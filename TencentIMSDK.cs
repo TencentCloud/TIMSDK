@@ -136,7 +136,7 @@ namespace com.tencent.imsdk.unity
         /// </summary>
         /// <param name="user_id">用户ID</param>
         /// <param name="user_sig">通过sdk_app_id与secret生成，可参考 https://cloud.tencent.com/document/product/269/32688</param>
-        /// <param name="callback">回调 <see cref="ValueCallback"/> </param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult Login(string user_id, string user_sig, ValueCallback<object> callback)
         {
@@ -179,8 +179,8 @@ namespace com.tencent.imsdk.unity
         /// <summary>
         /// 设置全局配置
         /// </summary>
-        /// <param name="config">配置 SetConfig</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="config">配置</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult SetConfig(SetConfig config, ValueCallback<types.SetConfig> callback)
         {
@@ -219,7 +219,7 @@ namespace com.tencent.imsdk.unity
         /// <summary>
         /// 退出登录
         /// </summary>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult Logout(ValueCallback<object> callback)
         {
@@ -272,7 +272,7 @@ namespace com.tencent.imsdk.unity
         /// <summary>
         /// 获取会话列表
         /// </summary>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult ConvGetConvList(ValueCallback<List<ConvInfo>> callback)
         {
@@ -304,7 +304,7 @@ namespace com.tencent.imsdk.unity
         /// </summary>
         /// <param name="conv_id">会话ID，c2c会话为user_id，群会话为group_id</param>
         /// <param name="conv_type">会话类型 TIMConvType</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult ConvDelete(string conv_id, TIMConvType conv_type, ValueCallback<object> callback)
         {
@@ -335,7 +335,7 @@ namespace com.tencent.imsdk.unity
         /// 获取会话信息
         /// </summary>
         /// <param name="conv_list_param">获取会话列表参数 ConvParam列表</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult ConvGetConvInfo(List<ConvParam> conv_list_param, ValueCallback<List<ConvInfo>> callback)
         {
@@ -400,7 +400,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="conv_id">会话ID</param>
         /// <param name="conv_type">会话类型 TIMConvType</param>
         /// <param name="is_pinned">是否置顶标记</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult ConvPinConversation(string conv_id, TIMConvType conv_type, bool is_pinned, ValueCallback<object> callback)
         {
@@ -430,7 +430,7 @@ namespace com.tencent.imsdk.unity
         /// <summary>
         /// 获取全部会话未读数
         /// </summary>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult ConvGetTotalUnreadMessageCount(ValueCallback<GetTotalUnreadNumberResult> callback)
         {
@@ -464,7 +464,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="conv_type">会话类型 TIMConvType</param>
         /// <param name="message">消息体 Message</param>
         /// <param name="message_id">承接消息ID的StringBuilder</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult MsgSendMessage(string conv_id, TIMConvType conv_type, Message message, StringBuilder message_id, ValueCallback<Message> callback)
         {
@@ -497,7 +497,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="conv_id">会话ID</param>
         /// <param name="conv_type">会话类型 TIMConvType</param>
         /// <param name="message_id">消息ID</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult MsgCancelSend(string conv_id, TIMConvType conv_type, string message_id, ValueCallback<Message> callback)
         {
@@ -528,7 +528,7 @@ namespace com.tencent.imsdk.unity
         /// 从本地查找消息
         /// </summary>
         /// <param name="message_id_array">查找消息的id列表</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult MsgFindMessages(List<string> message_id_array, ValueCallback<List<Message>> callback)
         {
@@ -561,7 +561,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="conv_id">会话ID</param>
         /// <param name="conv_type">会话类型 TIMConvType</param>
         /// <param name="message">消息体 Message</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult MsgReportReaded(string conv_id, TIMConvType conv_type, Message message, ValueCallback<object> callback)
         {
@@ -591,7 +591,7 @@ namespace com.tencent.imsdk.unity
         /// <summary>
         /// 标记所有消息为已读
         /// </summary>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult MsgMarkAllMessageAsRead(ValueCallback<object> callback)
         {
@@ -624,7 +624,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="conv_id">会话ID</param>
         /// <param name="conv_type">会话类型 TIMConvType</param>
         /// <param name="message">消息体 Message</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult MsgRevoke(string conv_id, TIMConvType conv_type, Message message, ValueCallback<object> callback)
         {
@@ -657,7 +657,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="conv_id">会话ID</param>
         /// <param name="conv_type">会话类型 TIMConvType</param>
         /// <param name="message_locator">消息定位符 MsgLocator</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult MsgFindByMsgLocatorList(string conv_id, TIMConvType conv_type, MsgLocator message_locator, ValueCallback<List<Message>> callback)
         {
@@ -690,7 +690,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="conv_id">会话ID</param>
         /// <param name="conv_type">会话类型 TIMConvType</param>
         /// <param name="message_list">消息列表 Message列表</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult MsgImportMsgList(string conv_id, TIMConvType conv_type, List<Message> message_list, ValueCallback<object> callback)
         {
@@ -723,7 +723,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="conv_id">会话ID</param>
         /// <param name="conv_type">会话类型 TIMConvType</param>
         /// <param name="message">消息体</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult MsgSaveMsg(string conv_id, TIMConvType conv_type, Message message, ValueCallback<object> callback)
         {
@@ -756,7 +756,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="conv_id">会话ID</param>
         /// <param name="conv_type">会话类型 TIMConvType</param>
         /// <param name="get_message_list_param">获取历史消息参数 MsgGetMsgListParam</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult MsgGetMsgList(string conv_id, TIMConvType conv_type, MsgGetMsgListParam get_message_list_param, ValueCallback<List<Message>> callback)
         {
@@ -789,7 +789,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="conv_id">会话ID</param>
         /// <param name="conv_type">会话类型 TIMConvType</param>
         /// <param name="message_delete_param">删除消息参数 MsgDeleteParam</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult MsgDelete(string conv_id, TIMConvType conv_type, MsgDeleteParam message_delete_param, ValueCallback<object> callback)
         {
@@ -822,7 +822,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="conv_id">会话ID</param>
         /// <param name="conv_type">会话类型 TIMConvType</param>
         /// <param name="message_delete_param">删除消息参数 MsgDeleteParam</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult MsgListDelete(string conv_id, TIMConvType conv_type, List<Message> message_list, ValueCallback<object> callback)
         {
@@ -856,7 +856,7 @@ namespace com.tencent.imsdk.unity
         /// </summary>
         /// <param name="conv_id">会话ID</param>
         /// <param name="conv_type">会话类型 TIMConvType</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult MsgClearHistoryMessage(string conv_id, TIMConvType conv_type, ValueCallback<object> callback)
         {
@@ -888,7 +888,7 @@ namespace com.tencent.imsdk.unity
         /// </summary>
         /// <param name="user_id_list">用户ID列表</param>
         /// <param name="opt">接收消息选项 TIMReceiveMessageOpt</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult MsgSetC2CReceiveMessageOpt(List<string> user_id_list, TIMReceiveMessageOpt opt, ValueCallback<object> callback)
         {
@@ -920,7 +920,7 @@ namespace com.tencent.imsdk.unity
         /// </summary>
         /// <param name="user_id_list">用户ID列表</param>
         /// <param name="opt">接收消息选项 TIMReceiveMessageOpt</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult MsgGetC2CReceiveMessageOpt(List<string> user_id_list, ValueCallback<List<GetC2CRecvMsgOptResult>> callback)
         {
@@ -952,7 +952,7 @@ namespace com.tencent.imsdk.unity
         /// </summary>
         /// <param name="group_id">用户ID列表</param>
         /// <param name="opt">接收消息选项 TIMReceiveMessageOpt</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult MsgSetGroupReceiveMessageOpt(string group_id, TIMReceiveMessageOpt opt, ValueCallback<object> callback)
         {
@@ -1075,7 +1075,7 @@ namespace com.tencent.imsdk.unity
         /// </summary>
         /// <param name="download_param">下载参数 DownloadElemParam</param>
         /// <param name="path">本地路径</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult MsgDownloadElemToPath(DownloadElemParam download_param, string path, ValueCallback<MsgDownloadElemResult> callback)
         {
@@ -1106,7 +1106,7 @@ namespace com.tencent.imsdk.unity
         /// 下载合并消息
         /// </summary>
         /// <param name="message">消息体 Message</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult MsgDownloadMergerMessage(Message message, ValueCallback<List<Message>> callback)
         {
@@ -1137,7 +1137,7 @@ namespace com.tencent.imsdk.unity
         /// 批量发送消息
         /// </summary>
         /// <param name="json_batch_send_param">批量消息体 MsgBatchSendParam</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult MsgBatchSend(MsgBatchSendParam json_batch_send_param, ValueCallback<List<MsgBatchSendResult>> callback)
         {
@@ -1168,7 +1168,7 @@ namespace com.tencent.imsdk.unity
         /// 搜索本地消息
         /// </summary>
         /// <param name="message_search_param">搜索消息参数 MessageSearchParam</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult MsgSearchLocalMessages(MessageSearchParam message_search_param, ValueCallback<MessageSearchResult> callback)
         {
@@ -1199,7 +1199,7 @@ namespace com.tencent.imsdk.unity
         /// 设置消息本地数据
         /// </summary>
         /// <param name="message">消息体 Message</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult MsgSetLocalCustomData(Message message, ValueCallback<object> callback)
         {
@@ -1230,7 +1230,7 @@ namespace com.tencent.imsdk.unity
         /// 创建群
         /// </summary>
         /// <param name="group">创建群信息 CreateGroupParam</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult GroupCreate(CreateGroupParam group, ValueCallback<CreateGroupResult> callback)
         {
@@ -1261,7 +1261,7 @@ namespace com.tencent.imsdk.unity
         /// 删除群
         /// </summary>
         /// <param name="group_id">群ID</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult GroupDelete(string group_id, ValueCallback<object> callback)
         {
@@ -1293,7 +1293,7 @@ namespace com.tencent.imsdk.unity
         /// </summary>
         /// <param name="group_id">群ID</param>
         /// <param name="hello_message">进群打招呼信息</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult GroupJoin(string group_id, string hello_message, ValueCallback<object> callback)
         {
@@ -1324,7 +1324,7 @@ namespace com.tencent.imsdk.unity
         /// 退出群
         /// </summary>
         /// <param name="group_id">群ID</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult GroupQuit(string group_id, ValueCallback<object> callback)
         {
@@ -1355,7 +1355,7 @@ namespace com.tencent.imsdk.unity
         /// 邀请用户进群
         /// </summary>
         /// <param name="param">邀请人员信息 GroupInviteMemberParam</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult GroupInviteMember(GroupInviteMemberParam param, ValueCallback<List<GroupInviteMemberResult>> callback)
         {
@@ -1386,7 +1386,7 @@ namespace com.tencent.imsdk.unity
         /// 剔除群成员
         /// </summary>
         /// <param name="param">删除人员信息 GroupDeleteMemberParam</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult GroupDeleteMember(GroupDeleteMemberParam param, ValueCallback<List<GroupDeleteMemberResult>> callback)
         {
@@ -1416,7 +1416,7 @@ namespace com.tencent.imsdk.unity
         /// <summary>
         /// 获取已加入的群组列表
         /// </summary>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult GroupGetJoinedGroupList(ValueCallback<List<GroupBaseInfo>> callback)
         {
@@ -1447,7 +1447,7 @@ namespace com.tencent.imsdk.unity
         /// 获取群信息
         /// </summary>
         /// <param name="group_id_list">群ID列表</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult GroupGetGroupInfoList(List<string> group_id_list, ValueCallback<List<GetGroupInfoResult>> callback)
         {
@@ -1478,7 +1478,7 @@ namespace com.tencent.imsdk.unity
         /// 修改群信息
         /// </summary>
         /// <param name="json_group_modifyinfo_param">修改信息参数 GroupModifyInfoParam</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult GroupModifyGroupInfo(GroupModifyInfoParam json_group_modifyinfo_param, ValueCallback<object> callback)
         {
@@ -1509,7 +1509,7 @@ namespace com.tencent.imsdk.unity
         /// 获取群成员信息
         /// </summary>
         /// <param name="json_group_getmeminfos_param">修改信息参数 GroupGetMemberInfoListParam</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult GroupGetMemberInfoList(GroupGetMemberInfoListParam json_group_getmeminfos_param, ValueCallback<GroupGetMemberInfoListResult> callback)
         {
@@ -1540,7 +1540,7 @@ namespace com.tencent.imsdk.unity
         /// 修改群成员信息
         /// </summary>
         /// <param name="json_group_modifymeminfo_param">修改信息参数 GroupModifyMemberInfoParam</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult GroupModifyMemberInfo(GroupModifyMemberInfoParam json_group_modifymeminfo_param, ValueCallback<object> callback)
         {
@@ -1571,7 +1571,7 @@ namespace com.tencent.imsdk.unity
         /// 获取群未决信息列表
         /// </summary>
         /// <param name="json_group_getpendence_list_param">修改信息参数 GroupPendencyOption</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult GroupGetPendencyList(GroupPendencyOption json_group_getpendence_list_param, ValueCallback<GroupPendencyResult> callback)
         {
@@ -1602,7 +1602,7 @@ namespace com.tencent.imsdk.unity
         /// 上报群未决信息已读
         /// </summary>
         /// <param name="time_stamp">时间戳</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult GroupReportPendencyReaded(long time_stamp, ValueCallback<object> callback)
         {
@@ -1633,7 +1633,7 @@ namespace com.tencent.imsdk.unity
         /// 处理群未决信息
         /// </summary>
         /// <param name="json_group_handle_pendency_param">处理群未决信息参数 GroupHandlePendencyParam</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult GroupHandlePendency(GroupHandlePendencyParam json_group_handle_pendency_param, ValueCallback<object> callback)
         {
@@ -1664,7 +1664,7 @@ namespace com.tencent.imsdk.unity
         /// 获取群在线用户数
         /// </summary>
         /// <param name="group_id">群ID</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult GroupGetOnlineMemberCount(string group_id, ValueCallback<GroupGetOnlineMemberCountResult> callback)
         {
@@ -1695,7 +1695,7 @@ namespace com.tencent.imsdk.unity
         /// 获取群在线用户数
         /// </summary>
         /// <param name="group_id">群ID</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult GroupSearchGroups(GroupSearchParam json_group_search_groups_param, ValueCallback<List<GroupDetailInfo>> callback)
         {
@@ -1726,7 +1726,7 @@ namespace com.tencent.imsdk.unity
         /// 搜索群成员
         /// </summary>
         /// <param name="json_group_search_group_members_param">搜索群成员参数 GroupMemberSearchParam</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult GroupSearchGroupMembers(GroupMemberSearchParam json_group_search_group_members_param, ValueCallback<List<GroupGetOnlineMemberCountResult>> callback)
         {
@@ -1758,7 +1758,7 @@ namespace com.tencent.imsdk.unity
         /// </summary>
         /// <param name="group_id">群ID</param>
         /// <param name="json_group_atrributes">群属性参数 GroupAttributes</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult GroupInitGroupAttributes(string group_id, GroupAttributes json_group_atrributes, ValueCallback<object> callback)
         {
@@ -1790,7 +1790,7 @@ namespace com.tencent.imsdk.unity
         /// </summary>
         /// <param name="group_id">群ID</param>
         /// <param name="json_keys">属性key列表</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult GroupDeleteGroupAttributes(string group_id, List<string> json_keys, ValueCallback<object> callback)
         {
@@ -1822,7 +1822,7 @@ namespace com.tencent.imsdk.unity
         /// </summary>
         /// <param name="group_id">群ID</param>
         /// <param name="json_keys">属性key列表</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult GroupGetGroupAttributes(string group_id, List<string> json_keys, ValueCallback<List<GroupAttributes>> callback)
         {
@@ -1853,7 +1853,7 @@ namespace com.tencent.imsdk.unity
         /// 获取用户信息列表
         /// </summary>
         /// <param name="json_get_user_profile_list_param">用户信息列表参数 FriendShipGetProfileListParam</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult ProfileGetUserProfileList(FriendShipGetProfileListParam json_get_user_profile_list_param, ValueCallback<List<UserProfile>> callback)
         {
@@ -1884,7 +1884,7 @@ namespace com.tencent.imsdk.unity
         /// 修改自己的信息
         /// </summary>
         /// <param name="json_modify_self_user_profile_param">用户信息列表参数 UserProfileItem</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult ProfileModifySelfUserProfile(UserProfileItem json_modify_self_user_profile_param, ValueCallback<object> callback)
         {
@@ -1914,7 +1914,7 @@ namespace com.tencent.imsdk.unity
         /// <summary>
         /// 获取好友信息
         /// </summary>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult FriendshipGetFriendProfileList(ValueCallback<List<FriendProfile>> callback)
         {
@@ -1945,7 +1945,7 @@ namespace com.tencent.imsdk.unity
         /// 添加好友
         /// </summary>
         /// <param name="param">添加好友参数 FriendshipAddFriendParam</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult FriendshipAddFriend(FriendshipAddFriendParam param, ValueCallback<FriendResult> callback)
         {
@@ -1976,7 +1976,7 @@ namespace com.tencent.imsdk.unity
         /// 处理好友申请
         /// </summary>
         /// <param name="param">处理好友申请参数 FriendRespone</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult FriendshipHandleFriendAddRequest(FriendRespone json_handle_friend_add_param, ValueCallback<FriendResult> callback)
         {
@@ -2007,7 +2007,7 @@ namespace com.tencent.imsdk.unity
         /// 修改好友信息
         /// </summary>
         /// <param name="json_modify_friend_info_param">修改好友信息参数 FriendshipModifyFriendProfileParam</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult FriendshipModifyFriendProfile(FriendshipModifyFriendProfileParam json_modify_friend_info_param, ValueCallback<object> callback)
         {
@@ -2040,7 +2040,7 @@ namespace com.tencent.imsdk.unity
         /// 删除好友
         /// </summary>
         /// <param name="json_delete_friend_param">删除好友参数 FriendshipDeleteFriendParam</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult FriendshipDeleteFriend(FriendshipDeleteFriendParam json_delete_friend_param, ValueCallback<FriendResult> callback)
         {
@@ -2071,7 +2071,7 @@ namespace com.tencent.imsdk.unity
         /// 检测好友关系
         /// </summary>
         /// <param name="json_check_friend_list_param">检测好友关系参数 FriendshipCheckFriendTypeParam</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult FriendshipCheckFriendType(FriendshipCheckFriendTypeParam json_check_friend_list_param, ValueCallback<List<FriendshipCheckFriendTypeResult>> callback)
         {
@@ -2102,7 +2102,7 @@ namespace com.tencent.imsdk.unity
         /// 创建好友分组
         /// </summary>
         /// <param name="json_create_friend_group_param">创建好友分组参数 FriendGroupInfo</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult FriendshipCreateFriendGroup(FriendGroupInfo json_create_friend_group_param, ValueCallback<List<FriendResult>> callback)
         {
@@ -2133,7 +2133,7 @@ namespace com.tencent.imsdk.unity
         /// 获取好友分组列表
         /// </summary>
         /// <param name="json_get_friend_group_list_param">获取好友分组，userID列表</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult FriendshipGetFriendGroupList(List<string> json_get_friend_group_list_param, ValueCallback<List<FriendGroupInfo>> callback)
         {
@@ -2164,7 +2164,7 @@ namespace com.tencent.imsdk.unity
         /// 修改好友分组列表
         /// </summary>
         /// <param name="json_modify_friend_group_param">修改好友分组 FriendshipModifyFriendGroupParam</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult FriendshipModifyFriendGroup(FriendshipModifyFriendGroupParam json_modify_friend_group_param, ValueCallback<List<FriendResult>> callback)
         {
@@ -2195,7 +2195,7 @@ namespace com.tencent.imsdk.unity
         /// 删除好友分组列表
         /// </summary>
         /// <param name="json_delete_friend_group_param">删除好友分组 ，userID列表</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult FriendshipDeleteFriendGroup(List<string> json_delete_friend_group_param, ValueCallback<object> callback)
         {
@@ -2226,7 +2226,7 @@ namespace com.tencent.imsdk.unity
         /// 删除好友分组列表
         /// </summary>
         /// <param name="json_delete_friend_group_param">删除好友分组 ，userID列表</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult FriendshipAddToBlackList(List<string> json_add_to_blacklist_param, ValueCallback<List<FriendResult>> callback)
         {
@@ -2256,7 +2256,7 @@ namespace com.tencent.imsdk.unity
         /// <summary>
         /// 获取黑名单列表
         /// </summary>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult FriendshipGetBlackList(ValueCallback<List<FriendProfile>> callback)
         {
@@ -2287,7 +2287,7 @@ namespace com.tencent.imsdk.unity
         /// 从黑名单删除
         /// </summary>
         /// <param name="json_delete_from_blacklist_param">userID列表</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult FriendshipDeleteFromBlackList(List<string> json_delete_from_blacklist_param, ValueCallback<List<FriendResult>> callback)
         {
@@ -2318,7 +2318,7 @@ namespace com.tencent.imsdk.unity
         /// 获取好友申请未决
         /// </summary>
         /// <param name="json_get_pendency_list_param">好友申请未决参数 FriendshipGetPendencyListParam</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult FriendshipGetPendencyList(FriendshipGetPendencyListParam json_get_pendency_list_param, ValueCallback<PendencyPage> callback)
         {
@@ -2349,7 +2349,7 @@ namespace com.tencent.imsdk.unity
         /// 删除好友申请未决
         /// </summary>
         /// <param name="json_delete_pendency_param">删除好友申请未决参数 FriendshipDeletePendencyParam</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult FriendshipDeletePendency(FriendshipDeletePendencyParam json_delete_pendency_param, ValueCallback<List<FriendResult>> callback)
         {
@@ -2380,7 +2380,7 @@ namespace com.tencent.imsdk.unity
         /// 上报好友申请未决已读
         /// </summary>
         /// <param name="time_stamp">上报时间戳</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult FriendshipReportPendencyReaded(long time_stamp, ValueCallback<object> callback)
         {
@@ -2411,7 +2411,7 @@ namespace com.tencent.imsdk.unity
         /// 搜索好友
         /// </summary>
         /// <param name="json_search_friends_param">搜索参数 FriendSearchParam</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult FriendshipSearchFriends(FriendSearchParam json_search_friends_param, ValueCallback<List<FriendInfoGetResult>> callback)
         {
@@ -2442,7 +2442,7 @@ namespace com.tencent.imsdk.unity
         /// 搜索好友
         /// </summary>
         /// <param name="json_get_friends_info_param">获取好友信息，好友userIDs</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult FriendshipGetFriendsInfo(List<string> json_get_friends_info_param, ValueCallback<List<FriendInfoGetResult>> callback)
         {
@@ -2473,7 +2473,7 @@ namespace com.tencent.imsdk.unity
         /// 实验性接口，开发者一般使用不到，例如私有化等等
         /// </summary>
         /// <param name="json_param">实验性接口参数 ExperimentalAPIReqeustParam</param>
-        /// <param name="callback">回调 ValueCallback</param>
+        /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
         public static TIMResult CallExperimentalAPI(ExperimentalAPIReqeustParam json_param, ValueCallback<ReponseInfo> callback)
         {
