@@ -81,7 +81,6 @@
    
    ```
 
-8. 其他api使用，请参考[完整api文档](https://comm.qq.com/im/sdk/unity_plus/_site/api/com.tencent.imsdk.unity.html)
 
 9. #### 常见问题
 

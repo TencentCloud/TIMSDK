@@ -791,9 +791,9 @@ namespace com.tencent.imsdk.unity.enums
         /// </summary>
         FriendCheckBWithA,      // 仅B中有A
         /// <summary>
-        /// <description>双向</description>
+        /// <description>双向的</description>
         /// </summary>
-        FriendCheckBothWay,     // 双向
+        FriendCheckBothWay,     // 双向的
     };
     public enum TIMFriendPendencyType
     {
