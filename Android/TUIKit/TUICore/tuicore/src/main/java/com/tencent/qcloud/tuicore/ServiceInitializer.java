@@ -24,21 +24,21 @@ public class ServiceInitializer extends ContentProvider {
      * 获取轻量版主题资源 id
      */
     public int getLightThemeResId() {
-        return 0;
+        return R.style.TUIBaseLightTheme;
     }
 
     /**
      * 获取活泼版主题资源 id
      */
     public int getLivelyThemeResId() {
-        return 0;
+        return R.style.TUIBaseLivelyTheme;
     }
 
     /**
      * 获取严肃版主题资源 id
      */
     public int getSeriousThemeResId() {
-        return 0;
+        return R.style.TUIBaseSeriousTheme;
     }
 
 /////////////////////////////////////////////////////////////////////////////////
