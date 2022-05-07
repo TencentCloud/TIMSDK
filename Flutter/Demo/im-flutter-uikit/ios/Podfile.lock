@@ -11,14 +11,14 @@ PODS:
   - connectivity_plus (0.0.1):
     - Flutter
     - ReachabilitySwift
-  - DKImagePickerController/Core (4.3.2):
+  - DKImagePickerController/Core (4.3.3):
     - DKImagePickerController/ImageDataManager
     - DKImagePickerController/Resource
-  - DKImagePickerController/ImageDataManager (4.3.2)
-  - DKImagePickerController/PhotoGallery (4.3.2):
+  - DKImagePickerController/ImageDataManager (4.3.3)
+  - DKImagePickerController/PhotoGallery (4.3.3):
     - DKImagePickerController/Core
     - DKPhotoGallery
-  - DKImagePickerController/Resource (4.3.2)
+  - DKImagePickerController/Resource (4.3.3)
   - DKPhotoGallery (0.0.17):
     - DKPhotoGallery/Core (= 0.0.17)
     - DKPhotoGallery/Model (= 0.0.17)
@@ -109,19 +109,19 @@ PODS:
   - tencent_im_sdk_plugin (1.0.5):
     - Flutter
     - HydraAsync
-    - TXIMSDK_Plus_iOS (= 6.1.2155.1)
+    - TXIMSDK_Plus_iOS (= 6.1.2166)
   - tencent_trtc_cloud (9.5.11234):
     - Flutter
-    - TXLiteAVSDK_Live
+    - TXLiteAVSDK_Live (= 9.5.11346)
   - Toast (4.0.0)
   - TPNS-iOS (1.3.4.1)
   - tpns_flutter_plugin (1.1.5):
     - Flutter
     - TPNS-iOS (= 1.3.4.1)
-  - TXIMSDK_Plus_iOS (6.1.2155.1)
-  - TXLiteAVSDK_Live (9.5.11344):
-    - TXLiteAVSDK_Live/Live (= 9.5.11344)
-  - TXLiteAVSDK_Live/Live (9.5.11344)
+  - TXIMSDK_Plus_iOS (6.1.2166)
+  - TXLiteAVSDK_Live (9.5.11346):
+    - TXLiteAVSDK_Live/Live (= 9.5.11346)
+  - TXLiteAVSDK_Live/Live (9.5.11346)
   - url_launcher_ios (0.0.1):
     - Flutter
   - video_player_avfoundation (0.0.1):
@@ -242,7 +242,7 @@ SPEC CHECKSUMS:
   BaiduMapKit: f227cfb43581e91466fb4f1344f655eab5788777
   camera: 9993f92f2c793e87b65e35f3a23c70582afb05b1
   connectivity_plus: 413a8857dd5d9f1c399a39130850d02fe0feaf7e
-  DKImagePickerController: b5eb7f7a388e4643264105d648d01f727110fc3d
+  DKImagePickerController: 72fd378f244cef3d27288e0aebf217a4467e4012
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
   file_picker: 3e6c3790de664ccf9b882732d9db5eaf6b8d4eb1
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
@@ -268,13 +268,13 @@ SPEC CHECKSUMS:
   shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
   SwiftyGif: 6c3eafd0ce693cad58bb63d2b2fb9bacb8552780
-  tencent_im_sdk_plugin: c68993c62fd0198cd47132a055a06c9cef33b8e3
-  tencent_trtc_cloud: c503175ea9e5455667bca8b0f8391559efb5ab79
+  tencent_im_sdk_plugin: d51730e02a10bc548db5b15f06151843435237aa
+  tencent_trtc_cloud: a717270754b3519b473b513b967c0b88b233aa45
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   TPNS-iOS: 36c335eff80670de6ede780ab827f679d78f64ff
   tpns_flutter_plugin: 51978efb8da959e9c2389421b0a73b175fdc4e1e
-  TXIMSDK_Plus_iOS: 2b0e9440eacdb49f385c90a23ad6558013f0cac6
-  TXLiteAVSDK_Live: 84d79436ed65ce7ad57aa29f2ca16f0abf85ebf3
+  TXIMSDK_Plus_iOS: 9edddba97d7ad3691ac278e81ee89e0a72a90f5e
+  TXLiteAVSDK_Live: cae30145d70254bdd35838569fcdfefd3a369aa0
   url_launcher_ios: 839c58cdb4279282219f5e248c3321761ff3c4de
   video_player_avfoundation: e489aac24ef5cf7af82702979ed16f2a5ef84cff
   video_thumbnail: c4e2a3c539e247d4de13cd545344fd2d26ffafd1

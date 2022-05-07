@@ -8,6 +8,8 @@ import 'package:timuikit/i18n/i18n_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:timuikit/src/provider/theme.dart';
 
+import '../src/search.dart';
+
 class Conversation extends StatefulWidget {
   final TIMUIKitConversationController conversationController;
   const Conversation({Key? key, required this.conversationController})
@@ -90,7 +92,7 @@ class _ConversationState extends State<Conversation> {
         await Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => TIMUIKitSearch(
+              builder: (context) => Search(
                   onTapConversation: _handleOnConvItemTapedWithPlace),
             ));
       },

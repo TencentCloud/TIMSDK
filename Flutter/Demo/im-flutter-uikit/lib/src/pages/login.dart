@@ -66,9 +66,10 @@ class AppLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double height = MediaQuery.of(context).size.height;
     final theme = Provider.of<DefaultThemeData>(context).theme;
     return Stack(
-      alignment: Alignment.center,
+      alignment: Alignment.topCenter,
       children: [
         Container(
             decoration: BoxDecoration(
@@ -82,44 +83,47 @@ class AppLogo extends StatelessWidget {
             ),
             child: Image.asset("assets/hero_image.png")),
         Positioned(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(
-                height: CommonUtils.adaptWidth(380),
-                width: CommonUtils.adaptWidth(200),
-                child: Image(
-                    image: timNewLogo,
-                    width: CommonUtils.adaptWidth(380),
-                    height: CommonUtils.adaptHeight(200)),
-              ),
-              Expanded(
-                  child: Container(
-                margin: const EdgeInsets.only(right: 5),
-                height: CommonUtils.adaptHeight(180),
-                padding: const EdgeInsets.only(top: 10, left: 5, right: 15),
-                child: Column(
-                  children: <Widget>[
-                    Text(
-                      imt("登录·即时通信"),
-                      style: TextStyle(
-                        color: const Color.fromARGB(255, 255, 255, 255),
-                        fontSize: CommonUtils.adaptFontSize(64),
-                      ),
-                    ),
-                    Text(
-                      imt("体验群组聊天，音视频对话等IM功能"),
-                      style: TextStyle(
-                        color: const Color.fromARGB(255, 255, 255, 255),
-                        fontSize: CommonUtils.adaptFontSize(28),
-                      ),
-                    ),
-                  ],
-                  crossAxisAlignment: CrossAxisAlignment.start,
+          child: Container(
+            padding: EdgeInsets.only(top: height / 30),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(
+                  height: CommonUtils.adaptWidth(380),
+                  width: CommonUtils.adaptWidth(200),
+                  child: Image(
+                      image: timNewLogo,
+                      width: CommonUtils.adaptWidth(380),
+                      height: CommonUtils.adaptHeight(200)),
                 ),
-              )),
-            ],
+                Expanded(
+                    child: Container(
+                      margin: const EdgeInsets.only(right: 5),
+                      height: CommonUtils.adaptHeight(180),
+                      padding: const EdgeInsets.only(top: 10, left: 5, right: 15),
+                      child: Column(
+                        children: <Widget>[
+                          Text(
+                            imt("登录·即时通信"),
+                            style: TextStyle(
+                              color: const Color.fromARGB(255, 255, 255, 255),
+                              fontSize: CommonUtils.adaptFontSize(64),
+                            ),
+                          ),
+                          Text(
+                            imt("体验群组聊天，音视频对话等IM功能"),
+                            style: TextStyle(
+                              color: const Color.fromARGB(255, 255, 255, 255),
+                              fontSize: CommonUtils.adaptFontSize(28),
+                            ),
+                          ),
+                        ],
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                      ),
+                    )),
+              ],
+            ),
           ),
         )
       ],
