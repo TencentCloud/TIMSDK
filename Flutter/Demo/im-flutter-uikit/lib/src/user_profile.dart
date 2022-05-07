@@ -3,12 +3,12 @@ import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
-import 'package:tim_ui_kit/ui/views/TIMUIKitSearch/tim_uikit_search.dart';
 import 'package:tim_ui_kit/ui/widgets/toast.dart';
 import 'package:tim_ui_kit_calling_plugin/enum/tim_uikit_trtc_calling_scence.dart';
 import 'package:tim_ui_kit_calling_plugin/tim_ui_kit_calling_plugin.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';
 import 'package:timuikit/src/provider/theme.dart';
+import 'package:timuikit/src/search.dart';
 
 import '../utils/toast.dart';
 import 'chat.dart';
@@ -212,7 +212,7 @@ class UserProfileState extends State<UserProfile> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => TIMUIKitSearch(
+                              builder: (context) => Search(
                                   conversation: conversation,
                                   onTapConversation:
                                       (V2TimConversation conversation,
