@@ -2,6 +2,30 @@ English | [简体中文](./版本历史.md)
 
 # TIMSDK
 
+## 6.2.2363 @2022.04.29 - Enhanced Version
+
+### SDK
+
+- Added the community topic feature.
+- Added the message edit API.
+- Added support for one-to-one message read receipts.
+- Optimized the network quality of the International Site.
+- Fixed the issue where a read message was displayed as unread after the app was uninstalled and reinstalled.
+- Fixed the issue where when the profile of a non-friend user was obtained, the values of custom fields cannot be updated after they were changed to null.
+- Fixed the issue where the `lastMsg` of a one-to-one conversation was inconsistent with the `lastMsg` in the message history when both sides sent a message simultaneously.
+- Fixed the issue where after the group owner of a public group approved a group joining request, the callback received by the applicant was incorrect.
+- Fixed the issue where the `nameCard` of a message sent by a user was null when the user checked this message.
+- Fixed the issue in some cases where the conversation list was not rearranged after messages were sent.
+
+### TUIKit and demo
+
+- Added the offline push component and simplified the integration process.
+- Added support for read receipts for group messages.
+- Added support for the dark theme for iOS.
+- Fixed the issue for Android where the app crashed when an excessively large image was sent and previewed.
+- Fixed the issue for Android where after a video message was sent, the duration displayed in the message was inconsistent with the actual duration of the video.
+- Fixed the issue for Android where a user cannot continue to handle friend requests after the user handled a friend request.
+
 ## 6.1.2166 @2022.04.02 - Enhanced Version
 
 ### SDK
