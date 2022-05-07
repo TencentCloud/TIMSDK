@@ -211,7 +211,11 @@ class _ChatState extends State<Chat> {
           locationMessageItemBuilder: (message, isShowJump, clearJump) {
             return LocationMsgElement(
               messageID: message.msgID,
-              locationElem: message.locationElem!,
+              locationElem: LocationMessage(
+                longitude: message.locationElem!.longitude,
+                latitude: message.locationElem!.longitude,
+                desc: message.locationElem?.desc ?? "",
+              ),
               isFromSelf: message.isSelf ?? false,
               isShowJump: isShowJump,
               clearJump: clearJump,
