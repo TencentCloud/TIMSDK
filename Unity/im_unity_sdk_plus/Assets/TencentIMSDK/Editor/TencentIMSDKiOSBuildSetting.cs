@@ -42,13 +42,13 @@ public class SDKBuildIOS : Editor
         AddProjectSetting(proj, buildTarget, path);
 
         proj.WriteToFile(projPath);
-        
+
         UnityEngine.Debug.Log("End change TencentIMSDK Setting");
     }
 
-    
 
-    
+
+
 
     static void AddFileToEmbedFrameworks(PBXProject proj, string targetGuid, string framework)
     {
@@ -56,7 +56,7 @@ public class SDKBuildIOS : Editor
 
         PBXProjectExtensions.AddFileToEmbedFrameworks(proj, targetGuid, fileGuid);
 
-        
+
     }
 
 
@@ -64,18 +64,18 @@ public class SDKBuildIOS : Editor
     {
         string targetGuid = proj.GetUnityMainTargetGuid();
 
-        proj.SetBuildProperty(targetGuid, "ENABLE_BITCODE", "NO"); 
+        proj.SetBuildProperty(targetGuid, "ENABLE_BITCODE", "NO");
 
         proj.SetBuildProperty(proj.ProjectGuid(), "ENABLE_BITCODE", "NO");
 
-        string tencentIMSDKFrameworkPath = path + "/Frameworks/TencentIMSDK/Plugins/iOS/ImSDK.xcframework/ios-arm64_armv7/ImSDK.framework";
+        string tencentIMSDKFrameworkPath = path + "/Frameworks/com.tencent.imsdk.unity/Assets/TencentIMSDK/Plugins/iOS/ImSDK.xcframework/ios-arm64_armv7/ImSDK.framework";
 
         UnityEngine.Debug.Log("AddFileToEmbedFrameworks add tencentIMSDKFrameworkPath at " + tencentIMSDKFrameworkPath );
 
         AddFileToEmbedFrameworks(proj, targetGuid, tencentIMSDKFrameworkPath);
 
     }
-    
+
 
 
 }
