@@ -8,7 +8,7 @@ namespace com.tencent.imsdk.unity.callback
 {
 
     /// <summary>
-    /// 异步方法通用回调
+    /// 异步方法回调
     /// </summary>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void ValueCallback<T> (int code, string desc, T data, string user_data);
