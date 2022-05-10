@@ -225,34 +225,33 @@ public class TestApi : MonoBehaviour
 
 
 
-    public static void GroupAttributeChangedCallback(string group_id, List<GroupAttributes> group_attributes, string user_data)
+    public static void GroupAttributeChangedCallback(string group_id, string group_attributes, string user_data)
     {
-        addStringDataToConsole("SetGroupAttributeChangedCallback called " + JsonConvert.SerializeObject(group_attributes[0]));
+        addStringDataToConsole("SetGroupAttributeChangedCallback called " + group_attributes);
     }
-    public static void GroupTipsEventCallback(List<GroupTipsElem> tips, string user_data)
+    public static void GroupTipsEventCallback(string tips, string user_data)
     {
-        addStringDataToConsole("SetGroupTipsEventCallback called " + JsonConvert.SerializeObject(tips));
+        addStringDataToConsole("SetGroupTipsEventCallback called " + tips);
     }
-    public static void MsgElemUploadProgressCallback(Message message, int index, int cur_size, int total_size, string user_data)
+    public static void MsgElemUploadProgressCallback(string message, int index, int cur_size, int total_size, string user_data)
     {
         addStringDataToConsole("SetMsgElemUploadProgressCallback called " + cur_size.ToString() + "/" + total_size.ToString());
     }
-    public static void MsgRevokeCallback(List<MsgLocator> msg_locator, string user_data)
+    public static void MsgRevokeCallback(string msg_locator, string user_data)
     {
-        addStringDataToConsole("SetMsgRevokeCallback called " + JsonConvert.SerializeObject(msg_locator[0]));
+        addStringDataToConsole("SetMsgRevokeCallback called " + msg_locator);
     }
-    public static void MsgReadedReceiptCallback(List<MessageReceipt> message_receipt, string user_data)
+    public static void MsgReadedReceiptCallback(string message_receipt, string user_data)
     {
-        addStringDataToConsole("SetMsgReadedReceiptCallback called " + JsonConvert.SerializeObject(message_receipt[0]));
+        addStringDataToConsole("SetMsgReadedReceiptCallback called " + message_receipt);
     }
     public static void CustomValueCallback(int code, string desc, string json_param, string user_data)
     {
         addStringDataToConsole("code: " + code.ToString() + " user_data: " + user_data + " json_param: " + json_param + " desc: " + desc);
     }
-    public static void RecvNewMsgCallback(List<Message> message, string user_data)
+    public static void RecvNewMsgCallback(string message, string user_data)
     {
-        addStringDataToConsole("AddRecvNewMsgCallback called " + JsonConvert.SerializeObject(message[0]));
-        addCallbackDataToConsole(JsonConvert.SerializeObject(message[0]), user_data);
+        addStringDataToConsole("AddRecvNewMsgCallback called " + message);
     }
 
     public static void LogCallback(TIMLogLevel logLevel, string log, string user_data)
@@ -260,9 +259,9 @@ public class TestApi : MonoBehaviour
 
         addStringDataToConsole("LogCallback called log：" + log + "user_data :" + user_data);
     }
-    public static void ConvEventCallback(TIMConvEvent conv_event, List<ConvInfo> conv_list, string user_data)
+    public static void ConvEventCallback(TIMConvEvent conv_event, string conv_list, string user_data)
     {
-        addStringDataToConsole("ConvEventCallback called " + "user_data :" + user_data);
+        addStringDataToConsole("ConvEventCallback called " + "user_data :" + conv_list);
     }
 
 
