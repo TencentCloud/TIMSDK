@@ -1,10 +1,10 @@
 namespace com.tencent.imsdk.unity.callback
 {
-    public class CallbackConvert<T>
+    public class CallbackConvert
     {
         public int code;
         public string type;
-        public T data;
+        public string data;
 
         public string user_data;
 
@@ -19,7 +19,7 @@ namespace com.tencent.imsdk.unity.callback
         public string group_id = "";
 
         public int conv_event = 0;
-        public CallbackConvert(int code,string type, T data, string user_data, string desc = "",int index = 0 , int cur_size = 0, int total_size = 0,string group_id = "",int conv_event = 0)
+        public CallbackConvert(int code,string type, string data, string user_data, string desc = "",int index = 0 , int cur_size = 0, int total_size = 0,string group_id = "",int conv_event = 0)
         {
             this.code = code;
             this.data = data;
