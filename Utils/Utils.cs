@@ -40,7 +40,7 @@ namespace com.tencent.imsdk.unity.utils
             if (string.IsNullOrEmpty(pJson)) return default(T);
             try
             {
-                T ret = JsonConvert.DeserializeObject<T>(pJson);
+                T ret = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(pJson);
                 return ret;
             }
             catch (System.Exception error)
@@ -57,7 +57,7 @@ namespace com.tencent.imsdk.unity.utils
                 var setting = new JsonSerializerSettings();
                 setting.NullValueHandling = NullValueHandling.Ignore;
 
-                return JsonConvert.SerializeObject(pData, null, setting);
+                return Newtonsoft.Json.JsonConvert.SerializeObject(pData, setting);
             }
             catch (System.Exception error)
             {
