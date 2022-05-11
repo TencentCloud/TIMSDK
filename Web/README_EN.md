@@ -26,26 +26,27 @@ The web demo is developed with `Vue` + `Vuex` + `Element-UI`. You can develop ap
 ### Directory Structure
 
 ```
-├───sdk/
-│   ├───The `tim-js.js - tim sdk` file, which is not used in the demo and here provided for integration by yourself only.
+├───debug/ - Used to set `SDKAppID` and `SECRETKEY`
 ├───dist/ - Package compiled directory
 ├───public/ - Public entry
-│   ├───debug/ - Used to set `SDKAppID` and `SECRETKEY`
-│   └───index.html
 ├───src/ - Source code directory
 │   ├───assets/ - Static resource directory
 │   ├───components/ - Component directory
 │   ├───store/ - Vuex store directory
+│   ├───locales/ - internationalization directory
+│   ├───styles/ - css styles directory
+│   ├───views/ - views page directory
 │   ├───utils/ - Tool function directory
-│   ├───index.vue - Entry file
-│   ├───main.js - Global Vue configuration
-│   └───tim.js - TIM SDK
+│   ├───app.vue - Entry file
+│   ├───main.ts - Global Vue configuration
+│   └───TUIKit - TUIKit directory
 ├───_doc/ - Documentation
 ├───.eslintignore - eslintignore configuration
 ├───babel.config.js - babel configuration
 ├───package.json
+├───tsconfig.json - ts configuration
 ├───README.md
-└───vue.config.js - vue-cli@3 configuration file
+└───vue.config.js - vue-cli configuration file
 ```
 
 ### Preparations
@@ -71,7 +72,7 @@ The web demo is developed with `Vue` + `Vuex` + `Element-UI`. You can develop ap
    git clone https://github.com/tencentyun/TIMSDK.git
 
    # Open the web demo project
-   cd TIMSDK/H5
+   cd TIMSDK/Web/Demo
    ```
 
 2. Set `SDKAppID` and `SECRETKEY`. See [Obtain key information](https://cloud.tencent.com/document/product/269/36838#.E6.AD.A5.E9.AA.A42.EF.BC.9A.E8.8E.B7.E5.8F.96.E5.AF.86.E9.92.A5.E4.BF.A1.E6.81.AF) for details.
@@ -86,9 +87,13 @@ The web demo is developed with `Vue` + `Vuex` + `Element-UI`. You can develop ap
 
    ```shell
    # Sync dependencies
-   npm install
+   yarn install
+   # Sync TUIKit dependencies
+   cd src/TUIKit
+   yarn install
    # Start the project
-   npm start
+   cd ../../
+   yarn serve
    ```
 
    > If a problem occurs during dependency synchronization, change the NPM source and try again.

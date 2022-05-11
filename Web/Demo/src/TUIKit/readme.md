@@ -28,7 +28,7 @@ TUIKit 是基于 IM SDK 实现的一套 UI 组件，其包含会话、聊天、�
 > 
 > 若创建项目时未安装 sass/scss，则可以在下载完项目后，安装 sass + sass-loader
 > 
-> ``` shell
+> ```
 > cd projectName  // 进入您的项目
 > yarn add sass sass-loader@10.1.1
 > ```
@@ -61,7 +61,7 @@ TUIKit 是基于 IM SDK 实现的一套 UI 组件，其包含会话、聊天、�
 
 ### 步骤4：下载 TUIKit 组件所需依赖
 
-```shell
+```cmd
 cd src/TUIKit
 yarn install
 ```
@@ -140,7 +140,7 @@ export default class Home extends Vue {}
 
 ### 步骤7：启动项目
 
-```shell
+```cmd
 yarn serve
 ```
 
@@ -156,6 +156,6 @@ IM TUIKit web 样式依赖 sass，需在项目全局安装 sass 和 sass-loader
 
 其中 sass-loader 的版本<=10.1.1
 
-```shell
+```cmd
 yarn add sass sass-loader@10.1.1
 ```

@@ -6,7 +6,7 @@
 
 3. 配置 `SDKAppID` 和 `SECRETKEY`，参考：[密钥获取方法](https://cloud.tencent.com/document/product/269/36838#.E6.AD.A5.E9.AA.A42.EF.BC.9A.E8.8E.B7.E5.8F.96.E5.AF.86.E9.92.A5.E4.BF.A1.E6.81.AF)
 
-   2.1 打开 `/dist/debug/GenerateTestUserSig.js` 文件
+   2.1 打开 `/debug/GenerateTestUserSig.js` 文件
 
    2.2 按图示填写相应配置后，保存文件
 
@@ -16,7 +16,11 @@
 
 ## 开发运行
 
-Web Demo 使用 `Vue` + `Vuex` + `Element-UI` 开发，你可以参考该 Demo 进行业务开发，也可以直接基于本Demo 进行二次开发。 
+### 开发环境要求
+Web Demo 使用：
+- vue3
+- TypeScript
+- sass（sass-loader 版本<= 10.1.1）
 
 > 参考文档：
 >
@@ -25,26 +29,26 @@ Web Demo 使用 `Vue` + `Vuex` + `Element-UI` 开发，你可以参考该 Demo �
 ### 目录结构
 
 ```
-├───sdk/
-│   ├───tim-js.js - tim sdk 文件，demo 中未使用，仅供自行集成使用
+├───debug/ - 用于配置SDKAppID 和 SECRETKEY
 ├───dist/  - 打包编译后的目录
 ├───public/ - 公共入口
-│   ├───debug/ - 用于配置SDKAppID 和 SECRETKEY
-│   └───index.html
 ├───src/ - 源码目录
 │   ├───assets/ - 静态资源目录
 │   ├───components/ - 组件目录
 │   ├───store/ - Vuex Store 目录
+│   ├───locales/ - 国际化目录
+│   ├───styles/ - 样式
+│   ├───views/ - 视图页面
 │   ├───utils/ - 工具函数目录
-│   ├───index.vue - 入口文件
-│   ├───main.js - Vue 全局配置
-│   └───tim.js - TIM SDK相关
-├───_doc/ - 文档相关
+│   ├───app.vue - 入口文件
+│   ├───main.ts - Vue 全局配置
+│   └───TUIKit - TUIKit
 ├───.eslintignore - eslint 忽略配置
 ├───babel.config.js - babel 配置
 ├───package.json
+├───tsconfig.json - ts 配置
 ├───README.md
-└───vue.config.js - vue-cli@3 配置文件
+└───vue.config.js - vue-cli 配置文件
 ```
 
 ### 准备工作
@@ -70,7 +74,7 @@ Web Demo 使用 `Vue` + `Vuex` + `Element-UI` 开发，你可以参考该 Demo �
    git clone https://github.com/tencentyun/TIMSDK.git
 
    # 进入 Web Demo 项目
-   cd TIMSDK/H5
+   cd TIMSDK/Web/Demo
    ```
 
 2. 配置 `SDKAppID` 和 `SECRETKEY`，参考：[密钥获取方法](https://cloud.tencent.com/document/product/269/36838#.E6.AD.A5.E9.AA.A42.EF.BC.9A.E8.8E.B7.E5.8F.96.E5.AF.86.E9.92.A5.E4.BF.A1.E6.81.AF)
@@ -84,10 +88,14 @@ Web Demo 使用 `Vue` + `Vuex` + `Element-UI` 开发，你可以参考该 Demo �
 3. 启动项目
 
    ```shell
-   # 同步依赖
-   npm install
+   # 下载项目依赖
+   yarn install
+   # 下载 TUIKit 依赖
+   cd src/TUIKit
+   yarn install
    # 启动项目
-   npm start
+   cd ../../
+   yarn serve
    ```
 
    > 若同步依赖过程中出现问题，尝试切换 npm 源后重试。
