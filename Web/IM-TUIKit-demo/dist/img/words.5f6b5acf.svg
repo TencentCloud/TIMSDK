@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16px" height="16px" viewBox="0 0 16 16" version="1.1">
+  <title>编组 9备份 5</title>
+  <defs>
+    <path d="M3.25,1 L12.75,1 C13.9926407,1 15,2.00735931 15,3.25 L15,8.80223083 L15,8.80223083 L15,10.6730769 C15,11.9157176 13.9926407,12.9230769 12.75,12.9230769 L9.60349397,12.9230769 L9.60349397,12.9230769 L8.41095925,14.4677057 C8.24220503,14.6862843 7.9282097,14.726675 7.70963106,14.5579208 C7.6710256,14.5281153 7.63698877,14.4928218 7.60860204,14.4531614 L6.51344888,12.9230769 L6.51344888,12.9230769 L3.25,12.9230769 C2.00735931,12.9230769 1,11.9157176 1,10.6730769 L1,3.25 C1,2.00735931 2.00735931,1 3.25,1 Z" id="path-1"></path>
+    <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="14" height="14" fill="white">
+      <use xlink:href="#path-1"></use>
+    </mask>
+  </defs>
+  <g id="new" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.795168922">
+    <g id="消息列表" transform="translate(-1076.000000, -700.000000)">
+      <g id="输入框" transform="translate(796.000000, 686.000000)">
+        <g id="编组-11" transform="translate(20.000000, 11.000000)">
+          <g transform="translate(0.000000, 3.000000)" id="编组-9备份-5">
+            <g transform="translate(260.000000, 0.000000)">
+              <rect id="矩形" x="0" y="0" width="16" height="16"></rect>
+              <use id="矩形" stroke="#232832" mask="url(#mask-2)" stroke-width="2" stroke-dasharray="0,0" xlink:href="#path-1"></use>
+              <polyline id="路径-10" stroke="#232832" stroke-linecap="round" stroke-linejoin="round" points="9.29062678 3.74278634 5.97267016 6.33120496 9.88720003 7.13345401 6.6167373 9.74278634"></polyline>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

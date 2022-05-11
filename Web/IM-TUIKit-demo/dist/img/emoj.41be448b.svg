@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16px" height="16px" viewBox="0 0 16 16" version="1.1">
+  <title>ic/消息备份 8</title>
+  <defs>
+    <circle id="path-1" cx="8" cy="8" r="8"></circle>
+    <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="16" height="16" fill="white">
+      <use xlink:href="#path-1"></use>
+    </mask>
+  </defs>
+  <g id="new" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.795168922">
+    <g id="消息列表" transform="translate(-816.000000, -700.000000)">
+      <g id="输入框" transform="translate(796.000000, 686.000000)">
+        <g id="编组-11" transform="translate(20.000000, 11.000000)">
+          <g transform="translate(0.000000, 3.000000)" id="ic/消息备份-8">
+            <g id="编组-8备份">
+              <path d="M0,0 L16,0 L16,16 L0,16 L0,0 Z" id="矩形备份-3"></path>
+            </g>
+            <path d="M0,0 L16,0 L16,16 L0,16 L0,0 Z" id="矩形"></path>
+            <use id="椭圆形" stroke="#232832" mask="url(#mask-2)" stroke-width="2" stroke-dasharray="0,0" xlink:href="#path-1"></use>
+            <path d="M6,6 C6,6.55228475 5.55228475,7 5,7 C4.44771525,7 4,6.55228475 4,6 C4,5.44771525 4.44771525,5 5,5 C5.55228475,5 6,5.44771525 6,6 Z" id="矩形" fill="#232832"></path>
+            <path d="M12,6 C12,6.55228475 11.5522847,7 11,7 C10.4477153,7 10,6.55228475 10,6 C10,5.44771525 10.4477153,5 11,5 C11.5522847,5 12,5.44771525 12,6 Z" id="矩形备份" fill="#232832"></path>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

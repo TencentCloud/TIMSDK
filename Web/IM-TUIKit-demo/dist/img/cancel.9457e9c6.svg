@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16px" height="16px" viewBox="0 0 16 16" version="1.1">
+  <title>清除</title>
+  <g id="页面-2备份" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <g id="创建群聊" transform="translate(-1243.000000, -413.000000)">
+      <g id="Group-1364" transform="translate(650.000000, 343.000000)">
+        <g id="Group-1363" transform="translate(290.000000, 46.000000)">
+          <g id="Group-1358" transform="translate(0.000000, 24.000000)">
+            <g id="清除" transform="translate(303.000000, 0.000000)">
+              <path d="M0,0 L16,0 L16,16 L0,16 L0,0 Z" id="矩形"></path>
+              <path d="M1,8 C1,11.8659999 4.13400006,15 8,15 C11.8659999,15 15,11.8659999 15,8 C15,4.13400006 11.8659999,1 8,1 L8,1 C4.13400006,1 1,4.13400006 1,8 Z" fill="#999999"></path>
+              <g id="编组" transform="translate(8.000000, 8.000000) rotate(-315.000000) translate(-8.000000, -8.000000) translate(4.000000, 4.000000)" fill="#FFFFFF">
+                <rect id="矩形备份" transform="translate(4.000000, 4.000000) rotate(-90.000000) translate(-4.000000, -4.000000) " x="1.8189894e-12" y="3.5" width="8" height="1" rx="0.5"></rect>
+                <rect id="矩形备份" transform="translate(4.000000, 4.000000) rotate(-360.000000) translate(-4.000000, -4.000000) " x="0" y="3.5" width="8" height="1" rx="0.5"></rect>
+              </g>
+              <rect id="矩形" x="0" y="0" width="16" height="16"></rect>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

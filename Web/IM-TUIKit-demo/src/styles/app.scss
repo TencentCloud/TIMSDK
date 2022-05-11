@@ -1,0 +1,13 @@
+@import url(./common.css);
+@import url(./icon.scss);
+html, body, #app, .app {
+    width: 100%;
+    height: 100%;
+}
+.app{
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(135deg, #F1F4F7 0%, #EDF5FF 100%);
+    display: flex;
+    flex-direction: column;
+}

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16px" height="16px" viewBox="0 0 16 16" version="1.1">
+  <title>编组 14</title>
+  <defs>
+    <filter x="-10.6%" y="-5.4%" width="121.2%" height="110.9%" filterUnits="objectBoundingBox" id="filter-1">
+      <feOffset dx="0" dy="7" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+      <feGaussianBlur stdDeviation="10" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+      <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.1 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+      <feMerge>
+        <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+        <feMergeNode in="SourceGraphic"></feMergeNode>
+      </feMerge>
+    </filter>
+  </defs>
+  <g id="new" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <g id="自定义消息" transform="translate(-458.000000, -318.000000)">
+      <g id="编组-32" filter="url(#filter-1)" transform="translate(44.000000, 60.000000)">
+        <g id="编组-24" transform="translate(30.000000, 250.000000)">
+          <g id="编组-14" transform="translate(384.000000, 8.000000)">
+            <circle id="椭圆形" fill="#006EFF" fill-rule="nonzero" cx="8" cy="8" r="8"></circle>
+            <polyline id="路径-4" stroke="#FFFFFF" stroke-width="2" transform="translate(8.042641, 6.242641) rotate(-315.000000) translate(-8.042641, -6.242641) " points="6.04264069 10.2426407 10.0426407 10.2426407 10.0426407 2.24264069"></polyline>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

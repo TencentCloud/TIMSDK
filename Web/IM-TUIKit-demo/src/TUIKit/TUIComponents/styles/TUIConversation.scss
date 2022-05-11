@@ -1,0 +1,64 @@
+@import url('../../styles/common.scss');
+@import url('../../styles/icon.scss');
+
+.TUI-conversation {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  background: #ffffff;
+  box-sizing: border-box;
+  /* font:12px/22px"\5B8B\4F53",Arial,Helvetica,sans-serif; */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    padding: 12px;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    border-bottom: 0.06rem solid #F4F5F9;
+    h1 {
+      padding: 0 8px;
+      font-weight: 400;
+      font-size: 14px;
+      color: #000000;
+    }
+    .more{
+      display: inline-block;
+      width: 28px;
+      height: 28px;
+      background: #F3F3F3;
+      border-radius: 4px;
+    }
+  }
+  &-list {
+    flex: 1;
+    position: absolute;
+    width: 100%;
+  }
+  .network {
+    display: flex;
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+    p {
+      padding: 5px;
+      font-family: PingFangSC-Regular;
+      font-weight: 400;
+      font-size: 12px;
+      color: #E54545;
+      letter-spacing: 0;
+      line-height: 22px;
+    }
+  }
+}
+
+input {
+  box-sizing: border-box;
+  width: 100%;
+  height: 24px;
+  border: 1px solid #dddddd;
+  border-radius: 5px;
+  padding: 0 10px;
+}

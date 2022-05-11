@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="21px" height="21px" viewBox="0 0 21 21" version="1.1">
+  <title>编组 5</title>
+  <g id="web" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <g id="登录" transform="translate(-627.000000, -516.000000)" stroke="#FFFFFF" stroke-width="1.2">
+      <g id="编组-3" transform="translate(266.400000, 332.400000)">
+        <g id="编组-6" transform="translate(3.600000, 172.800000)">
+          <g id="编组-5" transform="translate(357.600000, 10.800000)">
+            <rect id="矩形" x="6.6" y="10.2" width="6" height="1" rx="0.5"></rect>
+            <circle id="椭圆形" cx="10.2" cy="10.2" r="9.6"></circle>
+            <polyline id="路径-2" stroke-linecap="round" stroke-linejoin="round" points="9.6 13.4662027 13.2 10.2 9.6 7.30762441"></polyline>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+  <title>编组 8</title>
+  <g id="new" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <g id="ICON" transform="translate(-19.000000, -60.000000)">
+      <g id="编组-8" transform="translate(19.000000, 60.000000)">
+        <rect id="矩形" x="0" y="0" width="24" height="24"></rect>
+        <rect id="矩形" stroke="#006EFF" transform="translate(19.000000, 8.500000) scale(1, -1) translate(-19.000000, -8.500000) " x="16.5" y="8.5" width="5" height="1" rx="0.5"></rect>
+        <rect id="矩形备份-2" stroke="#006EFF" x="16.5" y="11.5" width="5" height="1" rx="0.5"></rect>
+        <rect id="矩形备份-3" stroke="#006EFF" x="18.5" y="14.5" width="3" height="1" rx="0.5"></rect>
+        <path d="M9,12 C11.209139,12 13,9.35025579 13,7.09090909 C13,4.83156239 11.209139,3 9,3 C6.790861,3 5,4.83156239 5,7.09090909 C5,9.35025579 6.790861,12 9,12 Z" id="椭圆形" fill="#006EFF"></path>
+        <path d="M6,13 L12,13 C14.209139,13 16,14.790861 16,17 L16,20 C16,20.5522847 15.5522847,21 15,21 L3,21 C2.44771525,21 2,20.5522847 2,20 L2,17 C2,14.790861 3.790861,13 6,13 Z" id="矩形" fill="#006EFF"></path>
+      </g>
+    </g>
+  </g>
+</svg>
