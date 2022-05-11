@@ -70,7 +70,7 @@ yarn install
 
 ``` shell
 # 启动项目
-cd TIMSDK/Web/IM-TUIKit-demo
+cd TIMSDK/Web/Demo
 yarn serve
 ```
 
