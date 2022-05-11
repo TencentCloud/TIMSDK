@@ -107,7 +107,7 @@ createApp(App).use(TUIKit).mount("#app");
     </div>
     <div class="chat">
       <TUIChat>
-        <div class="chat-default">默认显示</div>
+        <h1>欢迎使用即时通信</h1>
       </TUIChat>
     </div>
   </div>
