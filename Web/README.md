@@ -1,5 +1,5 @@
 # TIMSDK Web Demo
-
+[English](./README_EN.md) | 简体中文
 ## 一分钟跑通Demo
 
 1. 下载源码到本地
