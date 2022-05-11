@@ -45,12 +45,12 @@ git clone https://github.com/tencentyun/TIMSDK.git
 
 # 进入 Web 项目
 
-cd TIMSDK/Web/IM-TUIKit-demo
+cd TIMSDK/Web/Demo
 
 # 安装 demo 依赖
 yarn install
 
-cd TIMSDK/Web/IM-TUIKit-demo/src/TUIKit
+cd TIMSDK/Web/Demo/src/TUIKit
 
 # 安装 TUIKit 依赖
 yarn install
