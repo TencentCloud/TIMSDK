@@ -1,22 +1,40 @@
 <!DOCTYPE html>
-<html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <title><%= htmlWebpackPlugin.options.title %></title>
+  </head>
+  <body>
+    <noscript>
+      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+    </noscript>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+    <script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
+    <script src="https://tam.cdn-go.cn/aegis-sdk/latest/aegis.min.js"></script>
+    <script>
+      /**
+      * 根据基础字体大小 和 效果图宽度设置 根节点字体大小
+      * @param baseFontSize  浏览器默认字体大小 [注]浏览器最小字体为12像素，所以该值必需大于等于12
+      * @param baseWidth  设计稿的尺寸
+      */
+      function initFontSize(){
+      // 获取当前屏幕宽度
+      var clientWidth = document.documentElement.clientWidth || window.innerWidth;
+      // 根据宽度计算根节点字体大小
+      //初始化 字体16px , 设计稿宽1920px
+      var size = Math.floor( clientWidth / 1920 * 16 );
 
-<head>
-  <meta charset="utf-8">
-  <!-- 优先使用Chrome内核 -->
-  <meta name="renderer" content="webkit"/>
-  <meta name="force-rendering" content="webkit"/>
-  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
-  <title>TIMSDK demo</title>
-  <link rel="stylesheet" href="//at.alicdn.com/t/font_1325097_tqpxiqxt2cc.css">
-  <link rel="icon" href="favicon.ico" type="image/x-icon" />
-  <script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
+      size = size > 12 ? size : 12;
 
-
-</head>
-<body>
-  <div id="app"></div>
-  <script src="./debug/GenerateTestUserSig.js"></script>
-  <script src="./debug/lib-generate-test-usersig.min.js"></script>
-</body>
+      document.querySelector('html').style.fontSize = size + 'px';
+      }
+      initFontSize();
+      // 窗口大小改变时设置根节点字体大小，通过字体大小来控制页面元素尺寸的缩放
+      window.addEventListener('resize', initFontSize);
+    </script>
+  </body>
 </html>

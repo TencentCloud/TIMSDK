@@ -1,0 +1,57 @@
+
+.icon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin: 0;
+}
+
+.icon-global {
+    background: url('../assets/icon/global.png') no-repeat;
+    background-size: contain;
+}
+.icon-arrow-down {
+    width: 10px !important;
+    height: 10px !important;
+    background: url('../assets/icon/arrow-down.png') no-repeat;
+    background-size: contain;
+}
+
+.icon-menu {
+    background: url('../assets/icon/menu.png') no-repeat;
+    background-size: contain;
+}
+
+.icon-message-selected {
+    background: url('../assets/icon/message-selected.svg') no-repeat;
+    background-size: contain;
+}
+.icon-message {
+    background: url('../assets/icon/message.svg') no-repeat;
+    background-size: contain;
+}
+
+.icon-group {
+    background: url('https://web.sdk.qcloud.com/component/TUIKit/assets/group_avatar.png') no-repeat;
+    background-size: contain;
+}
+
+.icon-setting {
+    background: url('../assets/icon/setting.png') no-repeat;
+    background-size: contain;
+}
+.icon-relation {
+    background: url('../assets/icon/relation.svg') no-repeat;
+    background-size: contain;
+}
+.icon-relation-selected {
+    background: url('../assets/icon/relation-selected.svg') no-repeat;
+    background-size: contain;
+}
+
+.icon-adv-arrow {
+    width: 24px;
+    height: 24px;
+    background: url('../assets/icon/adv-arrow.svg') no-repeat;
+    background-size: contain;
+}

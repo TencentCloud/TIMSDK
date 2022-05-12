@@ -1,13 +1,12 @@
 module.exports = {
-  presets: ['@vue/app'],
-  ignore: ['sdk/**', '../TIMSDK-WEB/dist/tim-js-sdk'],
+  presets: ['@vue/cli-plugin-babel/preset'],
   plugins: [
     [
-      'component',
+      '@babel/plugin-transform-runtime',
       {
-        libraryName: 'element-ui',
-        styleLibraryName: 'theme-chalk'
-      }
-    ]
-  ]
-}
+        corejs: 3,
+      },
+    ],
+    '@babel/plugin-proposal-class-properties',
+  ],
+};
