@@ -1,46 +1,62 @@
 {
-  "name": "timsdk-demo",
-  "version": "2.1.3",
+  "name": "tuikit",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "node node_modules/@vue/cli-service/bin/vue-cli-service.js serve",
-    "serve": "node node_modules/@vue/cli-service/bin/vue-cli-service.js serve",
-    "build": "node node_modules/@vue/cli-service/bin/vue-cli-service.js build",
-    "lint": "node node_modules/@vue/cli-service/bin/vue-cli-service.js lint src --ext .vue,.js --fix"
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "test:unit": "vue-cli-service test:unit",
+    "test:e2e": "vue-cli-service test:e2e",
+    "lint": "vue-cli-service lint",
+    "fix": "eslint --fix --fix-type suggestion --fix-type problem .",
+    "postinstall": "husky install"
   },
   "dependencies": {
-    "core-js": "^2.6.11",
-    "cos-js-sdk-v5": "^0.5.22",
-    "element-ui": "^2.13.0",
-    "mta-h5-analysis": "^2.0.15",
-    "tim-js-sdk": "^2.14.0",
-    "trtc-js-sdk": "^4.7.1",
-    "tsignaling": "^0.7.0",
-    "trtc-calling-js": "^1.0.0",
-    "vue": "^2.6.11",
-    "vuex": "^3.1.2",
-    "vue-clipboard2": "^0.3.1"
+    "axios": "^0.26.1",
+    "core-js": "^3.6.5",
+    "element-plus": "^2.1.4",
+    "qs": "^6.10.3",
+    "vue": "^3.0.0",
+    "vue-class-component": "^8.0.0-0",
+    "vue-router": "^4.0.0-0",
+    "vuex": "^4.0.0-0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.12.1",
-    "@vue/cli-plugin-eslint": "^3.12.1",
-    "@vue/cli-service": "^3.12.1",
-    "babel-eslint": "^10.0.3",
-    "babel-plugin-component": "^1.1.1",
-    "eslint": "^5.16.0",
-    "eslint-plugin-vue": "^5.0.0",
-    "stylus": "^0.54.7",
-    "stylus-loader": "^3.0.2",
-    "vue-template-compiler": "^2.6.11"
+    "@babel/plugin-transform-runtime": "^7.17.0",
+    "@babel/runtime-corejs3": "^7.17.2",
+    "@commitlint/cli": "^16.2.3",
+    "@commitlint/config-conventional": "^16.2.1",
+    "@types/chai": "^4.2.11",
+    "@types/mocha": "^5.2.4",
+    "@typescript-eslint/eslint-plugin": "^4.18.0",
+    "@typescript-eslint/parser": "^4.33.0",
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-e2e-cypress": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-plugin-router": "~4.5.0",
+    "@vue/cli-plugin-typescript": "~4.5.0",
+    "@vue/cli-plugin-unit-mocha": "~4.5.0",
+    "@vue/cli-plugin-vuex": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/compiler-sfc": "^3.0.0",
+    "@vue/eslint-config-prettier": "^6.0.0",
+    "@vue/eslint-config-typescript": "^7.0.0",
+    "@vue/test-utils": "^2.0.0-rc.17",
+    "chai": "^4.1.2",
+    "eslint": "^6.7.2",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-vue": "^7.1.0",
+    "husky": "^7.0.4",
+    "prettier": "^2.2.1",
+    "sass": "^1.26.5",
+    "sass-loader": "^8.0.2",
+    "typescript": "~4.1.5",
+    "vue-eslint-parser": "^8.3.0"
   },
-  "postcss": {
-    "plugins": {
-      "autoprefixer": {}
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint",
+      "commit-msg": "commitlint -e $HUSKY_GIT_PARAMS"
     }
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not ie <= 8"
-  ]
+  }
 }

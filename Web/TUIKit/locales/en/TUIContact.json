@@ -1,0 +1,20 @@
+{
+  "群聊通知": "Group notification",
+  "系统通知": "System notification",
+  "我的群聊": "My GroupChat",
+  "输入群ID，按回车搜索": "Enter groupId, enter search",
+  "群名称": "Group name",
+  "群ID": "Group ID",
+  "加入群聊": "Join",
+  "解散群聊": "Dissolution",
+  "退出群聊": "Quit",
+  "群类型": "Group type",
+  "请填写验证信息": "Please fill in the verification information",
+  "申请加入": "Apply Join",
+  "已申请":"Applied",
+  "接受": "accept",
+  "拒绝": "reject",
+  "已处理": "Processed",
+  "添加群聊": "add group chat",
+  "已加入": "joined"
+}
