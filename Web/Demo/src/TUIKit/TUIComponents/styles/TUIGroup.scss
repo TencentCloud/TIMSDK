@@ -1,0 +1,12 @@
+@import url('../../styles/common.scss');
+@import url('../../styles/icon.scss');
+
+.TUI-group {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+  box-sizing: border-box;
+  font-weight: 400;
+  display: flex;
+}

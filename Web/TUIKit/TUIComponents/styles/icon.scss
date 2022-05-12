@@ -1,0 +1,248 @@
+
+.icon {
+  box-sizing: border-box;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+}
+
+.icon-more {
+  margin: 0;
+  background: url('../assets/icon/more.png') no-repeat;
+  background-size: contain;
+}
+
+.icon-chat-setting {
+  background: url('../assets/icon/chat-setting.png') no-repeat;
+  background-size: contain;
+}
+
+.icon-image {
+  margin: 12px 10px 0;
+  background: url('../assets/icon/image.png') no-repeat;
+  background-size: contain;
+}
+
+.icon-files {
+  margin: 12px 10px 0;
+  background: url('../assets/icon/files.png') no-repeat;
+  background-size: contain;
+}
+
+.icon-video {
+  margin: 12px 10px 0;
+  background: url('../assets/icon/video.png') no-repeat;
+  background-size: contain;
+}
+
+.icon-face {
+  margin: 12px 10px 1px;
+  background: url('../assets/icon/emoj.svg') no-repeat;
+  background-size: contain;
+}
+
+.icon-custom {
+  margin: 12px 10px 0;
+  background: url('../assets/icon/custom.png') no-repeat;
+  background-size: contain;
+}
+
+.icon-location {
+  margin: 12px 10px 0;
+  background: url('../assets/icon/location.png') no-repeat;
+  background-size: contain;
+}
+
+.icon-selected {
+  width: 16px;
+  height: 16px;
+  background: url('../assets/icon/selected.svg') no-repeat;
+  background-size: contain;
+}
+
+.icon-unselected {
+  width: 16px;
+  height: 16px;
+  background: #FFFFFF;
+  border: 1px solid #DDDDDD;
+  border-radius: 8px;
+}
+
+.icon-cancel {
+  width: 16px;
+  height: 16px;
+  background: url('../assets/icon/cancel.svg') no-repeat;
+  background-size: contain;
+}
+
+.icon-left {
+  width: 12px;
+  height: 12px;
+  background: url('../assets/icon/right.png') no-repeat;
+  background-size: contain;
+  transform: rotate(180deg); 
+}
+
+.icon-right {
+  width: 12px;
+  height: 12px;
+  background: url('../assets/icon/right.png') no-repeat;
+  background-size: contain;
+}
+
+.icon-down {
+  width: 12px;
+  height: 12px;
+  background: url('../assets/icon/right.png') no-repeat;
+  background-size: contain;
+  transform: rotate(90deg); 
+}
+
+.icon-edit {
+  width: 16px;
+  height: 16px;
+  background: url('../assets/icon/edit.png') no-repeat;
+  background-size: contain;
+}
+.icon-voice {
+  width: 16px;
+  height: 16px;
+  background: url('../assets/icon/voice.png') no-repeat;
+  background-size: contain;
+}
+.icon-reserve {
+  transform: rotate(180deg); 
+}
+
+.icon-del {
+  width: 16px;
+  height: 16px;
+  background: url('../assets/icon/del.png') no-repeat;
+  background-size: contain;
+}
+
+.icon-work {
+  width: 36px;
+  height: 36px;
+  background: url('../assets/icon/work.png') no-repeat;
+  background-size: contain;
+}
+
+.icon-public {
+  width: 36px;
+  height: 36px;
+  background: url('../assets/icon/public.png') no-repeat;
+  background-size: contain;
+}
+
+.icon-meeting {
+  width: 36px;
+  height: 36px;
+  background: url('../assets/icon/meeting.png') no-repeat;
+  background-size: contain;
+}
+
+.icon-room {
+  width: 36px;
+  height: 36px;
+  background: url('../assets/icon/room.png') no-repeat;
+  background-size: contain;
+}
+
+.icon-system {
+  width: 36px;
+  height: 36px;
+  background: url('../assets/icon/system.png') no-repeat;
+  background-size: contain;
+}
+
+.icon-words {
+  background: url('../assets/icon/words.svg') no-repeat;
+  background-size: contain;
+}
+.icon-evaluate {
+  background: url('../assets/icon/evaluate.svg') no-repeat;
+  background-size: contain;
+}
+.icon-star {
+  width: 17px !important;
+  height: 24px;
+  background: url('../assets/icon/star.svg') no-repeat;
+  background-size: contain;
+  margin-top: 2px !important;
+}
+.icon-star-light {
+  width: 24px !important;
+  height: 24px !important;
+  background: url('../assets/icon/star-light.svg') no-repeat;
+  background-size: contain;
+}
+
+.icon-error {
+  width: 12px;
+  height: 12px;
+  border-radius: 100%;
+  background: #FF584C;
+  font-style: normal;
+  font-size: 12px;
+  color: #FFFFFF;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+/* .icon-close {
+ * width: 16px;
+ *  height: 16px;
+ *  background: url('../assets/icon/close.png') no-repeat;
+ *  background-size: contain;
+ *}
+ */
+ 
+.icon-close {
+  display: inline-block;
+  width:24px;
+  height:24px;
+  position: relative;
+  border-radius: 50%;
+}
+.icon-close::before,.icon-close::after{
+  content: "";
+  position: absolute;  /*方便进行定位*/
+  background-color: #8F959E;
+  height: 16px;
+  width: 2px;
+  top: 50%;
+  left: 50%;
+  margin-top: -8px;
+  margin-left: -1px;
+}
+.icon-close::before{
+transform: rotate(45deg);
+}
+.icon-close::after{
+transform: rotate(-45deg);
+}
+
+.plus {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  position: relative;
+}
+.plus::before,.plus::after{
+  content: "";
+  position: absolute; 
+  background-color: #232832;
+  border-radius: 0.5px;
+  width: 1px;
+  height: 14px;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+}
+.plus::after{
+  transform: rotate(90deg);
+  width: 0.5px;
+}
