@@ -249,7 +249,7 @@ public class TestApi : MonoBehaviour
     {
         addStringDataToConsole("code: " + code.ToString() + " user_data: " + user_data + " json_param: " + json_param + " desc: " + desc);
     }
-    public static void RecvNewMsgCallback(string message, string user_data)
+    public static void RecvNewMsgCallback(List<Message> message, string user_data)
     {
         addStringDataToConsole("AddRecvNewMsgCallback called " + message);
     }
