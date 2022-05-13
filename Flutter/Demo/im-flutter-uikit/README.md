@@ -1,3 +1,5 @@
+[English](./README_EN.md) | 简体中文
+
 # Flutter TUIKit Demo
 
 TUIKit Demo 是基于 `TIMUIKit` 快速搭建的一套及时通信系统。
