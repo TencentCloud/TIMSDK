@@ -1,3 +1,5 @@
+[English](./README_EN.md) | 简体中文
+
 # IM Electron Demo
 IM(Instant Messaging) Electron Demo 包含了即时通信(IM)和实时音视频(TRTC)的能力，简单接入、稳定必达，通过腾讯云服务向开发者开放，致力于帮助开发者快速搭建低成本、可靠的、高品质的通信解决方案。产品参考: [即时通信(IM)](https://cloud.tencent.com/product/im)
 

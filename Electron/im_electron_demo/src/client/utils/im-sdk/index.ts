@@ -75,6 +75,7 @@ const initSdk = async (directToMsgPage, routeHistory, forceUpdate = false) => {
     if (!isInited || forceUpdate) {
         console.log('=====init sdk=====');
         const { addressIp, port, publicKey } = getSettingConfig();
+        console.log(addressIp, port, publicKey)
         if (addressIp && port && publicKey) {
             const privite = await timRenderInstance.callExperimentalAPI({
                 json_param: {
@@ -82,7 +83,7 @@ const initSdk = async (directToMsgPage, routeHistory, forceUpdate = false) => {
                     request_set_custom_server_info_param: {
                         longconnection_address_array: [{
                             server_address_ip: addressIp,// ip
-                            server_address_port: port// 端口
+                            server_address_port: Number(port)// 端口
                         }],
                         server_public_key: publicKey// 公钥
                     }
@@ -423,9 +424,14 @@ const handleNotify = (messages: State.message[]) => {
     if(!isLogIn || !shouldShowNotify) {
         return;
     }
+    
     const { message_conv_id, message_elem_array, message_conv_type } = messages[0];
     const conversationList = getConversationList().conversationList;
-    const convProfile = conversationList.find(item => item.conv_id === message_conv_id).conv_profile;
+    const conv = conversationList.find(item => item.conv_id === message_conv_id);
+    const { conv_profile:convProfile,conv_recv_opt } = conv;
+    if(conv_recv_opt === 2){
+        return;
+    }
     const nickName = convProfile.user_profile_nick_name ?? convProfile.group_detial_info_group_name;
     const firstMsg = message_elem_array[0] || {};
     const displayTextMsg = firstMsg && firstMsg.text_elem_content;

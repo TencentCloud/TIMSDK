@@ -252,16 +252,16 @@ export const ConversationList = (): JSX.Element => {
     }
     const handleConvListClick = convInfo => dispatch(updateCurrentSelectedConversation(convInfo));
 
+    // 消息免打扰
     const disableRecMsg = async (conv: State.conversationItem, isDisable: boolean) => {
         const { conv_type, conv_id } = conv;
         let data;
         if (conv_type === 1) {
-            data = await TIMMsgSetC2CReceiveMessageOpt(conv_id, isDisable ? 1 : 0)
+            data = await TIMMsgSetC2CReceiveMessageOpt(conv_id, isDisable ? 2 : 0)
         }
         if (conv_type === 2) {
-            data = await TIMMsgSetGroupReceiveMessageOpt(conv_id, isDisable ? 1 : 0)
+            data = await TIMMsgSetGroupReceiveMessageOpt(conv_id, isDisable ? 2 : 0)
         }
-        console.log(data)
     }
 
     useEffect(() => {
@@ -306,11 +306,12 @@ export const ConversationList = (): JSX.Element => {
                         const { conv_profile, conv_id, conv_last_msg, conv_unread_num, conv_type, conv_is_pinned, conv_group_at_info_array, conv_recv_opt, conv_is_has_draft, conv_draft } = item;
                         const faceUrl = conv_profile.user_profile_face_url ?? conv_profile.group_detial_info_face_url;
                         const nickName = conv_profile.user_profile_nick_name ?? conv_profile.group_detial_info_group_name;
+
                         return (
                             <div ref={setRef(conv_id)} className={`conversion-list__item ${conv_id === currentSelectedConversation?.conv_id ? 'is-active' : ''} ${conv_is_pinned ? 'is-pinned' : ''}`} key={conv_id} onClick={() => handleConvListClick(item)} onContextMenu={(e) => { handleContextMenuEvent(e, item) }}>
                                 <div className="conversion-list__item--profile">
                                     {
-                                        conv_unread_num > 0 ? <div className="conversion-list__item--profile___unread">{getDisplayUnread(conv_unread_num)}</div> : null
+                                        conv_unread_num > 0 ? conv_recv_opt != 2 ? <div className="conversion-list__item--profile___unread">{getDisplayUnread(conv_unread_num)}</div> : null : null
                                     }
                                     <Avatar url={faceUrl} nickName={nickName} userID={conv_id} groupID={conv_id} size='small' />
 
@@ -322,13 +323,19 @@ export const ConversationList = (): JSX.Element => {
                                             conv_last_msg && <span className="conversion-list__item--format-time">{timeFormat((conv_last_msg.message_server_time === 0 ? conv_last_msg.message_client_time : conv_last_msg.message_server_time) * 1000, false)}</span>
                                         }
                                     </div>
+                                    
                                     {
-                                         (conv_last_msg && conv_last_msg.message_elem_array || conv_is_has_draft)  ? <div className="conversion-list__item--last-message">{conv_is_has_draft ? getDraftMsg(conv_draft) : getLastMsgInfo(conv_last_msg, conv_type, conv_group_at_info_array)}</div> : null
+                                       
+                                         (conv_last_msg && conv_last_msg.message_elem_array || conv_is_has_draft)  ? <div className="conversion-list__item--last-message">
+                                             {
+                                            conv_recv_opt === 2 && conv_unread_num > 0 ? <span className="conversion-list__item--unread-notshow">[{getDisplayUnread(conv_unread_num)}条未读消息]</span> : null
+                                       }
+                                       {conv_is_has_draft ? getDraftMsg(conv_draft) : getLastMsgInfo(conv_last_msg, conv_type, conv_group_at_info_array)}</div> : null
                                     }
                                 </div>
                                 <span className="pinned-tag"></span>
                                 {
-                                    conv_recv_opt === 1 ? <span className="mute"></span> : null
+                                    conv_recv_opt === 2 ? <span className="mute"></span> : null
                                 }
                             </div>
                         )
