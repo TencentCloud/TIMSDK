@@ -1,3 +1,5 @@
+[English](./README_EN.md) | 简体中文
+git a
 # im_api_example
 该项目用于构建Flutter api demo, 包含相关api 的使用方式，便于用户使用及测试。
 

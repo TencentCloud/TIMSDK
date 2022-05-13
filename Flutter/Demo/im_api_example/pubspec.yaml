@@ -29,8 +29,9 @@ dependencies:
   provider: ^5.0.0
   gradient_ui_widgets: ^1.0.2-nullsafety
   modal_bottom_sheet: ^2.0.0
-  tencent_im_sdk_plugin: ^3.8.8
-#  tencent_im_sdk_plugin: ^3.9.2
+  # tencent_im_sdk_plugin: ^3.8.8
+  tencent_im_sdk_plugin: 
+    path: /Users/xingchenhe/Documents/work/git.code.oa.com/im-flutter-plugin/tencent_im_sdk_plugin
   flutter_syntax_view: ^4.0.0
   loading_indicator: ^2.0.1
   crypto: ^3.0.1
