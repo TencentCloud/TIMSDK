@@ -73,6 +73,8 @@ class AddEventListenerState extends State<AddEventListener> {
           Provider.of<Event>(context, listen: false).onRecvNewMessage,
       onSendMessageProgress:
           Provider.of<Event>(context, listen: false).onSendMessageProgress,
+      onRecvMessageReadReceipts: Provider.of<Event>(context, listen: false).onRecvMessageReadReceipts,
+      onRecvMessageModified:  Provider.of<Event>(context, listen: false).onRecvMessageModified,
     );
 
     signalingListener = new V2TimSignalingListener(

@@ -34,7 +34,7 @@ class Event with ChangeNotifier {
       ),
     );
   }
-
+  
   void onConnectSuccess() {
     this.addEvents(
       Map<String, dynamic>.from(
@@ -488,7 +488,30 @@ class Event with ChangeNotifier {
       ),
     );
   }
-
+  void onRecvMessageReadReceipts(List<V2TimMessageReceipt> data){
+     List<Map<String, dynamic>> ml = List.empty(growable: true);
+    data.forEach((element) {
+      ml.add(element.toJson());
+    });
+    this.addEvents(
+      Map<String, dynamic>.from(
+        {
+          "type": "onRecvMessageReadReceipts",
+          "data":ml,
+        },
+      ),
+    );
+  }
+  void onRecvMessageModified(V2TimMessage msg){
+  this.addEvents(
+      Map<String, dynamic>.from(
+        {
+          "type": "onRecvMessageModified",
+          "data":msg.toJson(),
+        },
+      ),
+    );
+  }
 // 信令
   void onInvitationCancelled(
     String inviteID,
