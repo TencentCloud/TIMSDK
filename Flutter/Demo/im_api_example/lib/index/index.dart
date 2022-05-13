@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:im_api_example/callbacks/callbacks.dart';
 import 'package:im_api_example/config/config.dart';
 import 'package:im_api_example/index/exampleList.dart';
@@ -27,7 +29,8 @@ class IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
   }
 
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    print("-didChangeAppLifecycleState-" + state.toString());
+    if(Platform.isAndroid){
+      print("-didChangeAppLifecycleState-" + state.toString());
     // 这里要登录态度
     super.didChangeAppLifecycleState(state);
     switch (state) {
@@ -44,6 +47,7 @@ class IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
         break;
       case AppLifecycleState.detached: // APP结束时调用
         break;
+    }
     }
   }
 
