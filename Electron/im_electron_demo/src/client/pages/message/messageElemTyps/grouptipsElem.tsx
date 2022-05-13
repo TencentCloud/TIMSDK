@@ -44,6 +44,29 @@ const GroupTipsElemItem = (props: any): JSX.Element => {
         
         return [`${group_tips_elem_op_user_info.user_profile_nick_name||group_tips_elem_op_user_info.user_profile_identifier}退出群聊`]
     }
+
+    const tips_3 = ()=>{
+        const { group_tips_elem_op_user_info,group_tips_elem_changed_group_memberinfo_array } = props;
+        const users = group_tips_elem_changed_group_memberinfo_array.map((item)=>{
+            return item.group_member_info_name_card || item.group_member_info_nick_name || item.group_member_info_identifier
+        })
+        return [`${group_tips_elem_op_user_info.user_profile_nick_name || group_tips_elem_op_user_info.user_profile_identifier}将${users.join('、')}提出群聊`]
+    }
+
+    const tips_4 = ()=>{
+        const { group_tips_elem_op_user_info,group_tips_elem_changed_group_memberinfo_array } = props;
+        const users = group_tips_elem_changed_group_memberinfo_array.map((item)=>{
+            return item.group_member_info_name_card || item.group_member_info_nick_name || item.group_member_info_identifier
+        })
+        return [`${group_tips_elem_op_user_info.user_profile_nick_name || group_tips_elem_op_user_info.user_profile_identifier}将${users.join('、')}设置成管理员`]
+    }
+    const tips_5 = ()=>{
+        const { group_tips_elem_op_user_info,group_tips_elem_changed_group_memberinfo_array } = props;
+        const users = group_tips_elem_changed_group_memberinfo_array.map((item)=>{
+            return item.group_member_info_name_card || item.group_member_info_nick_name || item.group_member_info_identifier
+        })
+        return [`${group_tips_elem_op_user_info.user_profile_nick_name || group_tips_elem_op_user_info.user_profile_identifier}将${users.join('、')}取消管理员`]
+    }
     const getChangeType = () => {
         const { group_tips_elem_tip_type } = props;
         let res = ['未适配'];
@@ -65,10 +88,13 @@ const GroupTipsElemItem = (props: any): JSX.Element => {
                 res = tips_2()
                 break;
             case 3:
+                res = tips_3()
                 break;
             case 4:
+                res = tips_4();
                 break;
             case 5:
+                res = tips_5();
                 break;
             case 6:
                 res = tips_6()
