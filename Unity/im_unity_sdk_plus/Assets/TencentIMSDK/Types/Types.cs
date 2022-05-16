@@ -1,7 +1,9 @@
 using com.tencent.imsdk.unity.enums;
 using System.Collections.Generic;
 using System;
+using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace com.tencent.imsdk.unity.types
 {
@@ -9,7 +11,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class SdkConfig
+    public class SdkConfig : ExtraData
     {
         /// <value>只写，SDK配置本地路径</value>
         public string sdk_config_config_file_path = System.IO.Directory.GetCurrentDirectory() + "/.TIM-Config";
@@ -20,7 +22,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class ConvParam
+    public class ConvParam : ExtraData
     {
         /// <value>只写, 会话类型</value>
         public TIMConvType get_conversation_list_param_conv_type ;
@@ -30,7 +32,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class UserProfileCustemStringInfo
+    public class UserProfileCustemStringInfo : ExtraData
     {
         /// <value>只写, 用户自定义资料字段的key值（包含前缀Tag_Profile_Custom_）</value>
         public string user_profile_custom_string_info_key ;
@@ -40,7 +42,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class UserProfile
+    public class UserProfile : ExtraData
     {
         /// <value>只读, 用户ID</value>
         public string user_profile_identifier ;
@@ -78,7 +80,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class Message
+    public class Message : ExtraData
     {
         /// <value>读写(必填), 消息内元素列表</value>
         public List<Elem> message_elem_array ;
@@ -143,7 +145,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class OfflinePushConfig
+    public class OfflinePushConfig : ExtraData
     {
         /// <value>读写, 当前消息在对方收到离线推送时候展示内容</value>
         public string offline_push_config_desc ; // 文本消息
@@ -159,7 +161,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class IOSOfflinePushConfig
+    public class IOSOfflinePushConfig : ExtraData
     {
         /// <value>读写, 通知标题</value>
         public string ios_offline_push_config_title ; // 文本消息
@@ -171,7 +173,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class AndroidOfflinePushConfig
+    public class AndroidOfflinePushConfig : ExtraData
     {
 
 
@@ -189,7 +191,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class Elem
+    public class Elem : ExtraData
     {
         /// <value>读写(必填), 元素类型</value>
         public TIMElemType elem_type ;
@@ -426,7 +428,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class UserProfileItem
+    public class UserProfileItem : ExtraData
     {
         /// <value>只写, 修改用户昵称</value>
         public string user_profile_item_nick_name ; // UserProfileItem
@@ -455,7 +457,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class GroupMemberInfo
+    public class GroupMemberInfo : ExtraData
     {
         /// <value>读写(必填), 群组成员ID</value>
         public string group_member_info_identifier ; // GroupMemberInfo
@@ -474,9 +476,11 @@ namespace com.tencent.imsdk.unity.types
         public uint group_member_info_shutup_time ; // GroupMemberInfo
         /// <value>只读, 成员群名片</value>
         public string group_member_info_name_card ; // GroupMemberInfo
-        /// <value>只读, 好友备注</value>
+        /// <value>只读, 好友昵称</value>
 
         public string group_member_info_nick_name ; // GroupMemberInfo
+        /// <value>只读，好友备注</value>
+        public string group_member_info_remark;    // string, 只读, 好友备注
         /// <value>只读, 好友头像</value>
         public string group_member_info_face_url ; // GroupMemberInfo
         /// <value>只读, 请参考[自定义字段](https://cloud.tencent.com/document/product/269/1502#.E8.87.AA.E5.AE.9A.E4.B9.89.E5.AD.97.E6.AE.B5)</value>
@@ -486,7 +490,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class GroupTipGroupChangeInfo
+    public class GroupTipGroupChangeInfo : ExtraData
     {
         /// <value>只读, 群消息修改群信息标志</value>
         public TIMGroupTipGroupChangeFlag group_tips_group_change_info_flag ;
@@ -498,7 +502,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class GroupMemberInfoCustemString
+    public class GroupMemberInfoCustemString : ExtraData
     {
         /// <value>只写, 自定义字段的key</value>
         public string group_member_info_custom_string_info_key ; // GroupMemberInfoCustemString
@@ -510,7 +514,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class GroupTipMemberChangeInfo
+    public class GroupTipMemberChangeInfo : ExtraData
     {
         /// <value>只读, 群组成员ID</value>
         public string group_tips_member_change_info_identifier ;
@@ -520,7 +524,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class DraftParam
+    public class DraftParam : ExtraData
     {
 
         /// <value>只读, 草稿最新编辑时间</value>
@@ -534,7 +538,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class MsgLocator
+    public class MsgLocator : ExtraData
     {
 
         /// <value>读写,      要查找的消息所属的会话ID</value>
@@ -557,7 +561,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class MsgGetMsgListParam
+    public class MsgGetMsgListParam : ExtraData
     {
 
         /// <value>只写(选填), 指定的消息，不允许为null</value>
@@ -578,7 +582,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class MsgDeleteParam
+    public class MsgDeleteParam : ExtraData
     {
 
 
@@ -590,7 +594,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class DownloadElemParam
+    public class DownloadElemParam : ExtraData
     {
 
         /// <value>只写, 从消息元素里面取出来,元素的下载类型</value>
@@ -607,7 +611,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class MsgBatchSendParam
+    public class MsgBatchSendParam : ExtraData
     {
 
         /// <value>只写(必填), 接收群发消息的用户 ID 列表</value>
@@ -619,7 +623,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class MessageSearchParam
+    public class MessageSearchParam : ExtraData
     {
 
         /// <value>只写(必填)，搜索关键字列表，最多支持5个。</value>
@@ -650,7 +654,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class CreateGroupParam
+    public class CreateGroupParam : ExtraData
     {
 
         /// <value>只写(必填), 群组名称</value>
@@ -679,7 +683,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class GroupInfoCustemString
+    public class GroupInfoCustemString : ExtraData
     {
 
         /// <value>只写, 自定义字段的key</value>
@@ -690,7 +694,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class GroupInviteMemberParam
+    public class GroupInviteMemberParam : ExtraData
     {
 
         /// <value>只写(必填), 群组ID</value>
@@ -703,7 +707,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class GroupDeleteMemberParam
+    public class GroupDeleteMemberParam : ExtraData
     {
 
         /// <value>只写(必填), 群组ID</value>
@@ -717,7 +721,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class GroupModifyInfoParam
+    public class GroupModifyInfoParam : ExtraData
     {
 
 
@@ -751,18 +755,18 @@ namespace com.tencent.imsdk.unity.types
     }
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class OfflinePushToken
+    public class OfflinePushToken : ExtraData
     {
         /// <value>只写（选填）, 注册应用到厂商平台或者 TPNS 时获取的 token。使用注意事项：当接入推送 TPNS 通道，需要设置 isTPNSToken 为 true，上报注册 TPNS 获取的 token；当接入推送为厂商通道，需要设置 isTPNSToken 为 false，上报注册厂商获取的 token。</value>
         public string offline_push_token_token ;
-        /// <value>只写（选填），IM 控制台证书 ID，接入 TPNS 时不需要填写</value>  
+        /// <value>只写（选填），IM 控制台证书 ID，接入 TPNS 时不需要填写</value>
         public int offline_push_token_business_id ;
         /// <value>只写（选填），是否接入配置 TPNS, token 是否是从 TPNS 获取</value>
         public bool offline_push_token_is_tpns_token ;
     }
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class GroupGetMemberInfoListParam
+    public class GroupGetMemberInfoListParam : ExtraData
     {
 
 
@@ -779,7 +783,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class GroupMemberGetInfoOption
+    public class GroupMemberGetInfoOption : ExtraData
     {
 
         /// <value>读写(选填), 根据想要获取的信息过滤，默认值为0xffffffff(获取全部信息)</value>
@@ -793,7 +797,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class GroupModifyMemberInfoParam
+    public class GroupModifyMemberInfoParam : ExtraData
     {
 
         /// <value>只写(必填), 群组ID</value>
@@ -816,7 +820,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class GroupPendencyOption
+    public class GroupPendencyOption : ExtraData
     {
 
         /// <value>只写(必填), 设置拉取时间戳,第一次请求填0,后边根据server返回的[GroupPendencyResult]()键kTIMGroupPendencyResultNextStartTime指定的时间戳进行填写</value>
@@ -828,7 +832,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class GroupHandlePendencyParam
+    public class GroupHandlePendencyParam : ExtraData
     {
 
         /// <value>只写(选填), true表示接受，false表示拒绝。默认为false</value>
@@ -842,7 +846,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class GroupPendency
+    public class GroupPendency : ExtraData
     {
 
         /// <value>读写, 群组ID</value>
@@ -878,7 +882,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class GroupSearchParam
+    public class GroupSearchParam : ExtraData
     {
 
         /// <value>搜索关键字列表，最多支持5个 </value>
@@ -890,7 +894,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class GroupMemberSearchParam
+    public class GroupMemberSearchParam : ExtraData
     {
 
         /// <value>指定群 ID 列表，若为不填则搜索全部群中的群成员</value>
@@ -903,7 +907,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class GroupAttributes
+    public class GroupAttributes : ExtraData
     {
 
         /// <value>群属性 map 的 key</value>
@@ -915,7 +919,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class FriendShipGetProfileListParam
+    public class FriendShipGetProfileListParam : ExtraData
     {
 
         /// <value>只写, 想要获取目标用户资料的UserID列表</value>
@@ -928,7 +932,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class FriendshipAddFriendParam
+    public class FriendshipAddFriendParam : ExtraData
     {
 
         /// <value>只写, 请求加好友对应的UserID</value>
@@ -949,7 +953,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class FriendRespone
+    public class FriendRespone : ExtraData
     {
 
         /// <value>只写(必填), 响应好友添加的UserID</value>
@@ -964,7 +968,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class FriendshipModifyFriendProfileParam
+    public class FriendshipModifyFriendProfileParam : ExtraData
     {
 
         /// <value>只写, 被修改的好友的UserID</value>
@@ -975,7 +979,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class FriendProfileItem
+    public class FriendProfileItem : ExtraData
     {
 
         /// <value>只写, 修改好友备注</value>
@@ -989,7 +993,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class FriendProfileCustemStringInfo
+    public class FriendProfileCustemStringInfo : ExtraData
     {
 
         /// <value>只写, 好友自定义资料字段key</value>
@@ -1001,7 +1005,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class FriendshipDeleteFriendParam
+    public class FriendshipDeleteFriendParam : ExtraData
     {
 
         /// <value>只写, 删除好友，指定删除的好友类型</value>
@@ -1013,7 +1017,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class FriendshipCheckFriendTypeParam
+    public class FriendshipCheckFriendTypeParam : ExtraData
     {
 
 
@@ -1026,7 +1030,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class FriendGroupInfo
+    public class FriendGroupInfo : ExtraData
     {
 
         /// <value>只写, 创建分组的名称列表</value>
@@ -1038,7 +1042,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class FriendshipModifyFriendGroupParam
+    public class FriendshipModifyFriendGroupParam : ExtraData
     {
 
         /// <value>只写, 要修改的分组名称</value>
@@ -1053,7 +1057,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class FriendshipGetPendencyListParam
+    public class FriendshipGetPendencyListParam : ExtraData
     {
 
         /// <value>只写, 添加好友的未决请求类型</value>
@@ -1069,7 +1073,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class FriendshipDeletePendencyParam
+    public class FriendshipDeletePendencyParam : ExtraData
     {
 
         /// <value>只读, 添加好友的未决请求类型</value>
@@ -1080,7 +1084,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class FriendSearchParam
+    public class FriendSearchParam : ExtraData
     {
 
         /// <value>只写, 搜索的关键字列表，关键字列表最多支持 5 个</value>
@@ -1091,7 +1095,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class MessageReceipt
+    public class MessageReceipt : ExtraData
     {
 
         /// <value>只读, 会话ID</value>
@@ -1104,9 +1108,10 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class GroupTipsElem
+    public class GroupTipsElem : ExtraData
     {
-
+        /// <value>读写(必填), 元素类型</value>
+        // public TIMElemType elem_type ;
         /// <value>只读, 群消息类型</value>
         public TIMGroupTipType group_tips_elem_tip_type ; // 群组系统消息元素
         /// <value>只读, 操作者ID</value>
@@ -1143,7 +1148,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class ConvInfo
+    public class ConvInfo : ExtraData
     {
 
         /// <value>只读, 会话ID</value>
@@ -1178,7 +1183,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class Draft
+    public class Draft : ExtraData
     {
 
         /// <value>只读, 草稿内的消息</value>
@@ -1193,7 +1198,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class GroupAtInfo
+    public class GroupAtInfo : ExtraData
     {
 
         /// <value>只读, @ 消息序列号，即带有 “@我” 或者 “@所有人” 标记的消息的序列号</value>
@@ -1204,7 +1209,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class FriendAddPendency
+    public class FriendAddPendency : ExtraData
     {
 
 
@@ -1221,7 +1226,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class FriendProfile
+    public class FriendProfile : ExtraData
     {
 
         /// <value>只读, 好友UserID</value>
@@ -1247,7 +1252,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class SetConfig
+    public class SetConfig : ExtraData
     {
 
 
@@ -1272,7 +1277,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class HttpProxyInfo
+    public class HttpProxyInfo : ExtraData
     {
         /// <value>只写(必填), 代理的IP</value>
         public string http_proxy_info_ip ;
@@ -1286,7 +1291,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class Socks5ProxyInfo
+    public class Socks5ProxyInfo : ExtraData
     {
 
         /// <value>只写(必填), socks5代理的IP</value>
@@ -1301,7 +1306,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class UserConfig
+    public class UserConfig : ExtraData
     {
 
 
@@ -1321,7 +1326,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class GroupGetInfoOption
+    public class GroupGetInfoOption : ExtraData
     {
 
         /// <value>读写(选填), 根据想要获取的信息过滤，默认值为0xffffffff(获取全部信息)</value>
@@ -1333,7 +1338,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class SSODataParam
+    public class SSODataParam : ExtraData
     {
 
         /// <value>sso请求的命令字</value>
@@ -1347,7 +1352,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class ServerAddress
+    public class ServerAddress : ExtraData
     {
 
         /// <value>只写(必填), 服务器 IP</value>
@@ -1360,7 +1365,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class CustomServerInfo
+    public class CustomServerInfo : ExtraData
     {
 
         /// <value>只写(必填), 长连接服务器地址列表</value>
@@ -1374,7 +1379,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class SM4GCMCallbackParam
+    public class SM4GCMCallbackParam : ExtraData
     {
 
         /// <value>只写(必填), SM4 GCM 加密回调函数地址</value>
@@ -1386,7 +1391,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class CosSaveRegionForConversationParam
+    public class CosSaveRegionForConversationParam : ExtraData
     {
 
         /// <value>只写(必填), 会话 ID</value>
@@ -1398,7 +1403,7 @@ namespace com.tencent.imsdk.unity.types
 
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class ExperimentalAPIReqeustParam
+    public class ExperimentalAPIReqeustParam : ExtraData
     {
 
         /// <value>只写(必填), 内部接口的操作类型</value>
@@ -1426,14 +1431,14 @@ namespace com.tencent.imsdk.unity.types
     }
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class GetTotalUnreadNumberResult
+    public class GetTotalUnreadNumberResult : ExtraData
     {
         // int, 只读，会话未读数
         public int conv_get_total_unread_message_count_result_unread_count ;
     }
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class GetC2CRecvMsgOptResult
+    public class GetC2CRecvMsgOptResult : ExtraData
     {
         // string, 只读，用户ID
         public string msg_recv_msg_opt_result_identifier ;
@@ -1442,13 +1447,13 @@ namespace com.tencent.imsdk.unity.types
     }
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class CreateGroupResult
+    public class CreateGroupResult : ExtraData
     {
         // string, 只读, 创建的群ID
         public string create_group_result_groupid ;
     }
     [JsonObject(MemberSerialization.OptOut)]
-    public class GroupInviteMemberResult
+    public class GroupInviteMemberResult : ExtraData
     {
         // string, 只读, 被邀请加入群组的用户ID
         public string group_invite_member_result_identifier ;
@@ -1457,7 +1462,7 @@ namespace com.tencent.imsdk.unity.types
     }
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class GroupDeleteMemberResult
+    public class GroupDeleteMemberResult : ExtraData
     {
         // string, 只读, 删除的成员ID
         public string group_delete_member_result_identifier ;
@@ -1466,7 +1471,7 @@ namespace com.tencent.imsdk.unity.types
     }
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class GroupBaseInfo
+    public class GroupBaseInfo : ExtraData
     {
         // string, 只读, 群组ID
         public string group_base_info_group_id ;
@@ -1491,7 +1496,7 @@ namespace com.tencent.imsdk.unity.types
     }
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class GroupSelfInfo
+    public class GroupSelfInfo : ExtraData
     {
         // uint, 只读, 加入群组时间
         public uint group_self_info_join_time ;
@@ -1504,7 +1509,7 @@ namespace com.tencent.imsdk.unity.types
     }
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class GetGroupInfoResult
+    public class GetGroupInfoResult : ExtraData
     {
         // int [错误码](https://cloud.tencent.com/document/product/269/1671),   只读, 获取群组详细信息的结果
         public int get_groups_info_result_code ;
@@ -1515,7 +1520,7 @@ namespace com.tencent.imsdk.unity.types
     }
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class GroupDetailInfo
+    public class GroupDetailInfo : ExtraData
     {
         // string, 只读, 群组ID
         public string group_detial_info_group_id ;
@@ -1560,7 +1565,7 @@ namespace com.tencent.imsdk.unity.types
     }
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class GroupPendencyResult
+    public class GroupPendencyResult : ExtraData
     {
         // uint64, 只读, 下一次拉取的起始时戳,server返回0表示没有更多的数据,否则在下次获取数据时以这个时间戳作为开始时间戳
         public UInt64 group_pendency_result_next_start_time ;
@@ -1573,14 +1578,14 @@ namespace com.tencent.imsdk.unity.types
     }
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class GroupGetOnlineMemberCountResult
+    public class GroupGetOnlineMemberCountResult : ExtraData
     {
         // int, 只读, 指定群的在线人数
         public int group_get_online_member_count_result ;
     }
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class FriendResult
+    public class FriendResult : ExtraData
     {
         // string, 只读, 关系链操作的用户ID
         public string friend_result_identifier ;
@@ -1591,7 +1596,7 @@ namespace com.tencent.imsdk.unity.types
     }
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class FriendshipCheckFriendTypeResult
+    public class FriendshipCheckFriendTypeResult : ExtraData
     {
         // string, 只读, 被检测的好友UserID
         public string friendship_check_friendtype_result_identifier ;
@@ -1604,7 +1609,7 @@ namespace com.tencent.imsdk.unity.types
     }
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class PendencyPage
+    public class PendencyPage : ExtraData
     {
         // uint64, 只读, 未决请求信息页的起始时间
         public UInt64 pendency_page_start_time ;
@@ -1617,7 +1622,7 @@ namespace com.tencent.imsdk.unity.types
     }
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class FriendAddPendencyInfo
+    public class FriendAddPendencyInfo : ExtraData
     {
         // uint [TIMFriendPendencyType](), 只读, 好友添加请求未决类型
         public TIMFriendPendencyType friend_add_pendency_info_type ;
@@ -1634,7 +1639,7 @@ namespace com.tencent.imsdk.unity.types
     }
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class FriendInfoGetResult
+    public class FriendInfoGetResult : ExtraData
     {
         // string, 只读, 好友 user_id
         public string friendship_friend_info_get_result_identifier ;
@@ -1649,7 +1654,7 @@ namespace com.tencent.imsdk.unity.types
     }
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class MessageSearchResult
+    public class MessageSearchResult : ExtraData
     {
         // uint, 只读, 如果您本次搜索【指定会话】，那么返回满足搜索条件的消息总数量；如果您本次搜索【全部会话】，那么返回满足搜索条件的消息所在的所有会话总数量。
         public uint msg_search_result_total_count ;
@@ -1658,7 +1663,7 @@ namespace com.tencent.imsdk.unity.types
     }
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class MessageSearchResultItem
+    public class MessageSearchResultItem : ExtraData
     {
         // string, 只读，会话 ID
         public string msg_search_result_item_conv_id ;
@@ -1671,7 +1676,7 @@ namespace com.tencent.imsdk.unity.types
     }
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class MsgBatchSendResult
+    public class MsgBatchSendResult : ExtraData
     {
         // string, 只读, 接收群发消息的用户 ID
         public string msg_batch_send_result_identifier ;
@@ -1684,7 +1689,7 @@ namespace com.tencent.imsdk.unity.types
     }
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class MsgDownloadElemResult
+    public class MsgDownloadElemResult : ExtraData
     {
         // uint, 只读, 当前已下载的大小
         public uint msg_download_elem_result_current_size ;
@@ -1693,7 +1698,7 @@ namespace com.tencent.imsdk.unity.types
     }
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class ReponseInfo
+    public class ReponseInfo : ExtraData
     {
         // string [TIMInternalOperation](), 只读(必填), 响应的内部操作
         public string response_internal_operation ;
@@ -1708,14 +1713,14 @@ namespace com.tencent.imsdk.unity.types
     }
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class UserInfo
+    public class UserInfo : ExtraData
     {
         public string user_info_userid ;
         public uint user_info_tinyid ;
     }
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class SSODataRes
+    public class SSODataRes : ExtraData
     {
         // string, 只读(必填), sso返回数据对应请求的命令字
         public string sso_data_res_cmd ;
@@ -1724,11 +1729,26 @@ namespace com.tencent.imsdk.unity.types
     }
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class GroupGetMemberInfoListResult
+    public class GroupGetMemberInfoListResult : ExtraData
     {
         // uint64, 只读, 下一次拉取的标志,server返回0表示没有更多的数据,否则在下次获取数据时填入这个标志
         public UInt64 group_get_memeber_info_list_result_next_seq ;
         // array [GroupMemberInfo](), 只读, 成员信息列表
         public List<GroupMemberInfo> group_get_memeber_info_list_result_info_array ;
+    }
+
+    // 用于处理Deserialize时多余的参数
+    // Handle Unknown Fields when Deserialize
+    public class ExtraData {
+        // public IDictionary<string, JToken> extra_data;
+
+        [JsonExtensionData]
+        private IDictionary<string, JToken> _additionalData;
+
+        // [OnDeserialized]
+        // private void OnDeserialized(StreamingContext context)
+        // {
+            // extra_data = _additionalData;
+        // }
     }
 }
