@@ -1,6 +1,7 @@
 using Newtonsoft.Json.Utilities;
 using UnityEngine;
 using com.tencent.imsdk.unity.types;
+using Newtonsoft.Json.Linq;
 
 // 此Helper类用于解决 IL2CPP 平台下的 AOT compile error，请参考
 // https://github.com/jilleJr/Newtonsoft.Json-for-Unity/wiki/What-even-is-AOT
@@ -10,6 +11,7 @@ public class AotTypeEnforcer : MonoBehaviour
 {
   public void Awake()
   {
+    AotHelper.EnsureDictionary<string, JToken>();
     AotHelper.EnsureType<SdkConfig>();
     AotHelper.EnsureType<ConvParam>();
     AotHelper.EnsureType<UserProfileCustemStringInfo>();
