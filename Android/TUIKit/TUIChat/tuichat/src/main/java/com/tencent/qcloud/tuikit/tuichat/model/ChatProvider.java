@@ -216,6 +216,11 @@ public class ChatProvider {
         v2TIMMessage.setExcludedFromUnreadCount(TUIChatConfigs.getConfigs().getGeneralConfig().isExcludedFromUnreadCount());
         v2TIMMessage.setExcludedFromLastMessage(TUIChatConfigs.getConfigs().getGeneralConfig().isExcludedFromLastMessage());
 
+        // This feature in C2C message is not available in version 6.2
+        if (!isGroup) {
+            message.setNeedReadReceipt(false);
+        }
+
         String msgID = V2TIMManager.getMessageManager().sendMessage(v2TIMMessage, isGroup ? null : userID, isGroup ? groupID : null,
                 V2TIMMessage.V2TIM_PRIORITY_DEFAULT, false, v2TIMOfflinePushInfo, new V2TIMSendCallback<V2TIMMessage>() {
                     @Override
@@ -238,46 +243,17 @@ public class ChatProvider {
         return msgID;
     }
 
-    public String sendMessage(TUIMessageBean message, String groupType, OfflinePushInfo pushInfo,
-                              String receiver, boolean isGroup, boolean onlineUserOnly, IUIKitCallback<TUIMessageBean> callBack) {
-        final V2TIMMessage v2TIMMessage = message.getV2TIMMessage();
-        v2TIMMessage.setExcludedFromUnreadCount(TUIChatConfigs.getConfigs().getGeneralConfig().isExcludedFromUnreadCount());
-        v2TIMMessage.setExcludedFromLastMessage(TUIChatConfigs.getConfigs().getGeneralConfig().isExcludedFromLastMessage());
-
-        TUIChatLog.i(TAG, "sendMessage to " + receiver);
-        V2TIMOfflinePushInfo v2TIMOfflinePushInfo = OfflinePushInfoUtils.convertOfflinePushInfoToV2PushInfo(pushInfo);
-        String msgID = V2TIMManager.getMessageManager().sendMessage(message.getV2TIMMessage(),
-                isGroup ? null : receiver, isGroup ? receiver : null, V2TIMMessage.V2TIM_PRIORITY_DEFAULT,
-                onlineUserOnly, v2TIMOfflinePushInfo, new V2TIMSendCallback<V2TIMMessage>() {
-
-                    @Override
-                    public void onError(int code, String desc) {
-                        TUIChatLog.v(TAG, "sendMessage fail:" + code + "=" + ErrorMessageConverter.convertIMError(code, desc));
-                        TUIChatUtils.callbackOnError(callBack, TAG, code, desc);
-                    }
-
-                    @Override
-                    public void onSuccess(V2TIMMessage v2TIMMessage) {
-                        TUIChatLog.v(TAG, "sendMessage onSuccess:" + v2TIMMessage.getMsgID());
-                        message.setStatus(TUIMessageBean.MSG_STATUS_SEND_SUCCESS);
-                        message.setV2TIMMessage(v2TIMMessage);
-                        TUIChatUtils.callbackOnSuccess(callBack, message);
-                    }
-
-                    @Override
-                    public void onProgress(int progress) {
-
-                    }
-                });
-        return msgID;
-    }
-
     public String sendMessage(TUIMessageBean messageInfo, boolean isGroup, String id, OfflinePushInfo offlinePushInfo, IUIKitCallback<TUIMessageBean> callBack) {
         V2TIMMessage forwardMessage = messageInfo.getV2TIMMessage();
         forwardMessage.setExcludedFromUnreadCount(TUIChatConfigs.getConfigs().getGeneralConfig().isExcludedFromUnreadCount());
         forwardMessage.setExcludedFromLastMessage(TUIChatConfigs.getConfigs().getGeneralConfig().isExcludedFromLastMessage());
 
         V2TIMOfflinePushInfo v2TIMOfflinePushInfo = OfflinePushInfoUtils.convertOfflinePushInfoToV2PushInfo(offlinePushInfo);
+
+        // This feature in C2C message is not available in version 6.2
+        if (!isGroup) {
+            messageInfo.setNeedReadReceipt(false);
+        }
         String msgId = V2TIMManager.getMessageManager().sendMessage(forwardMessage, isGroup ? null : id, isGroup ? id : null,
                 V2TIMMessage.V2TIM_PRIORITY_DEFAULT, false, v2TIMOfflinePushInfo, new V2TIMSendCallback<V2TIMMessage>() {
                     @Override
