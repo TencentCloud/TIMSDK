@@ -310,51 +310,7 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
             isReadText.setVisibility(View.GONE);
             unreadAudioText.setVisibility(View.GONE);
         } else {
-            //// 对方已读标识的设置
-            if (TUIChatConfigs.getConfigs().getGeneralConfig().isShowRead()) {
-                if (msg.isSelf() && TUIMessageBean.MSG_STATUS_SEND_SUCCESS == msg.getStatus()) {
-                    if (msg.isGroup()) {
-                        if (!msg.isNeedReadReceipt()) {
-                            isReadText.setVisibility(View.GONE);
-                        } else {
-                            isReadText.setVisibility(View.VISIBLE);
-                            if (msg.isAllRead()) {
-                                isReadText.setText(R.string.has_all_read);
-                            } else if (msg.isUnread()) {
-                                isReadText.setTextColor(isReadText.getResources().getColor(TUIThemeManager.getAttrResId(isReadText.getContext(), R.attr.chat_read_receipt_text_color)));
-                                isReadText.setText(R.string.unread);
-                                isReadText.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        startShowUnread(msg);
-                                    }
-                                });
-                            } else {
-                                long readCount = msg.getReadCount();
-                                if (readCount > 0) {
-                                    isReadText.setText(isReadText.getResources().getString(R.string.someone_has_read, readCount));
-                                    isReadText.setTextColor(isReadText.getResources().getColor(TUIThemeManager.getAttrResId(isReadText.getContext(), R.attr.chat_read_receipt_text_color)));
-                                    isReadText.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            startShowUnread(msg);
-                                        }
-                                    });
-                                }
-                            }
-                        }
-                    } else {
-                        isReadText.setVisibility(View.VISIBLE);
-                        if (msg.isPeerRead()) {
-                            isReadText.setText(R.string.has_read);
-                        } else {
-                            isReadText.setText(R.string.unread);
-                        }
-                    }
-                } else {
-                    isReadText.setVisibility(View.GONE);
-                }
-            }
+            setReadStatus(msg);
 
             //// 音频已读
             unreadAudioText.setVisibility(View.GONE);
@@ -362,6 +318,58 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
         }
         //// 由子类设置指定消息类型的views
         layoutVariableViews(msg, position);
+    }
+
+    private void setReadStatus(TUIMessageBean msg) {
+        if (!TUIChatConfigs.getConfigs().getGeneralConfig().isShowRead()) {
+            return;
+        }
+        if (msg.isSelf() && TUIMessageBean.MSG_STATUS_SEND_SUCCESS == msg.getStatus()) {
+            if (msg.isGroup()) {
+                if (TUIChatConfigs.getConfigs().getGeneralConfig().isNeedReadReceipt()) {
+                    if (!msg.isNeedReadReceipt()) {
+                        isReadText.setVisibility(View.GONE);
+                    } else {
+                        isReadText.setVisibility(View.VISIBLE);
+                        if (msg.isAllRead()) {
+                            isReadText.setText(R.string.has_all_read);
+                        } else if (msg.isUnread()) {
+                            isReadText.setTextColor(isReadText.getResources().getColor(TUIThemeManager.getAttrResId(isReadText.getContext(), R.attr.chat_read_receipt_text_color)));
+                            isReadText.setText(R.string.unread);
+                            isReadText.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    startShowUnread(msg);
+                                }
+                            });
+                        } else {
+                            long readCount = msg.getReadCount();
+                            if (readCount > 0) {
+                                isReadText.setText(isReadText.getResources().getString(R.string.someone_has_read, readCount));
+                                isReadText.setTextColor(isReadText.getResources().getColor(TUIThemeManager.getAttrResId(isReadText.getContext(), R.attr.chat_read_receipt_text_color)));
+                                isReadText.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        startShowUnread(msg);
+                                    }
+                                });
+                            }
+                        }
+                    }
+                } else {
+                    isReadText.setVisibility(View.GONE);
+                }
+            } else {
+                isReadText.setVisibility(View.VISIBLE);
+                if (msg.isPeerRead()) {
+                    isReadText.setText(R.string.has_read);
+                } else {
+                    isReadText.setText(R.string.unread);
+                }
+            }
+        } else {
+            isReadText.setVisibility(View.GONE);
+        }
     }
 
     public abstract void layoutVariableViews(final TUIMessageBean msg, final int position);
