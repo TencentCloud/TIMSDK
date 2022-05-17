@@ -259,7 +259,9 @@ typedef void(^LoadMsgSucceedBlock)(BOOL isOlderNoMoreMsg, BOOL isNewerNoMoreMsg,
         }
         
         // 回调
-        self.loadMsgSucceedBlock(self.isOlderNoMoreMsg, self.isNewerNoMoreMsg, self.isFirstLoad, uiMsgs);
+        if (self.loadMsgSucceedBlock) {
+            self.loadMsgSucceedBlock(self.isOlderNoMoreMsg, self.isNewerNoMoreMsg, self.isFirstLoad, uiMsgs);
+        }
         
         self.isLoadingData = NO;
         self.isFirstLoad = NO;

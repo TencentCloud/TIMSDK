@@ -246,13 +246,15 @@
         else if(data.status == Msg_Status_Succ) {
             [_indicator stopAnimating];
             // 发送成功，说明 indicator 和 error 已不会显示在 label，可以开始显示已读回执 label
-            if (self.messageData.direction == MsgDirectionOutgoing
-                && self.messageData.innerMessage.needReadReceipt
-                && (self.messageData.innerMessage.userID || self.messageData.innerMessage.groupID)
-                && ![self.messageData isKindOfClass:TUISystemMessageCellData.class]
-               ) {
-                // 群聊和单聊，默认都要显示
-                _readReceiptLabel.hidden = NO;
+            if (self.messageData.direction == MsgDirectionOutgoing &&
+                ![self.messageData isKindOfClass:TUISystemMessageCellData.class]) {
+                if (self.messageData.innerMessage.groupID.length > 0) {
+                    // Only group message's read label is controlled by needReadReceipt.
+                    _readReceiptLabel.hidden = !self.messageData.innerMessage.needReadReceipt;
+                } else if (self.messageData.innerMessage.userID.length > 0) {
+                    // C2C message's read label is controlled by showReadReceipt.
+                    _readReceiptLabel.hidden = !self.messageData.showReadReceipt;
+                }
             }
         }
         else if (data.status == Msg_Status_Sending) {
