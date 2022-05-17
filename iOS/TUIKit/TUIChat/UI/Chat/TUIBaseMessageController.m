@@ -206,7 +206,7 @@ TUIMessageDataProviderDataSource>
 
 - (void)sendUIMessage:(TUIMessageCellData *)cellData {
     @weakify(self);
-    cellData.innerMessage.needReadReceipt = self.isMsgNeedReadReceipt;
+    cellData.innerMessage.needReadReceipt = self.conversationData.groupID.length > 0 ? self.isMsgNeedReadReceipt : NO;
     [self.messageDataProvider sendUIMsg:cellData
                          toConversation:self.conversationData
                           willSendBlock:^(BOOL isReSend, TUIMessageCellData * _Nonnull dateUIMsg) {
