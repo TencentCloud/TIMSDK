@@ -1090,4 +1090,9 @@ namespace com.tencent.imsdk.unity.enums
         /// </summary>
         kTIMFriendshipRelationType_BothFriend,
     };
+
+    public enum TIMGroupMessageReadMembersFilter {
+        TIM_GROUP_MESSAGE_READ_MEMBERS_FILTER_READ   = 0,  // 群消息已读成员列表
+        TIM_GROUP_MESSAGE_READ_MEMBERS_FILTER_UNREAD = 1,  // 群消息未读成员列表
+    };
 }

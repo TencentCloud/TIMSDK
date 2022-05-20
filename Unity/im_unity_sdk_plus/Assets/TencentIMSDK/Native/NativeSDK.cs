@@ -349,6 +349,15 @@ namespace com.tencent.imsdk.unity.native
         [DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void TIMSetMsgUpdateCallback(TIMMsgUpdateCallback cb, IntPtr user_data);
 
+        [DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int TIMMsgSendMessageReadReceipts(IntPtr json_msg_array, CommonValueCallback cb, IntPtr user_data);
+
+        [DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int TIMMsgGetMessageReadReceipts(IntPtr json_msg_array, CommonValueCallback cb, IntPtr user_data);
+
+        [DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int TIMMsgGetGroupMessageReadMemberList(IntPtr json_msg, TIMGroupMessageReadMembersFilter filter, ulong next_seq, int count, TIMMsgGroupMessageReadMemberListCallback cb, IntPtr user_data);
+
 
 
 
@@ -420,8 +429,8 @@ namespace com.tencent.imsdk.unity.native
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void CommonCallback(int code, IntPtr user_data);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void TIMMsgGroupMessageReadMemberListCallback(IntPtr json_group_member_array, ulong next_seq, bool is_finished, IntPtr user_data);
 
-
-       
     }
 }
