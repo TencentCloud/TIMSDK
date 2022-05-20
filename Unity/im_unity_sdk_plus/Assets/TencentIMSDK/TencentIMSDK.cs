@@ -48,6 +48,8 @@ namespace com.tencent.imsdk.unity
         private static Delegate FriendBlackListDeletedCallbackStore;
         private static LogCallback LogCallbackStore;
         private static Delegate MsgUpdateCallbackStore;
+        private static Delegate MsgGroupMessageReadMemberListCallbackStore;
+        private static HashSet<string> IsStringCallbackStore = new HashSet<string>();
 
 
 
@@ -188,16 +190,16 @@ namespace com.tencent.imsdk.unity
         /// <param name="config">配置</param>
         /// <param name="callback">异步回调</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult SetConfig(SetConfig config, ValueCallback<types.SetConfig> callback)
+        public static TIMResult SetConfig(SetConfig config, ValueCallback<SetConfig> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
             string user_data = fn_name + "_" + Utils.getRandomStr();
 
             ValuecallbackStore.Add(user_data, callback);
-            ValuecallbackDeleStore.Add(user_data, threadOperation<types.SetConfig>);
+            ValuecallbackDeleStore.Add(user_data, threadOperation<SetConfig>);
 
-            int res = IMNativeSDK.TIMSetConfig(Utils.string2intptr(Utils.ToJson(config)), ValueCallbackInstance<types.SetConfig>, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMSetConfig(Utils.string2intptr(Utils.ToJson(config)), ValueCallbackInstance<SetConfig>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -796,9 +798,7 @@ namespace com.tencent.imsdk.unity
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
             string user_data = fn_name + "_" + Utils.getRandomStr();
-
             ValuecallbackStore.Add(user_data, callback);
-
             int timSucc = IMNativeSDK.TIMMsgGetMsgList(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(get_message_list_param)), StringValueCallbackInstance, Utils.string2intptr(user_data));
 
             return (TIMResult)timSucc;
@@ -1257,7 +1257,6 @@ namespace com.tencent.imsdk.unity
             ValuecallbackStore.Add(user_data, callback);
 
             int timSucc = IMNativeSDK.TIMMsgSetLocalCustomData(Utils.string2intptr(Utils.ToJson(message)), StringValueCallbackInstance, Utils.string2intptr(user_data));
-
             return (TIMResult)timSucc;
         }
 
@@ -2576,6 +2575,67 @@ namespace com.tencent.imsdk.unity
             return (TIMResult)res;
         }
 
+        /// <summary>
+        /// 获取消息已读回执
+        /// </summary>
+        /// <param name="msg_array">消息列表</param>
+        /// <param name="callback">异步回调</param>
+        /// <returns><see cref="TIMResult"/></returns>
+        public static TIMResult MsgGetMessageReadReceipts(List<Message> msg_array, ValueCallback<List<MessageReceipt>> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+            ValuecallbackDeleStore.Add(user_data, threadOperation<List<MessageReceipt>>);
+
+            int res = IMNativeSDK.TIMMsgGetMessageReadReceipts(Utils.string2intptr(Utils.ToJson(msg_array)), ValueCallbackInstance<List<MessageReceipt>>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult MsgGetMessageReadReceipts(List<Message> msg_array, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMMsgGetMessageReadReceipts(Utils.string2intptr(Utils.ToJson(msg_array)), StringValueCallbackInstance, Utils.string2intptr(user_data));
+            return (TIMResult)res;
+        }
+
+        /// <summary>
+        /// 发送消息已读回执
+        /// </summary>
+        /// <param name="msg_array">消息列表</param>
+        /// <param name="callback">异步回调</param>
+        /// <returns><see cref="TIMResult"/></returns>
+        public static TIMResult MsgSendMessageReadReceipts(List<Message> msg_array, NullValueCallback callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+            ValuecallbackDeleStore.Add(user_data, threadOperation<object>);
+
+            int res = IMNativeSDK.TIMMsgSendMessageReadReceipts(Utils.string2intptr(Utils.ToJson(msg_array)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+            return (TIMResult)res;
+        }
+        public static TIMResult MsgSendMessageReadReceipts(List<Message> msg_array, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMMsgSendMessageReadReceipts(Utils.string2intptr(Utils.ToJson(msg_array)), StringValueCallbackInstance, Utils.string2intptr(user_data));
+            return (TIMResult)res;
+        }
+
 
 
 
@@ -2597,6 +2657,7 @@ namespace com.tencent.imsdk.unity
             if (callback != null) {
                 RecvNewMsgCallbackStore = callback;
             } else {
+                IsStringCallbackStore.Add(user_data);
                 RecvNewMsgCallbackStore = stringCallback;
             }
 
@@ -2631,6 +2692,7 @@ namespace com.tencent.imsdk.unity
                 if (callback != null) {
                     MsgReadedReceiptCallbackStore = callback;
                 } else{
+                    IsStringCallbackStore.Add(user_data);
                     MsgReadedReceiptCallbackStore = stringCallback;
                 }
 
@@ -2658,6 +2720,7 @@ namespace com.tencent.imsdk.unity
                 if (callback != null) {
                     MsgRevokeCallbackStore = callback;
                 } else{
+                    IsStringCallbackStore.Add(user_data);
                     MsgRevokeCallbackStore = stringCallback;
                 }
 
@@ -2685,6 +2748,7 @@ namespace com.tencent.imsdk.unity
                 if (callback != null) {
                     MsgElemUploadProgressCallbackStore = callback;
                 } else{
+                    IsStringCallbackStore.Add(user_data);
                     MsgElemUploadProgressCallbackStore = stringCallback;
                 }
 
@@ -2711,6 +2775,7 @@ namespace com.tencent.imsdk.unity
                 if (callback != null) {
                     GroupTipsEventCallbackStore = callback;
                 } else{
+                    IsStringCallbackStore.Add(user_data);
                     GroupTipsEventCallbackStore = stringCallback;
                 }
 
@@ -2737,6 +2802,7 @@ namespace com.tencent.imsdk.unity
                 if (callback != null) {
                     GroupAttributeChangedCallbackStore = callback;
                 } else{
+                    IsStringCallbackStore.Add(user_data);
                     GroupAttributeChangedCallbackStore = stringCallback;
                 }
 
@@ -2774,6 +2840,7 @@ namespace com.tencent.imsdk.unity
                 if (callback != null) {
                     ConvEventCallbackStore = callback;
                 } else{
+                    IsStringCallbackStore.Add(user_data);
                     ConvEventCallbackStore = stringCallback;
                 }
 
@@ -2913,6 +2980,7 @@ namespace com.tencent.imsdk.unity
                 if (callback != null) {
                     OnAddFriendCallbackStore = callback;
                 } else{
+                    IsStringCallbackStore.Add(user_data);
                     OnAddFriendCallbackStore = stringCallback;
                 }
 
@@ -2941,6 +3009,7 @@ namespace com.tencent.imsdk.unity
                 if (callback != null) {
                     OnDeleteFriendCallbackStore = callback;
                 } else{
+                    IsStringCallbackStore.Add(user_data);
                     OnDeleteFriendCallbackStore = stringCallback;
                 }
 
@@ -2970,6 +3039,7 @@ namespace com.tencent.imsdk.unity
                 if (callback != null) {
                     UpdateFriendProfileCallbackStore = callback;
                 } else{
+                    IsStringCallbackStore.Add(user_data);
                     UpdateFriendProfileCallbackStore = stringCallback;
                 }
 
@@ -2998,6 +3068,7 @@ namespace com.tencent.imsdk.unity
                 if (callback != null) {
                     FriendAddRequestCallbackStore = callback;
                 } else{
+                    IsStringCallbackStore.Add(user_data);
                     FriendAddRequestCallbackStore = stringCallback;
                 }
 
@@ -3029,6 +3100,7 @@ namespace com.tencent.imsdk.unity
                 if (callback != null) {
                     FriendApplicationListDeletedCallbackStore = callback;
                 } else{
+                    IsStringCallbackStore.Add(user_data);
                     FriendApplicationListDeletedCallbackStore = stringCallback;
                 }
 
@@ -3083,6 +3155,7 @@ namespace com.tencent.imsdk.unity
                 if (callback != null) {
                     FriendBlackListAddedCallbackStore = callback;
                 } else{
+                    IsStringCallbackStore.Add(user_data);
                     FriendBlackListAddedCallbackStore = stringCallback;
                 }
                 IMNativeSDK.TIMSetFriendBlackListAddedCallback(TIMFriendBlackListAddedCallbackInstance, Utils.string2intptr(user_data));
@@ -3112,6 +3185,7 @@ namespace com.tencent.imsdk.unity
                 if (callback != null) {
                     FriendBlackListDeletedCallbackStore = callback;
                 } else{
+                    IsStringCallbackStore.Add(user_data);
                     FriendBlackListDeletedCallbackStore = stringCallback;
                 }
                 IMNativeSDK.TIMSetFriendBlackListDeletedCallback(TIMFriendBlackListDeletedCallbackInstance, Utils.string2intptr(user_data));
@@ -3170,6 +3244,7 @@ namespace com.tencent.imsdk.unity
                 if (callback != null) {
                     MsgUpdateCallbackStore = callback;
                 } else{
+                    IsStringCallbackStore.Add(user_data);
                     MsgUpdateCallbackStore = stringCallback;
                 }
 
@@ -3178,6 +3253,40 @@ namespace com.tencent.imsdk.unity
             else
             {
                 IMNativeSDK.TIMSetMsgUpdateCallback(null, Utils.string2intptr(""));
+            }
+
+        }
+
+        /// <summary>
+        /// 获取群消息已读群成员列表
+        /// </summary>
+        /// <param name="message">单条群消息</param>
+        /// <param name="filter">指定拉取已读或未读群成员列表</param>
+        /// <param name="next_seq">分页拉取的游标，第一次默认取传 0，后续分页拉取时，传上一次分页拉取成功回调里的 next_seq</param>
+        /// <param name="count">分页拉取的个数，最大支持 100 个。</param>
+        /// <param name="callback">回调 MsgGroupMessageReadMemberListCallback</param>
+        /// <param name="stringCallback">string 类型回调 MsgGroupMessageReadMemberListStringCallback</param>
+        public static TIMResult GetMsgGroupMessageReadMemberList(Message message, TIMGroupMessageReadMembersFilter filter,  ulong next_seq,int count, MsgGroupMessageReadMemberListCallback callback = null, MsgGroupMessageReadMemberListStringCallback stringCallback = null)
+        {
+            if (callback != null || stringCallback != null)
+            {
+                string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+                string user_data = fn_name + "_" + Utils.getRandomStr();
+                if (callback != null) {
+                    MsgGroupMessageReadMemberListCallbackStore = callback;
+                } else{
+                    IsStringCallbackStore.Add(user_data);
+                    MsgGroupMessageReadMemberListCallbackStore = stringCallback;
+                }
+
+                int res = IMNativeSDK.TIMMsgGetGroupMessageReadMemberList(Utils.string2intptr(Utils.ToJson(message)), filter, next_seq, count, TIMMsgGroupMessageReadMemberListCallbackInstance, Utils.string2intptr(user_data));
+                return (TIMResult)res;
+            }
+            else
+            {
+                int res = IMNativeSDK.TIMMsgGetGroupMessageReadMemberList(Utils.string2intptr(""), filter, next_seq, count, null, Utils.string2intptr(""));
+                return (TIMResult)res;
             }
 
         }
@@ -3441,6 +3550,17 @@ namespace com.tencent.imsdk.unity
                             }
                         }
                         break;
+                    case "TIMMsgGroupMessageReadMemberListCallback":
+
+                        if (MsgGroupMessageReadMemberListCallbackStore != null)
+                        {
+                            if (typeof(T) == typeof(object)) {
+                                MsgGroupMessageReadMemberListCallbackStore.DynamicInvoke(Utils.FromJson<List<GroupMemberInfo>>(data.data), data.next_seq, data.is_finished, data.user_data);
+                            } else {
+                                MsgGroupMessageReadMemberListCallbackStore.DynamicInvoke(data.data, data.next_seq, data.is_finished, data.user_data);
+                            }
+                        }
+                        break;
 
                 }
             }
@@ -3461,7 +3581,7 @@ namespace com.tencent.imsdk.unity
 
                 string user_data_string = Utils.intptr2string(user_data);
 
-                if (RecvNewMsgCallbackStore.Method.Name == typeof(RecvNewMsgCallback).Name) {
+                if (!IsStringCallbackStore.Contains(user_data_string)) {
                     mainSyncContext.Send(threadOperation<object>, new CallbackConvert(0, "TIMRecvNewMsgCallback", json_msg_array_string, user_data_string, ""));
                 } else {
                     mainSyncContext.Send(threadOperation<string>, new CallbackConvert(0, "TIMRecvNewMsgCallback", json_msg_array_string, user_data_string, ""));
@@ -3484,7 +3604,7 @@ namespace com.tencent.imsdk.unity
             string user_data_string = Utils.intptr2string(user_data);
 
 
-            if (MsgReadedReceiptCallbackStore.Method.Name == typeof(MsgReadedReceiptCallback).Name) {
+            if (!IsStringCallbackStore.Contains(user_data_string)) {
                 mainSyncContext.Send(threadOperation<object>, new CallbackConvert(0, "TIMMsgReadedReceiptCallback", json_msg_readed_receipt_array_string, user_data_string, ""));
             } else {
                 mainSyncContext.Send(threadOperation<string>, new CallbackConvert(0, "TIMMsgReadedReceiptCallback", json_msg_readed_receipt_array_string, user_data_string, ""));
@@ -3498,7 +3618,7 @@ namespace com.tencent.imsdk.unity
             string json_msg_locator_array_string = Utils.intptr2string(json_msg_locator_array);
 
             string user_data_string = Utils.intptr2string(user_data);
-            if (MsgRevokeCallbackStore.Method.Name == typeof(MsgRevokeCallback).Name) {
+            if (!IsStringCallbackStore.Contains(user_data_string)) {
                 mainSyncContext.Send(threadOperation<object>, new CallbackConvert(0, "TIMMsgRevokeCallback", json_msg_locator_array_string, user_data_string, ""));
             } else {
                 mainSyncContext.Send(threadOperation<string>, new CallbackConvert(0, "TIMMsgRevokeCallback", json_msg_locator_array_string, user_data_string, ""));
@@ -3515,7 +3635,7 @@ namespace com.tencent.imsdk.unity
 
 
 
-            if (MsgElemUploadProgressCallbackStore.Method.Name == typeof(MsgElemUploadProgressCallback).Name) {
+            if (!IsStringCallbackStore.Contains(user_data_string)) {
                 mainSyncContext.Send(threadOperation<object>, new CallbackConvert(0, "TIMMsgElemUploadProgressCallback", json_msg_string, user_data_string, "", index, cur_size, total_size));
             } else {
                 mainSyncContext.Send(threadOperation<string>, new CallbackConvert(0, "TIMMsgElemUploadProgressCallback", json_msg_string, user_data_string, "", index, cur_size, total_size));
@@ -3530,7 +3650,7 @@ namespace com.tencent.imsdk.unity
 
             string user_data_string = Utils.intptr2string(user_data);
 
-            if (GroupTipsEventCallbackStore.Method.Name == typeof(GroupTipsEventCallback).Name) {
+            if (!IsStringCallbackStore.Contains(user_data_string)) {
                 mainSyncContext.Send(threadOperation<object>, new CallbackConvert(0, "TIMGroupTipsEventCallback", json_group_tip_array_string, user_data_string, ""));
             } else {
                 mainSyncContext.Send(threadOperation<string>, new CallbackConvert(0, "TIMGroupTipsEventCallback", json_group_tip_array_string, user_data_string, ""));
@@ -3551,7 +3671,7 @@ namespace com.tencent.imsdk.unity
             string user_data_string = Utils.intptr2string(user_data);
 
 
-            if (GroupAttributeChangedCallbackStore.Method.Name == typeof(GroupAttributeChangedCallback).Name) {
+            if (!IsStringCallbackStore.Contains(user_data_string)) {
                 mainSyncContext.Send(threadOperation<object>, new CallbackConvert(0, "TIMGroupAttributeChangedCallback", json_group_attibute_array_string, user_data_string, "", 0, 0, 0, group_id_string));
             } else {
                 mainSyncContext.Send(threadOperation<string>, new CallbackConvert(0, "TIMGroupAttributeChangedCallback", json_group_attibute_array_string, user_data_string, "", 0, 0, 0, group_id_string));
@@ -3567,7 +3687,7 @@ namespace com.tencent.imsdk.unity
             string user_data_string = Utils.intptr2string(user_data);
 
 
-            if (ConvEventCallbackStore.Method.Name == typeof(ConvEventCallback).Name) {
+            if (!IsStringCallbackStore.Contains(user_data_string)) {
                 mainSyncContext.Send(threadOperation<object>, new CallbackConvert(0, "TIMConvEventCallback", json_conv_array_string, user_data_string, "", 0, 0, 0, "", conv_event));
             } else {
                 mainSyncContext.Send(threadOperation<string>, new CallbackConvert(0, "TIMConvEventCallback", json_conv_array_string, user_data_string, "", 0, 0, 0, "", conv_event));
@@ -3639,7 +3759,7 @@ namespace com.tencent.imsdk.unity
             string json_identifier_array_string = Utils.intptr2string(json_identifier_array);
 
 
-            if (OnAddFriendCallbackStore.Method.Name == typeof(OnAddFriendCallback).Name) {
+            if (!IsStringCallbackStore.Contains(user_data_string)) {
                 mainSyncContext.Send(threadOperation<object>, new CallbackConvert(0, "TIMOnAddFriendCallback", json_identifier_array_string, user_data_string));
             } else {
                 mainSyncContext.Send(threadOperation<string>, new CallbackConvert(0, "TIMOnAddFriendCallback", json_identifier_array_string, user_data_string));
@@ -3656,7 +3776,7 @@ namespace com.tencent.imsdk.unity
             string json_identifier_array_string = Utils.intptr2string(json_identifier_array);
 
 
-            if (OnDeleteFriendCallbackStore.Method.Name == typeof(OnDeleteFriendCallback).Name) {
+            if (!IsStringCallbackStore.Contains(user_data_string)) {
                 mainSyncContext.Send(threadOperation<object>, new CallbackConvert(0, "TIMOnDeleteFriendCallback", json_identifier_array_string, user_data_string));
             } else {
                 mainSyncContext.Send(threadOperation<string>, new CallbackConvert(0, "TIMOnDeleteFriendCallback", json_identifier_array_string, user_data_string));
@@ -3673,7 +3793,7 @@ namespace com.tencent.imsdk.unity
             string json_friend_profile_update_array_string = Utils.intptr2string(json_friend_profile_update_array);
 
 
-            if (UpdateFriendProfileCallbackStore.Method.Name == typeof(UpdateFriendProfileCallback).Name) {
+            if (!IsStringCallbackStore.Contains(user_data_string)) {
                 mainSyncContext.Send(threadOperation<object>, new CallbackConvert(0, "TIMUpdateFriendProfileCallback", json_friend_profile_update_array_string, user_data_string));
             } else {
                 mainSyncContext.Send(threadOperation<string>, new CallbackConvert(0, "TIMUpdateFriendProfileCallback", json_friend_profile_update_array_string, user_data_string));
@@ -3690,7 +3810,7 @@ namespace com.tencent.imsdk.unity
             string json_friend_add_request_pendency_array_string = Utils.intptr2string(json_friend_add_request_pendency_array);
 
 
-            if (FriendAddRequestCallbackStore.Method.Name == typeof(FriendAddRequestCallback).Name) {
+            if (!IsStringCallbackStore.Contains(user_data_string)) {
                 mainSyncContext.Send(threadOperation<object>, new CallbackConvert(0, "TIMFriendAddRequestCallback", json_friend_add_request_pendency_array_string, user_data_string));
             } else {
                 mainSyncContext.Send(threadOperation<string>, new CallbackConvert(0, "TIMFriendAddRequestCallback", json_friend_add_request_pendency_array_string, user_data_string));
@@ -3707,7 +3827,7 @@ namespace com.tencent.imsdk.unity
             string json_identifier_array_string = Utils.intptr2string(json_identifier_array);
 
 
-            if (FriendApplicationListDeletedCallbackStore.Method.Name == typeof(FriendApplicationListDeletedCallback).Name) {
+            if (!IsStringCallbackStore.Contains(user_data_string)) {
                 mainSyncContext.Send(threadOperation<object>, new CallbackConvert(0, "TIMFriendApplicationListDeletedCallback", json_identifier_array_string, user_data_string));
             } else {
                 mainSyncContext.Send(threadOperation<string>, new CallbackConvert(0, "TIMFriendApplicationListDeletedCallback", json_identifier_array_string, user_data_string));
@@ -3737,7 +3857,7 @@ namespace com.tencent.imsdk.unity
 
 
 
-            if (FriendBlackListAddedCallbackStore.Method.Name == typeof(FriendBlackListAddedCallback).Name) {
+            if (!IsStringCallbackStore.Contains(user_data_string)) {
                 mainSyncContext.Send(threadOperation<object>, new CallbackConvert(0, "TIMFriendBlackListAddedCallback", json_friend_black_added_array_string, user_data_string));
             } else {
                 mainSyncContext.Send(threadOperation<string>, new CallbackConvert(0, "TIMFriendBlackListAddedCallback", json_friend_black_added_array_string, user_data_string));
@@ -3755,7 +3875,7 @@ namespace com.tencent.imsdk.unity
             string json_identifier_array_string = Utils.intptr2string(json_identifier_array);
 
 
-            if (FriendBlackListDeletedCallbackStore.Method.Name == typeof(FriendBlackListDeletedCallback).Name) {
+            if (!IsStringCallbackStore.Contains(user_data_string)) {
                 mainSyncContext.Send(threadOperation<object>, new CallbackConvert(0, "TIMFriendBlackListDeletedCallback", json_identifier_array_string, user_data_string));
             } else {
                 mainSyncContext.Send(threadOperation<string>, new CallbackConvert(0, "TIMFriendBlackListDeletedCallback", json_identifier_array_string, user_data_string));
@@ -3793,10 +3913,26 @@ namespace com.tencent.imsdk.unity
             string json_msg_array_string = Utils.intptr2string(json_msg_array);
 
 
-            if (MsgUpdateCallbackStore.Method.Name == typeof(MsgUpdateCallback).Name) {
+            if (!IsStringCallbackStore.Contains(user_data_string)) {
                 mainSyncContext.Send(threadOperation<object>, new CallbackConvert(0, "TIMMsgUpdateCallback", json_msg_array_string, user_data_string));
             } else {
                 mainSyncContext.Send(threadOperation<string>, new CallbackConvert(0, "TIMMsgUpdateCallback", json_msg_array_string, user_data_string));
+            }
+
+
+        }
+
+        [MonoPInvokeCallback(typeof(IMNativeSDK.TIMMsgGroupMessageReadMemberListCallback))]
+        public static void TIMMsgGroupMessageReadMemberListCallbackInstance(IntPtr json_group_member_array, ulong next_seq, bool is_finished, IntPtr user_data)
+        {
+            string user_data_string = Utils.intptr2string(user_data);
+
+            string json_group_member_array_string = Utils.intptr2string(json_group_member_array);
+
+            if (!IsStringCallbackStore.Contains(user_data_string)) {
+                mainSyncContext.Send(threadOperation<object>, new CallbackConvert(0, "TIMMsgGroupMessageReadMemberListCallback", json_group_member_array_string, user_data_string, "", 0, 0, 0, "", 0, next_seq, is_finished));
+            } else {
+                mainSyncContext.Send(threadOperation<string>, new CallbackConvert(0, "TIMMsgGroupMessageReadMemberListCallback", json_group_member_array_string, user_data_string, "", 0, 0, 0, "", 0, next_seq, is_finished));
             }
 
 

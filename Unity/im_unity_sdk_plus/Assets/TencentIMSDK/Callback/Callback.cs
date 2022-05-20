@@ -141,6 +141,14 @@ namespace com.tencent.imsdk.unity.callback
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void MsgUpdateCallback(List<Message> message_list, string user_data);
 
+    /// <summary>
+    /// 获取群消息已读群成员列表回调
+    /// </summary>
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate void MsgGroupMessageReadMemberListCallback(List<GroupMemberInfo> json_group_member_array, ulong next_seq, bool is_finished, string user_data);
+
+    ///
+
     /// String 类型回调
     /// <summary>
     /// 新消息回调
@@ -231,5 +239,11 @@ namespace com.tencent.imsdk.unity.callback
     /// </summary>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void MsgUpdateStringCallback(string message_list, string user_data);
+
+    /// <summary>
+    /// 获取群消息已读群成员列表回调
+    /// </summary>
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate void MsgGroupMessageReadMemberListStringCallback(string json_group_member_array, ulong next_seq, bool is_finished, string user_data);
 
 }
