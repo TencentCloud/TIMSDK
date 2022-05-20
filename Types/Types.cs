@@ -17,6 +17,8 @@ namespace com.tencent.imsdk.unity.types
         public string sdk_config_config_file_path = System.IO.Directory.GetCurrentDirectory() + "/.TIM-Config";
         /// <value>只写，SDK日志本地路径</value>
         public string sdk_config_log_file_path = System.IO.Directory.GetCurrentDirectory() + "/.TIM-Log";
+        /// <value> uint64, 只写(选填), 配置Android平台的Java虚拟机指针</value>
+        public ulong? sdk_config_java_vm;
 
     }
 
@@ -87,27 +89,37 @@ namespace com.tencent.imsdk.unity.types
         /// <value>读写(选填),       消息所属会话ID</value>
         public string message_conv_id ;
         /// <value>读写(选填), 消息所属会话类型</value>
-        public TIMConvType message_conv_type ;
+        public TIMConvType? message_conv_type ;
         /// <value>读写(选填),       消息的发送者</value>
         public string message_sender ;
         /// <value>读写(选填), 消息优先级</value>
-        public TIMMsgPriority message_priority ;
+        public TIMMsgPriority? message_priority ;
         /// <value>读写(选填),       客户端时间</value>
-        public ulong message_client_time ;
+        public ulong? message_client_time ;
         /// <value>读写(选填),       服务端时间</value>
-        public ulong message_server_time ;
+        public ulong? message_server_time ;
         /// <value>读写(选填),       消息是否来自自己</value>
-        public bool message_is_from_self ;
+        public bool? message_is_from_self ;
         /// <value>读写(选填), 发送消息的平台</value>
-        public TIMPlatform message_platform ;
+        public TIMPlatform? message_platform ;
         /// <value>读写(选填),       消息是否已读</value>
-        public bool message_is_read ;
+        public bool? message_is_read ;
         /// <value>读写(选填),       消息是否是在线消息，false表示普通消息,true表示阅后即焚消息，默认为false</value>
-        public bool message_is_online_msg ;
+        public bool? message_is_online_msg ;
         /// <value>只读,            消息是否被会话对方已读</value>
-        public bool message_is_peer_read ;
+        public bool? message_is_peer_read ;
+        /// <value>读写(选填),    消息是否需要已读回执（6.1 以上版本有效，需要您购买旗舰版套餐），群消息在使用该功能之前，需要先到 IM 控制台设置已读回执支持的群类型</value>
+        public bool? message_need_read_receipt ;
+        /// <value>只读,         是否已经发送了已读回执（只有Group 消息有效）</value>
+        public bool? message_has_sent_receipt ;
+        /// <value>只读,         注意：这个字段是内部字段，不推荐使用，推荐调用 TIMMsgGetMessageReadReceipts 获取群消息已读回执</value>
+        public int? message_group_receipt_read_count ;
+        /// <value>只读,         注意：这个字段是内部字段，不推荐使用，推荐调用 TIMMsgGetMessageReadReceipts 获取群消息已读回执</value>
+        public int? message_group_receipt_unread_count ;
+        /// <value>只读，注意：这个字段是内部字段，不推荐使用</value>
+        public ulong? message_version;
         /// <value>读写(选填), 消息当前状态</value>
-        public TIMMsgStatus message_status ;
+        public TIMMsgStatus? message_status ;
         /// <value>只读,       消息的唯一标识，推荐使用 kTIMMsgMsgId</value>
         public ulong message_unique_id ;
 
@@ -118,16 +130,16 @@ namespace com.tencent.imsdk.unity.types
         /// <value>只读,       消息序列</value>
         public ulong message_seq ;
         /// <value>读写(选填), 自定义整数值字段（本地保存，不会发送到对端，程序卸载重装后失效）</value>
-        public int message_custom_int ;
+        public int? message_custom_int ;
         /// <value>读写(选填), 自定义数据字段（本地保存，不会发送到对端，程序卸载重装后失效）</value>
         public string message_custom_str ;
         /// <value>读写(选填), 消息自定义数据（云端保存，会发送到对端，程序卸载重装后还能拉取到）</value>
         public string message_cloud_custom_str ;
         /// <value>读写(选填),  消息是否不计入未读计数：默认为 NO，表明需要计入未读计数，设置为 YES，表明不需要计入未读计数</value>
-        public bool message_is_excluded_from_unread_count ;
+        public bool? message_is_excluded_from_unread_count ;
 
         /// <value>读写(选填),  是否是转发消息</value>
-        public bool message_is_forward_message ;
+        public bool? message_is_forward_message ;
 
         /// <value>读写(选填), 群消息中被 @ 的用户 UserID 列表（即该消息都 @ 了哪些人），如果需要 @ALL ，请传入 kImSDK_MesssageAtALL 字段</value>
         public List<string> message_group_at_user_array ;
@@ -135,6 +147,8 @@ namespace com.tencent.imsdk.unity.types
         public UserProfile message_sender_profile ;
         /// <value>读写(选填), 消息发送者在群里面的信息，只有在群会话有效。目前仅能获取字段 kTIMGroupMemberInfoIdentifier、kTIMGroupMemberInfoNameCard 其他的字段建议通过 TIMGroupGetMemberInfoList 接口获取</value>
         public GroupMemberInfo message_sender_group_member_info ;
+        /// <value>只写(选填), 指定群消息接收成员（定向消息）；不支持群 @ 消息设置，不支持社群（Community）和直播群（AVChatRoom）消息设置；该字段设置后，消息会不计入会话未读数。</value>
+        public List<string> message_target_group_member_array ;
         /// <value>读写(选填), 消息的离线推送设置</value>
         public OfflinePushConfig message_offlie_push_config ;
         /// <value>读写 是否作为会话的 lasgMessage，true - 不作为，false - 作为</value>
@@ -183,6 +197,8 @@ namespace com.tencent.imsdk.unity.types
         public string android_offline_push_config_sound ; // 文本消息
         /// <value>读写, 当前消息的通知模式</value>
         public TIMAndroidOfflinePushNotifyMode android_offline_push_config_notify_mode ; // 文本消息
+        /// 读写，离线推送设置 VIVO 手机 （仅对 Android 生效），VIVO 手机离线推送消息分类，0：运营消息，1：系统消息。默认取值为 1 。
+        public int android_offline_push_config_vivo_classification = 1;
         /// <value>读写, OPPO的ChannelID</value>
         public string android_offline_push_config_oppo_channel_id ; // 文本消息
 
@@ -542,9 +558,9 @@ namespace com.tencent.imsdk.unity.types
     {
 
         /// <value>读写,      要查找的消息所属的会话ID</value>
-        public bool message_locator_conv_id ;
+        public string message_locator_conv_id ;
         /// <value>读写,      要查找的消息所属的会话类型</value>
-        public bool message_locator_conv_type ;
+        public TIMConvType message_locator_conv_type ;
         /// <value>读写(必填), 要查找的消息是否是被撤回。true表示被撤回的，false表示未撤回的。默认为false</value>
         public bool message_locator_is_revoked ;
         /// <value>读写(必填), 要查找的消息的时间戳</value>
@@ -567,17 +583,17 @@ namespace com.tencent.imsdk.unity.types
         /// <value>只写(选填), 指定的消息，不允许为null</value>
         public Message msg_getmsglist_param_last_msg ;
         /// <value>只写(选填), 从指定消息往后的消息数</value>
-        public uint msg_getmsglist_param_count ;
+        public uint? msg_getmsglist_param_count;
         /// <value>只写(选填), 是否漫游消息</value>
-        public bool msg_getmsglist_param_is_remble ;
+        public bool? msg_getmsglist_param_is_remble;
         /// <value>只写(选填), 是否向前排序</value>
-        public bool msg_getmsglist_param_is_forward ;
+        public bool? msg_getmsglist_param_is_forward;
         /// <value>只写(选填), 指定的消息的 seq</value>
-        public ulong msg_getmsglist_param_last_msg_seq ;
+        public ulong? msg_getmsglist_param_last_msg_seq;
         /// <value>只写(选填), 开始时间；UTC 时间戳， 单位：秒</value>
-        public ulong msg_getmsglist_param_time_begin ;
+        public ulong? msg_getmsglist_param_time_begin;
         /// <value>只写(选填), 持续时间；单位：秒</value>
-        public ulong msg_getmsglist_param_time_period ;
+        public ulong? msg_getmsglist_param_time_period;
     }
 
 
@@ -589,7 +605,7 @@ namespace com.tencent.imsdk.unity.types
         /// <value>只写(选填), 要删除的消息</value>
         public Message msg_delete_param_msg ;
         /// <value>只写(选填), 是否删除本地/漫游所有消息。true删除漫游消息，false删除本地消息，默认值false</value>
-        public bool msg_delete_param_is_remble ;
+        public bool? msg_delete_param_is_remble ;
     }
 
 
@@ -633,18 +649,18 @@ namespace com.tencent.imsdk.unity.types
         /// <value>只写(选填)，会话 ID</value>
         public string msg_search_param_conv_id ;
         /// <value>只写(选填), 会话类型，如果设置 kTIMConv_Invalid，代表搜索全部会话。否则，代表搜索指定会话。</value>
-        public TIMConvType msg_search_param_conv_type ;
+        public TIMConvType? msg_search_param_conv_type ;
         /// <value>只写(选填), 搜索的起始时间点。默认为0即代表从现在开始搜索。UTC 时间戳，单位：秒</value>
-        public ulong msg_search_param_search_time_position ;
+        public ulong? msg_search_param_search_time_position ;
         /// <value>只写(选填), 从起始时间点开始的过去时间范围，单位秒。默认为0即代表不限制时间范围，传24x60x60代表过去一天。</value>
-        public ulong msg_search_param_search_time_period ;
+        public ulong? msg_search_param_search_time_period ;
 
         /// <value>
         /// 只写(选填), 分页的页号：用于分页展示查找结果，从零开始起步。首次调用：通过参数 pageSize = 10, pageIndex = 0 调用 searchLocalMessage，从结果回调中的 totalCount 可以获知总共有多少条结果。
         /// </value>
-        public uint msg_search_param_page_index ;
+        public uint? msg_search_param_page_index ;
         /// <value>只写(选填), 每页结果数量：用于分页展示查找结果，如不希望分页可将其设置成 0，但如果结果太多，可能会带来性能问题。</value>
-        public uint msg_search_param_page_size ;
+        public uint? msg_search_param_page_size ;
         /// <value>关键字进行 Or 或者 And 进行搜索</value>
         public TIMKeywordListMatchType msg_search_param_keyword_list_match_type ;
         /// <value>按照发送者的 userid 进行搜索</value>
@@ -662,7 +678,7 @@ namespace com.tencent.imsdk.unity.types
         /// <value>只写(选填), 群组ID,不填时创建成功回调会返回一个后台分配的群ID，如果创建社群（Community）需要自定义群组 ID ，那必须以 "@TGS#_" 作为前缀。</value>
         public string create_group_param_group_id ;
         /// <value>只写(选填), 群组类型,默认为Public</value>
-        public TIMGroupType create_group_param_group_type ;
+        public TIMGroupType? create_group_param_group_type ;
         /// <value>只写(选填), 群组初始成员数组</value>
         public List<GroupMemberInfo> create_group_param_group_member_array ;
         /// <value>只写(选填), 群组公告</value>
@@ -672,9 +688,9 @@ namespace com.tencent.imsdk.unity.types
         /// <value>只写(选填), 群组头像URL</value>
         public string create_group_param_face_url ;
         /// <value>只写(选填), 加群选项，默认为Any</value>
-        public TIMGroupAddOption create_group_param_add_option ;
+        public TIMGroupAddOption? create_group_param_add_option ;
         /// <value>只写(选填), 群组最大成员数</value>
-        public uint create_group_param_max_member_num ;
+        public uint? create_group_param_max_member_num ;
         /// <value>只读(选填), 请参考[自定义字段](https://cloud.tencent.com/document/product/269/1502#.E8.87.AA.E5.AE.9A.E4.B9.89.E5.AD.97.E6.AE.B5)</value>
         public List<GroupInfoCustemString> create_group_param_custom_info ;
 
@@ -738,15 +754,15 @@ namespace com.tencent.imsdk.unity.types
         /// <value>只写(选填), 修改群头像URL,     当 modify_flag 包含 kTIMGroupModifyInfoFlag_FaceUrl 时必填,其他情况不用填</value>
         public string group_modify_info_param_face_url ;
         /// <value>只写(选填), 修改加群方式,       当 modify_flag 包含 kTIMGroupModifyInfoFlag_AddOption 时必填,其他情况不用填</value>
-        public TIMGroupAddOption group_modify_info_param_add_option ;
+        public TIMGroupAddOption? group_modify_info_param_add_option ;
         /// <value>只写(选填), 修改群最大成员数,    当 modify_flag 包含 kTIMGroupModifyInfoFlag_MaxMmeberNum 时必填,其他情况不用填</value>
-        public uint group_modify_info_param_max_member_num ;
+        public uint? group_modify_info_param_max_member_num ;
         /// <value>只写(选填), 修改群是否可见,      当 modify_flag 包含 kTIMGroupModifyInfoFlag_Visible 时必填,其他情况不用填</value>
-        public uint group_modify_info_param_visible ;
+        public uint? group_modify_info_param_visible ;
         /// <value>只写(选填), 修改群是否允许被搜索, 当 modify_flag 包含 kTIMGroupModifyInfoFlag_Searchable 时必填,其他情况不用填</value>
-        public uint group_modify_info_param_searchable ;
+        public uint? group_modify_info_param_searchable ;
         /// <value>只写(选填), 修改群是否全体禁言,  当 modify_flag 包含 kTIMGroupModifyInfoFlag_ShutupAll 时必填,其他情况不用填</value>
-        public bool group_modify_info_param_is_shutup_all ;
+        public bool? group_modify_info_param_is_shutup_all ;
         /// <value>只写(选填), 修改群主所有者,     当 modify_flag 包含 kTIMGroupModifyInfoFlag_Owner 时必填,其他情况不用填。此时 modify_flag 不能包含其他值，当修改群主时，同时修改其他信息已无意义</value>
         public string group_modify_info_param_owner ;
         /// <value>只写(选填), 请参考[自定义字段](https://cloud.tencent.com/document/product/269/1502#.E8.87.AA.E5.AE.9A.E4.B9.89.E5.AD.97.E6.AE.B5)</value>
@@ -760,9 +776,9 @@ namespace com.tencent.imsdk.unity.types
         /// <value>只写（选填）, 注册应用到厂商平台或者 TPNS 时获取的 token。使用注意事项：当接入推送 TPNS 通道，需要设置 isTPNSToken 为 true，上报注册 TPNS 获取的 token；当接入推送为厂商通道，需要设置 isTPNSToken 为 false，上报注册厂商获取的 token。</value>
         public string offline_push_token_token ;
         /// <value>只写（选填），IM 控制台证书 ID，接入 TPNS 时不需要填写</value>
-        public int offline_push_token_business_id ;
+        public int? offline_push_token_business_id ;
         /// <value>只写（选填），是否接入配置 TPNS, token 是否是从 TPNS 获取</value>
-        public bool offline_push_token_is_tpns_token ;
+        public bool? offline_push_token_is_tpns_token ;
     }
 
     [JsonObject(MemberSerialization.OptOut)]
@@ -777,7 +793,7 @@ namespace com.tencent.imsdk.unity.types
         /// <value>只写(选填), 获取群成员信息的选项</value>
         public GroupMemberGetInfoOption group_get_members_info_list_param_option ;
         /// <value>只写(选填), 分页拉取标志,第一次拉取填0,回调成功如果不为零,需要分页,调用接口传入再次拉取,直至为0</value>
-        public ulong group_get_members_info_list_param_next_seq ;
+        public ulong? group_get_members_info_list_param_next_seq ;
     }
 
 
@@ -807,13 +823,13 @@ namespace com.tencent.imsdk.unity.types
         /// <value>只写(必填), 修改类型,可设置多个值按位或</value>
         public TIMGroupMemberModifyInfoFlag group_modify_member_info_modify_flag ;
         /// <value>只写(选填), 修改消息接收选项,                  当 modify_flag 包含 kTIMGroupMemberModifyFlag_MsgFlag 时必填,其他情况不用填</value>
-        public TIMReceiveMessageOpt group_modify_member_info_msg_flag ;
+        public TIMReceiveMessageOpt? group_modify_member_info_msg_flag ;
         /// <value>只写(选填), 修改成员角色, 当 modify_flag 包含 kTIMGroupMemberModifyFlag_MemberRole 时必填,其他情况不用填</value>
-        public TIMGroupMemberRole group_modify_member_info_member_role ;
+        public TIMGroupMemberRole? group_modify_member_info_member_role ;
         /// <value>只写(选填), 修改禁言时间,                      当 modify_flag 包含 kTIMGroupMemberModifyFlag_ShutupTime 时必填,其他情况不用填</value>
-        public uint group_modify_member_info_shutup_time ;
+        public uint? group_modify_member_info_shutup_time ;
         /// <value>只写(选填), 修改群名片,                        当 modify_flag 包含 kTIMGroupMemberModifyFlag_NameCard 时必填,其他情况不用填</value>
-        public uint group_modify_member_info_name_card ;
+        public uint? group_modify_member_info_name_card ;
         /// <value>只写(选填), 请参考[自定义字段](https://cloud.tencent.com/document/product/269/1502#.E8.87.AA.E5.AE.9A.E4.B9.89.E5.AD.97.E6.AE.B5)</value>
         public List<GroupMemberInfoCustemString> group_modify_member_info_custom_info ;
     }
@@ -826,7 +842,7 @@ namespace com.tencent.imsdk.unity.types
         /// <value>只写(必填), 设置拉取时间戳,第一次请求填0,后边根据server返回的[GroupPendencyResult]()键kTIMGroupPendencyResultNextStartTime指定的时间戳进行填写</value>
         public ulong group_pendency_option_start_time ;
         /// <value>只写(选填), 拉取的建议数量,server可根据需要返回或多或少,不能作为完成与否的标志</value>
-        public uint group_pendency_option_max_limited ;
+        public uint? group_pendency_option_max_limited ;
 
     }
 
@@ -836,7 +852,7 @@ namespace com.tencent.imsdk.unity.types
     {
 
         /// <value>只写(选填), true表示接受，false表示拒绝。默认为false</value>
-        public bool group_handle_pendency_param_is_accept ;
+        public bool? group_handle_pendency_param_is_accept ;
         /// <value>只写(选填), 同意或拒绝信息,默认为空字符串</value>
         public string group_handle_pendency_param_handle_msg ;
         /// <value>只写(必填), 未决信息详情</value>
@@ -1104,6 +1120,14 @@ namespace com.tencent.imsdk.unity.types
         public TIMConvType msg_receipt_conv_type ;
         /// <value>只读, 时间戳</value>
         public ulong msg_receipt_time_stamp ;
+        //string, 只读, 群消息 ID
+        public string msg_receipt_msg_id;
+        //bool, C2C 对端消息是否已读
+        public bool msg_receipt_is_peer_read;
+        //uint64, 只读, 群消息已读人数
+        public int msg_receipt_read_count;
+        //uint64, 只读, 群消息未读人数
+        public int msg_receipt_unread_count;
     }
 
 
@@ -1240,7 +1264,7 @@ namespace com.tencent.imsdk.unity.types
         /// <value>只读, 好友申请时的添加来源</value>
         public string friend_profile_add_source ;
         /// <value>只读, 好友添加时间</value>
-        public ulong friend_profile_add_time ;
+        public long friend_profile_add_time ;
         /// <value>只读, 好友的个人资料</value>
         public UserProfile friend_profile_user_profile ;
         /// <value>只读, [自定义好友字段](https://cloud.tencent.com/document/product/269/1501#.E8.87.AA.E5.AE.9A.E4.B9.89.E5.A5.BD.E5.8F.8B.E5.AD.97.E6.AE.B5)</value>
@@ -1257,11 +1281,11 @@ namespace com.tencent.imsdk.unity.types
 
 
         /// <value>只写(选填), 输出到日志文件的日志级别</value>
-        public TIMLogLevel set_config_log_level ;
+        public TIMLogLevel? set_config_log_level ;
         /// <value>只写(选填), 日志回调的日志级别 </value>
-        public TIMLogLevel set_config_callback_log_level ;
+        public TIMLogLevel? set_config_callback_log_level ;
         /// <value>只写(选填), 是否输出到控制台，默认为 true</value>
-        public bool set_config_is_log_output_console ;
+        public bool? set_config_is_log_output_console ;
         /// <value>只写(选填), 用户配置</value>
         public UserConfig set_config_user_config ;
         /// <value>只写(选填), 自定义数据，如果需要，初始化前设置</value>
@@ -1271,7 +1295,7 @@ namespace com.tencent.imsdk.unity.types
         /// <value>只写(选填), 设置SOCKS5代理，如果需要，初始化前设置</value>
         public Socks5ProxyInfo set_config_socks5_proxy_info ;
         /// <value>只写(选填), 如果为true，SDK内部会在选择最优IP时只使用LocalDNS</value>
-        public bool set_config_is_only_local_dns_source ;
+        public bool? set_config_is_only_local_dns_source ;
     }
 
 
@@ -1415,9 +1439,9 @@ namespace com.tencent.imsdk.unity.types
         /// <value>只写(选填), 请求需要转换成userid的tinyid列表, 当 kTIMRequestInternalOperation 为 kTIMInternalOperationTinyId2UserId 时需要设置</value>
         public List<ulong> request_tinyid_userid_param ;
         /// <value>只写(选填), true 表示设置当前环境为测试环境，false表示设置当前环境是正式环境，默认是正式环境, 当 kTIMRequestInternalOperation 为 kTIMInternalOperationSetEnv 时需要设置</value>
-        public bool request_set_env_param ;
+        public bool? request_set_env_param ;
         /// <value>只写(选填), 设置登录、发消息的重试次数, 当 kTIMRequestInternalOperation 为 kTIMInternalOperationSetMaxRetryCount 时需要设置</value>
-        public int request_set_max_retry_count_param ;
+        public int? request_set_max_retry_count_param ;
         /// <value>只写(选填), 自定义服务器信息, 当 kTIMRequestInternalOperation 为 kTIMInternalOperationSetCustomServerInfo 时需要设置</value>
         public CustomServerInfo request_set_custom_server_info_param ;
         /// <value>只写(选填), 国密 SM4 GCM 回调函数地址的参数, 当 kTIMRequestInternalOperation 为 kTIMInternalOperationSetSM4GCMCallback 时需要设置</value>
@@ -1568,9 +1592,9 @@ namespace com.tencent.imsdk.unity.types
     public class GroupPendencyResult : ExtraData
     {
         // uint64, 只读, 下一次拉取的起始时戳,server返回0表示没有更多的数据,否则在下次获取数据时以这个时间戳作为开始时间戳
-        public UInt64 group_pendency_result_next_start_time ;
+        public ulong group_pendency_result_next_start_time ;
         // uint64, 只读, 已读上报的时间戳
-        public UInt64 group_pendency_result_read_time_seq ;
+        public ulong group_pendency_result_read_time_seq ;
         // uint,   只读, 未决请求的未读数
         public uint group_pendency_result_unread_num ;
         // array [GroupPendency](), 只读, 群未决信息列表
@@ -1612,11 +1636,11 @@ namespace com.tencent.imsdk.unity.types
     public class PendencyPage : ExtraData
     {
         // uint64, 只读, 未决请求信息页的起始时间
-        public UInt64 pendency_page_start_time ;
+        public ulong pendency_page_start_time ;
         // uint64, 只读, 未决请求信息页的未读数量
-        public UInt64 pendency_page_unread_num ;
+        public int pendency_page_unread_num ;
         // uint64, 只读, 未决请求信息页的当前Seq
-        public UInt64 pendency_page_current_seq ;
+        public ulong pendency_page_current_seq ;
         // array [FriendAddPendencyInfo](), 只读, 未决请求信息页的未决信息列表
         public List<FriendAddPendencyInfo> pendency_page_pendency_info_array ;
     }
@@ -1631,7 +1655,7 @@ namespace com.tencent.imsdk.unity.types
         // string, 只读, 好友添加请求未决的昵称
         public string friend_add_pendency_info_nick_name ;
         // uint64, 只读, 发起好友申请的时间
-        public UInt64 friend_add_pendency_info_add_time ;
+        public ulong friend_add_pendency_info_add_time ;
         // string, 只读, 好友添加请求未决的添加来源
         public string friend_add_pendency_info_add_source ;
         // string, 只读, 好友添加请求未决的添加附言
@@ -1649,8 +1673,8 @@ namespace com.tencent.imsdk.unity.types
         public uint friendship_friend_info_get_result_error_code ;
         // string, 只读， 错误描述
         public string friendship_friend_info_get_result_error_message ;
-        // array [FriendProfile], 只读, 好友资料
-        public List<FriendProfile> friendship_friend_info_get_result_field_info ;
+        // [FriendProfile], 只读, 好友资料
+        public FriendProfile friendship_friend_info_get_result_field_info ;
     }
 
     [JsonObject(MemberSerialization.OptOut)]
@@ -1732,7 +1756,7 @@ namespace com.tencent.imsdk.unity.types
     public class GroupGetMemberInfoListResult : ExtraData
     {
         // uint64, 只读, 下一次拉取的标志,server返回0表示没有更多的数据,否则在下次获取数据时填入这个标志
-        public UInt64 group_get_memeber_info_list_result_next_seq ;
+        public ulong group_get_memeber_info_list_result_next_seq ;
         // array [GroupMemberInfo](), 只读, 成员信息列表
         public List<GroupMemberInfo> group_get_memeber_info_list_result_info_array ;
     }
