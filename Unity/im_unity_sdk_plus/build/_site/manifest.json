@@ -1,6 +1,6 @@
 {
   "homepages": [],
-  "source_base_path": "/Users/xingchenhe/Documents/work/git.code.oa.com/im_unity_sdk_plus/Docfx",
+  "source_base_path": "/Users/ginxi/Downloads/IM/im_unity_sdk_plus/Docfx",
   "xrefmap": "xrefmap.yml",
   "files": [
     {
@@ -9,10 +9,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.TencentIMSDK.html",
-          "hash": "XQCXcWQBdBAuwdVWffGFBrS0l4SWoeHAUMW9gmVCUxg="
+          "hash": "qSQ88GeTZ6miNOlV1tcBem6NqB+1A8sFGaL7y7I5Frk="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -24,7 +24,19 @@
           "hash": "Ndo9uE3EUgI+slSIro+IiN+94tRZbZLLnA9muHWMI7U="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.ConvEventStringCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.ConvEventStringCallback.html",
+          "hash": "ra8eYFf9c9cwATmLrbesFsOE03dx1AwQCfOzHpfXD8M="
+        }
+      },
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -36,7 +48,7 @@
           "hash": "uE19tD5mNJ6rmMScA59vpiQgimQr/cCVJzwEiuWacts="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -48,7 +60,19 @@
           "hash": "XSo5AH4wd7N7zjEGUbCKKZF27iZufXPC4iOhGcOgCFo="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.FriendAddRequestStringCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.FriendAddRequestStringCallback.html",
+          "hash": "BR0Z5IxYScWO8qN59E3BYWwywRUHyaTaZVy76rLeHT4="
+        }
+      },
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -60,7 +84,19 @@
           "hash": "DKlwlzmd/37Wj9K9O7eqZ2epUQP2dK584dp2tWGQono="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.FriendApplicationListDeletedStringCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.FriendApplicationListDeletedStringCallback.html",
+          "hash": "wmcJH0ChnGP/TmAVjDi4iQt4rFahpmCSojzropjFqK4="
+        }
+      },
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -72,7 +108,7 @@
           "hash": "/NM/QjnMN3fbF2WShwg0zJMAvMJoqnBUeDmMvFz0bcM="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -84,7 +120,19 @@
           "hash": "IB3e4eru3rOyBGnBPSQNbtZFViVnJXGNkn3h/YNgcWE="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.FriendBlackListAddedStringCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.FriendBlackListAddedStringCallback.html",
+          "hash": "LIfqjdLTUsgib3tbv4qtHMF7w+zddNa84MHGgYvWmDA="
+        }
+      },
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -96,7 +144,19 @@
           "hash": "d/XM4lUskp7Y1nCX7VXyZx/N90tEYGnSAfF6ti5fktE="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.FriendBlackListDeletedStringCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.FriendBlackListDeletedStringCallback.html",
+          "hash": "k9jbOyoTY4LZ39hYAwrZtikxliW1LWrjJXgK9rveX7E="
+        }
+      },
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -108,7 +168,19 @@
           "hash": "dzbA7dBvlVBWow9XEQI19yXDDNpHvZKYdSzmch4kZTg="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.GroupAttributeChangedStringCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.GroupAttributeChangedStringCallback.html",
+          "hash": "4s4GgC9Rjz+f/wsBHSdRm8/MydqTjWHlwdTpPgHtHrA="
+        }
+      },
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -120,7 +192,19 @@
           "hash": "cgpdpx1mcyHttT6JGX7kUQfq4IJcj5vZUPJpekGR5/c="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.GroupTipsEventStringCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.GroupTipsEventStringCallback.html",
+          "hash": "8bn2P2a+4EOjOrFQxNlG5e7wQCmRD79D2wCeWaQDFgA="
+        }
+      },
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -132,7 +216,7 @@
           "hash": "ArOn+cJLTqV4BmL5OkXJ5fO9hsqIn5qwPF8z7DQ9HQM="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -144,7 +228,7 @@
           "hash": "MxnsupJX1YO6J0P34OjprQSHjUMAXmE71OEZha6BIqA="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -156,7 +240,43 @@
           "hash": "J/etrntTCaf9VqsZt/PjwIZxZOBHsBggYxAtXNoRDk0="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.MsgElemUploadProgressStringCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.MsgElemUploadProgressStringCallback.html",
+          "hash": "I49M1nTIo6dsW5En5ScIXonqdFlsucot0LSreynH4SM="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.MsgGroupMessageReadMemberListCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.MsgGroupMessageReadMemberListCallback.html",
+          "hash": "3kVYOob1VCPROo/F3n5tpbIPi114KHW4X5JpG/ky34I="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.MsgGroupMessageReadMemberListStringCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.MsgGroupMessageReadMemberListStringCallback.html",
+          "hash": "2/hNRjM2pH4ZA2nUrj1Swd3b5QMBTMbKCDPw+1sieRg="
+        }
+      },
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -168,7 +288,19 @@
           "hash": "S0kfbXq5VjcvO9oknyhfDnYGbPftGFHSWVA9uus3gx4="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.MsgReadedReceiptStringCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.MsgReadedReceiptStringCallback.html",
+          "hash": "UZn9jaSnicqyeuV1YgRexdWuWuKpIR7slnyLJxgzzdI="
+        }
+      },
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -180,7 +312,19 @@
           "hash": "Lu+cJp7sFd1wUkZwwlGP6t4/YLwKDrTMuJ6U9rbZHoA="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.MsgRevokeStringCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.MsgRevokeStringCallback.html",
+          "hash": "Y2nePGt/w7CE/d8lc8ITHmvs03NaXnnKQ/rqH62XwHY="
+        }
+      },
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -192,7 +336,19 @@
           "hash": "oig2c3abbfVx69JRBBL7gh/v4Yphju1gyCbLRv3p+8k="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.MsgUpdateStringCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.MsgUpdateStringCallback.html",
+          "hash": "/S4Un8NhhNUGYDDJnJ2Uonpjn5VKY9YuDpHXYVVSH3g="
+        }
+      },
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -204,7 +360,19 @@
           "hash": "+lwHmZUoBsVdYDFDh41S0GI7ecsd5Mc+Qv25uRMCOEw="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.NullValueCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.NullValueCallback.html",
+          "hash": "D+qDbdzbfwD/cSNdR2Q758l9Kx5lrkwRtA9AeQyzFQQ="
+        }
+      },
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -216,7 +384,19 @@
           "hash": "YU+kv+bkiwxHcsNvuMMO65gu6fl8QsBKZlZfOij8Dns="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.OnAddFriendStringCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.OnAddFriendStringCallback.html",
+          "hash": "sas/B8aMr9KshWIsYnW5xPWGjZ9+fBmOUDkChuzQ35s="
+        }
+      },
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -228,7 +408,19 @@
           "hash": "Ea2AheYE+70AbnSsdRsgLeExd1wXlR07rrlRohejmSA="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.OnDeleteFriendStringCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.OnDeleteFriendStringCallback.html",
+          "hash": "ZAUAYo16Nr+45hxwXMzQAXijjut18GVnP9a8AUNNXnw="
+        }
+      },
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -240,7 +432,19 @@
           "hash": "BnU/x1Gffwxv4wtVrm3ktspTqQ1LxmVOhP6OnPhOphI="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.RecvNewMsgStringCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.RecvNewMsgStringCallback.html",
+          "hash": "iwPM/eHtuSgP8oC/78wappiC1gGyp3X3pE/e+82GLTI="
+        }
+      },
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -252,7 +456,19 @@
           "hash": "FAOEAYBkTujFESSNqizNbxqbGVsqml5omI4zyWhj4zg="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.UpdateFriendProfileStringCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.UpdateFriendProfileStringCallback.html",
+          "hash": "P4dO0NL2xONmdJNmDBJtBkcyM1qrZ4Jl6g2KQmMzCjI="
+        }
+      },
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -264,7 +480,7 @@
           "hash": "fzULhoAyyUn/vj/7rFaerQdalA963Nsr83ttWltgRBo="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -273,10 +489,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.callback.ValueCallback-1.html",
-          "hash": "PUEZ0VMnrv53hCkHmI4KLYUhsq8Wa0fP7OOmCa6uZE8="
+          "hash": "KmSD75a4SsXBIfgmkVhoh53A0dtzVIX2gw8CGgccE8Y="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -285,10 +501,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.callback.html",
-          "hash": "FAl3N9aZuLkFglkvfaT2iO6x6CIAAuFkxBz0IHQoxy0="
+          "hash": "qAiYLSWjwI87f6EX7MSabzWhON0NgnHP+h84Fp5h9LU="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -300,7 +516,7 @@
           "hash": "eibNiLoXF5cjjZLNYGBb0mtGah7efmz2q3ewuorxFZk="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -312,7 +528,7 @@
           "hash": "zr9fOKWjTJK/kYDtagFnM4v0En7VrgNReps9OJSqC7U="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -324,7 +540,7 @@
           "hash": "mX4vDGbEyoFVBdV4SAzYLKq2gegq29mj76lY4Wvp8RU="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -336,7 +552,7 @@
           "hash": "C8YH/H2vdFfSr4ge1bsGd8mZq8l4gytqF3P3ToTupOI="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -348,7 +564,7 @@
           "hash": "TOniH/7s1J9Jlm6OhGNma/sgWuSOt2nbAKfcMY413gE="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -360,7 +576,7 @@
           "hash": "SBkxxiYgBSXchLF7J5jGcZo82D30cY77e2Y3e/aWQqY="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -384,7 +600,7 @@
           "hash": "hr1RfEWjDHy7BVZs816vZbLemdEwfUDAHBywnuB8IcA="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -396,7 +612,7 @@
           "hash": "UcSFg9V/8Ev65CAh7ldGb8OVvq5RWjE0CZZH/aTbJGs="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -408,7 +624,7 @@
           "hash": "mqFvB88Vr0nraohLEShKn19jHmJZlsBAoPR9vcmSWt4="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -420,7 +636,7 @@
           "hash": "UAmzB95zsmLFHc72kEATRAsf+9XwsGXjuuc/4ETd0wM="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -432,7 +648,7 @@
           "hash": "gzB4VoiWBrxm4nMou3w/OIhEWBdlyE/cVvxfCMyKnRI="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -444,7 +660,7 @@
           "hash": "3boiRcj/PjPWw7SycCf9KUmutdRPIpCAG6p39m7M5tk="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -456,7 +672,7 @@
           "hash": "lzCta5alI8o2B66YNzPF+7Q1bvfKiEc8+WARbKsSXyg="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -468,7 +684,7 @@
           "hash": "ODlyKaCvp+oJYfHdBVfYydCJ69O8R10OSiHpx3I1/3s="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -480,7 +696,7 @@
           "hash": "WQkDZOTcpvYbiUZck/DxBZzOYwB634KdXDOFNg7qytQ="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -492,7 +708,7 @@
           "hash": "QXz33lfGPtBhihO/T4P2R/SL99boYHNp7fGo2R25hGY="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -504,7 +720,7 @@
           "hash": "UIzE+UspB7J+KNWCwTkr8LV/qci1Eihe7DXuytFUJ78="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -516,7 +732,7 @@
           "hash": "+6DZKBXoaG0E5/qXXfcEa9RwNA4OXDWsnAxbqt6LVgk="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -528,7 +744,7 @@
           "hash": "jEHJqrRbRS/1GWFzHeCd+2g20iyriuVQvINkjvTZM5E="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -540,7 +756,19 @@
           "hash": "X5XooyihRLRQwdJheqC6OAY0cbkFhDkJaqtpKpUq6vQ="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMGroupMessageReadMembersFilter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMGroupMessageReadMembersFilter.html",
+          "hash": "TPOUl9XqDaw8hV5bu68gzNHTzw5wQFI1B6oI+6fbN/I="
+        }
+      },
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -552,7 +780,7 @@
           "hash": "zY83AeJlQ2If1EdqhaaGhMZWcBtK2qgGDGZd4/Bk8aw="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -564,7 +792,7 @@
           "hash": "QoW2il4amyXmPobFbX7cPlS+l2etEYiPbNmAQ5WiwgI="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -576,7 +804,7 @@
           "hash": "GiBWqJ5UsUXKss3K0I+VVUMGyQa5+4quexGKJI+9ZTU="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -588,7 +816,7 @@
           "hash": "M4bFNg51xF+B/zI2ckZMvl4oed90fJ7qWBMtiNlBXKc="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -600,7 +828,7 @@
           "hash": "P+zuF3c0jHPFLCJ+TXshpYgfZihAVv2CotubJm4fC1U="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -612,7 +840,7 @@
           "hash": "fnJSjccCpQkS4y1pq4Aex6XZCmWy7w8Yz9DKujH9NbU="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -624,7 +852,7 @@
           "hash": "oBOoYfBnek/7qbPaYDbjF+HOoftaBHTLOyZgQO4Q9GI="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -636,7 +864,7 @@
           "hash": "gip04sC8WjHE5i1d3NpTFPt1CrRhzQC/z+dnKqeQHBA="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -648,7 +876,7 @@
           "hash": "mdiiqnrKsfUekwmQfgQ6USknYR0oiA5x6g7PITowz1c="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -660,7 +888,7 @@
           "hash": "ORkiHng4ICvwhoQaK8hCFnJxM86/4KR2SragB0jFbl4="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -672,7 +900,7 @@
           "hash": "9V71DIr4+m3bfHGNGTH+k3mqR6C2WaJda97IdZtmrs0="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -684,7 +912,7 @@
           "hash": "dAXrVQkt/uW0FQpRuS+CqnB9f+QEFX7tayBuNM4YKJ8="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -696,7 +924,7 @@
           "hash": "sG+zH2LAXZh/tyf0/v/gEtO4bXNwyLuBAi9gf0/azNU="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -708,7 +936,7 @@
           "hash": "SDVJk8KI/1N6AfIk6U5NMFnr4L0/KyJ0W62kgT6jNFk="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -720,7 +948,7 @@
           "hash": "H9QQiJP7BVCa3hmLd3T/nLmqnQS+HUaeOIeOV3dxow0="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -732,7 +960,7 @@
           "hash": "H4BEmaf2WB1CN/RUVAyvSomE/XE36R4XaevSSRG9JMs="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -744,7 +972,7 @@
           "hash": "htWodxFdu4M4VJz/L+4u+kUDUdGu8BEo16ci7DT0nK0="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -756,7 +984,7 @@
           "hash": "6oYQNJqHI7vxbJXaFvKeILM7whyGr+S9JeC0Gw5W36w="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -768,7 +996,7 @@
           "hash": "b0bXVoYTGzJQkhl7WeL/8l2GSTDgTiian07SQZPoBp0="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -780,7 +1008,7 @@
           "hash": "ys04dlTe05BKCgnbWGYZMKlSVbkiIX81VXSxESIu/DM="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -792,7 +1020,7 @@
           "hash": "FihFd4IZZqebD1ktQE1hBEftDNRgsmxLpeedP0j8XVE="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -804,7 +1032,7 @@
           "hash": "60zSAmI78Zw2okcRD2Hs+te235wRKlkOpiY0JkU3g1Y="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -816,7 +1044,7 @@
           "hash": "lOUFX1j9gmDpkq51hgw923I62pV8i71NCxZzE9UBzss="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -825,7 +1053,7 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.enums.html",
-          "hash": "B2vC+zdEYrbnT+j4p+5j4lg68FCse9uV/dd419ODZLc="
+          "hash": "QovdR2p0kbQYSc5Dl+qgI6CorqT6d+PLz68B/u1tLnI="
         }
       },
       "is_incremental": false,
@@ -837,10 +1065,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.AndroidOfflinePushConfig.html",
-          "hash": "qI0HOiPmMoyf6/yWgtgoH2YSuLvvvpeGNe+mxbyy20Y="
+          "hash": "NoTz4qS7V3iKI0xs+3bcHI+LWV0R7/JJdJQQrfHno4I="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -849,10 +1077,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.ConvInfo.html",
-          "hash": "WyOOKPefiT6TZHpKaGg8fpxeXv13QJyxq6avtoYcGSk="
+          "hash": "BrKTJpKhRs1F/175xF5i9/g8lBDTdinzwKtMbjGAzuE="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -861,10 +1089,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.ConvParam.html",
-          "hash": "r//Gm0Z6ee7zd7/GVReCBAfLj+plKQfAbmgVo9hXIgo="
+          "hash": "sZLS+3CQa/fFi1yK1skMM24Ryh9wPOOtU6WyvjVq0eo="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -873,10 +1101,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.CosSaveRegionForConversationParam.html",
-          "hash": "Cp9nkL922eTa6CdRLVoGS6I2BPwP0X8rMT6fjs0RlAU="
+          "hash": "iS6dJ3TA9kg1mBv4DSK/hPBq0YTF5oRFCauK0wwDi5w="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -885,10 +1113,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.CreateGroupParam.html",
-          "hash": "r1ktBL23dPQVweRdIv/xSSKXpF8kBlwzn1py1IB0Rtg="
+          "hash": "nIA7YoJKrF8iU97kxIeW9v+WNSgecztdPY8ElzoRans="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -897,10 +1125,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.CreateGroupResult.html",
-          "hash": "+xzYdaEvr+Q0vssgQmFSVLadf4Xi/wsZPANeLiB8Jh0="
+          "hash": "2kaQFcNDv9mjNd9Nbm9KuSY37FGqw35T24jI0KUiYUk="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -909,10 +1137,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.CustomServerInfo.html",
-          "hash": "GGhNGlhMawOED1Z8BNUGDUhF20JCNoBlDb4CuOHJ0jc="
+          "hash": "tvwYxImXd1Ka6JNZ/llpq2CxpL1i3Pnhj6ncnKJr9Nc="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -921,10 +1149,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.DownloadElemParam.html",
-          "hash": "PF34dgA64O9h8kJjOxssW50hQIu3e8HBoK82U/taPYY="
+          "hash": "0LkvR8wiOA7bSlxbJbqG2MD5tcJXICAMwNv+jveIr8o="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -933,10 +1161,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.Draft.html",
-          "hash": "NLeqnuaghfrHSxA0/m5e5ujFvGyRP4QflI+yLh0oM2o="
+          "hash": "eWuksRJOUJjopqDXRNrfClSOgbGzWWoy2Yo23whYmoI="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -945,10 +1173,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.DraftParam.html",
-          "hash": "qefK1aTK99kRky6btELAEk0wYDfOCf/r/y3tVgvooLw="
+          "hash": "ebhhanV1gYMe90jMHuKvTBn1CVasiW1AkByzMYixS8E="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -957,10 +1185,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.Elem.html",
-          "hash": "UYMySUePczWS8SskctP/He+7OoXtAv28qRHAiQY+vZY="
+          "hash": "w7m0mHFYF3EklezduYeSivRQswb+Ho4a9AFSCplI57E="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -969,10 +1197,22 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.ExperimentalAPIReqeustParam.html",
-          "hash": "M2sP4sPuwJT05dBTWS9DzDU+95Oip4rGvnVTS3fE/P0="
+          "hash": "JxkfE2xO0Q6NlxTezYbypzlUKbTg1kAOMm3NLwQcdl8="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.ExtraData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.ExtraData.html",
+          "hash": "2DrNetkMdYEorcToLZ1yMN0UNNR6i/GotvyTngk80Nw="
+        }
+      },
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -981,10 +1221,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.FriendAddPendency.html",
-          "hash": "rREPNv4YOMNpyp7HEyEFXuhTo1CZnAh6cWsAizhMHjs="
+          "hash": "4zU3j0KIFtMgR6D7Q+tax/Ax3mnSvIzc9gHqjjKKNhQ="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -993,10 +1233,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.FriendAddPendencyInfo.html",
-          "hash": "ns0btzElpHr6gJL26zljzw/wPm/45kvB6Zxa8TIlPEM="
+          "hash": "KGLSoc1X806+C0JTC5nS+2Zq7iE7knsGkGht8MudXzU="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1005,10 +1245,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.FriendGroupInfo.html",
-          "hash": "/v4scPCNb1reKQ+kxSXt/JM6GomnWyRHpkADfN49Rhg="
+          "hash": "NEs57/5BmSKPO6kJ1zF+vEMoliOLAPHPu8SU7Kpc4Rg="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1017,10 +1257,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.FriendInfoGetResult.html",
-          "hash": "2+Gf4gOqyNuxW5mBjZv287tmP3+0g3/K5g+i8AEBDmw="
+          "hash": "Vs/obL79b5BiOB7zXynxMj/N22/+VAEsE3/bndKmVic="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1029,10 +1269,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.FriendProfile.html",
-          "hash": "WZ4g2BTTkdOOvX++oM2Gct0+ysZ69aO2CVHprzRoZXk="
+          "hash": "t5sGDe4q18QHBE8shGOUPQ2/buVsyJN1v6x87JU1nF8="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1041,10 +1281,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.FriendProfileCustemStringInfo.html",
-          "hash": "SQkJMyRvc39+VkS5vPasiFbySdzsfig8fElD3TRg/4g="
+          "hash": "JSaELss/yP8adXeMj9hzNuKWxXXOdGYWH0ao8tAy1Fk="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1053,10 +1293,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.FriendProfileItem.html",
-          "hash": "xsfSd+ajsQKw6qCYUVqrVvw5eo96GiRgsvmV0Nm+kNA="
+          "hash": "wZ6WmmLuWMUj68eaTXbdpmWtG3lM2Dg4FrK+OUePE4k="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1065,10 +1305,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.FriendRespone.html",
-          "hash": "Hzh2M5eFAaV6vtYzDp0HNmXl329YppMMYPdUESMUeRc="
+          "hash": "d0+AV6zb/JcBi2zGC8TUYXiAhX/jCUQLM8hEMdSyGa4="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1077,10 +1317,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.FriendResult.html",
-          "hash": "nnmYwKym9QpQKg5w6/d31CzGRpd3OJya3AShb7eKIEk="
+          "hash": "5LPDLLxt+aujGq9Qs9PXLjrjMz/1OadFSt/AVDSchl4="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1089,10 +1329,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.FriendSearchParam.html",
-          "hash": "Lamv7CBFydAsZFSSTxfzQVdwaZw/3Cx1HI2VJxrPl98="
+          "hash": "6z5t95R/uRQLP9d1iqwyL7cefLCgpAU4Yo0mwkcXoAg="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1101,10 +1341,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.FriendShipGetProfileListParam.html",
-          "hash": "nj0vwH+N/DCNprkfYkVvFzjxPbQMnp3vq0OPvo3+hvQ="
+          "hash": "np0X5g+QD4KDbdisDiFnBA8qg5dzH63eMp0XboKLFL0="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1113,10 +1353,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.FriendshipAddFriendParam.html",
-          "hash": "EjF/yHB1Izx3FubhkI3dC3S4TEK6DJTV3y9WwnfIgGE="
+          "hash": "Ga9zHolRcSm80O6ogwrzSwEDq0Y5tfq/7857cjVuQB0="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1125,10 +1365,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.FriendshipCheckFriendTypeParam.html",
-          "hash": "OypjB/jdqOVRHuv7g0322Eyf4JlINngfTwMkgatGB1c="
+          "hash": "7kTV+yDHCdG5hGbZE0G/vxKf6fGq202jyo8VR6e0p4g="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1137,7 +1377,7 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.FriendshipCheckFriendTypeResult.html",
-          "hash": "EsI4Me328W4Wfv6EBLxIRFxTusWYIcGgyV+DTC8MKZ8="
+          "hash": "cDBNnAVSmNLlkbXjbnZKopkt/DtcNEXUlOr0Uo0ITSQ="
         }
       },
       "is_incremental": false,
@@ -1149,10 +1389,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.FriendshipDeleteFriendParam.html",
-          "hash": "9qoyxM4kc0JJc4JyQXf8Xp7seKD6yzM7n96G/lKxF1k="
+          "hash": "pFqt6fJKs7XEfijBWA6PYZd94qL7Zy91QEA/7mo43Y0="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1161,10 +1401,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.FriendshipDeletePendencyParam.html",
-          "hash": "aGeIoH4uGh+8YZ4kBpuQFFvKuLF8CzR50TN1Y2NQQ3o="
+          "hash": "Nyly1dJqnVUw81CLL2BroKkvoNRW4EjgTqjLPD9gpS8="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1173,10 +1413,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.FriendshipGetPendencyListParam.html",
-          "hash": "p/v4AroLykSzuhi/n9WQPWVcZBfDE4z7v/JBm+kBsJY="
+          "hash": "teluFkGObsQRy1/gt0AM7eH1GbP2ZHb9mUiRdrqaAEQ="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1185,10 +1425,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.FriendshipModifyFriendGroupParam.html",
-          "hash": "Xo0JS9awt5SZBOyCsdallogW6EUJBwfng+Bq7claGf0="
+          "hash": "19V6g9nCBNL20LWquTlxRRCxxQXYrjAnE9jiLtfStLY="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1197,10 +1437,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.FriendshipModifyFriendProfileParam.html",
-          "hash": "4YnU2JeQ+YKyJZdvM9XRrnV1/pegMx7kKrWznRFtUZQ="
+          "hash": "id8PnfSKS96hz71F34Zd94edQBI41I9i40h2bmbZHo4="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1209,10 +1449,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.GetC2CRecvMsgOptResult.html",
-          "hash": "ckKd4XqSEcQXsmWgQnPHwmGXMyD5vEy5y8sO0CE76X0="
+          "hash": "GcIvcBJe3l37oLGDKQkujLXl3URnnXsb6gcM4LZY62g="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1221,10 +1461,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.GetGroupInfoResult.html",
-          "hash": "tVSEzAUpbmIvgHuB/H3fiz3+iYyZxSGFK5/pItr8dgQ="
+          "hash": "cQPh9p+zlezs1ZoAfMqaw/cxfrFt1foHuD8YDQETM4w="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1233,10 +1473,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.GetTotalUnreadNumberResult.html",
-          "hash": "6ofwgNGkU3cHi/EkOPxYGGY799caLliL32cWz0sTa30="
+          "hash": "eumohF+ntX7qEIhuD5GMLb1Bc7BNoyY8gpsIjRv58L0="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1245,10 +1485,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.GroupAtInfo.html",
-          "hash": "ai38dsm0IeLXjg8rcAdRiBkidJrO0KBoYW1LWcoRjRM="
+          "hash": "LWChPbEEZR4ptDQhYUKW+hDEs8AAcbenJUxNHKK9Pug="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1257,10 +1497,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.GroupAttributes.html",
-          "hash": "Th+WfLdzRxhrrVNkagKyH5s87lya2Faby3zvAmi7qS0="
+          "hash": "XOyc280JIIotbAeW5LkGdUEoDqyPdXvKM1O3nxo5QyE="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1269,10 +1509,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.GroupBaseInfo.html",
-          "hash": "xRtFgugnxCv9ckxDCpJVtg58IXj47ANyzH500VUAZ1E="
+          "hash": "xItEGfub9HevjjtoCgta98BXAiIEnr4N48TCICmq1XQ="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1281,10 +1521,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.GroupDeleteMemberParam.html",
-          "hash": "gI3v7d8YCxFyl0KHOzLKs2CQqYMCDEaXVKF7z0B2H3c="
+          "hash": "5seRJmZPvDk+4Phbjv1FEBKTcxKJNgh/uK7SuUL01Fc="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1293,10 +1533,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.GroupDeleteMemberResult.html",
-          "hash": "h7/WJziw3RCEDjLPits0zJfY6ZbdXgwavm3/qZQeQdI="
+          "hash": "VCN5kLYzARIUvbUQeKfgXXzlzDFSSpO4rpcXhfAON60="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1305,10 +1545,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.GroupDetailInfo.html",
-          "hash": "c9kSe8MnSrVjH6z20jIh91yn4XLq3AhKkdHQ1bLaNfo="
+          "hash": "qVV1aRplfeSLfI+nSRH3UEXzCxLt3XfgrOx7GWQoorg="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1317,10 +1557,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.GroupGetInfoOption.html",
-          "hash": "LABzOh8LG4g87R59sJkUSST7j2DOy4EpE4CGeevmJxg="
+          "hash": "sHt+ezgn9bJaDdAgZRPazsPd77Q7s0JgJEXd+YS+xP0="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1329,10 +1569,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.GroupGetMemberInfoListParam.html",
-          "hash": "p+aAKkw7nHahiwDBqE7vb1BUqZOsUVPpdCHr06qozeI="
+          "hash": "hu5D6EOxjkAc7d7YgahlkPA9KZCW+14ltYX3R0CEe/w="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1341,10 +1581,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.GroupGetMemberInfoListResult.html",
-          "hash": "aTtiyQMDAPfvkr+JXLHR9YBOPfddvdms0fSjky5NZNk="
+          "hash": "TnoSlo4TWN65Y5kTPDjxYWKLkV/jRtaCRtzeEh6hX9Q="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1353,10 +1593,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.GroupGetOnlineMemberCountResult.html",
-          "hash": "i7q8MG31B+KqiWwXtSDYm+MPo7uMDCjI1BEuVb74OFw="
+          "hash": "yfkF6FY8SaNlE0rhEOb+DICXs6S0J2Sfa9dppIXENKc="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1365,10 +1605,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.GroupHandlePendencyParam.html",
-          "hash": "roFnkaa9em7eSKDMyilzTKRBU0lDj8TSxTJWduJAj5U="
+          "hash": "MtY6oSnEkRSQ6VMA/2OXnurCQPEJ2KRIhDYhU8RLlxk="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1377,10 +1617,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.GroupInfoCustemString.html",
-          "hash": "EFhFWfC4DAGLws8uB6HbZ7x5LMGgmtBSiEhysIujTKA="
+          "hash": "2z8qCTH/7sagDYQbJ7qi1vdKjl497yjtJ0pW/lHD7IM="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1389,10 +1629,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.GroupInviteMemberParam.html",
-          "hash": "76TxFMF610lPDJxrWlUV7PhHGVh+/mOZ2MKMm3DdHe0="
+          "hash": "A6JE/ZHk0NrEVZluKcv60TGFu53uA30bOZf2ZOxAcY8="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1401,10 +1641,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.GroupInviteMemberResult.html",
-          "hash": "NhIm1WPhnEScdqg3NtXCaWuIElKYogPM+ttoNFGuWnk="
+          "hash": "YYklA/bJRNSrwLcKxGf5LqX7uYjgDN+mPP+jaiDh2Dg="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1413,10 +1653,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.GroupMemberGetInfoOption.html",
-          "hash": "l8TmwUV2+yMGVmv4GAKckswtAxkanfgjYVLY21eu4Ww="
+          "hash": "AXUVk8WLnxthH6EotSn2J68cSVpT7RxR8Nix9c0okzM="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1425,10 +1665,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.GroupMemberInfo.html",
-          "hash": "Vgu3/7BGnSmRqyLk73gkCciDfU/Yn8yQ6YT53Z4pNqU="
+          "hash": "RBXD2nLTEqKmj79gD/SrhQfq/7xUAg7h/JUxwMh1OpY="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1437,10 +1677,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.GroupMemberInfoCustemString.html",
-          "hash": "cB5wmUo/SRnc7S4z0d8EE9/GcFxGlxvlzos1bCvrR+4="
+          "hash": "M0UD8q6v+2fMmHRRPL85pkexdF98oKLe8jsvOarjkPc="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1449,10 +1689,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.GroupMemberSearchParam.html",
-          "hash": "mbKzXh0ZAzC8NCpPnROyuf0WaHuiooULuDQU8Veqp4c="
+          "hash": "fGHVR4eGqo3a+0HKW5SibieojFPbiXJfqvtmg8jJ3Rs="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1461,10 +1701,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.GroupModifyInfoParam.html",
-          "hash": "9G8M0x4zD39FBFYAl+FxZ0mM3Iht1JXgnrX5Ksdh+jE="
+          "hash": "t8CjDh2Ez5STZ13g/Vnplj5ojtSG5tG/iOfFql676sg="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1473,10 +1713,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.GroupModifyMemberInfoParam.html",
-          "hash": "4dtDvCfkmquIV/W81LB4AbaX7R54RfAKgxtzqxSQAzk="
+          "hash": "0WJTUpSMeFAlQ+6hd801onSGWU3/XSTQ03hnKxkN8mE="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1485,10 +1725,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.GroupPendency.html",
-          "hash": "q8/OH3iSI/6cKOx88EfG8q5eO472bK+f9dstBZ5gYXo="
+          "hash": "FlnRquUFWX+reqhb164C0HGKKnWSwVXbF9yUaYRjn5U="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1497,10 +1737,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.GroupPendencyOption.html",
-          "hash": "uyu+zJfVs/YoJ6HFNJi47xaLjOoOcbdinlamScJjB+o="
+          "hash": "oB4lBIloRORphXQieCgtx+cL83oP4lHpVOoh9yf9bHE="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1509,10 +1749,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.GroupPendencyResult.html",
-          "hash": "46epQTuI0+zic7g+IeN09vAHif6xkG/cI260hr5ZgoE="
+          "hash": "zg1lA7ktVLknyveyT/sUTGYjDhWmMlXd1jpPB/StKt0="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1521,10 +1761,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.GroupSearchParam.html",
-          "hash": "YhtHbhfHGm0K4ov1QYEqvB+Z3t8WfGh6uJEu4YIXhQQ="
+          "hash": "xpoVVjS9T20w5/KRHhcvUCXFDu+PGWsMjybRDAP10qA="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1533,10 +1773,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.GroupSelfInfo.html",
-          "hash": "pJIQm2AMH3wb7nXfB6LPBSjXGVbB/8aeqMvfG0sjfBQ="
+          "hash": "zOPgPckXW+UbAiCu17nFC/c2Z8X4P2l1XPayxbZOddY="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1545,10 +1785,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.GroupTipGroupChangeInfo.html",
-          "hash": "V+1OC2SFqo38ro7n5vB+YflG5fho4wyF0UkGjZM9CKw="
+          "hash": "WJMEO4saexPspgAecnPx2yoU2J8kNSq9QVI8jXUbdgI="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1557,10 +1797,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.GroupTipMemberChangeInfo.html",
-          "hash": "QeJ3d/86h0nsnw8j5o0qE+jcfZPGx85GuVziL7YiLyc="
+          "hash": "wGmYu5T9hGiut79scNnUWODo5RTHx20oo5OLLD+42jo="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1569,10 +1809,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.GroupTipsElem.html",
-          "hash": "lb18OVYwx1L3vAoZlP7N0jKZWy0nwkBTqrw6miHNOGw="
+          "hash": "DeSFrqQxRX/EsMiQaH/79jRVtPX670ZvZM3OwwfFNXY="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1581,10 +1821,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.HttpProxyInfo.html",
-          "hash": "pL7KcX1+7RLDVmcNgKG5qFNVTZO0F1+3j88hJC7JGzs="
+          "hash": "+Ta1fyQcf/jwzRO07lLb44b57bNFLnx1Vidwx2VhcLU="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1593,10 +1833,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.IOSOfflinePushConfig.html",
-          "hash": "laSGuJbjHj20PBN3Dr/8/q+DVms/9I6AKsLaLcr36VY="
+          "hash": "j7J7UhklETD7LOdK1akUSU2IN0NzwGToKSXtDHB6KXw="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1605,10 +1845,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.Message.html",
-          "hash": "vPB5oJ/xW+EbGMA0Ru6iDVJkvi864jhFyNS9XqVrBso="
+          "hash": "YY5+5/dFl3tyxg7vN6r3t0pd+4hpgwWGEDqU+IF8s6Q="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1617,10 +1857,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.MessageReceipt.html",
-          "hash": "GS1faqfBfo09wuD/taiy9nv8W6B8hd6EbnQRQPOUYSg="
+          "hash": "4n0MeXx/hZ6G6wuIuJqV4oGJHUdZt7IsFSVwM49zbtw="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1629,10 +1869,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.MessageSearchParam.html",
-          "hash": "nqnRyr3Jlofc7pcb0P5niTX8cnkPuB7AtYbgSonViMY="
+          "hash": "+BqB4/Qi1iQRRRvPH+pJcqIa3OPDnr3VdgQiMU+B4+o="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1641,10 +1881,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.MessageSearchResult.html",
-          "hash": "P8MhMUGvY4jmeerM/NsFqXTomsA1gvnud6WUmGvoIQg="
+          "hash": "NM6v0dFc32pCUV+WNBFBm+LlzPyws+E6Wacr+Py9tfk="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1653,10 +1893,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.MessageSearchResultItem.html",
-          "hash": "lUsjEmY8TpyY5uMuXflphfAvwzOSlVnC/Cva8/HRPDk="
+          "hash": "4ai++Oaq6rsDUGCfIv5eeM07K8Vum4DhyD2ipCyi58U="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1665,10 +1905,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.MsgBatchSendParam.html",
-          "hash": "BuoxQi3WMe0cuz+5Kmlnn28hCMAJw4jkyCYZzIHMz4w="
+          "hash": "3w0Rhzbd9CBK3D/ZmlCEs8A9hJpdUcoShW9EjOPBmHc="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1677,10 +1917,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.MsgBatchSendResult.html",
-          "hash": "4N1iSU7vnQvOZl02lCxjw4SD04u4QJ9iIz04730+p6s="
+          "hash": "OHYWD76lotYzd3KNyCK6IKSEiuVyjeU14yZ5dNlMzcw="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1689,10 +1929,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.MsgDeleteParam.html",
-          "hash": "3HVzEb7H7NXCugNvUsnOgvk7LfaoGZbEwkZu9BhdwnM="
+          "hash": "33r1YqvU5F2F90Ckgb13jbvGSzbbsimGdmUGRi08JcE="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1701,10 +1941,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.MsgDownloadElemResult.html",
-          "hash": "K/bvlrserLlJors6yqtBvVyhNxaxccnhDZW67u2mDhY="
+          "hash": "9/H0eqVWiLNPFYD0qukyFz+cK6pQcOvBWmlH+tM6HVs="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1713,10 +1953,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.MsgGetMsgListParam.html",
-          "hash": "2KZRN/aQ+axmRg0HTPPCyrGDzK1EXCX6SrilC/xpnAI="
+          "hash": "8ON7R7lTj9S0mZMRWhPHQZ0sWqupA1LKOAb4IIoJXB4="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1725,10 +1965,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.MsgLocator.html",
-          "hash": "3Uqh00lwKfKGvx+mHG4Y/k94tnNWPpK9w8X1EQt4Dmc="
+          "hash": "5BLQAukk1MWoDktWpeKZV1KewDRQ8yliqdr6z8nDzxk="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1737,10 +1977,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.OfflinePushConfig.html",
-          "hash": "Hy7h7ENnzHedYt7a4d1Ku/10YuTbhCTud/fB+EyWCuY="
+          "hash": "eCfxm6JVfcPYZn7dW8z8liTpZYZ+1pKbTAk24CxZwH4="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1749,10 +1989,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.OfflinePushToken.html",
-          "hash": "6sRZLvgxuUfBFkr2njnhm200OrIlST6w0mUGasEQSx4="
+          "hash": "F1FgYOCXAS9yhvGFKGgvTvTNnWsupZsVCiZ3RDj4WQI="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1761,10 +2001,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.PendencyPage.html",
-          "hash": "AYVtijQHtNE+/Kz6NyxjyugMHeOF7Za2IzHjKe8FaWA="
+          "hash": "JsKr4bjGfnq7ZgWx4z4RBZ1Zn2yilNeSo0VHy1utffg="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1773,10 +2013,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.ReponseInfo.html",
-          "hash": "op89nEYO2SdXz7MIm14qxbd7mXP1Hk5AydSvfLfZwjg="
+          "hash": "UzosW1f2p4PuWHmtcnc145tTiU41BMhaM8dx8RGpq+8="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1785,10 +2025,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.SM4GCMCallbackParam.html",
-          "hash": "PCo6K9eDAOwd3NrsduLjoVs+Bra5G522st0JJV9NlAM="
+          "hash": "VJYHetT2aZCRlKdsor4RdujXQPU6RTGeBGLE+yYC5CQ="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1797,10 +2037,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.SSODataParam.html",
-          "hash": "v3HNHSp1ff55zJzS6BuGoJTZGBcfw4aiLZG+rk2LJzw="
+          "hash": "YHp1GxdURMo+uV7OSrxZbjCjrAJaauT5OZ8zViIee0s="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1809,10 +2049,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.SSODataRes.html",
-          "hash": "S4AuK2ih8uYHFAY+KE+wHzk0Om4BioeLWuCtH+UZ6ro="
+          "hash": "PEb/+Mt+QObEhUBqzg8vvTVEvTKLXvKhW/gRYLt+r88="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1821,10 +2061,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.SdkConfig.html",
-          "hash": "yCWvtHvr1coMc7vYdPy/nXDcg31FIL33cS0e5rpY3uM="
+          "hash": "Zj6Amy1rPbhp03euaRDNM/46ghevH/3Y1vmwn3cbJAA="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1833,10 +2073,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.ServerAddress.html",
-          "hash": "dHWS2iBzbGQi2CyJAdWrwPAJCLh8iPlOy7r/L4B0a4A="
+          "hash": "K6L5VWcZWLHeBMqCz8m7kvgI+AGJaWo/CFXHdGbNI/I="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1845,10 +2085,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.SetConfig.html",
-          "hash": "O3AL1WftHtOM6m6x7Xeu0dO94VedgvSs81EYGsj9KzY="
+          "hash": "gXWtRH1NGJotVeisL4TvwmApPB3jMYP7+uh9ybn8wTM="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1857,10 +2097,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.Socks5ProxyInfo.html",
-          "hash": "Pevvmj22Qwe4riIiRjbqBT4CV6nt5d3SvvzKTCdCAH8="
+          "hash": "cFsL1RBnSu/uXN7G13qr7SEZVwflKwJGccpXDORrSYc="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1869,10 +2109,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.UserConfig.html",
-          "hash": "xw3A0alGKFUBrqAShv/rbD9taOMFt9ywYrVUwFT//Ow="
+          "hash": "vXlbWCTUMS92zTwh59KDDVf+cNLtqmZ3qPKWv8hA8B4="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1881,10 +2121,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.UserInfo.html",
-          "hash": "HjOt5ISh8HSQJwvruxoV7y3MvrD9yxrQbn8bLxybHfg="
+          "hash": "APu0XkB4/0CL+mys93qnW+MPn5ypUDoCuH7y0m1OF9Q="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1893,10 +2133,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.UserProfile.html",
-          "hash": "lEQYK0IAXPot1v5ee8CDNwLRO45O3f0N2UjoPzHiJeM="
+          "hash": "Dx4//YW3dJ3zStSLeUDRZ6DXiROJit/BNfbmiG6IKLw="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1905,10 +2145,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.UserProfileCustemStringInfo.html",
-          "hash": "GBFUQBbP1GrNRmTRqMOrXbZ76CjEchpom3yO41CQKvA="
+          "hash": "UjcetaJVuscg6wur9VaJyqrCpUB0idXLslg+JeTRxg4="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1917,10 +2157,10 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.UserProfileItem.html",
-          "hash": "mV6sECmwrrnBhzDey7IzVSPyZAPs8CwwyIRv/M2c72Y="
+          "hash": "mWyw3L48AMedhfslqZYrQDpEu5LUB68z9GGoGeFreLI="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1929,7 +2169,7 @@
       "output": {
         ".html": {
           "relative_path": "api/com.tencent.imsdk.unity.types.html",
-          "hash": "8y8Z5ULxP4fBEn/9Az+u5DX2oTJfMVfLDMAryz2ZhRI="
+          "hash": "5nL39LS6kvry6SFkFSlGnYC6gXVyqBWAts/J6k7H7uE="
         }
       },
       "is_incremental": false,
@@ -1944,7 +2184,7 @@
           "hash": "iZOHYafJhhSXdu+1URFIl8DpybJ5ltV9JBAQ7QboR2A="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1953,7 +2193,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "TInYDaGNoD5yfc66DGVwE9sEprIEvYjFpqEOwJDkl3U="
+          "hash": "QlDHsVJR9QKsp6W0ixUzP8QfPo9x3M/b1me3nPt+AiY="
         }
       },
       "is_incremental": false,
@@ -1968,7 +2208,7 @@
           "hash": "aOy2sep6UZV26oOkupcIBXuDgHQsCVz7R3i+I6vFl6Y="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1992,7 +2232,7 @@
           "hash": "Zuarg8Ko4JiTcHFS3jxO1XOBbzoRxc4hmiJiNVVoEw4="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -2011,23 +2251,25 @@
   "incremental_info": [
     {
       "status": {
-        "can_incremental": true,
+        "can_incremental": false,
+        "details": "Cannot build incrementally because last build info is missing.",
         "incrementalPhase": "build",
         "total_file_count": 0,
-        "skipped_file_count": 0
+        "skipped_file_count": 0,
+        "full_build_reason_code": "NoAvailableBuildCache"
       },
       "processors": {
         "ConceptualDocumentProcessor": {
-          "can_incremental": true,
+          "can_incremental": false,
           "incrementalPhase": "build",
           "total_file_count": 2,
-          "skipped_file_count": 2
+          "skipped_file_count": 0
         },
         "ManagedReferenceDocumentProcessor": {
-          "can_incremental": true,
+          "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 162,
-          "skipped_file_count": 161
+          "total_file_count": 182,
+          "skipped_file_count": 0
         },
         "TocDocumentProcessor": {
           "can_incremental": false,
@@ -2040,8 +2282,8 @@
     },
     {
       "status": {
-        "can_incremental": true,
-        "details": "Can support incremental post processing.",
+        "can_incremental": false,
+        "details": "Cannot support incremental post processing, the reason is: last post processor info is null.",
         "incrementalPhase": "postProcessing",
         "total_file_count": 0,
         "skipped_file_count": 0

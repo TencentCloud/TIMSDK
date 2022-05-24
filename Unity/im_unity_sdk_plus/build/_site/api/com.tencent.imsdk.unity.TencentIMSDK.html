@@ -115,7 +115,7 @@
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_AddRecvNewMsgCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.AddRecvNewMsgCallback*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_AddRecvNewMsgCallback_com_tencent_imsdk_unity_callback_RecvNewMsgCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.AddRecvNewMsgCallback(com.tencent.imsdk.unity.callback.RecvNewMsgCallback)">AddRecvNewMsgCallback(RecvNewMsgCallback)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_AddRecvNewMsgCallback_com_tencent_imsdk_unity_callback_RecvNewMsgCallback_com_tencent_imsdk_unity_callback_RecvNewMsgStringCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.AddRecvNewMsgCallback(com.tencent.imsdk.unity.callback.RecvNewMsgCallback,com.tencent.imsdk.unity.callback.RecvNewMsgStringCallback)">AddRecvNewMsgCallback(RecvNewMsgCallback, RecvNewMsgStringCallback)</h4>
   <div class="markdown level1 summary"><p>注册收到新消息回调</p>
 <p>如果用户是登录状态，ImSDK收到新消息会通过此接口设置的回调抛出，另外需要注意，抛出的消息不一定是未读的消息 </p>
 <p>只是本地曾经没有过的消息（例如在另外一个终端已读，拉取最近联系人消息时可以获取会话最后一条消息，如果本地没有，会通过此方法抛出）</p>
@@ -124,7 +124,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void AddRecvNewMsgCallback(RecvNewMsgCallback callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static void AddRecvNewMsgCallback(RecvNewMsgCallback callback = null, RecvNewMsgStringCallback stringCallback = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -141,6 +141,11 @@
         <td><span class="parametername">callback</span></td>
         <td><p>回调 RecvNewMsgCallback</p>
 </td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.RecvNewMsgStringCallback.html">RecvNewMsgStringCallback</a></td>
+        <td><span class="parametername">stringCallback</span></td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -338,13 +343,13 @@
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_ConvDelete_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.ConvDelete*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_ConvDelete_System_String_com_tencent_imsdk_unity_enums_TIMConvType_com_tencent_imsdk_unity_callback_ValueCallback_System_Object__" data-uid="com.tencent.imsdk.unity.TencentIMSDK.ConvDelete(System.String,com.tencent.imsdk.unity.enums.TIMConvType,com.tencent.imsdk.unity.callback.ValueCallback{System.Object})">ConvDelete(String, TIMConvType, ValueCallback&lt;Object&gt;)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_ConvDelete_System_String_com_tencent_imsdk_unity_enums_TIMConvType_com_tencent_imsdk_unity_callback_NullValueCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.ConvDelete(System.String,com.tencent.imsdk.unity.enums.TIMConvType,com.tencent.imsdk.unity.callback.NullValueCallback)">ConvDelete(String, TIMConvType, NullValueCallback)</h4>
   <div class="markdown level1 summary"><p>删除会话</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static TIMResult ConvDelete(string conv_id, TIMConvType conv_type, ValueCallback&lt;object&gt; callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static TIMResult ConvDelete(string conv_id, TIMConvType conv_type, NullValueCallback callback)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -369,7 +374,7 @@
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="com.tencent.imsdk.unity.callback.ValueCallback-1.html">ValueCallback</a>&lt;<span class="xref">System.Object</span>&gt;</td>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.NullValueCallback.html">NullValueCallback</a></td>
         <td><span class="parametername">callback</span></td>
         <td><p>异步回调</p>
 </td>
@@ -719,13 +724,13 @@
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_ConvPinConversation_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.ConvPinConversation*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_ConvPinConversation_System_String_com_tencent_imsdk_unity_enums_TIMConvType_System_Boolean_com_tencent_imsdk_unity_callback_ValueCallback_System_Object__" data-uid="com.tencent.imsdk.unity.TencentIMSDK.ConvPinConversation(System.String,com.tencent.imsdk.unity.enums.TIMConvType,System.Boolean,com.tencent.imsdk.unity.callback.ValueCallback{System.Object})">ConvPinConversation(String, TIMConvType, Boolean, ValueCallback&lt;Object&gt;)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_ConvPinConversation_System_String_com_tencent_imsdk_unity_enums_TIMConvType_System_Boolean_com_tencent_imsdk_unity_callback_NullValueCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.ConvPinConversation(System.String,com.tencent.imsdk.unity.enums.TIMConvType,System.Boolean,com.tencent.imsdk.unity.callback.NullValueCallback)">ConvPinConversation(String, TIMConvType, Boolean, NullValueCallback)</h4>
   <div class="markdown level1 summary"><p>会话置顶</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static TIMResult ConvPinConversation(string conv_id, TIMConvType conv_type, bool is_pinned, ValueCallback&lt;object&gt; callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static TIMResult ConvPinConversation(string conv_id, TIMConvType conv_type, bool is_pinned, NullValueCallback callback)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -756,7 +761,7 @@
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="com.tencent.imsdk.unity.callback.ValueCallback-1.html">ValueCallback</a>&lt;<span class="xref">System.Object</span>&gt;</td>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.NullValueCallback.html">NullValueCallback</a></td>
         <td><span class="parametername">callback</span></td>
         <td><p>异步回调</p>
 </td>
@@ -1385,13 +1390,13 @@
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_FriendshipDeleteFriendGroup_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.FriendshipDeleteFriendGroup*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_FriendshipDeleteFriendGroup_System_Collections_Generic_List_System_String__com_tencent_imsdk_unity_callback_ValueCallback_System_Object__" data-uid="com.tencent.imsdk.unity.TencentIMSDK.FriendshipDeleteFriendGroup(System.Collections.Generic.List{System.String},com.tencent.imsdk.unity.callback.ValueCallback{System.Object})">FriendshipDeleteFriendGroup(List&lt;String&gt;, ValueCallback&lt;Object&gt;)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_FriendshipDeleteFriendGroup_System_Collections_Generic_List_System_String__com_tencent_imsdk_unity_callback_NullValueCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.FriendshipDeleteFriendGroup(System.Collections.Generic.List{System.String},com.tencent.imsdk.unity.callback.NullValueCallback)">FriendshipDeleteFriendGroup(List&lt;String&gt;, NullValueCallback)</h4>
   <div class="markdown level1 summary"><p>删除好友分组列表</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static TIMResult FriendshipDeleteFriendGroup(List&lt;string&gt; json_delete_friend_group_param, ValueCallback&lt;object&gt; callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static TIMResult FriendshipDeleteFriendGroup(List&lt;string&gt; json_delete_friend_group_param, NullValueCallback callback)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1410,7 +1415,7 @@
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="com.tencent.imsdk.unity.callback.ValueCallback-1.html">ValueCallback</a>&lt;<span class="xref">System.Object</span>&gt;</td>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.NullValueCallback.html">NullValueCallback</a></td>
         <td><span class="parametername">callback</span></td>
         <td><p>异步回调</p>
 </td>
@@ -2342,13 +2347,13 @@
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_FriendshipModifyFriendProfile_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.FriendshipModifyFriendProfile*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_FriendshipModifyFriendProfile_com_tencent_imsdk_unity_types_FriendshipModifyFriendProfileParam_com_tencent_imsdk_unity_callback_ValueCallback_System_Object__" data-uid="com.tencent.imsdk.unity.TencentIMSDK.FriendshipModifyFriendProfile(com.tencent.imsdk.unity.types.FriendshipModifyFriendProfileParam,com.tencent.imsdk.unity.callback.ValueCallback{System.Object})">FriendshipModifyFriendProfile(FriendshipModifyFriendProfileParam, ValueCallback&lt;Object&gt;)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_FriendshipModifyFriendProfile_com_tencent_imsdk_unity_types_FriendshipModifyFriendProfileParam_com_tencent_imsdk_unity_callback_NullValueCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.FriendshipModifyFriendProfile(com.tencent.imsdk.unity.types.FriendshipModifyFriendProfileParam,com.tencent.imsdk.unity.callback.NullValueCallback)">FriendshipModifyFriendProfile(FriendshipModifyFriendProfileParam, NullValueCallback)</h4>
   <div class="markdown level1 summary"><p>修改好友信息</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static TIMResult FriendshipModifyFriendProfile(FriendshipModifyFriendProfileParam json_modify_friend_info_param, ValueCallback&lt;object&gt; callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static TIMResult FriendshipModifyFriendProfile(FriendshipModifyFriendProfileParam json_modify_friend_info_param, NullValueCallback callback)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -2367,7 +2372,7 @@
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="com.tencent.imsdk.unity.callback.ValueCallback-1.html">ValueCallback</a>&lt;<span class="xref">System.Object</span>&gt;</td>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.NullValueCallback.html">NullValueCallback</a></td>
         <td><span class="parametername">callback</span></td>
         <td><p>异步回调</p>
 </td>
@@ -2440,13 +2445,13 @@
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_FriendshipReportPendencyReaded_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.FriendshipReportPendencyReaded*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_FriendshipReportPendencyReaded_System_Int64_com_tencent_imsdk_unity_callback_ValueCallback_System_Object__" data-uid="com.tencent.imsdk.unity.TencentIMSDK.FriendshipReportPendencyReaded(System.Int64,com.tencent.imsdk.unity.callback.ValueCallback{System.Object})">FriendshipReportPendencyReaded(Int64, ValueCallback&lt;Object&gt;)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_FriendshipReportPendencyReaded_System_Int64_com_tencent_imsdk_unity_callback_NullValueCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.FriendshipReportPendencyReaded(System.Int64,com.tencent.imsdk.unity.callback.NullValueCallback)">FriendshipReportPendencyReaded(Int64, NullValueCallback)</h4>
   <div class="markdown level1 summary"><p>上报好友申请未决已读</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static TIMResult FriendshipReportPendencyReaded(long time_stamp, ValueCallback&lt;object&gt; callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static TIMResult FriendshipReportPendencyReaded(long time_stamp, NullValueCallback callback)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -2465,7 +2470,7 @@
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="com.tencent.imsdk.unity.callback.ValueCallback-1.html">ValueCallback</a>&lt;<span class="xref">System.Object</span>&gt;</td>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.NullValueCallback.html">NullValueCallback</a></td>
         <td><span class="parametername">callback</span></td>
         <td><p>异步回调</p>
 </td>
@@ -2707,6 +2712,80 @@
   </table>
   
   
+  <a id="com_tencent_imsdk_unity_TencentIMSDK_GetMsgGroupMessageReadMemberList_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.GetMsgGroupMessageReadMemberList*"></a>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_GetMsgGroupMessageReadMemberList_com_tencent_imsdk_unity_types_Message_com_tencent_imsdk_unity_enums_TIMGroupMessageReadMembersFilter_System_UInt64_System_Int32_com_tencent_imsdk_unity_callback_MsgGroupMessageReadMemberListCallback_com_tencent_imsdk_unity_callback_MsgGroupMessageReadMemberListStringCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.GetMsgGroupMessageReadMemberList(com.tencent.imsdk.unity.types.Message,com.tencent.imsdk.unity.enums.TIMGroupMessageReadMembersFilter,System.UInt64,System.Int32,com.tencent.imsdk.unity.callback.MsgGroupMessageReadMemberListCallback,com.tencent.imsdk.unity.callback.MsgGroupMessageReadMemberListStringCallback)">GetMsgGroupMessageReadMemberList(Message, TIMGroupMessageReadMembersFilter, UInt64, Int32, MsgGroupMessageReadMemberListCallback, MsgGroupMessageReadMemberListStringCallback)</h4>
+  <div class="markdown level1 summary"><p>获取群消息已读群成员列表</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TIMResult GetMsgGroupMessageReadMemberList(Message message, TIMGroupMessageReadMembersFilter filter, ulong next_seq, int count, MsgGroupMessageReadMemberListCallback callback = null, MsgGroupMessageReadMemberListStringCallback stringCallback = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="com.tencent.imsdk.unity.types.Message.html">Message</a></td>
+        <td><span class="parametername">message</span></td>
+        <td><p>单条群消息</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="com.tencent.imsdk.unity.enums.TIMGroupMessageReadMembersFilter.html">TIMGroupMessageReadMembersFilter</a></td>
+        <td><span class="parametername">filter</span></td>
+        <td><p>指定拉取已读或未读群成员列表</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.UInt64</span></td>
+        <td><span class="parametername">next_seq</span></td>
+        <td><p>分页拉取的游标，第一次默认取传 0，后续分页拉取时，传上一次分页拉取成功回调里的 next_seq</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">count</span></td>
+        <td><p>分页拉取的个数，最大支持 100 个。</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.MsgGroupMessageReadMemberListCallback.html">MsgGroupMessageReadMemberListCallback</a></td>
+        <td><span class="parametername">callback</span></td>
+        <td><p>回调 MsgGroupMessageReadMemberListCallback</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.MsgGroupMessageReadMemberListStringCallback.html">MsgGroupMessageReadMemberListStringCallback</a></td>
+        <td><span class="parametername">stringCallback</span></td>
+        <td><p>string 类型回调 MsgGroupMessageReadMemberListStringCallback</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="com.tencent.imsdk.unity.enums.TIMResult.html">TIMResult</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
   <a id="com_tencent_imsdk_unity_TencentIMSDK_GetSDKVersion_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.GetSDKVersion*"></a>
   <h4 id="com_tencent_imsdk_unity_TencentIMSDK_GetSDKVersion" data-uid="com.tencent.imsdk.unity.TencentIMSDK.GetSDKVersion">GetSDKVersion()</h4>
   <div class="markdown level1 summary"><p>初始化IM SDK底层库版本</p>
@@ -2860,13 +2939,13 @@
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_GroupDelete_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.GroupDelete*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_GroupDelete_System_String_com_tencent_imsdk_unity_callback_ValueCallback_System_Object__" data-uid="com.tencent.imsdk.unity.TencentIMSDK.GroupDelete(System.String,com.tencent.imsdk.unity.callback.ValueCallback{System.Object})">GroupDelete(String, ValueCallback&lt;Object&gt;)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_GroupDelete_System_String_com_tencent_imsdk_unity_callback_NullValueCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.GroupDelete(System.String,com.tencent.imsdk.unity.callback.NullValueCallback)">GroupDelete(String, NullValueCallback)</h4>
   <div class="markdown level1 summary"><p>删除群</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static TIMResult GroupDelete(string group_id, ValueCallback&lt;object&gt; callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static TIMResult GroupDelete(string group_id, NullValueCallback callback)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -2885,7 +2964,7 @@
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="com.tencent.imsdk.unity.callback.ValueCallback-1.html">ValueCallback</a>&lt;<span class="xref">System.Object</span>&gt;</td>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.NullValueCallback.html">NullValueCallback</a></td>
         <td><span class="parametername">callback</span></td>
         <td><p>异步回调</p>
 </td>
@@ -2958,13 +3037,13 @@
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_GroupDeleteGroupAttributes_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.GroupDeleteGroupAttributes*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_GroupDeleteGroupAttributes_System_String_System_Collections_Generic_List_System_String__com_tencent_imsdk_unity_callback_ValueCallback_System_Object__" data-uid="com.tencent.imsdk.unity.TencentIMSDK.GroupDeleteGroupAttributes(System.String,System.Collections.Generic.List{System.String},com.tencent.imsdk.unity.callback.ValueCallback{System.Object})">GroupDeleteGroupAttributes(String, List&lt;String&gt;, ValueCallback&lt;Object&gt;)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_GroupDeleteGroupAttributes_System_String_System_Collections_Generic_List_System_String__com_tencent_imsdk_unity_callback_NullValueCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.GroupDeleteGroupAttributes(System.String,System.Collections.Generic.List{System.String},com.tencent.imsdk.unity.callback.NullValueCallback)">GroupDeleteGroupAttributes(String, List&lt;String&gt;, NullValueCallback)</h4>
   <div class="markdown level1 summary"><p>删除群自定义属性</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static TIMResult GroupDeleteGroupAttributes(string group_id, List&lt;string&gt; json_keys, ValueCallback&lt;object&gt; callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static TIMResult GroupDeleteGroupAttributes(string group_id, List&lt;string&gt; json_keys, NullValueCallback callback)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -2989,7 +3068,7 @@
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="com.tencent.imsdk.unity.callback.ValueCallback-1.html">ValueCallback</a>&lt;<span class="xref">System.Object</span>&gt;</td>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.NullValueCallback.html">NullValueCallback</a></td>
         <td><span class="parametername">callback</span></td>
         <td><p>异步回调</p>
 </td>
@@ -3753,13 +3832,13 @@
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_GroupHandlePendency_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.GroupHandlePendency*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_GroupHandlePendency_com_tencent_imsdk_unity_types_GroupHandlePendencyParam_com_tencent_imsdk_unity_callback_ValueCallback_System_Object__" data-uid="com.tencent.imsdk.unity.TencentIMSDK.GroupHandlePendency(com.tencent.imsdk.unity.types.GroupHandlePendencyParam,com.tencent.imsdk.unity.callback.ValueCallback{System.Object})">GroupHandlePendency(GroupHandlePendencyParam, ValueCallback&lt;Object&gt;)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_GroupHandlePendency_com_tencent_imsdk_unity_types_GroupHandlePendencyParam_com_tencent_imsdk_unity_callback_NullValueCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.GroupHandlePendency(com.tencent.imsdk.unity.types.GroupHandlePendencyParam,com.tencent.imsdk.unity.callback.NullValueCallback)">GroupHandlePendency(GroupHandlePendencyParam, NullValueCallback)</h4>
   <div class="markdown level1 summary"><p>处理群未决信息</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static TIMResult GroupHandlePendency(GroupHandlePendencyParam json_group_handle_pendency_param, ValueCallback&lt;object&gt; callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static TIMResult GroupHandlePendency(GroupHandlePendencyParam json_group_handle_pendency_param, NullValueCallback callback)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -3778,7 +3857,7 @@
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="com.tencent.imsdk.unity.callback.ValueCallback-1.html">ValueCallback</a>&lt;<span class="xref">System.Object</span>&gt;</td>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.NullValueCallback.html">NullValueCallback</a></td>
         <td><span class="parametername">callback</span></td>
         <td><p>异步回调</p>
 </td>
@@ -3851,13 +3930,13 @@
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_GroupInitGroupAttributes_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.GroupInitGroupAttributes*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_GroupInitGroupAttributes_System_String_com_tencent_imsdk_unity_types_GroupAttributes_com_tencent_imsdk_unity_callback_ValueCallback_System_Object__" data-uid="com.tencent.imsdk.unity.TencentIMSDK.GroupInitGroupAttributes(System.String,com.tencent.imsdk.unity.types.GroupAttributes,com.tencent.imsdk.unity.callback.ValueCallback{System.Object})">GroupInitGroupAttributes(String, GroupAttributes, ValueCallback&lt;Object&gt;)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_GroupInitGroupAttributes_System_String_com_tencent_imsdk_unity_types_GroupAttributes_com_tencent_imsdk_unity_callback_NullValueCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.GroupInitGroupAttributes(System.String,com.tencent.imsdk.unity.types.GroupAttributes,com.tencent.imsdk.unity.callback.NullValueCallback)">GroupInitGroupAttributes(String, GroupAttributes, NullValueCallback)</h4>
   <div class="markdown level1 summary"><p>初始化群自定义属性</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static TIMResult GroupInitGroupAttributes(string group_id, GroupAttributes json_group_atrributes, ValueCallback&lt;object&gt; callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static TIMResult GroupInitGroupAttributes(string group_id, GroupAttributes json_group_atrributes, NullValueCallback callback)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -3882,7 +3961,7 @@
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="com.tencent.imsdk.unity.callback.ValueCallback-1.html">ValueCallback</a>&lt;<span class="xref">System.Object</span>&gt;</td>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.NullValueCallback.html">NullValueCallback</a></td>
         <td><span class="parametername">callback</span></td>
         <td><p>异步回调</p>
 </td>
@@ -4058,13 +4137,13 @@
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_GroupJoin_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.GroupJoin*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_GroupJoin_System_String_System_String_com_tencent_imsdk_unity_callback_ValueCallback_System_Object__" data-uid="com.tencent.imsdk.unity.TencentIMSDK.GroupJoin(System.String,System.String,com.tencent.imsdk.unity.callback.ValueCallback{System.Object})">GroupJoin(String, String, ValueCallback&lt;Object&gt;)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_GroupJoin_System_String_System_String_com_tencent_imsdk_unity_callback_NullValueCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.GroupJoin(System.String,System.String,com.tencent.imsdk.unity.callback.NullValueCallback)">GroupJoin(String, String, NullValueCallback)</h4>
   <div class="markdown level1 summary"><p>加入群</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static TIMResult GroupJoin(string group_id, string hello_message, ValueCallback&lt;object&gt; callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static TIMResult GroupJoin(string group_id, string hello_message, NullValueCallback callback)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -4089,7 +4168,7 @@
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="com.tencent.imsdk.unity.callback.ValueCallback-1.html">ValueCallback</a>&lt;<span class="xref">System.Object</span>&gt;</td>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.NullValueCallback.html">NullValueCallback</a></td>
         <td><span class="parametername">callback</span></td>
         <td><p>异步回调</p>
 </td>
@@ -4167,13 +4246,13 @@
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_GroupModifyGroupInfo_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.GroupModifyGroupInfo*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_GroupModifyGroupInfo_com_tencent_imsdk_unity_types_GroupModifyInfoParam_com_tencent_imsdk_unity_callback_ValueCallback_System_Object__" data-uid="com.tencent.imsdk.unity.TencentIMSDK.GroupModifyGroupInfo(com.tencent.imsdk.unity.types.GroupModifyInfoParam,com.tencent.imsdk.unity.callback.ValueCallback{System.Object})">GroupModifyGroupInfo(GroupModifyInfoParam, ValueCallback&lt;Object&gt;)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_GroupModifyGroupInfo_com_tencent_imsdk_unity_types_GroupModifyInfoParam_com_tencent_imsdk_unity_callback_NullValueCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.GroupModifyGroupInfo(com.tencent.imsdk.unity.types.GroupModifyInfoParam,com.tencent.imsdk.unity.callback.NullValueCallback)">GroupModifyGroupInfo(GroupModifyInfoParam, NullValueCallback)</h4>
   <div class="markdown level1 summary"><p>修改群信息</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static TIMResult GroupModifyGroupInfo(GroupModifyInfoParam json_group_modifyinfo_param, ValueCallback&lt;object&gt; callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static TIMResult GroupModifyGroupInfo(GroupModifyInfoParam json_group_modifyinfo_param, NullValueCallback callback)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -4192,7 +4271,7 @@
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="com.tencent.imsdk.unity.callback.ValueCallback-1.html">ValueCallback</a>&lt;<span class="xref">System.Object</span>&gt;</td>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.NullValueCallback.html">NullValueCallback</a></td>
         <td><span class="parametername">callback</span></td>
         <td><p>异步回调</p>
 </td>
@@ -4265,13 +4344,13 @@
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_GroupModifyMemberInfo_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.GroupModifyMemberInfo*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_GroupModifyMemberInfo_com_tencent_imsdk_unity_types_GroupModifyMemberInfoParam_com_tencent_imsdk_unity_callback_ValueCallback_System_Object__" data-uid="com.tencent.imsdk.unity.TencentIMSDK.GroupModifyMemberInfo(com.tencent.imsdk.unity.types.GroupModifyMemberInfoParam,com.tencent.imsdk.unity.callback.ValueCallback{System.Object})">GroupModifyMemberInfo(GroupModifyMemberInfoParam, ValueCallback&lt;Object&gt;)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_GroupModifyMemberInfo_com_tencent_imsdk_unity_types_GroupModifyMemberInfoParam_com_tencent_imsdk_unity_callback_NullValueCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.GroupModifyMemberInfo(com.tencent.imsdk.unity.types.GroupModifyMemberInfoParam,com.tencent.imsdk.unity.callback.NullValueCallback)">GroupModifyMemberInfo(GroupModifyMemberInfoParam, NullValueCallback)</h4>
   <div class="markdown level1 summary"><p>修改群成员信息</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static TIMResult GroupModifyMemberInfo(GroupModifyMemberInfoParam json_group_modifymeminfo_param, ValueCallback&lt;object&gt; callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static TIMResult GroupModifyMemberInfo(GroupModifyMemberInfoParam json_group_modifymeminfo_param, NullValueCallback callback)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -4290,7 +4369,7 @@
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="com.tencent.imsdk.unity.callback.ValueCallback-1.html">ValueCallback</a>&lt;<span class="xref">System.Object</span>&gt;</td>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.NullValueCallback.html">NullValueCallback</a></td>
         <td><span class="parametername">callback</span></td>
         <td><p>异步回调</p>
 </td>
@@ -4363,13 +4442,13 @@
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_GroupQuit_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.GroupQuit*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_GroupQuit_System_String_com_tencent_imsdk_unity_callback_ValueCallback_System_Object__" data-uid="com.tencent.imsdk.unity.TencentIMSDK.GroupQuit(System.String,com.tencent.imsdk.unity.callback.ValueCallback{System.Object})">GroupQuit(String, ValueCallback&lt;Object&gt;)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_GroupQuit_System_String_com_tencent_imsdk_unity_callback_NullValueCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.GroupQuit(System.String,com.tencent.imsdk.unity.callback.NullValueCallback)">GroupQuit(String, NullValueCallback)</h4>
   <div class="markdown level1 summary"><p>退出群</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static TIMResult GroupQuit(string group_id, ValueCallback&lt;object&gt; callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static TIMResult GroupQuit(string group_id, NullValueCallback callback)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -4388,7 +4467,7 @@
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="com.tencent.imsdk.unity.callback.ValueCallback-1.html">ValueCallback</a>&lt;<span class="xref">System.Object</span>&gt;</td>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.NullValueCallback.html">NullValueCallback</a></td>
         <td><span class="parametername">callback</span></td>
         <td><p>异步回调</p>
 </td>
@@ -4461,13 +4540,13 @@
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_GroupReportPendencyReaded_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.GroupReportPendencyReaded*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_GroupReportPendencyReaded_System_Int64_com_tencent_imsdk_unity_callback_ValueCallback_System_Object__" data-uid="com.tencent.imsdk.unity.TencentIMSDK.GroupReportPendencyReaded(System.Int64,com.tencent.imsdk.unity.callback.ValueCallback{System.Object})">GroupReportPendencyReaded(Int64, ValueCallback&lt;Object&gt;)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_GroupReportPendencyReaded_System_Int64_com_tencent_imsdk_unity_callback_NullValueCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.GroupReportPendencyReaded(System.Int64,com.tencent.imsdk.unity.callback.NullValueCallback)">GroupReportPendencyReaded(Int64, NullValueCallback)</h4>
   <div class="markdown level1 summary"><p>上报群未决信息已读</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static TIMResult GroupReportPendencyReaded(long time_stamp, ValueCallback&lt;object&gt; callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static TIMResult GroupReportPendencyReaded(long time_stamp, NullValueCallback callback)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -4486,7 +4565,7 @@
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="com.tencent.imsdk.unity.callback.ValueCallback-1.html">ValueCallback</a>&lt;<span class="xref">System.Object</span>&gt;</td>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.NullValueCallback.html">NullValueCallback</a></td>
         <td><span class="parametername">callback</span></td>
         <td><p>异步回调</p>
 </td>
@@ -4805,13 +4884,13 @@
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_Login_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.Login*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_Login_System_String_System_String_com_tencent_imsdk_unity_callback_ValueCallback_System_Object__" data-uid="com.tencent.imsdk.unity.TencentIMSDK.Login(System.String,System.String,com.tencent.imsdk.unity.callback.ValueCallback{System.Object})">Login(String, String, ValueCallback&lt;Object&gt;)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_Login_System_String_System_String_com_tencent_imsdk_unity_callback_NullValueCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.Login(System.String,System.String,com.tencent.imsdk.unity.callback.NullValueCallback)">Login(String, String, NullValueCallback)</h4>
   <div class="markdown level1 summary"><p>登录</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static TIMResult Login(string user_id, string user_sig, ValueCallback&lt;object&gt; callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static TIMResult Login(string user_id, string user_sig, NullValueCallback callback)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -4836,7 +4915,7 @@
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="com.tencent.imsdk.unity.callback.ValueCallback-1.html">ValueCallback</a>&lt;<span class="xref">System.Object</span>&gt;</td>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.NullValueCallback.html">NullValueCallback</a></td>
         <td><span class="parametername">callback</span></td>
         <td><p>异步回调</p>
 </td>
@@ -4914,13 +4993,13 @@
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_Logout_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.Logout*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_Logout_com_tencent_imsdk_unity_callback_ValueCallback_System_Object__" data-uid="com.tencent.imsdk.unity.TencentIMSDK.Logout(com.tencent.imsdk.unity.callback.ValueCallback{System.Object})">Logout(ValueCallback&lt;Object&gt;)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_Logout_com_tencent_imsdk_unity_callback_NullValueCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.Logout(com.tencent.imsdk.unity.callback.NullValueCallback)">Logout(NullValueCallback)</h4>
   <div class="markdown level1 summary"><p>退出登录</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static TIMResult Logout(ValueCallback&lt;object&gt; callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static TIMResult Logout(NullValueCallback callback)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -4933,7 +5012,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="com.tencent.imsdk.unity.callback.ValueCallback-1.html">ValueCallback</a>&lt;<span class="xref">System.Object</span>&gt;</td>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.NullValueCallback.html">NullValueCallback</a></td>
         <td><span class="parametername">callback</span></td>
         <td><p>异步回调</p>
 </td>
@@ -5219,13 +5298,13 @@
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_MsgClearHistoryMessage_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgClearHistoryMessage*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_MsgClearHistoryMessage_System_String_com_tencent_imsdk_unity_enums_TIMConvType_com_tencent_imsdk_unity_callback_ValueCallback_System_Object__" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgClearHistoryMessage(System.String,com.tencent.imsdk.unity.enums.TIMConvType,com.tencent.imsdk.unity.callback.ValueCallback{System.Object})">MsgClearHistoryMessage(String, TIMConvType, ValueCallback&lt;Object&gt;)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_MsgClearHistoryMessage_System_String_com_tencent_imsdk_unity_enums_TIMConvType_com_tencent_imsdk_unity_callback_NullValueCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgClearHistoryMessage(System.String,com.tencent.imsdk.unity.enums.TIMConvType,com.tencent.imsdk.unity.callback.NullValueCallback)">MsgClearHistoryMessage(String, TIMConvType, NullValueCallback)</h4>
   <div class="markdown level1 summary"><p>清除历史消息</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static TIMResult MsgClearHistoryMessage(string conv_id, TIMConvType conv_type, ValueCallback&lt;object&gt; callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static TIMResult MsgClearHistoryMessage(string conv_id, TIMConvType conv_type, NullValueCallback callback)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -5250,7 +5329,7 @@
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="com.tencent.imsdk.unity.callback.ValueCallback-1.html">ValueCallback</a>&lt;<span class="xref">System.Object</span>&gt;</td>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.NullValueCallback.html">NullValueCallback</a></td>
         <td><span class="parametername">callback</span></td>
         <td><p>异步回调</p>
 </td>
@@ -5328,13 +5407,13 @@
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_MsgDelete_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgDelete*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_MsgDelete_System_String_com_tencent_imsdk_unity_enums_TIMConvType_com_tencent_imsdk_unity_types_MsgDeleteParam_com_tencent_imsdk_unity_callback_ValueCallback_System_Object__" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgDelete(System.String,com.tencent.imsdk.unity.enums.TIMConvType,com.tencent.imsdk.unity.types.MsgDeleteParam,com.tencent.imsdk.unity.callback.ValueCallback{System.Object})">MsgDelete(String, TIMConvType, MsgDeleteParam, ValueCallback&lt;Object&gt;)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_MsgDelete_System_String_com_tencent_imsdk_unity_enums_TIMConvType_com_tencent_imsdk_unity_types_MsgDeleteParam_com_tencent_imsdk_unity_callback_NullValueCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgDelete(System.String,com.tencent.imsdk.unity.enums.TIMConvType,com.tencent.imsdk.unity.types.MsgDeleteParam,com.tencent.imsdk.unity.callback.NullValueCallback)">MsgDelete(String, TIMConvType, MsgDeleteParam, NullValueCallback)</h4>
   <div class="markdown level1 summary"><p>消息删除</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static TIMResult MsgDelete(string conv_id, TIMConvType conv_type, MsgDeleteParam message_delete_param, ValueCallback&lt;object&gt; callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static TIMResult MsgDelete(string conv_id, TIMConvType conv_type, MsgDeleteParam message_delete_param, NullValueCallback callback)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -5365,7 +5444,7 @@
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="com.tencent.imsdk.unity.callback.ValueCallback-1.html">ValueCallback</a>&lt;<span class="xref">System.Object</span>&gt;</td>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.NullValueCallback.html">NullValueCallback</a></td>
         <td><span class="parametername">callback</span></td>
         <td><p>异步回调</p>
 </td>
@@ -5448,13 +5527,13 @@
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_MsgDoBackground_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgDoBackground*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_MsgDoBackground_System_Int32_com_tencent_imsdk_unity_callback_ValueCallback_System_Object__" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgDoBackground(System.Int32,com.tencent.imsdk.unity.callback.ValueCallback{System.Object})">MsgDoBackground(Int32, ValueCallback&lt;Object&gt;)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_MsgDoBackground_System_Int32_com_tencent_imsdk_unity_callback_NullValueCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgDoBackground(System.Int32,com.tencent.imsdk.unity.callback.NullValueCallback)">MsgDoBackground(Int32, NullValueCallback)</h4>
   <div class="markdown level1 summary"><p>APP 检测到应用退后台时可以调用此接口，可以用作桌面应用角标的初始化未读数量（iOS 和 Android 平台专用）。</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static TIMResult MsgDoBackground(int unread_count, ValueCallback&lt;object&gt; callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static TIMResult MsgDoBackground(int unread_count, NullValueCallback callback)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -5473,7 +5552,7 @@
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="com.tencent.imsdk.unity.callback.ValueCallback-1.html">ValueCallback</a>&lt;<span class="xref">System.Object</span>&gt;</td>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.NullValueCallback.html">NullValueCallback</a></td>
         <td><span class="parametername">callback</span></td>
         <td><p>ValueCallback</p>
 </td>
@@ -5546,13 +5625,13 @@
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_MsgDoForeground_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgDoForeground*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_MsgDoForeground_com_tencent_imsdk_unity_callback_ValueCallback_System_Object__" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgDoForeground(com.tencent.imsdk.unity.callback.ValueCallback{System.Object})">MsgDoForeground(ValueCallback&lt;Object&gt;)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_MsgDoForeground_com_tencent_imsdk_unity_callback_NullValueCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgDoForeground(com.tencent.imsdk.unity.callback.NullValueCallback)">MsgDoForeground(NullValueCallback)</h4>
   <div class="markdown level1 summary"><p>APP 检测到应用进前台时可以调用此接口（iOS 和 Android 平台专用）。</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static TIMResult MsgDoForeground(ValueCallback&lt;object&gt; callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static TIMResult MsgDoForeground(NullValueCallback callback)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -5565,7 +5644,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="com.tencent.imsdk.unity.callback.ValueCallback-1.html">ValueCallback</a>&lt;<span class="xref">System.Object</span>&gt;</td>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.NullValueCallback.html">NullValueCallback</a></td>
         <td><span class="parametername">callback</span></td>
         <td><p>ValueCallback</p>
 </td>
@@ -6155,6 +6234,104 @@
   </table>
   
   
+  <a id="com_tencent_imsdk_unity_TencentIMSDK_MsgGetMessageReadReceipts_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgGetMessageReadReceipts*"></a>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_MsgGetMessageReadReceipts_System_Collections_Generic_List_com_tencent_imsdk_unity_types_Message__com_tencent_imsdk_unity_callback_ValueCallback_System_Collections_Generic_List_com_tencent_imsdk_unity_types_MessageReceipt___" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgGetMessageReadReceipts(System.Collections.Generic.List{com.tencent.imsdk.unity.types.Message},com.tencent.imsdk.unity.callback.ValueCallback{System.Collections.Generic.List{com.tencent.imsdk.unity.types.MessageReceipt}})">MsgGetMessageReadReceipts(List&lt;Message&gt;, ValueCallback&lt;List&lt;MessageReceipt&gt;&gt;)</h4>
+  <div class="markdown level1 summary"><p>获取消息已读回执</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TIMResult MsgGetMessageReadReceipts(List&lt;Message&gt; msg_array, ValueCallback&lt;List&lt;MessageReceipt&gt;&gt; callback)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="com.tencent.imsdk.unity.types.Message.html">Message</a>&gt;</td>
+        <td><span class="parametername">msg_array</span></td>
+        <td><p>消息列表</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.ValueCallback-1.html">ValueCallback</a>&lt;<span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="com.tencent.imsdk.unity.types.MessageReceipt.html">MessageReceipt</a>&gt;&gt;</td>
+        <td><span class="parametername">callback</span></td>
+        <td><p>异步回调</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="com.tencent.imsdk.unity.enums.TIMResult.html">TIMResult</a></td>
+        <td><p><a class="xref" href="com.tencent.imsdk.unity.enums.TIMResult.html">TIMResult</a></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="com_tencent_imsdk_unity_TencentIMSDK_MsgGetMessageReadReceipts_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgGetMessageReadReceipts*"></a>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_MsgGetMessageReadReceipts_System_Collections_Generic_List_com_tencent_imsdk_unity_types_Message__com_tencent_imsdk_unity_callback_ValueCallback_System_String__" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgGetMessageReadReceipts(System.Collections.Generic.List{com.tencent.imsdk.unity.types.Message},com.tencent.imsdk.unity.callback.ValueCallback{System.String})">MsgGetMessageReadReceipts(List&lt;Message&gt;, ValueCallback&lt;String&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TIMResult MsgGetMessageReadReceipts(List&lt;Message&gt; msg_array, ValueCallback&lt;string&gt; callback)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="com.tencent.imsdk.unity.types.Message.html">Message</a>&gt;</td>
+        <td><span class="parametername">msg_array</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.ValueCallback-1.html">ValueCallback</a>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="parametername">callback</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="com.tencent.imsdk.unity.enums.TIMResult.html">TIMResult</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
   <a id="com_tencent_imsdk_unity_TencentIMSDK_MsgGetMsgList_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgGetMsgList*"></a>
   <h4 id="com_tencent_imsdk_unity_TencentIMSDK_MsgGetMsgList_System_String_com_tencent_imsdk_unity_enums_TIMConvType_com_tencent_imsdk_unity_types_MsgGetMsgListParam_com_tencent_imsdk_unity_callback_ValueCallback_System_Collections_Generic_List_com_tencent_imsdk_unity_types_Message___" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgGetMsgList(System.String,com.tencent.imsdk.unity.enums.TIMConvType,com.tencent.imsdk.unity.types.MsgGetMsgListParam,com.tencent.imsdk.unity.callback.ValueCallback{System.Collections.Generic.List{com.tencent.imsdk.unity.types.Message}})">MsgGetMsgList(String, TIMConvType, MsgGetMsgListParam, ValueCallback&lt;List&lt;Message&gt;&gt;)</h4>
   <div class="markdown level1 summary"><p>获取历史消息列表</p>
@@ -6276,13 +6453,13 @@
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_MsgImportMsgList_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgImportMsgList*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_MsgImportMsgList_System_String_com_tencent_imsdk_unity_enums_TIMConvType_System_Collections_Generic_List_com_tencent_imsdk_unity_types_Message__com_tencent_imsdk_unity_callback_ValueCallback_System_Object__" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgImportMsgList(System.String,com.tencent.imsdk.unity.enums.TIMConvType,System.Collections.Generic.List{com.tencent.imsdk.unity.types.Message},com.tencent.imsdk.unity.callback.ValueCallback{System.Object})">MsgImportMsgList(String, TIMConvType, List&lt;Message&gt;, ValueCallback&lt;Object&gt;)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_MsgImportMsgList_System_String_com_tencent_imsdk_unity_enums_TIMConvType_System_Collections_Generic_List_com_tencent_imsdk_unity_types_Message__com_tencent_imsdk_unity_callback_NullValueCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgImportMsgList(System.String,com.tencent.imsdk.unity.enums.TIMConvType,System.Collections.Generic.List{com.tencent.imsdk.unity.types.Message},com.tencent.imsdk.unity.callback.NullValueCallback)">MsgImportMsgList(String, TIMConvType, List&lt;Message&gt;, NullValueCallback)</h4>
   <div class="markdown level1 summary"><p>导入消息</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static TIMResult MsgImportMsgList(string conv_id, TIMConvType conv_type, List&lt;Message&gt; message_list, ValueCallback&lt;object&gt; callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static TIMResult MsgImportMsgList(string conv_id, TIMConvType conv_type, List&lt;Message&gt; message_list, NullValueCallback callback)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -6313,7 +6490,7 @@
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="com.tencent.imsdk.unity.callback.ValueCallback-1.html">ValueCallback</a>&lt;<span class="xref">System.Object</span>&gt;</td>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.NullValueCallback.html">NullValueCallback</a></td>
         <td><span class="parametername">callback</span></td>
         <td><p>异步回调</p>
 </td>
@@ -6396,13 +6573,13 @@
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_MsgListDelete_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgListDelete*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_MsgListDelete_System_String_com_tencent_imsdk_unity_enums_TIMConvType_System_Collections_Generic_List_com_tencent_imsdk_unity_types_Message__com_tencent_imsdk_unity_callback_ValueCallback_System_Object__" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgListDelete(System.String,com.tencent.imsdk.unity.enums.TIMConvType,System.Collections.Generic.List{com.tencent.imsdk.unity.types.Message},com.tencent.imsdk.unity.callback.ValueCallback{System.Object})">MsgListDelete(String, TIMConvType, List&lt;Message&gt;, ValueCallback&lt;Object&gt;)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_MsgListDelete_System_String_com_tencent_imsdk_unity_enums_TIMConvType_System_Collections_Generic_List_com_tencent_imsdk_unity_types_Message__com_tencent_imsdk_unity_callback_NullValueCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgListDelete(System.String,com.tencent.imsdk.unity.enums.TIMConvType,System.Collections.Generic.List{com.tencent.imsdk.unity.types.Message},com.tencent.imsdk.unity.callback.NullValueCallback)">MsgListDelete(String, TIMConvType, List&lt;Message&gt;, NullValueCallback)</h4>
   <div class="markdown level1 summary"><p>消息删除</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static TIMResult MsgListDelete(string conv_id, TIMConvType conv_type, List&lt;Message&gt; message_list, ValueCallback&lt;object&gt; callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static TIMResult MsgListDelete(string conv_id, TIMConvType conv_type, List&lt;Message&gt; message_list, NullValueCallback callback)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -6432,7 +6609,7 @@
         <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="com.tencent.imsdk.unity.callback.ValueCallback-1.html">ValueCallback</a>&lt;<span class="xref">System.Object</span>&gt;</td>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.NullValueCallback.html">NullValueCallback</a></td>
         <td><span class="parametername">callback</span></td>
         <td><p>异步回调</p>
 </td>
@@ -6515,13 +6692,13 @@
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_MsgMarkAllMessageAsRead_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgMarkAllMessageAsRead*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_MsgMarkAllMessageAsRead_com_tencent_imsdk_unity_callback_ValueCallback_System_Object__" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgMarkAllMessageAsRead(com.tencent.imsdk.unity.callback.ValueCallback{System.Object})">MsgMarkAllMessageAsRead(ValueCallback&lt;Object&gt;)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_MsgMarkAllMessageAsRead_com_tencent_imsdk_unity_callback_NullValueCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgMarkAllMessageAsRead(com.tencent.imsdk.unity.callback.NullValueCallback)">MsgMarkAllMessageAsRead(NullValueCallback)</h4>
   <div class="markdown level1 summary"><p>标记所有消息为已读</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static TIMResult MsgMarkAllMessageAsRead(ValueCallback&lt;object&gt; callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static TIMResult MsgMarkAllMessageAsRead(NullValueCallback callback)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -6534,7 +6711,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="com.tencent.imsdk.unity.callback.ValueCallback-1.html">ValueCallback</a>&lt;<span class="xref">System.Object</span>&gt;</td>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.NullValueCallback.html">NullValueCallback</a></td>
         <td><span class="parametername">callback</span></td>
         <td><p>异步回调</p>
 </td>
@@ -6602,13 +6779,13 @@
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_MsgReportReaded_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgReportReaded*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_MsgReportReaded_System_String_com_tencent_imsdk_unity_enums_TIMConvType_com_tencent_imsdk_unity_types_Message_com_tencent_imsdk_unity_callback_ValueCallback_System_Object__" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgReportReaded(System.String,com.tencent.imsdk.unity.enums.TIMConvType,com.tencent.imsdk.unity.types.Message,com.tencent.imsdk.unity.callback.ValueCallback{System.Object})">MsgReportReaded(String, TIMConvType, Message, ValueCallback&lt;Object&gt;)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_MsgReportReaded_System_String_com_tencent_imsdk_unity_enums_TIMConvType_com_tencent_imsdk_unity_types_Message_com_tencent_imsdk_unity_callback_NullValueCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgReportReaded(System.String,com.tencent.imsdk.unity.enums.TIMConvType,com.tencent.imsdk.unity.types.Message,com.tencent.imsdk.unity.callback.NullValueCallback)">MsgReportReaded(String, TIMConvType, Message, NullValueCallback)</h4>
   <div class="markdown level1 summary"><p>消息已读上报</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static TIMResult MsgReportReaded(string conv_id, TIMConvType conv_type, Message message, ValueCallback&lt;object&gt; callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static TIMResult MsgReportReaded(string conv_id, TIMConvType conv_type, Message message, NullValueCallback callback)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -6639,7 +6816,7 @@
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="com.tencent.imsdk.unity.callback.ValueCallback-1.html">ValueCallback</a>&lt;<span class="xref">System.Object</span>&gt;</td>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.NullValueCallback.html">NullValueCallback</a></td>
         <td><span class="parametername">callback</span></td>
         <td><p>异步回调</p>
 </td>
@@ -6722,13 +6899,13 @@
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_MsgRevoke_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgRevoke*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_MsgRevoke_System_String_com_tencent_imsdk_unity_enums_TIMConvType_com_tencent_imsdk_unity_types_Message_com_tencent_imsdk_unity_callback_ValueCallback_System_Object__" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgRevoke(System.String,com.tencent.imsdk.unity.enums.TIMConvType,com.tencent.imsdk.unity.types.Message,com.tencent.imsdk.unity.callback.ValueCallback{System.Object})">MsgRevoke(String, TIMConvType, Message, ValueCallback&lt;Object&gt;)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_MsgRevoke_System_String_com_tencent_imsdk_unity_enums_TIMConvType_com_tencent_imsdk_unity_types_Message_com_tencent_imsdk_unity_callback_NullValueCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgRevoke(System.String,com.tencent.imsdk.unity.enums.TIMConvType,com.tencent.imsdk.unity.types.Message,com.tencent.imsdk.unity.callback.NullValueCallback)">MsgRevoke(String, TIMConvType, Message, NullValueCallback)</h4>
   <div class="markdown level1 summary"><p>消息撤回</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static TIMResult MsgRevoke(string conv_id, TIMConvType conv_type, Message message, ValueCallback&lt;object&gt; callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static TIMResult MsgRevoke(string conv_id, TIMConvType conv_type, Message message, NullValueCallback callback)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -6759,7 +6936,7 @@
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="com.tencent.imsdk.unity.callback.ValueCallback-1.html">ValueCallback</a>&lt;<span class="xref">System.Object</span>&gt;</td>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.NullValueCallback.html">NullValueCallback</a></td>
         <td><span class="parametername">callback</span></td>
         <td><p>异步回调</p>
 </td>
@@ -6842,13 +7019,13 @@
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_MsgSaveMsg_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgSaveMsg*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_MsgSaveMsg_System_String_com_tencent_imsdk_unity_enums_TIMConvType_com_tencent_imsdk_unity_types_Message_com_tencent_imsdk_unity_callback_ValueCallback_System_Object__" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgSaveMsg(System.String,com.tencent.imsdk.unity.enums.TIMConvType,com.tencent.imsdk.unity.types.Message,com.tencent.imsdk.unity.callback.ValueCallback{System.Object})">MsgSaveMsg(String, TIMConvType, Message, ValueCallback&lt;Object&gt;)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_MsgSaveMsg_System_String_com_tencent_imsdk_unity_enums_TIMConvType_com_tencent_imsdk_unity_types_Message_com_tencent_imsdk_unity_callback_NullValueCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgSaveMsg(System.String,com.tencent.imsdk.unity.enums.TIMConvType,com.tencent.imsdk.unity.types.Message,com.tencent.imsdk.unity.callback.NullValueCallback)">MsgSaveMsg(String, TIMConvType, Message, NullValueCallback)</h4>
   <div class="markdown level1 summary"><p>保存消息</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static TIMResult MsgSaveMsg(string conv_id, TIMConvType conv_type, Message message, ValueCallback&lt;object&gt; callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static TIMResult MsgSaveMsg(string conv_id, TIMConvType conv_type, Message message, NullValueCallback callback)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -6879,7 +7056,7 @@
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="com.tencent.imsdk.unity.callback.ValueCallback-1.html">ValueCallback</a>&lt;<span class="xref">System.Object</span>&gt;</td>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.NullValueCallback.html">NullValueCallback</a></td>
         <td><span class="parametername">callback</span></td>
         <td><p>异步回调</p>
 </td>
@@ -7190,14 +7367,112 @@
   </table>
   
   
+  <a id="com_tencent_imsdk_unity_TencentIMSDK_MsgSendMessageReadReceipts_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgSendMessageReadReceipts*"></a>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_MsgSendMessageReadReceipts_System_Collections_Generic_List_com_tencent_imsdk_unity_types_Message__com_tencent_imsdk_unity_callback_NullValueCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgSendMessageReadReceipts(System.Collections.Generic.List{com.tencent.imsdk.unity.types.Message},com.tencent.imsdk.unity.callback.NullValueCallback)">MsgSendMessageReadReceipts(List&lt;Message&gt;, NullValueCallback)</h4>
+  <div class="markdown level1 summary"><p>发送消息已读回执</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TIMResult MsgSendMessageReadReceipts(List&lt;Message&gt; msg_array, NullValueCallback callback)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="com.tencent.imsdk.unity.types.Message.html">Message</a>&gt;</td>
+        <td><span class="parametername">msg_array</span></td>
+        <td><p>消息列表</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.NullValueCallback.html">NullValueCallback</a></td>
+        <td><span class="parametername">callback</span></td>
+        <td><p>异步回调</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="com.tencent.imsdk.unity.enums.TIMResult.html">TIMResult</a></td>
+        <td><p><a class="xref" href="com.tencent.imsdk.unity.enums.TIMResult.html">TIMResult</a></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="com_tencent_imsdk_unity_TencentIMSDK_MsgSendMessageReadReceipts_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgSendMessageReadReceipts*"></a>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_MsgSendMessageReadReceipts_System_Collections_Generic_List_com_tencent_imsdk_unity_types_Message__com_tencent_imsdk_unity_callback_ValueCallback_System_String__" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgSendMessageReadReceipts(System.Collections.Generic.List{com.tencent.imsdk.unity.types.Message},com.tencent.imsdk.unity.callback.ValueCallback{System.String})">MsgSendMessageReadReceipts(List&lt;Message&gt;, ValueCallback&lt;String&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TIMResult MsgSendMessageReadReceipts(List&lt;Message&gt; msg_array, ValueCallback&lt;string&gt; callback)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="com.tencent.imsdk.unity.types.Message.html">Message</a>&gt;</td>
+        <td><span class="parametername">msg_array</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.ValueCallback-1.html">ValueCallback</a>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="parametername">callback</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="com.tencent.imsdk.unity.enums.TIMResult.html">TIMResult</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
   <a id="com_tencent_imsdk_unity_TencentIMSDK_MsgSetC2CReceiveMessageOpt_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgSetC2CReceiveMessageOpt*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_MsgSetC2CReceiveMessageOpt_System_Collections_Generic_List_System_String__com_tencent_imsdk_unity_enums_TIMReceiveMessageOpt_com_tencent_imsdk_unity_callback_ValueCallback_System_Object__" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgSetC2CReceiveMessageOpt(System.Collections.Generic.List{System.String},com.tencent.imsdk.unity.enums.TIMReceiveMessageOpt,com.tencent.imsdk.unity.callback.ValueCallback{System.Object})">MsgSetC2CReceiveMessageOpt(List&lt;String&gt;, TIMReceiveMessageOpt, ValueCallback&lt;Object&gt;)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_MsgSetC2CReceiveMessageOpt_System_Collections_Generic_List_System_String__com_tencent_imsdk_unity_enums_TIMReceiveMessageOpt_com_tencent_imsdk_unity_callback_NullValueCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgSetC2CReceiveMessageOpt(System.Collections.Generic.List{System.String},com.tencent.imsdk.unity.enums.TIMReceiveMessageOpt,com.tencent.imsdk.unity.callback.NullValueCallback)">MsgSetC2CReceiveMessageOpt(List&lt;String&gt;, TIMReceiveMessageOpt, NullValueCallback)</h4>
   <div class="markdown level1 summary"><p>设置收消息选项</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static TIMResult MsgSetC2CReceiveMessageOpt(List&lt;string&gt; user_id_list, TIMReceiveMessageOpt opt, ValueCallback&lt;object&gt; callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static TIMResult MsgSetC2CReceiveMessageOpt(List&lt;string&gt; user_id_list, TIMReceiveMessageOpt opt, NullValueCallback callback)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -7222,7 +7497,7 @@
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="com.tencent.imsdk.unity.callback.ValueCallback-1.html">ValueCallback</a>&lt;<span class="xref">System.Object</span>&gt;</td>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.NullValueCallback.html">NullValueCallback</a></td>
         <td><span class="parametername">callback</span></td>
         <td><p>异步回调</p>
 </td>
@@ -7300,13 +7575,13 @@
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_MsgSetGroupReceiveMessageOpt_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgSetGroupReceiveMessageOpt*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_MsgSetGroupReceiveMessageOpt_System_String_com_tencent_imsdk_unity_enums_TIMReceiveMessageOpt_com_tencent_imsdk_unity_callback_ValueCallback_System_Object__" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgSetGroupReceiveMessageOpt(System.String,com.tencent.imsdk.unity.enums.TIMReceiveMessageOpt,com.tencent.imsdk.unity.callback.ValueCallback{System.Object})">MsgSetGroupReceiveMessageOpt(String, TIMReceiveMessageOpt, ValueCallback&lt;Object&gt;)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_MsgSetGroupReceiveMessageOpt_System_String_com_tencent_imsdk_unity_enums_TIMReceiveMessageOpt_com_tencent_imsdk_unity_callback_NullValueCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgSetGroupReceiveMessageOpt(System.String,com.tencent.imsdk.unity.enums.TIMReceiveMessageOpt,com.tencent.imsdk.unity.callback.NullValueCallback)">MsgSetGroupReceiveMessageOpt(String, TIMReceiveMessageOpt, NullValueCallback)</h4>
   <div class="markdown level1 summary"><p>设置群收消息选项</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static TIMResult MsgSetGroupReceiveMessageOpt(string group_id, TIMReceiveMessageOpt opt, ValueCallback&lt;object&gt; callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static TIMResult MsgSetGroupReceiveMessageOpt(string group_id, TIMReceiveMessageOpt opt, NullValueCallback callback)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -7331,7 +7606,7 @@
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="com.tencent.imsdk.unity.callback.ValueCallback-1.html">ValueCallback</a>&lt;<span class="xref">System.Object</span>&gt;</td>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.NullValueCallback.html">NullValueCallback</a></td>
         <td><span class="parametername">callback</span></td>
         <td><p>异步回调</p>
 </td>
@@ -7409,13 +7684,13 @@
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_MsgSetLocalCustomData_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgSetLocalCustomData*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_MsgSetLocalCustomData_com_tencent_imsdk_unity_types_Message_com_tencent_imsdk_unity_callback_ValueCallback_System_Object__" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgSetLocalCustomData(com.tencent.imsdk.unity.types.Message,com.tencent.imsdk.unity.callback.ValueCallback{System.Object})">MsgSetLocalCustomData(Message, ValueCallback&lt;Object&gt;)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_MsgSetLocalCustomData_com_tencent_imsdk_unity_types_Message_com_tencent_imsdk_unity_callback_NullValueCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgSetLocalCustomData(com.tencent.imsdk.unity.types.Message,com.tencent.imsdk.unity.callback.NullValueCallback)">MsgSetLocalCustomData(Message, NullValueCallback)</h4>
   <div class="markdown level1 summary"><p>设置消息本地数据</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static TIMResult MsgSetLocalCustomData(Message message, ValueCallback&lt;object&gt; callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static TIMResult MsgSetLocalCustomData(Message message, NullValueCallback callback)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -7434,7 +7709,7 @@
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="com.tencent.imsdk.unity.callback.ValueCallback-1.html">ValueCallback</a>&lt;<span class="xref">System.Object</span>&gt;</td>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.NullValueCallback.html">NullValueCallback</a></td>
         <td><span class="parametername">callback</span></td>
         <td><p>异步回调</p>
 </td>
@@ -7507,13 +7782,13 @@
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_MsgSetOfflinePushToken_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgSetOfflinePushToken*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_MsgSetOfflinePushToken_com_tencent_imsdk_unity_types_OfflinePushToken_com_tencent_imsdk_unity_callback_ValueCallback_System_Object__" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgSetOfflinePushToken(com.tencent.imsdk.unity.types.OfflinePushToken,com.tencent.imsdk.unity.callback.ValueCallback{System.Object})">MsgSetOfflinePushToken(OfflinePushToken, ValueCallback&lt;Object&gt;)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_MsgSetOfflinePushToken_com_tencent_imsdk_unity_types_OfflinePushToken_com_tencent_imsdk_unity_callback_NullValueCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.MsgSetOfflinePushToken(com.tencent.imsdk.unity.types.OfflinePushToken,com.tencent.imsdk.unity.callback.NullValueCallback)">MsgSetOfflinePushToken(OfflinePushToken, NullValueCallback)</h4>
   <div class="markdown level1 summary"><p>设置离线推送配置信息（iOS 和 Android 平台专用）</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static TIMResult MsgSetOfflinePushToken(OfflinePushToken json_token, ValueCallback&lt;object&gt; callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static TIMResult MsgSetOfflinePushToken(OfflinePushToken json_token, NullValueCallback callback)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -7531,7 +7806,7 @@
         <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="com.tencent.imsdk.unity.callback.ValueCallback-1.html">ValueCallback</a>&lt;<span class="xref">System.Object</span>&gt;</td>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.NullValueCallback.html">NullValueCallback</a></td>
         <td><span class="parametername">callback</span></td>
         <td><p>ValueCallback</p>
 </td>
@@ -7702,13 +7977,13 @@
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_ProfileModifySelfUserProfile_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.ProfileModifySelfUserProfile*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_ProfileModifySelfUserProfile_com_tencent_imsdk_unity_types_UserProfileItem_com_tencent_imsdk_unity_callback_ValueCallback_System_Object__" data-uid="com.tencent.imsdk.unity.TencentIMSDK.ProfileModifySelfUserProfile(com.tencent.imsdk.unity.types.UserProfileItem,com.tencent.imsdk.unity.callback.ValueCallback{System.Object})">ProfileModifySelfUserProfile(UserProfileItem, ValueCallback&lt;Object&gt;)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_ProfileModifySelfUserProfile_com_tencent_imsdk_unity_types_UserProfileItem_com_tencent_imsdk_unity_callback_NullValueCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.ProfileModifySelfUserProfile(com.tencent.imsdk.unity.types.UserProfileItem,com.tencent.imsdk.unity.callback.NullValueCallback)">ProfileModifySelfUserProfile(UserProfileItem, NullValueCallback)</h4>
   <div class="markdown level1 summary"><p>修改自己的信息</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static TIMResult ProfileModifySelfUserProfile(UserProfileItem json_modify_self_user_profile_param, ValueCallback&lt;object&gt; callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static TIMResult ProfileModifySelfUserProfile(UserProfileItem json_modify_self_user_profile_param, NullValueCallback callback)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -7727,7 +8002,7 @@
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="com.tencent.imsdk.unity.callback.ValueCallback-1.html">ValueCallback</a>&lt;<span class="xref">System.Object</span>&gt;</td>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.NullValueCallback.html">NullValueCallback</a></td>
         <td><span class="parametername">callback</span></td>
         <td><p>异步回调</p>
 </td>
@@ -7909,7 +8184,7 @@
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_SetConvEventCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetConvEventCallback*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetConvEventCallback_com_tencent_imsdk_unity_callback_ConvEventCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetConvEventCallback(com.tencent.imsdk.unity.callback.ConvEventCallback)">SetConvEventCallback(ConvEventCallback)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetConvEventCallback_com_tencent_imsdk_unity_callback_ConvEventCallback_com_tencent_imsdk_unity_callback_ConvEventStringCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetConvEventCallback(com.tencent.imsdk.unity.callback.ConvEventCallback,com.tencent.imsdk.unity.callback.ConvEventStringCallback)">SetConvEventCallback(ConvEventCallback, ConvEventStringCallback)</h4>
   <div class="markdown level1 summary"><p>设置会话事件回调</p>
 <p>会话事件包括：</p>
 <p>会话新增</p>
@@ -7924,7 +8199,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void SetConvEventCallback(ConvEventCallback callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static void SetConvEventCallback(ConvEventCallback callback = null, ConvEventStringCallback stringCallback = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -7941,6 +8216,11 @@
         <td><span class="parametername">callback</span></td>
         <td><p>回调 ConvEventCallback</p>
 </td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.ConvEventStringCallback.html">ConvEventStringCallback</a></td>
+        <td><span class="parametername">stringCallback</span></td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -7976,14 +8256,14 @@
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_SetFriendAddRequestCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetFriendAddRequestCallback*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetFriendAddRequestCallback_com_tencent_imsdk_unity_callback_FriendAddRequestCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetFriendAddRequestCallback(com.tencent.imsdk.unity.callback.FriendAddRequestCallback)">SetFriendAddRequestCallback(FriendAddRequestCallback)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetFriendAddRequestCallback_com_tencent_imsdk_unity_callback_FriendAddRequestCallback_com_tencent_imsdk_unity_callback_FriendAddRequestStringCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetFriendAddRequestCallback(com.tencent.imsdk.unity.callback.FriendAddRequestCallback,com.tencent.imsdk.unity.callback.FriendAddRequestStringCallback)">SetFriendAddRequestCallback(FriendAddRequestCallback, FriendAddRequestStringCallback)</h4>
   <div class="markdown level1 summary"><p>设置好友添加请求的回调</p>
 <p>当前登入用户设置添加好友需要确认时，如果有用户请求加当前登入用户为好友，会收到好友添加请求的回调，ImSDK通过此回调告知开发者。如果多终端登入同一帐号，每个终端都会收到这个回调</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void SetFriendAddRequestCallback(FriendAddRequestCallback callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static void SetFriendAddRequestCallback(FriendAddRequestCallback callback = null, FriendAddRequestStringCallback stringCallback = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -8001,12 +8281,17 @@
         <td><p>回调 FriendAddRequestCallback</p>
 </td>
       </tr>
+      <tr>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.FriendAddRequestStringCallback.html">FriendAddRequestStringCallback</a></td>
+        <td><span class="parametername">stringCallback</span></td>
+        <td></td>
+      </tr>
     </tbody>
   </table>
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_SetFriendApplicationListDeletedCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetFriendApplicationListDeletedCallback*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetFriendApplicationListDeletedCallback_com_tencent_imsdk_unity_callback_FriendApplicationListDeletedCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetFriendApplicationListDeletedCallback(com.tencent.imsdk.unity.callback.FriendApplicationListDeletedCallback)">SetFriendApplicationListDeletedCallback(FriendApplicationListDeletedCallback)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetFriendApplicationListDeletedCallback_com_tencent_imsdk_unity_callback_FriendApplicationListDeletedCallback_com_tencent_imsdk_unity_callback_FriendApplicationListDeletedStringCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetFriendApplicationListDeletedCallback(com.tencent.imsdk.unity.callback.FriendApplicationListDeletedCallback,com.tencent.imsdk.unity.callback.FriendApplicationListDeletedStringCallback)">SetFriendApplicationListDeletedCallback(FriendApplicationListDeletedCallback, FriendApplicationListDeletedStringCallback)</h4>
   <div class="markdown level1 summary"><p>设置好友申请被删除的回调</p>
 <p>1. 主动删除好友申请</p>
 <p>2. 拒绝好友申请</p>
@@ -8016,7 +8301,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void SetFriendApplicationListDeletedCallback(FriendApplicationListDeletedCallback callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static void SetFriendApplicationListDeletedCallback(FriendApplicationListDeletedCallback callback = null, FriendApplicationListDeletedStringCallback stringCallback = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -8033,6 +8318,11 @@
         <td><span class="parametername">callback</span></td>
         <td><p>回调 FriendApplicationListDeletedCallback</p>
 </td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.FriendApplicationListDeletedStringCallback.html">FriendApplicationListDeletedStringCallback</a></td>
+        <td><span class="parametername">stringCallback</span></td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -8069,13 +8359,13 @@
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_SetFriendBlackListAddedCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetFriendBlackListAddedCallback*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetFriendBlackListAddedCallback_com_tencent_imsdk_unity_callback_FriendBlackListAddedCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetFriendBlackListAddedCallback(com.tencent.imsdk.unity.callback.FriendBlackListAddedCallback)">SetFriendBlackListAddedCallback(FriendBlackListAddedCallback)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetFriendBlackListAddedCallback_com_tencent_imsdk_unity_callback_FriendBlackListAddedCallback_com_tencent_imsdk_unity_callback_FriendBlackListAddedStringCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetFriendBlackListAddedCallback(com.tencent.imsdk.unity.callback.FriendBlackListAddedCallback,com.tencent.imsdk.unity.callback.FriendBlackListAddedStringCallback)">SetFriendBlackListAddedCallback(FriendBlackListAddedCallback, FriendBlackListAddedStringCallback)</h4>
   <div class="markdown level1 summary"><p>设置黑名单新增的回调</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void SetFriendBlackListAddedCallback(FriendBlackListAddedCallback callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static void SetFriendBlackListAddedCallback(FriendBlackListAddedCallback callback = null, FriendBlackListAddedStringCallback stringCallback = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -8093,18 +8383,23 @@
         <td><p>回调 FriendBlackListAddedCallback</p>
 </td>
       </tr>
+      <tr>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.FriendBlackListAddedStringCallback.html">FriendBlackListAddedStringCallback</a></td>
+        <td><span class="parametername">stringCallback</span></td>
+        <td></td>
+      </tr>
     </tbody>
   </table>
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_SetFriendBlackListDeletedCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetFriendBlackListDeletedCallback*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetFriendBlackListDeletedCallback_com_tencent_imsdk_unity_callback_FriendBlackListDeletedCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetFriendBlackListDeletedCallback(com.tencent.imsdk.unity.callback.FriendBlackListDeletedCallback)">SetFriendBlackListDeletedCallback(FriendBlackListDeletedCallback)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetFriendBlackListDeletedCallback_com_tencent_imsdk_unity_callback_FriendBlackListDeletedCallback_com_tencent_imsdk_unity_callback_FriendBlackListDeletedStringCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetFriendBlackListDeletedCallback(com.tencent.imsdk.unity.callback.FriendBlackListDeletedCallback,com.tencent.imsdk.unity.callback.FriendBlackListDeletedStringCallback)">SetFriendBlackListDeletedCallback(FriendBlackListDeletedCallback, FriendBlackListDeletedStringCallback)</h4>
   <div class="markdown level1 summary"><p>设置黑名单删除的回调</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void SetFriendBlackListDeletedCallback(FriendBlackListDeletedCallback callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static void SetFriendBlackListDeletedCallback(FriendBlackListDeletedCallback callback = null, FriendBlackListDeletedStringCallback stringCallback = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -8122,19 +8417,24 @@
         <td><p>回调 FriendBlackListDeletedCallback</p>
 </td>
       </tr>
+      <tr>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.FriendBlackListDeletedStringCallback.html">FriendBlackListDeletedStringCallback</a></td>
+        <td><span class="parametername">stringCallback</span></td>
+        <td></td>
+      </tr>
     </tbody>
   </table>
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_SetGroupAttributeChangedCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetGroupAttributeChangedCallback*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetGroupAttributeChangedCallback_com_tencent_imsdk_unity_callback_GroupAttributeChangedCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetGroupAttributeChangedCallback(com.tencent.imsdk.unity.callback.GroupAttributeChangedCallback)">SetGroupAttributeChangedCallback(GroupAttributeChangedCallback)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetGroupAttributeChangedCallback_com_tencent_imsdk_unity_callback_GroupAttributeChangedCallback_com_tencent_imsdk_unity_callback_GroupAttributeChangedStringCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetGroupAttributeChangedCallback(com.tencent.imsdk.unity.callback.GroupAttributeChangedCallback,com.tencent.imsdk.unity.callback.GroupAttributeChangedStringCallback)">SetGroupAttributeChangedCallback(GroupAttributeChangedCallback, GroupAttributeChangedStringCallback)</h4>
   <div class="markdown level1 summary"><p>设置群组属性变更回调</p>
 <p>某个已加入的群的属性被修改了，会返回所在群组的所有属性（该群所有的成员都能收到）</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void SetGroupAttributeChangedCallback(GroupAttributeChangedCallback callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static void SetGroupAttributeChangedCallback(GroupAttributeChangedCallback callback = null, GroupAttributeChangedStringCallback stringCallback = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -8152,19 +8452,24 @@
         <td><p>回调 GroupAttributeChangedCallback</p>
 </td>
       </tr>
+      <tr>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.GroupAttributeChangedStringCallback.html">GroupAttributeChangedStringCallback</a></td>
+        <td><span class="parametername">stringCallback</span></td>
+        <td></td>
+      </tr>
     </tbody>
   </table>
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_SetGroupTipsEventCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetGroupTipsEventCallback*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetGroupTipsEventCallback_com_tencent_imsdk_unity_callback_GroupTipsEventCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetGroupTipsEventCallback(com.tencent.imsdk.unity.callback.GroupTipsEventCallback)">SetGroupTipsEventCallback(GroupTipsEventCallback)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetGroupTipsEventCallback_com_tencent_imsdk_unity_callback_GroupTipsEventCallback_com_tencent_imsdk_unity_callback_GroupTipsEventStringCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetGroupTipsEventCallback(com.tencent.imsdk.unity.callback.GroupTipsEventCallback,com.tencent.imsdk.unity.callback.GroupTipsEventStringCallback)">SetGroupTipsEventCallback(GroupTipsEventCallback, GroupTipsEventStringCallback)</h4>
   <div class="markdown level1 summary"><p>设置群组系统消息回调</p>
 <p>群组系统消息事件包括 加入群、退出群、踢出群、设置管理员、取消管理员、群资料变更、群成员资料变更。此消息是针对所有群组成员下发的</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void SetGroupTipsEventCallback(GroupTipsEventCallback callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static void SetGroupTipsEventCallback(GroupTipsEventCallback callback = null, GroupTipsEventStringCallback stringCallback = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -8181,6 +8486,11 @@
         <td><span class="parametername">callback</span></td>
         <td><p>回调 GroupTipsEventCallback</p>
 </td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.GroupTipsEventStringCallback.html">GroupTipsEventStringCallback</a></td>
+        <td><span class="parametername">stringCallback</span></td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -8256,14 +8566,14 @@
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_SetMsgElemUploadProgressCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetMsgElemUploadProgressCallback*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetMsgElemUploadProgressCallback_com_tencent_imsdk_unity_callback_MsgElemUploadProgressCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetMsgElemUploadProgressCallback(com.tencent.imsdk.unity.callback.MsgElemUploadProgressCallback)">SetMsgElemUploadProgressCallback(MsgElemUploadProgressCallback)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetMsgElemUploadProgressCallback_com_tencent_imsdk_unity_callback_MsgElemUploadProgressCallback_com_tencent_imsdk_unity_callback_MsgElemUploadProgressStringCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetMsgElemUploadProgressCallback(com.tencent.imsdk.unity.callback.MsgElemUploadProgressCallback,com.tencent.imsdk.unity.callback.MsgElemUploadProgressStringCallback)">SetMsgElemUploadProgressCallback(MsgElemUploadProgressCallback, MsgElemUploadProgressStringCallback)</h4>
   <div class="markdown level1 summary"><p>设置消息内元素相关文件上传进度回调</p>
 <p>设置消息元素上传进度回调。当消息内包含图片、声音、文件、视频元素时，ImSDK会上传这些文件，并触发此接口设置的回调，用户可以根据回调感知上传的进度</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void SetMsgElemUploadProgressCallback(MsgElemUploadProgressCallback callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static void SetMsgElemUploadProgressCallback(MsgElemUploadProgressCallback callback = null, MsgElemUploadProgressStringCallback stringCallback = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -8281,19 +8591,24 @@
         <td><p>回调 MsgElemUploadProgressCallback</p>
 </td>
       </tr>
+      <tr>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.MsgElemUploadProgressStringCallback.html">MsgElemUploadProgressStringCallback</a></td>
+        <td><span class="parametername">stringCallback</span></td>
+        <td></td>
+      </tr>
     </tbody>
   </table>
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_SetMsgReadedReceiptCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetMsgReadedReceiptCallback*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetMsgReadedReceiptCallback_com_tencent_imsdk_unity_callback_MsgReadedReceiptCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetMsgReadedReceiptCallback(com.tencent.imsdk.unity.callback.MsgReadedReceiptCallback)">SetMsgReadedReceiptCallback(MsgReadedReceiptCallback)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetMsgReadedReceiptCallback_com_tencent_imsdk_unity_callback_MsgReadedReceiptCallback_com_tencent_imsdk_unity_callback_MsgReadedReceiptStringCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetMsgReadedReceiptCallback(com.tencent.imsdk.unity.callback.MsgReadedReceiptCallback,com.tencent.imsdk.unity.callback.MsgReadedReceiptStringCallback)">SetMsgReadedReceiptCallback(MsgReadedReceiptCallback, MsgReadedReceiptStringCallback)</h4>
   <div class="markdown level1 summary"><p>设置消息已读回执回调</p>
 <p>发送方发送消息，接收方调用接口[TIMMsgReportReaded]()上报该消息已读，发送方ImSDK会通过此接口设置的回调抛出</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void SetMsgReadedReceiptCallback(MsgReadedReceiptCallback callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static void SetMsgReadedReceiptCallback(MsgReadedReceiptCallback callback = null, MsgReadedReceiptStringCallback stringCallback = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -8311,19 +8626,24 @@
         <td><p>回调 MsgReadedReceiptCallback</p>
 </td>
       </tr>
+      <tr>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.MsgReadedReceiptStringCallback.html">MsgReadedReceiptStringCallback</a></td>
+        <td><span class="parametername">stringCallback</span></td>
+        <td></td>
+      </tr>
     </tbody>
   </table>
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_SetMsgRevokeCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetMsgRevokeCallback*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetMsgRevokeCallback_com_tencent_imsdk_unity_callback_MsgRevokeCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetMsgRevokeCallback(com.tencent.imsdk.unity.callback.MsgRevokeCallback)">SetMsgRevokeCallback(MsgRevokeCallback)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetMsgRevokeCallback_com_tencent_imsdk_unity_callback_MsgRevokeCallback_com_tencent_imsdk_unity_callback_MsgRevokeStringCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetMsgRevokeCallback(com.tencent.imsdk.unity.callback.MsgRevokeCallback,com.tencent.imsdk.unity.callback.MsgRevokeStringCallback)">SetMsgRevokeCallback(MsgRevokeCallback, MsgRevokeStringCallback)</h4>
   <div class="markdown level1 summary"><p>设置接收的消息被撤回回调</p>
 <p>发送方发送消息，接收方收到消息。此时发送方调用接口[TIMMsgRevoke]()撤回该消息，接收方的ImSDK会通过此接口设置的回调抛出</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void SetMsgRevokeCallback(MsgRevokeCallback callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static void SetMsgRevokeCallback(MsgRevokeCallback callback = null, MsgRevokeStringCallback stringCallback = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -8341,12 +8661,17 @@
         <td><p>回调 MsgRevokeCallback</p>
 </td>
       </tr>
+      <tr>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.MsgRevokeStringCallback.html">MsgRevokeStringCallback</a></td>
+        <td><span class="parametername">stringCallback</span></td>
+        <td></td>
+      </tr>
     </tbody>
   </table>
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_SetMsgUpdateCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetMsgUpdateCallback*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetMsgUpdateCallback_com_tencent_imsdk_unity_callback_MsgUpdateCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetMsgUpdateCallback(com.tencent.imsdk.unity.callback.MsgUpdateCallback)">SetMsgUpdateCallback(MsgUpdateCallback)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetMsgUpdateCallback_com_tencent_imsdk_unity_callback_MsgUpdateCallback_com_tencent_imsdk_unity_callback_MsgUpdateStringCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetMsgUpdateCallback(com.tencent.imsdk.unity.callback.MsgUpdateCallback,com.tencent.imsdk.unity.callback.MsgUpdateStringCallback)">SetMsgUpdateCallback(MsgUpdateCallback, MsgUpdateStringCallback)</h4>
   <div class="markdown level1 summary"><p>设置消息在云端被修改后回传回来的消息更新通知回调</p>
 <p> 当您发送的消息在服务端被修改后，ImSDK会通过该回调通知给您 </p>
 <p> 您可以在您自己的服务器上拦截所有即时通信IM消息 [发单聊消息之前回调](https://cloud.tencent.com/document/product/269/1632)</p>
@@ -8356,7 +8681,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void SetMsgUpdateCallback(MsgUpdateCallback callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static void SetMsgUpdateCallback(MsgUpdateCallback callback = null, MsgUpdateStringCallback stringCallback = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -8373,6 +8698,11 @@
         <td><span class="parametername">callback</span></td>
         <td><p>回调 FriendBlackListDeletedCallback</p>
 </td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.MsgUpdateStringCallback.html">MsgUpdateStringCallback</a></td>
+        <td><span class="parametername">stringCallback</span></td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -8412,14 +8742,14 @@
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_SetOnAddFriendCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetOnAddFriendCallback*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetOnAddFriendCallback_com_tencent_imsdk_unity_callback_OnAddFriendCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetOnAddFriendCallback(com.tencent.imsdk.unity.callback.OnAddFriendCallback)">SetOnAddFriendCallback(OnAddFriendCallback)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetOnAddFriendCallback_com_tencent_imsdk_unity_callback_OnAddFriendCallback_com_tencent_imsdk_unity_callback_OnAddFriendStringCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetOnAddFriendCallback(com.tencent.imsdk.unity.callback.OnAddFriendCallback,com.tencent.imsdk.unity.callback.OnAddFriendStringCallback)">SetOnAddFriendCallback(OnAddFriendCallback, OnAddFriendStringCallback)</h4>
   <div class="markdown level1 summary"><p>设置添加好友的回调</p>
 <p>此回调为了多终端同步。例如A设备、B设备都登录了同一帐号的ImSDK，A设备添加了好友，B设备ImSDK会收到添加好友的推送，ImSDK通过此回调告知开发者</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void SetOnAddFriendCallback(OnAddFriendCallback callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static void SetOnAddFriendCallback(OnAddFriendCallback callback = null, OnAddFriendStringCallback stringCallback = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -8437,19 +8767,24 @@
         <td><p>回调 OnAddFriendCallback</p>
 </td>
       </tr>
+      <tr>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.OnAddFriendStringCallback.html">OnAddFriendStringCallback</a></td>
+        <td><span class="parametername">stringCallback</span></td>
+        <td></td>
+      </tr>
     </tbody>
   </table>
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_SetOnDeleteFriendCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetOnDeleteFriendCallback*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetOnDeleteFriendCallback_com_tencent_imsdk_unity_callback_OnDeleteFriendCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetOnDeleteFriendCallback(com.tencent.imsdk.unity.callback.OnDeleteFriendCallback)">SetOnDeleteFriendCallback(OnDeleteFriendCallback)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetOnDeleteFriendCallback_com_tencent_imsdk_unity_callback_OnDeleteFriendCallback_com_tencent_imsdk_unity_callback_OnDeleteFriendStringCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetOnDeleteFriendCallback(com.tencent.imsdk.unity.callback.OnDeleteFriendCallback,com.tencent.imsdk.unity.callback.OnDeleteFriendStringCallback)">SetOnDeleteFriendCallback(OnDeleteFriendCallback, OnDeleteFriendStringCallback)</h4>
   <div class="markdown level1 summary"><p>设置删除好友的回调</p>
 <p>此回调为了多终端同步。例如A设备、B设备都登录了同一帐号的ImSDK，A设备删除了好友，B设备ImSDK会收到删除好友的推送，ImSDK通过此回调告知开发者</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void SetOnDeleteFriendCallback(OnDeleteFriendCallback callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static void SetOnDeleteFriendCallback(OnDeleteFriendCallback callback = null, OnDeleteFriendStringCallback stringCallback = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -8467,19 +8802,24 @@
         <td><p>回调 OnDeleteFriendCallback</p>
 </td>
       </tr>
+      <tr>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.OnDeleteFriendStringCallback.html">OnDeleteFriendStringCallback</a></td>
+        <td><span class="parametername">stringCallback</span></td>
+        <td></td>
+      </tr>
     </tbody>
   </table>
   
   
   <a id="com_tencent_imsdk_unity_TencentIMSDK_SetUpdateFriendProfileCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetUpdateFriendProfileCallback*"></a>
-  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetUpdateFriendProfileCallback_com_tencent_imsdk_unity_callback_UpdateFriendProfileCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetUpdateFriendProfileCallback(com.tencent.imsdk.unity.callback.UpdateFriendProfileCallback)">SetUpdateFriendProfileCallback(UpdateFriendProfileCallback)</h4>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetUpdateFriendProfileCallback_com_tencent_imsdk_unity_callback_UpdateFriendProfileCallback_com_tencent_imsdk_unity_callback_UpdateFriendProfileStringCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetUpdateFriendProfileCallback(com.tencent.imsdk.unity.callback.UpdateFriendProfileCallback,com.tencent.imsdk.unity.callback.UpdateFriendProfileStringCallback)">SetUpdateFriendProfileCallback(UpdateFriendProfileCallback, UpdateFriendProfileStringCallback)</h4>
   <div class="markdown level1 summary"><p>设置更新好友资料的回调</p>
 <p>此回调为了多终端同步。例如A设备、B设备都登录了同一帐号的ImSDK，A设备更新了好友资料，B设备ImSDK会收到更新好友资料的推送，ImSDK通过此回调告知开发者</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void SetUpdateFriendProfileCallback(UpdateFriendProfileCallback callback)</code></pre>
+    <pre><code class="lang-csharp hljs">public static void SetUpdateFriendProfileCallback(UpdateFriendProfileCallback callback = null, UpdateFriendProfileStringCallback stringCallback = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -8496,6 +8836,11 @@
         <td><span class="parametername">callback</span></td>
         <td><p>回调 UpdateFriendProfileCallback</p>
 </td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="com.tencent.imsdk.unity.callback.UpdateFriendProfileStringCallback.html">UpdateFriendProfileStringCallback</a></td>
+        <td><span class="parametername">stringCallback</span></td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -8527,6 +8872,48 @@
         <td><span class="parametername">callback</span></td>
         <td><p>回调 UserSigExpiredCallback</p>
 </td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="com_tencent_imsdk_unity_TencentIMSDK_TIMMsgGroupMessageReadMemberListCallbackInstance_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.TIMMsgGroupMessageReadMemberListCallbackInstance*"></a>
+  <h4 id="com_tencent_imsdk_unity_TencentIMSDK_TIMMsgGroupMessageReadMemberListCallbackInstance_System_IntPtr_System_UInt64_System_Boolean_System_IntPtr_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.TIMMsgGroupMessageReadMemberListCallbackInstance(System.IntPtr,System.UInt64,System.Boolean,System.IntPtr)">TIMMsgGroupMessageReadMemberListCallbackInstance(IntPtr, UInt64, Boolean, IntPtr)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void TIMMsgGroupMessageReadMemberListCallbackInstance(IntPtr json_group_member_array, ulong next_seq, bool is_finished, IntPtr user_data)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.IntPtr</span></td>
+        <td><span class="parametername">json_group_member_array</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.UInt64</span></td>
+        <td><span class="parametername">next_seq</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">is_finished</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.IntPtr</span></td>
+        <td><span class="parametername">user_data</span></td>
+        <td></td>
       </tr>
     </tbody>
   </table>
