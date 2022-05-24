@@ -78,7 +78,8 @@
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">GroupGetMemberInfoListParam</span></div>
+    <div class="level1"><a class="xref" href="com.tencent.imsdk.unity.types.ExtraData.html">ExtraData</a></div>
+    <div class="level2"><span class="xref">GroupGetMemberInfoListParam</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -108,7 +109,7 @@
   <h6><strong>Assembly</strong>: cs.temp.dll.dll</h6>
   <h5 id="com_tencent_imsdk_unity_types_GroupGetMemberInfoListParam_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class GroupGetMemberInfoListParam</code></pre>
+    <pre><code class="lang-csharp hljs">public class GroupGetMemberInfoListParam : ExtraData</code></pre>
   </div>
   <h3 id="fields">Fields
   </h3>
@@ -169,7 +170,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ulong group_get_members_info_list_param_next_seq</code></pre>
+    <pre><code class="lang-csharp hljs">public ulong? group_get_members_info_list_param_next_seq</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -181,7 +182,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.UInt64</span></td>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.UInt64</span>&gt;</td>
         <td><p>只写(选填), 分页拉取标志,第一次拉取填0,回调成功如果不为零,需要分页,调用接口传入再次拉取,直至为0</p>
 </td>
       </tr>

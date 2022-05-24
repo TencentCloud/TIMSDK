@@ -78,7 +78,8 @@
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">GroupModifyMemberInfoParam</span></div>
+    <div class="level1"><a class="xref" href="com.tencent.imsdk.unity.types.ExtraData.html">ExtraData</a></div>
+    <div class="level2"><span class="xref">GroupModifyMemberInfoParam</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -108,7 +109,7 @@
   <h6><strong>Assembly</strong>: cs.temp.dll.dll</h6>
   <h5 id="com_tencent_imsdk_unity_types_GroupModifyMemberInfoParam_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class GroupModifyMemberInfoParam</code></pre>
+    <pre><code class="lang-csharp hljs">public class GroupModifyMemberInfoParam : ExtraData</code></pre>
   </div>
   <h3 id="fields">Fields
   </h3>
@@ -194,7 +195,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public TIMGroupMemberRole group_modify_member_info_member_role</code></pre>
+    <pre><code class="lang-csharp hljs">public TIMGroupMemberRole? group_modify_member_info_member_role</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -206,7 +207,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="com.tencent.imsdk.unity.enums.TIMGroupMemberRole.html">TIMGroupMemberRole</a></td>
+        <td><span class="xref">System.Nullable</span>&lt;<a class="xref" href="com.tencent.imsdk.unity.enums.TIMGroupMemberRole.html">TIMGroupMemberRole</a>&gt;</td>
         <td><p>只写(选填), 修改成员角色, 当 modify_flag 包含 kTIMGroupMemberModifyFlag_MemberRole 时必填,其他情况不用填</p>
 </td>
       </tr>
@@ -244,7 +245,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public TIMReceiveMessageOpt group_modify_member_info_msg_flag</code></pre>
+    <pre><code class="lang-csharp hljs">public TIMReceiveMessageOpt? group_modify_member_info_msg_flag</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -256,7 +257,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="com.tencent.imsdk.unity.enums.TIMReceiveMessageOpt.html">TIMReceiveMessageOpt</a></td>
+        <td><span class="xref">System.Nullable</span>&lt;<a class="xref" href="com.tencent.imsdk.unity.enums.TIMReceiveMessageOpt.html">TIMReceiveMessageOpt</a>&gt;</td>
         <td><p>只写(选填), 修改消息接收选项,                  当 modify_flag 包含 kTIMGroupMemberModifyFlag_MsgFlag 时必填,其他情况不用填</p>
 </td>
       </tr>
@@ -269,7 +270,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public uint group_modify_member_info_name_card</code></pre>
+    <pre><code class="lang-csharp hljs">public uint? group_modify_member_info_name_card</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -281,7 +282,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.UInt32</span></td>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.UInt32</span>&gt;</td>
         <td><p>只写(选填), 修改群名片,                        当 modify_flag 包含 kTIMGroupMemberModifyFlag_NameCard 时必填,其他情况不用填</p>
 </td>
       </tr>
@@ -294,7 +295,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public uint group_modify_member_info_shutup_time</code></pre>
+    <pre><code class="lang-csharp hljs">public uint? group_modify_member_info_shutup_time</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -306,7 +307,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.UInt32</span></td>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.UInt32</span>&gt;</td>
         <td><p>只写(选填), 修改禁言时间,                      当 modify_flag 包含 kTIMGroupMemberModifyFlag_ShutupTime 时必填,其他情况不用填</p>
 </td>
       </tr>
