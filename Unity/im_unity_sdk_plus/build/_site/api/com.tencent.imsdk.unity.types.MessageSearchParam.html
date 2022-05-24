@@ -78,7 +78,8 @@
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">MessageSearchParam</span></div>
+    <div class="level1"><a class="xref" href="com.tencent.imsdk.unity.types.ExtraData.html">ExtraData</a></div>
+    <div class="level2"><span class="xref">MessageSearchParam</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -108,7 +109,7 @@
   <h6><strong>Assembly</strong>: cs.temp.dll.dll</h6>
   <h5 id="com_tencent_imsdk_unity_types_MessageSearchParam_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class MessageSearchParam</code></pre>
+    <pre><code class="lang-csharp hljs">public class MessageSearchParam : ExtraData</code></pre>
   </div>
   <h3 id="fields">Fields
   </h3>
@@ -144,7 +145,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public TIMConvType msg_search_param_conv_type</code></pre>
+    <pre><code class="lang-csharp hljs">public TIMConvType? msg_search_param_conv_type</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -156,7 +157,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="com.tencent.imsdk.unity.enums.TIMConvType.html">TIMConvType</a></td>
+        <td><span class="xref">System.Nullable</span>&lt;<a class="xref" href="com.tencent.imsdk.unity.enums.TIMConvType.html">TIMConvType</a>&gt;</td>
         <td><p>只写(选填), 会话类型，如果设置 kTIMConv_Invalid，代表搜索全部会话。否则，代表搜索指定会话。</p>
 </td>
       </tr>
@@ -244,7 +245,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public uint msg_search_param_page_index</code></pre>
+    <pre><code class="lang-csharp hljs">public uint? msg_search_param_page_index</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -256,7 +257,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.UInt32</span></td>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.UInt32</span>&gt;</td>
         <td><p>只写(选填), 分页的页号：用于分页展示查找结果，从零开始起步。首次调用：通过参数 pageSize = 10, pageIndex = 0 调用 searchLocalMessage，从结果回调中的 totalCount 可以获知总共有多少条结果。</p>
 </td>
       </tr>
@@ -269,7 +270,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public uint msg_search_param_page_size</code></pre>
+    <pre><code class="lang-csharp hljs">public uint? msg_search_param_page_size</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -281,7 +282,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.UInt32</span></td>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.UInt32</span>&gt;</td>
         <td><p>只写(选填), 每页结果数量：用于分页展示查找结果，如不希望分页可将其设置成 0，但如果结果太多，可能会带来性能问题。</p>
 </td>
       </tr>
@@ -294,7 +295,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ulong msg_search_param_search_time_period</code></pre>
+    <pre><code class="lang-csharp hljs">public ulong? msg_search_param_search_time_period</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -306,7 +307,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.UInt64</span></td>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.UInt64</span>&gt;</td>
         <td><p>只写(选填), 从起始时间点开始的过去时间范围，单位秒。默认为0即代表不限制时间范围，传24x60x60代表过去一天。</p>
 </td>
       </tr>
@@ -319,7 +320,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ulong msg_search_param_search_time_position</code></pre>
+    <pre><code class="lang-csharp hljs">public ulong? msg_search_param_search_time_position</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -331,7 +332,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.UInt64</span></td>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.UInt64</span>&gt;</td>
         <td><p>只写(选填), 搜索的起始时间点。默认为0即代表从现在开始搜索。UTC 时间戳，单位：秒</p>
 </td>
       </tr>

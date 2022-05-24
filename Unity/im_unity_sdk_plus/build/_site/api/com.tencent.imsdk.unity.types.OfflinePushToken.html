@@ -78,7 +78,8 @@
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">OfflinePushToken</span></div>
+    <div class="level1"><a class="xref" href="com.tencent.imsdk.unity.types.ExtraData.html">ExtraData</a></div>
+    <div class="level2"><span class="xref">OfflinePushToken</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -108,7 +109,7 @@
   <h6><strong>Assembly</strong>: cs.temp.dll.dll</h6>
   <h5 id="com_tencent_imsdk_unity_types_OfflinePushToken_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class OfflinePushToken</code></pre>
+    <pre><code class="lang-csharp hljs">public class OfflinePushToken : ExtraData</code></pre>
   </div>
   <h3 id="fields">Fields
   </h3>
@@ -119,7 +120,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public int offline_push_token_business_id</code></pre>
+    <pre><code class="lang-csharp hljs">public int? offline_push_token_business_id</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -131,7 +132,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Int32</span></td>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
         <td><p>只写（选填），IM 控制台证书 ID，接入 TPNS 时不需要填写</p>
 </td>
       </tr>
@@ -144,7 +145,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool offline_push_token_is_tpns_token</code></pre>
+    <pre><code class="lang-csharp hljs">public bool? offline_push_token_is_tpns_token</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -156,7 +157,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
         <td><p>只写（选填），是否接入配置 TPNS, token 是否是从 TPNS 获取</p>
 </td>
       </tr>
