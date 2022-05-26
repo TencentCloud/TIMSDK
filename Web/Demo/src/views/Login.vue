@@ -11,7 +11,6 @@
         </div>
       </template>
       <template v-slot:right>
-        <!-- <el-dropdown @command="change"> -->
         <el-dropdown>
           <span class="dropdown">
             <i class="icon icon-global"></i>
@@ -140,7 +139,7 @@ export default defineComponent({
       }
     });
 
-    // 切换语言
+    // change language
     const change = (value:any) => {
       if (locale.value !== value) {
         locale.value = value;
@@ -149,7 +148,6 @@ export default defineComponent({
     };
 
     const validateUserID = (rule: any, value: any, callback: any) => {
-      // const reg = new RegExp('^1[0-9]{10}$', 'gi');
       if (!rule.required) {
         callback();
       } else if (!value) {
