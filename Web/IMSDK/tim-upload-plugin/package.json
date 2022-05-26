@@ -1,0 +1,13 @@
+{
+  "name": "tim-upload-plugin",
+  "version": "1.0.4",
+  "description": "Tencent Cloud Upload To COS SDK for IM",
+  "main": "index.js",
+  "keywords": ["腾讯云IM", "即时通讯", "通信", "COS"],
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "author": "Tencent Cloud Terminal R&D Center",
+  "license": "ISC"
+}
