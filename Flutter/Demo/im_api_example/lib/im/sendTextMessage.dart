@@ -39,7 +39,9 @@ class SendTextMessageState extends State<SendTextMessage> {
             priority: priority,
             onlineUserOnly: onlineUserOnly,
             isExcludedFromUnreadCount: isExcludedFromUnreadCount,
-            localCustomData: imt("自定义localCustomData"));
+            localCustomData: imt("自定义localCustomData"),
+            needReadReceipt: true,
+            );
     setState(() {
       resData = res.toJson();
     });

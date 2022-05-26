@@ -78,7 +78,8 @@
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">Message</span></div>
+    <div class="level1"><a class="xref" href="com.tencent.imsdk.unity.types.ExtraData.html">ExtraData</a></div>
+    <div class="level2"><span class="xref">Message</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -108,7 +109,7 @@
   <h6><strong>Assembly</strong>: cs.temp.dll.dll</h6>
   <h5 id="com_tencent_imsdk_unity_types_Message_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Message</code></pre>
+    <pre><code class="lang-csharp hljs">public class Message : ExtraData</code></pre>
   </div>
   <h3 id="fields">Fields
   </h3>
@@ -119,7 +120,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ulong message_client_time</code></pre>
+    <pre><code class="lang-csharp hljs">public ulong? message_client_time</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -131,7 +132,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.UInt64</span></td>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.UInt64</span>&gt;</td>
         <td><p>读写(选填),       客户端时间</p>
 </td>
       </tr>
@@ -194,7 +195,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public TIMConvType message_conv_type</code></pre>
+    <pre><code class="lang-csharp hljs">public TIMConvType? message_conv_type</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -206,7 +207,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="com.tencent.imsdk.unity.enums.TIMConvType.html">TIMConvType</a></td>
+        <td><span class="xref">System.Nullable</span>&lt;<a class="xref" href="com.tencent.imsdk.unity.enums.TIMConvType.html">TIMConvType</a>&gt;</td>
         <td><p>读写(选填), 消息所属会话类型</p>
 </td>
       </tr>
@@ -219,7 +220,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public int message_custom_int</code></pre>
+    <pre><code class="lang-csharp hljs">public int? message_custom_int</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -231,7 +232,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Int32</span></td>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
         <td><p>读写(选填), 自定义整数值字段（本地保存，不会发送到对端，程序卸载重装后失效）</p>
 </td>
       </tr>
@@ -339,12 +340,12 @@
   </table>
   
   
-  <h4 id="com_tencent_imsdk_unity_types_Message_message_is_excluded_from_unread_count" data-uid="com.tencent.imsdk.unity.types.Message.message_is_excluded_from_unread_count">message_is_excluded_from_unread_count</h4>
+  <h4 id="com_tencent_imsdk_unity_types_Message_message_group_receipt_read_count" data-uid="com.tencent.imsdk.unity.types.Message.message_group_receipt_read_count">message_group_receipt_read_count</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool message_is_excluded_from_unread_count</code></pre>
+    <pre><code class="lang-csharp hljs">public int? message_group_receipt_read_count</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -356,7 +357,82 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><p>只读,         注意：这个字段是内部字段，不推荐使用，推荐调用 TIMMsgGetMessageReadReceipts 获取群消息已读回执</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <h4 id="com_tencent_imsdk_unity_types_Message_message_group_receipt_unread_count" data-uid="com.tencent.imsdk.unity.types.Message.message_group_receipt_unread_count">message_group_receipt_unread_count</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int? message_group_receipt_unread_count</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><p>只读,         注意：这个字段是内部字段，不推荐使用，推荐调用 TIMMsgGetMessageReadReceipts 获取群消息已读回执</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <h4 id="com_tencent_imsdk_unity_types_Message_message_has_sent_receipt" data-uid="com.tencent.imsdk.unity.types.Message.message_has_sent_receipt">message_has_sent_receipt</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool? message_has_sent_receipt</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
+        <td><p>只读,         是否已经发送了已读回执（只有Group 消息有效）</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <h4 id="com_tencent_imsdk_unity_types_Message_message_is_excluded_from_unread_count" data-uid="com.tencent.imsdk.unity.types.Message.message_is_excluded_from_unread_count">message_is_excluded_from_unread_count</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool? message_is_excluded_from_unread_count</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
         <td><p>读写(选填),  消息是否不计入未读计数：默认为 NO，表明需要计入未读计数，设置为 YES，表明不需要计入未读计数</p>
 </td>
       </tr>
@@ -369,7 +445,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool message_is_forward_message</code></pre>
+    <pre><code class="lang-csharp hljs">public bool? message_is_forward_message</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -381,7 +457,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
         <td><p>读写(选填),  是否是转发消息</p>
 </td>
       </tr>
@@ -394,7 +470,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool message_is_from_self</code></pre>
+    <pre><code class="lang-csharp hljs">public bool? message_is_from_self</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -406,7 +482,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
         <td><p>读写(选填),       消息是否来自自己</p>
 </td>
       </tr>
@@ -419,7 +495,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool message_is_online_msg</code></pre>
+    <pre><code class="lang-csharp hljs">public bool? message_is_online_msg</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -431,7 +507,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
         <td><p>读写(选填),       消息是否是在线消息，false表示普通消息,true表示阅后即焚消息，默认为false</p>
 </td>
       </tr>
@@ -444,7 +520,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool message_is_peer_read</code></pre>
+    <pre><code class="lang-csharp hljs">public bool? message_is_peer_read</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -456,7 +532,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
         <td><p>只读,            消息是否被会话对方已读</p>
 </td>
       </tr>
@@ -469,7 +545,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool message_is_read</code></pre>
+    <pre><code class="lang-csharp hljs">public bool? message_is_read</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -481,7 +557,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
         <td><p>读写(选填),       消息是否已读</p>
 </td>
       </tr>
@@ -508,6 +584,31 @@
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><p>只读,       消息的唯一标识</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <h4 id="com_tencent_imsdk_unity_types_Message_message_need_read_receipt" data-uid="com.tencent.imsdk.unity.types.Message.message_need_read_receipt">message_need_read_receipt</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool? message_need_read_receipt</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
+        <td><p>读写(选填),    消息是否需要已读回执（6.1 以上版本有效，需要您购买旗舰版套餐），群消息在使用该功能之前，需要先到 IM 控制台设置已读回执支持的群类型</p>
 </td>
       </tr>
     </tbody>
@@ -544,7 +645,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public TIMPlatform message_platform</code></pre>
+    <pre><code class="lang-csharp hljs">public TIMPlatform? message_platform</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -556,7 +657,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="com.tencent.imsdk.unity.enums.TIMPlatform.html">TIMPlatform</a></td>
+        <td><span class="xref">System.Nullable</span>&lt;<a class="xref" href="com.tencent.imsdk.unity.enums.TIMPlatform.html">TIMPlatform</a>&gt;</td>
         <td><p>读写(选填), 发送消息的平台</p>
 </td>
       </tr>
@@ -569,7 +670,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public TIMMsgPriority message_priority</code></pre>
+    <pre><code class="lang-csharp hljs">public TIMMsgPriority? message_priority</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -581,7 +682,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="com.tencent.imsdk.unity.enums.TIMMsgPriority.html">TIMMsgPriority</a></td>
+        <td><span class="xref">System.Nullable</span>&lt;<a class="xref" href="com.tencent.imsdk.unity.enums.TIMMsgPriority.html">TIMMsgPriority</a>&gt;</td>
         <td><p>读写(选填), 消息优先级</p>
 </td>
       </tr>
@@ -719,7 +820,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ulong message_server_time</code></pre>
+    <pre><code class="lang-csharp hljs">public ulong? message_server_time</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -731,7 +832,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.UInt64</span></td>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.UInt64</span>&gt;</td>
         <td><p>读写(选填),       服务端时间</p>
 </td>
       </tr>
@@ -744,7 +845,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public TIMMsgStatus message_status</code></pre>
+    <pre><code class="lang-csharp hljs">public TIMMsgStatus? message_status</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -756,8 +857,33 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="com.tencent.imsdk.unity.enums.TIMMsgStatus.html">TIMMsgStatus</a></td>
+        <td><span class="xref">System.Nullable</span>&lt;<a class="xref" href="com.tencent.imsdk.unity.enums.TIMMsgStatus.html">TIMMsgStatus</a>&gt;</td>
         <td><p>读写(选填), 消息当前状态</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <h4 id="com_tencent_imsdk_unity_types_Message_message_target_group_member_array" data-uid="com.tencent.imsdk.unity.types.Message.message_target_group_member_array">message_target_group_member_array</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;string&gt; message_target_group_member_array</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><p>只写(选填), 指定群消息接收成员（定向消息）；不支持群 @ 消息设置，不支持社群（Community）和直播群（AVChatRoom）消息设置；该字段设置后，消息会不计入会话未读数。</p>
 </td>
       </tr>
     </tbody>
@@ -783,6 +909,31 @@
       <tr>
         <td><span class="xref">System.UInt64</span></td>
         <td><p>只读,       消息的唯一标识，推荐使用 kTIMMsgMsgId</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <h4 id="com_tencent_imsdk_unity_types_Message_message_version" data-uid="com.tencent.imsdk.unity.types.Message.message_version">message_version</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ulong? message_version</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.UInt64</span>&gt;</td>
+        <td><p>只读，注意：这个字段是内部字段，不推荐使用</p>
 </td>
       </tr>
     </tbody>

@@ -54,8 +54,9 @@ class CallWindowIpc {
         callWindow.removeMenu();
         if (isDev) {
             callWindow.loadURL(`http://localhost:3000/call.html`);
+            callWindow.webContents.openDevTools(); // Formal production does not need to be turned on
         } else {
-            //callWindow.webContents.openDevTools(); // Formal production does not need to be turned on
+            
             callWindow.loadURL(
                 url.format({
                     pathname: path.join(__dirname, `../../bundle/call.html`),

@@ -40,7 +40,9 @@ namespace com.tencent.imsdk.unity.utils
             if (string.IsNullOrEmpty(pJson)) return default(T);
             try
             {
-                T ret = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(pJson);
+                JsonSerializerSettings settings = new JsonSerializerSettings();
+                settings.MissingMemberHandling = MissingMemberHandling.Ignore;
+                T ret = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(pJson, settings);
                 return ret;
             }
             catch (System.Exception error)

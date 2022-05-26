@@ -37,7 +37,7 @@
     if (self) {
         _direction = direction;
         _status = Msg_Status_Init;
-        _showReadReceipt = YES;//新 Demo 默认显示已读回执
+        _showReadReceipt = YES;// C2C Conversation shows message read label by default.
         _avatarImage = DefaultAvatarImage;
         if (direction == MsgDirectionIncoming) {
             _cellLayout = [TUIMessageCellLayout incommingMessageLayout];

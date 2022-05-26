@@ -730,7 +730,7 @@ static BOOL g_isEnableLink = YES;
         
         // 发送到其他聊天
         for (V2TIMMessage *message in msgs) {
-            message.needReadReceipt = g_isMsgNeedReadReceipt;
+            message.needReadReceipt = convCellData.groupID.length > 0 ? g_isMsgNeedReadReceipt : NO;
             [TUIMessageDataProvider sendMessage:message
                                  toConversation:convCellData
                                  isSendPushInfo:YES

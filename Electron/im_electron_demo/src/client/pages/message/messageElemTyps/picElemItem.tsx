@@ -29,9 +29,9 @@ const PicElemItem = (props: any): JSX.Element => {
         const { image_elem_orig_url } = props;
         image_elem_orig_url && downloadPic(image_elem_orig_url)
     }
-    // useEffect(() => {
-    //     savePic()
-    // }, [])
+    useEffect(() => {
+        savePic()
+    }, [])
     return item(props);
 }
 

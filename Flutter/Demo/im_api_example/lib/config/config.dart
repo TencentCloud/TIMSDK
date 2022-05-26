@@ -28,6 +28,7 @@ import 'package:im_api_example/im/getFriendsInfo.dart';
 import 'package:im_api_example/im/getGroupHistoryMessageList.dart';
 import 'package:im_api_example/im/getGroupMemberList.dart';
 import 'package:im_api_example/im/getGroupMembersInfo.dart';
+import 'package:im_api_example/im/getGroupMessageReadMemberList.dart';
 import 'package:im_api_example/im/getGroupOnlineMemberCount.dart';
 import 'package:im_api_example/im/getGroupsInfo.dart';
 import 'package:im_api_example/im/getHistoryMessageList.dart';
@@ -35,6 +36,7 @@ import 'package:im_api_example/im/getHistoryMessageListWithoutFormat.dart';
 import 'package:im_api_example/im/getJoinedGroupList.dart';
 import 'package:im_api_example/im/getLoginStatus.dart';
 import 'package:im_api_example/im/getLoginUser.dart';
+import 'package:im_api_example/im/getMessageReadReceipts.dart';
 import 'package:im_api_example/im/getServerTime.dart';
 import 'package:im_api_example/im/getSignalingInfo.dart';
 import 'package:im_api_example/im/getTotalUnreadMessageCount.dart';
@@ -71,6 +73,7 @@ import 'package:im_api_example/im/sendGroupTextMessage.dart';
 import 'package:im_api_example/im/sendImageMessage.dart';
 import 'package:im_api_example/im/sendLocationMessage.dart';
 import 'package:im_api_example/im/sendMergerMessage.dart';
+import 'package:im_api_example/im/sendMessageReadReceipts.dart';
 import 'package:im_api_example/im/sendSoundMessage.dart';
 import 'package:im_api_example/im/sendTextAtMessage.dart';
 import 'package:im_api_example/im/sendTextMessage.dart';
@@ -531,6 +534,28 @@ class Config {
           "detailRoute": FindMessages(),
           "codeFile": "lib/im/findMessages.dart",
         },
+        {
+          "apiName": "sendMessageReadReceipts",
+          "apiNameCN": imt("发送群已读回执"),
+          "apiDesc": imt("发送群已读回执"),
+          "detailRoute": SendMessageReadReceipts(),
+          "codeFile": "lib/im/sendMessageReadReceipts.dart",
+        },
+        {
+          "apiName": "getMessageReadReceipts",
+          "apiNameCN": imt("获取群已读回执"),
+          "apiDesc": imt("获取群已读回执"),
+          "detailRoute": GetMessageReadReceipts(),
+          "codeFile": "lib/im/getMessageReadReceipts.dart",
+        },
+        {
+          "apiName": "getGroupMessageReadMemberList",
+          "apiNameCN": imt("获取群已读（未读）成员列表"),
+          "apiDesc": imt("获取群已读（未读）成员列表"),
+          "detailRoute": GetGroupMessageReadMemberList(),
+          "codeFile": "lib/im/getGroupMessageReadMemberList.dart",
+        },
+        
       ]
     },
     {
