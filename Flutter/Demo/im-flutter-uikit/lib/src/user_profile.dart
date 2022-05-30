@@ -1,15 +1,20 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
+import 'package:tim_ui_kit/ui/utils/permission.dart';
 import 'package:tim_ui_kit/ui/widgets/toast.dart';
 import 'package:tim_ui_kit_calling_plugin/enum/tim_uikit_trtc_calling_scence.dart';
 import 'package:tim_ui_kit_calling_plugin/tim_ui_kit_calling_plugin.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';
 import 'package:timuikit/src/provider/theme.dart';
 import 'package:timuikit/src/search.dart';
+import 'package:timuikit/utils/platform.dart';
 
+import '../utils/push/push_constant.dart';
 import '../utils/toast.dart';
 import 'chat.dart';
 
@@ -23,10 +28,12 @@ class UserProfile extends StatefulWidget {
 class UserProfileState extends State<UserProfile> {
   final TIMUIKitProfileController _timuiKitProfileController =
       TIMUIKitProfileController();
-  final TUICalling _calling = TUICalling();
+  TUICalling? _calling;
+  final V2TIMManager sdkInstance = TIMUIKitCore.getSDKInstance();
   String? newUserMARK;
 
-  _itemClick(String id, BuildContext context, V2TimConversation conversation) {
+  _itemClick(
+      String id, BuildContext context, V2TimConversation conversation) async {
     switch (id) {
       case "sendMsg":
         Navigator.push(
@@ -53,10 +60,40 @@ class UserProfileState extends State<UserProfile> {
         });
         break;
       case "audioCall":
-        _calling.call(widget.userID, CallingScenes.Audio);
+        final user = await sdkInstance.getLoginUser();
+        final myId = user.data;
+        OfflinePushInfo offlinePush = OfflinePushInfo(
+          title: "",
+          desc: "邀请你语音通话",
+          ext: "{\"conversationID\": \"c2c_$myId\"}",
+          disablePush: false,
+          androidOPPOChannelID: PushConfig.OPPOChannelID,
+          ignoreIOSBadge: false,
+        );
+
+        final hasMicphonePermission = await Permissions.checkPermission(
+            context, Permission.microphone.value);
+
+        _calling?.call(widget.userID, CallingScenes.Audio, offlinePush);
         break;
       case "videoCall":
-        _calling.call(widget.userID, CallingScenes.Video);
+        final user = await sdkInstance.getLoginUser();
+        final myId = user.data;
+        OfflinePushInfo offlinePush = OfflinePushInfo(
+          title: "",
+          desc: "邀请你视频通话",
+          ext: "{\"conversationID\": \"c2c_$myId\"}",
+          androidOPPOChannelID: PushConfig.OPPOChannelID,
+          disablePush: false,
+          ignoreIOSBadge: false,
+        );
+
+        final hasCameraPermission =
+            await Permissions.checkPermission(context, Permission.camera.value);
+        final hasMicphonePermission = await Permissions.checkPermission(
+            context, Permission.microphone.value);
+            
+        _calling?.call(widget.userID, CallingScenes.Video, offlinePush);
         break;
     }
   }
@@ -154,6 +191,21 @@ class UserProfileState extends State<UserProfile> {
       newUserMARK = remark;
       _timuiKitProfileController.updateRemarks(widget.userID, remark);
     });
+  }
+
+  _initTUICalling() async {
+    final isAndroidEmulator = await PlatformUtils.isAndroidEmulator();
+    if (!isAndroidEmulator) {
+      _calling = TUICalling();
+    }
+  }
+
+  @override
+  void initState() {
+    // ignore: todo
+    // TODO: implement initState
+    super.initState();
+    _initTUICalling();
   }
 
   @override

@@ -1,7 +1,11 @@
 // ignore_for_file: avoid_print, prefer_typing_uninitialized_variables, empty_catches
 
+import 'dart:convert';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:tim_ui_kit/data_services/conversation/conversation_services.dart';
+import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tim_ui_kit/ui/constants/emoji.dart';
@@ -10,12 +14,14 @@ import 'package:tim_ui_kit_sticker_plugin/utils/tim_ui_kit_sticker_data.dart';
 import 'package:timuikit/src/config.dart';
 import 'package:timuikit/src/pages/home_page.dart';
 import 'package:timuikit/src/pages/login.dart';
-import 'package:timuikit/utils/offline_push_config.dart';
 import 'package:timuikit/utils/toast.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';
 import 'package:timuikit/src/provider/custom_sticker_package.dart';
 import 'package:timuikit/utils/constant.dart';
 import 'package:provider/provider.dart';
+
+import '../utils/push/channel/channel_push.dart';
+import 'chat.dart';
 
 bool isInitScreenUtils = false;
 
@@ -30,6 +36,8 @@ class _MyAppState extends State<MyApp> {
   var subscription;
   final Connectivity _connectivity = Connectivity();
   final CoreServicesImpl _coreInstance = TIMUIKitCore.getInstance();
+  final ConversationService _conversationService = serviceLocator<ConversationService>();
+
   Widget currentApp = Center(
     child: Text(imt("正在加载...")),
   );
@@ -111,8 +119,20 @@ class _MyAppState extends State<MyApp> {
     setCustomSticker();
   }
 
-  void handleClickNotification(Map<String, dynamic> msg) {
-    print(msg);
+  void handleClickNotification(Map<String, dynamic> msg) async {
+    String ext = msg['ext'] ?? "";
+    Map<String, dynamic> extMsp = jsonDecode(ext);
+    String convId = extMsp["conversationID"] ?? "";
+    V2TimConversation? targetConversation = await _conversationService.getConversation(conversationID: convId);
+    if(targetConversation != null){
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Chat(
+              selectedConversation: targetConversation,
+            ),
+          ));
+    }
   }
 
   @override
@@ -131,7 +151,8 @@ class _MyAppState extends State<MyApp> {
         // );
       }
     });
-    OfflinePush.init(handleClickNotification);
+    // OfflinePush.init(handleClickNotification);
+    ChannelPush.init(handleClickNotification);
     initApp();
   }
 

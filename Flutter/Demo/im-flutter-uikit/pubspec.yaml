@@ -48,25 +48,22 @@ dependencies:
   flutter_easyloading: ^3.0.3
   connectivity_plus: ^2.2.0
   i18n: any
-  tpns_flutter_plugin:
-    git:
-      url: https://github.com/TencentCloud/TPNS-Flutter-Plugin
-      ref: V1.1.5
-  tim_ui_kit: 0.0.8-beta
-  # tim_ui_kit:
-  #  path: package_src/tim_ui_kit
-  tim_ui_kit_calling_plugin: ^0.1.8
-  tim_ui_kit_sticker_plugin: ^0.0.4
+  # tim_ui_kit: ^0.0.8
+  tim_ui_kit: ^0.0.9
+  tim_ui_kit_calling_plugin: ^0.2.0
+  tim_ui_kit_sticker_plugin: ^0.0.5
   # tim_ui_kit_sticker_plugin:
   #   path: ../tim_ui_kit_sticker_plugin
   super_tooltip: ^1.0.1
-  flutter_baidu_mapapi_map: ^3.1.0+1
-  flutter_baidu_mapapi_base: ^3.1.0
-  flutter_baidu_mapapi_search: ^3.1.0
-  flutter_baidu_mapapi_utils: ^3.1.0+1
-  location: ^4.3.0
   flutter_svg: ^1.0.3
-  tim_ui_kit_lbs_plugin: ^1.1.0
+#  tim_ui_kit_lbs_plugin: ^1.1.2
+  tim_ui_kit_push_plugin: ^0.1.6
+#  tim_ui_kit_push_plugin:
+#    path: /Users/wangrunlin/Documents/GitHub/im-flutter-uikit-push
+  uni_links: ^0.5.1
+  fluwx: ^3.8.5
+  device_info_plus: ^3.2.3
+  firebase_core: 1.12.0
 #  tim_ui_kit_lbs_plugin:
 #    path: /Users/owennwang/Documents/GitHub/im-flutter-uikit-lbs
 dev_dependencies:

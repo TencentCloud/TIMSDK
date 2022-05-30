@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import
+
 import 'package:flutter/material.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/controller/tim_uikit_conversation_controller.dart';

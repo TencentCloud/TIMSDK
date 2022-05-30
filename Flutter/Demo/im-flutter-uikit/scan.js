@@ -160,7 +160,9 @@ Promise.all(
   try{
     const data = fs.readFileSync('lib/i18n/i18n_utils.dart', 'utf8').split('\n');
     const lineIndex = data.findIndex(item => item.indexOf("final zhJson") > -1);
-    data[lineIndex] = `  final zhJson = '''${JSON.stringify(chineseDict).replace(/\$/g, "\\$")}''';`
+    data[lineIndex] = `  final zhJson = `;
+    data[lineIndex + 1] = `    '''${JSON.stringify(chineseDict).replace(/\$/g, "\\$")}''';`;
+    // data.splice(lineIndex + 1, 0, `    '''${JSON.stringify(chineseDict).replace(/\$/g, "\\$")}''';`);
     fs.writeFileSync('lib/i18n/i18n_utils.dart', data.join('\n'), 'utf8');
   }catch(err){
     console.log(`替换dart文件失败, ${err}`);
