@@ -9,6 +9,10 @@ class V2MessageReceiptEntity: V2TIMMessageReceipt {
         var result: [String: Any] = [:];
         result["userID"] = info.userID;
         result["timestamp"] = info.timestamp;
+        result["groupID"] = info.groupID;
+        result["msgID"] = info.msgID;
+        result["readCount"] = info.readCount;
+        result["unreadCount"] = info.unreadCount;
         return result;
     }
 }

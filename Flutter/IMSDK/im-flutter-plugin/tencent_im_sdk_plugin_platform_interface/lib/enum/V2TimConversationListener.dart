@@ -6,6 +6,8 @@
 
 // void 	onNewConversation (List< V2TIMConversation > conversationList)
 
+// ignore_for_file: file_names, prefer_function_declarations_over_variables
+
 // void 	onConversationChanged (List< V2TIMConversation > conversationList)
 //
 //

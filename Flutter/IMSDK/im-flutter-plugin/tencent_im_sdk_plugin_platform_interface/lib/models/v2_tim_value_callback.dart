@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_shadowing_type_parameters
+
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_conversation.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_conversation_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_friend_application_result.dart';
@@ -12,12 +14,17 @@ import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_inf
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_member_full_info.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_member_info_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_member_operation_result.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_message_read_member_list.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_message.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_message_change_info.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_message_receipt.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_message_search_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_msg_create_info_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_receive_message_opt_info.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_member_search_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_signaling_info.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_topic_info_result.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_topic_operation_result.dart';
 import 'v2_tim_user_full_info.dart';
 
 import 'dart:convert';
@@ -44,7 +51,7 @@ class V2TimValueCallback<T> {
   V2TimValueCallback.fromJson(Map<String, dynamic> json) {
     late dynamic fromJsonData;
     if (json['data'] == null) {
-      fromJsonData = this.data;
+      fromJsonData = data;
     } else {
       if (T == V2TimMessage) {
         fromJsonData = V2TimMessage.fromJson(json['data']) as T;
@@ -63,7 +70,7 @@ class V2TimValueCallback<T> {
           return V2TimGroupInfoResult.fromJson(e);
         }).toList() as T;
       } else if (T == _getT<Map<String, String>>()) {
-        fromJsonData = new Map<String, String>.from(json['data']) as T;
+        fromJsonData = Map<String, String>.from(json['data']) as T;
       } else if (T == V2TimGroupMemberInfoResult) {
         fromJsonData = V2TimGroupMemberInfoResult.fromJson(json['data']) as T;
       } else if (T == _getT<List<V2TimGroupMemberFullInfo>>()) {
@@ -125,97 +132,141 @@ class V2TimValueCallback<T> {
             json['data']); // V2TimSignalingInfo
       } else if (T == V2TimSignalingInfo) {
         fromJsonData = V2TimSignalingInfo.fromJson(json['data']);
+      } else if(T == V2TimMessageChangeInfo){
+        fromJsonData = V2TimMessageChangeInfo.fromJson(json['data']);
       } else if (T == V2TimMsgCreateInfoResult) {
         fromJsonData = V2TimMsgCreateInfoResult.fromJson(json['data']);
-      } else
+      } else if (T == V2TimGroupMessageReadMemberList) {
+        fromJsonData = V2TimGroupMessageReadMemberList.fromJson(json['data']);
+      } else if (T == _getT<List<V2TimMessageReceipt>>()) {
+        fromJsonData = (json['data'] as List).map((e) {
+          return V2TimMessageReceipt.fromJson(e);
+        }).toList() as T;
+      } else if(T == _getT<List<V2TimTopicInfoResult>>()){
+        fromJsonData = (json['data'] as List).map((e) {
+          return V2TimTopicInfoResult.fromJson(e);
+        }).toList() as T;
+      } else if(T == _getT<List<V2TimTopicOperationResult>>()){
+        fromJsonData = (json['data'] as List).map((e) {
+          return V2TimTopicOperationResult.fromJson(e);
+        }).toList() as T;
+      } else if(T == _getT<List<V2TimGroupInfo>>()){
+        fromJsonData = (json['data'] as List).map((e) {
+          return V2TimGroupInfo.fromJson(e);
+        }).toList() as T;
+      } else {
         fromJsonData = json['data'];
+      }
     }
 
-    this.code = json['code'];
-    this.desc = json['desc'] == null ? '' : json['desc'];
-    this.data = fromJsonData;
+    code = json['code'];
+    desc = json['desc'] ?? '';
+    data = fromJsonData;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['code'] = this.code;
-    data['desc'] = this.desc;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['code'] = code;
+    data['desc'] = desc;
     dynamic toJsonData = this.data;
     if (this.data == null) {
       data['data'] = this.data;
     } else {
-      if (T == V2TimMessage)
+      if (T == V2TimMessage) {
         toJsonData = (this.data as V2TimMessage).toJson();
-      else if (T == V2TimUserFullInfo)
+      } else if (T == V2TimUserFullInfo) {
         toJsonData = (this.data as V2TimUserFullInfo).toJson();
-      else if (T == _getT<List<V2TimUserFullInfo>>())
+      } else if (T == _getT<List<V2TimUserFullInfo>>()) {
         toJsonData = (this.data as List)
             .map((e) => (e as V2TimUserFullInfo).toJson())
             .toList();
-      else if (T == _getT<List<V2TimGroupInfo>>())
+      } else if (T == _getT<List<V2TimGroupInfo>>()) {
         toJsonData = (this.data as List)
             .map((e) => (e as V2TimGroupInfo).toJson())
             .toList();
-      else if (T == _getT<List<V2TimGroupInfoResult>>())
+      } else if (T == _getT<List<V2TimGroupInfoResult>>()) {
         toJsonData = (this.data as List)
             .map((e) => (e as V2TimGroupInfoResult).toJson())
             .toList();
-      else if (T == _getT<Map<String, String>>())
+      } else if (T == _getT<Map<String, String>>()) {
         toJsonData = this.data as Map<String, String>;
-      else if (T == V2TimGroupMemberInfoResult)
+      } else if (T == V2TimGroupMemberInfoResult) {
         toJsonData = (this.data as V2TimGroupMemberInfoResult).toJson();
-      else if (T == _getT<List<V2TimGroupMemberFullInfo>>())
+      } else if (T == _getT<List<V2TimGroupMemberFullInfo>>()) {
         toJsonData = (this.data as List)
             .map((e) => (e as V2TimGroupMemberFullInfo).toJson())
             .toList();
-      else if (T == _getT<List<V2TimGroupMemberOperationResult>>())
+      } else if (T == _getT<List<V2TimGroupMemberOperationResult>>()) {
         toJsonData = (this.data as List)
             .map((e) => (e as V2TimGroupMemberOperationResult).toJson())
             .toList();
-      else if (T == V2TimGroupApplicationResult)
+      } else if (T == V2TimGroupApplicationResult) {
         toJsonData = (this.data as V2TimGroupApplicationResult).toJson();
-      else if (T == V2TimConversation)
+      } else if (T == V2TimConversation) {
         toJsonData = (this.data as V2TimConversation).toJson();
-      else if (T == V2TimConversationResult)
+      } else if (T == V2TimConversationResult) {
         toJsonData = (this.data as V2TimConversationResult).toJson();
-      else if (T == _getT<List<V2TimFriendInfo>>())
+      } else if (T == _getT<List<V2TimFriendInfo>>()) {
         toJsonData = (this.data as List)
             .map((e) => (e as V2TimFriendInfo).toJson())
             .toList();
-      else if (T == _getT<List<V2TimFriendInfoResult>>())
+      } else if (T == _getT<List<V2TimFriendInfoResult>>()) {
         toJsonData = (this.data as List)
             .map((e) => (e as V2TimFriendInfoResult).toJson())
             .toList();
-      else if (T == V2TimFriendOperationResult)
+      } else if (T == V2TimFriendOperationResult) {
         toJsonData = (this.data as V2TimFriendOperationResult).toJson();
-      else if (T == _getT<List<V2TimFriendOperationResult>>())
+      } else if (T == _getT<List<V2TimFriendOperationResult>>()) {
         toJsonData = (this.data as List)
             .map((e) => (e as V2TimFriendOperationResult).toJson())
             .toList();
-      else if (T == V2TimFriendCheckResult)
+      } else if (T == V2TimFriendCheckResult) {
         toJsonData = (this.data as V2TimFriendCheckResult).toJson();
-      else if (T == _getT<List<V2TimFriendCheckResult>>())
+      } else if (T == _getT<List<V2TimFriendCheckResult>>()) {
         toJsonData = (this.data as List)
             .map((e) => (e as V2TimFriendCheckResult).toJson())
             .toList();
-      else if (T == V2TimFriendApplicationResult)
+      } else if (T == V2TimFriendApplicationResult) {
         toJsonData = (this.data as V2TimFriendApplicationResult).toJson();
-      else if (T == _getT<List<V2TimFriendGroup>>())
+      } else if (T == _getT<List<V2TimFriendGroup>>()) {
         toJsonData = (this.data as List)
             .map((e) => (e as V2TimFriendGroup).toJson())
             .toList();
-      else if (T == _getT<List<V2TimMessage>>())
+      } else if (T == _getT<List<V2TimMessage>>()) {
         toJsonData = (this.data as List)
             .map((e) => (e as V2TimMessage).toJson())
             .toList();
-      else if (T == V2TimMessageSearchResult) {
+      } else if (T == V2TimMessageSearchResult) {
         toJsonData = (this.data as V2TimMessageSearchResult).toJson();
       } else if (T == V2TimSignalingInfo) {
         toJsonData = (this.data as V2TimSignalingInfo).toJson();
       } else if (T == V2TimMsgCreateInfoResult) {
         toJsonData = (this.data as V2TimMsgCreateInfoResult).toJson();
-      } else
+      } else if(T == V2TimMessageChangeInfo){
+        toJsonData = (this.data as V2TimMessageChangeInfo).toJson();
+      }
+      
+      else if (T == V2TimGroupMessageReadMemberList) {
+        toJsonData = (this.data as V2TimGroupMessageReadMemberList).toJson();
+      } else if (T == _getT<List<V2TimMessageReceipt>>()) {
+        toJsonData = (this.data as List)
+            .map((e) => (e as V2TimMessageReceipt).toJson())
+            .toList();
+      } else if(T == _getT<List<V2TimTopicInfoResult>>()){
+        toJsonData = (this.data as List)
+            .map((e) => (e as V2TimTopicInfoResult).toJson())
+            .toList();
+      } else if(T == _getT<List<V2TimTopicOperationResult>>()){
+        toJsonData = (this.data as List)
+            .map((e) => (e as V2TimTopicOperationResult).toJson())
+            .toList();
+      } else if(T == _getT<List<V2TimGroupInfo>>()){
+        toJsonData = (this.data as List)
+            .map((e) => (e as V2TimGroupInfo).toJson())
+            .toList();
+      }else {
         toJsonData = this.data;
+      }
       data['data'] = toJsonData;
     }
     return data;

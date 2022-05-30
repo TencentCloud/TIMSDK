@@ -14,14 +14,14 @@ class V2TimGroupAttributeChanged {
   V2TimGroupAttributeChanged.fromJson(Map<String, dynamic> json) {
     groupID = json['groupID'];
     groupAttributeMap = json['groupAttributeMap'] == null
-        ? new Map<String, String>()
+        ? <String, String>{}
         : Map<String, String>.from(json['groupAttributeMap']);
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['groupID'] = this.groupID;
-    data['groupAttributeMap'] = this.groupAttributeMap;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['groupID'] = groupID;
+    data['groupAttributeMap'] = groupAttributeMap;
     return data;
   }
 }

@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 class OfflinePushInfo {
   late String title;
   late String desc;
@@ -28,14 +30,14 @@ class OfflinePushInfo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['title'] = this.title;
-    data['desc'] = this.desc;
-    data['disablePush'] = this.disablePush;
-    data['ext'] = this.ext;
-    data['iOSSound'] = this.iOSSound;
-    data['ignoreIOSBadge'] = this.ignoreIOSBadge;
-    data['androidOPPOChannelID'] = this.androidOPPOChannelID;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['title'] = title;
+    data['desc'] = desc;
+    data['disablePush'] = disablePush;
+    data['ext'] = ext;
+    data['iOSSound'] = iOSSound;
+    data['ignoreIOSBadge'] = ignoreIOSBadge;
+    data['androidOPPOChannelID'] = androidOPPOChannelID;
     return data;
   }
 }

@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_function_declarations_over_variables, file_names
+
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/callbacks.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_user_full_info.dart';
 

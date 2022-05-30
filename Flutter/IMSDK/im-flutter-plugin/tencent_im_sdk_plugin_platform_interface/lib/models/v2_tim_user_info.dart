@@ -20,10 +20,10 @@ class V2TimUserInfo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['userID'] = this.userID;
-    data['nickName'] = this.nickName;
-    data['faceUrl'] = this.faceUrl;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['userID'] = userID;
+    data['nickName'] = nickName;
+    data['faceUrl'] = faceUrl;
     return data;
   }
 }

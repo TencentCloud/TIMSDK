@@ -10,6 +10,7 @@ class V2TimImage {
   late int? width;
   late int? height;
   late String? url;
+  String? localUrl;
 
   V2TimImage({
     // ignore: non_constant_identifier_names
@@ -19,6 +20,7 @@ class V2TimImage {
     this.width,
     this.height,
     this.url,
+    this.localUrl,
   });
 
   V2TimImage.fromJson(Map<String, dynamic> json) {
@@ -28,16 +30,18 @@ class V2TimImage {
     width = json['width'];
     height = json['height'];
     url = json['url'];
+    localUrl = json['localUrl'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['uuid'] = this.uuid;
-    data['type'] = this.type;
-    data['size'] = this.size;
-    data['width'] = this.width;
-    data['height'] = this.height;
-    data['url'] = this.url;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['uuid'] = uuid;
+    data['type'] = type;
+    data['size'] = size;
+    data['width'] = width;
+    data['height'] = height;
+    data['url'] = url;
+    data['localUrl'] = localUrl;
     return data;
   }
 }

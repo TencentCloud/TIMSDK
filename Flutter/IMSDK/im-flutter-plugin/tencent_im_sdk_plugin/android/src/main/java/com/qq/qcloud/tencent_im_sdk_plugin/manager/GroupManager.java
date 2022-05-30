@@ -14,6 +14,9 @@ import com.tencent.imsdk.v2.V2TIMGroupMemberSearchParam;
 import com.tencent.imsdk.v2.V2TIMGroupSearchParam;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessageSearchParam;
+import com.tencent.imsdk.v2.V2TIMTopicInfo;
+import com.tencent.imsdk.v2.V2TIMTopicInfoResult;
+import com.tencent.imsdk.v2.V2TIMTopicOperationResult;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 
 
@@ -67,6 +70,10 @@ public class GroupManager {
         if(CommonUtil.getParam(methodCall,result,"addOpt")!=null){
             int addOpt = CommonUtil.getParam(methodCall,result,"addOpt");
             info.setGroupAddOpt(addOpt);
+        }
+        if(CommonUtil.getParam(methodCall,result,"isSupportTopic")!=null){
+            boolean isSupportTopic = CommonUtil.getParam(methodCall,result,"isSupportTopic");
+            info.setSupportTopic(isSupportTopic);
         }
         List<V2TIMCreateGroupMemberInfo> memberList = new LinkedList<V2TIMCreateGroupMemberInfo>();
         if(CommonUtil.getParam(methodCall,result,"memberList")!=null ){
@@ -140,6 +147,7 @@ public class GroupManager {
         String notification = CommonUtil.getParam(methodCall,result,"notification");
         String introduction = CommonUtil.getParam(methodCall,result,"introduction");
         String faceUrl = CommonUtil.getParam(methodCall,result,"faceUrl");
+
         HashMap<String,String> customInfoString = CommonUtil.getParam(methodCall,result,"customInfo");
 
         V2TIMGroupInfo info =  new V2TIMGroupInfo();
@@ -169,6 +177,10 @@ public class GroupManager {
             int addOpt = CommonUtil.getParam(methodCall,result,"addOpt");
             info.setGroupAddOpt(addOpt);
         }
+        if(CommonUtil.getParam(methodCall,result,"isSupportTopic")!=null){
+            boolean isSupportTopic = CommonUtil.getParam(methodCall,result,"isSupportTopic");
+            info.setSupportTopic(isSupportTopic);
+        }
         if(CommonUtil.getParam(methodCall,result,"customInfo")!=null){
             HashMap<String, byte[]> newCustomHashMap = new HashMap<String, byte[]>();
             if(!customInfoString.isEmpty()){
@@ -192,6 +204,147 @@ public class GroupManager {
             }
         });
     }
+    public void getJoinedCommunityList(MethodCall methodCall, final MethodChannel.Result result) {
+        V2TIMManager.getGroupManager().getJoinedCommunityList(new V2TIMValueCallback<List<V2TIMGroupInfo>>() {
+            @Override
+            public void onSuccess(List<V2TIMGroupInfo> v2TIMGroupInfos) {
+                LinkedList<HashMap<String,Object>> list = new LinkedList<HashMap<String,Object>>();
+                for(int i = 0;i<v2TIMGroupInfos.size();i++){
+                    list.add(CommonUtil.convertV2TIMGroupInfoToMap(v2TIMGroupInfos.get(i)));
+                }
+                CommonUtil.returnSuccess(result,list);
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                CommonUtil.returnError(result,i,s);
+            }
+        });
+    }
+    public void createTopicInCommunity(MethodCall methodCall, final MethodChannel.Result result) {
+        String groupID = CommonUtil.getParam(methodCall,result,"groupID");
+        Map<String,Object> topicInfo = CommonUtil.getParam(methodCall,result,"topicInfo");
+        V2TIMTopicInfo info = new V2TIMTopicInfo();
+        if(topicInfo.get("topicID")!=null){
+            info.setTopicID((String) topicInfo.get("topicID"));
+        }
+        if(topicInfo.get("topicName")!=null){
+            info.setTopicName((String) topicInfo.get("topicName"));
+        }
+        if(topicInfo.get("topicFaceUrl")!=null){
+            info.setTopicFaceUrl((String) topicInfo.get("topicFaceUrl"));
+        }
+        if(topicInfo.get("notification")!=null){
+            info.setNotification((String) topicInfo.get("notification"));
+        }
+        if(topicInfo.get("isAllMute")!=null){
+            info.setAllMute((Boolean) topicInfo.get("isAllMute"));
+        }
+
+        if(topicInfo.get("customString")!=null){
+            info.setCustomString((String) topicInfo.get("customString"));
+        }
+
+        if(topicInfo.get("draftText")!=null){
+            info.setDraft((String) topicInfo.get("draftText"));
+        }
+        if(topicInfo.get("introduction")!=null){
+            info.setIntroduction((String) topicInfo.get("introduction"));
+        }
+
+        V2TIMManager.getGroupManager().createTopicInCommunity(groupID, info, new V2TIMValueCallback<String>() {
+            @Override
+            public void onSuccess(String s) {
+                CommonUtil.returnSuccess(result,s);
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                CommonUtil.returnError(result,i,s);
+            }
+        });
+
+    }
+    public void deleteTopicFromCommunity(MethodCall methodCall, final MethodChannel.Result result) {
+        String groupID = CommonUtil.getParam(methodCall,result,"groupID");
+        List< String > topicIDList= CommonUtil.getParam(methodCall,result,"topicIDList");
+        V2TIMManager.getGroupManager().deleteTopicFromCommunity(groupID, topicIDList, new V2TIMValueCallback<List<V2TIMTopicOperationResult>>() {
+            @Override
+            public void onSuccess(List<V2TIMTopicOperationResult> v2TIMTopicOperationResults) {
+                LinkedList<HashMap<String,Object>> list = new LinkedList<HashMap<String,Object>>();
+                for(int i = 0;i<v2TIMTopicOperationResults.size();i++){
+                    list.add(CommonUtil.convertV2TIMTopicOperationResultToMap(v2TIMTopicOperationResults.get(i)));
+                }
+                CommonUtil.returnSuccess(result,list);
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                CommonUtil.returnError(result,i,s);
+            }
+        });
+    }
+    public void setTopicInfo(MethodCall methodCall, final MethodChannel.Result result) {
+        Map<String,Object> topicInfo = CommonUtil.getParam(methodCall,result,"topicInfo");
+        V2TIMTopicInfo info = new V2TIMTopicInfo();
+        if(topicInfo.get("topicID")!=null){
+            info.setTopicID((String) topicInfo.get("topicID"));
+        }
+        if(topicInfo.get("topicName")!=null){
+            info.setTopicName((String) topicInfo.get("topicName"));
+        }
+        if(topicInfo.get("topicFaceUrl")!=null){
+            info.setTopicFaceUrl((String) topicInfo.get("topicFaceUrl"));
+        }
+        if(topicInfo.get("notification")!=null){
+            info.setNotification((String) topicInfo.get("notification"));
+        }
+        if(topicInfo.get("isAllMute")!=null){
+            info.setAllMute((Boolean) topicInfo.get("isAllMute"));
+        }
+
+        if(topicInfo.get("customString")!=null){
+            info.setCustomString((String) topicInfo.get("customString"));
+        }
+
+        if(topicInfo.get("draftText")!=null){
+            info.setDraft((String) topicInfo.get("draftText"));
+        }
+        if(topicInfo.get("introduction")!=null){
+            info.setIntroduction((String) topicInfo.get("introduction"));
+        }
+        V2TIMManager.getGroupManager().setTopicInfo(info, new V2TIMCallback() {
+            @Override
+            public void onSuccess() {
+                CommonUtil.returnSuccess(result,null);
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                CommonUtil.returnError(result,i,s);
+            }
+        });
+    }
+    public void getTopicInfoList(MethodCall methodCall, final MethodChannel.Result result) {
+        String groupID = CommonUtil.getParam(methodCall,result,"groupID");
+        List< String > topicIDList= CommonUtil.getParam(methodCall,result,"topicIDList");
+        V2TIMManager.getGroupManager().getTopicInfoList(groupID, topicIDList, new V2TIMValueCallback<List<V2TIMTopicInfoResult>>() {
+            @Override
+            public void onSuccess(List<V2TIMTopicInfoResult> v2TIMTopicInfoResults) {
+                LinkedList<HashMap<String,Object>> list = new LinkedList<HashMap<String,Object>>();
+                for(int i = 0;i<v2TIMTopicInfoResults.size();i++){
+                    list.add(CommonUtil.convertV2TIMTopicInfoResultToMap(v2TIMTopicInfoResults.get(i)));
+                }
+                CommonUtil.returnSuccess(result,list);
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                CommonUtil.returnError(result,i,s);
+            }
+        });
+    }
+
     public void getGroupOnlineMemberCount(MethodCall methodCall, final MethodChannel.Result result) {
         String groupID = CommonUtil.getParam(methodCall,result,"groupID");
         V2TIMManager.getInstance().getGroupManager().getGroupOnlineMemberCount(groupID, new V2TIMValueCallback<Integer>() {

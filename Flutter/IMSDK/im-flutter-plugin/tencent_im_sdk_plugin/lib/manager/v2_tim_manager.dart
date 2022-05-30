@@ -1,4 +1,4 @@
-// ignore_for_file: unused_element
+// ignore_for_file: unused_element, deprecated_member_use_from_same_package, unused_field
 
 import 'dart:convert';
 
@@ -12,7 +12,6 @@ import 'package:tencent_im_sdk_plugin/enum/V2TimSimpleMsgListener.dart';
 import 'package:tencent_im_sdk_plugin/enum/listener_type.dart';
 import 'package:tencent_im_sdk_plugin/enum/log_level_enum.dart';
 import 'package:tencent_im_sdk_plugin/enum/message_priority_enum.dart';
-import 'package:tencent_im_sdk_plugin/enum/utils.dart';
 import 'package:tencent_im_sdk_plugin/manager/v2_tim_conversation_manager.dart';
 import 'package:tencent_im_sdk_plugin/manager/v2_tim_friendship_manager.dart';
 import 'package:tencent_im_sdk_plugin/manager/v2_tim_group_manager.dart';
@@ -473,7 +472,17 @@ class V2TIMManager {
                     params['progress'],
                   );
                 });
-
+                break;
+              case 'onRecvMessageReadReceipts':
+                List dataList = params;
+                List<V2TimMessageReceipt> receiptList =
+                    List.empty(growable: true);
+                dataList.forEach((element) {
+                  receiptList.add(V2TimMessageReceipt.fromJson(element));
+                });
+                _catchListenerError(() {
+                  listener.onRecvMessageReadReceipts(receiptList);
+                });
                 break;
             }
           }
@@ -695,7 +704,7 @@ class V2TIMManager {
     this.initSDKListenerList[uuid] = listener;
     return ImFlutterPlatform.instance.initSDK(
       sdkAppID: sdkAppID,
-      loglevel: EnumUtils.convertLogLevelEnum(loglevel),
+      loglevel: loglevel.index,
       listenerUuid: uuid,
       listener: listener,
       uiPlatform: platform,
@@ -907,13 +916,14 @@ class V2TIMManager {
   Future<V2TimValueCallback<V2TimMessage>> sendGroupCustomMessage({
     required String customData,
     required String groupID,
-    MessagePriorityEnum priority = MessagePriorityEnum.V2TIM_PRIORITY_NORMAL,
+    MessagePriorityEnum? priority = MessagePriorityEnum.V2TIM_PRIORITY_NORMAL,
   }) async {
     printWarning("简单消息自3.6.0开始弃用，请使用messageManager下的高级收发消息,此接口将在以后版本中被删除）");
     return ImFlutterPlatform.instance.sendGroupCustomMessage(
-        customData: customData,
-        groupID: groupID,
-        priority: EnumUtils.convertMessagePriorityEnum(priority));
+      customData: customData,
+      groupID: groupID,
+      priority: priority!.index,
+    );
   }
 
   /// 创建群组

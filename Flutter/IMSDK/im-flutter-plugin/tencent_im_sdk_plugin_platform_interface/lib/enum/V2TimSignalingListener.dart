@@ -6,6 +6,8 @@
 
 // void 	onInvitationCancelled (String inviteID, String inviter, String data)
 
+// ignore_for_file: file_names, prefer_function_declarations_over_variables
+
 // void 	onInvitationTimeout (String inviteID, List< String > inviteeList)
 //
 import 'callbacks.dart';

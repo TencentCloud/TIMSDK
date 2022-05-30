@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/group_change_info_type.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/group_tips_elem_type.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/message_elem_type.dart';
@@ -325,6 +327,7 @@ class V2TIMMessage {
           groupID: jsToMap(messagePayload['groupProfile'])['groupID'],
           customData: messagePayload['userDefinedField']);
     }
+    return null;
   }
 
   static Future<V2TimGroupTipsElem?> convertGroupTipsMessage(
@@ -435,5 +438,6 @@ class V2TIMMessage {
           type: GroupTipsElemType.V2TIM_GROUP_TIPS_TYPE_MEMBER_INFO_CHANGE,
           opMember: opMember);
     }
+    return null;
   }
 }

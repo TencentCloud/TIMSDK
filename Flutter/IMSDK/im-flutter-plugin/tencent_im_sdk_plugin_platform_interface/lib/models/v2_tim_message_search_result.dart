@@ -14,22 +14,22 @@ class V2TimMessageSearchResult {
   });
 
   V2TimMessageSearchResult.fromJson(Map<String, dynamic> json) {
-    this.totalCount = json['totalCount'];
+    totalCount = json['totalCount'];
     if (json['messageSearchResultItems'] != null) {
       messageSearchResultItems = List.empty(growable: true);
       json['messageSearchResultItems'].forEach((v) {
         messageSearchResultItems!
-            .add(new V2TimMessageSearchResultItem.fromJson(v));
+            .add(V2TimMessageSearchResultItem.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['totalCount'] = this.totalCount;
-    if (this.messageSearchResultItems != null) {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['totalCount'] = totalCount;
+    if (messageSearchResultItems != null) {
       data['messageSearchResultItems'] =
-          this.messageSearchResultItems!.map((v) => v.toJson()).toList();
+          messageSearchResultItems!.map((v) => v.toJson()).toList();
     }
     return data;
   }

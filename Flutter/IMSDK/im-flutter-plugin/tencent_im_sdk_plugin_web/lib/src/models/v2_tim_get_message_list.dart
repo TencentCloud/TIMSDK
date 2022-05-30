@@ -17,7 +17,7 @@ class GetMessageList {
   late int count;
 
   static formateParams(Map<String, dynamic> data) {
-    Map<String, dynamic> params = Map<String, dynamic>();
+    Map<String, dynamic> params = <String, dynamic>{};
     final groupID = data['groupID'] ?? '';
     final userID = data['userID'] ?? '';
     final convType = groupID != '' ? 'GROUP' : 'C2C';

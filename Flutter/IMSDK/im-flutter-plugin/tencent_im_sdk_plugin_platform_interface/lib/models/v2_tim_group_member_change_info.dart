@@ -17,9 +17,9 @@ class V2TimGroupMemberChangeInfo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['userID'] = this.userID;
-    data['muteTime'] = this.muteTime;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['userID'] = userID;
+    data['muteTime'] = muteTime;
     return data;
   }
 }

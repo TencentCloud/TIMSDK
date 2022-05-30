@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:js';
 
 import 'package:js/js_util.dart';

@@ -11,6 +11,7 @@ class V2TimFileElem extends V2TIMElem {
   late String? UUID;
   late String? url;
   late int? fileSize;
+  String? localUrl;
 
   V2TimFileElem({
     this.path,
@@ -19,6 +20,7 @@ class V2TimFileElem extends V2TIMElem {
     this.UUID,
     this.url,
     this.fileSize,
+    this.localUrl,
   });
 
   V2TimFileElem.fromJson(Map<String, dynamic> json) {
@@ -26,6 +28,7 @@ class V2TimFileElem extends V2TIMElem {
     fileName = json['fileName'];
     UUID = json['UUID'];
     url = json['url'];
+    localUrl = json['localUrl'];
     fileSize = json['fileSize'];
     if (json['nextElem'] != null) {
       nextElem = Map<String, dynamic>.from(json['nextElem']);
@@ -39,6 +42,7 @@ class V2TimFileElem extends V2TIMElem {
     data['UUID'] = UUID;
     data['url'] = url;
     data['fileSize'] = fileSize;
+    data['localUrl'] = localUrl;
     if (nextElem != null) {
       data['nextElem'] = nextElem;
     }

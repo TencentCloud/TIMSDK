@@ -22,12 +22,12 @@ class V2TimGroupMemberInfo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['userID'] = this.userID;
-    data['nickName'] = this.nickName;
-    data['nameCard'] = this.nameCard;
-    data['friendRemark'] = this.friendRemark;
-    data['faceUrl'] = this.faceUrl;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['userID'] = userID;
+    data['nickName'] = nickName;
+    data['nameCard'] = nameCard;
+    data['friendRemark'] = friendRemark;
+    data['faceUrl'] = faceUrl;
     return data;
   }
 }

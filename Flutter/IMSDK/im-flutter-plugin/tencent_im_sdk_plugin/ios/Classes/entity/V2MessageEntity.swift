@@ -15,6 +15,7 @@ public class V2MessageEntity {
 	var isSelf: Bool?;
 	var isRead: Bool?;
 	var isPeerRead: Bool?;
+    var needReadReceipt: Bool?;
 	var groupAtUserList: [String]?;
 	var elemType: Int?;
 	var textElem: [String: Any]?;
@@ -27,12 +28,14 @@ public class V2MessageEntity {
 	var faceElem: [String: Any]?;
 	var mergerElem: [String: Any]?;
 	var groupTipsElem: [String: Any]?;
+    var offlinePushInfo: [String: Any]?;
 	var localCustomData: String?;
 	var cloudCustomData: String?;
 	var localCustomInt: Int32?;
 	var seq: String?;
 	var random: UInt64?;
 	var isExcludedFromUnreadCount: Bool?;
+    var isExcludedFromLastMessage: Bool?;
     var id:String?; // 只有在onProgress时才能拿掉此id
 	var v2message: V2TIMMessage;
 	
@@ -126,6 +129,7 @@ public class V2MessageEntity {
 		result["isSelf"] = self.isSelf
 		result["isRead"] = self.isRead
 		result["isPeerRead"] = self.isPeerRead
+        result["needReadReceipt"] = self.needReadReceipt;
 		result["groupAtUserList"] = self.groupAtUserList
 		result["elemType"] = self.elemType
 		result["localCustomInt"] = self.localCustomInt
@@ -145,9 +149,11 @@ public class V2MessageEntity {
         result["seq"] = String(self.seq!)
 		result["random"] = self.random;
 		result["isExcludedFromUnreadCount"] = self.isExcludedFromUnreadCount;
+        result["isExcludedFromLastMessage"] = self.isExcludedFromLastMessage;
         result["id"] = self.id;
 		result["timestamp"] = (self.timestamp == nil) ? Int(Date().timeIntervalSince1970) : Int(self.timestamp!.timeIntervalSince1970)
-		
+		result["offlinePushInfo"] = self.offlinePushInfo;
+
 		return result
 	}
     
@@ -177,14 +183,19 @@ public class V2MessageEntity {
         for image in imageElem.imageList! {
             var item: [String: Any] = [:];
             let fileManager = FileManager.default;
-            let path = NSTemporaryDirectory() + "\(image.uuid!)";
+            let file_identify = "\(image.size)\(image.width)\(image.height)" ;
+            
+            let path = NSTemporaryDirectory() + "\(file_identify)_\(image.uuid!)";
+            
             item["uuid"] = image.uuid;
             item["type"] = CommonUtils.changeToAndroid(type: image.type.rawValue);
             item["size"] = image.size;
             item["width"] = image.width;
             item["height"] = image.height;
             item["url"] = image.url;
+            
             if !fileManager.fileExists(atPath: path) && (item["url"] as! String).count > 10 {
+                
                 image.downloadImage(path, progress: {
                     (curSize, totalSize) -> Void in
                     // print(curSize);
@@ -192,50 +203,72 @@ public class V2MessageEntity {
                     
                 }, fail: {
                     (code, msg) -> Void in
-                    item["url"] = "";
+                    
                 })
                 
             } else {
+                
+                item["localUrl"] = path;
                 // 图片存在，无需处理
             }
+            
             list.append(item);
             result["imageList"] = list;
-            result["url"] = item["url"]
+            
         }
+      
         return result;
     }
     
     func convertSoundMessageElem(soundElem:V2TIMSoundElem) -> [String:Any] {
-        let url = "";
+        
         let tempPath = NSTemporaryDirectory() + "\(soundElem.uuid ?? "")";
         let fileManager = FileManager.default;
-        let path = soundElem.path ?? tempPath;
-        if !fileManager.fileExists(atPath: path) {
-            soundElem.downloadSound(path, progress: {
+
+        var item: [String: Any] = [:];
+        item["UUID"] = soundElem.uuid as Any;
+        item["dataSize"] = soundElem.dataSize;
+        item["duration"] = soundElem.duration;
+        // item["url"] = soundElem.url;
+        item["path"] = soundElem.path;
+       
+//        soundElem.getUrl { _url in
+//            item["url"] = _url;
+//        }
+        
+        if !fileManager.fileExists(atPath: tempPath) {
+            soundElem.downloadSound(tempPath, progress: {
                 (curSize, totalSize) -> Void in
             }, succ: {
             }, fail: {
                 (code, msg) -> Void in
             })
-        } else {}
+        } else {
+            item["localUrl"] = tempPath;
+        }
 
-        return [
-            "uuid": soundElem.uuid as Any,
-            "dataSize": soundElem.dataSize,
-            "duration": soundElem.duration,
-            "url": url,
-            "path": path
-        ]
+        return item;
 
     }
     
     func convertVideoMessageElem(videoElem:V2TIMVideoElem) -> [String:Any] {
-        let pathSnapshot = videoElem.snapshotPath ?? NSTemporaryDirectory() + "\(String(describing: videoElem.snapshotUUID))";
-        let pathVideo = videoElem.videoPath ?? NSTemporaryDirectory() + "\(String(describing: videoElem.videoUUID))";
+        let pathSnapshot = NSTemporaryDirectory() + "\(videoElem.snapshotUUID ?? "")";
+        let pathVideo = NSTemporaryDirectory() + "\(videoElem.videoUUID ?? "")";
         let fileManager = FileManager.default;
-        let videoUrl: String? = nil;
-        let snapshotUrl: String? = nil;
-        
+       
+        var item: [String: Any] = [:];
+        item["snapshotUUID"] = videoElem.snapshotUUID as Any;
+        item["snapshotPath"] = videoElem.snapshotPath as Any;
+        // item["snapshotUrl"] = videoElem.snapshotUrl as Any;
+        item["snapshotSize"] = videoElem.snapshotSize;
+        item["snapshotWidth"] = videoElem.snapshotWidth;
+        item["snapshotHeight"] = videoElem.snapshotHeight;
+        item["UUID"] = videoElem.videoUUID as Any;
+        item["videoPath"] = videoElem.videoPath as Any;
+        // item["videoUrl"] = videoElem.videoUrl as Any;
+        item["videoSize"] = videoElem.videoSize;
+        item["duration"] = videoElem.duration;
+
         if !fileManager.fileExists(atPath: pathSnapshot) {
             videoElem.downloadSnapshot(pathSnapshot, progress: {
                 (curSize, totalSize) -> Void in
@@ -243,36 +276,37 @@ public class V2MessageEntity {
             }, fail: {
                 (code, msg) -> Void in
             })
-        } else {}
+        } else {
+            item["localSnapshotUrl"] = pathSnapshot;
+        }
 
         if !fileManager.fileExists(atPath: pathVideo) {
             videoElem.downloadVideo(pathVideo, progress: {
                 (curSize, totalSize) -> Void in
             }, succ: {
+                
             }, fail: {
                 (code, msg) -> Void in
             })
-        } else {}
+        } else {
+            item["localVideoUrl"] = pathVideo;
+        }
         
-       return [
-        "snapshotUUID": videoElem.snapshotUUID as Any,
-        "snapshotPath": videoElem.snapshotPath as Any,
-        "snapshotUrl": snapshotUrl as Any ,
-            "snapshotSize": videoElem.snapshotSize,
-            "snapshotWidth": videoElem.snapshotWidth,
-            "snapshotHeight": videoElem.snapshotHeight,
-        "UUID": videoElem.videoUUID as Any,
-        "videoPath": videoElem.videoPath as Any,
-        "videoUrl": videoUrl  as Any,
-            "videoSize": videoElem.videoSize,
-            "duration": videoElem.duration
-        ];
+       return item;
     }
     
     func convertFileElem(fileElem:V2TIMFileElem) -> [String:Any] {
-        let path = fileElem.path ?? NSTemporaryDirectory() + "\(fileElem.uuid ?? "")";
+        let path = NSTemporaryDirectory() + "\(fileElem.uuid ?? "")";
         let fileManager = FileManager.default;
-        
+        var item: [String: Any] = [:];
+        item["UUID"] = fileElem.uuid ?? "";
+        item["path"] = fileElem.path;
+        // item["url"] = fileElem.url;
+        item["fileName"] = fileElem.filename;
+        item["fileSize"] = fileElem.fileSize;
+//        fileElem.getUrl { _url in
+//            item["url"] = _url;
+//        }
         if !fileManager.fileExists(atPath: path) {
             fileElem.downloadFile(path, progress: {
                 (curSize, totalSize) -> Void in
@@ -280,14 +314,10 @@ public class V2MessageEntity {
             }, fail: {
                 (code, msg) -> Void in
             })
-        } else {}
-        return  [
-            "UUID": fileElem.uuid ?? "",
-            "path": fileElem.path ?? NSTemporaryDirectory() + (fileElem.uuid ?? ""),
-            "url": fileElem.path ?? NSTemporaryDirectory() + (fileElem.uuid ?? ""),
-            "fileName": fileElem.filename!,
-            "fileSize":fileElem.fileSize
-        ];
+        } else {
+            item["localUrl"] = path;
+        }
+        return  item;
     }
     
     func convertLocationElem(locationElem:V2TIMLocationElem) -> [String:Any] {
@@ -416,6 +446,7 @@ public class V2MessageEntity {
 		self.status = message.status.rawValue;
 		self.isSelf = message.isSelf;
 		self.isRead = message.isRead;
+        self.needReadReceipt = message.needReadReceipt;
 		self.groupAtUserList = message.groupAtUserList as? [String];
 		self.isPeerRead = message.isPeerRead;
 		self.elemType = message.elemType.rawValue;
@@ -423,8 +454,23 @@ public class V2MessageEntity {
 		self.seq = String(message.seq);
 		self.random = message.random;
 		self.isExcludedFromUnreadCount = message.isExcludedFromUnreadCount;
+        self.isExcludedFromLastMessage = message.isExcludedFromLastMessage;
 		self.v2message = message
 		
+        if message.offlinePushInfo != nil {
+            self.offlinePushInfo = [
+                "title": message.offlinePushInfo?.title as Any,
+                "desc": message.offlinePushInfo?.desc as Any,
+                "ext": message.offlinePushInfo?.ext as Any,
+                "disablePush": message.offlinePushInfo?.disablePush as Any,
+                "iOSSound": message.offlinePushInfo?.iOSSound as Any,
+                "ignoreIOSBadge": message.offlinePushInfo?.ignoreIOSBadge as Any,
+                "androidOPPOChannelID": message.offlinePushInfo?.androidOPPOChannelID as Any,
+                "androidVIVOClassification": message.offlinePushInfo?.androidVIVOClassification as Any,
+                "androidSound": message.offlinePushInfo?.androidSound as Any,
+            ]
+        }
+
 		if message.localCustomData != nil {
             if let localCustomData = message.localCustomData {
                 let dataStr = String(data: localCustomData, encoding: .utf8) ?? "";

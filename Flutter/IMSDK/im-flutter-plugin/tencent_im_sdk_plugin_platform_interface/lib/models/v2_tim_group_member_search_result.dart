@@ -17,9 +17,9 @@ class V2GroupMemberInfoSearchResult {
     json.forEach((key, value) {
       var tempArr = [];
       if (value is List) {
-        value.forEach((element) {
+        for (var element in value) {
           tempArr.add(V2TimGroupMemberFullInfo.fromJson(element));
-        });
+        }
         myMap[key] = tempArr;
       }
     });
@@ -27,9 +27,9 @@ class V2GroupMemberInfoSearchResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.groupMemberSearchResultItems != null) {
-      var map = this.groupMemberSearchResultItems;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (groupMemberSearchResultItems != null) {
+      var map = groupMemberSearchResultItems;
       var newMap = {};
       map?.forEach((key, value) {
         newMap[key] = value.map((v) => v.toJson()).toList();

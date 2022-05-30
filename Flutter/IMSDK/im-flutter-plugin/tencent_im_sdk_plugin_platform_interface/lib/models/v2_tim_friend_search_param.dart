@@ -23,11 +23,11 @@ class V2TimFriendSearchParam {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['keywordList'] = this.keywordList;
-    data['isSearchUserID'] = this.isSearchUserID;
-    data['isSearchNickName'] = this.isSearchNickName;
-    data['isSearchRemark'] = this.isSearchRemark;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['keywordList'] = keywordList;
+    data['isSearchUserID'] = isSearchUserID;
+    data['isSearchNickName'] = isSearchNickName;
+    data['isSearchRemark'] = isSearchRemark;
     return data;
   }
 }

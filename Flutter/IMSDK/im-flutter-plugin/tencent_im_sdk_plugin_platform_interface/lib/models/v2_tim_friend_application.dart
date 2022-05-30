@@ -32,14 +32,14 @@ class V2TimFriendApplication {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['userID'] = this.userID;
-    data['nickname'] = this.nickname;
-    data['faceUrl'] = this.faceUrl;
-    data['addTime'] = this.addTime;
-    data['addSource'] = this.addSource;
-    data['addWording'] = this.addWording;
-    data['type'] = this.type;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['userID'] = userID;
+    data['nickname'] = nickname;
+    data['faceUrl'] = faceUrl;
+    data['addTime'] = addTime;
+    data['addSource'] = addSource;
+    data['addWording'] = addWording;
+    data['type'] = type;
     return data;
   }
 }

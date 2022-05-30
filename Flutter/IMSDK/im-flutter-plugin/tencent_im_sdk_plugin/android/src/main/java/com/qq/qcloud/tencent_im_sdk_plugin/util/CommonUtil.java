@@ -1,5 +1,6 @@
 package com.qq.qcloud.tencent_im_sdk_plugin.util;
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -8,6 +9,7 @@ import androidx.annotation.Nullable;
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMConversationResult;
 import com.tencent.imsdk.v2.V2TIMCustomElem;
+import com.tencent.imsdk.v2.V2TIMDownloadCallback;
 import com.tencent.imsdk.v2.V2TIMElem;
 import com.tencent.imsdk.v2.V2TIMFaceElem;
 import com.tencent.imsdk.v2.V2TIMFileElem;
@@ -42,11 +44,17 @@ import com.tencent.imsdk.v2.V2TIMReceiveMessageOptInfo;
 import com.tencent.imsdk.v2.V2TIMSignalingInfo;
 import com.tencent.imsdk.v2.V2TIMSoundElem;
 import com.tencent.imsdk.v2.V2TIMTextElem;
+import com.tencent.imsdk.v2.V2TIMTopicInfo;
+import com.tencent.imsdk.v2.V2TIMTopicInfoResult;
+import com.tencent.imsdk.v2.V2TIMTopicOperationResult;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.imsdk.v2.V2TIMUserInfo;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.imsdk.v2.V2TIMVideoElem;
+import com.tencent.imsdk.v2.V2TIMGroupMessageReadMemberList;
 
+
+import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -60,6 +68,8 @@ import io.flutter.plugin.common.MethodChannel;
  * Tools
  */
 public class CommonUtil {
+
+    public static Context context;
     /**
      * main thread processor
      */
@@ -199,6 +209,8 @@ public class CommonUtil {
         message.put("groupAtUserList",msg.getGroupAtUserList());
         message.put("random",msg.getRandom());
         message.put("isExcludedFromUnreadCount",msg.isExcludedFromUnreadCount());
+        message.put("isExcludedFromLastMessage",msg.isExcludedFromLastMessage());
+        message.put("needReadReceipt", true);
         V2TIMOfflinePushInfo info =  msg.getOfflinePushInfo();
 
         HashMap<String,Object> offlinePushInfo = new HashMap<String, Object>();
@@ -206,6 +218,7 @@ public class CommonUtil {
             offlinePushInfo.put("desc",info.getDesc());
             offlinePushInfo.put("title",info.getTitle());
             offlinePushInfo.put("disablePush",info.isDisablePush());
+            offlinePushInfo.put("ext",new String(info.getExt()));
         }catch (Exception e){
 
         }
@@ -236,6 +249,7 @@ public class CommonUtil {
                 img.put("nextElem", CommonUtil.convertMessageElem(nextElem));
             }
             message.put("imageElem",img);
+
         }else if(type == V2TIMMessage.V2TIM_ELEM_TYPE_SOUND){
             final V2TIMSoundElem soundElem = msg.getSoundElem();
             V2TIMElem nextElem = soundElem.getNextElem();
@@ -315,7 +329,7 @@ public class CommonUtil {
     }
 
     public static  HashMap<String,Object> convertImageMessageElem(V2TIMImageElem elem) {
-        HashMap<String,Object> img = new HashMap<String,Object>();
+        final HashMap<String,Object> img = new HashMap<String,Object>();
         img.put("path",elem.getPath());
         LinkedList<Object> imgList = new LinkedList<Object>();
         for (int i=0;i<elem.getImageList().size();i++){
@@ -327,9 +341,40 @@ public class CommonUtil {
             item.put("url",imgInstance.getUrl());
             item.put("UUID",imgInstance.getUUID());
             item.put("width",imgInstance.getWidth());
+
+            try{
+                File cacheDir =  context.getExternalCacheDir();
+                if(cacheDir.exists()){
+                    String path =  cacheDir.getPath()+"/"+imgInstance.getType()+""+imgInstance.getSize()+""+imgInstance.getWidth()+imgInstance.getHeight()+"_"+imgInstance.getUUID();
+                    File file = new File(path);
+                    if(!file.exists()){
+                        imgInstance.downloadImage(path, new V2TIMDownloadCallback() {
+                            @Override
+                            public void onProgress(V2TIMElem.V2ProgressInfo v2ProgressInfo) {
+
+                            }
+
+                            @Override
+                            public void onSuccess() {
+
+                            }
+
+                            @Override
+                            public void onError(int i, String s) {
+
+                            }
+                        });
+                    }else{
+                        item.put("localUrl",path);
+                    }
+                }
+            }catch (Exception err){
+                System.out.println(err);
+            }
             imgList.add(item);
         }
         img.put("imageList",imgList);
+        System.out.println(img);
         return  img;
     }
 
@@ -350,6 +395,36 @@ public class CommonUtil {
                 sound.put("url",s);
             }
         });
+        try {
+            File cacheDir = context.getExternalCacheDir();
+
+            if (cacheDir.exists()) {
+                String path = cacheDir.getPath() + "/" + soundElem.getUUID();
+                File file = new File(path);
+                if(!file.exists()){
+                    soundElem.downloadSound(path, new V2TIMDownloadCallback() {
+                        @Override
+                        public void onProgress(V2TIMElem.V2ProgressInfo v2ProgressInfo) {
+
+                        }
+
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onError(int i, String s) {
+
+                        }
+                    });
+                }else{
+                    sound.put("localUrl",path);
+                }
+            }
+        }catch (Exception errr){
+
+        }
         return sound;
     }
 
@@ -386,6 +461,58 @@ public class CommonUtil {
         video.put("videoPath",videoElem.getVideoPath());
         video.put("videoSize",videoElem.getVideoSize());
         video.put("UUID",videoElem.getVideoUUID());
+        try {
+            File cacheDir = context.getExternalCacheDir();
+
+            if (cacheDir.exists()) {
+                String path = cacheDir.getPath() + "/" + videoElem.getVideoUUID();
+                String snipPath = cacheDir.getPath() + "/" + videoElem.getSnapshotUUID();
+                File file = new File(path);
+                File snip = new File(snipPath);
+                if (!file.exists()) {
+                    videoElem.downloadVideo(path, new V2TIMDownloadCallback() {
+                        @Override
+                        public void onProgress(V2TIMElem.V2ProgressInfo v2ProgressInfo) {
+
+                        }
+
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onError(int i, String s) {
+
+                        }
+                    });
+                }else{
+                    video.put("localVideoUrl",path);
+                }
+                if(!snip.exists()){
+                    videoElem.downloadSnapshot(snipPath, new V2TIMDownloadCallback() {
+                        @Override
+                        public void onProgress(V2TIMElem.V2ProgressInfo v2ProgressInfo) {
+
+                        }
+
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onError(int i, String s) {
+
+                        }
+                    });
+                }else{
+                    video.put("localSnapshotUrl",snipPath);
+                }
+            }
+        }catch (Exception err){
+
+        }
         return  video;
     }
 
@@ -406,6 +533,36 @@ public class CommonUtil {
                 file.put("url",s);
             }
         });
+        try {
+            File cacheDir = context.getExternalCacheDir();
+
+            if (cacheDir.exists()) {
+                String path = cacheDir.getPath() + "/" + fileElem.getUUID();
+                File f = new File(path);
+                if(!f.exists()){
+                    fileElem.downloadFile(path, new V2TIMDownloadCallback() {
+                        @Override
+                        public void onProgress(V2TIMElem.V2ProgressInfo v2ProgressInfo) {
+
+                        }
+
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onError(int i, String s) {
+
+                        }
+                    });
+                }else{
+                    file.put("localUrl",path);
+                }
+            }
+        }catch (Exception errr){
+
+        }
         return  file;
     }
 
@@ -435,10 +592,12 @@ public class CommonUtil {
             String key = groupChangeInfoList.get(i).getKey();
             int types = groupChangeInfoList.get(i).getType();
             String value = groupChangeInfoList.get(i).getValue();
+            Boolean boolValue = groupChangeInfoList.get(i).getBoolValue();
             HashMap<String,Object> item = new HashMap<String,Object>();
             item.put("key", key);
             item.put("type", types);
             item.put("value", value);
+            item.put("boolValue", boolValue);
             gchangeInfoList.add(item);
         }
 
@@ -630,6 +789,10 @@ public class CommonUtil {
 
         rinfo.put("timestamp",info.getTimestamp());
         rinfo.put("userID",info.getUserID());
+        rinfo.put("unreadCount",info.getUnreadCount());
+        rinfo.put("readCount",info.getReadCount());
+        rinfo.put("msgID",info.getMsgID());
+        rinfo.put("groupID",info.getGroupID());
         return rinfo;
     }
     public static HashMap<String,Object> convertV2TIMGroupMemberInfoResultToMap(V2TIMGroupMemberInfoResult info){
@@ -762,6 +925,7 @@ public class CommonUtil {
         rinfo.put("recvOpt",info.getRecvOpt());
         rinfo.put("role",info.getRole());
         rinfo.put("isAllMuted",info.isAllMuted());
+        rinfo.put("isSupportTopic",info.isSupportTopic());
         Map<String,byte[]> customInfo = info.getCustomInfo();
 
         HashMap<String,String> customInfoTypeString = new HashMap<String, String>();
@@ -845,6 +1009,69 @@ public class CommonUtil {
 
         return rinfo;
     }
+     public static HashMap<String,Object> converV2TIMGroupMessageReadMemberListToMap(V2TIMGroupMessageReadMemberList info){
+        HashMap<String,Object> rinfo = new HashMap<String,Object>();
+
+        rinfo.put("nextSeq",info.getNextSeq());
+        rinfo.put("isFinished",info.isFinished());
+        
+        LinkedList<HashMap<String,Object>> searchList = new LinkedList<>();
+        List< V2TIMGroupMemberInfo > sList = info.getMemberInfoList();
+        for(int i = 0;i<sList.size();i++){
+            searchList.add(CommonUtil.convertV2TIMGroupMemberInfoToMap(sList.get(i)));
+        }
+        rinfo.put("memberInfoList",searchList);
+
+        return rinfo;
+    }
+
+    public static HashMap<String,Object> convertV2TIMTopicOperationResultToMap(V2TIMTopicOperationResult info){
+        HashMap<String,Object> rinfo = new HashMap<String,Object>();
+        rinfo.put("errorCode",info.getErrorCode());
+        rinfo.put("errorMessage",info.getErrorMessage());
+        rinfo.put("topicID",info.getTopicID());
+        return rinfo;
+    }
+    public static HashMap<String,Object> convertV2TIMTopicInfoResultToMap(V2TIMTopicInfoResult info){
+        System.out.println("hahhh");
+        System.out.println(info);
+        HashMap<String,Object> rinfo = new HashMap<String,Object>();
+        rinfo.put("errorCode",info.getErrorCode());
+        rinfo.put("errorMessage",info.getErrorMessage());
+        rinfo.put("topicInfo", CommonUtil.convertV2TIMTopicInfoToMap(info.getTopicInfo()) );
+        return rinfo;
+    }
+    public static HashMap<String,Object> convertV2TIMGroupAtInfoToMap(V2TIMGroupAtInfo info){
+        HashMap<String,Object> rinfo = new HashMap<String,Object>();
+        rinfo.put("atType",info.getAtType());
+        rinfo.put("seq",info.getSeq());
+        return rinfo;
+    }
+
+    public static HashMap<String,Object> convertV2TIMTopicInfoToMap(V2TIMTopicInfo info){
+        HashMap<String,Object> rinfo = new HashMap<String,Object>();
+        rinfo.put("topicID",info.getTopicID());
+        rinfo.put("lastMessage",CommonUtil.convertV2TIMMessageToMap(info.getLastMessage()));
+        rinfo.put("draftText",info.getDraftText());
+        rinfo.put("introduction",info.getIntroduction());
+        List<V2TIMGroupAtInfo> atInfos = info.getGroupAtInfoList();
+        LinkedList<Map<String,Object>> atlist = new LinkedList();
+        for(int i = 0;i<atInfos.size();i++){
+            atlist.add(CommonUtil.convertV2TIMGroupAtInfoToMap(atInfos.get(i)));
+        }
+        rinfo.put("groupAtInfoList",atlist);
+        rinfo.put("notification",info.getNotification());
+        rinfo.put("customString",info.getCustomString());
+        rinfo.put("recvOpt",info.getRecvOpt());
+        rinfo.put("selfMuteTime",info.getSelfMuteTime());
+        rinfo.put("topicFaceUrl",info.getTopicFaceUrl());
+        rinfo.put("topicName",info.getTopicName());
+        rinfo.put("unreadCount",info.getUnreadCount());
+        return rinfo;
+    }
+
+
+
     /**
      * Running the main thread returns an error result execution
      *
