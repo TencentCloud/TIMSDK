@@ -11,17 +11,18 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tim_ui_kit/ui/constants/emoji.dart';
 import 'package:tim_ui_kit/ui/widgets/emoji.dart';
 import 'package:tim_ui_kit_sticker_plugin/utils/tim_ui_kit_sticker_data.dart';
+import 'package:timuikit/src/chat.dart';
 import 'package:timuikit/src/config.dart';
 import 'package:timuikit/src/pages/home_page.dart';
 import 'package:timuikit/src/pages/login.dart';
+import 'package:timuikit/utils/push/channel/channel_push.dart';
 import 'package:timuikit/utils/toast.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';
 import 'package:timuikit/src/provider/custom_sticker_package.dart';
 import 'package:timuikit/utils/constant.dart';
 import 'package:provider/provider.dart';
 
-import '../utils/push/channel/channel_push.dart';
-import 'chat.dart';
+
 
 bool isInitScreenUtils = false;
 
