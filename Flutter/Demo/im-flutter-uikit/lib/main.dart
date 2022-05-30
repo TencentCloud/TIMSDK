@@ -1,7 +1,8 @@
+// ignore_for_file: unused_import
+
 import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_baidu_mapapi_base/flutter_baidu_mapapi_base.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
@@ -29,13 +30,20 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   LocaleSettings.useDeviceLocale();
 
-  if (Platform.isIOS) {
-    BMFMapSDK.setApiKeyAndCoordType(
-        IMDemoConfig.baiduMapIOSAppKey, BMF_COORD_TYPE.BD09LL);
-  } else if (Platform.isAndroid) {
-    BMFMapSDK.setCoordType(BMF_COORD_TYPE.BD09LL);
-  }
-  BMFMapSDK.setAgreePrivacy(true);
+  // 这里打开后可以用Google FCM推送
+  // WidgetsFlutterBinding.ensureInitialized();
+  // await Firebase.initializeApp(
+  //   options: DefaultFirebaseOptions.currentPlatform,
+  // );
+
+  // 这里打开后可以用百度地图
+  // if (Platform.isIOS) {
+  //   BMFMapSDK.setApiKeyAndCoordType(
+  //       IMDemoConfig.baiduMapIOSAppKey, BMF_COORD_TYPE.BD09LL);
+  // } else if (Platform.isAndroid) {
+  //   BMFMapSDK.setCoordType(BMF_COORD_TYPE.BD09LL);
+  // }
+  // BMFMapSDK.setAgreePrivacy(true);
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
