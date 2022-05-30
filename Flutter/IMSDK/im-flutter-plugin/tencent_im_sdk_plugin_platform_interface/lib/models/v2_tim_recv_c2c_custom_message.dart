@@ -17,15 +17,15 @@ class V2TimRecvC2cCustomMessage {
 
   V2TimRecvC2cCustomMessage.fromJson(Map<String, dynamic> json) {
     msgID = json['msgID'];
-    sender = new V2TimUserInfo.fromJson(json['sender']);
+    sender = V2TimUserInfo.fromJson(json['sender']);
     customData = json['customData'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['msgID'] = this.msgID;
-    data['sender'] = this.sender.toJson();
-    data['customData'] = this.customData;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['msgID'] = msgID;
+    data['sender'] = sender.toJson();
+    data['customData'] = customData;
     return data;
   }
 }

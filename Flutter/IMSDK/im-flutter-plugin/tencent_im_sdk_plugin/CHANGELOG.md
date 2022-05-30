@@ -147,3 +147,22 @@
 
 ## 3.9.2
 * Upgrade the ios library version to 6.1.2155.1
+
+## 3.9.3
+* Upgrade the underlying SDK version to 6.2.x
+* Fix the problem that the group ban group tips boolValue is lost
+* Fixed the problem that the nameCard field was not parsed for session instances
+* Added group read receipt related interface
+* flutter for web perfect
+
+## 4.0.0
+* Upgrade the underlying SDK version to 6.2.x
+* fix offlinePush info bug
+
+
+## 4.0.1
+* Added topic related interface
+* Added message editing interface
+
+## 4.0.2
+* Local video url bug fix

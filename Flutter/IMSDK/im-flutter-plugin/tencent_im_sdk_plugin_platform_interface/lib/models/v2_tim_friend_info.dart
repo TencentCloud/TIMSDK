@@ -24,21 +24,21 @@ class V2TimFriendInfo {
     friendRemark = json['friendRemark'];
     friendGroups = json['friendGroups'].cast<String>();
     friendCustomInfo = json['friendCustomInfo'] == null
-        ? new Map<String, String>()
+        ? <String, String>{}
         : Map<String, String>.from(json['friendCustomInfo']);
     userProfile = json['userProfile'] != null
-        ? new V2TimUserFullInfo.fromJson(json['userProfile'])
+        ? V2TimUserFullInfo.fromJson(json['userProfile'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['userID'] = this.userID;
-    data['friendRemark'] = this.friendRemark;
-    data['friendGroups'] = this.friendGroups;
-    data['friendCustomInfo'] = this.friendCustomInfo;
-    if (this.userProfile != null) {
-      data['userProfile'] = this.userProfile!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['userID'] = userID;
+    data['friendRemark'] = friendRemark;
+    data['friendGroups'] = friendGroups;
+    data['friendCustomInfo'] = friendCustomInfo;
+    if (userProfile != null) {
+      data['userProfile'] = userProfile!.toJson();
     }
     return data;
   }

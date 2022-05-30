@@ -17,21 +17,21 @@ class V2TimMemberKicked {
 
   V2TimMemberKicked.fromJson(Map<String, dynamic> json) {
     groupID = json['groupID'];
-    opUser = new V2TimGroupMemberInfo.fromJson(json['opUser']);
+    opUser = V2TimGroupMemberInfo.fromJson(json['opUser']);
     if (json['memberList'] != null) {
       memberList = List.empty(growable: true);
       json['memberList'].forEach((v) {
-        memberList!.add(new V2TimGroupMemberInfo.fromJson(v));
+        memberList!.add(V2TimGroupMemberInfo.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['groupID'] = this.groupID;
-    data['opUser'] = this.opUser.toJson();
-    if (this.memberList != null) {
-      data['memberList'] = this.memberList!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['groupID'] = groupID;
+    data['opUser'] = opUser.toJson();
+    if (memberList != null) {
+      data['memberList'] = memberList!.map((v) => v.toJson()).toList();
     }
     return data;
   }

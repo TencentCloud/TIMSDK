@@ -12,6 +12,8 @@
 
 // void 	onBlackListDeleted (List< String > userList)
 
+// ignore_for_file: file_names, prefer_function_declarations_over_variables
+
 // void 	onFriendInfoChanged (List< V2TIMFriendInfo > infoList)
 //
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/callbacks.dart';

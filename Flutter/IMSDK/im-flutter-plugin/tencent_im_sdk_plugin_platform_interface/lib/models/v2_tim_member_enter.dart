@@ -15,16 +15,16 @@ class V2TimMemberEnter {
     if (json['memberList'] != null) {
       memberList = List.empty(growable: true);
       json['memberList'].forEach((v) {
-        memberList!.add(new V2TimGroupMemberInfo.fromJson(v));
+        memberList!.add(V2TimGroupMemberInfo.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['groupID'] = this.groupID;
-    if (this.memberList != null) {
-      data['memberList'] = this.memberList!.map((v) => v!.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['groupID'] = groupID;
+    if (memberList != null) {
+      data['memberList'] = memberList!.map((v) => v!.toJson()).toList();
     }
     return data;
   }

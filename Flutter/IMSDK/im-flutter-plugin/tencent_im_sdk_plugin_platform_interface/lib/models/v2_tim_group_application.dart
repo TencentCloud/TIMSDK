@@ -44,18 +44,18 @@ class V2TimGroupApplication {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['groupID'] = this.groupID;
-    data['fromUser'] = this.fromUser;
-    data['fromUserNickName'] = this.fromUserNickName;
-    data['fromUserFaceUrl'] = this.fromUserFaceUrl;
-    data['toUser'] = this.toUser;
-    data['addTime'] = this.addTime;
-    data['requestMsg'] = this.requestMsg;
-    data['handledMsg'] = this.handledMsg;
-    data['type'] = this.type;
-    data['handleStatus'] = this.handleStatus;
-    data['handleResult'] = this.handleResult;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['groupID'] = groupID;
+    data['fromUser'] = fromUser;
+    data['fromUserNickName'] = fromUserNickName;
+    data['fromUserFaceUrl'] = fromUserFaceUrl;
+    data['toUser'] = toUser;
+    data['addTime'] = addTime;
+    data['requestMsg'] = requestMsg;
+    data['handledMsg'] = handledMsg;
+    data['type'] = type;
+    data['handleStatus'] = handleStatus;
+    data['handleResult'] = handleResult;
     return data;
   }
 }

@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:js';
 
 import 'package:tencent_im_sdk_plugin_web/src/utils/utils.dart';

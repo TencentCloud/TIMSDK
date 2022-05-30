@@ -14,17 +14,17 @@ class V2TimGroupInfoChanged {
     if (json['groupChangeInfo'] != null) {
       groupChangeInfoList = List.empty(growable: true);
       json['groupChangeInfo'].forEach((v) {
-        groupChangeInfoList!.add(new V2TimGroupChangeInfo.fromJson(v));
+        groupChangeInfoList!.add(V2TimGroupChangeInfo.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['groupID'] = this.groupID;
-    if (this.groupChangeInfoList != null) {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['groupID'] = groupID;
+    if (groupChangeInfoList != null) {
       data['groupChangeInfo'] =
-          this.groupChangeInfoList!.map((v) => v!.toJson()).toList();
+          groupChangeInfoList!.map((v) => v!.toJson()).toList();
     }
     return data;
   }

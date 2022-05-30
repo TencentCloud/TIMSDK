@@ -21,17 +21,17 @@ class V2TimMessageSearchResultItem {
     if (json['messageList'] != null) {
       messageList = List.empty(growable: true);
       json['messageList'].forEach((v) {
-        messageList!.add(new V2TimMessage.fromJson(v));
+        messageList!.add(V2TimMessage.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['conversationID'] = this.conversationID;
-    data['messageCount'] = this.messageCount;
-    if (this.messageList != null) {
-      data['messageList'] = this.messageList!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['conversationID'] = conversationID;
+    data['messageCount'] = messageCount;
+    if (messageList != null) {
+      data['messageList'] = messageList!.map((v) => v.toJson()).toList();
     }
     return data;
   }

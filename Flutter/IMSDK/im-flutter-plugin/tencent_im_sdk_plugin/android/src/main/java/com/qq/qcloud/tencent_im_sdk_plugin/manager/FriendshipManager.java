@@ -347,13 +347,18 @@ public class FriendshipManager {
             @Override
             public void onSuccess(V2TIMFriendApplicationResult v2TIMFriendApplicationResult) {
                List<V2TIMFriendApplication> list =  v2TIMFriendApplicationResult.getFriendApplicationList();
-                V2TIMFriendApplication app = new V2TIMFriendApplication();
+                V2TIMFriendApplication app = null;
+                System.out.println("当前所有申请:"+list.size()+",userID:"+userID+",responseType:"+responseType+",type:"+type);
                for(int i =0;i<list.size();i++){
+                   System.out.println(list.get(i).getUserID()+","+list.get(i).getType());
                    if(list.get(i).getUserID().equals(userID) && list.get(i).getType() == type){
                        app = list.get(i);
-
                        break;
                    }
+               }
+               if(app == null){
+                   CommonUtil.returnError(result,-1,"application get error");
+                   return;
                }
                 V2TIMManager.getFriendshipManager().acceptFriendApplication(app, responseType, new V2TIMValueCallback<V2TIMFriendOperationResult>() {
                     @Override

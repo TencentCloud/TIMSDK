@@ -20,10 +20,10 @@ class V2TimGroupSearchParam {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['keywordList'] = this.keywordList;
-    data['isSearchGroupID'] = this.isSearchGroupID;
-    data['isSearchGroupName'] = this.isSearchGroupName;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['keywordList'] = keywordList;
+    data['isSearchGroupID'] = isSearchGroupID;
+    data['isSearchGroupName'] = isSearchGroupName;
     return data;
   }
 }

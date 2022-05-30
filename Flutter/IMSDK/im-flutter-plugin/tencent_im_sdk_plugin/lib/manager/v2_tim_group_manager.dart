@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field
+
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
@@ -19,6 +21,9 @@ import 'package:tencent_im_sdk_plugin/models/v2_tim_group_search_param.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/im_flutter_plugin_platform_interface.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/V2_tim_topic_info.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_topic_info_result.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_topic_operation_result.dart';
 
 /// 群组高级接口，包含了群组的高级功能，例如群成员邀请、非群成员申请进群等操作接口。
 ///
@@ -90,6 +95,7 @@ class V2TIMGroupManager {
   ///
   /// ```
   /// 其他限制请参考V2TIMManager.createGroup注释
+  /// isSupportTopic 仅对社群有效
   /// ```
   Future<V2TimValueCallback<String>> createGroup({
     String? groupID,
@@ -99,20 +105,21 @@ class V2TIMGroupManager {
     String? introduction,
     String? faceUrl,
     bool? isAllMuted,
-    GroupAddOptTypeEnum? addOpt,
+    bool? isSupportTopic = false,
+    GroupAddOptTypeEnum? addOpt = GroupAddOptTypeEnum.V2TIM_GROUP_ADD_AUTH,
     List<V2TimGroupMember>? memberList,
   }) async {
     return ImFlutterPlatform.instance.createGroup(
-      groupType: groupType,
-      groupName: groupName,
-      groupID: groupID,
-      notification: notification,
-      introduction: introduction,
-      faceUrl: faceUrl,
-      isAllMuted: isAllMuted,
-      addOpt: EnumUtils.convertGroupAddOptEnum(addOpt),
-      memberList: memberList,
-    );
+        groupType: groupType,
+        groupName: groupName,
+        groupID: groupID,
+        notification: notification,
+        introduction: introduction,
+        faceUrl: faceUrl,
+        isAllMuted: isAllMuted,
+        addOpt: addOpt!.index,
+        memberList: memberList,
+        isSupportTopic: isSupportTopic);
   }
 
   /// 获取当前用户已经加入的群列表
@@ -284,7 +291,7 @@ class V2TIMGroupManager {
   }) async {
     return ImFlutterPlatform.instance.getGroupMemberList(
         groupID: groupID,
-        filter: EnumUtils.convertGroupMemberFilterEnum(filter),
+        filter: filter.index,
         nextSeq: nextSeq,
         count: count,
         offset: offset);
@@ -390,7 +397,9 @@ class V2TIMGroupManager {
     return ImFlutterPlatform.instance.setGroupMemberRole(
         groupID: groupID,
         userID: userID,
-        role: EnumUtils.convertGroupMemberRoleTypeEnum(role));
+        role: EnumUtils.convertGroupMemberRoleTypeEnum(
+          role,
+        ));
   }
 
   /// 转让群主
@@ -429,7 +438,8 @@ class V2TIMGroupManager {
     required String fromUser,
     required String toUser,
     int? addTime,
-    GroupApplicationTypeEnum? type,
+    GroupApplicationTypeEnum? type =
+        GroupApplicationTypeEnum.V2TIM_GROUP_APPLICATION_GET_TYPE_INVITE,
     String? webMessageInstance,
   }) async {
     return ImFlutterPlatform.instance.acceptGroupApplication(
@@ -438,7 +448,7 @@ class V2TIMGroupManager {
       fromUser: fromUser,
       toUser: toUser,
       addTime: addTime,
-      type: EnumUtils.convertGroupApplicationTypeEnum(type),
+      type: type!.index,
       webMessageInstance: webMessageInstance,
     );
   }
@@ -468,7 +478,7 @@ class V2TIMGroupManager {
         fromUser: fromUser,
         toUser: toUser,
         addTime: addTime,
-        type: EnumUtils.convertGroupApplicationTypeEnum(type) as int,
+        type: type.index,
         webMessageInstance: webMessageInstance);
   }
 
@@ -517,6 +527,62 @@ class V2TIMGroupManager {
     required String groupID,
   }) async {
     return ImFlutterPlatform.instance.searchGroupByID(groupID: groupID);
+  }
+
+  /// 获取当前用户已经加入的支持话题的社群列表
+  /// 4.0.1及以上版本支持
+  /// web版本不支持
+  ///
+  Future<V2TimValueCallback<List<V2TimGroupInfo>>>
+      getJoinedCommunityList() async {
+    return ImFlutterPlatform.instance.getJoinedCommunityList();
+  }
+
+  /// 创建话题
+  /// 4.0.1及以上版本支持
+  /// web版本不支持
+  ///
+  Future<V2TimValueCallback<String>> createTopicInCommunity({
+    required String groupID,
+    required V2TimTopicInfo topicInfo,
+  }) async {
+    return ImFlutterPlatform.instance
+        .createTopicInCommunity(groupID: groupID, topicInfo: topicInfo);
+  }
+
+  /// 删除话题
+  /// 4.0.1及以上版本支持
+  /// web版本不支持
+  ///
+  Future<V2TimValueCallback<List<V2TimTopicOperationResult>>>
+      deleteTopicFromCommunity({
+    required String groupID,
+    required List<String> topicIDList,
+  }) async {
+    return ImFlutterPlatform.instance
+        .deleteTopicFromCommunity(groupID: groupID, topicIDList: topicIDList);
+  }
+
+  /// 删除话题
+  /// 4.0.1及以上版本支持
+  /// web版本不支持
+  ///
+  Future<V2TimCallback> setTopicInfo({
+    required V2TimTopicInfo topicInfo,
+  }) async {
+    return ImFlutterPlatform.instance.setTopicInfo(topicInfo: topicInfo);
+  }
+
+  /// 获取话题列表。
+  /// 4.0.1及以上版本支持
+  /// web版本不支持
+  ///
+  Future<V2TimValueCallback<List<V2TimTopicInfoResult>>> getTopicInfoList({
+    required String groupID,
+    required List<String> topicIDList,
+  }) async {
+    return ImFlutterPlatform.instance
+        .getTopicInfoList(groupID: groupID, topicIDList: topicIDList);
   }
 
   ///@nodoc

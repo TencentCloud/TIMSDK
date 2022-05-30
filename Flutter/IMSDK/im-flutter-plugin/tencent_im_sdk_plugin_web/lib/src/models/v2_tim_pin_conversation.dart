@@ -1,3 +1,4 @@
+// ignore: unused_import
 import 'package:js/js.dart';
 import 'package:tencent_im_sdk_plugin_web/src/utils/utils.dart';
 
@@ -22,7 +23,7 @@ class PinConversation {
   );
 
   static formateParams(Map<String, dynamic> data) {
-    Map<String, dynamic> params = new Map<String, dynamic>();
+    Map<String, dynamic> params = <String, dynamic>{};
     params["conversationID"] = data["conversationID"];
     params["isPinned"] = data["isPinned"];
 

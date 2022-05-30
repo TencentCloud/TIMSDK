@@ -25,7 +25,7 @@ A new flutter plugin project.
   s.vendored_frameworks = '**/*.framework'
 
   # SDK 依赖
-  s.dependency 'TXIMSDK_Plus_iOS', "6.1.2155.1"
+  s.dependency 'TXIMSDK_Plus_iOS', "6.2.2363"
   # s.dependency 'TXIMSDK_Smart_iOS'
   # s.dependency 'BrightFutures'
   s.dependency 'HydraAsync'

@@ -14,8 +14,8 @@ class V2TimGroupCreated {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['groupID'] = this.groupID;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['groupID'] = groupID;
     return data;
   }
 }

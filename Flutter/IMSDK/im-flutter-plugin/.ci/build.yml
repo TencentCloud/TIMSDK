@@ -19,19 +19,16 @@ jobs:
         function test_plugin {
           cd tencent_im_sdk_plugin
           flutter pub get
-          flutter test
         }
 
         function test_platform_interface {
           cd tencent_im_sdk_plugin_platform_interface
           flutter pub get
-          flutter test
         }
 
         function test_plugin_web {
           cd ../tencent_im_sdk_plugin_web
           flutter pub get
-          flutter test --platform chrome
         }
         
         test_platform_interface && test_plugin_web

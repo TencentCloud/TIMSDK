@@ -31,7 +31,7 @@ class V2TimGroupMemberFullInfo {
     muteUntil = json['muteUntil'];
     joinTime = json['joinTime'];
     customInfo = json['customInfo'] == null
-        ? new Map<String, String>()
+        ? <String, String>{}
         : Map<String, String>.from(json['customInfo']);
     nickName = json['nickName'];
     nameCard = json['nameCard'];
@@ -40,16 +40,16 @@ class V2TimGroupMemberFullInfo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['userID'] = this.userID;
-    data['role'] = this.role;
-    data['muteUntil'] = this.muteUntil;
-    data['joinTime'] = this.joinTime;
-    data['customInfo'] = this.customInfo;
-    data['nickName'] = this.nickName;
-    data['nameCard'] = this.nameCard;
-    data['friendRemark'] = this.friendRemark;
-    data['faceUrl'] = this.faceUrl;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['userID'] = userID;
+    data['role'] = role;
+    data['muteUntil'] = muteUntil;
+    data['joinTime'] = joinTime;
+    data['customInfo'] = customInfo;
+    data['nickName'] = nickName;
+    data['nameCard'] = nameCard;
+    data['friendRemark'] = friendRemark;
+    data['faceUrl'] = faceUrl;
     return data;
   }
 }

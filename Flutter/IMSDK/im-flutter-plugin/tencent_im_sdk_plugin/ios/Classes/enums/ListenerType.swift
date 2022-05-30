@@ -54,4 +54,6 @@ public enum ListenerType {
     case onSendMessageProgress
 	case onSetAPPUnreadCount
     case onTotalUnreadMessageCountChanged
+    case onRecvMessageReadReceipts
+    case onRecvMessageModified
 }

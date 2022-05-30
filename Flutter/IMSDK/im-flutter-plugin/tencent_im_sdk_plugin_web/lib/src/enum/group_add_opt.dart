@@ -29,6 +29,7 @@ class GroupAddOptWeb {
     if (opt == JOIN_OPTIONS_DISABLE_APPLY) {
       return GroupAddOptType.V2TIM_GROUP_ADD_FORBID;
     }
+    return null;
   }
 
   static String? convertGroupAddOptToWeb(int? opt) {
@@ -43,5 +44,6 @@ class GroupAddOptWeb {
     if (opt == GroupAddOptType.V2TIM_GROUP_ADD_FORBID) {
       return JOIN_OPTIONS_DISABLE_APPLY;
     }
+    return null;
   }
 }

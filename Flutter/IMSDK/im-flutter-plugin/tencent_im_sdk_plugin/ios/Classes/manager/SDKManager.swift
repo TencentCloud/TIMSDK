@@ -383,6 +383,8 @@ class SDKManager {
 		let gender = CommonUtils.getParam(call: call, result: result, param: "gender") as? Int;
 		let allowType = CommonUtils.getParam(call: call, result: result, param: "allowType") as? Int;
 		let birthday = CommonUtils.getParam(call: call, result: result, param: "birthday") as? UInt32;
+		let level = CommonUtils.getParam(call: call, result: result, param: "level") as? UInt32;
+		let role = CommonUtils.getParam(call: call, result: result, param: "role") as? UInt32;
 		let customInfo = CommonUtils.getParam(call: call, result: result, param: "customInfo") as? Dictionary<String, String>;
 		var customInfoData: [String: Data] = [:]
 		
@@ -404,6 +406,12 @@ class SDKManager {
 		}
 		if birthday != nil {
             info.birthday = birthday!
+		}
+		if level != nil {
+            info.level = level!
+		}
+		if role != nil {
+            info.role = role!
 		}
 		if customInfo != nil {
             for (key, value) in customInfo ?? [:] {

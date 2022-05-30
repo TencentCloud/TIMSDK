@@ -11,6 +11,7 @@ class V2TimSoundElem extends V2TIMElem {
   late int? dataSize;
   late int? duration;
   late String? url;
+  String? localUrl;
 
   V2TimSoundElem({
     this.path,
@@ -19,6 +20,7 @@ class V2TimSoundElem extends V2TIMElem {
     this.dataSize,
     this.duration,
     this.url,
+    this.localUrl,
   });
 
   V2TimSoundElem.fromJson(Map<String, dynamic> json) {
@@ -26,6 +28,7 @@ class V2TimSoundElem extends V2TIMElem {
     UUID = json['UUID'];
     dataSize = json['dataSize'];
     duration = json['duration'];
+    localUrl = json['localUrl'];
     url = json['url'];
     if (json['nextElem'] != null) {
       nextElem = Map<String, dynamic>.from(json['nextElem']);
@@ -38,6 +41,7 @@ class V2TimSoundElem extends V2TIMElem {
     data['UUID'] = UUID;
     data['dataSize'] = dataSize;
     data['duration'] = duration;
+    data['localUrl'] = localUrl;
     data['url'] = url;
     if (nextElem != null) {
       data['nextElem'] = nextElem;

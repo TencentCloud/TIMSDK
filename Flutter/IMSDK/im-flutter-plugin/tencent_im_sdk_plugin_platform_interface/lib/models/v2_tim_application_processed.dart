@@ -21,17 +21,17 @@ class V2TimApplicationProcessed {
     groupID = json['groupID'];
     opUser = opUser == null
         ? null
-        : new V2TimGroupMemberInfo.fromJson(json['opUser']);
+        : V2TimGroupMemberInfo.fromJson(json['opUser']);
     isAgreeJoin = json['isAgreeJoin'];
     opReason = json['opReason'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['groupID'] = this.groupID;
-    data['opUser'] = this.opUser!.toJson();
-    data['isAgreeJoin'] = this.isAgreeJoin;
-    data['opReason'] = this.opReason;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['groupID'] = groupID;
+    data['opUser'] = opUser!.toJson();
+    data['isAgreeJoin'] = isAgreeJoin;
+    data['opReason'] = opReason;
     return data;
   }
 }

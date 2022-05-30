@@ -35,6 +35,7 @@ class MessagePriorityWeb {
     if (priority == MSG_PRIORITY_HIGH) {
       return MessagePriority.V2TIM_PRIORITY_HIGH;
     }
+    return null;
   }
 
   static String convertMsgPriorityToWeb(int priority) {

@@ -17,6 +17,8 @@ class V2TimVideoElem extends V2TIMElem {
   late int? snapshotHeight;
   late String? videoUrl;
   late String? snapshotUrl;
+  String? localVideoUrl;
+  String? localSnapshotUrl;
 
   V2TimVideoElem({
     this.videoPath,
@@ -31,6 +33,8 @@ class V2TimVideoElem extends V2TIMElem {
     this.snapshotHeight,
     this.videoUrl,
     this.snapshotUrl,
+    this.localVideoUrl,
+    this.localSnapshotUrl,
   });
 
   V2TimVideoElem.fromJson(Map<String, dynamic> json) {
@@ -45,6 +49,8 @@ class V2TimVideoElem extends V2TIMElem {
     snapshotHeight = json['snapshotHeight'];
     videoUrl = json['videoUrl'];
     snapshotUrl = json['snapshotUrl'];
+    localVideoUrl = json['localVideoUrl'];
+    localSnapshotUrl = json['localSnapshotUrl'];
     if (json['nextElem'] != null) {
       nextElem = Map<String, dynamic>.from(json['nextElem']);
     }
@@ -63,6 +69,8 @@ class V2TimVideoElem extends V2TIMElem {
     data['snapshotHeight'] = snapshotHeight;
     data['videoUrl'] = videoUrl;
     data['snapshotUrl'] = snapshotUrl;
+    data['localVideoUrl'] = localVideoUrl;
+    data['localSnapshotUrl'] = localSnapshotUrl;
     if (nextElem != null) {
       data['nextElem'] = nextElem;
     }

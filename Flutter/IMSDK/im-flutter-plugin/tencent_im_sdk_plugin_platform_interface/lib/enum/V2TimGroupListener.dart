@@ -30,6 +30,8 @@
 
 // void 	onGroupAttributeChanged (String groupID, Map< String, String > groupAttributeMap)
 
+// ignore_for_file: file_names, prefer_function_declarations_over_variables
+
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_change_info.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_member_change_info.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_member_info.dart';

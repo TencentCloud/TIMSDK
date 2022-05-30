@@ -3,6 +3,7 @@ package com.qq.qcloud.tencent_im_sdk_plugin.manager;
 import com.qq.qcloud.tencent_im_sdk_plugin.util.CommonUtil;
 import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
 import com.tencent.imsdk.v2.V2TIMCallback;
+import com.tencent.imsdk.v2.V2TIMCompleteCallback;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMergerElem;
 import com.tencent.imsdk.v2.V2TIMMessage;
@@ -15,12 +16,13 @@ import com.tencent.imsdk.v2.V2TIMOfflinePushInfo;
 import com.tencent.imsdk.v2.V2TIMReceiveMessageOptInfo;
 import com.tencent.imsdk.v2.V2TIMSendCallback;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
-
+import com.tencent.imsdk.v2.V2TIMGroupMessageReadMemberList;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MessageManager {
     private static MethodChannel channel;
@@ -52,6 +54,15 @@ public class MessageManager {
                     list.add(CommonUtil.convertV2TIMMessageReceiptToMap(receiptList.get(i)));
                 }
                 makeAddAdvancedMsgListenerEventData("onRecvC2CReadReceipt",list, listenerUuid);
+            }
+
+            @Override
+            public void onRecvMessageReadReceipts(List<V2TIMMessageReceipt> receiptList) {
+                List<Object> list = new LinkedList<Object>();
+                for(int i = 0;i<receiptList.size();i++){
+                    list.add(CommonUtil.convertV2TIMMessageReceiptToMap(receiptList.get(i)));
+                }
+                makeAddAdvancedMsgListenerEventData("onRecvMessageReadReceipts",list, listenerUuid);
             }
 
             @Override
@@ -191,6 +202,69 @@ public class MessageManager {
         handleSetMessageMap(msg,result);
     }
 
+    public void modifyMessage(MethodCall methodCall, final MethodChannel.Result result){
+        final Map<String,Object> message = CommonUtil.getParam(methodCall,result,"message");
+
+        if(message.get("msgID")==null){
+            CommonUtil.returnError(result,-1,"message not found");
+            return;
+        }
+        String messageID = (String) message.get("msgID");
+        LinkedList<String> list = new LinkedList<>();
+        list.add(messageID);
+        V2TIMManager.getMessageManager().findMessages(list, new V2TIMValueCallback<List<V2TIMMessage>>() {
+            @Override
+            public void onSuccess(List<V2TIMMessage> v2TIMMessages) {
+                if(v2TIMMessages.size()==1){
+                              V2TIMMessage currentMessage = v2TIMMessages.get(0);
+                              if(message.get("cloudCustomData")!=null){
+                                  currentMessage.setLocalCustomData((String) message.get("cloudCustomData"));
+                              }
+                              if(message.get("localCustomInt")!=null){
+                                  currentMessage.setLocalCustomInt((int) message.get("localCustomInt"));
+                              }
+                              if(message.get("localCustomData")!=null){
+                                  currentMessage.setCloudCustomData((String) message.get("localCustomData"));
+                              }
+                              if(currentMessage.getElemType() == V2TIMMessage.V2TIM_ELEM_TYPE_TEXT){
+                                 Map<String,Object> text = (Map<String, Object>) message.get("textElem");
+                                 if(text.get("text")!=null){
+                                     currentMessage.getTextElem().setText((String) text.get("text"));
+                                 }
+                              }
+                              if(currentMessage.getElemType() == V2TIMMessage.V2TIM_ELEM_TYPE_CUSTOM){
+                                  Map<String,Object> custom = (Map<String, Object>) message.get("customElem");
+                                  if(custom.get("data")!=null){
+                                      currentMessage.getCustomElem().setData(((String)custom.get("data")).getBytes());
+                                  }
+                                  if(custom.get("desc")!=null){
+                                      currentMessage.getCustomElem().setDescription(((String)custom.get("desc")));
+                                  }
+                                  if(custom.get("extension")!=null){
+                                      currentMessage.getCustomElem().setExtension(((String)custom.get("extension")).getBytes());
+                                  }
+                              }
+                            V2TIMManager.getMessageManager().modifyMessage(currentMessage, new V2TIMCompleteCallback<V2TIMMessage>() {
+                                @Override
+                                public void onComplete(int i, String s, V2TIMMessage v2TIMMessage) {
+                                    HashMap<String,Object> res = new HashMap<String,Object>();
+                                    res.put("code",i);
+                                    res.put("desc",s);
+                                    res.put("message",CommonUtil.convertV2TIMMessageToMap(v2TIMMessage));
+                                    CommonUtil.returnSuccess(result,res);
+                                }
+                            });
+                }else{
+                    CommonUtil.returnError(result,-1,"message not found");
+                }
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                CommonUtil.returnError(result,i,s);
+            }
+        });
+    }
     public  void createTargetedGroupMessage(MethodCall methodCall, final MethodChannel.Result result){
         String id = CommonUtil.getParam(methodCall,result,"id");
         List<String> receiverList = CommonUtil.getParam(methodCall,result,"receiverList");
@@ -308,8 +382,10 @@ public class MessageManager {
         String groupID = CommonUtil.getParam(methodCall,result,"groupID");
         final String cloudCustomData = CommonUtil.getParam(methodCall,result,"cloudCustomData");
         final String localCustomData = CommonUtil.getParam(methodCall,result,"localCustomData");
+        final Boolean needReadReceipt = CommonUtil.getParam(methodCall,result,"needReadReceipt");
 
         boolean isExcludedFromUnreadCount = CommonUtil.getParam(methodCall,result,"isExcludedFromUnreadCount");
+        boolean isExcludedFromLastMessage = CommonUtil.getParam(methodCall,result,"isExcludedFromLastMessage");
         int priority;
 
         V2TIMMessage msg = messageIDMap.get(id);
@@ -331,16 +407,19 @@ public class MessageManager {
         
         if(cloudCustomData !=null){
             msg.setCloudCustomData(cloudCustomData);
-            System.out.printf("cloudCustomData is set");
         }
         if(localCustomData != null){
             msg.setLocalCustomData(localCustomData);
-            System.out.printf("localCustomData is set");
+        }
+
+        if(needReadReceipt !=null) {
+            msg.setNeedReadReceipt(needReadReceipt);
         }
 
         HashMap<String,Object> offlinePushInfoParams = CommonUtil.getParam(methodCall,result,"offlinePushInfo");
         V2TIMOfflinePushInfo offlinePushInfo = handleOfflinePushInfo(methodCall,result);
         msg.setExcludedFromUnreadCount(isExcludedFromUnreadCount);
+        msg.setExcludedFromLastMessage(isExcludedFromLastMessage);
          handleSendMessage(msg,receiver,groupID,priority,onlineUserOnly,offlinePushInfo,result,id);
     }
     // Deprecated since 3.6.0
@@ -1735,7 +1814,6 @@ public class MessageManager {
     }
     public void deleteMessages(MethodCall methodCall, final MethodChannel.Result result){
         final List<String> msgIDs = CommonUtil.getParam(methodCall,result,"msgIDs");
-        System.out.println("msgIDs"+msgIDs);
         V2TIMManager.getMessageManager().findMessages(msgIDs, new V2TIMValueCallback<List<V2TIMMessage>>() {
             @Override
             public void onError(int i, String s) {
@@ -1763,6 +1841,106 @@ public class MessageManager {
             }
         });
     }
+    public void sendMessageReadReceipts(MethodCall methodCall, final MethodChannel.Result result){
+        final List<String> messageIDList = CommonUtil.getParam(methodCall,result,"messageIDList");
+        V2TIMManager.getMessageManager().findMessages(messageIDList, new V2TIMValueCallback<List<V2TIMMessage>>() {
+            @Override
+            public void onError(int i, String s) {
+                CommonUtil.returnError(result,i,s);
+            }
+
+            @Override
+            public void onSuccess(List<V2TIMMessage> v2TIMMessages) {
+                if(v2TIMMessages.size() == messageIDList.size()){
+                    V2TIMManager.getMessageManager().sendMessageReadReceipts(v2TIMMessages, new V2TIMCallback() {
+                        @Override
+                        public void onError(int i, String s) {
+                            CommonUtil.returnError(result,i,s);
+                        }
+
+                        @Override
+                        public void onSuccess() {
+                            CommonUtil.returnSuccess(result,null);
+                        }
+                    });
+                }else{
+                    CommonUtil.returnError(result,-1,"messages not found");
+                }
+            }
+        });
+    } 
+    public void getMessageReadReceipts(MethodCall methodCall, final MethodChannel.Result result){
+        final List<String> messageIDList = CommonUtil.getParam(methodCall,result,"messageIDList");
+        V2TIMManager.getMessageManager().findMessages(messageIDList, new V2TIMValueCallback<List<V2TIMMessage>>() {
+            @Override
+            public void onError(int i, String s) {
+                CommonUtil.returnError(result,i,s);
+            }
+
+            @Override
+            public void onSuccess(List<V2TIMMessage> v2TIMMessages) {
+                if(v2TIMMessages.size() == messageIDList.size()){
+                    V2TIMManager.getMessageManager().getMessageReadReceipts(v2TIMMessages, new V2TIMValueCallback<List<V2TIMMessageReceipt>>() {
+                        @Override
+                        public void onError(int i, String s) {
+                            
+                            CommonUtil.returnError(result,i,s);
+                        }
+
+                        @Override
+                        public void onSuccess(List<V2TIMMessageReceipt> receiptList) {
+                            List<Object> list = new LinkedList<Object>();
+                            for(int i = 0;i<receiptList.size();i++){
+                                list.add(CommonUtil.convertV2TIMMessageReceiptToMap(receiptList.get(i)));
+                            }
+                            CommonUtil.returnSuccess(result,list);
+                        }
+                    });
+                }else{
+                    CommonUtil.returnError(result,-1,"messages not found");
+                }
+            }
+        });
+    } 
+    public void getGroupMessageReadMemberList(MethodCall methodCall, final MethodChannel.Result result){
+        final String messageID = CommonUtil.getParam(methodCall,result,"messageID");
+        final int filter = CommonUtil.getParam(methodCall,result,"filter");
+        final int nextSeqParams = CommonUtil.getParam(methodCall,result,"nextSeq");
+        final int count = CommonUtil.getParam(methodCall,result,"count");
+        final long nextSeq = new Long(nextSeqParams);
+        
+        LinkedList<String> msgList = new LinkedList<>();
+
+        msgList.add(messageID);
+
+        V2TIMManager.getMessageManager().findMessages(msgList, new V2TIMValueCallback<List<V2TIMMessage>>() {
+            @Override
+            public void onError(int i, String s) {
+                CommonUtil.returnError(result,i,s);
+            }
+
+            @Override
+            public void onSuccess(List<V2TIMMessage> v2TIMMessages) {
+                if(v2TIMMessages.size() == 1){
+                    V2TIMManager.getMessageManager().getGroupMessageReadMemberList(v2TIMMessages.get(0), filter,nextSeq,count, new V2TIMValueCallback<V2TIMGroupMessageReadMemberList>() {
+                        @Override
+                        public void onError(int i, String s) {
+                            
+                            CommonUtil.returnError(result,i,s);
+                        }
+
+                        @Override
+                        public void onSuccess(V2TIMGroupMessageReadMemberList memberlist) {
+                            CommonUtil.returnSuccess(result,CommonUtil.converV2TIMGroupMessageReadMemberListToMap(memberlist));
+                        }
+                    });
+                }else{
+                    CommonUtil.returnError(result,-1,"messages not found");
+                }
+            }
+        });
+    } 
+    
     public void insertGroupMessageToLocalStorage(final MethodCall methodCall, final MethodChannel.Result result){
         final String data = CommonUtil.getParam(methodCall,result,"data");
         final String groupID= CommonUtil.getParam(methodCall,result,"groupID");
