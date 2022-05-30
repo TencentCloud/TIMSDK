@@ -15,12 +15,13 @@ import 'package:timuikit/src/pages/privacy/privacy_webview.dart';
 import 'package:timuikit/src/provider/theme.dart';
 import 'package:timuikit/utils/GenerateUserSig.dart';
 import 'package:timuikit/utils/commonUtils.dart';
+import 'package:timuikit/utils/push/channel/channel_push.dart';
+import 'package:timuikit/utils/push/push_constant.dart';
 import 'package:timuikit/utils/toast.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';
 
-import '../utils/push/channel/channel_push.dart';
-import '../utils/push/push_constant.dart';
+
 
 var timNewLogo = const AssetImage("assets/im_logo.png");
 
