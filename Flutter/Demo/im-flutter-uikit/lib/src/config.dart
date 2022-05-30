@@ -11,6 +11,8 @@ class IMDemoConfig {
       String.fromEnvironment('PROJECT_TYPE', defaultValue: "discord");
   static const bool productEnv =
       bool.fromEnvironment('ISPRODUCT_ENV', defaultValue: false);
+  static const bool openShareFeature =
+      bool.fromEnvironment('OPEN_SHARE_FEATURE', defaultValue: true);
   static const String smsLoginHttpBase =
       'https://demos.trtc.tencent-cloud.com/prod';
   // static const String captchaUrl =

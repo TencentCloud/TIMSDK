@@ -6,6 +6,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tim_ui_kit_push_plugin/tim_ui_kit_push_plugin.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:timuikit/src/config.dart';
@@ -14,10 +15,12 @@ import 'package:timuikit/src/pages/privacy/privacy_webview.dart';
 import 'package:timuikit/src/provider/theme.dart';
 import 'package:timuikit/utils/GenerateUserSig.dart';
 import 'package:timuikit/utils/commonUtils.dart';
-import 'package:timuikit/utils/offline_push_config.dart';
 import 'package:timuikit/utils/toast.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';
+
+import '../utils/push/channel/channel_push.dart';
+import '../utils/push/push_constant.dart';
 
 var timNewLogo = const AssetImage("assets/im_logo.png");
 
@@ -299,11 +302,16 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   Future<void> setOfflinePushInfo() async {
-    String token = await OfflinePush.getTPNSToken();
-    Utils.log("getTPNSToken $token");
+    // 这里先请求权限再上报token
+    ChannelPush.requestPermission();
+
+    int? businessID = await TimUiKitPushPlugin.getBuzId(PushConfig.appInfo);
+    String token = await ChannelPush.getDeviceToken();
     if (token != "") {
       coreInstance.setOfflinePushConfig(
-        token: token,
+          token: token,
+          isTPNSToken: false,
+          businessID: businessID
       );
     }
   }
