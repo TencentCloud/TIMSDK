@@ -4,7 +4,6 @@
     >
    <application
         android:label="云通信IM"
-        android:name=".application.TIMApplication"
         tools:replace="android:label"
         android:icon="@mipmap/logo"
        android:usesCleartextTraffic="true"
