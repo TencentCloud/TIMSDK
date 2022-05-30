@@ -2,6 +2,8 @@
 
 // library tim;
 
+// ignore_for_file: unused_import, non_constant_identifier_names
+
 import 'dart:html';
 
 import 'package:js/js.dart';
@@ -134,7 +136,7 @@ class V2TIMManagerWeb {
     timWeb = initTim(params);
     timWeb!.registerPlugin(mapToJSObj({
       'tim-upload-plugin': allowInterop(() {
-        return new TIMUploadPlugin();
+        return TIMUploadPlugin();
       })
     }));
   }

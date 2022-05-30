@@ -1,6 +1,7 @@
 package com.qq.qcloud.tencent_im_sdk_plugin;
 
 
+import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
@@ -31,7 +32,7 @@ import java.lang.reflect.Method;
  * tencent_im_sdk_plugin
  */
 public class
-tencent_im_sdk_plugin implements FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAware {
+tencent_im_sdk_plugin implements FlutterPlugin, MethodChannel.MethodCallHandler {
     /**
      * log signature
      */
@@ -53,7 +54,7 @@ tencent_im_sdk_plugin implements FlutterPlugin, MethodChannel.MethodCallHandler,
     private static FriendshipManager friendshipManager;
     private static OfflinePushManager offlinePushManager;
     public static TimManager timManager;
-
+    private Application mApplication;
     public tencent_im_sdk_plugin() {
     }
 
@@ -67,6 +68,7 @@ tencent_im_sdk_plugin implements FlutterPlugin, MethodChannel.MethodCallHandler,
         tencent_im_sdk_plugin.friendshipManager = new FriendshipManager(channel);
         tencent_im_sdk_plugin.offlinePushManager = new OfflinePushManager(channel);
         tencent_im_sdk_plugin.timManager = new TimManager(channel, context);
+        CommonUtil.context = context;
 //        JSON.DEFAULT_GENERATE_FEATURE |= SerializerFeature.DisableCircularReferenceDetect.mask;
 
     }
@@ -75,7 +77,8 @@ tencent_im_sdk_plugin implements FlutterPlugin, MethodChannel.MethodCallHandler,
     public void onAttachedToEngine(FlutterPlugin.FlutterPluginBinding flutterPluginBinding) {
         Log.i(TAG, "onAttachedToEngine");
         channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "tencent_im_sdk_plugin");
-
+        mApplication = (Application) flutterPluginBinding.getApplicationContext();
+        channel.setMethodCallHandler(new tencent_im_sdk_plugin(mApplication.getApplicationContext(), channel));
     }
 
     // This static function is optional and equivalent to onAttachedToEngine. It supports the old
@@ -113,32 +116,8 @@ tencent_im_sdk_plugin implements FlutterPlugin, MethodChannel.MethodCallHandler,
     @Override
     public void onDetachedFromEngine(FlutterPluginBinding binding) {
         Log.i(TAG, "onDetachedFromEngine");
-        // channel = null;
+        channel.setMethodCallHandler(null);
+        channel = null;
     }
 
-    @Override
-    public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
-        Log.i(TAG, "onAttachedToActivity");
-        channel.setMethodCallHandler(new tencent_im_sdk_plugin(binding.getActivity().getApplicationContext(), channel));
-    }
-
-
-    @Override
-    public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding binding) {
-        Log.i(TAG, "onReattachedToActivityForConfigChanges");
-        channel.setMethodCallHandler(new tencent_im_sdk_plugin(binding.getActivity().getApplicationContext(), channel));
-    }
-
-    @Override
-    public void onDetachedFromActivityForConfigChanges() {
-        Log.i(TAG, "onDetachedFromActivityForConfigChanges");
-        // channel = null;
-    }
-
-
-    @Override
-    public void onDetachedFromActivity() {
-        Log.i(TAG, "onDetachedFromActivity");
-        // channel = null;
-    }
 }

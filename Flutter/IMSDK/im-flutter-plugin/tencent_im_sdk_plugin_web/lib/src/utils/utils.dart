@@ -52,7 +52,7 @@ Future<T> handleThenable<T>(ThenableJsImpl<T> thenable) =>
 
 class CommonUtils {
   static V2TimValueCallback<T> returnSuccess<T>(dynamic data, {desc}) {
-    var returnMap = Map<String, dynamic>();
+    var returnMap = <String, dynamic>{};
     returnMap['code'] = 0;
     returnMap['desc'] = desc ?? 'ok';
     returnMap['data'] = data;

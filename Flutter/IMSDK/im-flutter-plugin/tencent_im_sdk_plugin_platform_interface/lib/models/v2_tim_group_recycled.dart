@@ -15,13 +15,13 @@ class V2TimGroupRecycled {
 
   V2TimGroupRecycled.fromJson(Map<String, dynamic> json) {
     groupID = json['groupID'];
-    opUser = new V2TimGroupMemberInfo.fromJson(json['opUser']);
+    opUser = V2TimGroupMemberInfo.fromJson(json['opUser']);
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['groupID'] = this.groupID;
-    data['opUser'] = this.opUser.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['groupID'] = groupID;
+    data['opUser'] = opUser.toJson();
     return data;
   }
 }

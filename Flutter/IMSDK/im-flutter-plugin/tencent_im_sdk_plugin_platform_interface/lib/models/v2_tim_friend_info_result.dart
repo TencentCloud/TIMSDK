@@ -23,17 +23,17 @@ class V2TimFriendInfoResult {
     resultInfo = json['resultInfo'];
     relation = json['relation'];
     friendInfo = json['friendInfo'] != null
-        ? new V2TimFriendInfo.fromJson(json['friendInfo'])
+        ? V2TimFriendInfo.fromJson(json['friendInfo'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['resultCode'] = this.resultCode;
-    data['resultInfo'] = this.resultInfo;
-    data['relation'] = this.relation;
-    if (this.friendInfo != null) {
-      data['friendInfo'] = this.friendInfo!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['resultCode'] = resultCode;
+    data['resultInfo'] = resultInfo;
+    data['relation'] = relation;
+    if (friendInfo != null) {
+      data['friendInfo'] = friendInfo!.toJson();
     }
     return data;
   }

@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import
+
 import 'dart:convert';
 
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/message_elem_type.dart';
@@ -20,7 +22,7 @@ class GetConversationList {
   late int count;
 
   static formateParams(Map<String, dynamic> data) {
-    Map<String, dynamic> params = Map<String, dynamic>();
+    Map<String, dynamic> params = <String, dynamic>{};
     params["conversationID"] = data["conversationID"];
     params["count"] = data["count"];
 
@@ -87,7 +89,7 @@ class GetConversationList {
     return conversationListItem;
   }
 
-  // TODO 这个lastMessage有点问题，他缺少的东西有点多，比如没有messageID
+  //  这个lastMessage有点问题，他缺少的东西有点多，比如没有messageID
   static formateLasteMessage(Map<String, dynamic> message) async {
     final elementType = message['type'] != null
         ? MsgType.convertMsgType(message['type'])
@@ -241,7 +243,7 @@ class GetConversationList {
       final atItem = jsToMap(groupAtInfoListJs[i]);
       final item = {
         "seq": (atItem['messageSequence']).toString(),
-        "atType": atItem['atTypeArray'][0] //TODO 这里返回的是一个Array我不懂了
+        "atType": atItem['atTypeArray'][0] // 这里返回的是一个Array我不懂了
       };
       groupAtInfoList.add(item);
     }

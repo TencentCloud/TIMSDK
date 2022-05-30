@@ -21,18 +21,18 @@ class V2TimConversationResult {
     if (json['conversationList'] != null) {
       conversationList = List.empty(growable: true);
       json['conversationList'].forEach((v) {
-        conversationList!.add(new V2TimConversation.fromJson(v));
+        conversationList!.add(V2TimConversation.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['nextSeq'] = this.nextSeq;
-    data['isFinished'] = this.isFinished;
-    if (this.conversationList != null) {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['nextSeq'] = nextSeq;
+    data['isFinished'] = isFinished;
+    if (conversationList != null) {
       data['conversationList'] =
-          this.conversationList!.map((v) => v!.toJson()).toList();
+          conversationList!.map((v) => v!.toJson()).toList();
     }
     return data;
   }

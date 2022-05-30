@@ -8,12 +8,12 @@ class V2TimReceiveMessageOptInfo {
   });
 
   V2TimReceiveMessageOptInfo.fromJson(Map<String, dynamic> jsonStr) {
-    this.c2CReceiveMessageOpt = jsonStr['c2CReceiveMessageOpt'];
-    this.userID = jsonStr['userID'];
+    c2CReceiveMessageOpt = jsonStr['c2CReceiveMessageOpt'];
+    userID = jsonStr['userID'];
   }
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['c2CReceiveMessageOpt'] = this.c2CReceiveMessageOpt;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['c2CReceiveMessageOpt'] = c2CReceiveMessageOpt;
     data['userID'] = userID;
     return data;
   }

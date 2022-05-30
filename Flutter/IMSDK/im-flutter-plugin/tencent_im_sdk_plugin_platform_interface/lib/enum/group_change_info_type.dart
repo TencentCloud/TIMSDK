@@ -2,6 +2,8 @@
 ///
 /// {@category Enums}
 ///
+// ignore_for_file: constant_identifier_names
+
 class GroupChangeInfoType {
   ///非法值
   ///

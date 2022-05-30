@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import
+
 /* 不能直接使用native中定义的那些数据类型,web SDK返回的消息是有很大区别的 */
 import '../utils.dart';
 

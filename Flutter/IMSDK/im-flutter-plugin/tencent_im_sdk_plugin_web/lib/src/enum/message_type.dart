@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:js/js.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/message_elem_type.dart';
 import 'package:tencent_im_sdk_plugin_web/src/utils/utils.dart';

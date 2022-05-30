@@ -38,27 +38,31 @@ class V2TimSignalingInfo {
     actionType = json['actionType'];
     // 下方三个参数ios不会返回
     if (json['businessID'] != null) businessID = json['businessID'];
-    if (json['isOnlineUserOnly'] != null)
+    if (json['isOnlineUserOnly'] != null) {
       isOnlineUserOnly = json['isOnlineUserOnly'];
-    if (json['offlinePushInfo'] != null)
+    }
+    if (json['offlinePushInfo'] != null) {
       offlinePushInfo = V2TimOfflinePushInfo.fromJson(json['offlinePushInfo']);
+    }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['inviteID'] = this.inviteID;
-    data['groupID'] = this.groupID;
-    data['inviter'] = this.inviter;
-    data['inviteeList'] = this.inviteeList;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['inviteID'] = inviteID;
+    data['groupID'] = groupID;
+    data['inviter'] = inviter;
+    data['inviteeList'] = inviteeList;
     data['data'] = this.data;
-    data['timeout'] = this.timeout;
-    data['actionType'] = this.actionType;
+    data['timeout'] = timeout;
+    data['actionType'] = actionType;
     // 下方三个参数ios不会返回
-    if (data['businessID'] != null) data['businessID'] = this.businessID;
-    if (data['businessID'] != null)
-      data['isOnlineUserOnly'] = this.isOnlineUserOnly;
-    if (data['offlinePushInfo'] != null)
-      data['offlinePushInfo'] = this.offlinePushInfo?.toJson();
+    if (data['businessID'] != null) data['businessID'] = businessID;
+    if (data['businessID'] != null) {
+      data['isOnlineUserOnly'] = isOnlineUserOnly;
+    }
+    if (data['offlinePushInfo'] != null) {
+      data['offlinePushInfo'] = offlinePushInfo?.toJson();
+    }
     return data;
   }
 }

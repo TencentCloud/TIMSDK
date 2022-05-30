@@ -34,6 +34,7 @@ class GroupTypeWeb {
     if (type == GRP_MEETING) {
       return GroupType.Meeting;
     }
+    return null;
   }
 
   static String convertGroupTypeToWeb(String type) {

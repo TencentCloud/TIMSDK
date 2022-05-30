@@ -2,6 +2,8 @@
 ///
 /// {@category Enums}
 ///
+// ignore_for_file: constant_identifier_names
+
 class GroupMemberRoleType {
   ///未定义（没有获取该字段）
   ///

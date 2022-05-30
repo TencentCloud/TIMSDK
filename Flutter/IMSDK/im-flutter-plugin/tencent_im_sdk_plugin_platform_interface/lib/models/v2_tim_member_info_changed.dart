@@ -20,17 +20,17 @@ class V2TimMemberInfoChanged {
       groupMemberChangeInfoList = List.empty(growable: true);
       json['groupMemberChangeInfoList'].forEach((v) {
         groupMemberChangeInfoList!
-            .add(new V2TimGroupMemberChangeInfo.fromJson(v));
+            .add(V2TimGroupMemberChangeInfo.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['groupID'] = this.groupID;
-    if (this.groupMemberChangeInfoList != null) {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['groupID'] = groupID;
+    if (groupMemberChangeInfoList != null) {
       data['groupMemberChangeInfoList'] =
-          this.groupMemberChangeInfoList!.map((v) => v!.toJson()).toList();
+          groupMemberChangeInfoList!.map((v) => v!.toJson()).toList();
     }
     return data;
   }

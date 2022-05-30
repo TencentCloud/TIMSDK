@@ -24,7 +24,9 @@ class GroupManager {
 		let faceURL = CommonUtils.getParam(call: call, result: result, param: "faceUrl") as? String;
 		let addOpt = CommonUtils.getParam(call: call, result: result, param: "addOpt") as? Int;
 		let memberListMap = CommonUtils.getParam(call: call, result: result, param: "memberList") as? [[String: Any]];
-		
+        let isAllMuted = CommonUtils.getParam(call: call, result: result, param: "isAllMuted") as? Bool;
+        let isSupportTopic = CommonUtils.getParam(call: call, result: result, param: "isSupportTopic") as? Bool;
+        
 		let info = V2TIMGroupInfo();
 		info.groupID = groupID;
 		info.groupType = groupType as String?;
@@ -33,7 +35,9 @@ class GroupManager {
 		info.introduction = introduction;
 		info.faceURL = faceURL;
 		info.groupAddOpt = V2TIMGroupAddOpt(rawValue: addOpt ?? 2)!;
-		
+        info.allMuted = isAllMuted ?? false;
+        info.isSupportTopic = isSupportTopic ?? false
+        
 		var memberList: [V2TIMCreateGroupMemberInfo] = []
 		if memberListMap != nil {
 			for i in memberListMap! {
@@ -114,13 +118,90 @@ class GroupManager {
     public func setGroupInfo(call: FlutterMethodCall, result: @escaping FlutterResult) {
 		if let dict = call.arguments as? Dictionary<String, Any> {
 			let info = V2GroupInfoEntity.init(dict: dict)
+            print(info)
 			V2TIMManager.sharedInstance().setGroupInfo(info, succ: {
 
 				CommonUtils.resultSuccess(call: call, result: result)
 			}, fail: TencentImUtils.returnErrorClosures(call: call, result: result))
         }
     }
+    public func getJoinedCommunityList(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        V2TIMManager.sharedInstance().getJoinedCommunityList { infos in
+            var dataList: [[String: Any]]  = [];
+            infos?.forEach({ info_item in
+                dataList.append(V2GroupInfoEntity.getDict(info: info_item))
+            })
+            CommonUtils.resultSuccess(call: call, result: result, data:dataList);
+        } fail: { code, desc in
+            CommonUtils.resultFailed(desc: desc, code: code, call: call, result: result)
+        }
+    }
+    
+    public func createTopicInCommunity(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String;
+        let topicInfo = CommonUtils.getParam(call: call, result: result, param: "topicInfo") as? [String:Any] ;
+        
+        let info = V2TIMTopicInfoEntity.init(dict: topicInfo!);
+        
+        V2TIMManager.sharedInstance().createTopic(inCommunity: groupID, topicInfo: info) { groupid in
+            CommonUtils.resultSuccess(call: call, result: result, data:groupid as Any);
+        } fail: { code, desc in
+            CommonUtils.resultFailed(desc: desc, code: code, call: call, result: result)
+        }
 
+    }
+    public func deleteTopicFromCommunity(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String;
+        let topicIDList = CommonUtils.getParam(call: call, result: result, param: "topicIDList") as? Array<String>;
+        V2TIMManager.sharedInstance().deleteTopic(fromCommunity: groupID, topicIDList: topicIDList) { _array in
+            var list: [[String: Any]]  = [];
+            _array?.forEach({ item in
+                let i = item as? V2TIMTopicOperationResult
+                var _item:[String:Any] = [:];
+                _item["errorCode"] = i?.errorCode as Any?
+                _item["errorMsg"] = i?.errorMsg as Any?
+                _item["topicID"] = i?.topicID as Any?
+                list.append(_item)
+            })
+            CommonUtils.resultSuccess(call: call, result: result, data:list);
+        } fail: { code, desc in
+            CommonUtils.resultFailed(desc: desc, code: code, call: call,result: result)
+        }
+    }
+    public func setTopicInfo(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let topicInfo = CommonUtils.getParam(call: call, result: result, param: "topicInfo") as? [String:Any] ;
+        let info = V2TIMTopicInfoEntity.init(dict: topicInfo!);
+        
+        V2TIMManager.sharedInstance().setTopicInfo(info) {
+            CommonUtils.resultSuccess(call: call, result: result);
+        } fail: { code, desc in
+            CommonUtils.resultFailed(desc: desc, code: code, call: call,result: result)
+        }
+        
+    }
+    
+    public func getTopicInfoList(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String;
+        let topicIDList = CommonUtils.getParam(call: call, result: result, param: "topicIDList") as? Array<String>;
+        
+        V2TIMManager.sharedInstance().getTopicInfoList(groupID, topicIDList: topicIDList) { _array in
+            var list: [[String: Any]]  = [];
+        
+            _array?.forEach({ item in
+                let i = item as? V2TIMTopicInfoResult
+                
+                var _item:[String:Any] = [:];
+                _item["errorCode"] = i?.errorCode as Any?
+                _item["errorMsg"] = i?.errorMsg as Any?
+                _item["topicInfo"] = V2TIMTopicInfoEntity.getDict(info: i!.topicInfo)
+                list.append(_item)
+            })
+            CommonUtils.resultSuccess(call: call, result: result, data:list);
+        } fail: { code, desc in
+            CommonUtils.resultFailed(desc: desc, code: code, call: call,result: result)
+        }
+
+    }
 	
 	// 0接收且推送，1不接收，2在线接收离线不推送
 	func setReceiveMessageOpt(call: FlutterMethodCall, result: @escaping FlutterResult) {

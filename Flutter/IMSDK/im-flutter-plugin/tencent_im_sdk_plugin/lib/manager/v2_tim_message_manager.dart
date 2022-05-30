@@ -1,23 +1,27 @@
+// ignore_for_file: deprecated_member_use_from_same_package
+
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
 import 'package:tencent_im_sdk_plugin/enum/V2TimAdvancedMsgListener.dart';
-import 'package:tencent_im_sdk_plugin/enum/history_message_get_type.dart';
 import 'package:tencent_im_sdk_plugin/enum/history_msg_get_type_enum.dart';
 import 'package:tencent_im_sdk_plugin/enum/message_elem_type.dart';
 import 'package:tencent_im_sdk_plugin/enum/message_priority_enum.dart';
 import 'package:tencent_im_sdk_plugin/enum/offlinePushInfo.dart';
 import 'package:tencent_im_sdk_plugin/enum/receive_message_opt_enum.dart';
-import 'package:tencent_im_sdk_plugin/enum/utils.dart';
+import 'package:tencent_im_sdk_plugin/models/v2_tim_message_change_info.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message_search_param.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message_search_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_receive_message_opt_info.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/enum/get_group_message_read_member_list_filter.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/im_flutter_plugin_platform_interface.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_message_read_member_list.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_message_receipt.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_msg_create_info_result.dart';
 import 'package:uuid/uuid.dart';
 
@@ -105,7 +109,7 @@ class V2TIMMessageManager {
       {required String imagePath,
       required String receiver,
       required String groupID,
-      MessagePriorityEnum priority = MessagePriorityEnum.V2TIM_PRIORITY_NORMAL,
+      MessagePriorityEnum? priority = MessagePriorityEnum.V2TIM_PRIORITY_NORMAL,
       bool onlineUserOnly = false,
       bool isExcludedFromUnreadCount = false,
       OfflinePushInfo? offlinePushInfo,
@@ -115,7 +119,7 @@ class V2TIMMessageManager {
         imagePath: imagePath,
         receiver: receiver,
         groupID: groupID,
-        priority: EnumUtils.convertMessagePriorityEnum(priority),
+        priority: priority!.index,
         onlineUserOnly: onlineUserOnly,
         isExcludedFromUnreadCount: isExcludedFromUnreadCount,
         offlinePushInfo: offlinePushInfo?.toJson(),
@@ -137,7 +141,7 @@ class V2TIMMessageManager {
     required String snapshotPath,
     required int duration,
     required String groupID,
-    MessagePriorityEnum priority = MessagePriorityEnum.V2TIM_PRIORITY_NORMAL,
+    MessagePriorityEnum? priority = MessagePriorityEnum.V2TIM_PRIORITY_NORMAL,
     bool onlineUserOnly = false,
     bool isExcludedFromUnreadCount = false,
     OfflinePushInfo? offlinePushInfo,
@@ -151,7 +155,7 @@ class V2TIMMessageManager {
       snapshotPath: snapshotPath,
       duration: duration,
       groupID: groupID,
-      priority: EnumUtils.convertMessagePriorityEnum(priority),
+      priority: priority!.index,
       onlineUserOnly: onlineUserOnly,
       isExcludedFromUnreadCount: isExcludedFromUnreadCount,
       offlinePushInfo: offlinePushInfo?.toJson(),
@@ -246,18 +250,18 @@ class V2TIMMessageManager {
     );
   }
 
-  ///  创建文本消息，并且可以附带 @ 提醒功能（最大支持 8KB）
+  /// 创建文本消息，并且可以附带 @ 提醒功能（最大支持 8KB）
   /// 提醒消息仅适用于在群组中发送的消息
   ///
   /// 参数：
   /// text 文本
-  /// atUserList	需要 @ 的用户列表，如果需要 @ALL，请传入 kImSDK_MesssageAtALL 常量字符串。 举个例子，假设该条文本消息希望@提醒 denny 和 lucy 两个用户，同时又希望@所有人，atUserList 传 @["denny",@"lucy",kImSDK_MesssageAtALL]
+  /// atUserList	需要 @ 的用户列表，如果需要 @ALL，请传入 kImSDK_MesssageAtALL 常量字符串。 举个例子，假设该条文本消息希望@提醒 denny 和 lucy 两个用户，同时又希望@所有人，atUserList 传 "denny","lucy",kImSDK_MesssageAtALL数组
+  /// 备注：
   ///
-  ///备注：
-  ///  ```
+  /// ```
   /// 默认情况下，最多支持 @ 30个用户，超过限制后，消息会发送失败。atUserList 的总数不能超过默认最大数，包括 @ALL。
-  ///直播群（AVChatRoom）不支持发送 @ 消息。
-  ///```
+  /// 直播群（AVChatRoom）不支持发送 @ 消息。
+  /// ```
 
   Future<V2TimValueCallback<V2TimMsgCreateInfoResult>> createTextAtMessage({
     required String text,
@@ -309,14 +313,17 @@ class V2TIMMessageManager {
   /// priority	消息优先级，仅针对群聊消息有效。请把重要消息设置为高优先级（比如红包、礼物消息），高频且不重要的消息设置为低优先级（比如点赞消息）。
   /// onlineUserOnly	是否只有在线用户才能收到，如果设置为 true ，接收方历史消息拉取不到，常被用于实现“对方正在输入”或群组里的非重要提示等弱提示功能，该字段不支持 AVChatRoom。
   /// offlinePushInfo	离线推送时携带的标题和内容。
+  /// needReadReceipt 消息是否需要已读回执（只有 Group 消息有效，6.1 及以上版本支持，需要您购买旗舰版套餐）
   ///  ```
   Future<V2TimValueCallback<V2TimMessage>> sendMessage(
       {required String id, // 自己创建的ID
       required String receiver,
       required String groupID,
-      MessagePriorityEnum priority = MessagePriorityEnum.V2TIM_PRIORITY_NORMAL,
+      MessagePriorityEnum? priority = MessagePriorityEnum.V2TIM_PRIORITY_NORMAL,
       bool onlineUserOnly = false,
       bool isExcludedFromUnreadCount = false,
+      bool isExcludedFromLastMessage = false,
+      bool needReadReceipt = false,
       OfflinePushInfo? offlinePushInfo,
       String? cloudCustomData, // 云自定义消息字段，只能在消息发送前添加
       String? localCustomData}) async {
@@ -324,11 +331,13 @@ class V2TIMMessageManager {
         id: id,
         receiver: receiver,
         groupID: groupID,
-        priority: EnumUtils.convertMessagePriorityEnum(priority),
+        priority: priority!.index,
         onlineUserOnly: onlineUserOnly,
         isExcludedFromUnreadCount: isExcludedFromUnreadCount,
+        isExcludedFromLastMessage: isExcludedFromLastMessage,
         offlinePushInfo: offlinePushInfo?.toJson(),
         localCustomData: localCustomData,
+        needReadReceipt: needReadReceipt,
         cloudCustomData: cloudCustomData);
   }
 
@@ -372,9 +381,10 @@ class V2TIMMessageManager {
       required String receiver,
       required String groupID,
       required V2TimMessage replyMessage, // 被回复的消息
-      MessagePriorityEnum priority = MessagePriorityEnum.V2TIM_PRIORITY_NORMAL,
+      MessagePriorityEnum? priority = MessagePriorityEnum.V2TIM_PRIORITY_NORMAL,
       bool onlineUserOnly = false,
       bool isExcludedFromUnreadCount = false,
+      bool needReadReceipt = false,
       OfflinePushInfo? offlinePushInfo,
       String? localCustomData}) async {
     final hasNickName =
@@ -394,7 +404,8 @@ class V2TIMMessageManager {
         id: id,
         receiver: receiver,
         groupID: groupID,
-        priority: EnumUtils.convertMessagePriorityEnum(priority),
+        needReadReceipt: needReadReceipt,
+        priority: priority!.index,
         onlineUserOnly: onlineUserOnly,
         isExcludedFromUnreadCount: isExcludedFromUnreadCount,
         offlinePushInfo: offlinePushInfo?.toJson(),
@@ -466,7 +477,7 @@ class V2TIMMessageManager {
     required String text,
     required String receiver,
     required String groupID,
-    MessagePriorityEnum priority = MessagePriorityEnum.V2TIM_PRIORITY_NORMAL,
+    MessagePriorityEnum? priority = MessagePriorityEnum.V2TIM_PRIORITY_NORMAL,
     bool onlineUserOnly = false,
     bool isExcludedFromUnreadCount = false,
     OfflinePushInfo? offlinePushInfo,
@@ -475,7 +486,7 @@ class V2TIMMessageManager {
       text: text,
       receiver: receiver,
       groupID: groupID,
-      priority: EnumUtils.convertMessagePriorityEnum(priority),
+      priority: priority!.index,
       onlineUserOnly: onlineUserOnly,
       isExcludedFromUnreadCount: isExcludedFromUnreadCount,
       offlinePushInfo: offlinePushInfo?.toJson(),
@@ -490,7 +501,7 @@ class V2TIMMessageManager {
     required String data,
     required String receiver,
     required String groupID,
-    MessagePriorityEnum priority = MessagePriorityEnum.V2TIM_PRIORITY_NORMAL,
+    MessagePriorityEnum? priority = MessagePriorityEnum.V2TIM_PRIORITY_NORMAL,
     String desc = "",
     String extension = "",
     bool onlineUserOnly = false,
@@ -501,7 +512,7 @@ class V2TIMMessageManager {
         data: data,
         receiver: receiver,
         groupID: groupID,
-        priority: EnumUtils.convertMessagePriorityEnum(priority),
+        priority: priority!.index,
         desc: desc,
         extension: extension,
         onlineUserOnly: onlineUserOnly,
@@ -518,7 +529,7 @@ class V2TIMMessageManager {
       required String fileName,
       required String receiver,
       required String groupID,
-      MessagePriorityEnum priority = MessagePriorityEnum.V2TIM_PRIORITY_NORMAL,
+      MessagePriorityEnum? priority = MessagePriorityEnum.V2TIM_PRIORITY_NORMAL,
       bool onlineUserOnly = false,
       bool isExcludedFromUnreadCount = false,
       OfflinePushInfo? offlinePushInfo,
@@ -528,7 +539,7 @@ class V2TIMMessageManager {
         fileName: fileName,
         receiver: receiver,
         groupID: groupID,
-        priority: EnumUtils.convertMessagePriorityEnum(priority),
+        priority: priority!.index,
         onlineUserOnly: onlineUserOnly,
         isExcludedFromUnreadCount: isExcludedFromUnreadCount,
         offlinePushInfo: offlinePushInfo?.toJson(),
@@ -546,7 +557,7 @@ class V2TIMMessageManager {
     required String receiver,
     required String groupID,
     required int duration,
-    MessagePriorityEnum priority = MessagePriorityEnum.V2TIM_PRIORITY_NORMAL,
+    MessagePriorityEnum? priority = MessagePriorityEnum.V2TIM_PRIORITY_NORMAL,
     bool onlineUserOnly = false,
     bool isExcludedFromUnreadCount = false,
     OfflinePushInfo? offlinePushInfo,
@@ -556,7 +567,7 @@ class V2TIMMessageManager {
         receiver: receiver,
         groupID: groupID,
         duration: duration,
-        priority: EnumUtils.convertMessagePriorityEnum(priority),
+        priority: priority!.index,
         onlineUserOnly: onlineUserOnly,
         isExcludedFromUnreadCount: isExcludedFromUnreadCount,
         offlinePushInfo: offlinePushInfo?.toJson());
@@ -567,7 +578,7 @@ class V2TIMMessageManager {
   /// 提醒消息仅适用于在群组中发送的消息
   ///
   /// 参数:
-  /// atUserList	需要 @ 的用户列表，如果需要 @ALL，请传入 AT_ALL_TAG 常量字符串。 举个例子，假设该条文本消息希望@提醒 denny 和 lucy 两个用户，同时又希望@所有人，atUserList 传 ["denny","lucy",AT_ALL_TAG]
+  /// atUserList	需要 @ 的用户列表，如果需要 @ALL，请传入 AT_ALL_TAG 常量字符串。 举个例子，假设该条文本消息希望@提醒 denny 和 lucy 两个用户，同时又希望@所有人，atUserList 传 "denny","lucy",AT_ALL_TAG数组
   /// 注意：
   /// ```
   /// atUserList 使用注意事项
@@ -581,7 +592,7 @@ class V2TIMMessageManager {
     required List<String> atUserList,
     required String receiver,
     required String groupID,
-    MessagePriorityEnum priority = MessagePriorityEnum.V2TIM_PRIORITY_NORMAL,
+    MessagePriorityEnum? priority = MessagePriorityEnum.V2TIM_PRIORITY_NORMAL,
     bool onlineUserOnly = false,
     bool isExcludedFromUnreadCount = false,
     OfflinePushInfo? offlinePushInfo,
@@ -591,7 +602,7 @@ class V2TIMMessageManager {
       receiver: receiver,
       groupID: groupID,
       atUserList: atUserList,
-      priority: EnumUtils.convertMessagePriorityEnum(priority),
+      priority: priority!.index,
       onlineUserOnly: onlineUserOnly,
       isExcludedFromUnreadCount: isExcludedFromUnreadCount,
       offlinePushInfo: offlinePushInfo?.toJson(),
@@ -607,7 +618,7 @@ class V2TIMMessageManager {
     required double latitude,
     required String receiver,
     required String groupID,
-    MessagePriorityEnum priority = MessagePriorityEnum.V2TIM_PRIORITY_NORMAL,
+    MessagePriorityEnum? priority = MessagePriorityEnum.V2TIM_PRIORITY_NORMAL,
     bool onlineUserOnly = false,
     bool isExcludedFromUnreadCount = false,
     OfflinePushInfo? offlinePushInfo,
@@ -618,7 +629,7 @@ class V2TIMMessageManager {
         latitude: latitude,
         receiver: receiver,
         groupID: groupID,
-        priority: EnumUtils.convertMessagePriorityEnum(priority),
+        priority: priority!.index,
         onlineUserOnly: onlineUserOnly,
         isExcludedFromUnreadCount: isExcludedFromUnreadCount,
         offlinePushInfo: offlinePushInfo?.toJson());
@@ -639,7 +650,7 @@ class V2TIMMessageManager {
     required String data,
     required String receiver,
     required String groupID,
-    MessagePriorityEnum priority = MessagePriorityEnum.V2TIM_PRIORITY_NORMAL,
+    MessagePriorityEnum? priority = MessagePriorityEnum.V2TIM_PRIORITY_NORMAL,
     bool onlineUserOnly = false,
     bool isExcludedFromUnreadCount = false,
     OfflinePushInfo? offlinePushInfo,
@@ -649,7 +660,7 @@ class V2TIMMessageManager {
         data: data,
         receiver: receiver,
         groupID: groupID,
-        priority: EnumUtils.convertMessagePriorityEnum(priority),
+        priority: priority!.index,
         onlineUserOnly: onlineUserOnly,
         isExcludedFromUnreadCount: isExcludedFromUnreadCount,
         offlinePushInfo: offlinePushInfo?.toJson());
@@ -696,7 +707,7 @@ class V2TIMMessageManager {
       required String compatibleText,
       required String receiver,
       required String groupID,
-      MessagePriorityEnum priority = MessagePriorityEnum.V2TIM_PRIORITY_NORMAL,
+      MessagePriorityEnum? priority = MessagePriorityEnum.V2TIM_PRIORITY_NORMAL,
       bool onlineUserOnly = false,
       bool isExcludedFromUnreadCount = false,
       OfflinePushInfo? offlinePushInfo,
@@ -708,7 +719,7 @@ class V2TIMMessageManager {
         compatibleText: compatibleText,
         receiver: receiver,
         groupID: groupID,
-        priority: EnumUtils.convertMessagePriorityEnum(priority),
+        priority: priority!.index,
         onlineUserOnly: onlineUserOnly,
         isExcludedFromUnreadCount: isExcludedFromUnreadCount,
         offlinePushInfo: offlinePushInfo?.toJson(),
@@ -753,7 +764,7 @@ class V2TIMMessageManager {
       {required String msgID,
       required String receiver,
       required String groupID,
-      MessagePriorityEnum priority = MessagePriorityEnum.V2TIM_PRIORITY_NORMAL,
+      MessagePriorityEnum? priority = MessagePriorityEnum.V2TIM_PRIORITY_NORMAL,
       bool onlineUserOnly = false,
       bool isExcludedFromUnreadCount = false,
       OfflinePushInfo? offlinePushInfo,
@@ -762,7 +773,7 @@ class V2TIMMessageManager {
         msgID: msgID,
         receiver: receiver,
         groupID: groupID,
-        priority: EnumUtils.convertMessagePriorityEnum(priority),
+        priority: priority!.index,
         onlineUserOnly: onlineUserOnly,
         isExcludedFromUnreadCount: isExcludedFromUnreadCount,
         offlinePushInfo: offlinePushInfo?.toJson(),
@@ -798,7 +809,9 @@ class V2TIMMessageManager {
     required ReceiveMsgOptEnum opt,
   }) async {
     return await ImFlutterPlatform.instance.setC2CReceiveMessageOpt(
-        userIDList: userIDList, opt: EnumUtils.convertReceiveMsgOptEnum(opt));
+      userIDList: userIDList,
+      opt: opt.index,
+    );
   }
 
   ///查询针对某个用户的 C2C 消息接收选项
@@ -826,7 +839,7 @@ class V2TIMMessageManager {
   }) async {
     return await ImFlutterPlatform.instance.setGroupReceiveMessageOpt(
       groupID: groupID,
-      opt: EnumUtils.convertReceiveMsgOptEnum(opt),
+      opt: opt.index,
     );
   }
 
@@ -956,7 +969,7 @@ class V2TIMMessageManager {
   ///
   ///
   Future<V2TimValueCallback<List<V2TimMessage>>> getHistoryMessageList({
-    HistoryMsgGetTypeEnum getType =
+    HistoryMsgGetTypeEnum? getType =
         HistoryMsgGetTypeEnum.V2TIM_GET_LOCAL_OLDER_MSG,
     String? userID,
     String? groupID,
@@ -965,7 +978,7 @@ class V2TIMMessageManager {
     String? lastMsgID,
   }) async {
     return ImFlutterPlatform.instance.getHistoryMessageList(
-        getType: EnumUtils.convertHistoryMsgGetTypeEnum(getType),
+        getType: getType!.index,
         userID: userID,
         count: count,
         lastMsgID: lastMsgID,
@@ -985,7 +998,7 @@ class V2TIMMessageManager {
   /// 注意： web不支持该接口
   ///
   Future<LinkedHashMap<dynamic, dynamic>> getHistoryMessageListWithoutFormat({
-    HistoryMsgGetTypeEnum getType =
+    HistoryMsgGetTypeEnum? getType =
         HistoryMsgGetTypeEnum.V2TIM_GET_LOCAL_OLDER_MSG,
     String? userID,
     String? groupID,
@@ -995,7 +1008,7 @@ class V2TIMMessageManager {
   }) async {
     return ImFlutterPlatform.instance.getHistoryMessageListWithoutFormat(
         count: count,
-        getType: EnumUtils.convertHistoryMsgGetTypeEnum(getType),
+        getType: getType!.index,
         userID: userID,
         groupID: groupID,
         lastMsgSeq: lastMsgSeq,
@@ -1146,7 +1159,7 @@ class V2TIMMessageManager {
   }
 
   /// 搜索本地消息
-  /// 参数：searchParam消息搜索参数，详见 [V2TIMMessageSearchParam] 的定义
+  /// 参数：searchParam消息搜索参数，详见 [V2TimMessageSearchParam] 的定义
   ///```
   /// 注意： web不支持该接口
   /// ```
@@ -1155,6 +1168,53 @@ class V2TIMMessageManager {
   }) async {
     return await ImFlutterPlatform.instance
         .searchLocalMessages(searchParam: searchParam);
+  }
+
+  /// 发送消息已读回执
+  /// 3.9.3及以上版本支持
+  /// 该接口暂时只支持 Group 消息。
+  /// messageIDList 里的消息Id必须在同一个 Group 会话中。
+  /// 该接口调用成功后，会话未读数不会变化，消息发送者会收到 onRecvMessageReadReceipts 回调，回调里面会携带消息的最新已读信息。
+  /// 参数：messageIDList，消息ID列表
+  /// 注意：web不支持该忌口
+  ///
+  Future<V2TimCallback> sendMessageReadReceipts({
+    required List<String> messageIDList,
+  }) async {
+    return await ImFlutterPlatform.instance.sendMessageReadReceipts(
+      messageIDList: messageIDList,
+    );
+  }
+
+  /// 获取消息已读回执
+  /// 3.9.3及以上版本支持
+  /// 该接口暂时只支持 Group 消息。
+  /// messageIDList 里的消息Id必须在同一个 Group 会话中。
+  ///
+  Future<V2TimValueCallback<List<V2TimMessageReceipt>>> getMessageReadReceipts({
+    required List<String> messageIDList,
+  }) async {
+    return await ImFlutterPlatform.instance.getMessageReadReceipts(
+      messageIDList: messageIDList,
+    );
+  }
+
+  /// 获取群消息已读群成员列表
+  /// 3.9.3及以上版本支持
+  ///
+  Future<V2TimValueCallback<V2TimGroupMessageReadMemberList>>
+      getGroupMessageReadMemberList({
+    required String messageID,
+    required GetGroupMessageReadMemberListFilter filter,
+    int nextSeq = 0,
+    int count = 100,
+  }) async {
+    return await ImFlutterPlatform.instance.getGroupMessageReadMemberList(
+      messageID: messageID,
+      filter: filter,
+      nextSeq: nextSeq,
+      count: count,
+    );
   }
 
   /// 根据 messageID 查询指定会话中的本地消息
@@ -1167,6 +1227,25 @@ class V2TIMMessageManager {
   }) async {
     return await ImFlutterPlatform.instance
         .findMessages(messageIDList: messageIDList);
+  }
+
+  /// 消息变更
+  /// 4.0.1及以后版本支持
+  /// 如果消息修改成功，自己和对端用户（C2C）或群组成员（Group）都会收到 onRecvMessageModified 回调。
+  /// 如果在修改消息过程中，消息已经被其他人修改，completion 会返回 ERR_SDK_MSG_MODIFY_CONFLICT 错误。
+  /// 消息无论修改成功或则失败，都会返回最新的消息对象。
+  /// 目前支持修改项目
+  /// localCustomData
+  /// localCustomInt
+  /// cloudCustomData
+  /// V2TIMTextElem
+  /// V2TIMCustomElem
+  ///```
+  /// 注意： web不支持该接口
+  ///```
+  Future<V2TimValueCallback<V2TimMessageChangeInfo>> modifyMessage(
+      {required V2TimMessage message, required}) async {
+    return await ImFlutterPlatform.instance.modifyMessage(message: message);
   }
 
   ///@nodoc

@@ -2,6 +2,8 @@
 ///
 /// {@category Enums}
 ///
+// ignore_for_file: constant_identifier_names
+
 class GroupMemberFilterType {
   ///全部成员
   ///

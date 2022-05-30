@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:js/js.dart';
 import 'package:js/js_util.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/V2TimConversationListener.dart';
@@ -83,7 +85,7 @@ class V2TIMConversationManager {
 
   Future<dynamic> deleteConversation(conversationParams) async {
     try {
-      final res = await promiseToFuture(timeweb!.deleteConversation(
+      await promiseToFuture(timeweb!.deleteConversation(
           DeleteConversation.formateParams(conversationParams)));
 
       return CommonUtils.returnSuccessWithDesc('ok');

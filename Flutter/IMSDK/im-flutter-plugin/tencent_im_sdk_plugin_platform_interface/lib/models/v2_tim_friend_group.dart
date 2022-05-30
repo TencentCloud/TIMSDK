@@ -20,10 +20,10 @@ class V2TimFriendGroup {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
-    data['friendCount'] = this.friendCount;
-    data['friendIDList'] = this.friendIDList;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['name'] = name;
+    data['friendCount'] = friendCount;
+    data['friendIDList'] = friendIDList;
     return data;
   }
 }

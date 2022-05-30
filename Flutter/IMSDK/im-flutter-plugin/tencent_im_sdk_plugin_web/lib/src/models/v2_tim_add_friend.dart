@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import
+
 import 'package:flutter/material.dart';
 import 'package:tencent_im_sdk_plugin_web/src/enum/friend_type.dart';
 import 'package:tencent_im_sdk_plugin_web/src/utils/utils.dart';
@@ -19,8 +21,8 @@ class AddFriend {
   static Map<String, dynamic> formateResult(Map<String, dynamic> object) {
     return <String, dynamic>{
       "userID": object['userID'],
-      "resultCode": object['code'] ?? null,
-      "resultInfo": object['message'] ?? null,
+      "resultCode": object['code'],
+      "resultInfo": object['message'],
     };
   }
 }

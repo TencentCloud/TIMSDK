@@ -9,8 +9,9 @@ class FriendGroup {
   static List<dynamic> formateResult(Map<String, dynamic> object) {
     List<dynamic> userIDList = jsToMap(object['friendGroup'])['userIDList'];
     List<dynamic> resultArr = [];
-    userIDList
-        .forEach((userID) => {resultArr.add(formateFriendGroupItem(userID))});
+    for (var userID in userIDList) {
+      resultArr.add(formateFriendGroupItem(userID));
+    }
     return resultArr;
   }
 
@@ -29,7 +30,7 @@ class FriendGroup {
   }
 
   static Map<String, dynamic> formateFriendGroupItem(userID) {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['userID'] = userID;
     return data;
   }

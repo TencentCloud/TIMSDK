@@ -208,3 +208,6 @@ typedef OnSendMessageProgressCallback = void Function(
   V2TimMessage message,
   int progress,
 );
+typedef OnRecvMessageReadReceipts = void Function(
+  List<V2TimMessageReceipt> receiptList,
+);

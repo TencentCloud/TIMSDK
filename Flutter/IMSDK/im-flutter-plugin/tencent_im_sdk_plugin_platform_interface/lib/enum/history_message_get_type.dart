@@ -2,6 +2,8 @@
 ///
 /// {@category Enums}
 ///
+// ignore_for_file: constant_identifier_names
+
 class HistoryMessageGetType {
   ///获取云端更老的消息
   ///

@@ -38,7 +38,7 @@ android {
     }
 
     dependencies {
-       api 'com.tencent.imsdk:imsdk-plus:6.1.2155'
+       api 'com.tencent.imsdk:imsdk-plus:6.2.2363'
         //    implementation fileTree(dir: 'libs', include: ['*.aar'])
 
     }

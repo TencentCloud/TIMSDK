@@ -1,6 +1,9 @@
+
 // void 	onRecvNewMessage (V2TIMMessage msg)
 
 // void 	onRecvC2CReadReceipt (List< V2TIMMessageReceipt > receiptList)
+
+// ignore_for_file: file_names, prefer_function_declarations_over_variables
 
 // void 	onRecvMessageRevoked (String msgID)
 //
@@ -17,14 +20,16 @@ class V2TimAdvancedMsgListener {
   OnRecvC2CReadReceiptCallback onRecvC2CReadReceipt =
       (List<V2TimMessageReceipt> receiptList) {};
   OnRecvMessageRevokedCallback onRecvMessageRevoked = (String msgID) {};
+  OnRecvMessageReadReceipts onRecvMessageReadReceipts =
+      (List<V2TimMessageReceipt> receiptList) {};
 
-  V2TimAdvancedMsgListener({
-    OnRecvC2CReadReceiptCallback? onRecvC2CReadReceipt,
-    OnRecvMessageRevokedCallback? onRecvMessageRevoked,
-    OnRecvNewMessageCallback? onRecvNewMessage,
-    OnSendMessageProgressCallback? onSendMessageProgress,
-    OnRecvMessageModified? onRecvMessageModified,
-  }) {
+  V2TimAdvancedMsgListener(
+      {OnRecvC2CReadReceiptCallback? onRecvC2CReadReceipt,
+      OnRecvMessageRevokedCallback? onRecvMessageRevoked,
+      OnRecvNewMessageCallback? onRecvNewMessage,
+      OnSendMessageProgressCallback? onSendMessageProgress,
+      OnRecvMessageModified? onRecvMessageModified,
+      OnRecvMessageReadReceipts? onRecvMessageReadReceipts}) {
     if (onRecvC2CReadReceipt != null) {
       this.onRecvC2CReadReceipt = onRecvC2CReadReceipt;
     }
@@ -39,6 +44,9 @@ class V2TimAdvancedMsgListener {
     }
     if (onRecvMessageModified != null) {
       this.onRecvMessageModified = onRecvMessageModified;
+    }
+    if (onRecvMessageReadReceipts != null) {
+      this.onRecvMessageReadReceipts = onRecvMessageReadReceipts;
     }
   }
 }

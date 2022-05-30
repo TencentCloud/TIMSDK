@@ -20,10 +20,10 @@ class V2TimFriendOperationResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['userID'] = this.userID;
-    data['resultCode'] = this.resultCode;
-    data['resultInfo'] = this.resultInfo;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['userID'] = userID;
+    data['resultCode'] = resultCode;
+    data['resultInfo'] = resultInfo;
     return data;
   }
 }

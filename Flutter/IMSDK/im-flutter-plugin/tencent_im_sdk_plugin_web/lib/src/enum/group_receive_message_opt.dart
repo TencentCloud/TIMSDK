@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:js/js.dart';
 import 'package:tencent_im_sdk_plugin_web/src/utils/utils.dart';
 
@@ -26,6 +28,7 @@ class GroupRecvMsgOpt {
     if (opt == MSG_REMIND_ACPT_NOT_NOTE) {
       return 2;
     }
+    return null;
   }
 
   static String? convertMsgRecvOptToWeb(int opt) {
@@ -40,5 +43,6 @@ class GroupRecvMsgOpt {
     if (opt == 2) {
       return MSG_REMIND_ACPT_NOT_NOTE;
     }
+    return null;
   }
 }

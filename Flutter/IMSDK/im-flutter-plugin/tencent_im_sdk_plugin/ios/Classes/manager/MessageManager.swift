@@ -52,7 +52,68 @@ class MessageManager {
 			}, fail: TencentImUtils.returnErrorClosures(call: call, result: result));
 		}
 	}
-	
+    
+    func modifyMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let message = CommonUtils.getParam(call: call, result: result, param: "message") as? [String:Any] ;
+        let msgID = message?["msgID"]
+        if(msgID == nil){
+            CommonUtils.resultFailed(desc: "message not found", code: -1, call: call,result: result)
+            return
+        }
+        var msgIDList:[String] = [];
+        
+        msgIDList.append(msgID as! String)
+        
+        V2TIMManager.sharedInstance().findMessages(msgIDList) { messages in
+            if(messages?.count == 1){
+                
+                if(message?["cloudCustomData"] != nil){
+                    messages?[0].cloudCustomData = (message?["cloudCustomData"]  as! String).data(using: .utf8)
+                }
+                if(message?["localCustomInt"] != nil){
+                    messages?[0].localCustomInt = message?["localCustomInt"] as! Int32
+                }
+                if(message?["localCustomData"] != nil){
+                    messages?[0].localCustomData = (message?["localCustomData"] as! String ).data(using: .utf8)
+                }
+                if(messages?[0].elemType == V2TIMElemType.ELEM_TYPE_TEXT){
+                    let textElem:[String:String] = message?["textElem"] as! [String : String];
+                    messages?[0].textElem.text = textElem["text"];
+                }
+                if(messages?[0].elemType == V2TIMElemType.ELEM_TYPE_CUSTOM){
+                    let customElem:[String:String] = message?["customElem"] as! [String : String];
+                    messages?[0].customElem.data = customElem["data"]?.data(using: .utf8)
+                    messages?[0].customElem.desc = customElem["desc"]
+                    messages?[0].customElem.extension = customElem["extension"];
+                }
+                
+                async({
+                    _ -> Int in
+                    
+                   V2TIMManager.sharedInstance().modifyMessage(messages?[0]) { code,desc,modifyedMessage  in
+                        
+                        var res:[String:Any] = [:]
+                        res["code"] = code
+                        res["desc"] = desc
+                        res["message"] = V2MessageEntity.init(message: modifyedMessage!).getDict()
+                        
+                        
+                        CommonUtils.resultSuccess(call: call, result: result, data: res)
+                    }
+                    return 1
+                }).then({
+                    value in
+                })
+                
+            }else{
+                CommonUtils.resultFailed(desc: "message not found", code: -1, call: call,result: result)
+            }
+        } fail: { code, desc in
+            CommonUtils.resultFailed(desc: desc, code: code, call: call,result: result)
+        }
+
+
+    }
 	func sendC2CCustomMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
 		let customData = CommonUtils.getParam(call: call, result: result, param: "customData") as? String;
 		let userID = CommonUtils.getParam(call: call, result: result, param: "userID") as? String;
@@ -650,6 +711,72 @@ class MessageManager {
 		}
 	}
 
+	func sendMessageReadReceipts(call: FlutterMethodCall, result: @escaping FlutterResult) {
+		if let msgIDs = CommonUtils.getParam(call: call, result: result, param: "messageIDList") as? Array<String> {
+			V2TIMManager.sharedInstance()?.findMessages(msgIDs, succ: {
+				(msgs) -> Void in
+                if msgs?.count != nil && msgs?.count != 0 {
+				V2TIMManager.sharedInstance().sendMessageReadReceipts(msgs, succ: {
+					CommonUtils.resultSuccess(call: call, result: result)
+				}, fail: TencentImUtils.returnErrorClosures(call: call, result: result))
+				} else {
+					CommonUtils.resultFailed(desc: "msgs is not exist", code: -1, call: call, result: result)
+				}
+			}, fail: TencentImUtils.returnErrorClosures(call: call, result: result));
+		}
+	}
+
+	func getMessageReadReceipts(call: FlutterMethodCall, result: @escaping FlutterResult) {
+		if let msgIDs = CommonUtils.getParam(call: call, result: result, param: "messageIDList") as? Array<String> {
+			V2TIMManager.sharedInstance()?.findMessages(msgIDs, succ: {
+				(msgs) -> Void in
+                if msgs?.count != nil && msgs?.count != 0 {
+				V2TIMManager.sharedInstance().getMessageReadReceipts(msgs, succ: {
+					(_ receiptList: [V2TIMMessageReceipt]!) -> Void in
+			
+					var data: [[String: Any]] = [];
+					for item in receiptList {
+						data.append(V2MessageReceiptEntity.getDict(info: item));
+					}
+					CommonUtils.resultSuccess(call: call, result: result,data: data)
+				}, fail: TencentImUtils.returnErrorClosures(call: call, result: result))
+				} else {
+					CommonUtils.resultFailed(desc: "msgs is not exist", code: -1, call: call, result: result)
+				}
+            }, fail: TencentImUtils.returnErrorClosures(call: call, result: result));
+		}
+	}
+
+	func getGroupMessageReadMemberList(call: FlutterMethodCall, result: @escaping FlutterResult) {
+		if let msgIDs = CommonUtils.getParam(call: call, result: result, param: "messageID") as? String,
+		   let filter = CommonUtils.getParam(call: call, result: result, param: "filter") as? Int,
+		   let seq = CommonUtils.getParam(call: call, result: result, param: "nextSeq") as? UInt64,
+		   let count = CommonUtils.getParam(call: call, result: result, param: "count") as? UInt32 {
+			V2TIMManager.sharedInstance()?.findMessages([msgIDs], succ: {
+				(msgs) -> Void in
+				if msgs?.count != nil  && msgs?.count != 0 {
+					let f = V2TIMGroupMessageReadMembersFilter.init(rawValue: filter)!
+                    let message = msgs![0]
+                    V2TIMManager.sharedInstance().getGroupMessageReadMemberList(message, filter: f, nextSeq: seq, count: count, succ: {
+                        (members,nextSeq,isFinished) -> Void in
+                            var res: [String: Any] = [:];
+                            res["nextSeq"] = nextSeq;
+                            res["isFinished"] = isFinished;
+                            var data: [[String: Any]] = [];
+                            for item in members! {
+                                data.append(V2GroupMemberFullInfoEntity.getDict(simpleInfo: item as! V2TIMGroupMemberInfo));
+                            }
+                            res["memberInfoList"] = data;
+                            CommonUtils.resultSuccess(call: call, result: result,data: res)
+                    }, fail: TencentImUtils.returnErrorClosures(call: call, result: result))
+				} else {
+					CommonUtils.resultFailed(desc: "msgs is not exist", code: -1, call: call, result: result)
+				}
+			}, fail: TencentImUtils.returnErrorClosures(call: call, result: result));
+		}
+	}
+	
+
 	func clearC2CHistoryMessage(call: FlutterMethodCall, result: @escaping FlutterResult){
 		if let userID = CommonUtils.getParam(call: call, result: result, param: "userID") as? String {
             V2TIMManager.sharedInstance().clearC2CHistoryMessage(userID, succ: {
@@ -724,11 +851,18 @@ class MessageManager {
     func setCustomDataBeforSend(call: FlutterMethodCall, result: @escaping FlutterResult, message: V2TIMMessage) {
         if let data = CommonUtils.getParam(call: call, result: result, param: "cloudCustomData") as? String {
             message.cloudCustomData = data.data(using: String.Encoding.utf8, allowLossyConversion: true)
-            print("CloudCustomData Setting Ok");
         }
         if let data = CommonUtils.getParam(call: call, result: result, param: "localCustomData") as? String {
             message.localCustomData = data.data(using: String.Encoding.utf8, allowLossyConversion: true)
-            print("localCustomData Setting Ok");
+        }
+		if let data = CommonUtils.getParam(call: call, result: result, param: "isExcludedFromUnreadCount") as? Bool {
+            message.isExcludedFromUnreadCount = data;
+        }
+		if let data = CommonUtils.getParam(call: call, result: result, param: "isExcludedFromLastMessage") as? Bool {
+            message.isExcludedFromLastMessage = data;
+        }
+        if let data = CommonUtils.getParam(call: call, result: result, param: "needReadReceipt") as? Bool {
+            message.needReadReceipt = data;
         }
     }
     

@@ -19,17 +19,17 @@ class V2TimGroupApplicationResult {
     if (json['groupApplicationList'] != null) {
       groupApplicationList = List.empty(growable: true);
       json['groupApplicationList'].forEach((v) {
-        groupApplicationList!.add(new V2TimGroupApplication.fromJson(v));
+        groupApplicationList!.add(V2TimGroupApplication.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['unreadCount'] = this.unreadCount;
-    if (this.groupApplicationList != null) {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['unreadCount'] = unreadCount;
+    if (groupApplicationList != null) {
       data['groupApplicationList'] =
-          this.groupApplicationList!.map((v) => v!.toJson()).toList();
+          groupApplicationList!.map((v) => v!.toJson()).toList();
     }
     return data;
   }

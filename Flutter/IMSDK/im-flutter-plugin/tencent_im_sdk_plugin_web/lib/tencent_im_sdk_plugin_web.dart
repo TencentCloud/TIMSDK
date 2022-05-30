@@ -3,6 +3,8 @@
 // To add platforms, run `flutter create -t plugin --platforms <platforms> .` under the same
 // directory. You can also find a detailed instruction on how to add platforms in the `pubspec.yaml` at https://flutter.dev/docs/development/packages-and-plugins/developing-packages#plugin-platforms.
 
+// ignore_for_file: unused_import
+
 import 'dart:async';
 import 'dart:collection';
 import 'dart:typed_data';
@@ -68,6 +70,7 @@ class TencentImSDKPluginWeb extends ImFlutterPlatform {
       {required int sdkAppID,
       required int loglevel,
       String? listenerUuid,
+      required String uiPlatform,
       V2TimSDKListener? listener}) async {
     return _v2timManager.initSDK(sdkAppID: sdkAppID, listener: listener);
   }
@@ -514,6 +517,7 @@ class TencentImSDKPluginWeb extends ImFlutterPlatform {
     bool? isAllMuted,
     int? addOpt,
     List<V2TimGroupMember>? memberList,
+    bool? isSupportTopic = false,
   }) async {
     return await _v2timGroupManager.createGroup({
       "groupID": groupID,
@@ -525,6 +529,7 @@ class TencentImSDKPluginWeb extends ImFlutterPlatform {
       "isAllMuted": isAllMuted,
       "addOpt": addOpt,
       "memberList": memberList?.map((member) => member.toJson()).toList(),
+      "isSupportTopic": isSupportTopic
     });
   }
 
@@ -874,6 +879,8 @@ class TencentImSDKPluginWeb extends ImFlutterPlatform {
       int priority = 0,
       bool onlineUserOnly = false,
       bool isExcludedFromUnreadCount = false,
+      bool isExcludedFromLastMessage = false,
+      bool needReadReceipt = false,
       Map<String, dynamic>? offlinePushInfo,
       String? cloudCustomData, // 云自定义消息字段，只能在消息发送前添加
       String? localCustomData // 本地自定义消息字段
@@ -886,7 +893,8 @@ class TencentImSDKPluginWeb extends ImFlutterPlatform {
           "groupID": groupID,
           "priority": priority,
           "onlineUserOnly": onlineUserOnly,
-          "isExcludedFromUnreadCount": isExcludedFromUnreadCount
+          "isExcludedFromUnreadCount": isExcludedFromUnreadCount,
+          "isExcludedFromLastMessage": isExcludedFromLastMessage,
         });
   }
 

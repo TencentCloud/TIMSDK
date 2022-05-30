@@ -27,6 +27,14 @@ class AdvancedMsgListener: NSObject, V2TIMAdvancedMsgListener {
         
         HydraThreadManager.subsc(promise: promise);
 	}
+    
+    public func onRecvMessageRead(_ receiptList: [V2TIMMessageReceipt]!) {
+        var data: [[String: Any]] = [];
+        for item in receiptList {
+            data.append(V2MessageReceiptEntity.getDict(info: item));
+        }
+        TencentImSDKPlugin.invokeListener(type: ListenerType.onRecvMessageReadReceipts, method: "advancedMsgListener", data: data, listenerUuid: listenerUuid)
+    }
 	
 	/// C2C已读回执
 	public func onRecvC2CReadReceipt(_ receiptList: [V2TIMMessageReceipt]!) {
@@ -46,12 +54,11 @@ class AdvancedMsgListener: NSObject, V2TIMAdvancedMsgListener {
     public func onRecvMessageModified(_ msg: V2TIMMessage!) {
         let promise =  Promise<Int>(in: .main,{ resolve, reject, _ in
                 V2MessageEntity.init(message: msg!).getDictAll().then(in: .main,{ res in
-                    TencentImSDKPlugin.invokeListener(type: ListenerType.onRecvNewMessage, method: "onRecvMessageModified", data: res, listenerUuid: self.listenerUuid)
+                    TencentImSDKPlugin.invokeListener(type: ListenerType.onRecvMessageModified, method: "advancedMsgListener", data: res, listenerUuid: self.listenerUuid)
                     resolve(1);
                 })
             })
         
         HydraThreadManager.subsc(promise: promise);
 	}
-
 }

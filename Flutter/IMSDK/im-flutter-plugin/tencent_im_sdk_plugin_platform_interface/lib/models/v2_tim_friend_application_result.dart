@@ -18,16 +18,16 @@ class V2TimFriendApplicationResult {
     unreadCount = json['unreadCount'];
     if (json['friendApplicationList'] != null) {
       json['friendApplicationList'].forEach((v) {
-        friendApplicationList!.add(new V2TimFriendApplication.fromJson(v));
+        friendApplicationList!.add(V2TimFriendApplication.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['unreadCount'] = this.unreadCount;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['unreadCount'] = unreadCount;
     data['friendApplicationList'] =
-        this.friendApplicationList!.map((v) => v!.toJson()).toList();
+        friendApplicationList!.map((v) => v!.toJson()).toList();
     return data;
   }
 }
