@@ -26,6 +26,9 @@ const charPtrType = function () {
 const int32Type = function () {
     return ffi.types.int32;
 };
+const int64Type = function () {
+    return ffi.types.uint64;
+};
 const voidType = function () {
     return ffi.types.void;
 };
@@ -129,7 +132,7 @@ function jsFuncToFFIFun(fun: CommonCallbackFun) {
 function jsFuncToFFIFunForGroupRead(fun: GroupReadMembersCallback) {
     const callback = ffi.Callback(
         voidType(),
-        [charPtrType(), int32Type(), ffi.types.bool, voidPtrType()],
+        [charPtrType(), int64Type(), ffi.types.bool, voidPtrType()],
         function (
             json_group_member_array: string,
             next_seq: number,

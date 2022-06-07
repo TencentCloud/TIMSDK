@@ -432,7 +432,7 @@ interface MsgGetGroupMessageReceiptsParam {
 interface MsgGetGroupMessageReadMembersParam {
     json_msg: string;
     filter: number;
-    next_seq: number;
+    next_seq: string;
     count: number;
     user_data: string;
 }

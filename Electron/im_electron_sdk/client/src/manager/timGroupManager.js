@@ -33,14 +33,15 @@ const TimBaseManager = {
   },
   async TIMMsgSendMessageReadReceipts(){
     const data = await timRenderInstance.TIMMsgGetMsgList({
-         conv_id: "@TGS#2N7OQRSHS",
+         conv_id: "@TGS#1X2AML5H6",
          conv_type: 2,
          params: {
              msg_getmsglist_param_last_msg: null,
-             msg_getmsglist_param_count: 100
+             msg_getmsglist_param_count: 1
          }
      })
      var d = JSON.parse(data.data.json_params);
+     console.log(d[0])
      return timRenderInstance.TIMMsgSendMessageReadReceipts({
        json_msg_array:JSON.stringify([
          d[0]
@@ -68,20 +69,25 @@ const TimBaseManager = {
    },
    async TIMMsgGetGroupMessageReadMemberList(){
      const data = await timRenderInstance.TIMMsgGetMsgList({
-       conv_id: "@TGS#2N7OQRSHS",
+       conv_id: "@TGS#2QLIXNKIB",
        conv_type: 2,
        params: {
            msg_getmsglist_param_last_msg: null,
-           msg_getmsglist_param_count: 100
+           msg_getmsglist_param_count: 1
        }
    })
+   
    const arr = JSON.parse(data.data.json_params);
+  //  arr[0].message_need_read_receipt = true;
+   console.log(JSON.stringify(arr[0]))
+   
      return timRenderInstance.TIMMsgGetGroupMessageReadMemberList({
        json_msg:JSON.stringify(arr[0]),
-       filter: 0,
-       next_seq: 0,
-       count: 10,
+       filter: 1,
+       next_seq: "144115242047631534",
+       count: 2,
      }); 
+     
    },
    
   TIMGroupGetJoinedGroupList: () => {
@@ -89,7 +95,7 @@ const TimBaseManager = {
   },
   TIMGroupGetGroupInfoList: () => {
     return timRenderInstance.TIMGroupGetGroupInfoList({
-      groupIds: ["@TGS#_im_discuss_6iQBFthZWrmRdcYS"],
+      groupIds: ["@TGS#1X2AML5H6"],
       data: 'test data'
     })
   },
