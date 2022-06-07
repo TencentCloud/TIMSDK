@@ -507,7 +507,7 @@ interface TIMMsgGetGroupMessageReadMemberListFun {
     (
         json_param: string,
         filter: number,
-        next_seq: number,
+        next_seq: string,
         count: number,
         callback: Buffer,
         user_data: string

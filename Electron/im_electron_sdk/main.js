@@ -8,6 +8,9 @@ const TimMain = require('./im_electron_sdk/dist/main');
 const mainInstance = new TimMain({
   sdkappid: 1400597090
 })
+// const mainInstance = new TimMain({
+//   sdkappid: 1400619962
+// })
 // const t = new TIM({
 //   sdkappid: 1400187352
 // })

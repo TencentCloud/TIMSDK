@@ -24,6 +24,10 @@ const TimBaseManager = {
             userID: "109442",
             userSig: "eJyrVgrxCdYrSy1SslIy0jNQ0gHzM1NS80oy0zLBwoYGliYmRlCZ4pTsxIKCzBQlK0MTAwNTS3MDSwOITGpFQWZRKlDc1NTUyMAAKlqSmQsSMzMxN7U0NjaGihZnpgMNTjJ3DnLKyXL1TIo0CHdNSnbJCbXMN-aoDIxyt-RKM-BKjir2rnIKDy-zd7RVqgUAuD8wOg__",
         })
+        // return timRenderInstance.TIMLogin({
+        //     userID: "d00617420",
+        //     userSig: "eJw1jMEKgkAUAP-lnUOeq7um0MFDtIQQYRDsTdrVHpKtupgR-XumdZwZmBecstwbTAcJMA9hNTNp0zgqadYaUfhRyP6x13VhLWlI-PCb4liwpZjRUmcgERiuERfn6DYZX-CARcgD-ntQNZ3lw5VPa9qxceaQ73Sm20Ed64JJdYmu9*2*VuehlxzTdAPvDy5rMhY_",
+        // })
     },
     TIMInvite: () => {
         return timRenderInstance.TIMInvite({
