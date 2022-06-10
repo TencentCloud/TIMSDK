@@ -1,4 +1,4 @@
-// ignore_for_file: use_key_in_widget_constructors
+// ignore_for_file: use_key_in_widget_constructors, unused_import
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +10,7 @@ import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:timuikit/src/pages/login.dart';
 import 'package:timuikit/src/provider/theme.dart';
 import 'package:provider/provider.dart';
+import 'package:timuikit/src/routes.dart';
 
 import '../i18n/i18n_utils.dart';
 import '../utils/request.dart';
@@ -20,9 +21,9 @@ import 'package:dio/dio.dart';
 
 import '../src/config.dart';
 
-class CancelAccount extends StatelessWidget{
+class CancelAccount extends StatelessWidget {
   final TUISelfInfoViewModel _selfInfoViewModel =
-  serviceLocator<TUISelfInfoViewModel>();
+      serviceLocator<TUISelfInfoViewModel>();
   final CoreServicesImpl _coreServices = TIMUIKitCore.getInstance();
 
   _handleLogout(BuildContext context) async {
@@ -40,10 +41,11 @@ class CancelAccount extends StatelessWidget{
         Utils.log("someError");
         Utils.log(err);
       }
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (BuildContext context) => const LoginPage()),
-        ModalRoute.withName('/'),
-      );
+      Routes().directToLoginPage();
+      // Navigator.of(context).pushAndRemoveUntil(
+      //   MaterialPageRoute(builder: (BuildContext context) => const LoginPage()),
+      //   ModalRoute.withName('/'),
+      // );
     }
   }
 
@@ -60,28 +62,27 @@ class CancelAccount extends StatelessWidget{
             String appID = prefs.getString("sdkAppId") ?? "";
 
             Response<Map<String, dynamic>> data = await appRequest(
-                path: "/base/v1/auth_users/user_delete?apaasUserId=$userID&userId=$userID&token=$token&apaasAppId=$appID",
+                path:
+                    "/base/v1/auth_users/user_delete?apaasUserId=$userID&userId=$userID&token=$token&apaasAppId=$appID",
                 method: "get",
                 data: <String, dynamic>{
                   "apaasUserId": userID,
                   "userId": userID,
                   "token": token,
                   "apaasAppId": appID
-                }
-                );
+                });
 
             Map<String, dynamic> res = data.data!;
             int errorCode = res['errorCode'];
             String? codeStr = res['codeStr'];
 
-            if(errorCode == 0){
+            if (errorCode == 0) {
               Utils.toast((imt("账户注销成功！")));
               _handleLogout(context);
-            }else{
+            } else {
               Utils.log(codeStr);
               Utils.toast(codeStr ?? "");
             }
-
           },
           child: Text(
             imt("注销"),
@@ -134,17 +135,18 @@ class CancelAccount extends StatelessWidget{
                     padding: const EdgeInsets.all(6),
                     child: CircleAvatar(
                       radius: 42,
-                      backgroundImage: NetworkImage(_selfInfoViewModel.loginInfo?.faceUrl ?? ""),
+                      backgroundImage: NetworkImage(
+                          _selfInfoViewModel.loginInfo?.faceUrl ?? ""),
                     ),
                   ),
                   Positioned(
                     right: 0,
-                      bottom: 0,
-                      child: Icon(
-                    Icons.do_not_disturb_on,
-                    color: hexToColor('FA5151'),
-                        size: 34,
-                  ),
+                    bottom: 0,
+                    child: Icon(
+                      Icons.do_not_disturb_on,
+                      color: hexToColor('FA5151'),
+                      size: 34,
+                    ),
                   ),
                 ],
               ),
@@ -152,7 +154,8 @@ class CancelAccount extends StatelessWidget{
                 margin: const EdgeInsets.only(top: 12, bottom: 80),
                 padding: const EdgeInsets.only(right: 40, left: 40),
                 child: Text(
-                  imt_para("注销后，您将无法使用当前账号，相关数据也将删除且无法找回。当前账号ID: {{option1}}", "注销后，您将无法使用当前账号，相关数据也将删除且无法找回。当前账号ID: $option1")(
+                  imt_para("注销后，您将无法使用当前账号，相关数据也将删除且无法找回。当前账号ID: {{option1}}",
+                          "注销后，您将无法使用当前账号，相关数据也将删除且无法找回。当前账号ID: $option1")(
                       option1: option1),
                   textAlign: TextAlign.left,
                   style: TextStyle(
@@ -162,7 +165,7 @@ class CancelAccount extends StatelessWidget{
                 ),
               ),
               Padding(
-                  padding: const EdgeInsets.only(right: 40, left: 40),
+                padding: const EdgeInsets.only(right: 40, left: 40),
                 child: MaterialButton(
                   elevation: 0,
                   highlightElevation: 0,
@@ -176,9 +179,11 @@ class CancelAccount extends StatelessWidget{
                       fontSize: 18,
                     ),
                   ),
-                  onPressed: (){
-                    showCupertinoModalPopup(context: context, builder: (BuildContext context) => mapAppSheet(context))
-                        .then((value) => null);
+                  onPressed: () {
+                    showCupertinoModalPopup(
+                        context: context,
+                        builder: (BuildContext context) =>
+                            mapAppSheet(context)).then((value) => null);
                   },
                 ),
               )
@@ -188,5 +193,4 @@ class CancelAccount extends StatelessWidget{
       ),
     );
   }
-  
 }

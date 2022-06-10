@@ -122,7 +122,7 @@ class _ChatState extends State<Chat> {
       return;
     }
     final isGroup = widget.selectedConversation.type == 2;
-    tuiChatField.currentState.inputextField.currentState.hideAllPanel();
+    tuiChatField.currentState.textFieldController.hideAllPanel();
     if (isGroup) {
       List<V2TimGroupMemberFullInfo>? selectedMember = await Navigator.push(
         context,
@@ -142,14 +142,15 @@ class _ChatState extends State<Chat> {
       final myId = user.data;
       OfflinePushInfo offlinePush = OfflinePushInfo(
         title: "",
-        desc: "邀请你视频通话",
+        desc: imt("邀请你视频通话"),
         ext: "{\"conversationID\": \"c2c_$myId\"}",
         disablePush: false,
         androidOPPOChannelID: PushConfig.OPPOChannelID,
         ignoreIOSBadge: false,
       );
 
-      _calling.call(widget.selectedConversation.userID!, CallingScenes.Video, offlinePush);
+      _calling.call(widget.selectedConversation.userID!, CallingScenes.Video,
+          offlinePush);
     }
   }
 
@@ -160,7 +161,7 @@ class _ChatState extends State<Chat> {
       return;
     }
     final isGroup = widget.selectedConversation.type == 2;
-    tuiChatField.currentState.inputextField.currentState.hideAllPanel();
+    tuiChatField.currentState.textFieldController.hideAllPanel();
     if (isGroup) {
       List<V2TimGroupMemberFullInfo>? selectedMember = await Navigator.push(
         context,
@@ -180,14 +181,15 @@ class _ChatState extends State<Chat> {
       final myId = user.data;
       OfflinePushInfo offlinePush = OfflinePushInfo(
         title: "",
-        desc: "邀请你语音通话",
+        desc: imt("邀请你语音通话"),
         ext: "{\"conversationID\": \"c2c_$myId\"}",
         disablePush: false,
         androidOPPOChannelID: PushConfig.OPPOChannelID,
         ignoreIOSBadge: false,
       );
 
-      _calling.call(widget.selectedConversation.userID!, CallingScenes.Audio, offlinePush);
+      _calling.call(widget.selectedConversation.userID!, CallingScenes.Audio,
+          offlinePush);
     }
   }
 

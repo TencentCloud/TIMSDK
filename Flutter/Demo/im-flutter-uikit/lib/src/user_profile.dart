@@ -64,7 +64,7 @@ class UserProfileState extends State<UserProfile> {
         final myId = user.data;
         OfflinePushInfo offlinePush = OfflinePushInfo(
           title: "",
-          desc: "邀请你语音通话",
+          desc: imt("邀请你语音通话"),
           ext: "{\"conversationID\": \"c2c_$myId\"}",
           disablePush: false,
           androidOPPOChannelID: PushConfig.OPPOChannelID,
@@ -81,7 +81,7 @@ class UserProfileState extends State<UserProfile> {
         final myId = user.data;
         OfflinePushInfo offlinePush = OfflinePushInfo(
           title: "",
-          desc: "邀请你视频通话",
+          desc: imt("邀请你视频通话"),
           ext: "{\"conversationID\": \"c2c_$myId\"}",
           androidOPPOChannelID: PushConfig.OPPOChannelID,
           disablePush: false,
