@@ -35,7 +35,7 @@ packages:
       name: args
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.3.0"
+    version: "2.3.1"
   async:
     dependency: transitive
     description:
@@ -510,6 +510,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.1"
+  flutter_launcher_icons:
+    dependency: "direct main"
+    description:
+      name: flutter_launcher_icons
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.9.2"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -535,14 +542,14 @@ packages:
       name: flutter_plugin_record_plus
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.2"
+    version: "0.0.3"
   flutter_screenutil:
     dependency: transitive
     description:
       name: flutter_screenutil
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.3.1"
+    version: "5.5.3+2"
   flutter_slidable:
     dependency: transitive
     description:
@@ -672,6 +679,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.4.1"
+  image:
+    dependency: transitive
+    description:
+      name: image
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.1.3"
   image_gallery_saver:
     dependency: transitive
     description:
@@ -1289,9 +1303,9 @@ packages:
   tim_ui_kit:
     dependency: "direct main"
     description:
-      name: tim_ui_kit
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "package_src/tim_ui_kit"
+      relative: true
+    source: path
     version: "0.0.9"
   tim_ui_kit_calling_plugin:
     dependency: "direct main"
@@ -1299,14 +1313,14 @@ packages:
       name: tim_ui_kit_calling_plugin
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.0"
+    version: "0.2.1"
   tim_ui_kit_push_plugin:
     dependency: "direct main"
     description:
       name: tim_ui_kit_push_plugin
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.6"
+    version: "0.1.9"
   tim_ui_kit_sticker_plugin:
     dependency: "direct main"
     description:
@@ -1325,6 +1339,13 @@ packages:
     dependency: transitive
     description:
       name: transparent_image
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
+  tuple:
+    dependency: transitive
+    description:
+      name: tuple
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
@@ -1600,7 +1621,7 @@ packages:
       name: yaml
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.0"
+    version: "3.1.1"
 sdks:
   dart: ">=2.16.0 <3.0.0"
   flutter: ">=2.10.0"

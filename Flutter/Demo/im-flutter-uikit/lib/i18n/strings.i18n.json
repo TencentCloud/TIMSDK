@@ -48,8 +48,8 @@
   "k_197r4f7": "IM service connected successfully",
   "k_1s5xnir": "Failed to initialize the IM SDK",
   "k_15bxnkw": "Network connection lost",
-  "k_002r09z": "Channel",
-  "k_003nvk2": "Message",
+  "k_002r09z": "Channels",
+  "k_003nvk2": "Chats",
   "k_1jwxwgt": "Connecting…",
   "k_03gm52d": "Contacts",
   "k_003k7dc": "Me",
@@ -175,8 +175,8 @@
   "k_036uv3f": "Tencent Cloud · IM",
   "k_167916k": "WeChat contacts",
   "k_03euwr1": "Moments",
-  "k_0cxccci": "Invite you to make a video call",
-  "k_06lhh4b": "Invite you to make a voice call",
+  "k_0cxccci": "invites you to a video call",
+  "k_06lhh4b": "invites you to a voice call",
   "k_1ywo9ut": "Tencent Cloud · IM is developed based on QQ messaging module. Chat, conversation, group, data management and LVB on-screen comments can be easily implemented by Chat SDK. Also, connecting with other products such as whiteboards through signaling messages is supported. We can fully covering your business scenarios. Our Chat SDK can support major platforms and Mini Program, to meet communication needs.",
   "k_0ios26v": "WeChat is not detected",
   "k_002rflt": "Delete",
@@ -194,5 +194,6 @@
   "k_1t0akzp": "After deregister this account, you will be unable to use it, and the related data will be permanently deleted. Current account: $option1",
   "k_1699p6d": "Tencent Building",
   "k_1ngd60h": "No. 10000 Shennan avenue, Shenzhen",
-  "k_1na29vg": "Location messages is not supported in DEMO temporarily"
+  "k_1na29vg": "Location messages is not supported in DEMO temporarily",
+  "k_1xmms9t": "Request to Join Group"
 }

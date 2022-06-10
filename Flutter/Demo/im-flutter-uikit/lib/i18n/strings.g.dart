@@ -1,11 +1,13 @@
 
+// ignore_for_file: annotate_overrides
+
 /*
  * Generated file. Do not edit.
  *
- * Locales: 2
- * Strings: 384 (192.0 per locale)
+ * Locales: 3
+ * Strings: 591 (197.0 per locale)
  *
- * Built on 2022-05-30 at 03:22 UTC
+ * Built on 2022-06-09 at 07:30 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -21,7 +23,8 @@ AppLocale _currLocale = _baseLocale;
 /// - if (LocaleSettings.currentLocale == AppLocale.en) // locale check
 enum AppLocale {
 	en, // 'en' (base locale, fallback)
-	zh, // 'zh'
+	zhHans, // 'zh-Hans'
+	zhHant, // 'zh-Hant'
 }
 
 /// Method A: Simple
@@ -150,7 +153,8 @@ class AppLocaleUtils {
 // translation instances
 
 late _StringsEn _translationsEn = _StringsEn.build();
-late _StringsZh _translationsZh = _StringsZh.build();
+late _StringsZhHans _translationsZhHans = _StringsZhHans.build();
+late _StringsZhHant _translationsZhHant = _StringsZhHant.build();
 
 // extensions for AppLocale
 
@@ -162,7 +166,8 @@ extension AppLocaleExtensions on AppLocale {
 	_StringsEn get translations {
 		switch (this) {
 			case AppLocale.en: return _translationsEn;
-			case AppLocale.zh: return _translationsZh;
+			case AppLocale.zhHans: return _translationsZhHans;
+			case AppLocale.zhHant: return _translationsZhHant;
 		}
 	}
 
@@ -176,21 +181,24 @@ extension AppLocaleExtensions on AppLocale {
 	_StringsEn build() {
 		switch (this) {
 			case AppLocale.en: return _StringsEn.build();
-			case AppLocale.zh: return _StringsZh.build();
+			case AppLocale.zhHans: return _StringsZhHans.build();
+			case AppLocale.zhHant: return _StringsZhHant.build();
 		}
 	}
 
 	String get languageTag {
 		switch (this) {
 			case AppLocale.en: return 'en';
-			case AppLocale.zh: return 'zh';
+			case AppLocale.zhHans: return 'zh-Hans';
+			case AppLocale.zhHant: return 'zh-Hant';
 		}
 	}
 
 	Locale get flutterLocale {
 		switch (this) {
 			case AppLocale.en: return const Locale.fromSubtags(languageCode: 'en');
-			case AppLocale.zh: return const Locale.fromSubtags(languageCode: 'zh');
+			case AppLocale.zhHans: return const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hans', );
+			case AppLocale.zhHant: return const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant', );
 		}
 	}
 }
@@ -199,7 +207,8 @@ extension StringAppLocaleExtensions on String {
 	AppLocale? toAppLocale() {
 		switch (this) {
 			case 'en': return AppLocale.en;
-			case 'zh': return AppLocale.zh;
+			case 'zh-Hans': return AppLocale.zhHans;
+			case 'zh-Hant': return AppLocale.zhHant;
 			default: return null;
 		}
 	}
@@ -360,8 +369,8 @@ class _StringsEn {
 	String get k_197r4f7 => 'IM service connected successfully';
 	String get k_1s5xnir => 'Failed to initialize the IM SDK';
 	String get k_15bxnkw => 'Network connection lost';
-	String get k_002r09z => 'Channel';
-	String get k_003nvk2 => 'Message';
+	String get k_002r09z => 'Channels';
+	String get k_003nvk2 => 'Chats';
 	String get k_1jwxwgt => 'Connecting…';
 	String get k_03gm52d => 'Contacts';
 	String get k_003k7dc => 'Me';
@@ -487,8 +496,8 @@ class _StringsEn {
 	String get k_036uv3f => 'Tencent Cloud · IM';
 	String get k_167916k => 'WeChat contacts';
 	String get k_03euwr1 => 'Moments';
-	String get k_0cxccci => 'Invite you to make a video call';
-	String get k_06lhh4b => 'Invite you to make a voice call';
+	String get k_0cxccci => 'invites you to a video call';
+	String get k_06lhh4b => 'invites you to a voice call';
 	String get k_1ywo9ut => 'Tencent Cloud · IM is developed based on QQ messaging module. Chat, conversation, group, data management and LVB on-screen comments can be easily implemented by Chat SDK. Also, connecting with other products such as whiteboards through signaling messages is supported. We can fully covering your business scenarios. Our Chat SDK can support major platforms and Mini Program, to meet communication needs.';
 	String get k_0ios26v => 'WeChat is not detected';
 	String get k_002rflt => 'Delete';
@@ -503,24 +512,28 @@ class _StringsEn {
 	String get k_0cfkcaz => 'Chat Message';
 	String get k_1rmkb2w => 'New Chat Message';
 	String get k_1lg375c => 'New Chat Message Remind';
+	String k_1t0akzp({required Object option1}) => 'After deregister this account, you will be unable to use it, and the related data will be permanently deleted. Current account: $option1';
+	String get k_1699p6d => 'Tencent Building';
+	String get k_1ngd60h => 'No. 10000 Shennan avenue, Shenzhen';
+	String get k_1na29vg => 'Location messages is not supported in DEMO temporarily';
+	String get k_1xmms9t => 'Request to Join Group';
 }
 
 // Path: <root>
-class _StringsZh implements _StringsEn {
+class _StringsZhHans implements _StringsEn {
 
 	/// You can call this constructor and build your own translation instance of this locale.
 	/// Constructing via the enum [AppLocale.build] is preferred.
-	_StringsZh.build();
+	_StringsZhHans.build();
 
 	/// Access flat map
 	@override dynamic operator[](String key) => _flatMap[key];
 
 	// Internal flat map initialized lazily
-	@override
-  late final Map<String, dynamic> _flatMap = _buildFlatMap();
+	late final Map<String, dynamic> _flatMap = _buildFlatMap();
 
 	// ignore: unused_field
-	@override late final _StringsZh _root = this;
+	@override late final _StringsZhHans _root = this;
 
 	// Translations
 	@override String get k_16758qw => '添加好友';
@@ -715,6 +728,227 @@ class _StringsZh implements _StringsEn {
 	@override String get k_0cfkcaz => '消息推送';
 	@override String get k_1rmkb2w => '推送新聊天消息';
 	@override String get k_1lg375c => '新消息提醒';
+	@override String k_1t0akzp({required Object option1}) => '注销后，您将无法使用当前账号，相关数据也将删除且无法找回。当前账号ID: $option1';
+	@override String get k_1699p6d => '腾讯大厦';
+	@override String get k_1ngd60h => '深圳市深南大道10000号';
+	@override String get k_1na29vg => '位置消息维护中';
+	@override String get k_1xmms9t => '进群申请列表';
+}
+
+// Path: <root>
+class _StringsZhHant implements _StringsEn {
+
+	/// You can call this constructor and build your own translation instance of this locale.
+	/// Constructing via the enum [AppLocale.build] is preferred.
+	_StringsZhHant.build();
+
+	/// Access flat map
+	@override dynamic operator[](String key) => _flatMap[key];
+
+	// Internal flat map initialized lazily
+	late final Map<String, dynamic> _flatMap = _buildFlatMap();
+
+	// ignore: unused_field
+	@override late final _StringsZhHant _root = this;
+
+	// Translations
+	@override String get k_16758qw => '添加好友';
+	@override String get k_0elt0kw => '添加群組';
+	@override String get k_03f15qk => '黑名單';
+	@override String get k_0s3p3ji => '暫無黑名單';
+	@override String get k_0uc5cnb => '我們還在內測中，暫不支持創建頻道。';
+	@override String get k_003rzap => '確定';
+	@override String get k_003nevv => '取消';
+	@override String get k_0s5ey0o => '實時音視訊 TRTC';
+	@override String get k_03gpl3d => '大家好';
+	@override String get k_0352fjr => '無網絡連接，進入頻道失敗';
+	@override String get k_0d7n018 => '結束話題';
+	@override String get k_0d826hk => '置頂話題';
+	@override String get k_15wcgna => '結束成功';
+	@override String get k_15wo7xu => '置頂成功';
+	@override String k_02slfpm({required Object errorMessage}) => '發生錯誤 $errorMessage';
+	@override String get k_003ltgm => '位置';
+	@override String get k_0h22snw => '語音通話';
+	@override String get k_0h20hg5 => '視訊通話';
+	@override String get k_002s934 => '話題';
+	@override String get k_18g3zdo => '雲通信·IM';
+	@override String get k_1m8vyp0 => '新的聯絡人';
+	@override String get k_0elz70e => '我的群組';
+	@override String get k_18tb4mo => '無聯絡人';
+	@override String get k_18nuh87 => '聯系我們';
+	@override String get k_1uf134v => '反饋及建議可以加入QQ群：788910197';
+	@override String get k_0xlhhrn => '在線時間，周一到周五，早上10點 - 晚上8點';
+	@override String get k_17fmlyf => '清除聊天';
+	@override String get k_0dhesoz => '取消置頂';
+	@override String get k_002sk7x => '置頂';
+	@override String get k_003kv3v => '搜尋';
+	@override String get k_0gmpgcg => '暫無會話';
+	@override String get k_1m8zuj4 => '選擇聯絡人';
+	@override String get k_002tu9r => '性能';
+	@override String k_0vwtop2({required Object getMsg}) => '獲取到的訊息:$getMsg';
+	@override String k_0upijvs({required Object message}) => '獲取討論區列表失敗 $message';
+	@override String get k_1tmcw5c => '請完善話題標題';
+	@override String get k_1cnmslk => '必須選擇一個標簽';
+	@override String k_0v5hlay({required Object message}) => '創建話題失敗 $message';
+	@override String get k_0z3ytji => '創建話題成功';
+	@override String get k_1a8vem3 => '創建者異常';
+	@override String get k_0eskkr1 => '選擇討論區';
+	@override String get k_0d7plb5 => '創建話題';
+	@override String get k_144t0ho => '---- 相關討論 ----';
+	@override String get k_0pnz619 => '填寫話題標題';
+	@override String get k_136v279 => '+標簽（至少添加一個）';
+	@override String get k_04hjhvp => '討論區參數異常';
+	@override String get k_002r79h => '全部';
+	@override String get k_03ejkb6 => '已加入';
+	@override String get k_172tngw => '話題（未連接）';
+	@override String get k_0rnmfc4 => '該討論區下暫無話題';
+	@override String get k_1pq0ybn => '暫未加入任何話題';
+	@override String get k_0bh95w0 => '無網絡連接，進入話題失敗';
+	@override String get k_002twmj => '群組';
+	@override String get k_0em28sp => '暫無群組';
+	@override String get k_09kalj0 => '清空聊天記錄';
+	@override String get k_18qjstb => '轉讓群主';
+	@override String get k_14j5iul => '刪除並退出';
+	@override String get k_0jtutmw => '退出後不會接收到此群組訊息';
+	@override String get k_04dqh36 => '暫無新聯絡人';
+	@override String get k_08k00l9 => '正在載入...';
+	@override String get k_197r4f7 => '即時通信服務連接成功';
+	@override String get k_1s5xnir => '即時通信 SDK初始化失敗';
+	@override String k_0owk5ss({required Object failedReason}) => '登入失敗 $failedReason';
+	@override String get k_15bxnkw => '網絡連接丟失';
+	@override String get k_0glj9us => '發起會話';
+	@override String get k_1631kyh => '創建工作群';
+	@override String get k_1644yii => '創建社交群';
+	@override String get k_1fxfx04 => '創建會議群';
+	@override String get k_1cnkqc9 => '創建直播群';
+	@override String get k_002r09z => '頻道';
+	@override String get k_003nvk2 => '訊息';
+	@override String get k_1jwxwgt => '連接中...';
+	@override String get k_03gm52d => '通訊錄';
+	@override String get k_003k7dc => '我的';
+	@override String get k_14yh35u => '登入·即時通信';
+	@override String get k_0st7i3e => '體驗群組聊天，音視訊對話等IM功能';
+	@override String get k_0cr1atw => '中國大陸';
+	@override String get k_0mnxjg7 => '歡迎使用騰訊雲即時通信 IM，為保護您的個人信息安全，我們更新了《私隱政策》，主要完善了收集用戶信息的具體內容和目的、增加了第三方SDK使用等方面的內容。';
+	@override String get k_1545beg => '請您點擊';
+	@override String get k_0opnzp6 => '《用戶協議》';
+	@override String get k_00041m1 => '和';
+	@override String get k_0orhtx0 => '《私隱協議》';
+	@override String get k_11x8pvm => '並仔細閱讀，如您同意以上內容，請點擊「同意並繼續」，開始使用我們的產品與服務！';
+	@override String get k_17nw8gq => '同意並繼續';
+	@override String get k_1nynslj => '不同意並退出';
+	@override String get k_0jsvmjm => '請輸入手機號碼';
+	@override String get k_1lg8qh2 => '手機號碼格式錯誤';
+	@override String get k_03jia4z => '無網絡連接';
+	@override String get k_007jqt2 => '驗證碼發送成功';
+	@override String get k_1a55aib => '驗證碼異常';
+	@override String k_1mw45lz({required Object errorReason}) => '登入失敗$errorReason';
+	@override String get k_16r3sej => '國家/地區';
+	@override String get k_15hlgzr => '選擇你的國家區號';
+	@override String get k_1bnmt3h => '請使用英文搜尋';
+	@override String get k_03fei8z => '手機號碼';
+	@override String get k_03aj66h => '驗證碼';
+	@override String get k_1m9jtmw => '請輸入驗證碼';
+	@override String get k_0y1wbxk => '獲取驗證碼';
+	@override String get k_002ri2g => '登陸';
+	@override String get k_161ecly => '當前無網絡';
+	@override String get k_11uz2i8 => '重試網絡';
+	@override String get k_1vhzltr => '騰訊雲即時通信IM';
+	@override String get k_0j433ys => '騰訊雲TRTC';
+	@override String get k_0epvs61 => '更換皮膚';
+	@override String get k_12u8g8l => '免責聲明';
+	@override String get k_1p0j8i3 => 'IM即時通信（「本產品」）是由騰訊雲提供的一款測試產品，騰訊雲享有本產品的著作權和所有權。本產品僅用於功能體驗，不得用於任何商業用途。為配合相關部門監管要求，本產品音視訊互動全程均有錄音錄像存檔，嚴禁在使用中有任何色情、辱罵、暴恐、涉政等違法內容傳播。';
+	@override String get k_0k7qoht => '同意任何用戶加好友';
+	@override String get k_0gyhkp5 => '需要驗證';
+	@override String get k_121ruco => '拒絕任何人加好友';
+	@override String get k_003kfai => '未知';
+	@override String get k_1kvyskd => '無網絡連接，無法修改';
+	@override String get k_1j91bvz => 'TUIKIT 為你選擇一個頭像?';
+	@override String get k_1wmkneq => '加我為好友時需要驗證';
+	@override String get k_1eitsd0 => '關於騰訊雲·通信';
+	@override String get k_1919d6m => '私隱條例';
+	@override String get k_0wqhgor => '個人資料收集清單';
+	@override String get k_12rfxml => '第三方資料共用清單';
+	@override String get k_131g7q4 => '註銷賬戶';
+	@override String get k_03fel2u => '版本號';
+	@override String get k_16kts8h => '登出';
+	@override String get k_129scag => '好友刪除成功';
+	@override String get k_094phq4 => '好友添加失敗';
+	@override String get k_13spdki => '發送訊息';
+	@override String get k_1666isy => '清除好友';
+	@override String get k_0r8fi93 => '好友添加成功';
+	@override String get k_02qw14e => '好友申請已發出';
+	@override String get k_0n3md5x => '當前用戶在黑名單';
+	@override String get k_14c600t => '修改備註';
+	@override String get k_1f811a4 => '支持數字、英文、下劃線';
+	@override String get k_11z7ml4 => '詳細資料';
+	@override String get k_0003y9x => '無';
+	@override String get k_1679vrd => '加為好友';
+	@override String get k_1ajt0b1 => '獲取當前位置失敗';
+	@override String get k_0lhm9xq => '發起檢索成功';
+	@override String get k_0fdeled => '發起檢索失敗';
+	@override String get k_1yh0a50 => 'mapDidLoad-地圖載入完成';
+	@override String get k_1t2zg6h => '圖片驗證碼校驗失敗';
+	@override String get k_03ibg5h => '星期一';
+	@override String get k_03i7hu1 => '星期二';
+	@override String get k_03iaiks => '星期三';
+	@override String get k_03el9pa => '星期四';
+	@override String get k_03i7ok1 => '星期五';
+	@override String get k_03efxyg => '星期六';
+	@override String get k_03ibfd2 => '星期七';
+	@override String k_1o7lf2y({required Object errorMessage}) => '服務器錯誤：$errorMessage';
+	@override String k_118l7sq({required Object requestErrorMessage}) => '請求錯誤：$requestErrorMessage';
+	@override String get k_003nfx9 => '深沈';
+	@override String get k_003rvjp => '輕快';
+	@override String get k_003rtht => '明媚';
+	@override String get k_003qxiw => '夢幻';
+	@override String k_0s5zoi3({required Object option1}) => '發生錯誤 $option1';
+	@override String k_0i8egqa({required Object option8}) => '獲取到的訊息:$option8';
+	@override String k_0pokyns({required Object option8}) => '獲取討論區列表失敗 $option8';
+	@override String k_1y03m8a({required Object option8}) => '創建話題失敗 $option8';
+	@override String k_1v6uh9c({required Object option8}) => '登入失敗 $option8';
+	@override String k_0t5a9hl({required Object option1}) => '登入失敗$option1';
+	@override String k_0k3uv02({required Object option8}) => '服務器錯誤：$option8';
+	@override String k_1g9o3kz({required Object option8}) => '請求錯誤：$option8';
+	@override String get k_14cahuz => '關於騰訊雲 · IM';
+	@override String get k_0llnalm => 'SDK版本號';
+	@override String get k_13dyfii => '應用版本號';
+	@override String get k_12h52zh => '私隱政策';
+	@override String get k_0fxhhwb => '用戶協議';
+	@override String get k_18z2e6q => 'IM即時通信（「本產品」）是由騰訊雲提供的一款測試產品，騰訊雲享有本產品的著作權和所有權。本產品僅用於功能體驗，不得用於任何商業用途。嚴禁在使用中有任何色情、辱罵、暴恐、涉政等違法內容傳播。';
+	@override String get k_0zu7dd7 => '個人資料收集清單';
+	@override String get k_0mcqhgh => '第三方資料共用清單';
+	@override String get k_12eqaty => '確認註銷賬戶';
+	@override String get k_0ziqsr6 => '賬戶註銷成功！';
+	@override String get k_002qtgt => '註銷';
+	@override String k_0rvdu91({required Object option1}) => '註銷後，您將無法使用當前賬號，相關數據也將刪除且無法找回。當前賬號ID: $option1';
+	@override String get k_15d22qk => '註銷賬號';
+	@override String get k_036uv3f => '雲通信IM';
+	@override String get k_167916k => '微信好友';
+	@override String get k_03euwr1 => '朋友圈';
+	@override String get k_0cxccci => '邀請你視訊通話';
+	@override String get k_06lhh4b => '邀請你語音通話';
+	@override String get k_1ywo9ut => '即時通信 IM (Instant Messaging)基於 QQ 底層 IM 能力開發，僅需植入 SDK 即可輕松集成聊天、會話、群組、資料管理和直播彈幕能力，也支持通過信令訊息與白板等其他產品打通，全面覆蓋您的業務場景，支持各大平臺小程序接入使用，全面滿足通信需要';
+	@override String get k_0ios26v => '未檢測到微信安裝';
+	@override String get k_002rflt => '刪除';
+	@override String get k_125ru1w => '解散該群';
+	@override String get k_0jtzmqa => '解散後不會接收到此群組訊息';
+	@override String get k_1jg6d5x => '《私隱政策摘要》';
+	@override String get k_0selni4 => '《私隱政策》';
+	@override String get k_10s6v2i => '《個人資料收集清單》';
+	@override String get k_0pasxq8 => '《第三方資料共用清單》';
+	@override String get k_003r6vf => '登入';
+	@override String get k_09khmso => '相關聊天記錄';
+	@override String get k_118prbn => '全局搜尋';
+	@override String get k_03f2zbs => '分享到';
+	@override String get k_0cfkcaz => '訊息推送';
+	@override String get k_1rmkb2w => '推送新聊天訊息';
+	@override String get k_1lg375c => '新訊息提醒';
+	@override String k_1t0akzp({required Object option1}) => '註銷後，您將無法使用當前賬號，相關數據也將刪除且無法找回。當前賬號ID: $option1';
+	@override String get k_1699p6d => '騰訊大廈';
+	@override String get k_1ngd60h => '深圳市深南大道10000號';
+	@override String get k_1na29vg => '位置訊息維護中';
+	@override String get k_1xmms9t => '進群申請列表';
 }
 
 /// Flat map(s) containing all translations.
@@ -772,8 +1006,8 @@ extension on _StringsEn {
 			'k_197r4f7': 'IM service connected successfully',
 			'k_1s5xnir': 'Failed to initialize the IM SDK',
 			'k_15bxnkw': 'Network connection lost',
-			'k_002r09z': 'Channel',
-			'k_003nvk2': 'Message',
+			'k_002r09z': 'Channels',
+			'k_003nvk2': 'Chats',
 			'k_1jwxwgt': 'Connecting…',
 			'k_03gm52d': 'Contacts',
 			'k_003k7dc': 'Me',
@@ -899,8 +1133,8 @@ extension on _StringsEn {
 			'k_036uv3f': 'Tencent Cloud · IM',
 			'k_167916k': 'WeChat contacts',
 			'k_03euwr1': 'Moments',
-			'k_0cxccci': 'Invite you to make a video call',
-			'k_06lhh4b': 'Invite you to make a voice call',
+			'k_0cxccci': 'invites you to a video call',
+			'k_06lhh4b': 'invites you to a voice call',
 			'k_1ywo9ut': 'Tencent Cloud · IM is developed based on QQ messaging module. Chat, conversation, group, data management and LVB on-screen comments can be easily implemented by Chat SDK. Also, connecting with other products such as whiteboards through signaling messages is supported. We can fully covering your business scenarios. Our Chat SDK can support major platforms and Mini Program, to meet communication needs.',
 			'k_0ios26v': 'WeChat is not detected',
 			'k_002rflt': 'Delete',
@@ -915,11 +1149,16 @@ extension on _StringsEn {
 			'k_0cfkcaz': 'Chat Message',
 			'k_1rmkb2w': 'New Chat Message',
 			'k_1lg375c': 'New Chat Message Remind',
+			'k_1t0akzp': ({required Object option1}) => 'After deregister this account, you will be unable to use it, and the related data will be permanently deleted. Current account: $option1',
+			'k_1699p6d': 'Tencent Building',
+			'k_1ngd60h': 'No. 10000 Shennan avenue, Shenzhen',
+			'k_1na29vg': 'Location messages is not supported in DEMO temporarily',
+			'k_1xmms9t': 'Request to Join Group',
 		};
 	}
 }
 
-extension on _StringsZh {
+extension on _StringsZhHans {
 	Map<String, dynamic> _buildFlatMap() {
 		return {
 			'k_16758qw': '添加好友',
@@ -1114,6 +1353,215 @@ extension on _StringsZh {
 			'k_0cfkcaz': '消息推送',
 			'k_1rmkb2w': '推送新聊天消息',
 			'k_1lg375c': '新消息提醒',
+			'k_1t0akzp': ({required Object option1}) => '注销后，您将无法使用当前账号，相关数据也将删除且无法找回。当前账号ID: $option1',
+			'k_1699p6d': '腾讯大厦',
+			'k_1ngd60h': '深圳市深南大道10000号',
+			'k_1na29vg': '位置消息维护中',
+			'k_1xmms9t': '进群申请列表',
+		};
+	}
+}
+
+extension on _StringsZhHant {
+	Map<String, dynamic> _buildFlatMap() {
+		return {
+			'k_16758qw': '添加好友',
+			'k_0elt0kw': '添加群組',
+			'k_03f15qk': '黑名單',
+			'k_0s3p3ji': '暫無黑名單',
+			'k_0uc5cnb': '我們還在內測中，暫不支持創建頻道。',
+			'k_003rzap': '確定',
+			'k_003nevv': '取消',
+			'k_0s5ey0o': '實時音視訊 TRTC',
+			'k_03gpl3d': '大家好',
+			'k_0352fjr': '無網絡連接，進入頻道失敗',
+			'k_0d7n018': '結束話題',
+			'k_0d826hk': '置頂話題',
+			'k_15wcgna': '結束成功',
+			'k_15wo7xu': '置頂成功',
+			'k_02slfpm': ({required Object errorMessage}) => '發生錯誤 $errorMessage',
+			'k_003ltgm': '位置',
+			'k_0h22snw': '語音通話',
+			'k_0h20hg5': '視訊通話',
+			'k_002s934': '話題',
+			'k_18g3zdo': '雲通信·IM',
+			'k_1m8vyp0': '新的聯絡人',
+			'k_0elz70e': '我的群組',
+			'k_18tb4mo': '無聯絡人',
+			'k_18nuh87': '聯系我們',
+			'k_1uf134v': '反饋及建議可以加入QQ群：788910197',
+			'k_0xlhhrn': '在線時間，周一到周五，早上10點 - 晚上8點',
+			'k_17fmlyf': '清除聊天',
+			'k_0dhesoz': '取消置頂',
+			'k_002sk7x': '置頂',
+			'k_003kv3v': '搜尋',
+			'k_0gmpgcg': '暫無會話',
+			'k_1m8zuj4': '選擇聯絡人',
+			'k_002tu9r': '性能',
+			'k_0vwtop2': ({required Object getMsg}) => '獲取到的訊息:$getMsg',
+			'k_0upijvs': ({required Object message}) => '獲取討論區列表失敗 $message',
+			'k_1tmcw5c': '請完善話題標題',
+			'k_1cnmslk': '必須選擇一個標簽',
+			'k_0v5hlay': ({required Object message}) => '創建話題失敗 $message',
+			'k_0z3ytji': '創建話題成功',
+			'k_1a8vem3': '創建者異常',
+			'k_0eskkr1': '選擇討論區',
+			'k_0d7plb5': '創建話題',
+			'k_144t0ho': '---- 相關討論 ----',
+			'k_0pnz619': '填寫話題標題',
+			'k_136v279': '+標簽（至少添加一個）',
+			'k_04hjhvp': '討論區參數異常',
+			'k_002r79h': '全部',
+			'k_03ejkb6': '已加入',
+			'k_172tngw': '話題（未連接）',
+			'k_0rnmfc4': '該討論區下暫無話題',
+			'k_1pq0ybn': '暫未加入任何話題',
+			'k_0bh95w0': '無網絡連接，進入話題失敗',
+			'k_002twmj': '群組',
+			'k_0em28sp': '暫無群組',
+			'k_09kalj0': '清空聊天記錄',
+			'k_18qjstb': '轉讓群主',
+			'k_14j5iul': '刪除並退出',
+			'k_0jtutmw': '退出後不會接收到此群組訊息',
+			'k_04dqh36': '暫無新聯絡人',
+			'k_08k00l9': '正在載入...',
+			'k_197r4f7': '即時通信服務連接成功',
+			'k_1s5xnir': '即時通信 SDK初始化失敗',
+			'k_0owk5ss': ({required Object failedReason}) => '登入失敗 $failedReason',
+			'k_15bxnkw': '網絡連接丟失',
+			'k_0glj9us': '發起會話',
+			'k_1631kyh': '創建工作群',
+			'k_1644yii': '創建社交群',
+			'k_1fxfx04': '創建會議群',
+			'k_1cnkqc9': '創建直播群',
+			'k_002r09z': '頻道',
+			'k_003nvk2': '訊息',
+			'k_1jwxwgt': '連接中...',
+			'k_03gm52d': '通訊錄',
+			'k_003k7dc': '我的',
+			'k_14yh35u': '登入·即時通信',
+			'k_0st7i3e': '體驗群組聊天，音視訊對話等IM功能',
+			'k_0cr1atw': '中國大陸',
+			'k_0mnxjg7': '歡迎使用騰訊雲即時通信 IM，為保護您的個人信息安全，我們更新了《私隱政策》，主要完善了收集用戶信息的具體內容和目的、增加了第三方SDK使用等方面的內容。',
+			'k_1545beg': '請您點擊',
+			'k_0opnzp6': '《用戶協議》',
+			'k_00041m1': '和',
+			'k_0orhtx0': '《私隱協議》',
+			'k_11x8pvm': '並仔細閱讀，如您同意以上內容，請點擊「同意並繼續」，開始使用我們的產品與服務！',
+			'k_17nw8gq': '同意並繼續',
+			'k_1nynslj': '不同意並退出',
+			'k_0jsvmjm': '請輸入手機號碼',
+			'k_1lg8qh2': '手機號碼格式錯誤',
+			'k_03jia4z': '無網絡連接',
+			'k_007jqt2': '驗證碼發送成功',
+			'k_1a55aib': '驗證碼異常',
+			'k_1mw45lz': ({required Object errorReason}) => '登入失敗$errorReason',
+			'k_16r3sej': '國家/地區',
+			'k_15hlgzr': '選擇你的國家區號',
+			'k_1bnmt3h': '請使用英文搜尋',
+			'k_03fei8z': '手機號碼',
+			'k_03aj66h': '驗證碼',
+			'k_1m9jtmw': '請輸入驗證碼',
+			'k_0y1wbxk': '獲取驗證碼',
+			'k_002ri2g': '登陸',
+			'k_161ecly': '當前無網絡',
+			'k_11uz2i8': '重試網絡',
+			'k_1vhzltr': '騰訊雲即時通信IM',
+			'k_0j433ys': '騰訊雲TRTC',
+			'k_0epvs61': '更換皮膚',
+			'k_12u8g8l': '免責聲明',
+			'k_1p0j8i3': 'IM即時通信（「本產品」）是由騰訊雲提供的一款測試產品，騰訊雲享有本產品的著作權和所有權。本產品僅用於功能體驗，不得用於任何商業用途。為配合相關部門監管要求，本產品音視訊互動全程均有錄音錄像存檔，嚴禁在使用中有任何色情、辱罵、暴恐、涉政等違法內容傳播。',
+			'k_0k7qoht': '同意任何用戶加好友',
+			'k_0gyhkp5': '需要驗證',
+			'k_121ruco': '拒絕任何人加好友',
+			'k_003kfai': '未知',
+			'k_1kvyskd': '無網絡連接，無法修改',
+			'k_1j91bvz': 'TUIKIT 為你選擇一個頭像?',
+			'k_1wmkneq': '加我為好友時需要驗證',
+			'k_1eitsd0': '關於騰訊雲·通信',
+			'k_1919d6m': '私隱條例',
+			'k_0wqhgor': '個人資料收集清單',
+			'k_12rfxml': '第三方資料共用清單',
+			'k_131g7q4': '註銷賬戶',
+			'k_03fel2u': '版本號',
+			'k_16kts8h': '登出',
+			'k_129scag': '好友刪除成功',
+			'k_094phq4': '好友添加失敗',
+			'k_13spdki': '發送訊息',
+			'k_1666isy': '清除好友',
+			'k_0r8fi93': '好友添加成功',
+			'k_02qw14e': '好友申請已發出',
+			'k_0n3md5x': '當前用戶在黑名單',
+			'k_14c600t': '修改備註',
+			'k_1f811a4': '支持數字、英文、下劃線',
+			'k_11z7ml4': '詳細資料',
+			'k_0003y9x': '無',
+			'k_1679vrd': '加為好友',
+			'k_1ajt0b1': '獲取當前位置失敗',
+			'k_0lhm9xq': '發起檢索成功',
+			'k_0fdeled': '發起檢索失敗',
+			'k_1yh0a50': 'mapDidLoad-地圖載入完成',
+			'k_1t2zg6h': '圖片驗證碼校驗失敗',
+			'k_03ibg5h': '星期一',
+			'k_03i7hu1': '星期二',
+			'k_03iaiks': '星期三',
+			'k_03el9pa': '星期四',
+			'k_03i7ok1': '星期五',
+			'k_03efxyg': '星期六',
+			'k_03ibfd2': '星期七',
+			'k_1o7lf2y': ({required Object errorMessage}) => '服務器錯誤：$errorMessage',
+			'k_118l7sq': ({required Object requestErrorMessage}) => '請求錯誤：$requestErrorMessage',
+			'k_003nfx9': '深沈',
+			'k_003rvjp': '輕快',
+			'k_003rtht': '明媚',
+			'k_003qxiw': '夢幻',
+			'k_0s5zoi3': ({required Object option1}) => '發生錯誤 $option1',
+			'k_0i8egqa': ({required Object option8}) => '獲取到的訊息:$option8',
+			'k_0pokyns': ({required Object option8}) => '獲取討論區列表失敗 $option8',
+			'k_1y03m8a': ({required Object option8}) => '創建話題失敗 $option8',
+			'k_1v6uh9c': ({required Object option8}) => '登入失敗 $option8',
+			'k_0t5a9hl': ({required Object option1}) => '登入失敗$option1',
+			'k_0k3uv02': ({required Object option8}) => '服務器錯誤：$option8',
+			'k_1g9o3kz': ({required Object option8}) => '請求錯誤：$option8',
+			'k_14cahuz': '關於騰訊雲 · IM',
+			'k_0llnalm': 'SDK版本號',
+			'k_13dyfii': '應用版本號',
+			'k_12h52zh': '私隱政策',
+			'k_0fxhhwb': '用戶協議',
+			'k_18z2e6q': 'IM即時通信（「本產品」）是由騰訊雲提供的一款測試產品，騰訊雲享有本產品的著作權和所有權。本產品僅用於功能體驗，不得用於任何商業用途。嚴禁在使用中有任何色情、辱罵、暴恐、涉政等違法內容傳播。',
+			'k_0zu7dd7': '個人資料收集清單',
+			'k_0mcqhgh': '第三方資料共用清單',
+			'k_12eqaty': '確認註銷賬戶',
+			'k_0ziqsr6': '賬戶註銷成功！',
+			'k_002qtgt': '註銷',
+			'k_0rvdu91': ({required Object option1}) => '註銷後，您將無法使用當前賬號，相關數據也將刪除且無法找回。當前賬號ID: $option1',
+			'k_15d22qk': '註銷賬號',
+			'k_036uv3f': '雲通信IM',
+			'k_167916k': '微信好友',
+			'k_03euwr1': '朋友圈',
+			'k_0cxccci': '邀請你視訊通話',
+			'k_06lhh4b': '邀請你語音通話',
+			'k_1ywo9ut': '即時通信 IM (Instant Messaging)基於 QQ 底層 IM 能力開發，僅需植入 SDK 即可輕松集成聊天、會話、群組、資料管理和直播彈幕能力，也支持通過信令訊息與白板等其他產品打通，全面覆蓋您的業務場景，支持各大平臺小程序接入使用，全面滿足通信需要',
+			'k_0ios26v': '未檢測到微信安裝',
+			'k_002rflt': '刪除',
+			'k_125ru1w': '解散該群',
+			'k_0jtzmqa': '解散後不會接收到此群組訊息',
+			'k_1jg6d5x': '《私隱政策摘要》',
+			'k_0selni4': '《私隱政策》',
+			'k_10s6v2i': '《個人資料收集清單》',
+			'k_0pasxq8': '《第三方資料共用清單》',
+			'k_003r6vf': '登入',
+			'k_09khmso': '相關聊天記錄',
+			'k_118prbn': '全局搜尋',
+			'k_03f2zbs': '分享到',
+			'k_0cfkcaz': '訊息推送',
+			'k_1rmkb2w': '推送新聊天訊息',
+			'k_1lg375c': '新訊息提醒',
+			'k_1t0akzp': ({required Object option1}) => '註銷後，您將無法使用當前賬號，相關數據也將刪除且無法找回。當前賬號ID: $option1',
+			'k_1699p6d': '騰訊大廈',
+			'k_1ngd60h': '深圳市深南大道10000號',
+			'k_1na29vg': '位置訊息維護中',
+			'k_1xmms9t': '進群申請列表',
 		};
 	}
 }

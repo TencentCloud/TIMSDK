@@ -97,8 +97,8 @@ class AboutState extends State<About>{
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const PrivacyDocument(
-                        title: "隐私政策",
+                    builder: (context) => PrivacyDocument(
+                        title: imt("隐私政策"),
                         url:
                         "https://privacy.qq.com/document/preview/1cfe904fb7004b8ab1193a55857f7272")));
           }),
@@ -106,8 +106,8 @@ class AboutState extends State<About>{
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const PrivacyDocument(
-                        title: "用户协议",
+                    builder: (context) => PrivacyDocument(
+                        title: imt("用户协议"),
                         url:
                         "https://web.sdk.qcloud.com/document/Tencent-IM-User-Agreement.html")));
           }),
@@ -143,8 +143,8 @@ class AboutState extends State<About>{
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const PrivacyDocument(
-                        title: "信息收集清单",
+                    builder: (context) => PrivacyDocument(
+                        title: imt("信息收集清单"),
                         url:
                         "https://privacy.qq.com/document/preview/45ba982a1ce6493597a00f8c86b52a1e")));
           }),
@@ -152,8 +152,8 @@ class AboutState extends State<About>{
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const PrivacyDocument(
-                        title: "信息共享清单",
+                    builder: (context) => PrivacyDocument(
+                        title: imt("信息共享清单"),
                         url:
                         "https://privacy.qq.com/document/preview/dea84ac4bb88454794928b77126e9246")));
           }),
