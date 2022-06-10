@@ -49,8 +49,7 @@ dependencies:
   connectivity_plus: ^2.2.0
   i18n: any
 #  tim_ui_kit: ^0.0.9
-  tim_ui_kit:
-    path: package_src/tim_ui_kit
+  tim_ui_kit: ^0.1.0
   tim_ui_kit_calling_plugin: ^0.2.1
   tim_ui_kit_sticker_plugin: ^0.0.5
   # tim_ui_kit_sticker_plugin:
