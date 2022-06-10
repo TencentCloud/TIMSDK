@@ -8,7 +8,6 @@ import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart'
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/ui/controller/tim_uikit_conversation_controller.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
-import 'package:tim_ui_kit/ui/utils/shared_theme.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitConversation/tim_uikit_conversation_item.dart';
 import 'package:tim_ui_kit/i18n/i18n_utils.dart';
 import 'package:tim_ui_kit/ui/widgets/customize_ball_pulse_header.dart';
@@ -38,6 +37,9 @@ class TIMUIKitConversation extends StatefulWidget {
   /// the filter for conversation
   final bool Function(V2TimConversation? conversation)? conversationCollector;
 
+  /// the builder for the second line in each conservation item, usually shows the summary of the last message
+  final LastMessageBuilder? lastMessageBuilder;
+
   const TIMUIKitConversation(
       {Key? key,
       this.onTapItem,
@@ -45,7 +47,8 @@ class TIMUIKitConversation extends StatefulWidget {
       this.itembuilder,
       this.itemSlidableBuilder,
       this.conversationCollector,
-      this.emptyBuilder})
+      this.emptyBuilder,
+      this.lastMessageBuilder})
       : super(key: key);
 
   @override
@@ -112,6 +115,7 @@ class ConversationItemSlidablePanel extends StatelessWidget {
 class _TIMUIKitConversationState extends State<TIMUIKitConversation> {
   late TUIConversationViewModel model;
   late TIMUIKitConversationController _timuiKitConversationController;
+  final TUIThemeViewModel _themeViewModel = serviceLocator<TUIThemeViewModel>();
 
   @override
   void initState() {
@@ -150,15 +154,16 @@ class _TIMUIKitConversationState extends State<TIMUIKitConversation> {
   }
 
   List<ConversationItemSlidablePanel> _defaultSlidableBuilder(
-      V2TimConversation conversationItem) {
-    final theme = SharedThemeWidget.of(context)?.theme;
+    V2TimConversation conversationItem,
+  ) {
+    final theme = _themeViewModel.theme;
     final I18nUtils ttBuild = I18nUtils(context);
     return [
       ConversationItemSlidablePanel(
         onPressed: (context) {
           _clearHistory(conversationItem);
         },
-        backgroundColor: theme?.primaryColor ?? CommonColor.primaryColor,
+        backgroundColor: theme.primaryColor ?? CommonColor.primaryColor,
         foregroundColor: Colors.white,
         label: ttBuild.imt("清除聊天"),
         spacing: 0,
@@ -168,7 +173,7 @@ class _TIMUIKitConversationState extends State<TIMUIKitConversation> {
         onPressed: (context) {
           _pinConversation(conversationItem);
         },
-        backgroundColor: theme?.infoColor ?? CommonColor.infoColor,
+        backgroundColor: theme.infoColor ?? CommonColor.infoColor,
         foregroundColor: Colors.white,
         label: conversationItem.isPinned!
             ? ttBuild.imt("取消置顶")
@@ -200,12 +205,11 @@ class _TIMUIKitConversationState extends State<TIMUIKitConversation> {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider.value(value: model),
-          ChangeNotifierProvider.value(
-              value: serviceLocator<TUIThemeViewModel>())
+          ChangeNotifierProvider.value(value: _themeViewModel)
         ],
         builder: (BuildContext context, Widget? w) {
           final _model = Provider.of<TUIConversationViewModel>(context);
-          final theme = Provider.of<TUIThemeViewModel>(context).theme;
+          // final theme = _themeViewModel.theme;
           List<V2TimConversation?> filteredConversationList =
               _model.conversationList;
           bool haveMoreData = _model.haveMoreData;
@@ -214,61 +218,62 @@ class _TIMUIKitConversationState extends State<TIMUIKitConversation> {
                 .where(widget.conversationCollector!)
                 .toList();
           }
-          return SharedThemeWidget(
-              theme: theme,
-              child: EasyRefresh(
-                header: CustomizeBallPulseHeader(color: theme.primaryColor),
-                onRefresh: () async {
-                  model.clear();
-                  model.loadData(count: 100);
-                },
-                child: filteredConversationList.isNotEmpty
-                    ? ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: filteredConversationList.length,
-                        itemBuilder: (context, index) {
-                          if (index == filteredConversationList.length - 1) {
-                            if (haveMoreData) {
-                              _timuiKitConversationController.loadData();
-                            }
+          return SlidableAutoCloseBehavior(
+            child: EasyRefresh(
+              header: CustomizeBallPulseHeader(
+                  color: _themeViewModel.theme.primaryColor),
+              onRefresh: () async {
+                model.clear();
+                model.loadData(count: 100);
+              },
+              child: filteredConversationList.isNotEmpty
+                  ? ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: filteredConversationList.length,
+                      itemBuilder: (context, index) {
+                        if (index == filteredConversationList.length - 1) {
+                          if (haveMoreData) {
+                            _timuiKitConversationController.loadData();
                           }
+                        }
 
-                          final conversationItem =
-                              filteredConversationList[index];
-                          if (widget.itembuilder != null) {
-                            return widget.itembuilder!(conversationItem!);
-                          }
+                        final conversationItem =
+                            filteredConversationList[index];
+                        if (widget.itembuilder != null) {
+                          return widget.itembuilder!(conversationItem!);
+                        }
 
-                          final slidableChildren =
-                              _getSlidableBuilder()(conversationItem!);
-                          return Slidable(
-                              child: InkWell(
-                                child: TIMUIKitConversationItem(
-                                  faceUrl: conversationItem.faceUrl ?? "",
-                                  nickName: conversationItem.showName ?? "",
-                                  isDisturb: conversationItem.recvOpt != 0,
-                                  lastMsg: conversationItem.lastMessage,
-                                  isPined: conversationItem.isPinned ?? false,
-                                  groupAtInfoList:
-                                      conversationItem.groupAtInfoList ?? [],
-                                  unreadCount:
-                                      conversationItem.unreadCount ?? 0,
-                                  draftText: conversationItem.draftText,
-                                  draftTimestamp:
-                                      conversationItem.draftTimestamp,
-                                ),
-                                onTap: () => onTapConvItem(conversationItem),
+                        final slidableChildren =
+                            _getSlidableBuilder()(conversationItem!);
+                        return Slidable(
+                            groupTag: 'conversation-list',
+                            child: InkWell(
+                              child: TIMUIKitConversationItem(
+                                lastMessageBuilder: widget.lastMessageBuilder,
+                                faceUrl: conversationItem.faceUrl ?? "",
+                                nickName: conversationItem.showName ?? "",
+                                isDisturb: conversationItem.recvOpt != 0,
+                                lastMsg: conversationItem.lastMessage,
+                                isPined: conversationItem.isPinned ?? false,
+                                groupAtInfoList:
+                                    conversationItem.groupAtInfoList ?? [],
+                                unreadCount: conversationItem.unreadCount ?? 0,
+                                draftText: conversationItem.draftText,
+                                draftTimestamp: conversationItem.draftTimestamp,
                               ),
-                              endActionPane: ActionPane(
-                                  extentRatio:
-                                      slidableChildren.length > 2 ? 0.7 : 0.5,
-                                  motion: const DrawerMotion(),
-                                  children: slidableChildren));
-                        })
-                    : (widget.emptyBuilder != null
-                        ? widget.emptyBuilder!()
-                        : Container()),
-              ));
+                              onTap: () => onTapConvItem(conversationItem),
+                            ),
+                            endActionPane: ActionPane(
+                                extentRatio:
+                                    slidableChildren.length > 2 ? 0.7 : 0.5,
+                                motion: const DrawerMotion(),
+                                children: slidableChildren));
+                      })
+                  : (widget.emptyBuilder != null
+                      ? widget.emptyBuilder!()
+                      : Container()),
+            ),
+          );
         });
   }
 }

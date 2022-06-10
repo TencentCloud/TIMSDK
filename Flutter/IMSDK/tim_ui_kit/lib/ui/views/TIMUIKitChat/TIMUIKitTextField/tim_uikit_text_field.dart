@@ -2,67 +2,87 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:tencent_im_sdk_plugin/enum/conversation_type.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_full_info.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_conversation_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
+import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/utils/message.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitTextField/tim_uikit_at_text.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitTextField/tim_uikit_emoji_panel.dart';
-import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitTextField/tim_uikit_more_panel.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitTextField/tim_uikit_send_sound_message.dart';
 
 import 'package:tim_ui_kit/ui/utils/permission.dart';
-import 'package:tim_ui_kit/ui/views/TIMUIKitChat/tim_uikit_chat_config.dart';
 
-class InputTextField extends StatefulWidget {
-  final ScrollController listViewController;
-  final bool closeKeyboardPanel;
-
-  /// 会话ID
+class TIMUIKitInputTextField extends StatefulWidget {
+  /// conversation id
   final String conversationID;
 
-  /// 会话类型
+  /// conversation type
   final int conversationType;
 
-  final String? draftText;
+  /// init text, use for draft text re-view
+  final String? initText;
 
-  ///控制滚动条
-  final AutoScrollController scrollController;
+  /// messageList widget scroll controller
+  final AutoScrollController? scrollController;
 
+  /// hint text for textField widget
   final String? hintText;
 
+  /// config for more pannel
   final MorePanelConfig? morePanelConfig;
 
+  /// show send audio icon
+  final bool showSendAudio;
+
+  /// show send emoji icon
+  final bool showSendEmoji;
+
+  /// show more pannel
+  final bool showMorePannel;
+
+  /// background color
+  final Color? backgroundColor;
+
+  /// controll input field behavior
+  final TIMUIKitInputTextFieldController? controller;
+
+  /// on text changed
+  final void Function(String)? onChanged;
+
+  /// sticker panel customiziation
   final Widget Function(
       {void Function() sendTextMessage,
       void Function(int index, String data) sendFaceMessage,
       void Function() deleteText,
       void Function(int unicode) addText})? customStickerPanel;
 
-  const InputTextField(
+  const TIMUIKitInputTextField(
       {Key? key,
-      required this.listViewController,
-      required this.closeKeyboardPanel,
       required this.conversationID,
       required this.conversationType,
-      this.draftText,
+      this.initText,
       this.hintText,
-      required this.scrollController,
+      this.scrollController,
       this.morePanelConfig,
-      this.customStickerPanel})
+      this.customStickerPanel,
+      this.showSendAudio = true,
+      this.showSendEmoji = true,
+      this.showMorePannel = true,
+      this.backgroundColor,
+      this.controller,
+      this.onChanged})
       : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _InputTextFieldState();
 }
 
-class _InputTextFieldState extends State<InputTextField> {
+class _InputTextFieldState extends State<TIMUIKitInputTextField> {
   bool showMore = false;
   bool showSendSoundText = false;
   bool showEmojiPanel = false;
@@ -151,23 +171,6 @@ class _InputTextFieldState extends State<InputTextField> {
     }
   }
 
-  // // 外部变量closeKeyboardPanel 是否传入
-  // bool isCloseKeyboardPanelExist() {
-  //   return widget.closeKeyboardPanel == null ? false : true;
-  // }
-
-  // // 优先哪外部传递的值
-  // bool getKeyBoardShow() {
-  //   bool? closeKeyboardPanel = widget.closeKeyboardPanel;
-  //   if (closeKeyboardPanel != null) {
-  //     if (closeKeyboardPanel == true) {
-  //       focusNode.requestFocus();
-  //     }
-  //     return closeKeyboardPanel;
-  //   }
-  //   return showKeyboard;
-  // }
-
   _openMore() {
     if (showMore) {
       focusNode.requestFocus();
@@ -225,8 +228,8 @@ class _InputTextFieldState extends State<InputTextField> {
         conversationID: conversationID, draftText: draftText);
   }
 
-  _buildRepliedMessage() {
-    final haveRepliedMessage = model.repliedMessage != null;
+  _buildRepliedMessage(V2TimMessage? repliedMessage) {
+    final haveRepliedMessage = repliedMessage != null;
     if (haveRepliedMessage) {
       final text =
           "${MessageUtils.getDisplayName(model.repliedMessage!)}:${MessageUtils.getAbstractMessage(model.repliedMessage!, context)}";
@@ -271,7 +274,7 @@ class _InputTextFieldState extends State<InputTextField> {
 
     if (originalText == zeroWidthSpace) {
       _handleSoftKeyBoardDelete();
-      _addDeleteTag();
+      // _addDeleteTag();
     } else {
       text = originalText.characters.skipLast(1);
       textEditingController.text = "$text";
@@ -289,7 +292,7 @@ class _InputTextFieldState extends State<InputTextField> {
     final text = textEditingController.text.trim();
     final convType =
         widget.conversationType == 1 ? ConvType.c2c : ConvType.group;
-    if (text != zeroWidthSpace) {
+    if (text.isNotEmpty && text != zeroWidthSpace) {
       if (model.repliedMessage != null) {
         MessageUtils.handleMessageError(
             model.sendReplyMessage(
@@ -302,8 +305,6 @@ class _InputTextFieldState extends State<InputTextField> {
             context);
       }
       textEditingController.clear();
-      // handleSetDraftText();
-      _addDeleteTag();
       goDownBottom();
     }
   }
@@ -343,7 +344,7 @@ class _InputTextFieldState extends State<InputTextField> {
     final text = textEditingController.text.trim();
     final convType =
         widget.conversationType == 1 ? ConvType.c2c : ConvType.group;
-    if (text != zeroWidthSpace) {
+    if (text.isNotEmpty && text != zeroWidthSpace) {
       if (model.repliedMessage != null) {
         MessageUtils.handleMessageError(
             model.sendReplyMessage(
@@ -363,11 +364,9 @@ class _InputTextFieldState extends State<InputTextField> {
             context);
       }
       textEditingController.clear();
-      _addDeleteTag();
       focusNode.requestFocus();
       lastText = "";
       memberInfoMap = {};
-      // handleSetDraftText();
       setState(() {
         showKeyboard = true;
       });
@@ -377,15 +376,17 @@ class _InputTextFieldState extends State<InputTextField> {
 
   void goDownBottom() {
     Future.delayed(const Duration(milliseconds: 50), () {
-      widget.scrollController.animateTo(
-        widget.scrollController.position.minScrollExtent,
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.ease,
-      );
+      if (widget.scrollController != null) {
+        widget.scrollController!.animateTo(
+          widget.scrollController!.position.minScrollExtent,
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.ease,
+        );
+      }
     });
   }
 
-  hideAllPanel() {
+  _hideAllPanel() {
     focusNode.unfocus();
     setState(() {
       showKeyboard = false;
@@ -394,25 +395,14 @@ class _InputTextFieldState extends State<InputTextField> {
     });
   }
 
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   if (widget.closeKeyboardPanel) {
-  //     setState(() {
-  //       showKeyboard = false;
-  //       showMore = false;
-  //       showEmojiPanel = false;
-  //     });
-  //   }
-  // }
-
   void onModelChanged() {
     if (model.repliedMessage != null) {
       focusNode.requestFocus();
+      _addDeleteTag();
       setState(() {
         showKeyboard = true;
       });
-    }
+    } else {}
     if (model.editRevokedMsg != "") {
       focusNode.requestFocus();
       setState(() {
@@ -428,7 +418,8 @@ class _InputTextFieldState extends State<InputTextField> {
   }
 
   _addDeleteTag() {
-    textEditingController.text = zeroWidthSpace;
+    final originalText = textEditingController.text;
+    textEditingController.text = zeroWidthSpace + originalText;
     textEditingController.selection = TextSelection.fromPosition(
         TextPosition(offset: textEditingController.text.length));
   }
@@ -450,7 +441,7 @@ class _InputTextFieldState extends State<InputTextField> {
             : userID;
   }
 
-  longPressToAt(String? userID, String? nickName) {
+  _longPressToAt(String? userID, String? nickName) {
     final memberInfo = V2TimGroupMemberFullInfo(
       userID: userID ?? "",
       nickName: nickName,
@@ -535,12 +526,23 @@ class _InputTextFieldState extends State<InputTextField> {
   void initState() {
     super.initState();
     focusNode = FocusNode();
-    textEditingController = TextEditingController();
+    textEditingController =
+        widget.controller?.textEditingController ?? TextEditingController();
+    if (widget.controller != null) {
+      widget.controller?.addListener(() {
+        final actionType = widget.controller?.actionType;
+        if (actionType == ActionType.hideAllPanel) {
+          _hideAllPanel();
+        }
+        if (actionType == ActionType.longPressToAt) {
+          _longPressToAt(
+              widget.controller?.atUserID, widget.controller?.atUserName);
+        }
+      });
+    }
     model.addListener(onModelChanged);
-    if (widget.draftText != null) {
-      textEditingController.text = zeroWidthSpace + widget.draftText!;
-    } else {
-      textEditingController.text = zeroWidthSpace;
+    if (widget.initText != null) {
+      textEditingController.text = widget.initText!;
     }
   }
 
@@ -549,154 +551,157 @@ class _InputTextFieldState extends State<InputTextField> {
     handleSetDraftText();
     model.removeListener(onModelChanged);
     focusNode.dispose();
-    textEditingController.dispose();
+    // textEditingController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final debounceFunc = _debounce((value) {
-      // handleSetDraftText();
+      if (widget.onChanged != null) {
+        widget.onChanged!(value);
+      }
       _handleAtText(value);
       final isEmpty = value.isEmpty;
       if (isEmpty) {
         _handleSoftKeyBoardDelete();
-        _addDeleteTag();
       }
     }, const Duration(milliseconds: 80));
-    final chatConfig = Provider.of<TIMUIKitChatConfig>(context);
-    return Column(
-      children: [
-        _buildRepliedMessage(),
-        Container(
-          color: hexToColor("EBF0F6"),
-          // constraints: const BoxConstraints(minHeight: 90),
-          // height: 90,
-          child: SafeArea(
-            child: Column(
-              children: [
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                  constraints: const BoxConstraints(minHeight: 50),
-                  child: Row(
+    return Selector<TUIChatViewModel, V2TimMessage?>(
+        builder: ((context, value, child) {
+          return Column(
+            children: [
+              _buildRepliedMessage(value),
+              Container(
+                color: widget.backgroundColor ?? hexToColor("EBF0F6"),
+                child: SafeArea(
+                  child: Column(
                     children: [
-                      if (chatConfig.isAllowSoundMessage)
-                        InkWell(
-                          onTap: () async {
-                            if (showSendSoundText) {
-                              focusNode.requestFocus();
-                              setState(() {
-                                showKeyboard = true;
-                              });
-                            }
-                            if (await Permissions.checkPermission(
-                                context, Permission.microphone.value)) {
-                              setState(() {
-                                showEmojiPanel = false;
-                                showMore = false;
-                                showSendSoundText = !showSendSoundText;
-                              });
-                            }
-                          },
-                          child: SvgPicture.asset(
-                            showSendSoundText
-                                ? 'images/keyboard.svg'
-                                : 'images/voice.svg',
-                            package: 'tim_ui_kit',
-                            color: const Color.fromRGBO(68, 68, 68, 1),
-                            height: 28,
-                            width: 28,
-                          ),
-                        ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Expanded(
-                        child: showSendSoundText
-                            ? SendSoundMessage(
-                                onDownBottom: goDownBottom,
-                                conversationID: widget.conversationID,
-                                conversationType: widget.conversationType)
-                            : TextField(
-                                onChanged: debounceFunc,
-                                maxLines: 4,
-                                minLines: 1,
-                                controller: textEditingController,
-                                focusNode: focusNode,
-                                onTap: () {
-                                  goDownBottom();
-                                  setState(() {
-                                    showKeyboard = true;
-                                    showEmojiPanel = false;
-                                    showMore = false;
-                                  });
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 16),
+                        constraints: const BoxConstraints(minHeight: 50),
+                        child: Row(
+                          children: [
+                            if (widget.showSendAudio)
+                              InkWell(
+                                onTap: () async {
+                                  if (showSendSoundText) {
+                                    focusNode.requestFocus();
+                                    setState(() {
+                                      showKeyboard = true;
+                                    });
+                                  }
+                                  if (await Permissions.checkPermission(
+                                      context, Permission.microphone.value)) {
+                                    setState(() {
+                                      showEmojiPanel = false;
+                                      showMore = false;
+                                      showSendSoundText = !showSendSoundText;
+                                    });
+                                  }
                                 },
-                                keyboardType: TextInputType.text,
-                                textInputAction: TextInputAction.send,
-                                onEditingComplete: onSubmitted,
-                                textAlignVertical: TextAlignVertical.center,
-                                decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    hintStyle: const TextStyle(
-                                      // fontSize: 10,
-                                      color: Color(0xffAEA4A3),
-                                    ),
-                                    fillColor: Colors.white,
-                                    filled: true,
-                                    isDense: true,
-                                    hintText: widget.hintText ?? ''),
+                                child: SvgPicture.asset(
+                                  showSendSoundText
+                                      ? 'images/keyboard.svg'
+                                      : 'images/voice.svg',
+                                  package: 'tim_ui_kit',
+                                  color: const Color.fromRGBO(68, 68, 68, 1),
+                                  height: 28,
+                                  width: 28,
+                                ),
                               ),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      if (chatConfig.isAllowEmojiPanel)
-                        InkWell(
-                          onTap: () {
-                            _openEmojiPanel();
-                            goDownBottom();
-                          },
-                          child: SvgPicture.asset(
-                            showEmojiPanel
-                                ? 'images/keyboard.svg'
-                                : 'images/face.svg',
-                            package: 'tim_ui_kit',
-                            color: const Color.fromRGBO(68, 68, 68, 1),
-                            height: 28,
-                            width: 28,
-                          ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Expanded(
+                              child: showSendSoundText
+                                  ? SendSoundMessage(
+                                      onDownBottom: goDownBottom,
+                                      conversationID: widget.conversationID,
+                                      conversationType: widget.conversationType)
+                                  : TextField(
+                                      onChanged: debounceFunc,
+                                      maxLines: 4,
+                                      minLines: 1,
+                                      controller: textEditingController,
+                                      focusNode: focusNode,
+                                      onTap: () {
+                                        goDownBottom();
+                                        setState(() {
+                                          showKeyboard = true;
+                                          showEmojiPanel = false;
+                                          showMore = false;
+                                        });
+                                      },
+                                      keyboardType: TextInputType.text,
+                                      textInputAction: TextInputAction.send,
+                                      onEditingComplete: onSubmitted,
+                                      textAlignVertical:
+                                          TextAlignVertical.center,
+                                      decoration: InputDecoration(
+                                          border: InputBorder.none,
+                                          hintStyle: const TextStyle(
+                                            // fontSize: 10,
+                                            color: Color(0xffAEA4A3),
+                                          ),
+                                          fillColor: Colors.white,
+                                          filled: true,
+                                          isDense: true,
+                                          hintText: widget.hintText ?? ''),
+                                    ),
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            if (widget.showSendEmoji)
+                              InkWell(
+                                onTap: () {
+                                  _openEmojiPanel();
+                                  goDownBottom();
+                                },
+                                child: SvgPicture.asset(
+                                  showEmojiPanel
+                                      ? 'images/keyboard.svg'
+                                      : 'images/face.svg',
+                                  package: 'tim_ui_kit',
+                                  color: const Color.fromRGBO(68, 68, 68, 1),
+                                  height: 28,
+                                  width: 28,
+                                ),
+                              ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            if (widget.showMorePannel)
+                              InkWell(
+                                onTap: () {
+                                  _openMore();
+                                  goDownBottom();
+                                },
+                                child: SvgPicture.asset(
+                                  'images/add.svg',
+                                  package: 'tim_ui_kit',
+                                  color: const Color.fromRGBO(68, 68, 68, 1),
+                                  height: 28,
+                                  width: 28,
+                                ),
+                              )
+                          ],
                         ),
-                      const SizedBox(
-                        width: 10,
                       ),
-                      if (chatConfig.isAllowShowMorePanel)
-                        InkWell(
-                          onTap: () {
-                            _openMore();
-                            goDownBottom();
-                          },
-                          child: SvgPicture.asset(
-                            'images/add.svg',
-                            package: 'tim_ui_kit',
-                            color: const Color.fromRGBO(68, 68, 68, 1),
-                            height: 28,
-                            width: 28,
-                          ),
-                        )
+                      AnimatedContainer(
+                        duration: const Duration(milliseconds: 150),
+                        height: _getBottomHeight(),
+                        child: _getBottomContainer(),
+                      )
                     ],
                   ),
                 ),
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 150),
-                  height: _getBottomHeight(),
-                  child: _getBottomContainer(),
-                )
-              ],
-            ),
-          ),
-        )
-      ],
-    );
+              )
+            ],
+          );
+        }),
+        selector: (c, model) => model.repliedMessage);
   }
 }

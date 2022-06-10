@@ -26,6 +26,12 @@ export 'package:tim_ui_kit/ui/views/TIMUIKitAddGroup/tim_uikit_add_group.dart';
 export 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitTextField/tim_uikit_more_panel.dart';
 export 'package:tim_ui_kit/ui/views/TIMUIKitSearch/tim_uikit_search.dart';
 export 'package:tim_ui_kit/ui/views/TIMUIKitSearch/tim_uikit_search_msg_detail.dart';
+export 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitTextField/tim_uikit_text_field_controller.dart';
+export 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitAppBar/tim_uikit_appbar.dart';
+export 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKItMessageList/tim_uikit_chat_history_message_list.dart';
+export 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKItMessageList/tim_uikit_chat_history_message_list_item.dart';
+export 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitTextField/tim_uikit_text_field.dart';
+export 'package:tim_ui_kit/ui/views/TIMUIKitGroup/tim_uikit_group_application_list.dart';
 
 // Enum
 export 'package:tencent_im_sdk_plugin/enum/log_level_enum.dart';
@@ -46,6 +52,7 @@ export 'package:tencent_im_sdk_plugin/models/v2_tim_user_full_info.dart';
 export 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_full_info.dart';
 export 'package:tim_ui_kit/i18n/i18n_utils.dart';
 export 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
+export 'package:tim_ui_kit/ui/theme/tim_uikit_message_theme.dart';
 export 'package:tencent_im_sdk_plugin/enum/offlinePushInfo.dart';
 
 // Controller

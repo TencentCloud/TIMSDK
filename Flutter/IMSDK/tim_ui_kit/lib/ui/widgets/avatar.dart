@@ -10,12 +10,14 @@ class Avatar extends StatelessWidget {
   final String showName;
   final bool isFromLocal;
   final CoreServicesImpl coreService = serviceLocator<CoreServicesImpl>();
+  final BorderRadius? borderRadius;
 
   Avatar(
       {Key? key,
       required this.faceUrl,
       required this.showName,
-      this.isFromLocal = false})
+      this.isFromLocal = false,
+      this.borderRadius})
       : super(key: key);
 
   Widget _getFaceUrlImageWidget(BuildContext context) {
@@ -52,7 +54,7 @@ class Avatar extends StatelessWidget {
         value: serviceLocator<TUIThemeViewModel>(),
         child: Consumer<TUIThemeViewModel>(
             builder: (context, tuiTheme, child) => ClipRRect(
-                  borderRadius: BorderRadius.circular(4.8),
+                  borderRadius: borderRadius ?? BorderRadius.circular(4.8),
                   child: _getFaceUrlImageWidget(context),
                 )));
   }

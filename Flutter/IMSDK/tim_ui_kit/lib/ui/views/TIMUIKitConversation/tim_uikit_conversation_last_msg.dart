@@ -65,9 +65,9 @@ class TIMUIKitLastMsg extends StatelessWidget {
       final option2 = callingLastMsgShow;
       callingLastMsgShow = isVoiceCall
           ? ttBuild.imt_para("[语音通话]：{{option1}}", "[语音通话]：$option1")(
-              option1: callingLastMsgShow)
+              option1: option1)
           : ttBuild.imt_para("[视频通话]：{{option2}}", "[视频通话]：$option2")(
-              option2: callingLastMsgShow);
+              option2: option2);
     }
     return callingLastMsgShow;
   }
@@ -118,18 +118,16 @@ class TIMUIKitLastMsg extends StatelessWidget {
   }
 
   String _getAtMessage() {
-    String option2 = "";
+    String msg = "";
     final I18nUtils ttBuild = I18nUtils(context);
     for (var item in groupAtInfoList) {
       if (item!.atType == 1) {
-        option2 = ttBuild.imt_para("{{option2}}[有人@我]", "$option2[有人@我]")(
-            option2: option2);
+        msg = ttBuild.imt("[有人@我] ");
       } else {
-        option2 = ttBuild.imt_para("{{option2}}[@所有人]", "$option2[@所有人]")(
-            option2: option2);
+        msg = ttBuild.imt("[@所有人] ");
       }
     }
-    return option2;
+    return msg;
   }
 
   @override
@@ -147,7 +145,7 @@ class TIMUIKitLastMsg extends StatelessWidget {
               ),
             if (groupAtInfoList.isNotEmpty)
               Text(_getAtMessage(),
-                  style: TextStyle(color: theme.cautionColor)),
+                  style: TextStyle(color: theme.cautionColor, fontSize: 14)),
             Expanded(
                 child: Text(
               _getMsgElem(),

@@ -71,7 +71,7 @@ class TIMUIKitSearchInputState extends State<TIMUIKitSearchInput> {
                 widget.onChange(value);
               },
               keyboardType: TextInputType.text,
-              textInputAction: TextInputAction.send,
+              textInputAction: TextInputAction.search,
               maxLines: 4,
               minLines: 1,
               focusNode: focusNode,

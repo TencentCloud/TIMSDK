@@ -1,20 +1,29 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:tim_ui_kit/ui/utils/shared_theme.dart';
+import 'package:provider/provider.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 
 class TIMUIKitTextElem extends StatefulWidget {
   final String text;
   final bool isFromSelf;
   final bool isShowJump;
   final VoidCallback clearJump;
+  final TextStyle? fontStyle;
+  final BorderRadius? borderRadius;
+  final Color? backgroundColor;
+  final EdgeInsetsGeometry? textPadding;
 
   const TIMUIKitTextElem(
       {Key? key,
       required this.text,
       required this.isFromSelf,
       required this.isShowJump,
-      required this.clearJump})
+      required this.clearJump,
+      this.fontStyle,
+      this.borderRadius,
+      this.backgroundColor,
+      this.textPadding})
       : super(key: key);
 
   @override
@@ -52,7 +61,7 @@ class _TIMUIKitTextElemState extends State<TIMUIKitTextElem> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = SharedThemeWidget.of(context)?.theme;
+    final theme = Provider.of<TUIThemeViewModel>(context).theme;
     final borderRadius = widget.isFromSelf
         ? const BorderRadius.only(
             topLeft: Radius.circular(10),
@@ -67,22 +76,23 @@ class _TIMUIKitTextElemState extends State<TIMUIKitTextElem> {
     if (widget.isShowJump) {
       _showJumpColor();
     }
+    final defaultStyle = widget.isFromSelf
+        ? theme.lightPrimaryMaterialColor.shade50
+        : theme.weakBackgroundColor;
     final backgroundColor = isShowJumpState
         ? const Color.fromRGBO(245, 166, 35, 1)
-        : widget.isFromSelf
-            ? theme?.lightPrimaryMaterialColor.shade50
-            : theme?.weakBackgroundColor;
+        : (widget.backgroundColor ?? defaultStyle);
     return Container(
-      padding: const EdgeInsets.all(10),
+      padding: widget.textPadding ?? const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: backgroundColor,
-        borderRadius: borderRadius,
+        borderRadius: widget.borderRadius ?? borderRadius,
       ),
       constraints: const BoxConstraints(maxWidth: 240),
       child: Text(
         widget.text,
         softWrap: true,
-        style: const TextStyle(fontSize: 16),
+        style: widget.fontStyle ?? const TextStyle(fontSize: 16),
       ),
     );
   }

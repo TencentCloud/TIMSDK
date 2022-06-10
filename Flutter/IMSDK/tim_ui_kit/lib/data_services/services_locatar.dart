@@ -15,8 +15,8 @@ import 'package:tim_ui_kit/data_services/group/group_services_implement.dart';
 import 'package:tim_ui_kit/data_services/message/message_service_implement.dart';
 import 'package:tim_ui_kit/data_services/message/message_services.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_search_view_model.dart';
-
-import '../business_logic/view_models/tui_self_info_view_model.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_group_profile_view_model.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_self_info_view_model.dart';
 
 final serviceLocator = GetIt.instance;
 bool boolIsInitailized = false;
@@ -46,6 +46,8 @@ void setupServiceLocator() {
         .registerSingleton<TUINewContactViewModel>(TUINewContactViewModel());
     serviceLocator.registerSingleton<TUIThemeViewModel>(TUIThemeViewModel());
     serviceLocator.registerSingleton<TUISearchViewModel>(TUISearchViewModel());
+    serviceLocator.registerSingleton<TUIGroupProfileViewModel>(
+        TUIGroupProfileViewModel());
     boolIsInitailized = true;
   }
 }

@@ -124,8 +124,9 @@ class _TIMUIKitGroupProfileState extends State<TIMUIKitGroupProfile> {
 
   @override
   void dispose() {
+    _model.clearData();
     _model.dispose();
-    _model.removeGroupListener();
+    // _model.removeGroupListener();
     super.dispose();
   }
 

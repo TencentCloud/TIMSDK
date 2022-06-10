@@ -1,9 +1,11 @@
-// ignore_for_file: unrelated_type_equality_checks, unused_local_variable
+// ignore_for_file: unrelated_type_equality_checks, unused_local_variable, unused_import
 
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_custom_elem.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/group/group_services.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
@@ -258,7 +260,8 @@ class _TIMUIKitGroupTrtcTipsElemState extends State<TIMUIKitGroupTrtcTipsElem> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = SharedThemeWidget.of(context)?.theme;
+    // final theme = SharedThemeWidget.of(context)?.theme;
+    final theme = Provider.of<TUIThemeViewModel>(context).theme;
 
     return MessageUtils.wrapMessageTips(_callElemBuilder(context), theme);
   }

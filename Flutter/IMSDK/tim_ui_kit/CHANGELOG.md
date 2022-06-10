@@ -65,3 +65,11 @@
 * Optimize the local preview of multimedia files
 * Fix some bugs
 
+## 0.1.0
+* Atomization of uikit components
+* uikit processes the onMessageModiy callback and updates the view when the message is edited
+* Added group application function
+* Enhanced internationalization capabilities, supporting the ability of traditional Chinese to customize the language
+* Added updateMessage interface, users can refresh the view after modifying the local message
+* Session list supports custom lastMessage
+* Fix some bugs

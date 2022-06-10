@@ -32,7 +32,7 @@ class TIMUIKitProfile extends StatefulWidget {
   /// Profile Controller
   final TIMUIKitProfileController? controller;
 
-  /// if allow jumo to personal profiler page
+  /// if allow jump to personal profiler page
   final bool canJumpToPersonalProfile;
 
   /// the callback when clicking self avatar

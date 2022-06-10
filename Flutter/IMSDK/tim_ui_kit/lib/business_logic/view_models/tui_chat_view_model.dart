@@ -6,14 +6,11 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tencent_im_sdk_plugin/enum/V2TimAdvancedMsgListener.dart';
-import 'package:tencent_im_sdk_plugin/enum/group_change_info_type.dart';
-import 'package:tencent_im_sdk_plugin/enum/V2TimFriendshipListener.dart';
-import 'package:tencent_im_sdk_plugin/enum/V2TimGroupListener.dart';
 import 'package:tencent_im_sdk_plugin/enum/history_msg_get_type_enum.dart';
 import 'package:tencent_im_sdk_plugin/enum/message_status.dart';
 import 'package:tencent_im_sdk_plugin/enum/offlinePushInfo.dart';
+import 'package:tencent_im_sdk_plugin/models/v2_tim_group_application.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message_receipt.dart';
-import 'package:tim_ui_kit/data_services/friendShip/friendship_services.dart';
 import 'package:tim_ui_kit/data_services/group/group_services.dart';
 import 'package:tim_ui_kit/data_services/message/message_services.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
@@ -30,8 +27,6 @@ class TUIChatViewModel extends ChangeNotifier {
   final MessageService _messageService = serviceLocator<MessageService>();
   final CoreServicesImpl _coreServices = serviceLocator<CoreServicesImpl>();
   final GroupServices _groupServices = serviceLocator<GroupServices>();
-  final FriendshipServices _friendshipServices =
-      serviceLocator<FriendshipServices>();
   final Map<String, List<V2TimMessage>?> _messageListMap = {};
   final Map<String, V2TimMessageReceipt> _messageReadReceiptMap = {};
   final Map<String, int> _messageListProgressMap = {};
@@ -50,13 +45,13 @@ class TUIChatViewModel extends ChangeNotifier {
   String localKeyPrefix = "TUIKit_conversation_stored_";
   String localMsgIDListKey = "TUIKit_conversation_list";
   String _jumpMsgID = "";
-  String _conversationShowName = "";
   V2TimAdvancedMsgListener? adVancesMsgListener;
   HistoryMessagePosition _listPosition = HistoryMessagePosition.bottom;
   int _unreadCountForConversation = 0;
   List<V2TimMessage>? _tempMessageList = [];
   TIMUIKitChatConfig chatConfig = const TIMUIKitChatConfig();
   ValueChanged<String>? _setInputField;
+  List<V2TimGroupApplication>? _groupApplicationList;
 
   TUIChatViewModel() {
     removeAdvanceListener();
@@ -94,16 +89,16 @@ class TUIChatViewModel extends ChangeNotifier {
     return _currentSelectedMsgId;
   }
 
+  int? get currentSelectedConvType {
+    return _currentSelectedConvType;
+  }
+
   String get editRevokedMsg {
     return _editRevokedMsg;
   }
 
   String get currentSelectedConv {
     return _currentSelectedConv;
-  }
-
-  String get conversationName {
-    return _conversationShowName;
   }
 
   V2TimMessage? get repliedMessage {
@@ -115,6 +110,13 @@ class TUIChatViewModel extends ChangeNotifier {
   int get unreadCountForConversation => _unreadCountForConversation;
 
   ValueChanged<String>? get setInputField => _setInputField;
+
+  List<V2TimGroupApplication> get groupApplicationList =>
+      _groupApplicationList ?? [];
+
+  set groupApplicationList(List<V2TimGroupApplication> value) {
+    _groupApplicationList = value;
+  }
 
   set setInputField(ValueChanged<String>? value) {
     _setInputField = value;
@@ -218,24 +220,60 @@ class TUIChatViewModel extends ChangeNotifier {
     // return list;
   }
 
-  void initForEachConversation(ValueChanged<String> onChangeInputField) {
+  void initForEachConversation(ValueChanged<String> onChangeInputField) async {
     _jumpMsgID = "";
     listPosition = HistoryMessagePosition.bottom;
     _tempMessageList = [];
     unreadCountForConversation = 0;
     setInputField = onChangeInputField;
+    if (_groupApplicationList == null) {
+      refreshGroupApplicationList();
+    }
   }
 
-  Future<void> loadData(
-      {HistoryMsgGetTypeEnum getType =
-          HistoryMsgGetTypeEnum.V2TIM_GET_CLOUD_OLDER_MSG,
-      String? userID,
-      String? groupID,
-      int lastMsgSeq = -1,
-      required int count,
-      String? lastMsgID,
-      String? conversationShowName}) async {
-    _conversationShowName = conversationShowName ?? "";
+  void refreshGroupApplicationList() async {
+    final res = await _groupServices.getGroupApplicationList();
+    _groupApplicationList = res.data?.groupApplicationList?.map((item) {
+          final V2TimGroupApplication applicationItem = item!;
+          return applicationItem;
+        }).toList() ??
+        [];
+    notifyListeners();
+  }
+
+  void loadDataFromController(
+      {String? receiverID, String? groupID, ConvType? convType}) {
+    if (convType != null) {
+      final convID = convType == ConvType.c2c ? receiverID : groupID;
+      if (convID != null && convID.isNotEmpty) {
+        loadData(
+          count: HistoryMessageDartConstant.getCount, //20
+          userID: convType == ConvType.c2c ? convID : null,
+          groupID: convType == ConvType.group ? convID : null,
+        );
+      } else {
+        print("ID is empty");
+        return;
+      }
+    } else {
+      loadData(
+        count: HistoryMessageDartConstant.getCount, //20
+        userID: _currentSelectedConvType == 1 ? _currentSelectedConv : null,
+        groupID: _currentSelectedConvType == 2 ? _currentSelectedConv : null,
+      );
+    }
+  }
+
+  Future<bool> loadData({
+    HistoryMsgGetTypeEnum getType =
+        HistoryMsgGetTypeEnum.V2TIM_GET_CLOUD_OLDER_MSG,
+    String? userID,
+    String? groupID,
+    int lastMsgSeq = -1,
+    required int count,
+    String? lastMsgID,
+  }) async {
+    _currentSelectedConvType = userID != null ? 1 : 2;
     _haveMoreData = true;
     final convID = userID ?? groupID;
     final currentHistoryMsgList = _messageListMap[convID];
@@ -277,7 +315,7 @@ class TUIChatViewModel extends ChangeNotifier {
         groupID != null) {
       _getGroupInfo(groupID);
     }
-    return;
+    return _haveMoreData;
   }
 
   _getGroupInfo(String groupID) async {
@@ -469,37 +507,37 @@ class TUIChatViewModel extends ChangeNotifier {
 
   void initAdvanceListener({V2TimAdvancedMsgListener? listener}) async {
     adVancesMsgListener = V2TimAdvancedMsgListener(
-      onRecvC2CReadReceipt: (List<V2TimMessageReceipt> receiptList) {
-        _onRecvC2CReadReceipt(receiptList);
-        if (listener != null) {
-          listener.onRecvC2CReadReceipt(receiptList);
-        }
-      },
-      onRecvMessageRevoked: (String msgID) {
-        _onMessageRevoked(msgID);
-        if (listener != null) {
-          listener.onRecvMessageRevoked(msgID);
-        }
-      },
-      onRecvNewMessage: (V2TimMessage newMsg) {
-        _onReceiveNewMsg(newMsg);
-        if (listener != null) {
-          listener.onRecvNewMessage(newMsg);
-        }
-      },
-      onSendMessageProgress: (V2TimMessage messagae, int progress) {
-        _onSendMessageProgress(messagae, progress);
-        if (listener != null) {
-          listener.onSendMessageProgress(messagae, progress);
-        }
-      },
-      onRecvMessageReadReceipts: (List<V2TimMessageReceipt> receiptList) {
-        _onRecvMessageReadReceipts(receiptList);
-        if (listener != null) {
-          listener.onRecvC2CReadReceipt(receiptList);
-        }
-      },
-    );
+        onRecvC2CReadReceipt: (List<V2TimMessageReceipt> receiptList) {
+      _onRecvC2CReadReceipt(receiptList);
+      if (listener != null) {
+        listener.onRecvC2CReadReceipt(receiptList);
+      }
+    }, onRecvMessageRevoked: (String msgID) {
+      _onMessageRevoked(msgID);
+      if (listener != null) {
+        listener.onRecvMessageRevoked(msgID);
+      }
+    }, onRecvNewMessage: (V2TimMessage newMsg) {
+      _onReceiveNewMsg(newMsg);
+      if (listener != null) {
+        listener.onRecvNewMessage(newMsg);
+      }
+    }, onSendMessageProgress: (V2TimMessage messagae, int progress) {
+      _onSendMessageProgress(messagae, progress);
+      if (listener != null) {
+        listener.onSendMessageProgress(messagae, progress);
+      }
+    }, onRecvMessageReadReceipts: (List<V2TimMessageReceipt> receiptList) {
+      _onRecvMessageReadReceipts(receiptList);
+      if (listener != null) {
+        listener.onRecvC2CReadReceipt(receiptList);
+      }
+    }, onRecvMessageModified: (V2TimMessage newMsg) {
+      _onMessageModified(newMsg);
+      if (listener != null) {
+        listener.onRecvMessageModified(newMsg);
+      }
+    });
 
     await _messageService.addAdvancedMsgListener(
         listener: adVancesMsgListener!);
@@ -585,58 +623,6 @@ class TUIChatViewModel extends ChangeNotifier {
       "ignoreIOSBadge": false,
       "androidOPPOChannelID": chatConfig.notificationOPPOChannelID,
     });
-  }
-
-  V2TimGroupListener? _groupListener;
-
-  addGroupListener() {
-    _groupListener = V2TimGroupListener(
-      onGroupInfoChanged: (groupID, changeInfos) {
-        if (groupID == _currentSelectedConv) {
-          final groupNameChangeInfo = changeInfos.firstWhere((element) =>
-              element.type ==
-              GroupChangeInfoType.V2TIM_GROUP_INFO_CHANGE_TYPE_NAME);
-          if (groupNameChangeInfo.value != null) {
-            _conversationShowName = groupNameChangeInfo.value!;
-            notifyListeners();
-          }
-        }
-      },
-    );
-    if (_groupListener != null) {
-      _groupServices.addGroupListener(listener: _groupListener!);
-    }
-  }
-
-  removeGroupListener() {
-    _groupServices.removeGroupListener(listener: _groupListener);
-    _currentSelectedConv = "";
-    _setInputField = null;
-  }
-
-  V2TimFriendshipListener? _friendshipListener;
-
-  addFriendInfoChangeListener() {
-    _friendshipListener = V2TimFriendshipListener(
-      onFriendInfoChanged: (infoList) {
-        final changedInfo = infoList.firstWhere(
-          (element) => element.userID == _currentSelectedConv,
-        );
-        if (changedInfo.friendRemark != null) {
-          _conversationShowName = changedInfo.friendRemark!;
-        }
-        notifyListeners();
-      },
-    );
-    if (_friendshipListener != null) {
-      _friendshipServices.setFriendshipListener(listener: _friendshipListener!);
-    }
-  }
-
-  removeFriendChangeListener() {
-    _friendshipServices.removeFriendListener(listener: _friendshipListener);
-    _currentSelectedConv = "";
-    _setInputField = null;
   }
 
   Future<V2TimValueCallback<V2TimMessage>?> reSendMessage(
@@ -1103,6 +1089,86 @@ class TUIChatViewModel extends ChangeNotifier {
     return null;
   }
 
+  _onMessageModified(V2TimMessage newMsg, [String? convID]) {
+    final activeMessageList = _messageListMap[convID ?? _currentSelectedConv];
+    final msgID = newMsg.msgID;
+    _messageListMap[_currentSelectedConv] = activeMessageList!.map((item) {
+      if (item.msgID == msgID) {
+        return newMsg;
+      }
+      return item;
+    }).toList();
+    notifyListeners();
+    storeMsgToLocal(activeMessageList, _currentSelectedConv);
+  }
+
+  Future<void> updateMessageFromController(
+      {required String msgID,
+      String? receiverID,
+      String? groupID,
+      ConvType? convType}) async {
+    String convID;
+    if (convType == null) {
+      convID = _currentSelectedConv;
+    } else {
+      convID = (convType == ConvType.c2c ? receiverID : groupID) ??
+          _currentSelectedConv;
+    }
+    final currentHistoryMsgList = _messageListMap[convID];
+
+    V2TimMessage? newMessage = await _getExistingMessageByID(
+        msgID: msgID, convID: convID, convType: convType);
+    if (newMessage != null) {
+      _onMessageModified(newMessage, convID);
+    } else {
+      loadData(
+        count: HistoryMessageDartConstant.getCount, //20
+        userID: convType == ConvType.c2c ? convID : null,
+        groupID: convType == ConvType.group ? convID : null,
+      );
+    }
+  }
+
+  Future<V2TimMessage?> _getExistingMessageByID(
+      {required String msgID,
+      required String convID,
+      ConvType? convType}) async {
+    final currentHistoryMsgList = _messageListMap[convID];
+    final int? targetIndex = currentHistoryMsgList?.indexWhere((item) {
+      return item.msgID == msgID;
+    });
+
+    if (targetIndex != null &&
+        targetIndex != -1 &&
+        currentHistoryMsgList != null &&
+        currentHistoryMsgList.isNotEmpty) {
+      List<V2TimMessage> response;
+      if (currentHistoryMsgList.length > targetIndex + 2) {
+        response = await _messageService.getHistoryMessageList(
+            count: 1,
+            getType: HistoryMsgGetTypeEnum.V2TIM_GET_LOCAL_NEWER_MSG,
+            userID: convType == ConvType.c2c ? convID : null,
+            groupID: convType == ConvType.group ? convID : null,
+            lastMsgID: currentHistoryMsgList[targetIndex + 1].msgID);
+      } else {
+        response = await _messageService.getHistoryMessageList(
+          count: 2,
+          getType: HistoryMsgGetTypeEnum.V2TIM_GET_LOCAL_OLDER_MSG,
+          userID: convType == ConvType.c2c ? convID : null,
+          groupID: convType == ConvType.group ? convID : null,
+          lastMsgID:
+              currentHistoryMsgList[currentHistoryMsgList.length - 3].msgID,
+        );
+      }
+
+      return response.firstWhere((item) {
+        return item.msgID == msgID;
+      });
+    } else {
+      return null;
+    }
+  }
+
   _updateMessage(V2TimValueCallback<V2TimMessage> sendMsgRes, String convID,
       String id, ConvType convType) {
     final currentHistoryMsgList = _messageListMap[convID];
@@ -1303,6 +1369,10 @@ class TUIChatViewModel extends ChangeNotifier {
   clear() {
     _messageListMap.clear();
     _totalUnreadCount = 0;
+    resetData();
+  }
+
+  resetData() {
     _isMultiSelect = false;
     _currentSelectedConv = "";
     _editRevokedMsg = "";
@@ -1310,5 +1380,6 @@ class TUIChatViewModel extends ChangeNotifier {
     _haveMoreData = true;
     _multiSelectedMessageList.clear();
     _groupType = null;
+    _setInputField = null;
   }
 }

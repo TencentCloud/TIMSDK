@@ -26,12 +26,16 @@ class TIMUIKitHistoryMessageListTongue extends StatelessWidget {
   /// the builder for tongue item
   final TongueItemBuilder? tongueItemBuilder;
 
+  /// total amount of messages at me
+  final String atNum;
+
   const TIMUIKitHistoryMessageListTongue({
     Key? key,
     required this.valueType,
     required this.onClick,
     required this.unreadCount,
     this.tongueItemBuilder,
+    this.atNum = "",
   }) : super(key: key);
 
   @override
@@ -44,6 +48,7 @@ class TIMUIKitHistoryMessageListTongue extends StatelessWidget {
         onClick: onClick,
         unreadCount: unreadCount,
         valueType: valueType,
+        atNum: atNum,
       );
     }
     return valueType != MessageListTongueType.none ? tongueItem : Container();

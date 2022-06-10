@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_merger_elem.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/i18n/i18n_utils.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/widgets/merger_message_screen.dart';
-
-import 'package:tim_ui_kit/ui/utils/shared_theme.dart';
 
 class TIMUIKitMergerElem extends StatelessWidget {
   final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
@@ -45,7 +45,9 @@ class TIMUIKitMergerElem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = SharedThemeWidget.of(context)?.theme;
+    // final theme = SharedThemeWidget.of(context)?.theme;
+    final theme = Provider.of<TUIThemeViewModel>(context).theme;
+
     final I18nUtils ttBuild = I18nUtils(context);
     return Container(
       decoration: BoxDecoration(
@@ -57,7 +59,7 @@ class TIMUIKitMergerElem extends StatelessWidget {
           bottomRight: const Radius.circular(10),
         ),
         border: Border.all(
-          color: theme?.weakDividerColor ?? CommonColor.weakDividerColor,
+          color: theme.weakDividerColor ?? CommonColor.weakDividerColor,
           width: 1,
         ),
       ),
@@ -105,7 +107,7 @@ class TIMUIKitMergerElem extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
                               style: TextStyle(
-                                color: theme?.weakTextColor,
+                                color: theme.weakTextColor,
                                 fontSize: 12,
                               ),
                             ),
@@ -125,7 +127,7 @@ class TIMUIKitMergerElem extends StatelessWidget {
                   Text(
                     ttBuild.imt("聊天记录"),
                     style: TextStyle(
-                      color: theme?.weakTextColor,
+                      color: theme.weakTextColor,
                       fontSize: 10,
                     ),
                   ),
