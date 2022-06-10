@@ -1,8 +1,11 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/i18n/i18n_utils.dart';
 import 'package:tim_ui_kit/ui/constants/emoji.dart';
 import 'package:tim_ui_kit/ui/widgets/emoji.dart';
-import 'package:tim_ui_kit/ui/utils/shared_theme.dart';
 
 class EmojiPanel extends StatelessWidget {
   final void Function(int unicode) onTapEmoji;
@@ -21,13 +24,14 @@ class EmojiPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final I18nUtils ttBuild = I18nUtils(context);
-    final theme = SharedThemeWidget.of(context)?.theme;
+    final theme = Provider.of<TUIThemeViewModel>(context).theme;
+
     return SingleChildScrollView(
         child: Column(
       children: [
         Container(
           height: showBottomContainer ? 190 : 248,
-          color: theme?.weakBackgroundColor,
+          // color: theme.weakBackgroundColor,
           padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
           child: Stack(
             children: [
@@ -35,8 +39,6 @@ class EmojiPanel extends StatelessWidget {
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 8,
                   childAspectRatio: 1,
-                  // mainAxisSpacing: 23,
-                  // crossAxisSpacing: 12,
                 ),
                 children: [
                   ...emojiData.map(
@@ -53,12 +55,6 @@ class EmojiPanel extends StatelessWidget {
                       );
                     },
                   ).toList(),
-                  ...List.generate(
-                      10,
-                      (index) => const EmojiItem(
-                            name: "Empty emoji",
-                            unicode: 0,
-                          ))
                 ],
               ),
               Align(
@@ -69,7 +65,7 @@ class EmojiPanel extends StatelessWidget {
                       delete();
                     },
                     child: Container(
-                        color: theme?.weakBackgroundColor,
+                        // color: theme.weakBackgroundColor,
                         margin: const EdgeInsets.only(right: 15),
                         width: 35,
                         // height: MediaQuery.of(context).padding.bottom,

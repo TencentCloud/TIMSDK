@@ -132,7 +132,7 @@ class _VideoScreenState extends State<VideoScreen> {
                 widget.message.videoElem!.localVideoUrl!,
               ));
     await player.initialize();
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
       // 图片目前按照缩略图尺寸走的，并未走UI图，UI图比例过大图片很糊
       double w = getVideoWidth();
       double h = getVideoHeight();

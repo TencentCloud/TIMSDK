@@ -1,11 +1,15 @@
+// ignore_for_file: unused_import
+
 import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:tencent_im_sdk_plugin/enum/message_elem_type.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/i18n/i18n_utils.dart';
 import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
@@ -33,12 +37,21 @@ class TIMUIKitReplyElem extends StatefulWidget {
   final Function scrollToIndex;
   final bool isShowJump;
   final VoidCallback clearJump;
+  final TextStyle? fontStyle;
+  final BorderRadius? borderRadius;
+  final Color? backgroundColor;
+  final EdgeInsetsGeometry? textPadding;
+
   const TIMUIKitReplyElem({
     Key? key,
     required this.message,
     required this.scrollToIndex,
     this.isShowJump = false,
     required this.clearJump,
+    this.fontStyle,
+    this.borderRadius,
+    this.backgroundColor,
+    this.textPadding,
   }) : super(key: key);
 
   @override
@@ -184,11 +197,14 @@ class _TIMUIKitReplyElemState extends State<TIMUIKitReplyElem> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = SharedThemeWidget.of(context)?.theme;
-    backgroundColorNormal = (widget.message.isSelf ?? false)
-        ? theme?.lightPrimaryMaterialColor.shade50 ??
-            const Color.fromRGBO(220, 234, 253, 1)
-        : theme?.weakBackgroundColor ?? const Color.fromRGBO(236, 236, 236, 1);
+    // final theme = SharedThemeWidget.of(context)?.theme;
+    final theme = Provider.of<TUIThemeViewModel>(context).theme;
+    final isSelf = widget.message.isSelf ?? false;
+    backgroundColorNormal = widget.backgroundColor ??
+        (isSelf
+            ? theme.lightPrimaryMaterialColor.shade50
+            : theme.weakBackgroundColor ??
+                const Color.fromRGBO(236, 236, 236, 1));
     backgroundColor = backgroundColorNormal;
     if (reqpliedMessage == null) {
       return Container();
@@ -210,10 +226,10 @@ class _TIMUIKitReplyElemState extends State<TIMUIKitReplyElem> {
       _showJumpColor();
     }
     return Container(
-      padding: const EdgeInsets.all(10),
+      padding: widget.textPadding ?? const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: backgroundColor,
-        borderRadius: borderRadius,
+        borderRadius: widget.borderRadius ?? borderRadius,
       ),
       constraints: const BoxConstraints(maxWidth: 240),
       child: GestureDetector(
@@ -237,7 +253,7 @@ class _TIMUIKitReplyElemState extends State<TIMUIKitReplyElem> {
                     "${reqpliedMessage!.messageSender}:",
                     style: TextStyle(
                         fontSize: 12,
-                        color: theme?.weakTextColor,
+                        color: theme.weakTextColor,
                         fontWeight: FontWeight.w500),
                   ),
                   const SizedBox(
@@ -253,9 +269,10 @@ class _TIMUIKitReplyElemState extends State<TIMUIKitReplyElem> {
             Text(
               widget.message.textElem?.text ?? "",
               softWrap: true,
-              style: const TextStyle(
-                fontSize: 16,
-              ),
+              style: widget.fontStyle ??
+                  const TextStyle(
+                    fontSize: 16,
+                  ),
             )
           ],
         ),

@@ -1,19 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/i18n/i18n_utils.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
-import 'package:tim_ui_kit/ui/utils/shared_theme.dart';
 import 'package:tim_ui_kit/ui/widgets/forward_message_screen.dart';
 
 class MultiSelectPanel extends StatelessWidget {
-  MultiSelectPanel(
-      {Key? key,
-      required this.conversationShowName,
-      required this.conversationType})
+  MultiSelectPanel({Key? key, required this.conversationType})
       : super(key: key);
-  final String conversationShowName;
   final int conversationType;
   final TUIChatViewModel _model = serviceLocator<TUIChatViewModel>();
 
@@ -23,20 +20,20 @@ class MultiSelectPanel extends StatelessWidget {
         MaterialPageRoute(
             builder: (context) => ForwardMessageScreen(
                   isMergerForward: isMergerForward,
-                  conversationShowName: conversationShowName,
                   conversationType: conversationType,
                 )));
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = SharedThemeWidget.of(context)?.theme;
+    // final theme = SharedThemeWidget.of(context)?.theme;
+    final theme = Provider.of<TUIThemeViewModel>(context).theme;
     final I18nUtils ttBuild = I18nUtils(context);
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(colors: [
-          theme?.lightPrimaryColor ?? CommonColor.lightPrimaryColor,
-          theme?.primaryColor ?? CommonColor.primaryColor
+          theme.lightPrimaryColor ?? CommonColor.lightPrimaryColor,
+          theme.primaryColor ?? CommonColor.primaryColor
         ]),
       ),
       padding: const EdgeInsets.only(top: 12, bottom: 48),
@@ -107,7 +104,7 @@ class MultiSelectPanel extends StatelessWidget {
                             },
                             child: Text(
                               ttBuild.imt("删除"),
-                              style: TextStyle(color: theme?.cautionColor),
+                              style: TextStyle(color: theme.cautionColor),
                             ),
                             isDefaultAction: false,
                           )

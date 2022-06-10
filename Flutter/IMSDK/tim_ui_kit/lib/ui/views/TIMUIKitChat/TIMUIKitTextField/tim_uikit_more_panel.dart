@@ -1,4 +1,4 @@
-// ignore_for_file: unused_field, avoid_print, unused_local_variable
+// ignore_for_file: unused_field, avoid_print, unused_local_variable, unused_import
 
 import 'dart:io';
 
@@ -8,8 +8,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_self_info_view_model.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/utils/message.dart';
@@ -313,12 +315,13 @@ class _MorePanelState extends State<MorePanel> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = SharedThemeWidget.of(context)?.theme;
+    // final theme = SharedThemeWidget.of(context)?.theme;
+    final theme = Provider.of<TUIThemeViewModel>(context).theme;
     final screenWidth = MediaQuery.of(context).size.width;
     return Container(
       height: 248,
       decoration: BoxDecoration(
-        color: hexToColor("EBF0F6"),
+        // color: hexToColor("EBF0F6"),
         border: Border(
           top: BorderSide(width: 1, color: Colors.grey.shade300),
         ),
@@ -354,7 +357,7 @@ class _MorePanelState extends State<MorePanel> {
                             Text(
                               item.title,
                               style: TextStyle(
-                                  fontSize: 12, color: theme?.darkTextColor),
+                                  fontSize: 12, color: theme.darkTextColor),
                             )
                           ],
                         ),

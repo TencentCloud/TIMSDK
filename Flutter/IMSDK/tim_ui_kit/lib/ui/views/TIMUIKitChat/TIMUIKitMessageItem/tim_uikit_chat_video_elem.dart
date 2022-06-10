@@ -4,8 +4,10 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import 'package:tencent_im_sdk_plugin/enum/message_status.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/i18n/i18n_utils.dart';
 
 import 'package:tim_ui_kit/ui/utils/color.dart';
@@ -13,8 +15,6 @@ import 'package:tim_ui_kit/ui/utils/message.dart';
 import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
 import 'package:tim_ui_kit/ui/widgets/video_screen.dart';
 import 'package:transparent_image/transparent_image.dart';
-
-import 'package:tim_ui_kit/ui/utils/shared_theme.dart';
 
 class TIMUIKitVideoElem extends StatefulWidget {
   final V2TimMessage message;
@@ -84,7 +84,8 @@ class _TIMUIKitVideoElemState extends State<TIMUIKitVideoElem> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = SharedThemeWidget.of(context)?.theme;
+    // final theme = SharedThemeWidget.of(context)?.theme;
+    final theme = Provider.of<TUIThemeViewModel>(context).theme;
     // Random 为了解决reply时的Hero同层Tag相同问题
     final heroTag =
         "${widget.message.msgID ?? widget.message.id ?? widget.message.timestamp ?? DateTime.now().millisecondsSinceEpoch}${widget.isFrom}";
@@ -113,7 +114,7 @@ class _TIMUIKitVideoElemState extends State<TIMUIKitVideoElem> {
               border: Border.all(
                 color: isShowBorder
                     ? const Color.fromRGBO(245, 166, 35, 1)
-                    : (theme?.weakDividerColor ?? CommonColor.weakDividerColor),
+                    : (theme.weakDividerColor ?? CommonColor.weakDividerColor),
                 width: 1,
                 style: BorderStyle.solid,
               ),

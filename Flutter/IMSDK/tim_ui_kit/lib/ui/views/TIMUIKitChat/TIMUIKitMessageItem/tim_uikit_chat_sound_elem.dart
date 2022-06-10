@@ -2,12 +2,13 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_plugin_record_plus/const/play_state.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_sound_elem.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/ui/constants/history_message_constant.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
-import 'package:tim_ui_kit/ui/utils/shared_theme.dart';
 import 'package:tim_ui_kit/ui/utils/sound_record.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
 
@@ -18,6 +19,10 @@ class TIMUIKitSoundElem extends StatefulWidget {
   final int? localCustomInt;
   final bool isShowJump;
   final VoidCallback? clearJump;
+  final TextStyle? fontStyle;
+  final BorderRadius? borderRadius;
+  final Color? backgroundColor;
+  final EdgeInsetsGeometry? textPadding;
 
   const TIMUIKitSoundElem(
       {Key? key,
@@ -26,7 +31,11 @@ class TIMUIKitSoundElem extends StatefulWidget {
       required this.isFromSelf,
       this.isShowJump = false,
       this.clearJump,
-      this.localCustomInt})
+      this.localCustomInt,
+      this.fontStyle,
+      this.borderRadius,
+      this.backgroundColor,
+      this.textPadding})
       : super(key: key);
 
   @override
@@ -139,11 +148,10 @@ class _TIMUIKitSoundElemState extends State<TIMUIKitSoundElem> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = SharedThemeWidget.of(context)?.theme;
+    final theme = Provider.of<TUIThemeViewModel>(context).theme;
     final backgroundColor = widget.isFromSelf
-        ? theme?.lightPrimaryMaterialColor.shade50 ??
-            CommonColor.lightPrimaryColor
-        : theme?.weakBackgroundColor ?? CommonColor.weakBackgroundColor;
+        ? theme.lightPrimaryMaterialColor.shade50
+        : theme.weakBackgroundColor ?? CommonColor.weakBackgroundColor;
     final borderRadius = widget.isFromSelf
         ? const BorderRadius.only(
             topLeft: Radius.circular(10),
@@ -161,12 +169,12 @@ class _TIMUIKitSoundElemState extends State<TIMUIKitSoundElem> {
     return InkWell(
       onTap: _playSound,
       child: Container(
-        padding: const EdgeInsets.all(10),
+        padding: widget.textPadding ?? const EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: isShowJumpState
               ? const Color.fromRGBO(245, 166, 35, 1)
-              : backgroundColor,
-          borderRadius: borderRadius,
+              : (widget.backgroundColor ?? backgroundColor),
+          borderRadius: widget.borderRadius ?? borderRadius,
         ),
         constraints: const BoxConstraints(maxWidth: 240),
         child: Row(
@@ -174,7 +182,10 @@ class _TIMUIKitSoundElemState extends State<TIMUIKitSoundElem> {
           children: widget.isFromSelf
               ? [
                   Container(width: _getSoundLen()),
-                  Text("''${widget.soundElem.duration} "),
+                  Text(
+                    "''${widget.soundElem.duration} ",
+                    style: widget.fontStyle,
+                  ),
                   isPlaying
                       ? Image.asset(
                           'images/play_voice_send.gif',
@@ -203,7 +214,10 @@ class _TIMUIKitSoundElemState extends State<TIMUIKitSoundElem> {
                           height: 16,
                           package: 'tim_ui_kit',
                         ),
-                  Text(" ${widget.soundElem.duration}''"),
+                  Text(
+                    " ${widget.soundElem.duration}''",
+                    style: widget.fontStyle,
+                  ),
                   Container(width: _getSoundLen()),
                 ],
         ),

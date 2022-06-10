@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_tips_elem.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/ui/utils/message.dart';
-
-import 'package:tim_ui_kit/ui/utils/shared_theme.dart';
 
 class TIMUIKitGroupTipsElem extends StatelessWidget {
   final V2TimGroupTipsElem groupTipsElem;
@@ -14,7 +14,7 @@ class TIMUIKitGroupTipsElem extends StatelessWidget {
   Widget build(BuildContext context) {
     final groupTipsAbstactText =
         MessageUtils.groupTipsMessageAbstract(groupTipsElem, context);
-    final theme = SharedThemeWidget.of(context)?.theme;
+    final theme = Provider.of<TUIThemeViewModel>(context).theme;
 
     return MessageUtils.wrapMessageTips(
         Container(

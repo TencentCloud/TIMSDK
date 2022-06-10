@@ -5,15 +5,15 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/i18n/i18n_utils.dart';
 import 'package:tim_ui_kit/ui/utils/message.dart';
 import 'package:tim_ui_kit/ui/utils/permission.dart';
 import 'package:tim_ui_kit/ui/utils/sound_record.dart';
 import 'package:tim_ui_kit/ui/widgets/toast.dart';
-
-import 'package:tim_ui_kit/ui/utils/shared_theme.dart';
 
 class SendSoundMessage extends StatefulWidget {
   /// conversation ID
@@ -260,7 +260,8 @@ class _SendSoundMessageState extends State<SendSoundMessage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = SharedThemeWidget.of(context)?.theme;
+    // final theme = SharedThemeWidget.of(context)?.theme;
+    final theme = Provider.of<TUIThemeViewModel>(context).theme;
     final I18nUtils ttBuild = I18nUtils(context);
     return GestureDetector(
       onTapDown: (detail) async {
@@ -279,7 +280,7 @@ class _SendSoundMessageState extends State<SendSoundMessage> {
       onLongPressCancel: onLonePressCancel,
       child: Container(
         height: 35,
-        color: isRecording ? theme?.weakBackgroundColor : Colors.white,
+        color: isRecording ? theme.weakBackgroundColor : Colors.white,
         alignment: Alignment.center,
         child: Text(
           ttBuild.imt("按住说话"),
@@ -287,7 +288,7 @@ class _SendSoundMessageState extends State<SendSoundMessage> {
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16,
-            color: theme?.darkTextColor,
+            color: theme.darkTextColor,
           ),
         ),
       ),

@@ -27,9 +27,11 @@ class _SendJoinGroupApplicationState extends State<SendJoinGroupApplication> {
   @override
   void initState() {
     super.initState();
-    final showName = widget.model.loginUserInfo?.nickName ??
+    final I18nUtils ttBuild = I18nUtils(context);
+    final option1 = widget.model.loginUserInfo?.nickName ??
         widget.model.loginUserInfo?.userID;
-    _verficationController.text = "我是: $showName";
+    _verficationController.text =
+        ttBuild.imt_para("我是: {{option1}}", "我是: $option1")(option1: option1);
   }
 
   String _getGroupType(String type) {
@@ -60,7 +62,7 @@ class _SendJoinGroupApplicationState extends State<SendJoinGroupApplication> {
     final faceUrl = widget.groupInfo.faceUrl ?? "";
     final groupID = widget.groupInfo.groupID;
     final showName = widget.groupInfo.groupName ?? groupID;
-    final groupType = _getGroupType(widget.groupInfo.groupType);
+    final option1 = _getGroupType(widget.groupInfo.groupType);
     return ChangeNotifierProvider.value(
         value: serviceLocator<TUIThemeViewModel>(),
         child: Consumer<TUIThemeViewModel>(builder: (context, value, child) {
@@ -69,7 +71,7 @@ class _SendJoinGroupApplicationState extends State<SendJoinGroupApplication> {
           return Scaffold(
             appBar: AppBar(
               title: Text(
-                ttBuild.imt("添加好友"),
+                ttBuild.imt("进群申请"),
                 style: const TextStyle(color: Colors.white, fontSize: 17),
               ),
               shadowColor: Colors.white,
@@ -95,7 +97,7 @@ class _SendJoinGroupApplicationState extends State<SendJoinGroupApplication> {
                         vertical: 12, horizontal: 16),
                     margin: const EdgeInsets.only(bottom: 12),
                     child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Container(
                           width: 48,
@@ -123,7 +125,9 @@ class _SendJoinGroupApplicationState extends State<SendJoinGroupApplication> {
                               height: 4,
                             ),
                             Text(
-                              "群类型: $groupType",
+                              ttBuild.imt_para(
+                                      "群类型: {{option1}}", "群类型: $option1")(
+                                  option1: option1),
                               style: TextStyle(
                                   fontSize: 12, color: theme.weakTextColor),
                             ),

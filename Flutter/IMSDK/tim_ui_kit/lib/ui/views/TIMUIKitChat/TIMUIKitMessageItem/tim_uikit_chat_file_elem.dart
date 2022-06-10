@@ -12,14 +12,13 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_file_elem.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/i18n/i18n_utils.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/utils/permission.dart';
 import 'package:open_file/open_file.dart';
 import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
-
-import 'package:tim_ui_kit/ui/utils/shared_theme.dart';
 
 class TIMUIKitFileElem extends StatefulWidget {
   final String? messageID;
@@ -163,7 +162,8 @@ class _TIMUIKitFileElemState extends State<TIMUIKitFileElem> {
     return ChangeNotifierProvider.value(
         value: model,
         child: Consumer<TUIChatViewModel>(builder: (context, value, child) {
-          final theme = SharedThemeWidget.of(context)?.theme;
+          // final theme = SharedThemeWidget.of(context)?.theme;
+          final theme = Provider.of<TUIThemeViewModel>(context).theme;
           final received = value.getMessageProgress(widget.messageID);
           final fileName = widget.fileElem!.fileName ?? "";
           final fileSize = widget.fileElem!.fileSize;
@@ -196,7 +196,7 @@ class _TIMUIKitFileElemState extends State<TIMUIKitFileElem> {
                 width: 237,
                 decoration: BoxDecoration(
                     border: Border.all(
-                      color: theme?.weakDividerColor ??
+                      color: theme.weakDividerColor ??
                           CommonColor.weakDividerColor,
                     ),
                     borderRadius: borderRadius),
@@ -208,10 +208,10 @@ class _TIMUIKitFileElemState extends State<TIMUIKitFileElem> {
                         minHeight: 66,
                         value: (received == 100 ? 0 : received) / 100,
                         backgroundColor: received == 100
-                            ? theme?.weakBackgroundColor
+                            ? theme.weakBackgroundColor
                             : Colors.white,
                         valueColor: AlwaysStoppedAnimation(
-                            theme?.lightPrimaryMaterialColor.shade50)),
+                            theme.lightPrimaryMaterialColor.shade50)),
                   ),
                   Padding(
                       padding: const EdgeInsets.symmetric(
@@ -230,7 +230,7 @@ class _TIMUIKitFileElemState extends State<TIMUIKitFileElem> {
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
-                                    color: theme?.darkTextColor,
+                                    color: theme.darkTextColor,
                                     fontSize: 16,
                                   ),
                                 ),
@@ -238,8 +238,7 @@ class _TIMUIKitFileElemState extends State<TIMUIKitFileElem> {
                                   "${(fileSize! / 1024).ceil()} KB",
                                   // "${received > 0 ? (received / 1024).ceil() : (received / 1024).ceil()} KB",
                                   style: TextStyle(
-                                      fontSize: 14,
-                                      color: theme?.weakTextColor),
+                                      fontSize: 14, color: theme.weakTextColor),
                                 )
                               ],
                             )),
@@ -248,7 +247,7 @@ class _TIMUIKitFileElemState extends State<TIMUIKitFileElem> {
                               width: 50,
                               child: Icon(
                                 Icons.file_present_outlined,
-                                color: theme?.cautionColor,
+                                color: theme.cautionColor,
                                 size: 40,
                               ),
                             )

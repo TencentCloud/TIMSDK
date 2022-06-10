@@ -3,9 +3,11 @@ import 'package:tencent_im_sdk_plugin/enum/V2TimGroupListener.dart';
 import 'package:tencent_im_sdk_plugin/enum/group_member_filter_enum.dart';
 import 'package:tencent_im_sdk_plugin/enum/receive_message_opt_enum.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_info.dart';
+import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_info.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_operation_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_search_param.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_search_result.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
 import 'package:tim_ui_kit/data_services/conversation/conversation_services.dart';
 import 'package:tim_ui_kit/data_services/friendShip/friendship_services.dart';
 import 'package:tim_ui_kit/data_services/group/group_services.dart';
@@ -21,6 +23,7 @@ class TUIGroupProfileViewModel extends ChangeNotifier {
   final MessageService _messageService = serviceLocator<MessageService>();
   final FriendshipServices _friendshipServices =
       serviceLocator<FriendshipServices>();
+  final TUIChatViewModel chatViewModel = serviceLocator<TUIChatViewModel>();
 
   V2TimGroupInfo? _groupInfo;
   String _groupMemberListSeq = "0";
@@ -43,10 +46,19 @@ class TUIGroupProfileViewModel extends ChangeNotifier {
     return _groupMemberList;
   }
 
+  clearData() {
+    _groupID = "";
+    _groupInfo = null;
+    _groupMemberList = [];
+    _contactList = [];
+    notifyListeners();
+  }
+
   loadData(String groupID) {
+    clearData();
     _groupID = groupID;
     _loadGroupInfo(groupID);
-    // count只有web时有效
+    // count只有web时有效.
     _loadGroupMemberList(count: 50, groupID: groupID);
     _loadContactList();
     _loadConversation();
@@ -360,23 +372,54 @@ class TUIGroupProfileViewModel extends ChangeNotifier {
   }
 
   setGroupListener() {
-    _groupListener = V2TimGroupListener(
-      onMemberInvited: (groupID, opUser, memberList) {
+    _groupListener = V2TimGroupListener(onMemberInvited:
+        (groupID, opUser, memberList) {
+      if (_groupID == groupID && _groupID.isNotEmpty) {
         _loadGroupInfo(groupID);
         _loadGroupMemberList(groupID: groupID, seq: "0");
-      },
-      onMemberKicked: (groupID, opUser, memberList) {
+      }
+    }, onMemberKicked: (groupID, opUser, memberList) {
+      if (_groupID == groupID && _groupID.isNotEmpty) {
         _loadGroupInfo(groupID);
         _loadGroupMemberList(groupID: groupID, seq: "0");
-      },
-      onGroupInfoChanged: (groupID, changeInfos) {
-        if (_groupID == groupID) {
-          _loadGroupInfo(groupID);
-          _loadGroupMemberList(groupID: groupID, seq: "0");
-        }
-      },
-    );
+      }
+    }, onGroupInfoChanged: (groupID, changeInfos) {
+      if (_groupID == groupID && _groupID.isNotEmpty) {
+        _loadGroupInfo(groupID);
+        _loadGroupMemberList(groupID: groupID, seq: "0");
+      }
+    }, onReceiveJoinApplication:
+        (String groupID, V2TimGroupMemberInfo member, String opReason) async {
+      _onReceiveJoinApplication(groupID, member, opReason);
+    }, onApplicationProcessed: (
+      String groupID,
+      V2TimGroupMemberInfo opUser,
+      bool isAgreeJoin,
+      String opReason,
+    ) async {
+      _onApplicationProcessed(groupID, opUser, isAgreeJoin, opReason);
+    }, onMemberEnter: (String groupID, List<V2TimGroupMemberInfo> memberList) {
+      _onMemberEnter(groupID, memberList);
+    });
     _groupServices.addGroupListener(listener: _groupListener!);
+  }
+
+  _onReceiveJoinApplication(
+      String groupID, V2TimGroupMemberInfo member, String opReason) {
+    chatViewModel.refreshGroupApplicationList();
+  }
+
+  _onMemberEnter(String groupID, List<V2TimGroupMemberInfo> memberList) {
+    // ignore: todo
+    // TODO：Provide a callback call for developer
+    // chatViewModel.refreshGroupApplicationList();
+  }
+
+  _onApplicationProcessed(String groupID, V2TimGroupMemberInfo opUser,
+      bool isAgreeJoin, String opReason) {
+    // ignore: todo
+    // TODO：Provide a callback call for developer
+    // print("_onApplicationProcessed $groupID ${opUser.toString()}");
   }
 
   removeGroupListener() {

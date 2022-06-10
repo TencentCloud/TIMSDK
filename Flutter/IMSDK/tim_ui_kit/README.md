@@ -22,9 +22,10 @@ TUIKit 是基于 IM SDK 实现的一套 UI 组件，其包含会话、聊天、�
 ![](https://imgcache.qq.com/operation/dianshi/other/191645543019_.pic.06d8f22e726287c07cf38d362ec40d4deb4799c7.jpg)
 
 ## 国际化
-node scan 全局扫描
-放入翻译JSON文件后，执行该命令：
-flutter pub run fast_i18n
+我们默认提供 `简体中文` `繁体中文` `英语` 的语言支持；并允许开发者新增语言包，扩展多语言支持。
+
+如果您需要使用国际化多语言能力，请参考 [腾讯云IM Flutter TUIKit 国际化指南](https://docs.qq.com/doc/DSVN4aHVpZm1CSEhv?u=c927b5c7e9874f77b40b7549f3fffa57)。
+
 ## TIMUIKitCore
 `TIMUIKitCore`提供两个静态方法`getInstance` 和 `getSDKInstance`。
 - `getInstance`: 返回 `CoreServicesImpl` 实例。
@@ -148,6 +149,7 @@ TIMUIKitConversation(
     controller: _controller, /// 会话组件控制器， 可通过其获取会话的数据，设置会话数据，会话置顶等操作
     itembuilder: (conversationItem) {} /// 用于自定义会话Item 的UI。 可结合TIMUIKitConversationController 实现业务逻辑
     conversationCollector: (conversation) {} /// 会话收集器，可自定义会话是否显示
+    lastMessageBuilder: (V2TimMessage, List<V2TimGroupAtInfo?>) {} /// 会话item第二行最后一条消息字段
 )
 ```
 
@@ -206,6 +208,9 @@ TIMUIKitChat(
     draftText: "", /// 消息草稿
     initFindingTimestamp: 0, /// 跳转至某条消息的时间戳，为0表示不跳转
     config: TIMUIKitChatConfig(), /// Chat组件配置类
+    onDealWithGroupApplication: (String groupID){
+      /// jump to the pages for the page of [TIMUIKitGroupApplicationList] or other pages to handle joining group application for specific group
+    }
 )
 ```
 
@@ -355,5 +360,193 @@ TIMUIKitSearchMsgDetail(
               keyword: initKeyword ?? "",
             );
 ```
+
+### 如何自定义TIMUIKitChat组件
+为扩展`TIMUIKitChat`组件的自定义能力，我们将该组件包含的基础子组件对外暴露，用户可根据业务去选择和使用基础子组件实现满足自身的业务。基础子组件包含如下:
+- `TIMUIKitAppBar`
+- `TIMUIKitHistoryMessageList`
+- `TIMUIKitHistoryMessageListItem`
+- `TIMUIKitInputTextField`
+
+下文将对以上组件介绍及使用用例。
+
+#### TIMUIKitAppBar
+该组件为`TIMUIKitChat`的appbar组件，用于自定义应用导航栏。相较于flutter默认的`appbar`, 该组件额外提供了`title`自适应`用户昵称， 群名称`改变而动态改变，主题色改变。具体参数如下:
+
+name | type | desc | optional
+---|---|---|---
+config | AppBar | flutter appbar, 具体使用参考官方文档 | 可选
+showTotalUnReadCount | bool | 显示会话总未读数, 默认为true | 可选
+conversationID | String | 会话ID | 可选
+conversationShowName | String | 会话名称 | 可选
+
+
+#### TIMUIKitHistoryMessageList
+该组件为消息列表渲染组件，提供消息自动拉取，自动加载更多，跳转到指定消息。 具体参数如下:
+
+name | type | desc | optional
+---|---|---|---
+messageList | List<V2TimMessage?> | 消息列表，渲染数据源 | 必填
+tongueItemBuilder | TongueItemBuilder | 小舌头(回到底部)自定义构造器 | 可选
+groupAtInfoList | List<V2TimGroupAtInfo?> | 艾特信息 | 可选
+itemBuilder |  Widget Function(BuildContext, V2TimMessage?) | 消息构造器 | 可选
+controller |  TIMUIKitHistoryMessageListController | 控制列表跳转，滚动 | 可选
+onLoadMore |  Function | 加载更多 | 必填
+mainHistoryListConfig |  ListView | 自定义ListView | 可选
+
+#### TIMUIKitHistoryMessageListItem
+该组件为消息实例组件，可根据提供的消息渲染不通的消息类型，包含`文本消息`，`图片消息`, `文件消息`,`通话消息`, `语音消息`等。同时支持消息自定义，主题定制能力。
+
+name | type | desc | optional
+---|---|---|---
+message | V2TimMessage | 消息实例 | 必填
+onTapForOthersPortrait | Function | 远端用户头像tap回调 | 可选
+onScrollToIndex | Function | TIMUIKitHistoryMessageListController 的scrollToIndex方法，用于回复消息点击跳转到指定消息 | 可选
+onScrollToIndexBegin |  Function | TIMUIKitHistoryMessageListController 的scrollToIndexBegin方法，长消息长按位置矫正 | 可选
+onLongPressForOthersHeadPortrait |  Function | 远端用户头像长按 | 可选
+messageItemBuilder |  MessageItemBuilder | 消息自定义构造器 | 可选
+topRowBuilder |  Function | 昵称所在行自定义builder | 可选
+bottomRowBuilder |  Function | 消息显示之下builder | 可选
+showAvatar |  bool | 是否显示头像 | 可选
+showNickName |  bool | 是否显示用户昵称 | 可选
+showMessageSending |  bool | 是否显示消息发送中状态 | 可选
+showMessageReadRecipt |  bool | 是否显示消息已读 | 可选
+showGroupMessageReadRecipt |  bool | 是否显示群消息已读 | 可选
+allowLongPress |  bool | 是否允许消息长按 | 可选
+allowAvatarTap |  bool | 是否允许头像tap | 可选
+allowAtUserWhenReply |  bool | 是否在回复消息中提示对方 | 可选
+onLongPress |  Function | 消息长按回掉 | 可选
+toolTipsConfig |  ToolTipsConfig | 消息长按tool tips 配置 | 可选
+padding |  double | 消息间的间距 | 可选
+textPadding |  EdgeInsetsGeometry | 文本消息内边距 | 可选
+userAvatarBuilder | Function | 用户头像构造器 | 可选
+themeData | MessageThemeData | 消息主题配置，可自定义字体颜色，大小等 | 可选
+
+
+#### TIMUIKitInputTextField
+该组件为输入框组件，提供`文本消息`,`图片消息`,`语音消息`等发送能力。参数如下
+
+name | type | desc | optional
+---|---|---|---
+conversationID | String | 会话ID | 必填
+conversationType | String | 会话类型 | 必填
+initText | String | 初始化文本 | 可选
+scrollController |  AutoScrollController | 用于发送消息时将消息列表滚动到底部 | 可选
+hintText |  String | 提示文本 | 可选
+morePanelConfig |  MorePanelConfig | 更多面板配置 | 可选
+showSendAudio |  bool | 是否显示发送语音 | 可选
+showSendEmoji |  bool | 是否显示发送表情 | 可选
+showMorePannel |  bool | 是否显示更多面板 | 可选
+backgroundColor |  Color | 背景色 | 可选
+controller |  TIMUIKitInputTextFieldController | 控制器，可控制输入框文本 | 可选
+onChanged |  Function | 文本改变回调事件 | 可选
+customStickerPanel |  Function | 自定义表情 | 可选
+
+#### 如何使用基础组件
+如下是一个完整的使用示例
+```dart
+import 'package:flutter/material.dart';
+import 'package:tim_ui_kit/tim_ui_kit.dart';
+import 'package:tim_ui_kit/ui/controller/tim_uikit_chat_controller.dart';
+import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKItMessageList/tim_uikit_history_message_list.dart';
+import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitTextField/tim_uikit_text_field.dart';
+
+class Chat extends StatefulWidget {
+  final V2TimConversation selectedConversation;
+  final V2TimMessage? initFindingMsg;
+
+  const ChatV2(
+      {Key? key, required this.selectedConversation, this.initFindingMsg})
+      : super(key: key);
+  @override
+  State<StatefulWidget> createState() => _ChatV2State();
+}
+
+class _ChatV2State extends State<ChatV2> {
+  final TIMUIKitChatController _controller = TIMUIKitChatController();
+  final TIMUIKitHistoryMessageListController _historyMessageListController =
+      TIMUIKitHistoryMessageListController();
+  final TIMUIKitInputTextFieldController _textFieldController =
+      TIMUIKitInputTextFieldController();
+  bool _haveMoreData = true;
+  String? _getConvID() {
+    return widget.selectedConversation.type == 1
+        ? widget.selectedConversation.userID
+        : widget.selectedConversation.groupID;
+  }
+
+  loadHistoryMessageList(String? lastMsgID, [int? count]) async {
+    if (_haveMoreData) {
+      _haveMoreData = await _controller.loadHistoryMessageList(
+          count: count ?? 20,
+          userID: widget.selectedConversation.userID,
+          groupID: widget.selectedConversation.groupID,
+          lastMsgID: lastMsgID);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TIMUIKitChatProviderScope(
+      conversationID: _getConvID() ?? "",
+      conversationType: widget.selectedConversation.type ?? 0,
+      builder: (context, w) {
+        return GestureDetector(
+          onTap: () {
+            _textFieldController.hideAllPanel();
+          },
+          child: Scaffold(
+            appBar: TIMUIKitAppBar(
+              config: AppBar(
+                title: Text(widget.selectedConversation.showName ?? ""),
+              ),
+            ),
+            body: Column(
+              children: [
+                Expanded(
+                    child: TIMUIKitHistoryMessageListSelector(
+                  builder: (context, messageList, w) {
+                    return TIMUIKitHistoryMessageList(
+                      controller: _historyMessageListController,
+                      messageList: messageList,
+                      onLoadMore: loadHistoryMessageList,
+                      itemBuilder: (context, message) {
+                        return TIMUIKitHistoryMessageListItem(
+                          onScrollToIndex:
+                              _historyMessageListController.scrollToIndex,
+                          onScrollToIndexBegin:
+                              _historyMessageListController.scrollToIndexBegin,
+                          message: message!,
+                        );
+                      },
+                    );
+                  },
+                  conversationID: _getConvID() ?? "",
+                )),
+                TIMUIKitInputTextField(
+                  controller: _textFieldController,
+                  conversationID: _getConvID() ?? "",
+                  conversationType: widget.selectedConversation.type ?? 1,
+                  scrollController:
+                      _historyMessageListController.scrollController!,
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+```
+在如上示例中需要注意的点:
+- 在使用基础组件时必须通过`TIMUIKitChatProviderScope`组件包裹， 他会根据传入的`conversationID` 及`conversationType` 拉取对应的历史消息.该组件提供是基于通过`MultiProvider` 实现,同时可注入自定义的`provider`.其目的在于基础组件能够消费到业务层数据，同时可通过`TIMUIKitChatController` 控制业务层数据达到数据触发视图渲染的目的。
+- 可以使用提供的`TIMUIKitAppBar`组件实现应用导航栏，同时也可根据业务的需要，自己实现appBar.
+- `TIMUIKitChatProviderScope`会加载历史消息到业务层, 通过`TIMUIKitHistoryMessageListSelector` 获取到业务层历史消息数据用于渲染，当历史消息数据发生改变时会触发渲染。
+- 通过`TIMUIKitHistoryMessageList` 结合 `TIMUIKitHistoryMessageListItem` 实现消息页面的渲染
+- `TIMUIKitInputTextField`实现发送消息
+
+基础组件可根据业务需要自行更换以及组合。如若需要控制业务层数据,可通过`TIMUIKitChatController`提供的方法。
 
 

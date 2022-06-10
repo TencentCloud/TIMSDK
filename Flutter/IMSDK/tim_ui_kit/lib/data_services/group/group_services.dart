@@ -1,7 +1,9 @@
 import 'package:tencent_im_sdk_plugin/enum/V2TimGroupListener.dart';
+import 'package:tencent_im_sdk_plugin/enum/group_application_type_enum.dart';
 import 'package:tencent_im_sdk_plugin/enum/group_member_filter_enum.dart';
 import 'package:tencent_im_sdk_plugin/enum/group_member_role_enum.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
+import 'package:tencent_im_sdk_plugin/models/v2_tim_group_application_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_info.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_info_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_full_info.dart';
@@ -91,4 +93,20 @@ abstract class GroupServices {
   Future<void> removeGroupListener({
     V2TimGroupListener? listener,
   });
+
+  Future<V2TimValueCallback<V2TimGroupApplicationResult>>
+      getGroupApplicationList();
+
+  Future<V2TimCallback> acceptGroupApplication(
+      {required String groupID,
+      required String fromUser,
+      required String toUser});
+
+  Future<V2TimCallback> refuseGroupApplication(
+      {String? reason,
+      required int addTime,
+      required String groupID,
+      required String fromUser,
+      required String toUser,
+      required GroupApplicationTypeEnum type});
 }

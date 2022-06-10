@@ -28,7 +28,7 @@ class CallingMessage {
   List<String>? inviteeList;
 
   /// videoCall: 语音 audioCall: 视频
-  String? callType;
+  int? callType;
 
   // 1: 邀请方发起邀请
   // 2: 邀请方取消邀请
@@ -68,7 +68,9 @@ class CallingMessage {
     inviter = json["inviter"];
     inviteeList = List<String>.from(json["inviteeList"]);
     inviteID = json["inviteID"];
-    callType = jsonDecode(json["data"])["cmd"];
+    callType = jsonDecode(json["data"])["cmd"] != null
+        ? (jsonDecode(json["data"])["cmd"] == "audioCall" ? 1 : 2)
+        : jsonDecode(json["data"])["call_type"];
     roomID = jsonDecode(json["data"])["room_id"];
     callEnd = jsonDecode(json["data"])["call_end"];
     isGroup = jsonDecode(json["data"])["is_group"];

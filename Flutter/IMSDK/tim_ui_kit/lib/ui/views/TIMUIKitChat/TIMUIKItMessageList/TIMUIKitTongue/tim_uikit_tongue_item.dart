@@ -16,21 +16,31 @@ class TIMUIKitTongueItem extends StatelessWidget {
   /// unread amount currently
   final int unreadCount;
 
+  /// total amount of messages at me
+  final String atNum;
+
   TIMUIKitTongueItem({
     Key? key,
     required this.onClick,
     required this.valueType,
     required this.unreadCount,
+    required this.atNum,
   }) : super(key: key);
 
   Map<MessageListTongueType, String> textType(BuildContext context) {
     final I18nUtils ttBuild = I18nUtils(context);
     final option1 = unreadCount;
+    final option2 = atNum;
+    final String atMeString = option2 != ""
+        ? ttBuild.imt_para("有{{option2}}条@我消息", "有$option2条@我消息")(
+            option2: option2)
+        : ttBuild.imt("有人@我");
+
     return {
       MessageListTongueType.toLatest: ttBuild.imt("回到最新位置"),
       MessageListTongueType.showUnread:
           ttBuild.imt_para("{{option1}}条新消息", "$option1条新消息")(option1: option1),
-      MessageListTongueType.atMe: ttBuild.imt("有人@我"),
+      MessageListTongueType.atMe: atMeString,
       MessageListTongueType.atAll: ttBuild.imt("@所有人"),
     };
   }

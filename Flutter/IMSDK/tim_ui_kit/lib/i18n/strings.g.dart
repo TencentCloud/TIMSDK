@@ -1,12 +1,12 @@
-// ignore_for_file: annotate_overrides
+// ignore_for_file: annotate_overrides, unused_field
 
 /*
  * Generated file. Do not edit.
  *
- * Locales: 2
- * Strings: 562 (281.0 per locale)
+ * Locales: 3
+ * Strings: 879 (293.0 per locale)
  *
- * Built on 2022-05-30 at 07:41 UTC
+ * Built on 2022-06-09 at 07:26 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -22,7 +22,8 @@ AppLocale _currLocale = _baseLocale;
 /// - if (LocaleSettings.currentLocale == AppLocale.en) // locale check
 enum AppLocale {
   en, // 'en' (base locale, fallback)
-  zh, // 'zh'
+  zhHans, // 'zh-Hans'
+  zhHant, // 'zh-Hant'
 }
 
 /// Method A: Simple
@@ -149,7 +150,8 @@ class AppLocaleUtils {
 // translation instances
 
 late _StringsEn _translationsEn = _StringsEn.build();
-late _StringsZh _translationsZh = _StringsZh.build();
+late _StringsZhHans _translationsZhHans = _StringsZhHans.build();
+late _StringsZhHant _translationsZhHant = _StringsZhHant.build();
 
 // extensions for AppLocale
 
@@ -161,8 +163,10 @@ extension AppLocaleExtensions on AppLocale {
     switch (this) {
       case AppLocale.en:
         return _translationsEn;
-      case AppLocale.zh:
-        return _translationsZh;
+      case AppLocale.zhHans:
+        return _translationsZhHans;
+      case AppLocale.zhHant:
+        return _translationsZhHant;
     }
   }
 
@@ -177,8 +181,10 @@ extension AppLocaleExtensions on AppLocale {
     switch (this) {
       case AppLocale.en:
         return _StringsEn.build();
-      case AppLocale.zh:
-        return _StringsZh.build();
+      case AppLocale.zhHans:
+        return _StringsZhHans.build();
+      case AppLocale.zhHant:
+        return _StringsZhHant.build();
     }
   }
 
@@ -186,8 +192,10 @@ extension AppLocaleExtensions on AppLocale {
     switch (this) {
       case AppLocale.en:
         return 'en';
-      case AppLocale.zh:
-        return 'zh';
+      case AppLocale.zhHans:
+        return 'zh-Hans';
+      case AppLocale.zhHant:
+        return 'zh-Hant';
     }
   }
 
@@ -195,8 +203,16 @@ extension AppLocaleExtensions on AppLocale {
     switch (this) {
       case AppLocale.en:
         return const Locale.fromSubtags(languageCode: 'en');
-      case AppLocale.zh:
-        return const Locale.fromSubtags(languageCode: 'zh');
+      case AppLocale.zhHans:
+        return const Locale.fromSubtags(
+          languageCode: 'zh',
+          scriptCode: 'Hans',
+        );
+      case AppLocale.zhHant:
+        return const Locale.fromSubtags(
+          languageCode: 'zh',
+          scriptCode: 'Hant',
+        );
     }
   }
 }
@@ -206,8 +222,10 @@ extension StringAppLocaleExtensions on String {
     switch (this) {
       case 'en':
         return AppLocale.en;
-      case 'zh':
-        return AppLocale.zh;
+      case 'zh-Hans':
+        return AppLocale.zhHans;
+      case 'zh-Hant':
+        return AppLocale.zhHant;
       default:
         return null;
     }
@@ -320,7 +338,6 @@ class _StringsEn {
   // Internal flat map initialized lazily
   late final Map<String, dynamic> _flatMap = _buildFlatMap();
 
-  // ignore: unused_field
   late final _StringsEn _root = this;
 
   // Translations
@@ -336,13 +353,13 @@ class _StringsEn {
   String get k_003tr0a => 'Group owner';
   String get k_002wddw => 'Mute';
   String get k_0got6f7 => 'Unmute';
-  String get k_1uaqed6 => '["Custom"]';
-  String get k_0z2z7rx => '["Voice"]';
-  String get k_0y39ngu => '["Emoji"]';
-  String get k_0y1a2my => '["Image"]';
-  String get k_0z4fib8 => '["Video"]';
-  String get k_0y24mcg => '["Location"]';
-  String get k_0pewpd1 => '["Chat history"]';
+  String get k_1uaqed6 => '[Custom]';
+  String get k_0z2z7rx => '[Voice]';
+  String get k_0y39ngu => '[Emoji]';
+  String get k_0y1a2my => '[Image]';
+  String get k_0z4fib8 => '[Video]';
+  String get k_0y24mcg => '[Location]';
+  String get k_0pewpd1 => '[Chat history]';
   String get k_13s8d9p => 'Unknown message';
   String get k_003qkx2 => 'Calendar';
   String get k_003n2pz => 'Camera';
@@ -376,8 +393,8 @@ class _StringsEn {
   String get k_003pqpr => 'Recall';
   String get k_03ezhho => 'Copied';
   String get k_11ctfsz => 'Not implemented';
-  String get k_1hbjg5g => '["Group system message"]';
-  String get k_03tvswb => '["Unknown message"]';
+  String get k_1hbjg5g => '[Group system message]';
+  String get k_03tvswb => '[Unknown message]';
   String get k_155cj23 => 'You\'ve recalled a message.';
   String get k_0gapun3 => 'Edit it again';
   String get k_0003z7x => 'You';
@@ -389,7 +406,7 @@ class _StringsEn {
   String get k_0pytyeu => 'Image saved successfully';
   String get k_0akceel => 'Failed to save the image';
   String get k_003rk1s => 'Save';
-  String get k_04a0awq => '["Voice message"]';
+  String get k_04a0awq => '[Voice message]';
   String get k_105c3y3 => 'Failed to load the video';
   String get k_176rzr7 => 'Chat history';
   String get k_002r305 => 'Send';
@@ -620,7 +637,7 @@ class _StringsEn {
   String get k_13p3w93 => 'Someone @ me';
   String get k_18w5uk6 => '@ all';
   String get k_0jmujgh => 'You are receiving other files';
-  String get k_12s5ept => 'Message deta ils';
+  String get k_12s5ept => 'Message details';
   String k_0mxa4f4({required Object option1}) => '$option1 read';
   String k_061tue3({required Object option2}) => '$option2 unread';
   String k_1vn4xq1({required Object adminMember}) =>
@@ -638,13 +655,27 @@ class _StringsEn {
   String get k_0gqewd3 => 'Later';
   String get k_03eq4s1 => 'Authorize Now';
   String get k_18qjstb => 'Transfer Group';
+  String k_0on1aj2({required Object option2}) => '$option2 messages @ me';
+  String get k_09j4izl => '[Someone @ me] ';
+  String get k_1oqtjw0 => '[@ all] ';
+  String k_1x5a9vb({required Object option1}) => 'This is: $option1';
+  String get k_14n31e7 => 'Add Group';
+  String k_08nc5j1({required Object option1}) => 'Group type: $option1';
+  String k_1josu12({required Object option1}) =>
+      '$option1 group joining request(s)';
+  String k_0n2x5s0({required Object option2}) =>
+      'Verification message: $option2';
+  String get k_03c1nx0 => 'Agreed';
+  String get k_03aw9w8 => 'Rejected';
+  String get k_038ryos => 'Handle now';
+  String get k_0gw8pum => 'Add Group';
 }
 
 // Path: <root>
-class _StringsZh implements _StringsEn {
+class _StringsZhHans implements _StringsEn {
   /// You can call this constructor and build your own translation instance of this locale.
   /// Constructing via the enum [AppLocale.build] is preferred.
-  _StringsZh.build();
+  _StringsZhHans.build();
 
   /// Access flat map
   @override
@@ -653,9 +684,8 @@ class _StringsZh implements _StringsEn {
   // Internal flat map initialized lazily
   late final Map<String, dynamic> _flatMap = _buildFlatMap();
 
-  // ignore: unused_field
   @override
-  late final _StringsZh _root = this;
+  late final _StringsZhHans _root = this;
 
   // Translations
   @override
@@ -1228,6 +1258,643 @@ class _StringsZh implements _StringsEn {
   String k_061tue3({required Object option2}) => '$option2人未读';
   @override
   String get k_18qjstb => '转让群主';
+  @override
+  String k_0on1aj2({required Object option2}) => '有$option2条@我消息';
+  @override
+  String get k_09j4izl => '[有人@我] ';
+  @override
+  String get k_1oqtjw0 => '[@所有人] ';
+  @override
+  String k_1x5a9vb({required Object option1}) => '我是: $option1';
+  @override
+  String get k_14n31e7 => '进群请求';
+  @override
+  String k_08nc5j1({required Object option1}) => '群类型: $option1';
+  @override
+  String k_1josu12({required Object option1}) => '$option1 条入群请求';
+  @override
+  String k_0n2x5s0({required Object option2}) => '验证消息: $option2';
+  @override
+  String get k_03c1nx0 => '已同意';
+  @override
+  String get k_03aw9w8 => '已拒绝';
+  @override
+  String get k_038ryos => '去处理';
+  @override
+  String get k_0gw8pum => '进群申请';
+}
+
+// Path: <root>
+class _StringsZhHant implements _StringsEn {
+  /// You can call this constructor and build your own translation instance of this locale.
+  /// Constructing via the enum [AppLocale.build] is preferred.
+  _StringsZhHant.build();
+
+  /// Access flat map
+  @override
+  dynamic operator [](String key) => _flatMap[key];
+
+  // Internal flat map initialized lazily
+  late final Map<String, dynamic> _flatMap = _buildFlatMap();
+
+  @override
+  late final _StringsZhHant _root = this;
+
+  // Translations
+  @override
+  String get k_1yemzyd => '收到一條訊息';
+  @override
+  String get k_0ylosxn => '自定義訊息';
+  @override
+  String get k_13sajrj => '貼圖訊息';
+  @override
+  String get k_13sjeb7 => '檔案訊息';
+  @override
+  String get k_0yd2ft8 => '群提示訊息';
+  @override
+  String get k_13s7mxn => '圖片訊息';
+  @override
+  String get k_13satlt => '位置訊息';
+  @override
+  String get k_00bbtsx => '合並轉發訊息';
+  @override
+  String get k_13sqwu4 => '語音訊息';
+  @override
+  String get k_13sqjjp => '影片';
+  @override
+  String get k_1fdhj9g => '該版本不支持此訊息';
+  @override
+  String get k_06pujtm => '同意任何用戶添加好友';
+  @override
+  String get k_0gyhkp5 => '需要驗證';
+  @override
+  String get k_121ruco => '拒絕任何人加好友';
+  @override
+  String get k_05nspni => '自定義字段';
+  @override
+  String get k_03fchyy => '群頭像';
+  @override
+  String get k_03i9mfe => '群簡介';
+  @override
+  String get k_03agq58 => '群名稱';
+  @override
+  String get k_039xqny => '群通知';
+  @override
+  String get k_003tr0a => '群主';
+  @override
+  String k_03iqsh4({required Object s}) => '$s為 ';
+  @override
+  String k_191t5n4({required Object opUserNickName}) => '$opUserNickName修改';
+  @override
+  String k_1pg6aoj({required Object opUserNickName}) => '$opUserNickName退出群組';
+  @override
+  String k_1f6zt3v({required Object invitedMemberString}) =>
+      '邀請$invitedMemberString加入群組';
+  @override
+  String k_0y7zd07({required Object invitedMemberString}) =>
+      '將$invitedMemberString踢出群組';
+  @override
+  String get k_03c49qt => '去授權';
+  @override
+  String k_1d5mshh({required Object joinedMemberString}) =>
+      '用戶$joinedMemberString加入了群組';
+  @override
+  String get k_002wddw => '禁言';
+  @override
+  String get k_0got6f7 => '解除禁言';
+  @override
+  String k_0yenqf0({required Object userName}) => '$userName 被';
+  @override
+  String k_0spotql({required Object adminMember}) => '將 $adminMember 設置為管理員';
+  @override
+  String k_0pg5zzj({required Object operationType}) => '系統訊息 $operationType';
+  @override
+  String k_0ohzb9l({required Object callTime}) => '通話時間：$callTime';
+  @override
+  String get k_1uaqed6 => '[自定義]';
+  @override
+  String get k_0z2z7rx => '[語音]';
+  @override
+  String get k_0y39ngu => '[貼圖]';
+  @override
+  String k_1c7z88n({required Object fileName}) => '[檔案] $fileName';
+  @override
+  String get k_0y1a2my => '[圖片]';
+  @override
+  String get k_0z4fib8 => '[影片]';
+  @override
+  String get k_0y24mcg => '[位置]';
+  @override
+  String get k_0pewpd1 => '[聊天記錄]';
+  @override
+  String get k_13s8d9p => '未知訊息';
+  @override
+  String get k_1c3us5n => '當前群組不支持@全體成員';
+  @override
+  String get k_11k579v => '發言中有非法語句';
+  @override
+  String get k_003qkx2 => '日歷';
+  @override
+  String get k_003n2pz => '相機';
+  @override
+  String get k_03idjo0 => '聯絡人';
+  @override
+  String get k_003ltgm => '位置';
+  @override
+  String get k_02k3k86 => '咪高風';
+  @override
+  String get k_003pm7l => '相冊';
+  @override
+  String get k_15ao57x => '相冊寫入';
+  @override
+  String get k_164m3jd => '本地存儲';
+  @override
+  String k_0qba4ns({required Object yoursItem}) => '想訪問您的$yoursItem';
+  @override
+  String get k_03r6qyx => '我們需要您的同意才能獲取信息';
+  @override
+  String get k_02noktt => '不允許';
+  @override
+  String get k_00043x4 => '好';
+  @override
+  String get k_003qzac => '昨天';
+  @override
+  String get k_003r39d => '前天';
+  @override
+  String get k_03fqp9o => '星期天';
+  @override
+  String get k_03ibg5h => '星期一';
+  @override
+  String get k_03i7hu1 => '星期二';
+  @override
+  String get k_03iaiks => '星期三';
+  @override
+  String get k_03el9pa => '星期四';
+  @override
+  String get k_03i7ok1 => '星期五';
+  @override
+  String get k_03efxyg => '星期六';
+  @override
+  String k_0oozw9x({required Object diffMinutes}) => '$diffMinutes 分鐘前';
+  @override
+  String get k_003q7ba => '下午';
+  @override
+  String get k_003q7bb => '上午';
+  @override
+  String get k_003pu3h => '現在';
+  @override
+  String k_13hzn00({required Object yesterday}) => '昨天 $yesterday';
+  @override
+  String get k_0n9pyxz => '用戶不存在';
+  @override
+  String get k_1bjwemh => '搜尋用戶 ID';
+  @override
+  String get k_003kv3v => '搜尋';
+  @override
+  String k_02owlq8({required Object userID}) => '我的用戶ID: $userID';
+  @override
+  String k_1wu8h4x({required Object showName}) => '我是: $showName';
+  @override
+  String get k_16758qw => '添加好友';
+  @override
+  String k_1shx4d9({required Object selfSignature}) => '個性簽名: $selfSignature';
+  @override
+  String get k_0i553x0 => '填寫驗證信息';
+  @override
+  String get k_031ocwx => '請填寫備註和分組';
+  @override
+  String get k_003ojje => '備註';
+  @override
+  String get k_003lsav => '分組';
+  @override
+  String get k_167bdvq => '我的好友';
+  @override
+  String get k_156b4ut => '好友申請已發送';
+  @override
+  String get k_002r305 => '發送';
+  @override
+  String get k_03gu05e => '聊天室';
+  @override
+  String get k_03b4f3p => '會議群';
+  @override
+  String get k_03avj1p => '公開群';
+  @override
+  String get k_03asq2g => '工作群';
+  @override
+  String get k_03b3hbi => '未知群';
+  @override
+  String k_1loix7s({required Object groupType}) => '群類型: $groupType';
+  @override
+  String get k_1lqbsib => '該群組不存在';
+  @override
+  String get k_03h153m => '搜尋群ID';
+  @override
+  String get k_0oxak3r => '群申請已發送';
+  @override
+  String get k_002rflt => '刪除';
+  @override
+  String get k_1don84v => '無法定位到原訊息';
+  @override
+  String get k_003q5fi => '復製';
+  @override
+  String get k_003prq0 => '轉發';
+  @override
+  String get k_002r1h2 => '多選';
+  @override
+  String get k_003j708 => '引用';
+  @override
+  String get k_003pqpr => '回收';
+  @override
+  String get k_03ezhho => '已復製';
+  @override
+  String get k_11ctfsz => '暫未實現';
+  @override
+  String get k_1hbjg5g => '[群系統訊息]';
+  @override
+  String get k_03tvswb => '[未知訊息]';
+  @override
+  String get k_155cj23 => '您回收了一條訊息，';
+  @override
+  String get k_0gapun3 => '重新編輯';
+  @override
+  String k_1uh417q({required Object displayName}) => '$displayName回收了一條訊息';
+  @override
+  String get k_1aszp2k => '您確定要重發這條訊息麽？';
+  @override
+  String get k_003rzap => '確定';
+  @override
+  String get k_003nevv => '取消';
+  @override
+  String get k_0003z7x => '您';
+  @override
+  String get k_002wfe4 => '已讀';
+  @override
+  String get k_002wjlg => '未讀';
+  @override
+  String get k_0h1ygf8 => '發起通話';
+  @override
+  String get k_0h169j0 => '取消通話';
+  @override
+  String get k_0h13jjk => '接受通話';
+  @override
+  String get k_0h19hfx => '拒絕通話';
+  @override
+  String get k_0obi9lh => '超時未接聽';
+  @override
+  String k_0y9u662({required Object appName}) =>
+      '「$appName」暫不可以開啟此類檔案，你可以使用其他應用開啟並預覽';
+  @override
+  String get k_001nmhu => '用其他應用開啟';
+  @override
+  String get k_1ht1b80 => '正在接收中';
+  @override
+  String get k_105682d => '圖片載入失敗';
+  @override
+  String get k_0pytyeu => '圖片保存成功';
+  @override
+  String get k_0akceel => '圖片保存失敗';
+  @override
+  String get k_003rk1s => '保存';
+  @override
+  String get k_04a0awq => '[語音訊息]';
+  @override
+  String get k_105c3y3 => '影片載入失敗';
+  @override
+  String get k_176rzr7 => '聊天記錄';
+  @override
+  String get k_0d5z4m5 => '選擇提醒人';
+  @override
+  String get k_003ngex => '完成';
+  @override
+  String get k_1665ltg => '發起呼叫';
+  @override
+  String get k_003n8b0 => '拍攝';
+  @override
+  String get k_003kthh => '照片';
+  @override
+  String get k_003tnp0 => '檔案';
+  @override
+  String get k_0jhdhtp => '發送失敗,影片不能大於100MB';
+  @override
+  String get k_119ucng => '圖片不能為空';
+  @override
+  String k_0w9x8gw({required Object successPath}) => '選擇成功$successPath';
+  @override
+  String get k_13dsw4l => '松開取消';
+  @override
+  String get k_0am7r68 => '手指上滑，取消發送';
+  @override
+  String get k_15jl6qw => '說話時間太短!';
+  @override
+  String get k_0gx7vl6 => '按住說話';
+  @override
+  String get k_15dlafd => '逐條轉發';
+  @override
+  String get k_15dryxy => '合並轉發';
+  @override
+  String get k_1eyhieh => '確定刪除已選訊息';
+  @override
+  String get k_17fmlyf => '清除聊天';
+  @override
+  String get k_0dhesoz => '取消置頂';
+  @override
+  String get k_002sk7x => '置頂';
+  @override
+  String get k_003ll77 => '草稿';
+  @override
+  String get k_03icaxo => '自定義';
+  @override
+  String k_1969986({required Object callingLastMsgShow}) =>
+      '[語音通話]：$callingLastMsgShow';
+  @override
+  String k_1960dlr({required Object callingLastMsgShow}) =>
+      '[視訊通話]：$callingLastMsgShow';
+  @override
+  String k_1np495n({required Object messageString}) => '$messageString[有人@我]';
+  @override
+  String k_1m797yi({required Object messageString}) => '$messageString[@所有人]';
+  @override
+  String get k_1uaov41 => '查找聊天內容';
+  @override
+  String get k_003kfai => '未知';
+  @override
+  String get k_13dq4an => '自動審批';
+  @override
+  String get k_0l13cde => '管理員審批';
+  @override
+  String get k_11y8c6a => '禁止加群';
+  @override
+  String get k_1kvyskd => '無網絡連接，無法修改';
+  @override
+  String get k_16payqf => '加群方式';
+  @override
+  String get k_0vzvn8r => '修改群名稱';
+  @override
+  String get k_038lh6u => '群管理';
+  @override
+  String get k_0k5wyiy => '設置管理員';
+  @override
+  String get k_0goiuwk => '全員禁言';
+  @override
+  String get k_1g889xx => '全員禁言開啟後，只允許群主和管理員發言。';
+  @override
+  String get k_0wlrefq => '添加需要禁言的群成員';
+  @override
+  String get k_0goox5g => '設置禁言';
+  @override
+  String get k_08daijh => '成功取消管理員身份';
+  @override
+  String k_0bxm97s({required Object adminNum}) => '管理員 ($adminNum/10)';
+  @override
+  String get k_0k5u935 => '添加管理員';
+  @override
+  String get k_03enyx5 => '群成員';
+  @override
+  String k_0jayw3z({required Object groupMemberNum}) => '群成員($groupMemberNum人)';
+  @override
+  String get k_0h1svv1 => '刪除群成員';
+  @override
+  String get k_0h1g636 => '添加群成員';
+  @override
+  String get k_0uj7208 => '無網絡連接，無法查看群成員';
+  @override
+  String k_01yfa4o({required Object memberCount}) => '$memberCount人';
+  @override
+  String get k_0hpukyx => '查看更多群成員';
+  @override
+  String get k_0qtsar0 => '訊息免打擾';
+  @override
+  String get k_0ef2a12 => '修改我的群昵稱';
+  @override
+  String get k_1aajych => '僅限中文、字母、數字和下劃線，2-20個字';
+  @override
+  String get k_137pab5 => '我的群昵稱';
+  @override
+  String get k_0ivim6d => '暫無群公告';
+  @override
+  String get k_03eq6cn => '群公告';
+  @override
+  String get k_002vxya => '編輯';
+  @override
+  String get k_17fpl3y => '置頂聊天';
+  @override
+  String get k_03es1ox => '群類型';
+  @override
+  String get k_003mz1i => '同意';
+  @override
+  String get k_003lpre => '拒絕';
+  @override
+  String get k_003qk66 => '頭像';
+  @override
+  String get k_003lhvk => '昵稱';
+  @override
+  String get k_003ps50 => '賬號';
+  @override
+  String get k_15lx52z => '個性簽名';
+  @override
+  String get k_003qgkp => '性別';
+  @override
+  String get k_003m6hr => '生日';
+  @override
+  String get k_0003v6a => '男';
+  @override
+  String get k_00043x2 => '女';
+  @override
+  String get k_03bcjkv => '未設置';
+  @override
+  String get k_11s0gdz => '修改昵稱';
+  @override
+  String get k_0p3j4sd => '僅限中字、字母、數字和下劃線';
+  @override
+  String get k_15lyvdt => '修改簽名';
+  @override
+  String get k_0vylzjp => '這個人很懶，什麽也沒寫';
+  @override
+  String get k_1hs7ese => '等上線再改這個';
+  @override
+  String get k_03exjk7 => '備註名';
+  @override
+  String get k_0s3skfd => '加入黑名單';
+  @override
+  String get k_0p3b31s => '修改備註名';
+  @override
+  String get k_0003y9x => '無';
+  @override
+  String get k_11zgnfs => '個人資料';
+  @override
+  String k_03xd79d({required Object signature}) => '個性簽名: $signature';
+  @override
+  String get k_1tez2xl => '暫無個性簽名';
+  @override
+  String get k_118prbn => '全局搜尋';
+  @override
+  String get k_1m9dftc => '全部聯絡人';
+  @override
+  String get k_0em4gyz => '全部群組';
+  @override
+  String get k_002twmj => '群組';
+  @override
+  String get k_09kga0d => '更多聊天記錄';
+  @override
+  String k_1ui5lzi({required Object count}) => '$count條相關聊天記錄';
+  @override
+  String get k_09khmso => '相關聊天記錄';
+  @override
+  String k_1kevf4k({required Object receiver}) => '與$receiver的聊天記錄';
+  @override
+  String get k_0vjj2kp => '群組的聊天記錄';
+  @override
+  String get k_003n2rp => '選擇';
+  @override
+  String get k_03ignw6 => '所有人';
+  @override
+  String get k_03erpei => '管理員';
+  @override
+  String get k_0qi9tno => '群主、管理員';
+  @override
+  String get k_1m9exwh => '最近聯絡人';
+  @override
+  String get k_119nwqr => '輸入不能為空';
+  @override
+  String get k_0pzwbmg => '影片保存成功';
+  @override
+  String get k_0aktupv => '影片保存失敗';
+  @override
+  String k_1qbg9xc({required Object option8}) => '$option8為 ';
+  @override
+  String k_1wq5ubm({required Object option7}) => '$option7修改';
+  @override
+  String k_0y5pu80({required Object option6}) => '$option6退出群組';
+  @override
+  String k_0nl7cmd({required Object option5}) => '邀請$option5加入群組';
+  @override
+  String k_1ju5iqw({required Object option4}) => '將$option4踢出群組';
+  @override
+  String k_1ovt677({required Object option3}) => '用戶$option3加入了群組';
+  @override
+  String k_0k05b8b({required Object option2}) => '$option2 被';
+  @override
+  String k_0wm4xeb({required Object option2}) => '系統訊息 $option2';
+  @override
+  String k_0nbq9v3({required Object option2}) => '通話時間：$option2';
+  @override
+  String k_0i1kf53({required Object option2}) => '[檔案] $option2';
+  @override
+  String k_1gnnby6({required Object option2}) => '想訪問您的$option2';
+  @override
+  String k_1wh4atg({required Object option2}) => '$option2 分鐘前';
+  @override
+  String k_07sh7g1({required Object option2}) => '昨天 $option2';
+  @override
+  String k_1pj8xzh({required Object option2}) => '我的用戶ID: $option2';
+  @override
+  String k_0py1evo({required Object option2}) => '個性簽名: $option2';
+  @override
+  String k_1kvj4i2({required Object option2}) => '$option2回收了一條訊息';
+  @override
+  String k_1v0lbpp({required Object option2}) =>
+      '「$option2」暫不可以開啟此類檔案，你可以使用其他應用開啟並預覽';
+  @override
+  String k_0torwfz({required Object option2}) => '選擇成功$option2';
+  @override
+  String k_0i1bjah({required Object option1}) => '$option1回收了一條訊息';
+  @override
+  String k_1qzxh9q({required Object option3}) => '通話時間：$option3';
+  @override
+  String k_0wrgmom({required Object option1}) => '[語音通話]：$option1';
+  @override
+  String k_06ix2f0({required Object option2}) => '[視訊通話]：$option2';
+  @override
+  String k_08o3z5w({required Object option1}) => '[檔案] $option1';
+  @override
+  String k_0ezbepg({required Object option2}) => '$option2[有人@我]';
+  @override
+  String k_1ccnht1({required Object option2}) => '$option2[@所有人]';
+  @override
+  String k_1k3arsw({required Object option2}) => '管理員 ($option2/10)';
+  @override
+  String k_1d4golg({required Object option1}) => '群成員($option1人)';
+  @override
+  String k_1bg69nt({required Object option1}) => '$option1人';
+  @override
+  String k_00gjqxj({required Object option1}) => '個性簽名: $option1';
+  @override
+  String k_0c29cxr({required Object option1}) => '$option1條相關聊天記錄';
+  @override
+  String k_1twk5rz({required Object option1}) => '與$option1的聊天記錄';
+  @override
+  String k_1vn4xq1({required Object adminMember}) => '將 $adminMember 取消管理員';
+  @override
+  String get k_0e35hsw => '為方便您將所拍攝的照片或影片發送給朋友，以及進行視訊通話，請允許我們訪問攝像頭進行拍攝照片和影片。';
+  @override
+  String get k_0dj6yr7 => '為方便您發送語音訊息、拍攝影片以及音視訊通話，請允許我們使用咪高風進行錄音。';
+  @override
+  String get k_003qnsl => '存儲';
+  @override
+  String get k_0s3rtpw =>
+      '為方便您查看和選擇相冊裏的圖片影片發送給朋友，以及保存內容到設備，請允許我們訪問您設備上的照片、媒體內容。';
+  @override
+  String k_0tezv85({required Object option2}) => ' 申請獲取$option2';
+  @override
+  String get k_002rety => '權限';
+  @override
+  String get k_18o68ro => '需要授予';
+  @override
+  String get k_1onpf8u => ' 相機權限，以正常使用拍攝圖片/影片、視訊通話等功能。';
+  @override
+  String get k_17irga5 => ' 咪高風權限，以正常使用發送語音訊息、拍攝影片、音視訊通話等功能。';
+  @override
+  String get k_0572kc4 => ' 訪問照片權限，以正常使用發送圖片、影片等功能。';
+  @override
+  String get k_0slykws => ' 訪問相冊寫入權限，以正常使用存儲圖片、影片等功能。';
+  @override
+  String get k_119pkcd => ' 檔案讀寫權限，以正常使用在聊天功能中的圖片查看、選擇能力和發送檔案的能力。';
+  @override
+  String get k_0gqewd3 => '以後再說';
+  @override
+  String get k_03eq4s1 => '去開啟';
+  @override
+  String get k_0nt2uyg => '回到最新位置';
+  @override
+  String k_04l16at({required Object option1}) => '$option1條新訊息';
+  @override
+  String get k_13p3w93 => '有人@我';
+  @override
+  String get k_18w5uk6 => '@所有人';
+  @override
+  String get k_0jmujgh => '其他檔案正在接收中';
+  @override
+  String get k_12s5ept => '訊息詳情';
+  @override
+  String k_0mxa4f4({required Object option1}) => '$option1人已讀';
+  @override
+  String k_061tue3({required Object option2}) => '$option2人未讀';
+  @override
+  String get k_18qjstb => '轉讓群主';
+  @override
+  String k_0on1aj2({required Object option2}) => '有$option2條@我訊息';
+  @override
+  String get k_09j4izl => '[有人@我] ';
+  @override
+  String get k_1oqtjw0 => '[@所有人] ';
+  @override
+  String k_1x5a9vb({required Object option1}) => '我是: $option1';
+  @override
+  String get k_14n31e7 => '進群請求';
+  @override
+  String k_08nc5j1({required Object option1}) => '群類型: $option1';
+  @override
+  String k_1josu12({required Object option1}) => '$option1 條入群請求';
+  @override
+  String k_0n2x5s0({required Object option2}) => '驗證消息: $option2';
+  @override
+  String get k_03c1nx0 => '已同意';
+  @override
+  String get k_03aw9w8 => '已拒絕';
+  @override
+  String get k_038ryos => '去處理';
+  @override
+  String get k_0gw8pum => '进群申请';
 }
 
 /// Flat map(s) containing all translations.
@@ -1248,13 +1915,13 @@ extension on _StringsEn {
       'k_003tr0a': 'Group owner',
       'k_002wddw': 'Mute',
       'k_0got6f7': 'Unmute',
-      'k_1uaqed6': '["Custom"]',
-      'k_0z2z7rx': '["Voice"]',
-      'k_0y39ngu': '["Emoji"]',
-      'k_0y1a2my': '["Image"]',
-      'k_0z4fib8': '["Video"]',
-      'k_0y24mcg': '["Location"]',
-      'k_0pewpd1': '["Chat history"]',
+      'k_1uaqed6': '[Custom]',
+      'k_0z2z7rx': '[Voice]',
+      'k_0y39ngu': '[Emoji]',
+      'k_0y1a2my': '[Image]',
+      'k_0z4fib8': '[Video]',
+      'k_0y24mcg': '[Location]',
+      'k_0pewpd1': '[Chat history]',
       'k_13s8d9p': 'Unknown message',
       'k_003qkx2': 'Calendar',
       'k_003n2pz': 'Camera',
@@ -1288,8 +1955,8 @@ extension on _StringsEn {
       'k_003pqpr': 'Recall',
       'k_03ezhho': 'Copied',
       'k_11ctfsz': 'Not implemented',
-      'k_1hbjg5g': '["Group system message"]',
-      'k_03tvswb': '["Unknown message"]',
+      'k_1hbjg5g': '[Group system message]',
+      'k_03tvswb': '[Unknown message]',
       'k_155cj23': 'You\'ve recalled a message.',
       'k_0gapun3': 'Edit it again',
       'k_0003z7x': 'You',
@@ -1301,7 +1968,7 @@ extension on _StringsEn {
       'k_0pytyeu': 'Image saved successfully',
       'k_0akceel': 'Failed to save the image',
       'k_003rk1s': 'Save',
-      'k_04a0awq': '["Voice message"]',
+      'k_04a0awq': '[Voice message]',
       'k_105c3y3': 'Failed to load the video',
       'k_176rzr7': 'Chat history',
       'k_002r305': 'Send',
@@ -1534,7 +2201,7 @@ extension on _StringsEn {
       'k_13p3w93': 'Someone @ me',
       'k_18w5uk6': '@ all',
       'k_0jmujgh': 'You are receiving other files',
-      'k_12s5ept': 'Message deta ils',
+      'k_12s5ept': 'Message details',
       'k_0mxa4f4': ({required Object option1}) => '$option1 read',
       'k_061tue3': ({required Object option2}) => '$option2 unread',
       'k_1vn4xq1': ({required Object adminMember}) =>
@@ -1552,11 +2219,25 @@ extension on _StringsEn {
       'k_0gqewd3': 'Later',
       'k_03eq4s1': 'Authorize Now',
       'k_18qjstb': 'Transfer Group',
+      'k_0on1aj2': ({required Object option2}) => '$option2 messages @ me',
+      'k_09j4izl': '[Someone @ me] ',
+      'k_1oqtjw0': '[@ all] ',
+      'k_1x5a9vb': ({required Object option1}) => 'This is: $option1',
+      'k_14n31e7': 'Add Group',
+      'k_08nc5j1': ({required Object option1}) => 'Group type: $option1',
+      'k_1josu12': ({required Object option1}) =>
+          '$option1 group joining request(s)',
+      'k_0n2x5s0': ({required Object option2}) =>
+          'Verification message: $option2',
+      'k_03c1nx0': 'Agreed',
+      'k_03aw9w8': 'Rejected',
+      'k_038ryos': 'Handle now',
+      'k_0gw8pum': 'Add Group',
     };
   }
 }
 
-extension on _StringsZh {
+extension on _StringsZhHans {
   Map<String, dynamic> _buildFlatMap() {
     return {
       'k_1yemzyd': '收到一条消息',
@@ -1848,6 +2529,326 @@ extension on _StringsZh {
       'k_0mxa4f4': ({required Object option1}) => '$option1人已读',
       'k_061tue3': ({required Object option2}) => '$option2人未读',
       'k_18qjstb': '转让群主',
+      'k_0on1aj2': ({required Object option2}) => '有$option2条@我消息',
+      'k_09j4izl': '[有人@我] ',
+      'k_1oqtjw0': '[@所有人] ',
+      'k_1x5a9vb': ({required Object option1}) => '我是: $option1',
+      'k_14n31e7': '进群请求',
+      'k_08nc5j1': ({required Object option1}) => '群类型: $option1',
+      'k_1josu12': ({required Object option1}) => '$option1 条入群请求',
+      'k_0n2x5s0': ({required Object option2}) => '验证消息: $option2',
+      'k_03c1nx0': '已同意',
+      'k_03aw9w8': '已拒绝',
+      'k_038ryos': '去处理',
+      'k_0gw8pum': '进群申请',
+    };
+  }
+}
+
+extension on _StringsZhHant {
+  Map<String, dynamic> _buildFlatMap() {
+    return {
+      'k_1yemzyd': '收到一條訊息',
+      'k_0ylosxn': '自定義訊息',
+      'k_13sajrj': '貼圖訊息',
+      'k_13sjeb7': '檔案訊息',
+      'k_0yd2ft8': '群提示訊息',
+      'k_13s7mxn': '圖片訊息',
+      'k_13satlt': '位置訊息',
+      'k_00bbtsx': '合並轉發訊息',
+      'k_13sqwu4': '語音訊息',
+      'k_13sqjjp': '影片',
+      'k_1fdhj9g': '該版本不支持此訊息',
+      'k_06pujtm': '同意任何用戶添加好友',
+      'k_0gyhkp5': '需要驗證',
+      'k_121ruco': '拒絕任何人加好友',
+      'k_05nspni': '自定義字段',
+      'k_03fchyy': '群頭像',
+      'k_03i9mfe': '群簡介',
+      'k_03agq58': '群名稱',
+      'k_039xqny': '群通知',
+      'k_003tr0a': '群主',
+      'k_03iqsh4': ({required Object s}) => '$s為 ',
+      'k_191t5n4': ({required Object opUserNickName}) => '$opUserNickName修改',
+      'k_1pg6aoj': ({required Object opUserNickName}) => '$opUserNickName退出群組',
+      'k_1f6zt3v': ({required Object invitedMemberString}) =>
+          '邀請$invitedMemberString加入群組',
+      'k_0y7zd07': ({required Object invitedMemberString}) =>
+          '將$invitedMemberString踢出群組',
+      'k_03c49qt': '去授權',
+      'k_1d5mshh': ({required Object joinedMemberString}) =>
+          '用戶$joinedMemberString加入了群組',
+      'k_002wddw': '禁言',
+      'k_0got6f7': '解除禁言',
+      'k_0yenqf0': ({required Object userName}) => '$userName 被',
+      'k_0spotql': ({required Object adminMember}) => '將 $adminMember 設置為管理員',
+      'k_0pg5zzj': ({required Object operationType}) => '系統訊息 $operationType',
+      'k_0ohzb9l': ({required Object callTime}) => '通話時間：$callTime',
+      'k_1uaqed6': '[自定義]',
+      'k_0z2z7rx': '[語音]',
+      'k_0y39ngu': '[貼圖]',
+      'k_1c7z88n': ({required Object fileName}) => '[檔案] $fileName',
+      'k_0y1a2my': '[圖片]',
+      'k_0z4fib8': '[影片]',
+      'k_0y24mcg': '[位置]',
+      'k_0pewpd1': '[聊天記錄]',
+      'k_13s8d9p': '未知訊息',
+      'k_1c3us5n': '當前群組不支持@全體成員',
+      'k_11k579v': '發言中有非法語句',
+      'k_003qkx2': '日歷',
+      'k_003n2pz': '相機',
+      'k_03idjo0': '聯絡人',
+      'k_003ltgm': '位置',
+      'k_02k3k86': '咪高風',
+      'k_003pm7l': '相冊',
+      'k_15ao57x': '相冊寫入',
+      'k_164m3jd': '本地存儲',
+      'k_0qba4ns': ({required Object yoursItem}) => '想訪問您的$yoursItem',
+      'k_03r6qyx': '我們需要您的同意才能獲取信息',
+      'k_02noktt': '不允許',
+      'k_00043x4': '好',
+      'k_003qzac': '昨天',
+      'k_003r39d': '前天',
+      'k_03fqp9o': '星期天',
+      'k_03ibg5h': '星期一',
+      'k_03i7hu1': '星期二',
+      'k_03iaiks': '星期三',
+      'k_03el9pa': '星期四',
+      'k_03i7ok1': '星期五',
+      'k_03efxyg': '星期六',
+      'k_0oozw9x': ({required Object diffMinutes}) => '$diffMinutes 分鐘前',
+      'k_003q7ba': '下午',
+      'k_003q7bb': '上午',
+      'k_003pu3h': '現在',
+      'k_13hzn00': ({required Object yesterday}) => '昨天 $yesterday',
+      'k_0n9pyxz': '用戶不存在',
+      'k_1bjwemh': '搜尋用戶 ID',
+      'k_003kv3v': '搜尋',
+      'k_02owlq8': ({required Object userID}) => '我的用戶ID: $userID',
+      'k_1wu8h4x': ({required Object showName}) => '我是: $showName',
+      'k_16758qw': '添加好友',
+      'k_1shx4d9': ({required Object selfSignature}) => '個性簽名: $selfSignature',
+      'k_0i553x0': '填寫驗證信息',
+      'k_031ocwx': '請填寫備註和分組',
+      'k_003ojje': '備註',
+      'k_003lsav': '分組',
+      'k_167bdvq': '我的好友',
+      'k_156b4ut': '好友申請已發送',
+      'k_002r305': '發送',
+      'k_03gu05e': '聊天室',
+      'k_03b4f3p': '會議群',
+      'k_03avj1p': '公開群',
+      'k_03asq2g': '工作群',
+      'k_03b3hbi': '未知群',
+      'k_1loix7s': ({required Object groupType}) => '群類型: $groupType',
+      'k_1lqbsib': '該群組不存在',
+      'k_03h153m': '搜尋群ID',
+      'k_0oxak3r': '群申請已發送',
+      'k_002rflt': '刪除',
+      'k_1don84v': '無法定位到原訊息',
+      'k_003q5fi': '復製',
+      'k_003prq0': '轉發',
+      'k_002r1h2': '多選',
+      'k_003j708': '引用',
+      'k_003pqpr': '回收',
+      'k_03ezhho': '已復製',
+      'k_11ctfsz': '暫未實現',
+      'k_1hbjg5g': '[群系統訊息]',
+      'k_03tvswb': '[未知訊息]',
+      'k_155cj23': '您回收了一條訊息，',
+      'k_0gapun3': '重新編輯',
+      'k_1uh417q': ({required Object displayName}) => '$displayName回收了一條訊息',
+      'k_1aszp2k': '您確定要重發這條訊息麽？',
+      'k_003rzap': '確定',
+      'k_003nevv': '取消',
+      'k_0003z7x': '您',
+      'k_002wfe4': '已讀',
+      'k_002wjlg': '未讀',
+      'k_0h1ygf8': '發起通話',
+      'k_0h169j0': '取消通話',
+      'k_0h13jjk': '接受通話',
+      'k_0h19hfx': '拒絕通話',
+      'k_0obi9lh': '超時未接聽',
+      'k_0y9u662': ({required Object appName}) =>
+          '「$appName」暫不可以開啟此類檔案，你可以使用其他應用開啟並預覽',
+      'k_001nmhu': '用其他應用開啟',
+      'k_1ht1b80': '正在接收中',
+      'k_105682d': '圖片載入失敗',
+      'k_0pytyeu': '圖片保存成功',
+      'k_0akceel': '圖片保存失敗',
+      'k_003rk1s': '保存',
+      'k_04a0awq': '[語音訊息]',
+      'k_105c3y3': '影片載入失敗',
+      'k_176rzr7': '聊天記錄',
+      'k_0d5z4m5': '選擇提醒人',
+      'k_003ngex': '完成',
+      'k_1665ltg': '發起呼叫',
+      'k_003n8b0': '拍攝',
+      'k_003kthh': '照片',
+      'k_003tnp0': '檔案',
+      'k_0jhdhtp': '發送失敗,影片不能大於100MB',
+      'k_119ucng': '圖片不能為空',
+      'k_0w9x8gw': ({required Object successPath}) => '選擇成功$successPath',
+      'k_13dsw4l': '松開取消',
+      'k_0am7r68': '手指上滑，取消發送',
+      'k_15jl6qw': '說話時間太短!',
+      'k_0gx7vl6': '按住說話',
+      'k_15dlafd': '逐條轉發',
+      'k_15dryxy': '合並轉發',
+      'k_1eyhieh': '確定刪除已選訊息',
+      'k_17fmlyf': '清除聊天',
+      'k_0dhesoz': '取消置頂',
+      'k_002sk7x': '置頂',
+      'k_003ll77': '草稿',
+      'k_03icaxo': '自定義',
+      'k_1969986': ({required Object callingLastMsgShow}) =>
+          '[語音通話]：$callingLastMsgShow',
+      'k_1960dlr': ({required Object callingLastMsgShow}) =>
+          '[視訊通話]：$callingLastMsgShow',
+      'k_1np495n': ({required Object messageString}) => '$messageString[有人@我]',
+      'k_1m797yi': ({required Object messageString}) => '$messageString[@所有人]',
+      'k_1uaov41': '查找聊天內容',
+      'k_003kfai': '未知',
+      'k_13dq4an': '自動審批',
+      'k_0l13cde': '管理員審批',
+      'k_11y8c6a': '禁止加群',
+      'k_1kvyskd': '無網絡連接，無法修改',
+      'k_16payqf': '加群方式',
+      'k_0vzvn8r': '修改群名稱',
+      'k_038lh6u': '群管理',
+      'k_0k5wyiy': '設置管理員',
+      'k_0goiuwk': '全員禁言',
+      'k_1g889xx': '全員禁言開啟後，只允許群主和管理員發言。',
+      'k_0wlrefq': '添加需要禁言的群成員',
+      'k_0goox5g': '設置禁言',
+      'k_08daijh': '成功取消管理員身份',
+      'k_0bxm97s': ({required Object adminNum}) => '管理員 ($adminNum/10)',
+      'k_0k5u935': '添加管理員',
+      'k_03enyx5': '群成員',
+      'k_0jayw3z': ({required Object groupMemberNum}) =>
+          '群成員($groupMemberNum人)',
+      'k_0h1svv1': '刪除群成員',
+      'k_0h1g636': '添加群成員',
+      'k_0uj7208': '無網絡連接，無法查看群成員',
+      'k_01yfa4o': ({required Object memberCount}) => '$memberCount人',
+      'k_0hpukyx': '查看更多群成員',
+      'k_0qtsar0': '訊息免打擾',
+      'k_0ef2a12': '修改我的群昵稱',
+      'k_1aajych': '僅限中文、字母、數字和下劃線，2-20個字',
+      'k_137pab5': '我的群昵稱',
+      'k_0ivim6d': '暫無群公告',
+      'k_03eq6cn': '群公告',
+      'k_002vxya': '編輯',
+      'k_17fpl3y': '置頂聊天',
+      'k_03es1ox': '群類型',
+      'k_003mz1i': '同意',
+      'k_003lpre': '拒絕',
+      'k_003qk66': '頭像',
+      'k_003lhvk': '昵稱',
+      'k_003ps50': '賬號',
+      'k_15lx52z': '個性簽名',
+      'k_003qgkp': '性別',
+      'k_003m6hr': '生日',
+      'k_0003v6a': '男',
+      'k_00043x2': '女',
+      'k_03bcjkv': '未設置',
+      'k_11s0gdz': '修改昵稱',
+      'k_0p3j4sd': '僅限中字、字母、數字和下劃線',
+      'k_15lyvdt': '修改簽名',
+      'k_0vylzjp': '這個人很懶，什麽也沒寫',
+      'k_1hs7ese': '等上線再改這個',
+      'k_03exjk7': '備註名',
+      'k_0s3skfd': '加入黑名單',
+      'k_0p3b31s': '修改備註名',
+      'k_0003y9x': '無',
+      'k_11zgnfs': '個人資料',
+      'k_03xd79d': ({required Object signature}) => '個性簽名: $signature',
+      'k_1tez2xl': '暫無個性簽名',
+      'k_118prbn': '全局搜尋',
+      'k_1m9dftc': '全部聯絡人',
+      'k_0em4gyz': '全部群組',
+      'k_002twmj': '群組',
+      'k_09kga0d': '更多聊天記錄',
+      'k_1ui5lzi': ({required Object count}) => '$count條相關聊天記錄',
+      'k_09khmso': '相關聊天記錄',
+      'k_1kevf4k': ({required Object receiver}) => '與$receiver的聊天記錄',
+      'k_0vjj2kp': '群組的聊天記錄',
+      'k_003n2rp': '選擇',
+      'k_03ignw6': '所有人',
+      'k_03erpei': '管理員',
+      'k_0qi9tno': '群主、管理員',
+      'k_1m9exwh': '最近聯絡人',
+      'k_119nwqr': '輸入不能為空',
+      'k_0pzwbmg': '影片保存成功',
+      'k_0aktupv': '影片保存失敗',
+      'k_1qbg9xc': ({required Object option8}) => '$option8為 ',
+      'k_1wq5ubm': ({required Object option7}) => '$option7修改',
+      'k_0y5pu80': ({required Object option6}) => '$option6退出群組',
+      'k_0nl7cmd': ({required Object option5}) => '邀請$option5加入群組',
+      'k_1ju5iqw': ({required Object option4}) => '將$option4踢出群組',
+      'k_1ovt677': ({required Object option3}) => '用戶$option3加入了群組',
+      'k_0k05b8b': ({required Object option2}) => '$option2 被',
+      'k_0wm4xeb': ({required Object option2}) => '系統訊息 $option2',
+      'k_0nbq9v3': ({required Object option2}) => '通話時間：$option2',
+      'k_0i1kf53': ({required Object option2}) => '[檔案] $option2',
+      'k_1gnnby6': ({required Object option2}) => '想訪問您的$option2',
+      'k_1wh4atg': ({required Object option2}) => '$option2 分鐘前',
+      'k_07sh7g1': ({required Object option2}) => '昨天 $option2',
+      'k_1pj8xzh': ({required Object option2}) => '我的用戶ID: $option2',
+      'k_0py1evo': ({required Object option2}) => '個性簽名: $option2',
+      'k_1kvj4i2': ({required Object option2}) => '$option2回收了一條訊息',
+      'k_1v0lbpp': ({required Object option2}) =>
+          '「$option2」暫不可以開啟此類檔案，你可以使用其他應用開啟並預覽',
+      'k_0torwfz': ({required Object option2}) => '選擇成功$option2',
+      'k_0i1bjah': ({required Object option1}) => '$option1回收了一條訊息',
+      'k_1qzxh9q': ({required Object option3}) => '通話時間：$option3',
+      'k_0wrgmom': ({required Object option1}) => '[語音通話]：$option1',
+      'k_06ix2f0': ({required Object option2}) => '[視訊通話]：$option2',
+      'k_08o3z5w': ({required Object option1}) => '[檔案] $option1',
+      'k_0ezbepg': ({required Object option2}) => '$option2[有人@我]',
+      'k_1ccnht1': ({required Object option2}) => '$option2[@所有人]',
+      'k_1k3arsw': ({required Object option2}) => '管理員 ($option2/10)',
+      'k_1d4golg': ({required Object option1}) => '群成員($option1人)',
+      'k_1bg69nt': ({required Object option1}) => '$option1人',
+      'k_00gjqxj': ({required Object option1}) => '個性簽名: $option1',
+      'k_0c29cxr': ({required Object option1}) => '$option1條相關聊天記錄',
+      'k_1twk5rz': ({required Object option1}) => '與$option1的聊天記錄',
+      'k_1vn4xq1': ({required Object adminMember}) => '將 $adminMember 取消管理員',
+      'k_0e35hsw': '為方便您將所拍攝的照片或影片發送給朋友，以及進行視訊通話，請允許我們訪問攝像頭進行拍攝照片和影片。',
+      'k_0dj6yr7': '為方便您發送語音訊息、拍攝影片以及音視訊通話，請允許我們使用咪高風進行錄音。',
+      'k_003qnsl': '存儲',
+      'k_0s3rtpw': '為方便您查看和選擇相冊裏的圖片影片發送給朋友，以及保存內容到設備，請允許我們訪問您設備上的照片、媒體內容。',
+      'k_0tezv85': ({required Object option2}) => ' 申請獲取$option2',
+      'k_002rety': '權限',
+      'k_18o68ro': '需要授予',
+      'k_1onpf8u': ' 相機權限，以正常使用拍攝圖片/影片、視訊通話等功能。',
+      'k_17irga5': ' 咪高風權限，以正常使用發送語音訊息、拍攝影片、音視訊通話等功能。',
+      'k_0572kc4': ' 訪問照片權限，以正常使用發送圖片、影片等功能。',
+      'k_0slykws': ' 訪問相冊寫入權限，以正常使用存儲圖片、影片等功能。',
+      'k_119pkcd': ' 檔案讀寫權限，以正常使用在聊天功能中的圖片查看、選擇能力和發送檔案的能力。',
+      'k_0gqewd3': '以後再說',
+      'k_03eq4s1': '去開啟',
+      'k_0nt2uyg': '回到最新位置',
+      'k_04l16at': ({required Object option1}) => '$option1條新訊息',
+      'k_13p3w93': '有人@我',
+      'k_18w5uk6': '@所有人',
+      'k_0jmujgh': '其他檔案正在接收中',
+      'k_12s5ept': '訊息詳情',
+      'k_0mxa4f4': ({required Object option1}) => '$option1人已讀',
+      'k_061tue3': ({required Object option2}) => '$option2人未讀',
+      'k_18qjstb': '轉讓群主',
+      'k_0on1aj2': ({required Object option2}) => '有$option2條@我訊息',
+      'k_09j4izl': '[有人@我] ',
+      'k_1oqtjw0': '[@所有人] ',
+      'k_1x5a9vb': ({required Object option1}) => '我是: $option1',
+      'k_14n31e7': '進群請求',
+      'k_08nc5j1': ({required Object option1}) => '群類型: $option1',
+      'k_1josu12': ({required Object option1}) => '$option1 條入群請求',
+      'k_0n2x5s0': ({required Object option2}) => '驗證消息: $option2',
+      'k_03c1nx0': '已同意',
+      'k_03aw9w8': '已拒絕',
+      'k_038ryos': '去處理',
+      'k_0gw8pum': '进群申请',
     };
   }
 }
