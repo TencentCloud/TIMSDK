@@ -1,23 +1,21 @@
-// ignore_for_file: unused_import
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_custom_elem.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_at_info.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_location_elem.dart';
+import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
+import 'package:tim_ui_kit/data_services/services_locatar.dart';
+import 'package:tim_ui_kit/i18n/i18n_utils.dart';
 import 'package:tim_ui_kit/ui/utils/optimize_utils.dart';
-import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKItMessageList/TIMUIKitTongue/tim_uikit_chat_history_message_list_tongue.dart';
+import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKItMessageList/utils.dart';
 import 'package:tim_ui_kit/ui/widgets/keepalive_wrapper.dart';
 
-import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
-import 'package:tim_ui_kit/tim_ui_kit.dart';
-
-import 'package:tim_ui_kit/data_services/services_locatar.dart';
+import 'TIMUIKitTongue/tim_uikit_chat_history_message_list_tongue.dart';
+import 'TIMUIKitTongue/tim_uikit_chat_history_message_list_tongue_container.dart';
 
 enum LoadingPlace {
   none,
@@ -25,84 +23,122 @@ enum LoadingPlace {
   bottom,
 }
 
-class TIMUIKitHistoryMessageList extends StatefulWidget {
-  static String? loadMoreTag = "";
-  final List<V2TimMessage?> messageList;
-  final Function(String?, [int?]) loadMore;
-  final Function(String?, [int?]) loadMoreAsync;
-  final AutoScrollController scrollController;
-  final bool isNoMoreMessage;
-  final void Function(String userID)? onTapAvatar;
-  final bool isShowNickName;
-  final int conversationType;
-  final V2TimMessage? initFindingMsg;
-  final Function(String? userId, String? nickName)?
-      onLongPressForOthersHeadPortrait;
-  final Function(V2TimMessage message)? onMsgSendFailIconTap;
-  final ValueChanged<String> updateMsgID;
-  final String convId;
-  final List<V2TimGroupAtInfo?>? groupAtInfoList;
+enum ScrollType { toIndex, toIndexBegin }
 
-  /// main history list config
-  final ListView? mainHistoryListConfig;
+class TIMUIKitHistoryMessageListController extends ChangeNotifier {
+  AutoScrollController? scrollController = AutoScrollController();
+  late ScrollType scrollType;
+  late V2TimMessage targetMessage;
 
-  /// message item builder, works for customize all message types and row layout.
-  final MessageItemBuilder? messageItemBuilder;
+  TIMUIKitHistoryMessageListController({
+    AutoScrollController? scrollController,
+  }) {
+    if (scrollController != null) {
+      this.scrollController = scrollController;
+    }
+  }
 
-  /// the builder for tongue
-  final TongueItemBuilder? tongueItemBuilder;
+  scrollToIndex(V2TimMessage message) {
+    scrollType = ScrollType.toIndex;
+    targetMessage = message;
+    notifyListeners();
+  }
 
-  final Widget? Function(V2TimMessage message, Function() closeTooltip,
-      [Key? key])? exteraTipsActionItemBuilder;
-
-  const TIMUIKitHistoryMessageList({
-    Key? key,
-    this.onTapAvatar,
-    required this.isNoMoreMessage,
-    required this.messageList,
-    required this.loadMore,
-    required this.scrollController,
-    required this.isShowNickName,
-    required this.conversationType,
-    required this.updateMsgID,
-    this.messageItemBuilder,
-    this.initFindingMsg,
-    this.exteraTipsActionItemBuilder,
-    this.onLongPressForOthersHeadPortrait,
-    this.onMsgSendFailIconTap,
-    required this.loadMoreAsync,
-    required this.convId,
-    this.tongueItemBuilder,
-    this.groupAtInfoList,
-    this.mainHistoryListConfig,
-  }) : super(key: key);
-
-  @override
-  State<StatefulWidget> createState() => TIMUIKitHistoryMessageListState();
+  scrollToIndexBegin(V2TimMessage message) {
+    scrollType = ScrollType.toIndexBegin;
+    targetMessage = message;
+    notifyListeners();
+  }
 }
 
-class TIMUIKitHistoryMessageListState
-    extends State<TIMUIKitHistoryMessageList> {
-  V2TimMessage? findingMsg;
-  String findingSeq = "";
-  bool isFinishJumpToAt = false;
-  LoadingPlace loadingPlace = LoadingPlace.none;
-  final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
+class TIMUIKitHistoryMessageList extends StatefulWidget {
+  /// message list
+  final List<V2TimMessage?> messageList;
+
+  /// tongue item builder
+  final TongueItemBuilder? tongueItemBuilder;
+
+  /// group at info, it can get from conversation info
+  final List<V2TimGroupAtInfo?>? groupAtInfoList;
+
+  /// use for build message item
+  final Widget Function(BuildContext, V2TimMessage?)? itemBuilder;
+
+  /// can controll message list scroll
+  final TIMUIKitHistoryMessageListController? controller;
+
+  /// use for message jump, if passed will jump to target message.
+  final V2TimMessage? initFindingMsg;
+
+  /// use for load more message
+  final Function(String?, [int?]) onLoadMore;
+
+  /// configuration for list view
+  final ListView? mainHistoryListConfig;
+
+  const TIMUIKitHistoryMessageList(
+      {Key? key,
+      required this.messageList,
+      this.itemBuilder,
+      this.controller,
+      required this.onLoadMore,
+      this.tongueItemBuilder,
+      this.groupAtInfoList,
+      this.initFindingMsg,
+      this.mainHistoryListConfig})
+      : super(key: key);
 
   @override
-  initState() {
+  State<StatefulWidget> createState() => _TIMUIKitHistoryMessageListState();
+}
+
+class _TIMUIKitHistoryMessageListState
+    extends State<TIMUIKitHistoryMessageList> {
+  final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
+  LoadingPlace loadingPlace = LoadingPlace.none;
+  V2TimMessage? findingMsg;
+  String findingSeq = "";
+  late TIMUIKitHistoryMessageListController _controller;
+  late AutoScrollController _autoScrollController;
+
+  @override
+  void initState() {
     super.initState();
+    _controller = widget.controller ?? TIMUIKitHistoryMessageListController();
+    _autoScrollController =
+        _controller.scrollController ?? AutoScrollController();
+    _controller.addListener(_controllerListener);
     initFinding();
-    initScrollListener();
   }
 
   initFinding() async {
     if (widget.initFindingMsg != null) {
-      await widget.loadMoreAsync(null);
+      await widget.onLoadMore(null);
       setState(() {
         findingMsg = widget.initFindingMsg!;
       });
     }
+  }
+
+  _controllerListener() {
+    final scrollType = _controller.scrollType;
+    final targetMessage = _controller.targetMessage;
+    switch (scrollType) {
+      case ScrollType.toIndex:
+        _onScrollToIndex(targetMessage);
+        break;
+      case ScrollType.toIndexBegin:
+        _onScrollToIndexBegin(targetMessage);
+        break;
+      default:
+    }
+  }
+
+  Widget _getMessageItemBuilder(V2TimMessage? messageItem) {
+    if (widget.itemBuilder != null) {
+      return widget.itemBuilder!(context, messageItem);
+    }
+    return Container();
   }
 
   _getMessageId(int index) {
@@ -159,14 +195,14 @@ class TIMUIKitHistoryMessageListState
         setState(() {
           findingMsg = null;
         });
-        widget.scrollController.scrollToIndex(
+        _autoScrollController.scrollToIndex(
           targetIndex,
           preferPosition: AutoScrollPosition.middle,
         );
-        widget.scrollController.scrollToIndex(targetIndex,
+        _autoScrollController.scrollToIndex(targetIndex,
             preferPosition: AutoScrollPosition.middle);
         // execute twice for accurate position, as the position located firstly can be wrong
-        widget.updateMsgID(targetMsg.msgID!);
+        model.jumpMsgID = targetMsg.msgID!;
         setState(() {
           loadingPlace = LoadingPlace.none;
         });
@@ -174,12 +210,12 @@ class TIMUIKitHistoryMessageListState
         showCantFindMsg();
       }
     } else {
-      if (!widget.isNoMoreMessage) {
+      if (model.haveMoreData) {
         // if the target message not in current message list, load more
         setState(() {
           findingMsg = targetMsg;
         });
-        widget.loadMore(
+        widget.onLoadMore(
             _getMessageId(widget.messageList.length - 1), singleLoadAmount);
       } else {
         showCantFindMsg();
@@ -207,7 +243,7 @@ class TIMUIKitHistoryMessageListState
 
     void showCantFindMsg() {
       setState(() {
-        findingMsg = null;
+        findingSeq = "";
         loadingPlace = LoadingPlace.none;
       });
       Fluttertoast.showToast(
@@ -235,16 +271,17 @@ class TIMUIKitHistoryMessageListState
 
       if (isFound && targetIndex != 1) {
         setState(() {
-          findingMsg = null;
+          findingSeq = "";
         });
-        widget.scrollController.scrollToIndex(
+        _autoScrollController.scrollToIndex(
           targetIndex,
           preferPosition: AutoScrollPosition.middle,
         );
-        widget.scrollController.scrollToIndex(targetIndex,
+        _autoScrollController.scrollToIndex(targetIndex,
             preferPosition: AutoScrollPosition.middle);
         if (targetMsgID != null && targetMsgID != "") {
-          widget.updateMsgID(targetMsgID);
+          // widget.updateMsgID(targetMsgID);
+          model.jumpMsgID = targetMsgID;
         }
         setState(() {
           loadingPlace = LoadingPlace.none;
@@ -253,11 +290,11 @@ class TIMUIKitHistoryMessageListState
         showCantFindMsg();
       }
     } else {
-      if (!widget.isNoMoreMessage) {
+      if (model.haveMoreData) {
         setState(() {
           findingSeq = targetSeq;
         });
-        widget.loadMore(
+        widget.onLoadMore(
             _getMessageId(widget.messageList.length - 1), singleLoadAmount);
       } else {
         showCantFindMsg();
@@ -285,10 +322,7 @@ class TIMUIKitHistoryMessageListState
         }
       }
       if (isFound && targetIndex != 1) {
-        setState(() {
-          findingMsg = null;
-        });
-        widget.scrollController.scrollToIndex(
+        _autoScrollController.scrollToIndex(
           targetIndex,
           preferPosition: AutoScrollPosition.end,
         );
@@ -296,95 +330,17 @@ class TIMUIKitHistoryMessageListState
     }
   }
 
-  _filterCustomMessage(V2TimCustomElem customElem) {
-    return false;
-  }
-
-  _filterMessageList(List<V2TimMessage?> messageList) {
-    if (messageList.isEmpty) {
-      return [];
-    }
-
-    final newMessageList = [];
-    for (var messageItem in messageList) {
-      final msgType = messageItem!.elemType;
-      bool isFilter = false;
-      switch (msgType) {
-        case MessageElemType.V2TIM_ELEM_TYPE_CUSTOM:
-          // return Text(ttBuild.imt("[自定义]"));
-          isFilter = _filterCustomMessage(
-            messageItem.customElem!,
-          );
-      }
-
-      if (!isFilter) {
-        newMessageList.add(messageItem);
-      }
-    }
-    return newMessageList;
-  }
-
-  MessageListTongueType _getTongueValueType(
-      List<V2TimGroupAtInfo?>? groupAtInfoList) {
-    if (groupAtInfoList != null &&
-        groupAtInfoList.isNotEmpty &&
-        !isFinishJumpToAt) {
-      for (V2TimGroupAtInfo? item in groupAtInfoList) {
-        if (item!.atType == 1) {
-          return MessageListTongueType.atMe;
-        } else {
-          return MessageListTongueType.atAll;
-        }
-      }
-    }
-
-    if (model.unreadCountForConversation > 0) {
-      return MessageListTongueType.showUnread;
-    }
-
-    if (model.listPosition == HistoryMessagePosition.awayTwoScreen) {
-      return MessageListTongueType.toLatest;
-    }
-
-    return MessageListTongueType.none;
-  }
-
-  void initScrollListener() {
-    void changePositionState(HistoryMessagePosition newPosition) {
-      if (model.listPosition != newPosition) {
-        setState(() {
-          model.listPosition = newPosition;
-        });
-      }
-    }
-
-    widget.scrollController.addListener(() {
-      final screenHeight = MediaQuery.of(context).size.height;
-      if (widget.scrollController.offset <=
-              widget.scrollController.position.minScrollExtent &&
-          !widget.scrollController.position.outOfRange) {
-        changePositionState(HistoryMessagePosition.bottom);
-      } else if (widget.scrollController.offset <= screenHeight * 1.6 &&
-          widget.scrollController.offset > 0 &&
-          !widget.scrollController.position.outOfRange) {
-        changePositionState(HistoryMessagePosition.inTwoScreen);
-      } else if (widget.scrollController.offset > screenHeight * 1.6 &&
-          !widget.scrollController.position.outOfRange) {
-        changePositionState(HistoryMessagePosition.awayTwoScreen);
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    final theme = Provider.of<TUIThemeViewModel>(context).theme;
-    List messageList = _filterMessageList(widget.messageList);
     if (widget.messageList.isEmpty) {
       return Container();
     }
+    final theme = Provider.of<TUIThemeViewModel>(context).theme;
+    final messageList = widget.messageList;
     final throteFunction = OptimizeUtils.throttle((index) {
-      final msgID = _getMessageId(index);
-      widget.loadMore(msgID);
+      final msgID =
+          TIMUIKitChatUtils.getMessageIDWithinIndex(widget.messageList, index);
+      widget.onLoadMore(msgID);
     }, 20);
 
     if (findingMsg != null) {
@@ -407,7 +363,6 @@ class TIMUIKitHistoryMessageListState
                     widget.mainHistoryListConfig?.padding ?? EdgeInsets.zero,
                 itemExtent: widget.mainHistoryListConfig?.itemExtent,
                 prototypeItem: widget.mainHistoryListConfig?.prototypeItem,
-                addAutomaticKeepAlives: true,
                 cacheExtent: widget.mainHistoryListConfig?.cacheExtent ?? 1200,
                 semanticChildCount:
                     widget.mainHistoryListConfig?.semanticChildCount,
@@ -420,79 +375,33 @@ class TIMUIKitHistoryMessageListState
                 restorationId: widget.mainHistoryListConfig?.restorationId,
                 clipBehavior:
                     widget.mainHistoryListConfig?.clipBehavior ?? Clip.hardEdge,
+                addAutomaticKeepAlives: true,
                 reverse: true,
                 shrinkWrap: true,
                 itemCount: messageList.length,
-                controller: widget.scrollController,
+                controller: _autoScrollController,
                 itemBuilder: (context, index) {
                   final messageItem = messageList[index];
                   if (index == messageList.length - 1) {
-                    if (!widget.isNoMoreMessage) {
+                    if (model.haveMoreData) {
                       throteFunction(index);
                     }
                   }
                   return AutoScrollTag(
-                    controller: widget.scrollController,
+                    controller: _autoScrollController,
                     index: -index,
-                    key: ValueKey(messageItem.seq),
+                    key: ValueKey(-index),
                     highlightColor: Colors.black.withOpacity(0.1),
                     child: KeepAliveWrapper(
-                        child: TIMUIKitHistoryMessageListItem(
-                            scrollToIndex: _onScrollToIndex,
-                            scrollToIndexBegin: _onScrollToIndexBegin,
-                            exteraTipsActionItemBuilder:
-                                widget.exteraTipsActionItemBuilder,
-                            messageItem: messageItem!,
-                            onTapAvatar: widget.onTapAvatar,
-                            isShowNickName: widget.isShowNickName,
-                            messageItemBuilder: widget.messageItemBuilder,
-                            conversationType: widget.conversationType,
-                            onLongPressForOthersHeadPortrait:
-                                widget.onLongPressForOthersHeadPortrait,
-                            onMsgSendFailIconTap: widget.onMsgSendFailIconTap)),
+                        child: _getMessageItemBuilder(messageItem)),
                   );
                 }),
           ),
-          Positioned(
-            bottom: 16,
-            right: 0,
-            child: TIMUIKitHistoryMessageListTongue(
-              tongueItemBuilder: widget.tongueItemBuilder,
-              unreadCount: model.unreadCountForConversation,
-              onClick: () {
-                if (widget.groupAtInfoList != null &&
-                    widget.groupAtInfoList!.isNotEmpty) {
-                  for (V2TimGroupAtInfo? item in widget.groupAtInfoList!) {
-                    _onScrollToIndexBySeq(item!.seq);
-                    model.markMessageAsRead(
-                        convID: widget.convId,
-                        convType: widget.conversationType);
-                    setState(() {
-                      isFinishJumpToAt = true;
-                    });
-                    return;
-                  }
-                }
-
-                if (model.listPosition ==
-                        HistoryMessagePosition.awayTwoScreen ||
-                    model.unreadCountForConversation > 0) {
-                  model.showLatestUnread(widget.convId);
-                  widget.scrollController.animateTo(
-                    widget.scrollController.position.minScrollExtent,
-                    duration: const Duration(milliseconds: 200),
-                    curve: Curves.ease,
-                  );
-                  widget.scrollController.animateTo(
-                    widget.scrollController.position.minScrollExtent,
-                    duration: const Duration(milliseconds: 200),
-                    curve: Curves.ease,
-                  );
-                  return;
-                }
-              },
-              valueType: _getTongueValueType(widget.groupAtInfoList),
-            ),
+          TIMUIKitHistoryMessageListTongueContainer(
+            scrollController: _autoScrollController,
+            scrollToIndexBySeq: _onScrollToIndexBySeq,
+            groupAtInfoList: widget.groupAtInfoList,
+            tongueItemBuilder: widget.tongueItemBuilder,
           ),
           if (loadingPlace == LoadingPlace.bottom)
             Positioned(
@@ -513,5 +422,21 @@ class TIMUIKitHistoryMessageListState
         ],
       ),
     );
+  }
+}
+
+class TIMUIKitHistoryMessageListSelector extends StatelessWidget {
+  final Widget Function(BuildContext, List<V2TimMessage?>, Widget?) builder;
+  final String conversationID;
+
+  const TIMUIKitHistoryMessageListSelector(
+      {Key? key, required this.builder, required this.conversationID})
+      : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Selector<TUIChatViewModel, List<V2TimMessage?>>(
+        builder: builder,
+        selector: (context, model) =>
+            model.getMessageListByConvId(conversationID) ?? []);
   }
 }

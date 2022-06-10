@@ -10,14 +10,10 @@ import 'package:tim_ui_kit/ui/widgets/recent_conversation_list.dart';
 
 class ForwardMessageScreen extends StatefulWidget {
   final bool isMergerForward;
-  final String conversationShowName;
   final int conversationType;
 
   const ForwardMessageScreen(
-      {Key? key,
-      this.isMergerForward = false,
-      required this.conversationShowName,
-      required this.conversationType})
+      {Key? key, this.isMergerForward = false, required this.conversationType})
       : super(key: key);
 
   @override

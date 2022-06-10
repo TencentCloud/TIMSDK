@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_typing_uninitialized_variables, unnecessary_import
+// ignore_for_file: prefer_typing_uninitialized_variables, unnecessary_import, unused_import
 
 import 'dart:async';
 import 'dart:io';
@@ -9,9 +9,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_image.dart';
 
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/constants/history_message_constant.dart';
@@ -47,6 +49,7 @@ class TIMUIKitImageElem extends StatefulWidget {
 class _TIMUIKitImageElem extends State<TIMUIKitImageElem> {
   bool imageIsRender = false;
   bool isShowBorder = false;
+  double? networkImagePositionRadio; // 加这个字段用于异步获取被安全打击后的兜底图的比例
   final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
 
   /*
@@ -225,22 +228,27 @@ class _TIMUIKitImageElem extends State<TIMUIKitImageElem> {
         child: errorDisplay(context, theme),
       ));
 
-  Widget _renderLocalImage(String imgPath, dynamic heroTag,
+  Widget _renderLocalImage(
+      String imgPath, dynamic heroTag, double positionRadio,
       [V2TimImage? originalImg]) {
-    double positionRadio = 1.0;
-    if (originalImg?.width != null &&
-        originalImg?.height != null &&
-        originalImg?.width != 0 &&
-        originalImg?.height != 0) {
-      positionRadio = (originalImg!.width! / originalImg.height!);
-    }
+    double? currentPositionRadio;
+
+    Image image = Image.file(File(imgPath));
+    image.image
+        .resolve(const ImageConfiguration())
+        .addListener(ImageStreamListener((image, synchronousCall) {
+      if (image.image.width != 0 && image.image.height != 0) {
+        currentPositionRadio = image.image.width / image.image.height;
+      }
+    }));
+
     return Stack(
       alignment: AlignmentDirectional.topStart,
       children: [
         AspectRatio(
-          aspectRatio: positionRadio,
+          aspectRatio: currentPositionRadio ?? positionRadio,
           child: Container(
-            decoration: const BoxDecoration(color: Colors.white),
+            decoration: const BoxDecoration(color: Colors.transparent),
           ),
         ),
         getImage(
@@ -270,22 +278,48 @@ class _TIMUIKitImageElem extends State<TIMUIKitImageElem> {
     );
   }
 
+  @override
+  void initState() {
+    super.initState();
+    setOnlineImageRatio();
+  }
+
+  void setOnlineImageRatio() {
+    if (networkImagePositionRadio == null) {
+      V2TimImage? smallImg = getImageFromList(V2_TIM_IMAGE_TYPES_ENUM.small);
+      V2TimImage? originalImg =
+          getImageFromList(V2_TIM_IMAGE_TYPES_ENUM.original);
+      Image image = Image.network(smallImg?.url ?? originalImg?.url ?? "");
+
+      image.image
+          .resolve(const ImageConfiguration())
+          .addListener(ImageStreamListener((ImageInfo info, bool _) {
+        if (info.image.width != 0 && info.image.height != 0) {
+          setState(() {
+            networkImagePositionRadio = (info.image.width / info.image.height);
+          });
+        }
+      }));
+    }
+  }
+
   Widget imageBuilder(dynamic heroTag, TUITheme? theme,
       {V2TimImage? originalImg, V2TimImage? smallImg}) {
-    if (originalImg?.localUrl != null && originalImg?.localUrl != "") {
-      return _renderLocalImage(originalImg!.localUrl!, heroTag, smallImg);
-    } else if (widget.message.imageElem!.path!.isNotEmpty &&
+    double positionRadio = 1.0;
+    if (smallImg?.width != null &&
+        smallImg?.height != null &&
+        smallImg?.width != 0 &&
+        smallImg?.height != 0) {
+      positionRadio = (smallImg!.width! / smallImg.height!);
+    }
+    if (widget.message.imageElem!.path!.isNotEmpty &&
         File(widget.message.imageElem!.path!).existsSync()) {
-      return _renderLocalImage(
-          widget.message.imageElem!.path!, heroTag, smallImg);
+      return _renderLocalImage(widget.message.imageElem!.path!, heroTag,
+          networkImagePositionRadio ?? positionRadio, smallImg);
+    } else if (originalImg?.localUrl != null && originalImg?.localUrl != "") {
+      return _renderLocalImage(originalImg!.localUrl!, heroTag,
+          networkImagePositionRadio ?? positionRadio, smallImg);
     } else if ((smallImg?.url ?? originalImg?.url) != null) {
-      double positionRadio = 1.0;
-      if (smallImg?.width != null &&
-          smallImg?.height != null &&
-          smallImg?.width != 0 &&
-          smallImg?.height != 0) {
-        positionRadio = (smallImg!.width! / smallImg.height!);
-      }
       String bigImgUrl = originalImg?.url ?? getBigPicUrl();
       if (bigImgUrl.isEmpty && smallImg?.url != null) {
         bigImgUrl = smallImg!.url!;
@@ -294,9 +328,9 @@ class _TIMUIKitImageElem extends State<TIMUIKitImageElem> {
         alignment: AlignmentDirectional.topStart,
         children: [
           AspectRatio(
-            aspectRatio: positionRadio,
+            aspectRatio: networkImagePositionRadio ?? positionRadio,
             child: Container(
-              decoration: const BoxDecoration(color: Colors.white),
+              decoration: const BoxDecoration(color: Colors.transparent),
             ),
           ),
           getImage(
@@ -317,7 +351,9 @@ class _TIMUIKitImageElem extends State<TIMUIKitImageElem> {
                 },
                 child: Hero(
                     tag: heroTag,
-                    child: CachedNetworkImage(
+                    child:
+                        // Image.network(smallImg?.url ?? ""),
+                        CachedNetworkImage(
                       width: double.infinity,
                       alignment: Alignment.topCenter,
                       imageUrl: smallImg?.url ?? originalImg!.url!,
@@ -341,7 +377,8 @@ class _TIMUIKitImageElem extends State<TIMUIKitImageElem> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = SharedThemeWidget.of(context)?.theme;
+    // final theme = SharedThemeWidget.of(context)?.theme;
+    final theme = Provider.of<TUIThemeViewModel>(context).theme;
     // Random 为了解决reply时的Hero同层Tag相同问题
     final heroTag =
         "${widget.message.msgID ?? widget.message.id ?? widget.message.timestamp ?? DateTime.now().millisecondsSinceEpoch}${widget.isFrom}";

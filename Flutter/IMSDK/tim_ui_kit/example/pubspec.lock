@@ -353,14 +353,14 @@ packages:
       name: flutter_plugin_record_plus
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.2"
+    version: "0.0.3"
   flutter_screenutil:
     dependency: transitive
     description:
       name: flutter_screenutil
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.4.0+1"
+    version: "5.5.3+2"
   flutter_slidable:
     dependency: transitive
     description:
@@ -1019,11 +1019,18 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.0.9"
+    version: "0.1.0"
   transparent_image:
     dependency: transitive
     description:
       name: transparent_image
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
+  tuple:
+    dependency: transitive
+    description:
+      name: tuple
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"

@@ -3,19 +3,28 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_custom_elem.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/i18n/i18n_utils.dart';
 import 'package:tim_ui_kit/ui/utils/message.dart';
-import 'package:tim_ui_kit/ui/utils/shared_theme.dart';
 
 class TIMUIKitCustomElem extends StatelessWidget {
   final V2TimCustomElem? customElem;
   final bool isFromSelf;
+  final TextStyle? messageFontStyle;
+  final BorderRadius? messageBorderRadius;
+  final Color? messageBackgroundColor;
+  final EdgeInsetsGeometry? textPadding;
 
   const TIMUIKitCustomElem({
     Key? key,
     this.customElem,
     this.isFromSelf = false,
+    this.messageFontStyle,
+    this.messageBorderRadius,
+    this.messageBackgroundColor,
+    this.textPadding,
   }) : super(key: key);
 
   static CallingMessage? getCallMessage(V2TimCustomElem? customElem) {
@@ -94,7 +103,10 @@ class TIMUIKitCustomElem extends StatelessWidget {
           isCallEnd
               ? Text(ttBuild.imt_para("通话时间：{{option2}}", "通话时间：$option2")(
                   option2: option2))
-              : Text(getActionType(callingMessage.actionType!, ttBuild)),
+              : Text(
+                  getActionType(callingMessage.actionType!, ttBuild),
+                  style: messageFontStyle,
+                ),
           if (isFromSelf)
             Padding(
               padding: const EdgeInsets.only(left: 4),
@@ -116,7 +128,7 @@ class TIMUIKitCustomElem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = SharedThemeWidget.of(context)?.theme;
+    final theme = Provider.of<TUIThemeViewModel>(context).theme;
     final borderRadius = isFromSelf
         ? const BorderRadius.only(
             topLeft: Radius.circular(10),
@@ -129,13 +141,13 @@ class TIMUIKitCustomElem extends StatelessWidget {
             bottomLeft: Radius.circular(10),
             bottomRight: Radius.circular(10));
     final backgroundColor = isFromSelf
-        ? theme?.lightPrimaryMaterialColor.shade50
-        : theme?.weakBackgroundColor;
+        ? theme.lightPrimaryMaterialColor.shade50
+        : theme.weakBackgroundColor;
     return Container(
-      padding: const EdgeInsets.all(10),
+      padding: textPadding ?? const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: borderRadius,
+        color: messageBackgroundColor ?? backgroundColor,
+        borderRadius: messageBorderRadius ?? borderRadius,
       ),
       constraints: const BoxConstraints(maxWidth: 240),
       child: _callElemBuilder(context),

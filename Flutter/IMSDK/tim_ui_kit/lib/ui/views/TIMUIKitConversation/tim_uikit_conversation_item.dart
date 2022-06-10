@@ -14,6 +14,9 @@ import 'package:tim_ui_kit/ui/views/TIMUIKitConversation/tim_uikit_conversation_
 import 'package:tim_ui_kit/ui/widgets/avatar.dart';
 import 'package:tim_ui_kit/ui/widgets/unread_message.dart';
 
+typedef LastMessageBuilder = Widget Function(
+    V2TimMessage? lastMsg, List<V2TimGroupAtInfo?> groupAtInfoList);
+
 class TIMUIKitConversationItem extends StatelessWidget {
   final String faceUrl;
   final String nickName;
@@ -24,6 +27,7 @@ class TIMUIKitConversationItem extends StatelessWidget {
   final String? draftText;
   final int? draftTimestamp;
   final bool isDisturb;
+  final LastMessageBuilder? lastMessageBuilder;
 
   const TIMUIKitConversationItem(
       {Key? key,
@@ -35,7 +39,8 @@ class TIMUIKitConversationItem extends StatelessWidget {
       required this.groupAtInfoList,
       required this.isDisturb,
       this.draftText,
-      this.draftTimestamp})
+      this.draftTimestamp,
+      this.lastMessageBuilder})
       : super(key: key);
 
   Widget _getShowMsgWidget(BuildContext context) {
@@ -45,6 +50,9 @@ class TIMUIKitConversationItem extends StatelessWidget {
         draftText: draftText ?? "",
       );
     } else if (lastMsg != null) {
+      if (lastMessageBuilder != null) {
+        return lastMessageBuilder!(lastMsg, groupAtInfoList);
+      }
       return TIMUIKitLastMsg(
         groupAtInfoList: groupAtInfoList,
         lastMsg: lastMsg,
@@ -86,16 +94,23 @@ class TIMUIKitConversationItem extends StatelessWidget {
         child: Consumer<TUIThemeViewModel>(builder: (context, value, child) {
           final theme = value.theme;
           return Container(
-            padding: const EdgeInsets.only(top: 8, left: 16, right: 16),
-            color: isPined ? theme.weakBackgroundColor : Colors.white,
+            padding:
+                const EdgeInsets.only(top: 6, bottom: 6, left: 16, right: 16),
+            decoration: BoxDecoration(
+                color: isPined ? theme.weakBackgroundColor : Colors.white,
+                border: Border(
+                    bottom: BorderSide(
+                        color: theme.weakDividerColor ??
+                            CommonColor.weakDividerColor,
+                        width: 1))),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                  padding: const EdgeInsets.only(bottom: 12),
+                  padding: const EdgeInsets.only(top: 0, bottom: 2, right: 0),
                   child: SizedBox(
-                    width: 48,
-                    height: 48,
+                    width: 44,
+                    height: 44,
                     child: Stack(
                       fit: StackFit.expand,
                       clipBehavior: Clip.none,
@@ -120,15 +135,9 @@ class TIMUIKitConversationItem extends StatelessWidget {
                     child: Container(
                   height: 60,
                   margin: const EdgeInsets.only(left: 12),
-                  padding: const EdgeInsets.only(bottom: 12),
-                  decoration: BoxDecoration(
-                      border: Border(
-                          bottom: BorderSide(
-                              color: theme.weakDividerColor ??
-                                  CommonColor.weakDividerColor,
-                              width: 1))),
+                  padding: const EdgeInsets.only(top: 0, bottom: 0),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -143,7 +152,7 @@ class TIMUIKitConversationItem extends StatelessWidget {
                             style: const TextStyle(
                                 height: 1,
                                 color: Colors.black,
-                                fontSize: 18.0,
+                                fontSize: 18,
                                 fontWeight: FontWeight.w400),
                           )),
                           _getTimeStringForChatWidget(context, theme),
@@ -159,7 +168,7 @@ class TIMUIKitConversationItem extends StatelessWidget {
                               child: Icon(
                                 Icons.notifications_off,
                                 color: theme.weakTextColor,
-                                size: 18.0,
+                                size: 16.0,
                               ),
                             )
                         ],

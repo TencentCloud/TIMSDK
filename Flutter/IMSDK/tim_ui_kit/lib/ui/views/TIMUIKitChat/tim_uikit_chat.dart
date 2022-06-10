@@ -3,28 +3,22 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
+import 'package:tencent_im_sdk_plugin/models/v2_tim_group_application.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_at_info.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
-import 'package:tim_ui_kit/i18n/i18n_utils.dart';
+import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/constants/history_message_constant.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/utils/frame.dart';
-import 'package:tim_ui_kit/ui/utils/message.dart';
 import 'package:tim_ui_kit/ui/utils/optimize_utils.dart';
-import 'package:tim_ui_kit/ui/utils/shared_theme.dart';
-import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
-import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKItMessageList/tim_uikit_chat_history_message_list.dart';
-import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitTextField/tim_uikit_more_panel.dart';
-import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitTextField/tim_uikit_text_field.dart';
-import 'package:tim_ui_kit/ui/views/TIMUIKitChat/tim_uikit_chat_config.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/tim_uikit_multi_select_panel.dart';
 
 import 'TIMUIKItMessageList/TIMUIKitTongue/tim_uikit_chat_history_message_list_tongue.dart';
-import 'TIMUIKItMessageList/tim_uikit_chat_history_message_list_item.dart';
+import 'TIMUIKItMessageList/tim_uikit_history_message_list_container.dart';
 
 class TIMUIKitChat extends StatefulWidget {
   int startTime = 0;
@@ -80,6 +74,9 @@ class TIMUIKitChat extends StatefulWidget {
   /// custom config for TIMUIKitChat widget
   final TIMUIKitChatConfig? config;
 
+  /// jump to the page for `TIMUIKitGroupApplicationList` or other pages to deal with enter group application for group administrator manually, if you use [public group]. The parameter is `groupID`
+  final ValueChanged<String>? onDealWithGroupApplication;
+
   /// custom emoji panel
   final Widget Function(
       {void Function() sendTextMessage,
@@ -91,10 +88,10 @@ class TIMUIKitChat extends StatefulWidget {
     Key? key,
     required this.conversationID,
     required this.conversationType,
+    required this.conversationShowName,
     this.onTapAvatar,
     this.showNickName = true,
     this.showTotalUnReadCount = false,
-    required this.conversationShowName,
     this.messageItemBuilder,
     this.exteraTipsActionItemBuilder,
     this.draftText,
@@ -107,6 +104,7 @@ class TIMUIKitChat extends StatefulWidget {
     this.tongueItemBuilder,
     this.groupAtInfoList,
     this.mainHistoryListConfig,
+    this.onDealWithGroupApplication,
   }) : super(key: key) {
     startTime = DateTime.now().millisecondsSinceEpoch;
   }
@@ -116,30 +114,24 @@ class TIMUIKitChat extends StatefulWidget {
 }
 
 class _TUIChatState extends State<TIMUIKitChat> {
-  GlobalKey<dynamic> inputextField = GlobalKey();
-
   final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
-  final ScrollController listViewScrollContoler = ScrollController();
+  final TUIThemeViewModel themeViewModel = serviceLocator<TUIThemeViewModel>();
+  final TIMUIKitInputTextFieldController textFieldController =
+      TIMUIKitInputTextFieldController();
+
   late AutoScrollController autoController = AutoScrollController(
     viewportBoundaryGetter: () =>
         Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom),
     axis: Axis.vertical,
   );
-  bool closeKeyboardPanel = false;
 
   @override
   void initState() {
     if (kProfileMode) {
       Frame.init();
     }
-    if (widget.conversationType == 2) {
-      model.addGroupListener();
-    } else {
-      model.addFriendInfoChangeListener();
-    }
     model.initForEachConversation((String value) =>
-        inputextField.currentState.textEditingController.text = value);
-    retriveData(null);
+        textFieldController.textEditingController?.text = value);
     model.markMessageAsRead(
         convID: widget.conversationID, convType: widget.conversationType);
     model.setChatConfig(widget.config!);
@@ -156,244 +148,190 @@ class _TUIChatState extends State<TIMUIKitChat> {
   @override
   void dispose() {
     super.dispose();
-    if (widget.conversationType == 2) {
-      model.removeGroupListener();
-    } else {
-      model.removeFriendChangeListener();
-    }
     if (kProfileMode) {
       Frame.destroy();
     }
+    model.resetData();
   }
 
-  void retriveData(String? lastMsgID, [int? count]) {
-    final convID = widget.conversationID;
-    final convType = widget.conversationType;
-    model.loadData(
-        conversationShowName: widget.conversationShowName,
-        count: count ?? HistoryMessageDartConstant.getCount, //20
-        userID: convType == 1 ? convID : null,
-        groupID: convType == 2 ? convID : null,
-        lastMsgID: lastMsgID);
-  }
-
-  Future<void> retriveDataAsync(String? lastMsgID, [int? count]) async {
-    final convID = widget.conversationID;
-    final convType = widget.conversationType;
-    await model.loadData(
-        count: count ?? HistoryMessageDartConstant.getCount, //20
-        userID: convType == 1 ? convID : null,
-        groupID: convType == 2 ? convID : null,
-        lastMsgID: lastMsgID);
-    return;
-  }
-
-  String _getTotalUnReadCount(int unreadCount) {
-    return unreadCount < 99 ? unreadCount.toString() : "99";
-  }
-
-  _onMsgSendFailIconTap(V2TimMessage message) {
-    final convID = widget.conversationID;
-    final convType =
-        widget.conversationType == 1 ? ConvType.c2c : ConvType.group;
-    MessageUtils.handleMessageError(
-        model.reSendFailMessage(
-            message: message, convType: convType, convID: convID),
-        context);
-  }
-
-  AppBar _getAppbarConfig(TUITheme theme, int totalUnreadCount) {
-    final setAppbar = widget.appBarConfig;
+  Widget _renderJoinGroupApplication(int amount, TUITheme theme) {
+    String option1 = amount.toString();
     final I18nUtils ttBuild = I18nUtils(context);
-    return AppBar(
-      backgroundColor: setAppbar?.backgroundColor,
-      actionsIconTheme: setAppbar?.actionsIconTheme,
-      foregroundColor: setAppbar?.foregroundColor,
-      elevation: setAppbar?.elevation,
-      bottom: setAppbar?.bottom,
-      bottomOpacity: setAppbar?.bottomOpacity ?? 1.0,
-      titleSpacing: setAppbar?.titleSpacing,
-      automaticallyImplyLeading: setAppbar?.automaticallyImplyLeading ?? false,
-      shadowColor: setAppbar?.shadowColor ?? theme.weakDividerColor,
-      excludeHeaderSemantics: setAppbar?.excludeHeaderSemantics ?? false,
-      toolbarHeight: setAppbar?.toolbarHeight,
-      titleTextStyle: setAppbar?.titleTextStyle,
-      toolbarOpacity: setAppbar?.toolbarOpacity ?? 1.0,
-      toolbarTextStyle: setAppbar?.toolbarTextStyle,
-      flexibleSpace: setAppbar?.flexibleSpace ??
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [
-                theme.lightPrimaryColor ?? CommonColor.lightPrimaryColor,
-                theme.primaryColor ?? CommonColor.primaryColor
-              ]),
+    return Container(
+      height: 36,
+      decoration: BoxDecoration(color: hexToColor("f6eabc")),
+      child: GestureDetector(
+        onTap: () {
+          widget.onDealWithGroupApplication!(widget.conversationID);
+        },
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              ttBuild.imt_para("{{option1}} 条入群请求", "$option1 条入群请求")(
+                  option1: option1),
+              style: const TextStyle(
+                fontSize: 12,
+              ),
             ),
-          ),
-      iconTheme: setAppbar?.iconTheme ??
-          const IconThemeData(
-            color: Colors.white,
-          ),
-      title: setAppbar?.title ??
-          Text(
-            model.conversationName.isNotEmpty
-                ? model.conversationName
-                : widget.conversationShowName,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 17,
-            ),
-          ),
-      centerTitle: setAppbar?.centerTitle ?? true,
-      leadingWidth: setAppbar?.leadingWidth ?? 70,
-      leading: model.isMultiSelect
-          ? TextButton(
-              onPressed: () {
-                model.updateMultiSelectStatus(false);
-              },
+            Container(
+              margin: const EdgeInsets.only(left: 12),
               child: Text(
-                ttBuild.imt('取消'),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                ),
+                ttBuild.imt("去处理"),
+                style: TextStyle(fontSize: 12, color: theme.primaryColor),
               ),
             )
-          : setAppbar?.leading ??
-              Row(
-                children: [
-                  IconButton(
-                    padding: const EdgeInsets.only(left: 16),
-                    constraints: const BoxConstraints(),
-                    icon: Image.asset(
-                      'images/arrow_back.png',
-                      package: 'tim_ui_kit',
-                      height: 34,
-                      width: 34,
-                    ),
-                    onPressed: () async {
-                      model.setRepliedMessage(null);
-                      Navigator.pop(context);
-                    },
-                  ),
-                  if (widget.showTotalUnReadCount && totalUnreadCount > 0)
-                    Container(
-                      width: 22,
-                      height: 22,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: theme.cautionColor,
-                      ),
-                      child: Text(_getTotalUnReadCount(totalUnreadCount)),
-                    ),
-                ],
-              ),
-      actions: setAppbar?.actions,
+          ],
+        ),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final closePanel = OptimizeUtils.throttle(
-        (_) => inputextField.currentState.hideAllPanel(), 60);
-    return MultiProvider(
+    final closePanel =
+        OptimizeUtils.throttle((_) => textFieldController.hideAllPanel(), 60);
+    return TIMUIKitChatProviderScope(
+        conversationID: widget.conversationID,
+        conversationType: widget.conversationType,
         providers: [
-          ChangeNotifierProvider.value(value: model),
-          ChangeNotifierProvider.value(
-              value: serviceLocator<TUIThemeViewModel>()),
-          Provider.value(
-            value: widget.config,
-          )
+          Provider(create: (_) => widget.config),
         ],
         builder: (context, w) {
-          final theme = Provider.of<TUIThemeViewModel>(context).theme;
-          return SharedThemeWidget(
-              theme: theme,
-              child: GestureDetector(
-                onTap: () {
-                  FocusScopeNode currentFocus = FocusScope.of(context);
-                  if (!currentFocus.hasPrimaryFocus) {
-                    currentFocus.unfocus();
-                  }
-                  // 点击屏幕时，关闭所有Panel
-                  inputextField.currentState.hideAllPanel();
+          final TUIChatViewModel model = Provider.of<TUIChatViewModel>(context);
+          final TUITheme theme = Provider.of<TUIThemeViewModel>(context).theme;
 
-                  setState(() {
-                    closeKeyboardPanel = true;
-                  });
-                },
-                child: Consumer<TUIChatViewModel>(
-                  builder: (context, value, child) {
-                    return Scaffold(
-                      // resizeToAvoidBottomInset: false,
-                      appBar: _getAppbarConfig(theme, value.totalUnReadCount),
-                      body: Column(
-                        children: [
-                          Expanded(
-                              child: Align(
-                                  alignment: Alignment.topCenter,
-                                  child: Listener(
-                                    onPointerMove: closePanel,
-                                    child: TIMUIKitHistoryMessageList(
-                                        mainHistoryListConfig:
-                                            widget.mainHistoryListConfig,
-                                        groupAtInfoList: widget.groupAtInfoList,
-                                        tongueItemBuilder:
-                                            widget.tongueItemBuilder,
-                                        convId: widget.conversationID,
-                                        onLongPressForOthersHeadPortrait:
-                                            (String? userId, String? nickName) {
-                                          widget.conversationType == 1
-                                              ? ConvType.c2c
-                                              : inputextField.currentState
-                                                  .longPressToAt(
-                                                      userId, nickName);
-                                        },
-                                        initFindingMsg: widget.initFindingMsg,
-                                        exteraTipsActionItemBuilder:
-                                            widget.exteraTipsActionItemBuilder,
-                                        conversationType:
-                                            widget.conversationType,
-                                        messageList:
-                                            model.getMessageListByConvId(
-                                                    widget.conversationID) ??
-                                                [],
-                                        updateMsgID: (String msgID) =>
-                                            model.jumpMsgID = msgID,
-                                        loadMore: retriveData,
-                                        loadMoreAsync: retriveDataAsync,
-                                        scrollController: autoController,
-                                        isNoMoreMessage: !model.haveMoreData,
-                                        onTapAvatar: widget.onTapAvatar,
-                                        isShowNickName: widget.showNickName,
-                                        messageItemBuilder:
-                                            widget.messageItemBuilder,
-                                        onMsgSendFailIconTap:
-                                            _onMsgSendFailIconTap),
-                                  ))),
-                          model.isMultiSelect
-                              ? MultiSelectPanel(
-                                  conversationShowName: model.conversationName,
-                                  conversationType: widget.conversationType,
-                                )
-                              : InputTextField(
-                                  customStickerPanel: widget.customStickerPanel,
-                                  morePanelConfig: widget.morePanelConfig,
-                                  scrollController: autoController,
-                                  conversationID: widget.conversationID,
-                                  conversationType: widget.conversationType,
-                                  listViewController: listViewScrollContoler,
-                                  closeKeyboardPanel: closeKeyboardPanel,
-                                  draftText: widget.draftText,
-                                  hintText: widget.textFieldHintText,
-                                  key: inputextField,
-                                )
-                        ],
-                      ),
-                    );
-                  },
+          final isMultiSelect = model.isMultiSelect;
+
+          List<V2TimGroupApplication> filteredApplicationList = [];
+          if (widget.conversationType == 2 &&
+              widget.onDealWithGroupApplication != null) {
+            filteredApplicationList = model.groupApplicationList.where((item) {
+              return (item.groupID == widget.conversationID) &&
+                  item.handleStatus == 0;
+            }).toList();
+          }
+
+          return GestureDetector(
+            onTap: () {
+              textFieldController.hideAllPanel();
+            },
+            child: Scaffold(
+                appBar: TIMUIKitAppBar(
+                  showTotalUnReadCount: widget.showTotalUnReadCount,
+                  config: widget.appBarConfig,
+                  conversationShowName: widget.conversationShowName,
+                  conversationID: widget.conversationID,
                 ),
-              ));
+                body: Column(
+                  children: [
+                    if (filteredApplicationList.isNotEmpty)
+                      _renderJoinGroupApplication(
+                          filteredApplicationList.length, theme),
+                    Expanded(
+                        child: Align(
+                            alignment: Alignment.topCenter,
+                            child: Listener(
+                              onPointerMove: closePanel,
+                              child: TIMUIKitHistoryMessageListContainer(
+                                groupAtInfoList: widget.groupAtInfoList,
+                                tongueItemBuilder: widget.tongueItemBuilder,
+                                convId: widget.conversationID,
+                                onLongPressForOthersHeadPortrait:
+                                    (String? userId, String? nickName) {
+                                  if (widget.conversationType != 1) {
+                                    textFieldController.longPressToAt(
+                                        nickName, userId);
+                                  }
+                                },
+                                mainHistoryListConfig:
+                                    widget.mainHistoryListConfig,
+                                initFindingMsg: widget.initFindingMsg,
+                                exteraTipsActionItemBuilder:
+                                    widget.exteraTipsActionItemBuilder,
+                                conversationType: widget.conversationType,
+                                scrollController: autoController,
+                                onTapAvatar: widget.onTapAvatar,
+                                showNickName: widget.showNickName,
+                                messageItemBuilder: widget.messageItemBuilder,
+                                conversationID: widget.conversationID,
+                              ),
+                            ))),
+                    isMultiSelect
+                        ? MultiSelectPanel(
+                            conversationType: widget.conversationType,
+                          )
+                        : TIMUIKitInputTextField(
+                            controller: textFieldController,
+                            customStickerPanel: widget.customStickerPanel,
+                            morePanelConfig: widget.morePanelConfig,
+                            scrollController: autoController,
+                            conversationID: widget.conversationID,
+                            conversationType: widget.conversationType,
+                            initText: widget.draftText,
+                            hintText: widget.textFieldHintText,
+                            showMorePannel:
+                                widget.config?.isAllowShowMorePanel ?? true,
+                            showSendAudio:
+                                widget.config?.isAllowSoundMessage ?? true,
+                            showSendEmoji:
+                                widget.config?.isAllowEmojiPanel ?? true,
+                          )
+                  ],
+                )),
+          );
         });
+  }
+}
+
+class TIMUIKitChatProviderScope extends StatelessWidget {
+  static final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
+  final TUIThemeViewModel themeViewModel = serviceLocator<TUIThemeViewModel>();
+  final Widget? child;
+  final Widget Function(BuildContext, Widget?)? builder;
+  final List<SingleChildWidget>? providers;
+
+  /// conversation id, use for get history message list.
+  final String conversationID;
+
+  /// converastion type
+  final int conversationType;
+
+  TIMUIKitChatProviderScope(
+      {Key? key,
+      this.child,
+      this.providers,
+      this.builder,
+      required this.conversationID,
+      required this.conversationType})
+      : super(key: key) {
+    loadData();
+  }
+
+  loadData() {
+    final convID = conversationID;
+    final convType = conversationType;
+    if (model.haveMoreData) {
+      model.loadData(
+        count: HistoryMessageDartConstant.getCount, //20
+        userID: convType == 1 ? convID : null,
+        groupID: convType == 2 ? convID : null,
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: model),
+        ChangeNotifierProvider.value(value: themeViewModel),
+        Provider(create: (_) => const TIMUIKitChatConfig()),
+        ...?providers
+      ],
+      child: child,
+      builder: builder,
+    );
   }
 }
