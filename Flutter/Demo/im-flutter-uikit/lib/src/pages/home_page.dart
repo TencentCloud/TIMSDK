@@ -401,12 +401,8 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(
-      BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width,
-          maxHeight: MediaQuery.of(context).size.height),
-      // 设计稿尺寸：px
+      context,
       designSize: const Size(750, 1624),
-      context: context,
       minTextAdapt: true,
     );
 

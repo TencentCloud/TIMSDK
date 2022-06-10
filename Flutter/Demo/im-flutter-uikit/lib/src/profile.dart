@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import
+
 import 'dart:math';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -11,6 +13,7 @@ import 'package:tim_ui_kit/ui/utils/color.dart';
 
 import 'package:timuikit/src/pages/login.dart';
 import 'package:timuikit/src/provider/theme.dart';
+import 'package:timuikit/src/routes.dart';
 import 'package:timuikit/utils/theme.dart';
 import 'package:timuikit/utils/toast.dart';
 
@@ -33,7 +36,6 @@ class _ProfileState extends State<MyProfile> {
   final TIMUIKitProfileController _timuiKitProfileController =
       TIMUIKitProfileController();
   String? userID;
-
 
   String _getAllowText(int allowType) {
     if (allowType == 0) {
@@ -66,10 +68,12 @@ class _ProfileState extends State<MyProfile> {
         Utils.log("someError");
         Utils.log(err);
       }
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (BuildContext context) => const LoginPage()),
-        ModalRoute.withName('/'),
-      );
+      Routes().directToLoginPage();
+
+      // Navigator.of(context).pushAndRemoveUntil(
+      //   MaterialPageRoute(builder: (BuildContext context) => const LoginPage()),
+      //   ModalRoute.withName('/'),
+      // );
     }
   }
 
@@ -241,7 +245,6 @@ class _ProfileState extends State<MyProfile> {
                   ),
                 );
               },
-
               child: TIMUIKitOperationItem(
                 operationName: imt("关于腾讯云 · IM"),
                 operationRightWidget: const Text(""),

@@ -15,14 +15,13 @@ import 'package:timuikit/src/chat.dart';
 import 'package:timuikit/src/config.dart';
 import 'package:timuikit/src/pages/home_page.dart';
 import 'package:timuikit/src/pages/login.dart';
+import 'package:timuikit/src/routes.dart';
 import 'package:timuikit/utils/push/channel/channel_push.dart';
 import 'package:timuikit/utils/toast.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';
 import 'package:timuikit/src/provider/custom_sticker_package.dart';
 import 'package:timuikit/utils/constant.dart';
 import 'package:provider/provider.dart';
-
-
 
 bool isInitScreenUtils = false;
 
@@ -37,7 +36,8 @@ class _MyAppState extends State<MyApp> {
   var subscription;
   final Connectivity _connectivity = Connectivity();
   final CoreServicesImpl _coreInstance = TIMUIKitCore.getInstance();
-  final ConversationService _conversationService = serviceLocator<ConversationService>();
+  final ConversationService _conversationService =
+      serviceLocator<ConversationService>();
 
   Widget currentApp = Center(
     child: Text(imt("正在加载...")),
@@ -108,12 +108,8 @@ class _MyAppState extends State<MyApp> {
   initScreenUtils() {
     if (isInitScreenUtils) return;
     ScreenUtil.init(
-      BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width,
-          maxHeight: MediaQuery.of(context).size.height),
-      // 设计稿尺寸：px
+      context,
       designSize: const Size(750, 1624),
-      context: context,
       minTextAdapt: true,
     );
     isInitScreenUtils = true;
@@ -124,8 +120,9 @@ class _MyAppState extends State<MyApp> {
     String ext = msg['ext'] ?? "";
     Map<String, dynamic> extMsp = jsonDecode(ext);
     String convId = extMsp["conversationID"] ?? "";
-    V2TimConversation? targetConversation = await _conversationService.getConversation(conversationID: convId);
-    if(targetConversation != null){
+    V2TimConversation? targetConversation =
+        await _conversationService.getConversation(conversationID: convId);
+    if (targetConversation != null) {
       Navigator.push(
           context,
           MaterialPageRoute(
@@ -136,9 +133,24 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  initRouteListener() {
+    final routes = Routes();
+    routes.addListener(() {
+      final pageType = routes.pageType;
+      if (pageType == "loginPage") {
+        directToLogin();
+      }
+
+      if (pageType == "homePage") {
+        directToHomePage();
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    initRouteListener();
     subscription =
         _connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
       if (result == ConnectivityResult.none) {
@@ -160,6 +172,7 @@ class _MyAppState extends State<MyApp> {
   @override
   dispose() {
     super.dispose();
+    Routes().dispose();
     // subscription.cancle();
   }
 
