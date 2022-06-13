@@ -18,6 +18,10 @@ Pod::Spec.new do |spec|
 
   spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/6.2.2363/ios/TUIConversation.zip'}
 
+  spec.subspec 'Header' do |header|
+      header.source_files = '**/TUIConversation/Header/*.{h,m,mm}'
+  end
+  
   spec.subspec 'Cell' do |cell|
     cell.subspec 'CellData' do |cellData|
       cellData.source_files = '**/TUIConversation/Cell/CellData/*.{h,m,mm}'
