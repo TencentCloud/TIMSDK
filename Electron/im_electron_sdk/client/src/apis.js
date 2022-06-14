@@ -376,11 +376,17 @@ const APIS = [
             {
                 name: "TIMMsgSendMessageReadReceipts",
                 action: (callback) => {
-                    TimGroupManager.TIMMsgSendMessageReadReceipts().then(res => {
-                        callback(JSON.stringify(res))
-                    }).catch(err => {
-                        callback(err.toString())
-                    })
+                   for(let i = 0;i<100;i++){
+                       var obj= {};
+                       
+                       setTimeout(()=>{
+                        TimGroupManager.TIMMsgSendMessageReadReceipts().then(res => {
+                            callback(JSON.stringify(res))
+                        }).catch(err => {
+                            callback(err.toString())
+                        })
+                    },i*500)
+                   }
                 }
             },
             {
@@ -398,7 +404,7 @@ const APIS = [
                 name: "TIMMsgGetGroupMessageReadMemberList",
                 action: (callback) => {
                     TimGroupManager.TIMMsgGetGroupMessageReadMemberList().then(res => {
-                        
+                        console.log(res)
                         callback(JSON.stringify(res))
                     }).catch(err => {
                         callback(err.toString())
@@ -1013,6 +1019,7 @@ const APIS = [
                 name: 'TIMMsgGetMsgList',
                 action: (callback) => {
                     TimAdvanceMessageManager.TIMMsgGetMsgList().then(data => {
+                        console.log(data)
                         callback(JSON.stringify(data))
                     }).catch(err => {
                         callback(err.toString())

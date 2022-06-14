@@ -27,13 +27,23 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>uikitflutterdemo</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
-		<string>iosamap</string>
-		<string>qqmap</string>
-		<string>baidumap</string>
+		<string>weixin</string>
+		<string>weixinULAPI</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
@@ -41,17 +51,13 @@
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
-		<key>NSAllowsLocalNetworking</key>
-		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>我们需要访问您的相机拍摄照片和录制视频</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>我们需要访问您的位置用于发送接收位置消息</string>
+	<string>为方便您将所拍摄的照片或视频发送给朋友，以及进行视频通话，请允许我们访问摄像头进行拍摄照片和视频。</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>我们需要访问您的麦克风录制音频</string>
+	<string>为方便您发送语音消息、拍摄视频以及音视频通话，请允许我们使用麦克风进行录音。</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>我们需要访问您的相册</string>
+	<string>为方便您查看和选择相册里的图片视频发送给朋友，以及保存内容到设备，请允许我们访问您设备上的照片、媒体内容。</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
@@ -77,5 +83,14 @@
 	<false/>
 	<key>io.flutter.embedded_views_preview</key>
 	<string>YES</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>weixin</string>
+		<string>weixinULAPI</string>
+	</array>
+	<key>flutter_apns.disable_firebase_core</key>
+    <false/>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 </dict>
 </plist>

@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import
+
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -6,15 +8,18 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tim_ui_kit_push_plugin/tim_ui_kit_push_plugin.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:timuikit/src/config.dart';
 import 'package:timuikit/src/pages/home_page.dart';
 import 'package:timuikit/src/pages/privacy/privacy_webview.dart';
 import 'package:timuikit/src/provider/theme.dart';
+import 'package:timuikit/src/routes.dart';
 import 'package:timuikit/utils/GenerateUserSig.dart';
 import 'package:timuikit/utils/commonUtils.dart';
-import 'package:timuikit/utils/offline_push_config.dart';
+import 'package:timuikit/utils/push/channel/channel_push.dart';
+import 'package:timuikit/utils/push/push_constant.dart';
 import 'package:timuikit/utils/toast.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';
@@ -99,29 +104,29 @@ class AppLogo extends StatelessWidget {
                 ),
                 Expanded(
                     child: Container(
-                      margin: const EdgeInsets.only(right: 5),
-                      height: CommonUtils.adaptHeight(180),
-                      padding: const EdgeInsets.only(top: 10, left: 5, right: 15),
-                      child: Column(
-                        children: <Widget>[
-                          Text(
-                            imt("登录·即时通信"),
-                            style: TextStyle(
-                              color: const Color.fromARGB(255, 255, 255, 255),
-                              fontSize: CommonUtils.adaptFontSize(64),
-                            ),
-                          ),
-                          Text(
-                            imt("体验群组聊天，音视频对话等IM功能"),
-                            style: TextStyle(
-                              color: const Color.fromARGB(255, 255, 255, 255),
-                              fontSize: CommonUtils.adaptFontSize(28),
-                            ),
-                          ),
-                        ],
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                  margin: const EdgeInsets.only(right: 5),
+                  height: CommonUtils.adaptHeight(180),
+                  padding: const EdgeInsets.only(top: 10, left: 5, right: 15),
+                  child: Column(
+                    children: <Widget>[
+                      Text(
+                        imt("登录·即时通信"),
+                        style: TextStyle(
+                          color: const Color.fromARGB(255, 255, 255, 255),
+                          fontSize: CommonUtils.adaptFontSize(64),
+                        ),
                       ),
-                    )),
+                      Text(
+                        imt("体验群组聊天，音视频对话等IM功能"),
+                        style: TextStyle(
+                          color: const Color.fromARGB(255, 255, 255, 255),
+                          fontSize: CommonUtils.adaptFontSize(28),
+                        ),
+                      ),
+                    ],
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                  ),
+                )),
               ],
             ),
           ),
@@ -251,10 +256,12 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   directToHomePage() {
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (BuildContext context) => const HomePage()),
-      (route) => false,
-    );
+    Routes().directToHomePage();
+
+    // Navigator.of(context).pushAndRemoveUntil(
+    //   MaterialPageRoute(builder: (BuildContext context) => const HomePage()),
+    //   (route) => false,
+    // );
   }
 
   userLogin() async {
@@ -299,24 +306,22 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   Future<void> setOfflinePushInfo() async {
-    String token = await OfflinePush.getTPNSToken();
-    Utils.log("getTPNSToken $token");
+    // 这里先请求权限再上报token
+    ChannelPush.requestPermission();
+
+    int? businessID = await TimUiKitPushPlugin.getBuzId(PushConfig.appInfo);
+    String token = await ChannelPush.getDeviceToken();
     if (token != "") {
       coreInstance.setOfflinePushConfig(
-        token: token,
-      );
+          token: token, isTPNSToken: false, businessID: businessID);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(
-      BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width,
-          maxHeight: MediaQuery.of(context).size.height),
-      // 设计稿尺寸：px
+      context,
       designSize: const Size(750, 1624),
-      context: context,
       minTextAdapt: true,
     );
     return Stack(

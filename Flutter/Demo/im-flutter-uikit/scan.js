@@ -160,7 +160,9 @@ Promise.all(
   try{
     const data = fs.readFileSync('lib/i18n/i18n_utils.dart', 'utf8').split('\n');
     const lineIndex = data.findIndex(item => item.indexOf("final zhJson") > -1);
-    data[lineIndex] = `  final zhJson = '''${JSON.stringify(chineseDict).replace(/\$/g, "\\$")}''';`
+    data[lineIndex] = `  final zhJson = `;
+    data[lineIndex + 1] = `    '''${JSON.stringify(chineseDict).replace(/\$/g, "\\$")}''';`;
+    // data.splice(lineIndex + 1, 0, `    '''${JSON.stringify(chineseDict).replace(/\$/g, "\\$")}''';`);
     fs.writeFileSync('lib/i18n/i18n_utils.dart', data.join('\n'), 'utf8');
   }catch(err){
     console.log(`替换dart文件失败, ${err}`);
@@ -171,6 +173,7 @@ Promise.all(
     // 增补英文JSON
     const enDataFile = fs.readFileSync('lib/i18n/strings.i18n.json');
     const enData = JSON.parse(enDataFile);
+
     for(const item in chineseDict){
       if(!enData.hasOwnProperty(item)){
         enData[item] = chineseDict[item];
@@ -191,8 +194,32 @@ Promise.all(
   }
 
   try{
-    // 增补中文JSON
-    const zhDataFile = fs.readFileSync('lib/i18n/strings_zh.i18n.json');
+    // 增补繁体中文JSON
+    const hantDataFile = fs.readFileSync('lib/i18n/strings_zh-Hant.i18n.json');
+    const hantData = JSON.parse(hantDataFile);
+
+    for(const item in chineseDict){
+      if(!hantData.hasOwnProperty(item)){
+        hantData[item] = chineseDict[item];
+      }
+    }
+    fs.writeFile(
+      "lib/i18n/strings_zh-Hant.i18n.json",
+      JSON.stringify(hantData),
+      (err) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+      }
+    );
+  }catch(err){
+    console.error(err);
+  }
+
+  try{
+    // 增补简体中文JSON
+    const zhDataFile = fs.readFileSync('lib/i18n/strings_zh-Hans.i18n.json');
     const zhData = JSON.parse(zhDataFile);
     for(const item in chineseDict){
       if(!zhData.hasOwnProperty(item)){
@@ -200,7 +227,7 @@ Promise.all(
       }
     }
     fs.writeFile(
-      "lib/i18n/strings_zh.i18n.json",
+      "lib/i18n/strings_zh-Hans.i18n.json",
       JSON.stringify(zhData),
       (err) => {
         if (err) {

@@ -10,6 +10,7 @@ class V2TimGroupInfo {
   late String? introduction;
   late String? faceUrl;
   late bool? isAllMuted;
+  bool? isSupportTopic = false;
   late String? owner;
   late int? createTime;
   late int? groupAddOpt;
@@ -40,6 +41,7 @@ class V2TimGroupInfo {
     this.role,
     this.recvOpt,
     this.joinTime,
+    this.isSupportTopic,
     this.customInfo,
   });
 
@@ -58,34 +60,36 @@ class V2TimGroupInfo {
     lastMessageTime = json['lastMessageTime'];
     memberCount = json['memberCount'];
     onlineCount = json['onlineCount'];
+    isSupportTopic = json["isSupportTopic"];
     role = json['role'];
     recvOpt = json['recvOpt'];
     joinTime = json['joinTime'];
     customInfo = json['customInfo'] == null
-        ? new Map<String, String>()
+        ? <String, String>{}
         : Map<String, String>.from(json['customInfo']);
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['groupID'] = this.groupID;
-    data['groupType'] = this.groupType;
-    data['groupName'] = this.groupName;
-    data['notification'] = this.notification;
-    data['introduction'] = this.introduction;
-    data['faceUrl'] = this.faceUrl;
-    data['isAllMuted'] = this.isAllMuted;
-    data['owner'] = this.owner;
-    data['createTime'] = this.createTime;
-    data['groupAddOpt'] = this.groupAddOpt;
-    data['lastInfoTime'] = this.lastInfoTime;
-    data['lastMessageTime'] = this.lastMessageTime;
-    data['memberCount'] = this.memberCount;
-    data['onlineCount'] = this.onlineCount;
-    data['role'] = this.role;
-    data['recvOpt'] = this.recvOpt;
-    data['joinTime'] = this.joinTime;
-    data['customInfo'] = this.customInfo;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['groupID'] = groupID;
+    data['groupType'] = groupType;
+    data['groupName'] = groupName;
+    data['notification'] = notification;
+    data['introduction'] = introduction;
+    data['faceUrl'] = faceUrl;
+    data['isAllMuted'] = isAllMuted;
+    data['owner'] = owner;
+    data['createTime'] = createTime;
+    data['groupAddOpt'] = groupAddOpt;
+    data['lastInfoTime'] = lastInfoTime;
+    data['lastMessageTime'] = lastMessageTime;
+    data['memberCount'] = memberCount;
+    data['onlineCount'] = onlineCount;
+    data['role'] = role;
+    data['recvOpt'] = recvOpt;
+    data['joinTime'] = joinTime;
+    data['customInfo'] = customInfo;
+    data['isSupportTopic'] = isSupportTopic;
     return data;
   }
 }

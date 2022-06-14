@@ -1,4 +1,8 @@
 enum HistoryMsgGetTypeEnum {
+  ///不要使用，dart枚举站位
+  ///
+  V2TIM_NULL,
+
   ///获取云端更老的消息
   ///
   V2TIM_GET_CLOUD_OLDER_MSG,

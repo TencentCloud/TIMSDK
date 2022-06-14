@@ -20,6 +20,10 @@ Pod::Spec.new do |spec|
   spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/6.2.2363/ios/TUIChat.zip'}
   spec.dependency 'TUICore','6.2.2363'
 
+  spec.subspec 'Header' do |header|
+      header.source_files = '**/TUIChat/Header/*.{h,m,mm}'
+  end
+  
   spec.subspec 'Common' do |common|
     common.source_files = '**/TUIChat/Common/*.{h,m,mm}'
   end

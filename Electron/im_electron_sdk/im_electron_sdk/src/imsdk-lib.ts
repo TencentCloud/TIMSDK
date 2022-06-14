@@ -11,6 +11,7 @@ const charPtrType = function () {
 const intType = function () {
     return ffi.types.int;
 };
+
 const uint64Type = function () {
     return ffi.types.uint64;
 };
@@ -318,7 +319,7 @@ const Imsdklib = ffi.Library(ffiPath, {
         [
             charPtrType(),
             intType(),
-            intType(),
+            uint64Type(),
             intType(),
             callback(),
             voidPtrType(),

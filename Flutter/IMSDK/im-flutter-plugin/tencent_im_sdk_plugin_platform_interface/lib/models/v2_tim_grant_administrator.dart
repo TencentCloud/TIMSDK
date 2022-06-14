@@ -18,24 +18,24 @@ class V2TimGrantAdministrator {
   V2TimGrantAdministrator.fromJson(Map<String, dynamic> json) {
     groupID = json['groupID'];
     opUser = json['opUser'] != null
-        ? new V2TimGroupMemberInfo.fromJson(json['opUser'])
+        ? V2TimGroupMemberInfo.fromJson(json['opUser'])
         : null;
     if (json['memberList'] != null) {
       memberList = List.empty(growable: true);
       json['memberList'].forEach((v) {
-        memberList!.add(new V2TimGroupMemberInfo.fromJson(v));
+        memberList!.add(V2TimGroupMemberInfo.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['groupID'] = this.groupID;
-    if (this.opUser != null) {
-      data['opUser'] = this.opUser!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['groupID'] = groupID;
+    if (opUser != null) {
+      data['opUser'] = opUser!.toJson();
     }
-    if (this.memberList != null) {
-      data['memberList'] = this.memberList!.map((v) => v.toJson()).toList();
+    if (memberList != null) {
+      data['memberList'] = memberList!.map((v) => v.toJson()).toList();
     }
     return data;
   }

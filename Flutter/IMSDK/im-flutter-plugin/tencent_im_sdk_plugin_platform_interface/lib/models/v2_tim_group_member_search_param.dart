@@ -28,13 +28,13 @@ class V2TimGroupMemberSearchParam {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['keywordList'] = this.keywordList;
-    data['groupIDList'] = this.groupIDList;
-    data['isSearchMemberUserID'] = this.isSearchMemberUserID;
-    data['isSearchMemberNickName'] = this.isSearchMemberNickName;
-    data['isSearchMemberRemark'] = this.isSearchMemberRemark;
-    data['isSearchMemberNameCard'] = this.isSearchMemberNameCard;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['keywordList'] = keywordList;
+    data['groupIDList'] = groupIDList;
+    data['isSearchMemberUserID'] = isSearchMemberUserID;
+    data['isSearchMemberNickName'] = isSearchMemberNickName;
+    data['isSearchMemberRemark'] = isSearchMemberRemark;
+    data['isSearchMemberNameCard'] = isSearchMemberNameCard;
     return data;
   }
 }

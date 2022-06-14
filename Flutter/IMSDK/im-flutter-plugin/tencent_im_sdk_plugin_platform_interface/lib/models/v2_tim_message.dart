@@ -50,8 +50,10 @@ class V2TimMessage {
   late String? seq;
   late int? random;
   late bool? isExcludedFromUnreadCount;
+  late bool? isExcludedFromLastMessage;
   late String? messageFromWeb;
   late String? id; // plugin自己维护的id，在onProgressListener的监听中才返回
+  late bool? needReadReceipt;
 
   V2TimMessage({
     this.msgID,
@@ -88,8 +90,10 @@ class V2TimMessage {
     this.seq,
     this.random,
     this.isExcludedFromUnreadCount,
+    this.isExcludedFromLastMessage,
     this.messageFromWeb,
     this.id,
+    this.needReadReceipt,
   });
 
   V2TimMessage.fromJson(Map<String, dynamic> json) {
@@ -106,6 +110,7 @@ class V2TimMessage {
     status = json['status'];
     elemType = json['elemType'];
     id = json['id'];
+    needReadReceipt = json['needReadReceipt'];
     textElem = json['textElem'] != null
         ? V2TimTextElem.fromJson(json['textElem'])
         : null;
@@ -152,6 +157,7 @@ class V2TimMessage {
     seq = json['seq'];
     random = json['random'];
     isExcludedFromUnreadCount = json['isExcludedFromUnreadCount'];
+    isExcludedFromLastMessage = json['isExcludedFromLastMessage'];
     messageFromWeb = json['messageFromWeb'];
   }
 
@@ -170,6 +176,7 @@ class V2TimMessage {
     data['status'] = status;
     data['elemType'] = elemType;
     data['id'] = id;
+    data['needReadReceipt'] = needReadReceipt;
     if (textElem != null) {
       data['textElem'] = textElem!.toJson();
     }
@@ -217,6 +224,7 @@ class V2TimMessage {
     data['seq'] = seq;
     data['random'] = random;
     data['isExcludedFromUnreadCount'] = isExcludedFromUnreadCount;
+    data['isExcludedFromLastMessage'] = isExcludedFromLastMessage;
     data['messageFromWeb'] = messageFromWeb;
     return data;
   }

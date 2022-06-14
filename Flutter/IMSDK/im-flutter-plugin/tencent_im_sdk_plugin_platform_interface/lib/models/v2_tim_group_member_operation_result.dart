@@ -17,9 +17,9 @@ class V2TimGroupMemberOperationResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['memberID'] = this.memberID;
-    data['result'] = this.result;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['memberID'] = memberID;
+    data['result'] = result;
     return data;
   }
 }

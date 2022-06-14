@@ -54,7 +54,7 @@ class V2TimConversation {
     recvOpt = json['recvOpt'];
     orderkey = json['orderkey'];
     lastMessage = json['lastMessage'] != null
-        ? new V2TimMessage.fromJson(json['lastMessage'])
+        ? V2TimMessage.fromJson(json['lastMessage'])
         : null;
     draftText = json['draftText'];
     draftTimestamp = json['draftTimestamp'];
@@ -67,26 +67,26 @@ class V2TimConversation {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['conversationID'] = this.conversationID;
-    data['type'] = this.type;
-    data['userID'] = this.userID;
-    data['groupID'] = this.groupID;
-    data['showName'] = this.showName;
-    data['faceUrl'] = this.faceUrl;
-    data['groupType'] = this.groupType;
-    data['unreadCount'] = this.unreadCount;
-    data['isPinned'] = this.isPinned;
-    data['recvOpt'] = this.recvOpt;
-    data['orderkey'] = this.orderkey;
-    if (this.lastMessage != null) {
-      data['lastMessage'] = this.lastMessage!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['conversationID'] = conversationID;
+    data['type'] = type;
+    data['userID'] = userID;
+    data['groupID'] = groupID;
+    data['showName'] = showName;
+    data['faceUrl'] = faceUrl;
+    data['groupType'] = groupType;
+    data['unreadCount'] = unreadCount;
+    data['isPinned'] = isPinned;
+    data['recvOpt'] = recvOpt;
+    data['orderkey'] = orderkey;
+    if (lastMessage != null) {
+      data['lastMessage'] = lastMessage!.toJson();
     }
-    data['draftText'] = this.draftText;
-    data['draftTimestamp'] = this.draftTimestamp;
-    if (this.groupAtInfoList != null) {
+    data['draftText'] = draftText;
+    data['draftTimestamp'] = draftTimestamp;
+    if (groupAtInfoList != null) {
       data['groupAtInfoList'] =
-          this.groupAtInfoList!.map((v) => v!.toJson()).toList();
+          groupAtInfoList!.map((v) => v!.toJson()).toList();
     }
     return data;
   }

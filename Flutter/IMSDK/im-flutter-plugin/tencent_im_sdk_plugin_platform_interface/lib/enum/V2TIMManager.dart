@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_function_declarations_over_variables, file_names
+
 typedef SetAPPUnreadCountCallback = void Function(int unreadCount);
 
 class V2TIMAPNSListener {

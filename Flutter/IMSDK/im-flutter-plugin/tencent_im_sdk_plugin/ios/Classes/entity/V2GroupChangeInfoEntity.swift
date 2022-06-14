@@ -10,6 +10,7 @@ class V2GroupChangeInfoEntity: V2TIMGroupChangeInfo {
         result["type"] = info.type.rawValue;
         result["key"] = info.key;
         result["value"] = info.value;
+        result["boolValue"] = info.boolValue
         return result;
     }
 }

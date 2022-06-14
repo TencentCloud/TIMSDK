@@ -1,16 +1,22 @@
 // ignore_for_file: avoid_print, prefer_typing_uninitialized_variables, empty_catches
 
+import 'dart:convert';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:tim_ui_kit/data_services/conversation/conversation_services.dart';
+import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tim_ui_kit/ui/constants/emoji.dart';
 import 'package:tim_ui_kit/ui/widgets/emoji.dart';
 import 'package:tim_ui_kit_sticker_plugin/utils/tim_ui_kit_sticker_data.dart';
+import 'package:timuikit/src/chat.dart';
 import 'package:timuikit/src/config.dart';
 import 'package:timuikit/src/pages/home_page.dart';
 import 'package:timuikit/src/pages/login.dart';
-import 'package:timuikit/utils/offline_push_config.dart';
+import 'package:timuikit/src/routes.dart';
+import 'package:timuikit/utils/push/channel/channel_push.dart';
 import 'package:timuikit/utils/toast.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';
 import 'package:timuikit/src/provider/custom_sticker_package.dart';
@@ -30,6 +36,9 @@ class _MyAppState extends State<MyApp> {
   var subscription;
   final Connectivity _connectivity = Connectivity();
   final CoreServicesImpl _coreInstance = TIMUIKitCore.getInstance();
+  final ConversationService _conversationService =
+      serviceLocator<ConversationService>();
+
   Widget currentApp = Center(
     child: Text(imt("正在加载...")),
   );
@@ -99,25 +108,49 @@ class _MyAppState extends State<MyApp> {
   initScreenUtils() {
     if (isInitScreenUtils) return;
     ScreenUtil.init(
-      BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width,
-          maxHeight: MediaQuery.of(context).size.height),
-      // 设计稿尺寸：px
+      context,
       designSize: const Size(750, 1624),
-      context: context,
       minTextAdapt: true,
     );
     isInitScreenUtils = true;
     setCustomSticker();
   }
 
-  void handleClickNotification(Map<String, dynamic> msg) {
-    print(msg);
+  void handleClickNotification(Map<String, dynamic> msg) async {
+    String ext = msg['ext'] ?? "";
+    Map<String, dynamic> extMsp = jsonDecode(ext);
+    String convId = extMsp["conversationID"] ?? "";
+    V2TimConversation? targetConversation =
+        await _conversationService.getConversation(conversationID: convId);
+    if (targetConversation != null) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Chat(
+              selectedConversation: targetConversation,
+            ),
+          ));
+    }
+  }
+
+  initRouteListener() {
+    final routes = Routes();
+    routes.addListener(() {
+      final pageType = routes.pageType;
+      if (pageType == "loginPage") {
+        directToLogin();
+      }
+
+      if (pageType == "homePage") {
+        directToHomePage();
+      }
+    });
   }
 
   @override
   void initState() {
     super.initState();
+    initRouteListener();
     subscription =
         _connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
       if (result == ConnectivityResult.none) {
@@ -131,13 +164,15 @@ class _MyAppState extends State<MyApp> {
         // );
       }
     });
-    OfflinePush.init(handleClickNotification);
+    // OfflinePush.init(handleClickNotification);
+    ChannelPush.init(handleClickNotification);
     initApp();
   }
 
   @override
   dispose() {
     super.dispose();
+    Routes().dispose();
     // subscription.cancle();
   }
 

@@ -24,6 +24,7 @@ if (flutterVersionName == null) {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+apply plugin: 'com.huawei.agconnect'
 
 android {
     compileSdkVersion 31
@@ -42,24 +43,35 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.timuikit"
+        applicationId "com.tencent.flutter.tuikit"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         manifestPlaceholders = [
-            XG_ACCESS_ID : "1500029280",  // 信鸽官网注册所得ACCESS_ID
-            XG_ACCESS_KEY : "AGJPZPFYA2VZ",  // 信鸽官网注册所得ACCESS_KEY
+            VIVO_APPID:"",
+            VIVO_APPKEY:"",
             applicationName : "timuikit"
         ]
     }
 
+    signingConfigs {
+        release {
+            storeFile file('keystore_tuikit.jks')
+            storePassword 'tencent'
+            keyAlias 'izpan'
+            keyPassword 'tencent'
+        }
+    }
+
     buildTypes {
+        debug {
+            signingConfig signingConfigs.release
+        }
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

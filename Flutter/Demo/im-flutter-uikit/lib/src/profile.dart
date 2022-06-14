@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import
+
 import 'dart:math';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -8,17 +10,17 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
-import 'package:timuikit/src/config.dart';
-import 'package:timuikit/src/contactPage.dart';
+
 import 'package:timuikit/src/pages/login.dart';
 import 'package:timuikit/src/provider/theme.dart';
+import 'package:timuikit/src/routes.dart';
 import 'package:timuikit/utils/theme.dart';
 import 'package:timuikit/utils/toast.dart';
-import 'package:timuikit/utils/webview_page.dart';
-import 'package:url_launcher/url_launcher.dart';
+
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';
 
+import 'about.dart';
 import 'pages/skin/skin_page.dart';
 
 class MyProfile extends StatefulWidget {
@@ -34,32 +36,6 @@ class _ProfileState extends State<MyProfile> {
   final TIMUIKitProfileController _timuiKitProfileController =
       TIMUIKitProfileController();
   String? userID;
-
-  Future<void> showExonerateDialog() {
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(imt("免责声明")),
-          content: Text(imt(
-              "IM即时通信（“本产品”）是由腾讯云提供的一款测试产品，腾讯云享有本产品的著作权和所有权。本产品仅用于功能体验，不得用于任何商业用途。为配合相关部门监管要求，本产品音视频互动全程均有录音录像存档，严禁在使用中有任何色情、辱骂、暴恐、涉政等违法内容传播。")),
-          actions: <Widget>[
-            TextButton(
-              child: Text(imt("取消")),
-              onPressed: () => Navigator.of(context).pop(), // 关闭对话框
-            ),
-            TextButton(
-              child: Text(imt("确定")),
-              onPressed: () {
-                //关闭对话框并返回true
-                Navigator.of(context).pop(true);
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   String _getAllowText(int allowType) {
     if (allowType == 0) {
@@ -92,10 +68,12 @@ class _ProfileState extends State<MyProfile> {
         Utils.log("someError");
         Utils.log(err);
       }
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (BuildContext context) => const LoginPage()),
-        ModalRoute.withName('/'),
-      );
+      Routes().directToLoginPage();
+
+      // Navigator.of(context).pushAndRemoveUntil(
+      //   MaterialPageRoute(builder: (BuildContext context) => const LoginPage()),
+      //   ModalRoute.withName('/'),
+      // );
     }
   }
 
@@ -255,119 +233,22 @@ class _ProfileState extends State<MyProfile> {
                     style: TextStyle(color: theme.primaryColor)),
               ),
             ),
-            InkWell(
-              onTap: () {
-                launch('https://cloud.tencent.com/product/im');
-              },
-              child: TIMUIKitOperationItem(
-                operationName: imt("关于腾讯云·通信"),
-                operationRightWidget: const Text(""),
-              ),
-            ),
-            Container(
-                margin: const EdgeInsets.only(top: 10),
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      color:
-                          Color(int.parse('ededed', radix: 16)).withAlpha(255),
-                      width: 1,
-                      style: BorderStyle.solid,
-                    ),
-                  ),
-                ),
-                child: InkWell(
-                  onTap: () {
-                    launch(
-                        'https://web.sdk.qcloud.com/document/Tencent-IM-Privacy-Protection-Guidelines.html');
-                  },
-                  child: TIMUIKitOperationItem(
-                    operationName: imt("隐私条例"),
-                    operationRightWidget: const Text(""),
-                  ),
-                )),
-            Container(
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: Color(int.parse('ededed', radix: 16)).withAlpha(255),
-                    width: 1,
-                    style: BorderStyle.solid,
-                  ),
-                ),
-              ),
-              child: InkWell(
-                onTap: () {
-                  showExonerateDialog();
-                },
-                child: TIMUIKitOperationItem(
-                  operationName: imt("免责声明"),
-                  operationRightWidget: const Text(""),
-                ),
-              ),
+            const SizedBox(
+              height: 10,
             ),
             InkWell(
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => WebviewPage(
-                        url: IMDemoConfig.webUrls[WebUrl.personalInfo]!),
+                    builder: (context) => const About(),
                   ),
                 );
               },
               child: TIMUIKitOperationItem(
-                operationName: imt("个人信息收集清单"),
+                operationName: imt("关于腾讯云 · IM"),
                 operationRightWidget: const Text(""),
               ),
-            ),
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => WebviewPage(
-                        url: IMDemoConfig.webUrls[WebUrl.thirdPartyInfo]!),
-                  ),
-                );
-              },
-              child: TIMUIKitOperationItem(
-                operationName: imt("第三方信息共享清单"),
-                operationRightWidget: const Text(""),
-              ),
-            ),
-            // InkWell(
-            //   onTap: () {
-            //     Navigator.push(
-            //       context,
-            //       MaterialPageRoute(
-            //         builder: (context) => const ContactPage(),
-            //       ),
-            //     );
-            //   },
-            //   child: TIMUIKitOperationItem(
-            //     operationName: imt("注销账户"),
-            //     operationRightWidget: const Text(""),
-            //   ),
-            // ),
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const ContactPage(),
-                  ),
-                );
-              },
-              child: TIMUIKitOperationItem(
-                operationName: imt("联系我们"),
-                operationRightWidget: const Text(""),
-              ),
-            ),
-            TIMUIKitOperationItem(
-              showArrowRightIcon: false,
-              operationName: imt("版本号"),
-              operationRightWidget: const Text(IMDemoConfig.appVersion),
             ),
             const SizedBox(
               height: 10,

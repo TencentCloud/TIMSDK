@@ -705,6 +705,8 @@ public class TimManager {
         Integer gender = methodCall.argument("gender");
         Integer allowType = methodCall.argument("allowType");
         Integer birthday = methodCall.argument("birthday");
+        Integer level = methodCall.argument("level");
+        Integer role = methodCall.argument("role");
         HashMap<String,String> customInfoString = methodCall.argument("customInfo");
 
         V2TIMUserFullInfo userFullInfo = new V2TIMUserFullInfo();
@@ -726,6 +728,12 @@ public class TimManager {
         }
         if(allowType!=null){
             userFullInfo.setAllowType(allowType);
+        }
+        if(level!=null){
+            userFullInfo.setLevel(level);
+        }
+        if(role!=null){
+            userFullInfo.setRole(role);
         }
         if(CommonUtil.getParam(methodCall,result,"customInfo")!=null){
             HashMap<String, byte[]> newCustomHashMap = new HashMap<String, byte[]>();

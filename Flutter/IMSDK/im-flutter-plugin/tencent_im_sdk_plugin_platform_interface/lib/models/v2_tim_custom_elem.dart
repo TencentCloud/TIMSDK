@@ -22,7 +22,6 @@ class V2TimCustomElem extends V2TIMElem {
     if (json['nextElem'] != null) {
       nextElem = Map<String, dynamic>.from(json['nextElem']);
     }
-    ;
   }
 
   Map<String, dynamic> toJson() {

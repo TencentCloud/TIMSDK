@@ -17,9 +17,9 @@ class V2TimReceiveRestCustomData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['groupID'] = this.groupID;
-    data['customData'] = this.customData;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['groupID'] = groupID;
+    data['customData'] = customData;
     return data;
   }
 }

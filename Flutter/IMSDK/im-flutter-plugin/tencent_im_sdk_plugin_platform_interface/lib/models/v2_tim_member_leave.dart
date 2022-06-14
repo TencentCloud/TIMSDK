@@ -15,13 +15,13 @@ class V2TimMemberLeave {
 
   V2TimMemberLeave.fromJson(Map<String, dynamic> json) {
     groupID = json['groupID'];
-    member = new V2TimGroupMemberInfo.fromJson(json['member']);
+    member = V2TimGroupMemberInfo.fromJson(json['member']);
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['groupID'] = this.groupID;
-    data['member'] = this.member.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['groupID'] = groupID;
+    data['member'] = member.toJson();
     return data;
   }
 }

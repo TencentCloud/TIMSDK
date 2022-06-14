@@ -43,19 +43,17 @@ class V2TimMessageSearchParam {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['conversationID'] = this.conversationID;
-    data['keywordList'] = this.keywordList;
-    data['type'] = this.type;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['conversationID'] = conversationID;
+    data['keywordList'] = keywordList;
+    data['type'] = type;
     data['userIDList'] =
-        this.userIDList == null ? List.empty(growable: true) : this.userIDList;
-    data['messageTypeList'] = this.messageTypeList == null
-        ? List.empty(growable: true)
-        : this.messageTypeList;
-    data['searchTimePosition'] = this.searchTimePosition;
-    data['searchTimePeriod'] = this.searchTimePeriod;
-    data['pageSize'] = this.pageSize;
-    data['pageIndex'] = this.pageIndex;
+        userIDList ?? List.empty(growable: true);
+    data['messageTypeList'] = messageTypeList ?? List.empty(growable: true);
+    data['searchTimePosition'] = searchTimePosition;
+    data['searchTimePeriod'] = searchTimePeriod;
+    data['pageSize'] = pageSize;
+    data['pageIndex'] = pageIndex;
     return data;
   }
 }

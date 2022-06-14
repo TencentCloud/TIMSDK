@@ -19,17 +19,17 @@ class V2TimRecvGroupCustomMessage {
 
   V2TimRecvGroupCustomMessage.fromJson(Map<String, dynamic> json) {
     msgID = json['msgID'];
-    sender = new V2TimUserInfo.fromJson(json['sender']);
+    sender = V2TimUserInfo.fromJson(json['sender']);
     groupID = json['groupID'];
     customData = json['customData'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['msgID'] = this.msgID;
-    data['sender'] = this.sender.toJson();
-    data['groupID'] = this.groupID;
-    data['customData'] = this.customData;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['msgID'] = msgID;
+    data['sender'] = sender.toJson();
+    data['groupID'] = groupID;
+    data['customData'] = customData;
     return data;
   }
 }

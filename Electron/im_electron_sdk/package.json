@@ -87,6 +87,6 @@
     "prettier": "^2.3.2"
   },
   "dependencies": {
-    "im_electron_sdk": "^1.4.18"
+    "im_electron_sdk": "^1.4.20"
   }
 }

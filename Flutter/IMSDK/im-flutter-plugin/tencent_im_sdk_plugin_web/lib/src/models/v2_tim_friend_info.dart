@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import
+
 import 'dart:js_util';
 
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_value_callback.dart';

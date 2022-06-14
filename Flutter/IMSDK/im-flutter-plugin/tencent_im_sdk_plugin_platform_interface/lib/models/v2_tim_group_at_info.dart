@@ -17,9 +17,9 @@ class V2TimGroupAtInfo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['seq'] = this.seq;
-    data['atType'] = this.atType;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['seq'] = seq;
+    data['atType'] = atType;
     return data;
   }
 }

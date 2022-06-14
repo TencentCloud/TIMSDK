@@ -17,9 +17,9 @@ class V2TimCallback {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['code'] = this.code;
-    data['desc'] = this.desc;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['code'] = code;
+    data['desc'] = desc;
     return data;
   }
 }

@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import, library_prefixes, prefer_typing_uninitialized_variables, duplicate_ignore
+
 import 'dart:collection';
 import 'dart:html' as html;
 import 'dart:typed_data';
@@ -156,7 +158,7 @@ class V2TIMMessageManager {
   // 3.6.0后启用此函数
   Future<dynamic> sendMessageForNew<T, F>(
       {required Map<String, dynamic> params}) async {
-    String id = params['id'];
+    String? id = params['id'];
     try {
       final groupID = params['groupID'] ?? '';
       final recveiver = params['receiver'] ?? '';
@@ -537,7 +539,7 @@ class V2TIMMessageManager {
           fileContent, params['fileName'] as String, {'type': mimeType});
       return createMessage(type: "image", params: params);
     } catch (error) {
-      throw FormatException('fileName and fileContent cannot be empty.');
+      throw const FormatException('fileName and fileContent cannot be empty.');
     }
   }
 

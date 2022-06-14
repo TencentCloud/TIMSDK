@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import
+
 import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -24,14 +26,14 @@ class MockTencentPlatformInterface extends Fake
   }
 
   @override
-  Future<V2TimValueCallback<bool>> initSDK(
-      {required int sdkAppID,
-      required int loglevel,
-      V2TimSDKListener? listener,
-      String? listenerUuid,
-      required String uiPlatform,
-      }) async {
-    final arg = {"sdkAppID": sdkAppID, "loglevel": loglevel,"uiPlatform":""};
+  Future<V2TimValueCallback<bool>> initSDK({
+    required int sdkAppID,
+    required int loglevel,
+    V2TimSDKListener? listener,
+    String? listenerUuid,
+    required String uiPlatform,
+  }) async {
+    final arg = {"sdkAppID": sdkAppID, "loglevel": loglevel, "uiPlatform": ""};
     expect(arg, this.arguments);
     return this.responses;
   }
