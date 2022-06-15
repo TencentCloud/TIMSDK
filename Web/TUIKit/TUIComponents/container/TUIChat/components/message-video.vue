@@ -1,29 +1,33 @@
 <template>
  <div class="message-video">
     <div class="message-video-box" :class="[!data.progress && 'message-video-cover']" @click="toggleShow">
-      <img class="message-img" :src="data.snapshotUrl" alt="" v-if="data.snapshotUrl && !data.progress">
+      <img class="message-img" :class="[isWidth ? 'isWidth' : 'isHeight']" :src="data.snapshotUrl" alt="" v-if="data.snapshotUrl && !data.progress">
       <video v-else :src="data.url"></video>
       <div class="progress"  v-if="data.progress">
         <progress :value="data.progress" max="1"></progress>
       </div>
     </div>
     <div class="dialog-video" v-if="show" @click.self="toggleShow">
-      <header><i class="icon icon-close" @click.stop="toggleShow"></i></header>
-      <div class="dialog-video-box" @click.self="toggleShow">
-        <video :src="data.url" controls autoplay></video>
+      <header v-if="!isH5"><i class="icon icon-close" @click.stop="toggleShow"></i></header>
+      <div class="dialog-video-box" :class="[isH5 ? 'dialog-video-h5' : '']" @click.self="toggleShow">
+        <video :class="[isWidth ? 'isWidth' : 'isHeight']" :src="data.url" controls autoplay></video>
       </div>
     </div>
  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, watchEffect, reactive, toRefs } from 'vue';
+import { defineComponent, watchEffect, reactive, toRefs, computed } from 'vue';
 
 export default defineComponent({
   props: {
     data: {
       type: Object,
       default: () => ({}),
+    },
+    isH5: {
+      type: Boolean,
+      default: false,
     },
   },
   setup(props:any, ctx:any) {
@@ -36,6 +40,11 @@ export default defineComponent({
       data.data = props.data;
     });
 
+    const isWidth = computed(() => {
+      const { snapshotWidth = 0, snapshotHeight = 0 } = (data.data as any)?.message?.payload;
+      return snapshotWidth >= snapshotHeight;
+    });
+
     const toggleShow = () => {
       if (!(data.data as any).progress) {
         data.show = !data.show;
@@ -45,6 +54,7 @@ export default defineComponent({
     return {
       ...toRefs(data),
       toggleShow,
+      isWidth,
     };
   },
 });
@@ -55,12 +65,10 @@ export default defineComponent({
   &-box {
     max-width: 300px;
     video {
-      max-width: 300px;
-      max-height: 300px;
+      width: 100%;
     }
     img {
-      max-width: 300px;
-      max-height: 300px;
+      width: 100%;
     }
   }
   &-cover {
@@ -133,5 +141,18 @@ export default defineComponent({
       max-height: 100%;
     }
   }
+}
+.dialog-video-h5 {
+  width: 100%;
+  height: 100%;
+  background: #000000;
+  padding: 30px 0;
+}
+
+.isWidth {
+  width: 100%;
+}
+.isHeight {
+  height: 100%;
 }
 </style>

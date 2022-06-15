@@ -1,0 +1,40 @@
+.face {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+  &-main {
+    position: absolute;
+    z-index: 5;
+    width: 435px;
+    height: 250px;
+    top: -270px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+  }
+  &-list {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    overflow-y: auto;
+    &-item {
+      padding: 5px;
+    }
+    img {
+      width: 30px;
+    }
+    .face-img {
+      width: 60px;
+    }
+  }
+  &-tab {
+    display: flex;
+    align-items: center;
+    &-item {
+      padding: 0 10px;
+      img {
+        width: 30px;
+      }
+    }
+  }
+}

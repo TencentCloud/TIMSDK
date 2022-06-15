@@ -1,0 +1,39 @@
+.TUI-profile {
+  background: #FFFFFF;
+  .profile {
+    &-header {
+      border-bottom: 1px solid #DDDDDD;
+    }
+    &-main {
+      &-item {
+        span {
+          font-family: PingFangSC-Regular;
+          font-weight: 400;
+          color: #000000;
+          letter-spacing: 0;
+        }
+      }
+      &-name {
+        font-family: PingFangSC-Medium;
+        font-weight: 500;
+        color: #000000;
+        letter-spacing: 0;
+      }
+      &-label {
+        font-family: PingFangSC-Regular;
+        font-weight: 400;
+        color: #999999;
+        letter-spacing: 0;
+      }
+    }
+  }
+}
+.TUI-profile-h5 {
+  .profile {
+    &-main {
+      span {
+        color: #999999;
+      }
+    }
+  }
+}

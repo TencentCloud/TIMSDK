@@ -37,7 +37,56 @@ export function handleName(item: any) {
   }
   return name;
 }
+// Handle whether there is someone@
+export function handleAt(item: any) {
+  const { t } = (window as any).TUIKitTUICore.config.i18n.useI18n();
+  const List:any = [
+    `[${t('TUIConversation.有人@我')}]`,
+    `[${t('TUIConversation.@所有人')}]`,
+    `[${t('TUIConversation.@所有人')}][${t('TUIConversation.有人@我')}]`,
+  ];
+  let showAtType = '';
+  for (let index = 0 ; index < item.groupAtInfoList.length; index++) {
+    if (item.groupAtInfoList[index].atTypeArray[0] && item.unreadCount > 0) {
+      showAtType = List[item.groupAtInfoList[index].atTypeArray[0] - 1];
+    }
+  }
+  return showAtType;
+}
+// Internal display of processing message box
+export function handleShowLastMessage(item:any) {
+  const { t } = (window as any).TUIKitTUICore.config.i18n.useI18n();
+  const { lastMessage } = item;
+  const conversation = item;
+  let showNick = '';
+  let lastMessagePayload = '';
+  // Judge the number of unread messages and display them only when the message is enabled without interruption.
+  const showUnreadCount = conversation.unreadCount > 0 && conversation.messageRemindType === TIM.TYPES.MSG_REMIND_ACPT_NOT_NOTE ? t(`[${conversation.unreadCount > 99 ? '99+' : conversation.unreadCount}条]`) : '';
+  // Determine the lastmessage sender of the group. Namecard / Nick / userid is displayed by priority
+  if (conversation.type === TIM.TYPES.CONV_GROUP) {
+    if (lastMessage.fromAccount === conversation.groupProfile.selfInfo.userID) {
+      showNick = t('TUIConversation.我');
+    } else {
+      showNick = lastMessage.nameCard || lastMessage.nick || lastMessage.fromAccount;
+    }
+  }
+  // Display content of lastmessage message body
+  if (lastMessage.type === TIM.TYPES.MSG_TEXT) {
+    lastMessagePayload = lastMessage.payload.text;
+  } else {
+    lastMessagePayload = lastMessage.messageForShow;
+  }
 
+  if (lastMessage.isRevoked) {
+    lastMessagePayload = t('TUIChat.撤回了一条消息');
+  }
+
+  if (conversation.type === TIM.TYPES.CONV_GROUP && lastMessage.type === TIM.TYPES.MSG_GRP_TIP) {
+    return lastMessagePayload;
+  }
+  // Specific display content of message box
+  return `${showUnreadCount}${showNick ? `${showNick}:` : ''}${lastMessagePayload}`;
+}
 // 处理系统提示消息展示
 export function handleTipMessageShowContext(message:any) {
   const { t } = (window as any).TUIKitTUICore.config.i18n.useI18n();
@@ -128,7 +177,7 @@ export function handleFaceMessageShowContext(item:any) {
     url: '',
   };
   const currentEmojiList = bigEmojiList.filter((emoItem:any) => emoItem.icon === item.payload.data);
-  face.name = currentEmojiList[0].list[item.payload.index];
+  face.name = currentEmojiList[0]?.list[item.payload.index];
   if (item.payload.data.indexOf('@2x') < 0) {
     face.name = `${face.name}@2x`;
   }

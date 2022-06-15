@@ -1,5 +1,5 @@
 <template>
-  <div class="login">
+  <div :class="['login' + (env.isH5 ? '-h5' : '')]" data-env="H5">
     <Header class="login-header">
       <template v-slot:left>
         <div class="logo">
@@ -11,6 +11,7 @@
         </div>
       </template>
       <template v-slot:right>
+        <!-- <el-dropdown @command="change"> -->
         <el-dropdown>
           <span class="dropdown">
             <i class="icon icon-global"></i>
@@ -28,7 +29,7 @@
     </Header>
     <main class="login-main">
       <div class="login-main-content">
-        <div class="login-main-adv" :class="[locale === 'en' && 'small-txt']">
+        <div class="login-main-adv" :class="[locale === 'en' && 'small-txt']" v-if="!env.isH5">
           <p class="login-main-adv-introduce">
              {{$t('Login.超10亿用户的信赖')}}<br/>
              {{$t('腾讯云')}}{{$t('即时通信')}}
@@ -70,19 +71,19 @@
               </el-checkbox>
           </el-form-item>
           <el-form-item class="login-btn">
-            <el-button type="primary" @click="submitForm(ruleFormRef)" v-if="isLogin">{{$t('Login.登录当前账号')}}</el-button>
-            <el-button type="primary" @click="submitForm(ruleFormRef)" v-else>{{$t('Login.登录')}}</el-button>
+            <button class="btn btn-primary" @click.prevent="submitForm(ruleFormRef)" v-if="isLogin">{{$t('Login.登录当前账号')}}</button>
+            <button class="btn btn-primary" @click.prevent="submitForm(ruleFormRef)" v-else>{{$t('Login.登录')}}</button>
           </el-form-item>
           <el-form-item class="login-btn" v-if="isLogin">
-            <el-button @click="exitLogin">{{$t('Login.切换其他账号')}}</el-button>
+            <button class="btn" @click.prevent="exitLogin">{{$t('Login.切换其他账号')}}</button>
           </el-form-item>
-          <footer class="login-footer">
+          <footer class="login-form-footer">
             <a @click="openLink(Link.demo)">{{$t(`Login.${Link.demo.label}`)}}</a>
-            <a @click="openLink(Link.im)">{{$t(`Login.${Link.im.label}`)}}</a>
+            <a @click="openLink(Link.im)" v-if="!env.isH5">{{$t(`Login.${Link.im.label}`)}}</a>
           </footer>
         </el-form>
       </div>
-      <div class="login-main-footer">
+      <div class="login-main-footer" v-if="!env.isH5">
         <div class="buttom-mask">
           <p class="buttom-mask-top"> {{$t('Login.一分钟')}}</p>
           <p class="buttom-mask-under">{{$t('Login.改2行代码，1分钟跑通demo')}}</p>
@@ -101,6 +102,19 @@
         </div>
       </div>
     </main>
+    <footer  class="login-footer" v-if="env.isH5">
+        <ul class="login-footer-list">
+          <li class="login-footer-list-item" v-for="(item, index) in Link.advList" :key="index">
+            <a  @click="openLink(item)">
+              <aside>
+                <h1>{{$t(`Home.${item.label}`)}}</h1>
+                <h1 v-if="item.subLabel" class="sub">{{$t(`Home.${item.subLabel}`)}}</h1>
+              </aside>
+              <span><text>{{$t(`Home.${item.btnText}`)}}</text></span>
+            </a>
+          </li>
+        </ul>
+      </footer>
   </div>
 </template>
 
@@ -111,7 +125,7 @@ import type { FormInstance } from 'element-plus';
 import { useRouter } from 'vue-router';
 import Header from '../components/Header.vue';
 import { ElMessage } from 'element-plus';
-import { switchTitle } from '@/utils/switchTitle';
+import { switchTitle } from '../utils/switchTitle';
 import Link from '../assets/link';
 import { genTestUserSig, EXPIRETIME } from '../../debug/index';
 import { useStore } from 'vuex';
@@ -139,7 +153,6 @@ export default defineComponent({
       }
     });
 
-    // change language
     const change = (value:any) => {
       if (locale.value !== value) {
         locale.value = value;
@@ -148,6 +161,7 @@ export default defineComponent({
     };
 
     const validateUserID = (rule: any, value: any, callback: any) => {
+      // const reg = new RegExp('^1[0-9]{10}$', 'gi');
       if (!rule.required) {
         callback();
       } else if (!value) {
@@ -175,6 +189,7 @@ export default defineComponent({
         userID: [{ required: true, validator: validateUserID, trigger: 'blur' }],
       },
       isLogin: false,
+      env: TUIKit.TUIEnv,
     });
 
     if (localStorage.getItem('TUIKit-userInfo')) {
@@ -230,7 +245,7 @@ export default defineComponent({
       if (!formEl) return;
       formEl.resetFields();
     };
-    // 增加链接跳转上报
+
     const openLink = (type:any) => {
       window.open(type.url);
     };

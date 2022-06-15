@@ -1,0 +1,282 @@
+#preloadedImages {
+    background-image: url("https://sdk-web-1252463788.cos.ap-hongkong.myqcloud.com/im/assets/images/background.png");
+  }
+  .home {
+    &-header {
+      .menu {
+        font-family: PingFangSC-Medium;
+        font-weight: 500;
+        color: #333333;
+        letter-spacing: 0;
+      }
+    }
+    &-menu {
+      .logo {
+        border-bottom: 1px solid #EAECF2;
+        &-name {
+          font-weight: 500;
+          color: #000000;
+        }
+        p {
+          font-weight: 500;
+          color: #000000;
+          &::before {
+            background: #dddddd;
+          }
+        }
+      }
+      .menu-main {
+        &-title {
+          font-family: PingFangSC-Medium;
+          font-weight: 500;
+          color: #000000;
+        }
+        .menu-main-list {
+          &-item {
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+            label {
+              color: #B5B5B5;
+            }
+            .step {
+              background: rgba(81,94,136,0.04);
+              border: 1px solid #D2D6DC;
+              color: #93989F;
+            }
+            a {
+              color: #147AFF;
+            }
+          }
+          .complete {
+            label {
+              color: #333333;
+            }
+            span {
+              background: #147AFF;
+            }
+          }
+        }
+      }
+      .menu-footer {
+        &-list {
+          &-item {
+            a {
+              span {
+                background: #147AFF;
+                box-shadow: 0 0.19rem 0.25rem 0 rgba(255,255,255, .7), 0 0.13rem 0.38rem 0 rgba(20,122,255, .55);
+                  text  {
+                    font-family: PingFangSC-Regular;
+                    font-weight: 400;
+                    color: #FFFFFF;
+                    letter-spacing: 0;
+                  }
+              }
+              aside {
+                h1 {
+                  font-family: PingFangSC-Regular;
+                  color: #000000;
+                  letter-spacing: 0;
+                }
+              }
+            }
+          }
+        }
+      } 
+    }
+    &-TUIKit {
+      background: #FFFFFF;
+      box-shadow: 0 11px 20px 0 rgba(0,0,0,.3);
+      .setting {
+        background: #e8e8e9;
+        &-main {
+          .userInfo {
+            &-main {
+              background: #FFFFFF;
+              box-shadow: 0 1px 10px 0 rgba(2,16,43,0.15);
+            }
+            .TUIProfile {
+              background: rgba(0,0,0,.3);
+              main {
+                background: #FFFFFF;
+              }
+            }
+          }
+          &-list {
+            .selected {
+              background: #dddddd;
+            }
+          }
+        }
+      }
+      &-main {
+        .conversation {
+          border-right: 1px solid #F4F5F9;
+          .TUI-search {
+            border-bottom: 1px solid #F4F5F9;
+          }
+        }
+        .chat {
+          &-default {
+            h1 {
+              font-family: PingFangSC-Medium;
+              font-weight: 500;
+              color: #000000;
+              letter-spacing: 0;
+            }
+            p {
+              font-family: PingFangSC-Regular;
+              font-weight: 400;
+              color: #666666;
+              letter-spacing: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+  .status {
+    background: #CFD7E0;
+  }
+  .status  text{
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    color: #FFFFFF;
+  }
+  .showmore{
+    background: #FFFFFF;
+    box-shadow: 0 1px 10px 0 rgba(2,16,43, .15);
+  }
+  
+  .show-profile span  {
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    color: #000000;
+    letter-spacing: 0;
+  }
+  .show-about span  {
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    color: #000000;
+    letter-spacing: 0;
+  }
+  
+  .show-cut {
+    border: 1px solid #E8E8E9;
+  }
+
+  .show-quit span {
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    color: #000000;
+    letter-spacing: 0;
+  }
+  .show-about-box{
+    background: #FFFFFF;
+    main {
+      header {
+        h1 {
+          font-family: PingFangSC-Medium;
+          font-weight: 500;
+          color: #000000;
+          letter-spacing: 0;
+        }
+      }
+      .sub {
+        font-family: PingFangSC-Regular;
+        font-weight: 400;
+        color: #999999;
+        letter-spacing: 0;
+      }
+    }
+    footer {
+      a {
+        font-family: PingFangSC-Regular;
+        font-weight: 400;
+        color: #006EFF;
+        letter-spacing: 0;
+      }
+      p {
+        font-family: PingFangSC-Regular;
+        font-weight: 400;
+        color: #999999;
+        letter-spacing: 0;
+      }
+    }
+  }
+  
+  
+  .cancellation-box {
+    background: #FFFFFF;
+      main {
+        font-family: PingFangSC-Regular;
+        font-weight: 400;
+        color: #000000;
+        letter-spacing: 0;
+          text {
+            color:#006EFF;
+          }
+      }
+  }
+  
+  .dialog {
+    background: rgba(0, 0, 0, 0.3);
+    .title {
+      h1 {
+        font-family: PingFangSC-Medium;
+        font-weight: 500;
+        color: #000000;
+        letter-spacing: 0;
+      }
+    }
+    .btn {
+      background: none;
+      font-family: PingFangSC-Regular;
+      font-weight: 400;
+      letter-spacing: 0;
+      &-submit {
+        border: 1px solid #E54545;
+        color: #E54545;
+      }
+      &-default  {
+        background: #006EFF;
+        border: 1px solid #006EFF;
+        color: #FFFFFF;
+      }
+    }
+  }
+
+  .disclaimer-box{
+    background: #FFFFFF;
+      main {
+        font-family: PingFangSC-Regular;
+        font-weight: 400;
+        color: #000000;
+        letter-spacing: 0;
+      }
+  }
+
+  .home-h5 {
+    .dialog {
+      .btn {
+        &-default  {
+          background: none;
+          color: #006EFF;
+        }
+      }
+    }
+  }
+  
+  
+  // 公共样式
+  .bottom-line {
+    border-bottom: 1px solid #EAECF2;
+  }
+
+  .btn-text {
+    cursor: pointer;
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    color: #006EFF;
+    letter-spacing: 0;
+  }
+  

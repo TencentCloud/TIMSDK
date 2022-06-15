@@ -1,0 +1,264 @@
+.home-h5 {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  background: #FFFFFF;
+  background-image: none !important;
+  .menu-h5 {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,.5);
+    z-index: 10;
+    display: flex;
+    align-items: flex-end;
+  }
+  .menu {
+    padding: 0 23px 23px;
+    width: 100%;
+    height: auto;
+    position: static;
+    border-radius: 12px 12px 0 0;
+    margin-top: 40px;
+    max-height: calc(100% - 40px);
+    &-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 27px 0 4px;
+      position: sticky;
+      top: 0;
+      background: #FFFFFF;
+      h1 {
+        font-family: PingFangSC-Medium;
+        font-weight: 500;
+        font-size: 20px;
+        color: #000000;
+        letter-spacing: 0;
+        line-height: 28px;
+      }
+    }
+    &-footer {
+      &-list {
+        flex: 1;
+        display: flex;
+        &-item {
+          flex: 1;
+          display: flex;
+          padding: 20px 0;
+          background-size: 100% 100%;
+
+          &:last-child {
+            background-size: 100% 100%;
+            a {
+              aside {
+                padding-bottom: 14px;
+              }
+            }
+          }
+          a {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+            span {
+              padding: 5px 20px;
+              background: #147AFF;
+              box-shadow: 0 4px 5px 0 rgba(255,255,255,0.70), 0 3px 8px 0 rgba(20,122,255,0.55);
+              border-radius: 30.5px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+                text  {
+                  font-family: PingFangSC-Regular;
+                  font-weight: 400;
+                  font-size: 15px;
+                  color: #FFFFFF;
+                  letter-spacing: 0;
+                }
+            }
+            aside {
+              h1 {
+                font-family: PingFangSC-Regular;
+                font-size: 16px;
+                color: #000000;
+                letter-spacing: 0;
+              }
+              .sub {
+                padding-left: 40px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  &-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    .message {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    &-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px;
+      border-bottom: 1px solid #F4F5F9;
+    }
+    &-content {
+      flex: 1;
+    }
+    .nav {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px 18px;
+      display: flex;
+      &-list {
+        flex: 1;
+        display: flex;
+        background: #EBF0F6;
+        box-shadow: 0 0 18px 0 #F0F6FF;
+        border-radius: 9px;
+        &-item {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          padding: 9px 0;
+          label {
+            padding-top: 4px;
+            line-height: 16px;
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+            font-size: 12px;
+            color: #A0A3A6;
+          }
+          .selected {
+            color: #006EFF;
+          }
+        }
+      }
+    }
+  }
+  &-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  &-profile {
+    background: #EFEFEF;
+    &-list{
+      margin-top: 12px;
+      &-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #FFFFFF;
+        padding: 14px 18px;
+        label {
+          font-family: PingFangSC-Regular;
+          font-weight: 400;
+          font-size: 18px;
+          color: #000000;
+          letter-spacing: 0;
+          line-height: 27px;
+        }
+      }
+    }
+    &-footer {
+      margin-top: 12px;
+      display: flex;
+      .btn {
+        flex: 1;
+        border: none;
+        padding: 14px 0;
+        font-family: PingFangSC-Regular;
+        font-weight: 400;
+        font-size: 19px;
+        color: #E54545;
+        text-align: center;
+        line-height: 29px;
+        background: #FFFFFF;
+      }
+    }
+  }
+  .dialog {
+    width: 100%;
+    height: 100%;
+    .title {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 15px 18px;
+      display: flex;
+      justify-content: center;
+      position: relative;
+      .icon {
+        position: absolute;
+        left: 18px;
+      }
+      h1 {
+        font-size: 18px;
+      }
+    }
+  }
+  .show-about-box,.cancellation-box, .disclaimer-box {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    border-radius: 0;
+  }
+  .show-about-box {
+    main {
+      header {
+        flex-direction: column;
+        img {
+          width: 33vw;
+        }
+        h1 {
+          padding-top: 10px;
+          font-size: 38px;
+          line-height: 41px;
+        }
+      }
+      .sub {
+        font-size: 14px;
+      }
+    }
+  }
+  .cancellation-box {
+    align-items: center;
+    main {
+      display: flex;
+      padding: 72px 40px 52px;
+    }
+    footer {
+      flex-direction: column;
+      .btn {
+        margin-right: 0;
+      }
+    }
+  }
+  .disclaimer-box {
+    main {
+      padding: 36px 20px 0;
+      font-size: 16px;
+      header {
+        padding: 16px 0;
+        text-align: center;
+        font-size: 18px;
+      }
+    }
+    footer {
+      padding-bottom: 0;
+    }
+  }
+}

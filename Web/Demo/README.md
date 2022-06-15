@@ -1,3 +1,5 @@
+[English](./README_EN.md) | 简体中文
+
 Web Demo 是基于 IM TUIKit 实现，TUIKit 中包含会话、聊天、群组、个人资料管理等功能，基于 TUIKit 您可以像搭积木一样快速搭建起自己的业务逻辑。
 
 ## 效果展示

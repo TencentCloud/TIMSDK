@@ -1,4 +1,4 @@
-import { TUITheme, TUIi18n } from '../../TUIPlugin';
+import { TUITheme, TUIi18n, TUIEnv, TUIDirective } from '../../TUIPlugin';
 
 import TIM from 'tim-js-sdk';
 import TIMUploadPlugin from 'tim-upload-plugin';
@@ -41,7 +41,7 @@ export default class TUICore extends ITUIServer {
     this.TIM = TIM;
     (window as any).TIM = TIM;
     if (!params.tim) {
-      (window as any).TUIKit = TIM.create({ SDKAppID: this.SDKAppID, devMode: true });
+      (window as any).TUIKit = TIM.create({ SDKAppID: this.SDKAppID });
     } else {
       (window as any).TUIKit = params.tim;
     }
@@ -50,6 +50,7 @@ export default class TUICore extends ITUIServer {
     this.tim.registerPlugin({ 'tim-upload-plugin': TIMUploadPlugin });
 
     this.bindTIMEvent();
+    this.TUIEnv = TUIEnv();
   }
 
   /**
@@ -96,6 +97,8 @@ export default class TUICore extends ITUIServer {
     flag && this.TUIComponents.forEach((element) => {
       app.component(element.name, element.component);
     });
+
+    TUIDirective(app);
   }
 
   /**
@@ -158,8 +161,8 @@ export default class TUICore extends ITUIServer {
 
   private bindTIMEvent() {
     this.tim.on(TIM.EVENT.SDK_READY, this.handleSDKReady, this);
-    // this.tim.on(TIM.EVENT.SDK_NOT_READY, )
-    // this.tim.on(TIM.EVENT.KICKED_OUT, )
+    // this.tim.on(TIM.EVENT.SDK_NOT_READY,)
+    // this.tim.on(TIM.EVENT.KICKED_OUT,)
     // this.tim.on(TIM.EVENT.ERROR, )
     // this.tim.on(TIM.EVENT.NET_STATE_CHANGE, )
     // this.tim.on(TIM.EVENT.SDK_RELOAD, )
@@ -168,7 +171,7 @@ export default class TUICore extends ITUIServer {
   private unbindTIMEvent() {
     this.tim.off(TIM.EVENT.SDK_READY, this.handleSDKReady);
     // this.tim.off(TIM.EVENT.SDK_NOT_READY, )
-    // this.tim.off(TIM.EVENT.KICKED_OUT, )
+    // this.tim.off(TIM.EVENT.KICKED_OUT,)
     // this.tim.off(TIM.EVENT.ERROR, )
     // this.tim.off(TIM.EVENT.NET_STATE_CHANGE, )
     // this.tim.off(TIM.EVENT.SDK_RELOAD, )

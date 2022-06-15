@@ -80,7 +80,7 @@ export default class TUIProfileServer extends IComponentServer {
    * @param {callback} callback 回调函数
    * @returns {Promise} 返回异步函数
    */
-  public handlePromiseCallback(callback:any) {
+  public handlePromiseCallback(callback:any): Promise<any> {
     return new Promise<void>((resolve, reject) => {
       const config = {
         TUIName: 'TUIProfile',
@@ -105,7 +105,7 @@ export default class TUIProfileServer extends IComponentServer {
  *
  * @returns {Promise}
  */
-  public async getMyProfile() {
+  public async getMyProfile(): Promise<any> {
     return this.handlePromiseCallback(async (resolve:any, reject:any) => {
       try {
         const imResponse = await this.TUICore.tim.getMyProfile();
@@ -124,7 +124,7 @@ export default class TUIProfileServer extends IComponentServer {
  * @param {Array<string>} userIDList 用户的账号列表
  * @returns {Promise}
  */
-  public async getUserProfile(userIDList:Array<string>) {
+  public async getUserProfile(userIDList:Array<string>): Promise<any> {
     return this.handlePromiseCallback(async (resolve:any, reject:any) => {
       try {
         const imResponse = await this.TUICore.tim.getUserProfile({ userIDList });
@@ -141,7 +141,7 @@ export default class TUIProfileServer extends IComponentServer {
  * @param {Object} options 资料参数--[详细参数,请点击查看详情](https://web.sdk.qcloud.com/im/doc/zh-cn//SDK.html#updateMyProfile)
  * @returns {Promise}
  */
-  public async updateMyProfile(options:any) {
+  public async updateMyProfile(options:any): Promise<any> {
     return this.handlePromiseCallback(async (resolve:any, reject:any) => {
       try {
         const imResponse = await this.TUICore.tim.updateMyProfile(options);
@@ -156,12 +156,23 @@ export default class TUIProfileServer extends IComponentServer {
   /**
  * 赋值
  *
- * @param {Object} params 使用的数据
- * @returns {Object} 数据
+ * @param {any} params 使用的数据
+ * @returns {any} 数据
  */
-  public async bind(params:any) {
+  public async bind(params:unknown): Promise<any> {
     this.currentStore = params;
     this.getMyProfile();
     return this.currentStore;
+  }
+
+  /**
+ * 赋值
+ *
+ * @param {Boolean} params 使用的数据
+ * @returns {boolean} 数据
+ */
+  public setEdit(params:boolean): boolean {
+    this.currentStore.isEdit = params;
+    return this.currentStore.isEdit;
   }
 }

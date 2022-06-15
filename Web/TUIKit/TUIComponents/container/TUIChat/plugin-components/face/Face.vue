@@ -1,7 +1,7 @@
 <template>
-  <div class="face">
+  <div class="face" id="face">
       <i class="icon icon-face" title="表情" @click="toggleShow"></i>
-      <main class="face-main"  v-show="show" ref="dialog">
+      <main class="face-main" :class="[isH5 && 'face-H5-main']" v-show="show" ref="dialog">
          <ul class="face-list" v-for="(item, index) in list" :key="index" v-show="currentIndex === index">
           <li  class="face-list-item" v-for="(childrenItem, childrenIndex) in item" :key="childrenIndex" @click="select(childrenItem, childrenIndex)">
             <img v-if="index === 0" :src="emojiUrl + emojiMap[childrenItem]">
@@ -36,6 +36,14 @@ const Face = defineComponent({
       type: Boolean,
       default: () => false,
     },
+    isH5: {
+      type: Boolean,
+      default: () => false,
+    },
+    parentID: {
+      type: String,
+      default: () => '',
+    },
   },
   setup(props:any, ctx:any) {
     const data = reactive({
@@ -47,6 +55,7 @@ const Face = defineComponent({
       show: false,
       currentIndex: 0,
       isMute: false,
+      transDom: false,
     });
 
     const dialog:any = ref();
@@ -57,16 +66,29 @@ const Face = defineComponent({
     });
 
     const toggleShow = () => {
+      const main:any = document.getElementsByClassName('face-main')[0];
       if (!data.isMute) {
-        data.show = !data.show;
+        main.style.display = main.style.display === 'none' ? 'flex' : 'none';
       }
-      if (!data.show) {
+      if (main.style.display === 'none') {
         selectFace(0);
+      }
+      toggleH5Show();
+    };
+
+    const toggleH5Show = () => {
+      const parent = document.getElementById(props.parentID);
+      const main = document.getElementsByClassName('face-H5-main')[0];
+      if (props.isH5) {
+        parent?.appendChild(main);
       }
     };
 
     onClickOutside(dialog, () => {
-      data.show = false;
+      const main:any = document.getElementsByClassName('face-H5-main')[0];
+      if (main) {
+        main.style.display = 'none';
+      }
     });
 
     const select = async (item:string, index?:number) => {
@@ -77,7 +99,9 @@ const Face = defineComponent({
         options.type = 'emo';
         options.url = emojiUrl + emojiMap[item];
         options.template = `<img src="${emojiUrl + emojiMap[item]}">`;
-        toggleShow();
+        if (!props.isH5) {
+          toggleShow();
+        }
         return ctx.emit('send', options);
       }
       try {
@@ -88,7 +112,9 @@ const Face = defineComponent({
       } catch (error) {
         TUIMessage({ message: error });
       }
-      toggleShow();
+      if (!props.isH5) {
+        toggleShow();
+      }
     };
 
     const list = computed(() => {
@@ -116,47 +142,4 @@ const Face = defineComponent({
 export default Face;
 </script>
 
-<style lang="scss" scoped>
-.face {
-  display: inline-block;
-  position: relative;
-  cursor: pointer;
-  &-main {
-    position: absolute;
-    z-index: 5;
-    width: 435px;
-    height: 250px;
-    background: #ffffff;
-    top: -270px;
-    box-shadow: 0 2px 12px 0 rgba(0,0,0, .1);
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-  }
-  &-list {
-    flex: 1;
-    display: flex;
-    flex-wrap: wrap;
-    overflow-y: auto;
-    &-item {
-      padding: 5px;
-    }
-    img {
-      width: 30px;
-    }
-    .face-img {
-      width: 60px;
-    }
-  }
-  &-tab {
-    display: flex;
-    align-items: center;
-    &-item {
-      padding: 0 10px;
-      img {
-        width: 30px;
-      }
-    }
-  }
-}
-</style>
+<style lang="scss" scoped src="./style/index.scss"></style>

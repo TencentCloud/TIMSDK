@@ -1,0 +1,26 @@
+.TUI-conversation {
+  background: #FFFFFF;
+  header {
+    background: #FFFFFF;
+    border-bottom: 0.06rem solid #F4F5F9;
+    h1 {
+      font-weight: 400;
+      color: #000000;
+    }
+    .more{
+      background: #F3F3F3;
+    }
+  }
+  .network {
+    p {
+      font-family: PingFangSC-Regular;
+      font-weight: 400;
+      color: #E54545;
+      letter-spacing: 0;
+    }
+  }
+}
+
+input {
+  border: 1px solid #DDDDDD;
+}

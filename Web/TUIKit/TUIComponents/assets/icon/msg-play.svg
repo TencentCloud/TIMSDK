@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="130px" height="130px" viewBox="0 0 130 130" version="1.1">
+  <title>编组</title>
+  <defs>
+    <filter x="-20.0%" y="-20.0%" width="140.0%" height="140.0%" filterUnits="objectBoundingBox" id="filter-1">
+      <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+      <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+      <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.15 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+      <feMerge>
+        <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+        <feMergeNode in="SourceGraphic"></feMergeNode>
+      </feMerge>
+    </filter>
+  </defs>
+  <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <g id="消息状态" transform="translate(-1210.000000, -966.000000)">
+      <g id="编组-3" transform="translate(1055.000000, 783.000000)">
+        <g id="编组-17" transform="translate(60.000000, 37.996517)">
+          <g id="编组-14" transform="translate(0.000000, 0.003483)">
+            <g id="编组" transform="translate(110.000000, 160.000000)" filter="url(#filter-1)">
+              <rect id="矩形" x="0" y="0" width="100" height="100"></rect>
+              <path d="M67.4424727,46.9165576 L41.2606545,30.5526788 C40.1396848,29.8520727 38.7265939,29.8147394 37.5704727,30.4557091 C36.4143515,31.0966788 35.6970182,32.3143758 35.6970182,33.6363152 L35.6970182,66.3635879 C35.6970182,67.6855273 36.4143515,68.9032242 37.5704727,69.5441939 C38.1198061,69.8486788 38.7268364,69.9999515 39.3331394,69.9999515 C40.0029576,69.9999515 40.6720485,69.8152242 41.2604121,69.4472242 L67.4422303,53.0838303 C68.505503,52.4193455 69.1513213,51.2540121 69.1513213,50.0001939 C69.1513213,48.7463758 68.5057455,47.5810424 67.4424727,46.9165576" id="Fill-1" fill="#FFFFFF"></path>
+              <path d="M50,10 C27.944,10 10,27.944 10,50 C10,72.0557576 27.944,90 50,90 C72.056,90 90,72.0557576 90,50 C90,27.944 72.056,10 50,10" id="路径" stroke="#FFFFFF" stroke-width="6"></path>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

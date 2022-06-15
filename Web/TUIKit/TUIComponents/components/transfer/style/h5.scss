@@ -1,0 +1,71 @@
+.transfer-h5 {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  &-header {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    font-size: 18px;
+    padding: 16px 18px;
+    .icon {
+      position: absolute;
+      left: 18px;
+      top: 18px;
+    }
+  }
+  .main {
+    flex: 1;
+    flex-direction: column;
+    width: auto;
+    height: auto;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    max-height: calc( 100% - 54px);
+    padding: 0;
+    .avatar {
+      border-radius: 0;
+    }
+    .left {
+      padding: 0;
+      flex: 1;
+      border: none;
+      display: flex;
+      flex-direction: column;
+      header {
+        position: sticky;
+        top: 0;
+        padding: 0 18px;
+        input {
+          border-radius: 5px;
+          font-size: 14px;
+        }
+      }
+      .list {
+        padding: 0 18px;
+      }
+    }
+    .right {
+      flex: 0;
+      padding: 0;
+      flex-direction: row;
+      align-items: center;
+      box-shadow: inset 0 1px 0 0 #EEEEEE;
+      padding: 0 18px 8px;
+      .list {
+        flex-direction: row;
+        width: 0;
+      }
+      footer {
+        padding: 6px 0;
+        display: flex;
+        align-items: center;
+        .btn {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+}
