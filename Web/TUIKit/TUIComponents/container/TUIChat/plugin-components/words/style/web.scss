@@ -1,0 +1,42 @@
+.words {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+  .icon {
+    margin: 12px 10px 0;
+  }
+  &-main {
+    position: absolute;
+    z-index: 5;
+    width: 315px;
+    top: -200px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    width: 19.13rem;
+    height: 12.44rem;
+    overflow-y: auto;
+    header {
+      display: flex;
+      justify-content: space-between;
+      aside {
+        display: flex;
+        align-items: center;
+        font-size: 12px;
+        h1 {
+          font-size: 12px;
+        }
+      }
+    }
+  }
+  &-list {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    &-item {
+      cursor: pointer;
+      padding: 4px 0;
+      font-size: 12px;
+    }
+  }
+}

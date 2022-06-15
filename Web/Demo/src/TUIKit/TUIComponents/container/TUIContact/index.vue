@@ -1,6 +1,6 @@
 <template>
   <transition @before-leave="init">
-    <div class="TUI-contact">
+    <div class="TUI-contact" :class="[env.isH5 ? 'TUI-contact-H5' : '']" >
       <aside class="TUI-contact-left">
         <header class="TUI-contact-left-header">
           <div class="search">
@@ -10,10 +10,10 @@
             </div>
             <div class="search-box" v-else>
               <div class="input-box">
-                <input type="text" v-model="searchID" :placeholder="$t('TUIContact.输入群ID，按回车搜索')" @keyup.enter="handleSearchGroup">
+                <input type="text" v-model="searchID" :placeholder="$t('TUIContact.输入群ID，按回车搜索')" @keyup.enter="handleSearchGroup"  enterkeyhint="search">
                 <i class="icon icon-cancel" v-if="!!searchID" @click="searchID=''"></i>
               </div>
-              <span class="search-cancel" @click="toggleSearch">取消</span>
+              <span class="search-cancel" @click="toggleSearch">{{$t('取消')}}</span>
             </div>
           </div>
         </header>
@@ -33,7 +33,7 @@
               </li>
             </ul>
           </li>
-          <li class="TUI-contact-column-item">
+          <li class="TUI-contact-column-item" :class="[columnName === 'system' && 'label-drop']">
             <header @click="select('group')">
               <i class="icon icon-right" :class="[ columnName === 'group' && 'icon-down']"></i>
               <main>
@@ -83,7 +83,11 @@
           </li>
         </ul>
       </aside>
-      <main class="TUI-contact-main">
+      <main class="TUI-contact-main" v-show="!!currentGroup?.groupID || columnName === 'system' || !env.isH5">
+        <header class="TUI-contact-main-h5-title" v-if="env.isH5">
+          <i class="icon icon-back" @click="back"></i>
+          <h1>{{currentGroup?.name || $t('TUIContact.系统通知')}}</h1>
+        </header>
         <div v-if="!!currentGroup?.groupID" class="TUI-contact-main-info">
           <header class="TUI-contact-main-info-header">
             <ul class="list">
@@ -111,18 +115,19 @@
             <p v-else-if="currentGroup.apply">{{$t('TUIContact.已申请')}}</p>
             <button class="btn btn-default" v-else-if="isNeedPermission" @click="join(currentGroup)">{{$t('TUIContact.申请加入')}}</button>
             <button class="btn btn-default" v-else-if="!currentGroup.selfInfo.userID" @click="join(currentGroup)">{{$t('TUIContact.加入群聊')}}</button>
-              <button
-                class="btn btn-cancel"
-                v-else-if="currentGroup.selfInfo.userID && currentGroup.selfInfo.role ==='Owner' && currentGroup.type !=='Private'"
-                @click="dismiss(currentGroup)">{{$t('TUIContact.解散群聊')}}</button>
-              <button class="btn btn-cancel" v-else @click="quit(currentGroup)">{{$t('TUIContact.退出群聊')}}</button>
+            <button
+              class="btn btn-cancel"
+              v-else-if="currentGroup.selfInfo.userID && currentGroup.selfInfo.role ==='Owner' && currentGroup.type !=='Private'"
+              @click="dismiss(currentGroup)">{{$t('TUIContact.解散群聊')}}</button>
+            <button class="btn btn-cancel" v-else @click="quit(currentGroup)">{{$t('TUIContact.退出群聊')}}</button>
+            <button v-if="currentGroup.selfInfo.userID" class="btn btn-default" @click="enter(currentGroup)">{{$t('TUIContact.进入群聊')}}</button>
           </footer>
         </div>
         <div class="TUI-contact-system" v-else-if="columnName === 'system'">
-          <header class="TUI-contact-system-header">
+          <header class="TUI-contact-system-header" v-if="!env.isH5">
             <h1>{{$t('TUIContact.系统通知')}}</h1>
           </header>
-          <MessageSystem :data="systemMessageList" :types="types" @application="handleGroupApplication" />
+          <MessageSystem :isH5="env.isH5" :data="systemMessageList" :types="types" @application="handleGroupApplication" />
         </div>
         <slot v-else />
       </main>
@@ -132,7 +137,6 @@
 <script lang="ts">
 import { computed, defineComponent, reactive, toRefs } from 'vue';
 import MessageSystem from './components/message-system.vue';
-import { useStore } from 'vuex';
 import TUIMessage from '../../components/message';
 
 const TUIContact = defineComponent({
@@ -141,8 +145,9 @@ const TUIContact = defineComponent({
     MessageSystem,
   },
 
-  setup(props) {
+  setup(props:any, ctx:any) {
     const TUIServer:any = TUIContact.TUIServer;
+    const { t } = TUIServer.TUICore.config.i18n.useI18n();
     const data = reactive({
       groupList: [],
       searchGroup: {},
@@ -155,11 +160,10 @@ const TUIContact = defineComponent({
       columnName: '',
       types: TUIServer.TUICore.TIM.TYPES,
       isSearch: false,
+      env: TUIServer.TUICore.TUIEnv,
     });
 
     TUIServer.bind(data);
-    // 获取vuex 的 store
-    const VuexStore = useStore();
 
     const isNeedPermission = computed(() => {
       const isHaveSeif = (data.currentGroup as any).selfInfo.userID;
@@ -177,7 +181,7 @@ const TUIContact = defineComponent({
         try {
           await TUIServer.searchGroupByID(data.searchID.trim());
         } catch (error) {
-          TUIMessage({ message: '该群组不存在' });
+          TUIMessage({ message: t('TUIContact.该群组不存在') });
         }
       }
     };
@@ -185,7 +189,7 @@ const TUIContact = defineComponent({
     const join = async (group:any) => {
       const options:any = {
         groupID: group.groupID,
-        applyMessage: group.applyMessage || '加群',
+        applyMessage: group.applyMessage || t('TUIContact.加群'),
         type: group?.type,
       };
       await TUIServer.joinGroup(options);
@@ -197,10 +201,19 @@ const TUIContact = defineComponent({
       data.currentGroup = null;
     };
 
+    const enter = async (group:any) => {
+      const name = `GROUP${group.groupID}`;
+      TUIServer.TUICore.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse:any) => {
+        // 通知 TUIConversation 添加当前会话
+        // Notify TUIConversation to toggle the current conversation
+        TUIServer.TUICore.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
+        back();
+      });
+    };
+
     const dismiss = (group:any) => {
       TUIServer.dismissGroup(group.groupID);
       data.currentGroup = null;
-      VuexStore.commit('handleTask', 5);
     };
 
     const select = async (name:string) => {
@@ -208,7 +221,8 @@ const TUIContact = defineComponent({
         await TUIServer.getSystemMessageList();
         await TUIServer.setMessageRead();
       }
-      if (data.columnName !== 'group' && name === 'group') {
+      (data.currentGroup as any) = {};
+      if (data.columnName !== 'group' && name === 'group' && !data.env.isH5) {
         (data.currentGroup as any) = data.groupList[0];
       } else {
         (data.currentGroup as any) = {};
@@ -235,6 +249,10 @@ const TUIContact = defineComponent({
     const handleGroupApplication = (params:any)=> {
       TUIServer.handleGroupApplication(params);
     };
+    const back = ()=> {
+      (data.currentGroup as any) = {};
+      data.columnName = '';
+    };
 
     return {
       ...toRefs(data),
@@ -248,12 +266,12 @@ const TUIContact = defineComponent({
       handleGroupApplication,
       toggleSearch,
       init,
+      back,
+      enter,
     };
   },
 });
 export default TUIContact;
 </script>
 
-<style lang="scss" scoped>
-@import '../../styles/TUIContact.scss';
-</style>
+<style lang="scss" scoped src="./style/index.scss"></style>

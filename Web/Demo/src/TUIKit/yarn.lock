@@ -45,6 +45,13 @@
   resolved "https://registry.yarnpkg.com/@vue/devtools-api/-/devtools-api-6.1.4.tgz#b4aec2f4b4599e11ba774a50c67fa378c9824e53"
   integrity sha512-IiA0SvDrJEgXvVxjNkHPFfDx6SXw0b/TUkqMcDZWNg9fnCAHbTpoo59YfJ9QLFkwa3raau5vSlRVzMSLDnfdtQ==
 
+"@vuepic/vue-datepicker@^3.2.1":
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/@vuepic/vue-datepicker/-/vue-datepicker-3.2.2.tgz#8471fe44212292ce5103499749f850e6515be311"
+  integrity sha512-Q+nVYsbxm2lb+nhlsBxC84UR/j/QZi0bmQZ8BFhZsyqatX0BN4Nm7/uwkZDtCE/s6jYms7zPY1Pz3DOhlQJ+PQ==
+  dependencies:
+    date-fns "^2.28.0"
+
 "@vueuse/core@^8.2.6":
   version "8.4.2"
   resolved "https://registry.yarnpkg.com/@vueuse/core/-/core-8.4.2.tgz#e5be73f40394150e6a1b6abd59e5adb7c6bb6c1f"
@@ -66,15 +73,20 @@
   dependencies:
     vue-demi "*"
 
+date-fns@^2.28.0:
+  version "2.28.0"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.28.0.tgz#9570d656f5fc13143e50c975a3b6bbeb46cd08b2"
+  integrity sha512-8d35hViGYx/QH0icHYCeLmsLmMUheMmTyV9Fcm6gvNwdw31yXXH+O85sOBJ+OLnLQMKZowvpKb6FgMIQjcpvQw==
+
 source-map@0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.6.1.tgz#74722af32e9614e9c287a8d0bbde48b5e2f1a263"
   integrity sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==
 
-tim-js-sdk@^2.19.0:
-  version "2.19.1"
-  resolved "https://registry.yarnpkg.com/tim-js-sdk/-/tim-js-sdk-2.19.1.tgz#c699193772aaeb21a4e631b99d118fe4409b8c5d"
-  integrity sha512-M0BJ/Ttg7zCJg8UXke9RMEOlqrJ2ifatLtYVVE2BE2U2ebw67R5zReCidCTkcL0mTcEkVAD/bem6OlLLwqhCPA==
+tim-js-sdk@^2.19.1:
+  version "2.20.0"
+  resolved "https://registry.yarnpkg.com/tim-js-sdk/-/tim-js-sdk-2.20.0.tgz#5f30ed65441db235e808aa06ffe4434660813edb"
+  integrity sha512-5v2zGRK15vT9uZTYhxVzT6keG8vxvODHkf1OTDuXS/YHW90QbwgTVHy+WIsLG73IiEnbFinXBtH8uf8iV38RXQ==
 
 tim-upload-plugin@^1.0.4:
   version "1.0.4"

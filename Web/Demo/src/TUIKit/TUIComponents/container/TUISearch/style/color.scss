@@ -1,0 +1,31 @@
+.TUI-search {
+  header {
+    h1 {
+      font-weight: 400;
+      color: #000000;
+    }
+    .more{
+      background: #F3F3F3;
+    }
+  }
+}
+
+input {
+  border: 1px solid #DDDDDD;
+}
+
+.TUI-search-H5 {
+  header {
+    ul {
+      background: #FFFFFF;
+      border: 2px solid #E0E0E0;
+      box-shadow: 0 3px 7px 0 rgba(0, 0, 0, .06);
+      h1 {
+        font-family: PingFangSC-Regular;
+        font-weight: 400;
+        color: #444444;
+        letter-spacing: 0;
+      }
+    }
+  }
+}

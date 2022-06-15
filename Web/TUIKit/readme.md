@@ -8,6 +8,7 @@ TUIKit 是基于 IM SDK 实现的一套 UI 组件，其包含会话、聊天、�
 
 ![](https://web.sdk.qcloud.com/im/demo/TUIkit/document-image/component3.png)
 
+[English](./README_EN.md) | 简体中文
 ## 如何集成 TUIKit
 
 ### 开发环境要求
@@ -35,22 +36,20 @@ TUIKit 是基于 IM SDK 实现的一套 UI 组件，其包含会话、聊天、�
 
 ### 步骤2：下载 TUIKit
 
-从 [GitHub 下载](https://github.com/tencentyun/TIMSDK/tree/master/Web) TUIKit 源码。复制 TUIKit 文件夹放置到自己到工程文件中，例如：
+从 [GitHub 下载](https://github.com/tencentyun/TIMSDK/tree/master/Web) TUIKit 源码。复制 TUIKit 文件夹放置到自己到工程的 src 文件中，例如：
 
 ![](https://web.sdk.qcloud.com/im/demo/TUIkit/document-image/integrate.png)
 
 ### 步骤3：生成 usesig
 
-1. 从 [GitHub 下载](https://github.com/tencentyun/TIMSDK/tree/master/Web/Demo) GenerateTestUserSig 工具包。并复制到项目中，例如： 
-  ![](https://web.sdk.qcloud.com/im/demo/TUIkit/document-image/userSig-catalogue.png)
+1. 从 [GitHub 下载](https://github.com/tencentyun/TIMSDK/tree/master/Web) GenerateTestUserSig 工具包。并复制到项目中，例如：
+
+![](https://web.sdk.qcloud.com/im/demo/TUIkit/document-image/userSig-catalogue.png)
 
 2. 设置`GenerateTestUserSig`文件中的相关参数，其中 SDKAppID 和密钥等信息，可通过 [即时通信 IM 控制台](https://console.cloud.tencent.com/im) 获取，单击目标应用卡片，进入应用的基础配置页面。  
    [![](https://qcloudimg.tencent-cloud.cn/raw/e435332cda8d9ec7fea21bd95f7a0cba.png)](https://camo.githubusercontent.com/20575292024f27b76db87d6688e57f16d38b579b249054466668b596975dd30e/68747470733a2f2f71636c6f7564696d672e74656e63656e742d636c6f75642e636e2f7261772f65343335333332636461386439656337666561323162643935663761306362612e706e67)
 
-3. 设置`GenerateTestUserSig`文件中的相关参数，其中 SDKAppID 和密钥等信息，可通过 [即时通信 IM 控制台](https://console.cloud.tencent.com/im) 获取，单击目标应用卡片，进入应用的基础配置页面。 
-   [![](https://qcloudimg.tencent-cloud.cn/raw/e435332cda8d9ec7fea21bd95f7a0cba.png)](https://camo.githubusercontent.com/20575292024f27b76db87d6688e57f16d38b579b249054466668b596975dd30e/68747470733a2f2f71636c6f7564696d672e74656e63656e742d636c6f75642e636e2f7261772f65343335333332636461386439656337666561323162643935663761306362612e706e67)
-
-4. 在**基本信息**区域，单击**显示密钥**，复制并保存密钥信息至 `GenerateTestUserSig` 文件。 
+3. 在**基本信息**区域，单击**显示密钥**，复制并保存密钥信息至 `GenerateTestUserSig` 文件。 
    [![](https://main.qcloudimg.com/raw/e7f6270bcbc68c51595371bd48c40af7.png)](https://camo.githubusercontent.com/d3e2ecc55db7a3c14ba0ba84c7cb92e18618028006c6f7fa304ba5ef01f0b6be/68747470733a2f2f6d61696e2e71636c6f7564696d672e636f6d2f7261772f65376636323730626362633638633531353935333731626434386334306166372e706e67)
 
 > 注意：
@@ -67,8 +66,11 @@ yarn install
 ### 步骤5：在 main.ts 中，引入 TUIKit，并注册到 vue 项目实例中。
 
 ```typescript
+import { createApp } from 'vue'
+import App from './App.vue'
+
 import { TUICore, TUIComponents } from "./TUIKit";
-import { genTestUserSig } from "../GenerateTestUserSig";
+import { genTestUserSig } from "../debug";
 
 const config = {
   SDKAppID: 0, // Replace 0 with the SDKAppID of your IM application when connecting. Value type: Number
@@ -88,7 +90,7 @@ const userInfo = {
 TUIKit.login(userInfo);
 
 // register
-createApp(App).use(TUIKit).mount("#app");
+createApp(App).use(TUIKit).mount('#app')
 ```
 
 > 注意：
@@ -97,26 +99,21 @@ createApp(App).use(TUIKit).mount("#app");
 
 ### 步骤6：在需要展示的页面，调用TUIKit的组件即可使用。
 
-### 例如：在Home.vue页面中，使用 TUIConversation、TUIChat搭建聊天界面。
+### 例如：在App.vue页面中，使用 TUIConversation、TUIChat搭建聊天界面。
 
 ```html
 <template>
-  <div class="home-TUIKit-main">
+   <div class="home-TUIKit-main">
     <div class="conversation">
       <TUIConversation />
     </div>
     <div class="chat">
       <TUIChat>
-        <h1>欢迎使用即时通信</h1>
+        <h1>Welcome to IM</h1>
       </TUIChat>
     </div>
   </div>
 </template>
-
-<script lang="ts">
-import { Vue } from "vue-class-component";
-export default class Home extends Vue {}
-</script>
 
 <style scoped>
 .home-TUIKit-main {

@@ -3,8 +3,11 @@
   "删除": "delete",
   "重新发送": "resend",
   "转发": "forward",
+  "回复": "reply",
   "打开": "open",
   "已读": "read",
+  "该消息不存在": "The message does not exist",
+  "无法定位到原消息": "Unable to navigate to the original message",
   "未读": "unread",
   "您": "you",
   "撤回了一条消息": "revoke a message",
@@ -16,9 +19,15 @@
   "描述": "description",
   "经度": "longitude",
   "纬度": "latitude",
+  "自定义消息": "custom message",
+  "[图片]": "[photo]",
+  "[语音]": "[audio]",
+  "[视频]": "[video]",
+  "[表情]": "[face]",
   "管理员开启全员禁言": "The administrator opens the prohibition of all staff",
   "您已被管理员禁言": "You have been banned by the administrator",
   "按Enter发送，Ctrl+Enter换行": "Press enter to send, Ctrl + enter to wrap",
+  "单击下载": "Click download",
   "manage": {
     "群公告": "Group announcement",
     "群成员": "Group members",
@@ -57,6 +66,12 @@
     "新增管理员": "Add administrator",
     "移除管理员": "Remove administrator",
     "新增禁言用户": "Add forbidden users",
-    "移除禁言用户": "Remove forbidden users"
+    "移除禁言用户": "Remove forbidden users",
+    "修改群聊名称": "Modify group chat name",
+    "修改群聊名称后，将在群内通知其他成员": "After modifying the group chat name, other members will be notified in the group",
+    "仅限中文、字母、数字和下划线，2-20个字": "Chinese, letters, numbers and underscores only, 2-20 words",
+    "请先注册 TUIGroup 模块": "Please register the TUIGroup module first",
+    "该用户不存在": "The user does not exist",
+    "该用户不在群组内": "The user is not in the group"
   }
 }

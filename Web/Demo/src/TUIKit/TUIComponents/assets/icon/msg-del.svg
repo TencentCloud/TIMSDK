@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="40px" height="40px" viewBox="0 0 40 40" version="1.1">
+  <title>矩形</title>
+  <defs>
+    <path d="M467,0 C474.731986,-2.71135202e-14 481,6.2680135 481,14 L481,247 C481,254.731986 474.731986,261 467,261 L353.036,261 L340.862492,273.204941 C339.302377,274.769018 336.769719,274.77223 335.205642,273.212116 C335.203247,273.209727 335.200856,273.207335 335.198467,273.204941 L323.024,261 L14,261 C6.2680135,261 2.72325209e-15,254.731986 0,247 L0,14 C8.29461588e-16,6.2680135 6.2680135,3.19669972e-15 14,0 L467,0 Z" id="path-1"></path>
+    <filter x="-10.1%" y="-14.0%" width="120.2%" height="135.4%" filterUnits="objectBoundingBox" id="filter-2">
+      <feOffset dx="0" dy="10" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+      <feGaussianBlur stdDeviation="14.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+      <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.06 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+    </filter>
+  </defs>
+  <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <g id="消息状态" transform="translate(-779.000000, -326.000000)">
+      <g id="编组-11" transform="translate(499.000000, 163.000000)">
+        <g id="形状结合">
+          <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+          <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+        </g>
+        <g id="编组-13备份" transform="translate(246.000000, 131.583780)">
+          <g id="编组-17" transform="translate(34.000000, 31.416220)">
+            <g id="编组-18" transform="translate(4.000000, 2.847939)">
+              <path d="M27,8.04349833 L27,34.26099 L5,34.26099 L5,8.04349833 L27,8.04349833 Z" id="路径-5" stroke="#444444" stroke-width="4"></path>
+              <rect id="矩形" fill="#444444" x="9.14285714" y="0" width="14" height="4.02899889"></rect>
+              <rect id="矩形" fill="#444444" x="0" y="6.04349833" width="32" height="4.02899889"></rect>
+              <path d="M14,15.1087458 L14,27.1957425 L10,27.1957425 L10,15.1087458 L14,15.1087458 Z M22,15.1087458 L22,27.1957425 L18,27.1957425 L18,15.1087458 L22,15.1087458 Z" id="形状结合" fill="#444444"></path>
+            </g>
+          </g>
+        </g>
+        <g id="编组-19" transform="translate(8.000000, 1.000000)"></g>
+      </g>
+    </g>
+  </g>
+</svg>
