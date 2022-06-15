@@ -1,4 +1,4 @@
-[English](./readme_en.md) | 简体中文
+[English](./README_EN.md) | 简体中文
 ## 什么是 TUIKit？
 
 TUIKit 是基于 IM SDK 实现的一套 UI 组件，其包含会话、聊天、群组、个人资料等功能，基于 TUIKit 组件您可以像搭积木一样快速搭建起自己的业务逻辑。
