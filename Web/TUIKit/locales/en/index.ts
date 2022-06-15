@@ -4,6 +4,7 @@ const TUIConversation = require('./TUIConversation.json');
 const TUIGroup = require('./TUIGroup.json');
 const TUIProfile = require('./TUIProfile.json');
 const TUIContact = require('./TUIContact.json');
+const TUISearch = require('./TUISearch.json');
 
 const message = require('./message.json');
 const component = require('./component.json');
@@ -16,6 +17,8 @@ const messages = {
     取消: 'cancel',
     发送: 'send',
     系统通知: 'System notification',
+    关闭: 'close',
+    确定: 'submit',
     TUIChat,
     TUIConversation,
     TUIGroup,
@@ -26,6 +29,7 @@ const messages = {
     time,
     Evaluate,
     Words,
+    TUISearch,
   },
 };
 

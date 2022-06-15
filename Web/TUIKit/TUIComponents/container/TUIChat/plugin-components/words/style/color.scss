@@ -1,0 +1,50 @@
+.words {
+  &-main {
+    background: #ffffff;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0, .1);
+    header {
+      aside {
+        font-weight: 500;
+        color: #000000;
+        h1 {
+          font-weight: 500;
+          color: #000000;
+        }
+        a {
+          color: #006EFF;
+        }
+      }
+    }
+  }
+  &-list {
+    &-item {
+      cursor: pointer;
+      font-weight: 400;
+      color: #50545C;
+      &:hover {
+        color: #006EFF;
+      }
+    }
+  }
+}
+.words-H5-main {
+  background: rgba(0,0,0,.5);
+  .words-main-content {
+    background: #FFFFFF;
+    .words-list {
+      &-item {
+        border-bottom: 1px solid #EEEEEE;
+        font-family: PingFangSC-Regular;
+        font-weight: 400;
+        color: #333333;
+        letter-spacing: 0;
+      }
+    }
+    .close {
+      font-family: PingFangSC-Regular;
+      font-weight: 400;
+      color: #3370FF;
+      letter-spacing: 0;
+    }
+  }
+}

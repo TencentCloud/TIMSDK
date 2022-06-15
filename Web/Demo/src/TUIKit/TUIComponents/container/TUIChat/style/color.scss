@@ -1,0 +1,131 @@
+.TUIChat {
+  &-header {
+    h1 {
+      font-family: PingFangSC-Medium;
+      font-weight: 500;
+      color: #000000;
+      letter-spacing: 0;
+    }
+  }
+  .TUIChat-setting{
+    background: #FFFFFF;
+  }
+
+  &-footer {
+    border-top: 1px solid #F4F5F9;
+    .input {
+      textarea {
+        &::placeholder {
+          color: #DDDDDD;
+        }
+      }
+      p {
+        color: #DDDDDD;
+      }
+      .input-btn {
+        font-weight: 400;
+        background: #006EFF;
+        color: #FFFFFF;
+        letter-spacing: 0;
+        &:disabled {
+          opacity: 0.3;
+        }
+        &-hover {
+          background: #000000;
+          &::before {
+            border: 10px solid transparent;
+            border-left: 10px solid #000000;
+          }
+        }
+      }
+    }
+  }
+  .disabled {
+    &::before {
+      background: #FBFBFB;
+    }
+  }
+}
+.TUI-message-list {
+  .message-more {
+    color: #999999;
+    cursor: pointer;
+  }
+}
+
+.dialog {
+  background: #FFFFFF;
+  border: 1px solid #DDDDDD;
+  &-item {
+    background: #FFFFFF;
+    border: 1px solid #E0E0E0;
+    box-shadow: 0 4px 12px 0 rgba(0,0,0,0.06);
+    p {
+      font-weight: 400;
+      color: #4F4F4F;
+      &:hover {
+        background: rgba(0,110,255,0.10);
+      }
+    }
+  }
+  &-userInfo {
+    background: rgba( #000000, 0.3);
+    .userInfo-main {
+      background: #FFFFFF;
+      main {
+        ol {
+          dl {
+            .userInfo-mask {
+              background: #FFFFFF;
+              box-shadow: 0 11px 20px 0 rgba(0,0,0, .3);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+.image-dialog {
+  background: rgba(0, 0, 0, 0.3);
+  header {
+    background: rgba(0,0,0,0.49);
+  }
+}
+
+.btn {
+  font-weight: 400;
+  color: #FFFFFF;
+  letter-spacing: 0;
+  &-cancel {
+    border: 1px solid #DDDDDD;
+    color: #666666;
+  }
+  &-default {
+    background: #006EFF;
+    border: 1px solid #006EFF;
+  }
+  &:disabled {
+    opacity: 0.3;
+  }
+}
+
+.toggleMask {
+  &::before {
+    opacity: 0;
+  }
+}
+
+
+.TUIChat-H5 {
+  .TUIChat-header {
+    background: #FFFFFF;
+  }
+  .TUIChat-footer {
+    background: #FFFFFF;
+    .input {
+      input {
+        background: #F4F5F9;
+      }
+    }
+  }
+}

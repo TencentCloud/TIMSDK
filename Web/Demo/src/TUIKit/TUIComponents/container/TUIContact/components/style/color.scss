@@ -1,0 +1,30 @@
+.list {
+  li {
+    font-weight: 400;
+    color: #000000;
+    letter-spacing: 0;
+  }
+}
+.icon {
+  &-warn {
+    background: coral;
+    color: #FFFFFF;
+    font-style: normal;
+  }
+}
+.btn {
+  font-weight: 400;
+  color: #FFFFFF;
+  letter-spacing: 0;
+  &-cancel {
+    border: 1px solid #dddddd;
+    color: #666666;
+  }
+  &-default {
+    background: #006EFF;
+    border: 1px solid #006EFF;
+  }
+  &:disabled {
+    opacity: 0.3;
+  }
+}

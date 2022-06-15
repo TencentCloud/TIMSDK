@@ -1,13 +1,21 @@
 <template>
   <div class="words">
       <i class="icon icon-words" title="快速回复" @click="toggleShow"></i>
-      <main class="words-main"  v-if="show&&!isMute" ref="dialog">
-        <header>{{$t('Words.常用语-快捷回复工具')}}（{{$t('Words.使用')}}<a  @click="openLink(Link.customMessage)">{{$t(`Words.${Link.customMessage.label}`)}}</a>{{$t('Words.搭建')}}）</header>
-        <ul class="words-list">
-          <li class="words-list-item" v-for="(item, index) in list" :key="index"  @click="select(item)">
-            {{item.value}}
-          </li>
-        </ul>
+      <main class="words-main" :class="[isH5 ? 'words-H5-main' : '']" v-show="show&&!isMute">
+        <div class="words-main-content" ref="dialog">
+          <header>
+            <aside>
+              <h1>{{$t('Words.常用语-快捷回复工具')}}</h1>
+              <p>（{{$t('Words.使用')}}<a  @click="openLink(Link.customMessage)">{{$t(`Words.${Link.customMessage.label}`)}}</a>{{$t('Words.搭建')}}）</p>
+            </aside>
+            <span v-if="isH5" class="close" @click="toggleShow">关闭</span>
+          </header>
+          <ul class="words-list">
+            <li class="words-list-item" v-for="(item, index) in list" :key="index"  @click="select(item)">
+              <label>{{item.value}}</label>
+            </li>
+          </ul>
+        </div>
       </main>
   </div>
 </template>
@@ -26,6 +34,10 @@ const Words = defineComponent({
       default: () => false,
     },
     isMute: {
+      type: Boolean,
+      default: () => false,
+    },
+    isH5: {
       type: Boolean,
       default: () => false,
     },
@@ -71,10 +83,6 @@ const Words = defineComponent({
 
     const dialog:any = ref();
 
-    onClickOutside(dialog, () => {
-      data.show = false;
-    });
-
     watch(() => data.locale, (newVal:any, oldVal:any) => {
       data.list = list.map((item:any) => ({
         value: t(`Words.${item.value}`),
@@ -94,6 +102,10 @@ const Words = defineComponent({
         }));
       }
     };
+
+    onClickOutside(dialog, () => {
+      data.show = false;
+    });
 
     const select = (item:any, index?:number) => {
       const options:any = {
@@ -119,52 +131,4 @@ const Words = defineComponent({
 });
 export default Words;
 </script>
-
-<style lang="scss" scoped>
-.words {
-  display: inline-block;
-  position: relative;
-  cursor: pointer;
-  .icon {
-    margin: 12px 10px 0;
-  }
-  &-main {
-    position: absolute;
-    z-index: 5;
-    width: 315px;
-    background: #ffffff;
-    top: -200px;
-    box-shadow: 0 2px 12px 0 rgba(0,0,0, .1);
-    padding: 12px;
-    display: flex;
-    flex-direction: column;
-    width: 19.13rem;
-    height: 12.44rem;
-    overflow-y: auto;
-    header {
-      font-weight: 500;
-      font-size: 12px;
-      color: #000000;
-      padding-bottom: 4px;
-      a {
-        color: #006EFF;
-      }
-    }
-  }
-  &-list {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    &-item {
-      cursor: pointer;
-      padding: 4px 0;
-      font-weight: 400;
-      font-size: 12px;
-      color: #50545C;
-      &:hover {
-        color: #006EFF;
-      }
-    }
-  }
-}
-</style>
+<style lang="scss" scoped src="./style/index.scss"></style>

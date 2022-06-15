@@ -32,6 +32,9 @@ export default class TUIConversationServer extends IComponentServer {
      * @param {any} oldValue 旧数据
      */
   updateStore(newValue:any, oldValue:any) {
+    if (!this?.currentStore?.conversationData) {
+      return;
+    }
     this.currentStore.conversationData.list = newValue.conversationList;
   }
 
@@ -85,17 +88,14 @@ export default class TUIConversationServer extends IComponentServer {
    * @param {Array} list conversationList
    * @returns {Object}
    */
-  private handleFilterSystem(list:any) {
+  private handleFilterSystem(list: any) {
     const options = {
       allConversationList: list,
       conversationList: [],
     };
-    const currentList = list.filter((item:any) => item?.conversationID === this?.currentStore?.currrentConversationID);
+    const currentList = list.filter((item:any) => item?.conversationID === this?.currentStore?.currentConversationID);
     if (currentList.length === 0) {
-      this.currentStore.currrentConversationID === '';
-      this.TUICore.getStore().TUIChat.conversation = {
-        conversationID: '',
-      };
+      this.handleCurrentConversation({});
     }
     options.conversationList = list.filter((item:any) => item.type !== this.TUICore.TIM.TYPES.CONV_SYSTEM);
     this.store.allConversationList = options.allConversationList;
@@ -145,6 +145,39 @@ export default class TUIConversationServer extends IComponentServer {
     });
   }
 
+  /**
+   * 置顶会话
+   *
+   * @param {Object} options 置顶参数
+   * @returns {Promise}
+   */
+  public async pinConversation(options: any) {
+    return this.handlePromiseCallback(async (resolve:any, reject:any) => {
+      try {
+        const imResponse:any = await this.TUICore.tim.pinConversation(options);
+        resolve(imResponse);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
+  /**
+   * C2C消息免打扰
+   *
+   * @param {Object} options 消息免打扰参数
+   * @returns {Promise}
+   */
+  public async muteConversation(options: any) {
+    return this.handlePromiseCallback(async (resolve:any, reject:any) => {
+      try {
+        const imResponse:any = await this.TUICore.tim.setMessageRemindType(options);
+        resolve(imResponse);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
   /**
    * 获取 conversationList
    *
@@ -215,5 +248,25 @@ export default class TUIConversationServer extends IComponentServer {
     this.currentStore = params;
     await this.getConversationList();
     return this.currentStore;
+  }
+
+  // 切换当前会话
+  public handleCurrentConversation(value: any) {
+    // 通知 TUIChat 切换会话或关闭会话
+    this.TUICore.getStore().TUIChat.conversation = value || {};
+
+    if (!value?.conversationID) {
+      this.currentStore.currentConversationID = '';
+      return;
+    }
+    // Prevent group chat that is currently open from entering from the address book, resulting in no jump.
+    if (this.currentStore.currentConversationID === value?.conversationID) {
+      this.currentStore.currentConversationID = '';
+    }
+    if (this.currentStore.currentConversationID) {
+      this.setMessageRead(this.currentStore.currentConversationID);
+    }
+    this.currentStore.currentConversationID = value?.conversationID;
+    this.setMessageRead(value.conversationID);
   }
 }

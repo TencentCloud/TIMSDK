@@ -30,3 +30,17 @@ a{
 a:hover{
     text-decoration:none;
 }
+
+* {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+input, textarea {
+    user-select: auto;
+}
+input:focus, input:active {
+    border: none;
+}

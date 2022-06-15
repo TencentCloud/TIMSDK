@@ -44,6 +44,7 @@ export default class TUIChatServer extends IComponentServer {
 
   public render(conversation:any) {
     const len = 15;
+    this.currentStore.isFirstRender = true;
     this.currentStore.messageList = [];
     this.getMessageList({ conversationID: conversation.conversationID, count: len });
     if (conversation.type === this.TUICore.TIM.TYPES.CONV_GROUP) {
@@ -52,6 +53,7 @@ export default class TUIChatServer extends IComponentServer {
         groupID: conversation.groupProfile.groupID,
         userIDList: [conversation.groupProfile.selfInfo.userID],
       };
+      this.getGroupProfile({ groupID: conversation.groupProfile.groupID });
       this.getGroupMemberProfile(options).then((res:any) => {
         const { memberList } = res.data;
         const [selfInfo] = memberList;
@@ -466,13 +468,16 @@ export default class TUIChatServer extends IComponentServer {
  * 发送文本消息
  *
  * @param {any} text 发送的消息
+ * @param {object} data 被引用消息的内容
  * @returns {Promise}
  */
-  public sendTextMessage(text:any): Promise<any>  {
+  public sendTextMessage(text:any, data:any): Promise<any>  {
     return this.handlePromiseCallback(async (resolve:any, reject:any) => {
       try {
         const options = this.handleMessageOptions({ text }, 'text');
-        const message = this.TUICore.tim.createTextMessage(options);
+        const cloudCustomData = JSON.stringify(data);
+        const secondOptions = Object.assign(options, { cloudCustomData });
+        const message = this.TUICore.tim.createTextMessage(secondOptions);
         this.currentStore.messageList.push(message);
         const imResponse = await this.TUICore.tim.sendMessage(message);
         this.currentStore.messageList = this.currentStore.messageList.map((item:any) => {
@@ -607,11 +612,31 @@ export default class TUIChatServer extends IComponentServer {
       try {
         const imResponse = await this.TUICore.tim.deleteMessage(messages);
         resolve(imResponse);
-      } catch (error) {
-        reject(error);
         const middleData = this.currentStore.messageList;
         this.currentStore.messageList = [];
         this.currentStore.messageList = middleData;
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
+  /**
+ * 获取群组属性
+ *
+ * @param {any} options 参数
+ * @param {String} options.groupID 群组ID
+ * @param {Array.<String>} options.groupProfileFilter 群资料过滤器
+ * @returns {Promise}
+ */
+  public getGroupProfile(options:any): Promise<any>  {
+    return this.handlePromiseCallback(async (resolve:any, reject:any) => {
+      try {
+        const imResponse = await this.TUICore.tim.getGroupProfile(options);
+        this.currentStore.conversation.groupProfile = imResponse.data.group;
+        resolve(imResponse);
+      } catch (error) {
+        reject(error);
       }
     });
   }
@@ -693,3 +718,5 @@ export default class TUIChatServer extends IComponentServer {
     return this.currentStore = params;
   }
 }
+
+

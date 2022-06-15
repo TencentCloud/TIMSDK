@@ -1,6 +1,6 @@
 <template>
   <div class="message-file">
-    <div class="box" @click="download" title="单击下载">
+    <div class="box" @click="download" :title="$t('TUIChat.单击下载')">
       <i class="icon icon-files"></i>
       <div class="message-file-content">
         <label>{{data.name}}</label>
@@ -39,6 +39,7 @@ export default defineComponent({
         }),
       };
       // 浏览器支持fetch则用blob下载，避免浏览器点击a标签，跳转到新页面预览的行为
+      // If the browser supports fetch, use blob to download, so as to avoid the browser clicking the a tag and jumping to the preview of the new page
       if ((window as any).fetch) {
         fetch(file.url, option)
           .then(res => res.blob())

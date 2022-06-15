@@ -1,0 +1,63 @@
+.main {
+  background: #FFFFFF;
+  border: 1px solid #E0E0E0;
+  box-shadow: 0 -4px 12px 0 rgba(0,0,0,0.06);
+  .left {
+    border-right: 1px solid #E8E8E9;
+  }
+  header {
+    font-weight: 500;
+    color: #000000;
+    letter-spacing: 0;
+    input {
+      background: #FFFFFF;
+      border: 1px solid #DEE0E3;
+      font-weight: 500;
+      color: #8F959E;
+      letter-spacing: 0;
+    }
+  }
+  .list {
+    p {
+      font-weight: 500;
+      color: #8F959E;
+      letter-spacing: 0;
+    }
+    &-item {
+      .disabled {
+        background: #eeeeee;
+      }
+    }
+  }
+}
+.avatar {
+  background: #F4F5F9;
+  color: #000000;
+}
+.btn {
+  background: #3370FF;
+  border: 0 solid #2F80ED;
+  font-weight: 400;
+  color: #FFFFFF;
+  &-cancel {
+    background: #FFFFFF;
+    border: 1px solid #DDDDDD;
+    color: #828282;
+  }
+}
+.btn-no {
+  background: #e8e8e9;
+  border: 1px solid #DDDDDD;
+  font-weight: 400;
+  color: #FFFFFF;
+}
+
+.transfer-h5-header {
+  background: #FFFFFF;
+  .title {
+    font-family: PingFangSC-Medium;
+    font-weight: 500;
+    color: #000000;
+    letter-spacing: 0;
+  }
+}

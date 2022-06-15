@@ -1,0 +1,85 @@
+.group {
+  background: #FFFFFF;
+  &-list {
+    &-item {
+      background: #FFFFFF;
+      label {
+        font-family: PingFangSC-Regular;
+        font-weight: 400;
+        color: #333333;
+      }
+    }
+    input {
+      border: 1px solid rgba(131,137,153,0.40);
+      font-weight: 400;
+      color: #333333;
+    }
+    .select {
+      flex: 1;
+        a {
+          color: #006EFF;
+        }
+      &-item {
+        border: 1px solid rgba(131,137,153,0.40);
+        &-header {
+          .left {
+            font-weight: 500;
+            color: #333333;
+          }
+        }
+        &-detail {
+          color: #4F4F4F;
+        }
+      }
+      .selected {
+        border: 1px solid #006EFF;
+      }
+    }
+    &-edit {
+      background: #FFFFFF;
+    }
+  }
+  &-profile-footer {
+    background: #FFFFFF;
+  }
+  &-h5 {
+    background: #F7F8FA;
+    &-list-item-introduction {
+      font-family: PingFangSC-Regular;
+      font-weight: 400;
+      color: #888888;
+      a {
+        color: #006EFF;
+      }
+    }
+  }
+}
+header {
+  background: #FFFFFF;
+  h1 {
+    font-family: PingFangSC-Medium;
+    font-weight: 500;
+    color: #000000;
+    letter-spacing: 0;
+  }
+}
+.btn-default {
+    background: #FFFFFF;
+    border: 1px solid #DDDDDD;
+    font-family: PingFangSC-Medium;
+    font-weight: 500;
+    color: #828282;
+}
+.btn-submit {
+    background: #3370FF;
+    border: 0 solid #2F80ED;
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    color: #FFFFFF;
+    letter-spacing: 0;
+    &:disabled {
+      background: #e8e8e9;
+      border: 1px solid #DDDDDD;
+      color: #FFFFFF;
+    }
+}

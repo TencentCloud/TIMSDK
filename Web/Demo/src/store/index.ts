@@ -18,7 +18,7 @@ const taskList = [
   },
   {
     id: 4,
-    label: '发起一个多人会话',
+    label: '发起一个群聊',
     status: false,
   },
   {
@@ -28,7 +28,7 @@ const taskList = [
   },
   {
     id: 6,
-    label: '解散一个多人会话',
+    label: '解散一个群聊',
     status: false,
   },
 ];
@@ -40,7 +40,11 @@ const state:any = {
 
 if (localStorage.getItem('TUIKit-userInfo')) {
   const localUserInfoStorage:any = localStorage.getItem('TUIKit-userInfo') || {};
-  state.userInfo = JSON.parse(localUserInfoStorage);
+  try {
+    state.userInfo = JSON.parse(localUserInfoStorage);
+  } catch (error) {
+    state.userInfo = {};
+  }
 }
 
 export default createStore({

@@ -1,11 +1,14 @@
 <template>
 <div>
   <p @click="toggleShow">{{$t('TUIChat.转发')}}</p>
-  <div class="forward dialog" v-if="show" ref="dialog">
+  <div class="forward dialog" :class="[isH5 ? 'forward-h5': '']" v-if="show" ref="dialog">
     <Transfer
+      title="转发"
       :list="list"
       :isSearch="false"
-      :isCustomItem = "true"
+      :isH5="isH5"
+      :isCustomItem="true"
+      :resultShow="true"
       @submit="handleForWordMessage"
       @cancel="toggleShow">
       <template #item="{data}">
@@ -37,6 +40,10 @@ const Forward = defineComponent({
       default: () => ({}),
     },
     show: {
+      type: Boolean,
+      default: () => false,
+    },
+    isH5: {
       type: Boolean,
       default: () => false,
     },
@@ -103,7 +110,7 @@ export default Forward;
   width: 450px;
   height: 400px;
   top: -50px;
-  left: 0;
+  left: -90px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -140,5 +147,12 @@ export default Forward;
     justify-content: space-around;
     padding: 20px 0;
   }
+}
+.forward-h5 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 </style>

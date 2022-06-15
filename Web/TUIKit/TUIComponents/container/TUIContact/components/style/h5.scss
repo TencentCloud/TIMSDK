@@ -1,0 +1,16 @@
+.message-system-h5{
+  .list {
+    width: 100%;
+    min-width: 0;
+    li {
+      span {
+        flex: 1;
+        width: 0;
+        word-break: break-all;
+      }
+    }
+    .btn-box {
+      padding-right: 0;
+    }
+  }
+}

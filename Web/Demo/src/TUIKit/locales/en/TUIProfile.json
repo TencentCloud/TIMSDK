@@ -1,14 +1,23 @@
 {
   "编辑资料": "edit",
   "头像": "avatar",
-  "昵称": "nick",
+  "昵称": "nickname",
   "账号": "account",
   "个性签名": "signature",
-  "性别": "sex",
+  "性别": "gender",
   "男": "male",
   "女": "Female",
   "不显示": "No Display",
   "出生年月":"birthday",
   "取消": "cancel",
-  "保存": "preservation"
+  "保存": "preservation",
+  "请选择出生日期": "Please select the date of birthday",
+  "选择头像": "Select Avatar",
+  "设置昵称": "Setting nickname",
+  "仅限中文、字母、数字和下划线，2-20个字": "Chinese, letters, numbers and underscores only, 2-20 words",
+  "请输入昵称": "please enter nickname",
+  "性别选择": "Select gender",
+  "请输入内容": "please enter content",
+  "用户ID": "userID",
+  "暂未设置": "Not set yet"
 }
