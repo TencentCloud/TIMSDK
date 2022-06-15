@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="40px" height="40px" viewBox="0 0 40 40" version="1.1">
+  <title>编组 14</title>
+  <defs>
+    <path d="M467,0 C474.731986,-2.71135202e-14 481,6.2680135 481,14 L481,247 C481,254.731986 474.731986,261 467,261 L353.036,261 L340.862492,273.204941 C339.302377,274.769018 336.769719,274.77223 335.205642,273.212116 C335.203247,273.209727 335.200856,273.207335 335.198467,273.204941 L323.024,261 L14,261 C6.2680135,261 2.72325209e-15,254.731986 0,247 L0,14 C8.29461588e-16,6.2680135 6.2680135,3.19669972e-15 14,0 L467,0 Z" id="path-1"></path>
+    <filter x="-10.1%" y="-14.0%" width="120.2%" height="135.4%" filterUnits="objectBoundingBox" id="filter-2">
+      <feOffset dx="0" dy="10" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+      <feGaussianBlur stdDeviation="14.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+      <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.06 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+    </filter>
+  </defs>
+  <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <g id="消息状态" transform="translate(-541.000000, -196.000000)">
+      <g id="编组-11" transform="translate(499.000000, 163.000000)">
+        <g id="形状结合">
+          <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+          <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+        </g>
+        <g id="编组-19" transform="translate(8.000000, 1.000000)" fill-rule="nonzero">
+          <g id="编组-17" transform="translate(34.000000, 32.000000)">
+            <g id="编组-14" transform="translate(0.000000, 0.249660)">
+              <rect id="矩形" stroke="#444444" stroke-width="4" x="6" y="11.7115453" width="20.4869565" height="24.5849258" rx="1"></rect>
+              <path d="M36,2.01560374 L36,28.7262543 C36,29.0023967 35.7761424,29.2262543 35.5,29.2262543 L32.4652074,29.2262543 C32.1890657,29.2262525 31.9652084,29.002396 31.9652057,28.7262543 L31.9651258,6.04681123 L31.9651258,6.04681123 L12.2913043,6.04719144 C12.015162,6.04720643 11.7913,5.82335314 11.7912947,5.54721076 C11.7912947,5.54720754 11.7912947,5.54720432 11.7913043,5.5472011 L11.7913043,2.51560374 C11.7913043,2.23946137 12.015162,2.01560374 12.2913043,2.01560374 L36,2.01560374 L36,2.01560374 Z" id="路径-3" fill="#444444"></path>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

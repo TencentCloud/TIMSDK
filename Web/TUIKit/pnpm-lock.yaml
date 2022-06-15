@@ -1,0 +1,175 @@
+lockfileVersion: 5.3
+
+specifiers:
+  '@vuepic/vue-datepicker': ^3.2.1
+  '@vueuse/core': ^8.2.6
+  tim-js-sdk: ^2.19.1
+  tim-upload-plugin: ^1.0.4
+  trtc-calling-js: ^1.0.5
+  trtc-js-sdk: ^4.12.5
+  tsignaling: ^0.10.0
+  vue-i18n: ^9.2.0-beta.32
+  vuex: ^4.0.2
+
+dependencies:
+  '@vueuse/core': 8.5.0
+  tim-js-sdk: 2.19.1
+  tim-upload-plugin: 1.0.4
+  trtc-calling-js: 1.0.5
+  trtc-js-sdk: 4.12.5
+  tsignaling: 0.10.0
+  vue-i18n: 9.2.0-beta.35
+  vuex: 4.0.2
+
+devDependencies:
+  '@vuepic/vue-datepicker': 3.2.1
+
+packages:
+
+  /@intlify/core-base/9.2.0-beta.35:
+    resolution: {integrity: sha512-53yuCpo2ov5OKdvBTvE5zKMo2clLVqNORwkcY9TUu0B+yrOeDwLWQnbPJnOoDu5KkRdbdXlMxnHNCpJ5vlGZ1g==}
+    engines: {node: '>= 12'}
+    dependencies:
+      '@intlify/devtools-if': 9.2.0-beta.35
+      '@intlify/message-compiler': 9.2.0-beta.35
+      '@intlify/shared': 9.2.0-beta.35
+      '@intlify/vue-devtools': 9.2.0-beta.35
+    dev: false
+
+  /@intlify/devtools-if/9.2.0-beta.35:
+    resolution: {integrity: sha512-y3+7M+eS9mqeXTBa1QWAvt4nsjwWJ5G4xT+G3IFtd7Vb2CQHwli229n0avD+VdlDGwWCDWpLkny8QWtdNEYpOA==}
+    engines: {node: '>= 12'}
+    dependencies:
+      '@intlify/shared': 9.2.0-beta.35
+    dev: false
+
+  /@intlify/message-compiler/9.2.0-beta.35:
+    resolution: {integrity: sha512-wYQCgnRtyJ40HK3bJTrszHDaxqDXZH+9Ps7RsXNuNwZ9hIb1cVkLiUNIbuJS/XSJ1kATJXA6K+4if6ZLb0Ozxw==}
+    engines: {node: '>= 12'}
+    dependencies:
+      '@intlify/shared': 9.2.0-beta.35
+      source-map: 0.6.1
+    dev: false
+
+  /@intlify/shared/9.2.0-beta.35:
+    resolution: {integrity: sha512-DXf7xrwf08GKhr93XPQ8EgaEN0CIELl+mAS6SlRhi/aLtZv5HSGSMkz4M/ICwoWzFLSgOx/ZdBSasex19MMogg==}
+    engines: {node: '>= 12'}
+    dev: false
+
+  /@intlify/vue-devtools/9.2.0-beta.35:
+    resolution: {integrity: sha512-h7nf5F7AV4uKrr7zKTIyv8EOaIv4yAXuo7tvnFsp5uF8FO+kpBwWDm5csw9v9neyz42hiINJSP0Amou9M2ShEA==}
+    engines: {node: '>= 12'}
+    dependencies:
+      '@intlify/core-base': 9.2.0-beta.35
+      '@intlify/shared': 9.2.0-beta.35
+    dev: false
+
+  /@vue/devtools-api/6.1.4:
+    resolution: {integrity: sha512-IiA0SvDrJEgXvVxjNkHPFfDx6SXw0b/TUkqMcDZWNg9fnCAHbTpoo59YfJ9QLFkwa3raau5vSlRVzMSLDnfdtQ==}
+    dev: false
+
+  /@vuepic/vue-datepicker/3.2.1:
+    resolution: {integrity: sha512-+YP+Kvc9ZpMELftN4B243/ajgaIb6JVIR5CRoxZGIZX0cFe2tNhLYc8Cl40m12CHGlz44wbmQJGJuW9xtP05XA==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      vue: '>=3.2.0'
+    dependencies:
+      date-fns: 2.28.0
+    dev: true
+
+  /@vueuse/core/8.5.0:
+    resolution: {integrity: sha512-VEJ6sGNsPlUp0o9BGda2YISvDZbhWJSOJu5zlp2TufRGVrLcYUKr31jyFEOj6RXzG3k/H4aCYeZyjpItfU8glw==}
+    peerDependencies:
+      '@vue/composition-api': ^1.1.0
+      vue: ^2.6.0 || ^3.2.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+      vue:
+        optional: true
+    dependencies:
+      '@vueuse/metadata': 8.5.0
+      '@vueuse/shared': 8.5.0
+      vue-demi: 0.12.5
+    dev: false
+
+  /@vueuse/metadata/8.5.0:
+    resolution: {integrity: sha512-WxsD+Cd+bn+HcjpY6Dl9FJ8ywTRTT9pTwk3bCQpzEhXVYAyNczKDSahk50fCfIJKeWHhyI4B2+/ZEOxQAkUr0g==}
+    dev: false
+
+  /@vueuse/shared/8.5.0:
+    resolution: {integrity: sha512-qKG+SZb44VvGD4dU5cQ63z4JE2Yk39hQUecR0a9sEdJA01cx+XrxAvFKJfPooxwoiqalAVw/ktWK6xbyc/jS3g==}
+    peerDependencies:
+      '@vue/composition-api': ^1.1.0
+      vue: ^2.6.0 || ^3.2.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+      vue:
+        optional: true
+    dependencies:
+      vue-demi: 0.12.5
+    dev: false
+
+  /date-fns/2.28.0:
+    resolution: {integrity: sha512-8d35hViGYx/QH0icHYCeLmsLmMUheMmTyV9Fcm6gvNwdw31yXXH+O85sOBJ+OLnLQMKZowvpKb6FgMIQjcpvQw==}
+    engines: {node: '>=0.11'}
+    dev: true
+
+  /source-map/0.6.1:
+    resolution: {integrity: sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==}
+    engines: {node: '>=0.10.0'}
+    dev: false
+
+  /tim-js-sdk/2.19.1:
+    resolution: {integrity: sha512-M0BJ/Ttg7zCJg8UXke9RMEOlqrJ2ifatLtYVVE2BE2U2ebw67R5zReCidCTkcL0mTcEkVAD/bem6OlLLwqhCPA==}
+    dev: false
+
+  /tim-upload-plugin/1.0.4:
+    resolution: {integrity: sha512-Ib/Ql5vdKoLg2wSFBQ34nzBnaUFa6IxiV8060BF+RnWVlhBZSd3MpBXT32wWcmPj/Sl2yOSCM+dC4fn1sm+y/w==}
+    dev: false
+
+  /trtc-calling-js/1.0.5:
+    resolution: {integrity: sha512-VkmYGaBxaQhT+kjhZwjhdXxrAYV45zCG6og9PFalihW18zZGoOm5jhEfjhDEdl6X627/DkieG6aMaFxgiwK1pQ==}
+    dev: false
+
+  /trtc-js-sdk/4.12.5:
+    resolution: {integrity: sha512-bbByu29w0+My77tDnQfto7L7tOPp3mAaKAdDoMH/SKs5l+bGEtDD9awE/hhZ5vTgMqubfpf1M0FIPmffHa6nwQ==}
+    dev: false
+
+  /tsignaling/0.10.0:
+    resolution: {integrity: sha512-Ok8Q8X3e9B1UZuiYhV8dLhkkx7Co9QQho4cnvBIWd5zY/QjDX6CU50vMdLkThQQPRbASbVH1vUgvuL0kwQcR3A==}
+    dev: false
+
+  /vue-demi/0.12.5:
+    resolution: {integrity: sha512-BREuTgTYlUr0zw0EZn3hnhC3I6gPWv+Kwh4MCih6QcAeaTlaIX0DwOVN0wHej7hSvDPecz4jygy/idsgKfW58Q==}
+    engines: {node: '>=12'}
+    hasBin: true
+    requiresBuild: true
+    peerDependencies:
+      '@vue/composition-api': ^1.0.0-rc.1
+      vue: ^3.0.0-0 || ^2.6.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+    dev: false
+
+  /vue-i18n/9.2.0-beta.35:
+    resolution: {integrity: sha512-kTYzZSB3B/ar3M9RfQ0KAyTGfvRw544qVzY++/sNV4stOKG6NxIDOdHdYTfVEXTSkczFwoZHTKXTWNVpx+GuHA==}
+    engines: {node: '>= 12'}
+    peerDependencies:
+      vue: ^3.0.0
+    dependencies:
+      '@intlify/core-base': 9.2.0-beta.35
+      '@intlify/shared': 9.2.0-beta.35
+      '@intlify/vue-devtools': 9.2.0-beta.35
+      '@vue/devtools-api': 6.1.4
+    dev: false
+
+  /vuex/4.0.2:
+    resolution: {integrity: sha512-M6r8uxELjZIK8kTKDGgZTYX/ahzblnzC4isU1tpmEuOIIKmV+TRdc+H4s8ds2NuZ7wpUTdGRzJRtoj+lI+pc0Q==}
+    peerDependencies:
+      vue: ^3.0.2
+    dependencies:
+      '@vue/devtools-api': 6.1.4
+    dev: false

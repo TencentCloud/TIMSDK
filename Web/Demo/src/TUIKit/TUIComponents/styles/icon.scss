@@ -178,6 +178,80 @@
   background-size: contain;
 }
 
+.icon-back {
+  width: 27px;
+  height: 27px;
+  background: url('../assets/icon/back.svg') no-repeat;
+  background-size: contain;
+}
+
+.icon-c2c {
+  width: 20px;
+  height: 20px;
+  background: url('../assets/icon/c2c.svg') no-repeat;
+  background-size: contain;
+}
+
+.icon-group {
+  margin-left: 40px;
+  width: 14px;
+  height: 14px;
+  background: url('../assets/icon/startGroup.svg') no-repeat;
+  background-size: contain;
+}
+
+.icon-msg-del {
+  width: 20px;
+  height: 20px;
+  background: url('../assets/icon/msg-del.svg') no-repeat;
+  background-size: contain;
+}
+
+.icon-msg-forward {
+  width: 20px;
+  height: 20px;
+  background: url('../assets/icon/msg-forward.svg') no-repeat;
+  background-size: contain;
+}
+
+.icon-msg-copy {
+  width: 20px;
+  height: 20px;
+  background: url('../assets/icon/msg-copy.svg') no-repeat;
+  background-size: contain;
+}
+
+
+.icon-msg-play {
+  width: 20px;
+  height: 20px;
+  background: url('../assets/icon/msg-play.svg') no-repeat;
+  background-size: contain;
+}
+
+.icon-msg-reply {
+  width: 20px;
+  height: 20px;
+  background: url('../assets/icon/msg-reply.svg') no-repeat;
+  background-size: contain;
+}
+
+.icon-msg-revoke {
+  width: 20px;
+  height: 20px;
+  background: url('../assets/icon/msg-revoke.svg') no-repeat;
+  background-size: contain;
+}
+
+.icon-msg-resend {
+  width: 20px;
+  height: 20px;
+  background: url('../assets/icon/msg-revoke.svg') no-repeat;
+  background-size: contain;
+  transform: rotate(180deg); 
+}
+
+
 .icon-error {
   width: 12px;
   height: 12px;

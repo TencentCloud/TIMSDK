@@ -4,6 +4,7 @@ import TUIConversation from './container/TUIConversation';
 import TUIProfile from './container/TUIProfile';
 import TUIGroup from './container/TUIGroup';
 import TUIContact from './container/TUIContact';
+import TUISearch from './container/TUISearch';
 
 const list = [
   TUIChat,
@@ -11,6 +12,7 @@ const list = [
   TUIProfile,
   TUIGroup,
   TUIContact,
+  TUISearch,
 ];
 
 /**
@@ -43,6 +45,7 @@ const TUIComponents = {
   TUIProfile,
   TUIGroup,
   TUIContact,
+  TUISearch,
   install,
   plugin,
 };
@@ -55,4 +58,5 @@ export {
   TUIProfile,
   TUIGroup,
   TUIContact,
+  TUISearch,
 };

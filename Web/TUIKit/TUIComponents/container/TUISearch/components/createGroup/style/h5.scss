@@ -1,0 +1,73 @@
+.group-h5 {
+  width: auto;
+  max-height: none;
+  height: 100%;
+  border-radius: 0;
+  padding: 0;
+  .group-box {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    header {
+      flex-direction: row-reverse;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 16px 18px;
+      h1 {
+        padding-bottom: 0;
+      }
+      .icon {
+        position: absolute;
+        left: 18px;
+      }
+    }
+    .group-list {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column-reverse;
+      justify-content: flex-end;
+      margin-top: 12px;
+      &-item {
+        padding: 14px 18px;
+        border-bottom: 1px solid #E5E5E5;
+      }
+    }
+    .group-list-edit {
+      display: flex;
+      align-items: flex-start;
+      padding: 12px 18px;
+      input {
+        width: 100%;
+        flex: 0;
+      }
+    }
+    .group-profile-footer {
+      box-shadow: inset 0 1px 0 0 #eeeeee;
+      padding: 12px 18px;
+    }
+  }
+  &-list-item-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    .content {
+      width: 0;
+      flex: 1;
+      padding: 0 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: end;
+    }
+  }
+  &-list-item-introduction {
+    padding: 12px 18px;
+    font-size: 14px;
+    line-height: 20px;
+  }
+}

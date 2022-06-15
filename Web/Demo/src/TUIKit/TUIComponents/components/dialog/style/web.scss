@@ -1,0 +1,52 @@
+.dialog {
+  position: fixed;
+  width: 100vw;
+  height: calc(100vh - 62px);
+  top: 62px;
+  left: 0;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  header {
+    h1 {
+      font-size: 16px;
+      line-height: 30px;
+    }
+  }
+  &-main {
+    min-width: 368px;
+    border-radius: 10px;
+    padding: 20px 30px;
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 16px;
+      line-height: 30px;
+    }
+    &-content {
+      padding: 20px 0 40px;
+      font-size: 14px;
+    }
+    footer {
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+}
+.btn {
+  padding: 8px 20px;
+  margin: 0 6px;
+  border-radius: 4px;
+  border: none;
+  font-size: 14px;
+  text-align: center;
+  line-height: 20px;
+  &:disabled {
+    opacity: 0.3;
+  }
+  &:last-child {
+    margin-right: 0;
+  }
+}
