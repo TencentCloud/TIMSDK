@@ -306,8 +306,8 @@
             [image drawInRect:CGRectMake(0, 0, image.size.width, image.size.height)];
             UIImage *convertToUpImage = UIGraphicsGetImageFromCurrentImageContext();
             UIGraphicsEndImageContext();
-            [strongSelf.delegate cameraViewController:strongSelf didFinishPickingMediaWithImage:convertToUpImage];
-            
+            NSData *data = UIImageJPEGRepresentation(convertToUpImage, 0.75);
+            [strongSelf.delegate cameraViewController:strongSelf didFinishPickingMediaWithImageData:data];
             [strongSelf popViewControllerAnimated:YES];
         };
         vc.cancelBlock = ^{

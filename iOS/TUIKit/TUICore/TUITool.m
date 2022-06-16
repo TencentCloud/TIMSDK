@@ -202,7 +202,7 @@
     }
 }
 
-+ (NSString *)convertDateToStr:(NSDate *)date;
++ (NSString *)convertDateToStr:(NSDate *)date
 {
     if (!date) {
         return nil;
@@ -212,35 +212,40 @@
         return @"";
     }
     
-    NSCalendar *calendar = [ NSCalendar currentCalendar ];
-    int unit = NSCalendarUnitDay | NSCalendarUnitMonth |  NSCalendarUnitYear ;
-    NSDateComponents *nowCmps = [calendar components:unit fromDate:[ NSDate date ]];
-    NSDateComponents *myCmps = [calendar components:unit fromDate:date];
-    NSDateFormatter *dateFmt = [[NSDateFormatter alloc ] init ];
-    BOOL isYesterday = NO;
-    if (nowCmps.year != myCmps.year) {
+    NSDateFormatter *dateFmt = [[NSDateFormatter alloc] init];
+
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    calendar.firstWeekday = 7;
+    NSDateComponents *nowComponent = [calendar components:NSCalendarUnitDay|NSCalendarUnitMonth|NSCalendarUnitYear|NSCalendarUnitWeekOfMonth fromDate:NSDate.new];
+    NSDateComponents *dateCompoent = [calendar components:NSCalendarUnitDay|NSCalendarUnitMonth|NSCalendarUnitYear|NSCalendarUnitWeekOfMonth fromDate:date];
+    
+    if (nowComponent.year == dateCompoent.year) {
+        // 在同一年
+        if (nowComponent.month == dateCompoent.month) {
+            // 在同一个月
+            if (nowComponent.weekOfMonth == dateCompoent.weekOfMonth) {
+                // 在同一个周
+                if (nowComponent.day == dateCompoent.day) {
+                    // 在同一天
+                    dateFmt.dateFormat = @"HH:mm";
+                } else {
+                    // 不在同一天
+                    dateFmt.dateFormat = @"EEEE";
+                }
+            } else {
+                // 不在同一个周
+                dateFmt.dateFormat = @"MM/dd";
+            }
+        } else {
+            // 不在同一个月
+            dateFmt.dateFormat = @"MM/dd";
+        }
+    } else {
+        // 不在同一年
         dateFmt.dateFormat = @"yyyy/MM/dd";
     }
-    else{
-        if (nowCmps.day==myCmps.day) {
-            dateFmt.dateFormat = @"HH:mm";
-        } else if((nowCmps.day-myCmps.day)==1) {
-            isYesterday = YES;
-            dateFmt.AMSymbol = TUIKitLocalizableString(am); //@"上午";
-            dateFmt.PMSymbol = TUIKitLocalizableString(pm); //@"下午";
-            dateFmt.dateFormat = TUIKitLocalizableString(YesterdayDateFormat);
-        } else {
-            if ((nowCmps.day-myCmps.day) <=7) {
-                dateFmt.dateFormat = @"EEEE";
-            }else {
-                dateFmt.dateFormat = @"yyyy/MM/dd";
-            }
-        }
-    }
+    
     NSString *str = [dateFmt stringFromDate:date];
-    if (isYesterday) {
-        str = [NSString stringWithFormat:@"%@ %@", TUIKitLocalizableString(Yesterday), str];
-    }
     return str;
 }
 
@@ -577,6 +582,8 @@
             return TUIKitLocalizableString(TUIKitErrorSVRAccountCountLimit); // @"创建帐号数量超过免费体验版数量限制，请升级为专业版。";
         case ERR_SVR_ACCOUNT_INTERNAL_ERROR:
             return TUIKitLocalizableString(TUIKitErrorSVRAccountInternalError); // @"服务端内部错误，请重试。";
+        case ERR_SVR_ACCOUNT_USER_STATUS_DISABLED:
+            return TUIKitLocalizableString(TUIKitErrorEnableUserStatusOnConsole);
 
             // 资料错误码
 
@@ -812,8 +819,6 @@
             return TUIKitLocalizableString(TUIKitErrorSVRNoSuccessResult); // @"批量操作无成功结果";
         case ERR_TO_USER_INVALID:
             return TUIKitLocalizableString(TUIKitErrorSVRToUserInvalid); // @"IM: 无效接收方";
-        case ERR_REQUEST_TIMEOUT:
-            return TUIKitLocalizableString(TUIKitErrorSVRRequestTimeout); // @"请求超时";
         case ERR_INIT_CORE_FAIL:
             return TUIKitLocalizableString(TUIKitErrorSVRInitCoreFail); // @"INIT CORE模块失败";
         case ERR_EXPIRED_SESSION_NODE:

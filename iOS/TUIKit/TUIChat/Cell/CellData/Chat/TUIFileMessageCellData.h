@@ -8,7 +8,7 @@
  ******************************************************************************/
 
 #import "TUIMessageCellData.h"
-
+#import "TUIBubbleMessageCellData.h"
 NS_ASSUME_NONNULL_BEGIN
 
 /** 
@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  本类中整合调用了 IM SDK，通过 SDK 提供的接口对文件资源进行在线获取。
  *  数据源帮助实现了 MVVM 架构，使数据与 UI 进一步解耦，同时使 UI 层更加细化、可定制化。
  */
-@interface TUIFileMessageCellData : TUIMessageCellData<TUIMessageCellDataFileUploadProtocol, TUIMessageCellDataFileDownloadProtocol>
+@interface TUIFileMessageCellData : TUIBubbleMessageCellData<TUIMessageCellDataFileUploadProtocol, TUIMessageCellDataFileDownloadProtocol>
 
 /**
  *  文件存储路径

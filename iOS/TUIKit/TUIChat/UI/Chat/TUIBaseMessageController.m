@@ -20,6 +20,7 @@
 #import "TUILinkCell.h"
 #import "TUIReplyMessageCell.h"
 #import "TUIReplyMessageCellData.h"
+#import "TUIReferenceMessageCell.h"
 #import "TUIMessageDataProvider.h"
 #import "TUIFaceView.h"
 #import "TUIMediaView.h"
@@ -37,6 +38,7 @@
 #import <UIKit/UIWindow.h>
 #import "TUIThemeManager.h"
 #import "TUIMessageReadViewController.h"
+#import "TUIRepliesDetailViewController.h"
 
 @interface TUIBaseMessageController () <TUIMessageCellDelegate,
 TUIJoinGroupMessageCellDelegate,
@@ -106,6 +108,7 @@ TUIMessageDataProviderDataSource>
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationEnterBackground) name: UIApplicationDidEnterBackgroundNotification object:nil];
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapViewController)];
+    tap.cancelsTouchesInView = NO ;//解决触摸事件没有往下传递，导致手势和collectionView didselect冲突
     [self.view addGestureRecognizer:tap];
     
     self.tableView.scrollsToTop = NO;
@@ -124,6 +127,7 @@ TUIMessageDataProviderDataSource>
     [self.tableView registerClass:[TUIMergeMessageCell class] forCellReuseIdentifier:TRelayMessageCell_ReuserId];
     [self.tableView registerClass:[TUIGroupLiveMessageCell class] forCellReuseIdentifier:TGroupLiveMessageCell_ReuseId];
     [self.tableView registerClass:[TUIReplyMessageCell class] forCellReuseIdentifier:TReplyMessageCell_ReuseId];
+    [self.tableView registerClass:[TUIReferenceMessageCell class] forCellReuseIdentifier:TUIReferenceMessageCell_ReuseId];
     
     // 自定义消息注册 cell
     NSArray *customMessageInfo = [TUIMessageDataProvider getCustomMessageInfo];
@@ -206,7 +210,7 @@ TUIMessageDataProviderDataSource>
 
 - (void)sendUIMessage:(TUIMessageCellData *)cellData {
     @weakify(self);
-    cellData.innerMessage.needReadReceipt = self.conversationData.groupID.length > 0 ? self.isMsgNeedReadReceipt : NO;
+    cellData.innerMessage.needReadReceipt = self.isMsgNeedReadReceipt;
     [self.messageDataProvider sendUIMsg:cellData
                          toConversation:self.conversationData
                           willSendBlock:^(BOOL isReSend, TUIMessageCellData * _Nonnull dateUIMsg) {
@@ -262,6 +266,12 @@ TUIMessageDataProviderDataSource>
     } else {
         NSLog(@"缺少cell");
     }
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"kTUINotifyMessageStatusChanged" object:nil userInfo:@{
+        @"msg": msg,
+        @"status": [NSNumber numberWithUnsignedInteger:status],
+        @"msgSender": self,
+    }];
 }
 
 #pragma mark - TUIMessageDataProviderDataSource
@@ -569,6 +579,9 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     else if ([cell isKindOfClass:TUIReplyMessageCell.class]) {
         [self showReplyMessage:(TUIReplyMessageCell *)cell];
     }
+    else if ([cell isKindOfClass:TUIReferenceMessageCell.class]) {
+        [self showReplyMessage:(TUIReplyMessageCell *)cell];
+    }
 
     if ([self.delegate respondsToSelector:@selector(messageController:onSelectMessageContent:)]) {
         [self.delegate messageController:self onSelectMessageContent:cell];
@@ -587,17 +600,31 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
         TUITextMessageCell *textCell = (TUITextMessageCell *)cell;
         [textCell.textView becomeFirstResponder];
     }
+    else if ([data isKindOfClass:[TUIReferenceMessageCellData class]]) {
+        TUIReferenceMessageCell * referenceCell =  (TUIReferenceMessageCell*)cell;
+        [referenceCell.textView becomeFirstResponder];
+    }
 
     self.menuUIMsg = data;
 
     __weak typeof(self) weakSelf = self;
     TUIChatPopMenu *menu = [[TUIChatPopMenu alloc] init];
+    __weak typeof(menu) weakMenu = menu;
+    menu.reactClickCallback = ^(NSString * _Nonnull faceName) {
+        __weak typeof(weakSelf) strongSelf = weakSelf;
+        if(strongSelf.delegate && [strongSelf.delegate respondsToSelector:@selector(messageController:modifyMessage:reactEmoji:)]){
+            [strongSelf.delegate messageController:strongSelf modifyMessage:cell.messageData reactEmoji:faceName];
+            [weakMenu hideWithAnimation];
+        }
+    };
+    
     TUIChatPopMenuAction *copyAction = nil;
-    if ([data isKindOfClass:[TUITextMessageCellData class]] || [data isKindOfClass:TUIReplyMessageCellData.class]) {
+    if ([data isKindOfClass:[TUITextMessageCellData class]] || [data isKindOfClass:TUIReferenceMessageCellData.class]) {
         
         copyAction = [[TUIChatPopMenuAction alloc]
                       initWithTitle:TUIKitLocalizableString(Copy)
                       image:TUIChatBundleThemeImage(@"chat_icon_copy_img", @"icon_copy")
+                      rank:1
                       callback:^{
             [weakSelf onCopyMsg:cell];
         }];
@@ -608,6 +635,7 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     TUIChatPopMenuAction *deleteAction = [[TUIChatPopMenuAction alloc]
                                           initWithTitle:TUIKitLocalizableString(Delete)
                                           image:TUIChatBundleThemeImage(@"chat_icon_delete_img", @"icon_delete")
+                                          rank:7
                                           callback:^{
         [weakSelf onDelete:nil];
     }];
@@ -619,6 +647,7 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
         if([imMsg isSelf] && [[NSDate date] timeIntervalSinceDate:imMsg.timestamp] < 2 * 60 && (imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC)){
             recallAction = [[TUIChatPopMenuAction alloc] initWithTitle:TUIKitLocalizableString(Revoke)
                                                                  image:TUIChatBundleThemeImage(@"chat_icon_recall_img", @"icon_recall")
+                                                                  rank:6
                                                               callback:^{
                 [weakSelf onRevoke:nil];
             }];
@@ -630,6 +659,7 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 
     TUIChatPopMenuAction *multiAction = [[TUIChatPopMenuAction alloc] initWithTitle:TUIKitLocalizableString(Multiple) image:
                                          TUIChatBundleThemeImage(@"chat_icon_multi_img", @"icon_multi")
+                                                                               rank:3
                                           callback:^{
         [weakSelf onMulitSelect:nil];
     }];
@@ -637,11 +667,13 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 
     TUIChatPopMenuAction *forwardAction = nil;
     TUIChatPopMenuAction *quoteAction = nil;
+    TUIChatPopMenuAction *referenceAction = nil;
     if (imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC) {
         
         forwardAction = [[TUIChatPopMenuAction alloc] initWithTitle:TUIKitLocalizableString(Forward)
                                                               image:
                          TUIChatBundleThemeImage(@"chat_icon_forward_img", @"icon_forward")
+                                                               rank:2
                                                            callback:^{
             [weakSelf onForward:nil];
         }];
@@ -649,11 +681,20 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
         
         quoteAction = [[TUIChatPopMenuAction alloc] initWithTitle:TUIKitLocalizableString(Reply)
                                                             image:
-                        TUIChatBundleThemeImage(@"chat_icon_quote_img", @"icon_quote")
+                        TUIChatBundleThemeImage(@"chat_icon_reply_img", @"icon_reply")
+                                                             rank:5
                         callback:^{
             [weakSelf onReply:nil];
         }];
         [menu addAction:quoteAction];
+        referenceAction = [[TUIChatPopMenuAction alloc] initWithTitle:TUIKitLocalizableString(TUIKitReference)
+                                                            image:
+                        TUIChatBundleThemeImage(@"chat_icon_reference_img", @"icon_reference")
+                                                                 rank:4
+                        callback:^{
+            [weakSelf onReference:nil];
+        }];
+        [menu addAction:referenceAction];
     }
 
     BOOL isFirstResponder = NO;
@@ -689,6 +730,34 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
                 [menu addAction:multiAction];
                 [menu addAction:forwardAction];
                 [menu addAction:quoteAction];
+                [menu addAction:referenceAction];
+            } else {
+                [menu addAction:copyAction];
+                [menu addAction:forwardAction];
+            }
+            [menu layoutSubview];
+        };
+        menu.hideCallback = ^{
+            [textCell.textView setSelectedTextRange:nil];
+        };
+    }
+    if ([data isKindOfClass:[TUIReferenceMessageCellData class]]) {
+        TUIReferenceMessageCell *textCell = (TUIReferenceMessageCell *)cell;
+        [textCell.textView selectAll:self];
+        __block BOOL isSelectAll = YES;
+        textCell.selectAllContentContent = ^(BOOL selectAll) {
+            if (isSelectAll == selectAll) {
+                return;
+            }
+            isSelectAll = selectAll;
+            [menu removeAllAction];
+            if (isSelectAll) {
+                [menu addAction:copyAction];
+                [menu addAction:deleteAction];
+                [menu addAction:multiAction];
+                [menu addAction:forwardAction];
+                [menu addAction:quoteAction];
+                [menu addAction:referenceAction];
             } else {
                 [menu addAction:copyAction];
                 [menu addAction:forwardAction];
@@ -730,26 +799,50 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 
 - (void)onSelectReadReceipt:(TUIMessageCellData *)data {
     @weakify(self)
-    [TUIMessageDataProvider getMessageReadReceipt:@[data.innerMessage]
-                                             succ:^(NSArray<V2TIMMessageReceipt *> *receiptList) {
-        @strongify(self)
-        if (receiptList.count == 0) {
-            return;
-        }
-        // To avoid the labels in messageReadVC displaying all 0 which is not accurate, try to get message read count before navigation.
-        V2TIMMessageReceipt *receipt = receiptList.firstObject;
-        data.messageReceipt = receipt;
+    if (data.innerMessage.groupID.length > 0) {
+        // Navigate to group message read VC. Should get members first.
+        [TUIMessageDataProvider getMessageReadReceipt:@[data.innerMessage]
+                                                 succ:^(NSArray<V2TIMMessageReceipt *> *receiptList) {
+            @strongify(self)
+            if (receiptList.count == 0) {
+                return;
+            }
+            // To avoid the labels in messageReadVC displaying all 0 which is not accurate, try to get message read count before navigation.
+            V2TIMMessageReceipt *receipt = receiptList.firstObject;
+            data.messageReceipt = receipt;
+            [self pushMessageReadViewController:data];
+        } fail:^(int code, NSString *desc) {
+            @strongify(self)
+            [self pushMessageReadViewController:data];
+        }];
+    } else {
+        // navigate to c2c message read VC. No need to get member.
         [self pushMessageReadViewController:data];
-    } fail:^(int code, NSString *desc) {
-        [self pushMessageReadViewController:data];
-    }];
+    }
+
 }
 
 - (void)pushMessageReadViewController:(TUIMessageCellData *)data {
-    TUIMessageReadViewController *controller = [[TUIMessageReadViewController alloc] initWithCellData:data dataProvider:self.messageDataProvider showReadStatusDisable:NO];
+    TUIMessageReadViewController *controller = [[TUIMessageReadViewController alloc] initWithCellData:data dataProvider:self.messageDataProvider showReadStatusDisable:NO c2cReceiverName:self.conversationData.title c2cReceiverAvatar:self.conversationData.faceUrl];
     [self.navigationController pushViewController:controller animated:YES];
 }
 
+- (void)onJumpToRepliesDetailPage:(TUIMessageCellData *)data {
+    TUIRepliesDetailViewController *repliesDetailVC = [[TUIRepliesDetailViewController alloc] initWithCellData:data conversationData:self.conversationData];
+    repliesDetailVC.delegate = self.delegate;
+    [self.navigationController pushViewController:repliesDetailVC animated:YES];
+    repliesDetailVC.parentPageDataProvider = self.messageDataProvider;
+    __weak typeof(self) weakSelf = self;
+    repliesDetailVC.willCloseCallback = ^(){
+        // 刷新下，主要是更新下全局的UI
+        [weakSelf.tableView reloadData];
+    };
+}
+- (void)onEmojiClickCallback:(TUIMessageCellData *)data faceName:(NSString *)faceName {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(messageController:modifyMessage:reactEmoji:)]){
+        [self.delegate messageController:self modifyMessage:data reactEmoji:faceName];
+    }
+}
 -(BOOL)canPerformAction:(SEL)action withSender:(id)sender
 {
     if (action == @selector(onDelete:) ||
@@ -800,9 +893,9 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
         TUITextMessageCell *txtCell = (TUITextMessageCell *)sender;
         content = txtCell.selectContent;
     }
-    if ([_menuUIMsg isKindOfClass:TUIReplyMessageCellData.class]) {
-        TUIReplyMessageCellData *replyMsg = (TUIReplyMessageCellData *)_menuUIMsg;
-        content = replyMsg.content;
+    if ([sender isKindOfClass:TUIReferenceMessageCell.class]) {
+        TUIReferenceMessageCellData *replyMsg = (TUIReferenceMessageCellData *)sender;
+        content = replyMsg.selectContent;
     }
     if (content.length > 0) {
         UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
@@ -855,6 +948,12 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     }
 }
 
+- (void)onReference:(id)sender {
+    // 消息引用
+    if (_delegate && [_delegate respondsToSelector:@selector(messageController:onReferenceMessage:)]) {
+        [_delegate messageController:self onReferenceMessage:self.menuUIMsg];
+    }
+}
 // 是否支持多选
 - (BOOL)supportCheckBox:(TUIMessageCellData *)data
 {
@@ -1019,6 +1118,8 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     TUIMergeMessageListController *relayVc = [[TUIMergeMessageListController alloc] init];
     relayVc.delegate = self.delegate;
     relayVc.mergerElem = cell.relayData.mergerElem;
+    relayVc.conversationData = self.conversationData;
+    relayVc.parentPageDataProvider = self.messageDataProvider;
     __weak typeof(self) weakSelf = self;
     relayVc.willCloseCallback = ^(){
         // 刷新下，主要是更新下全局的UI

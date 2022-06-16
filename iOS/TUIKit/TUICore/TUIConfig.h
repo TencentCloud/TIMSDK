@@ -39,7 +39,8 @@ typedef NS_ENUM(NSInteger, TUIKitAvatarType) {
 /**
  * 表情列表（需要注意的是， TUIKit 里面的表情包都是有版权限制的，购买的 IM 服务不包括表情包的使用权，请在上线的时候替换成自己的表情包，否则会面临法律风险）
  */
-@property (nonatomic, strong) NSArray<TUIFaceGroup *> *faceGroups;
+@property (nonatomic, strong) NSArray<TUIFaceGroup *> *faceGroups; //键盘表情
+@property (nonatomic, strong) NSArray<TUIFaceGroup *> *chatPopDetailGroups;//消息编辑 快捷贴表情,表情详情。
 /**
  *  头像类型
  */

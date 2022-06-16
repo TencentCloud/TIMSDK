@@ -191,6 +191,10 @@ typedef NS_ENUM(NSUInteger, TMsgDirection) {
 @property (nonatomic, assign) BOOL showMessageTime;
 
 /**
+* 是否显示消息编辑x人回复按钮
+*/
+@property (nonatomic, assign) BOOL showMessageModifyReplies;
+/**
  * 高亮关键字，当改关键字不为空时，会短暂高亮显示，主要用在消息搜索场景中
  */
 @property (nonatomic, copy) NSString * __nullable highlightKeyword;
@@ -200,6 +204,17 @@ typedef NS_ENUM(NSUInteger, TMsgDirection) {
  */
 @property (nonatomic, strong) V2TIMMessageReceipt *messageReceipt;
 
+
+/**
+ * 源消息回复数组
+ */
+@property (nonatomic, strong) NSArray *messageModifyReplies;
+/**
+ * 消息响应字典
+ */
+@property (nonatomic, strong) NSDictionary *messageModifyReacts;
+@property (nonatomic, assign) CGSize messageModifyReactsSize;
+@property (nonatomic, strong) NSDictionary *messageModifyReactUsers;
 /**
  *  内容大小
  *  返回一个气泡内容的视图大小。

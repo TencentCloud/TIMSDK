@@ -8,7 +8,7 @@
  *
  ******************************************************************************/
 #import "TUIMessageCellData.h"
-
+#import "TUIBubbleMessageCellData.h"
 NS_ASSUME_NONNULL_BEGIN
 
 typedef void(^TUIImageMessageDownloadCallback)(void);
@@ -72,7 +72,7 @@ typedef NS_ENUM(NSInteger, TUIImageType)
  *  3. 原图 - 如果发送方选择发送原图，那么接收者会看到“原图”按钮，点击下载到原尺寸的图片
  *  数据源帮助实现了 MVVM 架构，使数据与 UI 进一步解耦，同时使 UI 层更加细化、可定制化。
  */
-@interface TUIImageMessageCellData : TUIMessageCellData<TUIMessageCellDataFileUploadProtocol>
+@interface TUIImageMessageCellData : TUIBubbleMessageCellData<TUIMessageCellDataFileUploadProtocol>
 
 /**
  *  图像缩略图

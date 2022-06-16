@@ -247,9 +247,7 @@
         _recordButton.backgroundColor = [UIColor lightGrayColor];
         [_recordButton setTitle:TUIKitLocalizableString(TUIKitInputReleaseToSend) forState:UIControlStateNormal];  // @"松开 结束"
         [self showHapticFeedback];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self startRecord];
-        });
+        [self startRecord];
     }
 }
 

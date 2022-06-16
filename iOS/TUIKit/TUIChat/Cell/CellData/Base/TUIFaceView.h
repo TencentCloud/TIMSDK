@@ -92,6 +92,18 @@
 @property (nonatomic, strong) UIPageControl *pageControl;
 
 /**
+ *
+ *  faceView 中的数据。
+ *  在此 NSMutableArray 中存放的对象为 TUIFaceGroup，即表情组。
+ *  
+ */
+@property (nonatomic, strong, readonly) NSMutableArray *faceGroups;
+@property (nonatomic, strong, readonly) NSMutableArray *sectionIndexInGroup;
+@property (nonatomic, strong, readonly) NSMutableArray *pageCountInGroup;
+@property (nonatomic, strong, readonly) NSMutableArray *groupIndexInSection;
+@property (nonatomic, strong, readonly) NSMutableDictionary *itemIndexs;
+
+/**
  *  委托变量，被委托者
  *  需要实现 TFaceViewDelegate 协议中要求的功能。
  */

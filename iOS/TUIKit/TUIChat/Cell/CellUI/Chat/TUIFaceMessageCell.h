@@ -7,6 +7,7 @@
  ******************************************************************************/
 #import "TUIMessageCell.h"
 #import "TUIFaceMessageCellData.h"
+#import "TUIBubbleMessageCell.h"
 
 /** 
  * 【模块名称】TUIFaceMessageCell
@@ -14,7 +15,7 @@
  *  表情消息单元，即显示动画表情时所使用并展示的消息单元。
  *  默认情况下，在消息列表中看到的“[动画消息]”，即为表情消息单元所承载并展示的消息。
  */
-@interface TUIFaceMessageCell : TUIMessageCell
+@interface TUIFaceMessageCell : TUIBubbleMessageCell
 
 /**
  *  表情图像视图

@@ -33,6 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)findMessages:(NSArray<NSString *> *)msgIDs callback:(void(^)(BOOL success, NSString *desc, NSArray<V2TIMMessage *> *messages))callback;
 
+- (void)preProcessMessage:(NSArray *)uiMsgs;
 @end
 
 NS_ASSUME_NONNULL_END

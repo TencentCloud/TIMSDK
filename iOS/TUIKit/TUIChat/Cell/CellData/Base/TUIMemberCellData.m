@@ -9,20 +9,27 @@
 
 @implementation TUIMemberCellData
 
-- (instancetype)initWithMember:(V2TIMGroupMemberInfo *)member {
+- (instancetype)initWithUserID:(nonnull NSString *)userID
+                      nickName:(nullable NSString *)nickName
+                  friendRemark:(nullable NSString *)friendRemark
+                      nameCard:(nullable NSString *)nameCard
+                     avatarUrl:(nonnull NSString *)avatarUrl
+                        detail:(nullable NSString *)detail {
     self = [super init];
 
-    _member = member;
-    _avatarURL = [NSURL URLWithString:member.faceURL];
+    if (avatarUrl.length > 0) {
+        _avatarUrL = [NSURL URLWithString:avatarUrl];
+    }
+    _detail = detail;
     
-    if (member.nameCard.length > 0) {
-        _title = member.nameCard;
-    } else if (member.friendRemark.length > 0) {
-        _title = member.friendRemark;
-    } else if (member.nickName.length > 0) {
-        _title = member.nickName;
+    if (nameCard.length > 0) {
+        _title = nameCard;
+    } else if (friendRemark.length > 0) {
+        _title = friendRemark;
+    } else if (nickName.length > 0) {
+        _title = nickName;
     } else {
-        _title = member.userID;
+        _title = userID;
     }
 
     return self;

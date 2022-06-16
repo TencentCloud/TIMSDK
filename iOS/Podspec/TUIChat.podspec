@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUIChat'
-  spec.version      = '6.2.2363'
+  spec.version      = '6.3.2609'
   spec.platform     = :ios
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
@@ -17,8 +17,8 @@ Pod::Spec.new do |spec|
 
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/6.2.2363/ios/TUIChat.zip'}
-  spec.dependency 'TUICore','6.2.2363'
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/6.3.2609/ios/TUIChat.zip'}
+  spec.dependency 'TUICore','6.3.2609'
 
   spec.subspec 'Header' do |header|
       header.source_files = '**/TUIChat/Header/*.{h,m,mm}'
@@ -91,11 +91,13 @@ Pod::Spec.new do |spec|
       end
       base.subspec 'Pop' do |pop|
         pop.source_files = '**/TUIChat/UI/Base/Pop/*.{h,m,mm}'
+        pop.dependency 'TUIChat/DataProvider'
       end
     end
     ui.subspec 'Forward' do |forward|
       forward.source_files = '**/TUIChat/UI/Forward/*.{h,m,mm}'
       forward.dependency 'TUIChat/UI/Base'
+      forward.dependency 'TUIChat/UI/Input'
     end
     ui.subspec 'Input' do |input|
       input.source_files = '**/TUIChat/UI/Input/*.{h,m,mm}'

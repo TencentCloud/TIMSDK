@@ -13,7 +13,6 @@
 ******************************************************************************/
 #import "TUIMessageCell.h"
 #import "TUIMergeMessageCellData.h"
-
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIMergeMessageCell : TUIMessageCell

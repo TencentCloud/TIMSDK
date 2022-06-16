@@ -56,6 +56,9 @@
     self.tableView.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
     //加入此行，会让反馈更加灵敏
     self.tableView.delaysContentTouches = NO;
+    if (@available(iOS 15.0, *)) {
+        self.tableView.sectionHeaderTopPadding = 0;
+    }
 }
 
 - (void)updateData {

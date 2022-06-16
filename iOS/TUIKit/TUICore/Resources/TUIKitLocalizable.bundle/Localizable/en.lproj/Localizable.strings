@@ -205,6 +205,9 @@
 "TUIKitMessageReadPartUnread" = "unread";
 "TUIKitMessageReadPartDisable" = "disable read";
 "TUIKitMessageReadAllRead" = "All read";
+"TUIKitMessageReadC2CRead" = "Read";
+"TUIKitMessageReadC2CUnRead" = "Unread";
+"TUIKitMessageReadC2CUnReadDetail" = "Unread";
 "TUIKitMessageReadDetail" = "Message Detail";
 "TUIKitMessageReadNoMoreData" = "There is no more data";
 
@@ -673,3 +676,13 @@
 "CancelStickonTop" = "Remove from Top";
 "ClearHistoryChatMessage" = "Clear messages";
 
+"TUIKitRepliesDetailTitle" = "Reply Details";
+"TUIKitRepliesNum" = " replies";
+"TUIKitReference" = "reference";
+"TUIKitNotSupportThisMessage" = "[This message display is not currently supported]";
+
+"TUIKitSignalingSwitchToAudio" = "Switch to voice call";
+"TUIKitSignalingUnsupportedCalling" = "Unknown invitation";
+"TUIKitSignalingComfirmSwitchToAudio" = "Comfirm video to voice";
+
+"TUIKitErrorEnableUserStatusOnConsole" = "The user status not supported. Please enable the ability in the console first.";

@@ -138,9 +138,9 @@ typedef void(^LoadMsgSucceedBlock)(BOOL isOlderNoMoreMsg, BOOL isNewerNoMoreMsg,
             NSArray *msgs = results.reverseObjectEnumerator.allObjects;
             NSMutableArray *uiMsgs = [self transUIMsgFromIMMsg:msgs];
             [self getGroupMessageReceipts:msgs uiMsgs:uiMsgs succ:^{
-                [self preprocessReplyMessage:uiMsgs];
+                [self preProcessMessage:uiMsgs];
             } fail:^{
-                [self preprocessReplyMessage:uiMsgs];
+                [self preProcessMessage:uiMsgs];
             }];
         });
     });
@@ -203,9 +203,9 @@ typedef void(^LoadMsgSucceedBlock)(BOOL isOlderNoMoreMsg, BOOL isNewerNoMoreMsg,
         // 转换数据
         NSMutableArray<TUIMessageCellData *> *uiMsgs = [self transUIMsgFromIMMsg:msgs];
         [self getGroupMessageReceipts:msgs uiMsgs:uiMsgs succ:^{
-            [self preprocessReplyMessage:uiMsgs orderType:orderType];
+            [self preProcessMessage:uiMsgs orderType:orderType];
         } fail:^{
-            [self preprocessReplyMessage:uiMsgs orderType:orderType];
+            [self preProcessMessage:uiMsgs orderType:orderType];
         }];
     } fail:^(int code, NSString *desc) {
         self.isLoadingData = NO;
@@ -237,18 +237,18 @@ typedef void(^LoadMsgSucceedBlock)(BOOL isOlderNoMoreMsg, BOOL isNewerNoMoreMsg,
     }];
 }
 
-- (void)preprocessReplyMessage:(NSArray *)uiMsgs {
+- (void)preProcessMessage:(NSArray *)uiMsgs {
     @weakify(self)
-    [self preProcessReplyMessage:uiMsgs callback:^{
+    [self preProcessMessage:uiMsgs callback:^{
         @strongify(self)
         [self.uiMsgs_ addObjectsFromArray:uiMsgs];
         self.loadSearchMsgSucceedBlock(self.isOlderNoMoreMsg, self.isNewerNoMoreMsg, self.uiMsgs_);
     }];
 }
 
-- (void)preprocessReplyMessage:(NSArray *)uiMsgs orderType:(BOOL)orderType {
+- (void)preProcessMessage:(NSArray *)uiMsgs orderType:(BOOL)orderType {
     @weakify(self)
-    [self preProcessReplyMessage:uiMsgs callback:^{
+    [self preProcessMessage:uiMsgs callback:^{
         @strongify(self)
         
         if (orderType) {

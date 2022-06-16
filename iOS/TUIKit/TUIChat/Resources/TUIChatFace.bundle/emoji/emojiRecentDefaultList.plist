@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>face_name</key>
+		<string>[龇牙]</string>
+		<key>face_id</key>
+		<string>001</string>
+	</dict>
+	<dict>
+		<key>face_name</key>
+		<string>[调皮]</string>
+		<key>face_id</key>
+		<string>002</string>
+	</dict>
+	<dict>
+		<key>face_name</key>
+		<string>[流汗]</string>
+		<key>face_id</key>
+		<string>003</string>
+	</dict>
+	<dict>
+		<key>face_name</key>
+		<string>[偷笑]</string>
+		<key>face_id</key>
+		<string>004</string>
+	</dict>
+	<dict>
+		<key>face_name</key>
+		<string>[再见]</string>
+		<key>face_id</key>
+		<string>005</string>
+	</dict>
+	<dict>
+		<key>face_name</key>
+		<string>[敲打]</string>
+		<key>face_id</key>
+		<string>006</string>
+	</dict>
+</array>
+</plist>
