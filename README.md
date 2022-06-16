@@ -145,29 +145,37 @@
 
 [接口升级指引](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
-## 最新增强版 6.2.2363 @2022.04.29
+## 最新增强版 6.3.2609 @2022.06.16
 
 ### SDK
 
-- 新增社群话题功能（[iOS 文档](https://cloud.tencent.com/document/product/269/44495#.E7.A4.BE.E7.BE.A4.E8.AF.9D.E9.A2.98) ，[Android 文档](https://cloud.tencent.com/document/product/269/44494#.E7.A4.BE.E7.BE.A4.E8.AF.9D.E9.A2.98)）
-- 新增消息编辑接口（[iOS 文档](https://cloud.tencent.com/document/product/269/44490#.E6.B6.88.E6.81.AF.E5.8F.98.E6.9B.B4) ，[Android 文档](https://cloud.tencent.com/document/product/269/44489#.E6.B6.88.E6.81.AF.E5.8F.98.E6.9B.B4)）
-- 支持 C2C 消息已读回执（[iOS 文档](https://cloud.tencent.com/document/product/269/44490#.E6.B6.88.E6.81.AF.E5.B7.B2.E8.AF.BB.E5.9B.9E.E6.89.A7) ，[Android 文档](https://cloud.tencent.com/document/product/269/44489#.E6.B6.88.E6.81.AF.E5.B7.B2.E8.AF.BB.E5.9B.9E.E6.89.A7)）
-- 优化国际站的联网质量
-- 修复消息已读后，卸载重装再拉取该消息，已读状态为未读的问题
-- 修复获取非好友用户资料，其自定义字段值修改为空字符串后一直不更新的问题
-- 修复 C2C 会话双方同时发消息时偶现的会话 lastMsg 与历史消息的 lastMsg 不一致的问题
-- 修复 Public 群组群主审批通过入群申请后，申请方收到的回调错误问题
-- 修复查看自己发送的群消息中 nameCard 为空的问题
-- 修复某些条件下发送消息，会话列表不会重新排序的问题
+- 新增在线状态及自定义状态
+- 直播群支持拉取群成员列表，最大支持1000人
+- 话题支持 at all 消息
+- 补充好友资料中添加好友的时间
+- 修复跨平台版本 sql 执行错误问题
+- 跨平台 SDK 增加社群话题相关接口
+- 修复登录后拉取指定话题偶现的未读数不对的问题
+- 修复没有网络时，获取加入的群组接口调用结果偶现为空的问题
+- 修复获取加入的群组中群主 userID 为空的问题
+- 修复转让群主后，新群主获取成员资料中的角色没更新问题
+- 修复搜索消息接口参数填多个发送者时的搜索结果异常问题
+- 修复搜索消息后，发送者昵称和头像不一致问题
+- 修复修改 cloudCustomData 为空字符串不生效问题
+- iOS 修复更改语音消息 cloudCustomData 后获取到的 elemType 为 0 的问题
+- iOS 修复 C2C 消息已读回执偶现不回调问题
+- Android 优化 so 加载速度
 
 ### TUIKit & Demo
 
-- 新增离线推送组件，简化接入流程
-- 支持群消息已读回执
-- iOS 支持暗黑皮肤
-- Android 修复发送尺寸特别大的图片后，预览会崩溃问题
-- Android 修复发送视频消息后，消息展示的时间跟实际播放时间不一致的问题
-- Android 修复处理一个好友请求后，无法继续点击处理其他好友请求的问题
+- 聊天消息支持表情回应
+- 聊天消息支持引用
+- 聊天消息支持回复
+- 单聊消息支持已读回执
+- 会话列表时间统一格式化显示
+- Demo App 支持版本升级检测
+- Demo App 品牌 logo 升级
+
 
 ## 最新基础版 5.1.66 @2021.09.22
 
