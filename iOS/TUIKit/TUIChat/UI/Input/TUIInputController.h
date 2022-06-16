@@ -112,7 +112,9 @@ typedef NS_ENUM(NSUInteger, InputStatus) {
 /**
  * 当前正在回复的消息
  */
-@property (nonatomic, strong, readonly) TUIReplyPreviewData *replyData;;
+@property (nonatomic, strong) TUIReplyPreviewData *replyData;
+
+@property (nonatomic, strong) TUIReferencePreviewData *referenceData;
 
 /**
  *  输入条
@@ -158,6 +160,8 @@ typedef NS_ENUM(NSUInteger, InputStatus) {
  * 显示/隐藏消息回复输入框的预览条
  */
 - (void)showReplyPreview:(TUIReplyPreviewData *)data;
+- (void)showReferencePreview:(TUIReferencePreviewData *)data;
+
 - (void)exitReply;
 
 /**

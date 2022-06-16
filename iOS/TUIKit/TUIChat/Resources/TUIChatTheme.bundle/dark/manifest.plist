@@ -57,7 +57,7 @@
 	<key>chat_link_message_bg_color</key>
 	<string>#6395DA</string>
 	<key>chat_link_message_title_color</key>
-	<string>#000000</string>
+	<string>#FFFFFF</string>
 	<key>chat_link_message_subtitle_color</key>
 	<string>#C0DAFC</string>
 	<key>chat_merge_message_bg_color</key>
@@ -110,6 +110,14 @@
 	<string>icon_forward</string>
 	<key>chat_icon_quote_img</key>
 	<string>icon_quote</string>
+	<key>chat_icon_reply_img</key>
+	<string>icon_reply</string>
+	<key>chat_icon_reference_img</key>
+	<string>icon_reference</string>
+	<key>chat_icon_emojiArrowDown_img</key>
+	<string>emojiArrowDown.png</string>
+	<key>chat_icon_emojiArrowUp_img</key>
+	<string>emojiArrowUp.png</string>
 	<key>chat_ToolViewInputVoice_img</key>
 	<string>ToolViewInputVoice</string>
 	<key>chat_ToolViewInputVoiceHL_img</key>
@@ -138,5 +146,7 @@
 	<string>#444444</string>
 	<key>chat_message_read_name_date_text_color</key>
 	<string>#888888</string>
+	<key>chat_messageReplyIcon_img</key>
+	<string>messageReplyIcon</string>
 </dict>
 </plist>

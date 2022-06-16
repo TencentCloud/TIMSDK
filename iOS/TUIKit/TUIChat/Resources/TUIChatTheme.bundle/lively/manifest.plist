@@ -102,5 +102,7 @@
 	<string>#444444</string>
 	<key>chat_message_read_name_date_text_color</key>
 	<string>#999999</string>
+	<key>chat_messageReplyIcon_img</key>
+	<string>messageReplyIcon</string>
 </dict>
 </plist>

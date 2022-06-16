@@ -206,6 +206,9 @@
 "TUIKitMessageReadPartUnread" = "人未读";
 "TUIKitMessageReadPartDisable" = "人无状态";
 "TUIKitMessageReadAllRead" = "全部已读";
+"TUIKitMessageReadC2CRead" = "已读";
+"TUIKitMessageReadC2CUnRead" = "未读";
+"TUIKitMessageReadC2CUnReadDetail" = "尚未阅读";
 "TUIKitMessageReadDetail" = "消息详情";
 "TUIKitMessageReadNoMoreData" = "没有更多数据了";
 
@@ -673,3 +676,13 @@
 "CancelStickonTop" = "取消置顶";
 "ClearHistoryChatMessage" = "清空消息";
 
+"TUIKitRepliesDetailTitle" = "回复详情";
+"TUIKitRepliesNum" = "条回复";
+"TUIKitReference" = "引用";
+"TUIKitNotSupportThisMessage" = "[暂时不支持该消息展示]";
+
+"TUIKitSignalingSwitchToAudio" = "视频转语音";
+"TUIKitSignalingUnsupportedCalling" = "未知邀请";
+"TUIKitSignalingComfirmSwitchToAudio" = "确认转语音";
+
+"TUIKitErrorEnableUserStatusOnConsole" = "您未开启用户状态功能，请先登录控制台开启";

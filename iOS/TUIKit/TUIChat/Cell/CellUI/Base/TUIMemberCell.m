@@ -15,6 +15,7 @@
 
 @property (nonatomic, strong) UIImageView *avatarView;
 @property (nonatomic, strong) UILabel *titleLabel;
+@property (nonatomic, strong) UILabel *detailLabel;
 @property (nonatomic, strong) TUIMemberCellData *cellData;
 
 @end
@@ -41,7 +42,13 @@
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         [self.contentView addSubview:self.titleLabel];
         self.titleLabel.textColor = TUICoreDynamicColor(@"form_title_color", @"#000000");
-        self.titleLabel.mm_left(self.avatarView.mm_maxX+12).mm_height(20).mm__centerY(self.avatarView.mm_centerY).mm_flexToRight(0);
+        self.titleLabel.mm_left(self.avatarView.mm_maxX+12).mm_height(20).mm_width(200).mm__centerY(self.avatarView.mm_centerY);
+        
+        self.detailLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 20)];
+        [self.contentView addSubview:self.detailLabel];
+        self.detailLabel.textAlignment = NSTextAlignmentRight;
+        self.detailLabel.textColor = TUICoreDynamicColor(@"form_title_color", @"#000000");
+        self.detailLabel.mm__centerY(self.avatarView.mm_centerY);
 
         [self setSelectionStyle:UITableViewCellSelectionStyleNone];
 
@@ -50,6 +57,11 @@
     return self;
 }
 
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    self.detailLabel.mm_sizeToFit();
+    self.detailLabel.mm_right(12);
+}
 
 #pragma mark - Public
 - (void)fillWithData:(TUIMemberCellData *)cellData {
@@ -57,9 +69,10 @@
     self.cellData = cellData;
 
     self.titleLabel.text = cellData.title;
-    [self.avatarView sd_setImageWithURL:cellData.avatarURL
+    [self.avatarView sd_setImageWithURL:cellData.avatarUrL
                        placeholderImage:DefaultAvatarImage];
+    self.detailLabel.hidden = cellData.detail.length == 0;
+    self.detailLabel.text = cellData.detail;
 }
-
 
 @end

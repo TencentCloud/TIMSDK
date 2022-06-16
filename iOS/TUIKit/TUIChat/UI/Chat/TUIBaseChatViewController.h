@@ -85,31 +85,4 @@
  */
 - (void)sendMessage:(V2TIMMessage *)message;
 
-
-#pragma mark - 聊天界面功能配置
-/**
- *  发送消息是否需要已读回执，默认 NO
- */
-+ (void)setIsMsgNeedReadReceipt:(BOOL)isMsgNeedReadReceipt;
-
-/**
- *  是否展示视频通话按钮，如果集成了 TUICalling 组件，默认 YES
- */
-+ (void)setIsEnableVideoCall:(BOOL)isEnableVideoCall;
-
-/**
- *  是否展示音频通话按钮，如果集成了 TUICalling 组件，默认 YES
- */
-+ (void)setIsEnableAudioCall:(BOOL)isEnableAudioCall;
-
-/**
- *  是否展示群直播通话按钮，如果集成了 TUIKitLive 组件，默认 YES
- */
-+ (void)setIsEnableLive:(BOOL)isEnableLive;
-
-/**
- *  是否展示自定义消息按钮，默认 YES
- */
-+ (void)setIsEnableLink:(BOOL)isEnableLink;
-
 @end

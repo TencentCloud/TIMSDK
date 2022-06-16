@@ -20,6 +20,7 @@
         [self.container addSubview:_bubbleView];
         _bubbleView.mm_fill();
         _bubbleView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        [self prepareReactTagUI:self.container];
     }
     return self;
 }

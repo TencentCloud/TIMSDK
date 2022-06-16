@@ -1,6 +1,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#define IS_NOT_EMPTY_NSSTRING(__X__)            (__X__ && [__X__ isKindOfClass:[NSString class]] && ![__X__ isEqualToString:@""])
 
 typedef void (^TAsyncImageComplete)(NSString *path, UIImage *image);
 

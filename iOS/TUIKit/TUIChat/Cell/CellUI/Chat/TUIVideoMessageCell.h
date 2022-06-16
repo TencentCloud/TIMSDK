@@ -7,7 +7,7 @@
  ******************************************************************************/
 #import "TUIMessageCell.h"
 #import "TUIVideoMessageCellData.h"
-
+#import "TUIBubbleMessageCell.h"
 /**
  * 【模块名称】TUIVideoMessageCell
  * 【功能说明】视频消息单元
@@ -15,7 +15,7 @@
  *  同时消息单元内整合了视频消息的网络获取与本地获取（如果本地缓存中存在的话）。
  *  是您能够方便的在 UI 界面展示并播放视频消息。
  */
-@interface TUIVideoMessageCell : TUIMessageCell
+@interface TUIVideoMessageCell : TUIBubbleMessageCell
 
 /**
  *  视频缩略图

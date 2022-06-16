@@ -20,10 +20,11 @@ NS_ASSUME_NONNULL_BEGIN
 static NSString * const kMemberCellReuseId = @"kMemberCellReuseId";
 
 typedef NS_ENUM(NSInteger, TUIMessageReadViewTag) {
-    TUIMessageReadViewTagUnknown = 0,   // 未知
-    TUIMessageReadViewTagRead,          // 已读
-    TUIMessageReadViewTagUnread,        // 未读
-    TUIMessageReadViewTagReadDisable,   // 未开启已读状态
+    TUIMessageReadViewTagUnknown = 0,   // unknown
+    TUIMessageReadViewTagRead,          // read group members
+    TUIMessageReadViewTagUnread,        // unread group members
+    TUIMessageReadViewTagReadDisable,   // disable read group members
+    TUIMessageReadViewTagC2C,           // c2c member
 };
 
 @class TUIMessageReadSelectView;
@@ -49,7 +50,9 @@ typedef NS_ENUM(NSInteger, TUIMessageReadViewTag) {
 
 - (instancetype)initWithCellData:(TUIMessageCellData *)data
                     dataProvider:(TUIMessageDataProvider *)dataProvider
-           showReadStatusDisable:(BOOL)showReadStatusDisable;
+           showReadStatusDisable:(BOOL)showReadStatusDisable
+                 c2cReceiverName:(NSString *)name
+               c2cReceiverAvatar:(NSString *)avatarUrl;
 @end
 
 

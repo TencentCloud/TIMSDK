@@ -5,6 +5,7 @@
 #import "TUITextMessageCell.h"
 #import "TUIReplyMessageCell.h"
 #import "TUIReplyMessageCellData.h"
+#import "TUIReferenceMessageCell.h"
 #import "TUIGlobalization.h"
 #import "TUIThemeManager.h"
 #import "TUIMessageSearchDataProvider.h"
@@ -343,9 +344,22 @@
 - (void)showReplyMessage:(TUIReplyMessageCell *)cell
 {
     [UIApplication.sharedApplication.keyWindow endEditing:YES];
-    TUIReplyMessageCellData *cellData = cell.replyData;
+    NSString *  originMsgID = @"";
+    NSString *  msgAbstract = @"";
+    if ([cell  isKindOfClass:TUIReplyMessageCell.class]) {
+        TUIReplyMessageCell * acell = (TUIReplyMessageCell *)cell;
+        TUIReplyMessageCellData *cellData = acell.replyData;
+        originMsgID = cellData.messageRootID;
+        msgAbstract = cellData.msgAbstract;
+    }
+    else if ([cell isKindOfClass:TUIReferenceMessageCell.class]) {
+        TUIReferenceMessageCell * acell = (TUIReferenceMessageCell *)cell;
+        TUIReferenceMessageCellData * cellData = acell.referenceData;
+        originMsgID = cellData.originMsgID;
+        msgAbstract = cellData.msgAbstract;
+    }
     // 查询原始消息 - 在数据源里头调用
-    [(TUIMessageSearchDataProvider *)self.messageDataProvider findMessages:@[cellData.originMsgID?:@""] callback:^(BOOL success, NSString * _Nonnull desc, NSArray<V2TIMMessage *> * _Nonnull msgs) {
+    [(TUIMessageSearchDataProvider *)self.messageDataProvider findMessages:@[originMsgID?:@""] callback:^(BOOL success, NSString * _Nonnull desc, NSArray<V2TIMMessage *> * _Nonnull msgs) {
         if (!success) {
             [TUITool makeToast:TUIKitLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
             return;
@@ -361,7 +375,25 @@
             [TUITool makeToast:TUIKitLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
             return;
         }
-        [self locateAssignMessage:message matchKeyWord:cellData.msgAbstract];
+        
+        if ([cell isKindOfClass:TUIReplyMessageCell.class]) {
+            [self jumpDetailPageByMessage:message];
+        }
+        else if ([cell isKindOfClass:TUIReferenceMessageCell.class]) {
+            [self locateAssignMessage:message matchKeyWord:msgAbstract];
+        }
+    }];
+}
+
+- (void)jumpDetailPageByMessage:(V2TIMMessage *)message {
+    NSMutableArray *uiMsgs = [self.messageDataProvider transUIMsgFromIMMsg:@[message]];
+    [self.messageDataProvider preProcessMessage:uiMsgs callback:^{
+        for (TUIMessageCellData *cellData in uiMsgs) {
+            if ([cellData.innerMessage.msgID isEqual:message.msgID]) {
+                [self onJumpToRepliesDetailPage:cellData];
+                return;
+            }
+        }
     }];
 }
 

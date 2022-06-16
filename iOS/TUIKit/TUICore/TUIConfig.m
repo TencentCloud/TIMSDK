@@ -11,7 +11,10 @@
 #import "TUICommonModel.h"
 #import "TUILogin.h"
 #import "TUIThemeManager.h"
-
+typedef NS_OPTIONS(NSInteger, emojiFaceType) {
+    emojiFaceTypeKeyBoard = 1 << 0,
+    emojiFaceTypePopDetail = 1 << 1,
+};
 @interface TUIConfig ()
 
 
@@ -33,12 +36,7 @@
         _isExcludedFromLastMessage = NO;
         _enableToast = YES;
         
-        NSMutableArray *faceArray = [NSMutableArray array];
-        TUIFaceGroup *defaultFaceGroup = [self getDefaultFaceGroup];
-        if (defaultFaceGroup) {
-            [faceArray addObject:defaultFaceGroup];
-        }
-        _faceGroups = faceArray;
+        [self updateEmojiGroups];
         
         [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onChangeLanguage) name:TUIChangeLanguageNotification object:nil];
         [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onChangeTheme) name:TUIDidApplyingThemeChangedNotfication object:nil];
@@ -58,19 +56,76 @@
 
 - (void)onChangeLanguage
 {
-    // 更新表情面板
-    if (self.faceGroups.count) {
-        NSMutableArray *arrayM = [NSMutableArray arrayWithArray:self.faceGroups];
-        [arrayM removeObjectAtIndex:0];
-        
-        TUIFaceGroup *defaultFaceGroup = [self getDefaultFaceGroup];
-        if (defaultFaceGroup) {
-            [arrayM insertObject:[self getDefaultFaceGroup] atIndex:0];
-        }
-        self.faceGroups = [NSArray arrayWithArray:arrayM];
-    }
+    [self updateEmojiGroups];
 }
 
+- (void)updateEmojiGroups {
+    // 更新表情面板
+    self.faceGroups = [self updateFaceGroups:self.faceGroups type:emojiFaceTypeKeyBoard];
+    self.chatPopDetailGroups = [self updateFaceGroups:self.chatPopDetailGroups type:emojiFaceTypePopDetail];
+}
+- (NSArray *)updateFaceGroups:(NSArray *)groups type:(emojiFaceType)type {
+    
+    if (groups.count) {
+        NSMutableArray *arrayM = [NSMutableArray arrayWithArray:groups];
+        [arrayM removeObjectAtIndex:0];
+        
+        TUIFaceGroup *defaultFaceGroup = [self findFaceGroupAboutType:type];
+        if (defaultFaceGroup) {
+            [arrayM insertObject:[self findFaceGroupAboutType:type] atIndex:0];
+        }
+        return  [NSArray arrayWithArray:arrayM];
+    }
+    else {
+        NSMutableArray *faceArray = [NSMutableArray array];
+        TUIFaceGroup *defaultFaceGroup = [self findFaceGroupAboutType:type];
+        if (defaultFaceGroup) {
+            [faceArray addObject:defaultFaceGroup];
+        }
+        return faceArray;
+    }
+    return @[];
+}
+- (TUIFaceGroup *)findFaceGroupAboutType:(emojiFaceType)type {
+    //emoji group
+
+    NSMutableArray *emojiFaces = [NSMutableArray array];
+    NSArray *emojis = [NSArray arrayWithContentsOfFile:TUIChatFaceImagePath(@"emoji/emoji.plist")];
+    for (NSDictionary *dic in emojis) {
+        TUIFaceCellData *data = [[TUIFaceCellData alloc] init];
+        NSString *name = [dic objectForKey:@"face_name"];
+        NSString *path = [NSString stringWithFormat:@"emoji/%@", name];
+        NSString *localizableName = [TUIGlobalization g_localizedStringForKey:name bundle:@"TUIChatFace"];
+        data.name = name;
+        data.path = TUIChatFaceImagePath(path);
+        data.localizableName = localizableName;
+        [self addFaceToCache:data.path];
+        [emojiFaces addObject:data];
+    }
+    if(emojiFaces.count != 0){
+        TUIFaceGroup *emojiGroup = [[TUIFaceGroup alloc] init];
+        emojiGroup.faces = emojiFaces;
+        emojiGroup.groupIndex = 0;
+        emojiGroup.groupPath = TUIChatFaceImagePath(@"emoji/");
+        emojiGroup.menuPath = TUIChatFaceImagePath(@"emoji/menu");
+        if(type == emojiFaceTypeKeyBoard) {
+            emojiGroup.rowCount = 3;
+            emojiGroup.itemCountPerRow = 9;
+            emojiGroup.needBackDelete = YES;
+        }
+        else  {
+            emojiGroup.rowCount = 3;
+            emojiGroup.itemCountPerRow = 8;
+            emojiGroup.needBackDelete = NO;
+        }
+
+        [self addFaceToCache:emojiGroup.menuPath];
+        [self addFaceToCache:TUIChatFaceImagePath(@"del_normal")];
+        return emojiGroup;
+    }
+    
+    return nil;
+}
 
 - (void)onChangeTheme
 {

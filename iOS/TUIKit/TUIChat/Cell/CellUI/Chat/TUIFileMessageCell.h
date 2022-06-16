@@ -7,7 +7,7 @@
  ******************************************************************************/
 #import "TUIMessageCell.h"
 #import "TUIFileMessageCellData.h"
-
+#import "TUIBubbleMessageCell.h"
 /**
  * 【模块名称】TUIFileMessageCell
  * 【功能说明】文件消息单元。

@@ -6,7 +6,7 @@
 @protocol TUICameraViewControllerDelegate <NSObject>
 
 - (void)cameraViewController:(TUICameraViewController *)controller didFinishPickingMediaWithVideoURL:(NSURL *)url;
-- (void)cameraViewController:(TUICameraViewController *)controller didFinishPickingMediaWithImage:(UIImage *)image;
+- (void)cameraViewController:(TUICameraViewController *)controller didFinishPickingMediaWithImageData:(NSData *)data;
 - (void)cameraViewControllerDidCancel:(TUICameraViewController *)controller;
 @end
 

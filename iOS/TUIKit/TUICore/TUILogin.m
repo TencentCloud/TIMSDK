@@ -1,8 +1,14 @@
 
 #import "TUILogin.h"
 #import "TUICore.h"
+#import "TUIDefine.h"
 
 @import ImSDK_Plus;
+
+NSString * const TUILoginSuccessNotification = @"TUILoginSuccessNotification";
+NSString * const TUILoginFailNotification = @"TUILoginFailNotification";
+NSString * const TUILogoutSuccessNotification = @"TUILogoutSuccessNotification";
+NSString * const TUILogoutFailNotification = @"TUILogoutFailNotification";
 
 @interface TUILogin () <V2TIMSDKListener>
 
@@ -111,7 +117,11 @@
     self.userSig = userSig;
     self.loginWithInit = NO;
     if ([[[V2TIMManager sharedInstance] getLoginUser] isEqualToString:userID]) {
-        succ();
+        if (succ) {
+            succ();
+        }
+        // 对外通知
+        [NSNotificationCenter.defaultCenter postNotificationName:TUILoginSuccessNotification object:nil];
     } else {
         __weak __typeof(self) weakSelf = self;
         [[V2TIMManager sharedInstance] login:userID userSig:userSig succ:^{
@@ -120,10 +130,14 @@
             if (succ) {
                 succ();
             }
+            // 对外通知
+            [NSNotificationCenter.defaultCenter postNotificationName:TUILoginSuccessNotification object:nil];
         } fail:^(int code, NSString *desc) {
             if (fail) {
                 fail(code, desc);
             }
+            // 对外通知
+            [NSNotificationCenter.defaultCenter postNotificationName:TUILoginFailNotification object:nil];
         }];
     }
 }
@@ -155,6 +169,8 @@
         if (succ) {
             succ();
         }
+        // 对外通知
+        [NSNotificationCenter.defaultCenter postNotificationName:TUILoginSuccessNotification object:nil];
         return;
     }
     __weak __typeof(self) weakSelf = self;
@@ -164,11 +180,15 @@
         if (succ) {
             succ();
         }
+        // 对外通知
+        [NSNotificationCenter.defaultCenter postNotificationName:TUILoginSuccessNotification object:nil];
     } fail:^(int code, NSString *desc) {
         self.loginWithInit = NO;
         if (fail) {
             fail(code, desc);
         }
+        // 对外通知
+        [NSNotificationCenter.defaultCenter postNotificationName:TUILoginFailNotification object:nil];
     }];
 }
 
@@ -197,10 +217,14 @@
             [V2TIMManager.sharedInstance unInitSDK];
             self.sdkAppID = 0;
         }
+        // 对外通知
+        [NSNotificationCenter.defaultCenter postNotificationName:TUILogoutSuccessNotification object:nil];
     } fail:^(int code, NSString *desc) {
         if (fail) {
             fail(code, desc);
         }
+        // 对外通知
+        [NSNotificationCenter.defaultCenter postNotificationName:TUILogoutFailNotification object:nil];
     }];
 }
 
@@ -269,6 +293,7 @@
                 [listener onConnecting];
             }
         }
+        [TUICore notifyEvent:TUICore_NetworkConnection_EVENT_CONNECTION_STATE_CHANGED subKey:TUICore_NetworkConnection_EVENT_SUB_KEY_CONNECTING object:nil param:nil];
     }];
 }
 
@@ -281,6 +306,7 @@
                 [listener onConnectSuccess];
             }
         }
+        [TUICore notifyEvent:TUICore_NetworkConnection_EVENT_CONNECTION_STATE_CHANGED subKey:TUICore_NetworkConnection_EVENT_SUB_KEY_CONNECT_SUCCESS object:nil param:nil];
     }];
 }
 
@@ -293,6 +319,7 @@
                 [listener onConnectFailed:code err:err];
             }
         }
+        [TUICore notifyEvent:TUICore_NetworkConnection_EVENT_CONNECTION_STATE_CHANGED subKey:TUICore_NetworkConnection_EVENT_SUB_KEY_CONNECT_FAILED object:nil param:nil];
     }];
 }
 

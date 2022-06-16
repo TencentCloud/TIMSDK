@@ -13,8 +13,11 @@
  ******************************************************************************/
 #import <UIKit/UIKit.h>
 #import "TUIMessageCellData.h"
-
+#import "TUITagsModel.h"
+#import "TUITagsView.h"
+#import "TUIFitButton.h"
 @class TUIMessageCell;
+
 
 /////////////////////////////////////////////////////////////////////////////////
 //
@@ -73,6 +76,10 @@
  */
 - (void)onSelectReadReceipt:(TUIMessageCellData *)cell;
 
+//点击x人回复按钮 跳转到多人回复详情页
+- (void)onJumpToRepliesDetailPage:(TUIMessageCellData *)data;
+
+- (void)onEmojiClickCallback:(TUIMessageCellData *)data faceName:(NSString *)faceName;
 @end
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -130,6 +137,11 @@
  */
 @property (nonatomic, strong) UIImageView *retryView;
 
+/**
+ *  消息编辑
+ *  x 人回复
+ */
+@property (nonatomic, strong) TUIFitButton *messageModifyRepliesButton;
 /**
  *  信息数据类。
  *  存储了该massageCell中所需的信息。包括发送者 ID，发送者头像、信息发送状态、信息气泡图标等。
@@ -190,4 +202,15 @@
  */
 - (void)updateReadLabelText;
 
+
+
+/**
+ 互动消息React容器视图
+ */
+@property (nonatomic, strong) TUITagsView *tagView;
+
+/**
+ 添加容器视图到container上
+ */
+- (void)prepareReactTagUI:(UIView *)containerView;
 @end

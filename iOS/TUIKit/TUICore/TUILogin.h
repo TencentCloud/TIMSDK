@@ -13,6 +13,15 @@
 typedef void (^TFail)(int code, NSString * msg);
 typedef void (^TSucc)(void);
 
+// 登录成功的通知
+FOUNDATION_EXTERN NSString * const TUILoginSuccessNotification;
+// 登录失败的通知
+FOUNDATION_EXTERN NSString * const TUILoginFailNotification;
+// 登出成功的通知
+FOUNDATION_EXTERN NSString * const TUILogoutSuccessNotification;
+// 登出失败的通知
+FOUNDATION_EXTERN NSString * const TUILogoutFailNotification;
+
 
 @protocol TUILoginListener <NSObject>
 

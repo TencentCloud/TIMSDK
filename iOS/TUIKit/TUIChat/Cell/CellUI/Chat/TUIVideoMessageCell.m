@@ -25,22 +25,21 @@
         _thumb.layer.cornerRadius = 5.0;
         [_thumb.layer setMasksToBounds:YES];
         _thumb.contentMode = UIViewContentModeScaleAspectFit;
-        _thumb.backgroundColor = [UIColor whiteColor];
+        _thumb.backgroundColor = [UIColor clearColor];
         [self.container addSubview:_thumb];
-        _thumb.mm_fill();
         _thumb.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
         CGSize playSize = TVideoMessageCell_Play_Size;
         _play = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, playSize.width, playSize.height)];
         _play.contentMode = UIViewContentModeScaleAspectFit;
         _play.image = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"play_normal")];
-        [self.container addSubview:_play];
+        [_thumb addSubview:_play];
 
 
         _duration = [[UILabel alloc] init];
         _duration.textColor = [UIColor whiteColor];
         _duration.font = [UIFont systemFontOfSize:12];
-        [self.container addSubview:_duration];
+        [_thumb addSubview:_duration];
 
 
         _progress = [[UILabel alloc] init];
@@ -73,6 +72,8 @@
         @strongify(self)
         if (thumbImage) {
             self.thumb.image = thumbImage;
+            [self.duration setFrame:CGRectMake(self.play.frame.origin.x + self.play.frame.size.width - 15, self.thumb.frame.size.height - 20 , 20, 20)];
+            self.duration.mm_sizeToFitThan(20, 20);
         }
     }];
 
@@ -103,8 +104,21 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
+    
+    self.bubbleView.hidden = YES;
+    
+    CGFloat topMargin = 0;
+    CGFloat height = self.container.mm_h;
+    
+    if (self.messageData.messageModifyReactsSize.height > 0) {
+        topMargin = 10;
+        height = (self.container.mm_h - self.messageData.messageModifyReactsSize.height - topMargin);
+        self.bubbleView.hidden = NO;
+    }
+    
+    _thumb.mm_height(height ).mm_left(0).mm_top(topMargin).mm_width(self.container.mm_w);
+
     _play.mm_width(TVideoMessageCell_Play_Size.width).mm_height(TVideoMessageCell_Play_Size.height).mm_center();
-    _duration.mm_sizeToFitThan(20, 20).mm_right(TVideoMessageCell_Margin_3).mm_bottom(TVideoMessageCell_Margin_3);
 }
 
 - (void)highlightWhenMatchKeyword:(NSString *)keyword
@@ -129,9 +143,9 @@
         return;
     }
     self.highlightAnimating = YES;
-    self.animateHighlightView.frame = self.thumb.bounds;
+    self.animateHighlightView.frame = self.container.bounds;
     self.animateHighlightView.alpha = 0.1;
-    [self.thumb addSubview:self.animateHighlightView];
+    [self.container addSubview:self.animateHighlightView];
     [UIView animateWithDuration:0.25 animations:^{
         self.animateHighlightView.alpha = 0.5;
     } completion:^(BOOL finished) {

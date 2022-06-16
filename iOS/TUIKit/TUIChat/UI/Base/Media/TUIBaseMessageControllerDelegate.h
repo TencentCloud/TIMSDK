@@ -110,6 +110,16 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)messageController:(TUIBaseMessageController *)controller onRelyMessage:(TUIMessageCellData *)data;
 
+/**
+ * 引用消息（长按消息内容后点击引用按钮）
+ */
+- (void)messageController:(TUIBaseMessageController *)controller onReferenceMessage:(TUIMessageCellData *)data;
+
+/**
+ * 快速响应消息消息（一般是长按消息内容后点击emoji表情触发）
+ */
+
+- (void)messageController:(TUIBaseMessageController *)controller modifyMessage:(nonnull TUIMessageCellData *)cellData reactEmoji:(NSString *)emojiName;
 
 /**
  * 重新编辑消息（一般用于撤回消息）

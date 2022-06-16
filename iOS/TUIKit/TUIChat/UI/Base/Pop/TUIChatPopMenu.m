@@ -8,7 +8,10 @@
 #import "TUIChatPopMenu.h"
 #import "TUIDefine.h"
 #import "TUIThemeManager.h"
-#define maxColumns 4    // 一排最多放 4 个
+#import "TUIChatPopEmojiView.h"
+#import "TUIChatPopRecentView.h"
+#import "TUIChatPopActionsView.h"
+#define maxColumns 5    // 一排最多放 5 个
 #define kContainerInsets UIEdgeInsetsMake(3, 0, 3, 0)
 #define kActionWidth 54
 #define kActionHeight 65
@@ -16,23 +19,30 @@
 #define kSepartorHeight 0.5
 #define kSepartorLRMargin 10
 #define kArrowSize CGSizeMake(15, 10)
+#define kEmojiHeight 44
 
 @implementation TUIChatPopMenuAction
 
-- (instancetype)initWithTitle:(NSString *)title image:(UIImage *)image callback:(TUIChatPopMenuActionCallback)callback
-{
+- (instancetype)initWithTitle:(NSString *)title
+                        image:(UIImage *)image
+                         rank:(NSInteger)rank
+                     callback:(TUIChatPopMenuActionCallback)callback {
     if (self = [super init]) {
         self.title = title;
         self.image = image;
+        self.rank = rank;
         self.callback = callback;
     }
     return self;
 }
 
+
 @end
 
 
-@interface TUIChatPopMenu () <UIGestureRecognizerDelegate>
+@interface TUIChatPopMenu () <UIGestureRecognizerDelegate,TFaceViewDelegate,TUIChatPopRecentEmojiDelegate>
+
+@property (nonatomic, strong) UIView *emojiContainerView; //emojiRecent视图和emoji二级页视图
 
 @property (nonatomic, strong) UIView *containerView;
  
@@ -45,6 +55,14 @@
 @property (nonatomic, strong) NSMutableDictionary *actionCallback;
 
 @property (nonatomic, strong) CAShapeLayer *arrowLayer;
+
+@property (nonatomic, assign) CGFloat emojiHeight;
+
+@property (nonatomic, strong) TUIChatPopRecentView *emojiRecentView;
+
+@property (nonatomic, strong) TUIChatPopEmojiView *emojiAdvanceView;
+
+@property (nonatomic, strong) TUIChatPopActionsView *actionsView;
 
 @end
 
@@ -77,8 +95,11 @@
         pan.delegate = self;
         [self addGestureRecognizer:tap];
         [self addGestureRecognizer:pan];
+        if ([TUIChatConfig defaultConfig].enablePopMenuEmojiReactAction) {
+            self.emojiHeight = kEmojiHeight;
+        }
         
-        [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(hide) name:UIKeyboardWillChangeFrameNotification object:nil];
+        [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(hideWithAnimation) name:UIKeyboardWillChangeFrameNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onThemeChanged) name:TUIDidApplyingThemeChangedNotfication object:nil];
 
     }
@@ -87,22 +108,48 @@
 
 - (void)onTap:(UIGestureRecognizer *)tap
 {
-    [self hide];
+    [self hideWithAnimation];
 }
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
-{
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    if ([touch.view isDescendantOfView:self.emojiContainerView]) {
+        return NO;
+    }
+    if ([touch.view isDescendantOfView:self.containerView]) {
+        return NO;
+    }
     return YES;
 }
 
-- (void)hide
-{
-    if (self.hideCallback) {
-        self.hideCallback();
-    }
-    [self removeFromSuperview];
+- (void)hideWithAnimation {
+    [UIView animateWithDuration:0.3 animations:^{
+        self.alpha = 0;
+    } completion:^(BOOL finished) {
+        if (finished) {
+            if (self.hideCallback) {
+                self.hideCallback();
+            }
+            [self removeFromSuperview];
+        }
+    }];
 }
 
+- (void)hideByClickButton:(UIButton *)button callback:(void (^ __nullable)(void ))callback {
+    [UIView animateWithDuration:0.3 animations:^{
+        self.alpha = 0;
+    } completion:^(BOOL finished) {
+        if (finished) {
+            if (callback){
+                callback();
+            }
+            if (self.hideCallback) {
+                self.hideCallback();
+            }
+            [self removeFromSuperview];
+        }
+    }];
+    
+}
 - (void)showInView:(UIView *)window
 {
     if (window == nil) {
@@ -117,10 +164,57 @@
 }
 
 - (void)layoutSubview {
+    self.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.layer.shadowRadius = 5;
+    self.layer.shadowOpacity = 0.5;
+    
+    [self updateActionByRank];
+    
+    if ([TUIChatConfig defaultConfig].enablePopMenuEmojiReactAction) {
+        [self prepareEmojiView];
+    }
+    
     [self prepareContainerView];
+    
+    if ([TUIChatConfig defaultConfig].enablePopMenuEmojiReactAction) {
+        [self setupEmojiSubView];
+    }
+    
     [self setupContainerPosition];
+    
+    // 更新子视图的布局
+    [self updateLayout];
+    
 }
 
+- (void)updateActionByRank {
+    NSArray *ageSortResultArray = [self.actions sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+            TUIChatPopMenuAction *per1 = obj1;
+            TUIChatPopMenuAction *per2 = obj2;
+            return per1.rank > per2.rank ? NSOrderedDescending : NSOrderedAscending;
+        }];
+    NSMutableArray *filterArray = [NSMutableArray arrayWithArray:ageSortResultArray];
+    
+    self.actions = [NSMutableArray arrayWithCapacity:10];
+    
+    [filterArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        TUIChatPopMenuAction *per1 = obj;
+        if (per1.rank == 4 ) {
+            if ([TUIChatConfig defaultConfig].enablePopMenuReferenceAction) {
+                [self.actions addObject:per1];
+            }
+        }
+        else if (per1.rank == 5) {
+            if ([TUIChatConfig defaultConfig].enablePopMenuReplyAction) {
+                [self.actions addObject:per1];
+            }
+        }
+        else {
+            [self.actions addObject:per1];
+        }
+    }];
+
+}
 - (void)setupContainerPosition
 {
     // 计算坐标，并修正，默认箭头朝下
@@ -132,10 +226,10 @@
     
     // 默认箭头朝下
     CGFloat containerX = self.arrawPoint.x - 0.5 * containerW;
-    CGFloat containerY = self.arrawPoint.y - kArrowSize.height - containerH - NavBar_Height;
+    CGFloat containerY = self.arrawPoint.y - kArrowSize.height - containerH - StatusBar_Height - self.emojiHeight ;
     BOOL top = NO;     // 箭头朝下
     CGFloat arrawX = 0.5 * containerW;
-    CGFloat arrawY = kArrowSize.height + containerH;
+    CGFloat arrawY = kArrowSize.height + containerH - 1.5;
     
     // 修正纵向
     if (containerY < minTopBottomMargin) {
@@ -149,7 +243,7 @@
         } else {
             // 箭头可以朝上
             top = YES;
-            self.arrawPoint = CGPointMake(self.arrawPoint.x, self.arrawPoint.y + self.adjustHeight - NavBar_Height - 5);
+            self.arrawPoint = CGPointMake(self.arrawPoint.x, self.arrawPoint.y + self.adjustHeight - StatusBar_Height - 5 );
             arrawY = - kArrowSize.height;
             containerY = self.arrawPoint.y + kArrowSize.height;
         }
@@ -174,16 +268,38 @@
             arrawX = containerW - 20;
         }
     }
-
-    self.containerView.frame = CGRectMake(containerX, containerY, containerW, containerH);
     
+    self.emojiContainerView.frame = CGRectMake(containerX, containerY, containerW, MAX(self.emojiHeight + containerH, 200));
+    self.containerView.frame = CGRectMake(containerX, containerY+self.emojiHeight, containerW, containerH);
+    
+
+
     // 绘制 箭头
     self.arrowLayer = [[CAShapeLayer alloc] init];
     self.arrowLayer.path = [self arrawPath:CGPointMake(arrawX, arrawY) directionTop:top].CGPath;
     self.arrowLayer.fillColor = TUIChatDynamicColor(@"chat_pop_menu_bg_color", @"#FFFFFF").CGColor;
-    [self.containerView.layer addSublayer:self.arrowLayer];
+    if (top) {
+        if (self.emojiContainerView) {
+            [self.emojiContainerView.layer addSublayer:self.arrowLayer];
+        }
+        else {
+            [self.containerView.layer addSublayer:self.arrowLayer];
+        }
+    }
+    else {
+        [self.containerView.layer addSublayer:self.arrowLayer];
+    }
 }
 
+- (void)prepareEmojiView {
+    if (self.emojiContainerView) {
+        [self.emojiContainerView removeFromSuperview];
+        self.emojiContainerView = nil;
+    }
+ 
+    self.emojiContainerView = [[UIView alloc] init];
+    [self addSubview:self.emojiContainerView];
+}
 - (void)prepareContainerView
 {
     if (self.containerView) {
@@ -191,22 +307,22 @@
         self.containerView = nil;
     }
     self.containerView = [[UIView alloc] init];
-    self.containerView.backgroundColor = TUIChatDynamicColor(@"chat_pop_menu_bg_color", @"#FFFFFF");
-    self.containerView.layer.shadowColor = [UIColor blackColor].CGColor;
-    self.containerView.layer.shadowRadius = 5;
-    self.containerView.layer.shadowOpacity = 0.5;
-    self.containerView.layer.cornerRadius = 5;
     [self addSubview:self.containerView];
     
+    self.actionsView = [[TUIChatPopActionsView alloc] init];
+    self.actionsView.backgroundColor = TUIChatDynamicColor(@"chat_pop_menu_bg_color", @"#FFFFFF");
+    [self.containerView addSubview:self.actionsView];
+
     int i = 0;
     for (TUIChatPopMenuAction *action in self.actions) {
         UIButton *actionButton = [self buttonWithAction:action tag:[self.actions indexOfObject:action]];
-        [self.containerView addSubview:actionButton];
+        [self.actionsView addSubview:actionButton];
         i++;
         if (i == maxColumns && i < self.actions.count ) {
             UIView *separtorView = [[UIView alloc] init];
             separtorView.backgroundColor =  TUICoreDynamicColor(@"separator_color", @"#39393B");
-            [self.containerView addSubview:separtorView];
+            separtorView.hidden = YES;
+            [self.actionsView addSubview:separtorView];
             i = 0;
         }
     }
@@ -214,23 +330,55 @@
     // 计算当前 container 的宽高
     int rows = (self.actions.count % maxColumns == 0) ? (int)self.actions.count / maxColumns : (int)(self.actions.count / maxColumns) + 1;
     int columns = self.actions.count < maxColumns ? (int)self.actions.count : maxColumns;
+    if ([TUIChatConfig defaultConfig].enablePopMenuEmojiReactAction) {
+        columns = maxColumns ;
+    }
     CGFloat width = kActionWidth * columns + kActionMargin * (columns + 1) + kContainerInsets.left + kContainerInsets.right;
     CGFloat height = kActionHeight * rows + (rows - 1) * kSepartorHeight + kContainerInsets.top + kContainerInsets.bottom;
-    self.containerView.bounds = CGRectMake(0, 0, width, height);
     
-    // 更新子视图的布局
-    [self updateLayout];
+    self.emojiContainerView.frame = CGRectMake(0, 0, width, self.emojiHeight + height);
+    self.containerView.frame = CGRectMake(0, self.emojiHeight, width, height);
 }
 
+- (void)setupEmojiSubView {
+    //表情一级页
+    [self setupEmojiRecentView];
+    //二级页
+    [self setupEmojiAdvanceView];
+}
+- (void)setupEmojiRecentView {
+    self.emojiRecentView = [[TUIChatPopRecentView alloc] initWithFrame:CGRectZero] ;
+    [self.emojiContainerView addSubview:_emojiRecentView];
+    _emojiRecentView.frame = CGRectMake(0, 0, self.emojiContainerView.mm_w, self.emojiHeight);
+    _emojiRecentView.backgroundColor = TUIChatDynamicColor(@"chat_pop_menu_bg_color", @"#FFFFFF");
+    _emojiRecentView.needShowbottomLine = YES;
+    _emojiRecentView.delegate = self;
+}
+- (void)setupEmojiAdvanceView {
+    self.emojiAdvanceView = [[TUIChatPopEmojiView alloc] initWithFrame:CGRectZero] ;
+    [self.emojiContainerView addSubview:_emojiAdvanceView];
+    
+    [_emojiAdvanceView setData:(id)[TUIConfig defaultConfig].chatPopDetailGroups];
+    _emojiAdvanceView.delegate = self;
+    _emojiAdvanceView.alpha = 0;
+    _emojiAdvanceView.faceCollectionView.scrollEnabled = YES;
+    _emojiAdvanceView.faceCollectionView.delaysContentTouches = NO;
+    _emojiAdvanceView.backgroundColor = TUIChatDynamicColor(@"chat_pop_menu_bg_color", @"#FFFFFF");
+    _emojiAdvanceView.faceCollectionView.backgroundColor = _emojiAdvanceView.backgroundColor;
+}
 - (void)updateLayout
 {
+    
+    self.emojiAdvanceView.frame = CGRectMake(0, self.emojiHeight - 0.5, self.emojiContainerView.mm_w ,  TChatEmojiView_CollectionHeight + 10 +  TChatEmojiView_Page_Height  );
+    self.actionsView.frame = CGRectMake(0, -0.5, self.containerView.frame.size.width ,  self.containerView.frame.size.height);
+
     int columns = self.actions.count < maxColumns ? (int)self.actions.count : maxColumns;
     CGFloat containerWidth = kActionWidth * columns + kActionMargin * (columns + 1) + kContainerInsets.left + kContainerInsets.right;
     
     int i = 0;
     int currentRow = 0;
     int currentColumn = 0;
-    for (UIView *subView in self.containerView.subviews) {
+    for (UIView *subView in self.actionsView.subviews) {
         if ([subView isKindOfClass:UIButton.class]) {
             currentRow = i / maxColumns;
             currentColumn = i % maxColumns;
@@ -276,7 +424,13 @@
     [actionButton setTitle:action.title forState:UIControlStateNormal];
     [actionButton setImage:action.image forState:UIControlStateNormal];
     actionButton.contentMode = UIViewContentModeScaleAspectFit;
+    
+
+    [actionButton addTarget:self action:@selector(buttonHighlightedEnter:) forControlEvents:UIControlEventTouchDown];
+    [actionButton addTarget:self action:@selector(buttonHighlightedEnter:) forControlEvents:UIControlEventTouchDragEnter];
+    [actionButton addTarget:self action:@selector(buttonHighlightedExit:) forControlEvents:UIControlEventTouchDragExit];
     [actionButton addTarget:self action:@selector(onClick:) forControlEvents:UIControlEventTouchUpInside];
+
     actionButton.tag = tag;
     
     CGSize imageSize = CGSizeMake(20, 20);
@@ -295,18 +449,31 @@
     return actionButton;
 }
 
+- (void)buttonHighlightedEnter:(UIButton *)sender
+{
+    
+    sender.backgroundColor = TUIChatDynamicColor(@"", @"#006EFF19");
+}
+- (void)buttonHighlightedExit:(UIButton *)sender
+{
+    sender.backgroundColor = [UIColor clearColor];
+}
 - (void)onClick:(UIButton *)button
 {
     if (![self.actionCallback.allKeys containsObject:@(button.tag)]) {
-        [self hide];
+        [self hideWithAnimation];
         return;
     }
     
-    TUIChatPopMenuActionCallback callback = [self.actionCallback objectForKey:@(button.tag)];
-    if (callback) {
-        callback();
-    }
-    [self hide];
+    __weak typeof(self)weakSelf = self;
+    [self hideByClickButton:button callback:^() {
+        __strong typeof(weakSelf)strongSelf = weakSelf;
+        TUIChatPopMenuActionCallback callback = [strongSelf.actionCallback objectForKey:@(button.tag)];
+        if (callback) {
+            callback();
+        }
+    }];
+
 }
 
 - (NSMutableArray *)actions
@@ -336,5 +503,82 @@
     [self applyBorderTheme];
 }
 
+//MARK: TFaceViewDelegate
+- (void)faceView:(TUIFaceView *)faceView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    TUIFaceGroup *group = faceView.faceGroups[indexPath.section];
+    
+    TUIFaceCellData *face = group.faces[indexPath.row];
+    if(indexPath.section == 0){
+        
+        NSString *faceName = face.name;
+        NSLog(@"FaceName:%@",faceName);
+        [self updateRecentMenuQueue:faceName];
+        if (self.reactClickCallback) {
+            self.reactClickCallback(faceName);
+        }
+    }
 
+}
+
+- (NSArray *)getChatPopMenuQueue {
+    NSArray *emojis = [[NSUserDefaults standardUserDefaults] objectForKey:@"TUIChatPopMenuQueue"];
+    if (emojis &&[emojis isKindOfClass:[NSArray class]]) {
+        if (emojis.count > 0) {
+            return emojis;
+        }
+    }
+    return [NSArray  arrayWithContentsOfFile:TUIChatFaceImagePath(@"emoji/emojiRecentDefaultList.plist")];
+}
+- (void)updateRecentMenuQueue:(NSString *)faceName {
+    
+    NSArray *emojis = [self getChatPopMenuQueue];
+    NSMutableArray *muArray = [NSMutableArray arrayWithArray:emojis];
+    
+    BOOL hasInQueue = NO;
+    for (NSDictionary *dic in emojis) {
+        NSString *name = [dic objectForKey:@"face_name"];
+        if ([name isEqualToString:faceName]) {
+            hasInQueue = YES;
+        }
+    }
+    if (hasInQueue) {
+        return;
+    }
+    
+    [muArray removeObjectAtIndex:0];
+    [muArray addObject:@{@"face_name":faceName,
+                         @"face_id":@""
+                       }];
+    [[NSUserDefaults standardUserDefaults] setObject:muArray forKey:@"TUIChatPopMenuQueue"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+}
+
+//MARK: TUIChatPopRecentEmojiDelegate
+- (void)popRecentViewClickArrow:(TUIChatPopRecentView *)faceView{
+    if (faceView.arrowButton.selected) {
+        [self hideDetailPage];
+    }
+    else {
+        [self showDetailPage];
+    }
+    
+}
+- (void)popRecentViewClickface:(TUIChatPopRecentView *)faceView tag:(NSInteger)tag {
+    TUIFaceGroup *group = faceView.faceGroups[0];
+    TUIFaceCellData *face = group.faces[tag];
+    NSString *faceName = face.name;
+    NSLog(@"FaceName:%@",faceName);
+    if (self.reactClickCallback) {
+        self.reactClickCallback(faceName);
+    }
+}
+- (void)showDetailPage {
+    self.containerView.alpha = 0;
+    self.emojiAdvanceView.alpha = 1;
+}
+- (void)hideDetailPage {
+    self.emojiAdvanceView.alpha = 0;
+    self.containerView.alpha = 1;
+}
 @end

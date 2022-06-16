@@ -7,7 +7,7 @@
 
 #import "TUIMessageCellData.h"
 #import "TUIDefine.h"
-
+#import "TUIBubbleMessageCellData.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIMergeMessageCellData : TUIMessageCellData

@@ -26,7 +26,23 @@
     return self;
 }
 
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    CGFloat topMargin = 0;
+    CGFloat height = self.container.mm_h;
+    
+    if (self.messageData.messageModifyReactsSize.height > 0) {
+        topMargin = 10;
+        height = (self.container.mm_h - self.messageData.messageModifyReactsSize.height - topMargin);
+        self.bubbleView.hidden = NO;
+    }
+    else {
+        self.bubbleView.hidden = YES;
+    }
+    _face.mm_height(height ).mm_left(0).mm_top(topMargin).mm_width(self.container.mm_w);
 
+    _face.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+}
 - (void)fillWithData:(TUIFaceMessageCellData *)data
 {
     //set data
