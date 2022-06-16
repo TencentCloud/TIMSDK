@@ -31,14 +31,11 @@ public class TUIConversationService extends ServiceInitializer  implements ITUIC
         return instance;
     }
 
-    private static Context appContext;
-
     private WeakReference<ConversationEventListener> conversationEventListener;
 
     @Override
     public void init(Context context) {
         instance = this;
-        appContext = context;
         initService();
         initEvent();
         initIMListener();
@@ -222,9 +219,5 @@ public class TUIConversationService extends ServiceInitializer  implements ITUIC
             return conversationEventListener.get();
         }
         return null;
-    }
-
-    public static Context getAppContext() {
-        return appContext;
     }
 }

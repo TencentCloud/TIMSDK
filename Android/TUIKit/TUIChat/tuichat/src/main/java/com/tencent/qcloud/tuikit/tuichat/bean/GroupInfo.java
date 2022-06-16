@@ -25,7 +25,6 @@ public class GroupInfo extends ChatInfo {
     private int joinType;
     private String owner;
     private boolean messageReceiveOption;
-    private String faceUrl;
 
     public GroupInfo() {
         setType(V2TIMConversation.V2TIM_GROUP);
@@ -176,14 +175,6 @@ public class GroupInfo extends ChatInfo {
      */
     public void setMessageReceiveOption(boolean messageReceiveOption) {
         this.messageReceiveOption = messageReceiveOption;
-    }
-
-    public String getFaceUrl() {
-        return faceUrl;
-    }
-
-    public void setFaceUrl(String faceUrl) {
-        this.faceUrl = faceUrl;
     }
 
     /**

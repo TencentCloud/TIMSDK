@@ -5,8 +5,8 @@
 
     <ImageView
         android:id="@+id/face_image"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_gravity="center_horizontal"
+        android:layout_width="28.32dp"
+        android:layout_height="28.32dp"
+        android:layout_gravity="center"
         android:scaleType="fitCenter" />
 </FrameLayout>

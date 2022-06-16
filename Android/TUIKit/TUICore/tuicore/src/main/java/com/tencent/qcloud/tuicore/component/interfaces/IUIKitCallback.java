@@ -5,9 +5,12 @@ package com.tencent.qcloud.tuicore.component.interfaces;
  */
 public abstract class IUIKitCallback<T> {
 
-    public abstract void onSuccess(T data);
+    public void onSuccess(T data) {};
 
-    public abstract void onError(String module, int errCode, String errMsg);
+    public void onError(String module, int errCode, String errMsg) {}
 
-    public void onProgress(Object data) {};
+    public void onError(int errCode, String errMsg, T data) {}
+
+    public void onProgress(Object data) {}
+
 }

@@ -1,16 +1,20 @@
 package com.tencent.qcloud.tuikit.tuichat.util;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
+import android.content.pm.ApplicationInfo;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.webkit.MimeTypeMap;
 
 import com.tencent.qcloud.tuikit.tuichat.component.imagevideoscan.ImageVideoScanPresenter;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -19,98 +23,213 @@ import java.io.InputStream;
 
 public class FileUtil {
     private static final String TAG = ImageVideoScanPresenter.class.getSimpleName();
-    //在picture目录下新建一个自己文件夹
-    public static final String rootPath =
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/im";
+
+    public static boolean saveVideoToGallery(Context context, String videoPath) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            return saveVideoToGalleryByMediaStore(context, videoPath);
+        } else {
+            return saveVideoToGalleryByFile(context, videoPath);
+        }
+    }
+
+    public static boolean saveImageToGallery(Context context, String videoPath) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            return saveImageToGalleryByMediaStore(context, videoPath);
+        } else {
+            return saveImageToGalleryByFile(context, videoPath);
+        }
+    }
 
 
-    //保存文件到指定路径
-    public static boolean saveImageToGallery(Context context, Bitmap bmp) {
-        if (bmp == null) {
-            TUIChatLog.e(TAG, "src is null");
+    public static boolean saveVideoToGalleryByMediaStore(Context context, String videoPath) {
+        if (TextUtils.isEmpty(videoPath) || context == null) {
+            TUIChatLog.e(TAG, "param invalid");
             return false;
         }
 
-        // 首先保存图片
-        File appDir = new File(rootPath);
-        if (!appDir.exists()) {
-            appDir.mkdir();
+        String videoFileName = getFileName(videoPath);
+        String videoMimeType = getMimeType(videoPath);
+        final long now = System.currentTimeMillis();
+
+        ContentValues videoImageValues = new ContentValues();
+        videoImageValues.put(MediaStore.Video.Media.DATE_ADDED, now / 1000);
+        videoImageValues.put(MediaStore.Video.Media.DATE_MODIFIED, now / 1000);
+        videoImageValues.put(MediaStore.Video.Media.DISPLAY_NAME,videoFileName);
+        videoImageValues.put(MediaStore.Video.Media.MIME_TYPE, videoMimeType);
+        // insert to gallery
+        Uri videoExternalContentUri = MediaStore.Video.Media
+                .getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
+        videoImageValues.put(MediaStore.Video.Media.IS_PENDING, 1);
+        videoImageValues.put(MediaStore.Video.Media.RELATIVE_PATH, Environment.DIRECTORY_MOVIES + "/" + getAppName(context) + "/");
+
+        ContentResolver resolver = context.getContentResolver();
+        Uri uri = resolver.insert(videoExternalContentUri, videoImageValues);
+        if (uri == null) {
+            return false;
         }
-        String fileName = System.currentTimeMillis() + ".jpg";
-        File file = new File(appDir, fileName);
+        // got permission, write file to public media dir
+        boolean saveSuccess = saveFileToUri(resolver, uri, videoPath);
+        if (!saveSuccess) {
+            resolver.delete(uri, null, null);
+            return false;
+        }
+        videoImageValues.clear();
+        videoImageValues.put(MediaStore.Images.Media.IS_PENDING, 0);
+        resolver.update(uri, videoImageValues, null, null);
+
+        // update system gallery
+        MediaScannerConnection.scanFile(context, new String[]{uri.toString()}, new String[]{videoMimeType}, null);
+        return true;
+    }
+
+    public static boolean saveVideoToGalleryByFile(Context context, String videoPath) {
+        String videoDirPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES) + "/" + getAppName(context) + "/";
+        File dir = new File(videoDirPath);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        String videoName = getFileName(videoPath);
+        String outputPath = videoDirPath + videoName;
+        File outputFile = new File(outputPath);
+        if (outputFile.exists()) {
+            outputFile.delete();
+        }
+        boolean isSuccess = saveFileFromPath(outputFile, videoPath);
+        if (!isSuccess) {
+            return false;
+        }
+        String videoMimeType = getMimeType(videoPath);
+        MediaScannerConnection.scanFile(context, new String[]{outputPath}, new String[]{videoMimeType}, null);
+        return true;
+    }
+
+    public static boolean saveImageToGalleryByMediaStore(Context context, String imagePath) {
+        if (TextUtils.isEmpty(imagePath) || context == null) {
+            TUIChatLog.e(TAG, "param invalid");
+            return false;
+        }
+
+        String imageFileName = getFileName(imagePath);
+        String imageMimeType = getMimeType(imagePath);
+        final long now = System.currentTimeMillis();
+
+        ContentValues newImageValues = new ContentValues();
+        newImageValues.put(MediaStore.Images.Media.DATE_ADDED, now / 1000);
+        newImageValues.put(MediaStore.Images.Media.DATE_MODIFIED, now / 1000);
+        newImageValues.put(MediaStore.Images.Media.DISPLAY_NAME,imageFileName);
+        newImageValues.put(MediaStore.Images.Media.MIME_TYPE, imageMimeType);
+        // insert to gallery
+        Uri imageExternalContentUri = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
+        newImageValues.put(MediaStore.Images.Media.IS_PENDING, 1);
+        newImageValues.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + "/" + getAppName(context) + "/");
+
+        ContentResolver resolver = context.getContentResolver();
+        Uri uri = resolver.insert(imageExternalContentUri, newImageValues);
+        if (uri == null) {
+            return false;
+        }
+        // got permission, write file to public media dir
+        boolean saveSuccess = saveFileToUri(resolver, uri, imagePath);
+        if (!saveSuccess) {
+            resolver.delete(uri, null, null);
+            return false;
+        }
+        newImageValues.clear();
+        newImageValues.put(MediaStore.Images.Media.IS_PENDING, 0);
+        resolver.update(uri, newImageValues, null, null);
+
+        // update system gallery
+        MediaScannerConnection.scanFile(context, new String[]{uri.toString()}, new String[]{imageMimeType}, null);
+        return true;
+    }
+
+    public static boolean saveImageToGalleryByFile(Context context, String imagePath) {
+        String imageDirPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/" + getAppName(context) + "/";
+        File dir = new File(imageDirPath);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        String imageName = getFileName(imagePath);
+        String outputPath = imageDirPath + imageName;
+        if (!outputPath.endsWith(".jpg")) {
+            outputPath += ".jpg";
+        }
+        File outputFile = new File(outputPath);
+        if (outputFile.exists()) {
+            outputFile.delete();
+        }
+        boolean isSuccess = saveFileFromPath(outputFile, imagePath);
+        if (!isSuccess) {
+            return false;
+        }
+        String imageMimeType = getMimeType(imagePath);
+        MediaScannerConnection.scanFile(context, new String[]{outputPath}, new String[]{imageMimeType}, null);
+        return true;
+    }
+
+    public static String getMimeType(String filePath) {
+        String fileExtension = com.tencent.qcloud.tuicore.util.FileUtil.getFileExtensionFromUrl(filePath);
+        return MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension);
+    }
+
+    public static String getFileName(String path) {
+        int filenamePos = path.lastIndexOf('/');
+        return 0 <= filenamePos ? path.substring(filenamePos + 1) : path;
+    }
+
+    public static boolean saveFileToUri(ContentResolver contentResolver, Uri destinationUri, String srcPath) {
+        InputStream is = null;
+        BufferedOutputStream bos = null;
         try {
-            FileOutputStream fos = new FileOutputStream(file);
-            //通过io流的方式来压缩保存图片
-            boolean isSuccess = bmp.compress(Bitmap.CompressFormat.JPEG, 60, fos);
-            fos.flush();
-            fos.close();
+            bos = new BufferedOutputStream(contentResolver.openOutputStream(destinationUri));
+            is = new FileInputStream(srcPath);
+            byte[] buf = new byte[1024];
 
-            //把文件插入到系统图库
-            MediaStore.Images.Media.insertImage(context.getContentResolver(), file.getAbsolutePath(), fileName, null);
-
-            //保存图片后发送广播通知更新数据库
-            Uri uri = Uri.fromFile(file);
-            context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri));
-            if (isSuccess) {
-                return true;
-            } else {
-                return false;
+            int actualBytes;
+            while ((actualBytes = is.read(buf)) != -1) {
+                bos.write(buf, 0, actualBytes);
             }
         } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-    
-    public static void saveFileToAlbum(Context context, String srcString) {
-        if (TextUtils.isEmpty(srcString)) {
-            TUIChatLog.e(TAG, "srcString is null");
-            return;
-        }
-        File srcFile = new File(srcString);
-        if (!srcFile.exists()) {
-            TUIChatLog.e(TAG, "srcFile is null");
-            return;
-        }
-        //如果root文件夹没有需要新建一个
-        createDirIfNotExist();
-
-        //拷贝文件到picture目录下
-        File destFile = new File(rootPath + "/" + srcFile.getName());
-        copyFile(srcFile, destFile);
-
-        //将该文件扫描到相册
-        MediaScannerConnection.scanFile(context, new String[] { destFile.getPath() }, null, null);
-    }
-
-    public static void createDirIfNotExist() {
-        File file = new File(rootPath);
-        if (!file.exists()) {
+            return false;
+        } finally {
             try {
-                file.mkdirs();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public static void copyFile(File src, File dest) {
-        if (!src.getAbsolutePath().equals(dest.getAbsolutePath())) {
-            try {
-                InputStream in = new FileInputStream(src);
-                FileOutputStream out = new FileOutputStream(dest);
-                byte[] buf = new byte[1024];
-
-                int len;
-                while ((len = in.read(buf)) >= 0) {
-                    out.write(buf, 0, len);
-                }
-                in.close();
-                out.close();
+                if (is != null) is.close();
+                if (bos != null) bos.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+        return true;
+    }
+
+    public static boolean saveFileFromPath(File desFile, String srcFilePath) {
+        InputStream is = null;
+        BufferedOutputStream bos = null;
+        try {
+            bos = new BufferedOutputStream(new FileOutputStream(desFile));
+            is = new FileInputStream(srcFilePath);
+            byte[] buf = new byte[1024];
+
+            int actualBytes;
+            while ((actualBytes = is.read(buf)) != -1) {
+                bos.write(buf, 0, actualBytes);
+            }
+        } catch (IOException e) {
+            return false;
+        } finally {
+            try {
+                if (is != null) is.close();
+                if (bos != null) bos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return true;
+    }
+
+    private static String getAppName(Context context) {
+        ApplicationInfo applicationInfo = context.getApplicationInfo();
+        return String.valueOf(context.getPackageManager().getApplicationLabel(applicationInfo));
     }
 
 }

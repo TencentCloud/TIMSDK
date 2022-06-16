@@ -6,8 +6,6 @@ import android.content.Context;
 import android.os.Build;
 
 import com.heytap.msp.push.callback.ICallBackResultService;
-import com.tencent.qcloud.tim.tuiofflinepush.TUIOfflinePushManager;
-import com.tencent.qcloud.tim.tuiofflinepush.PushSetting;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushLog;
 
 public class OPPOPushImpl implements ICallBackResultService {
@@ -18,11 +16,9 @@ public class OPPOPushImpl implements ICallBackResultService {
     public void onRegister(int responseCode, String registerID) {
         TUIOfflinePushLog.i(TAG, "onRegister responseCode: " + responseCode + " registerID: " + registerID);
 
-        if (PushSetting.isTPNSChannel) {
-            return;
+        if (OEMPushSetting.mPushCallback != null) {
+            OEMPushSetting.mPushCallback.onTokenCallback(registerID);
         }
-
-        TUIOfflinePushManager.getInstance().setPushTokenToTIM(registerID);
     }
 
     @Override
@@ -43,6 +39,11 @@ public class OPPOPushImpl implements ICallBackResultService {
     @Override
     public void onGetNotificationStatus(int responseCode, int status) {
         TUIOfflinePushLog.i(TAG, "onGetNotificationStatus responseCode: " + responseCode + " status: " + status);
+    }
+
+    @Override
+    public void onError(int i, String s) {
+        TUIOfflinePushLog.i(TAG, "onError code: " + i + " string: " + s);
     }
 
     public void createNotificationChannel(Context context) {

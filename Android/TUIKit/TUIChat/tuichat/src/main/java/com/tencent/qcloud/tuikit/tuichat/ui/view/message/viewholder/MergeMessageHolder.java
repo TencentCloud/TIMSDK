@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuicore.TUICore;
@@ -37,24 +38,23 @@ public class MergeMessageHolder extends MessageContentHolder{
         if (msg == null){
             return;
         }
-
-        if (isForwardMode) {
-            msgContentFrame.setBackgroundResource(R.drawable.chat_bubble_other_cavity_bg);
+        reactView.setThemeColorId(TUIThemeManager.getAttrResId(reactView.getContext(), R.attr.chat_react_other_text_color));
+        if (isForwardMode || isReplyDetailMode) {
+            msgArea.setBackgroundResource(R.drawable.chat_bubble_other_cavity_bg);
             statusImage.setVisibility(View.GONE);
         } else {
             //// 聊天气泡设置
             if (msg.isSelf()) {
                 if (properties.getRightBubble() != null && properties.getRightBubble().getConstantState() != null) {
-                    msgContentFrame.setBackground(properties.getRightBubble().getConstantState().newDrawable());
+                    msgArea.setBackground(properties.getRightBubble().getConstantState().newDrawable());
                 } else {
-                    msgContentFrame.setBackgroundResource(R.drawable.chat_bubble_self_cavity_bg);
+                    msgArea.setBackgroundResource(R.drawable.chat_bubble_self_cavity_bg);
                 }
             } else {
                 if (properties.getLeftBubble() != null && properties.getLeftBubble().getConstantState() != null) {
-                    msgContentFrame.setBackground(properties.getLeftBubble().getConstantState().newDrawable());
-                    msgContentFrame.setLayoutParams(msgContentFrame.getLayoutParams());
+                    msgArea.setBackground(properties.getLeftBubble().getConstantState().newDrawable());
                 } else {
-                    msgContentFrame.setBackgroundResource(R.drawable.chat_bubble_other_cavity_bg);
+                    msgArea.setBackgroundResource(R.drawable.chat_bubble_other_cavity_bg);
                 }
             }
         }
@@ -87,7 +87,9 @@ public class MergeMessageHolder extends MessageContentHolder{
         mForwardMsgLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                onItemClickListener.onMessageLongClick(v, position, msg);
+                if (onItemClickListener != null) {
+                    onItemClickListener.onMessageLongClick(v, position, msg);
+                }
                 return true;
             }
         });
@@ -97,9 +99,12 @@ public class MergeMessageHolder extends MessageContentHolder{
             public void onClick(View view) {
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(TUIChatConstants.FORWARD_MERGE_MESSAGE_KEY, msg);
+                bundle.putSerializable(TUIChatConstants.CHAT_INFO, presenter.getChatInfo());
                 TUICore.startActivity("TUIForwardChatActivity", bundle);
             }
         });
+        
+        setMessageAreaPadding();
     }
 
 }

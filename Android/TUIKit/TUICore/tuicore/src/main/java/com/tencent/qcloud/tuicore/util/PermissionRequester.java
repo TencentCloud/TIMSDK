@@ -55,6 +55,7 @@ public final class PermissionRequester {
     private static Context applicationContext;
     private SimpleCallback mSimpleCallback;
     private FullCallback mFullCallback;
+    private PermissionDialogCallback mDialogCallback;
     private Set<String> mPermissions;
     private List<String> mPermissionsRequest;
     private String mCurrentRequestPermission;
@@ -219,6 +220,11 @@ public final class PermissionRequester {
         return this;
     }
 
+    public PermissionRequester permissionDialogCallback(PermissionDialogCallback callback) {
+        mDialogCallback = callback;
+        return this;
+    }
+
     /**
      * 已经有权限则直接回调，否则启动权限申请 Activity 去申请权限
      */
@@ -305,15 +311,24 @@ public final class PermissionRequester {
             showPermissionDialog(activity, new PermissionDialogCallback() {
                 @Override
                 public void onApproved() {
+                    if (mDialogCallback != null) {
+                        mDialogCallback.onApproved();
+                    }
+                    mDialogCallback = null;
                     launchAppDetailsSettings();
                 }
 
                 @Override
                 public void onRefused() {
+                    if (mDialogCallback != null) {
+                        mDialogCallback.onRefused();
+                    }
+                    mDialogCallback = null;
                 }
             });
         } else {
             isRequesting = false;
+            mDialogCallback = null;
             activity.finish();
         }
 
@@ -408,7 +423,7 @@ public final class PermissionRequester {
 
             if (instance.mPermissionsRequest != null) {
                 instance.onRequestPermissionsResult(this);
-                if (!instance.mPermissionsDenied.isEmpty()) {
+                if (instance.mPermissionsDenied != null && !instance.mPermissionsDenied.isEmpty()) {
                     isDenied = true;
                 }
             }
@@ -551,8 +566,8 @@ public final class PermissionRequester {
 
         if (TextUtils.isEmpty(deniedAlert)) {
             isRequesting = false;
-            callback.onRefused();
             activity.finish();
+            callback.onRefused();
             return;
         }
 
@@ -581,8 +596,8 @@ public final class PermissionRequester {
             public void onClick(View v) {
                 isRequesting = false;
                 permissionTipDialog.cancel();
-                callback.onApproved();
                 activity.finish();
+                callback.onApproved();
             }
         });
 
@@ -591,8 +606,8 @@ public final class PermissionRequester {
             public void onClick(View v) {
                 isRequesting = false;
                 permissionTipDialog.cancel();
-                callback.onRefused();
                 activity.finish();
+                callback.onRefused();
             }
         });
         permissionTipDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
@@ -602,6 +617,7 @@ public final class PermissionRequester {
                     isRequesting = false;
                     permissionTipDialog.cancel();
                     activity.finish();
+                    callback.onRefused();
                 }
                 return false;
             }
@@ -617,7 +633,7 @@ public final class PermissionRequester {
         dialogWindow.setAttributes(layoutParams);
     }
 
-    interface PermissionDialogCallback{
+    public interface PermissionDialogCallback{
         void onApproved();
         void onRefused();
     }

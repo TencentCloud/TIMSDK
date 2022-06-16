@@ -21,6 +21,12 @@ public class TUIChatUtils {
         }
     }
 
+    public static <T> void callbackOnError(IUIKitCallback<T> callBack, int errCode, String desc, T data) {
+        if (callBack != null) {
+            callBack.onError(errCode, ErrorMessageConverter.convertIMError(errCode, desc), data);
+        }
+    }
+
     public static <T> void callbackOnError(IUIKitCallback<T> callBack, int errCode, String desc) {
         if (callBack != null) {
             callBack.onError(null, errCode, ErrorMessageConverter.convertIMError(errCode, desc));

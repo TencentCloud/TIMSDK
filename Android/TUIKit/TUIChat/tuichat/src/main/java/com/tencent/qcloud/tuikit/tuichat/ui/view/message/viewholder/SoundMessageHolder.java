@@ -4,15 +4,12 @@ import android.graphics.drawable.AnimationDrawable;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
-import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
@@ -24,9 +21,6 @@ import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import java.io.File;
 
 public class SoundMessageHolder extends MessageContentHolder {
-
-    private static final int AUDIO_MIN_WIDTH = ScreenUtil.getPxByDp(60);
-    private static final int AUDIO_MAX_WIDTH = ScreenUtil.getPxByDp(250);
 
     private static final int UNREAD = 0;
     private static final int READ = 1;
@@ -51,29 +45,13 @@ public class SoundMessageHolder extends MessageContentHolder {
     @Override
     public void layoutVariableViews(final TUIMessageBean msg, final int position) {
         SoundMessageBean message = (SoundMessageBean) msg;
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.addRule(RelativeLayout.CENTER_VERTICAL);
         if (message.isSelf()) {
-            int selfTextColorResId = TUIThemeManager.getAttrResId(audioTimeText.getContext(), R.attr.chat_self_msg_text_color);
-            int selfTextColor = audioTimeText.getResources().getColor(selfTextColorResId);
-            audioTimeText.setTextColor(selfTextColor);
-
-            params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-            params.rightMargin = 24;
             audioPlayImage.setImageResource(R.drawable.voice_msg_playing_3);
             audioPlayImage.setRotation(180f);
             audioContentView.removeView(audioPlayImage);
             audioContentView.addView(audioPlayImage);
             unreadAudioText.setVisibility(View.GONE);
         } else {
-            int otherTextColorResId = TUIThemeManager.getAttrResId(audioTimeText.getContext(), R.attr.chat_other_msg_text_color);
-            int otherTextColor = audioTimeText.getResources().getColor(otherTextColorResId);
-            audioTimeText.setTextColor(otherTextColor);
-
-            params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-            params.leftMargin = 24;
-
             audioPlayImage.setImageResource(R.drawable.voice_msg_playing_3);
             audioContentView.removeView(audioPlayImage);
             audioContentView.addView(audioPlayImage, 0);
@@ -87,19 +65,22 @@ public class SoundMessageHolder extends MessageContentHolder {
                 unreadAudioText.setVisibility(View.GONE);
             }
         }
-        audioContentView.setLayoutParams(params);
 
         int duration = (int) message.getDuration();
         if (duration == 0) {
             duration = 1;
         }
 
-        ViewGroup.LayoutParams audioParams = msgContentFrame.getLayoutParams();
-        audioParams.width = AUDIO_MIN_WIDTH + ScreenUtil.getPxByDp(duration * 6);
-        if (audioParams.width > AUDIO_MAX_WIDTH) {
-            audioParams.width = AUDIO_MAX_WIDTH;
+        if (isReplyDetailMode || isForwardMode || !msg.isSelf()) {
+            int otherTextColorResId = TUIThemeManager.getAttrResId(audioTimeText.getContext(), R.attr.chat_other_msg_text_color);
+            int otherTextColor = audioTimeText.getResources().getColor(otherTextColorResId);
+            audioTimeText.setTextColor(otherTextColor);
+        } else {
+            int selfTextColorResId = TUIThemeManager.getAttrResId(audioTimeText.getContext(), R.attr.chat_self_msg_text_color);
+            int selfTextColor = audioTimeText.getResources().getColor(selfTextColorResId);
+            audioTimeText.setTextColor(selfTextColor);
         }
-        msgContentFrame.setLayoutParams(audioParams);
+
         audioTimeText.setText(duration + "''");
         msgContentFrame.setOnClickListener(new View.OnClickListener() {
             @Override

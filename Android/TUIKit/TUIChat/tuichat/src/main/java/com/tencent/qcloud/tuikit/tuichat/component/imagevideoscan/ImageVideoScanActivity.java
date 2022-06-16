@@ -1,6 +1,7 @@
 package com.tencent.qcloud.tuikit.tuichat.component.imagevideoscan;
 
 import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -10,7 +11,6 @@ import android.widget.ImageView;
 import androidx.recyclerview.widget.OrientationHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.tencent.qcloud.tuicore.util.PermissionRequester;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
@@ -55,17 +55,21 @@ public class ImageVideoScanActivity extends Activity {
             @Override
             public void onClick(View view) {
                 TUIChatLog.d(TAG, "onClick");
-                PermissionHelper.requestPermission(PermissionHelper.PERMISSION_STORAGE, new PermissionHelper.PermissionCallback() {
-                    @Override
-                    public void onGranted() {
-                        mImageVideoScanPresenter.saveLocal(ImageVideoScanActivity.this);
-                    }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    mImageVideoScanPresenter.saveLocal(ImageVideoScanActivity.this);
+                } else {
+                    PermissionHelper.requestPermission(PermissionHelper.PERMISSION_STORAGE, new PermissionHelper.PermissionCallback() {
+                        @Override
+                        public void onGranted() {
+                            mImageVideoScanPresenter.saveLocal(ImageVideoScanActivity.this);
+                        }
 
-                    @Override
-                    public void onDenied() {
-                        ToastUtil.toastShortMessage("图片保存失败，请检查权限设置");
-                    }
-                });
+                        @Override
+                        public void onDenied() {
+                            ToastUtil.toastShortMessage(getString(R.string.save_failed));
+                        }
+                    });
+                }
             }
         });
 

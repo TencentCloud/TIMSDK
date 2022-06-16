@@ -1,37 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/audio_content_ll"
     android:layout_width="wrap_content"
-    android:layout_height="37dp"
-    android:minWidth="@dimen/item_width">
+    android:layout_height="wrap_content"
+    android:layout_centerVertical="true"
+    android:orientation="horizontal">
 
-    <LinearLayout
-        android:id="@+id/audio_content_ll"
-        android:layout_width="100dp"
+    <TextView
+        android:id="@+id/audio_time_tv"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:orientation="horizontal">
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:textColor="#000000"
+        android:textSize="14.5sp" />
 
-        <TextView
-            android:id="@+id/audio_time_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:textColor="#000000"
-            android:textSize="14.5sp" />
+    <ImageView
+        android:id="@+id/audio_play_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/voice_msg_playing_3" />
 
-        <ImageView
-            android:id="@+id/audio_play_iv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="2dp"
-            android:layout_marginRight="2dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/voice_msg_playing_3" />
+</LinearLayout>
 
-    </LinearLayout>
-
-</RelativeLayout>

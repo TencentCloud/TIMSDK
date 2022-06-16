@@ -1,21 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/menu_content_layout"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal"
     android:orientation="vertical">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/chat_pop_menu_content_view"
+        android:id="@+id/recent_faces"
+        android:layout_marginLeft="20.16dp"
+        android:layout_marginRight="20.16dp"
+        android:layout_marginTop="9.13dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="16.32dp"
-        android:paddingRight="16.32dp"
-        android:paddingBottom="18dp"
-        android:paddingTop="18dp"
-        android:background="@color/transparent" />
+        android:layout_height="42.24dp"/>
 
-</FrameLayout>
+    <View
+        android:id="@+id/divide_line"
+        android:layout_width="match_parent"
+        android:layout_height="0.96dp"
+        android:layout_marginLeft="20.16dp"
+        android:layout_marginRight="20.16dp"
+        android:background="#E5E5E5"/>
+
+    <LinearLayout
+        android:id="@+id/face_grid_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="20.16dp"
+        android:layout_marginRight="20.16dp"
+        android:layout_marginBottom="7.44dp"
+        android:layout_marginTop="7.44dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/face_grid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <com.tencent.qcloud.tuikit.tuichat.component.face.EmojiIndicatorView
+            android:id="@+id/face_indicator"
+            android:layout_marginTop="7.44dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center" />
+
+    </LinearLayout>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chat_pop_menu_content_view"
+        android:layout_marginLeft="3.84dp"
+        android:layout_marginRight="3.84dp"
+        android:layout_marginTop="3.84dp"
+        android:layout_marginBottom="3.84dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>
 

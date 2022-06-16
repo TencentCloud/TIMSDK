@@ -209,7 +209,7 @@ public class TUIThemeManager {
         return currentLanguage;
     }
 
-    private Locale getLocale(Context context) {
+    public Locale getLocale(Context context) {
         Locale locale;
 
         if (TUIBuild.getVersionInt() < Build.VERSION_CODES.N) {

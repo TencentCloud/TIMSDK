@@ -15,11 +15,8 @@ import java.util.Map;
 public class TUISearchService extends ServiceInitializer implements ITUISearchService {
     public static final String TAG = TUISearchService.class.getSimpleName();
 
-    private static Context appContext;
-
     @Override
     public void init(Context context) {
-        appContext = context;
         initExtension();
     }
 
@@ -44,9 +41,5 @@ public class TUISearchService extends ServiceInitializer implements ITUISearchSe
             }
         }
         return result;
-    }
-
-    public static Context getAppContext() {
-        return appContext;
     }
 }

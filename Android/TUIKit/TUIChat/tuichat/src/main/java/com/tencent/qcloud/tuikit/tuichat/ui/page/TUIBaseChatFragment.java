@@ -111,7 +111,7 @@ public class TUIBaseChatFragment extends BaseFragment {
                 }
 
                 Bundle bundle = new Bundle();
-                bundle.putString("chatId", message.getSender());
+                bundle.putString(TUIConstants.TUIChat.CHAT_ID, message.getSender());
                 TUICore.startActivity("FriendProfileActivity", bundle);
 
             }
@@ -155,9 +155,6 @@ public class TUIBaseChatFragment extends BaseFragment {
 
             @Override
             public void onTextSelected(View view, int position, TUIMessageBean messageInfo) {
-                if (messageInfo instanceof  TextMessageBean) {
-                    TUIChatLog.d(TAG, "chatfragment onTextSelected selectedText = " + ((TextMessageBean) messageInfo).getSelectText());
-                }
                 chatView.getMessageLayout().setSelectedPosition(position);
                 chatView.getMessageLayout().showItemPopMenu(position - 1, messageInfo, view);
             }

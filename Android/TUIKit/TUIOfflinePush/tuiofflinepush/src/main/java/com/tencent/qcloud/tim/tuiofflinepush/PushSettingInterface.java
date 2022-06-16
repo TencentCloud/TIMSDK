@@ -6,7 +6,7 @@ public interface PushSettingInterface {
     /**
      *  注册离线推送服务, IM 账号登录成功时调用
      */
-    void init(Context context);
+    void initPush(Context context);
     /**
      *  TPNS 接口
      *
@@ -24,5 +24,10 @@ public interface PushSettingInterface {
      *
      *  反注册离线推送服务取消推送，TPNS 通道登出账号或者账号被踢下线时调用
      */
-    void unInit(Context context);
+    void unInitPush(Context context);
+
+    /**
+     *  推送回调接口
+     */
+    void setPushCallback(TUIOfflinePushManager.PushCallback callback);
 }

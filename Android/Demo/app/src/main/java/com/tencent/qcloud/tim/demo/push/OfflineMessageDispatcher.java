@@ -14,11 +14,15 @@ import com.tencent.qcloud.tim.demo.utils.BrandUtil;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 
+import java.util.Map;
+import java.util.Set;
+
 public class OfflineMessageDispatcher {
 
     private static final String TAG = OfflineMessageDispatcher.class.getSimpleName();
     private static final String OEMMessageKey = "ext";
     private static final String TPNSMessageKey = "customContent";
+    private static final String XIAOMIMessageKey = "key_message";
 
     public static OfflineMessageBean parseOfflineMessage(Intent intent) {
         DemoLog.i(TAG, "intent: " + intent);
@@ -42,12 +46,51 @@ public class OfflineMessageDispatcher {
             String ext = bundle.getString(OEMMessageKey);
             DemoLog.i(TAG, "push custom data ext: " + ext);
             if (TextUtils.isEmpty(ext)) {
+                if (BrandUtil.isBrandXiaoMi()) {
+                    ext = getXiaomiMessage(bundle);
+                    return getOfflineMessageBeanFromContainer(ext);
+                } else if (BrandUtil.isBrandOppo()) {
+                    ext = getOPPOMessage(bundle);
+                    return getOfflineMessageBean(ext);
+                }
                 DemoLog.i(TAG, "ext is null");
                 return null;
             } else {
                 return getOfflineMessageBeanFromContainer(ext);
             }
         }
+    }
+
+    private static String getXiaomiMessage(Bundle bundle) {
+        Map extra = null;
+        try {
+            Object objectMessage = bundle.getSerializable(XIAOMIMessageKey);
+            extra = (Map) objectMessage.getClass().getMethod("getExtra").invoke(objectMessage);
+        } catch (Exception e) {
+            DemoLog.e(TAG, "getXiaomiMessage e = " + e);
+        }
+
+        if (extra == null) {
+            DemoLog.e(TAG, "getXiaomiMessage is null");
+            return "";
+        }
+
+        DemoLog.i(TAG, "getXiaomiMessage ext: " + extra.get("ext").toString());
+        return extra.get("ext").toString();
+    }
+
+    private static String getOPPOMessage(Bundle bundle) {
+        Set<String> set = bundle.keySet();
+        if (set != null) {
+            for (String key : set) {
+                Object value = bundle.get(key);
+                DemoLog.i(TAG, "push custom data key: " + key + " value: " + value);
+                if (TextUtils.equals("entity", key)) {
+                    return value.toString();
+                }
+            }
+        }
+        return null;
     }
 
     private static OfflineMessageBean parseOfflineMessageTPNS(Intent intent) {

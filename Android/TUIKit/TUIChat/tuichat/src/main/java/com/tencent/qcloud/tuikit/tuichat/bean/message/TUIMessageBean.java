@@ -7,7 +7,12 @@ import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
+import com.tencent.qcloud.tuikit.tuichat.bean.MessageReactBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.MessageReceiptInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.MessageRepliesBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TUIReplyQuoteBean;
+import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
+import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
 
 import java.io.Serializable;
 
@@ -62,24 +67,46 @@ public abstract class TUIMessageBean implements Serializable {
      private boolean isGroup;
      private int status;
      private int downloadStatus;
+     private String selectText;
 
-     private long readCount = 0;
-     private long unreadCount = 1;
+     private MessageReceiptInfo messageReceiptInfo;
+     private MessageRepliesBean messageRepliesBean;
+     private MessageReactBean messageReactBean;
 
-     public void setReadCount(long readCount) {
-          this.readCount = readCount;
+     public MessageReactBean getMessageReactBean() {
+          return messageReactBean;
      }
 
-     public void setUnreadCount(long unreadCount) {
-          this.unreadCount = unreadCount;
+     public MessageRepliesBean getMessageRepliesBean() {
+          return messageRepliesBean;
+     }
+
+     public void setMessageReactBean(MessageReactBean messageReactBean) {
+          this.messageReactBean = messageReactBean;
+          ChatMessageBuilder.mergeCloudCustomData(this, TUIChatConstants.MESSAGE_REACT_KEY, messageReactBean);
+     }
+
+     public void setMessageRepliesBean(MessageRepliesBean messageRepliesBean) {
+          this.messageRepliesBean = messageRepliesBean;
+          ChatMessageBuilder.mergeCloudCustomData(this, TUIChatConstants.MESSAGE_REPLIES_KEY, messageRepliesBean);
+     }
+
+     public void setMessageReceiptInfo(MessageReceiptInfo messageReceiptInfo) {
+          this.messageReceiptInfo = messageReceiptInfo;
      }
 
      public long getReadCount() {
-          return readCount;
+          if (messageReceiptInfo != null) {
+               return messageReceiptInfo.getReadCount();
+          }
+          return 0;
      }
 
      public long getUnreadCount() {
-          return unreadCount;
+          if (messageReceiptInfo != null) {
+               return messageReceiptInfo.getUnreadCount();
+          }
+          return 0;
      }
 
      public void setCommonAttribute(V2TIMMessage v2TIMMessage) {
@@ -92,10 +119,7 @@ public abstract class TUIMessageBean implements Serializable {
 
           id = v2TIMMessage.getMsgID();
           isGroup = !TextUtils.isEmpty(v2TIMMessage.getGroupID());
-          if (!isGroup && v2TIMMessage.isPeerRead()) {
-               unreadCount = 0;
-               readCount = 1;
-          }
+
           if (v2TIMMessage.getStatus() == V2TIMMessage.V2TIM_MSG_STATUS_LOCAL_REVOKED) {
                status = MSG_STATUS_REVOKE;
                if (isSelf()) {
@@ -117,28 +141,24 @@ public abstract class TUIMessageBean implements Serializable {
                     }
                }
           }
+
+          messageReactBean = ChatMessageParser.parseMessageReact(this);
+          messageRepliesBean = ChatMessageParser.parseMessageReplies(this);
      }
 
      public boolean isPeerRead() {
-          return unreadCount == 0 && readCount == 1;
-     }
-
-     public void setPeerRead(boolean isPeerRead) {
-          if (isPeerRead) {
-               unreadCount = 0;
-               readCount = 1;
-          } else {
-               unreadCount = 1;
-               readCount = 0;
+          if (messageReceiptInfo != null) {
+               return messageReceiptInfo.isPeerRead();
           }
+          return false;
      }
 
      public boolean isAllRead() {
-          return unreadCount == 0 && readCount > 0;
+          return getUnreadCount() == 0 && getReadCount() > 0;
      }
 
      public boolean isUnread() {
-          return readCount == 0;
+          return getReadCount() == 0;
      }
 
      /**
@@ -316,6 +336,14 @@ public abstract class TUIMessageBean implements Serializable {
           this.v2TIMMessage = v2TIMMessage;
           setCommonAttribute(v2TIMMessage);
           onProcessMessage(v2TIMMessage);
+     }
+
+     public String getSelectText() {
+          return selectText;
+     }
+
+     public void setSelectText(String text) {
+          this.selectText = text;
      }
 
      public Class<? extends TUIReplyQuoteBean> getReplyQuoteBeanClass() {
