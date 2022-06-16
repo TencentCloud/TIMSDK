@@ -126,7 +126,8 @@
         <!-- ********华为推送设置end******** -->
 
         <!-- ********魅族推送设置start******** -->
-        <receiver android:name="com.tencent.qcloud.tim.tuiofflinepush.OEMPush.MEIZUPushReceiver">
+        <receiver android:name="com.tencent.qcloud.tim.tuiofflinepush.OEMPush.MEIZUPushReceiver"
+            android:exported="true" >
             <intent-filter>
 
                 <!-- 接收push消息 -->
@@ -156,7 +157,8 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <!-- push应用定义消息receiver声明 -->
-        <receiver android:name="com.tencent.qcloud.tim.tuiofflinepush.OEMPush.VIVOPushMessageReceiverImpl">
+        <receiver android:name="com.tencent.qcloud.tim.tuiofflinepush.OEMPush.VIVOPushMessageReceiverImpl"
+            android:exported="true">
             <intent-filter>
 
                 <!-- 接收push消息 -->
@@ -179,7 +181,9 @@
         <!-- ********OPPO 推送 start******** -->
         <service
             android:name="com.heytap.msp.push.service.CompatibleDataMessageCallbackService"
-            android:permission="com.coloros.mcs.permission.SEND_MCS_MESSAGE">
+            android:permission="com.coloros.mcs.permission.SEND_MCS_MESSAGE"
+            tools:replace="android:exported"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="com.coloros.mcs.action.RECEIVE_MCS_MESSAGE" />
             </intent-filter>
@@ -188,7 +192,9 @@
 
         <service
             android:name="com.heytap.msp.push.service.DataMessageCallbackService"
-            android:permission="com.heytap.mcs.permission.SEND_PUSH_MESSAGE">
+            android:permission="com.heytap.mcs.permission.SEND_PUSH_MESSAGE"
+            tools:replace="android:exported"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.heytap.mcs.action.RECEIVE_MCS_MESSAGE" />
                 <action android:name="com.heytap.msp.push.RECEIVE_MCS_MESSAGE" />
@@ -221,7 +227,8 @@
             android:value="true" />
 
         <!-- TPNS receiver -->
-        <receiver android:name="com.tencent.qcloud.tim.tuiofflinepush.TPNSPush.TPNSMessageReceiver">
+        <receiver android:name="com.tencent.qcloud.tim.tuiofflinepush.TPNSPush.TPNSMessageReceiver"
+            android:exported="true" >
             <intent-filter>
                 <!-- 接收消息透传 -->
                 <action android:name="com.tencent.android.xg.vip.action.PUSH_MESSAGE" />

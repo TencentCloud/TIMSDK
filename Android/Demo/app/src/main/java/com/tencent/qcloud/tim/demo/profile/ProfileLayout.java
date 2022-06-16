@@ -140,12 +140,12 @@ public class ProfileLayout extends FrameLayout implements View.OnClickListener {
         messageReadStatusSwitch.setChecked(messageReadStatus);
     }
 
-    private void setMessageReadStatus(boolean isNeedGroupReadReceipt, boolean needUpdate) {
-        TUIChatService.getChatConfig().getGeneralConfig().setNeedReadReceipt(isNeedGroupReadReceipt);
+    private void setMessageReadStatus(boolean isShowReadStatus, boolean needUpdate) {
+        TUIChatService.getChatConfig().getGeneralConfig().setShowRead(isShowReadStatus);
         if (needUpdate) {
             SharedPreferences sharedPreferences = getContext().getSharedPreferences(DEMO_SETTING_SP_NAME, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean(DEMO_SP_KEY_MESSAGE_READ_STATUS, isNeedGroupReadReceipt);
+            editor.putBoolean(DEMO_SP_KEY_MESSAGE_READ_STATUS, isShowReadStatus);
             editor.commit();
         }
     }

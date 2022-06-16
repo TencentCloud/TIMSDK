@@ -31,11 +31,11 @@ public class MessageViewHolderFactory {
         }
 
         // 具体消息holder
-        view = inflater.inflate(R.layout.message_adapter_item_content, parent, false);
         if (viewType == TUIChatService.getInstance().getViewType(TipsMessageBean.class)) {
             view = inflater.inflate(R.layout.message_adapter_item_empty, parent, false);
             holder = new TipsMessageHolder(view);
         } else {
+            view = inflater.inflate(R.layout.message_adapter_item_content, parent, false);
             holder = getViewHolder(view, viewType);
         }
 

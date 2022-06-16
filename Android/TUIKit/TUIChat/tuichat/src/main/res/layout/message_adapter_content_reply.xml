@@ -2,6 +2,7 @@
 <com.tencent.qcloud.tuikit.tuichat.ui.view.message.MaxWidthLinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/reply_container"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:minWidth="@dimen/reply_message_content_min_width"
@@ -13,10 +14,8 @@
         android:id="@+id/origin_msg_abs_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="@dimen/reply_abstract_margin_right"
         android:background="?attr/chat_self_reply_quote_bg_color"
-        android:orientation="horizontal"
-        android:layout_marginLeft="@dimen/reply_abstract_margin_left">
+        android:orientation="horizontal">
 
         <!--左边细线-->
         <View
@@ -60,14 +59,11 @@
     <TextView
         android:id="@+id/reply_content_tv"
         android:ellipsize="end"
-        android:gravity="center_vertical"
         android:textSize="@dimen/reply_text_size"
         android:includeFontPadding="false"
         android:layout_marginTop="@dimen/chat_item_padding_bottom"
-        android:layout_marginLeft="@dimen/reply_abstract_margin_left"
-        android:layout_marginRight="@dimen/reply_abstract_margin_right"
         android:textColor="?attr/chat_self_reply_text_color"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
 </com.tencent.qcloud.tuikit.tuichat.ui.view.message.MaxWidthLinearLayout>

@@ -33,5 +33,12 @@
     <attr name="chat_other_reply_text_color" format="reference|color"/>
 
     <attr name="chat_read_receipt_text_color" format="reference|color"/>
+    <attr name="chat_react_text_color" format="reference|color"/>
+    <attr name="chat_react_other_text_color" format="reference|color"/>
+    <attr name="chat_reply_detail_icon" format="reference"/>
+    <attr name="chat_jump_recent_down_icon" format="reference"/>
+    <attr name="chat_jump_recent_up_icon" format="reference"/>
+
+    <attr name="chat_pressed_bg_color" format="reference|color"/>
 
 </resources>

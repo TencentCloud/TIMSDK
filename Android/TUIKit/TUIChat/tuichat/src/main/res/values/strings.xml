@@ -26,6 +26,7 @@
     <string name="forward_mode_merge">Combine and forward</string>
     <string name="forward_button">Forward</string>
     <string name="reply_button">Reply</string>
+    <string name="quote_button">Quote</string>
     <string name="delete_button">Delete</string>
     <string name="chat_delete_msg_tip">Delete now</string>
 
@@ -117,6 +118,7 @@
     <string name="downloaded">Downloaded</string>
     <string name="downloading">Downloading...</string>
     <string name="send_failed">Send Failed</string>
+    <string name="send_failed_file_not_exists">Send failed, file not exists</string>
     <string name="sended">Sent</string>
     <string name="sending">Sending...</string>
     <string name="open_file_tips">Select an app to open the file</string>
@@ -170,6 +172,9 @@
     <string name="stop_group_call">End Group Call</string>
     <string name="stop_call_tip">Duration:</string>
     <string name="reject_calls">Decline Call</string>
+    <string name="chat_calling_switch_to_audio">Switch to voice call</string>
+    <string name="chat_calling_switch_to_audio_accept">Confirm video to voice</string>
+    <string name="chat_calling_unknown_invitation">Unknown invitation</string>
 
     <string name="test_custom_message">View Details>></string>
 
@@ -179,7 +184,8 @@
     <string name="resend_tips">Are you sure you want to resend?</string>
     <string name="delete_tips">Are you sure you want to delete this message?</string>
     <string name="reedit_msg">Re-edit</string>
-    <string name="save_tips">Saved successfully.</string>
+    <string name="save_success">Saved successfully</string>
+    <string name="save_failed">Saved failed</string>
     <string name="saving_tips">Saving</string>
 
     <string name="back_to_lastmessage">Go to Latest Message</string>
@@ -192,10 +198,10 @@
     <string name="chat_permission_camera_reason_title">%s applies for camera permission</string>
     <string name="chat_permission_camera_reason">In order for you to take photos or videos to send to friends, and to make video calls, please allow us to access the webcam.</string>
     <string name="chat_permission_storage_reason_title">%s applies for storage permission</string>
-    <string name="chat_permission_storage_reason">In order for you to view and select pictures and videos in your albums, send files from your device to friends, and save content to your device, please allow us to access photos, media content and files on your device.</string>
+    <string name="chat_permission_storage_reason">In order for you to save photos and videos to your device, please allow us to write photos and videos to your device.</string>
     <string name="chat_permission_mic_dialog_alert">Allow microphone access in Settings->Apps->%s to use voice messages, video cameras, and audio and video calls as normal</string>
     <string name="chat_permission_camera_dialog_alert">Allow camera access in Settings->Apps->%s to use the photo, video and video calling functions as normal</string>
-    <string name="chat_permission_storage_dialog_alert">Allow storage access in Settings->Apps->%s to use the file selection, sending and saving content functions normally</string>
+    <string name="chat_permission_storage_dialog_alert">Allow storage access in Settings->Apps->%s to use the function of saving photos and videos normally</string>
 
     <string name="chat_message_read_receipt">Message Read Receipt</string>
     <string name="chat_i_know">I got it</string>
@@ -204,4 +210,8 @@
     <string name="chat_buying_guidelines">purchase guidelines</string>
     <string name="chat_im_flagship_edition_update_tip">%s features are IM Flagship Edition features, which can be used after purchasing the Flagship Edition. If you are currently using the Pro Edition, you need to do a refund on the Pro Edition first, and then purchase the Flagship Edition. see the purchase guidelines for details.</string>
 
+    <string name="chat_reply_num">%d replied</string>
+    <string name="chat_reply_detail">Reply detail</string>
+
+    <string name="chat_not_read">Unread</string>
 </resources>

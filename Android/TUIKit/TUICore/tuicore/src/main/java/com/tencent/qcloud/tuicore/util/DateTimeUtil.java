@@ -4,69 +4,77 @@ import android.content.Context;
 
 import com.tencent.qcloud.tuicore.R;
 import com.tencent.qcloud.tuicore.TUIConfig;
+import com.tencent.qcloud.tuicore.TUIThemeManager;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 
 public class DateTimeUtil {
 
-    private final static long minute = 60 * 1000;// 1分钟
-    private final static long hour = 60 * minute;// 1小时
-    private final static long day = 24 * hour;// 1天
-    private final static long month = 31 * day;// 月
-    private final static long year = 12 * month;// 年
+    private final static long minute = 60 * 1000;
+    private final static long hour = 60 * minute;
+    private final static long day = 24 * hour;
+    private final static long week = 7 * day;
+    private final static long month = 31 * day;
+    private final static long year = 12 * month;
 
     /**
-     * 返回文字描述的日期
-     *
-     * @param date
-     * @return
+     * return format text for time
+     * you can see https://docs.oracle.com/javase/8/docs/api/java/util/Formatter.html
+     * today：HH:MM
+     * this week：Sunday, Friday ..
+     * this year：MM/DD
+     * before this year：YYYY/MM/DD
+     * @param date current time
+     * @return format text
      */
     public static String getTimeFormatText(Date date) {
         if (date == null) {
-            return null;
+            return "";
         }
-
+        Context context = TUIConfig.getAppContext();
+        Locale locale;
+        if (context == null) {
+            locale = Locale.getDefault();
+        } else {
+            locale = TUIThemeManager.getInstance().getLocale(context);
+        }
+        String timeText;
         Calendar calendar = Calendar.getInstance();
-
-        int currentDayIndex = calendar.get(Calendar.DAY_OF_YEAR);
-        int currentYear = calendar.get(Calendar.YEAR);
-
-        calendar.setTime(date);
-        int msgYear = calendar.get(Calendar.YEAR);
-        int msgDayIndex = calendar.get(Calendar.DAY_OF_YEAR);
-        int msgMinute = calendar.get(Calendar.MINUTE);
-
-        String msgTimeStr = calendar.get(Calendar.HOUR_OF_DAY) + ":";
-
-        if (msgMinute < 10) {
-            msgTimeStr = msgTimeStr + "0" + msgMinute;
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        long dayStartTimeInMillis = calendar.getTimeInMillis();
+        calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_WEEK, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        long weekStartTimeInMillis = calendar.getTimeInMillis();
+        calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_YEAR, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        long yearStartTimeInMillis = calendar.getTimeInMillis();
+        long outTimeMillis = date.getTime();
+        if (outTimeMillis < yearStartTimeInMillis) {
+            timeText = String.format(locale, "%tD", date);
+        } else if (outTimeMillis < weekStartTimeInMillis) {
+            timeText = String.format(locale, "%1$tm/%1$td", date);
+        } else if (outTimeMillis < dayStartTimeInMillis) {
+            timeText = String.format(locale, "%tA", date);
         } else {
-            msgTimeStr = msgTimeStr + msgMinute;
+            timeText = String.format(locale, "%tR", date);
         }
-
-        int msgDayInWeek = calendar.get(Calendar.DAY_OF_WEEK);
-
-        if (currentDayIndex == msgDayIndex) {
-            return msgTimeStr;
-        } else {
-            Context context = TUIConfig.getAppContext();
-            if (currentDayIndex - msgDayIndex == 1 && currentYear == msgYear) {
-                msgTimeStr = context.getString(R.string.date_yesterday) + msgTimeStr;
-            } else if (false/*currentDayIndex - msgDayIndex > 1 && currentYear == msgYear*/) { //本年消息,注释掉统一按照 "年/月/日" 格式显示
-                //不同周显示具体月，日，注意函数：calendar.get(Calendar.MONTH) 一月对应0，十二月对应11
-                msgTimeStr = (Integer.valueOf(calendar.get(Calendar.MONTH) + 1)) + "/"+ calendar.get(Calendar.DAY_OF_MONTH) + " " + msgTimeStr + " ";
-                //msgTimeStr = (Integer.valueOf(calendar.get(Calendar.MONTH) + 1)) + context.getString(R.string.date_month_short) + " "+ calendar.get(Calendar.DAY_OF_MONTH) + context.getString(R.string.date_day_short) + " " + msgTimeStr + " ";
-            } else { // 1、非正常时间，如currentYear < msgYear，或者currentDayIndex < msgDayIndex
-                //2、非本年消息（currentYear > msgYear），如：历史消息是2018，今年是2019，显示年、月、日
-                msgTimeStr = msgYear + "/" + (Integer.valueOf(calendar.get(Calendar.MONTH) + 1)) + "/" + calendar.get(Calendar.DAY_OF_MONTH) + " " + msgTimeStr + " ";
-                //msgTimeStr = msgYear + context.getString(R.string.date_year_short) + (Integer.valueOf(calendar.get(Calendar.MONTH) + 1)) + context.getString(R.string.date_month_short) + calendar.get(Calendar.DAY_OF_MONTH) + context.getString(R.string.date_day_short) + msgTimeStr + " ";
-            }
-        }
-        return msgTimeStr;
+        return timeText;
     }
 
     public static String formatSeconds(long seconds) {

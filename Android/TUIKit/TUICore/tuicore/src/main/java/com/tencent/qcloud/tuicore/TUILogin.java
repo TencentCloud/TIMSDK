@@ -55,6 +55,8 @@ public class TUILogin {
             for (TUILoginListener listener : listenerList) {
                 listener.onConnecting();
             }
+            TUICore.notifyEvent(TUIConstants.NetworkConnection.EVENT_CONNECTION_STATE_CHANGED,
+                    TUIConstants.NetworkConnection.EVENT_SUB_KEY_CONNECTING, null);
         }
 
         @Override
@@ -62,6 +64,8 @@ public class TUILogin {
             for (TUILoginListener listener : listenerList) {
                 listener.onConnectSuccess();
             }
+            TUICore.notifyEvent(TUIConstants.NetworkConnection.EVENT_CONNECTION_STATE_CHANGED,
+                    TUIConstants.NetworkConnection.EVENT_SUB_KEY_CONNECT_SUCCESS, null);
         }
 
         @Override
@@ -69,6 +73,8 @@ public class TUILogin {
             for (TUILoginListener listener : listenerList) {
                 listener.onConnectFailed(code, error);
             }
+            TUICore.notifyEvent(TUIConstants.NetworkConnection.EVENT_CONNECTION_STATE_CHANGED,
+                    TUIConstants.NetworkConnection.EVENT_SUB_KEY_CONNECT_FAILED, null);
         }
 
         @Override

@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.qcloud.tuicore.util.BackgroundTasks;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.QuoteMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.ReplyMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
@@ -45,6 +47,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
     private int mHighShowPosition;
 
     private boolean isForwardMode = false;
+    private boolean isReplyDetailMode = false;
 
     private ChatPresenter presenter;
 
@@ -54,6 +57,10 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
 
     public void setForwardMode(boolean forwardMode) {
         isForwardMode = forwardMode;
+    }
+
+    public void setReplyDetailMode(boolean replyDetailMode) {
+        isReplyDetailMode = replyDetailMode;
     }
 
     //获得选中条目的结果，msgId
@@ -121,6 +128,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
         if (holder instanceof MessageContentHolder) {
             MessageContentHolder messageContentHolder = (MessageContentHolder) holder;
             messageContentHolder.isForwardMode = isForwardMode;
+            messageContentHolder.isReplyDetailMode = isReplyDetailMode;
             messageContentHolder.setPresenter(presenter);
 
             if (isForwardMode) {
@@ -222,7 +230,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
                 }
 
                 @Override
-                public void onReplyMessageClick(View view, int position, String originMsgId) {
+                public void onReplyMessageClick(View view, int position, QuoteMessageBean messageBean) {
                     changeCheckedStatus(msgId, position);
                 }
 
@@ -259,8 +267,8 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
         }
         RecyclerView.ViewHolder holder = mRecycleView.findViewHolderForAdapterPosition(index);
         if (holder != null) {
-            if (holder instanceof TextMessageHolder) {
-                ((TextMessageHolder) holder).resetSelectableText();
+            if (holder instanceof MessageContentHolder) {
+                ((MessageContentHolder) holder).resetSelectableText();
             }
         } else {
             TUIChatLog.d(TAG, "holder == null");
@@ -288,7 +296,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
     @Override
     public void onViewRecycled(@NonNull RecyclerView.ViewHolder holder) {
         if (holder instanceof MessageContentHolder) {
-            ((MessageContentHolder) holder).msgContentFrame.setBackground(null);
+            ((MessageContentHolder) holder).msgArea.setBackground(null);
             ((MessageContentHolder) holder).stopHighLight();
             ((MessageContentHolder) holder).onRecycled();
         }
@@ -319,7 +327,11 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
                     mRecycleView.smoothScrollToPosition(position);
                     notifyItemChanged(position);
                     mRecycleView.scrollMessageFinish();
+                } else if (type == MessageRecyclerView.DATA_CHANGE_TYPE_UPDATE) {
+                    int position = getMessagePosition(locateMessage);
+                    notifyItemChanged(position);
                 }
+                refreshLoadView();
             }
         });
     }
@@ -440,7 +452,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
             return new ArrayList<>(0);
         }
 
-        return mDataSource.subList(first - 1, last);
+        return new ArrayList<>(mDataSource.subList(first - 1, last));
     }
 
 }

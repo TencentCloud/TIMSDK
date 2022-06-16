@@ -54,12 +54,13 @@ public class VideoMessageHolder extends MessageContentHolder {
 
     @Override
     public void layoutVariableViews(TUIMessageBean msg, int position) {
-        msgContentFrame.setBackground(null);
         performVideo((VideoMessageBean) msg, position);
     }
 
     private ViewGroup.LayoutParams getImageParams(ViewGroup.LayoutParams params, final VideoMessageBean msg) {
         if (msg.getImgWidth() == 0 || msg.getImgHeight() == 0) {
+            params.width = DEFAULT_MAX_SIZE;
+            params.height = DEFAULT_MAX_SIZE;
             return params;
         }
         if (msg.getImgWidth() > msg.getImgHeight()) {
@@ -72,13 +73,9 @@ public class VideoMessageHolder extends MessageContentHolder {
         return params;
     }
 
-    private void resetParentLayout() {
-        ((FrameLayout) contentImage.getParent().getParent()).setPadding(17, 0, 13, 0);
-    }
 
     private void performVideo(final VideoMessageBean msg, final int position) {
         contentImage.setLayoutParams(getImageParams(contentImage.getLayoutParams(), msg));
-        resetParentLayout();
 
         videoPlayBtn.setVisibility(View.VISIBLE);
         videoDurationText.setVisibility(View.VISIBLE);
@@ -164,6 +161,11 @@ public class VideoMessageHolder extends MessageContentHolder {
                 TUIChatService.getAppContext().startActivity(intent);
             }
         });
+
+        if (msg.getMessageReactBean() == null || msg.getMessageReactBean().getReactSize() <= 0) {
+            msgArea.setBackground(null);
+            msgArea.setPadding(0, 0, 0, 0);
+        }
     }
 
     @Override

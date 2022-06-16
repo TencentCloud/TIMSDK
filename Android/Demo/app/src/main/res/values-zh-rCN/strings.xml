@@ -147,7 +147,7 @@
     <string name="im_privacy">隐私政策</string>
     <string name="im_statement">免责声明</string>
     <string name="im_user_agreement">用户协议</string>
-    <string name="im_statement_content">腾讯云IM APP（“本产品”）是由腾讯云提供的一款测试产品，腾讯云享有本产品的著作权和所有权。本产品仅用于功能体验，不得用于任何商业用途。为配合相关部门监管要求，本产品音视频互动全程均有录音录像存档，严禁在使用中有任何色情、辱骂、暴恐、涉政等违法内容传播。</string>
+    <string name="im_statement_content">腾讯云IM APP（“本产品”）是由腾讯云提供的一款测试产品，腾讯云享有本产品的著作权和所有权。本产品仅用于功能体验，不得用于任何商业用途。为配合相关部门监管要求，严禁在使用中有任何色情、辱骂、暴恐、涉政等违法内容传播。</string>
     <string name="im_privacy_tips">请先阅读并同意协议</string>
     <string name="demo_im_privacy_dialog_tips">欢迎使用腾讯云即时通信 IM，为保护您的个人信息安全，我们更新了《隐私政策》，主要完善了收集用户信息的具体内容和目的、增加了第三方SDK使用等方面的内容。\n\n请您点击 《用户协议》、《隐私政策摘要》、《隐私政策》、《个人信息收集清单》和《第三方信息共享清单》并仔细阅读，如您同意以上内容，请点击“同意并继续”，开始使用我们的产品与服务！</string>
     <string name="demo_im_privacy_agree">同意并继续</string>
@@ -175,10 +175,12 @@
     <string name="demo_permission_camera_reason_title">%s申请获取相机权限</string>
     <string name="demo_permission_camera_reason">为方便您拍摄照片或视频以发送给朋友，以及进行视频通话，请允许我们访问摄像头。</string>
     <string name="demo_permission_storage_reason_title">%s申请获取存储权限</string>
-    <string name="demo_permission_storage_reason">为方便您查看和选择相册里的图片视频、设备里的文件发送给朋友，以及保存内容到设备，请允许我们访问您设备上的照片、媒体内容和文件。</string>
+    <string name="demo_permission_storage_reason">为方便您保存照片和视频到设备，请允许我们写入照片和视频到设备。</string>
     <string name="demo_permission_mic_dialog_alert">在设置-应用-%s-权限中开启麦克风权限，以正常使用语音消息、摄像和音视频通话功能</string>
     <string name="demo_permission_camera_dialog_alert">在设置-应用-%s-权限中开启相机权限，以正常使用拍照、摄像和视频通话功能</string>
-    <string name="demo_permission_storage_dialog_alert">在设置-应用-%s-权限中开启存储权限，以正常使用文件选择、发送和保存内容功能</string>
+    <string name="demo_permission_storage_dialog_alert">在设置-应用-%s-权限中开启存储权限，以正常使用保存照片和视频功能</string>
     <!--  权限相关 end -->
+
+    <string name="upgrade_sure">立即升级</string>
 
 </resources>

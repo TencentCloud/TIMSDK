@@ -6,13 +6,13 @@ import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
-import com.tencent.qcloud.tuikit.tuichat.bean.C2CMessageReceiptInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.MessageReceiptInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.C2CChatEventListener;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.message.MessageRecyclerView;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class C2CChatPresenter extends ChatPresenter {
@@ -30,7 +30,7 @@ public class C2CChatPresenter extends ChatPresenter {
     public void initListener() {
         chatEventListener = new C2CChatEventListener() {
             @Override
-            public void onReadReport(List<C2CMessageReceiptInfo> receiptList) {
+            public void onReadReport(List<MessageReceiptInfo> receiptList) {
                 C2CChatPresenter.this.onReadReport(receiptList);
             }
 
@@ -60,8 +60,23 @@ public class C2CChatPresenter extends ChatPresenter {
                 }
                 C2CChatPresenter.this.onFriendInfoChanged();
             }
+
+            @Override
+            public void onRecvMessageModified(TUIMessageBean messageBean) {
+                if (chatInfo == null || !TextUtils.equals(messageBean.getUserId(), chatInfo.getId())) {
+                    return;
+                }
+                C2CChatPresenter.this.onRecvMessageModified(messageBean);
+            }
+
+            @Override
+            public void addMessage(TUIMessageBean messageBean, String chatId) {
+                if (TextUtils.equals(chatId, chatInfo.getId())) {
+                    addMessageInfo(messageBean);
+                }
+            }
         };
-        TUIChatService.getInstance().setChatEventListener(chatEventListener);
+        TUIChatService.getInstance().addC2CChatEventListener(chatEventListener);
         initMessageSender();
     }
 
@@ -107,7 +122,7 @@ public class C2CChatPresenter extends ChatPresenter {
     @Override
     protected void onMessageLoadCompleted(List<TUIMessageBean> data, int getType) {
         c2cReadReport(chatInfo.getId());
-        processLoadedMessage(data, getType);
+        getMessageReadReceipt(data, getType);
     }
 
     public void setChatInfo(ChatInfo chatInfo) {
@@ -125,37 +140,16 @@ public class C2CChatPresenter extends ChatPresenter {
         }
     }
 
-    public void onReadReport(List<C2CMessageReceiptInfo> receiptList) {
-        TUIChatLog.i(TAG, "onReadReport:" + receiptList.size());
-        if (!safetyCall()) {
-            TUIChatLog.w(TAG, "onReadReport unSafetyCall");
-            return;
-        }
-        if (receiptList.size() == 0) {
-            return;
-        }
-        C2CMessageReceiptInfo max = receiptList.get(0);
-        for (C2CMessageReceiptInfo msg : receiptList) {
-            if (!TextUtils.equals(msg.getUserID(), getChatInfo().getId())) {
-                continue;
+    public void onReadReport(List<MessageReceiptInfo> receiptList) {
+        if (chatInfo != null) {
+            List<MessageReceiptInfo> processReceipts = new ArrayList<>();
+            for (MessageReceiptInfo messageReceiptInfo : receiptList) {
+                if (!TextUtils.equals(messageReceiptInfo.getUserID(), chatInfo.getId())) {
+                    continue;
+                }
+                processReceipts.add(messageReceiptInfo);
             }
-            if (max.getTimestamp() < msg.getTimestamp()) {
-                max = msg;
-            }
-        }
-        for (int i = 0; i < loadedMessageInfoList.size(); i++) {
-            TUIMessageBean messageInfo = loadedMessageInfoList.get(i);
-            if (!TextUtils.equals(messageInfo.getUserId(), max.getUserID())) {
-                continue;
-            }
-            if (messageInfo.getMessageTime() > max.getTimestamp()) {
-                messageInfo.setPeerRead(false);
-            } else if (messageInfo.isPeerRead()) {
-                // do nothing
-            } else {
-                messageInfo.setPeerRead(true);
-                updateAdapter(MessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, i);
-            }
+            onMessageReadReceiptUpdated(loadedMessageInfoList, processReceipts);
         }
     }
 

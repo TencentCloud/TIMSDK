@@ -2,8 +2,11 @@ package com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tencent.qcloud.tuicore.TUIThemeManager;
@@ -27,11 +30,13 @@ public class ReplyMessageHolder extends MessageContentHolder {
     private TextView senderNameTv;
     private TextView replyContentTv;
     private FrameLayout quoteFrameLayout;
+    private LinearLayout replyContainer;
     private View line;
 
     public ReplyMessageHolder(View itemView) {
         super(itemView);
         senderNameTv = itemView.findViewById(R.id.sender_tv);
+        replyContainer = itemView.findViewById(R.id.reply_container);
         replyContentTv = itemView.findViewById(R.id.reply_content_tv);
         originMsgLayout = itemView.findViewById(R.id.origin_msg_abs_layout);
         quoteFrameLayout = itemView.findViewById(R.id.quote_frame_layout);
@@ -45,6 +50,8 @@ public class ReplyMessageHolder extends MessageContentHolder {
 
     @Override
     public void layoutVariableViews(TUIMessageBean msg, int position) {
+        msg.setSelectText(msg.getExtra());
+
         ReplyMessageBean replyMessageBean = (ReplyMessageBean) msg;
         TUIMessageBean replyContentBean = replyMessageBean.getContentMessageBean();
         String replyContent = replyContentBean.getExtra();
@@ -74,12 +81,26 @@ public class ReplyMessageHolder extends MessageContentHolder {
         });
 
         setThemeColor(msg);
+        if (isForwardMode || isReplyDetailMode) {
+            return;
+        }
+        boolean isEmoji = false;
+        if (!TextUtils.isEmpty(replyContent)) {
+            isEmoji = FaceManager.handlerEmojiText(replyContentTv, replyContent, false);
+        }
+        setSelectableTextHelper(msg, replyContentTv, position, isEmoji);
+    }
+
+    @Override
+    protected void setGravity(boolean isStart) {
+        super.setGravity(isStart);
+        replyContainer.setGravity(isStart ? Gravity.START : Gravity.END);
     }
 
     private void setThemeColor(TUIMessageBean messageBean) {
         Context context = itemView.getContext();
         Resources resources = itemView.getResources();
-        if (!messageBean.isSelf()) {
+        if (isReplyDetailMode || isForwardMode || !messageBean.isSelf()) {
             originMsgLayout.setBackgroundColor(resources.getColor(TUIThemeManager.getAttrResId(context, R.attr.chat_other_reply_quote_bg_color)));
             senderNameTv.setTextColor(resources.getColor(TUIThemeManager.getAttrResId(context, R.attr.chat_other_reply_quote_text_color)));
             replyContentTv.setTextColor(resources.getColor(TUIThemeManager.getAttrResId(context, R.attr.chat_other_reply_text_color)));
@@ -106,7 +127,7 @@ public class ReplyMessageHolder extends MessageContentHolder {
             @Override
             public void onClick(View v) {
                 if (onItemClickListener != null) {
-                    onItemClickListener.onReplyMessageClick(v, position, replyMessageBean.getOriginMsgId());
+                    onItemClickListener.onReplyMessageClick(v, position, replyMessageBean);
                 }
             }
         });
@@ -123,7 +144,11 @@ public class ReplyMessageHolder extends MessageContentHolder {
         textReplyQuoteBean.setText(typeStr + abstractStr);
         TextReplyQuoteView textReplyQuoteView = new TextReplyQuoteView(itemView.getContext());
         textReplyQuoteView.onDrawReplyQuote(textReplyQuoteBean);
-        textReplyQuoteView.setSelf(replyMessageBean.isSelf());
+        if (isForwardMode || isReplyDetailMode) {
+            textReplyQuoteView.setSelf(false);
+        } else {
+            textReplyQuoteView.setSelf(replyMessageBean.isSelf());
+        }
         quoteFrameLayout.removeAllViews();
         quoteFrameLayout.addView(textReplyQuoteView);
     }
@@ -148,7 +173,11 @@ public class ReplyMessageHolder extends MessageContentHolder {
                 quoteView.onDrawReplyQuote(replyQuoteBean);
                 quoteFrameLayout.removeAllViews();
                 quoteFrameLayout.addView(quoteView);
-                quoteView.setSelf(replyMessageBean.isSelf());
+                if (isForwardMode || isReplyDetailMode) {
+                    quoteView.setSelf(false);
+                } else {
+                    quoteView.setSelf(replyMessageBean.isSelf());
+                }
             }
         }
     }

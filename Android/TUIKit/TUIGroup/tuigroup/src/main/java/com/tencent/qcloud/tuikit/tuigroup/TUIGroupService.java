@@ -27,12 +27,10 @@ public class TUIGroupService extends ServiceInitializer implements ITUIGroupServ
         return instance;
     }
 
-    private static Context appContext;
 
     @Override
     public void init(Context context) {
         instance = this;
-        appContext = context;
         initService();
         initEvent();
         initIMListener();
@@ -187,10 +185,6 @@ public class TUIGroupService extends ServiceInitializer implements ITUIGroupServ
                 super.onGroupAttributeChanged(groupID, groupAttributeMap);
             }
         });
-    }
-
-    public static Context getAppContext() {
-        return appContext;
     }
 
     @Override

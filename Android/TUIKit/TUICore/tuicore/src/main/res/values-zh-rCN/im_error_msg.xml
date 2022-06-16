@@ -284,4 +284,5 @@
     <string name="TUIKitErrorRequestNoNetOnReq">请求时没有网络，请等网络恢复后重试</string>
     <string name="TUIKitErrorRequestNoNetOnRsp">响应时没有网络，请等网络恢复后重试</string>
     <string name="TUIKitErrorRequestOnverLoaded">请求队列満</string>
+    <string name="TUIKitErrorEnableUserStatusOnConsole">您未开启用户状态功能，请先登录控制台开启</string>
 </resources>

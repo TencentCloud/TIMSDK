@@ -6,6 +6,7 @@ import android.util.Pair;
 import com.google.gson.Gson;
 import com.tencent.imsdk.BaseConstants;
 import com.tencent.imsdk.v2.V2TIMCallback;
+import com.tencent.imsdk.v2.V2TIMCompleteCallback;
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMCreateGroupMemberInfo;
 import com.tencent.imsdk.v2.V2TIMFriendInfoResult;
@@ -13,6 +14,7 @@ import com.tencent.imsdk.v2.V2TIMGroupApplication;
 import com.tencent.imsdk.v2.V2TIMGroupApplicationResult;
 import com.tencent.imsdk.v2.V2TIMGroupChangeInfo;
 import com.tencent.imsdk.v2.V2TIMGroupInfo;
+import com.tencent.imsdk.v2.V2TIMGroupMemberFullInfo;
 import com.tencent.imsdk.v2.V2TIMGroupMemberInfo;
 import com.tencent.imsdk.v2.V2TIMGroupMessageReadMemberList;
 import com.tencent.imsdk.v2.V2TIMGroupTipsElem;
@@ -27,18 +29,18 @@ import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.ReactUserBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupApplyInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupMemberInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.OfflineMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.OfflineMessageContainerBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.OfflinePushInfo;
-import com.tencent.qcloud.tuikit.tuichat.bean.GroupMessageReceiptInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.MessageReceiptInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.GroupMessageReadMembersInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.config.GeneralConfig;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
@@ -50,6 +52,7 @@ import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.tencent.imsdk.BaseConstants.ERR_SDK_MSG_MODIFY_CONFLICT;
 import static com.tencent.imsdk.v2.V2TIMMessage.V2TIM_MSG_STATUS_SEND_FAIL;
 
 public class ChatProvider {
@@ -192,11 +195,9 @@ public class ChatProvider {
 
         String userID = "";
         String groupID = "";
-        String groupType = "";
         boolean isGroup = false;
         if (chatInfo.getType() == V2TIMConversation.V2TIM_GROUP) {
             groupID = chatInfo.getId();
-            groupType = chatInfo.getGroupType();
             isGroup = true;
             entity.chatType = V2TIMConversation.V2TIM_GROUP;
             entity.sender = groupID;
@@ -215,11 +216,6 @@ public class ChatProvider {
         final V2TIMMessage v2TIMMessage = message.getV2TIMMessage();
         v2TIMMessage.setExcludedFromUnreadCount(TUIChatConfigs.getConfigs().getGeneralConfig().isExcludedFromUnreadCount());
         v2TIMMessage.setExcludedFromLastMessage(TUIChatConfigs.getConfigs().getGeneralConfig().isExcludedFromLastMessage());
-
-        // This feature in C2C message is not available in version 6.2
-        if (!isGroup) {
-            message.setNeedReadReceipt(false);
-        }
 
         String msgID = V2TIMManager.getMessageManager().sendMessage(v2TIMMessage, isGroup ? null : userID, isGroup ? groupID : null,
                 V2TIMMessage.V2TIM_PRIORITY_DEFAULT, false, v2TIMOfflinePushInfo, new V2TIMSendCallback<V2TIMMessage>() {
@@ -243,17 +239,46 @@ public class ChatProvider {
         return msgID;
     }
 
+    public String sendMessage(TUIMessageBean message, String groupType, OfflinePushInfo pushInfo,
+                              String receiver, boolean isGroup, boolean onlineUserOnly, IUIKitCallback<TUIMessageBean> callBack) {
+        final V2TIMMessage v2TIMMessage = message.getV2TIMMessage();
+        v2TIMMessage.setExcludedFromUnreadCount(TUIChatConfigs.getConfigs().getGeneralConfig().isExcludedFromUnreadCount());
+        v2TIMMessage.setExcludedFromLastMessage(TUIChatConfigs.getConfigs().getGeneralConfig().isExcludedFromLastMessage());
+
+        TUIChatLog.i(TAG, "sendMessage to " + receiver);
+        V2TIMOfflinePushInfo v2TIMOfflinePushInfo = OfflinePushInfoUtils.convertOfflinePushInfoToV2PushInfo(pushInfo);
+        String msgID = V2TIMManager.getMessageManager().sendMessage(message.getV2TIMMessage(),
+                isGroup ? null : receiver, isGroup ? receiver : null, V2TIMMessage.V2TIM_PRIORITY_DEFAULT,
+                onlineUserOnly, v2TIMOfflinePushInfo, new V2TIMSendCallback<V2TIMMessage>() {
+
+                    @Override
+                    public void onError(int code, String desc) {
+                        TUIChatLog.v(TAG, "sendMessage fail:" + code + "=" + ErrorMessageConverter.convertIMError(code, desc));
+                        TUIChatUtils.callbackOnError(callBack, TAG, code, desc);
+                    }
+
+                    @Override
+                    public void onSuccess(V2TIMMessage v2TIMMessage) {
+                        TUIChatLog.v(TAG, "sendMessage onSuccess:" + v2TIMMessage.getMsgID());
+                        message.setStatus(TUIMessageBean.MSG_STATUS_SEND_SUCCESS);
+                        message.setV2TIMMessage(v2TIMMessage);
+                        TUIChatUtils.callbackOnSuccess(callBack, message);
+                    }
+
+                    @Override
+                    public void onProgress(int progress) {
+
+                    }
+                });
+        return msgID;
+    }
+
     public String sendMessage(TUIMessageBean messageInfo, boolean isGroup, String id, OfflinePushInfo offlinePushInfo, IUIKitCallback<TUIMessageBean> callBack) {
         V2TIMMessage forwardMessage = messageInfo.getV2TIMMessage();
         forwardMessage.setExcludedFromUnreadCount(TUIChatConfigs.getConfigs().getGeneralConfig().isExcludedFromUnreadCount());
         forwardMessage.setExcludedFromLastMessage(TUIChatConfigs.getConfigs().getGeneralConfig().isExcludedFromLastMessage());
 
         V2TIMOfflinePushInfo v2TIMOfflinePushInfo = OfflinePushInfoUtils.convertOfflinePushInfoToV2PushInfo(offlinePushInfo);
-
-        // This feature in C2C message is not available in version 6.2
-        if (!isGroup) {
-            messageInfo.setNeedReadReceipt(false);
-        }
         String msgId = V2TIMManager.getMessageManager().sendMessage(forwardMessage, isGroup ? null : id, isGroup ? id : null,
                 V2TIMMessage.V2TIM_PRIORITY_DEFAULT, false, v2TIMOfflinePushInfo, new V2TIMSendCallback<V2TIMMessage>() {
                     @Override
@@ -553,7 +578,7 @@ public class ChatProvider {
         }
     }
 
-    public void getGroupReadReceipt(List<TUIMessageBean> messageBeanList, IUIKitCallback<List<GroupMessageReceiptInfo>> callback) {
+    public void getMessageReadReceipt(List<TUIMessageBean> messageBeanList, IUIKitCallback<List<MessageReceiptInfo>> callback) {
         List<V2TIMMessage> messageList = new ArrayList<>();
         for (TUIMessageBean messageBean : messageBeanList) {
             messageList.add(messageBean.getV2TIMMessage());
@@ -562,11 +587,11 @@ public class ChatProvider {
         V2TIMManager.getMessageManager().getMessageReadReceipts(messageList, new V2TIMValueCallback<List<V2TIMMessageReceipt>>() {
             @Override
             public void onSuccess(List<V2TIMMessageReceipt> v2TIMGroupMessageReceipts) {
-                List<GroupMessageReceiptInfo> messageReceiptInfoList = new ArrayList<>();
+                List<MessageReceiptInfo> messageReceiptInfoList = new ArrayList<>();
                 for (V2TIMMessageReceipt receipt : v2TIMGroupMessageReceipts) {
-                    GroupMessageReceiptInfo groupMessageReceiptInfo = new GroupMessageReceiptInfo();
-                    groupMessageReceiptInfo.setMessageReceipt(receipt);
-                    messageReceiptInfoList.add(groupMessageReceiptInfo);
+                    MessageReceiptInfo messageReceiptInfo = new MessageReceiptInfo();
+                    messageReceiptInfo.setMessageReceipt(receipt);
+                    messageReceiptInfoList.add(messageReceiptInfo);
                 }
                 TUIChatUtils.callbackOnSuccess(callback, messageReceiptInfoList);
             }
@@ -578,7 +603,7 @@ public class ChatProvider {
         });
     }
 
-    public void sendGroupMessageReadReceipt(List<TUIMessageBean> messageBeanList, IUIKitCallback<Void> callback) {
+    public void sendMessageReadReceipt(List<TUIMessageBean> messageBeanList, IUIKitCallback<Void> callback) {
         List<V2TIMMessage> messageList = new ArrayList<>();
         for (TUIMessageBean messageBean : messageBeanList) {
             messageList.add(messageBean.getV2TIMMessage());
@@ -615,4 +640,60 @@ public class ChatProvider {
         });
     }
 
+    public void modifyMessage(TUIMessageBean messageBean, IUIKitCallback<TUIMessageBean> callback) {
+        V2TIMMessage v2TIMMessage = messageBean.getV2TIMMessage();
+        V2TIMManager.getMessageManager().modifyMessage(v2TIMMessage, new V2TIMCompleteCallback<V2TIMMessage>() {
+            @Override
+            public void onComplete(int code, String desc, V2TIMMessage v2TIMMessage) {
+                TUIMessageBean modifiedMessage = ChatMessageParser.parseMessage(v2TIMMessage);
+                if (code == ERR_SDK_MSG_MODIFY_CONFLICT) {
+                    TUIChatUtils.callbackOnError(callback, code, desc, modifiedMessage);
+                } else {
+                    TUIChatUtils.callbackOnSuccess(callback, modifiedMessage);
+                }
+            }
+        });
+    }
+
+    public void getReactUserBean(List<String> userIds, IUIKitCallback<List<ReactUserBean>> callback) {
+        V2TIMManager.getFriendshipManager().getFriendsInfo(userIds, new V2TIMValueCallback<List<V2TIMFriendInfoResult>>() {
+            @Override
+            public void onSuccess(List<V2TIMFriendInfoResult> v2TIMFriendInfoResults) {
+                List<ReactUserBean> reactUserBeanList = new ArrayList<>();
+                for (V2TIMFriendInfoResult result : v2TIMFriendInfoResults) {
+                    ReactUserBean reactUserBean = new ReactUserBean();
+                    reactUserBean.setUserId(result.getFriendInfo().getUserID());
+                    reactUserBean.setFriendRemark(result.getFriendInfo().getFriendRemark());
+                    if (result.getFriendInfo().getUserProfile() != null) {
+                        reactUserBean.setNikeName(result.getFriendInfo().getUserProfile().getNickName());
+                    }
+                    reactUserBeanList.add(reactUserBean);
+                }
+                TUIChatUtils.callbackOnSuccess(callback, reactUserBeanList);
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                TUIChatUtils.callbackOnError(callback, code, desc);
+            }
+        });
+    }
+
+    public void getGroupMembersInfo(String groupId, List<String> groupMemberIds, IUIKitCallback<List<GroupMemberInfo>> callback) {
+        V2TIMManager.getGroupManager().getGroupMembersInfo(groupId, groupMemberIds, new V2TIMValueCallback<List<V2TIMGroupMemberFullInfo>>() {
+            @Override
+            public void onSuccess(List<V2TIMGroupMemberFullInfo> v2TIMGroupMemberFullInfos) {
+                List<GroupMemberInfo> groupMemberInfos = new ArrayList<>();
+                for (V2TIMGroupMemberFullInfo fullInfo : v2TIMGroupMemberFullInfos) {
+                    groupMemberInfos.add(new GroupMemberInfo().covertTIMGroupMemberInfo(fullInfo));
+                }
+                TUIChatUtils.callbackOnSuccess(callback, groupMemberInfos);
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                TUIChatUtils.callbackOnError(callback, code, desc);
+            }
+        });
+    }
 }

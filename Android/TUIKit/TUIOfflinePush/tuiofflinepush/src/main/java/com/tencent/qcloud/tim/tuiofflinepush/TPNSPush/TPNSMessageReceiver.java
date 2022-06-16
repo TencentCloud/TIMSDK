@@ -8,8 +8,6 @@ import com.tencent.android.tpush.XGPushClickedResult;
 import com.tencent.android.tpush.XGPushRegisterResult;
 import com.tencent.android.tpush.XGPushShowedResult;
 import com.tencent.android.tpush.XGPushTextMessage;
-import com.tencent.qcloud.tim.tuiofflinepush.TUIOfflinePushManager;
-import com.tencent.qcloud.tim.tuiofflinepush.PushSetting;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushLog;
 
 public class TPNSMessageReceiver extends XGPushBaseReceiver {
@@ -44,7 +42,7 @@ public class TPNSMessageReceiver extends XGPushBaseReceiver {
 	 */
 	@Override
 	public void onRegisterResult(Context context, int errorCode, XGPushRegisterResult message) {
-		if (context == null || message == null || !PushSetting.isTPNSChannel) {
+		if (context == null || message == null) {
 			return;
 		}
 		String text = "";
@@ -52,7 +50,10 @@ public class TPNSMessageReceiver extends XGPushBaseReceiver {
 			// 在这里拿token
 			String token = message.getToken();
 			text = "注册成功1. token：" + token;
-			TUIOfflinePushManager.getInstance().setPushTokenToTIM(token);
+			//TUIOfflinePushManager.getInstance().setPushTokenToTIM(token);
+			if (TPNSPushSetting.mPushCallback != null) {
+				TPNSPushSetting.mPushCallback.onTokenCallback(token);
+			}
 		} else {
 			text = message + "注册失败，错误码：" + errorCode;
 		}
@@ -149,7 +150,7 @@ public class TPNSMessageReceiver extends XGPushBaseReceiver {
 	 */
 	@Override
 	public void onNotificationClickedResult(Context context, XGPushClickedResult message) {
-		if (context == null || message == null || !PushSetting.isTPNSChannel) {
+		if (context == null || message == null /*|| !PushSetting.isTPNSChannel*/) {
 			return;
 		}
 		String text = "";

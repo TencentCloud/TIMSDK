@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -19,6 +20,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.MessageProperties;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.ICommonMessageAdapter;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemClickListener;
+import com.tencent.qcloud.tuikit.tuichat.ui.view.message.reply.ChatFlowReactView;
 
 import java.util.Date;
 
@@ -31,6 +33,10 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
 
     public TextView chatTimeText;
     public FrameLayout msgContentFrame;
+    public LinearLayout msgReplyDetailLayout;
+    public LinearLayout msgArea;
+    public LinearLayout msgAreaAndReply;
+    public ChatFlowReactView reactView;
     public CheckBox mMutiSelectCheckBox;
     public RelativeLayout rightGroupLayout;
     public RelativeLayout mContentLayout;
@@ -38,8 +44,12 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
     private ValueAnimator highLightAnimator;
     public MessageBaseHolder(View itemView) {
         super(itemView);
-        chatTimeText = itemView.findViewById(R.id.chat_time_tv);
+        chatTimeText = itemView.findViewById(R.id.message_top_time_tv);
         msgContentFrame = itemView.findViewById(R.id.msg_content_fl);
+        msgReplyDetailLayout = itemView.findViewById(R.id.msg_reply_detail_fl);
+        reactView = itemView.findViewById(R.id.reacts_view);
+        msgArea = itemView.findViewById(R.id.msg_area);
+        msgAreaAndReply = itemView.findViewById(R.id.msg_area_and_reply);
         mMutiSelectCheckBox = itemView.findViewById(R.id.select_checkbox);
         rightGroupLayout = itemView.findViewById(R.id.right_group_layout);
         mContentLayout = itemView.findViewById(R.id.messsage_content_layout);
@@ -154,14 +164,14 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
     }
 
     public void setHighLightBackground(int color) {
-        Drawable drawable = msgContentFrame.getBackground();
+        Drawable drawable = msgArea.getBackground();
         if (drawable != null) {
             drawable.setColorFilter(color, PorterDuff.Mode.SRC_IN);
         }
     }
 
     public void clearHighLightBackground() {
-        Drawable drawable = msgContentFrame.getBackground();
+        Drawable drawable = msgArea.getBackground();
         if (drawable != null) {
             drawable.setColorFilter(null);
         }

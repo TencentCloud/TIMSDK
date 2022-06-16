@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 
+import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuikit.tuichat.presenter.C2CChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
@@ -46,7 +47,7 @@ public class TUIC2CChatFragment extends TUIBaseChatFragment {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
-                bundle.putString("chatId", chatInfo.getId());
+                bundle.putString(TUIConstants.TUIChat.CHAT_ID, chatInfo.getId());
                 TUICore.startActivity("FriendProfileActivity", bundle);
             }
         });

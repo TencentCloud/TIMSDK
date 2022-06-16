@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/item_left"
+    android:layout_width="match_parent"
+    android:layout_height="69.6dp"
+    android:background="#FFFFFF"
+    android:paddingLeft="12.6dp"
+    android:paddingTop="11.52dp">
+
+    <com.tencent.qcloud.tuicore.component.gatherimage.UserIconView
+        android:id="@+id/user_icon"
+        android:layout_width="41dp"
+        android:layout_height="41dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="6.23dp"
+        app:default_image="?attr/core_default_user_icon"
+        app:image_radius="4dp"
+        tools:visibility="visible"/>
+
+    <TextView
+        android:id="@+id/user_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/user_icon"
+        android:layout_toRightOf="@id/user_icon"
+        android:layout_alignTop="@id/user_icon"
+        android:layout_marginLeft="6.67dp"
+        android:layout_marginTop="2.4dp"
+        android:gravity="top|left"
+        android:ellipsize="end"
+        android:maxWidth="180dp"
+        android:singleLine="true"
+        android:textColor="#999999"
+        android:lineHeight="23.04sp"
+        android:textSize="13.44sp"
+        tools:text="Teemo"/>
+
+    <TextView
+        android:id="@+id/msg_abstract"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/user_name_tv"
+        android:layout_alignStart="@id/user_name_tv"
+        android:layout_alignLeft="@id/user_name_tv"
+        android:layout_marginTop="3.36dp"
+        android:lineHeight="21.6sp"
+        android:textColor="@color/black"
+        android:textSize="15.36sp"
+        tools:text="吃饭" />
+
+    <TextView
+        android:id="@+id/msg_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/user_name_tv"
+        android:layout_marginRight="15.36dp"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textColor="#B0B0B0"
+        android:textSize="11.52sp"
+        tools:text="18:00" />
+
+    <View
+        android:id="@+id/view_line"
+        android:layout_width="match_parent"
+        android:layout_height="0.48dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="1dp"
+        android:background="#DBDBDB" />
+
+</RelativeLayout>

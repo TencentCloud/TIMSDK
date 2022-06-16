@@ -2,13 +2,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.tencent.qcloud.tuikit.tuichat">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application>
-
+        <activity
+            android:name=".ui.page.MessageReplyDetailActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.page.TUIForwardChatActivity"
             android:screenOrientation="portrait" />
@@ -20,12 +24,11 @@
         <activity
             android:name=".ui.page.TUIGroupChatActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
+            android:screenOrientation="portrait"/>
 
-        <activity android:name=".ui.page.GroupMessageReceiptActivity"
+        <activity
+            android:name=".ui.page.MessageReceiptDetailActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".component.camera.CameraActivity"
             android:screenOrientation="portrait" />
@@ -38,7 +41,7 @@
             android:name=".TUIChatService"
             android:authorities="${applicationId}.TUIChat.Init"
             android:enabled="true"
-            android:exported="false"/>
+            android:exported="false" />
     </application>
 
 </manifest>
