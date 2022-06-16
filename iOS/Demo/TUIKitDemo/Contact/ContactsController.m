@@ -53,8 +53,8 @@
     UIButton *moreButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
     [moreButton setImage:TUIDemoDynamicImage(@"nav_more_img", [UIImage imageNamed:TUIDemoImagePath(@"more")]) forState:UIControlStateNormal];
     [moreButton addTarget:self action:@selector(onRightItem:) forControlEvents:UIControlEventTouchUpInside];
-    [moreButton.widthAnchor constraintEqualToConstant:20].active = YES;
-    [moreButton.heightAnchor constraintEqualToConstant:20].active = YES;
+    [moreButton.widthAnchor constraintEqualToConstant:24].active = YES;
+    [moreButton.heightAnchor constraintEqualToConstant:24].active = YES;
     UIBarButtonItem *moreItem = [[UIBarButtonItem alloc] initWithCustomView:moreButton];
     self.navigationItem.rightBarButtonItem = moreItem;
 

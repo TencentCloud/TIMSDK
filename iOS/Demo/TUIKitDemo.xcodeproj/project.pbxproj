@@ -7,9 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		48054970277F073F00FAEA4D /* AppDelegate+Push.m in Sources */ = {isa = PBXBuildFile; fileRef = 4805495F277F073F00FAEA4D /* AppDelegate+Push.m */; };
 		48054972277F073F00FAEA4D /* GenerateTestUserSig.m in Sources */ = {isa = PBXBuildFile; fileRef = 48054963277F073F00FAEA4D /* GenerateTestUserSig.m */; };
-		48054976277F073F00FAEA4D /* AppDelegate+APNS.m in Sources */ = {isa = PBXBuildFile; fileRef = 4805496F277F073F00FAEA4D /* AppDelegate+APNS.m */; };
 		480C761522DCA38A007495EC /* ContactsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 915AA6692248DBC600C0C9A0 /* ContactsController.m */; };
 		4824838127E4B1DC002F1926 /* TUIAboutSettingObj.m in Sources */ = {isa = PBXBuildFile; fileRef = 4824837B27E4B1DC002F1926 /* TUIAboutSettingObj.m */; };
 		4824838327E4B1DC002F1926 /* TUIAboutUsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4824838027E4B1DC002F1926 /* TUIAboutUsViewController.m */; };
@@ -21,7 +19,6 @@
 		48DF2C46253FE1B800BC522F /* NotificationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 48DF2C45253FE1B800BC522F /* NotificationService.m */; };
 		48DF2C4A253FE1B800BC522F /* pushservice.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 48DF2C42253FE1B800BC522F /* pushservice.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		48DF2CF82542E0EA00BC522F /* CustomFaceResource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 48DF2CF72542E0EA00BC522F /* CustomFaceResource.bundle */; };
-		48FBB4902791887A00099B2F /* AppDelegate+TPNS.m in Sources */ = {isa = PBXBuildFile; fileRef = 48FBB48E2791887A00099B2F /* AppDelegate+TPNS.m */; };
 		910D900122AE057E00C9A318 /* TCLoginModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 910D900022AE057E00C9A318 /* TCLoginModel.m */; };
 		BCF739AA621A7AF4B48F1525 /* libPods-TUIKitDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D1BCBC0335EEFE4307055DBB /* libPods-TUIKitDemo.a */; };
 		CE0BDFA9221D53C60083E1B0 /* Bugly.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE0BDFA8221D53C60083E1B0 /* Bugly.framework */; };
@@ -85,13 +82,9 @@
 
 /* Begin PBXFileReference section */
 		30722D34BE1DD45B2ACBD3BB /* Pods-TUIKitDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TUIKitDemo.release.xcconfig"; path = "Target Support Files/Pods-TUIKitDemo/Pods-TUIKitDemo.release.xcconfig"; sourceTree = "<group>"; };
-		4805495F277F073F00FAEA4D /* AppDelegate+Push.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AppDelegate+Push.m"; sourceTree = "<group>"; };
 		48054963277F073F00FAEA4D /* GenerateTestUserSig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenerateTestUserSig.m; sourceTree = "<group>"; };
 		4805496A277F073F00FAEA4D /* TCConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCConstants.h; sourceTree = "<group>"; };
 		4805496B277F073F00FAEA4D /* GenerateTestUserSig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenerateTestUserSig.h; sourceTree = "<group>"; };
-		4805496D277F073F00FAEA4D /* AppDelegate+APNS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppDelegate+APNS.h"; sourceTree = "<group>"; };
-		4805496E277F073F00FAEA4D /* AppDelegate+Push.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppDelegate+Push.h"; sourceTree = "<group>"; };
-		4805496F277F073F00FAEA4D /* AppDelegate+APNS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AppDelegate+APNS.m"; sourceTree = "<group>"; };
 		480C761722DCA3C3007495EC /* ImSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImSDK.framework; path = ../ImSDK/Framework/ImSDK.framework; sourceTree = "<group>"; };
 		4824837B27E4B1DC002F1926 /* TUIAboutSettingObj.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUIAboutSettingObj.m; sourceTree = "<group>"; };
 		4824837D27E4B1DC002F1926 /* TUIAboutUsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUIAboutUsViewController.h; sourceTree = "<group>"; };
@@ -114,8 +107,6 @@
 		48DF2C45253FE1B800BC522F /* NotificationService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationService.m; sourceTree = "<group>"; };
 		48DF2C47253FE1B800BC522F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		48DF2CF72542E0EA00BC522F /* CustomFaceResource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = CustomFaceResource.bundle; sourceTree = "<group>"; };
-		48FBB48E2791887A00099B2F /* AppDelegate+TPNS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AppDelegate+TPNS.m"; sourceTree = "<group>"; };
-		48FBB48F2791887A00099B2F /* AppDelegate+TPNS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppDelegate+TPNS.h"; sourceTree = "<group>"; };
 		8D757F7318DC3B846A870603 /* Pods-TUIKitDemo.dailybuild.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TUIKitDemo.dailybuild.xcconfig"; path = "Target Support Files/Pods-TUIKitDemo/Pods-TUIKitDemo.dailybuild.xcconfig"; sourceTree = "<group>"; };
 		910D8FFF22AE057E00C9A318 /* TCLoginModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCLoginModel.h; sourceTree = "<group>"; };
 		910D900022AE057E00C9A318 /* TCLoginModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCLoginModel.m; sourceTree = "<group>"; };
@@ -364,12 +355,6 @@
 		CF014484216E1A4900C12E35 /* TUIKitDemo */ = {
 			isa = PBXGroup;
 			children = (
-				48FBB48F2791887A00099B2F /* AppDelegate+TPNS.h */,
-				48FBB48E2791887A00099B2F /* AppDelegate+TPNS.m */,
-				4805496D277F073F00FAEA4D /* AppDelegate+APNS.h */,
-				4805496F277F073F00FAEA4D /* AppDelegate+APNS.m */,
-				4805496E277F073F00FAEA4D /* AppDelegate+Push.h */,
-				4805495F277F073F00FAEA4D /* AppDelegate+Push.m */,
 				48054960277F073F00FAEA4D /* Private */,
 				48DF2CF72542E0EA00BC522F /* CustomFaceResource.bundle */,
 				CE440CBA26E072530085EB57 /* Util */,
@@ -634,7 +619,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE440CDC26E072530085EB57 /* TUITabBarController.m in Sources */,
-				48FBB4902791887A00099B2F /* AppDelegate+TPNS.m in Sources */,
 				CE440CDF26E072530085EB57 /* Aspects.m in Sources */,
 				4824838127E4B1DC002F1926 /* TUIAboutSettingObj.m in Sources */,
 				CE440CE026E072530085EB57 /* TCUtil.m in Sources */,
@@ -644,7 +628,6 @@
 				4842D98927A033DF000DA6AF /* LanguageSelectController.m in Sources */,
 				480C761522DCA38A007495EC /* ContactsController.m in Sources */,
 				48054972277F073F00FAEA4D /* GenerateTestUserSig.m in Sources */,
-				48054970277F073F00FAEA4D /* AppDelegate+Push.m in Sources */,
 				CE440CE226E072530085EB57 /* TUILoginCache.m in Sources */,
 				CF01448A216E1A4900C12E35 /* LoginController.m in Sources */,
 				CE440CDE26E072530085EB57 /* TPopCell.m in Sources */,
@@ -652,7 +635,6 @@
 				487D4B8E22E15B8A00FD54BC /* ProfileController.m in Sources */,
 				CEF3EEEB272257A500A989D2 /* TUIKit.m in Sources */,
 				CFEB47D02179B82300CFD98C /* SettingController.m in Sources */,
-				48054976277F073F00FAEA4D /* AppDelegate+APNS.m in Sources */,
 				910D900122AE057E00C9A318 /* TCLoginModel.m in Sources */,
 				4824838327E4B1DC002F1926 /* TUIAboutUsViewController.m in Sources */,
 				CE2863A92756200000AF9687 /* TUIBadgeView.m in Sources */,

@@ -56,6 +56,9 @@
     self.navigationItem.titleView = _titleView;
     self.navigationItem.title = @"";
 
+    if (@available(iOS 15.0, *)) {
+        self.tableView.sectionHeaderTopPadding = 0;
+    }
     self.tableView.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
 
     [self.tableView registerClass:[TUICommonTextCell class] forCellReuseIdentifier:@"textCell"];
@@ -76,7 +79,7 @@
 
     TUICommonAvatarCellData *avatarData = [TUICommonAvatarCellData new];
     avatarData.key = NSLocalizedString(@"ProfilePhoto", nil); // @"头像";
-    avatarData.showAccessory = YES;
+    avatarData.showAccessory = NO;
     avatarData.cselector = @selector(didSelectAvatar);
     avatarData.avatarUrl = [NSURL URLWithString:self.profile.faceURL];
     [_data addObject:@[avatarData]];
@@ -146,6 +149,10 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     return section == 0 ? 0 : 10;
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 0;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
