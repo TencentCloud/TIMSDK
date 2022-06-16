@@ -1,4 +1,4 @@
-package com.tencent.qcloud.tuikit.tuichat.ui.view.input.face;
+package com.tencent.qcloud.tuikit.tuichat.component.face;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;

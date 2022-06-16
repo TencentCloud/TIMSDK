@@ -32,14 +32,11 @@ public class TUIContactService extends ServiceInitializer implements ITUIContact
         return instance;
     }
 
-    private static Context appContext;
-
     private final List<WeakReference<ContactEventListener>> contactEventListenerList = new ArrayList<>();
 
     @Override
     public void init(Context context) {
         instance = this;
-        appContext = context;
         initService();
         initEvent();
         initIMListener();
@@ -202,10 +199,6 @@ public class TUIContactService extends ServiceInitializer implements ITUIContact
             }
         }
         contactEventListenerList.add(reference);
-    }
-
-    public static Context getAppContext() {
-        return appContext;
     }
 
     @Override

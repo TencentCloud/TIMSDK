@@ -49,7 +49,7 @@
                         android:id="@+id/self_icon"
                         android:layout_width="@dimen/demo_profile_face_size"
                         android:layout_height="@dimen/demo_profile_face_size"
-                        android:layout_marginEnd="@dimen/demo_profile_face_margin_right"
+                        android:layout_marginEnd="10.56dp"
                         android:layout_gravity="center"
                         android:scaleType="centerCrop" />
 

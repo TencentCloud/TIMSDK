@@ -3,7 +3,6 @@ package com.tencent.qcloud.tuikit.tuichat.ui.page;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.component.CustomLinearLayoutManager;
@@ -28,27 +28,31 @@ import com.tencent.qcloud.tuicore.util.DateTimeUtil;
 import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
+import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupMemberInfo;
-import com.tencent.qcloud.tuikit.tuichat.bean.GroupMessageReceiptInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.MessageReceiptInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FileMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.GroupMessageReadMembersInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.presenter.GroupMessageReceiptPresenter;
+import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
+import com.tencent.qcloud.tuikit.tuichat.presenter.MessageReceiptPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class GroupMessageReceiptActivity extends BaseLightActivity {
+public class MessageReceiptDetailActivity extends BaseLightActivity {
 
-    private static final String TAG = GroupMessageReceiptActivity.class.getSimpleName();
+    private static final String TAG = MessageReceiptDetailActivity.class.getSimpleName();
 
-    private GroupMessageReceiptPresenter presenter;
+    private MessageReceiptPresenter presenter;
 
     private TitleBarLayout titleBarLayout;
+
+    private View groupDetailArea;
     private TextView msgAbstract;
     private ImageView msgAbstractImg;
     private TextView nameTv;
@@ -62,13 +66,18 @@ public class GroupMessageReceiptActivity extends BaseLightActivity {
     private RecyclerView readList;
     private RecyclerView unreadList;
 
+    private View c2cDetailArea;
+    private ImageView userFace;
+    private TextView userName;
+
     private TUIMessageBean messageBean;
+    private ChatInfo chatInfo;
 
     private MemberAdapter readAdapter;
     private MemberAdapter unreadAdapter;
 
-    private List<GroupMemberInfo> readMemberList = new ArrayList<>();
-    private List<GroupMemberInfo> unreadMemberList = new ArrayList<>();
+    private final List<GroupMemberInfo> readMemberList = new ArrayList<>();
+    private final List<GroupMemberInfo> unreadMemberList = new ArrayList<>();
     private long readNextSeq;
     private long unreadNextSeq;
     private boolean readFinished = false;
@@ -80,14 +89,14 @@ public class GroupMessageReceiptActivity extends BaseLightActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         TUIChatLog.i(TAG, "onCreate " + this);
-        setContentView(R.layout.group_msg_receipt_layout);
+        setContentView(R.layout.msg_receipt_detail_layout);
 
         initView();
         initData();
     }
 
     private void initView() {
-        titleBarLayout = findViewById(R.id.group_receipt_title);
+        titleBarLayout = findViewById(R.id.receipt_title);
         titleBarLayout.setOnLeftClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,6 +104,10 @@ public class GroupMessageReceiptActivity extends BaseLightActivity {
             }
         });
         titleBarLayout.setTitle(getString(R.string.chat_message_detail), ITitleBarLayout.Position.MIDDLE);
+        groupDetailArea = findViewById(R.id.group_read_details);
+        c2cDetailArea = findViewById(R.id.user_read_detail);
+        userFace = findViewById(R.id.user_face);
+        userName = findViewById(R.id.user_name_tv);
         msgAbstract = findViewById(R.id.msg_abstract);
         msgAbstractImg = findViewById(R.id.msg_abstract_iv);
         nameTv = findViewById(R.id.name_tv);
@@ -112,7 +125,7 @@ public class GroupMessageReceiptActivity extends BaseLightActivity {
             @Override
             public void onClick(View v) {
                 readTitleLine.setVisibility(View.VISIBLE);
-                readTitleTv.setTextColor(getResources().getColor(TUIThemeManager.getAttrResId(GroupMessageReceiptActivity.this, R.attr.core_primary_color)));
+                readTitleTv.setTextColor(getResources().getColor(TUIThemeManager.getAttrResId(MessageReceiptDetailActivity.this, R.attr.core_primary_color)));
                 readList.setVisibility(View.VISIBLE);
                 unreadList.setVisibility(View.GONE);
                 unreadTitleLine.setVisibility(View.INVISIBLE);
@@ -124,7 +137,7 @@ public class GroupMessageReceiptActivity extends BaseLightActivity {
             @Override
             public void onClick(View v) {
                 unreadTitleLine.setVisibility(View.VISIBLE);
-                unreadTitleTv.setTextColor(getResources().getColor(TUIThemeManager.getAttrResId(GroupMessageReceiptActivity.this, R.attr.core_primary_color)));
+                unreadTitleTv.setTextColor(getResources().getColor(TUIThemeManager.getAttrResId(MessageReceiptDetailActivity.this, R.attr.core_primary_color)));
                 unreadList.setVisibility(View.VISIBLE);
                 readList.setVisibility(View.GONE);
                 readTitleLine.setVisibility(View.INVISIBLE);
@@ -136,7 +149,8 @@ public class GroupMessageReceiptActivity extends BaseLightActivity {
     private void initData() {
         Intent intent = getIntent();
         messageBean = (TUIMessageBean) intent.getSerializableExtra(TUIChatConstants.MESSAGE_BEAN);
-        presenter = new GroupMessageReceiptPresenter();
+        chatInfo = (ChatInfo) intent.getSerializableExtra(TUIChatConstants.CHAT_INFO);
+        presenter = new MessageReceiptPresenter();
 
         setMsgAbstract();
 
@@ -145,6 +159,11 @@ public class GroupMessageReceiptActivity extends BaseLightActivity {
         long time = messageBean.getMessageTime();
         timeTv.setText(DateTimeUtil.getTimeFormatText(new Date(time * 1000)));
 
+        if (!messageBean.isGroup()) {
+            setUserDetail(messageBean);
+            return;
+        }
+
         readAdapter = new MemberAdapter();
         unreadAdapter = new MemberAdapter();
         readList.setLayoutManager(new CustomLinearLayoutManager(this));
@@ -152,10 +171,10 @@ public class GroupMessageReceiptActivity extends BaseLightActivity {
         readList.setAdapter(readAdapter);
         unreadList.setAdapter(unreadAdapter);
 
-        presenter.getGroupMessageReadReceipt(messageBean, new IUIKitCallback<List<GroupMessageReceiptInfo>>() {
+        presenter.getGroupMessageReadReceipt(messageBean, new IUIKitCallback<List<MessageReceiptInfo>>() {
             @Override
-            public void onSuccess(List<GroupMessageReceiptInfo> data) {
-                GroupMessageReceiptInfo info = data.get(0);
+            public void onSuccess(List<MessageReceiptInfo> data) {
+                MessageReceiptInfo info = data.get(0);
                 readTitleTv.setText(getString(R.string.someone_have_read, info.getReadCount()));
                 unreadTitleTv.setText(getString(R.string.someone_unread, info.getUnreadCount()));
             }
@@ -207,10 +226,28 @@ public class GroupMessageReceiptActivity extends BaseLightActivity {
             if (messageBean instanceof FileMessageBean) {
                 msgAbstract.setText(messageBean.getExtra() + ((FileMessageBean) messageBean).getFileName());
             } else {
-                msgAbstract.setText(messageBean.getExtra());
+                FaceManager.handlerEmojiText(msgAbstract, messageBean.getExtra(), false);
             }
         }
+    }
 
+    private void setUserDetail(TUIMessageBean messageBean) {
+        groupDetailArea.setVisibility(View.GONE);
+        c2cDetailArea.setVisibility(View.VISIBLE);
+        String userId = messageBean.getUserId();
+        if (chatInfo != null) {
+            GlideEngine.loadUserIcon(userFace, chatInfo.getFaceUrl());
+            userName.setText(chatInfo.getChatName());
+        }
+
+        c2cDetailArea.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString(TUIConstants.TUIChat.CHAT_ID, userId);
+                TUICore.startActivity("FriendProfileActivity", bundle);
+            }
+        });
     }
 
     private ViewGroup.LayoutParams getImageParams(ViewGroup.LayoutParams params, final TUIMessageBean msg) {
@@ -256,7 +293,7 @@ public class GroupMessageReceiptActivity extends BaseLightActivity {
             @Override
             public void onError(String module, int errCode, String errMsg) {
                 readLoading = false;
-                Log.e("GroupMessageReceiptActivity", "errCode " + errCode + " errMsg " + errMsg);
+                TUIChatLog.e(TAG, "errCode " + errCode + " errMsg " + errMsg);
             }
         });
     }
@@ -280,7 +317,7 @@ public class GroupMessageReceiptActivity extends BaseLightActivity {
             @Override
             public void onError(String module, int errCode, String errMsg) {
                 unreadLoading = false;
-                Log.e("GroupMessageReceiptActivity", "errCode " + errCode + " errMsg " + errMsg);
+                TUIChatLog.e(TAG, "errCode " + errCode + " errMsg " + errMsg);
             }
         });
     }
@@ -323,7 +360,7 @@ public class GroupMessageReceiptActivity extends BaseLightActivity {
                 @Override
                 public void onClick(View v) {
                     Bundle bundle = new Bundle();
-                    bundle.putString("chatId", memberInfo.getAccount());
+                    bundle.putString(TUIConstants.TUIChat.CHAT_ID, memberInfo.getAccount());
                     TUICore.startActivity("FriendProfileActivity", bundle);
                 }
             });

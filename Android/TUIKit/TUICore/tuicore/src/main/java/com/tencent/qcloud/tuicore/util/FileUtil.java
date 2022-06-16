@@ -225,7 +225,11 @@ public class FileUtil {
         String destinationPath = null;
         if (file != null) {
             destinationPath = file.getAbsolutePath();
-            saveFileFromUri(context, uri, destinationPath);
+            boolean saveSuccess = saveFileFromUri(context, uri, destinationPath);
+            if (!saveSuccess) {
+                file.delete();
+                return null;
+            }
         }
 
         return destinationPath;
@@ -307,7 +311,7 @@ public class FileUtil {
         return dir;
     }
 
-    private static void saveFileFromUri(Context context, Uri uri, String destinationPath) {
+    private static boolean saveFileFromUri(Context context, Uri uri, String destinationPath) {
         InputStream is = null;
         BufferedOutputStream bos = null;
         try {
@@ -321,6 +325,7 @@ public class FileUtil {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         } finally {
             try {
                 if (is != null) is.close();
@@ -329,6 +334,7 @@ public class FileUtil {
                 e.printStackTrace();
             }
         }
+        return true;
     }
 
     /**

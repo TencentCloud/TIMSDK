@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="200dp"
-    android:layout_height="match_parent"
-    android:paddingLeft="11.94dp"
-    android:paddingRight="11.94dp"
-    android:paddingBottom="8dp"
-    android:paddingTop="8dp"
-    android:orientation="horizontal">
+<com.tencent.qcloud.tuikit.tuichat.ui.view.message.MaxWidthLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:maxWidth="200dp"
+    android:paddingTop="9.6dp"
+    android:paddingBottom="9.6dp"
+    android:paddingLeft="11.52dp"
+    android:paddingRight="11.52dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -17,7 +21,6 @@
         <TextView
             android:id="@+id/file_name_tv"
             android:layout_width="wrap_content"
-            android:includeFontPadding="false"
             android:singleLine="true"
             android:ellipsize="middle"
             android:layout_height="wrap_content"
@@ -33,7 +36,6 @@
                 android:id="@+id/file_size_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:includeFontPadding="false"
                 android:layout_alignParentLeft="true"
                 android:textColor="#888888"
                 android:textSize="13sp" />
@@ -51,7 +53,9 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:textColor="#888888"
-                android:textSize="13sp" />
+                android:textSize="13sp"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/file_size_tv" />
         </RelativeLayout>
 
     </LinearLayout>
@@ -62,7 +66,6 @@
         android:layout_height="38dp"
         android:layout_marginLeft="12dp"
         android:scaleType="fitXY"
-        android:layout_gravity="center_vertical"
         android:src="@drawable/file_icon"/>
 
-</LinearLayout>
+</com.tencent.qcloud.tuikit.tuichat.ui.view.message.MaxWidthLinearLayout>

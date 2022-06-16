@@ -1,7 +1,7 @@
 package com.tencent.qcloud.tuikit.tuichat.presenter;
 
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
-import com.tencent.qcloud.tuikit.tuichat.bean.GroupMessageReceiptInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.MessageReceiptInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.GroupMessageReadMembersInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.model.ChatProvider;
@@ -9,12 +9,12 @@ import com.tencent.qcloud.tuikit.tuichat.model.ChatProvider;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GroupMessageReceiptPresenter {
+public class MessageReceiptPresenter {
     public static final int GET_MEMBERS_COUNT = 100;
 
     private final ChatProvider provider;
 
-    public GroupMessageReceiptPresenter() {
+    public MessageReceiptPresenter() {
         provider = new ChatProvider();
     }
 
@@ -22,9 +22,9 @@ public class GroupMessageReceiptPresenter {
         provider.getGroupMessageReadMembers(messageBean, isRead, GET_MEMBERS_COUNT, nextSeq, callback);
     }
 
-    public void getGroupMessageReadReceipt(TUIMessageBean messageBean, IUIKitCallback<List<GroupMessageReceiptInfo>> callback) {
+    public void getGroupMessageReadReceipt(TUIMessageBean messageBean, IUIKitCallback<List<MessageReceiptInfo>> callback) {
         List<TUIMessageBean> messageBeanList = new ArrayList<>();
         messageBeanList.add(messageBean);
-        provider.getGroupReadReceipt(messageBeanList, callback);
+        provider.getMessageReadReceipt(messageBeanList, callback);
     }
 }

@@ -4,15 +4,12 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:id="@+id/forward_msg_layout"
-    android:orientation="vertical"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp">
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/msg_forward_title"
         android:layout_width="@dimen/forward_text_max_length"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:gravity="center_vertical"
         android:textColor="@color/black"
         android:maxLines="1"

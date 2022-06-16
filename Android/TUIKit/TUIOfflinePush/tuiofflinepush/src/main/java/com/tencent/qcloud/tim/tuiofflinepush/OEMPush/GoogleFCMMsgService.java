@@ -1,8 +1,6 @@
 package com.tencent.qcloud.tim.tuiofflinepush.OEMPush;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
-import com.tencent.qcloud.tim.tuiofflinepush.TUIOfflinePushManager;
-import com.tencent.qcloud.tim.tuiofflinepush.PushSetting;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushLog;
 
 
@@ -14,10 +12,8 @@ public class GoogleFCMMsgService extends FirebaseMessagingService {
         super.onNewToken(token);
         TUIOfflinePushLog.i(TAG, "google fcm onNewToken : " + token);
 
-        if (PushSetting.isTPNSChannel) {
-            return;
+        if (OEMPushSetting.mPushCallback != null) {
+            OEMPushSetting.mPushCallback.onTokenCallback(token);
         }
-
-        TUIOfflinePushManager.getInstance().setPushTokenToTIM(token);
     }
 }

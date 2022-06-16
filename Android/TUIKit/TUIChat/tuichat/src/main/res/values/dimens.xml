@@ -49,14 +49,16 @@
     <dimen name="chat_pop_menu_padding_left_right">16.32dp</dimen>
     <dimen name="chat_pop_menu_padding_bottom">10.96dp</dimen>
     <dimen name="chat_pop_menu_item_height">35.8dp</dimen>
-    <dimen name="chat_pop_menu_icon_size">19.3dp</dimen>
+    <dimen name="chat_pop_menu_icon_size">19.2dp</dimen>
     <dimen name="chat_pop_menu_icon_margin_top">15.48dp</dimen>
     <dimen name="chat_pop_menu_font_size">9.6sp</dimen>
     <dimen name="chat_pop_menu_text_margin_top">3.92dp</dimen>
     <dimen name="chat_pop_menu_indicator_height">7dp</dimen>
     <dimen name="chat_pop_menu_radius">8dp</dimen>
-    <dimen name="chat_pop_menu_item_space_width">26dp</dimen>
-    <dimen name="chat_pop_menu_item_space_height">26dp</dimen>
+    <dimen name="chat_pop_menu_item_space_width">5.28dp</dimen>
+    <dimen name="chat_pop_menu_item_space_height">3.84dp</dimen>
 
+    <dimen name="chat_message_area_padding_left_right">11.52dp</dimen>
+    <dimen name="chat_message_area_padding_top_bottom">9.6dp</dimen>
 
 </resources>

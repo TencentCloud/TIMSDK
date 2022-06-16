@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <com.tencent.qcloud.tuicore.component.TitleBarLayout
-        android:id="@+id/group_receipt_title"
+        android:id="@+id/receipt_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
@@ -68,12 +68,65 @@
                 android:lineHeight="23.04dp" />
 
         </LinearLayout>
-
-
     </LinearLayout>
 
+    <RelativeLayout
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/user_read_detail"
+        android:layout_width="match_parent"
+        android:layout_height="58.58dp"
+        android:background="#FFFFFF"
+        android:focusable="true"
+        android:visibility="gone"
+        android:paddingLeft="15.36dp"
+        android:paddingStart="15.36dp"
+        android:paddingEnd="15.36dp"
+        android:paddingRight="15.36dp"
+        android:orientation="vertical">
+
+        <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+            android:id="@+id/user_face"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_width="38.4dp"
+            android:layout_height="38.4dp"
+            android:layout_marginTop="9.6dp"
+            android:layout_alignParentLeft="true" />
+
+        <TextView
+            android:id="@+id/user_name_tv"
+            android:layout_alignTop="@id/user_face"
+            android:layout_toEndOf="@id/user_face"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="11.52dp"
+            android:layout_marginLeft="11.52dp"
+            android:layout_marginRight="11.52dp"
+            android:layout_marginTop="7.68dp"
+            android:ellipsize="end"
+            android:lineHeight="23.04sp"
+            android:singleLine="true"
+            android:textColor="@color/black_font_color"
+            android:textSize="17.28sp"
+            tools:text="Bob"
+            android:layout_toRightOf="@id/user_face" />
+
+        <TextView
+            android:id="@+id/user_read_status"
+            android:text="@string/chat_not_read"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:textColor="@color/black_font_color"
+            android:textSize="15.36sp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true" />
+
+    </RelativeLayout>
+
     <LinearLayout
-        android:id="@+id/read_details"
+        android:id="@+id/group_read_details"
         android:orientation="vertical"
         android:background="@color/white"
         android:layout_width="match_parent"

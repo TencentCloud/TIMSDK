@@ -205,9 +205,8 @@ public class TUIConversationFragment extends BaseFragment {
             param.putLong(TUIConstants.TUIChat.DRAFT_TIME, conversationInfo.getDraft().getDraftTime());
         }
         param.putBoolean(TUIConstants.TUIChat.IS_TOP_CHAT, conversationInfo.isTop());
-
+        param.putString(TUIConstants.TUIChat.FACE_URL, conversationInfo.getIconPath());
         if (conversationInfo.isGroup()) {
-            param.putString(TUIConstants.TUIChat.FACE_URL, conversationInfo.getIconPath());
             param.putString(TUIConstants.TUIChat.GROUP_TYPE, conversationInfo.getGroupType());
             param.putSerializable(TUIConstants.TUIChat.AT_INFO_LIST, (Serializable) conversationInfo.getGroupAtInfoList());
         }

@@ -10,13 +10,40 @@ public class GeneralConfig {
     private String appCacheDir;
     private int audioRecordMaxTime = DEFAULT_AUDIO_RECORD_MAX_TIME;
     private int videoRecordMaxTime = DEFAULT_VIDEO_RECORD_MAX_TIME;
-    private boolean showRead = true;
-    private boolean isNeedReadReceipt = false;
     private String userNickname = "";
     private boolean excludedFromUnreadCount;
     private boolean excludedFromLastMessage;
 
     private boolean isAndroidPrivateRing;
+
+    private boolean showRead = false;
+    private boolean reactEnable = true;
+    private boolean replyEnable = true;
+    private boolean quoteEnable = true;
+
+    public void setReactEnable(boolean reactEnable) {
+        this.reactEnable = reactEnable;
+    }
+
+    public boolean isReactEnable() {
+        return reactEnable;
+    }
+
+    public void setReplyEnable(boolean replyEnable) {
+        this.replyEnable = replyEnable;
+    }
+
+    public boolean isReplyEnable() {
+        return replyEnable;
+    }
+
+    public void setQuoteEnable(boolean quoteEnable) {
+        this.quoteEnable = quoteEnable;
+    }
+
+    public boolean isQuoteEnable() {
+        return quoteEnable;
+    }
 
     public String getUserNickname() {
         return userNickname;
@@ -112,14 +139,6 @@ public class GeneralConfig {
      */
     public void setShowRead(boolean showRead) {
         this.showRead = showRead;
-    }
-
-    public boolean isNeedReadReceipt() {
-        return isNeedReadReceipt;
-    }
-
-    public void setNeedReadReceipt(boolean needReadReceipt) {
-        isNeedReadReceipt = needReadReceipt;
     }
 
     public boolean isExcludedFromUnreadCount() {

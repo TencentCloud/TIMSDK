@@ -1,5 +1,7 @@
 package com.tencent.qcloud.tuikit.tuichat.bean;
 
+import android.text.TextUtils;
+
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import com.tencent.imsdk.v2.V2TIMManager;
@@ -7,6 +9,7 @@ import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMSignalingInfo;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
 import java.io.Serializable;
@@ -57,6 +60,12 @@ public class CallModel implements Cloneable, Serializable {
      * 接听电话
      */
     public static final int VIDEO_CALL_ACTION_ACCEPT          = 7;
+
+    public static final int VIDEO_CALL_ACTION_SWITCH_TO_AUDIO = 8;
+
+    public static final int VIDEO_CALL_ACTION_SWITCH_TO_AUDIO_ACCEPT = 9;
+
+    public static final int VIDEO_CALL_ACTION_UNKNOWN_INVITE = 10;
 
     public static String SIGNALING_EXTRA_VALUE_BUSINESS_ID = "av_call";
 
@@ -129,9 +138,10 @@ public class CallModel implements Cloneable, Serializable {
         if (signalingInfo == null) {
             return null;
         }
+        Gson gson = new Gson();
         CallModel callModel = new CallModel();
         try {
-            Map extraMap = new Gson().fromJson(signalingInfo.getData(), Map.class);
+            Map extraMap = gson.fromJson(signalingInfo.getData(), Map.class);
             if (extraMap != null
                     && extraMap.containsKey(CallModel.SIGNALING_EXTRA_KEY_VERSION)
                     && ((Double)extraMap.get(CallModel.SIGNALING_EXTRA_KEY_VERSION)).intValue() > TUIChatConstants.version) {
@@ -140,23 +150,11 @@ public class CallModel implements Cloneable, Serializable {
             }
             callModel.data = signalingInfo.getData();
             if (extraMap != null) {
+                callModel.callType = ((Double)extraMap.get(TUIConstants.Message.CALLING_TYPE_KEY)).intValue();
                 callModel.bussinessID = (String) extraMap.get(CallModel.SIGNALING_EXTRA_KEY_BUSINESS_ID);
             }
             if (signalingInfo.getActionType() == V2TIMSignalingInfo.SIGNALING_ACTION_TYPE_INVITE && extraMap != null) {
-                callModel.groupId = signalingInfo.getGroupID();
-                callModel.timestamp = msg.getTimestamp();
-                callModel.version = ((Double)extraMap.get(CallModel.SIGNALING_EXTRA_KEY_VERSION)).intValue();
-                if (extraMap.containsKey(CallModel.SIGNALING_EXTRA_KEY_CALL_END)) {
-                    callModel.action = CallModel.VIDEO_CALL_ACTION_HANGUP;
-                    callModel.duration = ((Double)extraMap.get(CallModel.SIGNALING_EXTRA_KEY_CALL_END)).intValue();
-                } else {
-                    callModel.action = CallModel.VIDEO_CALL_ACTION_DIALING;
-                    callModel.callId = signalingInfo.getInviteID();
-                    callModel.sender = signalingInfo.getInviter();
-                    callModel.invitedList = signalingInfo.getInviteeList();
-                    callModel.callType = ((Double)extraMap.get(CallModel.SIGNALING_EXTRA_KEY_CALL_TYPE)).intValue();
-                    callModel.roomId = ((Double)extraMap.get(CallModel.SIGNALING_EXTRA_KEY_ROOM_ID)).intValue();
-                }
+                handleInvite(msg, signalingInfo, gson, callModel, extraMap);
             } else if (signalingInfo.getActionType() == V2TIMSignalingInfo.SIGNALING_ACTION_TYPE_CANCEL_INVITE) {
                 callModel.action = CallModel.VIDEO_CALL_ACTION_SPONSOR_CANCEL;
                 callModel.groupId = signalingInfo.getGroupID();
@@ -178,20 +176,82 @@ public class CallModel implements Cloneable, Serializable {
                 callModel.callId = signalingInfo.getInviteID();
                 callModel.invitedList = signalingInfo.getInviteeList();
             } else if (signalingInfo.getActionType() == V2TIMSignalingInfo.SIGNALING_ACTION_TYPE_ACCEPT_INVITE) {
-                callModel.action = CallModel.VIDEO_CALL_ACTION_ACCEPT;
-                callModel.groupId = signalingInfo.getGroupID();
-                callModel.callId = signalingInfo.getInviteID();
-                callModel.invitedList = signalingInfo.getInviteeList();
-                callModel.version = ((Double)extraMap.get(CallModel.SIGNALING_EXTRA_KEY_VERSION)).intValue();
-            }
-
-            if (extraMap != null) {
-                callModel.callType = ((Double)extraMap.get(TUIConstants.Message.CALLING_TYPE_KEY)).intValue();
+                handleAccept(signalingInfo, callModel, extraMap);
             }
 
         } catch (Exception e) {
             TUIChatLog.e(TAG, "convert2VideoCallData exception:" + e);
         }
         return callModel;
+    }
+
+    private static void handleAccept(V2TIMSignalingInfo signalingInfo, CallModel callModel, Map extraMap) {
+        callModel.groupId = signalingInfo.getGroupID();
+        callModel.callId = signalingInfo.getInviteID();
+        callModel.invitedList = signalingInfo.getInviteeList();
+        callModel.version = ((Double) extraMap.get(CallModel.SIGNALING_EXTRA_KEY_VERSION)).intValue();
+        callModel.callType = ((Double)extraMap.get(TUIConstants.Message.CALLING_TYPE_KEY)).intValue();
+
+        Map contentDataMap = (Map) extraMap.get("data");
+        if (contentDataMap != null) {
+            // new version
+            if (!contentDataMap.containsKey("cmd")) {
+                callModel.action = VIDEO_CALL_ACTION_UNKNOWN_INVITE;
+            } else {
+                String cmd = (String) contentDataMap.get("cmd");
+                if (TextUtils.equals(cmd, "switchToAudio")) {
+                    callModel.action = VIDEO_CALL_ACTION_SWITCH_TO_AUDIO_ACCEPT;
+                    callModel.callType = CallingMessageBean.ACTION_ID_VIDEO_CALL;
+                } else {
+                    callModel.action = VIDEO_CALL_ACTION_ACCEPT;
+                }
+            }
+        } else {
+            // old version
+            callModel.action = CallModel.VIDEO_CALL_ACTION_ACCEPT;
+        }
+    }
+
+    private static void handleInvite(V2TIMMessage msg, V2TIMSignalingInfo signalingInfo, Gson gson, CallModel callModel, Map extraMap) {
+        callModel.groupId = signalingInfo.getGroupID();
+        callModel.timestamp = msg.getTimestamp();
+        callModel.version = ((Double) extraMap.get(CallModel.SIGNALING_EXTRA_KEY_VERSION)).intValue();
+        Map contentDataMap = (Map) extraMap.get("data");
+        if (contentDataMap != null) {
+            // new version
+            if (!contentDataMap.containsKey("cmd")) {
+                callModel.action = VIDEO_CALL_ACTION_UNKNOWN_INVITE;
+            } else {
+                String cmd = (String) contentDataMap.get("cmd");
+                if (TextUtils.equals(cmd, "switchToAudio")) {
+                    callModel.action = VIDEO_CALL_ACTION_SWITCH_TO_AUDIO;
+                } else if (TextUtils.equals(cmd, "hangup")) {
+                    callModel.action = CallModel.VIDEO_CALL_ACTION_HANGUP;
+                    callModel.duration = ((Double) contentDataMap.get("cmdInfo")).intValue();
+                } else if (TextUtils.equals(cmd, "videoCall") || TextUtils.equals(cmd, "audioCall")) {
+                    callModel.action = CallModel.VIDEO_CALL_ACTION_DIALING;
+                    callModel.callId = signalingInfo.getInviteID();
+                    callModel.sender = signalingInfo.getInviter();
+                    callModel.invitedList = signalingInfo.getInviteeList();
+                    callModel.callType = TextUtils.equals(cmd, "audioCall") ? 1 : 2;
+                    callModel.roomId = ((Double) extraMap.get(CallModel.SIGNALING_EXTRA_KEY_ROOM_ID)).intValue();
+                } else {
+                    callModel.action = VIDEO_CALL_ACTION_UNKNOWN_INVITE;
+                }
+            }
+        } else {
+            // old version
+            if (extraMap.containsKey(CallModel.SIGNALING_EXTRA_KEY_CALL_END)) {
+                callModel.action = CallModel.VIDEO_CALL_ACTION_HANGUP;
+                callModel.duration = ((Double) extraMap.get(CallModel.SIGNALING_EXTRA_KEY_CALL_END)).intValue();
+            } else {
+                callModel.action = CallModel.VIDEO_CALL_ACTION_DIALING;
+                callModel.callId = signalingInfo.getInviteID();
+                callModel.sender = signalingInfo.getInviter();
+                callModel.invitedList = signalingInfo.getInviteeList();
+                callModel.callType = ((Double) extraMap.get(CallModel.SIGNALING_EXTRA_KEY_CALL_TYPE)).intValue();
+                callModel.roomId = ((Double) extraMap.get(CallModel.SIGNALING_EXTRA_KEY_ROOM_ID)).intValue();
+            }
+        }
     }
 }

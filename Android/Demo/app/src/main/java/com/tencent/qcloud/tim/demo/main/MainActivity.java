@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -256,6 +257,11 @@ public class MainActivity extends BaseLightActivity {
         mainTitleBar.getLeftGroup().setVisibility(View.GONE);
         mainTitleBar.getRightGroup().setVisibility(View.VISIBLE);
         mainTitleBar.setRightIcon(TUIThemeManager.getAttrResId(this, R.attr.demo_title_bar_more));
+        int titleBarIconSize = getResources().getDimensionPixelSize(R.dimen.demo_title_bar_icon_size);
+        ViewGroup.LayoutParams params = mainTitleBar.getRightIcon().getLayoutParams();
+        params.width = titleBarIconSize;
+        params.height = titleBarIconSize;
+        mainTitleBar.getRightIcon().setLayoutParams(params);
         setConversationMenu();
     }
 

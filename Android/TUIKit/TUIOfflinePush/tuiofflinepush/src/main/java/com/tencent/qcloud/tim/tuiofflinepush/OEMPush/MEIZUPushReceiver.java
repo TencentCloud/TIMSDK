@@ -11,8 +11,6 @@ import com.meizu.cloud.pushsdk.platform.message.RegisterStatus;
 import com.meizu.cloud.pushsdk.platform.message.SubAliasStatus;
 import com.meizu.cloud.pushsdk.platform.message.SubTagsStatus;
 import com.meizu.cloud.pushsdk.platform.message.UnRegisterStatus;
-import com.tencent.qcloud.tim.tuiofflinepush.TUIOfflinePushManager;
-import com.tencent.qcloud.tim.tuiofflinepush.PushSetting;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushLog;
 
 public class MEIZUPushReceiver extends MzPushMessageReceiver {
@@ -69,11 +67,9 @@ public class MEIZUPushReceiver extends MzPushMessageReceiver {
     public void onRegisterStatus(Context context, RegisterStatus registerStatus) {
         TUIOfflinePushLog.i(TAG, "onRegisterStatus token = " + registerStatus.getPushId());
 
-        if (PushSetting.isTPNSChannel) {
-            return;
+        if (OEMPushSetting.mPushCallback != null) {
+            OEMPushSetting.mPushCallback.onTokenCallback(registerStatus.getPushId());
         }
-
-        TUIOfflinePushManager.getInstance().setPushTokenToTIM(registerStatus.getPushId());
     }
 
     @Override

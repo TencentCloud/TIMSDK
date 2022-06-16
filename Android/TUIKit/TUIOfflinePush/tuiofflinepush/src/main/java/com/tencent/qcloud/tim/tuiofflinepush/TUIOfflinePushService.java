@@ -192,11 +192,11 @@ public class TUIOfflinePushService extends ServiceInitializer implements ITUINot
         return "local";
     }
 
-    public void logined() {
+    private void logined() {
         TUIOfflinePushManager.getInstance().registerPush(appContext, userId);
     }
 
-    public void logout() {
+    private void logout() {
         TUIOfflinePushManager.getInstance().unRegisterPush(appContext, userId);
     }
 

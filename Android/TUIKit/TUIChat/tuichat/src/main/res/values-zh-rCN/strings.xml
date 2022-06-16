@@ -26,6 +26,7 @@
     <string name="forward_mode_merge">合并转发</string>
     <string name="forward_button">转发</string>
     <string name="reply_button">回复</string>
+    <string name="quote_button">引用</string>
     <string name="delete_button">删除</string>
     <string name="chat_delete_msg_tip">确定删除已选消息</string>
     <string name="forward_chats">群聊的聊天记录</string>
@@ -116,6 +117,7 @@
     <string name="downloading">下载中...</string>
     <string name="sended">已发送</string>
     <string name="send_failed">发送失败</string>
+    <string name="send_failed_file_not_exists">发送失败，文件不存在</string>
     <string name="open_file_tips">选择要打开此文件的应用</string>
     <string name="sending">发送中...</string>
     <string name="download_file_error">下载视频失败: </string>
@@ -167,6 +169,9 @@
     <string name="reject_call">拒绝通话</string>
     <string name="invalid_command">不能识别的通话指令</string>
     <string name="reject_calls">拒绝通话</string>
+    <string name="chat_calling_switch_to_audio">视频转语音</string>
+    <string name="chat_calling_switch_to_audio_accept">确认视频转语音</string>
+    <string name="chat_calling_unknown_invitation">未知邀请</string>
 
     <string name="test_custom_message">查看详情>></string>
 
@@ -176,7 +181,8 @@
     <string name="resend_tips">确定重发吗？</string>
     <string name="delete_tips">是否删除该消息？</string>
     <string name="reedit_msg">重新编辑</string>
-    <string name="save_tips">保存成功</string>
+    <string name="save_success">保存成功</string>
+    <string name="save_failed">保存失败</string>
     <string name="saving_tips">保存中...</string>
 
     <string name="back_to_lastmessage">回到最新位置</string>
@@ -190,10 +196,10 @@
     <string name="chat_permission_camera_reason_title">%s申请获取相机权限</string>
     <string name="chat_permission_camera_reason">为方便您拍摄照片或视频以发送给朋友，以及进行视频通话，请允许我们访问摄像头。</string>
     <string name="chat_permission_storage_reason_title">%s申请获取存储权限</string>
-    <string name="chat_permission_storage_reason">为方便您查看和选择相册里的图片视频、设备里的文件发送给朋友，以及保存内容到设备，请允许我们访问您设备上的照片、媒体内容和文件。</string>
+    <string name="chat_permission_storage_reason">为方便您保存照片和视频到设备，请允许我们写入照片和视频到设备。</string>
     <string name="chat_permission_mic_dialog_alert">在设置-应用-%s-权限中开启麦克风权限，以正常使用语音消息、摄像和音视频通话功能</string>
     <string name="chat_permission_camera_dialog_alert">在设置-应用-%s-权限中开启相机权限，以正常使用拍照、摄像和视频通话功能</string>
-    <string name="chat_permission_storage_dialog_alert">在设置-应用-%s-权限中开启存储权限，以正常使用文件选择、发送和保存内容功能</string>
+    <string name="chat_permission_storage_dialog_alert">在设置-应用-%s-权限中开启存储权限，以正常使用保存照片和视频功能</string>
     <!--  权限相关 end -->
 
     <string name="chat_message_read_receipt">消息已读回执</string>
@@ -203,4 +209,8 @@
     <string name="chat_buying_guidelines">购买指引</string>
     <string name="chat_im_flagship_edition_update_tip">%s功能为IM旗舰版功能，购买旗舰版套餐包后可使用。如果您当前使用的是专业版套餐包，您需要先对专业版套餐包做退费处理，再购买旗舰版套餐包，详见购买指引。</string>
 
+    <string name="chat_reply_num">%d条回复</string>
+    <string name="chat_reply_detail">回复详情</string>
+
+    <string name="chat_not_read">尚未阅读</string>
 </resources>

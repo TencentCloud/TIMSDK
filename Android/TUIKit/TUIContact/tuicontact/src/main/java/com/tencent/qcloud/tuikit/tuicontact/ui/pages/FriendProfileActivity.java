@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import androidx.annotation.Nullable;
 
 import com.tencent.imsdk.v2.V2TIMGroupApplication;
+import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
@@ -30,7 +31,7 @@ public class FriendProfileActivity extends BaseLightActivity {
         layout.setPresenter(presenter);
         presenter.setFriendProfileLayout(layout);
         Intent intent = getIntent();
-        String chatId = intent.getStringExtra("chatId");
+        String chatId = intent.getStringExtra(TUIConstants.TUIChat.CHAT_ID);
         String fromUser = intent.getStringExtra("fromUser");
         String fromUserNickName = intent.getStringExtra("fromUserNickName");
         String requestMsg = intent.getStringExtra("requestMsg");

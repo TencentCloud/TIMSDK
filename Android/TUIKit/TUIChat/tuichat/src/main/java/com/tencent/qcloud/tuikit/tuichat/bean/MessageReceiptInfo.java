@@ -2,11 +2,27 @@ package com.tencent.qcloud.tuikit.tuichat.bean;
 
 import com.tencent.imsdk.v2.V2TIMMessageReceipt;
 
-public class GroupMessageReceiptInfo {
+import java.io.Serializable;
+
+public class MessageReceiptInfo implements Serializable {
     private V2TIMMessageReceipt messageReceipt;
 
     public void setMessageReceipt(V2TIMMessageReceipt messageReceipt) {
         this.messageReceipt = messageReceipt;
+    }
+
+    public String getUserID() {
+        if (messageReceipt != null) {
+            return messageReceipt.getUserID();
+        }
+        return null;
+    }
+
+    public boolean isPeerRead() {
+        if (messageReceipt != null) {
+            return messageReceipt.isPeerRead();
+        }
+        return false;
     }
 
     public String getGroupID() {

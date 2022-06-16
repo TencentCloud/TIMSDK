@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/text_frame"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical"
-    android:minHeight="30dp"
     android:orientation="horizontal">
 
     <TextView
         android:id="@+id/msg_body_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:gravity="center_vertical"
         android:textColor="?attr/chat_self_msg_text_color"
-        android:paddingLeft="7dp"
-        android:paddingRight="7dp"
         android:maxWidth="276dp"
+        android:lineHeight="20.16sp"
         android:textSize="@dimen/chat_message_text_size" />
-</LinearLayout>
+</FrameLayout>
 

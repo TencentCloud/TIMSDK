@@ -4,7 +4,7 @@ import com.tencent.imsdk.common.IMLog;
 
 public class TUIOfflinePushLog extends IMLog {
 
-    private static final String PRE = "TUIKitDemo-";
+    private static final String PRE = "TUIOfflinePush-";
 
     private static String mixTag(String tag) {
         return PRE + tag;

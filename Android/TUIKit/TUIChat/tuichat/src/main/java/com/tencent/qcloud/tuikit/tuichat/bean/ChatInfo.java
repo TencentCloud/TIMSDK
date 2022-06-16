@@ -18,7 +18,9 @@ public class ChatInfo implements Serializable {
 
     private static List<V2TIMGroupAtInfo> atInfoList;
 
-    private String chatName;
+    protected String chatName;
+    // other's face url
+    protected String faceUrl;
     private int type = V2TIMConversation.V2TIM_C2C;
     private String id;
     private String groupType;
@@ -41,6 +43,14 @@ public class ChatInfo implements Serializable {
      */
     public String getChatName() {
         return chatName;
+    }
+
+    public void setFaceUrl(String faceUrl) {
+        this.faceUrl = faceUrl;
+    }
+
+    public String getFaceUrl() {
+        return faceUrl;
     }
 
     /**
