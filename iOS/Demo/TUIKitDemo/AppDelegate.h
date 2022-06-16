@@ -13,6 +13,7 @@
 #import "GenerateTestUserSig.h"
 #import "TUILogin.h"
 #import "TUIContactViewDataProvider.h"
+#import "TCConstants.h"
 //sdkappid 请查看 GenerateTestUserSig.h
 @class AppDelegate;
 static AppDelegate *app = nil;
@@ -20,10 +21,6 @@ static AppDelegate *app = nil;
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (nonatomic, strong) UIWindow *window;
-@property (nonatomic, strong) NSData *deviceToken;
-
-@property (nonatomic, strong) NSString *groupID;
-@property (nonatomic, strong) NSString *userID;
 
 @property (nonatomic, assign) NSUInteger unReadCount;
 @property (nonatomic, strong) TUIContactViewDataProvider *contactDataProvider;

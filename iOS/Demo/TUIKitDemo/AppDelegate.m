@@ -10,7 +10,6 @@
 #import "ConversationController.h"
 #import "SettingController.h"
 #import "ContactsController.h"
-#import "TCConstants.h"
 #import "TUIDefine.h"
 #import "TUIKit.h"
 #import "Aspects.h"
@@ -24,19 +23,53 @@
 
 #import "TUIBaseChatViewController.h"
 #import "TUIBadgeView.h"
-#import "AppDelegate+Push.h"
+#import "AppDelegate+Redpoint.h"
 #import "ThemeSelectController.h"
 #import "TUIThemeManager.h"
 #import "LanguageSelectController.h"
-
 #import "TUILogin.h"
+#import "TUIChatConfig.h"
 
 @interface AppDelegate () <V2TIMConversationListener, TUILoginListener, ThemeSelectControllerDelegate, LanguageSelectControllerDelegate>
 
 @end
 
-
 @implementation AppDelegate
+
+
+#pragma mark - 推送的配置及统一跳转
+
+// APNs 证书 ID 配置
+TUIOfflinePushCertificateIDForAPNS(kAPNSBusiId)
+
+// TPNS 自定义域名、key 配置
+TUIOfflinePushConfigForTPNS(kTPNSAccessID, kTPNSAccessKey, kTPNSDomain)
+
+// 统一点击跳转
+- (void)navigateToTUIChatViewController:(NSString *)userID groupID:(NSString *)groupID
+{
+    UITabBarController *tab = [self getMainController];
+    if (![tab isKindOfClass: UITabBarController.class]) {
+        // 正在登录中
+        return;
+    }
+    if (tab.selectedIndex != 0) {
+        [tab setSelectedIndex:0];
+    }
+    self.window.rootViewController = tab;
+    UINavigationController *nav = (UINavigationController *)tab.selectedViewController;
+    if (![nav isKindOfClass:UINavigationController.class]) {
+        return;
+    }
+
+    UIViewController *vc = nav.viewControllers.firstObject;
+    if (![vc isKindOfClass:NSClassFromString(@"ConversationController")]) {
+        return;
+    }
+    if ([vc respondsToSelector:NSSelectorFromString(@"pushToChatViewController:userID:")]) {
+        [vc performSelector:NSSelectorFromString(@"pushToChatViewController:userID:") withObject:groupID withObject:userID];
+    }
+}
 
 #pragma mark - Life cycle
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
@@ -71,32 +104,16 @@
    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:login];
    return nav;
 }
+
 - (void)loginSDK:(NSString *)userID userSig:(NSString *)sig succ:(TSucc)succ fail:(TFail)fail {
     [TUILogin login:SDKAPPID userID:userID userSig:sig succ:^{
-        [self push_init];
-        [self push_registerIfLogined:userID];
-        
-        // fix: iOS 13 的系统，keyWindow 可能为空，导致切换跟控制器失败，从而引起白屏
-        // ios 13 的 iphone7plus 和 iphone xs max 都会出现，两者出现的频率不一样
-        // 复现步骤：APP 启动登录后，杀进程。再次点击桌面图标启动，页面白屏。（注意，xcode debug 模式下不会复现）
-        if (!self.window.isKeyWindow) {
-            [self.window makeKeyWindow];
-        }
-        
+        [self redpoint_setupTotalUnreadCount];
         self.window.rootViewController = [self getMainController];
-        
         [TUITool makeToast:NSLocalizedString(@"AppLoginSucc", nil) duration:1];
         if (succ) {
             succ();
         }
     } fail:^(int code, NSString *msg) {
-        // fix: iOS 13 的系统，keyWindow 可能为空，导致切换跟控制器失败，从而引起白屏
-        // ios 13 的 iphone7plus 和 iphone xs max 都会出现，两者出现的频率不一样
-        // 复现步骤：APP 启动登录后，杀进程。再次点击桌面图标启动，页面白屏。（注意，xcode debug 模式下不会复现）
-        if (!self.window.isKeyWindow) {
-            [self.window makeKeyWindow];
-        }
-        
         self.window.rootViewController = [self getLoginController];
         [[NSNotificationCenter defaultCenter] postNotificationName: @"TUILoginShowPrivacyPopViewNotfication" object:nil];
         if (fail) {
@@ -118,7 +135,7 @@
     @weakify(self)
     msgItem.badgeView.clearCallback = ^{
         @strongify(self)
-        [self push_clearUnreadMessage];
+        [self redpoint_clearUnreadMessage];
     };
     [items addObject:msgItem];
 
@@ -191,7 +208,7 @@ void uncaughtExceptionHandler(NSException*exception) {
 }
 
 - (void)setupConfig {
-    [TUIBaseChatViewController setIsMsgNeedReadReceipt:[self loadIsShowMessageReadStatus]];
+    [TUIChatConfig defaultConfig].msgNeedReadReceipt = [self loadIsShowMessageReadStatus];
 }
 
 - (BOOL)loadIsShowMessageReadStatus {
