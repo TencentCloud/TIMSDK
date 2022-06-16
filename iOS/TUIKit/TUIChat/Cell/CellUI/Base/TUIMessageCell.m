@@ -11,9 +11,11 @@
 #import "TUITool.h"
 #import "TUIThemeManager.h"
 #import "TUISystemMessageCellData.h"
-
+#import "NSString+emoji.h"
+#import "TUITagsView.h"
 @interface TUIMessageCell() <CAAnimationDelegate>
 @property (nonatomic, strong) TUIMessageCellData *messageData;
+@property (nonatomic, strong) NSMutableArray<TUITagsModel *> *reactlistArr;//消息响应
 
 @end
 
@@ -53,6 +55,7 @@
     _container.backgroundColor = [UIColor clearColor];
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onSelectMessage:)];
     [_container addGestureRecognizer:tap];
+    tap.cancelsTouchesInView = NO;
     UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(onLongPress:)];
     [_container addGestureRecognizer:longPress];
     [self.contentView addSubview:_container];
@@ -68,6 +71,16 @@
     UITapGestureRecognizer *resendTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onRetryMessage:)];
     [_retryView addGestureRecognizer:resendTap];
     [self.contentView addSubview:_retryView];
+    
+    //messageModifyRepliesLabel
+    _messageModifyRepliesButton = [[TUIFitButton alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+    _messageModifyRepliesButton.imageSize = CGSizeMake(12, 12);
+    [_messageModifyRepliesButton addTarget:self action:@selector(onJumpToRepliesDetailPage:) forControlEvents:UIControlEventTouchUpInside];
+
+    [_messageModifyRepliesButton.titleLabel setFont:[UIFont systemFontOfSize:12]];
+    [_messageModifyRepliesButton setTitleColor:TUIChatDynamicColor(@"chat_message_read_name_date_text_color", @"#999999")forState:UIControlStateNormal];
+//    TUIChatDynamicColor(@"chat_drop_down_color", @"#147AFF")
+    [self.contentView addSubview:_messageModifyRepliesButton];
     
     //已读label,由于 indicator 和 error，所以默认隐藏，消息发送成功后进行显示
     _readReceiptLabel = [[UILabel alloc] init];
@@ -111,10 +124,7 @@
         _nameLabel.mm_height(0);
     }
     
-    _selectedView.mm_x = 0;
-    _selectedView.mm_y = 0;
-    _selectedView.mm_w = self.contentView.mm_w;
-    _selectedView.mm_h = self.contentView.mm_h;
+
     if (self.messageData.showCheckBox) {
         _selectedIcon.mm_width(20).mm_height(20);
         _selectedIcon.mm_x = 10;
@@ -140,7 +150,24 @@
         _timeLabel.mm_sizeToFit();
         _timeLabel.hidden = YES;
     }
+    CGSize csize = [self.messageData contentSize];
+    //消息选择视图
+    _selectedView.mm_x = 0;
+    _selectedView.mm_y = 0;
+    _selectedView.mm_w = self.contentView.mm_w;
+    _selectedView.mm_h = self.contentView.mm_h;
     
+    CGFloat contentWidth =  csize.width;
+    CGFloat contentHeight = csize.height;
+
+    if (!CGSizeEqualToSize(self.messageData.messageModifyReactsSize, CGSizeZero)) {
+        //互动消息和文本取最大值
+        contentWidth = MAX(self.messageData.messageModifyReactsSize.width, csize.width);
+        //限制最大宽度为 Screen_Width *0.25 * 3
+        contentWidth = MIN(contentWidth, Screen_Width *0.25 * 3);
+        contentHeight = csize.height+ self.messageData.messageModifyReactsSize.height;
+    }
+
     TUIMessageCellLayout *cellLayout = self.messageData.cellLayout;
     if (self.messageData.direction == MsgDirectionIncoming) {
         self.avatarView.mm_x = _selectedIcon.mm_maxX + cellLayout.avatarInsets.left;
@@ -149,11 +176,11 @@
         self.avatarView.mm_h = cellLayout.avatarSize.height;
         
         self.nameLabel.mm_top(self.avatarView.mm_y);
-        
-        CGSize csize = [self.messageData contentSize];
+                
         CGFloat ctop = cellLayout.messageInsets.top + _nameLabel.mm_h;
+    
         self.container.mm_left(cellLayout.messageInsets.left+self.avatarView.mm_maxX)
-        .mm_top(ctop).mm_width(csize.width).mm_height(csize.height);
+        .mm_top(ctop).mm_width(contentWidth).mm_height(contentHeight);
         
         self.nameLabel.mm_left(_container.mm_x + 7) ;//与气泡对齐
         self.indicator.mm_sizeToFit().mm__centerY(_container.mm_centerY).mm_left(_container.mm_maxX + 8);
@@ -168,10 +195,11 @@
         
         self.nameLabel.mm_top(self.avatarView.mm_y);
         
-        CGSize csize = [self.messageData contentSize];
         CGFloat ctop = cellLayout.messageInsets.top + _nameLabel.mm_h;
-        self.container.mm_width(csize.width).mm_height(csize.height)
-        .mm_right(cellLayout.messageInsets.right+self.contentView.mm_w-self.avatarView.mm_x).mm_top(ctop);
+
+        self.container.mm_width(contentWidth).mm_height(contentHeight).
+        mm_right(cellLayout.messageInsets.right+self.contentView.mm_w-self.avatarView.mm_x).mm_top(ctop);
+        
         
         self.nameLabel.mm_right(_container.mm_r);
         self.indicator.mm_sizeToFit().mm__centerY(_container.mm_centerY).mm_left(_container.mm_x - 8 - _indicator.mm_w);
@@ -180,6 +208,13 @@
         //这里不能像 retryView 一样直接使用 indicator 的设定，否则内容会显示不全。
         self.readReceiptLabel.mm_sizeToFit().mm_bottom(self.container.mm_b).mm_left(_container.mm_x - 8 - _readReceiptLabel.mm_w);
         
+    }
+        
+    self.messageModifyRepliesButton.mm_sizeToFit();
+    self.messageModifyRepliesButton.frame = CGRectMake(_container.mm_x, CGRectGetMaxY(_container.frame) , self.messageModifyRepliesButton.frame.size.width +10, 30);
+    
+    if (self.tagView) {
+        self.tagView.frame = CGRectMake(0, _container.frame.size.height - self.messageData.messageModifyReactsSize.height, contentWidth, self.messageData.messageModifyReactsSize.height);
     }
 }
 
@@ -246,15 +281,13 @@
         else if(data.status == Msg_Status_Succ) {
             [_indicator stopAnimating];
             // 发送成功，说明 indicator 和 error 已不会显示在 label，可以开始显示已读回执 label
-            if (self.messageData.direction == MsgDirectionOutgoing &&
-                ![self.messageData isKindOfClass:TUISystemMessageCellData.class]) {
-                if (self.messageData.innerMessage.groupID.length > 0) {
-                    // Only group message's read label is controlled by needReadReceipt.
-                    _readReceiptLabel.hidden = !self.messageData.innerMessage.needReadReceipt;
-                } else if (self.messageData.innerMessage.userID.length > 0) {
-                    // C2C message's read label is controlled by showReadReceipt.
-                    _readReceiptLabel.hidden = !self.messageData.showReadReceipt;
-                }
+            if (self.messageData.direction == MsgDirectionOutgoing
+                && self.messageData.innerMessage.needReadReceipt
+                && (self.messageData.innerMessage.userID || self.messageData.innerMessage.groupID)
+                && ![self.messageData isKindOfClass:TUISystemMessageCellData.class]
+               ) {
+                // 群聊和单聊，默认都要显示
+                _readReceiptLabel.hidden = NO;
             }
         }
         else if (data.status == Msg_Status_Sending) {
@@ -264,6 +297,23 @@
         self.retryView.image = nil;
     }
     
+    //如果有消息编辑 x人回复
+    [self.messageModifyRepliesButton setImage:TUIChatBundleThemeImage(@"chat_messageReplyIcon_img", @"messageReplyIcon") forState:UIControlStateNormal];
+
+    self.messageModifyRepliesButton.hidden = YES;
+    if (data.showMessageModifyReplies) {
+        self.messageModifyRepliesButton.hidden = NO;
+        NSString *title = [NSString stringWithFormat:@"%ld%@", data.messageModifyReplies.count, TUIKitLocalizableString(TUIKitRepliesNum)];
+        [self.messageModifyRepliesButton setTitle:title forState:UIControlStateNormal];
+    }
+    
+    if (data.messageModifyReacts) {
+        [self updateMessageModifyReacts:data.messageModifyReacts];
+        self.tagView.hidden = NO ;
+    }
+    else {
+        self.tagView.hidden = YES;
+    }
     NSString *imageName = (data.showCheckBox && data.selected) ? TUICoreImagePath(@"icon_select_selected") : TUICoreImagePath(@"icon_select_normal");
     self.selectedIcon.image = [UIImage imageNamed:imageName];
     
@@ -320,9 +370,10 @@
         self.readReceiptLabel.text = text;
     } else {
         // c2c message
-        self.readReceiptLabel.text = self.messageData.innerMessage.isPeerRead ? TUIKitLocalizableString(Read): TUIKitLocalizableString(Unread);
+        BOOL isPeerRead = self.messageData.messageReceipt.isPeerRead;
+        NSString *text = isPeerRead ? TUIKitLocalizableString(TUIKitMessageReadC2CRead) :  TUIKitLocalizableString(TUIKitMessageReadC2CUnRead);
+        self.readReceiptLabel.text = text;
     }
-    TUIMessageCellLayout *cellLayout = self.messageData.cellLayout;
     self.readReceiptLabel.mm_sizeToFit().mm_bottom(self.container.mm_b).mm_left(_container.mm_x - 8 - _readReceiptLabel.mm_w);
 }
 
@@ -364,6 +415,15 @@
 
 - (void)onSelectMessage:(UIGestureRecognizer *)recognizer
 {
+    if ([recognizer isKindOfClass:[UIGestureRecognizer class]]) {
+        CGPoint point = [recognizer locationInView:self.tagView];
+        BOOL result = [self.tagView.layer containsPoint:point];
+        if (result) {
+            //tagview不响应选中msg
+            return;
+        }
+    }
+
     if(_delegate && [_delegate respondsToSelector:@selector(onSelectMessage:)]){
         [_delegate onSelectMessage:self];
     }
@@ -384,9 +444,6 @@
 }
 
 - (void)onSelectReadReceipt:(UITapGestureRecognizer *)gesture {
-    if (self.messageData.innerMessage.groupID.length == 0) {
-        return;
-    }
     if (![self shouldHighlightReadReceiptLabel]) {
         return;
     }
@@ -395,8 +452,80 @@
     }
 }
 
+- (void)onJumpToRepliesDetailPage:(UIButton *)btn {
+    NSLog(@"click onJumpToRepliesDetailPage");
+    NSLog(@"%@",self.messageData.messageModifyReplies);
+    
+    if (_delegate && [_delegate respondsToSelector:@selector(onJumpToRepliesDetailPage:)]) {
+        [_delegate onJumpToRepliesDetailPage:self.messageData];
+    }
+}
 - (BOOL)shouldHighlightReadReceiptLabel {
-    return ![self.readReceiptLabel.text isEqualToString:TUIKitLocalizableString(TUIKitMessageReadAllRead)];
+    if (self.messageData.innerMessage.groupID.length == 0) {
+        return ![self.readReceiptLabel.text isEqualToString:TUIKitLocalizableString(TUIKitMessageReadC2CRead)];
+    } else {
+        return ![self.readReceiptLabel.text isEqualToString:TUIKitLocalizableString(TUIKitMessageReadAllRead)];
+    }
+}
+
+
+- (void)prepareReactTagUI:(UIView *)containerView {
+    
+    TUITagsView *tagView = [[TUITagsView alloc] init];
+    tagView.backgroundColor = [UIColor clearColor];
+    [containerView addSubview:tagView];
+    self.tagView = tagView;
+    __weak typeof(self) weakSelf = self;
+    
+    tagView.emojiClickCallback = ^(TUITagsModel * _Nonnull model) {
+        __strong typeof(weakSelf)strongSelf = weakSelf;
+        if (strongSelf.delegate && [strongSelf.delegate respondsToSelector:@selector(onEmojiClickCallback:faceName:)]) {
+            [strongSelf.delegate onEmojiClickCallback:strongSelf.messageData faceName:model.emojiKey];
+        }
+    };
+    tagView.signSelectTag = ^(TUITagsModel * _Nonnull model) {
+        NSString *selectTagStr = (model.alias == nil || [model.alias isEqualToString:@""]) ? model.name : model.alias;
+        NSLog(@"The name of the selected label is：%@",selectTagStr);
+    };
+}
+
+- (NSMutableArray *)reactlistArr {
+    if (!_reactlistArr) {
+        _reactlistArr = [NSMutableArray array];
+    }
+    return _reactlistArr;
+}
+- (void)updateMessageModifyReacts:(NSDictionary *)messageModifyReacts {
+    
+    [self.reactlistArr removeAllObjects];
+    if(messageModifyReacts && [messageModifyReacts isKindOfClass:NSDictionary.class]) {
+
+        [messageModifyReacts enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+            
+            if (obj &&[obj isKindOfClass:NSArray.class] ) {
+                NSArray *arr = (NSArray *)obj;
+                if (arr.count >0) {
+                    TUITagsModel *model = [[TUITagsModel alloc] init];
+                    model.defaultColor = [TUIChatDynamicColor(@"", @"#DADADA") colorWithAlphaComponent:0.5];
+                    model.textColor = TUIChatDynamicColor(@"", @"#888888");
+                    model.emojiKey = key;
+                    model.emojiPath = [key getEmojiImagePath];
+                    model.followIDs =  [NSMutableArray arrayWithArray:obj];
+                    for (NSString *userID in obj) {
+                        TUITagsUserModel * userModel = [self.messageData.messageModifyReactUsers objectForKey:userID];
+                        NSString *name = [userModel getDisplayName];
+                        if (name.length >0) {
+                            [model.followUserNames addObject:name];
+                        }
+                    }
+                    [self.reactlistArr addObject:model];
+                }
+                
+            }
+        }];
+    }
+    self.tagView.listArrM = self.reactlistArr;
+    [self.tagView updateView];
 }
 
 @end

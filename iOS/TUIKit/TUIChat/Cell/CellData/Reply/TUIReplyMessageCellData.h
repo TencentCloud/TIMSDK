@@ -48,6 +48,12 @@ typedef void(^YUReplyMessageAsyncLoadFinsh)(TUIReplyMessageCellData *replyData);
 
 @property (nonatomic, copy) TUIReplyAsyncLoadFinish onFinish;
 
+
+//消息回复根RootID 【不一定是上面originMessage的msgID ，是最顶上被回复的消息ID】
+@property (nonatomic, copy) NSString *messageRootID;
+
+@property (nonatomic) UIColor *textColor;
+
 //Deprecated
 //Search `loadOriginMessageFromReplyData` in TUIMessageDataProvider+MessageDeal
 //- (void)loadOriginMessage:(void(^)(void))callback;
@@ -56,4 +62,10 @@ typedef void(^YUReplyMessageAsyncLoadFinsh)(TUIReplyMessageCellData *replyData);
 
 @end
 
+@interface TUIReferenceMessageCellData : TUIReplyMessageCellData
+@property (readonly) CGSize textSize;
+@property (readonly) CGPoint textOrigin;
+@property (nonatomic, strong) NSString *selectContent;
+@property (nonatomic, strong) NSMutableArray<NSDictionary<NSValue *, NSAttributedString *> *> *emojiLocations;
+@end
 NS_ASSUME_NONNULL_END

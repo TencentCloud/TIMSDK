@@ -9,14 +9,18 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class V2TIMGroupMemberInfo;
 @interface TUIMemberCellData : TUICommonCellData
 
-@property (nonatomic, copy) NSString *title;
-@property (nonatomic, copy) NSURL *avatarURL;
-@property (nonatomic, strong) V2TIMGroupMemberInfo *member;
+@property (nonatomic, copy) NSString *title;  // member's display name
+@property (nonatomic, copy) NSURL *avatarUrL; // member's avatar image url
+@property (nonatomic, copy) NSString *detail; // optional, used to display more info
 
-- (instancetype)initWithMember:(V2TIMGroupMemberInfo *)member;
+- (instancetype)initWithUserID:(nonnull NSString *)userID
+                      nickName:(nullable NSString *)nickName
+                  friendRemark:(nullable NSString *)friendRemark
+                      nameCard:(nullable NSString *)nameCard
+                     avatarUrl:(nonnull NSString *)avatarUrl
+                        detail:(nullable NSString *)detail;
 
 @end
 

@@ -27,14 +27,16 @@
 #import "TUIDefine.h"
 #import "TUIReplyMessageCellData.h"
 #import "TUIThemeManager.h"
-
+#import "TUIReferenceMessageCell.h"
+#import "TUIMessageSearchDataProvider.h"
+#import "TUIRepliesDetailViewController.h"
 #define STR(x) @#x
 
 @interface TUIMergeMessageListController () <TUIMessageCellDelegate>
 @property (nonatomic, strong) NSArray<V2TIMMessage *> *imMsgs;
 @property (nonatomic, strong) NSMutableArray<TUIMessageCellData *> *uiMsgs;
 @property (nonatomic, strong) NSMutableDictionary *stylesCache;
-@property (nonatomic, strong) TUIMessageDataProvider *msgDataProvider;
+@property (nonatomic, strong) TUIMessageSearchDataProvider *msgDataProvider;
 @end
 
 @implementation TUIMergeMessageListController
@@ -120,7 +122,7 @@
 {
     NSMutableArray *uiMsgs = [self transUIMsgFromIMMsg:msgs];
     @weakify(self)
-    [self.msgDataProvider preProcessReplyMessage:uiMsgs callback:^{
+    [self.msgDataProvider preProcessMessage:uiMsgs callback:^{
         @strongify(self)
         @weakify(self)
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -145,7 +147,8 @@
             TUIMessageCellData *data = [self.delegate messageController:nil onNewMessage:msg];
             // 全部设置为 incomming
             TUIMessageCellLayout *layout = TUIMessageCellLayout.incommingMessageLayout;
-            if ([data isKindOfClass:TUITextMessageCellData.class]) {
+            if ([data isKindOfClass:TUITextMessageCellData.class]
+                ||[data isKindOfClass:TUIReferenceMessageCellData.class]) {
                 layout = TUIMessageCellLayout.incommingTextMessageLayout;
             }else if ([data isKindOfClass:TUIVoiceMessageCellData.class]) {
                 layout = TUIMessageCellLayout.incommingVoiceMessageLayout;
@@ -168,8 +171,18 @@
         TUIMessageCellData *data = [TUIMessageDataProvider getCellData:msg];
         // 全部设置为 incomming
         TUIMessageCellLayout *layout = TUIMessageCellLayout.incommingMessageLayout;
+        
         if ([data isKindOfClass:TUITextMessageCellData.class]) {
             layout = TUIMessageCellLayout.incommingTextMessageLayout;
+            TUITextMessageCellData * textData = (TUITextMessageCellData *)data;
+            textData.textColor = TUIChatDynamicColor(@"chat_text_message_receive_text_color", @"#000000");
+            textData.textFont = [TUITextMessageCellData incommingTextFont];
+        }
+        else if( [data isKindOfClass:TUIReplyMessageCellData.class]||[data isKindOfClass:TUIReferenceMessageCellData.class]) {
+            layout = TUIMessageCellLayout.incommingTextMessageLayout;
+            TUIReferenceMessageCellData * textData = (TUIReferenceMessageCellData *)data;
+            textData.textColor = TUIChatDynamicColor(@"chat_text_message_receive_text_color", @"#000000");
+            
         }else if ([data isKindOfClass:TUIVoiceMessageCellData.class]) {
             TUIVoiceMessageCellData *voiceData = (TUIVoiceMessageCellData *)data;
             voiceData.cellLayout = [TUIMessageCellLayout incommingVoiceMessageLayout];
@@ -221,6 +234,7 @@
     [self.tableView registerClass:[TUIMergeMessageCell class] forCellReuseIdentifier:TRelayMessageCell_ReuserId];
     [self.tableView registerClass:[TUIGroupLiveMessageCell class] forCellReuseIdentifier:TGroupLiveMessageCell_ReuseId];
     [self.tableView registerClass:[TUIReplyMessageCell class] forCellReuseIdentifier:TReplyMessageCell_ReuseId];
+    [self.tableView registerClass:[TUIReferenceMessageCell class] forCellReuseIdentifier:TUIReferenceMessageCell_ReuseId];
     
     // 自定义消息注册 cell
     NSArray *customMessageInfo = [TUIMessageDataProvider getCustomMessageInfo];
@@ -296,39 +310,16 @@
     if ([cell isKindOfClass:[TUIReplyMessageCell class]]) {
         [self showReplyMessage:(TUIReplyMessageCell *)cell];
     }
+    if ([cell isKindOfClass:[TUIReferenceMessageCell class]]) {
+        [self showReplyMessage:(TUIReplyMessageCell *)cell];
+    }
     
     if ([self.delegate respondsToSelector:@selector(messageController:onSelectMessageContent:)]) {
         [self.delegate messageController:nil onSelectMessageContent:cell];
     }
 }
 
-- (void)showReplyMessage:(TUIReplyMessageCell *)cell
-{
-    TUIReplyMessageCellData *cellData = cell.replyData;
-    V2TIMMessage *message = cellData.originMessage;
-    if (message == nil) {
-        [TUITool makeToast:@"原始消息不存在，无法跳转"];
-        return;
-    }
-    
-    // 当前消息已经处于加载状态
-    BOOL memoryExist = NO;
-    for (TUIMessageCellData *cellData in self.uiMsgs) {
-        if ([cellData.innerMessage.msgID isEqual:message.msgID]) {
-            memoryExist = YES;
-            break;
-        }
-    }
-    if (memoryExist == NO) {
-        [TUITool makeToast:@"原始消息不存在，无法跳转"];
-        return;
-    }
-    
-    // 滚动
-    [self scrollLocateMessage:message];
-    // 高亮
-    [self highlightKeyword:cellData.msgAbstract locateMessage:message];
-}
+
 
 - (void)scrollLocateMessage:(V2TIMMessage *)locateMessage
 {
@@ -389,6 +380,73 @@
         TUIMessageCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
         [cell fillWithData:cellData];
     });
+}
+- (void)showReplyMessage:(TUIReplyMessageCell *)cell
+{
+    [UIApplication.sharedApplication.keyWindow endEditing:YES];
+    NSString *  originMsgID = @"";
+    NSString *  msgAbstract = @"";
+    if ([cell  isKindOfClass:TUIReplyMessageCell.class]) {
+        TUIReplyMessageCell * acell = (TUIReplyMessageCell *)cell;
+        TUIReplyMessageCellData *cellData = acell.replyData;
+        originMsgID = cellData.messageRootID;
+        msgAbstract = cellData.msgAbstract;
+    }
+    else if ([cell isKindOfClass:TUIReferenceMessageCell.class]) {
+        TUIReferenceMessageCell * acell = (TUIReferenceMessageCell *)cell;
+        TUIReferenceMessageCellData * cellData = acell.referenceData;
+        originMsgID = cellData.originMsgID;
+        msgAbstract = cellData.msgAbstract;
+    }
+    // 查询原始消息 - 在数据源里头调用
+    [(TUIMessageSearchDataProvider *)self.msgDataProvider findMessages:@[originMsgID?:@""] callback:^(BOOL success, NSString * _Nonnull desc, NSArray<V2TIMMessage *> * _Nonnull msgs) {
+        if (!success) {
+            [TUITool makeToast:TUIKitLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
+            return;
+        }
+        V2TIMMessage *message = msgs.firstObject;
+        if (message == nil) {
+            [TUITool makeToast:TUIKitLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
+            return;
+        }
+        
+        // 判断消息是否被删除或者撤回
+        if (message.status == V2TIM_MSG_STATUS_HAS_DELETED || message.status == V2TIM_MSG_STATUS_LOCAL_REVOKED) {
+            [TUITool makeToast:TUIKitLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
+            return;
+        }
+        
+        if ([cell isKindOfClass:TUIReplyMessageCell.class]) {
+            [self jumpDetailPageByMessage:message];
+        }
+        else if ([cell isKindOfClass:TUIReferenceMessageCell.class]) {
+            [self scrollLocateMessage:message];
+        }
+    }];
+}
+
+- (void)jumpDetailPageByMessage:(V2TIMMessage *)message {
+    NSMutableArray *uiMsgs = [self transUIMsgFromIMMsg:@[message]];
+    [self.msgDataProvider preProcessMessage:uiMsgs callback:^{
+        for (TUIMessageCellData *cellData in uiMsgs) {
+            if ([cellData.innerMessage.msgID isEqual:message.msgID]) {
+                [self onJumpToRepliesDetailPage:cellData];
+                return;
+            }
+        }
+    }];
+}
+
+- (void)onJumpToRepliesDetailPage:(TUIMessageCellData *)data {
+    TUIRepliesDetailViewController *repliesDetailVC = [[TUIRepliesDetailViewController alloc] initWithCellData:data conversationData:self.conversationData];
+    repliesDetailVC.delegate = self.delegate;
+    [self.navigationController pushViewController:repliesDetailVC animated:YES];
+    repliesDetailVC.parentPageDataProvider = self.parentPageDataProvider;
+    __weak typeof(self) weakSelf = self;
+    repliesDetailVC.willCloseCallback = ^(){
+        // 刷新下，主要是更新下全局的UI
+        [weakSelf.tableView reloadData];
+    };
 }
 
 - (void)showImageMessage:(TUIImageMessageCell *)cell
@@ -470,10 +528,10 @@
     return img;
 }
 
-- (TUIMessageDataProvider *)msgDataProvider
+- (TUIMessageSearchDataProvider *)msgDataProvider
 {
     if (_msgDataProvider == nil) {
-        _msgDataProvider = [[TUIMessageDataProvider alloc] init];
+        _msgDataProvider = [[TUIMessageSearchDataProvider alloc] init];
     }
     return _msgDataProvider;
 }

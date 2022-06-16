@@ -365,7 +365,7 @@ static void *ScrollViewBoundsChangeNotificationContext = &ScrollViewBoundsChange
 
 - (CGFloat)heightOfWidth:(CGFloat)width
 {
-    return 44;
+    return 48;
 }
 @end
 
@@ -623,7 +623,7 @@ static void *ScrollViewBoundsChangeNotificationContext = &ScrollViewBoundsChange
     
     _line = [[UIView alloc] initWithFrame:CGRectZero];
     [self.contentView addSubview:_line];
-    _line.backgroundColor = TUICoreDynamicColor(@"separator_color", @"#FFFFFF");
+    _line.backgroundColor = TUICoreDynamicColor(@"separator_color", @"#DBDBDB");
 }
 
 

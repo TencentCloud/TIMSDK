@@ -7,6 +7,7 @@
  ******************************************************************************/
 #import "TUIMessageCell.h"
 #import "TUIImageMessageCellData.h"
+#import "TUIBubbleMessageCell.h"
 
 /**
  * 【模块名称】TUIImageMessageCell
@@ -17,7 +18,7 @@
  *  3. 原图 - 如果发送方选择发送原图，那么接收者会看到“原图”按钮，点击下载到原尺寸的图片
  *  其中，三类不同清晰度的视图存储在属性 imageData 中。详细信息请参考 Section\Chat\CellData\TUIIamgeMessageCellData.h
  */
-@interface TUIImageMessageCell : TUIMessageCell
+@interface TUIImageMessageCell : TUIBubbleMessageCell
 
 /**
  *  缩略图

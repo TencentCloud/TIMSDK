@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) TUIInputPreviewBarCallback onClose;
 
 @property (nonatomic, strong) TUIReplyPreviewData *previewData;
+@property (nonatomic, strong) TUIReferencePreviewData *previewReferenceData;
+
 
 @end
 

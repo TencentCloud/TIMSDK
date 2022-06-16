@@ -127,6 +127,8 @@
 @property (nonatomic, strong) NSMutableArray *unreadMembers;
 @property (nonatomic, assign) NSUInteger readSeq;
 @property (nonatomic, assign) NSUInteger unreadSeq;
+@property (nonatomic, copy) NSString *c2cReceiverName;
+@property (nonatomic, copy) NSString *c2cReceiverAvatarUrl;
 
 @end
 
@@ -135,8 +137,12 @@
 #pragma mark - Life cycle
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.selectedViewTag = TUIMessageReadViewTagRead;
-    [self loadMembers];
+    if ([self isGroupMessageRead]) {
+        self.selectedViewTag = TUIMessageReadViewTagRead;
+        [self loadMembers];
+    } else {
+        self.selectedViewTag = TUIMessageReadViewTagC2C;
+    }
     [self setupViews];
     // Do any additional setup after loading the view.
 }
@@ -153,12 +159,16 @@
 #pragma mark - Public
 - (instancetype)initWithCellData:(TUIMessageCellData *)data
                     dataProvider:(TUIMessageDataProvider *)dataProvider
-           showReadStatusDisable:(BOOL)showReadStatusDisable {
+           showReadStatusDisable:(BOOL)showReadStatusDisable
+                 c2cReceiverName:(NSString *)name
+               c2cReceiverAvatar:(NSString *)avatarUrl {
     self = [super init];
     if (self) {
         self.cellData = data;
         self.dataProvider = dataProvider;
         self.showReadStatusDisable = showReadStatusDisable;
+        self.c2cReceiverName = name;
+        self.c2cReceiverAvatarUrl = avatarUrl;
     }
     return self;
 }
@@ -168,7 +178,9 @@
     self.view.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
     [self setupTitleView];
     [self setupMessageView];
-    [self setupSelectView];
+    if ([self isGroupMessageRead]) {
+        [self setupSelectView];
+    }
     [self setupTableView];
 }
 
@@ -203,7 +215,7 @@
     }
     
     self.tableView
-        .mm_top(self.messageBackView.mm_maxY + 10 + 48)
+        .mm_top(self.messageBackView.mm_maxY + 10 + (self.selectViewsDict.count > 0 ? 48 : 0))
         .mm_left(0)
         .mm_width(self.view.mm_w)
         .mm_height(self.view.mm_h - _tableView.mm_y);
@@ -211,6 +223,9 @@
 
 - (UIView *)layoutSelectView:(UIView *)view leftView:(UIView *)leftView {
     NSInteger count = self.selectViewsDict.count;
+    if (count == 0) {
+        return nil;
+    }
     view.mm_width(self.view.mm_w / count)
         .mm_height(48)
         .mm_left(leftView == nil ? 0 : leftView.mm_maxX)
@@ -311,6 +326,7 @@
     [self.view addSubview:_tableView];
     UIView *view = [[UIView alloc] initWithFrame:CGRectZero];
     [_tableView setTableFooterView:view];
+    _tableView.separatorStyle = [self isGroupMessageRead] ? UITableViewCellSeparatorStyleSingleLine : UITableViewCellSeparatorStyleNone;
     _tableView.separatorInset = UIEdgeInsetsMake(0, 58, 0, 0);
     [_tableView registerClass:[TUIMemberCell class] forCellReuseIdentifier:kMemberCellReuseId];
     
@@ -359,9 +375,6 @@
         [self.unreadMembers addObjectsFromArray:members];
         self.unreadSeq = isFinished ? -1 : nextSeq;
         
-        [self.tableView reloadData];
-        [self.tableView layoutIfNeeded];
-        
         if (completion) {
             completion(code, desc, members, isFinished);
         }
@@ -383,14 +396,21 @@
 
 #pragma mark - UITableViewDataSource & UITableViewDelegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row >= [self members].count) {
-        return;
+    if ([self isGroupMessageRead]) {
+        if (indexPath.row >= [self members].count) {
+            return;
+        }
+        V2TIMGroupMemberInfo *member = [self members][indexPath.row];
+        [self getUserOrFriendProfileVCWithUserID:member.userID
+                                       SuccBlock:^(UIViewController *vc) {
+            [self.navigationController pushViewController:vc animated:YES];
+        } failBlock:nil];
+    } else {
+        [self getUserOrFriendProfileVCWithUserID:self.cellData.innerMessage.userID
+                                       SuccBlock:^(UIViewController *vc) {
+            [self.navigationController pushViewController:vc animated:YES];
+        } failBlock:nil];
     }
-    V2TIMGroupMemberInfo *member = [self members][indexPath.row];
-    [self getUserOrFriendProfileVCWithUserID:member.userID
-                                   SuccBlock:^(UIViewController *vc) {
-        [self.navigationController pushViewController:vc animated:YES];
-    } failBlock:nil];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -398,20 +418,37 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [self members].count;
+    return [self isGroupMessageRead] ? [self members].count : 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row >= [self members].count) {
-        return nil;
-    }
     TUIMemberCell *cell = [tableView dequeueReusableCellWithIdentifier:kMemberCellReuseId forIndexPath:indexPath];
     cell.changeColorWhenTouched = YES;
-
-    V2TIMGroupMemberInfo *member = [self members][indexPath.row];
-    TUIMemberCellData *data = [[TUIMemberCellData alloc] initWithMember:member];
-    [cell fillWithData:data];
     
+    TUIMemberCellData *data;
+    if ([self isGroupMessageRead]) {
+        if (indexPath.row >= [self members].count) {
+            return nil;
+        }
+        V2TIMGroupMemberInfo *member = [self members][indexPath.row];
+        data = [[TUIMemberCellData alloc] initWithUserID:member.userID
+                                                nickName:member.nickName
+                                            friendRemark:member.friendRemark
+                                                nameCard:member.nameCard
+                                               avatarUrl:member.faceURL
+                                                  detail:nil];
+    } else {
+        NSString *detail = nil;
+        BOOL isPeerRead = self.cellData.messageReceipt.isPeerRead;
+        detail = isPeerRead ? TUIKitLocalizableString(TUIKitMessageReadC2CRead) :  TUIKitLocalizableString(TUIKitMessageReadC2CUnReadDetail);
+        data = [[TUIMemberCellData alloc] initWithUserID:self.cellData.innerMessage.userID
+                                                nickName:nil
+                                            friendRemark:self.c2cReceiverName
+                                                nameCard:nil
+                                               avatarUrl:self.c2cReceiverAvatarUrl
+                                                  detail:detail];
+    }
+    [cell fillWithData:data];
     return cell;
 }
 
@@ -585,6 +622,10 @@
         _indicatorView.hidesWhenStopped = YES;
     }
     return _indicatorView;
+}
+
+- (BOOL)isGroupMessageRead {
+    return self.cellData.innerMessage.groupID.length > 0;
 }
 
 @end

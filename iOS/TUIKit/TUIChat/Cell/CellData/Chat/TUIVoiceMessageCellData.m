@@ -25,6 +25,7 @@
     soundData.length = elem.dataSize;
     soundData.uuid = elem.uuid;
     soundData.reuseId = TVoiceMessageCell_ReuseId;
+    soundData.path = elem.path;
     return soundData;
 }
 

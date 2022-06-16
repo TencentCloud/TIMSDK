@@ -8,25 +8,23 @@
 #import "TUIThemeManager.h"
 #import "UIColor+TUIHexColor.h"
 
+@interface TUIDarkThemeRootVC:UIViewController
+
+@end
+@implementation TUIDarkThemeRootVC
+- (BOOL)shouldAutorotate {
+    return NO;
+}
+@end
+
 @interface TUIDarkWindow : UIWindow
 @property (nonatomic, readonly, class) TUIDarkWindow *sharedInstance;
+@property (nonatomic, strong) UIWindow *previousKeyWindow;
 @end
 @implementation TUIDarkWindow
 
 + (void)load {
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(windowDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
-    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(windowDidResign:) name:UIWindowDidResignKeyNotification object:nil];
-}
-
-+ (void)windowDidResign:(NSNotification *)noti {
-    if (TUIDarkWindow.sharedInstance != UIApplication.sharedApplication.keyWindow) return;
-    
-    for (UIWindow *window in UIApplication.sharedApplication.windows) {
-        if (window.hidden == YES) continue;
-        if (window == TUIDarkWindow.sharedInstance) continue;
-        if (window == noti.object) continue;
-        [window makeKeyWindow];
-    }
 }
 
 + (void)windowDidBecomeActive {
@@ -37,23 +35,62 @@
             darkWindow.windowScene = (UIWindowScene *)scene;
         }
     }
-    [darkWindow setRootViewController:[UIViewController new]];
-    [darkWindow makeKeyAndVisible];
-    for (UIWindow *window in UIApplication.sharedApplication.windows) {
-        if (window.hidden == NO && window != darkWindow) {
-            [window makeKeyWindow];
-        }
-    }
-    
+    [darkWindow setRootViewController:[TUIDarkThemeRootVC new]];
+    darkWindow.hidden = NO;
     [NSNotificationCenter.defaultCenter removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
 }
+
+- (void)becomeKeyWindow {
+    _previousKeyWindow = [self appKeyWindow];
+    [super becomeKeyWindow];
+}
+
+- (void)resignKeyWindow {
+    [super resignKeyWindow];
+    [_previousKeyWindow makeKeyWindow];
+    _previousKeyWindow = nil;
+}
+
+- (UIWindow *)appKeyWindow {
+    UIWindow *keywindow = UIApplication.sharedApplication.keyWindow;
+    if (keywindow == nil) {
+        if (@available(iOS 13.0, *)) {
+            for (UIWindowScene *scene in UIApplication.sharedApplication.connectedScenes) {
+                if (scene.activationState == UISceneActivationStateForegroundActive) {
+                    UIWindow *tmpWindow = nil;
+                    if (@available(iOS 15.0, *)) {
+                        tmpWindow = scene.keyWindow;
+                    }
+                    if (tmpWindow == nil) {
+                        for (UIWindow *window in scene.windows) {
+                            if (window.windowLevel == UIWindowLevelNormal && window.hidden == NO && CGRectEqualToRect(window.bounds, UIScreen.mainScreen.bounds)) {
+                                tmpWindow = window;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if (keywindow == nil) {
+        for (UIWindow *window in UIApplication.sharedApplication.windows) {
+            if (window.windowLevel == UIWindowLevelNormal && window.hidden == NO && CGRectEqualToRect(window.bounds, UIScreen.mainScreen.bounds)) {
+                keywindow = window;
+                break;
+            }
+        }
+    }
+    return keywindow;
+}
+
 + (instancetype)sharedInstance {
     static TUIDarkWindow *shareWindow = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         shareWindow = [[self alloc] init];
         shareWindow.frame = UIScreen.mainScreen.bounds;
-        shareWindow.userInteractionEnabled = NO;
+        shareWindow.userInteractionEnabled = YES;
         shareWindow.windowLevel = UIWindowLevelNormal - 1;
         shareWindow.hidden = YES;
         shareWindow.opaque = NO;

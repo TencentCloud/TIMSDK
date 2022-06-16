@@ -16,6 +16,10 @@
 @property (nonatomic, strong) CAShapeLayer *maskLayer;
 @property (nonatomic, strong) CAShapeLayer *borderLayer;
 @property (nonatomic, strong) UIView *progressView;
+@property (nonatomic, strong) UIView *fileContainer;
+
+@property (nonatomic, strong) UIView *animateHighlightView;
+
 
 @end
 
@@ -25,27 +29,29 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.container.backgroundColor = TUIChatDynamicColor(@"chat_file_message_bg_color", @"#FFFFFF");
-        [self.container addSubview:self.progressView];
+        [self.container addSubview:self.fileContainer];
+        self.fileContainer.backgroundColor = TUIChatDynamicColor(@"chat_file_message_bg_color", @"#FFFFFF");
+        [self.fileContainer addSubview:self.progressView];
 
         _fileName = [[UILabel alloc] init];
         _fileName.font = [UIFont systemFontOfSize:15];
         _fileName.textColor = TUIChatDynamicColor(@"chat_file_message_title_color", @"#000000");
-        [self.container addSubview:_fileName];
+        [self.fileContainer addSubview:_fileName];
 
         _length = [[UILabel alloc] init];
         _length.font = [UIFont systemFontOfSize:12];
         _length.textColor = TUIChatDynamicColor(@"chat_file_message_subtitle_color", @"#888888");
-        [self.container addSubview:_length];
+        [self.fileContainer addSubview:_length];
 
         _image = [[UIImageView alloc] init];
         _image.image = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"msg_file")];
         _image.contentMode = UIViewContentModeScaleAspectFit;
-        [self.container addSubview:_image];
+        [self.fileContainer addSubview:_image];
         
-        [self.container.layer insertSublayer:self.borderLayer atIndex:0];
-        [self.container.layer setMask:self.maskLayer];
+        [self.fileContainer.layer insertSublayer:self.borderLayer atIndex:0];
+        [self.fileContainer.layer setMask:self.maskLayer];
         
+        [self prepareReactTagUI:self.container];
         [V2TIMManager.sharedInstance addIMSDKListener:self];
         [TUIMessageProgressManager.shareManager addDelegate:self];
     }
@@ -108,12 +114,12 @@
     }
     
     self.progressView.hidden = NO;
-    self.progressView.frame = CGRectMake(0, 0, self.progressView.mm_w?:1, self.container.mm_h);
+    self.progressView.frame = CGRectMake(0, 0, self.progressView.mm_w?:1, self.fileContainer.mm_h);
     [UIView animateWithDuration:0.25 animations:^{
         self.progressView.mm_x = 0;
         self.progressView.mm_y = 0;
-        self.progressView.mm_h = self.container.mm_h;
-        self.progressView.mm_w = self.container.mm_w * progress / 100.0;
+        self.progressView.mm_h = self.fileContainer.mm_h;
+        self.progressView.mm_w = self.fileContainer.mm_w * progress / 100.0;
     } completion:^(BOOL finished) {
         if (progress == 0 || progress >= 100) {
             self.progressView.hidden = YES;
@@ -161,6 +167,7 @@
     [super layoutSubviews];
 
     CGSize containerSize = [self.fileData contentSize];
+    self.fileContainer.frame = CGRectMake(0, 0, containerSize.width, containerSize.height);
     CGFloat imageHeight = containerSize.height - 2 * TFileMessageCell_Margin;
     CGFloat imageWidth = imageHeight;
     _image.frame = CGRectMake(containerSize.width - TFileMessageCell_Margin - imageWidth, TFileMessageCell_Margin, imageWidth, imageHeight);
@@ -169,18 +176,27 @@
     _fileName.frame = CGRectMake(TFileMessageCell_Margin, TFileMessageCell_Margin, textWidth, nameSize.height);
     CGSize lengthSize = [_length sizeThatFits:containerSize];
     _length.frame = CGRectMake(TFileMessageCell_Margin, _fileName.frame.origin.y + nameSize.height + TFileMessageCell_Margin * 0.5, textWidth, lengthSize.height);
-    
-    
-    
-    self.maskLayer.frame = self.container.bounds;
-    self.borderLayer.frame = self.container.bounds;
+      
+    if (self.messageData.messageModifyReactsSize.height > 0) {
+        self.fileContainer.frame = CGRectMake(0, 0, self.container.frame.size.width, self.container.frame.size.height );
+        if (self.tagView) {
+            self.tagView.frame = CGRectMake(0, TFileMessageCell_Margin + imageHeight  , self.fileContainer.frame.size.width, self.messageData.messageModifyReactsSize.height);
+        }
+        self.bubble.hidden = NO;
+    }
+    else {
+        self.bubble.hidden = YES;
+    }
+
+    self.maskLayer.frame = self.fileContainer.bounds;
+    self.borderLayer.frame = self.fileContainer.bounds;
     
 
     UIRectCorner corner = UIRectCornerBottomLeft | UIRectCornerBottomRight | UIRectCornerTopLeft;
     if (self.fileData.direction == MsgDirectionIncoming) {
         corner = UIRectCornerBottomLeft | UIRectCornerBottomRight | UIRectCornerTopRight;
     }
-    UIBezierPath *bezierPath = [UIBezierPath bezierPathWithRoundedRect:self.container.bounds byRoundingCorners:corner cornerRadii:CGSizeMake(10, 10)];
+    UIBezierPath *bezierPath = [UIBezierPath bezierPathWithRoundedRect:self.fileContainer.bounds byRoundingCorners:corner cornerRadii:CGSizeMake(10, 10)];
     self.maskLayer.path = bezierPath.CGPath;
     self.borderLayer.path = bezierPath.CGPath;
 }
@@ -197,7 +213,7 @@
 {
     if (_borderLayer == nil) {
         _borderLayer = [CAShapeLayer layer];
-        _borderLayer.lineWidth = 0.2f;
+        _borderLayer.lineWidth = 0.5f;
         _borderLayer.strokeColor = [UIColor colorWithRed:221/255.0 green:221/255.0 blue:221/255.0 alpha:1.0].CGColor;
         _borderLayer.fillColor = [UIColor clearColor].CGColor;
     }
@@ -213,10 +229,67 @@
     return _progressView;
 }
 
+- (UIView *)fileContainer {
+    if (_fileContainer == nil) {
+        _fileContainer = [[UIView alloc] init];
+        _fileContainer.backgroundColor = TUIChatDynamicColor(@"chat_file_message_bg_color", @"#FFFFFF");
+    }
+    return _fileContainer;
+}
+
 - (void)onConnectSuccess
 {
     // 重新赋值
     [self fillWithData:self.fileData];
 }
 
+
+- (void)highlightWhenMatchKeyword:(NSString *)keyword
+{
+    // 默认高亮效果，闪烁
+    if (keyword) {
+        // 显示高亮动画
+        if (self.highlightAnimating) {
+            return;
+        }
+        [self animate:3];
+    }
+}
+
+// 默认高亮动画
+- (void)animate:(int)times
+{
+    times--;
+    if (times < 0) {
+        [self.animateHighlightView removeFromSuperview];
+        self.highlightAnimating = NO;
+        return;
+    }
+    self.highlightAnimating = YES;
+    self.animateHighlightView.frame = self.container.bounds;
+    self.animateHighlightView.alpha = 0.1;
+    [self.fileContainer addSubview:self.animateHighlightView];
+    [UIView animateWithDuration:0.25 animations:^{
+        self.animateHighlightView.alpha = 0.5;
+    } completion:^(BOOL finished) {
+        [UIView animateWithDuration:0.25 animations:^{
+            self.animateHighlightView.alpha = 0.1;
+        } completion:^(BOOL finished) {
+            if (!self.messageData.highlightKeyword) {
+                [self animate:0];
+                return;
+            }
+            [self animate:times];
+        }];
+    }];
+}
+
+- (UIView *)animateHighlightView
+{
+    if (_animateHighlightView == nil) {
+        _animateHighlightView = [[UIView alloc] init];
+        _animateHighlightView.backgroundColor = [UIColor orangeColor];
+    }
+    return _animateHighlightView;
+}
 @end

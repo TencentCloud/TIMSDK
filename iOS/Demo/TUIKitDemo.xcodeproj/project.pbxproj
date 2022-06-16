@@ -20,6 +20,7 @@
 		48DF2C4A253FE1B800BC522F /* pushservice.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 48DF2C42253FE1B800BC522F /* pushservice.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		48DF2CF82542E0EA00BC522F /* CustomFaceResource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 48DF2CF72542E0EA00BC522F /* CustomFaceResource.bundle */; };
 		910D900122AE057E00C9A318 /* TCLoginModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 910D900022AE057E00C9A318 /* TCLoginModel.m */; };
+		93811790285B56CF00AB8313 /* AppDelegate+Redpoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 9381178F285B56CF00AB8313 /* AppDelegate+Redpoint.m */; };
 		BCF739AA621A7AF4B48F1525 /* libPods-TUIKitDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D1BCBC0335EEFE4307055DBB /* libPods-TUIKitDemo.a */; };
 		CE0BDFA9221D53C60083E1B0 /* Bugly.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE0BDFA8221D53C60083E1B0 /* Bugly.framework */; };
 		CE2863A92756200000AF9687 /* TUIBadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE2863A82756200000AF9687 /* TUIBadgeView.m */; };
@@ -113,6 +114,8 @@
 		915AA6682248DBC600C0C9A0 /* ContactsController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContactsController.h; sourceTree = "<group>"; };
 		915AA6692248DBC600C0C9A0 /* ContactsController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContactsController.m; sourceTree = "<group>"; };
 		9176C5C3227A9D3500DF5784 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
+		9381178E285B56CF00AB8313 /* AppDelegate+Redpoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppDelegate+Redpoint.h"; sourceTree = "<group>"; };
+		9381178F285B56CF00AB8313 /* AppDelegate+Redpoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AppDelegate+Redpoint.m"; sourceTree = "<group>"; };
 		CE0BDFA8221D53C60083E1B0 /* Bugly.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bugly.framework; sourceTree = "<group>"; };
 		CE1C55922224F22C00A75262 /* TUIKitDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TUIKitDemo.entitlements; sourceTree = "<group>"; };
 		CE2863A72756200000AF9687 /* TUIBadgeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUIBadgeView.h; sourceTree = "<group>"; };
@@ -366,6 +369,8 @@
 				CE1C55922224F22C00A75262 /* TUIKitDemo.entitlements */,
 				CF014485216E1A4900C12E35 /* AppDelegate.h */,
 				CF014486216E1A4900C12E35 /* AppDelegate.m */,
+				9381178E285B56CF00AB8313 /* AppDelegate+Redpoint.h */,
+				9381178F285B56CF00AB8313 /* AppDelegate+Redpoint.m */,
 				CF01448B216E1A4900C12E35 /* Main.storyboard */,
 				CF01448E216E1A4B00C12E35 /* Assets.xcassets */,
 				CF014490216E1A4B00C12E35 /* LaunchScreen.storyboard */,
@@ -624,6 +629,7 @@
 				CE440CE026E072530085EB57 /* TCUtil.m in Sources */,
 				CE440CDA26E072530085EB57 /* TUIDateEditController.m in Sources */,
 				CE440CDB26E072530085EB57 /* PAirSandbox.m in Sources */,
+				93811790285B56CF00AB8313 /* AppDelegate+Redpoint.m in Sources */,
 				4842D98A27A033DF000DA6AF /* ThemeSelectController.m in Sources */,
 				4842D98927A033DF000DA6AF /* LanguageSelectController.m in Sources */,
 				480C761522DCA38A007495EC /* ContactsController.m in Sources */,

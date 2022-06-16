@@ -9,7 +9,7 @@
   *
  ******************************************************************************/
 #import "TUIMessageCellData.h"
-
+#import "TUIBubbleMessageCellData.h"
 NS_ASSUME_NONNULL_BEGIN
 
 typedef void(^TUIVideoMessageDownloadCallback)(void);
@@ -98,7 +98,7 @@ typedef void(^TUIVideoMessageDownloadCallback)(void);
  *  本类配合消息控制器实现了视频消息的播放等业务逻辑。
  *  数据源帮助实现了 MVVM 架构，使数据与 UI 进一步解耦，同时使 UI 层更加细化、可定制化。
  */
-@interface TUIVideoMessageCellData : TUIMessageCellData<TUIMessageCellDataFileUploadProtocol>
+@interface TUIVideoMessageCellData : TUIBubbleMessageCellData<TUIMessageCellDataFileUploadProtocol>
 
 /**
  *  缩略图图像

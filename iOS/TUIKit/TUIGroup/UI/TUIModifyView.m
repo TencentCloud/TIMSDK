@@ -83,6 +83,18 @@
     [_content.layer setCornerRadius:4.0f];
     [_content setReturnKeyType:UIReturnKeyDone];
     [_content addTarget:self action:@selector(textChanged) forControlEvents:UIControlEventEditingChanged];
+    CGRect leftviewFrame = _content.frame;
+    leftviewFrame.size.width = 16;// 距离左侧的距离 leftMargin
+    UIView *leftview = [[UIView alloc] initWithFrame:leftviewFrame];
+    _content.leftView = leftview;
+    _content.leftViewMode = UITextFieldViewModeAlways;
+    CGRect rightviewFrame = _content.frame;
+    rightviewFrame.size.width = 16;// 距离右侧的距离 rightMargin
+    rightviewFrame.origin.x = rightviewFrame.size.width - 16;
+    UIView *rightView = [[UIView alloc] initWithFrame:rightviewFrame];
+    _content.rightView = rightView;
+    _content.rightViewMode = UITextFieldViewModeAlways;
+
     [_container addSubview:_content];
     
     _descLabel = [[UILabel alloc] initWithFrame:CGRectMake(_content.frame.origin.x, CGRectGetMaxY(_content.frame) + 17, contentWidth, contentheight)];

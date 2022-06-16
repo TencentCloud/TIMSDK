@@ -181,5 +181,29 @@
     return attributeString;
 }
 
+- (NSString *)getEmojiImagePath {
+    TUIFaceGroup *group = [TUIConfig defaultConfig].faceGroups[0];
+
+    NSString *loaclName = [self getLocalizableStringWithFaceContent];
+    for (TUIFaceCellData *face in group.faces) {
+        if ([face.localizableName isEqualToString:loaclName]) {
+            return face.path;
+        }
+    }
+    return nil;
+    
+}
+
+- (UIImage *)getEmojiImage {
+    TUIFaceGroup *group = [TUIConfig defaultConfig].faceGroups[0];
+
+    for (TUIFaceCellData *face in group.faces) {
+        if ([face.name isEqualToString:self]) {
+            return [[TUIImageCache sharedInstance] getFaceFromCache:face.path];
+        }
+    }
+    return nil;
+    
+}
 
 @end
