@@ -13,7 +13,7 @@
  *  本类依赖于腾讯云 TUIKit和IMSDK 实现
  */
 #import "SettingController.h"
-#import "AppDelegate+Push.h"
+#import "AppDelegate.h"
 #import "TUIProfileCardCell.h"
 #import "TUITextEditController.h"
 #import "TUIDateEditController.h"
@@ -33,7 +33,7 @@
 #import "TUIThemeManager.h"
 #import "TUIAboutUsViewController.h"
 #import "TUIBaseChatViewController.h"
-
+#import "TUIChatConfig.h"
 NSString * kEnableMsgReadStatus = @"TUIKitDemo_EnableMsgReadStatus";
 
 @interface SettingController () <UIActionSheetDelegate, V2TIMSDKListener>
@@ -218,7 +218,7 @@ NSString * kEnableMsgReadStatus = @"TUIKitDemo_EnableMsgReadStatus";
     msgReadStatus.title =  NSLocalizedString(@"MeMessageReadStatus", nil);  // @"消息阅读状态"
     msgReadStatus.desc = NSLocalizedString(@"MeMessageReadStatusDesc", nil);
     msgReadStatus.cswitchSelector = @selector(onSwitchMsgReadStatus:);
-    [self setReadStatus:NO]; // 默认关闭
+    [self setReadStatus:YES]; // 默认打开
     msgReadStatus.on = [self msgReadStatus];
     [_data addObject:@[msgReadStatus]];
     
@@ -261,7 +261,6 @@ NSString * kEnableMsgReadStatus = @"TUIKitDemo_EnableMsgReadStatus";
 
 - (void)didConfirmLogout {
     [TUILogin logout:^{
-        [AppDelegate.sharedInstance push_unregisterIfLogouted];
         [[TCLoginModel sharedInstance] clearLoginedInfo];
         [self didLogoutInSettingController:self];
     } fail:^(int code, NSString *msg) {
@@ -327,7 +326,7 @@ NSString * kEnableMsgReadStatus = @"TUIKitDemo_EnableMsgReadStatus";
 }
 
 - (void)setReadStatus:(BOOL)on {
-    [TUIBaseChatViewController setIsMsgNeedReadReceipt:on];
+    [TUIChatConfig defaultConfig].msgNeedReadReceipt = on;
     [[NSUserDefaults standardUserDefaults] setBool:on forKey:kEnableMsgReadStatus];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }

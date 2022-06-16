@@ -86,7 +86,7 @@
     [super layoutSubviews];
 
     //_avatar.mm_top(self.mm_maxY - TPersonalCommonCell_Margin).mm_left(self.mm_maxX - 100);
-    _avatar.mm_left(self.mm_maxX - 120);
+    _avatar.mm_left(self.mm_maxX - 16 - TPersonalCommonCell_Image_Size.width);
 
 }
 
