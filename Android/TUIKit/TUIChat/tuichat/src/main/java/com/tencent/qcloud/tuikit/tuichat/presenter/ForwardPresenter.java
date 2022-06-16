@@ -3,6 +3,7 @@ package com.tencent.qcloud.tuikit.tuichat.presenter;
 import android.text.TextUtils;
 
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.model.ChatProvider;
@@ -18,7 +19,7 @@ public class ForwardPresenter extends ChatPresenter {
     public static final String TAG = ForwardPresenter.class.getSimpleName();
 
     private IMessageAdapter messageListAdapter;
-
+    private ChatInfo chatInfo;
     private final ChatProvider provider;
 
     List<TUIMessageBean> loadedData = new ArrayList<>();
@@ -32,6 +33,14 @@ public class ForwardPresenter extends ChatPresenter {
         this.messageListAdapter = messageListAdapter;
     }
 
+    public void setChatInfo(ChatInfo chatInfo) {
+        this.chatInfo = chatInfo;
+    }
+
+    @Override
+    public ChatInfo getChatInfo() {
+        return chatInfo;
+    }
 
     public void downloadMergerMessage(MergeMessageBean messageBean) {
         if (messageBean != null) {
@@ -41,7 +50,7 @@ public class ForwardPresenter extends ChatPresenter {
                 provider.downloadMergerMessage(messageBean, new IUIKitCallback<List<TUIMessageBean>>() {
                     @Override
                     public void onSuccess(List<TUIMessageBean> mergeMessageData) {
-                        preProcessReplyMessage(mergeMessageData, new IUIKitCallback<List<TUIMessageBean>>() {
+                        preProcessMessage(mergeMessageData, new IUIKitCallback<List<TUIMessageBean>>() {
                             @Override
                             public void onSuccess(List<TUIMessageBean> data) {
                                 onMergeMessageDownloaded(data);

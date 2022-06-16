@@ -69,7 +69,7 @@ public class ErrorMessageConverter {
                 return getLocalizedString(R.string.TUIKitErrorTLSSDKRequest); // @"TLS SDK 请求失败";
             case BaseConstants.ERR_SDK_ACCOUNT_TLS_REQUEST_TIMEOUT:
                 return getLocalizedString(R.string.TUIKitErrorTLSSDKRequestTimeout); // @"TLS SDK 请求超时";
-
+                
             // 消息错误码
 
             case BaseConstants.ERR_INVALID_CONVERSATION:
@@ -339,6 +339,8 @@ public class ErrorMessageConverter {
                 return getLocalizedString(R.string.TUIKitErrorSVRAccountCountLimit); // @"创建帐号数量超过免费体验版数量限制，请升级为专业版。";
             case BaseConstants.ERR_SVR_ACCOUNT_INTERNAL_ERROR:
                 return getLocalizedString(R.string.TUIKitErrorSVRAccountInternalError); // @"服务端内部错误，请重试。";
+            case BaseConstants.ERR_SVR_ACCOUNT_USER_STATUS_DISABLED:
+                return getLocalizedString(R.string.TUIKitErrorEnableUserStatusOnConsole);
 
             // 资料错误码
 
@@ -574,8 +576,6 @@ public class ErrorMessageConverter {
                 return getLocalizedString(R.string.TUIKitErrorSVRNoSuccessResult); // @"批量操作无成功结果";
             case BaseConstants.ERR_TO_USER_INVALID:
                 return getLocalizedString(R.string.TUIKitErrorSVRToUserInvalid); // @"IM: 无效接收方";
-            case BaseConstants.ERR_REQUEST_TIMEOUT:
-                return getLocalizedString(R.string.TUIKitErrorSVRRequestTimeout); // @"请求超时";
             case BaseConstants.ERR_INIT_CORE_FAIL:
                 return getLocalizedString(R.string.TUIKitErrorSVRInitCoreFail); // @"INIT CORE模块失败";
             case BaseConstants.ERR_EXPIRED_SESSION_NODE:

@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:drawable="@drawable/check_box_selected" android:state_checked="true" />
-    <item android:drawable="@drawable/check_box_unselected" android:state_checked="false" />
-    <item android:drawable="@drawable/check_box_unselected" />
+    <item android:drawable="@drawable/chat_unselected_icon" android:state_checked="false" />
+    <item android:drawable="@drawable/chat_unselected_icon" />
 
 </selector>

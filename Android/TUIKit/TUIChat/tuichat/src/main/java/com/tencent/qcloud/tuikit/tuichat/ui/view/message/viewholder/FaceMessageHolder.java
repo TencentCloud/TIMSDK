@@ -34,8 +34,11 @@ public class FaceMessageHolder extends MessageContentHolder {
 
     @Override
     public void layoutVariableViews(TUIMessageBean msg, int position) {
-        msgContentFrame.setBackground(null);
         performCustomFace((FaceMessageBean) msg, position);
+        if (msg.getMessageReactBean() == null || msg.getMessageReactBean().getReactSize() <= 0) {
+            msgArea.setBackground(null);
+            msgArea.setPadding(0, 0, 0, 0);
+        }
     }
 
     private void performCustomFace(final FaceMessageBean msg, final int position) {

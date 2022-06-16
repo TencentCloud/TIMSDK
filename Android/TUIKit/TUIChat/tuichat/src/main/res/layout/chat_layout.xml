@@ -2,6 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/chat_background_color">
 
     <com.tencent.qcloud.tuicore.component.TitleBarLayout
@@ -35,51 +37,66 @@
         android:id="@+id/chat_message_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/chat_notice_layout"
         android:layout_above="@id/chat_input_layout"
+        android:layout_below="@+id/chat_notice_layout"
         android:baselineAligned="false"
         android:clickable="false"
         android:descendantFocusability="blocksDescendants" />
 
-    <LinearLayout
-        android:id="@+id/jump_message_layout"
-        android:layout_width="100dp"
-        android:layout_height="45dp"
-        android:visibility="visible"
+    <androidx.cardview.widget.CardView
+        app:cardCornerRadius="4dp"
+        app:cardElevation="6dp"
+        app:cardUseCompatPadding="true"
         android:layout_above="@+id/chat_input_layout"
-        android:background="@drawable/white_back_ground"
-        android:gravity="center"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="@dimen/btn_margin_right"
         android:layout_marginBottom="@dimen/btn_margin_right"
-        android:orientation="horizontal">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/btn_margin_right"
+        android:layout_alignParentRight="true">
 
-        <ImageView
-            android:id="@+id/arrow_icon"
-            android:layout_marginLeft="7dp"
+        <LinearLayout
+            android:id="@+id/jump_message_layout"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:clickable="false"
-            android:src="@drawable/ic_arrow_down" />
+            android:layout_height="33.6dp"
+            android:paddingTop="9.12dp"
+            android:paddingBottom="8.64dp"
+            android:paddingLeft="10.08dp"
+            android:paddingRight="9.6dp"
+            android:background="#FFFFFF"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="visible">
 
-        <TextView
-            android:id="@+id/jump_message_content"
-            android:textColor="@color/jum_message_text_color"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:layout_marginLeft="2dp"
-            android:layout_marginRight="7dp"
-            android:singleLine="true"
-            android:textSize="12sp" />
+            <ImageView
+                android:id="@+id/arrow_icon"
+                android:layout_width="11.52dp"
+                android:layout_height="11.52dp"
+                android:layout_gravity="center"
+                android:clickable="false"
+                android:scaleType="fitCenter"
+                android:background="?attr/chat_jump_recent_down_icon" />
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/jump_message_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5.76dp"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:textColor="?attr/core_primary_color"
+                android:textSize="11.52sp" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
 
     <com.tencent.qcloud.tuikit.tuichat.ui.view.input.InputView
         android:id="@+id/chat_input_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@id/forward_layout"
         android:layout_alignParentBottom="true" />
 
     <RelativeLayout
@@ -114,34 +131,91 @@
 
         </LinearLayout>
     </RelativeLayout>
+
     <LinearLayout
         android:id="@+id/forward_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="#E6E9EB"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
-        android:visibility="gone">
+        android:paddingLeft="38.4dp"
+        android:paddingTop="15.36dp"
+        android:paddingRight="38.4dp"
+        android:paddingBottom="46.08dp"
+        android:visibility="gone"
+        tools:visibility="visible">
 
-
-        <Button
-            android:id="@+id/forward_button"
+        <LinearLayout
+            android:id="@+id/forward_one_by_one_button"
             android:layout_width="wrap_content"
-            android:layout_height="70dp"
-            android:layout_weight="1"
-            android:background="@color/navigation_bar_color"
-            android:textColor="@color/black_font_color"
-            android:text="@string/forward_button" />
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="38.4dp"
+                android:layout_height="38.4dp"
+                android:background="@drawable/multi_select_forward_one" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5.76dp"
+                android:text="@string/forward_mode_onebyone"
+                android:textColor="#444444"
+                android:textSize="11.52sp" />
+
+        </LinearLayout>
 
 
-        <Button
+        <LinearLayout
+            android:id="@+id/forward_merge_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="38.4dp"
+                android:layout_height="38.4dp"
+                android:background="@drawable/multi_select_forward_merge" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5.76dp"
+                android:text="@string/forward_mode_merge"
+                android:textColor="#444444"
+                android:textSize="11.52sp" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
             android:id="@+id/delete_button"
             android:layout_width="wrap_content"
-            android:layout_height="70dp"
-            android:layout_weight="1"
-            android:background="@color/navigation_bar_color"
-            android:textColor="@color/black_font_color"
-            android:text="@string/delete_button" />
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="38.4dp"
+                android:layout_height="38.4dp"
+                android:background="@drawable/multi_select_delete" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5.76dp"
+                android:text="@string/delete_button"
+                android:textColor="#444444"
+                android:textSize="11.52sp" />
+        </LinearLayout>
 
     </LinearLayout>
 </RelativeLayout>

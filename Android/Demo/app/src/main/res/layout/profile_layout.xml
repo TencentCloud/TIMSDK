@@ -94,9 +94,10 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/arrow_right"
                     android:layout_alignTop="@id/self_account_tag"
-                    android:layout_alignParentEnd="true" />
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/arrow_right" />
 
             </RelativeLayout>
 

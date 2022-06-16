@@ -41,6 +41,10 @@ public class TUIChatConstants {
     public static final String GROUP_ID = "group_id";
     public static final String SELECT_FOR_CALL = "isSelectForCall";
 
+    public static final String MESSAGE_REPLY_KEY = "messageReply";
+    public static final String MESSAGE_REPLIES_KEY = "messageReplies";
+    public static final String MESSAGE_REACT_KEY = "messageReact";
+
     public static final int ERR_SDK_INTERFACE_NOT_SUPPORT = BaseConstants.ERR_SDK_INTERFACE_NOT_SUPPORT;
     public static final String BUYING_GUIDELINES_EN = "https://intl.cloud.tencent.com/document/product/1047/36021?lang=en&pg=#changing-configuration";
     public static final String BUYING_GUIDELINES = "https://cloud.tencent.com/document/product/269/32458";

@@ -33,5 +33,12 @@
         <item name="chat_other_reply_text_color">@color/chat_other_reply_text_color_light</item>
 
         <item name="chat_read_receipt_text_color">@color/chat_read_receipt_text_color_light</item>
+        <item name="chat_react_text_color">@color/chat_react_text_color_light</item>
+        <item name="chat_react_other_text_color">@color/chat_react_other_text_color_light</item>
+        <item name="chat_reply_detail_icon">@drawable/chat_reply_icon_light</item>
+        <item name="chat_jump_recent_down_icon">@drawable/chat_ic_arrow_down_light</item>
+        <item name="chat_jump_recent_up_icon">@drawable/chat_ic_arrow_up_light</item>
+
+        <item name="chat_pressed_bg_color">@color/chat_pressed_bg_color_light</item>
     </style>
 </resources>

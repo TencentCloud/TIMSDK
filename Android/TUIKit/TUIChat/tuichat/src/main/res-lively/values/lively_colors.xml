@@ -30,4 +30,8 @@
     <color name="chat_other_reply_text_color_lively">#000000</color>
 
     <color name="chat_read_receipt_text_color_lively">#ECA08E</color>
+    <color name="chat_react_text_color_lively">#FFFFFF</color>
+    <color name="chat_react_other_text_color_lively">#888888</color>
+
+    <color name="chat_pressed_bg_color_lively">#19FF8E82</color>
 </resources>

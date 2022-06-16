@@ -508,7 +508,6 @@ public class SelectTextHelper {
             if (mSpan == null) {
                 mSpan = new BackgroundColorSpan(mSelectedColor);
             }
-//            Log.e("SelectableTextHelper", "start: " + mSelectionInfo.mStart + "   end: " + mSelectionInfo.mEnd);
             mSelectionInfo.mSelectionContent = mSpannable.subSequence(mSelectionInfo.mStart, mSelectionInfo.mEnd).toString();
             mSpannable.setSpan(mSpan, mSelectionInfo.mStart, mSelectionInfo.mEnd, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             if (mSelectListener != null) {

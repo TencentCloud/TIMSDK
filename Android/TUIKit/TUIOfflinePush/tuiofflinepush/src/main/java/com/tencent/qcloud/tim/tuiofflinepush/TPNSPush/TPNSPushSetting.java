@@ -8,8 +8,8 @@ import com.tencent.android.tpush.XGIOperateCallback;
 import com.tencent.android.tpush.XGPushConfig;
 import com.tencent.android.tpush.XGPushManager;
 import com.tencent.qcloud.tim.tuiofflinepush.PrivateConstants;
-import com.tencent.qcloud.tim.tuiofflinepush.TUIOfflinePushManager;
 import com.tencent.qcloud.tim.tuiofflinepush.PushSettingInterface;
+import com.tencent.qcloud.tim.tuiofflinepush.TUIOfflinePushManager;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushLog;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 
@@ -21,8 +21,10 @@ public class TPNSPushSetting implements PushSettingInterface {
     private static final String TAG = TPNSPushSetting.class.getSimpleName();
     private Context mContext;
 
+    protected static TUIOfflinePushManager.PushCallback mPushCallback = null;
+
     @Override
-    public void init(Context context) {
+    public void initPush(Context context) {
         mContext = context;
         // 关闭 TPNS SDK 拉活其他 app 的功能
         // ref: https://cloud.tencent.com/document/product/548/36674#.E5.A6.82.E4.BD.95.E5.85.B3.E9.97.AD-tpns-.E7.9A.84.E4.BF.9D.E6.B4.BB.E5.8A.9F.E8.83.BD.EF.BC.9F
@@ -73,7 +75,7 @@ public class TPNSPushSetting implements PushSettingInterface {
     }
 
     @Override
-    public void unInit(Context context) {
+    public void unInitPush(Context context) {
         TUIOfflinePushLog.d(TAG, "tpns 反注册");
         XGPushManager.unregisterPush(context, new XGIOperateCallback() {
             @Override
@@ -124,7 +126,11 @@ public class TPNSPushSetting implements PushSettingInterface {
 
                 String token = (String) o;
                 if (!TextUtils.isEmpty(token)) {
-                    TUIOfflinePushManager.getInstance().setPushTokenToTIM(token);
+                    if (mPushCallback != null) {
+                        mPushCallback.onTokenCallback(token);
+                    } else {
+                        TUIOfflinePushLog.e(TAG, "mPushCallback is null");
+                    }
                 }
 
                 // 重要：获取通过 TPNS SDK 注册到的厂商推送 token，并调用 IM 接口设置和上传。
@@ -142,5 +148,9 @@ public class TPNSPushSetting implements PushSettingInterface {
                 TUIOfflinePushLog.w(TAG, "tpush register failed errCode: " + i + ", errMsg: " + s);
             }
         });
+    }
+
+    public void setPushCallback(TUIOfflinePushManager.PushCallback callback){
+        mPushCallback = callback;
     }
 }

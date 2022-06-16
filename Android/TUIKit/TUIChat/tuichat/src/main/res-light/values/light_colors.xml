@@ -28,5 +28,9 @@
     <color name="chat_other_reply_text_color_light">#000000</color>
 
     <color name="chat_read_receipt_text_color_light">#679CE1</color>
+    <color name="chat_react_text_color_light">#888888</color>
+    <color name="chat_react_other_text_color_light">#888888</color>
+
+    <color name="chat_pressed_bg_color_light">#19006EFF</color>
 
 </resources>

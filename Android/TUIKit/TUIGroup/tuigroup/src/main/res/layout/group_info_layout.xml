@@ -81,7 +81,7 @@
                     android:layout_height="11.52dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="15.36dp"
+                    android:layout_marginEnd="20dp"
                     android:src="@drawable/arrow_right" />
             </RelativeLayout>
 
@@ -140,7 +140,7 @@
                 android:layout_height="69dp"
                 android:background="@color/white"
                 android:paddingLeft="@dimen/group_profile_face_margin_left"
-                android:paddingRight="@dimen/group_profile_face_margin_right"
+                android:paddingRight="20dp"
                 android:orientation="vertical">
 
                 <TextView

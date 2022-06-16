@@ -14,18 +14,19 @@ import com.huawei.hms.push.HmsMessaging;
 import com.meizu.cloud.pushsdk.PushManager;
 import com.meizu.cloud.pushsdk.util.MzSystemUtils;
 import com.tencent.qcloud.tim.tuiofflinepush.PrivateConstants;
-import com.tencent.qcloud.tim.tuiofflinepush.TUIOfflinePushManager;
 import com.tencent.qcloud.tim.tuiofflinepush.PushSettingInterface;
+import com.tencent.qcloud.tim.tuiofflinepush.TUIOfflinePushManager;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.BrandUtil;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushLog;
 import com.vivo.push.IPushActionListener;
 import com.vivo.push.PushClient;
 import com.xiaomi.mipush.sdk.MiPushClient;
 
-public class OEMPushSetting implements PushSettingInterface {
+public class OEMPushSetting implements PushSettingInterface{
     private static final String TAG = OEMPushSetting.class.getSimpleName();
+    protected static TUIOfflinePushManager.PushCallback mPushCallback = null;
 
-    public void init(Context context) {
+    public void initPush(Context context) {
        if (BrandUtil.isBrandXiaoMi()) {
             // 小米离线推送
             MiPushClient.registerPush(context, PrivateConstants.XM_PUSH_APPID, PrivateConstants.XM_PUSH_APPKEY);
@@ -52,7 +53,11 @@ public class OEMPushSetting implements PushSettingInterface {
                        String token = HmsInstanceId.getInstance(context).getToken(appId, "HCM");
                        TUIOfflinePushLog.i(TAG, "huawei get token:" + token);
                        if(!TextUtils.isEmpty(token)) {
-                           TUIOfflinePushManager.getInstance().setPushTokenToTIM(token);
+                           if (mPushCallback != null) {
+                               mPushCallback.onTokenCallback(token);
+                           } else {
+                               TUIOfflinePushLog.e(TAG, "mPushCallback is null");
+                           }
                        }
                    } catch (ApiException e) {
                        TUIOfflinePushLog.e(TAG, "huawei get token failed, " + e);
@@ -73,7 +78,11 @@ public class OEMPushSetting implements PushSettingInterface {
                    if (state == 0) {
                        String regId = PushClient.getInstance(context).getRegId();
                        TUIOfflinePushLog.i(TAG, "vivopush open vivo push success regId = " + regId);
-                       TUIOfflinePushManager.getInstance().setPushTokenToTIM(regId);
+                       if (mPushCallback != null) {
+                           mPushCallback.onTokenCallback(regId);
+                       } else {
+                           TUIOfflinePushLog.e(TAG, "mPushCallback is null");
+                       }
                    } else {
                        // 根据vivo推送文档说明，state = 101 表示该vivo机型或者版本不支持vivo推送，链接：https://dev.vivo.com.cn/documentCenter/doc/156
                        TUIOfflinePushLog.i(TAG, "vivopush open vivo push fail state = " + state);
@@ -82,7 +91,7 @@ public class OEMPushSetting implements PushSettingInterface {
             });
         } else if(BrandUtil.isBrandOppo()){
            HeytapPushManager.init(context, false);
-           if (HeytapPushManager.isSupportPush()) {
+           if (HeytapPushManager.isSupportPush(context)) {
                // oppo离线推送
                OPPOPushImpl oppo = new OPPOPushImpl();
                oppo.createNotificationChannel(context);
@@ -105,10 +114,14 @@ public class OEMPushSetting implements PushSettingInterface {
                             String token = task.getResult().getToken();
                             TUIOfflinePushLog.i(TAG, "google fcm getToken = " + token);
 
-                            TUIOfflinePushManager.getInstance().setPushTokenToTIM(token);
+                            if (mPushCallback != null) {
+                                mPushCallback.onTokenCallback(token);
+                            } else {
+                                TUIOfflinePushLog.e(TAG, "mPushCallback is null");
+                            }
                         }
                     });
-        };
+        }
     }
 
     @Override
@@ -120,7 +133,12 @@ public class OEMPushSetting implements PushSettingInterface {
     }
 
     @Override
-    public void unInit(Context context) {
+    public void unInitPush(Context context) {
 
     }
+
+    public void setPushCallback(TUIOfflinePushManager.PushCallback callback){
+        mPushCallback = callback;
+    }
+
 }

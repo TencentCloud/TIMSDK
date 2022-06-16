@@ -17,6 +17,8 @@ import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.CallModel;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageCustom;
+import com.tencent.qcloud.tuikit.tuichat.bean.MessageReactBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.MessageRepliesBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageTyping;
 import com.tencent.qcloud.tuikit.tuichat.bean.ReplyPreviewBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingMessageBean;
@@ -26,6 +28,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.FileMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.LocationMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.QuoteMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ReplyMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.SoundMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
@@ -110,6 +113,11 @@ public class ChatMessageParser {
         if (messageBean == null) {
             messageBean = parseCustomMessageFromMap(v2TIMMessage);
         }
+        if (messageBean == null) {
+            messageBean = new TextMessageBean();
+            String text = TUIChatService.getAppContext().getString(R.string.no_support_msg);
+            ((TextMessageBean) messageBean).setText(text);
+        }
         return messageBean;
     }
 
@@ -137,7 +145,7 @@ public class ChatMessageParser {
             Gson gson = new Gson();
             HashMap replyHashMap = gson.fromJson(cloudCustomData, HashMap.class);
             if (replyHashMap != null) {
-                Object replyContentObj = replyHashMap.get("messageReply");
+                Object replyContentObj = replyHashMap.get(TUIChatConstants.MESSAGE_REPLY_KEY);
                 ReplyPreviewBean replyPreviewBean = null;
                 if (replyContentObj instanceof Map) {
                     replyPreviewBean = gson.fromJson(gson.toJson(replyContentObj), ReplyPreviewBean.class);
@@ -146,7 +154,63 @@ public class ChatMessageParser {
                     if (replyPreviewBean.getVersion() > ReplyPreviewBean.VERSION) {
                         return null;
                     }
-                    return new ReplyMessageBean(replyPreviewBean);
+                    if (TextUtils.isEmpty(replyPreviewBean.getMessageRootID())) {
+                        return new QuoteMessageBean(replyPreviewBean);
+                    } else {
+                        return new ReplyMessageBean(replyPreviewBean);
+                    }
+                }
+            }
+        } catch (JsonSyntaxException e) {
+            TUIChatLog.e(TAG, " getCustomJsonMap error ");
+        }
+        return null;
+    }
+
+    public static MessageReactBean parseMessageReact(TUIMessageBean messageBean) {
+        V2TIMMessage message = messageBean.getV2TIMMessage();
+        String cloudCustomData = message.getCloudCustomData();
+
+        try {
+            Gson gson = new Gson();
+            HashMap hashMap = gson.fromJson(cloudCustomData, HashMap.class);
+            if (hashMap != null) {
+                Object reactContentObj = hashMap.get(TUIChatConstants.MESSAGE_REACT_KEY);
+                MessageReactBean reactBean = null;
+                if (reactContentObj instanceof Map) {
+                    reactBean = gson.fromJson(gson.toJson(reactContentObj), MessageReactBean.class);
+                }
+                if (reactBean != null) {
+                    if (reactBean.getVersion() > MessageReactBean.VERSION) {
+                        return null;
+                    }
+                    return reactBean;
+                }
+            }
+        } catch (JsonSyntaxException e) {
+            TUIChatLog.e(TAG, " getCustomJsonMap error ");
+        }
+        return null;
+    }
+
+    public static MessageRepliesBean parseMessageReplies(TUIMessageBean messageBean) {
+        V2TIMMessage message = messageBean.getV2TIMMessage();
+        String cloudCustomData = message.getCloudCustomData();
+
+        try {
+            Gson gson = new Gson();
+            HashMap hashMap = gson.fromJson(cloudCustomData, HashMap.class);
+            if (hashMap != null) {
+                Object repliesContentObj = hashMap.get(TUIChatConstants.MESSAGE_REPLIES_KEY);
+                MessageRepliesBean repliesBean = null;
+                if (repliesContentObj instanceof Map) {
+                    repliesBean = gson.fromJson(gson.toJson(repliesContentObj), MessageRepliesBean.class);
+                }
+                if (repliesBean != null) {
+                    if (repliesBean.getVersion() > MessageRepliesBean.VERSION) {
+                        return null;
+                    }
+                    return repliesBean;
                 }
             }
         } catch (JsonSyntaxException e) {
@@ -215,57 +279,12 @@ public class ChatMessageParser {
     }
 
     private static TUIMessageBean parseCallingMessage(V2TIMMessage v2TIMMessage) {
-        V2TIMCustomElem customElem = v2TIMMessage.getCustomElem();
-        if (customElem == null || customElem.getData() == null) {
-            return null;
-        }
-        String data = new String(customElem.getData());
-
-        Gson gson = new Gson();
-        HashMap customJsonMap = null;
-        try {
-            customJsonMap = gson.fromJson(data, HashMap.class);
-        } catch (JsonSyntaxException e) {
-            TUIChatLog.e(TAG, " getCustomJsonMap error ");
-        }
-        String businessId = null;
-        Double businessIdForTimeout = 0.0;
-        Object businessIdObj = null;
-        Object dataInData = null;
-        if (customJsonMap != null) {
-            businessIdObj = customJsonMap.get(TUIConstants.Message.CUSTOM_BUSINESS_ID_KEY);
-            //dataInData = customJsonMap.get(TUIConstants.Message.CALLING_MESSAGE_DATA_KEY);
-        }
-        if (businessIdObj instanceof String) {
-            businessId = (String) businessIdObj;
-        } else if (businessIdObj instanceof Double) {
-            businessIdForTimeout = (Double) businessIdObj;
-        }
-
-        /*HashMap dataJsonMap = null;
-        Object typeObject = null;
-        int callType = 0;
-        if (dataInData instanceof String) {
-            String dataString = (String) dataInData;
-            Gson gsonData = new Gson();
-            try {
-                dataJsonMap = gsonData.fromJson(dataString, HashMap.class);
-            } catch (JsonSyntaxException e) {
-                TUIChatLog.e(TAG, " getCustomJsonMap error ");
-            }
-        }
-        if (dataJsonMap != null) {
-            typeObject = dataJsonMap.get(TUIConstants.Message.CALLING_TYPE_KEY);
-        }
-
-        if (typeObject instanceof Integer) {
-            callType = (Integer) typeObject;
-        }*/
-
         V2TIMSignalingInfo signalingInfo = V2TIMManager.getSignalingManager().getSignalingInfo(v2TIMMessage);
-
-        // 欢迎消息
-        if (signalingInfo != null) { // 信令消息
+        if (signalingInfo != null) {
+            String businessId = null;
+            Double businessIdForTimeout = 0.0;
+            Object businessIdObj = null;
+            Gson gson = new Gson();
             try {
                 HashMap signalDataMap = gson.fromJson(signalingInfo.getData(), HashMap.class);
                 if (signalDataMap != null) {
@@ -342,6 +361,15 @@ public class ChatMessageParser {
             case CallModel.VIDEO_CALL_ACTION_HANGUP:
                 content = isGroup ? context.getString(R.string.stop_group_call) :
                         context.getString(R.string.stop_call_tip) + DateTimeUtil.formatSecondsTo00(callModel.duration);
+                break;
+            case CallModel.VIDEO_CALL_ACTION_SWITCH_TO_AUDIO:
+                content = context.getString(R.string.chat_calling_switch_to_audio);
+                break;
+            case CallModel.VIDEO_CALL_ACTION_SWITCH_TO_AUDIO_ACCEPT:
+                content = context.getString(R.string.chat_calling_switch_to_audio_accept);
+                break;
+            case CallModel.VIDEO_CALL_ACTION_UNKNOWN_INVITE:
+                content = context.getString(R.string.chat_calling_unknown_invitation);
                 break;
             default:
                 content = context.getString(R.string.invalid_command);
