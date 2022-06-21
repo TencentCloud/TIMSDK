@@ -4,11 +4,11 @@ English | [简体中文](./readme.md)
 
 The TUIKit is a set of UI components based on IM SDKs. It provides features such as management of conversations, chats, groups, and profiles. With these TUIKit components, you can quickly build your own business logic.
 
-![](https://web.sdk.qcloud.com/im/demo/TUIkit/document-image/component1.png)
+![](https://web.sdk.qcloud.com/im/demo/TUIkit/document-image/intl/component1.png)
 
-![](https://web.sdk.qcloud.com/im/demo/TUIkit/document-image/component2.png)
+![](https://web.sdk.qcloud.com/im/demo/TUIkit/document-image/intl/component2.png)
 
-![](https://web.sdk.qcloud.com/im/demo/TUIkit/document-image/component3.png)
+![](https://web.sdk.qcloud.com/im/demo/TUIkit/document-image/intl/component3.png)
 
 ## TUIKit integration
 
@@ -47,10 +47,10 @@ Download the TUIKit source code from [GitHub](https://github.com/tencentyun/TIMS
     ![](https://web.sdk.qcloud.com/im/demo/TUIkit/document-image/userSig-catalogue.png)
 
 2. Set required parameters in the `GenerateTestUserSig` file, where `SDKAppID` and `Key` can be obtained in the [IM console](https://console.cloud.tencent.com/im). Click the card of the target app to go to its basic configuration page.  
-   [![](https://qcloudimg.tencent-cloud.cn/raw/e435332cda8d9ec7fea21bd95f7a0cba.png)](https://camo.githubusercontent.com/20575292024f27b76db87d6688e57f16d38b579b249054466668b596975dd30e/68747470733a2f2f71636c6f7564696d672e74656e63656e742d636c6f75642e636e2f7261772f65343335333332636461386439656337666561323162643935663761306362612e706e67)
+   ![](https://web.sdk.qcloud.com/im/demo/TUIkit/document-image/intl/control.png)
 
 3. In the **Basic Information** area, click **Display key**, and copy and save the key information to the `GenerateTestUserSig` file. 
-   [![](https://main.qcloudimg.com/raw/e7f6270bcbc68c51595371bd48c40af7.png)](https://camo.githubusercontent.com/d3e2ecc55db7a3c14ba0ba84c7cb92e18618028006c6f7fa304ba5ef01f0b6be/68747470733a2f2f6d61696e2e71636c6f7564696d672e636f6d2f7261772f65376636323730626362633638633531353935333731626434386334306166372e706e67)
+   ![](https://web.sdk.qcloud.com/im/demo/TUIkit/document-image/intl/useSig.png)
 
 > Note:
 > 
