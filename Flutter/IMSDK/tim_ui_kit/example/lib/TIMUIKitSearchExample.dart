@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitSearch/tim_uikit_search.dart';
-
 class TIMUIKitSearchExample extends StatelessWidget {
   const TIMUIKitSearchExample({Key? key}) : super(key: key);
 
