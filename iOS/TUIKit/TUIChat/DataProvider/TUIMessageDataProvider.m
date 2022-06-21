@@ -22,6 +22,7 @@
 #import "TUILogin.h"
 #import "NSString+TUIUtil.h"
 #import "TUIMessageProgressManager.h"
+#import "TUICloudCustomDataTypeCenter.h"
 
 #define MaxDateMessageDelay 5 * 60 /// 消息上方的日期时间间隔, 单位秒 , default is (5 * 60)
 #define MaxReEditMessageDelay 2 * 60 /// 消息撤回后最大可编辑时间 , default is (2 * 60)
@@ -31,7 +32,6 @@ static NSArray *customMessageInfo = nil;
 @interface TUIMessageDataProvider ()<V2TIMAdvancedMsgListener, TUIMessageProgressManagerDelegate>
 @property (nonatomic) TUIChatConversationModel *conversationModel;
 @property (nonatomic) NSMutableArray<TUIMessageCellData *> *uiMsgs_;
-@property (nonatomic) NSMutableArray<V2TIMMessage *> *readGroupMsgs;
 @property (nonatomic) NSMutableSet<NSString *> *sentReadGroupMsgSet;
 @property (nonatomic) NSMutableDictionary<NSString *, NSNumber *> *heightCache_;
 @property (nonatomic) BOOL isLoadingData;
@@ -66,7 +66,6 @@ static NSArray *customMessageInfo = nil;
         _conversationModel = conversationModel;
         _uiMsgs_ = [NSMutableArray arrayWithCapacity:10];
         _heightCache_ = [NSMutableDictionary dictionaryWithCapacity:10];
-        _readGroupMsgs = [NSMutableArray arrayWithCapacity:10];
         _sentReadGroupMsgSet = [NSMutableSet setWithCapacity:10];
         _isLoadingData = NO;
         _isNoMoreMsg = NO;
@@ -120,7 +119,7 @@ static NSArray *customMessageInfo = nil;
     }
     
     @weakify(self)
-    [self preProcessReplyMessage:cellDataList callback:^{
+    [self preProcessMessage:cellDataList callback:^{
         @strongify(self)
         // 更新数据, 刷新页面
         [self.dataSource dataProviderDataSourceWillChange:self];
@@ -137,7 +136,7 @@ static NSArray *customMessageInfo = nil;
         if ([self.dataSource respondsToSelector:@selector(dataProvider:ReceiveNewUIMsg:)]) {
             // 注意这里不能去 firstObject，firstObject 有可能是展示系统时间的 SystemMessageCellData
             [self.dataSource dataProvider:self ReceiveNewUIMsg:cellDataList.lastObject];
-        }        
+        }
     }];
 }
 
@@ -172,19 +171,7 @@ static NSArray *customMessageInfo = nil;
     return uiMsgs;
 }
 
-/// 收到单聊消息已读回执
-- (void)onRecvC2CReadReceipt:(NSArray<V2TIMMessageReceipt *> *)receiptList {
-    if (!receiptList.count) {
-        NSLog(@"Receipt Data Error");
-        return;
-    }
-    V2TIMMessageReceipt *receipt = receiptList.firstObject;
-    if (receipt && [self.dataSource respondsToSelector:@selector(dataProvider:ReceiveReadMsgWithUserID:Time:)]) {
-        [self.dataSource dataProvider:self ReceiveReadMsgWithUserID:receipt.userID Time:receipt.timestamp];
-    }
-}
-
-/// 收到群聊消息已读回执
+/// Received message read receipts, both in group and c2c conversation.
 - (void)onRecvMessageReadReceipts:(NSArray<V2TIMMessageReceipt *> *)receiptList {
     if (receiptList.count == 0) {
         NSLog(@"group receipt data is empty, ignore");
@@ -195,7 +182,6 @@ static NSArray *customMessageInfo = nil;
     }
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     for (V2TIMMessageReceipt *receipt in receiptList) {
-        NSLog(@"\n********************* received receipt info **********************\ngroupID: %@,\nmsgID: %@,\nunreadCount: %d,\nreadCount: %d", receipt.groupID, receipt.msgID, receipt.unreadCount, receipt.readCount);
         [dict setObject:receipt forKey:receipt.msgID];
     }
     // update TUIMessageCellData readCount/unreadCount
@@ -203,7 +189,9 @@ static NSArray *customMessageInfo = nil;
         if ([dict.allKeys containsObject:data.innerMessage.msgID]) {
             V2TIMMessageReceipt *receipt = dict[data.innerMessage.msgID];
             data.messageReceipt = receipt;
-            [self.dataSource dataProvider:self ReceiveReadMsgWithGroupID:receipt.groupID msgID:receipt.msgID readCount:receipt.readCount unreadCount:receipt.unreadCount];
+            if ([self.dataSource respondsToSelector:@selector(dataProvider:ReceiveReadMsgWithGroupID:msgID:readCount:unreadCount:)]){
+                [self.dataSource dataProvider:self ReceiveReadMsgWithGroupID:receipt.groupID msgID:receipt.msgID readCount:receipt.readCount unreadCount:receipt.unreadCount];
+            }
         }
     }
 }
@@ -244,18 +232,27 @@ static NSArray *customMessageInfo = nil;
     for (TUIMessageCellData *uiMsg in self.uiMsgs) {
         if ([uiMsg.msgID isEqualToString:imMsg.msgID]) {
             NSMutableArray *cellDataList = [self transUIMsgFromIMMsg:@[imMsg]];
-            [self preProcessReplyMessage:cellDataList callback:^{
+            for (TUIMessageCellData *cellData in cellDataList) {
+                if ([cellData.msgID isEqualToString:imMsg.msgID]) {
+                    cellData.messageReceipt = uiMsg.messageReceipt;
+                    break;
+                }
+            }
+            [self preProcessMessage:cellDataList callback:^{
                 @strongify(self)
                 if (cellDataList.count > 0) {
-                    TUIMessageCellData *cellData =cellDataList.firstObject;
-                    [self.dataSource dataProviderDataSourceWillChange:self];
+                    //Fix:原先取值cellDataList.firstObject会因为firstObject可能被拼接日期date导致替代错误.
+                    TUIMessageCellData *cellData = cellDataList.lastObject;
                     NSInteger index = [self.uiMsgs indexOfObject:uiMsg];
-                    [self replaceUIMsg:cellData atIndex:index];
-                    [self.dataSource dataProviderDataSourceChange:self
-                                                         withType:TUIMessageDataProviderDataSourceChangeTypeReload
-                                                          atIndex:index
-                                                        animation:YES];
-                    [self.dataSource dataProviderDataSourceDidChange:self];
+                    if (index < self.uiMsgs.count) {
+                        [self.dataSource dataProviderDataSourceWillChange:self];
+                        [self replaceUIMsg:cellData atIndex:index];
+                        [self.dataSource dataProviderDataSourceChange:self
+                                                             withType:TUIMessageDataProviderDataSourceChangeTypeReload
+                                                              atIndex:index
+                                                            animation:YES];
+                        [self.dataSource dataProviderDataSourceDidChange:self];
+                    }
                 }
             }];
             return;
@@ -320,7 +317,7 @@ static NSArray *customMessageInfo = nil;
 {
     NSMutableArray<TUIMessageCellData *> *uiMsgs = [self transUIMsgFromIMMsg:msgs];
     @weakify(self)
-    [self preProcessReplyMessage:uiMsgs callback:^{
+    [self preProcessMessage:uiMsgs callback:^{
         @strongify(self)
         if(msgs.count < self.pageCount) {
             self.isNoMoreMsg = YES;
@@ -338,7 +335,90 @@ static NSArray *customMessageInfo = nil;
     }];
 }
 
-- (void)preProcessReplyMessage:(NSArray<TUIMessageCellData *> *)uiMsgs callback:(void(^)(void))callback
+- (void)preProcessMessage:(NSArray<TUIMessageCellData *> *)uiMsgs
+            callback:(void(^)(void))callback   {
+    @weakify(self)
+    [self preProcessReactMessage:uiMsgs reactCallback:^{
+        @strongify(self)
+        [self preProcessReplyMessageV2:uiMsgs callback:callback];
+    }];
+
+}
+
+- (void)preProcessReactMessage:(NSArray<TUIMessageCellData *> *)uiMsgs reactCallback:(void(^)(void))reactCallback
+{
+    if (uiMsgs.count == 0) {
+        if (reactCallback) {
+            reactCallback();
+        }
+        return;
+    }
+    dispatch_group_t group = dispatch_group_create();
+    NSArray *arrayWithoutDuplicates = [self getIDsAboutWhoUseReactMessage:uiMsgs];
+    NSMutableDictionary * reactUserMap = [NSMutableDictionary dictionaryWithCapacity:3];
+    
+    dispatch_group_enter(group);
+    if (self.conversationModel.groupID.length>0 && arrayWithoutDuplicates.count > 0) {
+        [[V2TIMManager sharedInstance] getGroupMembersInfo:self.conversationModel.groupID  memberList:arrayWithoutDuplicates succ:^(NSArray<V2TIMGroupMemberFullInfo *> *memberList) {
+            [memberList enumerateObjectsUsingBlock:^(V2TIMGroupMemberFullInfo * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    TUITagsUserModel * userModel = [[TUITagsUserModel alloc] init];
+                    userModel.userID = obj.userID;
+                    userModel.friendRemark = obj.friendRemark;
+                    userModel.nameCard = obj.nameCard;
+                    userModel.nickName = obj.nickName;
+                if (userModel && userModel.userID.length >0 ) {
+                    [reactUserMap setObject:userModel forKey:userModel.userID];
+                }
+            }];
+            dispatch_group_leave(group);
+        } fail:^(int code, NSString *desc) {
+            dispatch_group_leave(group);
+        }];
+    }
+    else  {
+        [[V2TIMManager sharedInstance] getFriendsInfo:arrayWithoutDuplicates succ:^(NSArray<V2TIMFriendInfoResult *> *resultList) {
+            [resultList enumerateObjectsUsingBlock:^(V2TIMFriendInfoResult * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                TUITagsUserModel * userModel = [[TUITagsUserModel alloc] init];
+                userModel.userID = obj.friendInfo.userID;
+                userModel.nickName = obj.friendInfo.userFullInfo.nickName;
+                userModel.friendRemark = obj.friendInfo.friendRemark;
+                if (userModel && userModel.userID.length >0 ) {
+                    [reactUserMap setObject:userModel forKey:userModel.userID];
+                }
+            }];
+            
+            dispatch_group_leave(group);
+
+        } fail:^(int code, NSString *desc) {
+            dispatch_group_leave(group);
+
+        }];
+        
+    }
+
+    
+    dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+        for (TUIMessageCellData *cellData in uiMsgs) {
+            TUIMessageCellData *myData = (TUIMessageCellData *)cellData;
+            __weak typeof(myData) weakMyData = myData;
+            TUIMessageCell * cell = [[TUIMessageCell alloc] initWithFrame:CGRectZero];
+            if ([myData.messageModifyReacts isKindOfClass:NSDictionary.class] && [myData.messageModifyReacts allKeys].count >0 ) {
+                myData.messageModifyReactUsers = reactUserMap;
+                [cell prepareReactTagUI:cell.container];
+                [cell fillWithData:myData];
+                [cell layoutIfNeeded];
+                [cell.tagView layoutIfNeeded];
+                [cell.tagView updateView];
+                weakMyData.messageModifyReactsSize = cell.tagView.frame.size;
+            }
+        }
+        
+        if (reactCallback) {
+            reactCallback();
+        }
+    });
+}
+- (void)preProcessReplyMessageV2:(NSArray<TUIMessageCellData *> *)uiMsgs callback:(void(^)(void))callback
 {
     if (uiMsgs.count == 0) {
         if (callback) {
@@ -379,13 +459,36 @@ static NSArray *customMessageInfo = nil;
     });
 }
 
+//Find all ids that who use React Emoji
+- (NSArray *)getIDsAboutWhoUseReactMessage:(NSArray<TUIMessageCellData *> *)uiMsgs {
+    NSMutableArray *hasReactArray = [NSMutableArray arrayWithCapacity:3];
+
+    for (TUIMessageCellData *cellData in uiMsgs) {
+        TUIMessageCellData *myData = (TUIMessageCellData *)cellData;
+        if ([myData.messageModifyReacts isKindOfClass:NSDictionary.class] && [myData.messageModifyReacts allKeys].count >0 ) {
+            [myData.messageModifyReacts enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+                
+                if (obj &&[obj isKindOfClass:NSArray.class] ) {
+                    NSArray *arr = (NSArray *)obj;
+                    if (arr.count >0) {
+                        [hasReactArray addObjectsFromArray:obj];
+                    }
+                }
+            }];
+        }
+    }
+    
+    NSSet *set = [NSSet setWithArray:hasReactArray];
+    NSArray *arrayWithoutOrder = [set allObjects];
+    return arrayWithoutOrder;
+}
 - (void)sendUIMsg:(TUIMessageCellData *)uiMsg
    toConversation:(TUIChatConversationModel *)conversationData
     willSendBlock:(void(^)(BOOL isReSend, TUIMessageCellData *dateUIMsg))willSendBlock
         SuccBlock:(nullable V2TIMSucc)succ
         FailBlock:(nullable V2TIMFail)fail
 {
-    [self preProcessReplyMessage:@[uiMsg] callback:^{
+    [self preProcessMessage:@[uiMsg] callback:^{
         [TUITool dispatchMainAsync:^{
             V2TIMMessage *imMsg = uiMsg.innerMessage;
             TUIMessageCellData *dateMsg = nil;
@@ -603,7 +706,7 @@ static NSArray *customMessageInfo = nil;
         if (data.innerMessage == nil) {
             continue;
         }
-        // use Set to avoid sending duplicate element to SDK
+        // Use Set to avoid sending duplicate element to SDK
         if (data.msgID.length > 0) {
             if ([self.sentReadGroupMsgSet containsObject:data.msgID]) {
                 continue;
@@ -611,14 +714,16 @@ static NSArray *customMessageInfo = nil;
                 [self.sentReadGroupMsgSet addObject:data.msgID];
             }
         }
-        // if needReadReceipt is NO, receiver won't send message read receipt
+        // If needReadReceipt is NO, receiver won't send message read receipt
         if (!data.innerMessage.needReadReceipt) {
             continue;
         }
         [array addObject:data.innerMessage];
     }
-    [self.readGroupMsgs addObjectsFromArray:array];
-    [TUIMessageDataProvider sendMessageReadReceipts:self.readGroupMsgs];
+    if (array.count == 0) {
+        return;
+    }
+    [TUIMessageDataProvider sendMessageReadReceipts:array];
 }
 
 - (NSInteger)getIndexOfMessage:(NSString *)msgID {
@@ -670,7 +775,7 @@ static NSArray *customMessageInfo = nil;
     }
     
     TUIMessageCellData *data = nil;
-    switch (message.elemType) {
+    switch (message.elemType) { 
         case V2TIM_ELEM_TYPE_TEXT:
         {
             data = [TUITextMessageCellData getCellData:message];
@@ -729,12 +834,64 @@ static NSArray *customMessageInfo = nil;
             break;
     }
 
-    // 判断是否为「回复消息」
+    if (!data) {
+        TUITextMessageCellData *cantSupportCellData = [[TUITextMessageCellData alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
+        cantSupportCellData.content = TUIKitLocalizableString(TUIKitNotSupportThisMessage);
+        data = cantSupportCellData;
+        data.reuseId = TTextMessageCell_ReuseId;
+    }
+    
+    // 判断是否包含「云自定义消息」
     if (message.cloudCustomData) {
-        TUIMessageCellData *replyData = [TUIReplyMessageCellData getCellData:message];
-        if (replyData) {
-            data = replyData;
+        // 判断是否包含「回复消息」
+        if ([message isContainsCloudCustomOfDataType:TUICloudCustomDataType_MessageReply]) {
+            TUIMessageCellData *replyData = [TUIReplyMessageCellData getCellData:message];
+            if (replyData) {
+                data = replyData;
+            }
         }
+        
+        // 判断是否包含「引用消息」
+        if ([message isContainsCloudCustomOfDataType:TUICloudCustomDataType_MessageReference]) {
+            TUIMessageCellData *referenceData = [TUIReferenceMessageCellData getCellData:message];
+            if (referenceData) {
+                data = referenceData;
+            }
+        }
+        // 判断是否包含「消息响应」
+        if ([message isContainsCloudCustomOfDataType:TUICloudCustomDataType_MessageReact]) {
+            [message doThingsInContainsCloudCustomOfDataType:TUICloudCustomDataType_MessageReact callback:^(BOOL isContains, id obj) {
+                if (isContains) {
+                    if(obj && [obj isKindOfClass:NSDictionary.class]) {
+                        NSDictionary * dic =  (NSDictionary *)obj;
+                        if ([dic isKindOfClass:NSDictionary.class]) {
+                            data.messageModifyReacts = dic.copy;
+                        }
+                    }
+                }
+            }];
+            
+        }
+        // 判断是否包含「消息回复数」
+        if ([message isContainsCloudCustomOfDataType:TUICloudCustomDataType_MessageReplies]) {
+            [message doThingsInContainsCloudCustomOfDataType:TUICloudCustomDataType_MessageReplies callback:^(BOOL isContains, id obj) {
+                if (isContains) {
+                    data.showMessageModifyReplies = YES;
+                    if(obj && [obj isKindOfClass:NSDictionary.class]) {
+                        NSDictionary * dic =  (NSDictionary *)obj;
+                        NSString * typeStr =  [TUICloudCustomDataTypeCenter convertType2String:TUICloudCustomDataType_MessageReplies];
+                        NSDictionary *messageReplies = [dic valueForKey:typeStr];
+                        NSArray *repliesArr = [messageReplies valueForKey:@"replies"];
+                        if ([repliesArr isKindOfClass:NSArray.class]) {
+                            data.messageModifyReplies = repliesArr.copy;
+                        }
+                    }
+                }
+            }];
+        }
+        
+
+    
     }
     
     if (data) {
@@ -945,7 +1102,7 @@ static NSArray *customMessageInfo = nil;
         pushInfo.AndroidOPPOChannelID = @"tuikit";
         pushInfo.AndroidSound = TUIConfig.defaultConfig.enableCustomRing ? @"private_ring" : nil;
     }
-    if ([TUIMessageDataProvider isGroupCommunity:conversationData.groupType] ||
+    if ([TUIMessageDataProvider isGroupCommunity:conversationData.groupType groupID:conversationData.groupID] ||
         [TUIMessageDataProvider isGroupAVChatRoom:conversationData.groupType]) {
         message.needReadReceipt = NO;
     }
@@ -967,8 +1124,8 @@ static NSArray *customMessageInfo = nil;
     }];
 }
 
-+ (BOOL)isGroupCommunity:(NSString *)groupType {
-    return [groupType isEqualToString:@"Community"];
++ (BOOL)isGroupCommunity:(NSString *)groupType groupID:(NSString *)groupID {
+    return [groupType isEqualToString:@"Community"] || [groupID startsWith:@"@TGS#_@TGS#"];
 }
 
 + (BOOL)isGroupAVChatRoom:(NSString *)groupType {
@@ -990,13 +1147,16 @@ static NSArray *customMessageInfo = nil;
 + (void)sendMessageReadReceipts:(NSArray *)msgs {
     [[V2TIMManager sharedInstance] sendMessageReadReceipts:msgs succ:^{
     } fail:^(int code, NSString *desc) {
-        NSLog(@"sendMessageReadReceipts failed, code: %d, desc: %@", code, desc);
         if (code == ERR_SDK_INTERFACE_NOT_SUPPORT) {
             [TUITool postUnsupportNotificationOfService:TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceMessageRead)];
         }
     }];
 }
 
++ (void)modifyMessage:(V2TIMMessage *)msg
+           completion:(V2TIMMessageModifyCompletion)completion {
+    [[V2TIMManager sharedInstance] modifyMessage:msg completion:completion];
+}
 + (void)revokeMessage:(V2TIMMessage *)msg
                  succ:(nullable V2TIMSucc)succ
                  fail:(nullable V2TIMFail)fail {

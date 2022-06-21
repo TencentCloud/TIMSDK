@@ -9,5 +9,8 @@
         <item name="android:windowExitAnimation">@anim/translate_dialog_out</item>
     </style>
 
-
+    <style name="ChatPopMenuAnimation">
+        <item name="android:windowEnterAnimation">@anim/chat_pop_menu_in_anim</item>
+        <item name="android:windowExitAnimation">@anim/chat_pop_menu_out_anim</item>
+    </style>
 </resources>

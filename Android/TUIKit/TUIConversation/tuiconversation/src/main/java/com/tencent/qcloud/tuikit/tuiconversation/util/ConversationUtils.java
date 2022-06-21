@@ -97,6 +97,7 @@ public class ConversationUtils {
                 faceList.add(conversation.getFaceUrl());
             }
         }
+        info.setIconPath(conversation.getFaceUrl());
         info.setIconUrlList(faceList);
 
         if (isGroup) {

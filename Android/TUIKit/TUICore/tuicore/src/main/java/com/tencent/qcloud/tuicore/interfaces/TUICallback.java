@@ -1,17 +1,17 @@
 package com.tencent.qcloud.tuicore.interfaces;
 
-public interface TUICallback {
-    void onSuccess();
+public abstract class TUICallback {
+    public abstract void onSuccess();
 
-    void onError(int errorCode, String errorMessage);
+    public abstract void onError(int errorCode, String errorMessage);
 
-    static void onSuccess(TUICallback callback) {
+    public static void onSuccess(TUICallback callback) {
         if (callback != null) {
             callback.onSuccess();
         }
     }
 
-    static void onError(TUICallback callback, int errorCode, String errorMessage) {
+    public static void onError(TUICallback callback, int errorCode, String errorMessage) {
         if (callback != null) {
             callback.onError(errorCode, errorMessage);
         }

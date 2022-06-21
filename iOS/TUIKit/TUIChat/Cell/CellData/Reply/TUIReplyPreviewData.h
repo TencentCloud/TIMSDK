@@ -25,6 +25,14 @@ typedef void(^TUIInputPreviewBarCallback)(void);
 // 被回复的源消息
 @property (nonatomic, strong) V2TIMMessage *originMessage;
 
+//消息回复根RootID 【不一定是上面originMessage的msgID ，是最顶上被回复的消息ID】
+// Message reply root RootID (not necessarily the msgID of the originMessage above, but the ID of the message at the top)
+@property (nonatomic, copy) NSString *messageRootID;
+
 + (NSString *)displayAbstract:(NSInteger)type abstract:(NSString *)abstract withFileName:(BOOL)withFilename;
+
+@end
+
+@interface TUIReferencePreviewData : TUIReplyPreviewData
 
 @end

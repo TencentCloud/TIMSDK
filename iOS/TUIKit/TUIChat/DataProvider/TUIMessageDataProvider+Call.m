@@ -100,7 +100,6 @@
     NSMutableString *mutableContent = [NSMutableString string];
     
     NSString *businessId = [param objectForKey:@"businessID"];
-//    if (![businessId isEqualToString:Signal_Business_Call]) {
     if (![businessId isEqualToString:@"av_call"]) {
         return NO;
     }
@@ -111,17 +110,62 @@
     switch (info.actionType) {
         case SignalingActionType_Invite:
         {
-            // 结束通话
-//            if ([param.allKeys containsObject:SIGNALING_EXTRA_KEY_CALL_END]) {
-            if ([param.allKeys containsObject:@"call_end"]) {
-                int duration = [param[@"call_end"] intValue];
-                [mutableContent appendString:message.groupID.length > 0 ? TUIKitLocalizableString(TUIKitSignalingFinishGroupChat) : [NSString stringWithFormat:TUIKitLocalizableString(TUIKitSignalingFinishConversationAndTimeFormat),duration / 60,duration % 60]]; // 结束通话，通话时长：%.2d:%.2d
-            } else {
-            // 发起通话
-                if (message.groupID.length > 0) {
-                    [mutableContent appendString:[NSString stringWithFormat:TUIKitLocalizableString(TUIKitSignalingNewGroupCallFormat),showName]]; // \"%@\" 发起群通话
+            if ([param.allKeys containsObject:@"data"]) {
+                // newer version for calling
+                NSDictionary *callData = [param objectForKey:@"data"];
+                if (![callData isKindOfClass:NSDictionary.class]) {
+                    NSLog(@"error instructure of the calling proto");
+                    return NO;
+                }
+                if (![callData.allKeys containsObject:@"cmd"]) {
+                    NSLog(@"error instructure of the calling proto");
+                    return NO;
+                }
+                
+                NSString *cmd = [callData objectForKey:@"cmd"];
+                if ([cmd isEqualToString:@"switchToAudio"]) {
+                    // switch to audio call
+                    [mutableContent appendString:TUIKitLocalizableString(TUIKitSignalingSwitchToAudio)];
+                } else if ([cmd isEqualToString:@"hangup"]) {
+                    // hang up
+                    NSInteger duration = 0;
+                    if ([callData.allKeys containsObject:@"cmdInfo"]) {
+                        duration = [[callData objectForKey:@"cmdInfo"] integerValue];
+                    }
+                    [mutableContent appendString:message.groupID.length > 0 ? TUIKitLocalizableString(TUIKitSignalingFinishGroupChat) : [NSString stringWithFormat:TUIKitLocalizableString(TUIKitSignalingFinishConversationAndTimeFormat),duration / 60,duration % 60]];
+                } else if ([cmd isEqualToString:@"videoCall"] ||
+                           [cmd isEqualToString:@"audioCall"]) {
+                    // launch call
+                    if (callType) {
+                        *callType = [cmd isEqualToString:@"audioCall"] ? 1 : 2;
+                    }
+                    if (message.groupID.length > 0) {
+                        [mutableContent appendString:[NSString stringWithFormat:TUIKitLocalizableString(TUIKitSignalingNewGroupCallFormat),showName]];
+                    } else {
+                        [mutableContent appendString:TUIKitLocalizableString(TUIKitSignalingNewCall)];
+                    }
                 } else {
-                    [mutableContent appendString:TUIKitLocalizableString(TUIKitSignalingNewCall)];
+                    // other's unsupported invitation
+                    [mutableContent appendString:TUIKitLocalizableString(TUIKitSignalingUnsupportedCalling)];
+                }
+                
+            } else {
+                // Compatible with older versions
+                if (callType) {
+                    *callType = [[param objectForKey:@"call_type"] integerValue];
+                }
+                
+                if ([param.allKeys containsObject:@"call_end"]) {
+                    // finish call
+                    int duration = [param[@"call_end"] intValue];
+                    [mutableContent appendString:message.groupID.length > 0 ? TUIKitLocalizableString(TUIKitSignalingFinishGroupChat) : [NSString stringWithFormat:TUIKitLocalizableString(TUIKitSignalingFinishConversationAndTimeFormat),duration / 60,duration % 60]];
+                } else {
+                    // launch call
+                    if (message.groupID.length > 0) {
+                        [mutableContent appendString:[NSString stringWithFormat:TUIKitLocalizableString(TUIKitSignalingNewGroupCallFormat),showName]];
+                    } else {
+                        [mutableContent appendString:TUIKitLocalizableString(TUIKitSignalingNewCall)];
+                    }
                 }
             }
         }
@@ -130,7 +174,7 @@
         {
             // 取消通话
             if (message.groupID.length > 0) {
-                [mutableContent appendString:[NSString stringWithFormat:TUIKitLocalizableString(TUIkitSignalingCancelGroupCallFormat),showName]]; // \"%@\" 取消群通话
+                [mutableContent appendString:[NSString stringWithFormat:TUIKitLocalizableString(TUIkitSignalingCancelGroupCallFormat),showName]];
             } else {
                 [mutableContent appendString:TUIKitLocalizableString(TUIkitSignalingCancelCall)];
             }
@@ -138,11 +182,41 @@
             break;
         case SignalingActionType_Accept_Invite:
         {
-            // 接受通话
-            if (message.groupID.length > 0) {
-                [mutableContent appendString:[NSString stringWithFormat:TUIKitLocalizableString(TUIKitSignalingHangonCallFormat),showName]]; // \"%@\" 已接听
+            if ([param.allKeys containsObject:@"data"]) {
+                // newer version for accepting calling
+                NSDictionary *callData = [param objectForKey:@"data"];
+                if (![callData isKindOfClass:NSDictionary.class]) {
+                    NSLog(@"error instructure of the calling proto");
+                    return NO;
+                }
+                if (![callData.allKeys containsObject:@"cmd"]) {
+                    NSLog(@"error instructure of the calling proto");
+                    return NO;
+                }
+                
+                NSString *cmd = [callData objectForKey:@"cmd"];
+                if ([cmd isEqualToString:@"switchToAudio"]) {
+                    // comfirm switch to audio call
+                    if (callType) {
+                        *callType = 2;
+                    }
+                    [mutableContent appendString:TUIKitLocalizableString(TUIKitSignalingComfirmSwitchToAudio)];
+                } else {
+                    // accept for calling
+                    if (message.groupID.length > 0) {
+                        [mutableContent appendString:[NSString stringWithFormat:TUIKitLocalizableString(TUIKitSignalingHangonCallFormat),showName]];
+                    } else {
+                        [mutableContent appendString:TUIKitLocalizableString(TUIkitSignalingHangonCall)];
+                    }
+                }
+                
             } else {
-                [mutableContent appendString:TUIKitLocalizableString(TUIkitSignalingHangonCall)]; // 已接听
+                // Compatible with older versions
+                if (message.groupID.length > 0) {
+                    [mutableContent appendString:[NSString stringWithFormat:TUIKitLocalizableString(TUIKitSignalingHangonCallFormat),showName]];
+                } else {
+                    [mutableContent appendString:TUIKitLocalizableString(TUIkitSignalingHangonCall)];
+                }
             }
         }
             break;

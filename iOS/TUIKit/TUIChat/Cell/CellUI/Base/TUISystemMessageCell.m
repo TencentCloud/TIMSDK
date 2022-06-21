@@ -28,6 +28,8 @@
         _messageLabel.layer.cornerRadius = 3;
         [_messageLabel.layer setMasksToBounds:YES];
         [self.container addSubview:_messageLabel];
+        self.backgroundColor = [UIColor clearColor];
+        self.contentView.backgroundColor = [UIColor clearColor];
     }
     return self;
 }

@@ -2,24 +2,29 @@ package com.tencent.qcloud.tuikit.tuichat.ui.interfaces;
 
 import android.view.View;
 
+import com.tencent.qcloud.tuikit.tuichat.bean.message.QuoteMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 
-public interface OnItemClickListener {
-    void onMessageLongClick(View view, int position, TUIMessageBean messageInfo);
+public abstract class OnItemClickListener {
+    public void onMessageLongClick(View view, int position, TUIMessageBean messageInfo) {};
 
-    default void onMessageClick(View view, int position, TUIMessageBean messageInfo) {};
+    public void onMessageClick(View view, int position, TUIMessageBean messageInfo) {};
 
-    void onUserIconClick(View view, int position, TUIMessageBean messageInfo);
+    public void onUserIconClick(View view, int position, TUIMessageBean messageInfo) {};
 
-    void onUserIconLongClick(View view, int position, TUIMessageBean messageInfo);
+    public void onUserIconLongClick(View view, int position, TUIMessageBean messageInfo) {};
 
-    void onReEditRevokeMessage(View view, int position, TUIMessageBean messageInfo);
+    public void onReEditRevokeMessage(View view, int position, TUIMessageBean messageInfo) {};
 
-    void onRecallClick(View view, int position, TUIMessageBean messageInfo);
+    public void onRecallClick(View view, int position, TUIMessageBean messageInfo) {};
 
-    default void onReplyMessageClick(View view, int position, String originMsgId) {}
+    public  void onReplyMessageClick(View view, int position, QuoteMessageBean messageBean) {}
 
-    default void onSendFailBtnClick(View view, int position, TUIMessageBean messageInfo) {};
+    public  void onReplyDetailClick(TUIMessageBean messageBean) {}
 
-    default void onTextSelected(View view, int position, TUIMessageBean messageInfo) {};
+    public  void onReactOnClick(String emojiId, TUIMessageBean messageBean) {}
+
+    public  void onSendFailBtnClick(View view, int position, TUIMessageBean messageInfo) {};
+
+    public  void onTextSelected(View view, int position, TUIMessageBean messageInfo) {};
 }

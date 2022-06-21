@@ -70,7 +70,7 @@
 
 - (void)textViewDidChangeSelection:(UITextView *)textView {
     NSAttributedString *selectedString = [textView.attributedText attributedSubstringFromRange:textView.selectedRange];
-    if (self.selectAllContentContent) {
+    if (self.selectAllContentContent && selectedString.length>0) {
         if (selectedString.length == textView.attributedText.length) {
             self.selectAllContentContent(YES);
         } else {

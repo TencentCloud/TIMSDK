@@ -85,6 +85,8 @@ public final class TUIConstants {
         public static final String METHOD_EXIT_CHAT = "exitChat";
         // 获取消息摘要 用来显示在会话列表
         public static final String METHOD_GET_DISPLAY_STRING = "getDisplayString";
+        // add message to chat list
+        public static final String METHOD_ADD_MESSAGE_TO_CHAT = "addMessageToChat";
 
         // 更多输入按钮扩展
         public static final String EXTENSION_INPUT_MORE_CUSTOM_MESSAGE = "inputMoreCustomMessage";
@@ -118,6 +120,7 @@ public final class TUIConstants {
         public static final String MEMBER_DETAILS = "memberDetails";
         public static final String IS_GROUP_CHAT = "isGroupChat";
         public static final String V2TIMMESSAGE = "v2TIMMessage";
+        public static final String MESSAGE_BEAN = "messageBean";
 
 
         // 发送自定义消息字段
@@ -284,7 +287,8 @@ public final class TUIConstants {
         public static final String PARAM_NAME_SRC_TEXTURE_ID = "srcTextureId";
 
         public static final String METHOD_PROCESS_VIDEO_FRAME = "processVideoFrame";
-        public static final String METHOD_INIT_XMAGIC         = "initXmagic";
+        public static final String METHOD_INIT_XMAGIC         = "setLicense";
+        public static final String METHOD_DESTROY_XMAGIC      = "destroy";
     }
     
     /**
@@ -301,4 +305,10 @@ public final class TUIConstants {
         public static final String CALLING_TYPE_KEY = "call_type";
     }
 
+    public static final class NetworkConnection {
+        public static final String EVENT_CONNECTION_STATE_CHANGED = "eventConnectionStateChanged";
+        public static final String EVENT_SUB_KEY_CONNECTING       = "eventSubKeyConnecting";
+        public static final String EVENT_SUB_KEY_CONNECT_SUCCESS  = "eventSubKeyConnectSuccess";
+        public static final String EVENT_SUB_KEY_CONNECT_FAILED   = "eventSubKeyConnectFailed";
+    }
 }

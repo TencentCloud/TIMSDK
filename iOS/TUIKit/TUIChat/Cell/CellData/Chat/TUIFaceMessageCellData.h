@@ -5,6 +5,7 @@
  *
  ******************************************************************************/
 #import "TUIMessageCellData.h"
+#import "TUIBubbleMessageCellData.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -15,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 *  表情消息单元数据源，则是为表情消息单元的显示提供一系列所需数据的类。
 *  数据源帮助实现了 MVVM 架构，使数据与 UI 进一步解耦，同时使 UI 层更加细化、可定制化。
 */
-@interface TUIFaceMessageCellData : TUIMessageCellData
+@interface TUIFaceMessageCellData : TUIBubbleMessageCellData
 
 /**
  *  表情分组索引

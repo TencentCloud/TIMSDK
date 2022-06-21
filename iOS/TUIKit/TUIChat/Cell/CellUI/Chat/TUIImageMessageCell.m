@@ -24,10 +24,8 @@
         _thumb.layer.cornerRadius = 5.0;
         [_thumb.layer setMasksToBounds:YES];
         _thumb.contentMode = UIViewContentModeScaleAspectFit;
-        _thumb.backgroundColor = [UIColor whiteColor];
+        _thumb.backgroundColor = [UIColor clearColor];
         [self.container addSubview:_thumb];
-        _thumb.mm_fill();
-        _thumb.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
         _progress = [[UILabel alloc] init];
         _progress.textColor = [UIColor whiteColor];
@@ -38,8 +36,6 @@
         _progress.backgroundColor = TImageMessageCell_Progress_Color;
         [_progress.layer setMasksToBounds:YES];
         [self.container addSubview:_progress];
-        _progress.mm_fill();
-        _progress.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     }
     return self;
 }
@@ -72,6 +68,31 @@
     }
 }
 
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    CGFloat topMargin = 0;
+    CGFloat height = self.container.mm_h;
+    
+    if (self.messageData.messageModifyReactsSize.height > 0) {
+        topMargin = 10;
+        height = (self.container.mm_h - self.messageData.messageModifyReactsSize.height - topMargin);
+        self.bubbleView.hidden = NO;
+    }
+    else {
+        self.bubbleView.hidden = YES;
+    }
+    
+    _thumb.mm_height(height ).mm_left(0).mm_top(topMargin).mm_width(self.container.mm_w);
+
+    _thumb.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    
+    _progress.mm_fill();
+    _progress.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    
+
+
+}
 - (void)highlightWhenMatchKeyword:(NSString *)keyword
 {
     // 默认高亮效果，闪烁
@@ -94,9 +115,9 @@
         return;
     }
     self.highlightAnimating = YES;
-    self.animateHighlightView.frame = self.thumb.bounds;
+    self.animateHighlightView.frame = self.container.bounds;
     self.animateHighlightView.alpha = 0.1;
-    [self.thumb addSubview:self.animateHighlightView];
+    [self.container addSubview:self.animateHighlightView];
     [UIView animateWithDuration:0.25 animations:^{
         self.animateHighlightView.alpha = 0.5;
     } completion:^(BOOL finished) {

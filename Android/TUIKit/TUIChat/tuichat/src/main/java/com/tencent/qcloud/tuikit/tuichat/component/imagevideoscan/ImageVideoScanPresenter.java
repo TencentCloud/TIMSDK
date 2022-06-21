@@ -1,25 +1,12 @@
 package com.tencent.qcloud.tuikit.tuichat.component.imagevideoscan;
 
 import android.app.ProgressDialog;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.MediaScannerConnection;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Environment;
-import android.os.FileUtils;
-import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
-import android.webkit.MimeTypeMap;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ThreadHelper;
@@ -34,14 +21,7 @@ import com.tencent.qcloud.tuikit.tuichat.util.FileUtil;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -202,15 +182,8 @@ public class ImageVideoScanPresenter {
         TUIChatLog.d(TAG, "mCurrentPosition = " + mCurrentPosition);
         if (mAdapter != null && mCurrentPosition >= 0 && mCurrentPosition < mAdapter.getItemCount()) {
             TUIMessageBean messageBean = mAdapter.getDataSource().get(mCurrentPosition);
-            if (messageBean.getMsgType() == V2TIMMessage.V2TIM_ELEM_TYPE_IMAGE) {
-                ImageMessageBean imageMessageBean;
-                if (messageBean instanceof ImageMessageBean) {
-                    imageMessageBean = (ImageMessageBean) messageBean;
-                } else {
-                    TUIChatLog.e(TAG, "is not ImageMessageBean");
-                    return;
-                }
-                final List<ImageMessageBean.ImageBean> imgs = imageMessageBean.getImageBeanList();
+            if (messageBean instanceof ImageMessageBean) {
+                ImageMessageBean imageMessageBean = (ImageMessageBean) messageBean;
                 String imagePath = imageMessageBean.getDataPath();
                 TUIChatLog.d(TAG, "imagePath = " + imagePath);
                 String originImagePath = TUIChatUtils.getOriginImagePath(imageMessageBean);
@@ -218,62 +191,47 @@ public class ImageVideoScanPresenter {
                 if (!TextUtils.isEmpty(originImagePath)) {
                     imagePath = originImagePath;
                 }
-
-                String finalImagePath = imagePath;
-                ThreadHelper.INST.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        Bitmap bitmap = BitmapFactory.decodeFile(finalImagePath);
-                        FileUtil.saveImageToGallery(context, bitmap);
-                        ToastUtil.toastShortMessage(context.getString(R.string.save_tips));
-
-                        //FileUtil.saveFileToAlbum(context, imagePath);
-                    }
-                });
-            } else if (messageBean.getMsgType() == V2TIMMessage.V2TIM_ELEM_TYPE_VIDEO) {
-                VideoMessageBean videoMessageBean;
-                if (messageBean instanceof VideoMessageBean) {
-                    videoMessageBean = (VideoMessageBean) messageBean;
+                saveImage(context, imagePath);
+            } else if (messageBean instanceof VideoMessageBean) {
+                VideoMessageBean videoMessageBean = (VideoMessageBean) messageBean;
+                final String videoPath = TUIConfig.getVideoDownloadDir() + videoMessageBean.getVideoUUID();
+                File file = new File(videoPath);
+                if (file.exists() && file.length() == videoMessageBean.getVideoSize()) {
+                    saveVideo(context, videoPath);
                 } else {
-                    TUIChatLog.e(TAG, "is not VideoMessageBean");
-                    return;
+                    ToastUtil.toastShortMessage(context.getString(R.string.downloading));
                 }
-
-                String videoPath = FileUtil.rootPath + videoMessageBean.getVideoUUID();
-
-                final ProgressDialog progressDialog = ProgressDialog.show(context, "", context.getString(R.string.saving_tips), false, true);;
-                videoMessageBean.downloadVideo(videoPath, new VideoMessageBean.VideoDownloadCallback() {
-                    @Override
-                    public void onProgress(long currentSize, long totalSize) {
-                        TUIChatLog.i("downloadVideo progress current:", currentSize + ", total:" + totalSize);
-                    }
-
-                    @Override
-                    public void onError(int code, String desc) {
-                        ToastUtil.toastLongMessage(TUIChatService.getAppContext().getString(R.string.download_file_error) + code + "=" + desc);
-                        videoMessageBean.setStatus(TUIMessageBean.MSG_STATUS_DOWNLOADED);
-                        progressDialog.cancel();
-                    }
-
-                    @Override
-                    public void onSuccess() {
-                        progressDialog.cancel();
-                        //将该文件扫描到相册
-                        MediaScannerConnection.scanFile(context, new String[] { videoPath }, null, null);
-                        ToastUtil.toastShortMessage(context.getString(R.string.save_tips));
-                    }
-                });
-
-                /*ThreadHelper.INST.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        FileUtil.saveFileToAlbum(context, videoPath);
-                        ToastUtil.toastShortMessage(context.getString(R.string.save_tips));
-                    }
-                });*/
             } else {
                 TUIChatLog.d(TAG, "error message type");
             }
-         }
+        }
+    }
+
+    private void saveImage(Context context, String imagePath) {
+        ThreadHelper.INST.execute(new Runnable() {
+            @Override
+            public void run() {
+                boolean success = FileUtil.saveImageToGallery(context, imagePath);
+                if (success) {
+                    ToastUtil.toastShortMessage(context.getString(R.string.save_success));
+                } else {
+                    ToastUtil.toastShortMessage(context.getString(R.string.save_failed));
+                }
+            }
+        });
+    }
+
+    private void saveVideo(Context context, String videoPath) {
+        ThreadHelper.INST.execute(new Runnable() {
+            @Override
+            public void run() {
+                boolean success = FileUtil.saveVideoToGallery(context, videoPath);
+                if (success) {
+                    ToastUtil.toastShortMessage(context.getString(R.string.save_success));
+                } else {
+                    ToastUtil.toastShortMessage(context.getString(R.string.save_failed));
+                }
+            }
+        });
     }
 }

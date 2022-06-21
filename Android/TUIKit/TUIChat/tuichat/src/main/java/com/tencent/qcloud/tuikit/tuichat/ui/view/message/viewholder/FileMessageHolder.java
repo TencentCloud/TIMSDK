@@ -56,29 +56,29 @@ public class FileMessageHolder extends MessageContentHolder {
 
     @Override
     public void layoutVariableViews(final TUIMessageBean msg, final int position) {
+        msgArea.setPadding(0, 0, 0, 0);
         msgId = msg.getId();
-
-        if (isForwardMode) {
-            msgContentFrame.setBackgroundResource(R.drawable.chat_bubble_other_cavity_bg);
+        reactView.setThemeColorId(TUIThemeManager.getAttrResId(reactView.getContext(), R.attr.chat_react_other_text_color));
+        if (isForwardMode || isReplyDetailMode) {
+            msgArea.setBackgroundResource(R.drawable.chat_bubble_other_cavity_bg);
             statusImage.setVisibility(View.GONE);
         } else {
             //// 聊天气泡设置
             if (msg.isSelf()) {
                 if (properties.getRightBubble() != null && properties.getRightBubble().getConstantState() != null) {
-                    msgContentFrame.setBackground(properties.getRightBubble().getConstantState().newDrawable());
+                    msgArea.setBackground(properties.getRightBubble().getConstantState().newDrawable());
                 } else {
-                    msgContentFrame.setBackgroundResource(R.drawable.chat_bubble_self_cavity_bg);
+                    msgArea.setBackgroundResource(R.drawable.chat_bubble_self_cavity_bg);
                 }
             } else {
                 if (properties.getLeftBubble() != null && properties.getLeftBubble().getConstantState() != null) {
-                    msgContentFrame.setBackground(properties.getLeftBubble().getConstantState().newDrawable());
-                    msgContentFrame.setLayoutParams(msgContentFrame.getLayoutParams());
+                    msgArea.setBackground(properties.getLeftBubble().getConstantState().newDrawable());
                 } else {
-                    msgContentFrame.setBackgroundResource(R.drawable.chat_bubble_other_cavity_bg);
+                    msgArea.setBackgroundResource(R.drawable.chat_bubble_other_cavity_bg);
                 }
             }
         }
-        normalBackground = msgContentFrame.getBackground();
+        normalBackground = msgArea.getBackground();
 
         progressListener = new ProgressPresenter.ProgressListener() {
             @Override
@@ -218,7 +218,7 @@ public class FileMessageHolder extends MessageContentHolder {
 
         msg.setDownloadStatus(TUIMessageBean.MSG_STATUS_DOWNLOADING);
         if (progress == 0 || progress == 100) {
-            msgContentFrame.setBackground(normalBackground);
+            msgArea.setBackground(normalBackground);
             if (progressDrawable != null) {
                 progressDrawable.setProgress(0);
             }
@@ -235,7 +235,7 @@ public class FileMessageHolder extends MessageContentHolder {
         }
 
 
-        Drawable drawable = msgContentFrame.getBackground();
+        Drawable drawable = msgArea.getBackground();
         if (drawable != null) {
             if (progressDrawable == null) {
                 progressDrawable = new ProgressDrawable();
@@ -245,11 +245,11 @@ public class FileMessageHolder extends MessageContentHolder {
                 progressDrawable.setBorderColor(context.getResources().getColor(R.color.chat_message_bubble_bg_stoke_color));
                 progressDrawable.setSelf(msg.isSelf());
                 progressDrawable.setBackgroundDrawable(drawable);
-                msgContentFrame.setBackground(progressDrawable);
+                msgArea.setBackground(progressDrawable);
             } else {
                 progressDrawable.setProgress(progress);
-                msgContentFrame.setBackground(progressDrawable);
-                msgContentFrame.getBackground().invalidateSelf();
+                msgArea.setBackground(progressDrawable);
+                msgArea.getBackground().invalidateSelf();
             }
         }
     }

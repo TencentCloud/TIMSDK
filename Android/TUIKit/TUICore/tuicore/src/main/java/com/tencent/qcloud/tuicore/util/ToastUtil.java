@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.tencent.qcloud.tuicore.TUIConfig;
+import com.tencent.qcloud.tuicore.ServiceInitializer;
 
 /**
  * UI通用方法类
@@ -30,7 +30,7 @@ public class ToastUtil {
                     toast.cancel();
                     toast = null;
                 }
-                toast = Toast.makeText(TUIConfig.getAppContext(), message,
+                toast = Toast.makeText(ServiceInitializer.getAppContext(), message,
                         isLong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT);
                 // 解决各个手机系统 toast 文字对齐方式不一致的问题
                 View view = toast.getView();

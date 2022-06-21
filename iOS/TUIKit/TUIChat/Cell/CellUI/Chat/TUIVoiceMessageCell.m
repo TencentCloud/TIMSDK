@@ -87,15 +87,12 @@
     self.voice.mm_sizeToFit().mm_top(self.voiceData.voiceTop);
     
     if (self.voiceData.direction == MsgDirectionOutgoing) {
-        self.bubbleView.mm_left(self.duration.mm_w).mm_flexToRight(0);
         self.voice.mm_right(self.voiceData.cellLayout.bubbleInsets.right);
         self.duration.mm_left(self.voice.mm_x - self.duration.mm_w - 5);
         self.voiceReadPoint.hidden = YES;
     } else {
-        self.bubbleView.mm_left(0).mm_flexToRight(self.duration.mm_w);
         self.voice.mm_left(self.voiceData.cellLayout.bubbleInsets.left);
         self.duration.mm_left(self.voice.mm_x + self.voice.mm_w + 5);
-//        self.voiceReadPoint.mm_bottom(self.duration.mm_y + self.duration.mm_h).mm_left(self.duration.mm_x);
         self.voiceReadPoint.mm_top(0).mm_right(-self.voiceReadPoint.mm_w);
     }
     self.duration.mm_centerY = self.voice.mm_centerY;

@@ -5,22 +5,24 @@
     android:layout_height="wrap_content"
     android:clickable="true"
     android:orientation="vertical"
-    android:paddingBottom="12.6dp">
+    android:paddingTop="8.6dp"
+    android:paddingBottom="8.6dp"
+    android:paddingLeft="15.36dp"
+    android:paddingRight="15.36dp">
 
     <TextView
-        android:id="@+id/chat_time_tv"
+        android:id="@+id/message_top_time_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:includeFontPadding="false"
-        android:layout_marginBottom="20.58dp"
-        android:layout_marginTop="7.98dp"
+        android:layout_marginBottom="19.2dp"
         android:textColor="@color/text_tips_color"
         android:textSize="12.6sp" />
 
     <FrameLayout
         android:id="@+id/msg_content_fl"
-        android:layout_below="@+id/chat_time_tv"
+        android:layout_below="@+id/message_top_time_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 

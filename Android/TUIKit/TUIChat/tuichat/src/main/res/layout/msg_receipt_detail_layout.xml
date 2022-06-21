@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="?attr/core_bg_color"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.tencent.qcloud.tuicore.component.TitleBarLayout
+        android:id="@+id/receipt_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:id="@+id/msg_abstract_area"
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:paddingStart="15.36dp"
+        android:paddingRight="15.36dp"
+        android:layout_marginBottom="9.6dp"
+        android:layout_marginTop="0.96dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="15.36dp">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:paddingTop="11.52dp"
+            android:paddingBottom="5.76dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/name_tv"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="11.52dp"
+                android:layout_marginRight="11.52dp" />
+
+            <TextView
+                android:id="@+id/time_tv"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_marginBottom="11.52dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/msg_abstract_iv"
+                android:scaleType="fitCenter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/msg_abstract"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#111111"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:textSize="15.36sp"
+                android:lineHeight="23.04dp" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/user_read_detail"
+        android:layout_width="match_parent"
+        android:layout_height="58.58dp"
+        android:background="#FFFFFF"
+        android:focusable="true"
+        android:visibility="gone"
+        android:paddingLeft="15.36dp"
+        android:paddingStart="15.36dp"
+        android:paddingEnd="15.36dp"
+        android:paddingRight="15.36dp"
+        android:orientation="vertical">
+
+        <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+            android:id="@+id/user_face"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_width="38.4dp"
+            android:layout_height="38.4dp"
+            android:layout_marginTop="9.6dp"
+            android:layout_alignParentLeft="true" />
+
+        <TextView
+            android:id="@+id/user_name_tv"
+            android:layout_alignTop="@id/user_face"
+            android:layout_toEndOf="@id/user_face"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="11.52dp"
+            android:layout_marginLeft="11.52dp"
+            android:layout_marginRight="11.52dp"
+            android:layout_marginTop="7.68dp"
+            android:ellipsize="end"
+            android:lineHeight="23.04sp"
+            android:singleLine="true"
+            android:textColor="@color/black_font_color"
+            android:textSize="17.28sp"
+            tools:text="Bob"
+            android:layout_toRightOf="@id/user_face" />
+
+        <TextView
+            android:id="@+id/user_read_status"
+            android:text="@string/chat_not_read"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:textColor="@color/black_font_color"
+            android:textSize="15.36sp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/group_read_details"
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:paddingTop="11.52dp"
+            android:paddingBottom="5.28dp"
+            android:layout_height="46.08dp">
+
+            <LinearLayout
+                android:id="@+id/read_title"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/read_title_tv"
+                    android:gravity="center"
+                    android:textSize="15.36sp"
+                    android:lineHeight="23.04sp"
+                    android:textColor="?attr/core_primary_color"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <View
+                    android:id="@+id/read_title_line"
+                    android:background="@drawable/group_msg_receipt_line_bg"
+                    android:layout_marginTop="3.84dp"
+                    android:layout_width="55.68dp"
+                    android:layout_height="2.4dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/unread_title"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/unread_title_tv"
+                    android:gravity="center"
+                    android:textSize="15.36sp"
+                    android:lineHeight="23.04sp"
+                    android:textColor="#444444"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <View
+                    android:id="@+id/unread_title_line"
+                    android:background="@drawable/group_msg_receipt_line_bg"
+                    android:visibility="invisible"
+                    android:layout_marginTop="3.84dp"
+                    android:layout_width="55.68dp"
+                    android:layout_height="2.4dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/read_list"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/unread_list"
+            android:visibility="gone"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+</LinearLayout>

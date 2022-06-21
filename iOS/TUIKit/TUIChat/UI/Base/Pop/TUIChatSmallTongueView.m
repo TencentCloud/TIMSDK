@@ -146,7 +146,6 @@
 static TUIChatSmallTongueView *g_tongueView = nil;
 static TUIChatSmallTongue *g_tongue = nil;
 static UIWindow *g_window = nil;
-static UIWindow *keyWindow = nil;   // 保存真正的 keyWindow
 
 @implementation TUIChatSmallTongueManager
 + (void)showTongue:(TUIChatSmallTongue *)tongue delegate:(id<TUIChatSmallTongueViewDelegate>) delegate {
@@ -177,9 +176,7 @@ static UIWindow *keyWindow = nil;   // 保存真正的 keyWindow
     if (!g_tongueView) {
         g_tongueView = [[TUIChatSmallTongueView alloc] initWithFrame:CGRectZero];
         [g_window addSubview:g_tongueView];
-        keyWindow = UIApplication.sharedApplication.keyWindow;
-        [g_window makeKeyAndVisible];
-        [keyWindow makeKeyWindow];
+        g_window.hidden = NO;
     }
     g_tongueView.frame = g_window.bounds;
     g_tongueView.delegate = delegate;
@@ -197,18 +194,11 @@ static UIWindow *keyWindow = nil;   // 保存真正的 keyWindow
     g_tongue = nil;
     g_tongueView =  nil;
     g_window = nil;
-    [keyWindow makeKeyWindow];
-    keyWindow = nil;
 }
 
 + (void)hideTongue:(BOOL)isHidden {
     if (g_tongueView) {
         g_tongueView.hidden = isHidden;
-        if (isHidden) {
-            [keyWindow makeKeyWindow];
-        } else {
-            [g_window makeKeyWindow];
-        }
     }
 }
 

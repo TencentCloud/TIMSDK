@@ -73,3 +73,6 @@
 * Added updateMessage interface, users can refresh the view after modifying the local message
 * Session list supports custom lastMessage
 * Fix some bugs
+
+## 0.1.0-bugfix
+* update Tencent IM SDK

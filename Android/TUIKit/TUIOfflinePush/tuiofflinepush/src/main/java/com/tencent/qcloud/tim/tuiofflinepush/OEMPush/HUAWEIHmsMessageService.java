@@ -4,8 +4,6 @@ import android.content.Context;
 
 import com.huawei.hms.push.HmsMessageService;
 import com.huawei.hms.push.RemoteMessage;
-import com.tencent.qcloud.tim.tuiofflinepush.PushSetting;
-import com.tencent.qcloud.tim.tuiofflinepush.TUIOfflinePushManager;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.BrandUtil;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushLog;
 
@@ -32,11 +30,9 @@ public class HUAWEIHmsMessageService extends HmsMessageService {
     public void onNewToken(String token) {
         TUIOfflinePushLog.i(TAG, "onNewToken token=" + token);
 
-        if (PushSetting.isTPNSChannel) {
-            return;
+        if (OEMPushSetting.mPushCallback != null) {
+            OEMPushSetting.mPushCallback.onTokenCallback(token);
         }
-
-        TUIOfflinePushManager.getInstance().setPushTokenToTIM(token);
     }
 
     @Override
@@ -55,6 +51,8 @@ public class HUAWEIHmsMessageService extends HmsMessageService {
             return;
         }
         TUIOfflinePushLog.i(TAG, "huawei badge = " + number);
-        TUIOfflinePushManager.getInstance().updateBadge(context, number);
+        if (OEMPushSetting.mPushCallback != null) {
+            OEMPushSetting.mPushCallback.onBadgeCallback(context, number);
+        }
     }
 }

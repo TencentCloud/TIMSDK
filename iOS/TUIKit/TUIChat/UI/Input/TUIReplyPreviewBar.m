@@ -23,7 +23,7 @@
 }
 
 - (void)setupViews {
-    self.backgroundColor = TUIChatDynamicColor(@"chat_input_controller_bg_color", @"#FFFFFF");
+    self.backgroundColor = TUIChatDynamicColor(@"chat_input_controller_bg_color", @"#EBF0F6");
     [self addSubview:self.titleLabel];
     [self addSubview:self.closeButton];
 }
@@ -55,6 +55,14 @@
     NSString *abstract = [TUIReplyPreviewData displayAbstract:previewData.type abstract:previewData.msgAbstract withFileName:YES];
     _titleLabel.text = [[NSString stringWithFormat:@"%@: %@", previewData.sender, abstract] getLocalizableStringWithFaceContent];
     _titleLabel.lineBreakMode = previewData.type == (NSInteger)V2TIM_ELEM_TYPE_FILE ? NSLineBreakByTruncatingMiddle : NSLineBreakByTruncatingTail;
+}
+
+- (void)setPreviewReferenceData:(TUIReferencePreviewData *)previewReferenceData {
+    _previewReferenceData = previewReferenceData;
+    
+    NSString *abstract = [TUIReferencePreviewData displayAbstract:previewReferenceData.type abstract:previewReferenceData.msgAbstract withFileName:YES];
+    _titleLabel.text = [[NSString stringWithFormat:@"%@: %@", previewReferenceData.sender, abstract] getLocalizableStringWithFaceContent];
+    _titleLabel.lineBreakMode = previewReferenceData.type == (NSInteger)V2TIM_ELEM_TYPE_FILE ? NSLineBreakByTruncatingMiddle : NSLineBreakByTruncatingTail;
 }
 
 - (UILabel *)titleLabel

@@ -115,9 +115,9 @@
                 }
             }
             attchment.image = image;
-            attchment.bounds = CGRectMake(0, -(self.textFont.lineHeight-self.textFont.pointSize)/2, self.textFont.pointSize, self.textFont.pointSize);
+            attchment.bounds = CGRectMake(0, -(self.textFont.lineHeight-self.textFont.pointSize)/2, 16, 16);
             NSAttributedString *imageString = [NSAttributedString attributedStringWithAttachment:(NSTextAttachment *)(attchment)];
-            NSAttributedString *spaceString = [[NSAttributedString alloc] initWithString:@" " attributes:@{NSFontAttributeName: self.textFont}];
+            NSAttributedString *spaceString = [[NSAttributedString alloc] initWithString:@"  " attributes:@{NSFontAttributeName: self.textFont}];
             if (self.innerMessage.isSelf) {
                 [_attributedString appendAttributedString:spaceString];
                 [_attributedString appendAttributedString:imageString];

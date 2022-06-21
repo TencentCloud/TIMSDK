@@ -399,14 +399,14 @@
     [self transcodeIfNeed:url];
 }
 
-- (void)cameraViewController:(TUICameraViewController *)controller didFinishPickingMediaWithImage:(UIImage *)image {
-    NSData *data = UIImageJPEGRepresentation(image, 0.75);
+- (void)cameraViewController:(TUICameraViewController *)controller didFinishPickingMediaWithImageData:(NSData *)data {
     NSString *path = [TUIKit_Image_Path stringByAppendingString:[TUITool genImageName:nil]];
     [[NSFileManager defaultManager] createFileAtPath:path contents:data attributes:nil];
     
     V2TIMMessage *message = [[V2TIMManager sharedInstance] createImageMessage:path];
     [self sendMessage:message];
 }
+
 
 - (void)cameraViewControllerDidCancel:(TUICameraViewController *)controller {
 }
@@ -529,7 +529,21 @@
                 __strong typeof(self) strongSelf = weakSelf;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     NSString *path = [TUIKit_Image_Path stringByAppendingString:[TUITool genImageName:nil]];
-                    [[NSFileManager defaultManager] createFileAtPath:path contents:data attributes:nil];
+                    UIImage *transImg = [[UIImage alloc] initWithData:data];
+                    UIImageOrientation imageOrientation = transImg.imageOrientation;
+                    if(imageOrientation != UIImageOrientationUp)
+                    {
+                        CGFloat aspectRatio = MIN ( 1920 / transImg.size.width, 1920 / transImg.size.height );
+                        CGFloat aspectWidth = transImg.size.width * aspectRatio;
+                        CGFloat aspectHeight = transImg.size.height * aspectRatio;
+
+                        UIGraphicsBeginImageContext(CGSizeMake(aspectWidth, aspectHeight));
+                        [transImg drawInRect:CGRectMake(0, 0, aspectWidth, aspectHeight)];
+                        transImg = UIGraphicsGetImageFromCurrentImageContext();
+                        UIGraphicsEndImageContext();
+                    }
+                    NSData * jpegData = UIImageJPEGRepresentation(transImg, 0.75);
+                    [[NSFileManager defaultManager] createFileAtPath:path contents:jpegData attributes:nil];
                     V2TIMMessage *message = [[V2TIMManager sharedInstance] createImageMessage:path];
                     [strongSelf sendMessage:message];
                 });

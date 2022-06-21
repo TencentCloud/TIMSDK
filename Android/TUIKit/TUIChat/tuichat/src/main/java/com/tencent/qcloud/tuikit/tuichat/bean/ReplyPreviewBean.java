@@ -2,11 +2,14 @@ package com.tencent.qcloud.tuikit.tuichat.bean;
 
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 
-public class ReplyPreviewBean {
+import java.io.Serializable;
+
+public class ReplyPreviewBean implements Serializable {
 
     public static final int VERSION = 1;
 
     private String messageID;
+    private String messageRootID;
     private String messageAbstract;
     private String messageSender;
     private int messageType;
@@ -79,5 +82,13 @@ public class ReplyPreviewBean {
 
     public void setMessageTime(long messageTime) {
         this.messageTime = messageTime;
+    }
+
+    public String getMessageRootID() {
+        return messageRootID;
+    }
+
+    public void setMessageRootID(String messageRootID) {
+        this.messageRootID = messageRootID;
     }
 }

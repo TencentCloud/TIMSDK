@@ -187,7 +187,7 @@
 "TUIKitAboutUs3PartySharingList" = "Information Shared with Third Parties";
 "TUIKitAboutUsCloseAccount" = "Cancel Account";
 "TUIKitAboutUsContactUs" = "Contact Us";
-"TUIKitAboutUsDisclaimerText" = "腾讯云IM APP (\"this product\") is a test product provided by Tencent Cloud, and Tencent Cloud enjoys the copyright and ownership of this product. This product is only used for functional experience and must not be used for any commercial purposes. In order to comply with the regulatory requirements of relevant departments, the audio and video interactions of this product are archived throughout the entire audio and video interactions. Any pornography, abusive, violent, and politically related content is strictly prohibited during use.";
+"TUIKitAboutUsDisclaimerText" = "Tencent Cloud Instant Messaging APP  (\"this product\") is a test product provided by Tencent Cloud, and Tencent Cloud enjoys the copyright and ownership of this product. This product is only used for functional experience and must not be used for any commercial purposes. In order to comply with the regulatory requirements of relevant departments, any pornography, abusive, violent, and politically related content is strictly prohibited during use.";
 "TUIKitAboutUsCloseAccountDescribe" =  "After canceling this account, you will be unable to use it, and related data will be permanently deleted. Current account:%@";
 "TUIKitAboutUsCloseAccountAlterMsg" = "Are you sure you want to cancel this account?";
 "TUIKitAboutUsCloseAccountAlterAction1" = "Confirm";
@@ -207,3 +207,5 @@
 //未翻译---start
 "TUIThemeNameSystemFollowTitle" = "Automatic";
 "TUIThemeNameSystemFollowSubTitle" = "After this function is enabled, only the default skin (light/dark) will be displayed. Other skin styles cannot be switched";
+
+"UpgradeNow" = "Upgrade";

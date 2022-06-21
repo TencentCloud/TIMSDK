@@ -3,8 +3,6 @@ package com.tencent.qcloud.tim.tuiofflinepush.OEMPush;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.tencent.qcloud.tim.tuiofflinepush.TUIOfflinePushManager;
-import com.tencent.qcloud.tim.tuiofflinepush.PushSetting;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushLog;
 import com.xiaomi.mipush.sdk.ErrorCode;
 import com.xiaomi.mipush.sdk.MiPushClient;
@@ -30,7 +28,7 @@ public class XiaomiMsgReceiver extends PushMessageReceiver {
     public void onNotificationMessageClicked(Context context, MiPushMessage miPushMessage) {
         TUIOfflinePushLog.d(TAG, "onNotificationMessageClicked miPushMessage " + miPushMessage.toString());
 
-        if (PushSetting.isTPNSChannel) {
+        if (OEMPushSetting.mPushCallback == null) {
             return;
         }
 
@@ -68,12 +66,9 @@ public class XiaomiMsgReceiver extends PushMessageReceiver {
         }
 
         TUIOfflinePushLog.d(TAG, "regId: " + mRegId);
-
-        if (PushSetting.isTPNSChannel) {
-            return;
+        if (OEMPushSetting.mPushCallback != null) {
+            OEMPushSetting.mPushCallback.onTokenCallback(mRegId);
         }
-
-        TUIOfflinePushManager.getInstance().setPushTokenToTIM(mRegId);
     }
 
     @Override

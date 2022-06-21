@@ -121,8 +121,10 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 
 + (TUIMessageCellData *)getCellData:(V2TIMMessage *)message;
 
-// 预处理回复消息(异步加载原始消息以及下载对应的缩略图)
-- (void)preProcessReplyMessage:(NSArray<TUIMessageCellData *> *)uiMsgs callback:(void(^)(void))callback;
+// 预处理互动消息、回复消息(异步加载原始消息以及下载对应的缩略图)
+//Preprocessing interactive messages, reply messages (asynchronously loading original messages and downloading corresponding thumbnails)
+- (void)preProcessMessage:(NSArray<TUIMessageCellData *> *)uiMsgs
+                 callback:(void(^)(void))callback;
 
 // 发送最新消息的已读回执
 - (void)sendLatestMessageReadReceipt;
@@ -132,6 +134,8 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 
 // 通过 msgID 获取到 message 的 index
 - (NSInteger)getIndexOfMessage:(NSString *)msgID;
+
+- (NSMutableArray *)transUIMsgFromIMMsg:(NSArray *)msgs;
 
 @end
 
@@ -161,6 +165,9 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 + (void)deleteMessages:(NSArray<V2TIMMessage *>*)msgList
                   succ:(nullable V2TIMSucc)succ
                   fail:(nullable V2TIMFail)fail;
+
++ (void)modifyMessage:(V2TIMMessage *)msg
+           completion:(V2TIMMessageModifyCompletion)completion;
 
 + (V2TIMMessage *)getCustomMessageWithJsonData:(NSData *)data;
 

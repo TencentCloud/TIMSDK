@@ -2,18 +2,15 @@ package com.tencent.qcloud.tuikit.tuichat.component.face;
 
 import android.graphics.Bitmap;
 
-import com.tencent.qcloud.tuicore.util.ScreenUtil;
-
 import java.io.Serializable;
 
 public class Emoji implements Serializable {
 
-    private static final int deaultSize = ScreenUtil.getPxByDp(32);
     private String desc;
     private String filter;
     private Bitmap icon;
-    private int width = deaultSize;
-    private int height = deaultSize;
+    private int width;
+    private int height;
 
     public String getDesc() {
         return desc;

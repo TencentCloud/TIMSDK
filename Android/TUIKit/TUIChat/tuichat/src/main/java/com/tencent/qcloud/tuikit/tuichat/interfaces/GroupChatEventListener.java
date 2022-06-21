@@ -1,28 +1,33 @@
 package com.tencent.qcloud.tuikit.tuichat.interfaces;
 
-import com.tencent.qcloud.tuikit.tuichat.bean.GroupMessageReceiptInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.MessageReceiptInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 
 import java.util.List;
 
 /**
- * 其他模块与 Group 聊天模块的通信接口
+ * Group Chat event listener
  */
-public interface GroupChatEventListener {
+public abstract class GroupChatEventListener {
 
-    void onGroupForceExit(String groupId);
+    public void onGroupForceExit(String groupId) {};
 
-    void onApplied(int unHandledSize);
+    public void onApplied(int unHandledSize) {}
 
-    void handleRevoke(String msgId);
+    public void handleRevoke(String msgId) {}
 
-    void onRecvNewMessage(TUIMessageBean message);
+    public void onRecvNewMessage(TUIMessageBean message) {}
 
-    void onReadReport(List<GroupMessageReceiptInfo> receiptInfoList);
+    public void onReadReport(List<MessageReceiptInfo> receiptInfoList) {}
 
-    void onGroupNameChanged(String groupId, String newName);
+    public void onGroupNameChanged(String groupId, String newName) {}
 
-    void exitGroupChat(String chatId);
+    public void exitGroupChat(String chatId) {}
 
-    void clearGroupMessage(String chatId);
+    public void clearGroupMessage(String chatId) {}
+
+    public void onRecvMessageModified(TUIMessageBean messageBean) {}
+
+    public void addMessage(TUIMessageBean messageBean, String chatId) {}
+
 }

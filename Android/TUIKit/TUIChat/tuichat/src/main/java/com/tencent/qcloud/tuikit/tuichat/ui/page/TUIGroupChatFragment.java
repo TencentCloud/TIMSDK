@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 
 import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
@@ -67,7 +68,7 @@ public class TUIGroupChatFragment extends TUIBaseChatFragment {
                 info.setId(messageBean.getSender());
 
                 Bundle bundle = new Bundle();
-                bundle.putString("chatId", info.getId());
+                bundle.putString(TUIConstants.TUIChat.CHAT_ID, info.getId());
                 TUICore.startActivity("FriendProfileActivity", bundle);
 
             }
@@ -99,9 +100,6 @@ public class TUIGroupChatFragment extends TUIBaseChatFragment {
 
             @Override
             public void onTextSelected(View view, int position, TUIMessageBean messageInfo) {
-                if (messageInfo instanceof  TextMessageBean) {
-                    TUIChatLog.d(TAG, "chatfragment onTextSelected selectedText = " + ((TextMessageBean) messageInfo).getSelectText());
-                }
                 chatView.getMessageLayout().setSelectedPosition(position);
                 chatView.getMessageLayout().showItemPopMenu(position - 1, messageInfo, view);
             }

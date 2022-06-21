@@ -20,7 +20,7 @@ import java.util.List;
 public class SuspensionDecoration extends RecyclerView.ItemDecoration {
 
     private static final String TAG = SuspensionDecoration.class.getSimpleName();
-    private static int COLOR_TITLE_BG = Color.parseColor("#FFEDEDED");
+    private static int COLOR_TITLE_BG = Color.parseColor("#FFF2F3F5");
     private static int COLOR_TITLE_BOTTOM_LINE = Color.parseColor("#FFCACACA");
     private static int COLOR_TITLE_FONT = Color.parseColor("#FF888888");
     private int mTitleFontSize;//title字体大小

@@ -56,6 +56,9 @@
 
     [self.container.layer insertSublayer:self.borderLayer atIndex:0];
     [self.container.layer setMask:self.maskLayer];
+    
+    [self prepareReactTagUI:self.container];
+
 }
 
 - (void)layoutSubviews

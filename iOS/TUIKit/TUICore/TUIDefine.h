@@ -201,6 +201,7 @@
 
 //repply message cell
 #define TReplyMessageCell_ReuseId @"TUIReplyMessageCell"
+#define TUIReferenceMessageCell_ReuseId @"TUIReferenceMessageCell"
 
 //relay message cell
 #define TRelayMessageCell_ReuserId @"TRelayMessageCell"
@@ -563,8 +564,13 @@
 #define TUICore_TUIBeautyExtension_BeautyView_LicenseKey @"TUICore_TUIBeautyExtension_BeautyView_LicenseKey"
 #define TUICore_TUIBeautyExtension_BeautyView_DataProcessDelegate @"TUICore_TUIBeautyExtension_BeautyView_DataProcessDelegate"
 
-
-
+#pragma mark - TUICore_TUIBeautyService
+#define TUICore_TUIBeautyService @"TUICore_TUIBeautyService"
+#define TUICore_TUIBeautyService_SetLicense @"TUICore_TUIBeautyService_SetLicense"
+#define TUICore_TUIBeautyService_ProcessVideoFrame @"TUICore_TUIBeautyService_ProcessVideoFrame"
+#define TUICore_TUIBeautyService_ProcessVideoFrame_SRCTextureIdKey @"TUICore_TUIBeautyService_ProcessVideoFrame_SRCTextureIdKey"
+#define TUICore_TUIBeautyService_ProcessVideoFrame_SRCFrameWidthKey @"TUICore_TUIBeautyService_ProcessVideoFrame_SRCFrameWidthKey"
+#define TUICore_TUIBeautyService_ProcessVideoFrame_SRCFrameHeightKey @"TUICore_TUIBeautyService_ProcessVideoFrame_SRCFrameHeightKey"
 
 #pragma mark - TUICore_TUIAudioEffectViewExtension
 #define TUICore_TUIAudioEffectViewExtension_AudioEffectView @"TUICore_TUIAudioEffectViewExtension_AudioEffectView"
@@ -574,5 +580,28 @@
 #define TUICore_TUIAudioEffectViewExtension_Extension_View @"TUICore_TUIAudioEffectViewExtension_Extension_View"
 
 #define TUICore_TUIAudioEffectViewExtension_AudioEffectView_AudioEffectManager @"TUICore_TUIAudioEffectViewExtension_AudioEffectView_AudioEffectManager"
+
+#pragma mark - TUICore_NetworkConnection_EVENT
+#define TUICore_NetworkConnection_EVENT_CONNECTION_STATE_CHANGED @"eventConnectionStateChanged"
+#define TUICore_NetworkConnection_EVENT_SUB_KEY_CONNECTING @"eventSubKeyConnecting"
+#define TUICore_NetworkConnection_EVENT_SUB_KEY_CONNECT_SUCCESS @"eventSubKeyConnectSuccess"
+#define TUICore_NetworkConnection_EVENT_SUB_KEY_CONNECT_FAILED @"eventSubKeyConnectFailed"
+
+
+/////////////////////////////////////////////////////////////////////////////////
+//
+//            TUIOfflinePush 离线推送相关
+//
+/////////////////////////////////////////////////////////////////////////////////
+// 设置 APNs 的证书 ID
+#define TUIOfflinePushCertificateIDForAPNS(value) - (int)push_certificateIDForAPNS {return value;}
+
+// 设置 TPNS 的配置信息
+#define TUIOfflinePushConfigForTPNS(access_id, access_key, tpn_domain) - (void)push_accessID:(int *)accessID accessKey:(NSString **)accessKey domain:(NSString **)domain\
+                                                                        {\
+                                                                            *accessID = access_id;\
+                                                                            *accessKey = access_key;\
+                                                                            *domain = tpn_domain;\
+                                                                        }
 
 #endif /* THeader_h */

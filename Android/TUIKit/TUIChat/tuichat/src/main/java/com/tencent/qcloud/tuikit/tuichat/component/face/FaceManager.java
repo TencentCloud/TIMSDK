@@ -201,6 +201,7 @@ public class FaceManager {
 
     public static boolean handlerEmojiText(TextView comment, String content, boolean typing) {
         if (content == null) {
+            comment.setText(content);
             return false;
         }
         SpannableStringBuilder sb = new SpannableStringBuilder(content);

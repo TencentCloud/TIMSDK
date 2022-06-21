@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:paddingStart="7.68dp"
+    android:paddingEnd="7.68dp"
+    android:background="@drawable/chat_react_bg"
+    android:layout_width="wrap_content"
+    android:layout_height="23.04dp">
+
+    <ImageView
+        android:id="@+id/face_iv"
+        android:layout_width="15.36dp"
+        android:layout_height="15.36dp"
+        android:layout_gravity="center"
+        android:scaleType="fitCenter" />
+
+    <View
+        android:background="#33444444"
+        android:layout_marginStart="3.84dp"
+        android:layout_marginEnd="3.84dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="4.32dp"
+        android:layout_marginBottom="4.32dp"
+        android:layout_width="0.96dp"
+        android:layout_height="match_parent"/>
+
+    <TextView
+        android:id="@+id/users_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_gravity="center"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textSize="10.56sp"
+        android:textColor="?attr/chat_react_text_color"/>
+
+</LinearLayout>

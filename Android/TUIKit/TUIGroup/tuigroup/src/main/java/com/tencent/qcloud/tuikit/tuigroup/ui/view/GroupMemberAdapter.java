@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
@@ -147,7 +148,7 @@ public class GroupMemberAdapter extends RecyclerView.Adapter<GroupMemberAdapter.
                 @Override
                 public void onClick(View v) {
                     Bundle bundle = new Bundle();
-                    bundle.putString("chatId", info.getAccount());
+                    bundle.putString(TUIConstants.TUIChat.CHAT_ID, info.getAccount());
                     TUICore.startActivity("FriendProfileActivity", bundle);
                 }
             });

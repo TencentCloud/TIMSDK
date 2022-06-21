@@ -31,6 +31,10 @@
 #import "TUIBaseChatViewController+AuthControl.h"
 #import "TUIMessageReadViewController.h"
 #import "TUIJoinGroupMessageCell.h"
+#import "TUICloudCustomDataTypeCenter.h"
+#import "TUILogin.h"
+#import "TUIChatConfig.h"
+#import "TUIChatModifyMessageHelper.h"
 
 @interface TUIBaseChatViewController () <TUIBaseMessageControllerDelegate, TInputControllerDelegate, UIImagePickerControllerDelegate, UIDocumentPickerDelegate, UINavigationControllerDelegate, TUIMessageMultiChooseViewDelegate, TUIChatDataProviderForwardDelegate, TUINotificationProtocol, TUIJoinGroupMessageCellDelegate, V2TIMConversationListener>
 @property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
@@ -50,43 +54,13 @@
 
 @end
 
-static BOOL g_isMsgNeedReadReceipt = NO;
-static BOOL g_isEnableVideoCall = YES;
-static BOOL g_isEnableAudioCall = YES;
-static BOOL g_isEnableLive = NO;
-static BOOL g_isEnableLink = YES;
-
 @implementation TUIBaseChatViewController
-
-+ (void)setIsMsgNeedReadReceipt:(BOOL)isMsgNeedReadReceipt {
-    g_isMsgNeedReadReceipt = isMsgNeedReadReceipt;
-}
-
-+ (void)setIsEnableVideoCall:(BOOL)isEnableVideoCall {
-    g_isEnableVideoCall = isEnableVideoCall;
-}
-
-+ (void)setIsEnableAudioCall:(BOOL)isEnableAudioCall {
-    g_isEnableAudioCall = isEnableAudioCall;
-}
-
-+ (void)setIsEnableLive:(BOOL)isEnableLive {
-    g_isEnableLive = isEnableLive;
-}
-
-+ (void)setIsEnableLink:(BOOL)isEnableLink {
-    g_isEnableLink = isEnableLink;
-}
 
 #pragma mark - Life Cycle
 - (instancetype)init {
     self = [super init];
     if (self) {
         [TUIBaseChatViewController createCachePath];
-
-        if (NSClassFromString(@"TUIKitLive")) {
-            g_isEnableLive = YES;
-        }
     }
     return self;
 }
@@ -110,7 +84,7 @@ static BOOL g_isEnableLink = YES;
         TUIMessageController *vc = [[TUIMessageController alloc] init];
         vc.hightlightKeyword = self.highlightKeyword;
         vc.locateMessage = self.locateMessage;
-        vc.isMsgNeedReadReceipt = g_isMsgNeedReadReceipt;
+        vc.isMsgNeedReadReceipt = [TUIChatConfig defaultConfig].msgNeedReadReceipt;
         _messageController = vc;
         
 //    }else {
@@ -187,10 +161,11 @@ static BOOL g_isEnableLink = YES;
         CGPoint offset = self.messageController.tableView.contentOffset;
         __weak typeof(self) weakSelf = self;
         dispatch_async(dispatch_get_main_queue(), ^{
-            weakSelf.responseKeyboard = YES;
+            __strong typeof(weakSelf)strongSelf = weakSelf;
+            strongSelf.responseKeyboard = YES;
             [UIApplication.sharedApplication.keyWindow endEditing:YES];
-            [weakSelf inputController:weakSelf.inputController didChangeHeight:CGRectGetMaxY(weakSelf.inputController.inputBar.frame) + Bottom_SafeHeight];
-            [weakSelf.messageController.tableView setContentOffset:offset];
+            [strongSelf inputController:strongSelf.inputController didChangeHeight:CGRectGetMaxY(strongSelf.inputController.inputBar.frame) + Bottom_SafeHeight];
+            [strongSelf.messageController.tableView setContentOffset:offset];
         });
     }
 }
@@ -239,26 +214,41 @@ static BOOL g_isEnableLink = YES;
 - (void)saveDraft
 {
     NSString *content = self.inputController.inputBar.inputTextView.text;
-    if (self.inputController.replyData) {
+    
+    TUIReplyPreviewData * previewData = nil;
+    if (self.inputController.referenceData) {
+        previewData  = self.inputController.referenceData;
+    }
+    else if(self.inputController.replyData) {
+        previewData  = self.inputController.replyData;
+    }
+    if (previewData) {
+        
         NSDictionary *dict = @{
             @"content" : content?:@"",
             @"messageReply" : @{
-                    @"messageID"       : self.inputController.replyData.msgID?:@"",
-                    @"messageAbstract" : [self.inputController.replyData.msgAbstract?:@"" getInternationalStringWithfaceContent],
-                    @"messageSender"   : self.inputController.replyData.sender?:@"",
-                    @"messageType"     : @(self.inputController.replyData.type),
-                    @"messageTime"     : @(self.inputController.replyData.originMessage.timestamp ? [self.inputController.replyData.originMessage.timestamp timeIntervalSince1970] : 0),  // 兼容 web
-                    @"messageSequence" : @(self.inputController.replyData.originMessage.seq),                                                                                             // 兼容 web
-                    @"version"         : @(kDraftMessageReplyVersion)
-            }
+                    @"messageID"       : previewData.msgID?:@"",
+                    @"messageAbstract" : [previewData.msgAbstract?:@"" getInternationalStringWithfaceContent],
+                    @"messageSender"   : previewData.sender?:@"",
+                    @"messageType"     : @(previewData.type),
+                    @"messageTime"     : @(previewData.originMessage.timestamp ? [previewData.originMessage.timestamp timeIntervalSince1970] : 0),  // 兼容 web
+                    @"messageSequence" : @(previewData.originMessage.seq),// 兼容 web
+                    @"version"         : @(kDraftMessageReplyVersion),
+            },
         };
+        NSMutableDictionary *mudic = [NSMutableDictionary dictionaryWithDictionary:dict];
+        
+        if (IS_NOT_EMPTY_NSSTRING(previewData.messageRootID)) {
+            [mudic setObject:previewData.messageRootID forKey:@"messageRootID"];
+        }
         NSError *error = nil;
-        NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
+        NSData *data = [NSJSONSerialization dataWithJSONObject:mudic options:0 error:&error];
         if (error == nil) {
             content = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         }
     }
     [TUIChatDataProvider saveDraftWithConversationID:self.conversationData.conversationID Text:content];
+
 }
 
 - (void)loadDraft
@@ -279,6 +269,9 @@ static BOOL g_isEnableLink = YES;
     NSString *draftContent = [jsonDict.allKeys containsObject:@"content"] ? jsonDict[@"content"] : @"";
     self.inputController.inputBar.inputTextView.text = draftContent;
     
+    NSString *messageRootID = [jsonDict.allKeys containsObject:@"messageRootID"] ? jsonDict[@"messageRootID"] : @"";
+
+    
     // 显示消息回复预览
     if ([jsonDict isKindOfClass:NSDictionary.class] && [jsonDict.allKeys containsObject:@"messageReply"]) {
         NSDictionary *reply = jsonDict[@"messageReply"];
@@ -290,12 +283,24 @@ static BOOL g_isEnableLink = YES;
             [reply.allKeys containsObject:@"version"]) {
             NSInteger version = [reply[@"version"] integerValue];
             if (version <= kDraftMessageReplyVersion) {
-                TUIReplyPreviewData *replyData = [[TUIReplyPreviewData alloc] init];
-                replyData.msgID       = reply[@"messageID"];
-                replyData.msgAbstract = reply[@"messageAbstract"];
-                replyData.sender      = reply[@"messageSender"];
-                replyData.type        = [reply[@"messageType"] integerValue];
-                [self.inputController showReplyPreview:replyData];
+
+                if (IS_NOT_EMPTY_NSSTRING(messageRootID)) {
+                    TUIReplyPreviewData *replyData = [[TUIReplyPreviewData alloc] init];
+                    replyData.msgID       = reply[@"messageID"];
+                    replyData.msgAbstract = reply[@"messageAbstract"];
+                    replyData.sender      = reply[@"messageSender"];
+                    replyData.type        = [reply[@"messageType"] integerValue];
+                    replyData.messageRootID = messageRootID;
+                    [self.inputController showReplyPreview:replyData];
+                }
+                else {
+                    TUIReferencePreviewData *replyData = [[TUIReferencePreviewData alloc] init];
+                    replyData.msgID       = reply[@"messageID"];
+                    replyData.msgAbstract = reply[@"messageAbstract"];
+                    replyData.sender      = reply[@"messageSender"];
+                    replyData.type        = [reply[@"messageType"] integerValue];
+                    [self.inputController showReferencePreview:replyData];
+                }
             }
         }
     }
@@ -308,7 +313,7 @@ static BOOL g_isEnableLink = YES;
     self.resgisterParam = [NSMutableArray array];
     _moreMenus = ({
         // TUIKit 组件内部自定义按钮
-        NSMutableArray<TUIInputMoreCellData *> *moreMenus = [TUIChatDataProvider moreMenuCellDataArray:conversationData.groupID userID:conversationData.userID isNeedVideoCall:g_isEnableVideoCall isNeedAudioCall:g_isEnableAudioCall isNeedGroupLive:g_isEnableLive isNeedLink:g_isEnableLink];
+        NSMutableArray<TUIInputMoreCellData *> *moreMenus = [TUIChatDataProvider moreMenuCellDataArray:conversationData.groupID userID:conversationData.userID isNeedVideoCall:[TUIChatConfig defaultConfig].enableVideoCall isNeedAudioCall:[TUIChatConfig defaultConfig].enableAudioCall isNeedGroupLive:NO isNeedLink:[TUIChatConfig defaultConfig].enableLink];
         moreMenus;
     });
     
@@ -464,16 +469,16 @@ static BOOL g_isEnableLink = YES;
     if (cell.disableDefaultSelectAction) {
         return;
     }
-    if (cell.data == [TUIInputMoreCellData photoData]) {
+    if ([cell.data.key isEqualToString:[TUIInputMoreCellData photoData].key]) {
         [self selectPhotoForSendV2];
     }
-    else if (cell.data == [TUIInputMoreCellData videoData]) {
+    else if ([cell.data.key isEqualToString:[TUIInputMoreCellData videoData].key]) {
         [self takeVideoForSend];
     }
-    else if (cell.data == [TUIInputMoreCellData fileData]) {
+    else if ([cell.data.key isEqualToString:[TUIInputMoreCellData fileData].key]) {
         [self selectFileForSend];
     }
-    else if (cell.data == [TUIInputMoreCellData pictureData]) {
+    else if ([cell.data.key isEqualToString:[TUIInputMoreCellData pictureData].key]) {
         [self takePictureForSend];
     }
 }
@@ -730,7 +735,7 @@ static BOOL g_isEnableLink = YES;
         
         // 发送到其他聊天
         for (V2TIMMessage *message in msgs) {
-            message.needReadReceipt = convCellData.groupID.length > 0 ? g_isMsgNeedReadReceipt : NO;
+            message.needReadReceipt = [TUIChatConfig defaultConfig].msgNeedReadReceipt;
             [TUIMessageDataProvider sendMessage:message
                                  toConversation:convCellData
                                  isSendPushInfo:YES
@@ -762,6 +767,36 @@ static BOOL g_isEnableLink = YES;
 - (void)messageController:(TUIBaseMessageController *)controller onRelyMessage:(nonnull TUIMessageCellData *)data
 {
     NSString *desc = @"";
+    desc = [self replyReferenceMessageDesc:data];
+    
+    TUIReplyPreviewData *replyData = [[TUIReplyPreviewData alloc] init];
+    replyData.msgID = data.msgID;
+    replyData.msgAbstract = desc;
+    replyData.sender = data.name;
+    replyData.type = (NSInteger)data.innerMessage.elemType;
+    replyData.originMessage = data.innerMessage;
+    
+    NSMutableDictionary *cloudResultDic = [[NSMutableDictionary alloc] initWithCapacity:5];
+    if (replyData.originMessage.cloudCustomData) {
+        NSDictionary * originDic = [TUITool jsonData2Dictionary:replyData.originMessage.cloudCustomData];
+        if (originDic && [originDic isKindOfClass:[NSDictionary class]]) {
+            [cloudResultDic addEntriesFromDictionary:originDic];
+        }
+    }
+    NSString * messageParentReply = cloudResultDic[@"messageReply"];
+    NSString * messageRootID = [messageParentReply valueForKey:@"messageRootID"];
+    if (!IS_NOT_EMPTY_NSSTRING(messageRootID)) {
+        //源消息没有messageRootID， 则需要将当前源消息的msgID作为root
+        if (IS_NOT_EMPTY_NSSTRING(replyData.originMessage.msgID)) {
+            messageRootID = replyData.originMessage.msgID;
+        }
+    }
+    
+    replyData.messageRootID =  messageRootID;
+    [self.inputController showReplyPreview:replyData];
+}
+- (NSString *)replyReferenceMessageDesc:(TUIMessageCellData *)data {
+    NSString *desc = @"";
     if (data.innerMessage.elemType == V2TIM_ELEM_TYPE_FILE) {
         desc = data.innerMessage.fileElem.filename;
     } else if (data.innerMessage.elemType == V2TIM_ELEM_TYPE_MERGER) {
@@ -771,16 +806,42 @@ static BOOL g_isEnableLink = YES;
     } else if (data.innerMessage.elemType == V2TIM_ELEM_TYPE_TEXT) {
         desc = data.innerMessage.textElem.text;
     }
+    return desc;
+}
+#pragma mark - 消息引用
+- (void)messageController:(TUIBaseMessageController *)controller onReferenceMessage:(TUIMessageCellData *)data {
+    NSString *desc = @"";
+    desc = [self replyReferenceMessageDesc:data];
     
-    TUIReplyPreviewData *replyData = [[TUIReplyPreviewData alloc] init];
-    replyData.msgID = data.msgID;
-    replyData.msgAbstract = desc;
-    replyData.sender = data.name;
-    replyData.type = (NSInteger)data.innerMessage.elemType;
-    replyData.originMessage = data.innerMessage;
-    [self.inputController showReplyPreview:replyData];
+    TUIReferencePreviewData *referenceData = [[TUIReferencePreviewData alloc] init];
+    referenceData.msgID = data.msgID;
+    referenceData.msgAbstract = desc;
+    referenceData.sender = data.name;
+    referenceData.type = (NSInteger)data.innerMessage.elemType;
+    referenceData.originMessage = data.innerMessage;
+    [self.inputController showReferencePreview:referenceData];
 }
 
+#pragma mark -消息响应
+/*
+ "messageReact": {
+     "reacts": [
+         {
+             "emojiId1": ["userId1","userId2"]
+         },
+         {
+             "emojiId2": ["userId3","userId4"]
+         },
+     ],
+     "version": "1",
+ }
+ */
+- (void)messageController:(TUIBaseMessageController *)controller modifyMessage:(nonnull TUIMessageCellData *)cellData reactEmoji:(NSString *)emojiName{
+    
+    V2TIMMessage *rootMsg = cellData.innerMessage;
+
+    [[TUIChatModifyMessageHelper defaultHelper] modifyMessage:rootMsg reactEmoji:emojiName simpleCurrentContent:nil timeControl:0];
+}
 #pragma mark - Privete Methods
 + (void)createCachePath
 {
