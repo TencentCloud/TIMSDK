@@ -49,15 +49,15 @@ dependencies:
   connectivity_plus: ^2.2.0
   i18n: any
 #  tim_ui_kit: ^0.0.9
-  tim_ui_kit: ^0.1.0
-  tim_ui_kit_calling_plugin: ^0.2.1
+  tim_ui_kit: ^0.1.0-bugfix
+  tim_ui_kit_calling_plugin: ^0.2.4
   tim_ui_kit_sticker_plugin: ^0.0.5
   # tim_ui_kit_sticker_plugin:
   #   path: ../tim_ui_kit_sticker_plugin
   super_tooltip: ^1.0.1
   flutter_svg: ^1.0.3
 #  tim_ui_kit_lbs_plugin: ^1.1.2
-  tim_ui_kit_push_plugin: ^0.1.9
+  tim_ui_kit_push_plugin: ^0.1.14
 #  tim_ui_kit_push_plugin:
 #    path: /Users/wangrunlin/Documents/GitHub/im-flutter-uikit-push
   uni_links: ^0.5.1
