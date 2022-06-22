@@ -1,30 +1,34 @@
 using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace com.tencent.imsdk.unity.callback
 {
     public class CallbackConvert
     {
-        public int code;
-        public string type;
-        public string data;
+        public int code { get; set; }
+        public string type { get; set; }
+        public string data { get; set; }
 
-        public string user_data;
+        public string user_data { get; set; }
 
-        public string desc;
+        public string desc { get; set; }
 
-        public int index = 0;
+        public int index { get; set; } = 0;
 
-        public int cur_size = 0;
+        public int cur_size { get; set; } = 0;
 
-        public int total_size = 0;
+        public int total_size { get; set; } = 0;
 
-        public string group_id = "";
+        public string group_id { get; set; } = "";
 
-        public int conv_event = 0;
+        public int conv_event { get; set; } = 0;
 
-        public ulong next_seq = 0;
+        public ulong next_seq { get; set; } = 0;
 
-        public bool is_finished = true;
+        public bool is_finished { get; set; } = true;
+
+        public CallbackConvert() {}
 
         public CallbackConvert(int code,string type, string data, string user_data, string desc = "",int index = 0 , int cur_size = 0, int total_size = 0,string group_id = "",int conv_event = 0, ulong next_seq = 0, bool is_finished = true)
         {
