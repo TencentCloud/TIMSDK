@@ -788,7 +788,7 @@ namespace com.tencent.imsdk.unity
             string user_data = fn_name + "_" + Utils.getRandomStr();
 
             ValuecallbackStore.Add(user_data, callback);
-
+            ValuecallbackDeleStore.Add(user_data, threadOperation<List<Message>>);
             int timSucc = IMNativeSDK.TIMMsgGetMsgList(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(get_message_list_param)), ValueCallbackInstance<List<Message>>, Utils.string2intptr(user_data));
 
             return (TIMResult)timSucc;
@@ -2649,21 +2649,20 @@ namespace com.tencent.imsdk.unity
         /// <param name="callback">回调 RecvNewMsgCallback</param>
         public static void AddRecvNewMsgCallback(RecvNewMsgCallback callback = null, RecvNewMsgStringCallback stringCallback = null)
         {
-
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
-
-            string user_data = fn_name + "_" + Utils.getRandomStr();
-
-            if (callback != null) {
-                RecvNewMsgCallbackStore = callback;
+            if (stringCallback == null || callback != null)
+            {
+                IsStringCallbackStore.Remove(fn_name);
             } else {
-                IsStringCallbackStore.Add(user_data);
-                RecvNewMsgCallbackStore = stringCallback;
+                IsStringCallbackStore.Add(fn_name);
             }
-
+            if (callback == null && stringCallback == null) {
+                IMNativeSDK.TIMAddRecvNewMsgCallback(null, Utils.string2intptr(""));
+                return;
+            }
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+            RecvNewMsgCallbackStore = callback != null ? (Delegate) callback : (Delegate) stringCallback;
             IMNativeSDK.TIMAddRecvNewMsgCallback(TIMRecvNewMsgCallbackInstance, Utils.string2intptr(user_data));
-
-
         }
 
         /// <summary>
@@ -2683,26 +2682,21 @@ namespace com.tencent.imsdk.unity
         /// <param name="callback">回调 MsgReadedReceiptCallback</param>
         public static void SetMsgReadedReceiptCallback(MsgReadedReceiptCallback callback = null, MsgReadedReceiptStringCallback stringCallback = null)
         {
-            if (callback != null || stringCallback != null)
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+            if (stringCallback == null || callback != null)
             {
-                string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
-
-                string user_data = fn_name + "_" + Utils.getRandomStr();
-
-                if (callback != null) {
-                    MsgReadedReceiptCallbackStore = callback;
-                } else{
-                    IsStringCallbackStore.Add(user_data);
-                    MsgReadedReceiptCallbackStore = stringCallback;
-                }
-
-                IMNativeSDK.TIMSetMsgReadedReceiptCallback(TIMMsgReadedReceiptCallbackInstance, Utils.string2intptr(user_data));
+                IsStringCallbackStore.Remove(fn_name);
+            } else {
+                IsStringCallbackStore.Add(fn_name);
             }
-            else
+            if (callback == null && stringCallback == null)
             {
                 IMNativeSDK.TIMSetMsgReadedReceiptCallback(null, Utils.string2intptr(""));
+                return;
             }
-
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+            MsgReadedReceiptCallbackStore = callback != null ? (Delegate) callback : (Delegate) stringCallback;
+            IMNativeSDK.TIMSetMsgReadedReceiptCallback(TIMMsgReadedReceiptCallbackInstance, Utils.string2intptr(user_data));
         }
 
         /// <summary>
@@ -2712,24 +2706,21 @@ namespace com.tencent.imsdk.unity
         /// <param name="callback">回调 MsgRevokeCallback</param>
         public static void SetMsgRevokeCallback(MsgRevokeCallback callback = null, MsgRevokeStringCallback stringCallback = null)
         {
-            if (callback != null || stringCallback != null)
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+            if (stringCallback == null || callback != null)
             {
-                string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
-
-                string user_data = fn_name + "_" + Utils.getRandomStr();
-                if (callback != null) {
-                    MsgRevokeCallbackStore = callback;
-                } else{
-                    IsStringCallbackStore.Add(user_data);
-                    MsgRevokeCallbackStore = stringCallback;
-                }
-
-                IMNativeSDK.TIMSetMsgRevokeCallback(TIMMsgRevokeCallbackInstance, Utils.string2intptr(user_data));
+                IsStringCallbackStore.Remove(fn_name);
+            } else {
+                IsStringCallbackStore.Add(fn_name);
             }
-            else
+            if (callback == null && stringCallback == null)
             {
                 IMNativeSDK.TIMSetMsgRevokeCallback(null, Utils.string2intptr(""));
+                return;
             }
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+            MsgRevokeCallbackStore = callback != null ? (Delegate) callback : (Delegate) stringCallback;
+            IMNativeSDK.TIMSetMsgRevokeCallback(TIMMsgRevokeCallbackInstance, Utils.string2intptr(user_data));
         }
 
 
@@ -2740,24 +2731,21 @@ namespace com.tencent.imsdk.unity
         /// <param name="callback">回调 MsgElemUploadProgressCallback</param>
         public static void SetMsgElemUploadProgressCallback(MsgElemUploadProgressCallback callback = null, MsgElemUploadProgressStringCallback stringCallback = null)
         {
-            if (callback != null || stringCallback != null)
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+            if (stringCallback == null || callback != null)
             {
-                string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
-
-                string user_data = fn_name + "_" + Utils.getRandomStr();
-                if (callback != null) {
-                    MsgElemUploadProgressCallbackStore = callback;
-                } else{
-                    IsStringCallbackStore.Add(user_data);
-                    MsgElemUploadProgressCallbackStore = stringCallback;
-                }
-
-                IMNativeSDK.TIMSetMsgElemUploadProgressCallback(TIMMsgElemUploadProgressCallbackInstance, Utils.string2intptr(user_data));
+                IsStringCallbackStore.Remove(fn_name);
+            } else {
+                IsStringCallbackStore.Add(fn_name);
             }
-            else
+            if (callback == null && stringCallback == null)
             {
                 IMNativeSDK.TIMSetMsgElemUploadProgressCallback(null, Utils.string2intptr(""));
+                return;
             }
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+            MsgElemUploadProgressCallbackStore = callback != null ? (Delegate) callback : (Delegate) stringCallback;
+            IMNativeSDK.TIMSetMsgElemUploadProgressCallback(TIMMsgElemUploadProgressCallbackInstance, Utils.string2intptr(user_data));
         }
 
         /// <summary>
@@ -2767,24 +2755,21 @@ namespace com.tencent.imsdk.unity
         /// <param name="callback">回调 GroupTipsEventCallback</param>
         public static void SetGroupTipsEventCallback(GroupTipsEventCallback callback = null, GroupTipsEventStringCallback stringCallback = null)
         {
-            if (callback != null || stringCallback != null)
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+            if (stringCallback == null || callback != null)
             {
-                string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
-
-                string user_data = fn_name + "_" + Utils.getRandomStr();
-                if (callback != null) {
-                    GroupTipsEventCallbackStore = callback;
-                } else{
-                    IsStringCallbackStore.Add(user_data);
-                    GroupTipsEventCallbackStore = stringCallback;
-                }
-
-                IMNativeSDK.TIMSetGroupTipsEventCallback(TIMGroupTipsEventCallbackInstance, Utils.string2intptr(user_data));
+                IsStringCallbackStore.Remove(fn_name);
+            } else {
+                IsStringCallbackStore.Add(fn_name);
             }
-            else
+            if (callback == null && stringCallback == null)
             {
                 IMNativeSDK.TIMSetGroupTipsEventCallback(null, Utils.string2intptr(""));
+                return;
             }
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+            GroupTipsEventCallbackStore = callback != null ? (Delegate) callback : (Delegate) stringCallback;
+            IMNativeSDK.TIMSetGroupTipsEventCallback(TIMGroupTipsEventCallbackInstance, Utils.string2intptr(user_data));
         }
 
         /// <summary>
@@ -2794,26 +2779,21 @@ namespace com.tencent.imsdk.unity
         /// <param name="callback">回调 GroupAttributeChangedCallback</param>
         public static void SetGroupAttributeChangedCallback(GroupAttributeChangedCallback callback = null, GroupAttributeChangedStringCallback stringCallback = null)
         {
-            if (callback != null || stringCallback != null)
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+            if (stringCallback == null || callback != null)
             {
-                string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
-
-                string user_data = fn_name + "_" + Utils.getRandomStr();
-                if (callback != null) {
-                    GroupAttributeChangedCallbackStore = callback;
-                } else{
-                    IsStringCallbackStore.Add(user_data);
-                    GroupAttributeChangedCallbackStore = stringCallback;
-                }
-
-                IMNativeSDK.TIMSetGroupAttributeChangedCallback(TIMGroupAttributeChangedCallbackInstance, Utils.string2intptr(user_data));
+                IsStringCallbackStore.Remove(fn_name);
+            } else {
+                IsStringCallbackStore.Add(fn_name);
             }
-            else
+            if (callback == null && stringCallback == null)
             {
                 IMNativeSDK.TIMSetGroupAttributeChangedCallback(null, Utils.string2intptr(""));
+                return;
             }
-
-
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+            GroupAttributeChangedCallbackStore = callback != null ? (Delegate) callback : (Delegate) stringCallback;
+            IMNativeSDK.TIMSetGroupAttributeChangedCallback(TIMGroupAttributeChangedCallbackInstance, Utils.string2intptr(user_data));
         }
 
 
@@ -2832,26 +2812,21 @@ namespace com.tencent.imsdk.unity
         /// <param name="callback">回调 ConvEventCallback</param>
         public static void SetConvEventCallback(ConvEventCallback callback = null, ConvEventStringCallback stringCallback = null)
         {
-            if (callback != null || stringCallback != null)
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+            if (stringCallback == null || callback != null)
             {
-                string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
-
-                string user_data = fn_name + "_" + Utils.getRandomStr();
-                if (callback != null) {
-                    ConvEventCallbackStore = callback;
-                } else{
-                    IsStringCallbackStore.Add(user_data);
-                    ConvEventCallbackStore = stringCallback;
-                }
-
-                IMNativeSDK.TIMSetConvEventCallback(TIMConvEventCallbackInstance, Utils.string2intptr(user_data));
+                IsStringCallbackStore.Remove(fn_name);
+            } else {
+                IsStringCallbackStore.Add(fn_name);
             }
-            else
+            if (callback == null && stringCallback == null)
             {
                 IMNativeSDK.TIMSetConvEventCallback(null, Utils.string2intptr(""));
+                return;
             }
-
-
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+            ConvEventCallbackStore = callback != null ? (Delegate) callback : (Delegate) stringCallback;
+            IMNativeSDK.TIMSetConvEventCallback(TIMConvEventCallbackInstance, Utils.string2intptr(user_data));
         }
 
         /// <summary>
@@ -2972,26 +2947,21 @@ namespace com.tencent.imsdk.unity
         /// <param name="callback">回调 OnAddFriendCallback</param>
         public static void SetOnAddFriendCallback(OnAddFriendCallback callback = null, OnAddFriendStringCallback stringCallback = null)
         {
-            if (callback != null || stringCallback != null)
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+            if (stringCallback == null || callback != null)
             {
-                string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
-
-                string user_data = fn_name + "_" + Utils.getRandomStr();
-                if (callback != null) {
-                    OnAddFriendCallbackStore = callback;
-                } else{
-                    IsStringCallbackStore.Add(user_data);
-                    OnAddFriendCallbackStore = stringCallback;
-                }
-
-                IMNativeSDK.TIMSetOnAddFriendCallback(TIMOnAddFriendCallbackInstance, Utils.string2intptr(user_data));
+                IsStringCallbackStore.Remove(fn_name);
+            } else {
+                IsStringCallbackStore.Add(fn_name);
             }
-            else
+            if (callback == null && stringCallback == null)
             {
                 IMNativeSDK.TIMSetOnAddFriendCallback(null, Utils.string2intptr(""));
+                return;
             }
-
-
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+            OnAddFriendCallbackStore = callback != null ? (Delegate) callback : (Delegate) stringCallback;
+            IMNativeSDK.TIMSetOnAddFriendCallback(TIMOnAddFriendCallbackInstance, Utils.string2intptr(user_data));
         }
 
         /// <summary>
@@ -3001,27 +2971,21 @@ namespace com.tencent.imsdk.unity
         /// <param name="callback">回调 OnDeleteFriendCallback</param>
         public static void SetOnDeleteFriendCallback(OnDeleteFriendCallback callback = null, OnDeleteFriendStringCallback stringCallback = null)
         {
-            if (callback != null || stringCallback != null)
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+            if (stringCallback == null || callback != null)
             {
-                string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
-
-                string user_data = fn_name + "_" + Utils.getRandomStr();
-                if (callback != null) {
-                    OnDeleteFriendCallbackStore = callback;
-                } else{
-                    IsStringCallbackStore.Add(user_data);
-                    OnDeleteFriendCallbackStore = stringCallback;
-                }
-
-                IMNativeSDK.TIMSetOnDeleteFriendCallback(TIMOnDeleteFriendCallbackInstance, Utils.string2intptr(user_data));
-
+                IsStringCallbackStore.Remove(fn_name);
+            } else {
+                IsStringCallbackStore.Add(fn_name);
             }
-            else
+            if (callback == null && stringCallback == null)
             {
                 IMNativeSDK.TIMSetOnDeleteFriendCallback(null, Utils.string2intptr(""));
+                return;
             }
-
-
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+            OnDeleteFriendCallbackStore = callback != null ? (Delegate) callback : (Delegate) stringCallback;
+            IMNativeSDK.TIMSetOnDeleteFriendCallback(TIMOnDeleteFriendCallbackInstance, Utils.string2intptr(user_data));
         }
 
         /// <summary>
@@ -3031,26 +2995,21 @@ namespace com.tencent.imsdk.unity
         /// <param name="callback">回调 UpdateFriendProfileCallback</param>
         public static void SetUpdateFriendProfileCallback(UpdateFriendProfileCallback callback = null, UpdateFriendProfileStringCallback stringCallback = null)
         {
-            if (callback != null || stringCallback != null)
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+            if (stringCallback == null || callback != null)
             {
-                string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
-
-                string user_data = fn_name + "_" + Utils.getRandomStr();
-                if (callback != null) {
-                    UpdateFriendProfileCallbackStore = callback;
-                } else{
-                    IsStringCallbackStore.Add(user_data);
-                    UpdateFriendProfileCallbackStore = stringCallback;
-                }
-
-                IMNativeSDK.TIMSetUpdateFriendProfileCallback(TIMUpdateFriendProfileCallbackInstance, Utils.string2intptr(user_data));
+                IsStringCallbackStore.Remove(fn_name);
+            } else {
+                IsStringCallbackStore.Add(fn_name);
             }
-            else
+            if (callback == null && stringCallback == null)
             {
                 IMNativeSDK.TIMSetUpdateFriendProfileCallback(null, Utils.string2intptr(""));
+                return;
             }
-
-
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+            UpdateFriendProfileCallbackStore = callback != null ? (Delegate) callback : (Delegate) stringCallback;
+            IMNativeSDK.TIMSetUpdateFriendProfileCallback(TIMUpdateFriendProfileCallbackInstance, Utils.string2intptr(user_data));
         }
 
         /// <summary>
@@ -3060,25 +3019,21 @@ namespace com.tencent.imsdk.unity
         /// <param name="callback">回调 FriendAddRequestCallback</param>
         public static void SetFriendAddRequestCallback(FriendAddRequestCallback callback = null, FriendAddRequestStringCallback stringCallback = null)
         {
-            if (callback != null || stringCallback != null)
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+            if (stringCallback == null || callback != null)
             {
-                string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
-
-                string user_data = fn_name + "_" + Utils.getRandomStr();
-                if (callback != null) {
-                    FriendAddRequestCallbackStore = callback;
-                } else{
-                    IsStringCallbackStore.Add(user_data);
-                    FriendAddRequestCallbackStore = stringCallback;
-                }
-
-                IMNativeSDK.TIMSetFriendAddRequestCallback(TIMFriendAddRequestCallbackInstance, Utils.string2intptr(user_data));
+                IsStringCallbackStore.Remove(fn_name);
+            } else {
+                IsStringCallbackStore.Add(fn_name);
             }
-            else
+            if (callback == null && stringCallback == null)
             {
                 IMNativeSDK.TIMSetFriendAddRequestCallback(null, Utils.string2intptr(""));
+                return;
             }
-
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+            FriendAddRequestCallbackStore = callback != null ? (Delegate) callback : (Delegate) stringCallback;
+            IMNativeSDK.TIMSetFriendAddRequestCallback(TIMFriendAddRequestCallbackInstance, Utils.string2intptr(user_data));
         }
 
         /// <summary>
@@ -3091,26 +3046,21 @@ namespace com.tencent.imsdk.unity
         /// <param name="callback">回调 FriendApplicationListDeletedCallback</param>
         public static void SetFriendApplicationListDeletedCallback(FriendApplicationListDeletedCallback callback = null, FriendApplicationListDeletedStringCallback stringCallback = null)
         {
-
-            if (callback != null || stringCallback != null)
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+            if (stringCallback == null || callback != null)
             {
-                string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
-
-                string user_data = fn_name + "_" + Utils.getRandomStr();
-                if (callback != null) {
-                    FriendApplicationListDeletedCallbackStore = callback;
-                } else{
-                    IsStringCallbackStore.Add(user_data);
-                    FriendApplicationListDeletedCallbackStore = stringCallback;
-                }
-
-                IMNativeSDK.TIMSetFriendApplicationListDeletedCallback(TIMFriendApplicationListDeletedCallbackInstance, Utils.string2intptr(user_data));
+                IsStringCallbackStore.Remove(fn_name);
+            } else {
+                IsStringCallbackStore.Add(fn_name);
             }
-            else
+            if (callback == null && stringCallback == null)
             {
                 IMNativeSDK.TIMSetFriendApplicationListDeletedCallback(null, Utils.string2intptr(""));
+                return;
             }
-
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+            FriendApplicationListDeletedCallbackStore = callback != null ? (Delegate) callback : (Delegate) stringCallback;
+            IMNativeSDK.TIMSetFriendApplicationListDeletedCallback(TIMFriendApplicationListDeletedCallbackInstance, Utils.string2intptr(user_data));
         }
 
         /// <summary>
@@ -3144,28 +3094,21 @@ namespace com.tencent.imsdk.unity
         /// <param name="callback">回调 FriendBlackListAddedCallback</param>
         public static void SetFriendBlackListAddedCallback(FriendBlackListAddedCallback callback = null, FriendBlackListAddedStringCallback stringCallback = null)
         {
-
-
-
-            if (callback != null || stringCallback != null)
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+            if (stringCallback == null || callback != null)
             {
-                string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
-
-                string user_data = fn_name + "_" + Utils.getRandomStr();
-                if (callback != null) {
-                    FriendBlackListAddedCallbackStore = callback;
-                } else{
-                    IsStringCallbackStore.Add(user_data);
-                    FriendBlackListAddedCallbackStore = stringCallback;
-                }
-                IMNativeSDK.TIMSetFriendBlackListAddedCallback(TIMFriendBlackListAddedCallbackInstance, Utils.string2intptr(user_data));
+                IsStringCallbackStore.Remove(fn_name);
+            } else {
+                IsStringCallbackStore.Add(fn_name);
             }
-            else
+            if (callback == null && stringCallback == null)
             {
                 IMNativeSDK.TIMSetFriendBlackListAddedCallback(null, Utils.string2intptr(""));
+                return;
             }
-
-
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+            FriendBlackListAddedCallbackStore = callback != null ? (Delegate) callback : (Delegate) stringCallback;
+            IMNativeSDK.TIMSetFriendBlackListAddedCallback(TIMFriendBlackListAddedCallbackInstance, Utils.string2intptr(user_data));
         }
 
         /// <summary>
@@ -3174,29 +3117,21 @@ namespace com.tencent.imsdk.unity
         /// <param name="callback">回调 FriendBlackListDeletedCallback</param>
         public static void SetFriendBlackListDeletedCallback(FriendBlackListDeletedCallback callback = null, FriendBlackListDeletedStringCallback stringCallback = null)
         {
-
-
-
-            if (callback != null || stringCallback != null)
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+            if (stringCallback == null || callback != null)
             {
-                string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
-
-                string user_data = fn_name + "_" + Utils.getRandomStr();
-                if (callback != null) {
-                    FriendBlackListDeletedCallbackStore = callback;
-                } else{
-                    IsStringCallbackStore.Add(user_data);
-                    FriendBlackListDeletedCallbackStore = stringCallback;
-                }
-                IMNativeSDK.TIMSetFriendBlackListDeletedCallback(TIMFriendBlackListDeletedCallbackInstance, Utils.string2intptr(user_data));
+                IsStringCallbackStore.Remove(fn_name);
+            } else {
+                IsStringCallbackStore.Add(fn_name);
             }
-            else
+            if (callback == null && stringCallback == null)
             {
                 IMNativeSDK.TIMSetFriendBlackListDeletedCallback(null, Utils.string2intptr(""));
+                return;
             }
-
-
-
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+            FriendBlackListDeletedCallbackStore = callback != null ? (Delegate) callback : (Delegate) stringCallback;
+            IMNativeSDK.TIMSetFriendBlackListDeletedCallback(TIMFriendBlackListDeletedCallbackInstance, Utils.string2intptr(user_data));
         }
 
         /// <summary>
@@ -3235,26 +3170,21 @@ namespace com.tencent.imsdk.unity
         /// <param name="callback">回调 FriendBlackListDeletedCallback</param>
         public static void SetMsgUpdateCallback(MsgUpdateCallback callback = null, MsgUpdateStringCallback stringCallback = null)
         {
-
-            if (callback != null || stringCallback != null)
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+            if (stringCallback == null || callback != null)
             {
-                string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
-
-                string user_data = fn_name + "_" + Utils.getRandomStr();
-                if (callback != null) {
-                    MsgUpdateCallbackStore = callback;
-                } else{
-                    IsStringCallbackStore.Add(user_data);
-                    MsgUpdateCallbackStore = stringCallback;
-                }
-
-                IMNativeSDK.TIMSetMsgUpdateCallback(TIMMsgUpdateCallbackInstance, Utils.string2intptr(user_data));
+                IsStringCallbackStore.Remove(fn_name);
+            } else {
+                IsStringCallbackStore.Add(fn_name);
             }
-            else
+            if (callback == null && stringCallback == null)
             {
                 IMNativeSDK.TIMSetMsgUpdateCallback(null, Utils.string2intptr(""));
+                return;
             }
-
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+            MsgUpdateCallbackStore = callback != null ? (Delegate) callback : (Delegate) stringCallback;
+            IMNativeSDK.TIMSetMsgUpdateCallback(TIMMsgUpdateCallbackInstance, Utils.string2intptr(user_data));
         }
 
         /// <summary>
@@ -3268,27 +3198,22 @@ namespace com.tencent.imsdk.unity
         /// <param name="stringCallback">string 类型回调 MsgGroupMessageReadMemberListStringCallback</param>
         public static TIMResult GetMsgGroupMessageReadMemberList(Message message, TIMGroupMessageReadMembersFilter filter,  ulong next_seq,int count, MsgGroupMessageReadMemberListCallback callback = null, MsgGroupMessageReadMemberListStringCallback stringCallback = null)
         {
-            if (callback != null || stringCallback != null)
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+            if (stringCallback == null || callback != null)
             {
-                string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
-
-                string user_data = fn_name + "_" + Utils.getRandomStr();
-                if (callback != null) {
-                    MsgGroupMessageReadMemberListCallbackStore = callback;
-                } else{
-                    IsStringCallbackStore.Add(user_data);
-                    MsgGroupMessageReadMemberListCallbackStore = stringCallback;
-                }
-
-                int res = IMNativeSDK.TIMMsgGetGroupMessageReadMemberList(Utils.string2intptr(Utils.ToJson(message)), filter, next_seq, count, TIMMsgGroupMessageReadMemberListCallbackInstance, Utils.string2intptr(user_data));
-                return (TIMResult)res;
+                IsStringCallbackStore.Remove(fn_name);
+            } else {
+                IsStringCallbackStore.Add(fn_name);
             }
-            else
+            if (callback == null && stringCallback == null)
             {
-                int res = IMNativeSDK.TIMMsgGetGroupMessageReadMemberList(Utils.string2intptr(""), filter, next_seq, count, null, Utils.string2intptr(""));
-                return (TIMResult)res;
+                int timRes = IMNativeSDK.TIMMsgGetGroupMessageReadMemberList(Utils.string2intptr(""), filter, next_seq, count, null, Utils.string2intptr(""));
+                return (TIMResult)timRes;
             }
-
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+            MsgGroupMessageReadMemberListCallbackStore = callback != null ? (Delegate) callback : (Delegate) stringCallback;
+            int res = IMNativeSDK.TIMMsgGetGroupMessageReadMemberList(Utils.string2intptr(Utils.ToJson(message)), filter, next_seq, count, TIMMsgGroupMessageReadMemberListCallbackInstance, Utils.string2intptr(user_data));
+            return (TIMResult)res;
         }
 
 
@@ -3300,7 +3225,7 @@ namespace com.tencent.imsdk.unity
             string desc_string = Utils.intptr2string(desc);
             string param = Utils.intptr2string(json_param);
             if (ValuecallbackDeleStore.TryGetValue(user_data_string, out SendOrPostCallback dele)) {
-                mainSyncContext.Send(dele, new CallbackConvert(code, "ValueCallback", param, user_data_string, desc_string));
+                mainSyncContext.Post(dele, new CallbackConvert{code = code, type = "ValueCallback", data = param, user_data = user_data_string, desc = desc_string});
                 ValuecallbackDeleStore.Remove(user_data_string);
             }
         }
@@ -3311,7 +3236,7 @@ namespace com.tencent.imsdk.unity
             string user_data_string = Utils.intptr2string(user_data);
             string desc_string = Utils.intptr2string(desc);
             string param = Utils.intptr2string(json_param);
-            mainSyncContext.Send(threadOperation<string>, new CallbackConvert(code, "ValueCallback", param, user_data_string, desc_string));
+            mainSyncContext.Post(threadOperation<string>, new CallbackConvert{code = code, type = "ValueCallback", data = param, user_data = user_data_string, desc = desc_string});
         }
         static private void threadOperation<T>(object obj)
         {
@@ -3325,15 +3250,13 @@ namespace com.tencent.imsdk.unity
                         {
                             if (ValuecallbackStore.TryGetValue(data.user_data, out Delegate callbackDele))
                             {
-                                // object type means null callback data here
-                                if (typeof(T) == typeof(object)) {
+                                // 3 means no need for callback data
+                                if (callbackDele.GetMethodInfo().GetParameters().Length == 3) {
                                     callbackDele.DynamicInvoke(data.code, data.desc, data.user_data);
                                 } else {
-                                    callbackDele.DynamicInvoke(data.code, data.desc,
-                                Utils.FromJson<T>(data.data), data.user_data);
+                                    callbackDele.DynamicInvoke(data.code, data.desc, Utils.FromJson<T>(data.data), data.user_data);
                                 }
                                 ValuecallbackStore.Remove(data.user_data);
-
                             }
 
                         }
@@ -3580,11 +3503,11 @@ namespace com.tencent.imsdk.unity
                 string json_msg_array_string = Utils.intptr2string(json_msg_array);
 
                 string user_data_string = Utils.intptr2string(user_data);
-
-                if (!IsStringCallbackStore.Contains(user_data_string)) {
-                    mainSyncContext.Send(threadOperation<object>, new CallbackConvert(0, "TIMRecvNewMsgCallback", json_msg_array_string, user_data_string, ""));
+                CallbackConvert cc = new CallbackConvert{code = 0, type = "TIMRecvNewMsgCallback", data = json_msg_array_string, user_data = user_data_string, desc = ""};
+                if (!IsStringCallbackStore.Contains(user_data_string.Split('_')[0])) {
+                    mainSyncContext.Post(threadOperation<object>, cc);
                 } else {
-                    mainSyncContext.Send(threadOperation<string>, new CallbackConvert(0, "TIMRecvNewMsgCallback", json_msg_array_string, user_data_string, ""));
+                    mainSyncContext.Post(threadOperation<string>, cc);
                 }
             }
             catch (Exception e)
@@ -3603,11 +3526,11 @@ namespace com.tencent.imsdk.unity
 
             string user_data_string = Utils.intptr2string(user_data);
 
-
-            if (!IsStringCallbackStore.Contains(user_data_string)) {
-                mainSyncContext.Send(threadOperation<object>, new CallbackConvert(0, "TIMMsgReadedReceiptCallback", json_msg_readed_receipt_array_string, user_data_string, ""));
+            CallbackConvert cc = new CallbackConvert{code = 0, type = "TIMMsgReadedReceiptCallback", data = json_msg_readed_receipt_array_string, user_data = user_data_string, desc = ""};
+            if (!IsStringCallbackStore.Contains(user_data_string.Split('_')[0])) {
+                mainSyncContext.Post(threadOperation<object>, cc);
             } else {
-                mainSyncContext.Send(threadOperation<string>, new CallbackConvert(0, "TIMMsgReadedReceiptCallback", json_msg_readed_receipt_array_string, user_data_string, ""));
+                mainSyncContext.Post(threadOperation<string>, cc);
             }
 
         }
@@ -3618,10 +3541,11 @@ namespace com.tencent.imsdk.unity
             string json_msg_locator_array_string = Utils.intptr2string(json_msg_locator_array);
 
             string user_data_string = Utils.intptr2string(user_data);
-            if (!IsStringCallbackStore.Contains(user_data_string)) {
-                mainSyncContext.Send(threadOperation<object>, new CallbackConvert(0, "TIMMsgRevokeCallback", json_msg_locator_array_string, user_data_string, ""));
+            CallbackConvert cc = new CallbackConvert{code = 0, type = "TIMMsgRevokeCallback", data = json_msg_locator_array_string, user_data = user_data_string, desc = ""};
+            if (!IsStringCallbackStore.Contains(user_data_string.Split('_')[0])) {
+                mainSyncContext.Post(threadOperation<object>, cc);
             } else {
-                mainSyncContext.Send(threadOperation<string>, new CallbackConvert(0, "TIMMsgRevokeCallback", json_msg_locator_array_string, user_data_string, ""));
+                mainSyncContext.Post(threadOperation<string>, cc);
             }
         }
 
@@ -3634,11 +3558,11 @@ namespace com.tencent.imsdk.unity
             string user_data_string = Utils.intptr2string(user_data);
 
 
-
-            if (!IsStringCallbackStore.Contains(user_data_string)) {
-                mainSyncContext.Send(threadOperation<object>, new CallbackConvert(0, "TIMMsgElemUploadProgressCallback", json_msg_string, user_data_string, "", index, cur_size, total_size));
+            CallbackConvert cc = new CallbackConvert{code = 0, type = "TIMMsgElemUploadProgressCallback", data = json_msg_string, user_data = user_data_string, desc = "", index = index, cur_size = cur_size, total_size = total_size};
+            if (!IsStringCallbackStore.Contains(user_data_string.Split('_')[0])) {
+                mainSyncContext.Post(threadOperation<object>, cc);
             } else {
-                mainSyncContext.Send(threadOperation<string>, new CallbackConvert(0, "TIMMsgElemUploadProgressCallback", json_msg_string, user_data_string, "", index, cur_size, total_size));
+                mainSyncContext.Post(threadOperation<string>, cc);
             }
 
 
@@ -3649,15 +3573,12 @@ namespace com.tencent.imsdk.unity
             string json_group_tip_array_string = Utils.intptr2string(json_group_tip_array);
 
             string user_data_string = Utils.intptr2string(user_data);
-
-            if (!IsStringCallbackStore.Contains(user_data_string)) {
-                mainSyncContext.Send(threadOperation<object>, new CallbackConvert(0, "TIMGroupTipsEventCallback", json_group_tip_array_string, user_data_string, ""));
+            CallbackConvert cc = new CallbackConvert{code = 0, type = "TIMGroupTipsEventCallback", data = json_group_tip_array_string, user_data = user_data_string, desc = ""};
+            if (!IsStringCallbackStore.Contains(user_data_string.Split('_')[0])) {
+                mainSyncContext.Post(threadOperation<object>, cc);
             } else {
-                mainSyncContext.Send(threadOperation<string>, new CallbackConvert(0, "TIMGroupTipsEventCallback", json_group_tip_array_string, user_data_string, ""));
+                mainSyncContext.Post(threadOperation<string>, cc);
             }
-
-
-
         }
 
 
@@ -3670,14 +3591,12 @@ namespace com.tencent.imsdk.unity
 
             string user_data_string = Utils.intptr2string(user_data);
 
-
-            if (!IsStringCallbackStore.Contains(user_data_string)) {
-                mainSyncContext.Send(threadOperation<object>, new CallbackConvert(0, "TIMGroupAttributeChangedCallback", json_group_attibute_array_string, user_data_string, "", 0, 0, 0, group_id_string));
+            CallbackConvert cc = new CallbackConvert{code = 0, type = "TIMGroupAttributeChangedCallback", data = json_group_attibute_array_string, user_data = user_data_string, group_id = group_id_string};
+            if (!IsStringCallbackStore.Contains(user_data_string.Split('_')[0])) {
+                mainSyncContext.Post(threadOperation<object>, cc);
             } else {
-                mainSyncContext.Send(threadOperation<string>, new CallbackConvert(0, "TIMGroupAttributeChangedCallback", json_group_attibute_array_string, user_data_string, "", 0, 0, 0, group_id_string));
+                mainSyncContext.Post(threadOperation<string>, cc);
             }
-
-
         }
         [MonoPInvokeCallback(typeof(IMNativeSDK.TIMConvEventCallback))]
         private static void TIMConvEventCallbackInstance(int conv_event, IntPtr json_conv_array, IntPtr user_data)
@@ -3686,69 +3605,41 @@ namespace com.tencent.imsdk.unity
 
             string user_data_string = Utils.intptr2string(user_data);
 
-
-            if (!IsStringCallbackStore.Contains(user_data_string)) {
-                mainSyncContext.Send(threadOperation<object>, new CallbackConvert(0, "TIMConvEventCallback", json_conv_array_string, user_data_string, "", 0, 0, 0, "", conv_event));
+            CallbackConvert cc = new CallbackConvert{code = 0, type = "TIMConvEventCallback", data = json_conv_array_string, user_data = user_data_string, conv_event = conv_event};
+            if (!IsStringCallbackStore.Contains(user_data_string.Split('_')[0])) {
+                mainSyncContext.Post(threadOperation<object>, cc);
             } else {
-                mainSyncContext.Send(threadOperation<string>, new CallbackConvert(0, "TIMConvEventCallback", json_conv_array_string, user_data_string, "", 0, 0, 0, "", conv_event));
+                mainSyncContext.Post(threadOperation<string>, cc);
             }
-
-
-
         }
 
 
         [MonoPInvokeCallback(typeof(IMNativeSDK.TIMConvTotalUnreadMessageCountChangedCallback))]
         private static void TIMConvTotalUnreadMessageCountChangedCallbackInstance(int total_unread_count, IntPtr user_data)
         {
-
             string user_data_string = Utils.intptr2string(user_data);
-
-
-
-            mainSyncContext.Send(threadOperation<string>, new CallbackConvert(total_unread_count, "TIMConvTotalUnreadMessageCountChangedCallback", "", user_data_string));
-
-
-
+            mainSyncContext.Post(threadOperation<string>, new CallbackConvert{code = 0, type = "TIMConvTotalUnreadMessageCountChangedCallback", data = total_unread_count.ToString(), user_data = user_data_string});
         }
 
         [MonoPInvokeCallback(typeof(IMNativeSDK.TIMNetworkStatusListenerCallback))]
         private static void TIMNetworkStatusListenerCallbackInstance(int status, int code, IntPtr desc, IntPtr user_data)
         {
             string user_data_string = Utils.intptr2string(user_data);
-
             string desc_string = Utils.intptr2string(desc);
-
-
-
-            mainSyncContext.Send(threadOperation<string>, new CallbackConvert(status, "TIMNetworkStatusListenerCallback", "", user_data_string, desc_string, code));
-
-
-
+            mainSyncContext.Post(threadOperation<string>, new CallbackConvert{code = status, type = "TIMNetworkStatusListenerCallback", data = "", user_data = user_data_string, desc = desc_string, index = code});
         }
         [MonoPInvokeCallback(typeof(IMNativeSDK.TIMKickedOfflineCallback))]
         private static void TIMKickedOfflineCallbackInstance(IntPtr user_data)
         {
             string user_data_string = Utils.intptr2string(user_data);
-
-
-
-            mainSyncContext.Send(threadOperation<string>, new CallbackConvert(0, "TIMKickedOfflineCallback", "", user_data_string));
-
-
+            mainSyncContext.Post(threadOperation<string>, new CallbackConvert{code = 0, type = "TIMKickedOfflineCallback", data = "", user_data = user_data_string});
         }
 
         [MonoPInvokeCallback(typeof(IMNativeSDK.TIMUserSigExpiredCallback))]
         private static void TIMUserSigExpiredCallbackInstance(IntPtr user_data)
         {
             string user_data_string = Utils.intptr2string(user_data);
-
-
-
-
-            mainSyncContext.Send(threadOperation<string>, new CallbackConvert(0, "TIMUserSigExpiredCallback", "", user_data_string));
-
-
+            mainSyncContext.Post(threadOperation<string>, new CallbackConvert{code = 0, type = "TIMUserSigExpiredCallback", data = "", user_data = user_data_string});
         }
 
         [MonoPInvokeCallback(typeof(IMNativeSDK.TIMOnAddFriendCallback))]
@@ -3758,14 +3649,12 @@ namespace com.tencent.imsdk.unity
 
             string json_identifier_array_string = Utils.intptr2string(json_identifier_array);
 
-
-            if (!IsStringCallbackStore.Contains(user_data_string)) {
-                mainSyncContext.Send(threadOperation<object>, new CallbackConvert(0, "TIMOnAddFriendCallback", json_identifier_array_string, user_data_string));
+            CallbackConvert cc = new CallbackConvert{code = 0, type = "TIMOnAddFriendCallback", data = json_identifier_array_string, user_data = user_data_string};
+            if (!IsStringCallbackStore.Contains(user_data_string.Split('_')[0])) {
+                mainSyncContext.Post(threadOperation<object>, cc);
             } else {
-                mainSyncContext.Send(threadOperation<string>, new CallbackConvert(0, "TIMOnAddFriendCallback", json_identifier_array_string, user_data_string));
+                mainSyncContext.Post(threadOperation<string>, cc);
             }
-
-
         }
 
         [MonoPInvokeCallback(typeof(IMNativeSDK.TIMOnDeleteFriendCallback))]
@@ -3775,11 +3664,11 @@ namespace com.tencent.imsdk.unity
 
             string json_identifier_array_string = Utils.intptr2string(json_identifier_array);
 
-
-            if (!IsStringCallbackStore.Contains(user_data_string)) {
-                mainSyncContext.Send(threadOperation<object>, new CallbackConvert(0, "TIMOnDeleteFriendCallback", json_identifier_array_string, user_data_string));
+            CallbackConvert cc = new CallbackConvert{code = 0, type = "TIMOnDeleteFriendCallback", data = json_identifier_array_string, user_data =user_data_string};
+            if (!IsStringCallbackStore.Contains(user_data_string.Split('_')[0])) {
+                mainSyncContext.Post(threadOperation<object>, cc);
             } else {
-                mainSyncContext.Send(threadOperation<string>, new CallbackConvert(0, "TIMOnDeleteFriendCallback", json_identifier_array_string, user_data_string));
+                mainSyncContext.Post(threadOperation<string>, cc);
             }
 
 
@@ -3792,14 +3681,12 @@ namespace com.tencent.imsdk.unity
 
             string json_friend_profile_update_array_string = Utils.intptr2string(json_friend_profile_update_array);
 
-
-            if (!IsStringCallbackStore.Contains(user_data_string)) {
-                mainSyncContext.Send(threadOperation<object>, new CallbackConvert(0, "TIMUpdateFriendProfileCallback", json_friend_profile_update_array_string, user_data_string));
+            CallbackConvert cc = new CallbackConvert{code = 0, type = "TIMUpdateFriendProfileCallback", data = json_friend_profile_update_array_string, user_data = user_data_string};
+            if (!IsStringCallbackStore.Contains(user_data_string.Split('_')[0])) {
+                mainSyncContext.Post(threadOperation<object>, cc);
             } else {
-                mainSyncContext.Send(threadOperation<string>, new CallbackConvert(0, "TIMUpdateFriendProfileCallback", json_friend_profile_update_array_string, user_data_string));
+                mainSyncContext.Post(threadOperation<string>, cc);
             }
-
-
         }
 
         [MonoPInvokeCallback(typeof(IMNativeSDK.TIMFriendAddRequestCallback))]
@@ -3809,14 +3696,12 @@ namespace com.tencent.imsdk.unity
 
             string json_friend_add_request_pendency_array_string = Utils.intptr2string(json_friend_add_request_pendency_array);
 
-
-            if (!IsStringCallbackStore.Contains(user_data_string)) {
-                mainSyncContext.Send(threadOperation<object>, new CallbackConvert(0, "TIMFriendAddRequestCallback", json_friend_add_request_pendency_array_string, user_data_string));
+            CallbackConvert cc = new CallbackConvert{code = 0, type = "TIMFriendAddRequestCallback", data = json_friend_add_request_pendency_array_string, user_data = user_data_string};
+            if (!IsStringCallbackStore.Contains(user_data_string.Split('_')[0])) {
+                mainSyncContext.Post(threadOperation<object>, cc);
             } else {
-                mainSyncContext.Send(threadOperation<string>, new CallbackConvert(0, "TIMFriendAddRequestCallback", json_friend_add_request_pendency_array_string, user_data_string));
+                mainSyncContext.Post(threadOperation<string>, cc);
             }
-
-
         }
 
         [MonoPInvokeCallback(typeof(IMNativeSDK.TIMFriendApplicationListDeletedCallback))]
@@ -3826,26 +3711,19 @@ namespace com.tencent.imsdk.unity
 
             string json_identifier_array_string = Utils.intptr2string(json_identifier_array);
 
-
-            if (!IsStringCallbackStore.Contains(user_data_string)) {
-                mainSyncContext.Send(threadOperation<object>, new CallbackConvert(0, "TIMFriendApplicationListDeletedCallback", json_identifier_array_string, user_data_string));
+            CallbackConvert cc = new CallbackConvert{code = 0, type = "TIMFriendApplicationListDeletedCallback", data = json_identifier_array_string, user_data = user_data_string};
+            if (!IsStringCallbackStore.Contains(user_data_string.Split('_')[0])) {
+                mainSyncContext.Post(threadOperation<object>, cc);
             } else {
-                mainSyncContext.Send(threadOperation<string>, new CallbackConvert(0, "TIMFriendApplicationListDeletedCallback", json_identifier_array_string, user_data_string));
+                mainSyncContext.Post(threadOperation<string>, cc);
             }
-
-
         }
 
         [MonoPInvokeCallback(typeof(IMNativeSDK.TIMFriendApplicationListReadCallback))]
         private static void TIMFriendApplicationListReadCallbackInstance(IntPtr user_data)
         {
             string user_data_string = Utils.intptr2string(user_data);
-
-
-
-            mainSyncContext.Send(threadOperation<string>, new CallbackConvert(0, "TIMFriendApplicationListReadCallback", "", user_data_string));
-
-
+            mainSyncContext.Post(threadOperation<string>, new CallbackConvert{code = 0, type = "TIMFriendApplicationListReadCallback", data = "", user_data = user_data_string});
         }
 
         [MonoPInvokeCallback(typeof(IMNativeSDK.TIMFriendBlackListAddedCallback))]
@@ -3854,17 +3732,12 @@ namespace com.tencent.imsdk.unity
             string user_data_string = Utils.intptr2string(user_data);
 
             string json_friend_black_added_array_string = Utils.intptr2string(json_friend_black_added_array);
-
-
-
-            if (!IsStringCallbackStore.Contains(user_data_string)) {
-                mainSyncContext.Send(threadOperation<object>, new CallbackConvert(0, "TIMFriendBlackListAddedCallback", json_friend_black_added_array_string, user_data_string));
+            CallbackConvert cc = new CallbackConvert{code = 0, type = "TIMFriendBlackListAddedCallback", data = json_friend_black_added_array_string, user_data = user_data_string};
+            if (!IsStringCallbackStore.Contains(user_data_string.Split('_')[0])) {
+                mainSyncContext.Post(threadOperation<object>, cc);
             } else {
-                mainSyncContext.Send(threadOperation<string>, new CallbackConvert(0, "TIMFriendBlackListAddedCallback", json_friend_black_added_array_string, user_data_string));
+                mainSyncContext.Post(threadOperation<string>, cc);
             }
-
-
-
         }
 
         [MonoPInvokeCallback(typeof(IMNativeSDK.TIMFriendBlackListDeletedCallback))]
@@ -3874,31 +3747,20 @@ namespace com.tencent.imsdk.unity
 
             string json_identifier_array_string = Utils.intptr2string(json_identifier_array);
 
-
-            if (!IsStringCallbackStore.Contains(user_data_string)) {
-                mainSyncContext.Send(threadOperation<object>, new CallbackConvert(0, "TIMFriendBlackListDeletedCallback", json_identifier_array_string, user_data_string));
+            CallbackConvert cc = new CallbackConvert{code = 0, type = "TIMFriendBlackListDeletedCallback", data = json_identifier_array_string, user_data = user_data_string};
+            if (!IsStringCallbackStore.Contains(user_data_string.Split('_')[0])) {
+                mainSyncContext.Post(threadOperation<object>, cc);
             } else {
-                mainSyncContext.Send(threadOperation<string>, new CallbackConvert(0, "TIMFriendBlackListDeletedCallback", json_identifier_array_string, user_data_string));
+                mainSyncContext.Post(threadOperation<string>, cc);
             }
-
-
-
-
         }
 
         [MonoPInvokeCallback(typeof(IMNativeSDK.TIMLogCallback))]
         private static void TIMLogCallbackInstance(int level, IntPtr log, IntPtr user_data)
         {
             string user_data_string = Utils.intptr2string(user_data);
-
-
             string log_string = Utils.intptr2string(log);
-
-
-
-            mainSyncContext.Send(threadOperation<string>, new CallbackConvert(level, "TIMLogCallback", log_string, user_data_string));
-
-
+            mainSyncContext.Post(threadOperation<string>, new CallbackConvert{code = level, type = "TIMLogCallback", data = log_string, user_data = user_data_string});
         }
 
 
@@ -3912,14 +3774,12 @@ namespace com.tencent.imsdk.unity
 
             string json_msg_array_string = Utils.intptr2string(json_msg_array);
 
-
-            if (!IsStringCallbackStore.Contains(user_data_string)) {
-                mainSyncContext.Send(threadOperation<object>, new CallbackConvert(0, "TIMMsgUpdateCallback", json_msg_array_string, user_data_string));
+            CallbackConvert cc = new CallbackConvert{code = 0, type = "TIMMsgUpdateCallback", data = json_msg_array_string, user_data = user_data_string};
+            if (!IsStringCallbackStore.Contains(user_data_string.Split('_')[0])) {
+                mainSyncContext.Post(threadOperation<object>, cc);
             } else {
-                mainSyncContext.Send(threadOperation<string>, new CallbackConvert(0, "TIMMsgUpdateCallback", json_msg_array_string, user_data_string));
+                mainSyncContext.Post(threadOperation<string>, cc);
             }
-
-
         }
 
         [MonoPInvokeCallback(typeof(IMNativeSDK.TIMMsgGroupMessageReadMemberListCallback))]
@@ -3928,11 +3788,11 @@ namespace com.tencent.imsdk.unity
             string user_data_string = Utils.intptr2string(user_data);
 
             string json_group_member_array_string = Utils.intptr2string(json_group_member_array);
-
-            if (!IsStringCallbackStore.Contains(user_data_string)) {
-                mainSyncContext.Send(threadOperation<object>, new CallbackConvert(0, "TIMMsgGroupMessageReadMemberListCallback", json_group_member_array_string, user_data_string, "", 0, 0, 0, "", 0, next_seq, is_finished));
+            CallbackConvert cc = new CallbackConvert{code = 0, type = "TIMMsgGroupMessageReadMemberListCallback", data = json_group_member_array_string, user_data = user_data_string, next_seq = next_seq, is_finished = is_finished};
+            if (!IsStringCallbackStore.Contains(user_data_string.Split('_')[0])) {
+                mainSyncContext.Post(threadOperation<object>, cc);
             } else {
-                mainSyncContext.Send(threadOperation<string>, new CallbackConvert(0, "TIMMsgGroupMessageReadMemberListCallback", json_group_member_array_string, user_data_string, "", 0, 0, 0, "", 0, next_seq, is_finished));
+                mainSyncContext.Post(threadOperation<string>, cc);
             }
 
 
