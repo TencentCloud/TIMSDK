@@ -2,6 +2,37 @@ English | [简体中文](./版本历史.md)
 
 # TIMSDK
 
+## 6.3.2609 @2022.06.16 - Enhanced Version
+
+### SDK
+
+- Added the online status and custom status.
+- Supported pulling the member list (up to 1,000 persons) of an audio-video group.
+- Supported @all messages for a topic.
+- Added the friend adding time in the profile of a friend.
+- Fixed the issue where cross-platform SQL execution errors occurred.
+- Added community topic APIs for the cross-platform SDK.
+- Fixed the issue where the unread count was occasionally incorrect when messages of a specified topic was pulled after login.
+- Fixed the issue where the call result of the API for getting the list of groups a user has joined was occasionally null when the network was unavailable.
+- Fixed the issue where the call result of the API for getting the group owner userID of a group a user has joined was occasionally null.
+- Fixed the issue where the role in the member profile obtained by the new group owner was not upgraded after a group was transferred.
+- Fixed the issue where search result error occurred when several senders were provided as parameters for the message search API.
+- Fixed the issue where the name and profile photo of a sender were inconsistent after message search.
+- Fixed the issue where modifying `cloudCustomData` as null did not apply.
+- Fixed the issue for iOS where the returned value of `elemType` was `0` after `cloudCustomData` of audio messages was modified.
+- Fixed the issue for iOS where the read receipts of one-to-one messages were occasionally not called back.
+- Optimized .so loading for Android
+
+### TUIKit and demo
+
+- Supported stickers in chat messages.
+- Supported quoting a chat message.
+- Supported replying to a chat message.
+- Supported read receipts for one-to-one messages.
+- Unified the time display format of conversation lists.
+- Supported version upgrade check for the demo app.
+- Upgraded the brand logo for the demo app.
+
 ## 6.2.2363 @2022.04.29 - Enhanced Version
 
 ### SDK
