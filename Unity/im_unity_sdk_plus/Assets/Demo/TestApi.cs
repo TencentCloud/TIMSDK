@@ -285,7 +285,7 @@ public class TestApi : MonoBehaviour
 
     public static void MsgSetOfflinePushToken(){
         OfflinePushToken token = new OfflinePushToken();
-        token.offline_push_token_token = "asda1asda";
+        token.offline_push_token_token = "701d9a8bbc149cb6cd01b01d99c67312a978f92e1e1231dc5120dffce33f6140";
         token.offline_push_token_business_id = 13121;
         token.offline_push_token_is_tpns_token = false;
         TIMResult res = TencentIMSDK.MsgSetOfflinePushToken(token,addAsyncDataToConsole);
