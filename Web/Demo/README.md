@@ -8,7 +8,7 @@ Web Demo 是基于 IM TUIKit 实现，TUIKit 中包含会话、聊天、群组�
 
 | 发起会话 | 会话列表 | 会话列表管理 |
 | --- | --- | --- |
-| ![](https://web.sdk.qcloud.com/im/demo/TUIkit/document-image/search.png) | ![](https://web.sdk.qcloud.com/im/demo/TUIkit/document-image/conversationList.png) | ![](https://web.sdk.qcloud.com/im/demo/TUIkit/document-image/conversationManage.png) |
+| ![](https://web.sdk.qcloud.com/im/demo/TUIkit/document-image/search.png)| ![](https://web.sdk.qcloud.com/im/demo/TUIkit/document-image/conversationList.png) | ![](https://web.sdk.qcloud.com/im/demo/TUIkit/document-image/conversationManage.png) |
 
 ### 聊天管理
 
@@ -61,9 +61,11 @@ yarn install
 ### 步骤2：初始化
 
 1. 打开终端目录的工程，找到对应的 `GenerateTestUserSig` 文件，路径为：/debug/GenerateTestUserSig.js
-2. 设置`GenerateTestUserSig`文件中的相关参数，其中 SDKAppID 和密钥等信息，可通过 [即时通信 IM 控制台](https://console.cloud.tencent.com/im) 获取，单击目标应用卡片，进入应用的基础配置页面。 ![](https://qcloudimg.tencent-cloud.cn/raw/e435332cda8d9ec7fea21bd95f7a0cba.png)
+2. 设置`GenerateTestUserSig`文件中的相关参数，其中 SDKAppID 和密钥等信息，可通过 [即时通信 IM 控制台](https://console.cloud.tencent.com/im) 获取，单击目标应用卡片，进入应用的基础配置页面。
+  ![](https://qcloudimg.tencent-cloud.cn/raw/e435332cda8d9ec7fea21bd95f7a0cba.png)
   
-3. 在**基本信息**区域，单击**显示密钥**，复制并保存密钥信息至 `GenerateTestUserSig` 文件。 ![](https://main.qcloudimg.com/raw/e7f6270bcbc68c51595371bd48c40af7.png)
+3. 在**基本信息**区域，单击**显示密钥**，复制并保存密钥信息至 `GenerateTestUserSig` 文件。 
+  ![](https://main.qcloudimg.com/raw/e7f6270bcbc68c51595371bd48c40af7.png)
   
 
 > !本文提到的获取 UserSig 的方案是在客户端代码中配置 SECRETKEY，该方法中 SECRETKEY 很容易被反编译逆向破解，一旦您的密钥泄露，攻击者就可以盗用您的腾讯云流量，因此**该方法仅适合本地跑通 Demo 和功能调试**。 正确的 UserSig 签发方式是将 UserSig 的计算代码集成到您的服务端，并提供面向 App 的接口，在需要 UserSig 时由您的 App 向业务服务器发起请求获取动态 UserSig。更多详情请参见 [服务端生成 UserSig](https://cloud.tencent.com/document/product/269/32688#GeneratingdynamicUserSig)。

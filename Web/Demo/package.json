@@ -8,8 +8,7 @@
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
-    "fix": "eslint --fix --fix-type suggestion --fix-type problem .",
-    "postinstall": "husky install"
+    "fix": "eslint --fix --fix-type suggestion --fix-type problem ."
   },
   "dependencies": {
     "axios": "^0.26.1",
@@ -19,7 +18,11 @@
     "vue": "^3.0.0",
     "vue-class-component": "^8.0.0-0",
     "vue-router": "^4.0.0-0",
-    "vuex": "^4.0.0-0"
+    "vuex": "^4.0.0-0",
+    "@vueuse/core": "^8.2.6",
+    "tim-js-sdk": "^2.19.1",
+    "tim-upload-plugin": "^1.0.4",
+    "vue-i18n": "^9.2.0-beta.32"
   },
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.17.0",
@@ -41,22 +44,13 @@
     "@vue/compiler-sfc": "^3.0.0",
     "@vue/eslint-config-prettier": "^6.0.0",
     "@vue/eslint-config-typescript": "^7.0.0",
-    "@vue/test-utils": "^2.0.0-rc.17",
-    "chai": "^4.1.2",
     "eslint": "^6.7.2",
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-vue": "^7.1.0",
-    "husky": "^7.0.4",
     "prettier": "^2.2.1",
     "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
     "typescript": "~4.1.5",
-    "vue-eslint-parser": "^8.3.0"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run lint",
-      "commit-msg": "commitlint -e $HUSKY_GIT_PARAMS"
-    }
+    "@vuepic/vue-datepicker": "^3.2.2"
   }
 }
