@@ -145,29 +145,36 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 [API Upgrade Guidelines](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
-## Latest Enhanced Version 6.2.2363 @2022.04.29
+## Latest Enhanced Version 6.3.2609 @2022.06.16
 
 ### SDK
 
-- Added the community topic feature.
-- Added the message edit API.
-- Added support for one-to-one message read receipts.
-- Optimized the network quality of the International Site.
-- Fixed the issue where a read message was displayed as unread after the app was uninstalled and reinstalled.
-- Fixed the issue where when the profile of a non-friend user was obtained, the values of custom fields cannot be updated after they were changed to null.
-- Fixed the issue where the `lastMsg` of a one-to-one conversation was inconsistent with the `lastMsg` in the message history when both sides sent a message simultaneously.
-- Fixed the issue where after the group owner of a public group approved a group joining request, the callback received by the applicant was incorrect.
-- Fixed the issue where the `nameCard` of a message sent by a user was null when the user checked this message.
-- Fixed the issue in some cases where the conversation list was not sorted after messages were sent.
+- Added the online status and custom status.
+- Supported pulling the member list (up to 1,000 persons) of an audio-video group.
+- Supported @all messages for a topic.
+- Added the friend adding time in the profile of a friend.
+- Fixed the issue where cross-platform SQL execution errors occurred.
+- Added community topic APIs for the cross-platform SDK.
+- Fixed the issue where the unread count was occasionally incorrect when messages of a specified topic was pulled after login.
+- Fixed the issue where the call result of the API for getting the list of groups a user has joined was occasionally null when the network was unavailable.
+- Fixed the issue where the call result of the API for getting the group owner userID of a group a user has joined was occasionally null.
+- Fixed the issue where the role in the member profile obtained by the new group owner was not upgraded after a group was transferred.
+- Fixed the issue where search result error occurred when several senders were provided as parameters for the message search API.
+- Fixed the issue where the name and profile photo of a sender were inconsistent after message search.
+- Fixed the issue where modifying `cloudCustomData` as null did not apply.
+- Fixed the issue for iOS where the returned value of `elemType` was `0` after `cloudCustomData` of audio messages was modified.
+- Fixed the issue for iOS where the read receipts of one-to-one messages were occasionally not called back.
+- Optimized .so loading for Android
 
 ### TUIKit and demo
 
-- Added the offline push component and simplified the integration process.
-- Supported read receipts for group messages.
-- Supported the dark theme for iOS.
-- Fixed the issue for Android where the app crashed when an excessively large image was sent and previewed.
-- Fixed the issue for Android where after a video message was sent, the duration displayed in the message was inconsistent with the actual duration of the video.
-- Fixed the issue for Android where a user cannot continue to handle friend requests after the user handled a friend request.
+- Supported stickers in chat messages.
+- Supported quoting a chat message.
+- Supported replying to a chat message.
+- Supported read receipts for one-to-one messages.
+- Unified the time display format of conversation lists.
+- Supported version upgrade check for the demo app.
+- Upgraded the brand logo for the demo app.
 
 ## Latest Basic Version 5.1.66 @2021.09.22
 
