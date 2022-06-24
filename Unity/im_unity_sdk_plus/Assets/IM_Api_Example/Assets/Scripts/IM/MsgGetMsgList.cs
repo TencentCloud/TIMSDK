@@ -10,36 +10,27 @@ using EasyUI.Toast;
 using System.Collections;
 using System.Text;
 using System.Collections.Generic;
-public class SendTextMessage : MonoBehaviour
+public class MsgGetMsgList : MonoBehaviour
 {
   public Text Header;
 
-  public InputField Input;
+  public Text LastMessageID;
   public Dropdown SelectedFriend;
   public Dropdown SelectedGroup;
-  public Dropdown SelectedPriority;
-  public Toggle IsOnline;
-  public Toggle IsUnread;
   public Text Result;
   public Button Submit;
   public Button Copy;
   private List<string> GroupList;
   private List<string> FriendList;
+  private Message LastMessage;
   void Start()
   {
     GroupGetJoinedGroupListSDK();
     FriendshipGetFriendProfileListSDK();
     Header = GameObject.Find("HeaderText").GetComponent<Text>();
-    Input = GameObject.Find("Message").GetComponent<InputField>();
+    LastMessageID = GameObject.Find("LastMessageID").GetComponent<Text>();
     SelectedFriend = GameObject.Find("Friend").GetComponent<Dropdown>();
     SelectedGroup = GameObject.Find("Group").GetComponent<Dropdown>();
-    SelectedPriority = GameObject.Find("Priority").GetComponent<Dropdown>();
-    foreach (string name in Enum.GetNames(typeof(TIMMsgPriority)))
-    {
-      Dropdown.OptionData option = new Dropdown.OptionData();
-      option.text = name;
-      SelectedPriority.options.Add(option);
-    }
     SelectedGroup.onValueChanged.AddListener(delegate
     {
       GroupDropdownValueChanged(SelectedGroup);
@@ -48,12 +39,10 @@ public class SendTextMessage : MonoBehaviour
     {
       FriendDropdownValueChanged(SelectedFriend);
     });
-    IsOnline = GameObject.Find("Online").GetComponent<Toggle>();
-    IsUnread = GameObject.Find("Unread").GetComponent<Toggle>();
     Result = GameObject.Find("ResultText").GetComponent<Text>();
     Submit = GameObject.Find("Submit").GetComponent<Button>();
     Copy = GameObject.Find("Copy").GetComponent<Button>();
-    Submit.onClick.AddListener(SendTextMessageSDK);
+    Submit.onClick.AddListener(MsgGetMsgListSDK);
     Copy.onClick.AddListener(CopyText);
     if (CurrentSceneInfo.info != null)
     {
@@ -144,47 +133,45 @@ public class SendTextMessage : MonoBehaviour
     print($"FriendshipGetFriendProfileListSDK {res}");
   }
 
-  void SendTextMessageSDK()
+  void MsgGetMsgListSDK()
   {
-    var message = new Message
+    var get_message_list_param = new MsgGetMsgListParam
     {
-      message_conv_id = "1234",
-      message_conv_type = TIMConvType.kTIMConv_Group,
-      message_cloud_custom_str = "unity local custom data",
-      message_elem_array = new List<Elem>{new Elem
-      {
-        elem_type = TIMElemType.kTIMElem_Text,
-        text_elem_content = Input.text
-      }},
-      message_need_read_receipt = true,
-      message_priority = (TIMMsgPriority)SelectedPriority.value,
-      message_is_excluded_from_unread_count = IsUnread.isOn,
-      message_is_online_msg = IsOnline.isOn
+      msg_getmsglist_param_count = 20
     };
-    StringBuilder messageId = new StringBuilder(128);
+    if (LastMessage != null)
+    {
+      get_message_list_param.msg_getmsglist_param_last_msg = LastMessage;
+    }
     if (SelectedGroup.value > 0)
     {
       print(GroupList[SelectedGroup.value]);
-      message.message_conv_id = GroupList[SelectedGroup.value];
-      message.message_conv_type = TIMConvType.kTIMConv_Group;
-      TIMResult res = TencentIMSDK.MsgSendMessage(GroupList[SelectedGroup.value], TIMConvType.kTIMConv_Group, message, messageId, Utils.addAsyncStringDataToScreen(GetResult));
+      TIMResult res = TencentIMSDK.MsgGetMsgList(GroupList[SelectedGroup.value], TIMConvType.kTIMConv_Group, get_message_list_param, Utils.addAsyncStringDataToScreen(GetResult));
       Result.text = Utils.SynchronizeResult(res);
     }
     else if (SelectedFriend.value > 0)
     {
       print(FriendList[SelectedFriend.value]);
-      message.message_conv_id = FriendList[SelectedFriend.value];
-      message.message_conv_type = TIMConvType.kTIMConv_C2C;
-      TIMResult res = TencentIMSDK.MsgSendMessage(FriendList[SelectedFriend.value], TIMConvType.kTIMConv_C2C, message, messageId, Utils.addAsyncStringDataToScreen(GetResult));
+      TIMResult res = TencentIMSDK.MsgGetMsgList(FriendList[SelectedFriend.value], TIMConvType.kTIMConv_C2C, get_message_list_param, Utils.addAsyncStringDataToScreen(GetResult));
       Result.text = Utils.SynchronizeResult(res);
     }
-    print(IsOnline.isOn);
-    print(IsUnread.isOn);
   }
 
   void GetResult(params object[] parameters)
   {
     Result.text += (string)parameters[0];
+    List<Message> messages = Utils.FromJson<List<Message>>((string)parameters[1]);
+    if (messages.Count > 0)
+    {
+      LastMessage = messages[messages.Count - 1];
+      LastMessageID.text = messages[messages.Count - 1].message_msg_id;
+      print("有lastMsg");
+    }
+    else
+    {
+      LastMessage = null;
+      LastMessageID.text = "";
+    }
   }
 
   void CopyText()
