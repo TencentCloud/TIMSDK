@@ -3226,7 +3226,6 @@ namespace com.tencent.imsdk.unity
             string param = Utils.intptr2string(json_param);
             if (ValuecallbackDeleStore.TryGetValue(user_data_string, out SendOrPostCallback dele)) {
                 mainSyncContext.Post(dele, new CallbackConvert{code = code, type = "ValueCallback", data = param, user_data = user_data_string, desc = desc_string});
-                ValuecallbackDeleStore.Remove(user_data_string);
             }
         }
 
@@ -3254,7 +3253,13 @@ namespace com.tencent.imsdk.unity
                                 if (callbackDele.GetMethodInfo().GetParameters().Length == 3) {
                                     callbackDele.DynamicInvoke(data.code, data.desc, data.user_data);
                                 } else {
-                                    callbackDele.DynamicInvoke(data.code, data.desc, Utils.FromJson<T>(data.data), data.user_data);
+                                    var isFoundDele = ValuecallbackDeleStore.Remove(data.user_data);
+                                    Debug.Log($"data.user_data: {data.user_data} typeof(T): {typeof(T).Name} FoundDele: {isFoundDele}");
+                                     if (isFoundDele) {
+                                        callbackDele.DynamicInvoke(data.code, data.desc, Utils.FromJson<T>(data.data), data.user_data);
+                                    } else {
+                                        callbackDele.DynamicInvoke(data.code, data.desc, data.data, data.user_data);
+                                    }
                                 }
                                 ValuecallbackStore.Remove(data.user_data);
                             }
