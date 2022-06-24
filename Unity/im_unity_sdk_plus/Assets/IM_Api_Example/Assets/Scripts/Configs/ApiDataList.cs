@@ -90,6 +90,12 @@ namespace com.tencent.im.unity.demo.config.ApiDataList
         ""apiText"": ""发送文本消息"",
         ""apiDesc"": ""发送文本消息"",
         ""scene"": ""SendTextMessage""
+      },
+      {
+        ""apiName"": ""msgGetMsgList"",
+        ""apiText"": ""获取历史消息列表"",
+        ""apiDesc"": ""获取历史消息列表"",
+        ""scene"": ""MsgGetMsgList""
       }
     ]
   },
