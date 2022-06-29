@@ -2,6 +2,13 @@ English | [简体中文](./版本历史.md)
 
 # TIMSDK
 
+## 6.3.2619 @2022.06.29 - Enhanced Version
+
+### SDK
+
+- Fixed the occasional crash when getting the topic list
+- Fixed the abnormal problem of getting the conversation list after deleting a topic
+
 ## 6.3.2609 @2022.06.16 - Enhanced Version
 
 ### SDK
