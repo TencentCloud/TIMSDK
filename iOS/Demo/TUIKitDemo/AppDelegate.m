@@ -83,7 +83,6 @@ TUIOfflinePushConfigForTPNS(kTPNSAccessID, kTPNSAccessKey, kTPNSDomain)
     [ThemeSelectController applyTheme:nil];
         
     [self setupListener];
-    [self setupCustomSticker];
     [self setupGlobalUI];
     [self setupConfig];
     [self tryAutoLogin];
@@ -235,74 +234,6 @@ void uncaughtExceptionHandler(NSException*exception) {
     } error:NULL];
 }
 
-- (void)setupCustomSticker {
-    NSMutableArray *faceGroups = [NSMutableArray arrayWithArray:TUIConfig.defaultConfig.faceGroups];
-    
-    //4350 group
-    NSMutableArray *faces4350 = [NSMutableArray array];
-    for (int i = 0; i <= 17; i++) {
-        TUIFaceCellData *data = [[TUIFaceCellData alloc] init];
-        NSString *name = [NSString stringWithFormat:@"yz%02d", i];
-        NSString *path = [NSString stringWithFormat:@"4350/%@", name];
-        data.name = name;
-        data.path = [[[NSBundle mainBundle] pathForResource:@"CustomFaceResource" ofType:@"bundle"] stringByAppendingPathComponent:path];
-        [faces4350 addObject:data];
-    }
-    if(faces4350.count != 0){
-        TUIFaceGroup *group4350 = [[TUIFaceGroup alloc] init];
-        group4350.groupIndex = 1;
-        group4350.groupPath = [[[NSBundle mainBundle] pathForResource:@"CustomFaceResource" ofType:@"bundle"] stringByAppendingPathComponent:@"4350/"]; //TUIChatFaceImagePath(@"4350/");
-        group4350.faces = faces4350;
-        group4350.rowCount = 2;
-        group4350.itemCountPerRow = 5;
-        group4350.menuPath = [[[NSBundle mainBundle] pathForResource:@"CustomFaceResource" ofType:@"bundle"] stringByAppendingPathComponent:@"4350/menu"]; // TUIChatFaceImagePath(@"4350/menu");
-        [faceGroups addObject:group4350];
-    }
-    
-    //4351 group
-    NSMutableArray *faces4351 = [NSMutableArray array];
-    for (int i = 0; i <= 15; i++) {
-        TUIFaceCellData *data = [[TUIFaceCellData alloc] init];
-        NSString *name = [NSString stringWithFormat:@"ys%02d", i];
-        NSString *path = [NSString stringWithFormat:@"4351/%@", name];
-        data.name = name;
-        data.path = [[[NSBundle mainBundle] pathForResource:@"CustomFaceResource" ofType:@"bundle"] stringByAppendingPathComponent:path]; // TUIChatFaceImagePath(path);
-        [faces4351 addObject:data];
-    }
-    if(faces4351.count != 0){
-        TUIFaceGroup *group4351 = [[TUIFaceGroup alloc] init];
-        group4351.groupIndex = 2;
-        group4351.groupPath = [[[NSBundle mainBundle] pathForResource:@"CustomFaceResource" ofType:@"bundle"] stringByAppendingPathComponent:@"4351/"]; // TUIChatFaceImagePath(@"4351/");
-        group4351.faces = faces4351;
-        group4351.rowCount = 2;
-        group4351.itemCountPerRow = 5;
-        group4351.menuPath = [[[NSBundle mainBundle] pathForResource:@"CustomFaceResource" ofType:@"bundle"] stringByAppendingPathComponent:@"4351/menu"]; //TUIChatFaceImagePath(@"4351/menu");
-        [faceGroups addObject:group4351];
-    }
-    
-    //4352 group
-    NSMutableArray *faces4352 = [NSMutableArray array];
-    for (int i = 0; i <= 16; i++) {
-        TUIFaceCellData *data = [[TUIFaceCellData alloc] init];
-        NSString *name = [NSString stringWithFormat:@"gcs%02d", i];
-        NSString *path = [NSString stringWithFormat:@"4352/%@", name];
-        data.name = name;
-        data.path = [[[NSBundle mainBundle] pathForResource:@"CustomFaceResource" ofType:@"bundle"] stringByAppendingPathComponent:path]; // TUIChatFaceImagePath(path);
-        [faces4352 addObject:data];
-    }
-    if(faces4352.count != 0){
-        TUIFaceGroup *group4352 = [[TUIFaceGroup alloc] init];
-        group4352.groupIndex = 3;
-        group4352.groupPath = [[[NSBundle mainBundle] pathForResource:@"CustomFaceResource" ofType:@"bundle"] stringByAppendingPathComponent:@"4352/"]; //TUIChatFaceImagePath(@"4352/");
-        group4352.faces = faces4352;
-        group4352.rowCount = 2;
-        group4352.itemCountPerRow = 5;
-        group4352.menuPath = [[[NSBundle mainBundle] pathForResource:@"CustomFaceResource" ofType:@"bundle"] stringByAppendingPathComponent:@"4352/menu"]; // TUIChatFaceImagePath(@"4352/menu");
-        [faceGroups addObject:group4352];
-    }
-    
-    TUIConfig.defaultConfig.faceGroups = faceGroups;
-}
 
 #pragma mark - V2TIMConversationListener
 - (void)onTotalUnreadMessageCountChanged:(UInt64) totalUnreadCount {
