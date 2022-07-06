@@ -1,0 +1,326 @@
+@import './common.scss';
+@import './icon.scss';
+
+.TUIChat {
+  width: 100%;
+  height: 100vh;
+  padding-top: 8px;
+  display: flex;
+  flex-direction: column;
+	position: fixed;
+	top: 0;
+	right: 0;
+	left: 0;
+	bottom: 0;
+  .more-btn {
+		position: absolute;
+		top: 70px;
+		right: 0;
+		width: 50px;
+		height: 30px;
+		line-height: 30px;
+		background-color: rgba(0,0,0,0.5);
+		color: #ffffff;
+		font-size: 10px;
+		border-top-left-radius:20px;
+	  border-bottom-left-radius: 20px;
+	  padding-left: 15px;
+		z-index: 9999;
+	}
+   &-header {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    h1 {
+      font-family: PingFangSC-Medium;
+      font-weight: 500;
+      font-size: 16px;
+      color: #000000;
+      letter-spacing: 0;
+      line-height: 24px;
+    }
+  }
+  .TUIChat-setting{
+    position: absolute;
+    background: #ffffff;
+    right: 0;
+    height: calc(100% - 40px);
+    z-index: 2;
+    top: 40px;
+  }
+	&-container {
+		flex: 1;
+		width: 100%;
+		overflow-y: scroll;
+	}
+  &-main {
+    height: 100%;
+    position: relative;
+		width: 100%;
+  }
+  &-footer {
+    min-height: 60px;
+		position: fixed;
+		right: 0;
+		left: 0;
+		bottom: 0;
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid #F4F5F9;
+		background-color: aliceblue;
+    .input {
+      flex: 1;
+      position: relative;
+      textarea {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 12px 20px 20px;
+        resize: none;
+        box-sizing: border-box;
+        border: none;
+        background: no-repeat;
+        &:focus {
+          outline: none;
+          border: none; 
+        }
+      }
+      p {
+        padding: 12px 20px 20px;
+        color: #dddddd;
+      }
+      .input-btn {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        background: #006EFF;
+        padding: 8px 20px;
+        border-radius: 4px;
+        border: none;
+        font-weight: 400;
+        font-size: 14px;
+        color: #FFFFFF;
+        letter-spacing: 0;
+        text-align: center;
+        line-height: 20px;
+        &:disabled {
+          opacity: 0.3;
+        }
+      }
+    }
+  }
+  .disabled {
+    position: relative;
+    &::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: #FBFBFB;
+    }
+  }
+}
+.TUI-message-list {
+  overflow: hidden;
+  // min-width: 600px;
+	 /* #ifdef H5 */
+	margin-top: 60px;   // H5
+	 /* #endif */
+   .message-more {
+    text-align: center;
+    color: #999999;
+    cursor: pointer;
+  }
+	.loading-text {
+		text-align: center;
+		font-size: 14px;
+		line-height: 28px;
+	}
+	.loading-icon {
+		width: 22px;
+		height: 22px;
+		display: block;
+		margin: 5px auto 0;	
+	}
+  li {
+    display: flex;
+    position: relative;
+    padding:0 20px 30px;
+    .message-label {
+      max-width: 50px;
+    }
+  }
+  .right{
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+  }
+}
+
+.dialog {
+  position: absolute;
+  z-index: 5;
+  width: 120px;
+  height: 60px;
+  background: #FFFFFF;
+	top: -70px;
+	border-radius: 5px;
+	right: 0;
+  box-shadow: 0 0 10px 0 rgba(0,0,0,0.21);
+  &-item {
+    p {
+      padding: 4px 16px;
+      font-weight: 400;
+      font-size: 12px;
+      color: #4F4F4F;
+      line-height: 17px;
+      &:hover {
+        background: rgba(0,110,255,0.10);
+      }
+    }
+  }
+  &-conversation {
+    .avatar {
+      width: 36px;
+      height: 36px;
+      margin: 0 5px 0 8px;
+    }
+  }
+
+  &-userInfo {
+    box-sizing: border-box;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba( #000000, 0.3);
+    display: flex;
+    justify-content: flex-end;
+    .userInfo-main {
+      background: #ffffff;
+      height: 100%;
+      box-sizing: border-box;
+      padding: 20px;
+      width: 240px;
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      main {
+        display: flex;
+        padding: 20px 0;
+        ol {
+          flex: 1;
+          display: flex;
+          flex-wrap: wrap;
+          dl {
+            position: relative;
+            flex: 0 0 33%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            img {
+              width: 40px;
+              height: 40px;
+            }
+            .more {
+              padding-top: 10px;
+            }
+            dd {
+              max-width: 60px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+            .userInfo-mask {
+              position: absolute;
+              z-index: 5;
+              background: #ffffff;
+              padding: 20px;
+              box-shadow: 0 11px 20px 0 rgb(0 0 0 / 30%);
+              left: 100%;
+              li {
+                display: flex;
+                align-items: center;
+                label {
+                  width: 60px;
+                }
+                span {
+                  max-width: 200px;
+                  word-break: keep-all;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+.image-dialog {
+  position: fixed;
+  z-index: 5;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  background: rgba( #000000, 0.3);
+  header {
+    display: flex;
+    justify-content: flex-end;
+    background: rgba(0,0,0,0.49);
+    position: absolute;
+    width: 100%;
+    box-sizing: border-box;
+    top: 62px;
+    left: 0px;
+    padding: 10px 10px;
+  }
+}
+
+.btn {
+  padding: 8px 20px;
+  border-radius: 4px;
+  border: none;
+  font-weight: 400;
+  font-size: 14px;
+  color: #FFFFFF;
+  letter-spacing: 0;
+  text-align: center;
+  line-height: 20px;
+  &-cancel {
+    border: 1px solid #dddddd;
+    color: #666666;
+  }
+  &-default {
+    background: #006EFF;
+    border: 1px solid #006EFF;
+  }
+  &:disabled {
+    opacity: 0.3;
+  }
+}
+.time-container {
+	text-align: center;
+	font-size: 12px;
+	color: #BBBBBB;
+	font-family: PingFangSC-Regular;
+	font-weight: 400;
+	color: #BBBBBB;
+	letter-spacing: 0;
+	text-align: center;
+	height: 33rpx;
+	margin: 10px;
+}
+.toggleMask {
+  &::before {
+    position: fixed;
+    z-index: 1;
+    content: "";
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    opacity: 0;
+  }
+}
