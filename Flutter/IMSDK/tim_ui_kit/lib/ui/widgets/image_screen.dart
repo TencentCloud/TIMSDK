@@ -3,8 +3,10 @@ import 'dart:math';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/ui/widgets/center_loading.dart';
 import 'package:tim_ui_kit/ui/widgets/gestured_image.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 import 'package:tim_ui_kit/ui/widgets/image_hero.dart';
 
 typedef DoubleClickAnimationListener = void Function();
@@ -29,7 +31,7 @@ class ImageScreen extends StatefulWidget {
   }
 }
 
-class _ImageScreenState extends State<ImageScreen>
+class _ImageScreenState extends TIMUIKitState<ImageScreen>
     with TickerProviderStateMixin {
   Animation<double>? _doubleClickAnimation;
   late DoubleClickAnimationListener _doubleClickAnimationListener;
@@ -73,7 +75,7 @@ class _ImageScreenState extends State<ImageScreen>
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     return OrientationBuilder(builder: ((context, orientation) {
       return Container(
           color: Colors.transparent,

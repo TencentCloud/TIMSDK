@@ -5,17 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:lpinyin/lpinyin.dart';
 import 'package:provider/provider.dart';
-import 'package:tencent_im_sdk_plugin/enum/group_member_role.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_full_info.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
-import 'package:tim_ui_kit/data_services/services_locatar.dart';
+
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/utils/optimize_utils.dart';
+import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
 import 'package:tim_ui_kit/ui/widgets/avatar.dart';
 import 'package:tim_ui_kit/ui/widgets/az_list_view.dart';
 import 'package:tim_ui_kit/ui/widgets/radio_button.dart';
-
-import '../../../i18n/i18n_utils.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
 class GroupProfileMemberList extends StatefulWidget {
   final List<V2TimGroupMemberFullInfo?> memberList;
@@ -56,7 +56,8 @@ class GroupProfileMemberList extends StatefulWidget {
   State<StatefulWidget> createState() => _GroupProfileMemberListState();
 }
 
-class _GroupProfileMemberListState extends State<GroupProfileMemberList> {
+class _GroupProfileMemberListState
+    extends TIMUIKitState<GroupProfileMemberList> {
   List<V2TimGroupMemberFullInfo> selectedMember = [];
 
   _getShowName(V2TimGroupMemberFullInfo? item) {
@@ -97,15 +98,13 @@ class _GroupProfileMemberListState extends State<GroupProfileMemberList> {
 
     // add @everyone item
     if (widget.canAtAll) {
-      final I18nUtils ttBuild = I18nUtils(context);
       final canAtGroupType = ["Work", "Public", "Meeting"];
       if (canAtGroupType.contains(widget.groupType)) {
         showList.insert(
             0,
             ISuspensionBeanImpl(
                 memberInfo: V2TimGroupMemberFullInfo(
-                    userID: "__kImSDK_MesssageAtALL__",
-                    nickName: ttBuild.imt("所有人")),
+                    userID: "__kImSDK_MesssageAtALL__", nickName: TIM_t("所有人")),
                 tagIndex: ""));
       }
     }
@@ -115,7 +114,6 @@ class _GroupProfileMemberListState extends State<GroupProfileMemberList> {
 
   Widget _buildListItem(
       BuildContext context, V2TimGroupMemberFullInfo memberInfo) {
-    final I18nUtils ttBuild = I18nUtils(context);
     final theme = Provider.of<TUIThemeViewModel>(context).theme;
     final isGroupMember =
         memberInfo.role == GroupMemberRoleType.V2TIM_GROUP_MEMBER_ROLE_MEMBER;
@@ -134,7 +132,7 @@ class _GroupProfileMemberListState extends State<GroupProfileMemberList> {
                       backgroundColor:
                           theme.cautionColor ?? CommonColor.cautionColor,
                       autoClose: true,
-                      label: ttBuild.imt("删除"),
+                      label: TIM_t("删除"),
                     )
                   ])
                 : null,
@@ -179,7 +177,7 @@ class _GroupProfileMemberListState extends State<GroupProfileMemberList> {
                             GroupMemberRoleType.V2TIM_GROUP_MEMBER_ROLE_OWNER
                         ? Container(
                             margin: const EdgeInsets.only(left: 5),
-                            child: Text(ttBuild.imt("群主"),
+                            child: Text(TIM_t("群主"),
                                 style: TextStyle(
                                   color: theme.ownerColor,
                                   fontSize: 12,
@@ -199,7 +197,7 @@ class _GroupProfileMemberListState extends State<GroupProfileMemberList> {
                                     .V2TIM_GROUP_MEMBER_ROLE_ADMIN
                             ? Container(
                                 margin: const EdgeInsets.only(left: 5),
-                                child: Text(ttBuild.imt("管理员"),
+                                child: Text(TIM_t("管理员"),
                                     style: TextStyle(
                                       color: theme.adminColor,
                                       fontSize: 12,
@@ -248,12 +246,10 @@ class _GroupProfileMemberListState extends State<GroupProfileMemberList> {
             ])));
   }
 
-  static Widget getSusItem(BuildContext context, String tag,
+  static Widget getSusItem(BuildContext context, TUITheme theme, String tag,
       {double susHeight = 40}) {
-    final theme = Provider.of<TUIThemeViewModel>(context).theme;
-    final I18nUtils ttBuild = I18nUtils(context);
     if (tag == '@') {
-      tag = ttBuild.imt("群主、管理员");
+      tag = TIM_t("群主、管理员");
     }
     return Container(
       height: susHeight,
@@ -273,7 +269,9 @@ class _GroupProfileMemberListState extends State<GroupProfileMemberList> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    final TUITheme theme = value.theme;
+
     final throteFunction =
         OptimizeUtils.throttle((ScrollNotification notification) {
       final pixels = notification.metrics.pixels;
@@ -285,41 +283,34 @@ class _GroupProfileMemberListState extends State<GroupProfileMemberList> {
         widget.touchBottomCallBack!();
       }
     }, 300);
-    return ChangeNotifierProvider.value(
-        value: serviceLocator<TUIThemeViewModel>(),
-        child: Consumer<TUIThemeViewModel>(builder: (context, value, child) {
-          final theme = value.theme;
-          final showList = _getShowList(widget.memberList);
-          return Container(
-            color: theme.weakBackgroundColor,
-            child: SafeArea(
-                child: Column(
-              children: [
-                widget.customTopArea != null
-                    ? widget.customTopArea!
-                    : Container(),
-                Expanded(
-                    child: NotificationListener<ScrollNotification>(
-                  onNotification: (ScrollNotification notification) {
-                    throteFunction(notification);
-                    return true;
-                  },
-                  child: AZListViewContainer(
-                      memberList: showList,
-                      susItemBuilder: (context, index) {
-                        final model = showList[index];
-                        return getSusItem(context, model.getSuspensionTag());
-                      },
-                      itemBuilder: (context, index) {
-                        final memberInfo = showList[index].memberInfo
-                            as V2TimGroupMemberFullInfo;
+    final showList = _getShowList(widget.memberList);
+    return Container(
+      color: theme.weakBackgroundColor,
+      child: SafeArea(
+          child: Column(
+        children: [
+          widget.customTopArea != null ? widget.customTopArea! : Container(),
+          Expanded(
+              child: NotificationListener<ScrollNotification>(
+            onNotification: (ScrollNotification notification) {
+              throteFunction(notification);
+              return true;
+            },
+            child: AZListViewContainer(
+                memberList: showList,
+                susItemBuilder: (context, index) {
+                  final model = showList[index];
+                  return getSusItem(context, theme, model.getSuspensionTag());
+                },
+                itemBuilder: (context, index) {
+                  final memberInfo =
+                      showList[index].memberInfo as V2TimGroupMemberFullInfo;
 
-                        return _buildListItem(context, memberInfo);
-                      }),
-                ))
-              ],
-            )),
-          );
-        }));
+                  return _buildListItem(context, memberInfo);
+                }),
+          ))
+        ],
+      )),
+    );
   }
 }

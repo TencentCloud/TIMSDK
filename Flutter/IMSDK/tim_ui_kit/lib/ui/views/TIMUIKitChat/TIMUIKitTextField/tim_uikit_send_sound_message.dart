@@ -1,19 +1,23 @@
-// ignore_for_file: unused_local_variable, avoid_print, unused_import
+// ignore_for_file:  avoid_print, unused_import
 
 import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:provider/provider.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
-import 'package:tim_ui_kit/i18n/i18n_utils.dart';
+
 import 'package:tim_ui_kit/ui/utils/message.dart';
 import 'package:tim_ui_kit/ui/utils/permission.dart';
 import 'package:tim_ui_kit/ui/utils/sound_record.dart';
+import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
 import 'package:tim_ui_kit/ui/widgets/toast.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
 class SendSoundMessage extends StatefulWidget {
   /// conversation ID
@@ -36,7 +40,7 @@ class SendSoundMessage extends StatefulWidget {
   State<StatefulWidget> createState() => _SendSoundMessageState();
 }
 
-class _SendSoundMessageState extends State<SendSoundMessage> {
+class _SendSoundMessageState extends TIMUIKitState<SendSoundMessage> {
   final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
   String soundTipsText = "";
   bool isRecording = false;
@@ -51,7 +55,6 @@ class _SendSoundMessageState extends State<SendSoundMessage> {
   buildOverLayView(BuildContext context) {
     if (overlayEntry == null) {
       overlayEntry = OverlayEntry(builder: (content) {
-        final I18nUtils ttBuild = I18nUtils(context);
         return Positioned(
           top: 0,
           left: 0,
@@ -102,10 +105,9 @@ class _SendSoundMessageState extends State<SendSoundMessage> {
   }
 
   onLongPressStart(_) {
-    final I18nUtils ttBuild = I18nUtils(context);
     if (isInit) {
       setState(() {
-        soundTipsText = ttBuild.imt("手指上滑，取消发送");
+        soundTipsText = TIM_t("手指上滑，取消发送");
       });
       startTime = DateTime.now();
       SoundPlayer.startRecord();
@@ -114,20 +116,19 @@ class _SendSoundMessageState extends State<SendSoundMessage> {
   }
 
   onLongPressUpdate(e) {
-    final I18nUtils ttBuild = I18nUtils(context);
     double height = MediaQuery.of(context).size.height * 0.5 - 240;
     double dy = e.localPosition.dy;
 
     if (dy.abs() > height) {
-      if (mounted && soundTipsText != ttBuild.imt("松开取消")) {
+      if (mounted && soundTipsText != TIM_t("松开取消")) {
         setState(() {
-          soundTipsText = ttBuild.imt("松开取消");
+          soundTipsText = TIM_t("松开取消");
         });
       }
     } else {
-      if (mounted && soundTipsText == ttBuild.imt("松开取消")) {
+      if (mounted && soundTipsText == TIM_t("松开取消")) {
         setState(() {
-          soundTipsText = ttBuild.imt("手指上滑，取消发送");
+          soundTipsText = TIM_t("手指上滑，取消发送");
         });
       }
     }
@@ -135,7 +136,6 @@ class _SendSoundMessageState extends State<SendSoundMessage> {
 
   onLongPressEnd(e) {
     double dy = e.localPosition.dy;
-    final I18nUtils ttBuild = I18nUtils(context);
     // 此高度为 160为录音取消组件距离顶部的预留距离
     double height = MediaQuery.of(context).size.height * 0.5 - 240;
     if (dy.abs() > height) {
@@ -150,7 +150,10 @@ class _SendSoundMessageState extends State<SendSoundMessage> {
     // Did not receive onStop from FlutterPluginRecord if the duration is too short.
     if (DateTime.now().difference(startTime).inSeconds < 1) {
       isCancelSend = true;
-      Toast.showToast(ToastType.info, ttBuild.imt("说话时间太短!"), context);
+      onTIMCallback(TIMCallback(
+          type: TIMCallbackType.INFO,
+          infoRecommendText: TIM_t("说话时间太短"),
+          infoCode: 6660404));
     }
     stop();
   }
@@ -167,18 +170,16 @@ class _SendSoundMessageState extends State<SendSoundMessage> {
   }
 
   void stop() {
-    final I18nUtils ttBuild = I18nUtils(context);
     setState(() {
       isRecording = false;
     });
     SoundPlayer.stopRecord();
     setState(() {
-      soundTipsText = ttBuild.imt("手指上滑，取消发送");
+      soundTipsText = TIM_t("手指上滑，取消发送");
     });
   }
 
   sendSound({required String path, required int duration}) {
-    final I18nUtils ttBuild = I18nUtils(context);
     final convID = widget.conversationID;
     final convType =
         widget.conversationType == 1 ? ConvType.c2c : ConvType.group;
@@ -197,7 +198,10 @@ class _SendSoundMessageState extends State<SendSoundMessage> {
         isCancelSend = false;
       }
     } else {
-      Toast.showToast(ToastType.info, ttBuild.imt("说话时间太短!"), context);
+      onTIMCallback(TIMCallback(
+          type: TIMCallbackType.INFO,
+          infoRecommendText: TIM_t("说话时间太短"),
+          infoCode: 6660404));
     }
   }
 
@@ -259,10 +263,9 @@ class _SendSoundMessageState extends State<SendSoundMessage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    // final theme = SharedThemeWidget.of(context)?.theme;
-    final theme = Provider.of<TUIThemeViewModel>(context).theme;
-    final I18nUtils ttBuild = I18nUtils(context);
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    final TUITheme theme = value.theme;
+
     return GestureDetector(
       onTapDown: (detail) async {
         if (!isInit) {
@@ -283,7 +286,7 @@ class _SendSoundMessageState extends State<SendSoundMessage> {
         color: isRecording ? theme.weakBackgroundColor : Colors.white,
         alignment: Alignment.center,
         child: Text(
-          ttBuild.imt("按住说话"),
+          TIM_t("按住说话"),
           textAlign: TextAlign.center,
           style: TextStyle(
             fontWeight: FontWeight.bold,

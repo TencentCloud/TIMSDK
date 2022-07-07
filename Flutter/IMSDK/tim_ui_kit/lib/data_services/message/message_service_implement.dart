@@ -1,24 +1,13 @@
 // ignore_for_file: deprecated_member_use
 
-import 'package:tencent_im_sdk_plugin/enum/V2TimAdvancedMsgListener.dart';
-import 'package:tencent_im_sdk_plugin/enum/V2TimSimpleMsgListener.dart';
-import 'package:tencent_im_sdk_plugin/enum/message_priority_enum.dart';
-import 'package:tencent_im_sdk_plugin/enum/offlinePushInfo.dart';
-import 'package:tencent_im_sdk_plugin/enum/receive_message_opt_enum.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_message_receipt.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_message_search_param.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_message_search_result.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_msg_create_info_result.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
-import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
+import 'package:tim_ui_kit/data_services/core/core_services_implements.dart';
 import 'package:tim_ui_kit/data_services/message/message_services.dart';
-import 'package:tencent_im_sdk_plugin/enum/history_msg_get_type_enum.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
-import 'package:tencent_im_sdk_plugin/enum/get_group_message_read_member_list_filter.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_message_read_member_list.dart';
+import 'package:tim_ui_kit/data_services/services_locatar.dart';
 
 class MessageServiceImpl extends MessageService {
+  final CoreServicesImpl _coreService = serviceLocator<CoreServicesImpl>();
+
   @override
   Future<List<V2TimMessage>> getHistoryMessageList({
     HistoryMsgGetTypeEnum getType =
@@ -39,13 +28,19 @@ class MessageServiceImpl extends MessageService {
             lastMsgID: lastMsgID,
             lastMsgSeq: lastMsgSeq);
     final List<V2TimMessage> messageList = res.data ?? [];
+    if (res.code != 0) {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: res.desc,
+          errorCode: res.code));
+    }
     return messageList;
   }
 
   @override
   Future addSimpleMsgListener({
     required V2TimSimpleMsgListener listener,
-  }) {
+  }) async {
     return TencentImSDKPlugin.v2TIMManager
         .addSimpleMsgListener(listener: listener);
   }
@@ -72,32 +67,53 @@ class MessageServiceImpl extends MessageService {
     required GetGroupMessageReadMemberListFilter filter,
     int nextSeq = 0,
     int count = 100,
-  }) {
-    return TencentImSDKPlugin.v2TIMManager
+  }) async {
+    final result = await TencentImSDKPlugin.v2TIMManager
         .getMessageManager()
         .getGroupMessageReadMemberList(
             messageID: messageID,
             filter: filter,
             nextSeq: nextSeq,
             count: count);
+    if (result.code != 0) {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: result.desc,
+          errorCode: result.code));
+    }
+    return result;
   }
 
   @override
   Future<V2TimValueCallback<List<V2TimMessageReceipt>>> getMessageReadReceipts({
     required List<String> messageIDList,
-  }) {
-    return TencentImSDKPlugin.v2TIMManager
+  }) async {
+    final result = await TencentImSDKPlugin.v2TIMManager
         .getMessageManager()
         .getMessageReadReceipts(messageIDList: messageIDList);
+    if (result.code != 0) {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: result.desc,
+          errorCode: result.code));
+    }
+    return result;
   }
 
   @override
   Future<V2TimCallback> sendMessageReadReceipts({
     required List<String> messageIDList,
-  }) {
-    return TencentImSDKPlugin.v2TIMManager
+  }) async {
+    final result = await TencentImSDKPlugin.v2TIMManager
         .getMessageManager()
         .sendMessageReadReceipts(messageIDList: messageIDList);
+    if (result.code != 0) {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: result.desc,
+          errorCode: result.code));
+    }
+    return result;
   }
 
   @override
@@ -110,6 +126,10 @@ class MessageServiceImpl extends MessageService {
       final messageResult = res.data;
       return messageResult;
     }
+    _coreService.callOnCallback(TIMCallback(
+        type: TIMCallbackType.API_ERROR,
+        errorMsg: res.desc,
+        errorCode: res.code));
     return null;
   }
 
@@ -123,6 +143,10 @@ class MessageServiceImpl extends MessageService {
       final messageResult = res.data;
       return messageResult;
     }
+    _coreService.callOnCallback(TIMCallback(
+        type: TIMCallbackType.API_ERROR,
+        errorMsg: res.desc,
+        errorCode: res.code));
     return null;
   }
 
@@ -136,6 +160,10 @@ class MessageServiceImpl extends MessageService {
       final messageResult = res.data;
       return messageResult;
     }
+    _coreService.callOnCallback(TIMCallback(
+        type: TIMCallbackType.API_ERROR,
+        errorMsg: res.desc,
+        errorCode: res.code));
     return null;
   }
 
@@ -146,6 +174,12 @@ class MessageServiceImpl extends MessageService {
     final res = await TencentImSDKPlugin.v2TIMManager
         .getMessageManager()
         .reSendMessage(msgID: msgID, onlineUserOnly: onlineUserOnly ?? false);
+    if (res.code != 0) {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: res.desc,
+          errorCode: res.code));
+    }
     return res;
   }
 
@@ -159,6 +193,10 @@ class MessageServiceImpl extends MessageService {
       final messageResult = res.data;
       return messageResult;
     }
+    _coreService.callOnCallback(TIMCallback(
+        type: TIMCallbackType.API_ERROR,
+        errorMsg: res.desc,
+        errorCode: res.code));
     return null;
   }
 
@@ -172,6 +210,10 @@ class MessageServiceImpl extends MessageService {
     if (res.code == 0) {
       return res.data;
     }
+    _coreService.callOnCallback(TIMCallback(
+        type: TIMCallbackType.API_ERROR,
+        errorMsg: res.desc,
+        errorCode: res.code));
     return null;
   }
 
@@ -186,6 +228,10 @@ class MessageServiceImpl extends MessageService {
     if (res.code == 0) {
       return res.data;
     }
+    _coreService.callOnCallback(TIMCallback(
+        type: TIMCallbackType.API_ERROR,
+        errorMsg: res.desc,
+        errorCode: res.code));
     return null;
   }
 
@@ -201,75 +247,127 @@ class MessageServiceImpl extends MessageService {
     OfflinePushInfo? offlinePushInfo,
     String? cloudCustomData, // 云自定义消息字段，只能在消息发送前添加
     String? localCustomData,
-  }) {
-    return TencentImSDKPlugin.v2TIMManager.getMessageManager().sendMessage(
-          id: id,
-          receiver: receiver,
-          groupID: groupID,
-          priority: priority,
-          onlineUserOnly: onlineUserOnly,
-          offlinePushInfo: offlinePushInfo,
-          needReadReceipt: needReadReceipt,
-        );
+  }) async {
+    final result =
+        await TencentImSDKPlugin.v2TIMManager.getMessageManager().sendMessage(
+              id: id,
+              receiver: receiver,
+              groupID: groupID,
+              priority: priority,
+              onlineUserOnly: onlineUserOnly,
+              offlinePushInfo: offlinePushInfo,
+              needReadReceipt: needReadReceipt,
+            );
+    if (result.code != 0) {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: result.desc,
+          errorCode: result.code));
+    }
+    return result;
   }
 
   @override
   Future<V2TimCallback> deleteMessageFromLocalStorage({
     required String msgID,
-  }) {
-    return TencentImSDKPlugin.v2TIMManager
+  }) async {
+    final result = await TencentImSDKPlugin.v2TIMManager
         .getMessageManager()
         .deleteMessageFromLocalStorage(msgID: msgID);
+    if (result.code != 0) {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: result.desc,
+          errorCode: result.code));
+    }
+    return result;
   }
 
   @override
-  Future<V2TimCallback> revokeMessage({required String msgID}) {
-    return TencentImSDKPlugin.v2TIMManager
+  Future<V2TimCallback> revokeMessage({required String msgID}) async {
+    final result = await TencentImSDKPlugin.v2TIMManager
         .getMessageManager()
         .revokeMessage(msgID: msgID);
+    if (result.code != 0) {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: result.desc,
+          errorCode: result.code));
+    }
+    return result;
   }
 
   @override
   Future<V2TimCallback> clearC2CHistoryMessage({
     required String userID,
-  }) {
-    return TencentImSDKPlugin.v2TIMManager
+  }) async {
+    final result = await TencentImSDKPlugin.v2TIMManager
         .getMessageManager()
         .clearC2CHistoryMessage(userID: userID);
+    if (result.code != 0) {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: result.desc,
+          errorCode: result.code));
+    }
+    return result;
   }
 
   @override
   Future<V2TimCallback> clearGroupHistoryMessage({
     required String groupID,
-  }) {
-    return TencentImSDKPlugin.v2TIMManager
+  }) async {
+    final result = await TencentImSDKPlugin.v2TIMManager
         .getMessageManager()
         .clearGroupHistoryMessage(groupID: groupID);
+    if (result.code != 0) {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: result.desc,
+          errorCode: result.code));
+    }
+    return result;
   }
 
   @override
   Future<V2TimCallback> markC2CMessageAsRead({
     required String userID,
-  }) {
-    return TencentImSDKPlugin.v2TIMManager
+  }) async {
+    final result = await TencentImSDKPlugin.v2TIMManager
         .getMessageManager()
         .markC2CMessageAsRead(userID: userID);
+    if (result.code != 0) {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: result.desc,
+          errorCode: result.code));
+    }
+    return result;
   }
 
   @override
   Future<V2TimCallback> markGroupMessageAsRead({
     required String groupID,
-  }) {
-    return TencentImSDKPlugin.v2TIMManager
+  }) async {
+    final result = await TencentImSDKPlugin.v2TIMManager
         .getMessageManager()
         .markGroupMessageAsRead(groupID: groupID);
+    if (result.code != 0) {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: result.desc,
+          errorCode: result.code));
+    }
+    return result;
   }
 
   @override
-  Future<void> removeAdvancedMsgListener({V2TimAdvancedMsgListener? listener}) {
-    return TencentImSDKPlugin.v2TIMManager
+  Future<void> removeAdvancedMsgListener(
+      {V2TimAdvancedMsgListener? listener}) async {
+    final result = await TencentImSDKPlugin.v2TIMManager
         .getMessageManager()
         .removeAdvancedMsgListener(listener: listener);
+    return result;
   }
 
   @override
@@ -282,6 +380,10 @@ class MessageServiceImpl extends MessageService {
     if (res.code == 0) {
       return res.data;
     }
+    _coreService.callOnCallback(TIMCallback(
+        type: TIMCallbackType.API_ERROR,
+        errorMsg: res.desc,
+        errorCode: res.code));
     return null;
   }
 
@@ -295,6 +397,10 @@ class MessageServiceImpl extends MessageService {
     if (res.code == 0) {
       return res.data;
     }
+    _coreService.callOnCallback(TIMCallback(
+        type: TIMCallbackType.API_ERROR,
+        errorMsg: res.desc,
+        errorCode: res.code));
     return null;
   }
 
@@ -315,15 +421,27 @@ class MessageServiceImpl extends MessageService {
     if (res.code == 0) {
       return res.data;
     }
+    _coreService.callOnCallback(TIMCallback(
+        type: TIMCallbackType.API_ERROR,
+        errorMsg: res.desc,
+        errorCode: res.code));
     return null;
   }
 
   @override
   Future<V2TimCallback> deleteMessages(
-      {required List<String> msgIDs, List<dynamic>? webMessageInstanceList}) {
-    return TencentImSDKPlugin.v2TIMManager
+      {required List<String> msgIDs,
+      List<dynamic>? webMessageInstanceList}) async {
+    final result = await TencentImSDKPlugin.v2TIMManager
         .getMessageManager()
         .deleteMessages(msgIDs: msgIDs);
+    if (result.code != 0) {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: result.desc,
+          errorCode: result.code));
+    }
+    return result;
   }
 
   @override
@@ -343,6 +461,10 @@ class MessageServiceImpl extends MessageService {
     if (res.code == 0) {
       return res.data;
     }
+    _coreService.callOnCallback(TIMCallback(
+        type: TIMCallbackType.API_ERROR,
+        errorMsg: res.desc,
+        errorCode: res.code));
     return null;
   }
 
@@ -353,13 +475,22 @@ class MessageServiceImpl extends MessageService {
     required String groupID,
     bool needReadReceipt = false,
     required V2TimMessage replyMessage, // 被回复的消息
-  }) {
-    return TencentImSDKPlugin.v2TIMManager.getMessageManager().sendReplyMessage(
-        id: id,
-        receiver: receiver,
-        groupID: groupID,
-        needReadReceipt: needReadReceipt,
-        replyMessage: replyMessage);
+  }) async {
+    final result = await TencentImSDKPlugin.v2TIMManager
+        .getMessageManager()
+        .sendReplyMessage(
+            id: id,
+            receiver: receiver,
+            groupID: groupID,
+            needReadReceipt: needReadReceipt,
+            replyMessage: replyMessage);
+    if (result.code != 0) {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: result.desc,
+          errorCode: result.code));
+    }
+    return result;
   }
 
   @override
@@ -371,6 +502,10 @@ class MessageServiceImpl extends MessageService {
     if (res.code == 0) {
       return res.data;
     }
+    _coreService.callOnCallback(TIMCallback(
+        type: TIMCallbackType.API_ERROR,
+        errorMsg: res.desc,
+        errorCode: res.code));
     return null;
   }
 
@@ -386,16 +521,26 @@ class MessageServiceImpl extends MessageService {
     if (res.code == 0) {
       return res.data;
     }
+    _coreService.callOnCallback(TIMCallback(
+        type: TIMCallbackType.API_ERROR,
+        errorMsg: res.desc,
+        errorCode: res.code));
     return null;
   }
 
   @override
   Future<V2TimValueCallback<V2TimMessageSearchResult>> searchLocalMessages(
       {required V2TimMessageSearchParam searchParam}) async {
-    final res = await TencentImSDKPlugin.v2TIMManager
+    final result = await TencentImSDKPlugin.v2TIMManager
         .getMessageManager()
         .searchLocalMessages(searchParam: searchParam);
-    return res;
+    if (result.code != 0) {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: result.desc,
+          errorCode: result.code));
+    }
+    return result;
   }
 
   @override
@@ -408,35 +553,89 @@ class MessageServiceImpl extends MessageService {
     if (res.code == 0) {
       return res.data;
     }
+    _coreService.callOnCallback(TIMCallback(
+        type: TIMCallbackType.API_ERROR,
+        errorMsg: res.desc,
+        errorCode: res.code));
     return null;
   }
 
   @override
   Future<V2TimCallback> setLocalCustomInt(
       {required String msgID, required int localCustomInt}) async {
-    final res = await TencentImSDKPlugin.v2TIMManager
+    final result = await TencentImSDKPlugin.v2TIMManager
         .getMessageManager()
         .setLocalCustomInt(msgID: msgID, localCustomInt: localCustomInt);
-    return res;
+    if (result.code != 0) {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: result.desc,
+          errorCode: result.code));
+    }
+    return result;
   }
 
   @override
   Future<V2TimCallback> setC2CReceiveMessageOpt({
     required List<String> userIDList,
     required ReceiveMsgOptEnum opt,
-  }) {
-    return TencentImSDKPlugin.v2TIMManager
+  }) async {
+    final result = await TencentImSDKPlugin.v2TIMManager
         .getMessageManager()
         .setC2CReceiveMessageOpt(userIDList: userIDList, opt: opt);
+    if (result.code != 0) {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: result.desc,
+          errorCode: result.code));
+    }
+    return result;
   }
 
   @override
   Future<V2TimCallback> setGroupReceiveMessageOpt({
     required String groupID,
     required ReceiveMsgOptEnum opt,
-  }) {
-    return TencentImSDKPlugin.v2TIMManager
+  }) async {
+    final result = await TencentImSDKPlugin.v2TIMManager
         .getMessageManager()
         .setGroupReceiveMessageOpt(groupID: groupID, opt: opt);
+    if (result.code != 0) {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: result.desc,
+          errorCode: result.code));
+    }
+    return result;
+  }
+
+  @override
+  Future<V2TimValueCallback<V2TimMessageChangeInfo>> modifyMessage(
+      {required V2TimMessage message}) async {
+    final result = await TencentImSDKPlugin.v2TIMManager
+        .getMessageManager()
+        .modifyMessage(message: message);
+    if (result.code != 0) {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: result.desc,
+          errorCode: result.code));
+    }
+    return result;
+  }
+
+  @override
+  Future<V2TimCallback> setLocalCustomData(
+      {required String msgID, required String localCustomData}) async {
+    final result = await TencentImSDKPlugin.v2TIMManager
+        .getMessageManager()
+        .setLocalCustomData(msgID: msgID, localCustomData: localCustomData);
+    if (result.code != 0) {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: result.desc,
+          errorCode: result.code));
+    }
+    return result;
   }
 }

@@ -37,6 +37,7 @@ dependencies:
   tim_ui_kit:
     path: ../../tim_ui_kit
   archive: ^3.3.0
+  tencent_im_base: ^0.0.18
 
 dev_dependencies:
   flutter_test:

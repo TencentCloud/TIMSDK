@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tencent_im_sdk_plugin/enum/friend_type_enum.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_operation_result.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_user_full_info.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
+
+import 'package:tim_ui_kit/business_logic/life_cycle/add_friend_life_cycle.dart';
 import 'package:tim_ui_kit/data_services/core/core_services_implements.dart';
 import 'package:tim_ui_kit/data_services/friendShip/friendship_services.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
@@ -13,6 +12,12 @@ class TUIAddFriendViewModel extends ChangeNotifier {
       serviceLocator<FriendshipServices>();
   V2TimUserFullInfo? loginUserInfo;
   List<V2TimUserFullInfo>? _friendInfoResult;
+  AddFriendLifeCycle? _lifeCycle;
+
+  set lifeCycle(AddFriendLifeCycle? value) {
+    _lifeCycle = value;
+  }
+
   List<V2TimUserFullInfo>? get friendInfoResult {
     return _friendInfoResult;
   }
@@ -31,8 +36,17 @@ class TUIAddFriendViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<V2TimValueCallback<V2TimFriendOperationResult>> addFriend(
-      String userID, String? remark, String? friendGroup, String? addWording) {
+  Future<V2TimValueCallback<V2TimFriendOperationResult>?> addFriend(
+      String userID,
+      String? remark,
+      String? friendGroup,
+      String? addWording) async {
+    if (_lifeCycle?.shouldAddFriend != null &&
+        await _lifeCycle!
+                .shouldAddFriend(userID, remark, friendGroup, addWording) ==
+            false) {
+      return null;
+    }
     final res = _friendshipServices.addFriend(
         userID: userID,
         addType: FriendTypeEnum.V2TIM_FRIEND_TYPE_BOTH,

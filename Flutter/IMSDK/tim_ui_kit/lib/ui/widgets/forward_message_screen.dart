@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/utils/message.dart';
 import 'package:tim_ui_kit/ui/widgets/recent_conversation_list.dart';
+
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
 class ForwardMessageScreen extends StatefulWidget {
   final bool isMergerForward;
@@ -20,29 +21,27 @@ class ForwardMessageScreen extends StatefulWidget {
   State<StatefulWidget> createState() => _ForwardMessageScreenState();
 }
 
-class _ForwardMessageScreenState extends State<ForwardMessageScreen> {
+class _ForwardMessageScreenState extends TIMUIKitState<ForwardMessageScreen> {
   final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
   List<V2TimConversation> _conversationList = [];
   bool isMultiSelect = false;
 
   String _getMergerMessageTitle() {
-    final I18nUtils ttBuild = I18nUtils(context);
     if (widget.conversationType == 1) {
       final selectedMessage = model.multiSelectedMessageList.first;
       final sender = selectedMessage.sender;
       final option1 = selectedMessage.nickName ?? selectedMessage.userID;
       return sender! +
-          ttBuild.imt_para("与{{option1}}的聊天记录", "与$option1的聊天记录")(
-              option1: option1);
+          TIM_t_para("与{{option1}}的聊天记录", "与$option1的聊天记录")(option1: option1);
     } else {
-      return ttBuild.imt("群聊的聊天记录");
+      return TIM_t("群聊的聊天记录");
     }
   }
 
   List<String> _getAbstractList() {
     return model.multiSelectedMessageList
         .map((e) =>
-            "${e.sender}: ${MessageUtils.getAbstractMessage(e, context)}")
+            "${e.sender}: ${model.abstractMessageBuilder != null ? model.abstractMessageBuilder!(e) : MessageUtils.getAbstractMessage(e)}")
         .toList();
   }
 
@@ -62,83 +61,78 @@ class _ForwardMessageScreenState extends State<ForwardMessageScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final I18nUtils ttBuild = I18nUtils(context);
-    return ChangeNotifierProvider.value(
-        value: serviceLocator<TUIThemeViewModel>(),
-        child: Consumer<TUIThemeViewModel>(
-            builder: (context, value, child) => Scaffold(
-                  appBar: AppBar(
-                    title: Text(
-                      ttBuild.imt("选择"),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 17,
-                      ),
-                    ),
-                    shadowColor: value.theme.weakBackgroundColor,
-                    flexibleSpace: Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(colors: [
-                          value.theme.lightPrimaryColor ??
-                              CommonColor.lightPrimaryColor,
-                          value.theme.primaryColor ?? CommonColor.primaryColor
-                        ]),
-                      ),
-                    ),
-                    leading: TextButton(
-                      onPressed: () {
-                        if (isMultiSelect) {
-                          setState(() {
-                            isMultiSelect = false;
-                            _conversationList = [];
-                          });
-                        } else {
-                          model.updateMultiSelectStatus(false);
-                          Navigator.pop(context);
-                        }
-                      },
-                      child: Text(
-                        ttBuild.imt("取消"),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          if (!isMultiSelect) {
-                            setState(() {
-                              isMultiSelect = true;
-                            });
-                          } else {
-                            _handleForwardMessage();
-                          }
-                        },
-                        child: Text(
-                          !isMultiSelect
-                              ? ttBuild.imt("多选")
-                              : ttBuild.imt("完成"),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                  body: RecentForwardList(
-                    isMultiSelect: isMultiSelect,
-                    onChanged: (conversationList) {
-                      _conversationList = conversationList;
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    final TUITheme theme = value.theme;
 
-                      if (!isMultiSelect) {
-                        _handleForwardMessage();
-                      }
-                    },
-                  ),
-                )));
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          TIM_t("选择"),
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 17,
+          ),
+        ),
+        shadowColor: theme.weakBackgroundColor,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+              theme.lightPrimaryColor ?? CommonColor.lightPrimaryColor,
+              theme.primaryColor ?? CommonColor.primaryColor
+            ]),
+          ),
+        ),
+        leading: TextButton(
+          onPressed: () {
+            if (isMultiSelect) {
+              setState(() {
+                isMultiSelect = false;
+                _conversationList = [];
+              });
+            } else {
+              model.updateMultiSelectStatus(false);
+              Navigator.pop(context);
+            }
+          },
+          child: Text(
+            TIM_t("取消"),
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              if (!isMultiSelect) {
+                setState(() {
+                  isMultiSelect = true;
+                });
+              } else {
+                _handleForwardMessage();
+              }
+            },
+            child: Text(
+              !isMultiSelect ? TIM_t("多选") : TIM_t("完成"),
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+              ),
+            ),
+          )
+        ],
+      ),
+      body: RecentForwardList(
+        isMultiSelect: isMultiSelect,
+        onChanged: (conversationList) {
+          _conversationList = conversationList;
+
+          if (!isMultiSelect) {
+            _handleForwardMessage();
+          }
+        },
+      ),
+    );
   }
 }

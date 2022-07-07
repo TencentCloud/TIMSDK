@@ -1,12 +1,9 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/cupertino.dart';
-import 'package:tencent_im_sdk_plugin/enum/V2TimAdvancedMsgListener.dart';
-import 'package:tencent_im_sdk_plugin/enum/history_msg_get_type_enum.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
-
-import '../../tim_ui_kit.dart';
+import 'package:tim_ui_kit/tim_ui_kit.dart';
 
 class TIMUIKitChatController {
   final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
@@ -28,18 +25,6 @@ class TIMUIKitChatController {
       lastMsgID: lastMsgID,
       lastMsgSeq: lastMsgSeq,
     );
-  }
-
-  /// set message listener;
-  /// 添加消息监听器
-  setMessageListener({V2TimAdvancedMsgListener? listener}) {
-    return model.initAdvanceListener(listener: listener);
-  }
-
-  /// remove message listener;
-  /// 移除监听器
-  removeMessageListener() {
-    return model.removeAdvanceListener();
   }
 
   /// clear the current conversation;
@@ -144,5 +129,17 @@ class TIMUIKitChatController {
         title: title,
         abstractList: abstractList,
         context: context);
+  }
+
+  /// Set local custom data
+  /// 为本地消息配置额外String字段
+  setLocalCustomData(String msgID, String localCustomData) {
+    return model.setLocalCustomData(msgID, localCustomData);
+  }
+
+  /// Set local custom int
+  /// 为本地消息配置额外int字段
+  setLocalCustomInt(String msgID, int localCustomInt) {
+    return model.setLocalCustomInt(msgID, localCustomInt);
   }
 }

@@ -1,18 +1,13 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/cupertino.dart';
-import 'package:tencent_im_sdk_plugin/enum/V2TimSDKListener.dart';
-import 'package:tencent_im_sdk_plugin/enum/log_level_enum.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_user_full_info.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
-import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_self_info_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/core/core_services.dart';
-import 'package:tim_ui_kit/i18n/i18n_utils.dart';
+import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
-
-import '../services_locatar.dart';
 
 typedef EmptyAvatarBuilder = Widget Function(BuildContext context);
 
@@ -31,6 +26,8 @@ class CoreServicesImpl with CoreServices {
   late int _sdkAppID;
   late String _userID;
   late String _userSig;
+  ValueChanged<TIMCallback>? onCallback;
+
   V2TimUserFullInfo? get loginUserInfo {
     return _loginInfo;
   }
@@ -55,6 +52,8 @@ class CoreServicesImpl with CoreServices {
 
   @override
   Future<bool?> init({
+    /// Callback from TUIKit invoke, includes IM SDK API error, notify information, Flutter error.
+    ValueChanged<TIMCallback>? onTUIKitCallbackListener,
     required int sdkAppID,
     required LogLevelEnum loglevel,
     required V2TimSDKListener listener,
@@ -64,6 +63,9 @@ class CoreServicesImpl with CoreServices {
       Future.delayed(const Duration(milliseconds: 1), () {
         I18nUtils(null, language);
       });
+    }
+    if (onTUIKitCallbackListener != null) {
+      onCallback = onTUIKitCallbackListener;
     }
     _sdkAppID = sdkAppID;
     final result = await TencentImSDKPlugin.v2TIMManager.initSDK(
@@ -87,6 +89,16 @@ class CoreServicesImpl with CoreServices {
     return result.data;
   }
 
+  callOnCallback(TIMCallback callbackValue) {
+    if (onCallback != null) {
+      Future.delayed(const Duration(milliseconds: 500), () {
+        onCallback!(callbackValue);
+      });
+    } else {
+      print("TUIKit Callback: ${callbackValue.type}");
+    }
+  }
+
   @override
   Future<V2TimCallback> login({
     required String userID,
@@ -104,6 +116,11 @@ class CoreServicesImpl with CoreServices {
                 serviceLocator<TUISelfInfoViewModel>().setLoginInfo(_loginInfo!)
               }
           });
+    } else {
+      callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorCode: result.code,
+          errorMsg: result.desc));
     }
     return result;
   }
@@ -117,6 +134,13 @@ class CoreServicesImpl with CoreServices {
             {
               _loginInfo = res.data![0],
               serviceLocator<TUISelfInfoViewModel>().setLoginInfo(_loginInfo!)
+            }
+          else
+            {
+              callOnCallback(TIMCallback(
+                  type: TIMCallbackType.API_ERROR,
+                  errorCode: res.code,
+                  errorMsg: res.desc))
             }
         });
   }

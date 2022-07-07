@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
+// ignore: unused_import
 import 'package:provider/provider.dart';
-import 'package:tencent_im_sdk_plugin/enum/message_elem_type.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_info.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
-import 'package:tencent_im_sdk_plugin/enum/get_group_message_read_member_list_filter.dart';
-import 'package:tim_ui_kit/i18n/i18n_utils.dart';
+
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/utils/message.dart';
 import 'package:tim_ui_kit/ui/utils/time_ago.dart';
@@ -19,6 +17,7 @@ import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitMessageItem/tim_uikit_c
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitMessageItem/tim_uikit_chat_video_elem.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitMessageItem/tim_uikit_merger_message_elem.dart';
 import 'package:tim_ui_kit/ui/widgets/avatar.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
 class MessageReadReceipt extends StatefulWidget {
   final V2TimMessage messageItem;
@@ -38,7 +37,7 @@ class MessageReadReceipt extends StatefulWidget {
   State<StatefulWidget> createState() => _MessageReadReceiptState();
 }
 
-class _MessageReadReceiptState extends State<MessageReadReceipt> {
+class _MessageReadReceiptState extends TIMUIKitState<MessageReadReceipt> {
   final TUIChatViewModel _model = serviceLocator<TUIChatViewModel>();
   bool readMemberIsFinished = false;
   bool unreadMemberIsFinished = false;
@@ -90,13 +89,13 @@ class _MessageReadReceiptState extends State<MessageReadReceipt> {
     _getUnreadMemberList();
   }
 
-  Widget _getMsgItem(V2TimMessage message, I18nUtils ttBuild) {
+  Widget _getMsgItem(V2TimMessage message) {
     final type = message.elemType;
     final isFromSelf = message.isSelf ?? false;
 
     switch (type) {
       case MessageElemType.V2TIM_ELEM_TYPE_CUSTOM:
-        return Text(ttBuild.imt("[自定义]"));
+        return Text(TIM_t("[自定义]"));
       case MessageElemType.V2TIM_ELEM_TYPE_SOUND:
         return TIMUIKitSoundElem(
             soundElem: message.soundElem!,
@@ -118,18 +117,22 @@ class _MessageReadReceiptState extends State<MessageReadReceipt> {
             fileElem: message.fileElem,
             isSelf: isFromSelf);
       case MessageElemType.V2TIM_ELEM_TYPE_IMAGE:
-        return TIMUIKitImageElem(message: message, isFrom: "merger");
+        return TIMUIKitImageElem(
+          message: message,
+          isFrom: "merger",
+          key: Key("${message.seq}_${message.timestamp}"),
+        );
       case MessageElemType.V2TIM_ELEM_TYPE_VIDEO:
         return TIMUIKitVideoElem(message, isFrom: "merger");
       case MessageElemType.V2TIM_ELEM_TYPE_LOCATION:
-        return Text(ttBuild.imt("[位置]"));
+        return Text(TIM_t("[位置]"));
       case MessageElemType.V2TIM_ELEM_TYPE_MERGER:
         return TIMUIKitMergerElem(
             mergerElem: message.mergerElem!,
             isSelf: isFromSelf,
             messageID: message.msgID!);
       default:
-        return Text(ttBuild.imt("未知消息"));
+        return Text(TIM_t("未知消息"));
     }
   }
 
@@ -181,182 +184,173 @@ class _MessageReadReceiptState extends State<MessageReadReceipt> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final I18nUtils ttBuild = I18nUtils(context);
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    final TUITheme theme = value.theme;
+
     final option1 = widget.readCount;
     final option2 = widget.unreadCount;
-    return ChangeNotifierProvider.value(
-        value: serviceLocator<TUIThemeViewModel>(),
-        child: Consumer<TUIThemeViewModel>(builder: (context, value, child) {
-          final theme = value.theme;
-          return DefaultTabController(
-            length: 2,
-            child: Scaffold(
-              appBar: AppBar(
-                  title: Text(
-                    ttBuild.imt("消息详情"),
-                    style: const TextStyle(color: Colors.white, fontSize: 17),
-                  ),
-                  shadowColor: theme.weakDividerColor,
-                  flexibleSpace: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(colors: [
-                        theme.lightPrimaryColor ??
-                            CommonColor.lightPrimaryColor,
-                        theme.primaryColor ?? CommonColor.primaryColor
-                      ]),
-                    ),
-                  ),
-                  iconTheme: const IconThemeData(
-                    color: Colors.white,
-                  )),
-              body: Container(
-                color: Colors.white,
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+            title: Text(
+              TIM_t("消息详情"),
+              style: const TextStyle(color: Colors.white, fontSize: 17),
+            ),
+            shadowColor: theme.weakDividerColor,
+            flexibleSpace: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(colors: [
+                  theme.lightPrimaryColor ?? CommonColor.lightPrimaryColor,
+                  theme.primaryColor ?? CommonColor.primaryColor
+                ]),
+              ),
+            ),
+            iconTheme: const IconThemeData(
+              color: Colors.white,
+            )),
+        body: Container(
+          color: Colors.white,
+          child: Column(
+            children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(MessageUtils.getDisplayName(
-                                  widget.messageItem)),
-                              const SizedBox(
-                                width: 8,
-                              ),
-                              Text(
-                                TimeAgo(context).getTimeForMessage(
-                                    widget.messageItem.timestamp ?? 0),
-                                softWrap: true,
-                                style: TextStyle(
-                                    fontSize: 12, color: theme.weakTextColor),
-                              )
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 6,
-                          ),
-                          _getMsgItem(widget.messageItem, ttBuild)
-                        ],
-                      ),
-                    ),
-                    Container(
-                      height: 8,
-                      color: theme.weakBackgroundColor,
-                    ),
                     Row(
-                      // direction: Axis.horizontal,
-                      children: <Widget>[
-                        Expanded(
-                          flex: 1,
-                          child: InkWell(
-                            onTap: () {
-                              currentIndex = 0;
-                              setState(() {});
-                            },
-                            child: Container(
-                              height: 50.0,
-                              alignment: Alignment.bottomCenter,
-                              padding: const EdgeInsets.only(bottom: 5),
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border(
-                                      bottom: BorderSide(
-                                          width: 2,
-                                          color: currentIndex == 0
-                                              ? theme.primaryColor!
-                                              : Colors.white))),
-                              child: Text(
-                                ttBuild.imt_para(
-                                        "{{option1}}人已读", "$option1人已读")(
-                                    option1: option1),
-                                style: TextStyle(
-                                    color: currentIndex != 0
-                                        ? theme.weakTextColor
-                                        : Colors.black,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: InkWell(
-                            onTap: () {
-                              currentIndex = 1;
-                              setState(() {});
-                            },
-                            child: Container(
-                              alignment: Alignment.bottomCenter,
-                              height: 50.0,
-                              padding: const EdgeInsets.only(bottom: 5),
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border(
-                                      bottom: BorderSide(
-                                          width: 2,
-                                          color: currentIndex == 1
-                                              ? theme.primaryColor!
-                                              : Colors.white))),
-                              child: Text(
-                                ttBuild.imt_para(
-                                        "{{option2}}人未读", "$option2人未读")(
-                                    option2: option2),
-                                style: TextStyle(
-                                    color: currentIndex != 1
-                                        ? theme.weakTextColor
-                                        : Colors.black,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      height: 1,
-                      decoration: BoxDecoration(
-                          border: Border(
-                              bottom: BorderSide(
-                                  color: theme.weakDividerColor ??
-                                      CommonColor.weakDividerColor))),
-                    ),
-                    Expanded(
-                        child: IndexedStack(
-                      index: currentIndex,
                       children: [
-                        ListView.builder(
-                            itemCount: readMemberList.length,
-                            itemBuilder: (context, index) {
-                              if (!readMemberIsFinished &&
-                                  index == readMemberList.length - 5) {
-                                _getReadMemberList();
-                              }
-                              return _memberItemBuilder(
-                                  readMemberList[index], theme);
-                            }),
-                        ListView.builder(
-                            itemCount: unreadMemberList.length,
-                            itemBuilder: (context, index) {
-                              if (!unreadMemberIsFinished &&
-                                  index == unreadMemberList.length - 5) {
-                                _getUnreadMemberList();
-                              }
-                              return _memberItemBuilder(
-                                  unreadMemberList[index], theme);
-                            }),
+                        Text(MessageUtils.getDisplayName(widget.messageItem)),
+                        const SizedBox(
+                          width: 8,
+                        ),
+                        Text(
+                          TimeAgo().getTimeForMessage(
+                              widget.messageItem.timestamp ?? 0),
+                          softWrap: true,
+                          style: TextStyle(
+                              fontSize: 12, color: theme.weakTextColor),
+                        )
                       ],
-                    )),
+                    ),
+                    const SizedBox(
+                      height: 6,
+                    ),
+                    _getMsgItem(widget.messageItem)
                   ],
                 ),
               ),
-            ),
-          );
-        }));
+              Container(
+                height: 8,
+                color: theme.weakBackgroundColor,
+              ),
+              Row(
+                // direction: Axis.horizontal,
+                children: <Widget>[
+                  Expanded(
+                    flex: 1,
+                    child: InkWell(
+                      onTap: () {
+                        currentIndex = 0;
+                        setState(() {});
+                      },
+                      child: Container(
+                        height: 50.0,
+                        alignment: Alignment.bottomCenter,
+                        padding: const EdgeInsets.only(bottom: 5),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border(
+                                bottom: BorderSide(
+                                    width: 2,
+                                    color: currentIndex == 0
+                                        ? theme.primaryColor!
+                                        : Colors.white))),
+                        child: Text(
+                          TIM_t_para("{{option1}}人已读", "$option1人已读")(
+                              option1: option1),
+                          style: TextStyle(
+                              color: currentIndex != 0
+                                  ? theme.weakTextColor
+                                  : Colors.black,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: InkWell(
+                      onTap: () {
+                        currentIndex = 1;
+                        setState(() {});
+                      },
+                      child: Container(
+                        alignment: Alignment.bottomCenter,
+                        height: 50.0,
+                        padding: const EdgeInsets.only(bottom: 5),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border(
+                                bottom: BorderSide(
+                                    width: 2,
+                                    color: currentIndex == 1
+                                        ? theme.primaryColor!
+                                        : Colors.white))),
+                        child: Text(
+                          TIM_t_para("{{option2}}人未读", "$option2人未读")(
+                              option2: option2),
+                          style: TextStyle(
+                              color: currentIndex != 1
+                                  ? theme.weakTextColor
+                                  : Colors.black,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                height: 1,
+                decoration: BoxDecoration(
+                    border: Border(
+                        bottom: BorderSide(
+                            color: theme.weakDividerColor ??
+                                CommonColor.weakDividerColor))),
+              ),
+              Expanded(
+                  child: IndexedStack(
+                index: currentIndex,
+                children: [
+                  ListView.builder(
+                      itemCount: readMemberList.length,
+                      itemBuilder: (context, index) {
+                        if (!readMemberIsFinished &&
+                            index == readMemberList.length - 5) {
+                          _getReadMemberList();
+                        }
+                        return _memberItemBuilder(readMemberList[index], theme);
+                      }),
+                  ListView.builder(
+                      itemCount: unreadMemberList.length,
+                      itemBuilder: (context, index) {
+                        if (!unreadMemberIsFinished &&
+                            index == unreadMemberList.length - 5) {
+                          _getUnreadMemberList();
+                        }
+                        return _memberItemBuilder(
+                            unreadMemberList[index], theme);
+                      }),
+                ],
+              )),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_full_info.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_search_param.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_group_profile_view_model.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
-import 'package:tim_ui_kit/data_services/services_locatar.dart';
-import 'package:tim_ui_kit/i18n/i18n_utils.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
-import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/tim_ui_group_member_search.dart';
+import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
+import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/widgets/tim_ui_group_member_search.dart';
 import 'package:tim_ui_kit/ui/widgets/group_member_list.dart';
+
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
 class AtText extends StatefulWidget {
   final String? groupID;
@@ -24,7 +24,7 @@ class AtText extends StatefulWidget {
   State<StatefulWidget> createState() => _AtTextState();
 }
 
-class _AtTextState extends State<AtText> {
+class _AtTextState extends TIMUIKitState<AtText> {
   final TUIGroupProfileViewModel _model = TUIGroupProfileViewModel();
   List<V2TimGroupMemberFullInfo?>? _groupMemberList;
   @override
@@ -50,7 +50,7 @@ class _AtTextState extends State<AtText> {
         Provider.of<TUIGroupProfileViewModel>(context, listen: false)
                 .groupMemberList ??
             [];
-    final res = await _model.searcrhGroupMember(V2TimGroupMemberSearchParam(
+    final res = await _model.searchGroupMember(V2TimGroupMemberSearchParam(
       keywordList: [searchText],
       groupIDList: [widget.groupID!],
     ));
@@ -79,79 +79,67 @@ class _AtTextState extends State<AtText> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final I18nUtils ttBuild = I18nUtils(context);
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider.value(value: serviceLocator<TUIThemeViewModel>())
-      ],
-      builder: (context, w) {
-        return Consumer<TUIThemeViewModel>(
-            builder: (context, themeModel, child) {
-          return Scaffold(
-              appBar: AppBar(
-                shadowColor: themeModel.theme.weakBackgroundColor,
-                iconTheme: const IconThemeData(
-                  color: Colors.white,
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    final TUITheme theme = value.theme;
+
+    return Scaffold(
+        appBar: AppBar(
+          shadowColor: theme.weakBackgroundColor,
+          iconTheme: const IconThemeData(
+            color: Colors.white,
+          ),
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [
+                theme.lightPrimaryColor ?? CommonColor.lightPrimaryColor,
+                theme.primaryColor ?? CommonColor.primaryColor
+              ]),
+            ),
+          ),
+          leading: Row(
+            children: [
+              IconButton(
+                padding: const EdgeInsets.only(left: 16),
+                constraints: const BoxConstraints(),
+                icon: Image.asset(
+                  'images/arrow_back.png',
+                  package: 'tim_ui_kit',
+                  height: 34,
+                  width: 34,
                 ),
-                flexibleSpace: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: [
-                      themeModel.theme.lightPrimaryColor ??
-                          CommonColor.lightPrimaryColor,
-                      themeModel.theme.primaryColor ?? CommonColor.primaryColor
-                    ]),
-                  ),
-                ),
-                leading: Row(
-                  children: [
-                    IconButton(
-                      padding: const EdgeInsets.only(left: 16),
-                      constraints: const BoxConstraints(),
-                      icon: Image.asset(
-                        'images/arrow_back.png',
-                        package: 'tim_ui_kit',
-                        height: 34,
-                        width: 34,
-                      ),
-                      onPressed: () async {
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ],
-                ),
-                centerTitle: true,
-                leadingWidth: 100,
-                title: Text(
-                  ttBuild.imt("选择提醒人"),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 17,
-                  ),
-                ),
+                onPressed: () async {
+                  Navigator.pop(context);
+                },
               ),
-              body: ChangeNotifierProvider.value(
-                  value: _model,
-                  child: Consumer<TUIGroupProfileViewModel>(
-                      builder: ((context, value, child) {
-                    return GroupProfileMemberList(
-                        groupType: widget.groupType ?? "",
-                        memberList:
-                            _groupMemberList ?? value.groupMemberList ?? [],
-                        onTapMemberItem: _onTapMemberItem,
-                        canAtAll: true,
-                        canSlideDelete: false,
-                        touchBottomCallBack: () {
-                          _model.loadMoreData(
-                              groupID: _model.groupInfo!.groupID);
-                        },
-                        customTopArea: GroupMemberSearchTextField(
-                          onTextChange: (text) =>
-                              handleSearchGroupMembers(text, context),
-                        ));
-                  }))));
-        });
-      },
-    );
+            ],
+          ),
+          centerTitle: true,
+          leadingWidth: 100,
+          title: Text(
+            TIM_t("选择提醒人"),
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 17,
+            ),
+          ),
+        ),
+        body: ChangeNotifierProvider.value(
+            value: _model,
+            child: Consumer<TUIGroupProfileViewModel>(
+                builder: ((context, value, child) {
+              return GroupProfileMemberList(
+                  groupType: widget.groupType ?? "",
+                  memberList: _groupMemberList ?? value.groupMemberList ?? [],
+                  onTapMemberItem: _onTapMemberItem,
+                  canAtAll: true,
+                  canSlideDelete: false,
+                  touchBottomCallBack: () {
+                    _model.loadMoreData(groupID: _model.groupInfo!.groupID);
+                  },
+                  customTopArea: GroupMemberSearchTextField(
+                    onTextChange: (text) =>
+                        handleSearchGroupMembers(text, context),
+                  ));
+            }))));
   }
 }

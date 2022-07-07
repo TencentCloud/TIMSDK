@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 
 class TIMUIKitFaceElem extends StatefulWidget {
   final String path;
@@ -14,7 +16,7 @@ class TIMUIKitFaceElem extends StatefulWidget {
   State<StatefulWidget> createState() => _TIMUIKitTextElemState();
 }
 
-class _TIMUIKitTextElemState extends State<TIMUIKitFaceElem> {
+class _TIMUIKitTextElemState extends TIMUIKitState<TIMUIKitFaceElem> {
   bool isShowJumpState = false;
 
   @override
@@ -50,9 +52,11 @@ class _TIMUIKitTextElemState extends State<TIMUIKitFaceElem> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     if (widget.isShowJump!) {
-      _showJumpColor();
+      Future.delayed(Duration.zero, () {
+        _showJumpColor();
+      });
     }
     return Container(
       padding: const EdgeInsets.all(10),

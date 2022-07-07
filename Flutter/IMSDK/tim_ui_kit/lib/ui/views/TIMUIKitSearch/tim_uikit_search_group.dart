@@ -4,13 +4,15 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_info.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
+import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitSearch/pureUI/tim_uikit_search_item.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitSearch/pureUI/tim_uikit_search_folder.dart';
 
 import 'package:tim_ui_kit/business_logic/view_models/tui_search_view_model.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitSearch/pureUI/tim_uikit_search_showAll.dart';
-import '../../../../tim_ui_kit.dart';
+
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
 class TIMUIKitSearchGroup extends StatefulWidget {
   List<V2TimGroupInfo> groupList;
@@ -24,14 +26,14 @@ class TIMUIKitSearchGroup extends StatefulWidget {
   State<StatefulWidget> createState() => TIMUIKitSearchGroupState();
 }
 
-class TIMUIKitSearchGroupState extends State<TIMUIKitSearchGroup> {
+class TIMUIKitSearchGroupState extends TIMUIKitState<TIMUIKitSearchGroup> {
   bool isShowAll = false;
   int defaultShowLines = 3;
 
-  Widget _renderShowALl(int currentLines, I18nUtils ttBuild) {
+  Widget _renderShowALl(int currentLines) {
     return (isShowAll == false && currentLines > defaultShowLines)
         ? TIMUIKitSearchShowALl(
-            textShow: ttBuild.imt("全部群聊"),
+            textShow: TIM_t("全部群聊"),
             onClick: () => setState(() {
               isShowAll = true;
             }),
@@ -40,8 +42,7 @@ class TIMUIKitSearchGroupState extends State<TIMUIKitSearchGroup> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final I18nUtils ttBuild = I18nUtils(context);
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     List<V2TimConversation?> _conversationList =
         Provider.of<TUISearchViewModel>(context).conversationList;
 
@@ -58,7 +59,7 @@ class TIMUIKitSearchGroupState extends State<TIMUIKitSearchGroup> {
             0, min(defaultShowLines, filteredGroupResultList.length));
 
     if (filteredGroupResultList.isNotEmpty) {
-      return TIMUIKitSearchFolder(folderName: ttBuild.imt("群聊"), children: [
+      return TIMUIKitSearchFolder(folderName: TIM_t("群聊"), children: [
         ...halfFilteredGroupResultList.map((group) {
           int convIndex = _conversationList
               .indexWhere((item) => group.groupID == item?.groupID);
@@ -75,7 +76,7 @@ class TIMUIKitSearchGroupState extends State<TIMUIKitSearchGroup> {
                 "",
           );
         }).toList(),
-        _renderShowALl(filteredGroupResultList.length, ttBuild),
+        _renderShowALl(filteredGroupResultList.length),
       ]);
     } else {
       return Container();

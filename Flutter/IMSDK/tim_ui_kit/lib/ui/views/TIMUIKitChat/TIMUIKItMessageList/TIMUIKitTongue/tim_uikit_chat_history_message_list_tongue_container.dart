@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_at_info.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKItMessageList/TIMUIKitTongue/tim_uikit_chat_history_message_list_tongue.dart';
 
 class TIMUIKitHistoryMessageListTongueContainer extends StatefulWidget {
@@ -26,7 +28,7 @@ class TIMUIKitHistoryMessageListTongueContainer extends StatefulWidget {
 }
 
 class _TIMUIKitHistoryMessageListTongueContainerState
-    extends State<TIMUIKitHistoryMessageListTongueContainer> {
+    extends TIMUIKitState<TIMUIKitHistoryMessageListTongueContainer> {
   final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
   bool isFinishJumpToAt = false;
   List<V2TimGroupAtInfo?>? groupAtInfoList = [];
@@ -86,7 +88,7 @@ class _TIMUIKitHistoryMessageListTongueContainerState
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     return Positioned(
       bottom: 16,
       right: 0,

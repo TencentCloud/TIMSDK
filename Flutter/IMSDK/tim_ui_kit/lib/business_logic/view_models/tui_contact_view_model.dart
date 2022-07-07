@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tencent_im_sdk_plugin/enum/V2TimFriendshipListener.dart';
+import 'package:tim_ui_kit/business_logic/life_cycle/friend_list_life_cycle.dart';
 import 'package:tim_ui_kit/data_services/friendShip/friendship_services.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
@@ -8,6 +8,11 @@ class TUIContactViewModel extends ChangeNotifier {
   final FriendshipServices _friendshipServices =
       serviceLocator<FriendshipServices>();
   List<V2TimFriendInfo>? _friendList;
+  FriendListLifeCycle? _lifeCycle;
+
+  set lifeCycle(FriendListLifeCycle? value) {
+    _lifeCycle = value;
+  }
 
   V2TimFriendshipListener? _friendshipListener;
 
@@ -16,8 +21,10 @@ class TUIContactViewModel extends ChangeNotifier {
   }
 
   loadData() async {
-    final res = await _friendshipServices.getFriendList();
-    _friendList = res;
+    final List<V2TimFriendInfo> res =
+        await _friendshipServices.getFriendList() ?? [];
+    final memberList = await _lifeCycle?.friendListWillMount(res) ?? res;
+    _friendList = memberList;
     notifyListeners();
   }
 

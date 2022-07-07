@@ -1,22 +1,21 @@
 // ignore_for_file: unused_element
 
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_full_info.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
-import 'package:tim_ui_kit/data_services/services_locatar.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_statelesswidget.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_group_profile_view_model.dart';
-import 'package:tim_ui_kit/i18n/i18n_utils.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
+import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/tim_uikit_group_member_list.dart';
-import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/tim_uikit_group_profile.dart';
 import 'package:tim_ui_kit/ui/widgets/avatar.dart';
+import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/shared_data_widget.dart';
 
-class GroupMemberTile extends StatelessWidget {
-  const GroupMemberTile({
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
+
+class GroupMemberTile extends TIMUIKitStatelessWidget {
+  GroupMemberTile({
     Key? key,
   }) : super(key: key);
 
@@ -40,24 +39,21 @@ class GroupMemberTile extends StatelessWidget {
     return _getMemberList(memberList).map((element) {
       final faceUrl = element?.faceUrl ?? "";
       final showName = _getShowName(element);
-      return Container(
-        margin: const EdgeInsets.only(right: 21),
-        child: Column(
-          children: [
-            SizedBox(
-              width: 50,
-              height: 50,
-              child: Avatar(faceUrl: faceUrl, showName: showName),
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-            Text(
-              showName,
-              style: TextStyle(color: theme.weakTextColor, fontSize: 10),
-            )
-          ],
-        ),
+      return Column(
+        children: [
+          SizedBox(
+            width: 50,
+            height: 50,
+            child: Avatar(faceUrl: faceUrl, showName: showName),
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          Text(
+            showName,
+            style: TextStyle(color: theme.weakTextColor, fontSize: 10),
+          )
+        ],
       );
     }).toList();
   }
@@ -68,7 +64,9 @@ class GroupMemberTile extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    final TUITheme theme = value.theme;
+
     final model = SharedDataWidget.of(context)?.model;
     if (model == null) {
       return Container();
@@ -76,8 +74,6 @@ class GroupMemberTile extends StatelessWidget {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider.value(value: model),
-          ChangeNotifierProvider.value(
-              value: serviceLocator<TUIThemeViewModel>())
         ],
         builder: (context, w) {
           final memberAmount = Provider.of<TUIGroupProfileViewModel>(context)
@@ -92,10 +88,7 @@ class GroupMemberTile extends StatelessWidget {
               Provider.of<TUIGroupProfileViewModel>(context).canInviteMember();
           final isCanKickOffMember =
               Provider.of<TUIGroupProfileViewModel>(context).canKickOffMember();
-          final theme = Provider.of<TUIThemeViewModel>(context).theme;
-          final I18nUtils ttBuild = I18nUtils(context);
           return Container(
-            margin: const EdgeInsets.symmetric(vertical: 10),
             padding: const EdgeInsets.only(top: 12, left: 16, bottom: 12),
             color: Colors.white,
             child: Column(
@@ -110,19 +103,6 @@ class GroupMemberTile extends StatelessWidget {
                                   CommonColor.weakDividerColor))),
                   child: InkWell(
                     onTap: () async {
-                      final connectivityResult =
-                          await (Connectivity().checkConnectivity());
-                      if (connectivityResult == ConnectivityResult.none) {
-                        final I18nUtils ttBuild = I18nUtils(context);
-                        Fluttertoast.showToast(
-                          msg: ttBuild.imt("无网络连接，无法查看群成员"),
-                          gravity: ToastGravity.CENTER,
-                          timeInSecForIosWeb: 1,
-                          textColor: Colors.white,
-                          backgroundColor: Colors.black,
-                        );
-                        return;
-                      }
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -133,13 +113,13 @@ class GroupMemberTile extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(ttBuild.imt("群成员"),
+                        Text(TIM_t("群成员"),
                             style: TextStyle(
                                 color: theme.darkTextColor, fontSize: 16)),
                         Row(
                           children: [
                             Text(
-                              ttBuild.imt_para("{{option1}}人", "$option1人")(
+                              TIM_t_para("{{option1}}人", "$option1人")(
                                   option1: option1),
                               style: TextStyle(
                                   color: theme.darkTextColor, fontSize: 16),
@@ -158,7 +138,7 @@ class GroupMemberTile extends StatelessWidget {
                   // height: 90,
                   padding: const EdgeInsets.only(top: 12),
                   child: Wrap(
-                    // spacing: 21,
+                    spacing: 20,
                     runSpacing: 10,
                     alignment: WrapAlignment.start,
                     children: [
@@ -185,10 +165,10 @@ class GroupMemberTile extends StatelessWidget {
                                 color: theme.weakTextColor,
                               ),
                             )),
-                      if (isCanInviteMember)
-                        const SizedBox(
-                          width: 21,
-                        ),
+                      // if (isCanInviteMember)
+                      //   const SizedBox(
+                      //     width: 21,
+                      //   ),
                       if (isCanKickOffMember)
                         DottedBorder(
                             borderType: BorderType.RRect,
@@ -220,25 +200,12 @@ class GroupMemberTile extends StatelessWidget {
                       alignment: Alignment.center,
                       margin: const EdgeInsets.only(top: 16),
                       child: Text(
-                        ttBuild.imt("查看更多群成员"),
+                        TIM_t("查看更多群成员"),
                         style:
                             TextStyle(color: theme.weakTextColor, fontSize: 14),
                       ),
                     ),
                     onTap: () async {
-                      final connectivityResult =
-                          await (Connectivity().checkConnectivity());
-                      if (connectivityResult == ConnectivityResult.none) {
-                        final I18nUtils ttBuild = I18nUtils(context);
-                        Fluttertoast.showToast(
-                          msg: ttBuild.imt("无网络连接，无法查看群成员"),
-                          gravity: ToastGravity.CENTER,
-                          timeInSecForIosWeb: 1,
-                          textColor: Colors.white,
-                          backgroundColor: Colors.black,
-                        );
-                        return;
-                      }
                       Navigator.push(
                           context,
                           MaterialPageRoute(

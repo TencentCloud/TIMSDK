@@ -1,17 +1,11 @@
-import 'package:tencent_im_sdk_plugin/enum/V2TimFriendshipListener.dart';
-import 'package:tencent_im_sdk_plugin/enum/friend_application_type_enum.dart';
-import 'package:tencent_im_sdk_plugin/enum/friend_response_type_enum.dart';
-import 'package:tencent_im_sdk_plugin/enum/friend_type_enum.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_application_result.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_check_result.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_info_result.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_operation_result.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_search_param.dart';
-import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:tim_ui_kit/data_services/core/core_services_implements.dart';
 import 'package:tim_ui_kit/data_services/friendShip/friendship_services.dart';
-import 'package:tim_ui_kit/tim_ui_kit.dart';
+import 'package:tim_ui_kit/data_services/services_locatar.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
 
 class FriendshipServicesImpl with FriendshipServices {
+  final CoreServicesImpl _coreService = serviceLocator<CoreServicesImpl>();
+
   @override
   Future<List<V2TimFriendInfoResult>?> getFriendsInfo({
     required List<String> userIDList,
@@ -21,8 +15,13 @@ class FriendshipServicesImpl with FriendshipServices {
         .getFriendsInfo(userIDList: userIDList);
     if (res.code == 0) {
       return res.data;
+    } else {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: res.desc,
+          errorCode: res.code));
+      return null;
     }
-    return null;
   }
 
   @override
@@ -34,8 +33,13 @@ class FriendshipServicesImpl with FriendshipServices {
         .addToBlackList(userIDList: userIDList);
     if (res.code == 0) {
       return res.data;
+    } else {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: res.desc,
+          errorCode: res.code));
+      return null;
     }
-    return null;
   }
 
   @override
@@ -47,14 +51,22 @@ class FriendshipServicesImpl with FriendshipServices {
     String? addSource,
     String? addWording,
   }) async {
-    return TencentImSDKPlugin.v2TIMManager.getFriendshipManager().addFriend(
-          userID: userID,
-          addType: addType,
-          remark: remark,
-          addWording: addWording,
-          friendGroup: friendGroup,
-          addSource: addSource,
-        );
+    final result =
+        await TencentImSDKPlugin.v2TIMManager.getFriendshipManager().addFriend(
+              userID: userID,
+              addType: addType,
+              remark: remark,
+              addWording: addWording,
+              friendGroup: friendGroup,
+              addSource: addSource,
+            );
+    if (result.code != 0) {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: result.desc,
+          errorCode: result.code));
+    }
+    return result;
   }
 
   @override
@@ -66,8 +78,13 @@ class FriendshipServicesImpl with FriendshipServices {
         .deleteFromBlackList(userIDList: userIDList);
     if (res.code == 0) {
       return res.data;
+    } else {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: res.desc,
+          errorCode: res.code));
+      return null;
     }
-    return null;
   }
 
   @override
@@ -80,8 +97,13 @@ class FriendshipServicesImpl with FriendshipServices {
         .deleteFromFriendList(userIDList: userIDList, deleteType: deleteType);
     if (res.code == 0) {
       return res.data;
+    } else {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: res.desc,
+          errorCode: res.code));
+      return null;
     }
-    return null;
   }
 
   @override
@@ -91,8 +113,13 @@ class FriendshipServicesImpl with FriendshipServices {
         .getFriendList();
     if (res.code == 0) {
       return res.data;
+    } else {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: res.desc,
+          errorCode: res.code));
+      return null;
     }
-    return null;
   }
 
   @override
@@ -102,8 +129,13 @@ class FriendshipServicesImpl with FriendshipServices {
         .getBlackList();
     if (res.code == 0) {
       return res.data;
+    } else {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: res.desc,
+          errorCode: res.code));
+      return null;
     }
-    return null;
   }
 
   @override
@@ -116,8 +148,13 @@ class FriendshipServicesImpl with FriendshipServices {
         .checkFriend(userIDList: userIDList, checkType: checkType);
     if (res.code == 0) {
       return res.data;
+    } else {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: res.desc,
+          errorCode: res.code));
+      return null;
     }
-    return null;
   }
 
   @override
@@ -145,8 +182,13 @@ class FriendshipServicesImpl with FriendshipServices {
         .getFriendApplicationList();
     if (res.code == 0) {
       return res.data;
+    } else {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: res.desc,
+          errorCode: res.code));
+      return null;
     }
-    return null;
   }
 
   @override
@@ -164,8 +206,13 @@ class FriendshipServicesImpl with FriendshipServices {
         );
     if (res.code == 0) {
       return res.data;
+    } else {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: res.desc,
+          errorCode: res.code));
+      return null;
     }
-    return null;
   }
 
   @override
@@ -176,8 +223,13 @@ class FriendshipServicesImpl with FriendshipServices {
         .refuseFriendApplication(type: type, userID: userID);
     if (res.code == 0) {
       return res.data;
+    } else {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: res.desc,
+          errorCode: res.code));
+      return null;
     }
-    return null;
   }
 
   @override
@@ -192,8 +244,11 @@ class FriendshipServicesImpl with FriendshipServices {
             friendRemark: friendRemark,
             friendCustomInfo: friendCustomInfo,
             userID: userID);
-    if (res.code == 0) {
-      return res;
+    if (res.code != 0) {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: res.desc,
+          errorCode: res.code));
     }
     return res;
   }
@@ -207,7 +262,12 @@ class FriendshipServicesImpl with FriendshipServices {
         .searchFriends(searchParam: searchParam);
     if (res.code == 0) {
       return res.data;
+    } else {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: res.desc,
+          errorCode: res.code));
+      return null;
     }
-    return null;
   }
 }
