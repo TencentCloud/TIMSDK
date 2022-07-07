@@ -3,7 +3,6 @@
 import 'dart:math';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
 import 'package:flutter/material.dart';
@@ -12,6 +11,7 @@ import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 
 import 'package:timuikit/src/pages/login.dart';
+import 'package:timuikit/src/provider/login_user_Info.dart';
 import 'package:timuikit/src/provider/theme.dart';
 import 'package:timuikit/src/routes.dart';
 import 'package:timuikit/utils/theme.dart';
@@ -21,6 +21,7 @@ import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';
 
 import 'about.dart';
+import 'my_profile_detail.dart';
 import 'pages/skin/skin_page.dart';
 
 class MyProfile extends StatefulWidget {
@@ -37,7 +38,7 @@ class _ProfileState extends State<MyProfile> {
       TIMUIKitProfileController();
   String? userID;
 
-  String _getAllowText(int allowType) {
+  String _getAllowText(int? allowType) {
     if (allowType == 0) {
       return imt("同意任何用户加好友");
     }
@@ -95,12 +96,6 @@ class _ProfileState extends State<MyProfile> {
     const neddConfirm = 1;
     const denyAny = 2;
 
-    final connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult == ConnectivityResult.none) {
-      Utils.toast("无网络连接，无法修改");
-      return;
-    }
-
     showAdaptiveActionSheet(
       context: context,
       actions: <BottomSheetAction>[
@@ -149,42 +144,6 @@ class _ProfileState extends State<MyProfile> {
     getLoginUser();
   }
 
-  setRandomAvatar() async {
-    int random = Random().nextInt(999);
-    String avatar = "https://picsum.photos/id/$random/200/200";
-    await _coreServices.setSelfInfo(
-        userFullInfo: V2TimUserFullInfo.fromJson({
-      "faceUrl": avatar,
-    }));
-  }
-
-  Future<bool?> showChangeAvatarDialog() {
-    return showDialog<bool>(
-      context: context,
-      builder: (context) {
-        return CupertinoAlertDialog(
-          title: Text(imt("TUIKIT 为你选择一个头像?")),
-          actions: [
-            CupertinoDialogAction(
-              child: Text(imt("确定")),
-              onPressed: () {
-                setRandomAvatar();
-                Navigator.of(context).pop();
-              },
-            ),
-            CupertinoDialogAction(
-              child: Text(imt("取消")),
-              isDestructiveAction: true,
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     if (userID == null) {
@@ -192,72 +151,75 @@ class _ProfileState extends State<MyProfile> {
     }
     final themeType = Provider.of<DefaultThemeData>(context).currentThemeType;
     final theme = Provider.of<DefaultThemeData>(context).theme;
-    return TIMUIKitProfile(
-      controller: _timuiKitProfileController,
-      canJumpToPersonalProfile: true,
-      userID: userID!,
-      onSelfAvatarTap: showChangeAvatarDialog,
-      operationListBuilder:
-          (context, userInfo, conversation, friendType, isDisturb) {
-        final allowType = userInfo.userProfile?.allowType ?? 0;
-        final allowText = _getAllowText(allowType);
+    final loginUserInfoModel = Provider.of<LoginUserInfo>(context);
+    final V2TimUserFullInfo loginUserInfo = loginUserInfoModel.loginUserInfo;
+    final int? allowType = loginUserInfo.allowType;
+    final allowText = _getAllowText(allowType);
 
-        return Column(
-          children: [
-            // 好友验证方式选
-            Container(
-              margin: const EdgeInsets.symmetric(vertical: 10),
-              child: InkWell(
-                onTap: () {
-                  showApplicationTypeSheet(theme);
-                },
-                child: TIMUIKitOperationItem(
-                  operationName: imt("加我为好友时需要验证"),
-                  operationRightWidget: Text(allowText),
-                ),
+    return Column(
+      children: [
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => MyProfileDetail()),
+            );
+          },
+          child: TIMUIKitProfileUserInfoCard(
+            userInfo: loginUserInfo,
+            showArrowRightIcon: true,
+          ),
+        ),
+        // 好友验证方式选
+        Container(
+          margin: const EdgeInsets.symmetric(vertical: 10),
+          child: InkWell(
+            onTap: () {
+              showApplicationTypeSheet(theme);
+            },
+            child: TIMUIKitOperationItem(
+              operationName: imt("加我为好友时需要验证"),
+              operationRightWidget: Text(allowText),
+            ),
+          ),
+        ),
+        InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const SkinPage(),
               ),
-            ),
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const SkinPage(),
-                  ),
-                );
-              },
-              child: TIMUIKitOperationItem(
-                operationName: imt("更换皮肤"),
-                operationRightWidget: Text(
-                    DefTheme.defaultThemeName[themeType]!,
-                    style: TextStyle(color: theme.primaryColor)),
+            );
+          },
+          child: TIMUIKitOperationItem(
+            operationName: imt("更换皮肤"),
+            operationRightWidget: Text(DefTheme.defaultThemeName[themeType]!,
+                style: TextStyle(color: theme.primaryColor)),
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const About(),
               ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const About(),
-                  ),
-                );
-              },
-              child: TIMUIKitOperationItem(
-                operationName: imt("关于腾讯云 · IM"),
-                operationRightWidget: const Text(""),
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            )
-          ],
-        );
-      },
-      bottomOperationBuilder: (context, friendInfo, conversation, friendType) {
-        return InkWell(
+            );
+          },
+          child: TIMUIKitOperationItem(
+            operationName: imt("关于腾讯云 · IM"),
+            operationRightWidget: const Text(""),
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        InkWell(
           onTap: _handleLogout,
           child: Container(
             alignment: Alignment.center,
@@ -271,8 +233,8 @@ class _ProfileState extends State<MyProfile> {
               style: TextStyle(color: hexToColor("FF584C"), fontSize: 17),
             ),
           ),
-        );
-      },
+        )
+      ],
     );
   }
 }

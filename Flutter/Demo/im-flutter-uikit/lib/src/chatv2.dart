@@ -98,7 +98,7 @@ class _ChatV2State extends State<ChatV2> {
                 TIMUIKitInputTextField(
                   controller: _textFieldController,
                   conversationID: _getConvID() ?? "",
-                  conversationType: widget.selectedConversation.type ?? 1,
+                  conversationType: widget.selectedConversation.type ?? ConversationType.V2TIM_C2C,
                   scrollController:
                       _historyMessageListController.scrollController!,
                   hintText: "",

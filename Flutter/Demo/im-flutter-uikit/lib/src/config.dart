@@ -1,4 +1,5 @@
-import '../i18n/i18n_utils.dart';
+
+import 'package:timuikit/i18n/i18n_utils.dart';
 
 enum WebUrl { personalInfo, thirdPartyInfo }
 

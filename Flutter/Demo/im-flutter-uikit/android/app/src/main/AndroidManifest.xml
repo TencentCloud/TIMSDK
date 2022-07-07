@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     >
    <application
-        android:label="云通信IM"
+        android:label="腾讯云IM"
         tools:replace="android:label"
         android:icon="@mipmap/logo"
        android:usesCleartextTraffic="true"

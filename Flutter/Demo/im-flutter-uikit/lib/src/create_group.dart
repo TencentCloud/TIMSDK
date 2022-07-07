@@ -6,10 +6,10 @@ import 'package:timuikit/i18n/i18n_utils.dart';
 import 'package:timuikit/src/chat.dart';
 import 'package:timuikit/src/provider/theme.dart';
 
-enum ConversationType { single, work, chat, meeting, public }
+enum GroupTypeForUIKit { single, work, chat, meeting, public }
 
 class CreateGroup extends StatefulWidget {
-  final ConversationType convType;
+  final GroupTypeForUIKit convType;
   const CreateGroup({Key? key, required this.convType}) : super(key: key);
 
   @override
@@ -127,19 +127,19 @@ class _CreateGroup extends State<CreateGroup> {
               onPressed: () async {
                 if (selectedFriendList.isNotEmpty) {
                   switch (widget.convType) {
-                    case ConversationType.single:
+                    case GroupTypeForUIKit.single:
                       _createSingleConversation();
                       break;
-                    case ConversationType.chat:
+                    case GroupTypeForUIKit.chat:
                       _createGroup(GroupType.AVChatRoom);
                       break;
-                    case ConversationType.meeting:
+                    case GroupTypeForUIKit.meeting:
                       _createGroup(GroupType.Meeting);
                       break;
-                    case ConversationType.work:
+                    case GroupTypeForUIKit.work:
                       _createGroup(GroupType.Work);
                       break;
-                    case ConversationType.public:
+                    case GroupTypeForUIKit.public:
                       _createGroup(GroupType.Public);
                       break;
                   }
@@ -160,7 +160,7 @@ class _CreateGroup extends State<CreateGroup> {
       body: ContactList(
         contactList: friendList,
         isCanSelectMemberItem: true,
-        maxSelectNum: widget.convType == ConversationType.single ? 1 : null,
+        maxSelectNum: widget.convType == GroupTypeForUIKit.single ? 1 : null,
         onSelectedMemberItemChange: (selectedMember) {
           selectedFriendList = selectedMember;
           setState(() {});

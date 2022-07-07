@@ -9,8 +9,7 @@ import 'package:timuikit/src/chat.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:timuikit/src/provider/theme.dart';
-
-import '../src/search.dart';
+import 'package:timuikit/src/search.dart';
 
 class Conversation extends StatefulWidget {
   final TIMUIKitConversationController conversationController;
@@ -65,6 +64,11 @@ class _ConversationState extends State<Conversation> {
         isPinned: !conversation.isPinned!);
   }
 
+  _deleteConversation(V2TimConversation conversation) {
+    _controller.deleteConversation(conversationID: conversation.conversationID);
+  }
+
+
   List<ConversationItemSlidablePanel> _itemSlidableBuilder(
       V2TimConversation conversationItem) {
     return [
@@ -84,6 +88,14 @@ class _ConversationState extends State<Conversation> {
         backgroundColor: hexToColor("FF9C19"),
         foregroundColor: Colors.white,
         label: conversationItem.isPinned! ? imt("取消置顶") : imt("置顶"),
+      ),
+      ConversationItemSlidablePanel(
+        onPressed: (context) {
+          _deleteConversation(conversationItem);
+        },
+        backgroundColor: Colors.red,
+        foregroundColor: Colors.white,
+        label: imt("删除"),
       )
     ];
   }
@@ -94,8 +106,8 @@ class _ConversationState extends State<Conversation> {
         await Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => Search(
-                  onTapConversation: _handleOnConvItemTapedWithPlace),
+              builder: (context) =>
+                  Search(onTapConversation: _handleOnConvItemTapedWithPlace),
             ));
       },
       child: Container(
@@ -156,11 +168,14 @@ class _ConversationState extends State<Conversation> {
           onTapItem: _handleOnConvItemTaped,
           itemSlidableBuilder: _itemSlidableBuilder,
           controller: _controller,
-          emptyBuilder: () {
-            return Center(
-              child: Text(imt("暂无会话")),
-            );
-          },
+              emptyBuilder: () {
+                return Container(
+                  padding: const EdgeInsets.only(top:100),
+                  child: Center(
+                    child: Text(imt("暂无会话")),
+                  ),
+                );
+              },
         ))
       ],
     );
