@@ -1,8 +1,6 @@
 // ignore_for_file: constant_identifier_names
+import 'package:timuikit/i18n/i18n_utils.dart';
 import 'package:timuikit/utils/custom_emoji_face_data.dart';
-
-import '../i18n/i18n_utils.dart';
-import 'custom_emoji_face_data.dart';
 
 class Const {
   // 时间戳消息 前端模拟

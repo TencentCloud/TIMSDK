@@ -7,19 +7,16 @@ import 'package:tim_ui_kit/business_logic/view_models/tui_self_info_view_model.d
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
+import 'package:timuikit/i18n/i18n_utils.dart';
 import 'package:timuikit/src/pages/login.dart';
 import 'package:timuikit/src/provider/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:timuikit/src/routes.dart';
-
-import '../i18n/i18n_utils.dart';
-import '../utils/request.dart';
-import '../utils/toast.dart';
+import 'package:timuikit/utils/request.dart';
+import 'package:timuikit/utils/toast.dart';
 import 'config.dart';
 
 import 'package:dio/dio.dart';
-
-import '../src/config.dart';
 
 class CancelAccount extends StatelessWidget {
   final TUISelfInfoViewModel _selfInfoViewModel =

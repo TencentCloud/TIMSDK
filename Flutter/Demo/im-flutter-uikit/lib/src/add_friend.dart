@@ -29,7 +29,8 @@ class AddFriend extends StatelessWidget {
           iconTheme: const IconThemeData(
             color: Colors.white,
           )),
-      body: const TIMUIKitAddFriend(),
+      body: const TIMUIKitAddFriend(
+      ),
     );
   }
 }

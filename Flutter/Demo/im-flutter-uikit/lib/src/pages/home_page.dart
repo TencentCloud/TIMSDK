@@ -308,7 +308,7 @@ class HomePageState extends State<HomePage> {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => const CreateGroup(
-              convType: ConversationType.single,
+              convType: GroupTypeForUIKit.single,
             ),
           ),
         );
@@ -317,7 +317,7 @@ class HomePageState extends State<HomePage> {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => const CreateGroup(
-              convType: ConversationType.work,
+              convType: GroupTypeForUIKit.work,
             ),
           ),
         );
@@ -326,7 +326,7 @@ class HomePageState extends State<HomePage> {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => const CreateGroup(
-              convType: ConversationType.public,
+              convType: GroupTypeForUIKit.public,
             ),
           ),
         );
@@ -335,7 +335,7 @@ class HomePageState extends State<HomePage> {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => const CreateGroup(
-              convType: ConversationType.meeting,
+              convType: GroupTypeForUIKit.meeting,
             ),
           ),
         );
@@ -344,7 +344,7 @@ class HomePageState extends State<HomePage> {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => const CreateGroup(
-              convType: ConversationType.chat,
+              convType: GroupTypeForUIKit.chat,
             ),
           ),
         );
