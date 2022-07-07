@@ -1,3 +1,4 @@
+// ignore: camel_case_types
 enum V2_TIM_IMAGE_TYPES_ENUM {
   original,
   big,

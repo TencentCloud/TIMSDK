@@ -5,10 +5,12 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 import 'package:tencent_im_sdk_plugin/enum/message_status.dart';
+import 'package:tim_ui_kit/business_logic/view_models/ourschool_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
@@ -25,7 +27,6 @@ import 'package:tim_ui_kit/ui/widgets/avatar.dart';
 import 'package:tim_ui_kit/ui/widgets/forward_message_screen.dart';
 import 'package:tim_ui_kit/ui/widgets/loading.dart';
 import 'package:tim_ui_kit/ui/widgets/radio_button.dart';
-import 'package:flutter/services.dart';
 
 typedef MessageRowBuilder = Widget Function(
   /// current message
@@ -336,6 +337,10 @@ class _TIMUIKItHistoryMessageListItemState
           return tooltipsConfig.showDeleteMessage;
         }
 
+        if (type == "multiSelect") {
+          return tooltipsConfig.showMultipleChoiceMessage;
+        }
+
         if (type == "revoke") {
           return tooltipsConfig.showRecallMessage;
         }
@@ -457,7 +462,7 @@ class _TIMUIKItHistoryMessageListItemState
       left: widget.message.isSelf! ? null : 60,
       borderColor: Colors.white,
       backgroundColor: Colors.white,
-      shadowColor: Colors.black26,
+      shadowColor: Colors.black.withOpacity(.05),
       hasShadow: true,
       borderWidth: 1.0,
       showCloseButton: ShowCloseButton.none,
@@ -744,13 +749,15 @@ class _TIMUIKItHistoryMessageListItemState
   Widget _revokedMessageBuilder(theme, String option2) {
     final I18nUtils ttBuild = I18nUtils(context);
     return Container(
-        margin: const EdgeInsets.symmetric(vertical: 20),
-        alignment: Alignment.center,
-        child: Text(
-          ttBuild.imt_para("{{option2}}撤回了一条消息", "$option2撤回了一条消息")(
-              option2: option2),
-          style: TextStyle(color: theme.weakTextColor, fontSize: 12),
-        ));
+      margin: const EdgeInsets.symmetric(vertical: 20),
+      alignment: Alignment.center,
+      child: Text(
+        ttBuild.imt_para("{{option2}}撤回了一条消息", "$option2撤回了一条消息")(
+          option2: option2,
+        ),
+        style: TextStyle(color: theme.weakTextColor, fontSize: 12),
+      ),
+    );
   }
 
   Widget _timeDividerBuilder(theme, int timeStamp) {
@@ -900,8 +907,13 @@ class _TIMUIKItHistoryMessageListItemState
     }
 
     if (isRevokedMsg) {
-      final displayName =
-          isSelf ? ttBuild.imt("您") : message.nickName ?? message.sender;
+      final OurSchoolChatProvider ourSchoolChatProvider =
+          Provider.of<OurSchoolChatProvider>(context);
+      final displayName = isSelf
+          ? ttBuild.imt("您")
+          : ourSchoolChatProvider.getMemberByIMId(message.sender)?.name ??
+              message.nickName ??
+              message.sender;
       return isSelf && isRevokeEditable && isRevokable(message.timestamp!)
           ? _selfRevokeEditMessageBuilder(theme, model)
           : _revokedMessageBuilder(theme, displayName ?? "");

@@ -31,13 +31,13 @@ class _PermissionRequestInfo extends State<PermissionRequestInfo>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
     super.dispose();
-    WidgetsBinding.instance?.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
   }
 
   @override
@@ -163,7 +163,7 @@ class Permissions {
   static String _permissionText(
       BuildContext context, String appName, int value) {
     final I18nUtils ttBuild = I18nUtils(context);
-    final _prefix = ttBuild.imt("需要授予");
+    final _prefix = ttBuild.imt("需要授予 ");
     final _postfixList = <String>[
       ttBuild.imt("日历"),
       ttBuild.imt(" 相机权限，以正常使用拍摄图片视频、视频通话等功能。"),

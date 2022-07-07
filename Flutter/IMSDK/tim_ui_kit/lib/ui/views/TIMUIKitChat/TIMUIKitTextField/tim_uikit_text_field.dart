@@ -3,21 +3,26 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:tencent_im_sdk_plugin/enum/conversation_type.dart';
+import 'package:tim_ui_kit/business_logic/view_models/ourschool_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_conversation_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/utils/message.dart';
+import 'package:tim_ui_kit/ui/utils/permission.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitTextField/tim_uikit_at_text.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitTextField/tim_uikit_emoji_panel.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitTextField/tim_uikit_send_sound_message.dart';
 
-import 'package:tim_ui_kit/ui/utils/permission.dart';
-
 class TIMUIKitInputTextField extends StatefulWidget {
+  final List<SingleChildWidget>? providers;
+
+  final bool? disabled;
+
   /// conversation id
   final String conversationID;
 
@@ -61,22 +66,24 @@ class TIMUIKitInputTextField extends StatefulWidget {
       void Function() deleteText,
       void Function(int unicode) addText})? customStickerPanel;
 
-  const TIMUIKitInputTextField(
-      {Key? key,
-      required this.conversationID,
-      required this.conversationType,
-      this.initText,
-      this.hintText,
-      this.scrollController,
-      this.morePanelConfig,
-      this.customStickerPanel,
-      this.showSendAudio = true,
-      this.showSendEmoji = true,
-      this.showMorePannel = true,
-      this.backgroundColor,
-      this.controller,
-      this.onChanged})
-      : super(key: key);
+  const TIMUIKitInputTextField({
+    Key? key,
+    required this.conversationID,
+    required this.conversationType,
+    this.disabled,
+    this.providers,
+    this.initText,
+    this.hintText,
+    this.scrollController,
+    this.morePanelConfig,
+    this.customStickerPanel,
+    this.showSendAudio = true,
+    this.showSendEmoji = true,
+    this.showMorePannel = true,
+    this.backgroundColor,
+    this.controller,
+    this.onChanged,
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _InputTextFieldState();
@@ -90,7 +97,7 @@ class _InputTextFieldState extends State<TIMUIKitInputTextField> {
   late FocusNode focusNode;
   String zeroWidthSpace = '\ufeff';
   String lastText = "";
-  double lastkeyboardHeight = 0;
+  double lastKeyboardHeight = 0;
 
   Map<String, V2TimGroupMemberFullInfo> memberInfoMap = {};
 
@@ -102,16 +109,16 @@ class _InputTextFieldState extends State<TIMUIKitInputTextField> {
   listenKeyBoardStatus() {
     final currentKeyboardHeight = MediaQuery.of(context).viewInsets.bottom;
     // 键盘弹出
-    if (currentKeyboardHeight - lastkeyboardHeight > 0) {
+    if (currentKeyboardHeight - lastKeyboardHeight > 0) {
       // 保证弹出时showKeyboard为true
       setState(() {
         showKeyboard = true;
       });
 
       /// 键盘收回
-    } else if (currentKeyboardHeight - lastkeyboardHeight < 0) {}
+    } else if (currentKeyboardHeight - lastKeyboardHeight < 0) {}
 
-    lastkeyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+    lastKeyboardHeight = MediaQuery.of(context).viewInsets.bottom;
   }
 
   Widget _getBottomContainer() {
@@ -228,11 +235,14 @@ class _InputTextFieldState extends State<TIMUIKitInputTextField> {
         conversationID: conversationID, draftText: draftText);
   }
 
-  _buildRepliedMessage(V2TimMessage? repliedMessage) {
+  _buildRepliedMessage(
+    V2TimMessage? repliedMessage,
+    String? name,
+  ) {
     final haveRepliedMessage = repliedMessage != null;
     if (haveRepliedMessage) {
       final text =
-          "${MessageUtils.getDisplayName(model.repliedMessage!)}:${MessageUtils.getAbstractMessage(model.repliedMessage!, context)}";
+          "${name ?? MessageUtils.getDisplayName(model.repliedMessage!)}:${MessageUtils.getAbstractMessage(model.repliedMessage!, context)}";
       return Container(
         color: hexToColor("EBF0F6"),
         alignment: Alignment.centerLeft,
@@ -446,10 +456,18 @@ class _InputTextFieldState extends State<TIMUIKitInputTextField> {
       userID: userID ?? "",
       nickName: nickName,
     );
-    final showName = _getShowName(memberInfo);
+
+    /// final showName = _getShowName(memberInfo);
+    final showName = Provider.of<OurSchoolChatProvider>(
+          context,
+          listen: false,
+        ).getMemberByIMId(memberInfo.userID)?.name ??
+        _getShowName(memberInfo);
+
     memberInfoMap["@$showName"] = memberInfo;
     String text = "$lastText@$showName ";
-    //please do not delete space
+
+    /// please do not delete space
     textEditingController.text = text;
     textEditingController.selection =
         TextSelection.fromPosition(TextPosition(offset: text.length));
@@ -492,14 +510,25 @@ class _InputTextFieldState extends State<TIMUIKitInputTextField> {
         context,
         MaterialPageRoute(
           builder: (context) => AtText(
-              groupID: groupID,
-              groupType: conversationModel.selectedConversation?.groupType),
+            groupID: groupID,
+            groupType: conversationModel.selectedConversation?.groupType,
+            providers: widget.providers,
+          ),
         ),
       );
-      final showName = _getShowName(memberInfo);
+
+      final showName = Provider.of<OurSchoolChatProvider>(
+            context,
+            listen: false,
+          ).getMemberByIMId(memberInfo?.userID)?.name ??
+          _getShowName(memberInfo);
+
+      /// final showName = _getShowName(memberInfo);
+
       if (memberInfo != null) {
         memberInfoMap["@$showName"] = memberInfo;
-        //please don not delete space
+
+        /// please don not delete space
         textEditingController.text = "$text$showName ";
       }
     }
@@ -569,77 +598,88 @@ class _InputTextFieldState extends State<TIMUIKitInputTextField> {
     }, const Duration(milliseconds: 80));
     return Selector<TUIChatViewModel, V2TimMessage?>(
         builder: ((context, value, child) {
-          return Column(
-            children: [
-              _buildRepliedMessage(value),
-              Container(
-                color: widget.backgroundColor ?? hexToColor("EBF0F6"),
-                child: SafeArea(
-                  child: Column(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8, horizontal: 16),
-                        constraints: const BoxConstraints(minHeight: 50),
-                        child: Row(
-                          children: [
-                            if (widget.showSendAudio)
-                              InkWell(
-                                onTap: () async {
-                                  if (showSendSoundText) {
-                                    focusNode.requestFocus();
-                                    setState(() {
-                                      showKeyboard = true;
-                                    });
-                                  }
-                                  if (await Permissions.checkPermission(
-                                      context, Permission.microphone.value)) {
-                                    setState(() {
-                                      showEmojiPanel = false;
-                                      showMore = false;
-                                      showSendSoundText = !showSendSoundText;
-                                    });
-                                  }
-                                },
-                                child: SvgPicture.asset(
-                                  showSendSoundText
-                                      ? 'images/keyboard.svg'
-                                      : 'images/voice.svg',
-                                  package: 'tim_ui_kit',
-                                  color: const Color.fromRGBO(68, 68, 68, 1),
-                                  height: 28,
-                                  width: 28,
+          final ourschoolChatProvider = Provider.of<OurSchoolChatProvider>(
+            context,
+            listen: false,
+          );
+
+          final name =
+              ourschoolChatProvider.getMemberByIMId(value?.sender)?.name;
+
+          return AbsorbPointer(
+            absorbing: widget.disabled == true,
+            child: Column(
+              children: [
+                _buildRepliedMessage(value, name),
+                Container(
+                  color: widget.backgroundColor ?? hexToColor("EBF0F6"),
+                  child: SafeArea(
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8, horizontal: 16),
+                          constraints: const BoxConstraints(minHeight: 50),
+                          child: Row(
+                            children: [
+                              if (widget.showSendAudio)
+                                InkWell(
+                                  onTap: () async {
+                                    if (showSendSoundText) {
+                                      focusNode.requestFocus();
+                                      setState(() {
+                                        showKeyboard = true;
+                                      });
+                                    }
+                                    if (await Permissions.checkPermission(
+                                        context, Permission.microphone.value)) {
+                                      setState(() {
+                                        showEmojiPanel = false;
+                                        showMore = false;
+                                        showSendSoundText = !showSendSoundText;
+                                      });
+                                    }
+                                  },
+                                  child: SvgPicture.asset(
+                                    showSendSoundText
+                                        ? 'images/keyboard.svg'
+                                        : 'images/voice.svg',
+                                    package: 'tim_ui_kit',
+                                    color: const Color.fromRGBO(68, 68, 68, 1),
+                                    height: 28,
+                                    width: 28,
+                                  ),
                                 ),
+                              const SizedBox(
+                                width: 10,
                               ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Expanded(
-                              child: showSendSoundText
-                                  ? SendSoundMessage(
-                                      onDownBottom: goDownBottom,
-                                      conversationID: widget.conversationID,
-                                      conversationType: widget.conversationType)
-                                  : TextField(
-                                      onChanged: debounceFunc,
-                                      maxLines: 4,
-                                      minLines: 1,
-                                      controller: textEditingController,
-                                      focusNode: focusNode,
-                                      onTap: () {
-                                        goDownBottom();
-                                        setState(() {
-                                          showKeyboard = true;
-                                          showEmojiPanel = false;
-                                          showMore = false;
-                                        });
-                                      },
-                                      keyboardType: TextInputType.text,
-                                      textInputAction: TextInputAction.send,
-                                      onEditingComplete: onSubmitted,
-                                      textAlignVertical:
-                                          TextAlignVertical.center,
-                                      decoration: InputDecoration(
+                              Expanded(
+                                child: showSendSoundText
+                                    ? SendSoundMessage(
+                                        onDownBottom: goDownBottom,
+                                        conversationID: widget.conversationID,
+                                        conversationType:
+                                            widget.conversationType)
+                                    : TextField(
+                                        onChanged: debounceFunc,
+                                        maxLines: 4,
+                                        minLines: 1,
+                                        controller: textEditingController,
+                                        focusNode: focusNode,
+                                        onTap: () {
+                                          goDownBottom();
+                                          setState(() {
+                                            showKeyboard = true;
+                                            showEmojiPanel = false;
+                                            showMore = false;
+                                          });
+                                        },
+                                        keyboardType: TextInputType.text,
+                                        textInputAction: TextInputAction.send,
+                                        onEditingComplete: onSubmitted,
+                                        textAlignVertical:
+                                            TextAlignVertical.center,
+                                        decoration: InputDecoration(
                                           border: InputBorder.none,
                                           hintStyle: const TextStyle(
                                             // fontSize: 10,
@@ -648,58 +688,62 @@ class _InputTextFieldState extends State<TIMUIKitInputTextField> {
                                           fillColor: Colors.white,
                                           filled: true,
                                           isDense: true,
-                                          hintText: widget.hintText ?? ''),
-                                    ),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            if (widget.showSendEmoji)
-                              InkWell(
-                                onTap: () {
-                                  _openEmojiPanel();
-                                  goDownBottom();
-                                },
-                                child: SvgPicture.asset(
-                                  showEmojiPanel
-                                      ? 'images/keyboard.svg'
-                                      : 'images/face.svg',
-                                  package: 'tim_ui_kit',
-                                  color: const Color.fromRGBO(68, 68, 68, 1),
-                                  height: 28,
-                                  width: 28,
-                                ),
+                                          hintText: widget.disabled == true
+                                              ? '全体家长禁言中'
+                                              : widget.hintText ?? '',
+                                        ),
+                                      ),
                               ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            if (widget.showMorePannel)
-                              InkWell(
-                                onTap: () {
-                                  _openMore();
-                                  goDownBottom();
-                                },
-                                child: SvgPicture.asset(
-                                  'images/add.svg',
-                                  package: 'tim_ui_kit',
-                                  color: const Color.fromRGBO(68, 68, 68, 1),
-                                  height: 28,
-                                  width: 28,
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              if (widget.showSendEmoji)
+                                InkWell(
+                                  onTap: () {
+                                    _openEmojiPanel();
+                                    goDownBottom();
+                                  },
+                                  child: SvgPicture.asset(
+                                    showEmojiPanel
+                                        ? 'images/keyboard.svg'
+                                        : 'images/face.svg',
+                                    package: 'tim_ui_kit',
+                                    color: const Color.fromRGBO(68, 68, 68, 1),
+                                    height: 28,
+                                    width: 28,
+                                  ),
                                 ),
-                              )
-                          ],
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              if (widget.showMorePannel)
+                                InkWell(
+                                  onTap: () {
+                                    _openMore();
+                                    goDownBottom();
+                                  },
+                                  child: SvgPicture.asset(
+                                    'images/add.svg',
+                                    package: 'tim_ui_kit',
+                                    color: const Color.fromRGBO(68, 68, 68, 1),
+                                    height: 28,
+                                    width: 28,
+                                  ),
+                                )
+                            ],
+                          ),
                         ),
-                      ),
-                      AnimatedContainer(
-                        duration: const Duration(milliseconds: 150),
-                        height: _getBottomHeight(),
-                        child: _getBottomContainer(),
-                      )
-                    ],
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 150),
+                          height: _getBottomHeight(),
+                          child: _getBottomContainer(),
+                        )
+                      ],
+                    ),
                   ),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           );
         }),
         selector: (c, model) => model.repliedMessage);

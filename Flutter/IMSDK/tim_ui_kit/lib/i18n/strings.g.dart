@@ -81,10 +81,7 @@ class LocaleSettings {
     _currLocale = locale;
     _t = _currLocale.translations;
 
-    if (WidgetsBinding.instance != null) {
-      // force rebuild if TranslationProvider is used
-      _translationProviderKey.currentState?.setLocale(_currLocale);
-    }
+    _translationProviderKey.currentState?.setLocale(_currLocale);
 
     return _currLocale;
   }
@@ -126,7 +123,7 @@ class AppLocaleUtils {
   /// Fallbacks to base locale.
   static AppLocale findDeviceLocale() {
     final String? deviceLocale =
-        WidgetsBinding.instance?.window.locale.toLanguageTag();
+        WidgetsBinding.instance.window.locale.toLanguageTag();
     if (deviceLocale != null) {
       final typedLocale = _selectLocale(deviceLocale);
       if (typedLocale != null) {

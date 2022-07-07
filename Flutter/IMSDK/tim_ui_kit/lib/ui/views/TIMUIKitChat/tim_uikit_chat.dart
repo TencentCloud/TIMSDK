@@ -136,7 +136,7 @@ class _TUIChatState extends State<TIMUIKitChat> {
         convID: widget.conversationID, convType: widget.conversationType);
     model.setChatConfig(widget.config!);
     super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((_) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (kProfileMode) {
         widget.endTime = DateTime.now().millisecondsSinceEpoch;
         int timeSpend = widget.endTime - widget.startTime;

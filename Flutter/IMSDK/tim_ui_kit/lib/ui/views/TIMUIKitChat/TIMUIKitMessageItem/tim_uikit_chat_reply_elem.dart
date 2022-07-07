@@ -8,15 +8,15 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:tencent_im_sdk_plugin/enum/message_elem_type.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
+import 'package:tim_ui_kit/business_logic/view_models/ourschool_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/i18n/i18n_utils.dart';
+import 'package:tim_ui_kit/ui/utils/shared_theme.dart';
 import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitMessageItem/main.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitMessageItem/tim_uikit_chat_face_elem.dart';
-
-import 'package:tim_ui_kit/ui/utils/shared_theme.dart';
 
 class CloudCustomData {
   late Map<String, dynamic> messageReply;
@@ -152,7 +152,7 @@ class _TIMUIKitReplyElemState extends State<TIMUIKitReplyElem> {
 
   @override
   void didUpdateWidget(covariant TIMUIKitReplyElem oldWidget) {
-    WidgetsBinding.instance?.addPostFrameCallback((mag) {
+    WidgetsBinding.instance.addPostFrameCallback((mag) {
       super.didUpdateWidget(oldWidget);
       _getMessageByMessageID();
     });
@@ -199,6 +199,11 @@ class _TIMUIKitReplyElemState extends State<TIMUIKitReplyElem> {
   Widget build(BuildContext context) {
     // final theme = SharedThemeWidget.of(context)?.theme;
     final theme = Provider.of<TUIThemeViewModel>(context).theme;
+    final ourSchoolChatProvider = Provider.of<OurSchoolChatProvider>(
+      context,
+      listen: false,
+    );
+
     final isSelf = widget.message.isSelf ?? false;
     backgroundColorNormal = widget.backgroundColor ??
         (isSelf
@@ -250,7 +255,8 @@ class _TIMUIKitReplyElemState extends State<TIMUIKitReplyElem> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "${reqpliedMessage!.messageSender}:",
+                    /// 这里的 messageSender 是发送人的昵称，不是发送人的 id，只是我们约定默认的昵称就是 id
+                    "${ourSchoolChatProvider.getMemberByIMId(reqpliedMessage!.messageSender)?.name ?? reqpliedMessage!.messageSender}:",
                     style: TextStyle(
                         fontSize: 12,
                         color: theme.weakTextColor,

@@ -52,6 +52,9 @@ class TIMUIKitHistoryMessageListController extends ChangeNotifier {
 }
 
 class TIMUIKitHistoryMessageList extends StatefulWidget {
+  /// 1 or 2
+  final int? conversationType;
+
   /// message list
   final List<V2TimMessage?> messageList;
 
@@ -76,17 +79,18 @@ class TIMUIKitHistoryMessageList extends StatefulWidget {
   /// configuration for list view
   final ListView? mainHistoryListConfig;
 
-  const TIMUIKitHistoryMessageList(
-      {Key? key,
-      required this.messageList,
-      this.itemBuilder,
-      this.controller,
-      required this.onLoadMore,
-      this.tongueItemBuilder,
-      this.groupAtInfoList,
-      this.initFindingMsg,
-      this.mainHistoryListConfig})
-      : super(key: key);
+  const TIMUIKitHistoryMessageList({
+    Key? key,
+    this.conversationType,
+    required this.messageList,
+    this.itemBuilder,
+    this.controller,
+    required this.onLoadMore,
+    this.tongueItemBuilder,
+    this.groupAtInfoList,
+    this.initFindingMsg,
+    this.mainHistoryListConfig,
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _TIMUIKitHistoryMessageListState();
@@ -104,6 +108,9 @@ class _TIMUIKitHistoryMessageListState
   @override
   void initState() {
     super.initState();
+    if (widget.conversationType != null) {
+      model.currentSelectedConvType = widget.conversationType;
+    }
     _controller = widget.controller ?? TIMUIKitHistoryMessageListController();
     _autoScrollController =
         _controller.scrollController ?? AutoScrollController();

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:chewie/chewie.dart';
 import 'package:dio/dio.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +11,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tencent_im_sdk_plugin/enum/message_status.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
-
-import 'package:chewie/chewie.dart';
 import 'package:tim_ui_kit/ui/utils/permission.dart';
 import 'package:tim_ui_kit/ui/utils/platform.dart';
 import 'package:tim_ui_kit/ui/widgets/toast.dart';
@@ -132,7 +131,7 @@ class _VideoScreenState extends State<VideoScreen> {
                 widget.message.videoElem!.localVideoUrl!,
               ));
     await player.initialize();
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       // 图片目前按照缩略图尺寸走的，并未走UI图，UI图比例过大图片很糊
       double w = getVideoWidth();
       double h = getVideoHeight();

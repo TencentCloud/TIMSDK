@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+import 'package:tencent_im_sdk_plugin/models/v2_tim_conversation.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_info.dart';
+import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_full_info.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_group_profile_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
@@ -15,9 +17,8 @@ import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/tim_uikit_group_name_ca
 import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/tim_uikit_group_notification.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/tim_uikit_group_pin_conversation.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/tim_uikit_group_type.dart';
-export 'package:tim_ui_kit/ui/widgets/transimit_group_owner_select.dart';
 
-import '../../../tim_ui_kit.dart';
+export 'package:tim_ui_kit/ui/widgets/transimit_group_owner_select.dart';
 
 class SharedDataWidget extends InheritedWidget {
   final TUIGroupProfileViewModel model;

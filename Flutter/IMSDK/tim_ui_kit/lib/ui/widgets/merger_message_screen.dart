@@ -20,20 +20,20 @@ class MergerMessageScreen extends StatelessWidget {
       : super(key: key);
 
   bool isReplyMessage(V2TimMessage message) {
-    final hasCustomdata =
+    final hasCustomData =
         message.cloudCustomData != null && message.cloudCustomData != "";
-    if (hasCustomdata) {
-      bool canparse = false;
+    if (hasCustomData) {
+      bool canParse = false;
       try {
         final messageCloudCustomData = json.decode(message.cloudCustomData!);
         CloudCustomData.fromJson(messageCloudCustomData);
-        canparse = true;
+        canParse = true;
       } catch (error) {
-        canparse = false;
+        canParse = false;
       }
-      return canparse;
+      return canParse;
     }
-    return hasCustomdata;
+    return hasCustomData;
   }
 
   Widget _getMsgItem(V2TimMessage message, I18nUtils ttBuild) {

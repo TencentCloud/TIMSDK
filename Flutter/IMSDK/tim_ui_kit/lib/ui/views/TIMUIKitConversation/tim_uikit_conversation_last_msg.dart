@@ -24,15 +24,11 @@ class TIMUIKitLastMsg extends StatelessWidget {
       : super(key: key);
 
   String _getMsgElem() {
-    final I18nUtils ttBuild = I18nUtils(context);
-
     final isRevokedMessage = lastMsg!.status == 6;
+
+    /// 这里没有 OurSchoolChatProvider，获取名字太麻烦了，干脆不显示名字
     if (isRevokedMessage) {
-      final isSelf = lastMsg!.isSelf ?? false;
-      final option1 =
-          isSelf ? ttBuild.imt("您") : lastMsg!.nickName ?? lastMsg?.sender;
-      return ttBuild.imt_para("{{option1}}撤回了一条消息", "$option1撤回了一条消息")(
-          option1: option1);
+      return '一条消息被撤回了';
     }
     return _getLastMsgShowText(lastMsg, context);
   }

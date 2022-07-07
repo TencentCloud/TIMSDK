@@ -40,16 +40,22 @@ class TIMUIKitConversation extends StatefulWidget {
   /// the builder for the second line in each conservation item, usually shows the summary of the last message
   final LastMessageBuilder? lastMessageBuilder;
 
-  const TIMUIKitConversation(
-      {Key? key,
-      this.onTapItem,
-      this.controller,
-      this.itembuilder,
-      this.itemSlidableBuilder,
-      this.conversationCollector,
-      this.emptyBuilder,
-      this.lastMessageBuilder})
-      : super(key: key);
+  final String Function(V2TimConversation? conversation)? faceUrlBuilder;
+
+  final String Function(V2TimConversation? conversation)? nickNameBuilder;
+
+  const TIMUIKitConversation({
+    Key? key,
+    this.onTapItem,
+    this.controller,
+    this.itembuilder,
+    this.itemSlidableBuilder,
+    this.conversationCollector,
+    this.emptyBuilder,
+    this.lastMessageBuilder,
+    this.faceUrlBuilder,
+    this.nickNameBuilder,
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -250,8 +256,12 @@ class _TIMUIKitConversationState extends State<TIMUIKitConversation> {
                             child: InkWell(
                               child: TIMUIKitConversationItem(
                                 lastMessageBuilder: widget.lastMessageBuilder,
-                                faceUrl: conversationItem.faceUrl ?? "",
-                                nickName: conversationItem.showName ?? "",
+                                faceUrl: widget.faceUrlBuilder != null
+                                    ? widget.faceUrlBuilder!(conversationItem)
+                                    : conversationItem.faceUrl ?? "",
+                                nickName: widget.nickNameBuilder != null
+                                    ? widget.nickNameBuilder!(conversationItem)
+                                    : conversationItem.showName ?? "",
                                 isDisturb: conversationItem.recvOpt != 0,
                                 lastMsg: conversationItem.lastMessage,
                                 isPined: conversationItem.isPinned ?? false,

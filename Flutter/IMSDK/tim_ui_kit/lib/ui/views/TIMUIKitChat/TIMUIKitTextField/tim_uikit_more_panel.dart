@@ -120,26 +120,26 @@ class _MorePanelState extends State<MorePanel> {
               width: 64,
             ),
           )),
-      MorePanelItem(
-          id: "file",
-          title: ttBuild.imt("文件"),
-          onTap: (c) {
-            _onFeatureTap("file", c);
-          },
-          icon: Container(
-            height: 64,
-            width: 64,
-            margin: const EdgeInsets.only(bottom: 4),
-            decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.all(Radius.circular(5))),
-            child: SvgPicture.asset(
-              "images/file.svg",
-              package: 'tim_ui_kit',
-              height: 64,
-              width: 64,
-            ),
-          )),
+      // MorePanelItem(
+      //     id: "file",
+      //     title: ttBuild.imt("文件"),
+      //     onTap: (c) {
+      //       _onFeatureTap("file", c);
+      //     },
+      //     icon: Container(
+      //       height: 64,
+      //       width: 64,
+      //       margin: const EdgeInsets.only(bottom: 4),
+      //       decoration: const BoxDecoration(
+      //           color: Colors.white,
+      //           borderRadius: BorderRadius.all(Radius.circular(5))),
+      //       child: SvgPicture.asset(
+      //         "images/file.svg",
+      //         package: 'tim_ui_kit',
+      //         height: 64,
+      //         width: 64,
+      //       ),
+      //     )),
       if (config.extraAction != null) ...?config.extraAction,
     ].where((element) {
       if (element.id == "screen") {

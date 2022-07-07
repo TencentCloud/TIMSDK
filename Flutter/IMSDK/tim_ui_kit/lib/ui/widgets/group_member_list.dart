@@ -7,6 +7,7 @@ import 'package:lpinyin/lpinyin.dart';
 import 'package:provider/provider.dart';
 import 'package:tencent_im_sdk_plugin/enum/group_member_role.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_full_info.dart';
+import 'package:tim_ui_kit/business_logic/view_models/ourschool_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
@@ -59,7 +60,12 @@ class GroupProfileMemberList extends StatefulWidget {
 class _GroupProfileMemberListState extends State<GroupProfileMemberList> {
   List<V2TimGroupMemberFullInfo> selectedMember = [];
 
-  _getShowName(V2TimGroupMemberFullInfo? item) {
+  _getShowName(
+    V2TimGroupMemberFullInfo? item,
+    OurSchoolMember? ourSchoolMember,
+  ) {
+    if (ourSchoolMember != null) return ourSchoolMember.name;
+
     final friendRemark = item?.friendRemark ?? "";
     final nameCard = item?.nameCard ?? "";
     final nickName = item?.nickName ?? "";
@@ -74,11 +80,16 @@ class _GroupProfileMemberListState extends State<GroupProfileMemberList> {
   }
 
   List<ISuspensionBeanImpl> _getShowList(
-      List<V2TimGroupMemberFullInfo?> memberList) {
+    List<V2TimGroupMemberFullInfo?> memberList,
+    OurSchoolMember? Function(String?) getMemberByIMId,
+  ) {
     final List<ISuspensionBeanImpl> showList = List.empty(growable: true);
     for (var i = 0; i < memberList.length; i++) {
       final item = memberList[i];
-      final showName = _getShowName(item);
+      final showName = _getShowName(
+        item,
+        getMemberByIMId(item?.userID),
+      );
       if (item?.role == GroupMemberRoleType.V2TIM_GROUP_MEMBER_ROLE_OWNER ||
           item?.role == GroupMemberRoleType.V2TIM_GROUP_MEMBER_ROLE_ADMIN) {
         showList.add(ISuspensionBeanImpl(memberInfo: item, tagIndex: "@"));
@@ -101,12 +112,14 @@ class _GroupProfileMemberListState extends State<GroupProfileMemberList> {
       final canAtGroupType = ["Work", "Public", "Meeting"];
       if (canAtGroupType.contains(widget.groupType)) {
         showList.insert(
-            0,
-            ISuspensionBeanImpl(
-                memberInfo: V2TimGroupMemberFullInfo(
-                    userID: "__kImSDK_MesssageAtALL__",
-                    nickName: ttBuild.imt("所有人")),
-                tagIndex: ""));
+          0,
+          ISuspensionBeanImpl(
+            memberInfo: V2TimGroupMemberFullInfo(
+                userID: "__kImSDK_MesssageAtALL__",
+                nickName: ttBuild.imt("所有人")),
+            tagIndex: "",
+          ),
+        );
       }
     }
 
@@ -114,7 +127,10 @@ class _GroupProfileMemberListState extends State<GroupProfileMemberList> {
   }
 
   Widget _buildListItem(
-      BuildContext context, V2TimGroupMemberFullInfo memberInfo) {
+    BuildContext context,
+    V2TimGroupMemberFullInfo memberInfo,
+    OurSchoolMember? ourSchoolMember,
+  ) {
     final I18nUtils ttBuild = I18nUtils(context);
     final theme = Provider.of<TUIThemeViewModel>(context).theme;
     final isGroupMember =
@@ -170,11 +186,21 @@ class _GroupProfileMemberListState extends State<GroupProfileMemberList> {
                       height: 36,
                       margin: const EdgeInsets.only(right: 10),
                       child: Avatar(
-                          faceUrl: memberInfo.faceUrl ?? "",
-                          showName: _getShowName(memberInfo)),
+                        faceUrl:
+                            ourSchoolMember?.avatar ?? memberInfo.faceUrl ?? "",
+                        showName: _getShowName(
+                          memberInfo,
+                          ourSchoolMember,
+                        ),
+                      ),
                     ),
-                    Text(_getShowName(memberInfo),
-                        style: const TextStyle(fontSize: 16)),
+                    Text(
+                      _getShowName(
+                        memberInfo,
+                        ourSchoolMember,
+                      ),
+                      style: const TextStyle(fontSize: 16),
+                    ),
                     memberInfo.role ==
                             GroupMemberRoleType.V2TIM_GROUP_MEMBER_ROLE_OWNER
                         ? Container(
@@ -274,52 +300,79 @@ class _GroupProfileMemberListState extends State<GroupProfileMemberList> {
 
   @override
   Widget build(BuildContext context) {
-    final throteFunction =
-        OptimizeUtils.throttle((ScrollNotification notification) {
-      final pixels = notification.metrics.pixels;
-      // 总像素高度
-      final maxScrollExtent = notification.metrics.maxScrollExtent;
-      // 滑动百分比
-      final progress = pixels / maxScrollExtent;
-      if (progress >= 0.9 && widget.touchBottomCallBack != null) {
-        widget.touchBottomCallBack!();
-      }
-    }, 300);
+    final throttleFunction = OptimizeUtils.throttle(
+      (ScrollNotification notification) {
+        final pixels = notification.metrics.pixels;
+        // 总像素高度
+        final maxScrollExtent = notification.metrics.maxScrollExtent;
+        // 滑动百分比
+        final progress = pixels / maxScrollExtent;
+        if (progress >= 0.9 && widget.touchBottomCallBack != null) {
+          widget.touchBottomCallBack!();
+        }
+      },
+      300,
+    );
+    final OurSchoolChatProvider ourSchoolChatProvider =
+        Provider.of<OurSchoolChatProvider>(
+      context,
+      listen: false,
+    );
     return ChangeNotifierProvider.value(
-        value: serviceLocator<TUIThemeViewModel>(),
-        child: Consumer<TUIThemeViewModel>(builder: (context, value, child) {
+      value: serviceLocator<TUIThemeViewModel>(),
+      child: Consumer<TUIThemeViewModel>(
+        builder: (context, value, child) {
           final theme = value.theme;
-          final showList = _getShowList(widget.memberList);
+          final showList = _getShowList(
+            widget.memberList
+                .where((element) =>
+                    ourSchoolChatProvider.getMemberByIMId(element?.userID) !=
+                    null)
+                .toList(),
+            ourSchoolChatProvider.getMemberByIMId,
+          );
           return Container(
             color: theme.weakBackgroundColor,
             child: SafeArea(
-                child: Column(
-              children: [
-                widget.customTopArea != null
-                    ? widget.customTopArea!
-                    : Container(),
-                Expanded(
+              child: Column(
+                children: [
+                  widget.customTopArea != null
+                      ? widget.customTopArea!
+                      : Container(),
+                  Expanded(
                     child: NotificationListener<ScrollNotification>(
-                  onNotification: (ScrollNotification notification) {
-                    throteFunction(notification);
-                    return true;
-                  },
-                  child: AZListViewContainer(
-                      memberList: showList,
-                      susItemBuilder: (context, index) {
-                        final model = showList[index];
-                        return getSusItem(context, model.getSuspensionTag());
+                      onNotification: (ScrollNotification notification) {
+                        throttleFunction(notification);
+                        return true;
                       },
-                      itemBuilder: (context, index) {
-                        final memberInfo = showList[index].memberInfo
-                            as V2TimGroupMemberFullInfo;
+                      child: AZListViewContainer(
+                        memberList: showList,
+                        susItemBuilder: (context, index) {
+                          final model = showList[index];
+                          return getSusItem(context, model.getSuspensionTag());
+                        },
+                        itemBuilder: (context, index) {
+                          final memberInfo = showList[index].memberInfo
+                              as V2TimGroupMemberFullInfo;
+                          final OurSchoolMember? ourSchoolMember =
+                              ourSchoolChatProvider
+                                  .getMemberByIMId(memberInfo.userID);
 
-                        return _buildListItem(context, memberInfo);
-                      }),
-                ))
-              ],
-            )),
+                          return _buildListItem(
+                            context,
+                            memberInfo,
+                            ourSchoolMember,
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           );
-        }));
+        },
+      ),
+    );
   }
 }

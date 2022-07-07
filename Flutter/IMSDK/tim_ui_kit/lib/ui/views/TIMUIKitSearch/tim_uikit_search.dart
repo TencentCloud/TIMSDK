@@ -3,16 +3,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_info_result.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_info.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message_search_result_item.dart';
-import 'package:tim_ui_kit/data_services/services_locatar.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_search_view_model.dart';
-import 'package:tim_ui_kit/ui/views/TIMUIKitSearch/tim_uikit_search_friend.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
+import 'package:tim_ui_kit/data_services/services_locatar.dart';
+import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitSearch/pureUI/tim_uikit_search_input.dart';
+import 'package:tim_ui_kit/ui/views/TIMUIKitSearch/tim_uikit_search_friend.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitSearch/tim_uikit_search_group.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitSearch/tim_uikit_search_msg.dart';
-import 'package:tim_ui_kit/tim_ui_kit.dart';
+
 import '../../utils/color.dart';
 
 class TIMUIKitSearch extends StatefulWidget {

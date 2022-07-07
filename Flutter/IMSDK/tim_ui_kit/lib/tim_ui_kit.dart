@@ -50,6 +50,8 @@ export 'package:tencent_im_sdk_plugin/enum/group_member_role.dart';
 export 'package:tencent_im_sdk_plugin/enum/V2TimConversationListener.dart';
 export 'package:tencent_im_sdk_plugin/models/v2_tim_user_full_info.dart';
 export 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_full_info.dart';
+export 'package:tencent_im_sdk_plugin/models/v2_tim_group_info.dart';
+export 'package:tencent_im_sdk_plugin/models/v2_tim_conversation_result.dart';
 export 'package:tim_ui_kit/i18n/i18n_utils.dart';
 export 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 export 'package:tim_ui_kit/ui/theme/tim_uikit_message_theme.dart';

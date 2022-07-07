@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:tencent_im_sdk_plugin/enum/V2TimGroupListener.dart';
 import 'package:tencent_im_sdk_plugin/enum/group_member_filter_enum.dart';
 import 'package:tencent_im_sdk_plugin/enum/receive_message_opt_enum.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_info.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_info.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_operation_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_search_param.dart';

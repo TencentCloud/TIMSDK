@@ -135,7 +135,7 @@ class I18nUtils {
 
   AppLocale findDeviceLocale() {
     final String? deviceLocale =
-        WidgetsBinding.instance?.window.locale.toLanguageTag();
+        WidgetsBinding.instance.window.locale.toLanguageTag();
     if (deviceLocale != null) {
       final typedLocale = _selectLocale(deviceLocale);
       if (typedLocale != null) {

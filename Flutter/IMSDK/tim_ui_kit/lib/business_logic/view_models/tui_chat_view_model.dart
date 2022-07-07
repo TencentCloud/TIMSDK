@@ -6,18 +6,18 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tencent_im_sdk_plugin/enum/V2TimAdvancedMsgListener.dart';
+import 'package:tencent_im_sdk_plugin/enum/get_group_message_read_member_list_filter.dart';
 import 'package:tencent_im_sdk_plugin/enum/history_msg_get_type_enum.dart';
 import 'package:tencent_im_sdk_plugin/enum/message_status.dart';
 import 'package:tencent_im_sdk_plugin/enum/offlinePushInfo.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_application.dart';
+import 'package:tencent_im_sdk_plugin/models/v2_tim_group_message_read_member_list.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message_receipt.dart';
 import 'package:tim_ui_kit/data_services/group/group_services.dart';
 import 'package:tim_ui_kit/data_services/message/message_services.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/constants/history_message_constant.dart';
-import 'package:tencent_im_sdk_plugin/enum/get_group_message_read_member_list_filter.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_message_read_member_list.dart';
 
 enum ConvType { group, c2c }
 
@@ -120,6 +120,10 @@ class TUIChatViewModel extends ChangeNotifier {
 
   set setInputField(ValueChanged<String>? value) {
     _setInputField = value;
+  }
+
+  set currentSelectedConvType(int? value) {
+    _currentSelectedConvType = value;
   }
 
   set unreadCountForConversation(int value) {
@@ -464,7 +468,7 @@ class TUIChatViewModel extends ChangeNotifier {
 
   _onMessageRevoked(String msgID) {
     final activeMessageList = _messageListMap[_currentSelectedConv];
-    _messageListMap[_currentSelectedConv] = activeMessageList!.map((item) {
+    _messageListMap[_currentSelectedConv] = activeMessageList?.map((item) {
       if (item.msgID == msgID) {
         item.status = MessageStatus.V2TIM_MSG_STATUS_LOCAL_REVOKED;
       }
@@ -1257,6 +1261,7 @@ class TUIChatViewModel extends ChangeNotifier {
     required String convID,
     required int convType,
   }) {
+    print('@@@@@ markMessageAsRead');
     _unreadCountForConversation = 0;
     if (convType == 1) {
       return _messageService.markC2CMessageAsRead(userID: convID);

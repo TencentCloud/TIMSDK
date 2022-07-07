@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_full_info.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_search_param.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_group_profile_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/i18n/i18n_utils.dart';
-import 'package:tim_ui_kit/ui/utils/color.dart';
-import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/tim_ui_group_member_search.dart';
 import 'package:tim_ui_kit/ui/widgets/group_member_list.dart';
 
 class AtText extends StatefulWidget {
   final String? groupID;
-  // some Group type cant @all
+  final List<SingleChildWidget>? providers;
+
+  /// some Group type cant @all
   final String? groupType;
   const AtText({
     this.groupID,
     this.groupType,
+    this.providers,
     Key? key,
   }) : super(key: key);
 
@@ -81,25 +83,27 @@ class _AtTextState extends State<AtText> {
   @override
   Widget build(BuildContext context) {
     final I18nUtils ttBuild = I18nUtils(context);
+
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(value: serviceLocator<TUIThemeViewModel>())
+        ChangeNotifierProvider.value(
+            value: serviceLocator<TUIThemeViewModel>()),
+        ...widget.providers ?? [],
       ],
       builder: (context, w) {
         return Consumer<TUIThemeViewModel>(
-            builder: (context, themeModel, child) {
-          return Scaffold(
+          builder: (context, themeModel, child) {
+            return Scaffold(
               appBar: AppBar(
                 shadowColor: themeModel.theme.weakBackgroundColor,
                 iconTheme: const IconThemeData(
                   color: Colors.white,
                 ),
                 flexibleSpace: Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     gradient: LinearGradient(colors: [
-                      themeModel.theme.lightPrimaryColor ??
-                          CommonColor.lightPrimaryColor,
-                      themeModel.theme.primaryColor ?? CommonColor.primaryColor
+                      Color.fromRGBO(0x73, 0x70, 0xff, 1),
+                      Color.fromRGBO(0x33, 0x70, 0xFf, 1),
                     ]),
                   ),
                 ),
@@ -131,26 +135,30 @@ class _AtTextState extends State<AtText> {
                 ),
               ),
               body: ChangeNotifierProvider.value(
-                  value: _model,
-                  child: Consumer<TUIGroupProfileViewModel>(
-                      builder: ((context, value, child) {
+                value: _model,
+                child: Consumer<TUIGroupProfileViewModel>(
+                  builder: ((context, value, child) {
                     return GroupProfileMemberList(
-                        groupType: widget.groupType ?? "",
-                        memberList:
-                            _groupMemberList ?? value.groupMemberList ?? [],
-                        onTapMemberItem: _onTapMemberItem,
-                        canAtAll: true,
-                        canSlideDelete: false,
-                        touchBottomCallBack: () {
-                          _model.loadMoreData(
-                              groupID: _model.groupInfo!.groupID);
-                        },
-                        customTopArea: GroupMemberSearchTextField(
-                          onTextChange: (text) =>
-                              handleSearchGroupMembers(text, context),
-                        ));
-                  }))));
-        });
+                      groupType: widget.groupType ?? "",
+                      memberList:
+                          _groupMemberList ?? value.groupMemberList ?? [],
+                      onTapMemberItem: _onTapMemberItem,
+                      canAtAll: true,
+                      canSlideDelete: false,
+                      touchBottomCallBack: () {
+                        _model.loadMoreData(groupID: _model.groupInfo!.groupID);
+                      },
+                      // customTopArea: GroupMemberSearchTextField(
+                      //   onTextChange: (text) =>
+                      //       handleSearchGroupMembers(text, context),
+                      // ),
+                    );
+                  }),
+                ),
+              ),
+            );
+          },
+        );
       },
     );
   }
