@@ -1,14 +1,14 @@
-// ignore_for_file: unnecessary_import
-
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_black_list_view_model.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
+import 'package:tim_ui_kit/business_logic/life_cycle/block_list_life_cycle.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_block_list_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
-import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/widgets/avatar.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
 typedef BlackListItemBuilder = Widget Function(
     BuildContext context, V2TimFriendInfo groupInfo);
@@ -18,16 +18,23 @@ class TIMUIKitBlackList extends StatefulWidget {
   final Widget Function(BuildContext context)? emptyBuilder;
   final BlackListItemBuilder? itemBuilder;
 
+  /// The life cycle hooks for block list business logic
+  final BlockListLifeCycle? lifeCycle;
+
   const TIMUIKitBlackList(
-      {Key? key, this.onTapItem, this.emptyBuilder, this.itemBuilder})
+      {Key? key,
+      this.onTapItem,
+      this.emptyBuilder,
+      this.itemBuilder,
+      this.lifeCycle})
       : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _TIMUIKitBlackListState();
 }
 
-class _TIMUIKitBlackListState extends State<TIMUIKitBlackList> {
-  final TUIBlackListViewModel _blackListViewModel = TUIBlackListViewModel();
+class _TIMUIKitBlackListState extends TIMUIKitState<TIMUIKitBlackList> {
+  final TUIBlockListViewModel _blackListViewModel = TUIBlockListViewModel();
 
   _getShowName(V2TimFriendInfo item) {
     final friendRemark = item.friendRemark ?? "";
@@ -38,7 +45,6 @@ class _TIMUIKitBlackListState extends State<TIMUIKitBlackList> {
   }
 
   Widget _itemBuilder(BuildContext context, V2TimFriendInfo groupInfo) {
-    final I18nUtils ttBuild = I18nUtils(context);
     final theme = Provider.of<TUIThemeViewModel>(context).theme;
     final showName = _getShowName(groupInfo);
     final faceUrl = groupInfo.userProfile?.faceUrl ?? "";
@@ -51,7 +57,7 @@ class _TIMUIKitBlackListState extends State<TIMUIKitBlackList> {
             },
             backgroundColor: theme.cautionColor ?? CommonColor.cautionColor,
             foregroundColor: Colors.white,
-            label: ttBuild.imt("删除"),
+            label: TIM_t("删除"),
             autoClose: true,
           )
         ]),
@@ -98,15 +104,15 @@ class _TIMUIKitBlackListState extends State<TIMUIKitBlackList> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: _blackListViewModel),
-        ChangeNotifierProvider.value(
-            value: serviceLocator<TUIThemeViewModel>()),
       ],
       builder: (BuildContext context, Widget? w) {
-        final blackList = Provider.of<TUIBlackListViewModel>(context).blackList;
+        final model = Provider.of<TUIBlockListViewModel>(context);
+        model.lifeCycle = widget.lifeCycle;
+        final blackList = model.blackList;
         if (blackList.isNotEmpty) {
           return ListView.builder(
             itemCount: blackList.length,

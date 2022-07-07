@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tencent_im_sdk_plugin/enum/V2TimFriendshipListener.dart';
-import 'package:tencent_im_sdk_plugin/enum/V2TimGroupListener.dart';
-import 'package:tencent_im_sdk_plugin/enum/group_change_info_type.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/friendShip/friendship_services.dart';
 import 'package:tim_ui_kit/data_services/group/group_services.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tuple/tuple.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
 class TIMUIKitAppBar extends StatefulWidget implements PreferredSizeWidget {
   /// appbar config
@@ -40,7 +38,7 @@ class TIMUIKitAppBar extends StatefulWidget implements PreferredSizeWidget {
   State<StatefulWidget> createState() => _TIMUIKitAppBarState();
 }
 
-class _TIMUIKitAppBarState extends State<TIMUIKitAppBar> {
+class _TIMUIKitAppBarState extends TIMUIKitState<TIMUIKitAppBar> {
   final FriendshipServices _friendshipServices =
       serviceLocator<FriendshipServices>();
   final GroupServices _groupServices = serviceLocator<GroupServices>();
@@ -106,10 +104,10 @@ class _TIMUIKitAppBarState extends State<TIMUIKitAppBar> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    final TUITheme theme = value.theme;
+
     final setAppbar = widget.config;
-    final theme = Provider.of<TUIThemeViewModel>(context).theme;
-    final I18nUtils ttBuild = I18nUtils(context);
     return AppBar(
       backgroundColor: setAppbar?.backgroundColor,
       actionsIconTheme: setAppbar?.actionsIconTheme,
@@ -160,7 +158,7 @@ class _TIMUIKitAppBarState extends State<TIMUIKitAppBar> {
                       chatVM.updateMultiSelectStatus(false);
                     },
                     child: Text(
-                      ttBuild.imt('取消'),
+                      TIM_t('取消'),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16,

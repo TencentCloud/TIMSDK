@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_conversation.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_conversation_view_model.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
-import 'package:tim_ui_kit/data_services/services_locatar.dart';
+import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
 import 'package:tim_ui_kit/ui/widgets/avatar.dart';
 import 'package:tim_ui_kit/ui/widgets/az_list_view.dart';
 import 'package:tim_ui_kit/ui/widgets/radio_button.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
 
-import '../../i18n/i18n_utils.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
 class RecentForwardList extends StatefulWidget {
   final bool isMultiSelect;
@@ -24,7 +24,7 @@ class RecentForwardList extends StatefulWidget {
   State<StatefulWidget> createState() => _RecentForwardListState();
 }
 
-class _RecentForwardListState extends State<RecentForwardList> {
+class _RecentForwardListState extends TIMUIKitState<RecentForwardList> {
   final TUIConversationViewModel _conversationViewModel =
       TUIConversationViewModel();
   final List<V2TimConversation> _selectedConversation = [];
@@ -130,18 +130,17 @@ class _RecentForwardListState extends State<RecentForwardList> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    final TUITheme theme = value.theme;
+
     if (!widget.isMultiSelect) {
       _selectedConversation.clear();
     }
-    final I18nUtils ttBuild = I18nUtils(context);
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: _conversationViewModel),
-        ChangeNotifierProvider.value(value: serviceLocator<TUIThemeViewModel>())
       ],
       builder: (context, w) {
-        final theme = Provider.of<TUIThemeViewModel>(context).theme;
         final recentConvList =
             Provider.of<TUIConversationViewModel>(context).conversationList;
         final showList = _buildMemberList(recentConvList);
@@ -157,7 +156,7 @@ class _RecentForwardListState extends State<RecentForwardList> {
               color: theme.weakDividerColor,
               alignment: Alignment.centerLeft,
               child: Text(
-                ttBuild.imt("最近联系人"),
+                TIM_t("最近联系人"),
                 softWrap: true,
                 style: TextStyle(
                   fontSize: 14.0,

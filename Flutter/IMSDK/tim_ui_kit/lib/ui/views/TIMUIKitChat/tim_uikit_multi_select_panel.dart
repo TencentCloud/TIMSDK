@@ -1,14 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_statelesswidget.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
-import 'package:tim_ui_kit/i18n/i18n_utils.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
+import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
 import 'package:tim_ui_kit/ui/widgets/forward_message_screen.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
 
-class MultiSelectPanel extends StatelessWidget {
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
+
+class MultiSelectPanel extends TIMUIKitStatelessWidget {
   MultiSelectPanel({Key? key, required this.conversationType})
       : super(key: key);
   final int conversationType;
@@ -25,10 +27,9 @@ class MultiSelectPanel extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    // final theme = SharedThemeWidget.of(context)?.theme;
-    final theme = Provider.of<TUIThemeViewModel>(context).theme;
-    final I18nUtils ttBuild = I18nUtils(context);
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    final TUITheme theme = value.theme;
+
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(colors: [
@@ -50,7 +51,7 @@ class MultiSelectPanel extends StatelessWidget {
                   _handleForwardMessage(context, false);
                 },
               ),
-              Text(ttBuild.imt("逐条转发"),
+              Text(TIM_t("逐条转发"),
                   style: const TextStyle(color: Colors.white, fontSize: 12))
             ],
           ),
@@ -65,7 +66,7 @@ class MultiSelectPanel extends StatelessWidget {
                 },
               ),
               Text(
-                ttBuild.imt("合并转发"),
+                TIM_t("合并转发"),
                 style: const TextStyle(color: Colors.white, fontSize: 12),
               )
             ],
@@ -81,7 +82,7 @@ class MultiSelectPanel extends StatelessWidget {
                     context: context,
                     builder: (BuildContext context) {
                       return CupertinoActionSheet(
-                        title: Text(ttBuild.imt("确定删除已选消息")),
+                        title: Text(TIM_t("确定删除已选消息")),
                         cancelButton: CupertinoActionSheetAction(
                           onPressed: () {
                             Navigator.pop(
@@ -89,7 +90,7 @@ class MultiSelectPanel extends StatelessWidget {
                               "cancel",
                             );
                           },
-                          child: Text(ttBuild.imt("取消")),
+                          child: Text(TIM_t("取消")),
                           isDefaultAction: false,
                         ),
                         actions: [
@@ -103,7 +104,7 @@ class MultiSelectPanel extends StatelessWidget {
                               );
                             },
                             child: Text(
-                              ttBuild.imt("删除"),
+                              TIM_t("删除"),
                               style: TextStyle(color: theme.cautionColor),
                             ),
                             isDefaultAction: false,
@@ -114,7 +115,7 @@ class MultiSelectPanel extends StatelessWidget {
                   );
                 },
               ),
-              Text(ttBuild.imt("删除"),
+              Text(TIM_t("删除"),
                   style: const TextStyle(color: Colors.white, fontSize: 12))
             ],
           )

@@ -1,12 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tencent_im_sdk_plugin/enum/V2TimGroupListener.dart';
-import 'package:tencent_im_sdk_plugin/enum/group_member_filter_enum.dart';
-import 'package:tencent_im_sdk_plugin/enum/receive_message_opt_enum.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_info.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_info.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_operation_result.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_search_param.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_search_result.dart';
+import 'package:tim_ui_kit/business_logic/life_cycle/group_profile_life_cycle.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
 import 'package:tim_ui_kit/data_services/conversation/conversation_services.dart';
 import 'package:tim_ui_kit/data_services/friendShip/friendship_services.dart';
@@ -33,6 +26,16 @@ class TUIGroupProfileViewModel extends ChangeNotifier {
   bool? isDisturb;
   V2TimConversation? conversation;
   V2TimGroupListener? _groupListener;
+  GroupProfileLifeCycle? _lifeCycle;
+
+  set lifeCycle(GroupProfileLifeCycle? value) {
+    _lifeCycle = value;
+  }
+
+  // ignore: unnecessary_getters_setters
+  GroupProfileLifeCycle? get lifeCycle {
+    return _lifeCycle;
+  }
 
   V2TimGroupInfo? get groupInfo {
     return _groupInfo;
@@ -51,17 +54,16 @@ class TUIGroupProfileViewModel extends ChangeNotifier {
     _groupInfo = null;
     _groupMemberList = [];
     _contactList = [];
-    notifyListeners();
+    _groupMemberListSeq = "0";
   }
 
   loadData(String groupID) {
     clearData();
     _groupID = groupID;
     _loadGroupInfo(groupID);
-    // count只有web时有效.
-    _loadGroupMemberList(count: 50, groupID: groupID);
     _loadContactList();
     _loadConversation();
+    _loadGroupMemberList(count: 50, groupID: groupID);
   }
 
   _loadConversation() async {
@@ -87,8 +89,34 @@ class TUIGroupProfileViewModel extends ChangeNotifier {
     _contactList = res;
   }
 
-  _loadGroupMemberList(
-      {required String groupID, int count = 50, String? seq}) async {
+  Future<bool> getMemberMuteStatus(String userID) async {
+    // Get the mute state of the members recursively
+    if (_groupMemberList?.any((item) => (item?.userID == userID)) ?? false) {
+      final int muteUntil = _groupMemberList!
+              .firstWhere((item) => (item?.userID == userID))
+              ?.muteUntil ??
+          0;
+      return muteUntil * 1000 > DateTime.now().millisecondsSinceEpoch;
+    } else {
+      return false;
+    }
+  }
+
+  Future<void> _loadGroupMemberList(
+      {required String groupID, int count = 100, String? seq}) async {
+    if (seq == null || seq == "" || seq == "0") {
+      _groupMemberList = [];
+    }
+    final String? nextSeq = await _loadGroupMemberListFunction(
+        groupID: groupID, seq: seq, count: count);
+    if (nextSeq != null && nextSeq != "0" && nextSeq != "") {
+      return await _loadGroupMemberList(
+          groupID: groupID, count: count, seq: nextSeq);
+    }
+  }
+
+  Future<String?> _loadGroupMemberListFunction(
+      {required String groupID, int count = 100, String? seq}) async {
     if (seq == "0") {
       _groupMemberList?.clear();
     }
@@ -103,6 +131,7 @@ class TUIGroupProfileViewModel extends ChangeNotifier {
       _groupMemberListSeq = groupMemberListRes.nextSeq ?? "0";
       notifyListeners();
     }
+    return groupMemberListRes?.nextSeq;
   }
 
   _reloadGroupMemberList({required String groupID, int count = 50}) async {
@@ -149,6 +178,10 @@ class TUIGroupProfileViewModel extends ChangeNotifier {
         "groupType": _groupInfo!.groupType,
         "isAllMuted": muteAll
       }));
+      if (response.code != 0) {
+        _groupInfo?.isAllMuted = muteAll;
+      }
+      notifyListeners();
       return response;
     }
     return null;
@@ -343,7 +376,7 @@ class TUIGroupProfileViewModel extends ChangeNotifier {
     return res;
   }
 
-  Future<V2TimValueCallback<V2GroupMemberInfoSearchResult>> searcrhGroupMember(
+  Future<V2TimValueCallback<V2GroupMemberInfoSearchResult>> searchGroupMember(
       V2TimGroupMemberSearchParam searchParam) async {
     final res =
         await _groupServices.searchGroupMembers(searchParam: searchParam);
@@ -424,5 +457,9 @@ class TUIGroupProfileViewModel extends ChangeNotifier {
 
   removeGroupListener() {
     _groupServices.removeGroupListener(listener: _groupListener);
+  }
+
+  TUIGroupProfileViewModel() {
+    setGroupListener();
   }
 }

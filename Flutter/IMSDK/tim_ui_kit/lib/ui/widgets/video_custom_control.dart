@@ -7,8 +7,12 @@ import 'package:chewie/src/helpers/utils.dart';
 import 'package:chewie/src/animated_play_pause.dart';
 import 'package:chewie/src/material/material_progress_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_statelesswidget.dart';
+import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
 import 'package:video_player/video_player.dart';
 import 'center_play_button.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
 class VideoCustomControls extends StatefulWidget {
   const VideoCustomControls({required this.downloadFn, Key? key})
@@ -21,7 +25,7 @@ class VideoCustomControls extends StatefulWidget {
   }
 }
 
-class _VideoCustomControlsState extends State<VideoCustomControls>
+class _VideoCustomControlsState extends TIMUIKitState<VideoCustomControls>
     with SingleTickerProviderStateMixin {
   late VideoPlayerValue _latestValue;
   bool _hideStuff = true;
@@ -40,7 +44,7 @@ class _VideoCustomControlsState extends State<VideoCustomControls>
   ChewieController get chewieController => _chewieController!;
 
   @override
-  Widget build(BuildContext context) {
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     if (_latestValue.hasError) {
       return chewieController.errorBuilder?.call(
             context,
@@ -360,8 +364,8 @@ class _VideoCustomControlsState extends State<VideoCustomControls>
   }
 }
 
-class _PlaybackSpeedDialog extends StatelessWidget {
-  const _PlaybackSpeedDialog({
+class _PlaybackSpeedDialog extends TIMUIKitStatelessWidget {
+  _PlaybackSpeedDialog({
     Key? key,
     required List<double> speeds,
     required double selected,
@@ -373,8 +377,11 @@ class _PlaybackSpeedDialog extends StatelessWidget {
   final double _selected;
 
   @override
-  Widget build(BuildContext context) {
-    final Color selectedColor = Theme.of(context).primaryColor;
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    final TUITheme theme = value.theme;
+
+    final Color selectedColor =
+        theme.primaryColor ?? Theme.of(context).primaryColor;
 
     return ListView.builder(
       shrinkWrap: true,

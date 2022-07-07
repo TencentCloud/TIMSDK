@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_statelesswidget.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/widgets/avatar.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
-import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
-
-class TIMUIKitSearchItem extends StatelessWidget {
+class TIMUIKitSearchItem extends TIMUIKitStatelessWidget {
   final String faceUrl;
   final String showName;
   final String lineOne;
@@ -14,7 +13,7 @@ class TIMUIKitSearchItem extends StatelessWidget {
   final String? lineTwo;
   final VoidCallback? onClick;
 
-  const TIMUIKitSearchItem(
+  TIMUIKitSearchItem(
       {Key? key,
       required this.faceUrl,
       required this.showName,
@@ -49,8 +48,9 @@ class TIMUIKitSearchItem extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final theme = Provider.of<TUIThemeViewModel>(context).theme;
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    final TUITheme theme = value.theme;
+
     return GestureDetector(
       onTap: onClick,
       child: Container(

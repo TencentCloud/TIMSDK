@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 
-import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
-import 'package:tim_ui_kit/i18n/i18n_utils.dart';
-import '../../../utils/color.dart';
+import 'package:tim_ui_kit/ui/utils/color.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
+
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
+import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
 
 class TIMUIKitSearchInput extends StatefulWidget {
   final ValueChanged<String> onChange;
@@ -25,7 +27,7 @@ class TIMUIKitSearchInput extends StatefulWidget {
   State<StatefulWidget> createState() => TIMUIKitSearchInputState();
 }
 
-class TIMUIKitSearchInputState extends State<TIMUIKitSearchInput> {
+class TIMUIKitSearchInputState extends TIMUIKitState<TIMUIKitSearchInput> {
   late FocusNode focusNode = FocusNode();
   late TextEditingController textEditingController =
       widget.controller ?? TextEditingController();
@@ -43,9 +45,9 @@ class TIMUIKitSearchInputState extends State<TIMUIKitSearchInput> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final theme = Provider.of<TUIThemeViewModel>(context).theme;
-    final I18nUtils ttBuild = I18nUtils(context);
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    final TUITheme theme = value.theme;
+
     return Container(
       height: 64,
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
@@ -86,7 +88,7 @@ class TIMUIKitSearchInputState extends State<TIMUIKitSearchInput> {
                 fillColor: Colors.white,
                 filled: true,
                 isDense: true,
-                hintText: ttBuild.imt("搜索"),
+                hintText: TIM_t("搜索"),
                 prefix: widget.prefixText != null
                     ? Container(
                         margin: const EdgeInsets.only(right: 8),
@@ -115,7 +117,7 @@ class TIMUIKitSearchInputState extends State<TIMUIKitSearchInput> {
                 onTap: () {
                   Navigator.pop(context);
                 },
-                child: Text(ttBuild.imt("取消"),
+                child: Text(TIM_t("取消"),
                     style: const TextStyle(
                       color: Colors.white,
                     )),

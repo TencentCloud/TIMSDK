@@ -1,54 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tencent_im_sdk_plugin/enum/group_type.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_info.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
+import 'package:tim_ui_kit/business_logic/life_cycle/add_group_life_cycle.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_add_group_view_model.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
-import 'package:tim_ui_kit/data_services/services_locatar.dart';
-import 'package:tim_ui_kit/i18n/i18n_utils.dart';
+import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitAddGroup/tim_uikit_send_application.dart';
 import 'package:tim_ui_kit/ui/widgets/avatar.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
 class TIMUIKitAddGroup extends StatefulWidget {
-  const TIMUIKitAddGroup({Key? key}) : super(key: key);
+  /// The life cycle hooks for adding group business logic
+  final AddGroupLifeCycle? lifeCycle;
+  const TIMUIKitAddGroup({Key? key, this.lifeCycle}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _TIMUIKitAddGroupState();
 }
 
-class _TIMUIKitAddGroupState extends State<TIMUIKitAddGroup> {
+class _TIMUIKitAddGroupState extends TIMUIKitState<TIMUIKitAddGroup> {
   final TextEditingController _controller = TextEditingController();
   final TUIAddGroupViewModel _addGroupViewModel = TUIAddGroupViewModel();
-  final TUIThemeViewModel _themeViewModel = serviceLocator<TUIThemeViewModel>();
   final FocusNode _focusNode = FocusNode();
   bool isFocused = false;
   bool showResult = false;
 
   String _getGroupType(String type) {
-    final I18nUtils ttBuild = I18nUtils(context);
     String groupType;
     switch (type) {
       case GroupType.AVChatRoom:
-        groupType = ttBuild.imt("聊天室");
+        groupType = TIM_t("聊天室");
         break;
       case GroupType.Meeting:
-        groupType = ttBuild.imt("会议群");
+        groupType = TIM_t("会议群");
         break;
       case GroupType.Public:
-        groupType = ttBuild.imt("公开群");
+        groupType = TIM_t("公开群");
         break;
       case GroupType.Work:
-        groupType = ttBuild.imt("工作群");
+        groupType = TIM_t("工作群");
         break;
       default:
-        groupType = ttBuild.imt("未知群");
+        groupType = TIM_t("未知群");
         break;
     }
     return groupType;
   }
 
-  Widget _searchResultItemBuilder(V2TimGroupInfo groupInfo) {
-    final theme = _themeViewModel.theme;
+  Widget _searchResultItemBuilder(V2TimGroupInfo groupInfo, TUITheme theme) {
     final faceUrl = groupInfo.faceUrl ?? "";
     final groupID = groupInfo.groupID;
     final showName = groupInfo.groupName ?? groupID;
@@ -99,17 +98,20 @@ class _TIMUIKitAddGroupState extends State<TIMUIKitAddGroup> {
     );
   }
 
-  List<Widget> _searchResultBuilder(List<V2TimGroupInfo>? searchResult) {
+  List<Widget> _searchResultBuilder(
+      List<V2TimGroupInfo>? searchResult, TUITheme theme) {
     final noResult = searchResult != null && searchResult.isEmpty;
-    final I18nUtils ttbuild = I18nUtils(context);
     if (noResult) {
       return [
         Center(
-          child: Text(ttbuild.imt("该群聊不存在")),
+          child: Text(TIM_t("该群聊不存在")),
         )
       ];
     }
-    return searchResult?.map((e) => _searchResultItemBuilder(e)).toList() ?? [];
+    return searchResult
+            ?.map((e) => _searchResultItemBuilder(e, theme))
+            .toList() ??
+        [];
   }
 
   @override
@@ -120,6 +122,7 @@ class _TIMUIKitAddGroupState extends State<TIMUIKitAddGroup> {
       isFocused = _isFocused;
       setState(() {});
     });
+    _addGroupViewModel.lifeCycle = widget.lifeCycle;
   }
 
   @override
@@ -128,16 +131,15 @@ class _TIMUIKitAddGroupState extends State<TIMUIKitAddGroup> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final I18nUtils ttbuild = I18nUtils(context);
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    final TUITheme theme = value.theme;
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: _addGroupViewModel),
-        ChangeNotifierProvider.value(value: _themeViewModel),
       ],
       builder: (BuildContext context, Widget? w) {
         final model = Provider.of<TUIAddGroupViewModel>(context);
-        final theme = Provider.of<TUIThemeViewModel>(context).theme;
         final searchResult = model.groupResult;
         return Column(
           children: [
@@ -184,7 +186,7 @@ class _TIMUIKitAddGroupState extends State<TIMUIKitAddGroup> {
                         ),
                         fillColor: Colors.white,
                         filled: true,
-                        hintText: ttbuild.imt("搜索群ID")),
+                        hintText: TIM_t("搜索群ID")),
                   )),
                   AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
@@ -199,7 +201,7 @@ class _TIMUIKitAddGroupState extends State<TIMUIKitAddGroup> {
                           }
                         },
                         child: Text(
-                          ttbuild.imt("搜索"),
+                          TIM_t("搜索"),
                           softWrap: false,
                           style: const TextStyle(color: Colors.black),
                         )),
@@ -211,7 +213,7 @@ class _TIMUIKitAddGroupState extends State<TIMUIKitAddGroup> {
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
-                    children: _searchResultBuilder(searchResult),
+                    children: _searchResultBuilder(searchResult, theme),
                   ),
                 ),
               )

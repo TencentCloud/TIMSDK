@@ -1,19 +1,18 @@
-// ignore_for_file: unused_local_variable
-
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
-import 'package:tim_ui_kit/i18n/i18n_utils.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_statelesswidget.dart';
 import 'package:tim_ui_kit/ui/constants/emoji.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:tim_ui_kit/ui/widgets/emoji.dart';
 
-class EmojiPanel extends StatelessWidget {
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
+
+class EmojiPanel extends TIMUIKitStatelessWidget {
   final void Function(int unicode) onTapEmoji;
   final void Function() onSubmitted;
   final void Function() delete;
   final bool showBottomContainer;
 
-  const EmojiPanel({
+  EmojiPanel({
     Key? key,
     required this.onTapEmoji,
     required this.onSubmitted,
@@ -22,10 +21,7 @@ class EmojiPanel extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final I18nUtils ttBuild = I18nUtils(context);
-    final theme = Provider.of<TUIThemeViewModel>(context).theme;
-
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     return SingleChildScrollView(
         child: Column(
       children: [
@@ -94,7 +90,7 @@ class EmojiPanel extends StatelessWidget {
                         margin: const EdgeInsets.only(right: 25),
                         // height: MediaQuery.of(context).padding.bottom,
                         child: ElevatedButton(
-                            child: Text(ttBuild.imt("发送")),
+                            child: Text(TIM_t("发送")),
                             style: ElevatedButton.styleFrom(),
                             onPressed: () {
                               onSubmitted();
@@ -108,8 +104,8 @@ class EmojiPanel extends StatelessWidget {
   }
 }
 
-class EmojiItem extends StatelessWidget {
-  const EmojiItem({Key? key, required this.name, required this.unicode})
+class EmojiItem extends TIMUIKitStatelessWidget {
+  EmojiItem({Key? key, required this.name, required this.unicode})
       : super(key: key);
   final String name;
   final int unicode;
@@ -117,7 +113,7 @@ class EmojiItem extends StatelessWidget {
   // final int type;
   // final Function close;
   @override
-  Widget build(BuildContext context) {
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     return Text(
       String.fromCharCode(unicode),
       style: const TextStyle(

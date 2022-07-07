@@ -1,17 +1,17 @@
-// ignore_for_file: unused_local_variable
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tencent_im_sdk_plugin/enum/group_application_type_enum.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_application.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
 
 import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
+import 'package:tim_ui_kit/data_services/group/group_services.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
-import '../../../business_logic/view_models/tui_chat_view_model.dart';
-import '../../../data_services/group/group_services.dart';
-import '../../../i18n/i18n_utils.dart';
-import '../../utils/color.dart';
-import '../../widgets/avatar.dart';
+import 'package:tim_ui_kit/ui/utils/color.dart';
+import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
+import 'package:tim_ui_kit/ui/widgets/avatar.dart';
+
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
 
 typedef GroupApplicationItemBuilder = Widget Function(
     BuildContext context, V2TimGroupApplication applicationInfo, int index);
@@ -38,7 +38,7 @@ class TIMUIKitGroupApplicationList extends StatefulWidget {
 }
 
 class TIMUIKitGroupApplicationListState
-    extends State<TIMUIKitGroupApplicationList> {
+    extends TIMUIKitState<TIMUIKitGroupApplicationList> {
   final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
   final GroupServices _groupServices = serviceLocator<GroupServices>();
   List<V2TimGroupApplication> groupApplicationList = [];
@@ -61,7 +61,6 @@ class TIMUIKitGroupApplicationListState
   Widget _defaultItemBuilder(
       BuildContext context, V2TimGroupApplication applicationInfo, int index) {
     final theme = Provider.of<TUIThemeViewModel>(context).theme;
-    final I18nUtils ttBuild = I18nUtils(context);
     final ApplicationStatus currentStatus = applicationStatusList[index];
 
     String _getUserName() {
@@ -76,7 +75,7 @@ class TIMUIKitGroupApplicationListState
 
     String _getRequestMessage() {
       String option2 = applicationInfo.requestMsg!;
-      return ttBuild.imt_para("验证消息: {{option2}}", "验证消息: $option2")(
+      return TIM_t_para("验证消息: {{option2}}", "验证消息: $option2")(
           option2: option2);
     }
 
@@ -136,7 +135,7 @@ class TIMUIKitGroupApplicationListState
                             color: theme.weakTextColor ??
                                 CommonColor.weakTextColor)),
                     child: Text(
-                      ttBuild.imt("同意"), // agree
+                      TIM_t("同意"), // agree
                       style: const TextStyle(
                         color: Colors.white,
                       ),
@@ -147,6 +146,8 @@ class TIMUIKitGroupApplicationListState
                       groupID: applicationInfo.groupID,
                       fromUser: applicationInfo.fromUser!,
                       toUser: applicationInfo.toUser!,
+                      type: applicationInfo.type,
+                      addTime: applicationInfo.addTime ?? 0,
                     );
                     if (res.code == 0) {
                       setState(() {
@@ -172,7 +173,7 @@ class TIMUIKitGroupApplicationListState
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 child: Text(
-                  ttBuild.imt("拒绝"), // reject
+                  TIM_t("拒绝"), // reject
                   style: TextStyle(
                     color: theme.primaryColor,
                   ),
@@ -201,7 +202,7 @@ class TIMUIKitGroupApplicationListState
             Container(
               margin: const EdgeInsets.only(left: 8),
               child: Text(
-                ttBuild.imt("已同意"),
+                TIM_t("已同意"),
                 style: TextStyle(fontSize: 15, color: theme.weakTextColor),
               ),
             ),
@@ -210,7 +211,7 @@ class TIMUIKitGroupApplicationListState
             Container(
               margin: const EdgeInsets.only(left: 8),
               child: Text(
-                ttBuild.imt("已拒绝"),
+                TIM_t("已拒绝"),
                 style: TextStyle(fontSize: 15, color: theme.weakTextColor),
               ),
             )
@@ -220,17 +221,12 @@ class TIMUIKitGroupApplicationListState
   }
 
   @override
-  Widget build(BuildContext context) {
-    final I18nUtils ttBuild = I18nUtils(context);
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    final TUITheme theme = value.theme;
 
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider.value(
-            value: serviceLocator<TUIThemeViewModel>()),
-        ChangeNotifierProvider.value(value: model)
-      ],
+      providers: [ChangeNotifierProvider.value(value: model)],
       builder: (context, w) {
-        final theme = Provider.of<TUIThemeViewModel>(context).theme;
         return Container(
           decoration: BoxDecoration(color: theme.weakBackgroundColor),
           child: ListView.builder(

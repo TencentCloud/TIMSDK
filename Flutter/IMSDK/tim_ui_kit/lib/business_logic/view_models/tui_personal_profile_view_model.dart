@@ -1,8 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_info.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_user_full_info.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_self_info_view_model.dart';
 import 'package:tim_ui_kit/data_services/core/core_services_implements.dart';
 import 'package:tim_ui_kit/data_services/friendShip/friendship_services.dart';
@@ -20,7 +19,6 @@ class TUIPersonalProfileViewModel extends ChangeNotifier {
   String? userID;
 
   V2TimUserFullInfo? get userInfo {
-    notifyListeners();
     return _userInfo ?? _selfInfoViewModel.loginInfo;
   }
 
@@ -101,7 +99,7 @@ class TUIPersonalProfileViewModel extends ChangeNotifier {
     }
   }
 
-  _updatUserInfo(String key, dynamic value) {
+  updateUserInfo(String key, dynamic value) {
     if (key == "nickName") {
       userInfo?.nickName = value;
     }
@@ -142,7 +140,7 @@ class TUIPersonalProfileViewModel extends ChangeNotifier {
     );
     if (res.code == 0) {
       newSelfInfo.forEach((key, value) {
-        _updatUserInfo(key, value);
+        updateUserInfo(key, value);
       });
 
       notifyListeners();

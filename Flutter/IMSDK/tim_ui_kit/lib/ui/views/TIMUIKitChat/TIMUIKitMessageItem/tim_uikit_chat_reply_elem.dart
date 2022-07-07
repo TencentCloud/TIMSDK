@@ -6,17 +6,19 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import 'package:tencent_im_sdk_plugin/enum/message_elem_type.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
-import 'package:tim_ui_kit/i18n/i18n_utils.dart';
+
 import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitMessageItem/main.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitMessageItem/tim_uikit_chat_face_elem.dart';
 
 import 'package:tim_ui_kit/ui/utils/shared_theme.dart';
+import 'package:tim_ui_kit/ui/widgets/link_preview/link_preview_entry.dart';
 
 class CloudCustomData {
   late Map<String, dynamic> messageReply;
@@ -58,9 +60,9 @@ class TIMUIKitReplyElem extends StatefulWidget {
   State<StatefulWidget> createState() => _TIMUIKitReplyElemState();
 }
 
-class _TIMUIKitReplyElemState extends State<TIMUIKitReplyElem> {
+class _TIMUIKitReplyElemState extends TIMUIKitState<TIMUIKitReplyElem> {
   TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
-  CloudCustomData? reqpliedMessage;
+  CloudCustomData? repliedMessage;
   V2TimMessage? rawMessage;
   Color backgroundColorNormal = const Color.fromRGBO(236, 236, 236, 1);
   Color backgroundColorJump = const Color.fromRGBO(245, 166, 35, 1);
@@ -89,36 +91,37 @@ class _TIMUIKitReplyElemState extends State<TIMUIKitReplyElem> {
       }
     }
     setState(() {
-      reqpliedMessage = cloudCustomData;
+      repliedMessage = cloudCustomData;
     });
+  }
+
+  Widget _defaultRawMessageText(String text, TUITheme? theme) {
+    return Text(text,
+        style: TextStyle(
+            fontSize: 12,
+            color: theme?.weakTextColor,
+            fontWeight: FontWeight.w400));
   }
 
   _rawMessageBuilder(V2TimMessage? message, TUITheme? theme) {
     if (message == null) {
-      return Text(
-        reqpliedMessage!.messageAbstract,
-        style: TextStyle(
-            fontSize: 12,
-            color: theme?.weakTextColor,
-            fontWeight: FontWeight.w400),
-      );
+      return _defaultRawMessageText(repliedMessage!.messageAbstract, theme);
     }
     final messageType = message.elemType;
     final isSelf = message.isSelf ?? false;
-    final I18nUtils ttBuild = I18nUtils(context);
+    if (model.abstractMessageBuilder != null) {
+      return _defaultRawMessageText(
+        model.abstractMessageBuilder!(message),
+        theme,
+      );
+    }
     switch (messageType) {
       case MessageElemType.V2TIM_ELEM_TYPE_CUSTOM:
-        return Text(ttBuild.imt("[自定义]"));
+        return _defaultRawMessageText(TIM_t("[自定义]"), theme);
       case MessageElemType.V2TIM_ELEM_TYPE_SOUND:
-        return Text(ttBuild.imt("[语音消息]"));
+        return _defaultRawMessageText(TIM_t("[语音消息]"), theme);
       case MessageElemType.V2TIM_ELEM_TYPE_TEXT:
-        return Text(
-          message.textElem?.text ?? "",
-          style: TextStyle(
-              fontSize: 12,
-              color: theme?.weakTextColor,
-              fontWeight: FontWeight.w400),
-        );
+        return _defaultRawMessageText(message.textElem?.text ?? "", theme);
       case MessageElemType.V2TIM_ELEM_TYPE_FACE:
         return TIMUIKitFaceElem(
           path: message.faceElem!.data ?? "",
@@ -133,14 +136,14 @@ class _TIMUIKitReplyElemState extends State<TIMUIKitReplyElem> {
       case MessageElemType.V2TIM_ELEM_TYPE_VIDEO:
         return TIMUIKitVideoElem(message, isFrom: "reply");
       case MessageElemType.V2TIM_ELEM_TYPE_LOCATION:
-        return Text(ttBuild.imt("[位置]"));
+        return _defaultRawMessageText(TIM_t("[位置]"), theme);
       case MessageElemType.V2TIM_ELEM_TYPE_MERGER:
         return TIMUIKitMergerElem(
             mergerElem: message.mergerElem!,
             messageID: message.msgID ?? "",
             isSelf: isSelf);
       default:
-        return Text(ttBuild.imt("[未知消息]"));
+        return _defaultRawMessageText(TIM_t("[未知消息]"), theme);
     }
   }
 
@@ -181,24 +184,19 @@ class _TIMUIKitReplyElemState extends State<TIMUIKitReplyElem> {
   }
 
   void _jumpToRawMsg() {
-    final I18nUtils ttBuild = I18nUtils(context);
     if (rawMessage?.timestamp != null) {
       widget.scrollToIndex(rawMessage);
     } else {
-      Fluttertoast.showToast(
-        msg: ttBuild.imt("无法定位到原消息"),
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        textColor: Colors.white,
-        backgroundColor: Colors.black,
-      );
+      onTIMCallback(TIMCallback(
+          type: TIMCallbackType.INFO,
+          infoRecommendText: TIM_t("无法定位到原消息"),
+          infoCode: 6660401));
     }
   }
 
   @override
-  Widget build(BuildContext context) {
-    // final theme = SharedThemeWidget.of(context)?.theme;
-    final theme = Provider.of<TUIThemeViewModel>(context).theme;
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    final theme = value.theme;
     final isSelf = widget.message.isSelf ?? false;
     backgroundColorNormal = widget.backgroundColor ??
         (isSelf
@@ -206,7 +204,7 @@ class _TIMUIKitReplyElemState extends State<TIMUIKitReplyElem> {
             : theme.weakBackgroundColor ??
                 const Color.fromRGBO(236, 236, 236, 1));
     backgroundColor = backgroundColorNormal;
-    if (reqpliedMessage == null) {
+    if (repliedMessage == null) {
       return Container();
     }
     final isFromSelf = widget.message.isSelf ?? false;
@@ -223,8 +221,11 @@ class _TIMUIKitReplyElemState extends State<TIMUIKitReplyElem> {
             bottomLeft: Radius.circular(10),
             bottomRight: Radius.circular(10));
     if (widget.isShowJump) {
-      _showJumpColor();
+      Future.delayed(Duration.zero, () {
+        _showJumpColor();
+      });
     }
+    final textWithLink = LinkPreviewEntry.getHyperlinksText(widget.message);
     return Container(
       padding: widget.textPadding ?? const EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -250,7 +251,7 @@ class _TIMUIKitReplyElemState extends State<TIMUIKitReplyElem> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "${reqpliedMessage!.messageSender}:",
+                    "${repliedMessage!.messageSender}:",
                     style: TextStyle(
                         fontSize: 12,
                         color: theme.weakTextColor,
@@ -266,9 +267,7 @@ class _TIMUIKitReplyElemState extends State<TIMUIKitReplyElem> {
             const SizedBox(
               height: 12,
             ),
-            Text(
-              widget.message.textElem?.text ?? "",
-              softWrap: true,
+            textWithLink!(
               style: widget.fontStyle ??
                   const TextStyle(
                     fontSize: 16,

@@ -40,6 +40,7 @@ final V2TIMManager _sdkInstance = TIMUIKitCore.getSDKInstance();
 
 /// init
 _coreInstance.init(
+        onTUIKitCallbackListener: (TIMCallback) {}, // 详见下方说明
         language: LanguageEnum?,
         sdkAppID: 0, // 控制台申请的sdkAppID
         loglevel: LogLevelEnum.V2TIM_LOG_DEBUG,
@@ -107,6 +108,82 @@ _coreInstance.setTheme(TUITheme theme: theme) // 设置主题色
 返回为 `V2TIMManager` 为`SDK 实例` 具体使用方式请参考[`Flutter IM SDK 文档`](https://pub.dev/documentation/tencent_im_sdk_plugin/latest/manager_v2_tim_manager/V2TIMManager/initSDK.html)
 
 ---
+
+### `onTUIKitCallbackListener`监听
+
+该监听用于返回包括：SDK API错误 / Flutter报错 / 一些可能需要弹窗提示用户的场景信息。
+
+通过`TIMCallbackType`确定类型。
+
+> 这部分的处理逻辑[可参考我们的DEMO](https://github.com/TencentCloud/TIMSDK/blob/master/Flutter/Demo/im-flutter-uikit/lib/src/pages/app.dart)，并根据您的需要，自行修改。
+#### SDK API错误（`TIMCallbackType.API_ERROR`）
+
+该场景下，提供SDK API原生`errorMsg`及`errorCode`。
+
+[错误码请参考该文档](https://cloud.tencent.com/document/product/269/1671)
+
+#### Flutter报错（`TIMCallbackType.FLUTTER_ERROR`）
+
+该错误由监听Flutter原生抛出异常产生，提供错误发生时的`stackTrace`(来自`FlutterError.onError`)或`catchError`(来自try-catch)。
+
+#### 场景信息（`TIMCallbackType.INFO`）
+
+这些信息建议根据实际情况，弹窗提示用户。具体弹窗规则和弹窗样式可由您决定。
+
+提供`infoCode`场景码帮助您确定当前的场景，并提供默认的提示推荐语`infoRecommendText`。
+
+您可直接弹窗我们的推荐语，也可根据场景码自定义推荐语。推荐语语言根据系统语言自适应，请勿根据推荐语来判断场景。
+
+场景码规则如下：
+
+场景码由七位数组成，前五位数确定场景发生的组件，后两位确定具体的场景表现。
+
+| 场景码开头 | 对应的组件 |
+| ------ | ------ |
+| 66601 | `TIMUIKitAddFriend` |
+| 66602 | `TIMUIKitAddGroup` |
+| 66603 | `TIMUIKitBlackList` |
+| 66604 | `TIMUIKitChat` |
+| 66605 | `TIMUIKitContact` |
+| 66606 | `TIMUIKitConversation` |
+| 66607 | `TIMUIKitGroup` |
+| 66608 | `TIMUIKitGroupProfile` |
+| 66609 | `TIMUIKitNewContact` |
+| 66610 | `TIMUIKitGroupProfile` |
+| 66611 | `TIMUIKitNewContact` |
+| 66612 | `TIMUIKitProfile` |
+| 66613 | `TIMUIKitSearch` |
+| 66614 | 通用组件 |
+
+全部场景码清单如下：
+
+| 场景码 `infoCode` | 推荐提示语 `infoRecommendText` | 场景描述 |
+| ------ | ------ | ------ |
+| 6660101 | 好友申请已发送 | 用户申请添加其他用户为联系人 |
+| 6660201 | 群申请已发送 | 用户申请加入需要管理员审批的群聊 |
+| 6660401 | 无法定位到原消息 | 当用户需要跳转至@消息或者是引用消息时，在消息列表中查不到目标消息 |
+| 6660402 | 视频保存成功 | 用户在消息列表，点开视频消息后，选择保存视频 |
+| 6660403 | 视频保存失败 | 用户在消息列表，点开视频消息后，选择保存视频 |
+| 6660404 | 说话时间太短 | 用户发送了过短的语音消息 |
+| 6660405 | 发送失败,视频不能大于100MB | 用户试图发送大于100MB的视频 |
+| 6660406 | 图片保存成功 | 用户在消息列表，点开图片大图后，选择保存图片 |
+| 6660407 | 图片保存失败 | 用户在消息列表，点开图片大图后，选择保存图片 |
+| 6660408 | 已复制 | 用户在弹窗内选择复制文字消息 |
+| 6660409 | 暂未实现 | 用户在弹窗内选择非标功能 |
+| 6660410 | 其他文件正在接收中 | 用户点击下载文件消息时，前序下载任务还未完成 |
+| 6660411 | 正在接收中 | 用户点击下载文件消息 |
+| 6661001 | 无网络连接，无法修改 | 当用户试图在无网络环境下，修改群资料 |
+| 6661002 | 无网络连接，无法查看群成员 | 当用户试图在无网络环境下，修改群资料 |
+| 6661003 | 成功取消管理员身份 | 用户将群内其他用户移除管理员 |
+| 6661201 | 无网络连接，无法修改 | 当用户试图在无网络环境下，修改自己或联系人的资料 |
+| 6661202 | 好友添加成功 | 在资料页添加其他用户为好友，并自动添加成功，无需验证 |
+| 6661203 | 好友申请已发出 | 在资料页添加其他用户为好友，对方设置需要验证 |
+| 6661204 | 当前用户在黑名单 | 在资料页添加其他用户为好友，对方在自己的黑名单内 |
+| 6661205 | 好友添加失败 | 在资料页添加其他用户为好友，添加失败，可能是由于对方禁止加好友 |
+| 6661206 | 好友删除成功 | 在资料页删除其他用户为好友，成功 |
+| 6661207 | 好友删除失败 | 在资料页删除其他用户为好友，失败 |
+| 6661401 | 输入不能为空 | 当用户在录入信息时，输入了空字符串 |
+| 6661402 | 请传入离开群组生命周期函数，提供返回首页或其他页面的导航方法 | 用户退出群或解散群时，为提供返回首页办法 |
 
 ## TIMUIKitConversation
 `TIMUIKitConversation` 为会话组件，拉取用户会话列表，默认提供一套UI,用户也可自定义会话条目。同时提供对应的`TIMUIKitConversationController`。
@@ -217,8 +294,6 @@ TIMUIKitChat(
 ### TIMUIKitChatController
 
 #### 方法
-- **setMessageListener({V2TimAdvancedMsgListener? listener})**: 设置高级消息监听器
-- **removeMessageListener({V2TimAdvancedMsgListener? listener})**: 移除高级消息监听器
 - **clearHistory()**: 清除历史消息
 - **dispose()**：销毁
 - **sendMessage({required V2TimMessage messageInfo, String? receiverID, String? groupID, required ConvType convType})**：发送消息。根据ConvType，receiverID/groupID二选一传入。

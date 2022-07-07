@@ -3,13 +3,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_custom_elem.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
-import 'package:tim_ui_kit/i18n/i18n_utils.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_statelesswidget.dart';
+
 import 'package:tim_ui_kit/ui/utils/message.dart';
 
-class TIMUIKitCustomElem extends StatelessWidget {
+class TIMUIKitCustomElem extends TIMUIKitStatelessWidget {
   final V2TimCustomElem? customElem;
   final bool isFromSelf;
   final TextStyle? messageFontStyle;
@@ -17,7 +17,7 @@ class TIMUIKitCustomElem extends StatelessWidget {
   final Color? messageBackgroundColor;
   final EdgeInsetsGeometry? textPadding;
 
-  const TIMUIKitCustomElem({
+  TIMUIKitCustomElem({
     Key? key,
     this.customElem,
     this.isFromSelf = false,
@@ -39,13 +39,13 @@ class TIMUIKitCustomElem extends StatelessWidget {
     }
   }
 
-  static String getActionType(int actionType, I18nUtils ttBuild) {
+  static String getActionType(int actionType) {
     final actionMessage = {
-      1: ttBuild.imt("发起通话"),
-      2: ttBuild.imt("取消通话"),
-      3: ttBuild.imt("接受通话"),
-      4: ttBuild.imt("拒绝通话"),
-      5: ttBuild.imt("超时未接听"),
+      1: TIM_t("发起通话"),
+      2: TIM_t("取消通话"),
+      3: TIM_t("接受通话"),
+      4: TIM_t("拒绝通话"),
+      5: TIM_t("超时未接听"),
     };
     return actionMessage[actionType] ?? "";
   }
@@ -72,8 +72,7 @@ class TIMUIKitCustomElem extends StatelessWidget {
     return "${twoDigits(minutsShow)}:${twoDigits(secondsShow)}";
   }
 
-  Widget _callElemBuilder(BuildContext context) {
-    final I18nUtils ttBuild = I18nUtils(context);
+  Widget _callElemBuilder() {
     final callingMessage = getCallMessage(customElem);
 
     if (callingMessage != null) {
@@ -101,10 +100,10 @@ class TIMUIKitCustomElem extends StatelessWidget {
               ),
             ),
           isCallEnd
-              ? Text(ttBuild.imt_para("通话时间：{{option2}}", "通话时间：$option2")(
+              ? Text(TIM_t_para("通话时间：{{option2}}", "通话时间：$option2")(
                   option2: option2))
               : Text(
-                  getActionType(callingMessage.actionType!, ttBuild),
+                  getActionType(callingMessage.actionType!),
                   style: messageFontStyle,
                 ),
           if (isFromSelf)
@@ -127,8 +126,8 @@ class TIMUIKitCustomElem extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final theme = Provider.of<TUIThemeViewModel>(context).theme;
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    final theme = value.theme;
     final borderRadius = isFromSelf
         ? const BorderRadius.only(
             topLeft: Radius.circular(10),
@@ -150,7 +149,7 @@ class TIMUIKitCustomElem extends StatelessWidget {
         borderRadius: messageBorderRadius ?? borderRadius,
       ),
       constraints: const BoxConstraints(maxWidth: 240),
-      child: _callElemBuilder(context),
+      child: _callElemBuilder(),
     );
   }
 }

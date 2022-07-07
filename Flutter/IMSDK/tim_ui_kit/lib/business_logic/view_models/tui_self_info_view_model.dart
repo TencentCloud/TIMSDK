@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_user_full_info.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
 
 class TUISelfInfoViewModel extends ChangeNotifier {
   V2TimUserFullInfo? _loginInfo;

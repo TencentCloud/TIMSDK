@@ -4,11 +4,9 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
-import 'package:tencent_im_sdk_plugin/enum/message_status.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
-import 'package:tim_ui_kit/i18n/i18n_utils.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
 
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/utils/message.dart';
@@ -30,7 +28,7 @@ class TIMUIKitVideoElem extends StatefulWidget {
   State<StatefulWidget> createState() => _TIMUIKitVideoElemState();
 }
 
-class _TIMUIKitVideoElemState extends State<TIMUIKitVideoElem> {
+class _TIMUIKitVideoElemState extends TIMUIKitState<TIMUIKitVideoElem> {
   bool isShowBorder = false;
 
   void _showJumpColor() {
@@ -55,7 +53,6 @@ class _TIMUIKitVideoElemState extends State<TIMUIKitVideoElem> {
   }
 
   Widget errorDisplay(TUITheme? theme) {
-    final I18nUtils ttBuild = I18nUtils(context);
     return Container(
       decoration: BoxDecoration(
           border: Border.all(
@@ -73,7 +70,7 @@ class _TIMUIKitVideoElemState extends State<TIMUIKitVideoElem> {
               size: 16,
             ),
             Text(
-              ttBuild.imt("视频加载失败"),
+              TIM_t("视频加载失败"),
               style: TextStyle(color: theme?.cautionColor),
             ),
           ],
@@ -83,10 +80,8 @@ class _TIMUIKitVideoElemState extends State<TIMUIKitVideoElem> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    // final theme = SharedThemeWidget.of(context)?.theme;
-    final theme = Provider.of<TUIThemeViewModel>(context).theme;
-    // Random 为了解决reply时的Hero同层Tag相同问题
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    final theme = value.theme;
     final heroTag =
         "${widget.message.msgID ?? widget.message.id ?? widget.message.timestamp ?? DateTime.now().millisecondsSinceEpoch}${widget.isFrom}";
     if (widget.isShowJump) {

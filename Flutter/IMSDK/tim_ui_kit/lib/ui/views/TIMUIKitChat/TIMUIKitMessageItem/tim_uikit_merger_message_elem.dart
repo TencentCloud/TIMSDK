@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_merger_elem.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_statelesswidget.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
-import 'package:tim_ui_kit/i18n/i18n_utils.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
+import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
 import 'package:tim_ui_kit/ui/widgets/merger_message_screen.dart';
 
-class TIMUIKitMergerElem extends StatelessWidget {
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
+
+class TIMUIKitMergerElem extends TIMUIKitStatelessWidget {
   final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
   final V2TimMergerElem mergerElem;
   final String messageID;
@@ -44,11 +45,9 @@ class TIMUIKitMergerElem extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    // final theme = SharedThemeWidget.of(context)?.theme;
-    final theme = Provider.of<TUIThemeViewModel>(context).theme;
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    final TUITheme theme = value.theme;
 
-    final I18nUtils ttBuild = I18nUtils(context);
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -125,7 +124,7 @@ class TIMUIKitMergerElem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    ttBuild.imt("聊天记录"),
+                    TIM_t("聊天记录"),
                     style: TextStyle(
                       color: theme.weakTextColor,
                       fontSize: 10,
