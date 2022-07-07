@@ -1,13 +1,11 @@
 
-// ignore_for_file: annotate_overrides
-
 /*
  * Generated file. Do not edit.
  *
  * Locales: 3
- * Strings: 591 (197.0 per locale)
+ * Strings: 612 (204.0 per locale)
  *
- * Built on 2022-06-09 at 07:30 UTC
+ * Built on 2022-06-14 at 11:41 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -517,6 +515,13 @@ class _StringsEn {
 	String get k_1ngd60h => 'No. 10000 Shennan avenue, Shenzhen';
 	String get k_1na29vg => 'Location messages is not supported in DEMO temporarily';
 	String get k_1xmms9t => 'Request to Join Group';
+	String get k_0dla4vp => 'To provide feedback or suggestions,\n please join our QQ group at';
+	String get k_1odrjd1 => 'Online time: 10 AM to 8 PM, Mon through Fri';
+	String get k_1bh903m => 'Copied successfully';
+	String get k_16264lp => 'Copy group number';
+	String get k_18ger86 => 'Tencent Cloud IM';
+	String get k_1vd70l1 => 'Chat SDK serving hundreds of millions of QQ users';
+	String get k_036phup => 'Tencent Cloud IM';
 }
 
 // Path: <root>
@@ -530,7 +535,8 @@ class _StringsZhHans implements _StringsEn {
 	@override dynamic operator[](String key) => _flatMap[key];
 
 	// Internal flat map initialized lazily
-	late final Map<String, dynamic> _flatMap = _buildFlatMap();
+	@override
+  late final Map<String, dynamic> _flatMap = _buildFlatMap();
 
 	// ignore: unused_field
 	@override late final _StringsZhHans _root = this;
@@ -707,7 +713,7 @@ class _StringsZhHans implements _StringsEn {
 	@override String get k_002qtgt => '注销';
 	@override String k_0rvdu91({required Object option1}) => '注销后，您将无法使用当前账号，相关数据也将删除且无法找回。当前账号ID: $option1';
 	@override String get k_15d22qk => '注销账号';
-	@override String get k_036uv3f => '云通信IM';
+	@override String get k_036uv3f => '腾讯云IM';
 	@override String get k_167916k => '微信好友';
 	@override String get k_03euwr1 => '朋友圈';
 	@override String get k_0cxccci => '邀请你视频通话';
@@ -733,6 +739,13 @@ class _StringsZhHans implements _StringsEn {
 	@override String get k_1ngd60h => '深圳市深南大道10000号';
 	@override String get k_1na29vg => '位置消息维护中';
 	@override String get k_1xmms9t => '进群申请列表';
+	@override String get k_0dla4vp => '反馈及建议可以加入QQ群';
+	@override String get k_1odrjd1 => '在线时间: 周一到周五，早上10点 - 晚上8点';
+	@override String get k_1bh903m => 'QQ群号复制成功';
+	@override String get k_16264lp => '复制群号';
+	@override String get k_18ger86 => '腾讯云 · IM';
+	@override String get k_1vd70l1 => '服务亿级 QQ 用户的即时通讯技术';
+	@override String get k_036phup => '腾讯云IM';
 }
 
 // Path: <root>
@@ -746,7 +759,8 @@ class _StringsZhHant implements _StringsEn {
 	@override dynamic operator[](String key) => _flatMap[key];
 
 	// Internal flat map initialized lazily
-	late final Map<String, dynamic> _flatMap = _buildFlatMap();
+	@override
+  late final Map<String, dynamic> _flatMap = _buildFlatMap();
 
 	// ignore: unused_field
 	@override late final _StringsZhHant _root = this;
@@ -775,7 +789,7 @@ class _StringsZhHant implements _StringsEn {
 	@override String get k_1m8vyp0 => '新的聯絡人';
 	@override String get k_0elz70e => '我的群組';
 	@override String get k_18tb4mo => '無聯絡人';
-	@override String get k_18nuh87 => '聯系我們';
+	@override String get k_18nuh87 => '聯絡我們';
 	@override String get k_1uf134v => '反饋及建議可以加入QQ群：788910197';
 	@override String get k_0xlhhrn => '在線時間，周一到周五，早上10點 - 晚上8點';
 	@override String get k_17fmlyf => '清除聊天';
@@ -949,6 +963,13 @@ class _StringsZhHant implements _StringsEn {
 	@override String get k_1ngd60h => '深圳市深南大道10000號';
 	@override String get k_1na29vg => '位置訊息維護中';
 	@override String get k_1xmms9t => '進群申請列表';
+	@override String get k_0dla4vp => '反饋及建議可以加入QQ群組';
+	@override String get k_1odrjd1 => '在線時間: 周一到周五，早上10點 - 晚上8點';
+	@override String get k_1bh903m => '群組復製成功';
+	@override String get k_16264lp => '復製群組號';
+	@override String get k_18ger86 => '騰訊雲 · IM';
+	@override String get k_1vd70l1 => '服務億級 QQ 用戶的即時通訊技術';
+	@override String get k_036phup => '騰訊雲IM';
 }
 
 /// Flat map(s) containing all translations.
@@ -1154,6 +1175,13 @@ extension on _StringsEn {
 			'k_1ngd60h': 'No. 10000 Shennan avenue, Shenzhen',
 			'k_1na29vg': 'Location messages is not supported in DEMO temporarily',
 			'k_1xmms9t': 'Request to Join Group',
+			'k_0dla4vp': 'To provide feedback or suggestions,\n please join our QQ group at',
+			'k_1odrjd1': 'Online time: 10 AM to 8 PM, Mon through Fri',
+			'k_1bh903m': 'Copied successfully',
+			'k_16264lp': 'Copy group number',
+			'k_18ger86': 'Tencent Cloud IM',
+			'k_1vd70l1': 'Chat SDK serving hundreds of millions of QQ users',
+			'k_036phup': 'Tencent Cloud IM',
 		};
 	}
 }
@@ -1332,7 +1360,7 @@ extension on _StringsZhHans {
 			'k_002qtgt': '注销',
 			'k_0rvdu91': ({required Object option1}) => '注销后，您将无法使用当前账号，相关数据也将删除且无法找回。当前账号ID: $option1',
 			'k_15d22qk': '注销账号',
-			'k_036uv3f': '云通信IM',
+			'k_036uv3f': '腾讯云IM',
 			'k_167916k': '微信好友',
 			'k_03euwr1': '朋友圈',
 			'k_0cxccci': '邀请你视频通话',
@@ -1358,6 +1386,13 @@ extension on _StringsZhHans {
 			'k_1ngd60h': '深圳市深南大道10000号',
 			'k_1na29vg': '位置消息维护中',
 			'k_1xmms9t': '进群申请列表',
+			'k_0dla4vp': '反馈及建议可以加入QQ群',
+			'k_1odrjd1': '在线时间: 周一到周五，早上10点 - 晚上8点',
+			'k_1bh903m': 'QQ群号复制成功',
+			'k_16264lp': '复制群号',
+			'k_18ger86': '腾讯云 · IM',
+			'k_1vd70l1': '服务亿级 QQ 用户的即时通讯技术',
+			'k_036phup': '腾讯云IM',
 		};
 	}
 }
@@ -1388,7 +1423,7 @@ extension on _StringsZhHant {
 			'k_1m8vyp0': '新的聯絡人',
 			'k_0elz70e': '我的群組',
 			'k_18tb4mo': '無聯絡人',
-			'k_18nuh87': '聯系我們',
+			'k_18nuh87': '聯絡我們',
 			'k_1uf134v': '反饋及建議可以加入QQ群：788910197',
 			'k_0xlhhrn': '在線時間，周一到周五，早上10點 - 晚上8點',
 			'k_17fmlyf': '清除聊天',
@@ -1562,6 +1597,13 @@ extension on _StringsZhHant {
 			'k_1ngd60h': '深圳市深南大道10000號',
 			'k_1na29vg': '位置訊息維護中',
 			'k_1xmms9t': '進群申請列表',
+			'k_0dla4vp': '反饋及建議可以加入QQ群組',
+			'k_1odrjd1': '在線時間: 周一到周五，早上10點 - 晚上8點',
+			'k_1bh903m': '群組復製成功',
+			'k_16264lp': '復製群組號',
+			'k_18ger86': '騰訊雲 · IM',
+			'k_1vd70l1': '服務億級 QQ 用戶的即時通訊技術',
+			'k_036phup': '騰訊雲IM',
 		};
 	}
 }

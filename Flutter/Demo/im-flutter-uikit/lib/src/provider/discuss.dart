@@ -53,8 +53,8 @@ class DiscussData with ChangeNotifier {
     notifyListeners();
   }
 
-  addNewConversation(List<V2TimConversation> list) {
-    _conversationList.addAll(list);
+  addNewConversation(List<V2TimConversation?> list) {
+    _conversationList.addAll(List.from(list));
     sort();
     notifyListeners();
   }

@@ -20,8 +20,8 @@ import 'package:timuikit/src/user_profile.dart';
 import 'package:provider/provider.dart';
 
 import 'package:timuikit/i18n/i18n_utils.dart';
-import '../i18n/i18n_utils.dart';
-import '../utils/push/push_constant.dart';
+import 'package:timuikit/src/widgets/message_item/location_message_item.dart';
+import 'package:timuikit/utils/push/push_constant.dart';
 
 class Chat extends StatefulWidget {
   final V2TimConversation selectedConversation;
@@ -234,7 +234,7 @@ class _ChatState extends State<Chat> {
           notificationOPPOChannelID: PushConfig.OPPOChannelID,
         ),
         conversationID: _getConvID() ?? '',
-        conversationType: widget.selectedConversation.type ?? 0,
+        conversationType: widget.selectedConversation.type ?? ConversationType.V2TIM_C2C,
         onTapAvatar: _onTapAvatar,
         conversationShowName: _getTitle(),
         initFindingMsg: widget.initFindingMsg,
@@ -257,7 +257,10 @@ class _ChatState extends State<Chat> {
             //   ),
             //   locationUtils: LocationUtils(BaiduMapService()),
             // );
-            return Container();
+            return LocationMessageItem(
+              message: message,
+              isSelf: message.isSelf,
+            );
           },
         ),
         morePanelConfig: MorePanelConfig(

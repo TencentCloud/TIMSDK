@@ -1,13 +1,10 @@
-// ignore_for_file: unnecessary_import
+
 
 import 'package:flutter/material.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
-import 'package:tim_ui_kit/ui/views/TIMUIKitSearch/tim_uikit_search.dart';
-import 'package:tim_ui_kit/ui/views/TIMUIKitSearch/tim_uikit_search_msg_detail.dart';
+import 'package:timuikit/i18n/i18n_utils.dart';
 import 'package:timuikit/src/provider/theme.dart';
 import 'package:provider/provider.dart';
-
-import '../i18n/i18n_utils.dart';
 
 class Search extends StatelessWidget {
   const Search(

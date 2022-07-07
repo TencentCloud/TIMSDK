@@ -1,4 +1,4 @@
-// ignore_for_file: unused_import
+// ignore_for_file: unused_import, avoid_print
 
 import 'dart:io';
 
@@ -257,11 +257,6 @@ class _LoginFormState extends State<LoginForm> {
 
   directToHomePage() {
     Routes().directToHomePage();
-
-    // Navigator.of(context).pushAndRemoveUntil(
-    //   MaterialPageRoute(builder: (BuildContext context) => const HomePage()),
-    //   (route) => false,
-    // );
   }
 
   userLogin() async {
@@ -308,12 +303,9 @@ class _LoginFormState extends State<LoginForm> {
   Future<void> setOfflinePushInfo() async {
     // 这里先请求权限再上报token
     ChannelPush.requestPermission();
-
-    int? businessID = await TimUiKitPushPlugin.getBuzId(PushConfig.appInfo);
-    String token = await ChannelPush.getDeviceToken();
-    if (token != "") {
-      coreInstance.setOfflinePushConfig(
-          token: token, isTPNSToken: false, businessID: businessID);
+    final bool isUploadSuccess = await ChannelPush.uploadToken(PushConfig.appInfo);
+    if(isUploadSuccess){
+      print("upload success");
     }
   }
 

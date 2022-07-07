@@ -1,6 +1,6 @@
 import 'package:tim_ui_kit_push_plugin/tim_ui_kit_push_plugin.dart';
+import 'package:timuikit/utils/push/push_constant.dart';
 
-import '../push_constant.dart';
 
 class ChannelPush{
   static final TimUiKitPushPlugin cPush = TimUiKitPushPlugin(
@@ -23,5 +23,17 @@ class ChannelPush{
 
   static Future<String> getDeviceToken() async {
     return cPush.getDevicePushToken();
+  }
+
+  static setBadgeNum(int badgeNum){
+    return cPush.setBadgeNum(badgeNum);
+  }
+
+  static clearAllNotification(){
+    return cPush.clearAllNotification();
+  }
+
+  static Future<bool> uploadToken(PushAppInfo appInfo) async {
+    return cPush.uploadToken(appInfo);
   }
 }
