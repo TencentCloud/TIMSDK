@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_application.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_at_info.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
+import 'package:tim_ui_kit/business_logic/life_cycle/chat_life_cycle.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_group_profile_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
@@ -19,6 +20,7 @@ import 'package:tim_ui_kit/ui/views/TIMUIKitChat/tim_uikit_multi_select_panel.da
 
 import 'TIMUIKItMessageList/TIMUIKitTongue/tim_uikit_chat_history_message_list_tongue.dart';
 import 'TIMUIKItMessageList/tim_uikit_history_message_list_container.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
 class TIMUIKitChat extends StatefulWidget {
   int startTime = 0;
@@ -27,7 +29,7 @@ class TIMUIKitChat extends StatefulWidget {
   /// conversation id, use for get history message list.
   final String conversationID;
 
-  /// converastion type
+  /// conversation type
   final int conversationType;
 
   /// use for show conversation name
@@ -45,8 +47,13 @@ class TIMUIKitChat extends StatefulWidget {
   /// show unread message count, default value is false
   final bool showTotalUnReadCount;
 
+  /// Deprecated("Please use [extraTipsActionItemBuilder] instead")
   final Widget? Function(V2TimMessage message, Function() closeTooltip,
       [Key? key])? exteraTipsActionItemBuilder;
+
+  /// The builder for extra tips action
+  final Widget? Function(V2TimMessage message, Function() closeTooltip,
+      [Key? key])? extraTipsActionItemBuilder;
 
   /// show draft Text on TextField
   final String? draftText;
@@ -63,7 +70,7 @@ class TIMUIKitChat extends StatefulWidget {
   /// main history list config
   final ListView? mainHistoryListConfig;
 
-  /// more pannel config and customize actions
+  /// more panel config and customize actions
   final MorePanelConfig? morePanelConfig;
 
   /// the builder for tongue on right bottom
@@ -77,6 +84,15 @@ class TIMUIKitChat extends StatefulWidget {
   /// jump to the page for `TIMUIKitGroupApplicationList` or other pages to deal with enter group application for group administrator manually, if you use [public group]. The parameter is `groupID`
   final ValueChanged<String>? onDealWithGroupApplication;
 
+  /// the builder for abstract messages, normally used in replied message and forward message.
+  final String Function(V2TimMessage message)? abstractMessageBuilder;
+
+  /// tool tips panel configuration, long press message will show tool tips panel
+  final ToolTipsConfig? toolTipsConfig;
+
+  /// The life cycle for chat business logic
+  final ChatLifeCycle? lifeCycle;
+
   /// custom emoji panel
   final Widget Function(
       {void Function() sendTextMessage,
@@ -89,11 +105,14 @@ class TIMUIKitChat extends StatefulWidget {
     required this.conversationID,
     required this.conversationType,
     required this.conversationShowName,
+    this.abstractMessageBuilder,
     this.onTapAvatar,
     this.showNickName = true,
     this.showTotalUnReadCount = false,
     this.messageItemBuilder,
-    this.exteraTipsActionItemBuilder,
+    @Deprecated("Please use [extraTipsActionItemBuilder] instead")
+        this.exteraTipsActionItemBuilder,
+    this.extraTipsActionItemBuilder,
     this.draftText,
     this.textFieldHintText,
     this.initFindingMsg,
@@ -105,6 +124,8 @@ class TIMUIKitChat extends StatefulWidget {
     this.groupAtInfoList,
     this.mainHistoryListConfig,
     this.onDealWithGroupApplication,
+    this.toolTipsConfig,
+    this.lifeCycle,
   }) : super(key: key) {
     startTime = DateTime.now().millisecondsSinceEpoch;
   }
@@ -113,9 +134,11 @@ class TIMUIKitChat extends StatefulWidget {
   State<StatefulWidget> createState() => _TUIChatState();
 }
 
-class _TUIChatState extends State<TIMUIKitChat> {
+class _TUIChatState extends TIMUIKitState<TIMUIKitChat> {
   final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
   final TUIThemeViewModel themeViewModel = serviceLocator<TUIThemeViewModel>();
+  final TUIGroupProfileViewModel groupProfileViewModel =
+      serviceLocator<TUIGroupProfileViewModel>();
   final TIMUIKitInputTextFieldController textFieldController =
       TIMUIKitInputTextFieldController();
 
@@ -135,6 +158,12 @@ class _TUIChatState extends State<TIMUIKitChat> {
     model.markMessageAsRead(
         convID: widget.conversationID, convType: widget.conversationType);
     model.setChatConfig(widget.config!);
+    model.abstractMessageBuilder = widget.abstractMessageBuilder;
+    if (widget.conversationType == 2) {
+      groupProfileViewModel.loadData(widget.conversationID);
+      // groupProfileViewModel.setGroupListener();
+    }
+    model.lifeCycle = widget.lifeCycle;
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_) async {
       if (kProfileMode) {
@@ -152,11 +181,11 @@ class _TUIChatState extends State<TIMUIKitChat> {
       Frame.destroy();
     }
     model.resetData();
+    groupProfileViewModel.clearData();
   }
 
   Widget _renderJoinGroupApplication(int amount, TUITheme theme) {
     String option1 = amount.toString();
-    final I18nUtils ttBuild = I18nUtils(context);
     return Container(
       height: 36,
       decoration: BoxDecoration(color: hexToColor("f6eabc")),
@@ -169,7 +198,7 @@ class _TUIChatState extends State<TIMUIKitChat> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              ttBuild.imt_para("{{option1}} 条入群请求", "$option1 条入群请求")(
+              TIM_t_para("{{option1}} 条入群请求", "$option1 条入群请求")(
                   option1: option1),
               style: const TextStyle(
                 fontSize: 12,
@@ -178,7 +207,7 @@ class _TUIChatState extends State<TIMUIKitChat> {
             Container(
               margin: const EdgeInsets.only(left: 12),
               child: Text(
-                ttBuild.imt("去处理"),
+                TIM_t("去处理"),
                 style: TextStyle(fontSize: 12, color: theme.primaryColor),
               ),
             )
@@ -189,9 +218,11 @@ class _TUIChatState extends State<TIMUIKitChat> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    final TUITheme theme = value.theme;
     final closePanel =
         OptimizeUtils.throttle((_) => textFieldController.hideAllPanel(), 60);
+
     return TIMUIKitChatProviderScope(
         conversationID: widget.conversationID,
         conversationType: widget.conversationType,
@@ -200,7 +231,6 @@ class _TUIChatState extends State<TIMUIKitChat> {
         ],
         builder: (context, w) {
           final TUIChatViewModel model = Provider.of<TUIChatViewModel>(context);
-          final TUITheme theme = Provider.of<TUIThemeViewModel>(context).theme;
 
           final isMultiSelect = model.isMultiSelect;
 
@@ -235,9 +265,9 @@ class _TUIChatState extends State<TIMUIKitChat> {
                             child: Listener(
                               onPointerMove: closePanel,
                               child: TIMUIKitHistoryMessageListContainer(
+                                toolTipsConfig: widget.toolTipsConfig,
                                 groupAtInfoList: widget.groupAtInfoList,
                                 tongueItemBuilder: widget.tongueItemBuilder,
-                                convId: widget.conversationID,
                                 onLongPressForOthersHeadPortrait:
                                     (String? userId, String? nickName) {
                                   if (widget.conversationType != 1) {
@@ -248,8 +278,9 @@ class _TUIChatState extends State<TIMUIKitChat> {
                                 mainHistoryListConfig:
                                     widget.mainHistoryListConfig,
                                 initFindingMsg: widget.initFindingMsg,
-                                exteraTipsActionItemBuilder:
-                                    widget.exteraTipsActionItemBuilder,
+                                extraTipsActionItemBuilder:
+                                    widget.extraTipsActionItemBuilder ??
+                                        widget.exteraTipsActionItemBuilder,
                                 conversationType: widget.conversationType,
                                 scrollController: autoController,
                                 onTapAvatar: widget.onTapAvatar,
@@ -288,6 +319,8 @@ class _TUIChatState extends State<TIMUIKitChat> {
 class TIMUIKitChatProviderScope extends StatelessWidget {
   static final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
   final TUIThemeViewModel themeViewModel = serviceLocator<TUIThemeViewModel>();
+  final TUIGroupProfileViewModel groupProfileViewModel =
+      serviceLocator<TUIGroupProfileViewModel>();
   final Widget? child;
   final Widget Function(BuildContext, Widget?)? builder;
   final List<SingleChildWidget>? providers;
@@ -327,6 +360,7 @@ class TIMUIKitChatProviderScope extends StatelessWidget {
       providers: [
         ChangeNotifierProvider.value(value: model),
         ChangeNotifierProvider.value(value: themeViewModel),
+        ChangeNotifierProvider.value(value: groupProfileViewModel),
         Provider(create: (_) => const TIMUIKitChatConfig()),
         ...?providers
       ],

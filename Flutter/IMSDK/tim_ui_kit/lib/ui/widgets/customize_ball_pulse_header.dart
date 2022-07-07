@@ -4,6 +4,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
 /// 球脉冲Header
 class CustomizeBallPulseHeader extends Header {
@@ -94,7 +96,7 @@ class BallPulseHeaderWidget extends StatefulWidget {
   }
 }
 
-class BallPulseHeaderWidgetState extends State<BallPulseHeaderWidget> {
+class BallPulseHeaderWidgetState extends TIMUIKitState<BallPulseHeaderWidget> {
   RefreshMode get _refreshState => widget.linkNotifier.refreshState;
 
   double get _indicatorExtent => widget.linkNotifier.refreshIndicatorExtent;
@@ -157,7 +159,7 @@ class BallPulseHeaderWidgetState extends State<BallPulseHeaderWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     if (_noMore) return Container();
     // 开启动画
     if (_refreshState == RefreshMode.done ||

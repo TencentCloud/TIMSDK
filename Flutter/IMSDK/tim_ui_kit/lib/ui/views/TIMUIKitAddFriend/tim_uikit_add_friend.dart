@@ -1,30 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_user_full_info.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
+import 'package:tim_ui_kit/business_logic/life_cycle/add_friend_life_cycle.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_add_friend_view_model.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
-import 'package:tim_ui_kit/data_services/services_locatar.dart';
-import 'package:tim_ui_kit/i18n/i18n_utils.dart';
+import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitAddFriend/tim_uikit_send_application.dart';
 import 'package:tim_ui_kit/ui/widgets/avatar.dart';
 
 class TIMUIKitAddFriend extends StatefulWidget {
-  const TIMUIKitAddFriend({Key? key}) : super(key: key);
+  final bool? isShowDefaultGroup;
+
+  /// The life cycle hooks for adding friends and contact business logic
+  final AddFriendLifeCycle? lifeCycle;
+  const TIMUIKitAddFriend(
+      {Key? key, this.isShowDefaultGroup = false, this.lifeCycle})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _TIMUIKitAddFriendState();
 }
 
-class _TIMUIKitAddFriendState extends State<TIMUIKitAddFriend> {
+class _TIMUIKitAddFriendState extends TIMUIKitState<TIMUIKitAddFriend> {
   final TextEditingController _controller = TextEditingController();
   final TUIAddFriendViewModel _addFriendViewModel = TUIAddFriendViewModel();
-  final TUIThemeViewModel _themeViewModel = serviceLocator<TUIThemeViewModel>();
   final FocusNode _focusNode = FocusNode();
   bool isFocused = false;
   bool showResult = false;
 
-  Widget _searchResultItemBuilder(V2TimUserFullInfo friendInfo) {
-    final theme = _themeViewModel.theme;
+  Widget _searchResultItemBuilder(
+      V2TimUserFullInfo friendInfo, TUITheme theme) {
     final faceUrl = friendInfo.faceUrl ?? "";
     final userID = friendInfo.userID ?? "";
     final showName = friendInfo.nickName ?? userID;
@@ -34,7 +40,9 @@ class _TIMUIKitAddFriendState extends State<TIMUIKitAddFriend> {
             context,
             MaterialPageRoute(
                 builder: (context) => SendApplication(
-                    friendInfo: friendInfo, model: _addFriendViewModel)));
+                    isShowDefaultGroup: widget.isShowDefaultGroup ?? false,
+                    friendInfo: friendInfo,
+                    model: _addFriendViewModel)));
       },
       child: Container(
         color: Colors.white,
@@ -63,24 +71,24 @@ class _TIMUIKitAddFriendState extends State<TIMUIKitAddFriend> {
                   style: TextStyle(fontSize: 12, color: theme.weakTextColor),
                 )
               ],
-            )
+            ),
           ],
         ),
       ),
     );
   }
 
-  List<Widget> _searchResultBuilder(List<V2TimUserFullInfo>? searchResult) {
+  List<Widget> _searchResultBuilder(
+      List<V2TimUserFullInfo>? searchResult, TUITheme theme) {
     final noResult = searchResult == null || searchResult.isEmpty;
-    final I18nUtils ttbuild = I18nUtils(context);
     if (noResult) {
       return [
         Center(
-          child: Text(ttbuild.imt("用户不存在")),
+          child: Text(TIM_t("用户不存在")),
         )
       ];
     }
-    return searchResult.map((e) => _searchResultItemBuilder(e)).toList();
+    return searchResult.map((e) => _searchResultItemBuilder(e, theme)).toList();
   }
 
   @override
@@ -99,19 +107,19 @@ class _TIMUIKitAddFriendState extends State<TIMUIKitAddFriend> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final I18nUtils ttbuild = I18nUtils(context);
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    final TUITheme theme = value.theme;
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: _addFriendViewModel),
-        ChangeNotifierProvider.value(value: _themeViewModel),
       ],
       builder: (BuildContext context, Widget? w) {
         final model = Provider.of<TUIAddFriendViewModel>(context);
-        final theme = Provider.of<TUIThemeViewModel>(context).theme;
         final userID = model.loginUserInfo?.userID ?? "";
         String option2 = userID;
         final searchResult = model.friendInfoResult;
+        model.lifeCycle = widget.lifeCycle;
         return Column(
           children: [
             Padding(
@@ -157,7 +165,7 @@ class _TIMUIKitAddFriendState extends State<TIMUIKitAddFriend> {
                         ),
                         fillColor: Colors.white,
                         filled: true,
-                        hintText: ttbuild.imt("搜索用户 ID")),
+                        hintText: TIM_t("搜索用户 ID")),
                   )),
                   AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
@@ -172,7 +180,7 @@ class _TIMUIKitAddFriendState extends State<TIMUIKitAddFriend> {
                           }
                         },
                         child: Text(
-                          ttbuild.imt("搜索"),
+                          TIM_t("搜索"),
                           softWrap: false,
                           style: const TextStyle(color: Colors.black),
                         )),
@@ -183,14 +191,14 @@ class _TIMUIKitAddFriendState extends State<TIMUIKitAddFriend> {
             if (!isFocused)
               Center(
                 child: Text(
-                    ttbuild.imt_para("我的用户ID: {{option2}}", "我的用户ID: $option2")(
+                    TIM_t_para("我的用户ID: {{option2}}", "我的用户ID: $option2")(
                         option2: option2)),
               ),
             if (showResult)
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
-                    children: _searchResultBuilder(searchResult),
+                    children: _searchResultBuilder(searchResult, theme),
                   ),
                 ),
               )

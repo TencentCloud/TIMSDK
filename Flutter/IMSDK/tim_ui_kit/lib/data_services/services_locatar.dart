@@ -24,12 +24,13 @@ bool boolIsInitailized = false;
 void setupServiceLocator() {
   if (!boolIsInitailized) {
     // services
+
+    serviceLocator.registerSingleton<CoreServicesImpl>(CoreServicesImpl());
     serviceLocator
         .registerSingleton<TUISelfInfoViewModel>(TUISelfInfoViewModel());
     serviceLocator
         .registerSingleton<ConversationService>(ConversationServicesImpl());
     serviceLocator.registerSingleton<MessageService>(MessageServiceImpl());
-    serviceLocator.registerSingleton<CoreServicesImpl>(CoreServicesImpl());
     serviceLocator
         .registerSingleton<FriendshipServices>(FriendshipServicesImpl());
     serviceLocator.registerSingleton<GroupServices>(GroupServicesImpl());

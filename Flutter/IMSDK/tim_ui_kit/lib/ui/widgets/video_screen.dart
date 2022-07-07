@@ -2,23 +2,22 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:dio/dio.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:tencent_im_sdk_plugin/enum/message_status.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
 
 import 'package:chewie/chewie.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/ui/utils/permission.dart';
 import 'package:tim_ui_kit/ui/utils/platform.dart';
-import 'package:tim_ui_kit/ui/widgets/toast.dart';
 import 'package:tim_ui_kit/ui/widgets/video_custom_control.dart';
 import 'package:video_player/video_player.dart';
 
-import '../../../../i18n/i18n_utils.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
 class VideoScreen extends StatefulWidget {
   const VideoScreen({required this.message, required this.heroTag, Key? key})
@@ -31,7 +30,7 @@ class VideoScreen extends StatefulWidget {
   State<StatefulWidget> createState() => _VideoScreenState();
 }
 
-class _VideoScreenState extends State<VideoScreen> {
+class _VideoScreenState extends TIMUIKitState<VideoScreen> {
   late VideoPlayerController videoPlayerController;
   late ChewieController chewieController;
   GlobalKey<ExtendedImageSlidePageState> slidePagekey =
@@ -52,7 +51,6 @@ class _VideoScreenState extends State<VideoScreen> {
 
   //保存网络视频到本地
   _savenNetworkVideo(context, String videoUrl, {bool isAsset = true}) async {
-    final I18nUtils ttBuild = I18nUtils(context);
     if (PlatformUtils().isIOS) {
       if (!await Permissions.checkPermission(
           context, Permission.photosAddOnly.value)) {
@@ -73,15 +71,27 @@ class _VideoScreenState extends State<VideoScreen> {
     var result = await ImageGallerySaver.saveFile(savePath);
     if (PlatformUtils().isIOS) {
       if (result['isSuccess']) {
-        Toast.showToast(ToastType.success, ttBuild.imt("视频保存成功"), context);
+        onTIMCallback(TIMCallback(
+            type: TIMCallbackType.INFO,
+            infoRecommendText: TIM_t("视频保存成功"),
+            infoCode: 6660402));
       } else {
-        Toast.showToast(ToastType.fail, ttBuild.imt("视频保存失败"), context);
+        onTIMCallback(TIMCallback(
+            type: TIMCallbackType.INFO,
+            infoRecommendText: TIM_t("视频保存失败"),
+            infoCode: 6660403));
       }
     } else {
       if (result != null) {
-        Toast.showToast(ToastType.success, ttBuild.imt("视频保存成功"), context);
+        onTIMCallback(TIMCallback(
+            type: TIMCallbackType.INFO,
+            infoRecommendText: TIM_t("视频保存成功"),
+            infoCode: 6660402));
       } else {
-        Toast.showToast(ToastType.fail, ttBuild.imt("视频保存失败"), context);
+        onTIMCallback(TIMCallback(
+            type: TIMCallbackType.INFO,
+            infoRecommendText: TIM_t("视频保存失败"),
+            infoCode: 6660403));
       }
     }
   }
@@ -176,7 +186,7 @@ class _VideoScreenState extends State<VideoScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     return OrientationBuilder(builder: ((context, orientation) {
       return Container(
         color: Colors.transparent,

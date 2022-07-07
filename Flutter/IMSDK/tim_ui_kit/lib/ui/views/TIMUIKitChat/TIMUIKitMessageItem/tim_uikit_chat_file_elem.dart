@@ -5,16 +5,16 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_file_elem.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
-import 'package:tim_ui_kit/i18n/i18n_utils.dart';
+
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/utils/permission.dart';
 import 'package:open_file/open_file.dart';
@@ -36,13 +36,12 @@ class TIMUIKitFileElem extends StatefulWidget {
   State<StatefulWidget> createState() => _TIMUIKitFileElemState();
 }
 
-class _TIMUIKitFileElemState extends State<TIMUIKitFileElem> {
+class _TIMUIKitFileElemState extends TIMUIKitState<TIMUIKitFileElem> {
   String filePath = "";
   final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
 
   Future<bool?> showOpenFileConfirmDialog(
       BuildContext context, String path, TUITheme? theme) async {
-    final I18nUtils ttBuild = I18nUtils(context);
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     String option2 = packageInfo.appName;
     return showDialog<bool>(
@@ -50,17 +49,16 @@ class _TIMUIKitFileElemState extends State<TIMUIKitFileElem> {
       builder: (context) {
         return CupertinoAlertDialog(
           title: Text(widget.fileElem!.fileName!),
-          content: Text(ttBuild.imt_para(
-              "“{{option2}}”暂不可以打开此类文件，你可以使用其他应用打开并预览",
+          content: Text(TIM_t_para("“{{option2}}”暂不可以打开此类文件，你可以使用其他应用打开并预览",
               "“$option2”暂不可以打开此类文件，你可以使用其他应用打开并预览")(option2: option2)),
           actions: <Widget>[
             CupertinoDialogAction(
-              child: Text(ttBuild.imt("取消"),
+              child: Text(TIM_t("取消"),
                   style: TextStyle(color: theme?.secondaryColor)),
               onPressed: () => Navigator.of(context).pop(), // 关闭对话框
             ),
             CupertinoDialogAction(
-              child: Text(ttBuild.imt("用其他应用打开"),
+              child: Text(TIM_t("用其他应用打开"),
                   style: TextStyle(color: theme?.primaryColor)),
               onPressed: () {
                 //关闭对话框并返回true
@@ -149,7 +147,8 @@ class _TIMUIKitFileElemState extends State<TIMUIKitFileElem> {
         } catch (e) {
           model.setMessageProgress(widget.messageID!, 0);
           print('Error $e');
-          Fluttertoast.showToast(msg: e.toString());
+          onTIMCallback(
+              TIMCallback(type: TIMCallbackType.FLUTTER_ERROR, catchError: e));
         }
       }
     } else if (received == 100) {
@@ -158,16 +157,14 @@ class _TIMUIKitFileElemState extends State<TIMUIKitFileElem> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    final theme = value.theme;
     return ChangeNotifierProvider.value(
         value: model,
         child: Consumer<TUIChatViewModel>(builder: (context, value, child) {
-          // final theme = SharedThemeWidget.of(context)?.theme;
-          final theme = Provider.of<TUIThemeViewModel>(context).theme;
           final received = value.getMessageProgress(widget.messageID);
           final fileName = widget.fileElem!.fileName ?? "";
           final fileSize = widget.fileElem!.fileSize;
-          final I18nUtils ttBuild = I18nUtils(context);
           final borderRadius = widget.isSelf
               ? const BorderRadius.only(
                   topLeft: Radius.circular(10),
@@ -182,14 +179,20 @@ class _TIMUIKitFileElemState extends State<TIMUIKitFileElem> {
           return GestureDetector(
               onTap: () {
                 if (value.isDownloading) {
-                  Fluttertoast.showToast(msg: ttBuild.imt("其他文件正在接收中"));
+                  onTIMCallback(TIMCallback(
+                      type: TIMCallbackType.INFO,
+                      infoRecommendText: TIM_t("其他文件正在接收中"),
+                      infoCode: 6660410));
                   return;
                 }
                 //if downloaded or not download can tap
                 if (received == 0 || received == 100) {
                   _onTap(context, theme, received);
                 } else {
-                  Fluttertoast.showToast(msg: ttBuild.imt("正在接收中"));
+                  onTIMCallback(TIMCallback(
+                      type: TIMCallbackType.INFO,
+                      infoRecommendText: TIM_t("正在接收中"),
+                      infoCode: 6660411));
                 }
               },
               child: Container(

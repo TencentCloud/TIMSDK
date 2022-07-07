@@ -1,14 +1,16 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_statelesswidget.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
-class TIMUIKitSearchShowALl extends StatelessWidget {
+class TIMUIKitSearchShowALl extends TIMUIKitStatelessWidget {
   final String textShow;
   final VoidCallback? onClick;
   final bool isNeedMoreBottom;
 
-  const TIMUIKitSearchShowALl(
+  TIMUIKitSearchShowALl(
       {Key? key,
       this.onClick,
       required this.textShow,
@@ -16,7 +18,7 @@ class TIMUIKitSearchShowALl extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     return GestureDetector(
       onTap: onClick,
       child: Container(

@@ -4,18 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
-import 'package:tencent_im_sdk_plugin/enum/conversation_type.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_conversation_view_model.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_group_profile_view_model.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_self_info_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/utils/message.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitTextField/tim_uikit_at_text.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitTextField/tim_uikit_emoji_panel.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitTextField/tim_uikit_send_sound_message.dart';
 
 import 'package:tim_ui_kit/ui/utils/permission.dart';
+
+enum MuteStatus { none, me, all }
 
 class TIMUIKitInputTextField extends StatefulWidget {
   /// conversation id
@@ -82,7 +87,7 @@ class TIMUIKitInputTextField extends StatefulWidget {
   State<StatefulWidget> createState() => _InputTextFieldState();
 }
 
-class _InputTextFieldState extends State<TIMUIKitInputTextField> {
+class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
   bool showMore = false;
   bool showSendSoundText = false;
   bool showEmojiPanel = false;
@@ -98,6 +103,8 @@ class _InputTextFieldState extends State<TIMUIKitInputTextField> {
   final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
   final TUIConversationViewModel conversationModel =
       serviceLocator<TUIConversationViewModel>();
+  final TUISelfInfoViewModel selfModel = serviceLocator<TUISelfInfoViewModel>();
+  MuteStatus muteStatus = MuteStatus.none;
 
   listenKeyBoardStatus() {
     final currentKeyboardHeight = MediaQuery.of(context).viewInsets.bottom;
@@ -172,13 +179,11 @@ class _InputTextFieldState extends State<TIMUIKitInputTextField> {
   }
 
   _openMore() {
-    if (showMore) {
-      focusNode.requestFocus();
-    } else {
+    if (!showMore) {
       focusNode.unfocus();
     }
     setState(() {
-      showKeyboard = showMore;
+      showKeyboard = false;
       showEmojiPanel = false;
       showSendSoundText = false;
       showMore = !showMore;
@@ -232,7 +237,7 @@ class _InputTextFieldState extends State<TIMUIKitInputTextField> {
     final haveRepliedMessage = repliedMessage != null;
     if (haveRepliedMessage) {
       final text =
-          "${MessageUtils.getDisplayName(model.repliedMessage!)}:${MessageUtils.getAbstractMessage(model.repliedMessage!, context)}";
+          "${MessageUtils.getDisplayName(model.repliedMessage!)}:${model.abstractMessageBuilder != null ? model.abstractMessageBuilder!(model.repliedMessage!) : MessageUtils.getAbstractMessage(model.repliedMessage!)}";
       return Container(
         color: hexToColor("EBF0F6"),
         alignment: Alignment.centerLeft,
@@ -388,11 +393,13 @@ class _InputTextFieldState extends State<TIMUIKitInputTextField> {
 
   _hideAllPanel() {
     focusNode.unfocus();
-    setState(() {
-      showKeyboard = false;
-      showMore = false;
-      showEmojiPanel = false;
-    });
+    if (showKeyboard != false || showMore != false || showEmojiPanel != false) {
+      setState(() {
+        showKeyboard = false;
+        showMore = false;
+        showEmojiPanel = false;
+      });
+    }
   }
 
   void onModelChanged() {
@@ -555,8 +562,44 @@ class _InputTextFieldState extends State<TIMUIKitInputTextField> {
     super.dispose();
   }
 
+  _getMuteType(TUIGroupProfileViewModel groupProfileViewModel) async {
+    if (widget.conversationType == 2) {
+      if ((groupProfileViewModel.groupInfo?.isAllMuted ?? false) &&
+          muteStatus != MuteStatus.all) {
+        Future.delayed(const Duration(seconds: 0), () {
+          setState(() {
+            muteStatus = MuteStatus.all;
+          });
+        });
+      } else if (selfModel.loginInfo?.userID != null &&
+          await groupProfileViewModel
+              .getMemberMuteStatus(selfModel.loginInfo!.userID!) &&
+          muteStatus != MuteStatus.me) {
+        Future.delayed(const Duration(seconds: 0), () {
+          setState(() {
+            muteStatus = MuteStatus.me;
+          });
+        });
+      } else if (!(groupProfileViewModel.groupInfo?.isAllMuted ?? false) &&
+          !(selfModel.loginInfo?.userID != null &&
+              await groupProfileViewModel
+                  .getMemberMuteStatus(selfModel.loginInfo!.userID!)) &&
+          muteStatus != MuteStatus.none) {
+        Future.delayed(const Duration(seconds: 0), () {
+          setState(() {
+            muteStatus = MuteStatus.none;
+          });
+        });
+      }
+    }
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    final TUIGroupProfileViewModel groupProfileViewModel =
+        Provider.of<TUIGroupProfileViewModel>(context);
+    final theme = value.theme;
+    _getMuteType(groupProfileViewModel);
     final debounceFunc = _debounce((value) {
       if (widget.onChanged != null) {
         widget.onChanged!(value);
@@ -583,7 +626,26 @@ class _InputTextFieldState extends State<TIMUIKitInputTextField> {
                         constraints: const BoxConstraints(minHeight: 50),
                         child: Row(
                           children: [
-                            if (widget.showSendAudio)
+                            if (muteStatus != MuteStatus.none)
+                              Expanded(
+                                  child: Container(
+                                height: 35,
+                                color: theme.weakBackgroundColor,
+                                alignment: Alignment.center,
+                                child: Text(
+                                  TIM_t(muteStatus == MuteStatus.all
+                                      ? "全员禁言中"
+                                      : "您被禁言"),
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: theme.weakTextColor,
+                                  ),
+                                ),
+                              )),
+                            if (widget.showSendAudio &&
+                                muteStatus == MuteStatus.none)
                               InkWell(
                                 onTap: () async {
                                   if (showSendSoundText) {
@@ -611,50 +673,55 @@ class _InputTextFieldState extends State<TIMUIKitInputTextField> {
                                   width: 28,
                                 ),
                               ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Expanded(
-                              child: showSendSoundText
-                                  ? SendSoundMessage(
-                                      onDownBottom: goDownBottom,
-                                      conversationID: widget.conversationID,
-                                      conversationType: widget.conversationType)
-                                  : TextField(
-                                      onChanged: debounceFunc,
-                                      maxLines: 4,
-                                      minLines: 1,
-                                      controller: textEditingController,
-                                      focusNode: focusNode,
-                                      onTap: () {
-                                        goDownBottom();
-                                        setState(() {
-                                          showKeyboard = true;
-                                          showEmojiPanel = false;
-                                          showMore = false;
-                                        });
-                                      },
-                                      keyboardType: TextInputType.text,
-                                      textInputAction: TextInputAction.send,
-                                      onEditingComplete: onSubmitted,
-                                      textAlignVertical:
-                                          TextAlignVertical.center,
-                                      decoration: InputDecoration(
-                                          border: InputBorder.none,
-                                          hintStyle: const TextStyle(
-                                            // fontSize: 10,
-                                            color: Color(0xffAEA4A3),
-                                          ),
-                                          fillColor: Colors.white,
-                                          filled: true,
-                                          isDense: true,
-                                          hintText: widget.hintText ?? ''),
-                                    ),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            if (widget.showSendEmoji)
+                            if (muteStatus == MuteStatus.none)
+                              const SizedBox(
+                                width: 10,
+                              ),
+                            if (muteStatus == MuteStatus.none)
+                              Expanded(
+                                child: showSendSoundText
+                                    ? SendSoundMessage(
+                                        onDownBottom: goDownBottom,
+                                        conversationID: widget.conversationID,
+                                        conversationType:
+                                            widget.conversationType)
+                                    : TextField(
+                                        onChanged: debounceFunc,
+                                        maxLines: 4,
+                                        minLines: 1,
+                                        controller: textEditingController,
+                                        focusNode: focusNode,
+                                        onTap: () {
+                                          goDownBottom();
+                                          setState(() {
+                                            showKeyboard = true;
+                                            showEmojiPanel = false;
+                                            showMore = false;
+                                          });
+                                        },
+                                        keyboardType: TextInputType.text,
+                                        textInputAction: TextInputAction.send,
+                                        onEditingComplete: onSubmitted,
+                                        textAlignVertical:
+                                            TextAlignVertical.center,
+                                        decoration: InputDecoration(
+                                            border: InputBorder.none,
+                                            hintStyle: const TextStyle(
+                                              // fontSize: 10,
+                                              color: Color(0xffAEA4A3),
+                                            ),
+                                            fillColor: Colors.white,
+                                            filled: true,
+                                            isDense: true,
+                                            hintText: widget.hintText ?? ''),
+                                      ),
+                              ),
+                            if (muteStatus == MuteStatus.none)
+                              const SizedBox(
+                                width: 10,
+                              ),
+                            if (widget.showSendEmoji &&
+                                muteStatus == MuteStatus.none)
                               InkWell(
                                 onTap: () {
                                   _openEmojiPanel();
@@ -670,10 +737,12 @@ class _InputTextFieldState extends State<TIMUIKitInputTextField> {
                                   width: 28,
                                 ),
                               ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            if (widget.showMorePannel)
+                            if (muteStatus == MuteStatus.none)
+                              const SizedBox(
+                                width: 10,
+                              ),
+                            if (widget.showMorePannel &&
+                                muteStatus == MuteStatus.none)
                               InkWell(
                                 onTap: () {
                                   _openMore();

@@ -1,12 +1,8 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
-import 'package:tencent_im_sdk_plugin/enum/friend_type_enum.dart';
-import 'package:tencent_im_sdk_plugin/enum/receive_message_opt_enum.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_info.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_operation_result.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_user_full_info.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
+import 'package:tim_ui_kit/business_logic/life_cycle/profile_life_cycle.dart';
 import 'package:tim_ui_kit/business_logic/model/profile_model.dart';
 import 'package:tim_ui_kit/data_services/conversation/conversation_services.dart';
 import 'package:tim_ui_kit/data_services/core/core_services_implements.dart';
@@ -23,6 +19,7 @@ class TUIProfileViewModel extends ChangeNotifier {
   final MessageService _messageService = serviceLocator<MessageService>();
 
   UserProfile? _userProfile;
+  ProfileLifeCycle? _lifeCycle;
   bool? _shouldAddToBlackList;
   int _friendType = 0;
   bool? _isDisturb;
@@ -39,8 +36,12 @@ class TUIProfileViewModel extends ChangeNotifier {
     return _shouldAddToBlackList;
   }
 
-  int get firendType {
+  int get friendType {
     return _friendType;
+  }
+
+  set lifeCycle(ProfileLifeCycle? value) {
+    _lifeCycle = value;
   }
 
   loadData({required String userID}) async {
@@ -64,10 +65,12 @@ class TUIProfileViewModel extends ChangeNotifier {
       friendUserInfo = userInfoList[0].friendInfo;
     }
 
-    // ignore: unrelated_type_equality_checks
+    final friendInfo =
+        await _lifeCycle?.didGetFriendInfo(friendUserInfo) ?? friendUserInfo;
+
     _isDisturb = conversation?.recvOpt == 2;
     _userProfile =
-        UserProfile(friendInfo: friendUserInfo, conversation: conversation);
+        UserProfile(friendInfo: friendInfo, conversation: conversation);
 
     notifyListeners();
   }
@@ -80,6 +83,10 @@ class TUIProfileViewModel extends ChangeNotifier {
   }
 
   addToBlackList(bool shouldAdd, String userID) async {
+    if (_lifeCycle?.shouldAddToBlockList != null &&
+        await _lifeCycle!.shouldAddToBlockList(userID) == false) {
+      return null;
+    }
     if (shouldAdd) {
       final res =
           await _friendshipServices.addToBlackList(userIDList: [userID]);
@@ -105,10 +112,15 @@ class TUIProfileViewModel extends ChangeNotifier {
   }
 
   Future<V2TimFriendOperationResult?> deleteFriend(String userID) async {
+    if (_lifeCycle?.shouldDeleteFriend != null &&
+        await _lifeCycle!.shouldDeleteFriend(userID) == false) {
+      return null;
+    }
     final res = await _friendshipServices.deleteFromFriendList(
         userIDList: [userID],
         deleteType: FriendTypeEnum.V2TIM_FRIEND_TYPE_BOTH);
     if (res != null) {
+      loadData(userID: userID);
       return res.first;
     }
     return null;
@@ -173,9 +185,14 @@ class TUIProfileViewModel extends ChangeNotifier {
   }
 
   Future<V2TimFriendOperationResult?> addFriend(String userID) async {
+    if (_lifeCycle?.shouldAddFriend != null &&
+        await _lifeCycle!.shouldAddFriend(userID) == false) {
+      return null;
+    }
     final res = await _friendshipServices.addFriend(
         userID: userID, addType: FriendTypeEnum.V2TIM_FRIEND_TYPE_BOTH);
     if (res.code == 0) {
+      loadData(userID: userID);
       return res.data;
     }
     return null;

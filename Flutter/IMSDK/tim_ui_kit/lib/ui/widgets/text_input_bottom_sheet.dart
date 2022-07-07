@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-
-import '../../i18n/i18n_utils.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
+import 'package:tim_ui_kit/data_services/core/core_services_implements.dart';
+import 'package:tim_ui_kit/data_services/services_locatar.dart';
 
 class TextInputBottomSheet {
   static showTextInputBottomSheet(BuildContext context, String title,
       String tips, Function(String text) onSubmitted) {
+    final CoreServicesImpl _coreService = serviceLocator<CoreServicesImpl>();
     TextEditingController _selectionController = TextEditingController();
-    final I18nUtils ttBuild = I18nUtils(context);
+
     showModalBottomSheet(
         isScrollControlled: true, // !important
         context: context,
@@ -52,13 +53,16 @@ class TextInputBottomSheet {
                       onPressed: () {
                         String text = _selectionController.text;
                         if (text == "") {
-                          Fluttertoast.showToast(msg: ttBuild.imt("输入不能为空"));
+                          _coreService.callOnCallback(TIMCallback(
+                              type: TIMCallbackType.INFO,
+                              infoRecommendText: TIM_t("输入不能为空"),
+                              infoCode: 6661401));
                           return;
                         }
                         onSubmitted(text);
                         Navigator.pop(context);
                       },
-                      child: Text(ttBuild.imt("确定"))),
+                      child: Text(TIM_t("确定"))),
                 ),
                 const SizedBox(
                   height: 40,

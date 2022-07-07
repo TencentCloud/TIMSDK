@@ -1,11 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_statelesswidget.dart';
 import 'package:tim_ui_kit/data_services/core/core_services_implements.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
+import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
-class Avatar extends StatelessWidget {
+class Avatar extends TIMUIKitStatelessWidget {
   final String faceUrl;
   final String showName;
   final bool isFromLocal;
@@ -20,8 +21,7 @@ class Avatar extends StatelessWidget {
       this.borderRadius})
       : super(key: key);
 
-  Widget _getFaceUrlImageWidget(BuildContext context) {
-    final theme = Provider.of<TUIThemeViewModel>(context).theme;
+  Widget _getFaceUrlImageWidget(BuildContext context, TUITheme theme) {
     final emptyAvatarBuilder = coreService.emptyAvatarBuilder;
     if (faceUrl != "") {
       if (isFromLocal) {
@@ -49,13 +49,12 @@ class Avatar extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
-        value: serviceLocator<TUIThemeViewModel>(),
-        child: Consumer<TUIThemeViewModel>(
-            builder: (context, tuiTheme, child) => ClipRRect(
-                  borderRadius: borderRadius ?? BorderRadius.circular(4.8),
-                  child: _getFaceUrlImageWidget(context),
-                )));
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    final TUITheme theme = value.theme;
+
+    return ClipRRect(
+      borderRadius: borderRadius ?? BorderRadius.circular(4.8),
+      child: _getFaceUrlImageWidget(context, theme),
+    );
   }
 }

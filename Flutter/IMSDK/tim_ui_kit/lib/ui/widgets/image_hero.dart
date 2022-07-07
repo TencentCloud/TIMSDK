@@ -1,5 +1,7 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
 /// make hero better when slide out
 class HeroWidget extends StatefulWidget {
@@ -18,10 +20,10 @@ class HeroWidget extends StatefulWidget {
   _HeroWidgetState createState() => _HeroWidgetState();
 }
 
-class _HeroWidgetState extends State<HeroWidget> {
+class _HeroWidgetState extends TIMUIKitState<HeroWidget> {
   RectTween? _rectTween;
   @override
-  Widget build(BuildContext context) {
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     return Hero(
       tag: widget.tag,
       createRectTween: (Rect? begin, Rect? end) {

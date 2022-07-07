@@ -1,11 +1,8 @@
 // ignore_for_file: avoid_print, empty_catches
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_at_info.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
-import 'package:tim_ui_kit/data_services/services_locatar.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_statelesswidget.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/utils/time_ago.dart';
 import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
@@ -13,11 +10,12 @@ import 'package:tim_ui_kit/ui/views/TIMUIKitConversation/tim_uikit_conversation_
 import 'package:tim_ui_kit/ui/views/TIMUIKitConversation/tim_uikit_conversation_last_msg.dart';
 import 'package:tim_ui_kit/ui/widgets/avatar.dart';
 import 'package:tim_ui_kit/ui/widgets/unread_message.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
 typedef LastMessageBuilder = Widget Function(
     V2TimMessage? lastMsg, List<V2TimGroupAtInfo?> groupAtInfoList);
 
-class TIMUIKitConversationItem extends StatelessWidget {
+class TIMUIKitConversationItem extends TIMUIKitStatelessWidget {
   final String faceUrl;
   final String nickName;
   final V2TimMessage? lastMsg;
@@ -29,7 +27,7 @@ class TIMUIKitConversationItem extends StatelessWidget {
   final bool isDisturb;
   final LastMessageBuilder? lastMessageBuilder;
 
-  const TIMUIKitConversationItem(
+  TIMUIKitConversationItem(
       {Key? key,
       required this.faceUrl,
       required this.nickName,
@@ -68,15 +66,13 @@ class TIMUIKitConversationItem extends StatelessWidget {
   Widget _getTimeStringForChatWidget(BuildContext context, TUITheme theme) {
     try {
       if (draftTimestamp != null && draftTimestamp != 0) {
-        return Text(
-            TimeAgo(context).getTimeStringForChat(draftTimestamp as int),
+        return Text(TimeAgo().getTimeStringForChat(draftTimestamp as int),
             style: TextStyle(
               fontSize: 12,
               color: theme.weakTextColor,
             ));
       } else if (lastMsg != null) {
-        return Text(
-            TimeAgo(context).getTimeStringForChat(lastMsg!.timestamp as int),
+        return Text(TimeAgo().getTimeStringForChat(lastMsg!.timestamp as int),
             style: TextStyle(
               fontSize: 12,
               color: theme.weakTextColor,
@@ -88,97 +84,91 @@ class TIMUIKitConversationItem extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
-        value: serviceLocator<TUIThemeViewModel>(),
-        child: Consumer<TUIThemeViewModel>(builder: (context, value, child) {
-          final theme = value.theme;
-          return Container(
-            padding:
-                const EdgeInsets.only(top: 6, bottom: 6, left: 16, right: 16),
-            decoration: BoxDecoration(
-                color: isPined ? theme.weakBackgroundColor : Colors.white,
-                border: Border(
-                    bottom: BorderSide(
-                        color: theme.weakDividerColor ??
-                            CommonColor.weakDividerColor,
-                        width: 1))),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    final TUITheme theme = value.theme;
+    return Container(
+      padding: const EdgeInsets.only(top: 6, bottom: 6, left: 16, right: 16),
+      decoration: BoxDecoration(
+          color: isPined ? theme.weakBackgroundColor : Colors.white,
+          border: Border(
+              bottom: BorderSide(
+                  color: theme.weakDividerColor ?? CommonColor.weakDividerColor,
+                  width: 1))),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.only(top: 0, bottom: 2, right: 0),
+            child: SizedBox(
+              width: 44,
+              height: 44,
+              child: Stack(
+                fit: StackFit.expand,
+                clipBehavior: Clip.none,
+                children: [
+                  Avatar(faceUrl: faceUrl, showName: nickName),
+                  if (unreadCount != 0)
+                    Positioned(
+                      top: isDisturb ? -2.5 : -4.5,
+                      right: isDisturb ? -2.5 : -4.5,
+                      child: UnconstrainedBox(
+                        child: UnreadMessage(
+                            width: isDisturb ? 10 : 22,
+                            height: isDisturb ? 10 : 22,
+                            unreadCount: isDisturb ? 0 : unreadCount),
+                      ),
+                    )
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+              child: Container(
+            height: 60,
+            margin: const EdgeInsets.only(left: 12),
+            padding: const EdgeInsets.only(top: 0, bottom: 0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  padding: const EdgeInsets.only(top: 0, bottom: 2, right: 0),
-                  child: SizedBox(
-                    width: 44,
-                    height: 44,
-                    child: Stack(
-                      fit: StackFit.expand,
-                      clipBehavior: Clip.none,
-                      children: [
-                        Avatar(faceUrl: faceUrl, showName: nickName),
-                        if (unreadCount != 0)
-                          Positioned(
-                            top: isDisturb ? -2.5 : -4.5,
-                            right: isDisturb ? -2.5 : -4.5,
-                            child: UnconstrainedBox(
-                              child: UnreadMessage(
-                                  width: isDisturb ? 10 : 22,
-                                  height: isDisturb ? 10 : 22,
-                                  unreadCount: isDisturb ? 0 : unreadCount),
-                            ),
-                          )
-                      ],
-                    ),
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                        child: Text(
+                      nickName,
+                      softWrap: true,
+                      textAlign: TextAlign.left,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      style: const TextStyle(
+                          height: 1,
+                          color: Colors.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400),
+                    )),
+                    _getTimeStringForChatWidget(context, theme),
+                  ],
                 ),
-                Expanded(
-                    child: Container(
-                  height: 60,
-                  margin: const EdgeInsets.only(left: 12),
-                  padding: const EdgeInsets.only(top: 0, bottom: 0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                              child: Text(
-                            nickName,
-                            softWrap: true,
-                            textAlign: TextAlign.left,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            style: const TextStyle(
-                                height: 1,
-                                color: Colors.black,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w400),
-                          )),
-                          _getTimeStringForChatWidget(context, theme),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Expanded(child: _getShowMsgWidget(context)),
-                          if (isDisturb)
-                            SizedBox(
-                              width: 18,
-                              height: 18,
-                              child: Icon(
-                                Icons.notifications_off,
-                                color: theme.weakTextColor,
-                                size: 16.0,
-                              ),
-                            )
-                        ],
-                      ),
-                    ],
-                  ),
-                ))
+                Row(
+                  children: [
+                    Expanded(child: _getShowMsgWidget(context)),
+                    if (isDisturb)
+                      SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: Icon(
+                          Icons.notifications_off,
+                          color: theme.weakTextColor,
+                          size: 16.0,
+                        ),
+                      )
+                  ],
+                ),
               ],
             ),
-          );
-        }));
+          ))
+        ],
+      ),
+    );
   }
 }

@@ -1,18 +1,4 @@
-import 'package:tencent_im_sdk_plugin/enum/V2TimAdvancedMsgListener.dart';
-import 'package:tencent_im_sdk_plugin/enum/V2TimSimpleMsgListener.dart';
-import 'package:tencent_im_sdk_plugin/enum/history_msg_get_type_enum.dart';
-import 'package:tencent_im_sdk_plugin/enum/message_priority_enum.dart';
-import 'package:tencent_im_sdk_plugin/enum/offlinePushInfo.dart';
-import 'package:tencent_im_sdk_plugin/enum/receive_message_opt_enum.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_message_receipt.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_message_search_param.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_message_search_result.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_msg_create_info_result.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
-import 'package:tencent_im_sdk_plugin/enum/get_group_message_read_member_list_filter.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_message_read_member_list.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
 
 abstract class MessageService {
   Future<List<V2TimMessage>> getHistoryMessageList({
@@ -67,6 +53,10 @@ abstract class MessageService {
   Future<V2TimValueCallback<V2TimMessage>> reSendMessage(
       {required String msgID, // 自己创建的ID
       bool onlineUserOnly});
+
+  Future<V2TimValueCallback<V2TimMessageChangeInfo>> modifyMessage(
+      {required V2TimMessage message});
+
   Future<V2TimMsgCreateInfoResult?> createImageMessage({
     required String imagePath,
   });
@@ -144,6 +134,9 @@ abstract class MessageService {
 
   Future<V2TimCallback> setLocalCustomInt(
       {required String msgID, required int localCustomInt});
+
+  Future<V2TimCallback> setLocalCustomData(
+      {required String msgID, required String localCustomData});
 
   Future<V2TimCallback> setC2CReceiveMessageOpt({
     required List<String> userIDList,

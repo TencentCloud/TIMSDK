@@ -1,7 +1,9 @@
-import '../../../business_logic/view_models/tui_chat_view_model.dart';
-import '../../../tim_ui_kit.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
+import 'package:tim_ui_kit/tim_ui_kit.dart';
 
 enum GroupReceptAllowType { work, public, meeting }
+
+enum UrlPreviewType { none, onlyHyperlink, previewCardAndHyperlink }
 
 class TIMUIKitChatConfig {
   /// control if allowed to show reading status
@@ -50,9 +52,13 @@ class TIMUIKitChatConfig {
   final String Function(V2TimMessage message, String convID, ConvType convType)?
       notificationExt;
 
+  /// The type of URL preview level, none preview, only hyperlink in text, or shows a preview card for website.
+  final UrlPreviewType urlPreviewType;
+
   const TIMUIKitChatConfig(
       {this.isAtWhenReply = true,
       this.notificationExt,
+      this.urlPreviewType = UrlPreviewType.previewCardAndHyperlink,
       this.notificationBody,
       this.notificationOPPOChannelID = "",
       this.notificationTitle = "",

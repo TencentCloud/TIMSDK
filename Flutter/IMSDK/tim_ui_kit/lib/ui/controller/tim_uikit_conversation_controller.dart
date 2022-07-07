@@ -1,6 +1,4 @@
-import 'package:tencent_im_sdk_plugin/enum/V2TimConversationListener.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_conversation.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_conversation_view_model.dart';
 
 class TIMUIKitConversationController {
@@ -54,7 +52,7 @@ class TIMUIKitConversationController {
   }
 
   /// 删除会话
-  Future<V2TimCallback> deleteConversation({required String conversationID}) {
+  Future<V2TimCallback?> deleteConversation({required String conversationID}) {
     return model.deleteConversation(conversationID: conversationID);
   }
 

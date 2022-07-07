@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_message_receipt.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_statelesswidget.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/widgets/message_read_receipt.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
-class TIMUIKitMessageReadReceipt extends StatelessWidget {
+class TIMUIKitMessageReadReceipt extends TIMUIKitStatelessWidget {
   final V2TimMessageReceipt messageReadReceipt;
   final V2TimMessage messageItem;
-  final TUITheme theme;
   final void Function(String)? onTapAvatar;
 
-  const TIMUIKitMessageReadReceipt(
+  TIMUIKitMessageReadReceipt(
       {Key? key,
       required this.messageReadReceipt,
-      required this.theme,
       this.onTapAvatar,
       required this.messageItem})
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    final TUITheme theme = value.theme;
     return Container(
       padding: const EdgeInsets.only(bottom: 3),
       margin: const EdgeInsets.only(right: 6),

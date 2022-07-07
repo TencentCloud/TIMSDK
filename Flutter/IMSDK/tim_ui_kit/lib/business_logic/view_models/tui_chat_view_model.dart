@@ -1,23 +1,20 @@
-// ignore_for_file: avoid_print, unnecessary_getters_setters, unnecessary_import, unused_local_variable
+// ignore_for_file: avoid_print, unnecessary_getters_setters
 
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tencent_im_sdk_plugin/enum/V2TimAdvancedMsgListener.dart';
-import 'package:tencent_im_sdk_plugin/enum/history_msg_get_type_enum.dart';
-import 'package:tencent_im_sdk_plugin/enum/message_status.dart';
-import 'package:tencent_im_sdk_plugin/enum/offlinePushInfo.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_application.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_message_receipt.dart';
+
+import 'package:tim_ui_kit/business_logic/life_cycle/chat_life_cycle.dart';
 import 'package:tim_ui_kit/data_services/group/group_services.dart';
 import 'package:tim_ui_kit/data_services/message/message_services.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/constants/history_message_constant.dart';
-import 'package:tencent_im_sdk_plugin/enum/get_group_message_read_member_list_filter.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_message_read_member_list.dart';
+
+import 'package:tim_ui_kit/ui/utils/message.dart';
 
 enum ConvType { group, c2c }
 
@@ -30,7 +27,11 @@ class TUIChatViewModel extends ChangeNotifier {
   final Map<String, List<V2TimMessage>?> _messageListMap = {};
   final Map<String, V2TimMessageReceipt> _messageReadReceiptMap = {};
   final Map<String, int> _messageListProgressMap = {};
+  final Map<String, dynamic> _preloadImageMap = {};
 
+  Map<String, dynamic> get preloadImageMap => _preloadImageMap;
+
+  ChatLifeCycle? _lifeCycle;
   bool _isDownloading = false;
   int _totalUnreadCount = 0;
   bool _isMultiSelect = false;
@@ -45,18 +46,19 @@ class TUIChatViewModel extends ChangeNotifier {
   String localKeyPrefix = "TUIKit_conversation_stored_";
   String localMsgIDListKey = "TUIKit_conversation_list";
   String _jumpMsgID = "";
-  V2TimAdvancedMsgListener? adVancesMsgListener;
+  V2TimAdvancedMsgListener? advancedMsgListener;
   HistoryMessagePosition _listPosition = HistoryMessagePosition.bottom;
   int _unreadCountForConversation = 0;
   List<V2TimMessage>? _tempMessageList = [];
   TIMUIKitChatConfig chatConfig = const TIMUIKitChatConfig();
   ValueChanged<String>? _setInputField;
   List<V2TimGroupApplication>? _groupApplicationList;
+  String Function(V2TimMessage message)? _abstractMessageBuilder;
 
   TUIChatViewModel() {
-    removeAdvanceListener();
     initAdvanceListener();
     initMessageMapFromLocal();
+    // Future.delayed(const Duration(milliseconds: 200)).then((value) => initMessageMapFromLocal());
   }
 
   bool get isDownloading => _isDownloading;
@@ -114,6 +116,17 @@ class TUIChatViewModel extends ChangeNotifier {
   List<V2TimGroupApplication> get groupApplicationList =>
       _groupApplicationList ?? [];
 
+  String Function(V2TimMessage message)? get abstractMessageBuilder =>
+      _abstractMessageBuilder;
+
+  set abstractMessageBuilder(String Function(V2TimMessage message)? value) {
+    _abstractMessageBuilder = value;
+  }
+
+  set lifeCycle(ChatLifeCycle? value) {
+    _lifeCycle = value;
+  }
+
   set groupApplicationList(List<V2TimGroupApplication> value) {
     _groupApplicationList = value;
   }
@@ -167,18 +180,61 @@ class TUIChatViewModel extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     final List<String>? localMsgIDList = prefs.getStringList(localMsgIDListKey);
 
+    int index = -1;
+
     if (localMsgIDList != null) {
       for (String convID in localMsgIDList) {
+        index++;
         final List<String>? localMsgJson =
             prefs.getStringList("$localKeyPrefix$convID");
         if (localMsgJson != null) {
           List<V2TimMessage> localMsg = localMsgJson
               .map((item) => V2TimMessage.fromJson(jsonDecode(item)))
               .toList();
-          _messageListMap[convID] = localMsg;
+          final msgList =
+              await _lifeCycle?.didGetHistoricalMessageList(localMsg) ??
+                  localMsg;
+          _messageListMap[convID] = msgList;
+          if (index < 10) {
+            Future.delayed(Duration.zero)
+                .then((value) => _preLoadImage(msgList));
+          }
         }
       }
       notifyListeners();
+    }
+  }
+
+  _preLoadImage(List<V2TimMessage> msgList) {
+    List<V2TimMessage> needPreViewList =
+        msgList.sublist(0, max(0, min(5, msgList.length - 1)));
+    for (var msgItem in needPreViewList) {
+      V2TimImage? getImageFromList(V2_TIM_IMAGE_TYPES_ENUM imgType) {
+        V2TimImage? img = MessageUtils.getImageFromImgList(
+            msgItem.imageElem?.imageList,
+            HistoryMessageDartConstant.imgPriorMap[imgType] ??
+                HistoryMessageDartConstant.oriImgPrior);
+        return img;
+      }
+
+      V2TimImage? originalImg = getImageFromList(V2_TIM_IMAGE_TYPES_ENUM.small);
+      if (originalImg?.localUrl != null && originalImg!.localUrl != "") {
+        try {
+          ImageConfiguration configuration = const ImageConfiguration();
+          final image = FileImage(File((originalImg.localUrl!)));
+
+          image.resolve(configuration).addListener(
+              ImageStreamListener((ImageInfo image, bool synchronousCall) {
+            final tempImg = image.image;
+            _preloadImageMap[msgItem.seq! +
+                msgItem.timestamp.toString() +
+                (msgItem.msgID ?? "")] = tempImg;
+            print("cacheImage ${msgItem.msgID}");
+          }));
+        } catch (e) {
+          print("cacheImage error ${msgItem.msgID}");
+        }
+      }
     }
   }
 
@@ -288,14 +344,16 @@ class TUIChatViewModel extends ChangeNotifier {
         lastMsgID: lastMsgID,
         lastMsgSeq: lastMsgSeq);
     if (lastMsgID != null && currentHistoryMsgList != null) {
-      _messageListMap[convID!] = [
-        ...currentHistoryMsgList,
-        ...response
-      ]; // 拼接拉取更多历史
+      final newList = [...currentHistoryMsgList, ...response];
+      final List<V2TimMessage> msgList =
+          await _lifeCycle?.didGetHistoricalMessageList(newList) ?? newList;
+      _messageListMap[convID!] = msgList; // 拼接拉取更多历史
     } else {
-      _messageListMap[convID!] = response; // 首屏默认历史消息
+      final List<V2TimMessage> msgList =
+          await _lifeCycle?.didGetHistoricalMessageList(response) ?? response;
+      _messageListMap[convID!] = msgList; // 首屏默认历史消息
       // put the last 20 messages to local
-      storeMsgToLocal(response, convID, ifEmptyHistory);
+      storeMsgToLocal(msgList, convID, ifEmptyHistory);
     }
     if (response.isEmpty || response.length < 20) {
       _haveMoreData = false;
@@ -398,7 +456,14 @@ class TUIChatViewModel extends ChangeNotifier {
     }
   }
 
-  _onReceiveNewMsg(V2TimMessage newMsg) {
+  _onReceiveNewMsg(V2TimMessage msgComing) async {
+    final V2TimMessage? newMsg = _lifeCycle?.newMessageWillMount != null
+        ? await _lifeCycle?.newMessageWillMount(msgComing)
+        : msgComing;
+    if (newMsg == null) {
+      return;
+    }
+
     final convID = newMsg.userID ?? newMsg.groupID;
     if (listPosition == HistoryMessagePosition.bottom &&
         unreadCountForConversation == 0) {
@@ -464,13 +529,15 @@ class TUIChatViewModel extends ChangeNotifier {
 
   _onMessageRevoked(String msgID) {
     final activeMessageList = _messageListMap[_currentSelectedConv];
-    _messageListMap[_currentSelectedConv] = activeMessageList!.map((item) {
-      if (item.msgID == msgID) {
-        item.status = MessageStatus.V2TIM_MSG_STATUS_LOCAL_REVOKED;
-      }
-      return item;
-    }).toList();
-    notifyListeners();
+    if (activeMessageList != null) {
+      _messageListMap[_currentSelectedConv] = activeMessageList.map((item) {
+        if (item.msgID == msgID) {
+          item.status = MessageStatus.V2TIM_MSG_STATUS_LOCAL_REVOKED;
+        }
+        return item;
+      }).toList();
+      notifyListeners();
+    }
   }
 
   _onRecvC2CReadReceipt(List<V2TimMessageReceipt> receiptList) {
@@ -506,7 +573,7 @@ class TUIChatViewModel extends ChangeNotifier {
   }
 
   void initAdvanceListener({V2TimAdvancedMsgListener? listener}) async {
-    adVancesMsgListener = V2TimAdvancedMsgListener(
+    advancedMsgListener = V2TimAdvancedMsgListener(
         onRecvC2CReadReceipt: (List<V2TimMessageReceipt> receiptList) {
       _onRecvC2CReadReceipt(receiptList);
       if (listener != null) {
@@ -540,12 +607,12 @@ class TUIChatViewModel extends ChangeNotifier {
     });
 
     await _messageService.addAdvancedMsgListener(
-        listener: adVancesMsgListener!);
+        listener: advancedMsgListener!);
   }
 
   Future<void> removeAdvanceListener() async {
     return _messageService.removeAdvancedMsgListener(
-        listener: adVancesMsgListener);
+        listener: advancedMsgListener);
   }
 
   V2TimMessage _setUserInfoForMessage(V2TimMessage messageInfo, String? id) {
@@ -573,7 +640,6 @@ class TUIChatViewModel extends ChangeNotifier {
             : createJSON("group_$convID"));
 
     String desc = message.userID ?? message.groupID ?? "";
-    String user = message.sender ?? "";
     String messageSummary = "";
     switch (message.elemType) {
       case MessageElemType.V2TIM_ELEM_TYPE_CUSTOM:
@@ -637,10 +703,10 @@ class TUIChatViewModel extends ChangeNotifier {
     if (messageInfo != null) {
       final messageInfoWithSender =
           _setUserInfoForMessage(messageInfo, messageInfo.id!);
-      _messageListMap[convID] = [
-        messageInfoWithSender,
-        ...currentHistoryMsgList
-      ];
+      final lifeCycleMsg =
+          await _lifeCycle?.messageWillSend(messageInfoWithSender) ??
+              messageInfoWithSender;
+      _messageListMap[convID] = [lifeCycleMsg, ...currentHistoryMsgList];
     }
     return res;
   }
@@ -711,10 +777,10 @@ class TUIChatViewModel extends ChangeNotifier {
     if (messageInfo != null) {
       final messageInfoWithSender =
           _setUserInfoForMessage(messageInfo, textMessageInfo.id!);
-      _messageListMap[convID] = [
-        messageInfoWithSender,
-        ...currentHistoryMsgList
-      ];
+      final lifeCycleMsg =
+          await _lifeCycle?.messageWillSend(messageInfoWithSender) ??
+              messageInfoWithSender;
+      _messageListMap[convID] = [lifeCycleMsg, ...currentHistoryMsgList];
 
       notifyListeners();
       return _sendMessage(
@@ -759,10 +825,10 @@ class TUIChatViewModel extends ChangeNotifier {
     if (messageInfo != null) {
       final messageInfoWithSender =
           _setUserInfoForMessage(messageInfo, textATMessageInfo.id!);
-      _messageListMap[convID] = [
-        messageInfoWithSender,
-        ...currentHistoryMsgList
-      ];
+      final lifeCycleMsg =
+          await _lifeCycle?.messageWillSend(messageInfoWithSender) ??
+              messageInfoWithSender;
+      _messageListMap[convID] = [lifeCycleMsg, ...currentHistoryMsgList];
 
       notifyListeners();
       return _sendMessage(
@@ -786,10 +852,10 @@ class TUIChatViewModel extends ChangeNotifier {
     if (messageInfo != null) {
       final messageInfoWithSender =
           _setUserInfoForMessage(messageInfo, textATMessageInfo.id!);
-      _messageListMap[convID] = [
-        messageInfoWithSender,
-        ...currentHistoryMsgList
-      ];
+      final lifeCycleMsg =
+          await _lifeCycle?.messageWillSend(messageInfoWithSender) ??
+              messageInfoWithSender;
+      _messageListMap[convID] = [lifeCycleMsg, ...currentHistoryMsgList];
 
       notifyListeners();
       return _sendMessage(
@@ -814,10 +880,10 @@ class TUIChatViewModel extends ChangeNotifier {
     if (messageInfo != null) {
       final messageInfoWithSender =
           _setUserInfoForMessage(messageInfo, textMessageInfo.id!);
-      _messageListMap[convID] = [
-        messageInfoWithSender,
-        ...currentHistoryMsgList
-      ];
+      final lifeCycleMsg =
+          await _lifeCycle?.messageWillSend(messageInfoWithSender) ??
+              messageInfoWithSender;
+      _messageListMap[convID] = [lifeCycleMsg, ...currentHistoryMsgList];
       notifyListeners();
       return _sendMessage(
           convID: convID,
@@ -842,10 +908,10 @@ class TUIChatViewModel extends ChangeNotifier {
     if (messageInfo != null) {
       final messageInfoWithSender =
           _setUserInfoForMessage(messageInfo, soundMessageInfo.id!);
-      _messageListMap[convID] = [
-        messageInfoWithSender,
-        ...currentHistoryMsgList
-      ];
+      final lifeCycleMsg =
+          await _lifeCycle?.messageWillSend(messageInfoWithSender) ??
+              messageInfoWithSender;
+      _messageListMap[convID] = [lifeCycleMsg, ...currentHistoryMsgList];
 
       notifyListeners();
       return _sendMessage(
@@ -902,10 +968,10 @@ class TUIChatViewModel extends ChangeNotifier {
     if (messageInfo != null) {
       final messageInfoWithSender =
           _setUserInfoForMessage(messageInfo, imageMessageInfo.id);
-      _messageListMap[convID] = [
-        messageInfoWithSender,
-        ...?_messageListMap[convID]
-      ];
+      final lifeCycleMsg =
+          await _lifeCycle?.messageWillSend(messageInfoWithSender) ??
+              messageInfoWithSender;
+      _messageListMap[convID] = [lifeCycleMsg, ...?_messageListMap[convID]];
 
       notifyListeners();
       return _sendMessage(
@@ -934,10 +1000,10 @@ class TUIChatViewModel extends ChangeNotifier {
     if (messageInfo != null) {
       final messageInfoWithSender =
           _setUserInfoForMessage(messageInfo, videoMessageInfo.id);
-      _messageListMap[convID] = [
-        messageInfoWithSender,
-        ...?_messageListMap[convID]
-      ];
+      final lifeCycleMsg =
+          await _lifeCycle?.messageWillSend(messageInfoWithSender) ??
+              messageInfoWithSender;
+      _messageListMap[convID] = [lifeCycleMsg, ...?_messageListMap[convID]];
 
       notifyListeners();
       return _sendMessage(
@@ -963,10 +1029,10 @@ class TUIChatViewModel extends ChangeNotifier {
       final messageInfoWithSender =
           _setUserInfoForMessage(messageInfo, fileMessageInfo.id);
       messageInfoWithSender.fileElem!.fileSize = size;
-      _messageListMap[convID] = [
-        messageInfoWithSender,
-        ...?_messageListMap[convID]
-      ];
+      final lifeCycleMsg =
+          await _lifeCycle?.messageWillSend(messageInfoWithSender) ??
+              messageInfoWithSender;
+      _messageListMap[convID] = [lifeCycleMsg, ...?_messageListMap[convID]];
 
       notifyListeners();
       return _sendMessage(
@@ -992,10 +1058,10 @@ class TUIChatViewModel extends ChangeNotifier {
     if (messageInfo != null) {
       final messageInfoWithSender =
           _setUserInfoForMessage(messageInfo, locationMessageInfo.id);
-      _messageListMap[convID] = [
-        messageInfoWithSender,
-        ...?_messageListMap[convID]
-      ];
+      final lifeCycleMsg =
+          await _lifeCycle?.messageWillSend(messageInfoWithSender) ??
+              messageInfoWithSender;
+      _messageListMap[convID] = [lifeCycleMsg, ...?_messageListMap[convID]];
 
       notifyListeners();
       return _sendMessage(
@@ -1023,10 +1089,10 @@ class TUIChatViewModel extends ChangeNotifier {
         if (messageInfo != null) {
           final messageInfoWithSender =
               _setUserInfoForMessage(messageInfo, forwardMessageInfo.id);
-          _messageListMap[convID] = [
-            messageInfoWithSender,
-            ...?_messageListMap[convID]
-          ];
+          final lifeCycleMsg =
+              await _lifeCycle?.messageWillSend(messageInfoWithSender) ??
+                  messageInfoWithSender;
+          _messageListMap[convID] = [lifeCycleMsg, ...?_messageListMap[convID]];
           notifyListeners();
           _sendMessage(
             id: forwardMessageInfo.id!,
@@ -1049,7 +1115,6 @@ class TUIChatViewModel extends ChangeNotifier {
     required List<String> abstractList,
     required BuildContext context,
   }) async {
-    final I18nUtils ttBuild = I18nUtils(context);
     for (var conversation in conversationList) {
       final convID = conversation.groupID ?? conversation.userID ?? "";
       final convType = conversation.type;
@@ -1061,20 +1126,18 @@ class TUIChatViewModel extends ChangeNotifier {
           msgIDList: msgIDList,
           title: title,
           abstractList: abstractList,
-          compatibleText: ttBuild.imt("该版本不支持此消息"));
+          compatibleText: TIM_t("该版本不支持此消息"));
       final messageInfo = mergerMessageInfo!.messageInfo;
       if (messageInfo != null) {
         final messageInfoWithSender =
             _setUserInfoForMessage(messageInfo, mergerMessageInfo.id);
+        final lifeCycleMsg =
+            await _lifeCycle?.messageWillSend(messageInfoWithSender) ??
+                messageInfoWithSender;
         if (_messageListMap[convID] != null) {
-          _messageListMap[convID] = [
-            messageInfoWithSender,
-            ...?_messageListMap[convID]
-          ];
+          _messageListMap[convID] = [lifeCycleMsg, ...?_messageListMap[convID]];
         } else {
-          _messageListMap[convID] = [
-            messageInfoWithSender,
-          ];
+          _messageListMap[convID] = [lifeCycleMsg, ...?_messageListMap[convID]];
         }
         notifyListeners();
         return _sendMessage(
@@ -1089,8 +1152,11 @@ class TUIChatViewModel extends ChangeNotifier {
     return null;
   }
 
-  _onMessageModified(V2TimMessage newMsg, [String? convID]) {
+  _onMessageModified(V2TimMessage modifiedMessage, [String? convID]) async {
     final activeMessageList = _messageListMap[convID ?? _currentSelectedConv];
+    final V2TimMessage newMsg =
+        await _lifeCycle?.modifiedMessageWillMount(modifiedMessage) ??
+            modifiedMessage;
     final msgID = newMsg.msgID;
     _messageListMap[_currentSelectedConv] = activeMessageList!.map((item) {
       if (item.msgID == msgID) {
@@ -1100,6 +1166,11 @@ class TUIChatViewModel extends ChangeNotifier {
     }).toList();
     notifyListeners();
     storeMsgToLocal(activeMessageList, _currentSelectedConv);
+  }
+
+  Future<V2TimValueCallback<V2TimMessageChangeInfo>?> modifyMessage(
+      {required V2TimMessage message}) async {
+    return _messageService.modifyMessage(message: message);
   }
 
   Future<void> updateMessageFromController(
@@ -1114,10 +1185,12 @@ class TUIChatViewModel extends ChangeNotifier {
       convID = (convType == ConvType.c2c ? receiverID : groupID) ??
           _currentSelectedConv;
     }
-    final currentHistoryMsgList = _messageListMap[convID];
 
     V2TimMessage? newMessage = await _getExistingMessageByID(
-        msgID: msgID, convID: convID, convType: convType);
+        msgID: msgID,
+        convID: convID,
+        convType: convType ??
+            (_currentSelectedConvType == 1 ? ConvType.c2c : ConvType.group));
     if (newMessage != null) {
       _onMessageModified(newMessage, convID);
     } else {
@@ -1152,12 +1225,13 @@ class TUIChatViewModel extends ChangeNotifier {
             lastMsgID: currentHistoryMsgList[targetIndex + 1].msgID);
       } else {
         response = await _messageService.getHistoryMessageList(
-          count: 2,
+          count: 5,
           getType: HistoryMsgGetTypeEnum.V2TIM_GET_LOCAL_OLDER_MSG,
           userID: convType == ConvType.c2c ? convID : null,
           groupID: convType == ConvType.group ? convID : null,
-          lastMsgID:
-              currentHistoryMsgList[currentHistoryMsgList.length - 3].msgID,
+          lastMsgID: currentHistoryMsgList.length - 3 < 0
+              ? null
+              : currentHistoryMsgList[currentHistoryMsgList.length - 3].msgID,
         );
       }
 
@@ -1231,6 +1305,10 @@ class TUIChatViewModel extends ChangeNotifier {
   }
 
   deleteMsg(String msgID, {String? id}) async {
+    if (_lifeCycle?.shouldDeleteMessage != null &&
+        await _lifeCycle!.shouldDeleteMessage(msgID) == false) {
+      return;
+    }
     final res =
         await _messageService.deleteMessageFromLocalStorage(msgID: msgID);
     if (res.code == 0) {
@@ -1341,6 +1419,20 @@ class TUIChatViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  setLocalCustomData(String msgID, String localCustomData) async {
+    final res = await _messageService.setLocalCustomData(
+        msgID: msgID, localCustomData: localCustomData);
+    if (res.code == 0) {
+      _messageListMap[_currentSelectedConv]?.map((item) {
+        if (item.msgID == msgID) {
+          item.localCustomData = localCustomData;
+        }
+        return item;
+      }).toList();
+    }
+    notifyListeners();
+  }
+
   Future<V2TimValueCallback<List<V2TimMessageReceipt>>> getMessageReadReceipts(
       List<String> messageIDList) {
     return _messageService.getMessageReadReceipts(messageIDList: messageIDList);
@@ -1360,7 +1452,13 @@ class TUIChatViewModel extends ChangeNotifier {
     return res;
   }
 
-  clearHistory() {
+  clearHistory() async {
+    if (_lifeCycle?.shouldClearHistoricalMessageList != null &&
+        await _lifeCycle!
+                .shouldClearHistoricalMessageList(_currentSelectedConv) ==
+            false) {
+      return;
+    }
     _messageListMap[_currentSelectedConv] = [];
     notifyListeners();
     storeMsgToLocal([], _currentSelectedConv);
@@ -1381,5 +1479,6 @@ class TUIChatViewModel extends ChangeNotifier {
     _multiSelectedMessageList.clear();
     _groupType = null;
     _setInputField = null;
+    _lifeCycle = null;
   }
 }
