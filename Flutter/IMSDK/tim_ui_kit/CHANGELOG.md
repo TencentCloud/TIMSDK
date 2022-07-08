@@ -76,3 +76,17 @@
 
 ## 0.1.0-bugfix
 * update Tencent IM SDK
+
+## 0.1.1
+* Optimize the image display process.
+* Improve the internationalization of components and related extensions.
+* Add life cycle hooks for the main components, please refer to the component parameter description for details.
+* Added mute monitoring and status display on the chat page.
+* The URL Preview for Text message.
+* Callback for global information (error code, tips, error) and you can display toast up to your needs.
+* Text overflow UI optimization.
+* Rebuild TUIKitGroupProfile (group data component) and TUIKitProfile (personal data component).
+* Optimize some experience problems and fix bugs.
+
+## 0.1.2
+* update flutetr_record_plugin_plus to 0.0.4
