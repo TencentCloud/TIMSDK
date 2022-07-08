@@ -67,32 +67,32 @@
 
    </application>
 
-    <!--小米 开始-->
+    <!--xiaomi-->
     <permission
         android:name="com.tencent.flutter.tuikit.permission.MIPUSH_RECEIVE"
         android:protectionLevel="signature" />
     <uses-permission android:name="com.tencent.flutter.tuikit.permission.MIPUSH_RECEIVE" />
-    <!--小米 结束-->
+    <!--xioami-->
 
-    <!--OPPO 开始-->
+    <!--OPPO-->
     <uses-permission android:name="com.coloros.mcs.permission.RECIEVE_MCS_MESSAGE" />
     <uses-permission android:name="com.heytap.mcs.permission.RECIEVE_MCS_MESSAGE" />
-    <!--OPPO 结束-->
+    <!--OPPO-->
 
-    <!--魅族 开始-->
-    <!-- 可选，用于兼容 Flyme5 且推送服务是旧版本的情况-->
+    <!--meizu-->
+    <!--  Flyme5-->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <!-- 兼容 Flyme5 的权限配置-->
+    <!-- Flyme5-->
     <uses-permission android:name="com.meizu.flyme.push.permission.RECEIVE" />
     <permission android:name="com.tencent.flutter.tuikit.push.permission.MESSAGE"
         android:protectionLevel="signature"/>
     <uses-permission android:name="com.tencent.flutter.tuikit.push.permission.MESSAGE" />
-    <!-- 兼容 Flyme3 的权限配置-->
+    <!-- Flyme3-->
     <uses-permission android:name="com.meizu.c2dm.permission.RECEIVE" />
     <permission android:name="com.tencent.flutter.tuikit.permission.C2D_MESSAGE" android:protectionLevel="signature"
         />
     <uses-permission android:name="com.tencent.flutter.tuikit.permission.C2D_MESSAGE"/>
-    <!--魅族 结束-->
+    <!--Meizu end-->
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO" />

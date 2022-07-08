@@ -1320,7 +1320,7 @@ packages:
       name: tencent_im_base
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.20"
+    version: "0.0.23"
   tencent_im_sdk_plugin:
     dependency: transitive
     description:
@@ -1366,9 +1366,9 @@ packages:
   tim_ui_kit:
     dependency: "direct main"
     description:
-      path: "package_src/tim_ui_kit"
-      relative: true
-    source: path
+      name: tim_ui_kit
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "0.1.1"
   tim_ui_kit_calling_plugin:
     dependency: "direct main"

@@ -8,7 +8,7 @@ const readline = require("readline").createInterface({
 let pathList = [];
 const keyMap = new Map();
 const keyMapRevert = new Map();
-const dirPaths = ["lib/src", "lib/utils"];
+const dirPaths = ["lib/src", "lib/utils", "lib/openSourceTmp"];
 
 const singleREP = /'([^']*[^\x00-\xff]{0,200}[^']*)'/g;
 const doubleREP = /"([^"]*[^\x00-\xff]{0,200}[^"]*)"/g;
