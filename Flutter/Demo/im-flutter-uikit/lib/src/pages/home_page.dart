@@ -18,6 +18,7 @@ import 'package:timuikit/src/create_group.dart';
 import 'package:timuikit/src/profile.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';
+import 'package:timuikit/src/provider/login_user_Info.dart';
 import 'package:timuikit/src/provider/theme.dart';
 
 /// 首页
@@ -39,7 +40,7 @@ class HomePageState extends State<HomePage> {
   final V2TIMManager _sdkInstance = TIMUIKitCore.getSDKInstance();
   final TUICalling _calling = TUICalling();
   final TIMUIKitConversationController _conversationController =
-      TIMUIKitConversationController();
+  TIMUIKitConversationController();
   final contactTooltip = [
     {"id": "addFriend", "asset": "assets/add_friend.png", "label": imt("添加好友")},
     {"id": "addGroup", "asset": "assets/add_group.png", "label": imt("添加群聊")}
@@ -80,9 +81,9 @@ class HomePageState extends State<HomePage> {
   _initConversationListener() {
     final listener = V2TimConversationListener(
         onTotalUnreadMessageCountChanged: ((unreadCount) {
-      totalUnreadCount = unreadCount;
-      setState(() {});
-    }));
+          totalUnreadCount = unreadCount;
+          setState(() {});
+        }));
 
     _conversationController.setConversationListener(listener: listener);
   }
@@ -122,6 +123,19 @@ class HomePageState extends State<HomePage> {
     setState(() {});
     subscription =
         _connectivity.onConnectivityChanged.listen(_connectivityChange);
+    getLoginUserInfo();
+  }
+
+  getLoginUserInfo() async {
+    final res = await _sdkInstance.getLoginUser();
+    if (res.code == 0) {
+      final result = await _sdkInstance.getUsersInfo(userIDList: [res.data!]);
+
+      if (result.code == 0) {
+        Provider.of<LoginUserInfo>(context, listen: false)
+            .setLoginUserInfo(result.data![0]);
+      }
+    }
   }
 
   @override
@@ -447,7 +461,7 @@ class HomePageState extends State<HomePage> {
       bottomNavigationBar: BottomNavigationBar(
         items: List.generate(
           bottomNavigatorList(theme).length,
-          (index) => BottomNavigationBarItem(
+              (index) => BottomNavigationBarItem(
             icon: index == currentIndex
                 ? bottomNavigatorList(theme)[index].selectedIcon
                 : bottomNavigatorList(theme)[index].unselectedIcon,

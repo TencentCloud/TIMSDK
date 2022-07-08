@@ -104,29 +104,29 @@ class AppLogo extends StatelessWidget {
                 ),
                 Expanded(
                     child: Container(
-                  margin: const EdgeInsets.only(right: 5),
-                  height: CommonUtils.adaptHeight(180),
-                  padding: const EdgeInsets.only(top: 10, left: 5, right: 15),
-                  child: Column(
-                    children: <Widget>[
-                      Text(
-                        imt("登录·即时通信"),
-                        style: TextStyle(
-                          color: const Color.fromARGB(255, 255, 255, 255),
-                          fontSize: CommonUtils.adaptFontSize(64),
-                        ),
+                      margin: const EdgeInsets.only(right: 5),
+                      height: CommonUtils.adaptHeight(180),
+                      padding: const EdgeInsets.only(top: 10, left: 5, right: 15),
+                      child: Column(
+                        children: <Widget>[
+                          Text(
+                            imt("登录·即时通信"),
+                            style: TextStyle(
+                              color: const Color.fromARGB(255, 255, 255, 255),
+                              fontSize: CommonUtils.adaptFontSize(64),
+                            ),
+                          ),
+                          Text(
+                            imt("体验群组聊天，音视频对话等IM功能"),
+                            style: TextStyle(
+                              color: const Color.fromARGB(255, 255, 255, 255),
+                              fontSize: CommonUtils.adaptFontSize(28),
+                            ),
+                          ),
+                        ],
+                        crossAxisAlignment: CrossAxisAlignment.start,
                       ),
-                      Text(
-                        imt("体验群组聊天，音视频对话等IM功能"),
-                        style: TextStyle(
-                          color: const Color.fromARGB(255, 255, 255, 255),
-                          fontSize: CommonUtils.adaptFontSize(28),
-                        ),
-                      ),
-                    ],
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                  ),
-                )),
+                    )),
               ],
             ),
           ),
@@ -226,7 +226,7 @@ class _LoginFormState extends State<LoginForm> {
             CupertinoDialogAction(
               child: Container(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 100, vertical: 10),
+                  const EdgeInsets.symmetric(horizontal: 100, vertical: 10),
                   decoration: const BoxDecoration(
                     color: Color.fromRGBO(0, 110, 253, 1),
                     borderRadius: BorderRadius.all(
@@ -235,7 +235,7 @@ class _LoginFormState extends State<LoginForm> {
                   ),
                   child: Text(imt("同意并继续"),
                       style:
-                          const TextStyle(color: Colors.white, fontSize: 16))),
+                      const TextStyle(color: Colors.white, fontSize: 16))),
               onPressed: () {
                 prefs.setString("firstTime", "true");
                 Navigator.of(context).pop(true);
@@ -268,7 +268,7 @@ class _LoginFormState extends State<LoginForm> {
     String key = IMDemoConfig.key;
     int sdkAppId = IMDemoConfig.sdkappid;
     if (key == "") {
-      Utils.toast("请在环境变量中写入key");
+      Utils.toast(imt("请在环境变量中写入key"));
       return;
     }
     GenerateTestUserSig generateTestUserSig = GenerateTestUserSig(
@@ -277,7 +277,7 @@ class _LoginFormState extends State<LoginForm> {
     );
 
     String userSig =
-        generateTestUserSig.genSig(identifier: userID, expire: 99999);
+    generateTestUserSig.genSig(identifier: userID, expire: 99999);
 
     var data = await coreInstance.login(
       userID: userID,
@@ -303,8 +303,9 @@ class _LoginFormState extends State<LoginForm> {
   Future<void> setOfflinePushInfo() async {
     // 这里先请求权限再上报token
     ChannelPush.requestPermission();
-    final bool isUploadSuccess = await ChannelPush.uploadToken(PushConfig.appInfo);
-    if(isUploadSuccess){
+    final bool isUploadSuccess =
+    await ChannelPush.uploadToken(PushConfig.appInfo);
+    if (isUploadSuccess) {
       print("upload success");
     }
   }
@@ -344,7 +345,7 @@ class _LoginFormState extends State<LoginForm> {
                   children: [
                     Padding(
                       padding:
-                          EdgeInsets.only(top: CommonUtils.adaptFontSize(34)),
+                      EdgeInsets.only(top: CommonUtils.adaptFontSize(34)),
                       child: Text(
                         imt("用户名"),
                         style: TextStyle(
@@ -357,10 +358,10 @@ class _LoginFormState extends State<LoginForm> {
                       autofocus: false,
                       decoration: InputDecoration(
                         contentPadding:
-                            EdgeInsets.only(left: CommonUtils.adaptWidth(14)),
+                        EdgeInsets.only(left: CommonUtils.adaptWidth(14)),
                         hintText: imt("请输入用户名"),
                         hintStyle:
-                            TextStyle(fontSize: CommonUtils.adaptFontSize(32)),
+                        TextStyle(fontSize: CommonUtils.adaptFontSize(32)),
                         //
                       ),
                       keyboardType: TextInputType.number,

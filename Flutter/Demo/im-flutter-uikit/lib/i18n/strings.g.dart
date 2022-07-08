@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 3
- * Strings: 612 (204.0 per locale)
+ * Strings: 678 (226.0 per locale)
  *
- * Built on 2022-06-14 at 11:41 UTC
+ * Built on 2022-07-08 at 02:57 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -79,10 +79,8 @@ class LocaleSettings {
 		_currLocale = locale;
 		_t = _currLocale.translations;
 
-		if (WidgetsBinding.instance != null) {
-			// force rebuild if TranslationProvider is used
-			_translationProviderKey.currentState?.setLocale(_currLocale);
-		}
+		// force rebuild if TranslationProvider is used
+		_translationProviderKey.currentState?.setLocale(_currLocale);
 
 		return _currLocale;
 	}
@@ -127,7 +125,7 @@ class AppLocaleUtils {
 	/// Returns the locale of the device as the enum type.
 	/// Fallbacks to base locale.
 	static AppLocale findDeviceLocale() {
-		final String? deviceLocale = WidgetsBinding.instance?.window.locale.toLanguageTag();
+		final String? deviceLocale = WidgetsBinding.instance.window.locale.toLanguageTag();
 		if (deviceLocale != null) {
 			final typedLocale = _selectLocale(deviceLocale);
 			if (typedLocale != null) {
@@ -314,8 +312,7 @@ class _StringsEn {
 	// Internal flat map initialized lazily
 	late final Map<String, dynamic> _flatMap = _buildFlatMap();
 
-	// ignore: unused_field
-	late final _StringsEn _root = this;
+	late final _StringsEn _root = this; // ignore: unused_field
 
 	// Translations
 	String get k_03f15qk => 'Blocklist';
@@ -522,6 +519,28 @@ class _StringsEn {
 	String get k_18ger86 => 'Tencent Cloud IM';
 	String get k_1vd70l1 => 'Chat SDK serving hundreds of millions of QQ users';
 	String get k_036phup => 'Tencent Cloud IM';
+	String get k_003qgkp => 'Gender';
+	String get k_0003v6a => 'Male';
+	String get k_00043x2 => 'Female';
+	String get k_03bcjkv => 'Not sett';
+	String get k_11zgnfs => 'My Profile';
+	String get k_003qk66 => 'Profile Photo';
+	String get k_11s0gdz => 'Modify nickname';
+	String get k_0p3j4sd => 'Letters, numbers and underscores only';
+	String get k_003lhvk => 'Nickname';
+	String get k_15lyvdt => 'Modify Status';
+	String get k_15lx52z => 'Status';
+	String get k_0vylzjp => 'Nothing here';
+	String get k_1c3us5n => '@ALL is not supported in this group';
+	String get k_11k579v => 'Illegal sentences in the text';
+	String get k_0gfsln9 => 'Information modified';
+	String get k_0ow4akh => 'Please configure Baidu AK according to the README guidelines of Demo to experience the location messaging capability of DEMO.';
+	String get k_1kzh3lo => 'Please follow the guidelines of this document to https://docs.qq.com/doc/DSVliWE9acURta2dL to quickly experience location messaging capabilities.';
+	String get k_161zzkm => 'Please enter a User ID';
+	String get k_1veosyv => 'Please config the secret KEY in the environment variable';
+	String get k_03exdnb => 'User ID';
+	String get k_16kquu8 => 'Current path';
+	String get k_0fbvuqs => 'Copy';
 }
 
 // Path: <root>
@@ -535,11 +554,9 @@ class _StringsZhHans implements _StringsEn {
 	@override dynamic operator[](String key) => _flatMap[key];
 
 	// Internal flat map initialized lazily
-	@override
-  late final Map<String, dynamic> _flatMap = _buildFlatMap();
+	@override late final Map<String, dynamic> _flatMap = _buildFlatMap();
 
-	// ignore: unused_field
-	@override late final _StringsZhHans _root = this;
+	@override late final _StringsZhHans _root = this; // ignore: unused_field
 
 	// Translations
 	@override String get k_16758qw => '添加好友';
@@ -746,6 +763,28 @@ class _StringsZhHans implements _StringsEn {
 	@override String get k_18ger86 => '腾讯云 · IM';
 	@override String get k_1vd70l1 => '服务亿级 QQ 用户的即时通讯技术';
 	@override String get k_036phup => '腾讯云IM';
+	@override String get k_003qgkp => '性别';
+	@override String get k_0003v6a => '男';
+	@override String get k_00043x2 => '女';
+	@override String get k_03bcjkv => '未设置';
+	@override String get k_11zgnfs => '个人资料';
+	@override String get k_003qk66 => '头像';
+	@override String get k_11s0gdz => '修改昵称';
+	@override String get k_0p3j4sd => '仅限中字、字母、数字和下划线';
+	@override String get k_003lhvk => '昵称';
+	@override String get k_15lyvdt => '修改签名';
+	@override String get k_15lx52z => '个性签名';
+	@override String get k_0vylzjp => '这个人很懒，什么也没写';
+	@override String get k_1c3us5n => '当前群组不支持@全体成员';
+	@override String get k_11k579v => '发言中有非法语句';
+	@override String get k_0gfsln9 => '信息已变更';
+	@override String get k_0ow4akh => '请根据Demo的README指引，配置百度AK，体验DEMO的位置消息能力';
+	@override String get k_1kzh3lo => '请根据本文档指引 https://docs.qq.com/doc/DSVliWE9acURta2dL ， 快速体验位置消息能力';
+	@override String get k_161zzkm => '请输入用户名';
+	@override String get k_1veosyv => '请在环境变量中写入key';
+	@override String get k_03exdnb => '用户名';
+	@override String get k_16kquu8 => '当前目录';
+	@override String get k_0fbvuqs => '开始拷贝';
 }
 
 // Path: <root>
@@ -759,11 +798,9 @@ class _StringsZhHant implements _StringsEn {
 	@override dynamic operator[](String key) => _flatMap[key];
 
 	// Internal flat map initialized lazily
-	@override
-  late final Map<String, dynamic> _flatMap = _buildFlatMap();
+	@override late final Map<String, dynamic> _flatMap = _buildFlatMap();
 
-	// ignore: unused_field
-	@override late final _StringsZhHant _root = this;
+	@override late final _StringsZhHant _root = this; // ignore: unused_field
 
 	// Translations
 	@override String get k_16758qw => '添加好友';
@@ -970,6 +1007,28 @@ class _StringsZhHant implements _StringsEn {
 	@override String get k_18ger86 => '騰訊雲 · IM';
 	@override String get k_1vd70l1 => '服務億級 QQ 用戶的即時通訊技術';
 	@override String get k_036phup => '騰訊雲IM';
+	@override String get k_003qgkp => '性別';
+	@override String get k_0003v6a => '男';
+	@override String get k_00043x2 => '女';
+	@override String get k_03bcjkv => '未設置';
+	@override String get k_11zgnfs => '個人資料';
+	@override String get k_003qk66 => '頭像';
+	@override String get k_11s0gdz => '修改昵稱';
+	@override String get k_0p3j4sd => '僅限中字、字母、數字和下劃線';
+	@override String get k_003lhvk => '昵稱';
+	@override String get k_15lyvdt => '修改簽名';
+	@override String get k_15lx52z => '個性簽名';
+	@override String get k_0vylzjp => '這個人很懶，什麽也沒寫';
+	@override String get k_1c3us5n => '當前群組不支持@全體成員';
+	@override String get k_11k579v => '發言中有非法語句';
+	@override String get k_0gfsln9 => '信息已變更';
+	@override String get k_0ow4akh => '請根據Demo的README指引，配置百度AK，體驗DEMO的位置消息能力';
+	@override String get k_1kzh3lo => '請根據本文檔指引 https://docs.qq.com/doc/DSVliWE9acURta2dL ， 快速體驗位置消息能力';
+	@override String get k_161zzkm => '請輸入用戶名';
+	@override String get k_1veosyv => '請在環境變量中寫入key';
+	@override String get k_03exdnb => '用戶名';
+	@override String get k_16kquu8 => '當前目錄';
+	@override String get k_0fbvuqs => '開始拷貝';
 }
 
 /// Flat map(s) containing all translations.
@@ -977,7 +1036,7 @@ class _StringsZhHant implements _StringsEn {
 
 extension on _StringsEn {
 	Map<String, dynamic> _buildFlatMap() {
-		return {
+		return <String, dynamic>{
 			'k_03f15qk': 'Blocklist',
 			'k_0uc5cnb': 'Beta test in progress. Channel creation is not supported now.',
 			'k_003nevv': 'Cancel',
@@ -1182,13 +1241,35 @@ extension on _StringsEn {
 			'k_18ger86': 'Tencent Cloud IM',
 			'k_1vd70l1': 'Chat SDK serving hundreds of millions of QQ users',
 			'k_036phup': 'Tencent Cloud IM',
+			'k_003qgkp': 'Gender',
+			'k_0003v6a': 'Male',
+			'k_00043x2': 'Female',
+			'k_03bcjkv': 'Not sett',
+			'k_11zgnfs': 'My Profile',
+			'k_003qk66': 'Profile Photo',
+			'k_11s0gdz': 'Modify nickname',
+			'k_0p3j4sd': 'Letters, numbers and underscores only',
+			'k_003lhvk': 'Nickname',
+			'k_15lyvdt': 'Modify Status',
+			'k_15lx52z': 'Status',
+			'k_0vylzjp': 'Nothing here',
+			'k_1c3us5n': '@ALL is not supported in this group',
+			'k_11k579v': 'Illegal sentences in the text',
+			'k_0gfsln9': 'Information modified',
+			'k_0ow4akh': 'Please configure Baidu AK according to the README guidelines of Demo to experience the location messaging capability of DEMO.',
+			'k_1kzh3lo': 'Please follow the guidelines of this document to https://docs.qq.com/doc/DSVliWE9acURta2dL to quickly experience location messaging capabilities.',
+			'k_161zzkm': 'Please enter a User ID',
+			'k_1veosyv': 'Please config the secret KEY in the environment variable',
+			'k_03exdnb': 'User ID',
+			'k_16kquu8': 'Current path',
+			'k_0fbvuqs': 'Copy',
 		};
 	}
 }
 
 extension on _StringsZhHans {
 	Map<String, dynamic> _buildFlatMap() {
-		return {
+		return <String, dynamic>{
 			'k_16758qw': '添加好友',
 			'k_0elt0kw': '添加群聊',
 			'k_03f15qk': '黑名单',
@@ -1393,13 +1474,35 @@ extension on _StringsZhHans {
 			'k_18ger86': '腾讯云 · IM',
 			'k_1vd70l1': '服务亿级 QQ 用户的即时通讯技术',
 			'k_036phup': '腾讯云IM',
+			'k_003qgkp': '性别',
+			'k_0003v6a': '男',
+			'k_00043x2': '女',
+			'k_03bcjkv': '未设置',
+			'k_11zgnfs': '个人资料',
+			'k_003qk66': '头像',
+			'k_11s0gdz': '修改昵称',
+			'k_0p3j4sd': '仅限中字、字母、数字和下划线',
+			'k_003lhvk': '昵称',
+			'k_15lyvdt': '修改签名',
+			'k_15lx52z': '个性签名',
+			'k_0vylzjp': '这个人很懒，什么也没写',
+			'k_1c3us5n': '当前群组不支持@全体成员',
+			'k_11k579v': '发言中有非法语句',
+			'k_0gfsln9': '信息已变更',
+			'k_0ow4akh': '请根据Demo的README指引，配置百度AK，体验DEMO的位置消息能力',
+			'k_1kzh3lo': '请根据本文档指引 https://docs.qq.com/doc/DSVliWE9acURta2dL ， 快速体验位置消息能力',
+			'k_161zzkm': '请输入用户名',
+			'k_1veosyv': '请在环境变量中写入key',
+			'k_03exdnb': '用户名',
+			'k_16kquu8': '当前目录',
+			'k_0fbvuqs': '开始拷贝',
 		};
 	}
 }
 
 extension on _StringsZhHant {
 	Map<String, dynamic> _buildFlatMap() {
-		return {
+		return <String, dynamic>{
 			'k_16758qw': '添加好友',
 			'k_0elt0kw': '添加群組',
 			'k_03f15qk': '黑名單',
@@ -1604,6 +1707,28 @@ extension on _StringsZhHant {
 			'k_18ger86': '騰訊雲 · IM',
 			'k_1vd70l1': '服務億級 QQ 用戶的即時通訊技術',
 			'k_036phup': '騰訊雲IM',
+			'k_003qgkp': '性別',
+			'k_0003v6a': '男',
+			'k_00043x2': '女',
+			'k_03bcjkv': '未設置',
+			'k_11zgnfs': '個人資料',
+			'k_003qk66': '頭像',
+			'k_11s0gdz': '修改昵稱',
+			'k_0p3j4sd': '僅限中字、字母、數字和下劃線',
+			'k_003lhvk': '昵稱',
+			'k_15lyvdt': '修改簽名',
+			'k_15lx52z': '個性簽名',
+			'k_0vylzjp': '這個人很懶，什麽也沒寫',
+			'k_1c3us5n': '當前群組不支持@全體成員',
+			'k_11k579v': '發言中有非法語句',
+			'k_0gfsln9': '信息已變更',
+			'k_0ow4akh': '請根據Demo的README指引，配置百度AK，體驗DEMO的位置消息能力',
+			'k_1kzh3lo': '請根據本文檔指引 https://docs.qq.com/doc/DSVliWE9acURta2dL ， 快速體驗位置消息能力',
+			'k_161zzkm': '請輸入用戶名',
+			'k_1veosyv': '請在環境變量中寫入key',
+			'k_03exdnb': '用戶名',
+			'k_16kquu8': '當前目錄',
+			'k_0fbvuqs': '開始拷貝',
 		};
 	}
 }
