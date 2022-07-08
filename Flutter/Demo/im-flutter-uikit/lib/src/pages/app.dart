@@ -17,6 +17,7 @@ import 'package:timuikit/src/config.dart';
 import 'package:timuikit/src/launch_page.dart';
 import 'package:timuikit/src/pages/home_page.dart';
 import 'package:timuikit/src/pages/login.dart';
+import 'package:timuikit/src/provider/login_user_Info.dart';
 import 'package:timuikit/src/routes.dart';
 import 'package:timuikit/utils/push/channel/channel_push.dart';
 import 'package:timuikit/utils/toast.dart';
@@ -39,7 +40,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   final CoreServicesImpl _coreInstance = TIMUIKitCore.getInstance();
   final V2TIMManager _sdkInstance = TIMUIKitCore.getSDKInstance();
   final ConversationService _conversationService =
-      serviceLocator<ConversationService>();
+  serviceLocator<ConversationService>();
   BuildContext? _cachedContext;
 
   @override
@@ -53,7 +54,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       case AppLifecycleState.inactive:
         _coreInstance.setOfflinePushStatus(
             status: AppStatus.background, totalCount: unreadCount);
-        if(unreadCount != null){
+        if (unreadCount != null) {
           ChannelPush.setBadgeNum(unreadCount);
         }
         break;
@@ -128,9 +129,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     final isInitSuccess = await _coreInstance.init(
       // 此处可指定显示语言，不传该字段使用系统语言
       // language: LanguageEnum.zh,
-      onTUIKitCallbackListener: (TIMCallback callbackValue){
-
-        switch(callbackValue.type) {
+      onTUIKitCallbackListener: (TIMCallback callbackValue) {
+        switch (callbackValue.type) {
           case TIMCallbackType.INFO:
           // Shows the recommend text for info callback directly
             Utils.toast(callbackValue.infoRecommendText!);
@@ -138,22 +138,26 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
           case TIMCallbackType.API_ERROR:
           //Prints the API error to console, and shows the error message.
-            print("Error from TUIKit: ${callbackValue.errorMsg}, Code: ${callbackValue.errorCode}");
-            if (callbackValue.errorCode == 10004 && callbackValue.errorMsg!.contains("not support @all")) {
+            print(
+                "Error from TUIKit: ${callbackValue.errorMsg}, Code: ${callbackValue.errorCode}");
+            if (callbackValue.errorCode == 10004 &&
+                callbackValue.errorMsg!.contains("not support @all")) {
               Utils.toast(imt("当前群组不支持@全体成员"));
-            }else if (callbackValue.errorCode == 80001 && callbackValue.errorMsg!.contains("not support @all")) {
+            } else if (callbackValue.errorCode == 80001 &&
+                callbackValue.errorMsg!.contains("not support @all")) {
               Utils.toast(imt("发言中有非法语句"));
-            }else{
-              Utils.toast(callbackValue.errorMsg ?? callbackValue.errorCode.toString());
+            } else {
+              Utils.toast(
+                  callbackValue.errorMsg ?? callbackValue.errorCode.toString());
             }
             break;
 
           case TIMCallbackType.FLUTTER_ERROR:
           default:
           // prints the stack trace to console or shows the catch error
-            if(callbackValue.catchError != null){
+            if (callbackValue.catchError != null) {
               Utils.toast(callbackValue.catchError.toString());
-            }else{
+            } else {
               print(callbackValue.stackTrace);
             }
         }
@@ -171,6 +175,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         },
         onSelfInfoUpdated: (info) {
           print(imt("信息已变更"));
+          Provider.of<LoginUserInfo>(context, listen: false)
+              .setLoginUserInfo(info);
           // onSelfInfoUpdated(info);
         },
         onUserSigExpired: () {
@@ -191,7 +197,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     // 初始化IM SDK
     initIMSDKAndAddIMListeners();
 
-    directToLogin();
+    Future.delayed(const Duration(seconds: 1), () {
+      directToLogin();
+    });
   }
 
   initScreenUtils() {
@@ -210,7 +218,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     Map<String, dynamic> extMsp = jsonDecode(ext);
     String convId = extMsp["conversationID"] ?? "";
     V2TimConversation? targetConversation =
-        await _conversationService.getConversation(conversationID: convId);
+    await _conversationService.getConversation(conversationID: convId);
     if (targetConversation != null) {
       ChannelPush.clearAllNotification();
       Future.delayed(const Duration(milliseconds: 100), () {
@@ -277,7 +285,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
               .asMap()
               .keys
               .map((idx) =>
-                  CustomSticker(index: idx, name: customEmojiPackage.list[idx]))
+              CustomSticker(index: idx, name: customEmojiPackage.list[idx]))
               .toList(),
           menuItem: CustomSticker(
             index: 0,
@@ -294,3 +302,4 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     return const LaunchPage();
   }
 }
+
