@@ -1,8 +1,10 @@
 import 'package:azlistview/azlistview.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
 class AZListViewContainer extends StatefulWidget {
   final List<ISuspensionBeanImpl>? memberList;
@@ -22,7 +24,7 @@ class AZListViewContainer extends StatefulWidget {
   State<StatefulWidget> createState() => _AZListViewContainerState();
 }
 
-class _AZListViewContainerState extends State<AZListViewContainer> {
+class _AZListViewContainerState extends TIMUIKitState<AZListViewContainer> {
   List<ISuspensionBeanImpl>? _list;
 
   addShowSuspension(List<ISuspensionBeanImpl> curList) {
@@ -71,7 +73,7 @@ class _AZListViewContainerState extends State<AZListViewContainer> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     return ChangeNotifierProvider.value(
         value: serviceLocator<TUIThemeViewModel>(),
         child: Consumer<TUIThemeViewModel>(

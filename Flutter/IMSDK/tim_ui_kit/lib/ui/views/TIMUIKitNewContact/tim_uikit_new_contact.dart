@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_application.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
+import 'package:tim_ui_kit/business_logic/life_cycle/new_contact_life_cycle.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_new_contact_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
-import 'package:tim_ui_kit/ui/widgets/avatar.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
 
-import '../../../i18n/i18n_utils.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
+import 'package:tim_ui_kit/ui/widgets/avatar.dart';
 
 typedef NewContactItemBuilder = Widget Function(
     BuildContext context, V2TimFriendApplication applicationInfo);
@@ -25,8 +27,12 @@ class TIMUIKitNewContact extends StatefulWidget {
   /// the builder for the request item
   final NewContactItemBuilder? itemBuilder;
 
+  /// the life cycle hooks for new contact business logic
+  final NewContactLifeCycle? lifeCycle;
+
   const TIMUIKitNewContact(
       {Key? key,
+      this.lifeCycle,
       this.onAccept,
       this.onRefuse,
       this.emptyBuilder,
@@ -37,7 +43,7 @@ class TIMUIKitNewContact extends StatefulWidget {
   State<StatefulWidget> createState() => _TIMUIKitNewContactState();
 }
 
-class _TIMUIKitNewContactState extends State<TIMUIKitNewContact> {
+class _TIMUIKitNewContactState extends TIMUIKitState<TIMUIKitNewContact> {
   late TUINewContactViewModel model = serviceLocator<TUINewContactViewModel>();
 
   _getShowName(V2TimFriendApplication item) {
@@ -51,7 +57,6 @@ class _TIMUIKitNewContactState extends State<TIMUIKitNewContact> {
     final theme = Provider.of<TUIThemeViewModel>(context).theme;
     final showName = _getShowName(applicationInfo);
     final faceUrl = applicationInfo.faceUrl ?? "";
-    final I18nUtils ttBuild = I18nUtils(context);
     return Container(
       padding: const EdgeInsets.only(top: 10, left: 16),
       child: Row(
@@ -95,7 +100,7 @@ class _TIMUIKitNewContactState extends State<TIMUIKitNewContact> {
                               color: theme.weakTextColor ??
                                   CommonColor.weakTextColor)),
                       child: Text(
-                        ttBuild.imt("同意"),
+                        TIM_t("同意"),
                         style: const TextStyle(
                           color: Colors.white,
                         ),
@@ -125,7 +130,7 @@ class _TIMUIKitNewContactState extends State<TIMUIKitNewContact> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 14, vertical: 6),
                         child: Text(
-                          ttBuild.imt("拒绝"),
+                          TIM_t("拒绝"),
                           style: TextStyle(
                             color: theme.primaryColor,
                           ),
@@ -159,16 +164,15 @@ class _TIMUIKitNewContactState extends State<TIMUIKitNewContact> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider.value(value: model),
-          ChangeNotifierProvider.value(
-              value: serviceLocator<TUIThemeViewModel>())
         ],
         builder: (BuildContext context, Widget? w) {
-          final newContactList = Provider.of<TUINewContactViewModel>(context)
-              .friendApplicationList;
+          final model = Provider.of<TUINewContactViewModel>(context);
+          model.lifeCycle = widget.lifeCycle;
+          final newContactList = model.friendApplicationList;
           if (newContactList != null && newContactList.isNotEmpty) {
             return ListView.builder(
               itemCount: newContactList.length,

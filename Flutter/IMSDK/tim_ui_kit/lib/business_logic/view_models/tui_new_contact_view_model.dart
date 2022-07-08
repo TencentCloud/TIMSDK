@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tencent_im_sdk_plugin/enum/V2TimFriendshipListener.dart';
-import 'package:tencent_im_sdk_plugin/enum/friend_application_type_enum.dart';
-import 'package:tencent_im_sdk_plugin/enum/friend_response_type_enum.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_application.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_operation_result.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
+
+import 'package:tim_ui_kit/business_logic/life_cycle/new_contact_life_cycle.dart';
 import 'package:tim_ui_kit/data_services/friendShip/friendship_services.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 
@@ -13,6 +11,11 @@ class TUINewContactViewModel extends ChangeNotifier {
   List<V2TimFriendApplication?>? _friendApplicationList;
   V2TimFriendshipListener? _friendshipListener;
   int _unReadCount = 0;
+  NewContactLifeCycle? _lifeCycle;
+
+  set lifeCycle(NewContactLifeCycle? value) {
+    _lifeCycle = value;
+  }
 
   int get unreadCount => _unReadCount;
 
@@ -27,7 +30,7 @@ class TUINewContactViewModel extends ChangeNotifier {
             item!.type ==
             FriendApplicationTypeEnum.V2TIM_FRIEND_APPLICATION_COME_IN.index)
         .toList();
-    _unReadCount = _friendApplicationList!.length;
+    _unReadCount = _friendApplicationList?.length ?? 0;
     notifyListeners();
   }
 
@@ -35,6 +38,10 @@ class TUINewContactViewModel extends ChangeNotifier {
     String userID,
     int type,
   ) async {
+    if (_lifeCycle?.shouldAcceptContactApplication != null &&
+        await _lifeCycle!.shouldAcceptContactApplication(userID) == false) {
+      return null;
+    }
     final res = await _friendshipServices.acceptFriendApplication(
       responseType: FriendResponseTypeEnum.V2TIM_FRIEND_ACCEPT_AGREE_AND_ADD,
       type: FriendApplicationTypeEnum.values[type],
@@ -50,6 +57,10 @@ class TUINewContactViewModel extends ChangeNotifier {
     String userID,
     int type,
   ) async {
+    if (_lifeCycle?.shouldRefuseContactApplication != null &&
+        await _lifeCycle!.shouldRefuseContactApplication(userID) == false) {
+      return null;
+    }
     final res = await _friendshipServices.refuseFriendApplication(
       type: FriendApplicationTypeEnum.values[type],
       userID: userID,

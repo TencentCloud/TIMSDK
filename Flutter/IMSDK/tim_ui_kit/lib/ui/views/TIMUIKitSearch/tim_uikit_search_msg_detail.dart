@@ -1,15 +1,13 @@
-// ignore_for_file: unused_local_variable
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_search_view_model.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
+import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitSearch/pureUI/tim_uikit_search_input.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitSearch/pureUI/tim_uikit_search_item.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitSearch/pureUI/tim_uikit_search_showAll.dart';
-
-import '../../../tim_ui_kit.dart';
 
 class TIMUIKitSearchMsgDetail extends StatefulWidget {
   /// Conversation need search
@@ -32,7 +30,8 @@ class TIMUIKitSearchMsgDetail extends StatefulWidget {
   State<StatefulWidget> createState() => TIMUIKitSearchMsgDetailState();
 }
 
-class TIMUIKitSearchMsgDetailState extends State<TIMUIKitSearchMsgDetail> {
+class TIMUIKitSearchMsgDetailState
+    extends TIMUIKitState<TIMUIKitSearchMsgDetail> {
   final model = serviceLocator<TUISearchViewModel>();
   String keywordState = "";
   int currentPage = 0;
@@ -44,40 +43,38 @@ class TIMUIKitSearchMsgDetailState extends State<TIMUIKitSearchMsgDetail> {
     updateMsgResult(widget.keyword, true);
   }
 
-  String _getMsgElem(V2TimMessage message, BuildContext context) {
-    final I18nUtils ttBuild = I18nUtils(context);
+  String _getMsgElem(V2TimMessage message) {
     final msgType = message.elemType;
     final isRevokedMessage = message.status == 6;
     if (isRevokedMessage) {
       final isSelf = message.isSelf ?? false;
-      final option2 =
-          isSelf ? ttBuild.imt("您") : message.nickName ?? message.sender;
-      return ttBuild.imt_para("{{option2}}撤回了一条消息", "$option2撤回了一条消息")(
+      final option2 = isSelf ? TIM_t("您") : message.nickName ?? message.sender;
+      return TIM_t_para("{{option2}}撤回了一条消息", "$option2撤回了一条消息")(
           option2: option2);
     }
     switch (msgType) {
       case MessageElemType.V2TIM_ELEM_TYPE_CUSTOM:
-        return ttBuild.imt("[自定义]");
+        return TIM_t("[自定义]");
       case MessageElemType.V2TIM_ELEM_TYPE_SOUND:
-        return ttBuild.imt("[语音]");
+        return TIM_t("[语音]");
       case MessageElemType.V2TIM_ELEM_TYPE_TEXT:
         return message.textElem!.text as String;
       case MessageElemType.V2TIM_ELEM_TYPE_FACE:
-        return ttBuild.imt("[表情]");
+        return TIM_t("[表情]");
       case MessageElemType.V2TIM_ELEM_TYPE_FILE:
         final option1 = message.fileElem!.fileName;
-        return ttBuild.imt_para("[文件] {{option1}}", "[文件] $option1")(
+        return TIM_t_para("[文件] {{option1}}", "[文件] $option1")(
             option1: option1);
       case MessageElemType.V2TIM_ELEM_TYPE_IMAGE:
-        return ttBuild.imt("[图片]");
+        return TIM_t("[图片]");
       case MessageElemType.V2TIM_ELEM_TYPE_VIDEO:
-        return ttBuild.imt("[视频]");
+        return TIM_t("[视频]");
       case MessageElemType.V2TIM_ELEM_TYPE_LOCATION:
-        return ttBuild.imt("[位置]");
+        return TIM_t("[位置]");
       case MessageElemType.V2TIM_ELEM_TYPE_MERGER:
-        return ttBuild.imt("[聊天记录]");
+        return TIM_t("[聊天记录]");
       default:
-        return ttBuild.imt("未知消息");
+        return TIM_t("未知消息");
     }
   }
 
@@ -95,7 +92,7 @@ class TIMUIKitSearchMsgDetailState extends State<TIMUIKitSearchMsgDetail> {
           faceUrl: message.faceUrl ?? "",
           showName: message.nickName ?? message.userID ?? message.sender ?? "",
           lineOne: message.nickName ?? message.userID ?? message.sender ?? "",
-          lineTwo: _getMsgElem(message, context),
+          lineTwo: _getMsgElem(message),
           onClick: () {
             widget.onTapConversation(widget.currentConversation, message);
           },
@@ -119,7 +116,7 @@ class TIMUIKitSearchMsgDetailState extends State<TIMUIKitSearchMsgDetail> {
     });
   }
 
-  Widget _renderShowALl(bool isShowMore, I18nUtils ttBuild) {
+  Widget _renderShowALl(bool isShowMore) {
     return (isShowMore == true)
         ? Container(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -127,7 +124,7 @@ class TIMUIKitSearchMsgDetailState extends State<TIMUIKitSearchMsgDetail> {
               color: Colors.white,
             ),
             child: TIMUIKitSearchShowALl(
-              textShow: ttBuild.imt("更多聊天记录"),
+              textShow: TIM_t("更多聊天记录"),
               onClick: () => {updateMsgResult(null, false)},
             ),
           )
@@ -135,17 +132,13 @@ class TIMUIKitSearchMsgDetailState extends State<TIMUIKitSearchMsgDetail> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(
-            value: serviceLocator<TUIThemeViewModel>()),
         ChangeNotifierProvider.value(
             value: serviceLocator<TUISearchViewModel>())
       ],
       builder: (context, w) {
-        final I18nUtils ttBuild = I18nUtils(context);
-        final theme = Provider.of<TUIThemeViewModel>(context).theme;
         final List<V2TimMessage> currentMsgListForConversation =
             Provider.of<TUISearchViewModel>(context)
                 .currentMsgListForConversation;
@@ -175,11 +168,9 @@ class TIMUIKitSearchMsgDetailState extends State<TIMUIKitSearchMsgDetail> {
                   child: ListView(
                 children: [
                   ..._renderListMessage(currentMsgListForConversation, context),
-                  _renderShowALl(
-                      keywordState.isNotEmpty &&
-                          totalMsgInConversationCount >
-                              currentMsgListForConversation.length,
-                      ttBuild)
+                  _renderShowALl(keywordState.isNotEmpty &&
+                      totalMsgInConversationCount >
+                          currentMsgListForConversation.length)
                 ],
               )),
             ],

@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';
+import 'package:timuikit/src/config.dart';
 import 'package:timuikit/utils/toast.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import '../config.dart';
 
 enum CaptchaStatus { unReady, loading, ready }
 

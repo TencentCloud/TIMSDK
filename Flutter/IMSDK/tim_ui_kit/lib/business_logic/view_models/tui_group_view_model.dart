@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_info.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_full_info.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:tim_ui_kit/data_services/group/group_services.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 

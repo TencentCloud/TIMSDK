@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_statelesswidget.dart';
 
-import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
-import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKItMessageList/TIMUIKitTongue/tim_uikit_chat_history_message_list_tongue.dart';
-import 'package:tim_ui_kit/i18n/i18n_utils.dart';
+import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
 
-class TIMUIKitTongueItem extends StatelessWidget {
+import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKItMessageList/TIMUIKitTongue/tim_uikit_chat_history_message_list_tongue.dart';
+
+class TIMUIKitTongueItem extends TIMUIKitStatelessWidget {
   /// the callback after clicking
   final VoidCallback onClick;
 
@@ -28,20 +30,18 @@ class TIMUIKitTongueItem extends StatelessWidget {
   }) : super(key: key);
 
   Map<MessageListTongueType, String> textType(BuildContext context) {
-    final I18nUtils ttBuild = I18nUtils(context);
     final option1 = unreadCount;
     final option2 = atNum;
     final String atMeString = option2 != ""
-        ? ttBuild.imt_para("有{{option2}}条@我消息", "有$option2条@我消息")(
-            option2: option2)
-        : ttBuild.imt("有人@我");
+        ? TIM_t_para("有{{option2}}条@我消息", "有$option2条@我消息")(option2: option2)
+        : TIM_t("有人@我");
 
     return {
-      MessageListTongueType.toLatest: ttBuild.imt("回到最新位置"),
+      MessageListTongueType.toLatest: TIM_t("回到最新位置"),
       MessageListTongueType.showUnread:
-          ttBuild.imt_para("{{option1}}条新消息", "$option1条新消息")(option1: option1),
+          TIM_t_para("{{option1}}条新消息", "$option1条新消息")(option1: option1),
       MessageListTongueType.atMe: atMeString,
-      MessageListTongueType.atAll: ttBuild.imt("@所有人"),
+      MessageListTongueType.atAll: TIM_t("@所有人"),
     };
   }
 
@@ -53,8 +53,8 @@ class TIMUIKitTongueItem extends StatelessWidget {
   };
 
   @override
-  Widget build(BuildContext context) {
-    final theme = Provider.of<TUIThemeViewModel>(context).theme;
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    final TUITheme theme = value.theme;
     return GestureDetector(
       onTap: onClick,
       child: Container(

@@ -1,6 +1,6 @@
 name: tim_ui_kit
 description: TUIKit is a set of UI components implemented based on the IM SDK, which includes functions such as conversation, chat, search, relationship chain, group, and audio and video calls.
-version: 0.1.0-bugfix
+version: 0.1.1
 homepage: https://cloud.tencent.com/product/im
 repository: https://github.com/TencentCloud/TIMSDK/tree/master/Flutter/IMSDK/tim_ui_kit
 
@@ -13,14 +13,14 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  tencent_im_sdk_plugin: 4.0.6
+  tencent_im_sdk_plugin: 4.0.7
   adaptive_action_sheet: ^2.0.1
   provider: ^6.0.1
   intl: ^0.17.0
   get_it: ^7.2.0
   dotted_border: ^2.0.0+2
   flutter_svg: ^1.0.0
-  image_picker: ^0.8.4+4
+  image_picker: ^0.8.5+3
   file_picker: ^4.2.3
   # file_picker:
   #   git: https://github.com/XNeverGiveUp/flutter_file_picker.git
@@ -47,7 +47,6 @@ dependencies:
   shared_preferences: ^2.0.13
   json_annotation: ^4.4.0
   scroll_to_index: ^2.1.1
-  connectivity_plus: ^2.2.0
   wechat_assets_picker: ^7.0.2
   wechat_camera_picker: ^3.0.1
   flutter_easyrefresh: ^2.2.1
@@ -58,6 +57,10 @@ dependencies:
   permission_handler: ^9.2.0
   tuple: ^2.0.0
   flutter_screenutil: ^5.5.3+2
+  flutter_markdown: ^0.6.9
+  url_launcher: ^6.1.4
+  link_preview_generator: ^1.2.0
+  tencent_im_base: ^0.0.23
 
 dev_dependencies:
   flutter_test:

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tencent_im_sdk_plugin/enum/V2TimConversationListener.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_conversation.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_search_param.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
+import 'package:tim_ui_kit/business_logic/life_cycle/conversation_life_cycle.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
 import 'package:tim_ui_kit/data_services/conversation/conversation_services.dart';
 import 'package:tim_ui_kit/data_services/message/message_services.dart';
@@ -33,16 +31,13 @@ class TUIConversationViewModel extends ChangeNotifier {
   final FriendshipServices _friendshipServices =
       serviceLocator<FriendshipServices>();
   final TUIChatViewModel _chatViewModel = serviceLocator<TUIChatViewModel>();
-
   final MessageService _messageService = serviceLocator<MessageService>();
-
   V2TimConversationListener? _conversationListener;
-
   List<V2TimConversation?> _conversationList = [];
   static V2TimConversation? _selectedConversation;
   bool _haveMoreData = true;
-
   String _nextSeq = "0";
+  ConversationLifeCycle? _lifeCycle;
 
   List<V2TimConversation?> get conversationList {
     _conversationList.sort((a, b) => b!.orderkey!.compareTo(a!.orderkey!));
@@ -51,6 +46,10 @@ class TUIConversationViewModel extends ChangeNotifier {
 
   bool get haveMoreData {
     return _haveMoreData;
+  }
+
+  set lifeCycle(ConversationLifeCycle? value) {
+    _lifeCycle = value;
   }
 
   set conversationList(List<V2TimConversation?> conversationList) {
@@ -76,12 +75,15 @@ class TUIConversationViewModel extends ChangeNotifier {
       if (conversationList.isEmpty || conversationList.length < count) {
         _haveMoreData = false;
       }
-      final combinedConversationList = [
+      final List<V2TimConversation?> combinedConversationList = [
         ..._conversationList,
         ...conversationList
       ];
+      final List<V2TimConversation?> finalConversationList = await _lifeCycle
+              ?.conversationListWillMount(combinedConversationList) ??
+          combinedConversationList;
       _conversationList = removeDuplicates<V2TimConversation?>(
-          combinedConversationList,
+          finalConversationList,
           (item1, item2) => item1?.conversationID == item2?.conversationID);
       notifyListeners();
     }
@@ -99,7 +101,12 @@ class TUIConversationViewModel extends ChangeNotifier {
         conversationID: conversationID, isPinned: isPinned);
   }
 
-  clearHistoryMessage({required String convID, required int convType}) {
+  clearHistoryMessage({required String convID, required int convType}) async {
+    if (_lifeCycle?.shouldClearHistoricalMessageForConversation != null &&
+        await _lifeCycle!.shouldClearHistoricalMessageForConversation(convID) ==
+            false) {
+      return null;
+    }
     if (convType == 1) {
       _messageService.clearC2CHistoryMessage(userID: convID);
     } else {
@@ -113,8 +120,12 @@ class TUIConversationViewModel extends ChangeNotifier {
     return res;
   }
 
-  Future<V2TimCallback> deleteConversation(
+  Future<V2TimCallback?> deleteConversation(
       {required String conversationID}) async {
+    if (_lifeCycle?.shouldDeleteConversation != null &&
+        await _lifeCycle!.shouldDeleteConversation(conversationID) == false) {
+      return null;
+    }
     final res = await _conversationService.deleteConversation(
         conversationID: conversationID);
     if (res.code == 0) {
@@ -134,7 +145,8 @@ class TUIConversationViewModel extends ChangeNotifier {
       } else {
         _conversationList.add(list[element]);
       }
-    }
+      // ignore: todo
+    } // TODO
 
     notifyListeners();
   }

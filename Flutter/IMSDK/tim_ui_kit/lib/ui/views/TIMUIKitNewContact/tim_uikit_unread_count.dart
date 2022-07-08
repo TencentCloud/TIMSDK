@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_new_contact_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 import 'package:tim_ui_kit/ui/widgets/unread_message.dart';
 
 class TIMUIKitUnreadCount extends StatefulWidget {
@@ -15,7 +17,7 @@ class TIMUIKitUnreadCount extends StatefulWidget {
   State<StatefulWidget> createState() => _TIMUIKitUnreadCountState();
 }
 
-class _TIMUIKitUnreadCountState extends State<TIMUIKitUnreadCount> {
+class _TIMUIKitUnreadCountState extends TIMUIKitState<TIMUIKitUnreadCount> {
   final TUINewContactViewModel model = serviceLocator<TUINewContactViewModel>();
 
   @override
@@ -31,7 +33,7 @@ class _TIMUIKitUnreadCountState extends State<TIMUIKitUnreadCount> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     return ChangeNotifierProvider.value(
         value: model,
         child:

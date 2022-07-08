@@ -1,23 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_conversation.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_info.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_full_info.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
+import 'package:tim_ui_kit/business_logic/life_cycle/group_profile_life_cycle.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_group_profile_view_model.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
-import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/tim_ui_group_search_msg.dart';
-import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/tim_uikit_group_add_opt.dart';
-import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/tim_uikit_group_detai_card.dart';
-import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/tim_uikit_group_manage.dart';
-import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/tim_uikit_group_member_tile.dart';
-import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/tim_uikit_group_message_disturb.dart';
-import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/tim_uikit_group_name_card.dart';
-import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/tim_uikit_group_notification.dart';
-import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/tim_uikit_group_pin_conversation.dart';
-import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/tim_uikit_group_type.dart';
+import 'package:tim_ui_kit/tim_ui_kit.dart';
+import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/group_profile_widget.dart';
+import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/widgets/tim_ui_group_profile_widget.dart';
+import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/widgets/tim_uikit_group_button_area.dart';
+import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/widgets/tim_uikit_group_manage.dart';
+import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/widgets/tim_uikit_group_notification.dart';
 
+export 'package:tim_ui_kit/ui/widgets/transimit_group_owner_select.dart';
 export 'package:tim_ui_kit/ui/widgets/transimit_group_owner_select.dart';
 
 class SharedDataWidget extends InheritedWidget {
@@ -37,166 +32,271 @@ class SharedDataWidget extends InheritedWidget {
   }
 }
 
+typedef GroupProfileBuilder = Widget Function(BuildContext context,
+    V2TimGroupInfo groupInfo, List<V2TimGroupMemberFullInfo?> groupMemberList);
+
 class TIMUIKitGroupProfile extends StatefulWidget {
-  /// 群ID
+  /// Group ID
   final String groupID;
   final Color? backGroundColor;
 
-  /// 用于自定义构造操作条目
+  /// [Deprecated:] The builder for custom bottom operation area.
+  /// [operationListBuilder] and [bottomOperationBuilder] merged into [builder], please use it instead.
   final Widget Function(BuildContext context, V2TimGroupInfo groupInfo,
       List<V2TimGroupMemberFullInfo?> groupMemberList)? bottomOperationBuilder;
 
-  /// 用于自定义构造底部操作条目
+  /// [Deprecated:] The builder for custom bottom operation area.
+  /// [operationListBuilder] and [bottomOperationBuilder] merged into [builder], please use it instead.
   final Widget Function(BuildContext context, V2TimGroupInfo groupInfo,
       List<V2TimGroupMemberFullInfo?> groupMemberList)? operationListBuilder;
 
-  const TIMUIKitGroupProfile({
-    Key? key,
-    required this.groupID,
-    this.backGroundColor,
-    this.bottomOperationBuilder,
-    this.operationListBuilder,
-  }) : super(key: key);
+  /// [If you tend to customize the profile page, use [profileWidgetBuilder] with [profileWidgetsOrder] as priority.]
+  /// The builder for each widgets in profile page,
+  /// you can customize some of it by pass your own widget into here.
+  /// Or, you can add your custom widget to the three custom widgets.
+  final GroupProfileWidgetBuilder? profileWidgetBuilder;
 
-  static Widget detailCard(
-      {required V2TimGroupInfo groupInfo,
-      required Function(String updateGroupName) updateGroupName}) {
-    return GroupProfileDetailCard(
-      groupInfo: groupInfo,
-      updateGroupName: updateGroupName,
-    );
-  }
+  /// [If you tend to customize the profile page, use [profileWidgetBuilder] with [profileWidgetsOrder] as priority.]
+  /// If the default widget order can not meet you needs,
+  /// you may change the order by this array with widget enum.
+  final List<GroupProfileWidgetEnum>? profileWidgetsOrder;
 
-  static Widget memberTile() {
-    return const GroupMemberTile();
-  }
+  /// The builder for the whole group profile page, you can use this to customize all the element here.
+  /// Mentioned: If you use this builder, [profileWidgetBuilder] and [profileWidgetsOrder] will no longer works.
+  final GroupProfileBuilder? builder;
 
-  static Widget groupNotification() {
-    return const GroupProfileNotification();
-  }
+  /// The life cycle hooks for group profile business logic.
+  /// You have better to implement the `didLeaveGroup` in it.
+  final GroupProfileLifeCycle? lifeCycle;
 
-  static Widget groupManage() {
-    return const GroupProfileGroupManage();
-  }
-
-  static Widget searchMessage(Function(V2TimConversation?) onJumpToSearch) {
-    return GroupProfileGroupSearch(onJumpToSearch: onJumpToSearch);
-  }
-
-  static Widget operationDivider() {
-    return const SizedBox(
-      height: 10,
-    );
-  }
-
-  static Widget groupType() {
-    return const GroupProfileType();
-  }
-
-  static Widget groupAddOpt() {
-    return const GroupProfileAddOpt();
-  }
-
-  static Widget nameCard() {
-    return GroupProfileNameCard();
-  }
-
-  static Widget messageDisturb() {
-    return const GroupMessageDisturb();
-  }
-
-  static Widget pinedConversation() {
-    return const GroupPinConversation();
-  }
+  const TIMUIKitGroupProfile(
+      {Key? key,
+      required this.groupID,
+      this.backGroundColor,
+      @Deprecated("[operationListBuilder] and [bottomOperationBuilder] merged into [builder], please use it instead")
+          this.bottomOperationBuilder,
+      @Deprecated("[operationListBuilder] and [bottomOperationBuilder] merged into [builder], please use it instead")
+          this.operationListBuilder,
+      this.builder,
+      this.profileWidgetBuilder,
+      this.profileWidgetsOrder,
+      this.lifeCycle})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _TIMUIKitGroupProfileState();
 }
 
-class _TIMUIKitGroupProfileState extends State<TIMUIKitGroupProfile> {
-  final TUIGroupProfileViewModel _model = TUIGroupProfileViewModel();
+class _TIMUIKitGroupProfileState extends TIMUIKitState<TIMUIKitGroupProfile> {
+  final TUIGroupProfileViewModel _model =
+      serviceLocator<TUIGroupProfileViewModel>();
 
   @override
   void initState() {
     super.initState();
     _model.loadData(widget.groupID);
-    _model.setGroupListener();
+    _model.lifeCycle = widget.lifeCycle;
+    // _model.setGroupListener();
   }
 
   @override
   void dispose() {
-    _model.clearData();
-    _model.dispose();
+    // _model.clearData();
+    // _model.dispose();
     // _model.removeGroupListener();
     super.dispose();
   }
 
-  Widget _defaultOperationBuilder() {
-    return Column(children: [
-      TIMUIKitGroupProfile.memberTile(),
-      TIMUIKitGroupProfile.operationDivider(),
-      TIMUIKitGroupProfile.groupNotification(),
-      TIMUIKitGroupProfile.groupManage(),
-      TIMUIKitGroupProfile.groupAddOpt(),
-      TIMUIKitGroupProfile.groupType(),
-      TIMUIKitGroupProfile.operationDivider(),
-      TIMUIKitGroupProfile.messageDisturb(),
-      TIMUIKitGroupProfile.pinedConversation(),
-      TIMUIKitGroupProfile.operationDivider(),
-      TIMUIKitGroupProfile.nameCard(),
-    ]);
-  }
+  final List<GroupProfileWidgetEnum> _defaultWidgetOrder = [
+    GroupProfileWidgetEnum.detailCard,
+    GroupProfileWidgetEnum.operationDivider,
+    GroupProfileWidgetEnum.memberListTile,
+    GroupProfileWidgetEnum.operationDivider,
+    GroupProfileWidgetEnum.searchMessage,
+    GroupProfileWidgetEnum.operationDivider,
+    GroupProfileWidgetEnum.groupNotice,
+    GroupProfileWidgetEnum.groupManage,
+    GroupProfileWidgetEnum.groupJoiningModeBar,
+    GroupProfileWidgetEnum.groupTypeBar,
+    GroupProfileWidgetEnum.operationDivider,
+    GroupProfileWidgetEnum.pinedConversationBar,
+    GroupProfileWidgetEnum.muteGroupMessageBar,
+    GroupProfileWidgetEnum.operationDivider,
+    GroupProfileWidgetEnum.nameCardBar,
+    GroupProfileWidgetEnum.operationDivider,
+    GroupProfileWidgetEnum.buttonArea
+  ];
 
   @override
-  Widget build(BuildContext context) {
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    final TUITheme theme = value.theme;
+
     return MultiProvider(
         providers: [
           ChangeNotifierProvider.value(value: _model),
-          ChangeNotifierProvider.value(
-              value: serviceLocator<TUIThemeViewModel>())
         ],
         builder: (context, w) {
           final groupInfo =
               Provider.of<TUIGroupProfileViewModel>(context).groupInfo;
           final memberList =
               Provider.of<TUIGroupProfileViewModel>(context).groupMemberList;
-          final theme = Provider.of<TUIThemeViewModel>(context).theme;
           if (groupInfo == null || memberList == null) {
             return Container();
           }
-          return SharedDataWidget(
-            model: _model,
-            child: SingleChildScrollView(
-              child: Container(
-                color: widget.backGroundColor ?? theme.weakBackgroundColor,
-                child: Column(
-                  children: [
-                    TIMUIKitGroupProfile.detailCard(
-                        groupInfo: groupInfo,
-                        updateGroupName: (groupName) async {
-                          final res = await _model.setGroupName(groupName);
-                          if (res != null && res.code != 0) {
-                            Fluttertoast.showToast(
-                              msg: res.desc,
-                              gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 1,
-                              textColor: Colors.white,
-                              backgroundColor: Colors.black,
-                            );
-                          }
-                        }),
-                    widget.operationListBuilder != null
-                        ? widget.operationListBuilder!(
-                            context, groupInfo, memberList)
-                        : _defaultOperationBuilder(),
-                    if (widget.bottomOperationBuilder != null)
-                      widget.bottomOperationBuilder!(
-                          context, groupInfo, memberList)
-                  ],
+
+          final isGroupOwner = groupInfo.role ==
+              GroupMemberRoleType.V2TIM_GROUP_MEMBER_ROLE_OWNER;
+          final isAdmin = groupInfo.role ==
+              GroupMemberRoleType.V2TIM_GROUP_MEMBER_ROLE_ADMIN;
+
+          Widget groupProfilePage({required Widget child}) {
+            return SharedDataWidget(
+              model: _model,
+              child: SingleChildScrollView(
+                child: Container(
+                  color: widget.backGroundColor ?? theme.weakBackgroundColor,
+                  child: child,
                 ),
               ),
-            ),
-          );
+            );
+          }
+
+          void toDefaultNoticePage() {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => GroupProfileNotificationPage(
+                        model: _model,
+                        notification: groupInfo.notification ?? "")));
+          }
+
+          void toDefaultManagePage() {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => GroupProfileGroupManagePage(
+                          model: _model,
+                        )));
+          }
+
+          List<Widget> _renderWidgetsWithOrder(
+              List<GroupProfileWidgetEnum> order) {
+            final GroupProfileWidgetBuilder? customBuilder =
+                widget.profileWidgetBuilder;
+            return order.map((element) {
+              switch (element) {
+                case GroupProfileWidgetEnum.detailCard:
+                  return (customBuilder?.detailCard != null
+                      ? customBuilder?.detailCard!(
+                          groupInfo, _model.setGroupName)
+                      : TIMUIKitGroupProfileWidget.detailCard(
+                          groupInfo: groupInfo))!;
+                case GroupProfileWidgetEnum.memberListTile:
+                  return (customBuilder?.memberListTile != null
+                      ? customBuilder?.memberListTile!(memberList)
+                      : TIMUIKitGroupProfileWidget.memberTile())!;
+                case GroupProfileWidgetEnum.groupNotice:
+                  return (customBuilder?.groupNotice != null
+                      ? customBuilder?.groupNotice!(
+                          groupInfo.notification ?? "",
+                          toDefaultNoticePage,
+                          _model.setGroupNotification)
+                      : TIMUIKitGroupProfileWidget.groupNotification())!;
+                case GroupProfileWidgetEnum.groupManage:
+                  if (isAdmin || isGroupOwner) {
+                    return (customBuilder?.groupManage != null
+                        ? customBuilder?.groupManage!(toDefaultManagePage)
+                        : TIMUIKitGroupProfileWidget.groupManage())!;
+                  } else {
+                    return Container();
+                  }
+                case GroupProfileWidgetEnum.searchMessage:
+                  return (customBuilder?.searchMessage != null
+                      ? customBuilder?.searchMessage!()
+                      : Text(TIM_t("你必须自定义search bar，并处理点击跳转")))!;
+                case GroupProfileWidgetEnum.operationDivider:
+                  return (customBuilder?.operationDivider != null
+                      ? customBuilder?.operationDivider!()
+                      : TIMUIKitGroupProfileWidget.operationDivider())!;
+                case GroupProfileWidgetEnum.groupTypeBar:
+                  return (customBuilder?.groupTypeBar != null
+                      ? customBuilder?.groupTypeBar!(groupInfo.groupType)
+                      : TIMUIKitGroupProfileWidget.groupType())!;
+                case GroupProfileWidgetEnum.groupJoiningModeBar:
+                  return (customBuilder?.groupJoiningModeBar != null
+                      ? customBuilder?.groupJoiningModeBar!(
+                          groupInfo.groupAddOpt ?? 1, _model.setGroupAddOpt)
+                      : TIMUIKitGroupProfileWidget.groupAddOpt())!;
+                case GroupProfileWidgetEnum.nameCardBar:
+                  return (customBuilder?.nameCardBar != null
+                      ? customBuilder?.nameCardBar!(
+                          _model.getSelfNameCard(), _model.setNameCard)
+                      : TIMUIKitGroupProfileWidget.nameCard())!;
+                case GroupProfileWidgetEnum.muteGroupMessageBar:
+                  return (customBuilder?.muteGroupMessageBar != null
+                      ? customBuilder?.muteGroupMessageBar!(
+                          _model.isDisturb ?? false, _model.setMessageDisturb)
+                      : TIMUIKitGroupProfileWidget.messageDisturb())!;
+                case GroupProfileWidgetEnum.pinedConversationBar:
+                  return (customBuilder?.pinedConversationBar != null
+                      ? customBuilder?.pinedConversationBar!(
+                          _model.conversation?.isPinned ?? false,
+                          _model.pinedConversation)
+                      : TIMUIKitGroupProfileWidget.pinedConversation())!;
+                case GroupProfileWidgetEnum.buttonArea:
+                  return (customBuilder?.buttonArea != null
+                      ? customBuilder?.buttonArea!(groupInfo, memberList)
+                      : GroupProfileButtonArea(groupInfo.groupID, _model))!;
+                case GroupProfileWidgetEnum.customBuilderOne:
+                  return (customBuilder?.customBuilderOne != null
+                      ? customBuilder?.customBuilderOne!(groupInfo, memberList)
+                      // Please define the corresponding custom widget in `profileWidgetBuilder` before using it here.
+                      : Text(TIM_t("如使用自定义区域，请在profileWidgetBuilder传入对应组件")))!;
+                case GroupProfileWidgetEnum.customBuilderTwo:
+                  return (customBuilder?.customBuilderTwo != null
+                      ? customBuilder?.customBuilderTwo!(groupInfo, memberList)
+                      // Please define the corresponding custom widget in `profileWidgetBuilder` before using it here.
+                      : Text(TIM_t("如使用自定义区域，请在profileWidgetBuilder传入对应组件")))!;
+                case GroupProfileWidgetEnum.customBuilderThree:
+                  return (customBuilder?.customBuilderThree != null
+                      ? customBuilder?.customBuilderThree!(
+                          groupInfo, memberList)
+                      // Please define the corresponding custom widget in `profileWidgetBuilder` before using it here.
+                      : Text(TIM_t("如使用自定义区域，请在profileWidgetBuilder传入对应组件")))!;
+                case GroupProfileWidgetEnum.customBuilderFour:
+                  return (customBuilder?.customBuilderFour != null
+                      ? customBuilder?.customBuilderFour!(groupInfo, memberList)
+                      // Please define the corresponding custom widget in `profileWidgetBuilder` before using it here.
+                      : Text(TIM_t("如使用自定义区域，请在profileWidgetBuilder传入对应组件")))!;
+                case GroupProfileWidgetEnum.customBuilderFive:
+                  return (customBuilder?.customBuilderFive != null
+                      ? customBuilder?.customBuilderFive!(groupInfo, memberList)
+                      // Please define the corresponding custom widget in `profileWidgetBuilder` before using it here.
+                      : Text(TIM_t("如使用自定义区域，请在profileWidgetBuilder传入对应组件")))!;
+                default:
+                  return Container();
+              }
+            }).toList();
+          }
+
+          if (widget.builder != null) {
+            return groupProfilePage(
+              child: widget.builder!(context, groupInfo, memberList),
+            );
+          } else if (widget.profileWidgetsOrder != null) {
+            return groupProfilePage(
+              child: Column(
+                children: [
+                  ..._renderWidgetsWithOrder(widget.profileWidgetsOrder!)
+                ],
+              ),
+            );
+          } else {
+            return groupProfilePage(
+                child: Column(
+              children: [..._renderWidgetsWithOrder(_defaultWidgetOrder)],
+            ));
+          }
         });
   }
 }

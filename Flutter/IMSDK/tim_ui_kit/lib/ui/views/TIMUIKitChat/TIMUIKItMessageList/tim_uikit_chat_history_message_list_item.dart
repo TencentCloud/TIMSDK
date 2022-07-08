@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, unused_local_variable
+// ignore_for_file: non_constant_identifier_names
 
 import 'dart:convert';
 
@@ -6,10 +6,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:super_tooltip/super_tooltip.dart';
-import 'package:tencent_im_sdk_plugin/enum/message_status.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_statelesswidget.dart';
 import 'package:tim_ui_kit/business_logic/view_models/ourschool_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
@@ -179,7 +180,7 @@ class TIMUIKitHistoryMessageListItem extends StatefulWidget {
   /// on message long press callback
   final Function(BuildContext context, V2TimMessage message)? onLongPress;
 
-  /// tool tips panel configuraion, long press message will show tool tips panel
+  /// tool tips panel configuration, long press message will show tool tips panel
   final ToolTipsConfig? toolTipsConfig;
 
   /// padding for each message item
@@ -233,17 +234,17 @@ class TIMUIKitHistoryMessageListItem extends StatefulWidget {
   State<StatefulWidget> createState() => _TIMUIKItHistoryMessageListItemState();
 }
 
-class TipsActionItem extends StatelessWidget {
+class TipsActionItem extends TIMUIKitStatelessWidget {
   final String label;
   final String icon;
   final String? package;
 
-  const TipsActionItem(
+  TipsActionItem(
       {Key? key, required this.label, required this.icon, this.package})
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     return Column(
       children: [
         Image.asset(
@@ -269,7 +270,7 @@ class TipsActionItem extends StatelessWidget {
 }
 
 class _TIMUIKItHistoryMessageListItemState
-    extends State<TIMUIKitHistoryMessageListItem>
+    extends TIMUIKitState<TIMUIKitHistoryMessageListItem>
     with TickerProviderStateMixin {
   SuperTooltip? tooltip;
   final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
@@ -278,7 +279,6 @@ class _TIMUIKItHistoryMessageListItemState
   final GlobalKey _key = GlobalKey();
 
   _buildLongPressTipItem() {
-    final I18nUtils ttBuild = I18nUtils(context);
     final isCanRevoke = isRevokable(widget.message.timestamp!);
     final shouldShowRevokeAction = isCanRevoke &&
         (widget.message.isSelf ?? false) &&
@@ -286,33 +286,33 @@ class _TIMUIKItHistoryMessageListItemState
     final tooltipsConfig = widget.toolTipsConfig;
     final defaultTipsList = [
       {
-        "label": ttBuild.imt("复制"),
+        "label": TIM_t("复制"),
         "id": "copyMessage",
         "icon": "images/copy_message.png"
       },
       {
-        "label": ttBuild.imt("转发"),
+        "label": TIM_t("转发"),
         "id": "forwardMessage",
         "icon": "images/forward_message.png"
       },
       {
-        "label": ttBuild.imt("多选"),
+        "label": TIM_t("多选"),
         "id": "multiSelect",
         "icon": "images/multi_message.png"
       },
       {
-        "label": ttBuild.imt("引用"),
+        "label": TIM_t("引用"),
         "id": "replyMessage",
         "icon": "images/reply_message.png"
       },
       {
-        "label": ttBuild.imt("删除"),
+        "label": TIM_t("删除"),
         "id": "delete",
         "icon": "images/delete_message.png"
       },
       if (shouldShowRevokeAction)
         {
-          "label": ttBuild.imt("撤回"),
+          "label": TIM_t("撤回"),
           "id": "revoke",
           "icon": "images/revoke_message.png"
         }
@@ -472,7 +472,6 @@ class _TIMUIKItHistoryMessageListItemState
   }
 
   _onTap(String operation) async {
-    final I18nUtils ttBuild = I18nUtils(context);
     final messageItem = widget.message;
     final msgID = messageItem.msgID as String;
     switch (operation) {
@@ -499,8 +498,10 @@ class _TIMUIKItHistoryMessageListItemState
         if (widget.message.elemType == MessageElemType.V2TIM_ELEM_TYPE_TEXT) {
           await Clipboard.setData(
               ClipboardData(text: widget.message.textElem?.text ?? ""));
-          Fluttertoast.showToast(
-              msg: ttBuild.imt("已复制"), gravity: ToastGravity.CENTER);
+          onTIMCallback(TIMCallback(
+              type: TIMCallbackType.INFO,
+              infoRecommendText: TIM_t("已复制"),
+              infoCode: 6660408));
         }
         break;
       case "replyMessage":
@@ -512,8 +513,10 @@ class _TIMUIKItHistoryMessageListItemState
         }
         break;
       default:
-        Fluttertoast.showToast(
-            msg: ttBuild.imt("暂未实现"), gravity: ToastGravity.CENTER);
+        onTIMCallback(TIMCallback(
+            type: TIMCallbackType.INFO,
+            infoRecommendText: TIM_t("暂未实现"),
+            infoCode: 6660409));
     }
 
     tooltip!.close();
@@ -537,7 +540,6 @@ class _TIMUIKItHistoryMessageListItemState
   }
 
   Widget _messageItemBuilder(V2TimMessage messageItem) {
-    final I18nUtils ttBuild = I18nUtils(context);
     final msgType = messageItem.elemType;
     final isShowJump = (model.jumpMsgID == messageItem.msgID) &&
         (messageItem.msgID?.isNotEmpty ?? false);
@@ -614,7 +616,8 @@ class _TIMUIKItHistoryMessageListItemState
           )!;
         }
         return TIMUIKitTextElem(
-          text: messageItem.textElem!.text ?? "",
+          chatModel: model,
+          message: messageItem,
           isFromSelf: messageItem.isSelf ?? false,
           clearJump: () => model.jumpMsgID = "",
           isShowJump: isShowJump,
@@ -656,7 +659,7 @@ class _TIMUIKItHistoryMessageListItemState
             clearJump,
           )!;
         }
-        return Text(ttBuild.imt("[群系统消息]"));
+        return Text(TIM_t("[群系统消息]"));
       case MessageElemType.V2TIM_ELEM_TYPE_IMAGE:
         if (messageItemBuilder?.imageMessageItemBuilder != null) {
           return messageItemBuilder!.imageMessageItemBuilder!(
@@ -669,6 +672,7 @@ class _TIMUIKItHistoryMessageListItemState
           clearJump: () => model.jumpMsgID = "",
           isShowJump: isShowJump,
           message: messageItem,
+          key: Key("${messageItem.seq}_${messageItem.timestamp}"),
         );
       case MessageElemType.V2TIM_ELEM_TYPE_VIDEO:
         if (messageItemBuilder?.videoMessageItemBuilder != null) {
@@ -691,7 +695,7 @@ class _TIMUIKItHistoryMessageListItemState
             clearJump,
           )!;
         }
-        return Text(ttBuild.imt("[位置]"));
+        return Text(TIM_t("[位置]"));
       case MessageElemType.V2TIM_ELEM_TYPE_MERGER:
         if (messageItemBuilder?.mergerMessageItemBuilder != null) {
           return messageItemBuilder!.mergerMessageItemBuilder!(
@@ -705,7 +709,7 @@ class _TIMUIKItHistoryMessageListItemState
             messageID: messageItem.msgID ?? "",
             isSelf: messageItem.isSelf ?? false);
       default:
-        return Text(ttBuild.imt("[未知消息]"));
+        return Text(TIM_t("[未知消息]"));
     }
   }
 
@@ -726,17 +730,16 @@ class _TIMUIKItHistoryMessageListItemState
   }
 
   Widget _selfRevokeEditMessageBuilder(theme, model) {
-    final I18nUtils ttBuild = I18nUtils(context);
     return Container(
         margin: const EdgeInsets.symmetric(vertical: 20),
         alignment: Alignment.center,
         child: Text.rich(TextSpan(children: [
           TextSpan(
-            text: ttBuild.imt("您撤回了一条消息，"),
+            text: TIM_t("您撤回了一条消息，"),
             style: TextStyle(color: theme.weakTextColor),
           ),
           TextSpan(
-            text: ttBuild.imt("重新编辑"),
+            text: TIM_t("重新编辑"),
             recognizer: TapGestureRecognizer()
               ..onTap = () {
                 model.editRevokedMsg = widget.message.textElem?.text ?? "";
@@ -747,17 +750,13 @@ class _TIMUIKItHistoryMessageListItemState
   }
 
   Widget _revokedMessageBuilder(theme, String option2) {
-    final I18nUtils ttBuild = I18nUtils(context);
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 20),
-      alignment: Alignment.center,
-      child: Text(
-        ttBuild.imt_para("{{option2}}撤回了一条消息", "$option2撤回了一条消息")(
-          option2: option2,
-        ),
-        style: TextStyle(color: theme.weakTextColor, fontSize: 12),
-      ),
-    );
+        margin: const EdgeInsets.symmetric(vertical: 20),
+        alignment: Alignment.center,
+        child: Text(
+          TIM_t_para("{{option2}}撤回了一条消息", "$option2撤回了一条消息")(option2: option2),
+          style: TextStyle(color: theme.weakTextColor, fontSize: 12),
+        ));
   }
 
   Widget _timeDividerBuilder(theme, int timeStamp) {
@@ -765,7 +764,7 @@ class _TIMUIKItHistoryMessageListItemState
       alignment: Alignment.center,
       margin: const EdgeInsets.symmetric(vertical: 20),
       child: Text(
-        TimeAgo(context).getTimeForMessage(timeStamp),
+        TimeAgo().getTimeForMessage(timeStamp),
         style: widget.themeData?.timelineTextStyle ??
             TextStyle(fontSize: 12, color: theme.weakTextColor),
       ),
@@ -802,31 +801,26 @@ class _TIMUIKItHistoryMessageListItemState
 
   Widget _getMessageItemBuilder(V2TimMessage message, int? messageStatues) {
     final messageBuilder = _messageItemBuilder;
-    // Click when blocking sending
-    final uikitMessageBuilder = AbsorbPointer(
-        absorbing: messageStatues == MessageStatus.V2TIM_MSG_STATUS_SENDING,
-        child: _messageItemBuilder(widget.message));
 
     return messageBuilder(widget.message);
   }
 
   // 弹出对话框
   Future<bool?> showResendMsgFailDialg(BuildContext context) {
-    final I18nUtils ttBuild = I18nUtils(context);
     return showDialog<bool>(
       context: context,
       builder: (context) {
         return CupertinoAlertDialog(
-          title: Text(ttBuild.imt("您确定要重发这条消息么？")),
+          title: Text(TIM_t("您确定要重发这条消息么？")),
           actions: [
             CupertinoDialogAction(
-              child: Text(ttBuild.imt("确定")),
+              child: Text(TIM_t("确定")),
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
             ),
             CupertinoDialogAction(
-              child: Text(ttBuild.imt("取消")),
+              child: Text(TIM_t("取消")),
               isDestructiveAction: true,
               onPressed: () {
                 Navigator.of(context).pop();
@@ -851,13 +845,15 @@ class _TIMUIKItHistoryMessageListItemState
   @override
   void dispose() {
     super.dispose();
-    tooltip?.close();
+    if (tooltip?.isOpen ?? false) {
+      tooltip?.close();
+    }
   }
 
   @override
-  Widget build(BuildContext context) {
-    final I18nUtils ttBuild = I18nUtils(context);
-    final theme = Provider.of<TUIThemeViewModel>(context).theme;
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    final TUITheme theme = value.theme;
+
     final message = widget.message;
     final msgType = message.elemType;
     final isSelf = message.isSelf ?? false;
@@ -910,7 +906,7 @@ class _TIMUIKItHistoryMessageListItemState
       final OurSchoolChatProvider ourSchoolChatProvider =
           Provider.of<OurSchoolChatProvider>(context);
       final displayName = isSelf
-          ? ttBuild.imt("您")
+          ? TIM_t("您")
           : ourSchoolChatProvider.getMemberByIMId(message.sender)?.name ??
               message.nickName ??
               message.sender;
@@ -1044,9 +1040,7 @@ class _TIMUIKItHistoryMessageListItemState
                                 padding: const EdgeInsets.only(bottom: 3),
                                 margin: const EdgeInsets.only(right: 6),
                                 child: Text(
-                                  isPeerRead
-                                      ? ttBuild.imt("已读")
-                                      : ttBuild.imt("未读"),
+                                  isPeerRead ? TIM_t("已读") : TIM_t("未读"),
                                   style: TextStyle(
                                       color: theme.weakTextColor, fontSize: 12),
                                 ),
@@ -1061,7 +1055,6 @@ class _TIMUIKItHistoryMessageListItemState
                                 messageItem: widget.message,
                                 onTapAvatar: widget.onTapForOthersPortrait,
                                 messageReadReceipt: messageReadReceipt,
-                                theme: theme,
                               ),
                             if (widget.showMessageSending &&
                                 isSelf &&

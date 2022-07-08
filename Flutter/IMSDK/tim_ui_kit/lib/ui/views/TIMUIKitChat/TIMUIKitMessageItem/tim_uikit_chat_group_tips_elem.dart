@@ -1,28 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_tips_elem.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_statelesswidget.dart';
+import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/utils/message.dart';
+import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
-class TIMUIKitGroupTipsElem extends StatelessWidget {
+class TIMUIKitGroupTipsElem extends TIMUIKitStatelessWidget {
   final V2TimGroupTipsElem groupTipsElem;
 
-  const TIMUIKitGroupTipsElem({Key? key, required this.groupTipsElem})
+  TIMUIKitGroupTipsElem({Key? key, required this.groupTipsElem})
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final groupTipsAbstactText =
-        MessageUtils.groupTipsMessageAbstract(groupTipsElem, context);
-    final theme = Provider.of<TUIThemeViewModel>(context).theme;
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    final TUITheme theme = value.theme;
+    final groupTipsAbstractText =
+        MessageUtils.groupTipsMessageAbstract(groupTipsElem);
 
     return MessageUtils.wrapMessageTips(
-        Container(
-          alignment: Alignment.center,
-          child: Text(
-            groupTipsAbstactText,
-            style: const TextStyle(fontSize: 12),
-          ),
+        Text(
+          groupTipsAbstractText,
+          softWrap: true,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+              color: hexToColor("888888")),
         ),
         theme);
   }

@@ -2,22 +2,21 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tencent_im_sdk_plugin/enum/message_elem_type.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_statelesswidget.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
-import 'package:tim_ui_kit/data_services/services_locatar.dart';
+
 import 'package:tim_ui_kit/ui/utils/color.dart';
+import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitMessageItem/main.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitMessageItem/tim_uikit_chat_face_elem.dart';
 import 'package:tim_ui_kit/ui/widgets/avatar.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
-import '../../i18n/i18n_utils.dart';
-
-class MergerMessageScreen extends StatelessWidget {
+class MergerMessageScreen extends TIMUIKitStatelessWidget {
   final List<V2TimMessage> messageList;
 
-  const MergerMessageScreen({Key? key, required this.messageList})
-      : super(key: key);
+  MergerMessageScreen({Key? key, required this.messageList}) : super(key: key);
 
   bool isReplyMessage(V2TimMessage message) {
     final hasCustomData =
@@ -36,13 +35,13 @@ class MergerMessageScreen extends StatelessWidget {
     return hasCustomData;
   }
 
-  Widget _getMsgItem(V2TimMessage message, I18nUtils ttBuild) {
+  Widget _getMsgItem(V2TimMessage message) {
     final type = message.elemType;
     final isFromSelf = message.isSelf ?? false;
 
     switch (type) {
       case MessageElemType.V2TIM_ELEM_TYPE_CUSTOM:
-        return Text(ttBuild.imt("[自定义]"));
+        return Text(TIM_t("[自定义]"));
       case MessageElemType.V2TIM_ELEM_TYPE_SOUND:
         return TIMUIKitSoundElem(
             soundElem: message.soundElem!,
@@ -69,18 +68,22 @@ class MergerMessageScreen extends StatelessWidget {
             fileElem: message.fileElem,
             isSelf: isFromSelf);
       case MessageElemType.V2TIM_ELEM_TYPE_IMAGE:
-        return TIMUIKitImageElem(message: message, isFrom: "merger");
+        return TIMUIKitImageElem(
+          message: message,
+          isFrom: "merger",
+          key: Key("${message.seq}_${message.timestamp}"),
+        );
       case MessageElemType.V2TIM_ELEM_TYPE_VIDEO:
         return TIMUIKitVideoElem(message, isFrom: "merger");
       case MessageElemType.V2TIM_ELEM_TYPE_LOCATION:
-        return Text(ttBuild.imt("[位置]"));
+        return Text(TIM_t("[位置]"));
       case MessageElemType.V2TIM_ELEM_TYPE_MERGER:
         return TIMUIKitMergerElem(
             mergerElem: message.mergerElem!,
             isSelf: isFromSelf,
             messageID: message.msgID!);
       default:
-        return Text(ttBuild.imt("未知消息"));
+        return Text(TIM_t("未知消息"));
     }
   }
 
@@ -94,7 +97,6 @@ class MergerMessageScreen extends StatelessWidget {
     final faceUrl = message.faceUrl ?? "";
     final showName = message.nickName ?? message.userID ?? "";
     final theme = Provider.of<TUIThemeViewModel>(context).theme;
-    final I18nUtils ttBuild = I18nUtils(context);
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
       child: Row(
@@ -118,7 +120,7 @@ class MergerMessageScreen extends StatelessWidget {
               ),
               ConstrainedBox(
                 constraints: BoxConstraints(maxWidth: getMaxWidth(context)),
-                child: _getMsgItem(message, ttBuild),
+                child: _getMsgItem(message),
               )
             ],
           )
@@ -128,41 +130,37 @@ class MergerMessageScreen extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final I18nUtils ttBuild = I18nUtils(context);
-    return ChangeNotifierProvider.value(
-        value: serviceLocator<TUIThemeViewModel>(),
-        child: Consumer<TUIThemeViewModel>(builder: (context, value, child) {
-          final theme = value.theme;
-          return Scaffold(
-            appBar: AppBar(
-                title: Text(
-                  ttBuild.imt("聊天记录"),
-                  style: const TextStyle(color: Colors.white, fontSize: 17),
-                ),
-                shadowColor: theme.weakDividerColor,
-                flexibleSpace: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: [
-                      theme.lightPrimaryColor ?? CommonColor.lightPrimaryColor,
-                      theme.primaryColor ?? CommonColor.primaryColor
-                    ]),
-                  ),
-                ),
-                iconTheme: const IconThemeData(
-                  color: Colors.white,
-                )),
-            body: Padding(
-              padding: const EdgeInsets.all(16),
-              child: ListView.builder(
-                itemCount: messageList.length,
-                itemBuilder: (context, index) {
-                  final messageItem = messageList[index];
-                  return _itemBuilder(messageItem, context);
-                },
-              ),
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    final TUITheme theme = value.theme;
+
+    return Scaffold(
+      appBar: AppBar(
+          title: Text(
+            TIM_t("聊天记录"),
+            style: const TextStyle(color: Colors.white, fontSize: 17),
+          ),
+          shadowColor: theme.weakDividerColor,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [
+                theme.lightPrimaryColor ?? CommonColor.lightPrimaryColor,
+                theme.primaryColor ?? CommonColor.primaryColor
+              ]),
             ),
-          );
-        }));
+          ),
+          iconTheme: const IconThemeData(
+            color: Colors.white,
+          )),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: ListView.builder(
+          itemCount: messageList.length,
+          itemBuilder: (context, index) {
+            final messageItem = messageList[index];
+            return _itemBuilder(messageItem, context);
+          },
+        ),
+      ),
+    );
   }
 }

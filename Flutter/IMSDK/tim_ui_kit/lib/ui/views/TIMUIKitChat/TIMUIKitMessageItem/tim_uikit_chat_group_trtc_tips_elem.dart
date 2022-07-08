@@ -1,16 +1,20 @@
-// ignore_for_file: unrelated_type_equality_checks, unused_local_variable, unused_import
+// ignore_for_file: unrelated_type_equality_checks, unused_import
 
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_custom_elem.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/group/group_services.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/message.dart';
+
 import 'package:tim_ui_kit/ui/utils/shared_theme.dart';
+
+import '../../../utils/color.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
 class TIMUIKitGroupTrtcTipsElem extends StatefulWidget {
   final V2TimMessage? customMessage;
@@ -69,7 +73,8 @@ class TIMUIKitGroupTrtcTipsElem extends StatefulWidget {
   State<StatefulWidget> createState() => _TIMUIKitGroupTrtcTipsElemState();
 }
 
-class _TIMUIKitGroupTrtcTipsElemState extends State<TIMUIKitGroupTrtcTipsElem> {
+class _TIMUIKitGroupTrtcTipsElemState
+    extends TIMUIKitState<TIMUIKitGroupTrtcTipsElem> {
   final GroupServices groupServices = serviceLocator<GroupServices>();
   // CustomMessage最终展示的内容
   String customMessageShowText = "[自定义]";
@@ -227,29 +232,28 @@ class _TIMUIKitGroupTrtcTipsElemState extends State<TIMUIKitGroupTrtcTipsElem> {
   }
 
   Widget _callElemBuilder(BuildContext context) {
-    final I18nUtils ttBuild = I18nUtils(context);
     final customElem = widget.customMessage?.customElem;
     final callingMessage = TIMUIKitGroupTrtcTipsElem.getCallMessage(customElem);
-
     if (callingMessage != null) {
       String showText = "[自定义]";
       // 如果是结束消息
       final isCallEnd = isCallEndExist(callingMessage);
 
-      final isVoiceCall = callingMessage.callType == 1;
       String? option2 = "";
       if (isCallEnd) {
         option2 =
             TIMUIKitGroupTrtcTipsElem.getShowTime(callingMessage.callEnd!);
       }
       showText = isCallEnd
-          ? ttBuild.imt_para("通话时间：{{option2}}", "通话时间：$option2")(
-              option2: option2)
+          ? TIM_t_para("通话时间：{{option2}}", "通话时间：$option2")(option2: option2)
           : customMessageShowText;
 
       return Text(
         showText,
-        style: const TextStyle(fontSize: 12),
+        style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w400,
+            color: hexToColor("888888")),
         textAlign: TextAlign.center,
         softWrap: true,
       );
@@ -259,9 +263,8 @@ class _TIMUIKitGroupTrtcTipsElemState extends State<TIMUIKitGroupTrtcTipsElem> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    // final theme = SharedThemeWidget.of(context)?.theme;
-    final theme = Provider.of<TUIThemeViewModel>(context).theme;
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    final TUITheme theme = value.theme;
 
     return MessageUtils.wrapMessageTips(_callElemBuilder(context), theme);
   }

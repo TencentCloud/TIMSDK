@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_statelesswidget.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
-class CenterPlayButton extends StatelessWidget {
-  const CenterPlayButton({
+class CenterPlayButton extends TIMUIKitStatelessWidget {
+  CenterPlayButton({
     Key? key,
     required this.show,
     required this.isPlaying,
@@ -13,7 +15,7 @@ class CenterPlayButton extends StatelessWidget {
   final VoidCallback? onPressed;
 
   @override
-  Widget build(BuildContext context) {
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     return Container(
       color: Colors.transparent,
       child: Center(

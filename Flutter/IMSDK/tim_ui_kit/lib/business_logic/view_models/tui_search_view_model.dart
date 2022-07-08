@@ -2,18 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_info_result.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_search_param.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_search_param.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_message_search_param.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_message_search_result_item.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:tim_ui_kit/data_services/conversation/conversation_services.dart';
 import 'package:tim_ui_kit/data_services/friendShip/friendship_services.dart';
 import 'package:tim_ui_kit/data_services/group/group_services.dart';
 import 'package:tim_ui_kit/data_services/message/message_services.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
-
-import '../../tim_ui_kit.dart';
+import 'package:tim_ui_kit/tim_ui_kit.dart';
 
 enum KeywordListMatchType {
   V2TIM_KEYWORD_LIST_MATCH_TYPE_OR,

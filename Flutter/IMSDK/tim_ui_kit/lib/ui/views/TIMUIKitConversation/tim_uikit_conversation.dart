@@ -2,15 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_conversation.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_statelesswidget.dart';
+import 'package:tim_ui_kit/business_logic/life_cycle/conversation_life_cycle.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_conversation_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/ui/controller/tim_uikit_conversation_controller.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitConversation/tim_uikit_conversation_item.dart';
-import 'package:tim_ui_kit/i18n/i18n_utils.dart';
 import 'package:tim_ui_kit/ui/widgets/customize_ball_pulse_header.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
 
 typedef ConversationItemBuilder = Widget Function(
     V2TimConversation conversationItem);
@@ -40,12 +43,15 @@ class TIMUIKitConversation extends StatefulWidget {
   /// the builder for the second line in each conservation item, usually shows the summary of the last message
   final LastMessageBuilder? lastMessageBuilder;
 
+  final ConversationLifeCycle? lifeCycle;
+
   final String Function(V2TimConversation? conversation)? faceUrlBuilder;
 
   final String Function(V2TimConversation? conversation)? nickNameBuilder;
 
   const TIMUIKitConversation({
     Key? key,
+    this.lifeCycle,
     this.onTapItem,
     this.controller,
     this.itembuilder,
@@ -63,8 +69,8 @@ class TIMUIKitConversation extends StatefulWidget {
   }
 }
 
-class ConversationItemSlidablePanel extends StatelessWidget {
-  const ConversationItemSlidablePanel({
+class ConversationItemSlidablePanel extends TIMUIKitStatelessWidget {
+  ConversationItemSlidablePanel({
     Key? key,
     this.flex = 1,
     this.backgroundColor = Colors.white,
@@ -105,7 +111,7 @@ class ConversationItemSlidablePanel extends StatelessWidget {
   final String? label;
 
   @override
-  Widget build(BuildContext context) {
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     return SlidableAction(
       onPressed: onPressed,
       flex: flex,
@@ -118,7 +124,7 @@ class ConversationItemSlidablePanel extends StatelessWidget {
   }
 }
 
-class _TIMUIKitConversationState extends State<TIMUIKitConversation> {
+class _TIMUIKitConversationState extends TIMUIKitState<TIMUIKitConversation> {
   late TUIConversationViewModel model;
   late TIMUIKitConversationController _timuiKitConversationController;
   final TUIThemeViewModel _themeViewModel = serviceLocator<TUIThemeViewModel>();
@@ -163,7 +169,6 @@ class _TIMUIKitConversationState extends State<TIMUIKitConversation> {
     V2TimConversation conversationItem,
   ) {
     final theme = _themeViewModel.theme;
-    final I18nUtils ttBuild = I18nUtils(context);
     return [
       ConversationItemSlidablePanel(
         onPressed: (context) {
@@ -171,7 +176,7 @@ class _TIMUIKitConversationState extends State<TIMUIKitConversation> {
         },
         backgroundColor: theme.primaryColor ?? CommonColor.primaryColor,
         foregroundColor: Colors.white,
-        label: ttBuild.imt("清除聊天"),
+        label: TIM_t("清除聊天"),
         spacing: 0,
         autoClose: true,
       ),
@@ -181,9 +186,7 @@ class _TIMUIKitConversationState extends State<TIMUIKitConversation> {
         },
         backgroundColor: theme.infoColor ?? CommonColor.infoColor,
         foregroundColor: Colors.white,
-        label: conversationItem.isPinned!
-            ? ttBuild.imt("取消置顶")
-            : ttBuild.imt("置顶"),
+        label: conversationItem.isPinned! ? TIM_t("取消置顶") : TIM_t("置顶"),
       ),
       ConversationItemSlidablePanel(
         onPressed: (context) {
@@ -191,7 +194,7 @@ class _TIMUIKitConversationState extends State<TIMUIKitConversation> {
         },
         backgroundColor: Colors.red,
         foregroundColor: Colors.white,
-        label: ttBuild.imt("删除"),
+        label: TIM_t("删除"),
       )
     ];
   }
@@ -203,11 +206,11 @@ class _TIMUIKitConversationState extends State<TIMUIKitConversation> {
   @override
   void dispose() {
     super.dispose();
-    model.dispose();
+    // model.dispose();
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider.value(value: model),
@@ -215,7 +218,7 @@ class _TIMUIKitConversationState extends State<TIMUIKitConversation> {
         ],
         builder: (BuildContext context, Widget? w) {
           final _model = Provider.of<TUIConversationViewModel>(context);
-          // final theme = _themeViewModel.theme;
+          _model.lifeCycle = widget.lifeCycle;
           List<V2TimConversation?> filteredConversationList =
               _model.conversationList;
           bool haveMoreData = _model.haveMoreData;

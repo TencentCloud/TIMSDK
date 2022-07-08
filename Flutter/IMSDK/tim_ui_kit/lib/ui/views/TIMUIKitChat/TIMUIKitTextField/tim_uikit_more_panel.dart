@@ -1,4 +1,4 @@
-// ignore_for_file: unused_field, avoid_print, unused_local_variable, unused_import
+// ignore_for_file: unused_field, avoid_print, unused_import
 
 import 'dart:io';
 
@@ -9,6 +9,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_self_info_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
@@ -17,11 +19,13 @@ import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/utils/message.dart';
 import 'package:tim_ui_kit/ui/utils/permission.dart';
 import 'package:tim_ui_kit/ui/utils/platform.dart';
+import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
+import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitTextField/intl_camer_picker.dart';
 import 'package:tim_ui_kit/ui/widgets/toast.dart';
 import 'package:video_thumbnail/video_thumbnail.dart' as video_thumbnail;
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 import 'package:wechat_camera_picker/wechat_camera_picker.dart';
-import 'package:tim_ui_kit/i18n/i18n_utils.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
 import 'package:tim_ui_kit/ui/utils/shared_theme.dart';
 
@@ -70,19 +74,18 @@ class MorePanel extends StatefulWidget {
   State<StatefulWidget> createState() => _MorePanelState();
 }
 
-class _MorePanelState extends State<MorePanel> {
+class _MorePanelState extends TIMUIKitState<MorePanel> {
   final ImagePicker _picker = ImagePicker();
   final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
   final TUISelfInfoViewModel _selfInfoViewModel =
       serviceLocator<TUISelfInfoViewModel>();
 
   List<MorePanelItem> itemList() {
-    final I18nUtils ttBuild = I18nUtils(context);
     final config = widget.morePanelConfig ?? MorePanelConfig();
     return [
       MorePanelItem(
           id: "screen",
-          title: ttBuild.imt("拍摄"),
+          title: TIM_t("拍摄"),
           onTap: (c) {
             _onFeatureTap("screen", c);
           },
@@ -102,7 +105,7 @@ class _MorePanelState extends State<MorePanel> {
           )),
       MorePanelItem(
           id: "photo",
-          title: ttBuild.imt("照片"),
+          title: TIM_t("照片"),
           onTap: (c) {
             _onFeatureTap("photo", c);
           },
@@ -120,26 +123,26 @@ class _MorePanelState extends State<MorePanel> {
               width: 64,
             ),
           )),
-      // MorePanelItem(
-      //     id: "file",
-      //     title: ttBuild.imt("文件"),
-      //     onTap: (c) {
-      //       _onFeatureTap("file", c);
-      //     },
-      //     icon: Container(
-      //       height: 64,
-      //       width: 64,
-      //       margin: const EdgeInsets.only(bottom: 4),
-      //       decoration: const BoxDecoration(
-      //           color: Colors.white,
-      //           borderRadius: BorderRadius.all(Radius.circular(5))),
-      //       child: SvgPicture.asset(
-      //         "images/file.svg",
-      //         package: 'tim_ui_kit',
-      //         height: 64,
-      //         width: 64,
-      //       ),
-      //     )),
+      MorePanelItem(
+          id: "file",
+          title: TIM_t("文件"),
+          onTap: (c) {
+            _onFeatureTap("file", c);
+          },
+          icon: Container(
+            height: 64,
+            width: 64,
+            margin: const EdgeInsets.only(bottom: 4),
+            decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(5))),
+            child: SvgPicture.asset(
+              "images/file.svg",
+              package: 'tim_ui_kit',
+              height: 64,
+              width: 64,
+            ),
+          )),
       if (config.extraAction != null) ...?config.extraAction,
     ].where((element) {
       if (element.id == "screen") {
@@ -158,11 +161,13 @@ class _MorePanelState extends State<MorePanel> {
   }
 
   _sendVideoMessage(AssetEntity asset) async {
-    final I18nUtils ttBuild = I18nUtils(context);
     final originFile = await asset.originFile;
     final size = await originFile!.length();
     if (size >= 104857600) {
-      Toast.showToast(ToastType.fail, ttBuild.imt("发送失败,视频不能大于100MB"), context);
+      onTIMCallback(TIMCallback(
+          type: TIMCallbackType.INFO,
+          infoRecommendText: TIM_t("发送失败,视频不能大于100MB"),
+          infoCode: 6660405));
       return;
     }
 
@@ -229,7 +234,6 @@ class _MorePanelState extends State<MorePanel> {
   }
 
   _sendImageFromCamera() async {
-    final I18nUtils ttBuild = I18nUtils(context);
     try {
       if (!await Permissions.checkPermission(
           context, Permission.camera.value)) {
@@ -241,7 +245,9 @@ class _MorePanelState extends State<MorePanel> {
       // If here shows in English, not your language, you can add 'Localized resources can be mixed' with TRUE in "ios => Runner => info.plist"
       // final imageFile = await _picker.pickImage(source: ImageSource.camera);
       final pickedFile = await CameraPicker.pickFromCamera(context,
-          pickerConfig: const CameraPickerConfig(enableRecording: true));
+          pickerConfig: CameraPickerConfig(
+              enableRecording: true,
+              textDelegate: IntlCameraPickerTextDelegate()));
       final originFile = await pickedFile?.originFile;
       if (originFile != null) {
         final type = pickedFile!.type;
@@ -258,7 +264,7 @@ class _MorePanelState extends State<MorePanel> {
           _sendVideoMessage(pickedFile);
         }
       } else {
-        // Toast.showToast(ToastType.fail, ttBuild.imt("图片不能为空"), context);
+        // Toast.showToast(ToastType.fail, TIM_t("图片不能为空"), context);
       }
     } catch (error) {
       print("err: $error");
@@ -266,7 +272,6 @@ class _MorePanelState extends State<MorePanel> {
   }
 
   _sendFile() async {
-    final I18nUtils ttBuild = I18nUtils(context);
     try {
       // if (!await Permissions.checkPermission(
       //     context, Permission.storage.value)) {
@@ -278,8 +283,7 @@ class _MorePanelState extends State<MorePanel> {
           widget.conversationType == 1 ? ConvType.c2c : ConvType.group;
       if (result != null) {
         String? option2 = result.files.single.path ?? "";
-        print(ttBuild.imt_para("选择成功{{option2}}", "选择成功$option2")(
-            option2: option2));
+        print(TIM_t_para("选择成功{{option2}}", "选择成功$option2")(option2: option2));
         File file = File(result.files.single.path!);
         int size = file.lengthSync();
         String savePtah = file.path;
@@ -314,9 +318,9 @@ class _MorePanelState extends State<MorePanel> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    // final theme = SharedThemeWidget.of(context)?.theme;
-    final theme = Provider.of<TUIThemeViewModel>(context).theme;
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    final TUITheme theme = value.theme;
+
     final screenWidth = MediaQuery.of(context).size.width;
     return Container(
       height: 248,

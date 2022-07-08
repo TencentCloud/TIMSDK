@@ -49,15 +49,18 @@ dependencies:
   connectivity_plus: ^2.2.0
   i18n: any
 #  tim_ui_kit: ^0.0.9
-  tim_ui_kit: ^0.1.0-bugfix
-  tim_ui_kit_calling_plugin: ^0.2.4
+  tim_ui_kit: ^0.1.1
+  tim_ui_kit_calling_plugin: ^0.3.0
+#  tim_ui_kit_calling_plugin:
+#    path:
+#      /Users/wangrunlin/Documents/GitHub/im-flutter-uikit-calling
   tim_ui_kit_sticker_plugin: ^0.0.5
   # tim_ui_kit_sticker_plugin:
   #   path: ../tim_ui_kit_sticker_plugin
   super_tooltip: ^1.0.1
   flutter_svg: ^1.0.3
 #  tim_ui_kit_lbs_plugin: ^1.1.2
-  tim_ui_kit_push_plugin: ^0.1.14
+  tim_ui_kit_push_plugin: ^0.2.5
 #  tim_ui_kit_push_plugin:
 #    path: /Users/wangrunlin/Documents/GitHub/im-flutter-uikit-push
   uni_links: ^0.5.1
@@ -65,8 +68,10 @@ dependencies:
   device_info_plus: ^3.2.3
   firebase_core: 1.12.0
   flutter_launcher_icons: ^0.9.2
+  loading_animation_widget: ^1.2.0+2
 #  tim_ui_kit_lbs_plugin:
 #    path: /Users/owennwang/Documents/GitHub/im-flutter-uikit-lbs
+
 dev_dependencies:
   fast_i18n: ^5.12.0
   build_runner: any
@@ -133,3 +138,6 @@ flutter_icons:
   android: true
   ios: true
   image_path: "assets/im_new_logo.jpg"
+
+flutter_native_splash:
+  background_image: "assets/splash_new.png"

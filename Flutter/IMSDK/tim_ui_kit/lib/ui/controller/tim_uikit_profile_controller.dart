@@ -1,41 +1,45 @@
 import 'package:flutter/cupertino.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_operation_result.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_profile_view_model.dart';
 import 'package:tim_ui_kit/ui/widgets/text_input_bottom_sheet.dart';
 
 class TIMUIKitProfileController {
   final TUIProfileViewModel model = TUIProfileViewModel();
 
+  /// Remove a user from friend or contact
   Future<V2TimFriendOperationResult?> deleteFriend(String userID) {
     return model.deleteFriend(userID);
   }
 
-  /// 会话置顶
+  /// pin the conversation to the top
   pinedConversation(bool isPined, String convID) {
     model.pinedConversation(isPined, convID);
   }
 
-  /// 添加好友至黑名单
+  /// add a user to block list
   addUserToBlackList(bool shouldAdd, String userID) {
     model.addToBlackList(shouldAdd, userID);
   }
 
-  /// 更改好友验证方式, `0`为ttBuild.imt("同意任何用户添加好友")、`1`为ttBuild.imt("需要验证")、`2`为ttBuild.imt("拒绝任何人加好友").
+  /// Change the friend adding request verification method,
+  /// 0 represents "Accept all friend request",
+  /// 1 represents "Require approval for friend requests",
+  /// 2 represents "reject all friend requests".
   changeFriendVerificationMethod(int allowType) {
     model.changeFriendVerificationMethod(allowType);
   }
 
-  /// 更新好友备注,
+  /// update the remarks for other users,
   Future<V2TimCallback> updateRemarks(String userID, String remark) {
     return model.updateRemarks(userID, remark);
   }
 
-  /// 设置消息免打扰
+  /// set the message from a specific user as not disturb, mute notification
   setMessageDisturb(String userID, bool isDisturb) {
     model.setMessageDisturb(userID, isDisturb);
   }
 
+  /// Show the text input bottom sheet
   showTextInputBottomSheet(
     BuildContext context,
     String title,
@@ -46,7 +50,7 @@ class TIMUIKitProfileController {
         context, title, tips, onSubmitted);
   }
 
-  /// 加载数据
+  /// Load the profile data
   loadData(String userID) {
     model.loadData(userID: userID);
   }
@@ -55,6 +59,7 @@ class TIMUIKitProfileController {
     model.dispose();
   }
 
+  /// Add a user as friend or contact
   Future<V2TimFriendOperationResult?> addFriend(String userID) {
     return model.addFriend(userID);
   }

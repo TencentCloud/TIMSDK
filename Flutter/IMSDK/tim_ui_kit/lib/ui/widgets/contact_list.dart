@@ -1,14 +1,14 @@
 import 'package:azlistview/azlistview.dart';
 import 'package:flutter/material.dart';
 import 'package:lpinyin/lpinyin.dart';
-import 'package:provider/provider.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_info.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
-import 'package:tim_ui_kit/data_services/services_locatar.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
+import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
 import 'package:tim_ui_kit/ui/widgets/avatar.dart';
 import 'package:tim_ui_kit/ui/widgets/az_list_view.dart';
 import 'package:tim_ui_kit/ui/widgets/radio_button.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
 class ContactList extends StatefulWidget {
   final List<V2TimFriendInfo> contactList;
@@ -46,7 +46,7 @@ class ContactList extends StatefulWidget {
   State<StatefulWidget> createState() => _ContactListState();
 }
 
-class _ContactListState extends State<ContactList> {
+class _ContactListState extends TIMUIKitState<ContactList> {
   List<V2TimFriendInfo> selectedMember = [];
 
   _getShowName(V2TimFriendInfo item) {
@@ -84,8 +84,7 @@ class _ContactListState extends State<ContactList> {
     return selectedMember.length >= widget.maxSelectNum!;
   }
 
-  Widget _buildItem(BuildContext context, V2TimFriendInfo item) {
-    final theme = Provider.of<TUIThemeViewModel>(context).theme;
+  Widget _buildItem(TUITheme theme, V2TimFriendInfo item) {
     final showName = _getShowName(item);
     final faceUrl = item.userProfile?.faceUrl ?? "";
 
@@ -143,110 +142,102 @@ class _ContactListState extends State<ContactList> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return MultiProvider(
-        providers: [
-          ChangeNotifierProvider.value(
-              value: serviceLocator<TUIThemeViewModel>())
-        ],
-        builder: (context, w) {
-          final showList = _getShowList(widget.contactList);
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    final TUITheme theme = value.theme;
 
-          if (widget.topList != null && widget.topList!.isNotEmpty) {
-            final topList = widget.topList!
-                .map((e) => ISuspensionBeanImpl(memberInfo: e, tagIndex: '@'))
-                .toList();
-            showList.insertAll(0, topList);
+    final showList = _getShowList(widget.contactList);
+
+    if (widget.topList != null && widget.topList!.isNotEmpty) {
+      final topList = widget.topList!
+          .map((e) => ISuspensionBeanImpl(memberInfo: e, tagIndex: '@'))
+          .toList();
+      showList.insertAll(0, topList);
+    }
+
+    return AZListViewContainer(
+      memberList: showList,
+      itemBuilder: (context, index) {
+        final memberInfo = showList[index].memberInfo;
+        if (memberInfo is TopListItem) {
+          if (widget.topListItemBuilder != null) {
+            final customWidget = widget.topListItemBuilder!(memberInfo);
+            if (customWidget != null) {
+              return customWidget;
+            }
           }
-
-          return AZListViewContainer(
-            memberList: showList,
-            itemBuilder: (context, index) {
-              final memberInfo = showList[index].memberInfo;
-              if (memberInfo is TopListItem) {
-                if (widget.topListItemBuilder != null) {
-                  final customWidget = widget.topListItemBuilder!(memberInfo);
-                  if (customWidget != null) {
-                    return customWidget;
-                  }
+          return InkWell(
+              onTap: () {
+                if (memberInfo.onTap != null) {
+                  memberInfo.onTap!();
                 }
-                return InkWell(
-                    onTap: () {
-                      if (memberInfo.onTap != null) {
-                        memberInfo.onTap!();
-                      }
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.only(top: 8, left: 16),
+              },
+              child: Container(
+                padding: const EdgeInsets.only(top: 8, left: 16),
+                child: Row(
+                  children: [
+                    Container(
+                      height: 40,
+                      width: 40,
+                      margin: const EdgeInsets.only(right: 12, bottom: 12),
+                      child: memberInfo.icon,
+                    ),
+                    Expanded(
+                        child: Container(
+                      padding: const EdgeInsets.only(top: 10, bottom: 20),
+                      decoration: BoxDecoration(
+                          border: Border(
+                              bottom: BorderSide(color: hexToColor("DBDBDB")))),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Container(
-                            height: 40,
-                            width: 40,
-                            margin:
-                                const EdgeInsets.only(right: 12, bottom: 12),
-                            child: memberInfo.icon,
+                          Text(
+                            memberInfo.name,
+                            style: TextStyle(
+                                color: hexToColor("111111"), fontSize: 18),
                           ),
-                          Expanded(
-                              child: Container(
-                            padding: const EdgeInsets.only(top: 10, bottom: 20),
-                            decoration: BoxDecoration(
-                                border: Border(
-                                    bottom: BorderSide(
-                                        color: hexToColor("DBDBDB")))),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  memberInfo.name,
-                                  style: TextStyle(
-                                      color: hexToColor("111111"),
-                                      fontSize: 18),
-                                ),
-                                Expanded(child: Container()),
-                                // if (item.id == "newContact")
-                                //   const TIMUIKitUnreadCount(),
-                                Container(
-                                  margin: const EdgeInsets.only(right: 16),
-                                  child: Icon(
-                                    Icons.keyboard_arrow_right,
-                                    color: hexToColor('BBBBBB'),
-                                  ),
-                                )
-                              ],
+                          Expanded(child: Container()),
+                          // if (item.id == "newContact")
+                          //   const TIMUIKitUnreadCount(),
+                          Container(
+                            margin: const EdgeInsets.only(right: 16),
+                            child: Icon(
+                              Icons.keyboard_arrow_right,
+                              color: hexToColor('BBBBBB'),
                             ),
-                          ))
+                          )
                         ],
                       ),
-                    ));
-              } else {
-                return InkWell(
-                  onTap: () {
-                    if (widget.isCanSelectMemberItem) {
-                      if (selectedMember.contains(memberInfo)) {
-                        selectedMember.remove(memberInfo);
-                      } else {
-                        if (selectedMemberIsOverFlow()) {
-                          return;
-                        }
-                        selectedMember.add(memberInfo);
-                      }
-                      if (widget.onSelectedMemberItemChange != null) {
-                        widget.onSelectedMemberItemChange!(selectedMember);
-                      }
-                      setState(() {});
-                      return;
-                    }
-                    if (widget.onTapItem != null) {
-                      widget.onTapItem!(memberInfo);
-                    }
-                  },
-                  child: _buildItem(context, memberInfo),
-                );
+                    ))
+                  ],
+                ),
+              ));
+        } else {
+          return InkWell(
+            onTap: () {
+              if (widget.isCanSelectMemberItem) {
+                if (selectedMember.contains(memberInfo)) {
+                  selectedMember.remove(memberInfo);
+                } else {
+                  if (selectedMemberIsOverFlow()) {
+                    return;
+                  }
+                  selectedMember.add(memberInfo);
+                }
+                if (widget.onSelectedMemberItemChange != null) {
+                  widget.onSelectedMemberItemChange!(selectedMember);
+                }
+                setState(() {});
+                return;
+              }
+              if (widget.onTapItem != null) {
+                widget.onTapItem!(memberInfo);
               }
             },
+            child: _buildItem(theme, memberInfo),
           );
-        });
+        }
+      },
+    );
   }
 }
 

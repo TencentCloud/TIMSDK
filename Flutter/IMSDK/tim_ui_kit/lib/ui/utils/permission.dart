@@ -7,8 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tim_ui_kit/i18n/i18n_utils.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/ui/utils/platform.dart';
+import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
 
 class PermissionRequestInfo extends StatefulWidget {
   final Function removeOverLay;
@@ -26,7 +29,7 @@ class PermissionRequestInfo extends StatefulWidget {
   State<StatefulWidget> createState() => _PermissionRequestInfo();
 }
 
-class _PermissionRequestInfo extends State<PermissionRequestInfo>
+class _PermissionRequestInfo extends TIMUIKitState<PermissionRequestInfo>
     with WidgetsBindingObserver {
   @override
   void initState() {
@@ -49,23 +52,22 @@ class _PermissionRequestInfo extends State<PermissionRequestInfo>
   }
 
   @override
-  Widget build(BuildContext context) {
-    final I18nUtils ttBuild = I18nUtils(context);
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     final permission = {
       1: {
-        "name": ttBuild.imt("相机"),
+        "name": TIM_t("相机"),
         "icon": "images/chat_permission_icon_camera.png",
-        "text": "为方便您将所拍摄的照片或视频发送给朋友，以及进行视频通话，请允许我们访问摄像头进行拍摄照片和视频。"
+        "text": TIM_t("为方便您将所拍摄的照片或视频发送给朋友，以及进行视频通话，请允许我们访问摄像头进行拍摄照片和视频。")
       },
       7: {
-        "name": ttBuild.imt("麦克风"),
+        "name": TIM_t("麦克风"),
         "icon": "images/chat_permission_icon_mic.png",
-        "text": "为方便您发送语音消息、拍摄视频以及音视频通话，请允许我们使用麦克风进行录音。"
+        "text": TIM_t("为方便您发送语音消息、拍摄视频以及音视频通话，请允许我们使用麦克风进行录音。")
       },
       15: {
-        "name": ttBuild.imt("存储"),
+        "name": TIM_t("存储"),
         "icon": "images/chat_permission_icon_file.png",
-        "text": "为方便您查看和选择相册里的图片视频发送给朋友，以及保存内容到设备，请允许我们访问您设备上的照片、媒体内容。"
+        "text": TIM_t("为方便您查看和选择相册里的图片视频发送给朋友，以及保存内容到设备，请允许我们访问您设备上的照片、媒体内容。")
       },
     }[widget.permissionType];
     final option2 = permission?["name"] ?? "";
@@ -93,10 +95,10 @@ class _PermissionRequestInfo extends State<PermissionRequestInfo>
                       height: 10,
                     ),
                     Text(
-                      "“${widget.appName}" +
-                          ttBuild.imt_para(" 申请获取{{option2}}", " 申请获取$option2")(
+                      TIM_t(widget.appName) +
+                          TIM_t_para(" 申请获取{{option2}}", " 申请获取$option2")(
                               option2: option2) +
-                          "权限",
+                          TIM_t("权限"),
                       style: const TextStyle(color: Colors.white, fontSize: 18),
                     ),
                     const SizedBox(
@@ -124,24 +126,23 @@ class _PermissionRequestInfo extends State<PermissionRequestInfo>
 
 class Permissions {
   static List<String> _names(BuildContext context) {
-    final I18nUtils ttBuild = I18nUtils(context);
     return <String>[
-      ttBuild.imt("日历"),
-      ttBuild.imt("相机"),
-      ttBuild.imt("联系人"),
-      ttBuild.imt("位置"),
+      TIM_t("日历"),
+      TIM_t("相机"),
+      TIM_t("联系人"),
+      TIM_t("位置"),
       'locationAlways',
       'locationWhenInUse',
       'mediaLibrary',
-      ttBuild.imt("麦克风"),
+      TIM_t("麦克风"),
       'phone',
-      ttBuild.imt("照片"),
-      ttBuild.imt("相册写入"),
+      TIM_t("照片"),
+      TIM_t("相册写入"),
       'reminders',
       'sensors',
       'sms',
       'speech',
-      ttBuild.imt("文件"),
+      TIM_t("文件"),
       'ignoreBatteryOptimizations',
       'notification',
       'access_media_location',
@@ -162,25 +163,24 @@ class Permissions {
 
   static String _permissionText(
       BuildContext context, String appName, int value) {
-    final I18nUtils ttBuild = I18nUtils(context);
-    final _prefix = ttBuild.imt("需要授予 ");
+    final _prefix = TIM_t("需要授予 ");
     final _postfixList = <String>[
-      ttBuild.imt("日历"),
-      ttBuild.imt(" 相机权限，以正常使用拍摄图片视频、视频通话等功能。"),
-      ttBuild.imt("联系人"),
-      ttBuild.imt("位置"),
+      TIM_t("日历"),
+      TIM_t(" 相机权限，以正常使用拍摄图片视频、视频通话等功能。"),
+      TIM_t("联系人"),
+      TIM_t("位置"),
       'locationAlways',
       'locationWhenInUse',
       'mediaLibrary',
-      ttBuild.imt(" 麦克风权限，以正常使用发送语音消息、拍摄视频、音视频通话等功能。"),
+      TIM_t(" 麦克风权限，以正常使用发送语音消息、拍摄视频、音视频通话等功能。"),
       'phone',
-      ttBuild.imt(" 访问照片权限，以正常使用发送图片、视频等功能。"),
-      ttBuild.imt(" 访问相册写入权限，以正常使用存储图片、视频等功能。"),
+      TIM_t(" 访问照片权限，以正常使用发送图片、视频等功能。"),
+      TIM_t(" 访问相册写入权限，以正常使用存储图片、视频等功能。"),
       'reminders',
       'sensors',
       'sms',
       'speech',
-      ttBuild.imt(" 文件读写权限，以正常使用在聊天功能中的图片查看、选择能力和发送文件的能力。"),
+      TIM_t(" 文件读写权限，以正常使用在聊天功能中的图片查看、选择能力和发送文件的能力。"),
       'ignoreBatteryOptimizations',
       'notification',
       'access_media_location',
@@ -252,7 +252,7 @@ class Permissions {
       }
       return true;
     }
-    final I18nUtils ttBuild = I18nUtils(context);
+
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     String appName = packageInfo.appName;
     final option2 = _names(context)[value];
@@ -272,16 +272,16 @@ class Permissions {
         return platformUtils.isIOS
             ? CupertinoAlertDialog(
                 title: Text("“$appName”" +
-                    ttBuild.imt_para(" 想访问您的{{option2}}", " 想访问您的$option2")(
+                    TIM_t_para(" 想访问您的{{option2}}", " 想访问您的$option2")(
                         option2: option2)),
                 content: Text(permissionText),
                 actions: <Widget>[
                   CupertinoDialogAction(
-                    child: Text(ttBuild.imt("以后再说")),
+                    child: Text(TIM_t("以后再说")),
                     onPressed: closeDialog, // 关闭对话框
                   ),
                   CupertinoDialogAction(
-                    child: Text(ttBuild.imt("去开启")),
+                    child: Text(TIM_t("去开启")),
                     onPressed: getPermission,
                   ),
                 ],
@@ -297,7 +297,7 @@ class Permissions {
                       children: [
                         Expanded(
                           child: TextButton(
-                            child: Text(ttBuild.imt("以后再说"),
+                            child: Text(TIM_t("以后再说"),
                                 style: const TextStyle(color: Colors.black)),
                             onPressed: closeDialog, // 关闭对话框
                           ),
@@ -305,7 +305,7 @@ class Permissions {
                         const VerticalDivider(),
                         Expanded(
                           child: TextButton(
-                            child: Text(ttBuild.imt("去开启")),
+                            child: Text(TIM_t("去开启")),
                             onPressed: getPermission,
                           ),
                         )

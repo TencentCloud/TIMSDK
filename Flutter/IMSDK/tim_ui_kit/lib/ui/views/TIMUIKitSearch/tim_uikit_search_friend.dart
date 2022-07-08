@@ -4,13 +4,15 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_info_result.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
+import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitSearch/pureUI/tim_uikit_search_item.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitSearch/pureUI/tim_uikit_search_folder.dart';
 
 import 'package:tim_ui_kit/business_logic/view_models/tui_search_view_model.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitSearch/pureUI/tim_uikit_search_showAll.dart';
-import '../../../../tim_ui_kit.dart';
+
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
 class TIMUIKitSearchFriend extends StatefulWidget {
   List<V2TimFriendInfoResult> friendResultList;
@@ -26,14 +28,14 @@ class TIMUIKitSearchFriend extends StatefulWidget {
   State<StatefulWidget> createState() => TIMUIKitSearchFriendState();
 }
 
-class TIMUIKitSearchFriendState extends State<TIMUIKitSearchFriend> {
+class TIMUIKitSearchFriendState extends TIMUIKitState<TIMUIKitSearchFriend> {
   bool isShowAll = false;
   int defaultShowLines = 3;
 
-  Widget _renderShowALl(int currentLines, I18nUtils ttBuild) {
+  Widget _renderShowALl(int currentLines) {
     return (isShowAll == false && currentLines > defaultShowLines)
         ? TIMUIKitSearchShowALl(
-            textShow: ttBuild.imt("全部联系人"),
+            textShow: TIM_t("全部联系人"),
             onClick: () => setState(() {
               isShowAll = true;
             }),
@@ -42,8 +44,7 @@ class TIMUIKitSearchFriendState extends State<TIMUIKitSearchFriend> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final I18nUtils ttBuild = I18nUtils(context);
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     List<V2TimConversation?> _conversationList =
         Provider.of<TUISearchViewModel>(context).conversationList;
 
@@ -60,7 +61,7 @@ class TIMUIKitSearchFriendState extends State<TIMUIKitSearchFriend> {
             0, min(defaultShowLines, filteredFriendResultList.length));
 
     if (filteredFriendResultList.isNotEmpty) {
-      return TIMUIKitSearchFolder(folderName: ttBuild.imt("联系人"), children: [
+      return TIMUIKitSearchFolder(folderName: TIM_t("联系人"), children: [
         ...halfFilteredFriendResultList.map((conv) {
           int convIndex = _conversationList
               .indexWhere((item) => conv.friendInfo?.userID == item?.userID);
@@ -77,7 +78,7 @@ class TIMUIKitSearchFriendState extends State<TIMUIKitSearchFriend> {
                 "",
           );
         }).toList(),
-        _renderShowALl(filteredFriendResultList.length, ttBuild),
+        _renderShowALl(filteredFriendResultList.length),
       ]);
     } else {
       return Container();

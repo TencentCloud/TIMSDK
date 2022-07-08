@@ -1,165 +1,103 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
+import 'package:tim_ui_kit/business_logic/life_cycle/profile_life_cycle.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_profile_view_model.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
-import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
-import 'package:tim_ui_kit/ui/views/TIMUIKitProfile/tim_uikit_personal_profile.dart';
-import 'package:tim_ui_kit/ui/widgets/avatar.dart';
+
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
+import 'package:tim_ui_kit/ui/views/TIMUIKitProfile/profile_widget.dart';
+import 'package:tim_ui_kit/ui/views/TIMUIKitProfile/widget/tim_uikit_profile_widget.dart';
 
 typedef OnSelfAvatarTap = void Function();
+
+typedef ProfileBuilder = Widget Function(
+    BuildContext context,
+    V2TimFriendInfo friendInfo,
+    V2TimConversation conversation,
+    int friendType,
+    bool isMute);
 
 class TIMUIKitProfile extends StatefulWidget {
   /// user ID
   final String userID;
 
-  /// the builder for custom operation list
+  /// [Deprecated:] the builder for custom operation list.
+  /// [operationListBuilder] and [bottomOperationBuilder] merged into [builder], please use it instead.
   final Widget Function(
       BuildContext context,
       V2TimFriendInfo friendInfo,
       V2TimConversation conversation,
       int friendType,
-      bool isDisturb)? operationListBuilder;
+      bool isMute)? operationListBuilder;
 
-  /// the builder for custom bottom operation area
+  /// [Deprecated:] The builder for custom bottom operation area.
+  /// [operationListBuilder] and [bottomOperationBuilder] merged into [builder], please use it instead.
   final Widget Function(BuildContext context, V2TimFriendInfo? friendInfo,
       V2TimConversation? conversation, int friendType)? bottomOperationBuilder;
 
-  /// the callback for clicking profile detail card
+  /// [Deprecated:] Callback when clicking profile detail card.
+  /// This widget will no longer shows the personal info card and can not jump to personal info page automatically,
+  /// please navigate to [TIMUIKitProfilePersonalInfo] or your custom personal info page manually and directly.
   final void Function(BuildContext context, V2TimUserFullInfo? userFullInfo)?
       handleProfileDetailCardTap;
 
   /// Profile Controller
   final TIMUIKitProfileController? controller;
 
-  /// if allow jump to personal profiler page
+  /// [Deprecated:] If allows jump to personal profiler page.
+  /// This widget will no longer shows the personal info card and can not jump to personal info page automatically,
+  /// please navigate to [TIMUIKitProfilePersonalInfo] or your custom personal info page manually and directly.
   final bool canJumpToPersonalProfile;
 
-  /// the callback when clicking self avatar
+  /// [Deprecated:] The callback when clicking self avatar.
+  /// This widget will no longer shows the personal info card and will not support to change self avatar,
+  /// you can use [TIMUIKitProfilePersonalInfo] or your custom personal info page to implement this function.
   final OnSelfAvatarTap? onSelfAvatarTap;
 
-  const TIMUIKitProfile({
-    Key? key,
-    required this.userID,
-    this.operationListBuilder,
-    this.bottomOperationBuilder,
-    this.handleProfileDetailCardTap,
-    this.canJumpToPersonalProfile = false,
-    this.onSelfAvatarTap,
-    this.controller,
-  }) : super(key: key);
+  /// [If you tend to customize the profile page, use [profileWidgetsBuilder] with [profileWidgetsOrder] as priority.]
+  /// The builder for each widgets in profile page,
+  /// you can customize some of it by pass your own widget into here.
+  /// Or, you can add your custom widget to the three custom widgets.
+  final ProfileWidgetBuilder? profileWidgetBuilder;
 
-  static Widget operationDivider() {
-    return const SizedBox(
-      height: 10,
-    );
-  }
+  /// [If you tend to customize the profile page, use [profileWidgetsBuilder] with [profileWidgetsOrder] as priority.]
+  /// If the default widget order can not meet you needs,
+  /// you may change the order by this array with widget enum.
+  final List<ProfileWidgetEnum>? profileWidgetsOrder;
 
-  /// Remarks
-  static Widget remarkBar(
-    String remark,
-    BuildContext context, {
-    Function()? handleTap,
-  }) {
-    final I18nUtils ttBuild = I18nUtils(context);
-    return InkWell(
-      onTap: () {
-        if (handleTap != null) {
-          handleTap();
-        }
-      },
-      child: TIMUIKitOperationItem(
-        operationName: ttBuild.imt("备注名"),
-        operationRightWidget: Text(remark),
-      ),
-    );
-  }
+  /// The builder for the whole profile page, you can use this to customize all the element here.
+  /// Mentioned: If you use this builder, [profileWidgetBuilder] and [profileWidgetsOrder] will no longer works.
+  final ProfileBuilder? builder;
 
-  /// find history message
-  static Widget searchBar(BuildContext context, V2TimConversation conversation,
-      {Function()? handleTap}) {
-    final I18nUtils ttBuild = I18nUtils(context);
-    return InkWell(
-      onTap: () {
-        if (handleTap != null) {
-          handleTap();
-        }
-      },
-      child: TIMUIKitOperationItem(
-        operationName: ttBuild.imt("查找聊天内容"),
-      ),
-    );
-  }
+  /// The life cycle hooks for user profile business logic
+  final ProfileLifeCycle? lifeCycle;
 
-  /// add to block list
-  static Widget addToBlackListBar(
-      bool value, BuildContext context, Function(bool value)? onChanged) {
-    final I18nUtils ttBuild = I18nUtils(context);
-    return TIMUIKitOperationItem(
-      operationName: ttBuild.imt("加入黑名单"),
-      type: "switch",
-      operationValue: value,
-      onSwitchChange: (value) {
-        if (onChanged != null) {
-          onChanged(value);
-        }
-      },
-    );
-  }
-
-  /// pin the conversation to the top
-  static Widget pinConversationBar(
-      bool value, BuildContext context, Function(bool value)? onChanged) {
-    final I18nUtils ttBuild = I18nUtils(context);
-    return TIMUIKitOperationItem(
-      operationName: ttBuild.imt("置顶聊天"),
-      type: "switch",
-      operationValue: value,
-      onSwitchChange: (value) {
-        if (onChanged != null) {
-          onChanged(value);
-        }
-      },
-    );
-  }
-
-  /// message disturb
-  static Widget messageDisturb(
-      BuildContext context, bool isDisturb, Function(bool value)? onChanged) {
-    final I18nUtils ttBuild = I18nUtils(context);
-    return TIMUIKitOperationItem(
-      operationName: ttBuild.imt("消息免打扰"),
-      type: "switch",
-      operationValue: isDisturb,
-      onSwitchChange: (value) {
-        if (onChanged != null) {
-          onChanged(value);
-        }
-      },
-    );
-  }
-
-  static Widget operationItem({
-    required String operationName,
-    required String type,
-    bool? operationValue,
-    String? operationText,
-    void Function(bool newValue)? onSwitchChange,
-  }) {
-    return TIMUIKitOperationItem(
-      operationName: operationName,
-      type: type,
-      operationRightWidget: Text(operationText ?? ""),
-      operationValue: operationValue,
-      onSwitchChange: onSwitchChange,
-    );
-  }
+  const TIMUIKitProfile(
+      {Key? key,
+      required this.userID,
+      @Deprecated("[operationListBuilder] and [bottomOperationBuilder] merged into [builder], please use it instead")
+          this.operationListBuilder,
+      @Deprecated("[operationListBuilder] and [bottomOperationBuilder] merged into [builder], please use it instead")
+          this.bottomOperationBuilder,
+      @Deprecated("This widget will no longer shows the personal info card and can not jump to personal info page automatically, please navigate to [TIMUIKitProfilePersonalInfo] or your custom personal info page manually and directly")
+          this.handleProfileDetailCardTap,
+      @Deprecated("This widget will no longer shows the personal info card and can not jump to personal info page automatically, please navigate to [TIMUIKitProfilePersonalInfo] or your custom personal info page manually and directly")
+          this.canJumpToPersonalProfile = false,
+      @Deprecated("This widget will no longer shows the personal info card and will not support to change self avatar, you can use [TIMUIKitProfilePersonalInfo] or your custom personal info page to implement this function")
+          this.onSelfAvatarTap,
+      this.controller,
+      this.profileWidgetBuilder,
+      this.profileWidgetsOrder,
+      this.builder,
+      this.lifeCycle})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _TIMUIKitProfileState();
 }
 
-class _TIMUIKitProfileState extends State<TIMUIKitProfile> {
+class _TIMUIKitProfileState extends TIMUIKitState<TIMUIKitProfile> {
   late TUIProfileViewModel _model;
   late TIMUIKitProfileController _controller;
 
@@ -177,51 +115,21 @@ class _TIMUIKitProfileState extends State<TIMUIKitProfile> {
     super.dispose();
   }
 
-  handleTapRemarkBar(BuildContext context) {
-    final I18nUtils ttBuild = I18nUtils(context);
-    _controller.showTextInputBottomSheet(
-        context, ttBuild.imt("修改备注名"), ttBuild.imt("仅限中字、字母、数字和下划线"),
-        (String remark) {
-      _controller.updateRemarks(widget.userID, remark);
-    });
-  }
-
-  Widget _defaultOperationListBuilder(V2TimFriendInfo friendInfo,
-      V2TimConversation conversation, bool isFriend, bool isDusturb) {
-    final I18nUtils ttBuild = I18nUtils(context);
-    return isFriend
-        ? Column(
-            children: [
-              TIMUIKitProfile.operationDivider(),
-              TIMUIKitProfile.remarkBar(
-                  friendInfo.friendRemark ?? ttBuild.imt("无"), context,
-                  handleTap: () => handleTapRemarkBar(context)),
-              TIMUIKitProfile.operationDivider(),
-              TIMUIKitProfile.pinConversationBar(
-                  conversation.isPinned ?? false, context, (value) {
-                _controller.pinedConversation(value, widget.userID);
-              }),
-              TIMUIKitProfile.messageDisturb(
-                context,
-                isDusturb,
-                (value) => _controller.setMessageDisturb(widget.userID, value),
-              ),
-              TIMUIKitProfile.operationDivider(),
-              TIMUIKitProfile.addToBlackListBar(
-                _model.isAddToBlackList ?? false,
-                context,
-                (value) {
-                  _controller.addUserToBlackList(value, widget.userID);
-                },
-              ),
-            ],
-          )
-        : Container();
-  }
+  final List<ProfileWidgetEnum> _defaultWidgetOrder = [
+    ProfileWidgetEnum.userInfoCard,
+    ProfileWidgetEnum.operationDivider,
+    ProfileWidgetEnum.remarkBar,
+    ProfileWidgetEnum.operationDivider,
+    ProfileWidgetEnum.addToBlockListBar,
+    ProfileWidgetEnum.pinConversationBar,
+    ProfileWidgetEnum.messageMute,
+    ProfileWidgetEnum.operationDivider,
+    ProfileWidgetEnum.addAndDeleteArea
+  ];
 
   @override
-  Widget build(BuildContext context) {
-    final I18nUtils ttBuild = I18nUtils(context);
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    final theme = value.theme;
     return ChangeNotifierProvider.value(
       value: _model,
       child: Consumer<TUIProfileViewModel>(
@@ -230,133 +138,258 @@ class _TIMUIKitProfileState extends State<TIMUIKitProfile> {
               V2TimFriendInfo(userID: widget.userID);
           final conversation = value.userProfile?.conversation ??
               V2TimConversation(conversationID: "c2c_${widget.userID}");
-          final isFriend = value.firendType != 0;
-          final isDisturb = value.isDisturb ?? false;
-          return SingleChildScrollView(
-            physics: const BouncingScrollPhysics(
-                parent: AlwaysScrollableScrollPhysics()),
-            child: Column(children: [
-              // 个人信息小Card
-              InkWell(
-                onTap: () async {
-                  if (widget.canJumpToPersonalProfile) {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => TIMUIKitProfilePersonalInfoPage(
-                                // userID: widget.userID, //不填写代表使用登陆用户资料
-                                appBarTile: ttBuild.imt("个人资料"),
-                                onSelfAvatarTap: widget.onSelfAvatarTap,
-                              )),
-                    );
-                    value.loadData(userID: widget.userID);
-                  }
-
-                  if (widget.handleProfileDetailCardTap != null) {
-                    final userInfo = value.userProfile?.friendInfo?.userProfile;
-                    widget.handleProfileDetailCardTap!(context, userInfo);
-                  }
-                },
-                child: TIMUIKitProfileUserInfoCard(
-                  showArrowRightIcon: widget.canJumpToPersonalProfile,
-                  userInfo: value.userProfile?.friendInfo?.userProfile ??
-                      V2TimUserFullInfo(),
-                ),
+          final isFriend = value.friendType != 0;
+          final isMute = value.isDisturb ?? false;
+          Widget profilePage({required Widget child}) {
+            return SingleChildScrollView(
+              physics: const BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics()),
+              child: Container(
+                child: child,
               ),
-              widget.operationListBuilder != null
-                  ? widget.operationListBuilder!(context, userInfo,
-                      conversation, value.firendType, isDisturb)
-                  : _defaultOperationListBuilder(
-                      userInfo, conversation, isFriend, isDisturb),
-              if (widget.bottomOperationBuilder != null)
-                widget.bottomOperationBuilder!(
-                    context, userInfo, conversation, value.firendType)
-            ]),
-          );
+            );
+          }
+
+          void handleAddToBlockList(bool value) async {
+            _model.addToBlackList(value, userInfo.userID);
+          }
+
+          void handlePinConversation(bool value) async {
+            _model.pinedConversation(value, conversation.conversationID);
+          }
+
+          void handleMuteMessage(bool value) async {
+            _model.setMessageDisturb(userInfo.userID, value);
+          }
+
+          void handleTapRemarkBar() {
+            _controller.showTextInputBottomSheet(
+                context, TIM_t("修改备注名"), TIM_t("仅限中字、字母、数字和下划线"),
+                (String remark) {
+              _controller.updateRemarks(widget.userID, remark);
+            });
+          }
+
+          void handleAddFriend() async {
+            _model.addFriend(userInfo.userID).then((res) {
+              if (res == null) {
+                throw Error();
+              }
+              if (res.resultCode == 0) {
+                onTIMCallback(TIMCallback(
+                    type: TIMCallbackType.INFO,
+                    infoRecommendText: TIM_t("好友添加成功"),
+                    infoCode: 6661202));
+              } else if (res.resultCode == 30539) {
+                onTIMCallback(TIMCallback(
+                    type: TIMCallbackType.INFO,
+                    infoRecommendText: TIM_t("好友申请已发出"),
+                    infoCode: 6661203));
+              } else if (res.resultCode == 30515) {
+                onTIMCallback(TIMCallback(
+                    type: TIMCallbackType.INFO,
+                    infoRecommendText: TIM_t("当前用户在黑名单"),
+                    infoCode: 6661204));
+              }
+            }).catchError((error) {
+              onTIMCallback(TIMCallback(
+                  type: TIMCallbackType.INFO,
+                  infoRecommendText: TIM_t("好友添加失败"),
+                  infoCode: 6661205));
+            });
+          }
+
+          void handleDeleteFriend() {
+            _model.deleteFriend(userInfo.userID).then((res) {
+              if (res == null) {
+                throw Error();
+              }
+              if (res.resultCode == 0) {
+                onTIMCallback(TIMCallback(
+                    type: TIMCallbackType.INFO,
+                    infoRecommendText: TIM_t("好友删除成功"),
+                    infoCode: 6661206));
+              } else {
+                throw Error();
+              }
+            }).catchError((error) {
+              onTIMCallback(TIMCallback(
+                  type: TIMCallbackType.INFO,
+                  infoRecommendText: TIM_t("好友删除失败"),
+                  infoCode: 6661207));
+            });
+          }
+
+          List<Widget> _renderWidgetsWithOrder(List<ProfileWidgetEnum> order) {
+            final ProfileWidgetBuilder? customBuilder =
+                widget.profileWidgetBuilder;
+            return order.map((element) {
+              switch (element) {
+                case ProfileWidgetEnum.userInfoCard:
+                  return (customBuilder?.userInfoCard != null
+                      ? customBuilder?.userInfoCard!(userInfo.userProfile!)
+                      : TIMUIKitProfileUserInfoCard(
+                          userInfo: userInfo.userProfile))!;
+                case ProfileWidgetEnum.addToBlockListBar:
+                  if (!isFriend) {
+                    return Container();
+                  }
+                  return (customBuilder?.addToBlockListBar != null
+                      ? customBuilder?.addToBlockListBar!(
+                          _model.isAddToBlackList ?? false,
+                          handleAddToBlockList)
+                      : TIMUIKitProfileWidget.addToBlackListBar(
+                          _model.isAddToBlackList ?? false,
+                          context,
+                          handleAddToBlockList,
+                        ))!;
+                case ProfileWidgetEnum.pinConversationBar:
+                  if (!isFriend) {
+                    return Container();
+                  }
+                  return (customBuilder?.pinConversationBar != null
+                      ? customBuilder?.pinConversationBar!(
+                          conversation.isPinned ?? false, handlePinConversation)
+                      : TIMUIKitProfileWidget.pinConversationBar(
+                          conversation.isPinned ?? false,
+                          context,
+                          handlePinConversation))!;
+                case ProfileWidgetEnum.messageMute:
+                  if (!isFriend) {
+                    return Container();
+                  }
+                  return (customBuilder?.messageMute != null
+                      ? customBuilder?.messageMute!(isMute, handleMuteMessage)
+                      : TIMUIKitProfileWidget.messageDisturb(
+                          context, isMute, handleMuteMessage))!;
+                case ProfileWidgetEnum.searchBar:
+                  return (customBuilder?.searchBar != null
+                      ? customBuilder?.searchBar!(conversation)
+                      // Please define the search bar with navigating in `profileWidgetBuilder` before using it here.
+                      : Text(TIM_t("你必须自定义search bar，并处理点击跳转")))!;
+                case ProfileWidgetEnum.portraitBar:
+                  return (customBuilder?.portraitBar != null
+                      ? customBuilder?.portraitBar!(userInfo.userProfile!)
+                      : TIMUIKitProfileWidget.portraitBar(
+                          TIMUIKitProfileWidget.defaultPortraitWidget(
+                              userInfo.userProfile!)))!;
+                case ProfileWidgetEnum.nicknameBar:
+                  return (customBuilder?.nicknameBar != null
+                      ? customBuilder
+                          ?.nicknameBar!(userInfo.userProfile?.nickName ?? "")
+                      : TIMUIKitProfileWidget.nicknameBar(
+                          userInfo.userProfile?.nickName ?? ""))!;
+                case ProfileWidgetEnum.userAccountBar:
+                  return (customBuilder?.nicknameBar != null
+                      ? customBuilder
+                          ?.nicknameBar!(userInfo.userProfile?.userID ?? "")
+                      : TIMUIKitProfileWidget.nicknameBar(
+                          userInfo.userProfile?.userID ?? ""))!;
+                case ProfileWidgetEnum.signatureBar:
+                  return (customBuilder?.signatureBar != null
+                      ? customBuilder?.signatureBar!(
+                          userInfo.userProfile?.selfSignature ?? "")
+                      : TIMUIKitProfileWidget.signatureBar(
+                          userInfo.userProfile?.selfSignature ?? ""))!;
+                case ProfileWidgetEnum.genderBar:
+                  return (customBuilder?.genderBar != null
+                      ? customBuilder
+                          ?.genderBar!(userInfo.userProfile?.gender ?? 0)
+                      : TIMUIKitProfileWidget.genderBar(
+                          userInfo.userProfile?.gender ?? 0))!;
+                case ProfileWidgetEnum.birthdayBar:
+                  return (customBuilder?.birthdayBar != null
+                      ? customBuilder
+                          ?.birthdayBar!(userInfo.userProfile?.birthday)
+                      : TIMUIKitProfileWidget.birthdayBar(
+                          userInfo.userProfile?.birthday))!;
+                case ProfileWidgetEnum.addAndDeleteArea:
+                  return (customBuilder?.addAndDeleteArea != null
+                      ? customBuilder?.addAndDeleteArea!(
+                          userInfo,
+                          conversation,
+                          value.friendType,
+                          isMute,
+                        )
+                      : TIMUIKitProfileWidget.addAndDeleteArea(
+                          userInfo,
+                          conversation,
+                          value.friendType,
+                          isMute,
+                          theme,
+                          handleAddFriend,
+                          handleDeleteFriend))!;
+                case ProfileWidgetEnum.operationDivider:
+                  return (customBuilder?.operationDivider != null
+                      ? customBuilder?.operationDivider!()
+                      : TIMUIKitProfileWidget.operationDivider())!;
+                case ProfileWidgetEnum.remarkBar:
+                  if (!isFriend) {
+                    return Container();
+                  }
+                  return (customBuilder?.remarkBar != null
+                      ? customBuilder?.remarkBar!(
+                          userInfo.friendRemark ?? "", handleTapRemarkBar)
+                      : TIMUIKitProfileWidget.remarkBar(
+                          userInfo.friendRemark ?? "", handleTapRemarkBar))!;
+                case ProfileWidgetEnum.customBuilderOne:
+                  return (customBuilder?.customBuilderOne != null
+                      ? customBuilder?.customBuilderOne!(
+                          isFriend, userInfo, conversation)
+                      // Please define the corresponding custom widget in `profileWidgetBuilder` before using it here.
+                      : Text(TIM_t("如使用自定义区域，请在profileWidgetBuilder传入对应组件")))!;
+                case ProfileWidgetEnum.customBuilderTwo:
+                  return (customBuilder?.customBuilderTwo != null
+                      ? customBuilder?.customBuilderTwo!(
+                          isFriend, userInfo, conversation)
+                      // Please define the corresponding custom widget in `profileWidgetBuilder` before using it here.
+                      : Text(TIM_t("如使用自定义区域，请在profileWidgetBuilder传入对应组件")))!;
+                case ProfileWidgetEnum.customBuilderThree:
+                  return (customBuilder?.customBuilderThree != null
+                      ? customBuilder?.customBuilderThree!(
+                          isFriend, userInfo, conversation)
+                      // Please define the corresponding custom widget in `profileWidgetBuilder` before using it here.
+                      : Text(TIM_t("如使用自定义区域，请在profileWidgetBuilder传入对应组件")))!;
+                case ProfileWidgetEnum.customBuilderFour:
+                  return (customBuilder?.customBuilderFour != null
+                      ? customBuilder?.customBuilderFour!(
+                          isFriend, userInfo, conversation)
+                      // Please define the corresponding custom widget in `profileWidgetBuilder` before using it here.
+                      : Text(TIM_t("如使用自定义区域，请在profileWidgetBuilder传入对应组件")))!;
+                case ProfileWidgetEnum.customBuilderFive:
+                  return (customBuilder?.customBuilderFive != null
+                      ? customBuilder?.customBuilderFive!(
+                          isFriend, userInfo, conversation)
+                      // Please define the corresponding custom widget in `profileWidgetBuilder` before using it here.
+                      : Text(TIM_t("如使用自定义区域，请在profileWidgetBuilder传入对应组件")))!;
+
+                default:
+                  return Container();
+              }
+            }).toList();
+          }
+
+          if (widget.builder != null) {
+            return profilePage(
+              child: widget.builder!(
+                  context, userInfo, conversation, value.friendType, isMute),
+            );
+          } else if (widget.profileWidgetsOrder != null) {
+            return profilePage(
+              child: Column(
+                children: [
+                  ..._renderWidgetsWithOrder(widget.profileWidgetsOrder!)
+                ],
+              ),
+            );
+          } else {
+            return profilePage(
+                child: Column(
+              children: [..._renderWidgetsWithOrder(_defaultWidgetOrder)],
+            ));
+          }
         },
       ),
     );
-  }
-}
-
-class TIMUIKitProfileUserInfoCard extends StatelessWidget {
-  final V2TimUserFullInfo userInfo;
-  final bool isJumpToPersonalProfile;
-
-  // Show arrow_right icons?
-  final bool showArrowRightIcon;
-
-  const TIMUIKitProfileUserInfoCard(
-      {Key? key,
-      required this.userInfo,
-      this.isJumpToPersonalProfile = false,
-      this.showArrowRightIcon = false})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final I18nUtils ttBuild = I18nUtils(context);
-    return ChangeNotifierProvider.value(
-        value: serviceLocator<TUIThemeViewModel>(),
-        child: Consumer<TUIThemeViewModel>(builder: (context, value, child) {
-          final faceUrl = userInfo.faceUrl ?? "";
-          final nickName = userInfo.nickName ?? "";
-          final signature = userInfo.selfSignature;
-          final showName = nickName != "" ? nickName : userInfo.userID;
-          final option1 = signature;
-          final signatureText = option1 != null
-              ? ttBuild.imt_para("个性签名: {{option1}}", "个性签名: $option1")(
-                  option1: option1)
-              : ttBuild.imt("暂无个性签名");
-
-          return Container(
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-            color: Colors.white,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(
-                  width: 48,
-                  height: 48,
-                  child: Avatar(faceUrl: faceUrl, showName: showName ?? ""),
-                ),
-                const SizedBox(
-                  width: 12,
-                ),
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        child: Text(
-                          showName ?? "",
-                          style: const TextStyle(
-                              fontSize: 18, color: Colors.black),
-                          softWrap: true,
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.symmetric(vertical: 4),
-                        child: Text(
-                          "ID:  ${userInfo.userID ?? ""}",
-                          style: TextStyle(
-                              fontSize: 13, color: value.theme.weakTextColor),
-                        ),
-                      ),
-                      Text(signatureText,
-                          style: TextStyle(
-                              fontSize: 13, color: value.theme.weakTextColor))
-                    ],
-                  ),
-                ),
-                showArrowRightIcon
-                    ? const Icon(Icons.keyboard_arrow_right)
-                    : Container()
-              ],
-            ),
-          );
-        }));
   }
 }

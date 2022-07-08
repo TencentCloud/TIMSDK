@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_statelesswidget.dart';
 
-import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
+import 'package:tim_ui_kit/ui/utils/color.dart';
+import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
 
-import '../../../utils/color.dart';
-
-class TIMUIKitSearchFolder extends StatelessWidget {
+class TIMUIKitSearchFolder extends TIMUIKitStatelessWidget {
   final String folderName;
   final List<Widget> children;
 
-  const TIMUIKitSearchFolder(
+  TIMUIKitSearchFolder(
       {Key? key, required this.folderName, required this.children})
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final theme = Provider.of<TUIThemeViewModel>(context).theme;
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    final TUITheme theme = value.theme;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),

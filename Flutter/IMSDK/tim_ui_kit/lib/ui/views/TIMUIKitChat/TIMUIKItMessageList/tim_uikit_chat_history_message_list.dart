@@ -1,15 +1,15 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_at_info.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_statelesswidget.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
-import 'package:tim_ui_kit/i18n/i18n_utils.dart';
+// ignore: unused_import
 import 'package:tim_ui_kit/ui/utils/optimize_utils.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKItMessageList/utils.dart';
 import 'package:tim_ui_kit/ui/widgets/keepalive_wrapper.dart';
@@ -97,8 +97,9 @@ class TIMUIKitHistoryMessageList extends StatefulWidget {
 }
 
 class _TIMUIKitHistoryMessageListState
-    extends State<TIMUIKitHistoryMessageList> {
+    extends TIMUIKitState<TIMUIKitHistoryMessageList> {
   final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
+
   LoadingPlace loadingPlace = LoadingPlace.none;
   V2TimMessage? findingMsg;
   String findingSeq = "";
@@ -111,6 +112,7 @@ class _TIMUIKitHistoryMessageListState
     if (widget.conversationType != null) {
       model.currentSelectedConvType = widget.conversationType;
     }
+
     _controller = widget.controller ?? TIMUIKitHistoryMessageListController();
     _autoScrollController =
         _controller.scrollController ?? AutoScrollController();
@@ -156,30 +158,27 @@ class _TIMUIKitHistoryMessageListState
   }
 
   _onScrollToIndex(V2TimMessage targetMsg) {
-    setState(() {
-      if (loadingPlace != LoadingPlace.top) {
-        loadingPlace = LoadingPlace.top;
-      }
-    });
+    // This method called by @ messages or messages been searched, aims to jump to target message
+    // setState(() {
+    if (loadingPlace != LoadingPlace.top) {
+      loadingPlace = LoadingPlace.top;
+    }
+    // });
     const int singleLoadAmount = 40;
-    final I18nUtils ttBuild = I18nUtils(context);
     final lastTimestamp =
         widget.messageList[widget.messageList.length - 1]?.timestamp;
     final msgList = widget.messageList;
     final targetTimeStamp = targetMsg.timestamp!;
 
     void showCantFindMsg() {
-      setState(() {
-        findingMsg = null;
-        loadingPlace = LoadingPlace.none;
-      });
-      Fluttertoast.showToast(
-        msg: ttBuild.imt("无法定位到原消息"),
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        textColor: Colors.white,
-        backgroundColor: Colors.black,
-      );
+      // setState(() {
+      findingMsg = null;
+      loadingPlace = LoadingPlace.none;
+      // });
+      onTIMCallback(TIMCallback(
+          type: TIMCallbackType.INFO,
+          infoRecommendText: TIM_t("无法定位到原消息"),
+          infoCode: 6660401));
     }
 
     if (targetTimeStamp >= lastTimestamp!) {
@@ -199,9 +198,9 @@ class _TIMUIKitHistoryMessageListState
       }
 
       if (isFound && targetIndex != 1) {
-        setState(() {
-          findingMsg = null;
-        });
+        // setState(() {
+        findingMsg = null;
+        // });
         _autoScrollController.scrollToIndex(
           targetIndex,
           preferPosition: AutoScrollPosition.middle,
@@ -210,20 +209,20 @@ class _TIMUIKitHistoryMessageListState
             preferPosition: AutoScrollPosition.middle);
         // execute twice for accurate position, as the position located firstly can be wrong
         model.jumpMsgID = targetMsg.msgID!;
-        setState(() {
-          loadingPlace = LoadingPlace.none;
-        });
+        // setState(() {
+        loadingPlace = LoadingPlace.none;
+        // });
       } else {
         showCantFindMsg();
       }
     } else {
       if (model.haveMoreData) {
         // if the target message not in current message list, load more
-        setState(() {
-          findingMsg = targetMsg;
-        });
-        widget.onLoadMore(
-            _getMessageId(widget.messageList.length - 1), singleLoadAmount);
+        // setState(() {
+        findingMsg = targetMsg;
+        // });
+        final lastMsgId = _getMessageId(widget.messageList.length - 1);
+        widget.onLoadMore(lastMsgId, singleLoadAmount);
       } else {
         showCantFindMsg();
       }
@@ -231,13 +230,13 @@ class _TIMUIKitHistoryMessageListState
   }
 
   _onScrollToIndexBySeq(String targetSeq) {
+    // This method called by tongue request jumping to target @ message
     setState(() {
       if (loadingPlace != LoadingPlace.top) {
         loadingPlace = LoadingPlace.top;
       }
     });
     const int singleLoadAmount = 40;
-    final I18nUtils ttBuild = I18nUtils(context);
     final msgList = widget.messageList;
     String lastSeq = "";
     for (int i = msgList.length - 1; i >= 0; i--) {
@@ -249,17 +248,14 @@ class _TIMUIKitHistoryMessageListState
     }
 
     void showCantFindMsg() {
-      setState(() {
-        findingSeq = "";
-        loadingPlace = LoadingPlace.none;
-      });
-      Fluttertoast.showToast(
-        msg: ttBuild.imt("无法定位到原消息"),
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        textColor: Colors.white,
-        backgroundColor: Colors.black,
-      );
+      // setState(() {
+      findingSeq = "";
+      loadingPlace = LoadingPlace.none;
+      // });
+      onTIMCallback(TIMCallback(
+          type: TIMCallbackType.INFO,
+          infoRecommendText: TIM_t("无法定位到原消息"),
+          infoCode: 6660401));
     }
 
     if (int.parse(lastSeq) <= int.parse(targetSeq)) {
@@ -277,9 +273,9 @@ class _TIMUIKitHistoryMessageListState
       }
 
       if (isFound && targetIndex != 1) {
-        setState(() {
-          findingSeq = "";
-        });
+        // setState(() {
+        findingSeq = "";
+        // });
         _autoScrollController.scrollToIndex(
           targetIndex,
           preferPosition: AutoScrollPosition.middle,
@@ -290,17 +286,17 @@ class _TIMUIKitHistoryMessageListState
           // widget.updateMsgID(targetMsgID);
           model.jumpMsgID = targetMsgID;
         }
-        setState(() {
-          loadingPlace = LoadingPlace.none;
-        });
+        // setState(() {
+        loadingPlace = LoadingPlace.none;
+        // });
       } else {
         showCantFindMsg();
       }
     } else {
       if (model.haveMoreData) {
-        setState(() {
-          findingSeq = targetSeq;
-        });
+        // setState(() {
+        findingSeq = targetSeq;
+        // });
         widget.onLoadMore(
             _getMessageId(widget.messageList.length - 1), singleLoadAmount);
       } else {
@@ -338,11 +334,12 @@ class _TIMUIKitHistoryMessageListState
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    final theme = value.theme;
+
     if (widget.messageList.isEmpty) {
       return Container();
     }
-    final theme = Provider.of<TUIThemeViewModel>(context).theme;
     final messageList = widget.messageList;
     final throteFunction = OptimizeUtils.throttle((index) {
       final msgID =
@@ -350,11 +347,15 @@ class _TIMUIKitHistoryMessageListState
       widget.onLoadMore(msgID);
     }, 20);
 
+    // Future.delayed(const Duration(milliseconds: 600), (){
     if (findingMsg != null) {
       _onScrollToIndex(findingMsg!);
     } else if (findingSeq != "") {
       _onScrollToIndexBySeq(findingSeq);
     }
+    // }
+    // );
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Stack(
@@ -370,7 +371,7 @@ class _TIMUIKitHistoryMessageListState
                     widget.mainHistoryListConfig?.padding ?? EdgeInsets.zero,
                 itemExtent: widget.mainHistoryListConfig?.itemExtent,
                 prototypeItem: widget.mainHistoryListConfig?.prototypeItem,
-                cacheExtent: widget.mainHistoryListConfig?.cacheExtent ?? 1200,
+                cacheExtent: widget.mainHistoryListConfig?.cacheExtent ?? 400,
                 semanticChildCount:
                     widget.mainHistoryListConfig?.semanticChildCount,
                 dragStartBehavior:
@@ -432,15 +433,15 @@ class _TIMUIKitHistoryMessageListState
   }
 }
 
-class TIMUIKitHistoryMessageListSelector extends StatelessWidget {
+class TIMUIKitHistoryMessageListSelector extends TIMUIKitStatelessWidget {
   final Widget Function(BuildContext, List<V2TimMessage?>, Widget?) builder;
   final String conversationID;
 
-  const TIMUIKitHistoryMessageListSelector(
+  TIMUIKitHistoryMessageListSelector(
       {Key? key, required this.builder, required this.conversationID})
       : super(key: key);
   @override
-  Widget build(BuildContext context) {
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     return Selector<TUIChatViewModel, List<V2TimMessage?>>(
         builder: builder,
         selector: (context, model) =>

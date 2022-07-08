@@ -1,24 +1,12 @@
-import 'package:tencent_im_sdk_plugin/enum/V2TimGroupListener.dart';
-import 'package:tencent_im_sdk_plugin/enum/group_application_type_enum.dart';
-import 'package:tencent_im_sdk_plugin/enum/group_member_filter_enum.dart';
-import 'package:tencent_im_sdk_plugin/enum/group_member_role_enum.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_application_result.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_info.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_info_result.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_full_info.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_info_result.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_operation_result.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_search_param.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_search_result.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_group_search_param.dart';
-import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
-import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:tim_ui_kit/data_services/core/core_services_implements.dart';
 import 'package:tim_ui_kit/data_services/group/group_services.dart';
+import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/ui/utils/optimize_utils.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
 
 class GroupServicesImpl extends GroupServices {
   static List<Function?> groupInfoCallBackList = [];
+  final CoreServicesImpl _coreService = serviceLocator<CoreServicesImpl>();
   final throttleGetGroupInfo = OptimizeUtils.throttle((val) async {
     String groupID = val["groupID"];
     List<String> memberList = val["memberList"];
@@ -46,8 +34,13 @@ class GroupServicesImpl extends GroupServices {
         .getJoinedGroupList();
     if (res.code == 0) {
       return res.data;
+    } else {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: res.desc,
+          errorCode: res.code));
+      return null;
     }
-    return null;
   }
 
   @override
@@ -59,8 +52,13 @@ class GroupServicesImpl extends GroupServices {
         .getGroupsInfo(groupIDList: groupIDList);
     if (res.code == 0) {
       return res.data;
+    } else {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: res.desc,
+          errorCode: res.code));
+      return null;
     }
-    return null;
   }
 
   @override
@@ -81,6 +79,12 @@ class GroupServicesImpl extends GroupServices {
     final res = await TencentImSDKPlugin.v2TIMManager
         .getGroupManager()
         .getGroupMembersInfo(groupID: groupID, memberList: memberList);
+    if (res.code != 0) {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: res.desc,
+          errorCode: res.code));
+    }
     return res;
   }
 
@@ -102,17 +106,29 @@ class GroupServicesImpl extends GroupServices {
             offset: offset);
     if (res.code == 0) {
       return res.data;
+    } else {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: res.desc,
+          errorCode: res.code));
+      return null;
     }
-    return null;
   }
 
   @override
   Future<V2TimCallback> setGroupInfo({
     required V2TimGroupInfo info,
-  }) {
-    return TencentImSDKPlugin.v2TIMManager
+  }) async {
+    final result = await TencentImSDKPlugin.v2TIMManager
         .getGroupManager()
         .setGroupInfo(info: info);
+    if (result.code != 0) {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: result.desc,
+          errorCode: result.code));
+    }
+    return result;
   }
 
   @override
@@ -120,10 +136,17 @@ class GroupServicesImpl extends GroupServices {
     required String groupID,
     required String userID,
     required GroupMemberRoleTypeEnum role,
-  }) {
-    return TencentImSDKPlugin.v2TIMManager
+  }) async {
+    final result = await TencentImSDKPlugin.v2TIMManager
         .getGroupManager()
         .setGroupMemberRole(groupID: groupID, userID: userID, role: role);
+    if (result.code != 0) {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: result.desc,
+          errorCode: result.code));
+    }
+    return result;
   }
 
   @override
@@ -131,10 +154,17 @@ class GroupServicesImpl extends GroupServices {
     required String groupID,
     required String userID,
     required int seconds,
-  }) {
-    return TencentImSDKPlugin.v2TIMManager
+  }) async {
+    final result = await TencentImSDKPlugin.v2TIMManager
         .getGroupManager()
         .muteGroupMember(groupID: groupID, userID: userID, seconds: seconds);
+    if (result.code != 0) {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: result.desc,
+          errorCode: result.code));
+    }
+    return result;
   }
 
   @override
@@ -144,11 +174,20 @@ class GroupServicesImpl extends GroupServices {
     String? nameCard,
     Map<String, String>? customInfo,
   }) async {
-    return TencentImSDKPlugin.v2TIMManager.getGroupManager().setGroupMemberInfo(
-        groupID: groupID,
-        userID: userID,
-        nameCard: nameCard,
-        customInfo: customInfo);
+    final result = await TencentImSDKPlugin.v2TIMManager
+        .getGroupManager()
+        .setGroupMemberInfo(
+            groupID: groupID,
+            userID: userID,
+            nameCard: nameCard,
+            customInfo: customInfo);
+    if (result.code != 0) {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: result.desc,
+          errorCode: result.code));
+    }
+    return result;
   }
 
   @override
@@ -156,9 +195,18 @@ class GroupServicesImpl extends GroupServices {
     required String groupID,
     required List<String> memberList,
     String? reason,
-  }) {
-    return TencentImSDKPlugin.v2TIMManager.getGroupManager().kickGroupMember(
-        groupID: groupID, memberList: memberList, reason: reason);
+  }) async {
+    final result = await TencentImSDKPlugin.v2TIMManager
+        .getGroupManager()
+        .kickGroupMember(
+            groupID: groupID, memberList: memberList, reason: reason);
+    if (result.code != 0) {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: result.desc,
+          errorCode: result.code));
+    }
+    return result;
   }
 
   @override
@@ -166,71 +214,125 @@ class GroupServicesImpl extends GroupServices {
       inviteUserToGroup({
     required String groupID,
     required List<String> userList,
-  }) {
-    return TencentImSDKPlugin.v2TIMManager
+  }) async {
+    final result = await TencentImSDKPlugin.v2TIMManager
         .getGroupManager()
         .inviteUserToGroup(groupID: groupID, userList: userList);
+    if (result.code != 0) {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: result.desc,
+          errorCode: result.code));
+    }
+    return result;
   }
 
   @override
   Future<V2TimValueCallback<List<V2TimGroupInfo>>> searchGroups({
     required V2TimGroupSearchParam searchParam,
-  }) {
-    return TencentImSDKPlugin.v2TIMManager
+  }) async {
+    final result = await TencentImSDKPlugin.v2TIMManager
         .getGroupManager()
         .searchGroups(searchParam: searchParam);
+    if (result.code != 0) {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: result.desc,
+          errorCode: result.code));
+    }
+    return result;
   }
 
   @override
   Future<V2TimCallback> joinGroup({
     required String groupID,
     required String message,
-  }) {
-    return TencentImSDKPlugin.v2TIMManager
+  }) async {
+    final result = await TencentImSDKPlugin.v2TIMManager
         .joinGroup(groupID: groupID, message: message);
+    if (result.code != 0) {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: result.desc,
+          errorCode: result.code));
+    }
+    return result;
   }
 
   @override
   Future<V2TimValueCallback<V2GroupMemberInfoSearchResult>> searchGroupMembers({
     required V2TimGroupMemberSearchParam searchParam,
-  }) {
-    return TencentImSDKPlugin.v2TIMManager
+  }) async {
+    final result = await TencentImSDKPlugin.v2TIMManager
         .getGroupManager()
         .searchGroupMembers(param: searchParam);
+    if (result.code != 0) {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: result.desc,
+          errorCode: result.code));
+    }
+    return result;
   }
 
   @override
   Future<void> addGroupListener({
     required V2TimGroupListener listener,
-  }) {
-    return TencentImSDKPlugin.v2TIMManager.addGroupListener(listener: listener);
+  }) async {
+    final result = await TencentImSDKPlugin.v2TIMManager
+        .addGroupListener(listener: listener);
+    return result;
   }
 
   @override
   Future<void> removeGroupListener({
     V2TimGroupListener? listener,
-  }) {
-    return TencentImSDKPlugin.v2TIMManager
+  }) async {
+    final result = await TencentImSDKPlugin.v2TIMManager
         .removeGroupListener(listener: listener);
+    return result;
   }
 
   @override
   Future<V2TimValueCallback<V2TimGroupApplicationResult>>
-      getGroupApplicationList() {
-    return TencentImSDKPlugin.v2TIMManager
+      getGroupApplicationList() async {
+    final result = await TencentImSDKPlugin.v2TIMManager
         .getGroupManager()
         .getGroupApplicationList();
+    if (result.code != 0) {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: result.desc,
+          errorCode: result.code));
+    }
+    return result;
   }
 
   @override
   Future<V2TimCallback> acceptGroupApplication(
       {required String groupID,
       required String fromUser,
-      required String toUser}) {
-    return TencentImSDKPlugin.v2TIMManager
+      required String toUser,
+      required int type,
+      required int addTime,
+      String? reason}) async {
+    final result = await TencentImSDKPlugin.v2TIMManager
         .getGroupManager()
         .acceptGroupApplication(
-            groupID: groupID, fromUser: fromUser, toUser: toUser);
+          groupID: groupID,
+          fromUser: fromUser,
+          toUser: toUser,
+          addTime: addTime,
+          type: GroupApplicationTypeEnum.values[type],
+          reason: reason ?? "",
+        );
+    if (result.code != 0) {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: result.desc,
+          errorCode: result.code));
+    }
+    return result;
   }
 
   @override
@@ -240,8 +342,8 @@ class GroupServicesImpl extends GroupServices {
       required String groupID,
       required String fromUser,
       required String toUser,
-      required GroupApplicationTypeEnum type}) {
-    return TencentImSDKPlugin.v2TIMManager
+      required GroupApplicationTypeEnum type}) async {
+    final result = await TencentImSDKPlugin.v2TIMManager
         .getGroupManager()
         .refuseGroupApplication(
             groupID: groupID,
@@ -250,5 +352,12 @@ class GroupServicesImpl extends GroupServices {
             type: type,
             addTime: addTime,
             reason: reason);
+    if (result.code != 0) {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: result.desc,
+          errorCode: result.code));
+    }
+    return result;
   }
 }
