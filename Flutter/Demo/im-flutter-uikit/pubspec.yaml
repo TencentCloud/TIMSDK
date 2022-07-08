@@ -48,7 +48,7 @@ dependencies:
   flutter_easyloading: ^3.0.3
   connectivity_plus: ^2.2.0
   i18n: any
-  tim_ui_kit: ^0.1.1
+  tim_ui_kit: ^0.1.2
 #  tim_ui_kit:
 #    path: package_src/tim_ui_kit
   tim_ui_kit_calling_plugin: ^0.3.0
