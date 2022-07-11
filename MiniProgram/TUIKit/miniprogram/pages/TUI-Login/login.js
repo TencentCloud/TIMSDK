@@ -1,8 +1,8 @@
-import { setTokenStorage } from '../../utils/token'
-import logger from '../../utils/logger'
-import { genTestUserSig } from '../../debug/GenerateTestUserSig'
+import { setTokenStorage } from '../../utils/token';
+import logger from '../../utils/logger';
+import { genTestUserSig } from '../../debug/GenerateTestUserSig';
 
-const app = getApp()
+const app = getApp();
 Page({
   data: {
     userID: '',
@@ -18,7 +18,7 @@ Page({
   onLoad(option) {
     this.setData({
       path: option.path,
-    })
+    });
     wx.setStorage({
       key: 'path',
       data: option.path,
@@ -41,46 +41,47 @@ Page({
   },
   // 输入userID
   bindUserIDInput(e) {
-    const val = e.detail.value
+    const val = e.detail.value;
     this.setData({
       userID: val,
-    })
+    });
   },
   login() {
-    const userID = this.data.userID
-    const userSig = genTestUserSig(userID).userSig
-    logger.log(`TUI-login | login  | userSig:${userSig} userID:${userID}`)
+    const { userID } = this.data;
+    const { userSig } = genTestUserSig(userID);
+    logger.log(`TUI-login | login  | userSig:${userSig} userID:${userID}`);
     app.globalData.userInfo = {
       userSig,
       userID,
-    }
+    };
     setTokenStorage({
       userInfo: app.globalData.userInfo,
-    })
-    wx.$TUIKit.login({userID: userID, userSig: userSig})
-    .then(()=> {
-      wx.aegis.reportEvent({
-        name: 'login',
-        ext1: 'login-success',
-        ext2: 'imTuikitExternal',
-        ext3: app.globalData.SDKAppID,
+    });
+    wx.$TUIKit.login({ userID, userSig })
+      .then(() => {
+        wx.aegis.reportEvent({
+          name: 'login',
+          ext1: 'login-success',
+          ext2: 'imTuikitExternal',
+          ext3: app.globalData.SDKAppID,
+        });
       })
-    }).catch((error)=> {
-      wx.aegis.reportEvent({
-        name: 'login',
-        ext1: `login-failed#error:${error}`,
-        ext2: 'imTuikitxEternal',
-        ext3: app.globalData.SDKAppID,
-    })
-})
+      .catch((error) => {
+        wx.aegis.reportEvent({
+          name: 'login',
+          ext1: `login-failed#error:${error}`,
+          ext2: 'imTuikitxEternal',
+          ext3: app.globalData.SDKAppID,
+        });
+      });
     if (this.data.path && this.data.path !== 'undefined') {
       wx.redirectTo({
         url: this.data.path,
-      })
+      });
     } else {
       wx.switchTab({
         url: '../TUI-Index/index',
-      })
+      });
     }
   },
   onAgreePrivateProtocol() {
@@ -100,6 +101,6 @@ Page({
     const url = 'https://web.sdk.qcloud.com/document/Tencent-IM-User-Agreement.html'
     wx.navigateTo({
       url: `../TUI-User-Center/webview/webview?url=${url}&nav=User-Agreement`,
-    })
+    });
   },
-})
+});

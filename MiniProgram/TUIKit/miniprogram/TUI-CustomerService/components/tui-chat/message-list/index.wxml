@@ -1,7 +1,7 @@
 <view class="container">
-<scroll-view  class="message-list-container" scroll-y="true" scroll-top='{{topNum}}'  scroll-into-view="{{jumpAim}}" refresher-enabled="{{true}}" bindrefresherrefresh="refresh" refresher-triggered="{{triggered}}" lower-threshold="200" bindscroll="handleScroll" bindscrolltolower="scrollHandler">
+<scroll-view  class="message-list-container" scroll-y="true"   scroll-into-view="{{jumpAim}}" refresher-enabled="{{true}}" bindrefresherrefresh="refresh" refresher-triggered="{{triggered}}" lower-threshold="200" bindscroll="handleScroll" bindscrolltolower="scrollHandler">
     <view class="no-message" wx:if="{{isCompleted}}">没有更多啦</view>
-    <view class="t-message" wx:if="{{conversation.type !== '@TIM#SYSTEM'}}" wx:for="{{messageList}}" wx:key="index" id="{{item.ID}}" data-index ='{{index}}'   >
+    <view class="t-message" wx:if="{{conversation.type !== '@TIM#SYSTEM'}}" wx:for="{{messageList}}" wx:key="index"  data-index ='{{index}}'  >
          <view class="time-pop-mask" data-value="{{item.time}}" wx:if="{{showMessageTime}}">
              <view class="showmessagetime" wx:if="{{item.isShowTime}}">
              <text class="time"  wx:if="{{!item.isDeleted && !item.isRevoked}}">{{messageTime}} </text> 
@@ -17,9 +17,10 @@
              <text class="time">{{newArr[item.ID]}} </text> 
              </view>
          </view>
-        <view class="t-message-item"   wx:if="{{!item.isDeleted && !item.isRevoked}}" bindtap="handleEditToggleAvatar" >
+    <TUI-RevokeMessage wx:if="{{item.isRevoked}}" message="{{item}}" isMine="{{item.isSelf}}" bind:resendMessage="resendMessage"/>
+        <view class="t-message-item"   wx:if="{{!item.isDeleted && !item.isRevoked }}" bindtap="handleEditToggleAvatar" >
             <view wx:if="{{Show}}" catchtap="handleEditToggleAvatar">
-            <view class="label-pop"  wx:if="{{messageID === item.ID}}" class="{{item.isSelf ? 'label-self-body' : 'label-recieve-body'}}" >
+            <view class="label-pop"  wx:if="{{messageID === concat.connect('ID-',item.ID)}}" class="{{item.isSelf ? 'label-self-body' : 'label-recieve-body'}}" >
                 <view class="label-pop-mask" >
                     <view class="copymessage" wx:if="{{item.type === 'TIMTextElem'|| item.type === 'TIMFaceElem'}}" catchtap="copyMessage" > <text>复制｜</text>
                     </view>
@@ -40,14 +41,15 @@
                  <view wx:if="{{item.isSelf && item.ID === errorMessageID || item.status === 'fail'}}" class="t-message-error-box">
                  <image class="t-message-error" wx:if="{{showMessageError}}" src='../../../static/images/tuikit-msg-error.png' bindtap="ResndMessage" />
                 </view>
-                <view  class="{{item.isSelf ? 't-self-message-body':'t-recieve-message-body'}}"  catch:longpress="handleLongPress" data-index ='{{index}}' id="{{item.ID}}" message-value="{{item}}" >
+                <view  class="{{item.isSelf ? 't-self-message-body':'t-recieve-message-body'}}"  catch:longpress="handleLongPress" data-index='{{index}}'  data-value='{{item}}' id="{{concat.concat(conversation.type,'ID-',item.ID)}}" message-value="{{item}}" >
                     <TUI-TextMessage wx:if="{{item.type === 'TIMTextElem'}}" message="{{item}}" isMine="{{item.isSelf}}" />
                     <TUI-ImageMessage wx:if="{{item.type === 'TIMImageElem'}}" message="{{item}}" isMine="{{item.isSelf}}" />
                     <TUI-VideoMessage wx:if="{{item.type === 'TIMVideoFileElem'}}" message="{{item}}" isMine="{{item.isSelf}}"/>
                     <TUI-AudioMessage wx:if="{{item.type === 'TIMSoundElem'}}"  message="{{item}}" data-index ='{{index}}' messageList="{{messageList}}" isMine="{{item.isSelf}}"/>
-                    <TUI-CustomMessage wx:if="{{item.type === 'TIMCustomElem'}}" message="{{item}}" isMine="{{item.isSelf}}"/>
+                    <TUI-CustomMessage wx:if="{{item.type === 'TIMCustomElem'}}" message="{{item}}" isMine="{{item.isSelf}}" bindtap="handleJumpLink" data-value = "{{item}}"/>
                     <TUI-FaceMessage wx:if="{{item.type === 'TIMFaceElem'}}" message="{{item}}" isMine="{{item.isSelf}}"/>
                     <TUI-FileMessage wx:if="{{item.type === 'TIMFileElem'}}" message="{{item}}" isMine="{{item.isSelf}}"/>
+                    <TUI-MergerMessage wx:if="{{item.type === 'TIMRelayElem'}}" message="{{item}}" isMine="{{item.isSelf}}"/>
                 </view>
                 <image class="t-message-avatar" wx:if="{{item.isSelf}}"  src="{{item.avatar || 'https://sdk-web-1252463788.cos.ap-hongkong.myqcloud.com/component/TUIKit/assets/avatar_21.png'}}"  data-value="{{item}}" bindtap="getMemberProfile"/>
             </view>
@@ -55,14 +57,6 @@
     </view>
     <view class="t-message" wx:if="{{conversation.type === '@TIM#SYSTEM'}}"  wx:for="{{messageList}}" wx:key="index" id="{{filterSystemMessageID}}" data-value="{{item.ID}}">
         <TUI-SystemMessage  message="{{item}}" bind:changeSystemMessageList="changeSystemMessageList"></TUI-SystemMessage>
-    </view>
-     <view wx:if="{{isRevoke}}">
-        <view class="notice" bindtap="resendMessage">
-            <view class="content">
-                <text class="revoke">{{showName}}:撤回了一条消息</text>
-                <text class="rewrite" wx:if="{{isRewrite}}">重新编辑</text>
-            </view>
-        </view>
     </view>
 </scroll-view>
 </view>
@@ -83,3 +77,4 @@
     </view>
     </view>
 </view>
+<wxs src = './concat.wxs' module = 'concat'/>

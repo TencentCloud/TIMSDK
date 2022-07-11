@@ -37,10 +37,16 @@ Page({
       wx.navigateToMiniProgram({
         appId: 'wx3b91b7aaa809ecf9',
       });
-    } else {
+    } else if (tab.name === '在线客服') {
       wx.navigateTo({
         url: tab.url,
       });
+    } else if (tab.name === '实时通话') {
+      {
+        wx.navigateTo({
+          url: tab.url,
+        });
+      }
     }
   },
   learnMore() {

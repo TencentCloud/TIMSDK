@@ -1,5 +1,5 @@
 import logger from '../../../utils/logger';
-
+const app = getApp();
 // eslint-disable-next-line no-undef
 Page({
 

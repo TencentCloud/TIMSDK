@@ -1,0 +1,21 @@
+/* TUI-CustomerService/components/tui-chat/message-elements/relay-message/index.wxss */
+.message-body-span {
+  display: flex;
+  align-items: center;
+  /*justify-content: flex-start;*/
+  flex-wrap: wrap;
+  outline: none;
+  font-size: 28rpx;
+  color: #333333;
+  position: relative;
+  max-width: 60vw;
+}
+.text-message {
+  display: inline-flex;
+  max-width: 60vw;
+  line-height: 52rpx;
+  padding: 12rpx 24rpx;
+  background: #F8F8F8;
+  border: 1px solid #D9D9D9;
+  border-radius: 2px 10px 10px 10px;
+}

@@ -1,0 +1,6 @@
+var concat = function(str1, str2) {
+    return 2
+}
+module.exports = {
+    concat: concat
+};

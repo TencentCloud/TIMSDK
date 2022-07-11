@@ -9,8 +9,12 @@
   </view>
   <view wx:if="{{renderDom[0].type ==='consultion'}}"  class="custom-message {{isMine?'my-custom':''}}">
     <view class="custom-content">
-      <view class="custom-content-title">{{renderDom[0].title}}</view>
-      <view class="custom-content-description" wx:for="{{renderDom[0].item}}" wx:key="index" id="{{item.key}}">{{item.key}}</view>
+      <view>
+      <text class="custom-content-title">{{renderDom[0].title}}</text>
+      <text class="custom-content-hyperlinks" bindtap="openLink" data-value="{{renderDom[0].hyperlinks_text}}">{{renderDom[0].hyperlinks_text.key}}</text>
+      <view class="custom-content-description" wx:for="{{renderDom[0].item}}" wx:key="index" id="{{item.key}}">{{item.key}}
+      </view>
+      </view>
       <text class="custom-content-description">{{renderDom[0].description}}</text>
     </view>
   </view>
@@ -22,6 +26,10 @@
       </view>
       <view class="custom-content-description">{{renderDom[0].description}}</view>
     </view>
+  </view>
+  <view wx:if="{{renderDom[0].type === 'text_link'}}" class="message-body-span text-message">
+    <view class="message-body-span-text">{{renderDom[0].text}}</view>
+    <text class="message-body-span-link">查看详情>></text>
   </view>
   <view wx:if="{{renderDom[0].type ==='group_create'}}" class="custom-message {{isMine?'my-custom':''}}" >
     <view class="custom-content-text">{{renderDom[0].text}}</view>
