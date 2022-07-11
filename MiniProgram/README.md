@@ -57,16 +57,26 @@ cd TIMSDK/MiniProgram/TUIKit
 
 将以下域名添加到 **request 合法域名**：
 
-从v2.11.2起，SDK 支持了 WebSocket，WebSocket 版本须添加以下域名：
+**1. 小程序如果需要上线或者部署正式环境怎么办？**
+请在**微信公众平台**>**开发**>**开发管理**>**开发设置**>**服务器域名**中进行域名配置：
+
+从v2.11.2起 SDK 支持了 WebSocket，WebSocket 版本须添加以下域名到 **socket 合法域名**：
 
 | 域名 | 说明 |  是否必须 |
 |:-------:|---------|----|
 |`wss://wss.im.qcloud.com`| Web IM 业务域名 | 必须|
 |`wss://wss.tim.qq.com`| Web IM 业务域名 | 必须|
+
+将以下域名添加到 **request 合法域名**：
+
+| 域名 | 说明 |  是否必须 |
+|:-------:|---------|----|
 |`https://web.sdk.qcloud.com`| Web IM 业务域名 | 必须|
 |`https://webim.tim.qq.com` | Web IM 业务域名 | 必须|
+|`https://api.im.qcloud.com` | Web IM 业务域名 | 必须|
+|`https://aegis.qq.com`| Web IM 统计域名 | 必须 |
 
-v2.10.2及以下版本，使用 HTTP，HTTP 版本须添加以下域名：
+v2.10.2及以下版本使用 HTTP，HTTP 版本须添加以下域名到 **request 合法域名**：
 
 | 域名 | 说明 |  是否必须 |
 |:-------:|---------|----|
@@ -87,6 +97,7 @@ v2.10.2及以下版本，使用 HTTP，HTTP 版本须添加以下域名：
 | 域名 | 说明 |  是否必须 |
 |:-------:|---------|----|
 |`https://cos.ap-shanghai.myqcloud.com` | 文件下载域名 | 必须|
+
 
 ### 文档：
 - SDK API 手册：https://web.sdk.qcloud.com/im/doc/zh-cn/SDK.html

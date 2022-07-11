@@ -10,7 +10,7 @@ if (typeof console !== 'undefined') {
 }
 
 const noop = function () {}
-const methods = ['assert', 'clear', 'count', 'debug', 'dir', 'dirxml', 'error', 'exception', 'group', 'groupCollapsed', 'groupEnd', 'info', 'log', 'markTimeline', 'profile', 'profileEnd', 'table', 'time', 'timeEnd', 'timeStamp', 'trace', 'warn']
+const methods = ['assert', 'clear', 'count', 'debug', 'dir', 'dirxml', 'error', 'group', 'groupCollapsed', 'groupEnd', 'info', 'log', 'profile', 'profileEnd', 'table', 'time', 'timeEnd', 'timeStamp', 'trace', 'warn']
 let { length } = methods
 
 while (length--) {
@@ -20,6 +20,5 @@ while (length--) {
     _console[method] = noop
   }
 }
-_console.methods = methods
 
 export default _console

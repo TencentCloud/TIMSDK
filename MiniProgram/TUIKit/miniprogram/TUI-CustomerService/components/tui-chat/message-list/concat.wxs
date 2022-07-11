@@ -1,0 +1,13 @@
+var concat = function() {
+    if (arguments[0] === 'GROUP' && arguments[2].indexOf('@TGS#') !== -1) {
+        arguments[2] = arguments[2].replace('@TGS#', '')
+    }
+    return arguments[1] + arguments[2]
+}
+var connect = function() {
+    return arguments[0] + arguments[1]
+}
+module.exports = {
+    concat: concat
+    connect: connect
+};

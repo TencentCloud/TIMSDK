@@ -1,7 +1,7 @@
 import { parseAudio } from '../../../base/message-facade';
 
-//创建audio控件
-const myaudio = wx.createInnerAudioContext(); 
+// 创建audio控件
+const myaudio = wx.createInnerAudioContext();
 // eslint-disable-next-line no-undef
 Component({
   /**
@@ -22,11 +22,11 @@ Component({
       type: Object,
       value: {},
       observer(newVal) {
-        this.filtterAudioMessage(newVal)
+        this.filtterAudioMessage(newVal);
         this.setData({
-          audioMessageList: newVal
-        })
-      }
+          audioMessageList: newVal,
+        });
+      },
     },
     isMine: {
       type: Boolean,
@@ -44,12 +44,12 @@ Component({
    * 组件的初始数据
    */
   data: {
-    message:'',
+    message: '',
     renderDom: [],
     Audio: [],
     audioMessageList: [],
     audioSave: [],
-    audKey:'',  //当前选中的音频key
+    audKey: '',  // 当前选中的音频key
     indexAudio: Number,
     isPlay: false,
   },
@@ -59,95 +59,93 @@ Component({
    */
   methods: {
     // 过滤语音消息,从消息列表里面筛选出语音消息
-    filtterAudioMessage(messageList){
-      const list = []
-      for(let index = 0; index< messageList.length; index++) {
-       if(messageList[index].type === "TIMSoundElem") {
-        list.push(messageList[index])
-        Object.assign(messageList[index], {
-          isPlaying: false,
-        }),
-        this.data.audioSave = list
-        this.setData({
-          audioSave: this.data.audioSave
-        })
-       }
+    filtterAudioMessage(messageList) {
+      const list = [];
+      for (let index = 0; index < messageList.length; index++) {
+        if (messageList[index].type === 'TIMSoundElem') {
+          list.push(messageList[index]);
+          Object.assign(messageList[index], {
+            isPlaying: false,
+          }),
+          this.data.audioSave = list;
+          this.setData({
+            audioSave: this.data.audioSave,
+          });
+        }
       }
     },
 
-  //音频播放  
-  audioPlay(e) {
-     const  id = e.currentTarget.dataset.id,
-            audioSave = this.data.audioSave;
-  
-    //设置状态
-    audioSave.forEach((message, index,) => {
-      message.isPlaying = false;
-      if (audioSave[index].ID == id) {
-        message.isPlaying = true;
-      const indexAudio = audioSave.findIndex((value)=> value.ID == audioSave[index].ID) 
+    // 音频播放
+    audioPlay(e) {
+      const  { id } = e.currentTarget.dataset;
+      const { audioSave } = this.data;
+
+      // 设置状态
+      audioSave.forEach((message, index) => {
+        message.isPlaying = false;
+        if (audioSave[index].ID == id) {
+          message.isPlaying = true;
+          const indexAudio = audioSave.findIndex(value => value.ID == audioSave[index].ID);
+          this.setData({
+            indexAudio,
+            isPlay: false,
+          });
+        }
+      });
       this.setData({
-        indexAudio,
-        isPlay: false,
-      })
-      }   
-    })  
-    this.setData({
-      audioSave: audioSave,
-      audKey: this.data.indexAudio,
-      isPlay: true,
-    })
-    myaudio.autoplay = true;
-     const audKey = this.data.audKey,
-      playSrc = audioSave[audKey].payload.url;
-      myaudio.src = playSrc; 
+        audioSave,
+        audKey: this.data.indexAudio,
+        isPlay: true,
+      });
+      myaudio.autoplay = true;
+      const { audKey } = this.data;
+      const playSrc = audioSave[audKey].payload.url;
+      myaudio.src = playSrc;
       myaudio.play();
-    //开始监听
-    myaudio.onPlay(() => {
-      console.log('开始播放');
-    })
+      // 开始监听
+      myaudio.onPlay(() => {
+        console.log('开始播放');
+      });
 
-    //结束监听
-    myaudio.onEnded(() => {
-      console.log('自动播放完毕');
-      audioSave[this.data.indexAudio].isPlaying = false;
+      // 结束监听
+      myaudio.onEnded(() => {
+        console.log('自动播放完毕');
+        audioSave[this.data.indexAudio].isPlaying = false;
+        this.setData({
+          audioSave,
+          isPlay: false,
+        });
+      });
+
+      // 错误回调
+      myaudio.onError((err) => {
+        console.log(err);
+        audioSave[this.data.indexAudio].isPlaying = false;
+        this.setData({
+          audioSave,
+        });
+        return;
+      });
+    },
+
+    // 音频停止
+    audioStop(e) {
+      const { key } = e.currentTarget.dataset;
+      const { audioSave } = this.data;
+      // 设置状态
+      audioSave.forEach((message, index) => {
+        message.isPlaying = false;
+      });
       this.setData({
-        audioSave: audioSave,
+        audioSave,
         isPlay: false,
-      })
-    })
+      });
+      myaudio.stop();
 
-    //错误回调
-    myaudio.onError((err) => {
-      console.log(err); 
-      audioSave[this.data.indexAudio].isPlaying = false;
-      this.setData({
-        audioSave:audioSave,
-      })
-      return
-    })
-
+      // 停止监听
+      myaudio.onStop(() => {
+        console.log('停止播放');
+      });
+    },
   },
-
-  // 音频停止
-  audioStop(e){
-    const key = e.currentTarget.dataset.key,
-      audioSave = this.data.audioSave;
-    //设置状态
-    audioSave.forEach((message, index,) => {
-      message.isPlaying = false;
-    })
-    this.setData({
-      audioSave: audioSave,
-      isPlay: false
-    })
-    myaudio.stop();
-
-    //停止监听
-    myaudio.onStop(() => {
-      console.log('停止播放');
-    })
-
-  }, 
-}
 });

@@ -45,6 +45,14 @@ App({
       pagePerformance: true, // 开启页面测速
     });
   },
+  aegisInit() {
+    wx.aegis = new Aegis({
+      id: 'iHWefAYquFxvklBblC', // 项目key
+      reportApiSpeed: true, // 接口测速
+      reportAssetSpeed: true, // 静态资源测速
+      pagePerformance: true, // 开启页面测速
+    });
+  },
   // TODO:
   resetLoginData() {
     this.globalData.expiresIn = ''
@@ -54,9 +62,9 @@ App({
       userSig: '',
       token: '',
       phone: '',
-    }
-    this.globalData.userProfile = null
-    logger.log(`| app |  resetLoginData | globalData: ${this.globalData}`)
+    };
+    this.globalData.userProfile = null;
+    logger.log(`| app |  resetLoginData | globalData: ${this.globalData}`);
   },
   globalData: {
     // userInfo: userID userSig token phone
@@ -95,4 +103,4 @@ App({
   onSDKReload() {
 
   },
-})
+});

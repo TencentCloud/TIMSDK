@@ -51,7 +51,6 @@ Component({
     checkID: '',
     selectedMessage: {},
     deleteMessage: '',
-    isRevoke: false,
     RevokeID: '', // 撤回消息的ID用于处理对方消息展示界面
     showName: '',
     showDownJump: false,
@@ -80,7 +79,7 @@ Component({
     firstTime: Number,
     newArr: {},
     errorMessage: {},
-    errorMessageID: ''
+    errorMessageID: '',
   },
 
   lifetimes: {
@@ -167,7 +166,8 @@ Component({
         } else {
           this.setData({
             messageList,
-            jumpAim: this.filterSystemMessageID(currentMessageList[currentMessageList.length - 1].ID),
+            // 消息ID前拼接字符串为了解决scroll-into-view，无法跳转以数字开头的ID。
+            jumpAim: `ID-${this.filterSystemMessageID(currentMessageList[currentMessageList.length - 1].ID)}`,
           }, () => {
           });
         }
@@ -233,33 +233,42 @@ Component({
     },
     // 自己的消息上屏
     updateMessageList(message) {
+      this.$onMessageReadByPeer();
       this.messageTimeForShow(message);
       message.isSelf = true;
       this.data.messageList.push(message);
       this.setData({
         lastMessageSequence: this.data.messageList.slice(-1)[0].sequence,
         messageList: this.data.messageList,
-        jumpAim: this.filterSystemMessageID(this.data.messageList[this.data.messageList.length - 1].ID),
+        jumpAim: `ID-${this.filterSystemMessageID(this.data.messageList[this.data.messageList.length - 1].ID)}`,
       });
     },
     // 兼容 scrollView
     filterSystemMessageID(messageID) {
       const index = messageID.indexOf('@TIM#');
-      if (index > -1) {
-        return messageID.replace('@TIM#', '');
+      const groupIndex = messageID.indexOf('@TGS#');
+      if (index === 0) {
+        messageID =  messageID.replace('@TIM#', '');
+      }
+      if (groupIndex === 0) {
+        messageID =  messageID.replace('@TGS#', '');
       }
       return messageID;
     },
     // 获取消息ID
     handleLongPress(e) {
-      const { index } = e.currentTarget.dataset;
-      this.setData({
-        messageID: e.currentTarget.id,
-        selectedMessage: this.data.messageList[index],
-        Show: true,
-      });
+      for (let index = 0; index < this.data.messageList.length; index++) {
+        if (this.data.messageList[index].status === 'success') {
+          const { index } = e.currentTarget.dataset;
+          this.setData({
+            messageID: e.currentTarget.id,
+            selectedMessage: this.data.messageList[index],
+            Show: true,
+          });
+        }
+      }
     },
-    // 更新messagelist
+    // 更新 messagelist
     updateMessageByID(deleteMessageID) {
       const { messageList } = this.data;
       const deleteMessageArr = messageList.filter(item => item.ID === deleteMessageID);
@@ -295,13 +304,6 @@ Component({
             resendMessage: imResponse.data.message,
           });
           this.updateMessageByID(imResponse.data.message.ID);
-          if (imResponse.data.message.from === app.globalData.userInfo.userID) {
-            this.setData({
-              showName: '你',
-              isRevoke: true,
-              isRewrite: true,
-            });
-          }
           // 消息撤回成功
         })
         .catch((imError) => {
@@ -318,24 +320,10 @@ Component({
         });
     },
     // 撤回消息重新发送
-    resendMessage() {
-      wx.$TUIKit.resendMessage(this.data.resendMessage)
-        .then((imResponse) => {
-          this.triggerEvent('resendMessage', {
-            message: imResponse.data.message,
-          });
-          this.setData({
-            isRevoke: true,
-            isRewrite: false,
-          });
-        })
-        .catch((imError) => {
-          wx.showToast({
-            title: '重发失败',
-            icon: 'none',
-          });
-          logger.warn('resendMessage error', imError);
-        });
+    resendMessage(e) {
+      this.triggerEvent('resendMessage', {
+        message: e.detail.message,
+      });
     },
     // 关闭弹窗
     handleEditToggleAvatar() {
@@ -345,13 +333,6 @@ Component({
     },
     // 向对方通知消息撤回事件
     $onMessageRevoked(event) {
-      if (event.data[0].from !== app.globalData.userInfo.userID) {
-        this.setData({
-          showName: event.data[0].nick,
-          RevokeID: event.data[0].ID,
-          isRevoke: true,
-        });
-      }
       this.updateMessageByID(event.data[0].ID);
     },
     // 复制消息
@@ -373,7 +354,7 @@ Component({
     // 消息跳转到最新
     handleJumpNewMessage() {
       this.setData({
-        jumpAim: this.filterSystemMessageID(this.data.messageList[this.data.messageList.length - 1].ID),
+        jumpAim: `ID-${this.filterSystemMessageID(this.data.messageList[this.data.messageList.length - 1].ID)}`,
         showDownJump: false,
         showNewMessageCount: [],
       });
@@ -383,13 +364,13 @@ Component({
       if (this.data.unreadCount > 15) {
         this.getMessageList(this.data.conversation);
         this.setData({
-          jumpAim: this.filterSystemMessageID(this.data.messageList[this.data.messageList.length - this.data.unreadCount].ID),
+          jumpAim: `ID-${this.filterSystemMessageID(this.data.messageList[this.data.messageList.length - this.data.unreadCount].ID)}`,
           showUpJump: false,
         });
       } else {
         this.getMessageList(this.data.conversation);
         this.setData({
-          jumpAim: this.filterSystemMessageID(this.data.messageList[this.data.messageList.length - this.data.unreadCount].ID),
+          jumpAim: `ID-${this.filterSystemMessageID(this.data.messageList[this.data.messageList.length - this.data.unreadCount].ID)}`,
           showUpJump: false,
         });
       }
@@ -397,7 +378,7 @@ Component({
     // 滑动到最底部置跳转事件为false
     scrollHandler() {
       this.setData({
-        jumpAim: this.filterSystemMessageID(this.data.messageList[this.data.messageList.length - 1].ID),
+        jumpAim: `ID-${this.filterSystemMessageID(this.data.messageList[this.data.messageList.length - 1].ID)}`,
         showDownJump: false,
       });
     },
@@ -409,16 +390,18 @@ Component({
     messageTimeForShow(messageTime) {
       const interval = 5 * 60 * 1000;
       const nowTime = Math.floor(messageTime.time / 10) * 10 * 1000;
-      const lastTime = this.data.messageList.slice(-1)[0].time * 1000;
-      if (nowTime  - lastTime > interval) {
-        Object.assign(messageTime, {
-          isShowTime: true,
-        }),
-        this.data.messageTime = dayjs(nowTime);
-        this.setData({
-          messageTime: dayjs(nowTime).format('YYYY-MM-DD HH:mm:ss'),
-          showMessageTime: true,
-        });
+      if (this.data.messageList.length > 0) {
+        const lastTime = this.data.messageList.slice(-1)[0].time * 1000;
+        if (nowTime  - lastTime > interval) {
+          Object.assign(messageTime, {
+            isShowTime: true,
+          }),
+          this.data.messageTime = dayjs(nowTime);
+          this.setData({
+            messageTime: dayjs(nowTime).format('YYYY-MM-DD HH:mm:ss'),
+            showMessageTime: true,
+          });
+        }
       }
     },
     // 渲染历史消息时间
@@ -445,21 +428,23 @@ Component({
     },
     // 拉取更多历史消息渲染时间
     showMoreHistoryMessageTime(messageList) {
-      const showHistoryTime = messageList[0].time * 1000;
-      Object.assign(messageList[0], {
-        isShowMoreHistoryTime: true,
-      });
-      this.data.newArr[messageList[0].ID] = dayjs(showHistoryTime).format('YYYY-MM-DD HH:mm:ss');
-      this.setData({
-        newArr: this.data.newArr,
-      });
+      if (messageList.length > 0) {
+        const showHistoryTime = messageList[0].time * 1000;
+        Object.assign(messageList[0], {
+          isShowMoreHistoryTime: true,
+        });
+        this.data.newArr[messageList[0].ID] = dayjs(showHistoryTime).format('YYYY-MM-DD HH:mm:ss');
+        this.setData({
+          newArr: this.data.newArr,
+        });
+      }
     },
     // 消息发送失败
     sendMessageError(event) {
       this.setData({
-        errorMessage : event.detail.message,
-        errorMessageID: event.detail.message.ID
-      })
+        errorMessage: event.detail.message,
+        errorMessageID: event.detail.message.ID,
+      });
       const DIRTYWORDS_CODE = 80001;
       const UPLOADFAIL_CODE = 6008;
       const REQUESTOVERTIME_CODE = 2081;
@@ -515,22 +500,21 @@ Component({
                 });
               })
               .catch((imError) => {
-                if(imError.code === DIRTYWORDS_CODE) {
+                if (imError.code === DIRTYWORDS_CODE) {
                   wx.showToast({
-                    title:  '您发送的消息包含违禁词汇!',
+                    title: '您发送的消息包含违禁词汇!',
                     duration: 800,
                     icon: 'none',
                   });
-                } else if (imError.code === UPLOADFAIL_CODE ) {
+                } else if (imError.code === UPLOADFAIL_CODE) {
                   wx.showToast({
-                    title:  '文件上传失败!',
+                    title: '文件上传失败!',
                     duration: 800,
                     icon: 'none',
                   });
-                } else if (imError.code === (REQUESTOVERTIME_CODE || DISCONNECTNETWORK_CODE))
-                 {
+                } else if (imError.code === (REQUESTOVERTIME_CODE || DISCONNECTNETWORK_CODE)) {
                   wx.showToast({
-                    title:  '网络已断开!',
+                    title: '网络已断开!',
                     duration: 800,
                     icon: 'none',
                   });
@@ -566,6 +550,16 @@ Component({
         const url =  `/TUI-CustomerService/pages/TUI-Group/memberprofile-group/memberprofile?personalProfile=${JSON.stringify(this.data.personalProfile)}`;
         wx.navigateTo({
           url,
+        });
+      }
+    },
+    // 点击购买链接跳转
+    handleJumpLink(e) {
+      const dataLink = JSON.parse(e.currentTarget.dataset.value.payload.data);
+      if (dataLink.businessID === 'order' || dataLink.businessID === 'text_link') {
+        const url = `/pages/TUI-User-Center/webview/webview?url=${dataLink.link}&wechatMobile`;
+        wx.navigateTo({
+          url: encodeURI(url),
         });
       }
     },
