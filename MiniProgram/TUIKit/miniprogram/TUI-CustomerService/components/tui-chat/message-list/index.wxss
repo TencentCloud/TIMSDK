@@ -166,16 +166,7 @@
   font-size: 14px;
   color: white; 
 }
-.notice{
-  display: flex;
-  justify-content: center;
-  }
-.content{
-    background-color:white;
-    border-radius: 8px;
-    font-size: 14px;
-    padding: 6px 8px;
-  }
+
 .new-message-item{
   position: absolute;
   right: 30px;

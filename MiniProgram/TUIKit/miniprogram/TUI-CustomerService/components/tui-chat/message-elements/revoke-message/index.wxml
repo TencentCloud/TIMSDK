@@ -1,0 +1,6 @@
+  <view class="revoke" data-value="{{message}}">
+    <label class="name" wx:if="{{message.flow === 'in'}}">{{message.nick || message.from}}</label>
+    <label class="name" wx:else>你</label>
+    <span class="name">撤回了一条消息</span>
+    <span class="edit" wx:if="{{message.flow === 'out' && message.type === 'TIMTextElem'}}" bindtap="resendMessage" data-value="{{message}}">重新编辑</span>
+  </view>

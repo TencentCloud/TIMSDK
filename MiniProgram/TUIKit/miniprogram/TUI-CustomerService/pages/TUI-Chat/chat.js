@@ -96,7 +96,7 @@ Page({
       this.TRTCCalling.call(event.detail);
     }
   },
-  
+
   goBack() {
     // eslint-disable-next-line no-undef
     const pages = getCurrentPages(); // 当前页面栈

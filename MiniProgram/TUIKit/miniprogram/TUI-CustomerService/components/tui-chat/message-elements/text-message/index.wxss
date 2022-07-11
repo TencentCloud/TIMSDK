@@ -28,10 +28,12 @@
   max-width: 60vw;
 }
 .message-body-span-text {
-  width: 100%;
-  display: inline;
-  word-wrap: break-word;
-  word-break: break-all;
+  font-family: PingFangSC-Regular;
+  font-weight: 400;
+  color: #000000;
+  letter-spacing: 0;
+  line-height: 40rpx;
+  font-size: 28rpx;
 }
 .message-body-span-image {
   display: inline-block;

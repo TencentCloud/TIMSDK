@@ -2,18 +2,24 @@ const orderList = [
   {
     orderNum: 1,
     time: '2021-7-20 20:45',
-    title: '[天博检验]新冠核酸检测/预约',
-    description: '专业医学检测，电子报告',
-    imageUrl: 'https://sdk-web-1252463788.cos.ap-hongkong.myqcloud.com/component/TUIKit/assets/miles.jpeg',
-    price: '80元',
+    title: '即时通信 IM 首购活动',
+    description: '单用户限购1件',
+    imageUrl: 'https://sdk-web-1252463788.cos.ap-hongkong.myqcloud.com/component/TUIKit/assets/im.jpg',
+    link: 'https://cloud.tencent.com/act/pro/imnew?from=16262',
+    imageWidth: 135,
+    imageHeight: 135,
+    price: '0.9折起',
   },
   {
     orderNum: 2,
     time: '2021-7-20 22:45',
-    title: '[路边]新冠核酸检测/预约',
-    description: '专业医学检测，电子报告',
-    imageUrl: 'https://sdk-web-1252463788.cos.ap-hongkong.myqcloud.com/component/TUIKit/assets/miles.jpeg',
-    price: '7000元',
+    title: '即时通信 IM 老客户热销专区',
+    description: '购买时长越长越优惠',
+    imageUrl: 'https://sdk-web-1252463788.cos.ap-hongkong.myqcloud.com/component/TUIKit/assets/im.jpg',
+    link: 'https://cloud.tencent.com/act/pro/imnew?from=16262',
+    imageWidth: 135,
+    imageHeight: 135,
+    price: '7.2折起',
   },
 ];
 
@@ -77,12 +83,19 @@ Component({
       const { order } = e.currentTarget.dataset;
       this.triggerEvent('sendCustomMessage', { // 传递给父组件，在父组件处调用SDK的接口，来进行自定消息的发送
         payload: {
-          data: 'order', // data字段用于标识该消息类型
-          description: order.description, // 获取自定义消息的具体描述
-          extension: JSON.stringify({
+          data: JSON.stringify({
+            businessID: 'order',
+            version: 1,
             title: order.title,
             imageUrl: order.imageUrl,
-            price: order.price }), // 自定义消息的具体内容
+            imageWidth: order.imageWidth,
+            imageHeight: order.imageHeight,
+            link: order.link,
+            price: order.price,
+            description: order.description,
+          }), // data字段用于标识该消息类型
+          description: order.title, // 获取自定义消息的具体描述
+          extension: order.title, // 自定义消息的具体内容
         },
       });
     },
