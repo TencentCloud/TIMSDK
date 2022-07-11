@@ -1,5 +1,6 @@
 import logger from '../../../utils/logger';
-
+// eslint-disable-next-line no-undef
+const app = getApp();
 // eslint-disable-next-line no-undef
 Page({
 
@@ -73,7 +74,7 @@ Page({
   // 了解更多链接
   learnMore() {
     wx.navigateTo({
-      url: '../../TUI-User-Center/webview/webview?url=https://cloud.tencent.com/product/im',
+      url: '/pages/TUI-User-Center/webview/webview?url=https://cloud.tencent.com/product/im',
     });
   },
   // 点击事件跳转

@@ -52,12 +52,14 @@ Component({
       this.triggerEvent('sendCustomMessage', {
         payload: {
           // data 字段作为表示，可以自定义
-          data: 'evaluation',
-          description: '对本次服务的评价', // 获取骰子点数
-          extension: JSON.stringify({
+          data: JSON.stringify({
+            businessID: 'evaluation',
+            version: 1,
             score: this.data.score,
             comment: this.data.comment,
           }),
+          description: '对本次服务的评价', // 获取骰子点数
+          extension: '对本次服务的评价',
         },
       });
 

@@ -28,6 +28,7 @@ export function setTokenStorage(options) {
         userID: options.userInfo.userID,
         userSig: options.userInfo.userSig,
       },
+      isFirstSendMessage: options.isFirstSendMessage,
     }
     if (!app) {
       app = getApp()

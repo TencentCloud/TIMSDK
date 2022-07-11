@@ -10,7 +10,7 @@
   ],
   "plugins": {
     "myPlugin": {
-      "version": "1.0.0",
+      "version": "1.0.3",
       "provider": "wxb302e0fc8ab232b4"
     }
   },

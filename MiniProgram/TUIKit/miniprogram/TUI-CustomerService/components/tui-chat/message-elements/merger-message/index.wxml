@@ -1,0 +1,2 @@
+<!--TUI-CustomerService/components/tui-chat/message-elements/relay-message/index.wxml-->
+<text class="message-body-span text-message">[聊天记录]</text>

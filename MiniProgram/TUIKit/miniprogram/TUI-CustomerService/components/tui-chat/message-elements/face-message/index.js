@@ -34,8 +34,12 @@ Component({
   methods: {
     // 解析face 消息
     parseFace(message) {
+      // 兼容android的大表情格式
+      if (message.payload.data.indexOf('@2x') < 0) {
+        message.payload.data = `${message.payload.data}@2x`;
+      }
       const renderDom = {
-        src: `${this.data.faceUrl + message.payload.data}@2x.png`,
+        src: `${this.data.faceUrl + message.payload.data}.png`,
       };
       return renderDom;
     },
