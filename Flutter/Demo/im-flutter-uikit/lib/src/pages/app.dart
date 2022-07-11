@@ -199,6 +199,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
     Future.delayed(const Duration(seconds: 1), () {
       directToLogin();
+      setCustomSticker();
     });
   }
 
@@ -210,7 +211,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       minTextAdapt: true,
     );
     isInitScreenUtils = true;
-    setCustomSticker();
   }
 
   void handleClickNotification(Map<String, dynamic> msg) async {
@@ -254,7 +254,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     WidgetsBinding.instance?.addObserver(this);
     _cachedContext = context;
     ChannelPush.init(handleClickNotification);
+    
     initApp();
+    
   }
 
   @override
