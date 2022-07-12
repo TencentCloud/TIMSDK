@@ -218,7 +218,7 @@ NSString * kEnableMsgReadStatus = @"TUIKitDemo_EnableMsgReadStatus";
     msgReadStatus.title =  NSLocalizedString(@"MeMessageReadStatus", nil);  // @"消息阅读状态"
     msgReadStatus.desc = NSLocalizedString(@"MeMessageReadStatusDesc", nil);
     msgReadStatus.cswitchSelector = @selector(onSwitchMsgReadStatus:);
-    [self setReadStatus:NO]; // 默认关闭
+    
     msgReadStatus.on = [self msgReadStatus];
     [_data addObject:@[msgReadStatus]];
     
