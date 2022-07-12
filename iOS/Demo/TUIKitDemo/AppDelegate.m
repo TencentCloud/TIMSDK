@@ -207,7 +207,13 @@ void uncaughtExceptionHandler(NSException*exception) {
 }
 
 - (void)setupConfig {
-    [TUIChatConfig defaultConfig].msgNeedReadReceipt = [self loadIsShowMessageReadStatus];
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:kEnableMsgReadStatus]) {
+        TUIChatConfig.defaultConfig.msgNeedReadReceipt = [[NSUserDefaults standardUserDefaults] boolForKey:kEnableMsgReadStatus];
+    } else {
+        TUIChatConfig.defaultConfig.msgNeedReadReceipt = NO;
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kEnableMsgReadStatus];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
 }
 
 - (BOOL)loadIsShowMessageReadStatus {
