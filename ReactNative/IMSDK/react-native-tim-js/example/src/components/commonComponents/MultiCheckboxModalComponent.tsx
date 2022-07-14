@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Modal, TouchableOpacity, FlatList } from 'react-native';
 import { Text } from 'react-native-paper';
 import MultiCheckboxComponent from './MultiCheckboxComponent';
-import { TencentImSDKPlugin } from 'react-native-tim-js';
+import { TencentImSDKPlugin, V2TimConversation } from 'react-native-tim-js';
 
 const MultiCheckBoxModalComponent = (props) => {
-    const { visible, getVisible, getUsername, type, groupID } = props
+    const { visible, getVisible, getUsername, type, groupID} = props
     const usersSet = new Set()
     const [res, setRes] = useState<any>({})
     const [content, setContent] = useState('')
@@ -30,6 +30,10 @@ const MultiCheckBoxModalComponent = (props) => {
             case 'member':
                 setContent('选择群成员')
                 getMemberList()
+                break;
+            case 'conversation':
+                setContent('选择会话')
+                getConversationList()
                 break;
             default:
                 break;
@@ -66,6 +70,10 @@ const MultiCheckBoxModalComponent = (props) => {
         getVisible(val)
     }
 
+    const getConversationList = async () => {
+        const res = await TencentImSDKPlugin.v2TIMManager.getConversationManager().getConversationList(20, '');
+        setRes(res);
+    }
 
     const getUsersHandler = (isChecked, selectedname) => {
         if (isChecked) {
@@ -107,6 +115,13 @@ const MultiCheckBoxModalComponent = (props) => {
             <MultiCheckboxComponent text={item.userID} getSelectedUser={getUsersHandler} type={'member'} />
         )
     }
+
+    const renderConversationItem = ({item}: {item: V2TimConversation})=>{
+        return (
+            <MultiCheckboxComponent text={item.conversationID} getSelectedUser={getUsersHandler} type={'conversation'} />
+        )
+    }
+
     return (
         <Modal
             visible={visible}
@@ -167,6 +182,16 @@ const MultiCheckBoxModalComponent = (props) => {
                                         />
                                     </View>
                                 );
+                            case 'conversation':
+                                return (
+                                    <View style={styles.listContainer}>
+                                        <FlatList
+                                            data={res.data?.conversationList}
+                                            renderItem={renderConversationItem}
+                                            keyExtractor={(item, index) => item.userID + index.toString()}
+                                        />
+                                    </View> 
+                                )
                             default:
                                 return <></>;
                         }

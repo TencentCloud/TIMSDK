@@ -19,9 +19,9 @@ import mystylesheet from '../../stylesheets';
 
 const SendVideoMessageComponent = () => {
     const [res, setRes] = useState<any>({});
-    const [userName, setUserName] = useState<String>('未选择');
-    const [groupName, setGroupName] = useState<String>('未选择');
-    const [priority, setPriority] = useState<String>('');
+    const [userName, setUserName] = useState<string>('未选择');
+    const [groupName, setGroupName] = useState<string>('未选择');
+    const [priority, setPriority] = useState<string>('');
     const [isonlineUserOnly, setIsonlineUserOnly] = useState(false);
     const [isExcludedFromUnreadCount, setIsExcludedFromUnreadCount] =
         useState(false);

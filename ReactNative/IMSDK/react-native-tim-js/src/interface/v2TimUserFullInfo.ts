@@ -3,11 +3,11 @@
  */
 import type { StringMap } from './commonInterface';
 
-interface V2TimUserFullInfo {
-    userID?: String;
-    nickName?: String;
-    faceUrl?: String;
-    selfSignature?: String;
+export interface V2TimUserFullInfo {
+    userID?: string;
+    nickName?: string;
+    faceUrl?: string;
+    selfSignature?: string;
     gender?: number;
     allowType?: number;
     customInfo?: StringMap;
@@ -15,5 +15,3 @@ interface V2TimUserFullInfo {
     level?: number;
     birthday?: number;
 }
-
-export default V2TimUserFullInfo;

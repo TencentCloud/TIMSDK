@@ -3,25 +3,25 @@
  * @module BaseManager(基础接口)
  */
 import { NativeEventEmitter } from 'react-native';
-import type V2TimSDKListener from '../interface/v2TimSDKListener';
-import type V2TimGroupListener from '../interface/v2TimGroupListener';
-import type V2TimSimpleMsgListener from '../interface/v2TimSimpleMsgListener';
-import type V2TimUserFullInfo from '../interface/v2TimUserFullInfo';
+import type { V2TimSDKListener } from '../interface/v2TimSDKListener';
+import type { V2TimGroupListener } from '../interface/v2TimGroupListener';
+import type { V2TimSimpleMsgListener } from '../interface/v2TimSimpleMsgListener';
+import type { V2TimUserFullInfo } from '../interface/v2TimUserFullInfo';
 import { V2TIMFriendshipManager } from './v2_tim_friendship_manager';
 import { V2TimGroupManager } from './v2_tim_group_manager';
 import { V2TIMMessageManager } from './v2_tim_message_manager';
 import { V2TIMConversationManager } from './v2_tim_conversation_manager';
 import { V2TIMOfflinePushManager } from './v2_tim_offline_push_manager';
 import { V2TIMSignalingManager } from './v2_tim_signaling_manager';
-import type V2TimCallback from '../interface/v2TimCallback';
-import type V2TimValueCallback from '../interface/v2TimValueCallback';
-import type V2TimUserStatus from '../interface/v2TimUserStatus';
-import type V2TimMessage from '../interface/v2TimMessage';
+import type { V2TimCallback } from '../interface/v2TimCallback';
+import type { V2TimValueCallback } from '../interface/v2TimValueCallback';
+import type { V2TimUserStatus } from '../interface/v2TimUserStatus';
+import type { V2TimMessage } from '../interface/v2TimMessage';
 import type { LogLevelEnum } from '../enum/logLevel';
 import type { MessagePriorityEnum } from '../enum/messagePriority';
 
 export class V2TIMManager {
-    private manager: String = 'sdkManager';
+    private manager: string = 'sdkManager';
     private nativeModule: any;
     private simpleMsgListenerList: V2TimSimpleMsgListener[] = [];
     private groupListenerList: V2TimGroupListener[] = [];
@@ -103,127 +103,146 @@ export class V2TIMManager {
         });
     }
 
-    private callSimpleMsgCalbackFunc(eventType: String, data: any) {
+    private callSimpleMsgCalbackFunc(eventType: string, data: any) {
         this.simpleMsgListenerList.forEach((listener) => {
             switch (eventType) {
                 case 'onRecvC2CTextMessage':
-                    listener.onRecvC2CTextMessage(
-                        data.msgID,
-                        data.sender,
-                        data.text
-                    );
+                    listener.onRecvC2CTextMessage &&
+                        listener.onRecvC2CTextMessage(
+                            data.msgID,
+                            data.sender,
+                            data.text
+                        );
                     break;
                 case 'onRecvC2CCustomMessage':
-                    listener.onRecvC2CCustomMessage(
-                        data.msgID,
-                        data.sender,
-                        data.customData
-                    );
+                    listener.onRecvC2CCustomMessage &&
+                        listener.onRecvC2CCustomMessage(
+                            data.msgID,
+                            data.sender,
+                            data.customData
+                        );
                     break;
                 case 'onRecvGroupTextMessage':
-                    listener.onRecvGroupTextMessage(
-                        data.msgID,
-                        data.groupID,
-                        data.sender,
-                        data.text
-                    );
+                    listener.onRecvGroupTextMessage &&
+                        listener.onRecvGroupTextMessage(
+                            data.msgID,
+                            data.groupID,
+                            data.sender,
+                            data.text
+                        );
                     break;
                 case 'onRecvGroupCustomMessage':
-                    listener.onRecvGroupCustomMessage(
-                        data.msgID,
-                        data.groupID,
-                        data.sender,
-                        data.customData
-                    );
+                    listener.onRecvGroupCustomMessage &&
+                        listener.onRecvGroupCustomMessage(
+                            data.msgID,
+                            data.groupID,
+                            data.sender,
+                            data.customData
+                        );
                     break;
             }
         });
     }
 
-    private callGroupListenerCallbackFunc(eventType: String, data: any) {
+    private callGroupListenerCallbackFunc(eventType: string, data: any) {
         this.groupListenerList.forEach((listener) => {
             switch (eventType) {
                 case 'onMemberEnter':
-                    listener.onMemberEnter(data.groupID, data.memberList);
+                    listener.onMemberEnter &&
+                        listener.onMemberEnter(data.groupID, data.memberList);
                     break;
                 case 'onMemberLeave':
-                    listener.onMemberLeave(data.groupID, data.member);
+                    listener.onMemberLeave &&
+                        listener.onMemberLeave(data.groupID, data.member);
                     break;
                 case 'onMemberInvited':
-                    listener.onMemberInvited(
-                        data.groupID,
-                        data.opUser,
-                        data.memberList
-                    );
+                    listener.onMemberInvited &&
+                        listener.onMemberInvited(
+                            data.groupID,
+                            data.opUser,
+                            data.memberList
+                        );
                     break;
                 case 'onMemberKicked':
-                    listener.onMemberKicked(
-                        data.groupID,
-                        data.opUser,
-                        data.memberList
-                    );
+                    listener.onMemberKicked &&
+                        listener.onMemberKicked(
+                            data.groupID,
+                            data.opUser,
+                            data.memberList
+                        );
                     break;
                 case 'onMemberInfoChanged':
-                    listener.onMemberInfoChanged(
-                        data.groupID,
-                        data.groupMemberChangeInfoList
-                    );
+                    listener.onMemberInfoChanged &&
+                        listener.onMemberInfoChanged(
+                            data.groupID,
+                            data.groupMemberChangeInfoList
+                        );
                     break;
                 case 'onGroupCreated':
-                    listener.onGroupCreated(data.groupID);
+                    listener.onGroupCreated &&
+                        listener.onGroupCreated(data.groupID);
                     break;
                 case 'onGroupRecycled':
-                    listener.onGroupRecycled(data.groupID, data.opUser);
+                    listener.onGroupRecycled &&
+                        listener.onGroupRecycled(data.groupID, data.opUser);
                     break;
                 case 'onGroupInfoChanged':
-                    listener.onGroupInfoChanged(
-                        data.groupID,
-                        data.groupChangeInfoList
-                    );
+                    listener.onGroupInfoChanged &&
+                        listener.onGroupInfoChanged(
+                            data.groupID,
+                            data.groupChangeInfoList
+                        );
                     break;
                 case 'onReceiveJoinApplication':
-                    listener.onReceiveJoinApplication(
-                        data.groupID,
-                        data.member,
-                        data.opReason
-                    );
+                    listener.onReceiveJoinApplication &&
+                        listener.onReceiveJoinApplication(
+                            data.groupID,
+                            data.member,
+                            data.opReason
+                        );
                     break;
                 case 'onApplicationProcessed':
-                    listener.onApplicationProcessed(
-                        data.groupID,
-                        data.opUser,
-                        data.isAgreeJoin,
-                        data.opReason
-                    );
+                    listener.onApplicationProcessed &&
+                        listener.onApplicationProcessed(
+                            data.groupID,
+                            data.opUser,
+                            data.isAgreeJoin,
+                            data.opReason
+                        );
                     break;
                 case 'onGrantAdministrator':
-                    listener.onGrantAdministrator(
-                        data.groupID,
-                        data.opUser,
-                        data.memberList
-                    );
+                    listener.onGrantAdministrator &&
+                        listener.onGrantAdministrator(
+                            data.groupID,
+                            data.opUser,
+                            data.memberList
+                        );
                     break;
                 case 'onRevokeAdministrator':
-                    listener.onRevokeAdministrator(
-                        data.groupID,
-                        data.opUser,
-                        data.memberList
-                    );
+                    listener.onRevokeAdministrator &&
+                        listener.onRevokeAdministrator(
+                            data.groupID,
+                            data.opUser,
+                            data.memberList
+                        );
                     break;
                 case 'onQuitFromGroup':
-                    listener.onQuitFromGroup(data.groupID);
+                    listener.onQuitFromGroup &&
+                        listener.onQuitFromGroup(data.groupID);
                     break;
                 case 'onReceiveRESTCustomData':
-                    listener.onReceiveRESTCustomData(
-                        data.groupID,
-                        data.customData
-                    );
+                    listener.onReceiveRESTCustomData &&
+                        listener.onReceiveRESTCustomData(
+                            data.groupID,
+                            data.customData
+                        );
                     break;
                 case 'onGroupAttributeChanged':
-                    listener.onGroupAttributeChanged(
-                        data.groupID,
-                        data.groupAttributeMap
-                    );
+                    listener.onGroupAttributeChanged &&
+                        listener.onGroupAttributeChanged(
+                            data.groupID,
+                            data.groupAttributeMap
+                        );
                     break;
             }
         });
@@ -275,7 +294,7 @@ export class V2TIMManager {
      * - 在线时票据过期：用户在线期间也可能收到 V2TIMListener -> onUserSigExpired 回调，此时也是需要您生成新的 userSig 并重新登录。
      * - 在线时被踢下线：用户在线情况下被踢，SDK 会通过 V2TIMListener -> onKickedOffline 回调通知给您，此时可以 UI 提示用户，并再次调用 login() 重新登录。
      */
-    public login(userID: String, userSig: String): Promise<V2TimCallback> {
+    public login(userID: string, userSig: string): Promise<V2TimCallback> {
         return this.nativeModule.call(this.manager, 'login', {
             userID,
             userSig,
@@ -293,9 +312,9 @@ export class V2TIMManager {
     /**
      * ### 获取ImSDK版本号
      * @category SDK相关(如初始化)
-     * @return  String 返回ImSDK的版本号
+     * @return  string 返回ImSDK的版本号
      */
-    public getVersion(): Promise<V2TimValueCallback<String>> {
+    public getVersion(): Promise<V2TimValueCallback<string>> {
         return this.nativeModule.call(this.manager, 'getVersion', {});
     }
 
@@ -325,7 +344,7 @@ export class V2TIMManager {
      * @category 登录相关
      *
      */
-    public getLoginUser(): Promise<V2TimValueCallback<String>> {
+    public getLoginUser(): Promise<V2TimValueCallback<string>> {
         return this.nativeModule.call(this.manager, 'getLoginUser', {});
     }
 
@@ -336,8 +355,8 @@ export class V2TIMManager {
      * @param text - 文本消息
      */
     public sendC2CTextMessage(
-        userID: String,
-        text: String
+        userID: string,
+        text: string
     ): Promise<V2TimValueCallback<V2TimMessage>> {
         return this.nativeModule.call(this.manager, 'sendC2CTextMessage', {
             userID,
@@ -352,8 +371,8 @@ export class V2TIMManager {
      * @param customData - 自定义消息
      */
     public sendC2CCustomMessage(
-        userID: String,
-        customData: String
+        userID: string,
+        customData: string
     ): Promise<V2TimValueCallback<V2TimMessage>> {
         return this.nativeModule.call(this.manager, 'sendC2CCustomMessage', {
             userID,
@@ -369,8 +388,8 @@ export class V2TIMManager {
      * @param priority - 消息优先级,默认为`MessagePriorityEnum.V2TIM_PRIORITY_NORMAL`
      */
     public sendGroupTextMessage(
-        groupID: String,
-        text: String,
+        groupID: string,
+        text: string,
         priority: MessagePriorityEnum.V2TIM_PRIORITY_NORMAL
     ): Promise<V2TimValueCallback<V2TimMessage>> {
         return this.nativeModule.call(this.manager, 'sendGroupTextMessage', {
@@ -388,8 +407,8 @@ export class V2TIMManager {
      * @param priority - 消息优先级,默认为`MessagePriorityEnum.V2TIM_PRIORITY_NORMAL`
      */
     public sendGroupCustomMessage(
-        groupID: String,
-        customData: String,
+        groupID: string,
+        customData: string,
         priority: MessagePriorityEnum.V2TIM_PRIORITY_NORMAL
     ): Promise<V2TimValueCallback<V2TimMessage>> {
         return this.nativeModule.call(this.manager, 'sendGroupCustomMessage', {
@@ -417,10 +436,10 @@ export class V2TIMManager {
      * - 直播群（AVChatRoom）：在进程重启或重新登录之后，如果想继续接收直播群的消息，请您调用 joinGroup 重新加入直播群。
      */
     public createGroup(
-        groupName: String,
-        groupType: String,
-        groupID?: String
-    ): Promise<V2TimValueCallback<String>> {
+        groupName: string,
+        groupType: string,
+        groupID?: string
+    ): Promise<V2TimValueCallback<string>> {
         return this.nativeModule.call(this.manager, 'createGroup', {
             groupID,
             groupName,
@@ -441,7 +460,7 @@ export class V2TIMManager {
      * - 其他群：可以直接入群。
      * - 直播群（AVChatRoom）：在进程重启或重新登录之后，如果想继续接收直播群的消息，请您调用 joinGroup 重新加入直播群。
      */
-    public joinGroup(groupID: String, message: String): Promise<V2TimCallback> {
+    public joinGroup(groupID: string, message: string): Promise<V2TimCallback> {
         return this.nativeModule.call(this.manager, 'joinGroup', {
             groupID,
             message,
@@ -456,7 +475,7 @@ export class V2TIMManager {
      * @note
      * 在公开群（Public）、会议（Meeting）和直播群（AVChatRoom）中，群主是不可以退群的，群主只能调用 dismissGroup 解散群组。
      */
-    public quitGroup(groupID: String): Promise<V2TimCallback> {
+    public quitGroup(groupID: string): Promise<V2TimCallback> {
         return this.nativeModule.call(this.manager, 'joinGroup', {
             groupID,
         });
@@ -472,7 +491,7 @@ export class V2TIMManager {
      * - 好友工作群（Work）的解散最为严格，即使群主也不能随意解散，只能由您的业务服务器调用 解散群组 REST API 解散。
      * - 其他类型群的群主可以解散群组。
      */
-    public dismissGroup(groupID: String): Promise<V2TimCallback> {
+    public dismissGroup(groupID: string): Promise<V2TimCallback> {
         return this.nativeModule.call(this.manager, 'dismissGroup', {
             groupID,
         });
@@ -489,7 +508,7 @@ export class V2TIMManager {
      * - userIDList 建议一次最大 100 个，因为数量过多可能会导致数据包太大被后台拒绝，后台限制数据包最大为 1M。
      */
     public getUsersInfo(
-        userIDList: String[]
+        userIDList: string[]
     ): Promise<V2TimValueCallback<V2TimUserFullInfo[]>> {
         return this.nativeModule.call(this.manager, 'getUsersInfo', {
             userIDList,
@@ -517,7 +536,10 @@ export class V2TIMManager {
      * @param param - 接口参数
      *
      */
-    public callExperimentalAPI(api: String, param?: Object) {
+    public callExperimentalAPI(
+        api: string,
+        param?: Object
+    ): Promise<V2TimValueCallback<Object>> {
         return this.nativeModule.call(this.manager, 'callExperimentalAPI', {
             api,
             param,
@@ -595,7 +617,7 @@ export class V2TIMManager {
      * @param status - 待设置的自定义状态
      *
      */
-    public setSelfStatus(status: String): Promise<V2TimCallback> {
+    public setSelfStatus(status: string): Promise<V2TimCallback> {
         return this.nativeModule.call(this.manager, 'setSelfStatus', {
             status,
         });
@@ -611,7 +633,7 @@ export class V2TIMManager {
      * - 当您批量查询时，接口只会返回查询成功的用户状态信息；当所有用户均查询失败时，接口会报错
      */
     public getUserStatus(
-        userIDList: String[]
+        userIDList: string[]
     ): Promise<V2TimValueCallback<V2TimUserStatus>> {
         return this.nativeModule.call(this.manager, 'getUserStatus', {
             userIDList,

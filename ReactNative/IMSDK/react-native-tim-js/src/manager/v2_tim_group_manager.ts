@@ -6,25 +6,25 @@
  * > 直播群（AVChatRoom）：适合直播弹幕聊天室等场景，支持随意进出，人数无上限  <br>
  * @module GroupManager(群组相关接口)
  */
-import type V2TimCallback from '../interface/v2TimCallback';
+import type { V2TimCallback } from '../interface/v2TimCallback';
 import { GroupAddOptEnum } from '../enum/groupAddOpt';
-import type V2TimGroupInfo from '../interface/v2TimGroupInfo';
-import type V2TimGroupInfoResult from '../interface/v2TimGroupInfoResult';
-import type V2TimGroupMember from '../interface/v2TimGroupMember';
-import type V2TimValueCallback from '../interface/v2TimValueCallback';
+import type { V2TimGroupInfo } from '../interface/v2TimGroupInfo';
+import type { V2TimGroupInfoResult } from '../interface/v2TimGroupInfoResult';
+import type { V2TimGroupMember } from '../interface/v2TimGroupMember';
+import type { V2TimValueCallback } from '../interface/v2TimValueCallback';
 import type { StringMap } from '../interface/commonInterface';
 import type { GroupMemberFilterTypeEnum } from '../enum/groupMemberFilterType';
-import type V2TimGroupMemberInfoResult from '../interface/v2TimGroupMemberInfoResult';
-import type V2TimGroupMemberFullInfo from '../interface/v2TimGroupMemberFullInfo';
-import type V2TimGroupMemberOperationResult from '../interface/v2TimGroupMemberOperationResult';
+import type { V2TimGroupMemberInfoResult } from '../interface/v2TimGroupMemberInfoResult';
+import type { V2TimGroupMemberFullInfo } from '../interface/v2TimGroupMemberFullInfo';
+import type { V2TimGroupMemberOperationResult } from '../interface/v2TimGroupMemberOperationResult';
 import type { GroupMemberRoleTypeEnum } from '../enum/groupMemberRoleType';
-import type V2TimGroupApplicationResult from '../interface/v2TimGroupApplicationResult';
+import type { V2TimGroupApplicationResult } from '../interface/v2TimGroupApplicationResult';
 import { GroupApplicationTypeEnum } from '../enum/groupApplicationType';
-import type V2TimTopicInfo from '../interface/v2TimTopicInfo';
-import type V2TimTopicInfoResult from '../interface/v2TimTopicInfoResult';
+import type { V2TimTopicInfo } from '../interface/v2TimTopicInfo';
+import type { V2TimTopicInfoResult } from '../interface/v2TimTopicInfoResult';
 
 export class V2TimGroupManager {
-    private manager: String = 'groupManager';
+    private manager: string = 'groupManager';
     private nativeModule: any;
 
     /** @hidden */
@@ -36,17 +36,17 @@ export class V2TimGroupManager {
      * ### 创建自定义群组
      */
     public createGroup(
-        groupType: String,
-        groupName: String,
-        groupID?: String,
-        notification?: String,
-        introduction?: String,
-        faceUrl?: String,
+        groupType: string,
+        groupName: string,
+        groupID?: string,
+        notification?: string,
+        introduction?: string,
+        faceUrl?: string,
         isAllMuted?: Boolean,
         isSupportTopic = false,
         addOpt = GroupAddOptEnum.V2TIM_GROUP_ADD_AUTH,
         memberList?: V2TimGroupMember[]
-    ): Promise<V2TimValueCallback<String>> {
+    ): Promise<V2TimValueCallback<string>> {
         return this.nativeModule.call(this.manager, 'createGroup', {
             groupType,
             groupName,
@@ -78,7 +78,7 @@ export class V2TimGroupManager {
      * @param groupIDList - 群ID列表
      */
     public getGroupsInfo(
-        groupIDList: String[]
+        groupIDList: string[]
     ): Promise<V2TimValueCallback<V2TimGroupInfoResult[]>> {
         return this.nativeModule.call(this.manager, 'getGroupsInfo', {
             groupIDList,
@@ -106,7 +106,7 @@ export class V2TimGroupManager {
      *  - 目前只支持：直播群（ AVChatRoom）。
      */
     public initGroupAttributes(
-        groupID: String,
+        groupID: string,
         attributes: StringMap
     ): Promise<V2TimCallback> {
         return this.nativeModule.call(this.manager, 'initGroupAttributes', {
@@ -125,7 +125,7 @@ export class V2TimGroupManager {
      *  - 目前只支持：直播群（ AVChatRoom）。
      */
     public setGroupAttributes(
-        groupID: String,
+        groupID: string,
         attributes: StringMap
     ): Promise<V2TimCallback> {
         return this.nativeModule.call(this.manager, 'setGroupAttributes', {
@@ -144,8 +144,8 @@ export class V2TimGroupManager {
      *  - 目前只支持：直播群（ AVChatRoom）。
      */
     public deleteGroupAttributes(
-        groupID: String,
-        keys: String[]
+        groupID: string,
+        keys: string[]
     ): Promise<V2TimCallback> {
         return this.nativeModule.call(this.manager, 'deleteGroupAttributes', {
             groupID,
@@ -162,8 +162,8 @@ export class V2TimGroupManager {
      *  - 目前只支持：直播群（ AVChatRoom）。
      */
     public getGroupAttributes(
-        groupID: String,
-        keys?: String[]
+        groupID: string,
+        keys?: string[]
     ): Promise<V2TimValueCallback<StringMap>> {
         return this.nativeModule.call(this.manager, 'getGroupAttributes', {
             groupID,
@@ -180,7 +180,7 @@ export class V2TimGroupManager {
      *  - 目前只支持：直播群（ AVChatRoom）。
      */
     public getGroupOnlineMemberCount(
-        groupID: String
+        groupID: string
     ): Promise<V2TimValueCallback<number>> {
         return this.nativeModule.call(
             this.manager,
@@ -208,9 +208,9 @@ export class V2TimGroupManager {
      * - filter 字段不支持管理员角色，即不支持管理员角色的拉取。如果您的业务逻辑依赖于管理员角色，可以使用群自定义字段 groupAttributes 管理该角色。
      */
     public getGroupMemberList(
-        groupID: String,
+        groupID: string,
         filter: GroupMemberFilterTypeEnum,
-        nextSeq: String,
+        nextSeq: string,
         count = 15,
         offset = 0
     ): Promise<V2TimValueCallback<V2TimGroupMemberInfoResult>> {
@@ -229,8 +229,8 @@ export class V2TimGroupManager {
      * @param memberList - 成员ID数组
      */
     public getGroupMembersInfo(
-        groupID: String,
-        memberList?: String[]
+        groupID: string,
+        memberList?: string[]
     ): Promise<V2TimValueCallback<V2TimGroupMemberFullInfo[]>> {
         return this.nativeModule.call(this.manager, 'getGroupMembersInfo', {
             groupID,
@@ -246,9 +246,9 @@ export class V2TimGroupManager {
      * @param customInfo - 自定义信息
      */
     public setGroupMemberInfo(
-        groupID: String,
-        userID: String,
-        nameCard?: String,
+        groupID: string,
+        userID: string,
+        nameCard?: string,
         customInfo?: StringMap
     ): Promise<V2TimCallback> {
         return this.nativeModule.call(this.manager, 'setGroupMemberInfo', {
@@ -266,8 +266,8 @@ export class V2TimGroupManager {
      * @param seconds - 禁言时间
      */
     public muteGroupMember(
-        groupID: String,
-        userID: String,
+        groupID: string,
+        userID: string,
         seconds: number
     ): Promise<V2TimCallback> {
         return this.nativeModule.call(this.manager, 'muteGroupMember', {
@@ -283,8 +283,8 @@ export class V2TimGroupManager {
      * @param userList - 用户ID数组
      */
     public inviteUserToGroup(
-        groupID: String,
-        userList: String[]
+        groupID: string,
+        userList: string[]
     ): Promise<V2TimValueCallback<V2TimGroupMemberOperationResult[]>> {
         return this.nativeModule.call(this.manager, 'inviteUserToGroup', {
             groupID,
@@ -298,8 +298,8 @@ export class V2TimGroupManager {
      * @param memberList - 用户ID 数组
      */
     public kickGroupMember(
-        groupID: String,
-        memberList: String[]
+        groupID: string,
+        memberList: string[]
     ): Promise<V2TimCallback> {
         return this.nativeModule.call(this.manager, 'kickGroupMember', {
             groupID,
@@ -318,8 +318,8 @@ export class V2TimGroupManager {
      * - 切换的角色支持普通群成员（ V2TIM_GROUP_MEMBER_ROLE_MEMBER） 和管理员（V2TIM_GROUP_MEMBER_ROLE_ADMIN
      */
     public setGroupMemberRole(
-        groupID: String,
-        userID: String,
+        groupID: string,
+        userID: string,
         role: GroupMemberRoleTypeEnum
     ): Promise<V2TimCallback> {
         return this.nativeModule.call(this.manager, 'setGroupMemberRole', {
@@ -338,8 +338,8 @@ export class V2TimGroupManager {
      * - 直播群（AVChatRoom）：不支持转让群主。
      */
     public transferGroupOwner(
-        groupID: String,
-        userID: String
+        groupID: string,
+        userID: string
     ): Promise<V2TimCallback> {
         return this.nativeModule.call(this.manager, 'transferGroupOwner', {
             groupID,
@@ -364,10 +364,10 @@ export class V2TimGroupManager {
      * ### 同意某一条加群申请
      */
     public acceptGroupApplication(
-        groupID: String,
-        fromUser: String,
-        toUser: String,
-        reason?: String,
+        groupID: string,
+        fromUser: string,
+        toUser: string,
+        reason?: string,
         addTime?: number,
         type = GroupApplicationTypeEnum.V2TIM_GROUP_APPLICATION_GET_TYPE_INVITE
     ): Promise<V2TimCallback> {
@@ -385,12 +385,12 @@ export class V2TimGroupManager {
      * ### 拒绝某一条加群申请
      */
     public refuseGroupApplication(
-        groupID: String,
-        fromUser: String,
-        toUser: String,
+        groupID: string,
+        fromUser: string,
+        toUser: string,
         type: GroupApplicationTypeEnum,
         addTime: number,
-        reason?: String
+        reason?: string
     ): Promise<V2TimCallback> {
         return this.nativeModule.call(this.manager, 'refuseGroupApplication', {
             groupID,
@@ -424,7 +424,7 @@ export class V2TimGroupManager {
         isSearchGroupID = true,
         isSearchGroupName = true,
     }: {
-        keywordList: String[];
+        keywordList: string[];
         isSearchGroupID?: boolean;
         isSearchGroupName?: boolean;
     }): Promise<V2TimValueCallback<V2TimGroupInfo[]>> {
@@ -451,8 +451,8 @@ export class V2TimGroupManager {
         isSearchMemberNameCard = true,
         isSearchMemberRemark = true,
     }: {
-        keywordList: String[];
-        groupIDList?: String[];
+        keywordList: string[];
+        groupIDList?: string[];
         isSearchMemberUserID?: boolean;
         isSearchMemberNickName?: boolean;
         isSearchMemberRemark?: boolean;
@@ -491,9 +491,9 @@ export class V2TimGroupManager {
      * ### 创建话题
      */
     public createTopicInCommunity(
-        groupID: String,
+        groupID: string,
         topicInfo: V2TimTopicInfo
-    ): Promise<V2TimValueCallback<String>> {
+    ): Promise<V2TimValueCallback<string>> {
         return this.nativeModule.call(this.manager, 'createTopicInCommunity', {
             groupID,
             topicInfo,
@@ -503,7 +503,7 @@ export class V2TimGroupManager {
     /**
      * ### 删除话题
      */
-    public deleteTopicFromCommunity(groupID: String, topicIDList: String[]) {
+    public deleteTopicFromCommunity(groupID: string, topicIDList: string[]) {
         return this.nativeModule.call(
             this.manager,
             'deleteTopicFromCommunity',
@@ -530,8 +530,8 @@ export class V2TimGroupManager {
      * topicIDList 传空时，获取此社群下的所有话题列表
      */
     public getTopicInfoList(
-        groupID: String,
-        topicIDList: String[]
+        groupID: string,
+        topicIDList: string[]
     ): V2TimValueCallback<V2TimTopicInfoResult> {
         return this.nativeModule.call(this.manager, 'getTopicInfoList', {
             groupID,

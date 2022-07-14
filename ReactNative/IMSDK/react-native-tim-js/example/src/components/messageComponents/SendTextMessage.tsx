@@ -10,10 +10,10 @@ import mystylesheet from '../../stylesheets';
 
 const SendTextMessageComponent = () => {
     const [res, setRes] = useState<any>({});
-    const [input, setInput] = useState<String>('');
-    const [userName, setUserName] = useState<String>('未选择')
-    const [groupName, setGroupName] = useState<String>('未选择')
-    const [priority, setPriority] = useState<String>('')
+    const [input, setInput] = useState<string>('');
+    const [userName, setUserName] = useState<string>('未选择')
+    const [groupName, setGroupName] = useState<string>('未选择')
+    const [priority, setPriority] = useState<string>('')
     const [isonlineUserOnly, setIsonlineUserOnly] = useState(false);
     const [isExcludedFromUnreadCount, setIsExcludedFromUnreadCount] = useState(false);
     const receiveOnlineUserstoggle = () => setIsonlineUserOnly(previousState => !previousState);

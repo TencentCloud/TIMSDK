@@ -5,7 +5,7 @@ import SDKResponseView from '../sdkResponseView';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import MultiCheckBoxModalComponent from '../commonComponents/MultiCheckboxModalComponent';
 
-export const GetConversationListByConversationIDs = () => {
+export const DeleteConversation = () => {
     const [res, setRes] = useState<any>({});
     const [visible, setVisible] = useState<boolean>(false);
     const [userName, setUserName] = useState<string>('未选择');
@@ -22,9 +22,12 @@ export const GetConversationListByConversationIDs = () => {
     };
 
     const getConversationList = async () => {
+        if (userList.length == 0) {
+            return;
+        }
         const res = await TencentImSDKPlugin.v2TIMManager
             .getConversationManager()
-            .getConversationListByConversaionIds(userList);
+            .deleteConversation(userList[0]);
         setRes(res);
         TencentImSDKPlugin.v2TIMManager
             .getConversationManager()
@@ -59,7 +62,7 @@ export const GetConversationListByConversationIDs = () => {
             />
             <CommonButton
                 handler={getConversationList}
-                content={'获取会话'}
+                content={'删除会话'}
             ></CommonButton>
             <CodeComponent></CodeComponent>
         </>

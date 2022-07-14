@@ -1,14 +1,12 @@
 /**
  * @module interface
  */
-interface V2TimFriendApplication {
-    userID: String;
-    nickName?: String;
-    faceUrl?: String;
+export interface V2TimFriendApplication {
+    userID: string;
+    nickName?: string;
+    faceUrl?: string;
     addTime?: number;
-    addSource?: String;
-    addWording?: String;
+    addSource?: string;
+    addWording?: string;
     type: number;
 }
-
-export default V2TimFriendApplication;

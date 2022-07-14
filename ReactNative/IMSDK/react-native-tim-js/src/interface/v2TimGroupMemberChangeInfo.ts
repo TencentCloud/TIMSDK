@@ -1,9 +1,7 @@
 /**
  * @module interface
  */
-interface V2TimGroupMemberChangeInfo {
-    userID?: String;
+export interface V2TimGroupMemberChangeInfo {
+    userID?: string;
     muteTime?: number;
 }
-
-export default V2TimGroupMemberChangeInfo;

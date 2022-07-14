@@ -1,9 +1,7 @@
 /**
  * @module interface
  */
-interface V2TimCallback {
+export interface V2TimCallback {
     code: number;
-    desc: String;
+    desc: string;
 }
-
-export default V2TimCallback;

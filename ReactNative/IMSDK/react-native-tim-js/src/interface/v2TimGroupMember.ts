@@ -3,9 +3,7 @@
  */
 import type { GroupMemberRoleTypeEnum } from '../enum/groupMemberRoleType';
 
-interface V2TimGroupMember {
-    userID: String;
+export interface V2TimGroupMember {
+    userID: string;
     role: GroupMemberRoleTypeEnum;
 }
-
-export default V2TimGroupMember;

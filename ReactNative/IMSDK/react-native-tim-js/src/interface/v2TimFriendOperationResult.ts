@@ -1,10 +1,8 @@
 /**
  * @module interface
  */
-interface V2TimFriendOperationResult {
-    userID?: String;
+export interface V2TimFriendOperationResult {
+    userID?: string;
     resultCode?: number;
-    resultInfo?: String;
+    resultInfo?: string;
 }
-
-export default V2TimFriendOperationResult;

@@ -1,11 +1,9 @@
 /**
  * @module interface
  */
-interface V2TimFriendCheckResult {
-    userID: String;
+export interface V2TimFriendCheckResult {
+    userID: string;
     resultCode: number;
-    resultInfo?: String;
+    resultInfo?: string;
     resultType: number;
 }
-
-export default V2TimFriendCheckResult;

@@ -1,10 +1,8 @@
 /**
  * @module interface
  */
-interface V2TimFriendGroup {
-    name?: String;
+export interface V2TimFriendGroup {
+    name?: string;
     friendCount?: number;
-    friendIDList?: String[];
+    friendIDList?: string[];
 }
-
-export default V2TimFriendGroup;

@@ -1,31 +1,29 @@
 /**
  * @module interface
  */
-import type V2TimUserInfo from './v2TimUserInfo';
+import type { V2TimUserInfo } from './v2TimUserInfo';
 
-interface V2TimSimpleMsgListener {
-    onRecvC2CCustomMessage: (
-        msgID: String,
+export interface V2TimSimpleMsgListener {
+    onRecvC2CCustomMessage?: (
+        msgID: string,
         sender: V2TimUserInfo,
-        customData: String
+        customData: string
     ) => void;
-    onRecvC2CTextMessage: (
-        msgID: String,
+    onRecvC2CTextMessage?: (
+        msgID: string,
         sender: V2TimUserInfo,
-        text: String
+        text: string
     ) => void;
-    onRecvGroupCustomMessage: (
-        msgID: String,
-        groupID: String,
+    onRecvGroupCustomMessage?: (
+        msgID: string,
+        groupID: string,
         sender: V2TimUserInfo,
-        customData: String
+        customData: string
     ) => void;
-    onRecvGroupTextMessage: (
-        msgID: String,
-        groupID: String,
+    onRecvGroupTextMessage?: (
+        msgID: string,
+        groupID: string,
         sender: V2TimUserInfo,
-        text: String
+        text: string
     ) => void;
 }
-
-export default V2TimSimpleMsgListener;

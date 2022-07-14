@@ -1,11 +1,9 @@
 /**
  * @module interface
  */
-interface V2TimGroupChangeInfo {
+export interface V2TimGroupChangeInfo {
     type?: number;
-    value?: String;
-    key?: String;
+    value?: string;
+    key?: string;
     boolValue?: Boolean;
 }
-
-export default V2TimGroupChangeInfo;

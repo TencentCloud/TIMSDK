@@ -276,6 +276,26 @@ const DATA = [
                 id: 'getConversationListByConversationIDs',
                 name: '获取会话列表通过会话ID',
             },
+            {
+                id: 'pinConversation',
+                name: '会话置顶',
+            },
+            {
+                id: 'getTotalUnreadMessageCount',
+                name: '获取会话未读总数',
+            },
+            {
+                id: 'getConversation',
+                name: '获取指定会话',
+            },
+            {
+                id: 'deleteConversation',
+                name: '删除指定会话',
+            },
+            {
+                id: 'setConversationDraft',
+                name: '设置会话草稿',
+            },
         ],
     },
 ];

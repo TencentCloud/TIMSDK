@@ -1,23 +1,21 @@
 /**
  * @module interface
  */
-import type V2TimGroupAtInfo from './v2TimGroupAtInfo';
-import type V2TimMessage from './v2TimMessage';
+import type { V2TimGroupAtInfo } from './v2TimGroupAtInfo';
+import type { V2TimMessage } from './v2TimMessage';
 
-interface V2TimTopicInfo {
-    topicID?: String;
-    topicName?: String;
-    topicFaceUrl?: String;
-    introduction?: String;
-    notification?: String;
+export interface V2TimTopicInfo {
+    topicID?: string;
+    topicName?: string;
+    topicFaceUrl?: string;
+    introduction?: string;
+    notification?: string;
     isAllMute?: boolean;
     selfMuteTime?: number;
-    customString?: String;
+    customString?: string;
     recvOpt?: number;
-    draftText?: String;
+    draftText?: string;
     unreadCount?: number;
     lastMessage?: V2TimMessage;
     groupAtInfoList?: V2TimGroupAtInfo[];
 }
-
-export default V2TimTopicInfo;

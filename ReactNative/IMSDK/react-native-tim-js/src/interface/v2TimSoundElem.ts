@@ -1,13 +1,11 @@
 /**
  * @module interface
  */
-interface V2TimSoundElem {
-    path?: String;
-    UUID?: String;
+export interface V2TimSoundElem {
+    path?: string;
+    UUID?: string;
     dataSize?: number;
     duration?: number;
-    url?: String;
-    localUrl?: String;
+    url?: string;
+    localUrl?: string;
 }
-
-export default V2TimSoundElem;

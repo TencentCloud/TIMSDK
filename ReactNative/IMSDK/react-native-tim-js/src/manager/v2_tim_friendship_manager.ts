@@ -4,23 +4,23 @@
  * @module FriendshipManager(好友管理相关接口)
  */
 import type { NativeEventEmitter } from 'react-native';
-import type V2TimFriendInfo from '../interface/v2TimFriendInfo';
-import type V2TimValueCallback from '../interface/v2TimValueCallback';
-import type V2TimFriendshipListener from '../interface/v2TimFriendshipListener';
-import type V2TimFriendInfoResult from '../interface/v2TimFriendInfoResult';
+import type { V2TimFriendInfo } from '../interface/v2TimFriendInfo';
+import type { V2TimValueCallback } from '../interface/v2TimValueCallback';
+import type { V2TimFriendshipListener } from '../interface/v2TimFriendshipListener';
+import type { V2TimFriendInfoResult } from '../interface/v2TimFriendInfoResult';
 import type { StringMap } from '../interface/commonInterface';
-import type V2TimCallback from '../interface/v2TimCallback';
-import type V2TimFriendOperationResult from '../interface/v2TimFriendOperationResult';
-import type V2TimFriendCheckResult from '../interface/v2TimFriendCheckResult';
-import type V2TimFriendApplicationResult from '../interface/v2TimFriendApplicationResult';
-import type V2TimFriendGroup from '../interface/v2TimFriendGroup';
-import type V2TimFriendSearchParam from '../interface/v2TimFriendSearchParam';
+import type { V2TimCallback } from '../interface/v2TimCallback';
+import type { V2TimFriendOperationResult } from '../interface/v2TimFriendOperationResult';
+import type { V2TimFriendCheckResult } from '../interface/v2TimFriendCheckResult';
+import type { V2TimFriendApplicationResult } from '../interface/v2TimFriendApplicationResult';
+import type { V2TimFriendGroup } from '../interface/v2TimFriendGroup';
+import type { V2TimFriendSearchParam } from '../interface/v2TimFriendSearchParam';
 import type { FriendType } from '../enum/friendType';
 import type { FriendResponseTypeEnum } from '../enum/friendResponseType';
 import type { FriendApplicationTypeEnum } from '../enum/friendApplicationType';
 
 export class V2TIMFriendshipManager {
-    private manager: String = 'friendshipManager';
+    private manager: string = 'friendshipManager';
     private nativeModule: any;
     private friendListenerList: V2TimFriendshipListener[] = [];
 
@@ -30,32 +30,39 @@ export class V2TIMFriendshipManager {
         this.addListener(eventEmitter);
     }
 
-    private callFriendshipListener(eventType: String, data: any) {
+    private callFriendshipListener(eventType: string, data: any) {
         this.friendListenerList.forEach((listener) => {
             switch (eventType) {
                 case 'onFriendApplicationListAdded':
-                    listener.onFriendApplicationListAdded(data);
+                    listener.onFriendApplicationListAdded &&
+                        listener.onFriendApplicationListAdded(data);
                     break;
                 case 'onFriendApplicationListDeleted':
-                    listener.onFriendApplicationListDeleted(data);
+                    listener.onFriendApplicationListDeleted &&
+                        listener.onFriendApplicationListDeleted(data);
                     break;
                 case 'onFriendApplicationListRead':
-                    listener.onFriendApplicationListRead();
+                    listener.onFriendApplicationListRead &&
+                        listener.onFriendApplicationListRead();
                     break;
                 case 'onFriendListAdded':
-                    listener.onFriendListAdded(data);
+                    listener.onFriendListAdded &&
+                        listener.onFriendListAdded(data);
                     break;
                 case 'onFriendListDeleted':
-                    listener.onFriendListDeleted(data);
+                    listener.onFriendListDeleted &&
+                        listener.onFriendListDeleted(data);
                     break;
                 case 'onBlackListAdd':
-                    listener.onBlackListAdd(data);
+                    listener.onBlackListAdd && listener.onBlackListAdd(data);
                     break;
                 case 'onBlackListDeleted':
-                    listener.onBlackListDeleted(data);
+                    listener.onBlackListDeleted &&
+                        listener.onBlackListDeleted(data);
                     break;
                 case 'onFriendInfoChanged':
-                    listener.onFriendInfoChanged(data);
+                    listener.onFriendInfoChanged &&
+                        listener.onFriendInfoChanged(data);
                     break;
             }
         });
@@ -114,7 +121,7 @@ export class V2TIMFriendshipManager {
      * - ID 建议一次最大 100 个，因为数量过多可能会导致数据包太大被后台拒绝，后台限制数据包最大为 1M。
      */
     public getFriendsInfo(
-        userIDList: String[]
+        userIDList: string[]
     ): Promise<V2TimValueCallback<V2TimFriendInfoResult[]>> {
         return this.nativeModule.call(this.manager, 'getFriendsInfo', {
             userIDList,
@@ -129,8 +136,8 @@ export class V2TIMFriendshipManager {
      * @param friendCustomInfo - 好友自定义信息
      */
     public setFriendInfo(
-        userID: String,
-        friendRemark?: String,
+        userID: string,
+        friendRemark?: string,
         friendCustomInfo?: StringMap
     ): Promise<V2TimCallback> {
         return this.nativeModule.call(this.manager, 'setFriendInfo', {
@@ -150,12 +157,12 @@ export class V2TIMFriendshipManager {
      * @param addSource - 来源描述
      */
     public addFriend(
-        userID: String,
+        userID: string,
         addType: FriendType,
-        remark?: String,
-        friendGroup?: String,
-        addWording?: String,
-        addSource?: String
+        remark?: string,
+        friendGroup?: string,
+        addWording?: string,
+        addSource?: string
     ): Promise<V2TimValueCallback<V2TimFriendOperationResult>> {
         return this.nativeModule.call(this.manager, 'addFriend', {
             userID,
@@ -173,7 +180,7 @@ export class V2TIMFriendshipManager {
      * @param deleteType 删除类型
      */
     public deleteFromFriendList(
-        userIDList: String[],
+        userIDList: string[],
         deleteType: FriendType
     ): Promise<V2TimValueCallback<V2TimFriendOperationResult[]>> {
         return this.nativeModule.call(this.manager, 'deleteFromFriendList', {
@@ -193,7 +200,7 @@ export class V2TIMFriendshipManager {
      * - checkType 如果传入 V2TIM_FRIEND_TYPE_BOTH，结果返回：V2TIM_FRIEND_RELATION_TYPE_NONE、V2TIM_FRIEND_RELATION_TYPE_IN_MY_FRIEND_LIST、 V2TIM_FRIEND_RELATION_TYPE_IN_OTHER_FRIEND_LIST、V2TIM_FRIEND_RELATION_TYPE_BOTH_WAY 四种情况
      */
     public checkFriend(
-        userIDList: String[],
+        userIDList: string[],
         checkType: FriendType
     ): Promise<V2TimValueCallback<V2TimFriendCheckResult[]>> {
         return this.nativeModule.call(this.manager, 'checkFriend', {
@@ -224,7 +231,7 @@ export class V2TIMFriendshipManager {
     public acceptFriendApplication(
         responseType: FriendResponseTypeEnum,
         type: FriendApplicationTypeEnum,
-        userID: String
+        userID: string
     ): Promise<V2TimValueCallback<V2TimFriendOperationResult>> {
         return this.nativeModule.call(this.manager, 'acceptFriendApplication', {
             responseType,
@@ -240,7 +247,7 @@ export class V2TIMFriendshipManager {
      */
     public refuseFriendApplication(
         type: FriendApplicationTypeEnum,
-        userID: String
+        userID: string
     ): Promise<V2TimValueCallback<V2TimFriendOperationResult>> {
         return this.nativeModule.call(this.manager, 'refuseFriendApplication', {
             type,
@@ -255,7 +262,7 @@ export class V2TIMFriendshipManager {
      */
     public deleteFriendApplication(
         type: FriendApplicationTypeEnum,
-        userID: String
+        userID: string
     ): Promise<V2TimValueCallback<V2TimFriendOperationResult>> {
         return this.nativeModule.call(this.manager, 'deleteFriendApplication', {
             type,
@@ -279,7 +286,7 @@ export class V2TIMFriendshipManager {
      * @param userIDList 用户userID 列表
      */
     public addToBlackList(
-        userIDList: String[]
+        userIDList: string[]
     ): Promise<V2TimValueCallback<V2TimFriendOperationResult[]>> {
         return this.nativeModule.call(this.manager, 'addToBlackList', {
             userIDList,
@@ -291,7 +298,7 @@ export class V2TIMFriendshipManager {
      * @param userIDList 用户userID 列表
      */
     public deleteFromBlackList(
-        userIDList: String[]
+        userIDList: string[]
     ): Promise<V2TimValueCallback<V2TimFriendOperationResult[]>> {
         return this.nativeModule.call(this.manager, 'deleteFromBlackList', {
             userIDList,
@@ -311,8 +318,8 @@ export class V2TIMFriendshipManager {
      * @param userIDList - 用户userID 列表
      */
     public createFriendGroup(
-        groupName: String,
-        userIDList?: String[]
+        groupName: string,
+        userIDList?: string[]
     ): Promise<V2TimValueCallback<V2TimFriendOperationResult[]>> {
         return this.nativeModule.call(this.manager, 'createFriendGroup', {
             groupName,
@@ -325,7 +332,7 @@ export class V2TIMFriendshipManager {
      * @param groupNameList - 要获取信息的好友分组名称列表,传入 null 获得所有分组信息
      */
     public getFriendGroups(
-        groupNameList?: String[]
+        groupNameList?: string[]
     ): Promise<V2TimValueCallback<V2TimFriendGroup[]>> {
         return this.nativeModule.call(this.manager, 'getFriendGroups', {
             groupNameList,
@@ -336,7 +343,7 @@ export class V2TIMFriendshipManager {
      * ### 删除好友分组
      * @param groupNameList - 分组名称列表
      */
-    public deleteFriendGroup(groupNameList?: String[]): Promise<V2TimCallback> {
+    public deleteFriendGroup(groupNameList?: string[]): Promise<V2TimCallback> {
         return this.nativeModule.call(this.manager, 'deleteFriendGroup', {
             groupNameList,
         });
@@ -348,8 +355,8 @@ export class V2TIMFriendshipManager {
      * @param newName - 分组新名称
      */
     public renameFriendGroup(
-        oldName: String,
-        newName: String
+        oldName: string,
+        newName: string
     ): Promise<V2TimCallback> {
         return this.nativeModule.call(this.manager, 'renameFriendGroup', {
             oldName,
@@ -363,8 +370,8 @@ export class V2TIMFriendshipManager {
      * @param userIDList - 用户userID 列表
      */
     public addFriendsToFriendGroup(
-        groupName: String,
-        userIDList: String[]
+        groupName: string,
+        userIDList: string[]
     ): Promise<V2TimValueCallback<V2TimFriendOperationResult[]>> {
         return this.nativeModule.call(this.manager, 'addFriendsToFriendGroup', {
             groupName,
@@ -378,8 +385,8 @@ export class V2TIMFriendshipManager {
      * @param userIDList - 用户userID 列表
      */
     public deleteFriendsFromFriendGroup(
-        groupName: String,
-        userIDList: String[]
+        groupName: string,
+        userIDList: string[]
     ): Promise<V2TimValueCallback<V2TimFriendOperationResult[]>> {
         return this.nativeModule.call(
             this.manager,

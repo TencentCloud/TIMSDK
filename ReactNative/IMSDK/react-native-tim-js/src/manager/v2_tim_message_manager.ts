@@ -3,26 +3,26 @@
  * @module MessageManager(高级消息收发接口)
  */
 import type { NativeEventEmitter } from 'react-native';
-import type V2TimAdvancedMsgListener from '../interface/v2TimAdvancedMsgListener';
+import type { V2TimAdvancedMsgListener } from '../interface/v2TimAdvancedMsgListener';
 import type { GetGroupMessageReadMemberListFilter } from '../enum/getGroupMessageReadMemberListFilter';
 import { HistoryMsgGetTypeEnum } from '../enum/historyMsgGetTypeEnum';
 import { MessageElemType } from '../enum/messageElemType';
 import { MessagePriorityEnum } from '../enum/messagePriority';
 import type { ReceiveMsgOptEnum } from '../enum/receiveMsgOptEnum';
-import type V2TimCallback from '../interface/v2TimCallback';
-import type V2TimGroupMessageReadMemberList from '../interface/v2TimGroupMessageReadMemberList';
-import type V2TimMessage from '../interface/v2TimMessage';
-import type V2TimMessageChangeInfo from '../interface/v2TimMessageChangeInfo';
-import type V2TimMessageReceipt from '../interface/v2TimMessageReceipt';
-import type V2TimMessageSearchParam from '../interface/v2TimMessageSearchParam';
-import type V2TimMessageSearchResult from '../interface/v2TimMessageSearchResult';
-import type V2TimMsgCreateInfoResult from '../interface/v2TimMsgCreateInfoResult';
-import type V2TimOfflinePushInfo from '../interface/v2TimOfflinePushInfo';
-import type V2TimReceiveMessageOptInfo from '../interface/v2TimReceiveMessageOptInfo';
-import type V2TimValueCallback from '../interface/v2TimValueCallback';
+import type { V2TimCallback } from '../interface/v2TimCallback';
+import type { V2TimGroupMessageReadMemberList } from '../interface/v2TimGroupMessageReadMemberList';
+import type { V2TimMessage } from '../interface/v2TimMessage';
+import type { V2TimMessageChangeInfo } from '../interface/v2TimMessageChangeInfo';
+import type { V2TimMessageReceipt } from '../interface/v2TimMessageReceipt';
+import type { V2TimMessageSearchParam } from '../interface/v2TimMessageSearchParam';
+import type { V2TimMessageSearchResult } from '../interface/v2TimMessageSearchResult';
+import type { V2TimMsgCreateInfoResult } from '../interface/v2TimMsgCreateInfoResult';
+import type { V2TimOfflinePushInfo } from '../interface/v2TimOfflinePushInfo';
+import type { V2TimReceiveMessageOptInfo } from '../interface/v2TimReceiveMessageOptInfo';
+import type { V2TimValueCallback } from '../interface/v2TimValueCallback';
 
 export class V2TIMMessageManager {
-    private manager: String = 'messageManager';
+    private manager: string = 'messageManager';
 
     private nativeModule: any;
     private messageListenerList: V2TimAdvancedMsgListener[] = [];
@@ -33,23 +33,28 @@ export class V2TIMMessageManager {
         this.addListener(eventEmitter);
     }
 
-    private callListener(eventType: String, data: any) {
+    private callListener(eventType: string, data: any) {
         this.messageListenerList.forEach((listener) => {
             switch (eventType) {
                 case 'onRecvNewMessage':
-                    listener.onRecvNewMessage(data);
+                    listener.onRecvNewMessage &&
+                        listener.onRecvNewMessage(data);
                     break;
                 case 'onRecvMessageReadReceipts':
-                    listener.onRecvMessageReadReceipts(data);
+                    listener.onRecvMessageReadReceipts &&
+                        listener.onRecvMessageReadReceipts(data);
                     break;
                 case 'onRecvC2CReadReceipt':
-                    listener.onRecvC2CReadReceipt(data);
+                    listener.onRecvC2CReadReceipt &&
+                        listener.onRecvC2CReadReceipt(data);
                     break;
                 case 'onRecvMessageRevoked':
-                    listener.onRecvMessageRevoked(data);
+                    listener.onRecvMessageRevoked &&
+                        listener.onRecvMessageRevoked(data);
                     break;
                 case 'onRecvMessageModified':
-                    listener.onRecvMessageModified(data);
+                    listener.onRecvMessageModified &&
+                        listener.onRecvMessageModified(data);
                     break;
             }
         });
@@ -104,7 +109,7 @@ export class V2TIMMessageManager {
      * ### 创建文本消息
      */
     public createTextMessage(
-        text: String
+        text: string
     ): V2TimValueCallback<V2TimMsgCreateInfoResult> {
         return this.nativeModule.call(this.manager, 'createTextMessage', {
             text,
@@ -124,8 +129,8 @@ export class V2TIMMessageManager {
      * - 定向群消息默认不计入群会话的未读计数。
      */
     public createTargetedGroupMessage(
-        id: String,
-        receiverList: String[]
+        id: string,
+        receiverList: string[]
     ): V2TimValueCallback<V2TimMsgCreateInfoResult> {
         return this.nativeModule.call(
             this.manager,
@@ -141,8 +146,8 @@ export class V2TIMMessageManager {
      * ### 添加多Element消息
      */
     public appendMessage(
-        createMessageBaseId: String,
-        createMessageAppendId: String
+        createMessageBaseId: string,
+        createMessageAppendId: string
     ): V2TimValueCallback<V2TimMessage> {
         return this.nativeModule.call(this.manager, 'appendMessage', {
             createMessageAppendId,
@@ -162,9 +167,9 @@ export class V2TIMMessageManager {
         desc = '',
         extension = '',
     }: {
-        data: String;
-        desc?: String;
-        extension?: String;
+        data: string;
+        desc?: string;
+        extension?: string;
     }): V2TimValueCallback<V2TimMsgCreateInfoResult> {
         return this.nativeModule.call(this.manager, 'createCustomMessage', {
             data,
@@ -178,7 +183,7 @@ export class V2TIMMessageManager {
      * @param imagePath - 图片地址
      */
     public createImageMessage(
-        imagePath: String
+        imagePath: string
     ): V2TimValueCallback<V2TimMsgCreateInfoResult> {
         return this.nativeModule.call(this.manager, 'createImageMessage', {
             imagePath,
@@ -191,7 +196,7 @@ export class V2TIMMessageManager {
      * @param duration - 音频时长
      */
     public createSoundMessage(
-        soundPath: String,
+        soundPath: string,
         duration: number
     ): V2TimValueCallback<V2TimMsgCreateInfoResult> {
         return this.nativeModule.call(this.manager, 'createSoundMessage', {
@@ -208,10 +213,10 @@ export class V2TIMMessageManager {
      * @param snapshotPath - 视频第一帧截图，用于封面展示
      */
     public createVideoMessage(
-        videoFilePath: String,
-        type: String,
+        videoFilePath: string,
+        type: string,
         duration: number,
-        snapshotPath: String
+        snapshotPath: string
     ): V2TimValueCallback<V2TimMsgCreateInfoResult> {
         return this.nativeModule.call(this.manager, 'createVideoMessage', {
             videoFilePath,
@@ -233,8 +238,8 @@ export class V2TIMMessageManager {
      * - 直播群（AVChatRoom）不支持发送 @ 消息。
      */
     public createTextAtMessage(
-        text: String,
-        atUserList: String[]
+        text: string,
+        atUserList: string[]
     ): V2TimValueCallback<V2TimMsgCreateInfoResult> {
         return this.nativeModule.call(this.manager, 'createTextAtMessage', {
             text,
@@ -248,8 +253,8 @@ export class V2TIMMessageManager {
      * @param fileName - 文件名称
      */
     public createFileMessage(
-        filePath: String,
-        fileName: String
+        filePath: string,
+        fileName: string
     ): V2TimValueCallback<V2TimMsgCreateInfoResult> {
         return this.nativeModule.call(this.manager, 'createFileMessage', {
             filePath,
@@ -264,7 +269,7 @@ export class V2TIMMessageManager {
      * @param latitude - 纬度
      */
     public createLocationMessage(
-        desc: String,
+        desc: string,
         longitude: number,
         latitude: number
     ): V2TimValueCallback<V2TimMsgCreateInfoResult> {
@@ -283,7 +288,7 @@ export class V2TIMMessageManager {
      */
     public createFaceMessage(
         index: number,
-        data: String
+        data: string
     ): V2TimValueCallback<V2TimMsgCreateInfoResult> {
         return this.nativeModule.call(this.manager, 'createFaceMessage', {
             index,
@@ -308,10 +313,10 @@ export class V2TIMMessageManager {
      * - 3. 当用户点击摘要信息 UI 的时候，调用 downloadMessageList 接口获取转发消息列表。
      */
     public createMergerMessage(
-        msgIDList: String[],
-        title: String,
-        abstractList: String,
-        compatibleText: String
+        msgIDList: string[],
+        title: string,
+        abstractList: string[],
+        compatibleText: string
     ): V2TimValueCallback<V2TimMsgCreateInfoResult> {
         return this.nativeModule.call(this.manager, 'createMergerMessage', {
             msgIDList,
@@ -327,7 +332,7 @@ export class V2TIMMessageManager {
      * @param msgID - 待转发的消息对象ID
      */
     public createForwardMessage(
-        msgID: String
+        msgID: string
     ): V2TimValueCallback<V2TimMsgCreateInfoResult> {
         return this.nativeModule.call(this.manager, 'createForwardMessage', {
             msgID,
@@ -370,16 +375,16 @@ export class V2TIMMessageManager {
         localCustomData,
         priority = MessagePriorityEnum.V2TIM_PRIORITY_NORMAL,
     }: {
-        id: String;
-        receiver: String;
-        groupID: String;
+        id: string;
+        receiver: string;
+        groupID: string;
         onlineUserOnly?: boolean;
         isExcludedFromUnreadCount?: boolean;
         isExcludedFromLastMessage?: boolean;
         needReadReceipt?: boolean;
         offlinePushInfo?: V2TimOfflinePushInfo;
-        cloudCustomData?: String;
-        localCustomData?: String;
+        cloudCustomData?: string;
+        localCustomData?: string;
         priority?: MessagePriorityEnum;
     }): V2TimValueCallback<V2TimMessage> {
         return this.nativeModule.call(this.manager, 'sendMessage', {
@@ -397,7 +402,7 @@ export class V2TIMMessageManager {
         });
     }
 
-    private _getAbstractMessage(message: V2TimMessage): String {
+    private _getAbstractMessage(message: V2TimMessage): string {
         const elemType = message.elemType;
         switch (elemType) {
             case MessageElemType.V2TIM_ELEM_TYPE_FACE:
@@ -443,16 +448,16 @@ export class V2TIMMessageManager {
         replyMessage,
         priority = MessagePriorityEnum.V2TIM_PRIORITY_NORMAL,
     }: {
-        id: String;
-        receiver: String;
-        groupID: String;
+        id: string;
+        receiver: string;
+        groupID: string;
         replyMessage: V2TimMessage;
         onlineUserOnly?: boolean;
         isExcludedFromUnreadCount?: boolean;
         isExcludedFromLastMessage?: boolean;
         needReadReceipt?: boolean;
         offlinePushInfo?: V2TimOfflinePushInfo;
-        localCustomData?: String;
+        localCustomData?: string;
         priority: MessagePriorityEnum;
     }): V2TimValueCallback<V2TimMessage> {
         const hasNickName =
@@ -490,7 +495,7 @@ export class V2TIMMessageManager {
      * @param onlineUserOnly - 是否仅在线用户接收
      */
     public reSendMessage(
-        msgID: String,
+        msgID: string,
         onlineUserOnly = false
     ): V2TimValueCallback<V2TimMessage> {
         return this.nativeModule.call(this.manager, 'reSendMessage', {
@@ -510,7 +515,7 @@ export class V2TIMMessageManager {
      * - 该接口调用频率被限制为1秒内最多调用5次。
      */
     public setC2CReceiveMessageOpt(
-        userIDList: String[],
+        userIDList: string[],
         opt: ReceiveMsgOptEnum
     ): V2TimCallback {
         return this.nativeModule.call(this.manager, 'setC2CReceiveMessageOpt', {
@@ -524,7 +529,7 @@ export class V2TIMMessageManager {
      * @param userIDList - 需要获取消息选项的用户ID列表
      */
     public getC2CReceiveMessageOpt(
-        userIDList: String[]
+        userIDList: string[]
     ): V2TimValueCallback<V2TimReceiveMessageOptInfo> {
         return this.nativeModule.call(this.manager, 'getC2CReceiveMessageOpt', {
             userIDList,
@@ -535,7 +540,7 @@ export class V2TIMMessageManager {
      * ### 设置群消息的接收选项
      */
     public setGroupReceiveMessageOpt(
-        groupID: String,
+        groupID: string,
         opt: ReceiveMsgOptEnum
     ): V2TimCallback {
         return this.nativeModule.call(
@@ -552,8 +557,8 @@ export class V2TIMMessageManager {
      * ### 设置消息自定义数据（本地保存，不会发送到对端，程序卸载重装后失效）
      */
     public setLocalCustomData(
-        msgID: String,
-        localCustomData: String
+        msgID: string,
+        localCustomData: string
     ): V2TimCallback {
         return this.nativeModule.call(this.manager, 'setLocalCustomData', {
             msgID,
@@ -565,8 +570,8 @@ export class V2TIMMessageManager {
      * ### 设置消息自定义数据，可以用来标记语音、视频消息是否已经播放（本地保存，不会发送到对端，程序卸载重装后失效）
      */
     public setLocalCustomInt(
-        msgID: String,
-        localCustomInt: String
+        msgID: string,
+        localCustomInt: number
     ): V2TimCallback {
         return this.nativeModule.call(this.manager, 'setLocalCustomInt', {
             msgID,
@@ -581,9 +586,9 @@ export class V2TIMMessageManager {
      * @param lastMsgID - 获取消息的起始消息，如果传 nil，起始消息为会话的最新消息
      */
     public getC2CHistoryMessageList(
-        userID: String,
+        userID: string,
         count: number,
-        lastMsgID?: String
+        lastMsgID?: string
     ): V2TimValueCallback<V2TimMessage[]> {
         return this.nativeModule.call(
             this.manager,
@@ -607,9 +612,9 @@ export class V2TIMMessageManager {
      * - 只有会议群（Meeting）才能拉取到进群前的历史消息，直播群（AVChatRoom）消息不存漫游和本地数据库，调用这个接口无效
      */
     public getGroupHistoryMessageList(
-        groupID: String,
+        groupID: string,
         count: number,
-        lastMsgID?: String
+        lastMsgID?: string
     ): V2TimValueCallback<V2TimMessage[]> {
         return this.nativeModule.call(
             this.manager,
@@ -630,7 +635,7 @@ export class V2TIMMessageManager {
      * - 仅支持单聊和群组中发送的普通消息，无法撤销 onlineUserOnly 为 true 即仅在线用户才能收到的消息，也无法撤销直播群（AVChatRoom）中的消息。
      * - 如果发送方撤回消息，已经收到消息的一方会收到 V2TIMAdvancedMsgListener -> onRecvMessageRevoked 回调。
      */
-    public revokeMessage(msgID: String): V2TimCallback {
+    public revokeMessage(msgID: string): V2TimCallback {
         return this.nativeModule.call(this.manager, 'revokeMessage', {
             msgID,
         });
@@ -643,7 +648,7 @@ export class V2TIMMessageManager {
      * 注意：
      * - 该接口调用成功后，自己的未读数会清 0，对端用户会收到 onRecvC2CReadReceipt 回调，回调里面会携带标记会话已读的时间。
      */
-    public markC2CMessageAsRead(userID: String): V2TimCallback {
+    public markC2CMessageAsRead(userID: string): V2TimCallback {
         return this.nativeModule.call(this.manager, 'markC2CMessageAsRead', {
             userID,
         });
@@ -656,7 +661,7 @@ export class V2TIMMessageManager {
      * 注意：
      * - 该接口调用成功后，自己的未读数会清 0。
      */
-    public markGroupMessageAsRead(groupID: String): V2TimCallback {
+    public markGroupMessageAsRead(groupID: string): V2TimCallback {
         return this.nativeModule.call(this.manager, 'markGroupMessageAsRead', {
             groupID,
         });
@@ -672,10 +677,10 @@ export class V2TIMMessageManager {
     public getHistoryMessageList(
         count: number,
         getType = HistoryMsgGetTypeEnum.V2TIM_GET_LOCAL_OLDER_MSG,
-        userID?: String,
-        groupID?: String,
+        userID?: string,
+        groupID?: string,
         lastMsgSeq = -1,
-        lastMsgID?: String,
+        lastMsgID?: string,
         messageTypeList?: number[]
     ): V2TimValueCallback<V2TimMessage[]> {
         return this.nativeModule.call(this.manager, 'getHistoryMessageList', {
@@ -690,37 +695,12 @@ export class V2TIMMessageManager {
     }
 
     /**
-     * ### 获取历史消息高级接口(没有处理Native返回数据)
-     */
-    public getHistoryMessageListWithoutFormat(
-        count: number,
-        getType = HistoryMsgGetTypeEnum.V2TIM_GET_LOCAL_OLDER_MSG,
-        userID?: String,
-        groupID?: String,
-        lastMsgSeq = -1,
-        lastMsgID?: String
-    ) {
-        return this.nativeModule.call(
-            this.manager,
-            'getHistoryMessageListWithoutFormat',
-            {
-                count,
-                getType,
-                userID,
-                groupID,
-                lastMsgID,
-                lastMsgSeq,
-            }
-        );
-    }
-
-    /**
      * ### 删除本地消息
      * @note
      * 注意：
      * 该接口只能删除本地历史，消息删除后，SDK 会在本地把这条消息标记为已删除状态，getHistoryMessage 不能再拉取到，如果程序卸载重装，本地会失去对这条消息的删除标记，getHistoryMessage 还能再拉取到该条消息。
      */
-    public deleteMessageFromLocalStorage(msgID: String): V2TimCallback {
+    public deleteMessageFromLocalStorage(msgID: string): V2TimCallback {
         return this.nativeModule.call(
             this.manager,
             'deleteMessageFromLocalStorage',
@@ -739,7 +719,7 @@ export class V2TIMMessageManager {
      * - 一秒钟最多只能调用一次该接口
      * - 如果该账号在其他设备上拉取过这些消息，那么调用该接口删除后，这些消息仍然会保存在那些设备上，即删除消息不支持多端同步。
      */
-    public deleteMessages(msgIDs: String[]): V2TimCallback {
+    public deleteMessages(msgIDs: string[]): V2TimCallback {
         return this.nativeModule.call(this.manager, 'deleteMessages', {
             msgIDs,
         });
@@ -756,9 +736,9 @@ export class V2TIMMessageManager {
      * - 通过该接口 save 的消息只存本地，程序卸载后会丢失。
      */
     public insertGroupMessageToLocalStorage(
-        data: String,
-        groupID: String,
-        sender: String
+        data: string,
+        groupID: string,
+        sender: string
     ): V2TimValueCallback<V2TimMessage> {
         return this.nativeModule.call(
             this.manager,
@@ -782,9 +762,9 @@ export class V2TIMMessageManager {
      * - 通过该接口 save 的消息只存本地，程序卸载后会丢失。
      */
     public insertC2CMessageToLocalStorage(
-        data: String,
-        userID: String,
-        sender: String
+        data: string,
+        userID: string,
+        sender: string
     ): V2TimValueCallback<V2TimMessage> {
         return this.nativeModule.call(
             this.manager,
@@ -804,7 +784,7 @@ export class V2TIMMessageManager {
      * 注意:
      * - 会话内的消息在本地删除的同时，在服务器也会同步删除。
      */
-    public clearC2CHistoryMessage(userID: String): V2TimCallback {
+    public clearC2CHistoryMessage(userID: string): V2TimCallback {
         return this.nativeModule.call(this.manager, 'clearC2CHistoryMessage', {
             userID,
         });
@@ -817,7 +797,7 @@ export class V2TIMMessageManager {
      * 注意:
      * - 会话内的消息在本地删除的同时，在服务器也会同步删除。
      */
-    public clearGroupHistoryMessage(groupID: String): V2TimCallback {
+    public clearGroupHistoryMessage(groupID: string): V2TimCallback {
         return this.nativeModule.call(
             this.manager,
             'clearGroupHistoryMessage',
@@ -885,7 +865,7 @@ export class V2TIMMessageManager {
      * - messageList 里的消息必须在同一个会话中。
      * - 该接口调用成功后，会话未读数不会变化，消息发送者会收到 onRecvMessageReadReceipts 回调，回调里面会携带消息的最新已读信息。
      */
-    public sendMessageReadReceipts(messageIDList: String[]): V2TimCallback {
+    public sendMessageReadReceipts(messageIDList: string[]): V2TimCallback {
         return this.nativeModule.call(this.manager, 'sendMessageReadReceipts', {
             messageIDList,
         });
@@ -899,7 +879,7 @@ export class V2TIMMessageManager {
      * - messageList 里的消息必须在同一个会话中。
      */
     public getMessageReadReceipts(
-        messageIDList: String[]
+        messageIDList: string[]
     ): V2TimValueCallback<V2TimMessageReceipt[]> {
         return this.nativeModule.call(this.manager, 'getMessageReadReceipts', {
             messageIDList,
@@ -914,7 +894,7 @@ export class V2TIMMessageManager {
      * @param count - 分页拉取的个数，最大支持 100 个。
      */
     public getGroupMessageReadMemberList(
-        messageID: String,
+        messageID: string,
         filter: GetGroupMessageReadMemberListFilter,
         nextSeq = 0,
         count = 100
@@ -936,7 +916,7 @@ export class V2TIMMessageManager {
      * @param messageIDList
      */
     public findMessages(
-        messageIDList: String[]
+        messageIDList: string[]
     ): V2TimValueCallback<V2TimMessage[]> {
         return this.nativeModule.call(this.manager, 'findMessages', {
             messageIDList,
@@ -965,7 +945,7 @@ export class V2TIMMessageManager {
      * @param msgID
      */
     public downloadMergerMessage(
-        msgID: String
+        msgID: string
     ): V2TimValueCallback<V2TimMessage[]> {
         return this.nativeModule.call(this.manager, 'downloadMergerMessage', {
             msgID,

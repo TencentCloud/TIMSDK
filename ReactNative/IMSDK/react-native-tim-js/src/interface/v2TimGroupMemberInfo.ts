@@ -1,12 +1,10 @@
 /**
  * @module interface
  */
-interface V2TimGroupMemberInfo {
-    userID?: String;
-    nickName?: String;
-    nameCard?: String;
-    friendRemark?: String;
-    faceUrl?: String;
+export interface V2TimGroupMemberInfo {
+    userID?: string;
+    nickName?: string;
+    nameCard?: string;
+    friendRemark?: string;
+    faceUrl?: string;
 }
-
-export default V2TimGroupMemberInfo;

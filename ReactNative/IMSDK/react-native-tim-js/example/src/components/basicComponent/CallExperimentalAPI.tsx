@@ -7,14 +7,15 @@ import SDKResponseView from '../sdkResponseView';
 import UserInputComponent from '../commonComponents/UserInputComponent';
 
 const CallExperimentalAPIComponent = () => {
-    const [res] = useState<any>({});
+    const [res, setRes] = useState<any>({});
+    const [userName, setUserName] = useState<string>('');
 
     const callExperimentalAPI = async () => {
         const res = await TencentImSDKPlugin.v2TIMManager.callExperimentalAPI(
-            '940928'
+            'initLocalStorage',
+            userName
         );
-        console.log(res);
-        // setRes(res);
+        setRes(res);
     };
 
     const CodeComponent = () => {
@@ -28,7 +29,7 @@ const CallExperimentalAPIComponent = () => {
                 <UserInputComponent
                     content="请输入用户名"
                     placeholdercontent="请输入用户名"
-                    getContent={() => {}}
+                    getContent={setUserName}
                 />
             </View>
             <CommonButton
