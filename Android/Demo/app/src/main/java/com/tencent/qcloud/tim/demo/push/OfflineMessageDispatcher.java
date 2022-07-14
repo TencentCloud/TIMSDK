@@ -21,7 +21,6 @@ public class OfflineMessageDispatcher {
 
     private static final String TAG = OfflineMessageDispatcher.class.getSimpleName();
     private static final String OEMMessageKey = "ext";
-    private static final String TPNSMessageKey = "customContent";
     private static final String XIAOMIMessageKey = "key_message";
 
     public static OfflineMessageBean parseOfflineMessage(Intent intent) {
@@ -34,14 +33,8 @@ public class OfflineMessageDispatcher {
         Bundle bundle = intent.getExtras();
         DemoLog.i(TAG, "bundle: " + bundle);
         if (bundle == null) {
-            // TPNS 的透传参数数据格式为 customContent:{data}
-            Uri uri = intent.getData();
-            if (uri == null) {
-                DemoLog.i(TAG, "intent.getData() uri is null");
-                return null;
-            } else {
-                return parseOfflineMessageTPNS(intent);
-            }
+            DemoLog.i(TAG, "bundle is null");
+            return null;
         } else {
             String ext = bundle.getString(OEMMessageKey);
             DemoLog.i(TAG, "push custom data ext: " + ext);
@@ -88,25 +81,6 @@ public class OfflineMessageDispatcher {
                 if (TextUtils.equals("entity", key)) {
                     return value.toString();
                 }
-            }
-        }
-        return null;
-    }
-
-    private static OfflineMessageBean parseOfflineMessageTPNS(Intent intent) {
-        DemoLog.i(TAG, "parse TPNS push");
-        //intent uri
-        Uri uri = intent.getData();
-        if (uri == null) {
-            DemoLog.i(TAG, "intent.getData() uri is null");
-        } else {
-            DemoLog.i(TAG, "parseOfflineMessageTPNS get data uri: " + uri);
-            String ext= uri.getQueryParameter(TPNSMessageKey);
-            DemoLog.i(TAG, "push custom data ext: " + ext);
-            if (!TextUtils.isEmpty(ext)) {
-                return getOfflineMessageBeanFromContainer(ext);
-            } else {
-                DemoLog.i(TAG, "TextUtils.isEmpty(ext)");
             }
         }
         return null;

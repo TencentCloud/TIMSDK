@@ -22,6 +22,7 @@ import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.component.LineControllerView;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
+import com.tencent.qcloud.tuicore.component.activities.ImageSelectActivity;
 import com.tencent.qcloud.tuicore.component.activities.SelectionActivity;
 import com.tencent.qcloud.tuicore.component.dialog.TUIKitDialog;
 import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
@@ -39,6 +40,7 @@ import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupInfoPresenter;
 import com.tencent.qcloud.tuikit.tuigroup.ui.interfaces.IGroupMemberLayout;
 import com.tencent.qcloud.tuikit.tuigroup.ui.interfaces.IGroupMemberListener;
 import com.tencent.qcloud.tuikit.tuigroup.ui.page.GroupInfoActivity;
+import com.tencent.qcloud.tuikit.tuigroup.ui.page.GroupInfoFragment;
 import com.tencent.qcloud.tuikit.tuigroup.ui.page.GroupMemberActivity;
 import com.tencent.qcloud.tuikit.tuigroup.ui.page.GroupNoticeActivity;
 import com.tencent.qcloud.tuikit.tuigroup.ui.page.ManageGroupActivity;
@@ -81,7 +83,7 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
     private GroupInfo mGroupInfo;
     private GroupInfoPresenter mPresenter;
     private ArrayList<String> mJoinTypes = new ArrayList<>();
-
+    private GroupInfoFragment.OnModifyGroupAvatarListener onModifyGroupAvatarListener;
     public GroupInfoLayout(Context context) {
         super(context);
         init();
@@ -264,37 +266,10 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
             if (!mGroupInfo.isCanManagerGroup()) {
                 return;
             }
-            TUIKitDialog tipsDialog = new TUIKitDialog(getContext())
-                    .builder()
-                    .setCancelable(true)
-                    .setCancelOutside(true)
-                    .setTitle(getContext().getString(R.string.group_choose_random_face))
-                    .setDialogWidth(0.75f)
-                    .setPositiveButton(getContext().getString(R.string.sure), new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            String groupUrl = String.format("https://picsum.photos/id/%d/200/200", new Random().nextInt(1000));
-                            mPresenter.modifyGroupFaceUrl(mGroupInfo.getId(), groupUrl, new IUIKitCallback<Void>() {
-                                @Override
-                                public void onSuccess(Void data) {
-                                    mGroupInfo.setFaceUrl(groupUrl);
-                                    setGroupInfo(mGroupInfo);
-                                    ToastUtil.toastLongMessage(TUIGroupService.getAppContext().getString(R.string.modify_icon_suc));
-                                }
 
-                                @Override
-                                public void onError(String module, int errCode, String errMsg) {
-                                    ToastUtil.toastLongMessage(TUIGroupService.getAppContext().getString(R.string.modify_icon_fail) + ", code = " + errCode + ", info = " + errMsg);
-                                }
-                            });                      }
-                    })
-                    .setNegativeButton(getContext().getString(R.string.cancel), new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                        }
-                    });
-            tipsDialog.show();
+            if (onModifyGroupAvatarListener != null) {
+                onModifyGroupAvatarListener.onModifyGroupAvatar(mGroupInfo.getFaceUrl());
+            }
         } else if (v.getId() == R.id.group_notice) {
             Intent intent = new Intent(getContext(), GroupNoticeActivity.class);
             GroupNoticeActivity.setOnGroupNoticeChangedListener(new GroupNoticeActivity.OnGroupNoticeChangedListener() {
@@ -456,7 +431,7 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
         });
     }
 
-    private void setGroupInfo(GroupInfo info) {
+    public void setGroupInfo(GroupInfo info) {
         if (info == null) {
             return;
         }
@@ -563,6 +538,24 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
     public void setRouter(IGroupMemberListener listener) {
         mMemberPreviewListener = listener;
         mMemberAdapter.setManagerCallBack(listener);
+    }
+
+    public void setOnModifyGroupAvatarListener(GroupInfoFragment.OnModifyGroupAvatarListener onModifyGroupAvatarListener) {
+        this.onModifyGroupAvatarListener = onModifyGroupAvatarListener;
+    }
+
+    public void modifyGroupAvatar(String avatarUrl) {
+        mPresenter.modifyGroupFaceUrl(mGroupInfo.getId(), avatarUrl, new IUIKitCallback<Void>() {
+            @Override
+            public void onSuccess(Void data) {
+                mGroupInfo.setFaceUrl(avatarUrl);
+                setGroupInfo(mGroupInfo);            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                ToastUtil.toastShortMessage(TUIGroupService.getAppContext().getString(R.string.modify_icon_fail) + ", code = " + errCode + ", info = " + errMsg);
+            }
+        });
     }
 
     @Override

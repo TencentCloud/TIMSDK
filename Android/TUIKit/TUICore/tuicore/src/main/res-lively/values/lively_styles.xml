@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="TUIBaseLivelyTheme">
+    <style name="TUIBaseLivelyTheme" parent="@style/TUIBaseTheme">
         <!-- 颜色规范 start -->
         <item name="core_light_bg_title_text_color">@color/core_light_bg_title_text_color_lively</item>
         <item name="core_light_bg_primary_text_color">@color/core_light_bg_primary_text_color_lively</item>
@@ -31,7 +31,7 @@
         <item name="core_title_bar_back_icon">@drawable/core_title_bar_back_lively</item>
         <item name="core_default_group_icon">@drawable/core_default_group_icon_lively</item>
         <item name="core_default_user_icon">@drawable/core_default_user_icon_lively</item>
-
+        <item name="user_status_online">@drawable/core_online_status_lively</item>
     </style>
 
 </resources>

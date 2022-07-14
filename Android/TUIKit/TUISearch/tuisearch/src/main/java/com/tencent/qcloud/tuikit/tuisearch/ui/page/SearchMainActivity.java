@@ -2,6 +2,7 @@ package com.tencent.qcloud.tuikit.tuisearch.ui.page;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -25,25 +26,24 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuicore.component.dialog.TUIKitDialog;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuisearch.R;
+import com.tencent.qcloud.tuikit.tuisearch.TUISearchConstants;
+import com.tencent.qcloud.tuikit.tuisearch.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuisearch.bean.SearchDataBean;
 import com.tencent.qcloud.tuikit.tuisearch.presenter.SearchMainPresenter;
-import com.tencent.qcloud.tuikit.tuisearch.ui.view.SearchResultAdapter;
-import com.tencent.qcloud.tuikit.tuisearch.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuisearch.ui.view.PageRecycleView;
-import com.tencent.qcloud.tuikit.tuisearch.TUISearchConstants;
+import com.tencent.qcloud.tuikit.tuisearch.ui.view.SearchResultAdapter;
 import com.tencent.qcloud.tuikit.tuisearch.util.TUISearchLog;
 import com.tencent.qcloud.tuikit.tuisearch.util.TUISearchUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.tencent.qcloud.tuikit.tuisearch.TUISearchConstants.BUYING_GUIDELINES;
-import static com.tencent.qcloud.tuikit.tuisearch.TUISearchConstants.BUYING_GUIDELINES_EN;
 import static com.tencent.qcloud.tuikit.tuisearch.ui.view.SearchResultAdapter.CONTACT_TYPE;
 import static com.tencent.qcloud.tuikit.tuisearch.ui.view.SearchResultAdapter.CONVERSATION_TYPE;
 import static com.tencent.qcloud.tuikit.tuisearch.ui.view.SearchResultAdapter.GROUP_TYPE;
@@ -333,7 +333,7 @@ public class SearchMainActivity extends BaseLightActivity {
 
             @Override
             public void onError(String module, int code, String desc) {
-                if (code == TUISearchConstants.ERR_SDK_INTERFACE_NOT_SUPPORT) {
+                if (code == TUIConstants.BuyingFeature.ERR_SDK_INTERFACE_NOT_SUPPORT) {
                     showNotSupportDialog();
                 }
                 TUISearchLog.d(TAG, "SearchContact onError code = " + code + ", desc = " + desc);
@@ -362,7 +362,7 @@ public class SearchMainActivity extends BaseLightActivity {
 
             @Override
             public void onError(String module, int code, String desc) {
-                if (code == TUISearchConstants.ERR_SDK_INTERFACE_NOT_SUPPORT) {
+                if (code == TUIConstants.BuyingFeature.ERR_SDK_INTERFACE_NOT_SUPPORT) {
                     showNotSupportDialog();
                 }
                 TUISearchLog.d(TAG, "SearchContact onError code = " + code + ", desc = " + desc);
@@ -388,7 +388,7 @@ public class SearchMainActivity extends BaseLightActivity {
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
-                if (errCode == TUISearchConstants.ERR_SDK_INTERFACE_NOT_SUPPORT) {
+                if (errCode == TUIConstants.BuyingFeature.ERR_SDK_INTERFACE_NOT_SUPPORT) {
                     showNotSupportDialog();
                 }
                 mConversationLayout.setVisibility(View.GONE);
@@ -412,9 +412,9 @@ public class SearchMainActivity extends BaseLightActivity {
             @Override
             public void onClick(View view) {
                 if (TextUtils.equals(TUIThemeManager.getInstance().getCurrentLanguage(), "zh")) {
-                    openWebUrl(BUYING_GUIDELINES);
+                    openWebUrl(TUIConstants.BuyingFeature.BUYING_PRICE_DESC);
                 } else {
-                    openWebUrl(BUYING_GUIDELINES_EN);
+                    openWebUrl(TUIConstants.BuyingFeature.BUYING_PRICE_DESC_EN);
                 }
             }
 
@@ -431,10 +431,12 @@ public class SearchMainActivity extends BaseLightActivity {
                 // 只在 debug 模式下弹窗
                 .setShowOnlyDebug(true)
                 .setMovementMethod(LinkMovementMethod.getInstance())
+                .setHighlightColor(Color.TRANSPARENT)
                 .setCancelable(true)
                 .setCancelOutside(true)
                 .setTitle(spannedString)
                 .setDialogWidth(0.75f)
+                .setDialogFeatureName(TUIConstants.BuyingFeature.BUYING_FEATURE_SEARCH)
                 .setPositiveButton(getString(R.string.search_no_more_reminders), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

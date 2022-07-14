@@ -24,5 +24,6 @@
     <attr name="demo_login_theme_icon" format="reference"/>
     <attr name="demo_login_theme_language_text_color" format="color"/>
     <attr name="demo_login_ic_logo" format="reference"/>
+    <attr name="demo_phone_login_logo" format="reference"/>
 
 </resources>

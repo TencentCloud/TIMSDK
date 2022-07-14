@@ -7,6 +7,7 @@ import android.os.Message;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
+import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.BackgroundTasks;
@@ -15,6 +16,7 @@ import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
+import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupApplyInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupMemberInfo;
@@ -38,7 +40,6 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.IBaseMessageSender;
-import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.model.ChatProvider;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.IMessageAdapter;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.MessageRecyclerView;
@@ -755,6 +756,9 @@ public abstract class ChatPresenter {
                 }
                 TUIChatUtils.callbackOnSuccess(callBack, data);
                 updateMessageInfo(message);
+                Map<String, Object> param = new HashMap<>();
+                param.put(TUIChatConstants.MESSAGE_BEAN, data);
+                TUICore.notifyEvent(TUIChatConstants.EVENT_KEY_MESSAGE_STATUS_CHANGED, TUIChatConstants.EVENT_SUB_KEY_MESSAGE_SEND, param);
             }
 
             @Override
@@ -785,6 +789,14 @@ public abstract class ChatPresenter {
         } else {
             addMessageInfo(message);
         }
+    }
+
+    public void sendTypingStatusMessage(TUIMessageBean message, String receiver, IUIKitCallback<TUIMessageBean> callBack) {
+
+    }
+
+    public boolean isSupportTyping(long time) {
+        return false;
     }
 
     private void updateMessageInfo(TUIMessageBean messageInfo) {
@@ -1103,9 +1115,13 @@ public abstract class ChatPresenter {
         provider.revokeMessage(message, new IUIKitCallback<Void>() {
             @Override
             public void onSuccess(Void data) {
-                if (!safetyCall()) {
-                    TUIChatLog.w(TAG, "revokeMessage unSafetyCall");
-                    return;
+                if (message instanceof ReplyMessageBean) {
+                    modifyRootMessageToRemoveReplyInfo((ReplyMessageBean) message, new IUIKitCallback<Void>() {
+                        @Override
+                        public void onError(String module, int errCode, String errMsg) {
+                            ToastUtil.toastShortMessage("modify message failed code = " + errCode + " message = " + errMsg);
+                        }
+                    });
                 }
                 updateMessageRevoked(message.getId());
             }
@@ -1341,6 +1357,9 @@ public abstract class ChatPresenter {
 
                 message.setStatus(TUIMessageBean.MSG_STATUS_SEND_SUCCESS);
                 updateMessageInfo(message);
+                Map<String, Object> param = new HashMap<>();
+                param.put(TUIChatConstants.MESSAGE_BEAN, data);
+                TUICore.notifyEvent(TUIChatConstants.EVENT_KEY_MESSAGE_STATUS_CHANGED, TUIChatConstants.EVENT_SUB_KEY_MESSAGE_SEND, param);
             }
 
             @Override
@@ -1507,12 +1526,12 @@ public abstract class ChatPresenter {
         }
     }
 
-    public void modifyRootMessage(ReplyMessageBean replyMessageBean, IUIKitCallback<Void> callback) {
+    public void modifyRootMessageToRemoveReplyInfo(ReplyMessageBean replyMessageBean, IUIKitCallback<Void> callback) {
         String messageRootId = replyMessageBean.getMsgRootId();
         findMessage(messageRootId, new IUIKitCallback<TUIMessageBean>() {
             @Override
             public void onSuccess(TUIMessageBean data) {
-                modifyRootMessage(data, replyMessageBean);
+                modifyRootMessageToRemoveReplyInfo(data, replyMessageBean);
             }
 
             @Override
@@ -1522,7 +1541,7 @@ public abstract class ChatPresenter {
         });
     }
 
-    private void modifyRootMessage(TUIMessageBean rootMessage, ReplyMessageBean replyMessage) {
+    private void modifyRootMessageToRemoveReplyInfo(TUIMessageBean rootMessage, ReplyMessageBean replyMessage) {
         IUIKitCallback<TUIMessageBean> callback = new IUIKitCallback<TUIMessageBean>() {
             @Override
             public void onSuccess(TUIMessageBean data) {
@@ -1531,7 +1550,49 @@ public abstract class ChatPresenter {
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
-                ToastUtil.toastShortMessage("reactMessage failed code=" + errCode + " msg=" +errMsg);
+                ToastUtil.toastShortMessage("modifyRootMessageRemoveReply failed code=" + errCode + " msg=" +errMsg);
+            }
+        };
+        ChatModifyMessageHelper.ModifyMessageTask task = new ChatModifyMessageHelper.ModifyMessageTask(rootMessage, callback) {
+            @Override
+            public TUIMessageBean packageMessage(TUIMessageBean originMessage) {
+                MessageRepliesBean repliesBean = originMessage.getMessageRepliesBean();
+                if (repliesBean == null) {
+                    return originMessage;
+                }
+                repliesBean.removeReplyMessage(replyMessage.getId());
+                originMessage.setMessageRepliesBean(repliesBean);
+                return originMessage;
+            }
+        };
+        ChatModifyMessageHelper.enqueueTask(task);
+    }
+
+    public void modifyRootMessageToAddReplyInfo(ReplyMessageBean replyMessageBean, IUIKitCallback<Void> callback) {
+        String messageRootId = replyMessageBean.getMsgRootId();
+        findMessage(messageRootId, new IUIKitCallback<TUIMessageBean>() {
+            @Override
+            public void onSuccess(TUIMessageBean data) {
+                modifyRootMessageToAddReplyInfo(data, replyMessageBean);
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                TUIChatUtils.callbackOnError(callback, errCode, errMsg);
+            }
+        });
+    }
+
+    private void modifyRootMessageToAddReplyInfo(TUIMessageBean rootMessage, ReplyMessageBean replyMessage) {
+        IUIKitCallback<TUIMessageBean> callback = new IUIKitCallback<TUIMessageBean>() {
+            @Override
+            public void onSuccess(TUIMessageBean data) {
+                // do nothing, when modifyRootMessage successfully ,you can receive onRecvMessageModified callback in TUIChatService.java
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                ToastUtil.toastShortMessage("modifyRootMessageAddReply failed code=" + errCode + " msg=" +errMsg);
             }
         };
         ChatModifyMessageHelper.ModifyMessageTask task = new ChatModifyMessageHelper.ModifyMessageTask(rootMessage, callback) {
@@ -1645,7 +1706,7 @@ public abstract class ChatPresenter {
     }
 
     public interface TypingListener {
-        void onTyping();
+        void onTyping(int status);
     }
 
 

@@ -1,8 +1,9 @@
 package com.tencent.qcloud.tuikit.tuiconversation.presenter;
 
-import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Pair;
 
+import com.tencent.imsdk.v2.V2TIMUserStatus;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
@@ -10,8 +11,9 @@ import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationService;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.interfaces.ConversationEventListener;
 import com.tencent.qcloud.tuikit.tuiconversation.model.ConversationProvider;
-import com.tencent.qcloud.tuikit.tuiconversation.util.ConversationUtils;
+import com.tencent.qcloud.tuikit.tuiconversation.setting.TUIConversationConfig;
 import com.tencent.qcloud.tuikit.tuiconversation.ui.interfaces.IConversationListAdapter;
+import com.tencent.qcloud.tuikit.tuiconversation.util.ConversationUtils;
 import com.tencent.qcloud.tuikit.tuiconversation.util.TUIConversationLog;
 import com.tencent.qcloud.tuikit.tuiconversation.util.TUIConversationUtils;
 
@@ -91,6 +93,16 @@ public class ConversationPresenter {
             public void onFriendRemarkChanged(String id, String remark) {
                 ConversationPresenter.this.onFriendRemarkChanged(id, remark);
             }
+
+            @Override
+            public void onUserStatusChanged(List<V2TIMUserStatus> userStatusList) {
+                ConversationPresenter.this.onUserStatusChanged(userStatusList);
+            }
+
+            @Override
+            public void refreshUserStatusFragmentUI() {
+                ConversationPresenter.this.updateAdapter();
+            }
         };
         TUIConversationService.getInstance().setConversationEventListener(conversationEventListener);
     }
@@ -158,6 +170,39 @@ public class ConversationPresenter {
         });
     }
 
+    private void loadAndsubscribeConversationUserStatus(List<ConversationInfo> conversationInfoList) {
+        provider.loadConversationUserStatus(conversationInfoList, new IUIKitCallback<Void>() {
+            @Override
+            public void onSuccess(Void data) {
+                onConversationChanged(conversationInfoList);
+            }
+
+            @Override
+            public void onError(String module, int code, String desc) {
+                TUIConversationLog.e(TAG, "loadConversationUserStatus code:" + code + "|desc:" + desc);
+            }
+        });
+
+        List<String> userIdList = new ArrayList<>();
+        for(ConversationInfo conversationInfo : conversationInfoList) {
+            if (conversationInfo.isGroup()) {
+                continue;
+            }
+            userIdList.add(conversationInfo.getId());
+        }
+        provider.subscribeConversationUserStatus(userIdList, new IUIKitCallback<Void>() {
+            @Override
+            public void onSuccess(Void data) {
+                TUIConversationLog.d(TAG, "subscribeConversationUserStatus success");
+            }
+
+            @Override
+            public void onError(String module, int code, String desc) {
+                TUIConversationLog.e(TAG, "subscribeConversationUserStatus code:" + code + "|desc:" + desc);
+            }
+        });
+    }
+
     public boolean isLoadFinished() {
         return provider.isLoadFinished();
     }
@@ -188,6 +233,9 @@ public class ConversationPresenter {
                 ConversationInfo cacheInfo = loadedConversationInfoList.get(i);
                 // 去重
                 if (cacheInfo.getConversationId().equals(update.getConversationId())) {
+                    if (update.getStatusType() == V2TIMUserStatus.V2TIM_USER_STATUS_UNKNOWN) {
+                        update.setStatusType(cacheInfo.getStatusType());
+                    }
                     loadedConversationInfoList.set(i, update);
                     iterator.remove();
                     exists.add(update);
@@ -216,6 +264,8 @@ public class ConversationPresenter {
                 }
             }
         }
+
+        loadAndsubscribeConversationUserStatus(conversationInfoList);
     }
 
     /**
@@ -226,24 +276,43 @@ public class ConversationPresenter {
     public void onConversationChanged(List<ConversationInfo> conversationInfoList) {
         TUIConversationLog.i(TAG, "onConversationChanged conversations:" + conversationInfoList);
 
-        ArrayList<ConversationInfo> infos = new ArrayList<>();
+        ArrayList<ConversationInfo> addInfoList = new ArrayList<>();
+        ArrayList<ConversationInfo> changedInfoList = new ArrayList<>();
+
         for (ConversationInfo conversationInfo : conversationInfoList) {
             if (!ConversationUtils.isNeedUpdate(conversationInfo)) {
-                TUIConversationLog.i(TAG, "onConversationChanged conversationInfo " + conversationInfo.toString());
-                infos.add(conversationInfo);
+                boolean exists = false;
+                for (ConversationInfo loadedInfo : loadedConversationInfoList) {
+                    if (TextUtils.equals(conversationInfo.getConversationId(), loadedInfo.getConversationId())) {
+                        exists = true;
+                    }
+                }
+                if (exists) {
+                    TUIConversationLog.i(TAG, "onConversationChanged conversationInfo " + conversationInfo);
+                    changedInfoList.add(conversationInfo);
+                } else {
+                    addInfoList.add(conversationInfo);
+                }
             }
         }
-        if (infos.size() == 0) {
+        if (!addInfoList.isEmpty()) {
+            onNewConversation(addInfoList);
+        }
+
+        if (changedInfoList.size() == 0) {
             return;
         }
-        Collections.sort(infos);
+        Collections.sort(changedInfoList);
         HashMap<ConversationInfo, Integer> indexMap = new HashMap<>();
-        for (int j = 0; j < infos.size(); j++) {
-            ConversationInfo update = infos.get(j);
+        for (int j = 0; j < changedInfoList.size(); j++) {
+            ConversationInfo update = changedInfoList.get(j);
             for (int i = 0; i < loadedConversationInfoList.size(); i++) {
                 ConversationInfo cacheInfo = loadedConversationInfoList.get(i);
                 //单个会话刷新时找到老的会话数据，替换
                 if (cacheInfo.getConversationId().equals(update.getConversationId())) {
+                    if (update.getStatusType() == V2TIMUserStatus.V2TIM_USER_STATUS_UNKNOWN) {
+                        update.setStatusType(cacheInfo.getStatusType());
+                    }
                     loadedConversationInfoList.set(i, update);
                     indexMap.put(update, i);
                     break;
@@ -255,7 +324,7 @@ public class ConversationPresenter {
             adapter.onDataSourceChanged(loadedConversationInfoList);
             int minRefreshIndex = Integer.MAX_VALUE;
             int maxRefreshIndex = Integer.MIN_VALUE;
-            for (ConversationInfo info : infos) {
+            for (ConversationInfo info : changedInfoList) {
                 Integer oldIndexObj = indexMap.get(info);
                 if (oldIndexObj == null) {
                     continue;
@@ -483,6 +552,34 @@ public class ConversationPresenter {
                     adapter.onItemChanged(i);
                 }
                 break;
+            }
+        }
+    }
+
+    public void onUserStatusChanged(List<V2TIMUserStatus> userStatusList) {
+        if (!TUIConversationConfig.getInstance().isShowUserStatus()) {
+            return;
+        }
+        HashMap<String, Pair<Integer, ConversationInfo>> dataSourceMap = new HashMap<>();
+        int index = 0;
+        for(ConversationInfo itemBean : loadedConversationInfoList) {
+            dataSourceMap.put(itemBean.getId(), Pair.create(index++, itemBean));
+        }
+
+        for(V2TIMUserStatus timUserStatus : userStatusList) {
+            String userid = timUserStatus.getUserID();
+            Pair<Integer, ConversationInfo> beanPair = dataSourceMap.get(userid);
+            if (beanPair == null) {
+                continue;
+            }
+            ConversationInfo bean = dataSourceMap.get(userid).second;
+            int position = dataSourceMap.get(userid).first;
+            if (bean != null && bean.getStatusType() != timUserStatus.getStatusType()) {
+                bean.setStatusType(timUserStatus.getStatusType());
+                adapter.onDataSourceChanged(loadedConversationInfoList);
+                if (adapter != null) {
+                    adapter.onItemChanged(position);
+                }
             }
         }
     }

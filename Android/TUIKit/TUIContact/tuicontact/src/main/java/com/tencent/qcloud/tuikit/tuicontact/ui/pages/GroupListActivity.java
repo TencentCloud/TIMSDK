@@ -79,6 +79,7 @@ public class GroupListActivity extends BaseLightActivity {
         presenter.setFriendListListener();
         mListView.setIsGroupList(true);
         mListView.setPresenter(presenter);
+        mListView.setNotFoundTip(getString(R.string.contact_no_group));
         presenter.setContactListView(mListView);
         mListView.loadDataSource(ContactListView.DataSource.GROUP_LIST);
     }

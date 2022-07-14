@@ -105,18 +105,22 @@ public class ConversationIconView extends RelativeLayout {
     }
 
     private void fillFaceUrlList(final String groupID, final ConversationInfo info) {
-        clearImage();
-
-        presenter.getGroupMemberIconList(groupID, new IUIKitCallback<List<Object>>() {
+        BackgroundTasks.getInstance().runOnUiThread(new Runnable() {
             @Override
-            public void onSuccess(List<Object> data) {
-                info.setIconUrlList(data);
-                setIconUrls(data, info.getConversationId());
-            }
+            public void run() {
+                clearImage();
+                presenter.getGroupMemberIconList(groupID, new IUIKitCallback<List<Object>>() {
+                    @Override
+                    public void onSuccess(List<Object> data) {
+                        info.setIconUrlList(data);
+                        setIconUrls(data, info.getConversationId());
+                    }
 
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
+                    @Override
+                    public void onError(String module, int errCode, String errMsg) {
 
+                    }
+                });
             }
         });
     }

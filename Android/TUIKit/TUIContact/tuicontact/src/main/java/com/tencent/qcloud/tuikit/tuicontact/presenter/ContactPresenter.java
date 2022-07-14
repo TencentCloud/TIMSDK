@@ -3,6 +3,7 @@ package com.tencent.qcloud.tuikit.tuicontact.presenter;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
+import com.tencent.imsdk.v2.V2TIMUserStatus;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.BackgroundTasks;
@@ -14,6 +15,7 @@ import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.bean.FriendApplicationBean;
 import com.tencent.qcloud.tuikit.tuicontact.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuicontact.bean.MessageCustom;
+import com.tencent.qcloud.tuikit.tuicontact.config.TUIContactConfig;
 import com.tencent.qcloud.tuikit.tuicontact.interfaces.ContactEventListener;
 import com.tencent.qcloud.tuikit.tuicontact.model.ContactProvider;
 import com.tencent.qcloud.tuikit.tuicontact.ui.interfaces.IContactListView;
@@ -22,6 +24,7 @@ import com.tencent.qcloud.tuikit.tuicontact.util.ContactUtils;
 import com.tencent.qcloud.tuikit.tuicontact.util.TUIContactLog;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -82,6 +85,16 @@ public class ContactPresenter {
                 if (contactListView != null) {
                     contactListView.onFriendApplicationChanged();
                 }
+            }
+
+            @Override
+            public void onUserStatusChanged(List<V2TIMUserStatus> userStatusList) {
+                ContactPresenter.this.onUserStatusChanged(userStatusList);
+            }
+
+            @Override
+            public void refreshUserStatusFragmentUI() {
+                ContactPresenter.this.notifyDataSourceChanged();
             }
         };
         TUIContactService.getInstance().addContactEventListener(friendListListener);
@@ -176,6 +189,21 @@ public class ContactPresenter {
     private void onDataLoaded(List<ContactItemBean> loadedData) {
         dataSource.addAll(loadedData);
         notifyDataSourceChanged();
+        loadContactUserStatus(dataSource);
+    }
+
+    private void loadContactUserStatus(List<ContactItemBean> loadedData) {
+        provider.loadContactUserStatus(loadedData, new IUIKitCallback<Void>(){
+            @Override
+            public void onSuccess(Void result) {
+               notifyDataSourceChanged();
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                TUIContactLog.e(TAG, "loadContactUserStatus error code = " + errCode + ",des = " + errMsg);
+            }
+        });
     }
 
     private void notifyDataSourceChanged() {
@@ -197,6 +225,30 @@ public class ContactPresenter {
         notifyDataSourceChanged();
     }
 
+    public void onUserStatusChanged(List<V2TIMUserStatus> userStatusList) {
+        if (!TUIContactConfig.getInstance().isShowUserStatus()) {
+            return;
+        }
+        HashMap<String, ContactItemBean> dataSourceMap = new HashMap<>();
+        for(ContactItemBean itemBean : dataSource) {
+            dataSourceMap.put(itemBean.getId(), itemBean);
+        }
+
+        boolean isrefresh = false;
+        for(V2TIMUserStatus timUserStatus : userStatusList) {
+            String userid = timUserStatus.getUserID();
+            ContactItemBean bean = dataSourceMap.get(userid);
+            if (bean != null && bean.getStatusType() != timUserStatus.getStatusType()) {
+                isrefresh = true;
+                bean.setStatusType(timUserStatus.getStatusType());
+            }
+        }
+
+        if (isrefresh) {
+            notifyDataSourceChanged();
+        }
+    }
+
     private void onDataListAdd(List<ContactItemBean> users) {
         List<ContactItemBean> addUserList = new ArrayList<>(users);
         Iterator<ContactItemBean> beanIterator = addUserList.iterator();
@@ -210,6 +262,8 @@ public class ContactPresenter {
         }
         dataSource.addAll(addUserList);
         notifyDataSourceChanged();
+
+        loadContactUserStatus(addUserList);
     }
 
     public void getFriendApplicationUnreadCount(IUIKitCallback<Integer> callback) {
@@ -293,6 +347,9 @@ public class ContactPresenter {
         for (ContactItemBean changedItem : infoList) {
             for (int i = 0;i < dataSource.size();i++) {
                 if (TextUtils.equals(dataSource.get(i).getId(), changedItem.getId())) {
+                    if (changedItem.getStatusType() == V2TIMUserStatus.V2TIM_USER_STATUS_UNKNOWN) {
+                        changedItem.setStatusType(dataSource.get(i).getStatusType());
+                    }
                     dataSource.set(i, changedItem);
                     break;
                 }

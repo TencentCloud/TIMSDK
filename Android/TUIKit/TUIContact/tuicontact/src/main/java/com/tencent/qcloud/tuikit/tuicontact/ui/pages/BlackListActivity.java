@@ -61,6 +61,7 @@ public class BlackListActivity extends BaseLightActivity {
     public void loadDataSource() {
         presenter = new ContactPresenter();
         mListView.setPresenter(presenter);
+        mListView.setNotFoundTip(getString(R.string.contact_no_block_list));
         presenter.setContactListView(mListView);
         presenter.setBlackListListener();
         mListView.loadDataSource(ContactListView.DataSource.BLACK_LIST);

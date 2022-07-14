@@ -2,26 +2,26 @@ package com.tencent.qcloud.tuikit.tuiconversation.ui.view;
 
 import android.graphics.Color;
 import android.text.Html;
-import android.text.SpannableStringBuilder;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.imsdk.v2.V2TIMUserStatus;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.component.UnreadCountTextView;
 import com.tencent.qcloud.tuicore.util.DateTimeUtil;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.DraftInfo;
+import com.tencent.qcloud.tuikit.tuiconversation.setting.TUIConversationConfig;
 import com.tencent.qcloud.tuikit.tuiconversation.util.TUIConversationLog;
 
 import java.util.Date;
@@ -42,6 +42,7 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
     public ImageView messageSending;
     public ImageView messagefailed;
     private boolean isForwardMode = false;
+    protected View userStatusView;
 
     public ConversationCommonHolder(View itemView) {
         super(itemView);
@@ -57,6 +58,7 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
         messageStatusLayout = rootView.findViewById(R.id.message_status_layout);
         messagefailed = itemView.findViewById(R.id.message_status_failed);
         messageSending = itemView.findViewById(R.id.message_status_sending);
+        userStatusView = itemView.findViewById(R.id.user_status);
     }
 
     public void setForwardMode(boolean forwardMode) {
@@ -200,5 +202,15 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
             messageSending.setVisibility(View.GONE);
         }
 
+        if (!conversation.isGroup() && TUIConversationConfig.getInstance().isShowUserStatus()) {
+            userStatusView.setVisibility(View.VISIBLE);
+            if (conversation.getStatusType() == V2TIMUserStatus.V2TIM_USER_STATUS_ONLINE) {
+                userStatusView.setBackgroundResource(TUIThemeManager.getAttrResId(rootView.getContext(), com.tencent.qcloud.tuicore.R.attr.user_status_online));
+            } else {
+                userStatusView.setBackgroundResource(TUIThemeManager.getAttrResId(rootView.getContext(), com.tencent.qcloud.tuicore.R.attr.user_status_offline));
+            }
+        } else {
+            userStatusView.setVisibility(View.GONE);
+        }
     }
 }

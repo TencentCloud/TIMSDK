@@ -54,6 +54,7 @@ public class TUIC2CChatFragment extends TUIBaseChatFragment {
 
         chatView.setPresenter(presenter);
         presenter.setChatInfo(chatInfo);
+        presenter.setTypingListener(chatView.mTypingListener);
         chatView.setChatInfo(chatInfo);
     }
 

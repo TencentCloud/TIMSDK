@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
 import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
@@ -21,6 +22,7 @@ import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.ui.interfaces.IGroupApplyLayout;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupApplyPresenter;
 
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -85,6 +87,11 @@ public class GroupApplyManagerLayout extends LinearLayout implements IGroupApply
 
     public void onDataSetChanged() {
         mAdapter.notifyDataSetChanged();
+
+        HashMap<String, Object> param = new HashMap<>();
+        param.put(TUIConstants.TUIChat.IS_GROUP_CHAT, true);
+        param.put(TUIConstants.TUIChat.GROUP_APPLY_NUM, mAdapter.getCount()-1);
+        TUICore.callService(TUIConstants.TUIChat.SERVICE_NAME, TUIConstants.TUIChat.METHOD_GROUP_APPLICAITON_PROCESSED, param);
     }
 
     public void setPresenter(GroupApplyPresenter groupApplyPresenter) {

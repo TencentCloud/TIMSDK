@@ -15,6 +15,7 @@ public class GeneralConfig {
     private boolean excludedFromLastMessage;
 
     private boolean isAndroidPrivateRing;
+    private boolean isEnableMessageTyping = true;
 
     private boolean showRead = false;
     private boolean reactEnable = true;
@@ -141,27 +142,63 @@ public class GeneralConfig {
         this.showRead = showRead;
     }
 
+    /**
+     * 获取消息是否不计入会话未读数：默认为 false，表明需要计入会话未读数，设置为 true，表明不需要计入会话未读数
+     */
     public boolean isExcludedFromUnreadCount() {
         return excludedFromUnreadCount;
     }
 
+    /**
+     * 设置消息是否不计入会话未读数：默认为 false，表明需要计入会话未读数，设置为 true，表明不需要计入会话未读数
+     */
     public void setExcludedFromUnreadCount(boolean excludedFromUnreadCount) {
         this.excludedFromUnreadCount = excludedFromUnreadCount;
     }
 
+    /**
+     * 获取消息是否不计入会话 lastMsg：默认为 false，表明需要计入会话 lastMsg，设置为 true，表明不需要计入会话 lastMessage
+     */
     public boolean isExcludedFromLastMessage() {
         return excludedFromLastMessage;
     }
 
+    /**
+     * 设置消息是否不计入会话 lastMsg：默认为 false，表明需要计入会话 lastMsg，设置为 true，表明不需要计入会话 lastMessage
+     */
     public void setExcludedFromLastMessage(boolean excludedFromLastMessage) {
         this.excludedFromLastMessage = excludedFromLastMessage;
     }
 
+    /**
+     * 获取离线推送提示铃音是否为自定义铃音
+     */
     public boolean isAndroidPrivateRing() {
         return isAndroidPrivateRing;
     }
 
+    /**
+     * 设置离线推送提示铃音是否为自定义铃音
+     */
     public void setAndroidPrivateRing(boolean ring) {
         this.isAndroidPrivateRing = ring;
+    }
+
+    /**
+     * 获取 "对方正在输入..." 功能是否打开
+     *
+     * Get whether the "Typing..." function is enabled
+     */
+    public boolean isEnableMessageTyping() {
+        return isEnableMessageTyping;
+    }
+
+    /**
+     * 设置 "对方正在输入..." 功能是否打开
+     *
+     * Set whether the "Typing..." function is enabled
+     */
+    public void setEnableMessageTyping(boolean enableMessageTyping) {
+        isEnableMessageTyping = enableMessageTyping;
     }
 }

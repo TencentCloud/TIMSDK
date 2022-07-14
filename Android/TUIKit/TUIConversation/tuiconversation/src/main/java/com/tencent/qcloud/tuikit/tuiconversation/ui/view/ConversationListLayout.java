@@ -112,11 +112,11 @@ public class ConversationListLayout extends RecyclerView implements IConversatio
     }
 
     public interface OnItemClickListener {
-        void onItemClick(View view, int position, ConversationInfo messageInfo);
+        void onItemClick(View view, int viewType, ConversationInfo messageInfo);
     }
 
     public interface OnItemLongClickListener {
-        void OnItemLongClick(View view, int position, ConversationInfo messageInfo);
+        void OnItemLongClick(View view, ConversationInfo messageInfo);
     }
 
     @Override

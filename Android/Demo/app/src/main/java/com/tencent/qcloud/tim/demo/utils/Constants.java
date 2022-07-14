@@ -18,6 +18,10 @@ public class Constants {
 
     public static final String DEMO_SETTING_SP_NAME = "TUIKIT_DEMO_SETTINGS";
     public static final String DEMO_SP_KEY_MESSAGE_READ_STATUS = "MessageReadStatus";
+    public static final String DEMO_SP_KEY_USER_STATUS = "user_status";
+
+    public static final String AVATAR_FACE_URL = "https://im.sdk.cloud.tencent.cn/download/tuikit-resource/avatar/avatar_%s.png";
+    public static final int AVATAR_FACE_COUNT = 26;
 
     public static final String IM_PRIVACY_PROTECTION = "https://privacy.qq.com/document/preview/1cfe904fb7004b8ab1193a55857f7272";
     public static final String IM_PRIVACY_POLICY_SUMMARY = "https://privacy.qq.com/document/preview/c63a48325d0e4a35b93f675205a65a77";

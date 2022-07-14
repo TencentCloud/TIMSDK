@@ -25,6 +25,7 @@
         <item name="demo_login_theme_icon">@drawable/demo_login_theme_icon_lively</item>
         <item name="demo_login_theme_language_text_color">@color/demo_login_theme_language_text_color_lively</item>
         <item name="demo_login_ic_logo">@drawable/demo_ic_logo_lively</item>
+        <item name="demo_phone_login_logo">@drawable/demo_phone_login_logo_lively</item>
 
     </style>
 

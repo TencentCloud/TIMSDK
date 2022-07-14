@@ -1,25 +1,27 @@
 package com.tencent.qcloud.tuikit.tuiconversation.model;
 
-import android.text.TextUtils;
-
+import com.tencent.imsdk.BaseConstants;
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMConversationResult;
 import com.tencent.imsdk.v2.V2TIMGroupMemberFullInfo;
 import com.tencent.imsdk.v2.V2TIMGroupMemberInfoResult;
 import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.imsdk.v2.V2TIMUserStatus;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
-import com.tencent.qcloud.tuicore.TUIThemeManager;
+import com.tencent.qcloud.tuicore.BuildConfig;
+import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
-import com.tencent.qcloud.tuikit.tuiconversation.R;
-import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationService;
+import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
+import com.tencent.qcloud.tuikit.tuiconversation.setting.TUIConversationConfig;
 import com.tencent.qcloud.tuikit.tuiconversation.util.ConversationUtils;
 import com.tencent.qcloud.tuikit.tuiconversation.util.TUIConversationLog;
 import com.tencent.qcloud.tuikit.tuiconversation.util.TUIConversationUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ConversationProvider {
@@ -159,6 +161,68 @@ public class ConversationProvider {
                     urlList.add(v2TIMGroupMemberFullInfo.getFaceUrl());
                 }
                 TUIConversationUtils.callbackOnSuccess(callback, urlList);
+            }
+        });
+    }
+
+    public void loadConversationUserStatus(List<ConversationInfo> dataSource, IUIKitCallback<Void> callback) {
+        if (dataSource == null || dataSource.size() == 0) {
+            TUIConversationLog.d(TAG, "loadConversationUserStatus datasource is null");
+            TUIConversationUtils.callbackOnSuccess(callback, null);
+            return;
+        }
+
+        HashMap<String, ConversationInfo> dataSourceMap = new HashMap<>();
+        List<String> userList = new ArrayList<>();
+        for(ConversationInfo itemBean : dataSource) {
+            if (itemBean.isGroup()) {
+                continue;
+            }
+            userList.add(itemBean.getId());
+            dataSourceMap.put(itemBean.getId(), itemBean);
+        }
+        V2TIMManager.getInstance().getUserStatus(userList, new V2TIMValueCallback<List<V2TIMUserStatus>>() {
+            @Override
+            public void onSuccess(List<V2TIMUserStatus> v2TIMUserStatuses) {
+                for (V2TIMUserStatus item : v2TIMUserStatuses) {
+                    ConversationInfo bean = dataSourceMap.get(item.getUserID());
+                    if (bean != null) {
+                        bean.setStatusType(item.getStatusType());
+                    }
+                }
+
+                TUIConversationUtils.callbackOnSuccess(callback, null);
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                TUIConversationLog.e(TAG, "getUserStatus error code = " + code + ",des = " + desc);
+                TUIConversationUtils.callbackOnError(callback, code, desc);
+                if (code == TUIConstants.BuyingFeature.ERR_SDK_INTERFACE_NOT_SUPPORT &&
+                        TUIConversationConfig.getInstance().isShowUserStatus() && BuildConfig.DEBUG) {
+                    ToastUtil.toastLongMessage(desc);
+                }
+            }
+        });
+    }
+
+    public void subscribeConversationUserStatus(List<String> userIdList, IUIKitCallback<Void> callback) {
+        if (userIdList == null || userIdList.size() == 0) {
+            TUIConversationLog.e(TAG, "subscribeConversationUserStatus userId is null");
+            TUIConversationUtils.callbackOnError(callback, BaseConstants.ERR_INVALID_PARAMETERS, "userid list is null");
+            return;
+        }
+
+        V2TIMManager.getInstance().subscribeUserStatus(userIdList, new V2TIMCallback() {
+            @Override
+            public void onSuccess() {
+                TUIConversationUtils.callbackOnSuccess(callback, null);
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                TUIConversationLog.e(TAG, "subscribeConversationUserStatus error code = " + code + ",des = " + desc);
+                TUIConversationUtils.callbackOnError(callback, code, desc);
             }
         });
     }

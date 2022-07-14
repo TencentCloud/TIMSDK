@@ -21,6 +21,9 @@ import com.tencent.liteav.trtccalling.ui.base.BaseTUICallView;
 import com.tencent.liteav.trtccalling.ui.base.Status;
 import com.tencent.liteav.trtccalling.ui.videocall.TUICallVideoView;
 import com.tencent.liteav.trtccalling.ui.videocall.TUIGroupCallVideoView;
+import com.tencent.qcloud.tuicore.TUIConstants;
+import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
 import com.tencent.trtc.TRTCCloudDef;
 
 import java.util.ArrayList;
@@ -31,7 +34,7 @@ import java.util.Map;
 /**
  * TUICalling模块对外接口
  */
-public final class TUICallingImpl implements TUICalling, TRTCCallingDelegate {
+public final class TUICallingImpl implements TUICalling, TRTCCallingDelegate, ITUINotification {
     private static final String TAG = "TUICallingImpl";
 
     private static final int MAX_USERS = 8; //最大通话数为9(需包含自己)
@@ -69,11 +72,24 @@ public final class TUICallingImpl implements TUICalling, TRTCCallingDelegate {
     private TUICallingImpl(Context context) {
         mContext = context.getApplicationContext();
         TRTCCalling.sharedInstance(mContext).addDelegate(this);
+        registerLoginEvent();
         TRTCLogger.d(TAG, "TUICallingImpl init success.");
     }
 
     public void setCallingManagerListener(CallingManagerListener listener) {
         mCallingManagerListener = listener;
+    }
+
+
+    private void registerLoginEvent() {
+        TUICore.registerEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED,
+                TUIConstants.TUILogin.EVENT_SUB_KEY_USER_KICKED_OFFLINE, this);
+        TUICore.registerEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED,
+                TUIConstants.TUILogin.EVENT_SUB_KEY_USER_SIG_EXPIRED, this);
+        TUICore.registerEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED,
+                TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGIN_SUCCESS, this);
+        TUICore.registerEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED,
+                TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGOUT_SUCCESS, this);
     }
 
     @Override
@@ -378,6 +394,24 @@ public final class TUICallingImpl implements TUICalling, TRTCCallingDelegate {
     @Override
     public void onSwitchToAudio(boolean success, String message) {
         Log.d(TAG, "onSwitchToAudio enter");
+    }
+
+    @Override
+    public void onNotifyEvent(String key, String subKey, Map<String, Object> param) {
+        if (TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED.equals(key)) {
+            if (TUIConstants.TUILogin.EVENT_SUB_KEY_USER_KICKED_OFFLINE.equals(subKey)
+                    || TUIConstants.TUILogin.EVENT_SUB_KEY_USER_SIG_EXPIRED.equals(subKey)) {
+                //if user is in the call, end the call
+                TRTCCalling.sharedInstance(mContext).hangup();
+            } else if (TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGOUT_SUCCESS.equals(subKey)) {
+                //logout succeed: if user is in the call, end the call first and then clean data
+                TRTCCalling.sharedInstance(mContext).hangup();
+                TRTCCalling.destroySharedInstance();
+            } else if (TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGIN_SUCCESS.equals(subKey)) {
+                //login succeed: add "TUICallingListener" again
+                TRTCCalling.sharedInstance(mContext).addDelegate(this);
+            }
+        }
     }
 
     public interface CallingManagerListener {

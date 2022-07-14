@@ -37,8 +37,8 @@ import androidx.annotation.StringRes;
 
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
-import com.tencent.qcloud.tuikit.tuichat.model.ChatProvider;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
+import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -319,80 +319,91 @@ public class SelectTextHelper {
             }
         });
 
-        mTextView.setOnLongClickListener(v -> {
-
-            mTextView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
-                @Override
-                public void onViewAttachedToWindow(View v) {
-                }
-
-                @Override
-                public void onViewDetachedFromWindow(View v) {
-                    destroy();
-                }
-            });
-
-            mOnPreDrawListener = new ViewTreeObserver.OnPreDrawListener() {
-                @Override
-                public boolean onPreDraw() {
-                    if (isHideWhenScroll) {
-                        isHideWhenScroll = false;
-                        postShowSelectView(DEFAULT_SHOW_DURATION);
+        mTextView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                TUIChatUtils.showBeginnerGuideThen(mTextView, new Runnable() {
+                    @Override
+                    public void run() {
+                        onLongTextViewClick();
                     }
-                    // 拿textView的x坐标
-                    if (0 == mTextViewMarginStart) {
-                        int[] location = new int[2];
-                        mTextView.getLocationInWindow(location);
-                        mTextViewMarginStart = location[0];
+                });
+                return true;
+            }
+
+            private void onLongTextViewClick() {
+                mTextView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+                    @Override
+                    public void onViewAttachedToWindow(View v) {
                     }
-                    return true;
-                }
-            };
-            mTextView.getViewTreeObserver().addOnPreDrawListener(mOnPreDrawListener);
 
-            // 根布局监听
-            mRootTouchListener = new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    reset();
-                    mTextView.getRootView().setOnTouchListener(null);
-                    return false;
-                }
-            };
-            mTextView.getRootView().setOnTouchListener(mRootTouchListener);
+                    @Override
+                    public void onViewDetachedFromWindow(View v) {
+                        destroy();
+                    }
+                });
 
-            mOnScrollChangedListener = new ViewTreeObserver.OnScrollChangedListener() {
-                @Override
-                public void onScrollChanged() {
-                    if (mScrollShow) {
-                        if (!isHideWhenScroll && !isHide) {
-                            isHideWhenScroll = true;
-                            if (mStartHandle != null) {
-                                mStartHandle.dismiss();
-                            }
-                            if (mEndHandle != null) {
-                                mEndHandle.dismiss();
-                            }
+                mOnPreDrawListener = new ViewTreeObserver.OnPreDrawListener() {
+                    @Override
+                    public boolean onPreDraw() {
+                        if (isHideWhenScroll) {
+                            isHideWhenScroll = false;
+                            postShowSelectView(DEFAULT_SHOW_DURATION);
                         }
-                        if (null != mSelectListener) {
-                            mSelectListener.onScrolling();
+                        // 拿textView的x坐标
+                        if (0 == mTextViewMarginStart) {
+                            int[] location = new int[2];
+                            mTextView.getLocationInWindow(location);
+                            mTextViewMarginStart = location[0];
                         }
-                    } else {
+                        return true;
+                    }
+                };
+                mTextView.getViewTreeObserver().addOnPreDrawListener(mOnPreDrawListener);
+
+                // 根布局监听
+                mRootTouchListener = new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
                         reset();
+                        mTextView.getRootView().setOnTouchListener(null);
+                        return false;
                     }
-                }
-            };
-            mTextView.getViewTreeObserver().addOnScrollChangedListener(mOnScrollChangedListener);
+                };
+                mTextView.getRootView().setOnTouchListener(mRootTouchListener);
 
-            if (mSelectAll) {
-                showAllView();
-            } else {
-                showSelectView(mTouchX, mTouchY);
+                mOnScrollChangedListener = new ViewTreeObserver.OnScrollChangedListener() {
+                    @Override
+                    public void onScrollChanged() {
+                        if (mScrollShow) {
+                            if (!isHideWhenScroll && !isHide) {
+                                isHideWhenScroll = true;
+                                if (mStartHandle != null) {
+                                    mStartHandle.dismiss();
+                                }
+                                if (mEndHandle != null) {
+                                    mEndHandle.dismiss();
+                                }
+                            }
+                            if (null != mSelectListener) {
+                                mSelectListener.onScrolling();
+                            }
+                        } else {
+                            reset();
+                        }
+                    }
+                };
+                mTextView.getViewTreeObserver().addOnScrollChangedListener(mOnScrollChangedListener);
+
+                if (mSelectAll) {
+                    showAllView();
+                } else {
+                    showSelectView(mTouchX, mTouchY);
+                }
+                if (null != mSelectListener) {
+                    mSelectListener.onLongClick(mTextView);
+                }
             }
-            if (null != mSelectListener) {
-                mSelectListener.onLongClick(mTextView);
-            }
-            return true;
         });
         // 此setMovementMethod可被修改
         mTextView.setMovementMethod(new LinkMovementMethodInterceptor());

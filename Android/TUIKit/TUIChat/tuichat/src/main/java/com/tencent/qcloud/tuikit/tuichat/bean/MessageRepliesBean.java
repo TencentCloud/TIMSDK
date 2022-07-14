@@ -58,6 +58,18 @@ public class MessageRepliesBean implements Serializable {
         replies.add(replyBean);
     }
 
+    public void removeReplyMessage(String messageID) {
+        if (replies == null) {
+            return;
+        }
+        for (ReplyBean replyBean : replies) {
+            if (TextUtils.equals(replyBean.messageID, messageID)) {
+                replies.remove(replyBean);
+                return;
+            }
+        }
+    }
+
     public void setVersion(int version) {
         this.version = version;
     }

@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="?attr/chat_input_area_bg"
     android:orientation="vertical">
 
@@ -15,7 +16,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="5dp"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        tools:visibility="visible"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -85,6 +87,14 @@
             android:visibility="gone" />
 
     </LinearLayout>
+
+    <com.tencent.qcloud.tuikit.tuichat.ui.view.input.ReplyPreviewBar
+        android:id="@+id/quote_preview_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:paddingBottom="9.6dp"
+        tools:visibility="visible"/>
 
     <RelativeLayout
         android:id="@+id/more_groups"

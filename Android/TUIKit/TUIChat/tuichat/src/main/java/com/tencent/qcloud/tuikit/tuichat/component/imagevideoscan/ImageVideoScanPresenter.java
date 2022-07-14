@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tuikit.tuichat.component.imagevideoscan;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
@@ -8,12 +7,13 @@ import android.util.Log;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.qcloud.tuicore.TUIConfig;
+import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
 import com.tencent.qcloud.tuicore.util.ThreadHelper;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
-import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
@@ -22,11 +22,28 @@ import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ImageVideoScanPresenter {
     private static final String TAG = ImageVideoScanPresenter.class.getSimpleName();
+
+    private static class MessageChangedListener implements ITUINotification {
+        private WeakReference<ImageVideoScanPresenter> presenterWeakReference;
+
+        @Override
+        public void onNotifyEvent(String key, String subKey, Map<String, Object> param) {
+            if (presenterWeakReference != null && presenterWeakReference.get() != null) {
+                ImageVideoScanPresenter presenter = presenterWeakReference.get();
+                TUIMessageBean messageBean = (TUIMessageBean) param.get(TUIChatConstants.MESSAGE_BEAN);
+                presenter.onMessageStatusChanged(messageBean);
+            }
+        }
+    }
+
+    private static MessageChangedListener messageChangedListener = new MessageChangedListener();
 
     private RecyclerView mRecyclerView;
     private ImageVideoScanAdapter mAdapter;
@@ -36,6 +53,17 @@ public class ImageVideoScanPresenter {
     private int mCurrentPosition = -1;
     private int mIndex = 0;
     private boolean mIsForwardMode = false;
+
+    public ImageVideoScanPresenter () {
+        messageChangedListener.presenterWeakReference = new WeakReference<>(this);
+        TUICore.registerEvent(TUIChatConstants.EVENT_KEY_MESSAGE_STATUS_CHANGED, TUIChatConstants.EVENT_SUB_KEY_MESSAGE_SEND, messageChangedListener);
+    }
+
+    public void onMessageStatusChanged(TUIMessageBean messageBean) {
+        if (mAdapter != null) {
+            mAdapter.onDataChanged(messageBean);
+        }
+    }
 
     public void setAdapter(ImageVideoScanAdapter mAdapter) {
         this.mAdapter = mAdapter;

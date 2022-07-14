@@ -165,9 +165,11 @@
     <string name="demo_profile_detail">详细资料</string>
 
     <string name="demo_message_read_switch_title">消息阅读状态</string>
-    <string name="demo_message_read_switch_text">关闭后，您收发的消息均不带消息阅读状态，您将无法看到对方是否已读，同时对方也无法看到你是否已读。</string>
+    <string name="demo_message_read_switch_open_tip">该功能为旗舰版功能</string>
+    <string name="demo_message_read_switch_open_text">关闭后，您收发的消息均不带消息阅读状态，您将无法看到对方是否已读，同时对方也无法看到你是否已读。</string>
+    <string name="demo_message_read_switch_close_text">开启后，您在群聊中收发的消息均带有消息阅读状态，并且可以看到对方是否已读。与您单聊的好友若也开启了消息阅读状态，您与好友在单聊中收发的消息也将带有消息阅读状态。</string>
 
-    <string name="demo_choose_random_face">App 随机为您分配一个系统头像。</string>
+    <string name="demo_choose_avatar">选择头像</string>
 
     <!--  权限相关 start -->
     <string name="demo_permission_mic_reason_title">%s申请获取麦克风权限</string>
@@ -182,5 +184,14 @@
     <!--  权限相关 end -->
 
     <string name="upgrade_sure">立即升级</string>
-
+    <string name="demo_user_status_switch_title">显示在线状态</string>
+    <string name="demo_user_status_switch_on_text">关闭后，您将不可以在会话列表和通讯录中看到好友在线或离线的状态提示。</string>
+    <string name="demo_user_status_switch_off_text">开启后，您将可以在会话列表和通讯录中看到好友在线或离线的状态提示。</string>
+    <string name="demo_user_status">在线状态</string>
+    <string name="demo_i_know">我知道了</string>
+    <string name="demo_no_more_reminders">不再提醒</string>
+    <string name="demo_im_flagship">旗舰版</string>
+    <string name="demo_buying_guidelines">价格说明</string>
+    <string name="demo_im_flagship_edition_update_tip">%s功能为IM旗舰版功能，购买旗舰版套餐包后可使用，详见价格说明。</string>
+    <string name="demo_buying_tips">该功能为旗舰版功能</string>
 </resources>
