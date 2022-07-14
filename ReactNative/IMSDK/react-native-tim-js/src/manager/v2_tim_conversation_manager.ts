@@ -3,13 +3,13 @@
  * @module ConversationManager(会话相关接口)
  */
 import type { NativeEventEmitter } from 'react-native';
-import type V2TimCallback from '../interface/v2TimCallback';
-import type V2TimConversation from '../interface/v2TimConversation';
-import type V2TimConversationListener from '../interface/v2TimConversationListener';
-import type V2TimValueCallback from '../interface/v2TimValueCallback';
+import type { V2TimCallback } from '../interface/v2TimCallback';
+import type { V2TimConversation } from '../interface/v2TimConversation';
+import type { V2TimConversationListener } from '../interface/v2TimConversationListener';
+import type { V2TimValueCallback } from '../interface/v2TimValueCallback';
 
 export class V2TIMConversationManager {
-    private manager: String = 'conversationManager';
+    private manager: string = 'conversationManager';
     private nativeModule: any;
     private conversationListenerList: V2TimConversationListener[] = [];
 
@@ -106,10 +106,10 @@ export class V2TIMConversationManager {
      */
     public getConversationList(
         count: number,
-        nextSeq: String
+        nextSeq: string
     ): Promise<
         V2TimValueCallback<{
-            nextSeq?: String;
+            nextSeq?: string;
             isFinished?: boolean;
             conversationList?: V2TimConversation[];
         }>
@@ -127,7 +127,7 @@ export class V2TIMConversationManager {
      *
      */
     public getConversationListByConversaionIds(
-        conversationIDList: String[]
+        conversationIDList: string[]
     ): Promise<V2TimValueCallback<V2TimConversation[]>> {
         return this.nativeModule.call(
             this.manager,
@@ -144,7 +144,7 @@ export class V2TIMConversationManager {
      *
      */
     public pinConversation(
-        conversationID: String,
+        conversationID: string,
         isPinned: boolean
     ): Promise<V2TimCallback> {
         return this.nativeModule.call(this.manager, 'pinConversation', {
@@ -169,11 +169,11 @@ export class V2TIMConversationManager {
     /**
      * ### 获取单个会话
      * @category 获取会话信息
-     * @param conversationID - 会话唯一 ID，C2C 单聊组成方式为: String.format("c2c_%s", "userID")；群聊组成方式为: String.format("group_%s", "groupID")
+     * @param conversationID - 会话唯一 ID，C2C 单聊组成方式为: string.format("c2c_%s", "userID")；群聊组成方式为: string.format("group_%s", "groupID")
      *
      */
     public getConversation(
-        conversationID: String
+        conversationID: string
     ): Promise<V2TimValueCallback<V2TimConversation>> {
         return this.nativeModule.call(this.manager, 'getConversation', {
             conversationID,
@@ -183,7 +183,7 @@ export class V2TIMConversationManager {
     /**
      * ### 删除会话
      * @category 删除会话
-     * @param conversationID - 会话唯一 ID，C2C 单聊组成方式为: String.format("c2c_%s", "userID")；群聊组成方式为: String.format("group_%s", "groupID")
+     * @param conversationID - 会话唯一 ID，C2C 单聊组成方式为: string.format("c2c_%s", "userID")；群聊组成方式为: string.format("group_%s", "groupID")
      *
      * @note
      * 请注意:
@@ -191,7 +191,7 @@ export class V2TIMConversationManager {
      * - 会话内的消息在本地删除的同时，在服务器也会同步删除。
      *
      */
-    public deleteConversation(conversationID: String): Promise<V2TimCallback> {
+    public deleteConversation(conversationID: string): Promise<V2TimCallback> {
         return this.nativeModule.call(this.manager, 'deleteConversation', {
             conversationID,
         });
@@ -201,12 +201,12 @@ export class V2TIMConversationManager {
      * ### 设置会话草稿
      * 只在本地保存，不会存储 Server，不能多端同步，程序卸载重装会失效。
      * @category 会话草稿
-     * @param conversationID - 会话唯一 ID，C2C 单聊组成方式为: String.format("c2c_%s", "userID")；群聊组成方式为: String.format("group_%s", "groupID")
+     * @param conversationID - 会话唯一 ID，C2C 单聊组成方式为: string.format("c2c_%s", "userID")；群聊组成方式为: string.format("group_%s", "groupID")
      * @param draftText - 草稿内容, 为 null 则表示取消草稿
      */
     public setConversationDraft(
-        conversationID: String,
-        draftText?: String
+        conversationID: string,
+        draftText?: string
     ): Promise<V2TimCallback> {
         return this.nativeModule.call(this.manager, 'setConversationDraft', {
             conversationID,

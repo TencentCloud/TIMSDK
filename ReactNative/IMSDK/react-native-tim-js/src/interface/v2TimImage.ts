@@ -1,14 +1,12 @@
 /**
  * @module interface
  */
-interface V2TimImage {
-    uuid?: String;
+ export interface V2TimImage {
+    uuid?: string;
     type?: number;
     size?: number;
     width?: number;
     height?: number;
-    url?: String;
-    localUrl?: String;
+    url?: string;
+    localUrl?: string;
 }
-
-export default V2TimImage;

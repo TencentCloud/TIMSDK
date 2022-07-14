@@ -1,20 +1,18 @@
 /**
  * @module interface
  */
-interface V2TimVideoElem {
-    videoPath?: String;
-    UUID?: String;
+export interface V2TimVideoElem {
+    videoPath?: string;
+    UUID?: string;
     videoSize?: number;
     duration?: number;
-    snapshotPath?: String;
-    snapshotUUID?: String;
+    snapshotPath?: string;
+    snapshotUUID?: string;
     snapshotSize?: number;
     snapshotWidth?: number;
     snapshotHeight?: number;
-    videoUrl?: String;
-    snapshotUrl?: String;
-    localVideoUrl?: String;
-    localSnapshotUrl?: String;
+    videoUrl?: string;
+    snapshotUrl?: string;
+    localVideoUrl?: string;
+    localSnapshotUrl?: string;
 }
-
-export default V2TimVideoElem;

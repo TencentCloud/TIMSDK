@@ -59,6 +59,11 @@ import SetGroupMemberRoleComponent from '../components/groupComponents/SetGroupM
 import TransferGroupOwnerComponent from '../components/groupComponents/TransferGroupOwner';
 import SearchGroupsComponent from '../components/groupComponents/SearchGroups';
 import SearchGroupMembersComponent from '../components/groupComponents/SearchGroupMembers';
+import { PinConversation } from '../components/conversationComponents/pinConversation';
+import { GetTotalUnreadMessageCount } from '../components/conversationComponents/getTotalUnreadMessageCount';
+import { GetConversation } from '../components/conversationComponents/getConversation';
+import { DeleteConversation } from '../components/conversationComponents/deleteConversation';
+import { SetConversationDraft } from '../components/conversationComponents/setConversationDraft';
 const DetailsScreen = ({ navigation }) => {
     const id = navigation.state.params.idStr;
     return (
@@ -99,6 +104,16 @@ const DetailsScreen = ({ navigation }) => {
                         return <GetConversationList />;
                     case 'getConversationListByConversationIDs':
                         return <GetConversationListByConversationIDs />;
+                    case 'pinConversation':
+                        return <PinConversation />;
+                    case 'getTotalUnreadMessageCount':
+                        return <GetTotalUnreadMessageCount />;
+                    case 'getConversation':
+                        return <GetConversation />;
+                    case 'deleteConversation':
+                        return <DeleteConversation />;
+                    case 'setConversationDraft':
+                        return <SetConversationDraft />;
                     case 'joinGroup':
                         return <JoinGroupComponent />;
                     case 'getGroupsInfo':

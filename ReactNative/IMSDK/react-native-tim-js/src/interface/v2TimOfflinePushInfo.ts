@@ -1,16 +1,14 @@
 /**
  * @module interface
  */
-interface V2TimOfflinePushInfo {
-    title?: String;
-    desc?: String;
+export interface V2TimOfflinePushInfo {
+    title?: string;
+    desc?: string;
     disablePush?: boolean;
-    iOSSound?: String;
+    iOSSound?: string;
     ignoreIOSBadge?: boolean;
-    androidOPPOChannelID?: String;
-    androidVIVOClassification?: String;
-    androidSound?: String;
-    ext?: String;
+    androidOPPOChannelID?: string;
+    androidVIVOClassification?: string;
+    androidSound?: string;
+    ext?: string;
 }
-
-export default V2TimOfflinePushInfo;

@@ -2,15 +2,15 @@
  * 信令相关功能，主要用于音视频通话信令的发送。
  * @module SignalingManager(高级消息收发接口)
  */
-import type V2TimCallback from '../interface/v2TimCallback';
-import type V2TimSignalingInfo from 'src/interface/v2TimSignalingInfo';
-import type V2TimOfflinePushInfo from '../interface/v2TimOfflinePushInfo';
-import type V2TimValueCallback from '../interface/v2TimValueCallback';
-import type V2TimSignalingListener from '../interface/v2TimSignalingListener';
+import type { V2TimCallback } from '../interface/v2TimCallback';
+import type { V2TimSignalingInfo } from 'src/interface/v2TimSignalingInfo';
+import type { V2TimOfflinePushInfo } from '../interface/v2TimOfflinePushInfo';
+import type { V2TimValueCallback } from '../interface/v2TimValueCallback';
+import type { V2TimSignalingListener } from '../interface/v2TimSignalingListener';
 import type { NativeEventEmitter } from 'react-native';
 
 export class V2TIMSignalingManager {
-    private manager: String = 'signalingManager';
+    private manager: string = 'signalingManager';
     private nativeModule: any;
     private listenerList: V2TimSignalingListener[] = [];
 
@@ -101,12 +101,12 @@ export class V2TIMSignalingManager {
      * @param offlinePushInfo - 离线推送信息，其中 desc 为必填字段，推送的时候会默认展示 desc 信息。
      */
     public invite(
-        invitee: String,
-        data: String,
+        invitee: string,
+        data: string,
         timeout = 30,
         onlineUserOnly = false,
         offlinePushInfo?: V2TimOfflinePushInfo
-    ): Promise<V2TimValueCallback<String>> {
+    ): Promise<V2TimValueCallback<string>> {
         return this.nativeModule.call(this.manager, 'invite', {
             invitee,
             data,
@@ -127,12 +127,12 @@ export class V2TIMSignalingManager {
      * 群邀请暂不支持离线推送，如果您需要离线推送，可以针对被邀请的用户单独发离线推送自定义消息，
      */
     public inviteInGroup(
-        groupID: String,
-        inviteeList: String[],
-        data: String,
+        groupID: string,
+        inviteeList: string[],
+        data: string,
         timeout = 30,
         onlineUserOnly = false
-    ): Promise<V2TimValueCallback<String>> {
+    ): Promise<V2TimValueCallback<string>> {
         return this.nativeModule.call(this.manager, 'inviteInGroup', {
             groupID,
             inviteeList,
@@ -147,7 +147,7 @@ export class V2TIMSignalingManager {
      * @note
      * 如果所有被邀请人都已经处理了当前邀请（包含超时），不能再取消当前邀请。
      */
-    public cancel(inviteID: String, data?: String): Promise<V2TimCallback> {
+    public cancel(inviteID: string, data?: string): Promise<V2TimCallback> {
         return this.nativeModule.call(this.manager, 'cancel', {
             inviteID,
             data,
@@ -159,7 +159,7 @@ export class V2TIMSignalingManager {
      * @note
      * 不能接受不是针对自己的邀请，请在收到 onReceiveNewInvitation 回调的时候先判断 inviteeList 有没有自己，如果没有自己，不能 accept 邀请。
      */
-    public accept(inviteID: String, data?: String): Promise<V2TimCallback> {
+    public accept(inviteID: string, data?: string): Promise<V2TimCallback> {
         return this.nativeModule.call(this.manager, 'accept', {
             inviteID,
             data,
@@ -171,7 +171,7 @@ export class V2TIMSignalingManager {
      * @note
      * 不能拒绝不是针对自己的邀请，请在收到 onReceiveNewInvitation 回调的时候先判断 inviteeList 有没有自己，如果没有自己，不能 reject 邀请。
      */
-    public reject(inviteID: String, data?: String): Promise<V2TimCallback> {
+    public reject(inviteID: string, data?: string): Promise<V2TimCallback> {
         return this.nativeModule.call(this.manager, 'reject', {
             inviteID,
             data,
@@ -183,7 +183,7 @@ export class V2TIMSignalingManager {
      * 如果 invite 设置 onlineUserOnly 为 false，每次信令操作（包括 invite、cancel、accept、reject、timeout）都会产生一条自定义消息， 该消息会通过 V2TIMAdvancedMsgListener -> onRecvNewMessage 抛给用户，用户也可以通过历史消息拉取，如果需要根据信令信息做自定义化文本展示，可以调用下面接口获取信令信息。
      */
     public getSignalingInfo(
-        msgID: String
+        msgID: string
     ): Promise<V2TimValueCallback<V2TimSignalingInfo>> {
         return this.nativeModule.call(this.manager, 'getSignalingInfo', {
             msgID,

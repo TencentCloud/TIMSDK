@@ -1,30 +1,28 @@
 /**
  * @module interface
  */
-interface V2TimSignalingListener {
+export interface V2TimSignalingListener {
     onReceiveNewInvitation?: (
-        inviteID: String,
-        inviter: String,
-        groupID: String,
-        inviteeList: String[],
-        data: String
+        inviteID: string,
+        inviter: string,
+        groupID: string,
+        inviteeList: string[],
+        data: string
     ) => void;
     onInviteeAccepted?: (
-        inviteID: String,
-        invitee: String,
-        data: String
+        inviteID: string,
+        invitee: string,
+        data: string
     ) => void;
     onInviteeRejected?: (
-        inviteID: String,
-        invitee: String,
-        data: String
+        inviteID: string,
+        invitee: string,
+        data: string
     ) => void;
     onInvitationCancelled?: (
-        inviteID: String,
-        inviter: String,
-        data: String
+        inviteID: string,
+        inviter: string,
+        data: string
     ) => void;
-    onInvitationTimeout?: (inviteID: String, inviteeList: String[]) => void;
+    onInvitationTimeout?: (inviteID: string, inviteeList: string[]) => void;
 }
-
-export default V2TimSignalingListener;

@@ -1,18 +1,16 @@
 /**
  * @module interface
  */
-interface V2TimGroupApplication {
-    groupID: String;
-    fromUser?: String;
-    fromUserNickName?: String;
-    fromUserFaceUrl?: String;
-    toUser?: String;
+export interface V2TimGroupApplication {
+    groupID: string;
+    fromUser?: string;
+    fromUserNickName?: string;
+    fromUserFaceUrl?: string;
+    toUser?: string;
     addTime?: number;
-    requestMsg?: String;
-    handleMsg?: String;
+    requestMsg?: string;
+    handleMsg?: string;
     typeƒ: number;
     handleStatus: number;
     handleResult: number;
 }
-
-export default V2TimGroupApplication;

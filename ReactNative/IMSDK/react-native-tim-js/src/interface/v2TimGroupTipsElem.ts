@@ -1,12 +1,12 @@
 /**
  * @module interface
  */
-import type V2TimGroupChangeInfo from './v2TimGroupChangeInfo';
-import type V2TimGroupMemberChangeInfo from './v2TimGroupMemberChangeInfo';
-import type V2TimGroupMemberInfo from './v2TimGroupMemberInfo';
+import type { V2TimGroupChangeInfo } from './v2TimGroupChangeInfo';
+import type { V2TimGroupMemberChangeInfo } from './v2TimGroupMemberChangeInfo';
+import type { V2TimGroupMemberInfo } from './v2TimGroupMemberInfo';
 
-interface V2TimGroupTipsElem {
-    groupID: String;
+export interface V2TimGroupTipsElem {
+    groupID: string;
     type: number;
     opMember: V2TimGroupMemberInfo;
     memberList?: V2TimGroupMemberInfo[];
@@ -14,5 +14,3 @@ interface V2TimGroupTipsElem {
     memberChangeInfoList?: V2TimGroupMemberChangeInfo[];
     memberCount?: number;
 }
-
-export default V2TimGroupTipsElem;

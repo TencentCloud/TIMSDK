@@ -3,16 +3,16 @@
  */
 import type { StringMap } from './commonInterface';
 
-interface V2TimGroupInfo {
-    groupID: String;
-    groupType: String;
-    groupName?: String;
-    notification?: String;
-    introduction?: String;
-    faceUrl?: String;
+export interface V2TimGroupInfo {
+    groupID: string;
+    groupType: string;
+    groupName?: string;
+    notification?: string;
+    introduction?: string;
+    faceUrl?: string;
     isAllMuted?: Boolean;
     isSupportTopic?: Boolean;
-    owner?: String;
+    owner?: string;
     createTime?: number;
     groupAddOpt?: number;
     lastInfoTime?: number;
@@ -24,5 +24,3 @@ interface V2TimGroupInfo {
     joinTime?: number;
     customInfo?: StringMap;
 }
-
-export default V2TimGroupInfo;

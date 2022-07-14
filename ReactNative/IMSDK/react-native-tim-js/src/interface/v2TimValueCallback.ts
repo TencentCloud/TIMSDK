@@ -1,10 +1,8 @@
 /**
  * @module interface
  */
-interface V2TimValueCallback<T> {
+export interface V2TimValueCallback<T> {
     code: number;
-    desc: String;
+    desc: string;
     data?: T;
 }
-
-export default V2TimValueCallback;

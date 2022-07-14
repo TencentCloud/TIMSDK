@@ -1,10 +1,8 @@
 /**
  * @module interface
  */
-interface V2TimCustomElem {
-    data?: String;
-    desc?: String;
-    extension?: String;
+export interface V2TimCustomElem {
+    data?: string;
+    desc?: string;
+    extension?: string;
 }
-
-export default V2TimCustomElem;

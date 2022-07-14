@@ -1,10 +1,8 @@
 /**
  * @module interface
  */
-interface V2TimUserInfo {
-    userID: String;
-    nickName?: String;
-    faceUrl?: String;
+export interface V2TimUserInfo {
+    userID: string;
+    nickName?: string;
+    faceUrl?: string;
 }
-
-export default V2TimUserInfo;

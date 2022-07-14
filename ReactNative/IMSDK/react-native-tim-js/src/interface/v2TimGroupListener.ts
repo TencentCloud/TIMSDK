@@ -2,64 +2,62 @@
  * @module interface
  */
 import type { StringMap } from './commonInterface';
-import type V2TimGroupChangeInfo from './v2TimGroupChangeInfo';
-import type V2TimGroupMemberChangeInfo from './v2TimGroupMemberChangeInfo';
-import type V2TimGroupMemberInfo from './v2TimGroupMemberInfo';
+import type { V2TimGroupChangeInfo } from './v2TimGroupChangeInfo';
+import type { V2TimGroupMemberChangeInfo } from './v2TimGroupMemberChangeInfo';
+import type { V2TimGroupMemberInfo } from './v2TimGroupMemberInfo';
 
-interface V2TimGroupListener {
-    onMemberEnter: (
-        groupID: String,
+export interface V2TimGroupListener {
+    onMemberEnter?: (
+        groupID: string,
         memberList: V2TimGroupMemberInfo[]
     ) => void;
-    onMemberLeave: (groupID: String, member: V2TimGroupMemberInfo) => void;
-    onMemberInvited: (
-        groupID: String,
+    onMemberLeave?: (groupID: string, member: V2TimGroupMemberInfo) => void;
+    onMemberInvited?: (
+        groupID: string,
         opUser: V2TimGroupMemberInfo,
         memberList: V2TimGroupMemberInfo[]
     ) => void;
-    onMemberKicked: (
-        groupID: String,
+    onMemberKicked?: (
+        groupID: string,
         opUser: V2TimGroupMemberInfo,
         memberList: V2TimGroupMemberInfo[]
     ) => void;
-    onMemberInfoChanged: (
-        groupID: String,
+    onMemberInfoChanged?: (
+        groupID: string,
         groupMemberChangeInfoList: V2TimGroupMemberChangeInfo[]
     ) => void;
-    onGroupCreated: (groupID: String) => void;
-    onGroupDismissed: (groupID: String, opUser: V2TimGroupMemberInfo) => void;
-    onGroupRecycled: (groupID: String, opUser: V2TimGroupMemberInfo) => void;
-    onGroupInfoChanged: (
-        groupID: String,
+    onGroupCreated?: (groupID: string) => void;
+    onGroupDismissed?: (groupID: string, opUser: V2TimGroupMemberInfo) => void;
+    onGroupRecycled?: (groupID: string, opUser: V2TimGroupMemberInfo) => void;
+    onGroupInfoChanged?: (
+        groupID: string,
         changeInfos: V2TimGroupChangeInfo[]
     ) => void;
-    onReceiveJoinApplication: (
-        groupID: String,
+    onReceiveJoinApplication?: (
+        groupID: string,
         member: V2TimGroupMemberInfo,
-        opReason: String
+        opReason: string
     ) => void;
-    onApplicationProcessed: (
-        groupID: String,
+    onApplicationProcessed?: (
+        groupID: string,
         opUser: V2TimGroupMemberInfo,
         isAgreeJoin: Boolean,
-        opReason: String
+        opReason: string
     ) => void;
-    onGrantAdministrator: (
-        groupID: String,
+    onGrantAdministrator?: (
+        groupID: string,
         opUser: V2TimGroupMemberInfo,
         memberList: V2TimGroupMemberInfo[]
     ) => void;
-    onRevokeAdministrator: (
-        groupID: String,
+    onRevokeAdministrator?: (
+        groupID: string,
         opUser: V2TimGroupMemberInfo,
         memberList: V2TimGroupMemberInfo[]
     ) => void;
-    onQuitFromGroup: (groupID: String) => void;
-    onReceiveRESTCustomData: (groupID: String, customData: String) => void;
-    onGroupAttributeChanged: (
-        groupID: String,
+    onQuitFromGroup?: (groupID: string) => void;
+    onReceiveRESTCustomData?: (groupID: string, customData: string) => void;
+    onGroupAttributeChanged?: (
+        groupID: string,
         groupAttribute: StringMap
     ) => void;
 }
-
-export default V2TimGroupListener;

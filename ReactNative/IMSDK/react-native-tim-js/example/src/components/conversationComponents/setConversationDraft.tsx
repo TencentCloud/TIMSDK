@@ -4,12 +4,14 @@ import CommonButton from '../commonComponents/CommonButton';
 import SDKResponseView from '../sdkResponseView';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import MultiCheckBoxModalComponent from '../commonComponents/MultiCheckboxModalComponent';
+import UserInputComponent from '../commonComponents/UserInputComponent';
 
-export const GetConversationListByConversationIDs = () => {
+export const SetConversationDraft = () => {
     const [res, setRes] = useState<any>({});
     const [visible, setVisible] = useState<boolean>(false);
     const [userName, setUserName] = useState<string>('未选择');
     const [userList, setUserList] = useState<any>([]);
+    const [draftText, setDraftText] = useState<string>();
     const getUsersHandler = (userList) => {
         setUserName('[' + userList.join(',') + ']');
         setUserList(userList);
@@ -22,9 +24,12 @@ export const GetConversationListByConversationIDs = () => {
     };
 
     const getConversationList = async () => {
+        if (userList.length == 0) {
+            return;
+        }
         const res = await TencentImSDKPlugin.v2TIMManager
             .getConversationManager()
-            .getConversationListByConversaionIds(userList);
+            .setConversationDraft(userList[0], draftText);
         setRes(res);
         TencentImSDKPlugin.v2TIMManager
             .getConversationManager()
@@ -57,9 +62,16 @@ export const GetConversationListByConversationIDs = () => {
                 getUsername={getUsersHandler}
                 type={'conversation'}
             />
+            <View style={styles.userInputcontainer}>
+                <UserInputComponent
+                    content="请输入草稿"
+                    placeholdercontent="请输入草稿"
+                    getContent={setDraftText}
+                />
+            </View>
             <CommonButton
                 handler={getConversationList}
-                content={'获取会话'}
+                content={'设置会话草稿'}
             ></CommonButton>
             <CodeComponent></CodeComponent>
         </>
@@ -67,10 +79,6 @@ export const GetConversationListByConversationIDs = () => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-        margin: 10,
-        marginBottom: 0,
-    },
     buttonView: {
         backgroundColor: '#2F80ED',
         borderRadius: 3,
@@ -96,5 +104,11 @@ const styles = StyleSheet.create({
         fontSize: 14,
         textAlignVertical: 'center',
         lineHeight: 35,
+    },
+    userInputcontainer: {
+        margin: 10,
+        marginBottom: 0,
+        marginTop: 1,
+        justifyContent: 'center',
     },
 });

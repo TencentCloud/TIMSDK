@@ -1,9 +1,7 @@
 /**
  * @module interface
  */
-interface V2TimGroupMemberOperationResult {
-    memberID?: String;
+export interface V2TimGroupMemberOperationResult {
+    memberID?: string;
     result?: number;
 }
-
-export default V2TimGroupMemberOperationResult;

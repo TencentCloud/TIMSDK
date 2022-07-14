@@ -9,7 +9,7 @@ const DismissGroupComponent = () => {
 
     const [res, setRes] = React.useState<any>({});
     const [visible, setVisible] = useState<boolean>(false)
-    const [groupName, setGroupName] = useState<String>('未选择')
+    const [groupName, setGroupName] = useState<string>('未选择')
 
     const dismissGroup = async()=>{
         const res = await TencentImSDKPlugin.v2TIMManager.dismissGroup(groupName)

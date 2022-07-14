@@ -1,6 +1,7 @@
 import { NativeModules } from 'react-native';
 import { V2TIMManager } from './manager/v2_tim_manager';
-export * from './enum'
+export * from './enum';
+export * from './interface';
 
 const TimJSModule = NativeModules.TimJs;
 

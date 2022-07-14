@@ -2,11 +2,11 @@
  * 离线推送
  * @module OfflinePushManager(高级消息收发接口)
  */
-import type V2TimCallback from '../interface/v2TimCallback';
+import type { V2TimCallback } from '../interface/v2TimCallback';
 
 export class V2TIMOfflinePushManager {
     private nativeModule: any;
-    private manager: String = 'offlinePushManager';
+    private manager: string = 'offlinePushManager';
 
     /** @hidden */
     constructor(module: any) {
@@ -18,7 +18,7 @@ export class V2TIMOfflinePushManager {
      */
     public setOfflinePushConfig(
         businessID: number,
-        token: String,
+        token: string,
         isTPNSToken = false
     ): Promise<V2TimCallback> {
         return this.nativeModule.call(this.manager, 'setOfflinePushConfig', {

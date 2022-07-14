@@ -6456,11 +6456,6 @@ lodash.debounce@^4.0.8:
   resolved "https://registry.npmjs.org/lodash.debounce/-/lodash.debounce-4.0.8.tgz"
   integrity sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==
 
-lodash.isequal@4.5.0:
-  version "4.5.0"
-  resolved "https://mirrors.tencent.com/npm/lodash.isequal/-/lodash.isequal-4.5.0.tgz"
-  integrity sha1-QVxEePK8wwEgwizhDtMib30+GOA=
-
 lodash.ismatch@^4.4.0:
   version "4.4.0"
   resolved "https://registry.npmjs.org/lodash.ismatch/-/lodash.ismatch-4.4.0.tgz"
@@ -7965,13 +7960,6 @@ react-native-builder-bob@^0.18.2:
     yargs "^17.5.1"
   optionalDependencies:
     jetifier "^2.0.0"
-
-react-native-radio-buttons-group@^2.2.11:
-  version "2.2.11"
-  resolved "https://mirrors.tencent.com/npm/react-native-radio-buttons-group/-/react-native-radio-buttons-group-2.2.11.tgz"
-  integrity sha512-dDvwkqrNLxNAv5CFYZmAnjrFCx9U4mW64iRqscrBQ6DQMPYj2P1wp9Z8Q9T28exiRn04JwZQRIyc1H0VInxn0w==
-  dependencies:
-    lodash.isequal "4.5.0"
 
 react-native@0.63.4:
   version "0.63.4"

@@ -2,14 +2,12 @@
  * @module interface
  */
 import type { StringMap } from './commonInterface';
-import type V2TimUserFullInfo from './v2TimUserFullInfo';
+import type { V2TimUserFullInfo } from './v2TimUserFullInfo';
 
-interface V2TimFriendInfo {
-    userID: String;
-    friendRemark?: String;
-    friendGroups?: String[];
+export interface V2TimFriendInfo {
+    userID: string;
+    friendRemark?: string;
+    friendGroups?: string[];
     friendCustomInfo?: StringMap;
     userProfile?: V2TimUserFullInfo;
 }
-
-export default V2TimFriendInfo;

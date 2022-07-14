@@ -9,7 +9,7 @@ import mystylesheet from '../../stylesheets';
 const GetGroupMemberListComponent = () => {
     const [groupID, setGroupID] = useState<string>('未选择')
     const [res, setRes] = React.useState<any>({});
-    const [priority, setPriority] = useState<String>('V2TIM_GROUP_MEMBER_FILTER_OWNER')
+    const [priority, setPriority] = useState<string>('V2TIM_GROUP_MEMBER_FILTER_OWNER')
     const [priorityEnum, setPriorityEnum] = useState<number>(0)
 
     const getGroupMemberList = async () => {

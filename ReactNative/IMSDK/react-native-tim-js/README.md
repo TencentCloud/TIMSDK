@@ -62,4 +62,4 @@ timManager.logout();
 
 ### 参考链接
 - [腾讯云IM](https://cloud.tencent.com/product/im)
-- [SDK for React Native Docs]()
+- [完整API文档](https://comm.qq.com/im-react-native-doc/index.html)
