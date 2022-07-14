@@ -193,16 +193,37 @@ public class JsonUtil {
         var result = source;
 
         // 内容替换
-        result = result.replacingOccurrences(of: "\\", with: "\\\\");
-        result = result.replacingOccurrences(of: "\"", with: "\\\"");
-        result = result.replacingOccurrences(of: "/", with: "\\/");
-        result = result.replacingOccurrences(of: "\\\\b", with: "\\b");
-        result = result.replacingOccurrences(of: "\\\\f", with: "\\f");
-        result = result.replacingOccurrences(of: "\n", with: "\\n");
-        result = result.replacingOccurrences(of: "\r", with: "\\r");
-        result = result.replacingOccurrences(of: "\t", with: "\\t");
-        result = result.replacingOccurrences(of: "\0", with: "");
-
+        result = result.unicodeScalars.map { scalars in
+            if(scalars == "\\"){
+                return "\\\\"
+            }
+            if(scalars == "\""){
+                return "\\\""
+            }
+            if(scalars == "/"){
+                return "\\/"
+            }
+            if(scalars == "\\\\b"){
+                return "\\b"
+            }
+            if(scalars == "\\\\f"){
+                return "\\f"
+            }
+            if(scalars == "\n"){
+                return "\\n"
+            }
+            if(scalars == "\r"){
+                return "\\r"
+            }
+            if(scalars == "\t"){
+                return "\\t"
+            }
+            if(scalars == "\0"){
+                return ""
+            }
+            return "\(scalars)"
+        }.joined()
+        
         return result;
     }
 }
