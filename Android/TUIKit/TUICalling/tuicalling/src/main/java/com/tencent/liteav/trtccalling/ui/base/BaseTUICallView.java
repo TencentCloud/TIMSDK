@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,6 +26,7 @@ import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
+import com.tencent.qcloud.tuicore.interfaces.TUILoginListener;
 import com.tencent.trtc.TRTCCloudDef;
 
 import java.util.ArrayList;
@@ -216,6 +218,7 @@ public abstract class BaseTUICallView extends FrameLayout implements TRTCCalling
         NotificationManager notificationManager =
                 (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
+        TUILogin.addLoginListener(mTUILoginListener);
     }
 
     @Override
@@ -227,6 +230,7 @@ public abstract class BaseTUICallView extends FrameLayout implements TRTCCalling
         if (Status.mIsShowFloatWindow) {
             FloatWindowService.stopService(mContext);
         }
+        TUILogin.removeLoginListener(mTUILoginListener);
     }
 
     protected void finish() {
@@ -522,4 +526,13 @@ public abstract class BaseTUICallView extends FrameLayout implements TRTCCalling
                     }
                 });
     }
+
+    private TUILoginListener mTUILoginListener = new TUILoginListener() {
+        @Override
+        public void onKickedOffline() {
+            Log.e(TAG, "onKickedOffline");
+            onCallEnd();
+            mTRTCCalling.exitRoom();
+        }
+    };
 }

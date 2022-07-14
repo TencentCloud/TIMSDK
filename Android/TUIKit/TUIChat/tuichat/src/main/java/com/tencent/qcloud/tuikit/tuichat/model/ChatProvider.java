@@ -29,6 +29,7 @@ import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.MessageFeature;
 import com.tencent.qcloud.tuikit.tuichat.bean.ReactUserBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupApplyInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupInfo;
@@ -184,7 +185,16 @@ public class ChatProvider {
         });
     }
 
+    private void setMessageTypingFeature(TUIMessageBean messageBean) {
+        MessageFeature messageFeature = new MessageFeature();
+        messageFeature.setNeedTyping(1);
+        messageBean.setMessageTypingFeature(messageFeature);
+    }
+
     public String sendMessage(TUIMessageBean message, ChatInfo chatInfo, IUIKitCallback<TUIMessageBean> callBack) {
+        // support message typing flag
+        setMessageTypingFeature(message);
+
         OfflineMessageContainerBean containerBean = new OfflineMessageContainerBean();
         OfflineMessageBean entity = new OfflineMessageBean();
         entity.content = message.getExtra();
@@ -239,7 +249,7 @@ public class ChatProvider {
         return msgID;
     }
 
-    public String sendMessage(TUIMessageBean message, String groupType, OfflinePushInfo pushInfo,
+    public String sendMessage(TUIMessageBean message, OfflinePushInfo pushInfo,
                               String receiver, boolean isGroup, boolean onlineUserOnly, IUIKitCallback<TUIMessageBean> callBack) {
         final V2TIMMessage v2TIMMessage = message.getV2TIMMessage();
         v2TIMMessage.setExcludedFromUnreadCount(TUIChatConfigs.getConfigs().getGeneralConfig().isExcludedFromUnreadCount());

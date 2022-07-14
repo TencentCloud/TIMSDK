@@ -2,11 +2,14 @@ package com.tencent.qcloud.tim.demo.profile;
 
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.DatePicker;
+
+import androidx.annotation.Nullable;
 
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMManager;
@@ -15,7 +18,9 @@ import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.bean.UserInfo;
+import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
+import com.tencent.qcloud.tuicore.component.activities.ImageSelectActivity;
 import com.tencent.qcloud.tuicore.component.dialog.TUIKitDialog;
 import com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView;
 import com.tencent.qcloud.tuicore.component.popupcard.PopupInputCard;
@@ -26,6 +31,7 @@ import com.tencent.qcloud.tuicore.component.activities.SelectionActivity;
 import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
 import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
+import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 
 import java.util.ArrayList;
@@ -37,6 +43,7 @@ import java.util.regex.Pattern;
 public class SelfDetailActivity extends BaseLightActivity implements View.OnClickListener {
     private static final String TAG = SelfDetailActivity.class.getSimpleName();
 
+    private static final int CHOOSE_AVATAR_REQUEST_CODE = 1;
     private TitleBarLayout titleBarLayout;
     private ShadeImageView selfIcon;
     private View faceArea;
@@ -145,26 +152,20 @@ public class SelfDetailActivity extends BaseLightActivity implements View.OnClic
     @Override
     public void onClick(View v) {
         if (v == selfIcon || v == faceArea) {
-            TUIKitDialog tipsDialog = new TUIKitDialog(this)
-                    .builder()
-                    .setCancelable(true)
-                    .setCancelOutside(true)
-                    .setTitle(this.getString(R.string.demo_choose_random_face))
-                    .setDialogWidth(0.75f)
-                    .setPositiveButton(this.getString(R.string.sure), new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            faceUrl = String.format("https://picsum.photos/id/%d/200/200", new Random().nextInt(1000));
-                            updateProfile();                        }
-                    })
-                    .setNegativeButton(this.getString(R.string.cancel), new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
+            ArrayList<String> faceList = new ArrayList<>();
+            for (int i = 0; i < Constants.AVATAR_FACE_COUNT; i++) {
+                faceList.add(String.format(Constants.AVATAR_FACE_URL, (i + 1) + ""));
+            }
 
-                        }
-                    });
-            tipsDialog.show();
-
+            Intent intent = new Intent(SelfDetailActivity.this, ImageSelectActivity.class);
+            intent.putExtra(ImageSelectActivity.TITLE, getString(R.string.demo_choose_avatar));
+            intent.putExtra(ImageSelectActivity.SPAN_COUNT, 4);
+            intent.putExtra(ImageSelectActivity.PLACEHOLDER, R.drawable.core_default_user_icon_light);
+            intent.putExtra(ImageSelectActivity.ITEM_WIDTH, ScreenUtil.dip2px(77));
+            intent.putExtra(ImageSelectActivity.ITEM_HEIGHT, ScreenUtil.dip2px(77));
+            intent.putExtra(ImageSelectActivity.DATA, faceList);
+            intent.putExtra(ImageSelectActivity.SELECTED, faceUrl);
+            startActivityForResult(intent, CHOOSE_AVATAR_REQUEST_CODE);
         } else if (v == nickNameLv) {
             PopupInputCard popupInputCard = new PopupInputCard(this);
             popupInputCard.setContent(nickName);
@@ -279,5 +280,16 @@ public class SelfDetailActivity extends BaseLightActivity implements View.OnClic
                 DemoLog.i(TAG, "modifySelfProfile success");
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CHOOSE_AVATAR_REQUEST_CODE && resultCode == ImageSelectActivity.RESULT_CODE_SUCCESS) {
+            if (data != null) {
+                faceUrl = data.getStringExtra(ImageSelectActivity.DATA);
+                updateProfile();
+            }
+        }
     }
 }

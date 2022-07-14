@@ -33,11 +33,11 @@ import androidx.fragment.app.FragmentManager;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.BackgroundTasks;
 import com.tencent.qcloud.tuicore.util.FileUtil;
-import com.tencent.qcloud.tuicore.util.PermissionRequester;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
@@ -121,6 +121,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
      * 文本输入框
      */
     protected TIMMentionEditText mTextInput;
+    private boolean mIsSending = false;
 
     protected AppCompatActivity mActivity;
     protected View mInputMoreLayout;
@@ -155,10 +156,14 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     private ChatPresenter presenter;
 
     private boolean isReplyModel = false;
-    private View replyLayout;
-    private TextView replyTv;
-    private ImageView replyCloseBtn;
+    private boolean isQuoteModel = false;
     private ReplyPreviewBean replyPreviewBean;
+    private View replyPreviewBar;
+    private ImageView replyCloseBtn;
+    private TextView replyTv;
+    private View quotePreviewBar;
+    private TextView quoteTv;
+    private ImageView quoteCloseBtn;
     private boolean isShowCustomFace = true;
     public InputView(Context context) {
         super(context);
@@ -190,9 +195,12 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         mMoreInputButton = findViewById(R.id.more_btn);
         mSendTextButton = findViewById(R.id.send_btn);
         mTextInput = findViewById(R.id.chat_message_input);
-        replyLayout = findViewById(R.id.reply_preview_bar);
-        replyTv = findViewById(R.id.reply_text);
-        replyCloseBtn = findViewById(R.id.reply_close_btn);
+        replyPreviewBar = findViewById(R.id.reply_preview_bar);
+        replyTv = replyPreviewBar.findViewById(R.id.reply_text);
+        replyCloseBtn = replyPreviewBar.findViewById(R.id.reply_close_btn);
+        quotePreviewBar = findViewById(R.id.quote_preview_bar);
+        quoteTv = quotePreviewBar.findViewById(R.id.reply_text);
+        quoteCloseBtn = quotePreviewBar.findViewById(R.id.reply_close_btn);
         // 子类实现所有的事件处理
 
         int iconSize = getResources().getDimensionPixelSize(R.dimen.chat_input_icon_size);
@@ -210,6 +218,8 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         layoutParams.width = iconSize;
         layoutParams.height = iconSize;
         mMoreInputButton.setLayoutParams(layoutParams);
+
+        mIsSending = false;
 
         init();
     }
@@ -239,7 +249,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             @Override
             public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
                 if (keyCode == KeyEvent.KEYCODE_DEL && keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
-                    if (isReplyModel && TextUtils.isEmpty(mTextInput.getText().toString())) {
+                    if ((isQuoteModel || isReplyModel) && TextUtils.isEmpty(mTextInput.getText().toString())) {
                         exitReply();
                     }
                 }
@@ -251,6 +261,15 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 return false;
+            }
+        });
+
+        mTextInput.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean focus) {
+                if (!focus && mChatInputHandler != null) {
+                    mChatInputHandler.onUserTyping(false, V2TIMManager.getInstance().getServerTime());
+                }
             }
         });
 
@@ -330,6 +349,13 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         });
 
         replyCloseBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exitReply();
+            }
+        });
+
+        quoteCloseBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 exitReply();
@@ -458,6 +484,10 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         super.onDetachedFromWindow();
         mTextInput.removeTextChangedListener(this);
         atUserInfoMap.clear();
+
+        if (mChatInputHandler != null) {
+            mChatInputHandler.onUserTyping(false, V2TIMManager.getInstance().getServerTime());
+        }
     }
 
     protected void startSendPhoto() {
@@ -766,7 +796,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                     if (mChatLayout == null) {
                         mMessageHandler.sendMessage(ChatMessageBuilder.buildTextMessage(mTextInput.getText().toString().trim()));
                     } else {
-                        if (isReplyModel && replyPreviewBean != null) {
+                        if ((isQuoteModel || isReplyModel) && replyPreviewBean != null) {
                             if (TUIChatUtils.isGroupChat(mChatLayout.getChatInfo().getType()) && !mTextInput.getMentionIdList().isEmpty()) {
                                 List<String> atUserList = new ArrayList<>(mTextInput.getMentionIdList());
                                 mMessageHandler.sendMessage(ChatMessageBuilder.buildAtReplyMessage(mTextInput.getText().toString().trim(), atUserList, replyPreviewBean));
@@ -789,6 +819,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                         }
                     }
                 }
+                mIsSending = true;
                 mTextInput.setText("");
             }
         }
@@ -1011,6 +1042,10 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             mSendEnable = false;
             showSendTextButton(View.GONE);
             showMoreInputButton(View.VISIBLE);
+
+            if (mChatInputHandler != null) {
+                mChatInputHandler.onUserTyping(false, V2TIMManager.getInstance().getServerTime());
+            }
         } else {
             mSendEnable = true;
             showSendTextButton(View.VISIBLE);
@@ -1026,6 +1061,13 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             }
         }
 
+        if (mChatInputHandler != null && !mIsSending) {
+            mChatInputHandler.onUserTyping(true, V2TIMManager.getInstance().getServerTime());
+        }
+
+        if (mIsSending) {
+            mIsSending = false;
+        }
     }
 
     public void setDraft() {
@@ -1039,7 +1081,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         }
 
         String draftText = mTextInput.getText().toString();
-        if (isReplyModel && replyPreviewBean != null) {
+        if ((isQuoteModel || isReplyModel) && replyPreviewBean != null) {
             Gson gson = new Gson();
             Map<String, String> draftMap = new HashMap<>();
             draftMap.put("content", draftText);
@@ -1354,20 +1396,30 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     }
 
     public void showReplyPreview(ReplyPreviewBean previewBean) {
-        isReplyModel = true;
         replyPreviewBean = previewBean;
         String replyMessageAbstract = previewBean.getMessageAbstract();
         String msgTypeStr = ChatMessageParser.getMsgTypeStr(previewBean.getMessageType());
-        // 如果是回复文字消息，缩略显示文件名中间部分
-        if (previewBean.getOriginalMessageBean() instanceof FileMessageBean) {
-            replyTv.setEllipsize(TextUtils.TruncateAt.MIDDLE);
-        } else {
-            replyTv.setEllipsize(TextUtils.TruncateAt.END);
-        }
         String text = previewBean.getMessageSender() + " : " + msgTypeStr + " " + replyMessageAbstract;
         text = FaceManager.emojiJudge(text);
-        replyTv.setText(text);
-        replyLayout.setVisibility(View.VISIBLE);
+        // If replying to a text message, the middle part of the file name is displayed in abbreviated form
+        if (previewBean.isReplyMessage()) {
+            isReplyModel = true;
+            replyTv.setText(text);
+            replyPreviewBar.setVisibility(View.VISIBLE);
+        } else {
+            isQuoteModel = true;
+            quoteTv.setText(text);
+            quotePreviewBar.setVisibility(View.VISIBLE);
+        }
+
+        if (previewBean.getOriginalMessageBean() instanceof FileMessageBean) {
+            replyTv.setEllipsize(TextUtils.TruncateAt.MIDDLE);
+            quoteTv.setEllipsize(TextUtils.TruncateAt.MIDDLE);
+        } else {
+            replyTv.setEllipsize(TextUtils.TruncateAt.END);
+            quoteTv.setEllipsize(TextUtils.TruncateAt.END);
+        }
+
         if (mMessageHandler != null) {
             mMessageHandler.scrollToEnd();
         }
@@ -1375,12 +1427,12 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         showSoftInput();
     }
 
-
-
     public void exitReply() {
         isReplyModel = false;
         replyPreviewBean = null;
-        replyLayout.setVisibility(View.GONE);
+        replyPreviewBar.setVisibility(View.GONE);
+        isQuoteModel = false;
+        quotePreviewBar.setVisibility(View.GONE);
     }
 
     protected void showEmojiInputButton(int visibility) {
@@ -1414,6 +1466,8 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         void onInputAreaClick();
 
         void onRecordStatusChanged(int status);
+
+        void onUserTyping(boolean status, long time);
     }
 
     public interface OnStartActivityListener {

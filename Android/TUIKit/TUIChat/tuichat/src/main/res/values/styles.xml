@@ -13,4 +13,15 @@
         <item name="android:windowEnterAnimation">@anim/chat_pop_menu_in_anim</item>
         <item name="android:windowExitAnimation">@anim/chat_pop_menu_out_anim</item>
     </style>
+
+    <style name="RatingBaropreview" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/layer_live_rating_bar</item>
+        <item name="android:minHeight">25dp</item>
+        <item name="android:maxHeight">25dp</item>
+    </style>
+
+    <style name="BeginnerGuidePopupAnimation">
+        <item name="android:windowEnterAnimation">@anim/beginner_guide_in_anim</item>
+        <item name="android:windowExitAnimation">@anim/beginner_guide_out_anim</item>
+    </style>
 </resources>

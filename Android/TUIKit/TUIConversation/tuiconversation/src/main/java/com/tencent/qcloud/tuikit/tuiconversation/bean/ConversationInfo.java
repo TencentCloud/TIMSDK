@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMGroupAtInfo;
 import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.imsdk.v2.V2TIMUserStatus;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -34,9 +35,8 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
      * 会话标识，C2C为对方用户ID，群聊为群组ID
      */
     private String id;
-    /**
-     * 会话头像url
-     */
+
+    private int statusType = V2TIMUserStatus.V2TIM_USER_STATUS_UNKNOWN;
 
     private V2TIMConversation conversation;
 
@@ -255,6 +255,14 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
         return null;
     }
 
+    public int getStatusType() {
+        return statusType;
+    }
+
+    public void setStatusType(int statusType) {
+        this.statusType = statusType;
+    }
+
     /**
      * 首先根据是否置顶排序，再根据 orderKey 排序
      */
@@ -293,6 +301,7 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
                 ", lastMessage=" + lastMessage +
                 ", draftText=" + draft +
                 ", groupType=" + groupType +
+                ", statusType=" + statusType +
                 '}';
     }
 }

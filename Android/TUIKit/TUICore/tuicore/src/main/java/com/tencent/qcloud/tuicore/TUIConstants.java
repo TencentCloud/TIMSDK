@@ -1,5 +1,7 @@
 package com.tencent.qcloud.tuicore;
 
+import com.tencent.imsdk.BaseConstants;
+
 /**
  * 公共常量
  */
@@ -87,6 +89,8 @@ public final class TUIConstants {
         public static final String METHOD_GET_DISPLAY_STRING = "getDisplayString";
         // add message to chat list
         public static final String METHOD_ADD_MESSAGE_TO_CHAT = "addMessageToChat";
+        // 处理完群申请 // Process the group application
+        public static final String METHOD_GROUP_APPLICAITON_PROCESSED = "groupApplicationProcessed";
 
         // 更多输入按钮扩展
         public static final String EXTENSION_INPUT_MORE_CUSTOM_MESSAGE = "inputMoreCustomMessage";
@@ -121,6 +125,7 @@ public final class TUIConstants {
         public static final String IS_GROUP_CHAT = "isGroupChat";
         public static final String V2TIMMESSAGE = "v2TIMMessage";
         public static final String MESSAGE_BEAN = "messageBean";
+        public static final String GROUP_APPLY_NUM = "groupApplicaitonNumber";
 
 
         // 发送自定义消息字段
@@ -310,5 +315,20 @@ public final class TUIConstants {
         public static final String EVENT_SUB_KEY_CONNECTING       = "eventSubKeyConnecting";
         public static final String EVENT_SUB_KEY_CONNECT_SUCCESS  = "eventSubKeyConnectSuccess";
         public static final String EVENT_SUB_KEY_CONNECT_FAILED   = "eventSubKeyConnectFailed";
+    }
+
+    public static final class BuyingFeature {
+        public static final int ERR_SDK_INTERFACE_NOT_SUPPORT = BaseConstants.ERR_SDK_INTERFACE_NOT_SUPPORT;
+        public static final String BUYING_GUIDELINES_EN = "https://intl.cloud.tencent.com/document/product/1047/36021?lang=en&pg=#changing-configuration";
+        public static final String BUYING_GUIDELINES = "https://cloud.tencent.com/document/product/269/32458";
+
+        public static final String BUYING_PRICE_DESC_EN = "https://www.tencentcloud.com/document/product/1047/34349#basic-services";
+        public static final String BUYING_PRICE_DESC = "https://cloud.tencent.com/document/product/269/11673?from=17219#.E5.9F.BA.E7.A1.80.E6.9C.8D.E5.8A.A1.E8.AF.A6.E6.83.85";
+
+
+        public static final String BUYING_FEATURE_MESSAGE_RECEIPT = "buying_chat_message_read_receipt";
+        public static final String BUYING_FEATURE_COMMUNITY = "buying_community";
+        public static final String BUYING_FEATURE_SEARCH = "buying_search";
+        public static final String BUYING_FEATURE_ONLINE_STATUS = "buying_online_status";
     }
 }

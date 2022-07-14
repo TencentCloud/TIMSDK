@@ -144,6 +144,16 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
         return mDataSource.get(position);
     }
 
+    public void onDataChanged(TUIMessageBean messageBean) {
+        for (TUIMessageBean dataBean : mDataSource) {
+            if (TextUtils.equals(messageBean.getId(), dataBean.getId())) {
+                dataBean.update(messageBean);
+                break;
+            }
+        }
+        notifyDataSetChanged();
+    }
+
     private void loadPhotoView(ViewHolder holder, ImageMessageBean imageMessageBean,  int positon) {
         final List<ImageMessageBean.ImageBean> imgs = imageMessageBean.getImageBeanList();
         String imagePath = imageMessageBean.getDataPath();
@@ -343,6 +353,16 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
             updateVideoViewSize(holder, imagePath);
         }
 
+        if (videoMessageBean.getStatus() == TUIMessageBean.MSG_STATUS_SENDING) {
+            ToastUtil.toastShortMessage(mContext.getString(R.string.sending));
+            return;
+        }
+        if (videoMessageBean.getStatus() == TUIMessageBean.MSG_STATUS_SEND_FAIL) {
+            ToastUtil.toastShortMessage(mContext.getString(R.string.send_failed));
+            holder.loadingView.setVisibility(View.GONE);
+            return;
+        }
+
         final String videoPath = TUIConfig.getVideoDownloadDir() + videoMessageBean.getVideoUUID();
         final File videoFile = new File(videoPath);
         if (videoFile.exists() && videoMessageBean.getVideoSize() == videoFile.length()) {//若存在本地文件则优先获取本地文件
@@ -509,7 +529,7 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
         }
     }
 
-    private void playVideo(ViewHolder holder, VideoMessageBean videoMessageBean) {
+    private void  playVideo(ViewHolder holder, VideoMessageBean videoMessageBean) {
         Uri videoUri = processVideoMessage(videoMessageBean);
 
         holder.pauseCenterView.setVisibility(View.VISIBLE);

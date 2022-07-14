@@ -54,14 +54,4 @@ public class PrivateConstants {
     public static final String OPPO_PUSH_APPKEY = "";
     public static final String OPPO_PUSH_APPSECRET = "";
     /****** oppo离线推送参数end ******/
-
-    /**
-     *  是否选择 TPNS 方案接入，默认为 IM 厂商通道，不需要修改配置
-     *
-     *  @note 组件实现了厂商和 TPNS 两种方式，以此变量作为接入方案区分
-     *
-     *  - 当接入推送方案选择 TPNS 通道，设置 isTPNSChannel 为 true，推送由 TPNS 提供服务；
-     *  - 当接入推送方案选择 IM 厂商通道，设置 isTPNSChannel 为 false，走厂商推送逻辑；
-     */
-    public static final boolean isTPNSChannel = false;
 }

@@ -37,7 +37,6 @@
     <string name="trtccalling_switch_audio_call">Switch to Voice Call</string>
     <string name="trtccalling_btn_cancel">Cancel</string>
     <string name="trtccalling_tips_start_camera_audio">Please turn on the camera and microphone permissions first</string>
-    <string name="trtccalling_tips_start_audio">Please turn on the microphone permissions first</string>
     <string name="trtccalling_video_call">Video Call</string>
     <string name="trtccalling_audio_call">Voice Call</string>
     <string name="trtccalling_user_kicked_offline">You have been kicked off the line. Please log in again!</string>
@@ -47,4 +46,10 @@
     <string name="trtccalling_wait_resonse">Waiting</string>
     <string name="trtccalling_float_permission">please open "Display over other apps" permission</string>
     <string name="trtccalling_is_calling">Unable to restart the call</string>
+    <string name="trtccalling_tips_start_camera">Please turn on the camera permission first</string>
+    <string name="trtccalling_tips_start_audio">Please turn on the microphone permission first</string>
+    <string name="trtccalling_permission_mic_reason_title">%s applies for access to the microphone</string>
+    <string name="trtccalling_permission_mic_reason">Needs access to your microphone, and it can be used for functions such as Interactive Video Streaming, Show Live, Video Call, Group Video Call, Multi-person audio and video room, etc.</string>
+    <string name="trtccalling_permission_camera_reason_title">%s applies for camera permission</string>
+    <string name="trtccalling_permission_camera_reason">Needs access to your camera, and it can be used for functions such as Interactive Video Streaming, Show Live, Video Call, Group Video Call, Multi-person audio and video room, etc. For beauty filters to work, we will collect the facial information captured by your camera in real time to detect your facial features.</string>
 </resources>

@@ -11,7 +11,6 @@ import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageReactBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.ReactUserBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupInfo;
-import com.tencent.qcloud.tuikit.tuichat.bean.GroupMemberInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageRepliesBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ReplyMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
@@ -143,7 +142,7 @@ public class ReplyPresenter {
                 param.put(TUIConstants.TUIChat.MESSAGE_BEAN, data);
                 param.put(TUIConstants.TUIChat.IS_GROUP_CHAT, chatInfo.getType() == ChatInfo.TYPE_GROUP);
                 TUICore.callService(TUIConstants.TUIChat.SERVICE_NAME, TUIConstants.TUIChat.METHOD_ADD_MESSAGE_TO_CHAT, param);
-                chatPresenter.modifyRootMessage((ReplyMessageBean) data, new IUIKitCallback<Void>() {
+                chatPresenter.modifyRootMessageToAddReplyInfo((ReplyMessageBean) data, new IUIKitCallback<Void>() {
                     @Override
                     public void onError(String module, int errCode, String errMsg) {
                         TUIChatUtils.callbackOnError(callback, errCode, errMsg);

@@ -2,16 +2,27 @@ package com.tencent.qcloud.tuikit.tuichat.util;
 
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMImageElem;
+import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ImageUtil;
+import com.tencent.qcloud.tuicore.util.SoftKeyBoardUtil;
+import com.tencent.qcloud.tuikit.tuichat.R;
+import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.component.BeginnerGuidePage;
 
 import java.io.File;
 
 import static com.tencent.qcloud.tuicore.TUIConstants.TUIConversation.CONVERSATION_C2C_PREFIX;
 import static com.tencent.qcloud.tuicore.TUIConstants.TUIConversation.CONVERSATION_GROUP_PREFIX;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.view.Gravity;
+import android.view.View;
 
 public class TUIChatUtils {
 
@@ -93,4 +104,30 @@ public class TUIChatUtils {
         return localImgPath;
     }
 
+    public static long getServerTime() {
+        return V2TIMManager.getInstance().getServerTime();
+    }
+
+    public static void showBeginnerGuideThen(View view, Runnable runnable) {
+        SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(TUIChatConstants.CHAT_SETTINGS_SP_NAME, Context.MODE_PRIVATE);
+        boolean isShowGuide = sharedPreferences.getBoolean(TUIChatConstants.CHAT_REPLY_GUIDE_SHOW_SP_KEY, true);
+        if (isShowGuide) {
+            SoftKeyBoardUtil.hideKeyBoard(view.getWindowToken());
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean(TUIChatConstants.CHAT_REPLY_GUIDE_SHOW_SP_KEY, false);
+            editor.apply();
+
+            BeginnerGuidePage guidePage = new BeginnerGuidePage((Activity) view.getContext());
+            guidePage.setPagesResIDs(R.drawable.chat_reply_guide, R.drawable.chat_quote_guide);
+            guidePage.setOnFinishListener(new BeginnerGuidePage.OnFinishListener() {
+                @Override
+                public void onFinish() {
+                    runnable.run();
+                }
+            });
+            guidePage.show(view, Gravity.NO_GRAVITY);
+        } else {
+            runnable.run();
+        }
+    }
 }

@@ -226,7 +226,7 @@ public class ChatPopMenu {
                 actionRecyclerView.setVisibility(View.VISIBLE);
             }
         }
-
+        popupView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         popupView.setBackground(new PopIndicatorDrawable(anchorView, indicatorHeight, RECT_RADIUS));
         showAtLocation();
     }

@@ -1,5 +1,8 @@
 package com.tencent.qcloud.tuikit.tuichat.ui.view.message;
 
+import static com.tencent.qcloud.tuikit.tuichat.TUIChatConstants.CHAT_SETTINGS_SP_NAME;
+
+import android.app.Activity;
 import android.content.Context;
 
 import androidx.annotation.Nullable;
@@ -8,11 +11,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.PopupWindow;
@@ -27,6 +32,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.QuoteMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ReplyMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.component.BeginnerGuidePage;
 import com.tencent.qcloud.tuikit.tuichat.component.face.Emoji;
 import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.tuichat.component.popmenu.ChatPopMenu;
@@ -45,6 +51,9 @@ import java.util.List;
 
 public class MessageRecyclerView extends RecyclerView implements IMessageLayout {
     private static final String TAG = MessageRecyclerView.class.getSimpleName();
+
+    // 120s
+    public static final int REVOKE_TIME_OUT = 120;
 
     public static final int DATA_CHANGE_TYPE_REFRESH = 0;
     public static final int DATA_CHANGE_TYPE_LOAD = 1;
@@ -162,7 +171,7 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
         mChatPopMenu = new ChatPopMenu(getContext());
         mChatPopMenu.setShowFaces(TUIChatConfigs.getConfigs().getGeneralConfig().isReactEnable());
         mChatPopMenu.setChatPopMenuActionList(mPopActions);
-        mChatPopMenu.setEmojiOnClickListener(new ChatPopMenu.EmojiOnClickListener(){
+        mChatPopMenu.setEmojiOnClickListener(new ChatPopMenu.EmojiOnClickListener() {
 
             @Override
             public void onClick(Emoji emoji) {
@@ -174,7 +183,6 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
 
         int[] location = new int[2];
         getLocationOnScreen(location);
-        mChatPopMenu.show(view, location[1]);
         mChatPopMenu.setEmptySpaceClickListener(new MessageRecyclerView.OnEmptySpaceClickListener() {
             @Override
             public void onClick() {
@@ -183,7 +191,7 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
                 }
             }
         });
-
+         mChatPopMenu.show(view, location[1]);
     }
 
     public void onMsgAddBack() {
@@ -259,10 +267,13 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
             deleteAction.setActionClickListener(() -> mOnPopActionClickListener.onDeleteMessageClick(msg));
             if (msg.isSelf()) {
                 if (msg.getStatus() != TUIMessageBean.MSG_STATUS_SEND_FAIL) {
-                    revokeAction = new ChatPopMenu.ChatPopMenuAction();
-                    revokeAction.setActionName(getContext().getString(R.string.revoke_action));
-                    revokeAction.setActionIcon(R.drawable.pop_menu_revoke);
-                    revokeAction.setActionClickListener(() -> mOnPopActionClickListener.onRevokeMessageClick(msg));
+                    long timeInterval = TUIChatUtils.getServerTime() - msg.getMessageTime();
+                    if (timeInterval <= REVOKE_TIME_OUT) {
+                        revokeAction = new ChatPopMenu.ChatPopMenuAction();
+                        revokeAction.setActionName(getContext().getString(R.string.revoke_action));
+                        revokeAction.setActionIcon(R.drawable.pop_menu_revoke);
+                        revokeAction.setActionClickListener(() -> mOnPopActionClickListener.onRevokeMessageClick(msg));
+                    }
                 }
             }
 
@@ -426,7 +437,12 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
             @Override
             public void onMessageLongClick(View view, int position, TUIMessageBean messageInfo) {
                 if (mOnItemClickListener != null) {
-                    mOnItemClickListener.onMessageLongClick(view, position, messageInfo);
+                    TUIChatUtils.showBeginnerGuideThen(view, new Runnable() {
+                        @Override
+                        public void run() {
+                            mOnItemClickListener.onMessageLongClick(view, position, messageInfo);
+                        }
+                    });
                 }
             }
 
@@ -507,6 +523,7 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
                     mOnItemClickListener.onTextSelected(view, position, messageInfo);
                 }
             }
+
         });
     }
 

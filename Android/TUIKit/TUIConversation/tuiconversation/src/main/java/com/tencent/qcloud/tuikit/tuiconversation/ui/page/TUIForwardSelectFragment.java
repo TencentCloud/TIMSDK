@@ -73,11 +73,11 @@ public class TUIForwardSelectFragment extends BaseFragment {
         customizeConversation();
         mForwardLayout.getConversationList().setOnItemClickListener(new ConversationListLayout.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, int position, ConversationInfo conversationInfo) {
+            public void onItemClick(View view, int viewType, ConversationInfo conversationInfo) {
                 //此处为demo的实现逻辑，更根据会话类型跳转到相关界面，开发者可根据自己的应用场景灵活实现
-                if (position == 1){
+                if (viewType == ConversationInfo.TYPE_RECENT_LABEL){
                     return;
-                } else if (position == 0){
+                } else if (viewType == ConversationInfo.TYPE_FORWAR_SELECT){
                     //跳转到通讯录或者创建群聊界面
                     if(mTitleBarLayout.getLeftTitle().getText().equals(getString(R.string.titlebar_cancle))){
                         //通讯录
@@ -106,12 +106,6 @@ public class TUIForwardSelectFragment extends BaseFragment {
                         forwardMessages(conversationInfo);
                     }
                 }
-            }
-        });
-        mForwardLayout.getConversationList().setOnItemLongClickListener(new ConversationListLayout.OnItemLongClickListener() {
-            @Override
-            public void OnItemLongClick(View view, int position, ConversationInfo conversationInfo) {
-
             }
         });
 

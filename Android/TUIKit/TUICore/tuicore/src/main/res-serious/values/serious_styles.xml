@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="TUIBaseSeriousTheme">
+    <style name="TUIBaseSeriousTheme" parent="@style/TUIBaseTheme">
 
         <!-- 颜色规范 start -->
         <item name="core_light_bg_title_text_color">@color/core_light_bg_title_text_color_serious</item>
@@ -32,6 +32,7 @@
         <item name="core_title_bar_back_icon">@drawable/core_title_bar_back_serious</item>
         <item name="core_default_group_icon">@drawable/core_default_group_icon_serious</item>
         <item name="core_default_user_icon">@drawable/core_default_user_icon_serious</item>
+        <item name="user_status_online">@drawable/core_online_status_serious</item>
 
     </style>
 

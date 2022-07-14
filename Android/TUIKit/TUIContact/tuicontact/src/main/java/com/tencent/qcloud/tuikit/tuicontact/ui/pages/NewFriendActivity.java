@@ -28,7 +28,7 @@ public class NewFriendActivity extends BaseLightActivity implements INewFriendAc
     private TitleBarLayout mTitleBar;
     private ListView mNewFriendLv;
     private NewFriendListAdapter mAdapter;
-    private TextView mEmptyView;
+    private TextView notFoundTip;
 
     private NewFriendPresenter presenter;
     @Override
@@ -68,7 +68,7 @@ public class NewFriendActivity extends BaseLightActivity implements INewFriendAc
             }
         });
         mNewFriendLv = findViewById(R.id.new_friend_list);
-        mEmptyView = findViewById(R.id.empty_text);
+        notFoundTip = findViewById(R.id.not_found_tip);
     }
 
     private void initPendency() {
@@ -78,6 +78,11 @@ public class NewFriendActivity extends BaseLightActivity implements INewFriendAc
     @Override
     public void onDataSourceChanged(List<FriendApplicationBean> dataSource) {
         TUIContactLog.i(TAG, "getFriendApplicationList success");
+        if (dataSource == null || dataSource.isEmpty()) {
+            notFoundTip.setVisibility(View.VISIBLE);
+        } else {
+            notFoundTip.setVisibility(View.GONE);
+        }
         mNewFriendLv.setVisibility(View.VISIBLE);
         mAdapter = new NewFriendListAdapter(NewFriendActivity.this, R.layout.contact_new_friend_item, dataSource);
         mAdapter.setPresenter(presenter);

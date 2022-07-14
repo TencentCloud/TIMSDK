@@ -17,6 +17,7 @@ import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.CallModel;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageCustom;
+import com.tencent.qcloud.tuikit.tuichat.bean.MessageFeature;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageReactBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageRepliesBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageTyping;
@@ -564,6 +565,34 @@ public class ChatMessageParser {
             }
         }
         return typeStr;
+    }
+
+    public static MessageFeature isSupportTyping(TUIMessageBean messageBean) {
+        String cloudCustomData = messageBean.getV2TIMMessage().getCloudCustomData();
+        if (TextUtils.isEmpty(cloudCustomData)) {
+            return null;
+        }
+        try {
+            Gson gson = new Gson();
+            HashMap featureHashMap = gson.fromJson(cloudCustomData, HashMap.class);
+            if (featureHashMap != null) {
+                Object featureContentObj = featureHashMap.get(TUIChatConstants.MESSAGE_FEATURE_KEY);
+                MessageFeature messageFeature = null;
+                if (featureContentObj instanceof Map) {
+                    messageFeature = gson.fromJson(gson.toJson(featureContentObj), MessageFeature.class);
+                }
+                if (messageFeature != null) {
+                    if (messageFeature.getVersion() > MessageFeature.VERSION) {
+                        return null;
+                    }
+
+                    return messageFeature;
+                }
+            }
+        } catch (JsonSyntaxException e) {
+            TUIChatLog.e(TAG, " isSupportTyping exception e = " + e);
+        }
+        return null;
     }
     
 }

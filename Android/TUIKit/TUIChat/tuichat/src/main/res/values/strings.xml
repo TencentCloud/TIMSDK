@@ -206,12 +206,14 @@
     <string name="chat_message_read_receipt">Message Read Receipt</string>
     <string name="chat_i_know">I got it</string>
     <string name="chat_no_more_reminders">No more reminders</string>
-    <string name="chat_im_flagship">Flagship Edition</string>
-    <string name="chat_buying_guidelines">purchase guidelines</string>
-    <string name="chat_im_flagship_edition_update_tip">%s features are IM Flagship Edition features, which can be used after purchasing the Flagship Edition. If you are currently using the Pro Edition, you need to do a refund on the Pro Edition first, and then purchase the Flagship Edition. see the purchase guidelines for details.</string>
+    <string name="chat_im_flagship">Ultimate Edition</string>
+    <string name="chat_buying_guidelines">price description</string>
+    <string name="chat_im_flagship_edition_update_tip">%s function is the IM Ultimate Edition function, which can be used after purchasing the Ultimate Edition package. Please refer to the price description for details.</string>
 
     <string name="chat_reply_num">%d replied</string>
     <string name="chat_reply_detail">Reply detail</string>
 
     <string name="chat_not_read">Unread</string>
+
+    <string name="custom_evaluation_message">Evaluation of this service</string>
 </resources>

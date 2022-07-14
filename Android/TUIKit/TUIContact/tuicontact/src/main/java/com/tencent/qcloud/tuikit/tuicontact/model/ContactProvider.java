@@ -20,24 +20,28 @@ import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMReceiveMessageOptInfo;
 import com.tencent.imsdk.v2.V2TIMSendCallback;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
+import com.tencent.imsdk.v2.V2TIMUserStatus;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
-
+import com.tencent.qcloud.tuicore.BuildConfig;
+import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ThreadHelper;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.tuicontact.R;
+import com.tencent.qcloud.tuikit.tuicontact.TUIContactService;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactGroupApplyInfo;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.bean.FriendApplicationBean;
 import com.tencent.qcloud.tuikit.tuicontact.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuicontact.bean.GroupMemberInfo;
+import com.tencent.qcloud.tuikit.tuicontact.config.TUIContactConfig;
 import com.tencent.qcloud.tuikit.tuicontact.util.ContactUtils;
 import com.tencent.qcloud.tuikit.tuicontact.util.TUIContactLog;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 public class ContactProvider {
     private static final String TAG = ContactProvider.class.getSimpleName();
@@ -598,6 +602,49 @@ public class ContactProvider {
             @Override
             public void onError(int code, String desc) {
                 ContactUtils.callbackOnError(callback, code, desc);
+            }
+        });
+    }
+
+    public void loadContactUserStatus(List<ContactItemBean> dataSource, IUIKitCallback<Void> callback) {
+        if (dataSource == null || dataSource.size() == 0) {
+            TUIContactLog.d(TAG, "loadContactUserStatus datasource is null");
+            ContactUtils.callbackOnSuccess(callback, null);
+            return;
+        }
+
+        HashMap<String, ContactItemBean> dataSourceMap = new HashMap<>();
+        List<String> userList = new ArrayList<>();
+        for(ContactItemBean itemBean : dataSource) {
+            if (TextUtils.equals(TUIContactService.getAppContext().getResources().getString(R.string.new_friend), itemBean.getId())
+            || TextUtils.equals(TUIContactService.getAppContext().getResources().getString(R.string.blacklist), itemBean.getId())
+            || TextUtils.equals(TUIContactService.getAppContext().getResources().getString(R.string.group), itemBean.getId())) {
+                continue;
+            }
+            userList.add(itemBean.getId());
+            dataSourceMap.put(itemBean.getId(), itemBean);
+        }
+        V2TIMManager.getInstance().getUserStatus(userList, new V2TIMValueCallback<List<V2TIMUserStatus>>() {
+            @Override
+            public void onSuccess(List<V2TIMUserStatus> v2TIMUserStatuses) {
+                for (V2TIMUserStatus item : v2TIMUserStatuses) {
+                    ContactItemBean bean = dataSourceMap.get(item.getUserID());
+                    if (bean != null) {
+                        bean.setStatusType(item.getStatusType());
+                    }
+                }
+
+                ContactUtils.callbackOnSuccess(callback, null);
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                TUIContactLog.e(TAG, "getUserStatus error code = " + code + ",des = " + desc);
+                ContactUtils.callbackOnError(callback, code, desc);
+                if (code == TUIConstants.BuyingFeature.ERR_SDK_INTERFACE_NOT_SUPPORT &&
+                        TUIContactConfig.getInstance().isShowUserStatus() && BuildConfig.DEBUG) {
+                    ToastUtil.toastLongMessage(desc);
+                }
             }
         });
     }

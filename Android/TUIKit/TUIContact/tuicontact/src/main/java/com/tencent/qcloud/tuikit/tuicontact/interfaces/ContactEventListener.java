@@ -1,5 +1,6 @@
 package com.tencent.qcloud.tuikit.tuicontact.interfaces;
 
+import com.tencent.imsdk.v2.V2TIMUserStatus;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.bean.FriendApplicationBean;
 
@@ -65,5 +66,17 @@ public abstract class ContactEventListener {
      * 好友资料更新通知
      */
     public void onFriendRemarkChanged(String id, String remark) {
+    }
+
+    /**
+     * 好友在线状态变更通知
+     */
+    public void onUserStatusChanged(List<V2TIMUserStatus> userStatusList){
+    }
+
+    /**
+     * 刷新界面在线状态显示隐藏
+     */
+    public void refreshUserStatusFragmentUI() {
     }
 }

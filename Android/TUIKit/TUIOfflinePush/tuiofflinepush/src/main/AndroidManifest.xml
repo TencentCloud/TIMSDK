@@ -3,8 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.tencent.qcloud.tim.tuiofflinepush">
 
-    <!-- ********************************* OEMPush Permission begin************************ -->
-    <!-- 如果选择开启 TPNS 通道，OEM 的相关以下代码可以删掉 -->
     <!-- ********OPPO 推送 start******** -->
     <uses-permission android:name="com.coloros.mcs.permission.RECIEVE_MCS_MESSAGE" />
     <uses-permission android:name="com.heytap.mcs.permission.RECIEVE_MCS_MESSAGE" />
@@ -44,7 +42,6 @@
 
     <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE" />
 
-    <!-- ********************************* OEMPush Permission end************************ -->
 
     <application>
 
@@ -53,10 +50,6 @@
             android:authorities="${applicationId}.TUIOfflinePush.Init"
             android:enabled="true"
             android:exported="false" />
-
-
-        <!-- ********************************* OEMPush begin************************ -->
-        <!-- 如果选择开启 TPNS 通道，OEM 的相关以下代码可以删掉 -->
 
         <!-- ********小米推送service和receiver设置start******** -->
         <service
@@ -202,46 +195,5 @@
         </service>
         <!-- 兼容Q版本 -->
         <!-- ********OPPO 推送 end******** -->
-
-        <!-- ********************************* OEMPush end************************ -->
-
-        <!-- ********************************* TPNSPush begin************************ -->
-        <!-- 如果选择开启 OEM 通道，TPNS 的相关以下代码可以删掉 -->
-
-        <!--如果您的应用服务接入点为广州，SDK 默认实现该配置。
-            其他服务接入点域名如下：
-               上海：tpns.sh.tencent.com
-               新加坡：tpns.sgp.tencent.com
-               中国香港：tpns.hk.tencent.com
-        -->
-        <meta-data
-            android:name="XG_SERVER_SUFFIX"
-            android:value="tpns.hk.tencent.com" />
-
-        <meta-data android:name="XG_V2_ACCESS_ID" android:value="" tools:replace="android:value" />
-        <meta-data android:name="XG_V2_ACCESS_KEY" android:value="" tools:replace="android:value" />
-
-        <!--TPNS 可选：配置首次启动应用时不自动启动推送服务进程，直到调用 XGPushManager.registerPush 接口才开始启动-->
-        <meta-data
-            android:name="XG_SERVICE_PULL_UP_OFF"
-            android:value="true" />
-
-        <!-- TPNS receiver -->
-        <receiver android:name="com.tencent.qcloud.tim.tuiofflinepush.TPNSPush.TPNSMessageReceiver"
-            android:exported="true" >
-            <intent-filter>
-                <!-- 接收消息透传 -->
-                <action android:name="com.tencent.android.xg.vip.action.PUSH_MESSAGE" />
-                <!-- 监听注册、反注册、设置/删除标签、通知被点击等处理结果 -->
-                <action android:name="com.tencent.android.xg.vip.action.FEEDBACK" />
-            </intent-filter>
-        </receiver>
-
-        <!-- TPNS 如需兼容 Android P，需要添加使用 Apache HTTP client 库，在 AndroidManifest 的 application 节点内添加以下配置即可。-->
-        <uses-library
-            android:name="org.apache.http.legacy"
-            android:required="false" />
-
-        <!-- ********************************* TPNSPush end************************ -->
     </application>
 </manifest>

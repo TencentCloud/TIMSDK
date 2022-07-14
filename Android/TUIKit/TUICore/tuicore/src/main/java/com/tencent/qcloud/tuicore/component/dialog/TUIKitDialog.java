@@ -236,6 +236,7 @@ public class TUIKitDialog {
         private boolean isNeverShow;
         private boolean isShowOnlyDebug = false;
         private SharedPreferences sharedPreferences = null;
+        private String dialogFeatureName;
 
         private WeakReference<TUIKitDialog> tuiKitDialog;
 
@@ -245,7 +246,7 @@ public class TUIKitDialog {
 
         private TUIIMUpdateDialog() {
             sharedPreferences = TUIConfig.getAppContext().getSharedPreferences(TUICORE_SETTINGS_SP_NAME, Context.MODE_PRIVATE);
-            isNeverShow = sharedPreferences.getBoolean(KEY_NEVER_SHOW, false);
+            isNeverShow = sharedPreferences.getBoolean(getDialogFeatureName(), false);
         }
 
         public TUIIMUpdateDialog createDialog(Context context) {
@@ -257,7 +258,7 @@ public class TUIKitDialog {
         public void setNeverShow(boolean neverShowAlert) {
             this.isNeverShow = neverShowAlert;
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean(KEY_NEVER_SHOW, neverShowAlert);
+            editor.putBoolean(getDialogFeatureName(), neverShowAlert);
             editor.apply();
         }
 
@@ -269,6 +270,13 @@ public class TUIKitDialog {
         public TUIIMUpdateDialog setMovementMethod(MovementMethod movementMethod) {
             if (tuiKitDialog != null && tuiKitDialog.get() != null) {
                 tuiKitDialog.get().mTitleTv.setMovementMethod(movementMethod);
+            }
+            return this;
+        }
+
+        public TUIIMUpdateDialog setHighlightColor(int color) {
+            if (tuiKitDialog != null && tuiKitDialog.get() != null) {
+                tuiKitDialog.get().mTitleTv.setHighlightColor(color);
             }
             return this;
         }
@@ -315,10 +323,20 @@ public class TUIKitDialog {
             return this;
         }
 
+        public TUIIMUpdateDialog setDialogFeatureName(String featureName) {
+            this.dialogFeatureName = featureName;
+            return this;
+        }
+
+        private String getDialogFeatureName() {
+            return dialogFeatureName;
+        }
+
         public void show() {
             if (tuiKitDialog == null || tuiKitDialog.get() == null) {
                 return;
             }
+            isNeverShow = sharedPreferences.getBoolean(getDialogFeatureName(), false);
             Dialog dialog = tuiKitDialog.get().dialog;
             if (dialog == null || dialog.isShowing()) {
                 return;

@@ -6,6 +6,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -38,6 +39,7 @@ public class ContactListView extends LinearLayout implements IContactListView {
     private String groupId;
     private boolean isGroupList = false;
 
+    private TextView notFoundTip;
     /**
      * 右侧边栏导航区域
      */
@@ -82,6 +84,7 @@ public class ContactListView extends LinearLayout implements IContactListView {
     private void init() {
         inflate(getContext(), R.layout.contact_list, this);
         mRv = findViewById(R.id.contact_member_list);
+        notFoundTip = findViewById(R.id.not_found_tip);
         mManager = new CustomLinearLayoutManager(getContext());
         mRv.setLayoutManager(mManager);
 
@@ -115,8 +118,19 @@ public class ContactListView extends LinearLayout implements IContactListView {
         return mAdapter;
     }
 
+    public void setNotFoundTip(String text) {
+        notFoundTip.setText(text);
+    }
+
     @Override
     public void onDataSourceChanged(List<ContactItemBean> data) {
+        if (data == null || data.isEmpty()) {
+            if (!TextUtils.isEmpty(notFoundTip.getText())) {
+                notFoundTip.setVisibility(VISIBLE);
+            }
+        } else {
+            notFoundTip.setVisibility(GONE);
+        }
         mContactLoadingBar.setVisibility(GONE);
         this.mData = data;
         mAdapter.setDataSource(mData);
@@ -147,6 +161,9 @@ public class ContactListView extends LinearLayout implements IContactListView {
         this.dataSourceType = dataSource;
         if (presenter == null) {
             return;
+        }
+        if (mAdapter != null) {
+            mAdapter.setDataSourceType(dataSource);
         }
         mContactLoadingBar.setVisibility(VISIBLE);
         if (dataSource == ContactListView.DataSource.GROUP_MEMBER_LIST) {

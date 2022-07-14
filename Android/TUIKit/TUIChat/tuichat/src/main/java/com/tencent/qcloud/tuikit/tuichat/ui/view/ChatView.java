@@ -1,20 +1,9 @@
 package com.tencent.qcloud.tuikit.tuichat.ui.view;
 
-import static com.tencent.qcloud.tuikit.tuichat.TUIChatConstants.BUYING_GUIDELINES;
-import static com.tencent.qcloud.tuikit.tuichat.TUIChatConstants.BUYING_GUIDELINES_EN;
-import static com.tencent.qcloud.tuikit.tuichat.TUIChatConstants.ERR_SDK_INTERFACE_NOT_SUPPORT;
-
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
@@ -29,19 +18,25 @@ import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.gson.Gson;
 import com.tencent.imsdk.v2.V2TIMGroupAtInfo;
 import com.tencent.qcloud.tuicore.TUIConstants;
+import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
+import com.tencent.qcloud.tuicore.component.TitleBarLayout;
 import com.tencent.qcloud.tuicore.component.UnreadCountTextView;
+import com.tencent.qcloud.tuicore.component.dialog.TUIKitDialog;
 import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.BackgroundTasks;
@@ -49,20 +44,20 @@ import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
+import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupApplyInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.MessageTyping;
 import com.tencent.qcloud.tuikit.tuichat.bean.ReplyPreviewBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ReplyMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
+import com.tencent.qcloud.tuikit.tuichat.component.ProgressPresenter;
 import com.tencent.qcloud.tuikit.tuichat.component.face.Emoji;
 import com.tencent.qcloud.tuikit.tuichat.component.noticelayout.NoticeLayout;
-import com.tencent.qcloud.tuicore.component.TitleBarLayout;
-import com.tencent.qcloud.tuicore.component.dialog.TUIKitDialog;
-import com.tencent.qcloud.tuikit.tuichat.component.ProgressPresenter;
+import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.TotalUnreadCountListener;
 import com.tencent.qcloud.tuikit.tuichat.presenter.C2CChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
-import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.presenter.GroupChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.setting.ChatLayoutSetting;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.IChatLayout;
@@ -72,7 +67,6 @@ import com.tencent.qcloud.tuikit.tuichat.ui.view.message.MessageRecyclerView;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
-import com.tencent.qcloud.tuicore.TUICore;
 
 import java.util.List;
 
@@ -90,21 +84,38 @@ public class ChatView extends LinearLayout  implements IChatLayout {
     private AnimationDrawable mVolumeAnim;
     private Runnable mTypingRunnable = null;
     private ChatInfo mChatInfo;
-    private ChatPresenter.TypingListener mTypingListener = new ChatPresenter.TypingListener() {
+    public ChatPresenter.TypingListener mTypingListener = new ChatPresenter.TypingListener() {
         @Override
-        public void onTyping() {
-            final String oldTitle = getTitleBar().getMiddleTitle().getText().toString();
-            getTitleBar().getMiddleTitle().setText(R.string.typing);
-            if (mTypingRunnable == null) {
-                mTypingRunnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        getTitleBar().getMiddleTitle().setText(oldTitle);
-                    }
-                };
+        public void onTyping(int status) {
+            if (!TUIChatConfigs.getConfigs().getGeneralConfig().isEnableMessageTyping()) {
+                return;
             }
-            getTitleBar().getMiddleTitle().removeCallbacks(mTypingRunnable);
-            getTitleBar().getMiddleTitle().postDelayed(mTypingRunnable, 3000);
+
+            if (mChatInfo == null) {
+                return;
+            }
+
+            TUIChatLog.d(TAG, "mTypingListener status= " + status);
+            String oldTitle = mChatInfo.getChatName();
+            if (status == 1) {
+                getTitleBar().getMiddleTitle().setText(R.string.typing);
+
+                if (mTypingRunnable == null) {
+                    mTypingRunnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            getTitleBar().getMiddleTitle().setText(oldTitle);
+                        }
+                    };
+                }
+                getTitleBar().getMiddleTitle().removeCallbacks(mTypingRunnable);
+                getTitleBar().getMiddleTitle().postDelayed(mTypingRunnable, TUIChatConstants.TYPING_PARSE_MESSAGE_INTERVAL * 1000);
+            } else if (status == 0){
+                getTitleBar().getMiddleTitle().removeCallbacks(mTypingRunnable);
+                getTitleBar().getMiddleTitle().setText(oldTitle);
+            } else {
+                TUIChatLog.e(TAG, "parseTypingMessage error status =" + status);
+            }
         }
     };
 
@@ -128,6 +139,9 @@ public class ChatView extends LinearLayout  implements IChatLayout {
     private View mForwardMergeButton;
     private View mDeleteButton;
     private boolean isGroup = false;
+
+    private long lastTypingTime = 0;
+    private boolean isSupportTyping = false;
 
     private ChatPresenter presenter;
 
@@ -171,6 +185,8 @@ public class ChatView extends LinearLayout  implements IChatLayout {
         hideJumpMessageLayouts();
 
         mTitleBar.getMiddleTitle().setEllipsize(TextUtils.TruncateAt.END);
+        lastTypingTime = 0;
+        isSupportTyping = false;
     }
 
     public void displayBackToLastMessages(String messageId) {
@@ -384,7 +400,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
-                if (errCode == ERR_SDK_INTERFACE_NOT_SUPPORT) {
+                if (errCode == TUIConstants.BuyingFeature.ERR_SDK_INTERFACE_NOT_SUPPORT) {
                     showNotSupportDialog();
                 }
             }
@@ -726,6 +742,36 @@ public class ChatView extends LinearLayout  implements IChatLayout {
                 }
             }
 
+            @Override
+            public void onUserTyping(boolean status, long curTime) {
+                if (!TUIChatConfigs.getConfigs().getGeneralConfig().isEnableMessageTyping()) {
+                    return;
+                }
+
+                if (!isSupportTyping) {
+                    if (!isSupportTyping(curTime)) {
+                        TUIChatLog.d(TAG, "onUserTyping trigger condition not met");
+                        return;
+                    } else {
+                        isSupportTyping = true;
+                    }
+                }
+
+                if (!status) {
+                    sendTypingStatusMessage(false);
+                    return;
+                }
+
+                if (lastTypingTime != 0) {
+                    if ((curTime - lastTypingTime) < TUIChatConstants.TYPING_SEND_MESSAGE_INTERVAL) {
+                        return;
+                    }
+                }
+
+                lastTypingTime = curTime;
+                sendTypingStatusMessage(true);
+            }
+
             private void startRecording() {
                 post(new Runnable() {
                     @Override
@@ -785,6 +831,10 @@ public class ChatView extends LinearLayout  implements IChatLayout {
                 });
             }
         });
+    }
+
+    public boolean isSupportTyping(long time) {
+        return presenter.isSupportTyping(time);
     }
 
     @Override
@@ -1080,7 +1130,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
-                if (errCode == ERR_SDK_INTERFACE_NOT_SUPPORT) {
+                if (errCode == TUIConstants.BuyingFeature.ERR_SDK_INTERFACE_NOT_SUPPORT) {
                     showNotSupportDialog();
                 }
                 ToastUtil.toastLongMessage(errMsg);
@@ -1103,7 +1153,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
                         scrollToEnd();
                     }
                 });
-                presenter.modifyRootMessage((ReplyMessageBean) data, new IUIKitCallback<Void>() {
+                presenter.modifyRootMessageToAddReplyInfo((ReplyMessageBean) data, new IUIKitCallback<Void>() {
                     @Override
                     public void onError(String module, int errCode, String errMsg) {
                         ToastUtil.toastShortMessage("modify message failed code = " + errCode + " message = " + errMsg);
@@ -1113,10 +1163,36 @@ public class ChatView extends LinearLayout  implements IChatLayout {
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
-                if (errCode == ERR_SDK_INTERFACE_NOT_SUPPORT) {
+                if (errCode == TUIConstants.BuyingFeature.ERR_SDK_INTERFACE_NOT_SUPPORT) {
                     showNotSupportDialog();
                 }
                 ToastUtil.toastLongMessage(errMsg);
+            }
+        });
+    }
+
+    public void sendTypingStatusMessage(boolean status) {
+        if (mChatInfo == null || TextUtils.isEmpty(getChatInfo().getId())) {
+            TUIChatLog.e(TAG, "sendTypingStatusMessage receiver is invalid");
+            return;
+        }
+
+        Gson gson = new Gson();
+        MessageTyping typingMessageBean = new MessageTyping();
+        typingMessageBean.setTypingStatus(status);
+        String data = gson.toJson(typingMessageBean);
+        TUIChatLog.d(TAG, "sendTypingStatusMessage data = " + data);
+        TUIMessageBean msg = ChatMessageBuilder.buildCustomMessage(data, "", null);
+
+        presenter.sendTypingStatusMessage(msg, mChatInfo.getId(), new IUIKitCallback<TUIMessageBean>() {
+            @Override
+            public void onSuccess(TUIMessageBean data) {
+                TUIChatLog.d(TAG, "sendTypingStatusMessage onSuccess:" + data.getId());
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                TUIChatLog.d(TAG, "sendTypingStatusMessage fail:" + errCode + "=" + errMsg);
             }
         });
     }
@@ -1170,9 +1246,9 @@ public class ChatView extends LinearLayout  implements IChatLayout {
             @Override
             public void onClick(View view) {
                 if (TextUtils.equals(TUIThemeManager.getInstance().getCurrentLanguage(), "zh")) {
-                    openWebUrl(BUYING_GUIDELINES);
+                    openWebUrl(TUIConstants.BuyingFeature.BUYING_PRICE_DESC);
                 } else {
-                    openWebUrl(BUYING_GUIDELINES_EN);
+                    openWebUrl(TUIConstants.BuyingFeature.BUYING_PRICE_DESC_EN);
                 }
             }
 
@@ -1189,10 +1265,12 @@ public class ChatView extends LinearLayout  implements IChatLayout {
                 // 只在 debug 模式下弹窗
                 .setShowOnlyDebug(true)
                 .setMovementMethod(LinkMovementMethod.getInstance())
+                .setHighlightColor(Color.TRANSPARENT)
                 .setCancelable(true)
                 .setCancelOutside(true)
                 .setTitle(spannedString)
                 .setDialogWidth(0.75f)
+                .setDialogFeatureName(TUIConstants.BuyingFeature.BUYING_FEATURE_MESSAGE_RECEIPT)
                 .setPositiveButton(getResources().getString(R.string.chat_no_more_reminders), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
