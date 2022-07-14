@@ -32,8 +32,8 @@ const SetGroupInfoComponent = () => {
     const [notice, setNotice] = useState<string>('')
     const [briefly, setBriefly] = useState<string>('')
     const [isAllMuted, setIsAllMuted] = useState<boolean>(false)
-    const [groupType, setGroupType] = useState<String>('Work')
-    const [groupAddType, setGroupAddType] = useState<String>('V2TIM_GROUP_ADD_FORBID')
+    const [groupType, setGroupType] = useState<string>('Work')
+    const [groupAddType, setGroupAddType] = useState<string>('V2TIM_GROUP_ADD_FORBID')
     const [imageurl, setImageUrl] = useState<string>()
 
 

@@ -1,9 +1,9 @@
 /**
  * @module interface
  */
-import type V2TimConversation from './v2TimConversation';
+import type { V2TimConversation } from './v2TimConversation';
 
-interface V2TimConversationListener {
+export interface V2TimConversationListener {
     onSyncServerStart?: () => void;
     onSyncServerFinish?: () => void;
     onSyncServerFailed?: () => void;
@@ -11,5 +11,3 @@ interface V2TimConversationListener {
     onTotalUnreadMessageCountChanged?: (totalUnreadCount: number) => void;
     onConversationChanged?: (conversationList: V2TimConversation[]) => void;
 }
-
-export default V2TimConversationListener;

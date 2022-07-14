@@ -1,10 +1,8 @@
 /**
  * @module interface
  */
-interface V2TimLocationElem {
-    desc?: String;
+export interface V2TimLocationElem {
+    desc?: string;
     longitude: number;
     latitude: number;
 }
-
-export default V2TimLocationElem;

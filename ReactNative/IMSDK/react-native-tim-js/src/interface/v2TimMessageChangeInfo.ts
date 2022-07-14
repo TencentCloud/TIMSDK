@@ -1,12 +1,10 @@
 /**
  * @module interface
  */
-import type V2TimMessage from './v2TimMessage';
+import type { V2TimMessage } from './v2TimMessage';
 
-interface V2TimMessageChangeInfo {
+export interface V2TimMessageChangeInfo {
     code?: number;
-    desc?: String;
+    desc?: string;
     message?: V2TimMessage;
 }
-
-export default V2TimMessageChangeInfo;

@@ -1,10 +1,8 @@
 /**
  * @module interface
  */
-interface V2TimMergerElem {
+export interface V2TimMergerElem {
     isLayersOverLimit?: boolean;
-    title?: String;
-    abstractList?: String[];
+    title?: string;
+    abstractList?: string[];
 }
-
-export default V2TimMergerElem;

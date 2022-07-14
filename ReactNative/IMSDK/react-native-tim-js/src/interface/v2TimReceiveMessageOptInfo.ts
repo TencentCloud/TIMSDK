@@ -1,9 +1,7 @@
 /**
  * @module interface
  */
-interface V2TimReceiveMessageOptInfo {
+export interface V2TimReceiveMessageOptInfo {
     c2CReceiveMessageOpt?: number;
-    userID: String;
+    userID: string;
 }
-
-export default V2TimReceiveMessageOptInfo;

@@ -1,11 +1,9 @@
 /**
  * @module interface
  */
-import type V2TimMessage from './v2TimMessage';
+import type { V2TimMessage } from './v2TimMessage';
 
-interface V2TimMsgCreateInfoResult {
-    id?: String;
+export interface V2TimMsgCreateInfoResult {
+    id?: string;
     messageInfo: V2TimMessage;
 }
-
-export default V2TimMsgCreateInfoResult;

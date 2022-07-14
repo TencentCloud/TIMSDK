@@ -1,8 +1,6 @@
 /**
  * @module interface
  */
-interface V2TimTextElem {
-    text?: String;
+export interface V2TimTextElem {
+    text?: string;
 }
-
-export default V2TimTextElem;

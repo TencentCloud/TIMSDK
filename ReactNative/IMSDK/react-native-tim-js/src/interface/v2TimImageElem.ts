@@ -1,11 +1,9 @@
 /**
  * @module interface
  */
-import type V2TimImage from './v2TimImage';
+import type { V2TimImage } from './v2TimImage';
 
-interface V2TimImageElem {
-    path?: String;
+export interface V2TimImageElem {
+    path?: string;
     imageList?: V2TimImage[];
 }
-
-export default V2TimImageElem;

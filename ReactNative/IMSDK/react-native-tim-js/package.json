@@ -1,10 +1,10 @@
 {
   "name": "react-native-tim-js",
-  "version": "0.1.0",
-  "description": "tencent IM SDK for react native",
+  "version": "0.1.1-alpha.1",
+  "description": "Tencent IM SDK for react native",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
-  "types": "lib/typescript/index.d.ts",
+  "types": "lib/typescript/src/index.d.ts",
   "react-native": "src/index",
   "source": "src/index",
   "files": [
@@ -41,13 +41,13 @@
     "ios",
     "android"
   ],
-  "repository": "https://github.com/XNeverGiveUp/react-native-tim-js",
+  "repository": "https://github.com/TencentCloud/TIMSDK/tree/master/ReactNative/IMSDK/react-native-tim-js",
   "author": "Jingfeng <joyxian@tencent.com> (https://github.com/XNeverGiveUp)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/XNeverGiveUp/react-native-tim-js/issues"
+    "url": "https://github.com/TencentCloud/TIMSDK/issues"
   },
-  "homepage": "https://github.com/XNeverGiveUp/react-native-tim-js#readme",
+  "homepage": "https://cloud.tencent.com/product/im",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
@@ -150,8 +150,5 @@
         }
       ]
     ]
-  },
-  "dependencies": {
-    "react-native-radio-buttons-group": "^2.2.11"
   }
 }

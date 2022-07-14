@@ -1,9 +1,7 @@
 /**
  * @module interface
  */
-interface V2TimFaceElem {
+export interface V2TimFaceElem {
     index?: number;
-    data?: String;
+    data?: string;
 }
-
-export default V2TimFaceElem;

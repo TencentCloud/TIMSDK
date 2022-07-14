@@ -1,12 +1,10 @@
 /**
  * @module interface
  */
-import type V2TimMessage from './v2TimMessage';
+import type { V2TimMessage } from './v2TimMessage';
 
-interface V2TimMessageSearchResultItem {
-    conversationID?: String;
+export interface V2TimMessageSearchResultItem {
+    conversationID?: string;
     messageCount?: number;
     messageList?: V2TimMessage[];
 }
-
-export default V2TimMessageSearchResultItem;

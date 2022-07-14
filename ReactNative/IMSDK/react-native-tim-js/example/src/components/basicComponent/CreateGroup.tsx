@@ -8,10 +8,10 @@ import mystylesheet from '../../stylesheets';
 import BottomModalComponent from '../commonComponents/BottomModalComponent';
 import SDKResponseView from '../sdkResponseView';
 const CreateGroupComponent = () => {
-    const [groupType, setgroupType] = useState<String>('')
+    const [groupType, setgroupType] = useState<string>('')
     const [visible, setVisible] = useState<boolean>(false)
-    const [groupID,setGroupID] = useState<String>('')
-    const [groupName,setGroupName] = useState<String>('')
+    const [groupID,setGroupID] = useState<string>('')
+    const [groupName,setGroupName] = useState<string>('')
 
     const createGroup = async () => {
         const groupname = groupName

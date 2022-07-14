@@ -1,9 +1,7 @@
 /**
  * @module interface
  */
-interface V2TimGroupAtInfo {
-    seq: String;
+export interface V2TimGroupAtInfo {
+    seq: string;
     atType: number;
 }
-
-export default V2TimGroupAtInfo;

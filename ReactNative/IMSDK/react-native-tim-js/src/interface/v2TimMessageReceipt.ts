@@ -1,13 +1,11 @@
 /**
  * @module interface
  */
-interface V2TimMessageReceipt {
-    userID: String;
+export interface V2TimMessageReceipt {
+    userID: string;
     timestamp: number;
-    groupID?: String;
-    msgID?: String;
+    groupID?: string;
+    msgID?: string;
     readCount?: number;
     unreadCount?: number;
 }
-
-export default V2TimMessageReceipt;

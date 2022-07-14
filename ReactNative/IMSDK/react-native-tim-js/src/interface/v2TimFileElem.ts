@@ -1,13 +1,11 @@
 /**
  * @module interface
  */
-interface V2TimFileElem {
-    path?: String;
-    fileName?: String;
-    UUID?: String;
-    url?: String;
+export interface V2TimFileElem {
+    path?: string;
+    fileName?: string;
+    UUID?: string;
+    url?: string;
     fileSize?: number;
-    localUrl?: String;
+    localUrl?: string;
 }
-
-export default V2TimFileElem;

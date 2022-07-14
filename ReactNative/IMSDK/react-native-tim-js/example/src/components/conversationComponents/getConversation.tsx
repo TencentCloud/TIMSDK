@@ -5,7 +5,7 @@ import SDKResponseView from '../sdkResponseView';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import MultiCheckBoxModalComponent from '../commonComponents/MultiCheckboxModalComponent';
 
-export const GetConversationListByConversationIDs = () => {
+export const GetConversation = () => {
     const [res, setRes] = useState<any>({});
     const [visible, setVisible] = useState<boolean>(false);
     const [userName, setUserName] = useState<string>('未选择');
@@ -22,9 +22,18 @@ export const GetConversationListByConversationIDs = () => {
     };
 
     const getConversationList = async () => {
+        if (userList.length == 0) {
+            return;
+        }
         const res = await TencentImSDKPlugin.v2TIMManager
             .getConversationManager()
-            .getConversationListByConversaionIds(userList);
+            .getConversation(userList[0]);
+        // const res = await TencentImSDKPlugin.v2TIMManager
+        //     .getConversationManager()
+        //     .deleteConversation('c2c_121405');
+        // const res = await TencentImSDKPlugin.v2TIMManager
+        //     .getConversationManager()
+        //     .setConversationDraft('c2c_109442', 'test draft');
         setRes(res);
         TencentImSDKPlugin.v2TIMManager
             .getConversationManager()

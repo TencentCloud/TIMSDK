@@ -1,10 +1,8 @@
 /**
  * @module interface
  */
-interface V2TimUserStatus {
-    userID?: String;
+export interface V2TimUserStatus {
+    userID?: string;
     statusType?: number;
-    customStatus?: String;
+    customStatus?: string;
 }
-
-export default V2TimUserStatus;

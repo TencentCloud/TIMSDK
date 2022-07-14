@@ -1,11 +1,9 @@
 /**
  * @module interface
  */
-interface V2TimFriendSearchParam {
-    keywordList: String[];
+export interface V2TimFriendSearchParam {
+    keywordList: string[];
     isSearchUserID?: Boolean;
     isSearchNickName?: Boolean;
     isSearchRemark?: Boolean;
 }
-
-export default V2TimFriendSearchParam;
