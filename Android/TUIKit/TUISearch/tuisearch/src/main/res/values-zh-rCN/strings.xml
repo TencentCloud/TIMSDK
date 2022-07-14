@@ -67,7 +67,7 @@
     <string name="search_i_know">我知道了</string>
     <string name="search_no_more_reminders">不再提醒</string>
     <string name="search_im_flagship">旗舰版</string>
-    <string name="search_buying_guidelines">购买指引</string>
-    <string name="search_im_flagship_edition_update_tip">%s功能为IM旗舰版功能，购买旗舰版套餐包后可使用。如果您当前使用的是专业版套餐包，您需要先对专业版套餐包做退费处理，再购买旗舰版套餐包，详见购买指引。</string>
+    <string name="search_buying_guidelines">价格说明</string>
+    <string name="search_im_flagship_edition_update_tip">%s功能为IM旗舰版功能，购买旗舰版套餐包后可使用，详见价格说明。</string>
 
 </resources>

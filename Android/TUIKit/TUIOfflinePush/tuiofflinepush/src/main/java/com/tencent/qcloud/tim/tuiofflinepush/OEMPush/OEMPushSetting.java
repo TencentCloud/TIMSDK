@@ -124,19 +124,6 @@ public class OEMPushSetting implements PushSettingInterface{
         }
     }
 
-    @Override
-    public void bindUserID(String userId) {
-    }
-
-    @Override
-    public void unBindUserID(Context context, String userId) {
-    }
-
-    @Override
-    public void unInitPush(Context context) {
-
-    }
-
     public void setPushCallback(TUIOfflinePushManager.PushCallback callback){
         mPushCallback = callback;
     }

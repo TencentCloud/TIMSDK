@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="5dp">
+
+    <TextView
+        android:id="@+id/test_custom_message_tv"
+        android:textColor="?attr/chat_self_custom_msg_text_color"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <RatingBar
+        android:id="@+id/opreview_ratingbar"
+        android:layout_marginTop="@dimen/page_margin"
+        style="@style/RatingBaropreview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:progressDrawable="@drawable/ratingbar_opreview"
+        android:numStars="5"
+        android:rating="5"
+        android:stepSize="0.5" />
+
+    <TextView
+        android:id="@+id/link_tv"
+        android:text="@string/test_custom_message"
+        android:textColor="?attr/chat_self_custom_msg_text_color"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

@@ -99,5 +99,5 @@
     <string name="group_not_support_set_manager">Unable to set an admin for this type of group chat.</string>
     <string name="group_not_support_mute_member">Unable to mute specified members for this type of group chat.</string>
 
-    <string name="group_choose_random_face">The App randomly assigns you a group avatar.</string>
+    <string name="group_choose_avatar">Choose Avatar</string>
 </resources>

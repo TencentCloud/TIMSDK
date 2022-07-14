@@ -11,6 +11,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
+    <TextView
+        android:id="@+id/not_found_tip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="120dp"
+        android:gravity="center_horizontal"
+        android:textSize="13.44sp"
+        android:textColor="#444444"
+        android:visibility="gone"
+        tools:visibility="visible"
+        tools:text="暂无群聊"/>
+
     <com.tencent.qcloud.tuikit.tuicontact.component.indexlib.IndexBar.widget.IndexBar
         android:id="@+id/contact_indexBar"
         android:layout_width="24dp"

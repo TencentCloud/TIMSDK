@@ -13,8 +13,4 @@ public class TUISearchConstants {
     public static String covert2HTMLString(String original) {
         return "\"<font color=\"#5B6B92\">" + original + "</font>\"";
     }
-
-    public static final int ERR_SDK_INTERFACE_NOT_SUPPORT = BaseConstants.ERR_SDK_INTERFACE_NOT_SUPPORT;
-    public static final String BUYING_GUIDELINES_EN = "https://intl.cloud.tencent.com/document/product/1047/36021?lang=en&pg=#changing-configuration";
-    public static final String BUYING_GUIDELINES = "https://cloud.tencent.com/document/product/269/32458";
 }

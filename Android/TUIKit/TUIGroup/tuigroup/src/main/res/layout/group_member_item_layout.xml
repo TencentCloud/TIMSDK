@@ -9,7 +9,7 @@
         android:id="@+id/group_member_icon"
         android:layout_width="@dimen/group_profile_member_item_width"
         android:layout_height="@dimen/group_profile_member_item_width"
-        android:scaleType="centerInside"
+        android:scaleType="centerCrop"
         android:background="?attr/core_default_user_icon" />
 
 

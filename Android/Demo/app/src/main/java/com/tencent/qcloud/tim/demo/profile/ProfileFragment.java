@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.bean.UserInfo;
 import com.tencent.qcloud.tim.demo.utils.TUIKitConstants;
@@ -16,6 +15,7 @@ import com.tencent.qcloud.tim.demo.utils.TUIUtils;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.component.dialog.TUIKitDialog;
 import com.tencent.qcloud.tuicore.component.fragments.BaseFragment;
+import com.tencent.qcloud.tuicore.interfaces.TUICallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 
 
@@ -47,7 +47,7 @@ public class ProfileFragment extends BaseFragment {
                         .setPositiveButton(getString(R.string.sure), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                TUILogin.logout(new V2TIMCallback() {
+                                TUILogin.logout(new TUICallback() {
                                     @Override
                                     public void onSuccess() {
                                         UserInfo.getInstance().cleanUserInfo();

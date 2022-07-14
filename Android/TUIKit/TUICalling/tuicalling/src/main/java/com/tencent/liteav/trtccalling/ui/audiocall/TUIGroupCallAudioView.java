@@ -22,9 +22,8 @@ import com.tencent.liteav.trtccalling.model.util.ImageLoader;
 import com.tencent.liteav.trtccalling.ui.audiocall.audiolayout.TRTCGroupAudioLayout;
 import com.tencent.liteav.trtccalling.ui.audiocall.audiolayout.TRTCGroupAudioLayoutManager;
 import com.tencent.liteav.trtccalling.ui.base.BaseTUICallView;
-import com.tencent.qcloud.tuicore.util.PermissionRequester;
+import com.tencent.liteav.trtccalling.ui.common.PermissionHelper;
 
-import java.util.List;
 import java.util.Map;
 
 public class TUIGroupCallAudioView extends BaseTUICallView {
@@ -60,34 +59,54 @@ public class TUIGroupCallAudioView extends BaseTUICallView {
         initListener();
         if (mRole == TUICalling.Role.CALLED) {
             // 被叫方
-            PermissionRequester.permission(PermissionRequester.PermissionConstants.MICROPHONE).callback(new PermissionRequester.FullCallback() {
-                @Override
-                public void onGranted(List<String> permissionsGranted) {
-                    showWaitingResponseView();
-                }
+            PermissionHelper.requestPermission(getContext(),
+                    PermissionHelper.PERMISSION_MICROPHONE, new PermissionHelper.PermissionCallback() {
+                        @Override
+                        public void onGranted() {
+                            showWaitingResponseView();
+                        }
 
-                @Override
-                public void onDenied(List<String> permissionsDenied) {
-                    mTRTCCalling.reject();
-                    ToastUtils.showShort(R.string.trtccalling_tips_start_audio);
-                    finish();
-                }
-            }).request();
+                        @Override
+                        public void onDenied() {
+
+                        }
+
+                        @Override
+                        public void onDialogApproved() {
+
+                        }
+
+                        @Override
+                        public void onDialogRefused() {
+                            mTRTCCalling.reject();
+                            finish();
+                        }
+                    });
         } else {
             // 主叫方
             showInvitingView();
-            PermissionRequester.permission(PermissionRequester.PermissionConstants.MICROPHONE).callback(new PermissionRequester.FullCallback() {
-                @Override
-                public void onGranted(List<String> permissionsGranted) {
-                    startInviting(TRTCCalling.TYPE_AUDIO_CALL);
-                }
+            PermissionHelper.requestPermission(getContext(),
+                    PermissionHelper.PERMISSION_MICROPHONE, new PermissionHelper.PermissionCallback() {
+                        @Override
+                        public void onGranted() {
+                            startInviting(TRTCCalling.TYPE_AUDIO_CALL);
+                        }
 
-                @Override
-                public void onDenied(List<String> permissionsDenied) {
-                    ToastUtils.showShort(R.string.trtccalling_tips_start_audio);
-                    finish();
-                }
-            }).request();
+                        @Override
+                        public void onDenied() {
+
+                        }
+
+                        @Override
+                        public void onDialogApproved() {
+
+                        }
+
+                        @Override
+                        public void onDialogRefused() {
+                            finish();
+                        }
+                    });
         }
     }
 

@@ -6,8 +6,10 @@ import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
+import com.tencent.qcloud.tuikit.tuichat.bean.MessageFeature;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageReceiptInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.MessageTypingBean;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.C2CChatEventListener;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
@@ -21,6 +23,8 @@ public class C2CChatPresenter extends ChatPresenter {
     private ChatInfo chatInfo;
 
     private C2CChatEventListener chatEventListener;
+
+    private TypingListener typingListener;
 
     public C2CChatPresenter() {
         super();
@@ -49,6 +53,10 @@ public class C2CChatPresenter extends ChatPresenter {
                 if (chatInfo == null || !TextUtils.equals(message.getUserId(), chatInfo.getId())) {
                     TUIChatLog.i(TAG, "receive a new message , not belong to current chat.");
                 } else {
+                    if (message instanceof MessageTypingBean) {
+                        parseTypingMessage((MessageTypingBean) message);
+                        return;
+                    }
                     C2CChatPresenter.this.onRecvNewMessage(message);
                 }
             }
@@ -129,6 +137,18 @@ public class C2CChatPresenter extends ChatPresenter {
         this.chatInfo = chatInfo;
     }
 
+    public void setTypingListener(TypingListener typingListener) {
+        this.typingListener = typingListener;
+    }
+
+    private void parseTypingMessage(MessageTypingBean messageTypingBean) {
+        if (typingListener == null) {
+            TUIChatLog.e(TAG, "parseTypingMessage typingListener is null");
+            return;
+        }
+        typingListener.onTyping(messageTypingBean.getTypingStatus());
+    }
+
     @Override
     public ChatInfo getChatInfo() {
         return chatInfo;
@@ -171,5 +191,75 @@ public class C2CChatPresenter extends ChatPresenter {
 
             }
         });
+    }
+
+    public void sendTypingStatusMessage(TUIMessageBean message, String receiver, IUIKitCallback<TUIMessageBean> callBack) {
+        if (!safetyCall()) {
+            TUIChatLog.e(TAG, "sendTypingStatusMessage unSafetyCall");
+            return;
+        }
+        if (message == null || message.getStatus() == TUIMessageBean.MSG_STATUS_SENDING) {
+            TUIChatLog.e(TAG, "message is null");
+            return;
+        }
+
+        String msgId = provider.sendMessage(message, null, receiver, false, true,
+                new IUIKitCallback<TUIMessageBean>() {
+                    @Override
+                    public void onSuccess(TUIMessageBean data) {
+                        TUIChatLog.v(TAG, "sendTypingStatusMessage onSuccess:" + data.getId());
+                        if (!safetyCall()) {
+                            TUIChatLog.w(TAG, "sendTypingStatusMessage unSafetyCall");
+                            return;
+                        }
+                        message.setStatus(TUIMessageBean.MSG_STATUS_SEND_SUCCESS);
+                        TUIChatUtils.callbackOnSuccess(callBack, data);
+                    }
+
+                    @Override
+                    public void onError(String module, int errCode, String errMsg) {
+                        TUIChatLog.v(TAG, "sendTypingStatusMessage fail:" + errCode + "=" + errMsg);
+                        if (!safetyCall()) {
+                            TUIChatLog.w(TAG, "sendTypingStatusMessage unSafetyCall");
+                            return;
+                        }
+
+                        TUIChatUtils.callbackOnError(callBack, TAG, errCode, errMsg);
+                        message.setStatus(TUIMessageBean.MSG_STATUS_SEND_FAIL);
+                    }
+
+                    @Override
+                    public void onProgress(Object data) {
+                        TUIChatUtils.callbackOnProgress(callBack, data);
+                    }
+                });
+        //消息先展示，通过状态来确认发送是否成功
+        TUIChatLog.i(TAG, "sendTypingStatusMessage msgID:" + msgId);
+        message.setId(msgId);
+        message.setStatus(TUIMessageBean.MSG_STATUS_SENDING);
+    }
+
+    public boolean isSupportTyping(long time) {
+        if (loadedMessageInfoList == null || loadedMessageInfoList.size() == 0) {
+            return false;
+        }
+
+        int size = loadedMessageInfoList.size();
+        for (int i = size - 1; i >= 0 ; i--) {
+            TUIMessageBean tuiMessageBean = loadedMessageInfoList.get(i);
+            if (!tuiMessageBean.isSelf()) {
+                MessageFeature messageFeature = tuiMessageBean.isSupportTyping();
+                if (messageFeature != null && messageFeature.getNeedTyping() == 1) {
+                    int diff = (int) (time - tuiMessageBean.getMessageTime());
+                    if (diff < TUIChatConstants.TYPING_TRIGGER_CHAT_TIME) {
+                        return true;
+                    }
+
+                    return false;
+                }
+                break;
+            }
+        }
+        return false;
     }
 }

@@ -94,8 +94,10 @@ public class GroupInfoAdapter extends BaseAdapter {
         }
         view.setOnClickListener(null);
         holder.memberIcon.setBackground(null);
+        holder.memberIcon.setScaleType(ImageView.ScaleType.CENTER_CROP);
         if (info.getMemberType() == ADD_TYPE) {
             holder.memberIcon.setImageResource(R.drawable.add_group_member);
+            holder.memberIcon.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             holder.memberIcon.setBackgroundResource(R.drawable.bottom_action_border);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -107,6 +109,7 @@ public class GroupInfoAdapter extends BaseAdapter {
             });
         } else if (info.getMemberType() == DEL_TYPE) {
             holder.memberIcon.setImageResource(R.drawable.del_group_member);
+            holder.memberIcon.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             holder.memberIcon.setBackgroundResource(R.drawable.bottom_action_border);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override

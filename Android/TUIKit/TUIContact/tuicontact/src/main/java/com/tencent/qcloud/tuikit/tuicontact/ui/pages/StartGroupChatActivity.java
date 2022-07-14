@@ -1,9 +1,5 @@
 package com.tencent.qcloud.tuikit.tuicontact.ui.pages;
 
-import static com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants.BUYING_GUIDELINES;
-import static com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants.BUYING_GUIDELINES_EN;
-import static com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants.ERR_SDK_INTERFACE_NOT_SUPPORT;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,7 +14,9 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
+import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
+import com.tencent.qcloud.tuicore.component.LineControllerView;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
 import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuicore.component.activities.SelectionActivity;
@@ -33,9 +31,8 @@ import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuicontact.bean.GroupMemberInfo;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
-import com.tencent.qcloud.tuicore.component.LineControllerView;
-import com.tencent.qcloud.tuikit.tuicontact.util.ContactUtils;
 import com.tencent.qcloud.tuikit.tuicontact.ui.view.ContactListView;
+import com.tencent.qcloud.tuikit.tuicontact.util.ContactUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -203,7 +200,7 @@ public class StartGroupChatActivity extends BaseLightActivity {
             @Override
             public void onError(String module, int errCode, String errMsg) {
                 mCreating = false;
-                if (errCode == ERR_SDK_INTERFACE_NOT_SUPPORT || errCode == 11000) {
+                if (errCode == TUIConstants.BuyingFeature.ERR_SDK_INTERFACE_NOT_SUPPORT || errCode == 11000) {
                     showNotSupportDialog();
                 }
                 ToastUtil.toastLongMessage("createGroupChat fail:" + errCode + "=" + errMsg);
@@ -226,9 +223,9 @@ public class StartGroupChatActivity extends BaseLightActivity {
             @Override
             public void onClick(View view) {
                 if (TextUtils.equals(TUIThemeManager.getInstance().getCurrentLanguage(), "zh")) {
-                    openWebUrl(BUYING_GUIDELINES);
+                    openWebUrl(TUIConstants.BuyingFeature.BUYING_PRICE_DESC);
                 } else {
-                    openWebUrl(BUYING_GUIDELINES_EN);
+                    openWebUrl(TUIConstants.BuyingFeature.BUYING_PRICE_DESC_EN);
                 }
             }
 
@@ -249,6 +246,7 @@ public class StartGroupChatActivity extends BaseLightActivity {
                 .setCancelOutside(true)
                 .setTitle(spannedString)
                 .setDialogWidth(0.75f)
+                .setDialogFeatureName(TUIConstants.BuyingFeature.BUYING_FEATURE_COMMUNITY)
                 .setPositiveButton(getString(R.string.contact_no_more_reminders), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

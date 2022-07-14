@@ -31,5 +31,7 @@
     <attr name="core_title_bar_back_icon" format="reference"/>
     <attr name="core_default_group_icon" format="reference"/>
     <attr name="core_default_user_icon" format="reference"/>
+    <attr name="user_status_online" format="reference"/>
+    <attr name="user_status_offline" format="reference"/>
 
 </resources>

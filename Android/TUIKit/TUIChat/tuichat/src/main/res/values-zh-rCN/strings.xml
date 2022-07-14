@@ -96,7 +96,7 @@
     <string name="banned">被禁言</string>
     <string name="cancle_banned">被取消禁言</string>
 
-    <string name="typing">正在输入...</string>
+    <string name="typing">对方正在输入...</string>
     <string name="titlebar_mutiselect">多选</string>
     <string name="audio_permission_error">需要打开录音权限</string>
     <string name="record_occupied">录音机被占用</string>
@@ -206,11 +206,13 @@
     <string name="chat_i_know">我知道了</string>
     <string name="chat_no_more_reminders">不再提醒</string>
     <string name="chat_im_flagship">旗舰版</string>
-    <string name="chat_buying_guidelines">购买指引</string>
-    <string name="chat_im_flagship_edition_update_tip">%s功能为IM旗舰版功能，购买旗舰版套餐包后可使用。如果您当前使用的是专业版套餐包，您需要先对专业版套餐包做退费处理，再购买旗舰版套餐包，详见购买指引。</string>
+    <string name="chat_buying_guidelines">价格说明</string>
+    <string name="chat_im_flagship_edition_update_tip">%s功能为IM旗舰版功能，购买旗舰版套餐包后可使用，详见价格说明。</string>
 
     <string name="chat_reply_num">%d条回复</string>
     <string name="chat_reply_detail">回复详情</string>
 
     <string name="chat_not_read">尚未阅读</string>
+
+    <string name="custom_evaluation_message">对本次服务评价</string>
 </resources>

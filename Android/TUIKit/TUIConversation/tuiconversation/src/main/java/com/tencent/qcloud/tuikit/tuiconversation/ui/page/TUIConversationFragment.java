@@ -66,7 +66,7 @@ public class TUIConversationFragment extends BaseFragment {
 //        ConversationLayoutSetting.customizeConversation(mConversationLayout);
         mConversationLayout.getConversationList().setOnItemClickListener(new ConversationListLayout.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, int position, ConversationInfo conversationInfo) {
+            public void onItemClick(View view, int viewType, ConversationInfo conversationInfo) {
                 //此处为demo的实现逻辑，更根据会话类型跳转到相关界面，开发者可根据自己的应用场景灵活实现
                 startChatActivity(conversationInfo);
             }
@@ -74,7 +74,7 @@ public class TUIConversationFragment extends BaseFragment {
 
         mConversationLayout.getConversationList().setOnItemLongClickListener(new ConversationListLayout.OnItemLongClickListener() {
             @Override
-            public void OnItemLongClick(View view, int position, ConversationInfo conversationInfo) {
+            public void OnItemLongClick(View view, ConversationInfo conversationInfo) {
                 showItemPopMenu(view, conversationInfo);
             }
         });

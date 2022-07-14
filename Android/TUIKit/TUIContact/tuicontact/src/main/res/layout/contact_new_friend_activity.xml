@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <com.tencent.qcloud.tuicore.component.TitleBarLayout
@@ -12,14 +13,19 @@
     <ListView
         android:id="@+id/new_friend_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content" />
 
     <TextView
-        android:id="@+id/empty_text"
-        android:layout_height="match_parent"
+        android:id="@+id/not_found_tip"
         android:layout_width="match_parent"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:visibility="gone" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="120dp"
+        android:gravity="center_horizontal"
+        android:textSize="13.44sp"
+        android:textColor="#444444"
+        android:visibility="gone"
+        android:text="@string/contact_no_new_friend_application"
+        tools:visibility="visible"
+        tools:text="暂无群聊"/>
 
 </LinearLayout>

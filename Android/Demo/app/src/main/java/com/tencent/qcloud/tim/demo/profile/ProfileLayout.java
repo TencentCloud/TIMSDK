@@ -1,20 +1,23 @@
 package com.tencent.qcloud.tim.demo.profile;
 
-import static com.tencent.qcloud.tim.demo.utils.Constants.DEMO_SETTING_SP_NAME;
-import static com.tencent.qcloud.tim.demo.utils.Constants.DEMO_SP_KEY_MESSAGE_READ_STATUS;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.TextPaint;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -26,16 +29,27 @@ import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMSDKListener;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
+import com.tencent.qcloud.tim.demo.BuildConfig;
 import com.tencent.qcloud.tim.demo.R;
+import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.demo.utils.TUIKitConstants;
+import com.tencent.qcloud.tuicore.TUIConstants;
+import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.component.LineControllerView;
 import com.tencent.qcloud.tuicore.component.activities.SelectionActivity;
+import com.tencent.qcloud.tuicore.component.dialog.TUIKitDialog;
 import com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView;
 import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
+import com.tencent.qcloud.tuikit.tuicontact.TUIContactService;
+import com.tencent.qcloud.tuikit.tuicontact.config.TUIContactConfig;
+import com.tencent.qcloud.tuikit.tuicontact.interfaces.ContactEventListener;
+import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationService;
+import com.tencent.qcloud.tuikit.tuiconversation.interfaces.ConversationEventListener;
+import com.tencent.qcloud.tuikit.tuiconversation.setting.TUIConversationConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +68,10 @@ public class ProfileLayout extends FrameLayout implements View.OnClickListener {
     private LineControllerView aboutIM;
     private RelativeLayout selfDetailArea;
     private Switch messageReadStatusSwitch;
+    private TextView messageReadStatusSubtitle;
+    private Switch userStatusSwitch;
+    private TextView userStatusSubTitle;
+    private SharedPreferences mSharedPreferences;
 
     private ArrayList<String> joinTypeTextList = new ArrayList<>();
     private ArrayList<Integer> joinTypeIdList = new ArrayList<>();
@@ -105,14 +123,47 @@ public class ProfileLayout extends FrameLayout implements View.OnClickListener {
         joinTypeIdList.add(V2TIMUserFullInfo.V2TIM_FRIEND_DENY_ANY);
         joinTypeIdList.add(V2TIMUserFullInfo.V2TIM_FRIEND_NEED_CONFIRM);
 
+        mSharedPreferences = getContext().getSharedPreferences(Constants.DEMO_SETTING_SP_NAME, Context.MODE_PRIVATE);
         messageReadStatusSwitch = findViewById(R.id.message_read_switch);
+        messageReadStatusSubtitle = findViewById(R.id.message_read_status_subtitle);
+        initMessageReadStatus();
         messageReadStatusSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    if (BuildConfig.DEBUG) {
+                        ToastUtil.toastShortMessage(getResources().getString(R.string.demo_message_read_switch_open_tip));
+                    }
+                    messageReadStatusSubtitle.setText(R.string.demo_message_read_switch_open_text);
+                } else {
+                    messageReadStatusSubtitle.setText(R.string.demo_message_read_switch_close_text);
+                }
                 setMessageReadStatus(isChecked, true);
             }
         });
-        initMessageReadStatus();
+
+        userStatusSwitch = findViewById(R.id.user_status_switch);
+        userStatusSubTitle = findViewById(R.id.user_status_subtitle);
+        boolean userStatus = mSharedPreferences.getBoolean(Constants.DEMO_SP_KEY_USER_STATUS, false);
+        userStatusSwitch.setChecked(userStatus);
+        TUIConversationConfig.getInstance().setShowUserStatus(userStatus);
+        TUIContactConfig.getInstance().setShowUserStatus(userStatus);
+        userStatusSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    userStatusSubTitle.setText(getResources().getString(R.string.demo_user_status_switch_on_text));
+                    ToastUtil.toastLongMessage(getResources().getString(R.string.demo_buying_tips));
+                } else {
+                    userStatusSubTitle.setText(getResources().getString(R.string.demo_user_status_switch_off_text));
+                }
+
+                TUIConversationConfig.getInstance().setShowUserStatus(isChecked);
+                TUIContactConfig.getInstance().setShowUserStatus(isChecked);
+                mSharedPreferences.edit().putBoolean(Constants.DEMO_SP_KEY_USER_STATUS, isChecked).commit();
+                refreshFragmentUI();
+            }
+        });
 
         String selfUserID = V2TIMManager.getInstance().getLoginUser();
 
@@ -133,19 +184,47 @@ public class ProfileLayout extends FrameLayout implements View.OnClickListener {
         setUserInfoListener();
     }
 
+    private void refreshFragmentUI() {
+        ConversationEventListener conversationEventListener = TUIConversationService.getInstance().getConversationEventListener();
+        if (conversationEventListener != null) {
+            conversationEventListener.refreshUserStatusFragmentUI();
+        } else {
+            DemoLog.e(TAG, "refreshFragmentUI conversationEventListener is null");
+        }
+
+        List<ContactEventListener> contactEventListenerList = TUIContactService.getInstance().getContactEventListenerList();
+        for (ContactEventListener contactEventListener : contactEventListenerList) {
+            contactEventListener.refreshUserStatusFragmentUI();
+        }
+    }
+
+    private void openWebUrl(String url) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        Uri contentUrl = Uri.parse(url);
+        intent.setData(contentUrl);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        getContext().startActivity(intent);
+    }
+
     private void initMessageReadStatus() {
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences(DEMO_SETTING_SP_NAME, Context.MODE_PRIVATE );
-        boolean messageReadStatus = sharedPreferences.getBoolean(DEMO_SP_KEY_MESSAGE_READ_STATUS, false);
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(Constants.DEMO_SETTING_SP_NAME, Context.MODE_PRIVATE );
+        boolean messageReadStatus = sharedPreferences.getBoolean(Constants.DEMO_SP_KEY_MESSAGE_READ_STATUS, false);
         setMessageReadStatus(messageReadStatus, false);
+        if (messageReadStatus) {
+            messageReadStatusSubtitle.setText(R.string.demo_message_read_switch_open_text);
+        } else {
+            messageReadStatusSubtitle.setText(R.string.demo_message_read_switch_close_text);
+        }
         messageReadStatusSwitch.setChecked(messageReadStatus);
     }
 
     private void setMessageReadStatus(boolean isShowReadStatus, boolean needUpdate) {
         TUIChatService.getChatConfig().getGeneralConfig().setShowRead(isShowReadStatus);
         if (needUpdate) {
-            SharedPreferences sharedPreferences = getContext().getSharedPreferences(DEMO_SETTING_SP_NAME, Context.MODE_PRIVATE);
+            SharedPreferences sharedPreferences = getContext().getSharedPreferences(Constants.DEMO_SETTING_SP_NAME, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean(DEMO_SP_KEY_MESSAGE_READ_STATUS, isShowReadStatus);
+            editor.putBoolean(Constants.DEMO_SP_KEY_MESSAGE_READ_STATUS, isShowReadStatus);
             editor.commit();
         }
     }

@@ -50,4 +50,6 @@
 
     <color name="chat_unread_count_tip_color">#AABCD1</color>
     <color name="jum_message_text_color">#147AFF</color>
+
+    <color name="order_message_color">#FF7201</color>
 </resources>

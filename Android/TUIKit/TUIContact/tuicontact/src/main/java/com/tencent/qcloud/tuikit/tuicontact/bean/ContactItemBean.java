@@ -6,6 +6,7 @@ import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMFriendInfo;
 import com.tencent.imsdk.v2.V2TIMGroupInfo;
 import com.tencent.imsdk.v2.V2TIMGroupMemberFullInfo;
+import com.tencent.imsdk.v2.V2TIMUserStatus;
 import com.tencent.qcloud.tuikit.tuicontact.component.indexlib.IndexBar.bean.BaseIndexPinyinBean;
 
 public class ContactItemBean extends BaseIndexPinyinBean {
@@ -26,6 +27,7 @@ public class ContactItemBean extends BaseIndexPinyinBean {
     private String groupType;
     private boolean isFriend = false;
     private boolean isEnable = true;
+    private int statusType = V2TIMUserStatus.V2TIM_USER_STATUS_UNKNOWN;
 
     public ContactItemBean() {
     }
@@ -163,6 +165,14 @@ public class ContactItemBean extends BaseIndexPinyinBean {
 
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
+    }
+
+    public int getStatusType() {
+        return statusType;
+    }
+
+    public void setStatusType(int statusType) {
+        this.statusType = statusType;
     }
 
     public ContactItemBean covertTIMGroupBaseInfo(V2TIMGroupInfo group) {

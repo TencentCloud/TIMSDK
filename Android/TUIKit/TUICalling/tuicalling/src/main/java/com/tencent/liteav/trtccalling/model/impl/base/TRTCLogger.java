@@ -16,6 +16,6 @@ public class TRTCLogger {
     }
 
     public static void d(String tag, String message) {
-        TXCLog.d(tag, message);
+        TXCLog.i(tag, message);
     }
 }

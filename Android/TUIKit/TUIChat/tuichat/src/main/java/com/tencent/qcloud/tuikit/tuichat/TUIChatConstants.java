@@ -5,6 +5,9 @@ import android.os.Environment;
 import com.tencent.imsdk.BaseConstants;
 
 public class TUIChatConstants {
+    public static final String CHAT_SETTINGS_SP_NAME = "chat_settings_sp";
+    public static final String CHAT_REPLY_GUIDE_SHOW_SP_KEY = "chat_reply_guide_show";
+
     public static final String CAMERA_IMAGE_PATH = "camera_image_path";
     public static final String IMAGE_WIDTH = "image_width";
     public static final String IMAGE_HEIGHT = "image_height";
@@ -15,6 +18,9 @@ public class TUIChatConstants {
     public static final String CAMERA_TYPE = "camera_type";
 
     public static final String BUSINESS_ID_CUSTOM_HELLO = "text_link";
+    public static final String BUSINESS_ID_CUSTOM_EVALUATION = "evaluation";
+    public static final String BUSINESS_ID_CUSTOM_ORDER = "order";
+    public static final String BUSINESS_ID_CUSTOM_TYPING = "user_typing_status";
 
     public static final String FORWARD_SELECT_CONVERSATION_KEY = "forward_select_conversation_key";
     public static final int FORWARD_SELECT_ACTIVTY_CODE = 101;
@@ -44,10 +50,15 @@ public class TUIChatConstants {
     public static final String MESSAGE_REPLY_KEY = "messageReply";
     public static final String MESSAGE_REPLIES_KEY = "messageReplies";
     public static final String MESSAGE_REACT_KEY = "messageReact";
+    public static final String MESSAGE_FEATURE_KEY = "messageFeature";
 
-    public static final int ERR_SDK_INTERFACE_NOT_SUPPORT = BaseConstants.ERR_SDK_INTERFACE_NOT_SUPPORT;
-    public static final String BUYING_GUIDELINES_EN = "https://intl.cloud.tencent.com/document/product/1047/36021?lang=en&pg=#changing-configuration";
-    public static final String BUYING_GUIDELINES = "https://cloud.tencent.com/document/product/269/32458";
+    public static final int TYPING_SEND_MESSAGE_INTERVAL = 4;
+    public static final int TYPING_PARSE_MESSAGE_INTERVAL = 5;
+    public static final int TYPING_TRIGGER_CHAT_TIME = 30; //second
+
+    public static final String EVENT_KEY_MESSAGE_STATUS_CHANGED = "eventKeyMessageStatusChanged";
+    public static final String EVENT_SUB_KEY_MESSAGE_SEND = "eventSubKeyMessageSend";
+
     /**
      * 1: 仅仅是一个带链接的文本消息
      * 2: iOS支持的视频通话版本，后续已经不兼容

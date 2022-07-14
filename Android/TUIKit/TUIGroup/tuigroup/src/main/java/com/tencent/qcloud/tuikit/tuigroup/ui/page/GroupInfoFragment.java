@@ -9,8 +9,10 @@ import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 
 import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuicore.component.activities.ImageSelectActivity;
 import com.tencent.qcloud.tuicore.component.fragments.BaseFragment;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuigroup.R;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupService;
@@ -20,10 +22,12 @@ import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupInfoPresenter;
 import com.tencent.qcloud.tuikit.tuigroup.ui.view.GroupInfoLayout;
 import com.tencent.qcloud.tuikit.tuigroup.ui.interfaces.IGroupMemberListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class GroupInfoFragment extends BaseFragment {
+    private static final int CHOOSE_AVATAR_REQUEST_CODE = 101;
 
     private View baseView;
     private GroupInfoLayout groupInfoLayout;
@@ -51,7 +55,25 @@ public class GroupInfoFragment extends BaseFragment {
         // 新建 presenter 与 layout 互相绑定
         groupInfoPresenter = new GroupInfoPresenter(groupInfoLayout);
         groupInfoLayout.setGroupInfoPresenter(groupInfoPresenter);
+        groupInfoLayout.setOnModifyGroupAvatarListener(new OnModifyGroupAvatarListener() {
+            @Override
+            public void onModifyGroupAvatar(String originAvatarUrl) {
+                ArrayList<String> faceList = new ArrayList<>();
+                for (int i = 0; i < TUIGroupConstants.GROUP_FACE_COUNT; i++) {
+                    faceList.add(String.format(TUIGroupConstants.GROUP_FACE_URL, (i + 1) + ""));
+                }
 
+                Intent intent = new Intent(getContext(), ImageSelectActivity.class);
+                intent.putExtra(ImageSelectActivity.TITLE, getResources().getString(R.string.group_choose_avatar));
+                intent.putExtra(ImageSelectActivity.SPAN_COUNT, 4);
+                intent.putExtra(ImageSelectActivity.PLACEHOLDER, R.drawable.core_default_user_icon_light);
+                intent.putExtra(ImageSelectActivity.ITEM_WIDTH, ScreenUtil.dip2px(77));
+                intent.putExtra(ImageSelectActivity.ITEM_HEIGHT, ScreenUtil.dip2px(77));
+                intent.putExtra(ImageSelectActivity.DATA, faceList);
+                intent.putExtra(ImageSelectActivity.SELECTED, originAvatarUrl);
+                startActivityForResult(intent, CHOOSE_AVATAR_REQUEST_CODE);
+            }
+        });
         groupInfoLayout.loadGroupInfo(groupId);
         groupInfoLayout.setRouter(new IGroupMemberListener() {
             @Override
@@ -90,7 +112,16 @@ public class GroupInfoFragment extends BaseFragment {
             } else if (requestCode == 2) {
                 deleteGroupMembers(friends);
             }
+        } else if (requestCode == CHOOSE_AVATAR_REQUEST_CODE && resultCode == ImageSelectActivity.RESULT_CODE_SUCCESS) {
+            if (data != null) {
+                String avatarUrl = data.getStringExtra(ImageSelectActivity.DATA);
+                modifyGroupAvatar(avatarUrl);
+            }
         }
+    }
+
+    private void modifyGroupAvatar(String avatarUrl) {
+        groupInfoLayout.modifyGroupAvatar(avatarUrl);
     }
 
     private void deleteGroupMembers(List<String> friends) {
@@ -143,6 +174,11 @@ public class GroupInfoFragment extends BaseFragment {
 
             }
         });
+    }
+
+
+    public interface OnModifyGroupAvatarListener {
+        void onModifyGroupAvatar(String originAvatarUrl);
     }
 
 }

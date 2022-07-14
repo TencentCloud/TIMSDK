@@ -7,6 +7,7 @@ import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
+import com.tencent.qcloud.tuikit.tuichat.bean.MessageFeature;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageReactBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageReceiptInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageRepliesBean;
@@ -338,12 +339,24 @@ public abstract class TUIMessageBean implements Serializable {
           onProcessMessage(v2TIMMessage);
      }
 
+     public void update(TUIMessageBean messageBean) {
+          setV2TIMMessage(messageBean.getV2TIMMessage());
+     }
+
      public String getSelectText() {
           return selectText;
      }
 
      public void setSelectText(String text) {
           this.selectText = text;
+     }
+
+     public MessageFeature isSupportTyping() {
+          return ChatMessageParser.isSupportTyping(this);
+     }
+
+     public void setMessageTypingFeature(MessageFeature messageFeature) {
+          ChatMessageBuilder.mergeCloudCustomData(this, TUIChatConstants.MESSAGE_FEATURE_KEY, messageFeature);
      }
 
      public Class<? extends TUIReplyQuoteBean> getReplyQuoteBeanClass() {
