@@ -447,9 +447,9 @@
     self.replyPreviewBar.frame = CGRectMake(0, 0, self.view.bounds.size.width, TMenuView_Menu_Height);
     self.inputBar.mm_y = CGRectGetMaxY(self.replyPreviewBar.frame);
     if (self.status == Input_Status_Input_Keyboard) {
-        CGFloat keyboradHeight = self.keyboardFrame.size.height;
+        CGFloat keyboardHeight = self.keyboardFrame.size.height;
         if (self.delegate && [self.delegate respondsToSelector:@selector(inputController:didChangeHeight:)]){
-            [self.delegate inputController:self didChangeHeight:CGRectGetMaxY(self.inputBar.frame) + keyboradHeight];
+            [self.delegate inputController:self didChangeHeight:CGRectGetMaxY(self.inputBar.frame) + keyboardHeight];
         }
     } else if (self.status == Input_Status_Input_Face ||
                self.status == Input_Status_Input_Talk) {
@@ -470,9 +470,9 @@
     self.replyPreviewBar.frame = CGRectMake(0, 0, self.view.bounds.size.width, TMenuView_Menu_Height);
     self.inputBar.mm_y = CGRectGetMaxY(self.replyPreviewBar.frame);
     if (self.status == Input_Status_Input_Keyboard) {
-        CGFloat keyboradHeight = self.keyboardFrame.size.height;
+        CGFloat keyboardHeight = self.keyboardFrame.size.height;
         if (self.delegate && [self.delegate respondsToSelector:@selector(inputController:didChangeHeight:)]){
-            [self.delegate inputController:self didChangeHeight:CGRectGetMaxY(self.inputBar.frame) + keyboradHeight];
+            [self.delegate inputController:self didChangeHeight:CGRectGetMaxY(self.inputBar.frame) + keyboardHeight];
         }
     } else if (self.status == Input_Status_Input_Face ||
                self.status == Input_Status_Input_Talk) {
@@ -495,9 +495,9 @@
         weakSelf.inputBar.mm_y = 0;
         
         if (weakSelf.status == Input_Status_Input_Keyboard) {
-            CGFloat keyboradHeight = weakSelf.keyboardFrame.size.height;
+            CGFloat keyboardHeight = weakSelf.keyboardFrame.size.height;
             if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(inputController:didChangeHeight:)]){
-                [weakSelf.delegate inputController:weakSelf didChangeHeight:CGRectGetMaxY(weakSelf.inputBar.frame) + keyboradHeight];
+                [weakSelf.delegate inputController:weakSelf didChangeHeight:CGRectGetMaxY(weakSelf.inputBar.frame) + keyboardHeight];
             }
         } else {
             if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(inputController:didChangeHeight:)]){
