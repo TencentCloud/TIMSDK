@@ -206,6 +206,27 @@ const DATA = {
                 name: 'V2TIM_GROUP_MEMBER_UNDEFINED'
             }
         ]
+    },
+    historytypeSelectData:{
+        title:'type',
+        data: [
+            {
+                id: 1,
+                name: 'V2TIM_GET_CLOUD_OLDER_MSG',
+            },
+            {
+                id: 2,
+                name: 'V2TIM_GET_CLOUD_NEWER_MSG',
+            },
+            {
+                id: 3,
+                name: 'V2TIM_GET_LOCAL_OLDER_MSG',
+            },
+            {
+                id: 4,
+                name: 'V2TIM_GET_LOCAL_NEWER_MSG'
+            }
+        ]
     }
 }
 
@@ -267,6 +288,10 @@ const BottomModalComponent = (props) => {
                 setData(DATA.roleSelectData.data)
                 setTitle(DATA.roleSelectData.title)
                 break;
+            case 'historytypeselect':
+                setData(DATA.historytypeSelectData.data)
+                setTitle(DATA.historytypeSelectData.title)
+                break;
             default:
                 break;
         }
@@ -307,6 +332,9 @@ const BottomModalComponent = (props) => {
                 getSelected(selected)
                 break;
             case 'roleselect':
+                getSelected(selected)
+                break;
+            case 'historytypeselect':
                 getSelected(selected)
                 break;
             default:

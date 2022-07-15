@@ -1,6 +1,6 @@
 {
   "name": "react-native-tim-js",
-  "version": "0.1.1-alpha.1",
+  "version": "0.1.2",
   "description": "Tencent IM SDK for react native",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",

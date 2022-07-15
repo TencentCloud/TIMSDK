@@ -1,16 +1,22 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, Switch } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text, Switch} from 'react-native';
 import { TencentImSDKPlugin } from 'react-native-tim-js';
 import CommonButton from '../commonComponents/CommonButton';
 import SDKResponseView from '../sdkResponseView';
-import UserInputComponent from '../commonComponents/UserInputComponent';
 import CheckBoxModalComponent from '../commonComponents/CheckboxModalComponent';
 import BottomModalComponent from '../commonComponents/BottomModalComponent';
 import mystylesheet from '../../stylesheets';
-
-const SendTextMessageComponent = () => {
+import AudioRecorderPlayer, {
+    AVEncoderAudioQualityIOSType,
+    AVEncodingOption,
+    AudioEncoderAndroidType,
+    AudioSet,
+    AudioSourceAndroidType,
+    RecordBackType,
+  } from 'react-native-audio-recorder-player';
+const audioRecorderPlayer = new AudioRecorderPlayer();
+const SendSoundMessageComponent = () => {
     const [res, setRes] = useState<any>({});
-    const [input, setInput] = useState<string>('');
     const [userName, setUserName] = useState<string>('未选择')
     const [groupName, setGroupName] = useState<string>('未选择')
     const [priority, setPriority] = useState<string>('')
@@ -18,31 +24,90 @@ const SendTextMessageComponent = () => {
     const [isExcludedFromUnreadCount, setIsExcludedFromUnreadCount] = useState(false);
     const receiveOnlineUserstoggle = () => setIsonlineUserOnly(previousState => !previousState);
     const unreadCounttoggle = () => setIsExcludedFromUnreadCount(previousState => !previousState);
-    const sendTextMessage = async () => {
-        const messageRes = await TencentImSDKPlugin.v2TIMManager.getMessageManager().createTextMessage(input)        
+    const [soundState,setSoundState] = useState<boolean>(false)
+    const [fileName, setFileName] = useState<string>('未录制')
+    const [soundPath, setSoundPath] = useState<string>('')
 
+    const [recordSecs,setRecordSecs] = useState<number>(0)
+    const sendSoundMessage = async () => {
+        const messageRes = await TencentImSDKPlugin.v2TIMManager.getMessageManager().createSoundMessage(soundPath,recordSecs)
+        console.log(messageRes)
         const id = messageRes.data?.id
-        const receiver = userName==='未选择'?'':userName
-        const groupID = groupName==='未选择'?'':groupName
-        if(id!==undefined){
+        console.log(id)
+        const receiver = userName === '未选择' ? '' : userName
+        const groupID = groupName === '未选择' ? '' : groupName
+        if (id !== undefined) {
             const res = await TencentImSDKPlugin.v2TIMManager.getMessageManager().sendMessage({
                 id: id.toString(),
-                receiver:receiver,
-                groupID:groupID,
-                onlineUserOnly:isonlineUserOnly,
-                isExcludedFromUnreadCount:isExcludedFromUnreadCount,
+                receiver: receiver,
+                groupID: groupID,
+                onlineUserOnly: isonlineUserOnly,
+                isExcludedFromUnreadCount: isExcludedFromUnreadCount,
             })
             setRes(res)
         }
-       
+
 
     };
+   
 
     const CodeComponent = () => {
         return res.code !== undefined ? (
             <SDKResponseView codeString={JSON.stringify(res)} />
         ) : null;
     };
+
+    const soundHandle =()=>{
+        setSoundState(!soundState)
+        if(!soundState){
+            onStartRecord()
+        }else{
+            onStopRecord()
+        }
+    }
+    const onStartRecord = async () =>{
+        const audioSet:AudioSet = {
+            AudioEncoderAndroid: AudioEncoderAndroidType.AAC,
+            AudioSourceAndroid: AudioSourceAndroidType.MIC,
+            AVEncoderAudioQualityKeyIOS: AVEncoderAudioQualityIOSType.high,
+            AVNumberOfChannelsKeyIOS: 2,
+            AVFormatIDKeyIOS: AVEncodingOption.aac,
+          };
+        console.log(audioSet)
+
+        const uri = await audioRecorderPlayer.startRecorder(
+            undefined,
+            audioSet
+        )
+        audioRecorderPlayer.addRecordBackListener((e:RecordBackType)=>{
+            setRecordSecs(e.currentPosition)
+        })
+        setSoundPath(uri.replace(/file:\/\//, ''))
+    }
+    const onStopRecord = async ()=>{
+        try{
+            await audioRecorderPlayer.stopRecorder()
+            audioRecorderPlayer.removeRecordBackListener()
+            setRecordSecs(0)
+            setFileName('finsh')
+        }catch(e){
+            console.log('stopRecord',e)
+        }
+    }
+    const SoundComponent = () => {
+        return (
+            <View style={styles.friendgroupview}>
+                <View style={styles.selectContainer}>
+                    <TouchableOpacity onPress={soundHandle}>
+                        <View style={styles.buttonView}>
+                            <Text style={styles.buttonText}>{soundState?'结束录音':'开始录音'}</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <Text style={styles.selectedText}>{fileName}</Text>
+                </View>
+            </View>
+        )
+    }
 
     const FriendComponent = () => {
         const [visible, setVisible] = useState<boolean>(false)
@@ -108,9 +173,7 @@ const SendTextMessageComponent = () => {
 
     return (
         <>
-            <View style={styles.userInputcontainer}>
-                <UserInputComponent content='发送文本' placeholdercontent='发送文本' getContent={setInput} />
-            </View>
+            <SoundComponent />
             <FriendComponent />
             <GroupComponent />
             <PriorityComponent />
@@ -135,15 +198,15 @@ const SendTextMessageComponent = () => {
                 />
             </View>
             <CommonButton
-                handler={() => { sendTextMessage() }}
-                content={'发送文本消息'}
+                handler={() => { sendSoundMessage() }}
+                content={'发送录音消息'}
             ></CommonButton>
             <CodeComponent></CodeComponent>
         </>
     );
 };
 
-export default SendTextMessageComponent;
+export default SendSoundMessageComponent;
 const styles = StyleSheet.create({
     userInputcontainer: {
         marginLeft: 10,

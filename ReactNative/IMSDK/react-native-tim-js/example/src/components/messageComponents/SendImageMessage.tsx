@@ -43,7 +43,7 @@ const SendImageMessageComponent = () => {
                 const res = await TencentImSDKPlugin.v2TIMManager
                     .getMessageManager()
                     .sendMessage({
-                        id: id,
+                        id:id.toString(),
                         receiver: receiver,
                         groupID: groupID,
                         onlineUserOnly: isonlineUserOnly,

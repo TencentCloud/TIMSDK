@@ -17,7 +17,9 @@ const styles = {
 
 const CheckboxComponent = (props) => {
     const [checkboxData, setCheckboxData] = useState<any>([])
-    const { getSelect, type, getType, groupID } = props
+    const { getSelect, type, getType, groupID, conversationID } = props
+
+
     const setSelectedHandler = (val) => {
         if (getType) {
             getType(val.type)
@@ -39,7 +41,13 @@ const CheckboxComponent = (props) => {
                 getFriendGroupList()
                 break;
             case 'member':
-                GetMemberList()
+                getMemberList()
+                break;
+            case 'conversation':
+                getConversationList()
+                break;
+            case 'message':
+                getMessageList()
                 break;
             default:
                 break;
@@ -123,7 +131,8 @@ const CheckboxComponent = (props) => {
         setCheckboxData(dataArr)
     }
 
-    const GetMemberList = async () => {
+    const getMemberList = async () => {
+
         const res = await TencentImSDKPlugin.v2TIMManager.getGroupManager().getGroupMemberList(groupID, 0, '0')
         console.log(res)
         const dataArr: any = []
@@ -142,10 +151,48 @@ const CheckboxComponent = (props) => {
         setCheckboxData(dataArr)
     }
 
+    const getConversationList = async () => {
+        const dataArr: any = []
+        const res = await TencentImSDKPlugin.v2TIMManager.getConversationManager().getConversationList(100, '0')
+        if (res.code === 0) {
+            res.data?.conversationList?.forEach((val, index) => {
+                dataArr.push({
+                    id: index,
+                    text: `ID: ${val.conversationID}`,
+                    fillColor: '#2F80ED',
+                    unfillColor: 'white',
+                    textStyle: styles.textStyle,
+                    iconStyle: styles.iconStyle,
+                })
+            })
+        }
+        setCheckboxData(dataArr)
+    }
+
+    const getMessageList = async () => {
+        const dataArr: any = []
+        const res = await TencentImSDKPlugin.v2TIMManager.getConversationManager().getConversationListByConversaionIds([conversationID])
+        console.log(res)
+        if (res.code === 0) {
+            res.data?.forEach((val, index) => {
+                if(val.lastMessage){
+                    dataArr.push({
+                        id: index,
+                        text: `messageID: ${val.lastMessage?.msgID}`,
+                        fillColor: '#2F80ED',
+                        unfillColor: 'white',
+                        textStyle: styles.textStyle,
+                        iconStyle: styles.iconStyle,
+                    })
+                }
+            })
+        }
+        setCheckboxData(dataArr)
+    }
     return (
         <BouncyCheckboxGroup
             data={checkboxData}
-            style={{ flexDirection: 'column'}}
+            style={{ flexDirection: 'column' }}
             onChange={(selectedItem: ICheckboxButton) => {
                 if (selectedItem.text) setSelectedHandler(selectedItem)
             }}

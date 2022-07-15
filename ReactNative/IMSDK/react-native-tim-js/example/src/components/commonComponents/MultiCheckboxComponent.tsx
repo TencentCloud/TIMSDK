@@ -92,6 +92,23 @@ const MultiCheckboxComponent = (props) => {
                                 onPress={(isChecked: boolean) => { getSelectedUser(isChecked, text) }}
                             />
                         );
+                    case 'message':
+                        return (
+                            <BouncyCheckbox
+                                text={`messageID: ${text}`}
+                                fillColor='#2F80ED'
+                                unfillColor='white'
+                                iconStyle={{
+                                    height: 20,
+                                    width: 20,
+                                    borderRadius: 5,
+                                    borderColor: '#c0c0c0',
+                                    margin: 5
+                                }}
+                                textStyle={{ textDecorationLine: 'none' }}
+                                onPress={(isChecked: boolean) => { getSelectedUser(isChecked, text) }}
+                            />
+                        );
                     case 'conversation':
                         return (
                             <BouncyCheckbox
