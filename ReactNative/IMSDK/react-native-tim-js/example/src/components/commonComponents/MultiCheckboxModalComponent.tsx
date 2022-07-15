@@ -5,7 +5,7 @@ import MultiCheckboxComponent from './MultiCheckboxComponent';
 import { TencentImSDKPlugin, V2TimConversation } from 'react-native-tim-js';
 
 const MultiCheckBoxModalComponent = (props) => {
-    const { visible, getVisible, getUsername, type, groupID} = props
+    const { visible, getVisible, getUsername, type, groupID, conversationID } = props
     const usersSet = new Set()
     const [res, setRes] = useState<any>({})
     const [content, setContent] = useState('')
@@ -30,6 +30,10 @@ const MultiCheckBoxModalComponent = (props) => {
             case 'member':
                 setContent('选择群成员')
                 getMemberList()
+                break;
+            case 'message':
+                setContent('选择消息')
+                getMessageList()
                 break;
             case 'conversation':
                 setContent('选择会话')
@@ -58,7 +62,12 @@ const MultiCheckBoxModalComponent = (props) => {
     }
     const getMemberList = async () => {
         const res = await TencentImSDKPlugin.v2TIMManager.getGroupManager().getGroupMemberList(groupID, 0, '0')
-        setRes(res)    
+        setRes(res)
+    }
+    const getMessageList = async () => {
+        const res = await TencentImSDKPlugin.v2TIMManager.getConversationManager().getConversationListByConversaionIds([conversationID])
+        setRes(res)
+
     }
     const closeHandler = (val: boolean) => {
         getVisible(val)
@@ -110,9 +119,16 @@ const MultiCheckBoxModalComponent = (props) => {
             <MultiCheckboxComponent text={item.name} getSelectedUser={getUsersHandler} type={'selectgroup'} />
         )
     }
-    const renderItemselectmember = ({item})=>{
+    const renderItemselectmember = ({ item }) => {
         return (
             <MultiCheckboxComponent text={item.userID} getSelectedUser={getUsersHandler} type={'member'} />
+        )
+    }
+    const renderItemselectmessage = ({ item }) => {
+        return (
+            item.lastMessage?(
+                <MultiCheckboxComponent text={item.lastMessage.msgID} getSelectedUser={getUsersHandler} type={'message'} />
+            ):null         
         )
     }
 
@@ -179,6 +195,16 @@ const MultiCheckBoxModalComponent = (props) => {
                                             data={res.data?.memberInfoList}
                                             renderItem={renderItemselectmember}
                                             keyExtractor={(item, index) => item.userID + index}
+                                        />
+                                    </View>
+                                );
+                            case 'message':
+                                return (
+                                    <View style={styles.listContainer}>
+                                        <FlatList
+                                            data={res.data}
+                                            renderItem={renderItemselectmessage}
+                                            keyExtractor={(item, index) => item.lastMessage?item.lastMessage.msgID + index:index}
                                         />
                                     </View>
                                 );

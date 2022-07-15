@@ -384,16 +384,16 @@ class TimJs: RCTEventEmitter {
 		case "findMessages":
 			messageManager.findMessages(param: arguments, resolve: resolve)
 			break
-        case "appendMessage":
-            messageManager.appendMessage(param: arguments, resolve: resolve)
-            break
-        case "addAdvancedMsgListener":
-            messageManager.addAdvancedMsgListener(param: arguments, resolve: resolve)
-            break
-        case "removeAdvancedMsgListener":
-            messageManager.removeAdvancedMsgListener(param: arguments, resolve: resolve)
-            break
-        case "getConversationList":
+		case "appendMessage":
+				messageManager.appendMessage(param: arguments, resolve: resolve)
+				break
+		case "addAdvancedMsgListener":
+				messageManager.addAdvancedMsgListener(param: arguments, resolve: resolve)
+				break
+		case "removeAdvancedMsgListener":
+				messageManager.removeAdvancedMsgListener(param: arguments, resolve: resolve)
+				break
+		case "getConversationList":
 			conversationManager.getConversationList(param: arguments, resolve: resolve)
 			break
 		case "getConversationListByConversaionIds":

@@ -6,8 +6,10 @@ import {
     Text,
     SectionList,
     TouchableOpacity,
+    Image
 } from 'react-native';
-// import { TouchableOpacity } from 'react-native-gesture-handler';
+import ActionButton from 'react-native-action-button';
+
 
 const DATA = [
     {
@@ -18,6 +20,10 @@ const DATA = [
             {
                 id: 'initSDK',
                 name: '初始化SDK',
+            },
+            {
+                id: 'addEventListener',
+                name: '添加事件监听',
             },
             {
                 id: 'login',
@@ -230,12 +236,12 @@ const DATA = [
                 name: '添加好友到分组'
             },
             {
-                id:'deleteFriendsFromFriendGroup',
+                id: 'deleteFriendsFromFriendGroup',
                 name: '从分组中删除好友'
             },
             {
-                id:'searchFriends',
-                name:'搜索好友'
+                id: 'searchFriends',
+                name: '搜索好友'
             }
 
         ],
@@ -261,6 +267,111 @@ const DATA = [
                 id: 'sendVideoMessage',
                 name: '发送视频消息',
             },
+            {
+                id: 'sendFileMessage',
+                name: '发送文件消息',
+            },
+            {
+                id: 'sendSoundMessage',
+                name: '发送录音消息',
+            },
+            {
+                id: 'sendTextAtMessage',
+                name: '发送文本At消息',
+            },
+            {
+                id: 'sendLocationMessage',
+                name: '发送地理信息'
+            },
+            {
+                id: 'sendFaceMessage',
+                name: '发送表情消息'
+            },
+            {
+                id: 'sendMergerMessage',
+                name: '发送合并消息'
+            },
+            {
+                id: 'sendForwardMessage',
+                name: '发送转发消息'
+            },
+            {
+                id: 'reSendMessage',
+                name: '重发消息'
+            },
+            {
+                id: 'setLocalCustomData',
+                name: '修改本地消息（String）'
+            },
+            {
+                id: 'setLocalCustomInt',
+                name: '修改本地消息（Int）'
+            },
+            {
+                id: 'getC2CHistoryMessageList',
+                name: '获得C2C历史消息'
+            },
+            {
+                id: 'getGroupHistoryMessageList',
+                name: '获得Group历史消息'
+            },
+            {
+                id: 'getHistoryMessageList',
+                name: '获得历史消息高级接口'
+            },
+            {
+                id: 'revokeMessage',
+                name: '撤回消息'
+            },
+            {
+                id: 'markC2CMessageAsRead',
+                name: '标记C2C会话已读'
+            },
+            {
+                id: 'markGroupMessageAsRead',
+                name: '标记Group会话已读'
+            },
+            {
+                id: 'markAllMessageAsRead',
+                name: '标记所有消息已读'
+            },
+            {
+                id: 'deleteMessageFromLocalStorage',
+                name: '删除本地消息'
+            },
+            {
+                id: 'deleteMessage',
+                name: '删除消息'
+            },
+            {
+                id: 'insertGroupMessageToLocalStorage',
+                name: '向Group中插入一条本地消息'
+            },
+            {
+                id: 'insertC2CMessageToLocalStorage',
+                name: '向C2C会话中插入一条本地消息'
+            },
+            {
+                id: 'clearC2CHistoryMessage',
+                name: '清空单聊本地及云端的消息'
+            },
+            {
+                id: 'getC2CReceiveMessageOpt',
+                name: '获取用户消息接受选项'
+            },
+            {
+                id: 'clearGroupHistoryMessage',
+                name: '清空群组单聊本地及云端的消息'
+            },
+            {
+                id: 'searchLocalMessage',
+                name: '搜索本地消息'
+            },
+            {
+                id: 'findMessage',
+                name: '查询指定会话中的本地消息'
+            }
+
         ],
     },
     {
@@ -295,6 +406,29 @@ const DATA = [
             {
                 id: 'setConversationDraft',
                 name: '设置会话草稿',
+            },
+        ],
+    },
+    {
+        title: '信令模块',
+        id: 6,
+        show: false,
+        data: [
+            {
+                id: 'invite',
+                name: '发起邀请',
+            },
+            {
+                id: 'inviteInGroup',
+                name: '在群组中发起邀请',
+            },
+            {
+                id: 'getSignallingInfo',
+                name: '获取信令信息',
+            },
+            {
+                id: 'addInvitedSignaling',
+                name: '添加邀请信令',
             },
         ],
     },
@@ -346,6 +480,11 @@ const HomeScreen = (props) => {
         setdataArr(newDataArr);
     };
 
+    const renderIcon = ()=>{
+        return (
+            <Image source={require('../icon/icon.png')} style={styles.icon}/>
+        )
+    }
     return (
         <View style={styles.container}>
             <SectionList
@@ -353,6 +492,11 @@ const HomeScreen = (props) => {
                 sections={dataArr}
                 renderSectionHeader={renderSectionHeaderHandler}
                 keyExtractor={(item, index) => item.id + index}
+            />
+            <ActionButton
+                buttonColor="rgba(221,160,221,0.8)"
+                onPress={() => { props.navigation.navigate('CallBack'); }}
+                renderIcon={renderIcon} 
             />
         </View>
     );
@@ -405,4 +549,8 @@ const styles = StyleSheet.create({
     itemTitle: {
         color: '#808a87',
     },
+    icon:{
+        width:40,
+        height:40
+    }
 });

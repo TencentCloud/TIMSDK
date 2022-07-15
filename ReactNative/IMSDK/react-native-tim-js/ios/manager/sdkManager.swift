@@ -10,15 +10,19 @@ class SDKManager {
     /**
 	* 初始化腾讯云IM，TODO：config需要配置更多信息
 	*/
-	public func initSDK(param: [String: Any], resolve: RCTPromiseResolveBlock) {
+	public func initSDK(param: [String: Any], resolve: @escaping RCTPromiseResolveBlock) {
 		if let sdkAppID = param["sdkAppID"] as? Int32,
 		   let logLevel = param["logLevel"] as? Int {
-                let config = V2TIMSDKConfig()
-				config.logLevel = V2TIMLogLevel(rawValue: logLevel)!
-				let data = V2TIMManager.sharedInstance().initSDK(sdkAppID, config: config);
-				V2TIMManager.sharedInstance().add(sdkListener);
-				
-				CommonUtils.resultSuccess(method: "initSDK", resolve: resolve, data: data);
+				V2TIMManager.sharedInstance().callExperimentalAPI("setUIPlatform",param: "rn" as NSObject,succ:{_ in
+					let config = V2TIMSDKConfig()
+					config.logLevel = V2TIMLogLevel(rawValue: logLevel)!
+					let data = V2TIMManager.sharedInstance().initSDK(sdkAppID, config: config);
+					V2TIMManager.sharedInstance().add(self.sdkListener);
+					
+					CommonUtils.resultSuccess(method: "initSDK", resolve: resolve, data: data);
+				},fail:{_,_ in 
+					CommonUtils.resultSuccess(method: "initSDK", resolve: resolve, data: false);
+				});
 		}
 	}
 

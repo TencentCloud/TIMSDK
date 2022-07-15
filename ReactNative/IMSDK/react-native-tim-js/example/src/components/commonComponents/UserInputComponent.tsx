@@ -4,7 +4,8 @@ import { Text, TouchableOpacity, Image, TextInput, View } from 'react-native';
 import mystylesheet from '../../stylesheets';
 
 
-const UserInputComponent = ({content,placeholdercontent,getContent}:{content:string,placeholdercontent:string,getContent:(val:string)=>void}) => {
+const UserInputComponent = (props) => {
+    const {content,placeholdercontent,getContent,isNumber} = props
     const [value, onChangeText] = React.useState('')
     const textInputref = React.useRef<TextInput>(null)
     const [styleState, setstyleState] = React.useState(false)
@@ -21,7 +22,15 @@ const UserInputComponent = ({content,placeholdercontent,getContent}:{content:str
                     } else return null
 
                 })()}
-                <TextInput style={styleState ? mystylesheet.textInputblue : mystylesheet.textInputgray} placeholder={placeholder} ref={textInputref} onChangeText={text => {onChangeText(text);getContent(text)}} onFocus={() => {setstyleState(!styleState);setPlaceholder(placeholdercontent)}} onBlur={() => { setstyleState(!styleState);setPlaceholder(content)}} value={value}></TextInput>
+                <TextInput 
+                    style={styleState ? mystylesheet.textInputblue : mystylesheet.textInputgray} 
+                    placeholder={placeholder} ref={textInputref} 
+                    onChangeText={text => {onChangeText(text);getContent(text)}} 
+                    onFocus={() => {setstyleState(!styleState);setPlaceholder(placeholdercontent)}} 
+                    onBlur={() => { setstyleState(!styleState);setPlaceholder(content)}} 
+                    value={value}
+                    keyboardType={isNumber?'numeric':'default'}
+                ></TextInput>
             </View>
         </TouchableOpacity>
     )

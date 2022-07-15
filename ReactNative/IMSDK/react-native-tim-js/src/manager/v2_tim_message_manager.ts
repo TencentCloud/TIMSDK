@@ -96,12 +96,10 @@ export class V2TIMMessageManager {
 
         if (this.messageListenerList.length == 0) {
             this.nativeModule.call(
-                this.nativeModule.call(
-                    this.manager,
-                    'removeAdvancedMsgListener',
-                    {}
-                )
-            );
+                this.manager,
+                'removeAdvancedMsgListener',
+                {}
+            )
         }
     }
 

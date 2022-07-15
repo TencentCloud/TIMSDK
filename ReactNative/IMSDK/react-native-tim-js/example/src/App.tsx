@@ -1,14 +1,15 @@
-import * as React from 'react';
+import React,{useState} from 'react';
 
 import { Image, StyleSheet } from 'react-native';
 
 import HomeScreen from './pages/Home';
 import DetailsScreen from './pages/Details';
 import UserScreen from './pages/User';
-
+import CallBackScreen from './pages/CallBack';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import CallBackContext from './useContext';
 
 const AppNavigator = createStackNavigator({
   Home: {
@@ -22,7 +23,7 @@ const AppNavigator = createStackNavigator({
       ),
       headerStyle: { backgroundColor: '#2F80ED' },
       headerTitleStyle: { color: '#fff' }
-    })
+    }),
   },
   Details: {
     screen: DetailsScreen,
@@ -34,8 +35,9 @@ const AppNavigator = createStackNavigator({
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image style={styles.leftHeaderIcon} source={require('./icon/turnleft.png')} />
         </TouchableOpacity>
-      )
-    })
+      ),
+    }),
+
   },
   User: {
     screen: UserScreen,
@@ -49,18 +51,47 @@ const AppNavigator = createStackNavigator({
         </TouchableOpacity>
       )
     })
+  },
+  CallBack:{
+    screen: CallBackScreen,
+    navigationOptions:({navigation})=>({
+      title: '事件回调',
+      headerTitleStyle: { color: '#fff' },
+      headerStyle: { backgroundColor: '#2F80ED' },
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Image style={styles.leftHeaderIcon} source={require('./icon/turnleft.png')} />
+        </TouchableOpacity>
+      ),
+    })
   }
 },
   {
-    initialRouteName: 'Home'
+    initialRouteName: 'Home',
   }
 );
 
 const AppContainer = createAppContainer(AppNavigator)
 
 const App = () => {
+  const setCallbackDataHandle = (dataObj)=>{
+    const temp = callbackData.contextData
+    temp.push(dataObj)
+    setCallbackData({contextData:temp,setCallbackData:setCallbackDataHandle,clearCallbackData:clearCallbackHandle})
+  }
+  
+  const clearCallbackHandle = ()=>{
+    setCallbackData({contextData:[],setCallbackData:setCallbackDataHandle,clearCallbackData:clearCallbackHandle})
+  }
+  const [callbackData,setCallbackData] = useState<any>({
+    contextData:[],
+    setCallbackData:setCallbackDataHandle,
+    clearCallbackData:clearCallbackHandle
+  })
   return (
-    <AppContainer />
+    <CallBackContext.Provider value={callbackData}>
+      < AppContainer />
+    </CallBackContext.Provider>
   )
 }
 

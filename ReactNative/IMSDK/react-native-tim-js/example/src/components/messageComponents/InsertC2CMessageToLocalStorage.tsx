@@ -1,25 +1,18 @@
-import React, { useState } from 'react';
+import React,{useState} from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, } from 'react-native';
 import { TencentImSDKPlugin } from 'react-native-tim-js';
 import CommonButton from '../commonComponents/CommonButton';
 import SDKResponseView from '../sdkResponseView';
 import CheckBoxModalComponent from '../commonComponents/CheckboxModalComponent';
-import MultiCheckBoxModalComponent from '../commonComponents/MultiCheckboxModalComponent';
-import UserInputComponent from '../commonComponents/UserInputComponent';
-const KickGroupMemberComponent = () => {
-    const [groupID, setGroupID] = useState<string>('未选择')
+
+const InsertC2CMessageToLocalStorageComponent = () => {
+    const [userID, setUserID] = useState<string>('未选择')
+    const [senderID, setSenderID] = useState<string>('未选择')
     const [res, setRes] = useState<any>({});
-    const [membersName,setMembersName] = useState('');
-    const [membersList,setMembersList] = useState([]);
 
-    const kickGroupMember = async () => {
-        const res = await TencentImSDKPlugin.v2TIMManager.getGroupManager().kickGroupMember(groupID, membersList)
+    const insertC2CMessageToLocalStorage = async()=>{
+        const res = await TencentImSDKPlugin.v2TIMManager.getMessageManager().insertC2CMessageToLocalStorage('',userID,senderID)
         setRes(res)
-    }
-
-    const getMembersHandler = (memberslist)=>{
-        setMembersName('['+memberslist.join(',')+']')
-        setMembersList(memberslist)
     }
 
     const CodeComponent = () => {
@@ -27,66 +20,63 @@ const KickGroupMemberComponent = () => {
             <SDKResponseView codeString={JSON.stringify(res)} />
         ) : null;
     };
+    const FriendComponent = () => {
+        const [visible, setVisible] = useState<boolean>(false)
 
-    const GroupSelectComponent = () => {
-        const [visible, setVisible] = useState<boolean>(false)
         return (
-            <View style={styles.container}>
+            <View style={styles.friendgroupview}>
                 <View style={styles.selectContainer}>
                     <TouchableOpacity onPress={() => { setVisible(true) }}>
                         <View style={styles.buttonView}>
-                            <Text style={styles.buttonText}>选择群组</Text>
+                            <Text style={styles.buttonText}>选择好友</Text>
                         </View>
                     </TouchableOpacity>
-                    <Text style={styles.selectedText}>{groupID}</Text>
+                    <Text style={styles.selectedText}>{`消息接收者：${userID}`}</Text>
                 </View>
-                <CheckBoxModalComponent visible={visible} getVisible={setVisible} getUsername={setGroupID} type={'group'} />
+                <CheckBoxModalComponent visible={visible} getVisible={setVisible} getUsername={setUserID} type={'friend'} />
             </View>
         )
+
     };
-    const MembersSelectComponent = () => {
+
+    const SenderComponent = () => {
         const [visible, setVisible] = useState<boolean>(false)
+
         return (
-            <View style={styles.container}>
+            <View style={styles.friendgroupview}>
                 <View style={styles.selectContainer}>
                     <TouchableOpacity onPress={() => { setVisible(true) }}>
                         <View style={styles.buttonView}>
-                            <Text style={styles.buttonText}>选择群成员</Text>
+                            <Text style={styles.buttonText}>选择好友</Text>
                         </View>
                     </TouchableOpacity>
-                    <Text style={styles.selectedText}>{membersName}</Text>
+                    <Text style={styles.selectedText}>{`消息发送者：${senderID}`}</Text>
                 </View>
-                <MultiCheckBoxModalComponent visible={visible} getVisible={setVisible} getUsername={getMembersHandler} type={'member'} groupID={groupID} />
+                <CheckBoxModalComponent visible={visible} getVisible={setVisible} getUsername={setSenderID} type={'friend'} />
             </View>
         )
-    }
+
+    };
+
+
     return (
         <>
-            <GroupSelectComponent />
-            <MembersSelectComponent />
-            <View style={styles.userInputcontainer}>
-                <UserInputComponent content='reason' placeholdercontent='reason' getContent={() => {}} />
-            </View>
+            <FriendComponent/>
+            <SenderComponent/>
             <CommonButton
-                handler={() => kickGroupMember()}
-                content={'踢群成员出群'}
+                handler={() => insertC2CMessageToLocalStorage()}
+                content={'向c2c会话中插入一条本地信息'}
             ></CommonButton>
             <CodeComponent></CodeComponent>
         </>
     );
 };
 
-export default KickGroupMemberComponent;
+export default InsertC2CMessageToLocalStorageComponent;
 
 const styles = StyleSheet.create({
     container: {
         marginLeft: 10,
-    },
-    userInputcontainer: {
-        margin: 10,
-        marginBottom: 0,
-        marginTop: 1,
-        justifyContent: 'center'
     },
     buttonView: {
         backgroundColor: '#2F80ED',
@@ -113,5 +103,9 @@ const styles = StyleSheet.create({
         fontSize: 14,
         textAlignVertical: 'center',
         lineHeight: 35
-    }
+    },
+    friendgroupview: {
+        marginLeft: 10,
+        marginRight: 10,
+    },
 })
