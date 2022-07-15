@@ -34,7 +34,10 @@
 #import "TUIAboutUsViewController.h"
 #import "TUIBaseChatViewController.h"
 #import "TUIChatConfig.h"
+#import <TUICore/TUIConfig.h>
+
 NSString * kEnableMsgReadStatus = @"TUIKitDemo_EnableMsgReadStatus";
+NSString * kEnableOnlineStatus = @"TUIKitDemo_EnableOnlineStatus";
 
 @interface SettingController () <UIActionSheetDelegate, V2TIMSDKListener>
 @property (nonatomic, strong) NSMutableArray *data;
@@ -54,6 +57,7 @@ NSString * kEnableMsgReadStatus = @"TUIKitDemo_EnableMsgReadStatus";
 
     //如果不加这一行代码，依然可以实现点击反馈，但反馈会有轻微延迟，体验不好。
     self.tableView.delaysContentTouches = NO;
+    [TUITool addUnsupportNotificationInVC:self debugOnly:NO];
 }
 
 //在此处设置一次 setuoData，才能使得“我”界面消息更新。否则由于 UITabBar 的维护，“我”界面的消息将一直无法更新。
@@ -216,11 +220,17 @@ NSString * kEnableMsgReadStatus = @"TUIKitDemo_EnableMsgReadStatus";
     
     TUICommonSwitchCellData *msgReadStatus = [TUICommonSwitchCellData new];
     msgReadStatus.title =  NSLocalizedString(@"MeMessageReadStatus", nil);  // @"消息阅读状态"
-    msgReadStatus.desc = NSLocalizedString(@"MeMessageReadStatusDesc", nil);
+    msgReadStatus.desc = [self msgReadStatus] ? NSLocalizedString(@"MeMessageReadStatusOpenDesc", nil) : NSLocalizedString(@"MeMessageReadStatusCloseDesc", nil);
     msgReadStatus.cswitchSelector = @selector(onSwitchMsgReadStatus:);
-    
     msgReadStatus.on = [self msgReadStatus];
     [_data addObject:@[msgReadStatus]];
+    
+    TUICommonSwitchCellData *onlineStatus = [TUICommonSwitchCellData new];
+    onlineStatus.title =  NSLocalizedString(@"ShowOnlineStatus", nil);
+    onlineStatus.desc = [self onlineStatus] ? NSLocalizedString(@"ShowOnlineStatusOpenDesc", nil) : NSLocalizedString(@"ShowOnlineStatusCloseDesc", nil);
+    onlineStatus.cswitchSelector = @selector(onSwitchOnlineStatus:);
+    onlineStatus.on = [self onlineStatus];
+    [_data addObject:@[onlineStatus]];
     
     TUICommonTextCellData *about = [TUICommonTextCellData new];
     about.key = NSLocalizedString(@"MeAbout", nil); // @"关于腾讯·云通信";
@@ -319,6 +329,18 @@ NSString * kEnableMsgReadStatus = @"TUIKitDemo_EnableMsgReadStatus";
 
 - (void)onSwitchMsgReadStatus:(TUICommonSwitchCell *)cell {
     [self setReadStatus:cell.switcher.on];
+    
+    BOOL on = cell.switcher.isOn;
+    TUICommonSwitchCellData *switchData = cell.switchData;
+    switchData.on = on;
+    if (on) {
+        switchData.desc = NSLocalizedString(@"MeMessageReadStatusOpenDesc", nil);
+        [TUITool hideToast];
+        [TUITool makeToast:NSLocalizedString(@"ShowPackageToast", nil)];
+    } else {
+        switchData.desc = NSLocalizedString(@"MeMessageReadStatusCloseDesc", nil);
+    }
+    [cell fillWithData:switchData];
 }
 
 - (BOOL)msgReadStatus {
@@ -329,6 +351,32 @@ NSString * kEnableMsgReadStatus = @"TUIKitDemo_EnableMsgReadStatus";
     [TUIChatConfig defaultConfig].msgNeedReadReceipt = on;
     [[NSUserDefaults standardUserDefaults] setBool:on forKey:kEnableMsgReadStatus];
     [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (void)onSwitchOnlineStatus:(TUICommonSwitchCell *)cell {
+    BOOL on = cell.switcher.isOn;
+    TUICommonSwitchCellData *switchData = cell.switchData;
+    switchData.on = on;
+    if (on) {
+        switchData.desc = NSLocalizedString(@"ShowOnlineStatusOpenDesc", nil);
+    } else {
+        switchData.desc = NSLocalizedString(@"ShowOnlineStatusCloseDesc", nil);
+    }
+    
+    TUIConfig.defaultConfig.displayOnlineStatusIcon = on;
+    [NSUserDefaults.standardUserDefaults setBool:on forKey:kEnableOnlineStatus];
+    [NSUserDefaults.standardUserDefaults synchronize];
+    
+    if (on) {
+        [TUITool hideToast];
+        [TUITool makeToast:NSLocalizedString(@"ShowPackageToast", nil)];
+    }
+    
+    [cell fillWithData:switchData];
+}
+
+- (BOOL)onlineStatus {
+    return [NSUserDefaults.standardUserDefaults boolForKey:kEnableOnlineStatus];
 }
 
 @end

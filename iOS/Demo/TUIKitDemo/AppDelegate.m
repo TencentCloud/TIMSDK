@@ -182,6 +182,7 @@ void uncaughtExceptionHandler(NSException*exception) {
             [[TCLoginModel sharedInstance] getAccessAddressWithSucceedBlock:^(NSDictionary *data) {
                 [self autoLoginIfNeeded];
             } failBlock:^(NSInteger errorCode, NSString *errorMsg) {
+                [[NSNotificationCenter defaultCenter] postNotificationName: @"TUILoginShowPrivacyPopViewNotfication" object:nil];
             }];
         });
     }];
@@ -214,14 +215,7 @@ void uncaughtExceptionHandler(NSException*exception) {
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kEnableMsgReadStatus];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
-}
-
-- (BOOL)loadIsShowMessageReadStatus {
-    if ([[NSUserDefaults standardUserDefaults] objectForKey:kEnableMsgReadStatus]) {
-        return [[NSUserDefaults standardUserDefaults] boolForKey:kEnableMsgReadStatus];
-    } else {
-        return YES;
-    }
+    TUIConfig.defaultConfig.displayOnlineStatusIcon = [[NSUserDefaults standardUserDefaults] boolForKey:kEnableOnlineStatus];
 }
 
 #pragma mark -- Setup UI
@@ -239,6 +233,7 @@ void uncaughtExceptionHandler(NSException*exception) {
         vc.navigationItem.title = @"";
     } error:NULL];
 }
+
 
 
 #pragma mark - V2TIMConversationListener
