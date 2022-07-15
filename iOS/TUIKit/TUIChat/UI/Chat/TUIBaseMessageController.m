@@ -39,6 +39,7 @@
 #import "TUIThemeManager.h"
 #import "TUIMessageReadViewController.h"
 #import "TUIRepliesDetailViewController.h"
+#import "TUIOrderCell.h"
 
 @interface TUIBaseMessageController () <TUIMessageCellDelegate,
 TUIJoinGroupMessageCellDelegate,
@@ -73,27 +74,24 @@ TUIMessageDataProviderDataSource>
 - (void)viewWillAppear:(BOOL)animated
 {
     self.isInVC = YES;
-    [self readedReport];
-
     [super viewWillAppear:animated];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self sendVisibleReadGroupMessages];
+    [self limitReadReport];
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
     self.isInVC = NO;
-    [self readedReport];
-    [super viewWillDisappear:animated];
 }
 
 - (void)applicationBecomeActive
 {
     self.isActive = YES;
-    [self readedReport];
+    [self sendVisibleReadGroupMessages];
 }
 
 - (void)applicationEnterBackground
@@ -364,7 +362,7 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     // 查看历史消息的时候根据当前 contentOffset 判断是否需要滑动到底部
     if (self.tableView.contentSize.height - self.tableView.contentOffset.y < Screen_Height * 1.5) {
         [self scrollToBottom:YES];
-        if (self.isInVC) {
+        if (self.isInVC && self.isActive) {
             [self.messageDataProvider sendLatestMessageReadReceipt];
         }
     }
@@ -384,7 +382,7 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     // 超过 1s && 非首次 立即上报已读
     if (curTs - lastTs >= 1 && lastTs) {
         lastTs = curTs;
-        [self readedReport];
+        [self readReport];
     } else {
         // 低于 1s || 首次  延迟 1s 合并上报
         static BOOL delayReport = NO;
@@ -394,13 +392,13 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
         delayReport = YES;
         __weak typeof(self) weakSelf = self;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [weakSelf readedReport];
+            [weakSelf readReport];
             delayReport = NO;
         });
     }
 }
 
-- (void)readedReport
+- (void)readReport
 {
     if (self.isInVC && self.isActive) {
         NSString *userID = self.conversationData.userID;
@@ -431,8 +429,10 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
  * 4、用户停留在最新消息界面，此时收到了新消息时。在 [self dataProvider:ReceiveNewUIMsg:] 中得到通知。
  */
 - (void)sendVisibleReadGroupMessages {
-    NSRange range = [self calcVisibleCellRange];
-    [self.messageDataProvider sendMessageReadReceiptAtIndexes:[self transferIndexFromRange:range]];
+    if (self.isInVC && self.isActive) {
+        NSRange range = [self calcVisibleCellRange];
+        [self.messageDataProvider sendMessageReadReceiptAtIndexes:[self transferIndexFromRange:range]];
+    }
 }
 
 - (NSRange)calcVisibleCellRange {
@@ -452,6 +452,11 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
         [index addObject:@(start + i)];
     }
     return index;
+}
+
+- (void)hideKeyboardIfNeeded {
+    [self.view endEditing:YES];
+    [TUITool.applicationKeywindow endEditing:YES];
 }
 
 #pragma mark - UITableViewDelegate
@@ -582,11 +587,48 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     else if ([cell isKindOfClass:TUIReferenceMessageCell.class]) {
         [self showReplyMessage:(TUIReplyMessageCell *)cell];
     }
+    else if ([cell isKindOfClass:TUIOrderCell.class]) {
+        [self showOrderMessage:(TUIOrderCell *)cell];
+    }
 
     if ([self.delegate respondsToSelector:@selector(messageController:onSelectMessageContent:)]) {
         [self.delegate messageController:self onSelectMessageContent:cell];
     }
 }
+
+- (void)tryShowGuidance {
+    
+    BOOL hasShow = [NSUserDefaults.standardUserDefaults boolForKey:@"chat_reply_guide_showKey"];
+    if (hasShow) {
+        return;
+    }
+    else {
+        [NSUserDefaults.standardUserDefaults setBool:YES forKey:@"chat_reply_guide_showKey"];
+        [NSUserDefaults.standardUserDefaults synchronize];
+    }
+
+    TUICSToastStyle * style = [[TUICSToastStyle alloc] initWithDefaultStyle];
+    style.backgroundColor = [UIColor clearColor];
+    style.maxWidthPercentage = 1;
+    style.maxHeightPercentage = 1;
+    style.fadeDuration = 0;
+    style.verticalPadding = 0;
+    style.horizontalPadding = 0;
+    style.imageSize = CGSizeMake(Screen_Width , Screen_Height);
+    style.activitySize = CGSizeMake(Screen_Width , Screen_Height);
+    style.imageContentMode = UIViewContentModeScaleAspectFill;
+    
+    
+    [[UIApplication sharedApplication].keyWindow makeToast:@"" duration:[[NSDate distantFuture] timeIntervalSince1970] position:TUICSToastPositionCenter title:@"" image:TUIChatCommonBundleImage(@"chat_reference_guide")
+                                                     style:style completion:^(BOOL didTap) {
+    }];
+    
+    [[UIApplication sharedApplication].keyWindow makeToast:@"" duration:[[NSDate distantFuture] timeIntervalSince1970] position:TUICSToastPositionCenter title:@"" image:TUIChatCommonBundleImage(@"chat_reply_guide")
+                                                     style:style completion:^(BOOL didTap) {
+    }];
+
+}
+
 
 - (void)onLongPressMessage:(TUIMessageCell *)cell
 {
@@ -595,6 +637,9 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
         // 系统消息不响应
         return;
     }
+    
+    [self tryShowGuidance];
+    
     if ([data isKindOfClass:[TUITextMessageCellData class]]) {
         // 文本消息选中状态的时候会默认 becomeFirstResponder 导致键盘消失，界面错乱，这里先收起已经弹出的键盘。
         TUITextMessageCell *textCell = (TUITextMessageCell *)cell;
@@ -1072,6 +1117,7 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 
 - (void)showImageMessage:(TUIImageMessageCell *)cell
 {
+    [self hideKeyboardIfNeeded];
     CGRect frame = [cell.thumb convertRect:cell.thumb.bounds toView:[UIApplication sharedApplication].delegate.window];
     TUIMediaView *mediaView = [[TUIMediaView alloc] initWithFrame:CGRectMake(0, 0, Screen_Width, Screen_Height)];
     [mediaView setThumb:cell.thumb frame:frame];
@@ -1086,6 +1132,7 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 
 - (void)showVideoMessage:(TUIVideoMessageCell *)cell
 {
+    [self hideKeyboardIfNeeded];
     CGRect frame = [cell.thumb convertRect:cell.thumb.bounds toView:[UIApplication sharedApplication].delegate.window];
     TUIMediaView *mediaView = [[TUIMediaView alloc] initWithFrame:CGRectMake(0, 0, Screen_Width, Screen_Height)];
     [mediaView setThumb:cell.thumb frame:frame];
@@ -1100,6 +1147,7 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 
 - (void)showFileMessage:(TUIFileMessageCell *)cell
 {
+    [self hideKeyboardIfNeeded];
     TUIFileMessageCellData *fileData = cell.fileData;
     if (![fileData isLocalExist]) {
         // 开始下载
@@ -1132,6 +1180,13 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     TUILinkCellData *cellData = cell.customData;
     if (cellData.link) {
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:cellData.link]];
+    }
+}
+
+- (void)showOrderMessage:(TUIOrderCell *)cell {
+    TUIOrderCellData *cellData = cell.customData;
+    if (cellData.link) {
+        [TUITool openLinkWithURL:[NSURL URLWithString:cellData.link]];
     }
 }
 

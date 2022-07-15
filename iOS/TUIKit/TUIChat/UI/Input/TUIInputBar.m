@@ -17,17 +17,27 @@
 #import "TUIDarkModel.h"
 #import "TUIGlobalization.h"
 #import "TUIThemeManager.h"
+#import "NSTimer+Safe.h"
 
 @interface TUIInputBar() <UITextViewDelegate, AVAudioRecorderDelegate>
 @property (nonatomic, strong) TUIRecordView *record;
 @property (nonatomic, strong) NSDate *recordStartTime;
 @property (nonatomic, strong) AVAudioRecorder *recorder;
 @property (nonatomic, strong) NSTimer *recordTimer;
+
+@property (nonatomic, assign) BOOL isFocusOn;
+@property (nonatomic, strong) NSTimer *sendTypingStatusTimer;
+@property (nonatomic, assign) BOOL allowSendTypingStatusByChangeWord;
 @end
 
 @implementation TUIInputBar
 
 - (void)dealloc {
+    
+    if(_sendTypingStatusTimer){
+        [_sendTypingStatusTimer invalidate];
+        _sendTypingStatusTimer = nil;
+    }
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -328,10 +338,46 @@
     self.keyboardButton.hidden = YES;
     self.micButton.hidden = NO;
     self.faceButton.hidden = NO;
+    
+    self.isFocusOn = YES;
+    self.allowSendTypingStatusByChangeWord  = YES;
+
+    
+    __weak typeof(self) weakSelf = self;
+    self.sendTypingStatusTimer = [NSTimer tui_scheduledTimerWithTimeInterval:4 repeats:YES block:^(NSTimer * _Nonnull timer) {
+        __strong typeof(weakSelf)strongSelf = weakSelf;
+        strongSelf.allowSendTypingStatusByChangeWord = YES;
+    }];
+    
+    if (self.isFocusOn &&textView.text.length > 0) {
+        if (_delegate && [_delegate respondsToSelector:@selector(inputTextViewShouldBeginTyping:)]) {
+            [_delegate inputTextViewShouldBeginTyping:textView];
+        }
+    }
+}
+
+- (void)textViewDidEndEditing:(UITextView *)textView {
+    
+    self.isFocusOn = NO;
+    if (_delegate && [_delegate respondsToSelector:@selector(inputTextViewShouldEndTyping:)]) {
+        [_delegate inputTextViewShouldEndTyping:textView];
+    }
 }
 
 - (void)textViewDidChange:(UITextView *)textView
 {
+    if (self.allowSendTypingStatusByChangeWord && self.isFocusOn &&textView.text.length > 0) {
+        if (_delegate && [_delegate respondsToSelector:@selector(inputTextViewShouldBeginTyping:)]) {
+            self.allowSendTypingStatusByChangeWord = NO;
+            [_delegate inputTextViewShouldBeginTyping:textView];
+        }
+    }
+    
+    if (self.isFocusOn && textView.text.length == 0) {
+        if (_delegate && [_delegate respondsToSelector:@selector(inputTextViewShouldEndTyping:)]) {
+            [_delegate inputTextViewShouldEndTyping:textView];
+        }
+    }
     CGSize size = [_inputTextView sizeThatFits:CGSizeMake(_inputTextView.frame.size.width, TTextView_TextView_Height_Max)];
     CGFloat oldHeight = _inputTextView.frame.size.height;
     CGFloat newHeight = size.height;

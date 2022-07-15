@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUIChat'
-  spec.version      = '6.3.2609'
+  spec.version      = '6.5.2803'
   spec.platform     = :ios
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
@@ -17,8 +17,8 @@ Pod::Spec.new do |spec|
 
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/6.3.2609/ios/TUIChat.zip'}
-  spec.dependency 'TUICore','6.3.2609'
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/6.5.2803/ios/TUIChat.zip'}
+  spec.dependency 'TUICore','6.5.2803'
 
   spec.subspec 'Header' do |header|
       header.source_files = '**/TUIChat/Header/*.{h,m,mm}'

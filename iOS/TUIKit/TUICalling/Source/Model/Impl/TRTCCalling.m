@@ -25,9 +25,10 @@
     NSString *_curCallID;
 }
 
+static dispatch_once_t onceToken;
+static TRTCCalling *g_sharedInstance;
+
 + (TRTCCalling *)shareInstance {
-    static dispatch_once_t onceToken;
-    static TRTCCalling * g_sharedInstance = nil;
     dispatch_once(&onceToken, ^{
         g_sharedInstance = [[TRTCCalling alloc] init];
     });
@@ -47,7 +48,15 @@
     return self;
 }
 
++ (void)destroySharedInstance {
+    [[TRTCCalling shareInstance] exitRoom];
+    [TRTCCloud destroySharedIntance];
+    onceToken = 0;
+    g_sharedInstance = nil;
+}
+
 - (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self removeSignalListener];
 }
 

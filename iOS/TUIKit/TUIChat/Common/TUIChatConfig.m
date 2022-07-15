@@ -21,6 +21,7 @@
         self.enablePopMenuEmojiReactAction = YES;
         self.enablePopMenuReplyAction = YES;
         self.enablePopMenuReferenceAction = YES;
+        self.enableTypingStatus = YES;
     }
     return self;
 }

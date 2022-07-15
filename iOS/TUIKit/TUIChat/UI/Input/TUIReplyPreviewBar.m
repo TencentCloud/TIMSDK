@@ -88,3 +88,19 @@
 }
 
 @end
+
+@implementation TUIReferencePreviewBar
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    self.closeButton.mm_right(16.0);
+    self.closeButton.frame = CGRectMake(self.closeButton.frame.origin.x, (self.frame.size.height - 16 ) *0.5, 16, 16);
+    
+    self.titleLabel.mm_x = 16.0;
+    self.titleLabel.mm_y = 10;
+    self.titleLabel.mm_w = self.closeButton.mm_x - 10 - 16;
+    self.titleLabel.mm_h = self.mm_h - 20;
+}
+@end

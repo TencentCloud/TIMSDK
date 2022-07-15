@@ -80,15 +80,25 @@ static NSString *const Id = @"con";
                 if ([self existInSelectedArray:contact.identifier]) {
                     continue;
                 }
-                TUIConversationCellData *conv = [[TUIConversationCellData alloc] init];
-                conv.conversationID = contact.identifier;
-                conv.userID = contact.identifier;
-                conv.groupID = @"";
-                conv.avatarImage = contact.avatarImage;
-                conv.faceUrl = contact.avatarUrl.absoluteString;
+                TUIConversationCellData *conv =  [self findItemInDataListArray:contact.identifier];
+                if (!conv) {
+                    conv = [[TUIConversationCellData alloc] init];
+                    conv.conversationID = contact.identifier;
+                    conv.userID = contact.identifier;
+                    conv.groupID = @"";
+                    conv.avatarImage = contact.avatarImage;
+                    conv.faceUrl = contact.avatarUrl.absoluteString;
+                }
+                else {
+                    conv.selected = !conv.selected;
+                }
+                
                 [self.currentSelectedList addObject:conv];
             }
+            
+         
             [self updatePickerView];
+            [self.tableView reloadData];
             [self.navigationController popViewControllerAnimated:YES];
         } else {
             // 单选: 创建新聊天(多人就是群聊) -> 为所选联系人创建群聊 -> 直接转发
@@ -240,6 +250,11 @@ static NSString *const Id = @"con";
     if (self.enableMuliple) {
         // 退出多选
         self.enableMuliple = NO;
+        
+        for (TUIConversationCellData *cellData in self.dataProvider.dataList) {
+            cellData.selected = NO;
+        }
+        
         [self.currentSelectedList removeAllObjects];
         self.pickerView.selectArray = @[];
         [self updatePickerView];
@@ -259,9 +274,22 @@ static NSString *const Id = @"con";
 
 - (void)onCreateSessionOrSelectContact
 {
+    
+    NSMutableArray *ids = NSMutableArray.new;
+    for (TUIConversationCellData *cd in self.currentSelectedList) {
+        if (![cd.userID isEqualToString:[[V2TIMManager sharedInstance] getLoginUser]]) {
+            if (cd.userID.length > 0) {
+                [ids addObject:cd.userID];
+            }
+        }
+    }
+    
     UIViewController *vc = [TUICore callService:TUICore_TUIContactService
                                          method:TUICore_TUIContactService_GetContactSelectControllerMethod
-                                          param:nil];
+                                          param:@{
+        TUICore_TUIContactService_GetContactSelectControllerMethod_DisableIdsKey : ids,
+    }];
+    
     [self.navigationController pushViewController:(UIViewController *)vc animated:YES];
     self.showContactSelectVC = vc;
 }
@@ -274,6 +302,16 @@ static NSString *const Id = @"con";
         }
     }
     return NO;
+}
+
+- (TUIConversationCellData *)findItemInDataListArray:(NSString *)identifier
+{
+    for (TUIConversationCellData *cellData in self.dataProvider.dataList) {
+        if (cellData.userID.length && [cellData.userID isEqualToString:identifier]) {
+            return cellData;
+        }
+    }
+    return nil;
 }
 
 - (void)doPickerDone

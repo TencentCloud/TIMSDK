@@ -36,7 +36,7 @@
 #import "TUIChatConfig.h"
 #import "TUIChatModifyMessageHelper.h"
 
-@interface TUIBaseChatViewController () <TUIBaseMessageControllerDelegate, TInputControllerDelegate, UIImagePickerControllerDelegate, UIDocumentPickerDelegate, UINavigationControllerDelegate, TUIMessageMultiChooseViewDelegate, TUIChatDataProviderForwardDelegate, TUINotificationProtocol, TUIJoinGroupMessageCellDelegate, V2TIMConversationListener>
+@interface TUIBaseChatViewController () <TUIBaseMessageControllerDelegate, TInputControllerDelegate, UIImagePickerControllerDelegate, UIDocumentPickerDelegate, UINavigationControllerDelegate, TUIMessageMultiChooseViewDelegate, TUIChatDataProviderForwardDelegate, TUINotificationProtocol, TUIJoinGroupMessageCellDelegate, V2TIMConversationListener, TUINavigationControllerDelegate>
 @property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
 @property (nonatomic, strong) TUIMessageMultiChooseView *multiChooseView;
 @property (nonatomic, assign) BOOL responseKeyboard;
@@ -172,6 +172,8 @@
 
 - (void)setupNavigator
 {
+    TUINavigationController *naviController = (TUINavigationController *)self.navigationController;
+    naviController.uiNaviDelegate = self;
     _titleView = [[TUINaviBarIndicatorView alloc] init];
     self.navigationItem.titleView = _titleView;
     self.navigationItem.title = @"";
@@ -179,6 +181,14 @@
     [[RACObserve(_conversationData, title) distinctUntilChanged] subscribeNext:^(NSString *title) {
         [weakSelf.titleView setTitle:title];
     }];
+    
+    [[RACObserve(_conversationData, otherSideTyping) distinctUntilChanged] subscribeNext:^(id otherSideTyping) {
+        BOOL otherSideTypingFlag =  [otherSideTyping boolValue];
+        if (!otherSideTypingFlag) {
+            [weakSelf checkTitle:YES];
+        }
+    }];
+    
     [self checkTitle:NO];
     // 刷新未读数
     [TUIChatDataProvider getTotalUnreadMessageCountWithSuccBlock:^(UInt64 totalCount) {
@@ -462,6 +472,15 @@
     // 交给 GroupChatVC 去处理
 }
 
+- (void)inputControllerBeginTyping:(TUIInputController *)inputController {
+    
+    //for C2CChatVC
+}
+
+- (void)inputControllerEndTyping:(TUIInputController *)inputController {
+    //for C2CChatVC
+}
+
 - (void)inputController:(TUIInputController *)inputController didSelectMoreCell:(TUIInputMoreCell *)cell
 {
     cell.disableDefaultSelectAction = NO;
@@ -562,6 +581,20 @@
 
 - (NSString *)dataProvider:(TUIChatDataProvider *)dataProvider mergeForwardMsgAbstactForMessage:(V2TIMMessage *)message {
     return @"";
+}
+
+#pragma mark - TUINavigationControllerDelegate
+- (void)navigationControllerDidClickLeftButton:(TUINavigationController *)controller {
+    if (controller.currentShowVC == self) {
+        [self.messageController readReport];
+    }
+}
+
+- (void)navigationControllerDidSideSlideReturn:(TUINavigationController *)controller
+                            fromViewController:(UIViewController *)fromViewController {
+    if ([fromViewController isEqual:self]) {
+        [self.messageController readReport];
+    }
 }
 
 #pragma mark - 消息菜单操作: 多选 & 转发
@@ -840,7 +873,7 @@
     
     V2TIMMessage *rootMsg = cellData.innerMessage;
 
-    [[TUIChatModifyMessageHelper defaultHelper] modifyMessage:rootMsg reactEmoji:emojiName simpleCurrentContent:nil timeControl:0];
+    [[TUIChatModifyMessageHelper defaultHelper] modifyMessage:rootMsg reactEmoji:emojiName];
 }
 #pragma mark - Privete Methods
 + (void)createCachePath

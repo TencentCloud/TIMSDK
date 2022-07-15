@@ -29,7 +29,7 @@ typedef NS_ENUM(NSUInteger, TUICallingUserRemoveReason) {
     TUICallingUserRemoveReasonBusy
 };
 
-@interface TUICalling () <TRTCCallingDelegate, TUIInvitedActionProtocal>
+@interface TUICalling () <TRTCCallingDelegate, TUIInvitedActionProtocal, TUILoginListener>
 
 /// 存储监听者对象
 @property (nonatomic, weak) id<TUICallingListerner> listener;
@@ -77,6 +77,7 @@ typedef NS_ENUM(NSUInteger, TUICallingUserRemoveReason) {
         _currentCallingRole = NO;
         _enableCustomViewRoute = NO;
         [[TRTCCalling shareInstance] addDelegate:self];
+        [TUILogin addLoginListener:self];
         [self registerNotifications];
     }
     return self;
@@ -93,12 +94,12 @@ typedef NS_ENUM(NSUInteger, TUICallingUserRemoveReason) {
         return;
     }
     if ([[TUICallingFloatingWindowManager shareInstance] isFloating]) {
-        [self makeToast:CallingLocalize(@"Demo.TRTC.Calling.UnableToRestartTheCall")];
+        [self makeToast:TUICallingLocalize(@"Demo.TRTC.Calling.UnableToRestartTheCall")];
         return;
     }
     // 最大支持9人超过9人不能发起通话
     if (userIDs.count > MAX_USERS) {
-        [self makeToast:CallingLocalize(@"Demo.TRTC.Calling.User.Exceed.Limit")];
+        [self makeToast:TUICallingLocalize(@"Demo.TRTC.Calling.User.Exceed.Limit")];
         return;
     }
     
@@ -203,6 +204,12 @@ typedef NS_ENUM(NSUInteger, TUICallingUserRemoveReason) {
                                                  selector:@selector(appWillEnterForeground)
                                                      name:UIApplicationWillEnterForegroundNotification object:nil];
     }
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(loginSuccessNotification)
+                                                 name:TUILoginSuccessNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(logoutSuccessNotification)
+                                                 name:TUILogoutSuccessNotification object:nil];
 }
 
 - (void)appWillEnterForeground {
@@ -210,6 +217,15 @@ typedef NS_ENUM(NSUInteger, TUICallingUserRemoveReason) {
         [self playAudioToCalled];
     }
     self.needContinuePlaying = NO;
+}
+
+- (void)loginSuccessNotification {
+    [[TRTCCalling shareInstance] addDelegate:self];
+}
+
+- (void)logoutSuccessNotification {
+    [[TRTCCalling shareInstance] hangup];
+    [TRTCCalling destroySharedInstance];
 }
 
 - (void)setGroupID:(NSString *)groupID onlineUserOnly:(NSNumber *)onlineUserOnly {
@@ -222,13 +238,17 @@ typedef NS_ENUM(NSUInteger, TUICallingUserRemoveReason) {
 }
 
 - (void)callStartWithUserIDs:(NSArray *)userIDs type:(TUICallingType)type role:(TUICallingRole)role {
-    if (self.enableCustomViewRoute && self.listener && [self.listener respondsToSelector:@selector(callStart:type:role:viewController:)]) {
-        UIViewController *callVC = [[UIViewController alloc] init];
+    UIViewController *callVC = nil;
+    if (self.enableCustomViewRoute) {
+        callVC = [[UIViewController alloc] init];
         callVC.view.backgroundColor = [UIColor clearColor];
         [callVC.view addSubview:self.callingView];
-        [self.listener callStart:userIDs type:type role:role viewController:callVC];
     } else {
         [self.callingView showCalingViewEnableFloatWindow:self.enableFloatWindow];
+    }
+    
+    if (self.listener && [self.listener respondsToSelector:@selector(callStart:type:role:viewController:)]) {
+        [self.listener callStart:userIDs type:type role:role viewController:callVC];
     }
     
     if (self.enableMuteMode) {
@@ -263,7 +283,7 @@ typedef NS_ENUM(NSUInteger, TUICallingUserRemoveReason) {
 }
 
 - (void)handleCallEnd {
-    if (self.enableCustomViewRoute && self.listener && [self.listener respondsToSelector:@selector(callEnd:type:role:totalTime:)]) {
+    if (self.listener && [self.listener respondsToSelector:@selector(callEnd:type:role:totalTime:)]) {
         [self.listener callEnd:self.userIDs type:self.currentCallingType role:self.currentCallingRole totalTime:(CGFloat)self.totalTime];
     }
     
@@ -277,7 +297,7 @@ typedef NS_ENUM(NSUInteger, TUICallingUserRemoveReason) {
 }
 
 - (void)handleCallEvent:(TUICallingEvent)event message:(NSString *)message {
-    if (self.enableCustomViewRoute && self.listener && [self.listener respondsToSelector:@selector(onCallEvent:type:role:message:)]) {
+    if (self.listener && [self.listener respondsToSelector:@selector(onCallEvent:type:role:message:)]) {
         [self.listener onCallEvent:event type:self.currentCallingType role:self.currentCallingRole message:message];
     }
 }
@@ -496,14 +516,14 @@ typedef NS_ENUM(NSUInteger, TUICallingUserRemoveReason) {
 
 - (void)onCallingCancel:(NSString *)uid {
     NSLog(@"log: onCallingCancel: %@", uid);
-    [self makeToast:CallingLocalize(@"Demo.TRTC.calling.callingcancel") uid:uid];
+    [self makeToast:TUICallingLocalize(@"Demo.TRTC.calling.callingcancel") uid:uid];
     [self handleCallEnd];
     [self handleCallEvent:TUICallingEventCallFailed message:EVENT_CALL_CNACEL];
 }
 
 - (void)onCallingTimeOut {
     NSLog(@"log: onCallingTimeOut");
-    [self makeToast:CallingLocalize(@"Demo.TRTC.calling.callingtimeout")];
+    [self makeToast:TUICallingLocalize(@"Demo.TRTC.calling.callingtimeout")];
     [self handleCallEnd];
     [self handleCallEvent:TUICallingEventCallFailed message:EVENT_CALL_TIMEOUT];
 }
@@ -573,16 +593,16 @@ typedef NS_ENUM(NSUInteger, TUICallingUserRemoveReason) {
         switch (removeReason) {
             case TUICallingUserRemoveReasonReject:
                 if (![TRTCCalling shareInstance].isBeingCalled) {
-                    toast = CallingLocalize(@"Demo.TRTC.calling.callingrefuse");
+                    toast = TUICallingLocalize(@"Demo.TRTC.calling.callingrefuse");
                 }
                 [weakSelf handleCallEvent:TUICallingEventCallFailed message:EVENT_CALL_HANG_UP];
                 break;
             case TUICallingUserRemoveReasonNoresp:
-                toast = CallingLocalize(@"Demo.TRTC.calling.callingnoresponse");
+                toast = TUICallingLocalize(@"Demo.TRTC.calling.callingnoresponse");
                 [weakSelf handleCallEvent:TUICallingEventCallFailed message:EVENT_CALL_NO_RESP];
                 break;
             case TUICallingUserRemoveReasonBusy:
-                toast = CallingLocalize(@"Demo.TRTC.calling.callingbusy");
+                toast = TUICallingLocalize(@"Demo.TRTC.calling.callingbusy");
                 [weakSelf handleCallEvent:TUICallingEventCallFailed message:EVENT_CALL_LINE_BUSY];
                 break;
             default:
@@ -640,47 +660,6 @@ typedef NS_ENUM(NSUInteger, TUICallingUserRemoveReason) {
     }
 }
 
-- (void)showAuthorizationAlert:(int)type {
-    NSString * title = @"";
-    NSString * message = @"";
-    NSString * laterMessage = @"";
-    NSString * openSettingMessage = @"";
-    //mic
-    if (1 == type) {
-        title = CallingLocalize(@"Demo.TRTC.Calling.failedtogetmicrophonepermission.Title");
-        message = CallingLocalize(@"Demo.TRTC.Calling.failedtogetmicrophonepermission.Tips");
-        laterMessage = CallingLocalize(@"Demo.TRTC.Calling.failedtogetmicrophonepermission.Later");
-        openSettingMessage = CallingLocalize(@"Demo.TRTC.Calling.failedtogetmicrophonepermission.Enable");
-    }
-    //camera
-    else if (2 == type){
-        title = CallingLocalize(@"Demo.TRTC.Calling.failedtogetcamerapermission.Title");
-        message = CallingLocalize(@"Demo.TRTC.Calling.failedtogetcamerapermission.Tips");
-        laterMessage = CallingLocalize(@"Demo.TRTC.Calling.failedtogetcamerapermission.Later");
-        openSettingMessage = CallingLocalize(@"Demo.TRTC.Calling.failedtogetcamerapermission.Enable");
-    }
-    else {
-        return;
-    }
-    if (@available(iOS 8.0, *)) {
-        UIAlertController *ac = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
-        [ac addAction:[UIAlertAction actionWithTitle:laterMessage style:UIAlertActionStyleCancel handler:nil]];
-        [ac addAction:[UIAlertAction actionWithTitle:openSettingMessage style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            UIApplication *app = [UIApplication sharedApplication];
-            NSURL *settingsURL = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
-            if ([app canOpenURL:settingsURL]) {
-                [app openURL:settingsURL];
-            }
-        }]];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [UIApplication.sharedApplication.keyWindow.rootViewController presentViewController:ac animated:YES completion:nil];
-        });
-    } else {
-        // Fallback on earlier versions
-    }
-   
-
-}
 - (NSString *)currentUserId {
     return [[V2TIMManager sharedInstance] getLoginUser];
 }
@@ -735,11 +714,11 @@ typedef NS_ENUM(NSUInteger, TUICallingUserRemoveReason) {
     AVAuthorizationStatus statusAudio = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeAudio];
     AVAuthorizationStatus statusVideo = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
     if (statusAudio == AVAuthorizationStatusDenied) {
-        [self showAuthorizationAlert:1];
+        [[TUICommonUtil getRootWindow] makeToast:TUICallingLocalize(@"Demo.TRTC.Calling.failedtogetmicrophonepermission")];
         return YES;
     }
     if ((self.currentCallingType == TUICallingTypeVideo) && (statusVideo == AVAuthorizationStatusDenied)) {
-        [self showAuthorizationAlert:2];
+        [[TUICommonUtil getRootWindow] makeToast:TUICallingLocalize(@"Demo.TRTC.Calling.failedtogetcamerapermission")];
         return YES;
     }
     return NO;

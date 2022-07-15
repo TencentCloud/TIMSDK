@@ -5,18 +5,18 @@
 //  Created by noah on 2021/12/27.
 //
 
-"Audio Call" = "Audio Call";
+"Audio Call" = "Voice Call";
 "Video Call" = "Video Call";
 "App.PortalViewController.highqualityspeech" = "48 kHz sample rate, uninterrupted even when packet loss reaches 60%, and leading audio processing technologies to eliminate echo and feedback";
 "App.PortalViewController.supports1080PUHDvideo" = "1080p UHD videos, uninterrupted even when packet loss reaches 50%, and built-in beauty filters to ensure premium video call experience";
 "App.PortalViewController.loginimfailed" = "Failed to log in to IM";
 "App.PortalViewController.videocalling" = "Video Call";
-"App.PortalViewController.audiocalling" = "Audio Call";
+"App.PortalViewController.audiocalling" = "Voice Call";
 "App.PortalViewController.groupvideocalling" = "Group Video Call";
-"App.PortalViewController.groupaudiocalling" = "Group Audio Call";
+"App.PortalViewController.groupaudiocalling" = "Group Voice Call";
 "App.PortalViewController.areyousureloginout" = "Are you sure you want to log out?";
 "App.PortalViewController.cancel" = "Cancel";
 "App.PortalViewController.determine" = "Yes";
-"Demo.TRTC.Portal.Home.audiocalldesc" = "Audio call still available with 70% packet loss";
+"Demo.TRTC.Portal.Home.audiocalldesc" = "Voice call still available with 70% packet loss";
 "Demo.TRTC.Portal.Home.videocalldesc" = "Video call still available with 50% packet loss";
 "Demo.TRTC.Portal.Home.logout" = "Log out";

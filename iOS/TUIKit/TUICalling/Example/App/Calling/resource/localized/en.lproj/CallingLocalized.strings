@@ -28,7 +28,7 @@
 "App.PortalViewController.areyousureloginout" = "Are you sure you want to log out?";
 "App.PortalViewController.cancel" = "Cancel";
 "App.PortalViewController.determine" = "Yes";
-"Demo.TRTC.calling.calltitle" = "Audio/Video Call";
+"Demo.TRTC.calling.calltitle" = "Voice/Video Call";
 "Demo.TRTC.calling.callType" = "Please select the calling method";
-"Audio Call" = "Audio Call";
+"Audio Call" = "Voice Call";
 "Video Call" = "Video Call";

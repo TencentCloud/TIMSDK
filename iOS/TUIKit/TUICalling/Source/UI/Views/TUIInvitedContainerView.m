@@ -73,7 +73,7 @@
 
 - (TUICallingControlButton *)acceptBtn {
     if (!_acceptBtn) {
-        _acceptBtn = [TUICallingControlButton createViewWithFrame:CGRectZero titleText:CallingLocalize(@"Demo.TRTC.Calling.answer") buttonAction:^(UIButton * _Nonnull sender) {
+        _acceptBtn = [TUICallingControlButton createViewWithFrame:CGRectZero titleText:TUICallingLocalize(@"Demo.TRTC.Calling.answer") buttonAction:^(UIButton * _Nonnull sender) {
             [self acceptTouchEvent:sender];
         } imageSize:CGSizeMake(64, 64)];
         [_acceptBtn configTitleColor:[UIColor t_colorWithHexString:@"#666666"]];
@@ -84,7 +84,7 @@
 
 - (TUICallingControlButton *)refuseBtn {
     if (!_refuseBtn) {
-        _refuseBtn = [TUICallingControlButton createViewWithFrame:CGRectZero titleText:CallingLocalize(@"Demo.TRTC.Calling.decline") buttonAction:^(UIButton * _Nonnull sender) {
+        _refuseBtn = [TUICallingControlButton createViewWithFrame:CGRectZero titleText:TUICallingLocalize(@"Demo.TRTC.Calling.decline") buttonAction:^(UIButton * _Nonnull sender) {
             [self refuseTouchEvent:sender];
         } imageSize:CGSizeMake(64, 64)];
         [_refuseBtn configTitleColor:[UIColor t_colorWithHexString:@"#666666"]];

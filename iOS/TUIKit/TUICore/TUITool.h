@@ -38,7 +38,6 @@ typedef void (^TAsyncImageComplete)(NSString *path, UIImage *image);
 + (NSString *)genFileName:(NSString *)uuid;
 + (NSString *)genVoiceName:(NSString *)uuid withExtension:(NSString *)extent;
 + (void)asyncDecodeImage:(NSString *)path complete:(TAsyncImageComplete)complete;
-+ (NSString *)randAvatarUrl;
 
 // 设备
 + (NSString *)deviceModel;
@@ -52,6 +51,10 @@ typedef void (^TAsyncImageComplete)(NSString *path, UIImage *image);
 + (void)showUnsupportAlertOfService:(NSString *)service onVC:(UIViewController *)vc;
 // 套餐包不支持通知
 + (void)postUnsupportNotificationOfService:(NSString *)service;
++ (void)postUnsupportNotificationOfService:(NSString *)service serviceDesc:(NSString *)serviceDesc debugOnly:(BOOL)debugOnly;
 + (void)addUnsupportNotificationInVC:(UIViewController *)vc;
++ (void)addUnsupportNotificationInVC:(UIViewController *)vc debugOnly:(BOOL)debugOnly;
+
++ (UIWindow *)applicationKeywindow;
 
 @end

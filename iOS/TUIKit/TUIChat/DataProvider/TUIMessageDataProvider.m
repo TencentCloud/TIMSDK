@@ -16,6 +16,7 @@
 #import "TUIFaceMessageCellData.h"
 #import "TUIJoinGroupMessageCellData.h"
 #import "TUIReplyMessageCellData.h"
+#import "TUITypingStatusCellData.h"
 #import "TUIFaceView.h"
 #import "TUIDefine.h"
 #import "TUITool.h"
@@ -23,6 +24,7 @@
 #import "NSString+TUIUtil.h"
 #import "TUIMessageProgressManager.h"
 #import "TUICloudCustomDataTypeCenter.h"
+#import "TUIChatConfig.h"
 
 #define MaxDateMessageDelay 5 * 60 /// 消息上方的日期时间间隔, 单位秒 , default is (5 * 60)
 #define MaxReEditMessageDelay 2 * 60 /// 消息撤回后最大可编辑时间 , default is (2 * 60)
@@ -52,6 +54,18 @@ static NSArray *customMessageInfo = nil;
                           @{BussinessID : BussinessID_GroupCreate,
                             TMessageCell_Name : @"TUIGroupCreatedCell",
                             TMessageCell_Data_Name : @"TUIGroupCreatedCellData"
+                          },
+                          @{BussinessID : BussinessID_Evaluation,
+                            TMessageCell_Name : @"TUIEvaluationCell",
+                            TMessageCell_Data_Name : @"TUIEvaluationCellData"
+                          },
+                          @{BussinessID : BussinessID_Order,
+                            TMessageCell_Name : @"TUIOrderCell",
+                            TMessageCell_Data_Name : @"TUIOrderCellData"
+                          },
+                          @{BussinessID : BussinessID_Typing,
+                            TMessageCell_Name : @"TUIMessageCell",
+                            TMessageCell_Data_Name : @"TUITypingStatusCellData"
                           }
     ];
 }
@@ -90,7 +104,7 @@ static NSArray *customMessageInfo = nil;
 #pragma mark - TUIKitNotification
 - (void)registerTUIKitNotification {
     [[V2TIMManager sharedInstance] addAdvancedMsgListener:self];
-    
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onMessageStatusChanged:) name:TUIKitNotification_onMessageStatusChanged object:nil];
 }
 
@@ -115,6 +129,31 @@ static NSArray *customMessageInfo = nil;
     // immsg -> uimsg
     NSMutableArray *cellDataList = [self transUIMsgFromIMMsg:@[msg]];
     if (cellDataList.count == 0) {
+        return;
+    }
+    
+    TUIMessageCellData *lastObj = cellDataList.lastObject;
+    
+    if ([lastObj isKindOfClass:TUITypingStatusCellData.class]) {
+        
+        if (![TUIChatConfig defaultConfig].enableTypingStatus) {
+            return;
+        }
+        
+        TUITypingStatusCellData * stastusData = (TUITypingStatusCellData *)lastObj;
+ 
+        if (!NSThread.isMainThread) {
+            @weakify(self);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                @strongify(self);
+                [self dealTypingByStatusCellData:stastusData];
+            });
+            return;
+        }
+        else {
+            [self dealTypingByStatusCellData:stastusData];
+        }
+        
         return;
     }
     
@@ -259,7 +298,27 @@ static NSArray *customMessageInfo = nil;
         }
     }
 }
+- (void)dealTypingByStatusCellData:(TUITypingStatusCellData *)stastusData {
+    
+    if (1 == stastusData.typingStatus) {
+        //再次收到对方输入中的通知 则重新计时
+        //The timer is retimed upon receipt of the notification from the other party's input
+        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(resetTypingStatus) object:nil];
 
+        self.conversationModel.otherSideTyping = YES;
+        self.conversationModel.title = [NSString stringWithFormat:@"%@...",TUIKitLocalizableString(TUIKitTyping)];
+        
+        //如果对方没有继续输入，每隔5秒结束状态
+        //If the other party does not continue typing, end the status every 5 seconds
+        [self performSelector:@selector(resetTypingStatus) withObject:nil afterDelay:5.0];
+    }
+    else {
+        self.conversationModel.otherSideTyping = NO;
+    }
+}
+- (void)resetTypingStatus {
+    self.conversationModel.otherSideTyping = NO;
+}
 #pragma mark - Msgs
 - (void)loadMessageSucceedBlock:(void (^)(BOOL isFirstLoad, BOOL isNoMoreMsg, NSArray<TUIMessageCellData *> *newMsgs))SucceedBlock FailBlock:(V2TIMFail)FailBlock
 {
@@ -767,6 +826,30 @@ static NSArray *customMessageInfo = nil;
     [[V2TIMManager sharedInstance] getMessageReadReceipts:messages succ:succ fail:fail];
 }
 
++ (BOOL)isEvaluationCustomMessage:(V2TIMMessage *)message {
+    NSArray *evaluations = @[@"evaluate", @"evaluation"];
+    return [evaluations containsObject:[self dataParsedFromWebCustomData:message]];
+}
+
++ (BOOL)isOrderCustomMessage:(V2TIMMessage *)message {
+    NSArray *orders = @[@"order"];
+    return [orders containsObject:[self dataParsedFromWebCustomData:message]];
+}
+
++ (NSString *)dataParsedFromWebCustomData:(V2TIMMessage *)message {
+    NSError *error;
+    NSDictionary *data = [NSJSONSerialization JSONObjectWithData:message.customElem.data options:NSJSONReadingAllowFragments error:&error];
+    if (error) {
+        NSLog(@"parse customElem data error: %@", error);
+        return nil;
+    }
+    if (!data || ![data isKindOfClass:[NSDictionary class]]) {
+        return nil;
+    }
+    
+    return data[@"businessID"];
+}
+
 #pragma mark - CellData
 
 + (TUIMessageCellData *)getCellData:(V2TIMMessage *)message {
@@ -820,12 +903,14 @@ static NSArray *customMessageInfo = nil;
         {
             if ([self isCallMessage:message]) {
                 data = [self getCallCellData:message];
-            }
-            else if ([self isLiveMessage:message]) {
+            } else if ([self isLiveMessage:message]) {
                 data = [self getLiveCellData:message];
-            }
-            else {
-                data = [self getCustomCellData:message];
+            } else if ([self isEvaluationCustomMessage:message]) {
+                data = [self getEvalutionCustomCellData:message];
+            } else if ([self isOrderCustomMessage:message]) {
+                data = [self getOrderCustomCellData:message];
+            } else {
+                data = [self getNativeCustomCellData:message];
             }
         }
             break;
@@ -936,8 +1021,13 @@ static NSArray *customMessageInfo = nil;
     return data;
 }
 
-+ (TUIMessageCellData *)getCustomCellData:(V2TIMMessage *)message{
-    NSDictionary *param = [NSJSONSerialization JSONObjectWithData:message.customElem.data options:NSJSONReadingAllowFragments error:nil];
++ (TUIMessageCellData *)getNativeCustomCellData:(V2TIMMessage *)message {
+    NSError *error;
+    NSDictionary *param = [NSJSONSerialization JSONObjectWithData:message.customElem.data options:NSJSONReadingAllowFragments error:&error];
+    if (error) {
+        NSLog(@"parse customElem data error: %@", error);
+        return nil;
+    }
     if (!param || ![param isKindOfClass:[NSDictionary class]]) {
         return nil;
     }
@@ -959,7 +1049,30 @@ static NSArray *customMessageInfo = nil;
     return nil;
 }
 
-+ (TUISystemMessageCellData *) getSystemCellData:(V2TIMMessage *)message{
++ (TUIMessageCellData *)getEvalutionCustomCellData:(V2TIMMessage *)message {
+    return [self getWebCustomCellData:message businessID:BussinessID_Evaluation];
+}
+
++ (TUIMessageCellData *)getOrderCustomCellData:(V2TIMMessage *)message {
+    return [self getWebCustomCellData:message businessID:BussinessID_Order];
+}
+
++ (TUIMessageCellData *)getWebCustomCellData:(V2TIMMessage *)message businessID:(NSString *)businessID {
+    for (NSDictionary *messageInfo in customMessageInfo) {
+        if ([businessID isEqualToString:messageInfo[BussinessID]]) {
+            NSString *cellDataName = messageInfo[TMessageCell_Data_Name];
+            Class cls = NSClassFromString(cellDataName);
+            if (cls && [cls respondsToSelector:@selector(getCellData:)]) {
+                TUIMessageCellData *data = [cls getCellData:message];
+                data.reuseId = businessID;
+                return data;
+            }
+        }
+    }
+    return nil;
+}
+
++ (TUISystemMessageCellData *)getSystemCellData:(V2TIMMessage *)message {
     V2TIMGroupTipsElem *tip = message.groupTipsElem;
     NSString *opUserName = [self getOpUserName:tip.opMember];
     NSMutableArray<NSString *> *userNameList = [self getUserNameList:tip.memberList];
@@ -1106,6 +1219,16 @@ static NSArray *customMessageInfo = nil;
         [TUIMessageDataProvider isGroupAVChatRoom:conversationData.groupType]) {
         message.needReadReceipt = NO;
     }
+    
+    if (conversationData.userID.length > 0) {
+        //C2C
+        NSDictionary * cloudCustomDataDic = @{
+                @"needTyping":@1,
+                @"version":@1,
+        };
+        [message setCloudCustomData:cloudCustomDataDic forType:messageFeature];
+    }
+    
     return [V2TIMManager.sharedInstance sendMessage:message
                                            receiver:userID
                                             groupID:groupID

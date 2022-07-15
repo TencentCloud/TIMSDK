@@ -22,7 +22,7 @@ NSString *_userID;
 {
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onLoginSucc) name:@"TUILoginSuccessNotification" object:nil];
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onLogoutSucc) name:@"TUILogoutSuccessNotification" object:nil];
-    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onApplicationDidLaunch) name:UIApplicationDidFinishLaunchingNotification object:nil];
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onApplicationDidLaunch:) name:UIApplicationDidFinishLaunchingNotification object:nil];
 }
 
 static id _instance;
@@ -51,10 +51,14 @@ static id _instance;
     }
 }
 
-+ (void)onApplicationDidLaunch
++ (void)onApplicationDidLaunch:(NSNotification *)notice
 {
     if ([self.shareManager respondsToSelector:@selector(loadApplicationDelegateIfNeeded)]) {
         [self.shareManager loadApplicationDelegateIfNeeded];
+    }
+    
+    if ([self.shareManager respondsToSelector:@selector(handleLanuchInfoIfNeeded:)] ) {
+        [self.shareManager handleLanuchInfoIfNeeded:notice.userInfo];
     }
 }
 
@@ -93,6 +97,27 @@ static id _instance;
              NSLog(@"%s, fail, %d, %@", __func__, code, msg);
         }];
     }
+}
+
+- (void)handleLanuchInfoIfNeeded:(NSDictionary *)launchOptions
+{
+    if (launchOptions == nil || ![launchOptions isKindOfClass:NSDictionary.class] ||
+        ![launchOptions.allKeys containsObject:UIApplicationLaunchOptionsRemoteNotificationKey]) {
+        return;
+    }
+    
+    NSDictionary *remoteDictionary = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+    if (![remoteDictionary isKindOfClass:NSDictionary.class] || ![remoteDictionary.allKeys containsObject:@"ext"]) {
+        return;
+    }
+    NSDictionary *extParam = [self jsonSring2Dictionary:remoteDictionary[@"ext"]];
+    if (extParam == nil ||
+        ![extParam.allKeys containsObject:@"entity"]) {
+        return;
+    }
+    
+    NSDictionary *entity = extParam[@"entity"];
+    [self onReceiveOfflinePushEntity:entity];
 }
 
 - (void)onReceiveOfflinePushEntity:(NSDictionary *)entity
@@ -378,6 +403,22 @@ static id _instance;
         return self.applicationDelegate;
     }
     return [super forwardingTargetForSelector:aSelector];
+}
+
+#pragma mark - Utils
+- (NSDictionary *)jsonSring2Dictionary:(NSString *)jsonString
+{
+    if (jsonString == nil) {
+        return nil;
+    }
+    NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    NSError *err = nil;
+    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&err];
+    if (err || ![dic isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"Json parse failed: %@", jsonString);
+        return nil;
+    }
+    return dic;
 }
 
 @end

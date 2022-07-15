@@ -143,10 +143,6 @@
     });
 }
 
-+ (NSString *)randAvatarUrl
-{
-    return [NSString stringWithFormat:@"https://picsum.photos/id/%d/200/200", rand()%999];
-}
 
 + (void)makeToast:(NSString *)str
 {
@@ -1060,36 +1056,67 @@
 }
 
 + (void)addUnsupportNotificationInVC:(UIViewController *)vc {
+    [self addUnsupportNotificationInVC:vc debugOnly:YES];
+}
+
++ (void)addUnsupportNotificationInVC:(UIViewController *)vc debugOnly:(BOOL)debugOnly {
+    BOOL enable = YES;
+    if (debugOnly) {
 #if DEBUG
+        enable = YES;
+#else
+        enable = NO;
+#endif
+    }
+    
+    if (!enable) {
+        return;
+    }
+    
     @weakify(vc);
     [[NSNotificationCenter defaultCenter] addObserverForName:TUIKitNotification_onReceivedUnsupportInterfaceError object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
         @strongify(vc);
         NSDictionary *userInfo = note.userInfo;
         NSString *service = [userInfo objectForKey:@"service"];
-        [TUITool showUnsupportAlertOfService:service onVC:vc];
+        NSString *serviceDesc = [userInfo objectForKey:@"serviceDesc"];
+        [TUITool showUnsupportAlertOfService:service serviceDesc:serviceDesc onVC:vc];
     }];
-#endif
 }
 
 + (void)postUnsupportNotificationOfService:(NSString *)service {
+    [self postUnsupportNotificationOfService:service serviceDesc:nil debugOnly:YES];
+}
+
++ (void)postUnsupportNotificationOfService:(NSString *)service serviceDesc:(NSString *)serviceDesc debugOnly:(BOOL)debugOnly {
+    BOOL enable = YES;
+    if (debugOnly) {
 #if DEBUG
+        enable = YES;
+#else
+        enable = NO;
+#endif
+    }
+    
+    if (!enable) {
+        return;
+    }
+
     if (!service) {
         NSLog(@"postNotificationOfService, service is nil");
         return;
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:TUIKitNotification_onReceivedUnsupportInterfaceError
                                                         object:nil
-                                                      userInfo:@{@"service": service}];
-#endif
+                                                      userInfo:@{@"service": service?:@"", @"serviceDesc":serviceDesc?:@""}];
 }
 
-+ (void)showUnsupportAlertOfService:(NSString *)service onVC:(UIViewController *)vc {
-#if DEBUG
-    BOOL isShown = [[NSUserDefaults standardUserDefaults] boolForKey:@"show_unsupport_alert"];
++ (void)showUnsupportAlertOfService:(NSString *)service serviceDesc:(NSString *)serviceDesc onVC:(UIViewController *)vc {
+    NSString *key = [NSString stringWithFormat:@"show_unsupport_alert_%@", service];
+    BOOL isShown = [[NSUserDefaults standardUserDefaults] boolForKey:key];
     if (isShown) {
         return;
     }
-    NSString *desc = [NSString stringWithFormat:@"%@%@", service, TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceDesc)];
+    NSString *desc = [NSString stringWithFormat:@"%@%@%@", service, TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceDesc), serviceDesc?:@""];
     NSArray *buttons = @[TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceIGotIt), TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceNoMoreAlert)];
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceTitle)
                                                                              message:desc
@@ -1107,12 +1134,12 @@
     UIAlertAction *left = [UIAlertAction actionWithTitle:buttons[0] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
     }];
     UIAlertAction *right = [UIAlertAction actionWithTitle:buttons[1] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"show_unsupport_alert"];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:key];
+        [[NSUserDefaults standardUserDefaults] synchronize];
     }];
     [alertController addAction:left];
     [alertController addAction:right];
     [vc presentViewController:alertController animated:NO completion:nil];
-#endif
 }
 
 + (void)onTapLabel:(UIGestureRecognizer *)ges {
@@ -1149,6 +1176,39 @@
         view = view.subviews.firstObject;
     }
     return view;
+}
+
++ (UIWindow *)applicationKeywindow {
+    UIWindow *keywindow = UIApplication.sharedApplication.keyWindow;
+    if (keywindow == nil) {
+        if (@available(iOS 13.0, *)) {
+            for (UIWindowScene *scene in UIApplication.sharedApplication.connectedScenes) {
+                if (scene.activationState == UISceneActivationStateForegroundActive) {
+                    UIWindow *tmpWindow = nil;
+                    if (@available(iOS 15.0, *)) {
+                        tmpWindow = scene.keyWindow;
+                    }
+                    if (tmpWindow == nil) {
+                        for (UIWindow *window in scene.windows) {
+                            if (window.windowLevel == UIWindowLevelNormal && window.hidden == NO && CGRectEqualToRect(window.bounds, UIScreen.mainScreen.bounds)) {
+                                tmpWindow = window;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if (keywindow == nil) {
+        for (UIWindow *window in UIApplication.sharedApplication.windows) {
+            if (window.windowLevel == UIWindowLevelNormal && window.hidden == NO && CGRectEqualToRect(window.bounds, UIScreen.mainScreen.bounds)) {
+                keywindow = window;
+                break;
+            }
+        }
+    }
+    return keywindow;
 }
 
 @end

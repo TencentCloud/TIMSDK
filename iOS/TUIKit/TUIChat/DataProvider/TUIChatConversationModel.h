@@ -58,6 +58,13 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, strong) NSMutableArray<NSNumber *> *atMsgSeqs;
 
+/**
+ *  对方的输入状态 (单聊 Only)
+ *  The input status of the other Side (C2C Only)
+ */
+
+@property (nonatomic, assign) BOOL otherSideTyping;
+
 @end
 
 NS_ASSUME_NONNULL_END

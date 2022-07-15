@@ -78,5 +78,9 @@
 	<string>service_more_video_call.png</string>
 	<key>service_more_voice_call_img</key>
 	<string>service_more_voice_call.png</string>
+	<key>icon_online_status_img</key>
+	<string>icon_online_status.png</string>
+	<key>icon_offline_status_img</key>
+	<string>icon_offline_status.png</string>
 </dict>
 </plist>

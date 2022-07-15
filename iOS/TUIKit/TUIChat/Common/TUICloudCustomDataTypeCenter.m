@@ -7,6 +7,8 @@
 
 #import "TUICloudCustomDataTypeCenter.h"
 #import "TUIDefine.h"
+TUICustomType messageFeature = @"messageFeature";
+
 @implementation V2TIMMessage (CloudCustomDataType)
 
 - (BOOL)hasAnyCloudCustomDataType {

@@ -284,10 +284,10 @@ static CGFloat const kSmallVideoViewWidth = 100.0f;
             
             if (self.isVideo) {
                 [self initUIForVideoCallee];
-                [self.videoUserContainerView configUserInfoViewWith:self.remoteSponsor showWaitingText:CallingLocalize(@"Demo.TRTC.calling.invitetovideocall")];
+                [self.videoUserContainerView configUserInfoViewWith:self.remoteSponsor showWaitingText:TUICallingLocalize(@"Demo.TRTC.calling.invitetovideocall")];
             } else {
                 [self initUIForAudioCallee];
-                [self.audioUserContainerView configUserInfoViewWith:self.remoteSponsor showWaitingText:CallingLocalize(@"Demo.TRTC.calling.invitetoaudiocall")];
+                [self.audioUserContainerView configUserInfoViewWith:self.remoteSponsor showWaitingText:TUICallingLocalize(@"Demo.TRTC.calling.invitetoaudiocall")];
             }
         } break;
         case TUICallingStateDailing: {
@@ -295,10 +295,10 @@ static CGFloat const kSmallVideoViewWidth = 100.0f;
             
             if (self.isVideo) {
                 [self initUIForVideoCaller];
-                [self.videoUserContainerView configUserInfoViewWith:self.remoteSponsor showWaitingText:CallingLocalize(@"Demo.TRTC.Calling.waitaccept")];
+                [self.videoUserContainerView configUserInfoViewWith:self.remoteSponsor showWaitingText:TUICallingLocalize(@"Demo.TRTC.Calling.waitaccept")];
             } else {
                 [self initUIForAudioCaller];
-                [self.audioUserContainerView configUserInfoViewWith:self.remoteSponsor showWaitingText:CallingLocalize(@"Demo.TRTC.Calling.waitaccept")];
+                [self.audioUserContainerView configUserInfoViewWith:self.remoteSponsor showWaitingText:TUICallingLocalize(@"Demo.TRTC.Calling.waitaccept")];
             }
         } break;
         case TUICallingStateCalling: {
@@ -381,7 +381,7 @@ static CGFloat const kSmallVideoViewWidth = 100.0f;
     
     if (!self.isCallee && self.curCallingState != TUICallingStateCalling) {
         // 等待对方接听
-        showText = CallingLocalize(@"Demo.TRTC.Calling.waitaccept");
+        showText = TUICallingLocalize(@"Demo.TRTC.Calling.waitaccept");
     }
     
     if (self.curCallingState == TUICallingStateCalling) {
@@ -395,7 +395,7 @@ static CGFloat const kSmallVideoViewWidth = 100.0f;
 }
 
 - (void)setRemotePreViewWith:(CallUserModel *)user{
-    if (user.userId != [[V2TIMManager sharedInstance] getLoginUser]) {
+    if (![user.userId isEqualToString:[[V2TIMManager sharedInstance] getLoginUser]]) {
         self.remotePreView.hidden = NO;
         [self.remotePreView configViewWithUserModel:user];
         [[TRTCCalling shareInstance] startRemoteView:user.userId view:self.remotePreView];
@@ -416,22 +416,22 @@ static CGFloat const kSmallVideoViewWidth = 100.0f;
 - (void)updateUser:(CallUserModel *)user animated:(BOOL)animated {
     self.remotePreView.hidden = !user.isVideoAvaliable;
     
-    if (self.remoteSponsor.userId == user.userId) {
+    if ([self.remoteSponsor.userId isEqualToString:user.userId]) {
         self.remoteSponsor = user;
     }
 }
 
 - (void)updateUserVolume:(CallUserModel *)user {
-    if (self.remoteSponsor.userId == user.userId) {
+    if ([self.remoteSponsor.userId isEqualToString:user.userId]) {
         [self.remotePreView configViewWithUserModel:user];
     }
 }
 
 - (CallUserModel *)getUserById:(NSString *)userId {
-    if (self.remoteSponsor.userId == userId) {
+    if ([self.remoteSponsor.userId isEqualToString:userId]) {
         return self.remoteSponsor;
     }
-    return Nil;
+    return nil;
 }
 
 - (void)acceptCalling {
@@ -675,7 +675,7 @@ static CGFloat const kSmallVideoViewWidth = 100.0f;
 - (TUICallingControlButton *)muteBtn {
     if (!_muteBtn) {
         __weak typeof(self) weakSelf = self;
-        _muteBtn = [TUICallingControlButton createViewWithFrame:CGRectZero titleText:CallingLocalize(@"Demo.TRTC.Calling.mic") buttonAction:^(UIButton * _Nonnull sender) {
+        _muteBtn = [TUICallingControlButton createViewWithFrame:CGRectZero titleText:TUICallingLocalize(@"Demo.TRTC.Calling.mic") buttonAction:^(UIButton * _Nonnull sender) {
             [weakSelf muteTouchEvent:sender];
         } imageSize:kBtnSmallSize];
         [_muteBtn configBackgroundImage:[TUICommonUtil getBundleImageWithName:@"ic_mute"]];
@@ -686,7 +686,7 @@ static CGFloat const kSmallVideoViewWidth = 100.0f;
 - (TUICallingControlButton *)hangupBtn {
     if (!_hangupBtn) {
         __weak typeof(self) weakSelf = self;
-        _hangupBtn = [TUICallingControlButton createViewWithFrame:CGRectZero titleText:CallingLocalize(@"Demo.TRTC.Calling.hangup") buttonAction:^(UIButton * _Nonnull sender) {
+        _hangupBtn = [TUICallingControlButton createViewWithFrame:CGRectZero titleText:TUICallingLocalize(@"Demo.TRTC.Calling.hangup") buttonAction:^(UIButton * _Nonnull sender) {
             [weakSelf hangupTouchEvent:sender];
         } imageSize:kBtnLargeSize];
         [_hangupBtn configBackgroundImage:[TUICommonUtil getBundleImageWithName:@"ic_hangup"]];
@@ -697,7 +697,7 @@ static CGFloat const kSmallVideoViewWidth = 100.0f;
 - (TUICallingControlButton *)handsfreeBtn {
     if (!_handsfreeBtn) {
         __weak typeof(self) weakSelf = self;
-        _handsfreeBtn = [TUICallingControlButton createViewWithFrame:CGRectZero titleText:CallingLocalize(@"Demo.TRTC.Calling.speaker") buttonAction:^(UIButton * _Nonnull sender) {
+        _handsfreeBtn = [TUICallingControlButton createViewWithFrame:CGRectZero titleText:TUICallingLocalize(@"Demo.TRTC.Calling.speaker") buttonAction:^(UIButton * _Nonnull sender) {
             [weakSelf hangsfreeTouchEvent:sender];
         } imageSize:kBtnSmallSize];
         [_handsfreeBtn configBackgroundImage:[TUICommonUtil getBundleImageWithName:@"ic_handsfree"]];
@@ -751,7 +751,7 @@ static CGFloat const kSmallVideoViewWidth = 100.0f;
 - (TUICallingControlButton *)switchToAudioBtn {
     if (!_switchToAudioBtn) {
         __weak typeof(self) weakSelf = self;
-        _switchToAudioBtn = [TUICallingControlButton createViewWithFrame:CGRectZero titleText:CallingLocalize(@"Demo.TRTC.Calling.switchtoaudio") buttonAction:^(UIButton * _Nonnull sender) {
+        _switchToAudioBtn = [TUICallingControlButton createViewWithFrame:CGRectZero titleText:TUICallingLocalize(@"Demo.TRTC.Calling.switchtoaudio") buttonAction:^(UIButton * _Nonnull sender) {
             [weakSelf switchToAudioTouchEvent:sender];
         } imageSize:CGSizeMake(28, 18)];
         [_switchToAudioBtn configTitleColor:[UIColor t_colorWithHexString:@"#FFFFFF"]];
@@ -770,7 +770,7 @@ static CGFloat const kSmallVideoViewWidth = 100.0f;
 - (TUICallingControlButton *)closeCameraBtn {
     if (!_closeCameraBtn) {
         __weak typeof(self) weakSelf = self;
-        _closeCameraBtn = [TUICallingControlButton createViewWithFrame:CGRectZero titleText:CallingLocalize(@"Demo.TRTC.Calling.camera") buttonAction:^(UIButton * _Nonnull sender) {
+        _closeCameraBtn = [TUICallingControlButton createViewWithFrame:CGRectZero titleText:TUICallingLocalize(@"Demo.TRTC.Calling.camera") buttonAction:^(UIButton * _Nonnull sender) {
             [weakSelf closeCameraTouchEvent:sender];
         } imageSize:kBtnSmallSize];
         [_closeCameraBtn configTitleColor:[UIColor t_colorWithHexString:@"#FFFFFF"]];
