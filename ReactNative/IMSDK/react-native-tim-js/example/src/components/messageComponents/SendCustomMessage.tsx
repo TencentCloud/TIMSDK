@@ -32,7 +32,7 @@ const SendCustomMessageComponent = () => {
         const groupID = groupName==='未选择'?'':groupName
         if(id!==undefined){
             const res = await TencentImSDKPlugin.v2TIMManager.getMessageManager().sendMessage({
-                id:id,
+                id:id.toString(),
                 receiver:receiver,
                 groupID:groupID,
                 onlineUserOnly:isonlineUserOnly,

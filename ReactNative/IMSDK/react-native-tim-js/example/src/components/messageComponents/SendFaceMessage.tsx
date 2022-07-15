@@ -8,9 +8,10 @@ import CheckBoxModalComponent from '../commonComponents/CheckboxModalComponent';
 import BottomModalComponent from '../commonComponents/BottomModalComponent';
 import mystylesheet from '../../stylesheets';
 
-const SendTextMessageComponent = () => {
+const SendFaceMessageComponent = () => {
     const [res, setRes] = useState<any>({});
-    const [input, setInput] = useState<string>('');
+    const [data, setData] = useState<string>('');
+    const [index,setIndex] = useState<number>(0);
     const [userName, setUserName] = useState<string>('未选择')
     const [groupName, setGroupName] = useState<string>('未选择')
     const [priority, setPriority] = useState<string>('')
@@ -18,15 +19,15 @@ const SendTextMessageComponent = () => {
     const [isExcludedFromUnreadCount, setIsExcludedFromUnreadCount] = useState(false);
     const receiveOnlineUserstoggle = () => setIsonlineUserOnly(previousState => !previousState);
     const unreadCounttoggle = () => setIsExcludedFromUnreadCount(previousState => !previousState);
-    const sendTextMessage = async () => {
-        const messageRes = await TencentImSDKPlugin.v2TIMManager.getMessageManager().createTextMessage(input)        
+    const sendFaceMessage = async () => {
+        const messageRes = await TencentImSDKPlugin.v2TIMManager.getMessageManager().createFaceMessage(index,data)      
 
         const id = messageRes.data?.id
         const receiver = userName==='未选择'?'':userName
         const groupID = groupName==='未选择'?'':groupName
         if(id!==undefined){
             const res = await TencentImSDKPlugin.v2TIMManager.getMessageManager().sendMessage({
-                id: id.toString(),
+                id:id.toString(),
                 receiver:receiver,
                 groupID:groupID,
                 onlineUserOnly:isonlineUserOnly,
@@ -109,7 +110,10 @@ const SendTextMessageComponent = () => {
     return (
         <>
             <View style={styles.userInputcontainer}>
-                <UserInputComponent content='发送文本' placeholdercontent='发送文本' getContent={setInput} />
+                <UserInputComponent content='表情位置' placeholdercontent='表情位置' getContent={(val)=>setIndex(parseInt(val))} isNumber={true} />
+            </View>
+            <View style={styles.userInputcontainer}>
+                <UserInputComponent content='表情信息' placeholdercontent='表情信息' getContent={setData} />
             </View>
             <FriendComponent />
             <GroupComponent />
@@ -135,15 +139,15 @@ const SendTextMessageComponent = () => {
                 />
             </View>
             <CommonButton
-                handler={() => { sendTextMessage() }}
-                content={'发送文本消息'}
+                handler={() => { sendFaceMessage() }}
+                content={'发送表情消息'}
             ></CommonButton>
             <CodeComponent></CodeComponent>
         </>
     );
 };
 
-export default SendTextMessageComponent;
+export default SendFaceMessageComponent;
 const styles = StyleSheet.create({
     userInputcontainer: {
         marginLeft: 10,

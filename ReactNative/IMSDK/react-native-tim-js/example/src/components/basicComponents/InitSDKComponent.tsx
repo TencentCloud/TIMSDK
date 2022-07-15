@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import { Alert } from 'react-native';
 import { TencentImSDKPlugin } from 'react-native-tim-js';
 import CommonButton from '../commonComponents/CommonButton';
 import storage from '../../storage/Storage';
@@ -28,11 +28,16 @@ const InitSDKComponent = () => {
     }, []);
 
     const initSDK = async () => {
-        const res = await TencentImSDKPlugin.v2TIMManager.initSDK(
-            parseInt(sdkInfo.sdkappid),
-            3
-        );
-        setRes(res);
+        if(sdkInfo.sdkappid){
+            const res = await TencentImSDKPlugin.v2TIMManager.initSDK(
+                parseInt(sdkInfo.sdkappid),
+                3
+            );
+            setRes(res);
+        }else{
+            Alert.alert('请在配置页面完成配置')
+        }
+
     };
     const [res, setRes] = React.useState<any>({});
     const CodeComponent = () => {

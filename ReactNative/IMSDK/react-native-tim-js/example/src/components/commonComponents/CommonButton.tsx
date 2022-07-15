@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     },
     commonButtonText:{
         color: '#FFFFFF',
-        fontSize:16,
+        fontSize:14,
         textAlign:'center',
         textAlignVertical:'center',
         lineHeight:35

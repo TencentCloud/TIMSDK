@@ -6,7 +6,6 @@ import SDKResponseView from '../sdkResponseView';
 import UserInputComponent from '../commonComponents/UserInputComponent';
 const SearchGroupsComponent = () => {
     const searchGroups = async () => {
-        // const keywordList = keywords.split(' ');
         const res = await TencentImSDKPlugin.v2TIMManager.getGroupManager().searchGroups({
             keywordList:['Test'],
             isSearchGroupID:isSearchGroupID,

@@ -1,47 +1,101 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text, Switch } from 'react-native';
 import { TencentImSDKPlugin } from 'react-native-tim-js';
 import CommonButton from '../commonComponents/CommonButton';
 import SDKResponseView from '../sdkResponseView';
-import UserInputComponent from '../commonComponents/UserInputComponent';
 import CheckBoxModalComponent from '../commonComponents/CheckboxModalComponent';
 import BottomModalComponent from '../commonComponents/BottomModalComponent';
 import mystylesheet from '../../stylesheets';
+import RNLocation from "react-native-location";
 
-const SendTextMessageComponent = () => {
+
+const SendLocationMessageComponent = () => {
     const [res, setRes] = useState<any>({});
-    const [input, setInput] = useState<string>('');
     const [userName, setUserName] = useState<string>('未选择')
     const [groupName, setGroupName] = useState<string>('未选择')
     const [priority, setPriority] = useState<string>('')
     const [isonlineUserOnly, setIsonlineUserOnly] = useState(false);
+    const [latitude,setLatitude] = useState<number>(0.0)
+    const [longitude,setLongitude] = useState<number>(0.0)
     const [isExcludedFromUnreadCount, setIsExcludedFromUnreadCount] = useState(false);
     const receiveOnlineUserstoggle = () => setIsonlineUserOnly(previousState => !previousState);
     const unreadCounttoggle = () => setIsExcludedFromUnreadCount(previousState => !previousState);
-    const sendTextMessage = async () => {
-        const messageRes = await TencentImSDKPlugin.v2TIMManager.getMessageManager().createTextMessage(input)        
+    let locationSubscription;
+    useEffect(() => {
+        RNLocation.configure({
+            distanceFilter: 5.0
+        });
+        RNLocation.requestPermission({
+            ios: "whenInUse",
+            android: {
+                detail: "fine",
+                rationale: {
+                    title: "Location permission",
+                    message: "We use your location to demo the library",
+                    buttonPositive: "OK",
+                    buttonNegative: "Cancel"
+                }
+            }
+        }).then(grented=>{
+            if(grented){
+
+            }
+        })
+
+        return stopUpdatingLocation
+    }, [])
+    const startUpdatingLocation = ()=>{
+        locationSubscription = RNLocation.subscribeToLocationUpdates(
+            locations=>{
+                setLongitude(locations[0].longitude)
+                setLatitude(locations[0].latitude)
+            }
+        )
+    }
+    const stopUpdatingLocation = ()=>{
+        locationSubscription && locationSubscription()
+        setLongitude(0.0)
+        setLatitude(0.0)
+    }
+
+    const sendLocationMessage = async () => {
+        const messageRes = await TencentImSDKPlugin.v2TIMManager.getMessageManager().createLocationMessage('',longitude,latitude)
 
         const id = messageRes.data?.id
-        const receiver = userName==='未选择'?'':userName
-        const groupID = groupName==='未选择'?'':groupName
-        if(id!==undefined){
+        const receiver = userName === '未选择' ? '' : userName
+        const groupID = groupName === '未选择' ? '' : groupName
+        if (id !== undefined) {
             const res = await TencentImSDKPlugin.v2TIMManager.getMessageManager().sendMessage({
-                id: id.toString(),
-                receiver:receiver,
-                groupID:groupID,
-                onlineUserOnly:isonlineUserOnly,
-                isExcludedFromUnreadCount:isExcludedFromUnreadCount,
+                id:id.toString(),
+                receiver: receiver,
+                groupID: groupID,
+                onlineUserOnly: isonlineUserOnly,
+                isExcludedFromUnreadCount: isExcludedFromUnreadCount,
             })
             setRes(res)
         }
-       
-
     };
 
     const CodeComponent = () => {
         return res.code !== undefined ? (
             <SDKResponseView codeString={JSON.stringify(res)} />
         ) : null;
+    };
+
+    const LocationComponent = () => {
+        return (
+            <View style={styles.friendgroupview}>
+                <View style={styles.selectContainer}>
+                    <TouchableOpacity onPress={startUpdatingLocation}>
+                        <View style={styles.locationbuttonView}>
+                            <Text style={styles.buttonText}>获取当前地理位置信息</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <Text style={styles.selectedText}>{`${longitude},${latitude}`}</Text>
+                </View>
+            </View>
+        )
+
     };
 
     const FriendComponent = () => {
@@ -108,9 +162,7 @@ const SendTextMessageComponent = () => {
 
     return (
         <>
-            <View style={styles.userInputcontainer}>
-                <UserInputComponent content='发送文本' placeholdercontent='发送文本' getContent={setInput} />
-            </View>
+            <LocationComponent />
             <FriendComponent />
             <GroupComponent />
             <PriorityComponent />
@@ -135,15 +187,15 @@ const SendTextMessageComponent = () => {
                 />
             </View>
             <CommonButton
-                handler={() => { sendTextMessage() }}
-                content={'发送文本消息'}
+                handler={() => { sendLocationMessage() }}
+                content={'发送地理信息'}
             ></CommonButton>
             <CodeComponent></CodeComponent>
         </>
     );
 };
 
-export default SendTextMessageComponent;
+export default SendLocationMessageComponent;
 const styles = StyleSheet.create({
     userInputcontainer: {
         marginLeft: 10,
@@ -193,5 +245,12 @@ const styles = StyleSheet.create({
     switchtext: {
         lineHeight: 35,
         marginRight: 8
+    },
+    locationbuttonView: {
+        backgroundColor: '#2F80ED',
+        borderRadius: 3,
+        width: 170,
+        height: 35,
+        marginLeft: 10
     }
 })

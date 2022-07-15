@@ -3,14 +3,13 @@ import { View, StyleSheet, TouchableOpacity, Text, Switch } from 'react-native';
 import { TencentImSDKPlugin } from 'react-native-tim-js';
 import CommonButton from '../commonComponents/CommonButton';
 import SDKResponseView from '../sdkResponseView';
-import UserInputComponent from '../commonComponents/UserInputComponent';
 import CheckBoxModalComponent from '../commonComponents/CheckboxModalComponent';
 import BottomModalComponent from '../commonComponents/BottomModalComponent';
 import mystylesheet from '../../stylesheets';
+import MultiCheckBoxModalComponent from '../commonComponents/MultiCheckboxModalComponent';
 
-const SendTextMessageComponent = () => {
+const SendMergerMessageComponent = () => {
     const [res, setRes] = useState<any>({});
-    const [input, setInput] = useState<string>('');
     const [userName, setUserName] = useState<string>('未选择')
     const [groupName, setGroupName] = useState<string>('未选择')
     const [priority, setPriority] = useState<string>('')
@@ -18,31 +17,75 @@ const SendTextMessageComponent = () => {
     const [isExcludedFromUnreadCount, setIsExcludedFromUnreadCount] = useState(false);
     const receiveOnlineUserstoggle = () => setIsonlineUserOnly(previousState => !previousState);
     const unreadCounttoggle = () => setIsExcludedFromUnreadCount(previousState => !previousState);
-    const sendTextMessage = async () => {
-        const messageRes = await TencentImSDKPlugin.v2TIMManager.getMessageManager().createTextMessage(input)        
 
+    const [conversationID, setConversationID] = useState<string>('未选择')
+    const [messages, setMessages] = useState<string>('[]')
+    const [messageList,setMessageList] = useState<any>([])
+    const sendMergerMessage = async () => {
+        const messageRes = await TencentImSDKPlugin.v2TIMManager.getMessageManager().createMergerMessage(messageList,'xx与xx的会话',messageList,"低版本不支持会会收到文本消息")
+        console.log(messageRes)
         const id = messageRes.data?.id
-        const receiver = userName==='未选择'?'':userName
-        const groupID = groupName==='未选择'?'':groupName
-        if(id!==undefined){
+        const receiver = userName === '未选择' ? '' : userName
+        const groupID = groupName === '未选择' ? '' : groupName
+        if (id !== undefined) {
             const res = await TencentImSDKPlugin.v2TIMManager.getMessageManager().sendMessage({
-                id: id.toString(),
-                receiver:receiver,
-                groupID:groupID,
-                onlineUserOnly:isonlineUserOnly,
-                isExcludedFromUnreadCount:isExcludedFromUnreadCount,
+                id:id.toString(),
+                receiver: receiver,
+                groupID: groupID,
+                onlineUserOnly: isonlineUserOnly,
+                isExcludedFromUnreadCount: isExcludedFromUnreadCount,
             })
+            console.log(res)
             setRes(res)
         }
-       
-
     };
+
+    const getMessagesHandler = (messagelist)=>{
+        setMessages('['+messagelist.join(',')+']')
+        setMessageList(messagelist)
+    }
 
     const CodeComponent = () => {
         return res.code !== undefined ? (
             <SDKResponseView codeString={JSON.stringify(res)} />
         ) : null;
     };
+
+    const MessageSelectComponent = () => {
+        const [visible, setVisible] = useState<boolean>(false)
+        return (
+            <View style={styles.friendgroupview}>
+                <View style={styles.selectContainer}>
+                    <TouchableOpacity onPress={()=>setVisible(true)}>
+                        <View style={styles.buttonView}>
+                            <Text style={styles.buttonText}>选择消息</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <Text style={styles.selectedText}>{messages}</Text>
+                </View>
+                <MultiCheckBoxModalComponent visible={visible} getVisible={setVisible} getUsername={getMessagesHandler} type={'message'} conversationID={conversationID}/>
+            </View>
+            
+        )
+    }
+
+    const ConversationSelectComponent = () => {
+        const [visible, setVisible] = useState<boolean>(false)
+        return (
+            <View style={styles.friendgroupview}>
+                <View style={styles.selectContainer}>
+                    <TouchableOpacity onPress={()=>setVisible(true)}>
+                        <View style={styles.buttonView}>
+                            <Text style={styles.buttonText}>选择会话</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <Text style={styles.selectedText}>{conversationID}</Text>
+                </View>
+                <CheckBoxModalComponent visible={visible} getVisible={setVisible} getUsername={setConversationID} type={'conversation'}/>
+            </View>
+            
+        )
+    }
 
     const FriendComponent = () => {
         const [visible, setVisible] = useState<boolean>(false)
@@ -108,9 +151,8 @@ const SendTextMessageComponent = () => {
 
     return (
         <>
-            <View style={styles.userInputcontainer}>
-                <UserInputComponent content='发送文本' placeholdercontent='发送文本' getContent={setInput} />
-            </View>
+            <ConversationSelectComponent />
+            <MessageSelectComponent/>
             <FriendComponent />
             <GroupComponent />
             <PriorityComponent />
@@ -135,15 +177,15 @@ const SendTextMessageComponent = () => {
                 />
             </View>
             <CommonButton
-                handler={() => { sendTextMessage() }}
-                content={'发送文本消息'}
+                handler={() => { sendMergerMessage() }}
+                content={'合并消息'}
             ></CommonButton>
             <CodeComponent></CodeComponent>
         </>
     );
 };
 
-export default SendTextMessageComponent;
+export default SendMergerMessageComponent;
 const styles = StyleSheet.create({
     userInputcontainer: {
         marginLeft: 10,

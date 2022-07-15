@@ -46,6 +46,8 @@ public class SDKManager {
         int logLevel = arguments.getInt("logLevel");
         V2TIMSDKConfig config = new V2TIMSDKConfig();
         config.setLogLevel(logLevel);
+
+        V2TIMManager.getInstance().callExperimentalAPI("setUIPlatform", "rn", null);
         Boolean res = V2TIMManager.getInstance().initSDK(context, sdkAppID, config, new V2TIMSDKListener() {
             public void onConnecting() {
                 makeEventData("onConnecting", null);

@@ -49,6 +49,7 @@ public class TimJsModule extends ReactContextBaseJavaModule {
         TimJsModule.conversationManager = new ConversationManager();
         TimJsModule.offlinePushManager = new OfflinePushManager();
         TimJsModule.signalingManager = new SignalingManager();
+        TimJsModule.groupManager = new GroupManager();
     }
 
     public static void sendEvent(String eventName, WritableMap params) {
