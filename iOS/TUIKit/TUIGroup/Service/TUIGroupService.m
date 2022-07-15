@@ -103,7 +103,7 @@
                 completion(NO, nil, nil);
             }
             if (code == ERR_SDK_INTERFACE_NOT_SUPPORT) {
-                [TUITool postUnsupportNotificationOfService:TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceCommunity)];
+                [TUITool postUnsupportNotificationOfService:TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceCommunity) serviceDesc:TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceCommunityDesc) debugOnly:YES];
             }
         }];
     } fail:^(int code, NSString *msg) {

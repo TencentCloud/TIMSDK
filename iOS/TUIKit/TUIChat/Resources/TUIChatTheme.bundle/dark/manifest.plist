@@ -8,6 +8,16 @@
 	<string>黑夜</string>
 	<key>name_en</key>
 	<string>Dark</string>
+	<key>chat_custom_order_message_img</key>
+	<string>message_custom_order</string>
+	<key>chat_custom_order_message_desc_color</key>
+	<string>#FFFFFF</string>
+	<key>chat_custom_order_message_price_color</key>
+	<string>#FF7201</string>
+	<key>chat_custom_evaluation_message_img</key>
+	<string>message_custom_evaluation.png</string>
+	<key>chat_custom_evaluation_message_desc_color</key>
+	<string>#FFFFFF</string>
 	<key>chat_controller_bg_color</key>
 	<string>#111111</string>
 	<key>chat_input_controller_bg_color</key>

@@ -35,6 +35,7 @@ typedef NS_OPTIONS(NSInteger, emojiFaceType) {
         _isExcludedFromUnreadCount = NO;
         _isExcludedFromLastMessage = NO;
         _enableToast = YES;
+        _displayOnlineStatusIcon = NO;
         
         [self updateEmojiGroups];
         

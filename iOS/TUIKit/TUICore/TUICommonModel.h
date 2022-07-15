@@ -444,7 +444,7 @@ extern NSString *kTopConversationListChangedNotification;
  * @param groupID 群ID
  * @param imageCallBack 回调
  */
-+ (void)getCacheGroupAvatar:(NSString *)groupID callback:(void(^)(UIImage *))imageCallBack;
++ (void)getCacheGroupAvatar:(NSString *)groupID callback:(void(^)(UIImage *, NSString *groupID))imageCallBack;
 
 /**
  * 同步获取头像缓存，该接口不请求网络
@@ -453,6 +453,12 @@ extern NSString *kTopConversationListChangedNotification;
  * @param memberNum 指定群成员个数
  */
 + (UIImage *)getCacheAvatarForGroup:(NSString *)groupId number:(UInt32)memberNum;
+
+/**
+ * 清理指定群组的头像缓存
+ * Clear the avatar cache of the specified group
+ */
++ (void)asyncClearCacheAvatarForGroup:(NSString *)groupID;
 
 @end
 
@@ -564,10 +570,18 @@ typedef void(^TUIContactListPickerOnCancel)(TUICommonContactSelectCellData *data
 //                          TUINavigationController（通讯录多选视图）
 //
 /////////////////////////////////////////////////////////////////////////////////
+@class TUINavigationController;
+@protocol TUINavigationControllerDelegate <NSObject>
+@optional
+- (void)navigationControllerDidClickLeftButton:(TUINavigationController *)controller;
+- (void)navigationControllerDidSideSlideReturn:(TUINavigationController *)controller
+                            fromViewController:(UIViewController *)fromViewController;
+@end
+
 @interface TUINavigationController : UINavigationController <UINavigationControllerDelegate, UIGestureRecognizerDelegate>
 
-
 @property(nonatomic,weak) UIViewController* currentShowVC;
+@property (nonatomic, weak) id<TUINavigationControllerDelegate> uiNaviDelegate;
 
 @end
 

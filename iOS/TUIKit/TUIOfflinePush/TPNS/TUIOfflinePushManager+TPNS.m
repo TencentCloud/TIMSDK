@@ -186,19 +186,4 @@
     completionHandler();
 }
 
-- (NSDictionary *)jsonSring2Dictionary:(NSString *)jsonString
-{
-    if (jsonString == nil) {
-        return nil;
-    }
-    NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
-    NSError *err = nil;
-    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&err];
-    if (err || ![dic isKindOfClass:[NSDictionary class]]) {
-        NSLog(@"Json parse failed: %@", jsonString);
-        return nil;
-    }
-    return dic;
-}
-
 @end

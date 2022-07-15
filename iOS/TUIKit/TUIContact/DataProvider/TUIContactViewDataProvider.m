@@ -9,11 +9,14 @@
 #import "TUIDefine.h"
 #import "NSString+TUIUtil.h"
 
-@interface TUIContactViewDataProvider() <V2TIMFriendshipListener>
+@interface TUIContactViewDataProvider() <V2TIMFriendshipListener, V2TIMSDKListener>
 @property NSDictionary<NSString *, NSArray<TUICommonContactCellData *> *> *dataDict;
 @property NSArray *groupList;
 @property BOOL isLoadFinished;
 @property NSUInteger pendencyCnt;
+
+@property (nonatomic, strong) NSDictionary *contactMap;
+
 @end
 
 @implementation TUIContactViewDataProvider
@@ -22,6 +25,7 @@
 {
     if (self = [super init]) {
         [[V2TIMManager sharedInstance] addFriendListener:self];
+        [[V2TIMManager sharedInstance] addIMSDKListener:self];
     }
     return self;
 }
@@ -40,9 +44,17 @@
         NSMutableDictionary *dataDict = @{}.mutableCopy;
         NSMutableArray *groupList = @[].mutableCopy;
         NSMutableArray *nonameList = @[].mutableCopy;
+        
+        NSMutableDictionary *contactMap = [NSMutableDictionary dictionary];
+        NSMutableArray *userIDList = [NSMutableArray array];
 
         for (V2TIMFriendInfo *friend in infoList) {
             TUICommonContactCellData *data = [[TUICommonContactCellData alloc] initWithFriend:friend];
+            // for online status
+            data.onlineStatus = TUIContactOnlineStatusUnknown;
+            [contactMap setObject:data forKey:data.identifier];
+            [userIDList addObject:data.identifier];
+            
             NSString *group = [[data.title firstPinYin] uppercaseString];
             if (group.length == 0 || !isalpha([group characterAtIndex:0])) {
                 [nonameList addObject:data];
@@ -67,7 +79,12 @@
         }
         self.groupList = groupList;
         self.dataDict = dataDict;
+        self.contactMap = [NSDictionary dictionaryWithDictionary:contactMap];
         self.isLoadFinished = YES;
+        
+        // refresh online status async
+        [self asyncGetOnlineStatus:userIDList];
+        
     } fail:^(int code, NSString *desc) {
         NSLog(@"getFriendList failed, code:%d desc:%@", code, desc);
     }];
@@ -85,6 +102,84 @@
     } fail:nil];
 }
 
+- (void)asyncGetOnlineStatus:(NSArray *)userIDList
+{
+    if (NSThread.isMainThread) {
+        @weakify(self)
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            @strongify(self)
+            [self asyncGetOnlineStatus:userIDList];
+        });
+        return;
+    }
+
+    if (userIDList.count == 0) {
+        return;
+    }
+    
+    @weakify(self)
+    [V2TIMManager.sharedInstance getUserStatus:userIDList succ:^(NSArray<V2TIMUserStatus *> *result) {
+        @strongify(self)
+        [self handleOnlineStatus:result];
+    } fail:^(int code, NSString *desc) {
+#if DEBUG
+        if (code == ERR_SDK_INTERFACE_NOT_SUPPORT && TUIConfig.defaultConfig.displayOnlineStatusIcon) {
+            [TUITool makeToast:desc];
+        }
+#endif
+    }];
+}
+
+- (void)asyncUpdateOnlineStatus {
+    if (NSThread.isMainThread) {
+        @weakify(self)
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            @strongify(self)
+            [self asyncUpdateOnlineStatus];
+        });
+        return;
+    }
+
+    // reset
+    NSMutableArray *userIDList = [NSMutableArray array];
+    for (TUICommonContactCellData *contact in self.contactMap.allValues) {
+        contact.onlineStatus = TUIContactOnlineStatusOffline;
+        [userIDList addObject:contact.identifier];
+    }
+    
+    // refresh table view on the main thread
+    @weakify(self)
+    dispatch_async(dispatch_get_main_queue(), ^{
+        @strongify(self)
+        self.isLoadFinished = YES;
+        
+        // fetch
+        [self asyncGetOnlineStatus:userIDList];
+    });
+}
+
+- (void)handleOnlineStatus:(NSArray<V2TIMUserStatus *> *)userStatusList
+{
+    NSInteger changed = 0;
+    for (V2TIMUserStatus *userStatus in userStatusList) {
+        if ([self.contactMap.allKeys containsObject:userStatus.userID]) {
+            changed++;
+            TUICommonContactCellData *contact = [self.contactMap objectForKey:userStatus.userID];
+            contact.onlineStatus = (userStatus.statusType == V2TIM_USER_STATUS_ONLINE) ? TUIContactOnlineStatusOnline : TUIContactOnlineStatusOffline;
+        }
+    }
+    if (changed == 0) {
+        return;
+    }
+    
+    // refresh table view on the main thread
+    @weakify(self)
+    dispatch_async(dispatch_get_main_queue(), ^{
+        @strongify(self)
+        self.isLoadFinished = YES;
+    });
+}
+
 - (void)clearApplicationCnt
 {
     @weakify(self)
@@ -92,6 +187,21 @@
         @strongify(self)
         (self).pendencyCnt = 0;
     } fail:nil];
+}
+
+#pragma mark - V2TIMSDKListener
+- (void)onUserStatusChanged:(NSArray<V2TIMUserStatus *> *)userStatusList {
+    [self handleOnlineStatus:userStatusList];
+}
+
+- (void)onConnectFailed:(int)code err:(NSString *)err {
+    NSLog(@"%s", __func__);
+    [self asyncUpdateOnlineStatus];
+}
+
+- (void)onConnectSuccess {
+    NSLog(@"%s", __func__);
+    [self asyncUpdateOnlineStatus];
 }
 
 #pragma mark - V2TIMFriendshipListener

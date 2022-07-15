@@ -11,6 +11,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_ENUM(NSInteger, TUIConversationOnlineStatus) {
+    TUIConversationOnlineStatusUnknown  = 0,
+    TUIConversationOnlineStatusOnline   = 1,
+    TUIConversationOnlineStatusOffline  = 2,
+};
+
 
 /**
  * 【模块名称】会话单元数据源（TUIConversationCellData）
@@ -124,6 +130,13 @@ NS_ASSUME_NONNULL_BEGIN
  * 会话排序的 orderKey
  */
 @property (nonatomic, assign) NSUInteger orderKey;
+
+/**
+ * 在线状态
+ * The user's online status
+ */
+@property (nonatomic, assign) TUIConversationOnlineStatus onlineStatus;
+
 @end
 
 NS_ASSUME_NONNULL_END

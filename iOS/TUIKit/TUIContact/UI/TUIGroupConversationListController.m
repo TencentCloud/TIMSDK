@@ -15,6 +15,8 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
 
 @interface TUIGroupConversationListController ()<UIGestureRecognizerDelegate, UITableViewDelegate, UITableViewDataSource, UIPopoverPresentationControllerDelegate>
 
+@property (nonatomic, strong) UILabel *noDataTipsLabel;
+
 @end
 
 @implementation TUIGroupConversationListController
@@ -64,6 +66,9 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
         @strongify(self)
         [self.tableView reloadData];
     }];
+    
+    self.noDataTipsLabel.frame = CGRectMake(10, 60, self.view.bounds.size.width - 20, 40);
+    [self.tableView addSubview:self.noDataTipsLabel];
 }
 
 
@@ -80,6 +85,7 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;
 {
+    self.noDataTipsLabel.hidden = (self.viewModel.groupList.count != 0);
     return self.viewModel.groupList.count;
 }
 
@@ -186,6 +192,18 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
 
 - (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller {
     return UIModalPresentationNone;
+}
+
+- (UILabel *)noDataTipsLabel
+{
+    if (_noDataTipsLabel == nil) {
+        _noDataTipsLabel = [[UILabel alloc] init];
+        _noDataTipsLabel.textColor = TUIContactDynamicColor(@"contact_add_contact_nodata_tips_text_color", @"#999999");
+        _noDataTipsLabel.font = [UIFont systemFontOfSize:14.0];
+        _noDataTipsLabel.textAlignment = NSTextAlignmentCenter;
+        _noDataTipsLabel.text = TUIKitLocalizableString(TUIKitContactNoGroupChats);
+    }
+    return _noDataTipsLabel;
 }
 
 @end

@@ -8,6 +8,16 @@
 	<string>活泼</string>
 	<key>name_en</key>
 	<string>Lively</string>
+	<key>chat_custom_order_message_img</key>
+	<string>message_custom_order</string>
+	<key>chat_custom_order_message_desc_color</key>
+	<string>#999999</string>
+	<key>chat_custom_order_message_price_color</key>
+	<string>#FF7201</string>
+	<key>chat_custom_evaluation_message_img</key>
+	<string>message_custom_evaluation.png</string>
+	<key>chat_custom_evaluation_message_desc_color</key>
+	<string>#000000</string>
 	<key>chat_controller_bg_color</key>
 	<string>#FFFFFF</string>
 	<key>chat_input_controller_bg_color</key>
@@ -63,7 +73,7 @@
 	<key>chat_link_message_title_color</key>
 	<string>#000000</string>
 	<key>chat_link_message_subtitle_color</key>
-	<string>#0000FF</string>
+	<string>#C23D26</string>
 	<key>chat_merge_message_bg_color</key>
 	<string>#FFFFFF</string>
 	<key>chat_merge_message_title_color</key>

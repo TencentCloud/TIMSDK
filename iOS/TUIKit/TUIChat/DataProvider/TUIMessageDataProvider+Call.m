@@ -129,8 +129,8 @@
                 } else if ([cmd isEqualToString:@"hangup"]) {
                     // hang up
                     NSInteger duration = 0;
-                    if ([callData.allKeys containsObject:@"cmdInfo"]) {
-                        duration = [[callData objectForKey:@"cmdInfo"] integerValue];
+                    if ([param.allKeys containsObject:@"call_end"]) {
+                        duration = [param[@"call_end"] intValue];
                     }
                     [mutableContent appendString:message.groupID.length > 0 ? TUIKitLocalizableString(TUIKitSignalingFinishGroupChat) : [NSString stringWithFormat:TUIKitLocalizableString(TUIKitSignalingFinishConversationAndTimeFormat),duration / 60,duration % 60]];
                 } else if ([cmd isEqualToString:@"videoCall"] ||

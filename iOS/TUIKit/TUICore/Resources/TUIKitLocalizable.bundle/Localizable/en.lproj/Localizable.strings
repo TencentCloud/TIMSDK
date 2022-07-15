@@ -100,7 +100,7 @@
 "FriendAddResultForbid" = "The other user disabled friend request.";
 "FriendAddResultSuccess" = "Added to friend list";
 "FriendAddResultExists" = "Friend already exists.";
-"TUIKitWelcome" = "Welcome to Tencent Instant Messaging!";
+"TUIKitWelcome" = "Welcome to Tencent Cloud Instant Messaging!";
 "TUIKitMicCamerAuthTips" = "Enable mic and camera permissions";
 "TUIKitMicAuth" = "Enable mic permission";
 "TUIKitTipsConfirmResendMessage" = "Resend this message? ";
@@ -555,8 +555,9 @@
 "TUIKitErrorUnsupportIntefaceSearch" = "Search";
 "TUIKitErrorUnsupportIntefaceMessageRead" = "Message Read Receipt";
 "TUIKitErrorUnsupportIntefaceCommunity" = "Community";
-"TUIKitErrorUnsupportIntefaceDesc" = " features are IM Flagship Edition features, which can be used after purchasing the Flagship Edition. If you are currently using the Pro Edition, you need to do a refund on the Pro Edition first, and then purchase the Flagship Edition. See the purchase guidelines for details";
-"TUIKitErrorUnsupportIntefaceGuidelines" = "purchase guidelines";
+"TUIKitErrorUnsupportIntefaceDesc" = " features are IM Flagship Edition features, which can be used after purchasing the Flagship Edition. See the price guidelines for details.";
+"TUIKitErrorUnsupportIntefaceCommunityDesc" = "\nNote: The community can accommodate millions of members, and can be divided into groups and topics. It is suitable for interest making friends, game social networking, fan operation, organization management and other scenarios.";
+"TUIKitErrorUnsupportIntefaceGuidelines" = "price guidelines";
 "TUIKitErrorUnsupportIntefaceTitle" = "Tips";
 "TUIKitErrorUnsupportIntefaceIGotIt" = "I got it";
 "TUIKitErrorUnsupportIntefaceNoMoreAlert" = "No more reminders";
@@ -686,3 +687,11 @@
 "TUIKitSignalingComfirmSwitchToAudio" = "Comfirm video to voice";
 
 "TUIKitErrorEnableUserStatusOnConsole" = "The user status not supported. Please enable the ability in the console first.";
+
+"TUIKitChooseAvatar" = "Choose Avatar";
+"TUIKitChooseCover" = "Choose a cover";
+
+"TUIKitContactNoNewApplicationRequest" = "Friend request is empty";
+"TUIKitContactNoGroupChats" = "Group chats is empty";
+"TUIKitContactNoBlockList" = "Block list is emply";
+"TUIKitTyping" = "Typing";

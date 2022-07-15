@@ -20,6 +20,8 @@ typedef NS_OPTIONS(NSUInteger, TUICloudCustomDataType) {
 
 typedef NSString * TUICustomType;
 
+FOUNDATION_EXTERN TUICustomType messageFeature;
+
 @interface V2TIMMessage (CloudCustomDataType)
 
 - (void)doThingsInContainsCloudCustomOfDataType:(TUICloudCustomDataType)type

@@ -12,7 +12,7 @@
 
 #define Default_PagePullCount 100
 
-@interface TUIConversationListDataProvider ()<V2TIMConversationListener, V2TIMGroupListener>
+@interface TUIConversationListDataProvider ()<V2TIMConversationListener, V2TIMGroupListener, V2TIMSDKListener>
 @property (nonatomic, assign) uint64_t nextSeq;
 @property (nonatomic, assign) uint64_t isFinished;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, TUIConversationCellData *> *dataDic;
@@ -26,6 +26,7 @@
         
         [[V2TIMManager sharedInstance] addConversationListener:self];
         [[V2TIMManager sharedInstance] addGroupListener:self];
+        [[V2TIMManager sharedInstance] addIMSDKListener:self];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(didTopConversationListChanged:)
                                                      name:kTopConversationListChangedNotification
@@ -41,6 +42,22 @@
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+#pragma mark - V2TIMSDKListener
+- (void)onUserStatusChanged:(NSArray<V2TIMUserStatus *> *)userStatusList
+{
+    [self handleOnlineStatus:userStatusList];
+}
+
+- (void)onConnectFailed:(int)code err:(NSString *)err {
+    NSLog(@"%s", __func__);
+    [self asyncUpdateOnlineStatus];
+}
+
+- (void)onConnectSuccess {
+    NSLog(@"%s", __func__);
+    [self asyncUpdateOnlineStatus];
 }
 
 #pragma mark - V2TIMConversationListener
@@ -145,8 +162,9 @@
 
 - (void)updateConversation:(NSArray *)convList
 {
+    // 1. translate
+    NSMutableArray *userIDList = [NSMutableArray array];
     for (V2TIMConversation *conv in convList) {
-        // 屏蔽会话
         if ([self filteConversation:conv]) {
             continue;
         }
@@ -167,15 +185,134 @@
         data.isNotDisturb = ![conv.groupType isEqualToString:GroupType_Meeting] && (V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE == conv.recvOpt);
         data.orderKey = conv.orderKey;
         data.avatarImage = (conv.type == V2TIM_C2C ? DefaultAvatarImage : DefaultGroupAvatarImage);
+        data.onlineStatus = TUIConversationOnlineStatusUnknown;
         
         if (data && data.conversationID) {
             [self.dataDic setObject:data forKey:data.conversationID];
         }
+        
+        if (data.userID.length && data.groupID.length == 0) {
+            [userIDList addObject:data.userID];
+        }
     }
     NSMutableArray *newDataList = [NSMutableArray arrayWithArray:self.dataDic.allValues];
-    // UI 会话列表根据 orderKey 重新排序
+    
+    // 2. sort the list
     [self sortDataList:newDataList];
+    
+    // 3. refresh tableview
     self.dataList = newDataList;
+    
+    // 4. fetch online status async
+    [self asyncGetOnlineStatus:userIDList];
+}
+
+- (void)asyncGetOnlineStatus:(NSArray *)userIDList
+{
+    if (NSThread.isMainThread) {
+        @weakify(self)
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            @strongify(self)
+            [self asyncGetOnlineStatus:userIDList];
+        });
+        return;
+    }
+
+    if (userIDList.count == 0) {
+        return;
+    }
+    
+    // get
+    @weakify(self)
+    [V2TIMManager.sharedInstance getUserStatus:userIDList succ:^(NSArray<V2TIMUserStatus *> *result) {
+        @strongify(self)
+        [self handleOnlineStatus:result];
+    } fail:^(int code, NSString *desc) {
+#if DEBUG
+        if (code == ERR_SDK_INTERFACE_NOT_SUPPORT && TUIConfig.defaultConfig.displayOnlineStatusIcon) {
+            [TUITool makeToast:desc];
+        }
+#endif
+    }];
+    
+    // subscribe for the users who was deleted from friend list
+    [V2TIMManager.sharedInstance subscribeUserStatus:userIDList succ:^{
+        
+    } fail:^(int code, NSString *desc) {
+        
+    }];
+}
+
+- (void)asyncUpdateOnlineStatus {
+    if (NSThread.isMainThread) {
+        @weakify(self)
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            @strongify(self)
+            [self asyncUpdateOnlineStatus];
+        });
+        return;
+    }
+
+    // reset
+    NSMutableArray *userIDList = [NSMutableArray array];
+    for (TUIConversationCellData *conversation in self.dataDic.allValues) {
+        if (conversation.onlineStatus == TUIConversationOnlineStatusOnline) {
+            conversation.onlineStatus = TUIConversationOnlineStatusOffline;
+        }
+        if (conversation.userID.length && conversation.groupID.length == 0) {
+            [userIDList addObject:conversation.userID];
+        }
+    }
+
+    NSMutableArray *newDataList = [NSMutableArray arrayWithArray:self.dataDic.allValues];
+    [self sortDataList:newDataList];
+    
+    @weakify(self)
+    dispatch_async(dispatch_get_main_queue(), ^{
+        @strongify(self)
+        self.dataList = newDataList;
+        
+        // fetch
+        [self asyncGetOnlineStatus:userIDList];
+    });
+}
+
+- (void)handleOnlineStatus:(NSArray<V2TIMUserStatus *> *)userStatusList {
+    NSInteger changed = 0;
+    for (V2TIMUserStatus *userStatus in userStatusList) {
+        NSString *conversationID = [NSString stringWithFormat:@"c2c_%@", userStatus.userID];
+        if ([self.dataDic.allKeys containsObject:conversationID]) {
+            changed++;
+            TUIConversationCellData *conversation = [self.dataDic objectForKey:conversationID];
+            switch (userStatus.statusType) {
+                case V2TIM_USER_STATUS_ONLINE: {
+                    conversation.onlineStatus = TUIConversationOnlineStatusOnline;
+                }
+                    break;
+                case V2TIM_USER_STATUS_OFFLINE:
+                case V2TIM_USER_STATUS_UNLOGINED: {
+                    conversation.onlineStatus = TUIConversationOnlineStatusOffline;
+                }
+                    break;
+                default:
+                    conversation.onlineStatus = TUIConversationOnlineStatusUnknown;
+                    break;
+            }
+        }
+    }
+    
+    if (changed == 0) {
+        return;
+    }
+    
+    NSMutableArray *newDataList = [NSMutableArray arrayWithArray:self.dataDic.allValues];
+    [self sortDataList:newDataList];
+    
+    @weakify(self)
+    dispatch_async(dispatch_get_main_queue(), ^{
+        @strongify(self)
+        self.dataList = newDataList;
+    });
 }
 
 - (NSString *)getDraftContent:(V2TIMConversation *)conv

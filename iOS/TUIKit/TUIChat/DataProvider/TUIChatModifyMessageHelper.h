@@ -12,9 +12,14 @@
 
 + (TUIChatModifyMessageHelper *)defaultHelper;
 
+
 - (void)modifyMessage:(V2TIMMessage *)msg
-           reactEmoji:(NSString *)emojiName
- simpleCurrentContent:(NSDictionary *)simpleCurrentContent
-          timeControl:(NSInteger)time;
+           reactEmoji:(NSString *)emojiName;
+
+- (void)modifyMessage:(V2TIMMessage *)msg
+ simpleCurrentContent:(NSDictionary *)simpleCurrentContent;
+
+- (void)modifyMessage:(V2TIMMessage *)msg
+          revokeMsgID:(NSString *)revokeMsgID;
 
 @end

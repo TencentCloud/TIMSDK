@@ -16,6 +16,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, strong) V2TIMMessage *locateMessage;
 
+@property (nonatomic, strong) V2TIMMessage * C2CIncomingLastMsg;
+
+
 @end
 
 NS_ASSUME_NONNULL_END
