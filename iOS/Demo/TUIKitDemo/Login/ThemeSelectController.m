@@ -422,7 +422,16 @@
     
     [self.class changeFollowSystemChangeThemeSwitch:cellModel.selected];
 
-    if (!cellModel.selected) {
+    if (cellModel.selected) {
+        for (ThemeSelectCollectionViewCellModel *cellModel in self.datas) {
+            if (cellModel.selected) {
+                self.selectModel = cellModel;
+                break;
+            }
+        }
+        [self onSelectTheme:self.selectModel];
+    }
+    else {
         [self onSelectTheme:self.systemModel];
     }
     

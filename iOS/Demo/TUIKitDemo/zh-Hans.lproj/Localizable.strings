@@ -82,7 +82,8 @@
 "MeSwitchSkin" = "更换主题";
 "MeSwitchLaunguage" = "切换语言";
 "MeMessageReadStatus" = "消息阅读状态";
-"MeMessageReadStatusDesc" = "关闭后，您收发的消息均不带消息阅读状态，您将无法看到对方是否已读，同时对方也无法看到您是否已读";
+"MeMessageReadStatusOpenDesc" = "关闭后，您收发的消息均不带消息阅读状态，您将无法看到对方是否已读，同时对方也无法看到您是否已读。";
+"MeMessageReadStatusCloseDesc" = "开启后，您在群聊中收发的消息均带有消息阅读状态，并且可以看到对方是否已读。与您单聊的好友若也开启了消息阅读状态，您与好友在单聊中收发的消息也将带有消息阅读状态。";
 
 "ProfilePhoto" = "头像";
 "ProfileName"  = "昵称";
@@ -211,3 +212,9 @@
 "TUIThemeNameSystemFollowSubTitle" = "开启后仅展示默认皮肤 (轻快/深色)，不可切换其他皮肤样式";
 
 "UpgradeNow" = "立即升级";
+
+"ShowOnlineStatus" = "显示在线状态";
+"ShowOnlineStatusOpenDesc" = "关闭后，您将不可以在会话列表和通讯录中看到好友在线或离线的状态提示。";
+"ShowOnlineStatusCloseDesc" = "开启后，您将可以在会话列表和通讯录中看到好友在线或离线的状态提示。";
+"OnlineStatus" = "在线状态";
+"ShowPackageToast" = "该功能为旗舰版功能";

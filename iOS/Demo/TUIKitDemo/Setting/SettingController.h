@@ -15,6 +15,8 @@
 #import <UIKit/UIKit.h>
 
 extern NSString * kEnableMsgReadStatus;
+extern NSString * kEnableOnlineStatus;
+
 #define SHEET_COMMON 1
 #define SHEET_AGREE  2
 #define SHEET_SEX    3
