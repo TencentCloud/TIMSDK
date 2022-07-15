@@ -10,6 +10,8 @@
 	<string>Light</string>
 	<key>logo_bg</key>
 	<string>logo_bg.png</string>
+	<key>login_logo</key>
+	<string>login_logo</string>
 	<key>tab_msg_normal_img</key>
 	<string>tab_msg_normal.png</string>
 	<key>tab_msg_selected_img</key>

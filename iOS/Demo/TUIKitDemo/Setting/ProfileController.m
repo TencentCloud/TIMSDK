@@ -19,6 +19,7 @@
 #import "TUICommonAvatarCell.h"
 #import "TUIModifyView.h"
 #import "TUIThemeManager.h"
+#import "TUISelectAvatarController.h"
 
 #define SHEET_COMMON 1
 #define SHEET_AGREE  2
@@ -79,7 +80,7 @@
 
     TUICommonAvatarCellData *avatarData = [TUICommonAvatarCellData new];
     avatarData.key = NSLocalizedString(@"ProfilePhoto", nil); // @"头像";
-    avatarData.showAccessory = NO;
+    avatarData.showAccessory = YES;
     avatarData.cselector = @selector(didSelectAvatar);
     avatarData.avatarUrl = [NSURL URLWithString:self.profile.faceURL];
     [_data addObject:@[avatarData]];
@@ -261,22 +262,26 @@
 
 - (void)didSelectAvatar
 {
-    //点击头像的响应函数，换头像，上传头像URL
-    UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"choose_avatar_for_you", nil) message:nil preferredStyle:UIAlertControllerStyleAlert];
-    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        NSString *url = [TUITool randAvatarUrl];
-        V2TIMUserFullInfo *info = [[V2TIMUserFullInfo alloc] init];
-        info.faceURL = url;
-        [[V2TIMManager sharedInstance] setSelfInfo:info succ:^{
-            [self.profile setFaceURL:url];
-            [self setupData];
-        } fail:^(int code, NSString *desc) {
-            
-        }];
+    
+    TUISelectAvatarController * vc = [[TUISelectAvatarController alloc] init];
+    vc.selectAvatarType = TUISelectAvatarTypeUserAvatar;
+    vc.profilFaceURL = self.profile.faceURL;
+    [self.navigationController pushViewController:vc animated:YES];
 
-    }]];
-    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleDefault handler:nil]];
-    [self presentViewController:ac animated:YES completion:nil];
+    __weak typeof(self)weakSelf = self;
+    vc.selectCallBack = ^(NSString * _Nonnull urlStr) {
+        __strong typeof(weakSelf)strongSelf = weakSelf;
+        if (urlStr.length > 0) {
+            V2TIMUserFullInfo *info = [[V2TIMUserFullInfo alloc] init];
+            info.faceURL = urlStr;
+            [[V2TIMManager sharedInstance] setSelfInfo:info succ:^{
+                [strongSelf.profile setFaceURL:urlStr];
+                [strongSelf setupData];
+            } fail:^(int code, NSString *desc) {
+                
+            }];
+        }
+    };
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex

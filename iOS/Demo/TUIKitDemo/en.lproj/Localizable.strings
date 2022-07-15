@@ -81,7 +81,8 @@
 "MeSwitchSkin" = "Change Skin";
 "MeSwitchLaunguage" = "Change Launguage";
 "MeMessageReadStatus" = "Message read status";
-"MeMessageReadStatusDesc" = "If disabled, the message read status is hidden for all your messages and for all the messages sent by members in a chat.";
+"MeMessageReadStatusOpenDesc" = "If disabled, the message read status is hidden for all your messages and for all the messages sent by members in a chat.";
+"MeMessageReadStatusCloseDesc" = "If enabled, the message read status is displayed for all your messages and for all the messages sent by members in a chat.";
 
 "ProfilePhoto" = "Profile Photo";
 "ProfileName"  = "Name";
@@ -209,3 +210,9 @@
 "TUIThemeNameSystemFollowSubTitle" = "After this function is enabled, only the default skin (light/dark) will be displayed. Other skin styles cannot be switched";
 
 "UpgradeNow" = "Upgrade";
+
+"ShowOnlineStatus" = "Display online status";
+"ShowOnlineStatusOpenDesc" = "If disabled, the users' online status will not displayed in your session and contact list.";
+"ShowOnlineStatusCloseDesc" = "If enabled, the users' online status will displayed in your session and contact list.";
+"OnlineStatus" = "Online status";
+"ShowPackageToast" = "This is the feature of ultimate edition";
