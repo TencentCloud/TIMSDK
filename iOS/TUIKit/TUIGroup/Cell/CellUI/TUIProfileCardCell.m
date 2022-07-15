@@ -139,7 +139,12 @@
 {
     [super layoutSubviews];
     //此处解除 nameLabel 的 fit 宽度，使性别 icon 能够在短昵称情况下和 nameLabel 相邻。
+    CGFloat maxLabelWidth = self.contentView.mm_w - CGRectGetMaxX(_avatar.frame) - 30;
     _name.mm_sizeToFitThan(0, _avatar.mm_h/3).mm_top(_avatar.mm_y).mm_left(_avatar.mm_maxX + TPersonalCommonCell_Margin);
+    if (CGRectGetMaxX(_name.frame) >= self.contentView.mm_w) {
+        _name.mm_w = maxLabelWidth;
+    }
+    
     _identifier.mm_sizeToFitThan(80, _avatar.mm_h/3).mm_left(_name.mm_x);
 
     if (self.cardData.showSignature) {
@@ -150,6 +155,9 @@
     
     _signature.mm_sizeToFitThan(80, _avatar.mm_h/3).mm_left(_name.mm_x);
     _signature.mm_y = CGRectGetMaxY(_identifier.frame) + 5;
+    if (CGRectGetMaxX(_signature.frame) >= self.contentView.mm_w) {
+        _signature.mm_w = maxLabelWidth;
+    }
     
     //iCon大小 = 字体*0.9，视觉上最为自然
     _genderIcon.mm_sizeToFitThan(_name.font.pointSize * 0.9, _name.font.pointSize * 0.9).mm__centerY(_name.mm_centerY).mm_left(_name.mm_x + _name.mm_w + TPersonalCommonCell_Margin);

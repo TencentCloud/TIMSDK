@@ -12,6 +12,7 @@
 #import "UIView+TUILayout.h"
 #import "ReactiveObjC.h"
 #import "TUIDefine.h"
+#import "TUIChatModifyMessageHelper.h"
 
 #define MSG_GET_COUNT 20
 
@@ -319,6 +320,14 @@
         [self.tableView reloadData];
         [self.tableView layoutIfNeeded];
         
+        [newUIMsgs enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(TUIMessageCellData * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (obj.direction == MsgDirectionIncoming) {
+                self.C2CIncomingLastMsg = obj.innerMessage;
+                *stop = YES;
+            }
+            
+        }];
+        
         if (isFirstLoad) {
             [self scrollToBottom:NO];
         } else {
@@ -441,6 +450,10 @@
         tongue.unreadMsgCount = self.receiveMsgs.count;
         [TUIChatSmallTongueManager showTongue:tongue delegate:self];
     }
+    
+    if (self.isInVC) {
+        self.C2CIncomingLastMsg = uiMsg.innerMessage;
+    }
 }
 
 - (void)dataProvider:(TUIMessageDataProvider *)dataProvider
@@ -457,6 +470,27 @@
         } else {
             [TUIChatSmallTongueManager removeTongue:TUIChatSmallTongueType_ReceiveNewMsg];
         }
+    }
+    
+    /*
+     *  当被撤回的消息是否是 "回复"类型的消息时，去查根消息删除当前被撤回的消息。
+     *  When the retracted message is a "reply" type of message, go to the root message to delete the currently retracted message.
+     */
+    
+    if ([uiMsg isKindOfClass:TUIReplyMessageCellData.class]) {
+        TUIReplyMessageCellData *cellData = (TUIReplyMessageCellData *)uiMsg;
+        NSString *  messageRootID = @"";
+        NSString *  revokeMsgID = @"";
+        messageRootID = cellData.messageRootID;
+        revokeMsgID = cellData.msgID;
+        
+        [(TUIMessageSearchDataProvider *)self.messageDataProvider findMessages:@[messageRootID?:@""] callback:^(BOOL success, NSString * _Nonnull desc, NSArray<V2TIMMessage *> * _Nonnull msgs) {
+            if (success) {
+                V2TIMMessage *message = msgs.firstObject;
+                [[TUIChatModifyMessageHelper defaultHelper] modifyMessage:message revokeMsgID:revokeMsgID];
+            }
+            
+        }];
     }
 }
 

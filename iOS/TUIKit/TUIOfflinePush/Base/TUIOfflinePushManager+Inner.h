@@ -59,6 +59,8 @@ NS_ASSUME_NONNULL_BEGIN
 // 恢复系统代理
 - (void)unloadApplicationDelegateIfNeeded;
 
+- (NSDictionary *)jsonSring2Dictionary:(NSString *)jsonString;
+
 @end
 
 NS_ASSUME_NONNULL_END

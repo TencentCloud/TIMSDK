@@ -28,6 +28,9 @@
 /// @param leaveUser 离开的房间的用户id
 - (void)preExitRoom:(NSString *)leaveUser;
 
+/// 直接退房
+- (void)exitRoom;
+
 /// 发送 C2C 自定义（信令）消息
 - (void)sendInviteAction:(CallAction)action user:(NSString *)user model:(CallModel *)model;
 

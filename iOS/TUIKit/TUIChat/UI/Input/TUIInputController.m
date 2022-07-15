@@ -76,7 +76,8 @@
 - (void)keyboardWillHide:(NSNotification *)notification
 {
     if (_delegate && [_delegate respondsToSelector:@selector(inputController:didChangeHeight:)]){
-        [_delegate inputController:self didChangeHeight:CGRectGetMaxY(_inputBar.frame) + Bottom_SafeHeight];
+        CGFloat inputContainerBottom = [self getInputContainerBottom];
+        [_delegate inputController:self didChangeHeight:inputContainerBottom + Bottom_SafeHeight];
     }
     if (_status == Input_Status_Input_Keyboard) {
         _status = Input_Status_Input;
@@ -102,7 +103,8 @@
 {
     CGRect keyboardFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
     if (_delegate && [_delegate respondsToSelector:@selector(inputController:didChangeHeight:)]){
-        [_delegate inputController:self didChangeHeight:keyboardFrame.size.height + CGRectGetMaxY(_inputBar.frame)];
+        CGFloat inputContainerBottom = [self getInputContainerBottom];
+        [_delegate inputController:self didChangeHeight:keyboardFrame.size.height + inputContainerBottom];
     }
     self.keyboardFrame = keyboardFrame;
 }
@@ -194,7 +196,8 @@
     [self hideMoreAnimation];
     _status = Input_Status_Input_Talk;
     if (_delegate && [_delegate respondsToSelector:@selector(inputController:didChangeHeight:)]){
-        [_delegate inputController:self didChangeHeight:CGRectGetMaxY(_inputBar.frame) + Bottom_SafeHeight];
+        CGFloat inputContainerBottom = [self getInputContainerBottom];
+        [_delegate inputController:self didChangeHeight:inputContainerBottom + Bottom_SafeHeight];
     }
 }
 
@@ -252,6 +255,10 @@
     }
     if (_delegate && [_delegate respondsToSelector:@selector(inputController:didChangeHeight:)]){
         [_delegate inputController:self didChangeHeight:self.view.frame.size.height + offset];
+        if (_referencePreviewBar) {
+            CGRect referencePreviewBarFrame = _referencePreviewBar.frame;
+            _referencePreviewBar.frame = CGRectMake(referencePreviewBarFrame.origin.x, referencePreviewBarFrame.origin.y + offset, referencePreviewBarFrame.size.width, referencePreviewBarFrame.size.height);
+        }
     }
 }
 
@@ -355,7 +362,7 @@
             if (succ) {
                 if (msgs.count >0) {
                     V2TIMMessage *rootMsg = msgs.firstObject;
-                    [[TUIChatModifyMessageHelper defaultHelper] modifyMessage:rootMsg reactEmoji:nil simpleCurrentContent:simpleCurrentContent timeControl:0];
+                    [[TUIChatModifyMessageHelper defaultHelper] modifyMessage:rootMsg  simpleCurrentContent:simpleCurrentContent];
                 }
             }
         }];
@@ -418,6 +425,25 @@
     }
 }
 
+
+- (void)inputTextViewShouldBeginTyping:(UITextView *)textView {
+    
+    if (_delegate && [_delegate respondsToSelector:@selector(inputControllerBeginTyping:)]) {
+        [_delegate inputControllerBeginTyping:self];
+    }
+}
+
+- (void)inputTextViewShouldEndTyping:(UITextView *)textView {
+    
+    if (_delegate && [_delegate respondsToSelector:@selector(inputControllerEndTyping:)]) {
+        [_delegate inputControllerEndTyping:self];
+    }
+    
+}
+
+
+
+
 - (void)reset
 {
     if(_status == Input_Status_Input){
@@ -432,24 +458,27 @@
     _status = Input_Status_Input;
     [_inputBar.inputTextView resignFirstResponder];
     if (_delegate && [_delegate respondsToSelector:@selector(inputController:didChangeHeight:)]){
-        [_delegate inputController:self didChangeHeight:CGRectGetMaxY(_inputBar.frame) + Bottom_SafeHeight];
+        CGFloat inputContainerBottom = [self getInputContainerBottom];
+        [_delegate inputController:self didChangeHeight:inputContainerBottom + Bottom_SafeHeight];
     }
 }
 
 - (void)showReferencePreview:(TUIReferencePreviewData *)data {
     self.referenceData = data;
-    [self.replyPreviewBar removeFromSuperview];
-    [self.view addSubview:self.replyPreviewBar];
+    [self.referencePreviewBar removeFromSuperview];
+    [self.view addSubview:self.referencePreviewBar];
     self.inputBar.lineView.hidden = YES;
     
-    self.replyPreviewBar.previewReferenceData = data;
+    self.referencePreviewBar.previewReferenceData = data;
     
-    self.replyPreviewBar.frame = CGRectMake(0, 0, self.view.bounds.size.width, TMenuView_Menu_Height);
-    self.inputBar.mm_y = CGRectGetMaxY(self.replyPreviewBar.frame);
+    self.inputBar.mm_y = 0 ;
+        
+    self.referencePreviewBar.frame = CGRectMake(0, 0, self.view.bounds.size.width, TMenuView_Menu_Height);
+    self.referencePreviewBar.mm_y = CGRectGetMaxY(self.inputBar.frame);
     if (self.status == Input_Status_Input_Keyboard) {
         CGFloat keyboradHeight = self.keyboardFrame.size.height;
         if (self.delegate && [self.delegate respondsToSelector:@selector(inputController:didChangeHeight:)]){
-            [self.delegate inputController:self didChangeHeight:CGRectGetMaxY(self.inputBar.frame) + keyboradHeight];
+            [self.delegate inputController:self didChangeHeight:CGRectGetMaxY(self.referencePreviewBar.frame) + keyboradHeight];
         }
     } else if (self.status == Input_Status_Input_Face ||
                self.status == Input_Status_Input_Talk) {
@@ -492,6 +521,7 @@
     __weak typeof(self) weakSelf = self;
     [UIView animateWithDuration:0.25 animations:^{
         weakSelf.replyPreviewBar.hidden = YES;
+        weakSelf.referencePreviewBar.hidden = YES;
         weakSelf.inputBar.mm_y = 0;
         
         if (weakSelf.status == Input_Status_Input_Keyboard) {
@@ -507,8 +537,11 @@
         
     } completion:^(BOOL finished) {
         [weakSelf.replyPreviewBar removeFromSuperview];
+        [weakSelf.referencePreviewBar removeFromSuperview];
         weakSelf.replyPreviewBar = nil;
-        self.inputBar.lineView.hidden = NO;
+        weakSelf.referencePreviewBar = nil;
+        [weakSelf hideFaceAnimation];
+        weakSelf.inputBar.lineView.hidden = NO;
     }];
 }
 
@@ -620,10 +653,31 @@
         _replyPreviewBar = [[TUIReplyPreviewBar alloc] init];
         __weak typeof(self) weakSelf = self;
         _replyPreviewBar.onClose = ^{
-            [weakSelf exitReply];
+            __strong typeof(weakSelf)strongSelf = weakSelf;
+            [strongSelf exitReply];
         };
     }
     return _replyPreviewBar;
+}
+
+- (TUIReferencePreviewBar *)referencePreviewBar {
+    if (_referencePreviewBar == nil) {
+        _referencePreviewBar = [[TUIReferencePreviewBar alloc] init];
+        __weak typeof(self) weakSelf = self;
+        _referencePreviewBar.onClose = ^{
+            __strong typeof(weakSelf)strongSelf = weakSelf;
+            [strongSelf exitReply];
+        };
+    }
+    return _referencePreviewBar;
+}
+
+- (CGFloat)getInputContainerBottom {
+    CGFloat inputHeight = CGRectGetMaxY(_inputBar.frame);
+    if (_referencePreviewBar) {
+        inputHeight = CGRectGetMaxY(_referencePreviewBar.frame) ;
+    }
+    return inputHeight;
 }
 
 @end

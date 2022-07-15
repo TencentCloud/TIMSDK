@@ -102,7 +102,7 @@
 "FriendAddResultSuccess" = "已添加到好友列表";
 "FriendAddResultExists" = "好友已存在";
 
-"TUIKitWelcome" = "欢迎加入腾讯·云通信大家庭！";
+"TUIKitWelcome" = "欢迎加入腾讯云 IM 大家庭！";
 "TUIKitMicCamerAuthTips" = "请开启麦克风和摄像头权限";
 "TUIKitMicAuth" = "请开启麦克风权限";
 "TUIKitTipsConfirmResendMessage" = "确定重发此消息吗? ";
@@ -556,8 +556,9 @@
 "TUIKitErrorUnsupportIntefaceSearch" = "搜索";
 "TUIKitErrorUnsupportIntefaceMessageRead" = "消息已读回执";
 "TUIKitErrorUnsupportIntefaceCommunity" = "社群";
-"TUIKitErrorUnsupportIntefaceDesc" = "功能为 IM 旗舰版功能，购买旗舰版套餐包后可使用。如果您当前使用的是专业版套餐包，您需要先对专业版套餐包做退费处理，再购买旗舰版套餐包，详见购买指引";
-"TUIKitErrorUnsupportIntefaceGuidelines" = "购买指引";
+"TUIKitErrorUnsupportIntefaceDesc" = "功能为 IM 旗舰版功能，购买旗舰版套餐包后可使用，详见价格说明。";
+"TUIKitErrorUnsupportIntefaceCommunityDesc" = "\n备注: 社群可容纳百万成员，可划分分组、话题，适用于兴趣交友、游戏社交、粉丝运营、组织管理等场景。";
+"TUIKitErrorUnsupportIntefaceGuidelines" = "价格说明";
 "TUIKitErrorUnsupportIntefaceTitle" = "提示";
 "TUIKitErrorUnsupportIntefaceIGotIt" = "我知道了";
 "TUIKitErrorUnsupportIntefaceNoMoreAlert" = "不再提醒";
@@ -686,3 +687,11 @@
 "TUIKitSignalingComfirmSwitchToAudio" = "确认转语音";
 
 "TUIKitErrorEnableUserStatusOnConsole" = "您未开启用户状态功能，请先登录控制台开启";
+
+"TUIKitChooseAvatar" = "选择头像";
+"TUIKitChooseCover" = "选择封面";
+
+"TUIKitContactNoNewApplicationRequest" = "暂无新的联系人好友";
+"TUIKitContactNoGroupChats" = "暂无群聊";
+"TUIKitContactNoBlockList" = "暂无黑名单好友";
+"TUIKitTyping" = "对方正在输入";

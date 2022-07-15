@@ -338,10 +338,11 @@ static void *ScrollViewBoundsChangeNotificationContext = &ScrollViewBoundsChange
 {
     [_label sizeToFit];
     CGSize labelSize = _label.bounds.size; // [_label sizeThatFits:CGSizeMake(Screen_Width, NavBar_Height)];
+    CGFloat labelWidth = MIN(labelSize.width, 150);
     CGFloat labelY = 0;
     CGFloat labelX = _indicator.hidden ? 0 : (_indicator.frame.origin.x + _indicator.frame.size.width + TUINaviBarIndicatorView_Margin);
-    _label.frame = CGRectMake(labelX, labelY, labelSize.width, NavBar_Height);
-    self.frame = CGRectMake(0, 0, labelX + labelSize.width + TUINaviBarIndicatorView_Margin, NavBar_Height);
+    _label.frame = CGRectMake(labelX, labelY, labelWidth, NavBar_Height);
+    self.frame = CGRectMake(0, 0, labelX + labelWidth + TUINaviBarIndicatorView_Margin, NavBar_Height);
 //    self.center = CGPointMake(Screen_Width * 0.5, NavBar_Height * 0.5);
 }
 
@@ -1058,11 +1059,20 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
         for (V2TIMGroupMemberFullInfo* member in memberList) {
             if (member.faceURL.length > 0) {
                 [groupMemberAvatars addObject:member.faceURL];
-                i++;
+            } else {
+                [groupMemberAvatars addObject:@"http://placeholder"];
             }
-            if (i == 9) {
+            if (++i == 9) {
                 break;
             }
+        }
+        
+        if (i <= 1) {
+            [self asyncClearCacheAvatarForGroup:groupID];
+            if (callback) {
+                callback(NO, placeholder, groupID);
+            }
+            return;
         }
         
         // 存储当前获取到的群组头像信息
@@ -1124,17 +1134,17 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
 /// 获取缓存群组头像
 /// 缓存的维度是按照会议室ID & 会议室人数来定的，
 /// 人数变化要引起头像改变
-+ (void)getCacheGroupAvatar:(NSString *)groupID callback:(void(^)(UIImage *))imageCallBack {
++ (void)getCacheGroupAvatar:(NSString *)groupID callback:(void(^)(UIImage *, NSString *groupID))imageCallBack {
     if (groupID == nil || groupID.length == 0) {
         if (imageCallBack) {
-            imageCallBack(nil);
+            imageCallBack(nil, groupID);
         }
         return;
     }
     [[V2TIMManager sharedInstance] getGroupsInfo:@[groupID] succ:^(NSArray<V2TIMGroupInfoResult *> *groupResultList) {
         V2TIMGroupInfoResult *groupInfo = groupResultList.firstObject;
         if (!groupInfo) {
-            imageCallBack(nil);
+            imageCallBack(nil, groupID);
             return;
         }
         UInt32 memberNum = groupInfo.info.memberCount;
@@ -1154,12 +1164,11 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
             [NSUserDefaults.standardUserDefaults setInteger:memberNum forKey:key];
             [NSUserDefaults.standardUserDefaults synchronize];
         }
-        imageCallBack(avatar);
+        imageCallBack(avatar, groupInfo.info.groupID);
     } fail:^(int code, NSString *msg) {
-        imageCallBack(nil);
+        imageCallBack(nil, groupID);
     }];
 }
-
 
 /// 同步获取本地缓存的群组头像
 /// @param groupId 群id
@@ -1181,6 +1190,21 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
     }
     return avatar;
 }
+
++ (void)asyncClearCacheAvatarForGroup:(NSString *)groupID
+{
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        NSString* tempPath = NSTemporaryDirectory();
+        for (int i = 0; i < 9; i++) {
+            NSString *filePath = [NSString stringWithFormat:@"%@groupAvatar_%@_%d.png",tempPath,
+                                  groupID,(i+1)];
+            if ([NSFileManager.defaultManager fileExistsAtPath:filePath]) {
+                [NSFileManager.defaultManager removeItemAtPath:filePath error:nil];
+            }
+        }
+    });
+}
+
 @end
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -1477,6 +1501,9 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
 }
 
 - (void)back {
+    if ([self.uiNaviDelegate respondsToSelector:@selector(navigationControllerDidClickLeftButton:)]) {
+        [self.uiNaviDelegate navigationControllerDidClickLeftButton:self];
+    }
     [self popViewControllerAnimated:YES];
 }
 
@@ -1533,6 +1560,25 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
     }
 }
 
+- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    /**
+     * 监听侧边滑动返回的事件
+     * Listen to the event returned by the side slide
+     */
+    __weak typeof(self) weakSelf = self;
+    if (@available(iOS 10.0, *)) {
+        [viewController.transitionCoordinator notifyWhenInteractionChangesUsingBlock:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            [strongSelf handleSideSlideReturnIfNeeded:context];
+        }];
+    } else {
+        [viewController.transitionCoordinator notifyWhenInteractionEndsUsingBlock:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            [strongSelf handleSideSlideReturnIfNeeded:context];
+        }];
+    }
+}
+
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
 {
     if (gestureRecognizer == self.interactivePopGestureRecognizer) {
@@ -1543,6 +1589,16 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
         return NO;
     }
     return YES;
+}
+
+- (void)handleSideSlideReturnIfNeeded:(id<UIViewControllerTransitionCoordinatorContext>)context {
+    if (context.isCancelled) {
+        return;
+    }
+    UIViewController *fromVc = [context viewControllerForKey:UITransitionContextFromViewControllerKey];
+    if ([self.uiNaviDelegate respondsToSelector:@selector(navigationControllerDidSideSlideReturn:fromViewController:)]) {
+        [self.uiNaviDelegate navigationControllerDidSideSlideReturn:self fromViewController:fromVc];
+    }
 }
 
 @end

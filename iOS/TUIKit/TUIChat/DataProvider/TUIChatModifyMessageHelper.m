@@ -26,6 +26,8 @@
 @property (nonatomic, copy) NSString *reactEmoji;
 //reply
 @property (nonatomic, strong) NSDictionary *simpleCurrentContent;
+//revoke
+@property (nonatomic, copy) NSString *revokeMsgID;
 
 @end
 
@@ -43,6 +45,9 @@
     }
     if (self.simpleCurrentContent) {
         return [self.class resolveOriginCloudCustomData:rootMsg simpleCurrentContent:self.simpleCurrentContent];
+    }
+    if (self.revokeMsgID) {
+        return [self.class resolveOriginCloudCustomData:rootMsg revokeMsgID:self.revokeMsgID];
     }
     return rootMsg;
 }
@@ -115,6 +120,53 @@
     return rootMsg;
 }
 
+//revoke
+
++ (V2TIMMessage *)resolveOriginCloudCustomData:(V2TIMMessage *)rootMsg  revokeMsgID:(NSString *)revokeMsgId  {
+    NSMutableDictionary *mudic = [[NSMutableDictionary alloc] initWithCapacity:5];
+    NSMutableArray *replies = [[NSMutableArray alloc] initWithCapacity:5];
+    NSMutableDictionary *messageReplies = [[NSMutableDictionary alloc] initWithCapacity:5];
+
+    if (rootMsg.cloudCustomData) {
+        NSDictionary * originDic = [TUITool jsonData2Dictionary:rootMsg.cloudCustomData];
+        if (originDic && [originDic isKindOfClass:[NSDictionary class]]) {
+            [messageReplies addEntriesFromDictionary:originDic];
+            if (originDic[@"messageReplies"] && [originDic[@"messageReplies"] isKindOfClass:[NSDictionary class]]) {
+                NSArray * messageRepliesArray = originDic[@"messageReplies"][@"replies"];
+                if (messageRepliesArray && [messageRepliesArray isKindOfClass:NSArray.class] && messageRepliesArray.count>0) {
+                    [replies addObjectsFromArray:messageRepliesArray];
+                }
+            }
+        }
+        
+    }
+    
+    NSMutableArray *filterReplies = [[NSMutableArray alloc] initWithCapacity:5];
+    [replies enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (obj && [obj isKindOfClass:NSDictionary.class]) {
+            NSDictionary *  dic = (NSDictionary *)obj;
+            if (IS_NOT_EMPTY_NSSTRING(dic[@"messageID"]) ) {
+                NSString *messageID = dic[@"messageID"];
+                if (![messageID isEqualToString:revokeMsgId] ) {
+                    [filterReplies addObject:dic];
+                }
+            }
+        }
+    }];
+
+    [mudic setValue:filterReplies forKey:@"replies"];
+    
+
+    [messageReplies setValue:mudic forKey:@"messageReplies"];
+    [messageReplies setValue:@"1" forKey:@"version"];
+
+    NSData *data = [TUITool dictionary2JsonData:messageReplies];
+    if (data) {
+        rootMsg.cloudCustomData = data;
+    }
+    
+    return rootMsg;
+}
 @end
 
 @interface ModifyCustomOperation : NSOperation
@@ -254,11 +306,30 @@
         obj.msg = msg;
     }
 }
+#pragma mark - public
 
+- (void)modifyMessage:(V2TIMMessage *)msg
+           reactEmoji:(NSString *)emojiName {
+    [self modifyMessage:msg reactEmoji:emojiName simpleCurrentContent:nil revokeMsgID:nil timeControl:0];
+}
+
+- (void)modifyMessage:(V2TIMMessage *)msg
+ simpleCurrentContent:(NSDictionary *)simpleCurrentContent {
+    [self modifyMessage:msg reactEmoji:nil simpleCurrentContent:simpleCurrentContent revokeMsgID:nil timeControl:0];
+}
+
+- (void)modifyMessage:(V2TIMMessage *)msg
+          revokeMsgID:(NSString *)revokeMsgID {
+    [self modifyMessage:msg reactEmoji:nil simpleCurrentContent:nil revokeMsgID:revokeMsgID timeControl:0];
+}
+
+
+#pragma mark - private
 - (void)modifyMessage:(V2TIMMessage *)msg
            reactEmoji:(NSString *)emojiName
  simpleCurrentContent:(NSDictionary *)simpleCurrentContent
-          timeControl:(NSInteger)time{
+          revokeMsgID:(NSString *)revokeMsgID
+          timeControl:(NSInteger)time {
     
     NSString *msgID = msg.msgID;
     if (!IS_NOT_EMPTY_NSSTRING(msgID)) {
@@ -275,6 +346,10 @@
     if (simpleCurrentContent) {
         obj.simpleCurrentContent = simpleCurrentContent;
     }
+    if (revokeMsgID) {
+        obj.revokeMsgID = revokeMsgID;
+    }
+    
     [self.modifyMessageHelperMap setObject:obj forKey:obj.msgID];
 
     __weak typeof(self) weakSelf = self;
@@ -300,7 +375,7 @@
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_MSEC)), dispatch_get_main_queue(), ^{
                 TUIChatModifyMessageObj *obj = strongSelf.modifyMessageHelperMap[msgID];
                 if (obj && [obj isKindOfClass:[TUIChatModifyMessageObj class]] ) {
-                    [strongSelf modifyMessage:obj.msg reactEmoji:obj.reactEmoji simpleCurrentContent:obj.simpleCurrentContent timeControl:obj.time];
+                    [strongSelf modifyMessage:obj.msg reactEmoji:obj.reactEmoji simpleCurrentContent:obj.simpleCurrentContent revokeMsgID: obj.revokeMsgID timeControl:obj.time];
                 }
             });
         }

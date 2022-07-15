@@ -62,6 +62,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, assign) BOOL enablePopMenuReferenceAction;
 
+
+/**
+ *  C2C聊天对话框是否展示 "对方正在输入中..."，默认 YES
+ *  Whether the C2C chat dialog box displays "The other party is typing...", the default is YES
+ */
+@property(nonatomic, assign) BOOL enableTypingStatus;
+
 @end
 
 NS_ASSUME_NONNULL_END

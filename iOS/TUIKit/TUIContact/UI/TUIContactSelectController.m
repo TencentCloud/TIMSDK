@@ -87,6 +87,7 @@ static NSString *kReuseIdentifier = @"ContactSelectCell";
 
 
     _pickerView = [[TUIContactListPicker alloc] initWithFrame:CGRectZero];
+    [_pickerView setBackgroundColor:[UIColor groupTableViewBackgroundColor]];
     [self.view addSubview:_pickerView];
     [_pickerView.accessoryBtn addTarget:self action:@selector(finishTask) forControlEvents:UIControlEventTouchUpInside];
 

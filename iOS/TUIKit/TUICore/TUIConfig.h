@@ -78,5 +78,12 @@ typedef NS_ENUM(NSInteger, TUIKitAvatarType) {
  */
 @property(nonatomic, assign) BOOL enableCustomRing;
 
+/**
+ * 在会话、联系人中展示用户的在线状态图标， 默认是 NO
+ * Display users' online status in session and contact list. NO in default.
+ */
+@property(nonatomic, assign) BOOL displayOnlineStatusIcon;
+
+
 - (void)setSceneOptimizParams:(NSString *)path;
 @end

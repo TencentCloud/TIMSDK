@@ -22,4 +22,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface TUIReferencePreviewBar : TUIReplyPreviewBar
+@end
 NS_ASSUME_NONNULL_END

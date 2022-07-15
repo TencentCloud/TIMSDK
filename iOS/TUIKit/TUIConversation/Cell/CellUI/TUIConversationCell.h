@@ -86,6 +86,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIImageView *selectedIcon;
 
 /**
+ * 在线状态图标
+ *
+ * The icon of the user's online status
+ */
+@property (nonatomic, strong) UIImageView *onlineStatusIcon;
+
+/**
  *  填充数据
  *  根据传入的数据源，对会话单元中的各个属性进行赋值。
  *  本函数中还包含了一些会话单元的初始化操作。

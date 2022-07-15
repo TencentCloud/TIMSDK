@@ -248,7 +248,12 @@ static const NSString * TUICSToastQueueKey             = @"TUICSToastQueueKey";
     
     if(image != nil) {
         imageView = [[UIImageView alloc] initWithImage:image];
-        imageView.contentMode = UIViewContentModeScaleAspectFit;
+        if (style.imageContentMode) {
+            imageView.contentMode = style.imageContentMode;
+        }
+        else {
+            imageView.contentMode = UIViewContentModeScaleAspectFit;
+        }
         imageView.frame = CGRectMake(style.horizontalPadding, style.verticalPadding, style.imageSize.width, style.imageSize.height);
     }
     

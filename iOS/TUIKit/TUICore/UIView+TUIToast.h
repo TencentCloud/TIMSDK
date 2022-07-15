@@ -338,6 +338,11 @@ extern const NSString * TUICSToastPositionBottom;
 @property (assign, nonatomic) CGSize imageSize;
 
 /**
+ The image ContentMode. The default is `UIViewContentModeScaleAspectFit`.
+ */
+@property (assign, nonatomic) UIViewContentMode imageContentMode;
+
+/**
  The size of the toast activity view when `makeToastActivity:` is called.
  Default is `CGSizeMake(100.0, 100.0)`.
  */

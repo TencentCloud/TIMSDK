@@ -15,6 +15,7 @@
 @property UITableView *tableView;
 @property UIButton  *moreBtn;
 @property TUINewFriendViewDataProvider *viewModel;
+@property (nonatomic, strong) UILabel *noDataTipsLabel;
 @end
 
 @implementation TUINewFriendViewController
@@ -62,6 +63,9 @@
        @strongify(self)
        [self.tableView reloadData];
     }];
+    
+    self.noDataTipsLabel.frame = CGRectMake(10, 60, self.view.bounds.size.width - 20, 40);
+    [self.tableView addSubview:self.noDataTipsLabel];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -77,6 +81,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    self.noDataTipsLabel.hidden = (self.viewModel.dataList.count != 0);
     return self.viewModel.dataList.count;
 }
 
@@ -141,6 +146,18 @@
     if (self.cellClickBlock) {
         self.cellClickBlock(cell);
     }
+}
+
+- (UILabel *)noDataTipsLabel
+{
+    if (_noDataTipsLabel == nil) {
+        _noDataTipsLabel = [[UILabel alloc] init];
+        _noDataTipsLabel.textColor = TUIContactDynamicColor(@"contact_add_contact_nodata_tips_text_color", @"#999999");
+        _noDataTipsLabel.font = [UIFont systemFontOfSize:14.0];
+        _noDataTipsLabel.textAlignment = NSTextAlignmentCenter;
+        _noDataTipsLabel.text = TUIKitLocalizableString(TUIKitContactNoNewApplicationRequest);
+    }
+    return _noDataTipsLabel;
 }
 
 @end

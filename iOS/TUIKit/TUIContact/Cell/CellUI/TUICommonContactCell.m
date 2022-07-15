@@ -11,6 +11,8 @@
 #import "TUIDefine.h"
 #import "TUIThemeManager.h"
 
+#define kScale UIScreen.mainScreen.bounds.size.width / 375.0
+
 @interface TUICommonContactCell()
 @property TUICommonContactCellData *contactData;
 @end
@@ -38,11 +40,17 @@
         [self.contentView addSubview:self.titleLabel];
         self.titleLabel.textColor = TUICoreDynamicColor(@"form_title_color", @"#000000");
         self.titleLabel.mm_left(self.avatarView.mm_maxX+12).mm_height(20).mm__centerY(self.avatarView.mm_centerY).mm_flexToRight(0);
+        
+        self.onlineStatusIcon = [[UIImageView alloc] init];
+        [self.contentView addSubview:self.onlineStatusIcon];
+        self.onlineStatusIcon.mm_width(kScale * 15).mm_height(kScale * 15);
+        self.onlineStatusIcon.mm_x = CGRectGetMaxX(self.avatarView.frame) - 0.5 * self.onlineStatusIcon.mm_w - 3 * kScale;
+        self.onlineStatusIcon.mm_y = CGRectGetMaxY(self.avatarView.frame) - self.onlineStatusIcon.mm_w;
+        self.onlineStatusIcon.layer.cornerRadius = 0.5 * self.onlineStatusIcon.mm_w;
 
         [self setSelectionStyle:UITableViewCellSelectionStyleNone];
 
         self.changeColorWhenTouched = YES;
-        //[self setSelectionStyle:UITableViewCellSelectionStyleDefault];
     }
     return self;
 }
@@ -54,6 +62,23 @@
 
     self.titleLabel.text = contactData.title;
     [self.avatarView sd_setImageWithURL:contactData.avatarUrl placeholderImage:contactData.avatarImage?:DefaultAvatarImage];
+    
+    @weakify(self)
+    [[RACObserve(TUIConfig.defaultConfig, displayOnlineStatusIcon) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(id  _Nullable x) {
+        @strongify(self)
+        if (contactData.onlineStatus == TUIContactOnlineStatusOnline &&
+            TUIConfig.defaultConfig.displayOnlineStatusIcon) {
+            self.onlineStatusIcon.hidden = NO;
+            self.onlineStatusIcon.image = TUICoreDynamicImage(@"icon_online_status", [UIImage imageNamed:TUICoreImagePath(@"icon_online_status")]);
+        } else if (contactData.onlineStatus == TUIContactOnlineStatusOffline &&
+                   TUIConfig.defaultConfig.displayOnlineStatusIcon) {
+            self.onlineStatusIcon.hidden = NO;
+            self.onlineStatusIcon.image = TUICoreDynamicImage(@"icon_offline_status", [UIImage imageNamed:TUICoreImagePath(@"icon_offline_status")]);
+        } else {
+            self.onlineStatusIcon.hidden = YES;
+            self.onlineStatusIcon.image = nil;
+        }
+    }];
 }
 
 @end

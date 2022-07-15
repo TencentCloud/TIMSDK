@@ -9,6 +9,7 @@
 #import <TUICore/TUICore.h>
 #import <TUICore/TUIDefine.h>
 #import "TUICalling.h"
+#import "TUILogin.h"
 #import "TUICommonUtil.h"
 #import "TUIGlobalization.h"
 #import "NSDictionary+TUISafe.h"
@@ -39,10 +40,20 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        [TUICalling shareInstance];
         self.extentions = [NSMutableArray array];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(loginSuccessNotification)
+                                                     name:TUILoginSuccessNotification object:nil];
     }
     return self;
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)loginSuccessNotification {
+    [TUICalling shareInstance];
 }
 
 - (void)startCall:(NSString *)groupID userIDs:(NSArray *)userIDs callingType:(TUICallingType)callingType {
@@ -106,7 +117,7 @@
     imageView.contentMode = UIViewContentModeScaleAspectFit;
     imageView.frame = CGRectMake(0, 0, menuSize.width, menuSize.height);
     [view addSubview:imageView];
-
+    
     UILabel *titleLabel = [[UILabel alloc] init];
     [titleLabel setFont:[UIFont systemFontOfSize:10]];
     [titleLabel setTextColor:[UIColor grayColor]];

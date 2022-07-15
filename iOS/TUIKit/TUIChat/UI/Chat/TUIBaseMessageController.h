@@ -105,6 +105,12 @@ typedef NS_ENUM(NSInteger, TUIMultiResultOption) {
 - (void)deleteMessages:(NSArray<TUIMessageCellData *> *)uiMsgs;
 
 /**
+ * 会话已读上报
+ *
+ */
+- (void)readReport;
+
+/**
  * 子类实现点击回复消息
  */
 - (void)showReplyMessage:(TUIReplyMessageCell *)cell;

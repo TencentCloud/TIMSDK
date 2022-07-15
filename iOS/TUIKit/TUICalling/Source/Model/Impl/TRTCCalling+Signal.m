@@ -23,7 +23,6 @@
 
 - (void)removeSignalListener {
     [[V2TIMManager sharedInstance] removeSignalingListener:self];
-    [[V2TIMManager sharedInstance] removeSimpleMsgListener:self];
 }
 
 - (NSString *)invite:(NSString *)receiver action:(CallAction)action model:(CallModel *)model cmdInfo:(NSString *)cmdInfo {
@@ -366,7 +365,7 @@
                                   @"version" : @(APNs_Version)};       // 推送版本
     NSDictionary *extParam = @{@"entity" : entityParam};
     V2TIMOfflinePushInfo *info = [[V2TIMOfflinePushInfo alloc] init];
-    info.desc = CallingLocalize(@"Demo.TRTC.calling.callingrequest");
+    info.desc = TUICallingLocalize(@"Demo.TRTC.calling.callingrequest");
     info.ext = [TRTCCallingUtils dictionary2JsonStr:extParam];
     info.iOSSound = @"phone_ringing.mp3";
     return info;
@@ -598,7 +597,7 @@
             
             if (model.groupid != nil && ![model.invitedList containsObject:TUILogin.getUserID]
                 ) { // 群聊但是邀请不包含自己不处理
-                if (self.curCallID == model.callid) { // 在房间中更新列表
+                if ([self.curCallID isEqualToString:model.callid]) { // 在房间中更新列表
                     syncInvitingList();
                     if (self.curInvitingList.count > 0) {
                         if ([self canDelegateRespondMethod:@selector(onGroupCallInviteeListUpdate:)]) {
@@ -708,7 +707,7 @@
                 if ([self.curInvitingList containsObject:user]) {
                     [self.curInvitingList removeObject:user];
                 }
-                [self.delegate onError:-1 msg:CallingLocalize(@"Demo.TRTC.calling.syserror")];
+                [self.delegate onError:-1 msg:TUICallingLocalize(@"Demo.TRTC.calling.syserror")];
                 [self preExitRoom];
             }
         } break;

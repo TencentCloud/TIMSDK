@@ -142,10 +142,10 @@
     NSString *callingStateStr;
     switch (callingState) {
         case TUICallingStateDailing:
-            callingStateStr = CallingLocalize(@"Demo.TRTC.Calling.FloatingWindow.dailing");
+            callingStateStr = TUICallingLocalize(@"Demo.TRTC.Calling.FloatingWindow.dailing");
             break;
         case TUICallingStateOnInvitee:
-            callingStateStr = CallingLocalize(@"Demo.TRTC.Calling.FloatingWindow.waitaccept");
+            callingStateStr = TUICallingLocalize(@"Demo.TRTC.Calling.FloatingWindow.waitaccept");
             break;
         case TUICallingStateCalling:
             callingStateStr = @"";

@@ -14,6 +14,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property UIImageView *avatarView;
 @property UILabel *titleLabel;
 
+// The icon of indicating the user's online status
+@property (nonatomic, strong) UIImageView *onlineStatusIcon;
+
 @property (readonly) TUICommonContactCellData *contactData;
 
 - (void)fillWithData:(TUICommonContactCellData *)contactData;

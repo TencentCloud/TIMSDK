@@ -25,6 +25,10 @@
 #define BussinessID @"businessID"
 #define BussinessID_GroupCreate @"group_create"
 #define BussinessID_TextLink @"text_link"
+#define BussinessID_Evaluation @"web_evaluation"
+#define BussinessID_Order @"web_order"
+#define BussinessID_Typing @"user_typing_status"
+
 
 #define GroupCreate_Version 4           // 创建群自定义消息业务版本
 #define TextLink_Version    4           // 自定义 cell 业务版本（点击跳转官网）

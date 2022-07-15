@@ -12,6 +12,12 @@ NS_ASSUME_NONNULL_BEGIN
 @class V2TIMFriendInfo;
 @class V2TIMGroupInfo;
 
+typedef NS_ENUM(NSInteger, TUIContactOnlineStatus) {
+    TUIContactOnlineStatusUnknown = 0,
+    TUIContactOnlineStatusOnline  = 1,
+    TUIContactOnlineStatusOffline = 2
+};
+
 @interface TUICommonContactCellData : TUICommonCellData
 
 - (instancetype)initWithFriend:(V2TIMFriendInfo *)args;
@@ -23,6 +29,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property NSURL *avatarUrl;
 @property NSString *title;
 @property UIImage *avatarImage;
+
+// The flag of indicating the user's online status
+@property (nonatomic, assign) TUIContactOnlineStatus onlineStatus;
 
 @end
 

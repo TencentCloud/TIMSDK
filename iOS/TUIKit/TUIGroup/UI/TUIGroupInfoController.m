@@ -17,7 +17,7 @@
 #import "TUIGroupNoticeCell.h"
 #import "TUIGroupNoticeController.h"
 #import "TUISelectGroupMemberViewController.h"
-
+#import "TUISelectAvatarController.h"
 #define ADD_TAG @"-1"
 #define DEL_TAG @"-2"
 
@@ -254,20 +254,23 @@
     if ([TUIGroupInfoDataProvider isMeOwner:self.dataProvider.groupInfo]) {
         @weakify(self)
         [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitGroupProfileEditAvatar) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            UIAlertController *ac = [UIAlertController alertControllerWithTitle:TUIKitLocalizableString(choose_avatar_for_you) message:nil preferredStyle:UIAlertControllerStyleAlert];
-                [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(OK) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                    @strongify(self)
-                    NSString *url = [TUITool randAvatarUrl];
+            @strongify(self)
+            TUISelectAvatarController * vc = [[TUISelectAvatarController alloc] init];
+            vc.selectAvatarType = TUISelectAvatarTypeGroupAvatar;
+            vc.profilFaceURL = self.dataProvider.groupInfo.faceURL;
+            [self.navigationController pushViewController:vc animated:YES];
+            vc.selectCallBack = ^(NSString * _Nonnull urlStr) {
+                if (urlStr.length > 0) {
                     V2TIMGroupInfo *info = [[V2TIMGroupInfo alloc] init];
                     info.groupID = self.groupId;
-                    info.faceURL = url;
+                    info.faceURL = urlStr;
                     [[V2TIMManager sharedInstance] setGroupInfo:info succ:^{
                         [self updateGroupInfo];
                     } fail:^(int code, NSString *msg) {
                         [TUITool makeToastError:code msg:msg];
                     }];
-                }]];
-                [self presentViewController:ac animated:YES completion:nil];
+                }
+            };
         }]];
     }
     
@@ -412,22 +415,24 @@
 #pragma mark TUIProfileCardDelegate
 
 -(void)didTapOnAvatar:(TUIProfileCardCell *)cell{
-    //点击头像的响应函数，换头像，上传头像URL
+    TUISelectAvatarController * vc = [[TUISelectAvatarController alloc] init];
+    vc.selectAvatarType = TUISelectAvatarTypeGroupAvatar;
+    vc.profilFaceURL = self.dataProvider.groupInfo.faceURL;
+    [self.navigationController pushViewController:vc animated:YES];
     @weakify(self)
-    UIAlertController *ac = [UIAlertController alertControllerWithTitle:TUIKitLocalizableString(choose_avatar_for_you) message:nil preferredStyle:UIAlertControllerStyleAlert];
-    [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(OK) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    vc.selectCallBack = ^(NSString * _Nonnull urlStr) {
         @strongify(self)
-        NSString *url = [TUITool randAvatarUrl];
-        @weakify(self)
-        [self.dataProvider updateGroupAvatar:url succ:^{
-            @strongify(self)
-            [self updateGroupInfo];
-        } fail:^(int code, NSString *desc) {
-            [TUITool makeToast:[NSString stringWithFormat:@"%d, %@", code, desc]];
-        }];
-    }]];
-    [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel) style:UIAlertActionStyleDefault handler:nil]];
-    [self presentViewController:ac animated:YES completion:nil];
+        if (urlStr.length > 0) {
+            V2TIMGroupInfo *info = [[V2TIMGroupInfo alloc] init];
+            info.groupID = self.groupId;
+            info.faceURL = urlStr;
+            [[V2TIMManager sharedInstance] setGroupInfo:info succ:^{
+                [self updateGroupInfo];
+            } fail:^(int code, NSString *msg) {
+                [TUITool makeToastError:code msg:msg];
+            }];
+        }
+    };
 }
 
 #pragma mark TUIGroupMembersCellDelegate

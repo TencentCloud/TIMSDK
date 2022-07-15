@@ -74,7 +74,10 @@
     [self updateRootMsg];
 
     [self applyData];
+ 
+    [self updateTableViewConstraint];
 }
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     self.responseKeyboard = YES;
@@ -108,22 +111,8 @@
     }
 }
 - (void)applyData {
-    /*
-     {
-     messageAbstract = "1-1";
-     messageID = "144115263641742148-1652172672-3557886729";
-     messageSender = 1008611;
-     messageSequence = 103;
-     messageTime = 1652172673;
-     messageType = 1;
-     version = 1;
- }
-     */
     NSArray * messageModifyReplies = self.cellData.messageModifyReplies;
     NSMutableArray * msgIDArray =  [NSMutableArray array];
-//    if (IS_NOT_EMPTY_NSSTRING(self.cellData.msgID)) {
-//        [msgIDArray addObject:self.cellData.msgID];
-//    }
     if (messageModifyReplies.count >0) {
         for (NSDictionary * dic in messageModifyReplies) {
             if (dic) {
@@ -134,10 +123,15 @@
             }
         }
     }
+    
+    // When the only reply is retracted, go back to the previous controller
+    if (msgIDArray.count <= 0) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+    
     __weak typeof(self)weakSelf = self;
     [TUIChatDataProvider findMessages:msgIDArray callback:^(BOOL succ, NSString * _Nonnull error_message, NSArray * _Nonnull msgs) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
-
         if (succ) {
             if (msgs.count >0) {
                 strongSelf.imMsgs = msgs;
@@ -153,15 +147,22 @@
         }
     }];
 }
+
+- (void)updateTableViewConstraint {
+    CGFloat height = CGRectGetMaxY(self.inputController.inputBar.frame) + Bottom_SafeHeight;
+    CGRect msgFrame = self.tableView.frame;
+    msgFrame.size.height = self.view.frame.size.height - height;
+    self.tableView.frame = msgFrame;
+}
+
 - (void)setupViews
 {
     self.title = TUIKitLocalizableString(TUIKitRepliesDetailTitle);
-
+    self.view.backgroundColor = TUIChatDynamicColor(@"chat_controller_bg_color", @"#FFFFFF");
     self.tableView.scrollsToTop = NO;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
-    self.tableView.backgroundColor = TUIChatDynamicColor(@"chat_controller_bg_color", @"#FFFFFF");;
     [self.tableView registerClass:[TUITextMessageCell class] forCellReuseIdentifier:TTextMessageCell_ReuseId];
     [self.tableView registerClass:[TUIVoiceMessageCell class] forCellReuseIdentifier:TVoiceMessageCell_ReuseId];
     [self.tableView registerClass:[TUIImageMessageCell class] forCellReuseIdentifier:TImageMessageCell_ReuseId];
@@ -286,6 +287,17 @@
             [uiMsgs addObject:data];
         }
     }
+    
+    NSArray * sortedArray = [uiMsgs sortedArrayUsingComparator:^NSComparisonResult(TUIMessageCellData *obj1, TUIMessageCellData *obj2) {
+        if ([obj1.innerMessage.timestamp timeIntervalSince1970] == [obj2.innerMessage.timestamp timeIntervalSince1970]) {
+            return obj1.innerMessage.seq > obj2.innerMessage.seq;
+        } else {
+            return [obj1.innerMessage.timestamp compare:obj2.innerMessage.timestamp];
+        }
+    }];
+    
+    uiMsgs = [NSMutableArray arrayWithArray:sortedArray];
+    
     return uiMsgs;
 }
 
@@ -298,7 +310,10 @@
         if (![UINavigationBar appearance].isTranslucent && [[[UIDevice currentDevice] systemVersion] doubleValue]<15.0) {
             rect = CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height - TabBar_Height - NavBar_Height  - TTextView_Height);
         }
-        _tableView = [[UITableView alloc] initWithFrame:rect style:UITableViewStyleGrouped];
+        _tableView = [[UITableView alloc] initWithFrame:rect style:UITableViewStylePlain];
+        if (@available(iOS 15.0, *)) {
+            _tableView.sectionHeaderTopPadding = 0;
+        }
         [self.view addSubview:_tableView];
     }
     return _tableView;

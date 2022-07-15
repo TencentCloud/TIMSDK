@@ -109,6 +109,10 @@
  */
 - (void)inputBarDidDeleteBackward:(TUIInputBar *)textView;
 
+- (void)inputTextViewShouldBeginTyping:(UITextView *)textView;
+
+- (void)inputTextViewShouldEndTyping:(UITextView *)textView;
+
 @end
 
 
