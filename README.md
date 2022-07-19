@@ -149,10 +149,10 @@
 
 ### SDK
 
-- 新增会话标记支持
-- 新增会话分组支持
+- 新增[会话标记](https://cloud.tencent.com/document/product/269/77389)支持
+- 新增[会话分组](https://cloud.tencent.com/document/product/269/77392)支持
 - 新增会话自定义字段支持
-- 新增拉取会话高级接口
+- 新增[拉取会话高级接口](https://cloud.tencent.com/document/product/269/75366#.E8.8E.B7.E5.8F.96.E4.BC.9A.E8.AF.9D.E5.88.97.E8.A1.A8.E9.AB.98.E7.BA.A7.E6.8E.A5.E5.8F.A3)
 - 支持接收直播群广播消息
 - 支持加群选项变更的通知下发
 - 支持群消息接收选项变更的多端同步
