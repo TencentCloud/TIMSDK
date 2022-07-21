@@ -2,6 +2,40 @@ English | [简体中文](./版本历史.md)
 
 # TIMSDK
 
+## 6.5.2803 @ 2022.07.15 - Enhanced Edition
+
+### SDK
+
+- Added the support for marking conversations.
+- Added the support for grouping conversations.
+- Added the support for customizing chat fields.
+- Added the advanced API for pulling conversation list.
+- Supported receiving broadcast messages of audio-video groups.
+- Supported sending notifications of changes to group joining options.
+- Added the support for syncing the changes to group message receiving options across terminals.
+- Optimized the routing logic for persistent connections and added the support for rotation policy.
+- Scheduled to support for Tencent Cloud Japan.
+- Upgraded the authorization ID for HTTPDNS routing requests.
+- Added the support for HTTPDNS routing at Tencent Cloud International.
+- Optimized the start sequence of long polling requests in audio-video groups.
+- Fixed the issue where `lastMessage` is missing in topic profile under certain conditions.
+- Optimized the logic of pinning a chat to the top.
+- Optimized the statistics collection logic of end-to-end message time.
+- Fixed the issue where duplicate messages occasionally appeared in historical messages due to the resending of failed messages.
+- Fixed the issue where garbled characters were displayed when emojis were sent on earlier mobile phones.
+- Fixed the issue where the `faceURL` was empty in the message returned by `onRecvMessageModified`.
+- Fixed the issue where the group invitation signaling sent when the invitee was offline couldn't be received after login.
+
+
+### TUIKit and demo
+
+- Supported displaying the "Typing..." status in one-to-one chat.
+- Supported displaying the online status of friends in chats and contacts.
+- No longer displayed the "Recall" option 2 minutes after a message was sent.
+- Made custom messages intercompatible across terminals.
+- Fixed the issue where chats were not rearranged in certain scenarios on Android.
+- Removed the TPNS channel from the offline push component.
+
 ## 6.3.2619 @2022.06.29 - Enhanced Version
 
 ### SDK
