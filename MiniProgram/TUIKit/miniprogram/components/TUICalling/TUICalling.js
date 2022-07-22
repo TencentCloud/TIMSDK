@@ -1,13 +1,11 @@
 import TRTCCalling from './TRTCCalling/TRTCCalling.js';
 
-
 const TAG_NAME = 'TUICalling';
 // 组件旨在跨终端维护一个通话状态管理机，以事件发布机制驱动上层进行管理，并通过API调用进行状态变更。
 // 组件设计思路将UI和状态管理分离。您可以通过修改`component`文件夹下的文件，适配您的业务场景，
 // 在UI展示上，您可以通过属性的方式，将上层的用户头像，名称等数据传入组件内部，`static`下的icon和默认头像图片，
 // 只是为了展示基础的效果，您需要根据业务场景进行修改。
 
-// eslint-disable-next-line no-undef
 Component({
   properties: {
     config: {
@@ -37,7 +35,9 @@ Component({
     remoteUsers: [], // 远程用户资料
     screen: 'pusher', // 视屏通话中，显示大屏幕的流（只限1v1聊天
     soundMode: 'speaker', // 声音模式 听筒/扬声器
+    userList: null, //接受邀请的用户信息
   },
+
 
   methods: {
     initCall() {
@@ -62,6 +62,7 @@ Component({
       console.log(`${TAG_NAME}, handleUserAccept, event${JSON.stringify(event)}`);
       this.setData({
         callStatus: 'connection',
+        userList: event.data.userList,
       });
     },
 
@@ -109,6 +110,9 @@ Component({
     // 用户拒绝
     handleInviteeReject(event) {
       console.log(`${TAG_NAME}, handleInviteeReject, event${JSON.stringify(event)}`);
+      if (this.data.playerList.length===0) {
+        this.reset();
+      }
       wx.showToast({
         title: `${this.handleCallingUser([event.data.invitee])}已拒绝`,
       });
@@ -116,6 +120,9 @@ Component({
     // 用户不在线
     handleNoResponse(event) {
       console.log(`${TAG_NAME}, handleNoResponse, event${JSON.stringify(event)}`);
+      if (this.data.playerList.length===0) {
+        this.reset();
+      }
       wx.showToast({
         title: `${this.handleCallingUser(event.data.timeoutUserList)}不在线`,
       });
@@ -123,6 +130,9 @@ Component({
     // 用户忙线
     handleLineBusy(event) {
       console.log(`${TAG_NAME}, handleLineBusy, event${JSON.stringify(event)}`);
+      if (this.data.playerList.length===0) {
+        this.reset();
+      }
       wx.showToast({
         title: `${this.handleCallingUser([event.data.invitee])}忙线中`,
       });
@@ -130,6 +140,9 @@ Component({
     // 用户取消
     handleCallingCancel(event) {
       console.log(`${TAG_NAME}, handleCallingCancel, event${JSON.stringify(event)}`);
+      if (this.data.playerList.length===0) {
+        this.reset();
+      }
       wx.showToast({
         title: `${this.handleCallingUser([event.data.invitee])}取消通话`,
       });
@@ -137,6 +150,9 @@ Component({
     // 通话超时未应答
     handleCallingTimeout(event) {
       console.log(`${TAG_NAME}, handleCallingTimeout, event${JSON.stringify(event)}`);
+      if (this.data.playerList.length===0) {
+        this.reset();
+      }
       wx.showToast({
         title: `${this.handleCallingUser(event.data.timeoutUserList)}超时无应答`,
       });
@@ -183,6 +199,7 @@ Component({
     // 切换通话模式
     handleCallMode(event) {
       this.data.config.type = event.data.type;
+      this.toggleSoundMode();
       this.setData({
         config: this.data.config,
       });
@@ -261,6 +278,10 @@ Component({
      */
     async call(params) {
       this.initCall();
+      if (this.data.callStatus !== 'idle') {
+        console.warn(`${TAG_NAME}, call callStatus isn't idle`);
+        return;
+      }
       wx.$TRTCCalling.call({ userID: params.userID, type: params.type }).then((res) => {
         this.data.config.type = params.type;
         this.getUserProfile([params.userID]);
@@ -285,6 +306,10 @@ Component({
      */
     async groupCall(params) {
       this.initCall();
+      if (this.data.callStatus !== 'idle') {
+        console.warn(`${TAG_NAME}, groupCall callStatus isn't idle`);
+        return;
+      }
       wx.$TRTCCalling.groupCall({ userIDList: params.userIDList, type: params.type, groupID: params.groupID }).then((res) => {
         this.data.config.type = params.type;
         this.getUserProfile(params.userIDList);
@@ -301,6 +326,7 @@ Component({
      */
     async accept() {
       wx.$TRTCCalling.accept().then((res) => {
+        console.log('accept', res);
         this.setData({
           pusher: res.pusher,
           callStatus: 'connection',
@@ -348,6 +374,7 @@ Component({
       this.setData({
         callStatus: 'idle',
         isSponsor: false,
+        soundMode: 'speaker',
         pusher: {}, // TRTC 本地流
         playerList: [], // TRTC 远端流
       });
@@ -371,6 +398,7 @@ Component({
         case 'switchAudioCall':
           wx.$TRTCCalling.switchAudioCall().then((res) => {
             this.data.config.type = wx.$TRTCCalling.CALL_TYPE.AUDIO;
+            this.toggleSoundMode();
             this.setData({
               config: this.data.config,
             });
@@ -426,7 +454,8 @@ Component({
           break;
         case 'switchAudioCall':
           wx.$TRTCCalling.switchAudioCall().then((res) => {
-            this.data.config.type = 1;
+            this.data.config.type = wx.$TRTCCalling.CALL_TYPE.AUDIO;
+            this.toggleSoundMode();
             this.setData({
               config: this.data.config,
             });
@@ -453,12 +482,12 @@ Component({
     },
     // 初始化TRTCCalling
     async init() {
+      this._addTSignalingEvent();
       try {
         const res = await wx.$TRTCCalling.login({
           userID: this.data.config.userID,
           userSig: this.data.config.userSig,
         });
-        this._addTSignalingEvent();
         return res;
       } catch (error) {
         throw new Error('TRTCCalling login failure', error);
@@ -488,7 +517,7 @@ Component({
       if (!wx.$TRTCCalling) {
         wx.$TRTCCalling = new TRTCCalling({
           sdkAppID: this.data.config.sdkAppID,
-          tim: this.data.config.tim,
+          tim: wx.$tim,
         });
       }
       wx.$TRTCCalling.initData();
