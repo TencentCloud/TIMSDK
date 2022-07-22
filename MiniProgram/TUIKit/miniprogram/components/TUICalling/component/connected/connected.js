@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-undef
 Component({
   /**
    * 组件的属性列表
@@ -18,6 +17,9 @@ Component({
     },
     screen: {
       type: String,
+    },
+    userList: {
+      type: Object,
     },
   },
 
@@ -124,21 +126,20 @@ Component({
       this.triggerEvent('connectedEvent', data);
     },
     handleConnectErrorImage(e) {
-      const { value, flag } = e.target.dataset;
+      const {  flag, key, index } = e.target.dataset;
       if (flag === 'pusher') {
         this.data.pusher.avatar = '../../static/default_avatar.png';
         this.setData({
           pusher: this.data.pusher,
         });
       } else {
-        const playerList = this.data.playerList.map((item) => {
-          if (item.userID === value) {
-            item.avatar = '../../static/default_avatar.png';
-          }
-          return item;
-        });
+        this.data[key][index].avatar = '../../static/default_avatar.png';
+        if(this.data.playerList[index]) {
+          this.data.playerList[index].avatar = '../../static/default_avatar.png';
+        }
         this.setData({
-          playerList,
+          playerList: this.data.playerList,
+          [key]: this.data[key]
         });
       }
     },
