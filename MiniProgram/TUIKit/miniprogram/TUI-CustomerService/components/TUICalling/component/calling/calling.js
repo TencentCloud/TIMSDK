@@ -1,5 +1,4 @@
 // components/tui-calling/TUICalling/component/calling.js
-// eslint-disable-next-line no-undef
 Component({
   /**
    * 组件的属性列表
@@ -25,6 +24,25 @@ Component({
    */
   data: {
 
+  },
+
+  /**
+   * 生命周期方法
+   */
+   lifetimes: {
+    created() {
+
+    },
+    attached() {
+    },
+    ready() {
+      wx.createLivePusherContext().startPreview()
+    },
+    detached() {
+      wx.createLivePusherContext().stopPreview()
+    },
+    error() {
+    },
   },
 
   /**

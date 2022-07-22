@@ -8,9 +8,10 @@
       remoteUsers="{{remoteUsers}}"
       bind:callingEvent="handleCallingEvent"
     ></TUI-Calling>
-    <TUI-Connected 
+    <TUI-Connected
       wx:if="{{callStatus === 'connection'}}"
       playerList="{{playerList}}"
+      userList="{{userList}}"
       pusher="{{pusher}}"
       callType="{{config.type}}"
       soundMode="{{soundMode}}"
