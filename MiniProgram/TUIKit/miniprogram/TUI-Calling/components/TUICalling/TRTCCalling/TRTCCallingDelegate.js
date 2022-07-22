@@ -82,9 +82,10 @@ class TRTCCallingDelegate {
   }
 
   // 抛出用户接听
-  onUserAccept(userID) {
+  onUserAccept(userID, userList) {
     this._emitter.emit(EVENT.USER_ACCEPT, {
       userID,
+      userList,
     });
   }
 
