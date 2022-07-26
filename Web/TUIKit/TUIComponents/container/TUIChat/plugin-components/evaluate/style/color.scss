@@ -32,18 +32,22 @@
       color: #50545C;
     }
   }
-  &-h5{
-    .evaluate-main-content {
-      p {
-        a {
-          color: #3370FF;
+  &-H5{
+    &-main {
+      background: rgba(0,0,0,.5);
+      .evaluate-main-content {
+        background: #FFFFFF;
+        p {
+          a {
+            color: #3370FF;
+          }
         }
-      }
-      .close {
-        font-family: PingFangSC-Regular;
-        font-weight: 400;
-        color: #3370FF;
-        letter-spacing: 0;
+        .close {
+          font-family: PingFangSC-Regular;
+          font-weight: 400;
+          color: #3370FF;
+          letter-spacing: 0;
+        }
       }
     }
   }

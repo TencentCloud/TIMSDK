@@ -37,7 +37,7 @@
 
 .icon-face {
   margin: 12px 10px 1px;
-  background: url('../assets/icon/emoj.svg') no-repeat;
+  background: url('../assets/icon/face.png') no-repeat;
   background-size: contain;
 }
 
@@ -157,11 +157,11 @@
 }
 
 .icon-words {
-  background: url('../assets/icon/words.svg') no-repeat;
+  background: url('../assets/icon/words.png') no-repeat;
   background-size: contain;
 }
 .icon-evaluate {
-  background: url('../assets/icon/evaluate.svg') no-repeat;
+  background: url('../assets/icon/evaluate.png') no-repeat;
   background-size: contain;
 }
 .icon-star {
@@ -251,7 +251,24 @@
   transform: rotate(180deg); 
 }
 
-
+.icon-close-h5 {
+  width: 20px;
+  height: 20px;
+  background: url('../assets/icon/icon-close-h5.svg') no-repeat;
+  background-size: contain;
+}
+.icon-download-h5 {
+  width: 20px;
+  height: 20px;
+  background: url('../assets/icon/icon-download-h5.svg') no-repeat;
+  background-size: contain;
+}
+.icon-download {
+  width: 20px;
+  height: 20px;
+  background: url('../assets/icon/icon-download.svg') no-repeat;
+  background-size: contain;
+}
 .icon-error {
   width: 12px;
   height: 12px;

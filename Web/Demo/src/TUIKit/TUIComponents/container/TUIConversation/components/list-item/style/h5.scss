@@ -1,0 +1,27 @@
+
+.list-item-h5 {
+  .dialog {
+    left: auto;
+    right: 18px;
+    padding: 0;
+    .conversation-options {
+      padding: 14px;
+      font-size: 16px;
+    }
+  }
+  .TUI-conversation-item {
+    .content {
+      .name {
+        font-size: 16px;
+      }
+      .middle-box {
+        p {
+          font-size: 14px;
+        }
+      }
+    }
+    .time {
+      font-size: 14px;
+    }
+  }
+}

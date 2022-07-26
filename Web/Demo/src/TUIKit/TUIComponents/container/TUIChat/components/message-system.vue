@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import { defineComponent, watchEffect, reactive, toRefs } from 'vue';
-import { translateGroupSystemNotice } from '../untils/untis';
+import { translateGroupSystemNotice } from '../utils/utils';
 
 export default defineComponent({
   props: {

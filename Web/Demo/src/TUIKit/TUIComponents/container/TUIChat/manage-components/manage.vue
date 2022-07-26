@@ -256,18 +256,19 @@ import {
   computed,
   watch,
   ref,
-} from "vue";
-import { onClickOutside } from "@vueuse/core";
-import Mask from "../../../components/mask/mask.vue";
-import Transfer from "../../../components/transfer/index.vue";
-import Slider from "../../../components/slider/index.vue";
-import ManageName from "./manage-name.vue";
-import ManageNotification from "./manage-notification.vue";
-import ManageMember from "./manage-member.vue";
-import Dialog from "../../../components/dialog/index.vue";
+} from 'vue';
+import { onClickOutside } from '@vueuse/core';
+import Mask from '../../../components/mask/mask.vue';
+import Transfer from '../../../components/transfer/index.vue';
+import Slider from '../../../components/slider/index.vue';
+import ManageName from './manage-name.vue';
+import ManageNotification from './manage-notification.vue';
+import ManageMember from './manage-member.vue';
+import Dialog from '../../../components/dialog/index.vue';
 
-import Vuex from "vuex";
-import TUIMessage from "../../../components/message";
+import Vuex from 'vuex';
+import TUIAegis from '../../../../utils/TUIAegis';
+import { handleErrorPrompts } from '../../utils';
 
 const manage = defineComponent({
   components: {
@@ -302,7 +303,7 @@ const manage = defineComponent({
   },
   setup(props: any, ctx: any) {
     const types: any = manage.TUIServer.TUICore.TIM.TYPES;
-    const GroupServer: any = manage.GroupServer;
+    const { GroupServer } = manage;
     const { t } = manage.TUIServer.TUICore.config.i18n.useI18n();
     const data: any = reactive({
       conversation: {},
@@ -311,28 +312,28 @@ const manage = defineComponent({
         list: [],
       },
       isShowMuteTimeInput: false,
-      editLableName: "",
+      editLableName: '',
       mask: false,
-      currentTab: "",
-      transferType: "",
-      isSearch: true,
+      currentTab: '',
+      transferType: '',
+      isSearch: false,
       isRadio: false,
       transferList: [],
       selectedList: [],
       isMuteTime: false,
       show: false,
       typeName: {
-        [types.GRP_WORK]: "好友工作群",
-        [types.GRP_PUBLIC]: "陌生人社交群",
-        [types.GRP_MEETING]: "临时会议群",
-        [types.GRP_AVCHATROOM]: "直播群",
-        [types.JOIN_OPTIONS_FREE_ACCESS]: "自由加入",
-        [types.JOIN_OPTIONS_NEED_PERMISSION]: "需要验证",
-        [types.JOIN_OPTIONS_DISABLE_APPLY]: "禁止加群",
+        [types.GRP_WORK]: '好友工作群',
+        [types.GRP_PUBLIC]: '陌生人社交群',
+        [types.GRP_MEETING]: '临时会议群',
+        [types.GRP_AVCHATROOM]: '直播群',
+        [types.JOIN_OPTIONS_FREE_ACCESS]: '自由加入',
+        [types.JOIN_OPTIONS_NEED_PERMISSION]: '需要验证',
+        [types.JOIN_OPTIONS_DISABLE_APPLY]: '禁止加群',
       },
       delDialogShow: false,
       userList: [],
-      transferTitle: "",
+      transferTitle: '',
       member: {
         admin: [],
         member: [],
@@ -351,16 +352,16 @@ const manage = defineComponent({
     const VuexStore = (Vuex as any).useStore();
 
     const TabName = computed(() => {
-      let name = "";
+      let name = '';
       switch (data.currentTab) {
-        case "notification":
-          name = "群公告";
+        case 'notification':
+          name = '群公告';
           break;
-        case "member":
-          name = "群成员";
+        case 'member':
+          name = '群成员';
           break;
         default:
-          name = "群管理";
+          name = '群管理';
           break;
       }
       return name;
@@ -389,11 +390,9 @@ const manage = defineComponent({
           return item;
         });
         const time: number = new Date().getTime();
-        data.member.muteMember = newValue.filter(
-          (item: any) => item?.muteUntil * 1000 - time > 0
-        );
+        data.member.muteMember = newValue.filter((item: any) => item?.muteUntil * 1000 - time > 0);
       },
-      { deep: true }
+      { deep: true },
     );
 
     const isDismissGroupAuth = computed(() => {
@@ -423,7 +422,7 @@ const manage = defineComponent({
       if (!isShowAddMember.value) {
         num += 1;
       }
-      if ((data.conversation as any).groupProfile.selfInfo.role !== "Owner") {
+      if ((data.conversation as any).groupProfile.selfInfo.role !== 'Owner') {
         num += 1;
       }
       return num;
@@ -470,10 +469,10 @@ const manage = defineComponent({
       const options: any = {
         groupID: conversation?.groupProfile?.groupID,
         count: 100,
-        offset: type && type === "more" ? data.userInfo.list.length : 0,
+        offset: type && type === 'more' ? data.userInfo.list.length : 0,
       };
       GroupServer.getGroupMemberList(options).then((res: any) => {
-        if (type && type === "more") {
+        if (type && type === 'more') {
           data.userInfo.list = [...data.userInfo.list, ...res.data.memberList];
         } else {
           data.userInfo.list = res.data.memberList;
@@ -488,7 +487,7 @@ const manage = defineComponent({
         userIDList,
       };
       await GroupServer.addGroupMember(options);
-      getMember("More");
+      getMember('More');
     };
 
     const deleteMember = (user: any) => {
@@ -518,12 +517,12 @@ const manage = defineComponent({
     const dismiss = async (group: any) => {
       await GroupServer.dismissGroup(group.groupID);
       manage.TUIServer.store.conversation = {};
-      VuexStore.commit("handleTask", 5);
+      VuexStore.commit('handleTask', 5);
     };
 
     const handleAdmin = async (user: any) => {
       const { conversation } = data;
-      let role = "";
+      let role = '';
       switch (user.role) {
         case types.GRP_MBR_ROLE_ADMIN:
           role = types.GRP_MBR_ROLE_MEMBER;
@@ -546,11 +545,11 @@ const manage = defineComponent({
       const options: any = {
         groupID: conversation.groupProfile.groupID,
         userID,
-        muteTime: type === "add" ? 60 * 60 * 24 * 30 : 0,
+        muteTime: type === 'add' ? 60 * 60 * 24 * 30 : 0,
       };
       await GroupServer.setGroupMemberMuteTime(options);
-      if (type === "add") {
-        VuexStore.commit("handleTask", 4);
+      if (type === 'add') {
+        VuexStore.commit('handleTask', 4);
       }
       getMember();
     };
@@ -560,7 +559,7 @@ const manage = defineComponent({
       const options: any = {
         groupID: conversation.groupProfile.groupID,
         userIDList,
-        reason: "",
+        reason: '',
       };
       await GroupServer.deleteGroupMember(options);
       getMember();
@@ -581,17 +580,17 @@ const manage = defineComponent({
       conversation.groupProfile = res.data.group;
       manage.TUIServer.store.conversation = {};
       manage.TUIServer.store.conversation = conversation;
-      data.editLableName = "";
+      data.editLableName = '';
     };
 
     const setTab = (tabName: string) => {
       data.currentTab = tabName;
-      data.editLableName = "";
-      if (data.currentTab === "member") {
-        data.transferType = "remove";
+      data.editLableName = '';
+      if (data.currentTab === 'member') {
+        data.transferType = 'remove';
       }
       if (!data.currentTab) {
-        data.transferType = "";
+        data.transferType = '';
       }
     };
 
@@ -603,16 +602,10 @@ const manage = defineComponent({
         userIDList: [value],
       };
       switch (data.transferType) {
-        case "add":
+        case 'add':
           try {
-            imResponse = await manage.TUIServer.getUserProfile([value]);
-            if (imResponse.data.length === 0) {
-              return TUIMessage({ message: t('TUIChat.manage.该用户不存在') });
-            }
             imMemberResponse = await GroupServer.getGroupMemberProfile(options);
-            data.transferList = data.transferList.filter(
-              (item: any) => item.userID !== imResponse.data[0]?.userID
-            );
+            data.transferList = data.transferList.filter((item: any) => item.userID !== imResponse.data[0]?.userID);
             data.transferList = [...data.transferList, ...imResponse.data];
             if (imMemberResponse?.data?.memberList.length > 0) {
               data.transferList = data.transferList.map((item: any) => {
@@ -623,25 +616,25 @@ const manage = defineComponent({
               });
             }
           } catch (error) {
-            TUIMessage({ message: t('TUIChat.manage.该用户不存在') });
+            const message = t('TUIChat.manage.该用户不存在');
+            handleErrorPrompts(message, props);
           }
           break;
-        case "remove":
+        case 'remove':
           try {
             imResponse = await GroupServer.getGroupMemberProfile(options);
             if (imResponse.data.memberList.length === 0) {
-              return TUIMessage({ message: t('TUIChat.manage.该用户不在群组内') });
+              const message = t('TUIChat.manage.该用户不在群组内');
+              return handleErrorPrompts(message, props);
             }
-            data.transferList = data.transferList.filter(
-              (item: any) =>
-                item.userID !== imResponse?.data?.memberList[0]?.userID
-            );
+            data.transferList = data.transferList.filter((item: any) => item.userID !== imResponse?.data?.memberList[0]?.userID);
             data.transferList = [
               ...data.transferList,
               ...imResponse?.data?.memberList,
             ];
           } catch (error) {
-            TUIMessage({ message: t('TUIChat.manage.该用户不存在') });
+            const message = t('TUIChat.manage.该用户不存在');
+            handleErrorPrompts(message, props);
           }
           break;
         default:
@@ -650,7 +643,7 @@ const manage = defineComponent({
     };
 
     const submit = (userList: any) => {
-      if (data.transferType === "remove") {
+      if (data.transferType === 'remove') {
         data.userList = userList;
         data.delDialogShow = !data.delDialogShow;
       } else {
@@ -659,57 +652,56 @@ const manage = defineComponent({
       data.mask = false;
     };
 
+    const friendList = async () => {
+      const imResponse =  await manage.TUIServer.getFriendList();
+      const friendList =  imResponse.data.map((item: any) => item?.profile);
+      return friendList.filter((item: any) => !data.userInfo.list.some((infoItem:any) => infoItem.userID === item.userID));
+    };
+
     const cancel = () => {
       toggleMask();
     };
 
-    const toggleMask = (type?: string) => {
+    const toggleMask = async (type?: string) => {
       data.selectedList = [];
       switch (type) {
-        case "add":
-          data.isSearch = true;
-          data.transferList = [];
-          data.transferTitle = "添加成员";
+        case 'add':
+          data.isRadio = false;
+          data.transferList = await friendList();
+          data.transferTitle = '添加成员';
           break;
-        case "remove":
-          data.transferList = data.userInfo.list.filter(
-            (item: any) =>
-              item.userID !== data.conversation?.groupProfile?.selfInfo.userID
-          );
-          data.transferTitle = "删除成员";
+        case 'remove':
+          data.isRadio = false;
+          data.transferList = data.userInfo.list.filter((item: any) => item.userID !== data.conversation?.groupProfile?.selfInfo.userID);
+          data.transferTitle = '删除成员';
           break;
-        case "addAdmin":
-          data.isSearch = false;
+        case 'addAdmin':
           data.isRadio = true;
           data.transferList = data.member.member;
-          data.transferTitle = "新增管理员";
+          data.transferTitle = '新增管理员';
           break;
-        case "removeAdmin":
-          data.isSearch = false;
+        case 'removeAdmin':
           data.isRadio = true;
           data.transferList = data.member.admin;
-          data.transferTitle = "移除管理员";
+          data.transferTitle = '移除管理员';
           break;
-        case "changeOwner":
-          data.isSearch = false;
+        case 'changeOwner':
           data.isRadio = true;
           data.transferList = [...data.member.admin, ...data.member.member];
-          data.transferTitle = "转让群组";
+          data.transferTitle = '转让群组';
           break;
-        case "addMute":
-          data.isSearch = false;
+        case 'addMute':
           data.isRadio = true;
           data.transferList = data.member.member;
-          if (data.conversation.groupProfile.selfInfo.role === "Owner") {
+          if (data.conversation.groupProfile.selfInfo.role === 'Owner') {
             data.transferList = [...data.member.admin, ...data.member.member];
           }
-          data.transferTitle = "新增禁言用户";
+          data.transferTitle = '新增禁言用户';
           break;
-        case "removeMute":
-          data.isSearch = false;
+        case 'removeMute':
           data.isRadio = true;
           data.transferList = data.member.muteMember;
-          data.transferTitle = "移除禁言用户";
+          data.transferTitle = '移除禁言用户';
           break;
         default:
           break;
@@ -724,11 +716,12 @@ const manage = defineComponent({
 
     const toggleShow = () => {
       if (!GroupServer) {
-        return TUIMessage({ message: t('TUIChat.manage.请先注册 TUIGroup 模块') });
+        const message = t('TUIChat.manage.请先注册 TUIGroup 模块');
+        return handleErrorPrompts(message, props);
       }
       data.show = !data.show;
       if (!data.show) {
-        data.currentTab = "";
+        data.currentTab = '';
       }
       if (data.show) {
         getMember();
@@ -736,8 +729,8 @@ const manage = defineComponent({
     };
 
     const setAllMuteTime = (value: boolean) => {
-      updateProfile({ key: "muteAllMembers", value });
-      VuexStore.commit("handleTask", 4);
+      updateProfile({ key: 'muteAllMembers', value });
+      VuexStore.commit('handleTask', 4);
     };
 
     const handleManage = (userList: any, type: any) => {
@@ -747,26 +740,54 @@ const manage = defineComponent({
         return item;
       });
       switch (type) {
-        case "add":
+        case 'add':
           addMember(userIDList);
+          TUIAegis.getInstance().reportEvent({
+            name: 'groupOptions',
+            ext1: 'groupAddMember',
+          });
           break;
-        case "remove":
+        case 'remove':
           kickedOut(userIDList);
+          TUIAegis.getInstance().reportEvent({
+            name: 'groupOptions',
+            ext1: 'groupRemoveMember',
+          });
           break;
-        case "addAdmin":
+        case 'addAdmin':
           handleAdmin(userList[0]);
+          TUIAegis.getInstance().reportEvent({
+            name: 'groupOptions',
+            ext1: 'groupAddAdmin',
+          });
           break;
-        case "removeAdmin":
+        case 'removeAdmin':
           handleAdmin(userList[0]);
+          TUIAegis.getInstance().reportEvent({
+            name: 'groupOptions',
+            ext1: 'groupRemoveAdmin',
+          });
           break;
-        case "changeOwner":
+        case 'changeOwner':
           changeOwner(userIDList[0]);
+          TUIAegis.getInstance().reportEvent({
+            name: 'groupOptions',
+            ext1: 'groupChangeOwner',
+          });
           break;
-        case "addMute":
-          setMemberMuteTime(userIDList[0], "add");
+        case 'addMute':
+          setMemberMuteTime(userIDList[0], 'add');
+          TUIAegis.getInstance().reportEvent({
+            name: 'groupOptions',
+            ext1: 'groupAddMute',
+          });
           break;
-        case "removeMute":
-          setMemberMuteTime(userIDList[0], "remove");
+        case 'removeMute':
+          setMemberMuteTime(userIDList[0], 'remove');
+          TUIAegis.getInstance().reportEvent({
+            name: 'groupOptions',
+            ext1: 'groupRemoveMute',
+          });
           break;
         default:
           break;

@@ -37,7 +37,7 @@ class TUIAegis {
 
   static getInstance() {
     if (!TUIAegis.instance) {
-      TUIAegis.instance = new TUIAegis();
+      TUIAegis.instance = new TUIAegis((window as any).$Aegis.aegis);
     }
     return TUIAegis.instance;
   }

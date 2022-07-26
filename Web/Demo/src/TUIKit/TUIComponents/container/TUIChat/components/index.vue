@@ -38,7 +38,7 @@ import {
   handleMergerMessageShowContext,
   handleTipMessageShowContext,
   handleCustomMessageShowContext,
-} from '../untils/untis';
+} from '../utils/utils';
 
 export default defineComponent({
   components: {

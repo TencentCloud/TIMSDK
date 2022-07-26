@@ -23,8 +23,10 @@
       background: none;
       width: 100%;
       .logo {
-        display: flex;
         align-items: center;
+        a {
+        display: flex;
+        }
         img {
           width: 30px;
           margin-right: 7px;
@@ -32,6 +34,7 @@
         &-name {
           font-size: 18px;
           font-weight: 500;
+          display: flex;
         }
         p {
           padding-left: 40px;
@@ -154,6 +157,8 @@
         padding-left: 10.5px;
         font-size: 1.8rem;
         line-height: 2.7rem;
+        align-items: center;
+        display: flex;
       }
       .login-from-item{
         margin: 18px 0;
@@ -210,6 +215,17 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.login-main-middle {
+  height: 130px;
+  width: 100%;
+  padding: 0 1.6rem 20px;
+  box-sizing: border-box;
+  display: flex;
+  &-box {
+    flex: 1;
+    display: flex;
+  }
 }
 .buttom-mask{
   flex: 0 0 25%;

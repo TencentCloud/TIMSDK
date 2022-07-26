@@ -6,8 +6,9 @@
 </template>
 
 <script lang="ts">
+import TUIAegis from '../../../../../utils/TUIAegis';
 import { defineComponent, reactive, toRefs, watchEffect } from 'vue';
-import TUIMessage from '../../../../components/message';
+import { handleErrorPrompts } from '../../../utils';
 
 const File = defineComponent({
   props: {
@@ -16,6 +17,10 @@ const File = defineComponent({
       default: () => false,
     },
     isMute: {
+      type: Boolean,
+      default: () => false,
+    },
+    isH5: {
       type: Boolean,
       default: () => false,
     },
@@ -34,8 +39,12 @@ const File = defineComponent({
       if (e.target.files.length > 0) {
         try {
           await File.TUIServer.sendFileMessage(e.target);
+          TUIAegis.getInstance().reportEvent({
+            name: 'messageType',
+            ext1: 'typeFile',
+          });
         } catch (error) {
-          TUIMessage({ message: error });
+          handleErrorPrompts(error, props);
         }
       }
       e.target.value = '';

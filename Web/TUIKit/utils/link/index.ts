@@ -7,5 +7,9 @@ const Link = {
     label: '自定义消息',
     url: 'https://web.sdk.qcloud.com/im/doc/zh-cn/SDK.html#createCustomMessage',
   },
+  complaint: {
+    label: '点此投诉',
+    url: 'https://cloud.tencent.com/apply/p/xc3oaubi98g',
+  },
 };
 export default Link;

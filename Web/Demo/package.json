@@ -18,11 +18,7 @@
     "vue": "^3.0.0",
     "vue-class-component": "^8.0.0-0",
     "vue-router": "^4.0.0-0",
-    "vuex": "^4.0.0-0",
-    "@vueuse/core": "^8.2.6",
-    "tim-js-sdk": "^2.19.1",
-    "tim-upload-plugin": "^1.0.4",
-    "vue-i18n": "^9.2.0-beta.32"
+    "vuex": "^4.0.0-0"
   },
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.17.0",
@@ -44,13 +40,17 @@
     "@vue/compiler-sfc": "^3.0.0",
     "@vue/eslint-config-prettier": "^6.0.0",
     "@vue/eslint-config-typescript": "^7.0.0",
+    "@vue/test-utils": "^2.0.0-rc.17",
+    "chai": "^4.1.2",
     "eslint": "^6.7.2",
+    "eslint-config-tencent": "^1.0.3",
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-vue": "^7.1.0",
+    "husky": "^7.0.4",
     "prettier": "^2.2.1",
     "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
     "typescript": "~4.1.5",
-    "@vuepic/vue-datepicker": "^3.2.2"
+    "vue-eslint-parser": "^8.3.0"
   }
 }

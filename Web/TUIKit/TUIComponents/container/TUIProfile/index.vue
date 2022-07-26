@@ -47,6 +47,7 @@
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from 'vue';
 import { useStore } from 'vuex';
+import TUIAegis from '@/utils/TUIAegis';
 import TUIProfileEdit from './components/TUIProfileEdit';
 
 const TUIProfile = defineComponent({
@@ -76,17 +77,21 @@ const TUIProfile = defineComponent({
 
     const submit = async (profile: any) => {
       const options:any = {
-        nick: profile.nick || '',
-        avatar: profile.avatar || '',
+        nick: profile.nick,
+        avatar: profile.avatar,
         gender: profile.gender || TUIServer.TUICore.TIM.TYPES.GENDER_UNKNOWN,
-        selfSignature: profile.selfSignature || '',
-        birthday: profile.birthday || 0,
+        selfSignature: profile.selfSignature,
+        birthday: profile.birthday,
       };
       if (TUIServer.TUICore.getStore().TUIProfile.profile.nick !== profile.nick) {
         VuexStore.commit('handleTask', 2);
       }
       try {
         await TUIServer.updateMyProfile(options);
+        TUIAegis.getInstance().reportEvent({
+          name: 'changeProfile',
+          ext1: 'changeProfile',
+        });
       } catch (error) {
         console.log(error);
       }

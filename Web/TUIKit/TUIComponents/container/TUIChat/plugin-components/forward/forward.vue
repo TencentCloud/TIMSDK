@@ -11,8 +11,11 @@
       :resultShow="true"
       @submit="handleForWordMessage"
       @cancel="toggleShow">
-      <template #item="{data}">
-        <slot name="item" :data="data" />
+      <template #left="{data}">
+        <slot name="left" :data="data" />
+      </template>
+      <template #right="{data}">
+        <slot name="right" :data="data" />
       </template>
       </Transfer>
   </div>
@@ -22,7 +25,7 @@
 <script lang="ts">
 import { defineComponent, reactive, watchEffect, toRefs, ref } from 'vue';
 import Transfer from '../../../../components/transfer/index.vue';
-import TUIMessage from '../../../../components/message';
+import { handleErrorPrompts } from '../../../utils';
 import { onClickOutside } from '@vueuse/core';
 
 const Forward = defineComponent({
@@ -81,7 +84,7 @@ const Forward = defineComponent({
         try {
           await Forward.TUIServer.forwardMessage(props.message, item);
         } catch (error) {
-          TUIMessage({ message: error });
+          handleErrorPrompts(error, props);
         }
       });
       toggleShow();

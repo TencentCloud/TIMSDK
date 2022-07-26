@@ -43,7 +43,7 @@
           </div>
         </div>
       </main>
-      <label class="message-label fail" v-if="message.status === 'fail'">!</label>
+      <label class="message-label fail" v-if="message.status === 'fail'" @click="resendMessage(message)">!</label>
       <label class="message-label" :class="[!message.isPeerRead && 'unRead']" v-if="message.conversationType === 'C2C' && message.flow !== 'in' && message.status === 'success'">
         <span v-if="!message.isPeerRead">{{$t('TUIChat.未读')}}</span>
         <template v-else>
@@ -57,11 +57,12 @@
 </template>
 
 <script lang="ts">
-import { decodeText } from '../untils/decodeText';
+import { decodeText } from '../utils/decodeText';
 import constant from '../../constant';
 import { defineComponent, watchEffect, reactive, toRefs, ref, nextTick } from 'vue';
 import { onClickOutside, onLongPress, useElementBounding } from '@vueuse/core';
-import TUIMessage from '../../../components/message';
+import { JSONToString } from '../utils/utils';
+import { handleErrorPrompts } from '../../utils';
 
 const messageBubble = defineComponent({
   props: {
@@ -72,6 +73,10 @@ const messageBubble = defineComponent({
     messagesList: {
       type: Object,
       default: () => ({}),
+    },
+    isH5: {
+      type: Boolean,
+      default: false,
     },
   },
   setup(props:any, ctx:any) {
@@ -94,7 +99,8 @@ const messageBubble = defineComponent({
       data.messagesList = props.messagesList;
       if ((data.message as any).cloudCustomData) {
         const messageIDList:any[] = [];
-        data.referenceMessage = JSON.parse((data.message as any).cloudCustomData).messageReply;
+        const cloudCustomData  = JSONToString((data.message as any).cloudCustomData);
+        data.referenceMessage = cloudCustomData.messageReply ? cloudCustomData.messageReply :  '';
         for (let index = 0; index < (data.messagesList as any).length ; index++) {
           // To determine whether the referenced message is still in the message list, the corresponding field of the referenced message is displayed if it is in the message list. Otherwise, messageabstract/messagesender is displayed
           messageIDList.push((data.messagesList as any)[index].ID);
@@ -123,7 +129,10 @@ const messageBubble = defineComponent({
           const { top } = useElementBounding(htmlRefHook);
           const ParentEle = (htmlRefHook?.value?.offsetParent as any)?.offsetParent;
           const ParentBound = useElementBounding(ParentEle);
-          const T = top.value - ParentBound.top.value - 20;
+          let T = top.value - ParentBound.top.value - 20;
+          if (props.isH5) {
+            T = top.value - 90;
+          }
           const H = (dropdownRef as any).value.children[0].clientHeight;
           if (T <= H) {
             (dropdownRef as any).value.children[0].style.top = '100%';
@@ -138,7 +147,8 @@ const messageBubble = defineComponent({
       if ((data.referenceMessage as any)?.messageID && data.allMessageID.includes((data.referenceMessage as any)?.messageID)) {
         ctx.emit('jumpID', (data.referenceMessage as any).messageID);
       } else {
-        TUIMessage({ message: t('TUIChat.无法定位到原消息') });
+        const message = t('TUIChat.无法定位到原消息');
+        handleErrorPrompts(message, props);
       }
     };
 
@@ -151,6 +161,10 @@ const messageBubble = defineComponent({
 
     onLongPress(htmlRefHook, toggleDialog);
 
+    const resendMessage = (message:any) => {
+      ctx.emit('resendMessage', message);
+    };
+
     return {
       ...toRefs(data),
       toggleDialog,
@@ -158,6 +172,7 @@ const messageBubble = defineComponent({
       jumpToAim,
       dropdown,
       dropdownRef,
+      resendMessage,
     };
   },
 });
@@ -248,7 +263,7 @@ export default messageBubble;
   flex-direction: row-reverse;
 }
 .message-area {
-  max-width: calc(100% - 67px);
+  max-width: calc(100% - 54px);
   position: relative;
   display: flex;
   flex-direction: column;

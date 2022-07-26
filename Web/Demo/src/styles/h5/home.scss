@@ -13,6 +13,11 @@
     display: flex;
     align-items: flex-end;
   }
+  .btn-text{
+    cursor: auto;
+    font-size: 18px;
+    line-height: 27px;
+  }
   .menu {
     padding: 0 23px 23px;
     width: 100%;
@@ -45,22 +50,14 @@
         &-item {
           flex: 1;
           display: flex;
-          padding: 20px 0;
           background-size: 100% 100%;
-
           &:last-child {
             background-size: 100% 100%;
-            a {
-              aside {
-                padding-bottom: 14px;
-              }
-            }
           }
           a {
             flex: 1;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
+            justify-content: space-around;
             align-items: center;
             box-sizing: border-box;
             span {
@@ -85,9 +82,6 @@
                 font-size: 16px;
                 color: #000000;
                 letter-spacing: 0;
-              }
-              .sub {
-                padding-left: 40px;
               }
             }
           }
@@ -249,12 +243,15 @@
   }
   .disclaimer-box {
     main {
-      padding: 36px 20px 0;
+      padding-top: 36px;
       font-size: 16px;
       header {
         padding: 16px 0;
         text-align: center;
         font-size: 18px;
+      }
+      article {
+        padding:0 23px;
       }
     }
     footer {

@@ -13,7 +13,7 @@
             <i class="icon icon-face"></i>
           </li>
           <li  class="face-tab-item" v-for="(item, index) in bigEmojiList" :key="index" @click="selectFace(index+1)">
-            <img :src="faceUrl + item.icon + '@2x.png'">
+            <img :src="faceUrl + item.list[0] + '@2x.png'">
           </li>
         </ul>
       </main>
@@ -22,9 +22,10 @@
 
 <script lang="ts">
 import { defineComponent, reactive, watchEffect, toRefs, computed, ref } from 'vue';
-import { emojiUrl, emojiMap, emojiName, faceUrl, bigEmojiList } from '../../untils/emojiMap';
-import TUIMessage from '../../../../components/message';
+import { emojiUrl, emojiMap, emojiName, faceUrl, bigEmojiList } from '../../utils/emojiMap';
 import { onClickOutside } from '@vueuse/core';
+import TUIAegis from '../../../../../utils/TUIAegis';
+import { handleErrorPrompts } from '../../../utils';
 
 const Face = defineComponent({
   props: {
@@ -91,7 +92,7 @@ const Face = defineComponent({
       }
     });
 
-    const select = async (item:string, index?:number) => {
+    const select = async (item:string, index:number) => {
       const options:any = {
         name: item,
       };
@@ -106,11 +107,16 @@ const Face = defineComponent({
       }
       try {
         await Face.TUIServer.sendFaceMessage({
-          index,
-          data: data.bigEmojiList[data.currentIndex - 1].icon,
+          // Change large expression display field
+          index: data.bigEmojiList[data.currentIndex - 1].icon,
+          data: data.bigEmojiList[data.currentIndex - 1].list[index]
+        });
+        TUIAegis.getInstance().reportEvent({
+          name: 'messageType',
+          ext1: 'typeFace',
         });
       } catch (error) {
-        TUIMessage({ message: error });
+        handleErrorPrompts(error, props);
       }
       if (!props.isH5) {
         toggleShow();

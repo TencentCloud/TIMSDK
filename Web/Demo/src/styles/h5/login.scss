@@ -16,6 +16,9 @@
             left: 6px;
           }
         }
+        &-name {
+          font-weight: normal;
+        }
       }
     }
     &-title {
@@ -74,33 +77,27 @@
     }
     &-footer {
       background: none;
-      padding: 0 10px;
+      padding: 10px 10px;
       &-list {
         flex: 1;
         display: flex;
         &-item {
           flex: 1;
           display: flex;
-          padding: 20px 0;
-          background: url('../assets/image/h5/adv-im.svg') no-repeat;
+          background: url('../assets/image/h5/adv-more.svg') no-repeat;
           background-size: 100% 100%;
-
+          border: solid #96C3FF 1px;
           &:last-child {
-            background: url('../assets/image/h5/adv-more.svg') no-repeat;
+            background: url('../assets/image/h5/adv-im.svg') no-repeat;
             background-size: 100% 100%;
-            a {
-              aside {
-                padding-bottom: 14px;
-              }
-            }
           }
           a {
             flex: 1;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
+            justify-content: space-around;
             align-items: center;
             box-sizing: border-box;
+            padding: 20px;
             span {
               padding: 5px 20px;
               background: #147AFF;
@@ -118,6 +115,8 @@
                 }
             }
             aside {
+              display: flex;
+              flex-direction: column;
               h1 {
                 font-family: PingFangSC-Regular;
                 font-size: 16px;
@@ -125,12 +124,72 @@
                 letter-spacing: 0;
               }
               .sub {
-                padding-left: 40px;
+                align-self: flex-end;
               }
             }
           }
         }
+        &-bottom {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          .text-header{
+            display: flex;
+            align-items: center;
+             span {
+               padding: 20px 20px;
+               font-family: 'PingFang SC';
+               font-style: normal;
+               font-weight: 400;
+              color: #BBBBBB;
+             }
+          }
+          i {
+            width: 120px;
+            height: 1px;
+            background: #DBDBDB
+          }
+          &-image{
+            display: flex;
+              .platform{
+                width: 41px;
+                height: 41px;
+                padding: 0 20px;
+                  img {
+                    width: 100%;
+                    height: 100%;
+                  }
+              }
+          }
+        }
       }
     }
+  }
+  .mask {
+    position: fixed;
+    width: 100vw;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9;
+      &-main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+          span {
+            padding-top: 10px;
+            height: 27px;
+            opacity: 0.8;
+            font-family: TencentSansW7;
+            font-size: 18px;
+            color: #FFFFFF;
+            letter-spacing: 0;
+            text-align: center;
+          }
+      }
   }
 }
