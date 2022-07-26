@@ -16,9 +16,9 @@
 </template>
 <script lang="ts">
 import { defineComponent, reactive, toRefs, computed, watch } from 'vue';
-import TUIConversationList from './components/conversationList';
+import TUIConversationList from './components/list';
 import { caculateTimeago } from '../utils';
-import { handleAvatar, handleName, handleShowLastMessage, handleAt } from '../TUIChat/untils/untis';
+import { handleAvatar, handleName, handleShowLastMessage, handleAt } from '../TUIChat/utils/utils';
 
 const TUIConversation = defineComponent({
   name: 'TUIConversation',

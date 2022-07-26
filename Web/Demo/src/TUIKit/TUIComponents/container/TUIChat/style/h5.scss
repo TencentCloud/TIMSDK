@@ -1,13 +1,15 @@
 .TUIChat-H5 {
   flex: 1;
   position: static;
-  height: auto;
   .TUIChat-header {
     width: 100%;
     box-sizing: border-box;
     position: sticky;
     top: 0;
     z-index: 2;
+    .setting {
+      width: 27px;
+    }
   }
   .TUIChat-main {
     .TUI-message-list {
@@ -22,6 +24,7 @@
     flex-direction: column-reverse;
     height: auto;
     padding: 14px 23px 23px;
+    z-index: 1;
     .func {
       display: flex;
       flex-direction: column;
@@ -33,13 +36,16 @@
     .input {
       display: flex;
       flex-wrap: wrap;
-      input {
-        border: none;
-        border-radius: 9.4px;
+      textarea {
         width: auto;
+        height: auto;
+        padding: 0;
         flex: 1;
+        background: #F4F5F9;
+        border-radius: 9.4px;
         padding: 7px 18px;
-        font-size: 18px;
+        font-size: 16px;
+        height: 36px;
       }
       .reference-box {
         padding: 0;
@@ -116,5 +122,54 @@
     position: fixed;
     height: 100%;
     top: 0;
+  }
+  .mask {
+    position: fixed;
+    width: 100vw;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9;
+     &-main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 150px;
+      background: white;
+      border-radius: 4px
+     }
+     header {
+      font-family: PingFangSC-Regular;
+      font-weight: 400;
+      font-size: 14px;
+      color: #000000;
+      letter-spacing: 0;
+      text-align: center;
+      padding: 20px 0;
+     }
+     footer {
+      display: flex;
+      width: 100%;
+      justify-content: space-around;
+      border-top: 1px solid #DDDDDD;
+      height: 40px;
+      align-items: center;
+      p {
+        font-family: PingFangSC-Regular;
+        font-weight: 400;
+        font-size: 14px;
+        color: #000000;
+        letter-spacing: 0;
+        text-align: center;
+      }
+      i {
+        height: 40px;
+        width: 1px;
+        background: #DDDDDD;
+      }
+     }
   }
 }

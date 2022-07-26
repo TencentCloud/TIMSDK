@@ -1,6 +1,6 @@
 import { TUITheme, TUIi18n, TUIEnv, TUIDirective } from '../../TUIPlugin';
 
-import TIM from 'tim-js-sdk';
+import TIM from '../tim';
 import TIMUploadPlugin from 'tim-upload-plugin';
 
 import ITUIServer from '../interfaces/ITUIServer';
@@ -64,10 +64,17 @@ export default class TUICore extends ITUIServer {
     if (!TUICore.instance) {
       TUICore.instance = new TUICore(options);
     }
-    Aegis.setAegisOptions({
-      ext2: 'IMTUIKitWebExternal',
-      ext3: options.SDKAppID,
-    });
+    if (TUIEnv().isH5) {
+      Aegis.setAegisOptions({
+        ext2: 'TUIKitH5',
+        ext3: options.SDKAppID,
+      });
+    } else {
+      Aegis.setAegisOptions({
+        ext2: 'TUIKitWeb',
+        ext3: options.SDKAppID,
+      });
+    }
     Aegis.reportEvent({
       name: 'time',
       ext1: 'firstRunTime',

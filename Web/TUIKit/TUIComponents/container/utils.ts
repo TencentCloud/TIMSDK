@@ -1,3 +1,6 @@
+import TUIMessage from '../components/message/index';
+import Error from './error';
+
 export function caculateTimeago(dateTimeStamp:number) {
   const { t } = (window as any).TUIKitTUICore.config.i18n.useI18n();
   const minute = 1000 * 60;      // 把分，时，天，周，半个月，一个月用毫秒表示
@@ -69,5 +72,16 @@ export function translateGroupSystemNotice(message:any) {
       return `${message.payload.operatorID} ${t('message.tip.拒接加群')}：${groupName}`;
     case 255:
       return `${t('message.tip.自定义群系统通知')}: ${message.payload.userDefinedField}`;
+  }
+}
+
+
+// Different styles of handling H5 and web error prompts
+export function handleErrorPrompts(error: any, type:any) {
+  console.log(error);
+  if (type.isH5) {
+    TUIMessage({ message: Error[error.code] || error, isH5: true });
+  } else {
+    TUIMessage({ message: Error[error.code] || error, isH5: false });
   }
 }

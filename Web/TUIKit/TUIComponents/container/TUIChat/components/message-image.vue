@@ -1,13 +1,27 @@
 <template>
-  <div class="message-image">
-    <img class="message-img" :class="[isWidth ? 'isWidth' : 'isHeight']" :src="data.url"  @click="toggleShow" />
-    <div class="progress"  v-if="data.progress">
+  <div class="message-image" @click.self="toggleShow"
+   >
+    <img
+      class="message-img"
+      :class="[isWidth ? 'isWidth' : 'isHeight']"
+      :src="data.url"/>
+    <div class="progress" v-if="data.progress">
       <progress :value="data.progress" max="1"></progress>
     </div>
     <div class="dialog" v-if="show" @click.self="toggleShow">
-      <header v-if="!isH5"><i class="icon icon-close" @click.stop="toggleShow"></i></header>
-      <div class="dialog-box" :class="[isH5 ? 'dialog-box-h5' : '']" @click.self="toggleShow">
-        <img :class="[isWidth ? 'isWidth' : 'isHeight']"  :src="data.message.payload.imageInfoArray[0].url" @click.self="toggleShow">
+      <header v-if="!isH5">
+        <i class="icon icon-close" @click.stop="toggleShow"></i>
+      </header>
+      <div
+        class="dialog-box"
+        :class="[isH5 ? 'dialog-box-h5' : '']"
+        @click.self="toggleShow"
+      >
+        <img
+          :class="[isWidth ? 'isWidth' : 'isHeight']"
+          :src="data.message.payload.imageInfoArray[0].url"
+          @click.self="toggleShow"
+        />
       </div>
     </div>
   </div>
@@ -15,7 +29,6 @@
 
 <script lang="ts">
 import { defineComponent, watchEffect, reactive, toRefs, computed } from 'vue';
-
 export default defineComponent({
   props: {
     data: {
@@ -27,7 +40,7 @@ export default defineComponent({
       default: false,
     },
   },
-  setup(props:any, ctx:any) {
+  setup(props: any, ctx: any) {
     const data = reactive({
       data: {
         progress: 0,
@@ -40,15 +53,18 @@ export default defineComponent({
     });
 
     const isWidth = computed(() => {
-      const { width = 0, height = 0 } = (data.data as any)?.message?.payload?.imageInfoArray[0];
+      const { width = 0, height = 0 } = (data.data as any)?.message?.payload
+        ?.imageInfoArray[0];
       return width >= height;
     });
+
 
     const toggleShow = () => {
       if (!data.data.progress) {
         data.show = !data.show;
       }
     };
+
 
     return {
       ...toRefs(data),
@@ -61,8 +77,9 @@ export default defineComponent({
 <style lang="scss" scoped>
 .message-image {
   position: relative;
-  .message-img{
+  .message-img {
     max-width: 300px;
+    max-height: 300px;
   }
   .progress {
     position: absolute;
@@ -76,7 +93,25 @@ export default defineComponent({
     display: flex;
     align-items: center;
     progress {
+      color: #006eff;
+      appearance: none;
+      border-radius: 0.25rem;
+      background: rgba(#ffffff, 1);
       width: 100%;
+      height: 0.5rem;
+      &::-webkit-progress-value {
+        background-color: #006eff;
+        border-radius: 0.25rem;
+      }
+      &::-webkit-progress-bar {
+        border-radius: 0.25rem;
+        background: rgba(#ffffff, 1);
+      }
+      &::-moz-progress-bar {
+        color: #006eff;
+        background: #006eff;
+        border-radius: 0.25rem;
+      }
     }
   }
 }
@@ -94,7 +129,7 @@ export default defineComponent({
   header {
     display: flex;
     justify-content: flex-end;
-    background: rgba(0,0,0,0.49);
+    background: rgba(0, 0, 0, 0.49);
     width: 100%;
     box-sizing: border-box;
     padding: 10px 10px;
@@ -114,6 +149,18 @@ export default defineComponent({
   height: 100%;
   background: #000000;
   padding: 30px 0;
+  display: flex;
+  flex-direction: column;
+  footer {
+    position: fixed;
+    bottom: 30px;
+    display: flex;
+    width: 90vw;
+    justify-content: space-between;
+      i {
+        padding: 20px;
+      }
+  }
 }
 
 .isWidth {
@@ -122,5 +169,4 @@ export default defineComponent({
 .isHeight {
   height: 100%;
 }
-
 </style>

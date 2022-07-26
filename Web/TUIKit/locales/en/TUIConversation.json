@@ -1,8 +1,8 @@
 {
-  "发起单聊": "Start a single session",
-  "发起群聊": "Start a multiplayer session",
-  "请输入userID": "please input to userID",
-  "删除会话": "Delete",
+  "发起单聊": "New one-to-one chat",
+  "发起群聊": "New group chat",
+  "请输入userID": "Enter a user ID",
+  "删除会话": "Delete conversation",
   "系统通知": "System notification",
   "置顶会话": "Top conversation",
   "取消置顶": "cancel top conversation",

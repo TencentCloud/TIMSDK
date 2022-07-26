@@ -2,7 +2,7 @@
   <div class="edit" :class="[isH5 ? 'edit-h5': '']">
     <header class="edit-header">
       <i v-if="isH5" class="icon icon-back" @click="cancel"></i>
-      <h1 class="edit-header-title">{{$t('TUIProfile.编辑资料')}}</h1>
+      <h1 class="edit-header-title">{{$t('TUIProfile.资料设置')}}</h1>
     </header>
     <ul class="edit-list">
       <li class="edit-list-item space-top">
@@ -14,8 +14,8 @@
                 onerror="this.src='https://web.sdk.qcloud.com/component/TUIKit/assets/avatar_21.png'">
             </span>
             <ul class="avatar-list" v-else>
-              <li class="avatar-list-item" v-for="(item,index) in avatarList"  :key="index">
-                <img :class="[profile.avatar === item.avatar &&  'selected']" :src="item.avatar" @click="chooseAvatar(item)">
+              <li class="avatar-list-item" v-for="(item,index) in avatarList"  :key="index" @click="chooseAvatar(item)">
+                <img :class="[profile.avatar === item.avatar &&  'selected']" :src="item.avatar" >
               </li>
             </ul>
           </main>
@@ -136,27 +136,27 @@ const TUIProfileEdit:any = defineComponent({
       avatarList: [
         {
           name: 'avatar_01',
-          avatar: 'https://web.sdk.qcloud.com/im/demo/TUIkit/web/img/avatar_01.svg',
+          avatar: ' https://im.sdk.qcloud.com/download/tuikit-resource/avatar/avatar_1.png',
         },
         {
           name: 'avatar_02',
-          avatar: 'https://web.sdk.qcloud.com/im/demo/TUIkit/web/img/avatar_02.svg',
+          avatar: ' https://im.sdk.qcloud.com/download/tuikit-resource/avatar/avatar_2.png',
         },
         {
           name: 'avatar_03',
-          avatar: 'https://web.sdk.qcloud.com/im/demo/TUIkit/web/img/avatar_03.svg',
+          avatar: ' https://im.sdk.qcloud.com/download/tuikit-resource/avatar/avatar_3.png',
         },
         {
           name: 'avatar_04',
-          avatar: 'https://web.sdk.qcloud.com/im/demo/TUIkit/web/img/avatar_04.svg',
+          avatar: ' https://im.sdk.qcloud.com/download/tuikit-resource/avatar/avatar_4.png',
         },
         {
           name: 'avatar_05',
-          avatar: 'https://web.sdk.qcloud.com/im/demo/TUIkit/web/img/avatar_05.svg',
+          avatar: ' https://im.sdk.qcloud.com/download/tuikit-resource/avatar/avatar_5.png',
         },
         {
           name: 'avatar_06',
-          avatar: 'https://web.sdk.qcloud.com/im/demo/TUIkit/web/img/avatar_06.svg',
+          avatar: ' https://im.sdk.qcloud.com/download/tuikit-resource/avatar/avatar_6.png',
         },
       ],
       type: [
@@ -211,7 +211,7 @@ const TUIProfileEdit:any = defineComponent({
         const y = birthday.slice(0, 4);
         const m = birthday.slice(4, 6);
         const d = birthday.slice(-2);
-        return `${y}-${m}-${d}`;
+        return  `${y}-${m}-${d}`;
       }
       return '';
     };

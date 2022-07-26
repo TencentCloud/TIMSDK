@@ -1,33 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16px" height="16px" viewBox="0 0 16 16" version="1.1">
-  <title>编组 2</title>
-  <defs>
-    <filter x="-4.8%" y="-7.2%" width="109.6%" height="114.4%" filterUnits="objectBoundingBox" id="filter-1">
-      <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
-      <feGaussianBlur stdDeviation="12" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
-      <feColorMatrix values="0 0 0 0 0.0843469619   0 0 0 0 0.117697611   0 0 0 0 0.152253524  0 0 0 0.200002283 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
-      <feMerge>
-        <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
-        <feMergeNode in="SourceGraphic"></feMergeNode>
-      </feMerge>
-    </filter>
-  </defs>
-  <g id="web" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-    <g id="引用消息" transform="translate(-768.000000, -500.000000)">
-      <g id="编组-23" filter="url(#filter-1)" transform="translate(480.000000, 220.000000)">
-        <g id="编组-3" transform="translate(20.000000, 60.000000)">
-          <g id="表单/列表/信息备份-2" transform="translate(0.000000, 186.000000)">
-            <g id="编组-16" transform="translate(268.000000, 34.000000)">
-              <g id="编组-7" transform="translate(2.000000, 2.000000)">
-                <path d="M1.96763669,3.07036473 L9.711,10.6350769 L0,10.6357039 L0,9.69230769 L1.414,9.69207692 L1.41453841,5.16669216 C1.41453841,4.40423976 1.61561674,3.68875172 1.96763669,3.07036473 Z M10.128,9.69207692 L11.3163073,9.69230769 L11.3163073,10.6357039 L11.093,10.6350769 L10.128,9.69207692 Z M5.65815365,0.923076923 C8.00183763,0.923076923 9.90176888,2.82300818 9.90176888,5.16669216 L9.901,9.47007692 L2.54398743,2.28391478 C3.31911292,1.44697323 4.42745201,0.923076923 5.65815365,0.923076923 Z" id="形状结合" fill="#CCCCCC"></path>
-                <polygon id="路径-4" fill="#CCCCCC" fill-rule="nonzero" points="6.13003707 0 6.13003707 1.84615385 5.18664084 1.84615385 5.18664084 0"></polygon>
-                <rect id="矩形" stroke="#CCCCCC" stroke-width="0.943396226" x="4.24380054" y="11.5486212" width="2.82870621" height="1"></rect>
-                <line x1="12" y1="0.0713538937" x2="0.773033026" y2="11.0241029" id="路径-5" stroke="#CCCCCC" transform="translate(6.386517, 5.547728) scale(-1, 1) translate(-6.386517, -5.547728) "></line>
-              </g>
-            </g>
-          </g>
-        </g>
-      </g>
-    </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="design-iconfont">
+  <g fill="none" fill-rule="evenodd">
+    <path d="M4.13744611,6.61713753 L20.551,23 L0,23 L0,21 L3,21 L3,11 C3,9.40883362 3.41291862,7.91410954 4.13744611,6.61713753 Z M21.481,21 L24,21 L24,23 L23.485,23 L21.481,21 Z M12,2 C16.9705627,2 21,6.02943725 21,11 L21,20.52 L5.36684476,4.91705738 C7.01203082,3.12402075 9.37475086,2 12,2 Z" fill="#CCC" transform="translate(4 3)"/>
+    <path fill="#CCC" fill-rule="nonzero" d="M13 0L13 4 11 4 11 0z" transform="translate(4 3)"/>
+    <path stroke="#CCC" d="M8.5 24.5H15.5V25.5H8.5z" transform="translate(4 3)"/>
+    <path stroke="#CCC" stroke-width="2" transform="matrix(-1 0 0 1 31.089472 3)" d="M25.4499982 0.1546001L1.63947409 23.8855564"/>
   </g>
 </svg>

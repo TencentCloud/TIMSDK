@@ -1,12 +1,11 @@
 <template>
-  <div class="words">
+  <div class="words" :class="[isH5 ? 'words-H5' : '']">
       <i class="icon icon-words" title="快速回复" @click="toggleShow"></i>
       <main class="words-main" :class="[isH5 ? 'words-H5-main' : '']" v-show="show&&!isMute">
         <div class="words-main-content" ref="dialog">
           <header>
             <aside>
               <h1>{{$t('Words.常用语-快捷回复工具')}}</h1>
-              <p>（{{$t('Words.使用')}}<a  @click="openLink(Link.customMessage)">{{$t(`Words.${Link.customMessage.label}`)}}</a>{{$t('Words.搭建')}}）</p>
             </aside>
             <span v-if="isH5" class="close" @click="toggleShow">关闭</span>
           </header>
@@ -24,7 +23,6 @@
 import { defineComponent, reactive, watchEffect, toRefs, watch, ref } from 'vue';
 import { useI18nLocale  } from '../../../../../TUIPlugin/TUIi18n';
 import { onClickOutside } from '@vueuse/core';
-import Link from '../../../../../utils/link';
 
 const Words = defineComponent({
   type: 'custom',
@@ -74,7 +72,6 @@ const Words = defineComponent({
       },
     ];
     const data = reactive({
-      link: 'https://web.sdk.qcloud.com/im/doc/zh-cn//SDK.html#createCustomMessage',
       list: [],
       show: false,
       isMute: false,
@@ -108,24 +105,15 @@ const Words = defineComponent({
     });
 
     const select = (item:any, index?:number) => {
-      const options:any = {
-        data: 'words',
-        description: item.value,
-        extension: item.value,
-      };
+      const text = item.value;
       toggleShow();
-      Words.TUIServer.sendCustomMessage(options);
-    };
-    const openLink = (type:any) => {
-      window.open(type.url);
+      Words.TUIServer.sendTextMessage(text);
     };
     return {
       ...toRefs(data),
       toggleShow,
       select,
       dialog,
-      Link,
-      openLink,
     };
   },
 });

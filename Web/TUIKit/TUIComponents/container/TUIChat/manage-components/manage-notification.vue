@@ -64,6 +64,7 @@ export default ManageNotification;
   display: flex;
   flex-direction: column;
   section {
+    flex: 1;
     font-size: 14px;
     p {
       text-align: center;

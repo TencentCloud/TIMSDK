@@ -41,6 +41,9 @@ a:hover{
 input, textarea {
     user-select: auto;
 }
-input:focus, input:active {
-    border: none;
+input:focus, input:active, textarea:focus, textarea:active {
+    outline: none;
+}
+img{
+    pointer-events:none;
 }
