@@ -33,14 +33,14 @@
               </li>
             </ul>
           </li>
-          <li class="TUI-contact-column-item" :class="[columnName === 'system' && 'label-drop']">
+          <li class="TUI-contact-column-item">
             <header @click="select('group')">
               <i class="icon icon-right" :class="[ columnName === 'group' && 'icon-down']"></i>
               <main>
                 <label>{{$t('TUIContact.我的群聊')}}</label>
               </main>
             </header>
-            <ul class="TUI-contact-list" v-if="columnName === 'group'">
+            <ul class="TUI-contact-list" v-show="columnName === 'group'">
               <li  class="TUI-contact-list-item" :class="[currentGroup?.groupID === item?.groupID && 'selected']" v-for="(item, index) in groupList" :key="index"  @click="handleListItem(item)">
                 <aside class="left">
                   <img
@@ -57,6 +57,29 @@
                     </li>
                   </ul>
                   <span class="type">{{item?.type}}</span>
+                </main>
+              </li>
+            </ul>
+          </li>
+          <li class="TUI-contact-column-item">
+            <header @click="select('friend')">
+              <i class="icon icon-right" :class="[ columnName === 'friend' && 'icon-down']"></i>
+              <main>
+                <label>{{$t('TUIContact.我的好友')}}</label>
+              </main>
+            </header>
+            <ul class="TUI-contact-list" v-show="columnName === 'friend'">
+              <li  class="TUI-contact-list-item" :class="[currentFriend?.userID === item?.userID && 'selected']" v-for="(item, index) in friendList" :key="index"  @click="handleListItem(item)">
+                <aside class="left">
+                  <img
+                    class="avatar"
+                    :src="item?.profile?.avatar || 'https://web.sdk.qcloud.com/component/TUIKit/assets/avatar_21.png'"
+                    onerror="this.src='https://web.sdk.qcloud.com/component/TUIKit/assets/avatar_21.png'">
+                </aside>
+                <main class="content">
+                  <ul>
+                    <li class="name">{{item?.profile?.nick || item?.userID}}</li>
+                  </ul>
                 </main>
               </li>
             </ul>
@@ -120,7 +143,30 @@
               v-else-if="currentGroup.selfInfo.userID && currentGroup.selfInfo.role ==='Owner' && currentGroup.type !=='Private'"
               @click="dismiss(currentGroup)">{{$t('TUIContact.解散群聊')}}</button>
             <button class="btn btn-cancel" v-else @click="quit(currentGroup)">{{$t('TUIContact.退出群聊')}}</button>
-            <button v-if="currentGroup.selfInfo.userID" class="btn btn-default" @click="enter(currentGroup)">{{$t('TUIContact.进入群聊')}}</button>
+            <button v-if="currentGroup.selfInfo.userID" class="btn btn-default" @click="enter(currentGroup.groupID, 'GROUP')">{{$t('TUIContact.进入群聊')}}</button>
+          </footer>
+        </div>
+        <div v-else-if="currentFriend?.userID && columnName === 'friend'" class="TUI-contact-main-info">
+          <header class="TUI-contact-main-info-header">
+            <ul class="list">
+              <h1>{{currentFriend?.profile?.nick || currentFriend?.userID}}</h1>
+              <li>
+                <label>ID：</label>
+                <span>{{currentFriend?.profile?.userID}}</span>
+              </li>
+              <li>
+                <label>{{$t('TUIContact.个性签名')}}：</label>
+                <span>{{currentFriend?.profile?.selfSignature}}</span>
+              </li>
+            </ul>
+            <img
+              class="avatar"
+              :src="currentFriend?.profile?.avatar || 'https://web.sdk.qcloud.com/component/TUIKit/assets/avatar_21.png'"
+              onerror="this.src='https://web.sdk.qcloud.com/component/TUIKit/assets/avatar_21.png'">
+          </header>
+
+          <footer class="TUI-contact-main-info-footer">
+            <button class="btn btn-default" @click="enter(currentFriend.userID, 'C2C')">{{$t('TUIContact.发送消息')}}</button>
           </footer>
         </div>
         <div class="TUI-contact-system" v-else-if="columnName === 'system'">
@@ -137,7 +183,7 @@
 <script lang="ts">
 import { computed, defineComponent, reactive, toRefs } from 'vue';
 import MessageSystem from './components/message-system.vue';
-import TUIMessage from '../../components/message';
+import { handleErrorPrompts } from '../utils';
 
 const TUIContact = defineComponent({
   name: 'TUIContact',
@@ -161,6 +207,8 @@ const TUIContact = defineComponent({
       types: TUIServer.TUICore.TIM.TYPES,
       isSearch: false,
       env: TUIServer.TUICore.TUIEnv,
+      friendList: [],
+      currentFriend: {},
     });
 
     TUIServer.bind(data);
@@ -172,7 +220,17 @@ const TUIContact = defineComponent({
     });
 
     const handleListItem = async (item:any) => {
-      data.currentGroup = item;
+      switch (data.columnName) {
+        case 'group':
+          data.currentGroup = item;
+          break;
+        case 'friend':
+          data.currentFriend = item;
+          break;
+      }
+      if (data.isSearch) {
+        data.currentGroup = item;
+      }
     };
 
     const handleSearchGroup = async (e:any) => {
@@ -181,7 +239,8 @@ const TUIContact = defineComponent({
         try {
           await TUIServer.searchGroupByID(data.searchID.trim());
         } catch (error) {
-          TUIMessage({ message: t('TUIContact.该群组不存在') });
+          const message = t('TUIContact.该群组不存在');
+          handleErrorPrompts(message, data.env);
         }
       }
     };
@@ -201,8 +260,8 @@ const TUIContact = defineComponent({
       data.currentGroup = null;
     };
 
-    const enter = async (group:any) => {
-      const name = `GROUP${group.groupID}`;
+    const enter = async (ID:any, type:string) => {
+      const name = `${type}${ID}`;
       TUIServer.TUICore.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse:any) => {
         // 通知 TUIConversation 添加当前会话
         // Notify TUIConversation to toggle the current conversation
@@ -233,6 +292,7 @@ const TUIContact = defineComponent({
 
     const toggleSearch = () => {
       data.isSearch = !data.isSearch;
+      data.columnName = '';
       data.searchID = '';
       data.searchGroup = {};
       (data.currentGroup as any) = {};

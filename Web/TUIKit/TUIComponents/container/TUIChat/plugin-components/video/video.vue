@@ -6,8 +6,10 @@
 </template>
 
 <script lang="ts">
+import TUIAegis from '../../../../../utils/TUIAegis';
 import { defineComponent, reactive, toRefs, watchEffect } from 'vue';
-import TUIMessage from '../../../../components/message';
+import { handleErrorPrompts } from '../../../utils';
+
 
 const Video = defineComponent({
   props: {
@@ -16,6 +18,10 @@ const Video = defineComponent({
       default: () => false,
     },
     isMute: {
+      type: Boolean,
+      default: () => false,
+    },
+    isH5: {
       type: Boolean,
       default: () => false,
     },
@@ -33,8 +39,12 @@ const Video = defineComponent({
       if (e.target.files.length > 0) {
         try {
           await Video.TUIServer.sendVideoMessage(e.target);
+          TUIAegis.getInstance().reportEvent({
+            name: 'messageType',
+            ext1: 'typeVideo',
+          });
         } catch (error) {
-          TUIMessage({ message: error });
+          handleErrorPrompts(error, props);
         }
       }
       e.target.value = '';

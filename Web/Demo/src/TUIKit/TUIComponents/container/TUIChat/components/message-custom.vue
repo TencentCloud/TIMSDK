@@ -1,6 +1,6 @@
 <template>
   <div class="custom">
-    <template v-if="isCustom === 'consultion'">
+    <template v-if="isCustom === constant.typeService">
       <div>
         <h1>
           <label>{{extension.title}}</label>
@@ -15,15 +15,31 @@
         <article>{{extension.description}}</article>
       </div>
     </template>
-    <template v-else-if="isCustom === 'evaluate'">
+    <template v-else-if="isCustom.businessID === constant.typeEvaluate">
       <div class="evaluate">
         <h1>{{$t('message.custom.对本次服务评价')}}</h1>
         <ul>
-          <li class="evaluate-list-item" v-for="(item, index) in ~~payload.description" :key="index">
+          <li class="evaluate-list-item" v-for="(item, index) in ~~isCustom.score" :key="index">
             <i class="icon icon-star-light"></i>
           </li>
         </ul>
-        <article>{{data.custom}}</article>
+        <article>{{isCustom.comment}}</article>
+      </div>
+    </template>
+    <template v-else-if="isCustom.businessID === constant.typeOrder">
+      <div class="order" @click="openLink(isCustom.link)">
+        <img :src="isCustom.imageUrl" alt="">
+        <main>
+          <h1>{{isCustom.title}}</h1>
+          <p>{{isCustom.description}}</p>
+          <span>{{isCustom.price}}</span>
+        </main>
+      </div>
+    </template>
+    <template v-else-if="isCustom.businessID === constant.typeTextLink">
+      <div class="textLink">
+          <p>{{isCustom.text}}</p>
+          <a :href="isCustom.link" target="view_window">{{$t('message.custom.查看详情>>')}}</a>
       </div>
     </template>
     <template v-else>
@@ -34,7 +50,8 @@
 
 <script lang="ts">
 import { defineComponent, watchEffect, reactive, toRefs } from 'vue';
-import { isUrl } from '../untils/untis';
+import { isUrl, JSONToString } from '../utils/utils';
+import constant from '../../constant';
 
 export default defineComponent({
   props: {
@@ -48,20 +65,26 @@ export default defineComponent({
       data: {},
       extension: {},
       isCustom: '',
-      payload: {},
+      constant: constant,
     });
 
     watchEffect(() => {
       data.data = props.data;
-      data.isCustom = props.data.message.payload.data;
-      data.payload = props.data.message.payload;
-      if (props.data.message.payload.data === 'consultion') {
-        data.extension = JSON.parse(props.data.message.payload.extension);
+      const { message: { payload } } = props.data;
+      data.isCustom = payload.data || " ";
+      data.isCustom = JSONToString(payload.data);
+      if (payload.data === constant.typeService) {
+        data.extension = JSONToString(payload.extension);
       }
     });
+    const openLink = (url: any) => {
+      window.open(url);
+    };
+
     return {
       ...toRefs(data),
       isUrl,
+      openLink,
     };
   },
 });
@@ -83,6 +106,31 @@ a {
     ul {
       display: flex;
       padding-top: 10px;
+    }
+  }
+  .order {
+    display: flex;
+    main{
+      padding-left: 5px;
+      p {
+        font-family: PingFangSC-Regular;
+        width: 145px;
+        line-height: 17px;
+        font-size: 14px;
+        color: #999999;
+        letter-spacing: 0;
+        margin-bottom: 6px;
+        word-break: break-word;
+      }
+      span {
+        font-family: PingFangSC-Regular;
+        line-height: 25px;
+        color: #FF7201;
+      }
+    }
+    img {
+      width: 67px;
+      height: 67px;
     }
   }
 }

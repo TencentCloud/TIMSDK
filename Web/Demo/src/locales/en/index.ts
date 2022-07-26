@@ -5,11 +5,11 @@ const Home = require('./Home.json');
 const messages = {
   en: {
     当前语言: 'English',
-    即时通信: 'Instant Messaging',
-    即时通信IM: 'Instant Messaging',
-    社交娱乐: 'Social Entertainment',
+    即时通信: 'IM',
+    即时通信IM: 'IM',
+    社交娱乐: 'Entertaining & Socializing',
     腾讯云: 'Tencent Cloud',
-    使用指引: 'Instructions for use',
+    使用指引: 'User Guide',
     Login,
     Home,
   },

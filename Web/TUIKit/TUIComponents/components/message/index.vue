@@ -4,8 +4,9 @@
     @before-leave="onClose"
     @after-leave="$emit('destroy')"
   >
-  <div class="message" :style="customStyle" v-show="visible">
-    <p>{{message}}</p>
+  <div class="message" :style="customStyle" v-show="visible" :class="[isH5 && 'message-h5']">
+    <p v-if="!isH5">{{message}}</p>
+    <span v-if="isH5">{{message}}</span>
   </div>
   </transition>
 </template>
@@ -42,6 +43,10 @@ export default defineComponent({
     zIndex: {
       type: Number,
       default: 0,
+    },
+    isH5: {
+      type: Boolean,
+      default: false,
     },
   },
   setup(props) {
@@ -106,6 +111,23 @@ export default defineComponent({
     box-shadow: 0 2px 12px 0 rgba(0,0,0, .2);
     border-radius: 3px;
     padding: 5px 10px;
+  }
+}
+.message-h5 {
+  position: absolute;
+  top: 300px !important;
+  margin: 0 auto;
+  max-width: 450px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  span {
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    font-size: 14px;
+    color: #999999;
+    letter-spacing: 0;
   }
 }
 </style>

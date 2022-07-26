@@ -14,11 +14,11 @@ const Evaluate = require('./evaluate.json');
 
 const messages = {
   en: {
-    取消: 'cancel',
-    发送: 'send',
+    取消: 'Cancel',
+    发送: 'Send',
     系统通知: 'System notification',
-    关闭: 'close',
-    确定: 'submit',
+    关闭: 'Close',
+    确定: 'Save',
     TUIChat,
     TUIConversation,
     TUIGroup,

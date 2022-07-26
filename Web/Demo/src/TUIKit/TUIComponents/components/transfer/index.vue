@@ -12,7 +12,7 @@
         <ul class="list">
           <li class="list-item" @click="selectedAll" v-if="optional.length > 1 && !isRadio">
             <i class="icon" :class="[selectedList.length === optional.length ? 'icon-selected': 'icon-unselected']" ></i>
-            <span class="all">全选</span>
+            <span class="all">{{$t('component.全选')}}</span>
           </li>
           <li class="list-item" v-for="(item, index) in list" :key="index"  @click="selected(item)">
             <i class="icon" :class="[item?.isDisabled && 'disabled', selectedList.indexOf(item)>-1 ? 'icon-selected': 'icon-unselected']" ></i>
@@ -22,10 +22,10 @@
                 :src="item?.avatar || 'https://web.sdk.qcloud.com/component/TUIKit/assets/avatar_21.png'"
                 onerror="this.src='https://web.sdk.qcloud.com/component/TUIKit/assets/avatar_21.png'">
               <span class="name">{{item?.nick || item?.userID}}</span>
-              <span v-if="item?.isDisabled">（已在群聊中）</span>
+              <span v-if="item?.isDisabled">（{{$t('component.已在群聊中')}}）</span>
             </template>
             <template v-else>
-              <slot name="item" :data="item" />
+              <slot name="left" :data="item" />
             </template>
           </li>
         </ul>
@@ -44,7 +44,7 @@
                 <span  v-if="!isH5">{{item.nick || item.userID}}</span>
               </template>
               <template v-else>
-                <slot name="item" :data="item" />
+                <slot name="right" :data="item" />
               </template>
             </aside>
             <i class="icon icon-cancel" @click="selected(item)"  v-if="!isH5"></i>

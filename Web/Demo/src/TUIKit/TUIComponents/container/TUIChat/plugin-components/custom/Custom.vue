@@ -29,6 +29,7 @@
 </template>
 
 <script lang="ts">
+import TUIAegis from '../../../../../utils/TUIAegis';
 import { defineComponent, reactive, watchEffect, toRefs } from 'vue';
 
 const Custom = defineComponent({
@@ -70,6 +71,10 @@ const Custom = defineComponent({
 
     const submit = () => {
       Custom.TUIServer.sendCustomMessage(data.custom);
+      TUIAegis.getInstance().reportEvent({
+        name: 'messageType',
+        ext1: 'typeCustom',
+      });
       cancel();
     };
 

@@ -87,7 +87,7 @@ export default class TUIChatServer extends IComponentServer {
     this.TUICore.tim.off(this.TUICore.TIM.EVENT.MESSAGE_MODIFIED, this.handleMessageModified);
     this.TUICore.tim.off(this.TUICore.TIM.EVENT.MESSAGE_REVOKED, this.handleMessageRevoked);
     this.TUICore.tim.off(this.TUICore.TIM.EVENT.MESSAGE_READ_BY_PEER, this.handleMessageReadByPeer);
-    this.TUICore.tim.off(this.TUICore.TIM.EVENT.GROUP_LIST_UPDATED, this.handleGroupListUpdated, this);
+    this.TUICore.tim.off(this.TUICore.TIM.EVENT.GROUP_LIST_UPDATED, this.handleGroupListUpdated);
   }
 
   private handleMessageReceived(event:any) {
@@ -343,6 +343,7 @@ export default class TUIChatServer extends IComponentServer {
   public sendCustomMessage(data:any): Promise<any> {
     return this.handlePromiseCallback(async (resolve:any, reject:any) => {
       try {
+        data.data = JSON.stringify(data.data);
         const options = this.handleMessageOptions(data, 'custom');
         const message = this.TUICore.tim.createCustomMessage(options);
         this.currentStore.messageList.push(message);
@@ -693,6 +694,23 @@ export default class TUIChatServer extends IComponentServer {
     return this.handlePromiseCallback(async (resolve:any, reject:any) => {
       try {
         const imResponse = await this.TUICore.tim.getUserProfile({ userIDList });
+        resolve(imResponse);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
+  /**
+ * 获取 SDK 缓存的好友列表
+ *
+ * @param {Array<string>} userIDList 用户的账号列表
+ * @returns {Promise}
+ */
+  public async getFriendList():Promise<void> {
+    return this.handlePromiseCallback(async (resolve:any, reject:any) => {
+      try {
+        const imResponse = await this.TUICore.tim.getFriendList();
         resolve(imResponse);
       } catch (error) {
         reject(error);
