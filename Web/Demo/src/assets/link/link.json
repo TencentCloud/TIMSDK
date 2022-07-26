@@ -11,11 +11,11 @@
 		"label": "访问官网",
 		"url": "https://cloud.tencent.com/product/im"
 	},
-	"Privacy": {
+	"privacy": {
 		"label": "隐私条例",
 		"url": "https://web.sdk.qcloud.com/document/Tencent-IM-Privacy-Protection-Guidelines.html"
 	},
-	"Agreement": {
+	"agreement": {
 		"label": "用户协议",
 		"url": "https://web.sdk.qcloud.com/document/Tencent-IM-User-Agreement.html"
 	},
@@ -67,11 +67,6 @@
 			"subLabel": "复购75%起",
 			"btnText": "立即选购",
 			"url": "https://cloud.tencent.com/act/pro/imnew?from=16262"
-		},
-		{
-			"label": "体验更多Demo",
-			"btnText": "立即前往",
-			"url": "https://cloud.tencent.com/document/product/269/36852"
 		}
 	]
 }

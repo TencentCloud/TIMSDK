@@ -23,6 +23,7 @@
       @update:show="(e)=>(open = e)"
       >
       <Transfer
+        :isSearch="false"
         :title="showTitle"
         :list="searchUserList"
         :isH5="env.isH5"
@@ -40,12 +41,11 @@ import { defineComponent, reactive, ref, toRefs } from 'vue';
 import CreateGroup from './components/createGroup';
 import Dialog from '../../components/dialog/index.vue';
 import Transfer from '../../components/transfer/index.vue';
-import TUIMessage from '../../components/message';
 import { useStore } from 'vuex';
 import TUIAegis from '../../../utils/TUIAegis';
 import constant from '../constant';
 import { onClickOutside } from '@vueuse/core';
-
+import { handleErrorPrompts } from '../utils';
 const TUISearch = defineComponent({
   name: 'TUISearch',
 
@@ -123,26 +123,11 @@ const TUISearch = defineComponent({
       data.open = !data.open;
       if (!data.open) {
         data.searchUserID = '';
-        data.searchUserList = [];
         data.step = 1;
         initGroupOptions();
       }
     };
 
-    const handleSearch = async (val:any) => {
-      try {
-        const imResponse:any = await TUIServer.getUserProfile([val]);
-        if (imResponse.data.length === 0) {
-          return TUIMessage({ message: t('TUISearch.该用户不存在') });
-        }
-        const isCurrent = data.searchUserList.filter((item:any) => item.userID === imResponse.data[0].userID);
-        if (isCurrent.length === 0) {
-          (data.searchUserList as any).push(imResponse.data[0]);
-        }
-      } catch (error) {
-        TUIMessage({ message: t('TUISearch.该用户不存在') });
-      }
-    };
 
     const submit = (userList: any) =>  {
       if  (data.createConversationType  === constant.typeC2C)  {
@@ -151,7 +136,8 @@ const TUISearch = defineComponent({
         toggleOpen();
       } else  {
         if (!CreateGroup.TUIServer) {
-          TUIMessage({ message: t('TUISearch.创建群聊，请注册 TUIGroup 模块') });
+          const message = t('TUISearch.创建群聊，请注册 TUIGroup 模块');
+          handleErrorPrompts(message, data.env);
         }
         initGroupOptions();
         data.group.memberList = userList.map((item:any) => ({ userID: item.userID }));
@@ -171,7 +157,8 @@ const TUISearch = defineComponent({
       }
       try {
         const imResponse = await GroupServer.createGroup(options);
-        TUIMessage({ message: t('TUISearch.创建成功') });
+        const message = t('TUISearch.创建成功');
+        handleErrorPrompts(message, data.env);
         VuexStore.commit('handleTask', 3);
         toggleOpen();
         if (params.type === TUIServer.TUICore.TIM.TYPES.GRP_AVCHATROOM) {
@@ -183,7 +170,7 @@ const TUISearch = defineComponent({
         }
         handleCurrentConversation(imResponse.data.group.groupID, 'GROUP');
       } catch (imError:any) {
-        TUIMessage({ message: imError });
+        handleErrorPrompts(imError, data.env);
       }
     };
 
@@ -226,7 +213,7 @@ const TUISearch = defineComponent({
     return {
       ...toRefs(data),
       toggleOpen,
-      handleSearch,
+      // handleSearch,
       submit,
       create,
       showOpen,

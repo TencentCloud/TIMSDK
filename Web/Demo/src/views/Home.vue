@@ -9,7 +9,7 @@
       </template>
       <template v-slot:right>
         <!-- <el-dropdown @command="change"> -->
-        <el-dropdown>
+        <el-dropdown trigger="click">
           <span class="dropdown">
             <i class="icon icon-global"></i>
             <label>{{$t('当前语言')}}</label>
@@ -168,8 +168,8 @@
         <footer>
           <ul class="list">
             <li class="line">
-              <a  @click="openLink(Link.Privacy)">《{{$t(`Login.${Link.Privacy.label}`)}}》</a>
-              <a  @click="openLink(Link.Agreement)">《{{$t(`Login.${Link.Agreement.label}`)}}》</a>
+              <a  @click="openLink(Link.privacy)">《{{$t(`Login.${Link.privacy.label}`)}}》</a>
+              <a  @click="openLink(Link.agreement)">《{{$t(`Login.${Link.agreement.label}`)}}》</a>
               <a  @click="openDisclaimer">{{$t('Home.免责声明')}}</a>
             </li>
             <li class="line">
@@ -262,6 +262,8 @@ import Header from '../components/Header.vue';
 import Menu from '../components/Menu.vue';
 import { useStore } from 'vuex';
 import router from '@/router';
+import TUIAegis from '@/utils/TUIAegis';
+import { cancellation }   from '../api';
 import { switchTitle } from '../utils/switchTitle';
 import Link from '../assets/link';
 
@@ -332,6 +334,10 @@ export default defineComponent({
     const change = (value:any) => {
       if (locale.value !== value) {
         locale.value = value;
+        TUIAegis.getInstance().reportEvent({
+          name: 'language',
+          ext1: locale.value,
+        });
         store.commit('handleTask', 2);
         switchTitle(locale.value);
       }
@@ -365,6 +371,10 @@ export default defineComponent({
       data.ruleForm.userInfo.userId = '';
       data.ruleForm.userInfo.userSig = '';
       data.ruleForm.userInfo.expire = '';
+      TUIAegis.getInstance().reportEvent({
+        name: 'logout',
+        ext1: 'logout-success',
+      });
     };
     const openShowProfile = ()  =>  {
       TUICore.instance.TUIServer.TUIProfile.setEdit(true);
@@ -395,17 +405,37 @@ export default defineComponent({
     };
 
     const submitCancellation = ()  =>  {
+      const deleteInfo:any = localStorage.getItem('TUIKit-userInfo');
+      const deleteInfoList =  JSON.parse(deleteInfo);
+      const options: any = {
+        userId: deleteInfoList.userId,
+        token: deleteInfoList.token,
+        phone: deleteInfoList.phone,
+      };
       TUIKit.logout().then((res:any) => {
+        TUIAegis.getInstance().reportEvent({
+          name: 'cancellationCount',
+          ext1: 'cancellationCount-success',
+        });
         localStorage.removeItem('TUIKit-userInfo');
+        cancellation(options);
         router.push({ name: 'Login' });
       });
     };
     const openDataLink = (item:any) =>  {
       window.open(item.url);
+      TUIAegis.getInstance().reportEvent({
+        name: 'openLink',
+        ext1: item.label,
+      });
     };
 
     const openLink = (type:any) => {
       window.open(type.url);
+      TUIAegis.getInstance().reportEvent({
+        name: 'openLink',
+        ext1: type.label,
+      });
     };
 
     const handleCurrentConversation = (value: string) => {

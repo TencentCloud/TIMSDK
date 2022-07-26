@@ -65,8 +65,8 @@
             <el-checkbox v-model="ruleForm.checked">
               <p class="checked-text">
                 {{$t('Login.我已阅读并同意')}}
-                <a @click="openLink(Link.Privacy)">《{{$t(`Login.${Link.Privacy.label}`)}}》</a>{{$t('Login.和')}}
-                <a @click="openLink(Link.Agreement)">《{{$t(`Login.${Link.Agreement.label}`)}}》</a>
+                <a @click="openLink(Link.Privacy)">《{{$t(`Login.${Link.privacy.label}`)}}》</a>{{$t('Login.和')}}
+                <a @click="openLink(Link.Agreement)">《{{$t(`Login.${Link.agreement.label}`)}}》</a>
               </p>
               </el-checkbox>
           </el-form-item>

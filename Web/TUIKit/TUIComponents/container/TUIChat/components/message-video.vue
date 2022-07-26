@@ -1,19 +1,30 @@
 <template>
  <div class="message-video">
-    <div class="message-video-box" :class="[!data.progress && 'message-video-cover']" @click="toggleShow">
+    <div class="message-video-box" :class="[!data.progress && data.message.status === 'success' && 'message-video-cover']" @click="toggleShow">
       <img class="message-img" :class="[isWidth ? 'isWidth' : 'isHeight']" :src="data.snapshotUrl" alt="" v-if="data.snapshotUrl && !data.progress">
       <video v-else :src="data.url"></video>
-      <div class="progress"  v-if="data.progress">
+      <div class="progress" v-if="data.progress">
         <progress :value="data.progress" max="1"></progress>
       </div>
     </div>
     <div class="dialog-video" v-if="show" @click.self="toggleShow">
-      <header v-if="!isH5"><i class="icon icon-close" @click.stop="toggleShow"></i></header>
-      <div class="dialog-video-box" :class="[isH5 ? 'dialog-video-h5' : '']" @click.self="toggleShow">
-        <video :class="[isWidth ? 'isWidth' : 'isHeight']" :src="data.url" controls autoplay></video>
+      <header v-if="!isH5">
+        <i class="icon icon-close" @click.stop="toggleShow"></i>
+      </header>
+      <div
+        class="dialog-video-box"
+        :class="[isH5 ? 'dialog-video-h5' : '']"
+        @click.self="toggleShow"
+      >
+        <video
+          :class="[isWidth ? 'isWidth' : 'isHeight']"
+          :src="data.url"
+          controls
+          autoplay
+        ></video>
       </div>
     </div>
- </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -30,7 +41,7 @@ export default defineComponent({
       default: false,
     },
   },
-  setup(props:any, ctx:any) {
+  setup(props: any, ctx: any) {
     const data = reactive({
       data: {},
       show: false,
@@ -41,7 +52,8 @@ export default defineComponent({
     });
 
     const isWidth = computed(() => {
-      const { snapshotWidth = 0, snapshotHeight = 0 } = (data.data as any)?.message?.payload;
+      const { snapshotWidth = 0, snapshotHeight = 0 } = (data.data as any)
+        ?.message?.payload;
       return snapshotWidth >= snapshotHeight;
     });
 
@@ -65,10 +77,12 @@ export default defineComponent({
   &-box {
     max-width: 300px;
     video {
-      width: 100%;
+      max-width: 300px;
+      max-height: 300px;
     }
     img {
-      width: 100%;
+      max-width: 300px;
+      max-height: 300px;
     }
   }
   &-cover {
@@ -77,11 +91,11 @@ export default defineComponent({
     &::before {
       position: absolute;
       z-index: 1;
-      content: "";
+      content: '';
       width: 0px;
       height: 0px;
       border: 15px solid transparent;
-      border-left: 20px solid #FFFFFF;
+      border-left: 20px solid #ffffff;
       top: 0;
       left: 0;
       bottom: 0;
@@ -105,7 +119,25 @@ export default defineComponent({
     display: flex;
     align-items: center;
     progress {
+      color: #006eff;
+      appearance: none;
+      border-radius: 0.25rem;
+      background: rgba(#ffffff, 1);
       width: 100%;
+      height: 0.5rem;
+      &::-webkit-progress-value {
+        background-color: #006eff;
+        border-radius: 0.25rem;
+      }
+      &::-webkit-progress-bar {
+        border-radius: 0.25rem;
+        background: rgba(#ffffff, 1);
+      }
+      &::-moz-progress-bar {
+        color: #006eff;
+        background: #006eff;
+        border-radius: 0.25rem;
+      }
     }
   }
 }
@@ -123,7 +155,7 @@ export default defineComponent({
   header {
     display: flex;
     justify-content: flex-end;
-    background: rgba(0,0,0,0.49);
+    background: rgba(0, 0, 0, 0.49);
     width: 100%;
     box-sizing: border-box;
     padding: 10px 10px;

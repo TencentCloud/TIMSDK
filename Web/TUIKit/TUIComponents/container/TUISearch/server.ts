@@ -13,7 +13,7 @@ export default class TUISearchServer extends IComponentServer {
   constructor(TUICore:any) {
     super();
     this.TUICore = TUICore;
-    // this.bindTIMEvent();
+    this.bindTIMEvent();
     this.store = TUICore.setComponentStore('TUISearch', {}, this.updateStore.bind(this));
   }
 
@@ -22,7 +22,7 @@ export default class TUISearchServer extends IComponentServer {
    *
    */
   public destroyed() {
-    // this.unbindTIMEvent();
+    this.unbindTIMEvent();
   }
 
   /**
@@ -63,10 +63,17 @@ export default class TUISearchServer extends IComponentServer {
    * /////////////////////////////////////////////////////////////////////////////////
    */
 
-  // private bindTIMEvent() {}
+  private bindTIMEvent() {
+    this.TUICore.tim.on(this.TUICore.TIM.EVENT.FRIEND_LIST_UPDATED, this.handleFriendListUpdated, this);
+  }
 
-  // private unbindTIMEvent() {}
+  private unbindTIMEvent() {
+    this.TUICore.tim.off(this.TUICore.TIM.EVENT.FRIEND_LIST_UPDATED, this.handleFriendListUpdated);
+  }
 
+  private handleFriendListUpdated(event:any) {
+    this.currentStore.searchUserList = event.data.map((item: any)=> item?.profile);
+  }
 
   /**
    * /////////////////////////////////////////////////////////////////////////////////
@@ -82,7 +89,7 @@ export default class TUISearchServer extends IComponentServer {
    * @param {string} conversationID 会话ID
    * @returns {Promise}
    */
-  public async getConversationProfile(conversationID:string) {
+  public async getConversationProfile(conversationID:string):Promise<void> {
     return this.handlePromiseCallback(async (resolve:any, reject:any) => {
       try {
         const imResponse = await this.TUICore.tim.getConversationProfile(conversationID);
@@ -99,7 +106,7 @@ export default class TUISearchServer extends IComponentServer {
  * @param {Array<string>} userIDList 用户的账号列表
  * @returns {Promise}
  */
-  public async getUserProfile(userIDList:Array<string>) {
+  public async getUserProfile(userIDList:Array<string>):Promise<void> {
     return this.handlePromiseCallback(async (resolve:any, reject:any) => {
       try {
         const imResponse = await this.TUICore.tim.getUserProfile({ userIDList });
@@ -109,6 +116,25 @@ export default class TUISearchServer extends IComponentServer {
       }
     });
   }
+
+  /**
+ * 获取 SDK 缓存的好友列表
+ *
+ * @param {Array<string>} userIDList 用户的账号列表
+ * @returns {Promise}
+ */
+  public async getFriendList():Promise<void> {
+    return this.handlePromiseCallback(async (resolve:any, reject:any) => {
+      try {
+        const imResponse = await this.TUICore.tim.getFriendList();
+        this.currentStore.searchUserList = imResponse.data.map((item: any)=> item?.profile);
+        resolve(imResponse);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
 
   /**
    * /////////////////////////////////////////////////////////////////////////////////
@@ -126,6 +152,7 @@ export default class TUISearchServer extends IComponentServer {
    */
   public async bind(params:any) {
     this.currentStore = params;
+    await this.getFriendList();
     return this.currentStore;
   }
 }

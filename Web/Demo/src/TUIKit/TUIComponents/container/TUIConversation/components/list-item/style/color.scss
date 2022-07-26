@@ -1,0 +1,74 @@
+.TUI-conversation {
+  &-item {
+    &:hover {
+      background: rgba(0,110,255,0.10);
+    }
+    .left {
+      .num {
+        background: red;
+        color: #ffffff;
+        &-notify {
+          background: red;
+          color: #ffffff;
+        }
+      }
+      .num-notify {
+        background: red;
+        color: #ffffff;
+      }
+    }
+    .content-header {
+      label{
+          color: #000000;
+      }
+      .name {
+          font-weight: 400;
+          letter-spacing: 0;
+          color: #000000;
+        }
+    }
+    .middle-box{
+        span {
+          font-family: PingFangSC-Regular;
+          font-weight: 400;
+          color: #999999;
+        }
+        p {
+          font-weight: 400;
+          color: #999999;
+          letter-spacing: 0;
+        }
+        &-at {
+          color:#FB5059 !important;
+        }
+    }
+    .content-footer {
+      color: #999999;
+        .time {
+        color: #BBBBBB;
+      }
+    }
+  }
+  .selected {
+    background: rgba(0,110,255,0.10);
+  }
+  .pinned {
+    background: #EEF0F3;
+  }
+  .dialog{
+    background: #fff;
+    border: 1px solid #dddddd;
+    &-item {
+      box-shadow: 0 11px 20px 0 rgba(0,0,0,.3);
+      background: #FFFFFF;
+      border: 1px solid #E0E0E0;
+      box-shadow: 0 -4px 12px 0 rgba(0,0,0,.06);
+    }
+  .conversation-options {
+      font-family: PingFangSC-Regular;
+      font-weight: 400;
+      color: #4F4F4F;
+      letter-spacing: 0;
+    }
+  }
+}

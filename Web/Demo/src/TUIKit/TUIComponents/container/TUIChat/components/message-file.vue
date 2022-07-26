@@ -3,8 +3,8 @@
     <div class="box" @click="download" :title="$t('TUIChat.单击下载')">
       <i class="icon icon-files"></i>
       <div class="message-file-content">
-        <label>{{data.name}}</label>
-        <span>{{data.size}}</span>
+        <label>{{ data.name }}</label>
+        <span>{{ data.size }}</span>
       </div>
     </div>
     <progress v-if="data.progress" :value="data.progress" max="1"></progress>
@@ -21,7 +21,7 @@ export default defineComponent({
       default: () => ({}),
     },
   },
-  setup(props:any, ctx:any) {
+  setup(props: any, ctx: any) {
     const data = reactive({
       data: {},
     });
@@ -31,9 +31,9 @@ export default defineComponent({
     });
 
     const download = () => {
-      const file:any = data.data;
-      const option:any = {
-        mode: 'no-cors',
+      const file: any = data.data;
+      const option: any = {
+        mode: 'cors',
         headers: new Headers({
           'Content-Type': 'application/x-www-form-urlencoded',
         }),
@@ -42,7 +42,7 @@ export default defineComponent({
       // If the browser supports fetch, use blob to download, so as to avoid the browser clicking the a tag and jumping to the preview of the new page
       if ((window as any).fetch) {
         fetch(file.url, option)
-          .then(res => res.blob())
+          .then((res) => res.blob())
           .then((blob) => {
             const a = document.createElement('a');
             const url = window.URL.createObjectURL(blob);
@@ -81,7 +81,26 @@ export default defineComponent({
     }
   }
   progress {
-      width: 100%;
+    width: 100%;
+    color: #006eff;
+    appearance: none;
+    border-radius: 0.25rem;
+    background: rgba(#ffffff, 1);
+    width: 100%;
+    height: 0.5rem;
+    &::-webkit-progress-value {
+      background-color: #006eff;
+      border-radius: 0.25rem;
     }
+    &::-webkit-progress-bar {
+      border-radius: 0.25rem;
+      background: rgba(#ffffff, 1);
+    }
+    &::-moz-progress-bar {
+      color: #006eff;
+      background: #006eff;
+      border-radius: 0.25rem;
+    }
+  }
 }
 </style>

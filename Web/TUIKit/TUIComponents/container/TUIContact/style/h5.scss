@@ -1,8 +1,11 @@
 .TUI-contact-H5{
+  height:100%;
+  overflow-y: auto;
   .TUI-contact{
     &-left {
       min-width: 0;
       width: 100%;
+      height: 100%;
       flex: 1;
       position: static;
     }
@@ -60,11 +63,18 @@
         &-footer {
           padding-top: 12px;
           flex-direction: column;
+          p {
+            text-align: center;
+            background: #FFFFFF;
+            padding: 10px 0;
+            opacity: 1;
+          }
           .btn {
             flex: 1;
             background: #FFFFFF;
             border-bottom: 1px solid #EEEEEE;
             margin: 0;
+            padding: 15px 0;
           }
         }
       }
@@ -75,7 +85,7 @@
     }
     &-list {
       position: static;
-      height: 0;
+      overflow-y: scroll;
     }
   }
   .btn {

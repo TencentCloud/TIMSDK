@@ -1,9 +1,11 @@
 {
-  "取消": "cancel",
-  "完成": "complete",
+  "取消": "Cancel",
+  "完成": "Done",
   "已选中": "Selected",
-  "人": "people",
-  "保存": "preservation",
-  "请输入userID": "please input userID",
-  "确定": "submit"
+  "人": "",
+  "保存": "Save",
+  "请输入userID": "Enter a user ID",
+  "确定": "submit",
+  "全选": "All",
+  "已在群聊中": "exists"
 }

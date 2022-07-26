@@ -14,6 +14,14 @@ const constant:any = {
   typeFace: 8,
   typeForward: 'forward',
   typeMute: 'mute',
+  typeOrder: 'order',
+  typeService: 'consultion',
+  typeReply: 'quick_reply',
+  typeEvaluate: 'evaluation',
+  typeTextLink: 'text_link',
+  typeAndroid: 'android',
+  typeIphone: 'iphone',
+  typeMini: 'miniprogram'
 };
 
 export default constant;

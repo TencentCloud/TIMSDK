@@ -1,8 +1,8 @@
 {
-  "周": "Weeks",
-  "天": "Days",
-  "小时": "Hours",
-  "分钟": "Minutes",
-  "刚刚": "moment",
+  "周": "week(s) ",
+  "天": "day(s)",
+  "小时": "hour(s) ",
+  "分钟": "minute(s)",
+  "刚刚": "Just now",
   "前": " ago"
 }

@@ -12,13 +12,28 @@
         position: absolute;
         left: 18px;
       }
+      &-title {
+        color: rgba(0, 0, 0, 1);
+      }
     }
     &-list {
+      padding: 0;
       &-item {
-        padding: 14px 18px;
+        padding: 10px 18px;
         &-content {
+          label {
+            width: auto;
+            font-size: 16px;
+            color: rgba(0, 0, 0, 1);
+          }
           span {
             text-align: end;
+            font-size: 16px;
+            color: rgba(0, 0, 0, 0.6);
+            img {
+              width: 60px;
+              height: 60px;
+            }
           }
         }
       }
@@ -65,7 +80,8 @@
     .input {
       display: flex;
       padding-bottom: 10px;
-      input, textarea {
+      input,
+      textarea {
         flex: 1;
         padding: 10px 18px;
         border: none;
