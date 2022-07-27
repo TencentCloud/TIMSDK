@@ -7,6 +7,7 @@ import UserInputComponent from '../commonComponents/UserInputComponent';
 import CommonButton from '../commonComponents/CommonButton';
 import CheckBoxModalComponent from '../commonComponents/CheckboxModalComponent';
 import SDKResponseView from '../sdkResponseView';
+import mystylesheet from '../../stylesheets';
 const SendC2CTextMessageComponent = () => {
     const [visible, setVisible] = useState<boolean>(false)
     const [input,setInput]=useState<string>('')
@@ -23,28 +24,28 @@ const SendC2CTextMessageComponent = () => {
     const CodeComponent = () => {
         return (
             res.code !== undefined?
-                (<SDKResponseView codeString={JSON.stringify(res)} />) : null
+                (<SDKResponseView codeString={JSON.stringify(res, null, 2)} />) : null
         );
     }
 
 
     return (
-        <>
+        <View style={{height: '100%'}}>
             <View style={styles.container}>
                 <UserInputComponent content={'发送文本'} placeholdercontent={'发送文本'} getContent={setInput}/>
             </View>
             <View style={styles.selectContainer}>
                 <TouchableOpacity onPress={() => { setVisible(true) }}>
-                    <View style={styles.buttonView}>
-                        <Text style={styles.buttonText}>选择好友</Text>
+                    <View style={mystylesheet.buttonView}>
+                        <Text style={mystylesheet.buttonText}>选择好友</Text>
                     </View>
                 </TouchableOpacity>
-                <Text style={styles.selectedText}>{userName}</Text>
+                <Text style={mystylesheet.selectedText}>{userName}</Text>
             </View>
             <CheckBoxModalComponent visible={visible} getVisible={setVisible} getUsername={setUserName} type={'friend'}/>
             <CommonButton handler={() => sendC2CTextMessage()} content={'发送C2C文本消息'}></CommonButton>
             <CodeComponent></CodeComponent>
-        </>
+        </View>
     )
 }
 
@@ -54,28 +55,10 @@ const styles = StyleSheet.create({
     container: {
         margin: 10
     },
-    buttonView: {
-        backgroundColor: '#2F80ED',
-        borderRadius: 3,
-        width: 100,
-        height: 35,
-        marginLeft: 10
-    },
-    buttonText: {
-        color: '#FFFFFF',
-        fontSize: 14,
-        textAlign: 'center',
-        textAlignVertical: 'center',
-        lineHeight: 35
-    },
     selectContainer: {
-        flexDirection: 'row'
-    },
-    selectedText: {
-        marginLeft: 10,
-        fontSize: 14,
-        textAlignVertical: 'center',
-        lineHeight: 35
+        flexDirection: 'row',
+        marginLeft:10,
+        marginRight:10
     }
 })
 

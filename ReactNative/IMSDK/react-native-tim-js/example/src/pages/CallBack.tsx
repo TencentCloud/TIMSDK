@@ -1,7 +1,7 @@
 import React,{useContext} from 'react';
-import CallBackContext from '../useContext';
+    import {CallBackContext} from '../useContext';
 import SDKResponseView from '../components/sdkResponseView';
-import { FlatList,StyleSheet,View,Text } from 'react-native';
+import { FlatList,StyleSheet,View } from 'react-native';
 import CommonButton from '../components/commonComponents/CommonButton';
 
 const CallBackScreen = () => {
@@ -9,8 +9,8 @@ const CallBackScreen = () => {
     const CodeComponent = ({item}) => {
         return (
             <View style={styles.container}>
-                <SDKResponseView codeString={JSON.stringify(item.type)}/> 
-                <SDKResponseView codeString={JSON.stringify(item.data)}/> 
+                <SDKResponseView codeString={JSON.stringify(item.type, null, 4)}/> 
+                <SDKResponseView codeString={JSON.stringify(item.data, null, 4)}/> 
             </View>
         );
     }

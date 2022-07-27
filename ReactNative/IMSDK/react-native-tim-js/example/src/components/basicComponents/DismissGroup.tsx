@@ -5,6 +5,7 @@ import { TencentImSDKPlugin } from 'react-native-tim-js';
 import CommonButton from '../commonComponents/CommonButton';
 import SDKResponseView from '../sdkResponseView';
 import CheckBoxModalComponent from '../commonComponents/CheckboxModalComponent';
+import mystylesheet from '../../stylesheets';
 const DismissGroupComponent = () => {
 
     const [res, setRes] = React.useState<any>({});
@@ -18,25 +19,25 @@ const DismissGroupComponent = () => {
 
     const CodeComponent = () => {
         return res.code !== undefined ? (
-            <SDKResponseView codeString={JSON.stringify(res)} />
+            <SDKResponseView codeString={JSON.stringify(res, null, 2)} />
         ) : null;
     };
     return (
-        <>
+        <View style={{height: '100%'}}>
             <View style={styles.container}>
-                <View style={styles.selectContainer}>
+                <View style={mystylesheet.selectContainer}>
                     <TouchableOpacity onPress={() => { setVisible(true) }}>
-                        <View style={styles.buttonView}>
-                            <Text style={styles.buttonText}>选择群组</Text>
+                        <View style={mystylesheet.buttonView}>
+                            <Text style={mystylesheet.buttonText}>选择群组</Text>
                         </View>
                     </TouchableOpacity>
-                    <Text style={styles.selectedText}>{groupName}</Text>
+                    <Text style={mystylesheet.selectedText}>{groupName}</Text>
                 </View>
-                <CheckBoxModalComponent visible={visible} getVisible={setVisible} getUsername={setGroupName} type={'group'}/>
-                <CommonButton handler={() => dismissGroup()} content={'解散群组'}></CommonButton>
+                <CheckBoxModalComponent visible={visible} getVisible={setVisible} getUsername={setGroupName} type={'group'}/>  
             </View>
+            <CommonButton handler={() => dismissGroup()} content={'解散群组'}></CommonButton>
             <CodeComponent></CodeComponent>
-        </>
+        </View>
     );
 };
 
@@ -47,30 +48,4 @@ const styles = StyleSheet.create({
         margin: 10,
         marginBottom: 0
     },
-    buttonView: {
-        backgroundColor: '#2F80ED',
-        borderRadius: 3,
-        width: 100,
-        height: 35,
-        marginLeft: 10
-    },
-    buttonText: {
-        color: '#FFFFFF',
-        fontSize: 14,
-        textAlign: 'center',
-        textAlignVertical: 'center',
-        lineHeight: 35
-    },
-    selectContainer: {
-        flexDirection: 'row',
-        alignItems:'center',
-        width:'100%',
-        overflow:'hidden'
-    },
-    selectedText: {
-        marginLeft: 10,
-        fontSize: 14,
-        textAlignVertical: 'center',
-        lineHeight: 35
-    }
 })

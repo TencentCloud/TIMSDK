@@ -29,17 +29,16 @@ import java.util.List;
 import java.util.Map;
 
 public class GroupManager {
-
     public void createGroup(Promise promise, ReadableMap arguments) {
-        String groupID = arguments.getString("groupID");
-        String groupType = arguments.getString("groupType");
-        String groupName = arguments.getString("groupName");
-        String notification = arguments.getString("notification");
-        String introduction = arguments.getString("introduction");
-        String faceUrl = arguments.getString("faceUrl");
-        boolean isAllMuted = arguments.getBoolean("isAllMuted");
-        int addOpt = arguments.getInt("addOpt");
-        boolean isSupportTopic = arguments.getBoolean("isSupportTopic");
+        String groupID = CommonUtils.safeGetString(arguments, "groupID");
+        String groupType = CommonUtils.safeGetString(arguments, "groupType");
+        String groupName = CommonUtils.safeGetString(arguments, "groupName");
+        String notification = CommonUtils.safeGetString(arguments, "notification");
+        String introduction = CommonUtils.safeGetString(arguments, "introduction");
+        String faceUrl = CommonUtils.safeGetString(arguments, "faceUrl");
+        Boolean isAllMuted = CommonUtils.safeGetBoolean(arguments, "isAllMuted");
+        Integer addOpt = CommonUtils.safeGetInt(arguments, "addOpt");
+        Boolean isSupportTopic = CommonUtils.safeGetBoolean(arguments, "isSupportTopic");
 
         V2TIMGroupInfo info = new V2TIMGroupInfo();
         if (groupID != null) {
@@ -60,15 +59,15 @@ public class GroupManager {
         if (faceUrl != null) {
             info.setFaceUrl(faceUrl);
         }
-        // if (isAllMuted != null) {
-        info.setAllMuted(isAllMuted);
-        // }
-        // if (addOpt != null) {
-        info.setGroupAddOpt(addOpt);
-        // }
-        // if (isSupportTopic != null) {
-        info.setSupportTopic(isSupportTopic);
-        // }
+        if (isAllMuted != null) {
+            info.setAllMuted(isAllMuted);
+        }
+        if (addOpt != null) {
+            info.setGroupAddOpt(addOpt);
+        }
+        if (isSupportTopic != null) {
+            info.setSupportTopic(isSupportTopic);
+        }
         List<V2TIMCreateGroupMemberInfo> memberList = new LinkedList<V2TIMCreateGroupMemberInfo>();
         if (arguments.getArray("memberList") != null) {
             List<HashMap<String, Object>> list = CommonUtils
@@ -138,18 +137,15 @@ public class GroupManager {
     }
 
     public void setGroupInfo(Promise promise, ReadableMap arguments) {
-        String groupID = arguments.getString("groupID");
-        String groupType = arguments.getString("groupType");
-        String groupName = arguments.getString("groupName");
-        String notification = arguments.getString("notification");
-        String introduction = arguments.getString("introduction");
-        String faceUrl = arguments.getString("faceUrl");
-        boolean isAllMuted = arguments.getBoolean("isAllMuted");
-        int addOpt = arguments.getInt("addOpt");
-        boolean isSupportTopic = arguments.getBoolean("isSupportTopic");
+        String groupID = CommonUtils.safeGetString(arguments, "groupID");
+        String groupType = CommonUtils.safeGetString(arguments, "groupType");
+        String groupName = CommonUtils.safeGetString(arguments, "groupName");
+        String notification = CommonUtils.safeGetString(arguments, "notification");
+        String introduction = CommonUtils.safeGetString(arguments, "introduction");
+        String faceUrl = CommonUtils.safeGetString(arguments, "faceUrl");
 
         HashMap<String, String> customInfoString = CommonUtils
-                .convertReadableMapToHashMap(arguments.getMap("customInfo"));
+                .convertReadableMapToHashMap(CommonUtils.safeGetMap(arguments, "customInfo"));
 
         V2TIMGroupInfo info = new V2TIMGroupInfo();
         if (groupID != null) {
@@ -170,15 +166,15 @@ public class GroupManager {
         if (faceUrl != null) {
             info.setFaceUrl(faceUrl);
         }
-        // if (isAllMuted != null) {
-        info.setAllMuted(isAllMuted);
-        // }
-        // if (addOpt != null) {
-        info.setGroupAddOpt(addOpt);
-        // }
-        // if (isSupportTopic != null) {
-        info.setSupportTopic(isSupportTopic);
-        // }
+        if (CommonUtils.safeGetBoolean(arguments, "isAllMuted") != null) {
+            info.setAllMuted(CommonUtils.safeGetBoolean(arguments, "isAllMuted"));
+        }
+        if (CommonUtils.safeGetInt(arguments, "addOpt") != null) {
+            info.setGroupAddOpt(CommonUtils.safeGetInt(arguments, "addOpt"));
+        }
+        if (CommonUtils.safeGetBoolean(arguments, "isSupportTopic") != null) {
+            info.setSupportTopic(CommonUtils.safeGetBoolean(arguments, "isSupportTopic"));
+        }
         if (customInfoString != null) {
             HashMap<String, byte[]> newCustomHashMap = new HashMap<String, byte[]>();
             if (!customInfoString.isEmpty()) {
@@ -223,7 +219,8 @@ public class GroupManager {
 
     public void createTopicInCommunity(Promise promise, ReadableMap arguments) {
         String groupID = arguments.getString("groupID");
-        Map<String, Object> topicInfo = CommonUtils.convertReadableMapToHashMap(arguments.getMap("topicInfo"));
+        Map<String, Object> topicInfo = CommonUtils
+                .convertReadableMapToHashMap(CommonUtils.safeGetMap(arguments, "topicInfo"));
         V2TIMTopicInfo info = new V2TIMTopicInfo();
         if (topicInfo.get("topicID") != null) {
             info.setTopicID((String) topicInfo.get("topicID"));
@@ -289,7 +286,8 @@ public class GroupManager {
     }
 
     public void setTopicInfo(Promise promise, ReadableMap arguments) {
-        Map<String, Object> topicInfo = CommonUtils.convertReadableMapToHashMap(arguments.getMap("topicInfo"));
+        Map<String, Object> topicInfo = CommonUtils
+                .convertReadableMapToHashMap(CommonUtils.safeGetMap(arguments, "topicInfo"));
         V2TIMTopicInfo info = new V2TIMTopicInfo();
         if (topicInfo.get("topicID") != null) {
             info.setTopicID((String) topicInfo.get("topicID"));
@@ -369,7 +367,8 @@ public class GroupManager {
 
     public void initGroupAttributes(Promise promise, ReadableMap arguments) {
         String groupID = arguments.getString("groupID");
-        HashMap<String, String> attributes = CommonUtils.convertReadableMapToHashMap(arguments.getMap("attributes"));
+        HashMap<String, String> attributes = CommonUtils
+                .convertReadableMapToHashMap(CommonUtils.safeGetMap(arguments, "attributes"));
         V2TIMManager.getGroupManager().initGroupAttributes(groupID, attributes, new V2TIMCallback() {
             @Override
             public void onError(int i, String s) {
@@ -385,7 +384,8 @@ public class GroupManager {
 
     public void setGroupAttributes(Promise promise, ReadableMap arguments) {
         String groupID = arguments.getString("groupID");
-        HashMap<String, String> attributes = CommonUtils.convertReadableMapToHashMap(arguments.getMap("attributes"));
+        HashMap<String, String> attributes = CommonUtils
+                .convertReadableMapToHashMap(CommonUtils.safeGetMap(arguments, "attributes"));
         V2TIMManager.getGroupManager().setGroupAttributes(groupID, attributes, new V2TIMCallback() {
             @Override
             public void onError(int i, String s) {
@@ -476,7 +476,8 @@ public class GroupManager {
         String groupID = arguments.getString("groupID");
         String userID = arguments.getString("userID");
         String nameCard = arguments.getString("nameCard");
-        HashMap<String, String> customInfo = CommonUtils.convertReadableMapToHashMap(arguments.getMap("customInfo"));
+        HashMap<String, String> customInfo = CommonUtils
+                .convertReadableMapToHashMap(CommonUtils.safeGetMap(arguments, "customInfo"));
         V2TIMGroupMemberFullInfo info = new V2TIMGroupMemberFullInfo();
         if (userID != null) {
             info.setUserID(userID);
@@ -617,12 +618,10 @@ public class GroupManager {
     }
 
     public void acceptGroupApplication(Promise promise, ReadableMap arguments) {
-        final String reason = arguments.getString("reason");
-        final String groupID = arguments.getString("groupID");
-        final String fromUser = arguments.getString("fromUser");
-        final String toUser = arguments.getString("toUser");
-        final long addTime = arguments.getInt("addTime");
-        final int type = arguments.getInt("type");
+        final String reason = CommonUtils.safeGetString(arguments, "reason");
+        final String groupID = CommonUtils.safeGetString(arguments, "groupID");
+        final String fromUser = CommonUtils.safeGetString(arguments, "fromUser");
+        final String toUser = CommonUtils.safeGetString(arguments, "toUser");
         V2TIMManager.getGroupManager().getGroupApplicationList(new V2TIMValueCallback<V2TIMGroupApplicationResult>() {
             @Override
             public void onError(int i, String s) {
@@ -634,8 +633,7 @@ public class GroupManager {
                 for (int i = 0; i < v2TIMGroupApplicationResult.getGroupApplicationList().size(); i++) {
                     V2TIMGroupApplication application = v2TIMGroupApplicationResult.getGroupApplicationList().get(i);
                     if (application.getGroupID().equals(groupID) && application.getFromUser().equals(fromUser)
-                            && application.getToUser().equals(toUser) && application.getAddTime() == addTime
-                            && application.getType() == type) {
+                            && application.getToUser().equals(toUser)) {
                         V2TIMManager.getGroupManager().acceptGroupApplication(application, reason, new V2TIMCallback() {
                             @Override
                             public void onError(int i, String s) {
@@ -655,12 +653,12 @@ public class GroupManager {
     }
 
     public void refuseGroupApplication(Promise promise, ReadableMap arguments) {
-        final String reason = arguments.getString("reason");
-        final String groupID = arguments.getString("groupID");
-        final String fromUser = arguments.getString("fromUser");
-        final String toUser = arguments.getString("toUser");
-        final long addTime = arguments.getInt("addTime");
-        final int type = arguments.getInt("type");
+        final String reason = CommonUtils.safeGetString(arguments, "reason");
+        final String groupID = CommonUtils.safeGetString(arguments, "groupID");
+        final String fromUser = CommonUtils.safeGetString(arguments, "fromUser");
+        final String toUser = CommonUtils.safeGetString(arguments, "toUser");
+        // final long addTime = arguments.getInt("addTime");
+        // final int type = arguments.getInt("type");
         V2TIMManager.getGroupManager().getGroupApplicationList(new V2TIMValueCallback<V2TIMGroupApplicationResult>() {
             @Override
             public void onError(int i, String s) {
@@ -672,8 +670,7 @@ public class GroupManager {
                 for (int i = 0; i < v2TIMGroupApplicationResult.getGroupApplicationList().size(); i++) {
                     V2TIMGroupApplication application = v2TIMGroupApplicationResult.getGroupApplicationList().get(i);
                     if (application.getGroupID().equals(groupID) && application.getFromUser().equals(fromUser)
-                            && application.getToUser().equals(toUser) && application.getAddTime() == addTime
-                            && application.getType() == type) {
+                            && application.getToUser().equals(toUser)) {
 
                         V2TIMManager.getGroupManager().refuseGroupApplication(application, reason, new V2TIMCallback() {
                             @Override
@@ -709,7 +706,8 @@ public class GroupManager {
     }
 
     public void searchGroups(Promise promise, ReadableMap arguments) {
-        HashMap<String, Object> searchParam = CommonUtils.convertReadableMapToHashMap(arguments.getMap("searchParam"));
+        HashMap<String, Object> searchParam = CommonUtils
+                .convertReadableMapToHashMap(CommonUtils.safeGetMap(arguments, "searchParam"));
         V2TIMGroupSearchParam param = new V2TIMGroupSearchParam();
         if (searchParam.get("keywordList") != null) {
             param.setKeywordList((List<String>) searchParam.get("keywordList"));
@@ -738,7 +736,8 @@ public class GroupManager {
     }
 
     public void searchGroupMembers(Promise promise, ReadableMap arguments) {
-        HashMap<String, Object> param = CommonUtils.convertReadableMapToHashMap(arguments.getMap("param"));
+        HashMap<String, Object> param = CommonUtils
+                .convertReadableMapToHashMap(CommonUtils.safeGetMap(arguments, "param"));
         V2TIMGroupMemberSearchParam searchParam = new V2TIMGroupMemberSearchParam();
         if (param.get("keywordList") != null) {
             searchParam.setKeywordList((List<String>) param.get("keywordList"));

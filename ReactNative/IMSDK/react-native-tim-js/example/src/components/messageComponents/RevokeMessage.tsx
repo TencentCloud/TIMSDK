@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text} from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { TencentImSDKPlugin } from 'react-native-tim-js';
 import CommonButton from '../commonComponents/CommonButton';
 import SDKResponseView from '../sdkResponseView';
 import CheckBoxModalComponent from '../commonComponents/CheckboxModalComponent';
-
+import mystylesheet from '../../stylesheets';
 const RevokeMessageComponent = () => {
     const [res, setRes] = useState<any>({});
 
-    
+
 
     const [conversationID, setConversationID] = useState<string>('未选择')
     const [message, setMessage] = useState<string>('[]')
@@ -22,7 +22,7 @@ const RevokeMessageComponent = () => {
 
     const CodeComponent = () => {
         return res.code !== undefined ? (
-            <SDKResponseView codeString={JSON.stringify(res)} />
+            <SDKResponseView codeString={JSON.stringify(res, null, 2)} />
         ) : null;
     };
 
@@ -31,16 +31,16 @@ const RevokeMessageComponent = () => {
         return (
             <View style={styles.friendgroupview}>
                 <View style={styles.selectContainer}>
-                    <TouchableOpacity onPress={()=>setVisible(true)}>
-                        <View style={styles.buttonView}>
-                            <Text style={styles.buttonText}>选择消息</Text>
+                    <TouchableOpacity onPress={() => setVisible(true)}>
+                        <View style={mystylesheet.buttonView}>
+                            <Text style={mystylesheet.buttonText}>选择消息</Text>
                         </View>
                     </TouchableOpacity>
-                    <Text style={styles.selectedText}>{message}</Text>
+                    <Text style={mystylesheet.selectedText}>{message}</Text>
                 </View>
-                <CheckBoxModalComponent visible={visible} getVisible={setVisible} getUsername={setMessage} type={'message'} conversationID={conversationID}/>
+                <CheckBoxModalComponent visible={visible} getVisible={setVisible} getUsername={setMessage} type={'message'} conversationID={conversationID} />
             </View>
-            
+
         )
     }
 
@@ -49,16 +49,16 @@ const RevokeMessageComponent = () => {
         return (
             <View style={styles.friendgroupview}>
                 <View style={styles.selectContainer}>
-                    <TouchableOpacity onPress={()=>setVisible(true)}>
-                        <View style={styles.buttonView}>
-                            <Text style={styles.buttonText}>选择会话</Text>
+                    <TouchableOpacity onPress={() => setVisible(true)}>
+                        <View style={mystylesheet.buttonView}>
+                            <Text style={mystylesheet.buttonText}>选择会话</Text>
                         </View>
                     </TouchableOpacity>
-                    <Text style={styles.selectedText}>{conversationID}</Text>
+                    <Text style={mystylesheet.selectedText}>{conversationID}</Text>
                 </View>
-                <CheckBoxModalComponent visible={visible} getVisible={setVisible} getUsername={setConversationID} type={'conversation'}/>
+                <CheckBoxModalComponent visible={visible} getVisible={setVisible} getUsername={setConversationID} type={'conversation'} />
             </View>
-            
+
         )
     }
 
@@ -66,47 +66,24 @@ const RevokeMessageComponent = () => {
 
 
     return (
-        <>
+        <View style={{height: '100%'}}>
             <ConversationSelectComponent />
-            <MessageSelectComponent/>
+            <MessageSelectComponent />
             <CommonButton
                 handler={() => { revokeMessage() }}
                 content={'撤回消息'}
             ></CommonButton>
             <CodeComponent></CodeComponent>
-        </>
+        </View>
     );
 };
 
 export default RevokeMessageComponent;
 const styles = StyleSheet.create({
-    userInputcontainer: {
-        marginLeft: 10,
-        marginRight: 10,
-        justifyContent: 'center'
-    },
     selectContainer: {
-        flexDirection: 'row'
-    },
-    selectedText: {
+        flexDirection: 'row',
         marginLeft: 10,
-        fontSize: 14,
-        textAlignVertical: 'center',
-        lineHeight: 35
-    },
-    buttonView: {
-        backgroundColor: '#2F80ED',
-        borderRadius: 3,
-        width: 100,
-        height: 35,
-        marginLeft: 10
-    },
-    buttonText: {
-        color: '#FFFFFF',
-        fontSize: 14,
-        textAlign: 'center',
-        textAlignVertical: 'center',
-        lineHeight: 35
+        marginRight: 10
     },
     selectView: {
         flexDirection: 'row',
@@ -120,12 +97,4 @@ const styles = StyleSheet.create({
         marginRight: 10,
         marginTop: 10
     },
-    switchcontainer: {
-        flexDirection: 'row',
-        margin: 10
-    },
-    switchtext: {
-        lineHeight: 35,
-        marginRight: 8
-    }
 })

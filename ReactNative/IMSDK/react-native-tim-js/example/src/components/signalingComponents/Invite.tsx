@@ -5,6 +5,7 @@ import CommonButton from '../commonComponents/CommonButton';
 import SDKResponseView from '../sdkResponseView';
 import CheckBoxModalComponent from '../commonComponents/CheckboxModalComponent';
 import UserInputComponent from '../commonComponents/UserInputComponent';
+import mystylesheet from '../../stylesheets';
 const InviteComponent = () => {
   const [res, setRes] = useState<any>({});
   const [isonlineUserOnly, setIsonlineUserOnly] = useState<boolean>(false);
@@ -13,13 +14,13 @@ const InviteComponent = () => {
   const [inviteeID, setInviteeID] = useState<string>('未选择')
 
   const invite = async () => {
-    const res = await TencentImSDKPlugin.v2TIMManager.getSignalingManager().invite(inviteeID,input)
+    const res = await TencentImSDKPlugin.v2TIMManager.getSignalingManager().invite(inviteeID, input)
     setRes(res)
   };
 
   const CodeComponent = () => {
     return res.code !== undefined ? (
-      <SDKResponseView codeString={JSON.stringify(res)} />
+      <SDKResponseView codeString={JSON.stringify(res, null, 2)} />
     ) : null;
   };
 
@@ -29,24 +30,24 @@ const InviteComponent = () => {
       <>
         <View style={styles.selectContainer}>
           <TouchableOpacity onPress={() => { setVisible(true) }}>
-            <View style={styles.buttonView}>
-              <Text style={styles.buttonText}>选择好友</Text>
+            <View style={mystylesheet.buttonView}>
+              <Text style={mystylesheet.buttonText}>选择好友</Text>
             </View>
           </TouchableOpacity>
-          <Text style={styles.selectedText}>{inviteeID}</Text>
+          <Text style={mystylesheet.selectedText}>{inviteeID}</Text>
         </View>
         <CheckBoxModalComponent visible={visible} getVisible={setVisible} getUsername={setInviteeID} type={'friend'} />
       </>
     )
   }
   return (
-    <>
+    <View style={{height: '100%'}}>
       <View style={styles.container}>
         <UserInputComponent content={'发送文本'} placeholdercontent={'发送文本'} getContent={setInput} />
       </View>
-      <FriendSelectComponent/>
-      <View style={styles.switchcontainer}>
-        <Text style={styles.switchtext}>是否仅在线用户接受到消息</Text>
+      <FriendSelectComponent />
+      <View style={mystylesheet.switchcontainer}>
+        <Text style={mystylesheet.switchtext}>是否仅在线用户接受到消息</Text>
         <Switch
           trackColor={{ false: "#c0c0c0", true: "#81b0ff" }}
           thumbColor={isonlineUserOnly ? "#2F80ED" : "#f4f3f4"}
@@ -60,7 +61,7 @@ const InviteComponent = () => {
         content={'邀请'}
       ></CommonButton>
       <CodeComponent></CodeComponent>
-    </>
+    </View>
   );
 };
 
@@ -69,33 +70,10 @@ const styles = StyleSheet.create({
   container: {
     margin: 10
   },
-  userInputcontainer: {
-    marginLeft: 10,
-    marginRight: 10,
-    justifyContent: 'center'
-  },
   selectContainer: {
-    flexDirection: 'row'
-  },
-  selectedText: {
+    flexDirection: 'row',
     marginLeft: 10,
-    fontSize: 14,
-    textAlignVertical: 'center',
-    lineHeight: 35
-  },
-  buttonView: {
-    backgroundColor: '#2F80ED',
-    borderRadius: 3,
-    width: 100,
-    height: 35,
-    marginLeft: 10
-  },
-  buttonText: {
-    color: '#FFFFFF',
-    fontSize: 14,
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    lineHeight: 35
+    marginRight: 10
   },
   selectView: {
     flexDirection: 'row',
@@ -110,12 +88,4 @@ const styles = StyleSheet.create({
     marginRight: 10,
     marginTop: 10
   },
-  switchcontainer: {
-    flexDirection: 'row',
-    margin: 10
-  },
-  switchtext: {
-    lineHeight: 35,
-    marginRight: 8
-  }
 })

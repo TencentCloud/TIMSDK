@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { TencentImSDKPlugin } from 'react-native-tim-js';
 import SDKResponseView from '../sdkResponseView';
 const GetServerTimeComponent = () => {
@@ -12,14 +12,14 @@ const GetServerTimeComponent = () => {
     const CodeComponent = () => {
         return (
             res.code !== undefined?
-                (<SDKResponseView codeString={JSON.stringify(res)} />) : null
+                (<SDKResponseView codeString={JSON.stringify(res, null, 2)} />) : null
         );
     }
     return (
-        <>
+        <View style={{height: '100%'}}>
             <Text style={styles.detailButton} onPress={() => getServerTime()}>获得服务端时间</Text>
             <CodeComponent></CodeComponent>
-        </>
+        </View>
     )
 }
 
