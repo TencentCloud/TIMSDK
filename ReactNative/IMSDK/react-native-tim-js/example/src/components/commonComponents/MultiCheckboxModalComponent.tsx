@@ -67,7 +67,7 @@ const MultiCheckBoxModalComponent = (props) => {
     const getMessageList = async () => {
         const res = await TencentImSDKPlugin.v2TIMManager.getConversationManager().getConversationListByConversaionIds([conversationID])
         setRes(res)
-
+        console.log(res)
     }
     const closeHandler = (val: boolean) => {
         getVisible(val)
@@ -80,7 +80,7 @@ const MultiCheckBoxModalComponent = (props) => {
     }
 
     const getConversationList = async () => {
-        const res = await TencentImSDKPlugin.v2TIMManager.getConversationManager().getConversationList(20, '');
+        const res = await TencentImSDKPlugin.v2TIMManager.getConversationManager().getConversationList(20, '0');
         setRes(res);
     }
 
@@ -126,7 +126,7 @@ const MultiCheckBoxModalComponent = (props) => {
     }
     const renderItemselectmessage = ({ item }) => {
         return (
-            item.lastMessage?(
+            item.lastMessage?.msgID?(
                 <MultiCheckboxComponent text={item.lastMessage.msgID} getSelectedUser={getUsersHandler} type={'message'} />
             ):null         
         )

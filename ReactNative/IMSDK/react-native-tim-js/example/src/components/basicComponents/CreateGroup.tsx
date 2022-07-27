@@ -31,24 +31,24 @@ const CreateGroupComponent = () => {
     const CodeComponent = () => {
         return (
             res.code !== undefined ?
-                (<SDKResponseView codeString={JSON.stringify(res)}/>) : null
+                (<SDKResponseView codeString={JSON.stringify(res, null, 2)}/>) : null
         );
     }
     return (
-        <View>
-            <View style={styles.userInputcontainer}>
+        <View style={{height: '100%'}}>
+            <View style={mystylesheet.userInputcontainer}>
                 <UserInputComponent content='群ID' placeholdercontent={'选填（如填，则自定义群ID）'} getContent={setGroupID}/>
             </View>
-            <View style={styles.userInputcontainer}>
+            <View style={mystylesheet.userInputcontainer}>
                 <UserInputComponent content='群名称' placeholdercontent={'群名称'} getContent={setGroupName}/>
             </View>
-            <View style={styles.userInputcontainer}>
+            <View style={mystylesheet.userInputcontainer}>
                 <View style={mystylesheet.itemContainergray}>
                     <Image style={mystylesheet.userIcon} source={require('../../icon/persongray.png')} />
                     <View style={styles.groupSelectView}>
                         <TouchableOpacity onPress={() => {setVisible(true)}}>
                             <View style={styles.buttonView}>
-                                <Text style={styles.buttonText}>选择群类型</Text>
+                                <Text style={mystylesheet.buttonText}>选择群类型</Text>
                             </View>
                         </TouchableOpacity>
                         <Text style={styles.groupSelectText}>{`已选：${groupType}`}</Text>
@@ -65,12 +65,6 @@ const CreateGroupComponent = () => {
 export default CreateGroupComponent
 
 const styles = StyleSheet.create({
-    userInputcontainer: {
-        margin: 10,
-        marginBottom: 0,
-        marginTop: 1,
-        justifyContent: 'center'
-    },
     buttonView: {
         backgroundColor: '#2F80ED',
         borderRadius: 3,
@@ -78,13 +72,6 @@ const styles = StyleSheet.create({
         height: 35,
         marginTop: -5,
         marginRight: 10
-    },
-    buttonText: {
-        color: '#FFFFFF',
-        fontSize: 14,
-        textAlign: 'center',
-        textAlignVertical: 'center',
-        lineHeight: 35
     },
     groupSelectView: {
         flexDirection: 'row',

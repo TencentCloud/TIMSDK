@@ -7,6 +7,7 @@ import UserInputComponent from '../commonComponents/UserInputComponent';
 import CommonButton from '../commonComponents/CommonButton';
 import MultiCheckBoxModalComponent from '../commonComponents/MultiCheckboxModalComponent';
 import SDKResponseView from '../sdkResponseView';
+import mystylesheet from '../../stylesheets';
 const CreateFriendGroupComponent = () => {
     const [visible, setVisible] = useState<boolean>(false)
     const [input,setInput]=useState<string>('')
@@ -26,28 +27,28 @@ const CreateFriendGroupComponent = () => {
     const CodeComponent = () => {
         return (
             res.code !== undefined?
-                (<SDKResponseView codeString={JSON.stringify(res)} />) : null
+                (<SDKResponseView codeString={JSON.stringify(res, null, 2)} />) : null
         );
     }
 
 
     return (
-        <>
+        <View style={{height: '100%'}}>
             <View style={styles.container}>
                 <UserInputComponent content={'分组名'} placeholdercontent={'分组名'} getContent={setInput}/>
             </View>
             <View style={styles.selectContainer}>
                 <TouchableOpacity onPress={() => { setVisible(true) }}>
                     <View style={styles.buttonView}>
-                        <Text style={styles.buttonText}>选择好友</Text>
+                        <Text style={mystylesheet.buttonText}>选择好友</Text>
                     </View>
                 </TouchableOpacity>
-                <Text style={styles.selectedText}>{userName}</Text>
+                <Text style={mystylesheet.selectedText}>{userName}</Text>
             </View>
             <MultiCheckBoxModalComponent visible={visible} getVisible={setVisible} getUsername={getUsersHandler} type={'friend'} />
             <CommonButton handler={() => createFriendGroup()} content={'创建好友分组'}></CommonButton>
             <CodeComponent></CodeComponent>
-        </>
+        </View>
     )
 }
 
@@ -64,21 +65,8 @@ const styles = StyleSheet.create({
         height: 35,
         marginLeft: 10
     },
-    buttonText: {
-        color: '#FFFFFF',
-        fontSize: 14,
-        textAlign: 'center',
-        textAlignVertical: 'center',
-        lineHeight: 35
-    },
     selectContainer: {
         flexDirection: 'row'
-    },
-    selectedText: {
-        marginLeft: 10,
-        fontSize: 14,
-        textAlignVertical: 'center',
-        lineHeight: 35
     }
 })
 

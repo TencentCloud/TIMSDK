@@ -10,6 +10,7 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.bridge.ReadableType;
 import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.NoSuchKeyException;
 
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMConversationResult;
@@ -737,7 +738,7 @@ public class CommonUtils {
                     hashMap.put(key, map.getBoolean(key));
                     break;
                 case Number:
-                    hashMap.put(key, map.getDouble(key));
+                    hashMap.put(key, map.getInt(key));
                     break;
                 case String:
                     hashMap.put(key, map.getString(key));
@@ -1309,5 +1310,37 @@ public class CommonUtils {
         rinfo.put("friendIDList", info.getFriendIDList());
         rinfo.put("name", info.getName());
         return rinfo;
+    }
+
+    public static @Nullable Integer safeGetInt(ReadableMap arguments, String key) {
+        try {
+            return arguments.getInt(key);
+        } catch (NoSuchKeyException ex) {
+            return null;
+        }
+    }
+
+    public static @Nullable String safeGetString(ReadableMap arguments, String key) {
+        try {
+            return arguments.getString(key);
+        } catch (NoSuchKeyException ex) {
+            return null;
+        }
+    }
+
+    public static @Nullable ReadableMap safeGetMap(ReadableMap arguments, String key) {
+        try {
+            return arguments.getMap(key);
+        } catch (NoSuchKeyException ex) {
+            return null;
+        }
+    }
+
+    public static @Nullable Boolean safeGetBoolean(ReadableMap arguments, String key) {
+        try {
+            return arguments.getBoolean(key);
+        } catch (NoSuchKeyException ex) {
+            return null;
+        }
     }
 }

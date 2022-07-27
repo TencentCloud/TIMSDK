@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { TencentImSDKPlugin } from 'react-native-tim-js';
 import CommonButton from '../commonComponents/CommonButton';
-import CallBackContext from '../../useContext';
+import {CallBackContext} from '../../useContext';
 
 const AddEventListenerComponent = () => {
     const { setCallbackData } = useContext(CallBackContext)

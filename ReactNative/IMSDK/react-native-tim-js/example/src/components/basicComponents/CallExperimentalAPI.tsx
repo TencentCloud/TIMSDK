@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 
-import { View, StyleSheet } from 'react-native';
+import { View} from 'react-native';
 import { TencentImSDKPlugin } from 'react-native-tim-js';
 import CommonButton from '../commonComponents/CommonButton';
 import SDKResponseView from '../sdkResponseView';
 import UserInputComponent from '../commonComponents/UserInputComponent';
-
+import mystylesheet from '../../stylesheets';
 const CallExperimentalAPIComponent = () => {
     const [res, setRes] = useState<any>({});
     const [userName, setUserName] = useState<string>('');
@@ -20,12 +20,12 @@ const CallExperimentalAPIComponent = () => {
 
     const CodeComponent = () => {
         return res.code !== undefined ? (
-            <SDKResponseView codeString={JSON.stringify(res)} />
+            <SDKResponseView codeString={JSON.stringify(res, null, 2)} />
         ) : null;
     };
     return (
-        <>
-            <View style={styles.userInputcontainer}>
+        <View style={{height: '100%'}}>
+            <View style={mystylesheet.userInputcontainer}>
                 <UserInputComponent
                     content="请输入用户名"
                     placeholdercontent="请输入用户名"
@@ -39,16 +39,9 @@ const CallExperimentalAPIComponent = () => {
                 content={'调用实验性接口'}
             ></CommonButton>
             <CodeComponent></CodeComponent>
-        </>
+        </View>
     );
 };
 
 export default CallExperimentalAPIComponent;
-const styles = StyleSheet.create({
-    userInputcontainer: {
-        margin: 10,
-        marginBottom: 0,
-        marginTop: 1,
-        justifyContent: 'center',
-    },
-});
+

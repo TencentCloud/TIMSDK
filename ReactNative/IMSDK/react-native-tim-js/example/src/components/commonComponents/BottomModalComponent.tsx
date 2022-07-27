@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Modal, TouchableOpacity, FlatList, Image } from 'react-native';
+import { StyleSheet, View, Modal, TouchableOpacity, FlatList, Image, TouchableWithoutFeedback } from 'react-native';
 import { Text } from 'react-native-paper';
 
 
@@ -88,7 +88,7 @@ const DATA = {
                 name: 'V2TIM_PRIORITY_HIGH',
             },
             {
-                id: 2,
+                id: 0,
                 name: 'V2TIM_PRIORITY_DEFAULT',
             },
             {
@@ -96,29 +96,8 @@ const DATA = {
                 name: 'V2TIM_PRIORITY_LOW',
             },
             {
-                id: 4,
-                name: 'V2TIM_PRIORITY_NORMAL',
-            }
-        ]
-    },
-    prioritNumberSelectData: {
-        title: '优先级',
-        data: [
-            {
-                id: 0,
-                name: '0',
-            },
-            {
-                id: 1,
-                name: '1',
-            },
-            {
                 id: 2,
-                name: '2',
-            },
-            {
-                id: 3,
-                name: '3',
+                name: 'V2TIM_PRIORITY_NORMAL',
             }
         ]
     },
@@ -126,7 +105,7 @@ const DATA = {
         title: '好友类型',
         data: [
             {
-                id: 0,
+                id: 2,
                 name: '双向好友',
             },
             {
@@ -139,16 +118,16 @@ const DATA = {
         title: '请求类型',
         data: [
             {
-                id: 0,
+                id: 1,
                 name: '别人发给我的加好友请求',
             },
             {
-                id: 1,
+                id: 2,
                 name: '我发给别人的加好友请求',
             }
         ]
     },
-    groupTypeSelectData:{
+    groupTypeSelectData: {
         title: '选择加群类型',
         data: [
             {
@@ -165,28 +144,28 @@ const DATA = {
             }
         ]
     },
-    groupPrioritySelectData:{
+    groupPrioritySelectData: {
         title: 'filter',
         data: [
             {
-                id: 3,
+                id: 2,
                 name: 'V2TIM_GROUP_MEMBER_FILTER_ADMIN',
             },
             {
-                id: 2,
+                id: 0,
                 name: 'V2TIM_GROUP_MEMBER_FILTER_ALL',
             },
             {
-                id: 1,
+                id: 4,
                 name: 'V2TIM_GROUP_MEMBER_FILTER_COMMON',
             },
             {
-                id: 0,
+                id: 1,
                 name: 'V2TIM_GROUP_MEMBER_FILTER_OWNER'
             }
         ]
     },
-    roleSelectData:{
+    roleSelectData: {
         title: '群角色',
         data: [
             {
@@ -203,12 +182,12 @@ const DATA = {
             },
             {
                 id: 0,
-                name: 'V2TIM_GROUP_MEMBER_UNDEFINED'
+                name: ' V2TIM_GROUP_MEMBER_UNDEFINED'
             }
         ]
     },
-    historytypeSelectData:{
-        title:'type',
+    historytypeSelectData: {
+        title: 'type',
         data: [
             {
                 id: 1,
@@ -255,10 +234,6 @@ const BottomModalComponent = (props) => {
             case 'priorityselect':
                 setData(DATA.prioritySelectData.data)
                 setTitle(DATA.prioritySelectData.title)
-                break;
-            case 'prioritynumberselect':
-                setData(DATA.prioritNumberSelectData.data)
-                setTitle(DATA.prioritNumberSelectData.title)
                 break;
             case 'friendpriorityselect':
                 setData(DATA.friendPrioritySelectData.data)
@@ -310,36 +285,14 @@ const BottomModalComponent = (props) => {
             case 'imageselect':
                 getSelected(selected.url)
                 break;
-            case 'priorityselect':
-                getSelected(selected)
-                break;
             case 'prioritynumberselect':
                 getSelected(selected.id)
                 break;
-            case 'friendpriorityselect':
-                getSelected(selected)
-                break;
-            case 'deletefriendtypeselect':
-                getSelected(selected)
-                break;
-            case 'refusefriendselect':
-                getSelected(selected)
-                break;
-            case 'grouptypeselect':
-                getSelected(selected)
-                break;
-            case 'grouppriorityselect':
-                getSelected(selected)
-                break;
-            case 'roleselect':
-                getSelected(selected)
-                break;
-            case 'historytypeselect':
-                getSelected(selected)
-                break;
             default:
+                getSelected(selected)
                 break;
         }
+
         getVisible(false)
     }
     const Item = ({ item }) => {
@@ -367,6 +320,12 @@ const BottomModalComponent = (props) => {
             transparent={true}
         >
             <View style={styles.container}>
+                <TouchableWithoutFeedback
+                    onPress={() => { getVisible(false) }}
+                >
+                    <View style={styles.other}>
+                    </View>
+                </TouchableWithoutFeedback>
                 <View style={styles.showContainer}>
                     <Text style={styles.title}>{title}</Text>
                     <FlatList
@@ -404,12 +363,14 @@ const styles = StyleSheet.create({
     },
     flatList: {
         marginBottom: 5,
-        marginTop: 5
+        marginTop: 5,
+        width: '100%'
     },
     renderItem: {
         marginTop: 15,
         marginBottom: 15,
         alignItems: 'center',
+        width: '100%'
     },
     renderItemText: {
         fontSize: 19,
@@ -427,5 +388,8 @@ const styles = StyleSheet.create({
         fontSize: 19,
         fontWeight: '500',
         color: '#2F80ED'
+    },
+    other: {
+        flex: 1
     }
 })

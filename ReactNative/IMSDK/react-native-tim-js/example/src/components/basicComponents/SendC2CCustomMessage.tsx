@@ -22,12 +22,12 @@ const SendC2CCustomMessageComponent = () => {
     const CodeComponent = () => {
         return (
             res.code !== undefined?
-                (<SDKResponseView codeString={JSON.stringify(res)} />) : null
+                (<SDKResponseView codeString={JSON.stringify(res, null, 2)} />) : null
         );
     }
 
     return (
-        <>
+        <View style={{height: '100%'}}>
             <View style={styles.container}>
                 <UserInputComponent content={'自定义数据'} placeholdercontent={'自定义数据'} getContent={setInput}/>
             </View>
@@ -42,7 +42,7 @@ const SendC2CCustomMessageComponent = () => {
             <CheckBoxModalComponent visible={visible} getVisible={setVisible} getUsername={setUserName} type={'friend'}/>
             <CommonButton handler={() => sendC2CCustomMessage()} content={'发送C2C自定义消息'}></CommonButton>
             <CodeComponent></CodeComponent>
-        </>
+        </View>
     )
 }
 

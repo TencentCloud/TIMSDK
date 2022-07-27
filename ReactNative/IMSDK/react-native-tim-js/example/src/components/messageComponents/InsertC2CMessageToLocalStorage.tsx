@@ -4,7 +4,7 @@ import { TencentImSDKPlugin } from 'react-native-tim-js';
 import CommonButton from '../commonComponents/CommonButton';
 import SDKResponseView from '../sdkResponseView';
 import CheckBoxModalComponent from '../commonComponents/CheckboxModalComponent';
-
+import mystylesheet from '../../stylesheets';
 const InsertC2CMessageToLocalStorageComponent = () => {
     const [userID, setUserID] = useState<string>('未选择')
     const [senderID, setSenderID] = useState<string>('未选择')
@@ -17,7 +17,7 @@ const InsertC2CMessageToLocalStorageComponent = () => {
 
     const CodeComponent = () => {
         return res.code !== undefined ? (
-            <SDKResponseView codeString={JSON.stringify(res)} />
+            <SDKResponseView codeString={JSON.stringify(res, null, 2)} />
         ) : null;
     };
     const FriendComponent = () => {
@@ -27,11 +27,11 @@ const InsertC2CMessageToLocalStorageComponent = () => {
             <View style={styles.friendgroupview}>
                 <View style={styles.selectContainer}>
                     <TouchableOpacity onPress={() => { setVisible(true) }}>
-                        <View style={styles.buttonView}>
-                            <Text style={styles.buttonText}>选择好友</Text>
+                        <View style={mystylesheet.buttonView}>
+                            <Text style={mystylesheet.buttonText}>选择好友</Text>
                         </View>
                     </TouchableOpacity>
-                    <Text style={styles.selectedText}>{`消息接收者：${userID}`}</Text>
+                    <Text style={mystylesheet.selectedText}>{`消息接收者：${userID}`}</Text>
                 </View>
                 <CheckBoxModalComponent visible={visible} getVisible={setVisible} getUsername={setUserID} type={'friend'} />
             </View>
@@ -46,11 +46,11 @@ const InsertC2CMessageToLocalStorageComponent = () => {
             <View style={styles.friendgroupview}>
                 <View style={styles.selectContainer}>
                     <TouchableOpacity onPress={() => { setVisible(true) }}>
-                        <View style={styles.buttonView}>
-                            <Text style={styles.buttonText}>选择好友</Text>
+                        <View style={mystylesheet.buttonView}>
+                            <Text style={mystylesheet.buttonText}>选择好友</Text>
                         </View>
                     </TouchableOpacity>
-                    <Text style={styles.selectedText}>{`消息发送者：${senderID}`}</Text>
+                    <Text style={mystylesheet.selectedText}>{`消息发送者：${senderID}`}</Text>
                 </View>
                 <CheckBoxModalComponent visible={visible} getVisible={setVisible} getUsername={setSenderID} type={'friend'} />
             </View>
@@ -60,7 +60,7 @@ const InsertC2CMessageToLocalStorageComponent = () => {
 
 
     return (
-        <>
+        <View style={{height: '100%'}}>
             <FriendComponent/>
             <SenderComponent/>
             <CommonButton
@@ -68,7 +68,7 @@ const InsertC2CMessageToLocalStorageComponent = () => {
                 content={'向c2c会话中插入一条本地信息'}
             ></CommonButton>
             <CodeComponent></CodeComponent>
-        </>
+        </View>
     );
 };
 
@@ -78,31 +78,12 @@ const styles = StyleSheet.create({
     container: {
         marginLeft: 10,
     },
-    buttonView: {
-        backgroundColor: '#2F80ED',
-        borderRadius: 3,
-        width: 100,
-        height: 35,
-    },
-    buttonText: {
-        color: '#FFFFFF',
-        fontSize: 14,
-        textAlign: 'center',
-        textAlignVertical: 'center',
-        lineHeight: 35
-    },
     selectView: {
         flexDirection: 'row',
     },
     selectContainer: {
         flexDirection: 'row',
         marginTop: 10
-    },
-    selectedText: {
-        marginLeft: 10,
-        fontSize: 14,
-        textAlignVertical: 'center',
-        lineHeight: 35
     },
     friendgroupview: {
         marginLeft: 10,

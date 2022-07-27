@@ -6,10 +6,11 @@ import {
     Text,
     SectionList,
     TouchableOpacity,
-    Image
+    Image,
+    Alert
 } from 'react-native';
-import ActionButton from 'react-native-action-button';
-
+import ActionButton from 'react-native-action-button-warnings-fixed';
+import storage from '../storage/Storage';
 
 const DATA = [
     {
@@ -159,7 +160,23 @@ const DATA = [
             {
                 id: 'searchGroupMembers',
                 name: '搜索群成员'
-            }
+            },
+            {
+                id: 'getGroupApplicationList',
+                name: '获取群申请列表'
+            },
+            {
+                id: 'refuseGroupApplication',
+                name: '拒绝群申请'
+            },
+            {
+                id: 'acceptGroupApplication',
+                name: '同意群申请'
+            },
+            {
+                id: 'GroupAttributes',
+                name: '直播群属性'
+            },
         ],
     },
     {
@@ -426,10 +443,10 @@ const DATA = [
                 id: 'getSignallingInfo',
                 name: '获取信令信息',
             },
-            {
-                id: 'addInvitedSignaling',
-                name: '添加邀请信令',
-            },
+            // {
+            //     id: 'addInvitedSignaling',
+            //     name: '添加邀请信令',
+            // },
         ],
     },
 ];
@@ -440,11 +457,32 @@ const HomeScreen = (props) => {
     const onRouteTo = (id: String, name: String) => {
         props.navigation.navigate('Details', { idStr: id, nameStr: name });
     };
-
+    const itemPressHandle = (id: String, name: String)=>{
+        Promise.all([
+            storage.load({ key: 'userID' }),
+            storage.load({ key: 'secret' }),
+            storage.load({ key: 'sdkappid' }),
+        ]).then(() => {
+            onRouteTo(id, name)
+        }).catch(() => {
+            Alert.alert(
+                '提示',
+                '请先完成信息配置',
+                [
+                    {
+                        text:'OK',
+                        onPress:()=>{
+                            props.navigation.navigate('User')
+                        }
+                    }
+                ]
+            ) 
+        });     
+    }
     const Item = ({ name, id }: { name: String; id: String }) => {
         return (
             <TouchableOpacity
-                onPress={() => onRouteTo(id, name)}
+                onPress={() => itemPressHandle(id, name)}
                 style={styles.item}
             >
                 <Text style={styles.itemTitle}>{`${id} ${name}`}</Text>

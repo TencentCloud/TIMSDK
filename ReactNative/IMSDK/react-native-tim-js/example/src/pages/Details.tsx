@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { StyleSheet, View, Image } from 'react-native';
-import ActionButton from 'react-native-action-button';
+import ActionButton from 'react-native-action-button-warnings-fixed';
 import InitSDKComponent from '../components/basicComponents/InitSDKComponent';
 import UninitSDKComponent from '../components/basicComponents/UninitSDKComponent';
 import LoginComponent from '../components/basicComponents/LoginComponent';
@@ -95,6 +95,10 @@ import { GetTotalUnreadMessageCount } from '../components/conversationComponents
 import { GetConversation } from '../components/conversationComponents/getConversation';
 import { DeleteConversation } from '../components/conversationComponents/deleteConversation';
 import { SetConversationDraft } from '../components/conversationComponents/setConversationDraft';
+import GetGroupApplicationListComponent from '../components/groupComponents/GetGroupApplicationList';
+import RefuseGroupApplicationComponent from '../components/groupComponents/RefuseGroupApplication';
+import AcceptGroupApplicationComponent from '../components/groupComponents/AcceptGroupApplication';
+import InitGroupAttributesComponent from '../components/groupComponents/InitGroupAttributes';
 const DetailsScreen = ({ navigation }) => {
     const id = navigation.state.params.idStr;
     const renderIcon = () => {
@@ -293,8 +297,14 @@ const DetailsScreen = ({ navigation }) => {
                             return <InviteInGroupComponent />;
                         case 'getSignallingInfo':
                             return <GetSignallingInfoComponent />;
-                        case 'addInvitedSignaling':
-                            return <></>;
+                        case 'getGroupApplicationList':
+                            return <GetGroupApplicationListComponent/>;
+                        case 'refuseGroupApplication':
+                            return <RefuseGroupApplicationComponent/>;
+                        case 'acceptGroupApplication':
+                            return <AcceptGroupApplicationComponent/>;
+                        case 'GroupAttributes':
+                            return <InitGroupAttributesComponent/>;
                         default:
                             return <></>;
                     }

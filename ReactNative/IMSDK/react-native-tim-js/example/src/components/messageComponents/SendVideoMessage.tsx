@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Platform } from 'react-native';
 import {
     View,
     StyleSheet,
@@ -8,20 +9,20 @@ import {
     Image,
 } from 'react-native';
 import { TencentImSDKPlugin } from 'react-native-tim-js';
-import DocumentPicker, { isInProgress } from 'react-native-document-picker';
-import { launchImageLibrary } from 'react-native-image-picker';
-// import * as VideoThumbnails from 'expo-video-thumbnails';
+import DocumentPicker, { isInProgress,types } from 'react-native-document-picker';
 import CommonButton from '../commonComponents/CommonButton';
 import SDKResponseView from '../sdkResponseView';
 import CheckBoxModalComponent from '../commonComponents/CheckboxModalComponent';
 import BottomModalComponent from '../commonComponents/BottomModalComponent';
 import mystylesheet from '../../stylesheets';
+import { createThumbnail } from "react-native-create-thumbnail";
 
 const SendVideoMessageComponent = () => {
     const [res, setRes] = useState<any>({});
     const [userName, setUserName] = useState<string>('未选择');
     const [groupName, setGroupName] = useState<string>('未选择');
-    const [priority, setPriority] = useState<string>('');
+    const [priority, setPriority] = useState<string>('V2TIM_PRIORITY_DEFAULT')
+    const [priorityEnum,setPriorityEnum] = useState<number>(0)
     const [isonlineUserOnly, setIsonlineUserOnly] = useState(false);
     const [isExcludedFromUnreadCount, setIsExcludedFromUnreadCount] =
         useState(false);
@@ -30,7 +31,7 @@ const SendVideoMessageComponent = () => {
     const unreadCounttoggle = () =>
         setIsExcludedFromUnreadCount((previousState) => !previousState);
     const [videourl, setVideourl] = useState<string | null>();
-    const [snapShotPath] = useState<string>();
+    const [snapShotPath, setSnapshotPath] = useState<string>();
 
     const sendVideoMessage = async () => {
         if (videourl) {
@@ -55,6 +56,7 @@ const SendVideoMessageComponent = () => {
                         groupID: groupID,
                         onlineUserOnly: isonlineUserOnly,
                         isExcludedFromUnreadCount: isExcludedFromUnreadCount,
+                        priority:priorityEnum
                     });
                 setRes(res);
             }
@@ -63,7 +65,7 @@ const SendVideoMessageComponent = () => {
 
     const CodeComponent = () => {
         return res.code !== undefined ? (
-            <SDKResponseView codeString={JSON.stringify(res)} />
+            <SDKResponseView codeString={JSON.stringify(res, null, 2)} />
         ) : null;
     };
 
@@ -76,7 +78,6 @@ const SendVideoMessageComponent = () => {
     const VideoComponent = () => {
         const handleError = (e: unknown) => {
             if (DocumentPicker.isCancel(e)) {
-                console.warn('cancelled');
             } else if (isInProgress(e)) {
                 console.log(
                     'multiple pickers were opened, only the last will be considered'
@@ -87,19 +88,25 @@ const SendVideoMessageComponent = () => {
         };
         const selectImageHandle = async () => {
             try {
-                const pickerRes = await launchImageLibrary({
-                    mediaType: 'video',
-                });
-                if (pickerRes.assets) {
-                    setVideourl(pickerRes.assets[0]?.uri);
-                    // setVideoName(pickerRes.assets[0]?.fileName);
-                    if (pickerRes.assets[0]?.uri) {
-                        // const res = await VideoThumbnails.getThumbnailAsync(
-                        //     pickerRes.assets[0]?.uri
-                        // );
-                        // console.log(res);
-                        // setSnapshotPath(res.uri);
+                const pickerRes = await DocumentPicker.pickSingle({
+                    presentationStyle: 'fullScreen',
+                    copyTo: 'documentDirectory',
+                    type: types.video
+                })
+                if(Platform.OS==='android'){
+                    if ([pickerRes][0].fileCopyUri) {
+                        const uri = decodeURIComponent([pickerRes][0].fileCopyUri!)
+                        setVideourl(uri.replace(/file:\//, ''))
                     }
+                }else{
+                    setVideourl([pickerRes][0].uri)
+                }
+                if ([pickerRes][0].uri) {
+                    createThumbnail({
+                        url:[pickerRes][0].uri,
+                    }).then(response => {
+                        setSnapshotPath(response.path);
+                    }).catch(err => console.log({ err }))
                 }
             } catch (e) {
                 handleError(e);
@@ -110,8 +117,8 @@ const SendVideoMessageComponent = () => {
             <View style={styles.friendgroupview}>
                 <View style={styles.selectContainer}>
                     <TouchableOpacity onPress={selectImageHandle}>
-                        <View style={styles.buttonView}>
-                            <Text style={styles.buttonText}>选择视频</Text>
+                        <View style={mystylesheet.buttonView}>
+                            <Text style={mystylesheet.buttonText}>选择视频</Text>
                         </View>
                     </TouchableOpacity>
                     <ImgComponent />
@@ -131,11 +138,11 @@ const SendVideoMessageComponent = () => {
                             setVisible(true);
                         }}
                     >
-                        <View style={styles.buttonView}>
-                            <Text style={styles.buttonText}>选择好友</Text>
+                        <View style={mystylesheet.buttonView}>
+                            <Text style={mystylesheet.buttonText}>选择好友</Text>
                         </View>
                     </TouchableOpacity>
-                    <Text style={styles.selectedText}>{userName}</Text>
+                    <Text style={mystylesheet.selectedText}>{userName}</Text>
                 </View>
                 <CheckBoxModalComponent
                     visible={visible}
@@ -158,11 +165,11 @@ const SendVideoMessageComponent = () => {
                             setVisible(true);
                         }}
                     >
-                        <View style={styles.buttonView}>
-                            <Text style={styles.buttonText}>选择群组</Text>
+                        <View style={mystylesheet.buttonView}>
+                            <Text style={mystylesheet.buttonText}>选择群组</Text>
                         </View>
                     </TouchableOpacity>
-                    <Text style={styles.selectedText}>{groupName}</Text>
+                    <Text style={mystylesheet.selectedText}>{groupName}</Text>
                 </View>
                 <CheckBoxModalComponent
                     visible={visible}
@@ -178,10 +185,11 @@ const SendVideoMessageComponent = () => {
         const [visible, setVisible] = useState(false);
         const getSelectedHandler = (selected) => {
             setPriority(selected.name);
+            setPriorityEnum(selected.id)
         };
         return (
             <>
-                <View style={styles.userInputcontainer}>
+                <View style={mystylesheet.userInputcontainer}>
                     <View style={mystylesheet.itemContainergray}>
                         <View style={styles.selectView}>
                             <TouchableOpacity
@@ -189,8 +197,8 @@ const SendVideoMessageComponent = () => {
                                     setVisible(true);
                                 }}
                             >
-                                <View style={styles.buttonView}>
-                                    <Text style={styles.buttonText}>
+                                <View style={mystylesheet.buttonView}>
+                                    <Text style={mystylesheet.buttonText}>
                                         选择优先级
                                     </Text>
                                 </View>
@@ -212,13 +220,13 @@ const SendVideoMessageComponent = () => {
     };
 
     return (
-        <>
+        <View style={{height: '100%'}}>
             <VideoComponent />
             <FriendComponent />
             <GroupComponent />
             <PriorityComponent />
-            <View style={styles.switchcontainer}>
-                <Text style={styles.switchtext}>是否仅在线用户接受到消息</Text>
+            <View style={mystylesheet.switchcontainer}>
+                <Text style={mystylesheet.switchtext}>是否仅在线用户接受到消息</Text>
                 <Switch
                     trackColor={{ false: '#c0c0c0', true: '#81b0ff' }}
                     thumbColor={isonlineUserOnly ? '#2F80ED' : '#f4f3f4'}
@@ -227,8 +235,8 @@ const SendVideoMessageComponent = () => {
                     value={isonlineUserOnly}
                 />
             </View>
-            <View style={styles.switchcontainer}>
-                <Text style={styles.switchtext}>发送消息是否不计入未读数</Text>
+            <View style={mystylesheet.switchcontainer}>
+                <Text style={mystylesheet.switchtext}>发送消息是否不计入未读数</Text>
                 <Switch
                     trackColor={{ false: '#c0c0c0', true: '#81b0ff' }}
                     thumbColor={
@@ -246,40 +254,15 @@ const SendVideoMessageComponent = () => {
                 content={'发送视频消息'}
             ></CommonButton>
             <CodeComponent></CodeComponent>
-        </>
+        </View>
     );
 };
 
 export default SendVideoMessageComponent;
 
 const styles = StyleSheet.create({
-    userInputcontainer: {
-        marginLeft: 10,
-        marginRight: 10,
-        justifyContent: 'center',
-    },
     selectContainer: {
         flexDirection: 'row',
-    },
-    selectedText: {
-        marginLeft: 10,
-        fontSize: 14,
-        textAlignVertical: 'center',
-        lineHeight: 35,
-    },
-    buttonView: {
-        backgroundColor: '#2F80ED',
-        borderRadius: 3,
-        width: 100,
-        height: 35,
-        marginLeft: 10,
-    },
-    buttonText: {
-        color: '#FFFFFF',
-        fontSize: 14,
-        textAlign: 'center',
-        textAlignVertical: 'center',
-        lineHeight: 35,
     },
     selectView: {
         flexDirection: 'row',
@@ -293,14 +276,6 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         marginRight: 10,
         marginTop: 10,
-    },
-    switchcontainer: {
-        flexDirection: 'row',
-        margin: 10,
-    },
-    switchtext: {
-        lineHeight: 35,
-        marginRight: 8,
     },
     selectedimg: {
         width: 35,

@@ -23,13 +23,13 @@ const GenderSelectComponent = (props) => {
     }
     return (
         <>
-            <View style={styles.userInputcontainer}>
+            <View style={mystylesheet.userInputcontainer}>
                 <View style={mystylesheet.itemContainergray}>
                     <Image style={mystylesheet.userIcon} source={require('../../icon/persongray.png')} />
                     <View style={styles.selectView}>
                         <TouchableOpacity onPress={() => { setVisible(true) }}>
                             <View style={styles.buttonView}>
-                                <Text style={styles.buttonText}>选择性别</Text>
+                                <Text style={mystylesheet.buttonText}>选择性别</Text>
                             </View>
                         </TouchableOpacity>
                         <Text style={styles.selectText}>{`已选：${gender}`}</Text>
@@ -55,13 +55,13 @@ const FriendSelectComponent = (props) => {
     }
     return (
         <>
-            <View style={styles.userInputcontainer}>
+            <View style={mystylesheet.userInputcontainer}>
                 <View style={mystylesheet.itemContainergray}>
                     <Image style={mystylesheet.userIcon} source={require('../../icon/persongray.png')} />
                     <View style={styles.selectView}>
                         <TouchableOpacity onPress={() => { setVisible(true) }}>
                             <View style={styles.buttonView}>
-                                <Text style={styles.buttonText}>加好友验证方式</Text>
+                                <Text style={mystylesheet.buttonText}>加好友验证方式</Text>
                             </View>
                         </TouchableOpacity>
                         <Text style={styles.selectText}>{`已选：${method}`}</Text>
@@ -82,13 +82,13 @@ const ImageSelectComponent = (props) => {
     }
     return (
         <>
-            <View style={styles.userInputcontainer}>
+            <View style={mystylesheet.userInputcontainer}>
                 <View style={mystylesheet.itemContainergray}>
                     <Image style={mystylesheet.userIcon} source={require('../../icon/persongray.png')} />
                     <View style={styles.selectView}>
                         <TouchableOpacity onPress={() => { setVisible(true) }}>
                             <View style={styles.buttonView}>
-                                <Text style={styles.buttonText}>选择头像</Text>
+                                <Text style={mystylesheet.buttonText}>选择头像</Text>
                             </View>
                         </TouchableOpacity>
                         <Image style={styles.faceUrl} source={{ uri: imageurl }} />
@@ -142,14 +142,14 @@ const AddFieldsComponent = () => {
     }
     return (
         <>
-            <View style={styles.userInputcontainer}>
+            <View style={mystylesheet.userInputcontainer}>
                 <View style={styles.containerGray}>
                     <View style={styles.addFieldsButtonContainer}>
                         <Image style={styles.userIcon} source={require('../../icon/persongray.png')} />
                         <View style={styles.selectView}>
                             <TouchableOpacity onPress={() => { setVisible(true) }}>
                                 <View style={styles.buttonView}>
-                                    <Text style={styles.buttonText}>添加字段</Text>
+                                    <Text style={mystylesheet.buttonText}>添加字段</Text>
                                 </View>
                             </TouchableOpacity>
                         </View>
@@ -165,7 +165,7 @@ const AddFieldsComponent = () => {
 
                 </View>
             </View>
-            <AddFieldModalComponent visible={visible} getVisible={setVisible} getKeyValue={getKeyValueHandler} />
+            <AddFieldModalComponent visible={visible} getVisible={setVisible} getKeyValue={getKeyValueHandler} type={'field'}/>
         </>
     )
 }
@@ -202,18 +202,18 @@ const SetSelfInfoComponent = () => {
     };
     const CodeComponent = () => {
         return res.code !== undefined ? (
-            <SDKResponseView codeString={JSON.stringify(res)} />
+            <SDKResponseView codeString={JSON.stringify(res, null, 2)} />
         ) : null;
     };
     return (
-        <>
-            <View style={styles.userInputcontainer}>
+        <View style={{height: '100%'}}>
+            <View style={mystylesheet.userInputcontainer}>
                 <UserInputComponent content='昵称' placeholdercontent='昵称' getContent={setNickname} />
             </View>
-            <View style={styles.userInputcontainer}>
+            <View style={mystylesheet.userInputcontainer}>
                 <UserInputComponent content='签名' placeholdercontent='签名' getContent={setSig} />
             </View>
-            <View style={styles.userInputcontainer}>
+            <View style={mystylesheet.userInputcontainer}>
                 <UserInputComponent content='生日' placeholdercontent='int类型，不要输入字符串' getContent={(val) => setBirthday(parseInt(val))} />
             </View>
             <GenderSelectComponent getGender={setGender} />
@@ -225,18 +225,12 @@ const SetSelfInfoComponent = () => {
                 content={'设置个人信息'}
             ></CommonButton>
             <CodeComponent></CodeComponent>
-        </>
+        </View>
     );
 };
 
 export default SetSelfInfoComponent;
 const styles = StyleSheet.create({
-    userInputcontainer: {
-        margin: 10,
-        marginBottom: 0,
-        marginTop: 1,
-        justifyContent: 'center'
-    },
     buttonView: {
         backgroundColor: '#2F80ED',
         borderRadius: 3,
@@ -244,13 +238,6 @@ const styles = StyleSheet.create({
         height: 35,
         marginTop: -5,
         marginRight: 10,
-    },
-    buttonText: {
-        color: '#FFFFFF',
-        fontSize: 14,
-        textAlign: 'center',
-        textAlignVertical: 'center',
-        lineHeight: 35,
     },
     selectView: {
         flexDirection: 'row',

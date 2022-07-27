@@ -1,12 +1,12 @@
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, Modal, TouchableOpacity } from 'react-native';
 import { Text } from 'react-native-paper';
 import BasicInputComponent from './BasicInputComponent';
 
 const AddFieldModalComponent = (props) => {
-    const { visible, getVisible,getKeyValue } = props
-    const [fieldKey,setFieldKey] = useState<string>('')
-    const [fieldValue,setFieldValue]= useState<string>('')
+    const { visible, getVisible, getKeyValue, type } = props
+    const [fieldKey, setFieldKey] = useState<string>('')
+    const [fieldValue, setFieldValue] = useState<string>('')
     const closeHandler = (val: boolean) => {
         getVisible(val)
     }
@@ -14,7 +14,7 @@ const AddFieldModalComponent = (props) => {
     const confirmHandler = (val: boolean) => {
         const key = fieldKey
         const value = fieldValue
-        getKeyValue({key:key,val:value})
+        getKeyValue({ key: key, val: value })
         getVisible(val)
     }
 
@@ -26,8 +26,27 @@ const AddFieldModalComponent = (props) => {
             <View style={styles.container}>
                 <View style={styles.showContainer}>
                     <View style={styles.inputContainer}>
-                        <BasicInputComponent content={'字段名'} placeholdercontent={'请在控制台查看'} getContent={setFieldKey}/>
-                        <BasicInputComponent content={'字段值'} placeholdercontent={'字段值'} getContent={setFieldValue}/>
+                        {(() => {
+                            switch (type) {
+                                case 'field':
+                                    return (
+                                        <>
+                                            <BasicInputComponent content={'字段名'} placeholdercontent={'请在控制台查看'} getContent={setFieldKey} />
+                                            <BasicInputComponent content={'字段值'} placeholdercontent={'字段值'} getContent={setFieldValue} />
+                                        </>
+                                    )
+                                case 'attribute':
+                                    return (
+                                        <>
+                                            <BasicInputComponent content={'属性名'} placeholdercontent={'属性名'} getContent={setFieldKey} />
+                                            <BasicInputComponent content={'属性值'} placeholdercontent={'属性值'} getContent={setFieldValue} />
+                                        </>
+                                    )
+                                default:
+                                    return <></>
+                                }
+                            })()}
+
                     </View>
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity onPress={() => confirmHandler(false)}>
@@ -77,7 +96,6 @@ const styles = StyleSheet.create({
     buttonContainer: {
         flexDirection: 'row',
         justifyContent: 'flex-end',
-
     },
     buttonView: {
         backgroundColor: '#2F80ED',
