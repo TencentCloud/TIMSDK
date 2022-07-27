@@ -35,18 +35,29 @@ export class V2TimGroupManager {
     /**
      * ### 创建自定义群组
      */
-    public createGroup(
-        groupType: string,
-        groupName: string,
-        groupID?: string,
-        notification?: string,
-        introduction?: string,
-        faceUrl?: string,
-        isAllMuted?: Boolean,
-        isSupportTopic = false,
+    public createGroup({
+        groupType,
+        groupName,
+        groupID,
+        notification,
+        introduction,
+        faceUrl,
+        isAllMuted,
         addOpt = GroupAddOptEnum.V2TIM_GROUP_ADD_AUTH,
-        memberList?: V2TimGroupMember[]
-    ): Promise<V2TimValueCallback<string>> {
+        memberList,
+        isSupportTopic = false,
+    }: {
+        groupType: string;
+        groupName: string;
+        groupID?: string;
+        notification?: string;
+        introduction?: string;
+        faceUrl?: string;
+        isAllMuted?: Boolean;
+        isSupportTopic?: Boolean;
+        addOpt: GroupAddOptEnum;
+        memberList?: V2TimGroupMember[];
+    }): Promise<V2TimValueCallback<string>> {
         return this.nativeModule.call(this.manager, 'createGroup', {
             groupType,
             groupName,
@@ -91,7 +102,7 @@ export class V2TimGroupManager {
      */
     public setGroupInfo(info: V2TimGroupInfo): Promise<V2TimCallback> {
         return this.nativeModule.call(this.manager, 'setGroupInfo', {
-            info,
+            ...info,
         });
     }
 
@@ -388,8 +399,8 @@ export class V2TimGroupManager {
         groupID: string,
         fromUser: string,
         toUser: string,
-        type: GroupApplicationTypeEnum,
-        addTime: number,
+        type?: GroupApplicationTypeEnum,
+        addTime?: number,
         reason?: string
     ): Promise<V2TimCallback> {
         return this.nativeModule.call(this.manager, 'refuseGroupApplication', {
@@ -532,7 +543,7 @@ export class V2TimGroupManager {
     public getTopicInfoList(
         groupID: string,
         topicIDList: string[]
-    ): V2TimValueCallback<V2TimTopicInfoResult> {
+    ): Promise<V2TimValueCallback<V2TimTopicInfoResult>> {
         return this.nativeModule.call(this.manager, 'getTopicInfoList', {
             groupID,
             topicIDList,

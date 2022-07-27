@@ -7,6 +7,7 @@ import CommonButton from '../commonComponents/CommonButton';
 import MultiCheckBoxModalComponent from '../commonComponents/MultiCheckboxModalComponent';
 import SDKResponseView from '../sdkResponseView';
 import CheckBoxModalComponent from '../commonComponents/CheckboxModalComponent';
+import mystylesheet from '../../stylesheets';
 const DeleteFriendFromFriendGroupComponent = () => {
     const [groupName, setGroupName] = useState<string>('未选择')
     const [userName, setUserName] = useState<string>('未选择')
@@ -25,7 +26,7 @@ const DeleteFriendFromFriendGroupComponent = () => {
     const CodeComponent = () => {
         return (
             res.code !== undefined ?
-                (<SDKResponseView codeString={JSON.stringify(res)} />) : null
+                (<SDKResponseView codeString={JSON.stringify(res, null, 2)} />) : null
         );
     }
 
@@ -35,11 +36,11 @@ const DeleteFriendFromFriendGroupComponent = () => {
             <>
                 <View style={styles.selectContainer}>
                     <TouchableOpacity onPress={() => { setVisible(true) }}>
-                        <View style={styles.buttonView}>
-                            <Text style={styles.buttonText}>选择好友</Text>
+                        <View style={mystylesheet.buttonView}>
+                            <Text style={mystylesheet.buttonText}>选择好友</Text>
                         </View>
                     </TouchableOpacity>
-                    <Text style={styles.selectedText}>{userName}</Text>
+                    <Text style={mystylesheet.selectedText}>{userName}</Text>
                 </View>
                 <MultiCheckBoxModalComponent visible={visible} getVisible={setVisible} getUsername={getUsersHandler} type={'friend'} />
             </>
@@ -53,11 +54,11 @@ const DeleteFriendFromFriendGroupComponent = () => {
             <>
                 <View style={styles.selectContainer}>
                     <TouchableOpacity onPress={() => { setVisible(true) }}>
-                        <View style={styles.buttonView}>
-                            <Text style={styles.buttonText}>选择分组</Text>
+                        <View style={mystylesheet.buttonView}>
+                            <Text style={mystylesheet.buttonText}>选择分组</Text>
                         </View>
                     </TouchableOpacity>
-                    <Text style={styles.selectedText}>{groupName}</Text>
+                    <Text style={mystylesheet.selectedText}>{groupName}</Text>
                 </View>
                 <CheckBoxModalComponent  visible={visible} getVisible={setVisible} getUsername={setGroupName} type={'selectgroup'}/>
             </>
@@ -65,41 +66,23 @@ const DeleteFriendFromFriendGroupComponent = () => {
 
     }
     return (
-        <>
+        <View style={{height: '100%'}}>
             <FriendSelectComponent/>
             <GroupSelectComponent/>
-            <CommonButton handler={() => deleteFriendsFromFriendGroup()} content={'中从分组删除好友'}></CommonButton>
+            <CommonButton handler={() => deleteFriendsFromFriendGroup()} content={'从分组中删除好友'}></CommonButton>
             <CodeComponent></CodeComponent>
-        </>
+        </View>
     )
 }
 
 export default DeleteFriendFromFriendGroupComponent
 
 const styles = StyleSheet.create({
-    buttonView: {
-        backgroundColor: '#2F80ED',
-        borderRadius: 3,
-        width: 100,
-        height: 35,
-        marginLeft: 10
-    },
-    buttonText: {
-        color: '#FFFFFF',
-        fontSize: 14,
-        textAlign: 'center',
-        textAlignVertical: 'center',
-        lineHeight: 35
-    },
     selectContainer: {
         flexDirection: 'row',
-        marginTop: 10
-    },
-    selectedText: {
-        marginLeft: 10,
-        fontSize: 14,
-        textAlignVertical: 'center',
-        lineHeight: 35
+        marginTop: 10,
+        marginLeft:10,
+        marginRight:10
     }
 })
 

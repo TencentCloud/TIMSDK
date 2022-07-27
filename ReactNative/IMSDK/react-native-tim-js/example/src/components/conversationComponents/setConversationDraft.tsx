@@ -5,6 +5,7 @@ import SDKResponseView from '../sdkResponseView';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import MultiCheckBoxModalComponent from '../commonComponents/MultiCheckboxModalComponent';
 import UserInputComponent from '../commonComponents/UserInputComponent';
+import mystylesheet from '../../stylesheets';
 
 export const SetConversationDraft = () => {
     const [res, setRes] = useState<any>({});
@@ -19,7 +20,7 @@ export const SetConversationDraft = () => {
 
     const CodeComponent = () => {
         return res.code !== undefined ? (
-            <SDKResponseView codeString={JSON.stringify(res)} />
+            <SDKResponseView codeString={JSON.stringify(res, null, 2)} />
         ) : null;
     };
 
@@ -43,42 +44,48 @@ export const SetConversationDraft = () => {
             });
     };
     return (
-        <>
-            <View style={styles.selectContainer}>
-                <TouchableOpacity
-                    onPress={() => {
-                        setVisible(true);
-                    }}
-                >
-                    <View style={styles.buttonView}>
-                        <Text style={styles.buttonText}>选择会话</Text>
-                    </View>
-                </TouchableOpacity>
-                <Text style={styles.selectedText}>{userName}</Text>
-            </View>
-            <MultiCheckBoxModalComponent
-                visible={visible}
-                getVisible={setVisible}
-                getUsername={getUsersHandler}
-                type={'conversation'}
-            />
-            <View style={styles.userInputcontainer}>
-                <UserInputComponent
-                    content="请输入草稿"
-                    placeholdercontent="请输入草稿"
-                    getContent={setDraftText}
+        <View style={{height: '100%'}}>
+            <View style={styles.container}>
+                <View style={styles.selectContainer}>
+                    <TouchableOpacity
+                        onPress={() => {
+                            setVisible(true);
+                        }}
+                    >
+                        <View style={styles.buttonView}>
+                            <Text style={styles.buttonText}>选择会话</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <Text style={styles.selectedText}>{userName}</Text>
+                </View>
+                <MultiCheckBoxModalComponent
+                    visible={visible}
+                    getVisible={setVisible}
+                    getUsername={getUsersHandler}
+                    type={'conversation'}
                 />
+                <View style={mystylesheet.userInputcontainer}>
+                    <UserInputComponent
+                        content="请输入草稿"
+                        placeholdercontent="请输入草稿"
+                        getContent={setDraftText}
+                    />
+                </View>
             </View>
             <CommonButton
                 handler={getConversationList}
                 content={'设置会话草稿'}
             ></CommonButton>
             <CodeComponent></CodeComponent>
-        </>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
+    container: {
+        margin: 10,
+        marginBottom: 0,
+    },
     buttonView: {
         backgroundColor: '#2F80ED',
         borderRadius: 3,
@@ -104,11 +111,5 @@ const styles = StyleSheet.create({
         fontSize: 14,
         textAlignVertical: 'center',
         lineHeight: 35,
-    },
-    userInputcontainer: {
-        margin: 10,
-        marginBottom: 0,
-        marginTop: 1,
-        justifyContent: 'center',
     },
 });

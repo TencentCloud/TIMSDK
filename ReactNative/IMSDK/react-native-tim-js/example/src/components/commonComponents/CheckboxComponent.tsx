@@ -17,12 +17,14 @@ const styles = {
 
 const CheckboxComponent = (props) => {
     const [checkboxData, setCheckboxData] = useState<any>([])
-    const { getSelect, type, getType, groupID, conversationID } = props
-
+    const { getSelect, type, getType, groupID, conversationID, getApplicationInfo } = props
 
     const setSelectedHandler = (val) => {
-        if (getType) {
+        if (val.type) {
             getType(val.type)
+        }
+        if (val.info) {
+            getApplicationInfo(val.info)
         }
         getSelect(val.text)
     }
@@ -48,6 +50,9 @@ const CheckboxComponent = (props) => {
                 break;
             case 'message':
                 getMessageList()
+                break;
+            case 'application':
+                getApplicationList()
                 break;
             default:
                 break;
@@ -175,7 +180,7 @@ const CheckboxComponent = (props) => {
         console.log(res)
         if (res.code === 0) {
             res.data?.forEach((val, index) => {
-                if(val.lastMessage){
+                if (val.lastMessage) {
                     dataArr.push({
                         id: index,
                         text: `messageID: ${val.lastMessage?.msgID}`,
@@ -185,6 +190,31 @@ const CheckboxComponent = (props) => {
                         iconStyle: styles.iconStyle,
                     })
                 }
+            })
+        }
+        setCheckboxData(dataArr)
+    }
+
+    const getApplicationList = async () => {
+        const dataArr: any = []
+        const res = await TencentImSDKPlugin.v2TIMManager.getGroupManager().getGroupApplicationList()
+        if (res.code === 0) {
+            res.data?.groupApplicationList?.forEach((val, index) => {
+                dataArr.push({
+                    id: index,
+                    text: `groupID:${val.groupID},fromUser: ${val.fromUser}`,
+                    fillColor: '#2F80ED',
+                    unfillColor: 'white',
+                    textStyle: styles.textStyle,
+                    iconStyle: styles.iconStyle,
+                    info:{
+                        groupID:val.groupID,
+                        toUser: val.toUser,
+                        addTime: val.addTime,
+                        type:val.typeƒ
+                    }
+                })
+
             })
         }
         setCheckboxData(dataArr)

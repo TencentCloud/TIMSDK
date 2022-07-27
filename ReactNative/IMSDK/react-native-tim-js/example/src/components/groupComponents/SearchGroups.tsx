@@ -4,6 +4,7 @@ import { TencentImSDKPlugin } from 'react-native-tim-js';
 import CommonButton from '../commonComponents/CommonButton';
 import SDKResponseView from '../sdkResponseView';
 import UserInputComponent from '../commonComponents/UserInputComponent';
+import mystylesheet from '../../stylesheets';
 const SearchGroupsComponent = () => {
     const searchGroups = async () => {
         const res = await TencentImSDKPlugin.v2TIMManager.getGroupManager().searchGroups({
@@ -24,16 +25,16 @@ const SearchGroupsComponent = () => {
     const CodeComponent = () => {
         return (
             res.code !== undefined ?
-                (<SDKResponseView codeString={JSON.stringify(res)} />) : null
+                (<SDKResponseView codeString={JSON.stringify(res, null, 2)} />) : null
         );
     }
     return (
-        <>
-            <View style={styles.userInputcontainer}>
+        <View style={{height: '100%'}}>
+            <View style={mystylesheet.userInputcontainer}>
                 <UserInputComponent content='搜索关键词列表，最多支持5个' placeholdercontent='关键词(example只有设置了一个关键词)' getContent={() => {}} />
             </View>
-            <View style={styles.switchcontainer}>
-                <Text style={styles.switchtext}>设置是否搜索群ID</Text>
+            <View style={mystylesheet.switchcontainer}>
+                <Text style={mystylesheet.switchtext}>设置是否搜索群ID</Text>
                 <Switch
                     trackColor={{ false: "#c0c0c0", true: "#81b0ff" }}
                     thumbColor={isSearchGroupID ? "#2F80ED" : "#f4f3f4"}
@@ -42,8 +43,8 @@ const SearchGroupsComponent = () => {
                     value={isSearchGroupID}
                 />
             </View>
-            <View style={styles.switchcontainer}>
-                <Text style={styles.switchtext}>设置是否搜索群名称</Text>
+            <View style={mystylesheet.switchcontainer}>
+                <Text style={mystylesheet.switchtext}>设置是否搜索群名称</Text>
                 <Switch
                     trackColor={{ false: "#c0c0c0", true: "#81b0ff" }}
                     thumbColor={isSearchGroupname ? "#2F80ED" : "#f4f3f4"}
@@ -54,25 +55,9 @@ const SearchGroupsComponent = () => {
             </View>
             <CommonButton handler={() => searchGroups()} content={'搜索Group'}></CommonButton>
             <CodeComponent></CodeComponent>
-        </>
+        </View>
     )
 }
 
 export default SearchGroupsComponent
 
-const styles = StyleSheet.create({
-    userInputcontainer: {
-        margin: 10,
-        marginBottom: 0,
-        marginTop: 1,
-        justifyContent: 'center'
-    },
-    switchcontainer: {
-        flexDirection: 'row',
-        margin: 10
-    },
-    switchtext: {
-        lineHeight: 35,
-        marginRight: 8
-    }
-})

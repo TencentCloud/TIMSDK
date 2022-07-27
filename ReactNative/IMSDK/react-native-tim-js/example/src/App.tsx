@@ -9,7 +9,7 @@ import CallBackScreen from './pages/CallBack';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import CallBackContext from './useContext';
+import {CallBackContext} from './useContext';
 
 const AppNavigator = createStackNavigator({
   Home: {

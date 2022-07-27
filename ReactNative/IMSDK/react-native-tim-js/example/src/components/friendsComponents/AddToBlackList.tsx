@@ -5,6 +5,7 @@ import { TencentImSDKPlugin } from 'react-native-tim-js';
 import CommonButton from '../commonComponents/CommonButton';
 import MultiCheckBoxModalComponent from '../commonComponents/MultiCheckboxModalComponent';
 import SDKResponseView from '../sdkResponseView';
+import mystylesheet from '../../stylesheets';
 const AddToBlackListComponent = () => {
     const [visible, setVisible] = useState<boolean>(false)
     const [userName, setUserName] = useState<string>('未选择')
@@ -22,26 +23,27 @@ const AddToBlackListComponent = () => {
     const CodeComponent = () => {
         return (
             res.code !== undefined ?
-                (<SDKResponseView codeString={JSON.stringify(res)} />) : null
+                (<SDKResponseView codeString={JSON.stringify(res, null, 2)} />) : null
         );
     }
 
     return (
+        <View style={{height: '100%'}}>
+            <View style={styles.container}>
+                <View style={mystylesheet.selectContainer}>
+                    <TouchableOpacity onPress={() => { setVisible(true) }}>
+                        <View style={mystylesheet.buttonView}>
+                            <Text style={mystylesheet.buttonText}>选择好友</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <Text style={mystylesheet.selectedText}>{userName}</Text>
+                </View>
+                <MultiCheckBoxModalComponent visible={visible} getVisible={setVisible} getUsername={getUsersHandler} type={'friend'} />
 
-        <View style={styles.container}>
-            <View style={styles.selectContainer}>
-                <TouchableOpacity onPress={() => { setVisible(true) }}>
-                    <View style={styles.buttonView}>
-                        <Text style={styles.buttonText}>选择好友</Text>
-                    </View>
-                </TouchableOpacity>
-                <Text style={styles.selectedText}>{userName}</Text>
             </View>
-            <MultiCheckBoxModalComponent visible={visible} getVisible={setVisible} getUsername={getUsersHandler} type={'friend'} />
             <CommonButton handler={() => addToBlack()} content={'添加到黑名单'}></CommonButton>
             <CodeComponent></CodeComponent>
         </View>
-
     )
 }
 
@@ -51,31 +53,5 @@ const styles = StyleSheet.create({
     container: {
         margin: 10,
         marginBottom: 0
-    },
-    buttonView: {
-        backgroundColor: '#2F80ED',
-        borderRadius: 3,
-        width: 100,
-        height: 35,
-        marginLeft: 10
-    },
-    buttonText: {
-        color: '#FFFFFF',
-        fontSize: 14,
-        textAlign: 'center',
-        textAlignVertical: 'center',
-        lineHeight: 35
-    },
-    selectContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        width: '100%',
-        overflow: 'hidden'
-    },
-    selectedText: {
-        marginLeft: 10,
-        fontSize: 14,
-        textAlignVertical: 'center',
-        lineHeight: 35
     }
 })

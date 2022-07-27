@@ -12,7 +12,8 @@ const SendTextAtMessageComponent = () => {
     const [res, setRes] = useState<any>({});
     const [membersName,setMembersName] = useState('[]');
     const [membersList,setMembersList] = useState([]);
-    const [priority, setPriority] = useState<string>('');
+    const [priority, setPriority] = useState<string>('V2TIM_PRIORITY_DEFAULT')
+    const [priorityEnum,setPriorityEnum] = useState<number>(0)
     const [isonlineUserOnly, setIsonlineUserOnly] = useState(false);
     const [isExcludedFromUnreadCount, setIsExcludedFromUnreadCount] = useState(false);
     const receiveOnlineUserstoggle = () => setIsonlineUserOnly(previousState => !previousState);
@@ -27,6 +28,7 @@ const SendTextAtMessageComponent = () => {
                 groupID: groupID,
                 onlineUserOnly: isonlineUserOnly,
                 isExcludedFromUnreadCount: isExcludedFromUnreadCount,
+                priority:priorityEnum
             })
             setRes(res)
         }
@@ -37,7 +39,7 @@ const SendTextAtMessageComponent = () => {
     }
     const CodeComponent = () => {
         return res.code !== undefined ? (
-            <SDKResponseView codeString={JSON.stringify(res)} />
+            <SDKResponseView codeString={JSON.stringify(res, null, 2)} />
         ) : null;
     };
 
@@ -47,11 +49,11 @@ const SendTextAtMessageComponent = () => {
             <View style={styles.container}>
                 <View style={styles.selectContainer}>
                     <TouchableOpacity onPress={() => { setVisible(true) }}>
-                        <View style={styles.buttonView}>
-                            <Text style={styles.buttonText}>选择群组</Text>
+                        <View style={mystylesheet.buttonView}>
+                            <Text style={mystylesheet.buttonText}>选择群组</Text>
                         </View>
                     </TouchableOpacity>
-                    <Text style={styles.selectedText}>{groupID}</Text>
+                    <Text style={mystylesheet.selectedText}>{groupID}</Text>
                 </View>
                 <CheckBoxModalComponent visible={visible} getVisible={setVisible} getUsername={setGroupID} type={'group'} />
             </View>
@@ -63,11 +65,11 @@ const SendTextAtMessageComponent = () => {
             <View style={styles.container}>
                 <View style={styles.selectContainer}>
                     <TouchableOpacity onPress={() => { setVisible(true) }}>
-                        <View style={styles.buttonView}>
-                            <Text style={styles.buttonText}>选择群成员</Text>
+                        <View style={mystylesheet.buttonView}>
+                            <Text style={mystylesheet.buttonText}>选择群成员</Text>
                         </View>
                     </TouchableOpacity>
-                    <Text style={styles.selectedText}>{membersName}</Text>
+                    <Text style={mystylesheet.selectedText}>{membersName}</Text>
                 </View>
                 <MultiCheckBoxModalComponent visible={visible} getVisible={setVisible} getUsername={getMembersHandler} type={'member'} groupID={groupID}/>
             </View>
@@ -77,15 +79,16 @@ const SendTextAtMessageComponent = () => {
         const [visible, setVisible] = useState(false)
         const getSelectedHandler = (selected) => {
             setPriority(selected.name)
+            setPriorityEnum(selected.id)
         }
         return (
             <>
-                <View style={styles.userInputcontainer}>
+                <View style={mystylesheet.userInputcontainer}>
                     <View style={mystylesheet.itemContainergray}>
                         <View style={styles.selectView}>
                             <TouchableOpacity onPress={() => { setVisible(true) }}>
-                                <View style={styles.buttonView}>
-                                    <Text style={styles.buttonText}>选择优先级</Text>
+                                <View style={mystylesheet.buttonView}>
+                                    <Text style={mystylesheet.buttonText}>选择优先级</Text>
                                 </View>
                             </TouchableOpacity>
                             <Text style={styles.selectText}>{`已选：${priority}`}</Text>
@@ -97,12 +100,12 @@ const SendTextAtMessageComponent = () => {
         )
     };
     return (
-        <>
+        <View style={{height: '100%'}}>
             <GroupSelectComponent/>
             <MembersSelectComponent/>
             <PriorityComponent/>
-            <View style={styles.switchcontainer}>
-                <Text style={styles.switchtext}>是否仅在线用户接受到消息</Text>
+            <View style={mystylesheet.switchcontainer}>
+                <Text style={mystylesheet.switchtext}>是否仅在线用户接受到消息</Text>
                 <Switch
                     trackColor={{ false: "#c0c0c0", true: "#81b0ff" }}
                     thumbColor={isonlineUserOnly ? "#2F80ED" : "#f4f3f4"}
@@ -111,8 +114,8 @@ const SendTextAtMessageComponent = () => {
                     value={isonlineUserOnly}
                 />
             </View>
-            <View style={styles.switchcontainer}>
-                <Text style={styles.switchtext}>发送消息是否不计入未读数</Text>
+            <View style={mystylesheet.switchcontainer}>
+                <Text style={mystylesheet.switchtext}>发送消息是否不计入未读数</Text>
                 <Switch
                     trackColor={{ false: "#c0c0c0", true: "#81b0ff" }}
                     thumbColor={isExcludedFromUnreadCount ? "#2F80ED" : "#f4f3f4"}
@@ -126,7 +129,7 @@ const SendTextAtMessageComponent = () => {
                 content={'发送文本At消息'}
             ></CommonButton>
             <CodeComponent></CodeComponent>
-        </>
+        </View>
     );
 };
 
@@ -135,24 +138,6 @@ export default SendTextAtMessageComponent;
 const styles = StyleSheet.create({
     container: {
         marginLeft: 10,
-    },
-    userInputcontainer: {
-        marginLeft: 10,
-        marginRight: 10,
-        justifyContent: 'center'
-    },
-    buttonView: {
-        backgroundColor: '#2F80ED',
-        borderRadius: 3,
-        width: 100,
-        height: 35,
-    },
-    buttonText: {
-        color: '#FFFFFF',
-        fontSize: 14,
-        textAlign: 'center',
-        textAlignVertical: 'center',
-        lineHeight: 35
     },
     selectView: {
         flexDirection: 'row',
@@ -166,18 +151,4 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginTop: 10
     },
-    selectedText: {
-        marginLeft: 10,
-        fontSize: 14,
-        textAlignVertical: 'center',
-        lineHeight: 35
-    },
-    switchcontainer: {
-        flexDirection: 'row',
-        margin: 10
-    },
-    switchtext: {
-        lineHeight: 35,
-        marginRight: 8
-    }
 })

@@ -5,6 +5,7 @@ import CommonButton from '../commonComponents/CommonButton';
 import SDKResponseView from '../sdkResponseView';
 import CheckBoxModalComponent from '../commonComponents/CheckboxModalComponent';
 import UserInputComponent from '../commonComponents/UserInputComponent';
+import mystylesheet from '../../stylesheets';
 const MuteGroupMemberComponent = () => {
     const [groupID, setGroupID] = useState<string>('未选择')
     const [res, setRes] = useState<any>({});
@@ -18,7 +19,7 @@ const MuteGroupMemberComponent = () => {
 
     const CodeComponent = () => {
         return res.code !== undefined ? (
-            <SDKResponseView codeString={JSON.stringify(res)} />
+            <SDKResponseView codeString={JSON.stringify(res, null, 2)} />
         ) : null;
     };
     const setSecondsHandle = (sec)=>{
@@ -30,11 +31,11 @@ const MuteGroupMemberComponent = () => {
             <View style={styles.container}>
                 <View style={styles.selectContainer}>
                     <TouchableOpacity onPress={() => { setVisible(true) }}>
-                        <View style={styles.buttonView}>
-                            <Text style={styles.buttonText}>选择群组</Text>
+                        <View style={mystylesheet.buttonView}>
+                            <Text style={mystylesheet.buttonText}>选择群组</Text>
                         </View>
                     </TouchableOpacity>
-                    <Text style={styles.selectedText}>{groupID}</Text>
+                    <Text style={mystylesheet.selectedText}>{groupID}</Text>
                 </View>
                 <CheckBoxModalComponent visible={visible} getVisible={setVisible} getUsername={setGroupID} type={'group'} />
             </View>
@@ -46,21 +47,21 @@ const MuteGroupMemberComponent = () => {
             <View style={styles.container}>
                 <View style={styles.selectContainer}>
                     <TouchableOpacity onPress={() => { setVisible(true) }}>
-                        <View style={styles.buttonView}>
-                            <Text style={styles.buttonText}>选择群成员</Text>
+                        <View style={mystylesheet.buttonView}>
+                            <Text style={mystylesheet.buttonText}>选择群成员</Text>
                         </View>
                     </TouchableOpacity>
-                    <Text style={styles.selectedText}>{memberName}</Text>
+                    <Text style={mystylesheet.selectedText}>{memberName}</Text>
                 </View>
                 <CheckBoxModalComponent visible={visible} getVisible={setVisible} getUsername={setMemberName} type={'member'} groupID={groupID} />
             </View>
         )
     }
     return (
-        <>
+        <View style={{height: '100%'}}>
             <GroupSelectComponent/>
             <MembersSelectComponent/>
-            <View style={styles.userInputcontainer}>
+            <View style={mystylesheet.userInputcontainer}>
                 <UserInputComponent content='seconds' placeholdercontent='seconds' getContent={setSecondsHandle} />
             </View>
             <CommonButton
@@ -68,7 +69,7 @@ const MuteGroupMemberComponent = () => {
                 content={'禁言群成员'}
             ></CommonButton>
             <CodeComponent></CodeComponent>
-        </>
+        </View>
     );
 };
 
@@ -78,25 +79,6 @@ const styles = StyleSheet.create({
     container: {
         marginLeft: 10,
     },
-    userInputcontainer: {
-        margin: 10,
-        marginBottom: 0,
-        marginTop: 1,
-        justifyContent: 'center'
-    },
-    buttonView: {
-        backgroundColor: '#2F80ED',
-        borderRadius: 3,
-        width: 100,
-        height: 35,
-    },
-    buttonText: {
-        color: '#FFFFFF',
-        fontSize: 14,
-        textAlign: 'center',
-        textAlignVertical: 'center',
-        lineHeight: 35
-    },
     selectView: {
         flexDirection: 'row',
     },
@@ -104,10 +86,4 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginTop: 10
     },
-    selectedText: {
-        marginLeft: 10,
-        fontSize: 14,
-        textAlignVertical: 'center',
-        lineHeight: 35
-    }
 })

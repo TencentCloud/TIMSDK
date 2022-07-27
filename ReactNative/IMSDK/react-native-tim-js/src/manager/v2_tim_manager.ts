@@ -476,7 +476,7 @@ export class V2TIMManager {
      * 在公开群（Public）、会议（Meeting）和直播群（AVChatRoom）中，群主是不可以退群的，群主只能调用 dismissGroup 解散群组。
      */
     public quitGroup(groupID: string): Promise<V2TimCallback> {
-        return this.nativeModule.call(this.manager, 'joinGroup', {
+        return this.nativeModule.call(this.manager, 'quitGroup', {
             groupID,
         });
     }

@@ -99,7 +99,7 @@ export class V2TIMMessageManager {
                 this.manager,
                 'removeAdvancedMsgListener',
                 {}
-            )
+            );
         }
     }
 
@@ -108,7 +108,7 @@ export class V2TIMMessageManager {
      */
     public createTextMessage(
         text: string
-    ): V2TimValueCallback<V2TimMsgCreateInfoResult> {
+    ): Promise<V2TimValueCallback<V2TimMsgCreateInfoResult>> {
         return this.nativeModule.call(this.manager, 'createTextMessage', {
             text,
         });
@@ -129,7 +129,7 @@ export class V2TIMMessageManager {
     public createTargetedGroupMessage(
         id: string,
         receiverList: string[]
-    ): V2TimValueCallback<V2TimMsgCreateInfoResult> {
+    ): Promise<V2TimValueCallback<V2TimMsgCreateInfoResult>> {
         return this.nativeModule.call(
             this.manager,
             'createTargetedGroupMessage',
@@ -146,7 +146,7 @@ export class V2TIMMessageManager {
     public appendMessage(
         createMessageBaseId: string,
         createMessageAppendId: string
-    ): V2TimValueCallback<V2TimMessage> {
+    ): Promise<V2TimValueCallback<V2TimMessage>> {
         return this.nativeModule.call(this.manager, 'appendMessage', {
             createMessageAppendId,
             createMessageBaseId,
@@ -168,7 +168,7 @@ export class V2TIMMessageManager {
         data: string;
         desc?: string;
         extension?: string;
-    }): V2TimValueCallback<V2TimMsgCreateInfoResult> {
+    }): Promise<V2TimValueCallback<V2TimMsgCreateInfoResult>> {
         return this.nativeModule.call(this.manager, 'createCustomMessage', {
             data,
             desc,
@@ -182,7 +182,7 @@ export class V2TIMMessageManager {
      */
     public createImageMessage(
         imagePath: string
-    ): V2TimValueCallback<V2TimMsgCreateInfoResult> {
+    ): Promise<V2TimValueCallback<V2TimMsgCreateInfoResult>> {
         return this.nativeModule.call(this.manager, 'createImageMessage', {
             imagePath,
         });
@@ -196,7 +196,7 @@ export class V2TIMMessageManager {
     public createSoundMessage(
         soundPath: string,
         duration: number
-    ): V2TimValueCallback<V2TimMsgCreateInfoResult> {
+    ): Promise<V2TimValueCallback<V2TimMsgCreateInfoResult>> {
         return this.nativeModule.call(this.manager, 'createSoundMessage', {
             soundPath,
             duration,
@@ -215,7 +215,7 @@ export class V2TIMMessageManager {
         type: string,
         duration: number,
         snapshotPath: string
-    ): V2TimValueCallback<V2TimMsgCreateInfoResult> {
+    ): Promise<V2TimValueCallback<V2TimMsgCreateInfoResult>> {
         return this.nativeModule.call(this.manager, 'createVideoMessage', {
             videoFilePath,
             type,
@@ -238,7 +238,7 @@ export class V2TIMMessageManager {
     public createTextAtMessage(
         text: string,
         atUserList: string[]
-    ): V2TimValueCallback<V2TimMsgCreateInfoResult> {
+    ): Promise<V2TimValueCallback<V2TimMsgCreateInfoResult>> {
         return this.nativeModule.call(this.manager, 'createTextAtMessage', {
             text,
             atUserList,
@@ -253,7 +253,7 @@ export class V2TIMMessageManager {
     public createFileMessage(
         filePath: string,
         fileName: string
-    ): V2TimValueCallback<V2TimMsgCreateInfoResult> {
+    ): Promise<V2TimValueCallback<V2TimMsgCreateInfoResult>> {
         return this.nativeModule.call(this.manager, 'createFileMessage', {
             filePath,
             fileName,
@@ -270,7 +270,7 @@ export class V2TIMMessageManager {
         desc: string,
         longitude: number,
         latitude: number
-    ): V2TimValueCallback<V2TimMsgCreateInfoResult> {
+    ): Promise<V2TimValueCallback<V2TimMsgCreateInfoResult>> {
         return this.nativeModule.call(this.manager, 'createLocationMessage', {
             desc,
             longitude,
@@ -287,7 +287,7 @@ export class V2TIMMessageManager {
     public createFaceMessage(
         index: number,
         data: string
-    ): V2TimValueCallback<V2TimMsgCreateInfoResult> {
+    ): Promise<V2TimValueCallback<V2TimMsgCreateInfoResult>> {
         return this.nativeModule.call(this.manager, 'createFaceMessage', {
             index,
             data,
@@ -315,7 +315,7 @@ export class V2TIMMessageManager {
         title: string,
         abstractList: string[],
         compatibleText: string
-    ): V2TimValueCallback<V2TimMsgCreateInfoResult> {
+    ): Promise<V2TimValueCallback<V2TimMsgCreateInfoResult>> {
         return this.nativeModule.call(this.manager, 'createMergerMessage', {
             msgIDList,
             title,
@@ -331,7 +331,7 @@ export class V2TIMMessageManager {
      */
     public createForwardMessage(
         msgID: string
-    ): V2TimValueCallback<V2TimMsgCreateInfoResult> {
+    ): Promise<V2TimValueCallback<V2TimMsgCreateInfoResult>> {
         return this.nativeModule.call(this.manager, 'createForwardMessage', {
             msgID,
         });
@@ -384,7 +384,7 @@ export class V2TIMMessageManager {
         cloudCustomData?: string;
         localCustomData?: string;
         priority?: MessagePriorityEnum;
-    }): V2TimValueCallback<V2TimMessage> {
+    }): Promise<V2TimValueCallback<V2TimMessage>> {
         return this.nativeModule.call(this.manager, 'sendMessage', {
             id,
             receiver,
@@ -457,7 +457,7 @@ export class V2TIMMessageManager {
         offlinePushInfo?: V2TimOfflinePushInfo;
         localCustomData?: string;
         priority: MessagePriorityEnum;
-    }): V2TimValueCallback<V2TimMessage> {
+    }): Promise<V2TimValueCallback<V2TimMessage>> {
         const hasNickName =
             replyMessage.nickName && replyMessage.nickName !== '';
         const cloudCustomData = {
@@ -495,7 +495,7 @@ export class V2TIMMessageManager {
     public reSendMessage(
         msgID: string,
         onlineUserOnly = false
-    ): V2TimValueCallback<V2TimMessage> {
+    ): Promise<V2TimValueCallback<V2TimMessage>> {
         return this.nativeModule.call(this.manager, 'reSendMessage', {
             msgID,
             onlineUserOnly,
@@ -515,7 +515,7 @@ export class V2TIMMessageManager {
     public setC2CReceiveMessageOpt(
         userIDList: string[],
         opt: ReceiveMsgOptEnum
-    ): V2TimCallback {
+    ): Promise<V2TimCallback> {
         return this.nativeModule.call(this.manager, 'setC2CReceiveMessageOpt', {
             userIDList,
             opt,
@@ -528,7 +528,7 @@ export class V2TIMMessageManager {
      */
     public getC2CReceiveMessageOpt(
         userIDList: string[]
-    ): V2TimValueCallback<V2TimReceiveMessageOptInfo> {
+    ): Promise<V2TimValueCallback<V2TimReceiveMessageOptInfo>> {
         return this.nativeModule.call(this.manager, 'getC2CReceiveMessageOpt', {
             userIDList,
         });
@@ -540,7 +540,7 @@ export class V2TIMMessageManager {
     public setGroupReceiveMessageOpt(
         groupID: string,
         opt: ReceiveMsgOptEnum
-    ): V2TimCallback {
+    ): Promise<V2TimCallback> {
         return this.nativeModule.call(
             this.manager,
             'setGroupReceiveMessageOpt',
@@ -557,7 +557,7 @@ export class V2TIMMessageManager {
     public setLocalCustomData(
         msgID: string,
         localCustomData: string
-    ): V2TimCallback {
+    ): Promise<V2TimCallback> {
         return this.nativeModule.call(this.manager, 'setLocalCustomData', {
             msgID,
             localCustomData,
@@ -570,7 +570,7 @@ export class V2TIMMessageManager {
     public setLocalCustomInt(
         msgID: string,
         localCustomInt: number
-    ): V2TimCallback {
+    ): Promise<V2TimCallback> {
         return this.nativeModule.call(this.manager, 'setLocalCustomInt', {
             msgID,
             localCustomInt,
@@ -587,7 +587,7 @@ export class V2TIMMessageManager {
         userID: string,
         count: number,
         lastMsgID?: string
-    ): V2TimValueCallback<V2TimMessage[]> {
+    ): Promise<V2TimValueCallback<V2TimMessage[]>> {
         return this.nativeModule.call(
             this.manager,
             'getC2CHistoryMessageList',
@@ -613,7 +613,7 @@ export class V2TIMMessageManager {
         groupID: string,
         count: number,
         lastMsgID?: string
-    ): V2TimValueCallback<V2TimMessage[]> {
+    ): Promise<V2TimValueCallback<V2TimMessage[]>> {
         return this.nativeModule.call(
             this.manager,
             'getGroupHistoryMessageList',
@@ -633,7 +633,7 @@ export class V2TIMMessageManager {
      * - 仅支持单聊和群组中发送的普通消息，无法撤销 onlineUserOnly 为 true 即仅在线用户才能收到的消息，也无法撤销直播群（AVChatRoom）中的消息。
      * - 如果发送方撤回消息，已经收到消息的一方会收到 V2TIMAdvancedMsgListener -> onRecvMessageRevoked 回调。
      */
-    public revokeMessage(msgID: string): V2TimCallback {
+    public revokeMessage(msgID: string): Promise<V2TimCallback> {
         return this.nativeModule.call(this.manager, 'revokeMessage', {
             msgID,
         });
@@ -646,7 +646,7 @@ export class V2TIMMessageManager {
      * 注意：
      * - 该接口调用成功后，自己的未读数会清 0，对端用户会收到 onRecvC2CReadReceipt 回调，回调里面会携带标记会话已读的时间。
      */
-    public markC2CMessageAsRead(userID: string): V2TimCallback {
+    public markC2CMessageAsRead(userID: string): Promise<V2TimCallback> {
         return this.nativeModule.call(this.manager, 'markC2CMessageAsRead', {
             userID,
         });
@@ -659,7 +659,7 @@ export class V2TIMMessageManager {
      * 注意：
      * - 该接口调用成功后，自己的未读数会清 0。
      */
-    public markGroupMessageAsRead(groupID: string): V2TimCallback {
+    public markGroupMessageAsRead(groupID: string): Promise<V2TimCallback> {
         return this.nativeModule.call(this.manager, 'markGroupMessageAsRead', {
             groupID,
         });
@@ -680,7 +680,7 @@ export class V2TIMMessageManager {
         lastMsgSeq = -1,
         lastMsgID?: string,
         messageTypeList?: number[]
-    ): V2TimValueCallback<V2TimMessage[]> {
+    ): Promise<V2TimValueCallback<V2TimMessage[]>> {
         return this.nativeModule.call(this.manager, 'getHistoryMessageList', {
             count,
             getType,
@@ -698,7 +698,9 @@ export class V2TIMMessageManager {
      * 注意：
      * 该接口只能删除本地历史，消息删除后，SDK 会在本地把这条消息标记为已删除状态，getHistoryMessage 不能再拉取到，如果程序卸载重装，本地会失去对这条消息的删除标记，getHistoryMessage 还能再拉取到该条消息。
      */
-    public deleteMessageFromLocalStorage(msgID: string): V2TimCallback {
+    public deleteMessageFromLocalStorage(
+        msgID: string
+    ): Promise<V2TimCallback> {
         return this.nativeModule.call(
             this.manager,
             'deleteMessageFromLocalStorage',
@@ -717,7 +719,7 @@ export class V2TIMMessageManager {
      * - 一秒钟最多只能调用一次该接口
      * - 如果该账号在其他设备上拉取过这些消息，那么调用该接口删除后，这些消息仍然会保存在那些设备上，即删除消息不支持多端同步。
      */
-    public deleteMessages(msgIDs: string[]): V2TimCallback {
+    public deleteMessages(msgIDs: string[]): Promise<V2TimCallback> {
         return this.nativeModule.call(this.manager, 'deleteMessages', {
             msgIDs,
         });
@@ -737,7 +739,7 @@ export class V2TIMMessageManager {
         data: string,
         groupID: string,
         sender: string
-    ): V2TimValueCallback<V2TimMessage> {
+    ): Promise<V2TimValueCallback<V2TimMessage>> {
         return this.nativeModule.call(
             this.manager,
             'insertGroupMessageToLocalStorage',
@@ -763,7 +765,7 @@ export class V2TIMMessageManager {
         data: string,
         userID: string,
         sender: string
-    ): V2TimValueCallback<V2TimMessage> {
+    ): Promise<V2TimValueCallback<V2TimMessage>> {
         return this.nativeModule.call(
             this.manager,
             'insertC2CMessageToLocalStorage',
@@ -782,7 +784,7 @@ export class V2TIMMessageManager {
      * 注意:
      * - 会话内的消息在本地删除的同时，在服务器也会同步删除。
      */
-    public clearC2CHistoryMessage(userID: string): V2TimCallback {
+    public clearC2CHistoryMessage(userID: string): Promise<V2TimCallback> {
         return this.nativeModule.call(this.manager, 'clearC2CHistoryMessage', {
             userID,
         });
@@ -795,7 +797,7 @@ export class V2TIMMessageManager {
      * 注意:
      * - 会话内的消息在本地删除的同时，在服务器也会同步删除。
      */
-    public clearGroupHistoryMessage(groupID: string): V2TimCallback {
+    public clearGroupHistoryMessage(groupID: string): Promise<V2TimCallback> {
         return this.nativeModule.call(
             this.manager,
             'clearGroupHistoryMessage',
@@ -808,7 +810,7 @@ export class V2TIMMessageManager {
     /**
      * 标记所有会话为已读
      */
-    public markAllMessageAsRead(): V2TimCallback {
+    public markAllMessageAsRead(): Promise<V2TimCallback> {
         return this.nativeModule.call(this.manager, 'markAllMessageAsRead', {});
     }
 
@@ -839,7 +841,9 @@ export class V2TIMMessageManager {
         searchTimePosition,
         pageIndex = 0,
         pageSize = 100,
-    }: V2TimMessageSearchParam): V2TimValueCallback<V2TimMessageSearchResult> {
+    }: V2TimMessageSearchParam): Promise<
+        V2TimValueCallback<V2TimMessageSearchResult>
+    > {
         return this.nativeModule.call(this.manager, 'searchLocalMessages', {
             searchParam: {
                 conversationID,
@@ -863,7 +867,9 @@ export class V2TIMMessageManager {
      * - messageList 里的消息必须在同一个会话中。
      * - 该接口调用成功后，会话未读数不会变化，消息发送者会收到 onRecvMessageReadReceipts 回调，回调里面会携带消息的最新已读信息。
      */
-    public sendMessageReadReceipts(messageIDList: string[]): V2TimCallback {
+    public sendMessageReadReceipts(
+        messageIDList: string[]
+    ): Promise<V2TimCallback> {
         return this.nativeModule.call(this.manager, 'sendMessageReadReceipts', {
             messageIDList,
         });
@@ -878,7 +884,7 @@ export class V2TIMMessageManager {
      */
     public getMessageReadReceipts(
         messageIDList: string[]
-    ): V2TimValueCallback<V2TimMessageReceipt[]> {
+    ): Promise<V2TimValueCallback<V2TimMessageReceipt[]>> {
         return this.nativeModule.call(this.manager, 'getMessageReadReceipts', {
             messageIDList,
         });
@@ -896,7 +902,7 @@ export class V2TIMMessageManager {
         filter: GetGroupMessageReadMemberListFilter,
         nextSeq = 0,
         count = 100
-    ): V2TimValueCallback<V2TimGroupMessageReadMemberList> {
+    ): Promise<V2TimValueCallback<V2TimGroupMessageReadMemberList>> {
         return this.nativeModule.call(
             this.manager,
             'getGroupMessageReadMemberList',
@@ -915,7 +921,7 @@ export class V2TIMMessageManager {
      */
     public findMessages(
         messageIDList: string[]
-    ): V2TimValueCallback<V2TimMessage[]> {
+    ): Promise<V2TimValueCallback<V2TimMessage[]>> {
         return this.nativeModule.call(this.manager, 'findMessages', {
             messageIDList,
         });
@@ -932,7 +938,7 @@ export class V2TIMMessageManager {
      */
     public modifyMessage(
         message: V2TimMessage
-    ): V2TimValueCallback<V2TimMessageChangeInfo> {
+    ): Promise<V2TimValueCallback<V2TimMessageChangeInfo>> {
         return this.nativeModule.call(this.manager, 'modifyMessage', {
             message,
         });
@@ -944,7 +950,7 @@ export class V2TIMMessageManager {
      */
     public downloadMergerMessage(
         msgID: string
-    ): V2TimValueCallback<V2TimMessage[]> {
+    ): Promise<V2TimValueCallback<V2TimMessage[]>> {
         return this.nativeModule.call(this.manager, 'downloadMergerMessage', {
             msgID,
         });

@@ -4,7 +4,7 @@ import CommonButton from '../commonComponents/CommonButton';
 import SDKResponseView from '../sdkResponseView';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import MultiCheckBoxModalComponent from '../commonComponents/MultiCheckboxModalComponent';
-
+import mystylesheet from '../../stylesheets';
 export const DeleteConversation = () => {
     const [res, setRes] = useState<any>({});
     const [visible, setVisible] = useState<boolean>(false);
@@ -17,7 +17,7 @@ export const DeleteConversation = () => {
 
     const CodeComponent = () => {
         return res.code !== undefined ? (
-            <SDKResponseView codeString={JSON.stringify(res)} />
+            <SDKResponseView codeString={JSON.stringify(res, null, 2)} />
         ) : null;
     };
 
@@ -41,31 +41,33 @@ export const DeleteConversation = () => {
             });
     };
     return (
-        <>
-            <View style={styles.selectContainer}>
-                <TouchableOpacity
-                    onPress={() => {
-                        setVisible(true);
-                    }}
-                >
-                    <View style={styles.buttonView}>
-                        <Text style={styles.buttonText}>选择会话</Text>
-                    </View>
-                </TouchableOpacity>
-                <Text style={styles.selectedText}>{userName}</Text>
+        <View style={{height: '100%'}}>
+            <View style={styles.container}>
+                <View style={mystylesheet.selectContainer}>
+                    <TouchableOpacity
+                        onPress={() => {
+                            setVisible(true);
+                        }}
+                    >
+                        <View style={styles.buttonView}>
+                            <Text style={styles.buttonText}>选择会话</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <Text style={mystylesheet.selectedText}>{userName}</Text>
+                </View>
+                <MultiCheckBoxModalComponent
+                    visible={visible}
+                    getVisible={setVisible}
+                    getUsername={getUsersHandler}
+                    type={'conversation'}
+                />
             </View>
-            <MultiCheckBoxModalComponent
-                visible={visible}
-                getVisible={setVisible}
-                getUsername={getUsersHandler}
-                type={'conversation'}
-            />
             <CommonButton
                 handler={getConversationList}
                 content={'删除会话'}
             ></CommonButton>
             <CodeComponent></CodeComponent>
-        </>
+        </View>
     );
 };
 
@@ -79,24 +81,11 @@ const styles = StyleSheet.create({
         borderRadius: 3,
         width: 100,
         height: 35,
-        marginLeft: 10,
     },
     buttonText: {
         color: '#FFFFFF',
         fontSize: 14,
         textAlign: 'center',
-        textAlignVertical: 'center',
-        lineHeight: 35,
-    },
-    selectContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        width: '100%',
-        overflow: 'hidden',
-    },
-    selectedText: {
-        marginLeft: 10,
-        fontSize: 14,
         textAlignVertical: 'center',
         lineHeight: 35,
     },
