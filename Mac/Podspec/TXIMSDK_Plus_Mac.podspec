@@ -20,7 +20,7 @@ Pod::Spec.new do |spec|
   spec.source_files = '**/ImSDKForMac_Plus.framework/Versions/A/Headers/*.h'
   spec.public_header_files = '**/ImSDKForMac_Plus.framework/Versions/A/Headers/*.h'
   spec.vendored_frameworks = '**/ImSDKForMac_Plus.framework'
-  spec.xcconfig = { 'HEADER_SEARCH_PATHS' => '${PODS_ROOT}/TXIMSDK_Plus_Mac/ImSDKForMac_Plus.framework/Versions/A/Headers/'}
+  spec.xcconfig = { 'HEADER_SEARCH_PATHS' => '${PODS_ROOT}/TXIMSDK_Plus_Mac/ImSDKForMac_Plus.framework/Versions/A/Headers/'} 
 end
 
 # export EXPANDED_CODE_SIGN_IDENTITY=""
