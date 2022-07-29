@@ -2,6 +2,17 @@ English | [简体中文](./版本历史.md)
 
 # TIMSDK
 
+## 6.5.2816 @2022.07.29 - Enhanced Version
+
+### SDK
+
+- Optimizing the route selection strategy for the Indian station
+- Optimize rich media message upload/download progress callback
+- Optimized the compliance problem of Android terminal obtaining device process information
+- Fix the problem of continuous creation of topics crash
+- Fix the problem of occasional crash in Windows package
+- Fix Android v7a architecture pull down black friends, add black friends again crash problem
+
 ## 6.5.2803 @ 2022.07.15 - Enhanced Edition
 
 ### SDK
