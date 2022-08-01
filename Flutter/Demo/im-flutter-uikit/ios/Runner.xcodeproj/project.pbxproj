@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -14,8 +14,6 @@
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
-		AA632AC9286D958C00E66109 /* TXFFmpeg.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA632AC8286D958C00E66109 /* TXFFmpeg.xcframework */; };
-		AA632ACB286D95C200E66109 /* TXSoundTouch.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA632ACA286D95C200E66109 /* TXSoundTouch.xcframework */; };
 		AACBDD2628597D360036A1C2 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = AACBDD2828597D360036A1C2 /* InfoPlist.strings */; };
 /* End PBXBuildFile section */
 
@@ -67,8 +65,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA632ACB286D95C200E66109 /* TXSoundTouch.xcframework in Frameworks */,
-				AA632AC9286D958C00E66109 /* TXFFmpeg.xcframework in Frameworks */,
 				91C990566BE4439834BF3BC6 /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
