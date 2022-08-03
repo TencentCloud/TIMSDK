@@ -19,13 +19,13 @@
 ### 基础版
 [最新 ImSDK.framework 下载](https://im.sdk.qcloud.com/download/standard/5.1.62/TIM_SDK_iOS_latest_framework.zip)
 
-### [基础版与增强版差异对比](https://github.com/tencentyun/TIMSDK#%E5%9F%BA%E7%A1%80%E7%89%88%E4%B8%8E%E5%A2%9E%E5%BC%BA%E7%89%88%E5%B7%AE%E5%BC%82%E5%AF%B9%E6%AF%94)
-
 ### C 接口版
 [最新C接口下载](https://im.sdk.qcloud.com/download/plus/6.5.2816/cross_platform/ImSDK_iOS_C_6.5.2816.framework.zip)
 
 ### C++ 接口版
 [最新C++接口下载](https://im.sdk.cloud.tencent.cn/download/plus/6.5.2816/cross_platform/ImSDK_iOS_CPP_6.5.2816.framework.zip)
+
+### [基础版与增强版差异对比](https://github.com/tencentyun/TIMSDK#%E5%9F%BA%E7%A1%80%E7%89%88%E4%B8%8E%E5%A2%9E%E5%BC%BA%E7%89%88%E5%B7%AE%E5%BC%82%E5%AF%B9%E6%AF%94)
 
 ## cocoaPods 集成
 如果使用基础版 SDK，请您按照如下方式设置 Podfile 文件
