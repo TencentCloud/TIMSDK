@@ -1,6 +1,4 @@
 PODS:
-  - bugly (0.0.1):
-    - Flutter
   - camera_avfoundation (0.0.1):
     - Flutter
   - connectivity_plus (0.0.1):
@@ -149,8 +147,6 @@ PODS:
     - Flutter
   - PromisesObjC (2.1.1)
   - ReachabilitySwift (5.0.0)
-  - rmonitor_base (0.0.1):
-    - Flutter
   - SDWebImage (5.13.2):
     - SDWebImage/Core (= 5.13.2)
   - SDWebImage/Core (5.13.2)
@@ -189,7 +185,6 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
-  - bugly (from `.symlinks/plugins/bugly/ios`)
   - camera_avfoundation (from `.symlinks/plugins/camera_avfoundation/ios`)
   - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
@@ -210,7 +205,6 @@ DEPENDENCIES:
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - photo_manager (from `.symlinks/plugins/photo_manager/ios`)
   - plain_notification_token (from `.symlinks/plugins/plain_notification_token/ios`)
-  - rmonitor_base (from `.symlinks/plugins/rmonitor_base/ios`)
   - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
   - tencent_im_sdk_plugin (from `.symlinks/plugins/tencent_im_sdk_plugin/ios`)
@@ -248,8 +242,6 @@ SPEC REPOS:
     - TXLiteAVSDK_Live
 
 EXTERNAL SOURCES:
-  bugly:
-    :path: ".symlinks/plugins/bugly/ios"
   camera_avfoundation:
     :path: ".symlinks/plugins/camera_avfoundation/ios"
   connectivity_plus:
@@ -290,8 +282,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/photo_manager/ios"
   plain_notification_token:
     :path: ".symlinks/plugins/plain_notification_token/ios"
-  rmonitor_base:
-    :path: ".symlinks/plugins/rmonitor_base/ios"
   shared_preferences_ios:
     :path: ".symlinks/plugins/shared_preferences_ios/ios"
   sqflite:
@@ -316,7 +306,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/webview_flutter_wkwebview/ios"
 
 SPEC CHECKSUMS:
-  bugly: b3674afe180564b5464015d0a8a6b174c2356589
   camera_avfoundation: 07c77549ea54ad95d8581be86617c094a46280d9
   connectivity_plus: 413a8857dd5d9f1c399a39130850d02fe0feaf7e
   device_info_plus: e5c5da33f982a436e103237c0c85f9031142abed
@@ -353,7 +342,6 @@ SPEC CHECKSUMS:
   plain_notification_token: b36467dc91939a7b6754267c701bbaca14996ee1
   PromisesObjC: ab77feca74fa2823e7af4249b8326368e61014cb
   ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
-  rmonitor_base: f5378ba20d99f4107eb9ee44e4b51d4c8bbf7d03
   SDWebImage: 72f86271a6f3139cc7e4a89220946489d4b9a866
   shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
