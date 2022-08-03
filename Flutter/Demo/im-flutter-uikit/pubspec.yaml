@@ -52,7 +52,7 @@ dependencies:
   tim_ui_kit: ^0.1.2
 #  tim_ui_kit:
 #    path: package_src/tim_ui_kit
-  tim_ui_kit_calling_plugin: ^0.3.0
+  tim_ui_kit_calling_plugin: ^0.3.1
 #  tim_ui_kit_calling_plugin:
 #    path:
 #      /Users/wangrunlin/Documents/GitHub/im-flutter-uikit-calling
