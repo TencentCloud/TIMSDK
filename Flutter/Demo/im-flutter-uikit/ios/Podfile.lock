@@ -6,14 +6,14 @@ PODS:
     - ReachabilitySwift
   - device_info_plus (0.0.1):
     - Flutter
-  - DKImagePickerController/Core (4.3.3):
+  - DKImagePickerController/Core (4.3.4):
     - DKImagePickerController/ImageDataManager
     - DKImagePickerController/Resource
-  - DKImagePickerController/ImageDataManager (4.3.3)
-  - DKImagePickerController/PhotoGallery (4.3.3):
+  - DKImagePickerController/ImageDataManager (4.3.4)
+  - DKImagePickerController/PhotoGallery (4.3.4):
     - DKImagePickerController/Core
     - DKPhotoGallery
-  - DKImagePickerController/Resource (4.3.3)
+  - DKImagePickerController/Resource (4.3.4)
   - DKPhotoGallery (0.0.17):
     - DKPhotoGallery/Core (= 0.0.17)
     - DKPhotoGallery/Model (= 0.0.17)
@@ -89,7 +89,7 @@ PODS:
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
-  - GoogleDataTransport (9.1.4):
+  - GoogleDataTransport (9.2.0):
     - GoogleUtilities/Environment (~> 7.7)
     - nanopb (< 2.30910.0, >= 2.30908.0)
     - PromisesObjC (< 3.0, >= 1.2)
@@ -145,9 +145,9 @@ PODS:
     - Flutter
   - PromisesObjC (2.1.1)
   - ReachabilitySwift (5.0.0)
-  - SDWebImage (5.13.0):
-    - SDWebImage/Core (= 5.13.0)
-  - SDWebImage/Core (5.13.0)
+  - SDWebImage (5.13.2):
+    - SDWebImage/Core (= 5.13.2)
+  - SDWebImage/Core (5.13.2)
   - shared_preferences_ios (0.0.1):
     - Flutter
   - sqflite (0.0.2):
@@ -157,19 +157,17 @@ PODS:
   - tencent_im_sdk_plugin (4.0.3):
     - Flutter
     - HydraAsync
-    - TXIMSDK_Plus_iOS (= 6.3.2619)
-  - tencent_trtc_cloud (10.1):
+    - TXIMSDK_Plus_iOS (= 6.5.2803)
+  - tencent_trtc_cloud (9.5.11234):
     - Flutter
-    - TXCustomBeautyProcesserPlugin (= 1.0.2)
-    - TXLiteAVSDK_Professional (= 10.1.11351)
+    - TXLiteAVSDK_Live (= 9.5.11346)
   - tim_ui_kit_push_plugin (0.0.1):
     - Flutter
   - Toast (4.0.0)
-  - TXCustomBeautyProcesserPlugin (1.0.2)
-  - TXIMSDK_Plus_iOS (6.3.2619)
-  - TXLiteAVSDK_Professional (10.1.11351):
-    - TXLiteAVSDK_Professional/Professional (= 10.1.11351)
-  - TXLiteAVSDK_Professional/Professional (10.1.11351)
+  - TXIMSDK_Plus_iOS (6.5.2803)
+  - TXLiteAVSDK_Live (9.5.11346):
+    - TXLiteAVSDK_Live/Live (= 9.5.11346)
+  - TXLiteAVSDK_Live/Live (9.5.11346)
   - uni_links (0.0.1):
     - Flutter
   - url_launcher_ios (0.0.1):
@@ -237,9 +235,8 @@ SPEC REPOS:
     - SDWebImage
     - SwiftyGif
     - Toast
-    - TXCustomBeautyProcesserPlugin
     - TXIMSDK_Plus_iOS
-    - TXLiteAVSDK_Professional
+    - TXLiteAVSDK_Live
 
 EXTERNAL SOURCES:
   camera_avfoundation:
@@ -307,7 +304,7 @@ SPEC CHECKSUMS:
   camera_avfoundation: 07c77549ea54ad95d8581be86617c094a46280d9
   connectivity_plus: 413a8857dd5d9f1c399a39130850d02fe0feaf7e
   device_info_plus: e5c5da33f982a436e103237c0c85f9031142abed
-  DKImagePickerController: 72fd378f244cef3d27288e0aebf217a4467e4012
+  DKImagePickerController: b512c28220a2b8ac7419f21c491fc8534b7601ac
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
   file_picker: 817ab1d8cd2da9d2da412a417162deee3500fc95
   Firebase: 44dd9724c84df18b486639e874f31436eaa9a20c
@@ -323,7 +320,7 @@ SPEC CHECKSUMS:
   fluttertoast: 16fbe6039d06a763f3533670197d01fc73459037
   fluwx: 79c66b6d795ab8208262ada215d9e60388cfe492
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
-  GoogleDataTransport: 5fffe35792f8b96ec8d6775f5eccd83c998d5a3b
+  GoogleDataTransport: 1c8145da7117bd68bbbed00cf304edb6a24de00f
   GoogleUtilities: e0913149f6b0625b553d70dae12b49fc62914fd1
   HydraAsync: 8d589bd725b0224f899afafc9a396327405f8063
   image_gallery_saver: 259eab68fb271cfd57d599904f7acdc7832e7ef2
@@ -339,17 +336,16 @@ SPEC CHECKSUMS:
   plain_notification_token: b36467dc91939a7b6754267c701bbaca14996ee1
   PromisesObjC: ab77feca74fa2823e7af4249b8326368e61014cb
   ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
-  SDWebImage: 0327043dbb9533e75f2eff8445b3df0f2ceca6ac
+  SDWebImage: 72f86271a6f3139cc7e4a89220946489d4b9a866
   shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
   SwiftyGif: 6c3eafd0ce693cad58bb63d2b2fb9bacb8552780
-  tencent_im_sdk_plugin: efab401e0d49ca4cdfcecb6cd351e250d6f7154e
-  tencent_trtc_cloud: b1da59fa9313ac9175f9c47a04ab84d76f2dafd7
+  tencent_im_sdk_plugin: 3b4deb7f211548b3c73c77161a966a4ec18f04bb
+  tencent_trtc_cloud: a717270754b3519b473b513b967c0b88b233aa45
   tim_ui_kit_push_plugin: 37913e565d11c4841c254711cba35a3d5b17b02d
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
-  TXCustomBeautyProcesserPlugin: 099393b941cb40eda12b3a80bf6c0319957b1cfd
-  TXIMSDK_Plus_iOS: acabf5f67a2f4f779f1efb4e75654518ace81cfb
-  TXLiteAVSDK_Professional: 7fdea0ff199f31285e90eea706e510516755798b
+  TXIMSDK_Plus_iOS: 968cd84625b842bf7c8bc8fed94d794b906d66b9
+  TXLiteAVSDK_Live: cae30145d70254bdd35838569fcdfefd3a369aa0
   uni_links: d97da20c7701486ba192624d99bffaaffcfc298a
   url_launcher_ios: 839c58cdb4279282219f5e248c3321761ff3c4de
   video_player_avfoundation: e489aac24ef5cf7af82702979ed16f2a5ef84cff
