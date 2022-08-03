@@ -5,6 +5,10 @@ abstract class FriendshipServices {
     required List<String> userIDList,
   });
 
+  Future<List<V2TimUserFullInfo>?> getUsersInfo({
+    required List<String> userIDList,
+  });
+
   Future<List<V2TimFriendOperationResult>?> addToBlackList({
     required List<String> userIDList,
   });
@@ -61,5 +65,9 @@ abstract class FriendshipServices {
     required String userID,
     String? friendRemark,
     Map<String, String>? friendCustomInfo,
+  });
+
+  Future<List<V2TimUserStatus>> getUserStatus({
+    required List<String> userIDList,
   });
 }

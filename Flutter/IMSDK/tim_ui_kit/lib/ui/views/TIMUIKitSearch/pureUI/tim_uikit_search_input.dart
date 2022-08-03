@@ -66,11 +66,12 @@ class TIMUIKitSearchInputState extends TIMUIKitState<TIMUIKitSearchInput> {
             child: TextField(
               autofocus: true,
               onChanged: (value) async {
-                final isEmpty = value.isEmpty;
+                final trimValue = value.trim();
+                final isEmpty = trimValue.isEmpty;
                 setState(() {
                   isEmptyInput = isEmpty ? true : false;
                 });
-                widget.onChange(value);
+                widget.onChange(trimValue);
               },
               keyboardType: TextInputType.text,
               textInputAction: TextInputAction.search,

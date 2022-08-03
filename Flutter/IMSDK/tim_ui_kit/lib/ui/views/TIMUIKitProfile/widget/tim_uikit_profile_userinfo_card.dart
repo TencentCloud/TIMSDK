@@ -44,7 +44,7 @@ class TIMUIKitProfileUserInfoCard extends TIMUIKitStatelessWidget {
           SizedBox(
             width: 48,
             height: 48,
-            child: Avatar(faceUrl: faceUrl, showName: showName ?? ""),
+            child: Avatar(faceUrl: faceUrl, showName: showName ?? "",type: 1,),
           ),
           const SizedBox(
             width: 12,

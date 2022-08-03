@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:lpinyin/lpinyin.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_friendship_view_model.dart';
+import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
 import 'package:tim_ui_kit/ui/widgets/avatar.dart';
@@ -27,7 +29,12 @@ class ContactList extends StatefulWidget {
   /// 顶部列表项构造器
   final Widget? Function(TopListItem item)? topListItemBuilder;
 
+  /// Control if shows the online status for each user on its avatar.
+  final bool isShowOnlineStatus;
+
   final int? maxSelectNum;
+
+  final List<V2TimGroupMemberFullInfo?>? groupMemberList;
 
   const ContactList(
       {Key? key,
@@ -39,7 +46,9 @@ class ContactList extends StatefulWidget {
       this.onTapItem,
       this.topList,
       this.topListItemBuilder,
-      this.maxSelectNum})
+      this.isShowOnlineStatus = false,
+      this.maxSelectNum,
+      this.groupMemberList})
       : super(key: key);
 
   @override
@@ -48,6 +57,8 @@ class ContactList extends StatefulWidget {
 
 class _ContactListState extends TIMUIKitState<ContactList> {
   List<V2TimFriendInfo> selectedMember = [];
+  final TUIFriendShipViewModel friendShipViewModel = serviceLocator<TUIFriendShipViewModel>();
+
 
   _getShowName(V2TimFriendInfo item) {
     final friendRemark = item.friendRemark ?? "";
@@ -88,14 +99,28 @@ class _ContactListState extends TIMUIKitState<ContactList> {
     final showName = _getShowName(item);
     final faceUrl = item.userProfile?.faceUrl ?? "";
 
+    final V2TimUserStatus? onlineStatus = widget.isShowOnlineStatus
+        ? friendShipViewModel.userStatusList.firstWhere(
+            (element) => element.userID == item.userID,
+            orElse: () => V2TimUserStatus(statusType: 0))
+        : null;
+
+    bool disabled = false;
+    if (widget.groupMemberList != null && widget.groupMemberList!.isNotEmpty) {
+      disabled = ((widget.groupMemberList
+                  ?.indexWhere((element) => element?.userID == item.userID)) ??
+              -1) >
+          -1;
+    }
     return Container(
       padding: const EdgeInsets.only(top: 8, left: 16, right: 12),
       child: Row(
         children: [
           if (widget.isCanSelectMemberItem)
             Container(
-              margin: const EdgeInsets.only(right: 10),
+              margin: const EdgeInsets.only(right: 12, bottom: 8),
               child: CheckBoxButton(
+                disabled: disabled,
                 isChecked: selectedMember.contains(item),
                 onChanged: (isChecked) {
                   if (isChecked) {
@@ -119,7 +144,10 @@ class _ContactListState extends TIMUIKitState<ContactList> {
             child: SizedBox(
               height: 40,
               width: 40,
-              child: Avatar(faceUrl: faceUrl, showName: showName),
+              child: Avatar(
+                  onlineStatus: onlineStatus,
+                  faceUrl: faceUrl,
+                  showName: showName),
             ),
           ),
           Expanded(

@@ -1,7 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_class.dart';
 
-typedef MessageFunction = Future<V2TimMessage> Function(V2TimMessage message);
+typedef MessageFunction = Future<V2TimMessage?> Function(V2TimMessage message);
 
 typedef MessageFunctionOptional = Future<V2TimMessage?> Function(
     V2TimMessage message);
@@ -50,11 +51,11 @@ abstract class DefaultLifeCycle {
   }
 
   static Future<bool> defaultAddFriend(String userID, String? remark,
-      String? friendGroup, String? addWording) async {
+      String? friendGroup, String? addWording, [BuildContext? context]) async {
     return true;
   }
 
-  static Future<bool> defaultAddGroup(String groupID, String message) async {
+  static Future<bool> defaultAddGroup(String groupID, String message, [BuildContext? context]) async {
     return true;
   }
 

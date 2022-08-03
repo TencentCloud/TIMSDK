@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_conversation_view_model.dart';
+import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
 import 'package:tim_ui_kit/ui/widgets/avatar.dart';
 import 'package:tim_ui_kit/ui/widgets/az_list_view.dart';
@@ -93,7 +94,7 @@ class _RecentForwardListState extends TIMUIKitState<RecentForwardList> {
                   height: 40,
                   width: 40,
                   margin: const EdgeInsets.only(right: 12),
-                  child: Avatar(faceUrl: faceUrl, showName: showName),
+                  child: Avatar(faceUrl: faceUrl, showName: showName,type: conversation.type,),
                 ),
                 Expanded(
                     child: Container(
@@ -120,13 +121,11 @@ class _RecentForwardListState extends TIMUIKitState<RecentForwardList> {
   @override
   void initState() {
     super.initState();
-    _conversationViewModel.loadData(count: 50);
   }
 
   @override
   void dispose() {
     super.dispose();
-    _conversationViewModel.dispose();
   }
 
   @override
@@ -142,7 +141,7 @@ class _RecentForwardListState extends TIMUIKitState<RecentForwardList> {
       ],
       builder: (context, w) {
         final recentConvList =
-            Provider.of<TUIConversationViewModel>(context).conversationList;
+            serviceLocator<TUIConversationViewModel>().conversationList;
         final showList = _buildMemberList(recentConvList);
 
         return AZListViewContainer(

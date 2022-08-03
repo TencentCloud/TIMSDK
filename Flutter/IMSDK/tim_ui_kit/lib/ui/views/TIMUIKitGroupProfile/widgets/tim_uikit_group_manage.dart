@@ -1,32 +1,30 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_slidable_for_tencent_im/flutter_slidable.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:provider/provider.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_statelesswidget.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_group_profile_view_model.dart';
+import 'package:tim_ui_kit/business_logic/separate_models/tui_group_profile_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
 import 'package:tim_ui_kit/ui/widgets/avatar.dart';
 import 'package:tim_ui_kit/ui/widgets/radio_button.dart';
-import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/shared_data_widget.dart';
 
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
 class GroupProfileGroupManage extends TIMUIKitStatelessWidget {
-  GroupProfileGroupManage({Key? key}) : super(key: key);
+  final TUIGroupProfileModel model;
+  GroupProfileGroupManage(this.model, {Key? key}) : super(key: key);
 
   @override
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     final TUITheme theme = value.theme;
 
-    final model = SharedDataWidget.of(context)?.model;
-    if (model == null) {
-      return Container();
-    }
+    final model = Provider.of<TUIGroupProfileModel>(context);
+
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -61,7 +59,7 @@ class GroupProfileGroupManage extends TIMUIKitStatelessWidget {
 
 /// 管理员设置页面
 class GroupProfileGroupManagePage extends StatefulWidget {
-  final TUIGroupProfileViewModel model;
+  final TUIGroupProfileModel model;
   const GroupProfileGroupManagePage({
     Key? key,
     required this.model,
@@ -88,8 +86,7 @@ class _GroupProfileGroupManagePageState
         ],
         builder: (context, w) {
           final memberList =
-              Provider.of<TUIGroupProfileViewModel>(context).groupMemberList ??
-                  [];
+              Provider.of<TUIGroupProfileModel>(context).groupMemberList;
           final theme = Provider.of<TUIThemeViewModel>(context).theme;
           final isAllMuted = widget.model.groupInfo?.isAllMuted ?? false;
           return Scaffold(
@@ -306,7 +303,7 @@ Widget _buildListItem(BuildContext context, V2TimGroupMemberFullInfo memberInfo,
                 height: 36,
                 child: Avatar(
                     faceUrl: memberInfo.faceUrl ?? "",
-                    showName: _getShowName(memberInfo)),
+                    showName: _getShowName(memberInfo),type: 2,),
               ),
               title: Row(
                 children: [
@@ -327,7 +324,7 @@ Widget _buildListItem(BuildContext context, V2TimGroupMemberFullInfo memberInfo,
 
 /// 选择管理员
 class GroupProfileSetManagerPage extends StatefulWidget {
-  final TUIGroupProfileViewModel model;
+  final TUIGroupProfileModel model;
 
   const GroupProfileSetManagerPage({Key? key, required this.model})
       : super(key: key);
@@ -368,136 +365,137 @@ class _GroupProfileSetManagerPageState
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     final TUITheme theme = value.theme;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          TIM_t("设置管理员"),
-          style: const TextStyle(color: Colors.white, fontSize: 17),
-        ),
-        shadowColor: theme.weakDividerColor,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [
-              theme.lightPrimaryColor ?? CommonColor.lightPrimaryColor,
-              theme.primaryColor ?? CommonColor.primaryColor
-            ]),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: widget.model)
+      ],
+      builder: (context, w){
+        final model = Provider.of<TUIGroupProfileModel>(context);
+        final memberList = model.groupMemberList;
+        final adminList = _getAdminMemberList(memberList);
+        final ownerList = _getOwnerList(memberList);
+        final String option2 = adminList.length.toString();
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(
+              TIM_t("设置管理员"),
+              style: const TextStyle(color: Colors.white, fontSize: 17),
+            ),
+            shadowColor: theme.weakDividerColor,
+            flexibleSpace: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(colors: [
+                  theme.lightPrimaryColor ?? CommonColor.lightPrimaryColor,
+                  theme.primaryColor ?? CommonColor.primaryColor
+                ]),
+              ),
+            ),
+            iconTheme: const IconThemeData(
+              color: Colors.white,
+            ),
           ),
-        ),
-        iconTheme: const IconThemeData(
-          color: Colors.white,
-        ),
-      ),
-      body: ChangeNotifierProvider.value(
-        value: widget.model,
-        child: Consumer<TUIGroupProfileViewModel>(
-          builder: (context, value, child) {
-            final memberList = value.groupMemberList ?? [];
-            final adminList = _getAdminMemberList(memberList);
-            final ownerList = _getOwnerList(memberList);
-            final String option2 = adminList.length.toString();
-            return SingleChildScrollView(
-                child: Column(
-              children: [
-                Container(
-                  alignment: Alignment.topLeft,
-                  color: theme.weakDividerColor,
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
-                  child: Text(
-                    TIM_t("群主"),
-                    style: TextStyle(fontSize: 14, color: theme.weakTextColor),
+          body: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Container(
+                    alignment: Alignment.topLeft,
+                    color: theme.weakDividerColor,
+                    padding:
+                    const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+                    child: Text(
+                      TIM_t("群主"),
+                      style: TextStyle(fontSize: 14, color: theme.weakTextColor),
+                    ),
                   ),
-                ),
-                ...ownerList
-                    .map(
-                      (e) => _buildListItem(context, e!, null),
-                    )
-                    .toList(),
-                Container(
-                  alignment: Alignment.topLeft,
-                  color: theme.weakDividerColor,
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
-                  child: Text(
-                    TIM_t_para("管理员 ({{option2}}/10)", "管理员 ($option2/10)")(
-                        option2: option2),
-                    style: TextStyle(fontSize: 14, color: theme.weakTextColor),
+                  ...ownerList
+                      .map(
+                        (e) => _buildListItem(context, e!, null),
+                  )
+                      .toList(),
+                  Container(
+                    alignment: Alignment.topLeft,
+                    color: theme.weakDividerColor,
+                    padding:
+                    const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+                    child: Text(
+                      TIM_t_para("管理员 ({{option2}}/10)", "管理员 ($option2/10)")(
+                          option2: option2),
+                      style: TextStyle(fontSize: 14, color: theme.weakTextColor),
+                    ),
                   ),
-                ),
-                InkWell(
-                  child: Container(
-                      color: Colors.white,
-                      padding: const EdgeInsets.only(left: 16),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 12,
-                        ),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border(
-                                bottom: BorderSide(
-                                    color: theme.weakDividerColor ??
-                                        CommonColor.weakDividerColor))),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.add_circle_outline,
-                              color: theme.primaryColor,
-                              size: 20,
-                            ),
-                            const SizedBox(
-                              width: 12,
-                            ),
-                            Text(TIM_t("添加管理员"))
-                          ],
-                        ),
-                      )),
-                  onTap: () async {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => GroupProfileAddAdmin(
-                                  memberList: memberList
-                                      .where((element) =>
-                                          element?.role ==
-                                          GroupMemberRoleType
-                                              .V2TIM_GROUP_MEMBER_ROLE_MEMBER)
-                                      .toList(),
-                                  appbarTitle: TIM_t("设置管理员"),
-                                  selectCompletedHandler:
-                                      (context, selectedMember) async {
-                                    if (selectedMember.isNotEmpty) {
-                                      for (var member in selectedMember) {
-                                        final userID = member!.userID;
-                                        widget.model.setMemberToAdmin(userID);
-                                      }
+                  InkWell(
+                    child: Container(
+                        color: Colors.white,
+                        padding: const EdgeInsets.only(left: 16),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 12,
+                          ),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border(
+                                  bottom: BorderSide(
+                                      color: theme.weakDividerColor ??
+                                          CommonColor.weakDividerColor))),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.add_circle_outline,
+                                color: theme.primaryColor,
+                                size: 20,
+                              ),
+                              const SizedBox(
+                                width: 12,
+                              ),
+                              Text(TIM_t("添加管理员"))
+                            ],
+                          ),
+                        )),
+                    onTap: () async {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => GroupProfileAddAdmin(
+                                memberList: memberList
+                                    .where((element) =>
+                                element?.role ==
+                                    GroupMemberRoleType
+                                        .V2TIM_GROUP_MEMBER_ROLE_MEMBER)
+                                    .toList(),
+                                appbarTitle: TIM_t("设置管理员"),
+                                selectCompletedHandler:
+                                    (context, selectedMember) async {
+                                  if (selectedMember.isNotEmpty) {
+                                    for (var member in selectedMember) {
+                                      final userID = member!.userID;
+                                      widget.model.setMemberToAdmin(userID);
                                     }
-                                  },
-                                )));
-                  },
-                ),
-                ...adminList
-                    .map((e) => _buildListItem(
-                        context,
-                        e!,
-                        ActionPane(motion: const DrawerMotion(), children: [
-                          SlidableAction(
-                            onPressed: (_) {
-                              _removeAdmin(context, e);
-                            },
-                            flex: 1,
-                            backgroundColor:
-                                theme.cautionColor ?? CommonColor.cautionColor,
-                            autoClose: true,
-                            label: TIM_t("删除"),
-                          )
-                        ])))
-                    .toList(),
-              ],
-            ));
-          },
-        ),
-      ),
+                                  }
+                                },
+                              )));
+                    },
+                  ),
+                  ...adminList
+                      .map((e) => _buildListItem(
+                      context,
+                      e!,
+                      ActionPane(motion: const DrawerMotion(), children: [
+                        SlidableAction(
+                          onPressed: (_) {
+                            _removeAdmin(context, e);
+                          },
+                          flex: 1,
+                          backgroundColor:
+                          theme.cautionColor ?? CommonColor.cautionColor,
+                          autoClose: true,
+                          label: TIM_t("删除"),
+                        )
+                      ])))
+                      .toList(),
+                ],
+              )),
+        );
+      },
     );
   }
 }
@@ -629,7 +627,7 @@ class _GroupProfileAddAdminState extends TIMUIKitState<GroupProfileAddAdmin> {
                             height: 36,
                             child: Avatar(
                                 faceUrl: e?.faceUrl ?? "",
-                                showName: _getShowName(e)),
+                                showName: _getShowName(e),type: 2,),
                           ),
                           const SizedBox(
                             width: 10,

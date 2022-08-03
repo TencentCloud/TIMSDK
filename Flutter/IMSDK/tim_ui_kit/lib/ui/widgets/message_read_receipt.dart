@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 // ignore: unused_import
 import 'package:provider/provider.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
@@ -98,6 +99,7 @@ class _MessageReadReceiptState extends TIMUIKitState<MessageReadReceipt> {
         return Text(TIM_t("[自定义]"));
       case MessageElemType.V2TIM_ELEM_TYPE_SOUND:
         return TIMUIKitSoundElem(
+            message: message,
             soundElem: message.soundElem!,
             msgID: message.msgID ?? "",
             isFromSelf: isFromSelf,
@@ -110,12 +112,18 @@ class _MessageReadReceiptState extends TIMUIKitState<MessageReadReceipt> {
         );
       // return Text(message.textElem!.text!);
       case MessageElemType.V2TIM_ELEM_TYPE_FACE:
-        return TIMUIKitFaceElem(path: message.faceElem?.data ?? "");
+        return TIMUIKitFaceElem(
+            isShowJump: false,
+            path: message.faceElem?.data ?? "",
+            message: message);
       case MessageElemType.V2TIM_ELEM_TYPE_FILE:
         return TIMUIKitFileElem(
-            messageID: message.msgID,
-            fileElem: message.fileElem,
-            isSelf: isFromSelf);
+          message: message,
+          messageID: message.msgID,
+          fileElem: message.fileElem,
+          isSelf: isFromSelf,
+          isShowJump: false,
+        );
       case MessageElemType.V2TIM_ELEM_TYPE_IMAGE:
         return TIMUIKitImageElem(
           message: message,
@@ -128,6 +136,8 @@ class _MessageReadReceiptState extends TIMUIKitState<MessageReadReceipt> {
         return Text(TIM_t("[位置]"));
       case MessageElemType.V2TIM_ELEM_TYPE_MERGER:
         return TIMUIKitMergerElem(
+            isShowJump: false,
+            message: message,
             mergerElem: message.mergerElem!,
             isSelf: isFromSelf,
             messageID: message.msgID!);
@@ -215,7 +225,7 @@ class _MessageReadReceiptState extends TIMUIKitState<MessageReadReceipt> {
             children: [
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                    const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -258,7 +268,7 @@ class _MessageReadReceiptState extends TIMUIKitState<MessageReadReceipt> {
                       child: Container(
                         height: 50.0,
                         alignment: Alignment.bottomCenter,
-                        padding: const EdgeInsets.only(bottom: 5),
+                        padding: const EdgeInsets.only(bottom: 12),
                         decoration: BoxDecoration(
                             color: Colors.white,
                             border: Border(
@@ -271,11 +281,11 @@ class _MessageReadReceiptState extends TIMUIKitState<MessageReadReceipt> {
                           TIM_t_para("{{option1}}人已读", "$option1人已读")(
                               option1: option1),
                           style: TextStyle(
-                              color: currentIndex != 0
-                                  ? theme.weakTextColor
-                                  : Colors.black,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold),
+                            color: currentIndex != 0
+                                ? theme.weakTextColor
+                                : Colors.black,
+                            fontSize: 18,
+                          ),
                         ),
                       ),
                     ),
@@ -290,7 +300,7 @@ class _MessageReadReceiptState extends TIMUIKitState<MessageReadReceipt> {
                       child: Container(
                         alignment: Alignment.bottomCenter,
                         height: 50.0,
-                        padding: const EdgeInsets.only(bottom: 5),
+                        padding: const EdgeInsets.only(bottom: 12),
                         decoration: BoxDecoration(
                             color: Colors.white,
                             border: Border(
@@ -303,11 +313,11 @@ class _MessageReadReceiptState extends TIMUIKitState<MessageReadReceipt> {
                           TIM_t_para("{{option2}}人未读", "$option2人未读")(
                               option2: option2),
                           style: TextStyle(
-                              color: currentIndex != 1
-                                  ? theme.weakTextColor
-                                  : Colors.black,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold),
+                            color: currentIndex != 1
+                                ? theme.weakTextColor
+                                : Colors.black,
+                            fontSize: 18,
+                          ),
                         ),
                       ),
                     ),

@@ -1,5 +1,7 @@
 // ignore_for_file: unrelated_type_equality_checks
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_statelesswidget.dart';
@@ -34,10 +36,23 @@ class TIMUIKitLastMsg extends TIMUIKitStatelessWidget {
     return _getLastMsgShowText(lastMsg, context);
   }
 
+  static LinkMessage? getLinkMessage(V2TimCustomElem? customElem) {
+    try {
+      if (customElem?.data != null) {
+        final customMessage = jsonDecode(customElem!.data!);
+        return LinkMessage.fromJSON(customMessage);
+      }
+      return null;
+    } catch (err) {
+      return null;
+    }
+  }
+
   static String handleCustomMessage(V2TimMessage message) {
     final customElem = message.customElem;
     final callingMessage = TIMUIKitCustomElem.getCallMessage(customElem);
-    String callingLastMsgShow = TIM_t("自定义");
+    final linkMessage = getLinkMessage(customElem);
+    String customLastMsgShow = TIM_t("[自定义]");
     if (callingMessage != null) {
       // 如果是结束消息
       final isCallEnd = TIMUIKitCustomElem.isCallEndExist(callingMessage);
@@ -51,19 +66,21 @@ class TIMUIKitLastMsg extends TIMUIKitStatelessWidget {
       }
 
       final option3 = callTime;
-      callingLastMsgShow = isCallEnd
+      customLastMsgShow = isCallEnd
           ? TIM_t_para("通话时间：{{option1}}", "通话时间：$option3")(option1: option3)
           : TIMUIKitCustomElem.getActionType(callingMessage.actionType!);
 
-      final option1 = callingLastMsgShow;
-      final option2 = callingLastMsgShow;
-      callingLastMsgShow = isVoiceCall
+      final option1 = customLastMsgShow;
+      final option2 = customLastMsgShow;
+      customLastMsgShow = isVoiceCall
           ? TIM_t_para("[语音通话]：{{option1}}", "[语音通话]：$option1")(
               option1: option1)
           : TIM_t_para("[视频通话]：{{option2}}", "[视频通话]：$option2")(
               option2: option2);
+    }else if(linkMessage != null && linkMessage.text != null){
+      customLastMsgShow = linkMessage.text!;
     }
-    return callingLastMsgShow;
+    return customLastMsgShow;
   }
 
   String _getLastMsgShowText(V2TimMessage? message, BuildContext context) {

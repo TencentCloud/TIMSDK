@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:tim_ui_kit/business_logic/life_cycle/profile_life_cycle.dart';
 import 'package:tim_ui_kit/business_logic/model/profile_model.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_friendship_view_model.dart';
 import 'package:tim_ui_kit/data_services/conversation/conversation_services.dart';
 import 'package:tim_ui_kit/data_services/core/core_services_implements.dart';
 import 'package:tim_ui_kit/data_services/friendShip/friendship_services.dart';
@@ -15,6 +16,7 @@ class TUIProfileViewModel extends ChangeNotifier {
       serviceLocator<ConversationService>();
   final FriendshipServices _friendshipServices =
       serviceLocator<FriendshipServices>();
+  final TUIFriendShipViewModel _friendShipViewModel = serviceLocator<TUIFriendShipViewModel>();
   final CoreServicesImpl _coreServices = serviceLocator<CoreServicesImpl>();
   final MessageService _messageService = serviceLocator<MessageService>();
 
@@ -72,17 +74,22 @@ class TUIProfileViewModel extends ChangeNotifier {
     _userProfile =
         UserProfile(friendInfo: friendInfo, conversation: conversation);
 
+    _shouldAddToBlackList = _friendShipViewModel.blockList
+            .indexWhere((element) => element.userID == userID) >
+        -1;
+
     notifyListeners();
   }
 
-  pinedConversation(bool isPined, String convID) async {
-    await _conversationService.pinConversation(
+  Future<V2TimCallback> pinedConversation(bool isPined, String convID) async {
+    final res = await _conversationService.pinConversation(
         conversationID: convID, isPinned: isPined);
     _userProfile?.conversation!.isPinned = isPined;
     notifyListeners();
+    return res;
   }
 
-  addToBlackList(bool shouldAdd, String userID) async {
+  Future<List<V2TimFriendOperationResult>?> addToBlackList(bool shouldAdd, String userID) async {
     if (_lifeCycle?.shouldAddToBlockList != null &&
         await _lifeCycle!.shouldAddToBlockList(userID) == false) {
       return null;
@@ -97,6 +104,8 @@ class TUIProfileViewModel extends ChangeNotifier {
           _friendType = 0;
         }
       }
+      notifyListeners();
+      return res;
     } else {
       final res =
           await _friendshipServices.deleteFromBlackList(userIDList: [userID]);
@@ -104,11 +113,18 @@ class TUIProfileViewModel extends ChangeNotifier {
         final result = res.first;
         if (result.resultCode == 0) {
           _shouldAddToBlackList = false;
-          _friendType = 1;
+          final checkFriend = await _friendshipServices.checkFriend(
+              userIDList: [userID],
+              checkType: FriendTypeEnum.V2TIM_FRIEND_TYPE_SINGLE);
+          if (checkFriend != null) {
+            final res = checkFriend.first;
+            _friendType = res.resultType;
+          }
         }
       }
+      notifyListeners();
+      return res;
     }
-    notifyListeners();
   }
 
   Future<V2TimFriendOperationResult?> deleteFriend(String userID) async {
@@ -126,7 +142,7 @@ class TUIProfileViewModel extends ChangeNotifier {
     return null;
   }
 
-  changeFriendVerificationMethod(int allowType) async {
+  Future<V2TimCallback> changeFriendVerificationMethod(int allowType) async {
     final res = await _coreServices.setSelfInfo(
       userFullInfo: V2TimUserFullInfo.fromJson(
         {"allowType": allowType},
@@ -138,6 +154,7 @@ class TUIProfileViewModel extends ChangeNotifier {
     } else {
       print("${res.code},${res.desc}");
     }
+    return res;
   }
 
   // 1：男 女：2
@@ -209,7 +226,7 @@ class TUIProfileViewModel extends ChangeNotifier {
     return res;
   }
 
-  setMessageDisturb(String userID, bool isDisturb) async {
+  Future<V2TimCallback> setMessageDisturb(String userID, bool isDisturb) async {
     final res = await _messageService.setC2CReceiveMessageOpt(
         userIDList: [userID],
         opt: isDisturb
@@ -219,5 +236,6 @@ class TUIProfileViewModel extends ChangeNotifier {
       _isDisturb = isDisturb;
     }
     notifyListeners();
+    return res;
   }
 }

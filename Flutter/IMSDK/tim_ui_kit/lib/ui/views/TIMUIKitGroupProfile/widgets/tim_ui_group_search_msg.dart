@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_statelesswidget.dart';
+import 'package:tim_ui_kit/business_logic/separate_models/tui_group_profile_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
@@ -26,10 +27,8 @@ class GroupProfileGroupSearch extends TIMUIKitStatelessWidget {
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     final TUITheme theme = value.theme;
 
-    final model = SharedDataWidget.of(context)?.model;
-    if (model == null) {
-      return Container();
-    }
+    final model = Provider.of<TUIGroupProfileModel>(context);
+
     return InkWell(
       onTap: () async {
         V2TimConversation? conversation =

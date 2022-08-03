@@ -1,5 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:tim_ui_kit/base_widgets/tim_ui_kit_statelesswidget.dart';
+import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
@@ -9,22 +11,62 @@ import 'package:tim_ui_kit/ui/widgets/merger_message_screen.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
 
-class TIMUIKitMergerElem extends TIMUIKitStatelessWidget {
+import 'TIMUIKitMessageReaction/tim_uikit_message_reaction_show_panel.dart';
+
+class TIMUIKitMergerElem extends StatefulWidget {
   final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
   final V2TimMergerElem mergerElem;
   final String messageID;
   final bool isSelf;
+  final bool isShowJump;
+  final VoidCallback? clearJump;
+  final V2TimMessage message;
+  final bool? isShowMessageReaction;
 
   TIMUIKitMergerElem(
       {Key? key,
+      required this.message,
       required this.mergerElem,
       required this.isSelf,
-      required this.messageID})
+      this.isShowMessageReaction,
+      required this.messageID, required this.isShowJump, this.clearJump})
       : super(key: key);
 
+  @override
+  State<StatefulWidget> createState() => TIMUIKitMergerElemState();
+
+}
+
+class TIMUIKitMergerElemState extends TIMUIKitState<TIMUIKitMergerElem>{
+  bool isShowJumpState = false;
+
+  _showJumpColor() {
+    int shineAmount = 6;
+    setState(() {
+      isShowJumpState = true;
+    });
+    Future.delayed(const Duration(milliseconds: 100), () {
+      if (widget.clearJump != null) {
+        widget.clearJump!();
+      }
+    });
+    Timer.periodic(const Duration(milliseconds: 300), (timer) {
+      if (mounted) {
+        setState(() {
+          isShowJumpState = shineAmount.isOdd ? true : false;
+        });
+      }
+      if (shineAmount == 0 || !mounted) {
+        timer.cancel();
+      }
+      shineAmount--;
+    });
+  }
+
+
   _handleTap(BuildContext context) async {
-    if (messageID != "") {
-      final mergerMessageList = await model.downloadMergerMessage(messageID);
+    if (widget.messageID != "") {
+      final mergerMessageList = await widget.model.downloadMergerMessage(widget.messageID);
       if (mergerMessageList != null) {
         Navigator.push(
             context,
@@ -37,28 +79,32 @@ class TIMUIKitMergerElem extends TIMUIKitStatelessWidget {
   }
 
   List<String>? _getAbstractList() {
-    final length = mergerElem.abstractList!.length;
+    final length = widget.mergerElem.abstractList!.length;
     if (length <= 4) {
-      return mergerElem.abstractList;
+      return widget.mergerElem.abstractList;
     }
-    return mergerElem.abstractList!.getRange(0, 4).toList();
+    return widget.mergerElem.abstractList!.getRange(0, 4).toList();
   }
 
   @override
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     final TUITheme theme = value.theme;
-
+    if (widget.isShowJump) {
+      Future.delayed(Duration.zero, () {
+        _showJumpColor();
+      });
+    }
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
-          topLeft: isSelf ? const Radius.circular(10) : Radius.zero,
+          topLeft: widget.isSelf ? const Radius.circular(10) : Radius.zero,
           bottomLeft: const Radius.circular(10),
-          topRight: isSelf ? Radius.zero : const Radius.circular(10),
+          topRight: widget.isSelf ? Radius.zero : const Radius.circular(10),
           bottomRight: const Radius.circular(10),
         ),
         border: Border.all(
-          color: theme.weakDividerColor ?? CommonColor.weakDividerColor,
+          color: isShowJumpState ? const Color.fromRGBO(245, 166, 35, 1) : (theme.weakDividerColor ?? CommonColor.weakDividerColor),
           width: 1,
         ),
       ),
@@ -69,12 +115,13 @@ class TIMUIKitMergerElem extends TIMUIKitStatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(12),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
                   Expanded(
                     child: Text(
-                      mergerElem.title!,
+                      widget.mergerElem.title!,
                       softWrap: true,
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.left,
@@ -97,45 +144,43 @@ class TIMUIKitMergerElem extends TIMUIKitStatelessWidget {
                 children: _getAbstractList()!
                     .map(
                       (e) => Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              e,
-                              textAlign: TextAlign.left,
-                              softWrap: true,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
-                              style: TextStyle(
-                                color: theme.weakTextColor,
-                                fontSize: 12,
-                              ),
-                            ),
+                    children: [
+                      Expanded(
+                        child: Text(
+                          e,
+                          textAlign: TextAlign.left,
+                          softWrap: true,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                          style: TextStyle(
+                            color: theme.weakTextColor,
+                            fontSize: 12,
                           ),
-                        ],
+                        ),
                       ),
-                    )
+                    ],
+                  ),
+                )
                     .toList(),
               ),
               const SizedBox(
                 height: 4,
               ),
               const Divider(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    TIM_t("聊天记录"),
-                    style: TextStyle(
-                      color: theme.weakTextColor,
-                      fontSize: 10,
-                    ),
-                  ),
-                ],
-              )
+              Text(
+                TIM_t("聊天记录"),
+                style: TextStyle(
+                  color: theme.weakTextColor,
+                  fontSize: 10,
+                ),
+              ),
+              if (widget.isShowMessageReaction ?? true)
+                TIMUIKitMessageReactionShowPanel(message: widget.message)
             ],
           ),
         ),
       ),
     );
   }
+
 }

@@ -9,6 +9,8 @@ import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/widgets/link_preview/link_preview_entry.dart';
 import 'package:tim_ui_kit/ui/widgets/link_preview/widgets/link_preview.dart';
 
+import 'TIMUIKitMessageReaction/tim_uikit_message_reaction_show_panel.dart';
+
 class TIMUIKitTextElem extends StatefulWidget {
   final V2TimMessage message;
   final bool isFromSelf;
@@ -19,7 +21,7 @@ class TIMUIKitTextElem extends StatefulWidget {
   final Color? backgroundColor;
   final EdgeInsetsGeometry? textPadding;
   final TUIChatViewModel chatModel;
-
+  final bool? isShowMessageReaction;
   const TIMUIKitTextElem(
       {Key? key,
       required this.message,
@@ -28,6 +30,7 @@ class TIMUIKitTextElem extends StatefulWidget {
       required this.clearJump,
       this.fontStyle,
       this.borderRadius,
+      this.isShowMessageReaction,
       this.backgroundColor,
       this.textPadding,
       required this.chatModel})
@@ -56,14 +59,14 @@ class _TIMUIKitTextElemState extends TIMUIKitState<TIMUIKitTextElem> {
   }
 
   _showJumpColor() {
-    int shineAmount = 10;
+    int shineAmount = 6;
     setState(() {
       isShowJumpState = true;
     });
     Future.delayed(const Duration(milliseconds: 100), () {
       widget.clearJump();
     });
-    Timer.periodic(const Duration(milliseconds: 400), (timer) {
+    Timer.periodic(const Duration(milliseconds: 300), (timer) {
       if (mounted) {
         setState(() {
           isShowJumpState = shineAmount.isOdd ? true : false;
@@ -82,19 +85,23 @@ class _TIMUIKitTextElemState extends TIMUIKitState<TIMUIKitTextElem> {
         UrlPreviewType.previewCardAndHyperlink) {
       return;
     }
-    if (widget.message.localCustomData != null &&
-        widget.message.localCustomData!.isNotEmpty) {
-      final String localJSON = widget.message.localCustomData!;
-      final LinkPreviewModel? localPreviewInfo =
-          LinkPreviewModel.fromMap(json.decode(localJSON));
-      // If [localCustomData] is not empty, check if the link preview info exists
-      if (localPreviewInfo == null || localPreviewInfo.isEmpty()) {
-        // If not exists, get it
+    try{
+      if (widget.message.localCustomData != null &&
+          widget.message.localCustomData!.isNotEmpty) {
+        final String localJSON = widget.message.localCustomData!;
+        final LinkPreviewModel? localPreviewInfo =
+        LinkPreviewModel.fromMap(json.decode(localJSON));
+        // If [localCustomData] is not empty, check if the link preview info exists
+        if (localPreviewInfo == null || localPreviewInfo.isEmpty()) {
+          // If not exists, get it
+          _initLinkPreview();
+        }
+      } else {
+        // It [localCustomData] is empty, get the link info
         _initLinkPreview();
       }
-    } else {
-      // It [localCustomData] is empty, get the link info
-      _initLinkPreview();
+    }catch(e){
+      return null;
     }
   }
 
@@ -114,17 +121,21 @@ class _TIMUIKitTextElemState extends TIMUIKitState<TIMUIKitTextElem> {
     // Otherwise, it will returns null.
     if (widget.message.localCustomData != null &&
         widget.message.localCustomData!.isNotEmpty) {
-      final String localJSON = widget.message.localCustomData!;
-      final LinkPreviewModel? localPreviewInfo =
-          LinkPreviewModel.fromMap(json.decode(localJSON));
-      if (localPreviewInfo != null && !localPreviewInfo.isEmpty()) {
-        return Container(
-          margin: const EdgeInsets.only(top: 8),
-          child:
-              // You can use this default widget [LinkPreviewWidget] to render preview card, or you can use custom widget.
-              LinkPreviewWidget(linkPreview: localPreviewInfo),
-        );
-      } else {
+      try{
+        final String localJSON = widget.message.localCustomData!;
+        final LinkPreviewModel? localPreviewInfo =
+        LinkPreviewModel.fromMap(json.decode(localJSON));
+        if (localPreviewInfo != null && !localPreviewInfo.isEmpty()) {
+          return Container(
+            margin: const EdgeInsets.only(top: 8),
+            child:
+            // You can use this default widget [LinkPreviewWidget] to render preview card, or you can use custom widget.
+            LinkPreviewWidget(linkPreview: localPreviewInfo),
+          );
+        } else {
+          return null;
+        }
+      }catch(e){
         return null;
       }
     } else {
@@ -164,7 +175,8 @@ class _TIMUIKitTextElemState extends TIMUIKitState<TIMUIKitTextElem> {
         color: backgroundColor,
         borderRadius: widget.borderRadius ?? borderRadius,
       ),
-      constraints: const BoxConstraints(maxWidth: 240),
+      constraints:
+          BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.7),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -181,6 +193,7 @@ class _TIMUIKitTextElemState extends TIMUIKitState<TIMUIKitTextElem> {
               widget.chatModel.chatConfig.urlPreviewType ==
                   UrlPreviewType.previewCardAndHyperlink)
             _renderPreviewWidget()!,
+            if(widget.isShowMessageReaction ?? true)TIMUIKitMessageReactionShowPanel(message: widget.message)
         ],
       ),
     );

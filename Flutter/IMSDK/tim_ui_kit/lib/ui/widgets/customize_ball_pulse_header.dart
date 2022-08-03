@@ -167,11 +167,9 @@ class BallPulseHeaderWidgetState extends TIMUIKitState<BallPulseHeaderWidget> {
       _isAnimated = false;
     } else if (!_isAnimated) {
       _isAnimated = true;
-      setState(() {
-        _ballSize1 = 4.0;
-        _ballSize2 = 11.0;
-        _ballSize3 = 18.0;
-      });
+      _ballSize1 = 4.0;
+      _ballSize2 = 11.0;
+      _ballSize3 = 18.0;
       _loopAnimated();
     }
     return Stack(

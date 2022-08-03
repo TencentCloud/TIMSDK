@@ -4,71 +4,60 @@ import 'package:tim_ui_kit/business_logic/view_models/tui_conversation_view_mode
 class TIMUIKitConversationController {
   TUIConversationViewModel model = TUIConversationViewModel();
 
-  /// 获取选中的会话
+  /// Get the selected conversation currently
   V2TimConversation? get selectedConversation {
     return model.selectedConversation;
   }
 
-  /// 获取会话列表
+  /// Get the conversation list
   List<V2TimConversation?> get conversationList {
     return model.conversationList;
   }
 
-  /// 设置会话列表
+  /// Set the conversation list
   set conversationList(List<V2TimConversation?> conversationList) {
     model.conversationList = conversationList;
   }
 
-  /// 加载会话列表数据
+  /// Load teh conversation list to UI
   loadData({int count = 100}) {
     model.loadData(count: count);
   }
 
-  /// 重新加载会话列表数据
+  /// Reload teh conversation list to UI
   reloadData({int count = 100}) {
-    model.clear();
-    model.loadData(count: count);
+    model.refresh(count: count);
   }
 
-  /// 设置会话置顶
-  pinConversation({required String conversationID, required bool isPinned}) {
+  /// Pin one conversation to the top
+  Future<V2TimCallback> pinConversation({required String conversationID, required bool isPinned}) {
     return model.pinConversation(
         conversationID: conversationID, isPinned: isPinned);
   }
 
-  /// 设置会话草稿
-  setConversationDraft({required String conversationID, String? draftText}) {
+  /// Set the draft for a conversation
+  Future<V2TimCallback> setConversationDraft({required String conversationID, String? draftText}) {
     return model.setConversationDraft(
         conversationID: conversationID, draftText: draftText);
   }
 
-  /// 清除指定会话消息
-  clearHistoryMessage({required V2TimConversation conversation}) {
+  /// Clear the historical message in a specific conversation
+  Future<V2TimCallback?>? clearHistoryMessage({required V2TimConversation conversation}) {
     final convType = conversation.type;
     final convID = convType == 1 ? conversation.userID : conversation.groupID;
     if (convType != null && convID != null) {
-      model.clearHistoryMessage(convID: convID, convType: convType);
+      return model.clearHistoryMessage(convID: convID, convType: convType);
     }
+    return null;
   }
 
-  /// 删除会话
+  /// Delete a conversation
   Future<V2TimCallback?> deleteConversation({required String conversationID}) {
     return model.deleteConversation(conversationID: conversationID);
   }
 
-  /// 添加会话监听器
-  setConversationListener({V2TimConversationListener? listener}) {
-    model.setConversationListener(listener: listener);
-  }
-
-  /// 移除会话监听器
-  removeConversationListener() {
-    model.removeConversationListener();
-  }
-
-  /// 销毁
+  /// Clear the conversation list from UI
   dispose() {
-    model.removeConversationListener();
     model.clear();
   }
 }
