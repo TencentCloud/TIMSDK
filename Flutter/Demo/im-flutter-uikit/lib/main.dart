@@ -12,6 +12,7 @@ import 'package:timuikit/i18n/strings.g.dart';
 import 'package:timuikit/src/config.dart';
 import 'package:timuikit/src/pages/app.dart';
 import 'package:timuikit/src/provider/custom_sticker_package.dart';
+import 'package:timuikit/src/provider/local_setting.dart';
 import 'package:timuikit/src/provider/login_user_Info.dart';
 import 'package:timuikit/src/provider/theme.dart';
 
@@ -55,6 +56,7 @@ void main() {
             ChangeNotifierProvider(create: (_) => LoginUserInfo()),
             ChangeNotifierProvider(create: (_) => DefaultThemeData()),
             ChangeNotifierProvider(create: (_) => CustomStickerPackageData()),
+            ChangeNotifierProvider(create: (_) => LocalSetting()),
           ],
           child: const TUIKitDemoApp(),
         ),
