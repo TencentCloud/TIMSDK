@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 3
- * Strings: 678 (226.0 per locale)
+ * Strings: 711 (237.0 per locale)
  *
- * Built on 2022-07-08 at 02:57 UTC
+ * Built on 2022-08-03 at 07:36 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -541,6 +541,17 @@ class _StringsEn {
 	String get k_03exdnb => 'User ID';
 	String get k_16kquu8 => 'Current path';
 	String get k_0fbvuqs => 'Copy';
+	String get k_16j153h => 'Tencent Cloud IM APP ("this APP") is a product provided by Tencent Cloud aims of demonstration, which enjoys the copyright and ownership of this APP. This APP is for functional experience only and must not be used for any commercial purpose. It is strictly forbidden to spread any illegal content such as pornography, abuse, violence and terrorism, politics and so on.';
+	String get k_13ghyf8 => '[Security Reminder] This APP is only for experiencing the features of Tencent Cloud IM Chat, and cannot be used for any other purposes.';
+	String get k_0gt6cro => 'Complain here';
+	String k_03595fk({required Object option1}) => ' and $option1 more';
+	String k_1gpzgni({required Object option2}) => 'group with $option2 people';
+	String get k_02lfg57 => 'New Group Chat';
+	String get k_17ifd8i => 'Welcome to Tencent IM Chat SDK and TUIKit on Flutter';
+	String get k_1f0ms23 => 'Message read status';
+	String get k_1c0x9ha => 'Determines if the reading status shows for your messages and whether others can know about if you read.';
+	String get k_1dzhdr5 => 'Online status';
+	String get k_0mwsniq => 'Determines if the online status shows for you contacts or friends.';
 }
 
 // Path: <root>
@@ -785,6 +796,17 @@ class _StringsZhHans implements _StringsEn {
 	@override String get k_03exdnb => '用户名';
 	@override String get k_16kquu8 => '当前目录';
 	@override String get k_0fbvuqs => '开始拷贝';
+	@override String get k_16j153h => '腾讯云IM APP（“本产品”）是由腾讯云提供的一款测试产品，腾讯云享有本产品的著作权和所有权。本产品仅用于功能体验，不得用于任何商业用途。严禁在使用中有任何色情、辱骂、暴恐、涉政等违法内容传播。';
+	@override String get k_13ghyf8 => '【安全提示】本 APP 仅用于体验腾讯云即时通信 IM 产品功能，不可用于业务洽谈与拓展。请勿轻信汇款、中奖等涉及钱款的信息，勿轻易拨打陌生电话，谨防上当受骗。';
+	@override String get k_0gt6cro => '点此投诉';
+	@override String k_03595fk({required Object option1}) => ' 等$option1人';
+	@override String k_1gpzgni({required Object option2}) => '$option2人群';
+	@override String get k_02lfg57 => '新群聊';
+	@override String get k_17ifd8i => '欢迎使用本 APP 体验腾讯云 IM 产品服务';
+	@override String get k_1f0ms23 => '消息阅读状态';
+	@override String get k_1c0x9ha => '关闭后，您收发的消息均不带消息阅读状态，您将无法看到对方是否已读，同时对方也无法看到你是否已读。';
+	@override String get k_1dzhdr5 => '显示在线状态';
+	@override String get k_0mwsniq => '关闭后，您将不可以在会话列表和通讯录中看到好友在线或离线的状态提示。';
 }
 
 // Path: <root>
@@ -1029,6 +1051,17 @@ class _StringsZhHant implements _StringsEn {
 	@override String get k_03exdnb => '用戶名';
 	@override String get k_16kquu8 => '當前目錄';
 	@override String get k_0fbvuqs => '開始拷貝';
+	@override String get k_16j153h => '騰訊雲IM APP（「本產品」）是由騰訊雲提供的一款測試產品，騰訊雲享有本產品的著作權和所有權。本產品僅用於功能體驗，不得用於任何商業用途。嚴禁在使用中有任何色情、辱罵、暴恐、涉政等違法內容傳播。';
+	@override String get k_13ghyf8 => '【安全提示】本 APP 僅用於體驗騰訊雲即時通信 IM 產品功能，不可用於業務洽談與拓展。請勿輕信匯款、中獎等涉及錢款的信息，勿輕易撥打陌生電話，謹防上當受騙。';
+	@override String get k_0gt6cro => '點此投訴';
+	@override String k_03595fk({required Object option1}) => ' 等$option1人';
+	@override String k_1gpzgni({required Object option2}) => '$option2人群';
+	@override String get k_02lfg57 => '新群組';
+	@override String get k_17ifd8i => '歡迎使用本 APP 體驗騰訊雲 IM 產品服務';
+	@override String get k_1f0ms23 => '消息閱讀狀態';
+	@override String get k_1c0x9ha => '關閉後，您收發的消息均不帶消息閱讀狀態，您將無法看到對方是否已讀，同時對方也無法看到你是否已讀。';
+	@override String get k_1dzhdr5 => '顯示在線狀態';
+	@override String get k_0mwsniq => '關閉後，您將不可以在會話列表和通訊錄中看到好友在線或離線的狀態提示。';
 }
 
 /// Flat map(s) containing all translations.
@@ -1263,6 +1296,17 @@ extension on _StringsEn {
 			'k_03exdnb': 'User ID',
 			'k_16kquu8': 'Current path',
 			'k_0fbvuqs': 'Copy',
+			'k_16j153h': 'Tencent Cloud IM APP ("this APP") is a product provided by Tencent Cloud aims of demonstration, which enjoys the copyright and ownership of this APP. This APP is for functional experience only and must not be used for any commercial purpose. It is strictly forbidden to spread any illegal content such as pornography, abuse, violence and terrorism, politics and so on.',
+			'k_13ghyf8': '[Security Reminder] This APP is only for experiencing the features of Tencent Cloud IM Chat, and cannot be used for any other purposes.',
+			'k_0gt6cro': 'Complain here',
+			'k_03595fk': ({required Object option1}) => ' and $option1 more',
+			'k_1gpzgni': ({required Object option2}) => 'group with $option2 people',
+			'k_02lfg57': 'New Group Chat',
+			'k_17ifd8i': 'Welcome to Tencent IM Chat SDK and TUIKit on Flutter',
+			'k_1f0ms23': 'Message read status',
+			'k_1c0x9ha': 'Determines if the reading status shows for your messages and whether others can know about if you read.',
+			'k_1dzhdr5': 'Online status',
+			'k_0mwsniq': 'Determines if the online status shows for you contacts or friends.',
 		};
 	}
 }
@@ -1496,6 +1540,17 @@ extension on _StringsZhHans {
 			'k_03exdnb': '用户名',
 			'k_16kquu8': '当前目录',
 			'k_0fbvuqs': '开始拷贝',
+			'k_16j153h': '腾讯云IM APP（“本产品”）是由腾讯云提供的一款测试产品，腾讯云享有本产品的著作权和所有权。本产品仅用于功能体验，不得用于任何商业用途。严禁在使用中有任何色情、辱骂、暴恐、涉政等违法内容传播。',
+			'k_13ghyf8': '【安全提示】本 APP 仅用于体验腾讯云即时通信 IM 产品功能，不可用于业务洽谈与拓展。请勿轻信汇款、中奖等涉及钱款的信息，勿轻易拨打陌生电话，谨防上当受骗。',
+			'k_0gt6cro': '点此投诉',
+			'k_03595fk': ({required Object option1}) => ' 等$option1人',
+			'k_1gpzgni': ({required Object option2}) => '$option2人群',
+			'k_02lfg57': '新群聊',
+			'k_17ifd8i': '欢迎使用本 APP 体验腾讯云 IM 产品服务',
+			'k_1f0ms23': '消息阅读状态',
+			'k_1c0x9ha': '关闭后，您收发的消息均不带消息阅读状态，您将无法看到对方是否已读，同时对方也无法看到你是否已读。',
+			'k_1dzhdr5': '显示在线状态',
+			'k_0mwsniq': '关闭后，您将不可以在会话列表和通讯录中看到好友在线或离线的状态提示。',
 		};
 	}
 }
@@ -1729,6 +1784,17 @@ extension on _StringsZhHant {
 			'k_03exdnb': '用戶名',
 			'k_16kquu8': '當前目錄',
 			'k_0fbvuqs': '開始拷貝',
+			'k_16j153h': '騰訊雲IM APP（「本產品」）是由騰訊雲提供的一款測試產品，騰訊雲享有本產品的著作權和所有權。本產品僅用於功能體驗，不得用於任何商業用途。嚴禁在使用中有任何色情、辱罵、暴恐、涉政等違法內容傳播。',
+			'k_13ghyf8': '【安全提示】本 APP 僅用於體驗騰訊雲即時通信 IM 產品功能，不可用於業務洽談與拓展。請勿輕信匯款、中獎等涉及錢款的信息，勿輕易撥打陌生電話，謹防上當受騙。',
+			'k_0gt6cro': '點此投訴',
+			'k_03595fk': ({required Object option1}) => ' 等$option1人',
+			'k_1gpzgni': ({required Object option2}) => '$option2人群',
+			'k_02lfg57': '新群組',
+			'k_17ifd8i': '歡迎使用本 APP 體驗騰訊雲 IM 產品服務',
+			'k_1f0ms23': '消息閱讀狀態',
+			'k_1c0x9ha': '關閉後，您收發的消息均不帶消息閱讀狀態，您將無法看到對方是否已讀，同時對方也無法看到你是否已讀。',
+			'k_1dzhdr5': '顯示在線狀態',
+			'k_0mwsniq': '關閉後，您將不可以在會話列表和通訊錄中看到好友在線或離線的狀態提示。',
 		};
 	}
 }

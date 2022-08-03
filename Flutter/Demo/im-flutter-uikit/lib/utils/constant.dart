@@ -3,6 +3,12 @@ import 'package:timuikit/i18n/i18n_utils.dart';
 import 'package:timuikit/utils/custom_emoji_face_data.dart';
 
 class Const {
+
+  // 上报相关
+  static const String BID = "com.tencent.flutter.tuikit";
+  static const BAPPID = "6a585cf1c9";
+  static const BKEY = "b05d8677-a092-49a1-b21a-0221ce5cbded";
+
   // 时间戳消息 前端模拟
   static const int V2TIM_ELEM_TYPE_TIME = 11;
   static const int REQUEST_ERROR_CODE = -9;

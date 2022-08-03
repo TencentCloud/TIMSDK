@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:tim_ui_kit/business_logic/life_cycle/chat_life_cycle.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/controller/tim_uikit_chat_controller.dart';
@@ -10,11 +11,13 @@ import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitTextField/tim_uikit_cal
 import 'package:tim_ui_kit_calling_plugin/enum/tim_uikit_trtc_calling_scence.dart';
 import 'package:tim_ui_kit_calling_plugin/tim_ui_kit_calling_plugin.dart';
 import 'package:tim_ui_kit_sticker_plugin/tim_ui_kit_sticker_plugin.dart';
+import 'package:timuikit/src/group_application_list.dart';
 // import 'package:tim_ui_kit_lbs_plugin/utils/location_utils.dart';
 // import 'package:tim_ui_kit_lbs_plugin/utils/tim_location_model.dart';
 // import 'package:tim_ui_kit_lbs_plugin/widget/location_msg_element.dart';
 import 'package:timuikit/src/group_profile.dart';
 import 'package:timuikit/src/provider/custom_sticker_package.dart';
+import 'package:timuikit/src/provider/local_setting.dart';
 import 'package:timuikit/src/provider/theme.dart';
 import 'package:timuikit/src/user_profile.dart';
 import 'package:provider/provider.dart';
@@ -221,17 +224,44 @@ class _ChatState extends State<Chat> {
 
   @override
   Widget build(BuildContext context) {
+    final LocalSetting localSetting = Provider.of<LocalSetting>(context);
     return TIMUIKitChat(
+        lifeCycle: ChatLifeCycle(
+            newMessageWillMount: (V2TimMessage message) async {
+              // This configuration is unnecessary and only for demonstration purpose.
+              // It shows if you tend to avoid a message from rending, you can `return null` here.
+              return message;
+            }
+        ),
+        onDealWithGroupApplication: (String groupId) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => GroupApplicationList(
+                groupID: groupId,
+              ),
+            ),
+          );
+        },
         groupAtInfoList: widget.selectedConversation.groupAtInfoList,
         key: tuiChatField,
         customStickerPanel: renderCustomStickerPanel,
-        config: const TIMUIKitChatConfig(
-          // 仅供演示，非全部配置项，实际使用中，可只传和默认项不同的参数，无需传入所有开关
+        config: TIMUIKitChatConfig(
+          // For demonstration only, not all configuration items.
+          // In practical use, only parameters that are different from the default items need be provided.
           isAllowClickAvatar: true,
           isAllowLongPressMessage: true,
-          isShowReadingStatus: true,
+          isShowReadingStatus: localSetting.isShowReadingStatus,
+          isShowGroupReadingStatus: localSetting.isShowReadingStatus,
           notificationTitle: "",
           notificationOPPOChannelID: PushConfig.OPPOChannelID,
+            groupReadReceiptPermisionList: [
+              // The group receipt function only works with `Ultimate Edition`
+
+              // GroupReceptAllowType.work,
+              // GroupReceptAllowType.meeting,
+              // GroupReceptAllowType.public
+            ]
         ),
         conversationID: _getConvID() ?? '',
         conversationType: widget.selectedConversation.type ?? ConversationType.V2TIM_C2C,

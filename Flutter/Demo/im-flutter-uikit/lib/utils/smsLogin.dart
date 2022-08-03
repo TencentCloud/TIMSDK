@@ -33,7 +33,7 @@ class SmsLogin {
           "appId": appId,
           "ticket": ticket,
           "randstr": randstr,
-          "apaasAppId": "1027627063",
+          "apaasAppId": "1026227964",
         });
     Map<String, dynamic> res = data.data!;
     return res;
@@ -54,7 +54,7 @@ class SmsLogin {
           "sessionId": sessionId,
           "phone": phone,
           "code": code,
-          "apaasAppId": "1027627063",
+          "apaasAppId": "1026227964",
           "tag": "flutter_tuikit"
         });
     Map<String, dynamic> res = data.data!;
@@ -74,7 +74,7 @@ class SmsLogin {
         data: <String, dynamic>{
           "userId": userId,
           "token": token,
-          "apaasAppId": "1027627063"
+          "apaasAppId": "1026227964"
         });
     Map<String, dynamic> res = data.data!;
     return res;
@@ -100,7 +100,7 @@ class SmsLogin {
           "userId": userId,
           "token": token,
           "tag": "flutter_tuikit",
-          "apaasAppId": "1027627063"
+          "apaasAppId": "1026227964"
         });
     Map<String, dynamic> res = data.data!;
     return res;

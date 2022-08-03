@@ -54,7 +54,7 @@ class Search extends StatelessWidget {
               keyword: initKeyword ?? "",
             )
           : TIMUIKitSearch(
-              onEnterConversation:
+              onEnterSearchInConversation:
                   (V2TimConversation conversation, String keyword) {
                 Navigator.push(
                     context,
@@ -67,7 +67,6 @@ class Search extends StatelessWidget {
                     ));
               },
               onTapConversation: onTapConversation,
-              conversation: conversation,
             ),
     );
   }
