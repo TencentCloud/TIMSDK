@@ -6,8 +6,8 @@ import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
 class UnreadMessage extends TIMUIKitStatelessWidget {
   final int unreadCount;
-  final double width;
-  final double height;
+  final double? width;
+  final double? height;
   UnreadMessage(
       {Key? key,
       required this.unreadCount,
@@ -17,7 +17,7 @@ class UnreadMessage extends TIMUIKitStatelessWidget {
 
   String generateUnreadText() =>
       unreadCount > 99 ? '99+' : unreadCount.toString();
-  double generateFontSize(String text) => text.length * -2 + 14;
+  double generateFontSize(String text) => text.length * -2 + 13;
 
   @override
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
@@ -34,8 +34,10 @@ class UnreadMessage extends TIMUIKitStatelessWidget {
         color: theme.cautionColor ?? CommonColor.cautionColor,
       ),
       child: unreadText != "0"
-          ? Text(unreadText,
-              style: TextStyle(color: Colors.white, fontSize: fontSize))
+          ? Center(
+              child: Text(unreadText,
+                  style: TextStyle(color: Colors.white, fontSize: fontSize)),
+            )
           : null,
     );
   }

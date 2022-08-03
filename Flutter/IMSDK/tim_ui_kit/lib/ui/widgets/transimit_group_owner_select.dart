@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_group_profile_view_model.dart';
+import 'package:tim_ui_kit/business_logic/separate_models/tui_group_profile_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
@@ -12,9 +11,10 @@ import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
 class SelectTransimitOwner extends StatefulWidget {
   final String? groupID;
+  final TUIGroupProfileModel model;
   const SelectTransimitOwner({
     this.groupID,
-    Key? key,
+    Key? key, required this.model,
   }) : super(key: key);
 
   @override
@@ -22,7 +22,6 @@ class SelectTransimitOwner extends StatefulWidget {
 }
 
 class _SelectCallInviterState extends TIMUIKitState<SelectTransimitOwner> {
-  final TUIGroupProfileViewModel _model = TUIGroupProfileViewModel();
   final CoreServicesImpl _coreServicesImpl = serviceLocator<CoreServicesImpl>();
   List<V2TimGroupMemberFullInfo> selectedMember = [];
   List<V2TimGroupMemberFullInfo?>? searchMemberList;
@@ -31,15 +30,11 @@ class _SelectCallInviterState extends TIMUIKitState<SelectTransimitOwner> {
   @override
   void initState() {
     super.initState();
-    if (widget.groupID != null) {
-      _model.loadData(widget.groupID!);
-    }
   }
 
   @override
   void dispose() {
     super.dispose();
-    _model.dispose();
   }
 
   bool isSearchTextExist(String? searchText) {
@@ -48,16 +43,13 @@ class _SelectCallInviterState extends TIMUIKitState<SelectTransimitOwner> {
 
   handleSearchGroupMembers(String searchText, context) async {
     searchText = searchText;
-    List<V2TimGroupMemberFullInfo?> currentGroupMember =
-        Provider.of<TUIGroupProfileViewModel>(context, listen: false)
-                .groupMemberList
-                ?.where((element) =>
+    List<V2TimGroupMemberFullInfo?> currentGroupMember = widget.model.groupMemberList
+                .where((element) =>
                     element?.userID != _coreServicesImpl.loginInfo.userID)
-                .toList() ??
-            [];
-    final res = await _model.searchGroupMember(V2TimGroupMemberSearchParam(
+                .toList();
+    final res = await widget.model.searchGroupMember(V2TimGroupMemberSearchParam(
       keywordList: [searchText],
-      groupIDList: [_model.groupInfo!.groupID],
+      groupIDList: [widget.model.groupInfo!.groupID],
     ));
 
     if (res.code == 0) {
@@ -137,30 +129,24 @@ class _SelectCallInviterState extends TIMUIKitState<SelectTransimitOwner> {
             ),
           ),
         ),
-        body: ChangeNotifierProvider.value(
-            value: _model,
-            child: Consumer<TUIGroupProfileViewModel>(
-                builder: ((context, value, child) {
-              return GroupProfileMemberList(
-                customTopArea: GroupMemberSearchTextField(
-                  onTextChange: (text) =>
-                      handleSearchGroupMembers(text, context),
-                ),
-                memberList: (searchMemberList ?? value.groupMemberList ?? [])
-                    .where((element) =>
-                        element?.userID != _coreServicesImpl.loginInfo.userID)
-                    .toList(),
-                canSlideDelete: false,
-                canSelectMember: true,
-                maxSelectNum: 1,
-                onSelectedMemberChange: (member) {
-                  selectedMember = member;
-                  setState(() {});
-                },
-                touchBottomCallBack: () {
-                  _model.loadMoreData(groupID: _model.groupInfo!.groupID);
-                },
-              );
-            }))));
+        body: GroupProfileMemberList(
+          customTopArea: GroupMemberSearchTextField(
+            onTextChange: (text) =>
+                handleSearchGroupMembers(text, context),
+          ),
+          memberList: (searchMemberList ?? widget.model.groupMemberList)
+              .where((element) =>
+          element?.userID != _coreServicesImpl.loginInfo.userID)
+              .toList(),
+          canSlideDelete: false,
+          canSelectMember: true,
+          maxSelectNum: 1,
+          onSelectedMemberChange: (member) {
+            selectedMember = member;
+            setState(() {});
+          },
+          touchBottomCallBack: () {
+          },
+        ));
   }
 }

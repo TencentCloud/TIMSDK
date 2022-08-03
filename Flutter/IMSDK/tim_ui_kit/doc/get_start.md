@@ -193,7 +193,7 @@ _coreInstance.login(userID: userID, userSig: userSig);
 
 #### 实现：会话列表页面
 
-您可以以会话列表作为您的IM功能首页，其涵盖了与所有有聊天记录的用户的会话。
+您可以以会话列表作为您的IM功能首页，其涵盖了与所有有聊天记录的用户及群聊的会话。
 
 ![wecom-temp-320803-502538740c22124e9f3e0efc1d5a10ee](https://tuikit-1251787278.cos.ap-guangzhou.myqcloud.com/wecom-temp-320803-502538740c22124e9f3e0efc1d5a10ee.jpg)
 
@@ -439,7 +439,7 @@ V2TimValueCallback<V2TimMessage> res = await TencentImSDKPlugin.v2TIMManager
 
 常见应用场景为：
 
-在启动应用程序后立即获取对话列表，然后监听长连接以实时更新对话列表的变化。
+在启动应用程序后立即获取会话列表，然后监听长连接以实时更新会话列表的变化。
 
 ##### 一次性请求会话列表
 
@@ -448,16 +448,15 @@ V2TimValueCallback<V2TimMessage> res = await TencentImSDKPlugin.v2TIMManager
 ```dart
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
 
+String nextSeq = "0";
+
 getConversationList() async {
   V2TimValueCallback<V2TimConversationResult> res = await TencentImSDKPlugin
       .v2TIMManager
       .getConversationManager()
       .getConversationList(nextSeq: nextSeq, count: 10);
-
-  V2TimValueCallback<V2TimConversationResult> nextSeq =
-      await TencentImSDKPlugin.v2TIMManager
-          .getConversationManager()
-          .getConversationList(nextSeq: res.data?.nextSeq ?? "0", count: 20);
+  
+  nextSeq = res.data?.nextSeq ?? "0";
 }
 ```
 
@@ -570,25 +569,25 @@ TencentImSDKPlugin.v2TIMManager
 
 详情可查看[自实现UI集成SDK文档](https://cloud.tencent.com/document/product/269/75260)。
 
-### 常见问题
+## 常见问题
 
-#### 支持哪些平台？
+### 支持哪些平台？
 
 目前支持 iOS 、Android 和 Web 三个平台，另外 Windows 和 Mac 版正在开发中，敬请期待。
 
-#### Android 单击 Build And Run 报错找不到可用设备？
+### Android 单击 Build And Run 报错找不到可用设备？
 
 确保设备没被其他资源占用，或单击 **Build** 生成 APK 包，再拖动进模拟器里运行。
 
-#### iOS 第一次运行报错？
+### iOS 第一次运行报错？
 
 配置运行后，如果报错，可以单击 **Product** > **Clean**，清除产物后重新 Build，或者关闭 Xcode，重新打开后再次 Build。
 
-#### Flutter 环境问题
+### Flutter 环境问题
 
 如您需得知 Flutter 的环境是否存在问题，请运行 Flutter doctor 检测 Flutter 环境是否装好。
 
-#### 使用Flutter自动生成的项目，引入TUIKit后报错
+### 使用Flutter自动生成的项目，引入TUIKit后报错
 
 ![20220706132722](https://tuikit-1251787278.cos.ap-guangzhou.myqcloud.com/20220706132722.png)
 
@@ -602,6 +601,6 @@ TencentImSDKPlugin.v2TIMManager
 
 ![20220706133740](https://tuikit-1251787278.cos.ap-guangzhou.myqcloud.com/20220706133740.png)
 
-### 联系我们
+## 联系我们
 
 如果您在接入使用过程中有任何疑问，请加入QQ群：788910197 咨询。

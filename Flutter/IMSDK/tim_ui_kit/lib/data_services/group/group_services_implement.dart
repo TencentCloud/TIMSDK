@@ -89,7 +89,7 @@ class GroupServicesImpl extends GroupServices {
   }
 
   @override
-  Future<V2TimGroupMemberInfoResult?> getGroupMemberList({
+  Future<V2TimValueCallback<V2TimGroupMemberInfoResult>> getGroupMemberList({
     required String groupID,
     required GroupMemberFilterTypeEnum filter,
     required String nextSeq,
@@ -104,15 +104,13 @@ class GroupServicesImpl extends GroupServices {
             nextSeq: nextSeq,
             count: count,
             offset: offset);
-    if (res.code == 0) {
-      return res.data;
-    } else {
+    if (res.code != 0) {
       _coreService.callOnCallback(TIMCallback(
           type: TIMCallbackType.API_ERROR,
           errorMsg: res.desc,
           errorCode: res.code));
-      return null;
     }
+    return res;
   }
 
   @override

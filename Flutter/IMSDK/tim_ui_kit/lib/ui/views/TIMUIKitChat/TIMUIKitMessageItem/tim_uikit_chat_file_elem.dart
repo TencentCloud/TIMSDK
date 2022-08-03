@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'dart:io';
+import 'dart:math';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,17 +20,27 @@ import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/utils/permission.dart';
 import 'package:open_file/open_file.dart';
 import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
+import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitMessageItem/TIMUIKitMessageReaction/tim_uikit_message_reaction_wrapper.dart';
+import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitMessageItem/tim_uikit_chat_file_icon.dart';
 
 class TIMUIKitFileElem extends StatefulWidget {
   final String? messageID;
   final V2TimFileElem? fileElem;
   final bool isSelf;
+  final bool isShowJump;
+  final VoidCallback? clearJump;
+  final V2TimMessage message;
+  final bool? isShowMessageReaction;
 
   const TIMUIKitFileElem(
       {Key? key,
       required this.messageID,
       required this.fileElem,
-      required this.isSelf})
+      required this.isSelf,
+      required this.isShowJump,
+      this.clearJump,
+      required this.message,
+      this.isShowMessageReaction})
       : super(key: key);
 
   @override
@@ -159,104 +170,112 @@ class _TIMUIKitFileElemState extends TIMUIKitState<TIMUIKitFileElem> {
   @override
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     final theme = value.theme;
-    return ChangeNotifierProvider.value(
-        value: model,
-        child: Consumer<TUIChatViewModel>(builder: (context, value, child) {
-          final received = value.getMessageProgress(widget.messageID);
-          final fileName = widget.fileElem!.fileName ?? "";
-          final fileSize = widget.fileElem!.fileSize;
-          final borderRadius = widget.isSelf
-              ? const BorderRadius.only(
-                  topLeft: Radius.circular(10),
-                  topRight: Radius.circular(2),
-                  bottomLeft: Radius.circular(10),
-                  bottomRight: Radius.circular(10))
-              : const BorderRadius.only(
-                  topLeft: Radius.circular(2),
-                  topRight: Radius.circular(10),
-                  bottomLeft: Radius.circular(10),
-                  bottomRight: Radius.circular(10));
-          return GestureDetector(
-              onTap: () {
-                if (value.isDownloading) {
-                  onTIMCallback(TIMCallback(
-                      type: TIMCallbackType.INFO,
-                      infoRecommendText: TIM_t("其他文件正在接收中"),
-                      infoCode: 6660410));
-                  return;
-                }
-                //if downloaded or not download can tap
-                if (received == 0 || received == 100) {
-                  _onTap(context, theme, received);
-                } else {
-                  onTIMCallback(TIMCallback(
-                      type: TIMCallbackType.INFO,
-                      infoRecommendText: TIM_t("正在接收中"),
-                      infoCode: 6660411));
-                }
-              },
-              child: Container(
-                width: 237,
-                decoration: BoxDecoration(
-                    border: Border.all(
-                      color: theme.weakDividerColor ??
-                          CommonColor.weakDividerColor,
-                    ),
-                    borderRadius: borderRadius),
-                child: Stack(children: [
-                  ClipRRect(
-                    //剪裁为圆角矩形
-                    borderRadius: borderRadius,
-                    child: LinearProgressIndicator(
-                        minHeight: 66,
-                        value: (received == 100 ? 0 : received) / 100,
-                        backgroundColor: received == 100
-                            ? theme.weakBackgroundColor
-                            : Colors.white,
-                        valueColor: AlwaysStoppedAnimation(
-                            theme.lightPrimaryMaterialColor.shade50)),
-                  ),
-                  Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 8, horizontal: 12),
-                      child: Row(
-                          mainAxisAlignment: widget.isSelf
-                              ? MainAxisAlignment.end
-                              : MainAxisAlignment.start,
-                          children: [
-                            Expanded(
-                                child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+    return TIMUIKitMessageReactionWrapper(
+        isShowJump: widget.isShowJump,
+        clearJump: widget.clearJump,
+        isFromSelf: widget.message.isSelf ?? true,
+        isShowMessageReaction: widget.isShowMessageReaction ?? true,
+        message: widget.message,
+        child: ChangeNotifierProvider.value(
+            value: model,
+            child: Consumer<TUIChatViewModel>(builder: (context, value, child) {
+              final received = value.getMessageProgress(widget.messageID);
+              final fileName = widget.fileElem!.fileName ?? "";
+              final fileSize = widget.fileElem!.fileSize;
+              final borderRadius = widget.isSelf
+                  ? const BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(2),
+                      bottomLeft: Radius.circular(10),
+                      bottomRight: Radius.circular(10))
+                  : const BorderRadius.only(
+                      topLeft: Radius.circular(2),
+                      topRight: Radius.circular(10),
+                      bottomLeft: Radius.circular(10),
+                      bottomRight: Radius.circular(10));
+              String? fileFormat;
+              if (widget.fileElem?.fileName != null &&
+                  widget.fileElem!.fileName!.isNotEmpty) {
+                final String fileName = widget.fileElem!.fileName!;
+                fileFormat =
+                    fileName.split(".")[max(fileName.split(".").length - 1, 0)];
+              }
+              return GestureDetector(
+                  onTap: () {
+                    if (value.isDownloading) {
+                      onTIMCallback(TIMCallback(
+                          type: TIMCallbackType.INFO,
+                          infoRecommendText: TIM_t("其他文件正在接收中"),
+                          infoCode: 6660410));
+                      return;
+                    }
+                    //if downloaded or not download can tap
+                    if (received == 0 || received == 100) {
+                      _onTap(context, theme, received);
+                    } else {
+                      onTIMCallback(TIMCallback(
+                          type: TIMCallbackType.INFO,
+                          infoRecommendText: TIM_t("正在接收中"),
+                          infoCode: 6660411));
+                    }
+                  },
+                  child: Container(
+                    width: 237,
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                          color: theme.weakDividerColor ??
+                              CommonColor.weakDividerColor,
+                        ),
+                        borderRadius: borderRadius),
+                    child: Stack(children: [
+                      ClipRRect(
+                        //剪裁为圆角矩形
+                        borderRadius: borderRadius,
+                        child: LinearProgressIndicator(
+                            minHeight: 66,
+                            value: (received == 100 ? 0 : received) / 100,
+                            backgroundColor: received == 100
+                                ? theme.weakBackgroundColor
+                                : Colors.white,
+                            valueColor: AlwaysStoppedAnimation(
+                                theme.lightPrimaryMaterialColor.shade50)),
+                      ),
+                      Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8, horizontal: 12),
+                          child: Row(
+                              mainAxisAlignment: widget.isSelf
+                                  ? MainAxisAlignment.end
+                                  : MainAxisAlignment.start,
                               children: [
-                                Text(
-                                  fileName,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    color: theme.darkTextColor,
-                                    fontSize: 16,
-                                  ),
+                                Expanded(
+                                    child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      fileName,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        color: theme.darkTextColor,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    Text(
+                                      "${(fileSize! / 1024).ceil()} KB",
+                                      // "${received > 0 ? (received / 1024).ceil() : (received / 1024).ceil()} KB",
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          color: theme.weakTextColor),
+                                    )
+                                  ],
+                                )),
+                                TIMUIKitFileIcon(
+                                  fileFormat: fileFormat,
                                 ),
-                                Text(
-                                  "${(fileSize! / 1024).ceil()} KB",
-                                  // "${received > 0 ? (received / 1024).ceil() : (received / 1024).ceil()} KB",
-                                  style: TextStyle(
-                                      fontSize: 14, color: theme.weakTextColor),
-                                )
-                              ],
-                            )),
-                            SizedBox(
-                              height: 50,
-                              width: 50,
-                              child: Icon(
-                                Icons.file_present_outlined,
-                                color: theme.cautionColor,
-                                size: 40,
-                              ),
-                            )
-                          ])),
-                ]),
-              ));
-        }));
+                              ])),
+                    ]),
+                  ));
+            })));
   }
 }

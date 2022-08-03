@@ -4,7 +4,10 @@ import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/business_logic/life_cycle/add_friend_life_cycle.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_add_friend_view_model.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_self_info_view_model.dart';
+import 'package:tim_ui_kit/data_services/core/core_services_implements.dart';
+import 'package:tim_ui_kit/data_services/friendShip/friendship_services.dart';
+import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitAddFriend/tim_uikit_send_application.dart';
 import 'package:tim_ui_kit/ui/widgets/avatar.dart';
@@ -12,10 +15,13 @@ import 'package:tim_ui_kit/ui/widgets/avatar.dart';
 class TIMUIKitAddFriend extends StatefulWidget {
   final bool? isShowDefaultGroup;
 
+  /// You may navigate to user profile page, if friendship relationship exists.
+  final Function(String userID) onTapAlreadyFriendsItem;
+
   /// The life cycle hooks for adding friends and contact business logic
   final AddFriendLifeCycle? lifeCycle;
   const TIMUIKitAddFriend(
-      {Key? key, this.isShowDefaultGroup = false, this.lifeCycle})
+      {Key? key, this.isShowDefaultGroup = false, this.lifeCycle, required this.onTapAlreadyFriendsItem})
       : super(key: key);
 
   @override
@@ -24,10 +30,14 @@ class TIMUIKitAddFriend extends StatefulWidget {
 
 class _TIMUIKitAddFriendState extends TIMUIKitState<TIMUIKitAddFriend> {
   final TextEditingController _controller = TextEditingController();
-  final TUIAddFriendViewModel _addFriendViewModel = TUIAddFriendViewModel();
+  final CoreServicesImpl _coreServicesImpl = serviceLocator<CoreServicesImpl>();
+  final FriendshipServices _friendshipServices =
+      serviceLocator<FriendshipServices>();
+  final TUISelfInfoViewModel _selfInfoViewModel = serviceLocator<TUISelfInfoViewModel>();
   final FocusNode _focusNode = FocusNode();
   bool isFocused = false;
   bool showResult = false;
+  List<V2TimUserFullInfo>? searchResult;
 
   Widget _searchResultItemBuilder(
       V2TimUserFullInfo friendInfo, TUITheme theme) {
@@ -35,14 +45,30 @@ class _TIMUIKitAddFriendState extends TIMUIKitState<TIMUIKitAddFriend> {
     final userID = friendInfo.userID ?? "";
     final showName = friendInfo.nickName ?? userID;
     return InkWell(
-      onTap: () {
+      onTap: () async {
+        final checkFriend = await _friendshipServices.checkFriend(
+            userIDList: [userID],
+            checkType: FriendTypeEnum.V2TIM_FRIEND_TYPE_SINGLE);
+        if (checkFriend != null) {
+          final res = checkFriend.first;
+          if (res.resultCode == 0 && res.resultType != 0) {
+            onTIMCallback(TIMCallback(
+                type: TIMCallbackType.INFO,
+                infoRecommendText: TIM_t("该用户已是好友"),
+                infoCode: 6660102));
+            widget.onTapAlreadyFriendsItem(userID);
+            return;
+          }
+        }
+
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
                 builder: (context) => SendApplication(
+                    lifeCycle: widget.lifeCycle,
                     isShowDefaultGroup: widget.isShowDefaultGroup ?? false,
                     friendInfo: friendInfo,
-                    model: _addFriendViewModel)));
+                    model: _selfInfoViewModel)));
       },
       child: Container(
         color: Colors.white,
@@ -106,20 +132,31 @@ class _TIMUIKitAddFriendState extends TIMUIKitState<TIMUIKitAddFriend> {
     super.dispose();
   }
 
+  searchFriend(String params) async {
+    final response = await _coreServicesImpl.getUsersInfo(userIDList: [params]);
+    if (response.code == 0) {
+      setState((){
+        searchResult = response.data;
+      });
+    } else {
+      setState((){
+        searchResult = null;
+      });
+    }
+  }
+
   @override
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     final TUITheme theme = value.theme;
 
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(value: _addFriendViewModel),
+        ChangeNotifierProvider.value(value: _selfInfoViewModel),
       ],
       builder: (BuildContext context, Widget? w) {
-        final model = Provider.of<TUIAddFriendViewModel>(context);
-        final userID = model.loginUserInfo?.userID ?? "";
+        final selfInfoModel = Provider.of<TUISelfInfoViewModel>(context);
+        final userID = selfInfoModel.loginInfo?.userID ?? "";
         String option2 = userID;
-        final searchResult = model.friendInfoResult;
-        model.lifeCycle = widget.lifeCycle;
         return Column(
           children: [
             Padding(
@@ -141,7 +178,7 @@ class _TIMUIKitAddFriendState extends TIMUIKitState<TIMUIKitAddFriend> {
                     onSubmitted: (_) {
                       final searchParams = _controller.text;
                       if (searchParams.trim().isNotEmpty) {
-                        model.searchFriend(searchParams);
+                        searchFriend(searchParams);
                         showResult = true;
                         _focusNode.requestFocus();
                         setState(() {});
@@ -174,7 +211,7 @@ class _TIMUIKitAddFriendState extends TIMUIKitState<TIMUIKitAddFriend> {
                         onPressed: () {
                           final searchParams = _controller.text;
                           if (searchParams.trim().isNotEmpty) {
-                            model.searchFriend(searchParams);
+                            searchFriend(searchParams);
                             showResult = true;
                             setState(() {});
                           }

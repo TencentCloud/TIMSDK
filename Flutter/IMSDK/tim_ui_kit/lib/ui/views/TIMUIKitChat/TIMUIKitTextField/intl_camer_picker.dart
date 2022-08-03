@@ -12,6 +12,11 @@ class IntlCameraPickerTextDelegate extends CameraPickerTextDelegate {
   @override
   String get shootingTips => TIM_t('轻触拍照，长按摄像');
 
+  /// Tips string above the shooting button before shooting.
+  /// 拍摄前确认按钮上方的提示文字
+  @override
+  String get shootingWithRecordingTips => TIM_t('轻触拍照，长按摄像');
+
   /// Load failed string for item.
   /// 资源加载失败时的字段
   @override

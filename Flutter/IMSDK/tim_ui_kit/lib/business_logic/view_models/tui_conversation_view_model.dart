@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_getters_setters
+
 import 'package:flutter/material.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:tim_ui_kit/business_logic/life_cycle/conversation_life_cycle.dart';
@@ -32,10 +34,12 @@ class TUIConversationViewModel extends ChangeNotifier {
       serviceLocator<FriendshipServices>();
   final TUIChatViewModel _chatViewModel = serviceLocator<TUIChatViewModel>();
   final MessageService _messageService = serviceLocator<MessageService>();
-  V2TimConversationListener? _conversationListener;
+  late V2TimConversationListener _conversationListener;
   List<V2TimConversation?> _conversationList = [];
   static V2TimConversation? _selectedConversation;
   bool _haveMoreData = true;
+  int _totalUnReadCount = 0;
+
   String _nextSeq = "0";
   ConversationLifeCycle? _lifeCycle;
 
@@ -46,6 +50,12 @@ class TUIConversationViewModel extends ChangeNotifier {
 
   bool get haveMoreData {
     return _haveMoreData;
+  }
+
+  int get totalUnReadCount => _totalUnReadCount;
+
+  set totalUnReadCount(int value) {
+    _totalUnReadCount = value;
   }
 
   set lifeCycle(ConversationLifeCycle? value) {
@@ -63,6 +73,28 @@ class TUIConversationViewModel extends ChangeNotifier {
 
   static V2TimConversation? of() {
     return _selectedConversation;
+  }
+
+  TUIConversationViewModel(){
+    _conversationListener = V2TimConversationListener(
+      onConversationChanged: (conversationList) {
+        _onConversationListChanged(conversationList);
+      },
+      onNewConversation: (conversationList) {
+        _addNewConversation(conversationList);
+      },
+      onTotalUnreadMessageCountChanged: (totalUnread) {
+        _totalUnReadCount = totalUnread;
+        _chatViewModel.totalUnReadCount = totalUnread;
+        notifyListeners();
+      },
+    );
+    setConversationListener();
+  }
+
+  initConversation(){
+    clear();
+    loadData(count: 100);
   }
 
   void loadData({required int count}) async {
@@ -87,13 +119,14 @@ class TUIConversationViewModel extends ChangeNotifier {
           (item1, item2) => item1?.conversationID == item2?.conversationID);
       notifyListeners();
     }
+    _totalUnReadCount = await _conversationService.getTotalUnreadCount();
   }
 
   void setSelectedConversation(V2TimConversation conversation) {
     _selectedConversation = conversation;
   }
 
-  pinConversation({
+  Future<V2TimCallback> pinConversation({
     required String conversationID,
     required bool isPinned,
   }) {
@@ -101,16 +134,16 @@ class TUIConversationViewModel extends ChangeNotifier {
         conversationID: conversationID, isPinned: isPinned);
   }
 
-  clearHistoryMessage({required String convID, required int convType}) async {
+  Future<V2TimCallback?> clearHistoryMessage({required String convID, required int convType}) async {
     if (_lifeCycle?.shouldClearHistoricalMessageForConversation != null &&
         await _lifeCycle!.shouldClearHistoricalMessageForConversation(convID) ==
             false) {
       return null;
     }
     if (convType == 1) {
-      _messageService.clearC2CHistoryMessage(userID: convID);
+      return _messageService.clearC2CHistoryMessage(userID: convID);
     } else {
-      _messageService.clearGroupHistoryMessage(groupID: convID);
+      return _messageService.clearGroupHistoryMessage(groupID: convID);
     }
   }
 
@@ -158,55 +191,12 @@ class TUIConversationViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  setConversationListener({V2TimConversationListener? listener}) {
-    _conversationListener = V2TimConversationListener(
-      onConversationChanged: (conversationList) {
-        _onConversationListChanged(conversationList);
-        if (listener != null) {
-          listener.onConversationChanged(conversationList);
-        }
-      },
-      onNewConversation: (conversationList) {
-        _addNewConversation(conversationList);
-        if (listener != null) {
-          listener.onNewConversation(conversationList);
-        }
-      },
-      onSyncServerFailed: () {
-        if (listener != null) {
-          listener.onSyncServerFailed();
-        }
-      },
-      onSyncServerFinish: () {
-        if (listener != null) {
-          listener.onSyncServerFinish();
-        }
-      },
-      onSyncServerStart: () {
-        if (listener != null) {
-          listener.onSyncServerStart();
-        }
-      },
-      onTotalUnreadMessageCountChanged: (totalunread) {
-        if (listener != null) {
-          listener.onTotalUnreadMessageCountChanged(totalunread);
-        }
-        _chatViewModel.totalUnReadCount = totalunread;
-      },
-    );
-
-    if (_conversationListener != null) {
-      _conversationService.setConversationListener(
-          listener: _conversationListener!);
-    }
+  setConversationListener() {
+    _conversationService.setConversationListener(
+        listener:  _conversationListener);
   }
 
-  removeConversationListener() {
-    _conversationService.removeConversationListener(
-        listener: _conversationListener);
-  }
-
-  setConversationDraft(
+  Future<V2TimCallback> setConversationDraft(
       {required String conversationID, String? draftText}) async {
     return _conversationService.setConversationDraft(
         conversationID: conversationID, draftText: draftText);
@@ -217,5 +207,10 @@ class TUIConversationViewModel extends ChangeNotifier {
     _selectedConversation = null;
     _nextSeq = "0";
     _haveMoreData = true;
+  }
+
+  refresh({int count = 100}) {
+    clear();
+    loadData(count: count);
   }
 }

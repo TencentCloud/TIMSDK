@@ -25,6 +25,23 @@ class FriendshipServicesImpl with FriendshipServices {
   }
 
   @override
+  Future<List<V2TimUserFullInfo>?> getUsersInfo({
+    required List<String> userIDList,
+  }) async {
+    final res = await TencentImSDKPlugin.v2TIMManager
+        .getUsersInfo(userIDList: userIDList);
+    if (res.code == 0) {
+      return res.data;
+    } else {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: res.desc,
+          errorCode: res.code));
+      return null;
+    }
+  }
+
+  @override
   Future<List<V2TimFriendOperationResult>?> addToBlackList({
     required List<String> userIDList,
   }) async {
@@ -60,11 +77,12 @@ class FriendshipServicesImpl with FriendshipServices {
               friendGroup: friendGroup,
               addSource: addSource,
             );
-    if (result.code != 0) {
-      _coreService.callOnCallback(TIMCallback(
-          type: TIMCallbackType.API_ERROR,
-          errorMsg: result.desc,
-          errorCode: result.code));
+    if (result.code != 0 || (result.code == 0 && result.data?.resultCode != 0)) {
+      // _coreService.callOnCallback(TIMCallback(
+      //     type: TIMCallbackType.API_ERROR,
+      //     errorMsg: result.code == 0 ? result.data?.resultInfo :  result.desc,
+      //     errorCode: result.code == 0 ? result.data?.resultCode : result.code,
+      //     ));
     }
     return result;
   }
@@ -268,6 +286,22 @@ class FriendshipServicesImpl with FriendshipServices {
           errorMsg: res.desc,
           errorCode: res.code));
       return null;
+    }
+  }
+
+  @override
+  Future<List<V2TimUserStatus>> getUserStatus({
+    required List<String> userIDList,
+  }) async {
+    final res = await TencentImSDKPlugin.v2TIMManager.getUserStatus(userIDList: userIDList);
+    if (res.code == 0) {
+      return res.data ?? [];
+    } else {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: res.desc,
+          errorCode: res.code));
+      return [];
     }
   }
 }

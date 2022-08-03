@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/business_logic/life_cycle/profile_life_cycle.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_profile_view_model.dart';
+import 'package:tim_ui_kit/business_logic/separate_models/tui_profile_view_model.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
@@ -38,7 +38,7 @@ class TIMUIKitProfile extends StatefulWidget {
 
   /// [Deprecated:] Callback when clicking profile detail card.
   /// This widget will no longer shows the personal info card and can not jump to personal info page automatically,
-  /// please navigate to [TIMUIKitProfilePersonalInfo] or your custom personal info page manually and directly.
+  /// please navigate to your custom personal info page manually and directly, you may refer to our demo.
   final void Function(BuildContext context, V2TimUserFullInfo? userFullInfo)?
       handleProfileDetailCardTap;
 
@@ -47,12 +47,12 @@ class TIMUIKitProfile extends StatefulWidget {
 
   /// [Deprecated:] If allows jump to personal profiler page.
   /// This widget will no longer shows the personal info card and can not jump to personal info page automatically,
-  /// please navigate to [TIMUIKitProfilePersonalInfo] or your custom personal info page manually and directly.
+  /// please navigate to your custom personal info page manually and directly, you may refer to our demo.
   final bool canJumpToPersonalProfile;
 
   /// [Deprecated:] The callback when clicking self avatar.
   /// This widget will no longer shows the personal info card and will not support to change self avatar,
-  /// you can use [TIMUIKitProfilePersonalInfo] or your custom personal info page to implement this function.
+  /// please navigate to your custom personal info page manually and directly, you may refer to our demo.
   final OnSelfAvatarTap? onSelfAvatarTap;
 
   /// [If you tend to customize the profile page, use [profileWidgetsBuilder] with [profileWidgetsOrder] as priority.]
@@ -80,11 +80,11 @@ class TIMUIKitProfile extends StatefulWidget {
           this.operationListBuilder,
       @Deprecated("[operationListBuilder] and [bottomOperationBuilder] merged into [builder], please use it instead")
           this.bottomOperationBuilder,
-      @Deprecated("This widget will no longer shows the personal info card and can not jump to personal info page automatically, please navigate to [TIMUIKitProfilePersonalInfo] or your custom personal info page manually and directly")
+      @Deprecated("This widget will no longer shows the personal info card and can not jump to personal info page automatically, please navigate to your custom personal info page manually and directly, you may refer to our demo")
           this.handleProfileDetailCardTap,
-      @Deprecated("This widget will no longer shows the personal info card and can not jump to personal info page automatically, please navigate to [TIMUIKitProfilePersonalInfo] or your custom personal info page manually and directly")
+      @Deprecated("This widget will no longer shows the personal info card and can not jump to personal info page automatically, please navigate to your custom personal info page manually and directly, you may refer to our demo")
           this.canJumpToPersonalProfile = false,
-      @Deprecated("This widget will no longer shows the personal info card and will not support to change self avatar, you can use [TIMUIKitProfilePersonalInfo] or your custom personal info page to implement this function")
+      @Deprecated("This widget will no longer shows the personal info card and will not support to change self avatar, please navigate to your custom personal info page manually and directly, you may refer to our demo")
           this.onSelfAvatarTap,
       this.controller,
       this.profileWidgetBuilder,
@@ -105,6 +105,7 @@ class _TIMUIKitProfileState extends TIMUIKitState<TIMUIKitProfile> {
   void initState() {
     _controller = widget.controller ?? TIMUIKitProfileController();
     _model = _controller.model;
+    _model.lifeCycle = widget.lifeCycle;
     _controller.loadData(widget.userID);
     super.initState();
   }
@@ -227,13 +228,10 @@ class _TIMUIKitProfileState extends TIMUIKitState<TIMUIKitProfile> {
               switch (element) {
                 case ProfileWidgetEnum.userInfoCard:
                   return (customBuilder?.userInfoCard != null
-                      ? customBuilder?.userInfoCard!(userInfo.userProfile!)
+                      ? customBuilder?.userInfoCard!(userInfo.userProfile)
                       : TIMUIKitProfileUserInfoCard(
                           userInfo: userInfo.userProfile))!;
                 case ProfileWidgetEnum.addToBlockListBar:
-                  if (!isFriend) {
-                    return Container();
-                  }
                   return (customBuilder?.addToBlockListBar != null
                       ? customBuilder?.addToBlockListBar!(
                           _model.isAddToBlackList ?? false,
@@ -269,10 +267,10 @@ class _TIMUIKitProfileState extends TIMUIKitState<TIMUIKitProfile> {
                       : Text(TIM_t("你必须自定义search bar，并处理点击跳转")))!;
                 case ProfileWidgetEnum.portraitBar:
                   return (customBuilder?.portraitBar != null
-                      ? customBuilder?.portraitBar!(userInfo.userProfile!)
+                      ? customBuilder?.portraitBar!(userInfo.userProfile)
                       : TIMUIKitProfileWidget.portraitBar(
                           TIMUIKitProfileWidget.defaultPortraitWidget(
-                              userInfo.userProfile!)))!;
+                              userInfo.userProfile)))!;
                 case ProfileWidgetEnum.nicknameBar:
                   return (customBuilder?.nicknameBar != null
                       ? customBuilder
@@ -280,10 +278,10 @@ class _TIMUIKitProfileState extends TIMUIKitState<TIMUIKitProfile> {
                       : TIMUIKitProfileWidget.nicknameBar(
                           userInfo.userProfile?.nickName ?? ""))!;
                 case ProfileWidgetEnum.userAccountBar:
-                  return (customBuilder?.nicknameBar != null
+                  return (customBuilder?.userAccountBar != null
                       ? customBuilder
-                          ?.nicknameBar!(userInfo.userProfile?.userID ?? "")
-                      : TIMUIKitProfileWidget.nicknameBar(
+                          ?.userAccountBar!(userInfo.userProfile?.userID ?? "")
+                      : TIMUIKitProfileWidget.userAccountBar(
                           userInfo.userProfile?.userID ?? ""))!;
                 case ProfileWidgetEnum.signatureBar:
                   return (customBuilder?.signatureBar != null
@@ -316,6 +314,7 @@ class _TIMUIKitProfileState extends TIMUIKitState<TIMUIKitProfile> {
                           conversation,
                           value.friendType,
                           isMute,
+                          _model.isAddToBlackList ?? false,
                           theme,
                           handleAddFriend,
                           handleDeleteFriend))!;

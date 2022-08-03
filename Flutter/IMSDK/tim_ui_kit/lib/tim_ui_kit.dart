@@ -36,6 +36,7 @@ export 'package:tim_ui_kit/ui/views/TIMUIKitGroup/tim_uikit_group_application_li
 export 'package:tencent_im_base/tencent_im_base.dart';
 export 'package:tim_ui_kit/ui/widgets/link_preview/models/link_preview_content.dart';
 export 'package:tim_ui_kit/ui/views/TIMUIKitProfile/widget/tim_uikit_profile_userinfo_card.dart';
+export 'package:tim_ui_kit/ui/views/TIMUIKitConversation/tim_ui_kit_conversation_total_unread.dart';
 
 // Enum
 

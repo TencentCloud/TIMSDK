@@ -7,7 +7,6 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_conversation_view_model.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_group_profile_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_self_info_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
@@ -59,6 +58,10 @@ class TIMUIKitInputTextField extends StatefulWidget {
   /// on text changed
   final void Function(String)? onChanged;
 
+  final V2TimGroupInfo? groupInfo;
+
+  final List<V2TimGroupMemberFullInfo?>? groupMemberList;
+
   /// sticker panel customiziation
   final Widget Function(
       {void Function() sendTextMessage,
@@ -71,6 +74,8 @@ class TIMUIKitInputTextField extends StatefulWidget {
       required this.conversationID,
       required this.conversationType,
       this.initText,
+        this.groupInfo,
+        this.groupMemberList,
       this.hintText,
       this.scrollController,
       this.morePanelConfig,
@@ -105,6 +110,8 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
       serviceLocator<TUIConversationViewModel>();
   final TUISelfInfoViewModel selfModel = serviceLocator<TUISelfInfoViewModel>();
   MuteStatus muteStatus = MuteStatus.none;
+
+  int latestSendEditStatusTime = DateTime.now().millisecondsSinceEpoch;
 
   listenKeyBoardStatus() {
     final currentKeyboardHeight = MediaQuery.of(context).viewInsets.bottom;
@@ -376,6 +383,7 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
         showKeyboard = true;
       });
       goDownBottom();
+      _handleSendEditStatus("",false);
     }
   }
 
@@ -499,6 +507,8 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
         context,
         MaterialPageRoute(
           builder: (context) => AtText(
+            groupMemberList: widget.groupMemberList,
+              groupInfo: widget.groupInfo,
               groupID: groupID,
               groupType: conversationModel.selectedConversation?.groupType),
         ),
@@ -562,9 +572,22 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
     super.dispose();
   }
 
-  _getMuteType(TUIGroupProfileViewModel groupProfileViewModel) async {
+  Future<bool> getMemberMuteStatus(String userID) async {
+    // Get the mute state of the members recursively
+    if (widget.groupMemberList?.any((item) => (item?.userID == userID)) ?? false) {
+      final int muteUntil = widget.groupMemberList!
+          .firstWhere((item) => (item?.userID == userID))
+          ?.muteUntil ??
+          0;
+      return muteUntil * 1000 > DateTime.now().millisecondsSinceEpoch;
+    } else {
+      return false;
+    }
+  }
+
+  _getMuteType() async {
     if (widget.conversationType == 2) {
-      if ((groupProfileViewModel.groupInfo?.isAllMuted ?? false) &&
+      if ((widget.groupInfo?.isAllMuted ?? false) &&
           muteStatus != MuteStatus.all) {
         Future.delayed(const Duration(seconds: 0), () {
           setState(() {
@@ -572,18 +595,16 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
           });
         });
       } else if (selfModel.loginInfo?.userID != null &&
-          await groupProfileViewModel
-              .getMemberMuteStatus(selfModel.loginInfo!.userID!) &&
+          await getMemberMuteStatus(selfModel.loginInfo!.userID!) &&
           muteStatus != MuteStatus.me) {
         Future.delayed(const Duration(seconds: 0), () {
           setState(() {
             muteStatus = MuteStatus.me;
           });
         });
-      } else if (!(groupProfileViewModel.groupInfo?.isAllMuted ?? false) &&
+      } else if (!(widget.groupInfo?.isAllMuted ?? false) &&
           !(selfModel.loginInfo?.userID != null &&
-              await groupProfileViewModel
-                  .getMemberMuteStatus(selfModel.loginInfo!.userID!)) &&
+              await getMemberMuteStatus(selfModel.loginInfo!.userID!)) &&
           muteStatus != MuteStatus.none) {
         Future.delayed(const Duration(seconds: 0), () {
           setState(() {
@@ -594,24 +615,54 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
     }
   }
 
+  _handleSendEditStatus(String value,bool status){
+    int now = DateTime.now().millisecondsSinceEpoch;
+    if(value.isNotEmpty && widget.conversationType == 1 ){
+
+      if(status){
+        if(now - latestSendEditStatusTime < 5 * 1000){
+          return;
+        }
+      }
+      // send status
+      model.sendEditStatusMessage(status, widget.conversationID);
+      latestSendEditStatusTime = now;
+    }else{
+      model.sendEditStatusMessage(false, widget.conversationID);
+    }
+  }
   @override
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
-    final TUIGroupProfileViewModel groupProfileViewModel =
-        Provider.of<TUIGroupProfileViewModel>(context);
     final theme = value.theme;
-    _getMuteType(groupProfileViewModel);
+    _getMuteType();
     final debounceFunc = _debounce((value) {
       if (widget.onChanged != null) {
         widget.onChanged!(value);
       }
       _handleAtText(value);
+      _handleSendEditStatus(value, true);
       final isEmpty = value.isEmpty;
       if (isEmpty) {
         _handleSoftKeyBoardDelete();
       }
+
     }, const Duration(milliseconds: 80));
+
     return Selector<TUIChatViewModel, V2TimMessage?>(
         builder: ((context, value, child) {
+          String? getForbiddenText() {
+            if (!(model.isGroupExist)) {
+              return "群组不存在";
+            } else if(model.isNotAMember) {
+              return "您不是群成员";
+            } else if(muteStatus == MuteStatus.all){
+              return "全员禁言中";
+            }else if(muteStatus == MuteStatus.me){
+              return "您被禁言";
+            }
+            return null;
+          }
+          final forbiddenText = getForbiddenText();
           return Column(
             children: [
               _buildRepliedMessage(value),
@@ -626,16 +677,14 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
                         constraints: const BoxConstraints(minHeight: 50),
                         child: Row(
                           children: [
-                            if (muteStatus != MuteStatus.none)
+                            if (forbiddenText != null)
                               Expanded(
                                   child: Container(
                                 height: 35,
                                 color: theme.weakBackgroundColor,
                                 alignment: Alignment.center,
                                 child: Text(
-                                  TIM_t(muteStatus == MuteStatus.all
-                                      ? "全员禁言中"
-                                      : "您被禁言"),
+                                  TIM_t(forbiddenText),
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
@@ -645,7 +694,7 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
                                 ),
                               )),
                             if (widget.showSendAudio &&
-                                muteStatus == MuteStatus.none)
+                                forbiddenText == null)
                               InkWell(
                                 onTap: () async {
                                   if (showSendSoundText) {
@@ -673,11 +722,11 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
                                   width: 28,
                                 ),
                               ),
-                            if (muteStatus == MuteStatus.none)
+                            if (forbiddenText == null)
                               const SizedBox(
                                 width: 10,
                               ),
-                            if (muteStatus == MuteStatus.none)
+                            if (forbiddenText == null)
                               Expanded(
                                 child: showSendSoundText
                                     ? SendSoundMessage(
@@ -716,12 +765,12 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
                                             hintText: widget.hintText ?? ''),
                                       ),
                               ),
-                            if (muteStatus == MuteStatus.none)
+                            if (forbiddenText == null)
                               const SizedBox(
                                 width: 10,
                               ),
                             if (widget.showSendEmoji &&
-                                muteStatus == MuteStatus.none)
+                                forbiddenText == null)
                               InkWell(
                                 onTap: () {
                                   _openEmojiPanel();
@@ -737,14 +786,14 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
                                   width: 28,
                                 ),
                               ),
-                            if (muteStatus == MuteStatus.none)
+                            if (forbiddenText == null)
                               const SizedBox(
                                 width: 10,
                               ),
-                            if (widget.showMorePannel &&
-                                muteStatus == MuteStatus.none)
+                            if (widget.showMorePannel && forbiddenText == null)
                               InkWell(
                                 onTap: () {
+                                  // model.sendCustomMessage(data: "a", convID: model.currentSelectedConv, convType: model.currentSelectedConvType == 1 ? ConvType.c2c : ConvType.group);
                                   _openMore();
                                   goDownBottom();
                                 },

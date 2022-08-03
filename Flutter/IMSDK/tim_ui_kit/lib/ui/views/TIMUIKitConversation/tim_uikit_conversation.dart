@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_slidable_for_tencent_im/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_statelesswidget.dart';
 import 'package:tim_ui_kit/business_logic/life_cycle/conversation_life_cycle.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_conversation_view_model.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_friendship_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/ui/controller/tim_uikit_conversation_controller.dart';
@@ -16,7 +17,7 @@ import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
 
 typedef ConversationItemBuilder = Widget Function(
-    V2TimConversation conversationItem);
+    V2TimConversation conversationItem, [V2TimUserStatus? onlineStatus]);
 
 typedef ConversationItemSlidableBuilder = List<ConversationItemSlidablePanel>
     Function(V2TimConversation conversationItem);
@@ -40,11 +41,15 @@ class TIMUIKitConversation extends StatefulWidget {
   /// the filter for conversation
   final bool Function(V2TimConversation? conversation)? conversationCollector;
 
-  /// the builder for the second line in each conservation item, usually shows the summary of the last message
+  /// the builder for the second line in each conservation item,
+  /// usually shows the summary of the last message
   final LastMessageBuilder? lastMessageBuilder;
 
   /// The life cycle hooks for `TIMUIKitConversation`
   final ConversationLifeCycle? lifeCycle;
+
+  /// Control if shows the online status for each user on its avatar.
+  final bool isShowOnlineStatus;
 
   const TIMUIKitConversation(
       {Key? key,
@@ -55,7 +60,8 @@ class TIMUIKitConversation extends StatefulWidget {
       this.itemSlidableBuilder,
       this.conversationCollector,
       this.emptyBuilder,
-      this.lastMessageBuilder})
+      this.lastMessageBuilder,
+      this.isShowOnlineStatus = true})
       : super(key: key);
 
   @override
@@ -120,9 +126,10 @@ class ConversationItemSlidablePanel extends TIMUIKitStatelessWidget {
 }
 
 class _TIMUIKitConversationState extends TIMUIKitState<TIMUIKitConversation> {
-  late TUIConversationViewModel model;
+  late TUIConversationViewModel model = serviceLocator<TUIConversationViewModel>();
   late TIMUIKitConversationController _timuiKitConversationController;
-  final TUIThemeViewModel _themeViewModel = serviceLocator<TUIThemeViewModel>();
+  final TUIThemeViewModel themeViewModel = serviceLocator<TUIThemeViewModel>();
+  final TUIFriendShipViewModel friendShipViewModel = serviceLocator<TUIFriendShipViewModel>();
 
   @override
   void initState() {
@@ -163,7 +170,7 @@ class _TIMUIKitConversationState extends TIMUIKitState<TIMUIKitConversation> {
   List<ConversationItemSlidablePanel> _defaultSlidableBuilder(
     V2TimConversation conversationItem,
   ) {
-    final theme = _themeViewModel.theme;
+    final theme = themeViewModel.theme;
     return [
       ConversationItemSlidablePanel(
         onPressed: (context) {
@@ -206,13 +213,16 @@ class _TIMUIKitConversationState extends TIMUIKitState<TIMUIKitConversation> {
 
   @override
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    final theme = value.theme;
     return MultiProvider(
         providers: [
           ChangeNotifierProvider.value(value: model),
-          ChangeNotifierProvider.value(value: _themeViewModel)
+          ChangeNotifierProvider.value(value: friendShipViewModel)
         ],
         builder: (BuildContext context, Widget? w) {
           final _model = Provider.of<TUIConversationViewModel>(context);
+          final _friendShipViewModel =
+              Provider.of<TUIFriendShipViewModel>(context);
           _model.lifeCycle = widget.lifeCycle;
           List<V2TimConversation?> filteredConversationList =
               _model.conversationList;
@@ -222,13 +232,12 @@ class _TIMUIKitConversationState extends TIMUIKitState<TIMUIKitConversation> {
                 .where(widget.conversationCollector!)
                 .toList();
           }
+
           return SlidableAutoCloseBehavior(
             child: EasyRefresh(
-              header: CustomizeBallPulseHeader(
-                  color: _themeViewModel.theme.primaryColor),
+              header: CustomizeBallPulseHeader(color: theme.primaryColor),
               onRefresh: () async {
-                model.clear();
-                model.loadData(count: 100);
+                model.refresh();
               },
               child: filteredConversationList.isNotEmpty
                   ? ListView.builder(
@@ -243,8 +252,16 @@ class _TIMUIKitConversationState extends TIMUIKitState<TIMUIKitConversation> {
 
                         final conversationItem =
                             filteredConversationList[index];
+
+                        final V2TimUserStatus? onlineStatus =
+                            _friendShipViewModel.userStatusList.firstWhere(
+                                (item) =>
+                                    item.userID == conversationItem?.userID,
+                                orElse: () => V2TimUserStatus(statusType: 0));
+
                         if (widget.itembuilder != null) {
-                          return widget.itembuilder!(conversationItem!);
+                          return widget.itembuilder!(
+                              conversationItem!, onlineStatus);
                         }
 
                         final slidableChildren =
@@ -263,13 +280,19 @@ class _TIMUIKitConversationState extends TIMUIKitState<TIMUIKitConversation> {
                                     conversationItem.groupAtInfoList ?? [],
                                 unreadCount: conversationItem.unreadCount ?? 0,
                                 draftText: conversationItem.draftText,
+                                onlineStatus: (widget.isShowOnlineStatus &&
+                                        conversationItem.userID != null &&
+                                        conversationItem.userID!.isNotEmpty)
+                                    ? onlineStatus
+                                    : null,
                                 draftTimestamp: conversationItem.draftTimestamp,
+                                convType: conversationItem.type
                               ),
                               onTap: () => onTapConvItem(conversationItem),
                             ),
                             endActionPane: ActionPane(
                                 extentRatio:
-                                    slidableChildren.length > 2 ? 0.7 : 0.5,
+                                    slidableChildren.length > 2 ? 0.77 : 0.5,
                                 motion: const DrawerMotion(),
                                 children: slidableChildren));
                       })

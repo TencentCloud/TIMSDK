@@ -7,9 +7,10 @@ import 'package:provider/single_child_widget.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/business_logic/life_cycle/chat_life_cycle.dart';
+import 'package:tim_ui_kit/business_logic/listener_model/tui_group_listener_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_group_profile_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
+import 'package:tim_ui_kit/data_services/group/group_services.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/constants/history_message_constant.dart';
@@ -19,6 +20,7 @@ import 'package:tim_ui_kit/ui/utils/optimize_utils.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/tim_uikit_multi_select_panel.dart';
 
 import 'TIMUIKItMessageList/TIMUIKitTongue/tim_uikit_chat_history_message_list_tongue.dart';
+import 'TIMUIKItMessageList/tim_uikit_chat_history_message_list_config.dart';
 import 'TIMUIKItMessageList/tim_uikit_history_message_list_container.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
@@ -35,9 +37,10 @@ class TIMUIKitChat extends StatefulWidget {
   /// use for show conversation name
   final String conversationShowName;
 
-  /// avatar tap callback
+  /// avatar and name in message reaction tap callback
   final void Function(String userID)? onTapAvatar;
 
+  @Deprecated("Nickname will not shows in one-to-one chat, if you tend to control it in group chat, please use `isShowSelfNameInGroup` and `isShowOthersNameInGroup` from `config: TIMUIKitChatConfig` instead")
   /// should show the nick name
   final bool showNickName;
 
@@ -68,7 +71,7 @@ class TIMUIKitChat extends StatefulWidget {
   final AppBar? appBarConfig;
 
   /// main history list config
-  final ListView? mainHistoryListConfig;
+  final TIMUIKitHistoryMessageListConfig? mainHistoryListConfig;
 
   /// more panel config and customize actions
   final MorePanelConfig? morePanelConfig;
@@ -93,6 +96,9 @@ class TIMUIKitChat extends StatefulWidget {
   /// The life cycle for chat business logic
   final ChatLifeCycle? lifeCycle;
 
+  /// The top fixed widget
+  final Widget? topFixWidget;
+
   /// custom emoji panel
   final Widget Function(
       {void Function() sendTextMessage,
@@ -107,7 +113,8 @@ class TIMUIKitChat extends StatefulWidget {
     required this.conversationShowName,
     this.abstractMessageBuilder,
     this.onTapAvatar,
-    this.showNickName = true,
+    @Deprecated("Nickname will not show in one-to-one chat, if you tend to control it in group chat, please use `isShowSelfNameInGroup` and `isShowOthersNameInGroup` from `config: TIMUIKitChatConfig` instead")
+    this.showNickName = false,
     this.showTotalUnReadCount = false,
     this.messageItemBuilder,
     @Deprecated("Please use [extraTipsActionItemBuilder] instead")
@@ -126,6 +133,7 @@ class TIMUIKitChat extends StatefulWidget {
     this.onDealWithGroupApplication,
     this.toolTipsConfig,
     this.lifeCycle,
+    this.topFixWidget = const SizedBox(),
   }) : super(key: key) {
     startTime = DateTime.now().millisecondsSinceEpoch;
   }
@@ -137,10 +145,12 @@ class TIMUIKitChat extends StatefulWidget {
 class _TUIChatState extends TIMUIKitState<TIMUIKitChat> {
   final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
   final TUIThemeViewModel themeViewModel = serviceLocator<TUIThemeViewModel>();
-  final TUIGroupProfileViewModel groupProfileViewModel =
-      serviceLocator<TUIGroupProfileViewModel>();
+  final GroupServices _groupServices = serviceLocator<GroupServices>();
   final TIMUIKitInputTextFieldController textFieldController =
       TIMUIKitInputTextFieldController();
+  V2TimGroupInfo? _groupInfo;
+  String _groupMemberListSeq = "0";
+  List<V2TimGroupMemberFullInfo?>? _groupMemberList = [];
 
   late AutoScrollController autoController = AutoScrollController(
     viewportBoundaryGetter: () =>
@@ -153,16 +163,19 @@ class _TUIChatState extends TIMUIKitState<TIMUIKitChat> {
     if (kProfileMode) {
       Frame.init();
     }
-    model.initForEachConversation((String value) =>
-        textFieldController.textEditingController?.text = value);
+    model.initForEachConversation(
+        widget.conversationType,
+        widget.conversationID,
+        (String value) =>
+            textFieldController.textEditingController?.text = value);
     model.markMessageAsRead(
         convID: widget.conversationID, convType: widget.conversationType);
     model.setChatConfig(widget.config!);
     model.abstractMessageBuilder = widget.abstractMessageBuilder;
     if (widget.conversationType == 2) {
-      groupProfileViewModel.loadData(widget.conversationID);
-      // groupProfileViewModel.setGroupListener();
+      loadGroup();
     }
+    model.onTapAvatar = widget.onTapAvatar;
     model.lifeCycle = widget.lifeCycle;
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_) async {
@@ -172,6 +185,55 @@ class _TUIChatState extends TIMUIKitState<TIMUIKitChat> {
         print("Page render time:$timeSpend ms");
       }
     });
+    model.setShowC2cEditStatus(widget.conversationType == 1
+        ? widget.config?.showC2cMessageEditStaus ?? true
+        : false);
+  }
+
+  loadGroup() {
+    _loadGroupInfo(widget.conversationID);
+    _loadGroupMemberList(groupID: widget.conversationID);
+  }
+
+  Future<void> _loadGroupMemberList(
+      {required String groupID, int count = 100, String? seq}) async {
+    if (seq == null || seq == "" || seq == "0") {
+      _groupMemberList = [];
+    }
+    final String? nextSeq = await _loadGroupMemberListFunction(
+        groupID: groupID, seq: seq, count: count);
+    if (nextSeq != null && nextSeq != "0" && nextSeq != "") {
+      return await _loadGroupMemberList(
+          groupID: groupID, count: count, seq: nextSeq);
+    } else {
+      setState(() {
+        _groupMemberList = _groupMemberList;
+        model.groupMemberList = _groupMemberList ?? [];
+      });
+    }
+  }
+
+  Future<String?> _loadGroupMemberListFunction(
+      {required String groupID, int count = 100, String? seq}) async {
+    if (seq == "0") {
+      _groupMemberList?.clear();
+    }
+    final res = await _groupServices.getGroupMemberList(
+        groupID: groupID,
+        filter: GroupMemberFilterTypeEnum.V2TIM_GROUP_MEMBER_FILTER_ALL,
+        count: count,
+        nextSeq: seq ?? _groupMemberListSeq);
+    final groupMemberListRes = res.data;
+    if (res.code == 0 && groupMemberListRes != null) {
+      final groupMemberList = groupMemberListRes.memberInfoList ?? [];
+      _groupMemberList = [...?_groupMemberList, ...groupMemberList];
+      _groupMemberListSeq = groupMemberListRes.nextSeq ?? "0";
+    }else if (res.code == 10010){
+      model.isGroupExist = false;
+    }else if(res.code == 10007){
+      model.isNotAMember = true;
+    }
+    return groupMemberListRes?.nextSeq;
   }
 
   @override
@@ -181,7 +243,19 @@ class _TUIChatState extends TIMUIKitState<TIMUIKitChat> {
       Frame.destroy();
     }
     model.resetData();
-    groupProfileViewModel.clearData();
+  }
+
+  _loadGroupInfo(String groupID) async {
+    final groupInfo = await _groupServices
+        .getGroupsInfo(groupIDList: [widget.conversationID]);
+    if (groupInfo != null) {
+      final groupRes = groupInfo.first;
+      if (groupRes.resultCode == 0) {
+        setState(() {
+          _groupInfo = groupRes.groupInfo;
+        });
+      }
+    }
   }
 
   Widget _renderJoinGroupApplication(int amount, TUITheme theme) {
@@ -222,7 +296,6 @@ class _TUIChatState extends TIMUIKitState<TIMUIKitChat> {
     final TUITheme theme = value.theme;
     final closePanel =
         OptimizeUtils.throttle((_) => textFieldController.hideAllPanel(), 60);
-
     return TIMUIKitChatProviderScope(
         conversationID: widget.conversationID,
         conversationType: widget.conversationType,
@@ -231,9 +304,7 @@ class _TUIChatState extends TIMUIKitState<TIMUIKitChat> {
         ],
         builder: (context, w) {
           final TUIChatViewModel model = Provider.of<TUIChatViewModel>(context);
-
           final isMultiSelect = model.isMultiSelect;
-
           List<V2TimGroupApplication> filteredApplicationList = [];
           if (widget.conversationType == 2 &&
               widget.onDealWithGroupApplication != null) {
@@ -241,6 +312,12 @@ class _TUIChatState extends TIMUIKitState<TIMUIKitChat> {
               return (item.groupID == widget.conversationID) &&
                   item.handleStatus == 0;
             }).toList();
+          }
+          final TUIGroupListenerModel groupListenerModel = Provider.of<TUIGroupListenerModel>(context);
+          final NeedUpdate? needUpdate = groupListenerModel.needUpdate;
+          if(needUpdate != null && needUpdate.groupID == widget.conversationID){
+            groupListenerModel.needUpdate = null;
+            loadGroup();
           }
 
           return GestureDetector(
@@ -253,12 +330,14 @@ class _TUIChatState extends TIMUIKitState<TIMUIKitChat> {
                   config: widget.appBarConfig,
                   conversationShowName: widget.conversationShowName,
                   conversationID: widget.conversationID,
+                  showC2cMessageEditStaus: widget.config?.showC2cMessageEditStaus ?? true,
                 ),
                 body: Column(
                   children: [
                     if (filteredApplicationList.isNotEmpty)
                       _renderJoinGroupApplication(
                           filteredApplicationList.length, theme),
+                    widget.topFixWidget!,
                     Expanded(
                         child: Align(
                             alignment: Alignment.topCenter,
@@ -284,6 +363,7 @@ class _TUIChatState extends TIMUIKitState<TIMUIKitChat> {
                                 conversationType: widget.conversationType,
                                 scrollController: autoController,
                                 onTapAvatar: widget.onTapAvatar,
+                                // ignore: deprecated_member_use_from_same_package
                                 showNickName: widget.showNickName,
                                 messageItemBuilder: widget.messageItemBuilder,
                                 conversationID: widget.conversationID,
@@ -294,6 +374,8 @@ class _TUIChatState extends TIMUIKitState<TIMUIKitChat> {
                             conversationType: widget.conversationType,
                           )
                         : TIMUIKitInputTextField(
+                            groupInfo: _groupInfo,
+                            groupMemberList: _groupMemberList,
                             controller: textFieldController,
                             customStickerPanel: widget.customStickerPanel,
                             morePanelConfig: widget.morePanelConfig,
@@ -318,9 +400,9 @@ class _TUIChatState extends TIMUIKitState<TIMUIKitChat> {
 
 class TIMUIKitChatProviderScope extends StatelessWidget {
   static final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
+  final TUIGroupListenerModel groupListenerModel =
+  serviceLocator<TUIGroupListenerModel>();
   final TUIThemeViewModel themeViewModel = serviceLocator<TUIThemeViewModel>();
-  final TUIGroupProfileViewModel groupProfileViewModel =
-      serviceLocator<TUIGroupProfileViewModel>();
   final Widget? child;
   final Widget Function(BuildContext, Widget?)? builder;
   final List<SingleChildWidget>? providers;
@@ -360,7 +442,7 @@ class TIMUIKitChatProviderScope extends StatelessWidget {
       providers: [
         ChangeNotifierProvider.value(value: model),
         ChangeNotifierProvider.value(value: themeViewModel),
-        ChangeNotifierProvider.value(value: groupProfileViewModel),
+        ChangeNotifierProvider.value(value: groupListenerModel),
         Provider(create: (_) => const TIMUIKitChatConfig()),
         ...?providers
       ],

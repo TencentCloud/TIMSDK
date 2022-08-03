@@ -12,6 +12,7 @@ import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 // ignore: unused_import
 import 'package:tim_ui_kit/ui/utils/optimize_utils.dart';
+import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKItMessageList/tim_uikit_chat_history_message_list_config.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKItMessageList/utils.dart';
 import 'package:tim_ui_kit/ui/widgets/keepalive_wrapper.dart';
 
@@ -75,7 +76,7 @@ class TIMUIKitHistoryMessageList extends StatefulWidget {
   final Function(String?, [int?]) onLoadMore;
 
   /// configuration for list view
-  final ListView? mainHistoryListConfig;
+  final TIMUIKitHistoryMessageListConfig? mainHistoryListConfig;
 
   const TIMUIKitHistoryMessageList(
       {Key? key,

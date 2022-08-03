@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_group_profile_view_model.dart';
+import 'package:tim_ui_kit/data_services/group/group_services.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
@@ -21,42 +21,88 @@ class SelectCallInviter extends StatefulWidget {
 }
 
 class _SelectCallInviterState extends TIMUIKitState<SelectCallInviter> {
-  final TUIGroupProfileViewModel _model = TUIGroupProfileViewModel();
   final CoreServicesImpl _coreServicesImpl = serviceLocator<CoreServicesImpl>();
+  final GroupServices _groupServices = serviceLocator<GroupServices>();
   List<V2TimGroupMemberFullInfo> selectedMember = [];
+  List<V2TimGroupMemberFullInfo?>? _groupMemberList = [];
+  String _groupMemberListSeq = "0";
   List<V2TimGroupMemberFullInfo?>? searchMemberList;
   String? searchText;
+  bool loading = true;
 
   @override
   void initState() {
     super.initState();
     if (widget.groupID != null) {
-      _model.loadData(widget.groupID!);
+      _loadGroupMemberList(groupID: widget.groupID!);
     }
   }
 
   @override
   void dispose() {
     super.dispose();
-    _model.dispose();
   }
 
   bool isSearchTextExist(String? searchText) {
     return searchText != null && searchText != "";
   }
 
+  Future<void> _loadGroupMemberList(
+      {required String groupID, int count = 100, String? seq}) async {
+    if (seq == null || seq == "" || seq == "0") {
+      _groupMemberList = [];
+    }
+    final String? nextSeq = await _loadGroupMemberListFunction(
+        groupID: groupID, seq: seq, count: count);
+    if (nextSeq != null && nextSeq != "0" && nextSeq != "") {
+      return await _loadGroupMemberList(
+          groupID: groupID, count: count, seq: nextSeq);
+    }else{
+      setState((){
+        _groupMemberList = _groupMemberList;
+        searchMemberList = _groupMemberList;
+        loading = true;
+      });
+    }
+  }
+
+  Future<String?> _loadGroupMemberListFunction(
+      {required String groupID, int count = 100, String? seq}) async {
+    if (seq == "0") {
+      _groupMemberList?.clear();
+    }
+    final res = await _groupServices.getGroupMemberList(
+        groupID: widget.groupID!,
+        filter: GroupMemberFilterTypeEnum.V2TIM_GROUP_MEMBER_FILTER_ALL,
+        count: count,
+        nextSeq: seq ?? _groupMemberListSeq);
+    final groupMemberListRes = res.data;
+    if (res.code == 0 && groupMemberListRes != null) {
+      final groupMemberList = groupMemberListRes.memberInfoList ?? [];
+      _groupMemberList = [...?_groupMemberList, ...groupMemberList];
+      _groupMemberListSeq = groupMemberListRes.nextSeq ?? "0";
+    }
+    return groupMemberListRes?.nextSeq;
+  }
+
+  Future<V2TimValueCallback<V2GroupMemberInfoSearchResult>> searchGroupMember(
+      V2TimGroupMemberSearchParam searchParam) async {
+    final res =
+    await _groupServices.searchGroupMembers(searchParam: searchParam);
+
+    if (res.code == 0) {}
+    return res;
+  }
+
   handleSearchGroupMembers(String searchText, context) async {
-    searchText = searchText;
-    List<V2TimGroupMemberFullInfo?> currentGroupMember =
-        Provider.of<TUIGroupProfileViewModel>(context, listen: false)
-                .groupMemberList
-                ?.where((element) =>
-                    element?.userID != _coreServicesImpl.loginInfo.userID)
-                .toList() ??
-            [];
-    final res = await _model.searchGroupMember(V2TimGroupMemberSearchParam(
+    loading = true;
+    if(widget.groupID == null || widget.groupID!.isEmpty){
+      return;
+    }
+    List<V2TimGroupMemberFullInfo?> currentGroupMember = [];
+    final res = await searchGroupMember(V2TimGroupMemberSearchParam(
       keywordList: [searchText],
-      groupIDList: [_model.groupInfo!.groupID],
+      groupIDList: [widget.groupID!],
     ));
 
     if (res.code == 0) {
@@ -75,8 +121,9 @@ class _SelectCallInviterState extends TIMUIKitState<SelectCallInviter> {
       currentGroupMember = [];
     }
     setState(() {
+      loading = false;
       searchMemberList =
-          isSearchTextExist(searchText) ? currentGroupMember : null;
+          isSearchTextExist(searchText) ? currentGroupMember : _groupMemberList;
     });
   }
 
@@ -128,37 +175,35 @@ class _SelectCallInviterState extends TIMUIKitState<SelectCallInviter> {
           ],
           centerTitle: true,
           leadingWidth: 100,
-          title: const Text(
-            "发起呼叫",
-            style: TextStyle(
+          title: Text(
+            TIM_t("发起呼叫"),
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 17,
             ),
           ),
         ),
-        body: ChangeNotifierProvider.value(
-            value: _model,
-            child: Consumer<TUIGroupProfileViewModel>(
-                builder: ((context, value, child) {
-              return GroupProfileMemberList(
-                customTopArea: GroupMemberSearchTextField(
-                  onTextChange: (text) =>
-                      handleSearchGroupMembers(text, context),
-                ),
-                memberList: (searchMemberList ?? value.groupMemberList ?? [])
-                    .where((element) =>
-                        element?.userID != _coreServicesImpl.loginInfo.userID)
-                    .toList(),
-                canSlideDelete: false,
-                canSelectMember: true,
-                onSelectedMemberChange: (member) {
-                  selectedMember = member;
-                  setState(() {});
-                },
-                touchBottomCallBack: () {
-                  _model.loadMoreData(groupID: _model.groupInfo!.groupID);
-                },
-              );
-            }))));
+        body: (( searchMemberList ?? []).isNotEmpty || loading == false) ? GroupProfileMemberList(
+          customTopArea: GroupMemberSearchTextField(
+            onTextChange: (text) =>
+                handleSearchGroupMembers(text, context),
+          ),
+          memberList: (searchMemberList ?? [])
+              .where((element) =>
+          element?.userID != _coreServicesImpl.loginInfo.userID)
+              .toList(),
+          canSlideDelete: false,
+          canSelectMember: true,
+          onSelectedMemberChange: (member) {
+            selectedMember = member;
+            setState(() {});
+          },
+        ) : Center(
+          child: LoadingAnimationWidget.staggeredDotsWave(
+            color: theme.primaryColor ?? Colors.grey,
+            size: 40,
+          ),
+        )
+    );
   }
 }

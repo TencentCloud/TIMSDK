@@ -8,6 +8,9 @@ class TIMUIKitAddGroupExample extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const TIMUIKitAddGroup();
+    return TIMUIKitAddGroup(
+      onTapExistGroup: (groupID, conversation) {
+      },
+    );
   }
 }

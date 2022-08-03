@@ -3,11 +3,27 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_statelesswidget.dart';
 
 import 'package:tim_ui_kit/ui/utils/message.dart';
+import 'package:tim_ui_kit/ui/widgets/link_preview/common/utils.dart';
+
+import 'TIMUIKitMessageReaction/tim_uikit_message_reaction_show_panel.dart';
+
+class LinkMessage{
+  String? link;
+  String? text;
+  String? businessID;
+
+  LinkMessage.fromJSON(Map json) {
+    link = json["link"];
+    text = json["text"];
+    businessID = json["businessID"];
+  }
+}
 
 class TIMUIKitCustomElem extends TIMUIKitStatelessWidget {
   final V2TimCustomElem? customElem;
@@ -16,9 +32,13 @@ class TIMUIKitCustomElem extends TIMUIKitStatelessWidget {
   final BorderRadius? messageBorderRadius;
   final Color? messageBackgroundColor;
   final EdgeInsetsGeometry? textPadding;
+  final V2TimMessage message;
+  final bool? isShowMessageReaction;
 
   TIMUIKitCustomElem({
     Key? key,
+    required this.message,
+    this.isShowMessageReaction,
     this.customElem,
     this.isFromSelf = false,
     this.messageFontStyle,
@@ -32,6 +52,18 @@ class TIMUIKitCustomElem extends TIMUIKitStatelessWidget {
       if (customElem?.data != null) {
         final customMessage = jsonDecode(customElem!.data!);
         return CallingMessage.fromJSON(customMessage);
+      }
+      return null;
+    } catch (err) {
+      return null;
+    }
+  }
+
+  static LinkMessage? getLinkMessage(V2TimCustomElem? customElem) {
+    try {
+      if (customElem?.data != null) {
+        final customMessage = jsonDecode(customElem!.data!);
+        return LinkMessage.fromJSON(customMessage);
       }
       return null;
     } catch (err) {
@@ -72,8 +104,9 @@ class TIMUIKitCustomElem extends TIMUIKitStatelessWidget {
     return "${twoDigits(minutsShow)}:${twoDigits(secondsShow)}";
   }
 
-  Widget _callElemBuilder() {
+  Widget _callElemBuilder(BuildContext context) {
     final callingMessage = getCallMessage(customElem);
+    final linkMessage = getLinkMessage(customElem);
 
     if (callingMessage != null) {
       // 如果是结束消息
@@ -85,7 +118,6 @@ class TIMUIKitCustomElem extends TIMUIKitStatelessWidget {
       if (isCallEnd) {
         option2 = getShowTime(callingMessage.callEnd!);
       }
-
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -102,8 +134,7 @@ class TIMUIKitCustomElem extends TIMUIKitStatelessWidget {
           isCallEnd
               ? Text(TIM_t_para("通话时间：{{option2}}", "通话时间：$option2")(
                   option2: option2))
-              : Text(
-                  getActionType(callingMessage.actionType!),
+              : Text(getActionType(callingMessage.actionType!),
                   style: messageFontStyle,
                 ),
           if (isFromSelf)
@@ -118,6 +149,31 @@ class TIMUIKitCustomElem extends TIMUIKitStatelessWidget {
                 width: 16,
               ),
             ),
+        ],
+      );
+    } else if (linkMessage != null) {
+      final option1 = linkMessage.link;
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(linkMessage.text ?? ""),
+          MarkdownBody(
+            data: TIM_t_para("[查看详情 >>]({{option1}})", "[查看详情 >>]($option1)")(option1: option1),
+            styleSheet: MarkdownStyleSheet.fromTheme(ThemeData(
+                textTheme: const TextTheme(
+                    bodyText2: TextStyle(fontSize: 16.0))))
+                .copyWith(
+              a: TextStyle(color: LinkUtils.hexToColor("015fff")),
+            ),
+            onTapLink: (
+                String link,
+                String? href,
+                String title,
+                ) {
+              LinkUtils.launchURL(context, linkMessage.link ?? "");
+            },
+          )
         ],
       );
     } else {
@@ -149,7 +205,13 @@ class TIMUIKitCustomElem extends TIMUIKitStatelessWidget {
         borderRadius: messageBorderRadius ?? borderRadius,
       ),
       constraints: const BoxConstraints(maxWidth: 240),
-      child: _callElemBuilder(),
+      child: Column(
+        children: [
+          _callElemBuilder(context),
+          if (isShowMessageReaction ?? true)
+            TIMUIKitMessageReactionShowPanel(message: message)
+        ],
+      )
     );
   }
 }
