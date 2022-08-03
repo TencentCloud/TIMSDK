@@ -7,6 +7,7 @@ import 'package:tim_ui_kit/business_logic/view_models/tui_self_info_view_model.d
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
+import 'package:tim_ui_kit/ui/widgets/avatar.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';
 import 'package:timuikit/src/pages/login.dart';
 import 'package:timuikit/src/provider/theme.dart';
@@ -119,7 +120,7 @@ class CancelAccount extends StatelessWidget {
       ),
       body: Container(
         decoration: BoxDecoration(
-          color: hexToColor("E6E9EB"),
+          color: theme.weakBackgroundColor,
         ),
         child: Center(
           child: Column(
@@ -127,18 +128,21 @@ class CancelAccount extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Stack(
+                clipBehavior: Clip.none,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(6),
-                    child: CircleAvatar(
-                      radius: 42,
-                      backgroundImage: NetworkImage(
-                          _selfInfoViewModel.loginInfo?.faceUrl ?? ""),
+                  Container(
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
                     ),
+                    height: 64,
+                    width: 64,
+                    child: Avatar(
+                        showName: _selfInfoViewModel.loginInfo?.userID ?? "",
+                        faceUrl: _selfInfoViewModel.loginInfo?.faceUrl ?? ""),
                   ),
                   Positioned(
-                    right: 0,
-                    bottom: 0,
+                    right: -16,
+                    bottom: -16,
                     child: Icon(
                       Icons.do_not_disturb_on,
                       color: hexToColor('FA5151'),
@@ -148,7 +152,7 @@ class CancelAccount extends StatelessWidget {
                 ],
               ),
               Container(
-                margin: const EdgeInsets.only(top: 12, bottom: 80),
+                margin: const EdgeInsets.only(top: 40, bottom: 80),
                 padding: const EdgeInsets.only(right: 40, left: 40),
                 child: Text(
                   imt_para("注销后，您将无法使用当前账号，相关数据也将删除且无法找回。当前账号ID: {{option1}}",
@@ -156,7 +160,7 @@ class CancelAccount extends StatelessWidget {
                       option1: option1),
                   textAlign: TextAlign.left,
                   style: TextStyle(
-                    color: hexToColor("444444"),
+                    color: theme.darkTextColor,
                     fontSize: 14,
                   ),
                 ),

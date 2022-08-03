@@ -6,10 +6,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:tim_ui_kit/data_services/conversation/conversation_services.dart';
 import 'package:tim_ui_kit/data_services/core/core_services.dart';
+import 'package:tim_ui_kit/data_services/core/tim_uikit_config.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tim_ui_kit/ui/constants/emoji.dart';
+import 'package:tim_ui_kit/ui/controller/tim_uikit_chat_controller.dart';
 import 'package:tim_ui_kit/ui/widgets/emoji.dart';
 import 'package:tim_ui_kit_sticker_plugin/utils/tim_ui_kit_sticker_data.dart';
 import 'package:timuikit/src/chat.dart';
@@ -17,6 +19,7 @@ import 'package:timuikit/src/config.dart';
 import 'package:timuikit/src/launch_page.dart';
 import 'package:timuikit/src/pages/home_page.dart';
 import 'package:timuikit/src/pages/login.dart';
+import 'package:timuikit/src/provider/local_setting.dart';
 import 'package:timuikit/src/provider/login_user_Info.dart';
 import 'package:timuikit/src/routes.dart';
 import 'package:timuikit/utils/push/channel/channel_push.dart';
@@ -42,6 +45,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   final ConversationService _conversationService =
   serviceLocator<ConversationService>();
   BuildContext? _cachedContext;
+  final TIMUIKitChatController _timuiKitChatController =
+  TIMUIKitChatController();
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
@@ -126,9 +131,17 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   }
 
   initIMSDKAndAddIMListeners() async {
+    final LocalSetting localSetting = Provider.of<LocalSetting>(context, listen: false);
     final isInitSuccess = await _coreInstance.init(
-      // 此处可指定显示语言，不传该字段使用系统语言
+      // You can specify the language here,
+      // not providing this field means using the system language.
       // language: LanguageEnum.zh,
+
+      config: TIMUIKitConfig(
+        // This status is default to true,
+        // its unnecessary to specify this if you tend to use online status.
+        isShowOnlineStatus: localSetting.isShowOnlineStatus,
+      ),
       onTUIKitCallbackListener: (TIMCallback callbackValue) {
         switch (callbackValue.type) {
           case TIMCallbackType.INFO:
@@ -219,6 +232,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     String ext = msg['ext'] ?? "";
     Map<String, dynamic> extMsp = jsonDecode(ext);
     String convId = extMsp["conversationID"] ?? "";
+    final currentConvID = _timuiKitChatController.getCurrentConversation();
+    if(currentConvID == convId.split("_")[1]){
+      return;
+    }
     V2TimConversation? targetConversation =
     await _conversationService.getConversation(conversationID: convId);
     if (targetConversation != null) {

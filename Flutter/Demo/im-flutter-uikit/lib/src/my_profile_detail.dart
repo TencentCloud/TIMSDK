@@ -13,7 +13,6 @@ import 'package:timuikit/src/config.dart';
 import 'package:timuikit/src/provider/login_user_Info.dart';
 import 'package:timuikit/src/provider/theme.dart';
 import 'package:provider/provider.dart';
-import 'package:timuikit/utils/toast.dart';
 
 class MyProfileDetail extends StatelessWidget {
   MyProfileDetail({Key? key}) : super(key: key);
@@ -94,10 +93,6 @@ class MyProfileDetail extends StatelessWidget {
         );
       },
     );
-  }
-
-  void showCantModify() {
-    Utils.toast(imt("无网络连接，无法修改"));
   }
 
   @override

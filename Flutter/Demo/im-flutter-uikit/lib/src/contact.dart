@@ -5,6 +5,7 @@ import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/widgets/avatar.dart';
 import 'package:timuikit/src/blackList.dart';
 import 'package:timuikit/src/group_list.dart';
+import 'package:timuikit/src/provider/local_setting.dart';
 import 'package:timuikit/src/provider/theme.dart';
 import 'package:timuikit/src/user_profile.dart';
 import 'newContact.dart';
@@ -83,7 +84,8 @@ class _ContactState extends State<Contact> {
                 child: Avatar(
                     faceUrl: _getImagePathByID(item.id),
                     showName: showName,
-                    isFromLocal: true),
+                    isFromLocal: true,
+                    ),
               ),
               Expanded(
                   child: Container(
@@ -121,7 +123,9 @@ class _ContactState extends State<Contact> {
 
   @override
   Widget build(BuildContext context) {
+    final LocalSetting localSetting = Provider.of<LocalSetting>(context);
     return TIMUIKitContact(
+      isShowOnlineStatus: localSetting.isShowOnlineStatus,
       topList: [
         TopListItem(
             name: imt("新的联系人"),

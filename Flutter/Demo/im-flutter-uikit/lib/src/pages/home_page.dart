@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_typing_uninitialized_variables
+// ignore_for_file: prefer_typing_uninitialized_variables, avoid_print
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +20,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';
 import 'package:timuikit/src/provider/login_user_Info.dart';
 import 'package:timuikit/src/provider/theme.dart';
+import 'package:timuikit/utils/push/channel/channel_push.dart';
+import 'package:timuikit/utils/push/push_constant.dart';
 
 /// 首页
 class HomePage extends StatefulWidget {
@@ -34,7 +36,6 @@ class HomePageState extends State<HomePage> {
   bool hasInit = false;
   var subscription;
   final Connectivity _connectivity = Connectivity();
-  int totalUnreadCount = 0;
   bool hasInternet = true;
   final CoreServicesImpl _coreInstance = TIMUIKitCore.getInstance();
   final V2TIMManager _sdkInstance = TIMUIKitCore.getSDKInstance();
@@ -74,29 +75,9 @@ class HomePageState extends State<HomePage> {
 
   SuperTooltip? tooltip;
 
-  Widget _emptyAvatarBuilder(context) {
-    return Image.asset("assets/default_avatar.png");
-  }
-
-  _initConversationListener() {
-    final listener = V2TimConversationListener(
-        onTotalUnreadMessageCountChanged: ((unreadCount) {
-          totalUnreadCount = unreadCount;
-          setState(() {});
-        }));
-
-    _conversationController.setConversationListener(listener: listener);
-  }
-
-  _getTotalUnreadCount() async {
-    final res = await _sdkInstance
-        .getConversationManager()
-        .getTotalUnreadMessageCount();
-    if (res.code == 0) {
-      totalUnreadCount = res.data ?? 0;
-      setState(() {});
-    }
-  }
+  // Widget _emptyAvatarBuilder(context) {
+  //   return Image.asset("assets/default_avatar.png");
+  // }
 
   _connectivityChange(ConnectivityResult result) {
     hasInternet = result != ConnectivityResult.none;
@@ -116,14 +97,13 @@ class HomePageState extends State<HomePage> {
   initState() {
     super.initState();
     currentIndex = widget.pageIndex;
-    _coreInstance.setEmptyAvatarBuilder(_emptyAvatarBuilder);
-    _initConversationListener();
-    _getTotalUnreadCount();
+    // _coreInstance.setEmptyAvatarBuilder(_emptyAvatarBuilder);
     _initTrtc();
     setState(() {});
     subscription =
         _connectivity.onConnectivityChanged.listen(_connectivityChange);
     getLoginUserInfo();
+    uploadOfflinePushInfoToken();
   }
 
   getLoginUserInfo() async {
@@ -173,15 +153,13 @@ class HomePageState extends State<HomePage> {
                   theme.primaryColor ?? CommonColor.primaryColor,
                   BlendMode.srcATop),
             ),
-            if (totalUnreadCount != 0)
-              Positioned(
-                top: -5,
-                right: -6,
-                child: UnconstrainedBox(
-                  child: UnreadMessage(
-                      width: 16, height: 16, unreadCount: totalUnreadCount),
-                ),
-              )
+            Positioned(
+              top: -5,
+              right: -6,
+              child: UnconstrainedBox(
+                child: TIMUIKitConversationTotalUnread(width: 16, height: 16),
+              ),
+            )
           ],
         ),
         unselectedIcon: Stack(
@@ -192,15 +170,13 @@ class HomePageState extends State<HomePage> {
               width: 24,
               height: 24,
             ),
-            if (totalUnreadCount != 0)
-              Positioned(
-                top: -5,
-                right: -6,
-                child: UnconstrainedBox(
-                  child: UnreadMessage(
-                      width: 16, height: 16, unreadCount: totalUnreadCount),
-                ),
-              )
+            Positioned(
+              top: -5,
+              right: -6,
+              child: UnconstrainedBox(
+                child: TIMUIKitConversationTotalUnread(width: 16, height: 16),
+              ),
+            )
           ],
         ),
       ),
@@ -285,6 +261,13 @@ class HomePageState extends State<HomePage> {
     Navigator.of(context).pop();
   }
 
+  uploadOfflinePushInfoToken() async {
+    ChannelPush.requestPermission();
+    final bool isUploadSuccess =
+    await ChannelPush.uploadToken(PushConfig.appInfo);
+    print("offline push info token upload $isUploadSuccess");
+  }
+
   //如果点击的导航页不是当前项，切换
   void _changePage(int index) {
     if (index != currentIndex) {
@@ -367,7 +350,8 @@ class HomePageState extends State<HomePage> {
   }
 
   List<Widget> _getTooltipContent(BuildContext context) {
-    List toolTipList = currentIndex == 0 ? conversationTooltip : contactTooltip;
+    List toolTipList = currentIndex == 1 ? contactTooltip : conversationTooltip;
+
 
     return toolTipList.map((e) {
       return InkWell(

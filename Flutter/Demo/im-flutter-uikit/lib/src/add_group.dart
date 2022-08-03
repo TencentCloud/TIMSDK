@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';
+import 'package:timuikit/src/chat.dart';
 import 'package:timuikit/src/provider/theme.dart';
 
 class AddGroup extends StatelessWidget {
@@ -29,7 +30,17 @@ class AddGroup extends StatelessWidget {
           iconTheme: const IconThemeData(
             color: Colors.white,
           )),
-      body: const TIMUIKitAddGroup(),
+      body: TIMUIKitAddGroup(
+        onTapExistGroup: (groupID, conversation) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Chat(
+                  selectedConversation: conversation,
+                ),
+              ));
+        },
+      ),
     );
   }
 }
