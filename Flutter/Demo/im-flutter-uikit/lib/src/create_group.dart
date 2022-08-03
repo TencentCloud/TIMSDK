@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
@@ -53,9 +55,36 @@ class _CreateGroup extends State<CreateGroup> {
     return friendRemark != "" ? friendRemark : showName;
   }
 
-  _createGroup(String groupType) async {
-    final groupName = selectedFriendList.map((e) => _getShowName(e)).join("、");
+  bool _isValidGroupName(String groupName){
+    final List<int> bytes = utf8.encode(groupName);
+    return !(bytes.length > 30);
+  }
 
+  String _generateGroupName(){
+    String groupName = selectedFriendList.map((e) => _getShowName(e)).join(", ");
+    if(_isValidGroupName(groupName)){
+      return groupName;
+    }
+
+    final option1 = selectedFriendList.length;
+    groupName = _getShowName(selectedFriendList[0]) +
+        imt_para(" 等{{option1}}人", " 等$option1人")(option1: option1);
+    if(_isValidGroupName(groupName)){
+      return groupName;
+    }
+
+    final option2 = selectedFriendList.length + 1;
+    groupName = _getShowName(selectedFriendList[0]) +
+        imt_para("{{option2}}人群", "$option2人群")(option2: option2);
+    if(_isValidGroupName(groupName)){
+      return groupName;
+    }
+
+    return imt("新群聊");
+  }
+
+  _createGroup(String groupType) async {
+    String groupName = _generateGroupName();
     final groupMember = selectedFriendList.map((e) {
       final role = e.userProfile!.role!;
       GroupMemberRoleTypeEnum roleEnum =

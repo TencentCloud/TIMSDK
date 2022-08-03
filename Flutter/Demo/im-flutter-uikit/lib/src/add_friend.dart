@@ -4,6 +4,7 @@ import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';
 import 'package:timuikit/src/provider/theme.dart';
+import 'package:timuikit/src/user_profile.dart';
 
 class AddFriend extends StatelessWidget {
   const AddFriend({Key? key}) : super(key: key);
@@ -29,7 +30,14 @@ class AddFriend extends StatelessWidget {
           iconTheme: const IconThemeData(
             color: Colors.white,
           )),
-      body: const TIMUIKitAddFriend(
+      body: TIMUIKitAddFriend(
+        onTapAlreadyFriendsItem: (String userID) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => UserProfile(userID: userID),
+              ));
+        },
       ),
     );
   }

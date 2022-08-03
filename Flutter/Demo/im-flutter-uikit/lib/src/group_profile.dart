@@ -1,6 +1,8 @@
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:tim_ui_kit/business_logic/life_cycle/group_profile_life_cycle.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_self_info_view_model.dart';
+import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/group_profile_widget.dart';
@@ -10,6 +12,7 @@ import 'package:timuikit/i18n/i18n_utils.dart';
 import 'package:timuikit/src/chat.dart';
 import 'package:timuikit/src/provider/theme.dart';
 import 'package:timuikit/src/search.dart';
+import 'package:timuikit/src/user_profile.dart';
 
 class GroupProfilePage extends StatelessWidget {
   final String groupID;
@@ -21,6 +24,8 @@ class GroupProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Provider.of<DefaultThemeData>(context).theme;
+    final TUISelfInfoViewModel _selfInfoViewModel =
+    serviceLocator<TUISelfInfoViewModel>();
     return Scaffold(
         appBar: AppBar(
             title: Text(
@@ -51,6 +56,15 @@ class GroupProfilePage extends StatelessWidget {
                   (route) => false);
             }),
             groupID: groupID,
+            onClickUser: (String userID){
+              if(userID != _selfInfoViewModel.loginInfo?.userID){
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => UserProfile(userID: userID),
+                    ));
+              }
+            },
             profileWidgetBuilder: GroupProfileWidgetBuilder(searchMessage: () {
               return TIMUIKitGroupProfileWidget.searchMessage(
                   (V2TimConversation? conversation) {

@@ -6,6 +6,7 @@ import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';
 import 'package:timuikit/src/provider/theme.dart';
+import 'package:timuikit/src/user_profile.dart';
 
 class BlackList extends StatelessWidget {
   const BlackList({Key? key}) : super(key: key);
@@ -37,7 +38,13 @@ class BlackList extends StatelessWidget {
             child: Text(imt("暂无黑名单")),
           );
         },
-        onTapItem: (_) {},
+        onTapItem: (V2TimFriendInfo friendInfo) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => UserProfile(userID: friendInfo.userID),
+              ));
+        },
       ),
     );
   }

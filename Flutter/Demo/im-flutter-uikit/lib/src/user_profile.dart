@@ -229,9 +229,12 @@ class UserProfileState extends State<UserProfile> {
                       ));
                 }),
             customBuilderOne: (bool isFriend, V2TimFriendInfo friendInfo, V2TimConversation conversation){
-              if(!isFriend){
-                return Container();
-              }
+              // If you don't allow sending message when friendship not exist,
+              // please not comment the following lines.
+
+              // if(!isFriend){
+              //   return Container();
+              // }
               return Column(
                   children: _buildBottomOperationList(
                   context, conversation, theme)

@@ -117,7 +117,7 @@ class AboutState extends State<About>{
                 return AlertDialog(
                   title: Text(imt("免责声明")),
                   content: Text(imt(
-                      "IM即时通信（“本产品”）是由腾讯云提供的一款测试产品，腾讯云享有本产品的著作权和所有权。本产品仅用于功能体验，不得用于任何商业用途。严禁在使用中有任何色情、辱骂、暴恐、涉政等违法内容传播。")),
+                      "腾讯云IM APP（“本产品”）是由腾讯云提供的一款测试产品，腾讯云享有本产品的著作权和所有权。本产品仅用于功能体验，不得用于任何商业用途。严禁在使用中有任何色情、辱骂、暴恐、涉政等违法内容传播。")),
                   actions: <Widget>[
                     TextButton(
                       child: Text(imt("取消")),
