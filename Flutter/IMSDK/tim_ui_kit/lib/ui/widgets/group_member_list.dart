@@ -2,7 +2,7 @@
 
 import 'package:azlistview/azlistview.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_slidable_for_tencent_im/flutter_slidable.dart';
 import 'package:lpinyin/lpinyin.dart';
 import 'package:provider/provider.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
@@ -169,7 +169,9 @@ class _GroupProfileMemberListState
                       margin: const EdgeInsets.only(right: 10),
                       child: Avatar(
                           faceUrl: memberInfo.faceUrl ?? "",
-                          showName: _getShowName(memberInfo)),
+                          showName: _getShowName(memberInfo),
+                          type: 1,
+                          ),
                     ),
                     Text(_getShowName(memberInfo),
                         style: const TextStyle(fontSize: 16)),
@@ -296,18 +298,23 @@ class _GroupProfileMemberListState
               throteFunction(notification);
               return true;
             },
-            child: AZListViewContainer(
-                memberList: showList,
-                susItemBuilder: (context, index) {
-                  final model = showList[index];
-                  return getSusItem(context, theme, model.getSuspensionTag());
-                },
-                itemBuilder: (context, index) {
-                  final memberInfo =
-                      showList[index].memberInfo as V2TimGroupMemberFullInfo;
+            child: (showList.isEmpty)
+                ? Center(
+                    child: Text(TIM_t("暂无群成员")),
+                  )
+                : AZListViewContainer(
+                    memberList: showList,
+                    susItemBuilder: (context, index) {
+                      final model = showList[index];
+                      return getSusItem(
+                          context, theme, model.getSuspensionTag());
+                    },
+                    itemBuilder: (context, index) {
+                      final memberInfo = showList[index].memberInfo
+                          as V2TimGroupMemberFullInfo;
 
-                  return _buildListItem(context, memberInfo);
-                }),
+                      return _buildListItem(context, memberInfo);
+                    }),
           ))
         ],
       )),

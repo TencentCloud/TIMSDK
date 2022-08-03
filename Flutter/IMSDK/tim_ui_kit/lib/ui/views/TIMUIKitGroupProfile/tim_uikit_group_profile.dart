@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/business_logic/life_cycle/group_profile_life_cycle.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_group_profile_view_model.dart';
-import 'package:tim_ui_kit/data_services/services_locatar.dart';
+import 'package:tim_ui_kit/business_logic/listener_model/tui_group_listener_model.dart';
+import 'package:tim_ui_kit/business_logic/separate_models/tui_group_profile_model.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/group_profile_widget.dart';
-import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/shared_data_widget.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/widgets/tim_ui_group_profile_widget.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/widgets/tim_uikit_group_button_area.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/widgets/tim_uikit_group_manage.dart';
@@ -51,6 +50,10 @@ class TIMUIKitGroupProfile extends StatefulWidget {
   /// You have better to implement the `didLeaveGroup` in it.
   final GroupProfileLifeCycle? lifeCycle;
 
+  /// The callback after user clicking a user,
+  /// you may navigating to the specific profile page, or anywhere you want.
+  final Function(String userID)? onClickUser;
+
   const TIMUIKitGroupProfile(
       {Key? key,
       required this.groupID,
@@ -61,6 +64,7 @@ class TIMUIKitGroupProfile extends StatefulWidget {
           this.operationListBuilder,
       this.builder,
       this.profileWidgetBuilder,
+      this.onClickUser,
       this.profileWidgetsOrder,
       this.lifeCycle})
       : super(key: key);
@@ -70,22 +74,18 @@ class TIMUIKitGroupProfile extends StatefulWidget {
 }
 
 class _TIMUIKitGroupProfileState extends TIMUIKitState<TIMUIKitGroupProfile> {
-  final TUIGroupProfileViewModel _model =
-      serviceLocator<TUIGroupProfileViewModel>();
+  bool isSingleUse = false;
+  final model = TUIGroupProfileModel();
 
   @override
   void initState() {
     super.initState();
-    _model.loadData(widget.groupID);
-    _model.lifeCycle = widget.lifeCycle;
-    // _model.setGroupListener();
+    model.loadData(widget.groupID);
+    model.onClickUser = widget.onClickUser;
   }
 
   @override
   void dispose() {
-    // _model.clearData();
-    // _model.dispose();
-    // _model.removeGroupListener();
     super.dispose();
   }
 
@@ -110,20 +110,38 @@ class _TIMUIKitGroupProfileState extends TIMUIKitState<TIMUIKitGroupProfile> {
   ];
 
   @override
-  Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
-    final TUITheme theme = value.theme;
+  Widget tuiBuild(BuildContext context, TUIKitBuildValue buildValue) {
+    final TUITheme theme = buildValue.theme;
 
     return MultiProvider(
         providers: [
-          ChangeNotifierProvider.value(value: _model),
+          ChangeNotifierProvider.value(value: model),
+          ChangeNotifierProvider.value(value: TUIGroupListenerModel()),
         ],
         builder: (context, w) {
-          final groupInfo =
-              Provider.of<TUIGroupProfileViewModel>(context).groupInfo;
-          final memberList =
-              Provider.of<TUIGroupProfileViewModel>(context).groupMemberList;
-          if (groupInfo == null || memberList == null) {
+          final model = Provider.of<TUIGroupProfileModel>(context);
+          model.lifeCycle = widget.lifeCycle;
+          final V2TimGroupInfo? groupInfo = model.groupInfo;
+          final memberList = model.groupMemberList;
+          if (groupInfo == null) {
             return Container();
+          }
+
+          final TUIGroupListenerModel groupListenerModel = Provider.of<TUIGroupListenerModel>(context);
+          final NeedUpdate? needUpdate = groupListenerModel.needUpdate;
+          if(needUpdate != null && needUpdate.groupID == widget.groupID){
+            groupListenerModel.needUpdate = null;
+            switch(needUpdate.updateType) {
+              case UpdateType.groupInfo:
+                model.loadGroupInfo(widget.groupID);
+                break;
+              case UpdateType.memberList:
+                model.loadGroupMemberList(groupID: widget.groupID);
+                model.loadGroupInfo(widget.groupID);
+                break;
+              default:
+                break;
+            }
           }
 
           final isGroupOwner = groupInfo.role ==
@@ -132,13 +150,10 @@ class _TIMUIKitGroupProfileState extends TIMUIKitState<TIMUIKitGroupProfile> {
               GroupMemberRoleType.V2TIM_GROUP_MEMBER_ROLE_ADMIN;
 
           Widget groupProfilePage({required Widget child}) {
-            return SharedDataWidget(
-              model: _model,
-              child: SingleChildScrollView(
-                child: Container(
-                  color: widget.backGroundColor ?? theme.weakBackgroundColor,
-                  child: child,
-                ),
+            return SingleChildScrollView(
+              child: Container(
+                color: widget.backGroundColor ?? theme.weakBackgroundColor,
+                child: child,
               ),
             );
           }
@@ -148,7 +163,7 @@ class _TIMUIKitGroupProfileState extends TIMUIKitState<TIMUIKitGroupProfile> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => GroupProfileNotificationPage(
-                        model: _model,
+                        model: model,
                         notification: groupInfo.notification ?? "")));
           }
 
@@ -157,7 +172,7 @@ class _TIMUIKitGroupProfileState extends TIMUIKitState<TIMUIKitGroupProfile> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => GroupProfileGroupManagePage(
-                          model: _model,
+                          model: model,
                         )));
           }
 
@@ -170,7 +185,7 @@ class _TIMUIKitGroupProfileState extends TIMUIKitState<TIMUIKitGroupProfile> {
                 case GroupProfileWidgetEnum.detailCard:
                   return (customBuilder?.detailCard != null
                       ? customBuilder?.detailCard!(
-                          groupInfo, _model.setGroupName)
+                          groupInfo, model.setGroupName)
                       : TIMUIKitGroupProfileWidget.detailCard(
                           groupInfo: groupInfo))!;
                 case GroupProfileWidgetEnum.memberListTile:
@@ -182,13 +197,13 @@ class _TIMUIKitGroupProfileState extends TIMUIKitState<TIMUIKitGroupProfile> {
                       ? customBuilder?.groupNotice!(
                           groupInfo.notification ?? "",
                           toDefaultNoticePage,
-                          _model.setGroupNotification)
+                          model.setGroupNotification)
                       : TIMUIKitGroupProfileWidget.groupNotification())!;
                 case GroupProfileWidgetEnum.groupManage:
                   if (isAdmin || isGroupOwner) {
                     return (customBuilder?.groupManage != null
                         ? customBuilder?.groupManage!(toDefaultManagePage)
-                        : TIMUIKitGroupProfileWidget.groupManage())!;
+                        : TIMUIKitGroupProfileWidget.groupManage(model))!;
                   } else {
                     return Container();
                   }
@@ -207,28 +222,28 @@ class _TIMUIKitGroupProfileState extends TIMUIKitState<TIMUIKitGroupProfile> {
                 case GroupProfileWidgetEnum.groupJoiningModeBar:
                   return (customBuilder?.groupJoiningModeBar != null
                       ? customBuilder?.groupJoiningModeBar!(
-                          groupInfo.groupAddOpt ?? 1, _model.setGroupAddOpt)
+                          groupInfo.groupAddOpt ?? 1, model.setGroupAddOpt)
                       : TIMUIKitGroupProfileWidget.groupAddOpt())!;
                 case GroupProfileWidgetEnum.nameCardBar:
                   return (customBuilder?.nameCardBar != null
                       ? customBuilder?.nameCardBar!(
-                          _model.getSelfNameCard(), _model.setNameCard)
+                          model.getSelfNameCard(), model.setNameCard)
                       : TIMUIKitGroupProfileWidget.nameCard())!;
                 case GroupProfileWidgetEnum.muteGroupMessageBar:
                   return (customBuilder?.muteGroupMessageBar != null
                       ? customBuilder?.muteGroupMessageBar!(
-                          _model.isDisturb ?? false, _model.setMessageDisturb)
+                          model.conversation?.recvOpt != 0, model.setMessageDisturb)
                       : TIMUIKitGroupProfileWidget.messageDisturb())!;
                 case GroupProfileWidgetEnum.pinedConversationBar:
                   return (customBuilder?.pinedConversationBar != null
                       ? customBuilder?.pinedConversationBar!(
-                          _model.conversation?.isPinned ?? false,
-                          _model.pinedConversation)
+                          model.conversation?.isPinned ?? false,
+                          model.pinedConversation)
                       : TIMUIKitGroupProfileWidget.pinedConversation())!;
                 case GroupProfileWidgetEnum.buttonArea:
                   return (customBuilder?.buttonArea != null
                       ? customBuilder?.buttonArea!(groupInfo, memberList)
-                      : GroupProfileButtonArea(groupInfo.groupID, _model))!;
+                      : GroupProfileButtonArea(groupInfo.groupID, model))!;
                 case GroupProfileWidgetEnum.customBuilderOne:
                   return (customBuilder?.customBuilderOne != null
                       ? customBuilder?.customBuilderOne!(groupInfo, memberList)

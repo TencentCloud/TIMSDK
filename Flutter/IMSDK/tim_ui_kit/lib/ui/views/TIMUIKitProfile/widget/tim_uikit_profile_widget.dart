@@ -115,12 +115,12 @@ class TIMUIKitProfileWidget extends TIMUIKitClass {
   }
 
   /// defaultPortraitWidget
-  static Widget defaultPortraitWidget(V2TimUserFullInfo userInfo) {
+  static Widget defaultPortraitWidget(V2TimUserFullInfo? userInfo) {
     return SizedBox(
       width: 48,
       height: 48,
-      child: Avatar(
-          faceUrl: userInfo.faceUrl ?? "", showName: userInfo.nickName ?? ""),
+      child: userInfo != null ? Avatar(
+          faceUrl: userInfo.faceUrl ?? "", showName: userInfo.nickName ?? "",type: 1,) : Container(),
     );
   }
 
@@ -214,10 +214,12 @@ class TIMUIKitProfileWidget extends TIMUIKitClass {
 
   /// default button area
   static Widget addAndDeleteArea(
+
     V2TimFriendInfo friendInfo,
     V2TimConversation conversation,
     int friendType,
     bool isDisturb,
+    bool isBlocked,
     TUITheme theme,
     VoidCallback handleAddFriend,
     VoidCallback handleDeleteFriend,
@@ -268,7 +270,7 @@ class TIMUIKitProfileWidget extends TIMUIKitClass {
     return Column(
       children: [
         if (friendType != 0) _buildDeleteFriend(conversation, theme),
-        if (friendType == 0) _buildAddOperation()
+        if (friendType == 0 && !isBlocked) _buildAddOperation()
       ],
     );
   }

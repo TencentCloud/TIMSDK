@@ -7,7 +7,7 @@ abstract class GroupServices {
     required List<String> groupIDList,
   });
 
-  Future<V2TimGroupMemberInfoResult?> getGroupMemberList({
+  Future<V2TimValueCallback<V2TimGroupMemberInfoResult>> getGroupMemberList({
     required String groupID,
     required GroupMemberFilterTypeEnum filter,
     required String nextSeq,

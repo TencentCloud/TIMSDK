@@ -97,11 +97,12 @@ class TIMUIKitChatController {
       /// `groupID` is required only if `convType` is `ConvType.group`;
       /// 当convType为ConvType.group时，必传groupID：群聊ID
       String? groupID,
+      bool? showC2cMessageEditStaus = true,
       required ConvType convType}) {
     final convID = convType == ConvType.c2c ? receiverID : groupID;
     if (convID != null && convID.isNotEmpty) {
       return model.sendMessageFromController(
-          messageInfo: messageInfo, convID: convID, convType: convType);
+          messageInfo: messageInfo, convID: convID, convType: convType,);
     } else {
       print("ID is empty");
       return null;
@@ -131,15 +132,21 @@ class TIMUIKitChatController {
         context: context);
   }
 
-  /// Set local custom data
+  /// Set local custom data; returns the bool shows if succeed
   /// 为本地消息配置额外String字段
-  setLocalCustomData(String msgID, String localCustomData) {
+  Future<bool> setLocalCustomData(String msgID, String localCustomData) {
     return model.setLocalCustomData(msgID, localCustomData);
   }
 
-  /// Set local custom int
+  /// Set local custom int; returns the bool shows if succeed
   /// 为本地消息配置额外int字段
-  setLocalCustomInt(String msgID, int localCustomInt) {
+  Future<bool> setLocalCustomInt(String msgID, int localCustomInt) {
     return model.setLocalCustomInt(msgID, localCustomInt);
+  }
+
+  /// Get current conversation, returns UserID or GroupID if in the chat page, returns "" if not.
+  /// 获取当前会话，如果在Chat页面，返回UserID or GroupID， 反之返回""
+  String getCurrentConversation(){
+    return model.currentSelectedConv;
   }
 }

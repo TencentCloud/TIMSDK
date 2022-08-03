@@ -40,7 +40,7 @@ class TUIPersonalProfileViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  changeFriendVerificationMethod(int allowType) async {
+  Future<V2TimCallback> changeFriendVerificationMethod(int allowType) async {
     final res = await _coreServices.setSelfInfo(
       userFullInfo: V2TimUserFullInfo.fromJson(
         {"allowType": allowType},
@@ -53,10 +53,11 @@ class TUIPersonalProfileViewModel extends ChangeNotifier {
     } else {
       print("${res.code},${res.desc}");
     }
+    return res;
   }
 
   // 1：男 女：2
-  updateGender(int gender) async {
+  Future<V2TimCallback> updateGender(int gender) async {
     final res = await _coreServices.setSelfInfo(
       userFullInfo: V2TimUserFullInfo.fromJson(
         {"gender": gender},
@@ -68,9 +69,10 @@ class TUIPersonalProfileViewModel extends ChangeNotifier {
     } else {
       print("${res.code},${res.desc}");
     }
+    return res;
   }
 
-  updateNickName(String nickName) async {
+  Future<V2TimCallback> updateNickName(String nickName) async {
     final res = await _coreServices.setSelfInfo(
       userFullInfo: V2TimUserFullInfo.fromJson(
         {"nickName": nickName},
@@ -83,9 +85,10 @@ class TUIPersonalProfileViewModel extends ChangeNotifier {
     } else {
       print("${res.code},${res.desc}");
     }
+    return res;
   }
 
-  updateSelfSignature(String selfSignature) async {
+  Future<V2TimCallback> updateSelfSignature(String selfSignature) async {
     final res = await _coreServices.setSelfInfo(
       userFullInfo: V2TimUserFullInfo.fromJson(
         {"selfSignature": selfSignature},
@@ -97,6 +100,7 @@ class TUIPersonalProfileViewModel extends ChangeNotifier {
     } else {
       print("${res.code},${res.desc}");
     }
+    return res;
   }
 
   updateUserInfo(String key, dynamic value) {
@@ -132,7 +136,7 @@ class TUIPersonalProfileViewModel extends ChangeNotifier {
     }
   }
 
-  updateSelfInfo(Map<String, dynamic> newSelfInfo) async {
+  Future<V2TimCallback> updateSelfInfo(Map<String, dynamic> newSelfInfo) async {
     final res = await _coreServices.setSelfInfo(
       userFullInfo: V2TimUserFullInfo.fromJson(
         newSelfInfo,
@@ -147,5 +151,6 @@ class TUIPersonalProfileViewModel extends ChangeNotifier {
     } else {
       print("${res.code},${res.desc}");
     }
+    return res;
   }
 }

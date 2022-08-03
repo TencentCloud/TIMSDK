@@ -9,6 +9,7 @@ class ChatLifeCycle {
   MessageFunction modifiedMessageWillMount;
 
   /// Before a new message will be sent.
+  /// Returns null can block the message from sending.
   MessageFunction messageWillSend;
 
   /// After getting the latest message list from API,

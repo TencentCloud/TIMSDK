@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/business_logic/life_cycle/friend_list_life_cycle.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_contact_view_model.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_friendship_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 
@@ -25,13 +25,17 @@ class TIMUIKitContact extends StatefulWidget {
   /// the life cycle hooks for friend list or contacts list business logic
   final FriendListLifeCycle? lifeCycle;
 
+  /// Control if shows the online status for each user on its avatar.
+  final bool isShowOnlineStatus;
+
   const TIMUIKitContact(
       {Key? key,
       this.onTapItem,
       this.lifeCycle,
       this.topList,
       this.topListItemBuilder,
-      this.emptyBuilder})
+      this.emptyBuilder,
+      this.isShowOnlineStatus = true})
       : super(key: key);
 
   @override
@@ -39,20 +43,16 @@ class TIMUIKitContact extends StatefulWidget {
 }
 
 class _TIMUIKitContactState extends TIMUIKitState<TIMUIKitContact> {
-  final TUIContactViewModel model = serviceLocator<TUIContactViewModel>();
+  final TUIFriendShipViewModel model = serviceLocator<TUIFriendShipViewModel>();
 
   @override
   void initState() {
     super.initState();
-    model.loadData();
-    model.setFriendshipListener();
   }
 
   @override
   void dispose() {
     super.dispose();
-    model.removeFriendShipListener();
-    // model.dispose();
   }
 
   @override
@@ -62,16 +62,19 @@ class _TIMUIKitContactState extends TIMUIKitState<TIMUIKitContact> {
           ChangeNotifierProvider.value(value: model),
         ],
         builder: (context, w) {
-          final model = Provider.of<TUIContactViewModel>(context);
-          model.lifeCycle = widget.lifeCycle;
-          final memberList = model.friendList;
+          final model = Provider.of<TUIFriendShipViewModel>(context);
+          model.contactListLifeCycle = widget.lifeCycle;
+          final memberList = model.friendList ?? [];
 
-          return ContactList(
-            contactList: memberList ?? [],
-            onTapItem: widget.onTapItem,
-            topList: widget.topList,
-            topListItemBuilder: widget.topListItemBuilder,
-          );
+          return (memberList.isEmpty && widget.emptyBuilder != null)
+              ? widget.emptyBuilder!(context)
+              : ContactList(
+                  isShowOnlineStatus: widget.isShowOnlineStatus,
+                  contactList: memberList,
+                  onTapItem: widget.onTapItem,
+                  topList: widget.topList,
+                  topListItemBuilder: widget.topListItemBuilder,
+                );
         });
   }
 }

@@ -22,6 +22,7 @@ import 'package:tim_ui_kit/ui/constants/history_message_constant.dart';
 import 'package:tim_ui_kit/ui/utils/message.dart';
 import 'package:tim_ui_kit/ui/utils/permission.dart';
 import 'package:tim_ui_kit/ui/utils/platform.dart';
+import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitMessageItem/TIMUIKitMessageReaction/tim_uikit_message_reaction_wrapper.dart';
 import 'package:tim_ui_kit/ui/widgets/image_screen.dart';
 import 'package:tim_ui_kit/ui/widgets/toast.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -34,13 +35,15 @@ class TIMUIKitImageElem extends StatefulWidget {
   final bool isShowJump;
   final VoidCallback? clearJump;
   final String? isFrom;
+  final bool? isShowMessageReaction;
 
   const TIMUIKitImageElem(
       {required this.message,
       this.isShowJump = false,
       this.clearJump,
       this.isFrom,
-      Key? key})
+      Key? key,
+      this.isShowMessageReaction})
       : super(key: key);
 
   @override
@@ -48,7 +51,6 @@ class TIMUIKitImageElem extends StatefulWidget {
 }
 
 class _TIMUIKitImageElem extends TIMUIKitState<TIMUIKitImageElem> {
-  bool isShowBorder = false;
   double? networkImagePositionRadio; // 加这个字段用于异步获取被安全打击后的兜底图的比例
   final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
   Widget? imageItem;
@@ -164,27 +166,6 @@ class _TIMUIKitImageElem extends TIMUIKitState<TIMUIKitImageElem> {
             infoCode: 6660407));
       }
     }
-  }
-
-  void _showJumpColor() {
-    int shineAmount = 10;
-    setState(() {
-      isShowBorder = true;
-    });
-    Future.delayed(const Duration(milliseconds: 100), () {
-      widget.clearJump!();
-    });
-    Timer.periodic(const Duration(milliseconds: 400), (timer) {
-      if (mounted) {
-        setState(() {
-          isShowBorder = shineAmount.isOdd ? true : false;
-        });
-      }
-      if (shineAmount == 0 || !mounted) {
-        timer.cancel();
-      }
-      shineAmount--;
-    });
   }
 
   getImgWidthAndHeight(
@@ -424,17 +405,12 @@ class _TIMUIKitImageElem extends TIMUIKitState<TIMUIKitImageElem> {
     V2TimImage? originalImg =
         getImageFromList(V2_TIM_IMAGE_TYPES_ENUM.original);
     V2TimImage? smallImg = getImageFromList(V2_TIM_IMAGE_TYPES_ENUM.small);
-    if (widget.isShowJump) {
-      Future.delayed(Duration.zero, () {
-        _showJumpColor();
-      });
-    }
-    return Container(
-        decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(5)),
-            border: Border.all(
-                color: Color.fromRGBO(245, 166, 35, (isShowBorder ? 1 : 0)),
-                width: 2)),
+    return TIMUIKitMessageReactionWrapper(
+        isShowJump: widget.isShowJump,
+        clearJump: widget.clearJump,
+        isFromSelf: widget.message.isSelf ?? true,
+        isShowMessageReaction: widget.isShowMessageReaction ?? true,
+        message: widget.message,
         child: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
           return ConstrainedBox(

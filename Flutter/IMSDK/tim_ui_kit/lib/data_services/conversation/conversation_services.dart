@@ -28,4 +28,8 @@ abstract class ConversationService {
 
   Future<void> removeConversationListener(
       {V2TimConversationListener? listener});
+
+  Future<int> getTotalUnreadCount();
+
+  Future<V2TimConversation?> getConversationListByConversationId({required String convID});
 }

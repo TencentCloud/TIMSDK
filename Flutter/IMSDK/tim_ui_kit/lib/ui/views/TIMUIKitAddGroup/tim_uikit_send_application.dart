@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_add_group_view_model.dart';
+import 'package:tim_ui_kit/business_logic/life_cycle/add_group_life_cycle.dart';
+import 'package:tim_ui_kit/data_services/core/core_services_implements.dart';
+import 'package:tim_ui_kit/data_services/group/group_services.dart';
+import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
 import 'package:tim_ui_kit/ui/widgets/avatar.dart';
@@ -9,9 +12,9 @@ import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
 class SendJoinGroupApplication extends StatefulWidget {
   final V2TimGroupInfo groupInfo;
-  final TUIAddGroupViewModel model;
+  final AddGroupLifeCycle? lifeCycle;
   const SendJoinGroupApplication(
-      {Key? key, required this.groupInfo, required this.model})
+      {Key? key, required this.groupInfo, this.lifeCycle})
       : super(key: key);
 
   @override
@@ -21,14 +24,25 @@ class SendJoinGroupApplication extends StatefulWidget {
 class _SendJoinGroupApplicationState
     extends TIMUIKitState<SendJoinGroupApplication> {
   final TextEditingController _verficationController = TextEditingController();
+  final GroupServices _groupServices = serviceLocator<GroupServices>();
+  final CoreServicesImpl _coreServicesImpl = serviceLocator<CoreServicesImpl>();
 
   @override
   void initState() {
     super.initState();
-    final option1 = widget.model.loginUserInfo?.nickName ??
-        widget.model.loginUserInfo?.userID;
+    final loginUserInfo = _coreServicesImpl.loginUserInfo;
+    final option1 = loginUserInfo?.nickName ?? loginUserInfo?.userID;
     _verficationController.text =
         TIM_t_para("我是: {{option1}}", "我是: $option1")(option1: option1);
+  }
+
+  Future<V2TimCallback?> addGroup(String groupID, String message) async {
+    if (widget.lifeCycle?.shouldAddGroup != null &&
+        await widget.lifeCycle!.shouldAddGroup(groupID, message, context) ==
+            false) {
+      return null;
+    }
+    return _groupServices.joinGroup(groupID: groupID, message: message);
   }
 
   String _getGroupType(String type) {
@@ -157,7 +171,7 @@ class _SendJoinGroupApplicationState
                   onPressed: () async {
                     final addWording = _verficationController.text;
                     final res =
-                        await widget.model.addGroup(groupID, addWording);
+                        await addGroup(groupID, addWording);
                     if (res?.code == 0) {
                       onTIMCallback(TIMCallback(
                           type: TIMCallbackType.INFO,

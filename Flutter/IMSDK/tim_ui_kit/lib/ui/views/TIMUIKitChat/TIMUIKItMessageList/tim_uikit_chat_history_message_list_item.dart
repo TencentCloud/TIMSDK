@@ -9,24 +9,29 @@ import 'package:super_tooltip/super_tooltip.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_statelesswidget.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_self_info_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
+import 'package:tim_ui_kit/data_services/message/message_services.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/constants/history_message_constant.dart';
 import 'package:tim_ui_kit/ui/utils/message.dart';
 import 'package:tim_ui_kit/ui/utils/time_ago.dart';
+import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKItMessageList/tim_uikit_chat_message_tooltip.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKItMessageList/tim_uikit_message_read_receipt.dart';
+import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitMessageItem/TIMUIKitMessageReaction/tim_uikit_message_reaction_utils.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitMessageItem/main.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitMessageItem/tim_uikit_chat_custom_elem.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitMessageItem/tim_uikit_chat_face_elem.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitMessageItem/tim_uikit_chat_group_trtc_tips_elem.dart';
+import 'package:tim_ui_kit/ui/views/TIMUIKitChat/tim_uikit_cloud_custom_data.dart';
 import 'package:tim_ui_kit/ui/widgets/avatar.dart';
-import 'package:tim_ui_kit/ui/widgets/forward_message_screen.dart';
 import 'package:tim_ui_kit/ui/widgets/loading.dart';
 import 'package:tim_ui_kit/ui/widgets/radio_button.dart';
-import 'package:flutter/services.dart';
 
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
+
+import '../TIMUIKitMessageItem/TIMUIKitMessageReaction/tim_uikit_message_reaction_select_emoji.dart';
 
 typedef MessageRowBuilder = Widget Function(
   /// current message
@@ -173,6 +178,7 @@ class TIMUIKitHistoryMessageListItem extends StatefulWidget {
   /// allow notifi user when send reply message
   final bool allowAtUserWhenReply;
 
+  @Deprecated("Nickname will not show in one-to-one chat, if you tend to control it in group chat, please use `isShowSelfNameInGroup` and `isShowOthersNameInGroup` from `config: TIMUIKitChatConfig` instead")
   /// allow show user nick name
   final bool showNickName;
 
@@ -203,10 +209,14 @@ class TIMUIKitHistoryMessageListItem extends StatefulWidget {
   final Widget Function(BuildContext context, V2TimMessage message)?
       bottomRowBuilder;
 
+  // open MessageReaction
+  final bool? isUseMessageReaction;
+
   const TIMUIKitHistoryMessageListItem(
       {Key? key,
       required this.message,
-      this.showNickName = true,
+      @Deprecated("Nickname will not show in one-to-one chat, if you tend to control it in group chat, please use `isShowSelfNameInGroup` and `isShowOthersNameInGroup` from `config: TIMUIKitChatConfig` instead")
+      this.showNickName = false,
       this.onScrollToIndex,
       this.onScrollToIndexBegin,
       this.onTapForOthersPortrait,
@@ -226,6 +236,7 @@ class TIMUIKitHistoryMessageListItem extends StatefulWidget {
       this.padding,
       this.textPadding,
       this.topRowBuilder,
+      this.isUseMessageReaction,
       this.bottomRowBuilder})
       : super(key: key);
 
@@ -273,265 +284,34 @@ class _TIMUIKItHistoryMessageListItemState
     with TickerProviderStateMixin {
   SuperTooltip? tooltip;
   final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
+  // ignore: unused_field
+  final MessageService _messageService = serviceLocator<MessageService>();
+  final TUISelfInfoViewModel selfInfoModel = serviceLocator<TUISelfInfoViewModel>();
   final TUIThemeViewModel themeModel = serviceLocator<TUIThemeViewModel>();
   // bool isChecked = false;
   final GlobalKey _key = GlobalKey();
-
-  _buildLongPressTipItem() {
-    final isCanRevoke = isRevokable(widget.message.timestamp!);
-    final shouldShowRevokeAction = isCanRevoke &&
-        (widget.message.isSelf ?? false) &&
-        widget.message.status != MessageStatus.V2TIM_MSG_STATUS_SEND_FAIL;
-    final tooltipsConfig = widget.toolTipsConfig;
-    final defaultTipsList = [
-      {
-        "label": TIM_t("复制"),
-        "id": "copyMessage",
-        "icon": "images/copy_message.png"
-      },
-      {
-        "label": TIM_t("转发"),
-        "id": "forwardMessage",
-        "icon": "images/forward_message.png"
-      },
-      {
-        "label": TIM_t("多选"),
-        "id": "multiSelect",
-        "icon": "images/multi_message.png"
-      },
-      {
-        "label": TIM_t("引用"),
-        "id": "replyMessage",
-        "icon": "images/reply_message.png"
-      },
-      {
-        "label": TIM_t("删除"),
-        "id": "delete",
-        "icon": "images/delete_message.png"
-      },
-      if (shouldShowRevokeAction)
-        {
-          "label": TIM_t("撤回"),
-          "id": "revoke",
-          "icon": "images/revoke_message.png"
-        }
-    ];
-    if (widget.message.elemType != MessageElemType.V2TIM_ELEM_TYPE_TEXT) {
-      defaultTipsList.removeAt(0);
-    }
-    List formatedTipsList = defaultTipsList;
-    if (tooltipsConfig != null) {
-      formatedTipsList = defaultTipsList.where((element) {
-        final type = element["id"];
-        if (type == "copyMessage") {
-          return tooltipsConfig.showCopyMessage;
-        }
-        if (type == "forwardMessage") {
-          return tooltipsConfig.showForwardMessage;
-        }
-        if (type == "replyMessage") {
-          return tooltipsConfig.showReplyMessage;
-        }
-        if (type == "delete") {
-          return tooltipsConfig.showDeleteMessage;
-        }
-
-        if (type == "revoke") {
-          return tooltipsConfig.showRecallMessage;
-        }
-        return true;
-      }).toList();
-    }
-    return formatedTipsList
-        .map(
-          (item) => Material(
-            child: ItemInkWell(
-              onTap: () {
-                _onTap(item["id"]!);
-              },
-              child: Column(
-                children: [
-                  Image.asset(
-                    item["icon"]!,
-                    package: 'tim_ui_kit',
-                    width: 20,
-                    height: 20,
-                  ),
-                  const SizedBox(
-                    height: 4,
-                  ),
-                  Text(
-                    item["label"]!,
-                    style: TextStyle(
-                      decoration: TextDecoration.none,
-                      color: themeModel.theme.darkTextColor,
-                      fontSize: 10,
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-        )
-        .toList();
-  }
-
-  bool isRevokable(int timestamp) =>
-      (DateTime.now().millisecondsSinceEpoch / 1000).ceil() - timestamp < 120;
-
-  Widget ItemInkWell({
-    Widget? child,
-    GestureTapCallback? onTap,
-  }) {
-    return SizedBox(
-      width: 50,
-      child: InkWell(
-        onTap: onTap,
-        child: Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-          ),
-          child: child,
-        ),
-      ),
-    );
-  }
-
-  Widget _getTooltipAction() {
-    final bool haveExtraTipsConfig = widget.toolTipsConfig != null &&
-        widget.toolTipsConfig?.additionalItemBuilder != null;
-    Widget? extraTipsActionItem = haveExtraTipsConfig
-        ? widget.toolTipsConfig!.additionalItemBuilder!(
-            widget.message, closeTooltip)
-        : null;
-    return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(
-            maxWidth: 250,
-          ),
-          child: Wrap(
-            direction: Axis.horizontal,
-            alignment: WrapAlignment.start,
-            // crossAxisAlignment: crossAxisAlignment.st,
-            spacing: 4,
-            runSpacing: 24,
-            children: [
-              ..._buildLongPressTipItem(),
-              if (extraTipsActionItem != null) extraTipsActionItem
-            ],
-          ),
-        ));
-  }
 
   closeTooltip() {
     tooltip?.close();
   }
 
-  initTools({
-    BuildContext? context,
-    bool isLongMessage = false,
-  }) {
-    double arrowTipDistance = 30;
-    TooltipDirection popupDirection = TooltipDirection.up;
-
-    if (context != null) {
-      RenderBox? box = _key.currentContext?.findRenderObject() as RenderBox?;
-      if (box != null) {
-        Offset offset = box.localToGlobal(Offset.zero);
-        if (offset.dy < 240 && !isLongMessage) {
-          popupDirection = TooltipDirection.down;
-        }
-      }
-      arrowTipDistance = (context.size!.height / 2).roundToDouble() +
-          (isLongMessage ? -120 : 10);
-    }
-
-    tooltip = SuperTooltip(
-      popupDirection: popupDirection,
-      minimumOutSidePadding: 0,
-      arrowTipDistance: arrowTipDistance,
-      arrowBaseWidth: 10.0,
-      arrowLength: 10.0,
-      right: widget.message.isSelf! ? 60 : null,
-      left: widget.message.isSelf! ? null : 60,
-      borderColor: Colors.white,
-      backgroundColor: Colors.white,
-      shadowColor: Colors.black26,
-      hasShadow: true,
-      borderWidth: 1.0,
-      showCloseButton: ShowCloseButton.none,
-      touchThroughAreaShape: ClipAreaShape.rectangle,
-      content: _getTooltipAction(),
-    );
-  }
-
-  _onTap(String operation) async {
-    final messageItem = widget.message;
-    final msgID = messageItem.msgID as String;
-    switch (operation) {
-      case "delete":
-        model.deleteMsg(msgID);
-        break;
-      case "revoke":
-        model.revokeMsg(msgID);
-        break;
-      case "multiSelect":
-        model.updateMultiSelectStatus(true);
-        model.addToMultiSelectedMessageList(widget.message);
-        break;
-      case "forwardMessage":
-        model.addToMultiSelectedMessageList(widget.message);
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => const ForwardMessageScreen(
-                      conversationType: 1,
-                    )));
-        break;
-      case "copyMessage":
-        if (widget.message.elemType == MessageElemType.V2TIM_ELEM_TYPE_TEXT) {
-          await Clipboard.setData(
-              ClipboardData(text: widget.message.textElem?.text ?? ""));
-          onTIMCallback(TIMCallback(
-              type: TIMCallbackType.INFO,
-              infoRecommendText: TIM_t("已复制"),
-              infoCode: 6660408));
-        }
-        break;
-      case "replyMessage":
-        model.setRepliedMessage(widget.message);
-        if (widget.allowAtUserWhenReply &&
-            widget.onLongPressForOthersHeadPortrait != null) {
-          widget.onLongPressForOthersHeadPortrait!(
-              widget.message.sender, widget.message.nickName);
-        }
-        break;
-      default:
-        onTIMCallback(TIMCallback(
-            type: TIMCallbackType.INFO,
-            infoRecommendText: TIM_t("暂未实现"),
-            infoCode: 6660409));
-    }
-
-    tooltip!.close();
-  }
-
   bool isReplyMessage(V2TimMessage message) {
-    final hasCustomdata =
+    final hasCustomData =
         message.cloudCustomData != null && message.cloudCustomData != "";
-    if (hasCustomdata) {
-      bool canparse = false;
+    if (hasCustomData) {
       try {
-        final messageCloudCustomData = json.decode(message.cloudCustomData!);
-        CloudCustomData.fromJson(messageCloudCustomData);
-        canparse = true;
+        final CloudCustomData messageCloudCustomData =
+            CloudCustomData.fromJson(json.decode(message.cloudCustomData!));
+        if (messageCloudCustomData.messageReply != null) {
+          MessageRepliedData.fromJson(messageCloudCustomData.messageReply!);
+          return true;
+        }
+        return false;
       } catch (error) {
-        canparse = false;
+        return false;
       }
-      return canparse;
     }
-    return hasCustomdata;
+    return false;
   }
 
   Widget _messageItemBuilder(V2TimMessage messageItem) {
@@ -556,12 +336,14 @@ class _TIMUIKItHistoryMessageListItemState
           )!;
         }
         return TIMUIKitCustomElem(
+          message: messageItem,
           customElem: messageItem.customElem,
           isFromSelf: isFromSelf,
           messageBackgroundColor: widget.themeData?.messageBackgroundColor,
           messageBorderRadius: widget.themeData?.messageBorderRadius,
           messageFontStyle: widget.themeData?.messageTextStyle,
           textPadding: widget.textPadding,
+          isShowMessageReaction: widget.isUseMessageReaction,
         );
       case MessageElemType.V2TIM_ELEM_TYPE_SOUND:
         if (messageItemBuilder?.soundMessageItemBuilder != null) {
@@ -572,6 +354,7 @@ class _TIMUIKItHistoryMessageListItemState
           )!;
         }
         return TIMUIKitSoundElem(
+          message: messageItem,
           soundElem: messageItem.soundElem!,
           msgID: messageItem.msgID ?? "",
           isFromSelf: messageItem.isSelf ?? false,
@@ -582,6 +365,7 @@ class _TIMUIKItHistoryMessageListItemState
           fontStyle: widget.themeData?.messageTextStyle,
           backgroundColor: widget.themeData?.messageBackgroundColor,
           textPadding: widget.textPadding,
+          isShowMessageReaction: widget.isUseMessageReaction,
         );
       case MessageElemType.V2TIM_ELEM_TYPE_TEXT:
         if (isReplyMessage(messageItem)) {
@@ -601,6 +385,8 @@ class _TIMUIKItHistoryMessageListItemState
             fontStyle: widget.themeData?.messageTextStyle,
             backgroundColor: widget.themeData?.messageBackgroundColor,
             textPadding: widget.textPadding,
+            chatModel: model,
+            isShowMessageReaction: widget.isUseMessageReaction,
           );
         }
         if (messageItemBuilder?.textMessageItemBuilder != null) {
@@ -620,6 +406,7 @@ class _TIMUIKItHistoryMessageListItemState
           fontStyle: widget.themeData?.messageTextStyle,
           backgroundColor: widget.themeData?.messageBackgroundColor,
           textPadding: widget.textPadding,
+          isShowMessageReaction: widget.isUseMessageReaction,
         );
       case MessageElemType.V2TIM_ELEM_TYPE_FACE:
         if (messageItemBuilder?.faceMessageItemBuilder != null) {
@@ -631,8 +418,9 @@ class _TIMUIKItHistoryMessageListItemState
         }
         return TIMUIKitFaceElem(
           path: messageItem.faceElem!.data ?? "",
-          clearJump: () => model.jumpMsgID = "",
-          isShowJump: isShowJump,
+          clearJump: clearJump,
+          isShowJump: isShowJump, message: messageItem,
+          isShowMessageReaction: widget.isUseMessageReaction,
         );
       case MessageElemType.V2TIM_ELEM_TYPE_FILE:
         if (messageItemBuilder?.fileMessageItemBuilder != null) {
@@ -643,9 +431,14 @@ class _TIMUIKItHistoryMessageListItemState
           )!;
         }
         return TIMUIKitFileElem(
-            messageID: messageItem.msgID,
-            fileElem: messageItem.fileElem,
-            isSelf: messageItem.isSelf ?? false);
+          message: messageItem,
+          messageID: messageItem.msgID,
+          fileElem: messageItem.fileElem,
+          isSelf: messageItem.isSelf ?? false,
+          clearJump: clearJump,
+          isShowJump: isShowJump,
+          isShowMessageReaction: widget.isUseMessageReaction,
+        );
       case MessageElemType.V2TIM_ELEM_TYPE_GROUP_TIPS:
         if (messageItemBuilder?.groupTipsMessageItemBuilder != null) {
           return messageItemBuilder!.groupTipsMessageItemBuilder!(
@@ -667,6 +460,7 @@ class _TIMUIKItHistoryMessageListItemState
           clearJump: () => model.jumpMsgID = "",
           isShowJump: isShowJump,
           message: messageItem,
+          isShowMessageReaction: widget.isUseMessageReaction,
           key: Key("${messageItem.seq}_${messageItem.timestamp}"),
         );
       case MessageElemType.V2TIM_ELEM_TYPE_VIDEO:
@@ -681,6 +475,7 @@ class _TIMUIKItHistoryMessageListItemState
           messageItem,
           isShowJump: isShowJump,
           clearJump: () => model.jumpMsgID = "",
+          isShowMessageReaction: widget.isUseMessageReaction,
         );
       case MessageElemType.V2TIM_ELEM_TYPE_LOCATION:
         if (messageItemBuilder?.locationMessageItemBuilder != null) {
@@ -700,6 +495,10 @@ class _TIMUIKItHistoryMessageListItemState
           )!;
         }
         return TIMUIKitMergerElem(
+            isShowJump: isShowJump,
+            clearJump: clearJump,
+            message: messageItem,
+            isShowMessageReaction: widget.isUseMessageReaction,
             mergerElem: messageItem.mergerElem!,
             messageID: messageItem.msgID ?? "",
             isSelf: messageItem.isSelf ?? false);
@@ -766,6 +565,9 @@ class _TIMUIKItHistoryMessageListItemState
     );
   }
 
+  bool isRevokable(int timestamp) =>
+      (DateTime.now().millisecondsSinceEpoch / 1000).ceil() - timestamp < 120;
+
   _onLongPress(c, V2TimMessage message) {
     if (tooltip != null && tooltip!.isOpen) {
       tooltip!.close();
@@ -786,6 +588,71 @@ class _TIMUIKItHistoryMessageListItemState
       initTools(context: c);
       tooltip!.show(c);
     }
+  }
+
+  _clickOnCurrentSticker(int sticker) async {
+    for(int i = 0; i< 5; i++){
+      final res = await _modifySticker(sticker);
+      if(res.code == 0){
+        break;
+      }
+    }
+  }
+
+  Future<V2TimValueCallback<V2TimMessageChangeInfo>> _modifySticker(int sticker) async {
+    return await Future.delayed(const Duration(milliseconds: 50), () async {
+      return await MessageReactionUtils.clickOnSticker(widget.message, sticker);
+    });
+  }
+
+  initTools({
+    BuildContext? context,
+    bool isLongMessage = false,
+  }) {
+    double arrowTipDistance = 30;
+    TooltipDirection popupDirection = TooltipDirection.up;
+    SelectEmojiPanelPosition selectEmojiPanelPosition = SelectEmojiPanelPosition.down;
+    if (context != null) {
+      RenderBox? box = _key.currentContext?.findRenderObject() as RenderBox?;
+      if (box != null) {
+        Offset offset = box.localToGlobal(Offset.zero);
+        if (offset.dy < 300 && !isLongMessage) {
+          selectEmojiPanelPosition = SelectEmojiPanelPosition.up;
+          popupDirection = TooltipDirection.down;
+        }
+      }
+      arrowTipDistance = (context.size!.height / 2).roundToDouble() +
+          (isLongMessage ? -120 : 10);
+    }
+
+    tooltip = SuperTooltip(
+      popupDirection: popupDirection,
+      minimumOutSidePadding: 0,
+      arrowTipDistance: arrowTipDistance,
+      arrowBaseWidth: 10.0,
+      arrowLength: 10.0,
+      right: widget.message.isSelf! ? 60 : null,
+      left: widget.message.isSelf! ? null : 60,
+      borderColor: Colors.white,
+      backgroundColor: Colors.white,
+      shadowColor: Colors.black26,
+      hasShadow: true,
+      borderWidth: 1.0,
+      showCloseButton: ShowCloseButton.none,
+      touchThroughAreaShape: ClipAreaShape.rectangle,
+      content: TIMUIKitMessageTooltip(
+        toolTipsConfig: widget.toolTipsConfig,
+        message: widget.message,
+        allowAtUserWhenReply: widget.allowAtUserWhenReply,
+        onLongPressForOthersHeadPortrait: widget.onLongPressForOthersHeadPortrait,
+        selectEmojiPanelPosition: selectEmojiPanelPosition,
+        onCloseTooltip: () => tooltip?.close(),
+        onSelectSticker: (int value) {
+          tooltip?.close();
+          _clickOnCurrentSticker(value);
+        },
+      ),
+    );
   }
 
   double getMaxWidth(isSelect) {
@@ -858,16 +725,15 @@ class _TIMUIKItHistoryMessageListItemState
     final isRevokedMsg = msgStatus == 6;
     final isTimeDivider = msgType == 11;
     final isPeerRead = message.isPeerRead ?? false;
+    final isGroupMessage = widget.message.groupID != null && widget.message.groupID!.isNotEmpty;
     final bool isRevokeEditable =
         widget.message.elemType == MessageElemType.V2TIM_ELEM_TYPE_TEXT;
-    // final chatConfig = Provider.of<TIMUIKitChatConfig>(context);
+    final isShowNickNameForSelf = isGroupMessage && model.chatConfig.isShowSelfNameInGroup;
+    final isShowNickNameForOthers = isGroupMessage && model.chatConfig.isShowOthersNameInGroup;
     if (isTimeDivider) {
       return _timeDividerBuilder(theme, message.timestamp ?? 0);
     }
     void clearJump() {
-      // Future.delayed(const Duration(milliseconds: 100), () {
-      //   clearJump();
-      // });
       model.jumpMsgID = "";
     }
 
@@ -976,15 +842,21 @@ class _TIMUIKItHistoryMessageListItemState
                       },
                       child: widget.userAvatarBuilder != null
                           ? widget.userAvatarBuilder!(context, message)
-                          : SizedBox(
-                              width: 40,
-                              height: 40,
-                              child: Avatar(
-                                  borderRadius:
-                                      widget.themeData?.avatarBorderRadius,
-                                  faceUrl: message.faceUrl ?? "",
-                                  showName:
-                                      MessageUtils.getDisplayName(message)),
+                          : Container(
+                              margin: (isSelf && isShowNickNameForSelf) ||
+                                      (!isSelf && isShowNickNameForOthers)
+                                  ? const EdgeInsets.only(top: 2)
+                                  : null,
+                              child: SizedBox(
+                                width: 40,
+                                height: 40,
+                                child: Avatar(
+                                    borderRadius:
+                                        widget.themeData?.avatarBorderRadius,
+                                    faceUrl: message.faceUrl ?? "",
+                                    showName:
+                                        MessageUtils.getDisplayName(message),),
+                              ),
                             ),
                     ),
                   Container(
@@ -998,7 +870,8 @@ class _TIMUIKItHistoryMessageListItemState
                           ? CrossAxisAlignment.end
                           : CrossAxisAlignment.start,
                       children: [
-                        if (widget.showNickName)
+                        if ((isSelf && isShowNickNameForSelf) ||
+                            (!isSelf && isShowNickNameForOthers))
                           widget.topRowBuilder != null
                               ? widget.topRowBuilder!(context, message)
                               : Container(
@@ -1021,7 +894,8 @@ class _TIMUIKItHistoryMessageListItemState
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            if (widget.showMessageReadRecipt &&
+                            if (model.chatConfig.isShowReadingStatus &&
+                            widget.showMessageReadRecipt &&
                                 model.currentSelectedConvType == 1 &&
                                 isSelf &&
                                 message.status ==
@@ -1035,7 +909,7 @@ class _TIMUIKItHistoryMessageListItemState
                                       color: theme.weakTextColor, fontSize: 12),
                                 ),
                               ),
-                            if (widget.showGroupMessageReadRecipt &&
+                            if (model.chatConfig.isShowGroupMessageReadReceipt &&
                                 model.currentSelectedConvType == 2 &&
                                 isSelf &&
                                 message.status ==

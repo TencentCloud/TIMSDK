@@ -1,15 +1,23 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
+import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitMessageItem/TIMUIKitMessageReaction/tim_uikit_message_reaction_wrapper.dart';
 
 class TIMUIKitFaceElem extends StatefulWidget {
   final String path;
-  final bool? isShowJump;
+  final bool isShowJump;
   final VoidCallback? clearJump;
+  final V2TimMessage message;
+  final bool? isShowMessageReaction;
 
   const TIMUIKitFaceElem(
-      {Key? key, required this.path, this.isShowJump = false, this.clearJump})
+      {Key? key,
+      required this.path,
+      required this.isShowJump,
+      this.clearJump,
+      required this.message,
+      this.isShowMessageReaction})
       : super(key: key);
 
   @override
@@ -17,35 +25,12 @@ class TIMUIKitFaceElem extends StatefulWidget {
 }
 
 class _TIMUIKitTextElemState extends TIMUIKitState<TIMUIKitFaceElem> {
-  bool isShowJumpState = false;
 
   @override
   void initState() {
     super.initState();
   }
 
-  _showJumpColor() {
-    int shineAmount = 10;
-    setState(() {
-      isShowJumpState = true;
-    });
-    Future.delayed(const Duration(milliseconds: 100), () {
-      if (widget.clearJump != null) {
-        widget.clearJump!();
-      }
-    });
-    Timer.periodic(const Duration(milliseconds: 400), (timer) {
-      if (mounted) {
-        setState(() {
-          isShowJumpState = shineAmount.isOdd ? true : false;
-        });
-      }
-      if (shineAmount == 0 || !mounted) {
-        timer.cancel();
-      }
-      shineAmount--;
-    });
-  }
 
   bool isFromNetwork() {
     return widget.path.startsWith('http');
@@ -53,18 +38,19 @@ class _TIMUIKitTextElemState extends TIMUIKitState<TIMUIKitFaceElem> {
 
   @override
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
-    if (widget.isShowJump!) {
-      Future.delayed(Duration.zero, () {
-        _showJumpColor();
-      });
-    }
-    return Container(
-      padding: const EdgeInsets.all(10),
-      constraints:
-          BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.3),
-      child: isFromNetwork()
-          ? Image.network(widget.path)
-          : Image.asset(widget.path),
-    );
+    return TIMUIKitMessageReactionWrapper(
+        isShowJump: widget.isShowJump,
+        isFromSelf: widget.message.isSelf ?? true,
+        clearJump: widget.clearJump,
+        message: widget.message,
+        isShowMessageReaction: widget.isShowMessageReaction ?? true,
+        child: Container(
+          padding: const EdgeInsets.all(10),
+          constraints:
+              BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.3),
+          child: isFromNetwork()
+              ? Image.network(widget.path)
+              : Image.asset(widget.path),
+        ));
   }
 }

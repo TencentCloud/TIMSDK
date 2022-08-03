@@ -2,14 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_statelesswidget.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_group_profile_view_model.dart';
+import 'package:tim_ui_kit/business_logic/separate_models/tui_group_profile_model.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/controller/tim_uikit_chat_controller.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 
 class GroupProfileButtonArea extends TIMUIKitStatelessWidget {
   final String groupID;
-  final TUIGroupProfileViewModel model;
+  final TUIGroupProfileModel model;
   final sdkInstance = TIMUIKitCore.getSDKInstance();
   final coreInstance = TIMUIKitCore.getInstance();
   final TIMUIKitChatController _timuiKitChatController =
@@ -155,6 +155,7 @@ class GroupProfileButtonArea extends TIMUIKitStatelessWidget {
       context,
       MaterialPageRoute(
         builder: (context) => SelectTransimitOwner(
+          model: model,
           groupID: groupID,
         ),
       ),

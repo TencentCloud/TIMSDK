@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_profile_view_model.dart';
+import 'package:tim_ui_kit/business_logic/separate_models/tui_profile_view_model.dart';
 import 'package:tim_ui_kit/ui/widgets/text_input_bottom_sheet.dart';
 
 class TIMUIKitProfileController {
@@ -11,22 +11,28 @@ class TIMUIKitProfileController {
     return model.deleteFriend(userID);
   }
 
+  /// Deprecated: Please use [pinConversation] instead. Pin the conversation to the top
+  @Deprecated("Please use [pinConversation] instead")
+  Future<V2TimCallback> pinedConversation(bool isPined, String convID) {
+    return model.pinedConversation(isPined, convID);
+  }
+
   /// pin the conversation to the top
-  pinedConversation(bool isPined, String convID) {
-    model.pinedConversation(isPined, convID);
+  Future<V2TimCallback> pinConversation(bool isPined, String convID) {
+    return model.pinedConversation(isPined, convID);
   }
 
   /// add a user to block list
-  addUserToBlackList(bool shouldAdd, String userID) {
-    model.addToBlackList(shouldAdd, userID);
+  Future<List<V2TimFriendOperationResult>?> addUserToBlackList(bool shouldAdd, String userID) {
+    return model.addToBlackList(shouldAdd, userID);
   }
 
   /// Change the friend adding request verification method,
   /// 0 represents "Accept all friend request",
   /// 1 represents "Require approval for friend requests",
   /// 2 represents "reject all friend requests".
-  changeFriendVerificationMethod(int allowType) {
-    model.changeFriendVerificationMethod(allowType);
+  Future<V2TimCallback> changeFriendVerificationMethod(int allowType) {
+    return model.changeFriendVerificationMethod(allowType);
   }
 
   /// update the remarks for other users,
@@ -35,8 +41,8 @@ class TIMUIKitProfileController {
   }
 
   /// set the message from a specific user as not disturb, mute notification
-  setMessageDisturb(String userID, bool isDisturb) {
-    model.setMessageDisturb(userID, isDisturb);
+  Future<V2TimCallback> setMessageDisturb(String userID, bool isDisturb) {
+    return model.setMessageDisturb(userID, isDisturb);
   }
 
   /// Show the text input bottom sheet

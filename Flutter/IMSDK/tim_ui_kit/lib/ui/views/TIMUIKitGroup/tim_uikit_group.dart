@@ -4,7 +4,7 @@ import 'package:lpinyin/lpinyin.dart';
 import 'package:provider/provider.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_group_view_model.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_friendship_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
@@ -36,7 +36,7 @@ class TIMUIKitGroup extends StatefulWidget {
 }
 
 class _TIMUIKitGroupState extends TIMUIKitState<TIMUIKitGroup> {
-  final TUIGroupViewModel _groupViewModel = TUIGroupViewModel();
+  final TUIFriendShipViewModel _friendshipViewModel = serviceLocator<TUIFriendShipViewModel>();
 
   List<ISuspensionBeanImpl<V2TimGroupInfo>> _getShowList(
       List<V2TimGroupInfo> groupList) {
@@ -80,7 +80,7 @@ class _TIMUIKitGroupState extends TIMUIKitState<TIMUIKitGroup> {
               child: SizedBox(
                 height: 40,
                 width: 40,
-                child: Avatar(faceUrl: faceUrl, showName: showName),
+                child: Avatar(faceUrl: faceUrl, showName: showName,type: 2,),
               ),
             ),
             Expanded(
@@ -110,20 +110,20 @@ class _TIMUIKitGroupState extends TIMUIKitState<TIMUIKitGroup> {
   @override
   void initState() {
     super.initState();
-    _groupViewModel.loadData();
+    _friendshipViewModel.loadGroupListData();
   }
 
   @override
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(value: _groupViewModel),
+        ChangeNotifierProvider.value(value: _friendshipViewModel),
         ChangeNotifierProvider.value(
             value: serviceLocator<TUIThemeViewModel>()),
       ],
       builder: (BuildContext context, Widget? w) {
         List<V2TimGroupInfo> groupList =
-            Provider.of<TUIGroupViewModel>(context).groupList;
+            Provider.of<TUIFriendShipViewModel>(context).groupList;
         if (widget.groupCollector != null) {
           groupList = groupList.where(widget.groupCollector!).toList();
         }

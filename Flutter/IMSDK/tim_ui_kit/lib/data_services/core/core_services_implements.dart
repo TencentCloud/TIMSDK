@@ -2,9 +2,12 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_conversation_view_model.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_friendship_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_self_info_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/core/core_services.dart';
+import 'package:tim_ui_kit/data_services/core/tim_uikit_config.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
@@ -50,6 +53,12 @@ class CoreServicesImpl with CoreServices {
     _emptyAvatarBuilder = builder;
   }
 
+  setGlobalConfig(TIMUIKitConfig? config) {
+    final TUISelfInfoViewModel selfInfoViewModel =
+        serviceLocator<TUISelfInfoViewModel>();
+    selfInfoViewModel.globalConfig = config;
+  }
+
   @override
   Future<bool?> init({
     /// Callback from TUIKit invoke, includes IM SDK API error, notify information, Flutter error.
@@ -58,6 +67,7 @@ class CoreServicesImpl with CoreServices {
     required LogLevelEnum loglevel,
     required V2TimSDKListener listener,
     LanguageEnum? language,
+    TIMUIKitConfig? config,
   }) async {
     if (language != null) {
       Future.delayed(const Duration(milliseconds: 1), () {
@@ -76,17 +86,52 @@ class CoreServicesImpl with CoreServices {
             onConnectSuccess: listener.onConnectSuccess,
             onConnecting: listener.onConnecting,
             onKickedOffline: listener.onKickedOffline,
+            onUserStatusChanged: (List<V2TimUserStatus> userStatusList) {
+              updateUserStatusList(userStatusList);
+            },
             onSelfInfoUpdated: (V2TimUserFullInfo info) {
               listener.onSelfInfoUpdated(info);
               serviceLocator<TUISelfInfoViewModel>().setLoginInfo(info);
               _loginInfo = info;
             },
             onUserSigExpired: listener.onUserSigExpired));
-
-    // TencentImSDKPlugin.v2TIMManager.callExperimentalAPI(
-    //     api: "internal_operation_set_ui_platform",
-    //     param: {"request_set_ui_platform_param": "flutter_uikit"});
+    setGlobalConfig(config);
     return result.data;
+  }
+
+  /// This method is used for init the TUIKit after you initialized the IM SDK from Native SDK.
+  @override
+  Future<void> setDataFromNative({
+    /// Callback from TUIKit invoke, includes IM SDK API error, notify information, Flutter error.
+    ValueChanged<TIMCallback>? onTUIKitCallbackListener,
+    LanguageEnum? language,
+    TIMUIKitConfig? config,
+    required String userId,
+  }) async {
+    if (language != null) {
+      Future.delayed(const Duration(milliseconds: 1), () {
+        I18nUtils(null, language);
+      });
+    }
+    if (onTUIKitCallbackListener != null) {
+      onCallback = onTUIKitCallbackListener;
+    }
+    setGlobalConfig(config);
+    getUsersInfo(userIDList: [userId]).then((res) => {
+          if (res.code == 0)
+            {
+              _loginInfo = res.data![0],
+              serviceLocator<TUISelfInfoViewModel>().setLoginInfo(_loginInfo!),
+              initDataModel()
+            }
+          else
+            {
+              callOnCallback(TIMCallback(
+                  type: TIMCallbackType.API_ERROR,
+                  errorCode: res.code,
+                  errorMsg: res.desc))
+            }
+        });
   }
 
   callOnCallback(TIMCallback callbackValue) {
@@ -96,6 +141,44 @@ class CoreServicesImpl with CoreServices {
       });
     } else {
       print("TUIKit Callback: ${callbackValue.type}");
+    }
+  }
+
+  initDataModel() {
+    final TUIFriendShipViewModel tuiFriendShipViewModel =
+        serviceLocator<TUIFriendShipViewModel>();
+    final TUIConversationViewModel tuiConversationViewModel =
+        serviceLocator<TUIConversationViewModel>();
+
+    tuiFriendShipViewModel.initFriendShipModel();
+    tuiConversationViewModel.initConversation();
+  }
+
+  updateUserStatusList(List<V2TimUserStatus> newUserStatusList) {
+    try {
+      final TUISelfInfoViewModel selfInfoViewModel =
+          serviceLocator<TUISelfInfoViewModel>();
+      if (selfInfoViewModel.globalConfig?.isShowOnlineStatus == false) {
+        return;
+      }
+
+      final TUIFriendShipViewModel tuiFriendShipViewModel =
+          serviceLocator<TUIFriendShipViewModel>();
+      final currentUserStatusList = tuiFriendShipViewModel.userStatusList;
+
+      for (int i = 0; i < newUserStatusList.length; i++) {
+        final int indexInCurrentUserList = currentUserStatusList.indexWhere(
+            (element) => element.userID == newUserStatusList[i].userID);
+        if (indexInCurrentUserList == -1) {
+          currentUserStatusList.add(newUserStatusList[i]);
+        } else {
+          currentUserStatusList[indexInCurrentUserList] = newUserStatusList[i];
+        }
+      }
+
+      tuiFriendShipViewModel.userStatusList = currentUserStatusList;
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -109,6 +192,7 @@ class CoreServicesImpl with CoreServices {
     V2TimCallback result = await TencentImSDKPlugin.v2TIMManager
         .login(userID: userID, userSig: userSig);
     if (result.code == 0) {
+      initDataModel();
       getUsersInfo(userIDList: [userID]).then((res) => {
             if (res.code == 0)
               {
@@ -123,26 +207,6 @@ class CoreServicesImpl with CoreServices {
           errorMsg: result.desc));
     }
     return result;
-  }
-
-  @override
-  Future<void> setDataFromNative({
-    required String userId,
-  }) async {
-    getUsersInfo(userIDList: [userId]).then((res) => {
-          if (res.code == 0)
-            {
-              _loginInfo = res.data![0],
-              serviceLocator<TUISelfInfoViewModel>().setLoginInfo(_loginInfo!)
-            }
-          else
-            {
-              callOnCallback(TIMCallback(
-                  type: TIMCallbackType.API_ERROR,
-                  errorCode: res.code,
-                  errorMsg: res.desc))
-            }
-        });
   }
 
   @override
@@ -167,9 +231,8 @@ class CoreServicesImpl with CoreServices {
   @override
   Future<V2TimCallback> setOfflinePushConfig({
     // ignore: todo
-    // TODO
     required String token,
-    required bool isTPNSToken,
+    bool isTPNSToken = false,
     int? businessID,
   }) {
     return TencentImSDKPlugin.v2TIMManager
