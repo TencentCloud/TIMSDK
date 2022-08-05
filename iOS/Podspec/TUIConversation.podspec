@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUIConversation'
-  spec.version      = '6.5.2803'
+  spec.version      = '6.5.2816'
   spec.platform     = :ios 
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
 
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/6.5.2803/ios/TUIConversation.zip'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/6.5.2816/ios/TUIConversation.zip'}
 
   spec.subspec 'Header' do |header|
       header.source_files = '**/TUIConversation/Header/*.{h,m,mm}'
@@ -25,7 +25,7 @@ Pod::Spec.new do |spec|
   spec.subspec 'Cell' do |cell|
     cell.subspec 'CellData' do |cellData|
       cellData.source_files = '**/TUIConversation/Cell/CellData/*.{h,m,mm}'
-      cellData.dependency 'TUICore','6.5.2803'
+      cellData.dependency 'TUICore','6.5.2816'
     end
 
     cell.subspec 'CellUI' do |cellUI|
