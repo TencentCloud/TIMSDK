@@ -256,7 +256,7 @@
 		height: 20px;
 		padding: 5px;
 		width: 100%;
-		border: 1px solid #999999;;	
+		border: 1px solid #999999;
 	} */
 	.list-item .list-item-label {
 		font-weight: 500;

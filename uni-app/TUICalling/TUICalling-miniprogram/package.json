@@ -4,7 +4,7 @@
   "description": "",
   "main": "main.js",
   "dependencies": {
-    "tim-wx-sdk": "^2.15.0"
+    "tim-wx-sdk": "^2.21.2"
   },
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.16.5"
