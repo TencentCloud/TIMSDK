@@ -24,10 +24,6 @@
 	</view>
 </template>
 <script>
-	import TIM from 'tim-wx-sdk';
-	import {
-		genTestUserSig
-	} from '../../debug/GenerateTestUserSig.js'
 	export default {
 		data() {
 			return {
