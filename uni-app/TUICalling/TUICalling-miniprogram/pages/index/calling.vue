@@ -3,7 +3,7 @@
 		<tuicalling ref="TUICalling" id="TUICalling-component" :config="config"></tuicalling>
 		<view class="input-container">
 			<label class="list-item-label" style="margin-bottom: 10px;">呼叫用户ID:<span
-					style="color:#C0C0C0;margin-left: 8px;">user1;user2(“;”为英文分号)</span></label>
+					style="color:#C0C0C0;margin-left: 8px;"></span></label>
 			<input class="input-box" v-model="callUserID" maxlength="140" type="text" placeholder="输入userID"
 				placeholder-style="color:#BBBBBB;">
 		</view>
@@ -94,12 +94,13 @@
 								type
 							})
 						}
-						if (res.data.length > 1) {
-							this.$refs.TUICalling.groupCall({
-								userIDList: userIDs,
-								type: type
-							})
-						}
+						//groupCall接口暂不稳定，不建议使用，后续升级更新会在文档同步
+						// if (res.data.length > 1) {
+						// 	this.$refs.TUICalling.groupCall({
+						// 		userIDList: userIDs,
+						// 		type: type
+						// 	})
+						// }
 					})
 					.catch(() => {
 						uni.showToast({
