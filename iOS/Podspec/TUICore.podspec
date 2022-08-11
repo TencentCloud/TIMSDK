@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUICore'
-  spec.version      = '6.5.2816'
+  spec.version      = '6.5.2817'
   spec.platform     = :ios 
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
@@ -20,7 +20,7 @@ Pod::Spec.new do |spec|
   
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/6.5.2816/ios/TUICore.zip'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/6.5.2817/ios/TUICore.zip'}
   spec.source_files = '**/TUICore/*.{h,m,mm,c}'
   spec.resource = [
       '**/TUICore/Resources/*.bundle'
