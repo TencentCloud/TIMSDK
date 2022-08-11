@@ -93,9 +93,9 @@ pod repo update
 
 ## Step 5: Compile and Run the Demo (Removing the Audio/Video Call Feature)
 If you do not need the audio/video call feature, remote it as follows:
-1. Go to the `iOS/Demo` folder, comment out the TUICalling pod in the Podfile, and run the `pod install` command.
+1. Go to the `iOS/Demo` folder, comment out the TUICallKit pod in the Podfile, and run the `pod install` command.
 ```
-#  pod 'TUICalling' (Stop integrating the library)
+#  pod 'TUICallKit' (Stop integrating the library)
 ```
 
 2. Go to the **Building Settings** page of the **TUIKitDemo** and set `ENABLECALL` to `0` to disable audio/video call related logic.
@@ -104,11 +104,11 @@ If you do not need the audio/video call feature, remote it as follows:
 
 After the preceding steps are completed, the audio and video call entries in the demo are hidden.
 
-The conversation UIs before and after TUICalling masking are as follows:
+The conversation UIs before and after TUICallKit masking are as follows:
 
 <img src="https://qcloudimg.tencent-cloud.cn/raw/bc84e5278199bdd29320218ca6dc1f62.png" style="zoom:70%;" /> <img src="https://qcloudimg.tencent-cloud.cn/raw/5f9f5cca47deac0ceb490e09361699de.png" style="zoom:70%;" />
 
-The contact profile UIs before and after TUICalling masking are as follows:
+The contact profile UIs before and after TUICallKit masking are as follows:
 
 <img src="https://qcloudimg.tencent-cloud.cn/raw/b46981fc2d51ef2c4d8a75c2909fb651.png" style="zoom:70%;" />  <img src="https://qcloudimg.tencent-cloud.cn/raw/18be475fada3f04da1d99483111dc9d8.png" style="zoom:70%;" />
 
