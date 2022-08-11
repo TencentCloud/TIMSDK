@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="tuicalling_small_image_size">30dp</dimen>
+    <dimen name="tuicalling_small_image_left_margin">5dp</dimen>
+    <dimen name="tuicalling_text_size_hint">12sp</dimen>
+</resources>

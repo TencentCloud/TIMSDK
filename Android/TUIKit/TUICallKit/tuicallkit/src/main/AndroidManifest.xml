@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.tencent.qcloud.tuikit.tuicallkit.ui">
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <application>
+        <activity
+            android:name="com.tencent.qcloud.tuikit.tuicallkit.base.BaseCallActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <provider
+            android:name="com.tencent.qcloud.tuikit.tuicallkit.internal.ServiceInitializer"
+            android:authorities="${applicationId}.ServiceInitializer"
+            android:enabled="true"
+            android:exported="false" />
+
+        <service
+            android:name="com.tencent.qcloud.tuikit.tuicallkit.service.TUICallService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <service
+            android:name="com.tencent.qcloud.tuikit.tuicallkit.view.floatwindow.FloatWindowService"
+            android:enabled="true"
+            android:exported="false" />
+    </application>
+
+</manifest>
