@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="20dp"
+    android:layout_marginBottom="20dp">
+
+    <LinearLayout
+        android:id="@+id/ll_mute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toStartOf="@+id/ll_handsfree"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/iv_mute"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:src="@drawable/tuicalling_bg_mute_mic" />
+
+        <TextView
+            android:id="@+id/tv_mic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="@string/tuicalling_text_microphone"
+            android:textColor="@color/tuicalling_color_white"
+            android:textSize="@dimen/tuicalling_text_size_hint" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_handsfree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toStartOf="@+id/ll_open_camera"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/ll_mute"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/iv_handsfree"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:src="@drawable/tuicalling_bg_handsfree" />
+
+        <TextView
+            android:id="@+id/tv_speaker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="@string/tuicalling_text_speaker"
+            android:textColor="@color/tuicalling_color_white"
+            android:textSize="@dimen/tuicalling_text_size_hint" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_open_camera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/ll_handsfree"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/img_camera"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:src="@drawable/tuicalling_bg_camera" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="@string/tuicalling_text_camera"
+            android:textColor="@color/tuicalling_color_white"
+            android:textSize="@dimen/tuicalling_text_size_hint" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_hangup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ll_mute">
+
+        <ImageView
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:src="@drawable/tuicalling_bg_hangup" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="@string/tuicalling_text_hangup"
+            android:textColor="@color/tuicalling_color_white"
+            android:textSize="@dimen/tuicalling_text_size_hint" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/switch_camera"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="28dp"
+        android:src="@drawable/tuicalling_ic_switch_camera"
+        app:layout_constraintBottom_toBottomOf="@+id/ll_hangup"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/ll_hangup"
+        app:layout_constraintTop_toTopOf="@+id/ll_hangup" />
+</androidx.constraintlayout.widget.ConstraintLayout>

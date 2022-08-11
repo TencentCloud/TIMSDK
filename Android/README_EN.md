@@ -70,19 +70,19 @@ Import the demo project with Android Studio, and then compile and run it.
 ## Step 5: Compile and Run the Demo (Removing the Audio/Video Call Feature)
 If you do not need the audio/video call feature, you only delete the audio/video call integration code as shown in the figure below from the `build.gradle` file under the `app` module:
 
-![](https://qcloudimg.tencent-cloud.cn/raw/cd9e13bec6a5ac6ea67d1aeecfa5e9be.png)
+![](https://qcloudimg.tencent-cloud.cn/raw/4ad9df5f0b3d1068427a51937613da92.jpg)
 
 ```groovy
-api project(':tuicalling')
+api project(':tuicallkit')
 ```
 After the preceding steps are completed, the audio and video call entries in the demo are hidden.
-The conversation UIs before and after TUICalling masking are as follows:
+The conversation UIs before and after TUICallKit masking are as follows:
 
 | before | After |
 |---------|---------|
 | ![](https://qcloudimg.tencent-cloud.cn/raw/760e9de375121f01f4b385d101c30157.png) | ![](https://qcloudimg.tencent-cloud.cn/raw/71b73179123f1fc0201eca1f8b20e3ec.png)
 
-The contact profile UIs before and after TUICalling masking are as follows:
+The contact profile UIs before and after TUICallKit masking are as follows:
 
 | before | After |
 |---------|---------|
@@ -93,7 +93,7 @@ The contact profile UIs before and after TUICalling masking are as follows:
 ## Step 6: Compile and Run the Demo (Removing the Search Module)
 If you do not need the search feature, you only delete the line of code as shown in the figure below from the `build.gradle` file under the `app` module:
 
-![](https://qcloudimg.tencent-cloud.cn/raw/70c328a1ef45eb844d946f86ba65941e.png)
+![](https://qcloudimg.tencent-cloud.cn/raw/7e2685017b93e418dadd1599bcb0a3b6.jpg)
 
 ```groovy
 api project(':tuisearch')
