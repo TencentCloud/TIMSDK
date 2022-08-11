@@ -538,6 +538,8 @@
 #define TUICore_TUICallingService_ReceivePushCallingMethod @"TUICore_TUICallingService_ReceivePushCallingMethod"
 #define TUICore_TUICallingService_ShowCallingViewMethod_SignalingInfo @"TUICore_TUICallingService_ShowCallingViewMethod_SignalingInfo"
 
+#define TUICore_TUICallingService_EnableFloatWindowMethod @"TUICore_TUICallingService_EnableFloatWindowMethod"
+#define TUICore_TUICallingService_EnableFloatWindowMethod_EnableFloatWindow @"TUICore_TUICallingService_EnableFloatWindowMethod_EnableFloatWindow"
 
 #pragma mark - TUICore_TUIGiftExtension
 /// 获取入口btn
