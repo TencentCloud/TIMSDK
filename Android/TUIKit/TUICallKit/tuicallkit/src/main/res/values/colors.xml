@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="tuicalling_color_white">#FFFFFFFF</color>
+    <color name="tuicalling_color_black">#000000</color>
+    <color name="tuicalling_color_second">#666666</color>
+    <color name="tuicalling_color_audio_background">#FFF1F2F8</color>
+    <color name="tuicalling_color_video_background">#FF55534F</color>
+    <color name="tuicalling_color_transparent">#00000000</color>
+    <color name="tuicalling_color_green">#FF29CC85</color>
+    <color name="tuicalling_color_bg_float_view">#FFBBBBBB</color>
+</resources>

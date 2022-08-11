@@ -5,7 +5,7 @@ English | [简体中文](./README.md)
 
 ## Download Links
 
-[Latest TUIChat download](https://im.sdk.cloud.tencent.cn/download/tuikit/6.5.2803/android/TUIChat.zip)
+[Latest TUIChat download](https://im.sdk.cloud.tencent.cn/download/tuikit/6.5.2817/android/TUIChat.zip)
 
 [Latest TUIConversation download](https://im.sdk.cloud.tencent.cn/download/tuikit/6.5.2803/android/TUIConversation.zip)
 
@@ -15,10 +15,10 @@ English | [简体中文](./README.md)
 
 [Latest TUISearch download](https://im.sdk.cloud.tencent.cn/download/tuikit/6.5.2803/android/TUISearch.zip)
 
-[Latest TUICalling download](https://im.sdk.cloud.tencent.cn/download/tuikit/6.5.2803/android/TUICalling.zip)
+[Latest TUICallKit download](https://im.sdk.cloud.tencent.cn/download/tuikit/6.5.2817/android/TUICallKit.zip)
 
 [Latest TUIOfflinePush download](https://im.sdk.cloud.tencent.cn/download/tuikit/6.5.2803/android/TUIOfflinePush.zip)
 
-[Latest TUICore download](https://im.sdk.cloud.tencent.cn/download/tuikit/6.5.2803/android/TUICore.zip)
+[Latest TUICore download](https://im.sdk.cloud.tencent.cn/download/tuikit/6.5.2817/android/TUICore.zip)
 
 If you encounter a TUIKit bug, please submit a pull request. After successful merging, we will update the TUIKit library in time.
