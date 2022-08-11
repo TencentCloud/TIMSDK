@@ -45,7 +45,7 @@ dependencies {
     if (projects.contains("imsdk-plus")) {
         api project(':imsdk-plus')
     } else {
-        api 'com.tencent.imsdk:imsdk-plus:6.5.2803'
+        api 'com.tencent.imsdk:imsdk-plus:6.5.2816'
     }
 
 }

@@ -18,7 +18,8 @@ project(':tuisearch').projectDir = new File(settingsDir, '../TUIKit/TUISearch/tu
 include ':tuigroup'
 project(':tuigroup').projectDir = new File(settingsDir, '../TUIKit/TUIGroup/tuigroup')
 
-include ':tuicalling'
-project(':tuicalling').projectDir = new File(settingsDir, '../TUIKit/TUICalling/tuicalling')
+include ':tuicallkit'
+project(':tuicallkit').projectDir = new File(settingsDir, '../TUIKit/TUICallKit/tuicallkit')
+
 include ':tuiofflinepush'
 project(':tuiofflinepush').projectDir = new File(settingsDir, '../TUIKit/TUIOfflinePush/tuiofflinepush')

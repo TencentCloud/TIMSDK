@@ -32,8 +32,8 @@ android {
          *  "VIVO_APPID" : 厂商推送平台注册应用的 AppID
          */
         manifestPlaceholders = [
-                "VIVO_APPKEY" : "",
-                "VIVO_APPID" : ""
+                "VIVO_APPKEY" : " ",
+                "VIVO_APPID" : " "
         ]
     }
 
@@ -98,6 +98,6 @@ dependencies {
     api project(':tuichat')
     api project(':tuisearch')
     api project(':tuigroup')
-    api project(':tuicalling')
+    api project(':tuicallkit')
     api project(':tuiofflinepush')
 }

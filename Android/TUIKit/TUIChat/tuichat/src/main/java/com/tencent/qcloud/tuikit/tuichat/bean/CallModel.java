@@ -227,7 +227,7 @@ public class CallModel implements Cloneable, Serializable {
                     callModel.action = VIDEO_CALL_ACTION_SWITCH_TO_AUDIO;
                 } else if (TextUtils.equals(cmd, "hangup")) {
                     callModel.action = CallModel.VIDEO_CALL_ACTION_HANGUP;
-                    callModel.duration = ((Double) extraMap.get(CallModel.SIGNALING_EXTRA_KEY_CALL_END)).intValue();
+                    callModel.duration = Double.valueOf(String.valueOf(extraMap.get(CallModel.SIGNALING_EXTRA_KEY_CALL_END))).intValue();
                 } else if (TextUtils.equals(cmd, "videoCall") || TextUtils.equals(cmd, "audioCall")) {
                     callModel.action = CallModel.VIDEO_CALL_ACTION_DIALING;
                     callModel.callId = signalingInfo.getInviteID();
@@ -243,7 +243,7 @@ public class CallModel implements Cloneable, Serializable {
             // old version
             if (extraMap.containsKey(CallModel.SIGNALING_EXTRA_KEY_CALL_END)) {
                 callModel.action = CallModel.VIDEO_CALL_ACTION_HANGUP;
-                callModel.duration = ((Double) extraMap.get(CallModel.SIGNALING_EXTRA_KEY_CALL_END)).intValue();
+                callModel.duration = Double.valueOf(String.valueOf(extraMap.get(CallModel.SIGNALING_EXTRA_KEY_CALL_END))).intValue();
             } else {
                 callModel.action = CallModel.VIDEO_CALL_ACTION_DIALING;
                 callModel.callId = signalingInfo.getInviteID();
