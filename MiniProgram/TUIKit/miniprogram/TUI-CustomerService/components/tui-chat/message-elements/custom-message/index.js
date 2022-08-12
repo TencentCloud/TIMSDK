@@ -1,4 +1,5 @@
-import formateTime from '../../../TUICalling/TRTCCalling/utils/formate-time.js';
+import formateTime from '../../../../utils/formate-time';
+import constant from '../../../../utils/constant';
 // eslint-disable-next-line no-undef
 Component({
   /**
@@ -79,10 +80,11 @@ Component({
       }
     },
     parseCustom(message) {
+      const { conversationType_text, businessID_text } = constant;
       try {
         const customMessage = JSON.parse(message.payload.data);
         // 约定自定义消息的 data 字段作为区分，不解析的不进行展示
-        if (customMessage.businessID === 'order') {
+        if (customMessage.businessID === businessID_text.typeOrder) {
           const renderDom = [{
             type: 'order',
             name: 'custom',
@@ -94,7 +96,7 @@ Component({
           return renderDom;
         }
         // 服务评价
-        if (customMessage.businessID === 'evaluation') {
+        if (customMessage.businessID === businessID_text.typeEvaluation) {
           const renderDom = [{
             type: 'evaluation',
             title: message.payload.description,
@@ -104,7 +106,7 @@ Component({
           return renderDom;
         }
         // native 自定义消息解析
-        if (customMessage.businessID === 'text_link') {
+        if (customMessage.businessID === businessID_text.typeLink) {
           const renderDom = [{
             type: 'text_link',
             text: customMessage.text,
@@ -112,7 +114,7 @@ Component({
           return renderDom;
         }
         // 群消息解析
-        if (message.payload.data === 'group_create') {
+        if (message.payload.data === businessID_text.typeCreate) {
           const renderDom = [{
             type: 'group_create',
             text: message.payload.extension,
@@ -124,7 +126,7 @@ Component({
       // 客服咨询
       try {
         const extension = JSON.parse(message.payload.extension);
-        if (message.payload.data === 'consultion') {
+        if (message.payload.data === businessID_text.typeConsultion) {
           const renderDom = [{
             type: 'consultion',
             title: extension.title || '',
@@ -139,7 +141,7 @@ Component({
       try {
         const callingmessage = JSON.parse(message.payload.data);
         if (callingmessage.businessID === 1) {
-          if (message.conversationType === 'GROUP') {
+          if (message.conversationType === conversationType_text.typeGroup) {
             if (message.payload.data.actionType === 5) {
               message.nick = message.payload.data.inviteeList ? message.payload.data.inviteeList.join(',') : message.from;
             }
@@ -152,7 +154,7 @@ Component({
             }];
             return renderDom;
           }
-          if (message.conversationType === 'C2C') {
+          if (message.conversationType === conversationType_text.typeC2C) {
             const c2cText = this.extractCallingInfoFromMessage(message);
             const renderDom = [{
               type: 'c2cCalling',

@@ -1,5 +1,6 @@
 import dayjs from '../../base/dayjs';
 import logger from '../../../utils/logger';
+import constant from '../../../utils/constant';
 // eslint-disable-next-line no-undef
 const app = getApp();
 // eslint-disable-next-line no-undef
@@ -193,28 +194,55 @@ Component({
     },
     // 收到的消息
     $onMessageReceived(value) {
+      const { businessID_text, messageType_text } = constant;
       this.messageTimeForShow(value.data[0]);
       this.setData({
         UseData: value,
       });
       value.data.forEach((item) => {
-        if (this.data.messageList.length > 12 && !value.data[0].isRead
-        && item.conversationID === this.data.conversation.conversationID) {
-          this.data.showNewMessageCount.push(value.data[0]);
-          this.setData({
-            showNewMessageCount: this.data.showNewMessageCount,
-            showDownJump: true,
-          });
-        } else {
-          this.setData({
-            showDownJump: false,
-          });
+        if (item.conversationID === this.data.conversation.conversationID) {
+        // 判断收到的消息是否是正在输入状态消息。由于正在输入状态消息是自定义消息，需要对自定义消息进行一个过滤，是自定义消息但不是正在输入状态消息，则新消息未读数加1，不是自定义消息则新消息未读数直接加1
+          if (this.data.messageList.length > 12 && !value.data[0].isRead) {
+            if (item.type === messageType_text.typeTIMCustomElem) {
+              const typingMessage = JSON.parse(item.payload.data);
+              if (typingMessage.businessID !== businessID_text.typeUserTyping) {
+                this.data.showNewMessageCount.push(value.data[0]);
+                this.setData({
+                  showNewMessageCount: this.data.showNewMessageCount,
+                  showDownJump: true,
+                });
+              }
+            } else {
+              this.data.showNewMessageCount.push(value.data[0]);
+              this.setData({
+                showNewMessageCount: this.data.showNewMessageCount,
+                showDownJump: true,
+              });
+            }
+          } else {
+            this.setData({
+              showDownJump: false,
+            });
+          }
         }
       });
       // 若需修改消息，需将内存的消息复制一份，不能直接更改消息，防止修复内存消息，导致其他消息监听处发生消息错误
+      // 将收到的消息存入messageList之前需要进行过滤，正在输入状态消息不用存入messageList.
       const list = [];
       value.data.forEach((item) => {
-        if (item.conversationID === this.data.conversation.conversationID) {
+        if (item.conversationID === this.data.conversation.conversationID && item.type === messageType_text.typeTIMCustomElem) {
+          try {
+            const typingMessage = JSON.parse(item.payload.data);
+            if (typingMessage.businessID !== businessID_text.typeUserTyping) {
+              list.push(item);
+            } else {
+              this.triggerEvent('typeMessage', {
+                typingMessage,
+              });
+            }
+          } catch (error) {
+          }
+        } else if (item.conversationID === this.data.conversation.conversationID) {
           list.push(item);
         }
       });
@@ -233,10 +261,22 @@ Component({
     },
     // 自己的消息上屏
     updateMessageList(message) {
+      const { businessID_text, messageType_text } = constant;
       this.$onMessageReadByPeer();
       this.messageTimeForShow(message);
       message.isSelf = true;
-      this.data.messageList.push(message);
+      if (message.type === messageType_text.typeTIMCustomElem) {
+        const typingMessage = JSON.parse(message.payload.data);
+        if (typingMessage.businessID === businessID_text.typeUserTyping) {
+          this.setData({
+            messageList: this.data.messageList,
+          });
+        } else {
+          this.data.messageList.push(message);
+        }
+      } else {
+        this.data.messageList.push(message);
+      }
       this.setData({
         lastMessageSequence: this.data.messageList.slice(-1)[0].sequence,
         messageList: this.data.messageList,
@@ -445,88 +485,84 @@ Component({
         errorMessage: event.detail.message,
         errorMessageID: event.detail.message.ID,
       });
-      const DIRTYWORDS_CODE = 80001;
-      const UPLOADFAIL_CODE = 6008;
-      const REQUESTOVERTIME_CODE = 2081;
-      const DISCONNECTNETWORK_CODE = 2800;
-      if (event.detail.showErrorImageFlag === DIRTYWORDS_CODE) {
-        this.setData({
-          showMessageError: true,
-        });
-        wx.showToast({
-          title: '您发送的消息包含违禁词汇!',
-          duration: 800,
-          icon: 'none',
-        });
-      } else if (event.detail.showErrorImageFlag === UPLOADFAIL_CODE) {
-        this.setData({
-          showMessageError: true,
-        });
-        wx.showToast({
-          title: '文件上传失败!',
-          duration: 800,
-          icon: 'none',
-        });
-      } else if (event.detail.showErrorImageFlag === (REQUESTOVERTIME_CODE || DISCONNECTNETWORK_CODE)) {
-        this.setData({
-          showMessageError: true,
-        });
-        wx.showToast({
-          title: '网络已断开!',
-          duration: 800,
-          icon: 'none',
-        });
+      const errorCode = event.detail.showErrorImageFlag;
+      const { MESSAGE_ERROR_CODE, TOASTTITLE_TEXT } = constant;
+      switch (errorCode) {
+        case MESSAGE_ERROR_CODE.DIRTY_WORDS:
+          this.showToast(TOASTTITLE_TEXT.TITLEDIRTYWORDS);
+          break;
+        case MESSAGE_ERROR_CODE.UPLOAD_FAIL:
+          this.showToast(TOASTTITLE_TEXT.TITLEUPLOADFAIL);
+          break;
+        case MESSAGE_ERROR_CODE.REQUESTOR_TIME || MESSAGE_ERROR_CODE.DISCONNECT_NETWORK:
+          this.showToast(TOASTTITLE_TEXT.TITLECONNECTERROR);
+          break;
+        case MESSAGE_ERROR_CODE.DIRTY_MEDIA:
+          this.showToast(TOASTTITLE_TEXT.TITLEDIRTYMEDIA);
+          break;
+        default:
+          break;
       }
     },
     // 消息发送失败后重新发送
-    ResndMessage() {
-      const DIRTYWORDS_CODE = 80001;
-      const UPLOADFAIL_CODE = 6008;
-      const REQUESTOVERTIME_CODE = 2081;
-      const DISCONNECTNETWORK_CODE = 2800;
+    ResendMessage() {
+      const { MESSAGE_ERROR_CODE, TOASTTITLE_TEXT } = constant;
       wx.showModal({
         content: '确认重发该消息？',
         success: (res) => {
           if (res.confirm) {
             wx.$TUIKit.resendMessage(this.data.errorMessage) // 传入需要重发的消息实例
               .then(() => {
-                wx.showToast({
-                  title: '重发成功!',
-                  duration: 800,
-                  icon: 'none',
-                });
+                this.showToast(TOASTTITLE_TEXT.TITLERESENDSUCCESS);
                 this.setData({
                   showMessageError: false,
                 });
               })
               .catch((imError) => {
-                if (imError.code === DIRTYWORDS_CODE) {
-                  wx.showToast({
-                    title: '您发送的消息包含违禁词汇!',
-                    duration: 800,
-                    icon: 'none',
-                  });
-                } else if (imError.code === UPLOADFAIL_CODE) {
-                  wx.showToast({
-                    title: '文件上传失败!',
-                    duration: 800,
-                    icon: 'none',
-                  });
-                } else if (imError.code === (REQUESTOVERTIME_CODE || DISCONNECTNETWORK_CODE)) {
-                  wx.showToast({
-                    title: '网络已断开!',
-                    duration: 800,
-                    icon: 'none',
-                  });
+                switch (imError.code) {
+                  case MESSAGE_ERROR_CODE.DIRTY_WORDS:
+                    this.showToast(TOASTTITLE_TEXT.TITLEDIRTYWORDS);
+                    break;
+                  case MESSAGE_ERROR_CODE.UPLOAD_FAIL:
+                    this.showToast(TOASTTITLE_TEXT.TITLEUPLOADFAIL);
+                    break;
+                  case MESSAGE_ERROR_CODE.REQUESTOR_TIME || MESSAGE_ERROR_CODE.DISCONNECT_NETWORK:
+                    this.showToast(TOASTTITLE_TEXT.TITLECONNECTERROR);
+                    break;
+                  case MESSAGE_ERROR_CODE.DIRTY_MEDIA:
+                    this.showToast(TOASTTITLE_TEXT.TITLEDIRTYMEDIA);
+                    break;
+                  default:
+                    break;
                 }
               });
           }
         },
       });
     },
+
+    showToast(toastTitle) {
+      if (this.data.showMessageError) {
+        wx.showToast({
+          title: toastTitle,
+          duration: 800,
+          icon: 'none',
+        });
+      } else {
+        this.setData({
+          showMessageError: true,
+        });
+        wx.showToast({
+          title: toastTitle,
+          duration: 800,
+          icon: 'none',
+        });
+      }
+    },
     // 点击头像跳转到个人信息
     getMemberProfile(e) {
-      if (e.currentTarget.dataset.value.conversationType === 'GROUP') {
+      const { conversationType_text } = constant;
+      if (e.currentTarget.dataset.value.conversationType === conversationType_text.typeGroup) {
         wx.$TUIKit.getGroupMemberProfile({
           groupID: e.currentTarget.dataset.value.to,
           userIDList: [e.currentTarget.dataset.value.from],
@@ -540,7 +576,7 @@ Component({
           });
         });
       }
-      if (e.currentTarget.dataset.value.conversationType === 'C2C') {
+      if (e.currentTarget.dataset.value.conversationType === conversationType_text.typeC2C) {
         this.data.personalProfile = { avatar: e.currentTarget.dataset.value.avatar,
           nick: e.currentTarget.dataset.value.nick, userID: e.currentTarget.dataset.value.from,
           type: e.currentTarget.dataset.value.conversationType };
@@ -555,8 +591,9 @@ Component({
     },
     // 点击购买链接跳转
     handleJumpLink(e) {
+      const { businessID_text }  = constant;
       const dataLink = JSON.parse(e.currentTarget.dataset.value.payload.data);
-      if (dataLink.businessID === 'order' || dataLink.businessID === 'text_link') {
+      if (dataLink.businessID === businessID_text.typeOrder || dataLink.businessID === businessID_text.typeLink) {
         const url = `/pages/TUI-User-Center/webview/webview?url=${dataLink.link}&wechatMobile`;
         wx.navigateTo({
           url: encodeURI(url),

@@ -1,4 +1,6 @@
 import logger from '../../../utils/logger';
+import constant from '../../../utils/constant';
+// eslint-disable-next-line no-undef
 const app = getApp();
 // eslint-disable-next-line no-undef
 Component({
@@ -43,6 +45,8 @@ Component({
     ],
     displayServiceEvaluation: false,
     showErrorImageFlag: 0,
+    messageList: [],
+    isFirstSendTyping: true,
     firstSendMessage: true,
   },
 
@@ -86,6 +90,20 @@ Component({
    * 组件的方法列表
    */
   methods: {
+    // 获取消息列表来判断是否发送正在输入状态
+    getMessageList(conversation) {
+      wx.$TUIKit.getMessageList({
+        conversationID: conversation.conversationID,
+        nextReqMessageID: this.data.nextReqMessageID,
+        count: 15,
+      }).then((res) => {
+        const { messageList } = res.data;
+        this.setData({
+          messageList,
+        });
+      });
+    },
+
     // 打开录音开关
     switchAudio() {
       this.setData({
@@ -93,6 +111,7 @@ Component({
         text: '按住说话',
       });
     },
+
     // 长按录音
     handleLongPress(e) {
       this.recorderManager.start({
@@ -138,6 +157,7 @@ Component({
         }
       }
     },
+
     // 手指离开页面滑动
     handleTouchEnd() {
       this.setData({
@@ -148,6 +168,7 @@ Component({
       wx.hideLoading();
       this.recorderManager.stop();
     },
+
     // 选中表情消息
     handleEmoji() {
       let targetFlag = 'emoji';
@@ -158,6 +179,7 @@ Component({
         displayFlag: targetFlag,
       });
     },
+
     // 选自定义消息
     handleExtensions() {
       let targetFlag = 'extension';
@@ -176,9 +198,11 @@ Component({
     handleSendPicture() {
       this.sendImageMessage('camera');
     },
+
     handleSendImage() {
       this.sendImageMessage('album');
     },
+
     sendImageMessage(type) {
       const maxSize = 20480000;
       wx.chooseImage({
@@ -206,12 +230,15 @@ Component({
         },
       });
     },
+
     handleShootVideo() {
       this.sendVideoMessage('camera');
     },
+
     handleSendVideo() {
       this.sendVideoMessage('album');
     },
+
     sendVideoMessage(type) {
       wx.chooseVideo({
         sourceType: [type], // 来源相册或者拍摄
@@ -234,6 +261,7 @@ Component({
         },
       });
     },
+
     handleCommonFunctions(e) {
       switch (e.target.dataset.function.key) {
         case '0':
@@ -255,59 +283,89 @@ Component({
           break;
       }
     },
+
     handleSendOrder() {
       this.setData({
         displayOrderList: true,
       });
     },
+
     appendMessage(e) {
       this.setData({
         message: this.data.message + e.detail.message,
         sendMessageBtn: true,
       });
     },
+
     getToAccount() {
+      const { conversationType_text } = constant;
       if (!this.data.conversation || !this.data.conversation.conversationID) {
         return '';
       }
       switch (this.data.conversation.type) {
-        case 'C2C':
-          return this.data.conversation.conversationID.replace('C2C', '');
-        case 'GROUP':
-          return this.data.conversation.conversationID.replace('GROUP', '');
+        case conversationType_text.typeC2C:
+          return this.data.conversation.conversationID.replace(conversationType_text.typeC2C, '');
+        case conversationType_text.typeGroup:
+          return this.data.conversation.conversationID.replace(conversationType_text.typeGroup, '');
         default:
           return this.data.conversation.conversationID;
       }
     },
+
     handleCalling(e) {
       // todo 目前支持单聊
-      if (this.data.conversation.type === 'GROUP') {
-        wx.showToast({
-          title: '群聊暂不支持',
-          icon: 'none',
+      const { conversationType_text } = constant;
+      if (this.data.conversation.type === conversationType_text.typeGroup) {
+        if (e.currentTarget.dataset.value === 1) {
+          wx.aegis.reportEvent({
+            name: 'audioCall',
+            ext1: 'audioCall-group',
+            ext2: app.globalData.reportType,
+            ext3: app.globalData.SDKAppID,
+          });
+        } else if (e.currentTarget.dataset.value === 2) {
+          wx.aegis.reportEvent({
+            name: 'videoCall',
+            ext1: 'videoCall-group',
+            ext2: app.globalData.reportType,
+            ext3: app.globalData.SDKAppID,
+          });
+        }
+        if (this.data.conversation.type === 'GROUP') {
+          wx.showToast({
+            title: '群聊暂不支持',
+            icon: 'none',
+          });
+          return;
+        }
+        const type = e.currentTarget.dataset.value;
+        const { userID } = this.data.conversation.userProfile;
+        this.triggerEvent('handleCall', {
+          type,
+          userID,
         });
-        return;
+        this.setData({
+          displayFlag: '',
+        });
       }
-      const type = e.currentTarget.dataset.value;
-      const { userID } = this.data.conversation.userProfile;
-      this.triggerEvent('handleCall', {
-        type,
-        userID,
-      });
-      this.setData({
-        displayFlag: '',
-      });
     },
 
     sendTextMessage(msg, flag) {
       const to = this.getToAccount();
       const text = flag ? msg : this.data.message;
+      const { FEAT_NATIVE_CODE } = constant;
       const message = wx.$TUIKit.createTextMessage({
         to,
         conversationType: this.data.conversation.type,
         payload: {
           text,
         },
+        cloudCustomData: JSON.stringify({ messageFeature:
+        {
+          needTyping: FEAT_NATIVE_CODE.FEAT_TYPING,
+          version: FEAT_NATIVE_CODE.NATIVE_VERSION,
+        },
+        }),
       });
       this.setData({
         message: '',
@@ -316,13 +374,65 @@ Component({
       this.$sendTIMMessage(message);
     },
 
+    // 监听输入框value值变化
     onInputValueChange(event) {
+      const { businessID_text, FEAT_NATIVE_CODE } = constant;
       if (event.detail.message) {
         this.setData({
           message: event.detail.message,
           sendMessageBtn: true,
         });
       } else if (event.detail.value) {
+        // 创建正在输入状态消息, "typingStatus":1,正在输入中1,  输入结束0, "version": 1 兼容老版本,userAction:0, // 14表示正在输入,actionParam:"EIMAMSG_InputStatus_Ing" //"EIMAMSG_InputStatus_Ing" 表示正在输入, "EIMAMSG_InputStatus_End" 表示输入结束
+        const typingMessage = wx.$TUIKit.createCustomMessage({
+          to: this.getToAccount(),
+          conversationType: this.data.conversation.type,
+          payload: {
+            data: JSON.stringify({
+              businessID: businessID_text.typeUserTyping,
+              typingStatus: FEAT_NATIVE_CODE.ISTYPING_STATUS,
+              version: FEAT_NATIVE_CODE.NATIVE_VERSION,
+              userAction: FEAT_NATIVE_CODE.ISTYPING_ACTION,
+              actionParam: constant.typeInputStatusIng,
+            }),
+            description: '',
+            extension: '',
+          },
+          cloudCustomData: JSON.stringify({
+            messageFeature: {
+              needTyping: FEAT_NATIVE_CODE.FEAT_TYPING,
+              version: FEAT_NATIVE_CODE.NATIVE_VERSION,
+            },
+          }),
+        });
+        // 在消息列表中过滤出对方的消息，并且获取最新消息的时间。
+        const inList =  this.data.messageList.filter(item => item.flow === 'in');
+        const newMessageTime = inList.reverse()[0].time * 1000;
+        // 发送正在输入状态消息的触发条件。
+        const isSendTypingMessage = this.data.messageList.every((item) => {
+          try {
+            const sendTypingMessage = JSON.parse(item.cloudCustomData);
+            if (sendTypingMessage.messageFeature.needTyping) {
+              return sendTypingMessage;
+            }
+          } catch (error) {
+          }
+        });
+        // 获取当前编辑时间，与收到对方最新的一条消息时间相比，时间小于30s则发送正在输入状态消息/
+        const now = new Date().getTime();
+        const timeDifference =  (now  - newMessageTime);
+        if (isSendTypingMessage && timeDifference < (1000 * 30)) {
+          if (this.data.isFirstSendTyping) {
+            this.$sendTypingMessage(typingMessage);
+            this.setData({
+              isFirstSendTyping: false,
+            });
+          } else {
+            setTimeout(() => {
+              this.$sendTypingMessage(typingMessage);
+            }, (1000 * 4));
+          }
+        }
         this.setData({
           message: event.detail.value,
           sendMessageBtn: true,
@@ -332,6 +442,46 @@ Component({
           sendMessageBtn: false,
         });
       }
+    },
+
+    // 监听是否获取焦点，有焦点则向父级传值，动态改变input组件的高度。
+    inputBindFocus(event) {
+      this.getMessageList(this.data.conversation);
+      this.triggerEvent('pullKeysBoards', {
+        event,
+      });
+      // 有焦点则关闭除键盘之外的操作界面，例如表情组件。
+      this.handleClose();
+    },
+
+    // 监听是否失去焦点
+    inputBindBlur(event) {
+      const { businessID_text, FEAT_NATIVE_CODE } = constant;
+      const typingMessage = wx.$TUIKit.createCustomMessage({
+        to: this.getToAccount(),
+        conversationType: this.data.conversation.type,
+        payload: {
+          data: JSON.stringify({
+            businessID: businessID_text.typeUserTyping,
+            typingStatus: FEAT_NATIVE_CODE.NOTTYPING_STATUS,
+            version: FEAT_NATIVE_CODE.NATIVE_VERSION,
+            userAction: FEAT_NATIVE_CODE.NOTTYPING_ACTION,
+            actionParam: constant.typeInputStatusEnd,
+          }),
+          cloudCustomData: JSON.stringify({ messageFeature:
+              {
+                needTyping: FEAT_NATIVE_CODE.FEAT_TYPING,
+                version: FEAT_NATIVE_CODE.NATIVE_VERSION,
+              },
+          }),
+          description: '',
+          extension: '',
+        },
+      });
+      this.$sendTypingMessage(typingMessage);
+      this.triggerEvent('downKeysBoards', {
+        event,
+      });
     },
 
     $handleSendTextMessage(event) {
@@ -375,6 +525,12 @@ Component({
           break;
       }
     },
+    // 发送正在输入消息
+    $sendTypingMessage(message) {
+      wx.$TUIKit.sendMessage(message, {
+        onlineUserOnly: true,
+      });
+    },
 
     $sendTIMMessage(message) {
       this.triggerEvent('sendMessage', {
@@ -406,16 +562,18 @@ Component({
             showErrorImageFlag: error.code,
             message,
           });
+          this.setData({
+            displayFlag: '',
+          });
         });
-      this.setData({
-        displayFlag: '',
-      });
     },
+
     handleClose() {
       this.setData({
         displayFlag: '',
       });
     },
+
     handleServiceEvaluation() {
       this.setData({
         displayServiceEvaluation: true,
