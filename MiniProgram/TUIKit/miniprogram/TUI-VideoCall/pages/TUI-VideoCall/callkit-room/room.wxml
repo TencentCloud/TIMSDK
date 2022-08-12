@@ -1,0 +1,61 @@
+
+<view class="" hover-class="none" hover-stop-propagation="false">
+    <TUI-callkit 
+      id="TRTCCalling-component"
+      config="{{config}}"
+      backgroundMute="{{true}}"
+    ></TUI-callkit>
+
+    <view class="trtc-calling-index">
+    <view class="trtc-calling-index-title">
+      <image class="btn-goback" src="../../../static/images/back.png" bind:tap="onBack" />
+      <view class="trtc-calling-index-title title">{{title}}</view>
+    </view>
+    <view class="trtc-calling-index-search">
+      <view class="search">
+        <view class="input-box">
+          <!-- <view class="input-label" bindtap="onToggleCountryIndicator">
+            <label class="input-label-plus">+</label>
+            {{country}}
+            <image class="icon-right" src="../../Resources/right.png" lazy-load="false" />
+          </view> -->
+          <input class="input-search-user" maxlength="11" type="number" id="{{123}}" bindinput="userIDToSearchInput" placeholder="搜索用户ID" />
+        </view>
+        <view class="btn-search" bindtap="searchUser" >搜索</view>
+      </view>
+      <view class="search-selfInfo">
+        <label class="search-selfInfo-label">您的用户ID</label>
+        <view class="search-selfInfo-phone">
+          {{config.userID}}
+        </view>
+      </view>  
+      <view class="search-result" wx:if="{{searchResultShow}}">
+        <view wx:if="{{remoteUserInfo.userID}}" class="user-to-call">
+          <view class="userInfo-box">
+            <image class="userInfo-avatar" src="{{remoteUserInfo.avatar || 'https://web.sdk.qcloud.com/component/miniApp/resources/avatar2_100.png'}}" binderror="handleErrorImage"></image>
+            <text class="userInfo-name">{{remoteUserInfo.nick || remoteUserInfo.userID}}</text>
+          </view>
+          <view wx:if="{{config.userID === remoteUserInfo.userID }}">自己</view>
+          <view wx:else class="btn-userinfo-call" bindtap="call">呼叫</view>
+        </view>
+        <view wx:else="{{remoteUserInfo.userID}}" class="user-to-call">
+          <text class="userInfo-name">该用户暂未注册</text>
+        </view>
+      </view>
+      <view wx:else class="search-default">
+        <view class="search-default-box">
+          <image class="search-default-img" src="https://web.sdk.qcloud.com/component/miniApp/resources/search.png"  lazy-load="true" />
+          <view class="search-default-message">
+            搜索添加已注册用户以发起通话
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <!-- <CountryCodeSelector
+    status="{{countryIndicatorStatus}}"
+    defaultValue="{{indicatorValue}}"
+    bind:onSubmit="handleIndicator"
+    bind:onClose="onCountryIndicatorClose"
+    ></CountryCodeSelector> -->
+</view>

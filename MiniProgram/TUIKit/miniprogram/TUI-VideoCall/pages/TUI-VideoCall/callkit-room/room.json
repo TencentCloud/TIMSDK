@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "TUI-callkit": "../../../components/tui-callkit/TUICallKit/TUICallKit"
+  },
+  "navigationStyle": "custom",
+  "navigationBarTextStyle": "black"
+}

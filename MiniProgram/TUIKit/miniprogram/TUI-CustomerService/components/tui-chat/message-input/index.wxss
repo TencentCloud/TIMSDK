@@ -1,6 +1,5 @@
 .TUI-message-input-container {
     background-color: #F1F1F1;
-    padding-bottom: 80rpx;
 }
 
 .TUI-message-input {

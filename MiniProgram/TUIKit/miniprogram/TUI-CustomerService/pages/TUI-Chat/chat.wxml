@@ -1,17 +1,18 @@
 <view class="container">
-  <TUI-calling class="calling" id="tui-calling" config="{{config}}"  bind:sendMessage="sendMessage"></TUI-calling>
-  <view class="tui-chatroom-navigatorbar">
-    <image class="tui-chatroom-navigatorbar-back" bindtap="goBack" src="../../static/assets/ic_back_white.svg" />
-    <!-- 先查 remark；无 remark 查 (c2c)nick/(group)name；最后查 (c2c)userID/(group)groupID -->
-    <view class="conversation-title">{{conversationName}}</view>
-  </view>
+  <TUI-callkit class="calling" id="tui-callkit" config="{{config}}"  bind:sendMessage="sendMessage"></TUI-callkit>
   <view class="group-profile">
     <TUI-group-profile id="group-profile" wx:if="{{isShow}}" conversation="{{conversation}}"></TUI-group-profile>
   </view>
-  <view class="message-list" bindtap="triggerClose">
-    <TUI-message-list id="message-list" conversation="{{conversation}}" unreadCount="{{unreadCount}}" bind:changeMemberCount="changeMemberCount" bind:resendMessage="resendMessage"></TUI-message-list>
+  <view class="safetip-box">
+    <view class="safetip">
+      <text>【安全提示】本 APP 仅用于体验腾讯云即时通信 IM 产品功能，不可用于业务洽谈与拓展。请勿轻信汇款、中奖等涉及钱款的信息，勿轻易拨打陌生电话，谨防上当受骗。</text>
+      <span class="report" bindtap="handleReport">点此投诉</span>
+    </view>
   </view>
-  <view class="message-input" wx:if="{{showChat}}">
-    <TUI-message-input id="message-input" conversation="{{conversation}}" bind:sendMessage="sendMessage"  bind:showMessageErrorImage="showMessageErrorImage" bind:handleCall="handleCall"></TUI-message-input>
+  <view class="message-list" bindtap="triggerClose">
+    <TUI-message-list id="message-list" conversation="{{conversation}}" unreadCount="{{unreadCount}}" bind:changeMemberCount="changeMemberCount" bind:resendMessage="resendMessage" bind:typeMessage="typeMessage"></TUI-message-list>
+  </view>
+  <view class="message-input" style="{{viewData.style}}" wx:if="{{showChat}}">
+    <TUI-message-input id="message-input" conversation="{{conversation}}" bind:sendMessage="sendMessage" bind:downKeysBoards="downKeysBoards" bind:pullKeysBoards="pullKeysBoards" bind:showMessageErrorImage="showMessageErrorImage" bind:handleCall="handleCall"></TUI-message-input>
   </view>
 </view>

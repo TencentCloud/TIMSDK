@@ -1,6 +1,22 @@
 import logger from '../../utils/logger';
+import constant from '../../utils/constant';
 // eslint-disable-next-line no-undef
 const app = getApp();
+// eslint-disable-next-line no-undef
+const inputStyle = `
+  --padding: 30px
+`;
+
+let newInputStyle =  `
+--padding: 0px
+`;
+
+const setNewInputStyle = (number) => {
+  const height = number;
+  newInputStyle = `--padding: ${height}px`;
+};
+
+
 // eslint-disable-next-line no-undef
 Page({
 
@@ -23,6 +39,10 @@ Page({
       tim: null,
     },
     unreadCount: 0,
+    viewData: {
+      style: inputStyle,
+    },
+    KeyboardHeight: 0,
   },
   /**
    * 生命周期函数--监听页面加载
@@ -36,7 +56,7 @@ Page({
     this.setData({
       config,
     }, () => {
-      this.TRTCCalling = this.selectComponent('#tui-calling');
+      this.TRTCCalling = this.selectComponent('#tui-callkit');
       this.TRTCCalling.init();
     });
     // conversationID: C2C、 GROUP
@@ -50,8 +70,15 @@ Page({
     wx.$TUIKit.setMessageRead({ conversationID: this.data.conversationID }).then(() => {
       logger.log('| TUI-chat | setMessageRead | ok');
     });
+    wx.setNavigationBarColor({
+      frontColor: '#ffffff',
+      backgroundColor: '#006EFF',
+    });
     wx.$TUIKit.getConversationProfile(this.data.conversationID).then((res) => {
       const { conversation } = res.data;
+      wx.setNavigationBarTitle({
+        title: this.getConversationName(conversation),
+      });
       this.setData({
         conversationName: this.getConversationName(conversation),
         conversation,
@@ -66,16 +93,17 @@ Page({
     this.TRTCCalling.destroyed();
   },
   getConversationName(conversation) {
+    const { conversationType_text } = constant;
     if (conversation.type === '@TIM#SYSTEM') {
       this.setData({
         showChat: false,
       });
       return '系统通知';
     }
-    if (conversation.type === 'C2C') {
+    if (conversation.type === conversationType_text.typeC2C) {
       return conversation.remark || conversation.userProfile.nick || conversation.userProfile.userID;
     }
-    if (conversation.type === 'GROUP') {
+    if (conversation.type === conversationType_text.typeGroup) {
       return conversation.groupProfile.name || conversation.groupProfile.groupID;
     }
   },
@@ -122,5 +150,43 @@ Page({
   },
   resendMessage(event) {
     this.selectComponent('#message-input').onInputValueChange(event);
+  },
+  handleReport() {
+    const url = '/pages/TUI-User-Center/webview/webview?url=https://cloud.tencent.com/apply/p/xc3oaubi98g';
+    wx.navigateTo({
+      url,
+    });
+  },
+  // 监听键盘，获取焦点时将输入框推到键盘上方
+  pullKeysBoards(event) {
+    setNewInputStyle(event.detail.event.detail.height);
+    this.setData({
+      'viewData.style': newInputStyle,
+    });
+  },
+  // 监听键盘，失去焦点时收起键盘
+  downKeysBoards(event) {
+    this.setData({
+      'viewData.style': inputStyle,
+    });
+  },
+  typeMessage(event) {
+    const { conversationType_text, STRING_TEXT, FEAT_NATIVE_CODE } = constant;
+    if (this.data.conversation.type === conversationType_text.typeC2C) {
+      if (event.detail.typingMessage.typingStatus === FEAT_NATIVE_CODE.ISTYPING_STATUS && event.detail.typingMessage.actionParam === constant.typeInputStatusIng) {
+        wx.setNavigationBarTitle({
+          title: STRING_TEXT.TYPETYPING,
+        });
+        setTimeout(() => {
+          wx.setNavigationBarTitle({
+            title: this.data.conversationName,
+          });
+        }, (1000 * 30));
+      } else if (event.detail.typingMessage.typingStatus === FEAT_NATIVE_CODE.NOTTYPING_STATUS && event.detail.typingMessage.actionParam === constant.typeInputStatusEnd) {
+        wx.setNavigationBarTitle({
+          title: this.data.conversationName,
+        });
+      }
+    }
   },
 });
