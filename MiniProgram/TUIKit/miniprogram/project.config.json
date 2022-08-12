@@ -1,7 +1,7 @@
 {
   "appid": "wx649acbec87e200b4",
   "compileType": "miniprogram",
-  "libVersion": "2.25.0",
+  "libVersion": "2.25.3",
   "packOptions": {
     "ignore": [],
     "include": []
@@ -32,7 +32,8 @@
     },
     "disableUseStrict": false,
     "useCompilerPlugins": false,
-    "minifyWXML": true
+    "minifyWXML": true,
+    "ignoreUploadUnusedFiles": true
   },
   "condition": {},
   "editorSetting": {

@@ -56,7 +56,6 @@
 }
 
 .text-content{
-  width: 364rpx;
   height: 36rpx;
   font-size: 24rpx;
   line-height: 36rpx;

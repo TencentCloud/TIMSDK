@@ -1,0 +1,23 @@
+
+<!--room.wxml-->
+<view class="container">
+  <!-- <view class='title' style='padding-top:{{(headerHeight + statusBarHeight)/2 - 12}}px'> -->
+  <!-- <view class='title'>TRTC</view> -->
+  <view class="title">
+    <image class="btn-goback" src="../../../static/images/back.png" bind:tap="onBack" />
+    <text>TUICallKit</text>
+  </view>
+   <!-- <view class='tips'>
+    <text>以下将展示小程序实时音视频能力，由腾讯云提供技术支持</text>
+  </view> -->
+  <view class='guide-box'>
+    <view class="single-box" wx:for="{{entryInfos}}" wx:key="index" id="{{index}}" bindtap='handleEntry'>
+      <image class="icon" mode="aspectFit" src="{{item.icon}}" role="img"></image>
+      <view class="single-content">
+        <view class="label">{{item.title}}</view>
+        <view class="desc">{{item.desc}}</view>
+      </view>
+    </view>
+  </view>
+</view>
+<tabBar selected="{{0}}" />
