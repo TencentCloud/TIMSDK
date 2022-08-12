@@ -5,7 +5,7 @@
     <view class="TUI-message-input">
         <image class="TUI-icon" bindtap="switchAudio" src="{{isAudio ? '/static/assets/keyboard.svg' : '/static/assets/audio.svg'}}" />
         <view wx:if="{{!isAudio}}" class="TUI-message-input-main">
-            <textarea  class="TUI-message-input-area" adjust-position="{{true}}" cursor-spacing="20"
+            <textarea  class="TUI-message-input-area" adjust-position="{{false}}" cursor-spacing="20"
                 value="{{message}}" bindinput="onInputValueChange" maxlength="140" type="text" auto-height="{{true}}"
                 placeholder="" placeholder-class="input-placeholder" confirm-type="send" show-confirm-bar="{{false}}"
                 bindfocus="inputBindFocus"
@@ -33,8 +33,6 @@
         <TUI-Emoji bind:enterEmoji="appendMessage" />
     </view>
     <view wx:if="{{displayFlag === 'extension'}}" class="TUI-Extensions">
-        <!-- TODO: 这里功能还没实现 -->
-<!--        <camera device-position="back" flash="off" binderror="error" style="width: 100%; height: 300px;"></camera>-->
         <view class="TUI-Extension-slot" bindtap="handleSendPicture">
             <image class="TUI-Extension-icon" src="/static/assets/take-photo.svg" />
             <view class="TUI-Extension-slot-name">拍摄照片</view>

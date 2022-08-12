@@ -18,7 +18,7 @@ Page({
   onLoad(option) {
     this.setData({
       path: option.path,
-    });
+    })
     wx.setStorage({
       key: 'path',
       data: option.path,

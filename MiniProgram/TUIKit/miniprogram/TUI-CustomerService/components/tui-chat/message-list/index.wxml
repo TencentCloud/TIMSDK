@@ -39,7 +39,7 @@
                     <view wx:else>未读</view>
                 </view>
                  <view wx:if="{{item.isSelf && item.ID === errorMessageID || item.status === 'fail'}}" class="t-message-error-box">
-                 <image class="t-message-error" wx:if="{{showMessageError}}" src='../../../static/images/tuikit-msg-error.png' bindtap="ResndMessage" />
+                 <image class="t-message-error" wx:if="{{showMessageError}}" src='../../../static/images/tuikit-msg-error.png' bindtap="ResendMessage" />
                 </view>
                 <view  class="{{item.isSelf ? 't-self-message-body':'t-recieve-message-body'}}"  catch:longpress="handleLongPress" data-index='{{index}}'  data-value='{{item}}' id="{{concat.concat(conversation.type,'ID-',item.ID)}}" message-value="{{item}}" >
                     <TUI-TextMessage wx:if="{{item.type === 'TIMTextElem'}}" message="{{item}}" isMine="{{item.isSelf}}" />

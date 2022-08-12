@@ -11,7 +11,7 @@ Page({
   data: {
     sceneList: [
       { name: '在线客服', url: '../../TUI-CustomerService/pages/TUI-Conversation/conversation/conversation', iconUrl: '../../static/assets/online-service.svg' },
-      { name: '实时通话', url: '../../TUI-Calling/pages/TUI-Calling/calling-index/index', iconUrl: '../../static/assets/calling.svg' },
+      { name: '实时通话', url: '../../TUI-VideoCall/pages/TUI-VideoCall/callkit-index/index', iconUrl: '../../static/assets/calling.svg' },
       { name: '互动直播', url: '', iconUrl: '../../static/assets/interactive-live.svg' },
     ],
   },

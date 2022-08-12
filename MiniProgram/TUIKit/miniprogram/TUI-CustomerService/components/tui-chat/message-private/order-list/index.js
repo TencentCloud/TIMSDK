@@ -1,3 +1,5 @@
+import constant from '../../../../utils/constant';
+
 const orderList = [
   {
     orderNum: 1,
@@ -22,7 +24,6 @@ const orderList = [
     price: '7.2折起',
   },
 ];
-
 // eslint-disable-next-line no-undef
 Component({
   /**
@@ -80,12 +81,13 @@ Component({
       });
     },
     sendMessage(e) {
+      const { businessID_text, FEAT_NATIVE_CODE } = constant;
       const { order } = e.currentTarget.dataset;
       this.triggerEvent('sendCustomMessage', { // 传递给父组件，在父组件处调用SDK的接口，来进行自定消息的发送
         payload: {
           data: JSON.stringify({
-            businessID: 'order',
-            version: 1,
+            businessID: businessID_text.typeOrder,
+            version: FEAT_NATIVE_CODE.NATIVE_VERSION,
             title: order.title,
             imageUrl: order.imageUrl,
             imageWidth: order.imageWidth,

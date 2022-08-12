@@ -1,7 +1,0 @@
-{
-  "usingComponents": {
-    "TUI-calling": "/components/TUICalling/TUICalling"
-  },
-  "navigationStyle": "custom",
-  "navigationBarTextStyle": "black"
-}
