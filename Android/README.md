@@ -70,7 +70,7 @@
 ## 步骤5：编译运行（移除音视频通话）
 如果您不需要音视频通话功能，只需要在 `app 模块` 的 `build.gradle` 文件中删除音视频通话模块集成代码即可：
 
-![](https://qcloudimg.tencent-cloud.cn/raw/ca4175c3539b696333537cce1ea4773b.jpg)
+![](https://im.sdk.qcloud.com/tools/resource/tuicalling/android/GitHubDeleteTUICallKit.jpg)
 
 ```groovy
 api project(':tuicallkit')
@@ -78,20 +78,22 @@ api project(':tuicallkit')
 操作完上述步骤后会发现，Demo 中的音频通话、视频通话入口均被隐藏。
 会话界面屏蔽 TUICallKit 前后的效果：
 
-<img src="https://qcloudimg.tencent-cloud.cn/raw/3aea19a64e9dc5cef99fb2673de6060e.jpg" width="300px" />
-<img src="https://qcloudimg.tencent-cloud.cn/raw/fe67587f0aab427d4696ea8399146aab.jpg" width="300px" />
+| 修改之前 | 修改之后|
+|--------|------|
+|<img src="https://im.sdk.qcloud.com/tools/resource/tuicalling/android/GitHubChatAddTUICallKit.jpg" style="zoom:30%" /> | <img src="https://im.sdk.qcloud.com/tools/resource/tuicalling/android/GitHubChatDeleteTUICallKit.jpg" style="zoom:30%" />|
 
 联系人资料界面屏蔽 TUICallKit 前后的效果：
 
-<img src="https://qcloudimg.tencent-cloud.cn/raw/d08ff4d9aecfad9197eb746f141e7c86.jpg" width="300px" />
-<img src="https://qcloudimg.tencent-cloud.cn/raw/d3d8523e05b53afb21a330a0e434d3d8.jpg" width="300px" />
+| 修改之前 | 修改之后|
+|--------|------|
+| <img src="https://im.sdk.qcloud.com/tools/resource/tuicalling/android/GitHubContactAddTUICallKit.jpg" style="zoom:30%" /> | <img src="https://im.sdk.qcloud.com/tools/resource/tuicalling/android/GitHubContactDeleteTUICallKit.jpg" style="zoom:30%" /> |
 
 > 以上演示的仅仅是 Demo 对移除音视频通话功能的处理，开发者可以按照业务要求自定义。
 
 ## 步骤6：编译运行（移除搜索模块）
 如果您不需要搜索功能，那么只需要在 `app 模块` 的 `build.gradle` 文件中删除下面一行即可：
 
-![](https://qcloudimg.tencent-cloud.cn/raw/fb1ac457b353ea0cc9f357278c5209b0.jpg)
+![](https://im.sdk.qcloud.com/tools/resource/tuicalling/android/GitHubDeleteTUISearch.jpg)
 
 ```groovy
 api project(':tuisearch')
