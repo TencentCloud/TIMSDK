@@ -1,178 +1,83 @@
-本文档主要介绍如何快速集成实时音视频（TRTC）SDK，运行 TRTC 场景化解决方案，实现实时视频/语音通话。
+# TUICallKit Android 示例工程快速跑通
+_中文 | [English](README.en.md)_
+
+本文档主要介绍如何快速跑通 TUICallKit 示例工程，体验高质量视频/语音通话，更详细的 TUICallKit 组件接入流程，请点击腾讯云官网文档： [**TUICallKit 组件 Android 接入说明** ](https://cloud.tencent.com/document/product/647/78729)...
 
 ## 目录结构
 
 ```
-TUICalling
-├─ App          // 主面板，音视频通话场景入口
-├─ Debug        // 调试相关
-└─ Source       // 实时语音/视频通话业务逻辑
+TUICallKit
+├─ app          // 主面板，音视频通话场景入口
+├─ debug        // 调试相关
+└─ tuicallkit   // 实时语音/视频通话业务逻辑
 ```
 
 ## 环境准备
-- 最低兼容 Android 4.1（SDK API Level 16），建议使用 Android 5.0 （SDK API Level 21）及以上版本
-- Android Studio 3.5及以上版本
-- App 要求 Android 4.1及以上设备
+- 最低兼容 Android 4.2（SDK API Level 19），建议使用 Android 5.0 （SDK API Level 21）及以上版本。
+- Android Studio 3.5及以上版本。
+- Android 4.1 及以上的手机设备。
 
 ## 运行示例
 
-### 前提条件
-您已 [注册腾讯云](https://cloud.tencent.com/document/product/378/17985) 账号，并完成 [实名认证](https://cloud.tencent.com/document/product/378/3629)。
+[](id:step1)
+### 第一步：开通服务
+TUICallKit 是基于腾讯云 [即时通信 IM](https://cloud.tencent.com/document/product/269/42440) 和 [实时音视频 TRTC](https://cloud.tencent.com/document/product/647/16788) 两项付费 PaaS 服务构建出的音视频通信组件。您可以按照如下步骤开通相关的服务并体验 7 天的免费试用服务：
 
-### 申请 SDKAPPID 和 SECRETKEY
-1. 登录实时音视频控制台，选择【开发辅助】>【[快速跑通Demo](https://console.cloud.tencent.com/trtc/quickstart)】。
-2. 单击【立即开始】，输入您的应用名称，例如`TestTRTC`，单击【创建应用】。
-<img src="https://main.qcloudimg.com/raw/169391f6711857dca6ed8cfce7b391bd.png" width="650" height="295"/>
-3. 创建应用完成后，单击【我已下载，下一步】，可以查看 SDKAppID 和密钥信息。
+1. 登录到 [即时通信 IM 控制台](https://console.cloud.tencent.com/im)，单击**创建新应用**，在弹出的对话框中输入您的应用名称，并单击**确定**。
+![](https://qcloudimg.tencent-cloud.cn/raw/1105c3c339be4f71d72800fe2839b113.png)
+2. 单击刚刚创建出的应用，进入**基本配置**页面，并在页面的右下角找到**开通腾讯实时音视频服务**功能区，单击**免费体验**即可开通 TUICallKit 的 7 天免费试用服务。
+![](https://qcloudimg.tencent-cloud.cn/raw/667633f7addfd0c589bb086b1fc17d30.png)
+1. 在同一页面找到 **SDKAppID** 和 **密钥(SecretKey)** 并记录下来，它们会在后续的 [第二步](#step2) 中被用到。
+![](https://qcloudimg.tencent-cloud.cn/raw/e435332cda8d9ec7fea21bd95f7a0cba.png)
 
-### 配置工程文件
-
-1. 使用 Android Studio（3.5及以上的版本）打开源码工程`TUICalling`。
-2. 找到并打开`TUICalling/Debug/src/main/java/com/tencent/liteav/debug/GenerateTestUserSig.java`文件。
-3. 设置`GenerateTestUserSig.java`文件中的相关参数：
-<ul style="margin:0"><li/>SDKAPPID：默认为占位符（PLACEHOLDER），请设置为实际的 SDKAppID。
-<li/>SECRETKEY：默认为占位符（PLACEHOLDER），请设置为实际的密钥信息。</ul>
-<img src="https://liteav.sdk.qcloud.com/doc/res/trtc/picture/zh-cn/sdkappid_secretkey.png">
-
-4. 返回实时音视频控制台，单击【粘贴完成，下一步】。
-5. 单击【关闭指引，进入控制台管理应用】。
-
->!本文提到的生成 UserSig 的方案是在客户端代码中配置 SECRETKEY，该方法中 SECRETKEY 很容易被反编译逆向破解，一旦您的密钥泄露，攻击者就可以盗用您的腾讯云流量，因此**该方法仅适合本地跑通工程和功能调试**。
->正确的 UserSig 签发方式是将 UserSig 的计算代码集成到您的服务端，并提供面向 App 的接口，在需要 UserSig 时由您的 App 向业务服务器发起请求获取动态 UserSig。更多详情请参见 [服务端生成 UserSig](https://cloud.tencent.com/document/product/647/17275#Server)。
-
-### 集成 SDK
-
-您可以选择使用`mavenCentral`自动加载的方式，或者手动下载 aar 再将其导入到您当前的工程项目中，工程默认采用方法一配置。
-
-#### 方法一：自动加载（aar）
-实时音视频（TRTC） SDK 已经发布到`mavenCentral`库，您可以通过配置 gradle 自动下载更新。
-只需要用 Android Studio 打开需要集成 SDK 的工程，然后通过简单的三个步骤修改 App/build.gradle 文件，就可以完成 SDK 集成：
-
-1. 在 dependencies 中添加 SDK 的依赖。
-  - 若使用3.x版本的 com.android.tools.build:gradle 工具，请执行以下命令：
-
-```
-dependencies {
-    implementation 'com.tencent.liteav:LiteAVSDK_TRTC:latest.release'
-}
-```
-
-  - 若使用2.x版本的 com.android.tools.build:gradle 工具，请执行以下命令：
-
-```
-dependencies {
-    compile 'com.tencent.liteav:LiteAVSDK_TRTC:latest.release'
-}
-```
-
-2. 在 defaultConfig 中，指定 App 使用的 CPU 架构。
-
-```
-defaultConfig {
-    ndk {
-        abiFilters "armeabi", "armeabi-v7a", "arm64-v8a"
-    }
-}
-```
-
-3. 单击【Sync Now】，自动下载 SDK 并集成到工程里。
+> **注意**：
+> 单击 **免费体验** 以后，部分之前使用过 [实时音视频 TRTC](https://cloud.tencent.com/document/product/647/16788) 服务的用户会提示：
+> ```java
+> [-100013]:TRTC service is  suspended. Please check if the package balance is 0 or the Tencent Cloud accountis in arrears
+> ```
+> 因为新的 IM 音视频通话能力是整合了腾讯云 [实时音视频 TRTC](https://cloud.tencent.com/document/product/647/16788) 和 [即时通信 IM](https://cloud.tencent.com/document/product/269/42440) 两个基础的 PaaS 服务，所以当 [实时音视频 TRTC](https://cloud.tencent.com/document/product/647/16788) 的免费额度（10000分钟）已经过期或者耗尽，就会导致开通此项服务失败，这里您可以单击 [TRTC 控制台](https://console.cloud.tencent.com/trtc/app)，找到对应 SDKAppID 的应用管理页，示例如图，开通后付费功能后，再次 **启用应用** 即可正常体验音视频通话能力。
+> <img width=800px src="https://qcloudimg.tencent-cloud.cn/raw/f74a13a7170cf8894195a1cae6c2f153.png" />
 
 
-#### 方法二：手动下载（aar）
-如果您的网络连接`mavenCentral`有问题，您也可以手动下载 SDK 集成到工程里：
+[](id:step2)
+### 第二步：下载源码，配置工程
+1. 克隆或者直接下载此仓库源码，**欢迎 Star**，感谢~~
+2. 找到并打开 `Android/debug/src/main/java/com/tencent/liteav/debug/GenerateTestUserSig.java` 文件。
+3. 配置 `GenerateTestUserSig.java` 文件中的相关参数：
+	<img src="https://main.qcloudimg.com/raw/f9b23b8632058a75b78d1f6fdcdca7da.png" width="900">
+	
+	- SDKAPPID：默认为占位符（PLACEHOLDER），请设置为 [第一步](#step1) 中记录下的 SDKAppID。
+	- SECRETKEY：默认为占位符（PLACEHOLDER），请设置为 [第一步](#step1) 中记录下的密钥(SecretKey)信息。
 
-1. 下载最新版本 [实时音视频 SDK](https://liteav.sdk.qcloud.com/download/latest/TXLiteAVSDK_TRTC_Android_latest.zip)。
-2. 将下载到的 aar 文件拷贝到工程的 **App/libs** 目录下。
-3. 在工程根目录下的 build.gradle 中，添加 **flatDir**，指定本地仓库路径。
+[](id:step3)
+### 第三步：编译运行
+使用 Android Studio 打开源码目录 `TUICallKit/Android`，待Android Studio工程同步完成后，连接 **真机** 单击 **运行按钮** 即可开始体验本APP。
 
-```
-allprojects {
-    repositories {
-        flatDir {
-            dirs 'libs'
-            dirs project(':App').file('libs')
-        }
-    }
-}
-```
+[](id:step4)
+### 第四步：示例体验
 
-4. 在 App/build.gradle 中，添加引用 aar 包的代码。
+`Tips：TUICallKit 通话体验，至少需要两台设备，如果用户A/B分别代表两台不同的设备：`
 
-```
-dependencies {
-    compile(name: 'LiteAVSDK_TRTC_xxx', ext: 'aar') // xxx表示解压出来的SDK版本号    
-}
-```
+**用户 A（userId：111）**
 
-5. 在 App/build.gradle的defaultConfig 中，指定 App 使用的 CPU 架构。
+- 步骤 1：在欢迎页，输入用户名(<font color=red>请确保用户名唯一性，不能与其他用户重复</font>)，比如111； 
 
-```
-defaultConfig {
-    ndk {
-        abiFilters "armeabi", "armeabi-v7a", "arm64-v8a"
-    }
-}
-```
+- 步骤 2：根据不同的场景&业务需求，进入不同的场景界面，比如视频通话；
 
-6. 单击【Sync Now】，完成 SDK 的集成工作。 
+- 步骤 3：输入要拨打的用户B的userId，点击搜索，然后点击呼叫；
 
-### 编译运行
-用 Android Studio 打开该项目，连上Android设备，编译并运行。
+  | 步骤1 | 步骤2 | 步骤3 | 
+  |---------|---------|---------|
+  |<img src="https://qcloudimg.tencent-cloud.cn/raw/ab18c3dee2fa825b14ff19fc727a161b.png" width="240"/>|<img src="https://qcloudimg.tencent-cloud.cn/raw/94ce7747260d1ad2b5c9a476feb51b01.png" width="240">|<img src="https://liteav.sdk.qcloud.com/doc/res/trtc/picture/zh-cn/tuicalling_user.png" width="240"/>
 
+**用户 B（userId：222）**
 
-### 体验应用（**体验应用至少需要两台设备**）
-
-#### 用户 A
-
-步骤1、输入用户名(<font color=red>请确保用户名唯一性，不能与其他用户重复</font>)，如图示：
-
-<img src="https://qcloudimg.tencent-cloud.cn/raw/ab18c3dee2fa825b14ff19fc727a161b.png" width="320"/>
-
-步骤2、根据不同场景及人数需求，进入不同的场景界面，如图示：
-
-<img src="https://qcloudimg.tencent-cloud.cn/raw/011897b6601bac5ba27641a9b120647a.png" width="320">
-
-步骤3、输入要拨打的用户名，点击搜索，然后点击呼叫，如图示：（<font color=red>请确保被叫方保持在应用内，否则可能会拨打失败</font>）；
-
-<img src="https://liteav.sdk.qcloud.com/doc/res/trtc/picture/zh-cn/tuicalling_user.png" width="320"/>
-
-#### 用户 B
-
-步骤1、输入用户名(<font color=red>请确保用户名唯一性，不能与其他用户重复</font>)，如图示：
-
-<img src="https://qcloudimg.tencent-cloud.cn/raw/3c4a59146e1a325918bf4fa46aaa70af.png" width="320"/>
-
-步骤2、进入主页，等待接听来电；
+- 步骤 1：在欢迎页，输入用户名(<font color=red>请确保用户名唯一性，不能与其他用户重复</font>)，比如222；
+- 步骤 2：进入主页，等待接听来电即可；
 
 
 ## 常见问题
-#### 1. 查看密钥时只能获取公钥和私钥信息，该如何获取密钥？
-TRTC SDK 6.6 版本（2019年08月）开始启用新的签名算法 HMAC-SHA256。在此之前已创建的应用，需要先升级签名算法才能获取新的加密密钥。如不升级，您也可以继续使用 [老版本算法 ECDSA-SHA256](https://cloud.tencent.com/document/product/647/17275#.E8.80.81.E7.89.88.E6.9C.AC.E7.AE.97.E6.B3.95)，如已升级，您按需切换为新旧算法。
 
-升级/切换操作：
-
- 1. 登录 [实时音视频控制台](https://console.cloud.tencent.com/trtc)。
- 2. 在左侧导航栏选择【应用管理】，单击目标应用所在行的【应用信息】。
- 3. 选择【快速上手】页签，单击【第二步 获取签发UserSig的密钥】区域的【点此升级】、【非对称式加密】或【HMAC-SHA256】。
-  
-  - 升级：
-   
-   ![](https://main.qcloudimg.com/raw/69bd0957c99e6a6764368d7f13c6a257.png)
-   
-  - 切换回老版本算法 ECDSA-SHA256：
-  
-   ![](https://main.qcloudimg.com/raw/f89c00f4a98f3493ecc1fe89bea02230.png)
-   
-  - 切换为新版本算法 HMAC-SHA256：
-  
-   ![](https://main.qcloudimg.com/raw/b0412153935704abc9e286868ad8a916.png)
-   
-
-#### 2. 两台手机同时运行工程，为什么看不到彼此的画面？
-请确保两台手机在运行工程时使用的是不同的 UserID，TRTC 不支持同一个 UserID （除非 SDKAppID 不同）在两个终端同时使用。
-
-<img src="https://qcloudimg.tencent-cloud.cn/raw/43e70445b4eaa33da89851d2bb78ec4a.png" width="320"/>
-
-#### 3. 防火墙有什么限制？
-由于 SDK 使用 UDP 协议进行音视频传输，所以在对 UDP 有拦截的办公网络下无法使用。如遇到类似问题，请参考 [应对公司防火墙限制](https://cloud.tencent.com/document/product/647/34399) 排查并解决。
+- [TUICallKit (Android) 常见问题](https://cloud.tencent.com/document/product/647/78767)
+- 欢迎加入 QQ 群：**592465424**，进行技术交流和反馈~
 
