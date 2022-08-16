@@ -47,7 +47,7 @@
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from 'vue';
 import { useStore } from 'vuex';
-import TUIAegis from '@/utils/TUIAegis';
+import TUIAegis from '../../../utils/TUIAegis';
 import TUIProfileEdit from './components/TUIProfileEdit';
 
 const TUIProfile = defineComponent({
