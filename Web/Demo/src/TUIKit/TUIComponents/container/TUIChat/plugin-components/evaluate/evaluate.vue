@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts">
-import TUIAegis from '@/utils/TUIAegis';
+import TUIAegis from '../../../../../utils/TUIAegis';
 import { onClickOutside } from '@vueuse/core';
 import { defineComponent, reactive, watchEffect, toRefs, ref } from 'vue';
 import Link from '../../../../../utils/link';
