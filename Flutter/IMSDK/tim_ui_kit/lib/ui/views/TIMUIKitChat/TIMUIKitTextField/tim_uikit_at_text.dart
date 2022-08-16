@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_group_profile_view_model.dart';
+import 'package:tim_ui_kit/data_services/group/group_services.dart';
+import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
@@ -12,12 +12,16 @@ import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
 class AtText extends StatefulWidget {
   final String? groupID;
+  final V2TimGroupInfo? groupInfo;
+  final List<V2TimGroupMemberFullInfo?>? groupMemberList;
   // some Group type cant @all
   final String? groupType;
   const AtText({
     this.groupID,
     this.groupType,
     Key? key,
+    this.groupInfo,
+    this.groupMemberList,
   }) : super(key: key);
 
   @override
@@ -25,32 +29,38 @@ class AtText extends StatefulWidget {
 }
 
 class _AtTextState extends TIMUIKitState<AtText> {
-  final TUIGroupProfileViewModel _model = TUIGroupProfileViewModel();
-  List<V2TimGroupMemberFullInfo?>? _groupMemberList;
+  final GroupServices _groupServices = serviceLocator<GroupServices>();
+
+  List<V2TimGroupMemberFullInfo?>? groupMemberList;
+  List<V2TimGroupMemberFullInfo?>? searchMemberList;
+
   @override
   void initState() {
+    groupMemberList = widget.groupMemberList;
+    searchMemberList = groupMemberList;
     super.initState();
-    if (widget.groupID != null) {
-      _model.loadData(widget.groupID!);
-    }
   }
 
   @override
   void dispose() {
     super.dispose();
-    _model.dispose();
   }
 
   _onTapMemberItem(V2TimGroupMemberFullInfo memberInfo) {
     Navigator.pop(context, memberInfo);
   }
 
+  Future<V2TimValueCallback<V2GroupMemberInfoSearchResult>> searchGroupMember(
+      V2TimGroupMemberSearchParam searchParam) async {
+    final res =
+        await _groupServices.searchGroupMembers(searchParam: searchParam);
+
+    if (res.code == 0) {}
+    return res;
+  }
+
   handleSearchGroupMembers(String searchText, context) async {
-    List<V2TimGroupMemberFullInfo?> currentGroupMember =
-        Provider.of<TUIGroupProfileViewModel>(context, listen: false)
-                .groupMemberList ??
-            [];
-    final res = await _model.searchGroupMember(V2TimGroupMemberSearchParam(
+    final res = await searchGroupMember(V2TimGroupMemberSearchParam(
       keywordList: [searchText],
       groupIDList: [widget.groupID!],
     ));
@@ -65,12 +75,12 @@ class _AtTextState extends TIMUIKitState<AtText> {
           }
         }
       });
-      currentGroupMember = list;
+      searchMemberList = list;
     }
 
     setState(() {
-      _groupMemberList =
-          isSearchTextExist(searchText) ? currentGroupMember : null;
+      searchMemberList =
+          isSearchTextExist(searchText) ? searchMemberList : groupMemberList;
     });
   }
 
@@ -123,23 +133,17 @@ class _AtTextState extends TIMUIKitState<AtText> {
             ),
           ),
         ),
-        body: ChangeNotifierProvider.value(
-            value: _model,
-            child: Consumer<TUIGroupProfileViewModel>(
-                builder: ((context, value, child) {
-              return GroupProfileMemberList(
-                  groupType: widget.groupType ?? "",
-                  memberList: _groupMemberList ?? value.groupMemberList ?? [],
-                  onTapMemberItem: _onTapMemberItem,
-                  canAtAll: true,
-                  canSlideDelete: false,
-                  touchBottomCallBack: () {
-                    _model.loadMoreData(groupID: _model.groupInfo!.groupID);
-                  },
-                  customTopArea: GroupMemberSearchTextField(
-                    onTextChange: (text) =>
-                        handleSearchGroupMembers(text, context),
-                  ));
-            }))));
+        body: GroupProfileMemberList(
+            groupType: widget.groupType ?? "",
+            memberList: searchMemberList ?? [],
+            onTapMemberItem: _onTapMemberItem,
+            canAtAll: true,
+            canSlideDelete: false,
+            touchBottomCallBack: () {
+              // Get all by once, unnecessary to load more
+            },
+            customTopArea: GroupMemberSearchTextField(
+              onTextChange: (text) => handleSearchGroupMembers(text, context),
+            )));
   }
 }

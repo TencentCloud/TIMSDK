@@ -110,17 +110,17 @@ class AppLogo extends StatelessWidget {
                       child: Column(
                         children: <Widget>[
                           Text(
-                            imt("登录·即时通信"),
+                            imt("腾讯云即时通信IM"),
                             style: TextStyle(
-                              color: const Color.fromARGB(255, 255, 255, 255),
-                              fontSize: CommonUtils.adaptFontSize(64),
+                              color: Colors.white,
+                              fontSize: CommonUtils.adaptFontSize(58),
                             ),
                           ),
                           Text(
-                            imt("体验群组聊天，音视频对话等IM功能"),
+                            imt("欢迎使用本 APP 体验腾讯云 IM 产品服务"),
                             style: TextStyle(
-                              color: const Color.fromARGB(255, 255, 255, 255),
-                              fontSize: CommonUtils.adaptFontSize(28),
+                              color: Colors.white,
+                              fontSize: CommonUtils.adaptFontSize(26),
                             ),
                           ),
                         ],
@@ -289,25 +289,7 @@ class _LoginFormState extends State<LoginForm> {
           imt_para("登录失败{{option1}}", "登录失败$option1")(option1: option1));
       return;
     }
-    await getIMData();
-
     directToHomePage();
-  }
-
-  getIMData() async {
-    await Future.wait([
-      setOfflinePushInfo(),
-    ]);
-  }
-
-  Future<void> setOfflinePushInfo() async {
-    // 这里先请求权限再上报token
-    ChannelPush.requestPermission();
-    final bool isUploadSuccess =
-    await ChannelPush.uploadToken(PushConfig.appInfo);
-    if (isUploadSuccess) {
-      print("upload success");
-    }
   }
 
   @override

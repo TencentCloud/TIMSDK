@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/business_logic/life_cycle/new_contact_life_cycle.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_new_contact_view_model.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_friendship_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
@@ -44,7 +44,7 @@ class TIMUIKitNewContact extends StatefulWidget {
 }
 
 class _TIMUIKitNewContactState extends TIMUIKitState<TIMUIKitNewContact> {
-  late TUINewContactViewModel model = serviceLocator<TUINewContactViewModel>();
+  late TUIFriendShipViewModel model = serviceLocator<TUIFriendShipViewModel>();
 
   _getShowName(V2TimFriendApplication item) {
     final nickName = item.nickname ?? "";
@@ -112,6 +112,9 @@ class _TIMUIKitNewContactState extends TIMUIKitState<TIMUIKitNewContact> {
                         applicationInfo.type,
                       );
                       model.loadData();
+                      if(widget.onAccept != null){
+                        widget.onAccept!(applicationInfo);
+                      }
                       // widget?.onAccept();
                     },
                   ),
@@ -142,6 +145,9 @@ class _TIMUIKitNewContactState extends TIMUIKitState<TIMUIKitNewContact> {
                           applicationInfo.type,
                         );
                         model.loadData();
+                        if(widget.onRefuse != null){
+                          widget.onRefuse!(applicationInfo);
+                        }
                         // refuse(context);
                       },
                     ))
@@ -160,7 +166,6 @@ class _TIMUIKitNewContactState extends TIMUIKitState<TIMUIKitNewContact> {
   @override
   void initState() {
     super.initState();
-    model.loadData();
   }
 
   @override
@@ -170,8 +175,8 @@ class _TIMUIKitNewContactState extends TIMUIKitState<TIMUIKitNewContact> {
           ChangeNotifierProvider.value(value: model),
         ],
         builder: (BuildContext context, Widget? w) {
-          final model = Provider.of<TUINewContactViewModel>(context);
-          model.lifeCycle = widget.lifeCycle;
+          final model = Provider.of<TUIFriendShipViewModel>(context);
+          model.newContactLifeCycle = widget.lifeCycle;
           final newContactList = model.friendApplicationList;
           if (newContactList != null && newContactList.isNotEmpty) {
             return ListView.builder(

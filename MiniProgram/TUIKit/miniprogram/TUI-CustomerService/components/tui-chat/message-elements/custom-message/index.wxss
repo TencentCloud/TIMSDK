@@ -1,5 +1,4 @@
 .custom-message {
-  max-width: 60vw;
   background: #FBFBFB;
   border-radius: 4rpx 20rpx 20rpx 20rpx;
   display: flex;

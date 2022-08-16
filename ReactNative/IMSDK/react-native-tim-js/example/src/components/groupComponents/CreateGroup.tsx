@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { Text, View, StyleSheet, Image, TouchableOpacity, Switch } from 'react-native';
-import { TencentImSDKPlugin } from 'react-native-tim-js';
+import { TencentImSDKPlugin , V2TimGroupMember} from 'react-native-tim-js';
 import CommonButton from '../commonComponents/CommonButton';
 import UserInputComponent from '../commonComponents/UserInputComponent';
 import mystylesheet from '../../stylesheets';
@@ -12,16 +12,19 @@ const CreateSuperGroupComponent = () => {
     // addType未处理
     const createGroup = async () => {
         const res = await TencentImSDKPlugin.v2TIMManager.getGroupManager().createGroup(
-            groupType,
-            groupName,
-            groupID,
-            notice,
-            briefly,
-            imageurl,
-            isAllMuted,
-            false,
-            groupAddEnum,
-            userList)
+            {
+                groupType,
+                groupName,
+                groupID,
+                notification: notice,
+                introduction: briefly,
+                faceUrl: imageurl,
+                isAllMuted,
+                isSupportTopic: false,
+                addOpt: groupAddEnum,
+                memberList: userList
+            }
+           )
         setRes(res)
     }
     const [groupID, setGroupID] = useState<string>('')
@@ -33,29 +36,42 @@ const CreateSuperGroupComponent = () => {
     const [groupType, setGroupType] = useState<string>('Work')
     const [groupAddType, setGroupAddType] = useState<string>('V2TIM_GROUP_ADD_FORBID')
     const [imageurl, setImageUrl] = useState<string>()
-    const [userList, setUserList] = useState<any>([])
+    const [userList, setUserList] = useState<[V2TimGroupMember]>([{
+        userID: '',
+        role: 1 }])
+    const [groupAddEnum,setGroupAddEnum] = useState<number>(0)
     const getUsersHandler = (userList) => {
         setUserName('[' + userList.join(',') + ']')
-        setUserList(userList)
+        const dataArr: [V2TimGroupMember] = [{
+            userID: '',
+            role: 1 }]
+        dataArr.pop()
+        userList.forEach(ele => {
+            dataArr.push({
+                userID:ele,
+                role:1
+            })
+        });
+        console.log(userList)
+        setUserList(dataArr)
     }
     const [res, setRes] = useState<any>({})
-    let groupAddEnum = 0
     const allMutedtoggle = () => { setIsAllMuted(previousState => !previousState); }
     const CodeComponent = () => {
         return (
             res.code !== undefined ?
-                (<SDKResponseView codeString={JSON.stringify(res)} />) : null
+                (<SDKResponseView codeString={JSON.stringify(res, null, 2)} />) : null
         );
     }
     const getSelectedHandle = (seleted) => {
         setGroupAddType(seleted.name)
-        groupAddEnum = seleted.id
+        setGroupAddEnum(seleted.id)
     }
     const ImageSelectComponent = () => {
         const [visible, setVisible] = useState(false)
         return (
             <>
-                <View style={styles.userInputcontainer}>
+                <View style={mystylesheet.userInputcontainer}>
                     <View style={mystylesheet.itemContainergray}>
                         <Image style={mystylesheet.userIcon} source={require('../../icon/persongray.png')} />
                         <View style={styles.selectView}>
@@ -78,11 +94,11 @@ const CreateSuperGroupComponent = () => {
             <View style={styles.container}>
                 <View style={styles.selectContainer}>
                     <TouchableOpacity onPress={() => { setVisible(true) }}>
-                        <View style={styles.buttonView}>
-                            <Text style={styles.buttonText}>选择好友</Text>
+                        <View style={mystylesheet.buttonView}>
+                            <Text style={mystylesheet.buttonText}>选择好友</Text>
                         </View>
                     </TouchableOpacity>
-                    <Text style={styles.selectedText}>{userName}</Text>
+                    <Text style={mystylesheet.selectedText}>{userName}</Text>
                 </View>
                 <MultiCheckBoxModalComponent visible={visible} getVisible={setVisible} getUsername={getUsersHandler} type={'friend'} />
             </View>
@@ -93,13 +109,13 @@ const CreateSuperGroupComponent = () => {
         const [visible, setVisible] = useState<boolean>(false)
         return (
             <>
-                <View style={styles.userInputcontainer}>
+                <View style={mystylesheet.userInputcontainer}>
                     <View style={mystylesheet.itemContainergray}>
                         <Image style={mystylesheet.userIcon} source={require('../../icon/persongray.png')} />
                         <View style={styles.groupSelectView}>
                             <TouchableOpacity onPress={() => { setVisible(true) }}>
-                                <View style={styles.buttonView}>
-                                    <Text style={styles.buttonText}>选择群类型</Text>
+                                <View style={mystylesheet.buttonView}>
+                                    <Text style={mystylesheet.buttonText}>选择群类型</Text>
                                 </View>
                             </TouchableOpacity>
                             <Text style={styles.groupSelectText}>{`已选：${groupType}`}</Text>
@@ -116,13 +132,13 @@ const CreateSuperGroupComponent = () => {
         const [visible, setVisible] = useState<boolean>(false)
         return (
             <>
-                <View style={styles.userInputcontainer}>
+                <View style={mystylesheet.userInputcontainer}>
                     <View style={mystylesheet.itemContainergray}>
                         <Image style={mystylesheet.userIcon} source={require('../../icon/persongray.png')} />
                         <View style={styles.groupSelectView}>
                             <TouchableOpacity onPress={() => { setVisible(true) }}>
-                                <View style={styles.buttonView}>
-                                    <Text style={styles.buttonText}>选择加群类型</Text>
+                                <View style={mystylesheet.buttonView}>
+                                    <Text style={mystylesheet.buttonText}>选择加群类型</Text>
                                 </View>
                             </TouchableOpacity>
                             <Text style={styles.groupSelectText}>{`已选：${groupAddType}`}</Text>
@@ -134,22 +150,22 @@ const CreateSuperGroupComponent = () => {
         )
     }
     return (
-        <>
-            <View style={styles.userInputcontainer}>
+        <View style={{height: '100%'}}>
+            <View style={mystylesheet.userInputcontainer}>
                 <UserInputComponent content='群ID' placeholdercontent='群ID' getContent={setGroupID} />
             </View>
-            <View style={styles.userInputcontainer}>
+            <View style={mystylesheet.userInputcontainer}>
                 <UserInputComponent content='群名称' placeholdercontent='群名称' getContent={setGroupName} />
             </View>
-            <View style={styles.userInputcontainer}>
+            <View style={mystylesheet.userInputcontainer}>
                 <UserInputComponent content='群通告' placeholdercontent='群通告' getContent={setNotice} />
             </View>
-            <View style={styles.userInputcontainer}>
+            <View style={mystylesheet.userInputcontainer}>
                 <UserInputComponent content='群简介' placeholdercontent='群简介' getContent={setBriefly} />
             </View>
             <ImageSelectComponent />
-            <View style={styles.switchcontainer}>
-                <Text style={styles.switchtext}>是否全体禁言</Text>
+            <View style={mystylesheet.switchcontainer}>
+                <Text style={mystylesheet.switchtext}>是否全体禁言</Text>
                 <Switch
                     trackColor={{ false: "#c0c0c0", true: "#81b0ff" }}
                     thumbColor={isAllMuted ? "#2F80ED" : "#f4f3f4"}
@@ -163,7 +179,7 @@ const CreateSuperGroupComponent = () => {
             <GroupAddTypeSelectComponent/>
             <CommonButton handler={() => createGroup()} content={'高级创建群'}></CommonButton>
             <CodeComponent></CodeComponent>
-        </>
+        </View>
     )
 }
 
@@ -172,12 +188,6 @@ const styles = StyleSheet.create({
     container: {
         marginLeft: 10,
     },
-    userInputcontainer: {
-        margin: 10,
-        marginBottom: 0,
-        marginTop: 1,
-        justifyContent: 'center'
-    },
     prioritySelectView: {
         flexDirection: 'row',
     },
@@ -185,19 +195,6 @@ const styles = StyleSheet.create({
         marginTop: 5,
         fontSize: 14,
         marginLeft: 5
-    },
-    buttonView: {
-        backgroundColor: '#2F80ED',
-        borderRadius: 3,
-        width: 100,
-        height: 35,
-    },
-    buttonText: {
-        color: '#FFFFFF',
-        fontSize: 14,
-        textAlign: 'center',
-        textAlignVertical: 'center',
-        lineHeight: 35
     },
     selectView: {
         flexDirection: 'row',
@@ -222,23 +219,9 @@ const styles = StyleSheet.create({
         height: 45,
         marginTop: -10,
     },
-    switchcontainer: {
-        flexDirection: 'row',
-        margin: 10
-    },
-    switchtext: {
-        lineHeight: 35,
-        marginRight: 8
-    },
     selectContainer: {
         flexDirection: 'row',
         marginTop: 10
-    },
-    selectedText: {
-        marginLeft: 10,
-        fontSize: 14,
-        textAlignVertical: 'center',
-        lineHeight: 35
     },
     groupSelectView: {
         flexDirection: 'row',

@@ -20,7 +20,7 @@ const SetGroupMemberRoleComponent = () => {
 
     const CodeComponent = () => {
         return res.code !== undefined ? (
-            <SDKResponseView codeString={JSON.stringify(res)} />
+            <SDKResponseView codeString={JSON.stringify(res, null, 2)} />
         ) : null;
     };
 
@@ -30,11 +30,11 @@ const SetGroupMemberRoleComponent = () => {
             <View style={styles.container}>
                 <View style={styles.selectContainer}>
                     <TouchableOpacity onPress={() => { setVisible(true) }}>
-                        <View style={styles.buttonView}>
-                            <Text style={styles.buttonText}>选择群组</Text>
+                        <View style={mystylesheet.buttonView}>
+                            <Text style={mystylesheet.buttonText}>选择群组</Text>
                         </View>
                     </TouchableOpacity>
-                    <Text style={styles.selectedText}>{groupID}</Text>
+                    <Text style={mystylesheet.selectedText}>{groupID}</Text>
                 </View>
                 <CheckBoxModalComponent visible={visible} getVisible={setVisible} getUsername={setGroupID} type={'group'} />
             </View>
@@ -46,11 +46,11 @@ const SetGroupMemberRoleComponent = () => {
             <View style={styles.container}>
                 <View style={styles.selectContainer}>
                     <TouchableOpacity onPress={() => { setVisible(true) }}>
-                        <View style={styles.buttonView}>
-                            <Text style={styles.buttonText}>选择群成员</Text>
+                        <View style={mystylesheet.buttonView}>
+                            <Text style={mystylesheet.buttonText}>选择群成员</Text>
                         </View>
                     </TouchableOpacity>
-                    <Text style={styles.selectedText}>{memberName}</Text>
+                    <Text style={mystylesheet.selectedText}>{memberName}</Text>
                 </View>
                 <CheckBoxModalComponent visible={visible} getVisible={setVisible} getUsername={setMemberName} type={'member'} groupID={groupID} />
             </View>
@@ -64,12 +64,12 @@ const SetGroupMemberRoleComponent = () => {
         }
         return (
             <>
-                <View style={styles.userInputcontainer}>
+                <View style={mystylesheet.userInputcontainer}>
                     <View style={mystylesheet.itemContainergray}>
                         <View style={styles.selectView}>
                             <TouchableOpacity onPress={() => { setVisible(true) }}>
-                                <View style={styles.buttonView}>
-                                    <Text style={styles.buttonText}>选择群角色</Text>
+                                <View style={mystylesheet.buttonView}>
+                                    <Text style={mystylesheet.buttonText}>选择群角色</Text>
                                 </View>
                             </TouchableOpacity>
                             <Text style={styles.selectText}>{`已选：${role}`}</Text>
@@ -81,7 +81,7 @@ const SetGroupMemberRoleComponent = () => {
         )
     };
     return (
-        <>
+        <View style={{height: '100%'}}>
             <GroupSelectComponent/>
             <MembersSelectComponent/>
             <RoleComponent/>
@@ -90,7 +90,7 @@ const SetGroupMemberRoleComponent = () => {
                 content={'设置群成员角色'}
             ></CommonButton>
             <CodeComponent></CodeComponent>
-        </>
+        </View>
     );
 };
 
@@ -99,25 +99,6 @@ export default SetGroupMemberRoleComponent;
 const styles = StyleSheet.create({
     container: {
         marginLeft: 10,
-    },
-    userInputcontainer: {
-        margin: 10,
-        marginBottom: 0,
-        marginTop: 1,
-        justifyContent: 'center'
-    },
-    buttonView: {
-        backgroundColor: '#2F80ED',
-        borderRadius: 3,
-        width: 100,
-        height: 35,
-    },
-    buttonText: {
-        color: '#FFFFFF',
-        fontSize: 14,
-        textAlign: 'center',
-        textAlignVertical: 'center',
-        lineHeight: 35
     },
     selectView: {
         flexDirection: 'row',
@@ -131,10 +112,4 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginTop: 10
     },
-    selectedText: {
-        marginLeft: 10,
-        fontSize: 14,
-        textAlignVertical: 'center',
-        lineHeight: 35
-    }
 })

@@ -48,3 +48,5 @@ app.*.map.json
 
 
 local.properties
+
+node_modules

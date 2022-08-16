@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
+import 'package:tim_ui_kit/business_logic/separate_models/tui_group_profile_model.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/widgets/tim_ui_group_search_msg.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/widgets/tim_uikit_group_add_opt.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/widgets/tim_uikit_group_detail_card.dart';
@@ -31,8 +32,8 @@ class TIMUIKitGroupProfileWidget {
     return GroupProfileNotification();
   }
 
-  static Widget groupManage() {
-    return GroupProfileGroupManage();
+  static Widget groupManage(TUIGroupProfileModel model) {
+    return GroupProfileGroupManage(model);
   }
 
   static Widget searchMessage(Function(V2TimConversation?) onJumpToSearch) {

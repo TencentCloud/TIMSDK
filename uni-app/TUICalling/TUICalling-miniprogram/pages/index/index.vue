@@ -36,10 +36,6 @@
 			loginHandler() {
 				const userID = this.userID
 				const userSig = genTestUserSig(userID).userSig
-				uni.$TUIKit.login({
-					userID: userID,
-					userSig: userSig
-				});
 				getApp().globalData.userID = userID
 				getApp().globalData.userSig = userSig
 				uni.navigateTo({

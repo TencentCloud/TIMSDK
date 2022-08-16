@@ -102,12 +102,10 @@ class GroupManager {
 
 	/// 修改群资料
     public func setGroupInfo(param: [String: Any], resolve:@escaping RCTPromiseResolveBlock) {
-		if let dict = param["info"] as? Dictionary<String, Any> {
-			let info = V2GroupInfoEntity.init(dict: dict)
+		let info = V2GroupInfoEntity.init(dict: param)
 			V2TIMManager.sharedInstance().setGroupInfo(info, succ: {
 				CommonUtils.resultSuccess(method: "setGroupInfo", resolve: resolve)
 			}, fail: TencentImUtils.returnErrorClosures(method: "setGroupInfo", resolve: resolve))
-        }
     }
 
 	// 初始化群属性，会清空原有的群属性列表

@@ -11,7 +11,7 @@ const DeleteFromFriendListComponent = () => {
     const [visible, setVisible] = useState<boolean>(false)
     const [userName, setUserName] = useState<string>('未选择')
     const [userList, setUserList] = useState<any>([])
-    const [deleteType, setDeleteType] = useState<number>(0)
+    const [deleteType, setDeleteType] = useState<number>(2)
     const [priority, setPriority] = useState<string>('双向好友')
     const getUsersHandler = (userList) => {
         setUserName('[' + userList.join(',') + ']')
@@ -30,7 +30,7 @@ const DeleteFromFriendListComponent = () => {
     const CodeComponent = () => {
         return (
             res.code !== undefined ?
-                (<SDKResponseView codeString={JSON.stringify(res)} />) : null
+                (<SDKResponseView codeString={JSON.stringify(res, null, 2)} />) : null
         );
     }
 
@@ -38,7 +38,7 @@ const DeleteFromFriendListComponent = () => {
         const [visible, setVisible] = useState<boolean>(false)
         return (
             <>
-                <View style={styles.userInputcontainer}>
+                <View style={mystylesheet.userInputcontainer}>
                     <View style={mystylesheet.itemContainergray}>
                         <View style={styles.prioritySelectView}>
                             <TouchableOpacity onPress={() => { setVisible(true) }}>
@@ -56,13 +56,13 @@ const DeleteFromFriendListComponent = () => {
     }
     return (
         <View style={styles.container}>
-            <View style={styles.selectContainer}>
+            <View style={mystylesheet.selectContainer}>
                 <TouchableOpacity onPress={() => { setVisible(true) }}>
                     <View style={styles.buttonView}>
                         <Text style={styles.buttonText}>选择好友</Text>
                     </View>
                 </TouchableOpacity>
-                <Text style={styles.selectedText}>{userName}</Text>
+                <Text style={mystylesheet.selectedText}>{userName}</Text>
             </View>
             <MultiCheckBoxModalComponent visible={visible} getVisible={setVisible} getUsername={getUsersHandler} type={'friend'} />
             <PriorityComponent/>
@@ -106,24 +106,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         textAlignVertical: 'center',
         lineHeight: 35
-    },
-    selectContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        width: '100%',
-        overflow: 'hidden'
-    },
-    selectedText: {
-        marginLeft: 10,
-        fontSize: 14,
-        textAlignVertical: 'center',
-        lineHeight: 35
-    },
-    userInputcontainer: {
-        margin: 10,
-        marginBottom: 0,
-        marginTop: 1,
-        justifyContent: 'center'
     },
     prioritySelectView: {
         flexDirection: 'row',

@@ -26,19 +26,23 @@ class TIMUIKitConversationItem extends TIMUIKitStatelessWidget {
   final int? draftTimestamp;
   final bool isDisturb;
   final LastMessageBuilder? lastMessageBuilder;
-
+  final V2TimUserStatus? onlineStatus;
+  final int? convType;
   TIMUIKitConversationItem(
       {Key? key,
-      required this.faceUrl,
-      required this.nickName,
-      required this.lastMsg,
-      required this.isPined,
-      required this.unreadCount,
-      required this.groupAtInfoList,
-      required this.isDisturb,
+        required this.faceUrl,
+        required this.nickName,
+        required this.lastMsg,
+        this.onlineStatus,
+        required this.isPined,
+        required this.unreadCount,
+        required this.groupAtInfoList,
+        required this.isDisturb,
       this.draftText,
       this.draftTimestamp,
-      this.lastMessageBuilder})
+      this.lastMessageBuilder,
+      this.convType,
+      })
       : super(key: key);
 
   Widget _getShowMsgWidget(BuildContext context) {
@@ -106,15 +110,20 @@ class TIMUIKitConversationItem extends TIMUIKitStatelessWidget {
                 fit: StackFit.expand,
                 clipBehavior: Clip.none,
                 children: [
-                  Avatar(faceUrl: faceUrl, showName: nickName),
+                  Avatar(
+                      onlineStatus: onlineStatus,
+                      faceUrl: faceUrl,
+                      showName: nickName,
+                      type: convType
+                      ),
                   if (unreadCount != 0)
                     Positioned(
                       top: isDisturb ? -2.5 : -4.5,
                       right: isDisturb ? -2.5 : -4.5,
                       child: UnconstrainedBox(
                         child: UnreadMessage(
-                            width: isDisturb ? 10 : 22,
-                            height: isDisturb ? 10 : 22,
+                            width: isDisturb ? 10 : 18,
+                            height: isDisturb ? 10 : 18,
                             unreadCount: isDisturb ? 0 : unreadCount),
                       ),
                     )

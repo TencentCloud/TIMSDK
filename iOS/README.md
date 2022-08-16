@@ -94,21 +94,21 @@ pod repo update
 4. 进入 iOS/Demo 文件夹，打开 `TUIKitDemo.xcworkspace` 编译运行。
 
 > **注意：Demo 默认集成了音视频通话组件，由于音视频通话组件依赖的音视频 SDK 暂不支持模拟器，请使用真机调试/运行 Demo**
- 
+
 ## 步骤5：编译运行（移除音视频通话功能）
 如果您不想集成音视频通话功能，可以按照下面的步骤移除:
-1. 进入 iOS/Demo 文件夹，修改 `Podfile` 文件，屏蔽 `TUICalling` pod  集成，然后执行 `pod install` 命令。
+1. 进入 iOS/Demo 文件夹，修改 `Podfile` 文件，屏蔽 `TUICallKit pod  集成，然后执行 `pod install` 命令。
 ```
-#  pod 'TUICalling' （不需要再集成该库）
+#  pod 'TUICallKit' （不需要再集成该库）
 ```
 
 操作完后会发现，Demo 中的音频通话、视频通话入口均被隐藏。
 
-会话界面屏蔽 TUICalling 前后的效果：
+会话界面屏蔽 TUICallKit 前后的效果：
 
 ![](https://qcloudimg.tencent-cloud.cn/raw/11d6846dc76aedcda15f6f70b78c59c7.png) ![](https://qcloudimg.tencent-cloud.cn/raw/ca116e25894a6ba72d49e2507cc213ba.png)
 
-联系人资料界面屏蔽 TUICalling 前后的效果：
+联系人资料界面屏蔽 TUICallKit 前后的效果：
 
 ![](https://qcloudimg.tencent-cloud.cn/raw/98df67c187384445432d490f6c0f7847.png)  ![](https://qcloudimg.tencent-cloud.cn/raw/b604eeac45f0a2cf5924d23567c69090.png)
 

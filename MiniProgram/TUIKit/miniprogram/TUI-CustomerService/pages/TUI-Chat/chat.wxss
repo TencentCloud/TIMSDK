@@ -3,7 +3,23 @@
   height: 100vh;
   position: relative;
 }
-
+.safetip-box{
+  background: rgba(255, 149, 0, 0.1);
+  padding: 9px;
+}
+.safetip{
+  font-family: 'PingFang SC';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 24rpx;
+  line-height: 36rpx;
+  text-align: justify;
+  color: #FF8C39;
+}
+.report{
+  float: right;
+  color: #006EFF;
+}
 .tui-chatroom-navigatorbar{
   position: relative;
   /*top: 0;*/
@@ -45,6 +61,8 @@
 .message-input {
   flex-shrink: 0;
   width: 100%;
+  padding-bottom: var(--padding);
+  background-color: #F1F1F1;
 }
 .calling {
   position: fixed;

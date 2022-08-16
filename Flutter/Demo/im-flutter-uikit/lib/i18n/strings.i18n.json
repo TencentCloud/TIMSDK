@@ -224,5 +224,16 @@
   "k_1veosyv": "Please config the secret KEY in the environment variable",
   "k_03exdnb": "User ID",
   "k_16kquu8": "Current path",
-  "k_0fbvuqs": "Copy"
+  "k_0fbvuqs": "Copy",
+  "k_16j153h": "Tencent Cloud IM APP (\"this APP\") is a product provided by Tencent Cloud aims of demonstration, which enjoys the copyright and ownership of this APP. This APP is for functional experience only and must not be used for any commercial purpose. It is strictly forbidden to spread any illegal content such as pornography, abuse, violence and terrorism, politics and so on.",
+  "k_13ghyf8": "[Security Reminder] This APP is only for experiencing the features of Tencent Cloud IM Chat, and cannot be used for any other purposes.",
+  "k_0gt6cro": "Complain here",
+  "k_03595fk": " and $option1 more",
+  "k_1gpzgni": "group with $option2 people",
+  "k_02lfg57": "New Group Chat",
+  "k_17ifd8i": "Welcome to Tencent IM Chat SDK and TUIKit on Flutter",
+  "k_1f0ms23": "Message read status",
+  "k_1c0x9ha": "Determines if the reading status shows for your messages and whether others can know about if you read.",
+  "k_1dzhdr5": "Online status",
+  "k_0mwsniq": "Determines if the online status shows for you contacts or friends."
 }

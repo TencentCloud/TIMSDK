@@ -6,6 +6,9 @@ import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
 class TIMUIKitOperationItem extends TIMUIKitStatelessWidget {
   final String operationName;
+
+  /// shows on the second line
+  final String? operationDescription;
   final bool? operationValue;
   final bool isRightIcon;
 
@@ -19,6 +22,7 @@ class TIMUIKitOperationItem extends TIMUIKitStatelessWidget {
 
   TIMUIKitOperationItem(
       {Key? key,
+      this.operationDescription,
       required this.operationName,
       this.operationValue,
       this.type = "arrow",
@@ -39,7 +43,22 @@ class TIMUIKitOperationItem extends TIMUIKitStatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(operationName),
+          Expanded(
+            child: Container(
+              margin: const EdgeInsets.only(right: 22),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(operationName),
+                  if (operationDescription != null)
+                    Text(
+                      operationDescription!,
+                      style: TextStyle(color: theme.weakTextColor, fontSize: 12),
+                    )
+                ],
+              ),
+            ),
+          ),
           type == "switch"
               ? CupertinoSwitch(
                   value: operationValue ?? false,

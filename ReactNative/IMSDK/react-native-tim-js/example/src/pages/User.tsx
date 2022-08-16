@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import { StyleSheet, View, Text, Image } from 'react-native';
-import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
-
+import { StyleSheet, View, Text,Platform,TouchableWithoutFeedback,Image,TextInput} from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import mystylesheet from '../stylesheets';
 import storage from '../storage/Storage';
 
 const DATA = [
@@ -24,17 +24,18 @@ const DATA = [
 ]
 
 const Item = React.forwardRef(({ name, desc }: { name: string, desc: string }, ref) => {
+    const content = `${name}${desc}`
+    const placeholdercontent = `${name}${desc}`
     const [value, onChangeText] = React.useState('')
     const textInputref = React.useRef<TextInput>(null)
     const [styleState, setstyleState] = React.useState(false)
-
+    const [placeholder, setPlaceholder] = React.useState(content)
     React.useEffect(() => {
-        storage.load({ key: name }).then(res => onChangeText(res)).catch(err=>console.log(err.message))
+        storage.load({ key: name }).then(res => onChangeText(res)).catch(err => console.log(err.message))
     }, [])
 
     React.useImperativeHandle(ref, () => ({
         setInfo: () => {
-            itemBlue()
             storage.save({
                 key: name,
                 data: value,
@@ -46,22 +47,57 @@ const Item = React.forwardRef(({ name, desc }: { name: string, desc: string }, r
             onChangeText('')
         }
     }))
-    const itemBlue = () => {
-        if (textInputref.current) textInputref.current.blur()
-    }
 
+    if (Platform.OS === 'android')
+        return (
+            <TouchableWithoutFeedback onPress={() => { if (textInputref.current != null) textInputref.current.focus() }}>
+                <View style={styleState ? mystylesheet.itemContainerblueandroid : mystylesheet.itemContainergrayandroid}>
+                    <Image style={mystylesheet.userIconandroid} source={styleState ? require('../icon/personblue.png') : require('../icon/persongray.png')} />
+                    <View style={mystylesheet.textContainer}>
+                        <Text style={styleState ? mystylesheet.userContentTitleblueandroid : (value === '' ? mystylesheet.userContentTitlegrayandroid : mystylesheet.userContentTitleandroid)}>{content}</Text>
+                        <TextInput
+                            style={mystylesheet.textInputgrayandroid}
+                            placeholder={placeholder}
+                            value={value}
+                            onChangeText={text => { onChangeText(text) }}
+                            ref={textInputref}
+                            onFocus={() => { setstyleState(!styleState); setPlaceholder(placeholdercontent) }}
+                            onBlur={() => { setstyleState(!styleState); setPlaceholder(content) }}
+                            keyboardType={'default'}
+                        ></TextInput>
+                    </View>
+                </View>
+            </TouchableWithoutFeedback>
+        )
     return (
-        <TouchableOpacity style={styleState ? styles.itemContainerblue : styles.itemContainergray} onPress={() => { if (textInputref.current != null) textInputref.current.focus() }}>
-            <Image style={styles.userIcon} source={styleState ? require('../icon/personblue.png') : require('../icon/persongray.png')} />
-            <View>
-                <Text style={styleState ? styles.userContentTitleblue : styles.userContentTitlegray}>{`${name},${desc}`}</Text>
-                <TextInput ref={textInputref} onChangeText={text => onChangeText(text)} onFocus={() => setstyleState(!styleState)} onBlur={() => { setstyleState(!styleState) }} value={value}></TextInput>
+        <TouchableWithoutFeedback  onPress={() => { if (textInputref.current != null) textInputref.current.focus() }}>
+            <View style={styleState ? mystylesheet.itemContainerblue : mystylesheet.itemContainergray}>
+                <Image style={mystylesheet.userIcon} source={styleState ? require('../icon/personblue.png') : require('../icon/persongray.png')} />
+                <View>
+                    {(() => {
+                        if (styleState) {
+                            return (
+                                <Text style={styleState ? mystylesheet.userContentTitleblue : (value === '' ? mystylesheet.userContentTitlegray : mystylesheet.userContentTitle)}>{content}</Text>)
+                        } else return null
+
+                    })()}
+                    <TextInput
+                        style={styleState ? mystylesheet.textInputblue : mystylesheet.textInputgray}
+                        placeholder={placeholder}
+                        ref={textInputref}
+                        onChangeText={text => { onChangeText(text);}}
+                        onFocus={() => { setstyleState(!styleState); setPlaceholder(placeholdercontent) }}
+                        onBlur={() => { setstyleState(!styleState); setPlaceholder(content) }}
+                        value={value}
+                        keyboardType={'default'}
+                    ></TextInput>
+                </View>
             </View>
-        </TouchableOpacity>
+        </TouchableWithoutFeedback>
     )
 })
 
-const UserScreen = () => {
+const UserScreen = ({ navigation }) => {
     const appidRef = React.useRef<any>()
     const secretRef = React.useRef<any>()
     const useridRef = React.useRef<any>()
@@ -72,6 +108,7 @@ const UserScreen = () => {
         if (appidRef.current) appidRef.current.setInfo()
         if (secretRef.current) secretRef.current.setInfo()
         if (useridRef.current) useridRef.current.setInfo()
+        navigation.navigate('Home')
     }
     const cancelSettings = () => {
         console.log("cancel")
@@ -103,16 +140,50 @@ const styles = StyleSheet.create({
     container: {
         margin: 10
     },
+    itemContainergrayandroid: {
+        flexDirection: 'row',
+        borderBottomWidth: 1,
+        borderBottomColor: "#c0c0c0",
+        alignItems: 'center',
+        marginTop: 10
+    },
+    itemContainerblueandroid: {
+        flexDirection: 'row',
+        borderBottomWidth: 1,
+        borderBottomColor: "#2F80ED",
+        alignItems: 'center',
+        marginTop: 10
+    },
+    userIconandroid: {
+        width: 30,
+        height: 30,
+        marginRight: 15,
+        marginLeft: 15
+    },
+    textContainer: {
+        width: '100%'
+    },
+    userContentTitlegrayandroid: {
+        fontSize: 13,
+        color: '#808080'
+    },
+    userContentTitleblueandroid: {
+        fontSize: 13,
+        color: '#2F80ED'
+    },
+    userInputandroid: {
+        marginTop: -10
+    },
     itemContainergray: {
         flexDirection: "row",
-        borderBottomWidth: StyleSheet.hairlineWidth,
+        borderBottomWidth: 1,
         borderBottomColor: "#c0c0c0",
         paddingTop: 15,
         height: 55
     },
     itemContainerblue: {
         flexDirection: "row",
-        borderBottomWidth: StyleSheet.hairlineWidth,
+        borderBottomWidth: 1,
         borderBottomColor: "#2F80ED",
         paddingTop: 15,
         height: 55
@@ -143,5 +214,9 @@ const styles = StyleSheet.create({
         height: 40,
         lineHeight: 40,
         borderRadius: 5,
+    },
+    viewContainer: {
+        flexDirection: 'row',
+        alignItems: 'center'
     }
 })

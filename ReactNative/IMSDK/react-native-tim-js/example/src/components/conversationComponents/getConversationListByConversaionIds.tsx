@@ -17,7 +17,7 @@ export const GetConversationListByConversationIDs = () => {
 
     const CodeComponent = () => {
         return res.code !== undefined ? (
-            <SDKResponseView codeString={JSON.stringify(res)} />
+            <SDKResponseView codeString={JSON.stringify(res, null, 2)} />
         ) : null;
     };
 
@@ -38,31 +38,33 @@ export const GetConversationListByConversationIDs = () => {
             });
     };
     return (
-        <>
-            <View style={styles.selectContainer}>
-                <TouchableOpacity
-                    onPress={() => {
-                        setVisible(true);
-                    }}
-                >
-                    <View style={styles.buttonView}>
-                        <Text style={styles.buttonText}>选择会话</Text>
-                    </View>
-                </TouchableOpacity>
-                <Text style={styles.selectedText}>{userName}</Text>
+        <View style={{height: '100%'}}>
+            <View style={styles.container}>
+                <View style={styles.selectContainer}>
+                    <TouchableOpacity
+                        onPress={() => {
+                            setVisible(true);
+                        }}
+                    >
+                        <View style={styles.buttonView}>
+                            <Text style={styles.buttonText}>选择会话</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <Text style={styles.selectedText}>{userName}</Text>
+                </View>
+                <MultiCheckBoxModalComponent
+                    visible={visible}
+                    getVisible={setVisible}
+                    getUsername={getUsersHandler}
+                    type={'conversation'}
+                />
             </View>
-            <MultiCheckBoxModalComponent
-                visible={visible}
-                getVisible={setVisible}
-                getUsername={getUsersHandler}
-                type={'conversation'}
-            />
             <CommonButton
                 handler={getConversationList}
                 content={'获取会话'}
             ></CommonButton>
             <CodeComponent></CodeComponent>
-        </>
+        </View>
     );
 };
 
@@ -76,7 +78,6 @@ const styles = StyleSheet.create({
         borderRadius: 3,
         width: 100,
         height: 35,
-        marginLeft: 10,
     },
     buttonText: {
         color: '#FFFFFF',

@@ -7,6 +7,7 @@ import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/ui/constants/history_message_constant.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKItMessageList/TIMUIKitTongue/tim_uikit_chat_history_message_list_tongue.dart';
+import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKItMessageList/tim_uikit_chat_history_message_list_config.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKItMessageList/tim_uikit_chat_history_message_list_item.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKItMessageList/tim_uikit_chat_history_message_list.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/tim_uikit_chat_config.dart';
@@ -41,9 +42,10 @@ class TIMUIKitHistoryMessageListContainer extends StatefulWidget {
 
   final void Function(String userID)? onTapAvatar;
 
+  @Deprecated("Nickname will not show in one-to-one chat, if you tend to control it in group chat, please use `isShowSelfNameInGroup` and `isShowOthersNameInGroup` from `config: TIMUIKitChatConfig` instead")
   final bool showNickName;
 
-  final ListView? mainHistoryListConfig;
+  final TIMUIKitHistoryMessageListConfig? mainHistoryListConfig;
 
   /// tool tips panel configuration, long press message will show tool tips panel
   final ToolTipsConfig? toolTipsConfig;
@@ -60,6 +62,7 @@ class TIMUIKitHistoryMessageListContainer extends StatefulWidget {
       this.tongueItemBuilder,
       this.extraTipsActionItemBuilder,
       this.onTapAvatar,
+      @Deprecated("Nickname will not show in one-to-one chat, if you tend to control it in group chat, please use `isShowSelfNameInGroup` and `isShowOthersNameInGroup` from `config: TIMUIKitChatConfig` instead")
       this.showNickName = true,
       this.initFindingMsg,
       this.mainHistoryListConfig,
@@ -116,13 +119,13 @@ class _TIMUIKitHistoryMessageListContainerState
                       additionalItemBuilder: widget.extraTipsActionItemBuilder),
               message: message!,
               onTapForOthersPortrait: widget.onTapAvatar,
-              showNickName: widget.showNickName,
               messageItemBuilder: widget.messageItemBuilder,
               onLongPressForOthersHeadPortrait:
                   widget.onLongPressForOthersHeadPortrait,
               allowAtUserWhenReply: chatConfig.isAtWhenReply,
               allowAvatarTap: chatConfig.isAllowClickAvatar,
               allowLongPress: chatConfig.isAllowLongPressMessage,
+              isUseMessageReaction: chatConfig.isUseMessageReaction
             );
           },
           tongueItemBuilder: widget.tongueItemBuilder,

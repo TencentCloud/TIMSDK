@@ -91,7 +91,7 @@ class ConversationServicesImpl extends ConversationService {
     final result = await TencentImSDKPlugin.v2TIMManager
         .getConversationManager()
         .setConversationDraft(
-            conversationID: conversationID, draftText: draftText);
+        conversationID: conversationID, draftText: draftText);
     if (result.code != 0) {
       _coreService.callOnCallback(TIMCallback(
           type: TIMCallbackType.API_ERROR,
@@ -107,5 +107,38 @@ class ConversationServicesImpl extends ConversationService {
     return TencentImSDKPlugin.v2TIMManager
         .getConversationManager()
         .removeConversationListener(listener: listener);
+  }
+
+  @override
+  Future<V2TimConversation?> getConversationListByConversationId(
+      {required String convID}) async {
+    final result = await TencentImSDKPlugin.v2TIMManager
+        .getConversationManager()
+        .getConversationListByConversaionIds(
+        conversationIDList: [convID]);
+    if (result.code != 0) {
+      _coreService.callOnCallback(TIMCallback(
+          type: TIMCallbackType.API_ERROR,
+          errorMsg: result.desc,
+          errorCode: result.code));
+    }
+    return (result.data != null && result.data!.isNotEmpty)
+        ? result.data![0]
+        : null;
+  }
+
+  @override
+  Future<int> getTotalUnreadCount() async {
+    final res = await TencentImSDKPlugin.v2TIMManager
+        .getConversationManager()
+        .getTotalUnreadMessageCount();
+    if (res.code == 0) {
+      return res.data ?? 0;
+    }
+    _coreService.callOnCallback(TIMCallback(
+        type: TIMCallbackType.API_ERROR,
+        errorMsg: res.desc,
+        errorCode: res.code));
+    return 0;
   }
 }

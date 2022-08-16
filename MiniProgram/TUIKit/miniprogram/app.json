@@ -45,11 +45,11 @@
       "independent": false
     },
     {
-      "root": "TUI-Calling",
-      "name": "TUI-Calling",
+      "root": "TUI-VideoCall",
+      "name": "TUI-VideoCall",
       "pages": [
-        "pages/TUI-Calling/calling-index/index",
-        "pages/TUI-Calling/calling-room/room"
+        "pages/TUI-VideoCall/callkit-index/index",
+        "pages/TUI-VideoCall/callkit-room/room"
       ]
     }
   ],

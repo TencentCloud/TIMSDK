@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_group_profile_view_model.dart';
+import 'package:tim_ui_kit/business_logic/separate_models/tui_group_profile_model.dart';
 
 class SharedDataWidget extends InheritedWidget {
-  final TUIGroupProfileViewModel model;
+  final TUIGroupProfileModel model;
 
   const SharedDataWidget({Key? key, required Widget child, required this.model})
       : super(key: key, child: child);

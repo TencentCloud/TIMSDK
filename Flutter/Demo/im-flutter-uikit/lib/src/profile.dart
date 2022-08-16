@@ -11,6 +11,7 @@ import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 
 import 'package:timuikit/src/pages/login.dart';
+import 'package:timuikit/src/provider/local_setting.dart';
 import 'package:timuikit/src/provider/login_user_Info.dart';
 import 'package:timuikit/src/provider/theme.dart';
 import 'package:timuikit/src/routes.dart';
@@ -146,6 +147,7 @@ class _ProfileState extends State<MyProfile> {
 
   @override
   Widget build(BuildContext context) {
+    final LocalSetting localSetting = Provider.of<LocalSetting>(context);
     if (userID == null) {
       return Container();
     }
@@ -155,9 +157,10 @@ class _ProfileState extends State<MyProfile> {
     final V2TimUserFullInfo loginUserInfo = loginUserInfoModel.loginUserInfo;
     final int? allowType = loginUserInfo.allowType;
     final allowText = _getAllowText(allowType);
-
     return Column(
       children: [
+        Expanded(child: ListView(children: [
+
         GestureDetector(
           onTap: () {
             Navigator.push(
@@ -202,6 +205,31 @@ class _ProfileState extends State<MyProfile> {
         const SizedBox(
           height: 10,
         ),
+        TIMUIKitOperationItem(
+          operationName: imt("消息阅读状态"),
+          operationDescription:
+              imt("关闭后，您收发的消息均不带消息阅读状态，您将无法看到对方是否已读，同时对方也无法看到你是否已读。"),
+          type: "switch",
+          operationValue: localSetting.isShowReadingStatus,
+          onSwitchChange: (bool value) {
+            localSetting.isShowReadingStatus = value;
+          },
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        TIMUIKitOperationItem(
+          operationName: imt("显示在线状态"),
+          operationDescription: imt("关闭后，您将不可以在会话列表和通讯录中看到好友在线或离线的状态提示。"),
+          type: "switch",
+          operationValue: localSetting.isShowOnlineStatus,
+          onSwitchChange: (bool value) {
+            localSetting.isShowOnlineStatus = value;
+          },
+        ),
+        const SizedBox(
+          height: 10,
+        ),
         InkWell(
           onTap: () {
             Navigator.push(
@@ -234,6 +262,7 @@ class _ProfileState extends State<MyProfile> {
             ),
           ),
         )
+        ],))
       ],
     );
   }

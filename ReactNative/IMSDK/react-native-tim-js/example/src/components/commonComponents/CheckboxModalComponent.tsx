@@ -4,10 +4,9 @@ import { Text } from 'react-native-paper';
 import CheckboxComponent from './CheckboxComponent';
 
 const CheckBoxModalComponent = (props) => {
-    const { visible, getVisible, getUsername,type,groupID,conversationID} = props
+    const { visible, getVisible, getUsername,type,groupID,conversationID,getType,getApplicationInfo} = props
     const [selected, setSelected] = useState('')
     const [content, setContent] = useState('')
-
     useEffect(() => {
         switch (type) {
             case 'friend':
@@ -30,6 +29,9 @@ const CheckBoxModalComponent = (props) => {
                 break;
             case 'message':
                 setContent('选择消息')
+                break;
+            case 'application':
+                setContent('选择申请成员')
                 break;
             default:
                 break;
@@ -56,7 +58,7 @@ const CheckBoxModalComponent = (props) => {
                 <View style={styles.showContainer}>
                     <Text style={styles.title}>{content}（单选）</Text>
                     <ScrollView style={styles.listContainer}>
-                        <CheckboxComponent getSelect={setSelected} type={type} groupID={groupID} conversationID={conversationID}/>
+                        <CheckboxComponent getSelect={setSelected} type={type} groupID={groupID} conversationID={conversationID} getType={getType} getApplicationInfo={getApplicationInfo}/>
                     </ScrollView>
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity onPress={() => confirmHandler(false)}>

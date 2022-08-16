@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_statelesswidget.dart';
+import 'package:tim_ui_kit/business_logic/separate_models/tui_group_profile_model.dart';
 import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
-import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/shared_data_widget.dart';
 import 'package:tim_ui_kit/ui/widgets/avatar.dart';
 
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
@@ -20,7 +21,7 @@ class GroupProfileDetailCard extends TIMUIKitStatelessWidget {
   @override
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     final TUITheme theme = value.theme;
-    final model = SharedDataWidget.of(context)?.model;
+    final model = Provider.of<TUIGroupProfileModel>(context);
     final faceUrl = groupInfo.faceUrl ?? "";
     final groupID = groupInfo.groupID;
     final showName = groupInfo.groupName ?? groupID;
@@ -104,7 +105,7 @@ class GroupProfileDetailCard extends TIMUIKitStatelessWidget {
                                                 if (updateGroupName != null) {
                                                   updateGroupName!(text);
                                                 } else {
-                                                  model?.setGroupName(text);
+                                                  model.setGroupName(text);
                                                 }
                                                 Navigator.pop(context);
                                                 Navigator.pop(context);
@@ -146,7 +147,7 @@ class GroupProfileDetailCard extends TIMUIKitStatelessWidget {
             SizedBox(
               width: 48,
               height: 48,
-              child: Avatar(faceUrl: faceUrl, showName: showName),
+              child: Avatar(faceUrl: faceUrl, showName: showName,type: 2,),
             ),
             Expanded(
               child: Container(

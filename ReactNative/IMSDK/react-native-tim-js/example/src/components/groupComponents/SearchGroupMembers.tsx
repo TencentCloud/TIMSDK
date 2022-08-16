@@ -5,6 +5,7 @@ import CommonButton from '../commonComponents/CommonButton';
 import SDKResponseView from '../sdkResponseView';
 import UserInputComponent from '../commonComponents/UserInputComponent';
 import CheckBoxModalComponent from '../commonComponents/CheckboxModalComponent';
+import mystylesheet from '../../stylesheets';
 const SearchGroupMembersComponent = () => {
     const searchGroupMembers = async () => {
         const keywordList = keywords.split(' ');
@@ -33,7 +34,7 @@ const SearchGroupMembersComponent = () => {
     const CodeComponent = () => {
         return (
             res.code !== undefined ?
-                (<SDKResponseView codeString={JSON.stringify(res)} />) : null
+                (<SDKResponseView codeString={JSON.stringify(res, null, 2)} />) : null
         );
     }
 
@@ -43,24 +44,24 @@ const SearchGroupMembersComponent = () => {
             <View style={styles.container}>
                 <View style={styles.selectContainer}>
                     <TouchableOpacity onPress={() => { setVisible(true) }}>
-                        <View style={styles.buttonView}>
-                            <Text style={styles.buttonText}>选择群组</Text>
+                        <View style={mystylesheet.buttonView}>
+                            <Text style={mystylesheet.buttonText}>选择群组</Text>
                         </View>
                     </TouchableOpacity>
-                    <Text style={styles.selectedText}>{groupID}</Text>
+                    <Text style={mystylesheet.selectedText}>{groupID}</Text>
                 </View>
                 <CheckBoxModalComponent visible={visible} getVisible={setVisible} getUsername={setGroupID} type={'group'} />
             </View>
         )
     };
     return (
-        <>
-            <View style={styles.userInputcontainer}>
+        <View style={{height: '100%'}}>
+            <View style={mystylesheet.userInputcontainer}>
                 <UserInputComponent content='搜索关键词列表，最多支持5个' placeholdercontent='关键词(example只有设置了一个关键词)' getContent={setKeywords} />
             </View>
             <GroupSelectComponent/>
-            <View style={styles.switchcontainer}>
-                <Text style={styles.switchtext}>设置是否搜索群成员userID</Text>
+            <View style={mystylesheet.switchcontainer}>
+                <Text style={mystylesheet.switchtext}>设置是否搜索群成员userID</Text>
                 <Switch
                     trackColor={{ false: "#c0c0c0", true: "#81b0ff" }}
                     thumbColor={isSearchMemberUserID ? "#2F80ED" : "#f4f3f4"}
@@ -69,8 +70,8 @@ const SearchGroupMembersComponent = () => {
                     value={isSearchMemberUserID}
                 />
             </View>
-            <View style={styles.switchcontainer}>
-                <Text style={styles.switchtext}>设置是否搜索群成员昵称</Text>
+            <View style={mystylesheet.switchcontainer}>
+                <Text style={mystylesheet.switchtext}>设置是否搜索群成员昵称</Text>
                 <Switch
                     trackColor={{ false: "#c0c0c0", true: "#81b0ff" }}
                     thumbColor={isSearchMemberNickName? "#2F80ED" : "#f4f3f4"}
@@ -79,8 +80,8 @@ const SearchGroupMembersComponent = () => {
                     value={isSearchMemberNickName}
                 />
             </View>
-            <View style={styles.switchcontainer}>
-                <Text style={styles.switchtext}>设置是否搜索群成员名片</Text>
+            <View style={mystylesheet.switchcontainer}>
+                <Text style={mystylesheet.switchtext}>设置是否搜索群成员名片</Text>
                 <Switch
                     trackColor={{ false: "#c0c0c0", true: "#81b0ff" }}
                     thumbColor={isSearchMemberNameCard? "#2F80ED" : "#f4f3f4"}
@@ -89,8 +90,8 @@ const SearchGroupMembersComponent = () => {
                     value={isSearchMemberNameCard}
                 />
             </View>
-            <View style={styles.switchcontainer}>
-                <Text style={styles.switchtext}>设置是否搜索群成员备注</Text>
+            <View style={mystylesheet.switchcontainer}>
+                <Text style={mystylesheet.switchtext}>设置是否搜索群成员备注</Text>
                 <Switch
                     trackColor={{ false: "#c0c0c0", true: "#81b0ff" }}
                     thumbColor={isSearchMemberRemark? "#2F80ED" : "#f4f3f4"}
@@ -101,7 +102,7 @@ const SearchGroupMembersComponent = () => {
             </View>
             <CommonButton handler={() => searchGroupMembers()} content={'搜索群成员'}></CommonButton>
             <CodeComponent></CodeComponent>
-        </>
+        </View>
     )
 }
 
@@ -111,41 +112,8 @@ const styles = StyleSheet.create({
     container: {
         marginLeft: 10,
     },
-    userInputcontainer: {
-        margin: 10,
-        marginBottom: 0,
-        marginTop: 1,
-        justifyContent: 'center'
-    },
-    switchcontainer: {
-        flexDirection: 'row',
-        margin: 10
-    },
-    switchtext: {
-        lineHeight: 35,
-        marginRight: 8
-    },
     selectContainer: {
         flexDirection: 'row',
         marginTop: 10
-    },
-    selectedText: {
-        marginLeft: 10,
-        fontSize: 14,
-        textAlignVertical: 'center',
-        lineHeight: 35
-    },
-    buttonView: {
-        backgroundColor: '#2F80ED',
-        borderRadius: 3,
-        width: 100,
-        height: 35,
-    },
-    buttonText: {
-        color: '#FFFFFF',
-        fontSize: 14,
-        textAlign: 'center',
-        textAlignVertical: 'center',
-        lineHeight: 35
     },
 })

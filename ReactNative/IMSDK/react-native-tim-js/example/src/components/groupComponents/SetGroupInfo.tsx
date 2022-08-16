@@ -35,26 +35,25 @@ const SetGroupInfoComponent = () => {
     const [groupType, setGroupType] = useState<string>('Work')
     const [groupAddType, setGroupAddType] = useState<string>('V2TIM_GROUP_ADD_FORBID')
     const [imageurl, setImageUrl] = useState<string>()
-
+    const [groupAddEnum ,setGroupAddEnum] = useState<number>(0)
 
     const [res, setRes] = useState<any>({})
-    let groupAddEnum = 0
     const allMutedtoggle = () => { setIsAllMuted(previousState => !previousState); }
     const CodeComponent = () => {
         return (
             res.code !== undefined ?
-                (<SDKResponseView codeString={JSON.stringify(res)} />) : null
+                (<SDKResponseView codeString={JSON.stringify(res, null, 2)} />) : null
         );
     }
     const getSelectedHandle = (seleted) => {
         setGroupAddType(seleted.name)
-        groupAddEnum = seleted.id
+        setGroupAddEnum(seleted.id)
     }
     const ImageSelectComponent = () => {
         const [visible, setVisible] = useState(false)
         return (
             <>
-                <View style={styles.userInputcontainer}>
+                <View style={mystylesheet.userInputcontainer}>
                     <View style={mystylesheet.itemContainergray}>
                         <Image style={mystylesheet.userIcon} source={require('../../icon/persongray.png')} />
                         <View style={styles.selectView}>
@@ -77,11 +76,11 @@ const SetGroupInfoComponent = () => {
             <View style={styles.container}>
                 <View style={styles.selectContainer}>
                     <TouchableOpacity onPress={() => { setVisible(true) }}>
-                        <View style={styles.buttonView}>
-                            <Text style={styles.buttonText}>选择群组</Text>
+                        <View style={mystylesheet.buttonView}>
+                            <Text style={mystylesheet.buttonText}>选择群组</Text>
                         </View>
                     </TouchableOpacity>
-                    <Text style={styles.selectedText}>{groupID}</Text>
+                    <Text style={mystylesheet.selectedText}>{groupID}</Text>
                 </View>
                 <CheckBoxModalComponent visible={visible} getVisible={setVisible} getUsername={setGroupID} type={'group'} />
             </View>
@@ -91,13 +90,13 @@ const SetGroupInfoComponent = () => {
         const [visible, setVisible] = useState<boolean>(false)
         return (
             <>
-                <View style={styles.userInputcontainer}>
+                <View style={mystylesheet.userInputcontainer}>
                     <View style={mystylesheet.itemContainergray}>
                         <Image style={mystylesheet.userIcon} source={require('../../icon/persongray.png')} />
                         <View style={styles.groupSelectView}>
                             <TouchableOpacity onPress={() => { setVisible(true) }}>
-                                <View style={styles.buttonView}>
-                                    <Text style={styles.buttonText}>选择群类型</Text>
+                                <View style={mystylesheet.buttonView}>
+                                    <Text style={mystylesheet.buttonText}>选择群类型</Text>
                                 </View>
                             </TouchableOpacity>
                             <Text style={styles.groupSelectText}>{`已选：${groupType}`}</Text>
@@ -114,13 +113,13 @@ const SetGroupInfoComponent = () => {
         const [visible, setVisible] = useState<boolean>(false)
         return (
             <>
-                <View style={styles.userInputcontainer}>
+                <View style={mystylesheet.userInputcontainer}>
                     <View style={mystylesheet.itemContainergray}>
                         <Image style={mystylesheet.userIcon} source={require('../../icon/persongray.png')} />
                         <View style={styles.groupSelectView}>
                             <TouchableOpacity onPress={() => { setVisible(true) }}>
-                                <View style={styles.buttonView}>
-                                    <Text style={styles.buttonText}>选择加群类型</Text>
+                                <View style={mystylesheet.buttonView}>
+                                    <Text style={mystylesheet.buttonText}>选择加群类型</Text>
                                 </View>
                             </TouchableOpacity>
                             <Text style={styles.groupSelectText}>{`已选：${groupAddType}`}</Text>
@@ -173,14 +172,14 @@ const SetGroupInfoComponent = () => {
         }
         return (
             <>
-                <View style={styles.userInputcontainer}>
+                <View style={mystylesheet.userInputcontainer}>
                     <View style={styles.containerGray}>
                         <View style={styles.addFieldsButtonContainer}>
                             <Image style={styles.userIcon} source={require('../../icon/persongray.png')} />
                             <View style={styles.selectView}>
                                 <TouchableOpacity onPress={() => { setVisible(true) }}>
-                                    <View style={styles.buttonView}>
-                                        <Text style={styles.buttonText}>添加字段</Text>
+                                    <View style={mystylesheet.buttonView}>
+                                        <Text style={mystylesheet.buttonText}>添加字段</Text>
                                     </View>
                                 </TouchableOpacity>
                             </View>
@@ -196,25 +195,25 @@ const SetGroupInfoComponent = () => {
     
                     </View>
                 </View>
-                <AddFieldModalComponent visible={visible} getVisible={setVisible} getKeyValue={getKeyValueHandler} />
+                <AddFieldModalComponent visible={visible} getVisible={setVisible} getKeyValue={getKeyValueHandler} type={'field'}/>
             </>
         )
     }
     return (
-        <>
+        <View style={{height: '100%'}}>
             <GroupSelectComponent/>
-            <View style={styles.userInputcontainer}>
+            <View style={mystylesheet.userInputcontainer}>
                 <UserInputComponent content='群名称' placeholdercontent='群名称' getContent={setGroupName} />
             </View>
-            <View style={styles.userInputcontainer}>
+            <View style={mystylesheet.userInputcontainer}>
                 <UserInputComponent content='群通告' placeholdercontent='群通告' getContent={setNotice} />
             </View>
-            <View style={styles.userInputcontainer}>
+            <View style={mystylesheet.userInputcontainer}>
                 <UserInputComponent content='群简介' placeholdercontent='群简介' getContent={setBriefly} />
             </View>
             <ImageSelectComponent />
-            <View style={styles.switchcontainer}>
-                <Text style={styles.switchtext}>是否全体禁言</Text>
+            <View style={mystylesheet.switchcontainer}>
+                <Text style={mystylesheet.switchtext}>是否全体禁言</Text>
                 <Switch
                     trackColor={{ false: "#c0c0c0", true: "#81b0ff" }}
                     thumbColor={isAllMuted ? "#2F80ED" : "#f4f3f4"}
@@ -228,7 +227,7 @@ const SetGroupInfoComponent = () => {
             <AddFieldsComponent/>
             <CommonButton handler={() => setGroupInfo()} content={'设置群信息'}></CommonButton>
             <CodeComponent></CodeComponent>
-        </>
+        </View>
     )
 }
 
@@ -237,12 +236,6 @@ const styles = StyleSheet.create({
     container: {
         marginLeft: 10,
     },
-    userInputcontainer: {
-        margin: 10,
-        marginBottom: 0,
-        marginTop: 1,
-        justifyContent: 'center'
-    },
     prioritySelectView: {
         flexDirection: 'row',
     },
@@ -250,19 +243,6 @@ const styles = StyleSheet.create({
         marginTop: 5,
         fontSize: 14,
         marginLeft: 5
-    },
-    buttonView: {
-        backgroundColor: '#2F80ED',
-        borderRadius: 3,
-        width: 100,
-        height: 35,
-    },
-    buttonText: {
-        color: '#FFFFFF',
-        fontSize: 14,
-        textAlign: 'center',
-        textAlignVertical: 'center',
-        lineHeight: 35
     },
     selectView: {
         flexDirection: 'row',
@@ -287,23 +267,9 @@ const styles = StyleSheet.create({
         height: 45,
         marginTop: -10,
     },
-    switchcontainer: {
-        flexDirection: 'row',
-        margin: 10
-    },
-    switchtext: {
-        lineHeight: 35,
-        marginRight: 8
-    },
     selectContainer: {
         flexDirection: 'row',
         marginTop: 10
-    },
-    selectedText: {
-        marginLeft: 10,
-        fontSize: 14,
-        textAlignVertical: 'center',
-        lineHeight: 35
     },
     groupSelectView: {
         flexDirection: 'row',

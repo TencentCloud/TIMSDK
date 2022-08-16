@@ -300,17 +300,16 @@ public class SDKManager {
     }
 
     public void setSelfInfo(Promise promise, ReadableMap arguments) {
-
-        String nickName = arguments.getString("nickName");
-        String faceUrl = arguments.getString("faceUrl");
-        String selfSignature = arguments.getString("selfSignature");
-        Integer gender = arguments.getInt("gender");
-        Integer allowType = arguments.getInt("allowType");
-        Integer birthday = arguments.getInt("birthday");
-        Integer level = arguments.getInt("level");
-        Integer role = arguments.getInt("role");
+        String nickName = CommonUtils.safeGetString(arguments, "nickName");
+        String faceUrl = CommonUtils.safeGetString(arguments, "faceUrl");
+        String selfSignature = CommonUtils.safeGetString(arguments, "selfSignature");
+        Integer gender = CommonUtils.safeGetInt(arguments, "gender");
+        Integer allowType = CommonUtils.safeGetInt(arguments, "allowType");
+        Integer birthday = CommonUtils.safeGetInt(arguments, "birthday");
+        Integer level = CommonUtils.safeGetInt(arguments, "level");
+        Integer role = CommonUtils.safeGetInt(arguments, "role");
         HashMap<String, String> customInfoString = CommonUtils
-                .convertReadableMapToHashMap(arguments.getMap("customInfo"));
+                .convertReadableMapToHashMap(CommonUtils.safeGetMap(arguments, "customInfo"));
 
         V2TIMUserFullInfo userFullInfo = new V2TIMUserFullInfo();
 

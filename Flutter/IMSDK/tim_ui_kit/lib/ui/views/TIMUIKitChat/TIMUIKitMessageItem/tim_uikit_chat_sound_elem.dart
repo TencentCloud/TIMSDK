@@ -12,7 +12,10 @@ import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:tim_ui_kit/ui/utils/sound_record.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
 
+import 'TIMUIKitMessageReaction/tim_uikit_message_reaction_show_panel.dart';
+
 class TIMUIKitSoundElem extends StatefulWidget {
+  final V2TimMessage message;
   final V2TimSoundElem soundElem;
   final String msgID;
   final bool isFromSelf;
@@ -23,6 +26,7 @@ class TIMUIKitSoundElem extends StatefulWidget {
   final BorderRadius? borderRadius;
   final Color? backgroundColor;
   final EdgeInsetsGeometry? textPadding;
+  final bool? isShowMessageReaction;
 
   const TIMUIKitSoundElem(
       {Key? key,
@@ -35,7 +39,9 @@ class TIMUIKitSoundElem extends StatefulWidget {
       this.fontStyle,
       this.borderRadius,
       this.backgroundColor,
-      this.textPadding})
+      this.textPadding,
+      required this.message,
+      this.isShowMessageReaction})
       : super(key: key);
 
   @override
@@ -126,14 +132,14 @@ class _TIMUIKitSoundElemState extends TIMUIKitState<TIMUIKitSoundElem> {
   }
 
   _showJumpColor() {
-    int shineAmount = 10;
+    int shineAmount = 6;
     setState(() {
       isShowJumpState = true;
     });
     Future.delayed(const Duration(milliseconds: 100), () {
       widget.clearJump!();
     });
-    Timer.periodic(const Duration(milliseconds: 400), (timer) {
+    Timer.periodic(const Duration(milliseconds: 300), (timer) {
       if (mounted) {
         setState(() {
           isShowJumpState = shineAmount.isOdd ? true : false;
@@ -179,49 +185,57 @@ class _TIMUIKitSoundElemState extends TIMUIKitState<TIMUIKitSoundElem> {
           borderRadius: widget.borderRadius ?? borderRadius,
         ),
         constraints: const BoxConstraints(maxWidth: 240),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: widget.isFromSelf
-              ? [
-                  Container(width: _getSoundLen()),
-                  Text(
-                    "''${widget.soundElem.duration} ",
-                    style: widget.fontStyle,
-                  ),
-                  isPlaying
-                      ? Image.asset(
-                          'images/play_voice_send.gif',
-                          package: 'tim_ui_kit',
-                          width: 16,
-                          height: 16,
-                        )
-                      : Image.asset(
-                          'images/voice_send.png',
-                          package: 'tim_ui_kit',
-                          width: 16,
-                          height: 16,
-                        ),
-                ]
-              : [
-                  isPlaying
-                      ? Image.asset(
-                          'images/play_voice_receive.gif',
-                          package: 'tim_ui_kit',
-                          width: 16,
-                          height: 16,
-                        )
-                      : Image.asset(
-                          'images/voice_receive.png',
-                          width: 16,
-                          height: 16,
-                          package: 'tim_ui_kit',
-                        ),
-                  Text(
-                    " ${widget.soundElem.duration}''",
-                    style: widget.fontStyle,
-                  ),
-                  Container(width: _getSoundLen()),
-                ],
+        child: Column(
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: widget.isFromSelf
+                  ? [
+                Container(width: _getSoundLen()),
+                Text(
+                  "''${widget.soundElem.duration} ",
+                  style: widget.fontStyle,
+                ),
+                isPlaying
+                    ? Image.asset(
+                  'images/play_voice_send.gif',
+                  package: 'tim_ui_kit',
+                  width: 16,
+                  height: 16,
+                )
+                    : Image.asset(
+                  'images/voice_send.png',
+                  package: 'tim_ui_kit',
+                  width: 16,
+                  height: 16,
+                ),
+              ]
+                  : [
+                isPlaying
+                    ? Image.asset(
+                  'images/play_voice_receive.gif',
+                  package: 'tim_ui_kit',
+                  width: 16,
+                  height: 16,
+                )
+                    : Image.asset(
+                  'images/voice_receive.png',
+                  width: 16,
+                  height: 16,
+                  package: 'tim_ui_kit',
+                ),
+                Text(
+                  " ${widget.soundElem.duration}''",
+                  style: widget.fontStyle,
+                ),
+                Container(width: _getSoundLen()),
+              ],
+            ),
+            if (widget.isShowMessageReaction ?? true)
+              TIMUIKitMessageReactionShowPanel(
+                message: widget.message,
+              )
+          ],
         ),
       ),
     );

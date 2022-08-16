@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_statelesswidget.dart';
 import 'package:tim_ui_kit/ui/constants/emoji.dart';
@@ -109,6 +111,7 @@ class EmojiItem extends TIMUIKitStatelessWidget {
       : super(key: key);
   final String name;
   final int unicode;
+
   // final String toUser;
   // final int type;
   // final Function close;
@@ -116,8 +119,8 @@ class EmojiItem extends TIMUIKitStatelessWidget {
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     return Text(
       String.fromCharCode(unicode),
-      style: const TextStyle(
-        fontSize: 26,
+      style: TextStyle(
+        fontSize: Platform.isAndroid ? 20 : 26,
       ),
     );
   }

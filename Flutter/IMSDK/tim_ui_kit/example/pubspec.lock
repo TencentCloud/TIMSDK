@@ -325,7 +325,7 @@ packages:
       name: flutter_plugin_record_plus
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.4"
+    version: "0.0.8"
   flutter_screenutil:
     dependency: transitive
     description:
@@ -333,13 +333,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.5.3+2"
-  flutter_slidable:
+  flutter_slidable_for_tencent_im:
     dependency: transitive
     description:
-      name: flutter_slidable
+      name: flutter_slidable_for_tencent_im
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0"
+    version: "1.4.0"
   flutter_spinkit:
     dependency: transitive
     description:
@@ -963,28 +963,28 @@ packages:
       name: tencent_im_base
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.23"
+    version: "0.0.30"
   tencent_im_sdk_plugin:
     dependency: transitive
     description:
       name: tencent_im_sdk_plugin
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.7"
+    version: "4.0.8-bugfix"
   tencent_im_sdk_plugin_platform_interface:
     dependency: transitive
     description:
       name: tencent_im_sdk_plugin_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.8"
+    version: "0.2.9"
   tencent_im_sdk_plugin_web:
     dependency: transitive
     description:
       name: tencent_im_sdk_plugin_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.4"
+    version: "0.2.5"
   term_glyph:
     dependency: transitive
     description:

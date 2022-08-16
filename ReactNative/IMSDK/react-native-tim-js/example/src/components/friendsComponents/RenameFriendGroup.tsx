@@ -19,12 +19,12 @@ const RenameFriendGroupComponent = () => {
     const CodeComponent = () => {
         return (
             res.code !== undefined ?
-                (<SDKResponseView codeString={JSON.stringify(res)}/>) : null
+                (<SDKResponseView codeString={JSON.stringify(res, null, 2)}/>) : null
         );
     }
 
     return (
-        <>
+        <View style={{height: '100%'}}>
             <View style={styles.userInputcontainer}>
                 <UserInputComponent content='旧分组名' placeholdercontent='旧分组名' getContent={setOldGroup}/>
             </View>
@@ -33,7 +33,7 @@ const RenameFriendGroupComponent = () => {
             </View>
             <CommonButton handler={() => renameFriendGroup()} content={'重命名好友分组'}></CommonButton>
             <CodeComponent></CodeComponent>
-        </>
+        </View>
     )
 }
 
@@ -54,17 +54,4 @@ const styles = StyleSheet.create({
         fontSize: 14,
         marginLeft: 5
     },    
-    buttonView: {
-        backgroundColor: '#2F80ED',
-        borderRadius: 3,
-        width: 100,
-        height: 35,
-    },
-    buttonText: {
-        color: '#FFFFFF',
-        fontSize: 14,
-        textAlign: 'center',
-        textAlignVertical: 'center',
-        lineHeight: 35
-    },
 })

@@ -1,3 +1,5 @@
+import constant from '../../../../utils/constant';
+
 // eslint-disable-next-line no-undef
 Component({
   /**
@@ -49,17 +51,18 @@ Component({
       });
     },
     sendMessage() {
+      const { businessID_text, STRING_TEXT, FEAT_NATIVE_CODE } = constant;
       this.triggerEvent('sendCustomMessage', {
         payload: {
           // data 字段作为表示，可以自定义
           data: JSON.stringify({
-            businessID: 'evaluation',
-            version: 1,
+            businessID: businessID_text.typeEvaluation,
+            version: FEAT_NATIVE_CODE.NATIVE_VERSION,
             score: this.data.score,
             comment: this.data.comment,
           }),
-          description: '对本次服务的评价', // 获取骰子点数
-          extension: '对本次服务的评价',
+          description: STRING_TEXT.TYPETEXT, // 获取骰子点数
+          extension: STRING_TEXT.TYPETEXT,
         },
       });
 

@@ -7,6 +7,7 @@ import 'package:tim_ui_kit/data_services/group/group_services.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
+import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitAppBar/tim_uikit_appbar_title.dart';
 import 'package:tuple/tuple.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
@@ -22,12 +23,16 @@ class TIMUIKitAppBar extends StatefulWidget implements PreferredSizeWidget {
 
   /// conversation name
   final String conversationShowName;
+
+  final bool showC2cMessageEditStaus;
   const TIMUIKitAppBar(
       {Key? key,
       this.config,
       this.showTotalUnReadCount = true,
       this.conversationID = "",
-      this.conversationShowName = ""})
+      this.conversationShowName = "",
+      this.showC2cMessageEditStaus = true,
+      })
       : super(key: key);
 
   @override
@@ -136,14 +141,15 @@ class _TIMUIKitAppBarState extends TIMUIKitState<TIMUIKitAppBar> {
           const IconThemeData(
             color: Colors.white,
           ),
-      title: setAppbar?.title ??
-          Text(
-            _conversationShowName,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 17,
-            ),
-          ),
+      // title: setAppbar?.title ??
+      //     Text(
+      //       _conversationShowName,
+      //       style: const TextStyle(
+      //         color: Colors.white,
+      //         fontSize: 17,
+      //       ),
+      //     ),
+      title: TIMUIKitAppBarTitle(title: setAppbar?.title,conversationShowName: _conversationShowName, showC2cMessageEditStaus: widget.showC2cMessageEditStaus,fromUser: widget.conversationID,),
       centerTitle: setAppbar?.centerTitle ?? true,
       leadingWidth: setAppbar?.leadingWidth ?? 70,
       leading: Selector<TUIChatViewModel, Tuple2<bool, int>>(

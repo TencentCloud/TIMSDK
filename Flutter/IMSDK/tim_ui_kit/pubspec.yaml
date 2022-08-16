@@ -1,6 +1,6 @@
 name: tim_ui_kit
 description: TUIKit is a set of UI components implemented based on the IM SDK, which includes functions such as conversation, chat, search, relationship chain, group, and audio and video calls.
-version: 0.1.2
+version: 0.1.3
 homepage: https://cloud.tencent.com/product/im
 repository: https://github.com/TencentCloud/TIMSDK/tree/master/Flutter/IMSDK/tim_ui_kit
 
@@ -13,8 +13,7 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  # tencent_im_sdk_plugin: ^4.0.3-bugfix
-  adaptive_action_sheet: ^2.0.1
+  adaptive_action_sheet: 2.0.1
   provider: ^6.0.1
   intl: ^0.17.0
   get_it: ^7.2.0
@@ -22,14 +21,12 @@ dependencies:
   flutter_svg: ^1.0.0
   image_picker: ^0.8.5+3
   file_picker: ^4.2.3
-  # file_picker:
-  #   git: https://github.com/XNeverGiveUp/flutter_file_picker.git
   open_file: ^3.2.1
   super_tooltip: ^1.0.1
   video_player: ^2.4.2
   chewie: ^1.3.2
-  flutter_slidable: ^1.2.0
-  flutter_plugin_record_plus: ^0.0.4
+  flutter_slidable_for_tencent_im: ^1.4.0
+  flutter_plugin_record_plus: ^0.0.8
   azlistview: ^2.0.0-nullsafety.0
   lpinyin: ^2.0.3
   transparent_image: ^2.0.0
@@ -58,11 +55,11 @@ dependencies:
   flutter_markdown: ^0.6.9
   url_launcher: ^6.1.4
   link_preview_generator: ^1.2.0
-  tencent_im_base: ^0.0.23
+  tencent_im_base: ^0.0.30
+#  tencent_im_base:
+#     path: /Users/wangrunlin/Documents/GitHub/im-flutter-base
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
   flutter_lints: ^1.0.0
   build_runner: any
   fast_i18n: ^5.12.2

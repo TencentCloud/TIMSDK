@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
+import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_personal_profile_view_model.dart';
 import 'package:tim_ui_kit/ui/widgets/text_input_bottom_sheet.dart';
 
 class TIMUIKitPersonalProfileController {
   final TUIPersonalProfileViewModel model = TUIPersonalProfileViewModel();
 
-  changeFriendVerificationMethod(int allowType) {
-    model.changeFriendVerificationMethod(allowType);
+  Future<V2TimCallback> changeFriendVerificationMethod(int allowType) {
+    return model.changeFriendVerificationMethod(allowType);
   }
 
   showTextInputBottomSheet(
@@ -19,24 +20,24 @@ class TIMUIKitPersonalProfileController {
         context, title, tips, onSubmitted);
   }
 
-  updateGender(int gender) {
-    model.updateGender(gender);
+  Future<V2TimCallback> updateGender(int gender) {
+    return model.updateGender(gender);
   }
 
-  updateNickName(String nickName) {
-    model.updateNickName(nickName);
+  Future<V2TimCallback> updateNickName(String nickName) {
+    return model.updateNickName(nickName);
   }
 
-  updateSelfSignature(String selfSignature) {
-    model.updateSelfSignature(selfSignature);
+  Future<V2TimCallback> updateSelfSignature(String selfSignature) {
+    return model.updateSelfSignature(selfSignature);
   }
 
   loadData(String? userID) {
     model.loadData(userID: userID);
   }
 
-  updateSelfInfo(Map<String, dynamic> newSelfInfo) {
-    model.updateSelfInfo(newSelfInfo);
+  Future<V2TimCallback> updateSelfInfo(Map<String, dynamic> newSelfInfo) {
+    return model.updateSelfInfo(newSelfInfo);
   }
 
   dispose() {

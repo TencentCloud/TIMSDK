@@ -5,6 +5,7 @@ import genTestUserSig from '../../utils/generateTestUserSig';
 import CommonButton from '../commonComponents/CommonButton';
 import storage from '../../storage/Storage';
 import SDKResponseView from '../sdkResponseView';
+import { View } from 'react-native';
 
 const LoginComponent = () => {
     const [sdkInfo, setSDKInfo] = useState<{
@@ -48,17 +49,17 @@ const LoginComponent = () => {
 
     const CodeComponent = () => {
         return res.code !== undefined ? (
-            <SDKResponseView codeString={JSON.stringify(res)} />
+            <SDKResponseView codeString={JSON.stringify(res, null, 2)} />
         ) : null;
     };
     return (
-        <>
+        <View style={{height: '100%'}}>
             <CommonButton
                 handler={() => login()}
                 content={'登录'}
             ></CommonButton>
             <CodeComponent></CodeComponent>
-        </>
+        </View>
     );
 };
 

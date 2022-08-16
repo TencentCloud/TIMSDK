@@ -12,20 +12,30 @@ import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
 class TIMUIKitSearch extends StatefulWidget {
-  /// the callback after clicking the conversation item to specific message in it
+  /// the callback after clicking the conversation item
   final Function(V2TimConversation, V2TimMessage?) onTapConversation;
 
-  /// [Deprecated] if assign a specific conversation, it will only search in it; otherwise search globally
+  /// [Deprecated] : You are supposed to use [TIMUIKitSearchMsgDetail],
+  /// if you tend to search inside a specific conversation, includes c2c and group.
   final V2TimConversation? conversation;
 
-  /// on click each conversation and enter the detail search for it
-  final Function(V2TimConversation, String) onEnterConversation;
+  /// [Deprecated] : You are supposed to use [onEnterSearchInConversation],
+  /// though the effects are the same.
+  final Function(V2TimConversation conversation, String initKeyword)?
+      onEnterConversation;
+
+  /// On click each conversation from 'Chat history' and searching for historical message in it.
+  final Function(V2TimConversation conversation, String initKeyword)?
+      onEnterSearchInConversation;
 
   const TIMUIKitSearch(
       {required this.onTapConversation,
       Key? key,
-      this.conversation,
-      required this.onEnterConversation})
+      @Deprecated("You are supposed to use [TIMUIKitSearchMsgDetail], if you tend to search inside a specific conversation, includes c2c and group")
+          this.conversation,
+      @Deprecated("You are supposed to use [onEnterSearchInConversation], though the effects are the same.")
+          this.onEnterConversation,
+      this.onEnterSearchInConversation})
       : super(key: key);
 
   @override
@@ -99,7 +109,12 @@ class TIMUIKitSearchState extends TIMUIKitState<TIMUIKitSearch> {
                         msgList: msgList ?? [],
                         onEnterConversation:
                             (V2TimConversation conversation, String keyword) {
-                          widget.onEnterConversation(conversation, keyword);
+                          if (widget.onEnterSearchInConversation != null) {
+                            widget.onEnterSearchInConversation!(
+                                conversation, keyword);
+                          } else if (widget.onEnterConversation != null) {
+                            widget.onEnterConversation!(conversation, keyword);
+                          }
                         },
                       )
                     ],

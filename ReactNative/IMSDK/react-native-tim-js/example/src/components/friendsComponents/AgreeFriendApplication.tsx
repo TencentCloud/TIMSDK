@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { TencentImSDKPlugin } from 'react-native-tim-js';
-import { Text, View, TouchableOpacity, StyleSheet} from 'react-native';
+import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
 import CommonButton from '../commonComponents/CommonButton';
 import mystylesheet from '../../stylesheets';
 import SDKResponseView from '../sdkResponseView';
@@ -10,24 +10,37 @@ import BottomModalComponent from '../commonComponents/BottomModalComponent';
 const AgreeFriendApplicationComponent = () => {
     const [visible, setVisible] = useState<boolean>(false)
     const [userName, setUserName] = useState<string>('未选择')
-    const [checkType, setCheckType] = useState<number>(0)
+    const [checkType, setCheckType] = useState<number>(2)
     const [priority, setPriority] = useState<string>('双向好友')
-    let type = 0;
-    const getSelectedHandle = (selected)=>{
+    const [type,setType] = useState<number>(0)
+    const [requireType,setRequireType] = useState<string>('')
+    const getSelectedHandle = (selected) => {
         setCheckType(selected.id)
         setPriority(selected.name)
     }
     // deleteType未处理
     const agreeFriendApplication = async () => {
-        const res = await TencentImSDKPlugin.v2TIMManager.getFriendshipManager().acceptFriendApplication(checkType,type,userName)
+        const res = await TencentImSDKPlugin.v2TIMManager.getFriendshipManager().acceptFriendApplication(checkType, type, userName)
         setRes(res)
+    }
+
+    const setTypeHandle = (type)=>{
+        setType(type)
+        switch(type){
+            case 1:
+                setRequireType('单向好友')
+                break;
+            case 2:
+                setRequireType('双向好友')
+                break;
+        }
     }
 
     const [res, setRes] = React.useState<any>({})
     const CodeComponent = () => {
         return (
             res.code !== undefined ?
-                (<SDKResponseView codeString={JSON.stringify(res)} />) : null
+                (<SDKResponseView codeString={JSON.stringify(res, null, 2)} />) : null
         );
     }
 
@@ -35,7 +48,7 @@ const AgreeFriendApplicationComponent = () => {
         const [visible, setVisible] = useState<boolean>(false)
         return (
             <>
-                <View style={styles.userInputcontainer}>
+                <View style={mystylesheet.userInputcontainer}>
                     <View style={mystylesheet.itemContainergray}>
                         <View style={styles.prioritySelectView}>
                             <TouchableOpacity onPress={() => { setVisible(true) }}>
@@ -52,17 +65,20 @@ const AgreeFriendApplicationComponent = () => {
         )
     }
     return (
-        <View style={styles.container}>
-            <View style={styles.selectContainer}>
-                <TouchableOpacity onPress={() => { setVisible(true) }}>
-                    <View style={styles.buttonView}>
-                        <Text style={styles.buttonText}>选择好友申请</Text>
-                    </View>
-                </TouchableOpacity>
-                <Text style={styles.selectedText}>{userName}</Text>
-            </View>
-            <CheckBoxModalComponent visible={visible} getVisible={setVisible} getUsername={setUserName} type={'friendapplication'} getType={(val)=>{type=val}}/>
-            <PriorityComponent/>
+        <View style={{height: '100%'}}>
+            <View style={styles.container}>
+                <View style={mystylesheet.selectContainer}>
+                    <TouchableOpacity onPress={() => { setVisible(true) }}>
+                        <View style={mystylesheet.buttonView}>
+                            <Text style={mystylesheet.buttonText}>选择好友申请</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <Text style={mystylesheet.selectedText}>{userName}</Text>
+                </View>
+                <Text>申请类型：{requireType}</Text>
+                <CheckBoxModalComponent visible={visible} getVisible={setVisible} getUsername={setUserName} type={'friendapplication'} getType={setTypeHandle}/>
+            </View>         
+            <PriorityComponent />
             <CommonButton handler={() => agreeFriendApplication()} content={'同意申请'}></CommonButton>
             <CodeComponent></CodeComponent>
         </View>
@@ -76,21 +92,6 @@ const styles = StyleSheet.create({
         margin: 10,
         marginBottom: 0
     },
-
-    buttonView: {
-        backgroundColor: '#2F80ED',
-        borderRadius: 3,
-        width: 100,
-        height: 35,
-        marginLeft: 10
-    },
-    buttonText: {
-        color: '#FFFFFF',
-        fontSize: 14,
-        textAlign: 'center',
-        textAlignVertical: 'center',
-        lineHeight: 35
-    },    
     deletebuttonView: {
         backgroundColor: '#2F80ED',
         borderRadius: 3,
@@ -103,24 +104,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         textAlignVertical: 'center',
         lineHeight: 35
-    },
-    selectContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        width: '100%',
-        overflow: 'hidden'
-    },
-    selectedText: {
-        marginLeft: 10,
-        fontSize: 14,
-        textAlignVertical: 'center',
-        lineHeight: 35
-    },
-    userInputcontainer: {
-        margin: 10,
-        marginBottom: 0,
-        marginTop: 1,
-        justifyContent: 'center'
     },
     prioritySelectView: {
         flexDirection: 'row',

@@ -257,6 +257,8 @@ class MessageServiceImpl extends MessageService {
               onlineUserOnly: onlineUserOnly,
               offlinePushInfo: offlinePushInfo,
               needReadReceipt: needReadReceipt,
+              localCustomData: localCustomData,
+              cloudCustomData: cloudCustomData,
             );
     if (result.code != 0) {
       _coreService.callOnCallback(TIMCallback(

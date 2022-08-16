@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_add_friend_view_model.dart';
+import 'package:tim_ui_kit/business_logic/life_cycle/add_friend_life_cycle.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_self_info_view_model.dart';
+import 'package:tim_ui_kit/data_services/friendShip/friendship_services.dart';
+import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
 import 'package:tim_ui_kit/ui/widgets/avatar.dart';
@@ -9,10 +12,13 @@ import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
 class SendApplication extends StatefulWidget {
   final V2TimUserFullInfo friendInfo;
-  final TUIAddFriendViewModel model;
+  final TUISelfInfoViewModel model;
   final bool? isShowDefaultGroup;
+  final AddFriendLifeCycle? lifeCycle;
+
   const SendApplication(
       {Key? key,
+      this.lifeCycle,
       required this.friendInfo,
       required this.model,
       this.isShowDefaultGroup = false})
@@ -29,14 +35,16 @@ class _SendApplicationState extends TIMUIKitState<SendApplication> {
   @override
   void initState() {
     super.initState();
-    final showName = widget.model.loginUserInfo?.nickName ??
-        widget.model.loginUserInfo?.userID;
+    final showName = widget.model.loginInfo?.nickName ??
+        widget.model.loginInfo?.userID;
     _verficationController.text = "我是: $showName";
   }
 
   @override
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     final TUITheme theme = value.theme;
+    final FriendshipServices _friendshipServices =
+    serviceLocator<FriendshipServices>();
 
     final faceUrl = widget.friendInfo.faceUrl ?? "";
     final userID = widget.friendInfo.userID ?? "";
@@ -197,13 +205,26 @@ class _SendApplicationState extends TIMUIKitState<SendApplication> {
                     final remark = _nickNameController.text;
                     final addWording = _verficationController.text;
                     final friendGroup = TIM_t("我的好友");
-                    final res = await widget.model
-                        .addFriend(userID, remark, friendGroup, addWording);
-                    if (res?.code == 0) {
-                      onTIMCallback(TIMCallback(
-                          type: TIMCallbackType.INFO,
-                          infoRecommendText: TIM_t("好友申请已发送"),
-                          infoCode: 6660101));
+
+                    if (widget.lifeCycle?.shouldAddFriend != null &&
+                        await widget.lifeCycle!.shouldAddFriend(userID, remark,
+                                friendGroup, addWording, context) ==
+                            false) {
+                      return;
+                    }
+
+                    final res = await _friendshipServices.addFriend(
+                        userID: userID,
+                        addType: FriendTypeEnum.V2TIM_FRIEND_TYPE_BOTH,
+                        remark: remark,
+                        addWording: addWording,
+                        friendGroup: friendGroup);
+
+                    if (res.code == 0 && res.data?.resultCode == 0) {
+                      // onTIMCallback(TIMCallback(
+                      //     type: TIMCallbackType.INFO,
+                      //     infoRecommendText: TIM_t("好友申请已发送"),
+                      //     infoCode: 6660101));
                     }
                   },
                   child: Text(TIM_t("发送"))),

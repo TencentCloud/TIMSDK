@@ -14,7 +14,7 @@
 
 [最新 TUISearch 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/6.5.2803/ios/TUISearch.zip)
 
-[最新 TUICalling 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/6.5.2803/ios/TUICalling.zip)
+[最新 TUICallKit 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/6.5.2817/ios/TUICallKit.zip)
 
 [最新 TUICore 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/6.5.2803/ios/TUICore.zip)
 

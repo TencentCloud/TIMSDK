@@ -8,6 +8,7 @@ import 'package:tim_ui_kit/ui/views/TIMUIKitSearch/tim_uikit_search.dart';
 import 'package:timuikit/src/chat.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';
 import 'package:provider/provider.dart';
+import 'package:timuikit/src/provider/local_setting.dart';
 import 'package:timuikit/src/provider/theme.dart';
 import 'package:timuikit/src/search.dart';
 
@@ -27,7 +28,6 @@ class _ConversationState extends State<Conversation> {
   void initState() {
     super.initState();
     _controller = widget.conversationController;
-    _controller.setConversationListener();
   }
 
   void _handleOnConvItemTaped(V2TimConversation? selectedConv) async {
@@ -160,12 +160,14 @@ class _ConversationState extends State<Conversation> {
   @override
   Widget build(BuildContext context) {
     final theme = Provider.of<DefaultThemeData>(context).theme;
+    final LocalSetting localSetting = Provider.of<LocalSetting>(context);
     return Column(
       children: [
         searchEntry(theme),
         Expanded(
             child: TIMUIKitConversation(
           onTapItem: _handleOnConvItemTaped,
+          isShowOnlineStatus: localSetting.isShowOnlineStatus,
           itemSlidableBuilder: _itemSlidableBuilder,
           controller: _controller,
               emptyBuilder: () {

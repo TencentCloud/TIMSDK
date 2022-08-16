@@ -1159,7 +1159,9 @@ static NSArray *customMessageInfo = nil;
         } else if (info.nickName.length > 0){
             [userNameList addObject:info.nickName];
         }else{
-            [userNameList addObject:info.userID];
+            if (info.userID.length > 0) {
+                [userNameList addObject:info.userID];
+            }
         }
     }
     return userNameList;
@@ -1168,7 +1170,9 @@ static NSArray *customMessageInfo = nil;
 + (NSMutableArray *)getUserIDList:(NSArray<V2TIMGroupMemberInfo *> *)infoList{
     NSMutableArray<NSString *> *userIDList = [NSMutableArray array];
     for (V2TIMGroupMemberInfo *info in infoList) {
-        [userIDList addObject:info.userID];
+        if (info.userID.length > 0) {
+            [userIDList addObject:info.userID];
+        }
     }
     return userIDList;
 }
