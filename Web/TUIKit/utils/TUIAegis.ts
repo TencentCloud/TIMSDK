@@ -2,12 +2,12 @@ class TUIAegis {
   private aegis: any;
   private options: any = {};
   static instance: any;
-  private aegisOptions: any  = [];
+  private aegisOptions: any = [];
   constructor(Aegis?: any) {
     if (Aegis) {
       this.aegis = Aegis;
     } else {
-      this.init(()=>{
+      this.init(() => {
         this.aegis = new (window as any).Aegis({
           id: 'iHWefAYqTgxNuvtAjr', // 项目key
           uin: '', // 用户唯一 ID（可选）
@@ -16,7 +16,7 @@ class TUIAegis {
           spa: true, // spa 页面需要开启，页面切换的时候上报pv
         });
         if (this.aegisOptions.length > 0) {
-          this.aegisOptions.map((options:any)=> {
+          this.aegisOptions.map((options: any) => {
             this.reportEvent(options);
             return options;
           });
@@ -37,7 +37,7 @@ class TUIAegis {
 
   static getInstance() {
     if (!TUIAegis.instance) {
-      TUIAegis.instance = new TUIAegis((window as any).$Aegis.aegis);
+      TUIAegis.instance = new TUIAegis((window as any).$Aegis);
     }
     return TUIAegis.instance;
   }
@@ -65,7 +65,7 @@ class TUIAegis {
     }
   }
 
-  private init(callback:any) {
+  private init(callback: any) {
     if (!TUIAegis.instance) {
       const script = document.createElement('script');
       script.type = 'text/javascript';
