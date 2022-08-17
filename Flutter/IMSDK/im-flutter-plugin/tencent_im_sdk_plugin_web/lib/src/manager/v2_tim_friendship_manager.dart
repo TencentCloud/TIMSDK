@@ -24,14 +24,15 @@ import 'package:tencent_im_sdk_plugin_web/src/models/v2_tim_friend_list.dart';
 import 'package:tencent_im_sdk_plugin_web/src/utils/utils.dart';
 
 class V2TIMFriendshipManager {
-  late TIM? timeWeb;
+  static late TIM? timeWeb;
   late List<dynamic> friendList;
+  static V2TimFriendshipListener? _friendshipListener;
 
   V2TIMFriendshipManager() {
     timeWeb = V2TIMManagerWeb.timWeb;
   }
 
-  getUserIDlist(List<dynamic> list) {
+  static getUserIDlist(List<dynamic> list) {
     var arr = [];
     for (var item in list) {
       arr.add(item["userID"]);
@@ -39,7 +40,7 @@ class V2TIMFriendshipManager {
     return arr;
   }
 
-  getUserIDlistFromJS(List<dynamic> list) {
+  static getUserIDlistFromJS(List<dynamic> list) {
     var arr = [];
     for (var item in list) {
       arr.add(item.userID);
@@ -48,7 +49,7 @@ class V2TIMFriendshipManager {
   }
 
 // 求差集
-  getDiffsFromTwoArr(List<dynamic> listA, List<dynamic> listB) {
+  static getDiffsFromTwoArr(List<dynamic> listA, List<dynamic> listB) {
     var tempArr = [];
     tempArr.addAll(listA);
     tempArr.addAll(listB);
@@ -60,125 +61,147 @@ class V2TIMFriendshipManager {
     return difference;
   }
 
+  static final _friendListUpdatedHandler = allowInterop((res) {
+    print("好友列表更新回调执行");
+    final formateList = FriendList.formatedFriendListRes(jsToMap(res)['data']);
+    final oldFriendList = V2TIMManager.getFriendList();
+    if (oldFriendList.length == 1 && oldFriendList[0] == "init") {
+      return;
+    }
+
+    int formateListCount = formateList.length;
+    int oldFriendListCount = oldFriendList.length;
+    List<dynamic> formateUserIDList = getUserIDlist(formateList);
+    List<dynamic> oldFriendUserIDList = getUserIDlist(oldFriendList);
+
+    print("formateListCount:$formateListCount");
+    print("oldFriendListCount:$oldFriendListCount");
+    if (formateListCount > oldFriendListCount) {
+      print("好友列表ADD回调执行");
+      final addedList =
+          formateList.map((e) => V2TimFriendInfo.fromJson(e)).toList();
+      _friendshipListener?.onFriendListAdded(addedList);
+    } else {
+      print("好友列表Delete回调执行");
+      List<dynamic> difference =
+          getDiffsFromTwoArr(formateUserIDList, oldFriendUserIDList);
+      List<String> userList = List.from(difference);
+      _friendshipListener?.onFriendListDeleted(userList);
+    }
+    V2TIMManager.updtateFriendList(formateList);
+  });
+
+  static final _blackListUpdatedHandler = allowInterop((res) {
+    print("黑名单更新回调执行");
+    final formateList = FriendBlackList.formateBlackList(jsToMap(res)['data']);
+    final oldBlackList = V2TIMManager.getBlackList();
+    if (oldBlackList.length == 1 && oldBlackList[0] == "init") {
+      return;
+    }
+
+    int formateListCount = formateList.length;
+    int oldBlackListCount = oldBlackList.length;
+    List<dynamic> formateUserIDList = getUserIDlist(formateList);
+    List<dynamic> oldBlackUserIDList = getUserIDlist(oldBlackList);
+
+    print("formateListCount:$formateListCount");
+    print("oldFriendListCount:$oldBlackListCount");
+    if (formateListCount > oldBlackListCount) {
+      print("好友BlackList Add回调执行");
+      final infoListMap =
+          formateList.map((e) => V2TimFriendInfo.fromJson(e)).toList();
+      _friendshipListener?.onBlackListAdd(infoListMap);
+    } else {
+      print("好友BlackList Delete回调执行");
+      List<dynamic> difference =
+          getDiffsFromTwoArr(formateUserIDList, oldBlackUserIDList);
+      List<String> userList = List.from(difference);
+      _friendshipListener?.onBlackListDeleted(userList);
+    }
+    V2TIMManager.updateBlackList(formateList);
+  });
+
+  static final _friendApplicationListUpdatedHandler = allowInterop((res) {
+    final resData = jsToMap(res)['data'];
+    final List formateList = FriendApplication.formateResult(
+        jsToMap(resData))["friendApplicationList"];
+    final oldApplicationList = V2TIMManager.getFriendApplicationList();
+    if (oldApplicationList.length == 1 && oldApplicationList[0] == "init") {
+      return;
+    }
+
+    int formateListCount = formateList.length;
+    int oldApplicationListCount = oldApplicationList.length;
+    List<dynamic> formateUserIDList = getUserIDlist(formateList);
+    List<dynamic> oldApplicationIDList = getUserIDlist(oldApplicationList);
+
+    print("formateListCount:$formateListCount");
+    print("oldFriendListCount:$oldApplicationListCount");
+    if (formateListCount > oldApplicationListCount) {
+      print("好友Application ADD回调执行");
+      final addedList =
+          formateList.map((e) => V2TimFriendApplication.fromJson(e)).toList();
+      _friendshipListener?.onFriendApplicationListAdded(addedList);
+    } else {
+      print("好友Application Delete回调执行");
+      List<dynamic> difference =
+          getDiffsFromTwoArr(formateUserIDList, oldApplicationIDList);
+      List<String> userIDList = List.from(difference);
+      _friendshipListener?.onFriendApplicationListDeleted(userIDList);
+    }
+    V2TIMManager.updateFriendApplicationList(formateList);
+  });
+
+  static final _profileUpdatedHanlder = allowInterop((res) async {
+    List<dynamic> userIDList = getUserIDlistFromJS(jsToMap(res)['data']);
+    print("好友资料更新回调执行");
+    // 判断是不是修改自己的信息
+    if (userIDList.length == 1 && userIDList[0] == V2TIMManager.getUserID()) {
+      return null;
+    }
+
+    final result = await wrappedPromiseToFuture(timeWeb!.getFriendProfile(
+        FriendInfo.formateGetInfoParams({"userIDList": userIDList})));
+
+    List<dynamic> formateList =
+        FriendInfo.formateFriendInfoToList(jsToMap(result.data)['friendList']);
+    final infoList =
+        formateList.map((e) => V2TimFriendInfo.fromJson(e)).toList();
+
+    _friendshipListener?.onFriendInfoChanged(infoList);
+  });
+
 /*
   这里因为web add Friend 只有一个update
 */
   void setFriendListener(V2TimFriendshipListener listener) {
+    _friendshipListener = listener;
     // FriendList update linstener
-    timeWeb!.on("onFriendListUpdated", allowInterop((res) {
-      print("好友列表更新回调执行");
-      final formateList =
-          FriendList.formatedFriendListRes(jsToMap(res)['data']);
-      final oldFriendList = V2TIMManager.getFriendList();
-      if (oldFriendList.length == 1 && oldFriendList[0] == "init") {
-        return;
-      }
-
-      int formateListCount = formateList.length;
-      int oldFriendListCount = oldFriendList.length;
-      List<dynamic> formateUserIDList = getUserIDlist(formateList);
-      List<dynamic> oldFriendUserIDList = getUserIDlist(oldFriendList);
-
-      print("formateListCount:$formateListCount");
-      print("oldFriendListCount:$oldFriendListCount");
-      if (formateListCount > oldFriendListCount) {
-        print("好友列表ADD回调执行");
-        final addedList =
-            formateList.map((e) => V2TimFriendInfo.fromJson(e)).toList();
-        listener.onFriendListAdded(addedList);
-      } else {
-        print("好友列表Delete回调执行");
-        List<dynamic> difference =
-            getDiffsFromTwoArr(formateUserIDList, oldFriendUserIDList);
-        List<String> userList = List.from(difference);
-        listener.onFriendListDeleted(userList);
-      }
-      V2TIMManager.updtateFriendList(formateList);
-    }));
+    timeWeb!.on(EventType.FRIEND_LIST_UPDATED, _friendListUpdatedHandler);
 
     // BlackList update Listenet
-    timeWeb!.on("blacklistUpdated", allowInterop((res) {
-      print("黑名单更新回调执行");
-      final formateList =
-          FriendBlackList.formateBlackList(jsToMap(res)['data']);
-      final oldBlackList = V2TIMManager.getBlackList();
-      if (oldBlackList.length == 1 && oldBlackList[0] == "init") {
-        return;
-      }
-
-      int formateListCount = formateList.length;
-      int oldBlackListCount = oldBlackList.length;
-      List<dynamic> formateUserIDList = getUserIDlist(formateList);
-      List<dynamic> oldBlackUserIDList = getUserIDlist(oldBlackList);
-
-      print("formateListCount:$formateListCount");
-      print("oldFriendListCount:$oldBlackListCount");
-      if (formateListCount > oldBlackListCount) {
-        print("好友BlackList Add回调执行");
-        final infoListMap =
-            formateList.map((e) => V2TimFriendInfo.fromJson(e)).toList();
-        listener.onBlackListAdd(infoListMap);
-      } else {
-        print("好友BlackList Delete回调执行");
-        List<dynamic> difference =
-            getDiffsFromTwoArr(formateUserIDList, oldBlackUserIDList);
-        List<String> userList = List.from(difference);
-        listener.onBlackListDeleted(userList);
-      }
-      V2TIMManager.updateBlackList(formateList);
-    }));
+    timeWeb!.on(EventType.BLACKLIST_UPDATED, _blackListUpdatedHandler);
 
     // ApplicationList update Listenet
-    timeWeb!.on(EventType.FRIEND_APPLICATION_LIST_UPDATED, allowInterop((res) {
-      final resData = jsToMap(res)['data'];
-      final List formateList = FriendApplication.formateResult(
-          jsToMap(resData))["friendApplicationList"];
-      final oldApplicationList = V2TIMManager.getFriendApplicationList();
-      if (oldApplicationList.length == 1 && oldApplicationList[0] == "init") {
-        return;
-      }
-
-      int formateListCount = formateList.length;
-      int oldApplicationListCount = oldApplicationList.length;
-      List<dynamic> formateUserIDList = getUserIDlist(formateList);
-      List<dynamic> oldApplicationIDList = getUserIDlist(oldApplicationList);
-
-      print("formateListCount:$formateListCount");
-      print("oldFriendListCount:$oldApplicationListCount");
-      if (formateListCount > oldApplicationListCount) {
-        print("好友Application ADD回调执行");
-        final addedList =
-            formateList.map((e) => V2TimFriendApplication.fromJson(e)).toList();
-        listener.onFriendApplicationListAdded(addedList);
-      } else {
-        print("好友Application Delete回调执行");
-        List<dynamic> difference =
-            getDiffsFromTwoArr(formateUserIDList, oldApplicationIDList);
-        List<String> userIDList = List.from(difference);
-        listener.onFriendApplicationListDeleted(userIDList);
-      }
-      V2TIMManager.updateFriendApplicationList(formateList);
-    }));
+    timeWeb!.on(
+        EventType.FRIEND_APPLICATION_LIST_UPDATED, _blackListUpdatedHandler);
 
     // FriendIinfo update Listenet, res 只会返回
-    timeWeb!.on(EventType.PROFILE_UPDATED, allowInterop((res) async {
-      List<dynamic> userIDList = getUserIDlistFromJS(jsToMap(res)['data']);
-      print("好友资料更新回调执行");
-      // 判断是不是修改自己的信息
-      if (userIDList.length == 1 && userIDList[0] == V2TIMManager.getUserID()) {
-        return null;
-      }
+    timeWeb!.on(EventType.PROFILE_UPDATED, _profileUpdatedHanlder);
+  }
 
-      final result = await wrappedPromiseToFuture(timeWeb!.getFriendProfile(
-          FriendInfo.formateGetInfoParams({"userIDList": userIDList})));
+  void removeFriendListener() {
+    timeWeb!.off(EventType.FRIEND_LIST_UPDATED, _friendListUpdatedHandler);
 
-      List<dynamic> formateList = FriendInfo.formateFriendInfoToList(
-          jsToMap(result.data)['friendList']);
-      final infoList =
-          formateList.map((e) => V2TimFriendInfo.fromJson(e)).toList();
+    // BlackList update Listenet
+    timeWeb!.off(EventType.BLACKLIST_UPDATED, _blackListUpdatedHandler);
 
-      listener.onFriendInfoChanged(infoList);
-    }));
+    // ApplicationList update Listenet
+    timeWeb!.off(
+        EventType.FRIEND_APPLICATION_LIST_UPDATED, _blackListUpdatedHandler);
+
+    // FriendIinfo update Listenet, res 只会返回
+    timeWeb!.off(EventType.PROFILE_UPDATED, _profileUpdatedHanlder);
   }
 
   void makeConversationListenerEventData(_channel, String type, data) {
@@ -188,6 +211,7 @@ class V2TIMFriendshipManager {
   Future<dynamic> getFriendList() async {
     try {
       final res = await wrappedPromiseToFuture(timeWeb!.getFriendList());
+      
       final code = res.code;
       final friendList = res.data as List;
       if (code == 0) {
@@ -197,7 +221,11 @@ class V2TIMFriendshipManager {
         return CommonUtils.returnError('获取好友列表失败');
       }
     } catch (error) {
-      return CommonUtils.returnError(error);
+      print("12312");
+      print(error);
+      try{
+        return CommonUtils.returnError(error);
+      }catch(err){}
     }
   }
 

@@ -20,6 +20,7 @@ import 'package:tencent_im_sdk_plugin_platform_interface/enum/history_message_ge
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/V2TimSimpleMsgListener.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/offlinePushInfo.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/im_flutter_plugin_platform_interface.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/V2_tim_topic_info.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_callback.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_conversation.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_conversation_result.dart';
@@ -41,10 +42,14 @@ import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_mem
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_member_search_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_search_param.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_message.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_message_change_info.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_message_search_param.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_message_search_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_receive_message_opt_info.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_topic_info_result.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_topic_operation_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_user_full_info.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_user_status.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin_web/src/manager/v2_tim_conversation_manager.dart';
 import 'package:tencent_im_sdk_plugin_web/src/manager/v2_tim_friendship_manager.dart';
@@ -254,28 +259,47 @@ class TencentImSDKPluginWeb extends ImFlutterPlatform {
   }
 
   @override
+  Future<void> addConversationListener(
+      {required V2TimConversationListener listener,
+      String? listenerUuid}) async {
+    _v2TIMConversationManager.setConversationListener(listener);
+  }
+
+  @override
   Future<V2TimValueCallback<List<V2TimConversation>>>
       getConversationListByConversaionIds({
     required List<String> conversationIDList,
   }) async {
+    final List<String> formatedConversationIDList = conversationIDList.map((e) {
+      var formatedConversationID = e.replaceAll("c2c_", "C2C");
+      formatedConversationID =
+          formatedConversationID.replaceAll("group_", "GROUP");
+      return formatedConversationID;
+    }).toList();
     return await _v2TIMConversationManager.getConversationListByConversaionIds(
-        {"conversationIDList": conversationIDList});
+        {"conversationIDList": formatedConversationIDList});
   }
 
   @override
   Future<V2TimValueCallback<V2TimConversation>> getConversation({
     required String conversationID,
   }) async {
+    var formatedConversationID = conversationID.replaceAll("c2c_", "C2C");
+    formatedConversationID =
+        formatedConversationID.replaceAll("group_", "GROUP");
     return await _v2TIMConversationManager
-        .getConversation({"conversationID": conversationID});
+        .getConversation({"conversationID": formatedConversationID});
   }
 
   @override
   Future<V2TimCallback> deleteConversation({
     required String conversationID,
   }) async {
+    var formatedConversationID = conversationID.replaceAll("c2c_", "C2C");
+    formatedConversationID =
+        formatedConversationID.replaceAll("group_", "GROUP");
     return await _v2TIMConversationManager
-        .deleteConversation({"conversationID": conversationID});
+        .deleteConversation({"conversationID": formatedConversationID});
   }
 
   @override
@@ -291,8 +315,11 @@ class TencentImSDKPluginWeb extends ImFlutterPlatform {
     required String conversationID,
     required bool isPinned,
   }) async {
+    var formatedConversationID = conversationID.replaceAll("c2c_", "C2C");
+    formatedConversationID =
+        formatedConversationID.replaceAll("group_", "GROUP");
     return await _v2TIMConversationManager.pinConversation({
-      "conversationID": conversationID,
+      "conversationID": formatedConversationID,
       "isPinned": isPinned,
     });
   }
@@ -507,6 +534,50 @@ class TencentImSDKPluginWeb extends ImFlutterPlatform {
   }
 
   @override
+  Future<V2TimValueCallback<List<V2TimGroupInfo>>>
+      getJoinedCommunityList() async {
+    return await _v2timGroupManager.getJoinedCommunityList();
+  }
+
+  @override
+  Future<V2TimValueCallback<String>> createTopicInCommunity({
+    required String groupID,
+    required V2TimTopicInfo topicInfo,
+  }) async {
+    final res = await _v2timGroupManager.createTopicInCommunity(
+        groupID: groupID, topicInfo: topicInfo);
+    return res;
+  }
+
+  @override
+  Future<V2TimValueCallback<List<V2TimTopicInfoResult>>> getTopicInfoList({
+    required String groupID,
+    required List<String> topicIDList,
+  }) async {
+    return await _v2timGroupManager.getTopicInfoList(
+        groupID: groupID, topicIDList: topicIDList);
+  }
+
+  @override
+  Future<V2TimCallback> setTopicInfo({
+    required String groupID,
+    required V2TimTopicInfo topicInfo,
+  }) async {
+    return await _v2timGroupManager.setTopicInfo(
+        groupID: groupID, topicInfo: topicInfo);
+  }
+
+  @override
+  Future<V2TimValueCallback<List<V2TimTopicOperationResult>>>
+      deleteTopicFromCommunity({
+    required String groupID,
+    required List<String> topicIDList,
+  }) async {
+    return await _v2timGroupManager.deleteTopicFromCommunity(
+        groupID: groupID, topicIDList: topicIDList);
+  }
+
+  @override
   Future<V2TimValueCallback<String>> createGroup({
     String? groupID,
     required String groupType,
@@ -528,7 +599,7 @@ class TencentImSDKPluginWeb extends ImFlutterPlatform {
       "faceUrl": faceUrl,
       "isAllMuted": isAllMuted,
       "addOpt": addOpt,
-      "memberList": memberList?.map((member) => member.toJson()).toList(),
+      "memberList": memberList,
       "isSupportTopic": isSupportTopic
     });
   }
@@ -895,6 +966,7 @@ class TencentImSDKPluginWeb extends ImFlutterPlatform {
           "onlineUserOnly": onlineUserOnly,
           "isExcludedFromUnreadCount": isExcludedFromUnreadCount,
           "isExcludedFromLastMessage": isExcludedFromLastMessage,
+          "cloudCustomData": cloudCustomData
         });
   }
 
@@ -1230,6 +1302,7 @@ class TencentImSDKPluginWeb extends ImFlutterPlatform {
     String? groupID,
     int lastMsgSeq = -1,
     required int count,
+    List<int>? messageTypeList, // web暂不处理
     String? lastMsgID,
   }) async {
     return await _v2timMessageManager.getC2CHistoryMessageList({
@@ -1380,6 +1453,12 @@ class TencentImSDKPluginWeb extends ImFlutterPlatform {
   }
 
   @override
+  Future<void> addGroupListener(
+      {required V2TimGroupListener listener, String? listenerUuid}) async {
+    return _v2timManager.setGroupListener(listener);
+  }
+
+  @override
   Future<void> addAdvancedMsgListener(
       {required V2TimAdvancedMsgListener listener,
       String? listenerUuid}) async {
@@ -1389,5 +1468,48 @@ class TencentImSDKPluginWeb extends ImFlutterPlatform {
   @override
   Future<void> removeAdvancedMsgListener({String? listenerUuid}) async {
     _v2timMessageManager.removeAdvancedMsgListener();
+  }
+
+  @override
+  Future<void> addFriendListener({
+    required V2TimFriendshipListener listener,
+    String? listenerUuid,
+  }) async {
+    _v2timFriendshipManager.setFriendListener(listener);
+  }
+
+  @override
+  Future<V2TimValueCallback<List<V2TimUserStatus>>> getUserStatus({
+    required List<String> userIDList,
+  }) async {
+    return _v2timManager.getUserStatus(userIDList: userIDList);
+  }
+
+  @override
+  Future<void> removeConversationListener({
+    String? listenerUuid,
+  }) {
+    return _v2TIMConversationManager.removeConversationListener();
+  }
+
+  @override
+  Future<void> removeGroupListener({
+    String? listenerUuid,
+  }) async {
+    return _v2timManager.removeGroupListener();
+  }
+
+  @override
+  Future<void> removeFriendListener({
+    String? listenerUuid,
+  }) async {
+    return _v2timFriendshipManager.removeFriendListener();
+  }
+
+  @override
+  Future<V2TimValueCallback<V2TimMessageChangeInfo>> modifyMessage({
+    required V2TimMessage message,
+  }) async {
+    return await _v2timMessageManager.modifyMessage(message: message);
   }
 }

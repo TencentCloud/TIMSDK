@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_shadowing_type_parameters
 
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_conversation.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_conversation_operation_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_conversation_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_friend_application_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_friend_check_result.dart';
@@ -25,6 +26,7 @@ import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_mem
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_signaling_info.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_topic_info_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_topic_operation_result.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_user_status.dart';
 import 'v2_tim_user_full_info.dart';
 
 import 'dart:convert';
@@ -103,7 +105,9 @@ class V2TimValueCallback<T> {
         }).toList() as T;
       } else if (T == V2TimFriendCheckResult) {
         fromJsonData = V2TimFriendCheckResult.fromJson(json['data']) as T;
-      } else if (T == _getT<List<V2TimFriendCheckResult>>()) {
+      } else if(T == V2TimConversationOperationResult){
+         fromJsonData = V2TimConversationOperationResult.fromJson(json['data']) as T;
+      }else if (T == _getT<List<V2TimFriendCheckResult>>()) {
         fromJsonData = (json['data'] as List).map((e) {
           return V2TimFriendCheckResult.fromJson(e);
         }).toList() as T;
@@ -154,8 +158,18 @@ class V2TimValueCallback<T> {
         fromJsonData = (json['data'] as List).map((e) {
           return V2TimGroupInfo.fromJson(e);
         }).toList() as T;
-      } else {
-        fromJsonData = json['data'];
+      } else if(T == _getT<List<V2TimUserStatus>>()){
+         fromJsonData = (json['data'] as List).map((e) {
+          return V2TimUserStatus.fromJson(e);
+        }).toList() as T;
+      } else if(T == _getT<List<V2TimConversationOperationResult>>()){
+         fromJsonData = (json['data'] as List).map((e) {
+          return V2TimConversationOperationResult.fromJson(e);
+        }).toList() as T;
+      } else if(T == _getT<List<String>>()){
+        fromJsonData = List.from(json["data"]).map((e) => e.toString()).toList();
+      }else {
+        fromJsonData = json['data']  as T;
       }
     }
 
@@ -244,6 +258,8 @@ class V2TimValueCallback<T> {
         toJsonData = (this.data as V2TimMsgCreateInfoResult).toJson();
       } else if(T == V2TimMessageChangeInfo){
         toJsonData = (this.data as V2TimMessageChangeInfo).toJson();
+      }else if(T == V2TimConversationOperationResult){
+         toJsonData = (this.data as V2TimConversationOperationResult).toJson();
       }
       
       else if (T == V2TimGroupMessageReadMemberList) {
@@ -264,7 +280,15 @@ class V2TimValueCallback<T> {
         toJsonData = (this.data as List)
             .map((e) => (e as V2TimGroupInfo).toJson())
             .toList();
-      }else {
+      } else if(T == _getT<List<V2TimUserStatus>>() ){
+        toJsonData = (this.data as List)
+            .map((e) => (e as V2TimUserStatus).toJson())
+            .toList();
+      } else if(T == _getT<List<V2TimConversationOperationResult>>() ){
+        toJsonData = (this.data as List)
+            .map((e) => (e as V2TimConversationOperationResult).toJson())
+            .toList();
+      } else {
         toJsonData = this.data;
       }
       data['data'] = toJsonData;

@@ -17,6 +17,7 @@ class GroupTypeWeb {
       jsToMap(GroupTypeEnum.TYPES)["GRP_AVCHATROOM"]; // avchat room
   static String GRP_MEETING =
       jsToMap(GroupTypeEnum.TYPES)["GRP_MEETING"]; // chat room
+  static String GRP_COMMUNITY = jsToMap(GroupTypeEnum.TYPES)["GRP_COMMUNITY"];
 
   static String? convertGroupType(String type) {
     if (type == GRP_WORK) {
@@ -33,6 +34,10 @@ class GroupTypeWeb {
 
     if (type == GRP_MEETING) {
       return GroupType.Meeting;
+    }
+
+    if (type == GRP_COMMUNITY) {
+      return GroupType.Community;
     }
     return null;
   }
@@ -52,6 +57,10 @@ class GroupTypeWeb {
 
     if (type == GroupType.Meeting) {
       return GRP_MEETING;
+    }
+
+    if (type == GroupType.Community) {
+      return GRP_COMMUNITY;
     }
 
     return '';

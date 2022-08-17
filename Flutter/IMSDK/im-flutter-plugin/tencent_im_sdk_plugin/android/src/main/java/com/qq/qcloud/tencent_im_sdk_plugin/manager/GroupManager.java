@@ -285,45 +285,73 @@ public class GroupManager {
         });
     }
     public void setTopicInfo(MethodCall methodCall, final MethodChannel.Result result) {
-        Map<String,Object> topicInfo = CommonUtil.getParam(methodCall,result,"topicInfo");
-        V2TIMTopicInfo info = new V2TIMTopicInfo();
+        final Map<String,Object> topicInfo = CommonUtil.getParam(methodCall,result,"topicInfo");
+        String groupID = CommonUtil.getParam(methodCall,result,"groupID");
+
         if(topicInfo.get("topicID")!=null){
-            info.setTopicID((String) topicInfo.get("topicID"));
-        }
-        if(topicInfo.get("topicName")!=null){
-            info.setTopicName((String) topicInfo.get("topicName"));
-        }
-        if(topicInfo.get("topicFaceUrl")!=null){
-            info.setTopicFaceUrl((String) topicInfo.get("topicFaceUrl"));
-        }
-        if(topicInfo.get("notification")!=null){
-            info.setNotification((String) topicInfo.get("notification"));
-        }
-        if(topicInfo.get("isAllMute")!=null){
-            info.setAllMute((Boolean) topicInfo.get("isAllMute"));
+            List<String> topicIDList = new LinkedList();
+            topicIDList.add((String) topicInfo.get("topicID"));
+            V2TIMManager.getGroupManager().getTopicInfoList(groupID, topicIDList, new V2TIMValueCallback<List<V2TIMTopicInfoResult>>() {
+                @Override
+                public void onSuccess(List<V2TIMTopicInfoResult> v2TIMTopicInfoResults) {
+                    if(v2TIMTopicInfoResults.size()==1){
+                        System.out.println("有合适的topic");
+                        V2TIMTopicInfoResult  res = v2TIMTopicInfoResults.get(0);
+                        if(res.getErrorCode() == 0){
+                            System.out.println("code 也是对的");
+                            V2TIMTopicInfo topicInfo_native = res.getTopicInfo();
+                            System.out.println(topicInfo);
+                            if(topicInfo.get("topicName")!=null){
+                                topicInfo_native.setTopicName((String) topicInfo.get("topicName"));
+                            }
+                            if(topicInfo.get("topicFaceUrl")!=null){
+                                topicInfo_native.setTopicFaceUrl((String) topicInfo.get("topicFaceUrl"));
+                            }
+                            if(topicInfo.get("notification")!=null){
+                                topicInfo_native.setNotification((String) topicInfo.get("notification"));
+                            }
+                            if(topicInfo.get("isAllMute")!=null){
+                                topicInfo_native.setAllMute((Boolean) topicInfo.get("isAllMute"));
+                            }
+
+                            if(topicInfo.get("customString")!=null){
+                                topicInfo_native.setCustomString((String) topicInfo.get("customString"));
+                            }
+
+                            if(topicInfo.get("draftText")!=null){
+                                topicInfo_native.setDraft((String) topicInfo.get("draftText"));
+                            }
+                            if(topicInfo.get("introduction")!=null){
+                                topicInfo_native.setIntroduction((String) topicInfo.get("introduction"));
+                            }
+                            V2TIMManager.getGroupManager().setTopicInfo(topicInfo_native, new V2TIMCallback() {
+                                @Override
+                                public void onSuccess() {
+                                    CommonUtil.returnSuccess(result,null);
+                                }
+
+                                @Override
+                                public void onError(int i, String s) {
+                                    CommonUtil.returnError(result,i,s);
+                                }
+                            });
+                        }else{
+                            CommonUtil.returnError(result,res.getErrorCode(),res.getErrorMessage());
+                        }
+                    }else {
+                        CommonUtil.returnError(result,-1,"topic not found");
+                    }
+                }
+
+                @Override
+                public void onError(int i, String s) {
+                    CommonUtil.returnError(result,i,s);
+                }
+            });
         }
 
-        if(topicInfo.get("customString")!=null){
-            info.setCustomString((String) topicInfo.get("customString"));
-        }
 
-        if(topicInfo.get("draftText")!=null){
-            info.setDraft((String) topicInfo.get("draftText"));
-        }
-        if(topicInfo.get("introduction")!=null){
-            info.setIntroduction((String) topicInfo.get("introduction"));
-        }
-        V2TIMManager.getGroupManager().setTopicInfo(info, new V2TIMCallback() {
-            @Override
-            public void onSuccess() {
-                CommonUtil.returnSuccess(result,null);
-            }
 
-            @Override
-            public void onError(int i, String s) {
-                CommonUtil.returnError(result,i,s);
-            }
-        });
     }
     public void getTopicInfoList(MethodCall methodCall, final MethodChannel.Result result) {
         String groupID = CommonUtil.getParam(methodCall,result,"groupID");
@@ -607,7 +635,7 @@ public class GroupManager {
         final String groupID= CommonUtil.getParam(methodCall,result,"groupID");
         final String fromUser= CommonUtil.getParam(methodCall,result,"fromUser");
         final String toUser= CommonUtil.getParam(methodCall,result,"toUser");
-        final long addTime= CommonUtil.getParam(methodCall,result,"addTime");
+        final long addTime= Long.parseLong(String.valueOf(CommonUtil.getParam(methodCall,result,"addTime")));
         final int type= CommonUtil.getParam(methodCall,result,"type");
         V2TIMManager.getGroupManager().getGroupApplicationList(new V2TIMValueCallback<V2TIMGroupApplicationResult>() {
             @Override
@@ -617,22 +645,28 @@ public class GroupManager {
 
             @Override
             public void onSuccess(V2TIMGroupApplicationResult v2TIMGroupApplicationResult) {
+                V2TIMGroupApplication getapp = new V2TIMGroupApplication();
                 for (int i=0;i<v2TIMGroupApplicationResult.getGroupApplicationList().size();i++){
                     V2TIMGroupApplication application = v2TIMGroupApplicationResult.getGroupApplicationList().get(i);
-                    if(application.getGroupID().equals(groupID) && application.getFromUser().equals(fromUser) && application.getToUser().equals(toUser) && application.getAddTime() ==addTime && application.getType()==type){
-                        V2TIMManager.getGroupManager().acceptGroupApplication(application, reason, new V2TIMCallback() {
-                            @Override
-                            public void onError(int i, String s) {
-                                CommonUtil.returnError(result,i,s);
-                            }
-
-                            @Override
-                            public void onSuccess() {
-                                CommonUtil.returnSuccess(result,null);
-                            }
-                        });
+                    if(application.getGroupID().equals(groupID) && application.getFromUser().equals(fromUser) && application.getToUser().equals(toUser) && application.getAddTime() == addTime && application.getType()==type){
+                        getapp = application;
                         break;
                     }
+                }
+                if(getapp.getGroupID()==null){
+                    CommonUtil.returnError(result,-2,"application not found");
+                }else{
+                    V2TIMManager.getGroupManager().acceptGroupApplication(getapp, reason, new V2TIMCallback() {
+                        @Override
+                        public void onError(int i, String s) {
+                            CommonUtil.returnError(result,i,s);
+                        }
+
+                        @Override
+                        public void onSuccess() {
+                            CommonUtil.returnSuccess(result,null);
+                        }
+                    });
                 }
             }
         });
@@ -642,7 +676,7 @@ public class GroupManager {
         final String groupID= CommonUtil.getParam(methodCall,result,"groupID");
         final String fromUser= CommonUtil.getParam(methodCall,result,"fromUser");
         final String toUser= CommonUtil.getParam(methodCall,result,"toUser");
-        final long addTime= CommonUtil.getParam(methodCall,result,"addTime");
+        final long addTime= Long.parseLong(String.valueOf(CommonUtil.getParam(methodCall,result,"addTime")));
         final int type= CommonUtil.getParam(methodCall,result,"type");
         V2TIMManager.getGroupManager().getGroupApplicationList(new V2TIMValueCallback<V2TIMGroupApplicationResult>() {
             @Override
@@ -652,25 +686,30 @@ public class GroupManager {
 
             @Override
             public void onSuccess(V2TIMGroupApplicationResult v2TIMGroupApplicationResult) {
+                V2TIMGroupApplication getapp = new V2TIMGroupApplication();
                 for (int i=0;i<v2TIMGroupApplicationResult.getGroupApplicationList().size();i++){
                     V2TIMGroupApplication application = v2TIMGroupApplicationResult.getGroupApplicationList().get(i);
                     if(application.getGroupID().equals(groupID) && application.getFromUser().equals(fromUser) && application.getToUser().equals(toUser) && application.getAddTime() ==addTime && application.getType()==type){
-
-                        V2TIMManager.getGroupManager().refuseGroupApplication(application, reason, new V2TIMCallback() {
-                            @Override
-                            public void onError(int i, String s) {
-                                CommonUtil.returnError(result,i,s);
-                            }
-
-                            @Override
-                            public void onSuccess() {
-                                CommonUtil.returnSuccess(result,null);
-                            }
-                        });
+                        getapp = application;
                         break;
                     }
-
                 }
+                if(getapp.getGroupID()==null){
+                    CommonUtil.returnError(result,-2,"application not found");
+                }else{
+                    V2TIMManager.getGroupManager().refuseGroupApplication(getapp, reason, new V2TIMCallback() {
+                        @Override
+                        public void onError(int i, String s) {
+                            CommonUtil.returnError(result,i,s);
+                        }
+
+                        @Override
+                        public void onSuccess() {
+                            CommonUtil.returnSuccess(result,null);
+                        }
+                    });
+                }
+
             }
         });
     }

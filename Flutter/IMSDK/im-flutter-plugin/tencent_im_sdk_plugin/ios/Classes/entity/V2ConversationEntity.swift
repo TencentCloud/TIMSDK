@@ -22,6 +22,9 @@ class V2ConversationEntity: V2TIMConversation {
         result["test"] = nil;
 		result["isPinned"] = info.isPinned;
         result["orderkey"] = info.orderKey;
+        result["markList"] = info.markList;
+        result["customData"] = String.init(data: info.customData, encoding: String.Encoding.utf8) ?? "";
+        result["conversationGroupList"] = info.conversationGroupList;
 		if info.lastMessage != nil {
 			result["lastMessage"] = V2MessageEntity(message: info.lastMessage).getDict(progress: 100)
 		}

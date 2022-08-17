@@ -1,9 +1,11 @@
 package com.qq.qcloud.tencent_im_sdk_plugin.manager;
 
+import com.qq.qcloud.tencent_im_sdk_plugin.util.AbCallback;
 import com.qq.qcloud.tencent_im_sdk_plugin.util.CommonUtil;
 import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMCompleteCallback;
+import com.tencent.imsdk.v2.V2TIMElem;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMergerElem;
 import com.tencent.imsdk.v2.V2TIMMessage;
@@ -36,8 +38,51 @@ public class MessageManager {
         MessageManager.channel = _channel;
         MessageManager.manager = V2TIMManager.getMessageManager();
     }
-
-
+    public V2TIMElem getElem (V2TIMMessage message){
+        int type = message.getElemType();
+        V2TIMElem elem;
+        if(type == V2TIMMessage.V2TIM_ELEM_TYPE_TEXT){
+            elem = message.getTextElem();
+        } else if(type == V2TIMMessage.V2TIM_ELEM_TYPE_CUSTOM){
+            elem = message.getCustomElem();
+        }else if(type == V2TIMMessage.V2TIM_ELEM_TYPE_IMAGE){
+            elem = message.getImageElem();
+        }else if(type == V2TIMMessage.V2TIM_ELEM_TYPE_SOUND){
+            elem = message.getSoundElem();
+        }else if(type == V2TIMMessage.V2TIM_ELEM_TYPE_VIDEO){
+            elem = message.getVideoElem();
+        }else if(type == V2TIMMessage.V2TIM_ELEM_TYPE_FILE){
+            elem = message.getFileElem();
+        }else if(type == V2TIMMessage.V2TIM_ELEM_TYPE_LOCATION){
+            elem = message.getLocationElem();
+        }else if(type == V2TIMMessage.V2TIM_ELEM_TYPE_FACE){
+            elem = message.getFaceElem();
+        }else if(type == V2TIMMessage.V2TIM_ELEM_TYPE_GROUP_TIPS){
+            elem = message.getGroupTipsElem();
+        }else if(type == V2TIMMessage.V2TIM_ELEM_TYPE_MERGER){
+            elem = message.getMergerElem();
+        }else{
+            elem = new V2TIMElem();
+        }
+        return elem;
+    }
+    public void setAppendMessage(V2TIMMessage appendMess,V2TIMMessage baseMessage){
+        V2TIMElem aElem = getElem(appendMess);
+        V2TIMElem bElem = getElem(baseMessage);
+        bElem.appendElem(aElem);
+    }
+    public void appendMessage(MethodCall call,final MethodChannel.Result result){
+        final String createMessageBaseId = CommonUtil.getParam(call,result,"createMessageBaseId");
+        final String createMessageAppendId = CommonUtil.getParam(call,result,"createMessageAppendId");
+        if(messageIDMap.containsKey(createMessageAppendId) && messageIDMap.containsKey(createMessageAppendId)){
+            V2TIMMessage baseMessage = messageIDMap.get(createMessageBaseId);
+            V2TIMMessage appendMess = messageIDMap.get(createMessageAppendId);
+            setAppendMessage(appendMess,baseMessage);
+            CommonUtil.returnSuccess(result,CommonUtil.convertV2TIMMessageToMap(baseMessage));
+        }else{
+            CommonUtil.returnError(result,-1,"message not found");
+        }
+    }
     public void  addAdvancedMsgListener(MethodCall call,final MethodChannel.Result result){
         final String listenerUuid = CommonUtil.getParam(call,result,"listenerUuid");
         listenerUuidList.add(listenerUuid);
@@ -218,13 +263,13 @@ public class MessageManager {
                 if(v2TIMMessages.size()==1){
                               V2TIMMessage currentMessage = v2TIMMessages.get(0);
                               if(message.get("cloudCustomData")!=null){
-                                  currentMessage.setLocalCustomData((String) message.get("cloudCustomData"));
+                                  currentMessage.setCloudCustomData((String) message.get("cloudCustomData"));
                               }
                               if(message.get("localCustomInt")!=null){
                                   currentMessage.setLocalCustomInt((int) message.get("localCustomInt"));
                               }
                               if(message.get("localCustomData")!=null){
-                                  currentMessage.setCloudCustomData((String) message.get("localCustomData"));
+                                  currentMessage.setLocalCustomData((String) message.get("localCustomData"));
                               }
                               if(currentMessage.getElemType() == V2TIMMessage.V2TIM_ELEM_TYPE_TEXT){
                                  Map<String,Object> text = (Map<String, Object>) message.get("textElem");
@@ -376,7 +421,7 @@ public class MessageManager {
             }
         });
     }
-    public void sendMessage(MethodCall methodCall, final MethodChannel.Result result){
+    public void sendMessage(final MethodCall methodCall, final MethodChannel.Result result){
         String id = CommonUtil.getParam(methodCall,result,"id");
         String receiver = CommonUtil.getParam(methodCall,result,"receiver");
         String groupID = CommonUtil.getParam(methodCall,result,"groupID");
@@ -404,7 +449,7 @@ public class MessageManager {
         }else{
             onlineUserOnly = CommonUtil.getParam(methodCall,result,"onlineUserOnly");
         }
-        
+
         if(cloudCustomData !=null){
             msg.setCloudCustomData(cloudCustomData);
         }
@@ -420,7 +465,7 @@ public class MessageManager {
         V2TIMOfflinePushInfo offlinePushInfo = handleOfflinePushInfo(methodCall,result);
         msg.setExcludedFromUnreadCount(isExcludedFromUnreadCount);
         msg.setExcludedFromLastMessage(isExcludedFromLastMessage);
-         handleSendMessage(msg,receiver,groupID,priority,onlineUserOnly,offlinePushInfo,result,id);
+        handleSendMessage(msg,receiver,groupID,priority,onlineUserOnly,offlinePushInfo,result,id);
     }
     // Deprecated since 3.6.0
     public  void  sendTextMessage(MethodCall methodCall, final MethodChannel.Result result){
@@ -1643,6 +1688,8 @@ public class MessageManager {
         final String lastMsgID = CommonUtil.getParam(methodCall,result,"lastMsgID");
         int lastMsgSeq = CommonUtil.getParam(methodCall, result, "lastMsgSeq");
         int count  = CommonUtil.getParam(methodCall,result,"count");
+
+
         final V2TIMMessageListGetOption option = new V2TIMMessageListGetOption();
         option.setCount(count);
         option.setGetType(getType);
@@ -1654,6 +1701,10 @@ public class MessageManager {
         }
         if (lastMsgSeq != -1) {
             option.setLastMsgSeq(lastMsgSeq);
+        }
+        if(CommonUtil.getParam(methodCall,result,"messageTypeList")!=null){
+            List<Integer> messageTypeList = CommonUtil.getParam(methodCall,result,"messageTypeList");
+            option.setMessageTypeList(messageTypeList);
         }
         List<String> msglist =new  LinkedList<String>();
         if(lastMsgID!=null){

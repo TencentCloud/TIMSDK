@@ -16,6 +16,9 @@ class EventType {
   static String MESSAGE_READ_BY_PEER = checkEmptyEnum(
       () => jsToMap(EventEnum.EVENT)['MESSAGE_READ_BY_PEER'],
       "onMessageReadByPeer");
+  static String MESSAGE_READ_RECEIPT_RECEIVED = checkEmptyEnum(
+      () => jsToMap(EventEnum.EVENT)['MESSAGE_READ_RECEIPT_RECEIVED'],
+      "onMessageReadReceiptReceived");
   static String MESSAGE_REVOKED = checkEmptyEnum(
       () => jsToMap(EventEnum.EVENT)['MESSAGE_REVOKED'], "onMessageRevoked");
   static String GROUP_ATTRIBUTES_UPDATED = checkEmptyEnum(
@@ -24,6 +27,13 @@ class EventType {
   static String GROUP_LIST_UPDATED = checkEmptyEnum(
       () => jsToMap(EventEnum.EVENT)['GROUP_LIST_UPDATED'],
       "onGroupListUpdated");
+
+  static String TOPIC_CREATED = checkEmptyEnum(
+      () => jsToMap(EventEnum.EVENT)['TOPIC_CREATED'], "onTopicCreated");
+  static String TOPIC_DELETED = checkEmptyEnum(
+      () => jsToMap(EventEnum.EVENT)['TOPIC_DELETED'], "onTopicDeleted");
+  static String TOPIC_UPDATED = checkEmptyEnum(
+      () => jsToMap(EventEnum.EVENT)['TOPIC_UPDATED'], "onTopicUpdated");
 
   // 好友和自己的资料变更(native自己和好友是分开的)
   static String PROFILE_UPDATED = checkEmptyEnum(
@@ -35,11 +45,19 @@ class EventType {
   static String KICKED_OUT =
       checkEmptyEnum(() => jsToMap(EventEnum.EVENT)['KICKED_OUT'], "kickedOut");
 
+  static String CONVERSATION_LIST_UPDATED = checkEmptyEnum(
+      () => jsToMap(EventEnum.EVENT)['CONVERSATION_LIST_UPDATED'],
+      "onConversationListUpdated");
+
   // Friend
   // 好友和自己的资料变更
-  static String FRIEND_LIST_UPDATED = "EventEnum.EVENT?.FRIEND_LIST_UPDATED";
+  static String FRIEND_LIST_UPDATED = checkEmptyEnum(
+      () => jsToMap(EventEnum.EVENT)['FRIEND_LIST_UPDATED'],
+      "onFriendListUpdated");
+
   // 黑名单变更
-  static String BLACKLIST_UPDATED = "EventEnum.EVENT?.BLACKLIST_UPDATED";
+  static String BLACKLIST_UPDATED = checkEmptyEnum(
+      () => jsToMap(EventEnum.EVENT)['BLACKLIST_UPDATED'], "blacklistUpdated");
   // 好友申请变更
   static String FRIEND_APPLICATION_LIST_UPDATED =
       "EventEnum.EVENT?.FRIEND_APPLICATION_LIST_UPDATED;";

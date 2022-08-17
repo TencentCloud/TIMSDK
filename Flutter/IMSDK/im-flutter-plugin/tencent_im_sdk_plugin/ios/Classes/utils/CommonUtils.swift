@@ -62,30 +62,38 @@ public class CommonUtils {
 
     // 返回失败结果
 	public static func resultFailed(desc: String? = "failed", code: Int32? = 0, call: FlutterMethodCall, result: @escaping FlutterResult) {
-        let res = ["code": code ?? -1, "desc": desc ?? ""] as [String : Any]
+        
+        DispatchQueue.main.async {
+            let res = ["code": code ?? -1, "desc": desc ?? ""] as [String : Any]
 
-		TencentImSDKPlugin.channel?.invokeMethod("logFromSwift", arguments: ["msg": "Swift Error，方法名\(call.method)，错误信息：", "data": desc])
-		result(res)
+            TencentImSDKPlugin.channel?.invokeMethod("logFromSwift", arguments: ["msg": "Swift Error，方法名\(call.method)，错误信息：", "data": desc])
+            result(res)
+        }
     }
 	
 	// 返回失败结果带data
 	public static func resultFailed(desc: String? = "failed", code: Int32? = -1, data: Dictionary<String, Any>, call: FlutterMethodCall, result: @escaping FlutterResult) {
-        let res = ["code": code ?? -1, "desc": desc ?? "", "data": data] as [String : Any]
-	  
-		TencentImSDKPlugin.channel?.invokeMethod("logFromSwift", arguments: ["msg": "Swift Error，方法名\(call.method)，错误信息：", "data": res])
-		result(res)
+        
+        DispatchQueue.main.async {
+            let res = ["code": code ?? -1, "desc": desc ?? "", "data": data] as [String : Any]
+          
+            TencentImSDKPlugin.channel?.invokeMethod("logFromSwift", arguments: ["msg": "Swift Error，方法名\(call.method)，错误信息：", "data": res])
+            result(res)
+        }
 	}
 
     // 返回成功结果
 	public static func resultSuccess(desc: String = "ok", call: FlutterMethodCall, result: @escaping FlutterResult, data: Any = NSNull()) {
-		let res = ["code": 0, "desc": desc, "data": data] as [String : Any]
-		
-		TencentImSDKPlugin.channel?.invokeMethod(
-			"logFromSwift",
-			arguments: [
-				"msg": "Swift Response，方法名\(call.method)，数据：", "data": res
-		])
-        result(res)
+        DispatchQueue.main.async {
+            let res = ["code": 0, "desc": desc, "data": data] as [String : Any]
+            
+            TencentImSDKPlugin.channel?.invokeMethod(
+                "logFromSwift",
+                arguments: [
+                    "msg": "Swift Response，方法名\(call.method)，数据：", "data": res
+            ])
+            result(res)
+        }
     }
     
     
@@ -100,7 +108,10 @@ public class CommonUtils {
     }
 
     public static func logFromSwift(channel: FlutterMethodChannel, data: Any) {
-      channel.invokeMethod("logFromSwift", arguments: data);
+        DispatchQueue.main.async {
+            channel.invokeMethod("logFromSwift", arguments: data);
+        }
+      
     }
 	
 	public static func getV2TIMOfflinePushInfo(call: FlutterMethodCall, result: @escaping FlutterResult) -> V2TIMOfflinePushInfo {

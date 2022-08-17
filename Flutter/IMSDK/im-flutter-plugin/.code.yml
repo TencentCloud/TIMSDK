@@ -5,7 +5,7 @@ source:
   # 请勿使用Tab键，将会导致yaml解析出错
   test_source:
     #用于匹配文件; 匹配方式为正则表达式。
-    filepath_regex: [".*/*.java","doc/*",".*/*.h",".*/*.swift"]
+    filepath_regex: [".*/*.java","doc/*",".*/*.h",".*/*.swift",".*/*.dart"]
   # 提供产品代码库中工具或框架自动生成的且在代码库中的代码，没有可为空。以便后续代码统计环节进行排除等特殊处理。
   auto_generate_source:
   # 自动生成代码文件的正则表达式，若无统一标识格式，可以指定具体目录，样例可参考test_source举例

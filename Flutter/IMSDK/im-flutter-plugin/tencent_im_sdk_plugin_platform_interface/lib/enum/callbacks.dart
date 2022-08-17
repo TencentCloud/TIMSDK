@@ -1,3 +1,4 @@
+import 'package:tencent_im_sdk_plugin_platform_interface/models/V2_tim_topic_info.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_conversation.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_friend_application.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_friend_info.dart';
@@ -8,17 +9,19 @@ import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_message.d
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_message_receipt.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_user_full_info.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_user_info.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_user_status.dart';
 
 typedef VoidCallback = void Function();
 typedef ErrorCallback = void Function(int code, String error);
 typedef V2TimUserFullInfoCallback = void Function(V2TimUserFullInfo info);
 typedef OnTotalUnreadMessageCountChanged = void Function(int totalUnreadCount);
-
+typedef OnUserStatusChanged = void Function(List<V2TimUserStatus> userStatusList);
 typedef OnRecvC2CTextMessageCallback = void Function(
   String msgID,
   V2TimUserInfo userInfo,
   String text,
 );
+
 typedef OnRecvC2CCustomMessageCallback = void Function(
   String msgID,
   V2TimUserInfo sender,
@@ -211,3 +214,21 @@ typedef OnSendMessageProgressCallback = void Function(
 typedef OnRecvMessageReadReceipts = void Function(
   List<V2TimMessageReceipt> receiptList,
 );
+typedef OnConversationGroupCreated = void Function(String groupName,List< V2TimConversation> conversationList);
+
+typedef OnConversationGroupDeleted = void Function(String groupName);
+
+typedef OnConversationGroupNameChanged = void Function(String oldName, String newName);
+
+typedef OnConversationsAddedToGroup = void Function(String groupName, List<V2TimConversation> conversationList);
+
+typedef OnConversationsDeletedFromGroup = void Function(String groupName, List<V2TimConversation> conversationList);
+
+
+
+
+typedef 	OnTopicCreated  = void Function(String groupID, String topicID);
+ 
+typedef 	OnTopicDeleted  = void Function(String groupID, List< String > topicIDList);
+ 
+typedef 	OnTopicInfoChanged  = void Function(String groupID, V2TimTopicInfo topicInfo);

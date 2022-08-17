@@ -91,7 +91,7 @@ packages:
       name: collection
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.15.0"
+    version: "1.16.0"
   convert:
     dependency: transitive
     description:
@@ -119,7 +119,7 @@ packages:
       name: fake_async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0"
+    version: "1.3.0"
   file:
     dependency: transitive
     description:
@@ -155,7 +155,7 @@ packages:
       name: js
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.3"
+    version: "0.6.4"
   json_annotation:
     dependency: "direct main"
     description:
@@ -190,7 +190,7 @@ packages:
       name: material_color_utilities
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.3"
+    version: "0.1.4"
   meta:
     dependency: transitive
     description:
@@ -218,7 +218,7 @@ packages:
       name: path
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.0"
+    version: "1.8.1"
   pedantic:
     dependency: transitive
     description:
@@ -265,7 +265,7 @@ packages:
       name: source_span
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.1"
+    version: "1.8.2"
   stack_trace:
     dependency: transitive
     description:
@@ -290,17 +290,17 @@ packages:
   tencent_im_sdk_plugin_platform_interface:
     dependency: "direct main"
     description:
-      name: tencent_im_sdk_plugin_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.5"
+      path: "../tencent_im_sdk_plugin_platform_interface"
+      relative: true
+    source: path
+    version: "0.3.1"
   tencent_im_sdk_plugin_web:
     dependency: "direct main"
     description:
-      name: tencent_im_sdk_plugin_web
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.1"
+      path: "../tencent_im_sdk_plugin_web"
+      relative: true
+    source: path
+    version: "0.2.7"
   term_glyph:
     dependency: transitive
     description:
@@ -314,7 +314,7 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.8"
+    version: "0.4.9"
   typed_data:
     dependency: transitive
     description:
@@ -335,7 +335,7 @@ packages:
       name: vector_math
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.1"
+    version: "2.1.2"
   watcher:
     dependency: transitive
     description:
@@ -351,5 +351,5 @@ packages:
     source: hosted
     version: "3.1.0"
 sdks:
-  dart: ">=2.14.0 <3.0.0"
-  flutter: ">=1.20.0"
+  dart: ">=2.17.0-0 <3.0.0"
+  flutter: ">=2.0.0"

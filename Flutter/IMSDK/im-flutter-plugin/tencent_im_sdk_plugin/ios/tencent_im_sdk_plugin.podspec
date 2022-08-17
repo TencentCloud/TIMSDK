@@ -4,14 +4,14 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'tencent_im_sdk_plugin'
-  s.version          = '1.0.5'
-  s.summary          = 'A new flutter plugin project.'
+  s.version          = '4.0.3'
+  s.summary          = 'Tencent IM SDK For Flutter'
   s.description      = <<-DESC
-A new flutter plugin project.
+Tencent IM SDK For Flutter
                        DESC
-  s.homepage         = 'http://example.com'
+  s.homepage         = 'https://cloud.tencent.com/document/product/269'
   s.license          = { :file => '../LICENSE' }
-  s.author           = { 'Your Company' => 'email@example.com' }
+  s.author           = { 'tencent' => 'xingchenhe@tencent.com' }
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
@@ -25,7 +25,7 @@ A new flutter plugin project.
   s.vendored_frameworks = '**/*.framework'
 
   # SDK 依赖
-  s.dependency 'TXIMSDK_Plus_iOS', "6.2.2363"
+  s.dependency 'TXIMSDK_Plus_iOS', "6.5.2816"
   # s.dependency 'TXIMSDK_Smart_iOS'
   # s.dependency 'BrightFutures'
   s.dependency 'HydraAsync'

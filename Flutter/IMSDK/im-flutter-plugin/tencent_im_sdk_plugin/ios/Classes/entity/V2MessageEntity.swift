@@ -365,7 +365,8 @@ public class V2MessageEntity {
             let item: [String: Any] = [
                 "type": info.type.rawValue,
                 "value": info.value as Any,
-                "key": info.key as Any
+                "key": info.key as Any,
+                "boolValue": info.boolValue as Bool,
             ]
             groupChangeInfoList.append(item)
         }

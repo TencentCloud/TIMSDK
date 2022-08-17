@@ -1,6 +1,7 @@
 // ignore_for_file: unused_import
 
 import 'package:js/js_util.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/V2_tim_topic_info.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_callback.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_application_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_info.dart';
@@ -9,6 +10,8 @@ import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_mem
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_member_info_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_member_operation_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_member_search_result.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_topic_info_result.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_topic_operation_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin_web/src/enum/group_add_opt.dart';
 import 'package:tencent_im_sdk_plugin_web/src/manager/im_sdk_plugin_js.dart';
@@ -27,6 +30,9 @@ import 'package:tencent_im_sdk_plugin_web/src/models/v2_tim_set_group_member_inf
 import 'package:tencent_im_sdk_plugin_web/src/models/v2_tim_set_group_member_role.dart';
 import 'package:tencent_im_sdk_plugin_web/src/models/v2_tim_transfer_group_owner.dart';
 import 'package:tencent_im_sdk_plugin_web/src/utils/utils.dart';
+
+import '../enum/group_receive_message_opt.dart';
+import '../models/v2_tim_get_conversation_list.dart';
 
 class V2TIMGroupManager {
   late TIM? timeweb;
@@ -57,10 +63,15 @@ class V2TIMGroupManager {
   Future<dynamic> getJoinedGroupList() async {
     try {
       final res = await wrappedPromiseToFuture(timeweb!.getGroupList());
-      log(res);
       var code = res.code;
-      var groupList = jsToMap(res.data)['groupList'] as List;
       if (code == 0) {
+        var groupList = jsToMap(res.data)['groupList'] as List;
+        // var groupProfileList = List.empty(growable: true);
+        // for (var element in groupList) {
+        //   final groupID = jsToMap(element)["groupID"];
+        //   final groupProfile = await getGroupProfile(groupID);
+        //   groupProfileList.add(groupProfile);
+        // }
         final result = V2TimGroupCreate.formateGroupListResult(groupList);
         return CommonUtils.returnSuccess<List<V2TimGroupInfo>>(result);
       } else {
@@ -141,9 +152,14 @@ class V2TIMGroupManager {
       final res = await wrappedPromiseToFuture(
           timeweb!.updateGroupProfile(mapToJSObj(updateGroupParams)));
       if (res.code == 0) {
-        final groupInfo = V2TimGroupCreate.convertGroupResultFromWebToDart(
-            jsToMap(jsToMap(res.data)['group']));
-        return CommonUtils.returnSuccessForCb(groupInfo);
+        // if (jsToMap(res.data)['group'] != null) {
+        //   final groupInfo = V2TimGroupCreate.convertGroupResultFromWebToDart(
+        //       jsToMap(jsToMap(res.data)['group']));
+        //   print(groupInfo);
+        //   return CommonUtils.returnSuccessForCb(groupInfo);
+        // }
+
+        return CommonUtils.returnSuccessForCb(null);
       } else {
         return CommonUtils.returnError('set group info failed');
       }
@@ -456,5 +472,201 @@ class V2TIMGroupManager {
   V2TimValueCallback<V2TimGroupApplicationResult> getGroupApplicationList() {
     return CommonUtils.returnErrorForValueCb<V2TimGroupApplicationResult>(
         "getGroupApplicationList feature does not exist on the web");
+  }
+
+  Future<dynamic> getJoinedCommunityList() async {
+    try {
+      final res =
+          await wrappedPromiseToFuture(timeweb!.getJoinedCommunityList());
+      var code = res.code;
+
+      if (code == 0) {
+        var groupList = jsToMap(res.data)['groupList'] as List;
+        var groupProfileList = List.empty(growable: true);
+        for (var element in groupList) {
+          final groupID = jsToMap(element)["groupID"];
+          final groupProfile = await getGroupProfile(groupID);
+          groupProfileList.add(groupProfile);
+        }
+        final result =
+            V2TimGroupCreate.formateGroupListResult(groupProfileList);
+        return CommonUtils.returnSuccess<List<V2TimGroupInfo>>(result);
+      } else {
+        return CommonUtils.returnErrorForValueCb<List<V2TimGroupInfo>>(
+            "getJoinedList Failed");
+      }
+    } catch (error) {
+      return CommonUtils.returnErrorForValueCb<List<V2TimGroupInfo>>(
+          error.toString());
+    }
+  }
+
+  Future<V2TimValueCallback<String>> createTopicInCommunity({
+    required String groupID,
+    required V2TimTopicInfo topicInfo,
+  }) async {
+    try {
+      final res = await wrappedPromiseToFuture(
+          timeweb!.createTopicInCommunity(mapToJSObj({
+        "groupID": groupID,
+        "topicName": topicInfo.topicName,
+        "avatar": topicInfo.topicFaceUrl,
+        "notification": topicInfo.notification,
+        "introduction": topicInfo.introduction,
+        "customData": topicInfo.customString,
+      })));
+      var code = res.code;
+      var result = jsToMap(res.data)["topicID"] as String;
+      if (code == 0) {
+        return CommonUtils.returnSuccess<String>(result);
+      } else {
+        return CommonUtils.returnErrorForValueCb<String>(
+            "createTopicInCommunity Failed");
+      }
+    } catch (error) {
+      return CommonUtils.returnErrorForValueCb<String>(error.toString());
+    }
+  }
+
+  Future<V2TimValueCallback<List<V2TimTopicInfoResult>>> getTopicInfoList({
+    required String groupID,
+    required List<String> topicIDList,
+  }) async {
+    try {
+      final res = await wrappedPromiseToFuture(timeweb!.getTopicList(
+          mapToJSObj({"groupID": groupID, "topicIDList": topicIDList})));
+      var code = res.code;
+      var result = jsToMap(res.data);
+      var successTopicResult = result["successTopicList"] as List;
+      var failedTopicResult = result["failureTopicList"] as List;
+      if (code == 0) {
+        final formatedSuccessResult = List.empty(growable: true);
+        final formatedFailureResult = List.empty(growable: true);
+        for (var element in successTopicResult) {
+          final item = jsToMap(element);
+          final formatedMessage = await GetConversationList.formateLasteMessage(
+              jsToMap(item["lastMessage"]));
+          final formatedItem = {
+            "topicInfo": {
+              "topicID": item["topicID"],
+              "topicName": item["topicName"],
+              "topicFaceUrl": item["avatar"],
+              "introduction": item["introduction"],
+              "notification": item["notification"],
+              "isAllMute": item["muteAllMembers"],
+              "selfMuteTime": jsToMap(item["selfInfo"])["muteTime"],
+              "customString": item["customData"],
+              "recvOpt": GroupRecvMsgOpt.convertMsgRecvOpt(
+                  jsToMap(item["selfInfo"])["messageRemindType"]),
+              "unreadCount": item["unreadCount"],
+              "lastMessage": formatedMessage,
+              "groupAtInfoList": GetConversationList.formateGroupAtInfoList(
+                  item["groupAtInfoList"])
+            }
+          };
+          formatedSuccessResult.add(formatedItem);
+        }
+
+        for (var element in failedTopicResult) {
+          final item = jsToMap(element);
+          final formatedMessage = await GetConversationList.formateLasteMessage(
+              jsToMap(item["lastMessage"]));
+          final formatedItem = {
+            "errorCode": element["code"],
+            "errorMessage": element["message"],
+            "topicInfo": {
+              "topicID": element["topicID"],
+              "topicName": element["topicName"],
+              "topicFaceUrl": element["avatar"],
+              "introduction": element["introduction"],
+              "notification": element["notification"],
+              "isAllMute": element["muteAllMembers"],
+              "selfMuteTime": jsToMap(element["selfInfo"])["muteTime"],
+              "customString": element["customData"],
+              "recvOpt": GroupRecvMsgOpt.convertMsgRecvOpt(
+                  jsToMap(element["selfInfo"])["messageRemindType"]),
+              "unreadCount": element["unreadCount"],
+              "lastMessage": formatedMessage,
+              "groupAtInfoList": GetConversationList.formateGroupAtInfoList(
+                  element["groupAtInfoList"])
+            }
+          };
+          formatedSuccessResult.add(formatedItem);
+        }
+
+        return CommonUtils.returnSuccess<List<V2TimTopicInfoResult>>(
+            [...formatedSuccessResult, ...formatedFailureResult]);
+      } else {
+        return CommonUtils.returnErrorForValueCb<List<V2TimTopicInfoResult>>(
+            "getTopicInfoList Failed");
+      }
+    } catch (error) {
+      return CommonUtils.returnErrorForValueCb<List<V2TimTopicInfoResult>>(
+          error.toString());
+    }
+  }
+
+  Future<V2TimCallback> setTopicInfo({
+    required String groupID,
+    required V2TimTopicInfo topicInfo,
+  }) async {
+    try {
+      final res =
+          await wrappedPromiseToFuture(timeweb!.updateTopicProfile(mapToJSObj({
+        "groupID": groupID,
+        "topicID": topicInfo.topicID,
+        "topicName": topicInfo.topicName,
+        "avatar": topicInfo.topicFaceUrl,
+        "notification": topicInfo.notification,
+        "introduction": topicInfo.introduction,
+        "customData": topicInfo.customString,
+        "muteAllMembers": topicInfo.isAllMute
+      })));
+      var code = res.code;
+      if (code == 0) {
+        return CommonUtils.returnSuccessWithDesc("update success");
+      } else {
+        return CommonUtils.returnError("createTopicInCommunity Failed");
+      }
+    } catch (error) {
+      return CommonUtils.returnError(error.toString());
+    }
+  }
+
+  Future<V2TimValueCallback<List<V2TimTopicOperationResult>>>
+      deleteTopicFromCommunity({
+    required String groupID,
+    required List<String> topicIDList,
+  }) async {
+    try {
+      final res = await wrappedPromiseToFuture(timeweb!
+          .deleteTopicFromCommunity(
+              mapToJSObj({"groupID": groupID, "topicIDList": topicIDList})));
+      var code = res.code;
+      if (code == 0) {
+        final successTopicList = jsToMap(res.data)["successTopicList"] as List;
+        final failureTopicList = jsToMap(res.data)["failureTopicList"] as List;
+        final formatedSuccessList = successTopicList
+            .map((e) => {
+                  "topicID": jsToMap(e)["topicID"],
+                })
+            .toList();
+        final formatedFailureList = failureTopicList
+            .map((e) => {
+                  "errorCode": jsToMap(e)["code"],
+                  "errorMessage": jsToMap(e)["message"],
+                  "topicID": jsToMap(e)["topicID"],
+                })
+            .toList();
+        return CommonUtils.returnSuccess<List<V2TimTopicOperationResult>>(
+            [...formatedSuccessList, ...formatedFailureList]);
+      } else {
+        return CommonUtils.returnErrorForValueCb<
+            List<V2TimTopicOperationResult>>("deleteTopicFromCommunity Failed");
+      }
+    } catch (error) {
+      return CommonUtils.returnErrorForValueCb<List<V2TimTopicOperationResult>>(
+          error.toString());
+    }
   }
 }

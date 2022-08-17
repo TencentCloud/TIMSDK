@@ -108,7 +108,7 @@ class V2TIMMessage {
     // 群系统通知消息
     if (elementType == MessageElemType.V2TIM_ELEM_TYPE_GROUP_TIPS) {
       final groupTipsElement = await convertGroupTipsMessage(message);
-      formatedMsg['groupTipsElem'] = groupTipsElement!.toJson();
+      formatedMsg['groupTipsElem'] = groupTipsElement?.toJson();
     }
 
     // 图片消息
@@ -233,13 +233,15 @@ class V2TIMMessage {
 
     final List<V2TimUserFullInfo>? userInfoList = userInFoRes.data;
     final List<V2TimGroupMemberInfo> memberList = List.empty(growable: true);
-    for (var e in userInfoList!) {
-      memberList.add(V2TimGroupMemberInfo(
-          faceUrl: e.faceUrl,
-          userID: e.userID,
-          nickName: e.nickName,
-          friendRemark: '',
-          nameCard: ''));
+    if(userInfoList != null){
+      for (var e in userInfoList) {
+        memberList.add(V2TimGroupMemberInfo(
+            faceUrl: e.faceUrl,
+            userID: e.userID,
+            nickName: e.nickName,
+            friendRemark: '',
+            nameCard: ''));
+      }
     }
     return memberList;
   }
@@ -250,11 +252,11 @@ class V2TIMMessage {
     });
 
     final List<V2TimUserFullInfo>? data = userInfoRes.data;
-    final userInfoDetails = data!.first;
+    final userInfoDetails = data?.first;
     final member = V2TimGroupMemberInfo(
-        faceUrl: userInfoDetails.faceUrl,
-        userID: userInfoDetails.userID,
-        nickName: userInfoDetails.nickName,
+        faceUrl: userInfoDetails?.faceUrl ?? "",
+        userID: userInfoDetails?.userID ?? "",
+        nickName: userInfoDetails?.nickName,
         friendRemark: '',
         nameCard: '');
     return member;

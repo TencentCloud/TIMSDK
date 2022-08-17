@@ -26,6 +26,7 @@ class SDKManager {
     private var sdkListenerList: [String: SDKListener] = [:];
     
     private var friendShipListenerList: [String: FriendshipListener] = [:];
+    public static var uc:UInt32 = 0;
 	
 	init(channel: FlutterMethodChannel) {
 		self.channel = channel
@@ -53,7 +54,13 @@ class SDKManager {
 			)
 		}
 	}
-	
+    public func checkAbility(call: FlutterMethodCall, result: @escaping FlutterResult){
+        TencentImUtils.checkAbility(call: call, result: result,callback: AbCallback(success: {
+            CommonUtils.resultSuccess(call: call, result: result, data: 1);
+        }, error: { code, desc in
+            CommonUtils.resultFailed(desc: desc, code: code,  call: call, result: result)
+        }));
+    }
 	/**
 	* 登出
 	*/
@@ -118,6 +125,7 @@ class SDKManager {
 		let uiPlatform = CommonUtils.getParam(call: call, result: result, param: "uiPlatform") as! String;
 		if let sdkAppID = CommonUtils.getParam(call: call, result: result, param: "sdkAppID") as? Int32,
 		   let logLevel = CommonUtils.getParam(call: call, result: result, param: "logLevel") as? Int {
+//            V2TIMManager.sharedInstance().callExperimentalAPI("setTestEnvironment", param: true as NSObject?, succ: nil, fail: nil)
             V2TIMManager.sharedInstance().callExperimentalAPI("setUIPlatform",param: uiPlatform as NSObject,succ:{_ in
 				let config = V2TIMSDKConfig()
 				let sdkListener = SDKListener(listenerUid: listenerUuid);
@@ -256,7 +264,16 @@ class SDKManager {
             CommonUtils.resultSuccess(call: call, result: result, data: "removed all removeFriendListener");
         }
 	}
-
+    public func doBackground(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let unreadCount = CommonUtils.getParam(call: call, result: result, param: "unreadCount") as! UInt32;
+        SDKManager.uc = unreadCount
+        CommonUtils.resultSuccess(call: call, result: result)
+    }
+    public func doForeground(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        SDKManager.uc = 0
+        CommonUtils.resultSuccess(call: call, result: result)
+    }
+    
 	public func setGroupListener(call: FlutterMethodCall, result: @escaping FlutterResult) {
         let listenerUuid: String = CommonUtils.getParam(call: call, result: result, param: "listenerUuid") as! String;
         let groupListener = GroupListener(listenerUid: listenerUuid);
@@ -323,23 +340,27 @@ class SDKManager {
 	
 	
 	public func setAPNS(call: FlutterMethodCall, result: @escaping FlutterResult) {
-		if let businessID = CommonUtils.getParam(call: call, result: result, param: "businessID") as? Int32,
-			let token = CommonUtils.getParam(call: call, result: result, param: "token") as? String,
-			let isTPNSToken = CommonUtils.getParam(call: call, result: result, param: "isTPNSToken") as? Bool {
-			let config = V2TIMAPNSConfig()
-			
-			if(isTPNSToken){
-				config.token = token.data(using: String.Encoding.utf8, allowLossyConversion: true)
-			}else{
-				config.token = token.hexadecimal()
-			}
-			
-			config.businessID = businessID
-			config.isTPNSToken = isTPNSToken;
-			V2TIMManager.sharedInstance().setAPNS(config, succ: {
-				CommonUtils.resultSuccess(call: call, result: result);
-			}, fail: TencentImUtils.returnErrorClosures(call: call, result: result));
-		}
+        TencentImUtils.checkAbility(call: call, result: result, callback: AbCallback(success: {
+            if let businessID = CommonUtils.getParam(call: call, result: result, param: "businessID") as? Int32,
+                let token = CommonUtils.getParam(call: call, result: result, param: "token") as? String,
+                let isTPNSToken = CommonUtils.getParam(call: call, result: result, param: "isTPNSToken") as? Bool {
+                let config = V2TIMAPNSConfig()
+                
+                if(isTPNSToken){
+                    config.token = token.data(using: String.Encoding.utf8, allowLossyConversion: true)
+                }else{
+                    config.token = token.hexadecimal()
+                }
+                
+                config.businessID = businessID
+                // config.isTPNSToken = isTPNSToken;
+                V2TIMManager.sharedInstance().setAPNS(config, succ: {
+                    CommonUtils.resultSuccess(call: call, result: result);
+                }, fail: TencentImUtils.returnErrorClosures(call: call, result: result));
+            }
+        }, error: { code, desc in
+            CommonUtils.resultFailed(desc: desc, code: code, call: call, result: result)
+        }))
 	}
 
 	public func getUsersInfo(call: FlutterMethodCall, result: @escaping FlutterResult) { 
@@ -375,7 +396,37 @@ class SDKManager {
 			APNSListener.count = unreadCount
 		}
 	}
+    public func getUserStatus(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let userIDList:[String] = CommonUtils.getParam(call: call, result: result, param: "userIDList") as! [String];
+        
+        V2TIMManager.sharedInstance().getUserStatus(userIDList) { statusList in
+            var res: [[String: Any]] = []
+            statusList?.forEach({ status in
+                var item: [String: Any] = [:]
+                item["customStatus"] = status.customStatus ?? "";
+                item["statusType"] = status.statusType.rawValue;
+                item["userID"] = status.userID;
+                res.append(item)
+            })
+            print(res)
+            CommonUtils.resultSuccess(desc: "ok", call: call, result: result, data: res)
+        } fail: { code, desc in
+            CommonUtils.resultFailed(desc: desc, code: code, call: call, result: result)
+        }
 
+    }
+    public func setSelfStatus(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let status = CommonUtils.getParam(call: call, result: result, param: "status") as? String;
+        let s = V2TIMUserStatus();
+        s.customStatus = status;
+        V2TIMManager.sharedInstance().setSelfStatus(s) {
+            CommonUtils.resultSuccess(call: call, result: result)
+        } fail: { code, desc in
+            CommonUtils.resultFailed(desc: desc, code: code, call: call, result: result)
+        }
+    }
+    
+    
 	public func setSelfInfo(call: FlutterMethodCall, result: @escaping FlutterResult) {
 		let nickName = CommonUtils.getParam(call: call, result: result, param: "nickName") as? String;
 		let faceURL = CommonUtils.getParam(call: call, result: result, param: "faceUrl") as? String;
@@ -426,7 +477,23 @@ class SDKManager {
 			CommonUtils.resultSuccess(call: call, result: result)
 		}, fail: TencentImUtils.returnErrorClosures(call: call, result: result));
 	}
-	
+    public func subscribeUserStatus(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let userIDList:[String] = CommonUtils.getParam(call: call, result: result, param: "userIDList") as! [String];
+        V2TIMManager.sharedInstance().subscribeUserStatus(userIDList) {
+            CommonUtils.resultSuccess(call: call, result: result)
+        } fail: { code, desc in
+            CommonUtils.resultFailed(desc: desc, code: code, call: call, result: result)
+        }
+
+    }
+    public func unsubscribeUserStatus(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let userIDList:[String] = CommonUtils.getParam(call: call, result: result, param: "userIDList") as! [String];
+        V2TIMManager.sharedInstance().unsubscribeUserStatus(userIDList) {
+            CommonUtils.resultSuccess(call: call, result: result)
+        } fail: { code, desc in
+            CommonUtils.resultFailed(desc: desc, code: code, call: call, result: result)
+        }
+    }
 }
 
 

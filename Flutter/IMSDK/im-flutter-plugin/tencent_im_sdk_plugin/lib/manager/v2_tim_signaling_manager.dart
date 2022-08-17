@@ -6,6 +6,7 @@ import 'package:tencent_im_sdk_plugin/enum/offlinePushInfo.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_signaling_info.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/utils/utils.dart';
 import 'package:uuid/uuid.dart';
 
 /// 提供了信令操作相关接口
@@ -84,7 +85,7 @@ class V2TIMSignalingManager {
               "data": data,
               "timeout": timeout,
               "onlineUserOnly": onlineUserOnly,
-              "offlinePushInfo": offlinePushInfo?.toJson()
+              "offlinePushInfo": offlinePushInfo?.toJson(),
             },
           ),
         ),
@@ -221,6 +222,9 @@ class V2TIMSignalingManager {
   ///@nodoc
   Map buildParam(Map param) {
     param["TIMManagerName"] = "signalingManager";
+    try {
+      param["ability"] = Utils.getAbility();
+    } catch (err) {}
     return param;
   }
 

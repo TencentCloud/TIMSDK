@@ -30,11 +30,14 @@ import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_info.dart';
 
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message_receipt.dart';
+import 'package:tencent_im_sdk_plugin/models/v2_tim_topic_info.dart';
 
 import 'package:tencent_im_sdk_plugin/models/v2_tim_user_info.dart';
+import 'package:tencent_im_sdk_plugin/models/v2_tim_user_status.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_user_full_info.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/im_flutter_plugin_platform_interface.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/utils/const.dart';
 import 'package:uuid/uuid.dart';
 
 /// IM SDK 主核心类，负责 IM SDK 的初始化、登录、消息收发，建群退群等功能。
@@ -230,6 +233,17 @@ class V2TIMManager {
                   initSDKListener.onUserSigExpired();
                 });
                 break;
+              case 'onUserStatusChanged':
+                List<dynamic> statusList = params['statusList'];
+                List<V2TimUserStatus> list = List.empty(growable: true);
+                statusList.forEach((element) {
+                  list.add(V2TimUserStatus.fromJson(
+                      Map<String, dynamic>.from(element)));
+                });
+                _catchListenerError(() {
+                  initSDKListener.onUserStatusChanged(list);
+                });
+                break;
             }
           }
         } else if (call.method == ListenerType.groupListener) {
@@ -249,7 +263,13 @@ class V2TIMManager {
               params['isAgreeJoin'] == null ? false : params['isAgreeJoin'];
           String customData =
               params['customData'] == null ? '' : params['customData'];
-
+          String topicID = params["topicID"] == null ? "" : params["topicID"];
+          List<String> topicIDList = params["topicIDList"] == null
+              ? List.empty(growable: true)
+              : List.castFrom(params["topicIDList"]);
+          V2TimTopicInfo topicInfo = params["topicInfo"] == null
+              ? V2TimTopicInfo()
+              : V2TimTopicInfo.fromJson(params['topicInfo']);
           Map<String, String> groupAttributeMap =
               params['groupAttributeMap'] == null
                   ? new Map<String, String>()
@@ -430,6 +450,30 @@ class V2TIMManager {
                   );
                 });
                 break;
+              case "onTopicCreated":
+                _catchListenerError(() {
+                  groupListener.onTopicCreated(
+                    groupID,
+                    topicID,
+                  );
+                });
+                break;
+              case "onTopicDeleted":
+                _catchListenerError(() {
+                  groupListener.onTopicDeleted(
+                    groupID,
+                    topicIDList,
+                  );
+                });
+                break;
+              case "onTopicInfoChanged":
+                _catchListenerError(() {
+                  groupListener.onTopicInfoChanged(
+                    groupID,
+                    topicInfo,
+                  );
+                });
+                break;
             }
           }
         } else if (call.method == ListenerType.advancedMsgListener) {
@@ -443,10 +487,14 @@ class V2TIMManager {
           if (listener != null) {
             switch (type) {
               case 'onRecvNewMessage':
-                listener.onRecvNewMessage(V2TimMessage.fromJson(params));
+                _catchListenerError(() {
+                  listener.onRecvNewMessage(V2TimMessage.fromJson(params));
+                });
                 break;
               case 'onRecvMessageModified':
-                listener.onRecvMessageModified(V2TimMessage.fromJson(params));
+                _catchListenerError(() {
+                  listener.onRecvMessageModified(V2TimMessage.fromJson(params));
+                });
                 break;
               case 'onRecvC2CReadReceipt':
                 List dataList = params;
@@ -541,6 +589,51 @@ class V2TIMManager {
                 dynamic params = data['data'] == null ? 0 : data['data'];
                 _catchListenerError(() {
                   listener.onTotalUnreadMessageCountChanged(params);
+                });
+                break;
+              case "onConversationGroupCreated":
+                Map<String, dynamic> param = data["data"];
+                String groupName = param["groupName"];
+                List<V2TimConversation> list = List.empty(growable: true);
+                List.from(param["conversationList"]).forEach((v) {
+                  list.add(V2TimConversation.fromJson(v));
+                });
+                _catchListenerError(() {
+                  listener.onConversationGroupCreated(groupName, list);
+                });
+                break;
+              case "onConversationGroupDeleted":
+                _catchListenerError(() {
+                  listener.onConversationGroupDeleted(data["data"]);
+                });
+                break;
+              case "onConversationGroupNameChanged":
+                Map<String, dynamic> param = data["data"];
+                _catchListenerError(() {
+                  listener.onConversationGroupNameChanged(
+                      param["oldName"], param["newName"]);
+                });
+                break;
+              case "onConversationsAddedToGroup":
+                Map<String, dynamic> param = data["data"];
+                String groupName = param["groupName"];
+                List<V2TimConversation> list = List.empty(growable: true);
+                List.from(param["conversationList"]).forEach((v) {
+                  list.add(V2TimConversation.fromJson(v));
+                });
+                _catchListenerError(() {
+                  listener.onConversationsAddedToGroup(groupName, list);
+                });
+                break;
+              case "onConversationsDeletedFromGroup":
+                Map<String, dynamic> param = data["data"];
+                String groupName = param["groupName"];
+                List<V2TimConversation> list = List.empty(growable: true);
+                List.from(param["conversationList"]).forEach((v) {
+                  list.add(V2TimConversation.fromJson(v));
+                });
+                _catchListenerError(() {
+                  listener.onConversationsDeletedFromGroup(groupName, list);
                 });
                 break;
             }
@@ -713,9 +806,9 @@ class V2TIMManager {
 
   ///@nodoc
   String _getUiPlatform(String trace) {
-    String platfrom = "flutter";
-    if (trace.contains("package:tim_ui_kit")) {
-      platfrom = "flutter_uikit";
+    String platfrom = TencentIMSDKCONST.Flutter;
+    if (trace.contains(TencentIMSDKCONST.FlutterUIKitPkg)) {
+      platfrom = TencentIMSDKCONST.FlutterUIKit;
     }
     return platfrom;
   }
@@ -1194,6 +1287,60 @@ class V2TIMManager {
     return ImFlutterPlatform.instance.removeGroupListener(
       listenerUuid: listenerUuid,
     );
+  }
+
+  /// 能力位检测
+  ///
+  ///
+  Future<V2TimValueCallback<int>> checkAbility() {
+    return ImFlutterPlatform.instance.checkAbility();
+  }
+
+  /// 获取用户在线状态
+  /// 注意：4.0.3版本开始支持，web不支持
+  ///
+  ///
+  Future<V2TimValueCallback<List<V2TimUserStatus>>> getUserStatus({
+    required List<String> userIDList,
+  }) {
+    return ImFlutterPlatform.instance.getUserStatus(userIDList: userIDList);
+  }
+
+  /// 设置当前登录用户在线状态
+  /// 注意：4.0.3版本开始支持，web不支持
+  ///
+  ///
+  Future<V2TimCallback> setSelfStatus({
+    required String status,
+  }) {
+    return ImFlutterPlatform.instance.setSelfStatus(status: status);
+  }
+
+  /// 订阅用户状态
+  /// 注意：4.0.8版本开始支持，web不支持
+  /// 当成功订阅用户状态后，当对方的状态（包含在线状态、自定义状态）发生变更后，您可以监听 @onUserStatusChanged 回调来感知
+  /// 如果您需要订阅好友列表的状态，您只需要在控制台上打开开关即可，无需调用该接口
+  /// 该接口不支持订阅自己，您可以通过监听 @onUserStatusChanged 回调来感知自身的自定义状态的变更
+  /// 订阅列表有个数限制，超过限制后，会自动淘汰最先订阅的用户
+  /// 该功能为 IM 旗舰版功能，购买旗舰版套餐包后可使用，详见价格说明。
+  ///
+  ///
+  Future<V2TimCallback> subscribeUserStatus({
+    required List<String> userIDList,
+  }) {
+    return ImFlutterPlatform.instance
+        .subscribeUserStatus(userIDList: userIDList);
+  }
+
+  /// 取消订阅用户状态
+  /// 注意：4.0.8版本开始支持，web不支持
+  /// 当 userIDList 为空或者 nil 时，取消当前所有的订阅
+  /// 该功能为 IM 旗舰版功能，购买旗舰版套餐包后可使用，详见价格说明。
+  Future<V2TimCallback> unsubscribeUserStatus({
+    required List<String> userIDList,
+  }) {
+    return ImFlutterPlatform.instance
+        .unsubscribeUserStatus(userIDList: userIDList);
   }
 
   /// 设置apns监听
