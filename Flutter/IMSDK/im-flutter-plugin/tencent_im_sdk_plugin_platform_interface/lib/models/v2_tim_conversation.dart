@@ -1,3 +1,4 @@
+
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_message.dart';
 
 import 'v2_tim_group_at_info.dart';
@@ -22,6 +23,9 @@ class V2TimConversation {
   int? recvOpt;
   List<V2TimGroupAtInfo?>? groupAtInfoList = List.empty(growable: true);
   int? orderkey;
+  List<int?>? markList;
+  String? customData;
+  List<String?>? conversationGroupList;
 
   V2TimConversation({
     required this.conversationID,
@@ -39,6 +43,9 @@ class V2TimConversation {
     this.isPinned,
     this.recvOpt,
     this.orderkey,
+    this.markList,
+    this.customData,
+    this.conversationGroupList,
   });
 
   V2TimConversation.fromJson(Map<String, dynamic> json) {
@@ -57,7 +64,21 @@ class V2TimConversation {
         ? V2TimMessage.fromJson(json['lastMessage'])
         : null;
     draftText = json['draftText'];
+    customData = json['customData'];
     draftTimestamp = json['draftTimestamp'];
+    if(json['markList']!=null){
+      markList = List.empty(growable: true);
+      json['markList'].forEach((v){
+        markList?.add(v);
+      });
+    }
+    if(json['conversationGroupList']!=null){
+      conversationGroupList = List.empty(growable: true);
+      json['conversationGroupList'].forEach((v){
+        conversationGroupList?.add(v);
+      });
+    }
+    
     if (json['groupAtInfoList'] != null) {
       groupAtInfoList = List.empty(growable: true);
       json['groupAtInfoList'].forEach((v) {
@@ -79,6 +100,7 @@ class V2TimConversation {
     data['isPinned'] = isPinned;
     data['recvOpt'] = recvOpt;
     data['orderkey'] = orderkey;
+    data['customData'] = customData;
     if (lastMessage != null) {
       data['lastMessage'] = lastMessage!.toJson();
     }
@@ -87,6 +109,14 @@ class V2TimConversation {
     if (groupAtInfoList != null) {
       data['groupAtInfoList'] =
           groupAtInfoList!.map((v) => v!.toJson()).toList();
+    }
+    if (conversationGroupList != null) {
+      data['conversationGroupList'] =
+          conversationGroupList!.map((v) => v).toList();
+    }
+    if (markList != null) {
+      data['markList'] =
+          markList!.map((v) => v).toList();
     }
     return data;
   }

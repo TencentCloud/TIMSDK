@@ -1,3 +1,5 @@
+// ignore_for_file: empty_catches
+
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:typed_data';
@@ -10,10 +12,13 @@ import 'package:tencent_im_sdk_plugin_platform_interface/enum/V2TimGroupListener
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/get_group_message_read_member_list_filter.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/history_message_get_type.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/V2TimSimpleMsgListener.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/enum/message_elem_type.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/im_flutter_plugin_platform_interface.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/V2_tim_topic_info.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_callback.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_conversation.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_conversationList_filter.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_conversation_operation_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_conversation_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_friend_application_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_friend_check_result.dart';
@@ -41,7 +46,9 @@ import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_receive_m
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_topic_info_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_topic_operation_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_user_full_info.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_user_status.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_value_callback.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/utils/utils.dart';
 
 import 'enum/V2TimSDKListener.dart';
 import 'models/v2_tim_group_member_full_info.dart';
@@ -2379,6 +2386,7 @@ class MethodChannelIm extends ImFlutterPlatform {
     int lastMsgSeq = -1,
     required int count,
     String? lastMsgID,
+    List<int>? messageTypeList,
   }) async {
     return V2TimValueCallback<List<V2TimMessage>>.fromJson(
       formatJson(
@@ -2392,6 +2400,7 @@ class MethodChannelIm extends ImFlutterPlatform {
               'lastMsgSeq': lastMsgSeq,
               "count": count,
               "lastMsgID": lastMsgID,
+              "messageTypeList": messageTypeList,
             },
           ),
         ),
@@ -2844,114 +2853,330 @@ class MethodChannelIm extends ImFlutterPlatform {
       ),
     );
   }
-  @override
-  Future<V2TimValueCallback<List<V2TimGroupInfo>>> getJoinedCommunityList() async{
-    return V2TimValueCallback<List<V2TimGroupInfo>>.fromJson(
-      formatJson(
-        await _channel.invokeMethod('getJoinedCommunityList',buildGroupManagerParam({
 
-        }))
-      )
-    );
+  @override
+  Future<V2TimValueCallback<List<V2TimGroupInfo>>>
+      getJoinedCommunityList() async {
+    return V2TimValueCallback<List<V2TimGroupInfo>>.fromJson(formatJson(
+        await _channel.invokeMethod(
+            'getJoinedCommunityList', buildGroupManagerParam({}))));
   }
+
   @override
   Future<V2TimValueCallback<String>> createTopicInCommunity({
-    required String 	groupID,
-     required V2TimTopicInfo topicInfo,
-  }) async{
-    return V2TimValueCallback<String>.fromJson(
-      formatJson(
-        await _channel.invokeMethod('createTopicInCommunity',buildGroupManagerParam({
-          "groupID":groupID,
-          "topicInfo": topicInfo.toJson()
-        }))
-      )
-    );
+    required String groupID,
+    required V2TimTopicInfo topicInfo,
+  }) async {
+    return V2TimValueCallback<String>.fromJson(formatJson(
+        await _channel.invokeMethod(
+            'createTopicInCommunity',
+            buildGroupManagerParam(
+                {"groupID": groupID, "topicInfo": topicInfo.toJson()}))));
   }
 
   @override
-  Future<V2TimValueCallback<List<V2TimTopicOperationResult>>> deleteTopicFromCommunity(
-    {
-      required String 	groupID,
-      required 	List< String > 	topicIDList,
-    }
-  ) async{
+  Future<V2TimValueCallback<List<V2TimTopicOperationResult>>>
+      deleteTopicFromCommunity({
+    required String groupID,
+    required List<String> topicIDList,
+  }) async {
     return V2TimValueCallback<List<V2TimTopicOperationResult>>.fromJson(
-      formatJson(
-        await _channel.invokeMethod('deleteTopicFromCommunity',buildGroupManagerParam({
-          "groupID":groupID,
-          "topicInfo": topicIDList
-        }))
-      )
-    );
+        formatJson(await _channel.invokeMethod(
+            'deleteTopicFromCommunity',
+            buildGroupManagerParam(
+                {"groupID": groupID, "topicIDList": topicIDList}))));
   }
 
   @override
-  Future<V2TimCallback> setTopicInfo(
-    {
-      required V2TimTopicInfo topicInfo,
-    }
-  ) async{
-    return V2TimCallback.fromJson(
-      formatJson(
-        await _channel.invokeMethod('deleteTopicFromCommunity',buildGroupManagerParam({
-          "topicInfo":topicInfo.toJson(),
-        }))
-      )
-    );
+  Future<V2TimCallback> setTopicInfo({
+    required String groupID,
+    required V2TimTopicInfo topicInfo,
+  }) async {
+    return V2TimCallback.fromJson(formatJson(await _channel.invokeMethod(
+        'setTopicInfo',
+        buildGroupManagerParam({
+          "topicInfo": topicInfo.toJson(),
+          "groupID": groupID,
+        }))));
   }
 
   @override
-  Future<V2TimValueCallback<List<V2TimTopicInfoResult>>> getTopicInfoList(
-    {
-      required String 	groupID,
-      required 	List< String > 	topicIDList,
-    }
-  ) async{
-    return V2TimValueCallback<List<V2TimTopicInfoResult>>.fromJson(
-      formatJson(
-        await _channel.invokeMethod('getTopicInfoList',buildGroupManagerParam({
-          "groupID":groupID,
-          "topicInfo": topicIDList
-        }))
-      )
-    );
+  Future<V2TimValueCallback<List<V2TimTopicInfoResult>>> getTopicInfoList({
+    required String groupID,
+    required List<String> topicIDList,
+  }) async {
+    return V2TimValueCallback<List<V2TimTopicInfoResult>>.fromJson(formatJson(
+        await _channel.invokeMethod(
+            'getTopicInfoList',
+            buildGroupManagerParam(
+                {"groupID": groupID, "topicIDList": topicIDList}))));
   }
+
   @override
   Future<V2TimValueCallback<V2TimMessageChangeInfo>> modifyMessage({
     required V2TimMessage message,
   }) async {
     return V2TimValueCallback<V2TimMessageChangeInfo>.fromJson(
-      formatJson(
-        await _channel.invokeMethod('modifyMessage',buildMessageMangerParam({
-          "message":message.toJson(),
-        }))
-      )
-    );
+        formatJson(await _channel.invokeMethod(
+            'modifyMessage',
+            buildMessageMangerParam({
+              "message": message.toJson(),
+            }))));
+  }
+
+  @override 
+  Future<V2TimValueCallback<V2TimMessage>> appendMessage({
+    required String createMessageBaseId,
+    required String createMessageAppendId,
+  }) async {
+    return V2TimValueCallback<V2TimMessage>.fromJson(
+        formatJson(await _channel.invokeMethod(
+            'appendMessage',
+            buildMessageMangerParam({
+              "createMessageBaseId": createMessageBaseId,
+              "createMessageAppendId": createMessageAppendId,
+            }))));
+  }
+  @override
+  Future<V2TimValueCallback<List<V2TimUserStatus>>> getUserStatus({
+    required List< String > userIDList,
+  }) async {
+    return V2TimValueCallback<List<V2TimUserStatus>>.fromJson(
+        formatJson(await _channel.invokeMethod(
+            'getUserStatus',
+            buildTimManagerParam({
+              "userIDList": userIDList,
+            }))));
+  }
+
+  @override
+  Future<V2TimCallback> setSelfStatus({
+    required String status,
+  }) async {
+    return V2TimCallback.fromJson(
+        formatJson(await _channel.invokeMethod(
+            'setSelfStatus',
+            buildTimManagerParam({
+              "status": status,
+            }))));
+  }
+
+  @override
+  Future<V2TimValueCallback<int>> checkAbility() async {
+    return V2TimValueCallback<int>.fromJson(
+        formatJson(await _channel.invokeMethod(
+      'checkAbility',
+      buildTimManagerParam(
+        {},
+      ),
+    )));
+  }
+
+  @override
+  Future<V2TimCallback> subscribeUserStatus({
+    required List<String> userIDList,
+  }) async {
+    return V2TimCallback.fromJson(
+        formatJson(await _channel.invokeMethod(
+      'subscribeUserStatus',
+      buildTimManagerParam(
+        {
+          "userIDList":userIDList,
+        },
+      ),
+    )));
+  }
+  @override
+  Future<V2TimCallback> unsubscribeUserStatus({
+    required List< String > userIDList,
+  }) async {
+   return V2TimCallback.fromJson(
+        formatJson(await _channel.invokeMethod(
+      'unsubscribeUserStatus',
+      buildTimManagerParam(
+        {
+          "userIDList":userIDList,
+        },
+      ),
+    )));
+  }
+  @override
+   Future<V2TimValueCallback<List<V2TimConversationOperationResult> >> setConversationCustomData({
+    required String customData,
+    required List<String> conversationIDList,
+  }) async {
+    return V2TimValueCallback<List<V2TimConversationOperationResult>>.fromJson(
+        formatJson(await _channel.invokeMethod(
+      'setConversationCustomData',
+      buildConversationManagerParam(
+        {
+          "customData":customData,
+          "conversationIDList":conversationIDList,
+        },
+      ),
+    )));
+  }
+  @override
+  Future<V2TimValueCallback<V2TimConversationResult>> getConversationListByFilter({
+    required V2TimConversationListFilter filter,
+    
+  }) async {
+    return V2TimValueCallback<V2TimConversationResult>.fromJson(
+        formatJson(await _channel.invokeMethod(
+      'getConversationListByFilter',
+      buildConversationManagerParam(
+        {
+          "filter":filter.toJson(),
+        },
+      ),
+    )));
+  }
+  @override
+  Future<V2TimValueCallback<List<V2TimConversationOperationResult>>> markConversation({
+    required int markType,
+    required bool enableMark,
+    required List<String> conversationIDList,
+  }) async {
+    return V2TimValueCallback<List<V2TimConversationOperationResult>>.fromJson(
+        formatJson(await _channel.invokeMethod(
+      'markConversation',
+      buildConversationManagerParam(
+        {
+          "markType":markType,
+          "enableMark":enableMark,
+          "conversationIDList":conversationIDList,
+        },
+      ),
+    )));
+  }
+  @override
+  Future<V2TimValueCallback<List<V2TimConversationOperationResult>>> createConversationGroup({
+    required String groupName,
+    required List<String> conversationIDList,
+  }) async {
+    return V2TimValueCallback<List<V2TimConversationOperationResult>>.fromJson(
+        formatJson(await _channel.invokeMethod(
+      'createConversationGroup',
+      buildConversationManagerParam(
+        {
+          "groupName":groupName,
+          "conversationIDList":conversationIDList,
+        },
+      ),
+    )));
+  }
+  @override
+  Future<V2TimValueCallback<List<String>>> getConversationGroupList() async {
+    return V2TimValueCallback<List<String>>.fromJson(
+        formatJson(await _channel.invokeMethod(
+      'getConversationGroupList',
+      buildConversationManagerParam(
+        {
+          
+        },
+      ),
+    )));
+  }
+  @override
+  Future<V2TimCallback> deleteConversationGroup({
+    required String groupName,
+  }) async {
+    return V2TimCallback.fromJson(
+        formatJson(await _channel.invokeMethod(
+      'deleteConversationGroup',
+      buildConversationManagerParam(
+        {
+          "groupName":groupName,
+        },
+      ),
+    )));
+  }
+  @override
+   Future<V2TimCallback> renameConversationGroup({
+    required String oldName,
+    required String newName,
+  }) async {
+    return V2TimCallback.fromJson(
+        formatJson(await _channel.invokeMethod(
+      'renameConversationGroup',
+      buildConversationManagerParam(
+        {
+          "oldName":oldName,
+          "newName":newName,
+        },
+      ),
+    )));
+  }
+  @override
+  Future<V2TimValueCallback<List<V2TimConversationOperationResult>>> addConversationsToGroup({
+    required String groupName,
+    required List<String> conversationIDList,
+  }) async {
+    return V2TimValueCallback<List<V2TimConversationOperationResult>>.fromJson(
+        formatJson(await _channel.invokeMethod(
+      'addConversationsToGroup',
+      buildConversationManagerParam(
+        {
+          "groupName":groupName,
+          "conversationIDList":conversationIDList,
+        },
+      ),
+    )));
+  }
+  @override
+  Future<V2TimValueCallback<List<V2TimConversationOperationResult>>> deleteConversationsFromGroup({
+    required String groupName,
+    required List<String> conversationIDList,
+  }) async {
+    return V2TimValueCallback<List<V2TimConversationOperationResult>>.fromJson(
+        formatJson(await _channel.invokeMethod(
+      'deleteConversationsFromGroup',
+      buildConversationManagerParam(
+        {
+          "groupName":groupName,
+          "conversationIDList":conversationIDList,
+        },
+      ),
+    )));
   }
   Map buildGroupManagerParam(Map param) {
     param["TIMManagerName"] = "groupManager";
+    try {
+      param["ability"] = Utils.getAbility();
+    } catch (err) {}
     return param;
   }
 
   Map buildFriendManagerParam(Map param) {
     param["TIMManagerName"] = "friendshipManager";
+    try {
+      param["ability"] = Utils.getAbility();
+    } catch (err) {}
     return param;
   }
 
   Map buildTimManagerParam(Map param) {
     param["TIMManagerName"] = "timManager";
+    try {
+      param["ability"] = Utils.getAbility();
+    } catch (err) {}
     return param;
   }
 
   Map buildMessageMangerParam(Map param) {
     param["TIMManagerName"] = "messageManager";
+    try {
+      param["ability"] = Utils.getAbility();
+    } catch (err) {}
     return param;
   }
-
+  
   ///@nodoc
   Map buildConversationManagerParam(Map param) {
     param["TIMManagerName"] = "conversationManager";
+    try {
+      param["ability"] = Utils.getAbility();
+    } catch (err) {}
     return param;
   }
 

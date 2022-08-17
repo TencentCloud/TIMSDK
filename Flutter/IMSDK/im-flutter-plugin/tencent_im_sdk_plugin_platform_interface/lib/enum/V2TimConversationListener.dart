@@ -27,6 +27,15 @@ class V2TimConversationListener {
   OnTotalUnreadMessageCountChanged onTotalUnreadMessageCountChanged = (
     int totalUnreadCount,
   ) {};
+  OnConversationGroupCreated onConversationGroupCreated =
+      (String groupName, List<V2TimConversation> conversationList) {};
+  OnConversationGroupDeleted onConversationGroupDeleted = (String groupName) {};
+  OnConversationGroupNameChanged onConversationGroupNameChanged =
+      (String oldName, String newName) {};
+  OnConversationsAddedToGroup onConversationsAddedToGroup =
+      (String groupName, List<V2TimConversation> conversationList) {};
+  OnConversationsDeletedFromGroup onConversationsDeletedFromGroup =
+      (String groupName, List<V2TimConversation> conversationList) {};
   V2TimConversationListener({
     VoidCallback? onSyncServerStart,
     VoidCallback? onSyncServerFinish,
@@ -34,6 +43,11 @@ class V2TimConversationListener {
     OnNewConversation? onNewConversation,
     OnConversationChangedCallback? onConversationChanged,
     OnTotalUnreadMessageCountChanged? onTotalUnreadMessageCountChanged,
+    OnConversationGroupCreated? onConversationGroupCreated,
+    OnConversationGroupDeleted? onConversationGroupDeleted,
+    OnConversationGroupNameChanged? onConversationGroupNameChanged,
+    OnConversationsAddedToGroup? onConversationsAddedToGroup,
+    OnConversationsDeletedFromGroup? onConversationsDeletedFromGroup,
   }) {
     if (onSyncServerStart != null) {
       this.onSyncServerStart = onSyncServerStart;
@@ -52,6 +66,21 @@ class V2TimConversationListener {
     }
     if (onTotalUnreadMessageCountChanged != null) {
       this.onTotalUnreadMessageCountChanged = onTotalUnreadMessageCountChanged;
+    }
+    if (onConversationGroupCreated != null) {
+      this.onConversationGroupCreated = onConversationGroupCreated;
+    }
+    if (onConversationGroupDeleted != null) {
+      this.onConversationGroupDeleted = onConversationGroupDeleted;
+    }
+    if (onConversationGroupNameChanged != null) {
+      this.onConversationGroupNameChanged = onConversationGroupNameChanged;
+    }
+    if (onConversationsAddedToGroup != null) {
+      this.onConversationsAddedToGroup = onConversationsAddedToGroup;
+    }
+    if (onConversationsDeletedFromGroup != null) {
+      this.onConversationsDeletedFromGroup = onConversationsDeletedFromGroup;
     }
   }
 }

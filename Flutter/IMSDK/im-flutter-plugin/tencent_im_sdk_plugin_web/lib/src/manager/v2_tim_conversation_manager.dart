@@ -6,6 +6,7 @@ import 'package:tencent_im_sdk_plugin_platform_interface/enum/V2TimConversationL
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_conversation.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_conversation_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_value_callback.dart';
+import 'package:tencent_im_sdk_plugin_web/src/enum/event_enum.dart';
 import 'package:tencent_im_sdk_plugin_web/src/manager/im_sdk_plugin_js.dart';
 import 'package:tencent_im_sdk_plugin_web/src/models/v2_tim_delete_conversation.dart';
 import 'package:tencent_im_sdk_plugin_web/src/models/v2_tim_get_conversation.dart';
@@ -15,24 +16,27 @@ import 'package:tencent_im_sdk_plugin_web/src/utils/utils.dart';
 
 class V2TIMConversationManager {
   late TIM? timeweb;
+  static V2TimConversationListener? _conversationListener;
 
   V2TIMConversationManager() {
     timeweb = V2TIMManagerWeb.timWeb;
   }
+
+  static final _conversationListenerWeb = allowInterop((res) async {
+    List<dynamic> conversationList =
+        await GetConversationList.formateConversationList(jsToMap(res)['data']);
+    final convList =
+        conversationList.map((e) => V2TimConversation.fromJson(e)).toList();
+    _conversationListener?.onConversationChanged(convList);
+  });
 
 /*
   注意：web只有一个update回调(新增也在里面)，这个回调不做初始化磨平操作，native有新的会话
   即会在初始化时调用这个监听
 */
   void setConversationListener(V2TimConversationListener listener) async {
-    timeweb!.on("onConversationListUpdated", allowInterop((res) async {
-      List<dynamic> conversationList =
-          await GetConversationList.formateConversationList(
-              jsToMap(res)['data']);
-      final convList =
-          conversationList.map((e) => V2TimConversation.fromJson(e)).toList();
-      listener.onConversationChanged(convList);
-    }));
+    _conversationListener = listener;
+    timeweb!.on(EventType.CONVERSATION_LIST_UPDATED, _conversationListenerWeb);
   }
 
   void makeConversationListenerEventData(_channel, String type, data) {
@@ -117,5 +121,11 @@ class V2TIMConversationManager {
     print("web不支持获得未读消息总数此功能");
     return CommonUtils.returnErrorForValueCb<int>(
         "getTotalUnreadMessageCount feature does not exist on the web");
+  }
+
+  Future<void> removeConversationListener({
+    String? listenerUuid,
+  }) async {
+    timeweb!.off(EventType.CONVERSATION_LIST_UPDATED, _conversationListenerWeb);
   }
 }

@@ -12,7 +12,9 @@ class APNSListener: NSObject, V2TIMAPNSListener {
 	public static var count: UInt32 = 0;
 	
 	public func onSetAPPUnreadCount() -> UInt32 {
-		return APNSListener.count;
+        print("im sdk set unreadcount :")
+        print(SDKManager.uc)
+        return SDKManager.uc
 	}
 	
 }

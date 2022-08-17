@@ -94,8 +94,9 @@ class TIM {
   external Future revokeMessage(params);
   external Future sendMessage(param, [param2]);
   external Future reSendMessage(param);
-  external Future deleteMessages(param);
+  external Future deleteMessage(param);
   external Future setMessageRemindType(param);
+  external Future modifyMessage(param);
 
   // group
   external Future getGroupProfile(poaram);
@@ -116,6 +117,12 @@ class TIM {
   external Future handleGroupApplication(param);
   external Future searchGroupByID(param);
   external registerPlugin(param);
+  external Future getJoinedCommunityList();
+  external Future createTopicInCommunity(param);
+  external Future getTopicList(param);
+  external Future updateTopicProfile(param);
+  external Future deleteTopicFromCommunity(param);
+  external Future getUserStatus(param);
 }
 
 initTim(options) {

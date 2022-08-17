@@ -45,5 +45,18 @@ class SDKListener: NSObject, V2TIMSDKListener {
 	public func onSelfInfoUpdated(_ Info: V2TIMUserFullInfo!) {
 		TencentImSDKPlugin.invokeListener(type: ListenerType.onSelfInfoUpdated, method: "initSDKListener", data: V2UserFullInfoEntity.getDict(info: Info), listenerUuid: listenerUuid)
 	}
+    public func onUserStatusChanged(_ statusList: [V2TIMUserStatus]!){
+        var data:[String:Any] = [:];
+        var res: [[String: Any]] = []
+        statusList?.forEach({ status in
+            var item: [String: Any] = [:]
+            item["customStatus"] = status.customStatus ?? "";
+            item["statusType"] = status.statusType.rawValue;
+            item["userID"] = status.userID;
+            res.append(item)
+        })
+        data["statusList"] = res;
+        TencentImSDKPlugin.invokeListener(type: ListenerType.onUserStatusChanged, method: "initSDKListener", data: data, listenerUuid: listenerUuid)
+    }
 	
 }

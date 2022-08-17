@@ -32,6 +32,7 @@
 
 // ignore_for_file: file_names, prefer_function_declarations_over_variables
 
+import 'package:tencent_im_sdk_plugin_platform_interface/models/V2_tim_topic_info.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_change_info.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_member_change_info.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_member_info.dart';
@@ -104,6 +105,11 @@ class V2TimGroupListener {
     String groupID,
     Map<String, String> groupAttributeMap,
   ) {};
+OnTopicCreated 	onTopicCreated  = (String groupID, String topicID){};
+ 
+OnTopicDeleted 	onTopicDeleted  = (String groupID, List< String > topicIDList){};
+ 
+OnTopicInfoChanged 	onTopicInfoChanged  = (String groupID, V2TimTopicInfo topicInfo){};
 
   V2TimGroupListener({
     OnApplicationProcessedCallback? onApplicationProcessed,
@@ -122,6 +128,10 @@ class V2TimGroupListener {
     OnReceiveJoinApplicationCallback? onReceiveJoinApplication,
     OnReceiveRESTCustomDataCallback? onReceiveRESTCustomData,
     OnRevokeAdministratorCallback? onRevokeAdministrator,
+    OnTopicCreated? onTopicCreated,
+    OnTopicDeleted? onTopicDeleted,
+    OnTopicInfoChanged? onTopicInfoChanged,
+
   }) {
     if (onApplicationProcessed != null) {
       this.onApplicationProcessed = onApplicationProcessed;
@@ -170,6 +180,15 @@ class V2TimGroupListener {
     }
     if (onRevokeAdministrator != null) {
       this.onRevokeAdministrator = onRevokeAdministrator;
+    }
+    if (onTopicCreated != null) {
+      this.onTopicCreated = onTopicCreated;
+    }
+    if (onTopicDeleted != null) {
+      this.onTopicDeleted = onTopicDeleted;
+    }
+    if (onTopicInfoChanged != null) {
+      this.onTopicInfoChanged = onTopicInfoChanged;
     }
   }
 }

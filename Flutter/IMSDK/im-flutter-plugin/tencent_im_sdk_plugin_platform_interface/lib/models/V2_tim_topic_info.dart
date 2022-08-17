@@ -8,7 +8,7 @@ import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_message.d
 /// {@category Models}
 ///
 class V2TimTopicInfo {
-   String? topicID;
+  String? topicID;
   String? topicName;
   String? topicFaceUrl;
   String? introduction;
@@ -16,7 +16,7 @@ class V2TimTopicInfo {
   bool? isAllMute = false;
   int? selfMuteTime;
   String? customString;
-   int? recvOpt;
+  int? recvOpt;
   String? draftText;
   int? unreadCount = 0;
   V2TimMessage? lastMessage;
@@ -37,27 +37,27 @@ class V2TimTopicInfo {
     this.groupAtInfoList,
   });
   V2TimTopicInfo.fromJson(Map<String, dynamic> json) {
-   topicID = json['topicID'];
-   topicName = json['topicName'];
-   topicFaceUrl = json['topicFaceUrl'];
-   introduction = json['introduction'];
-   notification = json['notification'];
-   isAllMute = json['isAllMute'];
-   selfMuteTime = json['selfMuteTime'];
-   customString = json['customString'];
-   draftText = json['draftText'];
-   unreadCount = json['unreadCount'];
-    if(json['lastMessage']!=null){
+    topicID = json['topicID'];
+    topicName = json['topicName'];
+    topicFaceUrl = json['topicFaceUrl'];
+    introduction = json['introduction'];
+    notification = json['notification'];
+    isAllMute = json['isAllMute'];
+    selfMuteTime = json['selfMuteTime'];
+    customString = json['customString'];
+    draftText = json['draftText'];
+    unreadCount = json['unreadCount'];
+    if (json['lastMessage'] != null) {
       lastMessage = V2TimMessage.fromJson(json['lastMessage']);
     }
-   if (json['groupAtInfoList'] != null) {
+    if (json['groupAtInfoList'] != null) {
       groupAtInfoList = List.empty(growable: true);
       json['groupAtInfoList'].forEach((v) {
         groupAtInfoList!.add(V2TimGroupAtInfo.fromJson(v));
       });
     }
   }
-Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['topicID'] = topicID;
     data['topicName'] = topicName;
@@ -71,9 +71,9 @@ Map<String, dynamic> toJson() {
     data['unreadCount'] = unreadCount;
     data['lastMessage'] = lastMessage?.toJson();
     if (groupAtInfoList != null) {
-      data['groupAtInfoList'] = groupAtInfoList!.map((v) => v.toJson()).toList();
+      data['groupAtInfoList'] =
+          groupAtInfoList!.map((v) => v.toJson()).toList();
     }
     return data;
   }
-
 }

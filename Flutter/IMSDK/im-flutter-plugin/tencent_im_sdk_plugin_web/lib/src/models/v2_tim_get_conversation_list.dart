@@ -53,8 +53,14 @@ class GetConversationList {
 
   static formateConversationListItem(Map<String, dynamic> itemJS) async {
     Map<String, dynamic> conversationListItem = itemJS;
+    final originalConversationID = itemJS['conversationID'] as String;
+    var formatedConversationID = "";
+    formatedConversationID = originalConversationID.replaceAll("C2C", "c2c_");
+    formatedConversationID =
+        formatedConversationID.replaceAll("GROUP", "group_");
 
     conversationListItem["friendRemark"] = itemJS['remark'];
+    conversationListItem["conversationID"] = formatedConversationID;
 
     if (itemJS['lastMessage'] != null) {
       conversationListItem["lastMessage"] =
@@ -227,13 +233,16 @@ class GetConversationList {
   // 群组即群名称
   // C2C： 好友备注 => 昵称 =》 userID
   static String getShowName(Map<String, dynamic> itemJS) {
-    if (itemJS['remark'] != null) {
+    if (itemJS['remark'] != null && itemJS['remark'] != "") {
       return itemJS['remark'];
     } else if (itemJS['groupProfile'] != null) {
-      return jsToMap(itemJS['groupProfile'])['name'];
+      return itemJS['groupProfile']['name'];
     } else {
-      return jsToMap(itemJS['userProfile'])['nickName'] ??
-          jsToMap(itemJS['userProfile'])['userID'];
+      final hasNickName = itemJS["userProfile"]['nick'] != null &&
+          itemJS["userProfile"]['nick'] != "";
+      return hasNickName
+          ? itemJS["userProfile"]['nick']
+          : itemJS["userProfile"]['userID'];
     }
   }
 

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/utils/utils.dart';
 
 /// 提供离线推送相关的接口
 ///
@@ -44,6 +45,7 @@ class V2TIMOfflinePushManager {
           Platform.isIOS ? "setAPNS" : "setOfflinePushConfig",
           buildParam(
             {
+              "ability": Utils.getAbility(),
               "businessID": businessID,
               "token": token,
               "isTPNSToken": isTPNSToken,
@@ -57,7 +59,7 @@ class V2TIMOfflinePushManager {
   /// APP 检测到应用退后台时可以调用此接口，可以用作桌面应用角标的初始化未读数量。
   ///
   /// ```
-  /// 从5.0.1（native）版本开始，如果配置了离线推送，会收到厂商的离线推送通道下发的通知栏消息。
+  /// 从5.0.1（native）版本开始，如果配置了离线推送，会收到厂商的离线推送通道下发的通知栏消息，注意：仅安卓端需要调用。
   /// ```
   ///
   /// 参数
@@ -75,6 +77,7 @@ class V2TIMOfflinePushManager {
           "doBackground",
           buildParam(
             {
+              "ability": Utils.getAbility(),
               "unreadCount": unreadCount,
             },
           ),
@@ -86,7 +89,7 @@ class V2TIMOfflinePushManager {
   /// APP 检测到应用进前台时可以调用此接口
   ///
   /// ```
-  /// 从5.0.1（native）版本开始，对应 doBackground，会停止厂商的离线推送。但如果应用被 kill，仍然可以正常接收离线推送。
+  /// 从5.0.1（native）版本开始，对应 doBackground，会停止厂商的离线推送。但如果应用被 kill，仍然可以正常接收离线推送 注意：仅安卓端需要调用。
   /// ```
   ///
   /// 参数
@@ -100,7 +103,9 @@ class V2TIMOfflinePushManager {
         await _channel.invokeMethod(
           "doForeground",
           buildParam(
-            {},
+            {
+              "ability": Utils.getAbility(),
+            },
           ),
         ),
       ),
