@@ -57,6 +57,7 @@ const MessageAudio = defineComponent({
 		})
 		
     const handlePlay = () => {
+    			const audioUrl = props.data.url
 			if (audioUrl) {
 				audio.src = audioUrl;
 				audio.play();
