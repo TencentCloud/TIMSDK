@@ -1,8 +1,46 @@
 import  ImSDK_Plus
 import Hydra
 //  腾讯云工具类
+typealias abSuccess = () -> Void
+typealias abError = (_ code:Int32?,_ desc:String?) -> Void
 
+class AbCallback {
+    var success:abSuccess;
+    var error:abError;
+    init(success:@escaping abSuccess,error:@escaping abError){
+        self.success = success;
+        self.error = error;
+    }
+}
 public class TencentImUtils {
+  
+    static func checkAbility(call: FlutterMethodCall,result: @escaping FlutterResult,callback:AbCallback){
+        let params:[Int32] = CommonUtils.getParam(call: call, result: result, param: "ability") as! [Int32];
+        if(params.isEmpty){
+            callback.success();
+        }else{
+            let u64: UInt64 = 1
+            print(params[0])
+            var ab = u64 << params[0];
+            params.forEach({ item in
+                if(item != params[0]){
+                    ab = ab ^ (u64 << item);
+                }
+            })
+            print(ab)
+            V2TIMManager.sharedInstance().callExperimentalAPI("isCommercialAbilityEnabled",  param: ab as NSObject) {result in
+                let res = result as! Int;
+                if(res == 0){
+                    
+                    callback.error(70130,"the configuration to use this plugin was not obtained ("+String(params[0])+")")
+                }else{
+                    callback.success()
+                }
+            } fail: { code,desc in
+                callback.error(code, desc)
+            }
+        }
+    }
   public static func createMessage(call: FlutterMethodCall, result: @escaping FlutterResult, type: Int) -> V2TIMMessage {
 	var messageMap = call.arguments as! Dictionary<String, Any>
     var message: V2TIMMessage = V2TIMMessage()

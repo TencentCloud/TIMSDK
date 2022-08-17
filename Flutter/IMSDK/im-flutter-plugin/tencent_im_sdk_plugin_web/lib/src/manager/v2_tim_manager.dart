@@ -5,6 +5,7 @@ import 'package:tencent_im_sdk_plugin_platform_interface/enum/V2TimGroupListener
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/V2TimSDKListener.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/V2TimSimpleMsgListener.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/group_tips_elem_type.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/V2_tim_topic_info.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_callback.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_change_info.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_member_change_info.dart';
@@ -12,6 +13,7 @@ import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_mem
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_message.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_user_full_info.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_user_info.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_user_status.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin_web/src/enum/event_enum.dart';
 import 'package:tencent_im_sdk_plugin_web/src/enum/message_type.dart';
@@ -26,12 +28,14 @@ import 'package:tencent_im_sdk_plugin_web/src/models/v2_tim_profile.dart';
 import 'package:tencent_im_sdk_plugin_web/src/utils/utils.dart';
 import 'dart:js_util';
 
+import '../enum/group_receive_message_opt.dart';
+import '../models/v2_tim_get_conversation_list.dart';
 import 'im_sdk_plugin_js.dart';
 
 class V2TIMManager {
   static late TIM tim;
   static late V2TimSimpleMsgListener simpleMsglistener;
-  static late V2TimGroupListener groupListener;
+  static V2TimGroupListener? groupListener;
   static late String userID = "";
   // 多加一个init 为了保证在web SDKReady前调用不会被执行（磨平差异）
   static List<dynamic> friendList = ["init"];
@@ -370,127 +374,191 @@ class V2TIMManager {
   }
 
   void setGroupListener(V2TimGroupListener listener) {
-    submitGroupAttributeChanged(listener);
-    submitGroupInfoChangded(listener);
+    groupListener = listener;
+    submitGroupAttributeChanged();
+    submitGroupInfoChangded();
+    submitTopicChanged();
   }
 
-  static void submitGroupAttributeChanged(V2TimGroupListener listener) {
-    V2TIMManagerWeb.timWeb?.on(EventType.GROUP_ATTRIBUTES_UPDATED,
-        allowInterop((dynamic res) {
-      final reponse = jsToMap(res);
-      final responseData = jsToMap(reponse['data']);
-      final attributes = responseData['groupAttributes'];
-      final groupID = responseData['groupID'];
-      final Map<String, String> groupAttributeMap =
-          jsToMap(attributes) as Map<String, String>;
-
-      listener.onGroupAttributeChanged(groupID, groupAttributeMap);
-    }));
+  void removeGroupListener() {
+    V2TIMManagerWeb.timWeb
+        ?.off(EventType.GROUP_ATTRIBUTES_UPDATED, _groupAttributeChangeHandler);
+    V2TIMManagerWeb.timWeb
+        ?.off(EventType.MESSAGE_RECEIVED, _groupInfoChanageHandler);
+    V2TIMManagerWeb.timWeb?.off(EventType.TOPIC_CREATED, _topicCreateHandler);
+    V2TIMManagerWeb.timWeb?.off(EventType.TOPIC_DELETED, _topicDeletedHandler);
+    V2TIMManagerWeb.timWeb?.off(EventType.TOPIC_UPDATED, _topicUpdateHandler);
   }
 
-  static void submitGroupInfoChangded(V2TimGroupListener listener) {
-    V2TIMManagerWeb.timWeb?.on(EventType.MESSAGE_RECEIVED,
-        allowInterop((dynamic response) {
-      final List message = jsToMap(response)["data"];
-      for (var item in message) {
-        final formatedItem = jsToMap(item);
-        // 处理群提示消息
-        loop() async {
-          if (formatedItem['type'] == MsgType.MSG_GRP_TIP) {
-            final tipsMessageElement =
-                await V2TIMMessage.convertGroupTipsMessage(formatedItem);
-            final groupID = tipsMessageElement!.groupID;
-            final type = tipsMessageElement.type;
-            if (type ==
-                GroupTipsElemType.V2TIM_GROUP_TIPS_TYPE_GROUP_INFO_CHANGE) {
-              final changeInfoList = tipsMessageElement.groupChangeInfoList
-                  as List<V2TimGroupChangeInfo>;
-              listener.onGroupInfoChanged(groupID, changeInfoList);
-            }
+  static final _topicCreateHandler = allowInterop((dynamic res) {
+    final reponse = jsToMap(res);
+    groupListener?.onTopicCreated(jsToMap(reponse['data'])['groupID'],
+        jsToMap(reponse['data'])['topicID']);
+  });
 
-            if (type == GroupTipsElemType.V2TIM_GROUP_TIPS_TYPE_INVITE) {
-              final memberList =
-                  tipsMessageElement.memberList as List<V2TimGroupMemberInfo>;
-              final opUser = tipsMessageElement.opMember;
-              listener.onMemberInvited(groupID, opUser, memberList);
-            }
+  static final _topicUpdateHandler = allowInterop((dynamic res) async {
+    final topicInfo = jsToMap(jsToMap(res.data)['topic']);
+    final formatedMessage = await GetConversationList.formateLasteMessage(
+        jsToMap(topicInfo["lastMessage"]));
+    final formatedTopicInfo = V2TimTopicInfo.fromJson({
+      "topicID": topicInfo["topicID"],
+      "topicName": topicInfo["topicName"],
+      "topicFaceUrl": topicInfo["avatar"],
+      "introduction": topicInfo["introduction"],
+      "notification": topicInfo["notification"],
+      "isAllMute": topicInfo["muteAllMembers"],
+      "selfMuteTime": jsToMap(topicInfo["selfInfo"])["muteTime"],
+      "customString": topicInfo["customData"],
+      "recvOpt": GroupRecvMsgOpt.convertMsgRecvOpt(
+          jsToMap(topicInfo["selfInfo"])["messageRemindType"]),
+      "unreadCount": topicInfo["unreadCount"],
+      "lastMessage": formatedMessage,
+      "groupAtInfoList": GetConversationList.formateGroupAtInfoList(
+          topicInfo["groupAtInfoList"])
+    });
+    groupListener?.onTopicInfoChanged(
+        jsToMap(res.data)['groupID'], formatedTopicInfo);
+  });
 
-            if (type == GroupTipsElemType.V2TIM_GROUP_TIPS_TYPE_JOIN) {
-              final memberList =
-                  tipsMessageElement.memberList as List<V2TimGroupMemberInfo>;
-              listener.onMemberEnter(groupID, memberList);
-            }
+  static final _topicDeletedHandler = allowInterop((dynamic res) {
+    final groupID = jsToMap(res.data)['groupID'] as String;
+    final topicIDList = jsToMap(res.data)['topicIDList'] as List;
+    groupListener?.onTopicDeleted(
+        groupID, topicIDList.map((e) => e as String).toList());
+  });
 
-            if (type == GroupTipsElemType.V2TIM_GROUP_TIPS_TYPE_KICKED) {
-              final memberList =
-                  tipsMessageElement.memberList as List<V2TimGroupMemberInfo>;
-              final opUser = tipsMessageElement.opMember;
-              listener.onMemberKicked(groupID, opUser, memberList);
-            }
+  static void submitTopicChanged() {
+    V2TIMManagerWeb.timWeb?.on(EventType.TOPIC_CREATED, _topicCreateHandler);
 
-            if (type == GroupTipsElemType.V2TIM_GROUP_TIPS_TYPE_QUIT) {
-              final memberList =
-                  tipsMessageElement.memberList as V2TimGroupMemberInfo;
-              listener.onMemberLeave(groupID, memberList);
-            }
+    V2TIMManagerWeb.timWeb?.on(EventType.TOPIC_DELETED, _topicDeletedHandler);
 
-            if (type == GroupTipsElemType.V2TIM_GROUP_TIPS_TYPE_SET_ADMIN) {
-              final memberList =
-                  tipsMessageElement.memberList as List<V2TimGroupMemberInfo>;
-              final opUser = tipsMessageElement.opMember;
-              listener.onGrantAdministrator(groupID, opUser, memberList);
-            }
+    V2TIMManagerWeb.timWeb?.on(EventType.TOPIC_UPDATED, _topicUpdateHandler);
+  }
 
-            if (type == GroupTipsElemType.V2TIM_GROUP_TIPS_TYPE_CANCEL_ADMIN) {
-              final memberList =
-                  tipsMessageElement.memberList as List<V2TimGroupMemberInfo>;
-              final opUser = tipsMessageElement.opMember;
-              listener.onRevokeAdministrator(groupID, opUser, memberList);
-            }
+  static final _groupAttributeChangeHandler = allowInterop((dynamic res) {
+    final reponse = jsToMap(res);
+    final responseData = jsToMap(reponse['data']);
+    final attributes = responseData['groupAttributes'];
+    final groupID = responseData['groupID'];
+    final Map<String, String> groupAttributeMap =
+        jsToMap(attributes) as Map<String, String>;
 
-            if (type ==
-                GroupTipsElemType.V2TIM_GROUP_TIPS_TYPE_MEMBER_INFO_CHANGE) {
-              final memberChangeInfoList = tipsMessageElement
-                  .memberChangeInfoList as List<V2TimGroupMemberChangeInfo>;
-              listener.onMemberInfoChanged(groupID, memberChangeInfoList);
-            }
+    groupListener?.onGroupAttributeChanged(groupID, groupAttributeMap);
+  });
+
+  static void submitGroupAttributeChanged() {
+    V2TIMManagerWeb.timWeb
+        ?.on(EventType.GROUP_ATTRIBUTES_UPDATED, _groupAttributeChangeHandler);
+  }
+
+  static final _groupInfoChanageHandler = allowInterop((dynamic response) {
+    final List message = jsToMap(response)["data"];
+    for (var item in message) {
+      final formatedItem = jsToMap(item);
+      // 处理群提示消息
+      loop() async {
+        if (formatedItem['type'] == MsgType.MSG_GRP_TIP) {
+          final tipsMessageElement =
+              await V2TIMMessage.convertGroupTipsMessage(formatedItem);
+          final groupID = tipsMessageElement?.groupID;
+          if (groupID == null) {
+            return;
+          }
+          final type = tipsMessageElement?.type;
+          if (type ==
+              GroupTipsElemType.V2TIM_GROUP_TIPS_TYPE_GROUP_INFO_CHANGE) {
+            final changeInfoList = tipsMessageElement?.groupChangeInfoList
+                as List<V2TimGroupChangeInfo>;
+            groupListener?.onGroupInfoChanged(groupID, changeInfoList);
           }
 
-          // 群系统提示消息
-          if (formatedItem['type'] == MsgType.MSG_GRP_SYS_NOTICE) {
-            final formatedGroupNoticeMsg =
-                await V2TIMMessage.convertGroupNoticeMessage(formatedItem);
-            final listinerName = formatedGroupNoticeMsg!.listennerName;
-            final groupID = formatedGroupNoticeMsg.groupID;
-            final opUser = formatedGroupNoticeMsg.opUser;
-            final opReason = formatedGroupNoticeMsg.opReason;
-            final customData = formatedGroupNoticeMsg.customData;
-            final isAgreeJoin = formatedGroupNoticeMsg.isAgreeJoin;
-            if (listinerName == 'onReceiveJoinApplication') {
-              listener.onReceiveJoinApplication(groupID, opUser, opReason);
-            }
-            if (listinerName == 'onApplicationProcessed') {
-              listener.onApplicationProcessed(
-                  groupID, opUser, isAgreeJoin, opReason);
-            }
-            if (listinerName == 'onGroupDismissed') {
-              listener.onGroupDismissed(groupID, opUser);
-            }
-            if (listinerName == 'onGroupCreated') {
-              listener.onGroupCreated(groupID);
-            }
-            if (listinerName == 'onGroupRecycled') {
-              listener.onGroupRecycled(groupID, opUser);
-            }
-            if (listinerName == 'onReceiveRESTCustomData') {
-              listener.onReceiveRESTCustomData(groupID, customData);
-            }
+          if (type == GroupTipsElemType.V2TIM_GROUP_TIPS_TYPE_INVITE) {
+            final memberList =
+                tipsMessageElement?.memberList as List<V2TimGroupMemberInfo>;
+            final opUser = tipsMessageElement?.opMember;
+            groupListener?.onMemberInvited(groupID, opUser!, memberList);
+          }
+
+          if (type == GroupTipsElemType.V2TIM_GROUP_TIPS_TYPE_JOIN) {
+            final memberList =
+                tipsMessageElement?.memberList as List<V2TimGroupMemberInfo>;
+            groupListener?.onMemberEnter(groupID, memberList);
+          }
+
+          if (type == GroupTipsElemType.V2TIM_GROUP_TIPS_TYPE_KICKED) {
+            final memberList =
+                tipsMessageElement?.memberList as List<V2TimGroupMemberInfo>;
+            final opUser = tipsMessageElement?.opMember;
+            groupListener?.onMemberKicked(groupID, opUser!, memberList);
+          }
+
+          if (type == GroupTipsElemType.V2TIM_GROUP_TIPS_TYPE_QUIT) {
+            final memberList =
+                tipsMessageElement?.memberList as V2TimGroupMemberInfo;
+            groupListener?.onMemberLeave(groupID, memberList);
+          }
+
+          if (type == GroupTipsElemType.V2TIM_GROUP_TIPS_TYPE_SET_ADMIN) {
+            final memberList =
+                tipsMessageElement?.memberList as List<V2TimGroupMemberInfo>;
+            final opUser = tipsMessageElement?.opMember;
+            groupListener?.onGrantAdministrator(groupID, opUser!, memberList);
+          }
+
+          if (type == GroupTipsElemType.V2TIM_GROUP_TIPS_TYPE_CANCEL_ADMIN) {
+            final memberList =
+                tipsMessageElement?.memberList as List<V2TimGroupMemberInfo>;
+            final opUser = tipsMessageElement?.opMember;
+            groupListener?.onRevokeAdministrator(groupID, opUser!, memberList);
+          }
+
+          if (type ==
+              GroupTipsElemType.V2TIM_GROUP_TIPS_TYPE_MEMBER_INFO_CHANGE) {
+            final memberChangeInfoList = tipsMessageElement
+                ?.memberChangeInfoList as List<V2TimGroupMemberChangeInfo>;
+            groupListener?.onMemberInfoChanged(groupID, memberChangeInfoList);
           }
         }
 
-        loop();
+        // 群系统提示消息
+        if (formatedItem['type'] == MsgType.MSG_GRP_SYS_NOTICE) {
+          final formatedGroupNoticeMsg =
+              await V2TIMMessage.convertGroupNoticeMessage(formatedItem);
+          final listinerName = formatedGroupNoticeMsg!.listennerName;
+          final groupID = formatedGroupNoticeMsg.groupID;
+          final opUser = formatedGroupNoticeMsg.opUser;
+          final opReason = formatedGroupNoticeMsg.opReason;
+          final customData = formatedGroupNoticeMsg.customData;
+          final isAgreeJoin = formatedGroupNoticeMsg.isAgreeJoin;
+          if (listinerName == 'onReceiveJoinApplication') {
+            groupListener?.onReceiveJoinApplication(groupID, opUser, opReason);
+          }
+          if (listinerName == 'onApplicationProcessed') {
+            groupListener?.onApplicationProcessed(
+                groupID, opUser, isAgreeJoin, opReason);
+          }
+          if (listinerName == 'onGroupDismissed') {
+            groupListener?.onGroupDismissed(groupID, opUser);
+          }
+          if (listinerName == 'onGroupCreated') {
+            groupListener?.onGroupCreated(groupID);
+          }
+          if (listinerName == 'onGroupRecycled') {
+            groupListener?.onGroupRecycled(groupID, opUser);
+          }
+          if (listinerName == 'onReceiveRESTCustomData') {
+            groupListener?.onReceiveRESTCustomData(groupID, customData);
+          }
+        }
       }
-    }));
+
+      loop();
+    }
+  });
+
+  static void submitGroupInfoChangded() {
+    V2TIMManagerWeb.timWeb
+        ?.on(EventType.MESSAGE_RECEIVED, _groupInfoChanageHandler);
   }
 
   static final _reciveMessageHandler = allowInterop((dynamic responseData) {
@@ -554,5 +622,36 @@ class V2TIMManager {
   static void submitOnReciveMessageListiner() {
     V2TIMManagerWeb.timWeb
         ?.on(EventType.MESSAGE_RECEIVED, _reciveMessageHandler);
+  }
+
+  Future<V2TimValueCallback<List<V2TimUserStatus>>> getUserStatus({
+    required List<String> userIDList,
+  }) async {
+    try {
+      final res = await wrappedPromiseToFuture(V2TIMManagerWeb.timWeb!
+          .getUserStatus(mapToJSObj({"userIDList": userIDList})));
+      final code = res.code;
+      if (code == 0) {
+        final successUserList = jsToMap(res.data)["successUserList"] as List;
+        // final failureUserList = jsToMap(res.data)["failureUserList"];
+        final formatedUserList = successUserList.map((e) {
+          final item = jsToMap(e);
+          return {
+            "userID": item["userID"],
+            "statusType": item["statusType"],
+            "customStatus": item["customStatus"]
+          };
+        }).toList();
+
+        return CommonUtils.returnSuccess<List<V2TimUserStatus>>(
+            formatedUserList);
+      } else {
+        return CommonUtils.returnErrorForValueCb<List<V2TimUserStatus>>(
+            'getUserStatus failed');
+      }
+    } catch (error) {
+      return CommonUtils.returnErrorForValueCb<List<V2TimUserStatus>>(
+          error.toString());
+    }
   }
 }

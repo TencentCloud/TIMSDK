@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:tencent_im_sdk_plugin/enum/V2TimConversationListener.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_conversation.dart';
+import 'package:tencent_im_sdk_plugin/models/v2_tim_conversationList_filter.dart';
+import 'package:tencent_im_sdk_plugin/models/v2_tim_conversation_operation_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_conversation_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/im_flutter_plugin_platform_interface.dart';
@@ -181,10 +183,126 @@ class V2TIMConversationManager {
   ///
   Future<V2TimCallback> setConversationDraft({
     required String conversationID,
-    String? draftText,
+    String? draftText = "",
   }) async {
     return ImFlutterPlatform.instance.setConversationDraft(
         conversationID: conversationID, draftText: draftText);
+  }
+
+  /// 创建好友分组
+  /// 4.0.8及以后版本支持，web不支持
+  /// 会话分组最大支持 20 个，不再使用的分组请及时删除。
+  ///
+  Future<V2TimValueCallback<List<V2TimConversationOperationResult>>>
+      setConversationCustomData({
+    required String customData,
+    required List<String> conversationIDList,
+  }) async {
+    return ImFlutterPlatform.instance.setConversationCustomData(
+        customData: customData, conversationIDList: conversationIDList);
+  }
+
+  /// 高级获取会话接口
+  ///
+  Future<V2TimValueCallback<V2TimConversationResult>>
+      getConversationListByFilter({
+    required V2TimConversationListFilter filter,
+  }) async {
+    return ImFlutterPlatform.instance.getConversationListByFilter(
+      filter: filter,
+    );
+  }
+
+  /// 标记会话
+  /// 4.0.8及以后版本支持，web不支持，且应用为旗舰版
+  /// 会话分组最大支持 20 个，不再使用的分组请及时删除。
+  /// 如果已有标记不能满足您的需求，您可以自定义扩展标记，扩展标记需要满足以下两个条件：
+  /// 1、扩展标记值不能和 V2TIMConversation 已有的标记值冲突
+  /// 扩展标记值必须是 0x1L << n 的位移值（32 <= n < 64，即 n 必须大于等于 32 并且小于 64），比如自定义 0x1L << 32 标记值表示 "iPhone 在线"
+  /// 扩展标记值不能设置为 0x1 << 32，要设置为 0x1L << 32，明确告诉编译器是 64 位的整型常量
+  /// flutter中使用markType可参考 V2TimConversationMarkType
+  ///
+  Future<V2TimValueCallback<List<V2TimConversationOperationResult>>>
+      markConversation({
+    required int markType,
+    required bool enableMark,
+    required List<String> conversationIDList,
+  }) async {
+    return ImFlutterPlatform.instance.markConversation(
+        markType: markType,
+        enableMark: enableMark,
+        conversationIDList: conversationIDList);
+  }
+
+  /// 创建好友分组
+  /// 4.0.8及以后版本支持，web不支持
+  /// 会话分组最大支持 20 个，不再使用的分组请及时删除。
+  ///
+  Future<V2TimValueCallback<List<V2TimConversationOperationResult>>>
+      createConversationGroup({
+    required String groupName,
+    required List<String> conversationIDList,
+  }) async {
+    return ImFlutterPlatform.instance.createConversationGroup(
+        groupName: groupName, conversationIDList: conversationIDList);
+  }
+
+  /// 获取会话分组列表
+  /// 4.0.8及以后版本支持，web不支持
+  ///
+  Future<V2TimValueCallback<List<String>>> getConversationGroupList() async {
+    return ImFlutterPlatform.instance.getConversationGroupList();
+  }
+
+  /// 删除会话分组
+  /// 4.0.8及以后版本支持，web不支持
+  ///
+  Future<V2TimCallback> deleteConversationGroup({
+    required String groupName,
+  }) async {
+    return ImFlutterPlatform.instance
+        .deleteConversationGroup(groupName: groupName);
+  }
+
+  /// 重命名会话分组
+  /// 4.0.8及以后版本支持，web不支持
+  ///
+  Future<V2TimCallback> renameConversationGroup({
+    required String oldName,
+    required String newName,
+  }) async {
+    return ImFlutterPlatform.instance.renameConversationGroup(
+      oldName: oldName,
+      newName: newName,
+    );
+  }
+
+  /// 添加会话到一个会话分组
+  /// 4.0.8及以后版本支持，web不支持
+  ///
+  Future<V2TimValueCallback<List<V2TimConversationOperationResult>>>
+      addConversationsToGroup({
+    required String groupName,
+    required List<String> conversationIDList,
+  }) async {
+    return ImFlutterPlatform.instance.addConversationsToGroup(
+      groupName: groupName,
+      conversationIDList: conversationIDList,
+    );
+  }
+
+  /// 从一个会话分组中删除会话
+  /// 4.0.8及以后版本支持，web不支持
+  ///
+  Future<V2TimValueCallback<List<V2TimConversationOperationResult>>>
+      deleteConversationsFromGroup({
+    required String groupName,
+    required List<String> conversationIDList,
+  }) async {
+    return ImFlutterPlatform.instance.deleteConversationsFromGroup(
+      groupName: groupName,
+      conversationIDList: conversationIDList,
+    );
   }
 
   ///@nodoc

@@ -568,9 +568,13 @@ class V2TIMGroupManager {
   /// web版本不支持
   ///
   Future<V2TimCallback> setTopicInfo({
+    required String groupID,
     required V2TimTopicInfo topicInfo,
   }) async {
-    return ImFlutterPlatform.instance.setTopicInfo(topicInfo: topicInfo);
+    return ImFlutterPlatform.instance.setTopicInfo(
+      topicInfo: topicInfo,
+      groupID: groupID,
+    );
   }
 
   /// 获取话题列表。

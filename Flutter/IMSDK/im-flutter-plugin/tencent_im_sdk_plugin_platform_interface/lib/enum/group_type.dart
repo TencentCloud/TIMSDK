@@ -9,4 +9,5 @@ class GroupType {
   static const String Public = "Public";
   static const String Meeting = "Meeting";
   static const String AVChatRoom = "AVChatRoom";
+  static const String Community = "Community";
 }
