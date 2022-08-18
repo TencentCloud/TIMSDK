@@ -7,6 +7,7 @@
 class V2TimOfflinePushInfo {
   late String? title;
   late String? desc;
+  String? ext;
   late bool? disablePush;
   late String? iOSSound;
   late bool? ignoreIOSBadge;
@@ -21,6 +22,7 @@ class V2TimOfflinePushInfo {
     this.iOSSound,
     this.ignoreIOSBadge,
     this.androidOPPOChannelID,
+    this.ext,
     this.androidSound,
     this.androidVIVOClassification,
   });
@@ -28,6 +30,7 @@ class V2TimOfflinePushInfo {
   V2TimOfflinePushInfo.fromJson(Map<String, dynamic> json) {
     title = json['title'];
     desc = json['desc'];
+    ext = json['ext'];
     disablePush = json['disablePush'];
     iOSSound = json['iOSSound'];
     ignoreIOSBadge = json['ignoreIOSBadge'];
@@ -40,6 +43,7 @@ class V2TimOfflinePushInfo {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['title'] = title;
     data['desc'] = desc;
+    data['ext'] = ext;
     data['disablePush'] = disablePush;
     data['iOSSound'] = iOSSound;
     data['ignoreIOSBadge'] = ignoreIOSBadge;

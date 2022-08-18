@@ -2,6 +2,8 @@
 
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/callbacks.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_user_full_info.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_user_status.dart';
+
 
 class V2TimSDKListener {
   VoidCallback onConnecting = () {};
@@ -12,6 +14,7 @@ class V2TimSDKListener {
   V2TimUserFullInfoCallback onSelfInfoUpdated = (
     V2TimUserFullInfo info,
   ) {};
+  OnUserStatusChanged onUserStatusChanged = (List<V2TimUserStatus> userStatusList){};
 
   V2TimSDKListener({
     ErrorCallback? onConnectFailed,
@@ -20,6 +23,7 @@ class V2TimSDKListener {
     VoidCallback? onKickedOffline,
     V2TimUserFullInfoCallback? onSelfInfoUpdated,
     VoidCallback? onUserSigExpired,
+    OnUserStatusChanged? onUserStatusChanged,
   }) {
     if (onConnectFailed != null) {
       this.onConnectFailed = onConnectFailed;
@@ -38,6 +42,9 @@ class V2TimSDKListener {
     }
     if (onUserSigExpired != null) {
       this.onUserSigExpired = onUserSigExpired;
+    }
+    if(onUserStatusChanged!=null){
+      this.onUserStatusChanged = onUserStatusChanged;
     }
   }
 }

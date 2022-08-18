@@ -15,6 +15,7 @@ import com.qq.qcloud.tencent_im_sdk_plugin.manager.OfflinePushManager;
 import com.qq.qcloud.tencent_im_sdk_plugin.manager.SignalingManager;
 import com.qq.qcloud.tencent_im_sdk_plugin.manager.TimManager;
 import com.qq.qcloud.tencent_im_sdk_plugin.util.CommonUtil;
+import com.tencent.imsdk.common.IMLog;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
@@ -26,6 +27,7 @@ import io.flutter.plugin.common.MethodChannel.Result;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 
 
 /**
@@ -54,7 +56,7 @@ tencent_im_sdk_plugin implements FlutterPlugin, MethodChannel.MethodCallHandler 
     private static FriendshipManager friendshipManager;
     private static OfflinePushManager offlinePushManager;
     public static TimManager timManager;
-    private Application mApplication;
+    private static Application mApplication;
     public tencent_im_sdk_plugin() {
     }
 
@@ -76,9 +78,13 @@ tencent_im_sdk_plugin implements FlutterPlugin, MethodChannel.MethodCallHandler 
     @Override
     public void onAttachedToEngine(FlutterPlugin.FlutterPluginBinding flutterPluginBinding) {
         Log.i(TAG, "onAttachedToEngine");
-        channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "tencent_im_sdk_plugin");
-        mApplication = (Application) flutterPluginBinding.getApplicationContext();
-        channel.setMethodCallHandler(new tencent_im_sdk_plugin(mApplication.getApplicationContext(), channel));
+        if(channel==null){
+            channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "tencent_im_sdk_plugin");
+        }
+        if(mApplication == null){
+            mApplication = (Application) flutterPluginBinding.getApplicationContext();
+            channel.setMethodCallHandler(new tencent_im_sdk_plugin(mApplication.getApplicationContext(), channel));
+        }
     }
 
     // This static function is optional and equivalent to onAttachedToEngine. It supports the old
@@ -101,14 +107,14 @@ tencent_im_sdk_plugin implements FlutterPlugin, MethodChannel.MethodCallHandler 
             field = tencent_im_sdk_plugin.class.getDeclaredField(TIMManagerName);
             method = field.get(new Object()).getClass().getDeclaredMethod(call.method, MethodCall.class, Result.class);
             method.invoke(field.get(new Object()), call, result);
-        } catch (NoSuchFieldException e) {
+            try {
+                IMLog.i(TAG,call.<HashMap<String,Object>>arguments().toString());
+            }catch (Exception e){
+                System.out.println("print log error");
+            }
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
+            IMLog.writeException(TAG, "flutter invoke native method fail", e);
         }
     }
 
@@ -116,8 +122,9 @@ tencent_im_sdk_plugin implements FlutterPlugin, MethodChannel.MethodCallHandler 
     @Override
     public void onDetachedFromEngine(FlutterPluginBinding binding) {
         Log.i(TAG, "onDetachedFromEngine");
-        channel.setMethodCallHandler(null);
-        channel = null;
+        // channel.setMethodCallHandler(null);
+        // channel = null;
+        // 为了适配flutter多引擎开发模式，这里不在onDetachedFromEngine生命周期把chanel移除
     }
 
 }

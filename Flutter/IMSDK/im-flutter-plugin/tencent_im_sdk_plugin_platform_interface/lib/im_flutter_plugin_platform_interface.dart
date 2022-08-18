@@ -18,6 +18,8 @@ import 'package:tencent_im_sdk_plugin_platform_interface/method_channel_im_flutt
 import 'package:tencent_im_sdk_plugin_platform_interface/models/V2_tim_topic_info.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_callback.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_conversation.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_conversationList_filter.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_conversation_operation_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_conversation_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_friend_application_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_friend_check_result.dart';
@@ -47,6 +49,7 @@ import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_receive_m
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_topic_info_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_topic_operation_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_user_full_info.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_user_status.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_value_callback.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
@@ -1713,6 +1716,7 @@ abstract class ImFlutterPlatform extends PlatformInterface {
     int lastMsgSeq = -1,
     required int count,
     String? lastMsgID,
+    List<int>? messageTypeList,
   }) async {
     throw UnimplementedError(
         "getHistoryMessageList() has not been implemented");
@@ -1966,14 +1970,14 @@ abstract class ImFlutterPlatform extends PlatformInterface {
     required List<String> messageIDList,
   }) async {
     throw UnimplementedError(
-        'removeAdvancedMsgListener() has not been implemented.');
+        'sendMessageReadReceipts() has not been implemented.');
   }
 
   Future<V2TimValueCallback<List<V2TimMessageReceipt>>> getMessageReadReceipts({
     required List<String> messageIDList,
   }) async {
     throw UnimplementedError(
-        'removeAdvancedMsgListener() has not been implemented.');
+        'getMessageReadReceipts() has not been implemented.');
   }
 
   Future<V2TimValueCallback<V2TimGroupMessageReadMemberList>>
@@ -1984,52 +1988,160 @@ abstract class ImFlutterPlatform extends PlatformInterface {
     int count = 100,
   }) async {
     throw UnimplementedError(
-        'removeAdvancedMsgListener() has not been implemented.');
+        'getGroupMessageReadMemberList() has not been implemented.');
   }
 
-  Future<V2TimValueCallback<List<V2TimGroupInfo>>> getJoinedCommunityList() async{
-throw UnimplementedError(
+  Future<V2TimValueCallback<List<V2TimGroupInfo>>>
+      getJoinedCommunityList() async {
+    throw UnimplementedError(
         'getJoinedCommunityList has not been implemented.');
   }
+
   Future<V2TimValueCallback<String>> createTopicInCommunity({
-    required String 	groupID,
-     required V2TimTopicInfo topicInfo,
-  }) async{
+    required String groupID,
+    required V2TimTopicInfo topicInfo,
+  }) async {
     throw UnimplementedError(
         'createTopicInCommunity has not been implemented.');
   }
-    Future<V2TimValueCallback<List<V2TimTopicOperationResult>>> deleteTopicFromCommunity(
-    {
-      required String 	groupID,
-      required 	List< String > 	topicIDList,
-    }
-  ) async{
+
+  Future<V2TimValueCallback<List<V2TimTopicOperationResult>>>
+      deleteTopicFromCommunity({
+    required String groupID,
+    required List<String> topicIDList,
+  }) async {
     throw UnimplementedError(
         'deleteTopicFromCommunity has not been implemented.');
   }
 
-  Future<V2TimCallback> setTopicInfo(
-    {
-      required V2TimTopicInfo topicInfo,
-    }
-  ) async{
-    throw UnimplementedError(
-        'deleteTopicFromCommunity has not been implemented.');
+  Future<V2TimCallback> setTopicInfo({
+    required String groupID,
+    required V2TimTopicInfo topicInfo,
+  }) async {
+    throw UnimplementedError('setTopicInfo has not been implemented.');
   }
-  Future<V2TimValueCallback<List<V2TimTopicInfoResult>>> getTopicInfoList(
-    {
-      required String 	groupID,
-      required 	List< String > 	topicIDList,
-    }
-  ) async{
-    throw UnimplementedError(
-        'deleteTopicFromCommunity has not been implemented.');
+
+  Future<V2TimValueCallback<List<V2TimTopicInfoResult>>> getTopicInfoList({
+    required String groupID,
+    required List<String> topicIDList,
+  }) async {
+    throw UnimplementedError('getTopicInfoList has not been implemented.');
   }
 
   Future<V2TimValueCallback<V2TimMessageChangeInfo>> modifyMessage({
     required V2TimMessage message,
   }) async {
+    throw UnimplementedError('modifyMessage has not been implemented.');
+  }
+
+  /// 能力位检测
+  ///
+  ///
+  Future<V2TimValueCallback<int>> checkAbility() {
+    throw UnimplementedError('checkAbility has not been implemented.');
+  }
+
+  Future<V2TimValueCallback<V2TimMessage>> appendMessage({
+    required String createMessageBaseId,
+    required String createMessageAppendId,
+  }) async {
+    throw UnimplementedError('appendMessage has not been implemented.');
+  }
+
+  Future<V2TimValueCallback<List<V2TimUserStatus>>> getUserStatus({
+    required List<String> userIDList,
+  }) {
+    throw UnimplementedError('getUserStatus has not been implemented.');
+  }
+
+  Future<V2TimCallback> subscribeUserStatus({
+    required List<String> userIDList,
+  }) {
+    throw UnimplementedError('subscribeUserStatus has not been implemented.');
+  }
+
+  Future<V2TimCallback> unsubscribeUserStatus({
+    required List<String> userIDList,
+  }) {
+    throw UnimplementedError('unsubscribeUserStatus has not been implemented.');
+  }
+
+  Future<V2TimValueCallback<List<V2TimConversationOperationResult>>>
+      setConversationCustomData({
+    required String customData,
+    required List<String> conversationIDList,
+  }) async {
     throw UnimplementedError(
-        'deleteTopicFromCommunity has not been implemented.');
+        'setConversationCustomData has not been implemented.');
+  }
+
+  Future<V2TimValueCallback<V2TimConversationResult>>
+      getConversationListByFilter({
+    required V2TimConversationListFilter filter,
+  }) async {
+    throw UnimplementedError(
+        'getConversationListByFilter has not been implemented.');
+  }
+
+  Future<V2TimValueCallback<List<V2TimConversationOperationResult>>>
+      markConversation({
+    required int markType,
+    required bool enableMark,
+    required List<String> conversationIDList,
+  }) async {
+    throw UnimplementedError('markConversation has not been implemented.');
+  }
+
+  Future<V2TimValueCallback<List<V2TimConversationOperationResult>>>
+      createConversationGroup({
+    required String groupName,
+    required List<String> conversationIDList,
+  }) async {
+    throw UnimplementedError(
+        'createConversationGroup has not been implemented.');
+  }
+
+  Future<V2TimValueCallback<List<String>>> getConversationGroupList() async {
+    throw UnimplementedError(
+        'getConversationGroupList has not been implemented.');
+  }
+
+  Future<V2TimCallback> deleteConversationGroup({
+    required String groupName,
+  }) async {
+    throw UnimplementedError(
+        'deleteConversationGroup has not been implemented.');
+  }
+
+  Future<V2TimCallback> renameConversationGroup({
+    required String oldName,
+    required String newName,
+  }) async {
+    throw UnimplementedError(
+        'renameConversationGroup has not been implemented.');
+  }
+
+  Future<V2TimValueCallback<List<V2TimConversationOperationResult>>>
+      addConversationsToGroup({
+    required String groupName,
+    required List<String> conversationIDList,
+  }) async {
+    throw UnimplementedError(
+        'addConversationsToGroup has not been implemented.');
+  }
+
+  Future<V2TimValueCallback<List<V2TimConversationOperationResult>>>
+      deleteConversationsFromGroup({
+    required String groupName,
+    required List<String> conversationIDList,
+  }) async {
+    throw UnimplementedError(
+        'deleteConversationsFromGroup has not been implemented.');
+  }
+
+  Future<V2TimCallback> setSelfStatus({
+    required String status,
+  }) async {
+    throw UnimplementedError('setSelfStatus has not been implemented.');
   }
 }

@@ -52,6 +52,51 @@ class MessageManager {
 			}, fail: TencentImUtils.returnErrorClosures(call: call, result: result));
 		}
 	}
+    func getElem(message:V2TIMMessage) -> V2TIMElem {
+        let type = message.elemType;
+        if(type == V2TIMElemType.ELEM_TYPE_TEXT){
+            return message.textElem;
+        } else if(type == V2TIMElemType.ELEM_TYPE_CUSTOM){
+            return message.customElem;
+        } else if(type == V2TIMElemType.ELEM_TYPE_FACE){
+            return message.faceElem
+        } else if(type == V2TIMElemType.ELEM_TYPE_FILE){
+            return message.fileElem
+        } else if(type == V2TIMElemType.ELEM_TYPE_GROUP_TIPS){
+            return message.groupTipsElem
+        } else if(type == V2TIMElemType.ELEM_TYPE_IMAGE){
+            return message.imageElem
+        } else if(type == V2TIMElemType.ELEM_TYPE_LOCATION){
+            return message.locationElem
+        } else if(type == V2TIMElemType.ELEM_TYPE_MERGER){
+            return message.mergerElem
+        } else if(type == V2TIMElemType.ELEM_TYPE_SOUND){
+            return message.soundElem
+        } else if(type == V2TIMElemType.ELEM_TYPE_VIDEO){
+            return message.videoElem
+        } else{
+            return message.textElem
+        }
+       
+    }
+    func setAppendMessage(appendMess:V2TIMMessage,baseMessage:V2TIMMessage){
+        let bElem = getElem(message: baseMessage)
+        let Aelem = getElem(message: appendMess)
+        bElem.append(Aelem)
+    }
+    func appendMessage(call: FlutterMethodCall, result: @escaping FlutterResult){
+        let createMessageBaseId = CommonUtils.getParam(call: call, result: result, param: "createMessageBaseId") as? String ?? "";
+        let createMessageAppendId = CommonUtils.getParam(call: call, result: result, param: "createMessageAppendId") as? String ?? "";
+        
+        if(messageDict.keys.contains(createMessageBaseId) && messageDict.keys.contains(createMessageAppendId)){
+            let baseMessage = messageDict[createMessageBaseId]!
+            let appendMessage = messageDict[createMessageAppendId]!
+            setAppendMessage(appendMess: appendMessage,baseMessage: baseMessage)
+            CommonUtils.resultSuccess(desc: "ok", call: call, result: result, data: V2MessageEntity.init(message: baseMessage).getDict())
+        }else {
+            CommonUtils.resultFailed(desc: "message not found", code: -1, call: call, result: result)
+        }
+    }
     
     func modifyMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
         let message = CommonUtils.getParam(call: call, result: result, param: "message") as? [String:Any] ;
@@ -81,10 +126,10 @@ class MessageManager {
                     messages?[0].textElem.text = textElem["text"];
                 }
                 if(messages?[0].elemType == V2TIMElemType.ELEM_TYPE_CUSTOM){
-                    let customElem:[String:String] = message?["customElem"] as! [String : String];
-                    messages?[0].customElem.data = customElem["data"]?.data(using: .utf8)
-                    messages?[0].customElem.desc = customElem["desc"]
-                    messages?[0].customElem.extension = customElem["extension"];
+                    let customElem:[String:Any] = message?["customElem"] as! [String : Any];
+                    messages?[0].customElem.data = (customElem["data"] as? String)?.data(using: .utf8)
+                    messages?[0].customElem.desc = customElem["desc"]  as? String
+                    messages?[0].customElem.extension = customElem["extension"] as? String ;
                 }
                 
                 async({
@@ -540,6 +585,7 @@ class MessageManager {
 		let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String
 		let getType = CommonUtils.getParam(call: call, result: result, param: "getType") as? Int
         let lastMsgSeq = CommonUtils.getParam(call: call, result: result, param: "lastMsgSeq") as? Int
+        let messageTypeList = CommonUtils.getParam(call: call, result: result, param: "messageTypeList") as? Array<Int>
 		let option = V2TIMMessageListGetOption();
 		
 		if groupID != nil && userID != nil {
@@ -561,6 +607,11 @@ class MessageManager {
             if (lastMsgSeq >= 0) {
                 option.lastMsgSeq = UInt(lastMsgSeq)
             }
+        }
+        if(messageTypeList != nil){
+            option.messageTypeList = messageTypeList?.map({ value in
+                return NSNumber.init(value: value)
+            });
         }
 		if lastMsgID != nil {
 			V2TIMManager.sharedInstance()?.findMessages(lastMsgID == nil ? [""] : [lastMsgID!], succ: {

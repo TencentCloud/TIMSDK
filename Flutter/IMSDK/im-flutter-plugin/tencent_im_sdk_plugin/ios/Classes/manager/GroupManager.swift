@@ -4,7 +4,7 @@
 //
 //  Created by 林智 on 2020/12/24.
 //
-
+import Hydra
 import Foundation
 import ImSDK_Plus
 
@@ -37,6 +37,7 @@ class GroupManager {
 		info.groupAddOpt = V2TIMGroupAddOpt(rawValue: addOpt ?? 2)!;
         info.allMuted = isAllMuted ?? false;
         info.isSupportTopic = isSupportTopic ?? false
+        
         
 		var memberList: [V2TIMCreateGroupMemberInfo] = []
 		if memberListMap != nil {
@@ -169,14 +170,58 @@ class GroupManager {
         }
     }
     public func setTopicInfo(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        let topicInfo = CommonUtils.getParam(call: call, result: result, param: "topicInfo") as? [String:Any] ;
-        let info = V2TIMTopicInfoEntity.init(dict: topicInfo!);
-        
-        V2TIMManager.sharedInstance().setTopicInfo(info) {
-            CommonUtils.resultSuccess(call: call, result: result);
-        } fail: { code, desc in
-            CommonUtils.resultFailed(desc: desc, code: code, call: call,result: result)
+        let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String ;
+        let topicInfo = CommonUtils.getParam(call: call, result: result, param: "topicInfo") as? [String:Any] ?? [:];
+        if((topicInfo["topicID"]) != nil){
+            var IDList :[String] = [];
+            IDList.append(topicInfo["topicID"] as! String)
+            V2TIMManager.sharedInstance().getTopicInfoList(groupID, topicIDList: IDList) { res_list in
+                if(res_list?.count == 1){
+                    let info_native = res_list?[0] as? V2TIMTopicInfoResult;
+                    
+                    if(info_native?.errorCode == 0){
+                        let tinfo = info_native?.topicInfo;
+                        print(topicInfo)
+                        if(topicInfo["topicName"] as? String != nil){
+                            tinfo?.topicName = topicInfo["topicName"] as? String
+                        }
+                        if(topicInfo["topicFaceUrl"] as? String != nil){
+                            tinfo?.topicFaceURL = topicInfo["topicFaceUrl"] as? String
+                        }
+                        if(topicInfo["notification"] as? String != nil){
+                            tinfo?.notification = topicInfo["notification"] as? String
+                        }
+                        if(topicInfo["isAllMute"] as? Bool != nil){
+                            tinfo?.isAllMuted = topicInfo["isAllMute"] as! Bool
+                        }
+                        if(topicInfo["customString"] as? String != nil){
+                            tinfo?.customString = topicInfo["customString"] as? String
+                        }
+                        if(topicInfo["draftText"] as? String != nil){
+                            tinfo?.draftText = topicInfo["draftText"] as? String
+                        }
+                        if(topicInfo["introduction"] as? String != nil){
+                            tinfo?.introduction = topicInfo["introduction"] as? String
+                        }
+                        V2TIMManager.sharedInstance().setTopicInfo(tinfo) {
+                            CommonUtils.resultSuccess(call: call, result: result);
+                        } fail: { code, desc in
+                            CommonUtils.resultFailed(desc: desc, code: code, call: call,result: result)
+                        }
+                    }else{
+                        CommonUtils.resultFailed(desc: info_native?.errorMsg, code: info_native?.errorCode, call: call,result: result)
+                    }
+                }else {
+                    CommonUtils.resultFailed(desc: "topic not found", code: -1, call: call, result: result)
+                }
+            } fail: { code, desc in
+                CommonUtils.resultFailed(desc: desc, code: code, call: call,result: result)
+            }
+
+            
         }
+        
+        
         
     }
     
@@ -185,18 +230,36 @@ class GroupManager {
         let topicIDList = CommonUtils.getParam(call: call, result: result, param: "topicIDList") as? Array<String>;
         
         V2TIMManager.sharedInstance().getTopicInfoList(groupID, topicIDList: topicIDList) { _array in
-            var list: [[String: Any]]  = [];
-        
-            _array?.forEach({ item in
-                let i = item as? V2TIMTopicInfoResult
-                
-                var _item:[String:Any] = [:];
-                _item["errorCode"] = i?.errorCode as Any?
-                _item["errorMsg"] = i?.errorMsg as Any?
-                _item["topicInfo"] = V2TIMTopicInfoEntity.getDict(info: i!.topicInfo)
-                list.append(_item)
+            
+            
+           
+            
+            async({
+                _ -> [Dictionary<String, Any>] in
+                var list: [[String: Any]]  = [];
+            
+                _array?.forEach({ item in
+                    let i = item as? V2TIMTopicInfoResult
+                    
+                    var _item:[String:Any] = [:];
+                    _item["errorCode"] = i!.errorCode as Int32?
+                    _item["errorMsg"] = i!.errorMsg as String? ?? ""
+                    do {
+                        _item["topicInfo"] =  try Hydra.await(V2TIMTopicInfoEntity.getDict(info: i!.topicInfo))
+                    } catch {
+                        print("get topic info error ")
+                        print(error)
+                    }
+                    list.append(_item)
+                })
+                return list
+            }).then({
+                list in
+                print(22222)
+                print(list)
+                CommonUtils.resultSuccess(call: call, result: result, data:list);
             })
-            CommonUtils.resultSuccess(call: call, result: result, data:list);
+            
         } fail: { code, desc in
             CommonUtils.resultFailed(desc: desc, code: code, call: call,result: result)
         }
@@ -508,27 +571,34 @@ class GroupManager {
         let searchParam = CommonUtils.getParam(call: call, result: result, param: "param") as! [String: Any];
         let groupMemberSearchParam = V2TIMGroupMemberSearchParam();
         
-        if(searchParam["keywordList"] != nil){
+        if(searchParam["keywordList"] as? [String] != nil){
+            
             groupMemberSearchParam.keywordList = searchParam["keywordList"] as? [String];
         }
-        if(searchParam["groupIDList"] != nil){
+        if(searchParam["groupIDList"] as? [String] != nil){
+            
             groupMemberSearchParam.groupIDList = searchParam["groupIDList"] as? [String];
             if groupMemberSearchParam.groupIDList.isEmpty {
                 groupMemberSearchParam.groupIDList = nil;
             }
         }
-        if(searchParam["isSearchMemberUserID"] != nil){
+        if(searchParam["isSearchMemberUserID"] as? Bool ?? false){
+            
             groupMemberSearchParam.isSearchMemberUserID = searchParam["isSearchMemberUserID"] as! Bool;
         }
-        if(searchParam["isSearchGroupName"] != nil){
-            groupMemberSearchParam.isSearchMemberNickName = searchParam["isSearchGroupName"] as! Bool;
+        if(searchParam["isSearchMemberNickName"] as? Bool ?? false){
+            
+            groupMemberSearchParam.isSearchMemberNickName = searchParam["isSearchMemberNickName"] as! Bool;
         }
-        if(searchParam["isSearchMemberRemark"] != nil){
+        if(searchParam["isSearchMemberRemark"] as? Bool ?? false){
+            
             groupMemberSearchParam.isSearchMemberRemark = searchParam["isSearchMemberRemark"] as! Bool;
         }
-        if(searchParam["isSearchMemberNameCard"] != nil){
+        if(searchParam["isSearchMemberNameCard"] as? Bool ?? false){
+            
             groupMemberSearchParam.isSearchMemberNameCard = searchParam["isSearchMemberNameCard"] as! Bool;
         }
+        print(groupMemberSearchParam)
             V2TIMManager.sharedInstance().searchGroupMembers(groupMemberSearchParam, succ: {
                 (array) -> Void in
                 

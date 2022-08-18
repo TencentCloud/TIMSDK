@@ -186,6 +186,23 @@ class V2TIMMessageManager {
         .createTargetedGroupMessage(id: id, receiverList: receiverList);
   }
 
+  /// 添加多Element消息
+  ///
+  /// 注意 4.0.3以及之后版本支持,web版本不支持
+  ///
+  /// ```
+  ///
+  /// ```
+  Future<V2TimValueCallback<V2TimMessage>> appendMessage({
+    required String createMessageBaseId,
+    required String createMessageAppendId,
+  }) async {
+    return ImFlutterPlatform.instance.appendMessage(
+      createMessageAppendId: createMessageAppendId,
+      createMessageBaseId: createMessageBaseId,
+    );
+  }
+
   /// 创建定制化消息
   ///
   ///参数：
@@ -976,14 +993,17 @@ class V2TIMMessageManager {
     int lastMsgSeq = -1,
     required int count,
     String? lastMsgID,
+    List<int>? messageTypeList,
   }) async {
     return ImFlutterPlatform.instance.getHistoryMessageList(
-        getType: getType!.index,
-        userID: userID,
-        count: count,
-        lastMsgID: lastMsgID,
-        groupID: groupID,
-        lastMsgSeq: lastMsgSeq);
+      getType: getType!.index,
+      userID: userID,
+      count: count,
+      lastMsgID: lastMsgID,
+      groupID: groupID,
+      lastMsgSeq: lastMsgSeq,
+      messageTypeList: messageTypeList ?? [],
+    );
   }
 
   /// 获取历史消息高级接口(没有处理Native返回数据)

@@ -1,3 +1,6 @@
+import 'package:tencent_im_sdk_plugin_platform_interface/enum/group_member_role_enum.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/enum/utils.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_member.dart';
 import 'package:tencent_im_sdk_plugin_web/src/enum/group_add_opt.dart';
 import 'package:tencent_im_sdk_plugin_web/src/enum/group_member_role.dart';
 import 'package:tencent_im_sdk_plugin_web/src/enum/group_receive_message_opt.dart';
@@ -6,15 +9,31 @@ import 'package:tencent_im_sdk_plugin_web/src/utils/utils.dart';
 
 class V2TimGroupCreate {
   static Object formateParams(Map<String, dynamic> params) {
+    final List<V2TimGroupMember>? memberList = params["memberList"];
+    var formatedMemberList = List.empty(growable: true);
+    if (memberList != null && memberList.isNotEmpty) {
+      for (var element in memberList) {
+        final memberParam = {
+          "userID": element.userID,
+          "role": element.role ==
+                  GroupMemberRoleTypeEnum.V2TIM_GROUP_MEMBER_ROLE_ADMIN
+              ? GroupMemberRoleWeb.convertGroupMemberRoleToWeb(
+                  EnumUtils.convertGroupMemberRoleTypeEnum(element.role))
+              : null,
+        };
+        formatedMemberList.add(mapToJSObj(memberParam));
+      }
+    }
     final templateMapping = <String, dynamic>{
       'name': params['groupName'],
       'type': GroupTypeWeb.convertGroupTypeToWeb(params['groupType']),
       'groupID': params['groupID'],
       'introduction': params['introduction'] ?? '',
       'joinOption': GroupAddOptWeb.convertGroupAddOptToWeb(params['addOpt']),
-      'memberList': params['memberList'] ?? [],
+      'memberList': formatedMemberList,
       'groupCustomField': [],
       'avatar': params['faceUrl'] ?? '',
+      'isSupportTopic': params['isSupportTopic'] ?? false,
     };
     return mapToJSObj(templateMapping);
   }
@@ -29,6 +48,7 @@ class V2TimGroupCreate {
       'notification': params['notification'],
       'introduction': params['introduction'],
       'createTime': params['createTime'] == '' ? 0 : params['createTime'],
+      'isSupportTopic': params['isSupportTopic'] ?? false,
       'groupAddOpt':
           GroupAddOptWeb.convertGroupAddOpt(params['joinOption']) ?? 0,
       'isAllMuted': params['muteAllMembers'],
@@ -47,7 +67,7 @@ class V2TimGroupCreate {
       'role': GroupMemberRoleWeb.convertGroupMemberRole(
           jsToMap(params['selfInfo'])['role']),
       'customInfo':
-          convertGroupCustomInfoFromWebToDart(params['groupCustomField'])
+          convertGroupCustomInfoFromWebToDart(params['groupCustomField']),
     };
   }
 

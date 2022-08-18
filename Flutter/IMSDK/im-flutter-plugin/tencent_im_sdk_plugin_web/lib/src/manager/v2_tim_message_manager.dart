@@ -1,6 +1,7 @@
 // ignore_for_file: unused_import, library_prefixes, prefer_typing_uninitialized_variables, duplicate_ignore
 
 import 'dart:collection';
+import 'dart:convert';
 import 'dart:html' as html;
 import 'dart:typed_data';
 import 'package:path/path.dart' as Path;
@@ -8,8 +9,11 @@ import 'package:path/path.dart' as Path;
 import 'package:js/js.dart';
 import 'package:js/js_util.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/V2TimAdvancedMsgListener.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/enum/message_elem_type.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/enum/v2_signaling_action_type.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_callback.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_message.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_message_change_info.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_message_receipt.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_message_search_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_receive_message_opt_info.dart';
@@ -311,13 +315,13 @@ class V2TIMMessageManager {
           }
         case "file":
           {
-            final progressCallback = allowInterop((progress) async {
+            final progressCallback = allowInterop((double progress) async {
               final messageInstance =
                   await V2TIMMessage.convertMessageFromWebToDart(messageElem);
               if (messageListener != null) {
                 messageInstance['id'] = id;
                 messageListener!.onSendMessageProgress(
-                    V2TimMessage.fromJson(messageInstance), progress as int);
+                    V2TimMessage.fromJson(messageInstance), progress.toInt());
               }
             });
             final createElemParams = CreateMessage.createFileMessage(
@@ -330,6 +334,7 @@ class V2TIMMessageManager {
             break;
           }
       }
+      messageElem.cloudCustomData = params["cloudCustomData"];
       final res = await wrappedPromiseToFuture(timeweb!.sendMessage(messageElem,
           mapToJSObj({"onlineUserOnly": params['onlineUserOnly']})));
       final code = res.code;
@@ -710,14 +715,16 @@ class V2TIMMessageManager {
         "setCloudCustomData feature does not exist on the web");
   }
 
-  Future<dynamic> getMessageList(dynamic getMsgListParams) async {
+  Future<V2TimValueCallback<List<V2TimMessage>>> getMessageList(
+      dynamic getMsgListParams) async {
     // try {
     final res =
         await wrappedPromiseToFuture(timeweb!.getMessageList(getMsgListParams));
     final code = res.code;
     if (code == 0) {
       final List messageList = jsToMap(res.data)['messageList'];
-      final historyMessageListPromises = messageList.map((element) async {
+      final historyMessageListPromises =
+          messageList.reversed.map((element) async {
         final responses =
             await V2TIMMessage.convertMessageFromWebToDart(element);
         return responses;
@@ -725,31 +732,22 @@ class V2TIMMessageManager {
       final historyMessageList = await Future.wait(historyMessageListPromises);
       return CommonUtils.returnSuccess<List<V2TimMessage>>(historyMessageList);
     } else {
-      return CommonUtils.returnError("获取历史消息失败");
+      return CommonUtils.returnErrorForValueCb("获取历史消息失败");
     }
     // } catch (error) {
     //   return CommonUtils.returnError(error);
     // }
   }
 
-  Future<dynamic> getC2CHistoryMessageList(params) async {
+  Future<V2TimValueCallback<List<V2TimMessage>>> getC2CHistoryMessageList(
+      params) async {
     final getMessageListParams = GetMessageList.formateParams(params);
     return await getMessageList(getMessageListParams);
   }
 
-  Future<dynamic> getGroupHistoryMessageList(params) async {
+  Future<V2TimValueCallback<List<V2TimMessage>>> getGroupHistoryMessageList(
+      params) async {
     final getMessageListParams = GetMessageList.formateParams(params);
-    return await getMessageList(getMessageListParams);
-  }
-
-  Future<Map<String, dynamic>> getHistoryMessageList(params) async {
-    final getMessageListParams = GetMessageList.formateParams(params);
-    if (getMessageListParams == null) {
-      return {
-        'desc': "receiver and groupID cannot set at the same time",
-        'data': []
-      };
-    }
     return await getMessageList(getMessageListParams);
   }
 
@@ -766,7 +764,7 @@ class V2TIMMessageManager {
   Future<dynamic> revokeMessage(params) async {
     try {
       final res = await wrappedPromiseToFuture(
-          timeweb!.revokeMessage(params['webMessageInstatnce']));
+          timeweb!.revokeMessage(parse(params['webMessageInstatnce'])));
       final code = res.code;
       if (code == 0) {
         return CommonUtils.returnSuccessForCb(jsToMap(res.data));
@@ -849,13 +847,17 @@ class V2TIMMessageManager {
         "setC2CReceiveMessageOpt feature does not exist on the web");
   }
 
+  static parseWebMessageInstanceList(List<dynamic> webMessageInstanceList) {
+    return webMessageInstanceList.map((e) => parse(e)).toList();
+  }
+
   // webMessageInstanceList 这个参数web独有其中元素是web端的message实例
-  Future<dynamic> deleteMessages(params) async {
+  Future<V2TimCallback> deleteMessages(params) async {
     try {
-      final res = await wrappedPromiseToFuture(
-          timeweb!.deleteMessages(params['webMessageInstanceList']));
+      final res = await wrappedPromiseToFuture(timeweb!.deleteMessage(
+          parseWebMessageInstanceList(params['webMessageInstanceList'])));
       if (res.code == 0) {
-        return CommonUtils.returnSuccess(jsToMap(res.data));
+        return CommonUtils.returnSuccessForCb(jsToMap(res.data));
       } else {
         return CommonUtils.returnError('delete msg failed');
       }
@@ -894,6 +896,22 @@ class V2TIMMessageManager {
     messageListener!.onRecvC2CReadReceipt(readedList);
   });
 
+  static final _messageReadReceiptReceivedHandler =
+      allowInterop((dynamic responses) {
+    final List messageData = jsToMap(responses)['data'];
+    final readedList = messageData.map((item) {
+      final formatedItem = jsToMap(item);
+      return V2TimMessageReceipt(
+          userID: formatedItem['userID'],
+          timestamp: formatedItem['time'],
+          msgID: formatedItem['messageID'],
+          unreadCount: formatedItem['unreadCount'],
+          readCount: formatedItem['readCount'],
+          groupID: formatedItem['groupID']);
+    }).toList();
+    messageListener!.onRecvMessageReadReceipts(readedList);
+  });
+
   static final _messageRevokedHandler = allowInterop((dynamic responses) {
     final List messageData = jsToMap(responses)['data'];
     for (var element in messageData) {
@@ -908,8 +926,83 @@ class V2TIMMessageManager {
       loop() async {
         final formatedMessage =
             await V2TIMMessage.convertMessageFromWebToDart(messageItem);
+        V2TimMessage msg = V2TimMessage.fromJson(formatedMessage);
+        messageListener!.onRecvNewMessage(msg);
+        // handle signal message
+        _handleMessage(msg);
+      }
+
+      loop();
+    }
+  });
+  static _handleMessage(V2TimMessage message) {
+    if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_CUSTOM &&
+        message.customElem != null) {
+      // this message is custom message
+      try {
+        if (message.customElem!.data != null) {
+          if (message.customElem!.data!.isNotEmpty) {
+            Map<String, dynamic> customMessageData =
+                json.decode(message.customElem!.data!) ?? Map.from({});
+            String? inviteID = customMessageData["customMessageData"];
+            int? actionType = customMessageData["actionType"];
+            if (inviteID != null && actionType != null) {
+              switch (actionType) {
+                case V2SignalingActionType.SIGNALING_ACTION_TYPE_ACCEPT_INVITE:
+                  String invitee = customMessageData["invitee"] ?? "";
+                  String data = customMessageData["data"] ?? "";
+                  _onInviteeAccepted(inviteID, invitee, data);
+                  break;
+                case V2SignalingActionType.SIGNALING_ACTION_TYPE_CANCEL_INVITE:
+                  String invitee = customMessageData["invitee"] ?? "";
+                  String data = customMessageData["data"] ?? "";
+                  _onInvitationCancelled(inviteID, invitee, data);
+                  break;
+                case V2SignalingActionType.SIGNALING_ACTION_TYPE_INVITE:
+                  String inviter = message.sender!;
+                  List<String> inviteeList =
+                      customMessageData["customMessageData"] ??
+                          List.empty(growable: true);
+                  String data = customMessageData["data"] ?? "";
+                  String groupID = message.groupID ?? "";
+                  _onReceiveNewInvitation(
+                      inviteID, inviter, groupID, inviteeList, data);
+                  break;
+                case V2SignalingActionType.SIGNALING_ACTION_TYPE_INVITE_TIMEOUT:
+                  List<String> inviteeList = customMessageData["inviteeList"] ??
+                      List.empty(growable: true);
+                  _onInvitationTimeout(inviteID, inviteeList);
+                  break;
+                case V2SignalingActionType.SIGNALING_ACTION_TYPE_REJECT_INVITE:
+                  String invitee = customMessageData["invitee"] ?? "";
+                  String data = customMessageData["data"] ?? "";
+                  _onInviteeRejected(inviteID, invitee, data);
+                  break;
+              }
+            }
+          }
+        }
+      } catch (err) {
+        // err
+      }
+    }
+  }
+
+  static _onReceiveNewInvitation(String inviteID, String inviter,
+      String groupID, List<String> inviteeList, String data) {}
+  static _onInviteeAccepted(String inviteID, String invitee, String data) {}
+  static _onInviteeRejected(String inviteID, String invitee, String data) {}
+  static _onInvitationCancelled(String inviteID, String inviter, String data) {}
+  static _onInvitationTimeout(String inviteID, List<String> inviteeList) {}
+
+  static final _messageModifiedHandler = allowInterop((dynamic responses) {
+    final List messageList = jsToMap(responses)['data'];
+    for (var messageItem in messageList) {
+      loop() async {
+        final formatedMessage =
+            await V2TIMMessage.convertMessageFromWebToDart(messageItem);
         messageListener!
-            .onRecvNewMessage(V2TimMessage.fromJson(formatedMessage));
+            .onRecvMessageModified(V2TimMessage.fromJson(formatedMessage));
       }
 
       loop();
@@ -921,16 +1014,26 @@ class V2TIMMessageManager {
     submitMessageReadReceipt();
     submitMessageRevoked();
     submitRecvNewMessage();
+    submitMessageModified();
   }
 
   void removeAdvancedMsgListener() {
     timeweb!.off(EventType.MESSAGE_READ_BY_PEER, _messageReadReceiptHandler);
     timeweb!.off(EventType.MESSAGE_REVOKED, _messageRevokedHandler);
     timeweb!.off(EventType.MESSAGE_RECEIVED, _reciveNewMesageHandler);
+    timeweb!.off(EventType.MESSAGE_READ_RECEIPT_RECEIVED,
+        _messageReadReceiptReceivedHandler);
+    timeweb!.off(EventType.MESSAGE_MODIFIED, _messageModifiedHandler);
   }
 
   static void submitMessageReadReceipt() {
     timeweb!.on(EventType.MESSAGE_READ_BY_PEER, _messageReadReceiptHandler);
+    timeweb!.on(EventType.MESSAGE_READ_RECEIPT_RECEIVED,
+        _messageReadReceiptReceivedHandler);
+  }
+
+  static void submitMessageModified() {
+    timeweb!.on(EventType.MESSAGE_MODIFIED, _messageModifiedHandler);
   }
 
   static void submitMessageRevoked() {
@@ -939,5 +1042,26 @@ class V2TIMMessageManager {
 
   static void submitRecvNewMessage() {
     timeweb!.on(EventType.MESSAGE_RECEIVED, _reciveNewMesageHandler);
+  }
+
+  Future<V2TimValueCallback<V2TimMessageChangeInfo>> modifyMessage({
+    required V2TimMessage message,
+  }) async {
+    try {
+      final res = await wrappedPromiseToFuture(
+          timeweb!.modifyMessage(parse(message.messageFromWeb!)));
+      final code = res.code;
+      if (code == 0) {
+        final responses = await V2TIMMessage.convertMessageFromWebToDart(
+            jsToMap(res.data)["message"]);
+        return CommonUtils.returnSuccess<V2TimMessageChangeInfo>(
+            {"message": responses, "code": res.code});
+      } else {
+        return CommonUtils.returnSuccess<V2TimMessageChangeInfo>(
+            {"code": res.code, "desc": res.data});
+      }
+    } catch (error) {
+      return CommonUtils.returnErrorForValueCb(error.toString());
+    }
   }
 }

@@ -56,4 +56,13 @@ public enum ListenerType {
     case onTotalUnreadMessageCountChanged
     case onRecvMessageReadReceipts
     case onRecvMessageModified
+    case onUserStatusChanged
+    case onConversationGroupCreated
+    case onConversationGroupDeleted
+    case onConversationGroupNameChanged
+    case onConversationsAddedToGroup
+    case onConversationsDeletedFromGroup
+    case onTopicCreated
+    case onTopicInfoChanged
+    case onTopicDeleted
 }

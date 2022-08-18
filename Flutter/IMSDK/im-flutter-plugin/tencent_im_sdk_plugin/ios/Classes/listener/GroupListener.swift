@@ -7,7 +7,7 @@
 
 import Foundation
 import ImSDK_Plus
-
+import Hydra
 class GroupListener: NSObject, V2TIMGroupListener {
     let listenerUuid: String;
     
@@ -170,5 +170,30 @@ class GroupListener: NSObject, V2TIMGroupListener {
 			"groupAttributeMap": attributes ?? NSMutableDictionary(),
 		], listenerUuid: listenerUuid)
 	}
-	
+    func onTopicCreated(_ groupID: String!, topicID: String!) {
+        TencentImSDKPlugin.invokeListener(type: ListenerType.onTopicCreated, method: "groupListener", data: [
+            "groupID": groupID ?? "",
+            "topicID": topicID,
+        ], listenerUuid: listenerUuid)
+    }
+    func onTopicChanged(_ groupID: String!, topicInfo: V2TIMTopicInfo!) {
+        
+        async({
+                _ -> Int in
+            TencentImSDKPlugin.invokeListener(type: ListenerType.onTopicInfoChanged, method: "groupListener", data: [
+                "groupID": groupID ?? "",
+                "topicInfo": try Hydra.await(V2TIMTopicInfoEntity.getDict(info: topicInfo)),
+            ], listenerUuid: self.listenerUuid)
+                return 1
+            }).then({
+                value in
+            })
+        
+    }
+    func onTopicDeleted(_ groupID: String!, topicIDList: [String]!) {
+        TencentImSDKPlugin.invokeListener(type: ListenerType.onTopicDeleted, method: "groupListener", data: [
+            "groupID": groupID ?? "",
+            "topicIDList": topicIDList ?? [],
+        ], listenerUuid: listenerUuid)
+    }
 }

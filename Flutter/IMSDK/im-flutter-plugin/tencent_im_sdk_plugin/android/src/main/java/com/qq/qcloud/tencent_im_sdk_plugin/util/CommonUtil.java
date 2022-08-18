@@ -6,7 +6,9 @@ import android.os.Looper;
 
 import androidx.annotation.Nullable;
 
+import com.tencent.imsdk.common.IMLog;
 import com.tencent.imsdk.v2.V2TIMConversation;
+import com.tencent.imsdk.v2.V2TIMConversationOperationResult;
 import com.tencent.imsdk.v2.V2TIMConversationResult;
 import com.tencent.imsdk.v2.V2TIMCustomElem;
 import com.tencent.imsdk.v2.V2TIMDownloadCallback;
@@ -34,6 +36,7 @@ import com.tencent.imsdk.v2.V2TIMGroupMemberOperationResult;
 import com.tencent.imsdk.v2.V2TIMGroupTipsElem;
 import com.tencent.imsdk.v2.V2TIMImageElem;
 import com.tencent.imsdk.v2.V2TIMLocationElem;
+import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMergerElem;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMMessageReceipt;
@@ -49,6 +52,7 @@ import com.tencent.imsdk.v2.V2TIMTopicInfoResult;
 import com.tencent.imsdk.v2.V2TIMTopicOperationResult;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.imsdk.v2.V2TIMUserInfo;
+import com.tencent.imsdk.v2.V2TIMUserStatus;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.imsdk.v2.V2TIMVideoElem;
 import com.tencent.imsdk.v2.V2TIMGroupMessageReadMemberList;
@@ -70,6 +74,40 @@ import io.flutter.plugin.common.MethodChannel;
 public class CommonUtil {
 
     public static Context context;
+
+    public static String apiName = "isCommercialAbilityEnabled";
+    public static String paramName = "ability";
+    public static void checkAbility(final MethodCall methodCall, final AbCallback callback){
+        try {
+            final List<Integer> param =  methodCall.argument(paramName);
+            if(param.size()>0){
+                Long ab = new Long(1L << (long) param.get(0));
+                for(int i = 1;i<param.size();i++){
+                    ab = ab ^ new Long(1L << (long)param.get(i));
+                }
+                System.out.println(ab);
+                V2TIMManager.getInstance().callExperimentalAPI(apiName, ab, new V2TIMValueCallback<Object>() {
+                    @Override
+                    public void onError(int i, String s) {
+                        callback.onAbError(i,s);
+                    }
+                    @Override
+                    public void onSuccess(Object o) {
+                        boolean enabled = ((Integer)o > 0 ? true : false);
+                        if(!enabled){
+                            callback.onAbError(70130,"the configuration to use this plugin was not obtained (" + param.get(0)+")");
+                        }else{
+                            callback.onAbSuccess();
+                        }
+                    }
+                });
+            }else{
+                callback.onAbSuccess();
+            }
+        }catch (Exception e){
+            callback.onAbError(-2,e.getMessage());
+        }
+    };
     /**
      * main thread processor
      */
@@ -105,11 +143,19 @@ public class CommonUtil {
             }
         });
     }
+    public static void wirteLog(HashMap<String,Object> map){
+        try{
+            IMLog.i("tencent_im_sdk_plugin_res",map.toString());
+        }catch (Exception e){
+            System.out.println("write log fail");
+        }
+    }
     public static void returnError(final MethodChannel.Result result, int i,String s) {
         HashMap<String,Object> err = new HashMap<String,Object>();
         err.put("code",i);
         err.put("desc",s);
         result.success(err);
+        wirteLog(err);
     }
     public static void returnError(final MethodChannel.Result result, int i,String s,HashMap<String,Object> data) {
         HashMap<String,Object> err = new HashMap<String,Object>();
@@ -117,6 +163,7 @@ public class CommonUtil {
         err.put("desc",s);
         err.put("data",data);
         result.success(err);
+        wirteLog(err);
     }
     public static <T> void returnSuccess(final MethodChannel.Result result,T data) {
         HashMap<String,Object> succ = new HashMap<String,Object>();
@@ -124,6 +171,7 @@ public class CommonUtil {
         succ.put("desc","ok");
         succ.put("data",data);
         result.success(succ);
+        wirteLog(succ);
     }
     public static <T> void emitEvent(MethodChannel channel,String method,String type,T data, String listenerUuid){
         HashMap<String,Object> res = new HashMap<String,Object>();
@@ -131,6 +179,8 @@ public class CommonUtil {
         res.put("data",data);
         res.put("listenerUuid", listenerUuid);
         channel.invokeMethod(method,res);
+        res.put("method", method);
+        wirteLog(res);
     }
     public static HashMap<String,Object> convertV2TIMUserFullInfoToMap(V2TIMUserFullInfo info){
         HashMap<String,Object> userInfo = new HashMap<String,Object>();
@@ -698,7 +748,7 @@ public class CommonUtil {
 
     public static HashMap<String,Object> convertV2TIMGroupChangeInfoToMap(V2TIMGroupChangeInfo info){
         HashMap<String,Object> rinfo = new HashMap<String,Object>();
-
+        rinfo.put("boolValue", info.getBoolValue());
         rinfo.put("value", info.getValue());
         rinfo.put("type", info.getType());
         rinfo.put("key", info.getKey());
@@ -894,6 +944,13 @@ public class CommonUtil {
         rinfo.put("isPinned",info.isPinned());
         rinfo.put("recvOpt",info.getRecvOpt());
         rinfo.put("orderkey",info.getOrderKey());
+        rinfo.put("customData",info.getCustomData());
+        rinfo.put("conversationGroupList",info.getConversationGroupList());
+        List<Integer> mli = new LinkedList<>();
+        for(int i = 0;i<info.getMarkList().size();i++){
+            mli.add(info.getMarkList().get(i).intValue());
+        }
+        rinfo.put("markList",mli);
         List<V2TIMGroupAtInfo> atList =  info.getGroupAtInfoList();
         List<Map<String,Object>> groupAtInfoList = new LinkedList<Map<String,Object>>();
         for(int i = 0;i<atList.size();i++){
@@ -904,6 +961,7 @@ public class CommonUtil {
             groupAtInfoList.add(itemMap);
         }
         rinfo.put("groupAtInfoList",groupAtInfoList);
+
         return rinfo;
     }
     public static HashMap<String,Object> convertV2TIMGroupInfoToMap(V2TIMGroupInfo info){
@@ -1070,7 +1128,20 @@ public class CommonUtil {
         return rinfo;
     }
 
-
+    public static HashMap<String,Object>  convertV2TIMUserStatusToMap(V2TIMUserStatus status){
+        HashMap<String,Object> rinfo = new HashMap<String,Object>();
+        rinfo.put("customStatus",status.getCustomStatus());
+        rinfo.put("statusType",status.getStatusType());
+        rinfo.put("userID",status.getUserID());
+        return  rinfo;
+    }
+    public static HashMap<String,Object>  convertV2TIMConversationOperationResultToMap(V2TIMConversationOperationResult status){
+        HashMap<String,Object> rinfo = new HashMap<String,Object>();
+        rinfo.put("conversationID",status.getConversationID());
+        rinfo.put("resultCode",status.getResultCode());
+        rinfo.put("resultInfo",status.getResultInfo());
+        return  rinfo;
+    }
 
     /**
      * Running the main thread returns an error result execution

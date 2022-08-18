@@ -505,7 +505,55 @@ public class TencentImSDKPlugin: NSObject, FlutterPlugin, UNUserNotificationCent
 			break
 		case "searchFriends":
 			friendManager!.searchFriends(call: call, result: result)
-			break	
+			break
+        case "checkAbility":
+            sdkManager!.checkAbility(call: call, result: result)
+            break;
+        case "appendMessage":
+            messageManager!.appendMessage(call: call, result: result)
+            break
+        case "getUserStatus":
+            sdkManager!.getUserStatus(call: call, result: result)
+            break
+        case "setSelfStatus":
+            sdkManager!.setSelfStatus(call: call, result: result)
+            break
+        case "doBackground":
+            sdkManager!.doBackground(call: call, result: result)
+            break;
+        case "subscribeUserStatus":
+            sdkManager!.subscribeUserStatus(call: call, result: result)
+            break;
+        case "unsubscribeUserStatus":
+            sdkManager!.unsubscribeUserStatus(call: call, result: result)
+            break;
+        case "setConversationCustomData":
+            conversationManager!.setConversationCustomData(call: call, result: result)
+            break;
+        case "getConversationListByFilter":
+            conversationManager!.getConversationListByFilter(call: call, result: result)
+            break;
+        case "markConversation":
+            conversationManager!.markConversation(call: call, result: result)
+            break;
+        case "createConversationGroup":
+            conversationManager!.createConversationGroup(call: call, result: result)
+            break;
+        case "getConversationGroupList":
+            conversationManager!.getConversationGroupList(call: call, result: result)
+            break;
+        case "deleteConversationGroup":
+            conversationManager!.deleteConversationGroup(call: call, result: result)
+            break;
+        case "renameConversationGroup":
+            conversationManager!.renameConversationGroup(call: call, result: result)
+            break;
+        case "addConversationsToGroup":
+            conversationManager!.addConversationsToGroup(call: call, result: result)
+            break;
+        case "deleteConversationsFromGroup":
+            conversationManager!.deleteConversationsFromGroup(call: call, result: result)
+            break;
 		default:
 			result(FlutterMethodNotImplemented);
 		}
@@ -517,16 +565,18 @@ public class TencentImSDKPlugin: NSObject, FlutterPlugin, UNUserNotificationCent
 	* @param params 参数
 	*/
     public static func invokeListener(type: ListenerType, method: String, data: Any?, listenerUuid: String?) {
-		 CommonUtils.logFromSwift(channel: TencentImSDKPlugin.channel!, data: ["msg": "Swift向Dart发送事件，事件名\(type)，数据", "data": data])
-		var resultParams: [String: Any] = [:];
-		resultParams["type"] = "\(type)";
-		if data != nil {
-			resultParams["data"] = data;
-		}
-        
-        resultParams["listenerUuid"] = listenerUuid;
-		
-		TencentImSDKPlugin.channel!.invokeMethod(method, arguments: resultParams);
+        DispatchQueue.main.async {
+            CommonUtils.logFromSwift(channel: TencentImSDKPlugin.channel!, data: ["msg": "Swift向Dart发送事件，事件名\(type)，数据", "data": data])
+           var resultParams: [String: Any] = [:];
+           resultParams["type"] = "\(type)";
+           if data != nil {
+               resultParams["data"] = data;
+           }
+           
+           resultParams["listenerUuid"] = listenerUuid;
+           
+           TencentImSDKPlugin.channel!.invokeMethod(method, arguments: resultParams);
+        }
 	}
 }
 
