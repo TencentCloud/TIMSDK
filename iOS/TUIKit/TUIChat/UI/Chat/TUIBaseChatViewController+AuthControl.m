@@ -246,14 +246,12 @@
         
         PHAssetResourceRequestOptions *options = [[PHAssetResourceRequestOptions alloc] init];
         options.networkAccessAllowed = NO;
-        __block BOOL invoked = NO;
-        [PHAssetResourceManager.defaultManager requestDataForAssetResource:resources.firstObject options:options dataReceivedHandler:^(NSData * _Nonnull data) {
-            // 此处会有重复回调的问题
-            if (invoked) {
-                return;
-            }
-            invoked = YES;
-            if (data == nil) {
+        PHAssetResource *first = resources.firstObject;
+        NSMutableData *videoData = [NSMutableData data];
+        [PHAssetResourceManager.defaultManager requestDataForAssetResource:first options:options dataReceivedHandler:^(NSData * _Nonnull data) {
+            [videoData appendData:data];
+        } completionHandler:^(NSError * _Nullable error) {
+            if (error) {
                 completion(NO, nil);
                 return;
             }
@@ -264,10 +262,8 @@
                 [NSFileManager.defaultManager removeItemAtPath:filePath error:nil];
             }
             NSURL *newUrl = [NSURL fileURLWithPath:filePath];
-            BOOL flag = [NSFileManager.defaultManager createFileAtPath:filePath contents:data attributes:nil];
+            BOOL flag = [NSFileManager.defaultManager createFileAtPath:filePath contents:videoData attributes:nil];
             completion(flag, newUrl);
-        } completionHandler:^(NSError * _Nullable error) {
-            completion(NO, nil);
         }];
     }];
 }
