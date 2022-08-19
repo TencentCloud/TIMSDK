@@ -52,8 +52,10 @@
             TUICommonContactCellData *data = [[TUICommonContactCellData alloc] initWithFriend:friend];
             // for online status
             data.onlineStatus = TUIContactOnlineStatusUnknown;
-            [contactMap setObject:data forKey:data.identifier];
-            [userIDList addObject:data.identifier];
+            if (data.identifier) {
+                [contactMap setObject:data forKey:data.identifier];
+                [userIDList addObject:data.identifier];
+            }
             
             NSString *group = [[data.title firstPinYin] uppercaseString];
             if (group.length == 0 || !isalpha([group characterAtIndex:0])) {
@@ -89,7 +91,6 @@
         NSLog(@"getFriendList failed, code:%d desc:%@", code, desc);
     }];
 
-    // 好友请求
     [self loadFriendApplication];
 }
 
@@ -144,7 +145,9 @@
     NSMutableArray *userIDList = [NSMutableArray array];
     for (TUICommonContactCellData *contact in self.contactMap.allValues) {
         contact.onlineStatus = TUIContactOnlineStatusOffline;
-        [userIDList addObject:contact.identifier];
+        if (contact.identifier) {
+            [userIDList addObject:contact.identifier];
+        }
     }
     
     // refresh table view on the main thread

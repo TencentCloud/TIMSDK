@@ -10,19 +10,19 @@ static CGFloat progressLayerLineWidth = 5.0;
 @interface TUICameraView()
 
 @property (nonatomic) UIView *contentView;
-@property (nonatomic) UIButton *switchCameraButton;  // 切换摄像头
-@property (nonatomic) UIButton *closeButton;  // 关闭
-@property (nonatomic) UIView *focusView;    // 聚焦动画view
+@property (nonatomic) UIButton *switchCameraButton;
+@property (nonatomic) UIButton *closeButton;
+@property (nonatomic) UIView *focusView;
 @property (nonatomic) UISlider *slider;
-@property (nonatomic) UIView *photoBtn;  // 拍摄
-@property (nonatomic) UIView *photoStateView;   // 拍摄内的原点view, 表示状态
+@property (nonatomic) UIView *photoBtn;
+@property (nonatomic) UIView *photoStateView;
 @property (nonatomic) UILongPressGestureRecognizer *longPress;
 @property (nonatomic) CGRect lastRect;
 
 @property (nonatomic) CAShapeLayer *progressLayer;
 
 @property (nonatomic) TUICaptureTimer *timer;
-@property (nonatomic) BOOL isVideoRecording;    // 录制中
+@property (nonatomic) BOOL isVideoRecording;
 
 @end
 
@@ -69,12 +69,10 @@ static CGFloat progressLayerLineWidth = 5.0;
         timer;
     });
     
-    // ----------------------- 手势
-    // 点击-->聚焦 双击-->曝光
+
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction:)];
     [self.previewView addGestureRecognizer:tap];
 
-    // 捏合-->缩放
     UIPinchGestureRecognizer *pinch = [[UIPinchGestureRecognizer alloc] initWithTarget:self action: @selector(pinchAction:)];
     [self.previewView addGestureRecognizer:pinch];
 }
@@ -132,7 +130,6 @@ static CGFloat progressLayerLineWidth = 5.0;
             self.progressLayer.frame = CGRectInset(self.photoBtn.bounds, progressLayerLineWidth/2.0, progressLayerLineWidth/2.0);
             
             CGFloat radius = self.progressLayer.bounds.size.width/2;
-            //设置画笔路径
             UIBezierPath *path = [UIBezierPath bezierPathWithArcCenter:CGPointMake(radius, radius) radius:radius startAngle:- M_PI_2 endAngle:-M_PI_2 + M_PI * 2 clockwise:YES];
             self.progressLayer.path = path.CGPath;
             [self.photoBtn.layer addSublayer:self.progressLayer];
@@ -175,7 +172,6 @@ static CGFloat progressLayerLineWidth = 5.0;
     }
 }
 
-// 聚焦、曝光动画
 -(void)runFocusAnimation:(UIView *)view point:(CGPoint)point {
     view.center = point;
     view.hidden = NO;
@@ -233,11 +229,9 @@ static CGFloat progressLayerLineWidth = 5.0;
             break;
         }
         case UIGestureRecognizerStateChanged:{
-             // 正在录制
             break;
         }
         case UIGestureRecognizerStateEnded:{
-            // 结束录制
             [self endVideoRecordWithCaptureDuration:self.timer.captureDuration];
             break;
         }
@@ -258,8 +252,6 @@ static CGFloat progressLayerLineWidth = 5.0;
     [self.timer startTimer];
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        
-        // 开始录制
         self.progressLayer.strokeEnd = 0.0;
         [UIView animateWithDuration:0.2 animations:^{
             self.photoStateView.transform = CGAffineTransformMakeScale(.5, .5);
@@ -395,7 +387,7 @@ static CGFloat progressLayerLineWidth = 5.0;
         _slider.maximumTrackTintColor = [UIColor whiteColor];
         _slider.minimumTrackTintColor = [UIColor whiteColor];
         _slider.alpha = 0.0;
-        _slider.hidden = YES;   // 暂时不显示该功能
+        _slider.hidden = YES;
     }
     return _slider;
 }

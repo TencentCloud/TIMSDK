@@ -22,14 +22,16 @@
         __strong typeof(weakSelf) strongSelf = weakSelf;
         [strongSelf updateConversation:list];
     } fail:^(int code, NSString *msg) {
-        // 拉取会话列表失败
         NSLog(@"getConversationList failed");
     }];
 }
 
 - (void)updateConversation:(NSArray *)convList
 {
-    // 更新 UI 会话列表，如果 UI 会话列表有新增的会话，就替换，如果没有，就新增
+    /**
+     * 更新 UI 会话列表，如果 UI 会话列表有新增的会话，就替换，如果没有，就新增
+     * Update the conversation list on the UI, if it is an existing conversation, replace it, otherwise add it
+     */
     for (int i = 0 ; i < convList.count ; ++ i) {
         V2TIMConversation *conv = convList[i];
         BOOL isExit = NO;
@@ -45,15 +47,12 @@
             [self.localConvList addObject:conv];
         }
     }
-    // 更新 cell data
+    
     NSMutableArray *dataList = [NSMutableArray array];
     for (V2TIMConversation *conv in self.localConvList) {
-        // 屏蔽会话
         if ([self filteConversation:conv]) {
             continue;
         }
-        
-        // 创建cellData
         TUIConversationCellData *data = [[TUIConversationCellData alloc] init];
         data.conversationID = conv.conversationID;
         data.groupID = conv.groupID;
@@ -63,22 +62,21 @@
         data.unreadCount = 0;
         data.draftText = @"";
         data.subTitle = [[NSMutableAttributedString alloc] initWithString:@""];
-        if (conv.type == V2TIM_C2C) {   // 设置会话的默认头像
+        if (conv.type == V2TIM_C2C) {
             data.avatarImage = DefaultAvatarImage;
         } else {
-            data.avatarImage = DefaultGroupAvatarImage;
+            data.avatarImage = DefaultGroupAvatarImageByGroupType(conv.groupType);
         }
         
         [dataList addObject:data];
     }
-    // UI 会话列表根据 lastMessage 时间戳重新排序
+
     [self sortDataList:dataList];
     self.dataList = dataList;
 }
 
 - (BOOL)filteConversation:(V2TIMConversation *)conv
 {
-    // 屏蔽AVChatRoom的群聊会话
     if ([conv.groupType isEqualToString:@"AVChatRoom"]) {
         return YES;
     }
@@ -87,12 +85,18 @@
 
 - (void)sortDataList:(NSMutableArray<TUIConversationCellData *> *)dataList
 {
-    // 按时间排序，最近会话在上
+    /**
+     * 按时间排序，最近会话在上
+     * Sorted by time, the latest conversation is at the top of the conversation list
+     */
     [dataList sortUsingComparator:^NSComparisonResult(TUIConversationCellData *obj1, TUIConversationCellData *obj2) {
         return [obj2.time compare:obj1.time];
     }];
 
-    // 将置顶会话固定在最上面
+    /**
+     * 将置顶会话固定在最上面
+     * Pinned conversations are at the top of the conversation list
+     */
     NSArray *topList = [[TUIConversationPin sharedInstance] topConversationList];
     int existTopListSize = 0;
     for (NSString *convID in topList) {

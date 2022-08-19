@@ -18,28 +18,23 @@
 
 @interface TUICameraViewController ()<AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate, TUICameraViewDelegate>
 {
-    // 会话
     AVCaptureSession          *_session;
-    
-    // 输入
     AVCaptureDeviceInput      *_deviceInput;
-        
-    // 输出
+
     AVCaptureConnection       *_videoConnection;
     AVCaptureConnection       *_audioConnection;
     AVCaptureVideoDataOutput  *_videoOutput;
     AVCaptureStillImageOutput *_imageOutput;
 
-    // 录制
     BOOL                       _recording;
 }
 
-@property(nonatomic, strong) TUICameraView   *cameraView;       // 界面布局
-@property(nonatomic, strong) TUIMovieManager  *movieManager;     // 视频管理
-@property(nonatomic, strong) TUICameraManager *cameraManager;    // 相机管理
-@property(nonatomic, strong) TUIMotionManager *motionManager;    // 陀螺仪管理
-@property(nonatomic, strong) AVCaptureDevice *activeCamera;     // 当前输入设备
-@property(nonatomic, strong) AVCaptureDevice *inactiveCamera;   // 不活跃的设备(这里指前摄像头或后摄像头，不包括外接输入设备)
+@property(nonatomic, strong) TUICameraView   *cameraView;
+@property(nonatomic, strong) TUIMovieManager  *movieManager;
+@property(nonatomic, strong) TUICameraManager *cameraManager;
+@property(nonatomic, strong) TUIMotionManager *motionManager;
+@property(nonatomic, strong) AVCaptureDevice *activeCamera;
+@property(nonatomic, strong) AVCaptureDevice *inactiveCamera;
 
 @property (nonatomic) BOOL isFirstShow;
 @property (nonatomic) BOOL lastPageBarHidden;
@@ -101,7 +96,7 @@
     }
 }
 
-#pragma mark - -输入设备
+#pragma mark - - Input Device
 - (AVCaptureDevice *)cameraWithPosition:(AVCaptureDevicePosition)position {
     NSArray *devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
     for (AVCaptureDevice *device in devices) {
@@ -128,8 +123,7 @@
     return device;
 }
 
-#pragma mark - -相关配置
-/// 会话
+#pragma mark - - Configuration
 - (void)setupSession:(NSError **)error {
     _session = [[AVCaptureSession alloc]init];
     _session.sessionPreset = AVCaptureSessionPresetHigh;
@@ -138,9 +132,8 @@
     [self setupSessionOutputs:error];
 }
 
-/// 输入
+
 - (void)setupSessionInputs:(NSError **)error {
-    // 视频输入
     AVCaptureDevice *videoDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
     AVCaptureDeviceInput *videoInput = [AVCaptureDeviceInput deviceInputWithDevice:videoDevice error:error];
     if (videoInput) {
@@ -150,7 +143,6 @@
     }
     _deviceInput = videoInput;
     if (_type == TUICameraMediaTypeVideo) {
-        // 音频输入
         AVCaptureDevice *audioDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];
         AVCaptureDeviceInput *audioIn = [[AVCaptureDeviceInput alloc] initWithDevice:audioDevice error:error];
         if ([_session canAddInput:audioIn]) {
@@ -159,11 +151,9 @@
     }
 }
 
-/// 输出
 - (void)setupSessionOutputs:(NSError **)error {
     dispatch_queue_t captureQueue = dispatch_queue_create("com.tui.captureQueue", DISPATCH_QUEUE_SERIAL);
-    
-    // 视频输出
+
     AVCaptureVideoDataOutput *videoOut = [[AVCaptureVideoDataOutput alloc] init];
     [videoOut setAlwaysDiscardsLateVideoFrames:YES];
     [videoOut setVideoSettings:@{(id)kCVPixelBufferPixelFormatTypeKey: [NSNumber numberWithInt:kCVPixelFormatType_32BGRA]}];
@@ -175,7 +165,6 @@
     _videoConnection = [videoOut connectionWithMediaType:AVMediaTypeVideo];
 
     if (_type == TUICameraMediaTypeVideo) {
-        // 音频输出
         AVCaptureAudioDataOutput *audioOut = [[AVCaptureAudioDataOutput alloc] init];
         [audioOut setSampleBufferDelegate:self queue:captureQueue];
         if ([_session canAddOutput:audioOut]){
@@ -184,7 +173,6 @@
         _audioConnection = [audioOut connectionWithMediaType:AVMediaTypeAudio];
     }
     
-    // 静态图片输出
     AVCaptureStillImageOutput *imageOutput = [[AVCaptureStillImageOutput alloc] init];            
     imageOutput.outputSettings = @{AVVideoCodecKey:AVVideoCodecJPEG};
     if ([_session canAddOutput:imageOutput]) {
@@ -193,48 +181,41 @@
     _imageOutput = imageOutput;
 }
 
-#pragma mark - -会话控制
-// 开启捕捉
+#pragma mark - - Session Control
 - (void)startCaptureSession {
     if (!_session.isRunning) {
         [_session startRunning];
     }
 }
 
-// 停止捕捉
 - (void)stopCaptureSession {
     if (_session.isRunning) {
         [_session stopRunning];
     }
 }
 
-#pragma mark - -操作相机
-// 缩放
+#pragma mark - - Camera Operation
 -(void)zoomAction:(TUICameraView *)cameraView factor:(CGFloat)factor {
     NSError *error = [_cameraManager zoom:[self activeCamera] factor:factor];
     if (error) NSLog(@"%@", error);
 }
 
-// 聚焦
 -(void)focusAction:(TUICameraView *)cameraView point:(CGPoint)point handle:(void (^)(NSError *))handle {
     NSError *error = [_cameraManager focus:[self activeCamera] point:point];
     handle(error);
     NSLog(@"%f", [self activeCamera].activeFormat.videoMaxZoomFactor);
 }
 
-// 曝光
 -(void)exposAction:(TUICameraView *)cameraView point:(CGPoint)point handle:(void (^)(NSError *))handle {
     NSError *error = [_cameraManager expose:[self activeCamera] point:point];
     handle(error);
 }
 
-// 自动聚焦、曝光
 -(void)autoFocusAndExposureAction:(TUICameraView *)cameraView handle:(void (^)(NSError *))handle {
     NSError *error = [_cameraManager resetFocusAndExposure:[self activeCamera]];
     handle(error);
 }
 
-// 闪光灯
 -(void)flashLightAction:(TUICameraView *)cameraView handle:(void (^)(NSError *))handle {
     BOOL on = [_cameraManager flashMode:[self activeCamera]] == AVCaptureFlashModeOn;
     AVCaptureFlashMode mode = on ? AVCaptureFlashModeOff : AVCaptureFlashModeOn;
@@ -242,7 +223,6 @@
     handle(error);
 }
 
-// 手电筒
 -(void)torchLightAction:(TUICameraView *)cameraView handle:(void (^)(NSError *))handle {
     BOOL on = [_cameraManager torchMode:[self activeCamera]] == AVCaptureTorchModeOn;
     AVCaptureTorchMode mode = on ? AVCaptureTorchModeOff : AVCaptureTorchModeOn;
@@ -250,41 +230,29 @@
     handle(error);
 }
 
-// 转换摄像头
 - (void)swicthCameraAction:(TUICameraView *)cameraView handle:(void (^)(NSError *))handle {
     NSError *error;
     AVCaptureDevice *videoDevice = [self inactiveCamera];
     AVCaptureDeviceInput *videoInput = [AVCaptureDeviceInput deviceInputWithDevice:videoDevice error:&error];
     if (videoInput) {
-        // 动画效果
         CATransition *animation = [CATransition animation];
         animation.type = @"oglFlip";
         animation.subtype = kCATransitionFromLeft;
         animation.duration = 0.5;
         [self.cameraView.previewView.layer addAnimation:animation forKey:@"flip"];
 
-        // 当前闪光灯状态
         AVCaptureFlashMode mode = [_cameraManager flashMode:[self activeCamera]];
 
-        // 转换摄像头
         _deviceInput = [_cameraManager switchCamera:_session old:_deviceInput new:videoInput];
 
-        // 重新设置视频输出链接
         _videoConnection = [_videoOutput connectionWithMediaType:AVMediaTypeVideo];
 
-//         如果后置转前置，系统会自动关闭手电筒(如果之前打开的，需要更新UI)
-//        if (videoDevice.position == AVCaptureDevicePositionFront) {
-//            [self.cameraView changeTorch:NO];
-//        }
-
-        // 前后摄像头的闪光灯不是同步的，所以在转换摄像头后需要重新设置闪光灯
         [_cameraManager changeFlash:[self activeCamera] mode:mode];
     }
     handle(error);
 }
 
-#pragma mark - -拍摄照片
-// 拍照
+#pragma mark - - Taking Photo
 - (void)takePhotoAction:(TUICameraView *)cameraView {
     AVCaptureConnection *connection = [_imageOutput connectionWithMediaType:AVMediaTypeVideo];
     if (connection.isVideoOrientationSupported) {
@@ -317,18 +285,19 @@
     }];
 }
 
-// 取消拍照
 - (void)cancelAction:(TUICameraView *)cameraView {
     [self.delegate cameraViewControllerDidCancel:self];
     
     [self popViewControllerAnimated:YES];
 }
 
-#pragma mark - -录制视频
-// 开始录像
+#pragma mark - - Record
 -(void)startRecordVideoAction:(TUICameraView *)cameraView {
    
-    // 每次重新创建，避免之前的信息未释放导致的 Crash
+    /**
+     * 每次重新创建，避免之前的信息未释放导致的 Crash
+     * Recreate each time to avoid Crash caused by unreleased previous information
+     */
     _movieManager  = [[TUIMovieManager alloc]  init];
     _recording = YES;
     _movieManager.currentDevice = [self activeCamera];
@@ -344,7 +313,6 @@
     }];
 }
 
-// 停止录像
 -(void)stopRecordVideoAction:(TUICameraView *)cameraView RecordDuration:(CGFloat)duration {
     
     _recording = NO;
@@ -378,15 +346,14 @@
     }];
 }
 
-#pragma mark - - AVCaptureVideoDataOutputSampleBufferDelegate 输出代理
+#pragma mark - - AVCaptureVideoDataOutputSampleBufferDelegate
 - (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection{
     if (_recording) {
         [_movieManager writeData:connection video:_videoConnection audio:_audioConnection buffer:sampleBuffer];
     }
 }
 
-#pragma mark - -其它方法
-// 当前设备取向
+#pragma mark - - Others
 - (AVCaptureVideoOrientation)currentVideoOrientation {
     AVCaptureVideoOrientation orientation;
     switch (self.motionManager.deviceOrientation) { 

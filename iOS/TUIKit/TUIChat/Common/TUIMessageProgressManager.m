@@ -10,7 +10,6 @@
 
 @interface TUIMessageProgressManager () <V2TIMSDKListener>
 
-// 上传进度
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSNumber *> *uploadProgress;
 
 @property (nonatomic, strong) NSHashTable *delegates;

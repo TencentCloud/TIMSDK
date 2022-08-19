@@ -26,8 +26,17 @@
 #import "TUICloudCustomDataTypeCenter.h"
 #import "TUIChatConfig.h"
 
-#define MaxDateMessageDelay 5 * 60 /// 消息上方的日期时间间隔, 单位秒 , default is (5 * 60)
-#define MaxReEditMessageDelay 2 * 60 /// 消息撤回后最大可编辑时间 , default is (2 * 60)
+/**
+ * 消息上方的日期时间间隔, 单位秒 , default is (5 * 60)
+ * Date time interval above the message in the UIMessageCell, in seconds, default is (5 * 60)
+ */
+#define MaxDateMessageDelay 5 * 60
+
+/**
+ * 消息撤回后最大可编辑时间 , default is (2 * 60)
+ * The maximum editable time after the message is recalled, default is (2 * 60)
+ */
+#define MaxReEditMessageDelay 2 * 60
 
 static NSArray *customMessageInfo = nil;
 
@@ -124,7 +133,6 @@ static NSArray *customMessageInfo = nil;
 }
 
 #pragma mark - V2TIMAdvancedMsgListener
-/// 收到新消息
 - (void)onRecvNewMessage:(V2TIMMessage *)msg {
     // immsg -> uimsg
     NSMutableArray *cellDataList = [self transUIMsgFromIMMsg:@[msg]];
@@ -160,7 +168,6 @@ static NSArray *customMessageInfo = nil;
     @weakify(self)
     [self preProcessMessage:cellDataList callback:^{
         @strongify(self)
-        // 更新数据, 刷新页面
         [self.dataSource dataProviderDataSourceWillChange:self];
         for (TUIMessageCellData *uiMsg in cellDataList) {
             [self addUIMsg:uiMsg];
@@ -171,9 +178,11 @@ static NSArray *customMessageInfo = nil;
         }
         [self.dataSource dataProviderDataSourceDidChange:self];
         
-        // 抛出收到新消息事件
         if ([self.dataSource respondsToSelector:@selector(dataProvider:ReceiveNewUIMsg:)]) {
-            // 注意这里不能去 firstObject，firstObject 有可能是展示系统时间的 SystemMessageCellData
+            /**
+             * 注意这里不能取 firstObject，firstObject 有可能是展示系统时间的 SystemMessageCellData
+             * Note that firstObject cannot be taken here, firstObject may be SystemMessageCellData that displays system time
+             */
             [self.dataSource dataProvider:self ReceiveNewUIMsg:cellDataList.lastObject];
         }
     }];
@@ -183,24 +192,33 @@ static NSArray *customMessageInfo = nil;
     NSMutableArray *uiMsgs = [NSMutableArray array];
     for (NSInteger k = msgs.count - 1; k >= 0; --k) {
         V2TIMMessage *msg = msgs[k];
-        // 不是当前会话的消息，直接忽略
+        /**
+         * 不是当前会话的消息，直接忽略
+         * Messages that are not the current session, ignore them directly
+         */
         if (![msg.userID isEqualToString:self.conversationModel.userID] && ![msg.groupID isEqualToString:self.conversationModel.groupID]) {
             continue;
         }
         
         TUIMessageCellData *cellData = nil;
-        // 判断是否为外部的自定义消息
+        /**
+         * 判断是否为外部的自定义消息
+         * Determine whether it is a custom message outside the component
+         */
         if ([self.dataSource respondsToSelector:@selector(dataProvider:CustomCellDataFromNewIMMessage:)]) {
             cellData = [self.dataSource dataProvider:self CustomCellDataFromNewIMMessage:msg];
         }
-        // 判断是否为组件内部消息
+        
+        /**
+         * 判断是否为组件内部消息
+         * Determine whether it is a component internal message
+         */
         if (!cellData) {
             cellData = [TUIMessageDataProvider getCellData:msg];
         }
         if (cellData) {
             TUISystemMessageCellData *dateMsg = [self getSystemMsgFromDate:msg.timestamp];
             if (dateMsg) {
-                // 更新日期消息
                 self.msgForDate = msg;
                 [uiMsgs addObject:dateMsg];
             }
@@ -235,7 +253,6 @@ static NSArray *customMessageInfo = nil;
     }
 }
 
-/// 收到消息撤回
 - (void)onRecvMessageRevoked:(NSString *)msgID {
     @weakify(self)
     [TUITool dispatchMainAsync:^{
@@ -252,21 +269,19 @@ static NSArray *customMessageInfo = nil;
                 break;
             }
         }
-        // 抛出收到消息撤回事件
+        
         if ([self.dataSource respondsToSelector:@selector(dataProvider:ReceiveRevokeUIMsg:)]) {
             [self.dataSource dataProvider:self ReceiveRevokeUIMsg:uiMsg];
         }
     }];
 }
 
-/// 消息内容被修改（第三方服务回调修改了消息内容）
 - (void)onRecvMessageModified:(V2TIMMessage *)msg {
     V2TIMMessage *imMsg = msg;
     if (imMsg == nil || ![imMsg isKindOfClass:V2TIMMessage.class]) {
         return;
     }
     
-    // 更新消息
     @weakify(self)
     for (TUIMessageCellData *uiMsg in self.uiMsgs) {
         if ([uiMsg.msgID isEqualToString:imMsg.msgID]) {
@@ -280,7 +295,10 @@ static NSArray *customMessageInfo = nil;
             [self preProcessMessage:cellDataList callback:^{
                 @strongify(self)
                 if (cellDataList.count > 0) {
-                    //Fix:原先取值cellDataList.firstObject会因为firstObject可能被拼接日期date导致替代错误.
+                    /**
+                     * 注意这里不能取 firstObject，firstObject 有可能是展示系统时间的 SystemMessageCellData
+                     * Note that firstObject cannot be taken here, firstObject may be SystemMessageCellData that displays system time
+                     */
                     TUIMessageCellData *cellData = cellDataList.lastObject;
                     NSInteger index = [self.uiMsgs indexOfObject:uiMsg];
                     if (index < self.uiMsgs.count) {
@@ -323,7 +341,7 @@ static NSArray *customMessageInfo = nil;
 - (void)loadMessageSucceedBlock:(void (^)(BOOL isFirstLoad, BOOL isNoMoreMsg, NSArray<TUIMessageCellData *> *newMsgs))SucceedBlock FailBlock:(V2TIMFail)FailBlock
 {
     if(self.isLoadingData || self.isNoMoreMsg) {
-        FailBlock(ERR_SUCC, @"正在刷新中");
+        FailBlock(ERR_SUCC, @"refreshing");
         return;
     }
     self.isLoadingData = YES;
@@ -518,7 +536,7 @@ static NSArray *customMessageInfo = nil;
     });
 }
 
-//Find all ids that who use React Emoji
+// Find all ids that who use React Emoji
 - (NSArray *)getIDsAboutWhoUseReactMessage:(NSArray<TUIMessageCellData *> *)uiMsgs {
     NSMutableArray *hasReactArray = [NSMutableArray arrayWithCapacity:3];
 
@@ -553,10 +571,10 @@ static NSArray *customMessageInfo = nil;
             TUIMessageCellData *dateMsg = nil;
             BOOL isReSent = NO;
             if (uiMsg.status == Msg_Status_Init) {
-                //新消息
+                // New message
                 dateMsg = [self getSystemMsgFromDate:imMsg.timestamp];
             } else if (imMsg) {
-                //重发
+                // Re-sent
                 isReSent = YES;
                 dateMsg = [self getSystemMsgFromDate:[NSDate date]];
             } else {
@@ -569,10 +587,10 @@ static NSArray *customMessageInfo = nil;
             imMsg.isExcludedFromUnreadCount = [TUIConfig defaultConfig].isExcludedFromUnreadCount;
             imMsg.isExcludedFromLastMessage = [TUIConfig defaultConfig].isExcludedFromLastMessage;
             
-            // 更新发送状态
+            // Update send status
             uiMsg.status = Msg_Status_Sending;
             
-            // 处理数据
+            // Handle data
             [self.dataSource dataProviderDataSourceWillChange:self];
             if (isReSent) {
                 NSInteger row = [self.uiMsgs indexOfObject:uiMsg];
@@ -600,12 +618,10 @@ static NSArray *customMessageInfo = nil;
                 willSendBlock(isReSent, dateMsg);
             }
             
-            // 更新日期消息
             if (dateMsg) {
                 self.msgForDate = imMsg;
             }
-            
-            // 发送请求
+
             uiMsg.msgID = [TUIMessageDataProvider sendMessage:imMsg
                                                toConversation:conversationData
                                                isSendPushInfo:YES
@@ -617,9 +633,17 @@ static NSArray *customMessageInfo = nil;
                                                     SuccBlock:succ
                                                     FailBlock:fail];
             uiMsg.name = [TUIMessageDataProvider getShowName:uiMsg.innerMessage];
-            // !!!innerMessage.faceURL在sendMessage内部赋值,所以需要放在最后面. TUIMessageCell内部监听了avatarUrl的变更,所以不需要再次刷新
+            
+            /**
+             * 注意：innerMessage.faceURL 在sendMessage 内部赋值，所以需要放在最后面。 TUIMessageCell 内部监听了 avatarUrl 的变更,所以不需要再次刷新。
+             * Notes: innerMessage.faceURL is assigned inside sendMessage, so it needs to be last. TUIMessageCell internally monitors changes to avatarUrl, so it doesn't need to be refreshed again.
+             */
             uiMsg.avatarUrl = [NSURL URLWithString:[uiMsg.innerMessage faceURL]];
-            //发送消息需要携带【identifier】，否则再次发送消息，点击【我】的头像会导致无法进入的个人信息页面
+            
+            /**
+             * 发送消息需要携带【identifier】，否则再次发送消息，点击【我】的头像会导致无法进入的个人信息页面
+             * Sending a message needs to carry [identifier], otherwise sending the message again, clicking on the avatar of [Me] will result in an inaccessible personal information page
+             */
             uiMsg.identifier = [uiMsg.innerMessage sender];
         }];
     }];
@@ -709,6 +733,12 @@ static NSArray *customMessageInfo = nil;
         TUIMessageCellData *msg = self.uiMsgs[index];
         [self removeUIMsg:msg];
     }
+}
+- (void)clearUIMsgList {
+    NSArray *clearArray = [NSArray arrayWithArray:self.uiMsgs];
+    [self removeUIMsgList:clearArray];
+    self.msgForDate = nil;
+    self.uiMsgs_ = nil;
 }
 - (void)replaceUIMsg:(TUIMessageCellData *)cellData atIndex:(NSUInteger)index {
     if (index < self.uiMsgs.count) {
@@ -926,9 +956,15 @@ static NSArray *customMessageInfo = nil;
         data.reuseId = TTextMessageCell_ReuseId;
     }
     
-    // 判断是否包含「云自定义消息」
+    /**
+     * 判断是否包含「云自定义消息」
+     * Determine whether contains cloud custom data
+     */
     if (message.cloudCustomData) {
-        // 判断是否包含「回复消息」
+        /**
+         * 判断是否包含「回复消息」
+         * Determine whether to include "reply-message"
+         */
         if ([message isContainsCloudCustomOfDataType:TUICloudCustomDataType_MessageReply]) {
             TUIMessageCellData *replyData = [TUIReplyMessageCellData getCellData:message];
             if (replyData) {
@@ -936,14 +972,21 @@ static NSArray *customMessageInfo = nil;
             }
         }
         
-        // 判断是否包含「引用消息」
+        /**
+         * 判断是否包含「引用消息」
+         * Determine whether to include "quote-message"
+         */
         if ([message isContainsCloudCustomOfDataType:TUICloudCustomDataType_MessageReference]) {
             TUIMessageCellData *referenceData = [TUIReferenceMessageCellData getCellData:message];
             if (referenceData) {
                 data = referenceData;
             }
         }
-        // 判断是否包含「消息响应」
+        
+        /**
+         * 判断是否包含「消息响应」
+         * Determine whether to include "react-message"
+         */
         if ([message isContainsCloudCustomOfDataType:TUICloudCustomDataType_MessageReact]) {
             [message doThingsInContainsCloudCustomOfDataType:TUICloudCustomDataType_MessageReact callback:^(BOOL isContains, id obj) {
                 if (isContains) {
@@ -957,7 +1000,11 @@ static NSArray *customMessageInfo = nil;
             }];
             
         }
-        // 判断是否包含「消息回复数」
+        
+        /**
+         * 判断是否包含「消息回复数」
+         * Determine whether to include "replies-message"
+         */
         if ([message isContainsCloudCustomOfDataType:TUICloudCustomDataType_MessageReplies]) {
             [message doThingsInContainsCloudCustomOfDataType:TUICloudCustomDataType_MessageReplies callback:^(BOOL isContains, id obj) {
                 if (isContains) {
@@ -974,9 +1021,6 @@ static NSArray *customMessageInfo = nil;
                 }
             }];
         }
-        
-
-    
     }
     
     if (data) {
@@ -986,12 +1030,27 @@ static NSArray *customMessageInfo = nil;
         data.identifier = message.sender;
         data.name = [TUIMessageDataProvider getShowName:message];
         data.avatarUrl = [NSURL URLWithString:message.faceURL];
-        // 满足 -> 1、群消息 2、非自己的消息 3、非系统消息 ->展示 showName
+
+        /**
+         * 展示 showName 字段的条件：
+         * 1. 当前消息是群消息
+         * 2. 当前消息并非自己发送的消息
+         * 3. 当前消息不是系统消息
+         *
+         * Conditions to display the showName field:
+         * 1. The current message is a group message
+         * 2. The current message is not a message sent by yourself
+         * 3. The current message is not a system message
+         */
         if (message.groupID.length > 0 && !message.isSelf
            && ![data isKindOfClass:[TUISystemMessageCellData class]]) {
             data.showName = YES;
         }
-        // 更新消息状态
+        
+        /**
+         * 更新消息状态
+         * Update message status
+         */
         switch (message.status) {
             case V2TIM_MSG_STATUS_SEND_SUCC:
                 data.status = Msg_Status_Succ;
@@ -1006,7 +1065,10 @@ static NSArray *customMessageInfo = nil;
                 break;
         }
         
-        // 更新消息的上传/下载进度
+        /**
+         * 更新消息的上传/下载进度
+         * Update progress of message uploading/downloading
+         */
         {
             NSInteger progress = [TUIMessageProgressManager.shareManager progressForMessage:message.msgID];
             if ([data conformsToProtocol:@protocol(TUIMessageCellDataFileUploadProtocol)]) {
@@ -1087,7 +1149,6 @@ static NSArray *customMessageInfo = nil;
         joinGroupData.reuseId = TJoinGroupMessageCell_ReuseId;
         return joinGroupData;
     } else {
-        //其他群Tips消息正常处理
         TUISystemMessageCellData *sysdata = [[TUISystemMessageCellData alloc] initWithDirection:MsgDirectionIncoming];
         sysdata.content = [self getDisplayString:message];
         sysdata.reuseId = TSystemMessageCell_ReuseId;
@@ -1108,18 +1169,21 @@ static NSArray *customMessageInfo = nil;
         if (message.elemType == V2TIM_ELEM_TYPE_TEXT && fabs([[NSDate date] timeIntervalSinceDate:message.timestamp]) < MaxReEditMessageDelay) {
             revoke.supportReEdit = YES;
         }
-        revoke.content = TUIKitLocalizableString(TUIKitMessageTipsYouRecallMessage); // @"你撤回了一条消息";
+        revoke.content = TUIKitLocalizableString(TUIKitMessageTipsYouRecallMessage);
         revoke.innerMessage = message;
         return revoke;
     } else if (message.userID.length > 0){
-        revoke.content = TUIKitLocalizableString(TUIkitMessageTipsOthersRecallMessage); // @"对方撤回了一条消息";
+        revoke.content = TUIKitLocalizableString(TUIkitMessageTipsOthersRecallMessage);
         revoke.innerMessage = message;
         return revoke;
     } else if (message.groupID.length > 0) {
-        //对于群组消息的名称显示，优先显示群名片，昵称优先级其次，用户ID优先级最低。
+        /**
+         * 对于群组消息的名称显示，优先显示群名片，昵称优先级其次，用户ID优先级最低。
+         * For the name display of group messages, the group business card is displayed first, the nickname has the second priority, and the user ID has the lowest priority.
+         */
         NSString *userName = [TUIMessageDataProvider getShowName:message];
         TUIJoinGroupMessageCellData *joinGroupData = [[TUIJoinGroupMessageCellData alloc] initWithDirection:MsgDirectionIncoming];
-        joinGroupData.content = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsRecallMessageFormat), userName]; //  @"\"%@\"撤回了一条消息"
+        joinGroupData.content = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsRecallMessageFormat), userName];
         joinGroupData.opUserID = message.sender;
         joinGroupData.opUserName = userName;
         joinGroupData.reuseId = TJoinGroupMessageCell_ReuseId;
@@ -1193,7 +1257,21 @@ static NSArray *customMessageInfo = nil;
 {
     NSString *userID = conversationData.userID;
     NSString *groupID = conversationData.groupID;
-    NSAssert(userID || groupID, @"目标会话至少需要一个");
+    NSAssert(userID || groupID, @"userID and groupID cannot be null at same time");
+    NSString *conversationID = @"";
+    
+    if (IS_NOT_EMPTY_NSSTRING(userID)) {
+        conversationID = [NSString stringWithFormat:@"c2c_%@", userID];
+    }
+    
+    if (IS_NOT_EMPTY_NSSTRING(groupID)) {
+        conversationID = [NSString stringWithFormat:@"group_%@",groupID];
+    }
+    
+    if (IS_NOT_EMPTY_NSSTRING(conversationData.conversationID)) {
+        conversationID = conversationData.conversationID;
+    }
+    
     NSParameterAssert(message);
     
     V2TIMOfflinePushInfo *pushInfo = nil;
@@ -1222,6 +1300,12 @@ static NSArray *customMessageInfo = nil;
     if ([TUIMessageDataProvider isGroupCommunity:conversationData.groupType groupID:conversationData.groupID] ||
         [TUIMessageDataProvider isGroupAVChatRoom:conversationData.groupType]) {
         message.needReadReceipt = NO;
+    }
+    
+    // 被隐藏的会话从通讯录入口唤起聊天页面-发送消息，需要清空被隐藏标记
+    // Hidden conversation evokes the chat page from the address book entry - to send a message, the hidden flag needs to be cleared
+    if (conversationID.length>0) {
+        [V2TIMManager.sharedInstance markConversation:@[conversationID] markType:@(V2TIM_CONVERSATION_MARK_TYPE_HIDE) enableMark:NO succ:nil fail:nil];
     }
     
     if (conversationData.userID.length > 0) {
@@ -1257,6 +1341,11 @@ static NSArray *customMessageInfo = nil;
 
 + (BOOL)isGroupAVChatRoom:(NSString *)groupType {
     return [groupType isEqualToString:@"AVChatRoom"];
+}
+
+
++ (void)markConversationAsUndead:(NSArray<NSString *> *)conversationIDList enableMark:(BOOL)enableMark  {
+    [V2TIMManager.sharedInstance markConversation:conversationIDList markType:@(V2TIM_CONVERSATION_MARK_TYPE_UNREAD) enableMark:enableMark succ:nil fail:nil];
 }
 
 + (void)markC2CMessageAsRead:(NSString *)userID
@@ -1397,7 +1486,7 @@ static NSArray *customMessageInfo = nil;
                     str = [self getCustomDisplayString:message];
                 }
                 if (!str) {
-                    str = TUIKitLocalizableString(TUIKitMessageTipsUnsupportCustomMessage); // 不支持的自定义消息;
+                    str = TUIKitLocalizableString(TUIKitMessageTipsUnsupportCustomMessage);
                 }
             }
                 break;
@@ -1411,10 +1500,9 @@ static NSArray *customMessageInfo = nil;
 + (NSString *)getRevokeDispayString:(V2TIMMessage *)message {
     NSString *str = nil;
     if(message.isSelf){
-        str = TUIKitLocalizableString(TUIKitMessageTipsYouRecallMessage); // @"你撤回了一条消息";
+        str = TUIKitLocalizableString(TUIKitMessageTipsYouRecallMessage);
     }
     else if(message.groupID != nil){
-        //对于群组消息的名称显示，优先显示群名片，昵称优先级其次，用户ID优先级最低。
         NSString *userString = message.nameCard;;
         if(userString.length == 0){
             userString = message.nickName;
@@ -1422,10 +1510,10 @@ static NSArray *customMessageInfo = nil;
         if (userString.length == 0) {
             userString = message.sender;
         }
-        str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsRecallMessageFormat), userString]; // "\"%@\"撤回了一条消息";
+        str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsRecallMessageFormat), userString];
     }
     else if(message.userID != nil){
-        str = TUIKitLocalizableString(TUIkitMessageTipsOthersRecallMessage);   // @"对方撤回了一条消息";
+        str = TUIKitLocalizableString(TUIkitMessageTipsOthersRecallMessage);
     }
     return str;
 }
@@ -1441,10 +1529,10 @@ static NSArray *customMessageInfo = nil;
                 if (opUser.length > 0) {
                     if ((userList.count == 0) ||
                         (userList.count == 1 && [opUser isEqualToString:userList.firstObject])) {
-                        str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsJoinGroupFormat), opUser]; // @"\"%@\"加入群组
+                        str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsJoinGroupFormat), opUser];
                     } else {
                         NSString *users = [userList componentsJoinedByString:@"、"];
-                        str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsInviteJoinGroupFormat), opUser, users]; // \"%@\"邀请\"%@\"加入群组
+                        str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsInviteJoinGroupFormat), opUser, users];
                     }
                 }
             }
@@ -1453,14 +1541,14 @@ static NSArray *customMessageInfo = nil;
             {
                 if (userList.count > 0) {
                     NSString *users = [userList componentsJoinedByString:@"、"];
-                    str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsInviteJoinGroupFormat), opUser, users]; // \"%@\"邀请\"%@\"加入群组
+                    str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsInviteJoinGroupFormat), opUser, users];
                 }
             }
                 break;
             case V2TIM_GROUP_TIPS_TYPE_QUIT:
             {
                 if (opUser.length > 0) {
-                    str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsLeaveGroupFormat), opUser]; // \"%@\"退出了群聊
+                    str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsLeaveGroupFormat), opUser];
                 }
             }
                 break;
@@ -1468,7 +1556,7 @@ static NSArray *customMessageInfo = nil;
             {
                 if (userList.count > 0) {
                     NSString *users = [userList componentsJoinedByString:@"、"];
-                    str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsKickoffGroupFormat), opUser, users]; // \"%@\"将\"%@\"踢出群组
+                    str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsKickoffGroupFormat), opUser, users];
                 }
             }
                 break;
@@ -1476,7 +1564,7 @@ static NSArray *customMessageInfo = nil;
             {
                 if (userList.count > 0) {
                     NSString *users = [userList componentsJoinedByString:@"、"];
-                    str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsSettAdminFormat), users]; // \"%@\"被设置管理员
+                    str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsSettAdminFormat), users];
                 }
             }
                 break;
@@ -1484,7 +1572,7 @@ static NSArray *customMessageInfo = nil;
             {
                 if (userList.count > 0) {
                     NSString *users = [userList componentsJoinedByString:@"、"];
-                    str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsCancelAdminFormat), users]; // \"%@\"被取消管理员
+                    str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsCancelAdminFormat), users];
                 }
             }
                 break;
@@ -1495,18 +1583,18 @@ static NSArray *customMessageInfo = nil;
                     switch (info.type) {
                         case V2TIM_GROUP_INFO_CHANGE_TYPE_NAME:
                         {
-                            str = [NSString stringWithFormat:TUIKitLocalizableString(TUIkitMessageTipsEditGroupNameFormat), str, info.value]; // %@修改群名为\"%@\"、
+                            str = [NSString stringWithFormat:TUIKitLocalizableString(TUIkitMessageTipsEditGroupNameFormat), str, info.value];
                         }
                             break;
                         case V2TIM_GROUP_INFO_CHANGE_TYPE_INTRODUCTION:
                         {
-                            str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsEditGroupIntroFormat), str, info.value]; // %@修改群简介为\"%@\"、
+                            str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsEditGroupIntroFormat), str, info.value];
                         }
                             break;
                         case V2TIM_GROUP_INFO_CHANGE_TYPE_NOTIFICATION:
                         {
                             if (info.value.length) {
-                                str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsEditGroupAnnounceFormat), str, info.value]; // %@修改群公告为\"%@\"、
+                                str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsEditGroupAnnounceFormat), str, info.value];
                             } else {
                                 str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsDeleteGroupAnnounceFormat), str]; 
                             }
@@ -1514,12 +1602,11 @@ static NSArray *customMessageInfo = nil;
                             break;
                         case V2TIM_GROUP_INFO_CHANGE_TYPE_FACE:
                         {
-                            str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsEditGroupAvatarFormat), str]; // %@修改群头像、
+                            str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsEditGroupAvatarFormat), str];
                         }
                             break;
                         case V2TIM_GROUP_INFO_CHANGE_TYPE_OWNER:
                         {
-                            // %@修改群主为\"%@\"、
                             if (userList.count) {
                                 str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsEditGroupOwnerFormat), str, userList.firstObject];
                             } else {
@@ -1530,14 +1617,25 @@ static NSArray *customMessageInfo = nil;
                             break;
                         case V2TIM_GROUP_INFO_CHANGE_TYPE_SHUT_UP_ALL:
                         {
-                            // 全员禁言
                             if (info.boolValue) {
-                                // 开启
                                 str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitSetShutupAllFormat), opUser];
                             } else {
-                                // 取消
                                 str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitCancelShutupAllFormat), opUser];
                             }
+                        }
+                            break;
+                        case V2TIM_GROUP_INFO_CHANGE_TYPE_GROUP_ADD_OPT:
+                        {
+                            uint32_t addOpt = info.intValue;
+                            NSString *addOptDesc = @"unknown";
+                            if (addOpt == V2TIM_GROUP_ADD_FORBID) {
+                                addOptDesc = TUIKitLocalizableString(TUIKitGroupProfileJoinDisable);
+                            } else if (addOpt == V2TIM_GROUP_ADD_AUTH) {
+                                addOptDesc = TUIKitLocalizableString(TUIKitGroupProfileAdminApprove);
+                            } else if (addOpt == V2TIM_GROUP_ADD_ANY) {
+                                addOptDesc = TUIKitLocalizableString(TUIKitGroupProfileAutoApproval);
+                            }
+                            str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsEditGroupAddOptFormat), str, addOptDesc];
                         }
                             break;
                         default:

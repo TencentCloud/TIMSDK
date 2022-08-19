@@ -32,13 +32,13 @@
     self.container.backgroundColor = TUIChatDynamicColor(@"chat_merge_message_bg_color", @"#FFFFFF");
     
     _relayTitleLabel = [[UILabel alloc] init];
-    _relayTitleLabel.text = @"聊天记录";
+    _relayTitleLabel.text = @"Chat history";
     _relayTitleLabel.font = [UIFont systemFontOfSize:16];
     _relayTitleLabel.textColor = TUIChatDynamicColor(@"chat_merge_message_title_color", @"#000000");
     [self.container addSubview:_relayTitleLabel];
 
     _abstractLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    _abstractLabel.text = @"我: ******";
+    _abstractLabel.text = @"Me: ******";
     _abstractLabel.numberOfLines = 0;
     _abstractLabel.textColor = TUIChatDynamicColor(@"chat_merge_message_content_color", @"#d5d5d5");
     [self.container addSubview:_abstractLabel];

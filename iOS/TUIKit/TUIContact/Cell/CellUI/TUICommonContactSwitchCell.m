@@ -10,6 +10,7 @@
 #import "TUIThemeManager.h"
 
 @implementation TUICommonContactSwitchCellData
+
 - (instancetype)init {
     self = [super init];
     _margin = 20;
@@ -33,13 +34,14 @@
 @end
 
 @interface TUICommonContactSwitchCell()
+
 @property TUICommonContactSwitchCellData *switchData;
+
 @end
 
 @implementation TUICommonContactSwitchCell
 
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])
     {
         _titleLabel = [[UILabel alloc] init];
@@ -69,8 +71,7 @@
 }
 
 
-- (void)fillWithData:(TUICommonContactSwitchCellData *)switchData
-{
+- (void)fillWithData:(TUICommonContactSwitchCellData *)switchData {
     [super fillWithData:switchData];
 
     self.switchData = switchData;
@@ -96,8 +97,7 @@
 
 }
 
-- (void)switchClick
-{
+- (void)switchClick {
     if (self.switchData.cswitchSelector) {
         UIViewController *vc = self.mm_viewController;
         if ([vc respondsToSelector:self.switchData.cswitchSelector]) {

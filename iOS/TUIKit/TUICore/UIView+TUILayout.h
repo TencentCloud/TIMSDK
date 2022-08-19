@@ -33,10 +33,7 @@
 @property (readonly) CGFloat mm_safeAreaLeftGap;
 @property (readonly) CGFloat mm_safeAreaRightGap;
 
-/*
-   示例链接编程
-   self.mm_width(100).mm_height(100).mm_left(10).mm_top(10)
-*/
+
 - (UIView * (^)(CGFloat top))mm_top;            ///< set frame y
 - (UIView * (^)(CGFloat bottom))mm_bottom;      ///< set frame y
 - (UIView * (^)(CGFloat right))mm_flexToBottom; ///< set frame height
@@ -48,21 +45,16 @@
 - (UIView * (^)(CGFloat x))mm__centerX;         ///< set center
 - (UIView * (^)(CGFloat y))mm__centerY;         ///< set center
 
-/*
- 相对父View
- */
-- (UIView * (^)(void))mm_center;                 ///< 居中  
-- (UIView * (^)(void))mm_fill;                   ///< 填充
 
-/*
- 相对与兄弟节点，线性布局
- */
-- (UIView * (^)(CGFloat space))mm_hstack;        ///< 水平，居中对齐
-- (UIView * (^)(CGFloat space))mm_vstack;        ///< 垂直，居中对齐
+- (UIView * (^)(void))mm_center;
+- (UIView * (^)(void))mm_fill;
+
+- (UIView * (^)(CGFloat space))mm_hstack;
+- (UIView * (^)(CGFloat space))mm_vstack;
 
 
-- (UIView * (^)(void))mm_sizeToFit;              ///< sizeToFit
-- (UIView * (^)(CGFloat w, CGFloat h))mm_sizeToFitThan;  ///< sizeToFit, 最小值
+- (UIView * (^)(void))mm_sizeToFit;
+- (UIView * (^)(CGFloat w, CGFloat h))mm_sizeToFitThan;
 @end
 
 

@@ -12,8 +12,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSInteger, TUIFindContactType) {
-    TUIFindContactTypeC2C   =  1,   // 单聊联系人
-    TUIFindContactTypeGroup =  2,   // 群组
+    TUIFindContactTypeC2C   =  1,
+    TUIFindContactTypeGroup =  2,
 };
 
 @class TUIFindContactCellModel;
@@ -28,7 +28,10 @@ typedef void(^TUIFindContactOnCallback)(TUIFindContactCellModel *);
 @property (nonatomic, copy) NSString *subTitle;
 @property (nonatomic, copy) NSString *desc;
 
-// c2c-> userID,  group就是群ID
+/**
+ * c2c-> userID,  group就是群ID
+ * If the conversation type is c2c, contactID represents userid; if the conversation type is group, contactID represents groupID
+ */
 @property (nonatomic, copy) NSString *contactID;
 @property (nonatomic, strong) V2TIMUserFullInfo *userInfo;
 @property (nonatomic, strong) V2TIMGroupInfo *groupInfo;

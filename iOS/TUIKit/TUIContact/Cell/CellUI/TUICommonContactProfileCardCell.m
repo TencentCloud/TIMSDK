@@ -23,7 +23,6 @@
         }else if([_genderString isEqualToString:TUIKitLocalizableString(Female)]){
             _genderIconImage = TUIGroupCommonBundleImage(@"female");
         }else{
-            //(性别 iCon 在未设置性别时不显示)
             _genderIconImage = nil;
         }
     }
@@ -54,7 +53,7 @@
     _avatar.contentMode = UIViewContentModeScaleAspectFit;
     _avatar.layer.cornerRadius = 4;
     _avatar.layer.masksToBounds = YES;
-    //添加点击头像的手势
+
     UITapGestureRecognizer *tapAvatar = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapAvatar)];
     [_avatar addGestureRecognizer:tapAvatar];
     _avatar.userInteractionEnabled = YES;
@@ -123,7 +122,6 @@
         }else if([x isEqualToString:TUIKitLocalizableString(Female)]){
             self.genderIcon.image = TUIGroupCommonBundleImage(@"female");
         }else{
-            //(性别 iCon 在未设置性别时不显示)
             self.genderIcon.image = nil;
         }
     }];
@@ -159,7 +157,6 @@
         _signature.mm_w = maxLabelWidth;
     }
     
-    //iCon大小 = 字体*0.9，视觉上最为自然
     _genderIcon.mm_sizeToFitThan(_name.font.pointSize * 0.9, _name.font.pointSize * 0.9).mm__centerY(_name.mm_centerY).mm_left(_name.mm_x + _name.mm_w + TPersonalCommonCell_Margin);
 }
 

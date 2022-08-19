@@ -17,13 +17,9 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         self.textView = [[TUITextView alloc] init];
-        //self.textView.dataDetectorTypes = UIDataDetectorTypeAll;
         self.textView.backgroundColor = [UIColor clearColor];
-        //系统会为其默认设置距UITextView上、下边缘各8的页边距
         self.textView.textContainerInset = UIEdgeInsetsMake(0, 0, 0, 0);
-        //textContainer中的文段的上、下、左、右又会被填充5的空白
         self.textView.textContainer.lineFragmentPadding = 0;
-        // 这个参数不设置会丢失选中光标
         self.textView.scrollEnabled = NO;
         self.textView.editable = NO;
         self.textView.delegate = self;
@@ -85,10 +81,12 @@
             NSValue *key = emojiLocation.allKeys.firstObject;
             NSAttributedString *originStr = emojiLocation[key];
             NSRange currentRange = [key rangeValue];
-            // 每次 emoji 替换后，字符串的长度都会发生变化，后面 emoji 的实际 location 也要相应改变
+            /**
+             * 每次 emoji 替换后，字符串的长度都会发生变化，后面 emoji 的实际 location 也要相应改变
+             * After each emoji is replaced, the length of the string will change, and the actual location of the emoji will also change accordingly.
+             */
             currentRange.location += offsetLocation;
             if (currentRange.location >= textView.selectedRange.location) {
-                // selectedRange 如果发生了变化，emoji 实际 location 也要相应改变
                 currentRange.location -= textView.selectedRange.location;
                 if (currentRange.location + currentRange.length <= attributedString.length) {
                     [attributedString replaceCharactersInRange:currentRange withAttributedString:originStr];

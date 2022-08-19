@@ -30,7 +30,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    //初始化视图内的组件
     self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     [self.view addSubview:self.tableView];
     self.tableView.frame = self.view.frame;
@@ -107,9 +106,6 @@
 }
 
 #pragma mark - Keyboard
-/**
- *根据键盘的上浮与下沉，使组件一起浮动，保证视图不被键盘遮挡
- */
 - (void)adjustContentOffsetDuringKeyboardAppear:(BOOL)appear withNotification:(NSNotification *)notification {
     NSTimeInterval duration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     UIViewAnimationCurve curve = [notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue];
@@ -151,7 +147,7 @@
     if (section == 1) {
         label.text = [NSString stringWithFormat:@"   %@", TUIKitLocalizableString(please_fill_in_verification_information)];
     } else if (section == 2) {
-        label.text = [NSString stringWithFormat:@"   %@", TUIKitLocalizableString(please_fill_in_remarks_group_info)];// @"填写备注与分组";
+        label.text = [NSString stringWithFormat:@"   %@", TUIKitLocalizableString(please_fill_in_remarks_group_info)];
     }
     return label;
 }
@@ -169,14 +165,10 @@
     return 1;
 }
 
-/**
- *初始化tableView的信息单元
- */
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 0) {
         TUICommonContactProfileCardCell *cell = [[TUICommonContactProfileCardCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"TPersonalCommonCell_ReuseId"];
-        //设置 profileCard 的委托
         cell.delegate = self;
         [cell fillWithData:self.cardCellData];
         return cell;
@@ -190,7 +182,7 @@
     if (indexPath.section == 2) {
         if (indexPath.row == 0) {
             UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"NickName"];
-            cell.textLabel.text = TUIKitLocalizableString(Alia); // @"备注";
+            cell.textLabel.text = TUIKitLocalizableString(Alia);
             [cell.contentView addSubview:self.nickTextField];
             
             UIView *separtor = [[UIView alloc] init];
@@ -206,8 +198,8 @@
         } else {
             UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"GroupName"];
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-            cell.textLabel.text = TUIKitLocalizableString(Group); // @"分组";
-            cell.detailTextLabel.text = TUIKitLocalizableString(my_friend); // @"我的朋友";
+            cell.textLabel.text = TUIKitLocalizableString(Group);
+            cell.detailTextLabel.text = TUIKitLocalizableString(my_friend);
             self.groupNameLabel = cell.detailTextLabel;
             
             UIView *separtor = [[UIView alloc] init];
@@ -238,9 +230,6 @@
     return NO;
 }
 
-/**
- *发送好友请求，包含请求后的回调
- */
 - (void)onSend
 {
     [self.view endEditing:YES];
@@ -260,21 +249,23 @@
     }
     
     [[V2TIMManager sharedInstance] addFriend:application succ:^(V2TIMFriendOperationResult *result) {
-        NSString *msg = [NSString stringWithFormat:@"%ld", (long)result.resultCode];
-        //根据回调类型向用户展示添加结果
-        if (result.resultCode == ERR_SVR_FRIENDSHIP_ALLOW_TYPE_NEED_CONFIRM) {
-            msg = TUIKitLocalizableString(FriendAddResultSuccessWait); // @"发送成功,等待审核同意";
+        NSString *msg = nil;
+        if (ERR_SUCC == result.resultCode) {
+            msg = TUIKitLocalizableString(FriendAddResultSuccess);
         }
-        if (result.resultCode == ERR_SVR_FRIENDSHIP_ALLOW_TYPE_DENY_ANY) {
-            msg = TUIKitLocalizableString(FriendAddResultForbid); // @"对方禁止添加";
+        else if (ERR_SVR_FRIENDSHIP_INVALID_PARAMETERS == result.resultCode) {
+            if ([result.resultInfo isEqualToString:@"Err_SNS_FriendAdd_Friend_Exist"]) {
+                msg = TUIKitLocalizableString(FriendAddResultExists);
+            }
         }
-        if (result.resultCode == 0) {
-            msg = TUIKitLocalizableString(FriendAddResultSuccess); // @"已添加到好友列表";
+        else {
+            msg = [TUITool convertIMError:result.resultCode msg:result.resultInfo];
         }
-        if (result.resultCode == ERR_SVR_FRIENDSHIP_INVALID_PARAMETERS) {
-            msg = TUIKitLocalizableString(FriendAddResultExists); // @"好友已存在";
+        
+        if (msg.length == 0) {
+            msg = [NSString stringWithFormat:@"%ld", (long)result.resultCode];
         }
-
+        
         [TUITool hideToastActivity];
         [TUITool makeToast:msg duration:3.0 idposition:TUICSToastPositionBottom];
     } fail:^(int code, NSString *desc) {
@@ -288,10 +279,6 @@
     [self.view endEditing:YES];
 }
 
-
-/**
- *  点击头像查看大图的委托实现。
- */
 -(void)didTapOnAvatar:(TUICommonContactProfileCardCell *)cell{
     TUIContactAvatarViewController *image = [[TUIContactAvatarViewController alloc] init];
     image.avatarData = cell.cardData;

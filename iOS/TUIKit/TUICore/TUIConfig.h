@@ -5,17 +5,21 @@
 //  Created by kennethmiao on 2018/11/5.
 //  Copyright © 2018年 Tencent. All rights reserved.
 //
-/** 腾讯云 TUIConfig
- *
- *
+/**
  *  本类依赖于腾讯云 IM SDK 实现
- *  TUIKit 中的组件在实现 UI 功能的同时，调用 IM SDK 相应的接口实现 IM 相关逻辑和数据的处理
- *  您可以在TUIKit的基础上做一些个性化拓展，即可轻松接入IM SDK
  *
- *  TUIConfig 实现了配置文件的默认初始化，您可以根据您的需求在此更改默认配置，或通过此类修改配置
+ *  TUIConfig 实现了配置文件的默认初始化，您可以根据您的需求在此更改默认配置
  *  配置文件包括表情、默认图标等等
  *
  *  需要注意的是， TUIKit 里面的表情包都是有版权限制的，购买的 IM 服务不包括表情包的使用权，请在上线的时候替换成自己的表情包，否则会面临法律风险
+ *
+ *
+ * This class depends on the implementation of Tencent Cloud IM SDK
+ *
+ * TUIConfig implements the default initialization of the configuration file, you can change the default configuration here according to your needs
+ * Configuration file include emoticons, default icons, and more
+ *
+ * It should be noted that the emoticons in TUIKit are copyrighted. The purchased IM service does not include the right to use the emoticons. Please replace them with your own emoticons when you go online, otherwise you will face legal risks.
  */
 
 #import <Foundation/Foundation.h>
@@ -24,57 +28,78 @@
 
 #define DefaultAvatarImage ([TUIConfig defaultConfig].defaultAvatarImage)
 #define DefaultGroupAvatarImage ([TUIConfig defaultConfig].defaultGroupAvatarImage)
+#define DefaultGroupAvatarImageByGroupType(groupType) ([[TUIConfig defaultConfig] getGroupAvatarImageByGroupType:groupType])
 
 typedef NS_ENUM(NSInteger, TUIKitAvatarType) {
-    TAvatarTypeNone,             /*矩形直角头像*/
-    TAvatarTypeRounded,          /*圆形头像*/
-    TAvatarTypeRadiusCorner,     /*圆角头像*/
+    TAvatarTypeNone,
+    TAvatarTypeRounded,
+    TAvatarTypeRadiusCorner,
 };
 
 @interface TUIConfig : NSObject
-/**
- *  获取 TUIConfig 实例
- */
+
 + (TUIConfig *)defaultConfig;
+
 /**
- * 表情列表（需要注意的是， TUIKit 里面的表情包都是有版权限制的，购买的 IM 服务不包括表情包的使用权，请在上线的时候替换成自己的表情包，否则会面临法律风险）
+ * 聊天界面输入框的表情列表
+ * 需要注意的是， TUIKit 里面的表情包都是有版权限制的，购买的 IM 服务不包括表情包的使用权，请在上线的时候替换成自己的表情包，否则会面临法律风险
+ *
+ * The list of emojis in the input box of the chat interface
+ * It should be noted that the emoticons in TUIKit are copyrighted. The purchased IM service does not include the right to use the emoticons. Please replace them with your own emoticons when you go online, otherwise you will face legal risks.
  */
-@property (nonatomic, strong) NSArray<TUIFaceGroup *> *faceGroups; //键盘表情
-@property (nonatomic, strong) NSArray<TUIFaceGroup *> *chatPopDetailGroups;//消息编辑 快捷贴表情,表情详情。
+@property (nonatomic, strong) NSArray<TUIFaceGroup *> *faceGroups;
+
+/**
+ * 聊天界面上长按消息后显示的表情列表
+ * The list of emoticons displayed after long-pressing the message on the chat interface
+ */
+@property (nonatomic, strong) NSArray<TUIFaceGroup *> *chatPopDetailGroups;
+
 /**
  *  头像类型
+ *  Type of avatar
  */
 @property (nonatomic, assign) TUIKitAvatarType avatarType;
+
 /**
  *  头像圆角大小
+ *  The size of the rounded corners of the avatar
  */
 @property (nonatomic, assign) CGFloat avatarCornerRadius;
+
 /**
  *  默认头像图片
+ *  Default user avatar
  */
 @property (nonatomic, strong) UIImage *defaultAvatarImage;
+
 /**
  *  默认群组头像图片
+ *  Default group avatar
  */
 @property (nonatomic, strong) UIImage *defaultGroupAvatarImage;
 
 /**
- * 发消息不计入未读数 YES：启用 NO：关闭 默认：NO
+ * 发消息不计入未读数，默认为 NO
+ * When sending a message, the flag used to identify whether the current message is not counted as unread, the default is NO
  */
 @property(nonatomic, assign) BOOL isExcludedFromUnreadCount;
 
 /**
- * 发消息不更新会话的lastMesage，YES: 不更新，NO:更新。默认 NO。
+ * 发消息不更新会话的lastMesage，默认为 NO
+ * When sending a message, the flag used to identify whether the current message does not update the lastMessage of the conversation, the default is NO
  */
 @property(nonatomic, assign) BOOL isExcludedFromLastMessage;
 
 /**
- * 是否允许 SDK 内部默认弹框提示
+ * 是否允许 TUIKit 内部默认弹框提示
+ * Whether to allow default pop-up prompts inside TUIKit
  */
 @property(nonatomic, assign) BOOL enableToast;
 
 /**
  * 是否开启自定义铃音（仅针对 Android 有效）
+ * Whether to enable custom ringtone (only valid for Android)
  */
 @property(nonatomic, assign) BOOL enableCustomRing;
 
@@ -84,6 +109,15 @@ typedef NS_ENUM(NSInteger, TUIKitAvatarType) {
  */
 @property(nonatomic, assign) BOOL displayOnlineStatusIcon;
 
+/**
+ * 群组头像，允许展示九宫格样式的头像，默认为 YES
+ * Group avatar, allows to display avatars in the nine-square grid style, default is YES
+ */
+@property(nonatomic, assign) BOOL enableGroupGridAvatar;
+
 
 - (void)setSceneOptimizParams:(NSString *)path;
+
+- (UIImage *)getGroupAvatarImageByGroupType:(NSString *)groupType;
+
 @end

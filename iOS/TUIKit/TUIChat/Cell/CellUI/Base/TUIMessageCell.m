@@ -15,7 +15,7 @@
 #import "TUITagsView.h"
 @interface TUIMessageCell() <CAAnimationDelegate>
 @property (nonatomic, strong) TUIMessageCellData *messageData;
-@property (nonatomic, strong) NSMutableArray<TUITagsModel *> *reactlistArr;//消息响应
+@property (nonatomic, strong) NSMutableArray<TUITagsModel *> *reactlistArr;
 
 @end
 
@@ -33,7 +33,6 @@
 }
 
 - (void)setupSubViews {
-    self.backgroundColor = [UIColor clearColor];
     //head
     _avatarView = [[UIImageView alloc] init];
     _avatarView.contentMode = UIViewContentModeScaleAspectFit;
@@ -82,7 +81,6 @@
 //    TUIChatDynamicColor(@"chat_drop_down_color", @"#147AFF")
     [self.contentView addSubview:_messageModifyRepliesButton];
     
-    //已读label,由于 indicator 和 error，所以默认隐藏，消息发送成功后进行显示
     _readReceiptLabel = [[UILabel alloc] init];
     _readReceiptLabel.hidden = YES;
     _readReceiptLabel.font = [UIFont systemFontOfSize:12];
@@ -110,8 +108,8 @@
     [self.contentView addSubview:_timeLabel];
     
     self.selectionStyle = UITableViewCellSelectionStyleNone;
-    self.backgroundColor = TUIChatDynamicColor(@"chat_controller_bg_color", @"#FFFFFF");
-    self.contentView.backgroundColor = TUIChatDynamicColor(@"chat_controller_bg_color", @"#FFFFFF");
+    self.backgroundColor = UIColor.clearColor;
+    self.contentView.backgroundColor = UIColor.clearColor;
 }
 
 - (void)layoutSubviews {
@@ -151,7 +149,7 @@
         _timeLabel.hidden = YES;
     }
     CGSize csize = [self.messageData contentSize];
-    //消息选择视图
+
     _selectedView.mm_x = 0;
     _selectedView.mm_y = 0;
     _selectedView.mm_w = self.contentView.mm_w;
@@ -161,9 +159,15 @@
     CGFloat contentHeight = csize.height;
 
     if (!CGSizeEqualToSize(self.messageData.messageModifyReactsSize, CGSizeZero)) {
-        //互动消息和文本取最大值
+        /**
+         * 在「表情回复消息」和文本内容中间取最大宽度
+         * Taking the maximum width between the "emoji reply message" and the text content
+         */
         contentWidth = MAX(self.messageData.messageModifyReactsSize.width, csize.width);
-        //限制最大宽度为 Screen_Width *0.25 * 3
+        /**
+         * 限制最大宽度为 Screen_Width *0.25 * 3
+         * Limit the maximum width to Screen_Width *0.25 * 3
+         */
         contentWidth = MIN(contentWidth, Screen_Width *0.25 * 3);
         contentHeight = csize.height+ self.messageData.messageModifyReactsSize.height;
     }
@@ -182,7 +186,7 @@
         self.container.mm_left(cellLayout.messageInsets.left+self.avatarView.mm_maxX)
         .mm_top(ctop).mm_width(contentWidth).mm_height(contentHeight);
         
-        self.nameLabel.mm_left(_container.mm_x + 7) ;//与气泡对齐
+        self.nameLabel.mm_left(_container.mm_x + 7) ;
         self.indicator.mm_sizeToFit().mm__centerY(_container.mm_centerY).mm_left(_container.mm_maxX + 8);
         self.retryView.frame = self.indicator.frame;
         self.readReceiptLabel.hidden = YES;
@@ -205,7 +209,6 @@
         self.indicator.mm_sizeToFit().mm__centerY(_container.mm_centerY).mm_left(_container.mm_x - 8 - _indicator.mm_w);
         self.retryView.frame = self.indicator.frame;
         
-        //这里不能像 retryView 一样直接使用 indicator 的设定，否则内容会显示不全。
         self.readReceiptLabel.mm_sizeToFit().mm_bottom(self.container.mm_b).mm_left(_container.mm_x - 8 - _readReceiptLabel.mm_w);
         
     }
@@ -232,8 +235,16 @@
 
 - (void)prepareForReuse{
     [super prepareForReuse];
-    //今后任何关于复用产生的 UI 问题，都可以在此尝试编码解决。
-    _readReceiptLabel.text = TUIKitLocalizableString(Unread); // @"未读";//一但消息复用，说明即将新消息出现，label内容改为未读。
+    /**
+     * 今后任何关于复用产生的 UI 问题，都可以在此尝试编码解决。
+     * In the future, any UI problems caused by reuse can be solved by coding here.
+     */
+    
+    /**
+     * 一旦消息复用，说明即将新消息出现，label 内容改为未读
+     * Once the message is reused, it means that a new message is about to appear, and the label content is changed to unread.
+     */
+    _readReceiptLabel.text = TUIKitLocalizableString(Unread);
     _readReceiptLabel.hidden = YES;
 }
 
@@ -259,14 +270,10 @@
         self.avatarView.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
     }
     
-    //set data
     self.nameLabel.text = data.name;
     self.nameLabel.textColor = data.nameColor;
     self.nameLabel.font = data.nameFont;
     
-    //由于tableView的刷新策略，导致部分情况下可能会出现未读label未显示的bug。原因是因为在label显示时，内容为空。
-    //label内容的变化不会引起tableView的刷新，但是hiddend状态的变化会引起tableView刷新。
-    //所以未读标签选择直接赋值，而不是在发送成功时赋值。显示时机由hidden属性控制。
     [self updateReadLabelText];
     
     if (data.status == Msg_Status_Fail ){
@@ -280,13 +287,15 @@
         }
         else if(data.status == Msg_Status_Succ) {
             [_indicator stopAnimating];
-            // 发送成功，说明 indicator 和 error 已不会显示在 label，可以开始显示已读回执 label
+            /**
+             * 消息发送成功，说明 indicator 和 error 已不会显示在 label，可以开始显示已读回执 label
+             * The message is sent successfully, indicating that the indicator and error are no longer displayed on the label, and the read receipt label can be displayed.
+             */
             if (self.messageData.direction == MsgDirectionOutgoing
                 && self.messageData.innerMessage.needReadReceipt
                 && (self.messageData.innerMessage.userID || self.messageData.innerMessage.groupID)
                 && ![self.messageData isKindOfClass:TUISystemMessageCellData.class]
                ) {
-                // 群聊和单聊，默认都要显示
                 _readReceiptLabel.hidden = NO;
             }
         }
@@ -297,9 +306,8 @@
         self.retryView.image = nil;
     }
     
-    //如果有消息编辑 x人回复
     [self.messageModifyRepliesButton setImage:TUIChatBundleThemeImage(@"chat_messageReplyIcon_img", @"messageReplyIcon") forState:UIControlStateNormal];
-
+    
     self.messageModifyRepliesButton.hidden = YES;
     if (data.showMessageModifyReplies) {
         self.messageModifyRepliesButton.hidden = NO;
@@ -319,7 +327,10 @@
     
     _timeLabel.text = [TUITool convertDateToStr:data.innerMessage.timestamp];
     
-    // 高亮文本 - 此处异步是为了让其执行顺序与子类一致
+    /**
+     * 文本高亮显示 - 此处的异步操作是为了让其执行顺序与子类一致
+     * Text highlighting - asynchronous operations are here to keep the order of execution consistent with subclasses
+     */
     __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         [weakSelf highlightWhenMatchKeyword:data.highlightKeyword];
@@ -419,7 +430,6 @@
         CGPoint point = [recognizer locationInView:self.tagView];
         BOOL result = [self.tagView.layer containsPoint:point];
         if (result) {
-            //tagview不响应选中msg
             return;
         }
     }

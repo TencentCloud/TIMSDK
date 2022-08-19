@@ -84,10 +84,28 @@
 	<string>#FF7756</string>
 	<key>chat_reply_message_content_text_color</key>
 	<string>#F3F4F5</string>
+	<key>chat_reply_message_quoteView_text_color</key>
+	<string>#FFE1EC</string>
+	<key>chat_reply_message_quoteView_bg_color</key>
+	<string>#19000000</string>
 	<key>chat_reply_message_sender_text_color</key>
 	<string>#00000026</string>
 	<key>chat_reply_message_content_recv_text_color</key>
 	<string>#000000</string>
+	<key>chat_reply_message_quoteView_recv_text_color</key>
+	<string>#888888</string>
+	<key>chat_reference_message_content_text_color</key>
+	<string>#F3F4F5</string>
+	<key>chat_reference_message_quoteView_text_color</key>
+	<string>#888888</string>
+	<key>chat_reference_message_quoteView_bg_color</key>
+	<string>#4444440c</string>
+	<key>chat_reference_message_sender_text_color</key>
+	<string>#00000026</string>
+	<key>chat_reference_message_content_recv_text_color</key>
+	<string>#000000</string>
+	<key>chat_reference_message_quoteView_recv_text_color</key>
+	<string>#888888</string>
 	<key>chat_voice_message_send_duration_time_color</key>
 	<string>#FFFFFF</string>
 	<key>chat_voice_message_recv_duration_time_color</key>

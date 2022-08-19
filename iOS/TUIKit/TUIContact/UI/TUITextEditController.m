@@ -37,8 +37,6 @@
 
 @implementation TUITextEditController
 
-// MLeaksFinder 会对这个类误报，这里需要关闭一下
-
 - (BOOL)willDealloc {
     return NO;
 }

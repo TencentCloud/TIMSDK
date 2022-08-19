@@ -11,7 +11,8 @@
 #import "TUIChatPopEmojiView.h"
 #import "TUIChatPopRecentView.h"
 #import "TUIChatPopActionsView.h"
-#define maxColumns 5    // 一排最多放 5 个
+
+#define maxColumns 5
 #define kContainerInsets UIEdgeInsetsMake(3, 0, 3, 0)
 #define kActionWidth 54
 #define kActionHeight 65
@@ -42,7 +43,11 @@
 
 @interface TUIChatPopMenu () <UIGestureRecognizerDelegate,TFaceViewDelegate,TUIChatPopRecentEmojiDelegate>
 
-@property (nonatomic, strong) UIView *emojiContainerView; //emojiRecent视图和emoji二级页视图
+/**
+ * emojiRecent 视图和 emoji 二级页视图
+ * emojiRecent view and emoji secondary page view
+ */
+@property (nonatomic, strong) UIView *emojiContainerView;
 
 @property (nonatomic, strong) UIView *containerView;
  
@@ -158,8 +163,7 @@
 
     self.frame = window.bounds;
     [window addSubview:self];
-    
-    // 绘制子视图
+
     [self layoutSubview];
 }
 
@@ -182,7 +186,6 @@
     
     [self setupContainerPosition];
     
-    // 更新子视图的布局
     [self updateLayout];
     
 }
@@ -217,31 +220,49 @@
 }
 - (void)setupContainerPosition
 {
-    // 计算坐标，并修正，默认箭头朝下
-    CGFloat minTopBottomMargin = 100;
+    /**
+     * 计算坐标，并修正，默认箭头朝下
+     * Calculate the coordinates and correct them, the default arrow points down
+     */
+    CGFloat minTopBottomMargin = (Is_IPhoneX ? (100):(0.0));
     CGFloat minLeftRightMargin = 50;
     CGFloat containerW = self.containerView.bounds.size.width;
     CGFloat containerH = self.containerView.bounds.size.height;
-    CGFloat upContainerY = self.arrawPoint.y + self.adjustHeight + kArrowSize.height;   // 如果箭头朝上，containerY
+    CGFloat upContainerY = self.arrawPoint.y + self.adjustHeight + kArrowSize.height;   // The containerY value when arrow points up
     
-    // 默认箭头朝下
+    /**
+     * 默认箭头朝下
+     * The default arrow points down
+     */
     CGFloat containerX = self.arrawPoint.x - 0.5 * containerW;
     CGFloat containerY = self.arrawPoint.y - kArrowSize.height - containerH - StatusBar_Height - self.emojiHeight ;
-    BOOL top = NO;     // 箭头朝下
+    BOOL top = NO;     // The direction of arrow, here is down
     CGFloat arrawX = 0.5 * containerW;
     CGFloat arrawY = kArrowSize.height + containerH - 1.5;
     
-    // 修正纵向
+    /**
+     * 修正纵向坐标
+     * Corrected vertical coordinates
+     */
     if (containerY < minTopBottomMargin) {
-        // 此时 container 太靠上了，计划将箭头调整为朝上
+        /**
+         * 此时 container 太靠上了，计划将箭头调整为朝上
+         * At this time, the container is too high, and it is planned to adjust the direction of the arrow to upward.
+         */
         if (upContainerY + containerH + minTopBottomMargin > self.superview.bounds.size.height) {
-            // 朝上也不行，超出了屏幕 ==> 保持箭头朝下，移动 self.arrawPoint
+            /**
+             * 朝上也不行，超出了屏幕 ==> 保持箭头朝下，移动 self.arrawPoint
+             * After adjusting the upward arrow direction, it will cause the entire container to exceed the screen. At this time, the adjustment strategy is changed to: keep the arrow direction downward and move self.arrawPoint
+             */
             top = NO;
-            self.arrawPoint = CGPointMake(self.arrawPoint.x, self.arrawPoint.y + minTopBottomMargin - containerY);
+            self.arrawPoint = CGPointMake(self.arrawPoint.x, self.arrawPoint.y  - containerY);
             containerY = self.arrawPoint.y - kArrowSize.height - containerH;
             
         } else {
-            // 箭头可以朝上
+            /**
+             * 箭头可以朝上
+             * Adjust the direction of the arrow to meet the requirements
+             */
             top = YES;
             self.arrawPoint = CGPointMake(self.arrawPoint.x, self.arrawPoint.y + self.adjustHeight - StatusBar_Height - 5 );
             arrawY = - kArrowSize.height;
@@ -249,9 +270,15 @@
         }
     }
     
-    // 修正横向
+    /**
+     * 修正横向
+     * Corrected horizontal coordinates
+     */
     if (containerX < minLeftRightMargin) {
-        // 此时 container 太靠左了，需要往右靠
+        /**
+         * 此时 container 太靠左了，需要往右靠
+         * At this time, the container is too close to the left side of the screen and needs to move to the right
+         */
         CGFloat offset = (minLeftRightMargin - containerX);
         arrawX = arrawX - offset;
         containerX = containerX + offset;
@@ -260,7 +287,10 @@
         }
         
     } else if (containerX + containerW + minLeftRightMargin > self.bounds.size.width) {
-        // 此时container 太靠右了，需要往左靠
+        /**
+         * 此时container 太靠右了，需要往左靠
+         * At this time, the container is too close to the right side of the screen and needs to be moved to the left
+         */
         CGFloat offset = containerX + containerW + minLeftRightMargin - self.bounds.size.width;
         arrawX = arrawX + offset;
         containerX = containerX - offset;
@@ -272,9 +302,10 @@
     self.emojiContainerView.frame = CGRectMake(containerX, containerY, containerW, MAX(self.emojiHeight + containerH, 200));
     self.containerView.frame = CGRectMake(containerX, containerY+self.emojiHeight, containerW, containerH);
     
-
-
-    // 绘制 箭头
+    /**
+     * 绘制 箭头
+     * Drawing arrow
+     */
     self.arrowLayer = [[CAShapeLayer alloc] init];
     self.arrowLayer.path = [self arrawPath:CGPointMake(arrawX, arrawY) directionTop:top].CGPath;
     self.arrowLayer.fillColor = TUIChatDynamicColor(@"chat_pop_menu_bg_color", @"#FFFFFF").CGColor;
@@ -327,7 +358,10 @@
         }
     }
     
-    // 计算当前 container 的宽高
+    /**
+     * 计算当前 container 的宽高
+     * Calculating the size of container
+     */
     int rows = (self.actions.count % maxColumns == 0) ? (int)self.actions.count / maxColumns : (int)(self.actions.count / maxColumns) + 1;
     int columns = self.actions.count < maxColumns ? (int)self.actions.count : maxColumns;
     if ([TUIChatConfig defaultConfig].enablePopMenuEmojiReactAction) {
@@ -341,9 +375,7 @@
 }
 
 - (void)setupEmojiSubView {
-    //表情一级页
     [self setupEmojiRecentView];
-    //二级页
     [self setupEmojiAdvanceView];
 }
 - (void)setupEmojiRecentView {
@@ -389,7 +421,6 @@
             
             i++;
         } else {
-            // 分割线
             CGFloat y = (currentRow + 1) * kActionHeight + kContainerInsets.top;
             CGFloat width = containerWidth - 2 * kSepartorLRMargin - kContainerInsets.left - kContainerInsets.right;
             subView.frame = CGRectMake(kSepartorLRMargin, y, width, kSepartorHeight);
@@ -403,11 +434,9 @@
     UIBezierPath *arrowPath = [[UIBezierPath alloc] init];
     [arrowPath moveToPoint:point];
     if (top) {
-        // 上箭头
         [arrowPath addLineToPoint:CGPointMake(point.x + arrowSize.width * 0.5, point.y + arrowSize.height)];
         [arrowPath addLineToPoint:CGPointMake(point.x - arrowSize.width * 0.5, point.y + arrowSize.height)];
     } else {
-        // 下箭头
         [arrowPath addLineToPoint:CGPointMake(point.x + arrowSize.width * 0.5, point.y - arrowSize.height)];
         [arrowPath addLineToPoint:CGPointMake(point.x - arrowSize.width * 0.5, point.y - arrowSize.height)];
     }

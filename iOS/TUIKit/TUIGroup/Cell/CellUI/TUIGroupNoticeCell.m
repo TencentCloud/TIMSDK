@@ -72,7 +72,7 @@
 {
     if (_nameLabel == nil) {
         _nameLabel = [[UILabel alloc] init];
-        _nameLabel.text = @"群通告";
+        _nameLabel.text = @"";
         _nameLabel.textColor = TUICoreDynamicColor(@"form_key_text_color", @"#888888");
         _nameLabel.font = [UIFont systemFontOfSize:16.0];
     }

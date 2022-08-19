@@ -99,7 +99,7 @@
     });
     return shareWindow;
 }
-/// 重写系统方法禁止设置该Window的模式状态。
+
 - (void)setOverrideUserInterfaceStyle:(UIUserInterfaceStyle)overrideUserInterfaceStyle {}
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
     [super traitCollectionDidChange:previousTraitCollection];
@@ -118,23 +118,17 @@
 
 @implementation TUITheme
 
-// 获取动态颜色
 + (UIColor *)dynamicColor:(NSString *)colorKey module:(TUIThemeModule)module defaultColor:(NSString *)hex
 {
     TUITheme *theme = TUICurrentTheme(module);
     TUITheme *darkTheme = TUIDarkTheme(module);
     if (theme) {
-        // 指定了主题
         return [theme dynamicColor:colorKey defaultColor:hex];
     } else {
-        // 不指定主题
-        // 如果配置了黑夜主题，跟随系统适配暗黑，默认返回 defaut
-        // 如果没有配置黑夜主题，使用默认值
         if (@available(iOS 13.0, *)) {
             return [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traitCollection) {
                 switch (traitCollection.userInterfaceStyle) {
                     case UIUserInterfaceStyleDark:
-                        // 加载暗黑，如果没有配置黑夜主题，使用默认值
                         return [darkTheme dynamicColor:colorKey defaultColor:hex] ?: [UIColor colorWithHex:hex];
                     case UIUserInterfaceStyleLight:
                     case UIUserInterfaceStyleUnspecified:
@@ -165,10 +159,8 @@
     TUITheme *theme = TUICurrentTheme(module);
     TUITheme *darkTheme = TUIDarkTheme(module);
     if (theme) {
-        // 指定了主题
         return [theme dynamicImage:imageKey defaultImage:image];
     } else {
-        // 未指定主题
         UIImage *lightImage = image;
         UIImage *darkImage = [darkTheme dynamicImage:imageKey defaultImage:image];
         return [self imageWithImageLight:lightImage dark:darkImage];
@@ -191,7 +183,8 @@
     return dynamic;
 }
 
-+ (UIImage *)imageWithImageLight:(UIImage *)lightImage dark:(UIImage *)darkImage {
++ (UIImage *)imageWithImageLight:(UIImage *)lightImage dark:(UIImage *)darkImage
+{
     if (@available(iOS 13.0, *)) {
         UITraitCollection *const scaleTraitCollection = [UITraitCollection currentTraitCollection];
         UITraitCollection *const darkUnscaledTraitCollection = [UITraitCollection traitCollectionWithUserInterfaceStyle:UIUserInterfaceStyleDark];
@@ -211,16 +204,24 @@
 
 @interface TUIThemeManager ()
 
-// 各模块的主题资源路径，module:主题路径
+/**
+ * 各模块的主题资源路径，module:主题路径
+ * The theme resource path of each module, module: theme path
+ */
 @property (nonatomic, strong) NSMutableDictionary<NSNumber *, NSString *> *themeResourcePathCache;
 
-// 当前使用module使用的主题，module: 主题
+/**
+ * 当前module使用的主题，module: 主题
+ * The theme currently used by module, module: theme
+ */
 @property (nonatomic, strong) NSMutableDictionary<NSNumber *, TUITheme *> *currentThemeCache;
 
-// 每个module对应的黑夜模式主题, 如果有的话
+/**
+ * 每个module对应的黑夜模式主题, 如果有的话
+ * The dark theme for each module, if any
+ */
 @property (nonatomic, strong) NSMutableDictionary<NSNumber *, TUITheme *> *darkThemeCache;
 
-// 所有的监听者
 @property (nonatomic, strong) NSHashTable *listeners;
 
 - (void)allListenerExcuteonApplyThemeMethod:(TUITheme *)theme module:(TUIThemeModule)module;
@@ -274,7 +275,6 @@ static id _instance;
     });
 }
 
-// 设置主题资源根路径
 - (void)registerThemeResourcePath:(NSString *)path darkThemeID:(NSString *)darkThemeID forModule:(TUIThemeModule)module
 {
     if (path.length == 0) {
@@ -283,10 +283,8 @@ static id _instance;
     
     __weak typeof(self) weakSelf = self;
     dispatch_async(_queue, ^{
-        // 保存主题资源路径
         [weakSelf.themeResourcePathCache setObject:path forKey:@(module)];
         
-        // 加载黑夜主题
         TUITheme *theme = [weakSelf loadTheme:darkThemeID module:module];
         if (theme) {
             [weakSelf setDarkTheme:theme forModule:module];
@@ -299,7 +297,6 @@ static id _instance;
     [self registerThemeResourcePath:path darkThemeID:@"dark" forModule:module];
 }
 
-// 获取当前正在使用的主题，线程安全
 - (TUITheme *)currentThemeForModule:(TUIThemeModule)module
 {
     __block TUITheme *theme = nil;
@@ -312,7 +309,6 @@ static id _instance;
     return theme;
 }
 
-// 设置主题, 线程安全
 - (void)setCurrentTheme:(TUITheme *)theme forModule:(TUIThemeModule)module
 {
     __weak typeof(self) weakSelf = self;
@@ -326,7 +322,6 @@ static id _instance;
     });
 }
 
-// 获取每个模块对应的黑夜主题
 - (TUITheme *)darkThemeForModule:(TUIThemeModule)module
 {
     __block TUITheme *theme = nil;
@@ -339,7 +334,6 @@ static id _instance;
     return theme;
 }
 
-// 设置每个模块对应的黑夜主题, 线程安全
 - (void)setDarkTheme:(TUITheme *)theme forModule:(TUIThemeModule)module
 {
     __weak typeof(self) weakSelf = self;
@@ -353,7 +347,6 @@ static id _instance;
     });
 }
 
-// 应用主题
 - (void)applyTheme:(NSString *)themeID forModule:(TUIThemeModule)module
 {
     if (themeID.length == 0) {
@@ -402,7 +395,7 @@ static id _instance;
                 TUIThemeModule tmpModue = (TUIThemeModule)[moduleObject integerValue];
                 [weakSelf setCurrentTheme:nil forModule:tmpModue];
             }
-            //卸载所有主题，跟随系统变化时也应该触发主题变化通知.
+            
             [NSNotificationCenter.defaultCenter postNotificationName:TUIDidApplyingThemeChangedNotfication
                                                                       object:nil
                                                                     userInfo:nil];
@@ -417,7 +410,7 @@ static id _instance;
     });
 }
 
-#pragma mark - 非线程安全的内部方法
+#pragma mark - Not thread safe
 
 - (void)doApplyTheme:(NSString *)themeID forSingleModule:(TUIThemeModule)module
 {
@@ -426,23 +419,19 @@ static id _instance;
         return;
     }
 
-    // 应用主题
     [self setCurrentTheme:theme forModule:module];
     
-    // 动态切换主题
     [self notifyApplyTheme:theme module:module];
 }
 
 - (TUITheme *)loadTheme:(NSString *)themeID module:(TUIThemeModule)module
 {
-    // 获取当前模块对应的主题资源根路径
     NSString *themeResourcePath = [self themeResourcePathForModule:module];
     if (themeResourcePath.length == 0) {
         NSLog(@"[theme][applyTheme] theme resurce path not set, themeID:%@, module:%zd", themeID, module);
         return nil;
     }
     
-    // 获取主题ID对应的资源路径并校验合法性
     themeResourcePath = [themeResourcePath stringByAppendingPathComponent:themeID];
     {
         BOOL isDirectory = NO;
@@ -473,7 +462,6 @@ static id _instance;
         }
     }
     
-    // 加载并保存当前的主题配置
     NSDictionary *dict = [NSDictionary dictionaryWithContentsOfFile:manifestPath];
     if (dict == nil) {
         NSLog(@"[theme][applyTheme] manifest is null");

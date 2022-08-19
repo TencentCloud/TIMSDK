@@ -17,8 +17,7 @@
 
 @implementation TUIContactActionCell
 
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         self.avatarView = [[UIImageView alloc] initWithImage:DefaultAvatarImage];
@@ -47,8 +46,7 @@
     return self;
 }
 
-- (void)fillWithData:(TUIContactActionCellData *)actionData
-{
+- (void)fillWithData:(TUIContactActionCellData *)actionData {
     [super fillWithData:actionData];
     self.actionData = actionData;
 

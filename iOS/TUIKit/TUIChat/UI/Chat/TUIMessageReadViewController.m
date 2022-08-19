@@ -113,7 +113,7 @@
 @interface TUIMessageReadViewController () <UITableViewDelegate, UITableViewDataSource, TUIMessageReadSelectViewDelegate>
 
 @property (nonatomic, strong) TUIMessageCellData *cellData;
-@property (nonatomic, assign) BOOL showReadStatusDisable;   // 展示阅读状态禁用 tab
+@property (nonatomic, assign) BOOL showReadStatusDisable;
 @property (nonatomic, assign) TUIMessageReadViewTag selectedViewTag;
 @property (nonatomic, strong) TUIMessageDataProvider *dataProvider;
 
@@ -185,7 +185,6 @@
 }
 
 - (void)layoutViews {
-    // 处理 iOS15 兼容性
     float backViewTop = self.navigationController.navigationBar.mm_maxY;
     if (![UINavigationBar appearance].isTranslucent &&
         [[[UIDevice currentDevice] systemVersion] doubleValue] < 15.0) {
@@ -490,7 +489,6 @@
             break;
         }
         case TUIMessageReadViewTagReadDisable:{
-            // TODO: 获取未打开已读/未读开关的用户，SDK 暂未支持
             break;
         }
         default: {
@@ -586,7 +584,6 @@
             return self.unreadMembers;
         }
         case TUIMessageReadViewTagReadDisable: {
-            // TODO: 获取未打开已读/未读开关的用户，SDK 暂未支持
             return @[];
         }
         default: {

@@ -25,7 +25,10 @@
     return [layer captureDevicePointOfInterestForPoint:point];
 }
 
-// 使该view的layer方法返回AVCaptureVideoPreviewLayer对象
+/**
+ * 使该 view 的 layer 方法返回 AVCaptureVideoPreviewLayer 类对象
+ * Make the layer method of the view return the AVCaptureVideoPreviewLayer class object
+ */
 + (Class)layerClass {
     return [AVCaptureVideoPreviewLayer class];
 }

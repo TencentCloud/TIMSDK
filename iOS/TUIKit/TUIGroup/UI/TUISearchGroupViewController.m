@@ -10,7 +10,6 @@
 #import "TUIDefine.h"
 #import "TUIThemeManager.h"
 
-// MLeaksFinder 会对这个类误报，这里需要关闭一下
 @implementation UISearchController (Leak)
 
 - (BOOL)willDealloc {
@@ -44,9 +43,6 @@
     return self;
 }
 
-/**
- *群组信息设置
- */
 - (void)setGroupInfo:(V2TIMGroupInfo *)groupInfo
 {
     if (groupInfo) {
@@ -86,20 +82,18 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = TUIKitLocalizableString(ContactsJoinGroup); // @"添加群组";
+    self.title = TUIKitLocalizableString(ContactsJoinGroup);
 
     self.view.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
 
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.automaticallyAdjustsScrollViewInsets = NO;
-    self.definesPresentationContext = YES;//不设置会导致一些位置错乱，无动画等问题
+    self.definesPresentationContext = YES;
 
-    // 创建搜索框
     self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
-    //设置代理
     self.searchController.delegate = self;
     self.searchController.dimsBackgroundDuringPresentation = NO;
-    _searchController.searchBar.placeholder = @"群组ID";
+    _searchController.searchBar.placeholder = @"group ID";
     _searchController.searchBar.delegate = self;
     [self.view addSubview:_searchController.searchBar];
     [self setSearchIconCenter:YES];
@@ -125,9 +119,6 @@
 }
 
 #pragma mark - UISearchControllerDelegate
-/**
- * searchController委托函数
- */
 - (void)didPresentSearchController:(UISearchController *)searchController
 {
     NSLog(@"didPresentSearchController");

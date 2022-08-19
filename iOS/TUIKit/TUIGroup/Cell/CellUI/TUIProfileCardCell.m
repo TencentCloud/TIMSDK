@@ -23,7 +23,6 @@
         }else if([_genderString isEqualToString:TUIKitLocalizableString(Female)]){
             _genderIconImage = TUIGroupCommonBundleImage(@"female");
         }else{
-            //(性别 iCon 在未设置性别时不显示)
             _genderIconImage = nil;
         }
     }
@@ -54,7 +53,6 @@
     _avatar.contentMode = UIViewContentModeScaleAspectFit;
     _avatar.layer.cornerRadius = 4;
     _avatar.layer.masksToBounds = YES;
-    //添加点击头像的手势
     UITapGestureRecognizer *tapAvatar = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapAvatar)];
     [_avatar addGestureRecognizer:tapAvatar];
     _avatar.userInteractionEnabled = YES;
@@ -123,7 +121,6 @@
         }else if([x isEqualToString:TUIKitLocalizableString(Female)]){
             self.genderIcon.image = TUIGroupCommonBundleImage(@"female");
         }else{
-            //(性别 iCon 在未设置性别时不显示)
             self.genderIcon.image = nil;
         }
     }];
@@ -138,7 +135,6 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    //此处解除 nameLabel 的 fit 宽度，使性别 icon 能够在短昵称情况下和 nameLabel 相邻。
     CGFloat maxLabelWidth = self.contentView.mm_w - CGRectGetMaxX(_avatar.frame) - 30;
     _name.mm_sizeToFitThan(0, _avatar.mm_h/3).mm_top(_avatar.mm_y).mm_left(_avatar.mm_maxX + TPersonalCommonCell_Margin);
     if (CGRectGetMaxX(_name.frame) >= self.contentView.mm_w) {
@@ -158,8 +154,7 @@
     if (CGRectGetMaxX(_signature.frame) >= self.contentView.mm_w) {
         _signature.mm_w = maxLabelWidth;
     }
-    
-    //iCon大小 = 字体*0.9，视觉上最为自然
+
     _genderIcon.mm_sizeToFitThan(_name.font.pointSize * 0.9, _name.font.pointSize * 0.9).mm__centerY(_name.mm_centerY).mm_left(_name.mm_x + _name.mm_w + TPersonalCommonCell_Margin);
 }
 

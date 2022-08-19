@@ -51,7 +51,7 @@
                 map[user.identifier] = user;
             }
         }
-        // 批量获取头像 faceURL
+        
         [[V2TIMManager sharedInstance] getUsersInfo:ids succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
             NSArray *userIDs =  map.allKeys;
             for (V2TIMUserFullInfo *info in infoList) {

@@ -31,7 +31,7 @@
 - (CGSize)contentSize:(CGFloat)maxWidth
 {
     CGFloat marginWidth = 18;
-    CGSize size = [@"0" sizeWithAttributes: @{NSFontAttributeName:[UIFont systemFontOfSize:10.0]}]; // 单行的高度
+    CGSize size = [@"0" sizeWithAttributes: @{NSFontAttributeName:[UIFont systemFontOfSize:10.0]}];
     CGRect rect = [self.text boundingRectWithSize:CGSizeMake(maxWidth - marginWidth, size.height)
                                           options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                        attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:10.0]}
