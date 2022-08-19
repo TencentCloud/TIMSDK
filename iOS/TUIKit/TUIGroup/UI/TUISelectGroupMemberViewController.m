@@ -89,7 +89,6 @@
 
 #pragma mark UI
 
-/// 取消按钮
 - (UIButton *)cancelBtn {
     if (!_cancelBtn.superview) {
          _cancelBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
@@ -100,7 +99,6 @@
     return _cancelBtn;
 }
 
-/// 完成按钮
 - (UIButton *)doneBtn {
     if (!_doneBtn.superview) {
         _doneBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
@@ -112,7 +110,6 @@
     return _doneBtn;
 }
 
-///已选用户面板
 - (UICollectionView *)userPanel {
     if (!_userPanel.superview) {
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
@@ -136,7 +133,6 @@
     return _userPanel;
 }
 
-///选择用户列表
 - (UITableView *)selectTable {
     if (!_selectTable.superview) {
         _selectTable = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
@@ -161,7 +157,6 @@
     return _indicatorView;
 }
 
-///更新 UI
 - (void)updateUserPanel {
     self.userPanel.mm_height(self.userPanelHeight).mm_left(kUserPanelLeftSpacing).mm_flexToRight(0).mm_top(self.topStartPosition);
     self.selectTable.mm_width(self.view.mm_w).mm_top(self.userPanel.mm_maxY).mm_flexToBottom(0);
@@ -191,14 +186,12 @@
         });
     }
     if (self.optionalStyle == TUISelectMemberOptionalStyleTransferOwner) {
-        //转移群主用不到模块通信
         return;
     }
     [TUICore notifyEvent:TUICore_TUIGroupNotify subKey:TUICore_TUIGroupNotify_SelectGroupMemberSubKey object:self param:@{TUICore_TUIGroupNotify_SelectGroupMemberSubKey_UserListKey : users}];
 }
 
-/// 取消
--(void)cancel {
+- (void)cancel {
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -254,16 +247,13 @@
     }
     
     if ([userSelected.userId isEqualToString:kImSDK_MesssageAtALL]) {
-        // 清空选择
         [self.selectedUsers removeAllObjects];
         [self.selectedUsers addObject:userSelected];
-        // 完成选择
         [self onNext];
         return;
     }
     
     if (self.optionalStyle == TUISelectMemberOptionalStyleTransferOwner) {
-        // 清空选择
         [self.selectedUsers removeAllObjects];
     }
     if (isSelected) {
@@ -399,7 +389,6 @@
                 continue;
             }
             if (weakSelf.optionalStyle & TUISelectMemberOptionalStylePublicMan) {
-                //TUISelectMemberOptionalStylePublicMan 模式下 管理员和群主不添加进选中列表
                 BOOL isSuper = (info.role == V2TIM_GROUP_MEMBER_ROLE_SUPER);
                 BOOL isAdMin = (info.role == V2TIM_GROUP_MEMBER_ROLE_ADMIN);
                 if (isSuper || isAdMin) {

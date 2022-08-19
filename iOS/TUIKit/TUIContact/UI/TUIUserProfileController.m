@@ -50,8 +50,6 @@
     [self.tableView registerClass:[TUICommonContactTextCell class] forCellReuseIdentifier:@"TextCell"];
     [self.tableView registerClass:[TUICommonContactProfileCardCell class] forCellReuseIdentifier:@"CardCell"];
     [self.tableView registerClass:[TUIButtonCell class] forCellReuseIdentifier:@"ButtonCell"];
-
-    //如果不加这一行代码，依然可以实现点击反馈，但反馈会有轻微延迟，体验不好。
     self.tableView.delaysContentTouches = NO;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 
@@ -59,9 +57,6 @@
 }
 
 
-/**
- * 加载视图信息
- */
 - (void)loadData
 {
     NSMutableArray *list = @[].mutableCopy;
@@ -81,13 +76,12 @@
         inlist;
     })];
 
-    //当用户状态为请求添加好友/请求添加群组时，视图加载出验证消息模块
     if (self.pendency || self.groupPendency) {
         [list addObject:({
             NSMutableArray *inlist = @[].mutableCopy;
             [inlist addObject:({
                 TUICommonContactTextCellData *data = TUICommonContactTextCellData.new;
-                data.key = TUIKitLocalizableString(FriendAddVerificationMessage); // @"验证消息";
+                data.key = TUIKitLocalizableString(FriendAddVerificationMessage);
                 data.keyColor = [UIColor colorWithRed:136/255.0 green:136/255.0 blue:136/255.0 alpha:1/1.0];
                 data.valueColor = [UIColor colorWithRed:68/255.0 green:68/255.0 blue:68/255.0 alpha:1/1.0];
                 if (self.pendency) {
@@ -106,7 +100,6 @@
 
     self.dataList = list;
 
-    //当用户为陌生人时，在当前视图给出"加好友"按钮
     if (self.actionType == PCA_ADD_FRIEND) {
         [[V2TIMManager sharedInstance] checkFriend:@[self.userFullInfo.userID] checkType:V2TIM_FRIEND_TYPE_BOTH succ:^(NSArray<V2TIMFriendCheckResult *> *resultList) {
             if (resultList.count == 0) {
@@ -121,7 +114,7 @@
                 NSMutableArray *inlist = @[].mutableCopy;
                 [inlist addObject:({
                     TUIButtonCellData *data = TUIButtonCellData.new;
-                    data.title = TUIKitLocalizableString(FriendAddTitle); // @"加好友";
+                    data.title = TUIKitLocalizableString(FriendAddTitle);
                     data.style = ButtonWhite;
                     data.cbuttonSelector = @selector(onAddFriend);
                     data.reuseId = @"ButtonCell";
@@ -138,7 +131,6 @@
         }];
     }
 
-    //当用户请求添加使用者为好友时，在当前视图给出"同意"、"拒绝"，使当前用户进行选择
     if (self.actionType == PCA_PENDENDY_CONFIRM) {
         [self.dataList addObject:({
             NSMutableArray *inlist = @[].mutableCopy;
@@ -163,13 +155,12 @@
         })];
     }
 
-    //当用户请求加入群组时，在当前视图给出"同意"、"拒绝"，使当前群组管理员进行选择
     if (self.actionType == PCA_GROUP_CONFIRM) {
         [self.dataList addObject:({
             NSMutableArray *inlist = @[].mutableCopy;
             [inlist addObject:({
                 TUIButtonCellData *data = TUIButtonCellData.new;
-                data.title = TUIKitLocalizableString(Accept);// @"同意";
+                data.title = TUIKitLocalizableString(Accept);
                 data.style = ButtonWhite;
                 data.textColor = TUICoreDynamicColor(@"primary_theme_color", @"#147AFF");
                 data.cbuttonSelector = @selector(onAgreeGroup);
@@ -178,7 +169,7 @@
             })];
             [inlist addObject:({
                 TUIButtonCellData *data = TUIButtonCellData.new;
-                data.title = TUIKitLocalizableString(Decline);//@"拒绝";
+                data.title = TUIKitLocalizableString(Decline);
                 data.style = ButtonRedText;
                 data.cbuttonSelector =  @selector(onRejectGroup);
                 data.reuseId = @"ButtonCell";
@@ -192,9 +183,6 @@
 }
 
 #pragma mark - Table view data source
-/**
- *  tableView数据源函数
- */
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return self.dataList.count;
@@ -208,7 +196,6 @@
 
     TUICommonCellData *data = self.dataList[indexPath.section][indexPath.row];
     TUICommonTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:data.reuseId forIndexPath:indexPath];
-    //如果是 profileCard 的话，添加委托。
     if ([cell isKindOfClass:[TUICommonContactProfileCardCell class]]) {
         TUICommonContactProfileCardCell *cardCell = (TUICommonContactProfileCardCell *)cell;
         cardCell.delegate = self;
@@ -252,9 +239,7 @@
     return view;
 }
 
-/**
- *  点击 发送信息 按钮后执行的函数
- */
+
 - (void)onSendMessage
 {
 //    TUIChatConversationModel *data = [[TUIChatConversationModel alloc] init];
@@ -266,9 +251,7 @@
 //    [self.navigationController pushViewController:chat animated:YES];
 }
 
-/**
- *  点击 加好友 按钮后执行的函数
- */
+
 - (void)onAddFriend
 {
     TUIFriendRequestViewController *vc = [TUIFriendRequestViewController new];
@@ -276,9 +259,6 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
-/**
- *  点击 同意(好友) 按钮后执行的函数
- */
 - (void)onAgreeFriend
 {
     [self.pendency agree];
@@ -313,9 +293,6 @@
     [self.navigationController pushViewController:image animated:YES];
 }
 
-/**
- *  点击头像查看大图的委托实现
- */
 - (void)didTapOnAvatar:(TUICommonContactProfileCardCell *)cell {
     TUIContactAvatarViewController *image = [[TUIContactAvatarViewController alloc] init];
     image.avatarData = cell.cardData;

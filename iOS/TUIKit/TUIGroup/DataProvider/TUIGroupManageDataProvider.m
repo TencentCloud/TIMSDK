@@ -18,9 +18,7 @@
 
 @property (nonatomic, strong) NSMutableArray *datas;
 
-// 群信息数据源
 @property (nonatomic, strong) NSMutableArray *groupInfoDatasArray;
-// 禁言群成员数据源
 @property (nonatomic, strong) NSMutableArray *muteMembersDataArray;
 
 @property (nonatomic, strong) V2TIMGroupInfo *groupInfo;
@@ -70,7 +68,7 @@
             }
             
             if (code == 0 && mute) {
-                // 禁言成功
+                // mute succ
                 if (!existData) {
                     TUIMemberInfoCellData *cellData = [[TUIMemberInfoCellData alloc] init];
                     cellData.identifier = user.userId;
@@ -79,12 +77,12 @@
                     [weakSelf.muteMembersDataArray addObject:cellData];
                 }
             } else if (code == 0 && !mute){
-                // 解除禁言成功
+                // unmute succ
                 if (existData) {
                     [weakSelf.muteMembersDataArray removeObject:existData];
                 }
             } else {
-                // 操作失败
+                // fail
                 if ([weakSelf.delegate respondsToSelector:@selector(onError:desc:operate:)]) {
                     [weakSelf.delegate onError:code desc:desc operate:mute?@"禁言":@"解除禁言"];
                 }
@@ -97,7 +95,6 @@
         });
     };
     
-    // 禁言/取消禁言
     [V2TIMManager.sharedInstance muteGroupMember:self.groupID member:user.userId muteTime:mute?365 * 24 * 3600:0 succ:^{
         callback(0, nil, mute);
     } fail:^(int code, NSString *desc) {
@@ -159,7 +156,6 @@
         [self.delegate insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:1]] withRowAnimation:UITableViewRowAnimationNone];
     }
     
-    // 遍历群成员
     [self setupGroupMembers:0 first:YES];
 }
 
@@ -190,7 +186,6 @@
                 BOOL isSuper = (info.role == V2TIM_GROUP_MEMBER_ROLE_SUPER);
                 BOOL isAdMin = (info.role == V2TIM_GROUP_MEMBER_ROLE_ADMIN);
                 BOOL allowShowInMuteList = YES;
-                //在已禁言列表中需要过滤管理员
                 if (isSuper || isAdMin) {
                     allowShowInMuteList = NO;
                 }
@@ -243,7 +238,6 @@
     shutupAll.cswitchSelector = @selector(onMutedAll:);
     [self.groupInfoDatasArray addObject:shutupAll];
     
-    // 通知UI刷新列表
     if ([self.delegate respondsToSelector:@selector(reloadData)]) {
         [self.delegate reloadData];
     }
@@ -267,7 +261,6 @@
     return _datas;
 }
 
-//当前类型【群聊】是否支持设置管理员
 - (BOOL)canSupportSettingAdminAtThisGroupType:(NSString *)grouptype {
     if ([grouptype isEqualToString:@"Work"] ||[grouptype isEqualToString:@"AVChatRoom"] ) {
         return NO;
@@ -275,7 +268,6 @@
     return YES;
 }
 
-//当前类型【群聊】是否支持指定群员禁言
 - (BOOL)canSupportAddMemberOfBlockedAtThisGroupType:(NSString *)grouptype {
     if ([grouptype isEqualToString:@"Work"]) {
         return NO;

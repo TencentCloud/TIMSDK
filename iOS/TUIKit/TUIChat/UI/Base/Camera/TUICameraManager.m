@@ -3,7 +3,7 @@
 
 @implementation TUICameraManager
 
-#pragma mark - -转换摄像头
+#pragma mark - - Switch Camera
 - (AVCaptureDeviceInput *)switchCamera:(AVCaptureSession *)session old:(AVCaptureDeviceInput *)oldinput new:(AVCaptureDeviceInput *)newinput {
     [session beginConfiguration];
     [session removeInput:oldinput];
@@ -18,7 +18,7 @@
     }
 }
 
-#pragma mark - -缩放
+#pragma mark - - Zoom
 - (id)zoom:(AVCaptureDevice *)device factor:(CGFloat)factor {
     if (device.activeFormat.videoMaxZoomFactor > factor && factor >= 1.0) {
         NSError *error;
@@ -28,10 +28,10 @@
         }
         return error;
     }
-    return [self error:@"不支持的缩放倍数" code:2000];
+    return [self error:@"Unsupported zoom factor" code:2000];
 }
 
-#pragma mark - -聚焦
+#pragma mark - - Focus
 - (id)focus:(AVCaptureDevice *)device point:(CGPoint)point{
     BOOL supported = [device isFocusPointOfInterestSupported] &&
                      [device isFocusModeSupported:AVCaptureFocusModeAutoFocus];
@@ -44,10 +44,10 @@
         }
         return error;
     }
-    return [self error:@"设备不支持对焦" code:2001];
+    return [self error:@"Device does not support focus" code:2001];
 }
 
-#pragma mark - -曝光
+#pragma mark - - Expose
 static const NSString *CameraAdjustingExposureContext;
 - (id)expose:(AVCaptureDevice *)device point:(CGPoint)point{
     BOOL supported = [device isExposurePointOfInterestSupported] &&
@@ -64,7 +64,7 @@ static const NSString *CameraAdjustingExposureContext;
         }
         return error;
     }
-    return [self error:@"设备不支持曝光" code:2002];
+    return [self error:@"Device does not support exposure" code:2002];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
@@ -87,7 +87,7 @@ static const NSString *CameraAdjustingExposureContext;
     }
 }
 
-#pragma mark - -自动聚焦、曝光
+#pragma mark - - Auto focus, exposure
 - (id)resetFocusAndExposure:(AVCaptureDevice *)device {
     AVCaptureFocusMode focusMode = AVCaptureFocusModeContinuousAutoFocus;
     AVCaptureExposureMode exposureMode = AVCaptureExposureModeContinuousAutoExposure;
@@ -111,14 +111,14 @@ static const NSString *CameraAdjustingExposureContext;
     return error;
 }
 
-#pragma mark - -闪光灯
+#pragma mark - - Flash
 - (AVCaptureFlashMode)flashMode:(AVCaptureDevice *)device{
     return [device flashMode];
 }
 
 - (id)changeFlash:(AVCaptureDevice *)device mode:(AVCaptureFlashMode)mode{
     if (![device hasFlash]) {
-        return [self error:@"不支持闪光灯" code:2003];
+        return [self error:@"Flash is not supported" code:2003];
     }
     if ([self torchMode:device] == AVCaptureTorchModeOn) {
         [self setTorch:device model:AVCaptureTorchModeOff];
@@ -135,17 +135,17 @@ static const NSString *CameraAdjustingExposureContext;
         }
         return error;
     }
-    return [self error:@"不支持闪光灯" code:2003];
+    return [self error:@"Flash is not supported" code:2003];
 }
 
-#pragma mark - -手电筒
+#pragma mark - - Flashlight
 - (AVCaptureTorchMode)torchMode:(AVCaptureDevice *)device {
     return [device torchMode];
 }
 
 - (id)changeTorch:(AVCaptureDevice *)device model:(AVCaptureTorchMode)mode{
     if (![device hasTorch]) {
-        return [self error:@"不支持手电筒" code:2004];
+        return [self error:@"Flashlight not supported" code:2004];
     }
     if ([self flashMode:device] == AVCaptureFlashModeOn) {
         [self setFlash:device mode:AVCaptureFlashModeOff];
@@ -162,7 +162,7 @@ static const NSString *CameraAdjustingExposureContext;
         }
         return error;
     }
-    return [self error:@"不支持手电筒" code:2004];
+    return [self error:@"Flashlight not supported" code:2004];
 }
 
 #pragma mark -

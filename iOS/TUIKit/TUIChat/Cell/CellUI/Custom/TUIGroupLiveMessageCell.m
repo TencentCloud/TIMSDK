@@ -53,7 +53,7 @@
         self.tagLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         self.tagLabel.font = [UIFont systemFontOfSize:13];
         self.tagLabel.textColor = [UIColor lightGrayColor];
-        self.tagLabel.text = [@" " stringByAppendingString:TUIKitLocalizableString(TUIKitMoreGroupLive)]; // @" 群直播";
+        self.tagLabel.text = [@" " stringByAppendingString:TUIKitLocalizableString(TUIKitMoreGroupLive)];
         [self.container addSubview:self.tagLabel];
         
         [self.container.layer setMasksToBounds:YES];

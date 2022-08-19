@@ -54,7 +54,6 @@
 - (void)setupViews {
     self.tableView.tableFooterView = [[UIView alloc] init];
     self.tableView.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
-    //加入此行，会让反馈更加灵敏
     self.tableView.delaysContentTouches = NO;
     if (@available(iOS 15.0, *)) {
         self.tableView.sectionHeaderTopPadding = 0;
@@ -106,6 +105,9 @@
     else if([data isKindOfClass:[TUIButtonCellData class]]){
         return [(TUIButtonCellData *)data heightOfWidth:Screen_Width];;
     }
+    else if ([data isKindOfClass:[TUICommonSwitchCellData class]]) {
+        return [(TUICommonSwitchCellData *)data heightOfWidth:Screen_Width];;
+    }
     else if ([data isKindOfClass:TUIGroupNoticeCellData.class]) {
         return 72.0;
     }
@@ -120,7 +122,6 @@
         if(!cell){
             cell = [[TUIProfileCardCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TGroupCommonCell_ReuseId];
         }
-        //设置 profileCard 的委托
         cell.delegate = self;
         [cell fillWithData:(TUIProfileCardCellData *)data];
         return cell;
@@ -209,8 +210,7 @@
     TModifyViewData *data = [[TModifyViewData alloc] init];
     data.title = TUIKitLocalizableString(TUIKitGroupProfileEditAlias);
     data.content = self.dataProvider.selfInfo.nameCard;
-    data.desc = TUIKitLocalizableString(TUIKitGroupProfileEditAlias);
-    data.enableNull = YES;
+    data.desc = TUIKitLocalizableString(TUIKitGroupProfileEditAliasDesc);
     TUIModifyView *modify = [[TUIModifyView alloc] init];
     modify.tag = 2;
     modify.delegate = self;
@@ -287,7 +287,14 @@
     } else {
         opt = V2TIM_RECEIVE_MESSAGE;
     }
-    [self.dataProvider setGroupReceiveMessageOpt:opt];
+    @weakify(self)
+    [V2TIMManager.sharedInstance markConversation:@[[NSString stringWithFormat:@"group_%@",self.groupId]] markType:@(V2TIM_CONVERSATION_MARK_TYPE_FOLD) enableMark:NO succ:nil fail:nil];
+    
+    [self.dataProvider setGroupReceiveMessageOpt:opt Succ:^{
+        @strongify(self)
+        [self updateGroupInfo];
+    } fail:^(int code, NSString *desc) {}];
+    
 }
 
 - (void)didSelectOnTop:(TUICommonSwitchCell *)cell
@@ -297,7 +304,6 @@
             if (success) {
                 return;
             }
-            // 设置失败，还原
             cell.switcher.on = !cell.switcher.isOn;
             [TUITool makeToast:errorMessage];
         }];
@@ -306,7 +312,6 @@
             if (success) {
                 return;
             }
-            // 设置失败，还原
             cell.switcher.on = !cell.switcher.isOn;
             [TUITool makeToast:errorMessage];
         }];
@@ -328,8 +333,14 @@
                 @weakify(self)
                 dispatch_async(dispatch_get_main_queue(), ^{
                     @strongify(self)
+                    UIViewController *vc = [self findConversationListViewController];
                     [[TUIConversationPin sharedInstance] removeTopConversation:[NSString stringWithFormat:@"group_%@",self.groupId] callback:nil];
-                    [self.navigationController popToRootViewControllerAnimated:YES];
+                    [V2TIMManager.sharedInstance markConversation:@[[NSString stringWithFormat:@"group_%@",self.groupId]] markType:@(V2TIM_CONVERSATION_MARK_TYPE_FOLD) enableMark:NO succ:^(NSArray<V2TIMConversationOperationResult *> *result) {
+                        [self.navigationController popToViewController:vc animated:YES];
+                    } fail:^(int code, NSString *desc) {
+                        [self.navigationController popToViewController:vc animated:YES];
+                    }];
+                    
                 });
             } fail:^(int code, NSString *msg) {
                 [TUITool makeToastError:code msg:msg];
@@ -340,8 +351,13 @@
                 @weakify(self)
                 dispatch_async(dispatch_get_main_queue(), ^{
                     @strongify(self)
+                    UIViewController *vc = [self findConversationListViewController];
                     [[TUIConversationPin sharedInstance] removeTopConversation:[NSString stringWithFormat:@"group_%@",self.groupId] callback:nil];
-                    [self.navigationController popToRootViewControllerAnimated:YES];
+                    [V2TIMManager.sharedInstance markConversation:@[[NSString stringWithFormat:@"group_%@",self.groupId]] markType:@(V2TIM_CONVERSATION_MARK_TYPE_FOLD) enableMark:NO succ:^(NSArray<V2TIMConversationOperationResult *> *result) {
+                        [self.navigationController popToViewController:vc animated:YES];
+                    } fail:^(int code, NSString *desc) {
+                        [self.navigationController popToViewController:vc animated:YES];
+                    }];
                 });
             } fail:^(int code, NSString *msg) {
                 [TUITool makeToastError:code msg:msg];
@@ -351,6 +367,33 @@
 
     [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:nil]];
     [self presentViewController:ac animated:YES completion:nil];
+}
+- (UIViewController *)findConversationListViewController {
+    UIViewController *vc = self.navigationController.viewControllers[0];
+    for (UIViewController *vc in self.navigationController.viewControllers) {
+        if ([vc isKindOfClass:NSClassFromString(@"TUIFoldListViewController")]) {
+            return vc;
+        }
+    }
+    return vc;
+}
+
+- (void)didSelectOnFoldConversation:(TUICommonSwitchCell *)cell {
+   
+    BOOL enableMark = NO;
+    if (cell.switcher.on) {
+        enableMark = YES;
+    }
+    cell.switchData.on = enableMark;
+
+    @weakify(self)
+
+    [V2TIMManager.sharedInstance markConversation:@[[NSString stringWithFormat:@"group_%@",self.groupId]] markType:@(V2TIM_CONVERSATION_MARK_TYPE_FOLD) enableMark:enableMark succ:nil fail:nil];
+
+    [[TUIConversationPin sharedInstance] removeTopConversation:[NSString stringWithFormat:@"group_%@",self.groupId] callback:^(BOOL success, NSString * _Nonnull errorMessage) {
+        @strongify(self)
+        [self updateGroupInfo];
+    }];
 }
 
 - (void)didTransferGroup:(TUIButtonCell *)cell {
@@ -385,6 +428,10 @@
     [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Confirm) style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
         @strongify(self)
         [self.dataProvider clearAllHistory:^{
+            [TUICore notifyEvent:TUICore_TUIConversationNotify
+                          subKey:TUICore_TUIConversationNotify_ClearConversationUIHistorySubKey
+                          object:self
+                           param:nil];
             [TUITool makeToast:@"success"];
         } fail:^(int code, NSString *desc) {
             [TUITool makeToastError:code msg:desc];
@@ -455,24 +502,19 @@
                                               param:@{TUICore_TUIContactService_GetContactSelectControllerMethod_TitleKey :                 TUIKitLocalizableString(GroupAddFirend),
                                                       TUICore_TUIContactService_GetContactSelectControllerMethod_DisableIdsKey:ids}];
         [self.navigationController pushViewController:self.showContactSelectVC animated:YES];
-    }
-    else if(self.tag == 2) {
+    } else if(self.tag == 2) {
         // delete
         self.showContactSelectVC = [TUICore callService:TUICore_TUIContactService
                                              method:TUICore_TUIContactService_GetContactSelectControllerMethod
                                               param:@{TUICore_TUIContactService_GetContactSelectControllerMethod_TitleKey : TUIKitLocalizableString(GroupDeleteFriend),
                                                       TUICore_TUIContactService_GetContactSelectControllerMethod_SourceIdsKey:ids}];
         [self.navigationController pushViewController:self.showContactSelectVC animated:YES];
-    }
-    else
-    {
+    } else {
         // TODO:
     }
 }
 
-/**
- *确认添加群成员后的执行函数，函数内包含请求后的回调
- */
+
 - (void)addGroupId:(NSString *)groupId memebers:(NSArray *)members
 {
     @weakify(self)
@@ -485,9 +527,6 @@
     }];
 }
 
-/**
- *确认删除群成员后的执行函数，函数内包含请求后的回调
- */
 - (void)deleteGroupId:(NSString *)groupId memebers:(NSArray *)members
 {
     @weakify(self)
@@ -523,7 +562,7 @@
 
         NSArray<TUICommonContactSelectCellData *> *selectArray = [param tui_objectForKey:TUICore_TUIContactNotify_SelectedContactsSubKey_ListKey asClass:NSArray.class];
         if (![selectArray.firstObject isKindOfClass:TUICommonContactSelectCellData.class]) {
-            NSAssert(NO, @"传值类型错误");
+            NSAssert(NO, @"value type error");
         }
         
         if (self.tag == 1) {

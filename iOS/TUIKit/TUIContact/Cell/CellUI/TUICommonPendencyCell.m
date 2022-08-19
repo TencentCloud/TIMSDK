@@ -11,55 +11,53 @@
 
 @implementation TUICommonPendencyCell
 
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
-    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-
-    self.avatarView = [[UIImageView alloc] initWithImage:DefaultAvatarImage];
-    [self.contentView addSubview:self.avatarView];
-    self.avatarView.mm_width(70).mm_height(70).mm__centerY(43).mm_left(12);
-    if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {
-        self.avatarView.layer.masksToBounds = YES;
-        self.avatarView.layer.cornerRadius = self.avatarView.frame.size.height / 2;
-    } else if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRadiusCorner) {
-        self.avatarView.layer.masksToBounds = YES;
-        self.avatarView.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
+        self.avatarView = [[UIImageView alloc] initWithImage:DefaultAvatarImage];
+        [self.contentView addSubview:self.avatarView];
+        self.avatarView.mm_width(70).mm_height(70).mm__centerY(43).mm_left(12);
+        if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {
+            self.avatarView.layer.masksToBounds = YES;
+            self.avatarView.layer.cornerRadius = self.avatarView.frame.size.height / 2;
+        } else if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRadiusCorner) {
+            self.avatarView.layer.masksToBounds = YES;
+            self.avatarView.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
+        }
+        
+        self.titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        [self.contentView addSubview:self.titleLabel];
+        self.titleLabel.textColor = TUICoreDynamicColor(@"form_title_color", @"#000000");
+        self.titleLabel.mm_left(self.avatarView.mm_maxX+12).mm_top(14).mm_height(20).mm_width(120);
+        
+        self.addSourceLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        [self.contentView addSubview:self.addSourceLabel];
+        self.addSourceLabel.textColor = [UIColor d_systemGrayColor];
+        self.addSourceLabel.font = [UIFont systemFontOfSize:15];
+        self.addSourceLabel.mm_left(self.titleLabel.mm_x).mm_top(self.titleLabel.mm_maxY+6).mm_height(15).mm_width(120);
+        
+        self.addWordingLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        [self.contentView addSubview:self.addWordingLabel];
+        self.addWordingLabel.textColor = [UIColor d_systemGrayColor];
+        self.addWordingLabel.font = [UIFont systemFontOfSize:15];
+        self.addWordingLabel.mm_left(self.addSourceLabel.mm_x).mm_top(self.addSourceLabel.mm_maxY+6).mm_height(15).mm_width(120);
+        
+        self.agreeButton = [UIButton buttonWithType:UIButtonTypeSystem];
+        [self.agreeButton setTitleColor:TUICoreDynamicColor(@"form_title_color", @"#000000") forState:UIControlStateNormal];
+        [self.agreeButton addTarget:self action:@selector(agreeClick) forControlEvents:UIControlEventTouchUpInside];
+        
+        self.rejectButton = [UIButton buttonWithType:UIButtonTypeSystem];
+        [self.rejectButton setTitleColor:TUICoreDynamicColor(@"form_title_color", @"#000000") forState:UIControlStateNormal];
+        [self.rejectButton addTarget:self action:@selector(rejectClick) forControlEvents:UIControlEventTouchUpInside];
+        
+        UIStackView *stackView = [[UIStackView alloc] init];
+        [stackView addSubview:self.agreeButton];
+        [stackView addSubview:self.rejectButton];
+        stackView.axis = UILayoutConstraintAxisHorizontal;
+        stackView.alignment = UIStackViewAlignmentCenter;
+        [stackView sizeToFit];
+        self.stackView = stackView;
+        self.accessoryView = stackView;
     }
-
-    self.titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    [self.contentView addSubview:self.titleLabel];
-    self.titleLabel.textColor = TUICoreDynamicColor(@"form_title_color", @"#000000");
-    self.titleLabel.mm_left(self.avatarView.mm_maxX+12).mm_top(14).mm_height(20).mm_width(120);
-
-    self.addSourceLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    [self.contentView addSubview:self.addSourceLabel];
-    self.addSourceLabel.textColor = [UIColor d_systemGrayColor];
-    self.addSourceLabel.font = [UIFont systemFontOfSize:15];
-    self.addSourceLabel.mm_left(self.titleLabel.mm_x).mm_top(self.titleLabel.mm_maxY+6).mm_height(15).mm_width(120);
-
-    self.addWordingLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    [self.contentView addSubview:self.addWordingLabel];
-    self.addWordingLabel.textColor = [UIColor d_systemGrayColor];
-    self.addWordingLabel.font = [UIFont systemFontOfSize:15];
-    self.addWordingLabel.mm_left(self.addSourceLabel.mm_x).mm_top(self.addSourceLabel.mm_maxY+6).mm_height(15).mm_width(120);
-
-    self.agreeButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.agreeButton setTitleColor:TUICoreDynamicColor(@"form_title_color", @"#000000") forState:UIControlStateNormal];
-    [self.agreeButton addTarget:self action:@selector(agreeClick) forControlEvents:UIControlEventTouchUpInside];
-    
-    self.rejectButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.rejectButton setTitleColor:TUICoreDynamicColor(@"form_title_color", @"#000000") forState:UIControlStateNormal];
-    [self.rejectButton addTarget:self action:@selector(rejectClick) forControlEvents:UIControlEventTouchUpInside];
-
-    UIStackView *stackView = [[UIStackView alloc] init];
-    [stackView addSubview:self.agreeButton];
-    [stackView addSubview:self.rejectButton];
-    stackView.axis = UILayoutConstraintAxisHorizontal;
-    stackView.alignment = UIStackViewAlignmentCenter;
-    [stackView sizeToFit];
-    self.stackView = stackView;
-    self.accessoryView = stackView;
-    
     return self;
 }
 
@@ -74,8 +72,7 @@
     // Configure the view for the selected state
 }
 
-- (void)fillWithData:(TUICommonPendencyCellData *)pendencyData
-{
+- (void)fillWithData:(TUICommonPendencyCellData *)pendencyData {
     [super fillWithData:pendencyData];
 
     self.pendencyData = pendencyData;
@@ -134,8 +131,7 @@
     self.addSourceLabel.hidden = self.pendencyData.hideSource;
 }
 
-- (void)agreeClick
-{
+- (void)agreeClick {
     if (self.pendencyData.cbuttonSelector) {
         UIViewController *vc = self.mm_viewController;
         if ([vc respondsToSelector:self.pendencyData.cbuttonSelector]) {
@@ -148,8 +144,7 @@
 
 }
 
-- (void)rejectClick
-{
+- (void)rejectClick {
     if (self.pendencyData.cRejectButtonSelector) {
         UIViewController *vc = self.mm_viewController;
         if ([vc respondsToSelector:self.pendencyData.cRejectButtonSelector]) {
@@ -161,8 +156,7 @@
     }
 }
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
-{
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
     if ((touch.view == self.agreeButton)) {
         return NO;
     } else if (touch.view == self.rejectButton) {

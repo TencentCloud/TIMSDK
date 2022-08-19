@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)didSelectCommon;
 - (void)didSelectOnNotDisturb:(TUICommonSwitchCell *)cell;
 - (void)didSelectOnTop:(TUICommonSwitchCell *)cell;
+- (void)didSelectOnFoldConversation:(TUICommonSwitchCell *)cell;
 - (void)didDeleteGroup:(TUIButtonCell *)cell;
 - (void)didClearAllHistory:(TUIButtonCell *)cell;
 - (void)didSelectGroupManage;
@@ -40,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)loadData;
 - (void)updateGroupInfo;
 - (void)setGroupAddOpt:(V2TIMGroupAddOpt)opt;
-- (void)setGroupReceiveMessageOpt:(V2TIMReceiveMessageOpt)opt;
+- (void)setGroupReceiveMessageOpt:(V2TIMReceiveMessageOpt)opt Succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
 - (void)setGroupName:(NSString *)groupName;
 - (void)setGroupNotification:(NSString *)notification;
 - (void)setGroupMemberNameCard:(NSString *)nameCard;
@@ -49,11 +50,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)clearAllHistory:(V2TIMSucc)succ fail:(V2TIMFail)fail;
 - (void)updateGroupAvatar:(NSString *)url succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
 - (void)transferGroupOwner:(NSString*)groupID member:(NSString*)userID succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
-/**
- *  判断当前用户在对与当前 TIMGroupInfo 来说是否是管理。
- *
- *  @return YES：是管理；NO：不是管理
- */
 + (BOOL)isMeOwner:(V2TIMGroupInfo *)groupInfo;
 @end
 

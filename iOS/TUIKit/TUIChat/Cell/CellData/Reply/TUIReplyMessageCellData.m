@@ -7,6 +7,8 @@
 
 /**
     消息的自定义字段 cloudMessageData 的协议格式
+    The protocol format of the custom field cloudMessageData of the message
+ 
      {
      "messageReply":{
          "messageID": "xxxx0xxx=xx",
@@ -58,7 +60,7 @@
                 replyData.msgAbstract = reply[@"messageAbstract"];
                 replyData.sender = reply[@"messageSender"];
                 replyData.originMsgType = (V2TIMElemType)[reply[@"messageType"] integerValue];
-                replyData.content = message.textElem.text;  // 目前只支持文本回复
+                replyData.content = message.textElem.text;
                 replyData.messageRootID = reply[@"messageRootID"];
             }
         }
@@ -79,6 +81,7 @@
     CGFloat quotePlaceHolderMarginWidth = 12;
     
     // 动态计算发送者的尺寸
+    // Calculate the size of label which displays the sender's displyname
     CGSize senderSize = [@"0" sizeWithAttributes:@{NSFontAttributeName:[UIFont boldSystemFontOfSize:12.0]}];
     CGRect senderRect = [self.sender boundingRectWithSize:CGSizeMake(quoteMaxWidth, senderSize.height)
                                                   options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
@@ -86,9 +89,11 @@
                                                   context:nil];
     
     // 动态计算自定义引用占位视图的尺寸
+    // Calculate the size of customize quote placeholder view
     CGSize placeholderSize = [self quotePlaceholderSizeWithType:self.originMsgType data:self.quoteData];
     
     // 动态计算回复内容的尺寸
+    // Calculate the size of label which displays the content of replying the original message
     NSAttributedString *attributeString = [self.content getFormatEmojiStringWithFont:[UIFont systemFontOfSize:16.0] emojiLocations:nil];
     CGRect replyContentRect = [attributeString boundingRectWithSize:CGSizeMake(quoteMaxWidth, CGFLOAT_MAX)
                                                             options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
@@ -96,6 +101,7 @@
     
     
     // 根据内容计算引用视图整体的大小
+    // Calculate the size of quote view base the content
     quoteWidth = senderRect.size.width;
     if (quoteWidth < placeholderSize.width) {
         quoteWidth = placeholderSize.width;
@@ -120,6 +126,7 @@
     
     
     // 计算 cell 的高度
+    // Calculate the height of cell
     height = 12 + quoteHeight + 12 + self.replyContentSize.height + 12;
     return CGSizeMake(quoteWidth + kReplyQuoteViewMarginWidth, height);
 }
@@ -127,7 +134,6 @@
 - (CGSize)quotePlaceholderSizeWithType:(V2TIMElemType)type data:(TUIReplyQuoteViewData *)data
 {
     if (data == nil) {
-        // 根据类型，返回默认数据
         return CGSizeMake(kReplyQuoteViewMaxWidth - 12, 60);
     }
     
@@ -149,6 +155,7 @@
     
     if (quoteData == nil) {
         // 默认创建文本类型
+        // Return text reply data in default
         TUITextReplyQuoteViewData *myData =  [[TUITextReplyQuoteViewData alloc] init];
         myData.text = [TUIReplyPreviewData displayAbstract:self.originMsgType abstract:self.msgAbstract withFileName:NO];
         quoteData = myData;
@@ -195,6 +202,7 @@
                NSDictionary * reply =  (NSDictionary *)obj;
                if ([reply isKindOfClass:NSDictionary.class]) {
                    // 该消息是「引用消息」
+                   // This message is 「quote message」which indicating the original message
                    replyData = [[TUIReferenceMessageCellData alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
                    replyData.reuseId = TUIReferenceMessageCell_ReuseId;
                    replyData.originMsgID = reply[@"messageID"];
@@ -226,7 +234,7 @@
 - (CGFloat)heightOfWidth:(CGFloat)width {
     CGFloat cellHeight =  [super heightOfWidth:width];
     cellHeight += self.quoteSize.height;
-    cellHeight += 6; //和消息气泡的间距
+    cellHeight += 6;
     return cellHeight;
 }
 
@@ -237,15 +245,18 @@
     CGFloat quotePlaceHolderMarginWidth = 12;
     
     // 动态计算发送者的尺寸
+    // Calculate the size of label which displays the sender's displayname
     CGSize senderSize = [@"0" sizeWithAttributes:@{NSFontAttributeName:[UIFont boldSystemFontOfSize:12.0]}];
     CGRect senderRect = [self.sender boundingRectWithSize:CGSizeMake(quoteMaxWidth, senderSize.height)
                                                   options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                                attributes:@{NSFontAttributeName:[UIFont boldSystemFontOfSize:12.0]}
                                                   context:nil];
     // 动态计算自定义引用占位视图的尺寸
+    // Calculate the size of customize quote placeholder view
     CGSize placeholderSize = [self quotePlaceholderSizeWithType:self.originMsgType data:self.quoteData];
     
     // 动态计算回复内容的尺寸
+    // Calculate the size of label which displays the content of replying the original message
     NSAttributedString *attributeString = [self.content getFormatEmojiStringWithFont:[UIFont systemFontOfSize:16.0] emojiLocations:nil];
 
     CGRect replyContentRect = [attributeString boundingRectWithSize:CGSizeMake(TTextMessageCell_Text_Width_Max, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil];
@@ -262,8 +273,6 @@
         size.height = MAX(size.height, [TUIBubbleMessageCellData outgoingBubble].size.height);
     }
 
-    
-    // 根据内容计算引用视图整体的大小
     quoteWidth = senderRect.size.width;
     quoteWidth += placeholderSize.width;
     quoteWidth += (quotePlaceHolderMarginWidth * 2) ;
@@ -277,6 +286,6 @@
 //    self.replyContentSize = CGSizeMake(replyContentRect.size.width, replyContentRect.size.height);
     self.quoteSize = CGSizeMake(quoteWidth, quoteHeight);
         
-    return size;//仅仅内容size
+    return size;
 }
 @end

@@ -171,7 +171,6 @@ TUICustomType messageFeature = @"messageFeature";
             return NO;
         }
         if (![reply.allKeys containsObject:@"messageRootID"]) {
-             //是消息引用
             return NO;
         }
         return YES;
@@ -272,7 +271,6 @@ TUICustomType messageFeature = @"messageFeature";
     }
 }
 
-// 修改消息
 - (void)modifyIfNeeded:(V2TIMMessageModifyCompletion)callback {
     [V2TIMManager.sharedInstance modifyMessage:self completion:callback];
 }
@@ -286,7 +284,7 @@ TUICustomType messageFeature = @"messageFeature";
     NSString *resultString = @"";
     switch (type) {
         case TUICloudCustomDataType_MessageReply:
-        case TUICloudCustomDataType_MessageReference://复用同一个字段 仅用messageRootID区分
+        case TUICloudCustomDataType_MessageReference:
             resultString = @"messageReply";
             break;
         case TUICloudCustomDataType_MessageReact:
@@ -316,7 +314,6 @@ TUICustomType messageFeature = @"messageFeature";
             TUIReactModelReacts * react = [[TUIReactModelReacts alloc] init];
             react.emojiKey = key;
             react.emojiIdArray = orignMessageReactDic[@"reacts"][key];
-            //删除增加逻辑
             if ([key isEqualToString: emojiName]) {
                 if ([react.emojiIdArray containsObject:loginUser]) {
                     [react.emojiIdArray removeObject:loginUser];

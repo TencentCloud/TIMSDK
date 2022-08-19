@@ -25,7 +25,7 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
     [super viewDidLoad];
     
     UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.text = TUIKitLocalizableString(TUIKitContactsGroupChats); // @"群聊";
+    titleLabel.text = TUIKitLocalizableString(TUIKitContactsGroupChats);
     titleLabel.font = [UIFont boldSystemFontOfSize:17.0];
     titleLabel.textColor = TUICoreDynamicColor(@"nav_title_text_color", @"#000000");
     [titleLabel sizeToFit];
@@ -49,7 +49,6 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
     if (@available(iOS 15.0, *)) {
         _tableView.sectionHeaderTopPadding = 0;
     }
-    //cell无数据时，不显示间隔线
     UIView *v = [[UIView alloc] initWithFrame:CGRectZero];
     [_tableView setTableFooterView:v];
 

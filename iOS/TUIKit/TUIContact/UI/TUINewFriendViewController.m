@@ -24,7 +24,7 @@
     [super viewDidLoad];
 
     UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.text = TUIKitLocalizableString(TUIKitContactsNewFriends); // @"新的联系人";
+    titleLabel.text = TUIKitLocalizableString(TUIKitContactsNewFriends);
     titleLabel.font = [UIFont boldSystemFontOfSize:17.0];
     titleLabel.textColor = TUICoreDynamicColor(@"nav_title_text_color", @"#000000");
     [titleLabel sizeToFit];

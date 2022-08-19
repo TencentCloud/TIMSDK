@@ -24,8 +24,8 @@
 @property (nonatomic, strong) TUISearchBar *searchBar;
 @property (nonatomic, strong) UITableView *tableView;
 
-@property (nonatomic, assign) BOOL allowPageRequest;   // 是否允许分页请求
-@property (nonatomic, assign) NSUInteger pageIndex;    // 当前页码
+@property (nonatomic, assign) BOOL allowPageRequest;
+@property (nonatomic, assign) NSUInteger pageIndex;
 
 @end
 
@@ -82,7 +82,6 @@ static NSString * const HFId  = @"HFId";
     [self.view addSubview:_tableView];
     
     if (self.module == TUISearchResultModuleChatHistory) {
-        // 聊天记录，重新搜索
         [self.dataProvider searchForKeyword:self.searchBar.searchBar.text forModules:self.module param:self.param];
     }
 }
@@ -175,7 +174,6 @@ static NSString * const HFId  = @"HFId";
         param[TUISearchChatHistoryParamKeyCount] = @(TUISearchDefaultPageSize);
         self.param = [NSDictionary dictionaryWithDictionary:param];
         [self.dataProvider searchForKeyword:self.searchBar.searchBar.text forModules:self.module param:self.param];
-        NSLog(@"正在分页请求，page:%zd", self.pageIndex);
     }
 }
 
@@ -184,15 +182,12 @@ static NSString * const HFId  = @"HFId";
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-// 点击cell跳转
 - (void)onSelectModel:(TUISearchResultCellModel *)cellModel module:(TUISearchResultModule)module
 {
     [self.searchBar endEditing:YES];
-    // 聊天记录，需要确认跳转的逻辑
     if (module == TUISearchResultModuleChatHistory) {
         if (![cellModel.context isKindOfClass:NSDictionary.class]) {
             if ([cellModel.context isKindOfClass:V2TIMMessage.class]) {
-                // 点击的是单条聊天记录，跳转到会话页面
                 V2TIMMessage *message = cellModel.context;
                 NSDictionary *param = @{TUICore_TUIChatService_GetChatViewControllerMethod_TitleKey : cellModel.title ?: @"",
                                         TUICore_TUIChatService_GetChatViewControllerMethod_UserIDKey : message.userID ?: @"",
@@ -214,7 +209,6 @@ static NSString * const HFId  = @"HFId";
         V2TIMConversation *conversation = convInfo[kSearchChatHistoryConverationInfo];
         NSArray *msgs = convInfo[kSearchChatHistoryConversationMsgs];
         if (msgs.count == 1) {
-            // 直接跳转到会话页面
             NSDictionary *param = @{TUICore_TUIChatService_GetChatViewControllerMethod_TitleKey : cellModel.title ?: @"",
                                     TUICore_TUIChatService_GetChatViewControllerMethod_UserIDKey : conversation.userID ?: @"",
                                     TUICore_TUIChatService_GetChatViewControllerMethod_GroupIDKey : conversation.groupID ?: @"",
@@ -229,7 +223,6 @@ static NSString * const HFId  = @"HFId";
             return;
         }
         
-        // 跳转到会话详细搜索页面
         NSMutableArray *results = [NSMutableArray array];
         for (V2TIMMessage *message in msgs) {
             TUISearchResultCellModel *model = [[TUISearchResultCellModel alloc] init];
@@ -237,7 +230,8 @@ static NSString * const HFId  = @"HFId";
             NSString *desc = [TUISearchDataProvider matchedTextForMessage:message withKey:self.searchBar.searchBar.text];
             model.detailsAttributeString = [TUISearchDataProvider attributeStringWithText:desc key:self.searchBar.searchBar.text];
             model.avatarUrl = message.faceURL;
-            model.avatarImage = conversation.type == V2TIM_C2C ? DefaultAvatarImage : DefaultGroupAvatarImage;
+            model.groupType = conversation.groupID;
+            model.avatarImage = conversation.type == V2TIM_C2C ? DefaultAvatarImage : DefaultGroupAvatarImageByGroupType(conversation.groupType);
             model.context = message;
             [results addObject:model];
         }
@@ -249,8 +243,6 @@ static NSString * const HFId  = @"HFId";
         return;
     }
     
-    // 非聊天记录，跳转到具体的会话
-    // 联系人
     NSDictionary *param = nil;
     if (module == TUISearchResultModuleContact && [cellModel.context isKindOfClass:V2TIMFriendInfo.class]) {
         V2TIMFriendInfo *friend = cellModel.context;
@@ -259,7 +251,7 @@ static NSString * const HFId  = @"HFId";
                   
         };
     }
-    // 群组
+
     if (module == TUISearchResultModuleGroup && [cellModel.context isKindOfClass:V2TIMGroupInfo.class]) {
         V2TIMGroupInfo *group = cellModel.context;
         param = @{TUICore_TUIChatService_GetChatViewControllerMethod_TitleKey : cellModel.title ?: @"",
@@ -283,16 +275,13 @@ static NSString * const HFId  = @"HFId";
 
 - (void)searchBar:(TUISearchBar *)searchBar searchText:(NSString *)key
 {
-
-    // 恢复状态
     [self.results removeAllObjects];
     self.allowPageRequest = YES;
     self.pageIndex = 0;
     NSMutableDictionary *param = [NSMutableDictionary dictionaryWithDictionary:self.param];
     param[TUISearchChatHistoryParamKeyPage] = @(self.pageIndex);
     self.param = [NSDictionary dictionaryWithDictionary:param];
- 
-    // 重新换关键字开始搜索
+
     [self.dataProvider searchForKeyword:key forModules:self.module param:self.param];
 }
 
@@ -307,11 +296,10 @@ static NSString * const HFId  = @"HFId";
     [self.results addObjectsFromArray:arrayM];
     [self.tableView reloadData];
     
-    self.allowPageRequest = (arrayM.count >= TUISearchDefaultPageSize);  // 返回值不足一页，不允许分页请求
+    self.allowPageRequest = (arrayM.count >= TUISearchDefaultPageSize);
     self.pageIndex = (arrayM.count < TUISearchDefaultPageSize) ? self.pageIndex : self.pageIndex + 1;
     
     if (!self.allowPageRequest) {
-        NSLog(@"正在分页请求, 数据拉完了，不允许分页了.....");
     }
 }
 
@@ -320,7 +308,6 @@ static NSString * const HFId  = @"HFId";
     NSLog(@"search error: %@", errMsg);
 }
 
-//本函数实现了生成纯色背景的功能，从而配合 setBackgroundImage: forState: 来实现高亮时纯色按钮的点击反馈。
 - (UIImage *)imageWithColor:(UIColor *)color
 {
     CGRect rect = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);

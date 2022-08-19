@@ -54,14 +54,14 @@
 //react
 + (V2TIMMessage *)resolveOriginCloudCustomData:(V2TIMMessage *)rootMsg  reactEmoji:(NSString *)emojiName{
     NSMutableDictionary *resultDic = [[NSMutableDictionary alloc] initWithCapacity:5];
-    //拼接原始数据
+
     if (rootMsg.cloudCustomData) {
         NSDictionary * originDic = [TUITool jsonData2Dictionary:rootMsg.cloudCustomData];
         if (originDic && [originDic isKindOfClass:[NSDictionary class]]) {
             [resultDic addEntriesFromDictionary:originDic];
         }
     }
-    //查看是否有对应messageReact
+
     NSDictionary *orignMessageReactDic = resultDic[@"messageReact"];
     TUIReactModelMessageReact *welcome  = [[TUIReactModelMessageReact alloc] init];
     
@@ -88,13 +88,11 @@
 }
 
 //Input
-//拼接原始数据、拼需要修改数据
 + (V2TIMMessage *)resolveOriginCloudCustomData:(V2TIMMessage *)rootMsg  simpleCurrentContent:(NSDictionary *)simpleCurrentContent  {
     NSMutableDictionary *mudic = [[NSMutableDictionary alloc] initWithCapacity:5];
     NSMutableArray *replies = [[NSMutableArray alloc] initWithCapacity:5];
     NSMutableDictionary *messageReplies = [[NSMutableDictionary alloc] initWithCapacity:5];
 
-    //拼接原始数据
     if (rootMsg.cloudCustomData) {
         NSDictionary * originDic = [TUITool jsonData2Dictionary:rootMsg.cloudCustomData];
         if (originDic && [originDic isKindOfClass:[NSDictionary class]]) {

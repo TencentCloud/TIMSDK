@@ -8,7 +8,10 @@
 #import <Foundation/Foundation.h>
 #import "TUIDefine.h"
 
-// TUIKit 字符串国际化
+/**
+ * TUIKit 字符串国际化
+ * Get localized strings in TUIKit
+ */
 #define TUIKitLocalizableString(key) [TUIGlobalization g_localizedStringForKey:@""#key"" bundle:TUIKitLocalizableBundle]
 
 #define TUICustomLanguageKey @"TUICustomLanguageKey"
@@ -16,7 +19,6 @@
 
 @interface TUIGlobalization:NSObject
 
-// 字符串国际化，bundle 的格式参考 TUIKitLocalizable.bundle
 + (NSString *)g_localizedStringForKey:(NSString *)key bundle:(NSString *)bundleName;
 
 + (void)setCustomLanguage:(NSString *)language;

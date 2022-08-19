@@ -1,64 +1,71 @@
-/******************************************************************************
- *
- *  本文件声明了消息列表界面的视图模型。
- *  视图模型能够协助消息列表界面实现数据的加载、移除、过滤等多种功能。替界面分摊部分的业务逻辑运算。
- *
- ******************************************************************************/
+//
+//  TUIConversationListDataProvider.h
+//  TUIConversation
+//
+//  Created by harvy on 2022/7/14.
+//
 
 #import <Foundation/Foundation.h>
-#import "TUIConversationCell.h"
+
+@class V2TIMConversation;
+@class TUIConversationCellData;
 
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol TUIConversationListDataProviderDelegate <NSObject>
+
 - (NSString *)getConversationDisplayString:(V2TIMConversation *)conversation;
+
+- (void)insertConversationsAtIndexPaths:(NSArray *)indexPaths;
+- (void)reloadConversationsAtIndexPaths:(NSArray *)indexPaths;
+- (void)deleteConversationAtIndexPaths:(NSArray *)indexPaths;
+- (void)reloadAllConversations;
+
 @end
 
-
-/**
- * 【模块名称】消息列表视图模型（TConversationListViewModel）
- *
- * 【功能说明】负责实现消息列表中的部分数据处理和业务逻辑
- *  1、视图模型能够通过 IM SDK 提供的接口从服务端拉取会话列表数据，并将数据加载。
- *  2、视图模型能够在用户需要删除会话列表时，同步移除会话列表的数据。
- */
 @interface TUIConversationListDataProvider : NSObject
 
 /**
- * 设置 delegate
+ * 分页大小，默认 100 个
+ * The count of conversations per page, default is 100
  */
-@property (nonatomic, assign) id<TUIConversationListDataProviderDelegate> delegate;
+@property (nonatomic, assign) NSUInteger pageSize;
 
 /**
- * 分页拉取的会话数量，默认是 100
+ * 当前分页的索引
+ * The index of the current page
  */
-@property (nonatomic, assign) int pagePullCount;
+@property (nonatomic, assign) NSUInteger pageIndex;
 
 /**
- * 会话数据
+ * 标识是否已经拉到了最后一页
+ * An identifier that identifies whether the paging data has been completely pulled
  */
-@property (nonatomic, strong) NSArray<TUIConversationCellData *> *dataList;
+@property (nonatomic, assign, readonly, getter=isLastPage) BOOL lastPage;
 
-/**
- * 加载会话数据
- */
-- (void)loadConversation;
+@property (nonatomic, weak, nullable) id<TUIConversationListDataProviderDelegate> delegate;
 
-/**
- * 删除会话数据
- */
-- (void)removeData:(TUIConversationCellData *)data;
+@property (nonatomic, strong, readonly) NSMutableArray<TUIConversationCellData *> *conversationList;
 
-/**
- * 清空群组消息
- */
-- (void)clearGroupHistoryMessage:(NSString *)groupID;
+@property (nonatomic, strong) NSMutableDictionary<NSString *,TUIConversationCellData *> *markHideMap;
 
-/**
- * 清空单聊消息
- */
-- (void)clearC2CHistoryMessage:(NSString *)userID;
+@property (nonatomic, strong) NSMutableDictionary<NSString *,TUIConversationCellData *> *markUnreadMap;
 
+@property (nonatomic, strong) NSMutableDictionary<NSString *,TUIConversationCellData *> *markFoldMap;
+
+- (void)loadNexPageConversations;
+- (void)removeConversation:(TUIConversationCellData *)conversation;
+- (void)clearHistoryMessage:(TUIConversationCellData *)conversation;
+- (void)pinConversation:(TUIConversationCellData *)conversation pin:(BOOL)pin;
+- (void)hideConversation:(TUIConversationCellData *)conversation;
+- (void)markConversationHide:(TUIConversationCellData *)data;
+- (void)markConversationAsRead:(TUIConversationCellData *)conv;
+- (void)markConversationAsUnRead:(TUIConversationCellData *)conv;
+
++ (void)cacheConversationFoldListSettings_HideFoldItem:(BOOL)flag;
++ (void)cacheConversationFoldListSettings_FoldItemIsUnread:(BOOL)flag;
++ (BOOL)getConversationFoldListSettings_HideFoldItem;
++ (BOOL)getConversationFoldListSettings_FoldItemIsUnread;
 
 @end
 

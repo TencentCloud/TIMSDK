@@ -126,7 +126,6 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
 {
-    // 快速点的时候会回调多次
     @weakify(self)
     picker.delegate = nil;
     [picker dismissViewControllerAnimated:YES completion:^{
@@ -161,7 +160,10 @@
                 return;
             }
             
-            // 在某些情况下，UIImagePickerControllerMediaURL 可能为空，使用 UIImagePickerControllerPHAsset
+            /**
+             * 在某些情况下，UIImagePickerControllerMediaURL 可能为空，使用 UIImagePickerControllerPHAsset
+             * In some cases UIImagePickerControllerMediaURL may be empty, use UIImagePickerControllerPHAsset
+             */
             PHAsset *asset = nil;
             if (@available(iOS 11.0, *)) {
                 asset = [info objectForKey:UIImagePickerControllerPHAsset];
@@ -176,7 +178,10 @@
                 return;
             }
             
-            // 在 ios 12 的情况下，UIImagePickerControllerMediaURL 及 UIImagePickerControllerPHAsset 可能为空，需要使用其他方式获取视频文件原始路径
+            /**
+             * 在 ios 12 的情况下，UIImagePickerControllerMediaURL 及 UIImagePickerControllerPHAsset 可能为空，需要使用其他方式获取视频文件原始路径
+             * In the case of ios 12, UIImagePickerControllerMediaURL and UIImagePickerControllerPHAsset may be empty, and other methods need to be used to obtain the original path of the video file
+             */
             url = [info objectForKey:UIImagePickerControllerReferenceURL];
             if (url) {
                 [self originURLWithRefrenceURL:url completion:^(BOOL success, NSURL *URL) {
@@ -187,13 +192,15 @@
                 return;
             }
             
-            // 其他，不支持
             [self.view makeToast:@"not support this video"];
         }
     }];
 }
 
-// 根据 UIImagePickerControllerReferenceURL 获取原始文件路径
+/**
+ * 根据 UIImagePickerControllerReferenceURL 获取原始文件路径
+ * Get the original file path based on UIImagePickerControllerReferenceURL
+ */
 - (void)originURLWithRefrenceURL:(NSURL *)URL completion:(void(^)(BOOL success, NSURL *URL))completion
 {
     if (completion == nil) {
@@ -248,7 +255,10 @@
         options.networkAccessAllowed = NO;
         __block BOOL invoked = NO;
         [PHAssetResourceManager.defaultManager requestDataForAssetResource:resources.firstObject options:options dataReceivedHandler:^(NSData * _Nonnull data) {
-            // 此处会有重复回调的问题
+            /**
+             * 此处会有重复回调的问题
+             * There will be a problem of repeated callbacks here
+             */
             if (invoked) {
                 return;
             }
@@ -272,7 +282,6 @@
     }];
 }
 
-// 获取 NSURL 查询字符串信息
 - (NSDictionary *)dictionaryWithURLQuery:(NSString *)query
 {
     NSArray *components = [query componentsSeparatedByString:@"&"];
@@ -286,14 +295,11 @@
     return [NSDictionary dictionaryWithDictionary:dict];;
 }
 
-// 转码
 - (void)transcodeIfNeed:(NSURL *)url
 {
     if ([url.pathExtension.lowercaseString isEqualToString:@"mp4"]) {
-        // mp4 直接发送
         [self sendVideoWithUrl:url];
     } else {
-        // 非 mp4 文件 => mp4 文件
         NSString* tempPath = NSTemporaryDirectory();
         NSURL *urlName = [url URLByDeletingPathExtension];
         NSURL *newUrl = [NSURL URLWithString:[NSString stringWithFormat:@"file://%@%@.mp4", tempPath,[urlName.lastPathComponent stringByRemovingPercentEncoding]]];
@@ -363,7 +369,10 @@
         NSString *fileName = [url lastPathComponent];
         NSString *filePath = [TUIKit_File_Path stringByAppendingString:fileName];
         if ([NSFileManager.defaultManager fileExistsAtPath:filePath]) {
-            // 存在同名文件，对文件名进行递增
+            /**
+             * 存在同名文件，对文件名进行递增
+             * If a file with the same name exists, increment the file name
+             */
             int i = 0;
             NSArray *arrayM = [NSFileManager.defaultManager subpathsAtPath:TUIKit_File_Path];
             for (NSString *sub in arrayM) {
@@ -411,7 +420,7 @@
 - (void)cameraViewControllerDidCancel:(TUICameraViewController *)controller {
 }
 
-//MARK: iOS14使用新的相册管理器
+#pragma mark - New version for Assets in iOS 14
 - (void)selectPhotoForSendV2 {
     
     if (@available(iOS 14, *)) {
@@ -438,7 +447,6 @@
                   break;
         }
     } else {
-        //判断相册权限
         PHAuthorizationStatus photoAuthorStatus = [PHPhotoLibrary authorizationStatus];
         if (photoAuthorStatus ==PHAuthorizationStatusAuthorized ) {
             [self _takeImagePhoto];
@@ -452,7 +460,10 @@
 - (void)_requestPhotoAuthorization {
     if (@available(iOS 14, *)) {
         PHAccessLevel level = PHAccessLevelReadWrite;
-        // 请求权限，需注意 limited 权限仅在 accessLevel 为 readAndWrite 时生效
+        /**
+         * 请求权限，需注意 limited 权限仅在 accessLevel 为 readAndWrite 时生效
+         * Request permission, it should be noted that limited permission only takes effect when the accessLevel is readAndWrite
+         */
         [PHPhotoLibrary requestAuthorizationForAccessLevel:level handler:^(PHAuthorizationStatus status) {
             switch (status) {
                 case PHAuthorizationStatusLimited: {
@@ -472,12 +483,17 @@
             }
         }];
     } else {
-        //获取相册访问权限 ios8之后推荐用这种方法 //该方法提示用户授权对相册的访问
+        /**
+         * 获取相册访问权限 ios8 之后推荐用这种方法
+         * 该方法提示用户授权对相册的访问
+         *
+         * This method is recommended for obtaining album access permissions after ios8
+         * This method prompts the user to authorize access to the album
+         */
         [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
             if (status == PHAuthorizationStatusDenied) {
                 [TUIUserAuthorizationCenter showAlert:TUIChatAuthControlTypePhoto];
             }else if (status == PHAuthorizationStatusAuthorized){
-                //有权限 可直接跳转
                 [self _takeImagePhoto];
             }
         }];
@@ -510,8 +526,7 @@
     });
 }
 
-//MARK: PHPickerViewControllerDelegate
-
+#pragma mark - PHPickerViewControllerDelegate
 - (void)picker:(PHPickerViewController *)picker didFinishPicking:(NSArray<PHPickerResult*> *)results API_AVAILABLE(ios(14)){
     
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -573,8 +588,11 @@
                     UIImage * result;
                     NSData * data = [NSData dataWithContentsOfURL:url];
                     result = [UIImage imageWithData:data];
-                    //注：模拟器上 typeIdentifier 为public.jepg时拿不到url
-                    //见苹果developer原话：There is a separate JEPG transcoding issue that only affects the simulator (63426347), please refer to https://developer.apple.com/forums/thread/658135 for more information.
+
+                    /**
+                     * Can't get url when typeIdentifier is public.jepg on emulator:
+                     * There is a separate JEPG transcoding issue that only affects the simulator (63426347), please refer to https://developer.apple.com/forums/thread/658135 for more information.
+                     */
                 });
             }];
         }

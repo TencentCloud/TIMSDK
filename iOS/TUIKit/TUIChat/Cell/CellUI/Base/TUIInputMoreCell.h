@@ -1,11 +1,13 @@
- /******************************************************************************
+ /**
   *
   * 本文件声明了用于实现“更多”单元的模块。
-  * 更多单元，即在点击聊天界面右下角“+”后出现的若干单元。
-  * 目前更多单元提供拍摄、视频、图片、文件四种多媒体发送功能，您也可以继续根据您的需求进行自定义拓展。
-  * TUIInputMoreCell 更多单元负责在更多视图中显示，向用户展示更多视图中包含的功能。同时作为各个功能的入口，相应用户的交互事件。
+  * 更多单元，即在点击聊天界面右下角“+”后出现的 UI 界面。
+  * 目前更多单元提供拍摄、视频、图片、文件四种多媒体发送功能，您也可以根据您的需求自定义。
   *
-  ******************************************************************************/
+  * This document declares modules for implementing "more" units.
+  * More units, that is, the UI interface that appears after clicking the "+" in the lower right corner of the chat interface.
+  * At present, more units provide four multimedia sending functions of camera, video, picture, and file, and you can also customize it according to your needs.
+  */
 
 #import <UIKit/UIKit.h>
 #import "TUIInputMoreCellData.h"
@@ -16,16 +18,14 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-/** 腾讯云 TUIKit
- * 【模块名称】TUIInputMoreCell
- * 【功能说明】更多单元，即在更多视图中显示的单元。
- *  更多单元负责在更多视图中显示，向用户展示更多视图中包含的功能。同时作为各个功能的入口，相应用户的交互事件。
- */
 @interface TUIInputMoreCell : UICollectionViewCell
 
 /**
- *  更多单元对应的图标，从 TUIInputMoreCellData 的 iamge 中获取。
+ *  更多单元对应的图标，从 TUIInputMoreCellData 的 image 中获取。
  *  各个单元的图标有所不同，用于形象表示该单元所对应的功能。
+ *
+ *  The icons corresponding to more cells are obtained from the image of TUIInputMoreCellData.
+ *  The icons of each unit are different, which are used to visually represent the corresponding functions of the unit.
  */
 @property (nonatomic, strong) UIImageView *image;
 
@@ -33,33 +33,26 @@
  *  更多单元对应的标签。
  *  其文本内容从 TUIInputMoreCellData 的 title 中获取。
  *  各个单元的名称有所不同（比如拍摄、录像、文件、相册等），用于在图标下方以文字形式展示单元对应的功能。
+ *
+ *  The label corresponding to more cells, the text content of which is obtained from the title of TUIInputMoreCellData.
+ *  The names of each unit are different (such as camera, video, file, album, etc.), which are used to display the corresponding functions of the unit in text form below the icon.
  */
 @property (nonatomic, strong) UILabel *title;
 
-/**
- *  更多单元对应的数据源
- *  存放更多单元所需的信息与数据。
- */
+
 @property (nonatomic, strong) TUIInputMoreCellData *data;
 
 /**
  * 是否禁用封装在 TUIKit 内部的默认的选中行为，如群直播默认创建直播间等行为，默认：NO
+ * Whether to disable the default selection behavior encapsulated in TUIKit, such as group live broadcast by default to create live room and other behaviors, default: NO
  */
 @property (nonatomic, assign) BOOL disableDefaultSelectAction;
 
-/**
- *  根据消息源填充“更多”单元。
- *  包括 iamge、title 的赋值与 frame 的设定。
- *
- *  @param data 负责存放数据的数据源。
- */
+
 - (void)fillWithData:(TUIInputMoreCellData *)data;
 
-/**
- *  获取大小
- *  负责获取当前“更多”单元在 UI 上的显示面积。
- */
 + (CGSize)getSize;
+
 @end
 
 

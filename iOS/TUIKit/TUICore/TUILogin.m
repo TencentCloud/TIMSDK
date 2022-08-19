@@ -25,7 +25,7 @@ NSString * const TUILogoutFailNotification = @"TUILogoutFailNotification";
 
 @implementation TUILogin
 
-#pragma mark - 对外 API
+#pragma mark - API
 + (void)initWithSdkAppID:(int)sdkAppID {
     [TUILogin.shareInstance initWithSdkAppID:sdkAppID];
 }
@@ -75,7 +75,7 @@ NSString * const TUILogoutFailNotification = @"TUILogoutFailNotification";
 }
 
 
-#pragma mark - 内部方法
+#pragma mark - Private
 
 + (instancetype)shareInstance {
     static id _instance = nil;
@@ -101,7 +101,6 @@ NSString * const TUILogoutFailNotification = @"TUILogoutFailNotification";
 }
 
 - (void)initWithSdkAppID:(int)sdkAppID {
-    // sdkappid 如果发生了变化要先 unInitSDK，否则 initSDK 会失败
     if (0 != self.sdkAppID && sdkAppID != self.sdkAppID) {
         [self logout:nil fail:nil];
         [[V2TIMManager sharedInstance] unInitSDK];
@@ -120,7 +119,6 @@ NSString * const TUILogoutFailNotification = @"TUILogoutFailNotification";
         if (succ) {
             succ();
         }
-        // 对外通知
         [NSNotificationCenter.defaultCenter postNotificationName:TUILoginSuccessNotification object:nil];
     } else {
         __weak __typeof(self) weakSelf = self;
@@ -130,13 +128,11 @@ NSString * const TUILogoutFailNotification = @"TUILogoutFailNotification";
             if (succ) {
                 succ();
             }
-            // 对外通知
             [NSNotificationCenter.defaultCenter postNotificationName:TUILoginSuccessNotification object:nil];
         } fail:^(int code, NSString *desc) {
             if (fail) {
                 fail(code, desc);
             }
-            // 对外通知
             [NSNotificationCenter.defaultCenter postNotificationName:TUILoginFailNotification object:nil];
         }];
     }
@@ -147,9 +143,7 @@ NSString * const TUILogoutFailNotification = @"TUILogoutFailNotification";
       userSig:(NSString *)userSig
          succ:(TSucc)succ
          fail:(TFail)fail {
-    // 1. 初始化 SDK
     self.loginWithInit = YES;
-    // sdkappid 如果发生了变化要先 unInitSDK，否则 initSDK 会失败
     if (0 != self.sdkAppID && sdkAppID != self.sdkAppID) {
         [self logout:nil fail:nil];
         [[V2TIMManager sharedInstance] unInitSDK];
@@ -159,17 +153,14 @@ NSString * const TUILogoutFailNotification = @"TUILogoutFailNotification";
     config.logLevel = V2TIM_LOG_INFO;
     [[V2TIMManager sharedInstance] initSDK:sdkAppID config:config];
     
-    // 2. 添加监听
     [V2TIMManager.sharedInstance addIMSDKListener:self];
     
-    // 3. 登录
     self.userID = userID;
     self.userSig = userSig;
     if ([[[V2TIMManager sharedInstance] getLoginUser] isEqualToString:userID]) {
         if (succ) {
             succ();
         }
-        // 对外通知
         [NSNotificationCenter.defaultCenter postNotificationName:TUILoginSuccessNotification object:nil];
         return;
     }
@@ -180,14 +171,12 @@ NSString * const TUILogoutFailNotification = @"TUILogoutFailNotification";
         if (succ) {
             succ();
         }
-        // 对外通知
         [NSNotificationCenter.defaultCenter postNotificationName:TUILoginSuccessNotification object:nil];
     } fail:^(int code, NSString *desc) {
         self.loginWithInit = NO;
         if (fail) {
             fail(code, desc);
         }
-        // 对外通知
         [NSNotificationCenter.defaultCenter postNotificationName:TUILoginFailNotification object:nil];
     }];
 }
@@ -213,17 +202,16 @@ NSString * const TUILogoutFailNotification = @"TUILogoutFailNotification";
         }
         if (self.loginWithInit) {
             // 使用的是新接口登录，退出时需要反初始化，并移除监听
+            // The new interface is currently used to log in. When logging out, you need to deinitialize and remove the listener.
             [V2TIMManager.sharedInstance removeIMSDKListener:self];
             [V2TIMManager.sharedInstance unInitSDK];
             self.sdkAppID = 0;
         }
-        // 对外通知
         [NSNotificationCenter.defaultCenter postNotificationName:TUILogoutSuccessNotification object:nil];
     } fail:^(int code, NSString *desc) {
         if (fail) {
             fail(code, desc);
         }
-        // 对外通知
         [NSNotificationCenter.defaultCenter postNotificationName:TUILogoutFailNotification object:nil];
     }];
 }
@@ -284,7 +272,6 @@ NSString * const TUILogoutFailNotification = @"TUILogoutFailNotification";
 }
 
 #pragma mark - V2TIMSDKListener
-/// The SDK is connecting to the CVM instance
 - (void)onConnecting {
     __weak typeof(self) weakSelf = self;
     [self doInMainThread:^{
@@ -297,7 +284,6 @@ NSString * const TUILogoutFailNotification = @"TUILogoutFailNotification";
     }];
 }
 
-/// The SDK is successfully connected to the CVM instance
 - (void)onConnectSuccess {
     __weak typeof(self) weakSelf = self;
     [self doInMainThread:^{
@@ -310,7 +296,6 @@ NSString * const TUILogoutFailNotification = @"TUILogoutFailNotification";
     }];
 }
 
-/// The SDK failed to connect to the CVM instance
 - (void)onConnectFailed:(int)code err:(NSString*)err {
     __weak typeof(self) weakSelf = self;
     [self doInMainThread:^{
@@ -323,7 +308,6 @@ NSString * const TUILogoutFailNotification = @"TUILogoutFailNotification";
     }];
 }
 
-/// The current user is kicked offline: the SDK notifies the user on the UI, and the user can choose to call the login() function of V2TIMManager to log in again.
 - (void)onKickedOffline {
     __weak typeof(self) weakSelf = self;
     [self doInMainThread:^{
@@ -335,7 +319,6 @@ NSString * const TUILogoutFailNotification = @"TUILogoutFailNotification";
     }];
 }
 
-/// The ticket expires when the user is online: the user needs to generate a new userSig and call the login() function of V2TIMManager to log in again.
 - (void)onUserSigExpired {
     __weak typeof(self) weakSelf = self;
     [self doInMainThread:^{
@@ -347,9 +330,7 @@ NSString * const TUILogoutFailNotification = @"TUILogoutFailNotification";
     }];
 }
 
-/// The profile of the current user was updated
 - (void)onSelfInfoUpdated:(V2TIMUserFullInfo *)Info {
-    // 暂时不暴露
 }
 
 @end

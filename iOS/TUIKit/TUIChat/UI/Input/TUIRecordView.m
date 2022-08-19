@@ -101,7 +101,6 @@
 
 - (NSString *)getRecordImage:(NSInteger)power
 {
-    // 关键代码
     power = power + 60;
     int index = 0;
     if (power < 25){

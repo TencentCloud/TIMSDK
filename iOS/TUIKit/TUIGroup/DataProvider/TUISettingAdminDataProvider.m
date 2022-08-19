@@ -123,7 +123,6 @@
             cellData.name = (info.nameCard?:info.nickName)?:info.userID;
             cellData.avatarUrl = info.faceURL;
             if (info.role == V2TIM_GROUP_MEMBER_ROLE_SUPER) {
-                // 群主
                 [weakSelf.owners addObject:cellData];
             }
         }
@@ -146,7 +145,6 @@
             cellData.name = (info.nameCard?:info.nickName)?:info.userID;
             cellData.avatarUrl = info.faceURL;
             if (info.role == V2TIM_GROUP_MEMBER_ROLE_ADMIN) {
-                // 管理员
                 [weakSelf.admins addObject:cellData];
             }
         }

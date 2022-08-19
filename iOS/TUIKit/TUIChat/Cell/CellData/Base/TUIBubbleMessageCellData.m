@@ -136,7 +136,6 @@ static CGFloat sIncommingBubbleTop = 0;
 
 + (void)onThemeChanged:(NSNotification *)notice
 {
-    // 重新加载皮肤
     sOutgoingBubble = nil;
     sOutgoingHighlightedBubble = nil;
     

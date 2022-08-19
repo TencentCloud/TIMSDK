@@ -18,43 +18,47 @@ NS_ASSUME_NONNULL_BEGIN
 #define kSearchChatHistoryConverationInfo  @"conversation"
 #define kSearchChatHistoryConversationMsgs @"msgs"
 
-///////////////////////////////////////////////////////////////////// 新增模块 以及 模块配置信息 /////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////// Configuration /////////////////////////////////////////////////////////////////
 
-// 每个模块默认显示最多的个数，等于或超过之后显示「 查看更多*** 」
+/**
+ * 每个模块默认显示最多的个数，等于或超过之后显示「 查看更多*** 」
+ * The default maximum number of each module, if it is equal to or exceeds, it will display "View More***"
+ */
 #define kMaxNumOfPerModule 3
 
-// 枚举名称代表搜索的模块，枚举值代表模块之间的顺序
+/**
+ * 枚举名称代表搜索的模块，枚举值代表模块之间的顺序
+ * The enumeration name represents the searched module, and the enumeration value represents the order between modules
+ */
 typedef NS_ENUM(NSInteger, TUISearchResultModule) {
-    TUISearchResultModuleAll           = 1 << 0,        // 所有模块
-    TUISearchResultModuleContact       = 1 << 1,        // 联系人模块
-    TUISearchResultModuleGroup         = 1 << 2,        // 群聊模块
-    TUISearchResultModuleChatHistory   = 1 << 3,        // 聊天记录,结果显示会话
+    TUISearchResultModuleAll           = 1 << 0,
+    TUISearchResultModuleContact       = 1 << 1,
+    TUISearchResultModuleGroup         = 1 << 2,
+    TUISearchResultModuleChatHistory   = 1 << 3,
 };
 
-// 搜索附加条件的 key
 typedef NSString * TUISearchParamKey;
-FOUNDATION_EXTERN TUISearchParamKey TUISearchChatHistoryParamKeyConversationId; // 以会话id作为条件搜索历史聊天记录
-FOUNDATION_EXTERN TUISearchParamKey TUISearchChatHistoryParamKeyCount;          // 以个数作为条件搜索历史聊天记录
-FOUNDATION_EXPORT TUISearchParamKey TUISearchChatHistoryParamKeyPage;           // 以页码作为条件搜索历史聊天记录
-FOUNDATION_EXTERN NSUInteger TUISearchDefaultPageSize;                          // 搜索时分页的大小，默认是 20
+FOUNDATION_EXTERN TUISearchParamKey TUISearchChatHistoryParamKeyConversationId;
+FOUNDATION_EXTERN TUISearchParamKey TUISearchChatHistoryParamKeyCount;
+FOUNDATION_EXPORT TUISearchParamKey TUISearchChatHistoryParamKeyPage;
+FOUNDATION_EXTERN NSUInteger TUISearchDefaultPageSize;
 
-// 模块对应的名称
 static inline NSString *titleForModule(TUISearchResultModule module, BOOL isHeader)
 {
     NSString *headerTitle = @"";
     NSString *footerTitle = @"";
     switch (module) {
         case TUISearchResultModuleContact:
-            headerTitle = TUIKitLocalizableString(TUIKitSearchItemHeaderTitleContact); // @"联系人";
-            footerTitle = TUIKitLocalizableString(TUIKitSearchItemFooterTitleContact); // @"查看更多联系人";
+            headerTitle = TUIKitLocalizableString(TUIKitSearchItemHeaderTitleContact);
+            footerTitle = TUIKitLocalizableString(TUIKitSearchItemFooterTitleContact);
             break;
         case TUISearchResultModuleGroup:
-            headerTitle = TUIKitLocalizableString(TUIKitSearchItemHeaderTitleGroup); // @"群聊";
-            footerTitle = TUIKitLocalizableString(TUIKitSearchItemFooterTitleGroup); // @"查看更多群聊";
+            headerTitle = TUIKitLocalizableString(TUIKitSearchItemHeaderTitleGroup);
+            footerTitle = TUIKitLocalizableString(TUIKitSearchItemFooterTitleGroup);
             break;
         case TUISearchResultModuleChatHistory:
-            headerTitle = TUIKitLocalizableString(TUIkitSearchItemHeaderTitleChatHistory); // @"聊天记录";
-            footerTitle = TUIKitLocalizableString(TUIKitSearchItemFooterTitleChatHistory); // @"查看更多聊天记录";
+            headerTitle = TUIKitLocalizableString(TUIkitSearchItemHeaderTitleChatHistory);
+            footerTitle = TUIKitLocalizableString(TUIKitSearchItemFooterTitleChatHistory);
             break;
         default:
             break;
@@ -68,17 +72,7 @@ static inline NSString *titleForModule(TUISearchResultModule module, BOOL isHead
 
 @protocol TUISearchResultDelegate <NSObject>
 
-/**
- * 搜索成功后的回调
- * @param results 搜索完成后的结果集，也可以通过 TUISearchDataProvider 的 resultSet 属性来获取。属性的 key 以及 value 取值见 TUISearchDataProvider 的 @resultSet 属性
- * @param modules 当前搜索的模块，与调用 searchForKeyword:forModules: 方法时传入的 modules 一致
- */
 - (void)onSearchResults:(NSDictionary<NSNumber *, NSArray<TUISearchResultCellModel *> *> *)results forModules:(TUISearchResultModule)modules;
-
-/**
- * 搜索失败后的回调
- * @param errMsg 失败的描述
- */
 - (void)onSearchError:(NSString *)errMsg;
 
 @end
@@ -87,25 +81,8 @@ static inline NSString *titleForModule(TUISearchResultModule module, BOOL isHead
 
 @property (nonatomic, weak) id<TUISearchResultDelegate> delegate;
 
-/**
- * 搜索后的数据源，字典形式
- * key : 模块类型的枚举值，例如 @(TUISearchResultModuleContact)，不支持 TUISearchResultModuleAll
- * value: 表示当前模块对应的TUISearchResultCellModel类型的数组
- */
 @property (nonatomic, strong, readonly) NSMutableDictionary<NSNumber *, NSArray<TUISearchResultCellModel *> *> *resultSet;
 
-/**
- * 按模块模糊搜索，搜索完成后回触发 TUISearchResultDelegate 回调
- * @param keyword 搜索的关键词
- * @param modules 搜索的模块，支持单模块搜索，组合搜索以及全模块搜索。
- * @param param 搜索条件, key 取值见 @TUISearchParamKey
- *
- * @note modules 的传值示例以及搜索结果集 resultSet 示例如下：
- * ① 单模块搜索，例如传入 TUISearchResultModuleContact, 则搜索联系人完成后回调 resultSet 中，通过@(TUISearchResultModuleContact)的 key 来获取对应的联系人列表
- * ② 组合搜索，例如传入 TUISearchResultModuleContact|TUISearchResultModuleGroup，TUIKit会搜索联系人以及群组，搜索完成之后，可以分别通过@(TUISearchResultModuleContact)和
- *   @(TUISearchResultModuleGroup)来获取对应的联系人和群组列表
- * ③ 全模块搜索，例如传入 TUISearchResultModuleAll，TUIKit 会搜索所有支持的模块，并返回所有结果。通过具体的枚举值来获取对应列表
- */
 - (void)searchForKeyword:(NSString *)keyword forModules:(TUISearchResultModule)modules param:(NSDictionary<TUISearchParamKey, id> * __nullable)param;
 
 + (NSAttributedString *)attributeStringWithText:(NSString * __nullable)text key:(NSString * __nullable)key;

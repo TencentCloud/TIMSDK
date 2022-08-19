@@ -68,6 +68,12 @@
 	<string>#FFFFFF</string>
 	<key>nav_back_img</key>
 	<string>nav_back.png</string>
+	<key>default_group_head_public_img</key>
+	<string>default_group_head_public.png</string>
+	<key>default_group_head_meeting_img</key>
+	<string>default_group_head_meeting.png</string>
+	<key>default_group_head_avchatroom_img</key>
+	<string>default_group_head_avchatroom.png</string>
 	<key>default_group_head_img</key>
 	<string>default_group_head.png</string>
 	<key>default_c2c_head_img</key>

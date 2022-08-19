@@ -13,6 +13,7 @@
 #import "ReactiveObjC.h"
 #import "TUIDefine.h"
 #import "TUIChatModifyMessageHelper.h"
+#import "TUIChatConfig.h"
 
 #define MSG_GET_COUNT 20
 
@@ -21,18 +22,28 @@
 @property (nonatomic, assign) uint64_t locateGroupMessageSeq;
 @property (nonatomic, strong) TUIChatSmallTongueView *tongueView;
 @property (nonatomic, strong) NSMutableArray *receiveMsgs;
+@property (nonatomic, weak) UIImageView *backgroudView;
 @end
 
 @implementation TUIMessageController
 
 #pragma mark - Life Cycle
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     
     self.bottomIndicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, TMessageController_Header_Height)];
     self.bottomIndicatorView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
     self.tableView.tableFooterView = self.bottomIndicatorView;
-    self.tableView.backgroundColor = TUIChatDynamicColor(@"chat_controller_bg_color", @"#FFFFFF");
+    
+    UIImageView *backgroudView = [[UIImageView alloc] init];
+    self.tableView.backgroundView = backgroudView;
+    self.backgroudView = backgroudView;
+    self.backgroudView.backgroundColor = TUIChatConfig.defaultConfig.backgroudColor ? TUIChatConfig.defaultConfig.backgroudColor : TUIChatDynamicColor(@"chat_controller_bg_color", @"#FFFFFF");
+    if (TUIChatConfig.defaultConfig.backgroudImage) {
+        self.backgroudView.backgroundColor = UIColor.clearColor;
+        self.backgroudView.image = TUIChatConfig.defaultConfig.backgroudImage;
+    }
     
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(keyboardWillShow) name:UIKeyboardWillShowNotification object:nil];
     
@@ -51,12 +62,14 @@
     [NSNotificationCenter.defaultCenter removeObserver:self];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
+- (void)viewWillAppear:(BOOL)animated
+{
     [super viewWillAppear:animated];
     [TUIChatSmallTongueManager hideTongue:NO];
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
+- (void)viewWillDisappear:(BOOL)animated
+{
     [super viewWillDisappear:animated];
     [TUIChatSmallTongueManager hideTongue:YES];
 }
@@ -89,19 +102,28 @@
     [super scrollViewDidScroll:scrollView];
     if (scrollView.contentOffset.y <= TMessageController_Header_Height
        && ![self messageSearchDataProvider].isOlderNoMoreMsg) {
-        // 显示下拉刷新
+        /**
+         * 显示下拉刷新
+         * Display pull-to-refresh icon
+         */
         if (!self.indicatorView.isAnimating) {
             [self.indicatorView startAnimating];
         }
     }
     else if ([self isScrollToBottomIndicatorViewY:scrollView]) {
         if (![self messageSearchDataProvider].isNewerNoMoreMsg) {
-            // 显示上拉加载
+            /**
+             * 显示上拉加载
+             * Display pull-up-loading icon
+             */
             if (!self.bottomIndicatorView.isAnimating) {
                 [self.bottomIndicatorView startAnimating];
             }
         }
-        // 去掉 "回到最新位置", "xxx条新消息" 小舌头
+        /**
+         * 去掉 "回到最新位置", "xxx条新消息" 小舌头
+         * Remove the "back to the latest position", "xxx new message" bottom-banner-tips
+         */
         if (self.isInVC) {
             [TUIChatSmallTongueManager removeTongue:TUIChatSmallTongueType_ScrollToBoom];
             [TUIChatSmallTongueManager removeTongue:TUIChatSmallTongueType_ReceiveNewMsg];
@@ -109,7 +131,10 @@
     }
     else if (self.isInVC && 0 == self.receiveMsgs.count && self.tableView.contentSize.height - self.tableView.contentOffset.y >= Screen_Height * 2.0) {
         CGPoint point = [scrollView.panGestureRecognizer translationInView:scrollView];
-        // 下滑的时候，添加 "回到最新位置" 小舌头
+        /**
+         * 下滑的时候，添加 "回到最新位置" 小舌头
+         * When swiping, add a "back to last position" bottom-banner-tips
+         */
         if (point.y > 0) {
             TUIChatSmallTongue *tongue = [[TUIChatSmallTongue alloc] init];
             tongue.type = TUIChatSmallTongueType_ScrollToBoom;
@@ -117,7 +142,10 @@
         }
     }
     else if (self.isInVC && self.tableView.contentSize.height - self.tableView.contentOffset.y >= 20) {
-        // 去掉 "有人 @ 我" 小舌头
+        /**
+         * 去掉 "有人 @ 我" 小舌头
+         * Remove the "someone @ me" bottom-banner-tips
+         */
         [TUIChatSmallTongueManager removeTongue:TUIChatSmallTongueType_SomeoneAtMe];
     }
     else {
@@ -135,20 +163,30 @@
     [super scrollViewDidEndDecelerating:scrollView];
     if (scrollView.contentOffset.y <= TMessageController_Header_Height
        && ![self messageSearchDataProvider].isOlderNoMoreMsg) {
-        // 拉取旧消息
+        /**
+         * 拉取旧消息
+         * Pull old news
+         */
         [self loadMessages:YES];
     }
     else if ([self isScrollToBottomIndicatorViewY:scrollView]
              && ![self messageSearchDataProvider].isNewerNoMoreMsg
              ) {
-        // 加载新的消息
+        /**
+         * 加载新的消息
+         * Load latese message
+         */
         [self loadMessages:NO];
     }
 }
 
-- (BOOL)isScrollToBottomIndicatorViewY:(UIScrollView *)scrollView {
+- (BOOL)isScrollToBottomIndicatorViewY:(UIScrollView *)scrollView
+{
+    /**
+     * 滚到临界点,再 + 2 像素
+     * +2 pixels when scrolling to critical point
+     */
     return (scrollView.contentOffset.y + self.tableView.mm_h + 2) > (scrollView.contentSize.height - self.indicatorView.mm_h);
-    // 滚到临界点,再+2像素
 }
 
 #pragma mark - Getters & Setters
@@ -166,11 +204,11 @@
 }
 
 #pragma mark - Private Methods
-- (TUIMessageSearchDataProvider *)messageSearchDataProvider {
+- (TUIMessageSearchDataProvider *)messageSearchDataProvider
+{
     return (TUIMessageSearchDataProvider *)self.messageDataProvider;
 }
 
-// 加载定位消息
 - (void)loadLocateMessages:(BOOL)firstLoad
 {
     @weakify(self);
@@ -183,7 +221,10 @@
         self.bottomIndicatorView.mm_h = 0;
         [self.tableView reloadData];
         if (!firstLoad) {
-            // 在消息回复等跳转场景中，先将 tableview 滚动到最底部，再结合 scrollLocateMessage 来实现滚动定位效果
+            /**
+             * 在消息回复等跳转场景中，先将 tableview 滚动到最底部，再结合 scrollLocateMessage 来实现滚动定位效果
+             * In jump scenarios such as message reply, first scroll the tableview to the bottom, and then combine scrollLocateMessage to achieve scroll positioning effect
+             */
             NSInteger index = self.messageDataProvider.uiMsgs.count > 0 ? self.messageDataProvider.uiMsgs.count - 1 : 0;
             [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]
                                   atScrollPosition:UITableViewScrollPositionBottom
@@ -193,9 +234,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @strongify(self)
-            // 滚动到指定位置
             [self scrollLocateMessage:firstLoad];
-            // 关键字高亮
             [self highlightKeyword];
         });
         
@@ -205,7 +244,10 @@
 
 - (void)scrollLocateMessage:(BOOL)firstLoad
 {
-    // 先找到 locateMsg 的坐标偏移
+    /**
+     * 先找到 locateMsg 的坐标偏移
+     * First find the coordinate offset of locateMsg
+     */
     CGFloat offsetY = 0;
     NSInteger index = 0;
     for (TUIMessageCellData *uiMsg in [self messageSearchDataProvider].uiMsgs) {
@@ -216,12 +258,18 @@
         index++;
     }
     
-    // 没有找到定位消息
+    /**
+     * 没有找到定位消息
+     * The locateMsg not found
+     */
     if (index == [self messageSearchDataProvider].uiMsgs.count) {
         return;
     }
     
-    // 再偏移半个 tableview 的高度
+    /**
+     * 再偏移半个 tableview 的高度
+     * Offset half the height of the tableview
+     */
     offsetY -= self.tableView.frame.size.height / 2.0;
     if (offsetY <= TMessageController_Header_Height) {
         offsetY = TMessageController_Header_Height + 0.1;
@@ -267,7 +315,8 @@
     });
 }
 
-- (BOOL)isLocateMessage:(TUIMessageCellData *)uiMsg {
+- (BOOL)isLocateMessage:(TUIMessageCellData *)uiMsg
+{
     if (self.locateMessage) {
         if ([uiMsg.innerMessage.msgID isEqualToString:self.locateMessage.msgID]) {
             return YES;
@@ -280,15 +329,12 @@
     return NO;
 }
 
-/// @param order order=YES, 代表获取旧消息; order=NO, 代表获取新消息
 - (void)loadMessages:(BOOL)order
 {
-    // 加载中case
     if ([self messageSearchDataProvider].isLoadingData) {
         return;
     }
-    
-    // 无数据case
+
     if (order && [self messageSearchDataProvider].isOlderNoMoreMsg) {
         [self.indicatorView stopAnimating];
         return;
@@ -367,7 +413,7 @@
         originMsgID = cellData.originMsgID;
         msgAbstract = cellData.msgAbstract;
     }
-    // 查询原始消息 - 在数据源里头调用
+   
     [(TUIMessageSearchDataProvider *)self.messageDataProvider findMessages:@[originMsgID?:@""] callback:^(BOOL success, NSString * _Nonnull desc, NSArray<V2TIMMessage *> * _Nonnull msgs) {
         if (!success) {
             [TUITool makeToast:TUIKitLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
@@ -379,7 +425,6 @@
             return;
         }
         
-        // 判断消息是否被删除或者撤回
         if (message.status == V2TIM_MSG_STATUS_HAS_DELETED || message.status == V2TIM_MSG_STATUS_LOCAL_REVOKED) {
             [TUITool makeToast:TUIKitLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
             return;
@@ -394,7 +439,8 @@
     }];
 }
 
-- (void)jumpDetailPageByMessage:(V2TIMMessage *)message {
+- (void)jumpDetailPageByMessage:(V2TIMMessage *)message
+{
     NSMutableArray *uiMsgs = [self.messageDataProvider transUIMsgFromIMMsg:@[message]];
     [self.messageDataProvider preProcessMessage:uiMsgs callback:^{
         for (TUIMessageCellData *cellData in uiMsgs) {
@@ -415,7 +461,6 @@
     self.locateMessage = message;
     self.hightlightKeyword = keyword;
     
-    // 当前消息已经处于加载状态
     BOOL memoryExist = NO;
     for (TUIMessageCellData *cellData in self.messageDataProvider.uiMsgs) {
         if ([cellData.innerMessage.msgID isEqual:message.msgID]) {
@@ -424,14 +469,11 @@
         }
     }
     if (memoryExist) {
-        // 直接滚动
         [self scrollLocateMessage:NO];
-        // 高亮
         [self highlightKeyword];
         return;
     }
     
-    // 滚动
     TUIMessageSearchDataProvider *provider = (TUIMessageSearchDataProvider *)self.messageDataProvider;
     provider.isNewerNoMoreMsg = NO;
     provider.isOlderNoMoreMsg = NO;
@@ -440,9 +482,13 @@
 
 #pragma mark - TUIMessageDataProviderDataSource
 - (void)dataProvider:(TUIMessageDataProvider *)dataProvider
-     ReceiveNewUIMsg:(TUIMessageCellData *)uiMsg {
+     ReceiveNewUIMsg:(TUIMessageCellData *)uiMsg
+{
     [super dataProvider:dataProvider ReceiveNewUIMsg:uiMsg];
-    // 查看历史消息的时候，如果滚动超过两屏，收到新消息后，添加 "xxx条新消息"小舌头
+    /**
+     * 查看历史消息的时候，如果滚动超过两屏，收到新消息后，添加 "xxx条新消息"小舌头
+     * When viewing historical messages, if you scroll more than two screens, after receiving a new message, add a "xxx new message" bottom-banner-tips
+     */
     if (self.isInVC && self.tableView.contentSize.height - self.tableView.contentOffset.y >= Screen_Height * 2.0) {
         [self.receiveMsgs addObject:uiMsg];
         TUIChatSmallTongue *tongue = [[TUIChatSmallTongue alloc] init];
@@ -457,8 +503,12 @@
 }
 
 - (void)dataProvider:(TUIMessageDataProvider *)dataProvider
-  ReceiveRevokeUIMsg:(TUIMessageCellData *)uiMsg {
-    // 撤回的消息要从 "xxx条新消息" 踢出
+  ReceiveRevokeUIMsg:(TUIMessageCellData *)uiMsg
+{
+    /**
+     * 撤回的消息要从 "xxx条新消息" 移除
+     * Recalled messages need to be removed from "xxx new messages" bottom-banner-tips
+     */
     [super dataProvider:dataProvider ReceiveRevokeUIMsg:uiMsg];
     if ([self.receiveMsgs containsObject:uiMsg]) {
         [self.receiveMsgs removeObject:uiMsg];
@@ -495,7 +545,8 @@
 }
 
 #pragma mark - TUIChatSmallTongueViewDelegate
-- (void)onChatSmallTongueClick:(TUIChatSmallTongue *)tongue {
+- (void)onChatSmallTongueClick:(TUIChatSmallTongue *)tongue
+{
     switch (tongue.type) {
         case TUIChatSmallTongueType_ScrollToBoom:
         {
@@ -533,4 +584,5 @@
             break;
     }
 }
+
 @end

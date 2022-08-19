@@ -89,7 +89,6 @@
 
 - (void)fillWithData:(TUIVideoMessageCellData *)data;
 {
-    //set data
     [super fillWithData:data];
     self.videoData = data;
     self.isSaveVideo = NO;
@@ -110,17 +109,26 @@
     }];
     
     if (![self.videoData isVideoExist]) {
-        // 未下载的视频播放在线视频 url
+        /**
+         * 未下载的视频播放在线视频 url
+         * Undownloaded videos play using online url
+         */
         [self.videoData getVideoUrl:^(NSString * _Nonnull url) {
             @strongify(self)
             if (url) {
                 [self addPlayer:[NSURL URLWithString:url]];
             }
         }];
-        // 异步下载视频
+        /**
+         * 异步下载视频
+         * Download video asynchronously
+         */
         [self.videoData downloadVideo];
     } else {
-        // 已经下载的视频播放本地视频文件
+        /**
+         * 已经下载的视频播放本地视频文件
+         * Downloaded videos can be played directly using local video files
+         */
         self.videoPath = self.videoData.videoPath;
         if (self.videoPath) {
             [self addPlayer:[NSURL fileURLWithPath:self.videoPath]];
@@ -136,7 +144,10 @@
             [self saveVideo];
         }
         
-        // 如果还没播放，或者播放错误，将在线地址切成本地
+        /**
+         * 如果还没播放，或者播放错误，将在线地址切成本地
+         * If it has not been played, or the playback is wrong, switch from online playback to local playback
+         */
         if (self.player.status == AVPlayerStatusFailed || self.player.status == AVPlayerStatusReadyToPlay) {
             [self addPlayer:[NSURL fileURLWithPath:self.videoPath]];
         }

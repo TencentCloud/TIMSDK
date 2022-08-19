@@ -22,6 +22,7 @@
         self.enablePopMenuReplyAction = YES;
         self.enablePopMenuReferenceAction = YES;
         self.enableTypingStatus = YES;
+        self.enableFloatWindowForCall = YES;
     }
     return self;
 }

@@ -35,10 +35,12 @@
 
 - (void)unregisterService;
 {
-    // 恢复系统 delegate
+    /**
+     * 恢复系统 delegate
+     * Recover appdelegate
+     */
     [self unloadApplicationDelegateIfNeeded];
     
-    // apns 无需处理
     NSLog(@"[TUIOfflinePushManager][APNS] %s", __func__);
 }
 
@@ -47,7 +49,7 @@
     NSLog(@"[TUIOfflinePushManager][APNS] %s", __func__);
     [self onReportToken:deviceToken];
     
-    // 透传中转
+    // Forward
     if ([self.applicationDelegate respondsToSelector:@selector(application:didRegisterForRemoteNotificationsWithDeviceToken:)]) {
         [self.applicationDelegate application:app didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
     }
@@ -69,7 +71,7 @@
     NSDictionary *entity = extParam[@"entity"];
     [self onReceiveOfflinePushEntity:entity];
     
-    // 透传中转
+    // Forward
     if ([self.applicationDelegate respondsToSelector:@selector(application:didReceiveRemoteNotification:fetchCompletionHandler:)]) {
         [self.applicationDelegate application:application didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
     }
@@ -91,8 +93,7 @@
     NSDictionary *entity = extParam[@"entity"];
     [self onReceiveOfflinePushEntity:entity];
     
-    // 透传中转
-    // 反射方法
+    // Forward
     SEL selector = NSSelectorFromString(@"userNotificationCenter:didReceiveNotificationResponse:withCompletionHandler:");
     NSMethodSignature *signature = [self.applicationDelegate.class instanceMethodSignatureForSelector:selector];
     if (signature == nil) {
@@ -104,8 +105,6 @@
     [invocation setArgument:&center atIndex:2];
     [invocation setArgument:&response atIndex:3];
     [invocation setArgument:&completionHandler atIndex:4];
-    
-    // 调用方法
     [invocation invoke];
 }
 

@@ -18,8 +18,10 @@ typedef void(^TUIChatPopMenuActionCallback)(void);
 @property (nonatomic, strong) UIImage *image;
 @property (nonatomic, copy) TUIChatPopMenuActionCallback callback;
 
-//排序优先级:  复制(1)、转发(2)、多选(3)、引用(4)、回复(5)、撤回(6)、删除(7)
-// Sort priorities: copy, forward, multiselect, reference, reply, Withdraw, delete
+/**
+ * 排序优先级:  复制(1)、转发(2)、多选(3)、引用(4)、回复(5)、撤回(6)、删除(7)
+ * Sort priorities: copy, forward, multiselect, reference, reply, Withdraw, delete
+ */
 @property (nonatomic, assign) NSInteger rank;
 
 - (instancetype)initWithTitle:(NSString *)title

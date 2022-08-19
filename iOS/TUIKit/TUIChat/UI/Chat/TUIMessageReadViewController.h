@@ -1,6 +1,4 @@
-/******************************************************************************
- *
- * 腾讯云通讯服务界面组件 TUIKIT - 消息已读成员列表组件
+/**
  *
  * 本文件主要声明了点击群聊消息的已读 label 后，跳转到已读成员列表的控制器类
  *
@@ -10,7 +8,14 @@
  * TUIMessageReadViewController 类实现了已读成员列表的 UI 和逻辑。
  * TUIMessageReadViewControllerDelegate 回调点击成员列表 cell 事件。
  *
- ******************************************************************************/
+ * This file mainly declares the controller class that jumps to the read member list after clicking the read label of the group chat message
+ *
+ * The TUIMessageReadSelectView class defines a tab-like view in the read list. Currently only used in TUIMessageReadViewController.
+ * TUIMessageReadSelectViewDelegate Callback for clicked view event. Currently implemented by TUIMessageReadViewController to switch between read and unread lists.
+ *
+ * The TUIMessageReadViewController class implements the UI and logic for the read member list.
+ * TUIMessageReadViewControllerDelegate callback click member list cell event.
+ */
 
 #import <UIKit/UIKit.h>
 #import "TUIMessageCellData.h"

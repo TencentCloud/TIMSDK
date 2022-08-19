@@ -10,11 +10,16 @@
 #import "TUIBaseMessageControllerDelegate.h"
 #import "TUIInputController.h"
 #import "TUIChatConversationModel.h"
+
 @class TUIMessageDataProvider;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIRepliesDetailViewController : UIViewController
-- (instancetype)initWithCellData:(TUIMessageCellData *)data conversationData:(TUIChatConversationModel *)conversationData;
+
+- (instancetype)initWithCellData:(TUIMessageCellData *)data
+                conversationData:(TUIChatConversationModel *)conversationData;
+
 @property (nonatomic, weak) id<TUIBaseMessageControllerDelegate> delegate;
 @property (nonatomic, strong) V2TIMMergerElem *mergerElem;
 @property (nonatomic, copy) dispatch_block_t willCloseCallback;

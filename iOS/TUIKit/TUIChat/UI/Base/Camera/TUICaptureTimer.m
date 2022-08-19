@@ -21,26 +21,32 @@
 
     self.gcdTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_global_queue(0, 0));
 
-    //定时器延时时间
     NSTimeInterval delayTime = 0.f;
-    //定时器间隔时间
     NSTimeInterval timeInterval = 0.1f;
-    //设置开始时间
     dispatch_time_t startDelayTime = dispatch_time(DISPATCH_TIME_NOW, (uint64_t)(delayTime * NSEC_PER_SEC));
     dispatch_source_set_timer(self.gcdTimer, startDelayTime, timeInterval * NSEC_PER_SEC, timeInterval * NSEC_PER_SEC);
     
     dispatch_source_set_event_handler(self.gcdTimer, ^{
         self.captureDuration += timeInterval;
-        //主线程更新UI
+        /**
+         * 主线程更新 UI
+         * Updating UI on the main thread
+         */
         dispatch_async(dispatch_get_main_queue(), ^{
             if (self.progressBlock) {
                 self.progressBlock(self.captureDuration/self.maxCaptureTime, self.captureDuration);
             }
         });
         
-        //完成
+        /**
+         * 完成
+         * Fnish
+         */
         if (self.captureDuration >= self.maxCaptureTime) {
-            //取消定时器
+            /**
+             * 取消定时器
+             * Invalid timer
+             */
             CGFloat ratio = self.captureDuration/self.maxCaptureTime;
             CGFloat recordTime = self.captureDuration;
             [self cancel];
@@ -49,7 +55,10 @@
             });
         }
     });
-    //启动任务，GCD定时器创建后需要手动启动
+    /**
+     * 启动任务，GCD 定时器创建后需要手动启动
+     * Start the task. After the GCD timer is created, it needs to be started manually
+     */
     dispatch_resume(self.gcdTimer);
 }
 

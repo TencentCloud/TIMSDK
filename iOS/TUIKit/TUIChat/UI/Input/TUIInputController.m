@@ -264,7 +264,10 @@
 
 - (void)inputBar:(TUIInputBar *)textView didSendText:(NSString *)text
 {
-    // 表情国际化 --> 恢复成实际的中文 key
+    /**
+     * 表情国际化 --> 恢复成实际的中文 key
+     * Emoticon internationalization --> restore to actual Chinese key
+     */
     NSString *content = [text getInternationalStringWithfaceContent];
     V2TIMMessage *message = [[V2TIMManager sharedInstance] createTextMessage:content];
     [self appendReplyDataIfNeeded:message];
@@ -297,20 +300,24 @@
             @"messageAbstract" : [self.replyData.msgAbstract?:@"" getInternationalStringWithfaceContent],
             @"messageSender"   : self.replyData.sender?:@"",
             @"messageType"     : @(self.replyData.type),
-            @"messageTime"     : @(self.replyData.originMessage.timestamp ? [self.replyData.originMessage.timestamp timeIntervalSince1970] : 0),  // 兼容 web
-            @"messageSequence" : @(self.replyData.originMessage.seq),                                                                             // 兼容 web
-//            @"messageRootID":@"",
+            @"messageTime"     : @(self.replyData.originMessage.timestamp ? [self.replyData.originMessage.timestamp timeIntervalSince1970] : 0),
+            @"messageSequence" : @(self.replyData.originMessage.seq),
             @"version"         : @(kMessageReplyVersion),
         }];
-        //拼接原始数据
+        
         NSMutableDictionary *cloudResultDic = [[NSMutableDictionary alloc] initWithCapacity:5];
         if (parentMsg.cloudCustomData) {
             NSDictionary * originDic = [TUITool jsonData2Dictionary:parentMsg.cloudCustomData];
             if (originDic && [originDic isKindOfClass:[NSDictionary class]]) {
                 [cloudResultDic addEntriesFromDictionary:originDic];
             }
-            //接受parent里的数据，但是不能保存messageReplies\messageReact，因为这个字段是根消息话题创建者才有
-            //当前发送的新消息里不能存messageReplies\messageReact
+            /**
+             * 接受 parent 里的数据，但是不能保存 messageReplies\messageReact，因为根消息话题创建者才有这个字段。
+             * 当前发送的新消息里不能存 messageReplies\messageReact
+             *
+             * Accept the data in the parent, but cannot save messageReplies\messageReact, because the root message topic creator has this field.
+             * messageReplies\messageReact cannot be stored in the new message currently sent
+             */
             [cloudResultDic removeObjectForKey:@"messageReplies"];
             [cloudResultDic removeObjectForKey:@"messageReact"];
         }
@@ -320,7 +327,10 @@
             messageRootID = self.replyData.messageRootID;
         }
         if (!IS_NOT_EMPTY_NSSTRING(messageRootID)) {
-            //源消息没有messageRootID， 则需要将当前源消息的msgID作为root
+            /**
+             * 如果源消息没有 messageRootID， 则需要将当前源消息的 msgID 作为 root
+             * If the original message does not have a messageRootID, you need to use the msgID of the current original message as root
+             */
             if (IS_NOT_EMPTY_NSSTRING(parentMsg.msgID)) {
                 messageRootID = parentMsg.msgID;
             }
@@ -332,7 +342,7 @@
             message.cloudCustomData = data;
         }
 
-        [self exitReply];
+        [self exitReplyAndReference:nil];
         
         __weak typeof(self) weakSelf = self;
         self.modifyRootReplyMsgBlock = ^(TUIMessageCellData *cellData) {
@@ -352,12 +362,11 @@
         @"messageAbstract" : [messageCellData.innerMessage.textElem.text?:@"" getInternationalStringWithfaceContent],
         @"messageSender"   : messageCellData.innerMessage.sender?:@"",
         @"messageType"     : @(messageCellData.innerMessage.elemType),
-        @"messageTime"     : @(messageCellData.innerMessage.timestamp ? [messageCellData.innerMessage.timestamp timeIntervalSince1970] : 0),  // 兼容 web
-        @"messageSequence" : @(messageCellData.innerMessage.seq),                                                                             // 兼容 web
+        @"messageTime"     : @(messageCellData.innerMessage.timestamp ? [messageCellData.innerMessage.timestamp timeIntervalSince1970] : 0),
+        @"messageSequence" : @(messageCellData.innerMessage.seq),
         @"version"         : @(kMessageReplyVersion)
     };
     if (messageRootID) {
-        // 通过ID找根源消息
         [TUIChatDataProvider findMessages:@[messageRootID] callback:^(BOOL succ, NSString * _Nonnull error_message, NSArray * _Nonnull msgs) {
             if (succ) {
                 if (msgs.count >0) {
@@ -378,8 +387,8 @@
                     @"messageAbstract" : [self.referenceData.msgAbstract?:@"" getInternationalStringWithfaceContent],
                     @"messageSender"   : self.referenceData.sender?:@"",
                     @"messageType"     : @(self.referenceData.type),
-                    @"messageTime"     : @(self.referenceData.originMessage.timestamp ? [self.referenceData.originMessage.timestamp timeIntervalSince1970] : 0),  // 兼容 web
-                    @"messageSequence" : @(self.referenceData.originMessage.seq),                                                                             // 兼容 web
+                    @"messageTime"     : @(self.referenceData.originMessage.timestamp ? [self.referenceData.originMessage.timestamp timeIntervalSince1970] : 0),
+                    @"messageSequence" : @(self.referenceData.originMessage.seq),
                     @"version"         : @(kMessageReplyVersion)
             }
         };
@@ -388,7 +397,7 @@
         if (error == nil) {
             message.cloudCustomData = data;
         }
-        [self exitReply];
+        [self exitReplyAndReference:nil];
     }
 }
 
@@ -419,9 +428,8 @@
 
 - (void)inputBarDidDeleteBackward:(TUIInputBar *)textView
 {
-    // 点击键盘上的删除按钮
     if (textView.inputTextView.text.length == 0) {
-        [self exitReply];
+        [self exitReplyAndReference:nil];
     }
 }
 
@@ -545,6 +553,45 @@
     }];
 }
 
+- (void)exitReplyAndReference:(void (^ __nullable)(void))finishedCallback {
+    if (self.replyData == nil && self.referenceData == nil) {
+        if (finishedCallback) {
+            finishedCallback();
+        }
+        return;
+    }
+    self.replyData = nil;
+    self.referenceData = nil;
+    __weak typeof(self) weakSelf = self;
+    [UIView animateWithDuration:0.25 animations:^{
+        weakSelf.replyPreviewBar.hidden = YES;
+        weakSelf.referencePreviewBar.hidden = YES;
+        weakSelf.inputBar.mm_y = 0;
+        
+        if (weakSelf.status == Input_Status_Input_Keyboard) {
+            CGFloat keyboradHeight = weakSelf.keyboardFrame.size.height;
+            if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(inputController:didChangeHeight:)]){
+                [weakSelf.delegate inputController:weakSelf didChangeHeight:CGRectGetMaxY(weakSelf.inputBar.frame) + keyboradHeight];
+            }
+        } else {
+            if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(inputController:didChangeHeight:)]){
+                [weakSelf.delegate inputController:weakSelf didChangeHeight:CGRectGetMaxY(weakSelf.inputBar.frame) + Bottom_SafeHeight];
+            }
+        }
+        
+    } completion:^(BOOL finished) {
+        [weakSelf.replyPreviewBar removeFromSuperview];
+        [weakSelf.referencePreviewBar removeFromSuperview];
+        weakSelf.replyPreviewBar = nil;
+        weakSelf.referencePreviewBar = nil;
+        [weakSelf hideFaceAnimation];
+        weakSelf.inputBar.lineView.hidden = NO;
+        if (finishedCallback) {
+            finishedCallback();
+        }
+    }];
+}
+
 - (void)menuView:(TUIMenuView *)menuView didSelectItemAtIndex:(NSInteger)index
 {
     [self.faceView scrollToFaceGroupIndex:index];
@@ -556,7 +603,10 @@
     if([text isEqualToString:@""]){
         return;
     }
-    // 表情国际化 --> 恢复成实际的中文 key
+    /**
+     * 表情国际化 --> 恢复成实际的中文 key
+     * Emoticon internationalization --> restore to actual Chinese key
+     */
     NSString *content = [text getInternationalStringWithfaceContent];
     [_inputBar clearInput];
     V2TIMMessage *message = [[V2TIMManager sharedInstance] createTextMessage:content];
@@ -582,9 +632,7 @@
     TUIFaceGroup *group = [TUIConfig defaultConfig].faceGroups[indexPath.section];
     TUIFaceCellData *face = group.faces[indexPath.row];
     if(indexPath.section == 0){
-        // 表情本地化 - 将中文 key 转换成 对应的 本地化语言。eg,英文环境下 [大哭] --> [Cry]
-        NSString *localizableFaceName = face.localizableName.length ? face.localizableName : face.name;
-        [_inputBar addEmoji:localizableFaceName];
+        [_inputBar addEmoji:face];
     }
     else{
         if (face.name) {

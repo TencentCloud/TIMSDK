@@ -130,7 +130,7 @@
 
         NSMutableArray *commonArray = [NSMutableArray array];
         TUIProfileCardCellData *commonData = [[TUIProfileCardCellData alloc] init];
-        commonData.avatarImage = DefaultGroupAvatarImage;
+        commonData.avatarImage = DefaultGroupAvatarImageByGroupType(self.groupInfo.groupType);
         commonData.avatarUrl = [NSURL URLWithString:self.groupInfo.faceURL];
         commonData.name = self.groupInfo.groupName;
         commonData.identifier = self.groupInfo.groupID;
@@ -177,7 +177,6 @@
         manageData.value = @"";
         manageData.showAccessory = YES;
         manageData.cselector = @selector(didSelectGroupManage);
-        //只有管理员露出群管理入口
         if (([TUIGroupInfoDataProvider isMeOwner:self.groupInfo])) {
             [groupInfoArray addObject:manageData];
         }
@@ -190,7 +189,6 @@
         TUICommonTextCellData *addOptionData = [[TUICommonTextCellData alloc] init];
         addOptionData.key = TUIKitLocalizableString(TUIKitGroupProfileJoinType);
 
-        //私有群禁止加入，只能邀请
         if ([self.groupInfo.groupType isEqualToString:@"Work"]) {
             addOptionData.value = TUIKitLocalizableString(TUIKitGroupProfileInviteJoin);
         } else if ([self.groupInfo.groupType isEqualToString:@"Meeting"]) {
@@ -216,56 +214,46 @@
         [dataList addObject:@[nickData]];
         
         NSMutableArray *personalArray = [NSMutableArray array];
+        
+        TUICommonSwitchCellData *messageSwitchData = [[TUICommonSwitchCellData alloc] init];
+
         if (![self.groupInfo.groupType isEqualToString:GroupType_Meeting]) {
-            TUICommonSwitchCellData *messageSwitchData = [[TUICommonSwitchCellData alloc] init];
             messageSwitchData.on = (self.groupInfo.recvOpt == V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE);
             messageSwitchData.title = TUIKitLocalizableString(TUIKitGroupProfileMessageDoNotDisturb);
             messageSwitchData.cswitchSelector = @selector(didSelectOnNotDisturb:);
             [personalArray addObject:messageSwitchData];
         }
-
+        
+        TUICommonSwitchCellData *markFold = [[TUICommonSwitchCellData alloc] init];
+        
         TUICommonSwitchCellData *switchData = [[TUICommonSwitchCellData alloc] init];
         
-#ifndef SDKPlaceTop
-#define SDKPlaceTop
-#endif
-#ifdef SDKPlaceTop
-        @weakify(self)
-        [V2TIMManager.sharedInstance getConversation:[NSString stringWithFormat:@"group_%@",self.groupID] succ:^(V2TIMConversation *conv) {
-            @strongify(self)
-            switchData.on = conv.isPinned;
-            self.dataList = dataList;
-        } fail:^(int code, NSString *desc) {
-            NSLog(@"");
-        }];
-#else
-        if ([[[TUIConversationPin sharedInstance] topConversationList] containsObject:[NSString stringWithFormat:@"group_%@",self.groupID]]) {
-            switchData.on = YES;
+        markFold.title =  TUIKitLocalizableString(TUIKitConversationMarkFold);
+        
+        markFold.displaySeparatorLine = YES;
+    
+        markFold.cswitchSelector = @selector(didSelectOnFoldConversation:);
+        if (messageSwitchData.on) {
+            [personalArray addObject:markFold];
         }
-#endif
+        
         switchData.title = TUIKitLocalizableString(TUIKitGroupProfileStickyOnTop);
-        switchData.cswitchSelector = @selector(didSelectOnTop:);
         [personalArray addObject:switchData];
-
+        
         [dataList addObject:personalArray];
 
         NSMutableArray *buttonArray = [NSMutableArray array];
-        // 清空聊天记录
         TUIButtonCellData *clearHistory = [[TUIButtonCellData alloc] init];
         clearHistory.title = TUIKitLocalizableString(TUIKitClearAllChatHistory);
         clearHistory.style = ButtonRedText;
         clearHistory.cbuttonSelector = @selector(didClearAllHistory:);
         [buttonArray addObject:clearHistory];
         
-
-        //群删除按钮
         TUIButtonCellData *quitButton = [[TUIButtonCellData alloc] init];
         quitButton.title = TUIKitLocalizableString(TUIKitGroupProfileDeleteAndExit);
         quitButton.style = ButtonRedText;
         quitButton.cbuttonSelector = @selector(didDeleteGroup:);
         [buttonArray addObject:quitButton];
-        
-        //群转移按钮
 
         if ([self.class isMeSuper:self.groupInfo]) {
             TUIButtonCellData *transferButton = [[TUIButtonCellData alloc] init];
@@ -275,7 +263,6 @@
             [buttonArray addObject:transferButton];
         }
 
-        //群解散按钮
         if ([self.groupInfo canDelete]) {
               TUIButtonCellData *Deletebutton = [[TUIButtonCellData alloc] init];
               Deletebutton.title = TUIKitLocalizableString(TUIKitGroupProfileDissolve);
@@ -288,7 +275,34 @@
         lastCellData.hideSeparatorLine = YES;
         [dataList addObject:buttonArray];
         
-        self.dataList = dataList;
+#ifndef SDKPlaceTop
+#define SDKPlaceTop
+#endif
+#ifdef SDKPlaceTop
+        @weakify(self)
+        [V2TIMManager.sharedInstance getConversation:[NSString stringWithFormat:@"group_%@",self.groupID] succ:^(V2TIMConversation *conv) {
+            @strongify(self)
+            
+            markFold.on = [self.class isMarkedByFoldType:conv.markList];
+            
+            switchData.cswitchSelector = @selector(didSelectOnTop:);
+            switchData.on = conv.isPinned;
+            
+            if (markFold.on) {
+                switchData.on = NO;
+                switchData.disableChecked = YES;
+            }
+            
+            self.dataList = dataList;
+        } fail:^(int code, NSString *desc) {
+            NSLog(@"");
+        }];
+#else
+        if ([[[TUIConversationPin sharedInstance] topConversationList] containsObject:[NSString stringWithFormat:@"group_%@",self.groupID]]) {
+            switchData.on = YES;
+        }
+#endif
+        
     }
 }
 
@@ -326,6 +340,13 @@
     if (self.delegate && [self.delegate respondsToSelector:@selector(didSelectOnTop:)]) {
         [self.delegate didSelectOnTop:cell];
     }
+}
+
+- (void)didSelectOnFoldConversation:(TUICommonSwitchCell *)cell {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didSelectOnFoldConversation:)]) {
+        [self.delegate didSelectOnFoldConversation:cell];
+    }
+
 }
 
 - (void)didTransferGroup:(TUIButtonCell *)cell  {
@@ -400,9 +421,9 @@
     }];
 }
 
-- (void)setGroupReceiveMessageOpt:(V2TIMReceiveMessageOpt)opt
+- (void)setGroupReceiveMessageOpt:(V2TIMReceiveMessageOpt)opt Succ:(V2TIMSucc)succ fail:(V2TIMFail)fail
 {
-    [[V2TIMManager sharedInstance] setGroupReceiveMessageOpt:self.groupID opt:opt succ:nil fail:nil];
+    [[V2TIMManager sharedInstance] setGroupReceiveMessageOpt:self.groupID opt:opt succ:succ fail:fail];
 }
 
 - (void)setGroupName:(NSString *)groupName {
@@ -462,37 +483,33 @@
 
     if (groupInfo.groupType) {
         if([groupInfo.groupType isEqualToString:@"Work"]){
-            return TUIKitLocalizableString(TUIKitWorkGroup); // @"讨论组";
+            return TUIKitLocalizableString(TUIKitWorkGroup);
         }
         else if([groupInfo.groupType isEqualToString:@"Public"]){
-            return TUIKitLocalizableString(TUIKitPublicGroup); // @"公开群";
+            return TUIKitLocalizableString(TUIKitPublicGroup);
         }
         else if([groupInfo.groupType isEqualToString:@"Meeting"]){
-            return TUIKitLocalizableString(TUIKitChatRoom); // @"聊天室";
+            return TUIKitLocalizableString(TUIKitChatRoom);
         }
         else if([groupInfo.groupType isEqualToString:@"Community"]){
-            return TUIKitLocalizableString(TUIKitCommunity); // @"社区";
+            return TUIKitLocalizableString(TUIKitCommunity);
         }
     }
 
     return @"";
 }
 
-/**
- *  获取本群加群方式
- *
- *  @return 根据群组设置，返回“禁止加入”/“管理员审批”/“自动审批”。
- */
+
 + (NSString *)getAddOption:(V2TIMGroupInfo *)groupInfo {
     switch (groupInfo.groupAddOpt) {
         case V2TIM_GROUP_ADD_FORBID:
-            return TUIKitLocalizableString(TUIKitGroupProfileJoinDisable); // @"禁止加入";
+            return TUIKitLocalizableString(TUIKitGroupProfileJoinDisable);
             break;
         case V2TIM_GROUP_ADD_AUTH:
-            return TUIKitLocalizableString(TUIKitGroupProfileAdminApprove); // @"管理员审批";
+            return TUIKitLocalizableString(TUIKitGroupProfileAdminApprove);
             break;
         case V2TIM_GROUP_ADD_ANY:
-            return TUIKitLocalizableString(TUIKitGroupProfileAutoApproval); // @"自动审批";
+            return TUIKitLocalizableString(TUIKitGroupProfileAutoApproval);
             break;
         default:
             break;
@@ -500,19 +517,16 @@
     return @"";
 }
 
-/**
- *  获取本群加群方式
- */
 + (NSString *)getAddOptionWithV2AddOpt:(V2TIMGroupAddOpt)opt {
     switch (opt) {
         case V2TIM_GROUP_ADD_FORBID:
-            return TUIKitLocalizableString(TUIKitGroupProfileJoinDisable); // @"禁止加入";
+            return TUIKitLocalizableString(TUIKitGroupProfileJoinDisable);
             break;
         case V2TIM_GROUP_ADD_AUTH:
-            return TUIKitLocalizableString(TUIKitGroupProfileAdminApprove); // @"管理员审批";
+            return TUIKitLocalizableString(TUIKitGroupProfileAdminApprove);
             break;
         case V2TIM_GROUP_ADD_ANY:
-            return TUIKitLocalizableString(TUIKitGroupProfileAutoApproval); // @"自动审批";
+            return TUIKitLocalizableString(TUIKitGroupProfileAutoApproval);
             break;
         default:
             break;
@@ -520,20 +534,29 @@
     return @"";
 }
 
-/**
- *  判断当前用户在对与当前 TIMGroupInfo 来说是否是管理。
- *
- *  @return YES：是管理；NO：不是管理
- */
+
++ (BOOL)isMarkedByFoldType:(NSArray *)markList {
+    for (NSNumber *num in markList) {
+        if (num.unsignedLongValue == V2TIM_CONVERSATION_MARK_TYPE_FOLD) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
++ (BOOL)isMarkedByHideType:(NSArray *)markList {
+    for (NSNumber *num in markList) {
+        if (num.unsignedLongValue == V2TIM_CONVERSATION_MARK_TYPE_HIDE) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
 + (BOOL)isMeOwner:(V2TIMGroupInfo *)groupInfo {
     return [groupInfo.owner isEqualToString:[[V2TIMManager sharedInstance] getLoginUser]] || (groupInfo.role == V2TIM_GROUP_MEMBER_ROLE_ADMIN);
 }
 
-/**
- *  判断当前用户在对与当前 TIMGroupInfo 来说是否是群主。
- *
- *  @return YES：是群主；NO：不是群主
- */
 + (BOOL)isMeSuper:(V2TIMGroupInfo *)groupInfo {
     return [groupInfo.owner isEqualToString:[[V2TIMManager sharedInstance] getLoginUser]] && (groupInfo.role == V2TIM_GROUP_MEMBER_ROLE_SUPER);
 }
