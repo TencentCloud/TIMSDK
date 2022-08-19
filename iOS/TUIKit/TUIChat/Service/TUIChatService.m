@@ -4,6 +4,8 @@
 #import "TUIMessageDataProvider.h"
 
 #import "TUIThemeManager.h"
+#import "TUILogin.h"
+#import "TUIChatConfig.h"
 
 @interface TUIChatService ()<TUINotificationProtocol, TUIExtensionProtocol>
 @end
@@ -22,6 +24,21 @@
         g_sharedInstance = [[TUIChatService alloc] init];
     });
     return g_sharedInstance;
+}
+
+- (instancetype)init {
+    if (self = [super init]) {
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(loginSuccessNotification)
+                                                     name:TUILoginSuccessNotification object:nil];
+    }
+    return self;
+}
+
+- (void)loginSuccessNotification {
+    [TUICore callService:TUICore_TUICallingService
+                  method:TUICore_TUICallingService_EnableFloatWindowMethod
+                   param:@{TUICore_TUICallingService_EnableFloatWindowMethod_EnableFloatWindow:@(TUIChatConfig.defaultConfig.enableFloatWindowForCall)}];
 }
 
 - (NSString *)getDisplayString:(V2TIMMessage *)message {

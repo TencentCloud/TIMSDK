@@ -79,7 +79,6 @@
     if (self.isDownloading)
         return;
     self.isDownloading = YES;
-    //网络下载
     @weakify(self)
     if (self.innerMessage.elemType == V2TIM_ELEM_TYPE_FILE) {
         NSString *msgID = self.msgID;
@@ -123,7 +122,8 @@
     BOOL isDir = NO;
     *isExist = NO;
     if(self.direction == MsgDirectionOutgoing){
-        //上传方本地原图是否有效
+        // 上传方本地原图是否有效
+        // The origin file path is valid when uploading
         path = [NSString stringWithFormat:@"%@%@", TUIKit_File_Path, _path.lastPathComponent];
         if([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]){
             if(!isDir){
@@ -133,7 +133,6 @@
     }
 
     if(!*isExist){
-        //查看本地是否存在
         path = [NSString stringWithFormat:@"%@%@", TUIKit_File_Path, _fileName];
         if([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]){
             if(!isDir){

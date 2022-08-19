@@ -18,7 +18,7 @@
 /// default TUICameraMediaTypePhoto
 @property(nonatomic) TUICameraMediaType type;
 
-/// previewView的宽高比, 默认TUICameraViewAspectRatio16x9
+/// default TUICameraViewAspectRatio16x9
 @property (nonatomic) TUICameraViewAspectRatio aspectRatio;
 
 /// default 15s

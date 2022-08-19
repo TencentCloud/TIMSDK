@@ -72,7 +72,6 @@
     BOOL isDir = NO;
     *isExist = NO;
     if(self.direction == MsgDirectionOutgoing) {
-        //上传方本地原图是否有效
         path = [NSString stringWithFormat:@"%@%@", TUIKit_Image_Path, _path.lastPathComponent];
         if([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]){
             if(!isDir){
@@ -82,7 +81,6 @@
     }
 
     if(!*isExist) {
-        //查看本地是否存在
         TUIImageItem *tImageItem = [self getTImageItem:type];
         path = [NSString stringWithFormat:@"%@%@", TUIKit_Image_Path, tImageItem.uuid];
         if([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]){
@@ -131,7 +129,11 @@
     } fail:^(int code, NSString *msg) {
         @strongify(self)
         self.isDownloading = NO;
-        // 如果图片的 uuid 一样（同一个用户连续发送同一张图片），同一个 path 可能触发多次下载操作，除了第一次，后面的下载会报错，这时候要再去判断下本地文件是否存在
+        /**
+         * 如果图片的 uuid 一样（同一个用户连续发送同一张图片），同一个 path 可能触发多次下载操作，除了第一次，后面的下载会报错，这时候要再去判断下本地文件是否存在
+         * If the uuid of the picture is the same (the same user sends the same picture continuously), the same path may trigger multiple download operations. Except for the first time,
+         * subsequent downloads will report an error. At this time, it is necessary to judge whether the local file exists.
+         */
         [self decodeImage:type];
     }];
 }
@@ -186,7 +188,11 @@
     } else {
         [TUITool asyncDecodeImage:path complete:^(NSString *path, UIImage *image) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                if(![path containsString:@".gif"]) { // gif 图片过大, 不在内存进行缓存
+                if(![path containsString:@".gif"]) {
+                    /**
+                     * gif 图片过大, 不在内存进行缓存
+                     * The gif image is too large to be cached in memory
+                     */
                     [[SDImageCache sharedImageCache] storeImageToMemory:image forKey:cacheKey];
                 }
                 finishBlock(image);

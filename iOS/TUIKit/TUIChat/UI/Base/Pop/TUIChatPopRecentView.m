@@ -10,6 +10,7 @@
 #import "TUIDefine.h"
 #import "NSString+emoji.h"
 #import "TUIFitButton.h"
+
 #define TChatPopView_Margin 10
 #define TChatPopView_Padding 1
 
@@ -18,6 +19,7 @@
 #define TChatPopView_Page_Height 30
 
 @interface TUIChatPopRecentView()
+
 @property (nonatomic, strong) NSMutableArray *sectionIndexInGroup;
 @property (nonatomic, strong) NSMutableArray *pageCountInGroup;
 @property (nonatomic, strong) NSMutableArray *groupIndexInSection;
@@ -28,15 +30,16 @@
 
 @implementation TUIChatPopRecentView
 
-
 - (void)layoutSubviews {
     [super layoutSubviews];
     [self defaultLayout];
 }
+
 - (void)defaultLayout {
     [self setupCorner];
     [self setupDefaultArray];
 }
+
 - (void)setupCorner {
     UIRectCorner corner =  UIRectCornerTopRight | UIRectCornerTopLeft;
     UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.bounds byRoundingCorners:corner cornerRadii:CGSizeMake(5, 5)];
@@ -45,6 +48,7 @@
     maskLayer.path = maskPath.CGPath;
     self.layer.mask = maskLayer;
 }
+
 - (void)setupDefaultArray {
     NSMutableArray *faceArray = [NSMutableArray array];
     TUIFaceGroup *defaultFaceGroup = [self findFaceGroupAboutType];
@@ -53,8 +57,8 @@
     }
     [self setData:faceArray];
 }
-- (void)setData:(NSMutableArray *)data
-{
+
+- (void)setData:(NSMutableArray *)data {
     _faceGroups = data;
     _sectionIndexInGroup = [NSMutableArray array];
     _groupIndexInSection = [NSMutableArray array];
@@ -139,6 +143,7 @@
     
     return nil;
 }
+
 - (void)createBtns {
     if (self.subviews) {
         for (UIView *subView in self.subviews) {
@@ -170,12 +175,9 @@
     [self addSubview:self.arrowButton];
     [self.arrowButton setImage:TUIChatBundleThemeImage(@"chat_icon_emojiArrowUp_img", @"emojiArrowUp") forState:UIControlStateSelected];
     self.arrowButton.mm_width(25).mm_height(25).mm_right(margin).mm__centerY(self.mm_centerY);
-
-
 }
 
-- (UIButton *)buttonWithCellImage:(UIImage *)img Tag:(NSInteger)tag
-{
+- (UIButton *)buttonWithCellImage:(UIImage *)img Tag:(NSInteger)tag {
         
     TUIFitButton *actionButton = [TUIFitButton buttonWithType:UIButtonTypeCustom];
     actionButton.imageSize = CGSizeMake(25, 25);
@@ -201,4 +203,5 @@
     
     
 }
+
 @end

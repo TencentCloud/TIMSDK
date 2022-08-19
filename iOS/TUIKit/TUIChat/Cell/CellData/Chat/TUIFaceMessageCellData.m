@@ -27,7 +27,7 @@
 }
 
 + (NSString *)getDisplayString:(V2TIMMessage *)message {
-    return TUIKitLocalizableString(TUIKitMessageTypeAnimateEmoji); // @"[动画表情]";
+    return TUIKitLocalizableString(TUIKitMessageTypeAnimateEmoji);
 }
 
 - (CGSize)contentSize

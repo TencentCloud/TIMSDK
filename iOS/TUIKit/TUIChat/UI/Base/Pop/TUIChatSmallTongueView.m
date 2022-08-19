@@ -18,8 +18,10 @@
 #define TongueFontSize 13
 
 @interface TUIChatSmallTongueView()
+
 @property(nonatomic, strong) UIImageView *imageView;
 @property(nonatomic, strong) UILabel *label;
+
 @end
 
 @implementation TUIChatSmallTongueView
@@ -134,6 +136,7 @@
 
 
 @implementation TUIChatSmallTongue
+
 - (instancetype)init {
     self = [super init];
     if (self) {
@@ -141,6 +144,7 @@
     }
     return self;
 }
+
 @end
 
 static TUIChatSmallTongueView *g_tongueView = nil;
@@ -148,6 +152,7 @@ static TUIChatSmallTongue *g_tongue = nil;
 static UIWindow *g_window = nil;
 
 @implementation TUIChatSmallTongueManager
+
 + (void)showTongue:(TUIChatSmallTongue *)tongue delegate:(id<TUIChatSmallTongueViewDelegate>) delegate {
     if (tongue.type == g_tongue.type
         && tongue.unreadMsgCount == g_tongue.unreadMsgCount

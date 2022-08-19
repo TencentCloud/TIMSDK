@@ -16,8 +16,8 @@
 #import "UIView+TUILayout.h"
 #import "TUIDarkModel.h"
 #import "TUIGlobalization.h"
-#import "TUIThemeManager.h"
 #import "NSTimer+Safe.h"
+#import "NSString+emoji.h"
 
 @interface TUIInputBar() <UITextViewDelegate, AVAudioRecorderDelegate>
 @property (nonatomic, strong) TUIRecordView *record;
@@ -225,7 +225,10 @@
 - (void)recordBtnDown:(UIButton *)sender
 {
     AVAudioSessionRecordPermission permission = AVAudioSession.sharedInstance.recordPermission;
-    //在此添加新的判定 undetermined，否则新安装后的第一次询问会出错。新安装后的第一次询问为 undetermined，而非 denied。
+    /**
+     * 新安装后第一次请求授权，需要再次判断是否为 Undetermined，避免出现错误
+     * For the first request for authorization after a new installation, it is necessary to determine whether it is Undetermined again to avoid errors.
+     */
     if (permission == AVAudioSessionRecordPermissionDenied || permission == AVAudioSessionRecordPermissionUndetermined) {
         [AVAudioSession.sharedInstance requestRecordPermission:^(BOOL granted) {
             if (!granted) {
@@ -245,7 +248,7 @@
         }];
         return;
     }
-    //在此包一层判断，添加一层保护措施。
+
     if(permission == AVAudioSessionRecordPermissionGranted){
         if(!_record){
             _record = [[TUIRecordView alloc] init];
@@ -255,7 +258,7 @@
         _recordStartTime = [NSDate date];
         [_record setStatus:Record_Status_Recording];
         _recordButton.backgroundColor = [UIColor lightGrayColor];
-        [_recordButton setTitle:TUIKitLocalizableString(TUIKitInputReleaseToSend) forState:UIControlStateNormal];  // @"松开 结束"
+        [_recordButton setTitle:TUIKitLocalizableString(TUIKitInputReleaseToSend) forState:UIControlStateNormal];
         [self showHapticFeedback];
         [self startRecord];
     }
@@ -267,7 +270,7 @@
         return;
     }
     _recordButton.backgroundColor = [UIColor clearColor];
-    [_recordButton setTitle:TUIKitLocalizableString(TUIKitInputHoldToTalk) forState:UIControlStateNormal]; // @"按住 说话"
+    [_recordButton setTitle:TUIKitLocalizableString(TUIKitInputHoldToTalk) forState:UIControlStateNormal];
     NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:_recordStartTime];
     if(interval < 1){
         [_record setStatus:Record_Status_TooShort];
@@ -279,7 +282,6 @@
     } else if(interval > 60) {
         [_record setStatus:Record_Status_TooLong];
         if (self.recordTimer == nil) {
-            // 此时超时回调已经在处理了，忽略
             return;
         }
         [self cancelRecord];
@@ -303,20 +305,20 @@
 {
     [_record removeFromSuperview];
     _recordButton.backgroundColor = [UIColor clearColor];
-    [_recordButton setTitle:TUIKitLocalizableString(TUIKitInputHoldToTalk) forState:UIControlStateNormal]; // @"按住 说话"
+    [_recordButton setTitle:TUIKitLocalizableString(TUIKitInputHoldToTalk) forState:UIControlStateNormal];
     [self cancelRecord];
 }
 
 - (void)recordBtnExit:(UIButton *)sender
 {
     [_record setStatus:Record_Status_Cancel];
-    [_recordButton setTitle:TUIKitLocalizableString(TUIKitInputReleaseToCancel) forState:UIControlStateNormal]; //  @"松开 取消"
+    [_recordButton setTitle:TUIKitLocalizableString(TUIKitInputReleaseToCancel) forState:UIControlStateNormal];
 }
 
 - (void)recordBtnEnter:(UIButton *)sender
 {
     [_record setStatus:Record_Status_Recording];
-    [_recordButton setTitle:TUIKitLocalizableString(TUIKitInputReleaseToSend) forState:UIControlStateNormal]; //  @"松开 结束"
+    [_recordButton setTitle:TUIKitLocalizableString(TUIKitInputReleaseToSend) forState:UIControlStateNormal];
 }
 
 - (void)showHapticFeedback{
@@ -349,7 +351,7 @@
         strongSelf.allowSendTypingStatusByChangeWord = YES;
     }];
     
-    if (self.isFocusOn &&textView.text.length > 0) {
+    if (self.isFocusOn &&[textView.textStorage getPlainString].length > 0) {
         if (_delegate && [_delegate respondsToSelector:@selector(inputTextViewShouldBeginTyping:)]) {
             [_delegate inputTextViewShouldBeginTyping:textView];
         }
@@ -366,14 +368,14 @@
 
 - (void)textViewDidChange:(UITextView *)textView
 {
-    if (self.allowSendTypingStatusByChangeWord && self.isFocusOn &&textView.text.length > 0) {
+    if (self.allowSendTypingStatusByChangeWord && self.isFocusOn &&[textView.textStorage getPlainString].length > 0) {
         if (_delegate && [_delegate respondsToSelector:@selector(inputTextViewShouldBeginTyping:)]) {
             self.allowSendTypingStatusByChangeWord = NO;
             [_delegate inputTextViewShouldBeginTyping:textView];
         }
     }
     
-    if (self.isFocusOn && textView.text.length == 0) {
+    if (self.isFocusOn && [textView.textStorage getPlainString].length == 0) {
         if (_delegate && [_delegate respondsToSelector:@selector(inputTextViewShouldEndTyping:)]) {
             [_delegate inputTextViewShouldEndTyping:textView];
         }
@@ -403,63 +405,81 @@
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
+    if ([text containsString:@"["] && [text containsString:@"]"] ) {
+        NSRange selectedRange = textView.selectedRange;
+        if (selectedRange.length > 0) {
+            [textView.textStorage deleteCharactersInRange:selectedRange];
+        }
+    
+        NSMutableAttributedString *textChange = [text getAdvancedFormatEmojiStringWithFont:kTUIInputNoramlFont textColor:kTUIInputNormalTextColor emojiLocations:nil];
+        [textView.textStorage insertAttributedString:textChange atIndex:textView.textStorage.length];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.inputTextView.selectedRange = NSMakeRange(self.inputTextView.textStorage.length + 1, 0);
+        });
+        return NO;
+    }
+    
     if([text isEqualToString:@"\n"]){
         if(_delegate && [_delegate respondsToSelector:@selector(inputBar:didSendText:)]) {
-            NSString *sp = [textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+            NSString *sp = [[textView.textStorage getPlainString] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
             if (sp.length == 0) {
                 UIAlertController *ac = [UIAlertController alertControllerWithTitle:TUIKitLocalizableString(TUIKitInputBlankMessageTitle) message:nil preferredStyle:UIAlertControllerStyleAlert];
                 [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Confirm) style:UIAlertActionStyleDefault handler:nil]];
                 [self.mm_viewController presentViewController:ac animated:YES completion:nil];
             } else {
-                [_delegate inputBar:self didSendText:textView.text];
+                [_delegate inputBar:self didSendText:[textView.textStorage getPlainString]];
                 [self clearInput];
             }
         }
         return NO;
     }
     else if ([text isEqualToString:@""]) {
-        if (textView.text.length > range.location) {
-            // 一次性删除 [微笑] 这种表情消息
-            if ([textView.text characterAtIndex:range.location] == ']') {
-                NSUInteger location = range.location;
-                NSUInteger length = range.length;
-                int left = 91;     // '[' 对应的ascii码
-                int right = 93;    // ']' 对应的ascii码
-                while (location != 0) {
-                    location --;
-                    length ++ ;
-                    int c = (int)[textView.text characterAtIndex:location];     // 将字符转换成ascii码，复制给int  避免越界
-                    if (c == left) {
-                        textView.text = [textView.text stringByReplacingCharactersInRange:NSMakeRange(location, length) withString:@""];
-                        return NO;
-                    }
-                    else if (c == right) {
-                        return YES;
-                    }
-                }
-            }
+        
+        if (textView.textStorage.length > range.location) {
             // 一次性删除 @xxx 这种 @ 消息
-            else if ([textView.text characterAtIndex:range.location] == ' ') {
+            // Delete the @ message like @xxx at one time
+            NSAttributedString *lastAttributedStr = [textView.textStorage attributedSubstringFromRange:NSMakeRange(range.location , 1)];
+            NSString *lastStr = [lastAttributedStr getPlainString];
+            if (lastStr &&  lastStr.length>0 && [lastStr characterAtIndex:0] == ' ') {
                 NSUInteger location = range.location;
                 NSUInteger length = range.length;
-                int at = 64;    // '@' 对应的ascii码
+                
+                // '@' 对应的ascii码 '@'
+                // corresponds to ascii code
+                int at = 64;
+                // 空格(space) 对应的ascii码
+                // Space (space) corresponding ascii code
+                int space = 32;
+                
                 while (location != 0) {
                     location --;
                     length ++ ;
-                    int c = (int)[textView.text characterAtIndex:location]; // 将字符转成ascii码，复制给int,避免越界
+                    // 将字符转成ascii码，复制给int,避免越界
+                    // Convert characters to ascii code, copy to int, avoid out of bounds
+                    int c = (int)[[[textView.textStorage attributedSubstringFromRange:NSMakeRange(location, 1)] getPlainString] characterAtIndex:0];
+                    
                     if (c == at) {
-                        NSString *atText = [textView.text substringWithRange:NSMakeRange(location, length)];
-                        textView.text = [textView.text stringByReplacingCharactersInRange:NSMakeRange(location, length) withString:@""];
+                        NSString *atText = [[textView.textStorage attributedSubstringFromRange:NSMakeRange(location, length)] getPlainString];
+                        UIFont *textFont = kTUIInputNoramlFont;
+                        NSAttributedString *spaceString = [[NSAttributedString alloc] initWithString:@"" attributes:@{NSFontAttributeName: textFont}];
+                        [textView.textStorage replaceCharactersInRange:NSMakeRange(location, length) withAttributedString:spaceString];
                         if (self.delegate && [self.delegate respondsToSelector:@selector(inputBar:didDeleteAt:)]) {
                             [self.delegate inputBar:self didDeleteAt:atText];
                         }
                         return NO;
                     }
+                    else if (c == space) {
+                        // 避免出现 "@昵称 你好，很高兴认识 你(space)  "" 在空格后按del 过度删除到@
+                        // Avoid "@nickname Hello, nice to meet you (space) "" Press del after a space to over-delete to @
+                        break;
+                    }
                 }
             }
+
         }
     }
     // 监听 @ 字符的输入，包含全角/半角
+    // Monitor the input of @ character, including full-width/half-width
     else if ([text isEqualToString:@"@"] || [text isEqualToString:@"＠"]) {
         if (self.delegate && [self.delegate respondsToSelector:@selector(inputBarDidInputAt:)]) {
             [self.delegate inputBarDidInputAt:self];
@@ -470,7 +490,6 @@
 
 - (void)onDeleteBackward:(TUIResponderTextView *)textView
 {
-    // 点击键盘上的删除按钮
     if (self.delegate && [self.delegate respondsToSelector:@selector(inputBarDidDeleteBackward:)]) {
         [self.delegate inputBarDidDeleteBackward:self];
     }
@@ -478,29 +497,71 @@
 
 - (void)clearInput
 {
-    _inputTextView.text = @"";
+    [_inputTextView.textStorage deleteCharactersInRange:NSMakeRange(0, _inputTextView.textStorage.length)];
     [self textViewDidChange:_inputTextView];
 }
 
 - (NSString *)getInput
 {
-    return _inputTextView.text;
+    return [_inputTextView.textStorage getPlainString];
 }
 
-- (void)addEmoji:(NSString *)emoji
+
+- (void)addEmoji:(TUIFaceCellData *)emoji
 {
-    [_inputTextView setText:[_inputTextView.text stringByAppendingString:emoji]];
+    //Create emoji attachment
+    TUIEmojiTextAttachment *emojiTextAttachment = [[TUIEmojiTextAttachment alloc] init];
+    emojiTextAttachment.faceCellData = emoji;
+
+    NSString *localizableFaceName = emoji.localizableName.length ? emoji.localizableName : emoji.name;
+
+    //Set tag and image
+    emojiTextAttachment.emojiTag = localizableFaceName;
+    emojiTextAttachment.image =  [[TUIImageCache sharedInstance] getFaceFromCache:emoji.path];
+    
+    //Set emoji size
+    emojiTextAttachment.emojiSize = CGSizeMake(15,15);
+    NSAttributedString *str = [NSAttributedString attributedStringWithAttachment:emojiTextAttachment];
+
+    NSRange selectedRange = _inputTextView.selectedRange;
+    if (selectedRange.length > 0) {
+        [_inputTextView.textStorage deleteCharactersInRange:selectedRange];
+    }
+    //Insert emoji image
+    [_inputTextView.textStorage insertAttributedString:str atIndex:_inputTextView.selectedRange.location];
+    
+    _inputTextView.selectedRange = NSMakeRange(_inputTextView.selectedRange.location+1, 0);
+    [self resetTextStyle];
+
     if(_inputTextView.contentSize.height > TTextView_TextView_Height_Max){
         float offset = _inputTextView.contentSize.height - _inputTextView.frame.size.height;
         [_inputTextView scrollRectToVisible:CGRectMake(0, offset, _inputTextView.frame.size.width, _inputTextView.frame.size.height) animated:YES];
     }
     [self textViewDidChange:_inputTextView];
+    
+}
+
+- (void)resetTextStyle {
+    //After changing text selection, should reset style.
+    NSRange wholeRange = NSMakeRange(0, _inputTextView.textStorage.length);
+
+    [_inputTextView.textStorage removeAttribute:NSFontAttributeName range:wholeRange];
+    
+    [_inputTextView.textStorage removeAttribute:NSForegroundColorAttributeName range:wholeRange];
+
+    [_inputTextView.textStorage addAttribute:NSForegroundColorAttributeName value:kTUIInputNormalTextColor range:wholeRange];
+
+    [_inputTextView.textStorage addAttribute:NSFontAttributeName value:kTUIInputNoramlFont range:wholeRange];
 }
 
 - (void)backDelete
 {
-    [self textView:_inputTextView shouldChangeTextInRange:NSMakeRange(_inputTextView.text.length - 1, 1) replacementText:@""];
-    [self textViewDidChange:_inputTextView];
+
+    if (_inputTextView.textStorage.length > 0) {
+        [_inputTextView.textStorage deleteCharactersInRange:NSMakeRange(_inputTextView.textStorage.length - 1, 1)];
+        [self textViewDidChange:_inputTextView];
+    }
+    
 }
 
 - (void)updateTextViewFrame
@@ -520,17 +581,31 @@
     [session setCategory:AVAudioSessionCategoryPlayAndRecord error:&error];
     [session setActive:YES error:&error];
 
-    //设置参数
     NSDictionary *recordSetting = [[NSDictionary alloc] initWithObjectsAndKeys:
-                                   //采样率  8000/11025/22050/44100/96000（影响音频的质量）
+                                   /**
+                                    * 采样率：8000/11025/22050/44100/96000（该参数影响音频的质量）
+                                    * Sampling rate: 8000/11025/22050/44100/96000 (this parameter affects the audio quality)
+                                    */
                                    [NSNumber numberWithFloat: 8000.0],AVSampleRateKey,
-                                   // 音频格式
+                                   /**
+                                    * 音频格式
+                                    * Audio format
+                                    */
                                    [NSNumber numberWithInt: kAudioFormatMPEG4AAC],AVFormatIDKey,
-                                   //采样位数  8、16、24、32 默认为16
+                                   /**
+                                    * 采样位数：  8、16、24、32 默认为16
+                                    * Sampling bits: 8, 16, 24, 32 The default is 16
+                                    */
                                    [NSNumber numberWithInt:16],AVLinearPCMBitDepthKey,
-                                   // 音频通道数 1 或 2
+                                   /**
+                                    * 音频通道数 1 或 2
+                                    * Number of audio channels 1 or 2
+                                    */
                                    [NSNumber numberWithInt: 1], AVNumberOfChannelsKey,
-                                   //录音质量
+                                   /**
+                                    * 录音质量
+                                    * Recording quality
+                                    */
                                    [NSNumber numberWithInt:AVAudioQualityHigh],AVEncoderAudioQualityKey,
                                    nil];
 
@@ -550,12 +625,26 @@
     float power = [_recorder averagePowerForChannel:0];
     [_record setPower:power];
     
-    //在此处添加一个时长判定，如果时长超过60s，则取消录制，提示时间过长,同时不再显示 recordView。
-    //此处使用 recorder 的属性，使得录音结果尽量精准。注意：由于语音的时长为整形，所以 60.X 秒的情况会被向下取整。但因为 ticker 0.5秒执行一次，所以因该都会在超时时显示为60s
+    /**
+     * 此处需要判断录制时长，如果时长超过 60 s，则取消录制，并提示时间过长，同时不再显示 recordView。
+     * 为了使录音结果尽量精准，此处使用 recorder 的属性。
+     * 注意：由于语音的时长为整型，所以 60.X 秒的情况会被向下取整。但因为 ticker 每0.5秒执行一次，理论上都会显示 60 秒。
+     *
+     * The recording duration needs to be judged here. If the duration exceeds 60 s, the recording will be canceled, and a message will be displayed that the duration is too long, and recordView will no longer be displayed.
+     * In order to make the recording result as accurate as possible, the properties of recorder are used here.
+     * Since the duration of the speech is an integer, the case of 60.X seconds will be rounded down. But since the ticker executes every 0.5 seconds, it will theoretically show 60 seconds.
+     */
     NSTimeInterval interval = _recorder.currentTime;
     if(interval >= 55 && interval < 60){
         NSInteger seconds = 60 - interval;
-        NSString *secondsString = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitInputWillFinishRecordInSeconds),(long)seconds + 1];//此处加long，是为了消除编译器警告。此处 +1 是为了向上取整，优化时间逻辑。
+        /**
+         * 此处强转了 long 型，是为了消除编译器警告。
+         * 此处 +1 是为了向上取整，优化时间逻辑。
+         *
+         * The long type is cast here to eliminate compiler warnings.
+         * Here +1 is to round up and optimize the time logic.
+         */
+        NSString *secondsString = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitInputWillFinishRecordInSeconds),(long)seconds + 1];
         _record.title.text = secondsString;
     }
     if(interval >= 60){

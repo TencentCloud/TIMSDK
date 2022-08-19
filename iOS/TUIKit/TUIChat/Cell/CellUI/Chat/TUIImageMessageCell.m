@@ -95,9 +95,7 @@
 }
 - (void)highlightWhenMatchKeyword:(NSString *)keyword
 {
-    // 默认高亮效果，闪烁
     if (keyword) {
-        // 显示高亮动画
         if (self.highlightAnimating) {
             return;
         }
@@ -105,7 +103,6 @@
     }
 }
 
-// 默认高亮动画
 - (void)animate:(int)times
 {
     times--;

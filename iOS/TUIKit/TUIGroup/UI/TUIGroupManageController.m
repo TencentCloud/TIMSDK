@@ -78,8 +78,6 @@
             [weakSelf.view makeToast:error];
             return;
         }
-        
-        // 开启蒙版
         [weakSelf showCoverViewWhenMuteAll:switchCell.switcher.isOn];
     }];
 }
@@ -94,7 +92,6 @@
 
 - (void)showCoverViewWhenMuteAll:(BOOL)show
 {
-    // 简单处理，由于群禁言成员会遍历群成员列表，逐个insert，如果采取修改数据源的形式容易引起 tableview crash
     [self.coverView removeFromSuperview];
     if (show) {
         CGFloat y = 0;
@@ -116,7 +113,6 @@
     
     __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
-        // 异步
         [weakSelf showCoverViewWhenMuteAll:weakSelf.dataProvider.muteAll];
     });
 }
@@ -210,10 +206,7 @@
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
     
     if (indexPath.section == 1 && indexPath.row == 0) {
-        // 点击了”添加需要禁言的群成员“
-        
         if (!self.dataProvider.currentGroupTypeSupportAddMemberOfBlocked) {
-            //群聊暂不支持”添加需要禁言的群成员“
             [TUITool makeToast:TUIKitLocalizableString(TUIKitGroupAddMemberOfBlockedForbidden)];
             return;
         }
@@ -248,7 +241,6 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // 删除群禁言
         TUIMemberInfoCellData *cellData = self.dataProvider.datas[indexPath.section][indexPath.row];
         if (![cellData isKindOfClass:TUIMemberInfoCellData.class]) {
             return;

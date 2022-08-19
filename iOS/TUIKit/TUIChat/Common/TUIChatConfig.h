@@ -30,8 +30,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  是否展示音频通话按钮，如果集成了 TUICalling 组件，默认 YES
+ *  Whether to display the audio call button, if the TUICalling component is integrated, the default is YES
  */
-
 @property(nonatomic, assign) BOOL enableAudioCall;
 
 /**
@@ -68,6 +68,25 @@ NS_ASSUME_NONNULL_BEGIN
  *  Whether the C2C chat dialog box displays "The other party is typing...", the default is YES
  */
 @property(nonatomic, assign) BOOL enableTypingStatus;
+
+/**
+ * 设置聊天界面背景颜色
+ * Setup the backgroud color of chat page
+ */
+@property(nonatomic, strong) UIColor *backgroudColor;
+
+/**
+ * 设置聊天界面背景图片
+ * Setup the backgroud image of chat page
+ */
+@property(nonatomic, strong) UIImage *backgroudImage;
+
+/**
+ * 是否开启音视频通话悬浮窗，默认开启
+ * Whether to turn on audio and video call suspension windows, default is YES
+ */
+@property(nonatomic, assign) BOOL enableFloatWindowForCall;
+
 
 @end
 

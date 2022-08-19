@@ -42,9 +42,11 @@
 
 - (void)highlightWhenMatchKeyword:(NSString *)keyword
 {
-    // 默认高亮效果，闪烁
+    /**
+     * 父类实现默认高亮效果 - 闪烁
+     * The parent class implements the default highlighting effect - flickering
+     */
     if (keyword) {
-        // 显示高亮动画
         if (self.highlightAnimating) {
             return;
         }
@@ -52,7 +54,6 @@
     }
 }
 
-// 默认高亮动画
 - (void)animate:(int)times
 {
     times--;

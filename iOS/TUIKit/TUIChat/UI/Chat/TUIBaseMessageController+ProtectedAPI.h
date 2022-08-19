@@ -8,7 +8,9 @@
 #import "TUIBaseMessageController.h"
 #import "TUIMessageDataProvider.h"
 #import "TUIChatConversationModel.h"
+
 @class TUIMessageCellData;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIBaseMessageController ()<TUIMessageDataProviderDataSource>
@@ -20,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)onNewMessage:(NSNotification *)notification;
 
 - (void)onJumpToRepliesDetailPage:(TUIMessageCellData *)data;
+
 @end
 
 NS_ASSUME_NONNULL_END

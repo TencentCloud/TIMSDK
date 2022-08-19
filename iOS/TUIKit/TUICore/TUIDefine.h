@@ -20,6 +20,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
 //                             自定义消息业务版本号
+//                             Custom message protocol version number
 //
 /////////////////////////////////////////////////////////////////////////////////
 #define BussinessID @"businessID"
@@ -30,26 +31,65 @@
 #define BussinessID_Typing @"user_typing_status"
 
 
-#define GroupCreate_Version 4           // 创建群自定义消息业务版本
-#define TextLink_Version    4           // 自定义 cell 业务版本（点击跳转官网）
+/**
+ * 创建群自定义消息业务版本
+ * The business version of "Group-creating custom message"
+ */
+#define GroupCreate_Version 4
 
-// 消息回复的协议版本
-#define kMessageReplyVersion 1          // 「消息自定义字段」中的「消息回复协议」版本号
-#define kDraftMessageReplyVersion 1     // 「草稿字段」中的「消息回复协议」版本号
+/**
+ * 自定义 cell 业务版本（点击跳转官网）
+ * The business version of "custom cell" - click to jump to the official website
+ */
+#define TextLink_Version    4
+
+/**
+ * 消息回复的协议版本
+ *「消息自定义字段」中的「消息回复协议」版本号
+ *
+ * The version of the protocol for the message reply
+ * "Message Reply Protocol" version number in "Message Custom Field"
+ */
+#define kMessageReplyVersion 1
+
+/**
+ * 消息回复的协议版本
+ *「草稿字段」中的「消息回复协议」版本号
+ *
+ * The version of the protocol for the message reply
+ * "Message Reply Protocol" version number in "Draft Field"
+ */
+#define kDraftMessageReplyVersion 1
 
 
 /////////////////////////////////////////////////////////////////////////////////
 //
 //                             推送业务版本号
+//                             The version number of the push service
 //
 /////////////////////////////////////////////////////////////////////////////////
-#define APNs_Version             1  //推送版本
-#define APNs_Business_NormalMsg  1  //普通消息推送
-#define APNs_Business_Call       2  //音视频通话推送
+/**
+ * 推送版本
+ * The version number of the push service
+ */
+#define APNs_Version             1
+
+/**
+ * 普通消息推送
+ * General message push
+ */
+#define APNs_Business_NormalMsg  1
+
+/**
+ * 音视频通话推送
+ * Pushing of audio and video call
+ */
+#define APNs_Business_Call       2
 
 /////////////////////////////////////////////////////////////////////////////////
 //
 //                             设备系统相关
+//                             Device & Platform
 //
 /////////////////////////////////////////////////////////////////////////////////
 #define Screen_Width        [UIScreen mainScreen].bounds.size.width
@@ -66,7 +106,7 @@
 
 /////////////////////////////////////////////////////////////////////////////////
 //
-//                             boudle 读取
+//                             Bundle
 //
 /////////////////////////////////////////////////////////////////////////////////
 #define TUIDemoBundle            @"TUIDemo"
@@ -91,7 +131,6 @@
 
 #define TUIBundlePath(bundleName, bundleKeyClass) [[NSBundle mainBundle] pathForResource:bundleName ofType:@"bundle"].length > 0 ? [[NSBundle mainBundle] pathForResource:bundleName ofType:@"bundle"] : [[NSBundle bundleForClass:NSClassFromString(bundleKeyClass)] pathForResource:bundleName ofType:@"bundle"]
 
-// 主题包存储路径
 #define TUICoreThemePath TUIBundlePath(@"TUICoreTheme",TUICoreBundle_Key_Class)
 #define TUIChatThemePath TUIBundlePath(@"TUIChatTheme",TUIChatBundle_Key_Class)
 #define TUIConversationThemePath TUIBundlePath(@"TUIConversationTheme",TUIConversationBundle_Key_Class)
@@ -113,7 +152,7 @@
 
 /////////////////////////////////////////////////////////////////////////////////
 //
-//                             文件缓存路径
+//                             File Cache
 //
 /////////////////////////////////////////////////////////////////////////////////
 #define TUIKit_DB_Path [NSHomeDirectory() stringByAppendingString:@"/Documents/com_tencent_imsdk_data/"]
@@ -125,7 +164,7 @@
 
 /////////////////////////////////////////////////////////////////////////////////
 //
-//                             自定义 cell & view 相关
+//                             Custom view
 //
 /////////////////////////////////////////////////////////////////////////////////
 //input
@@ -156,7 +195,7 @@
 #define TSystemMessageCell_Text_Width_Max (Screen_Width * 0.5)
 #define TSystemMessageCell_Margin 5
 
-//joinGroup cell 继承自 system cell
+//joinGroup cell
 #define TJoinGroupMessageCell_ReuseId @"TJoinGroupMessageCell"
 #define TJoinGroupMessageCell_Text_Width_Max (Screen_Width * 0.5)
 #define TJoinGroupMessageCell_Margin 5
@@ -406,17 +445,30 @@
 
 /////////////////////////////////////////////////////////////////////////////////
 //
-//                             通知相关
+//                             Notification
 //
 /////////////////////////////////////////////////////////////////////////////////
-//消息状态变更通知
+/**
+ * 消息状态变更通知
+ * Notification of a change in message state
+ */
 #define TUIKitNotification_onMessageStatusChanged @"TUIKitNotification_onMessageStatusChanged"
-//收到套餐包不支持接口的错误通知
+
+/**
+ * 收到套餐包不支持接口的错误通知
+ * Received error notification that the package is not supported
+ */
 #define TUIKitNotification_onReceivedUnsupportInterfaceError @"TUIKitNotification_onReceivedUnsupportInterfaceError"
+
+/**
+ * 会话列表更新时收到的未读数更新通知
+ * Unread update notifications received when the Conversation list is updated
+ */
+#define TUIKitNotification_onConversationMarkUnreadCountChanged @"TUIKitNotification_onConversationMarkUnreadCountChanged"
 
 /////////////////////////////////////////////////////////////////////////////////
 //
-//                             TUICore相关
+//                             TUICore
 //
 /////////////////////////////////////////////////////////////////////////////////
 
@@ -440,7 +492,6 @@
 
 
 #pragma mark - TUICore_TUIChatExtension
-// 获取的更多按钮
 #define TUICore_TUIChatExtension_GetMoreCellInfo_VideoCall    @"TUICore_TUIChatExtension_GetMoreCellInfo_VideoCall"
 #define TUICore_TUIChatExtension_GetMoreCellInfo_AudioCall    @"TUICore_TUIChatExtension_GetMoreCellInfo_AudioCall"
 #define TUICore_TUIChatExtension_GetMoreCellInfo_UserID       @"TUICore_TUIChatExtension_GetMoreCellInfo_UserID"
@@ -449,15 +500,12 @@
 
 #pragma mark - TUICore_TUIConversationService
 #define TUICore_TUIConversationService @"TUICore_TUIConversationService"
-// 获取会话 VC
 #define TUICore_TUIConversationService_GetConversationControllerMethod @"TUICore_TUIConversationService_GetConversationControllerMethod"
-// 获取选择会话 VC
 #define TUICore_TUIConversationService_GetConversationSelectControllerMethod @"TUICore_TUIConversationService_GetConversationSelectControllerMethod"
 
 
 #pragma mark - TUICore_TUIConversationNotify
 #define TUICore_TUIConversationNotify @"TUICore_TUIConversationNotify"
-// 会话选择完毕后的回调
 #define TUICore_TUIConversationNotify_SelectConversationSubKey @"TUICore_TUIConversationNotify_SelectConversationSubKey"
 #define TUICore_TUIConversationNotify_SelectConversationSubKey_ConversationListKey @"TUICore_TUIConversationNotify_SelectConversationSubKey_ConversationListKey"
 #define TUICore_TUIConversationNotify_SelectConversationSubKey_ItemConversationIDKey @"TUICore_TUIConversationNotify_SelectConversationSubKey_ItemConversationIDKey"
@@ -465,6 +513,7 @@
 #define TUICore_TUIConversationNotify_SelectConversationSubKey_ItemUserIDKey @"TUICore_TUIConversationNotify_SelectConversationSubKey_ItemUserIDKey"
 #define TUICore_TUIConversationNotify_SelectConversationSubKey_ItemTitleKey @"TUICore_TUIConversationNotify_SelectConversationSubKey_ItemTitleKey"
 
+#define TUICore_TUIConversationNotify_ClearConversationUIHistorySubKey @"TUICore_TUIConversationNotify_ClearConversationUIHistorySubKey"
 
 #pragma mark - TUICore_TUIConversationExtension
 #define TUICore_TUIConversationExtension @"TUICore_TUIConversationExtension"
@@ -474,22 +523,17 @@
 
 #pragma mark - TUICore_TUIContactService
 #define TUICore_TUIContactService @"TUICore_TUIContactService"
-// 获取联系人 VC
 #define TUICore_TUIContactService_GetContactControllerMethod @"TUICore_TUIContactService_GetContactControllerMethod"
-// 获取联系人选择 VC
 #define TUICore_TUIContactService_GetContactSelectControllerMethod @"TUICore_TUIContactService_GetContactSelectControllerMethod"
 #define TUICore_TUIContactService_GetContactSelectControllerMethod_TitleKey @"TUICore_TUIContactService_GetContactSelectControllerMethod_TitleKey"
 #define TUICore_TUIContactService_GetContactSelectControllerMethod_SourceIdsKey @"TUICore_TUIContactService_GetContactSelectControllerMethod_SourceIdsKey"
 #define TUICore_TUIContactService_GetContactSelectControllerMethod_DisableIdsKey @"TUICore_TUIContactService_GetContactSelectControllerMethod_DisableIdsKey"
-// 获取好友资料 VC
 #define TUICore_TUIContactService_GetFriendProfileControllerMethod @"TUICore_TUIContactService_GetFriendProfileControllerMethod"
 #define TUICore_TUIContactService_GetFriendProfileControllerMethod_FriendProfileKey @"TUICore_TUIContactService_GetFriendProfileControllerMethod_FriendProfileKey"
-// 获取用户资料 VC
 #define TUICore_TUIContactService_GetUserProfileControllerMethod @"TUICore_TUIContactService_GetUserProfileControllerMethod"
 #define TUICore_TUIContactService_GetUserProfileControllerMethod_UserProfileKey @"TUICore_TUIContactService_GetUserProfileControllerMethod_UserProfileKey"
 #define TUICore_TUIContactService_GetUserProfileControllerMethod_PendencyDataKey @"TUICore_TUIContactService_GetUserProfileControllerMethod_PendencyDataKey"
 #define TUICore_TUIContactService_GetUserProfileControllerMethod_ActionTypeKey @"TUICore_TUIContactService_GetUserProfileControllerMethod_ActionTypeKey"
-// 根据 userID 获取好友或用户资料 VC
 #define TUICore_TUIContactService_GetUserOrFriendProfileVCMethod @"TUICore_TUIContactService_GetUserOrFriendProfileVCMethod"
 #define TUICore_TUIContactService_GetUserOrFriendProfileVCMethod_UserIDKey @"TUICore_TUIContactService_etUserOrFriendProfileVCMethod_UserIDKey"
 #define TUICore_TUIContactService_GetUserOrFriendProfileVCMethod_SuccKey @"TUICore_TUIContactService_GetUserOrFriendProfileVCMethod_SuccKey"
@@ -498,19 +542,16 @@
 #pragma mark - TUICore_TUIContactNotify
 #define TUICore_TUIContactNotify @"TUICore_TUIContactNotify"
 #define TUICore_TUIContactNotify_SelectedContactsSubKey @"TUICore_TUIContactNotify_SelectedContacts"
-#define TUICore_TUIContactNotify_SelectedContactsSubKey_ListKey @"TUICore_TUIContactEvent_SelectedContactsSubKey_ListKey"    // 对应value为NSArray<TUICommonContactSelectCellData *>
+#define TUICore_TUIContactNotify_SelectedContactsSubKey_ListKey @"TUICore_TUIContactEvent_SelectedContactsSubKey_ListKey"
 
 #pragma mark - TUICore_TUIGroupService
 #define TUICore_TUIGroupService @"TUICore_TUIGroupService"
-// 获取群资料 VC
 #define TUICore_TUIGroupService_GetGroupInfoControllerMethod @"TUICore_TUIGroupService_GetGroupInfoControllerMethod"
 #define TUICore_TUIGroupService_GetGroupInfoControllerMethod_GroupIDKey @"TUICore_TUIGroupService_GetGroupInfoControllerMethod_GroupIDKey"
-// 获取选择群成员 VC
 #define TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod @"TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod"
 #define TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_GroupIDKey @"TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod"
 #define TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_NameKey @"TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_NameKey"
 #define TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_OptionalStyleKey @"TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_optionalStyleKey"
-// 新建群
 #define TUICore_TUIGroupService_CreateGroupMethod @"TUICore_TUIGroupService_CreateGroupMethod"
 #define TUICore_TUIGroupService_CreateGroupMethod_GroupTypeKey @"TUICore_TUIGroupService_CreateGroupMethod_GroupTypeKey"
 #define TUICore_TUIGroupService_CreateGroupMethod_OptionKey @"TUICore_TUIGroupService_CreateGroupMethod_OptionKey"
@@ -519,12 +560,10 @@
 
 #pragma mark - TUICore_TUIGroupNotify
 #define TUICore_TUIGroupNotify @"TUICore_TUIContactNotify"
-// 选择群成员VC, 选择完成后的回调
 #define TUICore_TUIGroupNotify_SelectGroupMemberSubKey @"TUICore_TUIGroupNotify_SelectGroupMemberSubKey"
-#define TUICore_TUIGroupNotify_SelectGroupMemberSubKey_UserListKey @"TUICore_TUIGroupNotify_SelectGroupMemberSubKey_UserListKey" // 对应的value是NSMutableArray<TUIUserModel *>
-// 新建群，成功后的回调
+#define TUICore_TUIGroupNotify_SelectGroupMemberSubKey_UserListKey @"TUICore_TUIGroupNotify_SelectGroupMemberSubKey_UserListKey"
 #define TUICore_TUIGroupNotify_CreateGroupSubKey @"TUICore_TUIGroupNotify_CreateGroupSubKey"
-#define TUICore_TUIGroupNotify_CreateGroupSubKey_ConversationDataKey @"TUICore_TUIGroupNotify_CreateGroupSubKey_ConversationDataKey" // value 是 TUIChatConversationModel *
+#define TUICore_TUIGroupNotify_CreateGroupSubKey_ConversationDataKey @"TUICore_TUIGroupNotify_CreateGroupSubKey_ConversationDataKey"
 
 #pragma mark - TUICore_TUICallingService
 #define TUICore_TUICallingService @"TUICore_TUICallingService"
@@ -533,16 +572,17 @@
 
 #define TUICore_TUICallingService_ShowCallingViewMethod_GroupIDKey @"TUICore_TUICallingService_ShowCallingViewMethod_GroupIDKey"
 #define TUICore_TUICallingService_ShowCallingViewMethod_UserIDsKey @"TUICore_TUICallingService_ShowCallingViewMethod_UserIDsKey"
-#define TUICore_TUICallingService_ShowCallingViewMethod_CallTypeKey @"TUICore_TUICallingService_ShowCallingViewMethod_CallTypeKey" //@"0" 音频通话 @"1" 视频通话
+#define TUICore_TUICallingService_ShowCallingViewMethod_CallTypeKey @"TUICore_TUICallingService_ShowCallingViewMethod_CallTypeKey"
 
 #define TUICore_TUICallingService_ReceivePushCallingMethod @"TUICore_TUICallingService_ReceivePushCallingMethod"
 #define TUICore_TUICallingService_ShowCallingViewMethod_SignalingInfo @"TUICore_TUICallingService_ShowCallingViewMethod_SignalingInfo"
 
+
 #define TUICore_TUICallingService_EnableFloatWindowMethod @"TUICore_TUICallingService_EnableFloatWindowMethod"
 #define TUICore_TUICallingService_EnableFloatWindowMethod_EnableFloatWindow @"TUICore_TUICallingService_EnableFloatWindowMethod_EnableFloatWindow"
 
+
 #pragma mark - TUICore_TUIGiftExtension
-/// 获取入口btn
 #define TUICore_TUIGiftExtension_GetEnterBtn    @"TUICore_TUIGiftExtension_GetEnterBtn"
 #define TUICore_TUIGiftExtension_GetLikeBtn    @"TUICore_TUIGiftExtension_GetLikeBtn"
 #define TUICore_TUIGiftExtension_GetTUIGiftListPanel    @"TUICore_TUIGiftExtension_GetTUIGiftListPanel"
@@ -553,7 +593,6 @@
 #define TUICore_TUIGiftService_SendLikeMethod  @"TUICore_TUIGiftService_SendLikeMethod"
 
 #pragma mark - TUICore_TUIBarrageExtension
-/// 获取入口btn
 #define TUICore_TUIBarrageExtension_GetEnterBtn    @"TUICore_TUIBarrageExtension_GetEnterBtn"
 #define TUICore_TUIBarrageExtension_GetTUIBarrageSendView    @"TUICore_TUIBarrageExtension_GetTUIBarrageSendView"
 #define TUICore_TUIBarrageExtension_TUIBarrageDisplayView   @"TUICore_TUIBarrageExtension_GetTUIBarrageDisplayView"
@@ -596,13 +635,19 @@
 
 /////////////////////////////////////////////////////////////////////////////////
 //
-//            TUIOfflinePush 离线推送相关
+//            TUIOfflinePush
 //
 /////////////////////////////////////////////////////////////////////////////////
-// 设置 APNs 的证书 ID
+/**
+ * 设置 APNs 的证书 ID
+ * Set certificate IDs for APNs
+ */
 #define TUIOfflinePushCertificateIDForAPNS(value) - (int)push_certificateIDForAPNS {return value;}
 
-// 设置 TPNS 的配置信息
+/**
+ * 设置 TPNS 的配置信息
+ * Set TPNS configuration information
+ */
 #define TUIOfflinePushConfigForTPNS(access_id, access_key, tpn_domain) - (void)push_accessID:(int *)accessID accessKey:(NSString **)accessKey domain:(NSString **)domain\
                                                                         {\
                                                                             *accessID = access_id;\

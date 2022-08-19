@@ -29,17 +29,15 @@ static NSArray *customInputBtnInfo = nil;
 + (NSArray *)customInputBtnInfo
 {
     if (customInputBtnInfo == nil) {
-        // 以下代码需要您自己实现
-        customInputBtnInfo = @[@{Input_SendBtn_Key : TUIInputMoreCellKey_Link,  // 按钮唯一标识
-                                 Input_SendBtn_Title :  TUIKitLocalizableString(TUIKitMoreLink), // 按钮文本信息
-                                 Input_SendBtn_ImageName : @"chat_more_link_img"// 图片名称，图片需要放在 TUIChat.bundle 中
+        customInputBtnInfo = @[@{Input_SendBtn_Key : TUIInputMoreCellKey_Link,
+                                 Input_SendBtn_Title :  TUIKitLocalizableString(TUIKitMoreLink),
+                                 Input_SendBtn_ImageName : @"chat_more_link_img"
                                 }
         ];
     }
     return customInputBtnInfo;
 }
 
-// 转发消息到目标会话
 - (void)getForwardMessageWithCellDatas:(NSArray<TUIMessageCellData *> *)uiMsgs
                              toTargets:(NSArray<TUIChatConversationModel *> *)targets
                                  Merge:(BOOL)merge
@@ -57,8 +55,6 @@ static NSArray *customInputBtnInfo = nil;
         
         TUIChatConversationModel *convCellData = targets[index];
         
-        
-        // 获取消息列表
         NSMutableArray *tmpMsgs = [NSMutableArray array];
         for (TUIMessageCellData *uiMsg in uiMsgs) {
             V2TIMMessage *msg = uiMsg.innerMessage;
@@ -67,8 +63,6 @@ static NSArray *customInputBtnInfo = nil;
             }
         }
         NSArray *msgs = [NSArray arrayWithArray:tmpMsgs];
-        
-        // 排序-按照时间先后顺序以及seq顺序转发
         msgs = [msgs sortedArrayUsingComparator:^NSComparisonResult(V2TIMMessage *obj1, V2TIMMessage *obj2) {
             if ([obj1.timestamp timeIntervalSince1970] == [obj2.timestamp timeIntervalSince1970]) {
                 return obj1.seq > obj2.seq;
@@ -77,7 +71,6 @@ static NSArray *customInputBtnInfo = nil;
             }
         }];
         
-        // 逐条转发消息
         if (!merge) {
             
             NSMutableArray *forwardMsgs = [NSMutableArray array];
@@ -95,13 +88,11 @@ static NSArray *customInputBtnInfo = nil;
             return;
         }
         
-        // 合并转发
         @weakify(self);
         NSString *loginUserId = [V2TIMManager.sharedInstance getLoginUser];
         [V2TIMManager.sharedInstance getUsersInfo:@[loginUserId] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
             @strongify(self);
             
-            // 创建转发消息
             NSString *myName = loginUserId;
             if (infoList.firstObject.nickName.length > 0) {
                 myName = infoList.firstObject.nickName;
@@ -122,7 +113,7 @@ static NSArray *customInputBtnInfo = nil;
             V2TIMMessage *mergeMessage = [V2TIMManager.sharedInstance createMergerMessage:msgs title:title abstractList:abstactList compatibleText:compatibleText];
             if (mergeMessage == nil) {
                 if (fail) {
-                    fail(ERR_NO_SUCC_RESULT, @"合并转发消息失败");
+                    fail(ERR_NO_SUCC_RESULT, @"failed to merge-forward");
                 }
                 return;
             }
@@ -138,7 +129,6 @@ static NSArray *customInputBtnInfo = nil;
 
 - (NSString *)abstractDisplayWithMessage:(V2TIMMessage *)msg
 {
-    // 合并转发的消息只支持 nickName
     NSString *desc = @"";
     if (msg.nickName.length > 0) {
         desc = msg.nickName;
@@ -171,7 +161,6 @@ static NSArray *customInputBtnInfo = nil;
     [moreMenus addObject:[TUIInputMoreCellData fileData]];
     
     NSDictionary *param = @{TUICore_TUIChatExtension_GetMoreCellInfo_GroupID : groupID ? groupID : @"",TUICore_TUIChatExtension_GetMoreCellInfo_UserID : userID ? userID : @""};
-    // 聊天页面, 视频通话按钮
     if (isNeedVideoCall) {
         NSDictionary *extentionInfo = [TUICore getExtensionInfo:TUICore_TUIChatExtension_GetMoreCellInfo_VideoCall param:param];
         if (extentionInfo) {
@@ -181,7 +170,7 @@ static NSArray *customInputBtnInfo = nil;
             [moreMenus addObject:videoCallMenusData];
         }
     }
-    // 聊天页面, 语音通话按钮
+
     if (isNeedAudioCall) {
         NSDictionary *extentionInfo = [TUICore getExtensionInfo:TUICore_TUIChatExtension_GetMoreCellInfo_AudioCall param:param];
         if (extentionInfo) {
@@ -191,7 +180,7 @@ static NSArray *customInputBtnInfo = nil;
             [moreMenus addObject:audioCallMenusData];
         }
     }
-    // 聊天页面, 群直播按钮
+
     if (isNeedGroupLive && groupID.length > 0) {
         TUIInputMoreCellData *liveMenusData = [TUIInputMoreCellData new];
         liveMenusData.key = TUIInputMoreCellKey_GroupLive;
@@ -200,7 +189,7 @@ static NSArray *customInputBtnInfo = nil;
         [moreMenus addObject:liveMenusData];
 
     }
-    // 自定义消息
+
     for (NSDictionary *buttonInfo in [self customInputBtnInfo]) {
         NSString *key = buttonInfo[Input_SendBtn_Key];
         NSString *title = buttonInfo[Input_SendBtn_Title];
@@ -287,9 +276,13 @@ static NSArray *customInputBtnInfo = nil;
         V2TIMGroupInfoResult *result = groupResultList.firstObject;
         if (result
             && result.resultCode == 0) {
-            succ(result);
+            if (succ) {
+                succ(result);
+            }
         } else {
-            fail(result.resultCode, result.resultMsg);
+            if (fail) {
+                fail(result.resultCode, result.resultMsg);
+            }
         }
     } fail:fail];
 }

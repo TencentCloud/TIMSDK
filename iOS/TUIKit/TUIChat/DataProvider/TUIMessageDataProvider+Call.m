@@ -14,7 +14,10 @@
 
 @implementation TUIMessageDataProvider (Call)
 + (BOOL)isCallMessage:(V2TIMMessage *)message {
-    /// 音视频通话信令文本，比如 “xxx 发起群通话”，“xxx接收群通话” 等
+    /**
+     * 音视频通话信令文本，比如 “xxx 发起群通话”，“xxx接收群通话” 等
+     * Audio-video-call signaling text, such as "xxx initiates a group call", "xxx receives a group call", etc.
+     */
     NSString *content = [self getCallSignalingContentWithMessage:message callTye:nil];
     if (content.length > 0) {
         return YES;
@@ -23,7 +26,6 @@
 }
 
 + (BOOL)isCallMessage:(V2TIMMessage *)message callTye:(NSInteger *)callType{
-    /// 音视频通话信令文本，比如 “xxx 发起群通话”，“xxx接收群通话” 等
     NSString *content = [self getCallSignalingContentWithMessage:message callTye:callType];
     if (content.length > 0) {
         return YES;
@@ -63,14 +65,12 @@
 }
 
 #pragma mark - Utils
-/// 信令消息对应的自定义文本
 + (NSString *)getCallSignalingContentWithMessage:(V2TIMMessage *)message callTye:(NSInteger *)callType
 {
     V2TIMSignalingInfo *info = [[V2TIMManager sharedInstance] getSignallingInfo:message];
     if (!info) {
         return nil;
     }
-    // 解析透传的data字段
     NSError *err = nil;
     NSDictionary *param = nil;
     if (info.data != nil) {
@@ -80,13 +80,11 @@
         return nil;
     }
     
-    // 判断业务类型
     NSArray *allKeys = param.allKeys;
     if (![allKeys containsObject:@"businessID"]) {
         return nil;
     }
-
-    // 判断是否为音视频通话信令
+    
     NSString *callContent = @"";
     if ([self isCallSignalingInfo:message info:info infoData:param withCustomContent:&callContent callTye:callType]) {
         return callContent;
@@ -172,7 +170,6 @@
             break;
         case SignalingActionType_Cancel_Invite:
         {
-            // 取消通话
             if (message.groupID.length > 0) {
                 [mutableContent appendString:[NSString stringWithFormat:TUIKitLocalizableString(TUIkitSignalingCancelGroupCallFormat),showName]];
             } else {
@@ -222,27 +219,25 @@
             break;
         case SignalingActionType_Reject_Invite:
         {
-            // 拒绝通话
             if (message.groupID.length > 0) {
 //                if ([param.allKeys containsObject:SIGNALING_EXTRA_KEY_LINE_BUSY]) {
                 if ([param.allKeys containsObject:@"line_busy"]) {
-                    [mutableContent appendString:[NSString stringWithFormat:TUIKitLocalizableString(TUIKitSignalingBusyFormat),showName]]; // \"%@\" 忙线
+                    [mutableContent appendString:[NSString stringWithFormat:TUIKitLocalizableString(TUIKitSignalingBusyFormat),showName]];
                 } else {
-                    [mutableContent appendString:[NSString stringWithFormat:TUIKitLocalizableString(TUIKitSignalingDeclineFormat),showName]]; // \"%@\" 拒绝通话
+                    [mutableContent appendString:[NSString stringWithFormat:TUIKitLocalizableString(TUIKitSignalingDeclineFormat),showName]];
                 }
             } else {
 //                if ([param.allKeys containsObject:SIGNALING_EXTRA_KEY_LINE_BUSY]) {
                 if ([param.allKeys containsObject:@"line_busy"]) {
-                    [mutableContent appendString:TUIKitLocalizableString(TUIKitSignalingCallBusy)]; // 对方忙线
+                    [mutableContent appendString:TUIKitLocalizableString(TUIKitSignalingCallBusy)];
                 } else {
-                    [mutableContent appendString:TUIKitLocalizableString(TUIkitSignalingDecline)]; // 拒绝通话
+                    [mutableContent appendString:TUIKitLocalizableString(TUIkitSignalingDecline)];
                 }
             }
         }
             break;
         case SignalingActionType_Invite_Timeout:
         {
-            // 通话超时
             if (message.groupID.length > 0) {
                 for (NSString *invitee in info.inviteeList) {
                     [mutableContent appendString:@"\""];
@@ -251,12 +246,12 @@
                 }
                 [mutableContent replaceCharactersInRange:NSMakeRange(mutableContent.length - 1, 1) withString:@" "];
             }
-            [mutableContent appendString:TUIKitLocalizableString(TUIKitSignalingNoResponse)]; // 无应答
+            [mutableContent appendString:TUIKitLocalizableString(TUIKitSignalingNoResponse)];
         }
             break;
         default:
         {
-            [mutableContent appendString:TUIKitLocalizableString(TUIkitSignalingUnrecognlize)]; // 不能识别的通话指令
+            [mutableContent appendString:TUIKitLocalizableString(TUIkitSignalingUnrecognlize)];
         }
             break;
     }

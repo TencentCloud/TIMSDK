@@ -75,7 +75,6 @@
     BOOL isDir = false;
     *isExist = NO;
     if(self.direction == MsgDirectionOutgoing) {
-        //上传方本地是否有效
         if (_path.length) {
             path = [NSString stringWithFormat:@"%@%@", TUIKit_Voice_Path, _path.lastPathComponent];
             if([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]){
@@ -87,7 +86,6 @@
     }
 
     if(!*isExist) {
-        //查看本地是否存在
         if (_uuid.length) {
             path = [NSString stringWithFormat:@"%@%@.amr", TUIKit_Voice_Path, _uuid];
             if([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]){
@@ -156,7 +154,7 @@
         self.isDownloading = YES;
         @weakify(self)
         [imSound downloadSound:path progress:^(NSInteger curSize, NSInteger totalSize) {
-            // 下载进度
+            
         }  succ:^{
             @strongify(self)
             self.isDownloading = NO;

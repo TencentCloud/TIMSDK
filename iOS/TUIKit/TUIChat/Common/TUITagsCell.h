@@ -13,7 +13,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TUITagsCell : UIView
 
-/// 数据眼
 @property (nonatomic, strong) TUITagsModel *model;
 
 @property (nonatomic, assign) CGFloat ItemWidth;

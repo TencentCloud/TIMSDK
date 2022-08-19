@@ -81,13 +81,11 @@
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
     
     if (indexPath.section == 1 && indexPath.row == 0) {
-        // 添加更多管理员
         __weak typeof(self) weakSelf = self;
         TUISelectGroupMemberViewController *vc = [[TUISelectGroupMemberViewController alloc] init];
         vc.groupId = self.groupID;
         vc.name = TUIKitLocalizableString(TUIKitGroupManageAdminSetting);
         vc.selectedFinished = ^(NSMutableArray<TUIUserModel *> * _Nonnull modelList) {
-            // 设置管理员
             [weakSelf.dataProvider settingAdmins:modelList callback:^(int code, NSString *errorMsg) {
                 if (code != 0) {
                     [weakSelf.view makeToast:errorMsg];
@@ -112,7 +110,6 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // 删除群管理员
         NSArray *subArray = self.dataProvider.datas[indexPath.section];
         TUIMemberInfoCellData *cellData = subArray[indexPath.row];
         __weak typeof(self) weakSelf = self;

@@ -69,7 +69,7 @@
             [self->_movieWriter cancelWriting];
             self->_movieWriter = nil;
             dispatch_async(dispatch_get_main_queue(), ^{
-                handle(nil, [NSError errorWithDomain:@"com.tui.Movie.Writing" code:0 userInfo:@{NSLocalizedDescriptionKey:@"AVAssetWriter状态错误"}]);
+                handle(nil, [NSError errorWithDomain:@"com.tui.Movie.Writing" code:0 userInfo:@{NSLocalizedDescriptionKey:@"AVAssetWriter status error"}]);
             });
         }
     });
@@ -131,7 +131,6 @@
     return _readyToRecordVideo && _readyToRecordAudio;
 }
 
-/// 音频源数据写入配置
 - (NSError *)setupAssetWriterAudioInput:(CMFormatDescriptionRef)currentFormatDescription {
     size_t aclSize = 0;
     const AudioStreamBasicDescription *currentASBD = CMAudioFormatDescriptionGetStreamBasicDescription(currentFormatDescription);
@@ -157,7 +156,6 @@
     return nil;
 }
 
-/// 视频源数据写入配置
 - (NSError *)setupAssetWriterVideoInput:(CMFormatDescriptionRef)currentFormatDescription {
     CMVideoDimensions dimensions = CMVideoFormatDescriptionGetDimensions(currentFormatDescription);
     NSUInteger numPixels = dimensions.width * dimensions.height;
@@ -184,7 +182,6 @@
     return nil;
 }
 
-// 获取视频旋转矩阵
 - (CGAffineTransform)transformFromCurrentVideoOrientationToOrientation:(AVCaptureVideoOrientation)orientation{
     CGFloat orientationAngleOffset = [self angleOffsetFromPortraitOrientationToOrientation:orientation];
     CGFloat videoOrientationAngleOffset = [self angleOffsetFromPortraitOrientationToOrientation:self.currentOrientation];
@@ -198,7 +195,6 @@
     return transform;
 }
 
-// 获取视频旋转角度
 - (CGFloat)angleOffsetFromPortraitOrientationToOrientation:(AVCaptureVideoOrientation)orientation{
     CGFloat angle = 0.0;
     switch (orientation){
@@ -218,7 +214,6 @@
     return angle;
 }
 
-// 移除文件
 - (void)removeFile:(NSURL *)fileURL {
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSString *filePath = fileURL.path;
@@ -227,9 +222,9 @@
         BOOL success = [fileManager removeItemAtPath:filePath error:&error];
         if (!success) {
             NSAssert(NO, error.localizedDescription);
-            NSLog(@"删除视频文件失败：%@", error);
+            NSLog(@"Failed to delete file：%@", error);
         } else {
-            NSLog(@"删除视频文件成功");
+            NSLog(@"Succeed to delete file");
         }
     }
 }

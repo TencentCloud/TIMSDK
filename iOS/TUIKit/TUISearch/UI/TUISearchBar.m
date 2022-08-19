@@ -37,7 +37,7 @@
     
     self.backgroundColor = self.bgColorOfSearchBar;
     _searchBar = [[UISearchBar alloc] init];
-    _searchBar.placeholder = TUIKitLocalizableString(Search); // @"搜索";
+    _searchBar.placeholder = TUIKitLocalizableString(Search);
     _searchBar.backgroundImage = [UIImage new];
     _searchBar.barTintColor = UIColor.redColor;
     _searchBar.showsCancelButton = NO;

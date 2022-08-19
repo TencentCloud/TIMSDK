@@ -10,6 +10,7 @@
 #import "TUIBaseMessageControllerDelegate.h"
 #import "TUIChatConversationModel.h"
 #import "TUIMessageDataProvider.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIMergeMessageListController : UITableViewController

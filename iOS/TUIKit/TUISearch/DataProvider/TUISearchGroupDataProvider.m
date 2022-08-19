@@ -21,11 +21,9 @@ static BOOL match(NSArray *keywords, NSString *text)
 
 @interface TUISearchGroupResult ()
 
-/// 接口内部使用，主要临时存储搜索到的groupId和匹配的成员
 @property (nonatomic, copy) NSString *groupId;
 @property (nonatomic, strong) NSArray<V2TIMGroupMemberFullInfo *> *memberInfos;
 
-/// 对外暴露的字段
 @property (nonatomic, strong) V2TIMGroupInfo *groupInfo;
 @property (nonatomic, assign) TUISearchGroupMatchField matchField;
 @property (nonatomic, copy) NSString *matchValue;
@@ -67,7 +65,6 @@ static BOOL match(NSArray *keywords, NSString *text)
         return;
     }
     
-    // 处理关键字
     NSMutableArray *keywords = [NSMutableArray array];
     for (NSString *keyword in searchParam.keywordList) {
         [keywords addObject:keyword.lowercaseString];
@@ -78,7 +75,6 @@ static BOOL match(NSArray *keywords, NSString *text)
     
     dispatch_group_t group = dispatch_group_create();
     
-    // 搜索群
     dispatch_group_enter(group);
     [self doSearchGroups:searchParam keywords:keywords succ:^(NSArray<TUISearchGroupResult *> * _Nonnull resultSet) {
         groupsOne = resultSet;
@@ -88,7 +84,6 @@ static BOOL match(NSArray *keywords, NSString *text)
     }];
     
     
-    // 搜索群成员
     BOOL isSearchMember = searchParam.isSearchGroupMember;
     if (isSearchMember) {
         dispatch_group_enter(group);
@@ -102,9 +97,7 @@ static BOOL match(NSArray *keywords, NSString *text)
     
     __weak typeof(self) weakSelf = self;
     dispatch_group_notify(group, dispatch_get_global_queue(0, 0), ^{
-        // 合并数据
         NSArray *resultSet = [weakSelf mergeGroupSets:groupsOne withOthers:groupsTwo];
-        // 主线程回调
         dispatch_async(dispatch_get_main_queue(), ^{
             if (succ) {
                 succ(resultSet);
@@ -129,14 +122,12 @@ static BOOL match(NSArray *keywords, NSString *text)
             result.groupInfo = groupInfo;
             result.matchMembers = nil;
             if (match(keywords, groupInfo.groupName)) {
-                // 匹配群名称
                 result.matchField = TUISearchGroupMatchFieldGroupName;
                 result.matchValue = groupInfo.groupName;
                 [arrayM addObject:result];
                 continue;
             }
             if (match(keywords, groupInfo.groupID)) {
-                // 匹配群ID
                 result.matchField = TUISearchGroupMatchFieldGroupID;
                 result.matchValue = groupInfo.groupID;
                 [arrayM addObject:result];
@@ -153,7 +144,6 @@ static BOOL match(NSArray *keywords, NSString *text)
     }];
 }
 
-/// 结果回调在子线程
 + (void)doSearchMembers:(TUISearchGroupParam *)searchParam keywords:(NSArray<NSString *> *)keywords succ:(TUISearchGroupResultListSucc)succ fail:(TUISearchGroupResultListFail)fail
 {    
     V2TIMGroupMemberSearchParam *memberParam = [[V2TIMGroupMemberSearchParam alloc] init];
@@ -179,7 +169,6 @@ static BOOL match(NSArray *keywords, NSString *text)
         
         NSMutableDictionary *groupInfoMap = [NSMutableDictionary dictionary];
         dispatch_group_t group = dispatch_group_create();
-        // 异步查询群信息
         {
             dispatch_group_enter(group);
             [V2TIMManager.sharedInstance getGroupsInfo:groupIds succ:^(NSArray<V2TIMGroupInfoResult *> *groupResultList) {
@@ -194,7 +183,6 @@ static BOOL match(NSArray *keywords, NSString *text)
             }];
         }
         
-        // 异步计算成员
         {
             dispatch_group_enter(group);
             for (TUISearchGroupResult *result in resultSet) {
@@ -232,7 +220,6 @@ static BOOL match(NSArray *keywords, NSString *text)
             dispatch_group_leave(group);
         }
         
-        // 异步组装数据
         dispatch_group_notify(group, dispatch_get_global_queue(0, 0), ^{
             NSMutableArray *arrayM = [NSMutableArray array];
             NSArray *validGroupIds = groupInfoMap.allKeys;
@@ -259,7 +246,6 @@ static BOOL match(NSArray *keywords, NSString *text)
 {
     NSMutableArray *arrayM = [NSMutableArray array];
     
-    // 去重
     NSMutableDictionary *map = [NSMutableDictionary dictionary];
     for (TUISearchGroupResult *result in groupsOne) {
         [arrayM addObject:result];
@@ -273,7 +259,6 @@ static BOOL match(NSArray *keywords, NSString *text)
         [arrayM addObject:result];
     }
     
-    // 排序
     [arrayM sortUsingComparator:^NSComparisonResult(TUISearchGroupResult *obj1, TUISearchGroupResult *obj2) {
         return obj1.groupInfo.lastMessageTime > obj2.groupInfo.lastMessageTime ? NSOrderedDescending : NSOrderedAscending;
     }];

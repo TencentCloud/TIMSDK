@@ -48,7 +48,6 @@
         }
         NSMutableString *groupName = [NSMutableString stringWithString:showName];
         NSMutableArray *members = [NSMutableArray array];
-        //遍历contacts，初始化群组成员信息、群组名称信息
         for (TUICommonContactSelectCellData *item in contacts) {
             V2TIMCreateGroupMemberInfo *member = [[V2TIMCreateGroupMemberInfo alloc] init];
             member.userID = item.identifier;
@@ -57,7 +56,6 @@
             [members addObject:member];
         }
 
-        //群组名称默认长度不超过10，如有需求可在此更改，但可能会出现UI上的显示bug
         if ([groupName length] > 10) {
             groupName = [groupName substringToIndex:10].mutableCopy;
         }
@@ -69,20 +67,18 @@
             info.groupAddOpt = createOption;
         }
 
-        //发送创建请求后的回调函数
         [[V2TIMManager sharedInstance] createGroup:info memberList:members succ:^(NSString *groupID) {
-            //创建成功后，在群内推送创建成功的信息
             NSString *content = nil;
             if([info.groupType isEqualToString:GroupType_Work]) {
-                content = TUIKitLocalizableString(ChatsCreatePrivateGroupTips); // @"创建讨论组";
+                content = TUIKitLocalizableString(ChatsCreatePrivateGroupTips);
             } else if([info.groupType isEqualToString:GroupType_Public]){
-                content = TUIKitLocalizableString(ChatsCreateGroupTips); // @"创建群聊";
+                content = TUIKitLocalizableString(ChatsCreateGroupTips);
             } else if([info.groupType isEqualToString:GroupType_Meeting]) {
-                content = TUIKitLocalizableString(ChatsCreateChatRoomTips); // @"创建聊天室";
+                content = TUIKitLocalizableString(ChatsCreateChatRoomTips);
             } else if([info.groupType isEqualToString:GroupType_Community]) {
-                content = TUIKitLocalizableString(ChatsCreateCommunityTips); // @"创建社区";
+                content = TUIKitLocalizableString(ChatsCreateCommunityTips);
             } else {
-                content = TUIKitLocalizableString(ChatsCreateDefaultTips); // @"创建群组";
+                content = TUIKitLocalizableString(ChatsCreateDefaultTips);
             }
             NSDictionary *dic = @{@"version": @(GroupCreate_Version),
                                   BussinessID: BussinessID_GroupCreate,

@@ -42,14 +42,11 @@
     if (data.duration > 0) {
         _duration.text = [NSString stringWithFormat:@"%ld\"", (long)data.duration];
     } else {
-        _duration.text = @"1\"";    // 显示0秒容易产生误解
+        _duration.text = @"1\"";
     }
     _voice.image = data.voiceImage;
     _voice.animationImages = data.voiceAnimationImages;
     
-    //voiceReadPoint
-    //此处0为语音消息未播放，1为语音消息已播放
-    //发送出的消息，不展示红点
     if(self.voiceData.innerMessage.localCustomInt == 0 && self.voiceData.direction == MsgDirectionIncoming)
         self.voiceReadPoint.hidden = NO;
 
@@ -69,11 +66,9 @@
 
 - (void)applyStyleFromDirection:(TMsgDirection)direction {
     if (direction == MsgDirectionIncoming) {
-        //消息到达
         _duration.textAlignment = NSTextAlignmentLeft;
         _duration.textColor = TUIChatDynamicColor(@"chat_voice_message_recv_duration_time_color", @"#000000");
     } else {
-        //消息发送
         _duration.textAlignment = NSTextAlignmentRight;
         _duration.textColor = TUIChatDynamicColor(@"chat_voice_message_send_duration_time_color", @"#000000");
     }

@@ -17,13 +17,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIReplyMessageCell : TUIBubbleMessageCell
 
-// 引用的边框
 @property (nonatomic, strong) CALayer *quoteBorderLayer;
-// 引用视图
 @property (nonatomic, strong) UIView *quoteView;
-// 回复的内容
 @property (nonatomic, strong) UILabel *contentLabel;
-// 原始消息发送者昵称
 @property (nonatomic, strong) UILabel *senderLabel;
 
 

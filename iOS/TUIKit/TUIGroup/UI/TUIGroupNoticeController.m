@@ -71,12 +71,10 @@
 - (void)onClickRight:(UIButton *)button
 {
     if (button.isSelected) {
-        // 编辑完成
         self.textView.editable = NO;
         [self.textView resignFirstResponder];
         [self updateNotice];
     } else {
-        // 开始编辑
         self.textView.editable = YES;
         [self.textView becomeFirstResponder];
     }

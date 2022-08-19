@@ -67,7 +67,6 @@ static NSString *kReuseIdentifier = @"ContactSelectCell";
     [_tableView setSectionIndexBackgroundColor:[UIColor clearColor]];
     [_tableView setSectionIndexColor:[UIColor darkGrayColor]];
     [_tableView setBackgroundColor:self.view.backgroundColor];
-    //cell无数据时，不显示间隔线
     UIView *v = [[UIView alloc] initWithFrame:CGRectZero];
     [_tableView setTableFooterView:v];
     _tableView.separatorInset = UIEdgeInsetsMake(0, 58, 0, 0);

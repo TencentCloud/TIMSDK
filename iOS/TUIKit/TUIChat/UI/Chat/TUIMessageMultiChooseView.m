@@ -69,7 +69,7 @@
         self.titleLabel.frame = titleRect;
     }
     
-    // menuView 均布
+    // menuView
     {
         NSInteger count = self.menuView.subviews.count;
         CGFloat width = self.menuView.bounds.size.width / count;

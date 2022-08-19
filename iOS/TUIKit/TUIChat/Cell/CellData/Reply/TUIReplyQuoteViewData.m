@@ -9,7 +9,6 @@
 
 @implementation TUIReplyQuoteViewData
 
-// 子类实现
 + (instancetype)getReplyQuoteViewData:(TUIMessageCellData *)originCellData
 {
     return nil;

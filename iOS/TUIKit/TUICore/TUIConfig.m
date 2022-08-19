@@ -11,15 +11,18 @@
 #import "TUICommonModel.h"
 #import "TUILogin.h"
 #import "TUIThemeManager.h"
+
 typedef NS_OPTIONS(NSInteger, emojiFaceType) {
     emojiFaceTypeKeyBoard = 1 << 0,
     emojiFaceTypePopDetail = 1 << 1,
 };
+
 @interface TUIConfig ()
 
-
-//提前加载资源（全路径）
-
+@property (nonatomic, strong) UIImage *defaultGroupAvatarImage_Public;
+@property (nonatomic, strong) UIImage *defaultGroupAvatarImage_Meeting;
+@property (nonatomic, strong) UIImage *defaultGroupAvatarImage_AVChatRoom;
+@property (nonatomic, strong) UIImage *defaultGroupAvatarImage_Community;
 
 @end
 
@@ -32,10 +35,16 @@ typedef NS_OPTIONS(NSInteger, emojiFaceType) {
         _avatarCornerRadius = 5.f;
         _defaultAvatarImage = TUICoreBundleThemeImage(@"default_c2c_head_img", @"default_c2c_head");
         _defaultGroupAvatarImage = TUICoreBundleThemeImage(@"default_group_head_img", @"default_group_head");
+        _defaultGroupAvatarImage_Public = TUICoreBundleThemeImage(@"default_group_head_public_img", @"default_group_head_public");
+        _defaultGroupAvatarImage_Meeting = TUICoreBundleThemeImage(@"default_group_head_meeting_img", @"default_group_head_meeting");
+        _defaultGroupAvatarImage_AVChatRoom = TUICoreBundleThemeImage(@"default_group_head_avchatroom_img", @"default_group_head_avchatRoom");
+        _defaultGroupAvatarImage_Community = TUICoreBundleThemeImage(@"", @"default_group_head_Community");
+        
         _isExcludedFromUnreadCount = NO;
         _isExcludedFromLastMessage = NO;
         _enableToast = YES;
         _displayOnlineStatusIcon = NO;
+        _enableGroupGridAvatar = YES;
         
         [self updateEmojiGroups];
         
@@ -61,10 +70,10 @@ typedef NS_OPTIONS(NSInteger, emojiFaceType) {
 }
 
 - (void)updateEmojiGroups {
-    // 更新表情面板
     self.faceGroups = [self updateFaceGroups:self.faceGroups type:emojiFaceTypeKeyBoard];
     self.chatPopDetailGroups = [self updateFaceGroups:self.chatPopDetailGroups type:emojiFaceTypePopDetail];
 }
+
 - (NSArray *)updateFaceGroups:(NSArray *)groups type:(emojiFaceType)type {
     
     if (groups.count) {
@@ -130,14 +139,14 @@ typedef NS_OPTIONS(NSInteger, emojiFaceType) {
 
 - (void)onChangeTheme
 {
-    // 更新默认头像
     self.defaultAvatarImage = TUICoreBundleThemeImage(@"default_c2c_head_img", @"default_c2c_head");
     self.defaultGroupAvatarImage = TUICoreBundleThemeImage(@"default_group_head_img", @"default_group_head");
+    self.defaultGroupAvatarImage_Public = TUICoreBundleThemeImage(@"default_group_head_public_img", @"default_group_head_public");
+    self.defaultGroupAvatarImage_Meeting = TUICoreBundleThemeImage(@"default_group_head_meeting_img", @"default_group_head_meeting");
+    self.defaultGroupAvatarImage_AVChatRoom = TUICoreBundleThemeImage(@"default_group_head_avchatroom_img", @"default_group_head_avchatroom");
+    self.defaultGroupAvatarImage_Community = TUICoreBundleThemeImage(@"", @"default_group_head_community");
 }
 
-/**
- *  初始化默认表情，并将配默认表情写入本地缓存，方便下一次快速加载
- */
 - (TUIFaceGroup *)getDefaultFaceGroup
 {
     //emoji group
@@ -225,4 +234,27 @@ typedef NS_OPTIONS(NSInteger, emojiFaceType) {
         }
     }] resume];
 }
+
+- (UIImage *)getGroupAvatarImageByGroupType:(NSString *)groupType
+{
+    if ([groupType isEqualToString:GroupType_Work]) {
+        return self.defaultGroupAvatarImage;
+    }
+    else if ([groupType isEqualToString:GroupType_Public]) {
+        return self.defaultGroupAvatarImage_Public;
+    }
+    else if ([groupType isEqualToString:GroupType_Meeting]) {
+        return self.defaultGroupAvatarImage_Meeting;
+    }
+    else if ([groupType isEqualToString:GroupType_AVChatRoom]) {
+        return self.defaultGroupAvatarImage_AVChatRoom;
+    }
+    else if ([groupType isEqualToString:GroupType_Community]) {
+        return self.defaultGroupAvatarImage_Community;
+    }
+    else {
+        return self.defaultGroupAvatarImage;
+    }
+}
+
 @end

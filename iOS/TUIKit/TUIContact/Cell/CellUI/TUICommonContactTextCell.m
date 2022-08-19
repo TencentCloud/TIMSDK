@@ -35,10 +35,8 @@
 
 @implementation TUICommonContactTextCell
 
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
-    if (self = [super initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:reuseIdentifier])
-    {
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    if (self = [super initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:reuseIdentifier]) {
         self.backgroundColor = TUICoreDynamicColor(@"form_bg_color", @"#FFFFFF");
         self.contentView.backgroundColor = TUICoreDynamicColor(@"form_bg_color", @"#FFFFFF");
         
@@ -55,11 +53,8 @@
     return self;
 }
 
-- (void)layoutSubviews
-{
+- (void)layoutSubviews {
     [super layoutSubviews];
-    
-    
     
     if (self.textData.keyEdgeInsets.left) {
         self.keyLabel.mm_left(self.textData.keyEdgeInsets.left);
@@ -78,8 +73,7 @@
     }
 }
 
-- (void)fillWithData:(TUICommonContactTextCellData *)textData
-{
+- (void)fillWithData:(TUICommonContactTextCellData *)textData {
     [super fillWithData:textData];
 
     self.textData = textData;

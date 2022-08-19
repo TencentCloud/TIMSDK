@@ -19,6 +19,7 @@
 #import "TUICore.h"
 #import "TUIDefine.h"
 #import "NSDictionary+TUISafe.h"
+#import "NSString+emoji.h"
 
 @interface TUIGroupChatViewController () <V2TIMGroupListener, TUINotificationProtocol>
 
@@ -43,7 +44,18 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    [self setupTipsView];
+
+    [[V2TIMManager sharedInstance] addGroupListener:self];
     
+    [TUICore registerEvent:TUICore_TUIGroupNotify subKey:TUICore_TUIGroupNotify_SelectGroupMemberSubKey object:self];
+}
+
+- (void)dealloc {
+    [TUICore unRegisterEventByObject:self];
+}
+
+- (void)setupTipsView {
     self.tipsView = [[UIView alloc] initWithFrame:CGRectZero];
     self.tipsView.backgroundColor = RGB(246, 234, 190);
     [self.view addSubview:self.tipsView];
@@ -52,7 +64,6 @@
     self.pendencyLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     [self.tipsView addSubview:self.pendencyLabel];
     self.pendencyLabel.font = [UIFont systemFontOfSize:12];
-
 
     self.pendencyBtn = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.tipsView addSubview:self.pendencyBtn];
@@ -66,40 +77,29 @@
     [RACObserve(self.pendencyViewModel, unReadCnt) subscribeNext:^(NSNumber *unReadCnt) {
         @strongify(self)
         if ([unReadCnt intValue]) {
-            self.pendencyLabel.text = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitChatPendencyRequestToJoinGroupFormat), unReadCnt]; // @"%@条入群请求"
+            self.pendencyLabel.text = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitChatPendencyRequestToJoinGroupFormat), unReadCnt];
             [self.pendencyLabel sizeToFit];
             CGFloat gap = (self.tipsView.mm_w - self.pendencyLabel.mm_w - self.pendencyBtn.mm_w-8)/2;
             self.pendencyLabel.mm_left(gap).mm__centerY(self.tipsView.mm_h/2);
             self.pendencyBtn.mm_hstack(8);
 
-            [UIView animateWithDuration:1.f animations:^{
-                self.tipsView.alpha = 1;
-                self.tipsView.mm_top(0);
-            }];
+            self.tipsView.alpha = 1;
+            UIView *topView = [TUIGroupChatViewController customTopView];
+            self.tipsView.mm_top(topView ? topView.mm_h : 0);
         } else {
             self.tipsView.alpha = 0;
         }
     }];
+    
     [self getPendencyList];
-    
-    //监听入群请求通知
-    [[V2TIMManager sharedInstance] addGroupListener:self];
-    
-    [TUICore registerEvent:TUICore_TUIGroupNotify subKey:TUICore_TUIGroupNotify_SelectGroupMemberSubKey object:self];
 }
 
-- (void)dealloc {
-    [TUICore unRegisterEventByObject:self];
-}
-
-- (void)getPendencyList
-{
+- (void)getPendencyList {
     if (self.conversationData.groupID.length > 0)
         [self.pendencyViewModel loadData];
 }
 
-- (void)openPendency:(id)sender
-{
+- (void)openPendency:(id)sender {
     TUIGroupPendencyController *vc = [[TUIGroupPendencyController alloc] init];
     @weakify(self);
     vc.cellClickBlock = ^(TUIGroupPendencyCell * _Nonnull cell) {
@@ -143,13 +143,12 @@
     if ([key isEqualToString:TUICore_TUIGroupNotify]
         && [subKey isEqualToString:TUICore_TUIGroupNotify_SelectGroupMemberSubKey]
         && self.atSelectGroupMemberVC == anObject) {
-        // @ 转发选择完用户回调
         NSArray<TUIUserModel *> *modelList = [param tui_objectForKey:TUICore_TUIGroupNotify_SelectGroupMemberSubKey_UserListKey asClass:NSArray.class];
         NSMutableString *atText = [[NSMutableString alloc] init];
         for (int i = 0; i < modelList.count; i++) {
             TUIUserModel *model = modelList[i];
             if (![model isKindOfClass:TUIUserModel.class]) {
-                NSAssert(NO, @"modelList的数据类型错误");
+                NSAssert(NO, @"Error data-type in modelList");
                 continue;
             }
             [self.atUserList addObject:model];
@@ -160,8 +159,10 @@
             }
         }
         
-        NSString *inputText = self.inputController.inputBar.inputTextView.text;
-        self.inputController.inputBar.inputTextView.text = [NSString stringWithFormat:@"%@%@ ",inputText,atText];
+
+        UIFont *textFont = kTUIInputNoramlFont;
+        NSAttributedString *spaceString = [[NSAttributedString alloc] initWithString:atText attributes:@{NSFontAttributeName: textFont}];
+        [self.inputController.inputBar.inputTextView.textStorage insertAttributedString:spaceString atIndex:self.inputController.inputBar.inputTextView.textStorage.length];
         [self.inputController.inputBar updateTextViewFrame];
         
         [self.atSelectGroupMemberVC.navigationController popViewControllerAnimated:YES];
@@ -169,7 +170,6 @@
     else if ([key isEqualToString:TUICore_TUIGroupNotify]
              && [subKey isEqualToString:TUICore_TUIGroupNotify_SelectGroupMemberSubKey]
              && self.callingSelectGroupMemberVC == anObject) {
-        // 发起呼叫 选择完毕回调
         
         NSArray<TUIUserModel *> *modelList = [param tui_objectForKey:TUICore_TUIGroupNotify_SelectGroupMemberSubKey_UserListKey asClass:NSArray.class];
         NSMutableArray *userIDs = [NSMutableArray arrayWithCapacity:modelList.count];
@@ -197,8 +197,7 @@
     [self getPendencyList];
 }
 
-- (void)onGroupInfoChanged:(NSString *)groupID changeInfoList:(NSArray <V2TIMGroupChangeInfo *> *)changeInfoList
-{
+- (void)onGroupInfoChanged:(NSString *)groupID changeInfoList:(NSArray <V2TIMGroupChangeInfo *> *)changeInfoList {
     if (![groupID isEqualToString:self.conversationData.groupID]) {
         return;
     }
@@ -212,9 +211,11 @@
 
 
 #pragma mark - TInputControllerDelegate
-- (void)inputController:(TUIInputController *)inputController didSendMessage:(V2TIMMessage *)msg
-{
-    // 文本消息如果有 @ 用户，需要 createTextAtMessage
+- (void)inputController:(TUIInputController *)inputController didSendMessage:(V2TIMMessage *)msg {
+    /**
+     * 文本消息如果有 @ 用户，需要 createTextAtMessage
+     * If the text message has @ user, createTextAtMessage is required
+     */
     if (msg.elemType == V2TIM_ELEM_TYPE_TEXT) {
         NSMutableArray *atUserList = [NSMutableArray array];
         for (TUIUserModel *model in self.atUserList) {
@@ -227,24 +228,28 @@
             msg = [[V2TIMManager sharedInstance] createTextAtMessage:msg.textElem.text atUserList:atUserList];
             msg.cloudCustomData = cloudCustomData;
         }
-        //消息发送完后 atUserList 要重置
+        /**
+         * 消息发送完后 atUserList 要重置
+         * After the message is sent, the atUserList need to be reset
+         */
         [self.atUserList removeAllObjects];
     }
     [super inputController:inputController didSendMessage:msg];
 }
 
-- (void)inputControllerDidInputAt:(TUIInputController *)inputController
-{
+- (void)inputControllerDidInputAt:(TUIInputController *)inputController {
     [super inputControllerDidInputAt:inputController];
-    
-    // 检测到 @ 字符的输入
+    /**
+     * 检测到 @ 字符的输入
+     * Input of @ character detected
+     */
     if (self.conversationData.groupID.length > 0) {
         if ([self.navigationController.topViewController isKindOfClass:NSClassFromString(@"TUISelectGroupMemberViewController")]) {
             return;
         }
         NSDictionary *param = @{
             TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_GroupIDKey : self.conversationData.groupID,
-            TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_NameKey : TUIKitLocalizableString(TUIKitAtSelectMemberTitle), // @"选择群成员";
+            TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_NameKey : TUIKitLocalizableString(TUIKitAtSelectMemberTitle),
             TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_OptionalStyleKey : @(1),
         };
         UIViewController *vc = [TUICore callService:TUICore_TUIGroupService
@@ -255,11 +260,9 @@
     }
 }
 
-- (void)inputController:(TUIInputController *)inputController didDeleteAt:(NSString *)atText
-{
+- (void)inputController:(TUIInputController *)inputController didDeleteAt:(NSString *)atText {
     [super inputController:inputController didDeleteAt:atText];
     
-    // 删除了 @ 信息，atText 格式为：@xxx空格
     for (TUIUserModel *user in self.atUserList) {
         if ([atText rangeOfString:user.name].location != NSNotFound) {
             [self.atUserList removeObject:user];
@@ -268,14 +271,12 @@
     }
 }
 
-- (void)inputController:(TUIInputController *)inputController didSelectMoreCell:(TUIInputMoreCell *)cell
-{
+- (void)inputController:(TUIInputController *)inputController didSelectMoreCell:(TUIInputMoreCell *)cell {
     [super inputController:inputController didSelectMoreCell:cell];
     
     NSString *key = cell.data.key;
-    if ([key isEqualToString:TUIInputMoreCellKey_VideoCall]   // 视频通话
-        || [key isEqualToString:TUIInputMoreCellKey_AudioCall]) {    // 语音通话
-        // 群通话先选择需要通话的群成员
+    if ([key isEqualToString:TUIInputMoreCellKey_VideoCall]
+        || [key isEqualToString:TUIInputMoreCellKey_AudioCall]) {
         NSDictionary *param = @{
             TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_GroupIDKey : self.conversationData.groupID,
             TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_NameKey : TUIKitLocalizableString(Make-a-call),
@@ -286,13 +287,13 @@
         [self.navigationController pushViewController:vc animated:YES];
         
         self.callingSelectGroupMemberVC = vc;
-        if ([key isEqualToString:TUIInputMoreCellKey_VideoCall]) {    // 视频通话
+        if ([key isEqualToString:TUIInputMoreCellKey_VideoCall]) {
             self.callingType = @"1";
-        } else if ([key isEqualToString:TUIInputMoreCellKey_AudioCall]) {     // 语音通话
+        } else if ([key isEqualToString:TUIInputMoreCellKey_AudioCall]) {
             self.callingType = @"0";
         }
     }
-    else if ([key isEqualToString:TUIInputMoreCellKey_GroupLive]) { // 群直播
+    else if ([key isEqualToString:TUIInputMoreCellKey_GroupLive]) {
         NSDictionary *param = @{@"serviceID"   : @"kTUINotifyGroupLiveOnSelectGroupLive",
                                 @"groupID"     : self.conversationData.groupID ? : @"",
                                 @"userID"      : self.conversationData.userID ? : @"",
@@ -301,7 +302,7 @@
                                                             object:self
                                                             userInfo:param];
     }
-    else if ([key isEqualToString:TUIInputMoreCellKey_Link]) {  // 自定义消息
+    else if ([key isEqualToString:TUIInputMoreCellKey_Link]) {
         NSString *text = TUIKitLocalizableString(TUIKitWelcome);
         NSString *link = @"https://cloud.tencent.com/document/product/269/3794";
         NSError *error = nil;
@@ -337,8 +338,10 @@
         user.userId = cell.messageData.identifier;
         user.name = cell.messageData.name;
         [self.atUserList addObject:user];
-        NSString *inputText = self.inputController.inputBar.inputTextView.text ? : @"";
-        self.inputController.inputBar.inputTextView.text = [NSString stringWithFormat:@"%@@%@ ",inputText, user.name];
+        
+        UIFont *textFont = kTUIInputNoramlFont;
+        NSAttributedString *spaceString = [[NSAttributedString alloc] initWithString:user.name attributes:@{NSFontAttributeName: textFont}];
+        [self.inputController.inputBar.inputTextView.textStorage insertAttributedString:spaceString atIndex:self.inputController.inputBar.inputTextView.textStorage.length];        
         [self.inputController.inputBar.inputTextView becomeFirstResponder];
     }
 }

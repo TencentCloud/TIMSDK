@@ -30,6 +30,7 @@
 #import "TUIReferenceMessageCell.h"
 #import "TUIMessageSearchDataProvider.h"
 #import "TUIRepliesDetailViewController.h"
+
 #define STR(x) @#x
 
 @interface TUIMergeMessageListController () <TUIMessageCellDelegate>
@@ -59,7 +60,6 @@
 - (void)updateCellStyle:(BOOL)recover
 {
     if (recover) {
-        // 恢复全局设置
         [TUIBubbleMessageCellData setOutgoingBubble:self.stylesCache[STR(outgoingBubble)]];
         [TUIBubbleMessageCellData setIncommingBubble:self.stylesCache[STR(incomingBubble)]];
         TUIMessageCellLayout.incommingTextMessageLayout.bubbleInsets = UIEdgeInsetsFromString(self.stylesCache[STR(incomingTextBubbleInsets)]);
@@ -72,7 +72,6 @@
         return;
     }
     
-    // 修改聊天记录界面
     UIImage *outgoingBubble = [TUIBubbleMessageCellData outgoingBubble];
     [TUIBubbleMessageCellData setOutgoingBubble:[UIImage new]];
     [self.stylesCache setObject:outgoingBubble?:[UIImage new] forKey:STR(outgoingBubble)];
@@ -142,10 +141,8 @@
     NSMutableArray *uiMsgs = [NSMutableArray array];
     for (NSInteger k = 0; k < msgs.count; k++) {
         V2TIMMessage *msg = msgs[k];
-        // 外部自定义的消息
         if ([self.delegate respondsToSelector:@selector(messageController:onNewMessage:)]) {
             TUIMessageCellData *data = [self.delegate messageController:nil onNewMessage:msg];
-            // 全部设置为 incomming
             TUIMessageCellLayout *layout = TUIMessageCellLayout.incommingMessageLayout;
             if ([data isKindOfClass:TUITextMessageCellData.class]
                 ||[data isKindOfClass:TUIReferenceMessageCellData.class]) {
@@ -169,7 +166,6 @@
             }
         }
         TUIMessageCellData *data = [TUIMessageDataProvider getCellData:msg];
-        // 全部设置为 incomming
         TUIMessageCellLayout *layout = TUIMessageCellLayout.incommingMessageLayout;
         
         if ([data isKindOfClass:TUITextMessageCellData.class]) {
@@ -192,7 +188,7 @@
                                               [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"message_voice_receiver_playing_2")],
                                               [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"message_voice_receiver_playing_3")], nil];
             voiceData.voiceTop = 10;
-            msg.localCustomInt = 1; // 伪造其为 已读
+            msg.localCustomInt = 1;
             layout = TUIMessageCellLayout.incommingVoiceMessageLayout;
         }
         data.cellLayout = layout;
@@ -236,7 +232,6 @@
     [self.tableView registerClass:[TUIReplyMessageCell class] forCellReuseIdentifier:TReplyMessageCell_ReuseId];
     [self.tableView registerClass:[TUIReferenceMessageCell class] forCellReuseIdentifier:TUIReferenceMessageCell_ReuseId];
     
-    // 自定义消息注册 cell
     NSArray *customMessageInfo = [TUIMessageDataProvider getCustomMessageInfo];
     for (NSDictionary *messageInfo in customMessageInfo) {
         NSString *bussinessID = messageInfo[BussinessID];
@@ -323,7 +318,6 @@
 
 - (void)scrollLocateMessage:(V2TIMMessage *)locateMessage
 {
-    // 先找到 locateMsg 的坐标偏移
     CGFloat offsetY = 0;
     for (TUIMessageCellData *uiMsg in self.uiMsgs) {
         if ([uiMsg.innerMessage.msgID isEqualToString:locateMessage.msgID]) {
@@ -332,7 +326,6 @@
         offsetY += [uiMsg heightOfWidth:Screen_Width];
     }
     
-    // 再偏移半个 tableview 的高度
     offsetY -= self.tableView.frame.size.height / 2.0;
     if (offsetY <= TMessageController_Header_Height) {
         offsetY = TMessageController_Header_Height + 0.1;
@@ -398,7 +391,7 @@
         originMsgID = cellData.originMsgID;
         msgAbstract = cellData.msgAbstract;
     }
-    // 查询原始消息 - 在数据源里头调用
+    
     [(TUIMessageSearchDataProvider *)self.msgDataProvider findMessages:@[originMsgID?:@""] callback:^(BOOL success, NSString * _Nonnull desc, NSArray<V2TIMMessage *> * _Nonnull msgs) {
         if (!success) {
             [TUITool makeToast:TUIKitLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
@@ -410,7 +403,6 @@
             return;
         }
         
-        // 判断消息是否被删除或者撤回
         if (message.status == V2TIM_MSG_STATUS_HAS_DELETED || message.status == V2TIM_MSG_STATUS_LOCAL_REVOKED) {
             [TUITool makeToast:TUIKitLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
             return;
@@ -444,7 +436,6 @@
     repliesDetailVC.parentPageDataProvider = self.parentPageDataProvider;
     __weak typeof(self) weakSelf = self;
     repliesDetailVC.willCloseCallback = ^(){
-        // 刷新下，主要是更新下全局的UI
         [weakSelf.tableView reloadData];
     };
 }
@@ -516,7 +507,6 @@
     return _stylesCache;
 }
 
-// 生成一张透明的气泡图片撑开内容，确保语音消息可被点击
 - (UIImage *)bubbleImage {
     CGRect rect = CGRectMake(0, 0, 100, 40);
     UIGraphicsBeginImageContext(rect.size);

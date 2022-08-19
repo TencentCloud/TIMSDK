@@ -175,12 +175,10 @@ static NSString * const HFId = @"HFId";
 }
 
 #pragma mark - action
-// 点击cell跳转
 - (void)onSelectModel:(TUISearchResultCellModel *)cellModel module:(TUISearchResultModule)module
 {
     [self.searchBar endEditing:YES];
     
-    // 聊天记录，需要确认跳转的逻辑
     if (module == TUISearchResultModuleChatHistory) {
         if (![cellModel.context isKindOfClass:NSDictionary.class]) {
             return;
@@ -190,7 +188,6 @@ static NSString * const HFId = @"HFId";
         V2TIMConversation *conversation = convInfo[kSearchChatHistoryConverationInfo];
         NSArray *msgs = convInfo[kSearchChatHistoryConversationMsgs];
         if (msgs.count == 1) {
-            // 直接跳转到会话页面
             NSDictionary *param = @{TUICore_TUIChatService_GetChatViewControllerMethod_TitleKey : cellModel.title ?: @"",
                                     TUICore_TUIChatService_GetChatViewControllerMethod_UserIDKey : conversation.userID ?: @"",
                                     TUICore_TUIChatService_GetChatViewControllerMethod_GroupIDKey : conversation.groupID ?: @"",
@@ -204,8 +201,7 @@ static NSString * const HFId = @"HFId";
             [self.navigationController pushViewController:chatVC animated:YES];
             return;
         }
-        
-        // 跳转到会话详细搜索页面
+
         NSMutableArray *results = [NSMutableArray array];
         for (V2TIMMessage *message in msgs) {
             TUISearchResultCellModel *model = [[TUISearchResultCellModel alloc] init];
@@ -213,7 +209,8 @@ static NSString * const HFId = @"HFId";
             NSString *desc = [TUISearchDataProvider matchedTextForMessage:message withKey:self.searchBar.searchBar.text];
             model.detailsAttributeString = [TUISearchDataProvider attributeStringWithText:desc key:self.searchBar.searchBar.text];
             model.avatarUrl = message.faceURL;
-            model.avatarImage = conversation.type == V2TIM_C2C ? DefaultAvatarImage : DefaultGroupAvatarImage;
+            model.groupType = conversation.groupType;
+            model.avatarImage = conversation.type == V2TIM_C2C ? DefaultAvatarImage : DefaultGroupAvatarImageByGroupType(conversation.groupType);;
             model.context = message;
             [results addObject:model];
         }
@@ -225,16 +222,15 @@ static NSString * const HFId = @"HFId";
         return;
     }
     
-    // 非聊天记录，跳转到具体的会话
     NSDictionary *param = nil;
-    // 联系人
+
     if (module == TUISearchResultModuleContact && [cellModel.context isKindOfClass:V2TIMFriendInfo.class]) {
         V2TIMFriendInfo *friend = cellModel.context;
         param = @{TUICore_TUIChatService_GetChatViewControllerMethod_TitleKey : cellModel.title ?: @"",
                                 TUICore_TUIChatService_GetChatViewControllerMethod_UserIDKey : friend.userID ?: @"",
         };
     }
-    // 群组
+
     if (module == TUISearchResultModuleGroup && [cellModel.context isKindOfClass:V2TIMGroupInfo.class]) {
         V2TIMGroupInfo *group = cellModel.context;
         param = @{TUICore_TUIChatService_GetChatViewControllerMethod_TitleKey : cellModel.title ?: @"",
@@ -249,7 +245,6 @@ static NSString * const HFId = @"HFId";
     [self.navigationController pushViewController:(UIViewController *)chatVc animated:YES];
 }
 
-// 点击查看更多跳转
 - (void)onSelectMoreModule:(TUISearchResultModule)module results:(NSArray<TUISearchResultCellModel *> *)results
 {
     TUISearchResultListController *vc = [[TUISearchResultListController alloc] initWithResults:results
@@ -260,13 +255,11 @@ static NSString * const HFId = @"HFId";
 }
 
 #pragma mark - viewmodel
-// 根据section来确认模块的数据集
 - (NSArray *)resultForSection:(NSInteger)section
 {
     return [self resultForSection:section module:nil];
 }
 
-// 根据section来确认模块名称以及当前模块的数据集
 - (NSArray *)resultForSection:(NSInteger)section module:(TUISearchResultModule *)module
 {
     NSArray *keys = self.dataProvider.resultSet.allKeys;
@@ -295,7 +288,6 @@ static NSString * const HFId = @"HFId";
     [self.dataProvider searchForKeyword:key forModules:TUISearchResultModuleAll param:nil];
 }
 
-//本函数实现了生成纯色背景的功能，从而配合 setBackgroundImage: forState: 来实现高亮时纯色按钮的点击反馈。
 - (UIImage *)imageWithColor:(UIColor *)color
 {
     CGRect rect = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);

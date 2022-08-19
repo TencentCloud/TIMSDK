@@ -22,7 +22,6 @@ typedef void (^TAsyncImageComplete)(NSString *path, UIImage *image);
 + (void)makeToastActivity;
 + (void)hideToastActivity;
 
-// 切换主线程
 +(void)dispatchMainAsync:(dispatch_block_t) block;
 
 // date
@@ -31,7 +30,6 @@ typedef void (^TAsyncImageComplete)(NSString *path, UIImage *image);
 // msg code convert
 + (NSString *)convertIMError:(NSInteger)code msg:(NSString *)msg;
 
-// 富媒体
 + (NSString *)genImageName:(NSString *)uuid;
 + (NSString *)genSnapshotName:(NSString *)uuid;
 + (NSString *)genVideoName:(NSString *)uuid;
@@ -39,17 +37,16 @@ typedef void (^TAsyncImageComplete)(NSString *path, UIImage *image);
 + (NSString *)genVoiceName:(NSString *)uuid withExtension:(NSString *)extent;
 + (void)asyncDecodeImage:(NSString *)path complete:(TAsyncImageComplete)complete;
 
-// 设备
+
 + (NSString *)deviceModel;
 + (NSString *)deviceVersion;
 + (NSString *)deviceName;
 
-// 跳转浏览器打开
+
 + (void)openLinkWithURL:(NSURL *)url;
 
-// 套餐包不支持功能弹框
+
 + (void)showUnsupportAlertOfService:(NSString *)service onVC:(UIViewController *)vc;
-// 套餐包不支持通知
 + (void)postUnsupportNotificationOfService:(NSString *)service;
 + (void)postUnsupportNotificationOfService:(NSString *)service serviceDesc:(NSString *)serviceDesc debugOnly:(BOOL)debugOnly;
 + (void)addUnsupportNotificationInVC:(UIViewController *)vc;

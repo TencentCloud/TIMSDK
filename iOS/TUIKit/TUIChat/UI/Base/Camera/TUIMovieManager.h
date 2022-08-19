@@ -6,7 +6,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIMovieManager : NSObject
 
-@property(nonatomic, assign) AVCaptureVideoOrientation referenceOrientation; // 视频播放方向
+@property(nonatomic, assign) AVCaptureVideoOrientation referenceOrientation;
 
 @property(nonatomic, assign) AVCaptureVideoOrientation currentOrientation;
 

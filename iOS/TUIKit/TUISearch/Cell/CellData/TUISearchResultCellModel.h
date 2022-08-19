@@ -18,10 +18,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy) NSString * __nullable avatarUrl;
 @property (nonatomic, strong) UIImage * __nullable avatarImage;
-@property (nonatomic, copy) NSString * __nullable groupID;          // 群组id
+@property (nonatomic, copy) NSString * __nullable groupID;
+@property (nonatomic, copy) NSString * __nullable groupType;
 
 @property (nonatomic, assign) BOOL hideSeparatorLine;
-// 上下文信息, 可以用来传值
 @property (nonatomic, strong) id context;
 
 @end

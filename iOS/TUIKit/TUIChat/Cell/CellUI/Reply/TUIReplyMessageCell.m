@@ -29,7 +29,6 @@
 
 @interface TUIReplyMessageCell ()
 
-// 当前原始消息的引用视图
 @property (nonatomic, strong) TUIReplyQuoteView *currentOriginView;
 
 @property (nonatomic, strong) NSMutableDictionary<NSString *, TUIReplyQuoteView *> *customOriginViewsCache;
@@ -88,15 +87,12 @@
 
 - (void)updateUI:(TUIReplyMessageCellData *)replyData
 {
-    // 获取当前应该显示的视图
     self.currentOriginView = [self getCustomOriginView:replyData.originCellData];
     [self hiddenAllCustomOriginViews:YES];
     self.currentOriginView.hidden = NO;
 
-    // 填充数据
     [self.currentOriginView fillWithData:replyData.quoteData];
-    
-    // 调整布局
+
     self.quoteView.mm_x = 16;
     self.quoteView.mm_y = 12;
     self.quoteView.mm_w = self.replyData.quoteSize.width;
@@ -122,7 +118,6 @@
 
 - (TUIReplyQuoteView *)getCustomOriginView:(TUIMessageCellData *)originCellData
 {
-    // 如果原始消息不存在，默认当成文本
     NSString *reuseId = originCellData?NSStringFromClass(originCellData.class):NSStringFromClass(TUITextMessageCellData.class);
     TUIReplyQuoteView *view = nil;
     BOOL reuse = NO;
@@ -139,7 +134,6 @@
     }
     
     if (view == nil) {
-        // 外部未实现，默认使用文本
         TUITextReplyQuoteView* quoteView = [[TUITextReplyQuoteView alloc] init];
         view = quoteView;
     }
