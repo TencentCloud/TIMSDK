@@ -77,10 +77,16 @@
             android:textOn=""
             android:layout_marginRight="15dp" />
 
+        <View
+            android:id="@+id/disable_mask"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:background="@color/core_line_controller_white_translucent_color"/>
     </RelativeLayout>
 
     <View
-        android:id="@+id/bottomLine"
+        android:id="@+id/bottom_line"
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:background="@color/line" />

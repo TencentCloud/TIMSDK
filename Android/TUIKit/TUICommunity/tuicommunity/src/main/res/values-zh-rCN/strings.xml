@@ -1,0 +1,109 @@
+<resources>
+    <string name="community_create_community">创建一个社群</string>
+    <string name="community_create_community_success">创建社群成功</string>
+    <string name="community_create_community_failed">创建社群失败</string>
+    <string name="community_join_community">加入一个社群</string>
+    <string name="community_join">加入</string>
+    <string name="community_joined">已加入</string>
+    <string name="community_not_found_community">该社群不存在</string>
+    <string name="community_community_name">社群名称</string>
+    <string name="community_community_introduction">社群简介</string>
+    <string name="community_select_cover">选择封面</string>
+    <string name="community_select_face">选择头像</string>
+    <string name="community_edit_tips_input">请输入</string>
+    <string name="community_button_tips_select">请选择</string>
+    <string name="community_exit_community">退出社群</string>
+    <string name="community_group_id_label">社群ID: </string>
+    <string name="community_copy">复制</string>
+    <string name="community_user_list">用户列表</string>
+    <string name="community_share_community">分享社群</string>
+    <string name="community_settings">设置</string>
+    <string name="community_community_settings">社群设置</string>
+    <string name="community_topic_settings">话题详情</string>
+    <string name="community_create_topic">创建话题</string>
+    <string name="community_create_topic_success">创建话题成功</string>
+    <string name="community_create_topic_failed">创建话题失败</string>
+    <string name="community_create_topic_category">创建分组</string>
+    <string name="community_create_topic_category_success">创建分组成功</string>
+    <string name="community_create_topic_category_failed">创建分组失败</string>
+    <string name="community_delete_topic_category">删除分组</string>
+    <string name="community_topic_name">话题名称</string>
+    <string name="community_topic_category">话题分组</string>
+    <string name="community_topic_type">话题类型</string>
+    <string name="community_self_nick_name">我的群昵称</string>
+    <string name="community_personal_settings">个人设置</string>
+    <string name="community_community_information">社群信息</string>
+    <string name="community_settings_community_name">名称</string>
+    <string name="community_settings_community_avatar">头像</string>
+    <string name="community_settings_community_cover">封面</string>
+    <string name="community_settings_community_introduction">简介</string>
+    <string name="community_settings_community_id">社群ID</string>
+    <string name="community_settings_not_set">未设置</string>
+    <string name="community_transfer_owner">转让群主</string>
+    <string name="community_disband_group">解散社群</string>
+
+    <string name="community_no_category">无分组</string>
+
+    <string name="community_cancel">取消</string>
+    <string name="community_search_community_id">搜索社群ID</string>
+    <string name="community_search_community">搜索社群</string>
+    <string name="community_owner">群主</string>
+
+    <string name="community_select_category">选择分组</string>
+    <string name="community_invite">邀请成员</string>
+    <string name="community_remove_fail_tip">移除成员失败</string>
+    <string name="community_remove_member">移出社群</string>
+    <string name="community_add_group_member">添加成员</string>
+    <string name="community_remove_group_member">移除成员</string>
+
+    <string name="community_topic_type_text_title">文字话题</string>
+    <string name="community_topic_type_text_desc">支持文字、表情、图片、视频等类型消息收发互动，适用于聊天、发布活动/公告等场景</string>
+    <string name="community_topic_type_video_title">语音/视频话题</string>
+    <string name="community_topic_type_video_title_coming">语音/视频话题（敬请期待）</string>
+    <string name="community_topic_type_video_desc">支持实时语音连麦、视频互动，适用于唱歌聊天、游戏开黑等场景</string>
+    <string name="community_topic_type_live_title">直播话题</string>
+    <string name="community_topic_type_live_title_coming">直播话题（敬请期待）</string>
+    <string name="community_topic_type_live_desc">支持直播点赞、互动弹幕，适用于赛事直播、电商带货等场景</string>
+    <string name="community_delete_topic">删除话题</string>
+    <string name="community_delete_topic_tip">确认删除话题</string>
+    <string name="community_choose_avatar">选择头像</string>
+    <string name="community_over_limit_tip">最多只能选择%d个。</string>
+
+    <string name="community_default_category_announcement">公告</string>
+    <string name="community_default_category_communication">交流区</string>
+    <string name="community_topic_important_notice">重要通知</string>
+    <string name="community_topic_newbie_report">萌新报道</string>
+    <string name="community_topic_chat_hall">闲聊大厅</string>
+
+    <string name="community_to_be_experienced">待体验</string>
+    <string name="community_completed">已完成</string>
+    <string name="community_recommended_experience">建议体验功能</string>
+    <string name="community_quick_integration">用UI组件 1 分钟快速集成</string>
+    <string name="community_experience_send_message">在话题中发送一条消息</string>
+    <string name="community_experience_reply_message">在话题中回复一条消息</string>
+    <string name="community_experience_create_community">创建一个新社群</string>
+    <string name="community_experience_add_community">添加一个新社群</string>
+    <string name="community_experience_disband_community">解散一个社群</string>
+    <string name="community_experience_create_topic">创建一个话题</string>
+    <string name="community_experience_delete_topic">删除一个话题</string>
+    <string name="community_experience_more_demos">体验更多Demo</string>
+
+    <string name="community_integration_download_code">下载 TUIKit 源码</string>
+    <string name="community_integration_login">组件登录</string>
+    <string name="community_integration_create_viewPager">创建 ViewPager</string>
+    <string name="community_integration_build_fragment">构建核心 Fragment</string>
+    <string name="community_integration_build_audio_video_call">构建音视频通话功能</string>
+
+    <string name="community_network_connect_failed">网络异常，请检查网络设置</string>
+    <string name="community_network_connecting">网络连接中...</string>
+
+    <string name="community_integration_download_code_link">https://cloud.tencent.com/document/product/269/37059#module-.E6.BA.90.E7.A0.81.E9.9B.86.E6.88.90</string>
+    <string name="community_integration_login_link">https://cloud.tencent.com/document/product/269/37059#.E6.AD.A5.E9.AA.A4.E4.B8.80.EF.BC.9A.E7.BB.84.E4.BB.B6.E7.99.BB.E5.BD.95</string>
+    <string name="community_integration_create_viewPager_link">https://cloud.tencent.com/document/product/269/37059#.E6.AD.A5.E9.AA.A4.E4.BA.8C.EF.BC.9A.E5.88.9B.E5.BB.BA-viewpager</string>
+    <string name="community_integration_build_fragment_link">https://cloud.tencent.com/document/product/269/37059#.E6.AD.A5.E9.AA.A4.E4.B8.89.EF.BC.9A.E6.9E.84.E5.BB.BA.E6.A0.B8.E5.BF.83-fragment</string>
+    <string name="community_integration_build_audio_video_call_link">https://cloud.tencent.com/document/product/269/37059#.E6.AD.A5.E9.AA.A4.E5.9B.9B.EF.BC.9A.E6.9E.84.E5.BB.BA.E9.9F.B3.E8.A7.86.E9.A2.91.E9.80.9A.E8.AF.9D.E5.8A.9F.E8.83.BD</string>
+
+    <string name="community_copy_success_tip">复制成功</string>
+    <string name="community_coming_soon">敬请期待</string>
+
+</resources>

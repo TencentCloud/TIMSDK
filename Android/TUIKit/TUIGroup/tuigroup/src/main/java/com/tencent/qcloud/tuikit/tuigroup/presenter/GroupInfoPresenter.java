@@ -1,10 +1,14 @@
 package com.tencent.qcloud.tuikit.tuigroup.presenter;
 
+import android.text.TextUtils;
+
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupConstants;
+import com.tencent.qcloud.tuikit.tuigroup.TUIGroupService;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupMemberInfo;
+import com.tencent.qcloud.tuikit.tuigroup.interfaces.GroupEventListener;
 import com.tencent.qcloud.tuikit.tuigroup.model.GroupInfoProvider;
 import com.tencent.qcloud.tuikit.tuigroup.ui.interfaces.IGroupMemberLayout;
 import com.tencent.qcloud.tuikit.tuigroup.util.TUIGroupLog;
@@ -23,9 +27,21 @@ public class GroupInfoPresenter {
     private GroupInfo groupInfo;
     private GroupMemberInfo selfGroupMemberInfo;
 
+    private GroupEventListener groupEventListener;
+
     public GroupInfoPresenter(IGroupMemberLayout layout) {
         this.layout = layout;
         provider = new GroupInfoProvider();
+    }
+
+    public void setGroupEventListener() {
+        groupEventListener = new GroupEventListener() {
+            @Override
+            public void onGroupInfoChanged(String groupID) {
+                GroupInfoPresenter.this.onGroupInfoChanged(groupID);
+            }
+        };
+        TUIGroupService.getInstance().addGroupEventListener(groupEventListener);
     }
 
     public void setGroupInfo(GroupInfo groupInfo) {
@@ -50,6 +66,12 @@ public class GroupInfoPresenter {
                 ToastUtil.toastLongMessage(errMsg);
             }
         });
+    }
+
+    private void onGroupInfoChanged(String groupID) {
+        if (groupInfo != null && TextUtils.equals(groupID, groupInfo.getId())) {
+            loadGroupInfo(groupID);
+        }
     }
 
     public void getGroupMembers(GroupInfo groupInfo, final IUIKitCallback<GroupInfo> callBack) {
@@ -155,7 +177,8 @@ public class GroupInfoPresenter {
         provider.setTopConversation(conversationId, isSetTop, new IUIKitCallback<Void>() {
             @Override
             public void onSuccess(Void data) {
-                //不需要通知 Conversation 模块刷新界面，SDK 会回调。
+                groupInfo.setTopChat(isSetTop);
+                TUIGroupUtils.callbackOnSuccess(callback, null);
             }
 
             @Override
@@ -265,13 +288,44 @@ public class GroupInfoPresenter {
         });
     }
 
-    public void setGroupReceiveMessageOpt(GroupInfo groupInfo, boolean isChecked) {
+    public void setGroupNotDisturb(GroupInfo groupInfo, boolean isChecked, IUIKitCallback<Void> callback) {
         if (groupInfo == null) {
             TUIGroupLog.e(TAG, "mGroupInfo is NULL");
             return;
         }
 
-        provider.setGroupReceiveMessageOpt(groupInfo.getId(), !isChecked, null);
+        provider.setGroupReceiveMessageOpt(groupInfo.getId(), !isChecked, new IUIKitCallback() {
+            @Override
+            public void onSuccess(Object data) {
+                groupInfo.setMessageReceiveOption(!isChecked);
+                TUIGroupUtils.callbackOnSuccess(callback, null);
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                TUIGroupUtils.callbackOnError(callback, module, errCode, errMsg);
+            }
+        });
+    }
+
+    public void setGroupFold(GroupInfo groupInfo, boolean isChecked, IUIKitCallback<Void> callback) {
+        if (groupInfo == null) {
+            TUIGroupLog.e(TAG, "mGroupInfo is NULL");
+            return;
+        }
+
+        provider.setGroupFold(groupInfo.getId(), isChecked, new IUIKitCallback() {
+            @Override
+            public void onSuccess(Object data) {
+                groupInfo.setFolded(isChecked);
+                TUIGroupUtils.callbackOnSuccess(callback, null);
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                TUIGroupUtils.callbackOnError(callback, module, errCode, errMsg);
+            }
+        });
     }
 
     public void modifyGroupFaceUrl(String groupId, String faceUrl, IUIKitCallback<Void> callback) {

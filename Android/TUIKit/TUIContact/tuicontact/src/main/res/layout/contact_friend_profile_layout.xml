@@ -292,6 +292,21 @@
                     tools:visibility="visible" />
 
                 <Button
+                    android:id="@+id/btn_clear_chat_history"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/contact_profile_btn_height"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginTop="0.68dp"
+                    android:background="@drawable/btn_bg_color"
+                    android:text="@string/profile_clear_message"
+                    android:textColor="?attr/core_error_tip_color"
+                    android:textSize="@dimen/contact_profile_btn_text_size"
+                    android:visibility="gone"
+                    android:textAllCaps="false"
+                    tools:visibility="visible" />
+
+                <Button
                     android:id="@+id/btn_delete"
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="match_parent"

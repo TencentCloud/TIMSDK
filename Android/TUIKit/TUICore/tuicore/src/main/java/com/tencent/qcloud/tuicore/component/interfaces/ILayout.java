@@ -5,14 +5,14 @@ import com.tencent.qcloud.tuicore.component.TitleBarLayout;
 public interface ILayout {
 
     /**
-     * 获取标题栏
+     * get title bar
      *
      * @return
      */
     TitleBarLayout getTitleBar();
 
     /**
-     * 设置该 Layout 的父容器
+     * Set the parent container of this Layout
      *
      * @param parent
      */

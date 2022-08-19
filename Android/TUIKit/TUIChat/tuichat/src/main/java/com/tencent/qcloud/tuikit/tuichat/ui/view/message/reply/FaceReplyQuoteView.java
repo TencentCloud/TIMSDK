@@ -35,7 +35,6 @@ public class FaceReplyQuoteView extends TUIReplyQuoteView {
         }
         Bitmap bitmap = FaceManager.getCustomBitmap(faceReplyQuoteBean.getIndex(), filter);
         if (bitmap == null) {
-            // 自定义表情没有找到，用emoji再试一次
             bitmap = FaceManager.getEmoji(new String(faceReplyQuoteBean.getData()));
 
         }

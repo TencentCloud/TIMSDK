@@ -16,6 +16,8 @@
     <attr name="demo_main_tab_contact_selected_bg" format="reference"/>
     <attr name="demo_main_tab_profile_normal_bg" format="reference"/>
     <attr name="demo_main_tab_profile_selected_bg" format="reference"/>
+    <attr name="demo_main_tab_community_selected_bg" format="reference"/>
+    <attr name="demo_main_tab_community_normal_bg" format="reference"/>
     <attr name="demo_navigate_bar_bg" format="reference|color"/>
     <attr name="demo_title_bar_more" format="reference"/>
 

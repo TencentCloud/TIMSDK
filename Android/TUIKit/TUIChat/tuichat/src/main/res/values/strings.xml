@@ -97,6 +97,10 @@
     <string name="modify_group_avatar">changed the group profile photo.</string>
     <string name="banned">is blocked from posting</string>
     <string name="cancle_banned">is unblocked and can post now</string>
+    <string name="modify_group_add_opt">changed group add option to </string>
+    <string name="group_add_opt_auto_approval">Auto Approval</string>
+    <string name="group_add_opt_admin_approve">Admin Approval</string>
+    <string name="group_add_opt_join_disable">Prohibited from Joining</string>
 
     <string name="typing">Typing...</string>
     <string name="titlebar_mutiselect">MultiSelect</string>

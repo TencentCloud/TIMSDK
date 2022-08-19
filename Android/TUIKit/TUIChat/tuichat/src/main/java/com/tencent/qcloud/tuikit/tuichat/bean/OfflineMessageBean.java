@@ -17,6 +17,7 @@ public class OfflineMessageBean {
     public String faceUrl = "";
     public String content = "";
     // 发送时间戳，单位秒
+    // seconds
     public long sendTime = 0;
 
     @NonNull

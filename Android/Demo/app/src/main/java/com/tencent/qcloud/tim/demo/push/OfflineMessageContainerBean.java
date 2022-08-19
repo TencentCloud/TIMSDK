@@ -1,18 +1,33 @@
 package com.tencent.qcloud.tim.demo.push;
 
 /**
- * 为什么离线消息要做两层嵌套，主要是因为后台在携带离线数据时的包装不一样
- *
- * 比如我们发消息的时候想在V2TIMOfflinePushInfo.setExt设置的数据为{"a":1,"b":2}
- * 那后台对不同的厂商会有不同的包装：
- *
- * 小米：{"ext":"{\"a\":1, \"b\":2}"}，小米解析ext字段出来就可以
- * OPPO：没有用ext包装，所以oppo收到数据时用bundle.keySet()解析为两个key：a和b，值分别为1和2，无法简单转化为bean
- *
- * 所以现在的做法时，在发送离线消息时，统一包装为{"entity":"xxxxxx"}，实际内容放在entity中，这样对应各个平台的解析：
- *
- * 小米：{"ext":"{\"entity\": \"xxxxxx\"}，小米解析ext字段，用容器类OfflineMessageContainerBean获取到entity
- * OPPO：用bundle.keySet()解析出entity的key，直接就可以获取实际消息OfflineMessageBean
+ * Function：离线推送消息的透传字段可以通过接口 V2TIMOfflinePushInfo.setExt(ext) 设置，当用户收到推送点击通知栏时，可以在启动界面内获取该透传字段。
+ *           OfflineMessageContainerBean 是 TUIKitDemo 的透传参数 ext 对应的 Javabean。
+ * 
+ * Format：设置透传字段格式
+ *           new Gson().toJson(OfflineMessageContainerBean).getBytes()
+ *         获取透传字段格式
+ *           {"entity":"xxxxxx"}
+ * 
+ * Attention：OfflineMessageContainerBean 转化为 json 多了一层包装解析为 {"entity":"xxxxxx"} 格式，
+ *            因为 OPPO 透传消息解析方法有：收到数据时用bundle.keySet()解析需要 key-value 格式，不然无法简单转化为bean而获取失败。
+ * 
+ * 
+ * 
+ * 
+ * Function：The transparent transmission field of the offline push message can be set through the interface V2TIMOfflinePushInfo.setExt(ext)，
+ *           When the user receives the push and clicks on the notification bar, the transparent transmission field can be obtained in the startup interface.
+ *           OfflineMessageContainerBean is the Javabean corresponding to the transparent parameter ext of TUIKitDemo.
+ * 
+ * Format：Set the transparent transmission field format
+ *           new Gson().toJson(OfflineMessageContainerBean).getBytes()
+ *         Get the transparent transmission field format
+ *           {"entity":"xxxxxx"}
+ * 
+ * Attention：OfflineMessageContainerBean is converted to json with an extra layer of packaging and parsed as {"entity":"xxxxxx"} format，
+ *            Because OPPO's transparent message parsing methods are: when data is received, the key-value format is required for parsing with bundle.keySet(),
+ *            otherwise it cannot be simply converted into a bean and the acquisition fails.
+ * 
  */
 public class OfflineMessageContainerBean {
 

@@ -16,6 +16,11 @@ public class TUIConversationConstants {
      * 2: iOS支持的视频通话版本，后续已经不兼容
      * 3: 未发布版本
      * 4: Android/iOS/Web互通的视频通话版本
+     * 
+     * 1: Just a text message with a link
+     * 2: The video calling version supported by iOS is no longer compatible
+     * 3: unreleased version
+     * 4: Android/iOS/Web interoperable version for video call
      */
     public static final int JSON_VERSION_UNKNOWN = 0;
     public static final int JSON_VERSION_1       = 1;
@@ -29,7 +34,10 @@ public class TUIConversationConstants {
         public static final int PUBLIC = 1;
         public static final int CHAT_ROOM = 2;
         public static final int COMMUNITY = 3;
-
     }
+
+    public static final String CONVERSATION_SETTINGS_SP_NAME = "conversation_settings_sp";
+    public static final String HIDE_FOLD_ITEM_SP_KEY_PREFIX = "hide_fold_item_";
+    public static final String FOLD_ITEM_IS_UNREAD_SP_KEY_PREFIX = "fold_item_is_unread_";
 
 }

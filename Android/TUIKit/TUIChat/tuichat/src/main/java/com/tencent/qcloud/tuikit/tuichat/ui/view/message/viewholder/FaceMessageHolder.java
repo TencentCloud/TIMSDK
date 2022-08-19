@@ -54,10 +54,8 @@ public class FaceMessageHolder extends MessageContentHolder {
         }
         Bitmap bitmap = FaceManager.getCustomBitmap(msg.getIndex(), filter);
         if (bitmap == null) {
-            // 自定义表情没有找到，用emoji再试一次
             bitmap = FaceManager.getEmoji(new String(msg.getData()));
             if (bitmap == null) {
-                // TODO 临时找的一个图片用来表明自定义表情加载失败
                 contentImage.setImageDrawable(itemView.getContext().getResources().getDrawable(R.drawable.face_delete));
             } else {
                 contentImage.setImageBitmap(bitmap);

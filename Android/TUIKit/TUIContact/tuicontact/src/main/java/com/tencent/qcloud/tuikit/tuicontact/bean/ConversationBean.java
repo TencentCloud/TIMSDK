@@ -49,21 +49,17 @@ public class ConversationBean implements Parcelable {
 
         return 0;
     }
-    //2、实现Parcelable接口的public void writeToParcel(Parcel dest, int flags)方法
-    //通常进行重写
+    
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        //把数据写入Parcel
         dest.writeString(conversationID);
         dest.writeInt(isGroup);
         dest.writeString(title);
     }
-    //3、自定义类型中必须含有一个名称为CREATOR的静态成员，该成员对象要求实现Parcelable.Creator接口及其方法
+
     public static final Creator<ConversationBean> CREATOR = new Creator<ConversationBean>() {
         @Override
         public ConversationBean createFromParcel(Parcel source) {
-            //从Parcel中读取数据
-            //此处read顺序依据write顺序
             return new ConversationBean(source.readString(), source.readInt(),source.readString());
         }
         @Override

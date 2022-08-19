@@ -19,6 +19,7 @@ import com.tencent.qcloud.tuicore.component.TitleBarLayout;
 import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationPresenter;
+import com.tencent.qcloud.tuikit.tuiconversation.ui.interfaces.OnItemClickListener;
 import com.tencent.qcloud.tuikit.tuiconversation.ui.view.ForwardConversationSelectorAdapter;
 import com.tencent.qcloud.tuikit.tuiconversation.ui.view.ForwardSelectLayout;
 import com.tencent.qcloud.tuikit.tuiconversation.ui.view.ConversationListLayout;
@@ -60,33 +61,26 @@ public class TUIForwardSelectFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        // 从布局文件中获取会话列表面板
         mForwardLayout = view.findViewById(R.id.forward_conversation_layout);
 
         presenter = new ConversationPresenter();
         mForwardLayout.setPresenter(presenter);
 
-
-        // 会话列表面板的默认UI和交互初始化
         mForwardLayout.initDefault();
 
         customizeConversation();
-        mForwardLayout.getConversationList().setOnItemClickListener(new ConversationListLayout.OnItemClickListener() {
+        mForwardLayout.getConversationList().setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int viewType, ConversationInfo conversationInfo) {
-                //此处为demo的实现逻辑，更根据会话类型跳转到相关界面，开发者可根据自己的应用场景灵活实现
                 if (viewType == ConversationInfo.TYPE_RECENT_LABEL){
                     return;
                 } else if (viewType == ConversationInfo.TYPE_FORWAR_SELECT){
-                    //跳转到通讯录或者创建群聊界面
                     if(mTitleBarLayout.getLeftTitle().getText().equals(getString(R.string.titlebar_cancle))){
-                        //通讯录
                         Bundle param = new Bundle();
                         param.putInt(TUIConversationConstants.GroupType.TYPE, TUIConversationConstants.GroupType.PUBLIC);
                         param.putBoolean(TUIConversationConstants.FORWARD_CREATE_NEW_CHAT, false);
                         TUICore.startActivity(TUIForwardSelectFragment.this, "ForwardSelectGroupActivity", param, TUIConversationConstants.FORWARD_SELECT_MEMBERS_CODE);
                     }else if(mTitleBarLayout.getLeftTitle().getText().equals(getString(R.string.titlebar_close))){
-                        //创建群聊界面
                         Bundle param = new Bundle();
                         param.putInt(TUIConversationConstants.GroupType.TYPE, TUIConversationConstants.GroupType.PUBLIC);
                         param.putBoolean(TUIConversationConstants.FORWARD_CREATE_NEW_CHAT, true);
@@ -95,12 +89,11 @@ public class TUIForwardSelectFragment extends BaseFragment {
                         TUIConversationLog.d(TAG,"Titlebar exception");
                     }
                 } else {
-                    //转发
-                    if(mTitleBarLayout.getLeftTitle().getText().equals(getString(R.string.titlebar_cancle))) {//会话多选
+                    if(mTitleBarLayout.getLeftTitle().getText().equals(getString(R.string.titlebar_cancle))) {
                         mDataSource = mForwardLayout.getConversationList().getAdapter().getSelectedItem();
                         checkRepeat();
                         refreshSelectConversations();
-                    } else if(mTitleBarLayout.getLeftTitle().getText().equals(getString(R.string.titlebar_close))){//点击会话转发
+                    } else if(mTitleBarLayout.getLeftTitle().getText().equals(getString(R.string.titlebar_close))){
                         forwardMessages(conversationInfo);
                     } else {
                         forwardMessages(conversationInfo);
@@ -203,9 +196,7 @@ public class TUIForwardSelectFragment extends BaseFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("");
         builder.setMessage(getString(R.string.forward_alert_title));
-        //点击对话框以外的区域是否让对话框消失
         builder.setCancelable(true);
-        //设置正面按钮
         builder.setPositiveButton(getString(R.string.sure), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -222,7 +213,6 @@ public class TUIForwardSelectFragment extends BaseFragment {
                 dialog.dismiss();
             }
         });
-        //设置反面按钮
         builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -249,18 +239,15 @@ public class TUIForwardSelectFragment extends BaseFragment {
         mForwardLayout.getTitleBar().setOnLeftClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //点击取消/关闭
                 if(mTitleBarLayout.getLeftTitle().getText().equals(getString(R.string.titlebar_cancle))){
                     mTitleBarLayout.getRightGroup().setVisibility(View.VISIBLE);
                     mTitleBarLayout.setTitle(getString(R.string.titlebar_close), TitleBarLayout.Position.LEFT);
                     mTitleBarLayout.setTitle(getString(R.string.titlebar_mutiselect), TitleBarLayout.Position.RIGHT);
 
-                    //取消多选状态
                     ConversationListLayout listLayout = mForwardLayout.getConversationList();
                     listLayout.getAdapter().setShowMultiSelectCheckBox(false);
                     listLayout.getAdapter().notifyDataSetChanged();
 
-                    //取消选中会话显示
                     mForwardSelectlistViewLayout.setVisibility(View.GONE);
                     mAdapter.setDataSource(null);
                     mAllSelectedConversations.clear();
@@ -275,11 +262,9 @@ public class TUIForwardSelectFragment extends BaseFragment {
         mForwardLayout.getTitleBar().setOnRightClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //点击多选
                 mTitleBarLayout.getRightGroup().setVisibility(View.GONE);
                 mTitleBarLayout.setTitle(getString(R.string.titlebar_cancle), TitleBarLayout.Position.LEFT);
 
-                //打开多选状态
                 ConversationListLayout listLayout = mForwardLayout.getConversationList();
                 listLayout.getAdapter().setShowMultiSelectCheckBox(true);
                 listLayout.getAdapter().notifyDataSetChanged();
@@ -326,7 +311,7 @@ public class TUIForwardSelectFragment extends BaseFragment {
             if (mDataSource != null && mDataSource.size() != 0) {
                 for (int i = 0; i < mDataSource.size(); i++) {
                     if (conversationInfo.getId().equals(mDataSource.get(i).getId())) {
-                        iterator.remove();// 使用迭代器的删除方法删除
+                        iterator.remove();
                         break;
                     }
                 }

@@ -40,7 +40,6 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
     private List<TUIMessageBean> mDataSource = new ArrayList<>();
     private OnItemClickListener mOnItemClickListener;
 
-    //消息转发
     private HashMap<String, Boolean> mSelectedPositions = new HashMap<String, Boolean>();
     protected boolean isShowMultiSelectCheckBox = false;
 
@@ -63,7 +62,6 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
         isReplyDetailMode = replyDetailMode;
     }
 
-    //获得选中条目的结果，msgId
     public ArrayList<TUIMessageBean> getSelectedItem() {
         if (mSelectedPositions == null || mSelectedPositions.size() == 0) {
             return null;
@@ -87,7 +85,6 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
 
     }
 
-    //设置给定位置条目的选择状态
     public void setItemChecked(String msgID, boolean isChecked) {
         if (mSelectedPositions == null) {
             return;
@@ -96,7 +93,6 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
         mSelectedPositions.put(msgID, isChecked);
     }
 
-    //根据位置判断条目是否选中
     private boolean isItemChecked(String id) {
         if (mSelectedPositions.size() <= 0) {
             return false;
@@ -172,7 +168,6 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
         }
     }
 
-    // 设置多选框的选中状态和点击事件
     private void setCheckBoxStatus(final int position, final String msgId, MessageBaseHolder baseHolder) {
         if (baseHolder.mMutiSelectCheckBox == null) {
             return;
@@ -185,18 +180,13 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
             }
         } else {
             baseHolder.mMutiSelectCheckBox.setVisibility(View.VISIBLE);
-
-            //设置条目状态
             baseHolder.mMutiSelectCheckBox.setChecked(isItemChecked(msgId));
-            //checkBox的监听
             baseHolder.mMutiSelectCheckBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     changeCheckedStatus(msgId, position);
                 }
             });
-
-            //条目view的监听
             baseHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -353,9 +343,13 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
                 } else if (type == MessageRecyclerView.DATA_CHANGE_TYPE_UPDATE) {
                     notifyDataSetChanged();
                 } else if (type == MessageRecyclerView.DATA_CHANGE_TYPE_ADD_FRONT) {
-                    //加载条目为数0，只更新动画
+                    // 加载条目为数0，只更新动画
+                    // The number of loaded entries is 0, only the animation is updated
                     if (value != 0) {
-                        //加载过程中有可能之前第一条与新加载的最后一条的时间间隔不超过5分钟，时间条目需去掉，所以这里的刷新要多一个条目
+                        // 加载过程中有可能之前第一条与新加载的最后一条的时间间隔不超过5分钟，时间条目需去掉，所以这里的刷新要多一个条目
+                        // During the loading process, it is possible that the time interval between the first item before 
+                        // and the last item newly loaded is not more than 5 minutes, and the time entry needs to be removed, 
+                        // so the refresh here needs one more entry
                         if (getItemCount() > value) {
                             notifyItemRangeInserted(0, value);
                         } else {
@@ -390,7 +384,6 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
             return MSG_TYPE_HEADER_VIEW;
         }
         TUIMessageBean msg = getItem(position);
-        // 撤回消息显示为 TIPS 类型
         if (msg.getStatus() == TUIMessageBean.MSG_STATUS_REVOKE) {
             return TUIChatService.getInstance().getViewType(TipsMessageBean.class);
         }

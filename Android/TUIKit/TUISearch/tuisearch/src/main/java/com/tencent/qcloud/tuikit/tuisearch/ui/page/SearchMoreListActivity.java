@@ -40,24 +40,16 @@ import static com.tencent.qcloud.tuikit.tuisearch.ui.view.SearchResultAdapter.GR
 
 public class SearchMoreListActivity extends BaseLightActivity {
     private static final String TAG = SearchMoreListActivity.class.getSimpleName();
-    /**
-     * 搜索框
-     */
+
     private EditText mEdtSearch;
-    /**
-     * 删除按钮
-     */
+
     private ImageView mImgvDelete;
     private TextView mCancleView;
-    /**
-     * recyclerview
-     */
+
     private RecyclerView mFriendRcSearch;
     private RecyclerView mGroupRcSearch;
     private PageRecycleView mConversationRcSearch;
-    /**
-     * 全部匹配的适配器
-     */
+
     private SearchResultAdapter mContactRcSearchAdapter;
     private SearchResultAdapter mGroupRcSearchAdapter;
     private SearchResultAdapter mConversationRcSearchAdapter;
@@ -125,11 +117,7 @@ public class SearchMoreListActivity extends BaseLightActivity {
         presenter.setGroupAdapter(mGroupRcSearchAdapter);
     }
 
-    /**
-     * 设置监听
-     */
     private void setListener() {
-        //edittext的监听
         mEdtSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -141,7 +129,6 @@ public class SearchMoreListActivity extends BaseLightActivity {
 
             }
 
-            //每次edittext内容改变时执行 控制删除按钮的显示隐藏
             @Override
             public void afterTextChanged(Editable editable) {
                 if (editable.length() == 0) {
@@ -153,7 +140,6 @@ public class SearchMoreListActivity extends BaseLightActivity {
                 pageIndex = 0;
                 mConversationRcSearch.setNestedScrollingEnabled(true);
                 initData(mKeyWords);
-                //匹配文字 变色
                 doChangeColor(mKeyWords);
             }
         });
@@ -164,7 +150,6 @@ public class SearchMoreListActivity extends BaseLightActivity {
             }
         });
 
-        //recyclerview的点击监听
         if (mContactRcSearchAdapter != null) {
             mContactRcSearchAdapter.setOnItemClickListener(new SearchResultAdapter.onItemClickListener() {
                 @Override
@@ -274,7 +259,7 @@ public class SearchMoreListActivity extends BaseLightActivity {
                 }
             });
         }
-        //删除按钮的监听
+
         mImgvDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -286,16 +271,12 @@ public class SearchMoreListActivity extends BaseLightActivity {
         });
     }
 
-    /**
-     * 字体匹配方法
-     */
     private void doChangeColor(String text) {
         if (text.equals("")) {
             mContactRcSearchAdapter.setText(null);
             mGroupRcSearchAdapter.setText(null);
             mConversationRcSearchAdapter.setText(null);
         } else {
-            //设置要变色的关键字
             mContactRcSearchAdapter.setText(text);
             mGroupRcSearchAdapter.setText(text);
             mConversationRcSearchAdapter.setText(text);
@@ -379,7 +360,6 @@ public class SearchMoreListActivity extends BaseLightActivity {
         mGroupRcSearch = (RecyclerView) findViewById(R.id.group_rc_search);
         mConversationRcSearch = (PageRecycleView) findViewById(R.id.conversation_rc_search);
         mCancleView = (TextView) findViewById(R.id.cancel_button);
-        //Recyclerview的配置
         mFriendRcSearch.setLayoutManager(new LinearLayoutManager(this));
         mGroupRcSearch.setLayoutManager(new LinearLayoutManager(this));
         mConversationRcSearch.setLayoutManager(new LinearLayoutManager(this));
@@ -400,7 +380,6 @@ public class SearchMoreListActivity extends BaseLightActivity {
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-            // 获得当前得到焦点的View，一般情况下就是EditText（特殊情况就是轨迹求或者实体案件会移动焦点）
             View v = getCurrentFocus();
             if (isShouldHideInput(v, ev)) {
                 hideSoftInput(v.getWindowToken());
@@ -409,13 +388,6 @@ public class SearchMoreListActivity extends BaseLightActivity {
         return super.dispatchTouchEvent(ev);
     }
 
-    /**
-     * 根据EditText所在坐标和用户点击的坐标相对比，来判断是否隐藏键盘，因为当用户点击EditText时没必要隐藏
-     *
-     * @param v
-     * @param event
-     * @return
-     */
     private boolean isShouldHideInput(View v, MotionEvent event) {
         if (v != null && (v instanceof EditText)) {
             int[] l = {0, 0};
@@ -423,21 +395,14 @@ public class SearchMoreListActivity extends BaseLightActivity {
             int left = l[0], top = l[1], bottom = top + v.getHeight(), right = left
                     + v.getWidth();
             if (event.getX() > left && event.getX() < right && event.getY() > top && event.getY() < bottom) {
-                // 点击EditText的事件，忽略它。
                 return false;
             } else {
                 return true;
             }
         }
-        // 如果焦点不是EditText则忽略，这个发生在视图刚绘制完，第一个焦点不在EditView上，和用户用轨迹球选择其他的焦点
         return false;
     }
 
-    /**
-     * 多种隐藏软件盘方法的其中一种
-     *
-     * @param token
-     */
     private void hideSoftInput(IBinder token) {
         if (token != null) {
             InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);

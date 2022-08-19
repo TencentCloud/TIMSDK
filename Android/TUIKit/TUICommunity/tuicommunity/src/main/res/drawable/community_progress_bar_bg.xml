@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rotate xmlns:android="http://schemas.android.com/apk/res/android"
+    android:fromDegrees="0"
+    android:toDegrees="360"
+    android:repeatMode="restart"
+    android:interpolator="@android:interpolator/linear"
+    android:drawable="@drawable/community_progress_bar_ring"
+    android:pivotX="50%"
+    android:pivotY="50%">
+
+</rotate>

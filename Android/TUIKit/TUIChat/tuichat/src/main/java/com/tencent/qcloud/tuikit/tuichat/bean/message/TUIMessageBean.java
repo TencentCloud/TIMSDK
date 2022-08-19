@@ -17,47 +17,67 @@ import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
 
 import java.io.Serializable;
 
-public abstract class TUIMessageBean implements Serializable {
+public abstract class TUIMessageBean implements Serializable, Comparable<TUIMessageBean> {
      /**
       * 消息正常状态
+      *
+      * message normal
       */
      public static final int MSG_STATUS_NORMAL = 0;
      /**
       * 消息发送中状态
+      *
+      * message sending
       */
      public static final int MSG_STATUS_SENDING = 1;
      /**
       * 消息发送成功状态
+      *
+      * message send success
       */
      public static final int MSG_STATUS_SEND_SUCCESS = 2;
      /**
       * 消息发送失败状态
+      *
+      * message send failed
       */
      public static final int MSG_STATUS_SEND_FAIL = 3;
 
      /**
       * 消息未读状态
+      *
+      * message unread
       */
      public static final int MSG_STATUS_READ = 0x111;
      /**
       * 消息删除状态
+      *
+      * message deleted
       */
      public static final int MSG_STATUS_DELETE = 0x112;
      /**
       * 消息撤回状态
+      *
+      * messaage revoked
       */
      public static final int MSG_STATUS_REVOKE = 0x113;
 
      /**
       * 消息内容下载中状态
+      *
+      * message downloading
       */
      public static final int MSG_STATUS_DOWNLOADING = 4;
      /**
       * 消息内容未下载状态
+      *
+      * message undownloaded
       */
      public static final int MSG_STATUS_UN_DOWNLOAD = 5;
      /**
       * 消息内容已下载状态
+      *
+      * message downloaded
       */
      public static final int MSG_STATUS_DOWNLOADED = 6;
 
@@ -164,20 +184,17 @@ public abstract class TUIMessageBean implements Serializable {
 
      /**
       * 获取要显示在会话列表的消息摘要
-      * @return 消息摘要
+      *
+      * Get a summary of messages to display in the conversation list
+      * @return
       */
      public abstract String onGetDisplayString();
 
-     /**
-      * V2TIMMessage 解析为 TUIMessageBean
-      * @param v2TIMMessage IMSDK 消息类
-      */
      public abstract void onProcessMessage(V2TIMMessage v2TIMMessage);
 
      public final long getMessageTime() {
           if (v2TIMMessage != null) {
                long timestamp = v2TIMMessage.getTimestamp();
-               // 老版本 IMSDK 创建消息时间为0，返回客户端时间
                if (timestamp != 0) {
                     return timestamp;
                }
@@ -267,7 +284,6 @@ public abstract class TUIMessageBean implements Serializable {
      }
 
      public String getUserDisplayName() {
-          // 群名片->好友备注->昵称->ID
           String displayName;
           if (!TextUtils.isEmpty(getNameCard())) {
                displayName = getNameCard();
@@ -361,5 +377,30 @@ public abstract class TUIMessageBean implements Serializable {
 
      public Class<? extends TUIReplyQuoteBean> getReplyQuoteBeanClass() {
           return null;
+     }
+
+     @Override
+     public int compareTo(TUIMessageBean messageBean) {
+          if (TextUtils.equals(getId(), messageBean.getId())) {
+               return 0;
+          }
+
+          if (messageBean.isGroup()) {
+               if (getMsgSeq() > messageBean.getMsgSeq()) {
+                    return 1;
+               } else if (getMsgSeq() == messageBean.getMsgSeq()) {
+                    return 0;
+               } else {
+                    return -1;
+               }
+          } else {
+               if (getMessageTime() > messageBean.getMessageTime()) {
+                    return 1;
+               } else if (getMessageTime() == messageBean.getMessageTime()) {
+                    return 0;
+               } else {
+                    return -1;
+               }
+          }
      }
 }

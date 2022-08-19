@@ -41,7 +41,8 @@ public class GroupMemberAdapter extends RecyclerView.Adapter<GroupMemberAdapter.
     private boolean isSelectMode;
 
     private ArrayList<String> selectedMember = new ArrayList<>();
-
+    private ArrayList<String> excludeList;
+    private ArrayList<String> alreadySelectedList;
     public void setSelectMode(boolean selectMode) {
         isSelectMode = selectMode;
     }
@@ -58,6 +59,14 @@ public class GroupMemberAdapter extends RecyclerView.Adapter<GroupMemberAdapter.
         this.mCallback = callback;
     }
 
+    public void setExcludeList(ArrayList<String> excludeList) {
+        this.excludeList = excludeList;
+    }
+
+    public void setAlreadySelectedList(ArrayList<String> alreadySelectedList) {
+        this.alreadySelectedList = alreadySelectedList;
+    }
+
     @NonNull
     @Override
     public GroupMemberViewHodler onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -69,8 +78,6 @@ public class GroupMemberAdapter extends RecyclerView.Adapter<GroupMemberAdapter.
     public void onBindViewHolder(@NonNull GroupMemberViewHodler holder, int position) {
         final GroupMemberInfo info = mGroupMembers.get(position);
         GlideEngine.loadImage(holder.memberIcon, info.getIconUrl());
-
-        // 显示优先级 群名片->昵称->账号
         if (!TextUtils.isEmpty(info.getNameCard())) {
             holder.memberName.setText(info.getNameCard());
         } else {
@@ -92,8 +99,10 @@ public class GroupMemberAdapter extends RecyclerView.Adapter<GroupMemberAdapter.
                 public void onClick(View v) {
                     holder.checkBox.setChecked(!holder.checkBox.isChecked());
                     if (holder.checkBox.isChecked()) {
+                        info.setSelected(true);
                         selectedMember.add(info.getAccount());
                     } else {
+                        info.setSelected(false);
                         selectedMember.remove(info.getAccount());
                     }
                 }
@@ -153,6 +162,20 @@ public class GroupMemberAdapter extends RecyclerView.Adapter<GroupMemberAdapter.
                 }
             });
         }
+
+        setAlreadySelected(holder, info);
+    }
+
+    private void setAlreadySelected(GroupMemberViewHodler holder, GroupMemberInfo memberInfo) {
+        if (alreadySelectedList != null && alreadySelectedList.contains(memberInfo.getAccount())) {
+            holder.checkBox.setChecked(true);
+            holder.itemView.setEnabled(false);
+            holder.checkBox.setEnabled(false);
+        } else {
+            holder.itemView.setEnabled(true);
+            holder.checkBox.setEnabled(true);
+            holder.checkBox.setSelected(memberInfo.isSelected());
+        }
     }
 
     @Override
@@ -166,7 +189,17 @@ public class GroupMemberAdapter extends RecyclerView.Adapter<GroupMemberAdapter.
     public void setDataSource(GroupInfo groupInfo) {
         if (groupInfo != null) {
             mGroupInfo = groupInfo;
-            this.mGroupMembers = groupInfo.getMemberDetails();
+            mGroupMembers.clear();
+            if (excludeList == null || excludeList.isEmpty()) {
+                mGroupMembers.addAll(groupInfo.getMemberDetails());
+            } else {
+                for (GroupMemberInfo groupMemberInfo : groupInfo.getMemberDetails()) {
+                    if (excludeList.contains(groupMemberInfo.getAccount())) {
+                        continue;
+                    }
+                    mGroupMembers.add(groupMemberInfo);
+                }
+            }
             BackgroundTasks.getInstance().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

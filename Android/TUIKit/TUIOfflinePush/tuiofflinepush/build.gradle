@@ -2,6 +2,12 @@ plugins {
     id 'com.android.library'
 }
 
+ext {
+    // 是否要编译 uniapp 推送原生插件，默认为 false
+    // Whether to compile uniapp and push native plugins，default is false
+    UNIAPP_MODEL = false
+}
+
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
@@ -11,6 +17,7 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
+        //buildConfigField "boolean", "UNIAPP_MODEL", String.valueOf(UNIAPP_MODEL)
     }
 
     buildTypes {
@@ -22,6 +29,24 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    sourceSets {
+        main {
+            if (!UNIAPP_MODEL) {
+                manifest.srcFile 'src/main/AndroidManifest.xml'
+                java.srcDirs = [
+                        'src/main/java',
+                        'src/main/native/java'
+                ]
+            } else {
+                manifest.srcFile 'src/main/uniapp/AndroidManifest.xml'
+                java.srcDirs = [
+                        'src/main/java',
+                        'src/main/uniapp/java'
+                ]
+            }
+        }
     }
 }
 
@@ -48,5 +73,10 @@ dependencies {
     implementation 'com.tencent.tpns:huawei:1.3.3.3-release'
     implementation 'com.huawei.hms:push:5.0.2.300'
 
-    api project(':tuicore')
+    if (!UNIAPP_MODEL) {
+        api project(':tuicore')
+    } else {
+        implementation 'com.alibaba:fastjson:1.1.46.android'
+        compileOnly fileTree(dir: 'libs', include: ['uniapp-v8-release.aar'])
+    }
 }

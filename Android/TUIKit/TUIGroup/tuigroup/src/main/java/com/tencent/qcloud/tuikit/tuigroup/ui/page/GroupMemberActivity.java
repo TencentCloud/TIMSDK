@@ -6,7 +6,6 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 
 import android.view.View;
-
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
@@ -15,6 +14,7 @@ import com.tencent.qcloud.tuikit.tuigroup.R;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupService;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupConstants;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
+import com.tencent.qcloud.tuikit.tuigroup.bean.GroupMemberInfo;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupInfoPresenter;
 import com.tencent.qcloud.tuikit.tuigroup.ui.view.GroupMemberLayout;
 import com.tencent.qcloud.tuikit.tuigroup.ui.interfaces.IGroupMemberListener;
@@ -22,9 +22,6 @@ import com.tencent.qcloud.tuikit.tuigroup.ui.interfaces.IGroupMemberListener;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 群成员管理
- */
 public class GroupMemberActivity extends BaseLightActivity {
 
     private GroupMemberLayout mMemberLayout;
@@ -32,7 +29,8 @@ public class GroupMemberActivity extends BaseLightActivity {
     private GroupInfoPresenter presenter;
 
     private boolean isSelectMode = false;
-
+    private ArrayList<String> excludeList;
+    private ArrayList<String> alreadySelectedList;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,11 +48,13 @@ public class GroupMemberActivity extends BaseLightActivity {
         isSelectMode = intent.getBooleanExtra(TUIGroupConstants.Selection.IS_SELECT_MODE, false);
 
         String title = intent.getStringExtra(TUIGroupConstants.Selection.TITLE);
-
+        excludeList = intent.getStringArrayListExtra(TUIGroupConstants.Selection.EXCLUDE_LIST);
+        alreadySelectedList = intent.getStringArrayListExtra(TUIGroupConstants.Selection.SELECTED_LIST);
         int filter = intent.getIntExtra(TUIGroupConstants.Selection.FILTER, GroupInfo.GROUP_MEMBER_FILTER_ALL);
         mMemberLayout.setSelectMode(isSelectMode);
         mMemberLayout.setTitle(title);
-
+        mMemberLayout.setExcludeList(excludeList);
+        mMemberLayout.setAlreadySelectedList(alreadySelectedList);
         presenter = new GroupInfoPresenter(mMemberLayout);
         mMemberLayout.setPresenter(presenter);
         presenter.loadGroupInfo(mGroupInfo.getId(), filter);
@@ -93,6 +93,11 @@ public class GroupMemberActivity extends BaseLightActivity {
                 Bundle param = new Bundle();
                 param.putString(TUIGroupConstants.Group.GROUP_ID, info.getId());
                 param.putBoolean(TUIGroupConstants.Selection.SELECT_FRIENDS, true);
+                ArrayList<String> selectedList = new ArrayList<>();
+                for (GroupMemberInfo memberInfo : info.getMemberDetails()) {
+                    selectedList.add(memberInfo.getAccount());
+                }
+                param.putStringArrayList(TUIGroupConstants.Selection.SELECTED_LIST, selectedList);
                 TUICore.startActivity(GroupMemberActivity.this, "StartGroupMemberSelectActivity", param, 1);
             }
 
@@ -104,7 +109,6 @@ public class GroupMemberActivity extends BaseLightActivity {
                 TUICore.startActivity(GroupMemberActivity.this, "StartGroupMemberSelectActivity", param, 2);
             }
         });
-
     }
 
     @Override

@@ -11,9 +11,6 @@ import androidx.annotation.Nullable;
 
 import com.tencent.qcloud.tuikit.tuichat.R;
 
-/**
- * 可设置最大宽度的 LinearLayout
- */
 public class MaxWidthLinearLayout extends LinearLayout {
 
     int maxWidthPx;

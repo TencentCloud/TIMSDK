@@ -18,21 +18,24 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 图片消息
- */
 public class ImageMessageBean  extends TUIMessageBean {
 
     /**
      * ## 原图
+     * 
+     * original image
      */
     public static final int IMAGE_TYPE_ORIGIN = V2TIMImageElem.V2TIM_IMAGE_TYPE_ORIGIN;
     /**
      * ## 缩略图
+     * 
+     * thumbnail
      */
     public static final int IMAGE_TYPE_THUMB = V2TIMImageElem.V2TIM_IMAGE_TYPE_THUMB;
     /**
      * ## 大图
+     * 
+     * big picture
      */
     public static final int IMAGE_TYPE_LARGE = V2TIMImageElem.V2TIM_IMAGE_TYPE_LARGE;
 
@@ -71,7 +74,8 @@ public class ImageMessageBean  extends TUIMessageBean {
             imgWidth = size[0];
             imgHeight = size[1];
         }
-        //本地路径为空，可能为更换手机或者是接收的消息
+        // 本地路径为空，可能为更换手机或者是接收的消息
+        // The local path is empty, it may be a phone change or a received message
         else {
             List<V2TIMImageElem.V2TIMImage> imgs = imageElem.getImageList();
             for (int i = 0; i < imgs.size(); i++) {
@@ -92,6 +96,8 @@ public class ImageMessageBean  extends TUIMessageBean {
 
     /**
      * 获取多媒体消息的数据源
+     * 
+     * Get the data source of the multimedia message
      *
      * @return
      */
@@ -105,6 +111,8 @@ public class ImageMessageBean  extends TUIMessageBean {
 
     /**
      * 设置多媒体消息的数据源
+     * 
+     * Set the data source of the multimedia message
      *
      * @param dataUri
      */
@@ -116,6 +124,8 @@ public class ImageMessageBean  extends TUIMessageBean {
 
     /**
      * 获取多媒体消息的保存路径
+     * 
+     * Get the save path of multimedia messages
      *
      * @return
      */
@@ -125,6 +135,8 @@ public class ImageMessageBean  extends TUIMessageBean {
 
     /**
      * 设置多媒体消息的保存路径
+     * 
+     * Set the save path of multimedia messages
      *
      * @param dataPath
      */

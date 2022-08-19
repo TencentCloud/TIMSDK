@@ -10,8 +10,22 @@
 
     <com.tencent.qcloud.tuikit.tuigroup.ui.view.GroupMemberLayout
         android:id="@+id/group_member_grid_layout"
+        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-
+    <TextView
+        android:id="@+id/limit_tips"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:paddingBottom="36dp"
+        android:paddingTop="12dp"
+        android:background="#F6F6F6"
+        android:textColor="#999999"
+        android:textSize="12sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:visibility="visible"
+        tools:text="123"
+        android:visibility="gone"/>
 </LinearLayout>

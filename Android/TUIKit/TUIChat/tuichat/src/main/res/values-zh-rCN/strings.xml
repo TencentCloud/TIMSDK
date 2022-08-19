@@ -95,6 +95,10 @@
     <string name="modify_group_avatar">修改了群头像</string>
     <string name="banned">被禁言</string>
     <string name="cancle_banned">被取消禁言</string>
+    <string name="modify_group_add_opt">修改加群方式为</string>
+    <string name="group_add_opt_auto_approval">自动审批</string>
+    <string name="group_add_opt_admin_approve">管理员审批</string>
+    <string name="group_add_opt_join_disable">禁止加群</string>
 
     <string name="typing">对方正在输入...</string>
     <string name="titlebar_mutiselect">多选</string>

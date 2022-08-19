@@ -11,9 +11,6 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.CustomLinkReplyQuote
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TUIReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
-/**
- * 自定义超链接消息
- */
 public class CustomLinkMessageBean extends TUIMessageBean {
 
     private CustomHelloMessage customHelloMessage;

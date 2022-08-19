@@ -46,6 +46,7 @@ import java.util.Set;
 
 public class MessageReplyDetailActivity extends BaseLightActivity implements InputView.MessageHandler, IReplyMessageHandler {
     // 取一个足够大的偏移保证能一次性滚动到最底部
+    // Take a large enough offset to scroll to the bottom at one time
     private static final int SCROLL_TO_END_OFFSET = -999999;
 
     private TitleBarLayout titleBarLayout;

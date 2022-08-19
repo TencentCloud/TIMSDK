@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMConversation;
+import com.tencent.imsdk.v2.V2TIMConversationOperationResult;
 import com.tencent.imsdk.v2.V2TIMGroupApplication;
 import com.tencent.imsdk.v2.V2TIMGroupApplicationResult;
 import com.tencent.imsdk.v2.V2TIMGroupInfo;
@@ -41,12 +42,9 @@ public class GroupInfoProvider {
     }
 
     public void loadGroupInfo(final String groupId, int filter, final IUIKitCallback<GroupInfo> callBack) {
-        // 串行异步加载群组信息
         loadGroupPublicInfo(groupId, new IUIKitCallback<V2TIMGroupInfoResult>() {
             @Override
             public void onSuccess(V2TIMGroupInfoResult data) {
-
-                // 设置群的一般信息，比如名称、类型等
                 GroupInfo groupInfo = new GroupInfo();
                 groupInfo.covertTIMGroupDetailInfo(data);
                 String conversationId = TUIGroupUtils.getConversationIdByUserId(groupId, true);
@@ -55,13 +53,18 @@ public class GroupInfoProvider {
                     public void onSuccess(V2TIMConversation v2TIMConversation) {
                         boolean isTop = v2TIMConversation.isPinned();
                         groupInfo.setTopChat(isTop);
+
+                        List<Long> markList = v2TIMConversation.getMarkList();
+                        if (markList.contains(V2TIMConversation.V2TIM_CONVERSATION_MARK_TYPE_FOLD)) {
+                            groupInfo.setFolded(true);
+                        }
+
                         // 异步获取群成员
                         loadGroupMembers(groupInfo, filter , 0, callBack);
                     }
 
                     @Override
                     public void onError(int code, String desc) {
-                        // 异步获取群成员
                         loadGroupMembers(groupInfo, filter, 0, callBack);
                     }
                 });
@@ -406,6 +409,28 @@ public class GroupInfoProvider {
             public void onError(int code, String desc) {
                 TUIGroupUtils.callbackOnError(callBack, code, desc);
                 TUIGroupLog.d(TAG, "setReceiveMessageOpt onError code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
+            }
+        });
+    }
+
+    public void setGroupFold(String groupID, boolean isFold, IUIKitCallback callback) {
+        TUIGroupLog.i(TAG, "setGroupFold id:" + groupID + "|isTop:" + isFold);
+        String conversationID = "group_" + groupID;
+        List<String> conversationIDList = new ArrayList<>();
+        conversationIDList.add(conversationID);
+        V2TIMManager.getConversationManager().markConversation(conversationIDList,
+                V2TIMConversation.V2TIM_CONVERSATION_MARK_TYPE_FOLD, isFold,
+                new V2TIMValueCallback<List<V2TIMConversationOperationResult>>() {
+            @Override
+            public void onSuccess(List<V2TIMConversationOperationResult> v2TIMConversationOperationResults) {
+                TUIGroupUtils.callbackOnSuccess(callback, null);
+                TUIGroupLog.d(TAG, "markConversation fold onSuccess");
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                TUIGroupUtils.callbackOnError(callback, code, desc);
+                TUIGroupLog.d(TAG, "markConversation fold onError code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
             }
         });
     }

@@ -86,6 +86,7 @@ public class ForwardPresenter extends ChatPresenter {
     @Override
     public void locateMessage(String originMsgID, IUIKitCallback<Void> callback) {
         // 如果已经在列表中，直接跳转到对应位置
+        // If already in the list, jump directly to the corresponding position
         boolean isFind = false;
         for (TUIMessageBean loadedMessage : loadedData) {
             if (TextUtils.equals(originMsgID, loadedMessage.getId())) {

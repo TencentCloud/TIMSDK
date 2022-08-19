@@ -1,8 +1,11 @@
 package com.tencent.qcloud.tim.demo.main;
 
 import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -15,10 +18,16 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.tencent.imsdk.BaseConstants;
 import com.tencent.imsdk.v2.V2TIMCallback;
+import com.tencent.imsdk.v2.V2TIMConversation;
+import com.tencent.imsdk.v2.V2TIMConversationListFilter;
 import com.tencent.imsdk.v2.V2TIMConversationListener;
+import com.tencent.imsdk.v2.V2TIMConversationOperationResult;
+import com.tencent.imsdk.v2.V2TIMConversationResult;
 import com.tencent.imsdk.v2.V2TIMFriendApplication;
 import com.tencent.imsdk.v2.V2TIMFriendApplicationResult;
 import com.tencent.imsdk.v2.V2TIMFriendshipListener;
@@ -27,10 +36,13 @@ import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.SplashActivity;
 import com.tencent.qcloud.tim.demo.profile.ProfileFragment;
+import com.tencent.qcloud.tim.demo.push.HandleOfflinePushCallBack;
 import com.tencent.qcloud.tim.demo.push.OfflineMessageBean;
 import com.tencent.qcloud.tim.demo.push.OfflineMessageDispatcher;
+import com.tencent.qcloud.tim.demo.push.OfflinePushConfigs;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.demo.utils.TUIUtils;
+import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
 import com.tencent.qcloud.tuicore.component.action.PopActionClickListener;
@@ -39,6 +51,7 @@ import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.tuicommunity.ui.page.TUICommunityFragment;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
 import com.tencent.qcloud.tuikit.tuicontact.ui.pages.TUIContactFragment;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationConstants;
@@ -46,24 +59,26 @@ import com.tencent.qcloud.tuikit.tuiconversation.ui.page.TUIConversationFragment
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends BaseLightActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-
+    private TextView mCommunityBtnText;
     private TextView mConversationBtnText;
     private TextView mContactBtnText;
     private TextView mProfileSelfBtnText;
     private View mConversationBtn;
-    private View mContactBtn;
-    private View mProfileSelfBtn;
+    private ImageView mCommunityBtnIcon;
     private ImageView mConversationBtnIcon;
     private ImageView mContactBtnIcon;
     private ImageView mProfileSelfBtnIcon;
     private TextView mMsgUnread;
     private TextView mNewFriendUnread;
-    private View mLastTab;
+    private View mainNavigationBar;
 
     private TitleBarLayout mainTitleBar;
     private Menu menu;
@@ -73,8 +88,11 @@ public class MainActivity extends BaseLightActivity {
 
     private int count = 0;
     private long lastClickTime = 0;
+    private HashMap<String, V2TIMConversation> markUnreadMap = new HashMap<>();
 
     private static WeakReference<MainActivity> instance;
+    private BroadcastReceiver unreadCountReceiver;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         DemoLog.i(TAG, "onCreate");
@@ -82,6 +100,32 @@ public class MainActivity extends BaseLightActivity {
         instance = new WeakReference<>(this);
 
         initView();
+        initUnreadCountReceiver();
+    }
+
+    private void initUnreadCountReceiver() {
+        unreadCountReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                long unreadCount = intent.getLongExtra(TUIConstants.UNREAD_COUNT_EXTRA, 0);
+                if (unreadCount > 0) {
+                    mMsgUnread.setVisibility(View.VISIBLE);
+                } else {
+                    mMsgUnread.setVisibility(View.GONE);
+                }
+                String unreadStr = "" + unreadCount;
+                if (unreadCount > 100) {
+                    unreadStr = "99+";
+                }
+                mMsgUnread.setText(unreadStr);
+                // update Huawei offline push Badge
+                OfflineMessageDispatcher.updateBadge(MainActivity.this, (int) unreadCount);
+            }
+        };
+
+        IntentFilter unreadCountFilter = new IntentFilter();
+        unreadCountFilter.addAction(TUIConstants.CONVERSATION_UNREAD_COUNT_ACTION);
+        LocalBroadcastManager.getInstance(this).registerReceiver(unreadCountReceiver, unreadCountFilter);
     }
 
     @Override
@@ -96,42 +140,33 @@ public class MainActivity extends BaseLightActivity {
 
         mainTitleBar = findViewById(R.id.main_title_bar);
         initMenuAction();
+        mCommunityBtnText = findViewById(R.id.tab_community_tv);
         mConversationBtnText = findViewById(R.id.conversation);
         mContactBtnText = findViewById(R.id.contact);
         mProfileSelfBtnText = findViewById(R.id.mine);
+        mCommunityBtnIcon = findViewById(R.id.tab_community_icon);
         mConversationBtnIcon = findViewById(R.id.tab_conversation_icon);
         mContactBtnIcon = findViewById(R.id.tab_contact_icon);
         mProfileSelfBtnIcon = findViewById(R.id.tab_profile_icon);
         mConversationBtn = findViewById(R.id.conversation_btn_group);
-        mContactBtn = findViewById(R.id.contact_btn_group);
-        mProfileSelfBtn = findViewById(R.id.myself_btn_group);
         mMsgUnread = findViewById(R.id.msg_total_unread);
         mNewFriendUnread = findViewById(R.id.new_friend_total_unread);
+        mainNavigationBar = findViewById(R.id.main_navigation_bar);
 
         fragments = new ArrayList<>();
         fragments.add(new TUIConversationFragment());
+        fragments.add(new TUICommunityFragment());
         fragments.add(new TUIContactFragment());
         fragments.add(new ProfileFragment());
 
         mainViewPager = findViewById(R.id.view_pager);
         FragmentAdapter fragmentAdapter = new FragmentAdapter(this);
         fragmentAdapter.setFragmentList(fragments);
-        // 关闭左右滑动切换页面
         mainViewPager.setUserInputEnabled(false);
-        // 设置缓存数量为4 避免销毁重建
         mainViewPager.setOffscreenPageLimit(4);
         mainViewPager.setAdapter(fragmentAdapter);
         mainViewPager.setCurrentItem(0, false);
         setConversationTitleBar();
-        if (mLastTab == null) {
-            mLastTab = mConversationBtn;
-        } else {
-            // 初始化时，强制切换tab到上一次的位置
-            View tmp = mLastTab;
-            mLastTab = null;
-            tabClick(tmp);
-            mLastTab = tmp;
-        }
 
         prepareToClearAllUnreadMessage();
     }
@@ -181,7 +216,7 @@ public class MainActivity extends BaseLightActivity {
                         float translationY = eventY + viewY - downY;
                         view.setTranslationX(translationX);
                         view.setTranslationY(translationY);
-                        // 移动的 x 和 y 轴坐标超过一定像素则触发一键清空所有会话未读
+                        // If the moved x and y axis coordinates exceed a certain pixel, it will trigger one-click to clear all unread sessions
                         if (Math.abs(translationX) > 200|| Math.abs(translationY) > 200) {
                             isTriggered = true;
                             mMsgUnread.setVisibility(View.GONE);
@@ -207,42 +242,121 @@ public class MainActivity extends BaseLightActivity {
         V2TIMManager.getMessageManager().markAllMessageAsRead(new V2TIMCallback() {
             @Override
             public void onSuccess() {
-                Log.i(TAG, "markAllMessageAsRead success");
+                DemoLog.i(TAG, "markAllMessageAsRead success");
                 ToastUtil.toastShortMessage(MainActivity.this.getString(R.string.mark_all_message_as_read_succ));
             }
 
             @Override
             public void onError(int code, String desc) {
-                Log.i(TAG, "markAllMessageAsRead error:" + code + ", desc:" + ErrorMessageConverter.convertIMError(code, desc));
+                DemoLog.i(TAG, "markAllMessageAsRead error:" + code + ", desc:" + ErrorMessageConverter.convertIMError(code, desc));
                 ToastUtil.toastShortMessage(MainActivity.this.getString(R.string.mark_all_message_as_read_err_format, code, ErrorMessageConverter.convertIMError(code, desc)));
                 mMsgUnread.setVisibility(View.VISIBLE);
             }
         });
+
+        V2TIMConversationListFilter filter = new V2TIMConversationListFilter();
+        filter.setCount(100);
+        filter.setMarkType(V2TIMConversation.V2TIM_CONVERSATION_MARK_TYPE_UNREAD);
+        filter.setNextSeq(0);
+        getMarkUnreadConversationList(filter, true, new V2TIMValueCallback<HashMap<String, V2TIMConversation>>() {
+            @Override
+            public void onSuccess(HashMap<String, V2TIMConversation> stringV2TIMConversationHashMap) {
+                if (stringV2TIMConversationHashMap.size() == 0) {
+                    return;
+                }
+                List<String> unreadConversationIDList = new ArrayList<>();
+                Iterator<Map.Entry<String, V2TIMConversation>> iterator = markUnreadMap.entrySet().iterator();
+                while (iterator.hasNext()) {
+                    Map.Entry<String, V2TIMConversation> entry = iterator.next();
+                    unreadConversationIDList.add(entry.getKey());
+                }
+
+                V2TIMManager.getConversationManager().markConversation(unreadConversationIDList,
+                        V2TIMConversation.V2TIM_CONVERSATION_MARK_TYPE_UNREAD,
+                        false,
+                        new V2TIMValueCallback<List<V2TIMConversationOperationResult>>() {
+                    @Override
+                    public void onSuccess(List<V2TIMConversationOperationResult> v2TIMConversationOperationResults) {
+                        for (V2TIMConversationOperationResult result : v2TIMConversationOperationResults) {
+                            if (result.getResultCode() == BaseConstants.ERR_SUCC) {
+                                V2TIMConversation v2TIMConversation = markUnreadMap.get(result.getConversationID());
+                                if (!v2TIMConversation.getMarkList().contains(V2TIMConversation.V2TIM_CONVERSATION_MARK_TYPE_HIDE)) {
+                                    markUnreadMap.remove(result.getConversationID());
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(int code, String desc) {
+                        DemoLog.e(TAG, "triggerClearAllUnreadMessage->markConversation error:" + code + ", desc:" + ErrorMessageConverter.convertIMError(code, desc));
+                    }
+                });
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                DemoLog.e(TAG, "triggerClearAllUnreadMessage->getMarkUnreadConversationList error:" + code + ", desc:" + ErrorMessageConverter.convertIMError(code, desc));
+            }
+        });
     }
 
-    public void tabClick(View view) {
-
-        DemoLog.i(TAG, "tabClick last: " + mLastTab + " current: " + view);
-        if (mLastTab != null && mLastTab.getId() == view.getId()) {
-            return;
+    private void getMarkUnreadConversationList(V2TIMConversationListFilter filter, boolean fromStart, V2TIMValueCallback<HashMap<String, V2TIMConversation>> callback) {
+        if (fromStart) {
+            markUnreadMap.clear();
         }
-        mLastTab = view;
+        V2TIMManager.getConversationManager().getConversationListByFilter(filter, new V2TIMValueCallback<V2TIMConversationResult>() {
+            @Override
+            public void onSuccess(V2TIMConversationResult v2TIMConversationResult) {
+                List<V2TIMConversation> conversationList = v2TIMConversationResult.getConversationList();
+                for (V2TIMConversation conversation : conversationList) {
+                    markUnreadMap.put(conversation.getConversationID(), conversation);
+                }
+
+                if (!v2TIMConversationResult.isFinished()) {
+                    getMarkUnreadConversationList(filter, false, callback);
+                } else {
+                    if (callback != null) {
+                        callback.onSuccess(markUnreadMap);
+                    }
+                }
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                DemoLog.e(TAG, "getMarkUnreadConversationList error:" + code + ", desc:" + ErrorMessageConverter.convertIMError(code, desc));
+            }
+        });
+    }
+
+
+    public void tabClick(View view) {
         resetMenuState();
         switch (view.getId()) {
             case R.id.conversation_btn_group:
+                mainTitleBar.setVisibility(View.VISIBLE);
                 mainViewPager.setCurrentItem(0, false);
                 setConversationTitleBar();
                 mConversationBtnText.setTextColor(getResources().getColor(TUIThemeManager.getAttrResId(this, R.attr.demo_main_tab_selected_text_color)));
                 mConversationBtnIcon.setBackground(getResources().getDrawable(TUIThemeManager.getAttrResId(this, R.attr.demo_main_tab_conversation_selected_bg)));
                 break;
-            case R.id.contact_btn_group:
+            case R.id.community_btn_group:
+                mainTitleBar.setVisibility(View.GONE);
                 mainViewPager.setCurrentItem(1, false);
+                mCommunityBtnText.setTextColor(getResources().getColor(TUIThemeManager.getAttrResId(this, R.attr.demo_main_tab_selected_text_color)));
+                mCommunityBtnIcon.setBackground(getResources().getDrawable(TUIThemeManager.getAttrResId(this, R.attr.demo_main_tab_community_selected_bg)));
+                setCommunityBackground();
+                break;
+            case R.id.contact_btn_group:
+                mainTitleBar.setVisibility(View.VISIBLE);
+                mainViewPager.setCurrentItem(2, false);
                 setContactTitleBar();
                 mContactBtnText.setTextColor(getResources().getColor(TUIThemeManager.getAttrResId(this, R.attr.demo_main_tab_selected_text_color)));
                 mContactBtnIcon.setBackground(getResources().getDrawable(TUIThemeManager.getAttrResId(this, R.attr.demo_main_tab_contact_selected_bg)));
                 break;
             case R.id.myself_btn_group:
-                mainViewPager.setCurrentItem(2, false);
+                mainTitleBar.setVisibility(View.VISIBLE);
+                mainViewPager.setCurrentItem(3, false);
                 setProfileTitleBar();
                 mProfileSelfBtnText.setTextColor(getResources().getColor(TUIThemeManager.getAttrResId(this, R.attr.demo_main_tab_selected_text_color)));
                 mProfileSelfBtnIcon.setBackground(getResources().getDrawable(TUIThemeManager.getAttrResId(this, R.attr.demo_main_tab_profile_selected_bg)));
@@ -250,6 +364,13 @@ public class MainActivity extends BaseLightActivity {
             default:
                 break;
         }
+    }
+
+    private void setCommunityBackground() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.demo_community_page_status_bar_color));
+        }
+        mainNavigationBar.setBackgroundColor(getResources().getColor(R.color.demo_community_page_navigate_bar_color));
     }
 
     private void setConversationTitleBar() {
@@ -299,7 +420,6 @@ public class MainActivity extends BaseLightActivity {
             }
         };
 
-        // 设置右上角+号显示PopAction
         List<PopMenuAction> menuActions = new ArrayList<>();
 
         PopMenuAction action = new PopMenuAction();
@@ -386,29 +506,18 @@ public class MainActivity extends BaseLightActivity {
     private void resetMenuState() {
         mConversationBtnText.setTextColor(getResources().getColor(TUIThemeManager.getAttrResId(this, R.attr.demo_main_tab_normal_text_color)));
         mConversationBtnIcon.setBackground(getResources().getDrawable(TUIThemeManager.getAttrResId(this, R.attr.demo_main_tab_conversation_normal_bg)));
+        mCommunityBtnText.setTextColor(getResources().getColor(TUIThemeManager.getAttrResId(this, R.attr.demo_main_tab_normal_text_color)));
+        mCommunityBtnIcon.setBackground(getResources().getDrawable(TUIThemeManager.getAttrResId(this, R.attr.demo_main_tab_community_normal_bg)));
         mContactBtnText.setTextColor(getResources().getColor(TUIThemeManager.getAttrResId(this, R.attr.demo_main_tab_normal_text_color)));
         mContactBtnIcon.setBackground(getResources().getDrawable(TUIThemeManager.getAttrResId(this, R.attr.demo_main_tab_contact_normal_bg)));
         mProfileSelfBtnText.setTextColor(getResources().getColor(TUIThemeManager.getAttrResId(this, R.attr.demo_main_tab_normal_text_color)));
         mProfileSelfBtnIcon.setBackground(getResources().getDrawable(TUIThemeManager.getAttrResId(this, R.attr.demo_main_tab_profile_normal_bg)));
-    }
 
-    private final V2TIMConversationListener unreadListener = new V2TIMConversationListener() {
-        @Override
-        public void onTotalUnreadMessageCountChanged(long totalUnreadCount) {
-            if (totalUnreadCount > 0) {
-                mMsgUnread.setVisibility(View.VISIBLE);
-            } else {
-                mMsgUnread.setVisibility(View.GONE);
-            }
-            String unreadStr = "" + totalUnreadCount;
-            if (totalUnreadCount > 100) {
-                unreadStr = "99+";
-            }
-            mMsgUnread.setText(unreadStr);
-            // 华为离线推送角标
-            OfflineMessageDispatcher.updateBadge(MainActivity.this, (int) totalUnreadCount);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(getResources().getColor(TUIThemeManager.getAttrResId(this, com.tencent.qcloud.tuicore.R.attr.core_header_start_color)));
         }
-    };
+        mainNavigationBar.setBackgroundResource(TUIThemeManager.getAttrResId(this, R.attr.demo_navigate_bar_bg));
+    }
 
     private final V2TIMFriendshipListener friendshipListener = new V2TIMFriendshipListener() {
         @Override
@@ -454,20 +563,40 @@ public class MainActivity extends BaseLightActivity {
         handleOfflinePush();
     }
 
+    private void handleOfflinePush() {
+        Intent intent = getIntent();
+        if (intent == null) {
+            DemoLog.d(TAG, "handleOfflinePush intent is null");
+            return;
+        }
+
+        if (OfflinePushConfigs.getOfflinePushConfigs().getClickNotificationCallbackMode() == OfflinePushConfigs.CLICK_NOTIFICATION_CALLBACK_INTENT) {
+            TUIUtils.handleOfflinePush(intent, new HandleOfflinePushCallBack() {
+                @Override
+                public void onHandleOfflinePush(boolean hasLogged) {
+                    if (hasLogged) {
+                        setIntent(null);
+                    } else {
+                        finish();
+                    }
+                }
+            });
+        } else {
+            String ext = intent.getStringExtra(TUIConstants.TUIOfflinePush.NOTIFICATION_EXT_KEY);
+            TUIUtils.handleOfflinePush(ext, new HandleOfflinePushCallBack() {
+                @Override
+                public void onHandleOfflinePush(boolean hasLogged) {
+                    if (hasLogged) {
+                        setIntent(null);
+                    } else {
+                        finish();
+                    }
+                }
+            });
+        }
+    }
+
     private void registerUnreadListener() {
-        V2TIMManager.getConversationManager().addConversationListener(unreadListener);
-        V2TIMManager.getConversationManager().getTotalUnreadMessageCount(new V2TIMValueCallback<Long>() {
-            @Override
-            public void onSuccess(Long aLong) {
-                runOnUiThread(() -> unreadListener.onTotalUnreadMessageCountChanged(aLong));
-            }
-
-            @Override
-            public void onError(int code, String desc) {
-
-            }
-        });
-
         V2TIMManager.getFriendshipManager().addFriendListener(friendshipListener);
         refreshFriendApplicationUnreadCount();
     }
@@ -501,40 +630,10 @@ public class MainActivity extends BaseLightActivity {
         });
     }
 
-    private void handleOfflinePush() {
-        if (V2TIMManager.getInstance().getLoginStatus() == V2TIMManager.V2TIM_STATUS_LOGOUT) {
-            Intent intent = new Intent(MainActivity.this, SplashActivity.class);
-            if (getIntent() != null) {
-                intent.setData(getIntent().getData());
-                intent.putExtras(getIntent());
-            }
-            startActivity(intent);
-            finish();
-            return;
-        }
-
-        final OfflineMessageBean bean = OfflineMessageDispatcher.parseOfflineMessage(getIntent());
-        if (bean != null) {
-            setIntent(null);
-            NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            if (manager != null) {
-                manager.cancelAll();
-            }
-
-            if (bean.action == OfflineMessageBean.REDIRECT_ACTION_CHAT) {
-                if (TextUtils.isEmpty(bean.sender)) {
-                    return;
-                }
-                TUIUtils.startChat(bean.sender, bean.nickname, bean.chatType);
-            }
-        }
-    }
-
     @Override
     protected void onPause() {
         DemoLog.i(TAG, "onPause");
         super.onPause();
-        V2TIMManager.getConversationManager().removeConversationListener(unreadListener);
         V2TIMManager.getFriendshipManager().removeFriendListener(friendshipListener);
     }
 
@@ -547,8 +646,12 @@ public class MainActivity extends BaseLightActivity {
     @Override
     protected void onDestroy() {
         DemoLog.i(TAG, "onDestroy");
-        mLastTab = null;
         super.onDestroy();
+
+        if (unreadCountReceiver != null) {
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(unreadCountReceiver);
+            unreadCountReceiver = null;
+        }
     }
 
     public static void finishMainActivity() {

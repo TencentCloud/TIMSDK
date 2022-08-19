@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F6F6F6"
+    tools:context=".ui.page.TopicInfoActivity">
+
+    <com.tencent.qcloud.tuicore.component.TitleBarLayout
+        android:id="@+id/topic_info_title"
+        app:title_bar_can_return="true"
+        app:title_bar_middle_title="@string/community_topic_settings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <com.tencent.qcloud.tuikit.tuicommunity.component.SettingsLinearView
+        android:id="@+id/topic_name_setting"
+        app:setting_name="@string/community_topic_name"
+        app:setting_is_show_bottom_line="true"
+        app:setting_is_show_arrow="false"
+        android:background="#FFFFFF"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"/>
+
+    <com.tencent.qcloud.tuikit.tuicommunity.component.SettingsLinearView
+        android:id="@+id/topic_category_setting"
+        app:setting_name="@string/community_topic_category"
+        app:setting_is_show_arrow="false"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:background="#FFFFFF"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"/>
+
+    <TextView
+        android:id="@+id/delete_topic_button"
+        android:background="#FFFFFF"
+        android:textColor="#FF584C"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:text="@string/community_delete_topic"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
+
+</LinearLayout>

@@ -51,7 +51,7 @@ public class InputMoreFragment extends BaseInputFragment {
             if (resultCode != -1) {
                 return;
             }
-            Uri uri = data.getData();//得到uri，后面就是将uri转化成file的过程。
+            Uri uri = data.getData();
             if (mCallback != null) {
                 mCallback.onSuccess(uri);
             }

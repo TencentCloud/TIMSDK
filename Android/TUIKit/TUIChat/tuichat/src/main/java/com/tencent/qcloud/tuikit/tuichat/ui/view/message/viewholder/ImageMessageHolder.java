@@ -101,7 +101,6 @@ public class ImageMessageHolder extends MessageContentHolder {
                         downloadEles.add(img.getUUID());
                     }
                     final String path = ImageUtil.generateImagePath(img.getUUID(), ImageMessageBean.IMAGE_TYPE_THUMB);
-                    // 如果contentImage的路径和当前图片路径不同，说明图片未加载过或者recyclerView复用了之前的缓存，为了避免显示错乱需要清空
                     if (!path.equals(mImagePath)) {
                         GlideEngine.clear(contentImage);
                     }

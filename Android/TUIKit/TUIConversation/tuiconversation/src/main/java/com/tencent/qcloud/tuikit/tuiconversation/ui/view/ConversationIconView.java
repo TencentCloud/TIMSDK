@@ -8,6 +8,8 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.tencent.qcloud.tuicore.TUIConfig;
+import com.tencent.qcloud.tuicore.component.gatherimage.SynthesizedImageView;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.BackgroundTasks;
 import com.tencent.qcloud.tuicore.util.ImageUtil;
@@ -15,9 +17,7 @@ import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuicore.util.ThreadHelper;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
-import com.tencent.qcloud.tuicore.component.gatherimage.SynthesizedImageView;
 import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationIconPresenter;
-import com.tencent.qcloud.tuikit.tuiconversation.util.ConversationUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +29,7 @@ public class ConversationIconView extends RelativeLayout {
 
     private static final int icon_size = ScreenUtil.getPxByDp(50);
     private ImageView mIconView;
+    private boolean showFoldedStyle = false;
 
     private ConversationIconPresenter presenter;
 
@@ -50,8 +51,12 @@ public class ConversationIconView extends RelativeLayout {
     private void init() {
         inflate(getContext(), R.layout.profile_icon_view, this);
         mIconView = findViewById(R.id.profile_icon);
-        ((SynthesizedImageView) mIconView).defaultImage(0);
+        ((SynthesizedImageView) mIconView).defaultImage(TUIConfig.getDefaultAvatarImage());
         presenter = new ConversationIconPresenter();
+    }
+
+    public void setShowFoldedStyle(boolean showFoldedStyle) {
+        this.showFoldedStyle = showFoldedStyle;
     }
 
     /**
@@ -72,7 +77,9 @@ public class ConversationIconView extends RelativeLayout {
     }
 
     public void setConversation(ConversationInfo conversationInfo) {
-        if (mIconView instanceof SynthesizedImageView) {
+        if (showFoldedStyle && conversationInfo.isMarkFold()) {
+            mIconView.setImageResource(R.drawable.ic_fold);
+        } else if (mIconView instanceof SynthesizedImageView) {
             ((SynthesizedImageView) (mIconView)).setImageId(conversationInfo.getConversationId());
             if (conversationInfo.isGroup()) {
                 fillConversationUrlForGroup(conversationInfo);
@@ -83,7 +90,14 @@ public class ConversationIconView extends RelativeLayout {
     }
 
     private void fillConversationUrlForGroup(final ConversationInfo info) {
-        if (info.getIconUrlList() == null || info.getIconUrlList().size() == 0) {
+        List<Object> iconUrlList = info.getIconUrlList();
+        if (iconUrlList == null || iconUrlList.size() == 0) {
+            if (!TUIConfig.isEnableGroupGridAvatar()) {
+                List<Object> faceList = new ArrayList<>();
+                faceList.add(TUIConfig.getDefaultGroupAvatarImage());
+                setIconUrls(faceList, info.getConversationId());
+                return;
+            }
             // 读取文件，在线程池中进行，避免主线程卡顿
             ThreadHelper.INST.execute(new Runnable() {
                 @Override
@@ -100,7 +114,13 @@ public class ConversationIconView extends RelativeLayout {
                 }
             });
         } else {
-            setIconUrls(info.getIconUrlList(), info.getConversationId());
+            if (!TUIConfig.isEnableGroupGridAvatar() && iconUrlList.size() > 1) {
+                List<Object> faceList = new ArrayList<>();
+                faceList.add(TUIConfig.getDefaultGroupAvatarImage());
+                setIconUrls(faceList, info.getConversationId());
+            } else {
+                setIconUrls(iconUrlList, info.getConversationId());
+            }
         }
     }
 

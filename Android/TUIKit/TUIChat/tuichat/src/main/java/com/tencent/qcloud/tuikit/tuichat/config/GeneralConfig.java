@@ -1,8 +1,5 @@
 package com.tencent.qcloud.tuikit.tuichat.config;
 
-/**
- * TUIKit的通用配置，比如可以设置日志打印、音视频录制时长等
- */
 public class GeneralConfig {
 
     public final static int DEFAULT_AUDIO_RECORD_MAX_TIME = 60;
@@ -21,6 +18,20 @@ public class GeneralConfig {
     private boolean reactEnable = true;
     private boolean replyEnable = true;
     private boolean quoteEnable = true;
+
+    private boolean enableFloatWindowForCall = true;
+
+    /**
+     * 是否开启音视频通话悬浮窗
+     * Set to enable the floating window for call
+     */
+    public void setEnableFloatWindowForCall(boolean enableFloatWindowForCall) {
+        this.enableFloatWindowForCall = enableFloatWindowForCall;
+    }
+
+    public boolean isEnableFloatWindowForCall() {
+        return enableFloatWindowForCall;
+    }
 
     public void setReactEnable(boolean reactEnable) {
         this.reactEnable = reactEnable;
@@ -66,6 +77,8 @@ public class GeneralConfig {
 
     /**
      * 获取TUIKit缓存路径
+     * 
+     * Get TUIKit cache path
      *
      * @return
      */
@@ -75,6 +88,8 @@ public class GeneralConfig {
 
     /**
      * 设置TUIKit缓存路径
+     * 
+     * Set TUIKit cache path
      *
      * @param appCacheDir
      * @return
@@ -86,6 +101,8 @@ public class GeneralConfig {
 
     /**
      * 获取录音最大时长
+     * 
+     * Get the maximum duration of the recording
      *
      * @return
      */
@@ -95,6 +112,8 @@ public class GeneralConfig {
 
     /**
      * 录音最大时长
+     * 
+     * Maximum recording time
      *
      * @param audioRecordMaxTime
      * @return
@@ -106,6 +125,8 @@ public class GeneralConfig {
 
     /**
      * 获取录像最大时长
+     * 
+     * Get the maximum duration of the recording
      *
      * @return
      */
@@ -115,6 +136,8 @@ public class GeneralConfig {
 
     /**
      * 摄像最大时长
+     * 
+     * Maximum camera time
      *
      * @param videoRecordMaxTime
      * @return
@@ -126,6 +149,8 @@ public class GeneralConfig {
 
     /**
      * 对方已读的 view 是否展示
+     * 
+     * Whether the view read by the other party is displayed
      *
      * @return
      */
@@ -135,6 +160,8 @@ public class GeneralConfig {
 
     /**
      * 设置对方已读的 view 是否展示
+     * 
+     * Set whether the view read by the other party is displayed
      *
      * @return
      */
@@ -144,6 +171,8 @@ public class GeneralConfig {
 
     /**
      * 获取消息是否不计入会话未读数：默认为 false，表明需要计入会话未读数，设置为 true，表明不需要计入会话未读数
+     * 
+     * Get whether messages are not counted as conversation unread: false, need to be counted; true, do not need to be counted
      */
     public boolean isExcludedFromUnreadCount() {
         return excludedFromUnreadCount;
@@ -151,6 +180,8 @@ public class GeneralConfig {
 
     /**
      * 设置消息是否不计入会话未读数：默认为 false，表明需要计入会话未读数，设置为 true，表明不需要计入会话未读数
+     * 
+     * Set whether messages are not counted as conversation unread: false, need to be counted; true, do not need to be counted
      */
     public void setExcludedFromUnreadCount(boolean excludedFromUnreadCount) {
         this.excludedFromUnreadCount = excludedFromUnreadCount;
@@ -158,6 +189,8 @@ public class GeneralConfig {
 
     /**
      * 获取消息是否不计入会话 lastMsg：默认为 false，表明需要计入会话 lastMsg，设置为 true，表明不需要计入会话 lastMessage
+     * 
+     * Get whether the message does not count as the last message of the session: false, need to be counted; true, do not need to be counted
      */
     public boolean isExcludedFromLastMessage() {
         return excludedFromLastMessage;
@@ -165,6 +198,8 @@ public class GeneralConfig {
 
     /**
      * 设置消息是否不计入会话 lastMsg：默认为 false，表明需要计入会话 lastMsg，设置为 true，表明不需要计入会话 lastMessage
+     * 
+     * Set whether the message does not count as the last message of the session: false, need to be counted; true, do not need to be counted
      */
     public void setExcludedFromLastMessage(boolean excludedFromLastMessage) {
         this.excludedFromLastMessage = excludedFromLastMessage;
@@ -172,6 +207,8 @@ public class GeneralConfig {
 
     /**
      * 获取离线推送提示铃音是否为自定义铃音
+     * 
+     * Get whether the offline push notification ringtone is a custom ringtone
      */
     public boolean isAndroidPrivateRing() {
         return isAndroidPrivateRing;
@@ -179,6 +216,8 @@ public class GeneralConfig {
 
     /**
      * 设置离线推送提示铃音是否为自定义铃音
+     * 
+     * Set whether the offline push notification ringtone is a custom ringtone
      */
     public void setAndroidPrivateRing(boolean ring) {
         this.isAndroidPrivateRing = ring;

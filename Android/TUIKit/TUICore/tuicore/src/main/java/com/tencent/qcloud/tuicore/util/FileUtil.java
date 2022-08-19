@@ -38,10 +38,10 @@ public class FileUtil {
 
     public static final String DOCUMENTS_DIR = "documents";
 
-    public static final int SIZETYPE_B = 1;//获取文件大小单位为B的double值
-    public static final int SIZETYPE_KB = 2;//获取文件大小单位为KB的double值
-    public static final int SIZETYPE_MB = 3;//获取文件大小单位为MB的double值
-    public static final int SIZETYPE_GB = 4;//获取文件大小单位为GB的double值
+    public static final int SIZETYPE_B = 1;
+    public static final int SIZETYPE_KB = 2;
+    public static final int SIZETYPE_MB = 3;
+    public static final int SIZETYPE_GB = 4;
 
     public static String saveBitmap(String dir, Bitmap b) {
         String jpegName = TUIConfig.getMediaDir() + "picture_" + new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date()) + ".jpg";
@@ -126,6 +126,8 @@ public class FileUtil {
 
     /**
      * 专为Android4.4以上设计的从Uri获取文件路径
+     * 
+     * Get file path from Uri specially designed for Android4.4 and above
      */
     public static String getPath(final Context context, final Uri uri) {
 
@@ -173,6 +175,7 @@ public class FileUtil {
                 }
 
                 // 在某些android8+的手机上，无法获取路径，所以用拷贝的方式，获取新文件名，然后把文件发出去
+                // On some android8+ mobile phones, the path cannot be obtained, so the new file name is obtained by copying, and then the file is sent out
                 return getPathByCopyFile(context, uri);
             }
             // MediaProvider
@@ -398,6 +401,8 @@ public class FileUtil {
 
     /**
      * 转换文件大小
+     * 
+     * Convert file size to string
      *
      * @param fileS
      * @return
@@ -423,6 +428,7 @@ public class FileUtil {
 
 
     // 修复 android.webkit.MimeTypeMap 的 getFileExtensionFromUrl 方法不支持中文的问题
+    // fix the problem that getFileExtensionFromUrl does not support Chinese
     public static String getFileExtensionFromUrl(String url) {
         if (!TextUtils.isEmpty(url)) {
             int fragment = url.lastIndexOf('#');
@@ -446,7 +452,6 @@ public class FileUtil {
             if (!filename.isEmpty()) {
                 int dotPos = filename.lastIndexOf('.');
                 if (0 <= dotPos) {
-                    // 后缀转为小写
                     return filename.substring(dotPos + 1).toLowerCase();
                 }
             }

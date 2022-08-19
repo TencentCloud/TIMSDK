@@ -4,7 +4,6 @@ import static com.tencent.qcloud.tuicore.TUIConfig.TUICORE_SETTINGS_SP_NAME;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.text.method.MovementMethod;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -23,6 +22,7 @@ import androidx.annotation.NonNull;
 import com.tencent.qcloud.tuicore.BuildConfig;
 import com.tencent.qcloud.tuicore.R;
 import com.tencent.qcloud.tuicore.TUIConfig;
+import com.tencent.qcloud.tuicore.util.SPUtils;
 
 import java.lang.ref.WeakReference;
 
@@ -38,23 +38,10 @@ public class TUIKitDialog {
     private ImageView mLineImg;
     private Display mDisplay;
 
-    /**
-     * 是否显示title
-     */
     private boolean showTitle = false;
-    /***
-     * 是否显示确定按钮
-     */
     private boolean showPosBtn = false;
-
-    /**
-     * 是否显示取消按钮
-     */
     private boolean showNegBtn = false;
-
-    /**
-     * dialog  宽度
-     */
+    
     private float dialogWidth = 0.7f;
 
 
@@ -93,7 +80,7 @@ public class TUIKitDialog {
     }
 
     /***
-     * 是否点击返回能够取消
+     * Whether to click back to cancel
      * @param cancel
      * @return
      */
@@ -103,7 +90,7 @@ public class TUIKitDialog {
     }
 
     /**
-     * 设置是否可以取消
+     * Whether the setting can be canceled
      *
      * @param isCancelOutside
      * @return
@@ -113,13 +100,6 @@ public class TUIKitDialog {
         return this;
     }
 
-    /**
-     * 设置确定
-     *
-     * @param text
-     * @param listener
-     * @return
-     */
     public TUIKitDialog setPositiveButton(CharSequence text,
                                           final OnClickListener listener) {
         showPosBtn = true;
@@ -134,17 +114,15 @@ public class TUIKitDialog {
         return this;
     }
 
+    public void setTitleGravity(int gravity) {
+        mTitleTv.setGravity(gravity);
+    }
+
     public TUIKitDialog setPositiveButton(final OnClickListener listener) {
         setPositiveButton(TUIConfig.getAppContext().getString(R.string.sure), listener);
         return this;
     }
 
-    /***
-     * 设置取消
-     * @param text
-     * @param listener
-     * @return
-     */
     public TUIKitDialog setNegativeButton(CharSequence text,
                                           final OnClickListener listener) {
         showNegBtn = true;
@@ -210,6 +188,9 @@ public class TUIKitDialog {
         }
     }
 
+    public boolean isShowing() {
+        return dialog != null && dialog.isShowing();
+    }
 
     /**
      * 设置dialog  宽度
@@ -228,14 +209,13 @@ public class TUIKitDialog {
     public static class TUIIMUpdateDialog {
 
         private static final class TUIIMUpdateDialogHolder {
-            private static TUIIMUpdateDialog instance = new TUIIMUpdateDialog();
+            private static final TUIIMUpdateDialog instance = new TUIIMUpdateDialog();
         }
 
         public static final String KEY_NEVER_SHOW = "neverShow";
 
         private boolean isNeverShow;
         private boolean isShowOnlyDebug = false;
-        private SharedPreferences sharedPreferences = null;
         private String dialogFeatureName;
 
         private WeakReference<TUIKitDialog> tuiKitDialog;
@@ -245,8 +225,7 @@ public class TUIKitDialog {
         }
 
         private TUIIMUpdateDialog() {
-            sharedPreferences = TUIConfig.getAppContext().getSharedPreferences(TUICORE_SETTINGS_SP_NAME, Context.MODE_PRIVATE);
-            isNeverShow = sharedPreferences.getBoolean(getDialogFeatureName(), false);
+            isNeverShow = SPUtils.getInstance(TUICORE_SETTINGS_SP_NAME).getBoolean(getDialogFeatureName(), false);
         }
 
         public TUIIMUpdateDialog createDialog(Context context) {
@@ -257,9 +236,7 @@ public class TUIKitDialog {
 
         public void setNeverShow(boolean neverShowAlert) {
             this.isNeverShow = neverShowAlert;
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean(getDialogFeatureName(), neverShowAlert);
-            editor.apply();
+            SPUtils.getInstance(TUICORE_SETTINGS_SP_NAME).put(getDialogFeatureName(), neverShowAlert);
         }
 
         public TUIIMUpdateDialog setShowOnlyDebug(boolean isShowOnlyDebug) {
@@ -336,7 +313,7 @@ public class TUIKitDialog {
             if (tuiKitDialog == null || tuiKitDialog.get() == null) {
                 return;
             }
-            isNeverShow = sharedPreferences.getBoolean(getDialogFeatureName(), false);
+            isNeverShow = SPUtils.getInstance(TUICORE_SETTINGS_SP_NAME).getBoolean(getDialogFeatureName(), false);
             Dialog dialog = tuiKitDialog.get().dialog;
             if (dialog == null || dialog.isShowing()) {
                 return;

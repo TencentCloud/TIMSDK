@@ -11,12 +11,12 @@ import com.tencent.qcloud.tuicore.R;
 
 import java.util.List;
 
-/**
- * 合成头像
- */
+
 public class SynthesizedImageView extends ShadeImageView {
     /**
      * 群聊头像合成器
+     * 
+     * Group Chat Avatar Synthesizer
      */
     TeamHeadSynthesizer teamHeadSynthesizer;
     int imageSize = 100;

@@ -8,9 +8,7 @@ import android.widget.TextView;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 
-/**
- * 自定义会话Holder
- */
+
 public class ConversationCustomHolder extends ConversationBaseHolder {
 
     protected LinearLayout leftItemLayout;

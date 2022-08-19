@@ -131,9 +131,7 @@ public class ProfileLayout extends FrameLayout implements View.OnClickListener {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    if (BuildConfig.DEBUG) {
-                        ToastUtil.toastShortMessage(getResources().getString(R.string.demo_message_read_switch_open_tip));
-                    }
+                    ToastUtil.toastShortMessage(getResources().getString(R.string.demo_buying_tips));
                     messageReadStatusSubtitle.setText(R.string.demo_message_read_switch_open_text);
                 } else {
                     messageReadStatusSubtitle.setText(R.string.demo_message_read_switch_close_text);
@@ -211,11 +209,6 @@ public class ProfileLayout extends FrameLayout implements View.OnClickListener {
         SharedPreferences sharedPreferences = getContext().getSharedPreferences(Constants.DEMO_SETTING_SP_NAME, Context.MODE_PRIVATE );
         boolean messageReadStatus = sharedPreferences.getBoolean(Constants.DEMO_SP_KEY_MESSAGE_READ_STATUS, false);
         setMessageReadStatus(messageReadStatus, false);
-        if (messageReadStatus) {
-            messageReadStatusSubtitle.setText(R.string.demo_message_read_switch_open_text);
-        } else {
-            messageReadStatusSubtitle.setText(R.string.demo_message_read_switch_close_text);
-        }
         messageReadStatusSwitch.setChecked(messageReadStatus);
     }
 
@@ -232,7 +225,7 @@ public class ProfileLayout extends FrameLayout implements View.OnClickListener {
     private void setUserInfo(V2TIMUserFullInfo info) {
         mIconUrl = info.getFaceUrl();
         int radius = getResources().getDimensionPixelSize(R.dimen.demo_profile_face_radius);
-        GlideEngine.loadUserIcon(userIcon, Uri.parse(mIconUrl), radius);
+        GlideEngine.loadUserIcon(userIcon, mIconUrl, radius);
         mNickName = info.getNickName();
         if (TextUtils.isEmpty(mNickName)) {
             nickNameView.setText(info.getUserID());
@@ -277,7 +270,6 @@ public class ProfileLayout extends FrameLayout implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        // 点击个人详情区域
         if (v.getId() == R.id.self_detail_area) {
             Intent intent = new Intent(getContext(), SelfDetailActivity.class);
             getContext().startActivity(intent);
@@ -303,7 +295,6 @@ public class ProfileLayout extends FrameLayout implements View.OnClickListener {
     private void updateProfile() {
         V2TIMUserFullInfo v2TIMUserFullInfo = new V2TIMUserFullInfo();
 
-        // 加我验证方式
         int allowType = joinTypeIdList.get(mJoinTypeIndex);
         v2TIMUserFullInfo.setAllowType(allowType);
 

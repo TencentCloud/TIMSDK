@@ -69,7 +69,7 @@ public class FaceFragment extends BaseInputFragment implements View.OnClickListe
         if (activity instanceof OnEmojiClickListener) {
             this.listener = (OnEmojiClickListener) activity;
         }
-        recentManager = RecentEmojiManager.make(activity);
+        recentManager = RecentEmojiManager.getInstance();
         super.onAttach(activity);
     }
 
@@ -184,6 +184,8 @@ public class FaceFragment extends BaseInputFragment implements View.OnClickListe
 
     /**
      * 根据表情数量以及GridView设置的行数和列数计算Pager数量
+     * 
+     * Calculate the number of Pagers based on the number of expressions and the number of rows and columns set by the GridView
      *
      * @return
      */
@@ -198,11 +200,13 @@ public class FaceFragment extends BaseInputFragment implements View.OnClickListe
 
     private View getViewPagerItem(int position, ArrayList<Emoji> list, int columns, int rows) {
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View layout = inflater.inflate(R.layout.layout_face_grid, null);//表情布局
+        View layout = inflater.inflate(R.layout.layout_face_grid, null);
         GridView gridview = layout.findViewById(R.id.chart_face_gv);
         gridview.setNumColumns(columns);
         /**
          * 注：因为每一页末尾都有一个删除图标，所以每一页的实际表情columns *　rows　－　1; 空出最后一个位置给删除图标
+         * 
+         * Because there is a delete icon at the end of each page, the actual emoji of each page columns *　rows　－　1, Empty the last position for the delete icon
          * */
         final List<Emoji> subList = new ArrayList<>();
         int dit = 1;
@@ -215,6 +219,8 @@ public class FaceFragment extends BaseInputFragment implements View.OnClickListe
                         * (position + 1)));
         /**
          * 末尾添加删除图标
+         * 
+         * Add delete icon at the end
          * */
         if (mCurrentGroupIndex == 0 && subList.size() < (columns * rows - dit)) {
             for (int i = subList.size(); i < (columns * rows - dit); i++) {
@@ -231,7 +237,7 @@ public class FaceFragment extends BaseInputFragment implements View.OnClickListe
         FaceGVAdapter mGvAdapter = new FaceGVAdapter(subList, getActivity());
         gridview.setAdapter(mGvAdapter);
         gridview.setNumColumns(columns);
-        // 单击表情执行的操作
+
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -333,7 +339,6 @@ public class FaceFragment extends BaseInputFragment implements View.OnClickListe
     }
 
     class FaceVPAdapter extends PagerAdapter {
-        // 界面列表
         private List<View> views;
 
         public FaceVPAdapter(List<View> views) {
@@ -350,14 +355,12 @@ public class FaceFragment extends BaseInputFragment implements View.OnClickListe
             return views.size();
         }
 
-        // 初始化arg1位置的界面
         @Override
         public Object instantiateItem(View arg0, int arg1) {
             ((ViewPager) arg0).addView(views.get(arg1));
             return views.get(arg1);
         }
 
-        // 判断是否由对象生成界
         @Override
         public boolean isViewFromObject(View arg0, Object arg1) {
             return (arg0 == arg1);

@@ -61,6 +61,12 @@ public class ChatMessageBuilder {
      * @param groupId  自定义表情所在的表情组id
      * @param faceName 表情的名称
      * @return
+     * 
+     * Create a message with a custom emoji
+     * 
+     * @param groupId  The expression group id where the custom expression is located
+     * @param faceName name
+     * @return
      */
     public static TUIMessageBean buildFaceMessage(int groupId, String faceName) {
         V2TIMMessage v2TIMMessage = V2TIMManager.getMessageManager().createFaceMessage(groupId, faceName.getBytes());
@@ -74,6 +80,8 @@ public class ChatMessageBuilder {
 
     /**
      * 创建一条图片消息
+     * 
+     * Create a image message
      *
      * @param uri 图片 URI
      * @return
@@ -100,6 +108,8 @@ public class ChatMessageBuilder {
 
     /**
      * 创建一条视频消息
+     * 
+     * create a video message
      *
      * @param imgPath   视频缩略图路径
      * @param videoPath 视频路径
@@ -129,6 +139,8 @@ public class ChatMessageBuilder {
 
     /**
      * 创建一条音频消息
+     * 
+     * create a audio message
      *
      * @param recordPath 音频路径
      * @param duration   音频的时长
@@ -148,6 +160,8 @@ public class ChatMessageBuilder {
 
     /**
      * 创建一条文件消息
+     * 
+     * create a text message
      *
      * @param fileUri 文件路径
      * @return
@@ -174,6 +188,8 @@ public class ChatMessageBuilder {
 
     /**
      * 创建一条 onebyone 转发消息
+     * 
+     * create a forward message
      *
      * @param v2TIMMessage 要转发的消息
      * @return
@@ -187,6 +203,8 @@ public class ChatMessageBuilder {
 
     /**
      * 创建一条 merge 转发消息
+     * 
+     * create a merge message
      *
      * @return
      */
@@ -214,6 +232,8 @@ public class ChatMessageBuilder {
     /**
      * 创建一条自定义消息
      *
+     * create a custom message
+     * 
      * @param data        自定义消息内容，可以是任何内容
      * @param description 自定义消息描述内容，可以被搜索到
      * @param extension   扩展内容
@@ -232,6 +252,8 @@ public class ChatMessageBuilder {
 
     /**
      * 创建一条群消息自定义内容
+     * 
+     * create a custom message for group
      *
      * @param customMessage 消息内容
      * @return

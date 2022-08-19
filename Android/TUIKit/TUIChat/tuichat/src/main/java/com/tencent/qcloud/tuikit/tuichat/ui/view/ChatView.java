@@ -20,6 +20,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -74,6 +75,7 @@ import java.util.List;
 public class ChatView extends LinearLayout  implements IChatLayout {
     private static final String TAG = ChatView.class.getSimpleName();
     // 逐条转发消息数量限制
+    // Limit the number of messages forwarded one by one
     private static final int FORWARD_MSG_NUM_LIMIT = 30;
 
     protected MessageAdapter mAdapter;
@@ -119,6 +121,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
         }
     };
 
+    protected FrameLayout mCustomView;
     protected NoticeLayout mGroupApplyLayout;
     protected View mRecordingGroup;
     protected ImageView mRecordingIcon;
@@ -172,6 +175,8 @@ public class ChatView extends LinearLayout  implements IChatLayout {
         mRecordingTips = findViewById(R.id.recording_tips);
         mGroupApplyLayout = findViewById(R.id.chat_group_apply_layout);
         mNoticeLayout = findViewById(R.id.chat_notice_layout);
+        mCustomView = findViewById(R.id.custom_layout);
+        mCustomView.setVisibility(GONE);
 
         mForwardLayout = findViewById(R.id.forward_layout);
         mForwardOneButton = findViewById(R.id.forward_one_by_one_button);
@@ -348,9 +353,15 @@ public class ChatView extends LinearLayout  implements IChatLayout {
             getTitleBar().setOnRightClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString(TUIChatConstants.Group.GROUP_ID, chatInfo.getId());
-                    TUICore.startActivity(getContext(), "GroupInfoActivity", bundle);
+                    if (TUIChatUtils.isTopicGroup(chatInfo.getId())) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString(TUIConstants.TUICommunity.TOPIC_ID, chatInfo.getId());
+                        TUICore.startActivity(getContext(), "TopicInfoActivity", bundle);
+                    } else {
+                        Bundle bundle = new Bundle();
+                        bundle.putString(TUIChatConstants.Group.GROUP_ID, chatInfo.getId());
+                        TUICore.startActivity(getContext(), "GroupInfoActivity", bundle);
+                    }
                 }
             });
             mGroupApplyLayout.setOnNoticeClickListener(new OnClickListener() {
@@ -489,7 +500,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
-                ToastUtil.toastLongMessage("loadApplyList onError: " + errMsg);
+                TUIChatLog.e(TAG, "loadApplyList onError: " + errMsg);
             }
         });
     }
@@ -550,6 +561,10 @@ public class ChatView extends LinearLayout  implements IChatLayout {
     @Override
     public NoticeLayout getNoticeLayout() {
         return mNoticeLayout;
+    }
+
+    public FrameLayout getCustomView() {
+        return mCustomView;
     }
 
     @Override
@@ -991,13 +1006,11 @@ public class ChatView extends LinearLayout  implements IChatLayout {
     }
 
     private void resetForwardState(String leftTitle){
-        //取消多选界面
         if(mAdapter != null){
             mAdapter.setShowMultiSelectCheckBox(false);
             mAdapter.notifyDataSetChanged();
         }
 
-        //重置titlebar
         resetTitleBar(leftTitle);
     }
 
@@ -1008,7 +1021,6 @@ public class ChatView extends LinearLayout  implements IChatLayout {
         getTitleBar().getLeftIcon().setVisibility(GONE);
         final CharSequence leftTitle = getTitleBar().getLeftTitle().getText();
         getTitleBar().setTitle(getContext().getString(R.string.cancel), TitleBarLayout.Position.LEFT);
-        //点击取消
         getTitleBar().setOnLeftClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1017,7 +1029,6 @@ public class ChatView extends LinearLayout  implements IChatLayout {
         });
         getInputLayout().setVisibility(GONE);
         getForwardLayout().setVisibility(VISIBLE);
-        //点击转发
         getForwardOneButton().setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -1030,7 +1041,6 @@ public class ChatView extends LinearLayout  implements IChatLayout {
                 showForwardDialog(true, false);
             }
         });
-        //点击删除
         getDeleteButton().setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -1093,7 +1103,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
                     @Override
                     public void onClick(View v) {
                         startSelectForwardActivity(TUIChatConstants.FORWARD_MODE_MERGE, messageInfoList);
-                        resetForwardState("");;//发送完清理选中
+                        resetForwardState("");
                     }
                 })
                 .setNegativeButton(getContext().getString(R.string.cancel), new View.OnClickListener() {
@@ -1207,6 +1217,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+        mCustomView.removeAllViews();
         exitChat();
     }
 
@@ -1217,6 +1228,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
     @Override
     protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
         // 从其他界面会到 Chat ，也要上报一次已读回执
+        // You will go to Chat from other interfaces, and you must also report a read receipt
         if (visibility == VISIBLE) {
             if (getMessageLayout() == null) {
                 return;
@@ -1236,9 +1248,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
         String buyingGuidelines = getResources().getString(R.string.chat_buying_guidelines);
         int buyingGuidelinesIndex = string.lastIndexOf(buyingGuidelines);
         final int foregroundColor = getResources().getColor(TUIThemeManager.getAttrResId(getContext(), R.attr.core_primary_color));
-        //需要显示的字串
         SpannableString spannedString = new SpannableString(string);
-        //设置点击字体颜色
         ForegroundColorSpan colorSpan2 = new ForegroundColorSpan(foregroundColor);
         spannedString.setSpan(colorSpan2, buyingGuidelinesIndex, buyingGuidelinesIndex + buyingGuidelines.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 
@@ -1254,15 +1264,12 @@ public class ChatView extends LinearLayout  implements IChatLayout {
 
             @Override
             public void updateDrawState(TextPaint ds) {
-                //点击事件去掉下划线
                 ds.setUnderlineText(false);
             }
         };
         spannedString.setSpan(clickableSpan2, buyingGuidelinesIndex, buyingGuidelinesIndex + buyingGuidelines.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-        //开始响应点击事件
         TUIKitDialog.TUIIMUpdateDialog.getInstance()
                 .createDialog(getContext())
-                // 只在 debug 模式下弹窗
                 .setShowOnlyDebug(true)
                 .setMovementMethod(LinkMovementMethod.getInstance())
                 .setHighlightColor(Color.TRANSPARENT)

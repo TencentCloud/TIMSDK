@@ -6,6 +6,9 @@
         <activity
             android:name=".component.activities.SelectionActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".component.activities.ImageSelectActivity"
+            android:screenOrientation="portrait" />
 
         <activity android:name=".component.activities.ImageSelectActivity"
             android:screenOrientation="portrait"/>

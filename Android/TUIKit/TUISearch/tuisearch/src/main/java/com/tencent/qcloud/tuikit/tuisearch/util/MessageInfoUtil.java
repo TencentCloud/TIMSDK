@@ -44,12 +44,6 @@ import java.util.List;
 public class MessageInfoUtil {
     private static final String TAG = MessageInfoUtil.class.getSimpleName();
 
-    /**
-     * 把SDK的消息bean列表转化为TUIKit的消息bean列表
-     *
-     * @param timMessages SDK的群消息bean列表
-     * @return
-     */
     public static List<MessageInfo> convertTIMMessages2MessageInfos(List<V2TIMMessage> timMessages) {
         if (timMessages == null) {
             return null;
@@ -65,12 +59,6 @@ public class MessageInfoUtil {
         return messageInfos;
     }
 
-    /**
-     * 把SDK的消息bean转化为TUIKit的消息bean
-     *
-     * @param timMessage SDK的群消息bean
-     * @return
-     */
     public static MessageInfo convertTIMMessage2MessageInfo(V2TIMMessage timMessage) {
         if (timMessage == null || timMessage.getStatus() == V2TIMMessage.V2TIM_MSG_STATUS_HAS_DELETED || timMessage.getElemType() == V2TIMMessage.V2TIM_ELEM_TYPE_NONE) {
             return null;
@@ -179,14 +167,13 @@ public class MessageInfoUtil {
 
         V2TIMSignalingInfo signalingInfo = V2TIMManager.getSignalingManager().getSignalingInfo(msgInfo.getTimMessage());
 
-        // 欢迎消息
         if (TextUtils.equals(businessId, "text_link")) {
             msgInfo.setMsgType(MessageInfo.MSG_TYPE_CUSTOM);
             msgInfo.setExtra(customJsonMap.get("text"));
-        } else if (TextUtils.equals(businessId, TUIConstants.TUILive.CUSTOM_MESSAGE_BUSINESS_ID)) { // 群直播消息
+        } else if (TextUtils.equals(businessId, TUIConstants.TUILive.CUSTOM_MESSAGE_BUSINESS_ID)) {
             msgInfo.setMsgType(MessageInfo.MSG_TYPE_CUSTOM);
             setLiveExtra(msgInfo, customJsonMap);
-        } else if (signalingInfo != null) { // 信令消息
+        } else if (signalingInfo != null) {
             try {
                 HashMap signalDataMap = gson.fromJson(signalingInfo.getData(), HashMap.class);
                 if (signalDataMap != null) {
@@ -200,7 +187,7 @@ public class MessageInfoUtil {
             } else if (businessIdObj instanceof Double) {
                 businessIdForTimeout = (Double) businessIdObj;
             }
-            // 音视频自定义消息
+
             if (TextUtils.equals(businessId, TUIConstants.TUICalling.CUSTOM_MESSAGE_BUSINESS_ID) ||
                     Math.abs(businessIdForTimeout - TUIConstants.TUICalling.CALL_TIMEOUT_BUSINESS_ID) < 0.000001) {
                 boolean isGroup = !TextUtils.isEmpty(timMessage.getGroupID());
@@ -215,12 +202,12 @@ public class MessageInfoUtil {
             }
         } else if (data.equals(MessageCustom.BUSINESS_ID_GROUP_CREATE)) {
             // 兼容4.7版本以前的 tuikit
+            // Compatible with tuikit prior to version 4.7
             msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_CREATE);
             String message = TUISearchConstants.covert2HTMLString(getDisplayName(timMessage)) + context.getString(R.string.create_group);
             msgInfo.setExtra(message);
         } else {
             if (isTyping(customElem.getData())) {
-                // 忽略正在输入，它不能作为真正的消息展示
                 return null;
             }
             TUISearchLog.i(TAG, "custom data:" + data);
@@ -327,7 +314,6 @@ public class MessageInfoUtil {
         if (timMessage == null) {
             return null;
         }
-        // 群名片->好友备注->昵称->ID
         if (!TextUtils.isEmpty(timMessage.getNameCard())) {
             displayName = timMessage.getNameCard();
         } else if (!TextUtils.isEmpty(timMessage.getFriendRemark())) {
@@ -346,7 +332,6 @@ public class MessageInfoUtil {
         if (groupMemberInfo == null) {
             return null;
         }
-        // 群名片->好友备注->昵称->ID
         if (!TextUtils.isEmpty(groupMemberInfo.getNameCard())) {
             displayName = groupMemberInfo.getNameCard();
         } else if (!TextUtils.isEmpty(groupMemberInfo.getFriendRemark())) {
@@ -434,10 +419,8 @@ public class MessageInfoUtil {
                 } else if (modifyType == V2TIMGroupChangeInfo.V2TIM_GROUP_INFO_CHANGE_TYPE_OWNER) {
                     msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_MODIFY_NOTICE);
                     if (!TextUtils.isEmpty(targetUser)) {
-                        // 后台把新群主的资料放到了 getMemberList 中
                         tipsMessage = operationUser + context.getString(R.string.move_owner) + "\"" + targetUser + "\"";
                     } else {
-                        // modifyInfo 中只有新群主的 userID
                         tipsMessage =
                                 operationUser + context.getString(R.string.move_owner) + "\"" + TUISearchConstants.covert2HTMLString(modifyInfo.getValue()) + "\"";
                     }
@@ -540,9 +523,7 @@ public class MessageInfoUtil {
                 int size[] = ImageUtil.getImageSize(localPath);
                 msgInfo.setImgWidth(size[0]);
                 msgInfo.setImgHeight(size[1]);
-            }
-            //本地路径为空，可能为更换手机或者是接收的消息
-            else {
+            } else {
                 List<V2TIMImageElem.V2TIMImage> imgs = imageEle.getImageList();
                 for (int i = 0; i < imgs.size(); i++) {
                     V2TIMImageElem.V2TIMImage img = imgs.get(i);
@@ -573,7 +554,6 @@ public class MessageInfoUtil {
                 msgInfo.setImgWidth((int) videoEle.getSnapshotWidth());
                 msgInfo.setImgHeight((int) videoEle.getSnapshotHeight());
                 final String snapPath = TUIConfig.getImageDownloadDir() + videoEle.getSnapshotUUID();
-                //判断快照是否存在,不存在自动下载
                 if (new File(snapPath).exists()) {
                     msgInfo.setDataPath(snapPath);
                 }
@@ -615,7 +595,6 @@ public class MessageInfoUtil {
             msgInfo.setDataPath(finalPath);
             msgInfo.setExtra(context.getString(R.string.file_extra));
         } else if (type == V2TIMMessage.V2TIM_ELEM_TYPE_MERGER) {
-            // 合并转发消息
             msgInfo.setExtra("[聊天记录]");
         }
         msgInfo.setMsgType(convertTIMElemType2MessageInfoType(type));

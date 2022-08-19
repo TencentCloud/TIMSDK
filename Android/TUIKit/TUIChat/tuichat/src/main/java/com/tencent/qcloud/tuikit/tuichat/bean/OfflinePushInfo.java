@@ -96,6 +96,11 @@ public class OfflinePushInfo implements Serializable{
      * 是否关闭推送（默认开启推送）。
      *
      * @param disable true：关闭；false：打开
+     * 
+     * 
+     * Whether to disable push (push enabled by default)
+     *
+     * @param disable   true: disable; false: enable
      */
     public void disablePush(boolean disable) {
         if (disable) {
@@ -109,6 +114,11 @@ public class OfflinePushInfo implements Serializable{
      * 获取是否关闭离线推送状态。
      *
      * @return 关闭状态。true：关闭；false：打开
+     * 
+     * 
+     * Get the offline push disablement status
+     *
+     * @return Disabled. true: disabled; false: enabled
      */
     public boolean isDisablePush() {
         if (getPushFlag() == MessageOfflinePushInfo.OFFLINE_PUSH_FLAG_NO_PUSH) {
@@ -125,6 +135,14 @@ public class OfflinePushInfo implements Serializable{
      * 如果要自定义 iOSSound，需要先把语音文件链接进 Xcode 工程，然后把语音文件名（带后缀）设置给 iOSSound。
      *
      * @param sound iOS 声音路径
+     * 
+     * 
+     * Offline push sound setting (valid only for iOS)
+     * When sound is IOS_OFFLINE_PUSH_NO_SOUND, no sound is played when a message is received.
+     * When sound is IOS_OFFLINE_PUSH_DEFAULT_SOUND, the system alert sound is played when a message is received.
+     * To customize iOSSound, link the audio file to the Xcode project and set iOSSound to the audio filename (with the extension name).
+     *
+     * @param sound iOS    Sound path
      */
     public void setIOSSound(String sound) {
         this.iosSoundFilePath = sound;
@@ -135,6 +153,12 @@ public class OfflinePushInfo implements Serializable{
      * 指定 Android 工程里 raw 目录中的铃声文件名，不需要后缀名。
      *
      * @param sound 铃声文件名
+     * 
+     * 
+     * Offline push sound setting (valid only for Android, supported only in imsdk 6.1 and later versions)
+     * Only Huawei and Google phones support setting ringtone. And Xiaomi needs refer to https://dev.mi.com/console/doc/detail?pId=1278%23_3_0 .
+     * 
+     * @param sound: The ringtone file name in the raw directory of the Android project, no suffix is required.
      */
     public void setAndroidSound(String sound) {
         this.androidSoundFilePath = sound;
@@ -145,6 +169,12 @@ public class OfflinePushInfo implements Serializable{
      * 如果设置为 true，在 iOS 接收端，这条消息不会使 APP 的应用图标未读计数增加。
      *
      * @param ignoreIOSBadge iOS 应用图标未读计数状态。true：忽略；false：开启
+     * 
+     * 
+     * Whether to ignore the badge count for offline push (valid only for iOS)
+     * If this parameter is set to true, the unread message count on the app badge will not increase when the message is received by the iOS device.
+     *
+     * @param ignoreIOSBadge iOS   Status of the unread message count on the app badge. true: ignore; false: enable
      */
     public void setIgnoreIOSBadge(boolean ignoreIOSBadge) {
         if (ignoreIOSBadge) {
@@ -162,6 +192,11 @@ public class OfflinePushInfo implements Serializable{
      * 离线推送设置 OPPO 手机 8.0 系统及以上的渠道 ID。
      *
      * @param channelID OPPO 手机的渠道 ID
+     * 
+     * 
+     * Offline push channel ID for OPPO phones that run Android 8.0 or later
+     *
+     * @param channelID    OPPO phone channel ID
      */
     public void setAndroidOPPOChannelID(String channelID) {
         setOppoChannelID(channelID);
@@ -171,6 +206,11 @@ public class OfflinePushInfo implements Serializable{
      * 离线推送设置 VIVO 手机
      *
      * @param classification VIVO 手机离线推送消息分类，0：运营消息 1：系统消息，默认取值为 1
+     * 
+     *
+     * Offline push setting for vivo phones
+     *
+     * @param classification   Offline push message classification for vivo phones. 0: operation message; 1: system message. The default value is 1.
      */
     public void setAndroidVIVOClassification(int classification) {
         setVivoClassification(classification);

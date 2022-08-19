@@ -1,0 +1,7 @@
+package com.tencent.qcloud.tuikit.tuicommunity.ui.interfaces;
+
+import com.tencent.qcloud.tuikit.tuicommunity.bean.CommunityBean;
+
+public interface ICreateTopicActivity {
+    void onCommunityChanged(CommunityBean communityBean);
+}
