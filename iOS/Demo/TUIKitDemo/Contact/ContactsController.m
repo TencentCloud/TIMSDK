@@ -77,9 +77,6 @@
     [self.convVC.viewModel loadContacts];
 }
 
-/**
- *在导航栏中添加右侧按钮，使用popView展示进一步的内容
- */
 - (void)onRightItem:(UIButton *)rightBarButton;
 {
     NSMutableArray *menus = [NSMutableArray array];
@@ -130,7 +127,6 @@
 - (void)onSelectFriend:(TUICommonContactCell *)cell
 {
     TUICommonContactCellData *data = cell.contactData;
-
     TUIFriendProfileController *vc = [[TUIFriendProfileController alloc] init];
     vc.friendProfile = data.friendProfile;
     [self.navigationController pushViewController:(UIViewController *)vc animated:YES];

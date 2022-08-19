@@ -6,16 +6,18 @@
 //  Copyright © 2018年 Tencent. All rights reserved.
 //
 /** 腾讯云IM Demo 对话列表视图
- *  本文件实现了对话列表视图控制器，即下方按钮“消息”对应的视图控制器
- *  您可以从此处查看最近消息，整理您的消息列表
+ *  - 本文件实现了会话列表，即 “消息” tabItem 对应的 ViewController
+ *  - 本类依赖于腾讯云 TUIKit 和 IMSDK
  *
- *  本类依赖于腾讯云 TUIKit和IMSDK 实现
+ *
+ *  Tencent Cloud IM Demo Conversation List View
+ *  - This file implements the session list, the ViewController corresponding to the "message" tabItem
+ *  - This class depends on Tencent Cloud TUIKit and IMSDK
  */
 #import <UIKit/UIKit.h>
 
 @interface ConversationController : UIViewController
-/**
- *跳转到对应的聊天界面
- */
+
 - (void)pushToChatViewController:(NSString *)groupID userID:(NSString *)userID;
+
 @end

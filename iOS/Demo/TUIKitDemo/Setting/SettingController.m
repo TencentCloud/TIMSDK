@@ -5,13 +5,6 @@
 //  Created by kennethmiao on 2018/10/19.
 //  Copyright © 2018年 Tencent. All rights reserved.
 //
-/** 腾讯云IM Demo 设置主界面视图
- *  本文件实现了设置视图控制器，即TabBar内 "我" 按钮对应的视图
- *
- *  您可以在此处查看、并修改您的个人信息，或是执行退出登录等操作
- *
- *  本类依赖于腾讯云 TUIKit和IMSDK 实现
- */
 #import "SettingController.h"
 #import "AppDelegate.h"
 #import "TUIProfileCardCell.h"
@@ -35,6 +28,7 @@
 #import "TUIBaseChatViewController.h"
 #import "TUIChatConfig.h"
 #import <TUICore/TUIConfig.h>
+#import "TUIPrivateProtocolAlert.h"
 
 NSString * kEnableMsgReadStatus = @"TUIKitDemo_EnableMsgReadStatus";
 NSString * kEnableOnlineStatus = @"TUIKitDemo_EnableOnlineStatus";
@@ -54,13 +48,11 @@ NSString * kEnableOnlineStatus = @"TUIKitDemo_EnableOnlineStatus";
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupViews];
-
-    //如果不加这一行代码，依然可以实现点击反馈，但反馈会有轻微延迟，体验不好。
+    
     self.tableView.delaysContentTouches = NO;
     [TUITool addUnsupportNotificationInVC:self debugOnly:NO];
 }
 
-//在此处设置一次 setuoData，才能使得“我”界面消息更新。否则由于 UITabBar 的维护，“我”界面的消息将一直无法更新。
 - (void)viewWillAppear:(BOOL)animated{
     NSString *loginUser = [[V2TIMManager sharedInstance] getLoginUser];
     if (loginUser.length > 0) {
@@ -160,7 +152,6 @@ NSString * kEnableOnlineStatus = @"TUIKitDemo_EnableOnlineStatus";
     NSObject *data = array[indexPath.row];
     if([data isKindOfClass:[TUIProfileCardCellData class]]){
         TUIProfileCardCell *cell = [tableView dequeueReusableCellWithIdentifier:@"personalCell" forIndexPath:indexPath];
-        //设置 profileCard 的委托
         cell.delegate = self;
         [cell fillWithData:(TUIProfileCardCellData *)data];
         return cell;
@@ -186,7 +177,6 @@ NSString * kEnableOnlineStatus = @"TUIKitDemo_EnableOnlineStatus";
 }
 
 #pragma mark - Private
-// 初始化视图显示数据
 - (void)setupData {
     _data = [NSMutableArray array];
 
@@ -204,22 +194,22 @@ NSString * kEnableOnlineStatus = @"TUIKitDemo_EnableOnlineStatus";
     [_data addObject:@[personal]];
 
     TUICommonTextCellData *friendApply = [TUICommonTextCellData new];
-    friendApply.key = NSLocalizedString(@"MeFriendRequest", nil); // @"好友申请";
+    friendApply.key = NSLocalizedString(@"MeFriendRequest", nil);
     friendApply.showAccessory = YES;
     friendApply.cselector = @selector(onEditFriendApply);
     if (self.profile.allowType == V2TIM_FRIEND_ALLOW_ANY) {
-        friendApply.value = NSLocalizedString(@"MeFriendRequestMethodAgreeAll", nil); // @"同意任何用户加好友";
+        friendApply.value = NSLocalizedString(@"MeFriendRequestMethodAgreeAll", nil);
     }
     if (self.profile.allowType == V2TIM_FRIEND_NEED_CONFIRM) {
-        friendApply.value = NSLocalizedString(@"MeFriendRequestMethodNeedConfirm", nil); // @"需要验证";
+        friendApply.value = NSLocalizedString(@"MeFriendRequestMethodNeedConfirm", nil);
     }
     if (self.profile.allowType == V2TIM_FRIEND_DENY_ANY) {
-        friendApply.value = NSLocalizedString(@"MeFriendRequestMethodDenyAll", nil); // @"拒绝任何人加好友";
+        friendApply.value = NSLocalizedString(@"MeFriendRequestMethodDenyAll", nil);
     }
     [_data addObject:@[friendApply]];
     
     TUICommonSwitchCellData *msgReadStatus = [TUICommonSwitchCellData new];
-    msgReadStatus.title =  NSLocalizedString(@"MeMessageReadStatus", nil);  // @"消息阅读状态"
+    msgReadStatus.title =  NSLocalizedString(@"MeMessageReadStatus", nil);
     msgReadStatus.desc = [self msgReadStatus] ? NSLocalizedString(@"MeMessageReadStatusOpenDesc", nil) : NSLocalizedString(@"MeMessageReadStatusCloseDesc", nil);
     msgReadStatus.cswitchSelector = @selector(onSwitchMsgReadStatus:);
     msgReadStatus.on = [self msgReadStatus];
@@ -233,13 +223,13 @@ NSString * kEnableOnlineStatus = @"TUIKitDemo_EnableOnlineStatus";
     [_data addObject:@[onlineStatus]];
     
     TUICommonTextCellData *about = [TUICommonTextCellData new];
-    about.key = NSLocalizedString(@"MeAbout", nil); // @"关于腾讯·云通信";
+    about.key = NSLocalizedString(@"MeAbout", nil);
     about.showAccessory = YES;
     about.cselector = @selector(didSelectAbout);
     [_data addObject:@[about]];
     
     TUIButtonCellData *button =  [[TUIButtonCellData alloc] init];
-    button.title = NSLocalizedString(@"logout", nil); // @"退出登录";
+    button.title = NSLocalizedString(@"logout", nil);
     button.style = ButtonRedText;
     button.cbuttonSelector = @selector(logout:);
     button.hideSeparatorLine = YES;
@@ -252,12 +242,10 @@ NSString * kEnableOnlineStatus = @"TUIKitDemo_EnableOnlineStatus";
 #pragma mark -- Event
 - (void)didSelectCommon {
     [self setupData];
-    //点击个人资料，跳转到详细界面。
     ProfileController *test = [[ProfileController alloc] init];
     [self.navigationController pushViewController:test animated:YES];
 }
 
-// 点击 退出登录 后执行的函数，负责账户登出的操作
 - (void)logout:(TUIButtonCell *)cell {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"confirm_log_out", nil)/*@"确定退出吗"*/ message:nil preferredStyle:UIAlertControllerStyleAlert];
     [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -274,14 +262,11 @@ NSString * kEnableOnlineStatus = @"TUIKitDemo_EnableOnlineStatus";
         [[TCLoginModel sharedInstance] clearLoginedInfo];
         [self didLogoutInSettingController:self];
     } fail:^(int code, NSString *msg) {
-        NSLog(@"退出登录失败");
+        NSLog(@"logout fail");
     }];
     
 }
 
-/**
- *点击 好友申请 后执行的函数，使用户能够设置自己审核好友申请的程度
- */
 - (void)onEditFriendApply {
     UIActionSheet *sheet = [[UIActionSheet alloc] init];
     sheet.tag = SHEET_AGREE;
@@ -318,9 +303,6 @@ NSString * kEnableOnlineStatus = @"TUIKitDemo_EnableOnlineStatus";
     //PRIVATEMARK
 }
 
-/**
- *  点击头像查看大图的委托实现。
- */
 - (void)didTapOnAvatar:(TUIProfileCardCell *)cell{
     TUIAvatarViewController *image = [[TUIAvatarViewController alloc] init];
     image.avatarData = cell.cardData;

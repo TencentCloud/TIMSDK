@@ -67,6 +67,9 @@
 
 "ChatsSelectContact" = "选择联系人";
 
+"ChatSecurityWarning" = "【安全提示】本 APP 仅用于体验腾讯云即时通信 IM 产品功能，不可用于业务洽谈与拓展。请勿轻信汇款、中奖等涉及钱款的信息，勿轻易拨打陌生电话，谨防上当受骗。";
+"ChatSecurityWarningReport" = "点此举报";
+
 "ContactsAddFriends" = "添加好友";
 "ContactsJoinGroup"  = "添加群聊";
 
@@ -116,7 +119,7 @@
 "FriendAddResultSuccessWait" = "发送成功,等待审核同意";
 "FriendAddResultForbid" = "对方禁止添加";
 "FriendAddResultSuccess" = "已添加到好友列表";
-"FriendAddResultExists" = "好友已存在";
+"FriendAddResultExists" = "对方已是您的好友";
 "FriendAddVerificationMessage" = "验证消息";
 "FriendAddTitle" = "加好友";
 
