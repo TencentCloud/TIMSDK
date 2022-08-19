@@ -6,10 +6,14 @@
 //  Copyright © 2019年 kennethmiao. All rights reserved.
 //
 /** 腾讯云IM Demo好友列表视图
- *  本文件实现了好友列表的视图控制器，使用户可以浏览自己的好友、群组并对其进行管理
- *  本文件所实现的视图控制器，对应了下方barItemView中的 "通讯录" 视图
+ *  - 本视图控制器对应于 tabbar 上的“联系人”
+ *  - 本文件实现了好友列表界面，使用户可以浏览自己的好友、群组并对其进行管理
+ *  - 本类依赖于腾讯云 TUIKit 和 IMSDK
  *
- *  本类依赖于腾讯云 TUIKit和IMSDK 实现
+ *  Tencent Cloud IM Demo Friends List View
+ *  - This viewcontroller corresponds to the "contact" item on the tabBar.
+ *  - This file implements the friend list interface, allowing users to browse their own friends, groups and manage them.
+ *  - This class depends on Tencent Cloud TUIKit and IMSDK.
  */
 #import <UIKit/UIKit.h>
 #import "TUIContactController.h"

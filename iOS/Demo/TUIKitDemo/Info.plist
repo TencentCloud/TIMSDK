@@ -37,6 +37,10 @@
 	<string>云通讯IM需要访问您的相册权限，开启后才能发送图片或视频</string>
 	<key>PHPhotoLibraryPreventAutomaticLimitedAccessAlert</key>
 	<false/>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>Main</string>
 	<key>UIMainStoryboardFile</key>
