@@ -17,7 +17,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property BOOL showAccessory;
 @property UIColor *keyColor;
 @property UIColor *valueColor;
-@property BOOL enableMultiLineValue; // 允许 valueLabel 多行显示
+
+/**
+ * 允许 valueLabel 多行显示
+ * Allow valueLabel to be displayed on multiple lines
+ */
+@property BOOL enableMultiLineValue;
 
 @property (nonatomic, assign) UIEdgeInsets keyEdgeInsets;
 

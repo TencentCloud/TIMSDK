@@ -3,12 +3,12 @@ package com.tencent.qcloud.tuicore;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.webkit.WebView;
 
@@ -16,15 +16,18 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.tencent.qcloud.tuicore.util.SPUtils;
 import com.tencent.qcloud.tuicore.util.TUIBuild;
 import com.tencent.qcloud.tuicore.util.TUIUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
- * 静态换肤、换语言管理
+ * Static skinning, language
  */
 public class TUIThemeManager {
     private static final String TAG = TUIThemeManager.class.getSimpleName();
@@ -33,12 +36,12 @@ public class TUIThemeManager {
     private static final String SP_KEY_LANGUAGE = "language";
     private static final String SP_KEY_THEME = "theme";
 
-    public static final int THEME_LIGHT = 0; // 轻量版  默认
-    public static final int THEME_LIVELY = 1; // 活泼版
-    public static final int THEME_SERIOUS = 2; // 严肃版
+    public static final int THEME_LIGHT = 0; // default
+    public static final int THEME_LIVELY = 1;
+    public static final int THEME_SERIOUS = 2;
 
-    @IntDef({THEME_LIGHT, THEME_LIVELY, THEME_SERIOUS})
-    private @interface ThemeIds {}
+    public static final String LANGUAGE_ZH_CN = "zh";
+    public static final String LANGUAGE_EN = "en";
 
     private static final class ThemeManagerHolder {
         private static final TUIThemeManager instance = new TUIThemeManager();
@@ -48,17 +51,20 @@ public class TUIThemeManager {
         return ThemeManagerHolder.instance;
     }
 
-    private TUIThemeManager() {}
-
     private boolean isInit = false;
 
-    private final List<Integer> lightThemeResIds = new ArrayList<>();
-    private final List<Integer> livelyThemeResIds = new ArrayList<>();
-    private final List<Integer> seriousThemeResIds = new ArrayList<>();
+    private final Map<Integer, List<Integer>> themeResIDMap = new HashMap<>();
+    private final Map<String, Locale> languageMap = new HashMap<>();
 
-    private int currentTheme = THEME_LIGHT;
+    private int currentThemeID = THEME_LIGHT;
     private String currentLanguage = "";
     private Locale defaultLocale = null;
+
+    private TUIThemeManager() {
+        languageMap.put(LANGUAGE_ZH_CN, Locale.SIMPLIFIED_CHINESE);
+        languageMap.put(LANGUAGE_EN, Locale.ENGLISH);
+    }
+
     public static void setTheme(Context context) {
         getInstance().setThemeInternal(context);
     }
@@ -73,77 +79,89 @@ public class TUIThemeManager {
             isInit = true;
             if (appContext instanceof Application) {
                 ((Application) appContext).registerActivityLifecycleCallbacks(new ThemeAndLanguageCallback());
-
-                // 解决 Android 7 以上 WebView 导致切换语言失败的问题。
-                // 解决 Android 9 以上多进程使用 WebView Crash 的问题。
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    WebView.setDataDirectorySuffix(TUIUtil.getProcessName());
-                }
-                new WebView(appContext).destroy();
             }
 
             Locale defaultLocale = getLocale(appContext);
-            SharedPreferences sharedPreferences = context.getSharedPreferences(SP_THEME_AND_LANGUAGE_NAME, Context.MODE_PRIVATE);
-            currentLanguage = sharedPreferences.getString(SP_KEY_LANGUAGE, defaultLocale.getLanguage());
-            currentTheme = sharedPreferences.getInt(SP_KEY_THEME, THEME_LIGHT);
+            SPUtils spUtils = SPUtils.getInstance(SP_THEME_AND_LANGUAGE_NAME);
+            currentLanguage = spUtils.getString(SP_KEY_LANGUAGE, defaultLocale.getLanguage());
+            currentThemeID = spUtils.getInt(SP_KEY_THEME, THEME_LIGHT);
 
-            // 语言只需要初始化一次
+            // The language only needs to be initialized once
             applyLanguage(appContext);
         }
-        // 主题需要更新多次
+        // The theme needs to be updated multiple times
         applyTheme(appContext);
+    }
+
+    /**
+     * Solve the problem that WebView on Android 7 and above causes failure to switch languages.
+     * Solve the problem of using WebView Crash for multiple processes above Android 9.
+     */
+    public static void setWebViewLanguage(Context appContext) {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                WebView.setDataDirectorySuffix(TUIUtil.getProcessName());
+            }
+            new WebView(appContext).destroy();
+        } catch (Throwable throwable) {
+            Log.e("TUIThemeManager", "init language settings failed, " + throwable.getMessage());
+        }
     }
 
     public void setDefaultLocale(Locale defaultLocale) {
         this.defaultLocale = defaultLocale;
     }
 
-    public static void addLightTheme(int resId) {
-        if (resId == 0) {
+    public static void addTheme(int themeID, int resID) {
+        if (resID == 0) {
+            Log.e(TAG, "addTheme failed, theme resID is zero");
             return;
         }
-        if (getInstance().lightThemeResIds.contains(resId)) {
+        Log.i(TAG, "addTheme themeID=" + themeID + " resID=" + resID);
+        List<Integer> themeResIDList = getInstance().themeResIDMap.get(themeID);
+        if (themeResIDList == null) {
+            themeResIDList = new ArrayList<>();
+            getInstance().themeResIDMap.put(themeID, themeResIDList);
+        }
+        if (themeResIDList.contains(resID)) {
             return;
         }
-        getInstance().lightThemeResIds.add(resId);
+        themeResIDList.add(resID);
+        TUIThemeManager.getInstance().applyTheme(ServiceInitializer.getAppContext());
     }
-    public static void addLivelyTheme(int resId) {
-        if (resId == 0) {
-            return;
-        }
-        if (getInstance().livelyThemeResIds.contains(resId)) {
-            return;
-        }
-        getInstance().livelyThemeResIds.add(resId);
 
+    public static void addLightTheme(int resId) {
+        addTheme(THEME_LIGHT, resId);
+    }
+
+    public static void addLivelyTheme(int resId) {
+        addTheme(THEME_LIVELY, resId);
     }
     public static void addSeriousTheme(int resId) {
-        if (resId == 0) {
-            return;
-        }
-        if (getInstance().seriousThemeResIds.contains(resId)) {
-            return;
-        }
-        getInstance().seriousThemeResIds.add(resId);
+        addTheme(THEME_SERIOUS, resId);
     }
 
     public int getCurrentTheme() {
-        return currentTheme;
+        return currentThemeID;
     }
 
     private void mergeTheme(Resources.Theme theme) {
         if (theme == null) {
             return;
         }
-        List<Integer> currentThemeResIds = lightThemeResIds;
-        if (currentTheme == THEME_LIVELY) {
-            currentThemeResIds = livelyThemeResIds;
-        } else if (currentTheme == THEME_SERIOUS) {
-            currentThemeResIds = seriousThemeResIds;
+
+        List<Integer> currentThemeResIDList = themeResIDMap.get(currentThemeID);
+        if (currentThemeResIDList == null) {
+            return;
         }
-        for (Integer resId : currentThemeResIds) {
+        for (Integer resId : currentThemeResIDList) {
             theme.applyStyle(resId, true);
         }
+    }
+
+    public static void addLanguage(String language, Locale locale) {
+        Log.i(TAG, "addLanguage language=" + language + " locale=" + locale);
+        getInstance().languageMap.put(language, locale);
     }
 
     public void changeLanguage(Context context, String language) {
@@ -155,11 +173,8 @@ public class TUIThemeManager {
             return;
         }
         currentLanguage = language;
-
-        SharedPreferences sharedPreferences = context.getSharedPreferences(SP_THEME_AND_LANGUAGE_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(SP_KEY_LANGUAGE, language);
-        editor.commit();
+        SPUtils spUtils = SPUtils.getInstance(SP_THEME_AND_LANGUAGE_NAME);
+        spUtils.put(SP_KEY_LANGUAGE, language, true);
 
         applyLanguage(context.getApplicationContext());
         applyLanguage(context);
@@ -169,14 +184,13 @@ public class TUIThemeManager {
         if (context == null) {
             return;
         }
-
-        Locale locale = getLocale(context);
-        if ("en".equals(currentLanguage)) {
-            locale = Locale.ENGLISH;
-        } else if ("zh".equals(currentLanguage)) {
-            locale = Locale.CHINA;
-        } else if (defaultLocale != null) {
-            locale = defaultLocale;
+        Locale locale = languageMap.get(currentLanguage);
+        if (locale == null) {
+            if (defaultLocale != null) {
+                locale = defaultLocale;
+            } else {
+                locale = getLocale(context);
+            }
         }
 
         Resources resources = context.getResources();
@@ -209,52 +223,41 @@ public class TUIThemeManager {
         return locale;
     }
 
-    public void changeTheme(Context context, @ThemeIds int themeId) {
+    public void changeTheme(Context context, int themeId) {
         if (context == null) {
             return;
         }
 
-        if (themeId == currentTheme) {
+        if (themeId == currentThemeID) {
             return;
         }
-        currentTheme = themeId;
+        currentThemeID = themeId;
 
-        SharedPreferences sharedPreferences = context.getSharedPreferences(SP_THEME_AND_LANGUAGE_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(SP_KEY_THEME, themeId);
-        editor.commit();
+        SPUtils spUtils = SPUtils.getInstance(SP_THEME_AND_LANGUAGE_NAME);
+        spUtils.put(SP_KEY_THEME, themeId, true);
 
         applyTheme(context.getApplicationContext());
         applyTheme(context);
     }
 
-    /**
-     * 当前 Activity 或者 Application 应用主题
-     * @param context 一般为 Application 或者 Activity
-     */
     private void applyTheme(Context context) {
         if (context == null) {
             return;
         }
         Resources.Theme theme = context.getTheme();
         if (theme == null) {
-            if (currentTheme == THEME_LIVELY) {
-                context.setTheme(R.style.TUIBaseLivelyTheme);
-            } else if (currentTheme == THEME_SERIOUS) {
-                context.setTheme(R.style.TUIBaseSeriousTheme);
-            } else {
-                context.setTheme(R.style.TUIBaseLightTheme);
-            }
+            context.setTheme(R.style.TUIBaseTheme);
             theme = context.getTheme();
         }
         mergeTheme(theme);
     }
 
     /**
-     * 获取参与换肤的资源 id
-     * @param context 一般为当前界面的 Activity，此 Activity 实现了 ITUIThemeChangeable 接口
-     * @param attrId attr 自定义的要变换主题的 attr
-     * @return 当前主题下的资源 id
+     * Get resources for skinning
+     * 
+     * @param context   context
+     * @param attrId    custom attribute
+     * @return resources for skinning
      */
     public static int getAttrResId(Context context, int attrId) {
         if (context == null || attrId == 0) {

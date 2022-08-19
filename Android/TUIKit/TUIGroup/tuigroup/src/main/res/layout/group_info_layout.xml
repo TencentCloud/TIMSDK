@@ -219,7 +219,6 @@
                 android:layout_marginTop="10dp"
                 app:name="@string/in_group_nick_name" />
 
-
             <com.tencent.qcloud.tuicore.component.LineControllerView
                 android:id="@+id/msg_rev_option"
                 android:layout_width="match_parent"
@@ -227,15 +226,46 @@
                 android:layout_marginTop="10dp"
                 app:isSwitch="true"
                 app:name="@string/profile_msgrev_opt" />
+            <RelativeLayout
+                android:id="@+id/layout_fold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white" >
+                <View
+                    android:id="@+id/fold_top_line"
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/line"/>
+
+                <com.tencent.qcloud.tuicore.component.LineControllerView
+                    android:id="@+id/fold_group_chat"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/group_profile_item_height"
+                    android:layout_below="@id/fold_top_line"
+                    android:layout_marginLeft="20dp"
+                    app:isSwitch="true"
+                    app:name="@string/fold_this_group_chat" />
+                <View
+                    android:id="@+id/left_line"
+                    android:layout_width="10dp"
+                    android:layout_height="2px"
+                    android:layout_marginLeft="20dp"
+                    android:layout_centerVertical="true"
+                    android:background="@color/dark_line"/>
+                <View
+                    android:layout_below="@id/fold_group_chat"
+                    android:id="@+id/fold_bottom_line"
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/line"/>
+            </RelativeLayout>
 
             <com.tencent.qcloud.tuicore.component.LineControllerView
                 android:id="@+id/chat_to_top_switch"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/group_profile_item_height"
                 app:isSwitch="true"
-                app:isTop="true"
                 app:name="@string/chat_to_top" />
-
 
             <TextView
                 android:id="@+id/group_clear_msg_button"

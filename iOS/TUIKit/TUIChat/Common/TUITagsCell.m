@@ -14,7 +14,6 @@
 #define maxItemWidth 107
 @interface TUITagsCell()<TUIAttributedLabelDelegate>
 
-//标签按钮
 @property (nonatomic, strong) UIButton *tagBtn;
 
 @end
@@ -37,15 +36,14 @@
 }
 
 
-#pragma mark - 准备界面
+#pragma mark - UI
 - (void)prepareUI {
-    //设置背景颜色
     self.layer.cornerRadius = 12.0f;
     self.layer.masksToBounds = YES;
 }
 
 
-#pragma mark - 设置数据源
+#pragma mark - Data
 - (void)setModel:(TUITagsModel *)model {
     _model = model;
     self.backgroundColor = model.defaultColor;
@@ -102,11 +100,10 @@
     label.delegate = (id)self;
     
     
-    //拿到真实宽度
     allWidth+= label.frame.size.width;
-    allWidth+= margin; //左margin
-    allWidth+= rightMargin; //右margin
-    allWidth+= 8; //竖线的间距
+    allWidth+= margin;
+    allWidth+= rightMargin;
+    allWidth+= 8;
     self.ItemWidth = allWidth;
 }
 

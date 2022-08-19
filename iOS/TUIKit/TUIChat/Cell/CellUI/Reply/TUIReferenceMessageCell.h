@@ -18,12 +18,14 @@ NS_ASSUME_NONNULL_BEGIN
 typedef void(^TUIReferenceSelectAllContentCallback)(BOOL);
 
 @interface TUIReferenceMessageCell : TUIBubbleMessageCell
-
-// 引用的边框
+/**
+ * 引用的边框
+ * Border of quote view
+ */
 @property (nonatomic, strong) CALayer *quoteBorderLayer;
-// 引用视图
+
 @property (nonatomic, strong) UIView *quoteView;
-// 原始消息发送者昵称
+
 @property (nonatomic, strong) UILabel *senderLabel;
 
 @property (nonatomic, strong) TUIReferenceMessageCellData *referenceData;

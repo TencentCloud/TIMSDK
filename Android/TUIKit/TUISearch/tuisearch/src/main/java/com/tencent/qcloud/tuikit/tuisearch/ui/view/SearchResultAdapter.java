@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
+import com.tencent.qcloud.tuicore.util.TUIUtil;
 import com.tencent.qcloud.tuikit.tuisearch.R;
 import com.tencent.qcloud.tuikit.tuisearch.bean.SearchDataBean;
 import com.tencent.qcloud.tuikit.tuisearch.ui.interfaces.ISearchResultAdapter;
@@ -31,17 +32,8 @@ import java.util.regex.Pattern;
 
 public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ISearchResultAdapter {
     private Context context;
-    /**
-     * adapter传递过来的数据集合
-     */
     private List<String> list = new ArrayList<>();
-    /**
-     * 需要改变颜色的text
-     */
     private String text;
-    /**
-     * 属性动画
-     */
     private Animator animator;
 
     public static final int CONVERSATION_TYPE = 1;
@@ -56,9 +48,6 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     //data list
     private List<SearchDataBean> mDataList;
 
-    /**
-     * 在MainActivity中设置text
-     */
     public void setText(String text) {
         this.text = text;
     }
@@ -126,17 +115,18 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-        /**如果没有进行搜索操作或者搜索之后点击了删除按钮 我们会在MainActivity中把text置空并传递过来*/
+        /*如果没有进行搜索操作或者搜索之后点击了删除按钮 我们会在MainActivity中把text置空并传递过来*/
+        /*If there is no search operation or the delete button is clicked after the search, we will empty the text in MainActivity and pass it over.*/
 
         ContactViewHolder contactViewHolder = (ContactViewHolder) holder;
         if (contactViewHolder != null && mDataList != null && mDataList.size() > 0 && position < mDataList.size()) {
-            String title = mDataList.get(position).getTitle();
-            String subTitle = mDataList.get(position).getSubTitle();
-            String subTitleLabel = mDataList.get(position).getSubTitleLabel();
-            String path = mDataList.get(position).getIconPath();
+            SearchDataBean searchDataBean = mDataList.get(position);
+            String title = searchDataBean.getTitle();
+            String subTitle = searchDataBean.getSubTitle();
+            String subTitleLabel = searchDataBean.getSubTitleLabel();
+            String path = searchDataBean.getIconPath();
 
             contactViewHolder.mSubTvLabelText.setText(subTitleLabel);
-            // subTitle 内容为空时，title 可居中显示
             if (TextUtils.isEmpty(subTitle)) {
                 RelativeLayout.LayoutParams layoutParams= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                 layoutParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
@@ -146,10 +136,16 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 contactViewHolder.mTvText.setLayoutParams(layoutParams);
             }
 
-            if (!TextUtils.isEmpty(path)) {
-                GlideEngine.loadImage(contactViewHolder.mUserIconView, path);
+            int avatarDefaultIconResID;
+            if (searchDataBean.isGroup()) {
+                avatarDefaultIconResID = TUIUtil.getDefaultGroupIconResIDByGroupType(context, searchDataBean.getGroupType());
             } else {
-                contactViewHolder.mUserIconView.setImageResource(TUIThemeManager.getAttrResId(contactViewHolder.mUserIconView.getContext(), R.attr.core_default_user_icon));
+                avatarDefaultIconResID = TUIThemeManager.getAttrResId(contactViewHolder.mUserIconView.getContext(), R.attr.core_default_user_icon);
+            }
+            if (!TextUtils.isEmpty(path)) {
+                GlideEngine.loadImageSetDefault(contactViewHolder.mUserIconView, path, avatarDefaultIconResID);
+            } else {
+                contactViewHolder.mUserIconView.setImageResource(avatarDefaultIconResID);
             }
             if (text != null) {
                 if (mViewType == CONVERSATION_TYPE) {
@@ -191,9 +187,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public int getItemViewType(int position) {
         return mViewType;
     }
-    /**
-     * Recyclerview的点击监听接口
-     */
+
     public interface onItemClickListener {
         void onClick(View view, int pos);
     }
@@ -221,25 +215,18 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    /**
-     * 正则匹配 返回值是一个SpannableString 即经过变色处理的数据
-     */
     private SpannableString matcherSearchText(int color, String text, String keyword) {
         if (text == null || TextUtils.isEmpty(text)) {
             return SpannableString.valueOf("");
         }
         SpannableString spannableString = new SpannableString(text);
-        //条件 keyword
         Pattern pattern = Pattern.compile(Pattern.quote(keyword), Pattern.CASE_INSENSITIVE);
-        //匹配
         Matcher matcher = pattern.matcher(spannableString);
         while (matcher.find()) {
             int start = matcher.start();
             int end = matcher.end();
-            //ForegroundColorSpan 需要new 不然也只能是部分变色
             spannableString.setSpan(new ForegroundColorSpan(color), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
-        //返回变色处理的结果
         return spannableString;
     }
 

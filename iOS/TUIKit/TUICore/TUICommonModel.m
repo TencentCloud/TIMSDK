@@ -637,7 +637,6 @@ static void *ScrollViewBoundsChangeNotificationContext = &ScrollViewBoundsChange
         case ButtonGreen: {
             [_button setTitleColor:TUICoreDynamicColor(@"form_green_button_text_color", @"#FFFFFF") forState:UIControlStateNormal];
             _button.backgroundColor = TUICoreDynamicColor(@"form_green_button_bg_color", @"#232323");
-            //对于背景色为绿色的按钮，高亮颜色比原本略深（原本的5/6）。由于无法直接设置高亮时的背景色，所以高亮背景色的变化通过生成并设置纯色图片来实现。
             [_button setBackgroundImage:[self imageWithColor:TUICoreDynamicColor(@"form_green_button_highlight_bg_color", @"#179A1A")] forState:UIControlStateHighlighted];
         }
             break;
@@ -655,7 +654,6 @@ static void *ScrollViewBoundsChangeNotificationContext = &ScrollViewBoundsChange
         case ButtonBule:{
             [_button.titleLabel setTextColor:TUICoreDynamicColor(@"form_blue_button_text_color", @"#FFFFFF")];
             _button.backgroundColor = TUICoreDynamicColor(@"form_blue_button_bg_color", @"#1E90FF");
-            //对于背景色为蓝色的按钮，高亮颜色比原本略深（原本的5/6）。由于无法直接设置高亮时的背景色，所以高亮背景色的变化通过生成并设置纯色图片来实现。
             [_button setBackgroundImage:[self imageWithColor:TUICoreDynamicColor(@"form_blue_button_highlight_bg_color", @"#1978D5")] forState:UIControlStateHighlighted];
         }
             break;
@@ -704,7 +702,6 @@ static void *ScrollViewBoundsChangeNotificationContext = &ScrollViewBoundsChange
     }
 }
 
-//本函数实现了生成纯色背景的功能，从而配合 setBackgroundImage: forState: 来实现高亮时纯色按钮的点击反馈。
 - (UIImage *)imageWithColor:(UIColor *)color
 {
     CGRect rect = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
@@ -772,9 +769,16 @@ static void *ScrollViewBoundsChangeNotificationContext = &ScrollViewBoundsChange
 @implementation TUIFaceGroup
 @end
 
+@implementation TUIEmojiTextAttachment
+
+- (CGRect)attachmentBoundsForTextContainer:(NSTextContainer *)textContainer proposedLineFragment:(CGRect)lineFrag glyphPosition:(CGPoint)position characterIndex:(NSUInteger)charIndex {
+    return CGRectMake(0, 0, _emojiSize.width, _emojiSize.height);
+}
+
+@end
 /////////////////////////////////////////////////////////////////////////////////
 //
-//                          TUIUnReadView（会话未读数）
+//                          TUIUnReadView
 //
 /////////////////////////////////////////////////////////////////////////////////
 @implementation TUIUnReadView
@@ -856,7 +860,7 @@ static void *ScrollViewBoundsChangeNotificationContext = &ScrollViewBoundsChange
 
 /////////////////////////////////////////////////////////////////////////////////
 //
-//                          TUIConversationPin（会话置顶）
+//                          TUIConversationPin
 //
 /////////////////////////////////////////////////////////////////////////////////
 #define TOP_CONV_KEY @"TUIKIT_TOP_CONV_KEY"
@@ -953,7 +957,7 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
 
 /////////////////////////////////////////////////////////////////////////////////
 //
-//                          TUIGroupAvatar（九宫格群头像）
+//                          TUIGroupAvatar
 //
 /////////////////////////////////////////////////////////////////////////////////
 #define groupAvatarWidth (48*[[UIScreen mainScreen] scale])
@@ -965,14 +969,14 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         NSInteger avatarCount = group.count > 9 ? 9 : group.count;
         CGFloat width = groupAvatarWidth / 3 * 0.90;
-        CGFloat space3 = (groupAvatarWidth - width * 3) / 4;                      // 三张图时的边距（图与图之间的边距）
-        CGFloat space2 = (groupAvatarWidth - width * 2 + space3) / 2;             // 两张图时的边距
-        CGFloat space1 = (groupAvatarWidth - width) / 2;                          // 一张图时的边距
+        CGFloat space3 = (groupAvatarWidth - width * 3) / 4;
+        CGFloat space2 = (groupAvatarWidth - width * 2 + space3) / 2;
+        CGFloat space1 = (groupAvatarWidth - width) / 2;
         __block CGFloat y = avatarCount > 6 ? space3 : (avatarCount > 3 ? space2 : space1);
         __block CGFloat x = avatarCount  % 3 == 0 ? space3 : (avatarCount % 3 == 2 ? space2 : space1);
-        width = avatarCount > 4 ? width : (avatarCount > 1 ? (groupAvatarWidth - 3 * space3) / 2 : groupAvatarWidth );  // 重新计算width；
+        width = avatarCount > 4 ? width : (avatarCount > 1 ? (groupAvatarWidth - 3 * space3) / 2 : groupAvatarWidth );
         
-        if (avatarCount == 1) {                                          // 1,2,3,4 张图不同
+        if (avatarCount == 1) {
             x = 0;
             y = 0;
         }
@@ -990,7 +994,7 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
             UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, groupAvatarWidth, groupAvatarWidth)];
             [view setBackgroundColor:[UIColor colorWithWhite:0.8 alpha:0.6]];
             view.layer.cornerRadius = 6;
-            __block NSInteger count = 0;               //下载图片完成的计数
+            __block NSInteger count = 0;
             for (NSInteger i = avatarCount - 1; i >= 0; i--) {
                 NSString *avatarUrl = [group objectAtIndex:i];
                 
@@ -1001,7 +1005,7 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
                                                                                                                               SDImageCacheType cacheType,
                                                                                                                               NSURL * _Nullable imageURL) {
                     count ++ ;
-                    if (count == avatarCount) {     //图片全部下载完成
+                    if (count == avatarCount) {
                         UIGraphicsBeginImageContextWithOptions(view.frame.size, NO, 2.0);
                         [view.layer renderInContext:UIGraphicsGetCurrentContext()];
                         UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
@@ -1050,7 +1054,6 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
 
 + (void)fetchGroupAvatars:(NSString *)groupID placeholder:(UIImage *)placeholder callback:(void(^)(BOOL success, UIImage *image, NSString *groupID))callback
 {
-    // 获取群组前9个成员的头像url
     @weakify(self)
     [[V2TIMManager sharedInstance] getGroupMemberList:groupID filter:V2TIM_GROUP_MEMBER_FILTER_ALL nextSeq:0 succ:^(uint64_t nextSeq, NSArray<V2TIMGroupMemberFullInfo *> *memberList) {
         @strongify(self)
@@ -1075,19 +1078,15 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
             return;
         }
         
-        // 存储当前获取到的群组头像信息
         NSString *key = [NSString stringWithFormat:@"TUIConversationLastGroupMember_%@", groupID];
         [NSUserDefaults.standardUserDefaults setInteger:groupMemberAvatars.count forKey:key];
         [NSUserDefaults.standardUserDefaults synchronize];
         
-        // 创建九宫格头像
         [TUIGroupAvatar createGroupAvatar:groupMemberAvatars finished:^(UIImage *groupAvatar) {
             @strongify(self)
-            // 缓存
             UIImage *avatar = groupAvatar;
             [self cacheGroupAvatar:avatar number:(UInt32)groupMemberAvatars.count groupID:groupID];
             
-            // 回调
             if (callback) {
                 callback(YES, avatar, groupID);
             }
@@ -1100,10 +1099,6 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
     }];
 }
 
-/// 缓存群组头像
-/// @param avatar 图片
-/// 取缓存的维度是按照会议室ID & 会议室人数来定的，
-/// 人数变化取不到缓存
 + (void)cacheGroupAvatar:(UIImage*)avatar number:(UInt32)memberNum groupID:(NSString *)groupID
 {
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
@@ -1131,9 +1126,6 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
     });
 }
 
-/// 获取缓存群组头像
-/// 缓存的维度是按照会议室ID & 会议室人数来定的，
-/// 人数变化要引起头像改变
 + (void)getCacheGroupAvatar:(NSString *)groupID callback:(void(^)(UIImage *, NSString *groupID))imageCallBack {
     if (groupID == nil || groupID.length == 0) {
         if (imageCallBack) {
@@ -1148,7 +1140,6 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
             return;
         }
         UInt32 memberNum = groupInfo.info.memberCount;
-        //限定1-9的范围
         memberNum = MAX(1, memberNum);
         memberNum = MIN(memberNum, 9);;
         NSString* tempPath = NSTemporaryDirectory();
@@ -1159,7 +1150,6 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
 
         if (success) {
             avatar= [[UIImage alloc] initWithContentsOfFile:filePath];
-            // 存储当前获取到的群组头像信息
             NSString *key = [NSString stringWithFormat:@"TUIConversationLastGroupMember_%@", groupID];
             [NSUserDefaults.standardUserDefaults setInteger:memberNum forKey:key];
             [NSUserDefaults.standardUserDefaults synchronize];
@@ -1170,12 +1160,8 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
     }];
 }
 
-/// 同步获取本地缓存的群组头像
-/// @param groupId 群id
-/// @param memberNum 群成员个数, 最多返回9个成员的拼接头像
 + (UIImage *)getCacheAvatarForGroup:(NSString *)groupId number:(UInt32)memberNum
 {
-    //限定1-9的范围
     memberNum = MAX(1, memberNum);
     memberNum = MIN(memberNum, 9);;
     NSString* tempPath = NSTemporaryDirectory();
@@ -1209,7 +1195,7 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
 
 /////////////////////////////////////////////////////////////////////////////////
 //
-//                          TUIImageCache（图像资源、表情资源缓存与加载）
+//                          TUIImageCache
 //
 /////////////////////////////////////////////////////////////////////////////////
 @interface TUIImageCache()
@@ -1288,7 +1274,7 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
 
 /////////////////////////////////////////////////////////////////////////////////
 //
-//                          TUICommonContactSelectCellData（通讯录联系人信息）
+//                          TUICommonContactSelectCellData
 //
 /////////////////////////////////////////////////////////////////////////////////
 @implementation TUICommonContactSelectCellData
@@ -1312,7 +1298,7 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
 
 /////////////////////////////////////////////////////////////////////////////////
 //
-//                          TUICommonContactListPickerCell（通讯录多选视图的cell）
+//                          TUICommonContactListPickerCell
 //
 /////////////////////////////////////////////////////////////////////////////////
 @implementation TUICommonContactListPickerCell
@@ -1334,7 +1320,7 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
 
 /////////////////////////////////////////////////////////////////////////////////
 //
-//                          TUIContactListPickerOnCancel（通讯录多选视图）
+//                          TUIContactListPickerOnCancel
 //
 /////////////////////////////////////////////////////////////////////////////////
 @interface TUIContactListPicker()<UICollectionViewDelegate, UICollectionViewDataSource>
@@ -1377,7 +1363,7 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
                                  forState:UIControlStateNormal];
     [self.accessoryBtn setBackgroundImage:TUICoreCommonBundleImage(@"icon_cell_blue_normal")
                                  forState:UIControlStateHighlighted];
-    [self.accessoryBtn setTitle:[NSString stringWithFormat:@" %@ ", TUIKitLocalizableString(Confirm)] forState:UIControlStateNormal]; // @" 确定 "
+    [self.accessoryBtn setTitle:[NSString stringWithFormat:@" %@ ", TUIKitLocalizableString(Confirm)] forState:UIControlStateNormal];
     self.accessoryBtn.enabled = NO;
     [self addSubview:self.accessoryBtn];
 }
@@ -1484,7 +1470,6 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
         self.navigationBar.barTintColor = self.tintColor;
         self.navigationBar.shadowImage = [UIImage new];
         self.navigationBar.standardAppearance = appearance;
-        //iOS15新增特性：滑动边界样式
         self.navigationBar.scrollEdgeAppearance= appearance;
 
     }
@@ -1514,7 +1499,6 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
 
 - (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
-    //push的时候隐藏底部tabbar
     if(self.viewControllers.count != 0){
         viewController.hidesBottomBarWhenPushed = YES;
         self.tabBarController.tabBar.hidden = YES;
@@ -1543,16 +1527,26 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
 - (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
     if (navigationController.viewControllers.count == 1){
-        //如果堆栈内的视图控制器数量为1 说明只有根控制器，将currentShowVC 清空，为了下面的方法禁用侧滑手势
+        /**
+         * 如果堆栈内的视图控制器数量为1 说明只有根控制器，将 currentShowVC 清空，为了下面的方法禁用侧滑手势
+         * If the number of view controllers in the stack is 1, it means only the root controller, clear the currentShowVC, and disable the swipe gesture for the following method
+         */
         self.currentShowVC = Nil;
     }
     else{
-        //将push进来的视图控制器赋值给currentShowVC
+        /**
+         * 将 push 进来的视图控制器赋值给 currentShowVC
+         * Assign the pushed view controller to currentShowVC
+         */
         self.currentShowVC = viewController;
     }
 
     if ([navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
-        if (self.viewControllers.count == 1) {// 禁止首页的侧滑返回
+        if (self.viewControllers.count == 1) {
+            /**
+             * 禁止首页的侧滑返回
+             * Forbid the sliding back of the home page
+             */
             navigationController.interactivePopGestureRecognizer.enabled = NO;
         }else{
             navigationController.interactivePopGestureRecognizer.enabled = YES;
@@ -1583,7 +1577,10 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
 {
     if (gestureRecognizer == self.interactivePopGestureRecognizer) {
         if (self.currentShowVC == self.topViewController) {
-            //如果 currentShowVC 存在说明堆栈内的控制器数量大于 1 ，允许激活侧滑手势
+            /**
+             * 如果 currentShowVC 存在说明堆栈内的控制器数量大于 1 ，允许激活侧滑手势
+             * If currentShowVC exists, it means that the number of controllers in the stack is greater than 1, allowing the side slide gesture to be activated
+             */
             return YES;
         }
         return NO;
@@ -1606,7 +1603,6 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
 @implementation UIAlertController (TUITheme)
 
 + (void)load {
-    // 只执行一次
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         [self hookMethod:self originSelector:@selector(addAction:) swizzledSelector:@selector(tuitheme_addAction:) classMethod:NO];
@@ -1627,11 +1623,9 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
     Method swizzled_method;
     
     if (clsMethod) {
-        // 类方法
         origin_method = class_getClassMethod(cls, originSelector);
         swizzled_method = class_getClassMethod(cls, swizzledSelector);
     } else {
-        // 实例(对象)方法
         origin_method = class_getInstanceMethod(cls, originSelector);
         swizzled_method = class_getInstanceMethod(cls, swizzledSelector);
     }

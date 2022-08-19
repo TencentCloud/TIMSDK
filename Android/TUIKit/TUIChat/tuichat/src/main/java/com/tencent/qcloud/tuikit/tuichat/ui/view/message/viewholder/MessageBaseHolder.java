@@ -83,8 +83,6 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
     }
 
     public void layoutViews(final TUIMessageBean msg, final int position) {
-
-        //// 时间线设置
         if (properties.getChatTimeBubble() != null) {
             chatTimeText.setBackground(properties.getChatTimeBubble());
         }
@@ -118,7 +116,6 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
         clearHighLightBackground();
     }
 
-    // 选中高亮，设置动画改变背景
     public void startHighLight() {
         int highLightColorDark = itemView.getResources().getColor(R.color.chat_message_bubble_high_light_dark_color);
         int highLightColorLight = itemView.getResources().getColor(R.color.chat_message_bubble_high_light_light_color);

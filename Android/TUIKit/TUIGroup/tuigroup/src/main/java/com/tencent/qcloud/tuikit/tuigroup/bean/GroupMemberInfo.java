@@ -19,6 +19,7 @@ public class GroupMemberInfo implements Serializable {
     private long joinTime;
     private long tinyId;
     private int memberType;
+    private boolean isSelected = false;
 
     public String getIconUrl() {
         return iconUrl;
@@ -114,6 +115,14 @@ public class GroupMemberInfo implements Serializable {
 
     public void setMemberType(int memberType) {
         this.memberType = memberType;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
     }
 
     public GroupMemberInfo covertTIMGroupMemberInfo(V2TIMGroupMemberInfo info) {

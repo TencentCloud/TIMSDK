@@ -14,7 +14,7 @@
 #import "TUILogin.h"
 #import "TUIContactViewDataProvider.h"
 #import "TCConstants.h"
-//sdkappid 请查看 GenerateTestUserSig.h
+
 @class AppDelegate;
 static AppDelegate *app = nil;
 

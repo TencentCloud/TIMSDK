@@ -23,19 +23,29 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TUITagsModel : NSObject
 
-/// 标签名字
+/**
+ * 标签名字
+ * Label name
+ */
 @property (nonatomic, copy) NSString *name;
-/// 别名
+
+/**
+ * 标签别名
+ * Label alias
+ */
 @property (nonatomic, copy) NSString *alias;
 
-/// 标签名字颜色
+/**
+ * 标签名字颜色
+ * The color of label displaying name
+ */
 @property (nonatomic, strong) UIColor *textColor;
-/// 是否选中
+
+
 @property (nonatomic, assign) BOOL isSelect;
 
-/// 默认颜色
 @property (nonatomic, strong) UIColor *defaultColor;
-/// 选中颜色
+
 @property (nonatomic, strong) UIColor *selectColor;
 
 

@@ -15,12 +15,7 @@ public class MediaPlayerProxy implements IPlayer {
     private IPlayer mMediaPlayer;
 
     public MediaPlayerProxy() {
-        try {
-            Class.forName("tv.danmaku.ijk.media.player.IjkMediaPlayer").newInstance();
-            mMediaPlayer = new IjkMediaPlayerWrapper();
-        } catch (Exception e) {
-            mMediaPlayer = new SystemMediaPlayerWrapper();
-        }
+        mMediaPlayer = new SystemMediaPlayerWrapper();
         Log.i(TAG, "use mMediaPlayer: " + mMediaPlayer);
     }
 

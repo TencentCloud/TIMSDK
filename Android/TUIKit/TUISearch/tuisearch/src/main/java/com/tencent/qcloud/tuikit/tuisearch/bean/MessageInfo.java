@@ -17,117 +17,32 @@ public class MessageInfo implements Serializable {
     private final String TAG = "MessageInfo";
 
     public static final int MSG_TYPE_MIME = 0x1;
-
-    /**
-     * 文本类型消息
-     */
     public static final int MSG_TYPE_TEXT = 0x00;
-    /**
-     * 图片类型消息
-     */
     public static final int MSG_TYPE_IMAGE = 0x20;
-    /**
-     * 语音类型消息
-     */
     public static final int MSG_TYPE_AUDIO = 0x30;
-    /**
-     * 视频类型消息
-     */
     public static final int MSG_TYPE_VIDEO = 0x40;
-    /**
-     * 文件类型消息
-     */
     public static final int MSG_TYPE_FILE = 0x50;
-    /**
-     * 位置类型消息
-     */
     public static final int MSG_TYPE_LOCATION = 0x60;
-
-    /**
-     * 自定义图片类型消息
-     */
     public static final int MSG_TYPE_CUSTOM_FACE = 0x70;
-    /**
-     * 自定义消息
-     */
     public static final int MSG_TYPE_CUSTOM = 0x80;
-    /**
-     * 转发消息
-     */
     public static final int MSG_TYPE_MERGE = 0x81;
-
-    /**
-     * 提示类信息
-     */
     public static final int MSG_TYPE_TIPS = 0x100;
-    /**
-     * 群创建提示消息
-     */
     public static final int MSG_TYPE_GROUP_CREATE = 0x101;
-    /**
-     * 群解散提示消息
-     */
     public static final int MSG_TYPE_GROUP_DELETE = 0x102;
-    /**
-     * 群成员加入提示消息
-     */
     public static final int MSG_TYPE_GROUP_JOIN = 0x103;
-    /**
-     * 群成员退群提示消息
-     */
     public static final int MSG_TYPE_GROUP_QUITE = 0x104;
-    /**
-     * 群成员被踢出群提示消息
-     */
     public static final int MSG_TYPE_GROUP_KICK = 0x105;
-    /**
-     * 群名称修改提示消息
-     */
     public static final int MSG_TYPE_GROUP_MODIFY_NAME = 0x106;
-    /**
-     * 群通知更新提示消息
-     */
     public static final int MSG_TYPE_GROUP_MODIFY_NOTICE = 0x107;
-
-    /**
-     * 消息未读状态
-     */
     public static final int MSG_STATUS_READ = 0x111;
-    /**
-     * 消息删除状态
-     */
     public static final int MSG_STATUS_DELETE = 0x112;
-    /**
-     * 消息撤回状态
-     */
     public static final int MSG_STATUS_REVOKE = 0x113;
-    /**
-     * 消息正常状态
-     */
     public static final int MSG_STATUS_NORMAL = 0;
-    /**
-     * 消息发送中状态
-     */
     public static final int MSG_STATUS_SENDING = 1;
-    /**
-     * 消息发送成功状态
-     */
     public static final int MSG_STATUS_SEND_SUCCESS = 2;
-    /**
-     * 消息发送失败状态
-     */
     public static final int MSG_STATUS_SEND_FAIL = 3;
-    /**
-     * 消息内容下载中状态
-     */
     public static final int MSG_STATUS_DOWNLOADING = 4;
-    /**
-     * 消息内容未下载状态
-     */
     public static final int MSG_STATUS_UN_DOWNLOAD = 5;
-    /**
-     * 消息内容已下载状态
-     */
     public static final int MSG_STATUS_DOWNLOADED = 6;
 
     private String id = UUID.randomUUID().toString();
@@ -158,20 +73,10 @@ public class MessageInfo implements Serializable {
     private String groupId;
     private int downloadStatus;
 
-    /**
-     * 获取消息唯一标识
-     *
-     * @return
-     */
     public String getId() {
         return id;
     }
 
-    /**
-     * 设置消息唯一标识
-     *
-     * @param id
-     */
     public void setId(String id) {
         this.id = id;
     }
@@ -186,6 +91,8 @@ public class MessageInfo implements Serializable {
 
     /**
      * 获取消息发送方 ID
+     * 
+     * Get message sender ID
      *
      * @return
      */
@@ -196,6 +103,8 @@ public class MessageInfo implements Serializable {
     /**
      * 设置消息发送方 ID
      *
+     * Set message sender ID
+     * 
      * @param fromUser
      */
     public void setFromUser(String fromUser) {
@@ -204,6 +113,8 @@ public class MessageInfo implements Serializable {
 
     /**
      * 获取群名片
+     * 
+     * Get Group NameCard
      *
      * @return
      */
@@ -213,6 +124,8 @@ public class MessageInfo implements Serializable {
 
     /**
      * 设置群名片
+     * 
+     * Set Group NameCard
      *
      * @param groupNameCard
      */
@@ -222,6 +135,8 @@ public class MessageInfo implements Serializable {
 
     /**
      * 获取消息类型
+     * 
+     * Get message type
      *
      * @return
      */
@@ -231,6 +146,8 @@ public class MessageInfo implements Serializable {
 
     /**
      * 设置消息类型
+     * 
+     * Set message type
      *
      * @param msgType
      */
@@ -240,6 +157,8 @@ public class MessageInfo implements Serializable {
 
     /**
      * 获取消息发送状态
+     * 
+     * Get Message Status
      *
      * @return
      */
@@ -249,6 +168,8 @@ public class MessageInfo implements Serializable {
 
     /**
      * 设置消息发送状态
+     * 
+     * Set Message Status
      *
      * @param status
      */
@@ -267,6 +188,8 @@ public class MessageInfo implements Serializable {
 
     /**
      * 获取消息是否为登录用户发送
+     * 
+     * Get whether the message was sent for yourself
      *
      * @return
      */
@@ -276,6 +199,8 @@ public class MessageInfo implements Serializable {
 
     /**
      * 设置消息是否是登录用户发送
+     * 
+     * Set whether the message was sent for yourself
      *
      * @param self
      */
@@ -285,6 +210,8 @@ public class MessageInfo implements Serializable {
 
     /**
      * 获取消息是否已读
+     * 
+     * Get whether the message has been read
      *
      * @return
      */
@@ -294,6 +221,8 @@ public class MessageInfo implements Serializable {
 
     /**
      * 设置消息已读
+     * 
+     * Set whether the message has been read
      *
      * @param read
      */
@@ -303,6 +232,8 @@ public class MessageInfo implements Serializable {
 
     /**
      * 获取消息是否为群消息
+     * 
+     * Get whether the message is a group message
      *
      * @return
      */
@@ -312,6 +243,8 @@ public class MessageInfo implements Serializable {
 
     /**
      * 设置消息是否为群消息
+     * 
+     * Set whether the message is a group message
      *
      * @param group
      */
@@ -321,6 +254,8 @@ public class MessageInfo implements Serializable {
 
     /**
      * 获取多媒体消息的数据源
+     * 
+     * Get the data source of the multimedia message
      *
      * @return
      */
@@ -330,6 +265,8 @@ public class MessageInfo implements Serializable {
 
     /**
      * 获取多媒体消息的数据源
+     * 
+     * Get the data source of the multimedia message
      *
      * @return
      */
@@ -343,6 +280,8 @@ public class MessageInfo implements Serializable {
 
     /**
      * 设置多媒体消息的数据源
+     * 
+     * Set the data source of the multimedia message
      *
      * @param dataUri
      */
@@ -354,6 +293,8 @@ public class MessageInfo implements Serializable {
 
     /**
      * 设置多媒体消息的数据源
+     * 
+     * Set the data source of the multimedia message
      *
      * @param dataUri
      */
@@ -363,6 +304,8 @@ public class MessageInfo implements Serializable {
 
     /**
      * 获取多媒体消息的保存路径
+     * 
+     * Get the save path of multimedia messages
      *
      * @return
      */
@@ -372,6 +315,8 @@ public class MessageInfo implements Serializable {
 
     /**
      * 设置多媒体消息的保存路径
+     * 
+     * Set the save path of multimedia messages
      *
      * @param dataPath
      */
@@ -417,26 +362,18 @@ public class MessageInfo implements Serializable {
         return true;
     }
 
-    /**
-     * 获取SDK的消息bean
-     *
-     * @return
-     */
     public V2TIMMessage getTimMessage() {
         return timMessage;
     }
 
-    /**
-     * 设置SDK的消息bean
-     *
-     * @param timMessage
-     */
     public void setTimMessage(V2TIMMessage timMessage) {
         this.timMessage = timMessage;
     }
 
     /**
      * 非文字消息在会话列表时展示的文字说明，比如照片在会话列表展示为“[图片]”
+     * 
+     * Text description for non-text messages in the conversation list
      *
      * @return
      */
@@ -446,6 +383,8 @@ public class MessageInfo implements Serializable {
 
     /**
      * 设置非文字消息在会话列表时展示的文字说明，比如照片在会话列表展示为“[图片]”
+     * 
+     * Set text description for non-text messages in the conversation list
      *
      * @param extra
      */
@@ -453,56 +392,26 @@ public class MessageInfo implements Serializable {
         this.extra = extra;
     }
 
-    /**
-     * 获取图片或者视频缩略图的图片宽
-     *
-     * @return
-     */
     public int getImgWidth() {
         return imgWidth;
     }
 
-    /**
-     * 设置图片或者视频缩略图的图片宽
-     *
-     * @param imgWidth
-     */
     public void setImgWidth(int imgWidth) {
         this.imgWidth = imgWidth;
     }
 
-    /**
-     * 获取图片或者视频缩略图的图片高
-     *
-     * @return
-     */
     public int getImgHeight() {
         return imgHeight;
     }
 
-    /**
-     * 设置图片或者视频缩略图的图片高
-     *
-     * @param imgHeight
-     */
     public void setImgHeight(int imgHeight) {
         this.imgHeight = imgHeight;
     }
 
-    /**
-     * 获取消息发送时间，单位是秒
-     *
-     * @return
-     */
     public long getMsgTime() {
         return msgTime;
     }
 
-    /**
-     * 设置消息发送时间，单位是秒
-     *
-     * @param msgTime
-     */
     public void setMsgTime(long msgTime) {
         this.msgTime = msgTime;
     }

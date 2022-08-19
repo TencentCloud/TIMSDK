@@ -386,7 +386,6 @@ public class MessageReceiptDetailActivity extends BaseLightActivity {
         }
 
         private String getDisplayName(GroupMemberInfo memberInfo) {
-            // 群名片->好友备注->昵称->ID
             String displayName;
             if (!TextUtils.isEmpty(memberInfo.getNameCard())) {
                 displayName = memberInfo.getNameCard();

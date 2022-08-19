@@ -2,14 +2,12 @@ package com.tencent.qcloud.tuikit.tuiconversation.ui.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
-import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
@@ -56,7 +54,10 @@ public class ConversationLayout extends RelativeLayout implements IConversationL
 
     public void initDefault() {
         final ConversationListAdapter adapter = new ConversationListAdapter();
-        initSearchView(adapter);
+        if (presenter != null) {
+            initSearchView(adapter);
+            adapter.setShowFoldedStyle(true);
+        }
         mConversationList.setAdapter((IConversationListAdapter) adapter);
         if (presenter != null) {
             presenter.setAdapter(adapter);
@@ -104,6 +105,34 @@ public class ConversationLayout extends RelativeLayout implements IConversationL
     public void clearConversationMessage(ConversationInfo conversation) {
         if (presenter != null) {
             presenter.clearConversationMessage(conversation);
+        }
+    }
+
+    @Override
+    public void markConversationHidden(ConversationInfo conversation) {
+        if (presenter != null) {
+            presenter.markConversationHidden(conversation, true);
+        }
+    }
+
+    @Override
+    public void markConversationUnread(ConversationInfo conversationInfo, boolean markUnread) {
+        if (presenter != null) {
+            presenter.markConversationUnread(conversationInfo, markUnread);
+        }
+    }
+
+    @Override
+    public void hideFoldedItem(boolean needHide) {
+        if (presenter != null) {
+            presenter.hideFoldItem(needHide);
+        }
+    }
+
+    @Override
+    public void clearUnreadStatusOfFoldItem() {
+        if (presenter != null) {
+            presenter.setUnreadStatusOfFoldItem(false);
         }
     }
 

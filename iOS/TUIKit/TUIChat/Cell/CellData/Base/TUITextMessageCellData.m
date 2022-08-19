@@ -41,7 +41,6 @@
 }
 
 + (NSString *)getDisplayString:(V2TIMMessage *)message {
-    // 处理表情的国际化
     NSString *content = message.textElem.text;
     return content.getLocalizableStringWithFaceContent;
 }
@@ -100,7 +99,6 @@
     if (!_attributedString) {
         _emojiLocations = [NSMutableArray array];
         _attributedString = [self.content getFormatEmojiStringWithFont:self.textFont emojiLocations:_emojiLocations];
-        // 音视频通话消息需要加上对应图标
         if (self.isAudioCall || self.isVideoCall) {
             NSTextAttachment *attchment = [[NSTextAttachment alloc] init];
             UIImage *image = nil;

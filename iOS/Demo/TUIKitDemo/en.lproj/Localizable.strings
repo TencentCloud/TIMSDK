@@ -65,6 +65,8 @@
 "ChatsCreateFailed" = "Create Group Failed";
 
 "ChatsSelectContact" = "Select Contact";
+"ChatSecurityWarning" = "[Security Reminder] This App is only used to experience the features of Tencent Cloud IM products, and cannot be used for business negotiation and expansion. Please do not trust remittance, winning the lottery and other information related to money, do not easily make strange phone calls, beware of being deceived.";
+"ChatSecurityWarningReport" = "Report";
 
 "ContactsAddFriends" = "Add to Contacts";
 "ContactsJoinGroup"  = "Add Group";
@@ -115,7 +117,7 @@
 "FriendAddResultSuccessWait" = "Sent successfully. Wait for approval.";
 "FriendAddResultForbid" = "The other user disabled friend request.";
 "FriendAddResultSuccess" = "Added to friend list";
-"FriendAddResultExists" = "Friend already exists.";
+"FriendAddResultExists" = "You're already friends.";
 "FriendAddVerificationMessage" = "Verification Message";
 "FriendAddTitle" = "Add Friend";
 

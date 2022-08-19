@@ -49,12 +49,12 @@ import java.util.regex.Pattern;
 public class SelectTextHelper {
     private static final String TAG = SelectTextHelper.class.getSimpleName();
 
-    private static int DEFAULT_SELECTION_LENGTH = 2;// 选2个字节长度 例:表情属于2个字节
-    private static int DEFAULT_SHOW_DURATION = 100;// 弹窗100毫秒
+    private static int DEFAULT_SELECTION_LENGTH = 2;
+    private static int DEFAULT_SHOW_DURATION = 100;
 
-    private CursorHandle mStartHandle;// 开始操作标
-    private CursorHandle mEndHandle;// 结束操作标
-    private Magnifier mMagnifier;// 放大镜组件
+    private CursorHandle mStartHandle;
+    private CursorHandle mEndHandle;
+    private Magnifier mMagnifier;
     private SelectionInfo mSelectionInfo = new SelectionInfo();
     private OnSelectListener mSelectListener;
 
@@ -66,24 +66,24 @@ public class SelectTextHelper {
     private int mTouchY;
     private int mTextViewMarginStart = 0;// textView的marginStart值
 
-    private int mSelectedColor; // 选中文本的颜色
-    private int mCursorHandleColor; // 游标的颜色
-    private int mCursorHandleSize; // 游标大小
-    private boolean mSelectAll; // 全选
-    private boolean mSelectedAllNoPop; // 已经全选无弹窗
-    private boolean mScrollShow; // 滑动依然显示弹窗
-    private boolean mMagnifierShow; // 显示放大镜
-    private int mPopSpanCount; // 弹窗每行个数
-    private int mPopBgResource; // 弹窗箭头
-    private int mPopArrowImg; // 弹窗箭头
+    private int mSelectedColor;
+    private int mCursorHandleColor;
+    private int mCursorHandleSize;
+    private boolean mSelectAll;
+    private boolean mSelectedAllNoPop;
+    private boolean mScrollShow;
+    private boolean mMagnifierShow;
+    private int mPopSpanCount;
+    private int mPopBgResource;
+    private int mPopArrowImg;
     private boolean mIsEmoji = false;
-    private List<Pair<Integer, String>> itemTextList;// 操作弹窗item文本
-    private List<Builder.onSeparateItemClickListener> itemListenerList = new LinkedList<>();// 操作弹窗item监听
+    private List<Pair<Integer, String>> itemTextList;
+    private List<Builder.onSeparateItemClickListener> itemListenerList = new LinkedList<>();
 
     private BackgroundColorSpan mSpan;
     private boolean isHideWhenScroll;
     private boolean isHide = true;
-    private boolean usedClickListener = false;// 消费了点击事件
+    private boolean usedClickListener = false;
 
     private ViewTreeObserver.OnPreDrawListener mOnPreDrawListener;
     private ViewTreeObserver.OnScrollChangedListener mOnScrollChangedListener;

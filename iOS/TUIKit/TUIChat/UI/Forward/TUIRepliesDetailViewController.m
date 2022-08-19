@@ -38,6 +38,7 @@
 
 
 @interface TUIRepliesDetailViewController ()<TInputControllerDelegate,UITableViewDelegate,UITableViewDataSource,TUIMessageDataProviderDataSource,TUIMessageCellDelegate>
+
 @property (nonatomic, strong) TUIMessageCellData *cellData;
 @property (nonatomic, strong) TUIMessageDataProvider *msgDataProvider;
 @property (nonatomic, strong) UIView *headerView;
@@ -98,7 +99,6 @@
     
     if (self.inputController.status == Input_Status_Input ||
         self.inputController.status == Input_Status_Input_Keyboard) {
-        // 在后台默默关闭键盘 + 调整 tableview 的尺寸为全屏
         CGPoint offset = self.tableView.contentOffset;
         __weak typeof(self) weakSelf = self;
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -176,7 +176,6 @@
     [self.tableView registerClass:[TUIReplyMessageCell class] forCellReuseIdentifier:TReplyMessageCell_ReuseId];
     [self.tableView registerClass:[TUIReferenceMessageCell class] forCellReuseIdentifier:TUIReferenceMessageCell_ReuseId];
     
-    // 自定义消息注册 cell
     NSArray *customMessageInfo = [TUIMessageDataProvider getCustomMessageInfo];
     for (NSDictionary *messageInfo in customMessageInfo) {
         NSString *bussinessID = messageInfo[BussinessID];
@@ -262,7 +261,6 @@
     for (NSInteger k = 0; k < msgs.count; k++) {
         V2TIMMessage *msg = msgs[k];
         TUIMessageCellData *data = [TUITextMessageCellData getCellData:msg];
-        // 全部设置为 incomming
         TUIMessageCellLayout *layout = TUIMessageCellLayout.incommingMessageLayout;
         if ([data isKindOfClass:TUITextMessageCellData.class]) {
             layout = TUIMessageCellLayout.incommingTextMessageLayout;
@@ -409,7 +407,7 @@
     if (!self.responseKeyboard) {
         return;
     }
-    //目标celldata
+    
     if (self.inputController.replyData ==  nil) {
         [self onRelyMessage:self.cellData];
     }
@@ -504,7 +502,7 @@
         TUIMessageCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]];
         [cell fillWithData:msg];
     } else {
-        NSLog(@"缺少cell");
+        NSLog(@"lack of cell");
     }
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"kTUINotifyMessageStatusChanged" object:nil userInfo:@{
@@ -515,8 +513,7 @@
 }
 
 
-#pragma mark - 消息回复
-
+#pragma mark - Message reply
 
 - (void)onRelyMessage:(nonnull TUIMessageCellData *)data
 {

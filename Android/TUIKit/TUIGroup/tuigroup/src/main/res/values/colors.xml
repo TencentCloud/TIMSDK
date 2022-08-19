@@ -19,6 +19,7 @@
     <color name="black_font_color">#181818</color>
 
     <color name="line">#DDDDDD</color>
+    <color name="dark_line">#AAAAAA</color>
     <color name="dialog_line_bg">#c6c6c6</color>
     <color name="font_blue">#066fff</color>
 

@@ -100,7 +100,7 @@
 "FriendAddResultSuccessWait" = "发送成功,等待审核同意";
 "FriendAddResultForbid" = "对方禁止添加";
 "FriendAddResultSuccess" = "已添加到好友列表";
-"FriendAddResultExists" = "好友已存在";
+"FriendAddResultExists" = "对方已是您的好友";
 
 "TUIKitWelcome" = "欢迎加入腾讯云 IM 大家庭！";
 "TUIKitMicCamerAuthTips" = "请开启麦克风和摄像头权限";
@@ -142,6 +142,7 @@
 "TUIKitGroupProfileJoinDisable" = "禁止加群";
 "TUIKitGroupProfileAdminApprove" = "管理员审批";
 "TUIKitGroupProfileEditAlias" = "修改我的群昵称";
+"TUIKitGroupProfileEditAliasDesc" = "仅限中文、字母、数字和下划线";
 "TUIKitGroupProfileEditGroupName" = "修改群名称";
 "TUIKitGroupProfileEditAnnouncement" = "修改群公告";
 "TUIKitGroupProfileEditAvatar" = "修改群头像";
@@ -433,7 +434,7 @@
 "TUIKitErrorSVRFriendshipNetTimeout" = "网络超时，请稍后重试。";
 "TUIKitErrorSVRFriendshipWriteConflict" = "并发写导致写冲突，建议使用批量方式。";
 "TUIKitErrorSVRFriendshipAddFriendDeny" = "后台禁止该用户发起加好友请求。";
-"TUIkitErrorSVRFriendshipCountLimit" = "自己的好友数已达系统上限。";
+"TUIkitErrorSVRFriendshipCountLimit" = "您的好友数已达系统上限。";
 "TUIKitErrorSVRFriendshipGroupCountLimit" = "分组已达系统上限。";
 "TUIKitErrorSVRFriendshipPendencyLimit" = "未决数已达系统上限。";
 "TUIKitErrorSVRFriendshipBlacklistLimit" = "黑名单数已达系统上限。";
@@ -613,7 +614,7 @@
 /***************************** 消息回复 & 换肤 *************************/
 "Reply" = "回复";
 "TUIKitReplyMessageNotFoundOriginMessage" = "无法定位到原消息";
-"TUIKitClearAllChatHistory" = "清除聊天记录";
+"TUIKitClearAllChatHistory" = "清空聊天记录";
 "TUIKitClearAllChatHistoryTips" = "确定清空聊天记录？";
 "Discline" = "拒绝";
 "Copied" = "已复制";
@@ -676,6 +677,17 @@
 "StickyonTop" = "置顶";
 "CancelStickonTop" = "取消置顶";
 "ClearHistoryChatMessage" = "清空消息";
+"MarkAsRead" = "标记已读";
+"MarkAsUnRead" = "标记未读";
+"MarkHide" = "不显示";
+"MinimizeGroup" = "会话折叠";
+
+"TUIKitConversationMarkHide" = "会话隐藏";
+"TUIKitConversationMarkHideDescriptionOn" = "开启后，此会话将不会出现在会话列表中，聊天记录仍会被保留。";
+"TUIKitConversationMarkHideDescriptionOff" = "关闭后，此会话将出现在会话列表中，聊天记录仍会被保留。";
+
+"TUIKitConversationMarkFoldGroups" = "折叠的群聊";
+"TUIKitConversationMarkFold" = "折叠该群聊";
 
 "TUIKitRepliesDetailTitle" = "回复详情";
 "TUIKitRepliesNum" = "条回复";
@@ -695,3 +707,5 @@
 "TUIKitContactNoGroupChats" = "暂无群聊";
 "TUIKitContactNoBlockList" = "暂无黑名单好友";
 "TUIKitTyping" = "对方正在输入";
+
+"TUIKitMessageTipsEditGroupAddOptFormat" = "%@修改加群方式为\"%@\"、";

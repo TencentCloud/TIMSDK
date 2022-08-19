@@ -9,11 +9,11 @@ public class ConversationLayoutSetting {
 
         ConversationListLayout listLayout = (ConversationListLayout) layout.getConversationList();
 
-        listLayout.setItemTopTextSize(16); // 设置adapter item中top文字大小
-        listLayout.setItemBottomTextSize(12);// 设置adapter item中bottom文字大小
-        listLayout.setItemDateTextSize(10);// 设置adapter item中timeline文字大小
-        listLayout.setItemAvatarRadius(5);// 设置adapter item头像圆角大小
-        listLayout.disableItemUnreadDot(false);// 设置adapter item是否不显示未读红点，默认显示
+        listLayout.setItemTopTextSize(16);
+        listLayout.setItemBottomTextSize(12);
+        listLayout.setItemDateTextSize(10);
+        listLayout.setItemAvatarRadius(5);
+        listLayout.disableItemUnreadDot(false);
 
         // 动态插入，删除Item，包括自定义会话
 //        final ConversationInfo customInfo = new ConversationInfo();

@@ -7,6 +7,7 @@ import android.os.Message;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
+import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
@@ -56,16 +57,20 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.CountDownLatch;
 
 public abstract class ChatPresenter {
     private static final String TAG = ChatPresenter.class.getSimpleName();
     // 逐条转发 Group 消息发送消息的时间间隔
-    private static final int FORWARD_GROUP_INTERVAL = 90; // 单位： 毫秒
+    // Time interval for forwarding Group messages one by one
+    private static final int FORWARD_GROUP_INTERVAL = 90; // 单位： 毫秒 ms
     // 逐条转发 C2C 消息发送消息的时间间隔
-    private static final int FORWARD_C2C_INTERVAL = 50; // 单位： 毫秒
+    // Time interval for forwarding C2C messages one by one
+    private static final int FORWARD_C2C_INTERVAL = 50; // 单位： 毫秒 ms
     // 消息已读上报时间间隔
-    private static final int READ_REPORT_INTERVAL = 1000; // 单位： 毫秒
+    // Message read reporting interval
+    private static final int READ_REPORT_INTERVAL = 1000; // 单位： 毫秒 ms
 
     protected static final int MSG_PAGE_COUNT = 20;
 
@@ -85,15 +90,19 @@ public abstract class ChatPresenter {
     private final MessageReadReportHandler readReportHandler = new MessageReadReportHandler();
 
     // 当前聊天界面是否显示，用来判断接收到消息是否设置已读
+    // Whether the current chat interface is displayed, used to determine whether the received message is set to read
     private boolean isChatFragmentShow = false;
 
     // 用来定位消息搜索时消息的位置
+    // Used to locate the location of the message when searching for a message
     private TUIMessageBean locateMessage;
 
-//    // 对其他模块暴露的消息发送接口
+    // 对其他模块暴露的消息发送接口
+    // Message sending interface exposed to other modules
     private IBaseMessageSender baseMessageSender;
 
     // 标识是否有 更新的 消息没有更新下来
+    // Identifies whether there is an updated message that has not been updated
     protected boolean isHaveMoreNewMessage = false;
 
     protected boolean isLoading = false;
@@ -177,6 +186,7 @@ public abstract class ChatPresenter {
 
     public void locateMessage(String originMsgId, IUIKitCallback<Void> callback) {
         // 如果已经在列表中，直接跳转到对应位置，否则清空重新加载
+        // If it is already in the list, jump directly to the corresponding position, otherwise clear and reload
         for (TUIMessageBean loadedMessage : loadedMessageInfoList) {
             if (TextUtils.equals(originMsgId, loadedMessage.getId())) {
                 if (loadedMessage.getStatus() == TUIMessageBean.MSG_STATUS_REVOKE) {
@@ -270,6 +280,7 @@ public abstract class ChatPresenter {
             @Override
             public void run() {
                 // 拉取历史消息的时候不会把 lastMsg 返回，需要手动添加上
+                // LastMsg will not be returned when pulling historical messages, you need to add it manually
                 provider.loadHistoryMessageList(chatId, isGroup, loadCount / 2, locateMessageInfo, TUIChatConstants.GET_MESSAGE_FORWARD, new IUIKitCallback<List<TUIMessageBean>>() {
                     @Override
                     public void onSuccess(List<TUIMessageBean> secondData) {
@@ -323,7 +334,8 @@ public abstract class ChatPresenter {
         // 如果 getType 为 GET_MESSAGE_FORWARD， 就会拉取到消息 1,2,3
         // 如果 getType 为 GET_MESSAGE_BACKWARD， 就会拉取到消息 5,6,7
         // 如果 getType 为 GET_MESSAGE_TWO_WAY， 就会拉取到消息 1,2,3,5,6,7 ， 4 要手动加上
-
+        // If you are pulling messages before and after the same time, you need to pull twice, the first time to pull back, 
+        // the second time to pull forward
         if (getType == TUIChatConstants.GET_MESSAGE_TWO_WAY || getType == TUIChatConstants.GET_MESSAGE_LOCATE) {
             loadToWayMessageAsync(chatId, isGroup, getType, loadCount, locateMessageInfo, callback);
             return;
@@ -353,6 +365,7 @@ public abstract class ChatPresenter {
     protected void onMessageLoadCompleted(List<TUIMessageBean> data, int getType) {};
 
     // 加载消息成功之后会调用此方法
+    // This method is called after the message is loaded successfully
     protected void getMessageReadReceipt(List<TUIMessageBean> data, int getType) {
         getMessageReadReceipt(data, new IUIKitCallback<List<MessageReceiptInfo>>() {
             @Override
@@ -402,6 +415,12 @@ public abstract class ChatPresenter {
         provider.getMessageReadReceipt(messageBeanList, callback);
     }
 
+    private void removeDuplication(List<TUIMessageBean> messageBeans) {
+        TreeSet set = new TreeSet(messageBeans);
+        messageBeans.clear();
+        messageBeans.addAll(set);
+    }
+
     private void onLoadedMessageProcessed(List<TUIMessageBean> data, int type) {
 
         boolean isForward = type == TUIChatConstants.GET_MESSAGE_FORWARD;
@@ -412,8 +431,10 @@ public abstract class ChatPresenter {
         }
         if (isForward || isTwoWay || isLocate) {
             loadedMessageInfoList.addAll(0, data);
+            removeDuplication(loadedMessageInfoList);
             if (isForward) {
                 // 如果是初次加载，要强制跳转到底部
+                // If it is the first load, force jump to the bottom
                 if (loadedMessageInfoList.size() == data.size()) {
                     updateAdapter(MessageRecyclerView.DATA_CHANGE_TYPE_LOAD, data.size());
                 } else {
@@ -426,6 +447,7 @@ public abstract class ChatPresenter {
             }
         } else {
             loadedMessageInfoList.addAll(data);
+            removeDuplication(loadedMessageInfoList);
             updateAdapter(MessageRecyclerView.DATA_CHANGE_TYPE_ADD_BACK, data.size());
         }
 
@@ -455,6 +477,9 @@ public abstract class ChatPresenter {
 
     /**
      * 预查找回复消息，成功说明成功查找到原始消息，否则未查找到原始消息
+     * 
+     * Pre-find the reply message, success indicates that the original message was found successfully,
+     * otherwise the original message was not found
      */
     protected void preProcessMessage(List<TUIMessageBean> data, IUIKitCallback<List<TUIMessageBean>> callback) {
         List<String> msgIdList = new ArrayList<>();
@@ -780,7 +805,8 @@ public abstract class ChatPresenter {
                 TUIChatUtils.callbackOnProgress(callBack, data);
             }
         });
-        //消息先展示，通过状态来确认发送是否成功
+        // 消息先展示，通过状态来确认发送是否成功
+        // The message is displayed first, and the status is used to confirm whether the sending is successful
         TUIChatLog.i(TAG, "sendMessage msgID:" + msgId);
         message.setId(msgId);
         message.setStatus(TUIMessageBean.MSG_STATUS_SENDING);
@@ -801,6 +827,9 @@ public abstract class ChatPresenter {
 
     private void updateMessageInfo(TUIMessageBean messageInfo) {
         for (int i = 0; i < loadedMessageInfoList.size(); i++) {
+            if (loadedMessageInfoList.get(i) == null) {
+                continue;
+            }
             if (loadedMessageInfoList.get(i).getId().equals(messageInfo.getId())) {
                 loadedMessageInfoList.set(i, messageInfo);
                 updateAdapter(MessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, i);
@@ -860,6 +889,8 @@ public abstract class ChatPresenter {
         for (int i = 0; i < loadedMessageInfoList.size(); i++) {
             TUIMessageBean messageInfo = loadedMessageInfoList.get(i);
             // 一条包含多条元素的消息，撤回时，会把所有元素都撤回，所以下面的判断即使满足条件也不能return
+            // A message containing multiple elements, when withdrawn, will withdraw all elements, 
+            // so the following judgment cannot return even if the conditions are met
             if (messageInfo.getId().equals(msgId)) {
                 messageInfo.setStatus(TUIMessageBean.MSG_STATUS_REVOKE);
                 updateAdapter(MessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, i);
@@ -934,6 +965,8 @@ public abstract class ChatPresenter {
      * 收到消息上报已读加频率限制
      * @param chatId 如果是 C2C 消息， chatId 是 userId, 如果是 Group 消息 chatId 是 groupId
      * @param isGroup 是否为 Group 消息
+     * 
+     * Receive a message and report that it has been read and add frequency limit
      */
     private void limitReadReport(final String chatId, boolean isGroup) {
         final long currentTime = System.currentTimeMillis();
@@ -1141,6 +1174,8 @@ public abstract class ChatPresenter {
         for (int i = 0; i < loadedMessageInfoList.size(); i++) {
             TUIMessageBean messageInfo = loadedMessageInfoList.get(i);
             // 一条包含多条元素的消息，撤回时，会把所有元素都撤回，所以下面的判断即使满足条件也不能return
+            // A message containing multiple elements, when withdrawn, will withdraw all elements, 
+            // so the following judgment cannot return even if the conditions are met
             if (messageInfo.getId().equals(msgId)) {
                 messageInfo.setStatus(TUIMessageBean.MSG_STATUS_REVOKE);
                 updateAdapter(MessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, i);
@@ -1151,6 +1186,7 @@ public abstract class ChatPresenter {
 
     public List<TUIMessageBean> forwardTextMessageForSelected(List<TUIMessageBean> msgInfos) {
         // 选择文字转发只能是一条消息的操作
+        // Selecting text forwarding can only be a message operation
         if (msgInfos != null && msgInfos.size() >1) {
             return msgInfos;
         }
@@ -1183,6 +1219,7 @@ public abstract class ChatPresenter {
         }
 
         // 选中转发暂不做特殊处理，转发原消息
+        // If forwarding is selected, no special treatment will be performed for the time being, and the original message will be forwarded.
         //List<TUIMessageBean> forwardMsgInfos = forwardTextMessageForSelected(msgInfos);
         if (forwardMode == TUIChatConstants.FORWARD_MODE_ONE_BY_ONE) {
             forwardMessageOneByOne(msgInfos, isGroup, id, offlineTitle, selfConversation, callBack);
@@ -1240,6 +1277,7 @@ public abstract class ChatPresenter {
                     offlinePushInfo.setExtension(new Gson().toJson(containerBean).getBytes());
                     offlinePushInfo.setDescription(offlineTitle);
                     // OPPO必须设置ChannelID才可以收到推送消息，这个channelID需要和控制台一致
+                    // OPPO must set a ChannelID to receive push messages. This channelID needs to be the same as the console.
                     offlinePushInfo.setAndroidOPPOChannelID("tuikit");
                     if (TUIChatConfigs.getConfigs().getGeneralConfig().isAndroidPrivateRing()) {
                         offlinePushInfo.setAndroidSound(OfflinePushInfoUtils.PRIVATE_RING_NAME);
@@ -1292,10 +1330,8 @@ public abstract class ChatPresenter {
             } else if (messageBean instanceof FileMessageBean) {
                 abstractList.add(userid + ":" + context.getString(R.string.file_extra));
             } else if (messageBean instanceof MergeMessageBean) {
-                // 合并转发消息
                 abstractList.add(userid + ":" + context.getString(R.string.forward_extra));
             } else {
-                // 其他自定义消息等
                 abstractList.add(userid + ":" + messageBean.getExtra());
             }
         }
@@ -1328,6 +1364,7 @@ public abstract class ChatPresenter {
         offlinePushInfo.setExtension(new Gson().toJson(containerBean).getBytes());
         offlinePushInfo.setDescription(offlineTitle);
         // OPPO必须设置ChannelID才可以收到推送消息，这个channelID需要和控制台一致
+        // OPPO must set a ChannelID to receive push messages. This channelID needs to be the same as the console.
         offlinePushInfo.setAndroidOPPOChannelID("tuikit");
         if (TUIChatConfigs.getConfigs().getGeneralConfig().isAndroidPrivateRing()) {
             offlinePushInfo.setAndroidSound(OfflinePushInfoUtils.PRIVATE_RING_NAME);
@@ -1376,7 +1413,8 @@ public abstract class ChatPresenter {
                 updateMessageInfo(message);
             }
         });
-        //消息先展示，通过状态来确认发送是否成功
+        // 消息先展示，通过状态来确认发送是否成功
+        // The message is displayed first, and the status is used to confirm whether the sending is successful
         TUIChatLog.i(TAG, "sendMessage msgID:" + msgId);
         message.setId(msgId);
         message.setStatus(TUIMessageBean.MSG_STATUS_SENDING);
@@ -1437,7 +1475,7 @@ public abstract class ChatPresenter {
                 if (data != null && !data.isEmpty()) {
                     TUIChatUtils.callbackOnSuccess(callback, data.get(0));
                 } else {
-                    TUIChatUtils.callbackOnError(callback, 0, "");
+                    TUIChatUtils.callbackOnError(callback, -1, "can't find message");
                 }
             }
 
@@ -1588,6 +1626,9 @@ public abstract class ChatPresenter {
             @Override
             public void onSuccess(TUIMessageBean data) {
                 // do nothing, when modifyRootMessage successfully ,you can receive onRecvMessageModified callback in TUIChatService.java
+                Map<String, Object> param = new HashMap<>();
+                param.put(TUIConstants.TUIChat.CHAT_ID, rootMessage.getGroupId());
+                TUICore.notifyEvent(TUIConstants.TUIChat.EVENT_KEY_MESSAGE_EVENT, TUIConstants.TUIChat.EVENT_SUB_KEY_REPLY_MESSAGE_SUCCESS, param);
             }
 
             @Override

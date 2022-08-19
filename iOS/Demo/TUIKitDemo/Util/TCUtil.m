@@ -217,7 +217,7 @@ static const NSString *letters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRS
         NSData* data = [TCUtil dictionary2JsonData:param];
         if (data == nil)
         {
-            NSLog(@"sendHttpRequest failed，参数转成json格式失败");
+            NSLog(@"sendHttpRequest failed，parse json error");
             dispatch_async(dispatch_get_main_queue(), ^{
                 handler(kError_ConvertJsonFailed, nil);
             });
@@ -333,24 +333,5 @@ BOOL isFirstLaunch(void) {
     return (first == 0 ? YES:NO);
 }
 
-BOOL isFirstLaunchToday(void) {
-    static BOOL isFirstLaunchToday;
-    NSDate *now = [NSDate date];
-    NSDate *agoDate = [[NSUserDefaults standardUserDefaults] objectForKey:@"nowDate"];
-    
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"yyyy-MM-dd"];
 
-    NSString *agoDateString = [dateFormatter stringFromDate:agoDate];
-    NSString *nowDateString = [dateFormatter stringFromDate:now];
-   if([agoDateString isEqualToString:nowDateString]) {
-       isFirstLaunchToday = NO;
-    }else{
-        isFirstLaunchToday = YES;
-        NSDate *nowDate = [NSDate date];
-        [[NSUserDefaults standardUserDefaults] setObject:nowDate forKey:@"nowDate"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    }
-    return isFirstLaunchToday;
-}
 @end

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <com.tencent.qcloud.tuicore.component.RoundCornerImageView
+        android:id="@+id/face_url"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:scaleType="centerCrop"
+        tools:background="@android:drawable/ic_menu_gallery"
+        app:corner_radius="8dp" />
+
+    <View
+        android:id="@+id/selected_border_view"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/selected_border"/>
+
+    <com.tencent.qcloud.tuicore.component.UnreadCountTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/face_url"
+        android:layout_alignEnd="@id/face_url"
+        android:layout_alignRight="@id/face_url"
+        android:layout_marginTop="-5dp"
+        android:layout_marginEnd="-5dp"
+        android:layout_marginRight="-5dp"
+        android:visibility="gone"
+        tools:text="1"
+        tools:visibility="visible" />
+
+</RelativeLayout>

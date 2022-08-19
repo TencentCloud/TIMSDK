@@ -39,21 +39,32 @@
     if (self.listArrM.count <=0) {
         return;
     }
-    //外边距(上下左右) Margins (top, bottom, left and right)
+
+    /**
+     * 外边距 （上下左右）
+     * Margin, including top、bottom、left and right
+     */
     CGFloat margin = 12;
     CGFloat rightmargin = 12;
     CGFloat topMargin = 12;
     CGFloat bottomMargin = 12;
 
-    //水平内边距
-    //Horizontal inside margin
+    /**
+     * 水平内边距
+     * Padding in the horizontal direction
+     */
     CGFloat padding = 6;
-    //垂直内边距
-    //Vertical inside margin
+    
+    /**
+     * 垂直内边距
+     * Padding in the vertical direction
+     */
     CGFloat verticalPadding = 8;
 
-    //tagView宽高
-    //TagView wide high
+    /**
+     * TagView 的宽高
+     * Size of tagview
+     */
     CGFloat tagViewWidth = 0;
     CGFloat tagViewHeight = 0;
     int index = 0;
@@ -69,8 +80,10 @@
             tagViewWidth = cell.ItemWidth;
             tagViewHeight = 24;
             if (self.listArrM.count == 1) {
-                // 总共就一个
-                //There's only one
+                /**
+                 * 总共就一个
+                 * If  there is only one tag
+                 */
                 tagViewWidth = margin + cell.frame.size.width + rightmargin;
                 tagViewHeight = cell.frame.origin.y + cell.frame.size.height + bottomMargin;
             }
@@ -78,19 +91,25 @@
         else {
             CGFloat previousFrameRightPoint = preCell.frame.origin.x + preCell.frame.size.width;
             
-            //放置在当前行，布局后需要的宽度
-            //Placed in the current line, the width required after layout
+            /**
+             * 放置在当前行，布局后需要的宽度
+             * Placed in the current line, the width required after layout
+             */
             CGFloat needWidth = ( padding + cell.ItemWidth );
             CGFloat residueWidth = (MaxTagSize - previousFrameRightPoint - rightmargin);
             BOOL condation = (needWidth < residueWidth);
             if (condation) {
-                //这行还能放下 那就放
-                //Let it go if you can
+                /**
+                 * 这行还能放下 那就放
+                 * Placed it in the same line if has enough space
+                 */
                 cell.frame = CGRectMake(previousFrameRightPoint + padding, preCell.frame.origin.y, cell.ItemWidth, 24);
             }
             else {
-                //放不下新起一行
-                //put it in another row
+                /**
+                 * 放不下新起一行
+                 * Placed it in the another line if not enough space
+                 */
                 cell.frame = CGRectMake(margin, preCell.frame.origin.y + preCell.frame.size.height + verticalPadding, cell.ItemWidth, 24);
             }
             

@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 实现 Activity 路由跳转，只在 TUICore 内部使用，不对外暴露
+ * For Activity routing jump, only used inside TUICore, not exposed to the outside
  */
 class TUIRouter {
     private static final String TAG = TUIRouter.class.getSimpleName();
@@ -256,22 +256,18 @@ class TUIRouter {
             return this.intent;
         }
 
-        // 使用默认的 ApplicationContext 启动 Activity
         public void navigate() {
             navigate((Context) null);
         }
 
-        // 使用传入的 Context 启动 Activity
         public void navigate(Context context) {
             navigate(context, -1);
         }
 
-        // 使用传入的 Fragment 启动 Activity
         public void navigate(Fragment fragment) {
             navigate(fragment, -1);
         }
-
-        // 使用传入的 Fragment 启动 Activity，并返回接收返回结果
+        
         public void navigate(Fragment fragment, int requestCode) {
             if (!initialized) {
                 Log.e(TAG, "have not initialized.");
@@ -296,7 +292,6 @@ class TUIRouter {
             }
         }
 
-        // 使用传入的 Context 启动 Activity，并返回接收返回结果
         public void navigate(Context context, int requestCode) {
             if (!initialized) {
                 Log.e(TAG, "have not initialized.");

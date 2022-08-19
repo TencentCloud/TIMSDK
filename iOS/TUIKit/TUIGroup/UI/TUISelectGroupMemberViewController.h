@@ -12,12 +12,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-// 可选样式
 typedef NS_ENUM(NSInteger, TUISelectMemberOptionalStyle) {
-    TUISelectMemberOptionalStyleNone = 0,
-    TUISelectMemberOptionalStyleAtAll  = 1 << 0 , // 包含所有人选项，用在@场景
-    TUISelectMemberOptionalStyleTransferOwner  = 1 << 1  ,//转移群主
-    TUISelectMemberOptionalStylePublicMan    = 1 << 2   //【选项不含群主、管理员】
+    TUISelectMemberOptionalStyleNone            = 0,
+    TUISelectMemberOptionalStyleAtAll           = 1 << 0,
+    TUISelectMemberOptionalStyleTransferOwner   = 1 << 1,
+    TUISelectMemberOptionalStylePublicMan       = 1 << 2
 };
 
 typedef void(^SelectedFinished)(NSMutableArray <TUIUserModel *> *modelList);

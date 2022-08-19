@@ -18,6 +18,8 @@ public class CheckPermission {
 
     /**
      * 用于检测是否具有录音权限
+     * 
+     * Used to detect whether there is recording permission
      *
      * @return
      */
@@ -30,7 +32,7 @@ public class CheckPermission {
         int readSize = 0;
         try {
 
-            audioRecord.startRecording();//检测是否可以进入初始化状态
+            audioRecord.startRecording();
         } catch (Exception e) {
             if (audioRecord != null) {
                 audioRecord.release();
@@ -39,8 +41,6 @@ public class CheckPermission {
             return STATE_NO_PERMISSION;
         }
         if (audioRecord.getRecordingState() != AudioRecord.RECORDSTATE_RECORDING) {
-            //6.0以下机型都会返回此状态，故使用时需要判断bulid版本
-            //检测是否在录音中
             if (audioRecord != null) {
                 audioRecord.stop();
                 audioRecord.release();
@@ -49,10 +49,7 @@ public class CheckPermission {
             }
             return STATE_RECORDING;
         } else {
-            //检测是否可以获取录音结果
-
             readSize = audioRecord.read(point, 0, point.length);
-
 
             if (readSize <= 0) {
                 if (audioRecord != null) {
@@ -83,6 +80,7 @@ public class CheckPermission {
         try {
             mCamera = Camera.open(cameraID);
             // setParameters 是针对魅族MX5。MX5通过Camera.open()拿到的Camera对象不为null
+            // setParameters is for Meizu MX5. The Camera object obtained by MX5 through Camera.open() is not null
             Camera.Parameters mParameters = mCamera.getParameters();
             mCamera.setParameters(mParameters);
         } catch (Exception e) {

@@ -32,11 +32,9 @@ import java.util.List;
 
 public class Menu {
 
-    // 阴影宽度
     private static final int SHADOW_WIDTH = 10;
     private static final int Y_OFFSET = 4;
 
-    // 更多menu
     private ListView mMenuList;
     private PopMenuAdapter mMenuAdapter;
     private PopupWindow mMenuWindow;
@@ -78,7 +76,6 @@ public class Menu {
         mMenuAdapter.setDataSource(mActions);
         View menuView = LayoutInflater.from(mActivity).inflate(R.layout.core_pop_menu, null);
 
-        // 设置布局文件
         mMenuWindow.setContentView(menuView);
         mMenuList = menuView.findViewById(R.id.menu_pop_list);
         mMenuList.setAdapter(mMenuAdapter);
@@ -115,7 +112,7 @@ public class Menu {
         int x = location[0];
         int y;
         float xOffset = anchorWidth / 2;
-        // 如果是在右边，小箭头 x 坐标和 弹窗 x 位置都要变化
+        // If it is on the right, the x-coordinate of the small arrow and the x-position of the pop-up window will change
         if (location[0] * 2 + anchorWidth > screenWidth) {
             indicatorX = popWidth - anchorWidth / 2 - xOffset;
             x = (int) (location[0] + anchorWidth - popWidth + xOffset);
@@ -127,18 +124,14 @@ public class Menu {
         Drawable backgroundDrawable = getBackgroundDrawable(popWidth, popHeight, indicatorX, indicatorHeight, 16);
         menuView.setBackground(backgroundDrawable);
 
-        // 设置pop获取焦点，如果为false点击返回按钮会退出当前Activity，如果pop中有Editor的话，focusable必须要为true
         mMenuWindow.setFocusable(true);
-        // 设置pop可点击，为false点击事件无效，默认为true
         mMenuWindow.setTouchable(true);
-        // 设置点击pop外侧消失，默认为false；在focusable为true时点击外侧始终消失
         mMenuWindow.setOutsideTouchable(true);
-        // 相对于 + 号正下面，同时可以设置偏移量
         mMenuWindow.showAtLocation(mAttachView, Gravity.NO_GRAVITY, x, y);
     }
 
     /**
-     * 绘制带小三角的弹窗背景
+     * Draw a popup background with small triangles
      */
     public Drawable getBackgroundDrawable(final float widthPixel, final float heightPixel, float indicatorX, float indicatorHeight, float radius) {
         int borderWidth = SHADOW_WIDTH;

@@ -23,14 +23,12 @@ public class MessageViewHolderFactory {
         RecyclerView.ViewHolder holder = null;
         View view = null;
 
-        // 头部的holder
         if (viewType == MessageBaseHolder.MSG_TYPE_HEADER_VIEW) {
             view = inflater.inflate(R.layout.loading_progress_bar, parent, false);
             holder = new MessageHeaderHolder(view);
             return holder;
         }
 
-        // 具体消息holder
         if (viewType == TUIChatService.getInstance().getViewType(TipsMessageBean.class)) {
             view = inflater.inflate(R.layout.message_adapter_item_empty, parent, false);
             holder = new TipsMessageHolder(view);

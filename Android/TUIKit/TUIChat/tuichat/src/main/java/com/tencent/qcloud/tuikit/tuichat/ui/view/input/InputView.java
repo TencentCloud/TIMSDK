@@ -74,6 +74,8 @@ import java.util.Map;
 
 /**
  * 聊天界面，底部发送图片、拍照、摄像、文件面板
+ * 
+ * Chat interface, send pictures, take pictures, video, file panels at the bottom
  */
 
 public class InputView extends LinearLayout implements View.OnClickListener, TextWatcher {
@@ -86,22 +88,29 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     private static final int STATE_ACTION_INPUT = 3;
 
     // 音视频通话成员数限制
+    // Membership limit for audio and video calls
     protected static final int CALL_MEMBER_LIMIT = 8;
 
     /**
      * 语音/文字切换输入控件
+     * 
+     * Voice/text switch input controls
      */
     protected ImageView mAudioInputSwitchButton;
     protected boolean mAudioInputDisable;
 
     /**
      * 表情按钮
+     * 
+     * emoji button
      */
     protected ImageView mEmojiInputButton;
     protected boolean mEmojiInputDisable;
 
     /**
      * 更多按钮
+     * 
+     * more button
      */
     protected ImageView mMoreInputButton;
     protected Object mMoreInputEvent;
@@ -109,16 +118,22 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
 
     /**
      * 消息发送按钮
+     * 
+     * message send button
      */
     protected Button mSendTextButton;
 
     /**
      * 语音长按按钮
+     * 
+     * voice send button
      */
     protected Button mSendAudioButton;
 
     /**
      * 文本输入框
+     * 
+     * input text
      */
     protected TIMMentionEditText mTextInput;
     private boolean mIsSending = false;
@@ -201,7 +216,6 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         quotePreviewBar = findViewById(R.id.quote_preview_bar);
         quoteTv = quotePreviewBar.findViewById(R.id.reply_text);
         quoteCloseBtn = quotePreviewBar.findViewById(R.id.reply_close_btn);
-        // 子类实现所有的事件处理
 
         int iconSize = getResources().getDimensionPixelSize(R.dimen.chat_input_icon_size);
         ViewGroup.LayoutParams layoutParams = mEmojiInputButton.getLayoutParams();
@@ -412,6 +426,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                 mTextInput.setSelection(selectedIndex + displayInputString.length());
             }
             // @ 之后要显示软键盘。Activity 没有 onResume 导致无法显示软键盘
+            // Afterwards @, the soft keyboard is to be displayed. Activity does not have onResume, so the soft keyboard cannot be displayed
             BackgroundTasks.getInstance().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -564,8 +579,8 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         android.media.MediaMetadataRetriever mmr = new android.media.MediaMetadataRetriever();
         try {
             mmr.setDataSource(mUri);
-            String sDuration = mmr.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_DURATION);//时长(毫秒)
-            Bitmap bitmap = mmr.getFrameAtTime(0, android.media.MediaMetadataRetriever.OPTION_NEXT_SYNC);//缩略图
+            String sDuration = mmr.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_DURATION);
+            Bitmap bitmap = mmr.getFrameAtTime(0, android.media.MediaMetadataRetriever.OPTION_NEXT_SYNC);
 
             if (bitmap == null){
                 TUIChatLog.e(TAG, "buildVideoMessage() bitmap is null");
@@ -764,7 +779,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                 mEmojiInputButton.setImageResource(R.drawable.chat_input_keyboard);
                 showFaceViewGroup();
             }
-        } else if (view.getId() == R.id.more_btn) {//若点击右边的“+”号按钮
+        } else if (view.getId() == R.id.more_btn) {
             hideSoftInput();
             if (mMoreInputEvent instanceof View.OnClickListener) {
                 ((View.OnClickListener) mMoreInputEvent).onClick(view);
@@ -773,16 +788,13 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             } else {
                 if (mCurrentState == STATE_ACTION_INPUT) {
                     mCurrentState = STATE_NONE_INPUT;
-                    //以下是zanhanding添加的代码，用于fix有时需要两次点击加号按钮才能呼出富文本选择布局的问题
-                    //判断富文本选择布局是否已经被呼出，并反转相应的状态
                     if (mInputMoreView.getVisibility() == View.VISIBLE) {
                         mInputMoreView.setVisibility(View.GONE);
                     } else {
                         mInputMoreView.setVisibility(View.VISIBLE);
                     }
-                    //以上是zanhanding添加的代码，用于fix有时需要两次点击加号按钮才能呼出富文本选择布局的问题
                 } else {
-                    showInputMoreLayout();//显示“更多”消息发送布局
+                    showInputMoreLayout();
                     mCurrentState = STATE_ACTION_INPUT;
                     mAudioInputSwitchButton.setImageResource(R.drawable.action_audio_selector);
                     mEmojiInputButton.setImageResource(R.drawable.action_face_selector);
@@ -807,6 +819,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                         } else {
                             if (TUIChatUtils.isGroupChat(mChatLayout.getChatInfo().getType()) && !mTextInput.getMentionIdList().isEmpty()) {
                                 //发送时通过获取输入框匹配上@的昵称list，去从map中获取ID list。
+                                // When sending, get the ID list from the map by getting the nickname list that matches the @ in the input box.
                                 List<String> atUserList = new ArrayList<>(mTextInput.getMentionIdList());
                                 if (atUserList.isEmpty()) {
                                     mMessageHandler.sendMessage(ChatMessageBuilder.buildTextMessage(mTextInput.getText().toString().trim()));
@@ -874,7 +887,6 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         return screenHeight - rect.bottom - getNavigateBarHeight() >= 0;
     }
 
-    // 兼容有导航键的情况
     private int getNavigateBarHeight() {
         DisplayMetrics metrics = new DisplayMetrics();
         WindowManager windowManager  = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
@@ -1193,7 +1205,6 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
 
         addActionsFromListeners();
         mInputMoreActionList.addAll(mInputMoreCustomActionList);
-        // 按照优先级排序
         Collections.sort(mInputMoreActionList, new Comparator<InputMoreActionUnit>() {
             @Override
             public int compare(InputMoreActionUnit o1, InputMoreActionUnit o2) {
@@ -1212,6 +1223,30 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         param.put(TUIConstants.TUIChat.CHAT_NAME, mChatInfo.getChatName());
         param.put(TUIConstants.TUIChat.CHAT_TYPE, mChatInfo.getType());
         param.put(TUIConstants.TUIChat.CONTEXT, getContext());
+        Map<String, Object> customMessageExtension = TUICore.getExtensionInfo(TUIConstants.TUIChat.EXTENSION_INPUT_MORE_CUSTOM_MESSAGE, param);
+        if (customMessageExtension != null) {
+            Integer icon = (Integer) customMessageExtension.get(TUIConstants.TUIChat.INPUT_MORE_ICON);
+            Integer title = (Integer) customMessageExtension.get(TUIConstants.TUIChat.INPUT_MORE_TITLE);
+            Integer id = (Integer) customMessageExtension.get(TUIConstants.TUIChat.INPUT_MORE_ACTION_ID);
+            InputMoreActionUnit unit = new InputMoreActionUnit();
+            unit.setActionId(id);
+            unit.setIconResId(icon);
+            unit.setTitleId(title);
+            unit.setPriority(10);
+            unit.setOnClickListener(unit.new OnActionClickListener() {
+                @Override
+                public void onClick() {
+                    onCustomActionClick(unit.getActionId());
+                }
+            });
+            mInputMoreActionList.add(unit);
+        }
+
+        // topic not support call yet.
+        if (TUIChatUtils.isTopicGroup(mChatInfo.getId())) {
+            return;
+        }
+
         Map<String, Object> audioCallExtension = TUICore.getExtensionInfo(TUIConstants.TUIChat.EXTENSION_INPUT_MORE_AUDIO_CALL, param);
         if (audioCallExtension != null) {
             View audioView = (View) audioCallExtension.get(TUIConstants.TUIChat.INPUT_MORE_VIEW);
@@ -1276,24 +1311,6 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             mInputMoreActionList.add(videoUnit);
         }
 
-        Map<String, Object> customMessageExtension = TUICore.getExtensionInfo(TUIConstants.TUIChat.EXTENSION_INPUT_MORE_CUSTOM_MESSAGE, param);
-        if (customMessageExtension != null) {
-            Integer icon = (Integer) customMessageExtension.get(TUIConstants.TUIChat.INPUT_MORE_ICON);
-            Integer title = (Integer) customMessageExtension.get(TUIConstants.TUIChat.INPUT_MORE_TITLE);
-            Integer id = (Integer) customMessageExtension.get(TUIConstants.TUIChat.INPUT_MORE_ACTION_ID);
-            InputMoreActionUnit unit = new InputMoreActionUnit();
-            unit.setActionId(id);
-            unit.setIconResId(icon);
-            unit.setTitleId(title);
-            unit.setPriority(10);
-            unit.setOnClickListener(unit.new OnActionClickListener() {
-                @Override
-                public void onClick() {
-                    onCustomActionClick(unit.getActionId());
-                }
-            });
-            mInputMoreActionList.add(unit);
-        }
     }
 
     private void onCustomActionClick(int id) {
@@ -1396,6 +1413,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     }
 
     public void showReplyPreview(ReplyPreviewBean previewBean) {
+        exitReply();
         replyPreviewBean = previewBean;
         String replyMessageAbstract = previewBean.getMessageAbstract();
         String msgTypeStr = ChatMessageParser.getMsgTypeStr(previewBean.getMessageType());

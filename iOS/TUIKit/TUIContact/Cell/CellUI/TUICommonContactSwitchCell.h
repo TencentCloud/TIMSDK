@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface TUICommonContactSwitchCell : TUICommonTableViewCell
+
 @property UILabel *titleLabel; // main title label
 @property UILabel *descLabel; // detail title label below the main title label, used for explaining details
 @property UISwitch *switcher;

@@ -1,5 +1,7 @@
 package com.tencent.qcloud.tuikit.tuicontact.bean;
 
+import android.text.TextUtils;
+
 import com.tencent.imsdk.v2.V2TIMGroupMemberFullInfo;
 import com.tencent.imsdk.v2.V2TIMGroupMemberInfo;
 
@@ -114,6 +116,16 @@ public class GroupMemberInfo implements Serializable {
 
     public void setMemberType(int memberType) {
         this.memberType = memberType;
+    }
+
+    public String getDisplayName() {
+        String displayName = account;
+        if (!TextUtils.isEmpty(nameCard)) {
+            displayName = nameCard;
+        } else if (!TextUtils.isEmpty(nickName)) {
+            displayName = nickName;
+        }
+        return displayName;
     }
 
     public GroupMemberInfo covertTIMGroupMemberInfo(V2TIMGroupMemberInfo info) {

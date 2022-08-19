@@ -133,7 +133,10 @@
 
 - (NSString *)formatLength:(long)length
 {
-    // 默认显示文件大小
+    /**
+     * 默认显示文件大小
+     * Display file size by default
+     */
     double len = length;
     NSArray *array = [NSArray arrayWithObjects:@"Bytes", @"K", @"M", @"G", @"T", nil];
     int factor = 0;
@@ -146,15 +149,16 @@
     }
     NSString *str = [NSString stringWithFormat:@"%4.2f%@", len, array[factor]];
     
-    // 格式化显示字符
+    /**
+     * 格式化显示字符
+     * Formatted display characters
+     */
     if (self.fileData.direction == MsgDirectionOutgoing) {
         if (length == 0 && (self.fileData.status == Msg_Status_Sending || self.fileData.status == Msg_Status_Sending_2)) {
-            // 发送中 && 当前文件大小位置
             str = [NSString stringWithFormat:@"%zd%%", self.fileData.direction == MsgDirectionIncoming?self.fileData.downladProgress:self.fileData.uploadProgress];
         }
     } else {
         if (!self.fileData.isLocalExist && !self.fileData.isDownloading) {
-            // 未下载
             str = [NSString stringWithFormat:@"%@ %@", str, TUIKitLocalizableString(TUIKitNotDownload)];
         }
     }
@@ -239,16 +243,13 @@
 
 - (void)onConnectSuccess
 {
-    // 重新赋值
     [self fillWithData:self.fileData];
 }
 
 
 - (void)highlightWhenMatchKeyword:(NSString *)keyword
 {
-    // 默认高亮效果，闪烁
     if (keyword) {
-        // 显示高亮动画
         if (self.highlightAnimating) {
             return;
         }
@@ -256,7 +257,6 @@
     }
 }
 
-// 默认高亮动画
 - (void)animate:(int)times
 {
     times--;

@@ -47,7 +47,7 @@ typedef void(^TUISearchResultCallback)(BOOL succ, NSString * __nullable errMsg, 
     dispatch_group_t group = dispatch_group_create();
     BOOL request = NO;
     
-    // 搜索联系人
+    // Contact
     if ((modules == TUISearchResultModuleAll) || (modules & TUISearchResultModuleContact)) {
         request = YES;
         dispatch_group_enter(group);
@@ -67,7 +67,7 @@ typedef void(^TUISearchResultCallback)(BOOL succ, NSString * __nullable errMsg, 
         }];
     }
     
-    // 搜索群组
+    // Group
     if ((modules == TUISearchResultModuleAll) || (modules & TUISearchResultModuleGroup)) {
         request = YES;
         dispatch_group_enter(group);
@@ -87,7 +87,7 @@ typedef void(^TUISearchResultCallback)(BOOL succ, NSString * __nullable errMsg, 
         }];
     }
     
-    // 搜索聊天记录
+    // Chat history
     if ((modules == TUISearchResultModuleAll) || (modules & TUISearchResultModuleChatHistory)) {
         request = YES;
         dispatch_group_enter(group);
@@ -120,7 +120,6 @@ typedef void(^TUISearchResultCallback)(BOOL succ, NSString * __nullable errMsg, 
     });
 }
 
-// 搜索联系人
 - (void)searchContacts:(NSString *)keyword callback:(TUISearchResultCallback)callback
 {
     if (keyword == nil || callback == nil) {
@@ -147,7 +146,6 @@ typedef void(^TUISearchResultCallback)(BOOL succ, NSString * __nullable errMsg, 
                 title = result.friendInfo.userID;
             }
             
-            // 确定匹配当前keyword的条目(userId/remark/nickname)
             NSString *why = @"";
             if ([result.friendInfo.userID.lowercaseString containsString:keyword.lowercaseString]) {
                 why = result.friendInfo.userID;
@@ -176,7 +174,6 @@ typedef void(^TUISearchResultCallback)(BOOL succ, NSString * __nullable errMsg, 
     }];
 }
 
-// 搜索群组
 - (void)searchGroups:(NSString *)keyword callback:(TUISearchResultCallback)callback
 {
     if (keyword == nil || callback == nil) {
@@ -206,16 +203,15 @@ typedef void(^TUISearchResultCallback)(BOOL succ, NSString * __nullable errMsg, 
             cellModel.titleAttributeString = [TUISearchDataProvider attributeStringWithText:title key:keyword];
             cellModel.detailsAttributeString = nil;
             cellModel.groupID = result.groupInfo.groupID;
-            cellModel.avatarImage = DefaultGroupAvatarImage;
+            cellModel.groupType = result.groupInfo.groupType;
+            cellModel.avatarImage = DefaultGroupAvatarImageByGroupType(result.groupInfo.groupType);
             cellModel.context = result.groupInfo;
             [arrayM addObject:cellModel];
             
             if (result.matchField == TUISearchGroupMatchFieldGroupID) {
-                // 匹配到群id, details字段高亮显示
                 NSString *text = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitSearchResultMatchGroupIDFormat), result.matchValue];
                 cellModel.detailsAttributeString = [TUISearchDataProvider attributeStringWithText:text key:keyword];
             }else if (result.matchField == TUISearchGroupMatchFieldMember && result.matchMembers.count) {
-                // 匹配到群成员,details字段根据群成员具体匹配信息高亮显示
                 NSString *text = TUIKitLocalizableString(TUIKitSearchResultMatchGroupMember);
                 for (int i = 0; i < result.matchMembers.count; i++) {
                     TUISearchGroupMemberMatchResult *memberResult = result.matchMembers[i];
@@ -233,7 +229,6 @@ typedef void(^TUISearchResultCallback)(BOOL succ, NSString * __nullable errMsg, 
     }];
 }
 
-// 搜索聊天记录
 - (void)searchChatHistory:(NSString *)keyword param:(NSDictionary<TUISearchParamKey, id> * __nullable)paramters callback:(TUISearchResultCallback)callback
 {
     if (keyword == nil || callback == nil) {
@@ -247,7 +242,7 @@ typedef void(^TUISearchResultCallback)(BOOL succ, NSString * __nullable errMsg, 
     NSUInteger pageIndex = 0;
     NSString *conversationID = nil;
     NSArray *allKeys = paramters.allKeys;
-    BOOL displayWithConveration = YES;  // 是否按照会话来展示
+    BOOL displayWithConveration = YES;
     
     if ([allKeys containsObject:TUISearchChatHistoryParamKeyCount]) {
         pageSize = [paramters[TUISearchChatHistoryParamKeyCount] integerValue];
@@ -257,7 +252,7 @@ typedef void(^TUISearchResultCallback)(BOOL succ, NSString * __nullable errMsg, 
     }
     if ([allKeys containsObject:TUISearchChatHistoryParamKeyConversationId]) {
         conversationID = paramters[TUISearchChatHistoryParamKeyConversationId];
-        displayWithConveration = NO; // 按照消息来展示
+        displayWithConveration = NO;
     }
     
     V2TIMMessageSearchParam *param = [[V2TIMMessageSearchParam alloc] init];
@@ -316,19 +311,17 @@ typedef void(^TUISearchResultCallback)(BOOL succ, NSString * __nullable errMsg, 
                 NSArray *messageList = conversationMessageMap[conversationId];
                 NSUInteger count = [conversationCountMap[conversationId] integerValue];
                 if (displayWithConveration) {
-                    // 按照会话进行展示
                     TUISearchResultCellModel *cellModel = [[TUISearchResultCellModel alloc] init];
-                    // 按会话展示
                     NSString *desc = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitSearchResultDisplayChatHistoryCountFormat), count];
                     if (messageList.count == 1) {
-                        // 如果只有一条记录，直接显示具体的聊天内容
                         V2TIMMessage *firstMessage = messageList.firstObject;
                         desc = [TUISearchDataProvider matchedTextForMessage:(V2TIMMessage *)firstMessage withKey:keyword];
                     }
                     cellModel.title = conv.showName;
                     cellModel.detailsAttributeString = [TUISearchDataProvider attributeStringWithText:desc key:messageList.count == 1?keyword:nil];
                     cellModel.groupID = conv.groupID;
-                    cellModel.avatarImage = conv.type == V2TIM_GROUP ? DefaultGroupAvatarImage : DefaultAvatarImage;
+                    cellModel.avatarImage = conv.type == V2TIM_GROUP ? DefaultGroupAvatarImageByGroupType(conv.groupType) : DefaultAvatarImage;
+                    cellModel.groupType = conv.groupType;
                     cellModel.avatarUrl = conv.faceUrl;
                     cellModel.context = @{
                         kSearchChatHistoryConversationId  : conversationId,
@@ -337,15 +330,15 @@ typedef void(^TUISearchResultCallback)(BOOL succ, NSString * __nullable errMsg, 
                     };
                     [arrayM addObject:cellModel];
                 }else {
-                    // 按照单条消息进行展示
                     for (V2TIMMessage *message in messageList) {
                         TUISearchResultCellModel *cellModel = [[TUISearchResultCellModel alloc] init];
                         cellModel.title = message.nickName?:message.sender;
                         NSString *desc = [TUISearchDataProvider matchedTextForMessage:message withKey:keyword];
                         cellModel.detailsAttributeString = [TUISearchDataProvider attributeStringWithText:desc key:keyword];
                         cellModel.groupID = conv.groupID;
+                        cellModel.groupType = conv.groupType;
                         cellModel.avatarUrl = message.faceURL;
-                        cellModel.avatarImage = conv.type == V2TIM_GROUP ? DefaultGroupAvatarImage : DefaultAvatarImage;
+                        cellModel.avatarImage = conv.type == V2TIM_GROUP ? DefaultGroupAvatarImageByGroupType(conv.groupType) : DefaultAvatarImage;
                         cellModel.context = message;
                         [arrayM addObject:cellModel];
                     }

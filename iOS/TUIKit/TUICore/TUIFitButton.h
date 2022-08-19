@@ -10,12 +10,11 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIFitButton : UIButton
-//Rect 设置优先于 Size
 @property (nonatomic, assign) CGRect titleRect;
 @property (nonatomic, assign) CGRect imageRect;
 
-@property (nonatomic, assign) CGSize imageSize;//居中
-@property (nonatomic, assign) CGSize titleSize;//居中
+@property (nonatomic, assign) CGSize imageSize;
+@property (nonatomic, assign) CGSize titleSize;
 
 @property (nonatomic, strong) UIImage * hoverImage;
 @property (nonatomic, strong) UIImage * normalImage;

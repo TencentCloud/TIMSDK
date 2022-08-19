@@ -36,7 +36,7 @@
     [attributeString setAttributes:attributeDict range:NSMakeRange(0, attributeString.length)];
     if (self.supportReEdit) {
         NSString *reEditStr = TUIKitLocalizableString(TUIKitMessageTipsReEditMessage);
-        [attributeString appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %@", reEditStr]]]; // @"重新编辑"
+        [attributeString appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %@", reEditStr]]];
         NSDictionary *attributeDict = @{NSForegroundColorAttributeName:[UIColor d_systemBlueColor]};
         [attributeString setAttributes:attributeDict range:NSMakeRange(self.content.length + 1, reEditStr.length)];
         [attributeString addAttribute:NSUnderlineStyleAttributeName value:

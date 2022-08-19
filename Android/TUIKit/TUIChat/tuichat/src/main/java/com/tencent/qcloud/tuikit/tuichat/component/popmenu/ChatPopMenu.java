@@ -16,7 +16,6 @@ import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -44,9 +43,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 聊天界面长按弹窗
- */
 public class ChatPopMenu {
     // action column num
     private static final int ACTION_COLUMN_NUM = 5;
@@ -173,7 +169,7 @@ public class ChatPopMenu {
     private void initDefaultEmoji() {
         List<String> emojis = null;
         try {
-            emojis = (List<String>) RecentEmojiManager.make(context).getCollection(RECENT_EMOJI_KEY);
+            emojis = (List<String>) RecentEmojiManager.getInstance().getCollection(RECENT_EMOJI_KEY);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -188,7 +184,7 @@ public class ChatPopMenu {
             }
             emojis.addAll(emojiKeys);
             try {
-                RecentEmojiManager.make(context).putCollection(RECENT_EMOJI_KEY, emojis);
+                RecentEmojiManager.getInstance().putCollection(RECENT_EMOJI_KEY, emojis);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -200,7 +196,7 @@ public class ChatPopMenu {
         recentEmojiList.remove(emoji.getFilter());
         recentEmojiList.add(0, emoji.getFilter());
         try {
-            RecentEmojiManager.make(context).putCollection(RECENT_EMOJI_KEY, recentEmojiList);
+            RecentEmojiManager.getInstance().putCollection(RECENT_EMOJI_KEY, recentEmojiList);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -624,9 +620,6 @@ public class ChatPopMenu {
         }
     }
 
-    /**
-     * 添加间距和分割线
-     */
     static class GridDecoration extends RecyclerView.ItemDecoration {
 
         private final int columnNum;

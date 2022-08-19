@@ -16,6 +16,7 @@ public class InputMoreActionUnit {
     private View unitView;
 
     // 数字越小优先级越高
+    // The lower the number, the higher the priority
     private int priority = 0;
 
     private OnActionClickListener onClickListener = new OnActionClickListener();
@@ -88,12 +89,10 @@ public class InputMoreActionUnit {
         return unitView;
     }
 
-    // 注册者决定是否显示该 Action
     public boolean isEnable(int chatType) {
         return true;
     }
-
-    // 点击更多图标时具体执行方法
+    
     public void onAction(String chatInfoId, int chatType) {
 
     }

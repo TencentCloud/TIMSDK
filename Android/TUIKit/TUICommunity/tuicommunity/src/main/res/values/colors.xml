@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="community_setting_linear_name_default_color">#FF666666</color>
+    <color name="community_setting_linear_content_default_color">#FF000000</color>
+    <color name="community_setting_linear_content_disable_color">#FF999999</color>
+    <color name="community_more_introduction_disable_color">#333333</color>
+
+    <color name="community_banner_selected_color">#FFFFFFFF</color>
+    <color name="community_banner_normal_color">#66FFFFFF</color>
+
+    <color name="community_list_selected_color">#19006EFF</color>
+    <color name="community_list_normal_color">#FFFFFFFF</color>
+
+</resources>

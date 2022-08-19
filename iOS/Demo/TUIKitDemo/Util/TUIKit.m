@@ -40,7 +40,6 @@
 
 - (void)setupConfig
 {
-    // 设置头像的圆角
     self.config.avatarType = TAvatarTypeRadiusCorner;
     self.config.avatarCornerRadius = 5;
 }

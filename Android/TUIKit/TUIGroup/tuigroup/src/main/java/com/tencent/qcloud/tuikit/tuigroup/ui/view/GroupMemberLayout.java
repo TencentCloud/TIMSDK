@@ -38,6 +38,8 @@ public class GroupMemberLayout extends LinearLayout implements IGroupMemberLayou
     private RecyclerView recyclerView;
     private boolean isSelectMode;
     private String title;
+    private ArrayList<String> excludeList;
+    private ArrayList<String> alreadySelectedList;
 
     private GroupInfoPresenter presenter;
 
@@ -88,7 +90,6 @@ public class GroupMemberLayout extends LinearLayout implements IGroupMemberLayou
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    // 判断滚动到底部
                     LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                     if (layoutManager == null) {
                         return;
@@ -119,6 +120,16 @@ public class GroupMemberLayout extends LinearLayout implements IGroupMemberLayou
 
     public TitleBarLayout getTitleBar() {
         return mTitleBar;
+    }
+
+    public void setExcludeList(ArrayList<String> excludeList) {
+        this.excludeList = excludeList;
+        mAdapter.setExcludeList(excludeList);
+    }
+
+    public void setAlreadySelectedList(ArrayList<String> alreadySelectedList) {
+        this.alreadySelectedList = alreadySelectedList;
+        mAdapter.setAlreadySelectedList(alreadySelectedList);
     }
 
     public void setSelectMode(boolean selectMode) {

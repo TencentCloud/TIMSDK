@@ -2,6 +2,8 @@ package com.tencent.qcloud.tuikit.tuichat.component.face;
 
 /**
  * 自定义表情属性类
+ * 
+ * Custom expression attribute class
  */
 public class CustomFace {
 

@@ -4,7 +4,7 @@ import com.tencent.qcloud.tuicore.util.TUIBuild;
 
 public class BrandUtil {
     /**
-     * 判断是否为小米设备
+     * Xiaomi device
      */
     public static boolean isBrandXiaoMi() {
         return "xiaomi".equalsIgnoreCase(getBuildBrand())
@@ -12,7 +12,7 @@ public class BrandUtil {
     }
 
     /**
-     * 判断是否为华为设备
+     * huawei device
      */
     public static boolean isBrandHuawei() {
         return "huawei".equalsIgnoreCase(getBuildBrand()) ||
@@ -22,7 +22,7 @@ public class BrandUtil {
     }
 
     /**
-     * 判断是否为魅族设备
+     * meizu device
      */
     public static boolean isBrandMeizu() {
         return "meizu".equalsIgnoreCase(getBuildBrand())
@@ -31,7 +31,7 @@ public class BrandUtil {
     }
 
     /**
-     * 判断是否是 oppo 设备, 包含子品牌
+     * oppo device
      *
      * @return
      */
@@ -45,7 +45,7 @@ public class BrandUtil {
     }
 
     /**
-     * 判断是否是vivo设备
+     * vivo device
      *
      * @return
      */

@@ -35,12 +35,14 @@ import java.io.IOException;
 
 public class JCameraView extends FrameLayout implements CameraInterface.CameraOpenOverCallback, SurfaceHolder.Callback, CameraView {
 
-    //拍照浏览时候的类型
+    // 拍照浏览时候的类型
+    // camera mode
     public static final int TYPE_PICTURE = 0x001;
     public static final int TYPE_VIDEO = 0x002;
     public static final int TYPE_SHORT = 0x003;
     public static final int TYPE_DEFAULT = 0x004;
-    //录制视频比特率
+    // 录制视频比特率
+    // Recording video bit rate
     public static final int MEDIA_QUALITY_HIGH = 20 * 100000;
     public static final int MEDIA_QUALITY_MIDDLE = 16 * 100000;
     public static final int MEDIA_QUALITY_LOW = 12 * 100000;
@@ -52,14 +54,15 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
     public static final int BUTTON_STATE_ONLY_RECORDER = 0x102;     //只能录像
     public static final int BUTTON_STATE_BOTH = 0x103;              //两者都可以
     private static final String TAG = JCameraView.class.getSimpleName();
-    //闪关灯状态
+    // 闪关灯状态
+    // Flash status
     private static final int TYPE_FLASH_AUTO = 0x021;
     private static final int TYPE_FLASH_ON = 0x022;
     private static final int TYPE_FLASH_OFF = 0x023;
-    //Camera状态机
+    // Camera 状态机
+    // Camera state machine
     private CameraMachine machine;
     private int type_flash = TYPE_FLASH_OFF;
-    //回调监听
     private JCameraListener jCameraLisenter;
     private ClickListener leftClickListener;
     private ClickListener rightClickListener;
@@ -75,21 +78,23 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
     private int layout_width;
     private float screenProp = 0f;
 
-    private Bitmap captureBitmap;   //捕获的图片
-    private Bitmap firstFrame;      //第一帧图片
-    private String videoUrl;        //视频URL
+    private Bitmap captureBitmap;   //捕获的图片 captured picture
+    private Bitmap firstFrame;      //第一帧图片 first frame picture
+    private String videoUrl;        //视频URL Video URL
 
 
-    //切换摄像头按钮的参数
-    private int iconSize = 0;       //图标大小
-    private int iconMargin = 0;     //右上边距
-    private int iconSrc = 0;        //图标资源
-    private int iconLeft = 0;       //左图标
-    private int iconRight = 0;      //右图标
-    private int duration = 0;       //录制时间
+    // 切换摄像头按钮的参数
+    // Switch camera button parameters
+    private int iconSize = 0;
+    private int iconMargin = 0;
+    private int iconSrc = 0;
+    private int iconLeft = 0;
+    private int iconRight = 0;
+    private int duration = 0;
     private long recordTime;
 
-    //缩放梯度
+    // 缩放梯度
+    // scale gradient
     private int zoomGradient = 0;
 
     private boolean firstTouch = true;
@@ -124,7 +129,6 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
 
     private void initData() {
         layout_width = ScreenUtil.getScreenWidth(mContext);
-        //缩放梯度
         zoomGradient = (int) (layout_width / 16f);
         TUIChatLog.i(TAG, "zoom = " + zoomGradient);
         machine = new CameraMachine(getContext(), this, this);
@@ -143,14 +147,14 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
         mCaptureLayout.setIconSrc(iconLeft, iconRight);
         mFoucsView = view.findViewById(R.id.fouce_view);
         mVideoView.getHolder().addCallback(this);
-        //切换摄像头
+
         mSwitchCamera.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 machine.swtich(mVideoView.getHolder(), screenProp);
             }
         });
-        //拍照 录像
+
         mCaptureLayout.setCaptureLisenter(new CaptureListener() {
             @Override
             public void takePictures() {
@@ -195,7 +199,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
                 }
             }
         });
-        //确认 取消
+
         mCaptureLayout.setTypeLisenter(new TypeListener() {
             @Override
             public void cancel() {
@@ -207,7 +211,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
                 machine.confirm();
             }
         });
-        //退出
+
 //        mCaptureLayout.setReturnLisenter(new ReturnListener() {
 //            @Override
 //            public void onReturn() {
@@ -249,15 +253,13 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
         CameraInterface.getInstance().doStartPreview(mVideoView.getHolder(), screenProp);
     }
 
-    //生命周期onResume
     public void onResume() {
         TUIChatLog.i(TAG, "JCameraView onResume");
-        resetState(TYPE_DEFAULT); //重置状态
+        resetState(TYPE_DEFAULT);
         CameraInterface.getInstance().registerSensorManager(mContext);
         machine.start(mVideoView.getHolder(), screenProp);
     }
 
-    //生命周期onPause
     public void onPause() {
         TUIChatLog.i(TAG, "JCameraView onPause");
         machine.stop();
@@ -272,7 +274,6 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
         CameraInterface.destroyCameraInterface();
     }
 
-    //SurfaceView生命周期
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         TUIChatLog.i(TAG, "JCameraView SurfaceCreated");
@@ -299,7 +300,6 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 if (event.getPointerCount() == 1) {
-                    //显示对焦指示器
                     setFocusViewWidthAnimation(event.getX(), event.getY());
                 }
                 if (event.getPointerCount() == 2) {
@@ -311,10 +311,8 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
                     firstTouch = true;
                 }
                 if (event.getPointerCount() == 2) {
-                    //第一个点
                     float point_1_X = event.getX(0);
                     float point_1_Y = event.getY(0);
-                    //第二个点
                     float point_2_X = event.getX(1);
                     float point_2_Y = event.getY(1);
 
@@ -339,7 +337,6 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
         return true;
     }
 
-    //对焦框指示器动画
     private void setFocusViewWidthAnimation(float x, float y) {
         machine.foucs(x, y, new CameraInterface.FocusCallback() {
             @Override
@@ -363,18 +360,15 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
         this.jCameraLisenter = jCameraLisenter;
     }
 
-    //启动Camera错误回调
     public void setErrorLisenter(ErrorListener errorLisenter) {
         this.errorLisenter = errorLisenter;
         CameraInterface.getInstance().setErrorLinsenter(errorLisenter);
     }
 
-    //设置CaptureButton功能（拍照和录像）
     public void setFeatures(int state) {
         this.mCaptureLayout.setButtonFeatures(state);
     }
 
-    //设置录制质量
     public void setMediaQuality(int quality) {
         CameraInterface.getInstance().setMediaQuality(quality);
     }
@@ -383,8 +377,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
     public void resetState(int type) {
         switch (type) {
             case TYPE_VIDEO:
-                stopVideo();    //停止播放
-                //初始化VideoView
+                stopVideo();
                 FileUtil.deleteFile(videoUrl);
                 mVideoView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
                 machine.start(mVideoView.getHolder(), screenProp);
@@ -407,7 +400,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
     public void confirmState(int type) {
         switch (type) {
             case TYPE_VIDEO:
-                stopVideo();    //停止播放
+                stopVideo();
                 mVideoView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
                 machine.start(mVideoView.getHolder(), screenProp);
                 if (jCameraLisenter != null) {

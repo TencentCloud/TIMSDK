@@ -15,13 +15,8 @@ import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
 import java.io.Serializable;
 
-/**
- * 订单消息
- */
 public class CustomOrderMessageBean extends TUIMessageBean{
-    /**
-     * 自定义消息的bean实体，用来与json的相互转化
-     */
+
     public class CustomOrderMessage implements Serializable {
         //public static final int CUSTOM_EVALUATION_ACTION_ID = 5;
 

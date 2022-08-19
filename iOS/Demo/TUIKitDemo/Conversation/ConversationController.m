@@ -5,12 +5,6 @@
 //  Created by kennethmiao on 2018/10/10.
 //  Copyright © 2018年 Tencent. All rights reserved.
 //
-/** 腾讯云IM Demo 对话列表视图
- *  本文件实现了对话列表视图控制器，即下方按钮“消息”对应的视图控制器
- *  您可以从此处查看最近消息，整理您的消息列表
- *
- *  本类依赖于腾讯云 TUIKit和IMSDK 实现
- */
 #import "ConversationController.h"
 #import "TUIConversationListController.h"
 #import "TUIC2CChatViewController.h"
@@ -24,6 +18,7 @@
 #import "TUIKit.h"
 #import "TCUtil.h"
 #import "TUIGroupService.h"
+#import "TUIFoldListViewController.h"
 
 @interface ConversationController () <TUIConversationListControllerListener, TPopViewDelegate, V2TIMSDKListener>
 @property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
@@ -68,8 +63,8 @@
     for (UIViewController *vc in self.childViewControllers) {
         if ([vc isKindOfClass:TUIConversationListController.class]) {
             // 此处需要优化，目前修改备注通知均是demo层发出来的，所以.....
-            TUIConversationListDataProvider *dataProvider = [(TUIConversationListController *)vc dataProvider];
-            for (TUIConversationCellData *cellData in dataProvider.dataList) {
+            TUIConversationListDataProvider *dataProvider = [(TUIConversationListController *)vc provider];
+            for (TUIConversationCellData *cellData in dataProvider.conversationList) {
                 if ([cellData.userID isEqualToString:friendInfo.userID]) {
                     NSString *title = friendInfo.friendRemark;
                     if (title.length == 0) {
@@ -88,9 +83,7 @@
     }
 }
 
-/**
- *初始化导航栏
- */
+
 - (void)setupNavigation
 {
     _titleView = [[TUINaviBarIndicatorView alloc] init];
@@ -100,9 +93,7 @@
     [[V2TIMManager sharedInstance] addIMSDKListener:self];
 }
 
-/**
- *初始化导航栏Title，不同连接状态下Title显示内容不同
- */
+
 - (void)onNetworkChanged:(TUINetStatus)status
 {
     [TUITool dispatchMainAsync:^{
@@ -112,15 +103,15 @@
                 [self.titleView stopAnimating];
                 break;
             case TNet_Status_Connecting:
-                [self.titleView setTitle:NSLocalizedString(@"AppMainConnectingTitle", nil)];// 连接中...
+                [self.titleView setTitle:NSLocalizedString(@"AppMainConnectingTitle", nil)];
                 [self.titleView startAnimating];
                 break;
             case TNet_Status_Disconnect:
-                [self.titleView setTitle:NSLocalizedString(@"AppMainDisconnectTitle", nil)]; // 腾讯·云通信(未连接)
+                [self.titleView setTitle:NSLocalizedString(@"AppMainDisconnectTitle", nil)];
                 [self.titleView stopAnimating];
                 break;
             case TNet_Status_ConnFailed:
-                [self.titleView setTitle:NSLocalizedString(@"AppMainDisconnectTitle", nil)]; // 腾讯·云通信(未连接)
+                [self.titleView setTitle:NSLocalizedString(@"AppMainDisconnectTitle", nil)];
                 [self.titleView stopAnimating];
                 break;
                 
@@ -129,9 +120,7 @@
         }
     }];
 }
-/**
- *推送默认跳转
- */
+
 - (void)pushToChatViewController:(NSString *)groupID userID:(NSString *)userID {
 
     UIViewController *topVc = self.navigationController.topViewController;
@@ -157,9 +146,6 @@
     [self.navigationController pushViewController:chatVC animated:YES];
 }
 
-/**
- *对导航栏右侧的按钮（即视图右上角按钮）进行初始化，创建对应的popView
- */
 - (void)rightBarButtonClick:(UIButton *)rightBarButton
 {
     NSMutableArray *menus = [NSMutableArray array];
@@ -201,16 +187,13 @@
     [popView showInWindow:self.view.window];
 }
 
-/**
- *点击了popView中具体某一行后的响应函数，popView初始化请参照上述 rightBarButtonClick: 函数
- */
 - (void)popView:(TPopView *)popView didSelectRowAtIndex:(NSInteger)index
 {
     @weakify(self)
     if(index == 0){
-        //发起会话
+        // launch conversation
         TUIContactSelectController *vc = [TUIContactSelectController new];
-        vc.title = NSLocalizedString(@"ChatsSelectContact", nil);//@"选择联系人";
+        vc.title = NSLocalizedString(@"ChatsSelectContact", nil);
         vc.maxSelectCount = 1;
         [self.navigationController pushViewController:vc animated:YES];
         vc.finishBlock = ^(NSArray<TUICommonContactSelectCellData *> *array) {
@@ -229,9 +212,9 @@
         return;
     }
     else if(index == 1){
-        //创建讨论组
+        // create discuss group
         TUIContactSelectController *vc = [TUIContactSelectController new];
-        vc.title = NSLocalizedString(@"ChatsSelectContact", nil);//@"选择联系人";
+        vc.title = NSLocalizedString(@"ChatsSelectContact", nil);
         [self.navigationController pushViewController:vc animated:YES];
         vc.finishBlock = ^(NSArray<TUICommonContactSelectCellData *> *array) {
             @strongify(self)
@@ -239,9 +222,9 @@
         };
         return;
     } else if(index == 2){
-        //创建群聊
+        // create group chat
         TUIContactSelectController *vc = [TUIContactSelectController new];
-        vc.title = NSLocalizedString(@"ChatsSelectContact", nil);//@"选择联系人";
+        vc.title = NSLocalizedString(@"ChatsSelectContact", nil);
         [self.navigationController pushViewController:vc animated:YES];
         vc.finishBlock = ^(NSArray<TUICommonContactSelectCellData *> *array) {
             @strongify(self)
@@ -249,9 +232,9 @@
         };
         return;
     } else if(index == 3){
-        //创建聊天室
+        // create chat room
         TUIContactSelectController *vc = [TUIContactSelectController new];
-        vc.title = NSLocalizedString(@"ChatsSelectContact", nil);//@"选择联系人";
+        vc.title = NSLocalizedString(@"ChatsSelectContact", nil);
         [self.navigationController pushViewController:vc animated:YES];
         vc.finishBlock = ^(NSArray<TUICommonContactSelectCellData *> *array) {
             @strongify(self)
@@ -259,9 +242,9 @@
         };
         return;
     } else if(index == 4){
-        //创建社区
+        // create community
         TUIContactSelectController *vc = [TUIContactSelectController new];
-        vc.title = NSLocalizedString(@"ChatsSelectContact", nil);//@"选择联系人";
+        vc.title = NSLocalizedString(@"ChatsSelectContact", nil);
         [self.navigationController pushViewController:vc animated:YES];
         vc.finishBlock = ^(NSArray<TUICommonContactSelectCellData *> *array) {
             @strongify(self)
@@ -302,9 +285,6 @@
 
 #pragma mark TUIConversationListControllerListener
 
-/**
- * 获取会话展示信息回调
- */
 - (NSString *)getConversationDisplayString:(V2TIMConversation *)conversation {
     V2TIMMessage *msg = conversation.lastMessage;
     if (msg.customElem == nil || msg.customElem.data == nil) {
@@ -316,7 +296,8 @@
         if (![businessID isKindOfClass:[NSString class]]) {
             return nil;
         }
-        // 判断是不是自定义跳转消息
+
+        // whether custom jump message
         if ([businessID isEqualToString:BussinessID_TextLink] || ([(NSString *)param[@"text"] length] > 0 && [(NSString *)param[@"link"] length] > 0)) {
             NSString *desc = param[@"text"];
             if (msg.status == V2TIM_MSG_STATUS_LOCAL_REVOKED) {
@@ -325,7 +306,10 @@
                 } else if (msg.userID.length > 0){
                     desc = NSLocalizedString(@"MessageTipsOthersRecallMessage", nil);
                 } else if (msg.groupID.length > 0) {
-                    //对于群组消息的名称显示，优先显示群名片，昵称优先级其次，用户ID优先级最低。
+                    /**
+                     * 对于群组消息的名称显示，优先显示群名片，昵称优先级其次，用户ID优先级最低。
+                     * For the name display of group messages, the group business card is displayed first, the nickname has the second priority, and the user ID has the lowest priority.
+                     */
                     NSString *userName = msg.nameCard;
                     if (userName.length == 0) {
                         userName = msg.nickName?:msg.sender;
@@ -335,7 +319,8 @@
             }
             return desc;
         }
-        // 判断是不是群创建自定义消息
+
+        // whether the tips message of creating group
         else if ([businessID isEqualToString:BussinessID_GroupCreate] || [param.allKeys containsObject:BussinessID_GroupCreate]) {
             return [NSString stringWithFormat:@"\"%@\"%@",param[@"opUser"],param[@"content"]];
         }
@@ -343,12 +328,39 @@
     return nil;
 }
 
-/**
- *  点击会话回调
- */
-- (void)conversationListController:(TUIConversationListController *)conversationController didSelectConversation:(TUIConversationCell *)conversationCell
+- (void)conversationListController:(TUIConversationListController *)conversationController didSelectConversation:(TUIConversationCellData *)conversation
 {
-    TUIBaseChatViewController *chatVc = [self getChatViewController:[self getConversationModel:conversationCell.convData]];
+    if (conversation.isLocalConversationFoldList) {
+
+        [TUIConversationListDataProvider cacheConversationFoldListSettings_FoldItemIsUnread:NO];
+        
+        TUIFoldListViewController *foldVC = [[TUIFoldListViewController alloc] init];
+        [self.navigationController pushViewController:foldVC animated:YES];
+
+        foldVC.dismissCallback = ^(NSMutableAttributedString * _Nonnull foldStr, NSArray * _Nonnull sortArr , NSArray * _Nonnull needRemoveFromCacheMapArray) {
+            conversation.foldSubTitle  = foldStr;
+            conversation.subTitle = conversation.foldSubTitle;
+            conversation.isMarkAsUnread = NO;
+        
+            if (sortArr.count <= 0 ) {
+                conversation.orderKey = 0;
+                if ([conversationController.provider.conversationList  containsObject:conversation]) {
+                    [conversationController.provider hideConversation:conversation];
+                }
+            }
+            
+            for (NSString * removeId in needRemoveFromCacheMapArray) {
+                if ([conversationController.provider.markFoldMap objectForKey:removeId] ) {
+                    [conversationController.provider.markFoldMap removeObjectForKey:removeId];
+                }
+            }
+            
+            [TUIConversationListDataProvider cacheConversationFoldListSettings_FoldItemIsUnread:NO];
+            [[(TUIConversationListController *)conversationController tableView] reloadData];
+        };
+        return;
+    }
+    TUIBaseChatViewController *chatVc = [self getChatViewController:[self getConversationModel:conversation]];
     [self.navigationController pushViewController:chatVc animated:YES];
 }
 
@@ -360,14 +372,20 @@
     conversationCellData:(TUIConversationCellData *)conversationCellData
 {
     if (searchType == TUISearchTypeChatHistory && [searchItem isKindOfClass:V2TIMMessage.class]) {
-        // 点击搜索到的聊天消息
+        /**
+         * 点击搜索到的聊天消息
+         * Respond to clicked searched chat messages
+         */
         TUIBaseChatViewController *chatVc = [self getChatViewController:[self getConversationModel:conversationCellData]];
         chatVc.title = conversationCellData.title;
         chatVc.highlightKeyword = searchKey;
         chatVc.locateMessage = (V2TIMMessage *)searchItem;
         [searchVC.navigationController pushViewController:chatVc animated:YES];
     } else {
-        // 点击搜索到的群组和联系人
+        /**
+         * 点击搜索到的群组和联系人
+         * Respond to clicks on searched groups and contacts
+         */
         TUIBaseChatViewController *chatVc = [self getChatViewController:[self getConversationModel:conversationCellData]];
         chatVc.title = conversationCellData.title;
         [searchVC.navigationController pushViewController:chatVc animated:YES];

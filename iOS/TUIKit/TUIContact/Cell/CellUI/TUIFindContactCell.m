@@ -13,36 +13,33 @@
 
 @implementation TUIFindContactCell
 
--  (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
+-  (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
         [self setupView];
     }
     return self;
 }
 
-- (void)setupView
-{
+- (void)setupView {
     [self.contentView addSubview:self.avatarView];
     [self.contentView addSubview:self.mainTitleLabel];
     [self.contentView addSubview:self.subTitleLabel];
     [self.contentView addSubview:self.descLabel];
 }
 
-- (void)setData:(TUIFindContactCellModel *)data
-{
+- (void)setData:(TUIFindContactCellModel *)data {
     _data = data;
     
     self.mainTitleLabel.text = data.mainTitle;
     self.subTitleLabel.text = data.subTitle;
     self.descLabel.text = data.desc;
-    [self.avatarView sd_setImageWithURL:data.avatarUrl placeholderImage:data.avatar?:DefaultAvatarImage];
+    UIImage *placeHolder =  (data.type == TUIFindContactTypeC2C)?DefaultAvatarImage:DefaultGroupAvatarImageByGroupType(data.groupInfo.groupType);
+    [self.avatarView sd_setImageWithURL:data.avatarUrl placeholderImage:data.avatar?:placeHolder];
     
     self.descLabel.hidden = (data.type == TUIFindContactTypeC2C);
 }
 
-- (void)layoutSubviews
-{
+- (void)layoutSubviews {
     [super layoutSubviews];
     
     self.avatarView.mm_left(16 * kScale).mm_top(12 * kScale).mm_width(48 * kScale).mm_height(48 * kScale);
@@ -62,8 +59,7 @@
     self.descLabel.mm_flexToRight(12 * kScale);
 }
 
-- (UIImageView *)avatarView
-{
+- (UIImageView *)avatarView {
     if (_avatarView == nil) {
         _avatarView = [[UIImageView alloc] init];
         _avatarView.layer.cornerRadius = 3 * kScale;
@@ -72,8 +68,7 @@
     return _avatarView;
 }
 
-- (UILabel *)mainTitleLabel
-{
+- (UILabel *)mainTitleLabel {
     if (_mainTitleLabel == nil) {
         _mainTitleLabel = [[UILabel alloc] init];
         _mainTitleLabel.text = @"mainTitle";
@@ -83,8 +78,7 @@
     return _mainTitleLabel;
 }
 
-- (UILabel *)subTitleLabel
-{
+- (UILabel *)subTitleLabel {
     if (_subTitleLabel == nil) {
         _subTitleLabel = [[UILabel alloc] init];
         _subTitleLabel.text = @"subTitle";
@@ -94,8 +88,7 @@
     return _subTitleLabel;
 }
 
-- (UILabel *)descLabel
-{
+- (UILabel *)descLabel {
     if (_descLabel == nil) {
         _descLabel = [[UILabel alloc] init];
         _descLabel.text = @"descLabel";

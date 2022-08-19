@@ -4,9 +4,6 @@ import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.LocationReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TUIReplyQuoteBean;
 
-/**
- * 定位消息
- */
 public class LocationMessageBean extends TUIMessageBean {
 
     private String desc;

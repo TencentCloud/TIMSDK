@@ -40,9 +40,10 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
     protected CheckBox multiSelectCheckBox;
     protected RelativeLayout messageStatusLayout;
     public ImageView messageSending;
-    public ImageView messagefailed;
+    public ImageView messageFailed;
     private boolean isForwardMode = false;
     protected View userStatusView;
+    private boolean showFoldedStyle = true;
 
     public ConversationCommonHolder(View itemView) {
         super(itemView);
@@ -56,13 +57,17 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
         disturbView = rootView.findViewById(R.id.not_disturb);
         multiSelectCheckBox = rootView.findViewById(R.id.select_checkbox);
         messageStatusLayout = rootView.findViewById(R.id.message_status_layout);
-        messagefailed = itemView.findViewById(R.id.message_status_failed);
+        messageFailed = itemView.findViewById(R.id.message_status_failed);
         messageSending = itemView.findViewById(R.id.message_status_sending);
         userStatusView = itemView.findViewById(R.id.user_status);
     }
 
     public void setForwardMode(boolean forwardMode) {
         isForwardMode = forwardMode;
+    }
+
+    public void setShowFoldedStyle(boolean showFoldedStyle) {
+        this.showFoldedStyle = showFoldedStyle;
     }
 
     public void layoutViews(ConversationInfo conversation, int position) {
@@ -72,7 +77,12 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
             leftItemLayout.setBackgroundColor(Color.WHITE);
         }
 
-        titleText.setText(conversation.getTitle());
+        if (showFoldedStyle && conversation.isMarkFold()) {
+            titleText.setText(R.string.folded_group_chat);
+            timelineText.setVisibility(View.GONE);
+        } else {
+            titleText.setText(conversation.getTitle());
+        }
         messageText.setText("");
         timelineText.setText("");
         DraftInfo draftInfo = conversation.getDraft();
@@ -97,7 +107,8 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
             HashMap<String, Object> param = new HashMap<>();
             param.put(TUIConstants.TUIChat.V2TIMMESSAGE, conversation.getLastMessage());
             String lastMsgDisplayString = (String) TUICore.callService(TUIConstants.TUIChat.SERVICE_NAME, TUIConstants.TUIChat.METHOD_GET_DISPLAY_STRING, param);
-            // 如果最后一条消息是自定义消息, 获取要显示的字符
+            // 获取要显示的字符
+            // Get the characters to display
             if (lastMsgDisplayString != null) {
                 messageText.setText(Html.fromHtml(lastMsgDisplayString));
                 messageText.setTextColor(rootView.getResources().getColor(R.color.list_bottom_text_bg));
@@ -108,18 +119,32 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
         }
 
         if (conversation.isShowDisturbIcon()) {
-            if (conversation.getUnRead() > 0) {
-                unreadText.setVisibility(View.VISIBLE);
-                unreadText.setText("");
-
-                if (messageText.getText() != null) {
-                    String text = messageText.getText().toString();
-                    messageText.setText("[" + conversation.getUnRead() + rootView.getContext().getString(R.string.message_num) + "] " + text);
+            if ((showFoldedStyle && conversation.isMarkFold())) {
+                if (conversation.isMarkLocalUnread()) {
+                    unreadText.setVisibility(View.VISIBLE);
+                    unreadText.setText("");
+                } else {
+                    unreadText.setVisibility(View.GONE);
                 }
             } else {
-                unreadText.setVisibility(View.GONE);
+                if (conversation.getUnRead() == 0) {
+                    if (conversation.isMarkUnread()) {
+                        unreadText.setVisibility(View.VISIBLE);
+                        unreadText.setText("");
+                    } else {
+                        unreadText.setVisibility(View.GONE);
+                    }
+                } else {
+                    unreadText.setVisibility(View.VISIBLE);
+                    unreadText.setText("");
+
+                    if (messageText.getText() != null) {
+                        String text = messageText.getText().toString();
+                        messageText.setText("[" + conversation.getUnRead() + rootView.getContext().getString(R.string.message_num) + "] " + text);
+                    }
+                }
             }
-        }else if (conversation.getUnRead() > 0) {
+        } else if (conversation.getUnRead() > 0) {
             unreadText.setVisibility(View.VISIBLE);
             if (conversation.getUnRead() > 99) {
                 unreadText.setText("99+");
@@ -127,7 +152,12 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
                 unreadText.setText("" + conversation.getUnRead());
             }
         } else {
-            unreadText.setVisibility(View.GONE);
+            if (conversation.isMarkUnread()) {
+                unreadText.setVisibility(View.VISIBLE);
+                unreadText.setText("1");
+            } else {
+                unreadText.setVisibility(View.GONE);
+            }
         }
 
         if (draftInfo != null) {
@@ -136,7 +166,7 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
             atInfoText.setTextColor(Color.RED);
 
             messageStatusLayout.setVisibility(View.GONE);
-            messagefailed.setVisibility(View.GONE);
+            messageFailed.setVisibility(View.GONE);
             messageSending.setVisibility(View.GONE);
         } else {
             if (conversation.getAtInfoText().isEmpty()) {
@@ -152,20 +182,20 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
                 int status = lastMessage.getStatus();
                 if (status == V2TIMMessage.V2TIM_MSG_STATUS_SEND_FAIL) {
                     messageStatusLayout.setVisibility(View.VISIBLE);
-                    messagefailed.setVisibility(View.VISIBLE);
+                    messageFailed.setVisibility(View.VISIBLE);
                     messageSending.setVisibility(View.GONE);
                 } else if (status == V2TIMMessage.V2TIM_MSG_STATUS_SENDING) {
                     messageStatusLayout.setVisibility(View.VISIBLE);
-                    messagefailed.setVisibility(View.GONE);
+                    messageFailed.setVisibility(View.GONE);
                     messageSending.setVisibility(View.VISIBLE);
                 } else {
                     messageStatusLayout.setVisibility(View.GONE);
-                    messagefailed.setVisibility(View.GONE);
+                    messageFailed.setVisibility(View.GONE);
                     messageSending.setVisibility(View.GONE);
                 }
             } else {
                 messageStatusLayout.setVisibility(View.GONE);
-                messagefailed.setVisibility(View.GONE);
+                messageFailed.setVisibility(View.GONE);
                 messageSending.setVisibility(View.GONE);
             }
         }
@@ -184,10 +214,15 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
             unreadText.setVisibility(View.GONE);
         }
 
+        conversationIconView.setShowFoldedStyle(showFoldedStyle);
         conversationIconView.setConversation(conversation);
 
         if (conversation.isShowDisturbIcon() && !isForwardMode) {
-            disturbView.setVisibility(View.VISIBLE);
+            if (showFoldedStyle && conversation.isMarkFold()) {
+                disturbView.setVisibility(View.GONE);
+            } else {
+                disturbView.setVisibility(View.VISIBLE);
+            }
         } else {
             disturbView.setVisibility(View.GONE);
         }
@@ -198,7 +233,7 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
             unreadText.setVisibility(View.GONE);
             atInfoText.setVisibility(View.GONE);
             messageStatusLayout.setVisibility(View.GONE);
-            messagefailed.setVisibility(View.GONE);
+            messageFailed.setVisibility(View.GONE);
             messageSending.setVisibility(View.GONE);
         }
 

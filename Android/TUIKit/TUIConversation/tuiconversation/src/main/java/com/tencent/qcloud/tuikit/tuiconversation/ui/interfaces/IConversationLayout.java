@@ -1,43 +1,38 @@
 package com.tencent.qcloud.tuikit.tuiconversation.ui.interfaces;
 
-import com.tencent.qcloud.tuicore.component.TitleBarLayout;
+import android.view.View;
+
 import com.tencent.qcloud.tuicore.component.interfaces.ILayout;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
-import com.tencent.qcloud.tuikit.tuiconversation.ui.view.ConversationLayout;
-import com.tencent.qcloud.tuikit.tuiconversation.ui.view.ConversationListLayout;
 
-/**
- * 会话列表窗口 {@link ConversationLayout} 由标题区 {@link TitleBarLayout} 与列表区 {@link ConversationListLayout}
- * <br>组成，每一部分都提供了 UI 样式以及事件注册的接口可供修改。
- */
 public interface IConversationLayout extends ILayout {
-
-    /**
-     * 获取会话列表 List
-     *
-     * @return
-     */
-    ConversationListLayout getConversationList();
-
-    /**
-     * 置顶会话
-     *
-     * @param conversation 会话内容
-     */
+    View getConversationList();
     void setConversationTop(ConversationInfo conversation, IUIKitCallback callBack);
-
-    /**
-     * 删除会话
-     *
-     * @param conversation 会话内容
-     */
     void deleteConversation(ConversationInfo conversation);
+    void clearConversationMessage(ConversationInfo conversation);
 
     /**
-     * 清空会话
-     *
-     * @param conversation 会话内容
+     * 隐藏普通会话
+     * Hide normal conversation
      */
-    void clearConversationMessage(ConversationInfo conversation);
+    void markConversationHidden(ConversationInfo conversation);
+
+    /**
+     * 标记会话已读/未读
+     * Mark conversation read or unread
+     */
+    void markConversationUnread(ConversationInfo conversationInfo, boolean markUnread);
+
+    /**
+     * 隐藏整个折叠的会话 item
+     * Hide folded conversation item
+     */
+    void hideFoldedItem(boolean needHide);
+
+    /**
+     * 清除折叠 item 本地未读状态
+     * Clear unread status of fold item
+     */
+    void clearUnreadStatusOfFoldItem();
 }

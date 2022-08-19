@@ -8,14 +8,28 @@
 
 #import "AppDelegate+Redpoint.h"
 #import "Aspects.h"
+#import <objc/runtime.h>
+
+NSInteger _markUnreadCount = 0 ;
+NSInteger _markHideUnreadCount = 0;
+
+@interface AppDelegate (Redpoint)
+@property (nonatomic, strong) NSMutableDictionary * markUnreadMap;
+@end
 
 @implementation AppDelegate (Redpoint)
 
 + (void)load
 {
-    // 未读数相关的处理
-    // 1. hook AppDelegate 进入前后台的事件，从而设置 APP 的角标
-    // 2. hook AppDelegate 中监听的 onTotalUnreadMessageCountChanged: 事件，从而设置设置 APP 角标并更新 _unReadCount
+    /**
+     * 未读数相关的处理
+     * - 1. hook AppDelegate 进入前后台的事件，从而设置 APP 的角标
+     * - 2. hook AppDelegate 中监听的 onTotalUnreadMessageCountChanged: 事件，从而设置设置 APP 角标并更新 _unReadCount
+     *
+     * The Processing of unread count
+     * - 1. Hooking the callback of entering foregroud and background in AppDelegate to set the application's badge number.
+     * - 2. Hooking the event of onTotalUnreadMessageCountChanged: in AppDelegate to set the application's badge number and update the _unReadCount parameter.
+     */
     id appDidEnterBackGroundBlock = ^(id<AspectInfo> aspectInfo, UIApplication *application){
         AppDelegate *app = (AppDelegate *)application.delegate;
         application.applicationIconBadgeNumber = app.unReadCount;
@@ -38,7 +52,8 @@
     
     id onTotalUnreadMessageChangedBlock = ^(id<AspectInfo> aspectInfo, UInt64 totalUnreadCount){
         AppDelegate *app = (AppDelegate *)UIApplication.sharedApplication.delegate;
-        [app onTotalUnreadCountChanged:totalUnreadCount];
+        NSInteger unreadCalculationResults = [self.class caculateRealResultAboutSDKTotalCount:totalUnreadCount markUnreadCount:_markUnreadCount markHideUnreadCount:_markHideUnreadCount];
+        [app onTotalUnreadCountChanged:unreadCalculationResults];
         NSLog(@"[Redpoint] onTotalUnreadMessageCountChanged, unReadCount:%zd", app.unReadCount);
     };
     [AppDelegate aspect_hookSelector:@selector(onTotalUnreadMessageCountChanged:)
@@ -48,11 +63,10 @@
     
 }
 
-#pragma mark - 未读数相关
 - (void)redpoint_setupTotalUnreadCount
 {
     NSLog(@"[Redpoint] %s", __func__);
-    // 查询总的消息未读数
+    // Getting total unread count
     __weak typeof(self) weakSelf = self;
     [V2TIMManager.sharedInstance getTotalUnreadMessageCount:^(UInt64 totalCount) {
         [weakSelf onTotalUnreadCountChanged:totalCount];
@@ -60,7 +74,7 @@
         
     }];
     
-    // 查询当前的好友申请
+    // Getting the count of friends application
     @weakify(self)
     [RACObserve(self.contactDataProvider, pendencyCnt) subscribeNext:^(NSNumber *x) {
         @strongify(self)
@@ -72,7 +86,9 @@
 - (void)onTotalUnreadCountChanged:(UInt64)totalUnreadCount
 {
     NSLog(@"[Redpoint] %s, %llu", __func__, totalUnreadCount);
+    
     NSUInteger total = totalUnreadCount;
+    
     TUITabBarController *tab = (TUITabBarController *)UIApplication.sharedApplication.keyWindow.rootViewController;
     if (![tab isKindOfClass:TUITabBarController.class]) {
         return;
@@ -95,6 +111,12 @@
         [TUITool makeToast:[NSString stringWithFormat:NSLocalizedString(@"MarkAllMessageAsReadErrFormat", nil), code, desc]];
         [self onTotalUnreadCountChanged:self.unReadCount];
     }];
+    
+    NSArray *conversations = [self.markUnreadMap allKeys];
+    if (conversations.count) {
+        [V2TIMManager.sharedInstance markConversation:conversations markType:@(V2TIM_CONVERSATION_MARK_TYPE_UNREAD) enableMark:NO succ:nil fail:nil];
+    }
+    
 }
 
 - (void)onFriendApplicationCountChanged:(NSInteger)applicationCount
@@ -107,9 +129,52 @@
     if (tab.tabBarItems.count < 2) {
         return;
     }
-    NSLog(@"---> %zd", applicationCount);
     TUITabBarItem *item = tab.tabBarItems[1];
     item.badgeView.title = applicationCount == 0 ? @"" : [NSString stringWithFormat:@"%zd", applicationCount];
+}
+
+
+- (void)setMarkUnreadMap:(NSMutableDictionary *)markUnreadMap {
+    objc_setAssociatedObject(self, @selector(markUnreadMap), markUnreadMap, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (NSMutableDictionary *)markUnreadMap {
+    return objc_getAssociatedObject(self, _cmd);
+}
+#pragma mark - NSNotification
+- (void)updateMarkUnreadCount:(NSNotification *) note {
+    
+    NSDictionary *userInfo = note.userInfo;
+    NSInteger markUnreadCount = [[userInfo objectForKey:@"markUnreadCount"] integerValue];
+    NSInteger markHideUnreadCount = [[userInfo objectForKey:@"markHideUnreadCount"] integerValue];
+    _markUnreadCount = markUnreadCount;
+    _markHideUnreadCount = markHideUnreadCount;
+    if ([userInfo objectForKey:@"markUnreadMap"]) {
+        self.markUnreadMap = [NSMutableDictionary dictionaryWithDictionary:[userInfo objectForKey:@"markUnreadMap"]];
+    }
+    @weakify(self)
+    [V2TIMManager.sharedInstance getTotalUnreadMessageCount:^(UInt64 totalCount) {
+        @strongify(self)
+        NSInteger unreadCalculationResults = [self.class caculateRealResultAboutSDKTotalCount:totalCount markUnreadCount:markUnreadCount markHideUnreadCount:markHideUnreadCount];
+        [self onTotalUnreadCountChanged:unreadCalculationResults];
+    } fail:^(int code, NSString *desc) {
+    }];
+}
+
++ (NSInteger)caculateRealResultAboutSDKTotalCount:(UInt64) totalCount
+                                  markUnreadCount:(NSInteger)markUnreadCount
+                              markHideUnreadCount:(NSInteger)markHideUnreadCount {
+    NSInteger unreadCalculationResults = totalCount + markUnreadCount - markHideUnreadCount;
+    if (unreadCalculationResults < 0) {
+        //error protect
+        unreadCalculationResults = 0;
+    }
+    return unreadCalculationResults;
+}
+
+- (uint32_t)onSetAPPUnreadCount
+{
+    return (uint32_t)self.unReadCount; // test
 }
 
 @end

@@ -121,13 +121,11 @@
                 }
                 return;
             }
-            // 好友, 返回好友信息页
             UIViewController *vc = [self createFriendProfileController:friend.friendInfo];
             if (succ) {
                 succ(vc);
             }
         } else {
-            // 非好友, 返回用户信息页
             [[V2TIMManager sharedInstance] getUsersInfo:@[userID]
                                                    succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
                 V2TIMUserFullInfo *user = infoList.firstObject;

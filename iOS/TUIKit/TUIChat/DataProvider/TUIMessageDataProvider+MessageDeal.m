@@ -43,7 +43,6 @@
         TUIMessageCellData *cellData = [TUIMessageDataProvider getCellData:originMessage];
         replycellData.originCellData = cellData;
         if ([cellData isKindOfClass:TUIImageMessageCellData.class]) {
-            // 原始消息是图片
             TUIImageMessageCellData *imageData = (TUIImageMessageCellData *)cellData;
             [imageData downloadImage:TImage_Type_Thumb];
             replycellData.quoteData = [replycellData getQuoteData:imageData];
@@ -52,7 +51,6 @@
                 callback();
             }
         } else if ([cellData isKindOfClass:TUIVideoMessageCellData.class]) {
-            // 原始消息是视频
             TUIVideoMessageCellData *videoData = (TUIVideoMessageCellData *)cellData;
             [videoData downloadThumb];
             replycellData.quoteData = [replycellData getQuoteData:videoData];

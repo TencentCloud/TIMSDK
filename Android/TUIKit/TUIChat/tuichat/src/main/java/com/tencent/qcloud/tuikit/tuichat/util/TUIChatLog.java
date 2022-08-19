@@ -12,6 +12,8 @@ public class TUIChatLog extends IMLog {
 
     /**
      * 打印INFO级别日志
+     * 
+     * print INFO level log
      *
      * @param strTag  TAG
      * @param strInfo 消息
@@ -22,6 +24,8 @@ public class TUIChatLog extends IMLog {
 
     /**
      * 打印DEBUG级别日志
+     * 
+     * print DEBUG level log
      *
      * @param strTag  TAG
      * @param strInfo 消息
@@ -32,6 +36,8 @@ public class TUIChatLog extends IMLog {
 
     /**
      * 打印INFO级别日志
+     * 
+     * print INFO level log
      *
      * @param strTag  TAG
      * @param strInfo 消息
@@ -42,6 +48,8 @@ public class TUIChatLog extends IMLog {
 
     /**
      * 打印WARN级别日志
+     * 
+     * print WARN level log
      *
      * @param strTag  TAG
      * @param strInfo 消息
@@ -52,6 +60,8 @@ public class TUIChatLog extends IMLog {
 
     /**
      * 打印WARN级别日志
+     * 
+     * print WARN level log
      *
      * @param strTag  TAG
      * @param strInfo 消息
@@ -62,6 +72,8 @@ public class TUIChatLog extends IMLog {
 
     /**
      * 打印ERROR级别日志
+     * 
+     * print ERROR level log
      *
      * @param strTag  TAG
      * @param strInfo 消息

@@ -15,9 +15,6 @@ import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
 import java.io.File;
 
-/**
- * 语音消息
- */
 public class SoundMessageBean extends TUIMessageBean {
     private String dataPath;
     private V2TIMSoundElem soundElem;
@@ -70,6 +67,8 @@ public class SoundMessageBean extends TUIMessageBean {
 
     /**
      * 获取多媒体消息的保存路径
+     * 
+     * Get the save path of multimedia messages
      *
      * @return
      */
@@ -79,6 +78,8 @@ public class SoundMessageBean extends TUIMessageBean {
 
     /**
      * 设置多媒体消息的保存路径
+     * 
+     * Set the save path of multimedia messages
      *
      * @param dataPath
      */

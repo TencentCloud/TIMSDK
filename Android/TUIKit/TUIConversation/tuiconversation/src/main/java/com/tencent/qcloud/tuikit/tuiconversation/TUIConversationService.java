@@ -22,6 +22,7 @@ import com.tencent.qcloud.tuikit.tuiconversation.util.TUIConversationLog;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -32,8 +33,10 @@ public class TUIConversationService extends ServiceInitializer implements ITUICo
     public static TUIConversationService getInstance() {
         return instance;
     }
+    private boolean syncFinished = false;
 
     private WeakReference<ConversationEventListener> conversationEventListener;
+    private final List<WeakReference<ConversationEventListener>> conversationEventListenerList = new ArrayList<>();
 
     @Override
     public void init(Context context) {
@@ -48,18 +51,14 @@ public class TUIConversationService extends ServiceInitializer implements ITUICo
     }
 
     private void initEvent() {
-        // 退群通知
         TUICore.registerEvent(TUIConstants.TUIGroup.EVENT_GROUP, TUIConstants.TUIGroup.EVENT_SUB_KEY_EXIT_GROUP, this);
-        // 群成员被踢通知
         TUICore.registerEvent(TUIConstants.TUIGroup.EVENT_GROUP, TUIConstants.TUIGroup.EVENT_SUB_KEY_MEMBER_KICKED_GROUP, this);
-        // 群解散通知
         TUICore.registerEvent(TUIConstants.TUIGroup.EVENT_GROUP, TUIConstants.TUIGroup.EVENT_SUB_KEY_GROUP_DISMISS, this);
-        // 群被回收通知
         TUICore.registerEvent(TUIConstants.TUIGroup.EVENT_GROUP, TUIConstants.TUIGroup.EVENT_SUB_KEY_GROUP_RECYCLE, this);
-        // 好友备注修改通知
         TUICore.registerEvent(TUIConstants.TUIContact.EVENT_FRIEND_INFO_CHANGED, TUIConstants.TUIContact.EVENT_SUB_KEY_FRIEND_REMARK_CHANGED, this);
-        // 清空群消息通知
         TUICore.registerEvent(TUIConstants.TUIGroup.EVENT_GROUP, TUIConstants.TUIGroup.EVENT_SUB_KEY_CLEAR_MESSAGE, this);
+        TUICore.registerEvent(TUIConstants.TUIContact.EVENT_USER, TUIConstants.TUIContact.EVENT_SUB_KEY_CLEAR_MESSAGE, this);
+        TUICore.registerEvent(TUIConstants.TUIChat.EVENT_KEY_RECEIVE_MESSAGE, TUIConstants.TUIChat.EVENT_SUB_KEY_CONVERSATION_ID, this);
     }
 
     @Override
@@ -100,7 +99,12 @@ public class TUIConversationService extends ServiceInitializer implements ITUICo
             TUICore.notifyEvent(TUIConstants.TUIConversation.EVENT_UNREAD, TUIConstants.TUIConversation.EVENT_SUB_KEY_UNREAD_CHANGED, unreadMap);
         } else if (TextUtils.equals(TUIConstants.TUIConversation.METHOD_DELETE_CONVERSATION, method)) {
             String conversationId = (String) param.get(TUIConstants.TUIConversation.CONVERSATION_ID);
-            conversationEventListener.deleteConversation(conversationId);
+            conversationEventListener.clearFoldMarkAndDeleteConversation(conversationId);
+
+            List<ConversationEventListener> conversationEventObserverList = getConversationEventListenerList();
+            for(ConversationEventListener conversationEventObserver : conversationEventObserverList) {
+                conversationEventObserver.clearFoldMarkAndDeleteConversation(conversationId);
+            }
         }
         return result;
     }
@@ -119,6 +123,10 @@ public class TUIConversationService extends ServiceInitializer implements ITUICo
                 if (eventListener != null) {
                     eventListener.deleteConversation(groupId, true);
                 }
+                List<ConversationEventListener> conversationEventObserverList = getConversationEventListenerList();
+                for(ConversationEventListener conversationEventObserver : conversationEventObserverList) {
+                    conversationEventObserver.deleteConversation(groupId, true);
+                }
             } else if (TextUtils.equals(subKey, TUIConstants.TUIGroup.EVENT_SUB_KEY_MEMBER_KICKED_GROUP)) {
                 if (param == null) {
                     return;
@@ -134,6 +142,10 @@ public class TUIConversationService extends ServiceInitializer implements ITUICo
                         if (eventListener != null) {
                             eventListener.deleteConversation(groupId, true);
                         }
+                        List<ConversationEventListener> conversationEventObserverList = getConversationEventListenerList();
+                        for(ConversationEventListener conversationEventObserver : conversationEventObserverList) {
+                            conversationEventObserver.deleteConversation(groupId, true);
+                        }
                         break;
                     }
                 }
@@ -142,6 +154,25 @@ public class TUIConversationService extends ServiceInitializer implements ITUICo
                 ConversationEventListener eventListener = getConversationEventListener();
                 if (eventListener != null) {
                     eventListener.clearConversationMessage(groupId, true);
+                }
+                List<ConversationEventListener> conversationEventObserverList = getConversationEventListenerList();
+                for(ConversationEventListener conversationEventObserver : conversationEventObserverList) {
+                    conversationEventObserver.clearConversationMessage(groupId, true);
+                }
+            }
+        } else if (key.equals(TUIConstants.TUIContact.EVENT_USER)) {
+            if (subKey.equals(TUIConstants.TUIContact.EVENT_SUB_KEY_CLEAR_MESSAGE)) {
+                if (param == null || param.isEmpty()) {
+                    return;
+                }
+                String userID = (String) getOrDefault(param.get(TUIConstants.TUIContact.FRIEND_ID), "");
+                ConversationEventListener eventListener = getConversationEventListener();
+                if (eventListener != null) {
+                    eventListener.clearConversationMessage(userID, false);
+                }
+                List<ConversationEventListener> conversationEventObserverList = getConversationEventListenerList();
+                for(ConversationEventListener conversationEventObserver : conversationEventObserverList) {
+                    conversationEventObserver.clearConversationMessage(userID, false);
                 }
             }
         } else if (key.equals(TUIConstants.TUIContact.EVENT_FRIEND_INFO_CHANGED)) {
@@ -156,7 +187,32 @@ public class TUIConversationService extends ServiceInitializer implements ITUICo
                 String id = (String) param.get(TUIConstants.TUIContact.FRIEND_ID);
                 String remark = (String) param.get(TUIConstants.TUIContact.FRIEND_REMARK);
                 conversationEventListener.onFriendRemarkChanged(id ,remark);
+
+                List<ConversationEventListener> conversationEventObserverList = getConversationEventListenerList();
+                for(ConversationEventListener conversationEventObserver : conversationEventObserverList) {
+                    conversationEventObserver.onFriendRemarkChanged(id, remark);
+                }
             }
+        } else if (key.equals(TUIConstants.TUIChat.EVENT_KEY_RECEIVE_MESSAGE)) {
+            if (subKey.equals(TUIConstants.TUIChat.EVENT_SUB_KEY_CONVERSATION_ID)) {
+                if (param == null || param.isEmpty()) {
+                    return;
+                }
+                String conversationID = (String) param.get(TUIConstants.TUIChat.CONVERSATION_ID);
+                boolean isTypingMessage = false;
+                if (param.containsKey(TUIConstants.TUIChat.IS_TYPING_MESSAGE)) {
+                    isTypingMessage = (Boolean) param.get(TUIConstants.TUIChat.IS_TYPING_MESSAGE);
+                }
+                ConversationEventListener conversationEventListener = getInstance().getConversationEventListener();
+                if (conversationEventListener != null) {
+                    conversationEventListener.onReceiveMessage(conversationID, isTypingMessage);
+                }
+                List<ConversationEventListener> conversationEventObserverList = getConversationEventListenerList();
+                for(ConversationEventListener conversationEventObserver : conversationEventObserverList) {
+                    conversationEventObserver.onReceiveMessage(conversationID, isTypingMessage);
+                }
+            }
+
         }
     }
 
@@ -171,31 +227,54 @@ public class TUIConversationService extends ServiceInitializer implements ITUICo
         V2TIMManager.getConversationManager().addConversationListener(new V2TIMConversationListener() {
             @Override
             public void onSyncServerStart() {
+                syncFinished = false;
             }
 
             @Override
             public void onSyncServerFinish() {
+                ConversationEventListener conversationEventListener = getInstance().getConversationEventListener();
+                if (conversationEventListener != null) {
+                    conversationEventListener.onSyncServerFinish();
+                }
+
+                List<ConversationEventListener> conversationEventObserverList = getConversationEventListenerList();
+                for(ConversationEventListener conversationEventObserver : conversationEventObserverList) {
+                    conversationEventObserver.onSyncServerFinish();
+                }
+
+                syncFinished = true;
             }
 
             @Override
             public void onSyncServerFailed() {
+                syncFinished = false;
             }
 
             @Override
             public void onNewConversation(List<V2TIMConversation> conversationList) {
                 ConversationEventListener conversationEventListener = getInstance().getConversationEventListener();
+                List<ConversationInfo> conversationInfoList = ConversationUtils.convertV2TIMConversationList(conversationList);
                 if (conversationEventListener != null) {
-                    List<ConversationInfo> conversationInfoList = ConversationUtils.convertV2TIMConversationList(conversationList);
                     conversationEventListener.onNewConversation(conversationInfoList);
+                }
+
+                List<ConversationEventListener> conversationEventObserverList = getConversationEventListenerList();
+                for(ConversationEventListener conversationEventObserver : conversationEventObserverList) {
+                    conversationEventObserver.onNewConversation(conversationInfoList);
                 }
             }
 
             @Override
             public void onConversationChanged(List<V2TIMConversation> conversationList) {
                 ConversationEventListener conversationEventListener = getInstance().getConversationEventListener();
+                List<ConversationInfo> conversationInfoList = ConversationUtils.convertV2TIMConversationList(conversationList);
                 if (conversationEventListener != null) {
-                    List<ConversationInfo> conversationInfoList = ConversationUtils.convertV2TIMConversationList(conversationList);
                     conversationEventListener.onConversationChanged(conversationInfoList);
+                }
+
+                List<ConversationEventListener> conversationEventObserverList = getConversationEventListenerList();
+                for(ConversationEventListener conversationEventObserver : conversationEventObserverList) {
+                    conversationEventObserver.onConversationChanged(conversationInfoList);
                 }
             }
 
@@ -205,6 +284,11 @@ public class TUIConversationService extends ServiceInitializer implements ITUICo
                 if (conversationEventListener != null) {
                     conversationEventListener.updateTotalUnreadMessageCount(totalUnreadCount);
                 }
+                List<ConversationEventListener> conversationEventObserverList = getConversationEventListenerList();
+                for(ConversationEventListener conversationEventObserver : conversationEventObserverList) {
+                    conversationEventObserver.updateTotalUnreadMessageCount(totalUnreadCount);
+                }
+
                 HashMap<String, Object> param = new HashMap<>();
                 param.put(TUIConstants.TUIConversation.TOTAL_UNREAD_COUNT, totalUnreadCount);
                 TUICore.notifyEvent(TUIConstants.TUIConversation.EVENT_UNREAD, TUIConstants.TUIConversation.EVENT_SUB_KEY_UNREAD_CHANGED, param);
@@ -218,13 +302,47 @@ public class TUIConversationService extends ServiceInitializer implements ITUICo
                 if (conversationEventListener != null) {
                     conversationEventListener.onUserStatusChanged(userStatusList);
                 }
+                List<ConversationEventListener> conversationEventObserverList = getConversationEventListenerList();
+                for(ConversationEventListener conversationEventObserver : conversationEventObserverList) {
+                    conversationEventObserver.onUserStatusChanged(userStatusList);
+                }
             }
         };
         V2TIMManager.getInstance().addIMSDKListener(v2TIMSDKListener);
     }
 
+    public void addConversationEventListener(ConversationEventListener conversationEventListener) {
+        if (conversationEventListener == null) {
+            return;
+        }
+        for (WeakReference<ConversationEventListener> listenerWeakReference : conversationEventListenerList) {
+            if (listenerWeakReference.get() == conversationEventListener) {
+                return;
+            }
+        }
+        conversationEventListenerList.add(new WeakReference<>(conversationEventListener));
+    }
+
+    public List<ConversationEventListener> getConversationEventListenerList() {
+        List<ConversationEventListener> listeners = new ArrayList<>();
+        Iterator<WeakReference<ConversationEventListener>> iterator = conversationEventListenerList.listIterator();
+        while(iterator.hasNext()) {
+            WeakReference<ConversationEventListener> listenerWeakReference = iterator.next();
+            ConversationEventListener listener = listenerWeakReference.get();
+            if (listener == null) {
+                iterator.remove();
+            } else {
+                listeners.add(listener);
+            }
+        }
+        return listeners;
+    }
+
     public void setConversationEventListener(ConversationEventListener conversationManagerKit) {
         this.conversationEventListener = new WeakReference<>(conversationManagerKit);
+        if (syncFinished) {
+            conversationManagerKit.onSyncServerFinish();
+        }
     }
 
     public ConversationEventListener getConversationEventListener() {
@@ -232,5 +350,9 @@ public class TUIConversationService extends ServiceInitializer implements ITUICo
             return conversationEventListener.get();
         }
         return null;
+    }
+
+    public void addMessageListener() {
+
     }
 }

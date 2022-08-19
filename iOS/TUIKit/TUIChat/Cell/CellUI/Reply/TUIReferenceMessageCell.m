@@ -30,7 +30,7 @@
 #import "TUITextMessageCell.h"
 
 @interface TUIReferenceMessageCell ()<UITextViewDelegate>
-// 当前原始消息的引用视图
+
 @property (nonatomic, strong) TUIReplyQuoteView *currentOriginView;
 
 @property (nonatomic, strong) NSMutableDictionary<NSString *, TUIReplyQuoteView *> *customOriginViewsCache;
@@ -50,9 +50,7 @@
 
 - (void)setupViews
 {
-    //新回复内容
     [self setupContentTextView];
-    //引用内容
     [self.quoteView addSubview:self.senderLabel];
     [self.contentView addSubview:self.quoteView];
         
@@ -66,7 +64,7 @@
     self.textView.editable = NO;
     self.textView.delegate = self;
     self.textView.font = [UIFont systemFontOfSize:16.0];
-    self.textView.textColor = TUIChatDynamicColor(@"chat_reply_message_content_text_color", @"#000000");
+    self.textView.textColor = TUIChatDynamicColor(@"chat_reference_message_content_text_color", @"#000000");
 
     [self.bubbleView addSubview:self.textView];
 }
@@ -92,29 +90,26 @@
 
 - (void)updateUI:(TUIReferenceMessageCellData *)referenceData
 {
-    // 获取当前应该显示的视图
     self.currentOriginView = [self getCustomOriginView:referenceData.originCellData];
     [self hiddenAllCustomOriginViews:YES];
     self.currentOriginView.hidden = NO;
 
-    // 填充数据
     [self.currentOriginView fillWithData:referenceData.quoteData];
     
-    //回复内容
     self.textView.frame = (CGRect){.origin = self.referenceData.textOrigin, .size = self.referenceData.textSize};
     
     if (referenceData.direction == MsgDirectionIncoming) {
         self.textView.textColor =
-        TUIChatDynamicColor(@"chat_reply_message_content_recv_text_color", @"#000000");
+        TUIChatDynamicColor(@"chat_reference_message_content_recv_text_color", @"#000000");
         self.senderLabel.textColor =
-        TUIChatDynamicColor(@"chat_reply_message_quoteView_recv_text_color", @"#888888");
-        self.quoteView.backgroundColor = TUIChatDynamicColor(@"chat_reply_message_quoteView_bg_color", @"#4444440c");
+        TUIChatDynamicColor(@"chat_reference_message_quoteView_recv_text_color", @"#888888");
+        self.quoteView.backgroundColor = TUIChatDynamicColor(@"chat_reference_message_quoteView_bg_color", @"#4444440c");
     } else {
         self.textView.textColor =
-        TUIChatDynamicColor(@"chat_reply_message_content_text_color", @"#000000");
+        TUIChatDynamicColor(@"chat_reference_message_content_text_color", @"#000000");
         self.senderLabel.textColor =
-        TUIChatDynamicColor(@"chat_reply_message_quoteView_text_color", @"#888888");
-        self.quoteView.backgroundColor = TUIChatDynamicColor(@"chat_reply_message_quoteView_bg_color", @"#4444440c");
+        TUIChatDynamicColor(@"chat_reference_message_quoteView_text_color", @"#888888");
+        self.quoteView.backgroundColor = TUIChatDynamicColor(@"chat_reference_message_quoteView_bg_color", @"#4444440c");
     }
     if (referenceData.textColor) {
         self.textView.textColor = referenceData.textColor;
@@ -129,7 +124,6 @@
     self.senderLabel.mm_w = self.referenceData.senderSize.width + 4;
     self.senderLabel.mm_h = self.referenceData.senderSize.height;
     
-    // 调整布局
     self.quoteView.mm_w = self.referenceData.quoteSize.width;
     self.quoteView.mm_h = self.referenceData.quoteSize.height;
     self.quoteView.mm_bottom(self.container.mm_b- self.quoteView.mm_h -6);
@@ -158,8 +152,6 @@
 
 - (TUIReplyQuoteView *)getCustomOriginView:(TUIMessageCellData *)originCellData
 {
-    
-    // 如果原始消息不存在，默认当成文本
     NSString *reuseId = originCellData?NSStringFromClass(originCellData.class):NSStringFromClass(TUITextMessageCellData.class);
     TUIReplyQuoteView *view = nil;
     BOOL reuse = NO;
@@ -176,7 +168,6 @@
     }
     
     if (view == nil) {
-        // 外部未实现，默认使用文本
         TUITextReplyQuoteView* quoteView = [[TUITextReplyQuoteView alloc] init];
         view = quoteView;
     }
@@ -185,11 +176,11 @@
         TUITextReplyQuoteView* quoteView = (TUITextReplyQuoteView*)view;
         if (self.referenceData.direction == MsgDirectionIncoming) {
             quoteView.textLabel.textColor =
-            TUIChatDynamicColor(@"chat_reply_message_quoteView_recv_text_color", @"#888888");
+            TUIChatDynamicColor(@"chat_reference_message_quoteView_recv_text_color", @"#888888");
         }
         else {
             quoteView.textLabel.textColor =
-            TUIChatDynamicColor(@"chat_reply_message_quoteView_text_color", @"#888888");
+            TUIChatDynamicColor(@"chat_reference_message_quoteView_text_color", @"#888888");
         }
     }
     else if ([view isKindOfClass:[TUIMergeReplyQuoteView class]]) {
@@ -197,12 +188,12 @@
         if (self.referenceData.direction == MsgDirectionIncoming) {
             quoteView.titleLabel.textColor =
             quoteView.subTitleLabel.textColor =
-            TUIChatDynamicColor(@"chat_reply_message_quoteView_recv_text_color", @"#888888");
+            TUIChatDynamicColor(@"chat_reference_message_quoteView_recv_text_color", @"#888888");
         }
         else {
             quoteView.titleLabel.textColor =
             quoteView.subTitleLabel.textColor =
-            TUIChatDynamicColor(@"chat_reply_message_quoteView_text_color", @"#888888");
+            TUIChatDynamicColor(@"chat_reference_message_quoteView_text_color", @"#888888");
         }
     }
     
@@ -236,7 +227,7 @@
         _senderLabel = [[UILabel alloc] init];
         _senderLabel.text = @"harvy:";
         _senderLabel.font = [UIFont systemFontOfSize:12.0];
-        _senderLabel.textColor = TUIChatDynamicColor(@"chat_reply_message_sender_text_color", @"#888888");
+        _senderLabel.textColor = TUIChatDynamicColor(@"chat_reference_message_sender_text_color", @"#888888");
     }
     return _senderLabel;
 }
@@ -245,7 +236,7 @@
 {
     if (_quoteView == nil) {
         _quoteView = [[UIView alloc] init];
-        _quoteView.backgroundColor = TUIChatDynamicColor(@"chat_reply_message_quoteView_bg_color", @"#4444440c");
+        _quoteView.backgroundColor = TUIChatDynamicColor(@"chat_reference_message_quoteView_bg_color", @"#4444440c");
         _quoteView.layer.cornerRadius = 4.0;
         _quoteView.layer.masksToBounds = YES;
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(quoteViewOnTap)];
@@ -288,10 +279,8 @@
             NSValue *key = emojiLocation.allKeys.firstObject;
             NSAttributedString *originStr = emojiLocation[key];
             NSRange currentRange = [key rangeValue];
-            // 每次 emoji 替换后，字符串的长度都会发生变化，后面 emoji 的实际 location 也要相应改变
             currentRange.location += offsetLocation;
             if (currentRange.location >= textView.selectedRange.location) {
-                // selectedRange 如果发生了变化，emoji 实际 location 也要相应改变
                 currentRange.location -= textView.selectedRange.location;
                 if (currentRange.location + currentRange.length <= attributedString.length) {
                     [attributedString replaceCharactersInRange:currentRange withAttributedString:originStr];

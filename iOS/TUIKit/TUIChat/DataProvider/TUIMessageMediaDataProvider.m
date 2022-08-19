@@ -10,11 +10,14 @@
 #import "TUIImageMessageCellData.h"
 #import "TUIVideoMessageCellData.h"
 
-/// 消息拉取方式
+/**
+ * 消息拉取方式
+ * Message pull method
+ */
 typedef NS_ENUM(NSInteger, TUIMediaLoadType){
-    TUIMediaLoadType_Older                 = 1,  ///< 拉取更早的富媒体消息
-    TUIMediaLoadType_Newer                 = 2,  ///< 拉取更新的富媒体消息
-    TUIMediaLoadType_Older_And_Newer       = 3,  ///< 拉取更早和更新的富媒体消息
+    TUIMediaLoadType_Older                 = 1,
+    TUIMediaLoadType_Newer                 = 2,
+    TUIMediaLoadType_Older_And_Newer       = 3,
 };
 
 @interface TUIMessageMediaDataProvider()
@@ -42,7 +45,10 @@ typedef NS_ENUM(NSInteger, TUIMediaLoadType){
 - (void)loadMediaWithMessage:(V2TIMMessage *)curMessage {
     self.loadMessage = curMessage;
     self.loadType = TUIMediaLoadType_Older_And_Newer;
-    // 消息处于发送中的时候，通过消息拉取前后视频（图片）消息会异常，这里暂时只展示当前消息。
+    /**
+     * 消息处于发送中的时候，通过消息拉取前后视频（图片）消息会异常，这里暂时只展示当前消息
+     * When the message is being sent, an exception will occur when pulling the before and after video (picture) messages through the current message. Only the current message is displayed here for the time being.
+     */
     if (self.loadMessage.status != V2TIM_MSG_STATUS_SENDING) {
         [self loadMedia];
     } else {
@@ -122,7 +128,7 @@ typedef NS_ENUM(NSInteger, TUIMediaLoadType){
             SucceedBlock:(void(^)(NSArray<V2TIMMessage *> * _Nonnull olders, NSArray<V2TIMMessage *> * _Nonnull newers))SucceedBlock
                FailBlock:(V2TIMFail)FailBlock {
     if(self.isLoadingData) {
-        FailBlock(ERR_SUCC, @"正在加载中");
+        FailBlock(ERR_SUCC, @"loading");
         return;
     }
     self.isLoadingData = YES;
@@ -135,7 +141,10 @@ typedef NS_ENUM(NSInteger, TUIMediaLoadType){
     __block int failCode = 0;
     __block NSString *failDesc = nil;
     
-    // 以定位消息为起点，加载最旧的20条富媒体消息
+    /**
+     * 以定位消息为起点，加载最旧的20条富媒体消息
+     * Loading the oldest 20 media messages starting from the positioning message
+     */
     if(TUIMediaLoadType_Older == type || TUIMediaLoadType_Older_And_Newer == type)
     {
         dispatch_group_enter(group);
@@ -159,7 +168,11 @@ typedef NS_ENUM(NSInteger, TUIMediaLoadType){
             dispatch_group_leave(group);
         }];
     }
-    // 以定位消息为起点，加载最新的20条富媒体消息
+
+    /**
+     * 以定位消息为起点，加载最新的20条富媒体消息
+     * Load the latest 20 rich media messages starting from the positioning message
+     */
     if(TUIMediaLoadType_Newer == type || TUIMediaLoadType_Older_And_Newer == type)
     {
         dispatch_group_enter(group);

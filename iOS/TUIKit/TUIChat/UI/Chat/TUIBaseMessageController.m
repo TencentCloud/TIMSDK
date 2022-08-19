@@ -3,7 +3,7 @@
 //  UIKit
 //
 //  Created by annidyfeng on 2019/7/1.
-//  Copyright © 2018年 Tencent. All rights reserved.
+//  Copyright © 2022 Tencent. All rights reserved.
 //
 
 #import "TUIBaseMessageController.h"
@@ -106,7 +106,11 @@ TUIMessageDataProviderDataSource>
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationEnterBackground) name: UIApplicationDidEnterBackgroundNotification object:nil];
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapViewController)];
-    tap.cancelsTouchesInView = NO ;//解决触摸事件没有往下传递，导致手势和collectionView didselect冲突
+    /**
+     * 解决触摸事件没有往下传递，导致手势和 collectionView didselect 冲突的问题
+     * Solve the problem that the touch event is not passed down, causing the gesture to conflict with the collectionView didselect
+     */
+    tap.cancelsTouchesInView = NO ;
     [self.view addGestureRecognizer:tap];
     
     self.tableView.scrollsToTop = NO;
@@ -127,7 +131,6 @@ TUIMessageDataProviderDataSource>
     [self.tableView registerClass:[TUIReplyMessageCell class] forCellReuseIdentifier:TReplyMessageCell_ReuseId];
     [self.tableView registerClass:[TUIReferenceMessageCell class] forCellReuseIdentifier:TUIReferenceMessageCell_ReuseId];
     
-    // 自定义消息注册 cell
     NSArray *customMessageInfo = [TUIMessageDataProvider getCustomMessageInfo];
     for (NSDictionary *messageInfo in customMessageInfo) {
         NSString *bussinessID = messageInfo[BussinessID];
@@ -144,7 +147,8 @@ TUIMessageDataProviderDataSource>
 }
 
 #pragma mark - Data Provider
-- (void)setConversation:(TUIChatConversationModel *)conversationData {
+- (void)setConversation:(TUIChatConversationModel *)conversationData
+{
     self.conversationData = conversationData;
     if (!self.messageDataProvider) {
         self.messageDataProvider = [[TUIMessageDataProvider alloc] initWithConversationModel:conversationData];
@@ -169,7 +173,7 @@ TUIMessageDataProviderDataSource>
             [weakSelf.tableView reloadData];
             [weakSelf.tableView layoutIfNeeded];
             
-            if(isFirstLoad) {   // 第一次加载
+            if(isFirstLoad) {
                 [weakSelf scrollToBottom:NO];
             } else {
                 CGFloat visibleHeight = 0;
@@ -189,6 +193,12 @@ TUIMessageDataProviderDataSource>
     }];
 }
 
+- (void)clearUImsg {
+    [self.messageDataProvider clearUIMsgList];
+    [self.tableView reloadData];
+    [self.tableView layoutIfNeeded];
+}
+
 #pragma mark - Event Response
 - (void)scrollToBottom:(BOOL)animate
 {
@@ -206,7 +216,8 @@ TUIMessageDataProviderDataSource>
     }
 }
 
-- (void)sendUIMessage:(TUIMessageCellData *)cellData {
+- (void)sendUIMessage:(TUIMessageCellData *)cellData
+{
     @weakify(self);
     cellData.innerMessage.needReadReceipt = self.isMsgNeedReadReceipt;
     [self.messageDataProvider sendUIMsg:cellData
@@ -253,7 +264,6 @@ TUIMessageDataProviderDataSource>
     }
 }
 
-/// 更新发送的状态
 - (void)changeMsg:(TUIMessageCellData *)msg status:(TMsgStatus)status
 {
     msg.status = status;
@@ -262,7 +272,7 @@ TUIMessageDataProviderDataSource>
         TUIMessageCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]];
         [cell fillWithData:msg];
     } else {
-        NSLog(@"缺少cell");
+        NSLog(@"lack of cell");
     }
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"kTUINotifyMessageStatusChanged" object:nil userInfo:@{
@@ -273,13 +283,15 @@ TUIMessageDataProviderDataSource>
 }
 
 #pragma mark - TUIMessageDataProviderDataSource
-- (void)dataProviderDataSourceWillChange:(TUIMessageDataProvider *)dataProvider {
+- (void)dataProviderDataSourceWillChange:(TUIMessageDataProvider *)dataProvider
+{
     [self.tableView beginUpdates];
 }
 - (void)dataProviderDataSourceChange:(TUIMessageDataProvider *)dataProvider
                             withType:(TUIMessageDataProviderDataSourceChangeType)type
                              atIndex:(NSUInteger)index
-                           animation:(BOOL)animation {
+                           animation:(BOOL)animation
+{
     switch (type) {
         case TUIMessageDataProviderDataSourceChangeTypeInsert:
             [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:animation? UITableViewRowAnimationFade:UITableViewRowAnimationNone];
@@ -294,23 +306,23 @@ TUIMessageDataProviderDataSource>
             break;
     }
 }
-- (void)dataProviderDataSourceDidChange:(TUIMessageDataProvider *)dataProvider {
+- (void)dataProviderDataSourceDidChange:(TUIMessageDataProvider *)dataProvider
+{
     [self.tableView endUpdates];
 }
 
 - (nullable TUIMessageCellData *)dataProvider:(TUIMessageDataProvider *)dataProvider
-               CustomCellDataFromNewIMMessage:(V2TIMMessage *)msg {
+               CustomCellDataFromNewIMMessage:(V2TIMMessage *)msg
+{
     if (![msg.userID isEqualToString:self.conversationData.userID]
         && ![msg.groupID isEqualToString:self.conversationData.groupID]) {
         return nil;
     }
     
-    // 撤回消息, 不可自定义
     if (msg.status == V2TIM_MSG_STATUS_LOCAL_REVOKED) {
         return nil;
     }
     
-    // 自定义消息
     if ([self.delegate respondsToSelector:@selector(messageController:onNewMessage:)]) {
         TUIMessageCellData *customCellData = [self.delegate messageController:self onNewMessage:msg];
         if (customCellData) {
@@ -323,14 +335,17 @@ TUIMessageDataProviderDataSource>
 
 - (void)dataProvider:(TUIMessageDataProvider *)dataProvider
 ReceiveReadMsgWithUserID:(NSString *)userId
-                Time:(time_t)timestamp {
+                Time:(time_t)timestamp
+{
 
     if (userId.length > 0 && [userId isEqualToString:self.conversationData.userID]) {
-        //性能优化
         for (int i = 0; i < self.messageDataProvider.uiMsgs.count; i++) {
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.messageDataProvider.uiMsgs.count - 1 - i inSection:0];
             TUIMessageCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-            //通过回调时间戳判定当前的未读是否需要改为已读
+            /**
+             * 通过回调时间戳判定当前的未读状态是否需要改为已读状态
+             * Determine whether the current unread needs to be changed to read by the callback timestamp
+             */
             time_t msgTime = [cell.messageData.innerMessage.timestamp timeIntervalSince1970];
             if (msgTime <= timestamp
                 && ![cell.readReceiptLabel.text isEqualToString:TUIKitLocalizableString(Read)]) {
@@ -344,7 +359,8 @@ ReceiveReadMsgWithUserID:(NSString *)userId
 ReceiveReadMsgWithGroupID:(NSString *)groupID
                msgID:(NSString *)msgID
            readCount:(NSUInteger)readCount
-         unreadCount:(NSUInteger)unreadCount {
+         unreadCount:(NSUInteger)unreadCount
+{
     if (groupID != nil && ![groupID isEqualToString:self.conversationData.groupID]) {
         return;
     }
@@ -358,8 +374,12 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 }
 
 - (void)dataProvider:(TUIMessageDataProvider *)dataProvider
-     ReceiveNewUIMsg:(TUIMessageCellData *)uiMsg {
-    // 查看历史消息的时候根据当前 contentOffset 判断是否需要滑动到底部
+     ReceiveNewUIMsg:(TUIMessageCellData *)uiMsg
+{
+    /**
+     * 查看历史消息的时候根据当前 contentOffset 判断是否需要滑动到底部
+     * When viewing historical messages, judge whether you need to slide to the bottom according to the current contentOffset
+     */
     if (self.tableView.contentSize.height - self.tableView.contentOffset.y < Screen_Height * 1.5) {
         [self scrollToBottom:YES];
         if (self.isInVC && self.isActive) {
@@ -376,15 +396,22 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 
 
 #pragma mark - Private
-- (void)limitReadReport {
+- (void)limitReadReport
+{
     static uint64_t lastTs = 0;
     uint64_t curTs = [[NSDate date] timeIntervalSince1970];
-    // 超过 1s && 非首次 立即上报已读
+    /**
+     * 超过 1s && 非首次，立即上报已读
+     * More than 1s && Not the first time, report immediately
+     */
     if (curTs - lastTs >= 1 && lastTs) {
         lastTs = curTs;
         [self readReport];
     } else {
-        // 低于 1s || 首次  延迟 1s 合并上报
+        /**
+         * 低于 1s || 首次  延迟 1s 合并上报
+         * Less than 1s || First time, delay 1s and merge report
+         */
         static BOOL delayReport = NO;
         if (delayReport) {
             return;
@@ -409,24 +436,51 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
         if (groupID.length > 0) {
             [TUIMessageDataProvider markGroupMessageAsRead:groupID succ:nil fail:nil];
         }
+
+        NSString *conversationID = @"";
+        
+        if (IS_NOT_EMPTY_NSSTRING(userID)) {
+            conversationID = [NSString stringWithFormat:@"c2c_%@", userID];
+        }
+        
+        if (IS_NOT_EMPTY_NSSTRING(groupID)) {
+            conversationID = [NSString stringWithFormat:@"group_%@",groupID];
+        }
+        
+        if (IS_NOT_EMPTY_NSSTRING(self.conversationData.conversationID)) {
+            conversationID = self.conversationData.conversationID;
+        }
+        if (conversationID.length > 0) {
+            [TUIMessageDataProvider markConversationAsUndead:@[conversationID] enableMark:NO];
+        }
+        
     }
 }
 
 /**
  * 接收方需发送可见消息已读回执的时机：
  * 1、messageVC 可见时。在 [self viewDidAppear:] 中获得通知。
- *
  * 2、代码调用 [self scrollToBottom:] 后 scrollView 自动跳转到底部停止时（例如点击右下角 "x 条新消息" tips）。在 [UIScrollViewDelegate scrollViewDidEndScrollingAnimation:] 中获得通知。
- * - 注意需要借助 scrollView 的状态来准确判断 scrollView 是否真的停止了滑动。
- *
+ *    + 注意需要借助 scrollView 的状态来准确判断 scrollView 是否真的停止了滑动。
  * 3、用户连续地拖拽 scrollView 滑动查看消息时。在 [UIScrollViewDelegate scrollViewDidScroll:] 中得到通知。
- * - 注意此处要判断 scrollView 的滑动是否由用户手势触发（而不是自动代码触发）。因此借助 self.scrollingTriggeredByUser 标志位来区分。
- * - self.scrollingTriggeredByUser 的更新逻辑：
- * -- 用户手指触碰到屏幕并且开始拖拽时（scrollViewWillBeginDragging:）置 YES；
- * -- 用户手指以一定的加速度拖拽后离开屏幕，屏幕自动停止滑动时（scrollViewDidEndDecelerating:）置 NO；
- * -- 用户手指滑动后不施加加速度，直接抬起手指时（scrollViewDidEndDragging:）置 NO。
- *
+ *    + 注意此处要判断 scrollView 的滑动是否由用户手势触发（而不是自动代码触发）。因此借助 self.scrollingTriggeredByUser 标志位来区分。
+ *    + self.scrollingTriggeredByUser 的更新逻辑：
+ *      - 用户手指触碰到屏幕并且开始拖拽时（scrollViewWillBeginDragging:）置 YES；
+ *      - 用户手指以一定的加速度拖拽后离开屏幕，屏幕自动停止滑动时（scrollViewDidEndDecelerating:）置 NO；
+ *      - 用户手指滑动后不施加加速度，直接抬起手指时（scrollViewDidEndDragging:）置 NO。
  * 4、用户停留在最新消息界面，此时收到了新消息时。在 [self dataProvider:ReceiveNewUIMsg:] 中得到通知。
+ *
+ * When the receiver sends a visible message read receipt:
+ * 1. The time when messageVC is visible.  You will be notified when [self viewDidAppear:] is invoked
+ * 2. The time when scrollview scrolled to bottom by called [self scrollToBottom:] (For example, click the "x new message" tips in the lower right corner). You will be notified when  [UIScrollViewDelegate scrollViewDidEndScrollingAnimation:]  is invoked.
+ *   + Note that you need to use the state of the scrollView to accurately determine whether the scrollView has really stopped sliding.
+ * 3. The time when the user drags the scrollView continuously to view the message. You will be notified when [UIScrollViewDelegate scrollViewDidScroll:]  is invoked.
+ *   + Note here to determine whether the scrolling of the scrollView is triggered by user gestures (rather than automatic code triggers). So use the self.scrollingTriggeredByUser flag to distinguish.
+ *   + The update logic of self.scrollingTriggeredByUser is as follows:
+ *     - Set YES when the user's finger touches the screen and starts to drag (scrollViewWillBeginDragging:);
+ *     - When the user's finger drags at a certain acceleration and leaves the screen, when the screen automatically stops sliding (scrollViewDidEndDecelerating:), set to NO;
+ *     - No acceleration is applied after the user's finger slides, and when the user lifts the finger directly (scrollViewDidEndDragging:), set NO.
+ * 4. When the user stays in the latest message interface and receives a new message at this time. Get notified in [self dataProvider:ReceiveNewUIMsg:] .
  */
 - (void)sendVisibleReadGroupMessages {
     if (self.isInVC && self.isActive) {
@@ -435,7 +489,8 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     }
 }
 
-- (NSRange)calcVisibleCellRange {
+- (NSRange)calcVisibleCellRange
+{
     NSArray *indexPaths = [self.tableView indexPathsForVisibleRows];
     if (indexPaths.count == 0) {
         return NSMakeRange(0, 0);
@@ -445,7 +500,8 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     return NSMakeRange(topmost.row, downmost.row - topmost.row + 1);
 }
 
-- (NSArray *)transferIndexFromRange:(NSRange)range {
+- (NSArray *)transferIndexFromRange:(NSRange)range
+{
     NSMutableArray *index = [NSMutableArray array];
     NSInteger start = range.location;
     for (int i = 0; i < range.length; i++) {
@@ -454,25 +510,28 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     return index;
 }
 
-- (void)hideKeyboardIfNeeded {
+- (void)hideKeyboardIfNeeded
+{
     [self.view endEditing:YES];
     [TUITool.applicationKeywindow endEditing:YES];
 }
 
 #pragma mark - UITableViewDelegate
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
     return self.messageDataProvider.uiMsgs.count;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
     return [self.messageDataProvider getCellDataHeightAtIndex:indexPath.row Width:Screen_Width];
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
     TUIMessageCellData *data = self.messageDataProvider.uiMsgs[indexPath.row];
     data.showCheckBox = self.showCheckBox && [self supportCheckBox:data];
     TUIMessageCell *cell = nil;
-    // 外部自定义消息
     if ([self.delegate respondsToSelector:@selector(messageController:onShowMessageData:)]) {
         cell = [self.delegate messageController:self onShowMessageData:data];
         if (cell) {
@@ -482,7 +541,7 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     }
     
     if (!data.reuseId) {
-        NSAssert(NO, @"无法解析当前cell");
+        NSAssert(NO, @"Unknow cell");
         return nil;
     }
     cell = [tableView dequeueReusableCellWithIdentifier:data.reuseId forIndexPath:indexPath];
@@ -492,7 +551,8 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     return cell;
 }
 
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
     TUIMessageCell *uiMsg = (TUIMessageCell *)cell;
     if ([uiMsg isKindOfClass:TUIMessageCell.class]
         && [self.delegate respondsToSelector:@selector(messageController:willDisplayCell:withData:)]) {
@@ -501,26 +561,30 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 }
 
 #pragma mark - UIScrollViewDelegate
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
     if (self.scrollingTriggeredByUser) {
         // only if the scrollView is dragged by user's finger to scroll, we need to send read receipts.
         [self sendVisibleReadGroupMessages];
     }
 }
 
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
     self.scrollingTriggeredByUser = YES;
     [self didTapViewController];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-    if ([self isScrollViewEndDragging:scrollView]) {
+    if ([self isScrollViewEndDragging:scrollView])
+    {
         // user presses on the scrolling scrollView and forces it to stop scrolling immediately.
         self.scrollingTriggeredByUser = NO;
     }
 }
 
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
     if ([self isScrollViewEndDecelerating:scrollView]) {
         // user drags the scrollView with a certain acceleration and makes a flick gesture, and scrollView will stop scrolling after decelerating.
         self.scrollingTriggeredByUser = NO;
@@ -534,11 +598,13 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     }
 }
 
-- (BOOL)isScrollViewEndDecelerating:(UIScrollView *)scrollView {
+- (BOOL)isScrollViewEndDecelerating:(UIScrollView *)scrollView
+{
     return scrollView.tracking == 0 && scrollView.dragging == 0 && scrollView.decelerating == 0;
 }
 
-- (BOOL)isScrollViewEndDragging:(UIScrollView *)scrollView {
+- (BOOL)isScrollViewEndDragging:(UIScrollView *)scrollView
+{
     return scrollView.tracking == 1 && scrollView.dragging == 0 && scrollView.decelerating == 0;
 }
 
@@ -547,7 +613,6 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 - (void)onSelectMessage:(TUIMessageCell *)cell
 {
     if (self.showCheckBox) {
-        // 如果是多选
         TUIMessageCellData *data = (TUIMessageCellData *)cell.data;
         data.selected = !data.selected;
         [self.tableView reloadData];
@@ -634,14 +699,16 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 {
     TUIMessageCellData *data = cell.messageData;
     if ([data isKindOfClass:[TUISystemMessageCellData class]]) {
-        // 系统消息不响应
         return;
     }
     
     [self tryShowGuidance];
     
     if ([data isKindOfClass:[TUITextMessageCellData class]]) {
-        // 文本消息选中状态的时候会默认 becomeFirstResponder 导致键盘消失，界面错乱，这里先收起已经弹出的键盘。
+        /**
+         * 文本消息选中状态的时候会默认 becomeFirstResponder 导致键盘消失，界面错乱，这里先收起已经弹出的键盘。
+         * When the text message is selected, it will becomeFirstResponder by default, causing the keyboard to disappear and the interface to be chaotic. Here, the keyboard that has popped up is put away first.
+         */
         TUITextMessageCell *textCell = (TUITextMessageCell *)cell;
         [textCell.textView becomeFirstResponder];
     }
@@ -754,11 +821,21 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     }
 
     CGRect frame = [UIApplication.sharedApplication.keyWindow convertRect:cell.container.frame fromView:cell];
-    [menu setArrawPosition:CGPointMake(frame.origin.x + frame.size.width * 0.5, frame.origin.y - 5)
+    
+    CGFloat topMarginiByCustomView = 0;
+   
+    if(_delegate && [_delegate respondsToSelector:@selector(getTopMarginByCustomView)]){
+        topMarginiByCustomView = [_delegate getTopMarginByCustomView];
+    }
+    
+    [menu setArrawPosition:CGPointMake(frame.origin.x + frame.size.width * 0.5, frame.origin.y - 5 - topMarginiByCustomView)
               adjustHeight:frame.size.height + 5];
     [menu showInView:self.tableView];
     
-    // 如果是文本类型消息，设置文本消息光标选中状态，如果文字不是全选状态，只保留复制和转发
+    /**
+     * 如果是文本类型消息，设置文本消息光标选中状态，如果文字不是全选状态，只保留复制和转发
+     * If it is a text type message, set the text message cursor selected state, if the text is not all selected state, only keep copy and forward
+     */
     if ([data isKindOfClass:[TUITextMessageCellData class]]) {
         TUITextMessageCell *textCell = (TUITextMessageCell *)cell;
         [textCell.textView selectAll:self];
@@ -815,7 +892,8 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     }
 }
 
-- (void)onLongSelectMessageAvatar:(TUIMessageCell *)cell {
+- (void)onLongSelectMessageAvatar:(TUIMessageCell *)cell
+{
     if(_delegate && [_delegate respondsToSelector:@selector(messageController:onLongSelectMessageAvatar:)]){
         [_delegate messageController:self onLongSelectMessageAvatar:cell];
     }
@@ -842,7 +920,8 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     }
 }
 
-- (void)onSelectReadReceipt:(TUIMessageCellData *)data {
+- (void)onSelectReadReceipt:(TUIMessageCellData *)data
+{
     @weakify(self)
     if (data.innerMessage.groupID.length > 0) {
         // Navigate to group message read VC. Should get members first.
@@ -879,15 +958,16 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     repliesDetailVC.parentPageDataProvider = self.messageDataProvider;
     __weak typeof(self) weakSelf = self;
     repliesDetailVC.willCloseCallback = ^(){
-        // 刷新下，主要是更新下全局的UI
         [weakSelf.tableView reloadData];
     };
 }
+
 - (void)onEmojiClickCallback:(TUIMessageCellData *)data faceName:(NSString *)faceName {
     if(self.delegate && [self.delegate respondsToSelector:@selector(messageController:modifyMessage:reactEmoji:)]){
         [self.delegate messageController:self modifyMessage:data reactEmoji:faceName];
     }
 }
+
 -(BOOL)canPerformAction:(SEL)action withSender:(id)sender
 {
     if (action == @selector(onDelete:) ||
@@ -933,7 +1013,10 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 - (void)onCopyMsg:(id)sender
 {
     NSString *content = @"";
-    // 文本消息要以光标实际选中的消息内容为准
+    /**
+     * 文本消息要以光标实际选中的消息内容为准
+     * The text message should be based on the content of the message actually selected by the cursor
+     */
     if ([sender isKindOfClass:[TUITextMessageCell class]]) {
         TUITextMessageCell *txtCell = (TUITextMessageCell *)sender;
         content = txtCell.selectContent;
@@ -951,7 +1034,13 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 
 - (void)onRevoke:(id)sender
 {
-    [self.messageDataProvider revokeUIMsg:self.menuUIMsg SuccBlock:nil FailBlock:^(int code, NSString *desc) {
+    @weakify(self)
+    [self.messageDataProvider revokeUIMsg:self.menuUIMsg SuccBlock:^{
+        @strongify(self)
+        if(self.delegate && [self.delegate respondsToSelector:@selector(didHideMenuInMessageController:)]){
+            [self.delegate didHideMenuInMessageController:self];
+        }
+    }  FailBlock:^(int code, NSString *desc) {
         NSAssert(NO, desc);
     }];
 }
@@ -963,10 +1052,8 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 
 - (void)onMulitSelect:(id)sender
 {
-    // 显示多选框
     [self enableMultiSelectedMode:YES];
     
-    // 默认选中当前点击的cell
     self.menuUIMsg.selected = YES;
     [self.tableView beginUpdates];
     NSInteger index = [self.messageDataProvider.uiMsgs indexOfObject:self.menuUIMsg];
@@ -987,39 +1074,31 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 
 - (void)onReply:(id)sender
 {
-    // 消息回复
     if (_delegate && [_delegate respondsToSelector:@selector(messageController:onRelyMessage:)]) {
         [_delegate messageController:self onRelyMessage:self.menuUIMsg];
     }
 }
 
-- (void)onReference:(id)sender {
-    // 消息引用
+- (void)onReference:(id)sender
+{
     if (_delegate && [_delegate respondsToSelector:@selector(messageController:onReferenceMessage:)]) {
         [_delegate messageController:self onReferenceMessage:self.menuUIMsg];
     }
 }
-// 是否支持多选
+
 - (BOOL)supportCheckBox:(TUIMessageCellData *)data
 {
-    // TODO: 应该通过接口来判断, 不应该写死
-    // 过滤掉不支持多选
     if ([data isKindOfClass:TUISystemMessageCellData.class]) {
         return NO;
     }
-    // 默认都支持多选
     return YES;
 }
 
-// 是否支持转发
 - (BOOL)supportRelay:(TUIMessageCellData *)data
 {
-    // TODO: 应该通过接口来判断, 不应该写死
-    // 过滤掉不支持转发
     if ([data isKindOfClass: TUIVoiceMessageCellData.class]) {
         return NO;
     }
-    // 默认都支持转发
     return YES;
 }
 
@@ -1044,7 +1123,6 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     for (TUIMessageCellData *data in self.messageDataProvider.uiMsgs) {
         if (data.selected) {
             if (filterUnsupported && ![self supportRelay:data]) {
-                // 过滤掉不支持转发
                 continue;
             }
             [arrayM addObject:data];
@@ -1150,12 +1228,10 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     [self hideKeyboardIfNeeded];
     TUIFileMessageCellData *fileData = cell.fileData;
     if (![fileData isLocalExist]) {
-        // 开始下载
         [fileData downloadFile];
         return;
     }
     
-    // 本地存在，直接打开
     TUIFileViewController *file = [[TUIFileViewController alloc] init];
     file.data = [cell fileData];
     [self.navigationController pushViewController:file animated:YES];
@@ -1170,20 +1246,21 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     relayVc.parentPageDataProvider = self.messageDataProvider;
     __weak typeof(self) weakSelf = self;
     relayVc.willCloseCallback = ^(){
-        // 刷新下，主要是更新下全局的UI
         [weakSelf.tableView reloadData];
     };
     [self.navigationController pushViewController:relayVc animated:YES];
 }
 
-- (void)showLinkMessage:(TUILinkCell *)cell {
+- (void)showLinkMessage:(TUILinkCell *)cell
+{
     TUILinkCellData *cellData = cell.customData;
     if (cellData.link) {
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:cellData.link]];
     }
 }
 
-- (void)showOrderMessage:(TUIOrderCell *)cell {
+- (void)showOrderMessage:(TUIOrderCell *)cell
+{
     TUIOrderCellData *cellData = cell.customData;
     if (cellData.link) {
         [TUITool openLinkWithURL:[NSURL URLWithString:cellData.link]];
@@ -1192,7 +1269,6 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 
 - (void)showReplyMessage:(TUIReplyMessageCell *)cell
 {
-    // 子类实现
 }
 
 - (void)showLiveMessage:(TUIGroupLiveMessageCell *)cell {

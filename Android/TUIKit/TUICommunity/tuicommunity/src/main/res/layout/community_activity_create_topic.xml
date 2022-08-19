@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.page.CreateTopicActivity">
+
+    <com.tencent.qcloud.tuicore.component.TitleBarLayout
+        android:id="@+id/create_topic_title"
+        app:title_bar_middle_title="@string/community_create_topic"
+        app:title_bar_can_return="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="24dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
+
+            <TextView
+                android:id="@+id/topic_name_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:text="@string/community_topic_name"
+                android:textColor="#666666"
+                android:textSize="14sp" />
+
+            <com.tencent.qcloud.tuikit.tuicommunity.component.TextCountView
+                android:id="@+id/topic_name_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/topic_name_label"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:textColor="#666666"
+                android:textSize="14sp"
+                app:bind_edit_text="@id/topic_name_edit"
+                app:limit_count="20"
+                tools:text="0/20" />
+
+            <EditText
+                android:id="@+id/topic_name_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/topic_name_label"
+                android:layout_marginTop="17dp"
+                android:background="@null"
+                android:textCursorDrawable="@drawable/core_edit_cursor"
+                android:textColorHint="#999999"
+                android:hint="@string/community_edit_tips_input"
+                android:textSize="16sp"
+                android:maxLength="20" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#FFEEEEEE"
+                android:layout_below="@id/topic_name_edit"
+                android:layout_marginTop="12dp" />
+
+            <TextView
+                android:id="@+id/topic_category_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/topic_name_edit"
+                android:layout_marginTop="24dp"
+                android:text="@string/community_topic_category" />
+
+            <com.tencent.qcloud.tuikit.tuicommunity.component.SettingsLinearView
+                android:id="@+id/topic_category_linear"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_below="@id/topic_category_label"
+                android:background="#00FFFFFF"
+                android:textColor="#666666"
+                android:textSize="14sp"
+                app:setting_is_show_bottom_line="true"
+                app:setting_name="@string/community_button_tips_select" />
+
+            <TextView
+                android:id="@+id/topic_type_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/topic_category_linear"
+                android:layout_marginTop="24dp"
+                android:text="@string/community_topic_type" />
+
+            <!-- text -->
+            <RelativeLayout
+                android:id="@+id/text_type_area"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/topic_type_label"
+                android:layout_marginTop="25dp">
+
+                <ImageView
+                    android:id="@+id/text_type_image"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="35dp"
+                    android:background="@drawable/community_topic_text_type_icon" />
+
+                <TextView
+                    android:id="@+id/text_type_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="8dp"
+                    android:layout_toEndOf="@id/text_type_image"
+                    android:text="@string/community_topic_type_text_title"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/text_type_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/text_type_title"
+                    android:layout_alignLeft="@id/text_type_title"
+                    android:layout_marginTop="4dp"
+                    android:layout_toLeftOf="@id/text_check_box"
+                    android:text="@string/community_topic_type_text_desc"
+                    android:textColor="#999999"
+                    android:textSize="12sp" />
+
+                <CheckBox
+                    android:id="@+id/text_check_box"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="36dp"
+                    android:background="@drawable/core_selected_icon_light"
+                    android:button="@null"
+                    android:checked="true" />
+            </RelativeLayout>
+            <!-- text -->
+
+            <!-- video -->
+            <RelativeLayout
+                android:id="@+id/video_type_area"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_type_area"
+                android:layout_marginTop="33dp">
+
+                <ImageView
+                    android:id="@+id/video_type_image"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="35dp"
+                    android:background="@drawable/community_topic_video_type_icon" />
+
+                <TextView
+                    android:id="@+id/video_type_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="8dp"
+                    android:layout_toEndOf="@id/video_type_image"
+                    android:text="@string/community_topic_type_video_title_coming"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/video_type_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/video_type_title"
+                    android:layout_alignLeft="@id/video_type_title"
+                    android:layout_marginTop="4dp"
+                    android:layout_toLeftOf="@id/video_check_box"
+                    android:text="@string/community_topic_type_video_desc"
+                    android:textColor="#999999"
+                    android:textSize="12sp" />
+
+                <CheckBox
+                    android:id="@+id/video_check_box"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="36dp"
+                    android:background="@drawable/community_check_box_unselected"
+                    android:button="@null"
+                    android:enabled="false"
+                    android:visibility="invisible"/>
+            </RelativeLayout>
+            <!-- video -->
+
+            <!-- live -->
+            <RelativeLayout
+                android:id="@+id/live_type_area"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/video_type_area"
+                android:layout_marginTop="33dp">
+
+                <ImageView
+                    android:id="@+id/live_type_image"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="35dp"
+                    android:background="@drawable/community_topic_live_type_icon" />
+
+                <TextView
+                    android:id="@+id/live_type_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="8dp"
+                    android:layout_toEndOf="@id/live_type_image"
+                    android:text="@string/community_topic_type_live_title_coming"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/live_type_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/live_type_title"
+                    android:layout_alignLeft="@id/live_type_title"
+                    android:layout_marginTop="4dp"
+                    android:layout_toLeftOf="@id/live_check_box"
+                    android:text="@string/community_topic_type_live_desc"
+                    android:textColor="#999999"
+                    android:textSize="12sp" />
+
+                <CheckBox
+                    android:id="@+id/live_check_box"
+                    android:button="@null"
+                    android:background="@drawable/community_check_box_unselected"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="36dp"
+                    android:enabled="false"
+                    android:visibility="invisible"/>
+            </RelativeLayout>
+            <!-- live -->
+
+
+        </RelativeLayout>
+    </ScrollView>
+
+</LinearLayout>

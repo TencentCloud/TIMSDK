@@ -60,8 +60,6 @@
     [self.tableView registerClass:[TUICommonContactSwitchCell class] forCellReuseIdentifier:@"SwitchCell"];
     [self.tableView registerClass:[TUICommonContactProfileCardCell class] forCellReuseIdentifier:@"CardCell"];
     [self.tableView registerClass:[TUIButtonCell class] forCellReuseIdentifier:@"ButtonCell"];
-
-    //如果不加这一行代码，依然可以实现点击反馈，但反馈会有轻微延迟，体验不好。
     self.tableView.delaysContentTouches = NO;
     _titleView = [[TUINaviBarIndicatorView alloc] init];
     [_titleView setTitle:TUIKitLocalizableString(ProfileDetails)];
@@ -70,9 +68,7 @@
     
     [self loadData];
 }
-/**
- *初始化视图显示数据
- */
+
 - (void)loadData
 {
     NSMutableArray *list = @[].mutableCopy;
@@ -97,11 +93,11 @@
         NSMutableArray *inlist = @[].mutableCopy;
         [inlist addObject:({
             TUICommonContactTextCellData *data = TUICommonContactTextCellData.new;
-            data.key = TUIKitLocalizableString(ProfileAlia); // @"备注名";
+            data.key = TUIKitLocalizableString(ProfileAlia);
             data.value = self.friendProfile.friendRemark;
             if (data.value.length == 0)
             {
-                data.value = TUIKitLocalizableString(None); // @"无";
+                data.value = TUIKitLocalizableString(None);
             }
             data.showAccessory = YES;
             data.cselector = @selector(onChangeRemark:);
@@ -115,7 +111,7 @@
         NSMutableArray *inlist = @[].mutableCopy;
         [inlist addObject:({
             TUICommonContactSwitchCellData *data = TUICommonContactSwitchCellData.new;
-            data.title = TUIKitLocalizableString(ProfileMessageDoNotDisturb); // @"消息免打扰";
+            data.title = TUIKitLocalizableString(ProfileMessageDoNotDisturb);
             data.cswitchSelector =  @selector(onMessageDoNotDisturb:);
             data.reuseId = @"SwitchCell";
             __weak typeof(self) weakSelf = self;
@@ -134,7 +130,7 @@
         
         [inlist addObject:({
             TUICommonContactSwitchCellData *data = TUICommonContactSwitchCellData.new;
-            data.title = TUIKitLocalizableString(ProfileStickyonTop); // @"置顶聊天";
+            data.title = TUIKitLocalizableString(ProfileStickyonTop);
             data.on = NO;
 #ifndef SDKPlaceTop
 #define SDKPlaceTop
@@ -156,14 +152,30 @@
             data.reuseId = @"SwitchCell";
             data;
         })];
+        
         inlist;
     })];
+    
+    
+    [list addObject:({
+        NSMutableArray *inlist = @[].mutableCopy;
+        [inlist addObject:({
+            TUICommonContactTextCellData *data = TUICommonContactTextCellData.new;
+            data.key = TUIKitLocalizableString(TUIKitClearAllChatHistory);
+            data.showAccessory = NO;
+            data.cselector = @selector(onClearHistoryChatMessage:);
+            data.reuseId = @"TextCell";
+            data;
+        })];
+        inlist;
+    })];
+
     
     [list addObject:({
         NSMutableArray *inlist = @[].mutableCopy;
         [inlist addObject:({
             TUICommonContactSwitchCellData *data = TUICommonContactSwitchCellData.new;
-            data.title = TUIKitLocalizableString(ProfileBlocked); // @"加入黑名单";
+            data.title = TUIKitLocalizableString(ProfileBlocked);
             data.cswitchSelector =  @selector(onChangeBlackList:);
             data.reuseId = @"SwitchCell";
             __weak typeof(self) weakSelf = self;
@@ -187,7 +199,7 @@
         NSMutableArray *inlist = @[].mutableCopy;
         [inlist addObject:({
             TUIButtonCellData *data = TUIButtonCellData.new;
-            data.title = TUIKitLocalizableString(ProfileSendMessages); // @"发送消息";
+            data.title = TUIKitLocalizableString(ProfileSendMessages);
             data.style = ButtonWhite;
             data.textColor = TUICoreDynamicColor(@"primary_theme_color", @"147AFF");
             data.cbuttonSelector = @selector(onSendMessage:);
@@ -200,10 +212,9 @@
         NSDictionary *videoExtentionInfo = [TUICore getExtensionInfo:TUICore_TUIChatExtension_GetMoreCellInfo_VideoCall param:param];
         NSDictionary *audioExtentionInfo = [TUICore getExtensionInfo:TUICore_TUIChatExtension_GetMoreCellInfo_AudioCall param:param];
         if (audioExtentionInfo) {
-            // 集成了 音频
             [inlist addObject:({
                 TUIButtonCellData *data = TUIButtonCellData.new;
-                data.title = TUIKitLocalizableString(TUIKitMoreVoiceCall); // @"语音通话";
+                data.title = TUIKitLocalizableString(TUIKitMoreVoiceCall);
                 data.style = ButtonWhite;
                 data.textColor = TUICoreDynamicColor(@"primary_theme_color", @"147AFF");
                 data.cbuttonSelector = @selector(onVoiceCall:);
@@ -214,7 +225,7 @@
         if (videoExtentionInfo) {
             [inlist addObject:({
                 TUIButtonCellData *data = TUIButtonCellData.new;
-                data.title = TUIKitLocalizableString(TUIKitMoreVideoCall); // @"视频通话";
+                data.title = TUIKitLocalizableString(TUIKitMoreVideoCall);
                 data.style = ButtonWhite;
                 data.textColor = TUICoreDynamicColor(@"primary_theme_color", @"147AFF");
                 data.cbuttonSelector = @selector(onVideoCall:);
@@ -224,7 +235,7 @@
         }
         [inlist addObject:({
             TUIButtonCellData *data = TUIButtonCellData.new;
-            data.title = TUIKitLocalizableString(ProfileDeleteFirend); // @"删除好友";
+            data.title = TUIKitLocalizableString(ProfileDeleteFirend);
             data.style = ButtonRedText;
             data.cbuttonSelector =  @selector(onDeleteFriend:);
             data.reuseId = @"ButtonCell";
@@ -249,9 +260,6 @@
     }
 }
 
-/**
- *点击 修改备注 按钮后所执行的函数。包含数据的获取与请求回调
- */
 - (void)onChangeRemark:(TUICommonContactTextCell *)cell
 {
     TUITextEditController *vc = [[TUITextEditController alloc] initWithText:self.friendProfile.friendRemark];
@@ -270,6 +278,32 @@
         } fail:nil];
     }];
 
+}
+
+- (void)onClearHistoryChatMessage:(TUICommonContactTextCell *)cell {
+    
+    
+    if (IS_NOT_EMPTY_NSSTRING(self.friendProfile.userID)) {
+        NSString *userID = self.friendProfile.userID;
+        @weakify(self)
+        UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:TUIKitLocalizableString(TUIKitClearAllChatHistoryTips) preferredStyle:UIAlertControllerStyleAlert];
+        [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Confirm) style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+            @strongify(self)
+            [V2TIMManager.sharedInstance clearC2CHistoryMessage:userID succ:^{
+                [TUICore notifyEvent:TUICore_TUIConversationNotify
+                              subKey:TUICore_TUIConversationNotify_ClearConversationUIHistorySubKey
+                              object:self
+                               param:nil];
+                [TUITool makeToast:@"success"];
+            } fail:^(int code, NSString *desc) {
+                [TUITool makeToastError:code msg:desc];
+            }];
+        }]];
+        [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:nil]];
+        [self presentViewController:ac animated:YES completion:nil];
+
+    }
+    
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -302,10 +336,8 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 
     NSObject *data = self.dataList[indexPath.section][indexPath.row];
-    //原本的写法会使得子类重写的方法无法被调用，所以此处使用了“我”界面的写法。
     if([data isKindOfClass:[TUICommonContactProfileCardCellData class]]){
         TUICommonContactProfileCardCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CardCell" forIndexPath:indexPath];
-        //设置 profileCard 的委托
         cell.delegate = self;
         [cell fillWithData:(TUICommonContactProfileCardCellData *)data];
         return cell;
@@ -364,9 +396,6 @@
                    param:param];
 }
 
-/**
- *点击 删除好友 后执行的函数，包括好友信息获取和请求回调
- */
 - (void)onDeleteFriend:(id)sender
 {
     __weak typeof(self) weakSelf = self;
@@ -377,9 +406,6 @@
     } fail:nil];
 }
 
-/**
- *点击 发送消息 后执行的函数，默认跳转到对应好友的聊天界面
- */
 - (void)onSendMessage:(id)sender
 {
     NSDictionary *param = @{
@@ -394,9 +420,6 @@
     [self.navigationController pushViewController:chatVC animated:YES];
 }
 
-/**
- *操作 消息免打扰 开关后执行的函数
- */
 - (void)onMessageDoNotDisturb:(TUICommonContactSwitchCell *)cell
 {
     V2TIMReceiveMessageOpt opt;
@@ -408,9 +431,6 @@
     [[V2TIMManager sharedInstance] setC2CReceiveMessageOpt:@[self.friendProfile.userID] opt:opt succ:nil fail:nil];
 }
 
-/**
- *操作 置顶 开关后执行的函数，将对应好友添加/移除置顶队列
- */
 - (void)onTopMostChat:(TUICommonContactSwitchCell *)cell
 {
     if (cell.switcher.on) {
@@ -418,7 +438,6 @@
             if (success) {
                 return;
             }
-            // 操作失败，还原
             cell.switcher.on = !cell.switcher.isOn;
             [TUITool makeToast:errorMessage];
         }];
@@ -427,16 +446,13 @@
             if (success) {
                 return;
             }
-            // 操作失败，还原
             cell.switcher.on = !cell.switcher.isOn;
             [TUITool makeToast:errorMessage];
         }];
     }
 }
 
-/**
- *  以下两个函数实现了在好友界面长按的复制功能。
- */
+
 - (void)addLongPressGesture{
     UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(didLongPressAtCell:)];
     [self.tableView addGestureRecognizer:longPress];
@@ -447,8 +463,7 @@
         CGPoint point = [longPress locationInView:self.tableView];
         NSIndexPath *pathAtView = [self.tableView indexPathForRowAtPoint:point];
         NSObject *data = [self.tableView cellForRowAtIndexPath:pathAtView];
-
-        //长按 TUIContactCommonTextCell，可以复制 cell 内的字符串。
+        
         if([data isKindOfClass:[TUICommonContactTextCell class]]){
             TUICommonContactTextCell *textCell = (TUICommonContactTextCell *)data;
             if(textCell.textData.value && ![textCell.textData.value isEqualToString:@"未设置"]){
@@ -458,7 +473,6 @@
                 [TUITool makeToast:toastString];
             }
         }else if([data isKindOfClass:[TUICommonContactProfileCardCell class]]){
-            //长按 profileCard，复制好友的账号。
             TUICommonContactProfileCardCell *profileCard = (TUICommonContactProfileCardCell *)data;
             if(profileCard.cardData.identifier){
                 UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
@@ -470,13 +484,20 @@
         }
     }
 }
-/**
- *  点击头像查看大图的委托实现
- */
+
 -(void)didTapOnAvatar:(TUICommonContactProfileCardCell *)cell{
     TUIContactAvatarViewController *image = [[TUIContactAvatarViewController alloc] init];
     image.avatarData = cell.cardData;
     [self.navigationController pushViewController:image animated:YES];
 }
 
+
++ (BOOL)isMarkedByHideType:(NSArray *)markList {
+    for (NSNumber *num in markList) {
+        if (num.unsignedLongValue == V2TIM_CONVERSATION_MARK_TYPE_HIDE) {
+            return YES;
+        }
+    }
+    return NO;
+}
 @end

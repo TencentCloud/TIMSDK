@@ -14,11 +14,14 @@ import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.ui.interfaces.IConversationListAdapter;
 import com.tencent.qcloud.tuikit.tuiconversation.ui.interfaces.IConversationListLayout;
 import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationPresenter;
+import com.tencent.qcloud.tuikit.tuiconversation.ui.interfaces.OnItemClickListener;
+import com.tencent.qcloud.tuikit.tuiconversation.ui.interfaces.OnItemLongClickListener;
 
 public class ConversationListLayout extends RecyclerView implements IConversationListLayout {
 
     private ConversationListAdapter mAdapter;
     private ConversationPresenter presenter;
+    private boolean isFolded = false;
 
     public ConversationListLayout(Context context) {
         super(context);
@@ -109,14 +112,6 @@ public class ConversationListLayout extends RecyclerView implements IConversatio
     @Override
     public void setOnItemLongClickListener(OnItemLongClickListener listener) {
         mAdapter.setOnItemLongClickListener(listener);
-    }
-
-    public interface OnItemClickListener {
-        void onItemClick(View view, int viewType, ConversationInfo messageInfo);
-    }
-
-    public interface OnItemLongClickListener {
-        void OnItemLongClick(View view, ConversationInfo messageInfo);
     }
 
     @Override

@@ -17,7 +17,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) V2TIMMessage *msgForNewerGet;
 
 
-/// 加载指定的历史消息
 - (void)loadMessageWithSearchMsg:(V2TIMMessage *)searchMsg
                     SearchMsgSeq:(uint64_t)searchSeq
                 ConversationInfo:(TUIChatConversationModel *)conversation

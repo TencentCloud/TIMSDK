@@ -1,12 +1,16 @@
 package com.tencent.qcloud.tuikit.tuiconversation.util;
 
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.Adapter;
+import android.widget.ListView;
 
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMGroupAtInfo;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
-import com.tencent.qcloud.tuicore.TUIThemeManager;
+import com.tencent.qcloud.tuicore.TUIConfig;
+import com.tencent.qcloud.tuicore.component.action.PopDialogAdapter;
 import com.tencent.qcloud.tuicore.util.DateTimeUtil;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationService;
@@ -29,12 +33,6 @@ public class ConversationUtils {
         return conversationInfoList;
     }
 
-    /**
-     * V2TIMConversation 转换为 ConversationInfo
-     *
-     * @param conversation V2TIMConversation
-     * @return ConversationInfo
-     */
     public static ConversationInfo convertV2TIMConversation(final V2TIMConversation conversation) {
         if (conversation == null) {
             return null;
@@ -92,7 +90,7 @@ public class ConversationUtils {
             }
         } else {
             if (TextUtils.isEmpty(conversation.getFaceUrl())) {
-                faceList.add(TUIThemeManager.getAttrResId(TUIConversationService.getAppContext(), R.attr.core_default_user_icon));
+                faceList.add(TUIConfig.getDefaultAvatarImage());
             } else {
                 faceList.add(conversation.getFaceUrl());
             }
@@ -114,12 +112,29 @@ public class ConversationUtils {
         }
         info.setConversationId(conversation.getConversationID());
         info.setGroup(isGroup);
-        // AVChatRoom 不支持未读数。
+        
         if (!V2TIMManager.GROUP_TYPE_AVCHATROOM.equals(conversation.getGroupType())) {
             info.setUnRead(conversation.getUnreadCount());
         }
         info.setTop(conversation.isPinned());
         info.setOrderKey(conversation.getOrderKey());
+        if (conversation.getMarkList() != null) {
+            if (conversation.getMarkList().contains(V2TIMConversation.V2TIM_CONVERSATION_MARK_TYPE_FOLD)) {
+                info.setMarkFold(true);
+            } else {
+                info.setMarkFold(false);
+            }
+            if (conversation.getMarkList().contains(V2TIMConversation.V2TIM_CONVERSATION_MARK_TYPE_UNREAD)) {
+                info.setMarkUnread(true);
+            } else {
+                info.setMarkUnread(false);
+            }
+            if (conversation.getMarkList().contains(V2TIMConversation.V2TIM_CONVERSATION_MARK_TYPE_HIDE)) {
+                info.setMarkHidden(true);
+            } else {
+                info.setMarkHidden(false);
+            }
+        }
         return info;
     }
 
@@ -163,8 +178,31 @@ public class ConversationUtils {
         return atInfoType;
     }
 
-    public static boolean isNeedUpdate(ConversationInfo conversationInfo) {
-        return V2TIMManager.GROUP_TYPE_AVCHATROOM.equals(conversationInfo.getGroupType());
+    public static boolean isIgnored(ConversationInfo conversationInfo) {
+        if (V2TIMManager.GROUP_TYPE_AVCHATROOM.equals(conversationInfo.getGroupType())) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static int getListUnspecifiedWidth(PopDialogAdapter adapter, ListView listView) {
+        if (adapter == null || listView == null) {
+            return 0;
+        }
+        int maxWidth = 0;
+        View convertView = null;
+        int childCount = adapter.getCount();
+        if (childCount <= 0) {
+            return 0;
+        }
+        for (int i = 0; i < childCount; i++) {
+            View child = adapter.getView(i, convertView, listView);
+            child.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+            maxWidth = Math.max(maxWidth, child.getMeasuredWidth() + child.getPaddingLeft() + child.getPaddingRight());
+            convertView = child;
+        }
+        return maxWidth;
     }
 
 }

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+        android:id="@+id/group_member_icon"
+        android:layout_width="@dimen/group_profile_member_item_width"
+        android:layout_height="@dimen/group_profile_member_item_width"
+        android:scaleType="centerCrop"
+        android:background="?attr/core_default_user_icon" />
+
+
+    <TextView
+        android:id="@+id/group_member_name"
+        android:layout_width="@dimen/group_profile_member_item_width"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="9.6dp"
+        android:layout_marginTop="7.68dp"
+        android:gravity="center"
+        android:lines="1"
+        android:maxEms="3"
+        android:ellipsize="end"
+        android:textSize="@dimen/group_profile_member_item_name_size"
+        android:textColor="@color/group_profile_member_name_text_color" />
+</LinearLayout>

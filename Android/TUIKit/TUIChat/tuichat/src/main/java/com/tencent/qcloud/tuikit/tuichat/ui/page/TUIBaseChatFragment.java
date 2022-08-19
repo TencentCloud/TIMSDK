@@ -1,11 +1,13 @@
 package com.tencent.qcloud.tuikit.tuichat.ui.page;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.Nullable;
 
@@ -60,6 +62,7 @@ public class TUIBaseChatFragment extends BaseFragment {
         }
 
 //        // TODO 通过api设置ChatLayout各种属性的样例
+//        // Example of setting various properties of ChatLayout through api
 //        ChatLayoutSetting helper = new ChatLayoutSetting(getActivity());
 //        helper.setGroupId(mChatInfo.getId());
 //        helper.customizeChatLayout(mChatLayout);
@@ -67,19 +70,14 @@ public class TUIBaseChatFragment extends BaseFragment {
     }
 
     protected void initView() {
-        //从布局文件中获取聊天面板组件
         chatView = baseView.findViewById(R.id.chat_layout);
-
-        //单聊组件的默认UI和交互初始化
         chatView.initDefault();
-
-        //获取单聊面板的标题栏
         titleBar = chatView.getTitleBar();
-
-        //单聊面板标记栏返回按钮点击事件，这里需要开发者自行控制
         titleBar.setOnLeftClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(chatView.getWindowToken(), 0);
                 getActivity().finish();
             }
         });
@@ -99,7 +97,8 @@ public class TUIBaseChatFragment extends BaseFragment {
         chatView.getMessageLayout().setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onMessageLongClick(View view, int position, TUIMessageBean message) {
-                //因为adapter中第一条为加载条目，位置需减1
+                // 因为adapter中第一条为加载条目，位置需减1
+                // Because the first entry in the adapter is the load entry, the position needs to be decremented by 1
                 TUIChatLog.d(TAG, "chatfragment onTextSelected selectedText = ");
                 chatView.getMessageLayout().showItemPopMenu(position - 1, message, view);
             }
@@ -189,7 +188,7 @@ public class TUIBaseChatFragment extends BaseFragment {
                     return;
                 }
 
-                for (Map.Entry<String, Boolean> entry : chatMap.entrySet()) {//遍历发送对象会话
+                for (Map.Entry<String, Boolean> entry : chatMap.entrySet()) {
                     boolean isGroup = entry.getValue();
                     String id = entry.getKey();
                     String title = "";

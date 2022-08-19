@@ -1,7 +1,5 @@
 package com.tencent.qcloud.tuikit.tuichat;
 
-import android.os.Environment;
-
 import com.tencent.imsdk.BaseConstants;
 
 public class TUIChatConstants {
@@ -59,11 +57,21 @@ public class TUIChatConstants {
     public static final String EVENT_KEY_MESSAGE_STATUS_CHANGED = "eventKeyMessageStatusChanged";
     public static final String EVENT_SUB_KEY_MESSAGE_SEND = "eventSubKeyMessageSend";
 
+    public static final int ERR_SDK_INTERFACE_NOT_SUPPORT = BaseConstants.ERR_SDK_INTERFACE_NOT_SUPPORT;
+    public static final String BUYING_GUIDELINES_EN = "https://intl.cloud.tencent.com/document/product/1047/36021?lang=en&pg=#changing-configuration";
+    public static final String BUYING_GUIDELINES = "https://cloud.tencent.com/document/product/269/32458";
+    
     /**
      * 1: 仅仅是一个带链接的文本消息
      * 2: iOS支持的视频通话版本，后续已经不兼容
      * 3: 未发布版本
      * 4: Android/iOS/Web互通的视频通话版本
+     * 
+     * 
+     * 1: Just a text message with a link
+     * 2: The video calling version supported by iOS is no longer compatible
+     * 3: unreleased version
+     * 4: Android/iOS/Web interoperable version for video call 
      */
     public static final int JSON_VERSION_UNKNOWN = 0;
     public static final int JSON_VERSION_1       = 1;

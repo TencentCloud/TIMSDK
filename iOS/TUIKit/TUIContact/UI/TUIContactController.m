@@ -31,21 +31,21 @@
     [list addObject:({
         TUIContactActionCellData *data = [[TUIContactActionCellData alloc] init];
         data.icon = TUIContactDynamicImage(@"contact_new_friend_img", [UIImage imageNamed:TUIContactImagePath(@"new_friend")]);
-        data.title = TUIKitLocalizableString(TUIKitContactsNewFriends); // @"新的联系人";
+        data.title = TUIKitLocalizableString(TUIKitContactsNewFriends);
         data.cselector = @selector(onAddNewFriend:);
         data;
     })];
     [list addObject:({
         TUIContactActionCellData *data = [[TUIContactActionCellData alloc] init];
         data.icon = TUIContactDynamicImage(@"contact_public_group_img", [UIImage imageNamed:TUIContactImagePath(@"public_group")]);
-        data.title = TUIKitLocalizableString(TUIKitContactsGroupChats); // @"群聊";
+        data.title = TUIKitLocalizableString(TUIKitContactsGroupChats);
         data.cselector = @selector(onGroupConversation:);
         data;
     })];
     [list addObject:({
         TUIContactActionCellData *data = [[TUIContactActionCellData alloc] init];
         data.icon = TUIContactDynamicImage(@"contact_blacklist_img", [UIImage imageNamed:TUIContactImagePath(@"blacklist")]);
-        data.title = TUIKitLocalizableString(TUIKitContactsBlackList); // @"黑名单";
+        data.title = TUIKitLocalizableString(TUIKitContactsBlackList);
         data.cselector = @selector(onBlackList:);
         data;
     })];
@@ -66,14 +66,12 @@
     [_tableView setSectionIndexColor:[UIColor darkGrayColor]];
     [_tableView setBackgroundColor:self.view.backgroundColor];
     
-    //如果不加这一行代码，依然可以实现点击反馈，但反馈会有轻微延迟，体验不好。
     _tableView.delaysContentTouches = NO;
     if (@available(iOS 15.0, *)) {
         _tableView.sectionHeaderTopPadding = 0;
     }
     [self.view addSubview:_tableView];
-     
-    //cell无数据时，不显示间隔线
+    
     UIView *v = [[UIView alloc] initWithFrame:CGRectZero];
     [_tableView setTableFooterView:v];
     _tableView.separatorInset = UIEdgeInsetsMake(0, 58, 0, 0);
@@ -184,8 +182,6 @@
     if (indexPath.section == 0) {
         TUIContactActionCell *cell = [tableView dequeueReusableCellWithIdentifier:kContactActionCellReuseId forIndexPath:indexPath];
         [cell fillWithData:self.firstGroupData[indexPath.row]];
-
-        //可以在此处修改，也可以在对应cell的初始化中进行修改。用户可以灵活的根据自己的使用需求进行设置。
         cell.changeColorWhenTouched = YES;
         return cell;
     } else {
@@ -195,8 +191,6 @@
         TUICommonContactCellData *data = list[indexPath.row];
         data.cselector = @selector(onSelectFriend:);
         [cell fillWithData:data];
-
-        //可以在此处修改，也可以在对应cell的初始化中进行修改。用户可以灵活的根据自己的使用需求进行设置。
         cell.changeColorWhenTouched = YES;
         return cell;
     }
@@ -241,7 +235,6 @@
 
 - (void)runSelector:(SEL)selector withObject:(id)object{
     if([self respondsToSelector:selector]){
-        //因为 TCommonCell中写了 [vc performSelector:self.data.cselector withObject:self]，所以此处不管有无参数，和父类逻辑保持一致进行传参，防止意外情况
         IMP imp = [self methodForSelector:selector];
         void (*func)(id, SEL, id) = (void *)imp;
         func(self, selector, object);

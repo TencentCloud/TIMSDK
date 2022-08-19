@@ -555,8 +555,6 @@ char TUIPinyinFirstLetter(unsigned short hanzi)
         if (firstMatch)
         {
             NSRange resultRange = [firstMatch rangeAtIndex:0];
-
-            //从urlString当中截取数据
             NSString *result = [self substringAtRange:resultRange];
             return result;
         }
@@ -665,7 +663,6 @@ char TUIPinyinFirstLetter(unsigned short hanzi)
     return returnValue;
 }
 
-//递归计算符合规定的文本长度
 - (NSString *)cutBeyondTextInLength:(NSInteger)maxLenth
 {
     size_t length = strlen([self UTF8String]);

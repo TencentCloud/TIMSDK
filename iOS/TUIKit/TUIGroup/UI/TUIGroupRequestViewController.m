@@ -20,7 +20,6 @@
 @implementation TUIGroupRequestViewController
 
 - (void)viewDidLoad {
-    //初始化视图内容信息
     [super viewDidLoad];
     self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
     [self.view addSubview:self.tableView];
@@ -32,13 +31,13 @@
     self.addMsgTextView.font = [UIFont systemFontOfSize:14];
     NSString *loginUser = [[V2TIMManager sharedInstance] getLoginUser];
     [[V2TIMManager sharedInstance] getUsersInfo:@[loginUser] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
-        self.addMsgTextView.text = [NSString stringWithFormat:TUIKitLocalizableString(GroupRequestJoinGroupFormat), [[infoList firstObject] showName]]; // "%@ 申请加入群聊
+        self.addMsgTextView.text = [NSString stringWithFormat:TUIKitLocalizableString(GroupRequestJoinGroupFormat), [[infoList firstObject] showName]];
     } fail:^(int code, NSString *msg) {
     }];
     TUIProfileCardCellData *data = [TUIProfileCardCellData new];
     data.name = self.groupInfo.groupName;
     data.identifier = self.groupInfo.groupID;
-    data.avatarImage = DefaultGroupAvatarImage;
+    data.avatarImage = DefaultGroupAvatarImageByGroupType(self.groupInfo.groupType);
     data.avatarUrl = [NSURL URLWithString:self.groupInfo.faceURL];
     self.cardCellData = data;
 
@@ -52,9 +51,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-/**
- *tableView委托函数
- */
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
 {
     if (indexPath.section == 0) {
@@ -81,7 +78,7 @@
     view.backgroundColor = [UIColor clearColor];
     
     UILabel *label = [[UILabel alloc] init];
-    label.text = TUIKitLocalizableString(please_fill_in_verification_information); // @"填写验证信息";
+    label.text = TUIKitLocalizableString(please_fill_in_verification_information);
     label.textColor = [UIColor colorWithRed:136/255.0 green:136/255.0 blue:136/255.0 alpha:1/1.0];
     label.font = [UIFont systemFontOfSize:14.0];
     
@@ -121,7 +118,6 @@
 {
     if (indexPath.section == 0) {
         TUIProfileCardCell *cell = [[TUIProfileCardCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"TPersonalCommonCell_ReuseId"];
-        //设置 profileCard 的委托
         cell.delegate = self;
         [cell fillWithData:self.cardCellData];
         return cell;
@@ -151,9 +147,6 @@
     return NO;
 }
 
-/**
- *点击 发送 按钮后执行的函数，包括信息收集和请求回调
- */
 - (void)onSend
 {
     // display toast with an activity spinner
@@ -172,9 +165,6 @@
     }];
 }
 
-/**
- *  点击头像查看大图的委托实现
- */
 -(void)didTapOnAvatar:(TUIProfileCardCell *)cell{
     TUIAvatarViewController *image = [[TUIAvatarViewController alloc] init];
     image.avatarData = cell.cardData;

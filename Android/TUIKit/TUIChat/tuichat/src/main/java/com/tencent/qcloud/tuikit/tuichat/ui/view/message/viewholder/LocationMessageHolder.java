@@ -17,7 +17,7 @@ public class LocationMessageHolder extends MessageContentHolder {
 
     @Override
     public void layoutVariableViews(TUIMessageBean msg, int position) {
-        // TODO 定位消息
+
     }
 
 }

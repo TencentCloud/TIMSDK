@@ -6,9 +6,6 @@ import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 
 import java.io.Serializable;
 
-/**
- * 自定义消息的bean实体，用来与json的相互转化
- */
 public class CustomHelloMessage implements Serializable {
     public static final int CUSTOM_HELLO_ACTION_ID = 3;
 

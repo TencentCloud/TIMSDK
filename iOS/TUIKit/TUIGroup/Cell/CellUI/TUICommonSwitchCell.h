@@ -18,6 +18,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property CGFloat margin;
 @property SEL cswitchSelector;
 
+@property (nonatomic,assign) BOOL displaySeparatorLine;
+
+@property (nonatomic,assign) BOOL disableChecked;
+
 @end
 
 @interface TUICommonSwitchCell : TUICommonTableViewCell

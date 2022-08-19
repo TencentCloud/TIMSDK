@@ -85,4 +85,24 @@ public class ForwardSelectLayout extends RelativeLayout implements IConversation
     public void clearConversationMessage(ConversationInfo conversation) {
 
     }
+
+    @Override
+    public void markConversationHidden(ConversationInfo conversation) {
+
+    }
+
+    @Override
+    public void hideFoldedItem(boolean needHide) {
+
+    }
+
+    @Override
+    public void clearUnreadStatusOfFoldItem() {
+
+    }
+
+    @Override
+    public void markConversationUnread(ConversationInfo conversationInfo, boolean markRead) {
+
+    }
 }

@@ -23,3 +23,6 @@ project(':tuicallkit').projectDir = new File(settingsDir, '../TUIKit/TUICallKit/
 
 include ':tuiofflinepush'
 project(':tuiofflinepush').projectDir = new File(settingsDir, '../TUIKit/TUIOfflinePush/tuiofflinepush')
+
+include ':tuicommunity'
+project(':tuicommunity').projectDir = new File(settingsDir, '../TUIKit/TUICommunity/tuicommunity')

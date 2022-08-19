@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.page.JoinCommunityActivity">
+
+    <com.tencent.qcloud.tuicore.component.TitleBarLayout
+        android:id="@+id/join_community_title"
+        app:title_bar_can_return="true"
+        app:title_bar_middle_title="@string/community_search_community"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:background="#FFFFFF"
+        android:paddingStart="16dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="8dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_weight="1"
+            android:background="@drawable/community_search_bg"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/search_icon"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:scaleType="centerCrop"
+                android:layout_marginLeft="18dp"
+                android:background="@drawable/community_search_icon" />
+
+            <EditText
+                android:id="@+id/community_id_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
+                android:background="@null"
+                android:maxLines="1"
+                android:inputType="text"
+                android:textColorHint="#999999"
+                android:hint="@string/community_search_community_id"
+                android:textCursorDrawable="@drawable/core_edit_cursor"
+                android:textColor="#000000"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/cancel_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:text="@string/community_cancel"
+            android:textColor="#262626"
+            android:textSize="14sp"
+            android:visibility="gone"
+            tools:visibility="visible"/>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/community_item_rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="#FFFFFF"
+        android:paddingStart="16dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="11dp"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <com.tencent.qcloud.tuicore.component.RoundCornerImageView
+            android:id="@+id/community_avatar"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            app:corner_radius="4dp"
+            tools:background="@android:drawable/ic_menu_gallery"/>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_marginStart="8dp"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/community_avatar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/community_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="#000000"
+                tools:text="Name"/>
+
+            <TextView
+                android:id="@+id/community_owner"
+                android:layout_marginTop="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="#999999"
+                tools:text="Owner"/>
+
+        </LinearLayout>
+
+        <com.tencent.qcloud.tuikit.tuicommunity.component.SelectTextButton
+            android:id="@+id/join_community_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="4dp"
+            android:paddingStart="8dp"
+            android:paddingTop="2dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="2dp"
+            android:text="@string/community_join"
+            android:textColor="#006EFF"
+            android:textSize="12sp"
+            app:button_radius="50dp"
+            app:color="#006EFF" />
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/not_found_ll"
+        android:layout_marginTop="130dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <ImageView
+            android:layout_width="128dp"
+            android:layout_height="109dp"
+            android:layout_gravity="center"
+            android:background="@drawable/community_not_found_icon"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="18dp"
+            android:text="@string/community_not_found_community"
+            android:textSize="14sp"
+            android:textColor="#999999"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

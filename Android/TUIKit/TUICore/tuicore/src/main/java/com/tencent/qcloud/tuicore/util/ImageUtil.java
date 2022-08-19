@@ -1,7 +1,6 @@
 package com.tencent.qcloud.tuicore.util;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -32,12 +31,11 @@ public class ImageUtil {
     public final static String SP_IMAGE = "_conversation_group_face";
 
     /**
-     * @param outFile 图片的目录路径
+     * @param outFile
      * @param bitmap
      * @return
      */
     public static File storeBitmap(File outFile, Bitmap bitmap) {
-        // 检测是否达到存放文件的上限
         if (!outFile.exists() || outFile.isDirectory()) {
             outFile.getParentFile().mkdirs();
         }
@@ -77,28 +75,27 @@ public class ImageUtil {
             int originalHeight = onlyBoundsOptions.outHeight;
             if ((originalWidth == -1) || (originalHeight == -1))
                 return null;
-            //图片分辨率以480x800为标准
-            float hh = 800f;//这里设置高度为800f
-            float ww = 480f;//这里设置宽度为480f
+            float hh = 800f;
+            float ww = 480f;
             int degree = getBitmapDegree(uri);
             if (degree == 90 || degree == 270) {
                 hh = 480;
                 ww = 800;
             }
-            //缩放比。由于是固定比例缩放，只用高或者宽其中一个数据进行计算即可
-            int be = 1;//be=1表示不缩放
-            if (originalWidth > originalHeight && originalWidth > ww) {//如果宽度大的话根据宽度固定大小缩放
+            // 缩放比。由于是固定比例缩放，只用高或者宽其中一个数据进行计算即可
+            // zoom ratio. Since it is a fixed scale scaling, only one data of height or width can be used for calculation.
+            int be = 1;
+            if (originalWidth > originalHeight && originalWidth > ww) {
                 be = (int) (originalWidth / ww);
-            } else if (originalWidth < originalHeight && originalHeight > hh) {//如果高度高的话根据宽度固定大小缩放
+            } else if (originalWidth < originalHeight && originalHeight > hh) {
                 be = (int) (originalHeight / hh);
             }
             if (be <= 0)
                 be = 1;
-            //比例压缩
             BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
-            bitmapOptions.inSampleSize = be;//设置缩放比例
-            bitmapOptions.inDither = true;//optional
-            bitmapOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;//optional
+            bitmapOptions.inSampleSize = be;
+            bitmapOptions.inDither = true;
+            bitmapOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;
             input = TUIConfig.getAppContext().getContentResolver().openInputStream(uri);
             bitmap = BitmapFactory.decodeStream(input, null, bitmapOptions);
 
@@ -109,7 +106,7 @@ public class ImageUtil {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return bitmap;//再进行质量压缩
+        return bitmap;
     }
 
     public static Bitmap getBitmapFormPath(String path) {
@@ -122,28 +119,27 @@ public class ImageUtil {
     public static Bitmap compressImage(Bitmap image) {
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);//质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
+        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         int options = 100;
-        while (baos.toByteArray().length / 1024 > 100) {  //循环判断如果压缩后图片是否大于100kb,大于继续压缩
-            baos.reset();//重置baos即清空baos
-            //第一个参数 ：图片格式 ，第二个参数： 图片质量，100为最高，0为最差  ，第三个参数：保存压缩后的数据的流
-            image.compress(Bitmap.CompressFormat.JPEG, options, baos);//这里压缩options%，把压缩后的数据存放到baos中
-            options -= 10;//每次都减少10
+        while (baos.toByteArray().length / 1024 > 100) {
+            baos.reset();
+            image.compress(Bitmap.CompressFormat.JPEG, options, baos);
+            options -= 10;
         }
-        ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());//把压缩后的数据baos存放到ByteArrayInputStream中
-        Bitmap bitmap = BitmapFactory.decodeStream(isBm, null, null);//把ByteArrayInputStream数据生成图片
+        ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());
+        Bitmap bitmap = BitmapFactory.decodeStream(isBm, null, null);
         return bitmap;
     }
 
     /**
      * 读取图片的旋转的角度
+     * 
+     * Read the rotation angle of the image
      */
     public static int getBitmapDegree(Uri uri) {
         int degree = 0;
         try {
-            // 从指定路径下读取图片，并获取其EXIF信息
             ExifInterface exifInterface = new ExifInterface(FileUtil.getPathFromUri(uri));
-            // 获取图片的旋转信息
             int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION,
                     ExifInterface.ORIENTATION_NORMAL);
             switch (orientation) {
@@ -165,13 +161,13 @@ public class ImageUtil {
 
     /**
      * 读取图片的旋转的角度
+     * 
+     * Read the rotation angle of the image
      */
     public static int getBitmapDegree(String fileName) {
         int degree = 0;
         try {
-            // 从指定路径下读取图片，并获取其EXIF信息
             ExifInterface exifInterface = new ExifInterface(fileName);
-            // 获取图片的旋转信息
             int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION,
                     ExifInterface.ORIENTATION_NORMAL);
             switch (orientation) {
@@ -197,15 +193,20 @@ public class ImageUtil {
      * @param bm     需要旋转的图片
      * @param degree 旋转角度
      * @return 旋转后的图片
+     * 
+     * 
+     * Rotate the image by an angle
+     * 
+     * @param bm     image to be rotated
+     * @param degree Rotation angle
+     * @return rotated image
      */
     public static Bitmap rotateBitmapByDegree(Bitmap bm, int degree) {
         Bitmap returnBm = null;
 
-        // 根据旋转角度，生成旋转矩阵
         Matrix matrix = new Matrix();
         matrix.postRotate(degree);
         try {
-            // 将原始图片按照旋转矩阵进行旋转，并得到新的图片
             returnBm = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
         } catch (OutOfMemoryError e) {
         }
@@ -234,26 +235,24 @@ public class ImageUtil {
                 size[0] = originalWidth;
                 size[1] = originalHeight;
             } else {
-                //图片分辨率以480x800为标准
-                float hh = 800f;//这里设置高度为800f
-                float ww = 480f;//这里设置宽度为480f
+                float hh = 800f;
+                float ww = 480f;
                 if (degree == 90 || degree == 270) {
                     hh = 480;
                     ww = 800;
                 }
-                //缩放比。由于是固定比例缩放，只用高或者宽其中一个数据进行计算即可
-                int be = 1;//be=1表示不缩放
-                if (originalWidth > originalHeight && originalWidth > ww) {//如果宽度大的话根据宽度固定大小缩放
+                int be = 1;
+                if (originalWidth > originalHeight && originalWidth > ww) {
                     be = (int) (originalWidth / ww);
-                } else if (originalWidth < originalHeight && originalHeight > hh) {//如果高度高的话根据宽度固定大小缩放
+                } else if (originalWidth < originalHeight && originalHeight > hh) {
                     be = (int) (originalHeight / hh);
                 }
                 if (be <= 0)
                     be = 1;
                 BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
-                bitmapOptions.inSampleSize = be;//设置缩放比例
-                bitmapOptions.inDither = true;//optional
-                bitmapOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;//optional
+                bitmapOptions.inSampleSize = be;
+                bitmapOptions.inDither = true;
+                bitmapOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;
                 Bitmap bitmap = BitmapFactory.decodeFile(path, bitmapOptions);
                 bitmap = rotateBitmapByDegree(bitmap, degree);
                 size[0] = bitmap.getWidth();
@@ -268,6 +267,7 @@ public class ImageUtil {
 
 
     // 图片文件先在本地做旋转，返回旋转之后的图片文件路径
+    // The image file is rotated locally, and the path of the image file after rotation is returned.
     public static String getImagePathAfterRotate(final Uri uri) {
         try {
             InputStream is = TUIConfig.getAppContext().getContentResolver()
@@ -296,6 +296,12 @@ public class ImageUtil {
      * 转换图片成圆形
      *
      * @param bitmap 传入Bitmap对象
+     * @return
+     * 
+     * 
+     * Convert image to circle
+     *
+     * @param bitmap   Pass in a Bitmap object
      * @return
      */
     public static Bitmap toRoundBitmap(Bitmap bitmap) {
@@ -337,17 +343,16 @@ public class ImageUtil {
         final Rect dst = new Rect((int) dst_left, (int) dst_top, (int) dst_right, (int) dst_bottom);
         final RectF rectF = new RectF(dst);
 
-        paint.setAntiAlias(true);// 设置画笔无锯齿
+        paint.setAntiAlias(true);
 
-        canvas.drawARGB(0, 0, 0, 0); // 填充整个Canvas
+        canvas.drawARGB(0, 0, 0, 0);
         paint.setColor(color);
 
-        // 以下有两种方法画圆,drawRounRect和drawCircle
-        // canvas.drawRoundRect(rectF, roundPx, roundPx, paint);// 画圆角矩形，第一个参数为图形显示区域，第二个参数和第三个参数分别是水平圆角半径和垂直圆角半径。
+        // canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
         canvas.drawCircle(roundPx, roundPx, roundPx, paint);
 
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));// 设置两张图片相交时的模式
-        canvas.drawBitmap(bitmap, src, dst, paint); //以Mode.SRC_IN模式合并bitmap和已经draw了的Circle
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, src, dst, paint);
 
         return output;
     }
@@ -357,18 +362,21 @@ public class ImageUtil {
      *
      * @param imagePath 图片路径
      * @return Bitmap 调整后的位图
+     * 
+     * 
+     * Loading high-resolution images requires adaptation
+     * 
+     * @param imagePath
+     * @return Bitmap
      */
     public static Bitmap adaptBitmapFormPath(String imagePath, int reqWidth, int reqHeight){
         try {
-            // 获取图片分辨率
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
-            BitmapFactory.decodeFile(imagePath, options); //此时返回的bitmap为null,但是option会保留一部分参数
+            BitmapFactory.decodeFile(imagePath, options);
 
-            // 计算 inSampleSize
             options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
 
-            // 使用获取到的 inSampleSize 值再次解析图片
             options.inJustDecodeBounds = false;
             return BitmapFactory.decodeFile(imagePath, options);
         } catch (Exception e) {
@@ -408,6 +416,15 @@ public class ImageUtil {
      * @param imageType 图片类型 V2TIMImageElem.V2TIM_IMAGE_TYPE_THUMB , V2TIMImageElem.V2TIM_IMAGE_TYPE_ORIGIN ,
      *                  V2TIMImageElem.V2TIM_IMAGE_TYPE_LARGE
      * @return 图片文件路径
+     * 
+     * 
+     * 
+     * 
+     * Get the image file path based on the image UUID and type
+     * @param uuid 
+     * @param imageType V2TIMImageElem.V2TIM_IMAGE_TYPE_THUMB , V2TIMImageElem.V2TIM_IMAGE_TYPE_ORIGIN ,
+     *                  V2TIMImageElem.V2TIM_IMAGE_TYPE_LARGE
+     * @return path
      */
     public static String generateImagePath(String uuid, int imageType) {
         return TUIConfig.getImageDownloadDir() + uuid + "_" + imageType;
@@ -415,9 +432,8 @@ public class ImageUtil {
 
 
     public static String getGroupConversationAvatar(String groupId) {
-        SharedPreferences sp = TUIConfig.getAppContext().getSharedPreferences(
-                TUILogin.getSdkAppId() + SP_IMAGE, Context.MODE_PRIVATE);
-        final String savedIcon = sp.getString(groupId, "");
+        SPUtils spUtils = SPUtils.getInstance(TUILogin.getSdkAppId() + SP_IMAGE);
+        final String savedIcon = spUtils.getString(groupId, "");
         if (!TextUtils.isEmpty(savedIcon) && new File(savedIcon).isFile() && new File(savedIcon).exists()) {
             return savedIcon;
         }
@@ -425,14 +441,8 @@ public class ImageUtil {
     }
 
     public static void setGroupConversationAvatar(String conversationId, String url) {
-        SharedPreferences sp = TUIConfig.getAppContext().getSharedPreferences(
-                TUILogin.getSdkAppId() + SP_IMAGE, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putString(conversationId, url);
-        boolean success = editor.commit();
-        if (!success) {
-            Log.e("ImageUtil", "setGroupConversationAvatar failed , id : " + conversationId + " , url : " + url);
-        }
+        SPUtils spUtils = SPUtils.getInstance(TUILogin.getSdkAppId() + SP_IMAGE);
+        spUtils.put(conversationId, url);
     }
 
 }

@@ -1,4 +1,4 @@
-package com.tencent.qcloud.tim.tuiofflinepush.OEMPush;
+package com.tencent.qcloud.tim.tuiofflinepush.oempush;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushLog;

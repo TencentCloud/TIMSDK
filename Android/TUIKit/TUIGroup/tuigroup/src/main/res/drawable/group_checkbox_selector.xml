@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@drawable/check_box_selected" android:state_checked="true" android:state_enabled="true"/>
+    <item android:drawable="@drawable/group_select_disable" android:state_checked="true" android:state_enabled="false"/>
+    <item android:drawable="@drawable/check_box_unselected" android:state_checked="false" />
+    <item android:drawable="@drawable/check_box_unselected" />
+
+</selector>

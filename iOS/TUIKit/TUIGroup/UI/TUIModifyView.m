@@ -16,7 +16,7 @@
 @implementation TModifyViewData
 - (instancetype)init {
     if (self = [super init]) {
-        self.enableNull = YES;
+        self.enableNull = NO;
     }
     return self;
 }
@@ -25,6 +25,7 @@
 @interface TUIModifyView () <UITextFieldDelegate, UIGestureRecognizerDelegate>
 @property (nonatomic, assign) BOOL keyboardShowing;
 @property (nonatomic, strong) TModifyViewData *data;
+@property (nonatomic, strong) UIButton *closeBtn;
 @end
 
 @implementation TUIModifyView
@@ -48,7 +49,7 @@
     tap.delegate = self;
     [self addGestureRecognizer:tap];
 
-    self.backgroundColor = TUIGroupDynamicColor(@"group_modify_view_bg_color", @"#FFFFFF7F");
+    self.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.4];
 
     _container = [[UIView alloc] initWithFrame:CGRectMake(0, Screen_Height, kContainerWidth, kContainerHeight)];
     _container.backgroundColor = TUIGroupDynamicColor(@"group_modify_container_view_bg_color", @"#FFFFFF");
@@ -58,16 +59,16 @@
 
 
     CGFloat buttonHeight = 46;
-    CGFloat titleHeight = 60;
+    CGFloat titleHeight = 63;
 
     _title = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, _container.frame.size.width, titleHeight)];
-    _title.font = [UIFont systemFontOfSize:17];
+    _title.font =  [UIFont fontWithName:@"PingFangSC-Medium" size:17];
     _title.textColor = TUIGroupDynamicColor(@"group_modify_title_color", @"#000000");
     _title.textAlignment = NSTextAlignmentCenter;
     [_container addSubview:_title];
     
     _hLine = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(_title.frame), kContainerWidth, TLine_Heigh)];
-    _hLine.backgroundColor = TUICoreDynamicColor(@"separator_color", @"#BCBCBC99");
+    _hLine.backgroundColor = TUICoreDynamicColor(@"separator_color", @"#E4E5E9");
     [_container addSubview:_hLine];
     
     CGFloat contentMargin = 20;
@@ -84,12 +85,12 @@
     [_content setReturnKeyType:UIReturnKeyDone];
     [_content addTarget:self action:@selector(textChanged) forControlEvents:UIControlEventEditingChanged];
     CGRect leftviewFrame = _content.frame;
-    leftviewFrame.size.width = 16;// 距离左侧的距离 leftMargin
+    leftviewFrame.size.width = 16;
     UIView *leftview = [[UIView alloc] initWithFrame:leftviewFrame];
     _content.leftView = leftview;
     _content.leftViewMode = UITextFieldViewModeAlways;
     CGRect rightviewFrame = _content.frame;
-    rightviewFrame.size.width = 16;// 距离右侧的距离 rightMargin
+    rightviewFrame.size.width = 16;
     rightviewFrame.origin.x = rightviewFrame.size.width - 16;
     UIView *rightView = [[UIView alloc] initWithFrame:rightviewFrame];
     _content.rightView = rightView;
@@ -97,7 +98,7 @@
 
     [_container addSubview:_content];
     
-    _descLabel = [[UILabel alloc] initWithFrame:CGRectMake(_content.frame.origin.x, CGRectGetMaxY(_content.frame) + 17, contentWidth, contentheight)];
+    _descLabel = [[UILabel alloc] initWithFrame:CGRectMake(_content.frame.origin.x, CGRectGetMaxY(_content.frame) + 17, contentWidth, 20)];
     _descLabel.textColor = TUIGroupDynamicColor(@"group_modify_desc_color", @"#888888");
     _descLabel.font = [UIFont systemFontOfSize:13.0];
     _descLabel.numberOfLines = 0;
@@ -108,12 +109,19 @@
     [_confirm setTitle:TUIKitLocalizableString(Confirm) forState:UIControlStateNormal];
     [_confirm setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     _confirm.titleLabel.font = [UIFont systemFontOfSize:15];
-    _confirm.layer.cornerRadius = 3;
+    _confirm.layer.cornerRadius = 8;
     _confirm.layer.masksToBounds = YES;
     _confirm.imageView.contentMode = UIViewContentModeScaleToFill;
     [self enableConfirmButton:self.data.enableNull];
     [_confirm addTarget:self action:@selector(didConfirm:) forControlEvents:UIControlEventTouchUpInside];
     [_container addSubview:_confirm];
+    
+    _closeBtn = [[UIButton alloc] initWithFrame:CGRectMake(_container.frame.size.width - 24 - 20, 0, 24, 24)];
+    _closeBtn.mm__centerY(_title.mm_centerY);
+    [_closeBtn setImage:[UIImage imageNamed:TUIGroupImagePath(@"ic_close_poppings")] forState:UIControlStateNormal];
+    [_closeBtn addTarget:self action:@selector(didCancel:) forControlEvents:UIControlEventTouchUpInside];
+    [_container addSubview:_closeBtn];
+    
 }
 
 - (void)setData:(TModifyViewData *)data
@@ -149,8 +157,7 @@
 - (void)onTap:(UIGestureRecognizer *)recognizer
 {
     [_content resignFirstResponder];
-    
-    // 延时处理
+
     if (!self.keyboardShowing) {
         [self hide];
     }

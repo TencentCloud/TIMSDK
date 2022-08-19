@@ -50,7 +50,6 @@ public class FileUtil {
         String videoFileName = getFileName(videoPath);
         String videoMimeType = getMimeType(videoPath);
         final long now = System.currentTimeMillis();
-
         ContentValues videoImageValues = new ContentValues();
         videoImageValues.put(MediaStore.Video.Media.DATE_ADDED, now / 1000);
         videoImageValues.put(MediaStore.Video.Media.DATE_MODIFIED, now / 1000);
@@ -63,7 +62,13 @@ public class FileUtil {
         videoImageValues.put(MediaStore.Video.Media.RELATIVE_PATH, Environment.DIRECTORY_MOVIES + "/" + getAppName(context) + "/");
 
         ContentResolver resolver = context.getContentResolver();
-        Uri uri = resolver.insert(videoExternalContentUri, videoImageValues);
+        Uri uri;
+        try {
+            uri = resolver.insert(videoExternalContentUri, videoImageValues);
+        } catch (IllegalArgumentException e) {
+            TUIChatLog.e(TAG, "saveVideoToGalleryByMediaStore failed, " + e.getMessage());
+            return false;
+        }
         if (uri == null) {
             return false;
         }
@@ -124,7 +129,13 @@ public class FileUtil {
         newImageValues.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + "/" + getAppName(context) + "/");
 
         ContentResolver resolver = context.getContentResolver();
-        Uri uri = resolver.insert(imageExternalContentUri, newImageValues);
+        Uri uri;
+        try {
+            uri = resolver.insert(imageExternalContentUri, newImageValues);
+        } catch (IllegalArgumentException e) {
+            TUIChatLog.e(TAG, "saveImageToGalleryByMediaStore failed, " + e.getMessage());
+            return false;
+        }
         if (uri == null) {
             return false;
         }

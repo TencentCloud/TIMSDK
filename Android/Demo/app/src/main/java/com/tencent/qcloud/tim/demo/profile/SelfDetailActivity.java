@@ -235,7 +235,6 @@ public class SelfDetailActivity extends BaseLightActivity implements View.OnClic
         int month = c.get(Calendar.MONTH);
         int day = c.get(Calendar.DAY_OF_MONTH);
 
-        //日历控件
         DatePickerDialog dp = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int iyear, int monthOfYear, int dayOfMonth) {
@@ -248,22 +247,18 @@ public class SelfDetailActivity extends BaseLightActivity implements View.OnClic
 
     private void updateProfile() {
         V2TIMUserFullInfo v2TIMUserFullInfo = new V2TIMUserFullInfo();
-        // 头像
         if (!TextUtils.isEmpty(faceUrl)) {
             v2TIMUserFullInfo.setFaceUrl(faceUrl);
             UserInfo.getInstance().setAvatar(faceUrl);
         }
 
-        // 昵称
         v2TIMUserFullInfo.setNickname(nickName);
         UserInfo.getInstance().setName(nickName);
 
-        // 生日
         if (birthday != 0) {
             v2TIMUserFullInfo.setBirthday(birthday);
         }
 
-        // 个性签名
         v2TIMUserFullInfo.setSelfSignature(signature);
 
         v2TIMUserFullInfo.setGender(gender);

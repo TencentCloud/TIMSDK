@@ -7,14 +7,32 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/popup_card_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <FrameLayout
         android:layout_marginTop="@dimen/core_popup_card_padding"
+        android:orientation="horizontal"
         android:gravity="center"
-        android:textSize="@dimen/core_popup_card_title_size"
-        tool:text="弹窗标题"/>
+        android:layout_marginStart="@dimen/core_popup_card_padding"
+        android:layout_marginEnd="@dimen/core_popup_card_padding"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:gravity="center"
+            android:id="@+id/popup_card_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/core_popup_card_title_size"
+            android:textColor="#000000"
+            tool:text="弹窗标题"/>
+
+        <ImageView
+            android:id="@+id/close_btn"
+            android:layout_gravity="end"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/core_close_icon" />
+
+    </FrameLayout>
 
     <View
         android:layout_width="wrap_content"

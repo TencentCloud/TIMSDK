@@ -8,6 +8,7 @@ import com.tencent.imsdk.BaseConstants;
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMCompleteCallback;
 import com.tencent.imsdk.v2.V2TIMConversation;
+import com.tencent.imsdk.v2.V2TIMConversationOperationResult;
 import com.tencent.imsdk.v2.V2TIMCreateGroupMemberInfo;
 import com.tencent.imsdk.v2.V2TIMFriendInfoResult;
 import com.tencent.imsdk.v2.V2TIMGroupApplication;
@@ -26,6 +27,8 @@ import com.tencent.imsdk.v2.V2TIMMessageReceipt;
 import com.tencent.imsdk.v2.V2TIMOfflinePushInfo;
 import com.tencent.imsdk.v2.V2TIMSendCallback;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
+import com.tencent.qcloud.tuicore.TUIConstants;
+import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
@@ -51,7 +54,9 @@ import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.tencent.imsdk.BaseConstants.ERR_SDK_MSG_MODIFY_CONFLICT;
 import static com.tencent.imsdk.v2.V2TIMMessage.V2TIM_MSG_STATUS_SEND_FAIL;
@@ -146,6 +151,26 @@ public class ChatProvider {
                 TUIChatLog.d(TAG, "markC2CMessageAsRead setReadMessage success");
             }
         });
+
+        String conversationID = "c2c_" + userId;
+        List<String> conversationIDList = new ArrayList<>();
+        conversationIDList.add(conversationID);
+        V2TIMManager.getConversationManager().markConversation(conversationIDList, V2TIMConversation.V2TIM_CONVERSATION_MARK_TYPE_UNREAD, false, new V2TIMValueCallback<List<V2TIMConversationOperationResult>>() {
+            @Override
+            public void onSuccess(List<V2TIMConversationOperationResult> v2TIMConversationOperationResults) {
+                if (v2TIMConversationOperationResults.size() > 0) {
+                    V2TIMConversationOperationResult result = v2TIMConversationOperationResults.get(0);
+                    TUIChatLog.d(TAG, "mark C2C conversation unread disable success, code:" + result.getResultCode() + "|msg:" + result.getResultInfo());
+                } else {
+                    TUIChatLog.e(TAG, "mark C2C conversation unread disable failed, results size = 0");
+                }
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                TUIChatLog.e(TAG, "mark C2C conversation unread disable failed, code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
+            }
+        });
     }
 
     public void groupReadReport(String groupId) {
@@ -158,6 +183,26 @@ public class ChatProvider {
             @Override
             public void onSuccess() {
                 TUIChatLog.d(TAG, "markGroupMessageAsRead success");
+            }
+        });
+
+        String conversationID = "group_" + groupId;
+        List<String> conversationIDList = new ArrayList<>();
+        conversationIDList.add(conversationID);
+        V2TIMManager.getConversationManager().markConversation(conversationIDList, V2TIMConversation.V2TIM_CONVERSATION_MARK_TYPE_UNREAD, false, new V2TIMValueCallback<List<V2TIMConversationOperationResult>>() {
+            @Override
+            public void onSuccess(List<V2TIMConversationOperationResult> v2TIMConversationOperationResults) {
+                if (v2TIMConversationOperationResults.size() > 0) {
+                    V2TIMConversationOperationResult result = v2TIMConversationOperationResults.get(0);
+                    TUIChatLog.d(TAG, "mark group conversation unread disable success, code:" + result.getResultCode() + "|msg:" + result.getResultInfo());
+                } else {
+                    TUIChatLog.e(TAG, "mark group conversation unread disable failed, results size = 0");
+                }
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                TUIChatLog.e(TAG, "mark group conversation unread disable failed, code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
             }
         });
     }
@@ -218,6 +263,7 @@ public class ChatProvider {
         V2TIMOfflinePushInfo v2TIMOfflinePushInfo = new V2TIMOfflinePushInfo();
         v2TIMOfflinePushInfo.setExt(new Gson().toJson(containerBean).getBytes());
         // OPPO必须设置ChannelID才可以收到推送消息，这个channelID需要和控制台一致
+        // OPPO must set a ChannelID to receive push messages. This channelID needs to be the same as the console.
         v2TIMOfflinePushInfo.setAndroidOPPOChannelID("tuikit");
         if (TUIChatConfigs.getConfigs().getGeneralConfig().isAndroidPrivateRing()) {
             v2TIMOfflinePushInfo.setAndroidSound(OfflinePushInfoUtils.PRIVATE_RING_NAME);
@@ -244,22 +290,17 @@ public class ChatProvider {
                         TUIChatLog.v(TAG, "sendMessage onSuccess:" + v2TIMMessage.getMsgID());
                         message.setV2TIMMessage(v2TIMMessage);
                         TUIChatUtils.callbackOnSuccess(callBack, message);
+                        Map<String, Object> param = new HashMap<>();
+                        param.put(TUIConstants.TUIChat.CHAT_ID, chatInfo.getId());
+                        TUICore.notifyEvent(TUIConstants.TUIChat.EVENT_KEY_MESSAGE_EVENT, TUIConstants.TUIChat.EVENT_SUB_KEY_SEND_MESSAGE_SUCCESS, param);
                     }
                 });
         return msgID;
     }
 
-    public String sendMessage(TUIMessageBean message, OfflinePushInfo pushInfo,
-                              String receiver, boolean isGroup, boolean onlineUserOnly, IUIKitCallback<TUIMessageBean> callBack) {
-        final V2TIMMessage v2TIMMessage = message.getV2TIMMessage();
-        v2TIMMessage.setExcludedFromUnreadCount(TUIChatConfigs.getConfigs().getGeneralConfig().isExcludedFromUnreadCount());
-        v2TIMMessage.setExcludedFromLastMessage(TUIChatConfigs.getConfigs().getGeneralConfig().isExcludedFromLastMessage());
-
-        TUIChatLog.i(TAG, "sendMessage to " + receiver);
-        V2TIMOfflinePushInfo v2TIMOfflinePushInfo = OfflinePushInfoUtils.convertOfflinePushInfoToV2PushInfo(pushInfo);
-        String msgID = V2TIMManager.getMessageManager().sendMessage(message.getV2TIMMessage(),
-                isGroup ? null : receiver, isGroup ? receiver : null, V2TIMMessage.V2TIM_PRIORITY_DEFAULT,
-                onlineUserOnly, v2TIMOfflinePushInfo, new V2TIMSendCallback<V2TIMMessage>() {
+    public String sendTypingStatusMessage(TUIMessageBean message, String receiver, IUIKitCallback<TUIMessageBean> callBack) {
+        String msgID = V2TIMManager.getMessageManager().sendMessage(message.getV2TIMMessage(), receiver, null, V2TIMMessage.V2TIM_PRIORITY_DEFAULT,
+                true, null, new V2TIMSendCallback<V2TIMMessage>() {
 
                     @Override
                     public void onError(int code, String desc) {
@@ -273,6 +314,9 @@ public class ChatProvider {
                         message.setStatus(TUIMessageBean.MSG_STATUS_SEND_SUCCESS);
                         message.setV2TIMMessage(v2TIMMessage);
                         TUIChatUtils.callbackOnSuccess(callBack, message);
+                        Map<String, Object> param = new HashMap<>();
+                        param.put(TUIConstants.TUIChat.CHAT_ID, receiver);
+                        TUICore.notifyEvent(TUIConstants.TUIChat.EVENT_KEY_MESSAGE_EVENT, TUIConstants.TUIChat.EVENT_SUB_KEY_SEND_MESSAGE_SUCCESS, param);
                     }
 
                     @Override
@@ -305,6 +349,9 @@ public class ChatProvider {
                     public void onSuccess(V2TIMMessage v2TIMMessage) {
                         TUIMessageBean data = ChatMessageParser.parseMessage(v2TIMMessage);
                         TUIChatUtils.callbackOnSuccess(callBack, data);
+                        Map<String, Object> param = new HashMap<>();
+                        param.put(TUIConstants.TUIChat.CHAT_ID, id);
+                        TUICore.notifyEvent(TUIConstants.TUIChat.EVENT_KEY_MESSAGE_EVENT, TUIConstants.TUIChat.EVENT_SUB_KEY_SEND_MESSAGE_SUCCESS, param);
                     }
                 });
         return msgId;
@@ -690,6 +737,9 @@ public class ChatProvider {
     }
 
     public void getGroupMembersInfo(String groupId, List<String> groupMemberIds, IUIKitCallback<List<GroupMemberInfo>> callback) {
+        if (TUIChatUtils.isTopicGroup(groupId)) {
+            groupId = TUIChatUtils.getGroupIDFromTopicID(groupId);
+        }
         V2TIMManager.getGroupManager().getGroupMembersInfo(groupId, groupMemberIds, new V2TIMValueCallback<List<V2TIMGroupMemberFullInfo>>() {
             @Override
             public void onSuccess(List<V2TIMGroupMemberFullInfo> v2TIMGroupMemberFullInfos) {

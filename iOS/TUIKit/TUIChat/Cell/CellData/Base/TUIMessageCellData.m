@@ -10,24 +10,24 @@
 
 @implementation TUIMessageCellData
 
-+ (TUIMessageCellData *)getCellData:(V2TIMMessage *)message {
-    // 子类实现
++ (TUIMessageCellData *)getCellData:(V2TIMMessage *)message
+{
     return nil;
 }
 
-+ (NSString *)getDisplayString:(V2TIMMessage *)message {
-    // 子类实现
++ (NSString *)getDisplayString:(V2TIMMessage *)message
+{
     return nil;
 }
 
-- (Class)getReplyQuoteViewDataClass {
-    // 子类实现
+- (Class)getReplyQuoteViewDataClass
+{
+
     return nil;
 }
 
 - (Class)getReplyQuoteViewClass
 {
-    // 子类实现
     return nil;
 }
 
@@ -37,7 +37,7 @@
     if (self) {
         _direction = direction;
         _status = Msg_Status_Init;
-        _showReadReceipt = YES;//新 Demo 默认显示已读回执
+        _showReadReceipt = YES;
         _avatarImage = DefaultAvatarImage;
         if (direction == MsgDirectionIncoming) {
             _cellLayout = [TUIMessageCellLayout incommingMessageLayout];
@@ -60,7 +60,7 @@
 
     if (self.showName)
         height += 20;
-    if (self.showMessageModifyReplies) {// x人回复
+    if (self.showMessageModifyReplies) {
         height += 22;
     }
     if (self.messageModifyReactsSize.height > 0) {

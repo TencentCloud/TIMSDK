@@ -103,7 +103,10 @@
         self.navigationController.navigationBar.barTintColor = self.tintColor;
         self.navigationController.navigationBar.shadowImage = [UIImage new];
         self.navigationController.navigationBar.standardAppearance = appearance;
-        //iOS15新增特性：滑动边界样式
+        /**
+         * iOS15 新增特性：滑动边界样式
+         * New feature in iOS15: sliding border style
+         */
         self.navigationController.navigationBar.scrollEdgeAppearance= appearance;
 
     }
@@ -131,11 +134,16 @@
 
 - (void)setupViews
 {
-   self.edgesForExtendedLayout = UIRectEdgeNone;
-   self.automaticallyAdjustsScrollViewInsets = NO;
-   self.definesPresentationContext = YES;//不设置会导致一些位置错乱，无动画等问题
-   
-   self.navigationController.navigationBarHidden = NO;
+    self.edgesForExtendedLayout = UIRectEdgeNone;
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    
+    /**
+     * 不设置会导致一些位置错乱，无动画等问题
+     * Not setting it will cause some problems such as confusion in position, no animation, etc.
+     */
+    self.definesPresentationContext = YES;
+    
+    self.navigationController.navigationBarHidden = NO;
     _titleView = [[TUINaviBarIndicatorView alloc] init];
     [_titleView setTitle:NSLocalizedString(@"ChangeLanguage", nil)];
     self.navigationItem.titleView = _titleView;
@@ -148,8 +156,8 @@
     [backButton addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.hidesBackButton = YES;
-   
-   [self.view addSubview:self.tableView];
+    
+    [self.view addSubview:self.tableView];
 }
 
 - (void)back
@@ -216,16 +224,25 @@
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
     LanguageSelectCellModel *cellModel = self.datas[indexPath.row];
     
-    // 切换语言
+    /**
+     * 切换语言
+     * Changing language
+     */
     [TUIGlobalization setCustomLanguage:cellModel.languageID];
     
-    // 处理 UI 选中
+    /**
+     * 处理 UI 选中
+     * Handling UI selection
+     */
     self.selectModel.selected = NO;
     cellModel.selected = YES;
     self.selectModel = cellModel;
     [tableView reloadData];
     
-    // 通知页面动态刷新
+    /**
+     * 通知页面动态刷新
+     * Notify page dynamic refresh
+     */
     __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         if ([weakSelf.delegate respondsToSelector:@selector(onSelectLanguage:)]) {

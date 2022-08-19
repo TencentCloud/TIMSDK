@@ -26,7 +26,7 @@
         [self.container addSubview:_myTextLabel];
 
         _myLinkLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-        _myLinkLabel.text = TUIKitLocalizableString(TUIKitMoreLinkDetails); // @"查看详情>>";
+        _myLinkLabel.text = TUIKitLocalizableString(TUIKitMoreLinkDetails);
         _myLinkLabel.font = [UIFont systemFontOfSize:15];
         _myLinkLabel.textColor = TUIChatDynamicColor(@"chat_link_message_subtitle_color", @"#0000FF");
         [self.container addSubview:_myLinkLabel];

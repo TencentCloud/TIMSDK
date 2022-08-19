@@ -16,6 +16,15 @@ import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
  *  消息区 {@link MessageRecyclerView}，
  *  输入区 {@link InputView}，</pre>
  * 每个区域提供了多样的方法以供定制使用。
+ * 
+ * 
+ * The chat window {@link ChatView} provides functions such as displaying and sending messages.
+ * The interface layout is divided into four parts from top to bottom:
+ *  TitleBarLayout {@link TitleBarLayout}，
+ *  NoticeLayout {@link NoticeLayout}，
+ *  MessageRecyclerView {@link MessageRecyclerView}，
+ *  InputView {@link InputView},
+ *  Each area offers a variety of methods for customization.
  */
 public interface IChatLayout extends ILayout {
 

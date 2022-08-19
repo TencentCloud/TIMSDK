@@ -45,6 +45,24 @@
 
     <application>
 
+        <activity
+            android:name=".OpenActivity"
+            android:launchMode="singleTask"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+
+            <!-- 离线推送打开应用内页面 -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
+                    android:host="com.tencent.qcloud.uniapp"
+                    android:path="/detail"
+                    android:scheme="pushscheme" />
+            </intent-filter>
+        </activity>
+
         <provider
             android:name="com.tencent.qcloud.tim.tuiofflinepush.TUIOfflinePushService"
             android:authorities="${applicationId}.TUIOfflinePush.Init"
@@ -93,7 +111,7 @@
 
         <!-- 自实现小米推送的接收广播 -->
         <receiver
-            android:name="com.tencent.qcloud.tim.tuiofflinepush.OEMPush.XiaomiMsgReceiver"
+            android:name="com.tencent.qcloud.tim.tuiofflinepush.oempush.XiaomiMsgReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE" />
@@ -109,7 +127,7 @@
 
         <!-- ********华为推送设置start******** -->
         <service
-            android:name="com.tencent.qcloud.tim.tuiofflinepush.OEMPush.HUAWEIHmsMessageService"
+            android:name="com.tencent.qcloud.tim.tuiofflinepush.oempush.HUAWEIHmsMessageService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.huawei.push.action.MESSAGING_EVENT" />
@@ -119,7 +137,7 @@
         <!-- ********华为推送设置end******** -->
 
         <!-- ********魅族推送设置start******** -->
-        <receiver android:name="com.tencent.qcloud.tim.tuiofflinepush.OEMPush.MEIZUPushReceiver"
+        <receiver android:name="com.tencent.qcloud.tim.tuiofflinepush.oempush.MEIZUPushReceiver"
             android:exported="true" >
             <intent-filter>
 
@@ -150,7 +168,7 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <!-- push应用定义消息receiver声明 -->
-        <receiver android:name="com.tencent.qcloud.tim.tuiofflinepush.OEMPush.VIVOPushMessageReceiverImpl"
+        <receiver android:name="com.tencent.qcloud.tim.tuiofflinepush.oempush.VIVOPushMessageReceiverImpl"
             android:exported="true">
             <intent-filter>
 
@@ -163,7 +181,7 @@
 
         <!-- ********海外google云消息传递start******** -->
         <service
-            android:name="com.tencent.qcloud.tim.tuiofflinepush.OEMPush.GoogleFCMMsgService"
+            android:name="com.tencent.qcloud.tim.tuiofflinepush.oempush.GoogleFCMMsgService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

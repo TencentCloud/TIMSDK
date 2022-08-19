@@ -22,7 +22,6 @@
         }
     }
     
-    /// 群直播信令文本
     NSString *content = [self getLiveSignalingContentWithMessage:message];
     if (content.length > 0) {
         return YES;
@@ -31,7 +30,6 @@
 }
 
 + (TUIMessageCellData *)getLiveCellData:(V2TIMMessage *)message {
-    /// 群直播自定义消息
     NSDictionary *params = [NSJSONSerialization JSONObjectWithData:message.customElem.data options:NSJSONReadingAllowFragments error:nil];
     //[params[@"version"] integerValue] == Version &&
     if ([params isKindOfClass:NSDictionary.class] && [params[@"businessID"] isKindOfClass:NSString.class] && [params[@"businessID"] isEqualToString:@"group_live"]) {
@@ -44,7 +42,6 @@
         return cellData;
     }
     
-    /// 群直播信令文本
     NSString *content = [self getLiveSignalingContentWithMessage:message];
     if (content.length > 0) {
         TMsgDirection direction = message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming;
@@ -62,12 +59,12 @@
     if (message.customElem == nil || message.customElem.data == nil) {
         return nil;
     }
-    // 先判断下是不是群直播信令消息
+
     V2TIMSignalingInfo *info = [[V2TIMManager sharedInstance] getSignallingInfo:message];
     if (info != nil) {
         return [self getLiveSignalingContentWithMessage:message];
     }
-    // 判断是不是群直播自定义消息
+
     NSError *err = nil;
     NSDictionary *param = [NSJSONSerialization JSONObjectWithData:message.customElem.data options:NSJSONReadingMutableContainers error:&err];
     if (param != nil && [param isKindOfClass:[NSDictionary class]]) {
@@ -90,14 +87,13 @@
 }
 
 #pragma mark - Utils
-/// 信令消息对应的自定义文本
 + (NSString *)getLiveSignalingContentWithMessage:(V2TIMMessage *)message
 {
     V2TIMSignalingInfo *info = [[V2TIMManager sharedInstance] getSignallingInfo:message];
     if (!info) {
         return nil;
     }
-    // 解析透传的data字段
+
     NSError *err = nil;
     NSDictionary *param = nil;
     if (info.data != nil) {
@@ -107,13 +103,11 @@
         return nil;
     }
     
-    // 判断业务类型
     NSArray *allKeys = param.allKeys;
     if (![allKeys containsObject:@"businessID"]) {
         return nil;
     }
-    
-    // 判断是否为TRTC的信令
+
     NSString *liveRoomContent = @"";
     if ([self isLiveRoomSignalingInfo:info infoData:param withCustomContent:&liveRoomContent]) {
         return liveRoomContent;
@@ -122,7 +116,6 @@
     return nil;
 }
 
-// 直播间自定义信令文本
 + (BOOL)isLiveRoomSignalingInfo:(V2TIMSignalingInfo *)info infoData:(NSDictionary *)param withCustomContent:(NSString **)content
 {
     *content = @"";

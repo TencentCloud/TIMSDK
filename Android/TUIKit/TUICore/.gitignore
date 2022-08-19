@@ -8,5 +8,7 @@
 
 # IDEA Files
 /tuicore/.idea/
+.idea/
+.gradle/
 /tuicore/build/
 local.properties

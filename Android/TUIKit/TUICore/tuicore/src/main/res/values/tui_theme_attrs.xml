@@ -29,7 +29,10 @@
     <attr name="core_title_bar_bg" format="reference"/>
     <attr name="core_title_bar_text_bg" format="reference|color"/>
     <attr name="core_title_bar_back_icon" format="reference"/>
-    <attr name="core_default_group_icon" format="reference"/>
+    <attr name="core_default_group_icon_public" format="reference"/>
+    <attr name="core_default_group_icon_work" format="reference"/>
+    <attr name="core_default_group_icon_meeting" format="reference"/>
+    <attr name="core_default_group_icon_community" format="reference"/>
     <attr name="core_default_user_icon" format="reference"/>
     <attr name="user_status_online" format="reference"/>
     <attr name="user_status_offline" format="reference"/>

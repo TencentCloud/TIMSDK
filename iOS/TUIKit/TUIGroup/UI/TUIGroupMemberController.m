@@ -119,7 +119,7 @@
             [self.navigationController pushViewController:self.showContactSelectVC animated:YES];
         }]];
     }
-    if ([self.dataProvider.groupInfo canRemoveMember]) { // 删除成员
+    if ([self.dataProvider.groupInfo canRemoveMember]) {
         [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitGroupProfileManageDelete) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             // delete
             self.tag = 2;
@@ -256,7 +256,7 @@
 
         NSArray<TUICommonContactSelectCellData *> *selectArray = [param tui_objectForKey:TUICore_TUIContactNotify_SelectedContactsSubKey_ListKey asClass:NSArray.class];
         if (![selectArray.firstObject isKindOfClass:TUICommonContactSelectCellData.class]) {
-            NSAssert(NO, @"传值类型错误");
+            NSAssert(NO, @"value type error");
         }
         
         if (self.tag == 1) {

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="8dp"
+    android:background="#EBECF0"
+    tools:context=".ui.page.TUICommunityFragment">
+
+    <LinearLayout
+        android:id="@+id/community_list_area"
+        android:layout_width="62dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:background="#EBECF0"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingLeft="7dp"
+        android:paddingRight="7dp">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+                android:id="@+id/self_face"
+                android:layout_width="48dp"
+                android:layout_height="48dp" />
+
+            <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+                android:id="@+id/self_face_select_border"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/community_self_avatar_select_border" />
+        </FrameLayout>
+
+        <View
+            android:id="@+id/divide_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="2.63dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="2.63dp"
+            android:background="#1A000000" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.tencent.qcloud.tuikit.tuicommunity.ui.view.CommunityGroupList
+                android:id="@+id/community_group_list"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp">
+
+                <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+                    android:id="@+id/add_community"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/community_add_group" />
+
+                <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+                    android:id="@+id/add_community_select_border"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/selected_border"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/network_area"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/community_list_area"
+        android:layout_toRightOf="@id/community_list_area"
+        android:background="#EBF0F6"
+        android:orientation="vertical"
+        android:visibility="visible"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:id="@+id/network_connect_failed"
+            android:orientation="horizontal"
+            android:background="#EBF0F6"
+            android:gravity="center_vertical"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="18dp"
+            android:layout_marginEnd="18dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible">
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:background="@drawable/community_network_failed" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:textColor="#E54545"
+                android:text="@string/community_network_connect_failed"
+                android:textSize="14sp"
+                android:layout_marginLeft="8dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/network_connecting"
+            android:orientation="horizontal"
+            android:background="#EBECF0"
+            android:gravity="center_vertical"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="18dp"
+            android:layout_marginEnd="18dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible">
+            <ProgressBar
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:indeterminateDrawable="@drawable/community_progress_bar_bg"
+                android:indeterminateDuration="500"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#006EFF"
+                android:layout_marginStart="8dp"
+                android:text="@string/community_network_connecting"
+                android:textSize="14sp"
+                android:layout_marginLeft="8dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/community_content_view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/network_area"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_toEndOf="@id/community_list_area"
+        android:layout_toRightOf="@id/community_list_area"
+        android:background="#00FFFFFF" />
+
+</RelativeLayout>

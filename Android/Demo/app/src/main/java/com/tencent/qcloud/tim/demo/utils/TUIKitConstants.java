@@ -9,6 +9,11 @@ public class TUIKitConstants {
      * 2: iOS支持的视频通话版本，后续已经不兼容
      * 3: 未发布版本
      * 4: Android/iOS/Web互通的视频通话版本
+     * 
+     * 1: Just a text message with a link
+     * 2: The video calling version supported by iOS is no longer compatible
+     * 3: unreleased version
+     * 4: Android/iOS/Web interoperable version for video call
      */
     public static final int JSON_VERSION_UNKNOWN = 0;
     public static final int JSON_VERSION_1       = 1;

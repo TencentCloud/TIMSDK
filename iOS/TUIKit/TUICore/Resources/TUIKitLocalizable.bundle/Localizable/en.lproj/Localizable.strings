@@ -99,7 +99,7 @@
 "FriendAddResultSuccessWait" = "Sent successfully. Wait for approval.";
 "FriendAddResultForbid" = "The other user disabled friend request.";
 "FriendAddResultSuccess" = "Added to friend list";
-"FriendAddResultExists" = "Friend already exists.";
+"FriendAddResultExists" = "You're already friends.";
 "TUIKitWelcome" = "Welcome to Tencent Cloud Instant Messaging!";
 "TUIKitMicCamerAuthTips" = "Enable mic and camera permissions";
 "TUIKitMicAuth" = "Enable mic permission";
@@ -141,6 +141,7 @@
 "TUIKitGroupProfileJoinDisable" = "Prohibited from Joining";
 "TUIKitGroupProfileAdminApprove" = "Admin Approval";
 "TUIKitGroupProfileEditAlias" = "Edit My Alias in Group";
+"TUIKitGroupProfileEditAliasDesc" = "Only letters, digits, underscores, and Chinese characters.";
 "TUIKitGroupProfileEditGroupName" = "Edit Group Name";
 "TUIKitGroupProfileEditAnnouncement" = "Edit Group Notice";
 "TUIKitGroupProfileEditAvatar" = "Change Group Profile Photo";
@@ -676,6 +677,18 @@
 "StickyonTop" = "Sticky on Top";
 "CancelStickonTop" = "Remove from Top";
 "ClearHistoryChatMessage" = "Clear messages";
+"MarkAsRead" = "Mark As Read";
+"MarkAsUnRead" = "Mark As UnRead";
+"MarkHide" = "Hide";
+"MinimizeGroup" = "Minimize Group";
+
+"TUIKitConversationMarkHide" = "Conversation Hide";
+"TUIKitConversationMarkHideDescriptionOn" = "After opening, this conversation will not appear in the conversation list, and the chat history will still be preserved";
+"TUIKitConversationMarkHideDescriptionOff" = "After closing, this conversation will appear in the conversation list and the chat history will still be preserved.";
+
+"TUIKitConversationMarkFoldGroups" = "Minimized Groups";
+"TUIKitConversationMarkFold" = "Minimize Group";
+
 
 "TUIKitRepliesDetailTitle" = "Reply Details";
 "TUIKitRepliesNum" = " replies";
@@ -695,3 +708,5 @@
 "TUIKitContactNoGroupChats" = "Group chats is empty";
 "TUIKitContactNoBlockList" = "Block list is emply";
 "TUIKitTyping" = "Typing";
+
+"TUIKitMessageTipsEditGroupAddOptFormat" = "%@ changed group add option to \"%@\"、";

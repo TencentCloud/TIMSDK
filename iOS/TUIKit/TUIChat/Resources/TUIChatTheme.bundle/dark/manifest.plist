@@ -90,6 +90,20 @@
 	<string>#D9D9D9</string>
 	<key>chat_reply_message_quoteView_recv_text_color</key>
 	<string>#888888</string>
+
+	<key>chat_reference_message_content_text_color</key>
+	<string>#000000</string>
+	<key>chat_reference_message_quoteView_text_color</key>
+	<string>#D9D9D9</string>
+	<key>chat_reference_message_quoteView_bg_color</key>
+	<string>#393939</string>
+	<key>chat_reference_message_sender_text_color</key>
+	<string>#00000026</string>
+	<key>chat_reference_message_content_recv_text_color</key>
+	<string>#D9D9D9</string>
+	<key>chat_reference_message_quoteView_recv_text_color</key>
+	<string>#888888</string>
+
 	<key>chat_voice_message_send_duration_time_color</key>
 	<string>#000000</string>
 	<key>chat_voice_message_recv_duration_time_color</key>

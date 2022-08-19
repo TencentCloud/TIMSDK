@@ -16,13 +16,13 @@
 {
     if (self = [super initWithFrame:frame]) {
         _titleLabel = [[UILabel alloc] init];
-        _titleLabel.text = @"这是原始消息的摘要 title";
+        _titleLabel.text = @"title";
         _titleLabel.font = [UIFont systemFontOfSize:10.0];
         _titleLabel.textColor = [UIColor d_systemGrayColor];
         _titleLabel.numberOfLines = 1;
         
         _subTitleLabel = [[UILabel alloc] init];
-        _subTitleLabel.text = @"你好1\n你好2";
+        _subTitleLabel.text = @"1\n2";
         _subTitleLabel.font = [UIFont systemFontOfSize:10.0];
         _subTitleLabel.textColor = [UIColor d_systemGrayColor];
         _subTitleLabel.numberOfLines = 2;

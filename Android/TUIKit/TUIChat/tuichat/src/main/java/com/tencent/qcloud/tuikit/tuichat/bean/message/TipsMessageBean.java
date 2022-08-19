@@ -3,6 +3,7 @@ package com.tencent.qcloud.tuikit.tuichat.bean.message;
 import android.text.TextUtils;
 
 import com.tencent.imsdk.v2.V2TIMGroupChangeInfo;
+import com.tencent.imsdk.v2.V2TIMGroupInfo;
 import com.tencent.imsdk.v2.V2TIMGroupMemberChangeInfo;
 import com.tencent.imsdk.v2.V2TIMGroupMemberInfo;
 import com.tencent.imsdk.v2.V2TIMGroupTipsElem;
@@ -14,36 +15,47 @@ import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 
 import java.util.List;
 
-/**
- * 提示消息
- */
 public class TipsMessageBean extends TUIMessageBean {
     /**
      * 群创建提示消息
+     * 
+     * Create group
      */
     public static final int MSG_TYPE_GROUP_CREATE = 0x101;
     /**
      * 群解散提示消息
+     * 
+     * Dismiss a group
      */
     public static final int MSG_TYPE_GROUP_DELETE = 0x102;
     /**
      * 群成员加入提示消息
+     * 
+     * Proactively join a group (memberList joins a group; valid only for non-Work groups)
      */
     public static final int MSG_TYPE_GROUP_JOIN = 0x103;
     /**
      * 群成员退群提示消息
+     * 
+     * Quit a group
      */
     public static final int MSG_TYPE_GROUP_QUITE = 0x104;
     /**
      * 群成员被踢出群提示消息
+     * 
+     * Be kicked out of a group (opMember kicks memberList out of the group)
      */
     public static final int MSG_TYPE_GROUP_KICK = 0x105;
     /**
      * 群名称修改提示消息
+     * 
+     * Group name change prompt message
      */
     public static final int MSG_TYPE_GROUP_MODIFY_NAME = 0x106;
     /**
      * 群通知更新提示消息
+     * 
+     * Group notification update prompt message
      */
     public static final int MSG_TYPE_GROUP_MODIFY_NOTICE = 0x107;
 
@@ -130,10 +142,8 @@ public class TipsMessageBean extends TUIMessageBean {
                 } else if (modifyType == V2TIMGroupChangeInfo.V2TIM_GROUP_INFO_CHANGE_TYPE_OWNER) {
                     setTipType(TipsMessageBean.MSG_TYPE_GROUP_MODIFY_NOTICE);
                     if (!TextUtils.isEmpty(targetUser)) {
-                        // 后台把新群主的资料放到了 getMemberList 中
                         tipsMessage = operationUser + TUIChatService.getAppContext().getString(R.string.move_owner) + "\"" + targetUser + "\"";
                     } else {
-                        // modifyInfo 中只有新群主的 userID
                         tipsMessage =
                                 operationUser + TUIChatService.getAppContext().getString(R.string.move_owner) + "\"" + TUIChatConstants.covert2HTMLString(modifyInfo.getValue()) + "\"";
                     }
@@ -150,6 +160,17 @@ public class TipsMessageBean extends TUIMessageBean {
                         tipsMessage = operationUser + TUIChatService.getAppContext().getString(R.string.modify_shut_up_all);
                     } else {
                         tipsMessage = operationUser + TUIChatService.getAppContext().getString(R.string.modify_cancel_shut_up_all);
+                    }
+                } else if (modifyType == V2TIMGroupChangeInfo.V2TIM_GROUP_INFO_CHANGE_TYPE_GROUP_ADD_OPT) {
+                    setTipType(TipsMessageBean.MSG_TYPE_GROUP_MODIFY_NOTICE);
+                    tipsMessage = TUIChatService.getAppContext().getString(R.string.modify_group_add_opt);
+                    int addOpt = modifyInfo.getIntValue();
+                    if (addOpt == V2TIMGroupInfo.V2TIM_GROUP_ADD_FORBID) {
+                        tipsMessage = tipsMessage + TUIChatService.getAppContext().getString(R.string.group_add_opt_join_disable);
+                    } else if (addOpt == V2TIMGroupInfo.V2TIM_GROUP_ADD_AUTH) {
+                        tipsMessage = tipsMessage + TUIChatService.getAppContext().getString(R.string.group_add_opt_admin_approve);
+                    } else {
+                        tipsMessage = tipsMessage + TUIChatService.getAppContext().getString(R.string.group_add_opt_auto_approval);
                     }
                 }
                 if (i < modifyList.size() - 1) {
@@ -194,7 +215,7 @@ public class TipsMessageBean extends TUIMessageBean {
         if (groupMemberInfo == null) {
             return null;
         }
-        // 群名片->好友备注->昵称->ID
+        
         if (!TextUtils.isEmpty(groupMemberInfo.getNameCard())) {
             displayName = groupMemberInfo.getNameCard();
         } else if (!TextUtils.isEmpty(groupMemberInfo.getFriendRemark())) {

@@ -6,8 +6,11 @@
 //  Copyright © 2016年 tencent. All rights reserved.
 //
 /** 腾讯云IM Demo数据处理单元
+ *  - 本类为Demo客户端提供数据处理服务，以便客户端更好的工作
  *
- *  本类为Demo客户端提供数据处理服务，以便客户端更好的工作
+ *
+ *  Tencent Cloud IM Demo data processing unit
+ *  - This class provides data processing services for the Demo client, so that the client can work better
  *
  */
 #import <Foundation/Foundation.h>
@@ -40,13 +43,10 @@
 /// @param len length
 + (NSString *) randomStringWithLength: (int) len;
 
-//返回是否第一次安装客户端
 BOOL isFirstLaunch(void);
 
-//返回是否是当天首次启动
-BOOL isFirstLaunchToday(void);
 
-//通过Safari打开url
 + (void)openLinkWithURL:(NSURL *)url;
+
 @end
 

@@ -36,7 +36,8 @@
 }
 
 #pragma mark - Override Methods
-- (NSString *)forwardTitleWithMyName:(NSString *)nameStr {
+- (NSString *)forwardTitleWithMyName:(NSString *)nameStr
+{
     return [NSString stringWithFormat:TUIKitLocalizableString(TUIKitRelayChatHistoryForSomebodyFormat), self.conversationData.title, nameStr];
 }
 

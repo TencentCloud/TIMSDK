@@ -34,9 +34,6 @@
     return self;
 }
 
-/**
- *设置用户信息
- */
 - (void)setProfile:(V2TIMUserFullInfo *)profile
 {
     _profile = profile;
@@ -70,21 +67,19 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = TUIKitLocalizableString(ContactsAddFriends); // @"添加好友";
+    self.title = TUIKitLocalizableString(ContactsAddFriends);
 
     self.view.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
 
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.automaticallyAdjustsScrollViewInsets = NO;
-    self.definesPresentationContext = YES;//不设置会导致一些位置错乱，无动画等问题
+    self.definesPresentationContext = YES;
 
-    // 创建搜索框
     self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
-    //设置代理
     self.searchController.delegate = self;
     self.searchController.searchResultsUpdater = self;
     self.searchController.dimsBackgroundDuringPresentation = NO;
-    _searchController.searchBar.placeholder = TUIKitLocalizableString(SearchGroupPlaceholder); // @"用户ID";
+    _searchController.searchBar.placeholder = TUIKitLocalizableString(SearchGroupPlaceholder);
     [self.view addSubview:_searchController.searchBar];
     self.searchController.searchBar.mm_sizeToFit();
     [self setSearchIconCenter:YES];
@@ -130,9 +125,6 @@
     [self setSearchIconCenter:YES];
 }
 
-/**
- *设置UI显示的安全区域，防止View被异性屏等遮挡
- */
 - (CGFloat)safeAreaTopGap
 {
     NSNumber *gap;
@@ -153,9 +145,6 @@
     self.userView.profile = nil;
 }
 
-/**
- *searchController中的内容每次更新，都会调用改函数进行一次当前内容的搜索
- */
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
     NSString *inputStr = searchController.searchBar.text ;
     NSLog(@"serach %@", inputStr);

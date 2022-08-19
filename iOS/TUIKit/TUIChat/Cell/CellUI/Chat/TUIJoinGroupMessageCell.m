@@ -14,7 +14,6 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        //此处 textView 的样式按照系统信息的 messageLebel保持一致
         _textView = [[UITextView alloc] init];
         _textView.editable = NO;
         _textView.scrollEnabled = NO;
@@ -41,7 +40,6 @@
     self.retryView.hidden = YES;
     [self.indicator stopAnimating];
 
-    //以下代码对 attributeString 进行设置并对对应的名称部分添加识别。
     NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@",data.content]];
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     paragraphStyle.alignment = NSTextAlignmentCenter;
@@ -51,9 +49,7 @@
                                     };
     [attributeString setAttributes:attributeDict range:NSMakeRange(0, attributeString.length)];
 
-    ///对于多人，遍历以对其添加URL赋值。
     if(data.userNameList.count > 0){
-        //通过下面的函数，获取到每个昵称对应的精确位置。
         NSArray *nameRangeList = [self findRightRangeOfAllString:data.userNameList inText:attributeString.string];
         int i = 0;
         for(i = 0; i < nameRangeList.count; i++){
@@ -81,9 +77,7 @@
 }
 
 
-//通过 textView 的委托，实现点击蓝色名称时的回调。
 - (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange{
-    //判定被踢或被邀请 user 时，使用 URL 判定，方便获得具体点击的目标。
         NSArray *userNames = _joinData.userNameList;
         NSURL *urlRecognizer = [[NSURL alloc] init];
 
@@ -98,11 +92,17 @@
     return NO;
 }
 
-//对于昵称精确位置的查找，利用了以下性质：userName 数组从中的存放顺序，和最终内容中显示的顺序必定相同。
-//例如：“A 邀请了 B、C、D 加入群组”，则 userName 中元素的存放顺序必定为 ABCD。
-//所以在此采用从头查找，接力查找的方式。例如对于上一行中的例子，先查找第一个元素 A，因为 rangeOfString 的特性，必定查找到头部位置的A。
-//在查找到头部位置的 A 后，我们把 A 从查找范围中剔除，查找范围变为了 “邀请了 B、C、D 加入群组”，然后再从新范围中，查找下一个元素，也就是 B。
-//因为 userName 中的元素存放顺序和最终的显示顺序必定相同，这样就保证在查找范围内第一次出现的字符串的位置，必定为我们想要的位置，从而不必担心子串的误判定。
+/**
+ * 对于获取文本内容中昵称的准确位置，利用了以下性质：userName 在数组中的存放顺序，和最终文本显示的顺序必定相同。
+ * 例如：文本内容为，“A 邀请了 B、C、D 加入群组”，那么 userName 中元素的存放顺序必定为 ABCD。
+ * 故使用“从头查找，接力查找”的方式。例如，先查找第一个元素 A，因为 rangeOfString 的特性，必定查找到头部位置的 A。
+ * 在查找到头部位置的 A 后，我们把 A 从查找范围中剔除，查找范围变为了 “邀请了 B、C、D 加入群组”，然后继续查找下一个元素，也就是 B。
+ *
+ * To obtain the exact position of the nickname in the text content, the following properties are used: the storage order of userName in the array must be the same as the order in which the final text is displayed.
+ * For example: the text content is, "A invited B, C, D to join the group", then the storage order of the elements in userName must be ABCD.
+ * Therefore, the method of "searching from the beginning and searching in succession" is used. For example, find the first element A first, because of the characteristics of rangeOfString, it must find the A at the head position.
+ * After finding A at the head position, we remove A from the search range, and the search range becomes "B, C, D are invited to join the group", and then continue to search for the next element, which is B.
+ */
 - (NSMutableArray *) findRightRangeOfAllString:(NSMutableArray<NSString *> *) stringList inText:(NSString *)text{
     NSMutableArray *rangeList = [NSMutableArray array];
     NSUInteger beginLocation = 0;
