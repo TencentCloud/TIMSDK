@@ -33,14 +33,11 @@ public class CameraActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         TUIChatLog.i(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-        //去除标题栏
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        //去除状态栏
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_camera);
         jCameraView = findViewById(R.id.jcameraview);
-        //设置视频保存路径
         //jCameraView.setSaveVideoPath(Environment.getExternalStorageDirectory().getPath() + File.separator + "JCamera");
 
         int state = getIntent().getIntExtra(TUIChatConstants.CAMERA_TYPE, JCameraView.BUTTON_STATE_BOTH);
@@ -55,7 +52,6 @@ public class CameraActivity extends Activity {
         jCameraView.setErrorLisenter(new ErrorListener() {
             @Override
             public void onError() {
-                //错误监听
                 TUIChatLog.i(TAG, "camera error");
                 Intent intent = new Intent();
                 setResult(103, intent);
@@ -67,11 +63,10 @@ public class CameraActivity extends Activity {
                 ToastUtil.toastShortMessage(getString(R.string.audio_permission_error));
             }
         });
-        //JCameraView监听
+
         jCameraView.setJCameraLisenter(new JCameraListener() {
             @Override
             public void captureSuccess(Bitmap bitmap) {
-                //获取图片bitmap
                 String path = FileUtil.saveBitmap("JCamera", bitmap);
                /* Intent intent = new Intent();
                 intent.putExtra(ILiveConstants.CAMERA_IMAGE_PATH, path);
@@ -84,7 +79,6 @@ public class CameraActivity extends Activity {
 
             @Override
             public void recordSuccess(String url, Bitmap firstFrame, long duration) {
-                //获取视频路径
                 String path = FileUtil.saveBitmap("JCamera", firstFrame);
                 Intent intent = new Intent();
                 intent.putExtra(TUIChatConstants.IMAGE_WIDTH, firstFrame.getWidth());
@@ -148,7 +142,6 @@ public class CameraActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
-        //全屏显示
         if (Build.VERSION.SDK_INT >= 19) {
             View decorView = getWindow().getDecorView();
             decorView.setSystemUiVisibility(

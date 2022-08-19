@@ -164,6 +164,7 @@ public class SearchMainPresenter {
                     GroupInfo groupInfo = searchGroupResult.getGroupInfo();
                     String groupId = groupInfo.getId();
                     dataBean.setGroupID(groupId);
+                    dataBean.setGroup(true);
                     dataBean.setGroupName(groupInfo.getGroupName());
                     dataBean.setGroupType(groupInfo.getGroupType());
                     dataBean.setRemark(groupInfo.getGroupName());
@@ -215,7 +216,6 @@ public class SearchMainPresenter {
             @Override
             public void onSuccess(Pair<Integer, List<SearchMessageBean>> data) {
                 List<SearchMessageBean> searchMessageBeanList = data.second;
-                // conversationId 为空，totalCount 为符合条件的 Conversation 的总数
                 int totalCount = data.first;
                 if (pageIndex == 0) {
                     conversationSearchIdSet.clear();
@@ -253,6 +253,7 @@ public class SearchMainPresenter {
                             searchDataBean.setUserID(conversationInfo.getId());
                             searchDataBean.setGroupID(conversationInfo.getId());
                             searchDataBean.setGroup(conversationInfo.isGroup());
+                            searchDataBean.setGroupType(conversationInfo.getGroupType());
                             searchDataBean.setIconPath(conversationInfo.getIconPath());
                             searchDataBean.setTitle(conversationInfo.getTitle());
                             conversationSearchDataBeans.add(searchDataBean);

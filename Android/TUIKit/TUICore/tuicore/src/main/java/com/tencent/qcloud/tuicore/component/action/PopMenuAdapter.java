@@ -65,7 +65,7 @@ public class PopMenuAdapter extends BaseAdapter {
 
             holder.menu_lable = convertView.findViewById(R.id.pop_menu_label);
             convertView.setTag(holder);
-        } else {// 有直接获得ViewHolder
+        } else {
             holder = (ViewHolder) convertView.getTag();
         }
         PopMenuAction action = (PopMenuAction) getItem(position);

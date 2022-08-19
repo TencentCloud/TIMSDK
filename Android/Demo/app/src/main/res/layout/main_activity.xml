@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,134 +10,172 @@
     <com.tencent.qcloud.tuicore.component.TitleBarLayout
         android:id="@+id/main_title_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight = "1"/>
+        android:layout_height="match_parent"
+        android:layout_above="@id/main_navigation_bar"
+        android:layout_below="@id/main_title_bar" />
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="65dp"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/main_navigation_bar"
         android:background="?attr/demo_navigate_bar_bg"
-        android:clipChildren="false"
-        android:orientation="horizontal">
+        app:cardBackgroundColor="?attr/demo_navigate_bar_bg"
+        android:layout_alignParentBottom="true"
+        app:cardElevation="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-        <RelativeLayout
-            android:id="@+id/conversation_btn_group"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:onClick="tabClick"
-            android:layout_weight="1">
+            android:layout_height="65dp"
+            android:clipChildren="false"
+            android:background="@color/transparent"
+            android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/tab_conversation_icon"
-                android:background="?attr/demo_main_tab_conversation_selected_bg"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="8dp"
-                android:layout_width="32dp"
-                android:layout_height="32dp"/>
+            <RelativeLayout
+                android:id="@+id/conversation_btn_group"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="tabClick">
 
-            <TextView
-                android:id="@+id/conversation"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_below="@id/tab_conversation_icon"
-                android:textColor="?attr/demo_main_tab_selected_text_color"
-                android:gravity="center"
-                android:textSize="12sp"
-                android:text="@string/tab_conversation_tab_text" />
+                <ImageView
+                    android:id="@+id/tab_conversation_icon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
+                    android:background="?attr/demo_main_tab_conversation_selected_bg" />
 
-            <com.tencent.qcloud.tuicore.component.UnreadCountTextView
-                android:id="@+id/msg_total_unread"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_toEndOf="@id/conversation"
-                android:layout_marginTop="1dp"
-                android:layout_marginStart="-17dp"
-                android:gravity="center"
-                android:includeFontPadding="false"
-                android:minWidth="18.4dp"
-                android:minHeight="18.4dp"
-                android:textSize="13.6sp"
-                android:visibility="gone" />
+                <TextView
+                    android:id="@+id/conversation"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tab_conversation_icon"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:text="@string/tab_conversation_tab_text"
+                    android:textColor="?attr/demo_main_tab_selected_text_color"
+                    android:textSize="12sp" />
 
-        </RelativeLayout>
+                <com.tencent.qcloud.tuicore.component.UnreadCountTextView
+                    android:id="@+id/msg_total_unread"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="-17dp"
+                    android:layout_marginTop="1dp"
+                    android:layout_toEndOf="@id/conversation"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:minWidth="18.4dp"
+                    android:minHeight="18.4dp"
+                    android:textSize="13.6sp"
+                    android:visibility="gone" />
 
-        <RelativeLayout
-            android:id="@+id/contact_btn_group"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:onClick="tabClick"
-            android:layout_weight="1">
+            </RelativeLayout>
 
-            <ImageView
-                android:id="@+id/tab_contact_icon"
-                android:background="?attr/demo_main_tab_contact_normal_bg"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="8dp"
-                android:layout_width="32dp"
-                android:layout_height="32dp"/>
+            <RelativeLayout
+                android:id="@+id/community_btn_group"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="tabClick">
 
-            <TextView
-                android:id="@+id/contact"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tab_contact_icon"
-                android:layout_centerInParent="true"
-                android:textColor="?attr/demo_main_tab_normal_text_color"
-                android:gravity="center"
-                android:textSize="12sp"
-                android:text="@string/tab_contact_tab_text" />
+                <ImageView
+                    android:id="@+id/tab_community_icon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
+                    android:background="?attr/demo_main_tab_community_normal_bg" />
 
-            <com.tencent.qcloud.tuicore.component.UnreadCountTextView
-                android:id="@+id/new_friend_total_unread"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_toEndOf="@id/contact"
-                android:layout_marginTop="1dp"
-                android:layout_marginStart="-8dp"
-                android:gravity="center"
-                android:includeFontPadding="false"
-                android:minWidth="18.4dp"
-                android:minHeight="18.4dp"
-                android:textSize="13.6sp"
-                android:visibility="gone" />
-        </RelativeLayout>
+                <TextView
+                    android:id="@+id/tab_community_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tab_community_icon"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:text="@string/tab_community_tab_text"
+                    android:textColor="?attr/demo_main_tab_normal_text_color"
+                    android:textSize="12sp" />
 
-        <RelativeLayout
-            android:id="@+id/myself_btn_group"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:onClick="tabClick"
-            android:layout_weight="1">
+            </RelativeLayout>
 
-            <ImageView
-                android:id="@+id/tab_profile_icon"
-                android:background="?attr/demo_main_tab_profile_normal_bg"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="8dp"
-                android:layout_width="32dp"
-                android:layout_height="32dp"/>
+            <RelativeLayout
+                android:id="@+id/contact_btn_group"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="tabClick">
 
-            <TextView
-                android:id="@+id/mine"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tab_profile_icon"
-                android:layout_centerInParent="true"
-                android:textColor="?attr/demo_main_tab_normal_text_color"
-                android:textSize="12sp"
-                android:gravity="center"
-                android:text="@string/tab_profile_tab_text" />
+                <ImageView
+                    android:id="@+id/tab_contact_icon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
+                    android:background="?attr/demo_main_tab_contact_normal_bg" />
 
-        </RelativeLayout>
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/contact"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tab_contact_icon"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:text="@string/tab_contact_tab_text"
+                    android:textColor="?attr/demo_main_tab_normal_text_color"
+                    android:textSize="12sp" />
 
-</LinearLayout>
+                <com.tencent.qcloud.tuicore.component.UnreadCountTextView
+                    android:id="@+id/new_friend_total_unread"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="-8dp"
+                    android:layout_marginTop="1dp"
+                    android:layout_toEndOf="@id/contact"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:minWidth="18.4dp"
+                    android:minHeight="18.4dp"
+                    android:textSize="13.6sp"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/myself_btn_group"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="tabClick">
+
+                <ImageView
+                    android:id="@+id/tab_profile_icon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
+                    android:background="?attr/demo_main_tab_profile_normal_bg" />
+
+                <TextView
+                    android:id="@+id/mine"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tab_profile_icon"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:text="@string/tab_profile_tab_text"
+                    android:textColor="?attr/demo_main_tab_normal_text_color"
+                    android:textSize="12sp" />
+
+            </RelativeLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</RelativeLayout>

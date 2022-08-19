@@ -19,10 +19,9 @@ import androidx.annotation.Nullable;
 
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
-import com.tencent.qcloud.tuicore.TUIThemeManager;
+import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.component.LineControllerView;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
-import com.tencent.qcloud.tuicore.component.activities.ImageSelectActivity;
 import com.tencent.qcloud.tuicore.component.activities.SelectionActivity;
 import com.tencent.qcloud.tuicore.component.dialog.TUIKitDialog;
 import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
@@ -30,6 +29,7 @@ import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.component.popupcard.PopupInputCard;
 import com.tencent.qcloud.tuicore.util.ScreenUtil;
+import com.tencent.qcloud.tuicore.util.TUIUtil;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuigroup.R;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupService;
@@ -44,7 +44,6 @@ import com.tencent.qcloud.tuikit.tuigroup.ui.page.GroupInfoFragment;
 import com.tencent.qcloud.tuikit.tuigroup.ui.page.GroupMemberActivity;
 import com.tencent.qcloud.tuikit.tuigroup.ui.page.GroupNoticeActivity;
 import com.tencent.qcloud.tuikit.tuigroup.ui.page.ManageGroupActivity;
-import com.tencent.qcloud.tuikit.tuigroup.ui.page.SetGroupManagerActivity;
 import com.tencent.qcloud.tuikit.tuigroup.util.TUIGroupLog;
 
 import java.util.ArrayList;
@@ -52,7 +51,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 
 public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout, View.OnClickListener {
@@ -75,6 +73,8 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
     private LineControllerView mJoinTypeView;
     private LineControllerView mTopSwitchView;
     private LineControllerView mMsgRevOptionSwitchView;
+    private LineControllerView mFoldGroupChatSwitchView;
+    private View mLayoutFold;
     private TextView mDissolveBtn;
     private TextView mClearMsgBtn;
     private TextView mChangeOwnerBtn;
@@ -164,7 +164,6 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
                 mPresenter.setTopConversation(mGroupInfo.getId(), isChecked, new IUIKitCallback<Void>() {
                     @Override
                     public void onSuccess(Void data) {
-
                     }
 
                     @Override
@@ -177,6 +176,9 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
         });
         // 消息接收选项
         mMsgRevOptionSwitchView = findViewById(R.id.msg_rev_option);
+        // 折叠
+        mLayoutFold = findViewById(R.id.layout_fold);
+        mFoldGroupChatSwitchView = findViewById(R.id.fold_group_chat);
 
         // 退群
         mDissolveBtn = findViewById(R.id.group_dissolve_button);
@@ -193,7 +195,7 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
 
     private void initView() {
         int radius = ScreenUtil.dip2px(5);
-        GlideEngine.loadUserIcon(mGroupIcon, mGroupInfo.getFaceUrl(), TUIThemeManager.getAttrResId(getContext(), R.attr.core_default_group_icon), radius);
+        GlideEngine.loadUserIcon(mGroupIcon, mGroupInfo.getFaceUrl(), TUIUtil.getDefaultGroupIconResIDByGroupType(getContext(), mGroupInfo.getGroupType()), radius);
         if (!mGroupInfo.isCanManagerGroup()) {
             mGroupDetailArrow.setVisibility(GONE);
         }
@@ -289,6 +291,9 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
             PopupInputCard popupInputCard = new PopupInputCard((Activity) getContext());
             popupInputCard.setContent(mNickView.getContent());
             popupInputCard.setTitle(getResources().getString(R.string.modify_nick_name_in_goup));
+            String description = getResources().getString(R.string.group_modify_remark_rule);
+            popupInputCard.setRule("^[a-zA-Z0-9_\u4e00-\u9fa5]*$");
+            popupInputCard.setDescription(description);
             popupInputCard.setOnPositive((result -> {
                 mPresenter.modifyMyGroupNickname(result);
                 mNickView.setContent(result);
@@ -404,10 +409,13 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
             intent.putExtra(TUIGroupConstants.Group.GROUP_INFO, mGroupInfo);
             getContext().startActivity(intent);
         } else if (v == mChangeOwnerBtn) {
+            ArrayList<String> excludeList = new ArrayList<>();
+            excludeList.add(TUILogin.getLoginUser());
             Intent intent = new Intent(getContext(), GroupMemberActivity.class);
             intent.putExtra(TUIGroupConstants.Selection.IS_SELECT_MODE, true);
             intent.putExtra(TUIGroupConstants.Group.GROUP_INFO, mGroupInfo);
             intent.putExtra(TUIGroupConstants.Selection.LIMIT, 1);
+            intent.putExtra(TUIGroupConstants.Selection.EXCLUDE_LIST, excludeList);
             intent.putExtra(TUIGroupConstants.Selection.TITLE, getResources().getString(R.string.group_transfer_group_owner));
             ((Activity) getContext()).startActivityForResult(intent, GroupInfoActivity.REQUEST_FOR_CHANGE_OWNER);
         }
@@ -460,16 +468,92 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
 
         if (GroupInfo.GROUP_TYPE_MEETING.equals(info.getGroupType())) {
             mMsgRevOptionSwitchView.setVisibility(GONE);
+            mLayoutFold.setVisibility(GONE);
         } else {
+            if (mGroupInfo.getMessageReceiveOption()) {
+                mLayoutFold.setVisibility(View.VISIBLE);
+                if (mGroupInfo.isFolded()) {
+                    mFoldGroupChatSwitchView.setChecked(true);
+                }
+            } else {
+                mLayoutFold.setVisibility(View.GONE);
+            }
+            
             mMsgRevOptionSwitchView.setChecked(mGroupInfo.getMessageReceiveOption());
-
             mMsgRevOptionSwitchView.setCheckListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(final CompoundButton buttonView, boolean isChecked) {
-                    mPresenter.setGroupReceiveMessageOpt(mGroupInfo, isChecked);
+                    mPresenter.setGroupNotDisturb(mGroupInfo, isChecked, new IUIKitCallback<Void>() {
+                        @Override
+                        public void onSuccess(Void data) {
+                            if (!isChecked) {
+                                mLayoutFold.setVisibility(View.GONE);
+                                if (mGroupInfo.isFolded()) {
+                                    mPresenter.setGroupFold(mGroupInfo, false, new IUIKitCallback<Void>() {
+                                        @Override
+                                        public void onSuccess(Void data) {
+                                            mFoldGroupChatSwitchView.setChecked(false);
+                                        }
+
+                                        @Override
+                                        public void onError(String module, int errCode, String errMsg) {
+                                            ToastUtil.toastShortMessage(module + ", Error code = " + errCode + ", desc = " + errMsg);
+                                        }
+                                    });
+                                }
+                            } else {
+                                mLayoutFold.setVisibility(View.VISIBLE);
+                            }
+                        }
+
+                        @Override
+                        public void onError(String module, int errCode, String errMsg) {
+                            ToastUtil.toastShortMessage(module + ", Error code = " + errCode + ", desc = " + errMsg);
+                        }
+                    });
                 }
             });
         }
+
+        if (mGroupInfo.isFolded()) {
+            mTopSwitchView.setMask(true);
+        }
+
+        mFoldGroupChatSwitchView.setCheckListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mPresenter.setGroupFold(mGroupInfo, isChecked, new IUIKitCallback<Void>() {
+                    @Override
+                    public void onSuccess(Void data) {
+                        if (isChecked) {
+                            if (mGroupInfo.isTopChat()) {
+                                mPresenter.setTopConversation(mGroupInfo.getId(), false, new IUIKitCallback<Void>() {
+                                    @Override
+                                    public void onSuccess(Void data) {
+                                        mTopSwitchView.setChecked(false);
+                                        mTopSwitchView.setMask(true);
+                                    }
+
+                                    @Override
+                                    public void onError(String module, int errCode, String errMsg) {
+                                        ToastUtil.toastShortMessage(module + ", Error code = " + errCode + ", desc = " + errMsg);
+                                    }
+                                });
+                            } else {
+                                mTopSwitchView.setMask(true);
+                            }
+                        } else {
+                            mTopSwitchView.setMask(false);
+                        }
+                    }
+
+                    @Override
+                    public void onError(String module, int errCode, String errMsg) {
+                        ToastUtil.toastShortMessage(module + ", Error code = " + errCode + ", desc = " + errMsg);
+                    }
+                });
+            }
+        });
 
         mDissolveBtn.setText(R.string.dissolve);
         mClearMsgBtn.setText(R.string.clear_message);
@@ -549,7 +633,8 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
             @Override
             public void onSuccess(Void data) {
                 mGroupInfo.setFaceUrl(avatarUrl);
-                setGroupInfo(mGroupInfo);            }
+                setGroupInfo(mGroupInfo);
+            }
 
             @Override
             public void onError(String module, int errCode, String errMsg) {

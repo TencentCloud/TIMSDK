@@ -33,11 +33,14 @@ import com.tencent.qcloud.tuicore.interfaces.TUICallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 
 /**
- * <p>
  * Demo的登录Activity
  * 用户名可以是任意非空字符，但是前提需要按照下面文档修改代码里的 SDKAPPID 与 PRIVATEKEY
  * https://github.com/tencentyun/TIMSDK/tree/master/Android
- * <p>
+ * 
+ * 
+ * Login Activity
+ * The username can be any non-blank character, but the premise is to modify the SDKAPPID and PRIVATEKEY in the code according to the following documents:
+ * https://github.com/tencentyun/TIMSDK/tree/master/Android
  */
 
 public class LoginForDevActivity extends BaseLightActivity {
@@ -106,7 +109,6 @@ public class LoginForDevActivity extends BaseLightActivity {
                 DemoApplication.instance().init(0);
 
                 UserInfo.getInstance().setUserId(mUserAccount.getText().toString());
-                // 获取userSig函数
                 String userSig = GenerateTestUserSig.genTestUserSig(mUserAccount.getText().toString());
                 UserInfo.getInstance().setUserSig(userSig);
                 TUILogin.login(DemoApplication.instance(), DemoApplication.instance().getSdkAppId(), mUserAccount.getText().toString(), userSig, new TUICallback() {
@@ -126,6 +128,9 @@ public class LoginForDevActivity extends BaseLightActivity {
                         UserInfo.getInstance().setDebugLogin(true);
                         Intent intent = new Intent(LoginForDevActivity.this, MainActivity.class);
                         startActivity(intent);
+
+                        DemoApplication.instance().registerPushManually();
+
                         finish();
                     }
                 });

@@ -3,9 +3,6 @@ package com.tencent.qcloud.tuikit.tuichat.component.face;
 
 import java.util.ArrayList;
 
-/**
- * 一个表情包
- */
 public class CustomFaceGroup {
 
     private int faceGroupId;
@@ -17,6 +14,8 @@ public class CustomFaceGroup {
 
     /**
      * 增加一个表情
+     * 
+     * add an emoji
      *
      * @param face
      */
@@ -27,6 +26,8 @@ public class CustomFaceGroup {
     /**
      * 获取表情包
      *
+     * Get emoji
+     * 
      * @return
      */
     public ArrayList<CustomFace> getCustomFaceList() {
@@ -35,6 +36,8 @@ public class CustomFaceGroup {
 
     /**
      * 获取表情包所在的组ID
+     * 
+     * Get the group ID of the emoji
      *
      * @return
      */
@@ -44,6 +47,8 @@ public class CustomFaceGroup {
 
     /**
      * 设置表情包所在的组ID
+     * 
+     * Set the group ID where the emoji is located
      *
      * @param faceGroupId
      */
@@ -53,6 +58,8 @@ public class CustomFaceGroup {
 
     /**
      * 获取表情包的封面
+     * 
+     * Get the cover of the emoji
      *
      * @return
      */
@@ -62,6 +69,8 @@ public class CustomFaceGroup {
 
     /**
      * 设置表情包的封面
+     * 
+     * Set the cover of the emoji
      *
      * @param faceIconPath
      */
@@ -71,6 +80,8 @@ public class CustomFaceGroup {
 
     /**
      * 获取表情包每行显示数量
+     * 
+     * Get the number of emoticons displayed in each line
      *
      * @return
      */
@@ -80,6 +91,8 @@ public class CustomFaceGroup {
 
     /**
      * 设置表情包每行的显示数量
+     * 
+     * Set the number of emoticons displayed in each line
      *
      * @param pageRowCount
      */
@@ -89,6 +102,8 @@ public class CustomFaceGroup {
 
     /**
      * 获取表情包的列数量
+     * 
+     * Get the number of columns of the emoji
      *
      * @return
      */
@@ -98,6 +113,8 @@ public class CustomFaceGroup {
 
     /**
      * 设置表情包的列数量
+     * 
+     * Set the number of columns in the emoji
      *
      * @param pageColumnCount
      */
@@ -107,6 +124,8 @@ public class CustomFaceGroup {
 
     /**
      * 获取表情包的名称
+     * 
+     * Get the name of the emoji
      *
      * @return
      */
@@ -116,6 +135,8 @@ public class CustomFaceGroup {
 
     /**
      * 设置表情包的名称
+     * 
+     * Set the name of the emoji
      *
      * @param faceIconName
      */

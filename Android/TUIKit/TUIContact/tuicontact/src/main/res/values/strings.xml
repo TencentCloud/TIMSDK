@@ -50,6 +50,7 @@
     <string name="profile_delete_friend">Delete Friend</string>
     <string name="profile_voice_chat">Voice Call</string>
     <string name="profile_video_chat">Video Call</string>
+    <string name="profile_clear_message">Clear Chat History</string>
     <string name="contact_signature_tag">Status : </string>
     <string name="contact_no_status">No status</string>
     <string name="contact_account_tag">ID : </string>
@@ -60,6 +61,7 @@
 
     <string name="chat_to_top">Sticky on Top</string>
 
+    <string name="clear_msg_tip">Are you sure you want to clear the chat history?</string>
     // 群信息相关
     <string name="tips_empty_group_member">Select members</string>
     <string name="tips_empty_group_type">Select a method to join the group</string>
@@ -94,6 +96,7 @@
     <string name="auto_judge">Auto Approval</string>
     <string name="input_tip">No nickname. Enter again.</string>
     <string name="profile_msgrev_opt">Mute Notifications</string>
+    <string name="contact_modify_remark_rule">Only letters, digits, underscores, and Chinese characters.</string>
 
     <string name="contact_over_limit_tip">At most %d can be selected.</string>
 

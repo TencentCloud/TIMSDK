@@ -16,14 +16,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.tencent.qcloud.tuicore.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
-import com.tencent.qcloud.tuicore.component.action.PopDialogAdapter;
-import com.tencent.qcloud.tuicore.component.action.PopMenuAction;
 import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView;
 import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
@@ -37,6 +34,7 @@ import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupMemberInfo;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupManagerPresenter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SetGroupManagerActivity extends BaseLightActivity {
@@ -50,7 +48,7 @@ public class SetGroupManagerActivity extends BaseLightActivity {
     private ShadeImageView ownerFace;
     private TextView ownerName;
     private View setManagerView;
-
+    private String ownerID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +94,7 @@ public class SetGroupManagerActivity extends BaseLightActivity {
         presenter.loadGroupOwner(groupInfo.getId(), new IUIKitCallback<GroupMemberInfo>() {
             @Override
             public void onSuccess(GroupMemberInfo data) {
+                ownerID = data.getAccount();
                 String faceUrl = data.getIconUrl();
                 String displayName = getDisplayName(data);
                 GlideEngine.loadUserIcon(ownerFace, faceUrl);
@@ -122,6 +121,16 @@ public class SetGroupManagerActivity extends BaseLightActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(SetGroupManagerActivity.this, GroupMemberActivity.class);
                 intent.putExtra(TUIGroupConstants.Selection.IS_SELECT_MODE, true);
+                ArrayList<String> selectedList = new ArrayList<>();
+                if (managerAdapter.getGroupMemberInfoList() != null) {
+                    for (GroupMemberInfo memberInfo : managerAdapter.getGroupMemberInfoList()) {
+                        selectedList.add(memberInfo.getAccount());
+                    }
+                    intent.putExtra(TUIGroupConstants.Selection.SELECTED_LIST, selectedList);
+                }
+                ArrayList<String> excludeList = new ArrayList<>();
+                excludeList.add(ownerID);
+                intent.putExtra(TUIGroupConstants.Selection.EXCLUDE_LIST, excludeList);
                 intent.putExtra(TUIGroupConstants.Group.GROUP_INFO, groupInfo);
                 startActivityForResult(intent, 1);
             }
@@ -213,6 +222,10 @@ public class SetGroupManagerActivity extends BaseLightActivity {
         public void setGroupMemberInfoList(List<GroupMemberInfo> groupMemberInfoList) {
             this.groupMemberInfoList = groupMemberInfoList;
             notifyDataSetChanged();
+        }
+
+        public List<GroupMemberInfo> getGroupMemberInfoList() {
+            return groupMemberInfoList;
         }
 
         @NonNull

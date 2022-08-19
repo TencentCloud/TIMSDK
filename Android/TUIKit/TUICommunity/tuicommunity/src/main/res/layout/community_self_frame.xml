@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#00FFFFFF"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/community_banner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#EBECF0">
+
+            <com.tencent.qcloud.tuikit.tuicommunity.component.RoundFrameLayout
+                android:id="@+id/banner_frame"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:left_top_corner_radius="8dp">
+
+                <com.tencent.qcloud.tuikit.tuicommunity.component.banner.BannerView
+                    android:id="@+id/banner_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"
+                    android:background="#FFFFFF" />
+
+            </com.tencent.qcloud.tuikit.tuicommunity.component.RoundFrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="20dp"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:layout_below="@id/banner_frame"
+                android:background="#FFFFFFFF"
+                android:orientation="vertical">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/experience_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#FFFFFFFF"
+                    app:cardBackgroundColor="#FFFFFFFF"
+                    app:cardElevation="4dp"
+                    app:cardCornerRadius="8dp"
+                    app:cardUseCompatPadding="true"
+                    app:contentPaddingBottom="17.5dp"
+                    app:contentPaddingLeft="16dp"
+                    app:contentPaddingRight="16dp"
+                    app:contentPaddingTop="17.5dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="7.5dp"
+                            android:text="@string/community_recommended_experience"
+                            android:textColor="#000000"
+                            android:textSize="16sp" />
+
+                        <com.tencent.qcloud.tuikit.tuicommunity.ui.view.CommunityExperienceView
+                            android:id="@+id/create_community_experience"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:content_text="@string/community_experience_create_community" />
+
+                        <com.tencent.qcloud.tuikit.tuicommunity.ui.view.CommunityExperienceView
+                            android:id="@+id/add_community_experience"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:content_text="@string/community_experience_add_community" />
+
+                        <com.tencent.qcloud.tuikit.tuicommunity.ui.view.CommunityExperienceView
+                            android:id="@+id/send_message_experience"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:content_text="@string/community_experience_send_message" />
+
+                        <com.tencent.qcloud.tuikit.tuicommunity.ui.view.CommunityExperienceView
+                            android:id="@+id/reply_message_experience"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:content_text="@string/community_experience_reply_message" />
+
+                        <com.tencent.qcloud.tuikit.tuicommunity.ui.view.CommunityExperienceView
+                            android:id="@+id/disband_community_experience"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:content_text="@string/community_experience_disband_community" />
+
+                        <com.tencent.qcloud.tuikit.tuicommunity.ui.view.CommunityExperienceView
+                            android:id="@+id/create_topic_experience"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:content_text="@string/community_experience_create_topic" />
+
+                        <com.tencent.qcloud.tuikit.tuicommunity.ui.view.CommunityExperienceView
+                            android:id="@+id/delete_topic_experience"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:content_text="@string/community_experience_delete_topic" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/imploded_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="4dp"
+                    app:cardUseCompatPadding="true"
+                    app:contentPaddingBottom="16.5dp"
+                    app:contentPaddingLeft="16dp"
+                    app:contentPaddingRight="16dp"
+                    app:contentPaddingTop="16.5dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="13.5dp"
+                            android:text="@string/community_quick_integration"
+                            android:textColor="#000000"
+                            android:textSize="16sp" />
+
+                        <com.tencent.qcloud.tuikit.tuicommunity.ui.view.CommunityIndexLinkView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:content_index="1"
+                            app:content_link="@string/community_integration_download_code_link"
+                            app:content_link_text="@string/community_integration_download_code" />
+
+                        <com.tencent.qcloud.tuikit.tuicommunity.ui.view.CommunityIndexLinkView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            app:content_index="2"
+                            app:content_link="@string/community_integration_login_link"
+                            app:content_link_text="@string/community_integration_login" />
+
+                        <com.tencent.qcloud.tuikit.tuicommunity.ui.view.CommunityIndexLinkView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            app:content_index="3"
+                            app:content_link="@string/community_integration_create_viewPager_link"
+                            app:content_link_text="@string/community_integration_create_viewPager" />
+
+                        <com.tencent.qcloud.tuikit.tuicommunity.ui.view.CommunityIndexLinkView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            app:content_index="4"
+                            app:content_link="@string/community_integration_build_fragment_link"
+                            app:content_link_text="@string/community_integration_build_fragment" />
+
+                        <com.tencent.qcloud.tuikit.tuicommunity.ui.view.CommunityIndexLinkView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            app:content_index="5"
+                            app:content_link="@string/community_integration_build_audio_video_call_link"
+                            app:content_link_text="@string/community_integration_build_audio_video_call" />
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:id="@+id/experience_more_button"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="#2A84FF"
+                    android:textSize="12sp"
+                    android:text="@string/community_experience_more_demos"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
+
+</LinearLayout>

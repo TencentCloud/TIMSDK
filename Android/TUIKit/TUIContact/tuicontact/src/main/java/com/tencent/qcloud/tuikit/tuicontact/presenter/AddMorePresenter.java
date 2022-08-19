@@ -30,11 +30,6 @@ public class AddMorePresenter {
         this.addMoreActivity = addMoreActivity;
     }
 
-    /**
-     * 添加好友
-     * @param userId 用户 id
-     * @param addWording 验证消息
-     */
     public void addFriend(String userId, String addWording) {
 
         provider.addFriend(userId, addWording, new IUIKitCallback<Pair<Integer, String>>() {

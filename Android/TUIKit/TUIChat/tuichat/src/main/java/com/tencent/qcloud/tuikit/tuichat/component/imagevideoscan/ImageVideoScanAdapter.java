@@ -113,7 +113,7 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
         if (messageBean == null) {
             return;
         }
-        // SeekBar 的触摸事件不被父 View 拦截
+
         holder.playSeekBar.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -162,7 +162,6 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
             imagePath = originImagePath;
         }
 
-        // 预览加载
         if (TextUtils.isEmpty(imagePath)) {
             for (int i = 0; i < imgs.size(); i++) {
                 final ImageMessageBean.ImageBean img = imgs.get(i);
@@ -201,7 +200,6 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
         V2TIMImageElem.V2TIMImage mCurrentOriginalImage = null;
         String localImgPath = TUIChatUtils.getOriginImagePath(imageMessageBean);
         boolean isOriginImg = localImgPath != null;
-        // 点击后的预览图片路径 如果是原图直接放原图，否则用缩略图
         String previewImgPath = localImgPath;
         for (int i = 0; i < imgs.size(); i++) {
             ImageMessageBean.ImageBean img = imgs.get(i);
@@ -225,6 +223,7 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
         holder.photoView.setOnPhotoTapListener(new PhotoTapListener());
         holder.photoView.setOnSingleFlingListener(new SingleFlingListener());
         // 如果是原图就直接显示原图， 否则显示缩略图，点击查看原图按钮后下载原图显示
+        // If it is the original image, the original image will be displayed directly, otherwise, the thumbnail image will be displayed. Click the View Original Image button to download the original image and display it.
         holder.photoView.setImageBitmap(ImageUtil.adaptBitmapFormPath(previewImgPath, DeviceUtil.getScreenSize()[0], DeviceUtil.getScreenSize()[1]));
 
         if (!isOriginImg) {
@@ -274,6 +273,7 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
             });
         } else {
             // 因为图片还没下载下来 ， 加载失败, 接收下载成功的广播来刷新显示
+            // Because the picture has not been downloaded yet, the loading fails, receive the broadcast of the successful download to refresh the display
             if (holder.photoView.getDrawable() == null) {
                 ToastUtil.toastShortMessage("Downloading , please wait.");
                 downloadReceiver = new BroadcastReceiver() {
@@ -365,7 +365,7 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
 
         final String videoPath = TUIConfig.getVideoDownloadDir() + videoMessageBean.getVideoUUID();
         final File videoFile = new File(videoPath);
-        if (videoFile.exists() && videoMessageBean.getVideoSize() == videoFile.length()) {//若存在本地文件则优先获取本地文件
+        if (videoFile.exists() && videoMessageBean.getVideoSize() == videoFile.length()) {
             playVideo(holder, videoMessageBean);
         } else {
             if (!holder.downloadVideoFailed && !holder.downloadVideoFinished) {
@@ -426,7 +426,6 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
            }
         });
 
-        //给进度条设置滑动的监听
         holder.playSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -438,7 +437,6 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
                 int progress = seekBar.getProgress();
                 TUIChatLog.i(TAG,"onStartTrackingTouch progress == " + progress);
                 if (holder.videoView != null) {
-                    //进度条在当前位置播放
                     holder.videoView.seekTo(progress * 1000);
                 }
             }
@@ -447,11 +445,9 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
                 int progress = seekBar.getProgress();
                 TUIChatLog.i(TAG,"onStopTrackingTouch progress == " + progress);
                 if (holder.videoView != null && holder.videoView.isPlaying()) {
-                    //进度条在当前位置播放
                     holder.videoView.seekTo(progress * 1000);
                     holder.videoView.start();
                 } else if (holder.videoView != null) {
-                    //进度条在当前位置播放
                     holder.videoView.seekTo(progress * 1000);
                 }
             }
@@ -479,7 +475,6 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
             holder.loadingView.setVisibility(View.GONE);
             mIsVideoPlay = false;
         } else {
-            //获取音乐的总时长
             float times= holder.videoView.getDuration() *1.0f / 1000;
             if (times <= 0) {
                 TUIChatLog.e(TAG,"onClick, downloading video");
@@ -490,7 +485,6 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
                 return;
             }
 
-            //获取音乐的总时长
             int duration= Math.round(holder.videoView.getDuration() * 1.0f / 1000);
             int progress = Math.round(holder.videoView.getCurrentPosition() * 1.0f / 1000);
             TUIChatLog.d(TAG,"onClick playSeekBar duration == " + duration + " playSeekBar progress = " + progress);
@@ -506,8 +500,6 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
             holder.snapImageView.setVisibility(View.GONE);
             mIsVideoPlay = true;
 
-
-            //将进度条设置最大值为：音乐的总时长
             holder.playSeekBar.setMax(duration);
             holder.playSeekBar.setProgress(progress);
             String durations = DateTimeUtil.formatSecondsTo00(duration);
@@ -583,10 +575,8 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
                     }
                 };
 
-                //获取音乐的总时长
                 int duration = Math.round(mediaPlayer.getDuration() * 1.0f / 1000);
                 int progress = Math.round(mediaPlayer.getCurrentPosition() *1.0f / 1000);
-                //将进度条设置最大值为：音乐的总时长
                 holder.playSeekBar.setMax(duration);
                 holder.playSeekBar.setProgress(progress);
                 String durations = DateTimeUtil.formatSecondsTo00(duration);

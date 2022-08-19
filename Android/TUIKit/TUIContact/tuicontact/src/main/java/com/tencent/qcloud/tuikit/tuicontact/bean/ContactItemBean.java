@@ -16,7 +16,7 @@ public class ContactItemBean extends BaseIndexPinyinBean {
 
     public static final String INDEX_STRING_TOP = "↑";
     private String id;
-    private boolean isTop;//是否是最上面的 不需要被转化成拼音的
+    private boolean isTop;
     private boolean isSelected;
     private boolean isBlackList;
     private String remark;

@@ -260,6 +260,8 @@ public class ChatMessageParser {
 
     /**
      * 把 IMSDK 的消息 bean 列表转化为 TUIKit 的消息bean列表
+     * 
+     * Convert IMSDK's message bean list to TUIKit's message bean list
      *
      * @param v2TIMMessageList IMSDK 的消息 bean 列表
      * @return 转换后的 TUIKit bean 列表
@@ -299,7 +301,7 @@ public class ChatMessageParser {
             } else if (businessIdObj instanceof Double) {
                 businessIdForTimeout = (Double) businessIdObj;
             }
-            // 音视频自定义消息
+
             if (TextUtils.equals(businessId, TUIConstants.TUICalling.CUSTOM_MESSAGE_BUSINESS_ID) ||
                     Math.abs(businessIdForTimeout - TUIConstants.TUICalling.CALL_TIMEOUT_BUSINESS_ID) < 0.000001) {
                 return getCallingMessage(v2TIMMessage);
@@ -400,6 +402,7 @@ public class ChatMessageParser {
 
         if (data.equals(MessageCustom.BUSINESS_ID_GROUP_CREATE)) {
             // 兼容4.7版本以前的 tuikit
+            // Compatible with tuikit prior to version 4.7
             TipsMessageBean messageBean = new TipsMessageBean();
             messageBean.setCommonAttribute(v2TIMMessage);
             messageBean.setTipType(TipsMessageBean.MSG_TYPE_GROUP_CREATE);
@@ -410,6 +413,7 @@ public class ChatMessageParser {
         } else {
             if (isTyping(customElem.getData())) {
                 // 忽略正在输入，它不能作为真正的消息展示
+                // Ignore being typed, it cannot be displayed as a real message
                 return null;
             }
             TUIChatLog.i(TAG, "custom data:" + data);
@@ -437,7 +441,6 @@ public class ChatMessageParser {
         if (timMessage == null) {
             return null;
         }
-        // 群名片->好友备注->昵称->ID
         if (!TextUtils.isEmpty(timMessage.getNameCard())) {
             displayName = timMessage.getNameCard();
         } else if (!TextUtils.isEmpty(timMessage.getFriendRemark())) {
@@ -454,6 +457,10 @@ public class ChatMessageParser {
      * 获取图片在本地的原始路径 (可能是沙盒中的路径)
      * @param messageBean 图片消息元组
      * @return 图片原始路径，如果不存在返回 null
+     * 
+     * Get the original path of the image locally (maybe the path in the sandbox)
+     * @param messageBean message bean
+     * @return The original path of the image, or null if it does not exist
      */
     public static String getLocalImagePath(TUIMessageBean messageBean) {
         if (messageBean == null || !messageBean.isSelf()) {

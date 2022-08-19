@@ -14,14 +14,8 @@ import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
 import java.io.Serializable;
 
-/**
- * 服务评价消息
- */
 public class CustomEvaluationMessageBean extends TUIMessageBean{
 
-    /**
-     * 自定义消息的bean实体，用来与json的相互转化
-     */
     public class CustomEvaluationMessage implements Serializable {
         //public static final int CUSTOM_EVALUATION_ACTION_ID = 4;
 

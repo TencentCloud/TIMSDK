@@ -86,7 +86,7 @@ public class OfflineMessageDispatcher {
         return null;
     }
 
-    private static OfflineMessageBean getOfflineMessageBeanFromContainer(String ext) {
+    public static OfflineMessageBean getOfflineMessageBeanFromContainer(String ext) {
         if (TextUtils.isEmpty(ext)) {
             return null;
         }

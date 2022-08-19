@@ -22,23 +22,20 @@ import com.tencent.qcloud.tuikit.tuichat.component.camera.listener.ClickListener
 import com.tencent.qcloud.tuikit.tuichat.component.camera.listener.ReturnListener;
 import com.tencent.qcloud.tuikit.tuichat.component.camera.listener.TypeListener;
 
-/**
- * 集成各个控件的布局
- */
 public class CaptureLayout extends FrameLayout {
 
-    private CaptureListener captureLisenter;    //拍照按钮监听
-    private TypeListener typeLisenter;          //拍照或录制后接结果按钮监听
-    private ReturnListener returnListener;      //退出按钮监听
-    private ClickListener leftClickListener;    //左边按钮监听
-    private ClickListener rightClickListener;   //右边按钮监听
-    private CaptureButton btn_capture;      //拍照按钮
-    private TypeButton btn_confirm;         //确认按钮
-    private TypeButton btn_cancel;          //取消按钮
-    private ReturnButton btn_return;        //返回按钮
-    private ImageView iv_custom_left;            //左边自定义按钮
-    private ImageView iv_custom_right;            //右边自定义按钮
-    private TextView txt_tip;               //提示文本
+    private CaptureListener captureLisenter;    //拍照按钮监听 Camera button Lisenter
+    private TypeListener typeLisenter;          //拍照或录制后接结果按钮监听 Take a picture or record followed by the result button Lisenter
+    private ReturnListener returnListener;      //退出按钮监听 Exit button listener
+    private ClickListener leftClickListener;    //左边按钮监听 left button Lisenter
+    private ClickListener rightClickListener;   //右边按钮监听 Right button Lisenter
+    private CaptureButton btn_capture;      //拍照按钮 photo button
+    private TypeButton btn_confirm;         //确认按钮 Confirm button
+    private TypeButton btn_cancel;          //取消按钮 cancel button
+    private ReturnButton btn_return;        //返回按钮 back button
+    private ImageView iv_custom_left;            //左边自定义按钮 left custom button
+    private ImageView iv_custom_right;            //右边自定义按钮 right custom button
+    private TextView txt_tip;               //提示文本 prompt text
     private int layout_width;
     private int layout_height;
     private int button_size;
@@ -92,14 +89,12 @@ public class CaptureLayout extends FrameLayout {
     }
 
     public void initEvent() {
-        //默认Typebutton为隐藏
         iv_custom_right.setVisibility(GONE);
         btn_cancel.setVisibility(GONE);
         btn_confirm.setVisibility(GONE);
     }
 
     public void startTypeBtnAnimator() {
-        //拍照录制结果后的动画
         if (this.iconLeft != 0)
             iv_custom_left.setVisibility(GONE);
         else
@@ -201,7 +196,6 @@ public class CaptureLayout extends FrameLayout {
             }
         });
 
-        //确认按钮
         btn_confirm = new TypeButton(getContext(), TypeButton.TYPE_CONFIRM, button_size);
         LayoutParams btn_confirm_param = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         btn_confirm_param.gravity = Gravity.CENTER_VERTICAL | Gravity.RIGHT;
@@ -218,7 +212,6 @@ public class CaptureLayout extends FrameLayout {
             }
         });
 
-        //返回按钮
         btn_return = new ReturnButton(getContext(), (int) (button_size / 2.5f));
         LayoutParams btn_return_param = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         btn_return_param.gravity = Gravity.CENTER_VERTICAL;
@@ -232,7 +225,7 @@ public class CaptureLayout extends FrameLayout {
                 }
             }
         });
-        //左边自定义按钮
+
         iv_custom_left = new ImageView(getContext());
         LayoutParams iv_custom_param_left = new LayoutParams((int) (button_size / 2.5f), (int) (button_size / 2.5f));
         iv_custom_param_left.gravity = Gravity.CENTER_VERTICAL;
@@ -247,7 +240,6 @@ public class CaptureLayout extends FrameLayout {
             }
         });
 
-        //右边自定义按钮
         iv_custom_right = new ImageView(getContext());
         LayoutParams iv_custom_param_right = new LayoutParams((int) (button_size / 2.5f), (int) (button_size / 2.5f));
         iv_custom_param_right.gravity = Gravity.CENTER_VERTICAL | Gravity.RIGHT;
@@ -282,7 +274,7 @@ public class CaptureLayout extends FrameLayout {
     }
 
     /**************************************************
-     * 对外提供的API                      *
+     * Call API                      *
      **************************************************/
     public void resetCaptureLayout() {
         btn_capture.resetState();

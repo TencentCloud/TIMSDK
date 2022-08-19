@@ -54,7 +54,8 @@ public class TUIGroupChatFragment extends TUIBaseChatFragment {
         chatView.getMessageLayout().setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onMessageLongClick(View view, int position, TUIMessageBean messageBean) {
-                //因为adapter中第一条为加载条目，位置需减1
+                // 因为adapter中第一条为加载条目，位置需减1
+                // Because the first entry in the adapter is the load entry, the position needs to be decremented by 1
                 chatView.getMessageLayout().showItemPopMenu(position - 1, messageBean, view);
             }
 

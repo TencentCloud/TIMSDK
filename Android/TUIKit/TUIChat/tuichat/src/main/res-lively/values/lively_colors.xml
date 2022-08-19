@@ -19,8 +19,8 @@
 
     <color name="chat_tip_text_color_lively">#FF7756</color>
 
-    <color name="chat_self_reply_quote_bg_color_lively">#1A000000</color>
-    <color name="chat_self_reply_line_bg_color_lively">#66FFFFFF</color>
+    <color name="chat_self_reply_quote_bg_color_lively">#17000000</color>
+    <color name="chat_self_reply_line_bg_color_lively">#66DF4924</color>
     <color name="chat_self_reply_quote_text_color_lively">#FFE1EC</color>
     <color name="chat_self_reply_text_color_lively">#FFFFFF</color>
 

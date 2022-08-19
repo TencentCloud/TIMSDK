@@ -16,7 +16,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * 公共配置，如文件路径配置、用户信息
+ * TUI configuration, such as file path configuration, user information
  */
 public class TUIConfig {
 
@@ -42,7 +42,9 @@ public class TUIConfig {
     private static final String CRASH_LOG_DIR_SUFFIX = "/crash/";
 
     private static boolean initialized = false;
-
+    private static boolean enableGroupGridAvatar = true;
+    private static int defaultAvatarImage;
+    private static int defaultGroupAvatarImage;
 
     public static void init(Context context) {
         if (initialized) {
@@ -155,7 +157,67 @@ public class TUIConfig {
     }
 
     /**
-     * 设置登录用户信息
+     * 获取群组会话否展示九宫格样式的头像，默认为 true
+     * Gets whether to display the avatar in the nine-square grid style in the group conversation, the default is true
+     */
+    public static boolean isEnableGroupGridAvatar() {
+        return enableGroupGridAvatar;
+    }
+
+    /**
+     * 设置群组会话是否展示九宫格样式的头像
+     * Set whether to display the avatar in the nine-square grid style in group conversations
+     */
+    public static void setEnableGroupGridAvatar(boolean enableGroupGridAvatar) {
+        TUIConfig.enableGroupGridAvatar = enableGroupGridAvatar;
+    }
+
+    /**
+     * 获取 c2c 会话的默认头像
+     *
+     * Get the default avatar for c2c conversation
+     *
+     * @return
+     */
+    public static int getDefaultAvatarImage() {
+        return defaultAvatarImage;
+    }
+
+    /**
+     * 设置 c2c 会话的默认头像
+     *
+     *Set the default avatar for c2c conversation
+     *
+     * @return
+     */
+    public static void setDefaultAvatarImage(int defaultAvatarImage) {
+        TUIConfig.defaultAvatarImage = defaultAvatarImage;
+    }
+
+    /**
+     * 获取 group 会话的默认头像
+     *
+     * Get the default avatar for group conversation
+     *
+     * @return
+     */
+    public static int getDefaultGroupAvatarImage() {
+        return defaultGroupAvatarImage;
+    }
+
+    /**
+     * 设置 group 会话的默认头像
+     *
+     *Set the default avatar for group conversation
+     *
+     * @return
+     */
+    public static void setDefaultGroupAvatarImage(int defaultGroupAvatarImage) {
+        TUIConfig.defaultGroupAvatarImage = defaultGroupAvatarImage;
+    }
+
+    /**
+     * Set login user information
      */
     public static void setSelfInfo(V2TIMUserFullInfo userFullInfo) {
         TUIConfig.selfFaceUrl = userFullInfo.getFaceUrl();
@@ -167,7 +229,7 @@ public class TUIConfig {
     }
 
     /**
-     * 清除登录用户信息
+     * Clear login user information
      */
     public static void clearSelfInfo() {
         TUIConfig.selfFaceUrl = "";
@@ -178,7 +240,7 @@ public class TUIConfig {
     }
 
     /**
-     * 初始化文件目录
+     * init file path
      */
     public static void initPath() {
         File f = new File(getMediaDir());

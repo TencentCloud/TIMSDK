@@ -5,9 +5,6 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TUIReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TextReplyQuoteBean;
 
 
-/**
- * 音视频通话消息
- */
 public class CallingMessageBean extends TextMessageBean {
     private String text;
     private int callType; //1：audio; 2:video

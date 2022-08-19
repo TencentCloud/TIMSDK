@@ -35,7 +35,6 @@ public class TUIContactFragment extends BaseFragment {
     }
 
     private void initViews(View view) {
-        // 从布局文件中获取通讯录面板
         mContactLayout = view.findViewById(R.id.contact_layout);
 
         presenter = new ContactPresenter();

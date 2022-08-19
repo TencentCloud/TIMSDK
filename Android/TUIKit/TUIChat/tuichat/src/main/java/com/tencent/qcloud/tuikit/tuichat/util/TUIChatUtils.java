@@ -7,6 +7,7 @@ import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ImageUtil;
+import com.tencent.qcloud.tuicore.util.SPUtils;
 import com.tencent.qcloud.tuicore.util.SoftKeyBoardUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
@@ -18,9 +19,8 @@ import java.io.File;
 import static com.tencent.qcloud.tuicore.TUIConstants.TUIConversation.CONVERSATION_C2C_PREFIX;
 import static com.tencent.qcloud.tuicore.TUIConstants.TUIConversation.CONVERSATION_GROUP_PREFIX;
 
+import android.text.TextUtils;
 import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.view.Gravity;
 import android.view.View;
 
@@ -69,11 +69,6 @@ public class TUIChatUtils {
         return chatType == V2TIMConversation.V2TIM_GROUP;
     }
 
-    /**
-     * 获取 MessageInfo 中原图的路径
-     * @param msg
-     * @return
-     */
     public static String getOriginImagePath(final TUIMessageBean msg) {
         if (msg == null) {
             return null;
@@ -104,18 +99,38 @@ public class TUIChatUtils {
         return localImgPath;
     }
 
+    public static boolean isCommunityGroup(String groupID) {
+        if (TextUtils.isEmpty(groupID)) {
+            return false;
+        }
+
+        return groupID.startsWith("@TGS#_");
+
+    }
+
+    public static boolean isTopicGroup(String groupID) {
+        // topicID 格式：@TGS#_xxxx@TOPIC#_xxxx
+        if (!isCommunityGroup(groupID)) {
+            return false;
+        }
+        return groupID.contains("@TOPIC#_");
+    }
+
+    public static String getGroupIDFromTopicID(String topicID) {
+        // topicID 格式：@TGS#_xxxx@TOPIC#_xxxx
+        int index = topicID.indexOf("@TOPIC#_");
+        return topicID.substring(0, index);
+    }
+
     public static long getServerTime() {
         return V2TIMManager.getInstance().getServerTime();
     }
 
     public static void showBeginnerGuideThen(View view, Runnable runnable) {
-        SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(TUIChatConstants.CHAT_SETTINGS_SP_NAME, Context.MODE_PRIVATE);
-        boolean isShowGuide = sharedPreferences.getBoolean(TUIChatConstants.CHAT_REPLY_GUIDE_SHOW_SP_KEY, true);
+        boolean isShowGuide = SPUtils.getInstance(TUIChatConstants.CHAT_SETTINGS_SP_NAME).getBoolean(TUIChatConstants.CHAT_REPLY_GUIDE_SHOW_SP_KEY, true);
         if (isShowGuide) {
             SoftKeyBoardUtil.hideKeyBoard(view.getWindowToken());
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean(TUIChatConstants.CHAT_REPLY_GUIDE_SHOW_SP_KEY, false);
-            editor.apply();
+            SPUtils.getInstance(TUIChatConstants.CHAT_SETTINGS_SP_NAME).put(TUIChatConstants.CHAT_REPLY_GUIDE_SHOW_SP_KEY, false);
 
             BeginnerGuidePage guidePage = new BeginnerGuidePage((Activity) view.getContext());
             guidePage.setPagesResIDs(R.drawable.chat_reply_guide, R.drawable.chat_quote_guide);

@@ -50,7 +50,6 @@ public final class PermissionRequester {
 
     private static final List<String> PERMISSIONS = getPermissions();
 
-    // Callback 回调完之后会设置为 null，所以不会发生内存泄露。
     private static PermissionRequester instance;
     private static Context applicationContext;
     private SimpleCallback mSimpleCallback;
@@ -62,7 +61,6 @@ public final class PermissionRequester {
     private List<String> mPermissionsGranted;
     private List<String> mPermissionsDenied;
 
-    // 是否正在申请权限
     private static boolean isRequesting = false;
 
     private String mReason;
@@ -225,9 +223,6 @@ public final class PermissionRequester {
         return this;
     }
 
-    /**
-     * 已经有权限则直接回调，否则启动权限申请 Activity 去申请权限
-     */
     public void request() {
         if (isRequesting) {
             return;
@@ -339,7 +334,6 @@ public final class PermissionRequester {
     public static class PermissionActivity extends Activity {
         private static final int SHOW_TIP_DELAY = 150; // ms
 
-        // 当前申请的权限是否被拒绝
         private boolean isDenied = false;
 
         @Override
@@ -367,10 +361,6 @@ public final class PermissionRequester {
                 if (size <= 0) {
                     instance.onRequestPermissionsResult(this);
                 } else {
-                    /**
-                     * 保证用户拒绝权限且不再弹出时，先执行 {@link #onRequestPermissionsResult(int, String[], int[])}，
-                     * 再执行 {@link #fillContentView()} 避免闪烁
-                     */
                     BackgroundTasks.getInstance().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -571,7 +561,6 @@ public final class PermissionRequester {
             return;
         }
 
-        // 设置灰色透明背景
         activity.setContentView(R.layout.permission_activity_layout);
 
         View itemPop = LayoutInflater.from(activity).inflate(R.layout.permission_tip_layout, null);
@@ -624,7 +613,6 @@ public final class PermissionRequester {
         });
 
         permissionTipDialog.show();
-        // 用于显示圆角矩形
         Window dialogWindow = permissionTipDialog.getWindow();
         dialogWindow.setBackgroundDrawable(new ColorDrawable());
         WindowManager.LayoutParams layoutParams = dialogWindow.getAttributes();

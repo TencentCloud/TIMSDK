@@ -117,17 +117,13 @@ public class VideoMessageHolder extends MessageContentHolder {
 
         final String videoPath = TUIConfig.getVideoDownloadDir() + msg.getVideoUUID();
         final File videoFile = new File(videoPath);
-        //以下代码为zanhanding修改，用于fix视频消息发送失败后不显示红色感叹号的问题
         if (msg.getStatus() == TUIMessageBean.MSG_STATUS_SEND_SUCCESS) {
-            //若发送成功，则不显示红色感叹号和发送中动画
             statusImage.setVisibility(View.GONE);
             sendingProgress.setVisibility(View.GONE);
         } else if (videoFile.exists() && msg.getStatus() == TUIMessageBean.MSG_STATUS_SENDING) {
-            //若存在正在发送中的视频文件（消息），则显示发送中动画（隐藏红色感叹号）
             statusImage.setVisibility(View.GONE);
             sendingProgress.setVisibility(View.VISIBLE);
         } else if (msg.getStatus() == TUIMessageBean.MSG_STATUS_SEND_FAIL) {
-            //若发送失败，则显示红色感叹号（不显示发送中动画）
             statusImage.setVisibility(View.VISIBLE);
             sendingProgress.setVisibility(View.GONE);
 

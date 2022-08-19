@@ -65,7 +65,6 @@ public class TipsMessageHolder extends MessageBaseHolder {
             if (msg.isSelf()) {
                 int msgType = msg.getMsgType();
                 if (msgType == V2TIMMessage.V2TIM_ELEM_TYPE_TEXT) {
-                    // 2min 内可重新编辑
                     long nowtime = V2TIMManager.getInstance().getServerTime();
                     long msgtime = msg.getMessageTime();
                     if ((int) (nowtime - msgtime) < 2 * 60) {

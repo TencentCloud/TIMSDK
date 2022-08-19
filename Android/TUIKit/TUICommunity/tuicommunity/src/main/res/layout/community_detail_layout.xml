@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#FFFFFFFF"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:background="#EBECF0"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.tencent.qcloud.tuicore.component.RoundCornerImageView
+            android:id="@+id/cover_image"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:scaleType="centerCrop"
+            app:left_top_corner_radius="8dp" />
+
+        <TextView
+            android:id="@+id/community_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@id/cover_image"
+            android:layout_alignLeft="@id/cover_image"
+            android:layout_alignBottom="@id/cover_image"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="9.5dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:maxWidth="180dp"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            tools:text="IM官方社群" />
+
+        <ImageView
+            android:id="@+id/share_icon"
+            android:background="@drawable/community_share_icon"
+            android:layout_alignTop="@id/more_icon"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_toLeftOf="@id/more_icon"
+            android:layout_toStartOf="@id/more_icon" />
+
+        <ImageView
+            android:id="@+id/more_icon"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_alignBottom="@id/cover_image"
+            android:layout_alignRight="@id/cover_image"
+            android:layout_alignEnd="@id/cover_image"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="11dp"
+            android:background="@drawable/community_more_icon" />
+
+    </RelativeLayout>
+
+    <com.tencent.qcloud.tuikit.tuicommunity.ui.view.CommunityTopicList
+        android:paddingTop="10dp"
+        android:id="@+id/community_topic_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+</LinearLayout>

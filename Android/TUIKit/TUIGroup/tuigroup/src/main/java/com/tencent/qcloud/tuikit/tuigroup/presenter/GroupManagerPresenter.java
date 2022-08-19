@@ -30,7 +30,7 @@ public class GroupManagerPresenter {
     }
 
     public void muteGroupMember(String groupId, String userId, IUIKitCallback<Void> callback) {
-        int muteTime = 365 * 24 * 3600; // 禁言 365 天
+        int muteTime = 365 * 24 * 3600; // 365 days
         provider.muteGroupMember(groupId, userId, muteTime, callback);
     }
 

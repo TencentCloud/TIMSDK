@@ -2,56 +2,56 @@ package com.tencent.qcloud.tim.tuiofflinepush;
 
 public class PrivateConstants {
 
-    /****** 华为离线推送参数start ******/
-    // 在腾讯云控制台上传第三方推送证书后分配的证书ID
-    public static final long HW_PUSH_BUZID = 0;
-    // 海外证书 ID，不需要直接删掉
-    public static final long HW_PUSH_BUZID_ABROAD = 0;
-    // 角标参数，默认为应用的 launcher 界面的类名
-    public static final String BADGE_CLASS_NAME = "com.tencent.qcloud.tim.demo.SplashActivity";
-    /****** 华为离线推送参数end ******/
+    /****** huawei begin******/
+    // 在腾讯云控制台上传第三方推送证书后分配的证书ID  // The certificate ID assigned in the Tencent Cloud console
+    public static long huaweiPushBussinessId = 0;
+    // 海外证书 ID，需要在海外控制台配置，不使用不用填写  // The overseas certificate ID, which needs to be configured on the overseas console, does not need to be filled in if it is not used.
+    public static long huaweiPushBussinessIdAbroad = 0;
+    // 角标参数，默认为应用的 launcher 界面的类名  // Angular parameter, defaults to the class name of the application's launcher interface
+    public static String huaweiBadgeClassName = "";
+    /****** huawei end ******/
 
-    /****** 小米离线推送参数start ******/
-    // 在腾讯云控制台上传第三方推送证书后分配的证书ID
-    public static final long XM_PUSH_BUZID = 0;
-    // 海外证书 ID，不需要直接删掉
-    public static final long XM_PUSH_BUZID_ABROAD = 0;
-    // 小米开放平台分配的应用APPID及APPKEY
-    public static final String XM_PUSH_APPID = "";
-    public static final String XM_PUSH_APPKEY = "";
-    /****** 小米离线推送参数end ******/
+    /****** xiaomi begin ******/
+    // 在腾讯云控制台上传第三方推送证书后分配的证书ID  // The certificate ID assigned in the Tencent Cloud console
+    public static long xiaomiPushBussinessId = 0;
+    // 海外证书 ID，需要在海外控制台配置，不使用不用填写  // The overseas certificate ID, which needs to be configured on the overseas console, does not need to be filled in if it is not used.
+    public static long xiaomiPushBussinessIdAbroad = 0;
+    // 小米开放平台分配的应用APPID及APPKEY  // APPID APPKEY, Allocated by Xiaomi Open Platform
+    public static String xiaomiPushAppId = "";
+    public static String xiaomiPushAppKey = "";
+    /****** xiaomi end ******/
 
-    /****** 魅族离线推送参数start ******/
-    // 在腾讯云控制台上传第三方推送证书后分配的证书ID
-    public static final long MZ_PUSH_BUZID = 0;
-    // 海外证书 ID，不需要直接删掉
-    public static final long MZ_PUSH_BUZID_ABROAD = 0;
-    // 魅族开放平台分配的应用APPID及APPKEY
-    public static final String MZ_PUSH_APPID = "";
-    public static final String MZ_PUSH_APPKEY = "";
-    /****** 魅族离线推送参数end ******/
+    /****** meizu begin ******/
+    // 在腾讯云控制台上传第三方推送证书后分配的证书ID  // The certificate ID assigned in the Tencent Cloud console
+    public static long meizuPushBussinessId = 0;
+    // 海外证书 ID，需要在海外控制台配置，不使用不用填写  // The overseas certificate ID, which needs to be configured on the overseas console, does not need to be filled in if it is not used.
+    public static long meizuPushBussinessIdAbroad = 0;
+    // 魅族开放平台分配的应用APPID及APPKEY  // APPID APPKEY, Allocated by MeiZu Open Platform
+    public static String meizuPushAppId = "";
+    public static String meizuPushAppKey = "";
+    /****** meizu end ******/
 
-    /****** vivo离线推送参数start ******/
-    // 在腾讯云控制台上传第三方推送证书后分配的证书ID
-    public static final long VIVO_PUSH_BUZID = 0;
-    // 海外证书 ID，不需要直接删掉
-    public static final long VIVO_PUSH_BUZID_ABROAD = 0;
-    /****** vivo离线推送参数end ******/
+    /****** vivo begin******/
+    // 在腾讯云控制台上传第三方推送证书后分配的证书ID  // The certificate ID assigned in the Tencent Cloud console
+    public static long vivoPushBussinessId = 0;
+    // 海外证书 ID，需要在海外控制台配置，不使用不用填写  // The overseas certificate ID, which needs to be configured on the overseas console, does not need to be filled in if it is not used.
+    public static long vivoPushBussinessIdAbroad = 0;
+    /****** vivo end ******/
 
-    /****** google离线推送参数start ******/
-    // 在腾讯云控制台上传第三方推送证书后分配的证书ID
-    public static final long GOOGLE_FCM_PUSH_BUZID = 0;
-    // 海外证书 ID，不需要直接删掉
-    public static final long GOOGLE_FCM_PUSH_BUZID_ABROAD = 0;
-    /****** google离线推送参数end ******/
+    /****** google begin ******/
+    // 在腾讯云控制台上传第三方推送证书后分配的证书ID  // The certificate ID assigned in the Tencent Cloud console
+    public static long fcmPushBussinessId = 0;
+    // 海外证书 ID，需要在海外控制台配置，不使用不用填写  // The overseas certificate ID, which needs to be configured on the overseas console, does not need to be filled in if it is not used.
+    public static long fcmPushBussinessIdAbroad = 0;
+    /****** google end ******/
 
-    /****** oppo离线推送参数start ******/
-    // 在腾讯云控制台上传第三方推送证书后分配的证书ID
-    public static final long OPPO_PUSH_BUZID = 0;
-    // 海外证书 ID，不需要直接删掉
-    public static final long OPPO_PUSH_BUZID_ABROAD = 0;
-    // oppo开放平台分配的应用APPID及APPKEY
-    public static final String OPPO_PUSH_APPKEY = "";
-    public static final String OPPO_PUSH_APPSECRET = "";
-    /****** oppo离线推送参数end ******/
+    /****** oppo begin ******/
+    // 在腾讯云控制台上传第三方推送证书后分配的证书ID  // The certificate ID assigned in the Tencent Cloud console
+    public static long oppoPushBussinessId = 0;
+    // 海外证书 ID，需要在海外控制台配置，不使用不用填写  // The overseas certificate ID, which needs to be configured on the overseas console, does not need to be filled in if it is not used.
+    public static long oppoPushBussinessIdAbroad = 0;
+    // oppo开放平台分配的应用APPID及APPKEY  // APPID APPKEY, Allocated by OPPO Open Platform
+    public static String oppoPushAppKey = "";
+    public static String oppoPushAppSecret = "";
+    /****** oppo end ******/
 }

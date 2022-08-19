@@ -161,16 +161,17 @@ public class FaceManager {
 
     public static int calculateInSampleSize(BitmapFactory.Options options,
                                             int reqWidth, int reqHeight) {
-        // 源图片的高度和宽度
         final int height = options.outHeight;
         final int width = options.outWidth;
         int inSampleSize = 1;
         if (height > reqHeight || width > reqWidth) {
-            // 计算出实际宽高和目标宽高的比率
             final int heightRatio = Math.round((float) height / (float) reqHeight);
             final int widthRatio = Math.round((float) width / (float) reqWidth);
             // 选择宽和高中最小的比率作为inSampleSize的值，这样可以保证最终图片的宽和高
             // 一定都会大于等于目标的宽和高。
+            // Select the smallest ratio between width and high school as the value of inSampleSize, 
+            // which ensures that the width and height of the final image must be greater than or 
+            // equal to the target width and height.
             inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
         }
         return inSampleSize;
@@ -179,12 +180,15 @@ public class FaceManager {
     public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
                                                          int reqWidth, int reqHeight) {
         // 第一次解析将inJustDecodeBounds设置为true，来获取图片大小
+        // The first parsing sets inJustDecodeBounds to true to get the image size
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeResource(res, resId, options);
         // 调用上面定义的方法计算inSampleSize值
+        // Call the method defined above to calculate the inSampleSize value
         options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
         // 使用获取到的inSampleSize值再次解析图片
+        // Use the obtained inSampleSize value to parse the image again
         options.inJustDecodeBounds = false;
         return BitmapFactory.decodeResource(res, resId, options);
     }
@@ -220,6 +224,7 @@ public class FaceManager {
             }
         }
         // 如果没有发现表情图片，并且当前是输入状态，不再重设输入框
+        // If no emoticon picture is found, and it is currently in the input state, the input box will not be reset.
         if (!imageFound && typing) {
             return false;
         }
@@ -251,7 +256,8 @@ public class FaceManager {
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(text);
         ArrayList<EmojiData> emojiDataArrayList = new ArrayList<>();
-        //遍历找到匹配字符并存储
+        // 遍历找到匹配字符并存储
+        // Traverse to find matching characters and store
         int lastMentionIndex = -1;
         while (m.find()) {
             String emojiName = m.group();
@@ -279,7 +285,8 @@ public class FaceManager {
             emojiDataArrayList.add(emojiData);
         }
 
-        //倒叙替换
+        // 倒叙替换
+        // flashback replacement
         if (emojiDataArrayList.isEmpty()){
             return text;
         }

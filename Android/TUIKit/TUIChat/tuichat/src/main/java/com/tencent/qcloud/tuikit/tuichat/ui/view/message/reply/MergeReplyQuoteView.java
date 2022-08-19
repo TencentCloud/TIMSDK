@@ -49,7 +49,6 @@ public class MergeReplyQuoteView extends TUIReplyQuoteView {
         mergeMsgTitle.setText(title);
         String content = "";
         for (int i = 0; i < abstractList.size(); i++) {
-            // 最多显示两行
             if (i >= 2) {
                 break;
             }

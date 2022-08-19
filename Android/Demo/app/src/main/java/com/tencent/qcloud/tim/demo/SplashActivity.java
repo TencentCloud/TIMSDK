@@ -13,6 +13,7 @@ import com.tencent.qcloud.tim.demo.login.LoginForDevActivity;
 import com.tencent.qcloud.tim.demo.main.MainActivity;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.demo.utils.TUIUtils;
+import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuicore.interfaces.TUICallback;
@@ -67,6 +68,7 @@ public class SplashActivity extends BaseLightActivity {
             @Override
             public void onSuccess() {
                 startMain();
+                DemoApplication.instance().registerPushManually();
             }
         });
     }
@@ -82,8 +84,12 @@ public class SplashActivity extends BaseLightActivity {
         DemoLog.i(TAG, "MainActivity" );
 
         Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-        intent.putExtras(getIntent());
-        intent.setData(getIntent().getData());
+        Intent dataIntent = getIntent();
+        intent.putExtras(dataIntent);
+        if (dataIntent != null) {
+            String ext = dataIntent.getStringExtra(TUIConstants.TUIOfflinePush.NOTIFICATION_EXT_KEY);
+            intent.putExtra(TUIConstants.TUIOfflinePush.NOTIFICATION_EXT_KEY, ext);
+        }
         startActivity(intent);
         finish();
     }

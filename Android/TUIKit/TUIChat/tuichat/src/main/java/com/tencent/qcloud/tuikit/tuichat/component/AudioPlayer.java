@@ -43,13 +43,11 @@ public class AudioPlayer {
             mAudioRecordPath = CURRENT_RECORD_FILE + System.currentTimeMillis() + ".m4a";
             mRecorder = new MediaRecorder();
             mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-            // 使用mp4容器并且后缀改为.m4a，来兼容小程序的播放
             mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
             mRecorder.setOutputFile(mAudioRecordPath);
             mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
             mRecorder.prepare();
             mRecorder.start();
-            // 最大录制时间之后需要停止录制
             mHandler.removeCallbacksAndMessages(null);
             mHandler.postDelayed(new Runnable() {
                 @Override
@@ -150,12 +148,14 @@ public class AudioPlayer {
         }
         int duration = 0;
         // 通过初始化播放器的方式来获取真实的音频长度
+        // Get the real audio length by initializing the player
         try {
             MediaPlayer mp = new MediaPlayer();
             mp.setDataSource(mAudioRecordPath);
             mp.prepare();
             duration = mp.getDuration();
             // 语音长度如果是59s多，因为外部会/1000取整，会一直显示59'，所以这里对长度进行处理，达到四舍五入的效果
+            // the length is processed to achieve the effect of rounding
             if (duration < MIN_RECORD_DURATION) {
                 duration = 0;
             } else {

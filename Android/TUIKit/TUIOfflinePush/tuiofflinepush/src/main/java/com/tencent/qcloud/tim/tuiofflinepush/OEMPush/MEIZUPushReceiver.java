@@ -1,4 +1,4 @@
-package com.tencent.qcloud.tim.tuiofflinepush.OEMPush;
+package com.tencent.qcloud.tim.tuiofflinepush.oempush;
 
 import android.content.Context;
 import android.content.Intent;

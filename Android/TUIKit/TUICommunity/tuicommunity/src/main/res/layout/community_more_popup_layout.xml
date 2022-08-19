@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/popup_card_bg"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp">
+
+        <com.tencent.qcloud.tuicore.component.RoundCornerImageView
+            android:id="@+id/community_group_face"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:scaleType="centerCrop"
+            app:corner_radius="4.5dp" />
+
+        <TextView
+            android:id="@+id/community_name_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/community_group_face"
+            android:layout_marginLeft="16dp"
+            android:layout_toEndOf="@id/community_group_face"
+            android:layout_toRightOf="@id/community_group_face"
+            android:textColor="#000000"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:id="@+id/community_id_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/community_name_tv"
+            android:layout_alignStart="@id/community_name_tv"
+            android:layout_alignLeft="@id/community_name_tv"
+            android:layout_marginTop="4dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/community_group_id_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/community_group_id_label"
+                android:textColor="#999999"
+                android:textSize="12sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/community_group_id_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="#999999"
+                    android:textSize="12sp"
+                    tools:text="123" />
+
+                <com.tencent.qcloud.tuikit.tuicommunity.component.TextCopyView
+                    android:id="@+id/copy_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="9dp"
+                    android:layout_marginLeft="9dp"
+                    android:maxLines="1"
+                    app:bind_copy_text="@id/community_group_id_tv"
+                    android:text="@string/community_copy"
+                    android:textColor="#006EFF"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/community_introduction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/community_id_ll"
+            android:layout_alignStart="@id/community_id_ll"
+            android:layout_alignLeft="@id/community_name_tv"
+            android:layout_marginTop="10dp"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:textColor="#333333"
+            android:textSize="12sp" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#EEEEEE" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="15dp"
+        android:paddingBottom="20dp">
+
+        <LinearLayout
+            android:id="@+id/user_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <com.tencent.qcloud.tuicore.component.RoundCornerImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/community_popup_users_icon"
+                app:corner_radius="20dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/community_user_list"
+                android:textColor="#000000"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/share_community"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <com.tencent.qcloud.tuicore.component.RoundCornerImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/community_popup_share_icon"
+                app:corner_radius="20dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/community_share_community"
+                android:textColor="#000000"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <com.tencent.qcloud.tuicore.component.RoundCornerImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/community_popup_settings_icon"
+                app:corner_radius="20dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/community_settings"
+                android:textColor="#000000"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <com.tencent.qcloud.tuikit.tuicommunity.component.SelectTextButton
+        android:id="@+id/exit_community_button"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:text="@string/community_exit_community"
+        android:textColor="#FF584C"
+        android:textSize="16sp"
+        app:button_radius="22dp"
+        app:color="#FF584C" />
+
+</LinearLayout>

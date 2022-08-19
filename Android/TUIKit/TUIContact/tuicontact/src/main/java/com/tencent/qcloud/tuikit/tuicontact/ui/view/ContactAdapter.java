@@ -15,6 +15,7 @@ import com.tencent.imsdk.v2.V2TIMUserStatus;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuicore.util.TUIUtil;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactService;
@@ -22,6 +23,7 @@ import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.config.TUIContactConfig;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> {
@@ -35,6 +37,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     private ContactPresenter presenter;
     private boolean isGroupList = false;
     private int dataSourceType = ContactListView.DataSource.UNKNOWN;
+    private ArrayList<String> alreadySelectedList;
 
     public ContactAdapter(List<ContactItemBean> data) {
         this.mData = data;
@@ -46,6 +49,10 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
 
     public void setIsGroupList(boolean groupList) {
         isGroupList = groupList;
+    }
+
+    public void setAlreadySelectedList(ArrayList<String> alreadySelectedList) {
+        this.alreadySelectedList = alreadySelectedList;
     }
 
     @Override
@@ -60,7 +67,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         if (position < mData.size() - 1) {
             String tag1 = contactBean.getSuspensionTag();
             String tag2 = mData.get(position + 1).getSuspensionTag();
-            // tag不同时对item的分割线进行重新处理
+
             if (TextUtils.equals(tag1, tag2)) {
                 params.leftMargin = holder.tvName.getLeft();
             } else {
@@ -97,7 +104,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
                     mOnClickListener.onItemClick(position, contactBean);
                 }
                 if (isSingleSelectMode && position != mPreSelectedPosition && contactBean.isSelected()) {
-                    //单选模式的prePos处理
                     mData.get(mPreSelectedPosition).setSelected(false);
                     notifyItemChanged(mPreSelectedPosition);
                 }
@@ -133,7 +139,8 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         } else {
             int radius = holder.itemView.getResources().getDimensionPixelSize(R.dimen.contact_profile_face_radius);
             if (isGroupList) {
-                GlideEngine.loadUserIcon(holder.avatar, contactBean.getAvatarUrl(), TUIThemeManager.getAttrResId(holder.avatar.getContext(), R.attr.core_default_group_icon), radius);
+                int defaultIconResId = TUIUtil.getDefaultGroupIconResIDByGroupType(holder.itemView.getContext(), contactBean.getGroupType());
+                GlideEngine.loadUserIcon(holder.avatar, contactBean.getAvatarUrl(), defaultIconResId, radius);
             } else {
                 GlideEngine.loadUserIcon(holder.avatar, contactBean.getAvatarUrl(), radius);
             }
@@ -148,7 +155,19 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
                 holder.userStatusView.setVisibility(View.GONE);
             }
         }
+        setAlreadySelected(holder, contactBean);
+    }
 
+    private void setAlreadySelected(ContactAdapter.ViewHolder holder, ContactItemBean contactItemBean) {
+        if (alreadySelectedList != null && alreadySelectedList.contains(contactItemBean.getId())) {
+            holder.ccSelect.setChecked(true);
+            holder.itemView.setEnabled(false);
+            holder.ccSelect.setEnabled(false);
+        } else {
+            holder.itemView.setEnabled(true);
+            holder.ccSelect.setEnabled(true);
+            holder.ccSelect.setSelected(contactItemBean.isSelected());
+        }
     }
 
     @Override

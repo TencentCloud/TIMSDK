@@ -5,6 +5,7 @@ import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -17,6 +18,9 @@ import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tim.demo.login.LoginForDevActivity;
 import com.tencent.qcloud.tim.demo.main.MainActivity;
+import com.tencent.qcloud.tim.demo.push.OfflinePushAPIDemo;
+import com.tencent.qcloud.tim.demo.push.OfflinePushConfigs;
+import com.tencent.qcloud.tim.demo.push.OfflinePushLocalReceiver;
 import com.tencent.qcloud.tim.demo.signature.GenerateTestUserSig;
 import com.tencent.qcloud.tim.demo.utils.BrandUtil;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
@@ -28,6 +32,7 @@ import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.interfaces.TUILoginListener;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.PermissionRequester;
+import com.tencent.qcloud.tuicore.util.TUIUtil;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 
 import org.json.JSONException;
@@ -46,16 +51,19 @@ public class DemoApplication extends Application {
     }
 
     private int sdkAppId = 0;
+    private OfflinePushLocalReceiver offlinePushLocalReceiver = null;
+    private OfflinePushAPIDemo offlinePushAPIDemo;
     @Override
     public void onCreate() {
-        DemoLog.i(TAG, "onCreate");
+        Log.i(TAG, "onCreate");
         super.onCreate();
 
         if (isMainProcess()) {
             instance = this;
             MultiDex.install(this);
 
-            // 添加 Demo 主题
+            // add Demo theme
+            TUIThemeManager.setWebViewLanguage(this);
             TUIThemeManager.addLightTheme(R.style.DemoLightTheme);
             TUIThemeManager.addLivelyTheme(R.style.DemoLivelyTheme);
             TUIThemeManager.addSeriousTheme(R.style.DemoSeriousTheme);
@@ -64,11 +72,11 @@ public class DemoApplication extends Application {
             initLoginStatusListener();
             setPermissionRequestContent();
 
+            initOfflinePushConfigs();
         }
     }
 
     private void initBugly() {
-        // bugly上报
         CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(getApplicationContext());
         strategy.setAppVersion(BuildConfig.VERSION_NAME);
         strategy.setDeviceModel(BrandUtil.getBuildModel());
@@ -84,6 +92,9 @@ public class DemoApplication extends Application {
             buildInfoJson.put("buildVersionRelease", BrandUtil.getBuildVersionRelease());
             buildInfoJson.put("buildVersionSDKInt", BrandUtil.getBuildVersionSDKInt());
             // 工信部要求 app 在运行期间只能获取一次设备信息。因此 app 获取设备信息设置给 SDK 后，SDK 使用该值并且不再调用系统接口。
+            // The Ministry of Industry and Information Technology requires the app to obtain device information only once 
+            // during its operation. Therefore, after the app obtains the device information and sets it to the SDK, the SDK 
+            // uses this value and no longer calls the system interface.
             V2TIMManager.getInstance().callExperimentalAPI("setBuildInfo", buildInfoJson.toString(), new V2TIMValueCallback<Object>() {
                 @Override
                 public void onSuccess(Object o) {
@@ -150,8 +161,8 @@ public class DemoApplication extends Application {
         @Override
         public void onActivityCreated(Activity activity, Bundle bundle) {
             DemoLog.i(TAG, "onActivityCreated bundle: " + bundle);
-            if (bundle != null) { // 若bundle不为空则程序异常结束
-                // 重启整个程序
+            if (bundle != null) {
+                // restart app
                 Intent intent = new Intent(activity, SplashActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
@@ -211,29 +222,63 @@ public class DemoApplication extends Application {
     private boolean isMainProcess() {
         ActivityManager am = ((ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE));
         String mainProcessName = this.getPackageName();
-        int myPid = android.os.Process.myPid();
-
-        List<ActivityManager.RunningAppProcessInfo> processInfos = am.getRunningAppProcesses();
-        if (processInfos == null) {
-            Log.i(TAG, "isMainProcess get getRunningAppProcesses null");
-            List<ActivityManager.RunningServiceInfo> processList = am.getRunningServices(Integer.MAX_VALUE);
-            if (processList == null) {
-                Log.i(TAG, "isMainProcess get getRunningServices null");
-                return false;
-            }
-            for (ActivityManager.RunningServiceInfo rsi : processList) {
-                if (rsi.pid == myPid && mainProcessName.equals(rsi.service.getPackageName())) {
-                    return true;
-                }
-            }
+        String currentProcessName = TUIUtil.getProcessName();
+        if (mainProcessName.equals(currentProcessName)) {
+            return true;
+        } else {
             return false;
         }
+    }
 
-        for (ActivityManager.RunningAppProcessInfo info : processInfos) {
-            if (info.pid == myPid && mainProcessName.equals(info.processName)) {
-                return true;
-            }
+    private void initOfflinePushConfigs() {
+        final SharedPreferences sharedPreferences = getSharedPreferences("TUIKIT_DEMO_SETTINGS", MODE_PRIVATE);
+        int registerMode= sharedPreferences.getInt("test_OfflinePushRegisterMode_v2", 0);
+        int callbackMode= sharedPreferences.getInt("test_OfflinePushCallbackMode_v2", 0);
+        Log.i(TAG, "initOfflinePushConfigs registerMode = " + registerMode);
+        Log.i(TAG, "initOfflinePushConfigs callbackMode = " + callbackMode);
+
+        OfflinePushConfigs.getOfflinePushConfigs().setRegisterPushMode(registerMode);
+        OfflinePushConfigs.getOfflinePushConfigs().setClickNotificationCallbackMode(callbackMode);
+
+        registerNotify();
+    }
+
+    // call after login success
+    public void registerPushManually() {
+        int registerMode = OfflinePushConfigs.getOfflinePushConfigs().getRegisterPushMode();
+        DemoLog.d(TAG, "OfflinePush register mode:" + registerMode);
+        if (registerMode == OfflinePushConfigs.REGISTER_PUSH_MODE_AUTO) {
+            return;
         }
-        return false;
+        if (offlinePushAPIDemo == null) {
+            offlinePushAPIDemo = new OfflinePushAPIDemo();
+        }
+        offlinePushAPIDemo.registerPush(instance);
+    }
+
+    // call in Application onCreate
+    private void registerNotify() {
+        if (offlinePushAPIDemo == null) {
+            offlinePushAPIDemo = new OfflinePushAPIDemo();
+        }
+
+        int callbackMode = OfflinePushConfigs.getOfflinePushConfigs().getClickNotificationCallbackMode();
+        Log.d(TAG, "OfflinePush callback mode:" + callbackMode);
+        switch (callbackMode) {
+            case OfflinePushConfigs.CLICK_NOTIFICATION_CALLBACK_NOTIFY:
+                // 1 TUICore NotifyEvent
+                offlinePushAPIDemo.registerNotifyEvent();
+                break;
+            case OfflinePushConfigs.CLICK_NOTIFICATION_CALLBACK_BROADCAST:
+                // 2 broadcast
+                if (offlinePushLocalReceiver == null) {
+                    offlinePushLocalReceiver = new OfflinePushLocalReceiver();
+                }
+                offlinePushAPIDemo.registerNotificationReceiver(instance, offlinePushLocalReceiver);
+                break;
+            default:
+                // 3 intent
+                break;
+        }
     }
 }

@@ -87,7 +87,6 @@ public class SoundMessageHolder extends MessageContentHolder {
             public void onClick(View view) {
                 if (AudioPlayer.getInstance().isPlaying()) {
                     AudioPlayer.getInstance().stopPlay();
-                    // 同一语音消息，停止播放，不同语音消息，重新播放
                     if (TextUtils.equals(AudioPlayer.getInstance().getPath(), message.getDataPath())) {
                         return;
                     }

@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * 负责通知注册、移除和触发
+ * Notification registration, removal and triggering
  */
 class EventManager {
     private static final String TAG = ServiceManager.class.getSimpleName();

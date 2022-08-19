@@ -65,7 +65,7 @@ public class StartC2CChatActivity extends BaseLightActivity {
             public void onSelectChanged(ContactItemBean contact, boolean selected) {
                 if (selected) {
                     if (mSelectedItem == contact) {
-                        // 相同的Item，忽略
+                        
                     } else {
                         if (mSelectedItem != null) {
                             mSelectedItem.setSelected(false);

@@ -16,6 +16,8 @@ import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationService;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.ui.interfaces.IConversationListAdapter;
+import com.tencent.qcloud.tuikit.tuiconversation.ui.interfaces.OnItemClickListener;
+import com.tencent.qcloud.tuikit.tuiconversation.ui.interfaces.OnItemLongClickListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,8 +38,8 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
     private int mBottomTextSize;
     private int mDateTextSize;
     protected List<ConversationInfo> mDataSource = new ArrayList<>();
-    private ConversationListLayout.OnItemClickListener mOnItemClickListener;
-    private ConversationListLayout.OnItemLongClickListener mOnItemLongClickListener;
+    private OnItemClickListener mOnItemClickListener;
+    private OnItemLongClickListener mOnItemLongClickListener;
 
     //消息转发
     private final HashMap<String, Boolean> mSelectedPositions = new HashMap<>();
@@ -51,6 +53,8 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
     private int currentPosition = -1;
 
     private View searchView;
+    // 展示折叠样式
+    private boolean showFoldedStyle = true;
     public ConversationListAdapter() {
 
     }
@@ -86,6 +90,10 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
 
     public void setSearchView(View searchView) {
         this.searchView = searchView;
+    }
+
+    public void setShowFoldedStyle(boolean showFoldedStyle) {
+        this.showFoldedStyle = showFoldedStyle;
     }
 
     //设置给定位置条目的选择状态
@@ -143,11 +151,11 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
         }
     }
 
-    public void setOnItemClickListener(ConversationListLayout.OnItemClickListener listener) {
+    public void setOnItemClickListener(OnItemClickListener listener) {
         this.mOnItemClickListener = listener;
     }
 
-    public void setOnItemLongClickListener(ConversationListLayout.OnItemLongClickListener listener) {
+    public void setOnItemLongClickListener(OnItemLongClickListener listener) {
         this.mOnItemLongClickListener = listener;
     }
 
@@ -170,7 +178,7 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
                 searchView = new View(parent.getContext());
             }
             return new HeaderViewHolder(searchView);
-        }else if (viewType == ConversationInfo.TYPE_CUSTOM) {
+        } else if (viewType == ConversationInfo.TYPE_CUSTOM) {
             view = inflater.inflate(R.layout.conversation_custom_adapter, parent, false);
             holder = new ConversationCustomHolder(view);
         } else if (viewType == ITEM_TYPE_FOOTER_LOADING) {
@@ -186,6 +194,7 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
             view = inflater.inflate(R.layout.conversation_list_item_layout, parent, false);
             holder = new ConversationCommonHolder(view);
             ((ConversationCommonHolder) holder).setForwardMode(isForwardFragment);
+            ((ConversationCommonHolder) holder).setShowFoldedStyle(showFoldedStyle);
         }
         holder.setAdapter(this);
         return holder;

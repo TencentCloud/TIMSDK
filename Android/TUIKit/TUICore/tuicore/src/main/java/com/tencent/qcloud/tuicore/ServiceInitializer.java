@@ -10,39 +10,39 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 /**
- * 各模块如果需要初始化，需要实现此类的 init 方法，并在 Manifest 文件中以 ContentProvider 的形式注册。
+ * If each module needs to be initialized, it needs to implement the init method of this class 
+ * and register it in the form of ContentProvider in the Manifest file.
  */
 public class ServiceInitializer extends ContentProvider {
 
     /**
-     * 应用启动时自动调起的初始化方法
      * @param context applicationContext
      */
     public void init(Context context) {}
 
     /**
-     * 获取轻量版主题资源 id
+     * LightTheme id
      */
     public int getLightThemeResId() {
         return R.style.TUIBaseLightTheme;
     }
 
     /**
-     * 获取活泼版主题资源 id
+     * LivelyTheme id
      */
     public int getLivelyThemeResId() {
         return R.style.TUIBaseLivelyTheme;
     }
 
     /**
-     * 获取严肃版主题资源 id
+     * SeriousTheme id
      */
     public int getSeriousThemeResId() {
         return R.style.TUIBaseSeriousTheme;
     }
 
 /////////////////////////////////////////////////////////////////////////////////
-//                               以下方法无需重写                                 //
+//             The following methods do not need to be overridden                      //
 /////////////////////////////////////////////////////////////////////////////////
 
     private static Context appContext;
@@ -56,16 +56,13 @@ public class ServiceInitializer extends ContentProvider {
         if (appContext == null) {
             appContext = getContext().getApplicationContext();
         }
-        // 路由初始化
+        
         TUIRouter.init(appContext);
-        // 公共配置初始化
         TUIConfig.init(appContext);
-        // 皮肤语言初始化
         TUIThemeManager.addLightTheme(getLightThemeResId());
         TUIThemeManager.addLivelyTheme(getLivelyThemeResId());
         TUIThemeManager.addSeriousTheme(getSeriousThemeResId());
         TUIThemeManager.setTheme(appContext);
-        // 子类初始化，包括监听注册、扩展注册等。
         init(appContext);
         return false;
     }

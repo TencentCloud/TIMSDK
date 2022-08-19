@@ -108,6 +108,7 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
     }
 
     // 初始化自定义消息类型
+    // Initialize custom message types
     private void initMessageType() {
         addCustomMessageType(TUIChatConstants.BUSINESS_ID_CUSTOM_HELLO, CustomLinkMessageBean.class, CustomLinkMessageHolder.class);
         addCustomMessageType(TUIChatConstants.BUSINESS_ID_CUSTOM_EVALUATION, CustomEvaluationMessageBean.class, CustomEvaluationMessageHolder.class);
@@ -120,6 +121,11 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
      * @param businessId 自定义消息唯一标识（注意不能重复）
      * @param beanClass 消息 MessageBean 类型
      * @param holderClass 消息 MessageBaseHolder 类型
+     * 
+     * Register a custom message type
+     * @param businessId Custom message unique identifier（cannot be repeated）
+     * @param beanClass  MessageBean type
+     * @param holderClass  MessageBaseHolder type
      */
     private void addCustomMessageType(String businessId, Class<? extends TUIMessageBean> beanClass,
                                       Class<? extends MessageBaseHolder> holderClass) {
@@ -173,26 +179,18 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
     }
 
     private void initEvent() {
-        // 群信息更改通知
         TUICore.registerEvent(TUIConstants.TUIGroup.EVENT_GROUP, TUIConstants.TUIGroup.EVENT_SUB_KEY_GROUP_INFO_CHANGED, this);
-        // 退群通知
         TUICore.registerEvent(TUIConstants.TUIGroup.EVENT_GROUP, TUIConstants.TUIGroup.EVENT_SUB_KEY_EXIT_GROUP, this);
-        // 群成员被踢通知
         TUICore.registerEvent(TUIConstants.TUIGroup.EVENT_GROUP, TUIConstants.TUIGroup.EVENT_SUB_KEY_MEMBER_KICKED_GROUP, this);
-        // 群解散通知
         TUICore.registerEvent(TUIConstants.TUIGroup.EVENT_GROUP, TUIConstants.TUIGroup.EVENT_SUB_KEY_GROUP_DISMISS, this);
-        // 加群通知
         TUICore.registerEvent(TUIConstants.TUIGroup.EVENT_GROUP, TUIConstants.TUIGroup.EVENT_SUB_KEY_JOIN_GROUP, this);
-        // 被邀请进群通知
         TUICore.registerEvent(TUIConstants.TUIGroup.EVENT_GROUP, TUIConstants.TUIGroup.EVENT_SUB_KEY_INVITED_GROUP, this);
-        // 群被回收通知
         TUICore.registerEvent(TUIConstants.TUIGroup.EVENT_GROUP, TUIConstants.TUIGroup.EVENT_SUB_KEY_GROUP_RECYCLE, this);
-        // 好友备注修改通知
         TUICore.registerEvent(TUIConstants.TUIContact.EVENT_FRIEND_INFO_CHANGED, TUIConstants.TUIContact.EVENT_SUB_KEY_FRIEND_REMARK_CHANGED, this);
-        // 清空群消息通知
-        TUICore.registerEvent(TUIConstants.TUIGroup.EVENT_GROUP, TUIConstants.TUIGroup.EVENT_SUB_KEY_CLEAR_MESSAGE, this);        // 清空群消息通知
-        // 总未读数改变通知
+        TUICore.registerEvent(TUIConstants.TUIGroup.EVENT_GROUP, TUIConstants.TUIGroup.EVENT_SUB_KEY_CLEAR_MESSAGE, this);
+        TUICore.registerEvent(TUIConstants.TUIContact.EVENT_USER, TUIConstants.TUIContact.EVENT_SUB_KEY_CLEAR_MESSAGE, this);
         TUICore.registerEvent(TUIConstants.TUIConversation.EVENT_UNREAD, TUIConstants.TUIConversation.EVENT_SUB_KEY_UNREAD_CHANGED, this);
+        TUICore.registerEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGIN_SUCCESS, this);
     }
 
     @Override
@@ -308,6 +306,17 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
                     groupChatEventListener.clearGroupMessage(groupId);
                 }
             }
+        } else if (key.equals(TUIConstants.TUIContact.EVENT_USER)) {
+            if (subKey.equals(TUIConstants.TUIContact.EVENT_SUB_KEY_CLEAR_MESSAGE)) {
+                if (param == null || param.isEmpty()) {
+                    return;
+                }
+                String userID = (String) getOrDefault(param.get(TUIConstants.TUIContact.FRIEND_ID), "");
+                List<C2CChatEventListener> c2CChatEventListenerList = getC2CChatEventListenerList();
+                for(C2CChatEventListener c2CChatEventListener : c2CChatEventListenerList) {
+                    c2CChatEventListener.clearC2CMessage(userID);
+                }
+            }
         } else if (key.equals(TUIConstants.TUIContact.EVENT_FRIEND_INFO_CHANGED)) {
             if (subKey.equals(TUIConstants.TUIContact.EVENT_SUB_KEY_FRIEND_REMARK_CHANGED)) {
                 if (param == null || param.isEmpty()) {
@@ -328,6 +337,14 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
                     totalUnreadCountListener.onTotalUnreadCountChanged(unreadCount);
                 }
             }
+        } else if (TextUtils.equals(key, TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED)) {
+            if (TextUtils.equals(subKey, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGIN_SUCCESS)) {
+                // 设置音视频通话的悬浮窗是否开启
+                // Set whether to open the floating window for voice and video calls
+                Map<String, Object> data = new HashMap<>();
+                data.put(TUIConstants.TUICalling.PARAM_NAME_ENABLE_FLOAT_WINDOW, getChatConfig().getGeneralConfig().isEnableFloatWindowForCall());
+                TUICore.callService(TUIConstants.TUICalling.SERVICE_NAME, TUIConstants.TUICalling.METHOD_NAME_ENABLE_FLOAT_WINDOW, data);
+            }
         }
     }
 
@@ -343,21 +360,33 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
             @Override
             public void onRecvNewMessage(V2TIMMessage msg) {
                 TUIMessageBean message = ChatMessageParser.parseMessage(msg);
-                // 通话信令存在发送 null 的情况，此处加下判断
                 if (message == null) {
                     return;
                 }
+
+                HashMap<String, Object> param = new HashMap<>();
+                String conversationID;
                 if (TextUtils.isEmpty(msg.getGroupID())) {
                     List<C2CChatEventListener> c2CChatEventListenerList = getInstance().getC2CChatEventListenerList();
                     for (C2CChatEventListener c2CChatEventListener : c2CChatEventListenerList) {
                         c2CChatEventListener.onRecvNewMessage(message);
+                    }
+                    conversationID = TUIConstants.TUIConversation.CONVERSATION_C2C_PREFIX + msg.getUserID();
+                    if (message instanceof MessageTypingBean) {
+                        param.put(TUIConstants.TUIChat.IS_TYPING_MESSAGE, true);
+                    } else {
+                        param.put(TUIConstants.TUIChat.IS_TYPING_MESSAGE, false);
                     }
                 } else {
                     List<GroupChatEventListener> groupChatEventListenerList = getInstance().getGroupChatEventListenerList();
                     for (GroupChatEventListener groupChatEventListener : groupChatEventListenerList) {
                         groupChatEventListener.onRecvNewMessage(message);
                     }
+                    conversationID = TUIConstants.TUIConversation.CONVERSATION_GROUP_PREFIX + msg.getGroupID();
                 }
+
+                param.put(TUIConstants.TUIChat.CONVERSATION_ID, conversationID);
+                TUICore.notifyEvent(TUIConstants.TUIChat.EVENT_KEY_RECEIVE_MESSAGE, TUIConstants.TUIChat.EVENT_SUB_KEY_CONVERSATION_ID, param);
             }
 
             @Override
@@ -394,6 +423,9 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
             @Override
             public void onRecvMessageModified(V2TIMMessage msg) {
                 TUIMessageBean message = ChatMessageParser.parseMessage(msg);
+                if (message == null) {
+                    return;
+                }
                 List<C2CChatEventListener> c2CChatEventListenerList = getInstance().getC2CChatEventListenerList();
                 for (C2CChatEventListener c2CChatEventListener : c2CChatEventListenerList) {
                     c2CChatEventListener.onRecvMessageModified(message);

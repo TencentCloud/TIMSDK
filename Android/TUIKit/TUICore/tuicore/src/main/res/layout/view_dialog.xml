@@ -13,7 +13,7 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="15dp"
-        android:gravity="left|center"
+        android:gravity="center"
         android:clickable="true"
         android:focusableInTouchMode="true"
         android:textColor="@color/black"

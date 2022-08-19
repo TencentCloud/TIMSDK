@@ -180,9 +180,9 @@ public class ImageSelectActivity extends BaseLightActivity {
             setItemLayoutParams(holder);
             Object obj = data.get(position);
             if (selected != null && selected.equals(obj)) {
-                holder.selectBorder.setVisibility(View.VISIBLE);
+                holder.selectBorderLayout.setVisibility(View.VISIBLE);
             } else {
-                holder.selectBorder.setVisibility(View.GONE);
+                holder.selectBorderLayout.setVisibility(View.GONE);
             }
             Glide.with(holder.itemView.getContext()).asBitmap()
                     .load(obj)
@@ -206,10 +206,15 @@ public class ImageSelectActivity extends BaseLightActivity {
                 params.height = itemHeight;
                 holder.imageView.setLayoutParams(params);
 
-                ViewGroup.LayoutParams borderLayoutParams = holder.selectBorder.getLayoutParams();
+                ViewGroup.LayoutParams borderLayoutParams = holder.selectBorderLayout.getLayoutParams();
                 borderLayoutParams.width = itemWidth;
                 borderLayoutParams.height = itemHeight;
-                holder.selectBorder.setLayoutParams(borderLayoutParams);
+                holder.selectBorderLayout.setLayoutParams(borderLayoutParams);
+
+                ViewGroup.LayoutParams borderParams = holder.selectedBorder.getLayoutParams();
+                borderParams.width = itemWidth;
+                borderParams.height = itemHeight;
+                holder.selectedBorder.setLayoutParams(borderParams);
             }
         }
 
@@ -223,12 +228,14 @@ public class ImageSelectActivity extends BaseLightActivity {
 
         public static class ImageViewHolder extends RecyclerView.ViewHolder {
             private final ImageView imageView;
-            private final RelativeLayout selectBorder;
+            private final ImageView selectedBorder;
+            private final RelativeLayout selectBorderLayout;
 
             public ImageViewHolder(@NonNull View itemView) {
                 super(itemView);
                 imageView = itemView.findViewById(R.id.content_image);
-                selectBorder = itemView.findViewById(R.id.selected_border_view);
+                selectedBorder = itemView.findViewById(R.id.select_border);
+                selectBorderLayout = itemView.findViewById(R.id.selected_border_area);
             }
         }
     }

@@ -11,10 +11,15 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
+import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.component.LineControllerView;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
@@ -46,28 +51,34 @@ public class StartGroupChatActivity extends BaseLightActivity {
     private LineControllerView mJoinType;
     private ArrayList<GroupMemberInfo> mMembers = new ArrayList<>();
     private int mGroupType = -1;
+    private boolean communitySupportTopic = false;
     private int mJoinTypeIndex = 2;
     private ArrayList<String> mJoinTypes = new ArrayList<>();
     private ArrayList<String> mGroupTypeValue = new ArrayList<>();
     private boolean mCreating;
-
+    private RecyclerView selectedList;
+    private StartGroupMemberSelectActivity.SelectedAdapter selectedListAdapter;
+    private TextView confirmButton;
     private ContactPresenter presenter;
+    private GroupMemberInfo selfInfo;
+    private int limit;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.popup_start_group_chat_activity);
-
+        selfInfo = new GroupMemberInfo();
+        selfInfo.setAccount(ContactUtils.getLoginUser());
+        selfInfo.setNickName(TUIConfig.getSelfNickName());
         init();
     }
 
     private void init() {
+        limit = getIntent().getIntExtra(TUIContactConstants.Selection.LIMIT, Integer.MAX_VALUE);
         String[] array = getResources().getStringArray(R.array.group_type);
         mGroupTypeValue.addAll(Arrays.asList(array));
         array = getResources().getStringArray(R.array.group_join_type);
         mJoinTypes.addAll(Arrays.asList(array));
-        GroupMemberInfo memberInfo = new GroupMemberInfo();
-        memberInfo.setAccount(ContactUtils.getLoginUser());
-        mMembers.add(0, memberInfo);
+
         mTitleBar = findViewById(R.id.group_create_title_bar);
         mTitleBar.setTitle(getResources().getString(R.string.sure), ITitleBarLayout.Position.RIGHT);
         mTitleBar.getRightIcon().setVisibility(View.GONE);
@@ -95,12 +106,19 @@ public class StartGroupChatActivity extends BaseLightActivity {
         mJoinType.setContent(mJoinTypes.get(2));
 
         mContactListView = findViewById(R.id.group_create_member_list);
-
+        confirmButton = findViewById(R.id.confirm_button);
+        selectedList = findViewById(R.id.selected_list);
+        selectedListAdapter = new StartGroupMemberSelectActivity.SelectedAdapter();
+        selectedList.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
+        selectedList.setAdapter(selectedListAdapter);
         presenter = new ContactPresenter();
         presenter.setFriendListListener();
         mContactListView.setPresenter(presenter);
         presenter.setContactListView(mContactListView);
 
+        ArrayList<String> alreadySelectedList = new ArrayList<>();
+        alreadySelectedList.add(TUILogin.getLoginUser());
+        mContactListView.setAlreadySelectedList(alreadySelectedList);
         mContactListView.loadDataSource(ContactListView.DataSource.FRIEND_LIST);
         mContactListView.setOnSelectChangeListener(new ContactListView.OnSelectChangedListener() {
             @Override
@@ -108,6 +126,8 @@ public class StartGroupChatActivity extends BaseLightActivity {
                 if (selected) {
                     GroupMemberInfo memberInfo = new GroupMemberInfo();
                     memberInfo.setAccount(contact.getId());
+                    memberInfo.setNickName(contact.getNickName());
+                    memberInfo.setIconUrl(contact.getAvatarUrl());
                     mMembers.add(memberInfo);
                 } else {
                     for (int i = mMembers.size() - 1; i >= 0; i--) {
@@ -116,10 +136,19 @@ public class StartGroupChatActivity extends BaseLightActivity {
                         }
                     }
                 }
+                selectedListAdapter.setMembers(mMembers);
+                selectedListAdapter.notifyDataSetChanged();
             }
         });
-
-        setGroupType(getIntent().getIntExtra("type", TUIContactConstants.GroupType.PRIVATE));
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createGroupChat();
+            }
+        });
+        Intent intent = getIntent();
+        communitySupportTopic = intent.getBooleanExtra(TUIConstants.TUIContact.COMMUNITY_SUPPORT_TOPIC_KEY, false);
+        setGroupType(intent.getIntExtra(TUIConstants.TUIContact.GROUP_TYPE_KEY, TUIContactConstants.GroupType.PRIVATE));
     }
 
     public void setGroupType(int type) {
@@ -163,6 +192,7 @@ public class StartGroupChatActivity extends BaseLightActivity {
         if (mCreating) {
             return;
         }
+        mMembers.add(0, selfInfo);
         if (mGroupType < 3 && mMembers.size() == 1) {
             ToastUtil.toastLongMessage(getResources().getString(R.string.tips_empty_group_member));
             return;
@@ -175,31 +205,35 @@ public class StartGroupChatActivity extends BaseLightActivity {
             mJoinTypeIndex = -1;
         }
         final GroupInfo groupInfo = new GroupInfo();
-        String groupName = ContactUtils.getLoginUser();
+        String groupName = selfInfo.getDisplayName();
         for (int i = 1; i < mMembers.size(); i++) {
-            groupName = groupName + "、" + mMembers.get(i).getAccount();
+            groupName = groupName + "、" + mMembers.get(i).getDisplayName();
         }
-        if (groupName.length() > 20) {
-            groupName = groupName.substring(0, 17) + "...";
+        if (groupName.length() >= 10) {
+            groupName = groupName.substring(0, 7) + "..";
         }
         groupInfo.setChatName(groupName);
         groupInfo.setGroupName(groupName);
         groupInfo.setMemberDetails(mMembers);
         groupInfo.setGroupType(mGroupTypeValue.get(mGroupType));
         groupInfo.setJoinType(mJoinTypeIndex);
+        groupInfo.setCommunitySupportTopic(communitySupportTopic);
 
         mCreating = true;
 
         presenter.createGroupChat(groupInfo, new IUIKitCallback<String>() {
             @Override
             public void onSuccess(String data) {
-                ContactUtils.startChatActivity(data, ChatInfo.TYPE_GROUP, groupInfo.getGroupName(), groupInfo.getGroupType());
+                if (!communitySupportTopic) {
+                    ContactUtils.startChatActivity(data, ChatInfo.TYPE_GROUP, groupInfo.getGroupName(), groupInfo.getGroupType());
+                }
                 finish();
             }
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
                 mCreating = false;
+                mMembers.remove(selfInfo);
                 if (errCode == TUIConstants.BuyingFeature.ERR_SDK_INTERFACE_NOT_SUPPORT || errCode == 11000) {
                     showNotSupportDialog();
                 }
@@ -213,9 +247,7 @@ public class StartGroupChatActivity extends BaseLightActivity {
         String buyingGuidelines = getResources().getString(R.string.contact_buying_guidelines);
         int buyingGuidelinesIndex = string.lastIndexOf(buyingGuidelines);
         final int foregroundColor = getResources().getColor(TUIThemeManager.getAttrResId(this, R.attr.core_primary_color));
-        //需要显示的字串
         SpannableString spannedString = new SpannableString(string);
-        //设置点击字体颜色
         ForegroundColorSpan colorSpan2 = new ForegroundColorSpan(foregroundColor);
         spannedString.setSpan(colorSpan2, buyingGuidelinesIndex, buyingGuidelinesIndex + buyingGuidelines.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 
@@ -231,16 +263,14 @@ public class StartGroupChatActivity extends BaseLightActivity {
 
             @Override
             public void updateDrawState(TextPaint ds) {
-                //点击事件去掉下划线
                 ds.setUnderlineText(false);
             }
         };
         spannedString.setSpan(clickableSpan2, buyingGuidelinesIndex, buyingGuidelinesIndex + buyingGuidelines.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-        //开始响应点击事件
+
         TUIKitDialog.TUIIMUpdateDialog.getInstance()
                 .createDialog(this)
                 .setMovementMethod(LinkMovementMethod.getInstance())
-                // 只在 debug 模式下弹窗
                 .setShowOnlyDebug(true)
                 .setCancelable(true)
                 .setCancelOutside(true)

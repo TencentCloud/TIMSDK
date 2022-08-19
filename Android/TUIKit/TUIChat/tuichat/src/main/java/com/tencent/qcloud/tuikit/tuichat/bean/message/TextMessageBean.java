@@ -4,9 +4,6 @@ import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TUIReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TextReplyQuoteBean;
 
-/**
- * 文本消息
- */
 public class TextMessageBean extends TUIMessageBean {
     private String text;
 

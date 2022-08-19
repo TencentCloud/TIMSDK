@@ -40,7 +40,8 @@
             android:layout_height="wrap_content"
             android:textColor="?attr/core_title_bar_text_bg"
             android:gravity="center"
-            android:textSize="14sp"/>
+            android:textSize="16.3sp"
+            android:textStyle="bold"/>
 
     </LinearLayout>
 
@@ -72,7 +73,8 @@
             android:layout_height="wrap_content"
             android:gravity="right"
             android:textColor="?attr/core_title_bar_text_bg"
-            android:textSize="14sp"/>
+            android:textSize="16.3sp"
+            android:textStyle="bold"/>
 
         <ImageView
             android:id="@+id/page_title_right_icon"

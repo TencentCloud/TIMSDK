@@ -143,12 +143,13 @@ public class GroupChatPresenter extends ChatPresenter {
                     TUIChatUtils.callbackOnError(callback, errCode, errMsg);
                 }
             });
-        } else { // 向后拉更新的消息 或者 前后同时拉消息
+        } else {
             loadHistoryMessageList(chatId, true, type, MSG_PAGE_COUNT, lastMessageInfo, callback);
         }
     }
 
     // 加载消息成功之后会调用此方法
+    // This method is called after the message is loaded successfully
     @Override
     protected void onMessageLoadCompleted(List<TUIMessageBean> data, int getType) {
         groupReadReport(groupInfo.getId());
@@ -241,7 +242,7 @@ public class GroupChatPresenter extends ChatPresenter {
         message.setGroup(true);
         String groupType = groupInfo.getGroupType();
         if (TextUtils.equals(groupType, GroupInfo.GROUP_TYPE_AVCHATROOM) || TextUtils.equals(groupType, GroupInfo.GROUP_TYPE_COMMUNITY)
-                || (!TextUtils.isEmpty(groupInfo.getId()) && groupInfo.getId().startsWith("@TGS#_@TGS#"))) {
+                || (TUIChatUtils.isCommunityGroup(groupInfo.getId()))) {
             message.setNeedReadReceipt(false);
         }
     }

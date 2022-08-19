@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * 页面扩展注册和获取
+ * UI extension registration and acquisition
  */
 class ExtensionManager {
     private static final String TAG = ExtensionManager.class.getSimpleName();

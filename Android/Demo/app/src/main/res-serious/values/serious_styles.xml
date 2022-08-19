@@ -15,6 +15,8 @@
         <item name="demo_main_tab_contact_selected_bg">@drawable/demo_main_tab_contact_selected_serious</item>
         <item name="demo_main_tab_profile_normal_bg">@drawable/demo_profile_not_selected</item>
         <item name="demo_main_tab_profile_selected_bg">@drawable/demo_main_tab_profile_selected_serious</item>
+        <item name="demo_main_tab_community_selected_bg">@drawable/demo_main_tab_community_selected_serious</item>
+        <item name="demo_main_tab_community_normal_bg">@drawable/demo_community_not_selected</item>
 
         <item name="demo_navigate_bar_bg">@color/demo_navigate_bar_bg_serious</item>
         <item name="demo_title_bar_more">@drawable/demo_title_bar_more_serious</item>

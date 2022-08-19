@@ -29,7 +29,10 @@
         <item name="core_title_bar_bg">@drawable/core_title_bar_bg_lively</item>
         <item name="core_title_bar_text_bg">@color/core_title_bar_text_bg_lively</item>
         <item name="core_title_bar_back_icon">@drawable/core_title_bar_back_lively</item>
-        <item name="core_default_group_icon">@drawable/core_default_group_icon_lively</item>
+        <item name="core_default_group_icon_public">@drawable/core_default_group_icon_public_lively</item>
+        <item name="core_default_group_icon_work">@drawable/core_default_group_icon_work_lively</item>
+        <item name="core_default_group_icon_meeting">@drawable/core_default_group_icon_meeting_lively</item>
+        <item name="core_default_group_icon_community">@drawable/core_default_group_icon_community</item>
         <item name="core_default_user_icon">@drawable/core_default_user_icon_lively</item>
         <item name="user_status_online">@drawable/core_online_status_lively</item>
     </style>

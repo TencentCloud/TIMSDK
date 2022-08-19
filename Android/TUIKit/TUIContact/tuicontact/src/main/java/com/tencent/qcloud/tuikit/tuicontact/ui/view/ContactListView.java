@@ -45,14 +45,12 @@ public class ContactListView extends LinearLayout implements IContactListView {
      */
     private IndexBar mIndexBar;
 
-    /**
-     * 显示指示器DialogText
-     */
     private TextView mTvSideBarHint;
 
     private ContactPresenter presenter;
 
     private int dataSourceType = DataSource.UNKNOWN;
+    private ArrayList<String> alreadySelectedList;
 
     public ContactListView(Context context) {
         super(context);
@@ -79,6 +77,11 @@ public class ContactListView extends LinearLayout implements IContactListView {
 
     public void setIsGroupList(boolean isGroupList) {
         this.isGroupList = isGroupList;
+    }
+
+    public void setAlreadySelectedList(ArrayList<String> alreadySelectedList) {
+        this.alreadySelectedList = alreadySelectedList;
+        mAdapter.setAlreadySelectedList(alreadySelectedList);
     }
 
     private void init() {

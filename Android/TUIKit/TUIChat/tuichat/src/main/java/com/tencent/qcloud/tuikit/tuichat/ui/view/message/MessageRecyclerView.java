@@ -1,8 +1,5 @@
 package com.tencent.qcloud.tuikit.tuichat.ui.view.message;
 
-import static com.tencent.qcloud.tuikit.tuichat.TUIChatConstants.CHAT_SETTINGS_SP_NAME;
-
-import android.app.Activity;
 import android.content.Context;
 
 import androidx.annotation.Nullable;
@@ -11,16 +8,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.PopupWindow;
 
 import com.tencent.qcloud.tuicore.component.dialog.TUIKitDialog;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
@@ -63,14 +56,18 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
     public static final int DATA_CHANGE_TYPE_DELETE = 5;
     public static final int DATA_CHANGE_TYPE_CLEAR = 6;
     // 先刷新消息再定位到消息位置
+    // Refresh the message first and then locate the message location
     public static final int DATA_CHANGE_LOCATE_TO_POSITION = 7;
     public static final int DATA_CHANGE_NEW_MESSAGE = 8;
     // 直接滚动到消息位置
+    // Scroll directly to message location
     public static final int SCROLL_TO_POSITION = 9;
     // 先刷新消息再滚动到消息位置
+    // Refresh the message before scrolling to the message position
     public static final int DATA_CHANGE_SCROLL_TO_POSITION = 10;
 
     // 取一个足够大的偏移保证能一次性滚动到最底部
+    // Take a large enough offset to scroll to the bottom at one time
     private static final int SCROLL_TO_END_OFFSET = -999999;
 
     protected OnItemClickListener mOnItemClickListener;
@@ -196,7 +193,6 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
 
     public void onMsgAddBack() {
         if (mAdapter != null) {
-            // 如果当前显示最后一条消息，则消息刷新跳转到底部，否则不跳转
             if (isLastItemVisibleCompleted()) {
                 scrollToEnd();
             }
@@ -277,14 +273,12 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
                 }
             }
 
-            //多选
             multiSelectAction = new ChatPopMenu.ChatPopMenuAction();
             multiSelectAction.setActionName(getContext().getString(R.string.titlebar_mutiselect));
             multiSelectAction.setActionIcon(R.drawable.pop_menu_multi_select);
             multiSelectAction.setActionClickListener(() -> mOnPopActionClickListener.onMultiSelectMessageClick(msg));
         }
 
-        //转发
         if (msg.getStatus() != TUIMessageBean.MSG_STATUS_SEND_FAIL) {
             forwardAction = new ChatPopMenu.ChatPopMenuAction();
             forwardAction.setActionName(getContext().getString(R.string.forward_button));
@@ -293,7 +287,6 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
         }
 
         if (textIsAllSelected) {
-            // 回复
             if (msg.getStatus() != TUIMessageBean.MSG_STATUS_SEND_FAIL) {
                 replyAction = new ChatPopMenu.ChatPopMenuAction();
                 replyAction.setActionName(getContext().getString(R.string.reply_button));
@@ -476,7 +469,6 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
 
             @Override
             public void onReplyMessageClick(View view, int position, QuoteMessageBean messageBean) {
-                // 点击转发消息进行跳转
                 if (messageBean instanceof ReplyMessageBean) {
                     showRootMessageReplyDetail(((ReplyMessageBean) messageBean).getMsgRootId());
                 } else {
@@ -576,7 +568,7 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
-                ToastUtil.toastShortMessage("showRootMessageReplyDetail failed code = " + errCode + " message = " + errMsg);
+                ToastUtil.toastShortMessage(getContext().getString(R.string.locate_origin_msg_failed_tip) + " code = " + errCode + " message = " + errMsg);
             }
         });
 

@@ -24,9 +24,6 @@ import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
 
 import java.util.List;
 
-/**
- * 好友关系链管理消息adapter
- */
 public class NewFriendListAdapter extends ArrayAdapter<FriendApplicationBean> {
 
     private static final String TAG = NewFriendListAdapter.class.getSimpleName();

@@ -13,7 +13,7 @@ public class ViewPagerLayoutManager extends LinearLayoutManager {
     private PagerSnapHelper mPagerSnapHelper;
     private OnViewPagerListener mOnViewPagerListener;
     private RecyclerView mRecyclerView;
-    private int mDrift;//位移，用来判断移动方向
+    private int mDrift;//位移，用来判断移动方向 Displacement, used to determine the direction of movement
     private boolean mIsLeftScroll = false;
 
     public ViewPagerLayoutManager(Context context, int orientation) {
@@ -44,6 +44,12 @@ public class ViewPagerLayoutManager extends LinearLayoutManager {
      * 快速滚动-> SCROLL_STATE_SETTLING
      * 空闲状态-> SCROLL_STATE_IDLE
      * @param state
+     * 
+     * 
+     * Change of sliding state
+     * drag slowly-> SCROLL_STATE_DRAGGING
+     * scroll fast-> SCROLL_STATE_SETTLING
+     * idle state-> SCROLL_STATE_IDLE
      */
     @Override
     public void onScrollStateChanged(int state) {
@@ -60,6 +66,9 @@ public class ViewPagerLayoutManager extends LinearLayoutManager {
 
     /**
      * 监听竖直方向的相对偏移量
+     * 
+     * Monitor the relative offset in the vertical direction
+     * 
      * @param dy
      * @param recycler
      * @param state
@@ -74,6 +83,9 @@ public class ViewPagerLayoutManager extends LinearLayoutManager {
 
     /**
      * 监听水平方向的相对偏移量
+     * 
+     * Monitor the relative offset in the horizontal direction
+     * 
      * @param dx
      * @param recycler
      * @param state
@@ -90,10 +102,6 @@ public class ViewPagerLayoutManager extends LinearLayoutManager {
         return super.scrollHorizontallyBy(dx, recycler, state);
     }
 
-    /**
-     * 设置监听
-     * @param listener
-     */
     public void setOnViewPagerListener(OnViewPagerListener listener){
         this.mOnViewPagerListener = listener;
     }

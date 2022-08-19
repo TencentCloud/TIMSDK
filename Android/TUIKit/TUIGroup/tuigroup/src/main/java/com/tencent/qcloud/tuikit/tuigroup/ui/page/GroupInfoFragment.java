@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 
+import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.component.activities.ImageSelectActivity;
 import com.tencent.qcloud.tuicore.component.fragments.BaseFragment;
@@ -18,6 +19,7 @@ import com.tencent.qcloud.tuikit.tuigroup.R;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupService;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupConstants;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
+import com.tencent.qcloud.tuikit.tuigroup.bean.GroupMemberInfo;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupInfoPresenter;
 import com.tencent.qcloud.tuikit.tuigroup.ui.view.GroupInfoLayout;
 import com.tencent.qcloud.tuikit.tuigroup.ui.interfaces.IGroupMemberListener;
@@ -54,6 +56,7 @@ public class GroupInfoFragment extends BaseFragment {
         groupInfoLayout = baseView.findViewById(R.id.group_info_layout);
         // 新建 presenter 与 layout 互相绑定
         groupInfoPresenter = new GroupInfoPresenter(groupInfoLayout);
+        groupInfoPresenter.setGroupEventListener();
         groupInfoLayout.setGroupInfoPresenter(groupInfoPresenter);
         groupInfoLayout.setOnModifyGroupAvatarListener(new OnModifyGroupAvatarListener() {
             @Override
@@ -88,6 +91,11 @@ public class GroupInfoFragment extends BaseFragment {
                 Bundle param = new Bundle();
                 param.putString(TUIGroupConstants.Group.GROUP_ID, info.getId());
                 param.putBoolean(TUIGroupConstants.Selection.SELECT_FRIENDS, true);
+                ArrayList<String> selectedList = new ArrayList<>();
+                for (GroupMemberInfo memberInfo : info.getMemberDetails()) {
+                    selectedList.add(memberInfo.getAccount());
+                }
+                param.putStringArrayList(TUIGroupConstants.Selection.SELECTED_LIST, selectedList);
                 TUICore.startActivity(GroupInfoFragment.this, "StartGroupMemberSelectActivity", param, 1);
             }
 

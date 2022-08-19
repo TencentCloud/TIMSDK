@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="SelectTextButton">
+        <attr name="button_radius" format="dimension" />
+        <attr name="border_width" format="dimension" />
+        <attr name="button_left_top_radius" format="dimension" />
+        <attr name="button_right_top_radius" format="dimension" />
+        <attr name="button_right_bottom_radius" format="dimension" />
+        <attr name="button_left_bottom_radius" format="dimension" />
+        <attr name="color" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="TextCountView">
+        <attr name="limit_count" format="integer"/>
+        <attr name="bind_edit_text" format="reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="TextCopyView">
+        <attr name="bind_copy_text" format="reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="SettingsLinearView">
+        <attr name="setting_name" format="string"/>
+        <attr name="setting_name_color" format="string|reference"/>
+        <attr name="setting_content" format="string"/>
+        <attr name="setting_content_color" format="color|reference"/>
+        <attr name="setting_is_show_top_line" format="boolean"/>
+        <attr name="setting_is_show_bottom_line" format="boolean"/>
+        <attr name="setting_is_show_copy" format="boolean"/>
+        <attr name="setting_is_show_arrow" format="boolean"/>
+        <attr name="setting_is_show_content_text" format="boolean"/>
+        <attr name="setting_is_show_content_image" format="boolean"/>
+        <attr name="setting_content_image_width" format="dimension"/>
+        <attr name="setting_content_image_height" format="dimension"/>
+
+    </declare-styleable>
+
+    <declare-styleable name="RoundFrameLayout" parent="RoundCornerImageView">
+        <attr name="corner_radius" format="dimension" />
+        <attr name="left_top_corner_radius" format="dimension" />
+        <attr name="right_top_corner_radius" format="dimension" />
+        <attr name="right_bottom_corner_radius" format="dimension" />
+        <attr name="left_bottom_corner_radius" format="dimension" />
+    </declare-styleable>
+
+
+    <declare-styleable name="CommunityExperienceView">
+        <attr name="content_text" format="string|reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="CommunityIndexLinkView">
+        <attr name="content_index" format="integer"/>
+        <attr name="content_link_text" format="string|reference"/>
+        <attr name="content_link" format="string|reference"/>
+    </declare-styleable>
+</resources>

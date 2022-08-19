@@ -31,8 +31,6 @@ public class CustomLinkMessageHolder extends MessageContentHolder {
 
     @Override
     public void layoutVariableViews(TUIMessageBean msg, int position) {
-        // 自定义消息view的实现，这里仅仅展示文本信息，并且实现超链接跳转
-
         String text = "";
         String link = "";
         if (msg instanceof CustomLinkMessageBean) {

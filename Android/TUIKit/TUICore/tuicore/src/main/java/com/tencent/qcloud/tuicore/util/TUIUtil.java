@@ -1,8 +1,13 @@
 package com.tencent.qcloud.tuicore.util;
 
 import android.app.Application;
+import android.content.Context;
 import android.os.Build;
 import android.text.TextUtils;
+
+import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.qcloud.tuicore.R;
+import com.tencent.qcloud.tuicore.TUIThemeManager;
 
 import java.lang.reflect.Method;
 
@@ -32,5 +37,21 @@ public class TUIUtil {
         }
 
         return currentProcessName;
+    }
+
+    public static int getDefaultGroupIconResIDByGroupType(Context context, String groupType) {
+        if (context == null || TextUtils.isEmpty(groupType)) {
+            return R.drawable.core_default_group_icon_community;
+        }
+        if (TextUtils.equals(groupType, V2TIMManager.GROUP_TYPE_WORK)) {
+            return TUIThemeManager.getAttrResId(context, R.attr.core_default_group_icon_work);
+        } else if (TextUtils.equals(groupType, V2TIMManager.GROUP_TYPE_MEETING)) {
+            return TUIThemeManager.getAttrResId(context, R.attr.core_default_group_icon_meeting);
+        } else if (TextUtils.equals(groupType, V2TIMManager.GROUP_TYPE_PUBLIC)) {
+            return TUIThemeManager.getAttrResId(context, R.attr.core_default_group_icon_public);
+        } else if (TextUtils.equals(groupType, V2TIMManager.GROUP_TYPE_COMMUNITY)) {
+            return TUIThemeManager.getAttrResId(context, R.attr.core_default_group_icon_community);
+        }
+        return R.drawable.core_default_group_icon_community;
     }
 }
