@@ -28,7 +28,6 @@
 #import "TUIBaseChatViewController.h"
 #import "TUIChatConfig.h"
 #import <TUICore/TUIConfig.h>
-#import "TUIPrivateProtocolAlert.h"
 
 NSString * kEnableMsgReadStatus = @"TUIKitDemo_EnableMsgReadStatus";
 NSString * kEnableOnlineStatus = @"TUIKitDemo_EnableOnlineStatus";
