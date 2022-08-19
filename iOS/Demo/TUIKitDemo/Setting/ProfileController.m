@@ -40,15 +40,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-    [self addLongPressGesture];//添加长按手势
+    [self addLongPressGesture];
     [self setupViews];
 
-    //如果不加这一行代码，依然可以实现点击反馈，但反馈会有轻微延迟，体验不好。
     self.tableView.delaysContentTouches = NO;
     _dateFormatter = [[NSDateFormatter alloc] init];
     _dateFormatter.dateFormat = @"yyyy-MM-dd";
 }
-//实现该委托，保证数据刷新，同时保证 cell 的 select 能够符合显示逻辑
 
 - (void)setupViews
 {
@@ -79,38 +77,38 @@
     _data = [NSMutableArray array];
 
     TUICommonAvatarCellData *avatarData = [TUICommonAvatarCellData new];
-    avatarData.key = NSLocalizedString(@"ProfilePhoto", nil); // @"头像";
+    avatarData.key = NSLocalizedString(@"ProfilePhoto", nil);
     avatarData.showAccessory = YES;
     avatarData.cselector = @selector(didSelectAvatar);
     avatarData.avatarUrl = [NSURL URLWithString:self.profile.faceURL];
     [_data addObject:@[avatarData]];
 
     TUICommonTextCellData *nicknameData = [TUICommonTextCellData new];
-    nicknameData.key = NSLocalizedString(@"ProfileName", nil); // @"昵称";
+    nicknameData.key = NSLocalizedString(@"ProfileName", nil);
     nicknameData.value = self.profile.showName;
     nicknameData.showAccessory = YES;
     nicknameData.cselector = @selector(didSelectChangeNick);
 
     TUICommonTextCellData *IDData = [TUICommonTextCellData new];
-    IDData.key = NSLocalizedString(@"ProfileAccount", nil); // @"帐号";
+    IDData.key = NSLocalizedString(@"ProfileAccount", nil);
     IDData.value = [NSString stringWithFormat:@"%@      ", self.profile.userID];
     IDData.showAccessory = NO;
     [_data addObject:@[nicknameData, IDData]];
 
     TUICommonTextCellData *signatureData = [TUICommonTextCellData new];
-    signatureData.key = NSLocalizedString(@"ProfileSignature", nil); // @"个性签名";
+    signatureData.key = NSLocalizedString(@"ProfileSignature", nil);
     signatureData.value = self.profile.selfSignature.length ? self.profile.selfSignature : @"";
     signatureData.showAccessory = YES;
     signatureData.cselector = @selector(didSelectChangeSignature);
 
     TUICommonTextCellData *sexData = [TUICommonTextCellData new];
-    sexData.key = NSLocalizedString(@"ProfileGender", nil); // @"性别";
+    sexData.key = NSLocalizedString(@"ProfileGender", nil);
     sexData.value = [self.profile showGender];
     sexData.showAccessory = YES;
     sexData.cselector = @selector(didSelectSex);
     
     TUICommonTextCellData *birthdayData = [TUICommonTextCellData new];
-    birthdayData.key = NSLocalizedString(@"birthday", nil); // @"生日";
+    birthdayData.key = NSLocalizedString(@"birthday", nil);
     birthdayData.value = [_dateFormatter stringFromDate:NSDate.new];
     if (self.profile.birthday) {
         NSInteger year = self.profile.birthday / 10000;
@@ -187,7 +185,6 @@
 - (void)modifyView:(TUIModifyView *)modifyView didModiyContent:(NSString *)content
 {
     if (modifyView.tag == 0) {
-        // 文本校验
         if (![self validForSignatureAndNick:content]) {
             [TUITool makeToast:NSLocalizedString(@"ProfileEditNameDesc", nil)];
             return;
@@ -199,7 +196,6 @@
             [self setupData];
         } fail:nil];
     } else if (modifyView.tag == 1) {
-        // 文本校验
         if (![self validForSignatureAndNick:content]) {
             [TUITool makeToast:NSLocalizedString(@"ProfileEditNameDesc", nil)];
             return;
@@ -238,7 +234,7 @@
 - (void)didSelectChangeSignature
 {
     TModifyViewData *data = [[TModifyViewData alloc] init];
-    data.title = NSLocalizedString(@"ProfileEditSignture", nil); // @"修改个性签名";
+    data.title = NSLocalizedString(@"ProfileEditSignture", nil);
     data.desc = NSLocalizedString(@"ProfileEditNameDesc", nil);
     data.content = self.profile.selfSignature;
     TUIModifyView *modify = [[TUIModifyView alloc] init];
@@ -252,7 +248,7 @@
 {
     UIActionSheet *sheet = [[UIActionSheet alloc] init];
     sheet.tag = SHEET_SEX;
-    sheet.title = NSLocalizedString(@"ProfileEditGender", nil); // @"修改性别";
+    sheet.title = NSLocalizedString(@"ProfileEditGender", nil);
     [sheet addButtonWithTitle:NSLocalizedString(@"Male", nil)];
     [sheet addButtonWithTitle:NSLocalizedString(@"Female", nil)];
     [sheet setCancelButtonIndex:[sheet addButtonWithTitle:NSLocalizedString(@"Canel", nil)]];
@@ -303,9 +299,6 @@
     }
 }
 
-/**
- *  以下两个函数实现了长按的复制功能。
- */
 - (void)addLongPressGesture{
     UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(didLongPressAtCell:)];
     [self.tableView addGestureRecognizer:longPress];
@@ -317,7 +310,6 @@
         NSIndexPath *pathAtView = [self.tableView indexPathForRowAtPoint:point];
         NSObject *data = [self.tableView cellForRowAtIndexPath:pathAtView];
 
-        //长按 TUICommonTextCell，可以复制 cell 内的字符串。
         if([data isKindOfClass:[TUICommonTextCell class]]){
             TUICommonTextCell *textCell = (TUICommonTextCell *)data;
             if(textCell.textData.value && ![textCell.textData.value isEqualToString:NSLocalizedString(@"no_set", nil)]){
@@ -327,7 +319,6 @@
                 [TUITool makeToast:toastString];
             }
         }else if([data isKindOfClass:[TUIProfileCardCell class]]){
-            //长按 profileCard，复制自己的账号。
             TUIProfileCardCell *profileCard = (TUIProfileCardCell *)data;
             if(profileCard.cardData.identifier){
                 UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];

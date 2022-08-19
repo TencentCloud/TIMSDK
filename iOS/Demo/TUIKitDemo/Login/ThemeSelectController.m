@@ -117,8 +117,8 @@
 - (void)setCellModel:(ThemeSelectCollectionViewCellModel *)cellModel
 {
     [super setCellModel:cellModel];
-    self.titleLabel.text = NSLocalizedString(@"TUIThemeNameSystemFollowTitle", nil);// 跟随系统自动切换;
-    self.subTitleLabel.text = NSLocalizedString(@"TUIThemeNameSystemFollowSubTitle", nil);//@"开启后仅展示默认皮肤 (轻快/深色)，不可切换其他皮肤样式";
+    self.titleLabel.text = NSLocalizedString(@"TUIThemeNameSystemFollowTitle", nil);
+    self.subTitleLabel.text = NSLocalizedString(@"TUIThemeNameSystemFollowSubTitle", nil);
     self.switcher.on = cellModel.selected;
 }
 
@@ -221,7 +221,6 @@
         self.navigationController.navigationBar.barTintColor = self.tintColor;
         self.navigationController.navigationBar.shadowImage = [UIImage new];
         self.navigationController.navigationBar.standardAppearance = appearance;
-        //iOS15新增特性：滑动边界样式
         self.navigationController.navigationBar.scrollEdgeAppearance= appearance;
     }
     else {
@@ -250,7 +249,7 @@
 {
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.automaticallyAdjustsScrollViewInsets = NO;
-    self.definesPresentationContext = YES;//不设置会导致一些位置错乱，无动画等问题
+    self.definesPresentationContext = YES;
     
     self.navigationController.navigationBarHidden = NO;
     _titleView = [[TUINaviBarIndicatorView alloc] init];
@@ -288,32 +287,32 @@
     ThemeSelectCollectionViewCellModel *system = [[ThemeSelectCollectionViewCellModel alloc] init];
     system.backImage = [self imageWithColors:@[@"#FEFEFE", @"#FEFEFE"]];
     system.themeID = @"system";
-    system.themeName =  NSLocalizedString(@"ThemeNameSystem", nil);//@"跟随系统";
+    system.themeName =  NSLocalizedString(@"ThemeNameSystem", nil);
     system.selected = [lastThemeID isEqual:system.themeID];
     self.systemModel = system;
     
     ThemeSelectCollectionViewCellModel *serious = [[ThemeSelectCollectionViewCellModel alloc] init];
-    serious.backImage = [UIImage imageNamed:@"theme_cover_serious"]; // [self imageWithColors:@[@"#3371CD", @"#00449E"]];
+    serious.backImage = [UIImage imageNamed:@"theme_cover_serious"];
     serious.themeID = @"serious";
-    serious.themeName =  NSLocalizedString(@"ThemeNameSerious", nil);// @"深沉";
+    serious.themeName =  NSLocalizedString(@"ThemeNameSerious", nil);
     serious.selected = [lastThemeID isEqual:serious.themeID];
     
     ThemeSelectCollectionViewCellModel *light = [[ThemeSelectCollectionViewCellModel alloc] init];
-    light.backImage = [UIImage imageNamed:@"theme_cover_light"]; // [self imageWithColors:@[@"#147AFF", @"#147AFF"]];
+    light.backImage = [UIImage imageNamed:@"theme_cover_light"];
     light.themeID = @"light";
-    light.themeName = NSLocalizedString(@"ThemeNameLight", nil);//@"轻快";
+    light.themeName = NSLocalizedString(@"ThemeNameLight", nil);
     light.selected = ([lastThemeID isEqual:light.themeID] || isSystemLight);
     
     ThemeSelectCollectionViewCellModel *mingmei = [[ThemeSelectCollectionViewCellModel alloc] init];
-    mingmei.backImage = [UIImage imageNamed:@"theme_cover_lively"]; //[self imageWithColors:@[@"#FAE1B6", @"#F38787"]];
+    mingmei.backImage = [UIImage imageNamed:@"theme_cover_lively"];
     mingmei.themeID = @"lively";
-    mingmei.themeName = NSLocalizedString(@"ThemeNameLivey", nil); // @"明媚";
+    mingmei.themeName = NSLocalizedString(@"ThemeNameLivey", nil);
     mingmei.selected = [lastThemeID isEqual:mingmei.themeID];
     
     ThemeSelectCollectionViewCellModel *dark = [[ThemeSelectCollectionViewCellModel alloc] init];
     dark.backImage = [UIImage imageNamed:@"theme_cover_dark"];
     dark.themeID = @"dark";
-    dark.themeName = NSLocalizedString(@"ThemeNameDark", nil); //@"黑夜";
+    dark.themeName = NSLocalizedString(@"ThemeNameDark", nil);
     dark.selected = ([lastThemeID isEqual:dark.themeID]|| isSystemDark);
     
     self.datas = [NSMutableArray arrayWithArray:@[light, serious, mingmei,dark]];
@@ -367,7 +366,10 @@
     [NSUserDefaults.standardUserDefaults synchronize];
 }
 + (BOOL)followSystemChangeThemeSwitch {
-    //第一次启动/未设置 默认跟随系统
+    /**
+     * 第一次启动/未设置 默认跟随系统
+     * The first time to start or not setting, follow the system settings in default
+     */
     if ([[self.class getCacheThemeID] isEqualToString:@"system"]) {
         return YES;
     }
@@ -442,28 +444,41 @@
         return;
     }
     if (cellModel && ![cellModel.themeID isEqualToString:@"system"]) {
-        //只要选了皮肤 就关闭开关。
+        /**
+         * 只要选了皮肤，就关闭开关
+         * As long as the theme is selected, turn off the switch
+         */
         [self.class changeFollowSystemChangeThemeSwitch:YES];
     }
     
-    // 切换主题
+    /**
+     * 切换主题
+     * Change the theme
+     */
     self.selectModel.selected = NO;
     cellModel.selected = YES;
     self.selectModel = cellModel;
     [self.collectionView reloadData];
     
-    // 缓存当前选中的主题
+    /**
+     * 缓存当前选中的主题
+     * Cache the currently selected theme
+     */
     [self.class cacheThemeID:self.selectModel.themeID];
     
-    // 应用主题
+    // Applying theme
     [self.class applyTheme:self.selectModel.themeID];
     
-    // 通知
+    // Notify
     if ([self.delegate respondsToSelector:@selector(onSelectTheme:)]) {
         [self.delegate onSelectTheme:self.selectModel];
     }
 }
 
++ (void)applyLastTheme
+{
+    [self applyTheme:nil];
+}
 
 + (void)applyTheme:(NSString * __nullable)themeID
 {
@@ -473,7 +488,10 @@
     }
     
     if (lastThemeID == nil || lastThemeID.length == 0 || [lastThemeID isEqual:@"system"]) {
-        // 卸载主题， 跟随系统变化
+        /**
+         * 卸载主题， 跟随系统变化
+         * Uninstall the theme and let it follow system changes
+         */
         [TUIShareThemeManager unApplyThemeForModule:TUIThemeModuleAll];
     } else {
         [TUIShareThemeManager applyTheme:lastThemeID forModule:TUIThemeModuleAll];
@@ -482,13 +500,22 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         if (@available(iOS 13.0, *)) {
             if (lastThemeID == nil || lastThemeID.length == 0 || [lastThemeID isEqual:@"system"]) {
-                // 跟随系统
+                /**
+                 * 跟随系统
+                 * Following system settings
+                 */
                 UIApplication.sharedApplication.keyWindow.overrideUserInterfaceStyle = 0;
             } else if ([lastThemeID isEqual:@"dark"]) {
-                // 强制切换成黑夜
+                /**
+                 * 强制切换成黑夜
+                 * Mandatory switch to dark mode
+                 */
                 UIApplication.sharedApplication.keyWindow.overrideUserInterfaceStyle = UIUserInterfaceStyleDark;
             } else {
-                // 忽略系统的设置，强制修改成白天模式，并应用当前的主题
+                /**
+                 * 忽略系统的设置，强制修改成白天模式，并应用当前的主题
+                 * Ignoring the system settings, mandatory swtich  to light mode, and apply the current theme
+                 */
                 UIApplication.sharedApplication.keyWindow.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
             }
         }
@@ -526,7 +553,6 @@
     return _datas;
 }
 
-// 创建一张渐变色图片
 - (UIImage *)imageWithColors:(NSArray<NSString *> *)hexColors
 {
     CGSize imageSize = CGSizeMake(165, 116);
@@ -592,54 +618,3 @@
     
 }
 @end
-
-
-
-// 获取当前 demo 的主题根路径
-//NSMutableArray *arrayM = [NSMutableArray array];
-//ThemeSelectCollectionViewCellModel *system = [[ThemeSelectCollectionViewCellModel alloc] init];
-//system.backImage = [self imageWithColors:@[@"#FEFEFE", @"#FEFEFE"]];
-//system.themeID = @"system";
-//system.themeName = @"跟随系统";
-//system.selected = [lastThemeID isEqual:system.themeID];
-//[arrayM addObject:system];
-//NSString *rootPath = [NSBundle.mainBundle pathForResource:@"TUIDemoTheme.bundle" ofType:nil];
-//BOOL isDirectory = NO;
-//BOOL exist = [NSFileManager.defaultManager fileExistsAtPath:rootPath isDirectory:&isDirectory];
-//if (exist && isDirectory) {
-//    NSArray *subPaths = [NSFileManager.defaultManager subpathsAtPath:rootPath];
-//    for (NSString *path in subPaths) {
-//        BOOL isManifest = [path.lastPathComponent isEqualToString:@"manifest.plist"];
-//        if (!isManifest) {
-//            continue;
-//        }
-//        NSDictionary *manifest = [NSDictionary dictionaryWithContentsOfFile:[rootPath stringByAppendingPathComponent:path]];
-//        if ([manifest.allKeys containsObject:@"id"] &&
-//            [manifest.allKeys containsObject:@"name"] &&
-//            [manifest.allKeys containsObject:@"info"]) {
-//            NSString *themeID = [manifest objectForKey:@"id"];
-//
-//            NSString *themeName = themeID;
-//            NSString *currentLanguage = [TUIGlobalization tk_localizableLanguageKey];
-//            NSDictionary *nameDict = [manifest objectForKey:@"name"];
-//            if ([nameDict isKindOfClass:NSDictionary.class] && [nameDict.allKeys containsObject:currentLanguage]) {
-//                themeName = [nameDict objectForKey:currentLanguage];
-//            }
-//
-//            UIImage *backImage = [self imageWithColors:@[@"#FEFEFE", @"#FEFEFE"]];
-//            NSDictionary *infoDict = [manifest objectForKey:@"info"];
-//            if ([infoDict isKindOfClass:NSDictionary.class] && [infoDict.allKeys containsObject:@"cover"]) {
-//                NSString *coverName = infoDict[@"cover"];
-//                backImage = [UIImage imageNamed:[NSString stringWithFormat:@"TUIDemoTheme.bundle/%@/%@", themeID, coverName]];
-//            }
-//
-//            ThemeSelectCollectionViewCellModel *cellModel = [[ThemeSelectCollectionViewCellModel alloc] init];
-//            cellModel.backImage = backImage;
-//            cellModel.themeID = themeID;
-//            cellModel.themeName = themeName;
-//            cellModel.selected = [lastThemeID isEqual:themeID];
-//            [arrayM addObject:cellModel];
-//        }
-//    }
-//    self.datas = [NSMutableArray arrayWithArray:arrayM];
-//}

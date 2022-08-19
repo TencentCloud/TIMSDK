@@ -29,8 +29,9 @@
 #import "LanguageSelectController.h"
 #import "TUILogin.h"
 #import "TUIChatConfig.h"
+#import "TUIWarningView.h"
 
-@interface AppDelegate () <V2TIMConversationListener, TUILoginListener, ThemeSelectControllerDelegate, LanguageSelectControllerDelegate>
+@interface AppDelegate () <V2TIMConversationListener, TUILoginListener, ThemeSelectControllerDelegate, LanguageSelectControllerDelegate,V2TIMAPNSListener>
 
 @end
 
@@ -39,13 +40,22 @@
 
 #pragma mark - 推送的配置及统一跳转
 
-// APNs 证书 ID 配置
+/**
+ * APNs 证书 ID 配置
+ * APNs certificate ID configuration
+ */
 TUIOfflinePushCertificateIDForAPNS(kAPNSBusiId)
 
-// TPNS 自定义域名、key 配置
+/**
+ * TPNS 自定义域名、key 配置
+ * TPNS custom domain name, key configuration
+ */
 TUIOfflinePushConfigForTPNS(kTPNSAccessID, kTPNSAccessKey, kTPNSDomain)
 
-// 统一点击跳转
+/**
+ * 统一点击跳转
+ * Click the notification bar to jump
+ */
 - (void)navigateToTUIChatViewController:(NSString *)userID groupID:(NSString *)groupID
 {
     UITabBarController *tab = [self getMainController];
@@ -78,9 +88,8 @@ TUIOfflinePushConfigForTPNS(kTPNSAccessID, kTPNSAccessKey, kTPNSDomain)
     // Override point for customization after application launch.
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
     
-    // 设置主题样式
     TUIRegisterThemeResourcePath([NSBundle.mainBundle pathForResource:@"TUIDemoTheme.bundle" ofType:nil], TUIThemeModuleDemo);
-    [ThemeSelectController applyTheme:nil];
+    [ThemeSelectController applyLastTheme];
         
     [self setupListener];
     [self setupGlobalUI];
@@ -125,7 +134,7 @@ TUIOfflinePushConfigForTPNS(kTPNSAccessID, kTPNSAccessKey, kTPNSDomain)
     TUITabBarController *tbc = [[TUITabBarController alloc] init];
     NSMutableArray *items = [NSMutableArray array];
     TUITabBarItem *msgItem = [[TUITabBarItem alloc] init];
-    msgItem.title = NSLocalizedString(@"TabBarItemMessageText", nil); //@"消息";
+    msgItem.title = NSLocalizedString(@"TabBarItemMessageText", nil);
     msgItem.selectedImage = TUIDemoDynamicImage(@"tab_msg_selected_img", [UIImage imageNamed:@"session_selected"]);
     msgItem.normalImage = TUIDemoDynamicImage(@"tab_msg_normal_img", [UIImage imageNamed:@"session_normal"]);
     msgItem.controller = [[TUINavigationController alloc] initWithRootViewController:[[ConversationController alloc] init]];
@@ -165,6 +174,9 @@ TUIOfflinePushConfigForTPNS(kTPNSAccessID, kTPNSAccessKey, kTPNSDomain)
 - (void)setupListener {
     [TUILogin addLoginListener:self];
     [[V2TIMManager sharedInstance] addConversationListener:self];
+    [[V2TIMManager sharedInstance] setAPNSListener:self];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateMarkUnreadCount:) name:TUIKitNotification_onConversationMarkUnreadCountChanged object:nil];
 }
 
 void uncaughtExceptionHandler(NSException*exception) {
@@ -232,9 +244,22 @@ void uncaughtExceptionHandler(NSException*exception) {
         });
         vc.navigationItem.title = @"";
     } error:NULL];
+    
+    [self setupChatSecurityWarningView];
 }
 
-
+- (void)setupChatSecurityWarningView {
+    NSString *tips = NSLocalizedString(@"ChatSecurityWarning", nil);
+    NSString *buttonTitle = NSLocalizedString(@"ChatSecurityWarningReport", nil);
+    TUIWarningView *tipsView = [[TUIWarningView alloc] initWithFrame:CGRectMake(0, 0, Screen_Width, 0)
+                                                                tips:tips
+                                                         buttonTitle:buttonTitle
+                                                        buttonAction:^{
+        NSURL *url = [NSURL URLWithString:@"https://cloud.tencent.com/apply/p/xc3oaubi98g"];
+        [TUITool openLinkWithURL:url];
+    }];
+    [TUIBaseChatViewController setCustomTopView:tipsView];
+}
 
 #pragma mark - V2TIMConversationListener
 - (void)onTotalUnreadMessageCountChanged:(UInt64) totalUnreadCount {
@@ -279,12 +304,12 @@ void uncaughtExceptionHandler(NSException*exception) {
             break;
         case TUser_Status_ReConnFailed:
         {
-            NSLog(@"连网失败");
+            NSLog(@"%s, status:%zd", __func__, status);
         }
             break;
         case TUser_Status_SigExpired:
         {
-            NSLog(@"userSig过期");
+            NSLog(@"%s, status:%zd", __func__, status);
         }
             break;
         default:
@@ -317,11 +342,17 @@ void uncaughtExceptionHandler(NSException*exception) {
 
 #pragma mark - LanguageSelectControllerDelegate
 - (void)onSelectLanguage:(LanguageSelectCellModel *)cellModel {
-    // 动态刷新语言的方法: 销毁当前界面，并重新创建后跳转来实现动态刷新语言
+    /**
+     * 动态刷新语言的方法: 销毁当前界面，并重新创建后跳转来实现动态刷新语言
+     * The method of dynamically refreshing the language: Destroy the current interface, and recreate it and then jump to realize dynamic refreshing of the language
+     */
     [NSUserDefaults.standardUserDefaults setBool:YES forKey:@"need_recover_login_page_info"];
     [NSUserDefaults.standardUserDefaults synchronize];
     
-    // 1. 重新创建登录控制器以及根导航控制器
+    /**
+     * 1. 重新创建登录控制器以及根导航控制器
+     * 1. Recreate the login controller as well as the root navigation controller
+     */
     UIViewController *loginVc = [self getLoginController];
     UINavigationController *navVc = nil;
     if ([loginVc isKindOfClass:UINavigationController.class]) {
@@ -333,24 +364,42 @@ void uncaughtExceptionHandler(NSException*exception) {
         return;
     }
     
-    // 2. 创建语言选择页面，并 push
+    /**
+     * 2. 创建语言选择页面，并 push
+     * 2. Create a language selection page and push
+     */
     LanguageSelectController *languageVc = [[LanguageSelectController alloc] init];
     languageVc.delegate = self;
     [navVc pushViewController:languageVc animated:NO];
     
-    // 3. 切换根控制器
+    /**
+     * 3. 切换根控制器
+     * 3. Switch root controller
+     */
     dispatch_async(dispatch_get_main_queue(), ^{
         UIApplication.sharedApplication.keyWindow.rootViewController = navVc;
     });
+    
+    /**
+     * 4. 重新配置安全警告视图
+     * 4. Recofig the security warning view in ChatVC
+     */
+    [self setupChatSecurityWarningView];
 }
 
 #pragma mark - ThemeSelectControllerDelegate
 - (void)onSelectTheme:(ThemeSelectCollectionViewCellModel *)cellModel {
-    // 动态刷新主题的方法: 销毁当前界面，并重新创建后跳转来实现动态刷新主题
+    /**
+     * 动态刷新主题的方法: 销毁当前界面，并重新创建后跳转来实现动态刷新主题
+     * The method of dynamically refreshing the theme: Destroy the current interface, and recreate it and then jump to realize the dynamic refresh theme
+     */
     [NSUserDefaults.standardUserDefaults setBool:YES forKey:@"need_recover_login_page_info"];
     [NSUserDefaults.standardUserDefaults synchronize];
     
-    // 1. 重新创建登录控制器以及根导航控制器
+    /**
+     * 1. 重新创建登录控制器以及根导航控制器
+     * 1. Recreate the login controller and root navigation controller
+     */
     UIViewController *loginVc = [self getLoginController];
     UINavigationController *navVc = nil;
     if ([loginVc isKindOfClass:UINavigationController.class]) {
@@ -362,25 +411,34 @@ void uncaughtExceptionHandler(NSException*exception) {
         return;
     }
     
-    // 2. 创建主题选择控制器并 push
+    /**
+     * 2. 创建主题选择控制器并 push
+     * 2. Create a theme selection controller and push
+     */
     ThemeSelectController *themeVc = [[ThemeSelectController alloc] init];
     themeVc.disable = YES;
     themeVc.delegate = self;
     [themeVc.view makeToastActivity:TUICSToastPositionCenter];
     [navVc pushViewController:themeVc animated:NO];
     
-    // 3. 切换根控制器
+    /**
+     * 3. 切换根控制器
+     * 3. Switch root controller
+     */
     dispatch_async(dispatch_get_main_queue(), ^{
         UIApplication.sharedApplication.keyWindow.rootViewController = navVc;
         if (@available(iOS 13.0, *)) {
             if ([cellModel.themeID isEqual:@"system"]) {
-                // 跟随系统
+                // Follow system settings
                 UIApplication.sharedApplication.keyWindow.overrideUserInterfaceStyle = 0;
             } else if ([cellModel.themeID isEqual:@"dark"]) {
-                // 强制切换成黑色
+                // Forced switch to drak mode
                 UIApplication.sharedApplication.keyWindow.overrideUserInterfaceStyle = UIUserInterfaceStyleDark;
             } else {
-                // 忽略系统的设置，强制修改成白天模式，并应用当前的主题
+                /**
+                 * 忽略系统的设置，强制修改成白天模式，并应用当前的主题
+                 * Ignoring system settings, forced switch to light mode, and apply the current theme
+                 */
                 UIApplication.sharedApplication.keyWindow.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
             }
         }
@@ -389,6 +447,9 @@ void uncaughtExceptionHandler(NSException*exception) {
     });
 }
 
+#pragma mark - NSNotification
+
+- (void)updateMarkUnreadCount:(NSNotification *)note {}
 
 #pragma mark - Other
 typedef void (^cancelHandler)(UIAlertAction *action, NSString *content);

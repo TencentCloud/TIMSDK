@@ -61,7 +61,9 @@
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-    CGFloat height = TabBar_Height + 8; //因为tabbar加高了
+    // 因为tabbar加高了
+    // Cause of increaing tabbar height
+    CGFloat height = TabBar_Height + 8;
     CGRect newFrame = CGRectMake(0, self.view.frame.size.height - height,
                                  self.view.frame.size.width, height);
     [self.tabBar setFrame:newFrame];

@@ -18,9 +18,14 @@
 @interface TUIBadgeView () <UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) UILabel *label;
-@property (nonatomic, strong) UIView *assistCircleView; // 辅助圆，用来原地显示
 
-@property (nonatomic, assign) CGPoint initialCenterPosition;  // 初始位置
+// 辅助圆，用来原地显示
+// Assist circle view for displaying in the origin position
+@property (nonatomic, strong) UIView *assistCircleView;
+
+// 初始位置
+// initial postion
+@property (nonatomic, assign) CGPoint initialCenterPosition;
 
 @end
 
