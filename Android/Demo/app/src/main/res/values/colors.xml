@@ -72,4 +72,10 @@
     <color name="demo_theme_select_lively_color">#FFF38787</color>
     <color name="demo_theme_select_serious_color">#FF3371CD</color>
 
+    <color name="security_warning_color">#FF9500</color>
+    <color name="security_warning_text_color">#FF8C39</color>
+    <color name="security_warning_report_color">#006EFF</color>
+
+    <color name="demo_community_page_navigate_bar_color">#FFFFFFFF</color>
+    <color name="demo_community_page_status_bar_color">#EBECF0</color>
 </resources>

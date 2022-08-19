@@ -17,6 +17,7 @@
 
     <color name="core_line_controller_title_color">#444444</color>
     <color name="core_line_controller_content_color">#000000</color>
+    <color name="core_line_controller_white_translucent_color">#80FFFFFF</color>
 
     <color name="core_popup_card_bg">#FFFFFF</color>
     <color name="core_popup_card_positive_normal_bg">#147AFF</color>

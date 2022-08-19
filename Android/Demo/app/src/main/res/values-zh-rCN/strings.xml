@@ -96,7 +96,7 @@
     <string name="tab_contact_tab_text">通讯录</string>
     <string name="tab_conversation_tab_text">消息</string>
     <string name="tab_profile_tab_text">我</string>
-    <string name="tab_scenes_tab_text">直播</string>
+    <string name="tab_community_tab_text">社群</string>
 
     <string name="test_excluded_from_unread_count_action">不计入未读数消息</string>
 
@@ -194,4 +194,7 @@
     <string name="demo_buying_guidelines">价格说明</string>
     <string name="demo_im_flagship_edition_update_tip">%s功能为IM旗舰版功能，购买旗舰版套餐包后可使用，详见价格说明。</string>
     <string name="demo_buying_tips">该功能为旗舰版功能</string>
+
+    <string name="chat_security_warning">【安全提示】本 APP 仅用于体验腾讯云即时通信 IM 产品功能，不可用于业务洽谈与拓展。请勿轻信汇款、中奖等涉及钱款的信息，勿轻易拨打陌生电话，谨防上当受骗。</string>
+    <string name="chat_security_warning_report">点此举报</string>
 </resources>

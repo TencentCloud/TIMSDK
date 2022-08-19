@@ -49,7 +49,6 @@ public class SearchMoreMsgPresenter {
             @Override
             public void onSuccess(Pair<Integer, List<SearchMessageBean>> data) {
                 List<SearchMessageBean> searchMessageBeanList = data.second;
-                // conversationId 不为空，totalCount 为符合条件的消息的总数
                 int totalCount = data.first;
                 if (!isGetByPage) {
                     searchDataBeanList.clear();

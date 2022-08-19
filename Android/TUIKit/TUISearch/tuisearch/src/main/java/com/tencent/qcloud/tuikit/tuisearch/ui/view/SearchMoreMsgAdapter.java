@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
+import com.tencent.qcloud.tuicore.util.TUIUtil;
 import com.tencent.qcloud.tuikit.tuisearch.R;
 import com.tencent.qcloud.tuikit.tuisearch.bean.SearchDataBean;
 import com.tencent.qcloud.tuikit.tuisearch.ui.interfaces.ISearchMoreMsgAdapter;
@@ -32,9 +33,6 @@ public class SearchMoreMsgAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     private Context context;
 
-    /**
-     * 需要改变颜色的text
-     */
     private String text;
 
     private int mViewType = -1;
@@ -58,9 +56,6 @@ public class SearchMoreMsgAdapter extends RecyclerView.Adapter<RecyclerView.View
         this.onConversationClickListener = onConversationClickListener;
     }
 
-    /**
-     * 在MainActivity中设置text
-     */
     public void setText(String text) {
         this.text = text;
     }
@@ -122,10 +117,15 @@ public class SearchMoreMsgAdapter extends RecyclerView.Adapter<RecyclerView.View
             if (!TextUtils.isEmpty(path)) {
                 GlideEngine.loadImage(contactViewHolder.mUserIconView, path);
             } else {
-                contactViewHolder.mUserIconView.setImageResource(TUIThemeManager.getAttrResId(contactViewHolder.mUserIconView.getContext(), R.attr.core_default_user_icon));
+                int avatarIconResID;
+                if (searchDataBean.isGroup()) {
+                    avatarIconResID = TUIUtil.getDefaultGroupIconResIDByGroupType(context, searchDataBean.getGroupType());
+                } else {
+                    avatarIconResID = TUIThemeManager.getAttrResId(contactViewHolder.mUserIconView.getContext(), R.attr.core_default_user_icon);
+                }
+                contactViewHolder.mUserIconView.setImageResource(avatarIconResID);
             }
             if (text != null) {
-                //设置span
                 SpannableString string = matcherSearchText(Color.rgb(0, 0, 255), title, text);
                 contactViewHolder.mTvText.setText(string);
 
@@ -159,9 +159,7 @@ public class SearchMoreMsgAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
         return mViewType;
     }
-    /**
-     * Recyclerview的点击监听接口
-     */
+
     public interface onItemClickListener {
         void onClick(View view, int pos);
     }
@@ -182,10 +180,16 @@ public class SearchMoreMsgAdapter extends RecyclerView.Adapter<RecyclerView.View
             holder.conversationLayout.setVisibility(View.GONE);
         }
         holder.conversationLayout.setOnClickListener(onConversationClickListener);
-        if (!TextUtils.isEmpty(searchDataBean.getIconPath())) {
-            GlideEngine.loadImage(holder.conversationIcon, searchDataBean.getIconPath());
+        int avatarDefaultIconResID;
+        if (searchDataBean.isGroup()) {
+            avatarDefaultIconResID = TUIUtil.getDefaultGroupIconResIDByGroupType(context, searchDataBean.getGroupType());
         } else {
-            holder.conversationIcon.setImageResource(TUIThemeManager.getAttrResId(holder.conversationIcon.getContext(), R.attr.core_default_user_icon));
+            avatarDefaultIconResID = TUIThemeManager.getAttrResId(holder.itemView.getContext(), R.attr.core_default_user_icon);
+        }
+        if (!TextUtils.isEmpty(searchDataBean.getIconPath())) {
+            GlideEngine.loadImageSetDefault(holder.conversationIcon, searchDataBean.getIconPath(), avatarDefaultIconResID);
+        } else {
+            holder.conversationIcon.setImageResource(avatarDefaultIconResID);
         }
         holder.conversationTitle.setText(searchDataBean.getTitle());
     }
@@ -224,25 +228,18 @@ public class SearchMoreMsgAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
-    /**
-     * 正则匹配 返回值是一个SpannableString 即经过变色处理的数据
-     */
     private SpannableString matcherSearchText(int color, String text, String keyword) {
         if (text == null || TextUtils.isEmpty(text)) {
             return SpannableString.valueOf("");
         }
         SpannableString spannableString = new SpannableString(text);
-        //条件 keyword
         Pattern pattern = Pattern.compile(Pattern.quote(keyword), Pattern.CASE_INSENSITIVE);
-        //匹配
         Matcher matcher = pattern.matcher(spannableString);
         while (matcher.find()) {
             int start = matcher.start();
             int end = matcher.end();
-            //ForegroundColorSpan 需要new 不然也只能是部分变色
             spannableString.setSpan(new ForegroundColorSpan(color), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
-        //返回变色处理的结果
         return spannableString;
     }
 }

@@ -43,7 +43,6 @@ public class MergeMessageHolder extends MessageContentHolder{
             msgArea.setBackgroundResource(R.drawable.chat_bubble_other_cavity_bg);
             statusImage.setVisibility(View.GONE);
         } else {
-            //// 聊天气泡设置
             if (msg.isSelf()) {
                 if (properties.getRightBubble() != null && properties.getRightBubble().getConstantState() != null) {
                     msgArea.setBackground(properties.getRightBubble().getConstantState().newDrawable());

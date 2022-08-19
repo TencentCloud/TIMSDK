@@ -35,6 +35,7 @@ import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupMemberInfo;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupManagerPresenter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ManageGroupActivity extends BaseLightActivity {
@@ -132,6 +133,13 @@ public class ManageGroupActivity extends BaseLightActivity {
                 Intent intent = new Intent(ManageGroupActivity.this, GroupMemberActivity.class);
                 intent.putExtra(TUIGroupConstants.Selection.IS_SELECT_MODE, true);
                 intent.putExtra(TUIGroupConstants.Selection.FILTER, GroupInfo.GROUP_MEMBER_FILTER_COMMON);
+                if (mutedMemberAdapter.getGroupMemberInfoList() != null) {
+                    ArrayList<String> selectedList = new ArrayList<>();
+                    for (GroupMemberInfo memberInfo : mutedMemberAdapter.getGroupMemberInfoList()) {
+                        selectedList.add(memberInfo.getAccount());
+                    }
+                    intent.putExtra(TUIGroupConstants.Selection.SELECTED_LIST, selectedList);
+                }
                 intent.putExtra(TUIGroupConstants.Group.GROUP_INFO, groupInfo);
                 startActivityForResult(intent, 1);
             }
@@ -243,6 +251,10 @@ public class ManageGroupActivity extends BaseLightActivity {
         public void setGroupMemberInfoList(List<GroupMemberInfo> groupMemberInfoList) {
             this.groupMemberInfoList = groupMemberInfoList;
             notifyDataSetChanged();
+        }
+
+        public List<GroupMemberInfo> getGroupMemberInfoList() {
+            return groupMemberInfoList;
         }
 
         @NonNull

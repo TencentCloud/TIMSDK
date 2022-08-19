@@ -10,6 +10,8 @@ import android.view.View;
 
 /**
  * 拍照或录制完成后弹出的确认和返回按钮
+ * 
+ * Confirm and return buttons that pop up after taking a photo or recording
  */
 public class TypeButton extends View {
 
@@ -57,7 +59,8 @@ public class TypeButton extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        //如果类型为取消，则绘制内部为返回箭头
+        // 如果类型为取消，则绘制内部为返回箭头
+        // If the type is cancel, draw the return arrow inside
         if (button_type == TYPE_CANCEL) {
             mPaint.setAntiAlias(true);
             mPaint.setColor(0xEEDCDCDC);
@@ -83,7 +86,8 @@ public class TypeButton extends View {
             canvas.drawPath(path, mPaint);
 
         }
-        //如果类型为确认，则绘制绿色勾
+        // 如果类型为确认，则绘制绿色勾
+        // If the type is confirmation, draw a green tick
         if (button_type == TYPE_CONFIRM) {
             mPaint.setAntiAlias(true);
             mPaint.setColor(0xFFFFFFFF);

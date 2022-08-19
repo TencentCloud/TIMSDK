@@ -1,8 +1,13 @@
 package com.tencent.qcloud.tuicore.component;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -28,21 +33,29 @@ public class TitleBarLayout extends LinearLayout implements ITitleBarLayout {
 
     public TitleBarLayout(Context context) {
         super(context);
-        init();
+        init(context, null);
     }
 
     public TitleBarLayout(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init();
+        init(context, attrs);
     }
 
     public TitleBarLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
+        init(context, attrs);
     }
 
-    private void init() {
-        inflate(getContext(), R.layout.title_bar_layout, this);
+    private void init(Context context, @Nullable AttributeSet attrs) {
+        String middleTitle = null;
+        boolean canReturn = false;
+        if (attrs != null) {
+            TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.TitleBarLayout);
+            middleTitle = array.getString(R.styleable.TitleBarLayout_title_bar_middle_title);
+            canReturn = array.getBoolean(R.styleable.TitleBarLayout_title_bar_can_return, false);
+            array.recycle();
+        }
+        inflate(context, R.layout.title_bar_layout, this);
         mTitleLayout = findViewById(R.id.page_title_layout);
         mLeftGroup = findViewById(R.id.page_title_left_group);
         mRightGroup = findViewById(R.id.page_title_right_group);
@@ -69,6 +82,21 @@ public class TitleBarLayout extends LinearLayout implements ITitleBarLayout {
 
         mRightIcon.setLayoutParams(iconParams);
 
+        if (canReturn) {
+            mLeftGroup.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (context instanceof Activity) {
+                        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(TitleBarLayout.this.getWindowToken(), 0);
+                        ((Activity) context).finish();
+                    }
+                }
+            });
+        }
+        if (!TextUtils.isEmpty(middleTitle)) {
+            mCenterTitle.setText(middleTitle);
+        }
     }
 
     @Override

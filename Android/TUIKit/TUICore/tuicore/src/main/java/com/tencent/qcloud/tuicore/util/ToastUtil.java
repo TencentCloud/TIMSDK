@@ -7,9 +7,6 @@ import android.widget.Toast;
 
 import com.tencent.qcloud.tuicore.ServiceInitializer;
 
-/**
- * UI通用方法类
- */
 public class ToastUtil {
 
     private static Toast toast;
@@ -32,9 +29,7 @@ public class ToastUtil {
                 }
                 toast = Toast.makeText(ServiceInitializer.getAppContext(), message,
                         isLong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT);
-                // 解决各个手机系统 toast 文字对齐方式不一致的问题
                 View view = toast.getView();
-                // 红米手机上可能为空
                 if (view != null) {
                     TextView textView = view.findViewById(android.R.id.message);
                     if (textView != null) {

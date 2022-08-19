@@ -3,7 +3,9 @@
     <string name="chat_top">置顶聊天</string>
     <string name="chat_delete">删除聊天</string>
     <string name="quit_chat_top">取消置顶</string>
-    <string name="clear_conversation_message">清空消息</string>
+    <string name="mark_unread">标为未读</string>
+    <string name="mark_read">标为已读</string>
+    <string name="not_display">不显示</string>
 
     <string name="forward_select_new_chat">创建新聊天</string>
     <string name="forward_select_from_contact">从通讯录选择</string>
@@ -17,4 +19,6 @@
     <string name="drafts">[草稿]</string>
     <string name="titlebar_mutiselect">多选</string>
     <string name="message_num">条</string>
+
+    <string name="folded_group_chat">折叠的群聊</string>
 </resources>

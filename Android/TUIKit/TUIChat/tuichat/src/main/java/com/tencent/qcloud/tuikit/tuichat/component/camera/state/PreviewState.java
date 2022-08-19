@@ -10,9 +10,6 @@ import com.tencent.qcloud.tuikit.tuichat.component.camera.view.CameraInterface;
 import com.tencent.qcloud.tuikit.tuichat.component.camera.view.JCameraView;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
-/**
- * 空闲状态
- */
 class PreviewState implements State {
     public static final String TAG = "PreviewState";
 

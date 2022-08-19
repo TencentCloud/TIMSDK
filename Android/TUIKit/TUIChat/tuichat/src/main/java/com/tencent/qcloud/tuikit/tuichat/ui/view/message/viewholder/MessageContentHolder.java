@@ -106,7 +106,6 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
             leftUserIcon.setVisibility(View.VISIBLE);
             rightUserIcon.setVisibility(View.GONE);
         } else {
-            //// 头像设置
             if (msg.isSelf()) {
                 leftUserIcon.setVisibility(View.GONE);
                 rightUserIcon.setVisibility(View.VISIBLE);
@@ -142,12 +141,10 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
             rightUserIcon.setLayoutParams(params);
         }
 
-        // 转发模式下显示用户名
         if (isForwardMode || isReplyDetailMode) {
             usernameText.setVisibility(View.VISIBLE);
         } else {
-            //// 用户昵称设置
-            if (msg.isSelf()) { // 默认不显示自己的昵称
+            if (msg.isSelf()) {
                 if (properties.getRightNameVisibility() == 0) {
                     usernameText.setVisibility(View.GONE);
                 } else {
@@ -155,9 +152,9 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
                 }
             } else {
                 if (properties.getLeftNameVisibility() == 0) {
-                    if (msg.isGroup()) { // 群聊默认显示对方的昵称
+                    if (msg.isGroup()) {
                         usernameText.setVisibility(View.VISIBLE);
-                    } else { // 单聊默认不显示对方昵称
+                    } else {
                         usernameText.setVisibility(View.GONE);
                     }
                 } else {
@@ -171,7 +168,7 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
         if (properties.getNameFontSize() != 0) {
             usernameText.setTextSize(properties.getNameFontSize());
         }
-        // 聊天界面设置头像和昵称
+
         if (!TextUtils.isEmpty(msg.getNameCard())) {
             usernameText.setText(msg.getNameCard());
         } else if (!TextUtils.isEmpty(msg.getFriendRemark())) {
@@ -219,7 +216,6 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
             msgArea.setBackgroundResource(TUIThemeManager.getAttrResId(itemView.getContext(), R.attr.chat_bubble_other_bg));
             statusImage.setVisibility(View.GONE);
         } else {
-            //// 聊天气泡设置
             if (msg.isSelf()) {
                 if (properties.getRightBubble() != null && properties.getRightBubble().getConstantState() != null) {
                     msgArea.setBackground(properties.getRightBubble().getConstantState().newDrawable());
@@ -234,7 +230,6 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
                 }
             }
 
-            //// 聊天气泡的点击事件处理
             if (onItemClickListener != null) {
                 msgContentFrame.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
@@ -265,7 +260,6 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
                 });
             }
 
-            //// 发送状态的设置
             if (msg.getStatus() == TUIMessageBean.MSG_STATUS_SEND_FAIL) {
                 statusImage.setVisibility(View.VISIBLE);
                 msgContentFrame.setOnClickListener(new View.OnClickListener() {
@@ -302,7 +296,6 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
             msgContentLinear.removeView(msgAreaAndReply);
             msgContentLinear.addView(msgAreaAndReply);
         } else {
-            // 左右边的消息需要调整一下内容的位置，使已读标签位置显示正确
             if (msg.isSelf()) {
                 setGravity(false);
                 msgContentLinear.removeView(msgAreaAndReply);
@@ -327,7 +320,6 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
             isReadText.setVisibility(View.GONE);
             unreadAudioText.setVisibility(View.GONE);
         } else {
-            //// 对方已读标识的设置
             if (TUIChatConfigs.getConfigs().getGeneralConfig().isShowRead()) {
                 if (msg.isSelf() && TUIMessageBean.MSG_STATUS_SEND_SUCCESS == msg.getStatus()) {
                     if (!msg.isNeedReadReceipt()) {
@@ -339,10 +331,7 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
                     isReadText.setVisibility(View.GONE);
                 }
             }
-
-            //// 音频已读
             unreadAudioText.setVisibility(View.GONE);
-
         }
 
         if (isReplyDetailMode) {
@@ -354,7 +343,6 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
 
         setMessageAreaPadding();
 
-        //// 由子类设置指定消息类型的views
         layoutVariableViews(msg, position);
     }
 
@@ -498,35 +486,26 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
 
     protected void setSelectableTextHelper(TUIMessageBean msg, TextView textView, int position, boolean isEmoji) {
         selectableTextHelper = new SelectTextHelper
-                .Builder(textView)// 放你的textView到这里！！
-                .setCursorHandleColor(TUIChatService.getAppContext().getResources().getColor(R.color.font_blue))// 游标颜色
-                .setCursorHandleSizeInDp(18)// 游标大小 单位dp
-                .setSelectedColor(TUIChatService.getAppContext().getResources().getColor(R.color.test_blue))// 选中文本的颜色
-                .setSelectAll(true)// 初次选中是否全选 default true
+                .Builder(textView)
+                .setCursorHandleColor(TUIChatService.getAppContext().getResources().getColor(R.color.font_blue))
+                .setCursorHandleSizeInDp(18)
+                .setSelectedColor(TUIChatService.getAppContext().getResources().getColor(R.color.test_blue))
+                .setSelectAll(true)
                 .setIsEmoji(isEmoji)
-                .setScrollShow(false)// 滚动时是否继续显示 default true
-                .setSelectedAllNoPop(true)// 已经全选无弹窗，设置了监听会回调 onSelectAllShowCustomPop 方法
-                .setMagnifierShow(false)// 放大镜 default true
+                .setScrollShow(false)
+                .setSelectedAllNoPop(true)
+                .setMagnifierShow(false)
                 .build();
 
         selectableTextHelper.setSelectListener(new SelectTextHelper.OnSelectListener() {
-            /**
-             * 点击回调
-             */
             @Override
             public void onClick(View v) {
             }
 
-            /**
-             * 长按回调
-             */
             @Override
             public void onLongClick(View v) {
             }
 
-            /**
-             * 选中文本回调
-             */
             @Override
             public void onTextSelected(CharSequence content) {
                 String selectedText = content.toString();
@@ -537,51 +516,30 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
                 }
             }
 
-            /**
-             * 弹窗关闭回调
-             */
             @Override
             public void onDismiss() {
                 msg.setSelectText(null);
                 msg.setSelectText(msg.getExtra());
             }
 
-            /**
-             * 点击TextView里的url回调
-             *
-             * 已被下面重写
-             * textView.setMovementMethod(new LinkMovementMethodInterceptor());
-             */
             @Override
             public void onClickUrl(String url) {
             }
 
-            /**
-             * 全选显示自定义弹窗回调
-             */
             @Override
             public void onSelectAllShowCustomPop() {
             }
 
-            /**
-             * 重置回调
-             */
             @Override
             public void onReset() {
                 msg.setSelectText(null);
                 msg.setSelectText(msg.getExtra());
             }
 
-            /**
-             * 解除自定义弹窗回调
-             */
             @Override
             public void onDismissCustomPop() {
             }
 
-            /**
-             * 是否正在滚动回调
-             */
             @Override
             public void onScrolling() {
             }

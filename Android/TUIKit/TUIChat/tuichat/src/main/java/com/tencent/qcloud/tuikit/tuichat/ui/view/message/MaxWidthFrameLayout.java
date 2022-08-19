@@ -12,9 +12,6 @@ import androidx.annotation.Nullable;
 
 import com.tencent.qcloud.tuikit.tuichat.R;
 
-/**
- * 可设置最大宽度的 FrameLayout
- */
 public class MaxWidthFrameLayout extends FrameLayout {
 
     int maxWidthPx;

@@ -4,11 +4,13 @@ import android.graphics.drawable.Drawable;
 
 public interface IMessageProperties {
 
-    /// @name 设置头像
+    /// @name 设置头像 Set Avatar
     /// @{
 
     /**
      * 获取默认头像
+     * 
+     * Get default avatar
      *
      * @return
      */
@@ -16,6 +18,8 @@ public interface IMessageProperties {
 
     /**
      * 设置默认头像，默认与左边与右边的头像相同
+     * 
+     * Set the default avatar, the default is the same as the avatar on the left and right
      *
      * @param resId
      */
@@ -23,6 +27,8 @@ public interface IMessageProperties {
 
     /**
      * 获取头像圆角
+     * 
+     * Get avatar rounded corners
      *
      * @return
      */
@@ -30,6 +36,8 @@ public interface IMessageProperties {
 
     /**
      * 设置头像圆角
+     * 
+     * Set avatar rounded corners
      *
      * @param radius
      */
@@ -37,6 +45,8 @@ public interface IMessageProperties {
 
     /**
      * 获得头像大小
+     * 
+     * Get avatar size
      *
      * @return
      */
@@ -45,16 +55,20 @@ public interface IMessageProperties {
     /**
      * 设置头像大小
      *
+     * Set avatar size
+     * 
      * @param size
      */
     void setAvatarSize(int[] size);
 
     /// @}
-    /// @name 设置昵称样式
+    /// @name 设置昵称样式 Set nickname style
     /// @{
 
     /**
      * 获得昵称文字大小
+     * 
+     * Get nickname text size
      *
      * @return
      */
@@ -62,6 +76,8 @@ public interface IMessageProperties {
 
     /**
      * 设置昵称文字大小
+     * 
+     * Set nickname text size
      *
      * @param size
      */
@@ -69,6 +85,8 @@ public interface IMessageProperties {
 
     /**
      * 获取昵称文字颜色
+     * 
+     * Get nickname text color
      *
      * @return
      */
@@ -76,6 +94,8 @@ public interface IMessageProperties {
 
     /**
      * 设置昵称文字颜色
+     * 
+     * Set nickname text color
      *
      * @param color
      */
@@ -83,6 +103,8 @@ public interface IMessageProperties {
 
     /**
      * 获取左边昵称显示状态
+     * 
+     * Get the display status of the nickname on the left
      *
      * @return
      */
@@ -90,6 +112,8 @@ public interface IMessageProperties {
 
     /**
      * 设置左边昵称是否显示
+     * 
+     * Set the display status of the nickname on the left
      *
      * @param visibility
      */
@@ -97,6 +121,8 @@ public interface IMessageProperties {
 
     /**
      * 获取右边昵称显示状态
+     * 
+     * Get the display status of the nickname on the right
      *
      * @return
      */
@@ -104,17 +130,21 @@ public interface IMessageProperties {
 
     /**
      * 设置右边昵称是否显示
+     * 
+     * Set the display status of the nickname on the right
      *
      * @param visibility
      */
     void setRightNameVisibility(int visibility);
 
     /// @}
-    /// @name 设置气泡
+    /// @name 设置气泡 set bubbles
     /// @{
 
     /**
      * 获取右边聊天气泡的背景
+     * 
+     * Get the background of the chat bubble on the right
      *
      * @return
      */
@@ -122,6 +152,8 @@ public interface IMessageProperties {
 
     /**
      * 设置右边聊天气泡的背景
+     * 
+     * Set the background of the chat bubble on the right
      *
      * @param drawable
      */
@@ -129,6 +161,8 @@ public interface IMessageProperties {
 
     /**
      * 获取左边聊天气泡的背景
+     * 
+     * Get the background of the left chat bubble
      *
      * @return
      */
@@ -136,17 +170,21 @@ public interface IMessageProperties {
 
     /**
      * 设置左边聊天气泡的背景
+     * 
+     * Set the background of the left chat bubble
      *
      * @param drawable
      */
     void setLeftBubble(Drawable drawable);
 
     /// @}
-    /// @name 设置聊天内容
+    /// @name 设置聊天内容 Set chat content
     /// @{
 
     /**
      * 获取聊天内容字体大小
+     * 
+     * Get chat content font size
      *
      * @return
      */
@@ -154,6 +192,8 @@ public interface IMessageProperties {
 
     /**
      * 设置聊天内容字体大小
+     * 
+     * Set chat content font size
      *
      * @param size
      */
@@ -161,6 +201,8 @@ public interface IMessageProperties {
 
     /**
      * 获取右边聊天内容字体颜色
+     * 
+     * Get the font color of the chat content on the right
      *
      * @return
      */
@@ -168,6 +210,8 @@ public interface IMessageProperties {
 
     /**
      * 设置右边聊天内容字体颜色
+     * 
+     * Set the font color of the chat content on the right
      *
      * @param color
      */
@@ -175,6 +219,8 @@ public interface IMessageProperties {
 
     /**
      * 获取左边聊天内容字体颜色
+     * 
+     * Get the font color of the chat content on the left
      *
      * @return
      */
@@ -182,17 +228,21 @@ public interface IMessageProperties {
 
     /**
      * 设置左边聊天内容字体颜色
+     * 
+     * Set the font color of the chat content on the left
      *
      * @param color
      */
     void setLeftChatContentFontColor(int color);
 
     /// @}
-    /// @name 设置聊天时间
+    /// @name 设置聊天时间 Set chat time
     /// @{
 
     /**
      * 获取聊天时间的背景
+     * 
+     * Get the context of the chat time
      *
      * @return
      */
@@ -200,6 +250,8 @@ public interface IMessageProperties {
 
     /**
      * 设置聊天时间的背景
+     * 
+     * Set the context of the chat time
      *
      * @param drawable
      */
@@ -207,6 +259,8 @@ public interface IMessageProperties {
 
     /**
      * 获取聊天时间的文字大小
+     * 
+     * Get the text size of the chat time
      *
      * @return
      */
@@ -214,6 +268,8 @@ public interface IMessageProperties {
 
     /**
      * 设置聊天时间的字体大小
+     * 
+     * Set the text size of the chat time
      *
      * @param size
      */
@@ -221,6 +277,8 @@ public interface IMessageProperties {
 
     /**
      * 获取聊天时间的字体颜色
+     * 
+     * Get the font color of chat time
      *
      * @return
      */
@@ -228,17 +286,21 @@ public interface IMessageProperties {
 
     /**
      * 设置聊天时间的字体颜色
+     * 
+     * Set the font color of chat time
      *
      * @param color
      */
     void setChatTimeFontColor(int color);
 
     /// @}
-    /// @name 设置聊天的提示信息
+    /// @name 设置聊天的提示信息 Set up chat alerts
     /// @{
 
     /**
      * 获取聊天提示信息的背景
+     * 
+     * Get context for chat alerts
      *
      * @return
      */
@@ -246,6 +308,8 @@ public interface IMessageProperties {
 
     /**
      * 设置聊天提示信息的背景
+     * 
+     * Set context for chat alerts
      *
      * @param drawable
      */
@@ -253,6 +317,8 @@ public interface IMessageProperties {
 
     /**
      * 获取聊天提示信息的文字大小
+     * 
+     * Get the text size of the chat prompt message
      *
      * @return
      */
@@ -260,6 +326,8 @@ public interface IMessageProperties {
 
     /**
      * 设置聊天提示信息的文字大小
+     * 
+     * Set the text size of the chat prompt message
      *
      * @param size
      */
@@ -267,6 +335,8 @@ public interface IMessageProperties {
 
     /**
      * 获取聊天提示信息的文字颜色
+     * 
+     * Get the text color of the chat prompt message
      *
      * @return
      */
@@ -274,6 +344,8 @@ public interface IMessageProperties {
 
     /**
      * 设置聊天提示信息的文字颜色
+     * 
+     * Set the text color of the chat prompt message
      *
      * @param color
      */

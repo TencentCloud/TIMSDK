@@ -13,57 +13,58 @@ import com.tencent.qcloud.tuicore.interfaces.ITUIService;
 import java.util.Map;
 
 /**
- * TUI 插件核心类，主要负责 TUI 插件间数据的传递，通知的广播，功能的扩展等
+ * TUI Plugin core class, mainly responsible for data transfer between TUI plugins, notification broadcast, function extension, etc.
  */
 public class TUICore {
     private static final String TAG = TUICore.class.getSimpleName();
 
     /**
-     * 注册 Service 服务
-     * @param serviceName 服务名
-     * @param service service 服务对象
+     * Register Service
+     * @param serviceName    service name
+     * @param service        service object
      */
     public static void registerService(String serviceName, ITUIService service) {
         ServiceManager.getInstance().registerService(serviceName, service);
     }
 
     /**
-     *  唤起 Service 服务
+     *  Call Service
      *
-     *  @param serviceName 服务名
-     *  @param method 方法名
-     *  @param param 透传给服务方的数据
-     *  @return 返回对象
+     *  @param serviceName     service name
+     *  @param method          method name
+     *  @param param           pass parameters
+     *  @return                object
      */
     public static Object callService(String serviceName, String method, Map<String, Object> param) {
         return ServiceManager.getInstance().callService(serviceName, method, param);
     }
 
     /**
-     * 启动 Activity
-     * @param activityName Activity 名，例如 "TUIGroupChatActivity"
-     * @param param 传给 Activity 的参数
+     * start Activity
+     * @param activityName     activity name，such as "TUIGroupChatActivity"
+     * @param param            pass parameters
      */
     public static void startActivity(String activityName, Bundle param) {
         startActivity(null, activityName, param, -1);
     }
 
     /**
-     * 启动 Activity
-     * @param starter 启动者，可以是 {@link Context}，也可以是 {@link Fragment}
-     * @param activityName Activity 名，例如 "TUIGroupChatActivity"
-     * @param param 传给 Activity 的参数
+     * start Activity
+     * @param starter         Initiator, either {@link Context} or {@link Fragment}
+     * @param activityName    activity name，such as "TUIGroupChatActivity"
+     * @param param           pass parameters
      */
     public static void startActivity(@Nullable Object starter, String activityName, Bundle param) {
         startActivity(starter, activityName, param, -1);
     }
 
     /**
-     * 启动 Activity
-     * @param starter 启动者，可以是 {@link Context}，也可以是 {@link Fragment}
-     * @param activityName Activity 名，例如 "TUIGroupChatActivity"
-     * @param param 传给 Activity 的参数
-     * @param requestCode 传给 Activity 的请求值，用来在 Activity 结束时在启动者的 onActivityResult 方法中返回结果，大于等于 0 有效。
+     * start Activity
+     * @param starter         Initiator, either {@link Context} or {@link Fragment}
+     * @param activityName    activity name，such as "TUIGroupChatActivity"
+     * @param param           pass parameters
+     * @param requestCode     The request value passed to the Activity, used to return the result in the initiator's 
+     *                        onActivityResult method when the Activity ends, greater than or equal to 0 is valid.
      */
     public static void startActivity(@Nullable Object starter, String activityName, Bundle param, int requestCode) {
         TUIRouter.Navigation navigation = TUIRouter.getInstance().setDestination(activityName).putExtras(param);
@@ -77,49 +78,49 @@ public class TUICore {
     }
 
     /**
-     *  注册通知
+     *  Register event
      */
     public static void registerEvent(String key, String subKey, ITUINotification notification) {
         EventManager.getInstance().registerEvent(key, subKey, notification);
     }
 
     /**
-     *  移除指定 Key 和 subKey 的所有通知
+     *  Unregister event
      */
     public static void unRegisterEvent(String key, String subKey, ITUINotification notification) {
         EventManager.getInstance().unRegisterEvent(key, subKey, notification);
     }
 
     /**
-     *  移除指定通知对象的所有通知
+     *  Removes all notifications for the specified notification object
      */
     public static void unRegisterEvent(ITUINotification notification) {
         EventManager.getInstance().unRegisterEvent(notification);
     }
 
     /**
-     *  发起通知
+     *  Notify event
      */
     public static void notifyEvent(String key, String subKey, Map<String, Object> param) {
         EventManager.getInstance().notifyEvent(key, subKey, param);
     }
 
     /**
-     *  注册扩展
+     *  Register extension
      */
     public static void registerExtension(String key, ITUIExtension extension) {
         ExtensionManager.getInstance().registerExtension(key, extension);
     }
 
     /**
-     *  移除扩展
+     *  Unregister extension
      */
     public static void unRegisterExtension(String key, ITUIExtension extension) {
         ExtensionManager.getInstance().unRegisterExtension(key, extension);
     }
 
     /**
-     *  获取扩展
+     *  Get Extension
      */
     public static Map<String, Object> getExtensionInfo(String key, Map<String, Object> param) {
         return ExtensionManager.getInstance().getExtensionInfo(key, param);

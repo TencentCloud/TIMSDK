@@ -10,9 +10,6 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TUIReplyQuoteBean;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 合并转发消息
- */
 public class MergeMessageBean extends TUIMessageBean {
     private V2TIMMergerElem mergerElem;
 

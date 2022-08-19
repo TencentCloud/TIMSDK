@@ -52,10 +52,19 @@ public class SearchDataProvider {
 
     /**
      * 群搜索
-     *
      * @param searchParam 搜索参数
-     * @note - 搜索时支持匹配群信息，支持匹配群ID、群名称，详见 @TUISearchGroupMatchField
+     * 
+     * @note 
+     * - 搜索时支持匹配群信息，支持匹配群ID、群名称，详见 @TUISearchGroupMatchField
      * - 搜索时支持匹配群成员信息，支持匹配成员ID、匹配成员昵称、匹配成员备注、匹配成员名片，详见 @TUISearchGroupMemberMatchField
+     * 
+     * 
+     * group search
+     * @param searchParam
+     * 
+     * @note 
+     * - Support matching group information when searching, support matching group ID and group name, see @TUISearchGroupMatchField for details.
+     * - Support matching group member information when searching, support matching member ID, matching member nickname, matching member note, matching member business card, see @TUISearchGroupMemberMatchField for details
      */
     public void searchGroups(final TUISearchGroupParam searchParam, final IUIKitCallback<List<TUISearchGroupResult>> callback) {
         if (searchParam == null || searchParam.getKeywordList().size() == 0) {
@@ -202,13 +211,10 @@ public class SearchDataProvider {
             return false;
         }
 
-        //目前只是单字段搜索
         String keyword = keywordList.get(0);
         //return text.toLowerCase().contains(keyword.toLowerCase());
         SpannableString spannableString = new SpannableString(text);
-        //条件 keyword
         Pattern pattern = Pattern.compile(Pattern.quote(keyword), Pattern.CASE_INSENSITIVE);
-        //匹配
         Matcher matcher = pattern.matcher(spannableString);
         while (matcher.find()) {
             return true;
@@ -238,11 +244,11 @@ public class SearchDataProvider {
         //GroupInfo
         if (groupInfos != null && groupInfos.size() != 0) {
             for (V2TIMGroupInfo v2TIMGroupInfo : groupInfos) {
-                //组装匹配到的群信息数据
+                // 组装匹配到的群信息数据
+                // Assemble the matched group information data
                 TUISearchGroupResult searchGroupResult = new TUISearchGroupResult();
                 GroupInfo groupInfo = GroupInfoUtils.convertTimGroupInfo2GroupInfo(v2TIMGroupInfo);
                 searchGroupResult.setGroupInfo(groupInfo);
-                // 优先匹配群名称，其次群 ID
                 if (matcherSearchText(v2TIMGroupInfo.getGroupName(), keywordList)) {
                     searchGroupResult.setMatchField(TUISearchGroupParam.TUISearchGroupMatchField.SEARCH_FIELD_GROUP_NAME);
                     searchGroupResult.setMatchValue(v2TIMGroupInfo.getGroupName());
@@ -256,7 +262,8 @@ public class SearchDataProvider {
                 }
                 searchGroupResults.add(searchGroupResult);
 
-                //移除groupMemberFullInfos中匹配到群信息的数据
+                // 移除groupMemberFullInfos中匹配到群信息的数据
+                // Remove data matching group information in groupMemberFullInfos
                 Iterator iterator = groupMemberFullInfos.keySet().iterator();
                 while (iterator.hasNext()) {
                     String key = (String) iterator.next();
@@ -270,22 +277,24 @@ public class SearchDataProvider {
 
         TUISearchLog.d(TAG, "mergeGroupAndGroupMemberResult remove repeat, groupMemberFullInfos.size() = " + groupMemberFullInfos.size());
         //GroupMemberFullInfo
-        List<String> groupIDList = new ArrayList<>();//用来请求 groupInfo 数据
-        final HashMap<String, TUISearchGroupResult> searchGroupMemberResults = new HashMap<>();//暂存匹配到的群成员数据，缺少 groupInfo 信息
+        List<String> groupIDList = new ArrayList<>();// 用来请求 groupInfo 数据 // Used to request groupInfo data
+        // 暂存匹配到的群成员数据，缺少 groupInfo 信息 // Temporarily store the matched group member data, but the groupInfo information is missing
+        final HashMap<String, TUISearchGroupResult> searchGroupMemberResults = new HashMap<>();
         for (Map.Entry<String, List<V2TIMGroupMemberFullInfo>> entry : groupMemberFullInfos.entrySet()) {
             String groupId = entry.getKey();
             groupIDList.add(groupId);
 
-            //遍历剩余的匹配到的 groupMemberFullInfos，填充result数据
+            // 遍历剩余的匹配到的 groupMemberFullInfos，填充result数据
+            // Traverse the remaining matched groupMemberFullInfos and fill in the result data
             TUISearchGroupResult searchGroupResult = new TUISearchGroupResult();
             searchGroupResult.setMatchField(TUISearchGroupParam.TUISearchGroupMatchField.SEARCH_FIELD_GROUP_NONE);
             searchGroupResult.setMatchValue("");
 
-            //群成员数据填充
+            // 群成员数据填充
+            // fill group member data
             List<TUISearchGroupResult.TUISearchGroupMemberMatchResult> matchMembers = new ArrayList<>();
             for (V2TIMGroupMemberFullInfo v2TIMGroupMemberFullInfo : entry.getValue()) {
                 TUISearchGroupResult.TUISearchGroupMemberMatchResult searchGroupMemberMatchResult = new TUISearchGroupResult.TUISearchGroupMemberMatchResult();
-                // 优先级：群名片>好友备注>昵称>userID
                 if (matcherSearchText(v2TIMGroupMemberFullInfo.getNameCard(), keywordList)) {
                     searchGroupMemberMatchResult.setMemberMatchField(TUISearchGroupParam.TUISearchGroupMemberMatchField.SEARCH_FIELD_MEMBER_NAME_CARD);
                     searchGroupMemberMatchResult.setMemberMatchValue(v2TIMGroupMemberFullInfo.getNameCard());
@@ -307,7 +316,8 @@ public class SearchDataProvider {
             }
 
             searchGroupResult.setMatchMembers(matchMembers);
-            //群成员数据暂存 searchGroupMemberResults 中，缺少 groupInfo 信息
+            // 群成员数据暂存 searchGroupMemberResults 中，缺少 groupInfo 信息
+            // In the temporary storage of group member data searchGroupMemberResults, the groupInfo information is missing
             searchGroupMemberResults.put(groupId, searchGroupResult);
         }
         TUISearchLog.d(TAG, "mergeGroupAndGroupMemberResult searchGroupMemberResults.size() = " + searchGroupMemberResults.size());

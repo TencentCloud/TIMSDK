@@ -13,9 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-/**
- * 介绍：分类、悬停的Decoration
- */
 
 public class SuspensionDecoration extends RecyclerView.ItemDecoration {
 
@@ -23,11 +20,11 @@ public class SuspensionDecoration extends RecyclerView.ItemDecoration {
     private static int COLOR_TITLE_BG = Color.parseColor("#FFF2F3F5");
     private static int COLOR_TITLE_BOTTOM_LINE = Color.parseColor("#FFCACACA");
     private static int COLOR_TITLE_FONT = Color.parseColor("#FF888888");
-    private int mTitleFontSize;//title字体大小
+    private int mTitleFontSize;
     private List<? extends ISuspensionInterface> mDatas;
     private Paint mPaint;
-    private Rect mBounds;//用于存放测量文字Rect
-    private int mTitleHeight;//title的高
+    private Rect mBounds;
+    private int mTitleHeight;
     private int mHeaderViewCount = 0;
 
 
@@ -90,18 +87,17 @@ public class SuspensionDecoration extends RecyclerView.ItemDecoration {
                     .getLayoutParams();
             int position = params.getViewLayoutPosition();
             position -= getHeaderViewCount();
-            //pos为1，size为1，1>0? true
+
             if (mDatas == null || mDatas.isEmpty() || position > mDatas.size() - 1 || position < 0 || !mDatas.get(position).isShowSuspension()) {
-                continue;//越界
+                continue;
             }
-            //我记得Rv的item position在重置时可能为-1.保险点判断一下吧
+
             if (position > -1) {
-                if (position == 0) {//等于0肯定要有title的
+                if (position == 0) {
                     drawTitleArea(c, left, right, child, params, position);
 
-                } else {//其他的通过判断
+                } else {
                     if (null != mDatas.get(position).getSuspensionTag() && !mDatas.get(position).getSuspensionTag().equals(mDatas.get(position - 1).getSuspensionTag())) {
-                        //不为空 且跟前一个tag不一样了，说明是新的分类，也要title
                         drawTitleArea(c, left, right, child, params, position);
                     } else {
                         //none
@@ -113,6 +109,8 @@ public class SuspensionDecoration extends RecyclerView.ItemDecoration {
 
     /**
      * 绘制Title区域背景和文字的方法
+     * 
+     * How to draw the background and text of the Title area
      *
      * @param c
      * @param left
@@ -121,7 +119,7 @@ public class SuspensionDecoration extends RecyclerView.ItemDecoration {
      * @param params
      * @param position
      */
-    private void drawTitleArea(Canvas c, int left, int right, View child, RecyclerView.LayoutParams params, int position) {//最先调用，绘制在最下层
+    private void drawTitleArea(Canvas c, int left, int right, View child, RecyclerView.LayoutParams params, int position) {//最先调用，绘制在最下层 // Called first, drawn at the bottom layer
         mPaint.setColor(COLOR_TITLE_BG);
         c.drawRect(left, child.getTop() - params.topMargin - mTitleHeight, right, child.getTop() - params.topMargin, mPaint);
 
@@ -134,24 +132,28 @@ public class SuspensionDecoration extends RecyclerView.ItemDecoration {
     }
 
     @Override
-    public void onDrawOver(Canvas c, final RecyclerView parent, RecyclerView.State state) {//最后调用 绘制在最上层
+    public void onDrawOver(Canvas c, final RecyclerView parent, RecyclerView.State state) {//最后调用 绘制在最上层 // Last call to draw on top
         int pos = ((LinearLayoutManager) (parent.getLayoutManager())).findFirstVisibleItemPosition();
         pos -= getHeaderViewCount();
-        //pos为1，size为1，1>0? true
+
         if (mDatas == null || mDatas.isEmpty() || pos > mDatas.size() - 1 || pos < 0 || !mDatas.get(pos).isShowSuspension()) {
-            return;//越界
+            return;
         }
 
         String tag = mDatas.get(pos).getSuspensionTag();
         //View child = parent.getChildAt(pos);
-        View child = parent.findViewHolderForLayoutPosition(pos + getHeaderViewCount()).itemView;//出现一个奇怪的bug，有时候child为空，所以将 child = parent.getChildAt(i)。-》 parent.findViewHolderForLayoutPosition(pos).itemView
+        View child = parent.findViewHolderForLayoutPosition(pos + getHeaderViewCount()).itemView;
 
-        boolean flag = false;//定义一个flag，Canvas是否位移过的标志
-        if ((pos + 1) < mDatas.size()) {//防止数组越界（一般情况不会出现）
-            if (null != tag && !tag.equals(mDatas.get(pos + 1).getSuspensionTag())) {//当前第一个可见的Item的tag，不等于其后一个item的tag，说明悬浮的View要切换了
-//                TUIKitLog.d(TAG, "onDrawOver() called with: c = [" + child.getTop());//当getTop开始变负，它的绝对值，是第一个可见的Item移出屏幕的距离，
-                if (child.getHeight() + child.getTop() < mTitleHeight) {//当第一个可见的item在屏幕中还剩的高度小于title区域的高度时，我们也该开始做悬浮Title的“交换动画”
-                    c.save();//每次绘制前 保存当前Canvas状态，
+        boolean flag = false;//定义一个flag，Canvas是否位移过的标志 // Define a flag, whether the Canvas is shifted or not
+        if ((pos + 1) < mDatas.size()) {
+            if (null != tag && !tag.equals(mDatas.get(pos + 1).getSuspensionTag())) {
+                // 当前第一个可见的Item的tag，不等于其后一个item的tag，说明悬浮的View要切换了
+                // The tag of the current first visible item is not equal to the tag of the next item, indicating that the floating View is about to be switched.
+//                TUIKitLog.d(TAG, "onDrawOver() called with: c = [" + child.getTop());
+                if (child.getHeight() + child.getTop() < mTitleHeight) {
+                    // 当第一个可见的item在屏幕中还剩的高度小于title区域的高度时，我们也该开始做悬浮Title的“交换动画”
+                    // When the remaining height of the first visible item on the screen is less than the height of the title area, we should also start to do the "swap animation" of the floating Title
+                    c.save();
                     flag = true;
 
                     //一种头部折叠起来的视效，个人觉得也还不错~
@@ -160,6 +162,8 @@ public class SuspensionDecoration extends RecyclerView.ItemDecoration {
 
                     //类似饿了么点餐时,商品列表的悬停头部切换“动画效果”
                     //上滑时，将canvas上移 （y为负数） ,所以后面canvas 画出来的Rect和Text都上移了，有种切换的“动画”感觉
+                    // Similar to Ele.me ordering, the hover head of the product list switches the "animation effect"
+                    // When sliding up, move the canvas up (y is a negative number), so the Rect and Text drawn by the canvas are moved up, and there is a kind of "animation" feeling of switching
                     c.translate(0, child.getHeight() + child.getTop() - mTitleHeight);
                 }
             }
@@ -172,30 +176,25 @@ public class SuspensionDecoration extends RecyclerView.ItemDecoration {
                 parent.getPaddingTop() + mTitleHeight - (mTitleHeight / 2 - mBounds.height() / 2),
                 mPaint);
         if (flag)
-            c.restore();//恢复画布到之前保存的状态
+            c.restore();
     }
 
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-        //super里会先设置0 0 0 0
         super.getItemOffsets(outRect, view, parent, state);
         int position = ((RecyclerView.LayoutParams) view.getLayoutParams()).getViewLayoutPosition();
         position -= getHeaderViewCount();
-        if (mDatas == null || mDatas.isEmpty() || position > mDatas.size() - 1) {//pos为1，size为1，1>0? true
-            return;//越界
+        if (mDatas == null || mDatas.isEmpty() || position > mDatas.size() - 1) {
+            return;
         }
-        //我记得Rv的item position在重置时可能为-1.保险点判断一下吧
+
         if (position > -1) {
             ISuspensionInterface titleCategoryInterface = mDatas.get(position);
-            //等于0肯定要有title的,
-            // 2016 11 07 add 考虑到headerView 等于0 也不应该有title
-            // 2016 11 10 add 通过接口里的isShowSuspension() 方法，先过滤掉不想显示悬停的item
             if (titleCategoryInterface.isShowSuspension()) {
                 if (position == 0) {
                     outRect.set(0, mTitleHeight, 0, 0);
-                } else {//其他的通过判断
+                } else {
                     if (null != titleCategoryInterface.getSuspensionTag() && !titleCategoryInterface.getSuspensionTag().equals(mDatas.get(position - 1).getSuspensionTag())) {
-                        //不为空 且跟前一个tag不一样了，说明是新的分类，也要title
                         outRect.set(0, mTitleHeight, 0, 0);
                     }
                 }

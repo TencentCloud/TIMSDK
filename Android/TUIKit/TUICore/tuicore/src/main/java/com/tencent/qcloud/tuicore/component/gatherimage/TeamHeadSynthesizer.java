@@ -24,20 +24,16 @@ import java.util.concurrent.ExecutionException;
 
 public class TeamHeadSynthesizer implements Synthesizer {
 
-    /**
-     * 多图片数据
-     */
     MultiImageData multiImageData;
     Context mContext;
 
     ImageView imageView;
 
-    // currentImageId 只在主线程中设置和获取，是安全的
+    // It is safe to set and get only in the main thread
     private String currentImageId = "";
     Callback callback = new Callback() {
         @Override
         public void onCall(Bitmap bitmap, String targetID) {
-            // 异步加载结束之后可能当前 view 已经被复用，不能再设置上次请求的 bitmap
             if (!TextUtils.equals(getImageId(), targetID)) {
                 return;
             }
@@ -82,10 +78,10 @@ public class TeamHeadSynthesizer implements Synthesizer {
     }
 
     /**
-     * 设置宫格参数
+     * Set Grid params
      *
-     * @param imagesSize 图片数量
-     * @return 宫格参数 gridParam[0] 宫格行数 gridParam[1] 宫格列数
+     * @param imagesSize   Number of pictures
+     * @return gridParam[0] Rows gridParam[1] columns
      */
     protected int[] calculateGridParam(int imagesSize) {
         int[] gridParam = new int[2];
@@ -117,8 +113,7 @@ public class TeamHeadSynthesizer implements Synthesizer {
         boolean loadSuccess = true;
         List<Object> imageUrls = imageData.getImageUrls();
         for (int i = 0; i < imageUrls.size(); i++) {
-            Bitmap defaultIcon = BitmapFactory.decodeResource(mContext.getResources(), TUIThemeManager.getAttrResId(mContext, R.attr.core_default_user_icon));
-            //下载图片
+            Bitmap defaultIcon = BitmapFactory.decodeResource(mContext.getResources(), TUIConfig.getDefaultAvatarImage());
             try {
                 Bitmap bitmap = asyncLoadImage(imageUrls.get(i), imageData.targetImageSize);
                 imageData.putBitmap(bitmap, i);
@@ -130,24 +125,21 @@ public class TeamHeadSynthesizer implements Synthesizer {
                 imageData.putBitmap(defaultIcon, i);
             }
         }
-        //下载完毕
         return loadSuccess;
     }
 
     @Override
     public void drawDrawable(Canvas canvas, MultiImageData imageData) {
-        //画背景
         canvas.drawColor(imageData.bgColor);
-        //画组合图片
         int size = imageData.size();
-        int t_center = (imageData.maxHeight + imageData.gap) / 2;//中间位置以下的顶点（有宫格间距）
-        int b_center = (imageData.maxHeight - imageData.gap) / 2;//中间位置以上的底部（有宫格间距）
-        int l_center = (imageData.maxWidth + imageData.gap) / 2;//中间位置以右的左部（有宫格间距）
-        int r_center = (imageData.maxWidth - imageData.gap) / 2;//中间位置以左的右部（有宫格间距）
-        int center = (imageData.maxHeight - imageData.targetImageSize) / 2;//中间位置以上顶部（无宫格间距）
+        int t_center = (imageData.maxHeight + imageData.gap) / 2;
+        int b_center = (imageData.maxHeight - imageData.gap) / 2;
+        int l_center = (imageData.maxWidth + imageData.gap) / 2;
+        int r_center = (imageData.maxWidth - imageData.gap) / 2;
+        int center = (imageData.maxHeight - imageData.targetImageSize) / 2;
         for (int i = 0; i < size; i++) {
-            int rowNum = i / imageData.columnCount;//当前行数
-            int columnNum = i % imageData.columnCount;//当前列数
+            int rowNum = i / imageData.columnCount;
+            int columnNum = i % imageData.columnCount;
 
             int left = ((int) (imageData.targetImageSize * (imageData.columnCount == 1 ? columnNum + 0.5 : columnNum) + imageData.gap * (columnNum + 1)));
             int top = ((int) (imageData.targetImageSize * (imageData.columnCount == 1 ? rowNum + 0.5 : rowNum) + imageData.gap * (rowNum + 1)));
@@ -208,7 +200,7 @@ public class TeamHeadSynthesizer implements Synthesizer {
     }
 
     /**
-     * 根据坐标画图
+     * DrawBitmap
      *
      * @param canvas
      * @param left
@@ -219,9 +211,7 @@ public class TeamHeadSynthesizer implements Synthesizer {
      */
     public void drawBitmapAtPosition(Canvas canvas, int left, int top, int right, int bottom, Bitmap bitmap) {
         if (null == bitmap) {
-            //图片为空用默认图片
             if (multiImageData.getDefaultImageResId() > 0) {
-                //设置过默认id
                 bitmap = BitmapFactory.decodeResource(mContext.getResources(), multiImageData.getDefaultImageResId());
             }
         }
@@ -231,13 +221,6 @@ public class TeamHeadSynthesizer implements Synthesizer {
         }
     }
 
-    /**
-     * 同步加载图片
-     *
-     * @param imageUrl
-     * @param targetImageSize
-     * @return
-     */
     private Bitmap asyncLoadImage(Object imageUrl, int targetImageSize) throws ExecutionException, InterruptedException {
         return GlideEngine.loadBitmap(imageUrl, targetImageSize);
     }
@@ -250,13 +233,11 @@ public class TeamHeadSynthesizer implements Synthesizer {
         return currentImageId;
     }
 
-    /**
-     * 加载图片
-     * @param imageId 发起图片加载请求时的图片 ID
-     */
     public void load(String imageId) {
         if (multiImageData.size() == 0) {
             // 发起请求时的图片 id 和当前图片 id 不一致，说明发生了复用，此时不应该再设置图像
+            // The image id when the request is initiated is inconsistent with the current image id, 
+            // indicating that multiplexing has occurred, and the image should not be set at this time.
             if (imageId != null && !TextUtils.equals(imageId, currentImageId)) {
                 return;
             }
@@ -266,6 +247,8 @@ public class TeamHeadSynthesizer implements Synthesizer {
 
         if (multiImageData.size() == 1) {
             // 发起请求时的图片 id 和当前图片 id 不一致，说明发生了复用，此时不应该再设置图像
+            // The image id when the request is initiated is inconsistent with the current image id, 
+            // indicating that multiplexing has occurred, and the image should not be set at this time.
             if (imageId != null && !TextUtils.equals(imageId, currentImageId)) {
                 return;
             }
@@ -274,10 +257,15 @@ public class TeamHeadSynthesizer implements Synthesizer {
         }
 
         // 异步加载图像前先清空内容，避免闪烁
+        // Clear the content before loading images asynchronously to avoid flickering
         clearImage();
 
         // 初始化图片信息，由于是异步加载和合成头像，这里需要传给合成线程一个局部对象，只在异步加载线程中使用
         // 这样在图片被复用时外部线程再次设置 url 就不会覆盖此局部对象
+        // Initialize the image information. Since it is asynchronous loading and synthesizing the avatar, 
+        // a local object needs to be passed to the synthesis thread, which is only used in the asynchronous 
+        // loading thread, so that when the image is reused, the external thread will not overwrite the local 
+        // object by setting the url again.
         MultiImageData copyMultiImageData;
         try {
             copyMultiImageData = multiImageData.clone();
@@ -293,29 +281,24 @@ public class TeamHeadSynthesizer implements Synthesizer {
         copyMultiImageData.rowCount = gridParam[0];
         copyMultiImageData.columnCount = gridParam[1];
         copyMultiImageData.targetImageSize = (copyMultiImageData.maxWidth - (copyMultiImageData.columnCount + 1)
-                * copyMultiImageData.gap) / (copyMultiImageData.columnCount == 1 ? 2 : copyMultiImageData.columnCount);//图片尺寸
+                * copyMultiImageData.gap) / (copyMultiImageData.columnCount == 1 ? 2 : copyMultiImageData.columnCount);
         final String finalImageId = imageId;
         final MultiImageData finalCopyMultiImageData = copyMultiImageData;
         ThreadHelper.INST.execute(new Runnable() {
             @Override
             public void run() {
-                //根据id获取存储的文件路径
                 final File file = new File(TUIConfig.getImageBaseDir() + finalImageId);
                 boolean cacheBitmapExists = false;
                 Bitmap existsBitmap = null;
                 if (file.exists() && file.isFile()) {
-                    //文件存在，加载到内存
                     BitmapFactory.Options options = new BitmapFactory.Options();
                     existsBitmap = BitmapFactory.decodeFile(file.getPath(), options);
                     if (options.outWidth > 0 && options.outHeight > 0) {
-                        //当前文件是图片
                         cacheBitmapExists = true;
                     }
                 }
                 if (!cacheBitmapExists) {
-                    // 收集图片
                     asyncLoadImageList(finalCopyMultiImageData);
-                    // 合成图片
                     final Bitmap bitmap = synthesizeImageList(finalCopyMultiImageData);
                     ImageUtil.storeBitmap(file, bitmap);
                     ImageUtil.setGroupConversationAvatar(finalImageId, file.getAbsolutePath());

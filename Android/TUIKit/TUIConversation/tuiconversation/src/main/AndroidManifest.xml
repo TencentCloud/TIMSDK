@@ -7,6 +7,10 @@
             android:name=".ui.page.TUIForwardSelectActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".ui.page.TUIFoldedConversationActivity"
+            android:screenOrientation="portrait" />
+
         <provider
             android:name=".TUIConversationService"
             android:authorities="${applicationId}.TUIConversation.Init"

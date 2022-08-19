@@ -19,9 +19,6 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.VideoReplyQuoteBean;
 
 import java.io.File;
 
-/**
- * 视频消息
- */
 public class VideoMessageBean extends TUIMessageBean {
     private String dataUri;
     private String dataPath;
@@ -50,7 +47,6 @@ public class VideoMessageBean extends TUIMessageBean {
             imgWidth = (int) videoEle.getSnapshotWidth();
             imgHeight = (int) videoEle.getSnapshotHeight();
             final String snapPath = TUIConfig.getImageDownloadDir() + videoEle.getSnapshotUUID();
-            //判断快照是否存在,不存在自动下载
             if (new File(snapPath).exists()) {
                 dataPath = snapPath;
             }
@@ -64,6 +60,8 @@ public class VideoMessageBean extends TUIMessageBean {
 
     /**
      * 获取多媒体消息的数据源
+     * 
+     * Get the data source of the multimedia message
      *
      * @return
      */
@@ -77,6 +75,8 @@ public class VideoMessageBean extends TUIMessageBean {
 
     /**
      * 设置多媒体消息的数据源
+     * 
+     * Set the data source of the multimedia message
      *
      * @param dataUri
      */
@@ -88,6 +88,8 @@ public class VideoMessageBean extends TUIMessageBean {
 
     /**
      * 获取多媒体消息的保存路径
+     * 
+     * Get the save path of multimedia messages
      *
      * @return
      */
@@ -97,6 +99,8 @@ public class VideoMessageBean extends TUIMessageBean {
 
     /**
      * 设置多媒体消息的保存路径
+     * 
+     * Set the save path of multimedia messages
      *
      * @param dataPath
      */
@@ -152,9 +156,6 @@ public class VideoMessageBean extends TUIMessageBean {
         return 0;
     }
 
-    /**
-     * 获取视频 URL 下载地址
-     */
     public void getVideoUrl(final V2TIMValueCallback<String> callback) {
         if (callback == null) {
             return;

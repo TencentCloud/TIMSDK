@@ -63,7 +63,6 @@ public class FileMessageHolder extends MessageContentHolder {
             msgArea.setBackgroundResource(R.drawable.chat_bubble_other_cavity_bg);
             statusImage.setVisibility(View.GONE);
         } else {
-            //// 聊天气泡设置
             if (msg.isSelf()) {
                 if (properties.getRightBubble() != null && properties.getRightBubble().getConstantState() != null) {
                     msgArea.setBackground(properties.getRightBubble().getConstantState().newDrawable());
@@ -149,7 +148,6 @@ public class FileMessageHolder extends MessageContentHolder {
         networkConnectionListener = new NetworkConnectionListener() {
             @Override
             public void onConnected() {
-                // 网络重连，重新下载
                 if (message.getDownloadStatus() == FileMessageBean.MSG_STATUS_DOWNLOADING) {
                     downloadFile(message, path, fileName, false);
                 }
@@ -164,7 +162,6 @@ public class FileMessageHolder extends MessageContentHolder {
             return;
         }
 
-        // 如果在下载中用户手动点击，则返回，如果是断网重连则重新下载
         if (message.getDownloadStatus() == TUIMessageBean.MSG_STATUS_DOWNLOADING && isUserClick) {
             return;
         }
@@ -254,7 +251,6 @@ public class FileMessageHolder extends MessageContentHolder {
         }
     }
 
-    // 因为在下载中有两个不同的背景，高亮时需要同时处理下
     public void setHighLightBackground(int color) {
         if (normalBackground != null) {
             normalBackground.setColorFilter(color, PorterDuff.Mode.SRC_IN);
@@ -281,7 +277,6 @@ public class FileMessageHolder extends MessageContentHolder {
         ProgressPresenter.getInstance().unregisterProgressListener(msgId, progressListener);
     }
 
-    // 进度动画填充 drawable
     static class ProgressDrawable extends Drawable {
 
         private Drawable backgroundDrawable;
@@ -366,14 +361,11 @@ public class FileMessageHolder extends MessageContentHolder {
             solidPath.reset();
             highLightPath.reset();
             rectPath.addRoundRect(new RectF(borderWidth / 2, borderWidth / 2, width - borderWidth / 2, height - borderWidth / 2), radius, Path.Direction.CW);
-            // 先画边框
             highLightPath.set(rectPath);
             canvas.drawPath(rectPath, borderPaint);
             solidPath.addRect(new RectF(borderWidth / 2, borderWidth / 2, solidWidth - borderWidth / 2, height - borderWidth / 2), Path.Direction.CW);
             rectPath.op(solidPath, Path.Op.INTERSECT);
-            // 再填充
             canvas.drawPath(rectPath, paint);
-            // 最后画高亮
             canvas.drawPath(highLightPath, highLightPaint);
         }
 

@@ -14,9 +14,6 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TUIReplyQuoteBean;
 
 import java.io.File;
 
-/**
- * 文件消息
- */
 public class FileMessageBean extends TUIMessageBean {
 
     private String dataPath;
@@ -70,6 +67,8 @@ public class FileMessageBean extends TUIMessageBean {
 
     /**
      * 获取文件的保存路径
+     * 
+     * Get the save path of the file
      *
      * @return
      */
@@ -79,6 +78,8 @@ public class FileMessageBean extends TUIMessageBean {
 
     /**
      * 设置文件的保存路径
+     * 
+     * Set the save path of the file
      *
      * @param dataPath
      */

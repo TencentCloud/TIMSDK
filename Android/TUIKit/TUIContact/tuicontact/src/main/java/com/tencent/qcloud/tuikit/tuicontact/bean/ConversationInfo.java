@@ -15,23 +15,33 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
     public static final int TYPE_RECENT_LABEL = 4;
     /**
      * 会话类型，自定义会话or普通会话
+     * 
+     * conversation type
      */
     private int type;
 
     /**
      * 消息未读数
+     * 
+     * unread message number
      */
     private int unRead;
     /**
      * 会话ID
+     * 
+     * conversation ID
      */
     private String conversationId;
     /**
      * 会话标识，C2C为对方用户ID，群聊为群组ID
+     * 
+     * ID, C2C is UserID, Group is group ID
      */
     private String id;
     /**
      * 会话头像url
+     * 
+     * conversation avatar url
      */
     private List<Object> iconUrlList = new ArrayList<>();
 
@@ -43,46 +53,33 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
         this.iconUrlList = iconUrlList;
     }
 
-    /**
-     * 会话标题
-     */
     private String title;
-
-    /**
-     * 会话头像
-     */
     private String iconPath;
-    /**
-     * 是否为群会话
-     */
     private boolean isGroup;
-    /**
-     * 是否为置顶会话
-     */
     private boolean top;
-    /**
-     * 最后一条消息时间
-     */
     private long lastMessageTime;
 
 
     /**
      * 会话界面显示的@提示消息
+     * 
+     * "@" message in group
      */
     private String atInfoText;
 
     /**
      * 会话界面显示消息免打扰图标
+     * 
+     * the conversation item displays the icon of Do Not Disturb
      */
     private boolean showDisturbIcon;
 
-    /**
-     * 群类型
-     */
     private String groupType;
 
     /**
      * 会话排序键值
+     * 
+     * conversation sort key
      */
     private long orderKey;
 
@@ -140,6 +137,8 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
 
     /**
      * 获得最后一条消息的时间，单位是秒
+     * 
+     * Get the time of the last message, in seconds
      */
     public long getLastMessageTime() {
         return lastMessageTime;
@@ -147,6 +146,9 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
 
     /**
      * 设置最后一条消息的时间，单位是秒
+     * 
+     * Set the time to the last message, in seconds
+     * 
      * @param lastMessageTime
      */
     public void setLastMessageTime(long lastMessageTime) {

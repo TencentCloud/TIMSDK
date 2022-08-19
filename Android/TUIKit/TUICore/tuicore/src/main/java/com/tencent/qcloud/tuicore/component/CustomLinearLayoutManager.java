@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * https://stackoverflow.com/questions/30458640/recyclerview-java-lang-indexoutofboundsexception-inconsistency-detected-inval
- * 控件内部bug
  */
 public class CustomLinearLayoutManager extends LinearLayoutManager {
 
@@ -28,7 +27,6 @@ public class CustomLinearLayoutManager extends LinearLayoutManager {
     @Override
     public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
         try {
-            //try catch一下
             super.onLayoutChildren(recycler, state);
         } catch (IndexOutOfBoundsException e) {
             Log.w("CustomLinearLayoutManager", e.getLocalizedMessage());

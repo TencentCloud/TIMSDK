@@ -51,7 +51,6 @@ public class UnreadCountTextView extends AppCompatTextView {
     @Override
     protected void onDraw(Canvas canvas) {
         if (getText().length() == 0) {
-            // 没有字符，就在本View中心画一个小圆点
             int l = (getMeasuredWidth() - ScreenUtil.getPxByDp(6)) / 2;
             int t = l;
             int r = getMeasuredWidth() - l;

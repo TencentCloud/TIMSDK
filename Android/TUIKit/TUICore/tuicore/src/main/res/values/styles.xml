@@ -25,6 +25,11 @@
         <item name="android:windowDisablePreview">true</item>
     </style>
 
+    <style name="PopupInputCardAnim">
+        <item name="android:windowEnterAnimation">@anim/core_popup_in_anim</item>
+        <item name="android:windowExitAnimation">@anim/core_popup_out_anim</item>
+    </style>
+
     <style name="TUIBaseTheme">
         <item name="user_status_offline">@drawable/core_icon_offline_status</item>
     </style>

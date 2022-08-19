@@ -94,7 +94,6 @@ public class ReplyMessageHolder extends MessageContentHolder {
     @Override
     protected void setGravity(boolean isStart) {
         super.setGravity(isStart);
-        replyContainer.setGravity(isStart ? Gravity.START : Gravity.END);
     }
 
     private void setThemeColor(TUIMessageBean messageBean) {

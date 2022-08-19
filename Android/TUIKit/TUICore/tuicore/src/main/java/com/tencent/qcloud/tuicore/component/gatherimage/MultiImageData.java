@@ -9,25 +9,22 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 多张图片数据
+ * Multiple image data
  */
 
 public class MultiImageData implements Cloneable{
     final static int maxSize = 9;
-    //图片地址链接
     List<Object> imageUrls;
-    //默认的图片ID
     int defaultImageResId;
-    //下载下来的图片地址
     Map<Integer, Bitmap> bitmapMap;
     int bgColor = Color.parseColor("#cfd3d8");
 
 
-    int targetImageSize;//目标图片宽高
-    int maxWidth, maxHeight;//最大宽度，最大高度
-    int rowCount; //行数
-    int columnCount;  //列数
-    int gap = 6; //宫格间距
+    int targetImageSize;
+    int maxWidth, maxHeight;
+    int rowCount;
+    int columnCount;
+    int gap = 6;
 
     public MultiImageData() {
     }

@@ -17,7 +17,7 @@ import com.tencent.qcloud.tuicore.R;
 import com.tencent.qcloud.tuicore.util.ScreenUtil;
 
 /**
- * 设置等页面条状控制或显示信息的控件
+ * Custom LineControllerView
  */
 public class LineControllerView extends LinearLayout {
 
@@ -32,6 +32,7 @@ public class LineControllerView extends LinearLayout {
     private TextView mContentText;
     private ImageView mNavArrowView;
     private Switch mSwitchView;
+    private View mMask;
 
     public LineControllerView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -55,7 +56,7 @@ public class LineControllerView extends LinearLayout {
         mNameText.setText(mName);
         mContentText = findViewById(R.id.content);
         mContentText.setText(mContent);
-        View bottomLine = findViewById(R.id.bottomLine);
+        View bottomLine = findViewById(R.id.bottom_line);
         View topLine = findViewById(R.id.top_line);
         bottomLine.setVisibility(mIsBottom ? VISIBLE : GONE);
         topLine.setVisibility(mIsTop ? VISIBLE : GONE);
@@ -65,20 +66,13 @@ public class LineControllerView extends LinearLayout {
         contentLayout.setVisibility(mIsSwitch ? GONE : VISIBLE);
         mSwitchView = findViewById(R.id.btnSwitch);
         mSwitchView.setVisibility(mIsSwitch ? VISIBLE : GONE);
+        mMask = findViewById(R.id.disable_mask);
     }
 
-    /**
-     * 获取内容
-     */
     public String getContent() {
         return mContentText.getText().toString();
     }
 
-    /**
-     * 设置文字内容
-     *
-     * @param content 内容
-     */
     public void setContent(String content) {
         this.mContent = content;
         mContentText.setText(content);
@@ -89,9 +83,9 @@ public class LineControllerView extends LinearLayout {
     }
 
     /**
-     * 设置是否可以跳转
+     * Set whether to jump
      *
-     * @param canNav 是否可以跳转
+     * @param canNav
      */
     public void setCanNav(boolean canNav) {
         this.mIsJump = canNav;
@@ -115,23 +109,22 @@ public class LineControllerView extends LinearLayout {
         return mSwitchView.isChecked();
     }
 
-    /**
-     * 设置开关状态
-     *
-     * @param on 开关
-     */
     public void setChecked(boolean on) {
         mSwitchView.setChecked(on);
     }
 
-    /**
-     * 设置开关监听
-     *
-     * @param listener 监听
-     */
     public void setCheckListener(CompoundButton.OnCheckedChangeListener listener) {
         mSwitchView.setOnCheckedChangeListener(listener);
     }
 
+    public void setMask(boolean enableMask) {
+        if (enableMask) {
+            mMask.setVisibility(View.VISIBLE);
+            mSwitchView.setEnabled(false);
+        } else {
+            mMask.setVisibility(View.GONE);
+            mSwitchView.setEnabled(true);
+        }
+    }
 
 }

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:background="#FFFFFF"
+    android:orientation="vertical">
+
+    <com.tencent.qcloud.tuicore.component.TitleBarLayout
+        android:id="@+id/create_community_title"
+        app:title_bar_middle_title="@string/community_create_community"
+        app:title_bar_can_return="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/cover_iv"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:background="@drawable/community_cover_default"
+            android:scaleType="centerCrop" />
+
+        <FrameLayout
+            android:id="@+id/face_select_fl"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_alignStart="@id/cover_iv"
+            android:layout_alignLeft="@id/cover_iv"
+            android:layout_alignBottom="@id/cover_iv"
+            android:layout_marginLeft="16dp"
+            android:layout_marginBottom="-28dp">
+
+            <ImageView
+                android:id="@+id/face_iv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <LinearLayout
+                android:id="@+id/select_face_ll"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="@drawable/community_select_face_bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="21dp"
+                    android:background="@drawable/community_select_camera"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/community_select_face"
+                    android:textColor="#999999"
+                    android:textSize="10sp"/>
+            </LinearLayout>
+
+        </FrameLayout>
+
+        <com.tencent.qcloud.tuikit.tuicommunity.component.SelectTextButton
+            android:id="@+id/select_cover_button"
+            android:layout_width="wrap_content"
+            android:layout_height="26dp"
+            android:layout_alignEnd="@id/cover_iv"
+            android:layout_alignRight="@id/cover_iv"
+            android:layout_alignBottom="@id/cover_iv"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            android:paddingStart="8dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="4dp"
+            android:text="@string/community_select_cover"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            app:border_width="1dp"
+            app:button_radius="50dp"
+            app:color="#FFFFFF" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/cover_iv"
+            android:paddingStart="16dp"
+            android:paddingTop="44dp"
+            android:paddingEnd="16dp">
+
+            <TextView
+                android:id="@+id/name_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/community_community_name"
+                android:textColor="#666666"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/read_dot_bg"
+                android:text="*"
+                android:layout_marginLeft="4dp"
+                android:textSize="14sp"
+                android:layout_toEndOf="@id/name_title"
+                android:layout_alignTop="@id/name_title"
+                android:layout_toRightOf="@id/name_title" />
+
+            <com.tencent.qcloud.tuikit.tuicommunity.component.TextCountView
+                android:id="@+id/name_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/name_title"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                app:limit_count="20"
+                app:bind_edit_text="@id/name_edit_text"
+                android:textColor="#666666"
+                android:textSize="14sp"
+                tools:text="0/20" />
+
+            <EditText
+                android:id="@+id/name_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/name_title"
+                android:layout_marginTop="16dp"
+                android:background="@null"
+                android:hint="@string/community_edit_tips_input"
+                android:maxLength="20"
+                android:textColorHint="#999999"
+                android:textCursorDrawable="@drawable/core_edit_cursor"
+                android:textSize="16sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#FFEEEEEE"
+                android:layout_below="@id/name_edit_text"
+                android:layout_marginTop="12dp" />
+
+            <TextView
+                android:id="@+id/introduction_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/name_edit_text"
+                android:layout_marginTop="24dp"
+                android:text="@string/community_community_introduction"
+                android:textColor="#666666"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/introduction_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_below="@id/introduction_title"
+                android:layout_marginTop="3dp"
+                android:background="@drawable/community_edit_text_rect_bg"
+                android:gravity="start|top"
+                android:hint="@string/community_edit_tips_input"
+                android:maxLength="60"
+                android:padding="12dp"
+                android:textColorHint="#999999"
+                android:textCursorDrawable="@drawable/core_edit_cursor"
+                android:textSize="16sp" />
+
+            <com.tencent.qcloud.tuikit.tuicommunity.component.TextCountView
+                android:id="@+id/introduction_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@id/introduction_edit_text"
+                android:layout_alignRight="@id/introduction_edit_text"
+                android:layout_alignBottom="@id/introduction_edit_text"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="8dp"
+                app:limit_count="60"
+                app:bind_edit_text="@id/introduction_edit_text"
+                android:textColor="#666666"
+                android:textSize="14sp"
+                tools:text="0/60" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+
+</LinearLayout>

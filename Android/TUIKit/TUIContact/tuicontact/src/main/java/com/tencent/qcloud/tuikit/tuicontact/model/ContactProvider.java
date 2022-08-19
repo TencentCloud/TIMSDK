@@ -53,6 +53,7 @@ public class ContactProvider {
             @Override
             public void run() {
                 // 压测时数据量比较大，query耗时比较久，所以这里使用新线程来处理
+                // The amount of data during the stress test is relatively large, and the query takes a long time, so a new thread is used here to process
                 V2TIMManager.getFriendshipManager().getFriendList(new V2TIMValueCallback<List<V2TIMFriendInfo>>() {
                     @Override
                     public void onError(int code, String desc) {
@@ -513,6 +514,9 @@ public class ContactProvider {
         v2TIMGroupInfo.setGroupType(groupInfo.getGroupType());
         v2TIMGroupInfo.setGroupName(groupInfo.getGroupName());
         v2TIMGroupInfo.setGroupAddOpt(groupInfo.getJoinType());
+        if (TextUtils.equals(v2TIMGroupInfo.getGroupType(), V2TIMManager.GROUP_TYPE_COMMUNITY)) {
+            v2TIMGroupInfo.setSupportTopic(groupInfo.isCommunitySupportTopic());
+        }
 
         List<V2TIMCreateGroupMemberInfo> v2TIMCreateGroupMemberInfoList = new ArrayList<>();
         for (int i = 0; i < groupInfo.getMemberDetails().size(); i++) {

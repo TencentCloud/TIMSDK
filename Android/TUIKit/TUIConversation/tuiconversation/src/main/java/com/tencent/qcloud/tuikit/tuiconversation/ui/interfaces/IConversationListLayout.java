@@ -1,37 +1,19 @@
 package com.tencent.qcloud.tuikit.tuiconversation.ui.interfaces;
 
+import android.view.View;
+
 import com.tencent.qcloud.tuikit.tuiconversation.ui.view.ConversationListAdapter;
 import com.tencent.qcloud.tuikit.tuiconversation.ui.view.ConversationListLayout;
 
-/**
- * ConversationListLayout 的适配器，用户可自定义实现
- */
-
 public interface IConversationListLayout {
-
-    /**
-     * 设置会话界面背景，非ListView区域
-     *
-     * @param resId
-     */
     void setBackground(int resId);
-
-    /**
-     * 设置会话Item点击监听
-     *
-     * @param listener
-     */
-    void setOnItemClickListener(ConversationListLayout.OnItemClickListener listener);
-
-    /**
-     * 设置会话Item长按监听
-     *
-     * @param listener
-     */
-    void setOnItemLongClickListener(ConversationListLayout.OnItemLongClickListener listener);
+    void setOnItemClickListener(OnItemClickListener listener);
+    void setOnItemLongClickListener(OnItemLongClickListener listener);
 
     /**
      * 不显示小红点未读消息条数开关
+     * 
+     * Do not display the switch for the number of unread messages with the small red dot
      *
      * @param flag 默认false，表示显示
      */
@@ -39,6 +21,8 @@ public interface IConversationListLayout {
 
     /**
      * 设置会话Item头像圆角
+     * 
+     * Set session item avatar rounded corners
      *
      * @param radius
      */
@@ -46,6 +30,8 @@ public interface IConversationListLayout {
 
     /**
      * 设置会话Item顶部字体大小
+     * 
+     * Set the font size at the top of the session item
      *
      * @param size
      */
@@ -53,6 +39,8 @@ public interface IConversationListLayout {
 
     /**
      * 设置会话Item底部字体大小
+     * 
+     * Set the font size at the bottom of the session item
      *
      * @param size
      */
@@ -60,30 +48,16 @@ public interface IConversationListLayout {
 
     /**
      * 设置会话Item日期字体大小
+     * 
+     * Set the session item date font size
      *
      * @param size
      */
     void setItemDateTextSize(int size);
 
-    /**
-     * 获取会话列表ListView
-     *
-     * @return
-     */
-    ConversationListLayout getListLayout();
 
-    /**
-     * 获取会话列表Adapter
-     *
-     * @return
-     */
+    View getListLayout();
     ConversationListAdapter getAdapter();
-
-    /**
-     * 设置会话Adapter
-     *
-     * @param adapter
-     */
     void setAdapter(IConversationListAdapter adapter);
 
 }

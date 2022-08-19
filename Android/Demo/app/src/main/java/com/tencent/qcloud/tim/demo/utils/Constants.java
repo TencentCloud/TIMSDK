@@ -3,7 +3,6 @@ package com.tencent.qcloud.tim.demo.utils;
 
 public class Constants {
 
-    // 存储
     public static final String USERINFO = "userInfo";
     public static final String ACCOUNT = "account";
     public static final String PWD = "password";
@@ -29,4 +28,34 @@ public class Constants {
     public static final String IM_ABOUT = "https://cloud.tencent.com/product/im";
     public static final String IM_THIRD_SHARED = "https://privacy.qq.com/document/preview/dea84ac4bb88454794928b77126e9246";
     public static final String IM_SELF_INFORMATION_COLLECTION = "https://privacy.qq.com/document/preview/45ba982a1ce6493597a00f8c86b52a1e";
+
+    public static final String FLAVOR_INTERNATIONAL = "international";
+    public static final String FLAVOR_LOCAL = "local";
+
+    // Public
+    public static final int TEST_ENVIRONMENT_PUBLIC = 0;
+    // Public test
+    public static final int TEST_ENVIRONMENT_PUBLIC_TEST = 1;
+    // Private
+    public static final int TEST_ENVIRONMENT_PRIVATE = 2;
+    // Private test
+    public static final int TEST_ENVIRONMENT_PRIVATE_TEST = 3;
+    // Singapore
+    public static final int TEST_ENVIRONMENT_SINGAPORE = 4;
+    // Singapore test
+    public static final int TEST_ENVIRONMENT_SINGAPORE_TEST = 5;
+    // Korea
+    public static final int TEST_ENVIRONMENT_KOREA = 6;
+    // Korea test
+    public static final int TEST_ENVIRONMENT_KOREA_TEST = 7;
+    // Germany
+    public static final int TEST_ENVIRONMENT_GERMANY = 8;
+    // Germany test
+    public static final int TEST_ENVIRONMENT_GERMANY_TEST = 9;
+    // India
+    public static final int TEST_ENVIRONMENT_INDIA = 10;
+    // India test
+    public static final int TEST_ENVIRONMENT_INDIA_TEST = 11;
+    // Private Custom
+    public static final int TEST_ENVIRONMENT_CUSTOME = 12;
 }

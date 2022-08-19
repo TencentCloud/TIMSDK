@@ -34,7 +34,6 @@ public class InputMoreLayout extends LinearLayout {
         inflate(getContext(), R.layout.chat_inputmore_layout, this);
     }
 
-    // 初始化更多布局adapter
     public void init(List<InputMoreActionUnit> actions) {
 
         final ViewPager viewPager = findViewById(R.id.viewPager);

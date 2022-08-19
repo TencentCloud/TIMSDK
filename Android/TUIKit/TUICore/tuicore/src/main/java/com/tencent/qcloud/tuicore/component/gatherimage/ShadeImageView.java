@@ -2,6 +2,7 @@ package com.tencent.qcloud.tuicore.component.gatherimage;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -16,6 +17,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 
+import com.tencent.qcloud.tuicore.R;
 import com.tencent.qcloud.tuicore.util.ScreenUtil;
 
 @SuppressLint("AppCompatCustomView")
@@ -32,15 +34,18 @@ public class ShadeImageView extends ImageView {
 
     public ShadeImageView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init(attrs);
+        init(context, attrs);
     }
 
     public ShadeImageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(attrs);
+        init(context, attrs);
     }
 
-    private void init(AttributeSet attrs) {
+    private void init(Context context, AttributeSet attrs) {
+        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.core_round_rect_image_style);
+        radius = array.getDimensionPixelSize(R.styleable.core_round_rect_image_style_round_radius, radius);
+        array.recycle();
         setLayerType(LAYER_TYPE_HARDWARE, null);
     }
 
@@ -59,7 +64,7 @@ public class ShadeImageView extends ImageView {
 
 
     /**
-     * 获取圆角矩形图片方法
+     * Get rounded rectangle
      *
      * @return Bitmap
      */

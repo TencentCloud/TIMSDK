@@ -20,6 +20,7 @@ import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
 import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuicore.util.TUIUtil;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactService;
@@ -176,7 +177,8 @@ public class AddMoreActivity extends BaseLightActivity implements IAddMoreActivi
 
     private void setGroupDetail(GroupInfo groupInfo) {
         int radius = getResources().getDimensionPixelSize(R.dimen.contact_profile_face_radius);
-        GlideEngine.loadUserIcon(faceImgView, groupInfo.getFaceUrl(), R.drawable.core_default_group_icon_serious, radius);
+        GlideEngine.loadUserIcon(faceImgView, groupInfo.getFaceUrl(),
+                TUIUtil.getDefaultGroupIconResIDByGroupType(this, groupInfo.getGroupType()), radius);
         idTextView.setText(groupInfo.getId());
         nickNameView.setText(groupInfo.getGroupName());
         groupTypeTagView.setVisibility(View.VISIBLE);

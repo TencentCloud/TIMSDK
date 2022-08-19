@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.page.CommunitySettingsActivity">
+
+    <com.tencent.qcloud.tuicore.component.TitleBarLayout
+        android:id="@+id/community_settings_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title_bar_can_return="true"
+        app:title_bar_middle_title="@string/community_settings" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/community_community_information"
+                android:textColor="#000000"
+                android:textSize="12sp" />
+
+            <com.tencent.qcloud.tuikit.tuicommunity.component.SettingsLinearView
+                android:id="@+id/community_name_lv"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="#FFFFFFFF"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                app:setting_is_show_bottom_line="true"
+                app:setting_is_show_arrow="false"
+                app:setting_name="@string/community_settings_community_name" />
+
+            <com.tencent.qcloud.tuikit.tuicommunity.component.SettingsLinearView
+                android:id="@+id/community_face_lv"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="#FFFFFFFF"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                app:setting_is_show_arrow="false"
+                app:setting_content_image_height="30dp"
+                app:setting_content_image_width="30dp"
+                app:setting_is_show_bottom_line="true"
+                app:setting_is_show_content_image="true"
+                app:setting_name="@string/community_settings_community_avatar" />
+
+            <com.tencent.qcloud.tuikit.tuicommunity.component.SettingsLinearView
+                android:id="@+id/community_cover_lv"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="#FFFFFFFF"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                app:setting_is_show_arrow="false"
+                app:setting_content_image_height="30dp"
+                app:setting_content_image_width="65dp"
+                app:setting_is_show_bottom_line="true"
+                app:setting_is_show_content_image="true"
+                app:setting_name="@string/community_settings_community_cover" />
+
+            <com.tencent.qcloud.tuikit.tuicommunity.component.SettingsLinearView
+                android:id="@+id/community_introduction_lv"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="#FFFFFFFF"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                app:setting_is_show_arrow="false"
+                app:setting_content="@string/community_settings_not_set"
+                app:setting_is_show_bottom_line="true"
+                app:setting_name="@string/community_settings_community_introduction" />
+
+            <com.tencent.qcloud.tuikit.tuicommunity.component.SettingsLinearView
+                android:id="@+id/community_id_lv"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="#FFFFFFFF"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                app:setting_is_show_arrow="false"
+                app:setting_is_show_bottom_line="true"
+                app:setting_is_show_copy="true"
+                app:setting_name="@string/community_settings_community_id" />
+
+
+            <TextView
+                android:id="@+id/community_settings_label"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/community_community_settings"
+                android:textColor="#000000"
+                android:textSize="12sp" />
+
+            <com.tencent.qcloud.tuikit.tuicommunity.component.SettingsLinearView
+                android:id="@+id/create_topic_category_lv"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="#FFFFFFFF"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                app:setting_name="@string/community_create_topic_category" />
+
+            <com.tencent.qcloud.tuikit.tuicommunity.component.SettingsLinearView
+                android:id="@+id/create_topic_lv"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="#FFFFFFFF"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                app:setting_is_show_bottom_line="true"
+                app:setting_name="@string/community_create_topic" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/community_personal_settings"
+                android:textColor="#000000"
+                android:textSize="12sp" />
+
+            <com.tencent.qcloud.tuikit.tuicommunity.component.SettingsLinearView
+                android:id="@+id/self_nick_name"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="#FFFFFFFF"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                app:setting_is_show_bottom_line="true"
+                app:setting_name="@string/community_self_nick_name" />
+
+            <TextView
+                android:id="@+id/transfer_group_button"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
+                android:background="#FFFFFF"
+                android:gravity="center"
+                android:text="@string/community_transfer_owner"
+                android:textColor="#FF584C"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/disband_group_button"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="1dp"
+                android:background="#FFFFFF"
+                android:gravity="center"
+                android:text="@string/community_disband_group"
+                android:textColor="#FF584C"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

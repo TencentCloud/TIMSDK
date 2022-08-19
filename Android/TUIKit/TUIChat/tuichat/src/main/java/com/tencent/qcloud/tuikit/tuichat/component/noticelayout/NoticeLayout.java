@@ -11,6 +11,7 @@ import com.tencent.qcloud.tuikit.tuichat.R;
 
 public class NoticeLayout extends RelativeLayout implements INoticeLayout {
 
+    private RelativeLayout mNoticeLayout;
     private TextView mContentText;
     private TextView mContentExtraText;
     private boolean mAwaysShow;
@@ -32,8 +33,14 @@ public class NoticeLayout extends RelativeLayout implements INoticeLayout {
 
     private void init() {
         inflate(getContext(), R.layout.notice_layout, this);
+        mNoticeLayout = findViewById(R.id.notice_layout);
         mContentText = findViewById(R.id.notice_content);
         mContentExtraText = findViewById(R.id.notice_content_extra);
+    }
+
+    @Override
+    public RelativeLayout getParentLayout() {
+        return mNoticeLayout;
     }
 
     @Override

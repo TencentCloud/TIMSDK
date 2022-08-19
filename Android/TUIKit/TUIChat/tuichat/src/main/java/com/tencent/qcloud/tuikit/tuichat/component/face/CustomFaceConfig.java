@@ -5,6 +5,8 @@ import java.util.List;
 
 /**
  * 自定义表情包的配置类
+ * 
+ * Configuration class for custom emoticons
  */
 public class CustomFaceConfig {
 
@@ -12,6 +14,8 @@ public class CustomFaceConfig {
 
     /**
      * 增加自定义表情包
+     * 
+     * Add custom emoji
      *
      * @param group
      * @return
@@ -26,6 +30,8 @@ public class CustomFaceConfig {
 
     /**
      * 获取全部的自定义表情包
+     * 
+     * Get all custom emojis
      *
      * @return
      */

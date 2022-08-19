@@ -4,7 +4,9 @@
     <string name="chat_top">Pin</string>
     <string name="chat_delete">Delete Chat</string>
     <string name="quit_chat_top">Unpin</string>
-    <string name="clear_conversation_message">Clear Messages</string>
+    <string name="mark_unread">Mark unread</string>
+    <string name="mark_read">Mark read</string>
+    <string name="not_display">Not display</string>
 
     <string name="forward_select_new_chat">Create new chat</string>
     <string name="forward_select_from_contact">Select from contact</string>
@@ -18,4 +20,6 @@
     <string name="drafts">[Drafts]</string>
     <string name="titlebar_mutiselect">MultiSelect</string>
     <string name="message_num">messages</string>
+
+    <string name="folded_group_chat">folded group chat</string>
 </resources>

@@ -141,13 +141,13 @@ public class ThemeSelectActivity extends BaseLightActivity {
     }
 
     /**
-     * 添加间距和分割线
+     * Add spacing and dividers
      */
     static class GridDecoration extends RecyclerView.ItemDecoration {
 
-        private final int columnNum; // 总列数
-        private final int leftRightSpace; // 左右间隔
-        private final int topBottomSpace; // 上下间隔
+        private final int columnNum;
+        private final int leftRightSpace;
+        private final int topBottomSpace;
 
         public GridDecoration(int columnNum, int leftRightSpace, int topBottomSpace) {
             this.columnNum = columnNum;
@@ -161,9 +161,9 @@ public class ThemeSelectActivity extends BaseLightActivity {
             int column = position % columnNum;
 
             outRect.left = column * leftRightSpace / columnNum;
-            outRect.right = leftRightSpace - (column + 1) * leftRightSpace / columnNum;
+            outRect.right = leftRightSpace * (columnNum - 1 - column) / columnNum;
 
-            // 多行时添加顶部间距
+            // Add top spacing when multiple lines
             if (position >= columnNum) {
                 outRect.top = topBottomSpace;
             }

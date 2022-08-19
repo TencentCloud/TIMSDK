@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Service 注册和调用
+ * Service register and call
  */
 class ServiceManager {
     private static final String TAG = ServiceManager.class.getSimpleName();

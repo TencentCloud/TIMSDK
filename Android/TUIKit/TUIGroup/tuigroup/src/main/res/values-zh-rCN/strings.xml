@@ -17,6 +17,7 @@
     <string name="modify_group_notice">修改群公告</string>
     <string name="modify_nick_name_in_goup">修改我的群昵称</string>
     <string name="group_edit">编辑</string>
+    <string name="group_modify_remark_rule">仅限中文、字母、数字和下划线</string>
 
     <string name="group_detail">群聊详情</string>
 
@@ -67,6 +68,7 @@
 
     <string name="chat_to_top">置顶聊天</string>
     <string name="profile_msgrev_opt">消息免打扰</string>
+    <string name="fold_this_group_chat">折叠该群聊</string>
 
     <string name="join_group_tip">您已被邀请进群: </string>
     <string name="joined_tip">您已加入群: </string>

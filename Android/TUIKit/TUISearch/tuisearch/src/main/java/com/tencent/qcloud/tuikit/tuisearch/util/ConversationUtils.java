@@ -1,7 +1,6 @@
 package com.tencent.qcloud.tuikit.tuisearch.util;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.tencent.imsdk.v2.V2TIMConversation;
@@ -13,6 +12,7 @@ import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.util.DateTimeUtil;
+import com.tencent.qcloud.tuicore.util.SPUtils;
 import com.tencent.qcloud.tuikit.tuisearch.R;
 import com.tencent.qcloud.tuikit.tuisearch.TUISearchService;
 import com.tencent.qcloud.tuikit.tuisearch.bean.ConversationInfo;
@@ -39,12 +39,6 @@ public class ConversationUtils {
         return conversationInfoList;
     }
 
-    /**
-     * V2TIMConversation 转换为 ConversationInfo
-     *
-     * @param conversation V2TIMConversation
-     * @return ConversationInfo
-     */
     public static ConversationInfo convertV2TIMConversation(final V2TIMConversation conversation) {
         if (conversation == null) {
             return null;
@@ -119,7 +113,6 @@ public class ConversationUtils {
         info.setShowDisturbIcon(conversation.getRecvOpt() == V2TIMMessage.V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE ? true : false);
         info.setConversationId(conversation.getConversationID());
         info.setGroup(isGroup);
-        // AVChatRoom 不支持未读数。
         if (!V2TIMManager.GROUP_TYPE_AVCHATROOM.equals(conversation.getGroupType())) {
             info.setUnRead(conversation.getUnreadCount());
         }
@@ -211,9 +204,7 @@ public class ConversationUtils {
 
 
     public static String getGroupConversationAvatar(String groupId) {
-        SharedPreferences sp = TUISearchService.getAppContext().getSharedPreferences(
-                TUILogin.getSdkAppId() + SP_IMAGE, Context.MODE_PRIVATE);
-        final String savedIcon = sp.getString(groupId, "");
+        final String savedIcon = SPUtils.getInstance(TUILogin.getSdkAppId() + SP_IMAGE).getString(groupId);
         if (!TextUtils.isEmpty(savedIcon) && new File(savedIcon).isFile() && new File(savedIcon).exists()) {
             return savedIcon;
         }

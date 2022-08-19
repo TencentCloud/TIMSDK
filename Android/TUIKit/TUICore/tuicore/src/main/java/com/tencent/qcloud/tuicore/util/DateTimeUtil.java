@@ -119,12 +119,6 @@ public class DateTimeUtil {
         }
     }
 
-    /**
-     * 将字符串转为时间戳
-     * @param dateString
-     * @param pattern
-     * @return
-     */
     public static long getStringToDate(String dateString, String pattern) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
         Date date = new Date();

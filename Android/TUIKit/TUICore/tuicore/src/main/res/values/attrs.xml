@@ -37,6 +37,15 @@
         <attr name="indexBarPressBackground" format="color" />
     </declare-styleable>
 
+    <declare-styleable name="core_round_rect_image_style">
+        <attr name="round_radius" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="TitleBarLayout">
+        <attr name="title_bar_middle_title" format="string" />
+        <attr name="title_bar_can_return" format="boolean" />
+    </declare-styleable>
+
     <declare-styleable name="RoundCornerImageView">
         <attr name="corner_radius" format="dimension" />
         <attr name="left_top_corner_radius" format="dimension" />

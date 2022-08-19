@@ -27,6 +27,8 @@ public class TUIGroupConstants {
         public static final String TITLE = "title";
         public static final String LIST = "list";
         public static final String LIMIT = "limit";
+        public static final String EXCLUDE_LIST = "excludeList";
+        public static final String SELECTED_LIST = "selectedList";
         public static final String FILTER = "filter";
 
     }

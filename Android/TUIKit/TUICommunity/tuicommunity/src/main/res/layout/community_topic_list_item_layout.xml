@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/community_topic_list_item_bg"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:paddingLeft="18dp"
+    android:paddingTop="10dp">
+
+    <com.tencent.qcloud.tuicore.component.RoundCornerImageView
+        android:id="@+id/topic_face"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        app:corner_radius="8dp" />
+
+    <com.tencent.qcloud.tuicore.component.UnreadCountTextView
+        android:id="@+id/topic_unread"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:textColor="#FFFFFF"
+        android:textSize="8sp" />
+
+    <TextView
+        android:id="@+id/topic_title"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:gravity="center_vertical"
+        android:layout_alignTop="@id/topic_face"
+        android:layout_toRightOf="@id/topic_face"
+        android:layout_marginLeft="8dp"
+        android:ellipsize="end"
+        android:maxWidth="180dp"
+        android:singleLine="true"
+        android:textColor="@color/black_font_color"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/topic_last_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/topic_title"
+        android:layout_alignStart="@id/topic_title"
+        android:layout_alignLeft="@id/topic_title"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textColor="#999999"
+        android:textSize="12sp" />
+
+</RelativeLayout>

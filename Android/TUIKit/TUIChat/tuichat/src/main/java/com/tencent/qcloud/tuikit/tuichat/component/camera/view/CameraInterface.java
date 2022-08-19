@@ -68,13 +68,12 @@ public class CameraInterface implements Camera.PreviewCallback {
     private int preview_width;
     private int preview_height;
     private int angle = 0;
-    private int cameraAngle = 90;//摄像头角度   默认为90度
+    private int cameraAngle = 90;
     private int rotation = 0;
     private byte[] firstFrame_data;
     private int nowScaleRate = 0;
     private int recordScleRate = 0;
 
-    //视频质量
     private int mediaQuality = JCameraView.MEDIA_QUALITY_MIDDLE;
     private SensorManager sm = null;
     private SensorEventListener sensorEventListener = new SensorEventListener() {
@@ -90,9 +89,7 @@ public class CameraInterface implements Camera.PreviewCallback {
         public void onAccuracyChanged(Sensor sensor, int accuracy) {
         }
     };
-    /**
-     * 拍照
-     */
+
     private int nowAngle;
 
     private CameraInterface() {
@@ -107,7 +104,6 @@ public class CameraInterface implements Camera.PreviewCallback {
         }
     }
 
-    //获取CameraInterface单例
     public static synchronized CameraInterface getInstance() {
         if (mCameraInterface == null)
             synchronized (CameraInterface.class) {
@@ -148,7 +144,6 @@ public class CameraInterface implements Camera.PreviewCallback {
         }
     }
 
-    //切换摄像头icon跟随手机角度进行旋转
     private void rotationAnimation() {
         if (mSwitchView == null) {
             return;
@@ -224,12 +219,12 @@ public class CameraInterface implements Camera.PreviewCallback {
         }
         switch (type) {
             case TYPE_RECORDER:
-                //如果不是录制视频中，上滑不会缩放
                 if (!isRecorder) {
                     return;
                 }
                 if (zoom >= 0) {
-                    //每移动50个像素缩放一个级别
+                    // 每移动50个像素缩放一个级别
+                    // Zooms one level every 50 pixels you move
                     int scaleRate = (int) (zoom / 40);
                     if (scaleRate <= mParams.getMaxZoom() && scaleRate >= nowScaleRate && recordScleRate != scaleRate) {
                         mParams.setZoom(scaleRate);
@@ -242,7 +237,8 @@ public class CameraInterface implements Camera.PreviewCallback {
                 if (isRecorder) {
                     return;
                 }
-                //每移动50个像素缩放一个级别
+                // 每移动50个像素缩放一个级别
+                // Zooms one level every 50 pixels you move
                 int scaleRate = (int) (zoom / 50);
                 if (scaleRate < mParams.getMaxZoom()) {
                     nowScaleRate += scaleRate;
@@ -295,7 +291,7 @@ public class CameraInterface implements Camera.PreviewCallback {
 
     private void setFlashModel() {
         mParams = mCamera.getParameters();
-        mParams.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH); //设置camera参数为Torch模式
+        mParams.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
         mCamera.setParameters(mParams);
     }
 
@@ -389,9 +385,9 @@ public class CameraInterface implements Camera.PreviewCallback {
                 mCamera.setParameters(mParams);
                 mParams = mCamera.getParameters();
                 mCamera.setPreviewDisplay(holder);  //SurfaceView
-                mCamera.setDisplayOrientation(cameraAngle);//浏览角度
-                mCamera.setPreviewCallback(this); //每一帧回调
-                mCamera.startPreview();//启动浏览
+                mCamera.setDisplayOrientation(cameraAngle);
+                mCamera.setPreviewCallback(this);
+                mCamera.startPreview();
                 isPreviewing = true;
                 TUIChatLog.i(TAG, "=== Start Preview ===");
             } catch (IOException e) {
@@ -400,15 +396,11 @@ public class CameraInterface implements Camera.PreviewCallback {
         }
     }
 
-    /**
-     * 停止预览
-     */
     public void doStopPreview() {
         if (null != mCamera) {
             try {
                 mCamera.setPreviewCallback(null);
                 mCamera.stopPreview();
-                //这句要在stopPreview后执行，不然会卡顿或者花屏
                 mCamera.setPreviewDisplay(null);
                 isPreviewing = false;
                 TUIChatLog.i(TAG, "=== Stop Preview ===");
@@ -418,9 +410,6 @@ public class CameraInterface implements Camera.PreviewCallback {
         }
     }
 
-    /**
-     * 销毁Camera
-     */
     void doDestroyCamera() {
         errorLisenter = null;
         if (null != mCamera) {
@@ -429,7 +418,6 @@ public class CameraInterface implements Camera.PreviewCallback {
                 mSwitchView = null;
                 mFlashLamp = null;
                 mCamera.stopPreview();
-                //这句要在stopPreview后执行，不然会卡顿或者花屏
                 mCamera.setPreviewDisplay(null);
                 mHolder = null;
                 isPreviewing = false;
@@ -483,11 +471,9 @@ public class CameraInterface implements Camera.PreviewCallback {
         });
     }
 
-    //启动录像
     public void startRecord(Surface surface, float screenProp, ErrorCallback callback) {
         mCamera.setPreviewCallback(null);
         final int nowAngle = (angle + 90) % 360;
-        //获取第一帧图片
         Camera.Parameters parameters = mCamera.getParameters();
         int width = parameters.getPreviewSize().width;
         int height = parameters.getPreviewSize().height;
@@ -563,9 +549,7 @@ public class CameraInterface implements Camera.PreviewCallback {
 //        }
 
         if (SELECTED_CAMERA == CAMERA_FRONT_POSITION) {
-            //手机预览倒立的处理
             if (cameraAngle == 270) {
-                //横屏
                 if (nowAngle == 0) {
                     mediaRecorder.setOrientationHint(180);
                 } else if (nowAngle == 270) {
@@ -618,7 +602,6 @@ public class CameraInterface implements Camera.PreviewCallback {
         }
     }
 
-    //停止录像
     public void stopRecord(boolean isShort, StopRecordCallback callback) {
         if (!isRecorder) {
             return;

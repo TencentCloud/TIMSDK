@@ -18,7 +18,6 @@ public class ProgressPresenter {
         private static final ProgressPresenter instance = new ProgressPresenter();
     }
 
-    // 每调用 30 次接口清理一次
     private final int REMOVE_THRESHOLD = 30;
 
     private final Map<String, List<WeakReference<ProgressListener>>> progressListenerMap = new ConcurrentHashMap<>();
@@ -110,10 +109,6 @@ public class ProgressPresenter {
     }
 
     public interface ProgressListener {
-        /**
-         * 进度更新
-         * @param progress 当前进度 0-100
-         */
         void onProgress(int progress);
     }
 }
