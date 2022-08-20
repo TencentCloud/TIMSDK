@@ -1,5 +1,7 @@
 <template>
-  <img class="message-image" :src="data.url">
+  <div class="message-image">
+    <img class="message-img" :src="data.url" />
+  </div>
 </template>
 
 <script lang="ts">
@@ -12,7 +14,7 @@ export default defineComponent({
       default: () => ({}),
     },
   },
-  setup(props:any, ctx:any) {
+  setup(props: any, ctx: any) {
     const data = reactive({
       data: {},
     });
@@ -30,5 +32,9 @@ export default defineComponent({
 .text-img {
   width: 20px;
   height: 20px;
+}
+.message-img {
+  max-width: min(calc(100vw - 160px), 300px);
+  max-height: min(calc(100vw - 160px), 300px);
 }
 </style>

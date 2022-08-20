@@ -25,10 +25,10 @@
   "解散一个群聊": "Disband a group",
   "解散一个多人会话": "Disband a group",
   "修改一次我的昵称": "Edit a nick",
-  "我们为您默认提供了一位“示例好友”和一个“示例客服群”您不用额外添加好友和群聊就可完整体验腾讯云 IM 单聊、群聊的所有功能。":"We provide a Sample Friend and a Sample Customer Service Group by default, so that you can fully try out all the features of one-to-one chat and group chat of Tencent Cloud IM without adding additional friends or groups.",
+  "我们为您默认提供了一位“示例好友”和一个“示例客服群”您不用额外添加好友和群聊就可完整体验腾讯云 IM 单聊、群聊的所有功能。": "We provide a Sample Friend and a Sample Customer Service Group by default, so that you can fully try out all the features of one-to-one chat and group chat of Tencent Cloud IM without adding additional friends or groups.",
   "随时随地": "You can log in and try out anytime and anywhere.",
-  "男":"Male",
-  "女":"Female",
+  "男": "Male",
+  "女": "Female",
   "用户ID": "user ID",
   "个性签名": "Status",
   "暂未设置": "Not set",
@@ -49,8 +49,10 @@
   "取消": "Cancel",
   "注销": "Cancel",
   "关闭": "close",
+  "开启": "open",
   "关于腾讯云·通信": "About Tencent Cloud IM",
   "消息": "message",
   "通讯录": "contact",
-  "个人中心": "profile"
+  "个人中心": "Profile",
+  "已读回执": "Read receipt"
 }

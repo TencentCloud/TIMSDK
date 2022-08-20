@@ -2,12 +2,19 @@
   <div class="TUIChat" :class="[env.isH5 ? 'TUIChat-H5' : '']" v-if="conversationType === 'chat'">
     <header class="TUIChat-header">
       <i class="icon icon-back" @click="back" v-if="env.isH5"></i>
-      <h1>{{ conversationName }}</h1>
+      <typing-header
+        :needTyping="needTyping"
+        :conversation="conversation"
+        :messageList="messageList"
+        :inputText="text"
+        :inputBlur="inputBlur"
+        :inputCompositionCont="inputCompositionCont"
+      />
       <aside class="setting">
         <Manage v-if="conversation.groupProfile" :conversation="conversation" :userInfo="userInfo" :isH5="env.isH5" />
       </aside>
     </header>
-    <div class="TUIChat-main" @click="setMessageRead(conversation.conversationID)">
+    <div class="TUIChat-main">
       <div class="TUIChat-safe-tips">
         <span>
           【安全提示】本 APP 仅用于体验腾讯云即时通信 IM
@@ -19,15 +26,17 @@
         <p class="message-more" @click="getHistoryMessageList" v-if="!isCompleted">
           {{ $t('TUIChat.查看更多') }}
         </p>
-        <li v-for="(item, index) in messages" :key="index" id="messageAimID" ref="messageAimID">
+        <li v-for="(item, index) in messages" :key="index" :id="item?.ID" ref="messageAimID">
           <MessageTip v-if="item.type === types.MSG_GRP_TIP" :data="handleTipMessageShowContext(item)" />
           <MessageBubble
             v-else-if="!item.isRevoked"
             :isH5="env.isH5"
             :data="item"
             :messagesList="messages"
+            :needGroupReceipt="needGroupReceipt"
             @jumpID="jumpID"
             @resendMessage="resendMessage"
+            @showReadReceiptDialog="showReadReceiptDialog"
           >
             <MessageText v-if="item.type === types.MSG_TEXT" :data="handleTextMessageShowContext(item)" />
             <MessageImage
@@ -58,19 +67,26 @@
                   <i class="icon icon-msg-copy"></i>
                   <span>{{ $t('TUIChat.打开') }}</span>
                 </li>
-                <li v-if="item.status === 'success'" @click="handleMseeage(item, 'forward')">
+                <li v-if="item.type === types.MSG_TEXT" @click="handleMseeage(item, constant.handleMessage.copy)">
+                  <i class="icon icon-msg-copy"></i>
+                  <span>{{ $t('TUIChat.复制') }}</span>
+                </li>
+                <li v-if="item.status === 'success'" @click="handleMseeage(item, constant.handleMessage.forward)">
                   <i class="icon icon-msg-forward"></i>
                   <span>{{ $t('TUIChat.转发') }}</span>
                 </li>
                 <li v-if="item.status === 'success'" @click="handleMseeage(item, 'reply')">
-                  <i class="icon icon-msg-reply"></i>
-                  <span>{{ $t('TUIChat.回复') }}</span>
+                  <i class="icon icon-msg-quote"></i>
+                  <span>{{ $t('TUIChat.引用') }}</span>
                 </li>
-                <li v-if="item.flow === 'out' && item.status === 'success'" @click="handleMseeage(item, 'revoke')">
+                <li
+                  v-if="item.flow === 'out' && item.status === 'success'"
+                  @click="handleMseeage(item, constant.handleMessage.revoke)"
+                >
                   <i class="icon icon-msg-revoke"></i>
                   <span>{{ $t('TUIChat.撤回') }}</span>
                 </li>
-                <li v-if="item.status === 'success'" @click="handleMseeage(item, 'delete')">
+                <li v-if="item.status === 'success'" @click="handleMseeage(item, constant.handleMessage.delete)">
                   <i class="icon icon-msg-del"></i>
                   <span>{{ $t('TUIChat.删除') }}</span>
                 </li>
@@ -79,6 +95,12 @@
           </MessageBubble>
           <MessageRevoked v-else :isEdit="item.type === types.MSG_TEXT" :data="item" @edit="handleEdit(item)" />
         </li>
+        <div class="to-bottom-tip" v-if="needToBottom" @click="scrollToTarget('bottom')">
+          <i class="icon icon-bottom-double"></i>
+          <div class="to-bottom-tip-cont">
+            <span>{{ toBottomTipCont }}</span>
+          </div>
+        </div>
       </ul>
       <div class="dialog dialog-conversation" v-if="forwardStatus && messageComponents.Forward">
         <component
@@ -87,7 +109,7 @@
           :message="currentMessage"
           :show="forwardStatus"
           :isH5="env.isH5"
-          @update:show="(e) => (forwardStatus = e)"
+          @update:show="(e: any) => (forwardStatus = e)"
         >
           <template #left="{ data }">
             <img class="avatar" :src="conversationData.handleAvatar(data)" />
@@ -99,12 +121,18 @@
           </template>
         </component>
       </div>
+      <div class="dialog dialog-conversation" v-if="needGroupReceipt">
+        <ReadReceiptDialog
+          :message="currentMessage"
+          :conversation="conversation"
+          :show="receiptDialogStatus"
+          :isH5="env.isH5"
+          @closeDialog="closeReadReceiptDialog"
+          ref="readReceiptDialog"
+        />
+      </div>
     </div>
-    <div
-      class="TUIChat-footer"
-      :class="[isMute && 'disabled', env.isH5 && 'TUIChat-H5-footer']"
-      @click="setMessageRead(conversation.conversationID)"
-    >
+    <div class="TUIChat-footer" :class="[isMute && 'disabled', env.isH5 && 'TUIChat-H5-footer']">
       <div class="func" id="func">
         <main class="func-main">
           <component
@@ -161,6 +189,10 @@
           @keyup.enter="sendMseeage"
           @keyup.delete="deleteAt"
           @keypress="geeks"
+          @blur="inputBlur = true"
+          @focus="inputBlur = false"
+          @compositionstart="inputComposition = true"
+          @compositionend="compositionEnd"
           rows="1"
         ></textarea>
         <p v-if="isMute">{{ $t(`TUIChat.${muteText}`) }}</p>
@@ -192,7 +224,18 @@
   <slot v-else-if="slotDefault" />
 </template>
 <script lang="ts">
-import { defineComponent, reactive, toRefs, ref, computed, nextTick, watch, useSlots } from 'vue';
+import {
+  defineComponent,
+  reactive,
+  toRefs,
+  ref,
+  computed,
+  nextTick,
+  watch,
+  useSlots,
+  onMounted,
+  watchEffect,
+} from 'vue';
 import {
   MessageText,
   MessageImage,
@@ -225,6 +268,8 @@ import {
   handleTipMessageShowContext,
   handleCustomMessageShowContext,
   getImgLoad,
+  isTypingMessage,
+  deepCopy,
 } from './utils/utils';
 
 import { getComponents } from './index';
@@ -234,6 +279,9 @@ import TUIAegis from '../../../utils/TUIAegis';
 import constant from '../constant';
 import { handleErrorPrompts } from '../utils';
 import Link from '../../../utils/link';
+import useClipboard from 'vue-clipboard3';
+import { Message } from './interface';
+import { Conversation } from '../TUIConversation/interface';
 
 const TUIChat: any = defineComponent({
   name: 'TUIChat',
@@ -253,24 +301,28 @@ const TUIChat: any = defineComponent({
     MessageSystem,
     Manage,
   },
-
+  props: {
+    isSupportGroupReceipt: {
+      type: Boolean,
+      default: false,
+    },
+  },
   setup(props) {
     const { TUIServer } = TUIChat;
     const GroupServer = TUIServer?.TUICore?.TUIServer?.TUIGroup;
     const ProfileServer = TUIServer?.TUICore?.TUIServer?.TUIProfile;
+    const VuexStore = useStore();
+    const { t } = (window as any).TUIKitTUICore.config.i18n.useI18n();
     const data = reactive({
-      messageList: [
-        {
-          progress: 0,
-        },
-      ],
-      conversation: {},
+      messageList: [] as Message[],
+      conversation: {} as Conversation,
       text: '',
       atText: '',
       types: TUIServer.TUICore.TIM.TYPES,
-      currentMessage: {},
+      currentMessage: {} as Message,
       dialogID: '',
       forwardStatus: false,
+      receiptDialogStatus: false,
       isCompleted: false,
       userInfoView: false,
       userInfo: {
@@ -285,7 +337,7 @@ const TUIChat: any = defineComponent({
       isFirstRender: true,
       showGroupMemberList: false,
       showReference: false,
-      referenceMessage: {},
+      referenceMessage: {} as Message,
       referenceMessageForShow: '',
       referenceMessageType: 0,
       historyReference: false,
@@ -303,15 +355,44 @@ const TUIChat: any = defineComponent({
       env: TUIServer.TUICore.TUIEnv,
       showResend: false,
       resendMessage: {},
+      inputBlur: false,
+      inputComposition: false,
+      inputCompositionCont: '',
+      needTyping: true,
+      needReceipt: VuexStore.state.needReceipt,
+      peerNeedReceipt: false,
+      needToBottom: false,
+      toBottomTipCont: '',
+      messageInView: [] as Message[],
+      readSet: new Set(),
+      isUserAction: false,
+      scroll: {
+        scrollTop: 0,
+        scrollHeight: 0,
+        scrollTopMin: Infinity,
+        scrollTopMax: 0,
+      },
+      isSupportGroupReceipt: false,
     });
 
     const slotDefault = !!useSlots().default;
-
     // 调用 TUIConversation 模块的 setMessageRead 方法
     // 消息已读
-    // Using the setmessageread method of the tuiconversion module
-    const setMessageRead = (conversationID: string) => {
-      TUIServer?.TUICore?.TUIServer?.TUIConversation?.setMessageRead(conversationID);
+    // Using the setMessageRead method of the TUIConversion module
+    const setMessageRead = async (conversationID: string | undefined) => {
+      if (!conversationID) return;
+      await TUIServer?.TUICore?.TUIServer?.TUIConversation?.setMessageRead(conversationID);
+      return;
+    };
+
+    const sendMessageReadReceipt = async (messageList: Message[]) => {
+      const needReceiptMessageList = messageList.filter((item: Message) => item?.flow === 'in' && item?.needReadReceipt && !data.readSet.has(item?.ID));
+      if (needReceiptMessageList.length) {
+        await TUIServer?.sendMessageReadReceipt(needReceiptMessageList).then(() => {
+          needReceiptMessageList.forEach((item: Message) => data.readSet.add(item?.ID));
+        });
+        await setMessageRead(data?.conversation?.conversationID);
+      }
     };
 
     const pluginComponentList: any = [];
@@ -325,10 +406,9 @@ const TUIChat: any = defineComponent({
     const messageEle = ref();
     const inputEle: any = ref();
     const messageAimID = ref();
+    const readReceiptDialog = ref();
 
     TUIServer.bind(data);
-
-    const VuexStore = useStore();
 
     const conversationData = {
       list: [],
@@ -343,7 +423,7 @@ const TUIChat: any = defineComponent({
     });
 
     const conversationType = computed(() => {
-      const { conversation }: any = data;
+      const { conversation } = data;
       if (!conversation?.conversationID) {
         return '';
       }
@@ -354,7 +434,7 @@ const TUIChat: any = defineComponent({
     });
 
     const isMute = computed(() => {
-      const { conversation }: any = data;
+      const { conversation } = data;
       if (conversation?.type === TUIServer.TUICore.TIM.TYPES.CONV_GROUP) {
         const userRole = conversation?.groupProfile?.selfInfo.role;
         const isMember = userRole === TUIServer.TUICore.TIM.TYPES.GRP_MBR_ROLE_MEMBER;
@@ -371,8 +451,35 @@ const TUIChat: any = defineComponent({
       return false;
     });
 
+    watchEffect(() => {
+      data.isSupportGroupReceipt = props.isSupportGroupReceipt;
+      console.log('-----watch----');
+      console.log(data.isSupportGroupReceipt);
+    });
+
+    watch(
+      () => VuexStore.state.needReceipt,
+      (newVal: boolean) => {
+        data.needReceipt = newVal;
+      },
+    );
+
+    watch(
+      () => data?.conversation?.conversationID,
+      (newVal: () => string | undefined, oldVal: () => string | undefined) => {
+        if (newVal === oldVal) return;
+        data.scroll.scrollTop = 0;
+        data.scroll.scrollHeight = 0;
+        data.scroll.scrollTopMin = Infinity;
+        data.scroll.scrollTopMax = 0;
+      },
+      {
+        deep: true,
+      },
+    );
+
     watch(isMute, (newVal: any, oldVal: any) => {
-      const { conversation }: any = data;
+      const { conversation } = data;
       if (newVal && conversation?.type === TUIServer.TUICore.TIM.TYPES.CONV_GROUP) {
         const userRole = conversation?.groupProfile?.selfInfo.role;
         const isMember = userRole === TUIServer.TUICore.TIM.TYPES.GRP_MBR_ROLE_MEMBER;
@@ -391,34 +498,78 @@ const TUIChat: any = defineComponent({
       return handleName(conversation);
     });
 
-    const messages = computed(() => data.messageList.filter((item: any) => !item.isDeleted));
+    const messages = computed(() => data.messageList.filter((item: any) => !item.isDeleted && !isTypingMessage(item)));
+
+    const needGroupReceipt = computed(() => {
+      const { conversation, isSupportGroupReceipt } = data;
+      if (conversation?.type === TUIServer.TUICore.TIM.TYPES.CONV_C2C || isSupportGroupReceipt) {
+        console.log('needGroupReceipt', true);
+        return true;
+      }
+      console.log('needGroupReceipt', false);
+      return false;
+    });
 
     watch(
       messages,
-      (newVal: any, oldVal: any) => {
+      (newVal: Array<Message>, oldVal: Array<Message>) => {
         nextTick(() => {
           const isTheSameMessage = newVal[newVal.length - 1]?.ID === oldVal[oldVal.length - 1]?.ID;
           if (newVal.length === 0 || isTheSameMessage) {
             return;
           }
-          messageEle?.value?.lastElementChild?.scrollIntoView(false);
-          getImgLoad(messageEle?.value, 'message-img', (res: any) => {
-            messageEle?.value?.lastElementChild?.scrollIntoView(false);
-          });
-          data.isFirstRender = false;
+          handleScroll();
         });
+        if (data.currentMessage) {
+          const messageID = data.currentMessage?.ID;
+          const message = newVal.find((item: any) => item.ID === messageID);
+          if (message) {
+            data.currentMessage = deepCopy(message);
+          }
+        }
         if (data.historyReference) {
           for (let index = 0; index < messages.value.length; index++) {
-            if ((messages.value[index] as any).ID === data.referenceID) {
-              messageAimID.value[index].scrollIntoView(false);
+            if (messages?.value[index]?.ID === data?.referenceID) {
+              scrollToTarget('target', messageAimID.value[index]);
               messageAimID.value[index].getElementsByClassName('content')[0].classList.add('reference-content');
             }
           }
           data.historyReference = false;
         }
       },
-      { deep: true }
+      { deep: true },
     );
+
+    watch(
+      () => data.scroll.scrollTop,
+      (newVal: number) => {
+        setTimeout(() => {
+          // scrolling end
+          if (newVal === messageEle?.value?.scrollTop) {
+            if (data.scroll.scrollTopMin !== Infinity && data.scroll.scrollTopMax !== 0) {
+              sendMessageReadInView('scroll');
+            }
+            data.scroll.scrollTopMin = Infinity;
+            data.scroll.scrollTopMax = 0;
+          }
+        }, 20);
+      },
+      { deep: true },
+    );
+
+    onMounted(() => {
+      watch(
+        () => messageEle?.value,
+        () => {
+          if (messageEle?.value) {
+            messageEle.value.addEventListener('scroll', onScrolling);
+          }
+        },
+        {
+          deep: true,
+        },
+      );
+    });
 
     const handleSend = (emo: any) => {
       data.text += emo.name;
@@ -427,29 +578,38 @@ const TUIChat: any = defineComponent({
       }
     };
 
-    const sendMseeage = async () => {
-      let messageReply: any = {};
+    const sendMseeage = async (event: any) => {
+      if (event.keyCode === 13 && event.ctrlKey) return;
       const text = data.text.trimEnd();
+      const cloudCustomData: any = {};
       data.text = '';
+      if (data.needTyping) {
+        cloudCustomData.messageFeature = {
+          needTyping: 1,
+          version: 1,
+        };
+      }
       if (data.showReference) {
-        messageReply = {
-          messageReply: {
-            messageAbstract: data.referenceMessageForShow,
-            messageSender: (data.referenceMessage as any).nick || (data.referenceMessage as any).from,
-            messageID: (data.referenceMessage as any).ID,
-            messageType: data.referenceMessageType,
-            version: 1,
-          },
+        cloudCustomData.messageReply = {
+          messageAbstract: data.referenceMessageForShow,
+          messageSender: data.referenceMessage.nick || data.referenceMessage.from,
+          messageID: data.referenceMessage.ID,
+          messageType: data.referenceMessageType,
+          version: 1,
         };
         try {
-          await TUIServer.sendTextMessage(JSON.parse(JSON.stringify(text)), messageReply);
+          await TUIServer.sendTextMessage(JSON.parse(JSON.stringify(text)), cloudCustomData);
         } catch (error: any) {
           handleErrorPrompts(error, data.env);
         }
       }
       if (text && data.atType.length === 0 && data.showReference === false) {
         try {
-          await TUIServer.sendTextMessage(JSON.parse(JSON.stringify(text)));
+          if (data.needTyping) {
+            await TUIServer.sendTextMessage(JSON.parse(JSON.stringify(text)), cloudCustomData);
+          } else {
+            await TUIServer.sendTextMessage(JSON.parse(JSON.stringify(text)));
+          }
           data.showReference = false;
           TUIAegis.getInstance().reportEvent({
             name: 'messageType',
@@ -461,7 +621,7 @@ const TUIChat: any = defineComponent({
       }
       if (data.atType.length > 0) {
         const options: any = {
-          to: (data.conversation as any).groupProfile.groupID,
+          to: data?.conversation?.groupProfile?.groupID,
           conversationType: TUIServer.TUICore.TIM.TYPES.CONV_GROUP,
           payload: {
             text,
@@ -495,9 +655,9 @@ const TUIChat: any = defineComponent({
       data.dialogID = item.ID;
     };
 
-    const handleMseeage = async (message: any, type: string) => {
+    const handleMseeage = async (message: Message, type: string) => {
       switch (type) {
-        case 'revoke':
+        case constant.handleMessage.revoke:
           try {
             await TUIServer.revokeMessage(message);
             TUIAegis.getInstance().reportEvent({
@@ -510,7 +670,17 @@ const TUIChat: any = defineComponent({
           }
           data.dialogID = '';
           break;
-        case 'delete':
+        case constant.handleMessage.copy:
+          try {
+            if (message?.type === data.types.MSG_TEXT && message?.payload?.text) {
+              const { toClipboard } = useClipboard();
+              await toClipboard(message?.payload?.text);
+            }
+          } catch (error) {
+            handleErrorPrompts(error, data.env);
+          }
+          break;
+        case constant.handleMessage.delete:
           await TUIServer.deleteMessage([message]);
           TUIAegis.getInstance().reportEvent({
             name: 'messageOptions',
@@ -518,7 +688,7 @@ const TUIChat: any = defineComponent({
           });
           data.dialogID = '';
           break;
-        case 'forward':
+        case constant.handleMessage.forward:
           TUIAegis.getInstance().reportEvent({
             name: 'messageOptions',
             ext1: 'messageForward',
@@ -528,12 +698,12 @@ const TUIChat: any = defineComponent({
           conversationData.list = TUIServer.TUICore.getStore().TUIConversation.conversationList;
           data.forwardStatus = true;
           break;
-        case 'reply':
+        case constant.handleMessage.reply:
           data.showReference = true;
           data.referenceMessage = message;
           switch (message.type) {
             case data.types.MSG_TEXT:
-              data.referenceMessageForShow = message.payload.text;
+              data.referenceMessageForShow = message?.payload?.text;
               data.referenceMessageType = 1;
               break;
             case data.types.MSG_CUSTOM:
@@ -564,7 +734,7 @@ const TUIChat: any = defineComponent({
       }
     };
 
-    const resendMessage = (message: any) => {
+    const resendMessage = (message: Message) => {
       if (data.env.isH5) {
         data.showResend = true;
         data.resendMessage = message;
@@ -627,23 +797,28 @@ const TUIChat: any = defineComponent({
     };
 
     const geeks = (e: any) => {
-      if (e.keyCode === 13 && e.ctrlKey) {
-        e.target.value += '\n';
+      if (e.keyCode === 13) {
+        e.preventDefault();
+        if (e.ctrlKey) {
+          e.target.value += '\n';
+          data.text += '\n';
+        }
       }
     };
 
     const inputChange = (e: any) => {
-      if (e.data === constant.at && (data.conversation as any).type === constant.group) {
+      if (data.inputComposition) {
+        data.inputCompositionCont = e?.data ? e.data : '';
+      }
+      if (e.data === constant.at && data?.conversation?.type === constant.group) {
         const options: any = {
-          groupID: (data.conversation as any).groupProfile.groupID,
+          groupID: data?.conversation?.groupProfile?.groupID,
           count: 100,
           offset: 0,
         };
         data.showGroupMemberList = true;
         GroupServer.getGroupMemberList(options).then((res: any) => {
-          res.data.memberList = res.data.memberList.filter(
-            (item: any) => item.userID !== ProfileServer.currentStore.profile.userID
-          );
+          res.data.memberList = res.data.memberList.filter((item: any) => item.userID !== ProfileServer.currentStore.profile.userID);
           data.allMemberList = res.data.memberList;
         });
       }
@@ -659,8 +834,10 @@ const TUIChat: any = defineComponent({
       }
     };
 
-    const getHistoryMessageList = () => {
-      TUIServer.getHistoryMessageList();
+    const getHistoryMessageList = async () => {
+      await TUIServer.getHistoryMessageList().then(() => {
+        scrollToTarget('target', messageEle?.value?.firstElementChild);
+      });
     };
 
     const selectAt = async (type: string, item: any) => {
@@ -707,9 +884,9 @@ const TUIChat: any = defineComponent({
       const list: any = [];
       // If the referenced message is in the current messageList, you can jump directly. Otherwise, you need to pull the historical message
       for (let index = 0; index < messages.value.length; index++) {
-        list.push((messages.value[index] as any).ID);
-        if (list.indexOf(messageID) !== -1 && (messages.value[index] as any).ID === messageID) {
-          messageAimID.value[index].scrollIntoView(false);
+        list.push(messages?.value[index]?.ID);
+        if (list.indexOf(messageID) !== -1 && messages.value[index]?.ID === messageID) {
+          scrollToTarget('target', messageAimID.value[index]);
           messageAimID.value[index].getElementsByClassName('content')[0].classList.add('reference-content');
         }
       }
@@ -735,6 +912,160 @@ const TUIChat: any = defineComponent({
         ext1: type.label,
       });
     };
+
+    const compositionEnd = () => {
+      data.inputComposition = false;
+      data.inputCompositionCont = '';
+    };
+
+    const showReadReceiptDialog = async (message: any) => {
+      if (
+        message.conversationType !== TUIServer.TUICore.TIM.TYPES.CONV_GROUP
+        || message.readReceiptInfo?.unreadCount === 0
+      ) {
+        return;
+      }
+      data.currentMessage = message;
+      data.receiptDialogStatus = true;
+    };
+
+    const closeReadReceiptDialog = () => {
+      data.currentMessage = {};
+      data.receiptDialogStatus = false;
+    };
+
+    const handleScroll = () => {
+      if (data.isFirstRender) {
+        data.needToBottom = false;
+        scrollToTarget('bottom');
+        data.isFirstRender = false;
+        return;
+      }
+      if (messageEle.value) {
+        const { scrollHeight, scrollTop, clientHeight } = messageEle.value;
+        if (
+          scrollHeight - (scrollTop + clientHeight) <= clientHeight
+          || messages.value[messages.value.length - 1]?.flow === 'out'
+        ) {
+          scrollToTarget('bottom');
+        } else {
+          handleToBottomTip(true);
+        }
+      }
+    };
+
+    const scrollToTarget = (type: string, targetElement?: HTMLElement) => {
+      messageEle.value.removeEventListener('scroll', onScrolling);
+      data.isUserAction = true;
+      switch (type) {
+        case constant.scrollType.toBottom:
+          data.needToBottom = false;
+          messageEle?.value?.lastElementChild.scrollIntoView(false);
+          getImgLoad(messageEle?.value, 'message-img', async () => {
+            messageEle?.value?.lastElementChild?.scrollIntoView(false);
+            messageEle.value.addEventListener('scroll', onScrolling);
+            await sendMessageReadInView('page');
+          });
+          break;
+        case constant.scrollType.toTarget:
+          targetElement?.scrollIntoView(false);
+          getImgLoad(messageEle?.value, 'message-img', async () => {
+            targetElement?.scrollIntoView(false);
+            messageEle.value.addEventListener('scroll', onScrolling);
+            await sendMessageReadInView('page');
+          });
+          break;
+        default:
+          break;
+      }
+    };
+
+    const onScrolling = () => {
+      const { scrollHeight, scrollTop, clientHeight } = messageEle.value;
+      if (needGroupReceipt.value) {
+        data.scroll.scrollHeight = scrollHeight;
+        data.scroll.scrollTop = scrollTop;
+        data.scroll.scrollTopMin = data.isUserAction
+          ? data.scroll.scrollTopMin
+          : Math.min(data.scroll.scrollTopMin, data.scroll.scrollTop);
+        data.scroll.scrollTopMax = data.isUserAction
+          ? data.scroll.scrollTopMax
+          : Math.max(data.scroll.scrollTopMax, data.scroll.scrollTop);
+      }
+      if (scrollHeight - (scrollTop + clientHeight) > clientHeight) {
+        handleToBottomTip(true);
+      } else {
+        handleToBottomTip(false);
+      }
+      data.isUserAction = false;
+    };
+
+    const handleToBottomTip = (needToBottom: boolean) => {
+      switch (needToBottom) {
+        case true:
+          data.needToBottom = true;
+          if (data?.conversation?.unreadCount && data?.conversation?.unreadCount > 0) {
+            data.toBottomTipCont = `${data?.conversation?.unreadCount} ${t('TUIChat.条新消息')}`;
+          } else {
+            data.toBottomTipCont = t('TUIChat.回到最新位置');
+          }
+          break;
+        case false:
+          data.needToBottom = false;
+          break;
+        default:
+          data.needToBottom = false;
+          break;
+      }
+    };
+
+    const sendMessageReadInView = async (type: string) => {
+      if (!needGroupReceipt.value) {
+        setMessageRead(data?.conversation?.conversationID);
+        return;
+      }
+      if (data.messageInView.length) data.messageInView = [] as Message[];
+      let start = 0;
+      let end = 0;
+      switch (type) {
+        case constant.inViewType.page:
+          start = data.scroll.scrollTop;
+          end = data.scroll.scrollTop + messageEle?.value?.clientHeight;
+          break;
+        case constant.inViewType.scroll:
+          start = data.scroll.scrollTopMin;
+          end = data.scroll.scrollTopMax + messageEle?.value?.clientHeight;
+          break;
+        default:
+          break;
+      }
+      for (let i = 0; i < messageAimID?.value?.length; i++) {
+        if (isInView(type, messageAimID?.value[i], start, end)) {
+          const message = messages.value[i];
+          data.messageInView.push(message);
+        }
+      }
+      await sendMessageReadReceipt(data.messageInView);
+    };
+
+    const isInView = (type: string, dom: HTMLElement, viewStart: number, viewEnd: number) => {
+      const containerTop = messageEle.value.getBoundingClientRect().top;
+      const containerBottom = messageEle.value.getBoundingClientRect().bottom;
+      const { top, bottom } = dom.getBoundingClientRect();
+      const { offsetTop, clientHeight } = dom;
+      switch (type) {
+        case constant.inViewType.page:
+          return Math.round(top) >= Math.round(containerTop) && Math.round(bottom) <= Math.round(containerBottom);
+        case constant.inViewType.scroll:
+          return (
+            Math.round(offsetTop) >= Math.round(viewStart)
+            && Math.round(offsetTop + clientHeight) <= Math.round(viewEnd)
+          );
+        default:
+          return false;
+      }
+    };
+
     return {
       ...toRefs(data),
       conversationType,
@@ -744,6 +1075,7 @@ const TUIChat: any = defineComponent({
       messageAimID,
       conversationData,
       conversationName,
+      constant,
       sendMseeage,
       deleteAt,
       handleItem,
@@ -770,6 +1102,7 @@ const TUIChat: any = defineComponent({
       geeks,
       pasting,
       setMessageRead,
+      sendMessageReadReceipt,
       selectAt,
       inputChange,
       dialog,
@@ -781,6 +1114,12 @@ const TUIChat: any = defineComponent({
       submit,
       Link,
       openLink,
+      compositionEnd,
+      showReadReceiptDialog,
+      readReceiptDialog,
+      closeReadReceiptDialog,
+      scrollToTarget,
+      needGroupReceipt,
     };
   },
 });

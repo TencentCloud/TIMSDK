@@ -1,36 +1,46 @@
 #preloadedImages {
-  background-image: url("https://sdk-web-1252463788.cos.ap-hongkong.myqcloud.com/im/assets/images/background.png");
+  background: linear-gradient(135deg, #F1F4F7 0%, #EDF5FF 100%) no-repeat;
+  background-size: cover;
+  background-image: url("https://sdk-web-1252463788.cos.ap-hongkong.myqcloud.com/im/assets/images/background-zip.png");
 }
+
 .home {
   flex: 1;
   display: flex;
   flex-direction: column;
   min-width: 1024px;
   background-size: contain;
+
   &-header {
     width: 100%;
     position: sticky;
     top: 0;
     z-index: 10;
+
     .dropdown {
       display: flex;
       align-items: center;
+
       label {
         padding: 0 8px;
       }
     }
+
     .menu {
       display: flex;
       align-items: center;
       font-size: 14px;
+
       label {
         padding: 0 18px;
       }
+
       &-open {
         padding-left: 265px;
       }
     }
   }
+
   &-menu {
     position: fixed;
     z-index: 11;
@@ -42,21 +52,26 @@
     padding: 30px;
     padding-top: 0;
     overflow-y: auto;
+
     .logo {
       display: flex;
       align-items: center;
       padding: 20px 0;
+
       img {
         width: 30px;
         margin-right: 7px;
       }
+
       &-name {
         font-size: 16px;
       }
+
       p {
         position: relative;
         padding-left: 40px;
         font-size: 14px;
+
         &::before {
           content: "";
           position: absolute;
@@ -67,30 +82,38 @@
           bottom: 0;
           margin: auto 0;
         }
+
         label {
           padding: 0 3px;
         }
       }
+
       .txc-logo {
         width: 80px;
       }
+
       .im-logo {
         width: 30px;
       }
     }
+
     .menu-main {
       flex: 1;
+
       &-title {
         padding: 20px 0;
         font-size: 16px;
       }
+
       .menu-main-list {
         padding-bottom: 14px;
+
         &-item {
           display: flex;
           align-items: center;
           padding-bottom: 16px;
           font-size: 14px;
+
           .step {
             display: inline-flex;
             justify-content: center;
@@ -100,6 +123,7 @@
             border-radius: 50%;
             font-size: 11.67px;
           }
+
           a {
             margin: 0 12px;
             font-size: 14px;
@@ -108,6 +132,7 @@
         }
       }
     }
+
     .menu-footer {
       &-list {
         &-item {
@@ -119,11 +144,13 @@
           display: flex;
           background: url('../assets/image/h5/adv-more.svg') no-repeat;
           background-size: contain;
+
           &:last-child {
             background: url('../assets/image/h5/adv-im.svg') no-repeat;
             background-size: contain;
             margin: 0;
           }
+
           a {
             flex: 1;
             display: flex;
@@ -133,6 +160,7 @@
             font-size: 14px;
             box-sizing: border-box;
             background-size: cover;
+
             span {
               padding: 1px 7px;
               border-radius: 0.88rem;
@@ -140,15 +168,19 @@
               align-items: center;
               justify-content: center;
               margin-right: 10px;
-                text  {
-                  font-size: 0.75rem;
-                }
+
+              text {
+                font-size: 0.75rem;
+              }
             }
+
             aside {
               margin-left: 10px;
+
               h1 {
                 font-size: 14px;
               }
+
               .sub {
                 align-self: flex-end;
               }
@@ -156,14 +188,16 @@
           }
         }
       }
-    } 
+    }
   }
+
   &-main {
     flex: 1;
     box-sizing: border-box;
     display: flex;
     justify-content: center;
     align-items: center;
+
     &-box {
       flex: 1;
       box-sizing: border-box;
@@ -174,10 +208,12 @@
       justify-content: center;
       align-items: center;
     }
+
     &-open {
       padding-left: 290px;
     }
   }
+
   &-TUIKit {
     width: 100%;
     height: 100%;
@@ -187,6 +223,7 @@
     flex: 1;
     border-radius: 12px;
     display: flex;
+
     .setting {
       box-sizing: border-box;
       width: 60px;
@@ -197,23 +234,28 @@
       padding: 56px 0 17px;
       border-top-left-radius: 12px;
       border-bottom-left-radius: 12px;
+
       &-main {
         position: relative;
         display: flex;
         flex-direction: column;
+
         .userInfo {
           position: relative;
           padding: 0 12px;
+
           .avatar {
             width: 36px;
             height: 36px;
             border-radius: 5px;
           }
+
           &:hover {
             .userInfo-main {
               display: block;
             }
           }
+
           &-main {
             display: none;
             min-width: 165px;
@@ -225,6 +267,7 @@
             padding: 14px 20px;
             border-radius: 0 4px 4px 0;
           }
+
           .TUIProfile {
             position: fixed;
             width: 100vw;
@@ -236,6 +279,7 @@
             display: flex !important;
             justify-content: center;
             align-items: center;
+
             main {
               width: 550px;
               border-radius: 10px;
@@ -243,12 +287,15 @@
             }
           }
         }
+
         &-list {
           padding: 13px 0;
+
           &-item {
             padding: 13px 0;
             text-align: center;
             line-height: 100%;
+
             .icon {
               width: 24px;
               height: 24px;
@@ -256,24 +303,30 @@
           }
         }
       }
+
       &-footer {
         position: relative;
-      } 
+      }
     }
+
     &-main {
       flex: 1;
       display: flex;
+
       .conversation {
         min-width: 285px;
         flex: 0 0 24%;
+
         .TUI-search {
           padding: 12px;
         }
       }
+
       .chat {
         flex: 1;
         height: 100%;
         position: relative;
+
         &-default {
           width: 100%;
           height: 100%;
@@ -286,10 +339,12 @@
           background-size: cover;
           background-position-x: -17px;
           background-position-y: 173px;
+
           h1 {
             font-size: 1.75rem;
             display: flex;
             align-items: center;
+
             img {
               width: 2.5rem;
               height: 1.63rem;
@@ -297,21 +352,25 @@
               padding-right: 0.98rem
             }
           }
+
           p {
             padding-top: 1.88rem;
             max-width: 393px;
             font-size: 16px;
             line-height: 24px;
           }
+
           .logo-mask {
             display: flex;
             justify-content: flex-end;
+
             .logo {
               width: 50%;
               opacity: 0.1;
             }
           }
         }
+
         .home-TUIKit-chat {
           position: absolute;
         }
@@ -319,22 +378,27 @@
     }
   }
 }
-.icon-choosed{
+
+.icon-choosed {
   width: 24px;
   height: 24px;
 }
+
 .status {
   border-radius: 2px;
 }
-.status  text{
+
+.status text {
   font-size: 14px;
   text-align: right;
   padding: 0 5px;
 }
+
 .setting-more {
   position: relative;
 }
-.showmore{
+
+.showmore {
   width: 11.25rem;
   border-radius: 0 4px 4px 0;
   position: absolute;
@@ -342,14 +406,22 @@
   left: 202%;
   z-index: 2;
 }
+
+.show-profile:hover,
+.show-about:hover,
+.show-receipt:hover,
+.show-quit:hover,
+.more-selected {
+  background-color: rgba(0, 110, 255, 0.1);
+}
+
 .show-profile {
-  width: 180px;
   height: 40px;
   padding-left: 14px;
   display: flex;
 }
 
-.show-profile span  {
+.show-profile span {
   cursor: pointer;
   display: inline-block;
   padding-top: 6px;
@@ -357,31 +429,57 @@
   font-size: 14px;
   line-height: 24px;
 }
-.show-about {
-  width: 180px;
+
+.show-about,
+.show-receipt {
+  cursor: pointer;
   height: 40px;
   padding-left: 14px;
+  padding-right: 8px;
+  line-height: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-.show-about span  {
-  cursor: pointer;
-  width: 56px;
+
+
+.show-about span,
+.show-receipt span {
   height: 24px;
   font-size: 14px;
-  line-height: 24px; 
+  line-height: 24px;
 }
+
+.receipt-select {
+  position: absolute;
+  left: 100%;
+  top: 0;
+  width: 11.25rem;
+  height: 80px;
+  border-radius: 0 4px 4px 0;
+  bottom: 10px;
+  z-index: 2;
+  background: #FFFFFF;
+  box-shadow: 2px 1px 6px 0px rgba(2, 16, 43, 0.15);
+}
+
 .show-cut-box {
   display: flex;
   padding-left: 14px;
 }
+
 .show-cut {
   width: 9.5rem;
+  border: none;
+  border-bottom: 1px solid #E8E8E9;
 }
-.show-quit  {
-  width: 180px;
+
+.show-quit {
   height: 40px;
   padding-left: 14px;
   display: flex;
 }
+
 .show-quit span {
   cursor: pointer;
   display: inline-block;
@@ -389,16 +487,17 @@
   width: 56px;
   height: 24px;
   font-size: 14px;
-  line-height: 24px; 
+  line-height: 24px;
 }
 
-.show-about-box{
+.show-about-box {
   border-radius: 0.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 100px 180px;
   padding-bottom: 0;
+
   main {
     flex: 1;
     display: flex;
@@ -406,32 +505,40 @@
     align-items: center;
     justify-content: center;
     padding-bottom: 126px;
+
     header {
       display: flex;
       align-items: center;
       padding-bottom: 28px;
+
       img {
         width: 110px;
       }
+
       h1 {
         font-size: 40px;
       }
     }
   }
+
   footer {
     display: flex;
+
     .list {
       display: flex;
       flex-direction: column;
+
       .line {
         display: flex;
         justify-content: center;
         align-items: center;
         padding-top: 10px;
+
         a {
           position: relative;
           font-size: 16px;
           padding: 0 10px;
+
           &::after {
             content: "";
             position: absolute;
@@ -443,10 +550,12 @@
             bottom: 0;
             margin: auto 0;
           }
+
           &:last-child:after {
             display: none;
           }
         }
+
         p {
           font-size: 14px;
           padding: 25px 0;
@@ -462,14 +571,17 @@
   padding: 55px 42px;
   max-width: 566px;
   border-radius: 8px;
+
   main {
     display: flex;
     flex-direction: column;
     align-items: center;
+
     .icon {
       width: 65px;
       height: 65px;
     }
+
     span {
       padding-top: 16px;
       font-family: PingFangSC-Regular;
@@ -481,6 +593,7 @@
       line-height: 25px;
     }
   }
+
   footer {
     box-sizing: border-box;
     width: 100%;
@@ -499,44 +612,49 @@
   display: flex;
   justify-content: center;
   align-items: center;
+
   .btn {
     flex: 1;
     border-radius: 5px;
     margin-top: 14px;
     padding: 13px 0;
     margin-right: 20px;
+
     &:last-child {
       margin-right: 0;
     }
   }
 }
 
-.disclaimer-box{
+.disclaimer-box {
   border-radius: 0.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-    main {
-      width: 33rem;
-      font-size: 1rem;
-      padding: 3.5rem 4rem 3.5rem;
-      header  {
-        font-size: 1.5rem;
-        line-height: 1.5rem;
-        padding: 4rem 0 1rem;
-      }
+
+  main {
+    width: 33rem;
+    font-size: 1rem;
+    padding: 3.5rem 4rem 3.5rem;
+
+    header {
+      font-size: 1.5rem;
+      line-height: 1.5rem;
+      padding: 4rem 0 1rem;
     }
-    footer {
-      box-sizing: border-box;
-      width: 100%;
-      padding: 46px 23px;
-      display: flex;
-    }
+  }
+
+  footer {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 46px 23px;
+    display: flex;
+  }
 }
 
 
 // 公共样式
-.flex-justify-between{
+.flex-justify-between {
   justify-content: space-between;
 }
 
@@ -553,4 +671,8 @@
   cursor: pointer;
   font-size: 18px;
   line-height: 27px;
+}
+
+.language-intl {
+  color: inherit;
 }

@@ -5,30 +5,39 @@
   display: flex;
   border-radius: 8px;
   padding: 20px 0;
-  .left,.right {
+
+  .left,
+  .right {
     padding: 0 20px;
     flex: 1;
   }
+
   .left {
     overflow-y: auto;
   }
+
   .right {
     display: flex;
     flex-direction: column;
+
     footer {
       align-self: flex-end;
+
       .btn-cancel {
         margin-right: 12px;
       }
     }
+
     .list {
       overflow-y: auto;
     }
   }
+
   header {
     font-size: 14px;
     line-height: 14px;
     padding-bottom: 20px;
+
     input {
       box-sizing: border-box;
       width: 100%;
@@ -38,27 +47,33 @@
       padding: 9px 12px;
     }
   }
+
   .list {
     flex: 1;
-    display: flex; 
+    display: flex;
     flex-direction: column;
+
     p {
       font-size: 10px;
       line-height: 14px;
     }
+
     &-item {
       padding: 6px 0;
       display: flex;
       align-items: center;
       font-size: 14px;
+
       aside {
         display: flex;
         align-items: center;
       }
+
       .avatar {
         margin: 0 5px 0 8px;
         border-radius: 50%;
       }
+
       .name {
         overflow: hidden;
         text-overflow: ellipsis;
@@ -68,6 +83,8 @@
     }
   }
 }
+
+img,
 .avatar {
   width: 36px;
   height: 36px;
@@ -77,21 +94,25 @@
   justify-content: center;
   align-items: center;
 }
+
 .btn {
   padding: 4px 28px;
   font-size: 12px;
   line-height: 24px;
   border-radius: 4px;
 }
+
 .btn-no {
   padding: 4px 28px;
   font-size: 12px;
   line-height: 24px;
   border-radius: 4px;
 }
+
 .space-between {
   justify-content: space-between;
 }
+
 .all {
   padding-left: 8px;
   font-size: 14px;

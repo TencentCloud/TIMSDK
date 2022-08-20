@@ -33,13 +33,14 @@ const taskList = [
   },
 ];
 
-const state:any = {
+const state: any = {
   taskList,
   userInfo: {},
+  needReceipt: true,
 };
 
 if (localStorage.getItem('TUIKit-userInfo')) {
-  const localUserInfoStorage:any = localStorage.getItem('TUIKit-userInfo') || {};
+  const localUserInfoStorage: any = localStorage.getItem('TUIKit-userInfo') || {};
   try {
     state.userInfo = JSON.parse(localUserInfoStorage);
   } catch (error) {
@@ -47,15 +48,28 @@ if (localStorage.getItem('TUIKit-userInfo')) {
   }
 }
 
+if (sessionStorage.getItem('needReceipt')) {
+  const localNeedReceipt: string = sessionStorage.getItem('needReceipt') || '';
+  try {
+    state.needReceipt = JSON.parse(localNeedReceipt);
+  } catch (error) {
+    state.needReceipt = false;
+  }
+}
+
 export default createStore({
   state,
   mutations: {
-    handleTask(state, index:number) {
+    handleTask(state, index: number) {
       state.taskList[index].status = true;
     },
-    setUserInfo(state, userInfo:any) {
+    setUserInfo(state, userInfo: any) {
       state.userInfo = userInfo;
       localStorage.setItem('TUIKit-userInfo', JSON.stringify(userInfo));
+    },
+    setNeedReceipt(state, needReceipt: boolean) {
+      state.needReceipt = needReceipt;
+      sessionStorage.setItem('needReceipt', JSON.stringify(needReceipt));
     },
   },
   actions: {},

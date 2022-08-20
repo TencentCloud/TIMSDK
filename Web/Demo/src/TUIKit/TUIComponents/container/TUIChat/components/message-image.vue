@@ -1,10 +1,6 @@
 <template>
-  <div class="message-image" @click.self="toggleShow"
-   >
-    <img
-      class="message-img"
-      :class="[isWidth ? 'isWidth' : 'isHeight']"
-      :src="data.url"/>
+  <div class="message-image" @click.self="toggleShow">
+    <img class="message-img" :src="data.url" />
     <div class="progress" v-if="data.progress">
       <progress :value="data.progress" max="1"></progress>
     </div>
@@ -12,16 +8,20 @@
       <header v-if="!isH5">
         <i class="icon icon-close" @click.stop="toggleShow"></i>
       </header>
-      <div
-        class="dialog-box"
-        :class="[isH5 ? 'dialog-box-h5' : '']"
-        @click.self="toggleShow"
-      >
+      <div class="dialog-box" :class="[isH5 ? 'dialog-box-h5' : '']" @click.self="toggleShow">
         <img
           :class="[isWidth ? 'isWidth' : 'isHeight']"
           :src="data.message.payload.imageInfoArray[0].url"
           @click.self="toggleShow"
         />
+        <div v-if="isH5" class="dialog-box-h5-footer">
+          <p @click="toggleShow">
+            <img src="../../../assets/icon/close-image.png" />
+          </p>
+          <p @click.stop="downloadImage(data.message)">
+            <img src="../../../assets/icon/downaload-image.png" />
+          </p>
+        </div>
       </div>
     </div>
   </div>
@@ -53,23 +53,43 @@ export default defineComponent({
     });
 
     const isWidth = computed(() => {
-      const { width = 0, height = 0 } = (data.data as any)?.message?.payload
-        ?.imageInfoArray[0];
+      const { width = 0, height = 0 } = (data.data as any)?.message?.payload?.imageInfoArray[0];
       return width >= height;
     });
-
 
     const toggleShow = () => {
       if (!data.data.progress) {
         data.show = !data.show;
       }
     };
+    const downloadImage = (message: any) => {
+      const targetImage = document.createElement('a');
+      const downloadImageName = message.payload.imageInfoArray[0].instanceID;
+      targetImage.setAttribute('download', downloadImageName);
+      const image = new Image();
+      image.src = message.payload.imageInfoArray[0].url;
+      image.setAttribute('crossOrigin', 'Anonymous');
+      image.onload = () => {
+        targetImage.href = getImageDataURL(image);
+        targetImage.click();
+      };
+    };
 
+    const getImageDataURL = (image: any) => {
+      const canvas = document.createElement('canvas');
+      canvas.width = image.width;
+      canvas.height = image.height;
+      const ctx = canvas.getContext('2d');
+      ctx?.drawImage(image, 0, 0, image.width, image.height);
+      const extension = image.src.substring(image.src.lastIndexOf('.') + 1).toLowerCase();
+      return canvas.toDataURL(`image/${extension}`, 1);
+    };
 
     return {
       ...toRefs(data),
       toggleShow,
       isWidth,
+      downloadImage,
     };
   },
 });
@@ -78,8 +98,8 @@ export default defineComponent({
 .message-image {
   position: relative;
   .message-img {
-    max-width: 300px;
-    max-height: 300px;
+    max-width: min(calc(100vw - 160px), 300px);
+    max-height: min(calc(100vw - 160px), 300px);
   }
   .progress {
     position: absolute;
@@ -151,15 +171,22 @@ export default defineComponent({
   padding: 30px 0;
   display: flex;
   flex-direction: column;
-  footer {
+  &-footer {
     position: fixed;
-    bottom: 30px;
+    bottom: 10px;
     display: flex;
     width: 90vw;
     justify-content: space-between;
-      i {
-        padding: 20px;
-      }
+    p {
+      width: 3.88rem;
+      height: 3.88rem;
+    }
+    img {
+      width: 100%;
+    }
+    i {
+      padding: 20px;
+    }
   }
 }
 
