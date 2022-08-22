@@ -146,16 +146,31 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 [API Upgrade Guidelines](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
 
-## Latest Enhanced Version 6.5.2816 @2022.07.29
+## Latest Enhanced Version 6.6.3002 @2022.08.18
 
 ### SDK
 
-- Optimizing the route selection strategy for the Indian station
-- Optimize rich media message upload/download progress callback
-- Optimized the compliance problem of Android terminal obtaining device process information
-- Fix the problem of continuous creation of topics crash
-- Fix the problem of occasional crash in Windows package
-- Fix Android v7a architecture pull down black friends, add black friends again crash problem
+- Supported labeling a member of an audio-video group.
+- Supported removing a member from an audio-video group.
+- Fixed the occasional crash of the topic update callback for Android.
+- Fixed incorrect enumerated values in notifications of group joining option changes.
+- Fixed the issue where no callback for `onTopicInfoChanged` was received after custom topic fields were set.
+- Optimized the issue for Android where the network IP was requested repeatedly.
+
+### TUIKit and demo
+
+- Supported marking conversations as unread/read, hiding conversations, and folding group conversations.
+- Replaced TUICalling with TUICallKit.
+- TUICallKit supported displaying the audio or video call in a floating window.
+- Supported enabling or disabling group grid profile photos as needed.
+- TUIChat supported customizing background images.
+- Optimized the TUIOfflinePush component for Android to support calling back the app when users click received messages in the notification bar and to support packaging into native plugins for uni-app.
+- The TUIKit  for Android supported a three-tier community mode: community - group - topic.
+- Supported showing emoji in the input box for iOS.
+- Supported showing default profile photos by group type.
+- Supported showing security tips all the time in the Demo.
+- Fixed the compatibility and compliance issues arising from using the WebView in the TUICore theme component.
+- Fixed the issue where repeated messages displayed occasionally when users clicked messages pushed offline to enter the chat interface.
 
 
 ## Latest Basic Version 5.1.66 @2021.09.22
