@@ -1,4 +1,4 @@
-## 4.1.1+1
+## 4.1.1+2
 * Upgrade native SDK to 6.6.x
 * web signal support
 * flutter for web support
