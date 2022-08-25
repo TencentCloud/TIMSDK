@@ -1,6 +1,6 @@
 name: tencent_im_sdk_plugin
 description: Instant Messaging (Instant Messaging) is developed based on QQ's underlying IM capabilities. 
-version: 4.1.1+1
+version: 4.1.1+2
 homepage: https://cloud.tencent.com/product/im
 
 environment:
