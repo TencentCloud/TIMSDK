@@ -7,6 +7,7 @@ import 'package:tencent_im_sdk_plugin/enum/group_add_opt_enum.dart';
 import 'package:tencent_im_sdk_plugin/enum/group_application_type_enum.dart';
 import 'package:tencent_im_sdk_plugin/enum/group_member_filter_enum.dart';
 import 'package:tencent_im_sdk_plugin/enum/group_member_role_enum.dart';
+import 'package:tencent_im_sdk_plugin/enum/group_type.dart';
 import 'package:tencent_im_sdk_plugin/enum/utils.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_application_result.dart';
@@ -106,9 +107,14 @@ class V2TIMGroupManager {
     String? faceUrl,
     bool? isAllMuted,
     bool? isSupportTopic = false,
-    GroupAddOptTypeEnum? addOpt = GroupAddOptTypeEnum.V2TIM_GROUP_ADD_AUTH,
+    GroupAddOptTypeEnum? addOpt,
     List<V2TimGroupMember>? memberList,
   }) async {
+    // add a default number.
+    GroupAddOptTypeEnum addOptDefault = addOpt ??
+        (groupType == GroupType.AVChatRoom
+            ? GroupAddOptTypeEnum.V2TIM_GROUP_ADD_ANY
+            : GroupAddOptTypeEnum.V2TIM_GROUP_ADD_AUTH);
     return ImFlutterPlatform.instance.createGroup(
         groupType: groupType,
         groupName: groupName,
@@ -117,7 +123,7 @@ class V2TIMGroupManager {
         introduction: introduction,
         faceUrl: faceUrl,
         isAllMuted: isAllMuted,
-        addOpt: addOpt!.index,
+        addOpt: addOptDefault.index,
         memberList: memberList,
         isSupportTopic: isSupportTopic);
   }

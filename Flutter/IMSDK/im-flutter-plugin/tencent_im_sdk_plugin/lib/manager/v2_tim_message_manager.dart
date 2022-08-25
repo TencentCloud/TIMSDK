@@ -220,15 +220,11 @@ class V2TIMMessageManager {
 
   /// 创建图片消息（图片文件最大支持 28 MB）
   /// - imagePath 图片路径（只有发送方可以获取到）
-  /// - fileContent 字节数组（只有[web端](https://web.sdk.qcloud.com/im/doc/zh-cn/SDK.html#createImageMessage)时用到且必填）
-  /// - fileName 图片名（只有[web端](https://web.sdk.qcloud.com/im/doc/zh-cn/SDK.html#createImageMessage)用到且必填）
+  /// - inputElement 用于选择图片的 DOM 节点(web端必填)
   Future<V2TimValueCallback<V2TimMsgCreateInfoResult>> createImageMessage(
-      {required String imagePath,
-      Uint8List? fileContent, // web 必填
-      String? fileName //web必填写
-      }) async {
-    return ImFlutterPlatform.instance.createImageMessage(
-        imagePath: imagePath, fileContent: fileContent, fileName: fileName);
+      {required String imagePath, dynamic inputElement}) async {
+    return ImFlutterPlatform.instance
+        .createImageMessage(imagePath: imagePath, inputElement: inputElement);
   }
 
   /// 创建音频文件
@@ -247,24 +243,19 @@ class V2TIMMessageManager {
   /// type 视频类型，如 mp4 mov 等
   /// duration	视频时长，单位 s
   /// snapshotPath	视频封面图片路径
-  /// fileName 文件名 （只有[web端](https://web.sdk.qcloud.com/im/doc/zh-cn/SDK.html#createVideoMessage)用到且必填）
-  /// fileContent 字节数组 （只有[web端](https://web.sdk.qcloud.com/im/doc/zh-cn/SDK.html#createVideoMessage)用到且必填）
-  Future<V2TimValueCallback<V2TimMsgCreateInfoResult>> createVideoMessage({
-    required String videoFilePath,
-    required String type,
-    required int duration,
-    required String snapshotPath,
-    String? fileName,
-    Uint8List? fileContent,
-  }) async {
+  /// inputElement 用于选择视频文件的 DOM 节点 （只有[web端](https://web.sdk.qcloud.com/im/doc/zh-cn/SDK.html#createVideoMessage)用到且必填）
+  Future<V2TimValueCallback<V2TimMsgCreateInfoResult>> createVideoMessage(
+      {required String videoFilePath,
+      required String type,
+      required int duration,
+      required String snapshotPath,
+      dynamic inputElement}) async {
     return ImFlutterPlatform.instance.createVideoMessage(
-      videoFilePath: videoFilePath,
-      type: type,
-      duration: duration,
-      snapshotPath: snapshotPath,
-      fileName: fileName,
-      fileContent: fileContent,
-    );
+        videoFilePath: videoFilePath,
+        type: type,
+        duration: duration,
+        snapshotPath: snapshotPath,
+        inputElement: inputElement);
   }
 
   /// 创建文本消息，并且可以附带 @ 提醒功能（最大支持 8KB）
@@ -295,14 +286,14 @@ class V2TIMMessageManager {
   /// 参数：
   /// filePath 文件路径
   /// fileName文件名称
-  /// fileContent 字节数组（[web](https://web.sdk.qcloud.com/im/doc/zh-cn/SDK.html#createFileMessage)端使用，且必填）
+  /// inputElement 用于选择文件的 DOM 节点（[web](https://web.sdk.qcloud.com/im/doc/zh-cn/SDK.html#createFileMessage)端使用，且必填）
   ///
   Future<V2TimValueCallback<V2TimMsgCreateInfoResult>> createFileMessage(
       {required String filePath,
       required String fileName,
-      Uint8List? fileContent}) async {
+      dynamic inputElement}) async {
     return ImFlutterPlatform.instance.createFileMessage(
-        filePath: filePath, fileName: fileName, fileContent: fileContent);
+        filePath: filePath, fileName: fileName, inputElement: inputElement);
   }
 
   /// 创建位置信息

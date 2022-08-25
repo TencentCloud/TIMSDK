@@ -9,6 +9,7 @@ import 'package:path/path.dart' as Path;
 import 'package:js/js.dart';
 import 'package:js/js_util.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/V2TimAdvancedMsgListener.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/enum/V2TimSignalingListener.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/message_elem_type.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/v2_signaling_action_type.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_callback.dart';
@@ -20,10 +21,12 @@ import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_receive_m
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin_web/src/enum/event_enum.dart';
 import 'package:tencent_im_sdk_plugin_web/src/enum/group_receive_message_opt.dart';
+import 'package:tencent_im_sdk_plugin_web/src/manager/v2_tim_signaling_manager.dart';
 import 'package:tencent_im_sdk_plugin_web/src/models/v2_tim_create_message.dart';
 import 'package:tencent_im_sdk_plugin_web/src/models/v2_tim_get_message_list.dart';
 import 'package:tencent_im_sdk_plugin_web/src/models/v2_tim_message.dart';
 import 'package:tencent_im_sdk_plugin_web/src/utils/utils.dart';
+import 'package:tencent_im_sdk_plugin_web/tencent_im_sdk_plugin_web.dart';
 import 'im_sdk_plugin_js.dart';
 import 'package:mime_type/mime_type.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_msg_create_info_result.dart';
@@ -35,15 +38,17 @@ class V2TIMMessageManager {
   static int currentTimeMillis() {
     return DateTime.now().millisecondsSinceEpoch;
   }
-
+  static late final V2TIMSignalingManager _v2timSignalingManager;
   Map<String, dynamic> messageIDMap = {}; // 和native那边略有区别，web在发送信息时才会创建消息
 
-  V2TIMMessageManager() {
+  V2TIMMessageManager(V2TIMSignalingManager signalingManager) {
+    _v2timSignalingManager = signalingManager;
     timeweb = V2TIMManagerWeb.timWeb;
   }
   // 设置uuid，保证发送时可以直接拿到底层返回过来的messahe
   handleSetMessageMap(messageInfo) {
     String id = (currentTimeMillis()).toString();
+    messageInfo["id"] = id;
 
     Map<String, dynamic> resultMap = {"messageInfo": messageInfo, "id": id};
     messageIDMap[id] = resultMap;
@@ -93,12 +98,8 @@ class V2TIMMessageManager {
         }
       case "image":
         {
-          String imagePath = params['imagePath'] ?? '';
-          Uint8List fileContent = params['fileContent'];
-          String fileName = params['fileName'];
-          dynamic file = params['file'];
-          messageSimpleElem = CreateMessage.createSimpleImageMessage(
-              imagePath, fileContent, fileName, file);
+          messageSimpleElem =
+              CreateMessage.createSimpleImageMessage(params["inputElement"]);
           break;
         }
       case "textAt":
@@ -138,20 +139,19 @@ class V2TIMMessageManager {
       case "video":
         {
           String videoFilePath = params['videoFilePath'] ?? '';
-          Uint8List fileContent = params['fileContent'];
-          String fileName = params['fileName'];
-          dynamic file = params['file'];
+          dynamic file = params['inputElement'];
           messageSimpleElem = CreateMessage.createSimpleVideoMessage(
-              videoFilePath, fileContent, file, fileName);
+            videoFilePath,
+            file,
+          );
           break;
         }
       case "file":
         {
           messageSimpleElem = CreateMessage.createSimpleFileMessage(
-              fileContent: params['fileContent'],
               filePath: params['filePath'] ?? '',
               fileName: params['fileName'] ?? "",
-              file: params['file']);
+              file: params['inputElement']);
           break;
         }
     }
@@ -160,9 +160,10 @@ class V2TIMMessageManager {
   }
 
   // 3.6.0后启用此函数
-  Future<dynamic> sendMessageForNew<T, F>(
+  Future<V2TimValueCallback<V2TimMessage>> sendMessageForNew<T, F>(
       {required Map<String, dynamic> params}) async {
     String? id = params['id'];
+    var messageElem;
     try {
       final groupID = params['groupID'] ?? '';
       final recveiver = params['receiver'] ?? '';
@@ -172,14 +173,14 @@ class V2TIMMessageManager {
       final messageInfo = messageMap["messageInfo"];
       final type = messageMap["messageInfo"]["type"];
       if (haveTwoValues) {
-        return CommonUtils.returnErrorForValueCb<F>({
+        return CommonUtils.returnErrorForValueCb<V2TimMessage>({
           'code': 6017,
           'desc': "receiver and groupID cannot set at the same time",
           'data': V2TimMessage(elemType: 1).toJson()
         });
       }
       if (id == null || messageMap == null) {
-        return CommonUtils.returnErrorForValueCb<F>({
+        return CommonUtils.returnErrorForValueCb<V2TimMessage>({
           'code': 6017,
           'desc': "id cannot be empty or message cannot find",
           'data': V2TimMessage(elemType: 1).toJson()
@@ -187,7 +188,6 @@ class V2TIMMessageManager {
       }
       final convType = groupID != '' ? 'GROUP' : 'C2C';
       final sendToUserID = convType == 'GROUP' ? groupID : recveiver;
-      var messageElem;
       switch (type) {
         case "text":
           {
@@ -225,13 +225,13 @@ class V2TIMMessageManager {
           }
         case "image":
           {
-            final progressCallback = allowInterop((progress) async {
+            final progressCallback = allowInterop((double progress) async {
               final messageInstance =
                   await V2TIMMessage.convertMessageFromWebToDart(messageElem);
               if (messageListener != null) {
                 messageInstance['id'] = id;
                 messageListener!.onSendMessageProgress(
-                    V2TimMessage.fromJson(messageInstance), progress as int);
+                    V2TimMessage.fromJson(messageInstance), progress.toInt());
               }
             });
             final createElemParams = CreateMessage.createImageMessage(
@@ -295,13 +295,13 @@ class V2TIMMessageManager {
           }
         case "video":
           {
-            final progressCallback = allowInterop((progress) async {
+            final progressCallback = allowInterop((double progress) async {
               final messageInstance =
                   await V2TIMMessage.convertMessageFromWebToDart(messageElem);
               if (messageListener != null) {
                 messageInstance['id'] = id;
                 messageListener!.onSendMessageProgress(
-                    V2TimMessage.fromJson(messageInstance), progress as int);
+                    V2TimMessage.fromJson(messageInstance), progress.toInt());
               }
             });
             final createElemParams = CreateMessage.createVideoMessage(
@@ -343,13 +343,17 @@ class V2TIMMessageManager {
         final formatedMessage =
             await V2TIMMessage.convertMessageFromWebToDart(message);
         messageIDMap.remove(id);
-        return CommonUtils.returnSuccess<F>(formatedMessage);
+        return CommonUtils.returnSuccess<V2TimMessage>(formatedMessage);
       } else {
-        return CommonUtils.returnErrorForValueCb<F>('发送消息失败');
+        return CommonUtils.returnErrorForValueCb<V2TimMessage>('发送消息失败');
       }
     } catch (error) {
       messageIDMap.remove(id);
-      return CommonUtils.returnErrorForValueCb<F>(error);
+      messageElem.status = "fail";
+      final formatedMessage =
+          await V2TIMMessage.convertMessageFromWebToDart(messageElem);
+      return CommonUtils.returnErrorForValueCb<V2TimMessage>(error,
+          resultData: formatedMessage);
     }
   }
 
@@ -406,12 +410,12 @@ class V2TIMMessageManager {
           }
         case "image":
           {
-            final progressCallback = allowInterop((progress) async {
+            final progressCallback = allowInterop((double progress) async {
               final messageInstance =
                   await V2TIMMessage.convertMessageFromWebToDart(messageElem);
               if (messageListener != null) {
                 messageListener!.onSendMessageProgress(
-                    V2TimMessage.fromJson(messageInstance), progress as int);
+                    V2TimMessage.fromJson(messageInstance), progress.toInt());
               }
             });
             final createElemParams = CreateMessage.createImageMessage(
@@ -468,12 +472,12 @@ class V2TIMMessageManager {
           }
         case "video":
           {
-            final progressCallback = allowInterop((progress) async {
+            final progressCallback = allowInterop((double progress) async {
               final messageInstance =
                   await V2TIMMessage.convertMessageFromWebToDart(messageElem);
               if (messageListener != null) {
                 messageListener!.onSendMessageProgress(
-                    V2TimMessage.fromJson(messageInstance), progress as int);
+                    V2TimMessage.fromJson(messageInstance), progress.toInt());
               }
             });
             final createElemParams = CreateMessage.createVideoMessage(
@@ -487,12 +491,12 @@ class V2TIMMessageManager {
           }
         case "file":
           {
-            final progressCallback = allowInterop((progress) async {
+            final progressCallback = allowInterop((double progress) async {
               final messageInstance =
                   await V2TIMMessage.convertMessageFromWebToDart(messageElem);
               if (messageListener != null) {
                 messageListener!.onSendMessageProgress(
-                    V2TimMessage.fromJson(messageInstance), progress as int);
+                    V2TimMessage.fromJson(messageInstance), progress.toInt());
               }
             });
             final createElemParams = CreateMessage.createFileMessage(
@@ -531,17 +535,12 @@ class V2TIMMessageManager {
       {required String data, String? desc, String? extension}) async {
     return createMessage(
         type: "custom",
-        params: {"data": data, "desc": desc, "extension": extension});
+        params: {"data": data, "desc": desc ?? "", "extension": extension ?? ""});
   }
 
   Future<V2TimValueCallback<V2TimMsgCreateInfoResult>> createImageMessage(
       Map<String, dynamic> params) async {
     try {
-      String? mimeType = mime(Path.basename(params['fileName']));
-      final fileContent = generateDartListObject(params['fileContent']);
-
-      params['file'] = html.File(
-          fileContent, params['fileName'] as String, {'type': mimeType});
       return createMessage(type: "image", params: params);
     } catch (error) {
       throw const FormatException('fileName and fileContent cannot be empty.');
@@ -550,12 +549,6 @@ class V2TIMMessageManager {
 
   Future<V2TimValueCallback<V2TimMsgCreateInfoResult>> createVideoMessage(
       Map<String, dynamic> params) async {
-    String? mimeType = mime(Path.basename(params['fileName']));
-    final fileContent = generateDartListObject(params['fileContent']);
-
-    params['file'] = html.File(
-        fileContent, params['fileName'] as String, {'type': mimeType});
-
     return createMessage(type: "video", params: params);
   }
 
@@ -571,11 +564,6 @@ class V2TIMMessageManager {
 
   Future<V2TimValueCallback<V2TimMsgCreateInfoResult>> createFileMessage(
       Map<String, dynamic> params) async {
-    String? mimeType = mime(Path.basename(params['fileName']));
-    final fileContent = generateDartListObject(params['fileContent']);
-
-    params['file'] = html.File(
-        fileContent, params['fileName'] as String, {'type': mimeType});
     return createMessage(type: "file", params: params);
   }
 
@@ -723,8 +711,9 @@ class V2TIMMessageManager {
     final code = res.code;
     if (code == 0) {
       final List messageList = jsToMap(res.data)['messageList'];
-      final historyMessageListPromises =
-          messageList.reversed.map((element) async {
+      final historyMessageListPromises = messageList.reversed
+          .skipWhile((value) => jsToMap(value)["isDeleted"])
+          .map((element) async {
         final responses =
             await V2TIMMessage.convertMessageFromWebToDart(element);
         return responses;
@@ -935,7 +924,23 @@ class V2TIMMessageManager {
       loop();
     }
   });
-  static _handleMessage(V2TimMessage message) {
+  // static bool _isGroupCall(Map<String, dynamic> callinfo){
+  //   if(callinfo["groupID"]==null){
+  //     return false;
+  //   }else{
+  //     if(callinfo["groupID"].isNotEmpty){
+  //       return true;
+  //     }
+  //     return false;
+  //   }
+  // }
+  static Future<bool> _includeSelf(List<String> inviteeList) async {
+    V2TimValueCallback<String> user =
+        await TencentImSDKPluginWeb().getLoginUser();
+        List<String> list =   List.castFrom(inviteeList);
+        return list.contains(user.data ?? "");
+  }
+  static _handleMessage(V2TimMessage message) async {
     if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_CUSTOM &&
         message.customElem != null) {
       // this message is custom message
@@ -944,13 +949,31 @@ class V2TIMMessageManager {
           if (message.customElem!.data!.isNotEmpty) {
             Map<String, dynamic> customMessageData =
                 json.decode(message.customElem!.data!) ?? Map.from({});
-            String? inviteID = customMessageData["customMessageData"];
+            String? inviteID = customMessageData["inviteID"];
             int? actionType = customMessageData["actionType"];
+            print("current signal data: $customMessageData");
+            
             if (inviteID != null && actionType != null) {
+              List<String> inviteeList = [];
+              if(customMessageData["inviteeList"]!=null && customMessageData["inviteeList"].isNotEmpty){
+                inviteeList = List<String>.from(customMessageData["inviteeList"]);
+              }
+              bool includeSelf = await _includeSelf(inviteeList);
+              if(!includeSelf){
+                return;
+              }
+              // print signal data
+              try{
+                await _v2timSignalingManager.beforeCallback(actionType,customMessageData);
+              }catch(err){
+                print("handle before life error");
+              }
+              
               switch (actionType) {
                 case V2SignalingActionType.SIGNALING_ACTION_TYPE_ACCEPT_INVITE:
                   String invitee = customMessageData["invitee"] ?? "";
                   String data = customMessageData["data"] ?? "";
+                  
                   _onInviteeAccepted(inviteID, invitee, data);
                   break;
                 case V2SignalingActionType.SIGNALING_ACTION_TYPE_CANCEL_INVITE:
@@ -960,18 +983,15 @@ class V2TIMMessageManager {
                   break;
                 case V2SignalingActionType.SIGNALING_ACTION_TYPE_INVITE:
                   String inviter = message.sender!;
-                  List<String> inviteeList =
-                      customMessageData["customMessageData"] ??
-                          List.empty(growable: true);
+                  List<String> inviteeList = List<String>.from(customMessageData["inviteeList"]);
                   String data = customMessageData["data"] ?? "";
                   String groupID = message.groupID ?? "";
                   _onReceiveNewInvitation(
                       inviteID, inviter, groupID, inviteeList, data);
                   break;
                 case V2SignalingActionType.SIGNALING_ACTION_TYPE_INVITE_TIMEOUT:
-                  List<String> inviteeList = customMessageData["inviteeList"] ??
-                      List.empty(growable: true);
-                  _onInvitationTimeout(inviteID, inviteeList);
+                  List<String> inviteeList =  List<String>.from(customMessageData["inviteeList"]);
+                  _onInvitationTimeout(inviteID,inviteeList);
                   break;
                 case V2SignalingActionType.SIGNALING_ACTION_TYPE_REJECT_INVITE:
                   String invitee = customMessageData["invitee"] ?? "";
@@ -984,18 +1004,11 @@ class V2TIMMessageManager {
         }
       } catch (err) {
         // err
+        print(err);
       }
     }
   }
-
-  static _onReceiveNewInvitation(String inviteID, String inviter,
-      String groupID, List<String> inviteeList, String data) {}
-  static _onInviteeAccepted(String inviteID, String invitee, String data) {}
-  static _onInviteeRejected(String inviteID, String invitee, String data) {}
-  static _onInvitationCancelled(String inviteID, String inviter, String data) {}
-  static _onInvitationTimeout(String inviteID, List<String> inviteeList) {}
-
-  static final _messageModifiedHandler = allowInterop((dynamic responses) {
+   static final _messageModifiedHandler = allowInterop((dynamic responses) {
     final List messageList = jsToMap(responses)['data'];
     for (var messageItem in messageList) {
       loop() async {
@@ -1008,7 +1021,33 @@ class V2TIMMessageManager {
       loop();
     }
   });
-
+  static _onReceiveNewInvitation(String inviteID, String inviter,
+      String groupID, List<String> inviteeList, String data) {
+        _v2timSignalingManager.signalingListenerList.forEach((key, value) {
+          value.onReceiveNewInvitation(inviteID,inviter,groupID,inviteeList,data);
+        });
+      }
+  static _onInviteeAccepted(String inviteID, String invitee, String data) {
+    _v2timSignalingManager.signalingListenerList.forEach((key, value) {
+          value.onInviteeAccepted(inviteID,invitee,data);
+        });
+  }
+  static _onInviteeRejected(String inviteID, String invitee, String data) {
+    _v2timSignalingManager.signalingListenerList.forEach((key, value) {
+          value.onInviteeRejected(inviteID,invitee,data);
+        });
+  }
+  static _onInvitationCancelled(String inviteID, String inviter, String data) {
+    _v2timSignalingManager.signalingListenerList.forEach((key, value) {
+          value.onInvitationCancelled(inviteID,inviter,data);
+        });
+  }
+  static _onInvitationTimeout(String inviteID,
+    List<String> inviteeList){
+      _v2timSignalingManager.signalingListenerList.forEach((key, value) {
+          value.onInvitationTimeout(inviteID,inviteeList);
+        });
+  }
   void addAdvancedMsgListener(V2TimAdvancedMsgListener listener) {
     messageListener = listener;
     submitMessageReadReceipt();

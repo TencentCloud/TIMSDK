@@ -19,7 +19,8 @@ class FriendBlackList {
 
   static List<dynamic> formateDeleteBlackListRes(list) {
     final resultArr = [];
-    list.forEach((userID) => resultArr.add({"userID": userID}));
+    list.forEach(
+        (userID) => resultArr.add({"userID": userID, "resultCode": 0}));
     return resultArr;
   }
 }

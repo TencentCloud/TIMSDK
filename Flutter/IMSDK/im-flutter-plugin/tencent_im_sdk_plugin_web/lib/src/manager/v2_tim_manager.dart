@@ -45,7 +45,6 @@ class V2TIMManager {
   static void updateBlackList(List<dynamic> list) {
     blackList = list;
   }
-
   static void updtateFriendList(List<dynamic> list) {
     friendList = list;
   }
@@ -53,7 +52,8 @@ class V2TIMManager {
   static void updateFriendApplicationList(List<dynamic> list) {
     friendApplicationList = list;
   }
-
+  
+  
   static List<dynamic> getFriendList() {
     return friendList;
   }
@@ -360,7 +360,7 @@ class V2TIMManager {
   Future<dynamic> callExperimentalAPI() async {
     return CommonUtils.returnErrorForValueCb<Object>('Not support for web');
   }
-
+  
   void addSimpleMsgListener(
     V2TimSimpleMsgListener listener,
   ) {

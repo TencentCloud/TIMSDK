@@ -5,7 +5,6 @@ import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_elem.dart
 /// V2TimTextElem
 ///
 /// {@category Models}
-///
 class V2TimTextElem extends V2TIMElem {
   late String? text;
 

@@ -39,10 +39,13 @@ class GetConversationList {
   }
 
   // 将js的数据结构dart化,这里每层为了兼容dart都需要做细致化处理，不然返回回去的某些类型就会报错
-  static formateConversationList(dynamic conversationListJs) async {
+  static formateConversationList(List conversationListJs) async {
     final conversationList = [];
+    final formatedConversationList = conversationListJs
+        .skipWhile((value) => jsToMap(value)["type"] == "@TIM#SYSTEM")
+        .toList();
 
-    for (var i = 0; i < conversationListJs.length; i++) {
+    for (var i = 0; i < formatedConversationList.length; i++) {
       final item =
           await formateConversationListItem(jsToMap(conversationListJs[i]));
       conversationList.add(item);
@@ -91,7 +94,7 @@ class GetConversationList {
     }
     conversationListItem["type"] =
         ConversationTypeWeb.convertConverstationtType(itemJS["type"]);
-
+    conversationListItem["orderkey"] = 0;
     return conversationListItem;
   }
 
@@ -106,7 +109,7 @@ class GetConversationList {
       "msgID": message['ID'] ?? '',
       "timestamp": message['lastTime'],
       "progress": 100,
-      "sender": message['fromAccount'],
+      "sender": message['fromAccount'].toString(),
       "nickName": message['nick'],
       "friendRemark": message['remark'],
       // "faceUrl": message.avatar ?? '',
@@ -128,7 +131,7 @@ class GetConversationList {
       // "messageFromWeb": stringify(message)
     };
 
-    final messagePayload = jsToMap(message["payload"]);
+    final messagePayload = jsToMap(message["payload"] ?? "{}");
 
     // 文本消息
     if (elementType == MessageElemType.V2TIM_ELEM_TYPE_TEXT) {
