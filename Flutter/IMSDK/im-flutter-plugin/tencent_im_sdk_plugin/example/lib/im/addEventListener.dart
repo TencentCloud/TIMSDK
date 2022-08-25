@@ -63,9 +63,10 @@ class AddEventListenerState extends State<AddEventListener> {
           Provider.of<Event>(context, listen: false).onReceiveRESTCustomData,
       onRevokeAdministrator:
           Provider.of<Event>(context, listen: false).onRevokeAdministrator,
-          onTopicCreated: Provider.of<Event>(context, listen: false).onTopicCreated,
-          onTopicDeleted: Provider.of<Event>(context, listen: false).onTopicDeleted,
-          onTopicInfoChanged: Provider.of<Event>(context, listen: false).onTopicInfoChanged,
+      onTopicCreated: Provider.of<Event>(context, listen: false).onTopicCreated,
+      onTopicDeleted: Provider.of<Event>(context, listen: false).onTopicDeleted,
+      onTopicInfoChanged:
+          Provider.of<Event>(context, listen: false).onTopicInfoChanged,
     );
     advancedMsgListener = new V2TimAdvancedMsgListener(
       onRecvC2CReadReceipt:
@@ -76,8 +77,10 @@ class AddEventListenerState extends State<AddEventListener> {
           Provider.of<Event>(context, listen: false).onRecvNewMessage,
       onSendMessageProgress:
           Provider.of<Event>(context, listen: false).onSendMessageProgress,
-      onRecvMessageReadReceipts: Provider.of<Event>(context, listen: false).onRecvMessageReadReceipts,
-      onRecvMessageModified:  Provider.of<Event>(context, listen: false).onRecvMessageModified,
+      onRecvMessageReadReceipts:
+          Provider.of<Event>(context, listen: false).onRecvMessageReadReceipts,
+      onRecvMessageModified:
+          Provider.of<Event>(context, listen: false).onRecvMessageModified,
     );
 
     signalingListener = new V2TimSignalingListener(
@@ -104,12 +107,17 @@ class AddEventListenerState extends State<AddEventListener> {
           Provider.of<Event>(context, listen: false).onSyncServerFinish,
       onSyncServerStart:
           Provider.of<Event>(context, listen: false).onSyncServerStart,
-          onConversationGroupCreated: Provider.of<Event>(context, listen: false).onConversationGroupCreated,
-          onConversationGroupDeleted: Provider.of<Event>(context, listen: false).onConversationGroupDeleted,
-          onConversationGroupNameChanged: Provider.of<Event>(context, listen: false).onConversationGroupNameChanged,
-          onConversationsAddedToGroup: Provider.of<Event>(context, listen: false).onConversationsAddedToGroup,
-          onConversationsDeletedFromGroup: Provider.of<Event>(context, listen: false).onConversationsDeletedFromGroup,
-          
+      onConversationGroupCreated:
+          Provider.of<Event>(context, listen: false).onConversationGroupCreated,
+      onConversationGroupDeleted:
+          Provider.of<Event>(context, listen: false).onConversationGroupDeleted,
+      onConversationGroupNameChanged: Provider.of<Event>(context, listen: false)
+          .onConversationGroupNameChanged,
+      onConversationsAddedToGroup: Provider.of<Event>(context, listen: false)
+          .onConversationsAddedToGroup,
+      onConversationsDeletedFromGroup:
+          Provider.of<Event>(context, listen: false)
+              .onConversationsDeletedFromGroup,
     );
 
     friendshipListener = new V2TimFriendshipListener(
@@ -133,12 +141,7 @@ class AddEventListenerState extends State<AddEventListener> {
         .addAdvancedMsgListener(
           listener: advancedMsgListener,
         );
-    //注册信令消息监听器
-    await TencentImSDKPlugin.v2TIMManager
-        .getSignalingManager()
-        .addSignalingListener(
-          listener: signalingListener,
-        );
+
     //注册会话监听器
     await TencentImSDKPlugin.v2TIMManager
         .getConversationManager()
@@ -150,6 +153,12 @@ class AddEventListenerState extends State<AddEventListener> {
         .getFriendshipManager()
         .addFriendListener(
           listener: friendshipListener,
+        );
+    //注册信令消息监听器
+    await TencentImSDKPlugin.v2TIMManager
+        .getSignalingManager()
+        .addSignalingListener(
+          listener: signalingListener,
         );
   }
 

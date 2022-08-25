@@ -16,6 +16,7 @@ import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:example/i18n/i18n_utils.dart';
+import 'package:universal_html/html.dart' as html;
 
 class SendVideoMessage extends StatefulWidget {
   @override
@@ -38,17 +39,21 @@ class SendVideoMessageState extends State<SendVideoMessage> {
   final picker = ImagePicker();
   sendVideoMessage() async {
     print("${video!.path} $type $duration $snapshotPath");
+    html.Node? inputElement;
+    if (kIsWeb) {
+      inputElement = html.document
+          .getElementById("__image_picker_web-file-input")
+          ?.querySelector("input");
+    }
     V2TimValueCallback<V2TimMsgCreateInfoResult> createMessage =
         await TencentImSDKPlugin.v2TIMManager
             .getMessageManager()
             .createVideoMessage(
-              videoFilePath: kIsWeb ? '' : video!.path,
-              type: type,
-              snapshotPath: snapshotPath,
-              duration: duration,
-              fileContent: _fileContent,
-              fileName: _fileName,
-            );
+                videoFilePath: kIsWeb ? '' : video!.path,
+                type: type,
+                snapshotPath: snapshotPath,
+                duration: duration,
+                inputElement: inputElement);
     String id = createMessage.data!.id!;
     V2TimValueCallback<V2TimMessage> res = await TencentImSDKPlugin.v2TIMManager
         .getMessageManager()
@@ -113,7 +118,9 @@ class SendVideoMessageState extends State<SendVideoMessage> {
                 ),
                 margin: EdgeInsets.only(right: 12),
               ),
-              video == null ? Text(imt(imt("未选择"))) : Text(video!.path.split("/").last),
+              video == null
+                  ? Text(imt(imt("未选择")))
+                  : Text(video!.path.split("/").last),
             ],
           ),
           Row(
@@ -130,8 +137,8 @@ class SendVideoMessageState extends State<SendVideoMessage> {
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child:
-                      Text(receiver.length > 0 ? receiver.toString() : imt("未选择")),
+                  child: Text(
+                      receiver.length > 0 ? receiver.toString() : imt("未选择")),
                 ),
               )
             ],
@@ -150,7 +157,8 @@ class SendVideoMessageState extends State<SendVideoMessage> {
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child: Text(groupID.length > 0 ? groupID.toString() : imt("未选择")),
+                  child: Text(
+                      groupID.length > 0 ? groupID.toString() : imt("未选择")),
                 ),
               )
             ],
@@ -225,7 +233,7 @@ class SendVideoMessageState extends State<SendVideoMessage> {
                 ),
                 Container(
                   margin: EdgeInsets.only(left: 12),
-                  child:  Text("已选：$priority"),
+                  child: Text("已选：$priority"),
                 )
               ],
             ),

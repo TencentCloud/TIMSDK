@@ -141,7 +141,8 @@ class V2TIMMessage {
           snapshotSize: messagePayload['thumbSize'],
           snapshotWidth: messagePayload['thumbWidth'],
           snapshotHeight: messagePayload['thumbHeight'],
-          videoUrl: messagePayload['videoUrl'],
+          snapshotUrl: messagePayload['thumbUrl'],
+          videoUrl: messagePayload['remoteVideoUrl'],
           videoSize: messagePayload['videoSize']);
       formatedMsg['videoElem'] = videoElem.toJson();
     }
@@ -233,7 +234,7 @@ class V2TIMMessage {
 
     final List<V2TimUserFullInfo>? userInfoList = userInFoRes.data;
     final List<V2TimGroupMemberInfo> memberList = List.empty(growable: true);
-    if(userInfoList != null){
+    if (userInfoList != null) {
       for (var e in userInfoList) {
         memberList.add(V2TimGroupMemberInfo(
             faceUrl: e.faceUrl,

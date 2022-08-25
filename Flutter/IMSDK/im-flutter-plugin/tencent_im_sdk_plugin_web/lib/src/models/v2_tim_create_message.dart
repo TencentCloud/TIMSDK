@@ -1,3 +1,4 @@
+import 'dart:html';
 import 'dart:typed_data';
 
 import 'package:tencent_im_sdk_plugin_web/src/enum/message_priority.dart';
@@ -49,16 +50,12 @@ class CreateMessage {
     };
   }
 
-  static createSimpleImageMessage(
-      String imagePath, Uint8List fileContent, String fileName, file) {
+  static createSimpleImageMessage(Node inputElement) {
     return {
       "elemType": 3,
       "type": "image",
       "imageElem": {
-        "path": imagePath,
-        "fileContent": fileContent,
-        "fileName": fileName,
-        "file": file
+        "file": inputElement,
       }
     };
   }
@@ -71,16 +68,16 @@ class CreateMessage {
     };
   }
 
-  static createSimpleVideoMessage(String videoFilePath, Uint8List fileContent,
-      dynamic file, String fileName) {
+  static createSimpleVideoMessage(
+    String videoFilePath,
+    dynamic file,
+  ) {
     return {
       "elemType": 5,
       "type": "video",
       "videoElem": {
         "videoFilePath": videoFilePath,
         "file": file,
-        "fileContent": fileContent,
-        "fileName": fileName
       }
     };
   }
@@ -96,7 +93,6 @@ class CreateMessage {
     };
   }
 
-  
   static createSimpleSounMessage(
       String snapshotPath, String videoFilePath, String type, int duration) {
     return {
@@ -172,19 +168,11 @@ class CreateMessage {
   }
 
   static createSimpleFileMessage(
-      {required String filePath,
-      required String fileName,
-      Uint8List? fileContent,
-      dynamic file}) {
+      {required String filePath, required String fileName, dynamic file}) {
     return {
       "elemType": 6,
       "type": "file",
-      "fileElem": {
-        "filePath": filePath,
-        "fileName": fileName,
-        "fileContent": fileContent,
-        "file": file
-      }
+      "fileElem": {"filePath": filePath, "fileName": fileName, "file": file}
     };
   }
 

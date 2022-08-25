@@ -14,19 +14,37 @@ final allowTypeMapping = <String, dynamic>{
 
 class V2TimProfile {
   static Object formateSetSelfInfoParams(Map<String, dynamic> params) {
-    final fomatedParams = <String, dynamic>{
-      "nick": params["nickName"],
-      "avatar": params["faceUrl"],
-      "gender": convertGenderFromDartToWeb(params["gender"]),
-      "selfSignature": params["selfSignature"],
-      "allowType": convertAllowTypeFromDartToWeb(params['allowType']),
-      "level": params["level"] ?? 0,
-      "role": params["role"] ?? 0,
-      "birthday": params["birthday"] ?? 0,
-      "profileCustomField":
-          convertCustomInfoFromDartToWeb(params['customInfo']),
-    };
-    return mapToJSObj(fomatedParams);
+    final paramsMap = {};
+    if (params["nickName"] != null) {
+      paramsMap["nick"] = params["nickName"];
+    }
+    if (params["faceUrl"] != null) {
+      paramsMap["avatar"] = params["faceUrl"];
+    }
+    if (params["gender"] != null) {
+      paramsMap["gender"] = convertGenderFromDartToWeb(params["gender"]);
+    }
+    if (params["selfSignature"] != null) {
+      paramsMap["selfSignature"] = params["selfSignature"];
+    }
+    if (params["allowType"] != null) {
+      paramsMap["allowType"] =
+          convertAllowTypeFromDartToWeb(params['allowType']);
+    }
+    if (params["level"] != null) {
+      paramsMap["level"] = params["level"];
+    }
+    if (params["role"] != null) {
+      paramsMap["role"] = params["role"];
+    }
+    if (params["birthday"] != null) {
+      paramsMap["birthday"] = params["birthday"];
+    }
+    if (params["customInfo"] != null) {
+      paramsMap["profileCustomField"] =
+          convertCustomInfoFromDartToWeb(params['customInfo']);
+    }
+    return mapToJSObj(paramsMap);
   }
 
   static Map<String, dynamic> userFullInfoExtract(

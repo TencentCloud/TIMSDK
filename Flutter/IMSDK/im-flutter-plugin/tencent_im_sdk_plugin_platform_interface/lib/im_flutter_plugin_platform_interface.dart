@@ -11,9 +11,11 @@ import 'package:tencent_im_sdk_plugin_platform_interface/enum/V2TimAdvancedMsgLi
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/V2TimConversationListener.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/V2TimFriendshipListener.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/V2TimGroupListener.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/enum/V2TimSignalingListener.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/get_group_message_read_member_list_filter.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/history_message_get_type.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/V2TimSimpleMsgListener.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/enum/offlinePushInfo.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/method_channel_im_flutter.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/V2_tim_topic_info.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_callback.dart';
@@ -46,6 +48,7 @@ import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_message_s
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_message_search_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_msg_create_info_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_receive_message_opt_info.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_signaling_info.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_topic_info_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_topic_operation_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_user_full_info.dart';
@@ -1286,10 +1289,7 @@ abstract class ImFlutterPlatform extends PlatformInterface {
   }
 
   Future<V2TimValueCallback<V2TimMsgCreateInfoResult>> createImageMessage(
-      {required String imagePath,
-      Uint8List? fileContent, // web 必填
-      String? fileName //web必填写
-      }) async {
+      {required String imagePath, dynamic inputElement}) async {
     throw UnimplementedError("createImageMessage() has not been implemented");
   }
 
@@ -1330,8 +1330,7 @@ abstract class ImFlutterPlatform extends PlatformInterface {
       required String type,
       required int duration,
       required String snapshotPath,
-      Uint8List? fileContent,
-      String? fileName}) async {
+      dynamic inputElement}) async {
     throw UnimplementedError("createSoundMessage() has not been implemented");
   }
 
@@ -1339,7 +1338,7 @@ abstract class ImFlutterPlatform extends PlatformInterface {
   Future<V2TimValueCallback<V2TimMsgCreateInfoResult>> createFileMessage(
       {required String filePath,
       required String fileName,
-      Uint8List? fileContent}) async {
+      dynamic inputElement}) async {
     throw UnimplementedError("createFileMessage() has not been implemented");
   }
 
@@ -2143,5 +2142,65 @@ abstract class ImFlutterPlatform extends PlatformInterface {
     required String status,
   }) async {
     throw UnimplementedError('setSelfStatus has not been implemented.');
+  }
+  // 信令
+  Future<void> addSignalingListener({
+   required String listenerUuid,
+   required V2TimSignalingListener listener,
+  })async {
+    throw UnimplementedError('addSignalingListener has not been implemented.');
+  }
+  Future<void> removeSignalingListener({
+    required String listenerUuid,
+    V2TimSignalingListener? listener,
+  })async {
+    throw UnimplementedError('removeSignalingListener has not been implemented.');
+  }
+  Future<V2TimValueCallback<String>> invite({
+    required String invitee,
+    required String data,
+    int timeout = 30,
+    bool onlineUserOnly = false,
+    OfflinePushInfo? offlinePushInfo,
+  })async {
+    throw UnimplementedError('invite has not been implemented.');
+  }
+  Future<V2TimValueCallback<String>> inviteInGroup({
+    required String groupID,
+    required List<String> inviteeList,
+    required String data,
+    int timeout = 30,
+    bool onlineUserOnly = false,
+  })async {
+    throw UnimplementedError('inviteInGroup has not been implemented.');
+  }
+  Future<V2TimCallback> cancel({
+    required String inviteID,
+    String? data,
+  })async {
+    throw UnimplementedError('cancel has not been implemented.');
+  }
+
+  Future<V2TimCallback> accept({
+    required String inviteID,
+    String? data,
+  })async {
+    throw UnimplementedError('accept has not been implemented.');
+  }
+  Future<V2TimCallback> reject({
+    required String inviteID,
+    String? data,
+  })async {
+    throw UnimplementedError('reject has not been implemented.');
+  }
+  Future<V2TimValueCallback<V2TimSignalingInfo>> getSignalingInfo({
+    required String msgID,
+  }) async {
+    throw UnimplementedError('getSignalingInfo has not been implemented.');
+  }
+  Future<V2TimCallback> addInvitedSignaling({
+    required V2TimSignalingInfo info,
+  }) async {
+    throw UnimplementedError('addInvitedSignaling has not been implemented.');
   }
 }

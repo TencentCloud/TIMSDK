@@ -16,6 +16,7 @@ import 'package:tencent_im_sdk_plugin_platform_interface/enum/V2TimConversationL
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/V2TimFriendshipListener.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/V2TimGroupListener.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/V2TimSDKListener.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/enum/V2TimSignalingListener.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/history_message_get_type.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/V2TimSimpleMsgListener.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/offlinePushInfo.dart';
@@ -46,6 +47,7 @@ import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_message_c
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_message_search_param.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_message_search_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_receive_message_opt_info.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_signaling_info.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_topic_info_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_topic_operation_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_user_full_info.dart';
@@ -57,6 +59,7 @@ import 'package:tencent_im_sdk_plugin_web/src/manager/v2_tim_group_manager.dart'
 import 'package:tencent_im_sdk_plugin_web/src/manager/v2_tim_manager.dart';
 import 'package:tencent_im_sdk_plugin_web/src/manager/v2_tim_message_manager.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_msg_create_info_result.dart';
+import 'package:tencent_im_sdk_plugin_web/src/manager/v2_tim_signaling_manager.dart';
 
 class TencentImSDKPluginWeb extends ImFlutterPlatform {
   static final V2TIMManager _v2timManager = V2TIMManager();
@@ -65,7 +68,9 @@ class TencentImSDKPluginWeb extends ImFlutterPlatform {
       V2TIMConversationManager();
   static final V2TIMFriendshipManager _v2timFriendshipManager =
       V2TIMFriendshipManager();
-  static final V2TIMMessageManager _v2timMessageManager = V2TIMMessageManager();
+  
+  static final V2TIMSignalingManager _v2timSignalingManager = V2TIMSignalingManager();
+  static final V2TIMMessageManager _v2timMessageManager = V2TIMMessageManager(_v2timSignalingManager);
   static void registerWith(Registrar registrar) {
     ImFlutterPlatform.instance = TencentImSDKPluginWeb();
   }
@@ -850,14 +855,14 @@ class TencentImSDKPluginWeb extends ImFlutterPlatform {
   }
 
   @override
-  Future<V2TimValueCallback<V2TimMsgCreateInfoResult>> createImageMessage(
-      {required String imagePath,
-      String? fileName,
-      Uint8List? fileContent}) async {
+  Future<V2TimValueCallback<V2TimMsgCreateInfoResult>> createImageMessage({
+    required String imagePath,
+    String? fileName,
+    Uint8List? fileContent,
+    dynamic inputElement,
+  }) async {
     return _v2timMessageManager.createImageMessage({
-      "imagePath": imagePath,
-      "fileName": fileName,
-      "fileContent": fileContent
+      "inputElement": inputElement,
     });
   }
 
@@ -867,16 +872,14 @@ class TencentImSDKPluginWeb extends ImFlutterPlatform {
     required String? type,
     required int? duration,
     required String? snapshotPath,
-    String? fileName,
-    Uint8List? fileContent,
+    dynamic inputElement,
   }) async {
     return _v2timMessageManager.createVideoMessage({
       "videoFilePath": videoFilePath,
       "type": type,
       "duration": duration,
       "snapshotPath": snapshotPath,
-      "fileContent": fileContent,
-      "fileName": fileName
+      "inputElement": inputElement,
     });
   }
 
@@ -892,11 +895,11 @@ class TencentImSDKPluginWeb extends ImFlutterPlatform {
   Future<V2TimValueCallback<V2TimMsgCreateInfoResult>> createFileMessage(
       {required String filePath,
       required String fileName,
-      Uint8List? fileContent}) async {
+      dynamic inputElement}) async {
     return _v2timMessageManager.createFileMessage({
       "filePath": filePath,
       "fileName": fileName,
-      "fileContent": fileContent
+      "inputElement": inputElement
     });
   }
 
@@ -1505,7 +1508,75 @@ class TencentImSDKPluginWeb extends ImFlutterPlatform {
   }) async {
     return _v2timFriendshipManager.removeFriendListener();
   }
+  // 信令模块
+  @override
+  Future<void> addSignalingListener({
+   required String listenerUuid,
+   required V2TimSignalingListener listener,
+  })async {
+    return _v2timSignalingManager.addSignalingListenerForWeb(listener: listener,listenerUuid:listenerUuid);
+  }
+  @override
+  Future<void> removeSignalingListener({
+    required String listenerUuid,
+    V2TimSignalingListener? listener,
+  })async {
+    return _v2timSignalingManager.removeSignalingListener(listener: listener,listenerUuid:listenerUuid);
+  }
+  @override
+  Future<V2TimValueCallback<String>> invite({
+    required String invitee,
+    required String data,
+    int timeout = 30,
+    bool onlineUserOnly = false,
+    OfflinePushInfo? offlinePushInfo,
+  })async {
+    return _v2timSignalingManager.invite(invitee: invitee,data:data,timeout:timeout,onlineUserOnly: onlineUserOnly,offlinePushInfo:offlinePushInfo);
+  }
+  @override
+  Future<V2TimValueCallback<String>> inviteInGroup({
+    required String groupID,
+    required List<String> inviteeList,
+    required String data,
+    int timeout = 30,
+    bool onlineUserOnly = false,
+  })async {
+   return _v2timSignalingManager.inviteInGroup(groupID: groupID,inviteeList:inviteeList,data:data,timeout: timeout,onlineUserOnly:onlineUserOnly);
+  }
+  @override
+  Future<V2TimCallback> cancel({
+    required String inviteID,
+    String? data,
+  })async {
+    return _v2timSignalingManager.cancel(inviteID: inviteID,data: data);
+  }
 
+  @override
+  Future<V2TimCallback> accept({
+    required String inviteID,
+    String? data,
+  })async {
+    return _v2timSignalingManager.accept(inviteID: inviteID,data: data);
+  }
+  @override
+  Future<V2TimCallback> reject({
+    required String inviteID,
+    String? data,
+  })async {
+    return _v2timSignalingManager.reject(inviteID: inviteID,data: data);
+  }
+  @override
+  Future<V2TimValueCallback<V2TimSignalingInfo>> getSignalingInfo({
+    required String msgID,
+  }) async {
+    return _v2timSignalingManager.getSignalingInfo(msgID: msgID);
+  }
+  @override
+  Future<V2TimCallback> addInvitedSignaling({
+    required V2TimSignalingInfo info,
+  }) async {
+    return _v2timSignalingManager.addInvitedSignaling(info: info);
+  }
   @override
   Future<V2TimValueCallback<V2TimMessageChangeInfo>> modifyMessage({
     required V2TimMessage message,
