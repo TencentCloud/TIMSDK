@@ -11,7 +11,7 @@
 			"style": {
 				"navigationBarTitleText": "uni-app",
 				"usingComponents": {
-					"tuicalling": "/wxcomponents/TUICalling/TUICallKit/TUICallKit"
+					"tuicallkit": "/wxcomponents/TUICallKit/TUICallKit"
 				}
 			}
 		}
