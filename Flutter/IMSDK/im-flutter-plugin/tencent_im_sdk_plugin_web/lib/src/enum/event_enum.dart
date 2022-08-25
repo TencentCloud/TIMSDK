@@ -59,9 +59,11 @@ class EventType {
   static String BLACKLIST_UPDATED = checkEmptyEnum(
       () => jsToMap(EventEnum.EVENT)['BLACKLIST_UPDATED'], "blacklistUpdated");
   // 好友申请变更
-  static String FRIEND_APPLICATION_LIST_UPDATED =
-      "EventEnum.EVENT?.FRIEND_APPLICATION_LIST_UPDATED;";
+  static String FRIEND_APPLICATION_LIST_UPDATED = checkEmptyEnum(
+      () => jsToMap(EventEnum.EVENT)['FRIEND_APPLICATION_LIST_UPDATED'],
+      "onFriendApplicationListUpdated");
   // 好友分组变更回调（navite中没有用到，暂不使用）
-  static String FRIEND_GROUP_LIST_UPDATED =
-      "EventEnum.EVENT?.FRIEND_GROUP_LIST_UPDATED;";
+  static String FRIEND_GROUP_LIST_UPDATED = checkEmptyEnum(
+      () => jsToMap(EventEnum.EVENT)['FRIEND_GROUP_LIST_UPDATED'],
+      "onFriendGroupListUpdated");
 }

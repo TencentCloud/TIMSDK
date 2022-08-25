@@ -11,6 +11,7 @@ import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_friend_gr
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_friend_info.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_friend_info_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_friend_operation_result.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin_web/src/enum/event_enum.dart';
 import 'package:tencent_im_sdk_plugin_web/src/enum/friend_type.dart';
 import 'package:tencent_im_sdk_plugin_web/src/manager/im_sdk_plugin_js.dart';
@@ -32,21 +33,11 @@ class V2TIMFriendshipManager {
     timeWeb = V2TIMManagerWeb.timWeb;
   }
 
-  static getUserIDlist(List<dynamic> list) {
-    var arr = [];
-    for (var item in list) {
-      arr.add(item["userID"]);
-    }
-    return arr;
-  }
+  static getUserIDlist(List<dynamic> list) =>
+      list.map((e) => e["userID"]).toList();
 
-  static getUserIDlistFromJS(List<dynamic> list) {
-    var arr = [];
-    for (var item in list) {
-      arr.add(item.userID);
-    }
-    return arr;
-  }
+  static getUserIDlistFromJS(List<dynamic> list) =>
+      list.map((e) => e.userID).toList();
 
 // 求差集
   static getDiffsFromTwoArr(List<dynamic> listA, List<dynamic> listB) {
@@ -76,7 +67,7 @@ class V2TIMFriendshipManager {
 
     print("formateListCount:$formateListCount");
     print("oldFriendListCount:$oldFriendListCount");
-    if (formateListCount > oldFriendListCount) {
+    if (formateListCount >= oldFriendListCount) {
       print("好友列表ADD回调执行");
       final addedList =
           formateList.map((e) => V2TimFriendInfo.fromJson(e)).toList();
@@ -106,7 +97,7 @@ class V2TIMFriendshipManager {
 
     print("formateListCount:$formateListCount");
     print("oldFriendListCount:$oldBlackListCount");
-    if (formateListCount > oldBlackListCount) {
+    if (formateListCount >= oldBlackListCount) {
       print("好友BlackList Add回调执行");
       final infoListMap =
           formateList.map((e) => V2TimFriendInfo.fromJson(e)).toList();
@@ -137,7 +128,7 @@ class V2TIMFriendshipManager {
 
     print("formateListCount:$formateListCount");
     print("oldFriendListCount:$oldApplicationListCount");
-    if (formateListCount > oldApplicationListCount) {
+    if (formateListCount >= oldApplicationListCount) {
       print("好友Application ADD回调执行");
       final addedList =
           formateList.map((e) => V2TimFriendApplication.fromJson(e)).toList();
@@ -183,8 +174,8 @@ class V2TIMFriendshipManager {
     timeWeb!.on(EventType.BLACKLIST_UPDATED, _blackListUpdatedHandler);
 
     // ApplicationList update Listenet
-    timeWeb!.on(
-        EventType.FRIEND_APPLICATION_LIST_UPDATED, _blackListUpdatedHandler);
+    timeWeb!.on(EventType.FRIEND_APPLICATION_LIST_UPDATED,
+        _friendApplicationListUpdatedHandler);
 
     // FriendIinfo update Listenet, res 只会返回
     timeWeb!.on(EventType.PROFILE_UPDATED, _profileUpdatedHanlder);
@@ -211,7 +202,7 @@ class V2TIMFriendshipManager {
   Future<dynamic> getFriendList() async {
     try {
       final res = await wrappedPromiseToFuture(timeWeb!.getFriendList());
-      
+
       final code = res.code;
       final friendList = res.data as List;
       if (code == 0) {
@@ -223,19 +214,38 @@ class V2TIMFriendshipManager {
     } catch (error) {
       print("12312");
       print(error);
-      try{
+      try {
         return CommonUtils.returnError(error);
-      }catch(err){}
+      } catch (err) {}
     }
   }
 
-  Future<dynamic> getFriendsInfo(Map<String, dynamic> params) async {
+  Future<V2TimValueCallback<List<V2TimFriendInfoResult>>> getFriendsInfo(
+      Map<String, dynamic> params) async {
     try {
       final res = await wrappedPromiseToFuture(
           timeWeb!.getFriendProfile(FriendInfo.formateGetInfoParams(params)));
+      final resultData = jsToMap(res.data);
+      final successFriendList = resultData['friendList'] as List;
+      final failureFriendList = resultData['failureUserIDList'] as List;
+      var formatedFailureFriendList = [];
+      if (failureFriendList.isNotEmpty) {
+        final failedUserIDList =
+            failureFriendList.map((e) => jsToMap(e)["userID"]).toList();
+        final userProfileListResult = await wrappedPromiseToFuture(timeWeb!
+            .getUserProfile(mapToJSObj({"userIDList": failedUserIDList})));
+        formatedFailureFriendList = failureFriendList.map((e) {
+          final item = jsToMap(e);
+          final userID = item["userID"];
+          final userProfileList = userProfileListResult.data as List;
+          final result = userProfileList
+              .firstWhere((element) => jsToMap(element)["userID"] == userID);
+          e.profile = result;
+          return e;
+        }).toList();
+      }
       final result = await FriendInfo.formateFriendInfoResult(
-          jsToMap(res.data)['friendList'],
-          jsToMap(res.data)['failureUserIDList']);
+          successFriendList, formatedFailureFriendList);
 
       return CommonUtils.returnSuccess<List<V2TimFriendInfoResult>>(result);
     } catch (error) {
@@ -390,7 +400,8 @@ class V2TIMFriendshipManager {
     }
   }
 
-  Future<dynamic> addToBlackList(params) async {
+  Future<V2TimValueCallback<List<V2TimFriendOperationResult>>> addToBlackList(
+      params) async {
     try {
       final formateParams = mapToJSObj({
         "userIDList": params["userIDList"],
@@ -398,8 +409,8 @@ class V2TIMFriendshipManager {
       final res =
           await wrappedPromiseToFuture(timeWeb!.addToBlacklist(formateParams));
       List<dynamic> resultArr = [];
-      res.data.forEach(
-          (userID) => resultArr.add({"userID": userID, "resultCode": null}));
+      res.data.forEach((userID) =>
+          resultArr.add({"userID": userID, "resultCode": res.code}));
 
       return CommonUtils.returnSuccess<List<V2TimFriendOperationResult>>(
           resultArr);
@@ -409,14 +420,15 @@ class V2TIMFriendshipManager {
     }
   }
 
-  Future<dynamic> deleteFromBlackList(params) async {
+  Future<V2TimValueCallback<List<V2TimFriendOperationResult>>>
+      deleteFromBlackList(params) async {
     try {
       final formateParams = mapToJSObj({
         "userIDList": params["userIDList"],
       });
-      final res = await wrappedPromiseToFuture(
-          timeWeb!.removeFromBlacklist(formateParams));
-      final formateResult = FriendBlackList.formateDeleteBlackListRes(res.data);
+      await wrappedPromiseToFuture(timeWeb!.removeFromBlacklist(formateParams));
+      final formateResult =
+          FriendBlackList.formateDeleteBlackListRes(params["userIDList"]);
       return CommonUtils.returnSuccess<List<V2TimFriendOperationResult>>(
           formateResult);
     } catch (error) {

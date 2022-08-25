@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:example/im/friendSelector.dart';
 import 'package:example/im/groupSelector.dart';
@@ -13,6 +14,7 @@ import 'package:tencent_im_sdk_plugin/models/v2_tim_msg_create_info_result.dart'
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
 import 'package:example/i18n/i18n_utils.dart';
+import 'package:universal_html/html.dart' as html;
 
 class SendImageMessage extends StatefulWidget {
   @override
@@ -31,14 +33,18 @@ class SendImageMessageState extends State<SendImageMessage> {
   String? fileName;
   final picker = ImagePicker();
   sendImageMessage() async {
+    html.Node? inputElem;
+    if (kIsWeb) {
+      inputElem = html.document
+          .getElementById("__image_picker_web-file-input")
+          ?.querySelector("input");
+    }
+
     V2TimValueCallback<V2TimMsgCreateInfoResult> createMessage =
         await TencentImSDKPlugin.v2TIMManager
             .getMessageManager()
             .createImageMessage(
-              imagePath: image!.path,
-              fileName: 'test.png',
-              fileContent: fileContent,
-            );
+                imagePath: image!.path, inputElement: inputElem);
     String id = createMessage.data!.id!;
 
     V2TimValueCallback<V2TimMessage> res = await TencentImSDKPlugin.v2TIMManager
@@ -60,12 +66,26 @@ class SendImageMessageState extends State<SendImageMessage> {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     final imageContent = await pickedFile!.readAsBytes();
     final iamgeName = pickedFile.name;
-
     setState(() {
       image = File(pickedFile.path);
       fileContent = imageContent;
       fileName = iamgeName;
     });
+  }
+
+  Widget imageRender() {
+    if (kIsWeb) {
+      return Image.memory(
+        fileContent!,
+        width: 40,
+        height: 40,
+      );
+    }
+    return Image.file(
+      image!,
+      width: 40,
+      height: 40,
+    );
   }
 
   @override
@@ -82,13 +102,7 @@ class SendImageMessageState extends State<SendImageMessage> {
                 ),
                 margin: EdgeInsets.only(right: 12),
               ),
-              image == null
-                  ? Text(imt(imt("未选择")))
-                  : Image.file(
-                      image!,
-                      width: 40,
-                      height: 40,
-                    ),
+              image == null ? Text(imt(imt("未选择"))) : imageRender(),
             ],
           ),
           Row(
@@ -105,8 +119,8 @@ class SendImageMessageState extends State<SendImageMessage> {
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child:
-                      Text(receiver.length > 0 ? receiver.toString() : imt("未选择")),
+                  child: Text(
+                      receiver.length > 0 ? receiver.toString() : imt("未选择")),
                 ),
               )
             ],
@@ -125,7 +139,8 @@ class SendImageMessageState extends State<SendImageMessage> {
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child: Text(groupID.length > 0 ? groupID.toString() : imt("未选择")),
+                  child: Text(
+                      groupID.length > 0 ? groupID.toString() : imt("未选择")),
                 ),
               )
             ],

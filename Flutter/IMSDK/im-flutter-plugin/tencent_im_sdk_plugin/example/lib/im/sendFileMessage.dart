@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:example/im/friendSelector.dart';
 import 'package:example/im/groupSelector.dart';
@@ -13,6 +14,7 @@ import 'package:tencent_im_sdk_plugin/models/v2_tim_msg_create_info_result.dart'
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
 import 'package:example/i18n/i18n_utils.dart';
+import 'package:universal_html/html.dart' as html;
 
 class SendFileMessage extends StatefulWidget {
   @override
@@ -31,13 +33,19 @@ class SendFileMessageState extends State<SendFileMessage> {
   Uint8List? fileContent;
   final picker = ImagePicker();
   sendFileMessage() async {
+    html.Node? inputElement;
+    if (kIsWeb) {
+      inputElement = html.document
+          .getElementById("__image_picker_web-file-input")
+          ?.querySelector("input");
+    }
     V2TimValueCallback<V2TimMsgCreateInfoResult> createMessage =
         await TencentImSDKPlugin.v2TIMManager
             .getMessageManager()
             .createFileMessage(
-              filePath: image!.path,
-              fileName: fileName,
-            );
+                filePath: image!.path,
+                fileName: fileName,
+                inputElement: inputElement);
     String id = createMessage.data!.id!;
 
     V2TimValueCallback<V2TimMessage> res = await TencentImSDKPlugin.v2TIMManager
@@ -98,8 +106,8 @@ class SendFileMessageState extends State<SendFileMessage> {
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child:
-                      Text(receiver.length > 0 ? receiver.toString() : imt("未选择")),
+                  child: Text(
+                      receiver.length > 0 ? receiver.toString() : imt("未选择")),
                 ),
               )
             ],
@@ -118,7 +126,8 @@ class SendFileMessageState extends State<SendFileMessage> {
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child: Text(groupID.length > 0 ? groupID.toString() : imt("未选择")),
+                  child: Text(
+                      groupID.length > 0 ? groupID.toString() : imt("未选择")),
                 ),
               )
             ],
