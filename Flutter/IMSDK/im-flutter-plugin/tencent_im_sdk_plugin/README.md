@@ -1,4 +1,4 @@
-[中文](./README.MD)/[英文](./README_EN.md)
+[中文](https://github.com/TencentCloud/TIMSDK/blob/master/Flutter/IMSDK/im-flutter-plugin/tencent_im_sdk_plugin/README.md)/[英文](https://github.com/TencentCloud/TIMSDK/blob/master/Flutter/IMSDK/im-flutter-plugin/tencent_im_sdk_plugin/README_EN.md)
 
 ### DEMO体验
 
