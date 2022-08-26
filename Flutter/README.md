@@ -1,4 +1,4 @@
-[chinese](./README_ZH.md)/[english](./README.md)
+English|[简体中文](./README_ZH.md)
 
 #### Tencent cloud instant messaging IM Flutter version source code
 
