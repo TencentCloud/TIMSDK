@@ -1,4 +1,4 @@
-[中文](./README_ZH.md)/[英文](./README.md)
+[English](./README.md)|简体中文
 
 #### 腾讯云即时通信IM React Native版本源码
 
