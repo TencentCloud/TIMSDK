@@ -21,13 +21,13 @@ import com.tencent.qcloud.tuikit.tuicallengine.impl.base.TUILog;
 import com.tencent.qcloud.tuikit.tuicallengine.utils.PermissionUtils;
 import com.tencent.qcloud.tuikit.tuicallengine.utils.TUICallingConstants;
 import com.tencent.qcloud.tuikit.tuicallengine.utils.TUICallingConstants.Scene;
-import com.tencent.qcloud.tuikit.tuicallkit.ui.R;
 import com.tencent.qcloud.tuikit.tuicallkit.base.CallingUserModel;
 import com.tencent.qcloud.tuikit.tuicallkit.base.Constants;
 import com.tencent.qcloud.tuikit.tuicallkit.base.TUICallingStatusManager;
 import com.tencent.qcloud.tuikit.tuicallkit.extensions.CallingBellFeature;
 import com.tencent.qcloud.tuikit.tuicallkit.extensions.CallingKeepAliveFeature;
 import com.tencent.qcloud.tuikit.tuicallkit.extensions.CallingScreenSensorFeature;
+import com.tencent.qcloud.tuikit.tuicallkit.ui.R;
 import com.tencent.qcloud.tuikit.tuicallkit.utils.DeviceUtils;
 import com.tencent.qcloud.tuikit.tuicallkit.utils.PermissionRequest;
 import com.tencent.qcloud.tuikit.tuicallkit.utils.UserInfoUtils;
@@ -219,6 +219,10 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
                             @Override
                             public void onError(int errCode, String errMsg) {
                                 TUILog.i(TAG, " call error, errCode: " + errCode + " , errMsg: " + errMsg);
+                                if (errCode == TUICallDefine.ERROR_PACKAGE_NOT_SUPPORTED) {
+                                    String hint = mContext.getString(R.string.tuicalling_package_not_support);
+                                    ToastUtil.toastLongMessage(hint);
+                                }
                             }
                         });
             } else {
@@ -236,6 +240,9 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
                     @Override
                     public void onError(int errCode, String errMsg) {
                         TUILog.i(TAG, " call error, errCode: " + errCode + " , errMsg: " + errMsg);
+                        if (errCode == TUICallDefine.ERROR_PACKAGE_NOT_PURCHASED) {
+                            ToastUtil.toastLongMessage(mContext.getString(R.string.tuicalling_package_not_purchased));
+                        }
                     }
                 });
             }
@@ -284,6 +291,10 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
                             @Override
                             public void onError(int errCode, String errMsg) {
                                 resetCall();
+                                if (errCode == TUICallDefine.ERROR_PACKAGE_NOT_SUPPORTED) {
+                                    String hint = mContext.getString(R.string.tuicalling_package_not_support);
+                                    ToastUtil.toastLongMessage(hint);
+                                }
                             }
                         });
             }
