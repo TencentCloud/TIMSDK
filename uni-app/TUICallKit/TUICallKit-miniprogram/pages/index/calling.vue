@@ -1,6 +1,6 @@
 <template>
 	<view class="container">
-		<tuicalling ref="TUICalling" id="TUICalling-component" :config="config"></tuicalling>
+		<tuicallkit ref="TUICallKit" id="TUICallKit-component" :config="config"></tuicallkit>
 		<view class="input-container">
 			<label class="list-item-label" style="margin-bottom: 10px;">呼叫用户ID:<span
 					style="color:#C0C0C0;margin-left: 8px;"></span></label>
@@ -56,15 +56,15 @@
 				userID: getApp().globalData.userID,
 				userSig: getApp().globalData.userSig
 			}
-			console.log(this.$refs.TUICalling, 'TUICalling | ok')
+			console.log(this.$refs.TUICallKit, 'TUICallKit | ok')
 			this.$nextTick(() => {
-				this.$refs.TUICalling.init()
+				this.$refs.TUICallKit.init()
 			})
 
 		},
 
 		onUnload() {
-			this.$refs.TUICalling.destroyed();
+			this.$refs.TUICallKit.destroyed();
 		},
 		methods: {
 			callingHandle(type) {
@@ -89,14 +89,14 @@
 							return
 						}
 						if (res.data.length == 1) {
-							this.$refs.TUICalling.call({
+							this.$refs.TUICallKit.call({
 								userID: userIDs[0],
 								type
 							})
 						}
 						//groupCall接口暂不稳定，不建议使用，后续升级更新会在文档同步
 						// if (res.data.length > 1) {
-						// 	this.$refs.TUICalling.groupCall({
+						// 	this.$refs.TUICallKit.groupCall({
 						// 		userIDList: userIDs,
 						// 		type: type
 						// 	})
