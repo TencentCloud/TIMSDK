@@ -67,6 +67,10 @@ export default class TUICore extends ITUIServer {
     if (!TUICore.instance) {
       TUICore.instance = new TUICore(options);
     }
+    Aegis.setAegisOptions({
+      ext2: 'IMTUIKitWebExternal',
+      ext3: options.SDKAppID,
+    });
     if (TUIEnv().isH5) {
       Aegis.reportEvent({
         name: 'SDKAppID',

@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field
+
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
@@ -6,6 +8,7 @@ import 'package:tencent_im_sdk_plugin/enum/offlinePushInfo.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_signaling_info.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/im_flutter_plugin_platform_interface.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/utils/utils.dart';
 import 'package:uuid/uuid.dart';
 
@@ -46,8 +49,10 @@ class V2TIMSignalingManager {
   }) {
     final String listenerUuid = Uuid().v4();
     this.signalingListenerList[listenerUuid] = listener;
-    return _channel.invokeMethod(
-        "addSignalingListener", buildParam({"listenerUuid": listenerUuid}));
+    return ImFlutterPlatform.instance.addSignalingListener(
+      listenerUuid: listenerUuid,
+      listener: listener,
+    );
   }
 
   ///移除信令监听
@@ -64,8 +69,8 @@ class V2TIMSignalingManager {
     } else {
       this.signalingListenerList.clear();
     }
-    return _channel.invokeMethod(
-        "removeSignalingListener", buildParam({"listenerUuid": listenerUuid}));
+    return ImFlutterPlatform.instance
+        .removeSignalingListener(listenerUuid: listenerUuid);
   }
 
   Future<V2TimValueCallback<String>> invite({
@@ -75,22 +80,12 @@ class V2TIMSignalingManager {
     bool onlineUserOnly = false,
     OfflinePushInfo? offlinePushInfo,
   }) async {
-    return V2TimValueCallback<String>.fromJson(
-      formatJson(
-        await _channel.invokeMethod(
-          "invite",
-          buildParam(
-            {
-              "invitee": invitee,
-              "data": data,
-              "timeout": timeout,
-              "onlineUserOnly": onlineUserOnly,
-              "offlinePushInfo": offlinePushInfo?.toJson(),
-            },
-          ),
-        ),
-      ),
-    );
+    return ImFlutterPlatform.instance.invite(
+        invitee: invitee,
+        data: data,
+        timeout: timeout,
+        onlineUserOnly: onlineUserOnly,
+        offlinePushInfo: offlinePushInfo);
   }
 
   Future<V2TimValueCallback<String>> inviteInGroup({
@@ -100,40 +95,21 @@ class V2TIMSignalingManager {
     int timeout = 30,
     bool onlineUserOnly = false,
   }) async {
-    return V2TimValueCallback<String>.fromJson(
-      formatJson(
-        await _channel.invokeMethod(
-          "inviteInGroup",
-          buildParam(
-            {
-              "groupID": groupID,
-              "inviteeList": inviteeList,
-              "data": data,
-              "timeout": timeout,
-              "onlineUserOnly": onlineUserOnly,
-            },
-          ),
-        ),
-      ),
-    );
+    return ImFlutterPlatform.instance.inviteInGroup(
+        groupID: groupID,
+        inviteeList: inviteeList,
+        data: data,
+        timeout: timeout,
+        onlineUserOnly: onlineUserOnly);
   }
 
   Future<V2TimCallback> cancel({
     required String inviteID,
     String? data,
   }) async {
-    return V2TimCallback.fromJson(
-      formatJson(
-        await _channel.invokeMethod(
-          "cancel",
-          buildParam(
-            {
-              "inviteID": inviteID,
-              "data": data,
-            },
-          ),
-        ),
-      ),
+    return ImFlutterPlatform.instance.cancel(
+      inviteID: inviteID,
+      data: data,
     );
   }
 
@@ -141,18 +117,9 @@ class V2TIMSignalingManager {
     required String inviteID,
     String? data,
   }) async {
-    return V2TimCallback.fromJson(
-      formatJson(
-        await _channel.invokeMethod(
-          "accept",
-          buildParam(
-            {
-              "inviteID": inviteID,
-              "data": data,
-            },
-          ),
-        ),
-      ),
+    return ImFlutterPlatform.instance.accept(
+      inviteID: inviteID,
+      data: data,
     );
   }
 
@@ -160,18 +127,9 @@ class V2TIMSignalingManager {
     required String inviteID,
     String? data,
   }) async {
-    return V2TimCallback.fromJson(
-      formatJson(
-        await _channel.invokeMethod(
-          "reject",
-          buildParam(
-            {
-              "inviteID": inviteID,
-              "data": data,
-            },
-          ),
-        ),
-      ),
+    return ImFlutterPlatform.instance.reject(
+      inviteID: inviteID,
+      data: data,
     );
   }
 
@@ -188,34 +146,16 @@ class V2TIMSignalingManager {
   Future<V2TimValueCallback<V2TimSignalingInfo>> getSignalingInfo({
     required String msgID,
   }) async {
-    return V2TimValueCallback<V2TimSignalingInfo>.fromJson(
-      formatJson(
-        await _channel.invokeMethod(
-          "getSignalingInfo",
-          buildParam(
-            {
-              "msgID": msgID,
-            },
-          ),
-        ),
-      ),
+    return ImFlutterPlatform.instance.getSignalingInfo(
+      msgID: msgID,
     );
   }
 
   Future<V2TimCallback> addInvitedSignaling({
     required V2TimSignalingInfo info,
   }) async {
-    return V2TimCallback.fromJson(
-      formatJson(
-        await _channel.invokeMethod(
-          "addInvitedSignaling",
-          buildParam(
-            {
-              "info": info.toJson(),
-            },
-          ),
-        ),
-      ),
+    return ImFlutterPlatform.instance.addInvitedSignaling(
+      info: info,
     );
   }
 

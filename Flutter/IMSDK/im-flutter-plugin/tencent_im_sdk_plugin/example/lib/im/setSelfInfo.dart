@@ -13,26 +13,20 @@ class SetSelfInfo extends StatefulWidget {
 }
 
 class SetSelfInfoState extends State<SetSelfInfo> {
-  String nickname = '';
-  String faceUrl = '';
-  String selfSignature = "";
+  String? nickname;
+  String? faceUrl;
+  String? selfSignature;
   int? gender;
   int? allowType;
   int? bithday;
-  Map<String, String> customInfo = {};
+  Map<String, String> customInfo = {
+    "Str":"test custominfo 1222 r"
+  };
 
   Map<String, dynamic>? resData;
   setSelfInfo() async {
     V2TimCallback res = await TencentImSDKPlugin.v2TIMManager.setSelfInfo(
-      userFullInfo: V2TimUserFullInfo.fromJson({
-        "nickName": nickname,
-        "faceUrl": faceUrl,
-        "selfSignature": selfSignature,
-        "gender": gender,
-        "allowType": allowType,
-        "customInfo": customInfo,
-        "birthday": bithday,
-      }),
+      userFullInfo: V2TimUserFullInfo(nickName: nickname,faceUrl: faceUrl,selfSignature: selfSignature,gender: gender,allowType: allowType,customInfo: customInfo,birthday: bithday),
     );
     setState(() {
       resData = res.toJson();
@@ -324,7 +318,7 @@ class SetSelfInfoState extends State<SetSelfInfo> {
                               margin: EdgeInsets.only(left: 12),
                               child: faceUrl != ''
                                   ? Image.network(
-                                      faceUrl,
+                                      faceUrl ?? "",
                                       width: 40,
                                       height: 40,
                                     )

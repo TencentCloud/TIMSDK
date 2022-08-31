@@ -1,6 +1,6 @@
 name: tencent_im_sdk_plugin_web
 description: The web implementation of tencent_im_sdk_plugin.
-version: 0.2.7
+version: 0.2.9
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -12,12 +12,11 @@ dependencies:
   flutter_web_plugins:
     sdk: flutter
   mime_type: ^1.0.0
-  tencent_im_sdk_plugin_platform_interface: 
-    path: ../tencent_im_sdk_plugin_platform_interface
+  tencent_im_sdk_plugin_platform_interface: 0.3.2
   js: ^0.6.2
   path: ^1.8.0
   uuid: ^3.0.5
-
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

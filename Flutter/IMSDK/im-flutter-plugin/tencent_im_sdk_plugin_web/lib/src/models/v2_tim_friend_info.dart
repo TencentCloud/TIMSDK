@@ -68,7 +68,7 @@ class FriendInfo {
               "resultInfo": jsToMap(e)['message'],
               "relation": getRelationByUserID(
                   jsToMap(e)['userID'] as String, successUserIDList),
-              "friendInfo": {"userID": jsToMap(e)['userID'], "friendGroups": []}
+              "friendInfo": formateFriendInfo(jsToMap(e))
             })
         .toList();
   }

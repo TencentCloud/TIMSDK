@@ -74,7 +74,7 @@ class CommonUtils {
   //   return V2TimValueCallback<T>.fromJson(value);
   // }
 
-  static V2TimValueCallback<T> returnErrorForValueCb<T>(data) {
+  static V2TimValueCallback<T> returnErrorForValueCb<T>(data, {resultData}) {
     final value = {'code': 0, 'desc': data};
     if (data is String) {
       value['code'] = 0;
@@ -84,6 +84,7 @@ class CommonUtils {
       if (dataMap.containsKey("code")) {
         value['code'] = dataMap['code'] ?? 0;
         value['desc'] = dataMap["message"];
+        value['data'] = resultData;
       } else {
         value['desc'] = data.toString();
       }

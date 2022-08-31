@@ -137,10 +137,10 @@ class V2TIMGroupManager {
     try {
       final updateGroupParams = {
         "groupID": params['groupID'],
-        "name": params['groupName'] ?? '',
-        "avatar": params['faceUrl'] ?? '',
-        "introduction": params['introduction'] ?? '',
-        "notification": params['notification'] ?? '',
+        "name": params['groupName'],
+        "avatar": params['faceUrl'],
+        "introduction": params['introduction'],
+        "notification": params['notification'],
         "joinOption": GroupAddOptWeb.convertGroupAddOptToWeb(params['addOpt']),
         "groupCustomField":
             V2TimGroupCreate.convertGroupCustomInfoFromDartToWeb(

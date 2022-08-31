@@ -27,7 +27,9 @@ import com.tencent.imsdk.v2.V2TIMUserInfo;
 import com.tencent.imsdk.v2.V2TIMUserStatus;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -843,21 +845,21 @@ public class TimManager {
 
     }
     public void setSelfInfo(final MethodCall methodCall, final MethodChannel.Result result) {
+        final String nickName = methodCall.argument("nickName");
+        final  String faceUrl = methodCall.argument("faceUrl");
+        final  String selfSignature = methodCall.argument("selfSignature");
+        final Integer gender = methodCall.argument("gender");
+        final Integer allowType = methodCall.argument("allowType");
+        final Integer birthday = methodCall.argument("birthday");
+        final Integer level = methodCall.argument("level");
+        final Integer role = methodCall.argument("role");
+        final HashMap<String,String> customInfoString = methodCall.argument("customInfo");
+
+        final V2TIMUserFullInfo userFullInfo = new V2TIMUserFullInfo();
+
         CommonUtil.checkAbility(methodCall, new AbCallback() {
             @Override
             public void onAbSuccess() {
-                String nickName = methodCall.argument("nickName");
-                String faceUrl = methodCall.argument("faceUrl");
-                String selfSignature = methodCall.argument("selfSignature");
-                Integer gender = methodCall.argument("gender");
-                Integer allowType = methodCall.argument("allowType");
-                Integer birthday = methodCall.argument("birthday");
-                Integer level = methodCall.argument("level");
-                Integer role = methodCall.argument("role");
-                HashMap<String,String> customInfoString = methodCall.argument("customInfo");
-
-                V2TIMUserFullInfo userFullInfo = new V2TIMUserFullInfo();
-
                 if(nickName!=null){
                     userFullInfo.setNickname(nickName);
                 }
@@ -882,16 +884,19 @@ public class TimManager {
                 if(role!=null){
                     userFullInfo.setRole(role);
                 }
+                HashMap<String, byte[]> newCustomHashMap = userFullInfo.getCustomInfo();
                 if(CommonUtil.getParam(methodCall,result,"customInfo")!=null){
-                    HashMap<String, byte[]> newCustomHashMap = new HashMap<String, byte[]>();
                     if(!customInfoString.isEmpty()){
-                        for(String key : customInfoString.keySet() ){
+                        Iterator<String> iterator = customInfoString.keySet().iterator();
+                        while (iterator.hasNext()) {
+                            String key = iterator.next();
                             String value = customInfoString.get(key);
                             newCustomHashMap.put(key,value.getBytes());
                         }
-                        userFullInfo.setCustomInfo(newCustomHashMap);
                     }
+                    userFullInfo.setCustomInfo(newCustomHashMap);
                 }
+                System.out.println(userFullInfo);
                 V2TIMManager.getInstance().setSelfInfo(userFullInfo, new V2TIMCallback() {
                     @Override
                     public void onError(int i, String s) {

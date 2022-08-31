@@ -1,4 +1,4 @@
-简体中文 | [English](./README.md)
+[English](./README.md) | 简体中文
 
 - Windows 快速开始 [集成 SDK](https://cloud.tencent.com/document/product/269/33489) 和 [跑通 demo](https://cloud.tencent.com/document/product/269/33488)。
 

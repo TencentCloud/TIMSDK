@@ -9,10 +9,11 @@ import 'package:tencent_im_sdk_plugin_platform_interface/enum/V2TimAdvancedMsgLi
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/V2TimConversationListener.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/V2TimFriendshipListener.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/V2TimGroupListener.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/enum/V2TimSignalingListener.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/get_group_message_read_member_list_filter.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/history_message_get_type.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/enum/V2TimSimpleMsgListener.dart';
-import 'package:tencent_im_sdk_plugin_platform_interface/enum/message_elem_type.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/enum/offlinePushInfo.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/im_flutter_plugin_platform_interface.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/V2_tim_topic_info.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_callback.dart';
@@ -43,6 +44,7 @@ import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_message_r
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_message_search_param.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_message_search_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_receive_message_opt_info.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_signaling_info.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_topic_info_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_topic_operation_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_user_full_info.dart';
@@ -1729,10 +1731,7 @@ class MethodChannelIm extends ImFlutterPlatform {
 
   @override
   Future<V2TimValueCallback<V2TimMsgCreateInfoResult>> createImageMessage(
-      {required String imagePath,
-      Uint8List? fileContent, // web 必填 native不需要
-      String? fileName //web必填写 native不需要
-      }) async {
+      {required String imagePath, dynamic inputElement}) async {
     return V2TimValueCallback<V2TimMsgCreateInfoResult>.fromJson(
       formatJson(
         await _channel.invokeMethod(
@@ -1766,13 +1765,13 @@ class MethodChannelIm extends ImFlutterPlatform {
   }
 
   @override
-  Future<V2TimValueCallback<V2TimMsgCreateInfoResult>> createVideoMessage(
-      {required String videoFilePath,
-      required String type,
-      required int duration,
-      required String snapshotPath,
-      Uint8List? fileContent,
-      String? fileName}) async {
+  Future<V2TimValueCallback<V2TimMsgCreateInfoResult>> createVideoMessage({
+    required String videoFilePath,
+    required String type,
+    required int duration,
+    required String snapshotPath,
+    dynamic inputElement,
+  }) async {
     return V2TimValueCallback<V2TimMsgCreateInfoResult>.fromJson(
       formatJson(
         await _channel.invokeMethod(
@@ -1783,8 +1782,6 @@ class MethodChannelIm extends ImFlutterPlatform {
               "type": type,
               "duration": duration,
               "snapshotPath": snapshotPath,
-              "fileContent": fileContent,
-              "fileName": fileName
             },
           ),
         ),
@@ -1836,7 +1833,7 @@ class MethodChannelIm extends ImFlutterPlatform {
   Future<V2TimValueCallback<V2TimMsgCreateInfoResult>> createFileMessage(
       {required String filePath,
       required String fileName,
-      Uint8List? fileContent}) async {
+      dynamic inputElement}) async {
     return V2TimValueCallback<V2TimMsgCreateInfoResult>.fromJson(
       formatJson(
         await _channel.invokeMethod(
@@ -1845,7 +1842,6 @@ class MethodChannelIm extends ImFlutterPlatform {
             {
               "filePath": filePath,
               "fileName": fileName,
-              "fileContent": fileContent
             },
           ),
         ),
@@ -2924,7 +2920,7 @@ class MethodChannelIm extends ImFlutterPlatform {
             }))));
   }
 
-  @override 
+  @override
   Future<V2TimValueCallback<V2TimMessage>> appendMessage({
     required String createMessageBaseId,
     required String createMessageAppendId,
@@ -2937,9 +2933,10 @@ class MethodChannelIm extends ImFlutterPlatform {
               "createMessageAppendId": createMessageAppendId,
             }))));
   }
+
   @override
   Future<V2TimValueCallback<List<V2TimUserStatus>>> getUserStatus({
-    required List< String > userIDList,
+    required List<String> userIDList,
   }) async {
     return V2TimValueCallback<List<V2TimUserStatus>>.fromJson(
         formatJson(await _channel.invokeMethod(
@@ -2953,12 +2950,11 @@ class MethodChannelIm extends ImFlutterPlatform {
   Future<V2TimCallback> setSelfStatus({
     required String status,
   }) async {
-    return V2TimCallback.fromJson(
-        formatJson(await _channel.invokeMethod(
-            'setSelfStatus',
-            buildTimManagerParam({
-              "status": status,
-            }))));
+    return V2TimCallback.fromJson(formatJson(await _channel.invokeMethod(
+        'setSelfStatus',
+        buildTimManagerParam({
+          "status": status,
+        }))));
   }
 
   @override
@@ -2976,32 +2972,33 @@ class MethodChannelIm extends ImFlutterPlatform {
   Future<V2TimCallback> subscribeUserStatus({
     required List<String> userIDList,
   }) async {
-    return V2TimCallback.fromJson(
-        formatJson(await _channel.invokeMethod(
+    return V2TimCallback.fromJson(formatJson(await _channel.invokeMethod(
       'subscribeUserStatus',
       buildTimManagerParam(
         {
-          "userIDList":userIDList,
+          "userIDList": userIDList,
         },
       ),
     )));
   }
+
   @override
   Future<V2TimCallback> unsubscribeUserStatus({
-    required List< String > userIDList,
+    required List<String> userIDList,
   }) async {
-   return V2TimCallback.fromJson(
-        formatJson(await _channel.invokeMethod(
+    return V2TimCallback.fromJson(formatJson(await _channel.invokeMethod(
       'unsubscribeUserStatus',
       buildTimManagerParam(
         {
-          "userIDList":userIDList,
+          "userIDList": userIDList,
         },
       ),
     )));
   }
+
   @override
-   Future<V2TimValueCallback<List<V2TimConversationOperationResult> >> setConversationCustomData({
+  Future<V2TimValueCallback<List<V2TimConversationOperationResult>>>
+      setConversationCustomData({
     required String customData,
     required List<String> conversationIDList,
   }) async {
@@ -3010,29 +3007,32 @@ class MethodChannelIm extends ImFlutterPlatform {
       'setConversationCustomData',
       buildConversationManagerParam(
         {
-          "customData":customData,
-          "conversationIDList":conversationIDList,
+          "customData": customData,
+          "conversationIDList": conversationIDList,
         },
       ),
     )));
   }
+
   @override
-  Future<V2TimValueCallback<V2TimConversationResult>> getConversationListByFilter({
+  Future<V2TimValueCallback<V2TimConversationResult>>
+      getConversationListByFilter({
     required V2TimConversationListFilter filter,
-    
   }) async {
     return V2TimValueCallback<V2TimConversationResult>.fromJson(
         formatJson(await _channel.invokeMethod(
       'getConversationListByFilter',
       buildConversationManagerParam(
         {
-          "filter":filter.toJson(),
+          "filter": filter.toJson(),
         },
       ),
     )));
   }
+
   @override
-  Future<V2TimValueCallback<List<V2TimConversationOperationResult>>> markConversation({
+  Future<V2TimValueCallback<List<V2TimConversationOperationResult>>>
+      markConversation({
     required int markType,
     required bool enableMark,
     required List<String> conversationIDList,
@@ -3042,15 +3042,17 @@ class MethodChannelIm extends ImFlutterPlatform {
       'markConversation',
       buildConversationManagerParam(
         {
-          "markType":markType,
-          "enableMark":enableMark,
-          "conversationIDList":conversationIDList,
+          "markType": markType,
+          "enableMark": enableMark,
+          "conversationIDList": conversationIDList,
         },
       ),
     )));
   }
+
   @override
-  Future<V2TimValueCallback<List<V2TimConversationOperationResult>>> createConversationGroup({
+  Future<V2TimValueCallback<List<V2TimConversationOperationResult>>>
+      createConversationGroup({
     required String groupName,
     required List<String> conversationIDList,
   }) async {
@@ -3059,56 +3061,57 @@ class MethodChannelIm extends ImFlutterPlatform {
       'createConversationGroup',
       buildConversationManagerParam(
         {
-          "groupName":groupName,
-          "conversationIDList":conversationIDList,
+          "groupName": groupName,
+          "conversationIDList": conversationIDList,
         },
       ),
     )));
   }
+
   @override
   Future<V2TimValueCallback<List<String>>> getConversationGroupList() async {
     return V2TimValueCallback<List<String>>.fromJson(
         formatJson(await _channel.invokeMethod(
       'getConversationGroupList',
       buildConversationManagerParam(
-        {
-          
-        },
+        {},
       ),
     )));
   }
+
   @override
   Future<V2TimCallback> deleteConversationGroup({
     required String groupName,
   }) async {
-    return V2TimCallback.fromJson(
-        formatJson(await _channel.invokeMethod(
+    return V2TimCallback.fromJson(formatJson(await _channel.invokeMethod(
       'deleteConversationGroup',
       buildConversationManagerParam(
         {
-          "groupName":groupName,
+          "groupName": groupName,
         },
       ),
     )));
   }
+
   @override
-   Future<V2TimCallback> renameConversationGroup({
+  Future<V2TimCallback> renameConversationGroup({
     required String oldName,
     required String newName,
   }) async {
-    return V2TimCallback.fromJson(
-        formatJson(await _channel.invokeMethod(
+    return V2TimCallback.fromJson(formatJson(await _channel.invokeMethod(
       'renameConversationGroup',
       buildConversationManagerParam(
         {
-          "oldName":oldName,
-          "newName":newName,
+          "oldName": oldName,
+          "newName": newName,
         },
       ),
     )));
   }
+
   @override
-  Future<V2TimValueCallback<List<V2TimConversationOperationResult>>> addConversationsToGroup({
+  Future<V2TimValueCallback<List<V2TimConversationOperationResult>>>
+      addConversationsToGroup({
     required String groupName,
     required List<String> conversationIDList,
   }) async {
@@ -3117,14 +3120,16 @@ class MethodChannelIm extends ImFlutterPlatform {
       'addConversationsToGroup',
       buildConversationManagerParam(
         {
-          "groupName":groupName,
-          "conversationIDList":conversationIDList,
+          "groupName": groupName,
+          "conversationIDList": conversationIDList,
         },
       ),
     )));
   }
+
   @override
-  Future<V2TimValueCallback<List<V2TimConversationOperationResult>>> deleteConversationsFromGroup({
+  Future<V2TimValueCallback<List<V2TimConversationOperationResult>>>
+      deleteConversationsFromGroup({
     required String groupName,
     required List<String> conversationIDList,
   }) async {
@@ -3133,14 +3138,191 @@ class MethodChannelIm extends ImFlutterPlatform {
       'deleteConversationsFromGroup',
       buildConversationManagerParam(
         {
-          "groupName":groupName,
-          "conversationIDList":conversationIDList,
+          "groupName": groupName,
+          "conversationIDList": conversationIDList,
         },
       ),
     )));
   }
+
+  // 信令
+  @override
+  Future<void> addSignalingListener({
+    required String listenerUuid,
+    required V2TimSignalingListener listener,
+  }) async {
+    return _channel.invokeMethod(
+        "addSignalingListener",
+        buildSignalingManagerParam({
+          "listenerUuid": listenerUuid,
+        }));
+  }
+
+  @override
+  Future<void> removeSignalingListener({
+    required String listenerUuid,
+    V2TimSignalingListener? listener,
+  }) async {
+    return _channel.invokeMethod(
+        "removeSignalingListener",
+        buildSignalingManagerParam({
+          "listenerUuid": listenerUuid,
+        }));
+  }
+
+  @override
+  Future<V2TimValueCallback<String>> invite({
+    required String invitee,
+    required String data,
+    int timeout = 30,
+    bool onlineUserOnly = false,
+    OfflinePushInfo? offlinePushInfo,
+  }) async {
+    return V2TimValueCallback<String>.fromJson(
+      formatJson(
+        await _channel.invokeMethod(
+          "invite",
+          buildSignalingManagerParam(
+            {
+              "invitee": invitee,
+              "data": data,
+              "timeout": timeout,
+              "onlineUserOnly": onlineUserOnly,
+              "offlinePushInfo": offlinePushInfo?.toJson(),
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Future<V2TimValueCallback<String>> inviteInGroup({
+    required String groupID,
+    required List<String> inviteeList,
+    required String data,
+    int timeout = 30,
+    bool onlineUserOnly = false,
+  }) async {
+    return V2TimValueCallback<String>.fromJson(
+      formatJson(
+        await _channel.invokeMethod(
+          "inviteInGroup",
+          buildSignalingManagerParam(
+            {
+              "groupID": groupID,
+              "inviteeList": inviteeList,
+              "data": data,
+              "timeout": timeout,
+              "onlineUserOnly": onlineUserOnly
+            },
+          ),
+        ),
+      ),
+    );
+  }
+@override
+  Future<V2TimCallback> cancel({
+    required String inviteID,
+    String? data,
+  })async {
+    return V2TimCallback.fromJson(
+      formatJson(
+        await _channel.invokeMethod(
+          "cancel",
+          buildSignalingManagerParam(
+            {
+              "inviteID": inviteID,
+              "data": data,
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Future<V2TimCallback> accept({
+    required String inviteID,
+    String? data,
+  })async {
+    return V2TimCallback.fromJson(
+      formatJson(
+        await _channel.invokeMethod(
+          "accept",
+          buildSignalingManagerParam(
+            {
+              "inviteID": inviteID,
+              "data": data,
+            },
+          ),
+        ),
+      ),
+    );
+  }
+  @override
+  Future<V2TimCallback> reject({
+    required String inviteID,
+    String? data,
+  })async {
+    return V2TimCallback.fromJson(
+      formatJson(
+        await _channel.invokeMethod(
+          "reject",
+          buildSignalingManagerParam(
+            {
+              "inviteID": inviteID,
+              "data": data,
+            },
+          ),
+        ),
+      ),
+    );
+  }
+  @override
+  Future<V2TimValueCallback<V2TimSignalingInfo>> getSignalingInfo({
+    required String msgID,
+  }) async {
+    return V2TimValueCallback<V2TimSignalingInfo>.fromJson(
+      formatJson(
+        await _channel.invokeMethod(
+          "getSignalingInfo",
+          buildSignalingManagerParam(
+            {
+              "msgID": msgID,
+            },
+          ),
+        ),
+      ),
+    );
+  }
+  @override
+  Future<V2TimCallback> addInvitedSignaling({
+    required V2TimSignalingInfo info,
+  }) async {
+     return V2TimCallback.fromJson(
+      formatJson(
+        await _channel.invokeMethod(
+          "addInvitedSignaling",
+          buildSignalingManagerParam(
+            {
+              "info": info.toJson(),
+            },
+          ),
+        ),
+      ),
+    );
+  }
   Map buildGroupManagerParam(Map param) {
     param["TIMManagerName"] = "groupManager";
+    try {
+      param["ability"] = Utils.getAbility();
+    } catch (err) {}
+    return param;
+  }
+
+  Map buildSignalingManagerParam(Map param) {
+    param["TIMManagerName"] = "signalingManager";
     try {
       param["ability"] = Utils.getAbility();
     } catch (err) {}
@@ -3170,7 +3352,7 @@ class MethodChannelIm extends ImFlutterPlatform {
     } catch (err) {}
     return param;
   }
-  
+
   ///@nodoc
   Map buildConversationManagerParam(Map param) {
     param["TIMManagerName"] = "conversationManager";

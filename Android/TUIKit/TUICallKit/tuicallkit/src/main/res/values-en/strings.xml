@@ -1,6 +1,4 @@
 <resources>
-    <string name="tuicalling_inviting_tag">They also</string>
-    <string name="tuicalling_call_time_default">"00:01"</string>
     <string name="tuicalling_contact_default_name">test 123</string>
     <string name="tuicalling_invite_video_call">Invites you to a video call…</string>
     <string name="tuicalling_toast_call_error_msg">Error [%1$d]:%2$s.</string>
@@ -15,7 +13,6 @@
     <string name="tuicalling_toast_use_handset">Earpiece</string>
     <string name="tuicalling_called_time_format">%02d:%02d</string>
     <string name="tuicalling_toast_user_end">%s end the call.</string>
-    <string name="tuicalling_title_have_a_call_invitation">You have a call invitation.</string>
     <string name="tuicalling_other_party_network_low_quality">The other party\'s network connection is poor</string>
     <string name="tuicalling_self_network_low_quality">Your network connection is poor</string>
     <string name="tuicalling_toast_switch_camera">Switch Camera</string>
@@ -32,7 +29,6 @@
     <string name="tuicalling_switch_camera_hint">Turn on your camera first</string>
     <string name="tuicalling_switch_audio_call">Switch to Voice Call</string>
     <string name="tuicalling_btn_cancel">Cancel</string>
-    <string name="tuicalling_tips_start_camera_audio">Please turn on the camera and microphone permissions first</string>
     <string name="tuicalling_tips_start_audio">Please turn on the microphone permissions first</string>
     <string name="tuicalling_video_call">Video Call</string>
     <string name="tuicalling_audio_call">Voice Call</string>
@@ -40,11 +36,12 @@
     <string name="tuicalling_user_sig_expired">Your user signature information has expired</string>
     <string name="tuicalling_user_exceed_limit">TUICalling currently supports call with up to 9 people.For larger conference calls,try using TUIRoom</string>
     <string name="tuicalling_wait_resonse">Waiting</string>
-    <string name="tuicalling_float_permission">please open "Display over other apps" permission</string>
     <string name="tuicalling_is_calling">Unable to restart the call</string>
     <string name="tuicalling_tips_start_camera">Please turn on the camera permission first</string>
     <string name="tuicalling_permission_mic_reason_title">%s applies for access to the microphone</string>
-    <string name="tuicalling_permission_mic_reason">Needs access to your microphone, and it can be used for functions such as Interactive Video Streaming, Show Live, Video Call, Group Video Call, Multi-person audio and video room, etc.</string>
+    <string name="tuicalling_permission_mic_reason">Needs access to your microphone, and it can be used for functions such as Audio/Video Call, Group Audio/Video Call etc.</string>
     <string name="tuicalling_permission_camera_reason_title">%s applies for camera permission</string>
-    <string name="tuicalling_permission_camera_reason">Needs access to your camera, and it can be used for functions such as Interactive Video Streaming, Show Live, Video Call, Group Video Call, Multi-person audio and video room, etc. For beauty filters to work, we will collect the facial information captured by your camera in real time to detect your facial features.</string>
+    <string name="tuicalling_permission_camera_reason">Needs access to your camera, and it can be used for functions such as Video Call, Group Video Call etc. For beauty filters to work, we will collect the facial information captured by your camera in real time to detect your facial features.</string>
+    <string name="tuicalling_package_not_purchased">You do not have TUICallKit package, please open the free experience in the console or purchase the official package</string>
+    <string name="tuicalling_package_not_support">The package you purchased does not support this ability</string>
 </resources>

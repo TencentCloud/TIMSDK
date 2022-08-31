@@ -124,7 +124,6 @@ class V2TIMManager {
     }
   }
 
-  ///@nodoc
   void addNativeCallback(MethodChannel _channel) {
     _channel.setMethodCallHandler((call) {
       try {
@@ -771,22 +770,6 @@ class V2TIMManager {
     });
   }
 
-  /// 初始化SDK
-  ///
-  /// 参数
-  ///
-  /// ```
-  /// @required int sdkAppID	应用 ID，必填项，可以在控制台中获取
-  /// @required LogLevelEnum loglevel	配置信息
-  /// @required [InitListener] listener	SDK的回调
-  /// ```
-  ///
-  /// 返回
-  /// ```
-  /// true：成功；
-  /// false：失败
-  /// ```
-  /// 本sdk封装与nativeSDk，也可以参考[native文档](https://im.sdk.qcloud.com/doc/zh-cn/classcom_1_1tencent_1_1imsdk_1_1v2_1_1V2TIMMessageManager.html#a28e01403acd422e53e999f21ec064795)
   Future<V2TimValueCallback<bool>> initSDK({
     required int sdkAppID,
     required LogLevelEnum loglevel,

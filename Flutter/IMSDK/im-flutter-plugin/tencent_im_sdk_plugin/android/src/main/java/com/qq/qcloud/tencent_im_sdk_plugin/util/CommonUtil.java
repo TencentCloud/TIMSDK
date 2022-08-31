@@ -260,7 +260,7 @@ public class CommonUtil {
         message.put("random",msg.getRandom());
         message.put("isExcludedFromUnreadCount",msg.isExcludedFromUnreadCount());
         message.put("isExcludedFromLastMessage",msg.isExcludedFromLastMessage());
-        message.put("needReadReceipt", true);
+        message.put("needReadReceipt", msg.isNeedReadReceipt());
         V2TIMOfflinePushInfo info =  msg.getOfflinePushInfo();
 
         HashMap<String,Object> offlinePushInfo = new HashMap<String, Object>();
