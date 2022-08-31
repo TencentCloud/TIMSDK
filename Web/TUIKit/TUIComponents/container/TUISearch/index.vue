@@ -23,7 +23,7 @@
       @update:show="(e)=>(open = e)"
       >
       <Transfer
-        :isSearch="false"
+        :isSearch="needSearch"
         :title="showTitle"
         :list="searchUserList"
         :isH5="env.isH5"
@@ -62,6 +62,7 @@ const TUISearch = defineComponent({
       open: false,
       searchUserID: '',
       selectedList: [],
+      allUserList: [],
       searchUserList: [],
       step: 1,
       group: {
@@ -82,6 +83,7 @@ const TUISearch = defineComponent({
       createConversationType: '',
       env: TUIServer.TUICore.TUIEnv,
       optionalShow: !TUIServer.TUICore.TUIEnv.isH5,
+      needSearch: !TUIServer.TUICore.isOfficial,
     });
 
     TUIServer.bind(data);
@@ -96,6 +98,7 @@ const TUISearch = defineComponent({
     onClickOutside(dialog, () => {
       if (data.env.isH5) {
         data.optionalShow = false;
+        data.searchUserList = [...data.allUserList];
       }
     });
 
@@ -143,6 +146,7 @@ const TUISearch = defineComponent({
         data.group.memberList = userList.map((item:any) => ({ userID: item.userID }));
         data.step = 2;
       }
+      data.searchUserList = [...data.allUserList];
     };
 
     // creating group
@@ -193,27 +197,56 @@ const TUISearch = defineComponent({
         name: 'conversationType',
         ext1: 'createConversation',
       });
+      data.searchUserList = [...data.allUserList];
       switch (type) {
         case 'isC2C':
           data.createConversationType = constant.typeC2C;
           data.showTitle = t('TUISearch.发起单聊');
+          TUIAegis.getInstance().reportEvent({
+            name: 'conversationType',
+            ext1: 'createConversation-c2c',
+          });
           return data.showTitle;
         case 'isGroup':
           data.createConversationType = constant.typeGroup;
           data.showTitle = t('TUISearch.发起群聊');
+          TUIAegis.getInstance().reportEvent({
+            name: 'conversationType',
+            ext1: 'createConversation-group',
+          });
           return data.showTitle;
       }
     };
 
-    const toggleOptionalShow = ()=> {
+    const toggleOptionalShow = () => {
       if (data.env.isH5) {
         data.optionalShow = !data.optionalShow;
       }
     };
+
+    const handleSearch = async (val:any) => {
+      try {
+        const imResponse:any = await TUIServer.getUserProfile([val]);
+        if (!imResponse.data.length) {
+          handleErrorPrompts(t('TUISearch.该用户不存在'), data.env);
+          data.searchUserList = [...data.allUserList];
+          return;
+        }
+        data.searchUserList = imResponse.data;
+        const searchAllResult = data.allUserList.filter((item:any) => item.userID === imResponse.data[0].userID);
+        data.allUserList = searchAllResult.length ? data.allUserList : [...data.allUserList,...data.searchUserList];
+      } catch (error) {
+        handleErrorPrompts(t('TUISearch.该用户不存在'), data.env);
+        data.searchUserList = [...data.allUserList];
+        return;
+      }
+    };
+
+
     return {
       ...toRefs(data),
       toggleOpen,
-      // handleSearch,
+      handleSearch,
       submit,
       create,
       showOpen,

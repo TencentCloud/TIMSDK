@@ -11,8 +11,7 @@
         </div>
       </template>
       <template v-slot:right>
-        <!-- <el-dropdown @command="change"> -->
-        <el-dropdown>
+        <el-dropdown @command="change">
           <span class="dropdown">
             <i class="icon icon-global"></i>
             <label>{{$t('当前语言')}}</label>
@@ -21,7 +20,9 @@
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item  command="zh_cn">简体中文</el-dropdown-item>
-              <el-dropdown-item  command="en">English(敬请期待)</el-dropdown-item>
+              <el-dropdown-item  command="en">
+                <a @click="openLink(Link.intl)" class="language-intl">English</a>
+              </el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>

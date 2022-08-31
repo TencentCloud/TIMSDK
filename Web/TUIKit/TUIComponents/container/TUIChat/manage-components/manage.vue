@@ -725,6 +725,10 @@ const manage = defineComponent({
       }
       if (data.show) {
         getMember();
+        TUIAegis.getInstance().reportEvent({
+          name: 'showGroupManage',
+          ext1: 'showGroupManage',
+        });
       }
     };
 
@@ -738,6 +742,10 @@ const manage = defineComponent({
       userList.map((item: any) => {
         userIDList.push(item.userID);
         return item;
+      });
+      TUIAegis.getInstance().reportEvent({
+        name: 'groupOptions',
+        ext1: 'groupOptions',
       });
       switch (type) {
         case 'add':
