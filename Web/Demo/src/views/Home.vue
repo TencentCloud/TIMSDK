@@ -1,58 +1,66 @@
 <template>
-  <div id="preloadedImages" :class="['home' + (env.isH5 ? '-h5' : '')]">
+  <div :class="['home' + (env.isH5 ? '-h5' : '')]" :id="env.isH5 ? '' : 'preloadedImages'">
     <Header class="home-header" v-if="!env.isH5">
       <template v-slot:left>
         <div class="menu" :class="[menuStatus && 'menu-open']" @click="toggleMenu">
           <i class="icon icon-menu"></i>
-          <label>{{$t('使用指引')}}</label>
+          <label>{{ $t('使用指引') }}</label>
         </div>
       </template>
       <template v-slot:right>
-        <!-- <el-dropdown @command="change"> -->
-        <el-dropdown trigger="click">
+        <el-dropdown @command="change">
           <span class="dropdown">
             <i class="icon icon-global"></i>
-            <label>{{$t('当前语言')}}</label>
+            <label>{{ $t('当前语言') }}</label>
             <i class="icon icon-arrow-down"></i>
           </span>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item  command="zh_cn">简体中文</el-dropdown-item>
-              <el-dropdown-item  command="en">English(敬请期待)</el-dropdown-item>
+              <el-dropdown-item command="zh_cn">简体中文</el-dropdown-item>
+              <el-dropdown-item command="en">
+                <a @click="openLink(Link.intl)" class="language-intl">English</a>
+              </el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
       </template>
     </Header>
-    <div :class="['menu' + (env.isH5 ? '-h5' : '')]" v-if="menuStatus"  @click.self="toggleMenu">
+    <div :class="['menu' + (env.isH5 ? '-h5' : '')]" v-if="menuStatus" @click.self="toggleMenu">
       <Menu class="home-menu">
         <template #header>
           <div class="logo" v-if="!env.isH5">
-            <img src="../assets/image/txc-logo.svg" alt="">
-            <label class="logo-name">{{$t('腾讯云')}}</label>
+            <img src="../assets/image/txc-logo.svg" alt="" />
+            <label class="logo-name">{{ $t('腾讯云') }}</label>
             <p>
-              <label class="logo-name">{{$t('即时通信IM')}}</label>
+              <label class="logo-name">{{ $t('即时通信IM') }}</label>
             </p>
           </div>
           <div class="menu-title" v-else>
-            <h1>{{$t('使用指引')}}</h1>
-            <span class="btn btn-text" @click="toggleMenu">{{$t('Home.关闭')}}</span>
+            <h1>{{ $t('使用指引') }}</h1>
+            <span class="btn btn-text" @click="toggleMenu">{{ $t('Home.关闭') }}</span>
           </div>
         </template>
         <template #main>
           <div class="menu-main">
             <ul class="menu-main-list bottom-line">
-              <h1 class="menu-main-title">{{$t('Home.建议体验功能')}}</h1>
-              <li class="menu-main-list-item flex-justify-between" :class="[item.status && 'complete']" v-for="(item, index) in taskList" :key="index">
-                <label>{{$t(`Home.${item.label}`)}}</label>
-                <span class="status"><text>{{$t(item.status ? 'Home.已完成' : 'Home.待体验')}}</text></span>
+              <h1 class="menu-main-title">{{ $t('Home.建议体验功能') }}</h1>
+              <li
+                class="menu-main-list-item flex-justify-between"
+                :class="[item.status && 'complete']"
+                v-for="(item, index) in taskList"
+                :key="index"
+              >
+                <label>{{ $t(`Home.${item.label}`) }}</label>
+                <span class="status"
+                  ><text>{{ $t(item.status ? 'Home.已完成' : 'Home.待体验') }}</text></span
+                >
               </li>
             </ul>
             <ul class="menu-main-list">
-              <h1 class="menu-main-title">{{$t('Home.用UI组件快速集成')}}</h1>
+              <h1 class="menu-main-title">{{ $t('Home.用UI组件快速集成') }}</h1>
               <li class="menu-main-list-item" v-for="(item, index) in stepList" :key="index">
-                <label class="step">{{index+1}}</label>
-                <a @click="openDataLink(item)">{{$t(`Home.${item.label}`)}}</a>
+                <label class="step">{{ index + 1 }}</label>
+                <a @click="openDataLink(item)">{{ $t(`Home.${item.label}`) }}</a>
               </li>
             </ul>
           </div>
@@ -61,12 +69,14 @@
           <div class="menu-footer">
             <ul class="menu-footer-list">
               <li class="menu-footer-list-item" v-for="(item, index) in advList" :key="index">
-                <a  @click="openDataLink(item)">
+                <a @click="openDataLink(item)">
                   <aside>
-                    <h1>{{$t(`Home.${item.label}`)}}</h1>
-                    <h1 v-if="item.subLabel" class="sub">{{$t(`Home.${item.subLabel}`)}}</h1>
+                    <h1>{{ $t(`Home.${item.label}`) }}</h1>
+                    <h1 v-if="item.subLabel" class="sub">{{ $t(`Home.${item.subLabel}`) }}</h1>
                   </aside>
-                  <span><text>{{$t(`Home.${item.btnText}`)}}</text></span>
+                  <span>
+                    <text>{{ $t(`Home.${item.btnText}`) }}</text>
+                  </span>
                 </a>
               </li>
             </ul>
@@ -74,107 +84,164 @@
         </template>
       </Menu>
     </div>
-   <main class="home-main" :class="[menuStatus && 'home-main-open']" v-if="!env.isH5">
-    <div class="home-main-box">
-      <div class="home-TUIKit">
-        <div class="setting">
-          <main class="setting-main">
-            <aside class="userInfo">
-              <img
-                class="avatar"
-                :src="userInfo.avatar ? userInfo.avatar : 'https://web.sdk.qcloud.com/component/TUIKit/assets/avatar_21.png'"
-                onerror="this.src='https://web.sdk.qcloud.com/component/TUIKit/assets/avatar_21.png'">
-              <div class="userInfo-main" :class="[showProfile ? 'TUIProfile' : '']" @click.self="handleChangeStatus">
-                <main>
-                  <TUIProfile :view="showProfile ? 'edit' : 'default'" @changeStatus="handleChangeStatus" />
-                </main>
-              </div>
-            </aside>
-            <ul class="setting-main-list">
-              <li class="setting-main-list-item" :class="[currentModel === 'message' && 'selected']" @click="selectModel('message')">
-                <i v-show="currentModel === 'message'" class="icon icon-message-selected"></i>
-                <i v-show="currentModel !== 'message'" class="icon icon-message"></i>
-              </li>
-              <li class="setting-main-list-item" :class="[currentModel === 'group'&& 'selected']" @click="selectModel('group')">
-                <i v-show="currentModel === 'group'" class="icon icon-relation-selected"></i>
-                <i v-show="currentModel !== 'group'" class="icon icon-relation"></i>
-              </li>
-            </ul>
-          </main>
-          <div class="setting-footer" @click="getProfile">
-            <i class="icon icon-setting" @click="openShowMore"></i>
-            <div class="setting-more" v-if="showMore">
-              <div class="showmore">
-                <div class="show-profile" >
-                  <span @click="openShowProfile">{{$t('Home.编辑资料')}}</span>
+    <main class="home-main" :class="[menuStatus && 'home-main-open']" v-if="!env.isH5">
+      <div class="home-main-box">
+        <div class="home-TUIKit">
+          <div class="setting">
+            <main class="setting-main">
+              <aside class="userInfo">
+                <img
+                  class="avatar"
+                  :src="
+                    userInfo.avatar
+                      ? userInfo.avatar
+                      : 'https://web.sdk.qcloud.com/component/TUIKit/assets/avatar_21.png'
+                  "
+                  onerror="this.src='https://web.sdk.qcloud.com/component/TUIKit/assets/avatar_21.png'"
+                />
+                <div class="userInfo-main" :class="[showProfile ? 'TUIProfile' : '']" @click.self="handleChangeStatus">
+                  <main>
+                    <TUIProfile :view="showProfile ? 'edit' : 'default'" @changeStatus="handleChangeStatus" />
+                  </main>
                 </div>
-                <div  class="show-about" @click="openShowAbout">
-                  <span>{{$t('Home.关于腾讯云IM')}}</span>
+              </aside>
+              <ul class="setting-main-list">
+                <li
+                  class="setting-main-list-item"
+                  :class="[currentModel === 'message' && 'selected']"
+                  @click="selectModel('message')"
+                >
+                  <i v-show="currentModel === 'message'" class="icon icon-message-selected"></i>
+                  <i v-show="currentModel !== 'message'" class="icon icon-message"></i>
+                </li>
+                <li
+                  class="setting-main-list-item"
+                  :class="[currentModel === 'group' && 'selected']"
+                  @click="selectModel('group')"
+                >
+                  <i v-show="currentModel === 'group'" class="icon icon-relation-selected"></i>
+                  <i v-show="currentModel !== 'group'" class="icon icon-relation"></i>
+                </li>
+              </ul>
+            </main>
+            <div class="setting-footer" @click="getProfile">
+              <i class="icon icon-setting" @click="openShowMore"></i>
+              <div class="setting-more" v-if="showMore">
+                <div class="showmore">
+                  <div class="show-profile" :class="[showProfile && 'more-selected']" @click="openShowProfile" @mouseover="closeShowReceipt">
+                    <span>{{ $t('Home.编辑资料') }}</span>
+                  </div>
+                  <div >
+                    <div @mouseover="openShowReceipt" class="show-receipt" :class="[showReceipt && 'more-selected']">
+                      <span>{{ $t('Home.消息阅读状态') }}</span>
+                      <i class="icon icon-right-transparent"></i>
+                    </div>
+                    <div class="receipt-select" v-if="showReceipt" >
+                      <div
+                        class="show-receipt"
+                        :class="[showReceipt && needReadReceipt && 'more-selected']"
+                        @click="setReadReceipt(true)"
+                      >
+                        <span>{{ $t('Home.开启') }}</span>
+                        <i v-show="needReadReceipt" class="icon icon-selected"></i>
+                      </div>
+                      <div
+                        class="show-receipt"
+                        :class="[showReceipt && !needReadReceipt && 'more-selected']"
+                        @click="setReadReceipt(false)"
+                      >
+                        <span>{{ $t('Home.关闭') }}</span>
+                        <i v-show="!needReadReceipt" class="icon icon-selected"></i>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="show-about" @click="openShowAbout" :class="[showAbout && 'more-selected']"  @mouseover="closeShowReceipt">
+                    <span>{{ $t('Home.关于腾讯云IM') }}</span>
+                  </div>
+                  <div class="show-cut-box">
+                    <p class="show-cut"></p>
+                  </div>
+                  <div class="show-quit" @click="exitLogin"  @mouseover="closeShowReceipt">
+                    <span>{{ $t('Home.退出登录') }}</span>
+                  </div>
                 </div>
-              <div class="show-cut-box">
-                <p  class="show-cut"></p>
+                <div class="moreMask" @click.self="openShowMore"></div>
               </div>
-                <div  class="show-quit" @click="exitLogin" >
-                  <span>{{$t('Home.退出登录')}}</span>
-                </div>
-              </div>
-              <div class="moreMask" @click.self="openShowMore"></div>
             </div>
           </div>
-        </div>
-        <div class="home-TUIKit-main" v-show="currentModel === 'message'">
-          <div class="conversation">
-            <TUISearch />
-            <TUIConversation @current="handleCurrentConversation" />
+          <div class="home-TUIKit-main" v-show="currentModel === 'message'">
+            <div class="conversation">
+              <TUISearch />
+              <TUIConversation @current="handleCurrentConversation" />
+            </div>
+            <div class="chat">
+              <TUIChat :isSupportGroupReceipt="isSupportGroupReceipt" >
+                <div class="chat-default">
+                  <h1>
+                    {{ $t('Home.欢迎使用') }} <img class="logo" src="../assets/image/logo.svg" alt="" />
+                    {{ $t('即时通信') }}
+                  </h1>
+                  <p>
+                    {{
+                      showText?
+                      $t(
+                        'Home.我们为您默认提供了一位“示例好友”和一个“示例客服群”您不用额外添加好友和群聊就可完整体验腾讯云 IM 单聊、群聊的所有功能。'
+                      ):''
+                    }}
+                    <br v-show="showText"/>
+                    {{ $t('Home.随时随地') }}
+                  </p>
+                </div>
+              </TUIChat>
+            </div>
           </div>
-          <div class="chat" >
-            <TUIChat>
+          <div class="home-TUIKit-main" v-show="currentModel === 'group'">
+            <TUIContact v-show="currentModel === 'group'">
               <div class="chat-default">
                 <h1>
-                  {{$t('Home.欢迎使用')}} <img class="logo" src="../assets/image/logo.svg" alt=""> {{$t('即时通信')}}
+                  {{ $t('Home.欢迎使用') }} <img class="logo" src="../assets/image/logo.svg" alt="" />
+                  {{ $t('即时通信') }}
                 </h1>
-                <p>{{$t('Home.我们为您默认提供了一位“示例好友”和一个“示例客服群”您不用额外添加好友和群聊就可完整体验腾讯云 IM 单聊、群聊的所有功能。')}}<br/> {{$t('Home.随时随地')}}</p>
+                <p>
+                  {{
+                    showText?
+                    $t(
+                      'Home.我们为您默认提供了一位“示例好友”和一个“示例客服群”您不用额外添加好友和群聊就可完整体验腾讯云 IM 单聊、群聊的所有功能。'
+                    ):''
+                  }}
+                  <br v-show="showText"/>
+                  {{ $t('Home.随时随地') }}
+                </p>
               </div>
-            </TUIChat>
+            </TUIContact>
           </div>
         </div>
-        <div class="home-TUIKit-main" v-show="currentModel === 'group'">
-          <TUIContact v-show="currentModel === 'group'">
-            <div class="chat-default">
-              <h1>
-                {{$t('Home.欢迎使用')}} <img class="logo" src="../assets/image/logo.svg" alt=""> {{$t('即时通信')}}
-              </h1>
-              <p>{{$t('Home.我们为您默认提供了一位“示例好友”和一个“示例客服群”您不用额外添加好友和群聊就可完整体验腾讯云 IM 单聊、群聊的所有功能。')}}
-                <br/> {{$t('Home.随时随地')}}</p>
-            </div>
-          </TUIContact>
-        </div>
       </div>
-    </div>
-   </main>
-    <div  class="dialog"  v-if="showAbout"  @click.self="closeShowAbout">
+    </main>
+    <div class="dialog" v-if="showAbout" @click.self="closeShowAbout">
       <div class="show-about-box">
         <header class="title" v-if="env.isH5">
           <i class="icon icon-back" @click.self="closeShowAbout"></i>
-          <h1>{{$t('Home.关于腾讯云·通信')}}</h1>
+          <h1>{{ $t('Home.关于腾讯云·通信') }}</h1>
         </header>
         <main>
           <header>
-            <img src="../assets/image/logo.svg" alt="">
-            <h1>{{$t('即时通信')}}</h1>
+            <img src="../assets/image/logo.svg" alt="" />
+            <h1>{{ $t('即时通信') }}</h1>
           </header>
-            <span class="sub">{{$t('Home.SDK版本')}}:{{version}}</span>
+          <span class="sub">{{ $t('Home.SDK版本') }}:{{ version }}</span>
         </main>
         <footer>
           <ul class="list">
             <li class="line">
-              <a  @click="openLink(Link.privacy)">《{{$t(`Login.${Link.privacy.label}`)}}》</a>
-              <a  @click="openLink(Link.agreement)">《{{$t(`Login.${Link.agreement.label}`)}}》</a>
-              <a  @click="openDisclaimer">{{$t('Home.免责声明')}}</a>
+              <a @click="openLink(Link.privacy)">《{{ $t(`Login.${Link.privacy.label}`) }}》</a>
+              <a @click="openLink(Link.agreement)">《{{ $t(`Login.${Link.agreement.label}`) }}》</a>
+              <a @click="openDisclaimer">{{ $t('Home.免责声明') }}</a>
             </li>
             <li class="line">
-              <a  @click="openLink(Link.contact)">《{{$t(`Home.${Link.contact.label}`)}}》</a>
-              <a  @click="openShowCancellation">{{$t('Home.注销账户')}}</a>
+              <a @click="openLink(Link.contact)">《{{ $t(`Home.${Link.contact.label}`) }}》</a>
+              <a @click="openShowCancellation">{{ $t('Home.注销账户') }}</a>
             </li>
             <li class="line">
               <p class="show-about-date">Copyright @ 2015-2022 Tecent. All Rights Reserved.</p>
@@ -184,18 +251,23 @@
       </div>
     </div>
     <div v-if="showCancellation" class="dialog">
-      <div  class="cancellation-box">
+      <div class="cancellation-box">
         <header class="title" v-if="env.isH5">
           <i class="icon icon-back" @click.self="cancel"></i>
-          <h1>{{$t('Home.关于腾讯云·通信')}}</h1>
+          <h1>{{ $t('Home.关于腾讯云·通信') }}</h1>
         </header>
         <main>
           <i class="icon icon-warn"></i>
-          <span>{{$t('Home.注销后，您将无法使用当前账号，相关数据也将删除无法找回。 当前账号')}}：<text  class="cancelID">{{userInfo.userID}}</text></span>
+          <span
+            >{{ $t('Home.注销后，您将无法使用当前账号，相关数据也将删除无法找回。 当前账号') }}：<text
+              class="cancelID"
+              >{{ userInfo.userID }}</text
+            ></span
+          >
         </main>
         <footer>
-          <button class="btn btn-submit" @click="submitCancellation(userInfo)">{{$t('Home.注销')}}</button>
-          <button class="btn btn-default" @click="cancel">{{$t('Home.取消')}}</button>
+          <button class="btn btn-submit" @click="submitCancellation(userInfo)">{{ $t('Home.注销') }}</button>
+          <button class="btn btn-default" @click="cancel">{{ $t('Home.取消') }}</button>
         </footer>
       </div>
     </div>
@@ -203,67 +275,81 @@
       <div class="disclaimer-box">
         <header class="title" v-if="env.isH5">
           <i class="icon icon-back" @click.self="showDisclaimer = false"></i>
-          <h1>{{$t('Home.关于腾讯云·通信')}}</h1>
+          <h1>{{ $t('Home.关于腾讯云·通信') }}</h1>
         </header>
         <main>
-          <header>{{$t(`Home.${disclaimer.label}`)}}</header>
-          <article>{{$t(`Home.${disclaimer.text}`)}}</article>
+          <header>{{ $t(`Home.${disclaimer.label}`) }}</header>
+          <article>{{ $t(`Home.${disclaimer.text}`) }}</article>
         </main>
         <footer @click="submitDisclaimer">
-          <button class="btn btn-default">{{$t('Home.同意')}}</button>
+          <button class="btn btn-default">{{ $t('Home.同意') }}</button>
         </footer>
       </div>
     </div>
-   <main class="home-h5-main" v-if="env.isH5">
-     <div class="message" v-show="!currentConversationID">
-      <main class="home-h5-content" v-show="currentModel === 'message'">
-        <header class="home-h5-main-header">
-          <TUISearch />
-          <span class="btn btn-text" @click="toggleMenu">{{$t('使用指引')}}</span>
-        </header>
-        <div class="home-h5-main-content">
+    <main class="home-h5-main" v-if="env.isH5">
+      <div class="message" v-show="!currentConversationID">
+        <main class="home-h5-content" v-show="currentModel === 'message'">
+          <header class="home-h5-main-header">
+            <TUISearch />
+            <span class="btn btn-text" @click="toggleMenu">{{ $t('使用指引') }}</span>
+          </header>
+          <div class="home-h5-main-content">
             <TUIConversation @current="handleCurrentConversation" />
-        </div>
-      </main>
-      <main class="home-h5-content" v-show="currentModel === 'group'">
-        <TUIContact></TUIContact>
-      </main>
-      <main class="home-h5-content home-h5-profile" v-show="currentModel === 'profile'">
-        <TUIProfile />
-        <ul class="home-h5-profile-list">
-          <li class="home-h5-profile-list-item" @click="openShowAbout">
-            <label>{{$t('Home.关于腾讯云·通信')}}</label>
-            <i class="icon icon-right"></i>
-          </li>
-        </ul>
-        <footer class="home-h5-profile-footer">
-          <button class="btn" @click.prevent="exitLogin">{{$t('Home.退出登录')}}</button>
+          </div>
+        </main>
+        <main class="home-h5-content" v-show="currentModel === 'group'">
+          <TUIContact></TUIContact>
+        </main>
+        <main class="home-h5-content home-h5-profile" v-show="currentModel === 'profile'">
+          <TUIProfile />
+          <ul class="home-h5-profile-list">
+            <li class="home-h5-profile-list-item">
+              <div class="home-h5-profile-list-item-receipt">
+                <label>{{ $t('Home.消息阅读状态') }}</label>
+                <div class="home-h5-profile-list-item-receipt-cont">
+                  <p>{{ needReadReceipt?$t('Home.关闭阅读状态'):$t('Home.开启阅读状态') }}</p>
+                </div>
+              </div>
+              <div>
+                <input type="checkbox" class="switch" checked v-model="needReadReceipt" @click="setReadReceipt(!needReadReceipt)"/>
+              </div>
+            </li>
+            <li class="home-h5-profile-list-item" @click="openShowAbout">
+              <label>{{ $t('Home.关于腾讯云·通信') }}</label>
+              <i class="icon icon-right"></i>
+            </li>
+          </ul>
+          <footer class="home-h5-profile-footer">
+            <button class="btn" @click.prevent="exitLogin">{{ $t('Home.退出登录') }}</button>
+          </footer>
+        </main>
+        <footer class="nav">
+          <ul class="nav-list">
+            <li class="nav-list-item" v-for="(item, index) in navList" :key="index" @click="selectModel(item.name)">
+              <i
+                class="icon"
+                :class="['icon-' + (currentModel === item.name ? `${item.icon}-selected` : `${item.icon}-real`)]"
+              ></i>
+              <label :class="[currentModel === item.name && `selected`]">{{ $t(`Home.${item.label}`) }}</label>
+            </li>
+          </ul>
         </footer>
-      </main>
-      <footer class="nav">
-        <ul class="nav-list">
-          <li class="nav-list-item" v-for="(item, index) in navList" :key="index" @click="selectModel(item.name)">
-            <i class="icon" :class="['icon-' + (currentModel === item.name ? `${item.icon}-selected` : `${item.icon}-real`)]"></i>
-            <label :class="[currentModel === item.name && `selected`]">{{$t(`Home.${item.label}`)}}</label>
-          </li>
-        </ul>
-      </footer>
-     </div>
-      <TUIChat v-show="currentConversationID" />
-   </main>
-   </div>
+      </div>
+      <TUIChat v-show="currentConversationID" :isSupportGroupReceipt="isSupportGroupReceipt" />
+    </main>
+  </div>
 </template>
 
-<script lang="ts" >
+<script lang="ts">
 import { computed, defineComponent, getCurrentInstance, reactive, toRefs } from 'vue';
-import { useI18nLocale  } from '../TUIKit/TUIPlugin/TUIi18n';
-import { TUICore  } from '../TUIKit';
+import { useI18nLocale } from '../TUIKit/TUIPlugin/TUIi18n';
+import { TUICore } from '../TUIKit';
 import Header from '../components/Header.vue';
 import Menu from '../components/Menu.vue';
 import { useStore } from 'vuex';
 import router from '@/router';
 import TUIAegis from '@/utils/TUIAegis';
-import { cancellation }   from '../api';
+import { cancellation } from '../api';
 import { switchTitle } from '../utils/switchTitle';
 import Link from '../assets/link';
 
@@ -275,7 +361,8 @@ export default defineComponent({
   setup(props, context) {
     const instance = getCurrentInstance();
     const locale = useI18nLocale();
-    const TUIKit:any = instance?.appContext.config.globalProperties.$TUIKit;
+    const TUIKit: any = instance?.appContext.config.globalProperties.$TUIKit;
+    const store = useStore();
     const data = reactive({
       stepList: Link.stepList,
       advList: Link.advList,
@@ -298,6 +385,7 @@ export default defineComponent({
       showProfile: false,
       showAbout: false,
       showMore: false,
+      showReceipt: false,
       showCancellation: false,
       showDisclaimer: false,
       currentModel: 'message',
@@ -321,17 +409,18 @@ export default defineComponent({
         },
       ],
       currentConversationID: '',
+      isSupportGroupReceipt: true,
+      showText: TUICore.instance.isOfficial,
     });
-
-    TUICore.instance.TUIServer.TUIProfile.getMyProfile().then((res:any)=>{
+    TUICore.instance.TUIServer.TUIProfile.getMyProfile().then((res: any) => {
       data.userInfo = res.data;
     });
 
-    const store = useStore();
     const taskList = computed(() => store.state.taskList);
-    const version : string  = TUICore.instance.TIM.VERSION;
+    const version: string = TUICore.instance.TIM.VERSION;
+    const needReadReceipt = computed(() => store.state.needReadReceipt);
 
-    const change = (value:any) => {
+    const change = (value: any) => {
       if (locale.value !== value) {
         locale.value = value;
         TUIAegis.getInstance().reportEvent({
@@ -343,27 +432,42 @@ export default defineComponent({
       }
     };
 
-
     const toggleMenu = () => {
       data.menuStatus = !data.menuStatus;
     };
 
-    const selectModel = (modelName:string) => {
+    const selectModel = (modelName: string) => {
       data.currentModel = modelName;
     };
 
-    const handleChangeStatus  = ()  =>  {
+    const handleChangeStatus = () => {
       data.showMore = false;
-      data.showProfile  = false;
+      data.showProfile = false;
       TUICore.instance.TUIServer.TUIProfile.setEdit(false);
     };
 
-    const openShowMore  = ()  =>  {
+    const openShowMore = () => {
       data.showMore = !data.showMore;
-      data.showProfile  = false;
-      data.showAbout  = false;
+      if (data.showMore) {
+        TUIAegis.getInstance().reportEvent({
+          name: 'showMore',
+          ext1: 'showMore',
+        });
+      }
+      data.showProfile = false;
+      data.showAbout = false;
+      data.showReceipt = false;
       data.showCancellation = false;
     };
+
+    const openShowReceipt = () => {
+      data.showReceipt = true;
+    };
+
+    const closeShowReceipt = () => {
+      data.showReceipt = false;
+    };
+
 
     const exitLogin = async () => {
       router.push({ name: 'Login' });
@@ -376,43 +480,49 @@ export default defineComponent({
         ext1: 'logout-success',
       });
     };
-    const openShowProfile = ()  =>  {
+    const openShowProfile = () => {
       TUICore.instance.TUIServer.TUIProfile.setEdit(true);
       data.showProfile = true;
+      data.showReceipt = false;
+      TUIAegis.getInstance().reportEvent({
+        name: 'showProfile',
+        ext1: 'showProfile',
+      });
     };
-    const openShowAbout = ()  =>  {
-      data.showAbout  = true;
+    const openShowAbout = () => {
+      data.showAbout = true;
+      data.showReceipt = false;
     };
-    const openShowCancellation  = ()  =>  {
+    const openShowCancellation = () => {
       data.showCancellation = true;
     };
-    const cancel  = ()  =>  {
+    const cancel = () => {
       data.showCancellation = false;
       data.showMore = false;
     };
 
-    const closeShowAbout  = ()  =>  {
-      data.showAbout  = false;
+    const closeShowAbout = () => {
+      data.showAbout = false;
     };
 
-    const openDisclaimer  =  () =>  {
+    const openDisclaimer = () => {
       data.showDisclaimer = true;
     };
 
-    const submitDisclaimer  = ()  =>  {
+    const submitDisclaimer = () => {
       data.showDisclaimer = false;
       data.showMore = false;
     };
 
-    const submitCancellation = ()  =>  {
-      const deleteInfo:any = localStorage.getItem('TUIKit-userInfo');
-      const deleteInfoList =  JSON.parse(deleteInfo);
+    const submitCancellation = () => {
+      const deleteInfo: any = localStorage.getItem('TUIKit-userInfo');
+      const deleteInfoList = JSON.parse(deleteInfo);
       const options: any = {
         userId: deleteInfoList.userId,
         token: deleteInfoList.token,
         phone: deleteInfoList.phone,
       };
-      TUIKit.logout().then((res:any) => {
+      TUIKit.logout().then((res: any) => {
         TUIAegis.getInstance().reportEvent({
           name: 'cancellationCount',
           ext1: 'cancellationCount-success',
@@ -422,7 +532,7 @@ export default defineComponent({
         router.push({ name: 'Login' });
       });
     };
-    const openDataLink = (item:any) =>  {
+    const openDataLink = (item: any) => {
       window.open(item.url);
       TUIAegis.getInstance().reportEvent({
         name: 'openLink',
@@ -430,7 +540,7 @@ export default defineComponent({
       });
     };
 
-    const openLink = (type:any) => {
+    const openLink = (type: any) => {
       window.open(type.url);
       TUIAegis.getInstance().reportEvent({
         name: 'openLink',
@@ -441,6 +551,11 @@ export default defineComponent({
     const handleCurrentConversation = (value: string) => {
       data.currentModel = 'message';
       data.currentConversationID = value;
+    };
+
+    const setReadReceipt = (value: boolean) => {
+      store.commit('setNeedReadReceipt', value);
+      data.showMore = false;
     };
 
     return {
@@ -462,13 +577,17 @@ export default defineComponent({
       submitDisclaimer,
       Link,
       openShowProfile,
+      openShowReceipt,
       openLink,
       openDataLink,
       handleCurrentConversation,
+      setReadReceipt,
+      needReadReceipt,
+      closeShowReceipt,
     };
   },
 });
 </script>
 <style lang="scss" scoped>
-@import "../styles/home.scss";
+@import '../styles/home.scss';
 </style>

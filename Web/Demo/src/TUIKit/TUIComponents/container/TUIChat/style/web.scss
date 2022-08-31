@@ -139,6 +139,7 @@
   flex: 1;
   height: 100%;
   overflow-y: auto;
+  position: relative;
 
   .message-more {
     font-size: 0.9rem;
@@ -154,6 +155,7 @@
     display: flex;
     position: relative;
     padding: 0 20px 30px;
+    flex-direction: column;
 
     .message-label {
       max-width: 50px;
@@ -164,29 +166,70 @@
     flex-direction: row-reverse;
     justify-content: flex-start;
   }
+
+  .to-bottom-tip {
+    position: sticky;
+    bottom: 10px;
+    left: 100%;
+    margin-right: 15px;
+    width: 92px;
+    height: 28px;
+    padding: 0 5px;
+    background: #FFFFFF;
+    border: 1px solid #E0E0E0;
+    box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    border-radius: 3px;
+
+    .icon {
+      width: 10px;
+      height: 10px;
+    }
+
+    &-cont {
+      font-family: PingFangSC-Regular;
+      font-weight: 400;
+      font-size: 10px;
+      color: #147AFF;
+      letter-spacing: 0;
+      text-align: center;
+      padding-left: 3px;
+    }
+  }
 }
 
 .dialog {
   position: absolute;
   z-index: 5;
-  padding: 15px 20px;
 
   &-item {
     min-width: min-content;
     max-width: 220px;
+    width: 72px;
     word-break: keep-all;
     padding: 12px 0;
     top: 30px;
     border-radius: 8px;
     display: flex;
     flex-wrap: wrap;
+    align-items: baseline;
+    white-space: nowrap;
+
+    li:first-child {
+      margin-top: 0;
+    }
 
     li {
       padding: 4px 12px;
       font-size: 12px;
       line-height: 17px;
       display: flex;
+      flex-direction: row;
       align-items: center;
+      flex-direction: row;
 
       span {
         padding-left: 4px;
@@ -419,4 +462,19 @@
     left: 0;
     opacity: 0;
   }
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 140px;
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #9A999C;
 }

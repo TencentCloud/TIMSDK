@@ -86,7 +86,7 @@ const Face = defineComponent({
     };
 
     onClickOutside(dialog, () => {
-      const main:any = document.getElementsByClassName('face-H5-main')[0];
+      const main:any = document.getElementsByClassName('face-main')[0];
       if (main) {
         main.style.display = 'none';
       }
@@ -109,7 +109,7 @@ const Face = defineComponent({
         await Face.TUIServer.sendFaceMessage({
           // Change large expression display field
           index: data.bigEmojiList[data.currentIndex - 1].icon,
-          data: data.bigEmojiList[data.currentIndex - 1].list[index]
+          data: data.bigEmojiList[data.currentIndex - 1].list[index],
         });
         TUIAegis.getInstance().reportEvent({
           name: 'messageType',

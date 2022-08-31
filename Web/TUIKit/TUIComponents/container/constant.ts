@@ -1,8 +1,15 @@
-const constant:any = {
+const constant: any = {
   typeC2C: 'isC2C',
   typeGroup: 'isGroup',
   cancel: 'cancel',
   group: 'GROUP',
+  handleMessage: {
+    revoke: 'revoke',
+    copy: 'copy',
+    delete: 'delete',
+    forward: 'forward',
+    reply: 'reply',
+  },
   at: '@',
   all: '所有人',
   typeText: 1,
@@ -21,7 +28,18 @@ const constant:any = {
   typeTextLink: 'text_link',
   typeAndroid: 'android',
   typeIphone: 'iphone',
-  typeMini: 'miniprogram'
+  typeMini: 'miniprogram',
+  typeUserTyping: 'user_typing_status',
+  typeInputStatusIng: 'EIMAMSG_InputStatus_Ing',
+  typeInputStatusEnd: 'EIMAMSG_InputStatus_End',
+  scrollType: {
+    toBottom: 'bottom',
+    toTarget: 'target',
+  },
+  inViewType: {
+    page: 'page',
+    scroll: 'scroll',
+  },
 };
 
 export default constant;

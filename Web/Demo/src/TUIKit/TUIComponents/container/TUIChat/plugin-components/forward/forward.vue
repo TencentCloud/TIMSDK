@@ -1,25 +1,25 @@
 <template>
-<div>
-  <p @click="toggleShow">{{$t('TUIChat.转发')}}</p>
-  <div class="forward dialog" :class="[isH5 ? 'forward-h5': '']" v-if="show" ref="dialog">
-    <Transfer
-      title="转发"
-      :list="list"
-      :isSearch="false"
-      :isH5="isH5"
-      :isCustomItem="true"
-      :resultShow="true"
-      @submit="handleForWordMessage"
-      @cancel="toggleShow">
-      <template #left="{data}">
-        <slot name="left" :data="data" />
-      </template>
-      <template #right="{data}">
-        <slot name="right" :data="data" />
-      </template>
+  <div>
+    <div class="forward" :class="[isH5 ? 'forward-h5' : '']" v-if="show" ref="dialog">
+      <Transfer
+        title="转发"
+        :list="list"
+        :isSearch="false"
+        :isH5="isH5"
+        :isCustomItem="true"
+        :resultShow="true"
+        @submit="handleForWordMessage"
+        @cancel="toggleShow"
+      >
+        <template #left="{ data }">
+          <slot name="left" :data="data" />
+        </template>
+        <template #right="{ data }">
+          <slot name="right" :data="data" />
+        </template>
       </Transfer>
+    </div>
   </div>
-</div>
 </template>
 
 <script lang="ts">
@@ -51,14 +51,14 @@ const Forward = defineComponent({
       default: () => false,
     },
   },
-  setup(props:any, ctx:any) {
+  setup(props: any, ctx: any) {
     const data = reactive({
       list: [],
       show: false,
       to: -1,
     });
 
-    const dialog:any = ref();
+    const dialog: any = ref();
 
     watchEffect(() => {
       data.list = props.list;
@@ -79,8 +79,8 @@ const Forward = defineComponent({
       data.to = -1;
     });
 
-    const handleForWordMessage = async (list:any) => {
-      list.map(async (item:any) => {
+    const handleForWordMessage = async (list: any) => {
+      list.map(async (item: any) => {
         try {
           await Forward.TUIServer.forwardMessage(props.message, item);
         } catch (error) {
@@ -105,19 +105,15 @@ export default Forward;
 .forward {
   position: absolute;
   z-index: 5;
-  background: #fff;
   box-sizing: border-box;
-  border: 1px solid #dddddd;
+  border-radius: 8px;
   padding: 15px 20px;
   padding: 0;
-  width: 450px;
-  height: 400px;
-  top: -50px;
   left: -90px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  box-shadow: 0 11px 20px 0 rgba(0,0,0, .3);
+  box-shadow: 0 11px 20px 0 rgba(0, 0, 0, 0.3);
   header {
     padding: 20px;
     display: flex;
@@ -142,6 +138,11 @@ export default Forward;
       .avatar {
         width: 36px;
         height: 36px;
+        border-radius: 4px;
+        font-size: 12px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
     }
   }

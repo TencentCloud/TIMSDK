@@ -13,12 +13,14 @@ import TUIAegis from '../../utils/TUIAegis';
 export default class TUICore extends ITUIServer {
   static instance: TUICore;
   static isLogin = false;
+  public isOfficial = false;
+  public isIntl = false;
 
   public tim: any;
   public TIM: any;
   static TUIServerFunMap: Map<string, Array<void>>;
   private isSDKReady = false;
-  private store:TUIStore;
+  private store: TUIStore;
 
   public TUIEnv: any;
 
@@ -51,6 +53,7 @@ export default class TUICore extends ITUIServer {
 
     this.bindTIMEvent();
     this.TUIEnv = TUIEnv();
+    this.isOfficial = this.SDKAppID === 1400187352;
   }
 
   /**
@@ -59,21 +62,29 @@ export default class TUICore extends ITUIServer {
    * @param {TUICoreParams} options 初始化参数
    * @returns {TUICore} TUICore的实例
    */
-  static init(options:TUICoreParams) {
+  static init(options: TUICoreParams) {
     const Aegis = TUIAegis.getInstance();
     if (!TUICore.instance) {
       TUICore.instance = new TUICore(options);
     }
-    Aegis.setAegisOptions({
-      ext2: 'IMTUIKitWebExternal',
-      ext3: options.SDKAppID,
-    });
     if (TUIEnv().isH5) {
+      Aegis.reportEvent({
+        name: 'SDKAppID',
+        ext1: 'IMTUIKitH5External',
+        ext2: 'IMTUIKitH5External',
+        ext3: options.SDKAppID,
+      });
       Aegis.setAegisOptions({
         ext2: 'TUIKitH5',
         ext3: options.SDKAppID,
       });
     } else {
+      Aegis.reportEvent({
+        name: 'SDKAppID',
+        ext1: 'IMTUIKitWebExternal',
+        ext2: 'IMTUIKitWebExternal',
+        ext3: options.SDKAppID,
+      });
       Aegis.setAegisOptions({
         ext2: 'TUIKitWeb',
         ext3: options.SDKAppID,
@@ -94,7 +105,7 @@ export default class TUICore extends ITUIServer {
    *
    * @param {Vue} app vue createApp实例
    */
-  public install(app:any) {
+  public install(app: any) {
     app.config.globalProperties.$TUIKit = this.getInstance();
 
     let flag = true;
@@ -105,9 +116,10 @@ export default class TUICore extends ITUIServer {
       }
     });
 
-    flag && this.TUIComponents.forEach((element) => {
-      app.component(element.name, element.component);
-    });
+    flag &&
+      this.TUIComponents.forEach((element) => {
+        app.component(element.name, element.component);
+      });
 
     TUIDirective(app);
   }
@@ -129,17 +141,19 @@ export default class TUICore extends ITUIServer {
    * @param {string} options.userSig 当前用户名签名
    * @returns {Promise}
    */
-  public login(options:TUICoreLoginParams): Promise<any> {
+  public login(options: TUICoreLoginParams): Promise<any> {
     return new Promise<void>((resolve, reject) => {
-      this.tim.login(options).then(() => {
-        this.loginResolveRejectCache.push({
-          resolve,
-          reject,
-        });
-        TUICore.isLogin = true;
-        return null;
-      })
-        .catch((error:any) => {
+      this.tim
+        .login(options)
+        .then(() => {
+          this.loginResolveRejectCache.push({
+            resolve,
+            reject,
+          });
+          TUICore.isLogin = true;
+          return null;
+        })
+        .catch((error: any) => {
           reject(error);
         });
     });
@@ -152,12 +166,14 @@ export default class TUICore extends ITUIServer {
    */
   public logout(): Promise<any> {
     return new Promise<void>((resolve, reject) => {
-      this.tim.logout().then((imResponse:any) => {
-        this.isSDKReady = false;
-        TUICore.isLogin = false;
-        resolve(imResponse);
-      })
-        .catch((error:any) => {
+      this.tim
+        .logout()
+        .then((imResponse: any) => {
+          this.isSDKReady = false;
+          TUICore.isLogin = false;
+          resolve(imResponse);
+        })
+        .catch((error: any) => {
           reject(error);
         });
     });
@@ -232,7 +248,7 @@ export default class TUICore extends ITUIServer {
    * @param {any} TUIComponent 挂载的组件
    * @returns {TUICore} 挂载后的实例
    */
-  public component(TUIName: string, TUIComponent:any) {
+  public component(TUIName: string, TUIComponent: any) {
     const TUICore = this.getInstance();
     if (!this.TUIServer) {
       this.TUIServer = {};
@@ -247,7 +263,6 @@ export default class TUICore extends ITUIServer {
     return TUICore;
   }
 
-
   /**
    * 插件注入
    *
@@ -255,7 +270,7 @@ export default class TUICore extends ITUIServer {
    * @param {any} options 其他参数
    * @returns {TUICore} 挂载后的实例
    */
-  public use(TUIPlugin:any, options?: any) {
+  public use(TUIPlugin: any, options?: any) {
     const TUICore = this.getInstance();
     if (this.installedPlugins.has(TUIPlugin)) {
       console.warn('Plugin has already been applied to target TUICore.');
@@ -266,13 +281,12 @@ export default class TUICore extends ITUIServer {
       this.installedPlugins.add(TUIPlugin);
       TUIPlugin(TUICore, options);
     } else {
-      console.warn('A plugin must either be a function or an object with an "plugin" '
-          + 'function.');
+      console.warn('A plugin must either be a function or an object with an "plugin" ' + 'function.');
     }
     return TUICore;
   }
 
-  public usePlugin(TUIPluginName:string) {
+  public usePlugin(TUIPluginName: string) {
     let plugin = {};
     this.installedPlugins.forEach((element) => {
       if (element.name === TUIPluginName) {
@@ -296,7 +310,7 @@ export default class TUICore extends ITUIServer {
         TUICore.TUIServerFunMap = new Map();
       }
 
-      const TUIServerFunList:Array<void> = TUICore.TUIServerFunMap.get(TUIName) || [];
+      const TUIServerFunList: Array<void> = TUICore.TUIServerFunMap.get(TUIName) || [];
       TUIServerFunList.push(callback);
       TUICore.TUIServerFunMap.set(TUIName, TUIServerFunList);
     }
@@ -312,7 +326,6 @@ export default class TUICore extends ITUIServer {
     return this.store.setCommonStore(store);
   }
 
-
   /**
    * 挂载组件数据
    *
@@ -321,7 +334,7 @@ export default class TUICore extends ITUIServer {
    * @param {callback} updateCallback 更新数据 callback
    * @returns {proxy} 挂载完成的模块数据
    */
-  public setComponentStore(TUIName:string, store: any, updateCallback?:any) {
+  public setComponentStore(TUIName: string, store: any, updateCallback?: any) {
     return this.store.setComponentStore(TUIName, store, updateCallback);
   }
 
@@ -341,7 +354,7 @@ export default class TUICore extends ITUIServer {
    * @param {callback} callback 数据变化回调
    * @returns {addStoreUpdate}
    */
-  public storeCommonListener(keys:Array<string>, callback: any) {
+  public storeCommonListener(keys: Array<string>, callback: any) {
     return this.store.storeCommonListener(keys, callback);
   }
 }

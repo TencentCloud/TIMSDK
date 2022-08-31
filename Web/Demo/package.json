@@ -8,13 +8,15 @@
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
-    "fix": "eslint --fix --fix-type suggestion --fix-type problem ."
+    "fix": "eslint --fix --fix-type suggestion --fix-type problem .",
+    
   },
   "dependencies": {
     "axios": "^0.26.1",
     "core-js": "^3.6.5",
     "element-plus": "^2.1.4",
     "qs": "^6.10.3",
+    "vconsole": "^3.14.6",
     "vue": "^3.0.0",
     "vue-class-component": "^8.0.0-0",
     "vue-router": "^4.0.0-0",
@@ -27,6 +29,7 @@
     "@commitlint/config-conventional": "^16.2.1",
     "@types/chai": "^4.2.11",
     "@types/mocha": "^5.2.4",
+    "@types/qs": "^6.9.7",
     "@typescript-eslint/eslint-plugin": "^4.18.0",
     "@typescript-eslint/parser": "^4.33.0",
     "@vue/cli-plugin-babel": "~4.5.0",
@@ -46,11 +49,17 @@
     "eslint-config-tencent": "^1.0.3",
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-vue": "^7.1.0",
-    "husky": "^7.0.4",
+    
     "prettier": "^2.2.1",
     "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
     "typescript": "~4.1.5",
     "vue-eslint-parser": "^8.3.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint",
+      "commit-msg": "commitlint -e $HUSKY_GIT_PARAMS"
+    }
   }
 }

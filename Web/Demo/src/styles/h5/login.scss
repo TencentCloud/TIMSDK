@@ -1,59 +1,72 @@
-
-.login-h5{
+.login-h5 {
   box-sizing: border-box;
   background: #ffffff;
   padding: 17px 0;
   min-height: 100%;
   display: flex;
   flex-direction: column;
+
   .login {
     &-header {
       padding: 0 23px;
+
       .logo {
         p {
           padding-left: 12px;
-          &::before{
+
+          &::before {
             left: 6px;
           }
         }
+
         &-name {
           font-weight: normal;
         }
       }
     }
+
     &-title {
       flex-direction: column;
       padding: 60px 0 18px;
+
       p {
         padding-left: 0;
         font-size: 27px;
         line-height: 40px;
       }
     }
+
     &-form {
       flex: 1;
+
       &-item {
         font-size: 18px;
       }
+
       &-footer {
         display: flex;
         justify-content: center;
         padding: 14px 0;
+
         a {
           font-size: 16px;
           line-height: 27px;
+
           &::before {
             display: none;
           }
         }
       }
+
       .login-from-item-disabled {
         font-size: 18px;
         line-height: 27px;
       }
     }
+
     &-main {
       padding: 0;
+
       &-content {
         padding: 0 23px;
         background: url('../assets/image/h5/login-bg.png') no-repeat;
@@ -61,13 +74,16 @@
         background-position-x: right;
         align-items: flex-start;
       }
+
       .checked-text {
         font-size: 14px;
       }
     }
+
     &-btn {
       padding-top: 16px;
       margin-bottom: 0;
+
       button {
         height: auto !important;
         font-size: 20px;
@@ -75,22 +91,27 @@
         padding: 13px 0;
       }
     }
+
     &-footer {
       background: none;
       padding: 10px 10px;
+
       &-list {
         flex: 1;
         display: flex;
+
         &-item {
           flex: 1;
           display: flex;
           background: url('../assets/image/h5/adv-more.svg') no-repeat;
           background-size: 100% 100%;
           border: solid #96C3FF 1px;
+
           &:last-child {
             background: url('../assets/image/h5/adv-im.svg') no-repeat;
             background-size: 100% 100%;
           }
+
           a {
             flex: 1;
             display: flex;
@@ -98,74 +119,88 @@
             align-items: center;
             box-sizing: border-box;
             padding: 20px;
+
             span {
               padding: 5px 20px;
               background: #147AFF;
-              box-shadow: 0 4px 5px 0 rgba(255,255,255,0.70), 0 3px 8px 0 rgba(20,122,255,0.55);
+              box-shadow: 0 4px 5px 0 rgba(255, 255, 255, 0.70), 0 3px 8px 0 rgba(20, 122, 255, 0.55);
               border-radius: 30.5px;
               display: flex;
               align-items: center;
               justify-content: center;
-                text  {
-                  font-family: PingFangSC-Regular;
-                  font-weight: 400;
-                  font-size: 15px;
-                  color: #FFFFFF;
-                  letter-spacing: 0;
-                }
+
+              text {
+                font-family: PingFangSC-Regular;
+                font-weight: 400;
+                font-size: 15px;
+                color: #FFFFFF;
+                letter-spacing: 0;
+              }
             }
+
             aside {
               display: flex;
               flex-direction: column;
+
               h1 {
                 font-family: PingFangSC-Regular;
                 font-size: 16px;
                 color: #000000;
                 letter-spacing: 0;
               }
+
               .sub {
                 align-self: flex-end;
               }
             }
           }
         }
+
         &-bottom {
           display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          .text-header{
+
+          .text-header {
             display: flex;
             align-items: center;
-             span {
-               padding: 20px 20px;
-               font-family: 'PingFang SC';
-               font-style: normal;
-               font-weight: 400;
+
+            span {
+              padding: 20px 20px;
+              width: 84px;
+              font-family: 'PingFang SC';
+              font-style: normal;
+              font-weight: 400;
               color: #BBBBBB;
-             }
+            }
           }
+
           i {
             width: 120px;
             height: 1px;
             background: #DBDBDB
           }
-          &-image{
+
+          &-image {
             display: flex;
-              .platform{
-                width: 41px;
-                height: 41px;
-                padding: 0 20px;
-                  img {
-                    width: 100%;
-                    height: 100%;
-                  }
+
+            .platform {
+              width: 41px;
+              height: 41px;
+              padding: 0 20px;
+
+              img {
+                width: 100%;
+                height: 100%;
               }
+            }
           }
         }
       }
     }
   }
+
   .mask {
     position: fixed;
     width: 100vw;
@@ -175,21 +210,23 @@
     justify-content: center;
     background: rgba(0, 0, 0, 0.5);
     z-index: 9;
-      &-main {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-          span {
-            padding-top: 10px;
-            height: 27px;
-            opacity: 0.8;
-            font-family: TencentSansW7;
-            font-size: 18px;
-            color: #FFFFFF;
-            letter-spacing: 0;
-            text-align: center;
-          }
+
+    &-main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      span {
+        padding-top: 10px;
+        height: 27px;
+        opacity: 0.8;
+        font-family: TencentSansW7;
+        font-size: 18px;
+        color: #FFFFFF;
+        letter-spacing: 0;
+        text-align: center;
       }
+    }
   }
 }

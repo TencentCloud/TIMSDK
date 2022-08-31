@@ -1,25 +1,32 @@
 import { formatTime } from '../../../utils/date';
 import { decodeText } from './decodeText';
 import TIM from 'tim-js-sdk';
+import constant from '../../constant';
 
-// 处理头像
+// Handling avatars
 export function handleAvatar(item: any) {
   let avatar = '';
   switch (item.type) {
     case TIM.TYPES.CONV_C2C:
-      avatar = isUrl(item?.userProfile?.avatar) ? item?.userProfile?.avatar : 'https://web.sdk.qcloud.com/component/TUIKit/assets/avatar_21.png';
+      avatar = isUrl(item?.userProfile?.avatar)
+        ? item?.userProfile?.avatar
+        : 'https://web.sdk.qcloud.com/component/TUIKit/assets/avatar_21.png';
       break;
     case TIM.TYPES.CONV_GROUP:
-      avatar = isUrl(item?.groupProfile?.avatar) ? item?.groupProfile?.avatar : 'https://sdk-web-1252463788.cos.ap-hongkong.myqcloud.com/im/demo/TUIkit/web/img/constomer.svg';
+      avatar = isUrl(item?.groupProfile?.avatar)
+        ? item?.groupProfile?.avatar
+        : 'https://sdk-web-1252463788.cos.ap-hongkong.myqcloud.com/im/demo/TUIkit/web/img/constomer.svg';
       break;
     case TIM.TYPES.CONV_SYSTEM:
-      avatar = isUrl(item?.groupProfile?.avatar) ? item?.groupProfile?.avatar : 'https://web.sdk.qcloud.com/component/TUIKit/assets/group_avatar.png';
+      avatar = isUrl(item?.groupProfile?.avatar)
+        ? item?.groupProfile?.avatar
+        : 'https://web.sdk.qcloud.com/component/TUIKit/assets/group_avatar.png';
       break;
   }
   return avatar;
 }
 
-// 处理昵称
+// Handling names
 export function handleName(item: any) {
   const { t } = (window as any).TUIKitTUICore.config.i18n.useI18n();
   let name = '';
@@ -39,13 +46,13 @@ export function handleName(item: any) {
 // Handle whether there is someone@
 export function handleAt(item: any) {
   const { t } = (window as any).TUIKitTUICore.config.i18n.useI18n();
-  const List:any = [
+  const List: any = [
     `[${t('TUIConversation.有人@我')}]`,
     `[${t('TUIConversation.@所有人')}]`,
     `[${t('TUIConversation.@所有人')}][${t('TUIConversation.有人@我')}]`,
   ];
   let showAtType = '';
-  for (let index = 0 ; index < item.groupAtInfoList.length; index++) {
+  for (let index = 0; index < item.groupAtInfoList.length; index++) {
     if (item.groupAtInfoList[index].atTypeArray[0] && item.unreadCount > 0) {
       showAtType = List[item.groupAtInfoList[index].atTypeArray[0] - 1];
     }
@@ -53,14 +60,17 @@ export function handleAt(item: any) {
   return showAtType;
 }
 // Internal display of processing message box
-export function handleShowLastMessage(item:any) {
+export function handleShowLastMessage(item: any) {
   const { t } = (window as any).TUIKitTUICore.config.i18n.useI18n();
   const { lastMessage } = item;
   const conversation = item;
   let showNick = '';
   let lastMessagePayload = '';
   // Judge the number of unread messages and display them only when the message is enabled without interruption.
-  const showUnreadCount = conversation.unreadCount > 0 && conversation.messageRemindType === TIM.TYPES.MSG_REMIND_ACPT_NOT_NOTE ? t(`[${conversation.unreadCount > 99 ? '99+' : conversation.unreadCount}条]`) : '';
+  const showUnreadCount =
+    conversation.unreadCount > 0 && conversation.messageRemindType === TIM.TYPES.MSG_REMIND_ACPT_NOT_NOTE
+      ? t(`[${conversation.unreadCount > 99 ? '99+' : conversation.unreadCount}条]`)
+      : '';
   // Determine the lastmessage sender of the group. Namecard / Nick / userid is displayed by priority
   if (conversation.type === TIM.TYPES.CONV_GROUP) {
     if (lastMessage.fromAccount === conversation.groupProfile.selfInfo.userID) {
@@ -86,40 +96,43 @@ export function handleShowLastMessage(item:any) {
   // Specific display content of message box
   return `${showUnreadCount}${showNick ? `${showNick}:` : ''}${lastMessagePayload}`;
 }
-// 处理系统提示消息展示
-export function handleTipMessageShowContext(message:any) {
+
+// Handling system tip message display
+export function handleTipMessageShowContext(message: any) {
   const { t } = (window as any).TUIKitTUICore.config.i18n.useI18n();
-  const options:any = {
+  const options: any = {
     message,
     text: '',
   };
-  let userName =  message.nick || message?.payload?.userIDList.join(',');
+  let userName = message.nick || message?.payload?.userIDList.join(',');
   if (message?.payload?.memberList?.length > 0) {
     userName = '';
-    message?.payload?.memberList?.map((user:any) => {
+    message?.payload?.memberList?.map((user: any) => {
       userName += `${user?.nick || user?.userID},`;
     });
     userName = userName.slice(0, -1);
   }
   switch (message.payload.operationType) {
     case TIM.TYPES.GRP_TIP_MBR_JOIN:
-      options.text =  `${userName} ${t('message.tip.加入群组')}`;
+      options.text = `${userName} ${t('message.tip.加入群组')}`;
       break;
     case TIM.TYPES.GRP_TIP_MBR_QUIT:
-      options.text =  `${t('message.tip.群成员')}：${userName} ${t('message.tip.退出群组')}`;
+      options.text = `${t('message.tip.群成员')}：${userName} ${t('message.tip.退出群组')}`;
       break;
     case TIM.TYPES.GRP_TIP_MBR_KICKED_OUT:
-      options.text =  `${t('message.tip.群成员')}：${userName} ${t('message.tip.被')}${message.payload.operatorID}${t('message.tip.踢出群组')}`;
+      options.text = `${t('message.tip.群成员')}：${userName} ${t('message.tip.被')}${message.payload.operatorID}${t(
+        'message.tip.踢出群组'
+      )}`;
       break;
     case TIM.TYPES.GRP_TIP_MBR_SET_ADMIN:
-      options.text =  `${t('message.tip.群成员')}：${userName} ${t('message.tip.成为管理员')}`;
+      options.text = `${t('message.tip.群成员')}：${userName} ${t('message.tip.成为管理员')}`;
       break;
     case TIM.TYPES.GRP_TIP_MBR_CANCELED_ADMIN:
-      options.text =  `${t('message.tip.群成员')}：${userName} ${t('message.tip.被撤销管理员')}`;
+      options.text = `${t('message.tip.群成员')}：${userName} ${t('message.tip.被撤销管理员')}`;
       break;
     case TIM.TYPES.GRP_TIP_GRP_PROFILE_UPDATED:
       // options.text =  `${userName} 修改群组资料`;
-      options.text =  handleTipGrpUpdated(message);
+      options.text = handleTipGrpUpdated(message);
       break;
     case TIM.TYPES.GRP_TIP_MBR_PROFILE_UPDATED:
       for (const member of message.payload.memberList) {
@@ -137,7 +150,7 @@ export function handleTipMessageShowContext(message:any) {
   return options;
 }
 
-function handleTipGrpUpdated(message:any) {
+function handleTipGrpUpdated(message: any) {
   const { t } = (window as any).TUIKitTUICore.config.i18n.useI18n();
   const { payload } = message;
   const { newGroupProfile } = payload;
@@ -167,17 +180,17 @@ function handleTipGrpUpdated(message:any) {
   return text;
 }
 
-// 解析处理文本消息展示
-export function handleTextMessageShowContext(item:any) {
-  const options:any = {
+// Parsing and handling text message display
+export function handleTextMessageShowContext(item: any) {
+  const options: any = {
     text: decodeText(item.payload),
   };
   return options;
 }
 
-// 解析处理位置消息展示
-export function handleFaceMessageShowContext(item:any) {
-  const face:any = {
+// Parsing and handling face message display
+export function handleFaceMessageShowContext(item: any) {
+  const face: any = {
     message: item,
     name: '',
     url: '',
@@ -190,9 +203,9 @@ export function handleFaceMessageShowContext(item:any) {
   return face;
 }
 
-// 解析处理位置消息展示
-export function handleLocationMessageShowContext(item:any) {
-  const location:any = {
+// Parsing and handling location message display
+export function handleLocationMessageShowContext(item: any) {
+  const location: any = {
     lon: '',
     lat: '',
     href: '',
@@ -202,18 +215,20 @@ export function handleLocationMessageShowContext(item:any) {
   };
   location.lon = item.payload.longitude.toFixed(6);
   location.lat = item.payload.latitude.toFixed(6);
-  location.href = 'https://map.qq.com/?type=marker&isopeninfowin=1&markertype=1&'
-        + `pointx=${location.lon}&pointy=${location.lat}&name=${item.payload.description}`;
-  location.url = 'https://apis.map.qq.com/ws/staticmap/v2/?'
-        + `center=${location.lat},${location.lon}&zoom=10&size=300*150&maptype=roadmap&`
-        + `markers=size:large|color:0xFFCCFF|label:k|${location.lat},${location.lon}&`
-        + 'key=UBNBZ-PTP3P-TE7DB-LHRTI-Y4YLE-VWBBD';
+  location.href =
+    'https://map.qq.com/?type=marker&isopeninfowin=1&markertype=1&' +
+    `pointx=${location.lon}&pointy=${location.lat}&name=${item.payload.description}`;
+  location.url =
+    'https://apis.map.qq.com/ws/staticmap/v2/?' +
+    `center=${location.lat},${location.lon}&zoom=10&size=300*150&maptype=roadmap&` +
+    `markers=size:large|color:0xFFCCFF|label:k|${location.lat},${location.lon}&` +
+    'key=UBNBZ-PTP3P-TE7DB-LHRTI-Y4YLE-VWBBD';
   location.description = item.payload.description;
   return location;
 }
 
-// 解析处理图片消息展示
-export function handleImageMessageShowContext(item:any) {
+// Parsing and handling image message display
+export function handleImageMessageShowContext(item: any) {
   return {
     progress: item?.status === 'unSend' && item.progress,
     url: item.payload.imageInfoArray[1].url,
@@ -221,8 +236,8 @@ export function handleImageMessageShowContext(item:any) {
   };
 }
 
-// 解析处理视频消息展示
-export function handleVideoMessageShowContext(item:any) {
+// Parsing and handling video message display
+export function handleVideoMessageShowContext(item: any) {
   return {
     progress: item?.status === 'unSend' && item?.progress,
     url: item?.payload?.videoUrl,
@@ -231,8 +246,8 @@ export function handleVideoMessageShowContext(item:any) {
   };
 }
 
-// 解析处理语音消息展示
-export function handleAudioMessageShowContext(item:any) {
+// Parsing and handling audio message display
+export function handleAudioMessageShowContext(item: any) {
   return {
     progress: item?.status === 'unSend' && item.progress,
     url: item.payload.url,
@@ -241,15 +256,15 @@ export function handleAudioMessageShowContext(item:any) {
   };
 }
 
-// 解析处理文件消息展示
-export function handleFileMessageShowContext(item:any) {
+// Parsing and handling file message display
+export function handleFileMessageShowContext(item: any) {
   let size = '';
   if (item.payload.fileSize >= 1024 * 1024) {
     size = `${(item.payload.fileSize / (1024 * 1024)).toFixed(2)} Mb`;
   } else if (item.payload.fileSize >= 1024) {
     size = `${(item.payload.fileSize / 1024).toFixed(2)} Kb`;
   } else {
-    size = `${(item.payload.fileSize).toFixed(2)}B`;
+    size = `${item.payload.fileSize.toFixed(2)}B`;
   }
   return {
     progress: item?.status === 'unSend' && item.progress,
@@ -260,16 +275,16 @@ export function handleFileMessageShowContext(item:any) {
   };
 }
 
-// 解析处理合并消息展示
-export function handleMergerMessageShowContext(item:any) {
+// Parsing and handling merger message display
+export function handleMergerMessageShowContext(item: any) {
   return { message: item, ...item.payload };
 }
 
-// 解析音视频通话消息
-export function extractCallingInfoFromMessage(message:any) {
+// Parse audio and video call messages
+export function extractCallingInfoFromMessage(message: any) {
   const { t } = (window as any).TUIKitTUICore.config.i18n.useI18n();
-  let callingmessage:any = {};
-  let objectData:any = {};
+  let callingmessage: any = {};
+  let objectData: any = {};
   try {
     callingmessage = JSONToString(message.payload.data);
   } catch (error) {
@@ -324,8 +339,8 @@ export function extractCallingInfoFromMessage(message:any) {
   }
 }
 
-// 解析处理自定义消息展示
-export function handleCustomMessageShowContext(item:any) {
+// Parsing and handling custom message display
+export function handleCustomMessageShowContext(item: any) {
   const { t } = (window as any).TUIKitTUICore.config.i18n.useI18n();
   return {
     message: item,
@@ -333,8 +348,8 @@ export function handleCustomMessageShowContext(item:any) {
   };
 }
 
-// 解析处理系统消息
-export function translateGroupSystemNotice(message:any) {
+// Parsing and handling system message display
+export function translateGroupSystemNotice(message: any) {
   const { t } = (window as any).TUIKitTUICore.config.i18n.useI18n();
   const groupName = message.payload.groupProfile.name || message.payload.groupProfile.groupID;
   switch (message.payload.operationType) {
@@ -347,7 +362,9 @@ export function translateGroupSystemNotice(message:any) {
     case 4:
       return `${t('message.tip.你被管理员')}${message.payload.operatorID} ${t('message.tip.踢出群组')}：${groupName}`;
     case 5:
-      return `${t('message.tip.群')}：${groupName} ${t('message.tip.被')} ${message.payload.operatorID} ${t('message.tip.解散')}`;
+      return `${t('message.tip.群')}：${groupName} ${t('message.tip.被')} ${message.payload.operatorID} ${t(
+        'message.tip.解散'
+      )}`;
     case 6:
       return `${message.payload.operatorID} ${t('message.tip.创建群')}：${groupName}`;
     case 7:
@@ -355,9 +372,13 @@ export function translateGroupSystemNotice(message:any) {
     case 8:
       return `${t('message.tip.你退出群组')}：${groupName}`;
     case 9:
-      return `${t('message.tip.你被')}${message.payload.operatorID} ${t('message.tip.设置为群')}：${groupName} ${t('message.tip.的管理员')}`;
+      return `${t('message.tip.你被')}${message.payload.operatorID} ${t('message.tip.设置为群')}：${groupName} ${t(
+        'message.tip.的管理员'
+      )}`;
     case 10:
-      return `${t('message.tip.你被')}${message.payload.operatorID} ${t('message.tip.撤销群')}：${groupName} ${t('message.tip.的管理员身份')}`;
+      return `${t('message.tip.你被')}${message.payload.operatorID} ${t('message.tip.撤销群')}：${groupName} ${t(
+        'message.tip.的管理员身份'
+      )}`;
     case 12:
       return `${message.payload.operatorID} ${t('message.tip.邀请你加群')}：${groupName}`;
     case 13:
@@ -369,31 +390,35 @@ export function translateGroupSystemNotice(message:any) {
   }
 }
 
-// 图片加载完成
-export function getImgLoad(container:any, className:string, callback:any) {
+// Image loading complete
+export function getImgLoad(container: any, className: string, callback: any) {
   const images = container?.querySelectorAll(`.${className}`) || [];
-  const promiseList = Array.prototype.slice.call(images).map((node:any) => new Promise((resolve:any, reject:any) => {
-    const loadImg = new Image();
-    loadImg.src = node.src;
-    loadImg.onload = () => {
-      resolve(node);
-    };
-  }));
+  const promiseList = Array.prototype.slice.call(images).map(
+    (node: any) =>
+      new Promise((resolve: any, reject: any) => {
+        const loadImg = new Image();
+        loadImg.src = node.src;
+        loadImg.onload = () => {
+          resolve(node);
+        };
+      })
+  );
 
-  Promise.all(promiseList).then(() => {
-    callback && callback();
-  })
+  return Promise.all(promiseList)
+    .then(() => {
+      callback && callback();
+    })
     .catch((e) => {
       console.error('网络异常', e);
     });
 }
 
-// 判断是否为地址
-export function isUrl(url:string) {
+// Determine whether it is url
+export function isUrl(url: string) {
   return /^(https?:\/\/(([a-zA-Z0-9]+-?)+[a-zA-Z0-9]+\.)+[a-zA-Z]+)(:\d+)?(\/.*)?(\?.*)?(#.*)?$/.test(url);
 }
 
-// 处理自定义消息固定字段
+// Handling custom message options
 export function handleOptions(businessID: string, version: number, other: any) {
   return {
     businessID,
@@ -402,22 +427,78 @@ export function handleOptions(businessID: string, version: number, other: any) {
   };
 }
 
-// 判断是否为JSON 字符串
-export function isJSON(str:string) {
+// Determine if it is a JSON string
+export function isJSON(str: string) {
   // eslint-disable-next-line no-useless-escape
-  if (/^[\],:{}\s]*$/.test(str.replace(/\\["\\\/bfnrtu]/g, '@').
-    // eslint-disable-next-line no-useless-escape
-    replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').
-    replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
+  if (
+    /^[\],:{}\s]*$/.test(
+      str
+        // eslint-disable-next-line no-useless-escape
+        .replace(/\\["\\\/bfnrtu]/g, '@')
+        // eslint-disable-next-line no-useless-escape
+        .replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']')
+        .replace(/(?:^|:|,)(?:\s*\[)+/g, '')
+    )
+  ) {
     return true;
   }
   return false;
 }
 
-// 判断是否为JSON 字符串
-export function JSONToString(str:string) {
+// Determine if it is a JSON string
+export function JSONToString(str: string) {
   if (!isJSON(str)) {
     return str;
   }
   return JSON.parse(str);
 }
+
+// Determine if it is a typing message
+export function isTypingMessage(item: any) {
+  if (!item) return false;
+  try {
+    const { businessID }: any = JSONToString(item?.payload?.data);
+    if (businessID === constant.typeUserTyping) return true;
+  } catch {
+    return false;
+  }
+  return false;
+}
+
+export function deepCopy(data: any, hash = new WeakMap()) {
+  if (typeof data !== 'object' || data === null) {
+    throw new TypeError('传入参数不是对象');
+  }
+  if (hash.has(data)) {
+    return hash.get(data);
+  }
+  const newData: any = {};
+  const dataKeys = Object.keys(data);
+  dataKeys.forEach((value) => {
+    const currentDataValue = data[value];
+    if (typeof currentDataValue !== 'object' || currentDataValue === null) {
+      newData[value] = currentDataValue;
+    } else if (Array.isArray(currentDataValue)) {
+      newData[value] = [...currentDataValue];
+    } else if (currentDataValue instanceof Set) {
+      newData[value] = new Set([...currentDataValue]);
+    } else if (currentDataValue instanceof Map) {
+      newData[value] = new Map([...currentDataValue]);
+    } else {
+      hash.set(data, data);
+      newData[value] = deepCopy(currentDataValue, hash);
+    }
+  });
+  return newData;
+}
+
+export const throttle = (fn: any): (() => void) => {
+  let isRunning = false;
+  return (...args) => {
+    if (isRunning) return;
+    setTimeout(() => {
+      fn.apply(this, args);
+      isRunning = false;
+    }, 100);
+  };
+};

@@ -6,11 +6,11 @@ import IComponentServer from '../IComponentServer';
  * TUIConversation 逻辑主体
  */
 export default class TUIConversationServer extends IComponentServer {
-  public TUICore:any;
-  public store:any;
+  public TUICore: any;
+  public store: any;
   public currentStore: any = {};
-  public storeCallback:any;
-  constructor(TUICore:any) {
+  public storeCallback: any;
+  constructor(TUICore: any) {
     super();
     this.TUICore = TUICore;
     this.bindTIMEvent();
@@ -26,12 +26,12 @@ export default class TUIConversationServer extends IComponentServer {
   }
 
   /**
-     * 数据监听回调
-     *
-     * @param {any} newValue 新数据
-     * @param {any} oldValue 旧数据
-     */
-  updateStore(newValue:any, oldValue:any) {
+   * 数据监听回调
+   *
+   * @param {any} newValue 新数据
+   * @param {any} oldValue 旧数据
+   */
+  updateStore(newValue: any, oldValue: any) {
     if (!this?.currentStore?.conversationData) {
       return;
     }
@@ -44,7 +44,7 @@ export default class TUIConversationServer extends IComponentServer {
    * @param {callback} callback 回调函数
    * @returns {Promise} 返回异步函数
    */
-  private handlePromiseCallback(callback:any) {
+  private handlePromiseCallback(callback: any) {
     return new Promise<void>((resolve, reject) => {
       const config = {
         TUIName: 'TUIConversation',
@@ -74,11 +74,11 @@ export default class TUIConversationServer extends IComponentServer {
     this.TUICore.tim.off(this.TUICore.TIM.EVENT.NET_STATE_CHANGE, this.handleNetStateChange);
   }
 
-  private handleConversationListUpdate(res:any) {
+  private handleConversationListUpdate(res: any) {
     this.handleFilterSystem(res.data);
   }
 
-  private handleNetStateChange(res:any) {
+  private handleNetStateChange(res: any) {
     this.currentStore.netWork = res?.data?.state || '';
   }
 
@@ -93,11 +93,11 @@ export default class TUIConversationServer extends IComponentServer {
       allConversationList: list,
       conversationList: [],
     };
-    const currentList = list.filter((item:any) => item?.conversationID === this?.currentStore?.currentConversationID);
+    const currentList = list.filter((item: any) => item?.conversationID === this?.currentStore?.currentConversationID);
     if (currentList.length === 0) {
       this.handleCurrentConversation({});
     }
-    options.conversationList = list.filter((item:any) => item.type !== this.TUICore.TIM.TYPES.CONV_SYSTEM);
+    options.conversationList = list.filter((item: any) => item.type !== this.TUICore.TIM.TYPES.CONV_SYSTEM);
     this.store.allConversationList = options.allConversationList;
     this.store.conversationList = options.conversationList;
     return options;
@@ -112,15 +112,16 @@ export default class TUIConversationServer extends IComponentServer {
    */
 
   /**
-   * 设置已读
+   * 设置会话内消息为已读状态
+   * Set the message within the conversation to read
    *
    * @param {string} conversationID 会话ID
    * @returns {Promise}
    */
   public async setMessageRead(conversationID: string) {
-    return this.handlePromiseCallback(async (resolve:any, reject:any) => {
+    return this.handlePromiseCallback(async (resolve: any, reject: any) => {
       try {
-        const imResponse:any = await this.TUICore.tim.setMessageRead({ conversationID });
+        const imResponse: any = await this.TUICore.tim.setMessageRead({ conversationID });
         resolve(imResponse);
       } catch (error) {
         reject(error);
@@ -135,9 +136,9 @@ export default class TUIConversationServer extends IComponentServer {
    * @returns {Promise}
    */
   public async deleteConversation(conversationID: string) {
-    return this.handlePromiseCallback(async (resolve:any, reject:any) => {
+    return this.handlePromiseCallback(async (resolve: any, reject: any) => {
       try {
-        const imResponse:any = await this.TUICore.tim.deleteConversation(conversationID);
+        const imResponse: any = await this.TUICore.tim.deleteConversation(conversationID);
         resolve(imResponse);
       } catch (error) {
         reject(error);
@@ -152,9 +153,9 @@ export default class TUIConversationServer extends IComponentServer {
    * @returns {Promise}
    */
   public async pinConversation(options: any) {
-    return this.handlePromiseCallback(async (resolve:any, reject:any) => {
+    return this.handlePromiseCallback(async (resolve: any, reject: any) => {
       try {
-        const imResponse:any = await this.TUICore.tim.pinConversation(options);
+        const imResponse: any = await this.TUICore.tim.pinConversation(options);
         resolve(imResponse);
       } catch (error) {
         reject(error);
@@ -169,9 +170,9 @@ export default class TUIConversationServer extends IComponentServer {
    * @returns {Promise}
    */
   public async muteConversation(options: any) {
-    return this.handlePromiseCallback(async (resolve:any, reject:any) => {
+    return this.handlePromiseCallback(async (resolve: any, reject: any) => {
       try {
-        const imResponse:any = await this.TUICore.tim.setMessageRemindType(options);
+        const imResponse: any = await this.TUICore.tim.setMessageRemindType(options);
         resolve(imResponse);
       } catch (error) {
         reject(error);
@@ -184,8 +185,8 @@ export default class TUIConversationServer extends IComponentServer {
    * @param {string} conversationID 会话ID
    * @returns {Promise}
    */
-  public async getConversationProfile(conversationID:string) {
-    return this.handlePromiseCallback(async (resolve:any, reject:any) => {
+  public async getConversationProfile(conversationID: string) {
+    return this.handlePromiseCallback(async (resolve: any, reject: any) => {
       try {
         const imResponse = await this.TUICore.tim.getConversationProfile(conversationID);
         resolve(imResponse);
@@ -196,12 +197,12 @@ export default class TUIConversationServer extends IComponentServer {
   }
 
   /*
-  * 获取 conversationList
-  *
-  * @returns {Promise}
-  */
+   * 获取 conversationList
+   *
+   * @returns {Promise}
+   */
   public async getConversationList() {
-    return this.handlePromiseCallback(async (resolve:any, reject:any) => {
+    return this.handlePromiseCallback(async (resolve: any, reject: any) => {
       try {
         const imResponse = await this.TUICore.tim.getConversationList();
         this.handleFilterSystem(imResponse.data.conversationList);
@@ -212,15 +213,14 @@ export default class TUIConversationServer extends IComponentServer {
     });
   }
 
-
   /**
- * 获取其他用户资料
- *
- * @param {Array<string>} userIDList 用户的账号列表
- * @returns {Promise}
- */
-  public async getUserProfile(userIDList:Array<string>) {
-    return this.handlePromiseCallback(async (resolve:any, reject:any) => {
+   * 获取其他用户资料
+   *
+   * @param {Array<string>} userIDList 用户的账号列表
+   * @returns {Promise}
+   */
+  public async getUserProfile(userIDList: Array<string>) {
+    return this.handlePromiseCallback(async (resolve: any, reject: any) => {
       try {
         const imResponse = await this.TUICore.tim.getUserProfile({ userIDList });
         resolve(imResponse);
@@ -244,7 +244,7 @@ export default class TUIConversationServer extends IComponentServer {
    * @param {Object} params 使用的数据
    * @returns {Object} 数据
    */
-  public async bind(params:any) {
+  public async bind(params: any) {
     this.currentStore = params;
     await this.getConversationList();
     return this.currentStore;
