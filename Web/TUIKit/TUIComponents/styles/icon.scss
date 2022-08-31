@@ -1,4 +1,3 @@
-
 .icon {
   box-sizing: border-box;
   display: inline-block;
@@ -80,7 +79,7 @@
   height: 12px;
   background: url('../assets/icon/right.png') no-repeat;
   background-size: contain;
-  transform: rotate(180deg); 
+  transform: rotate(180deg);
 }
 
 .icon-right {
@@ -90,12 +89,20 @@
   background-size: contain;
 }
 
+.icon-right-transparent {
+  width: 12px;
+  height: 12px;
+  background: url('../assets/icon/back.svg') no-repeat;
+  transform: rotate(180deg);
+  background-size: contain;
+}
+
 .icon-down {
   width: 12px;
   height: 12px;
   background: url('../assets/icon/right.png') no-repeat;
   background-size: contain;
-  transform: rotate(90deg); 
+  transform: rotate(90deg);
 }
 
 .icon-edit {
@@ -104,14 +111,16 @@
   background: url('../assets/icon/edit.png') no-repeat;
   background-size: contain;
 }
+
 .icon-voice {
   width: 16px;
   height: 16px;
   background: url('../assets/icon/voice.png') no-repeat;
   background-size: contain;
 }
+
 .icon-reserve {
-  transform: rotate(180deg); 
+  transform: rotate(180deg);
 }
 
 .icon-del {
@@ -160,10 +169,12 @@
   background: url('../assets/icon/words.png') no-repeat;
   background-size: contain;
 }
+
 .icon-evaluate {
   background: url('../assets/icon/evaluate.png') no-repeat;
   background-size: contain;
 }
+
 .icon-star {
   width: 17px !important;
   height: 24px;
@@ -171,6 +182,7 @@
   background-size: contain;
   margin-top: 2px !important;
 }
+
 .icon-star-light {
   width: 24px !important;
   height: 24px !important;
@@ -182,6 +194,13 @@
   width: 27px;
   height: 27px;
   background: url('../assets/icon/back.svg') no-repeat;
+  background-size: contain;
+}
+
+.icon-bottom-double {
+  width: 12px;
+  height: 12px;
+  background: url('../assets/icon/double-arrow.svg') no-repeat;
   background-size: contain;
 }
 
@@ -248,7 +267,14 @@
   height: 20px;
   background: url('../assets/icon/msg-revoke.svg') no-repeat;
   background-size: contain;
-  transform: rotate(180deg); 
+  transform: rotate(180deg);
+}
+
+.icon-msg-quote {
+  width: 20px;
+  height: 20px;
+  background: url('../assets/icon/msg-qnote.svg') no-repeat;
+  background-size: contain;
 }
 
 .icon-close-h5 {
@@ -257,18 +283,21 @@
   background: url('../assets/icon/icon-close-h5.svg') no-repeat;
   background-size: contain;
 }
+
 .icon-download-h5 {
   width: 20px;
   height: 20px;
   background: url('../assets/icon/icon-download-h5.svg') no-repeat;
   background-size: contain;
 }
+
 .icon-download {
   width: 20px;
   height: 20px;
   background: url('../assets/icon/icon-download.svg') no-repeat;
   background-size: contain;
 }
+
 .icon-error {
   width: 12px;
   height: 12px;
@@ -281,6 +310,7 @@
   justify-content: center;
   align-items: center;
 }
+
 /* .icon-close {
  * width: 16px;
  *  height: 16px;
@@ -288,17 +318,20 @@
  *  background-size: contain;
  *}
  */
- 
+
 .icon-close {
   display: inline-block;
-  width:24px;
-  height:24px;
+  width: 24px;
+  height: 24px;
   position: relative;
   border-radius: 50%;
 }
-.icon-close::before,.icon-close::after{
+
+.icon-close::before,
+.icon-close::after {
   content: "";
-  position: absolute;  /*方便进行定位*/
+  position: absolute;
+  /*方便进行定位*/
   background-color: #8F959E;
   height: 16px;
   width: 2px;
@@ -307,11 +340,13 @@
   margin-top: -8px;
   margin-left: -1px;
 }
-.icon-close::before{
-transform: rotate(45deg);
+
+.icon-close::before {
+  transform: rotate(45deg);
 }
-.icon-close::after{
-transform: rotate(-45deg);
+
+.icon-close::after {
+  transform: rotate(-45deg);
 }
 
 .plus {
@@ -320,9 +355,11 @@ transform: rotate(-45deg);
   height: 30px;
   position: relative;
 }
-.plus::before,.plus::after{
+
+.plus::before,
+.plus::after {
   content: "";
-  position: absolute; 
+  position: absolute;
   background-color: #232832;
   border-radius: 0.5px;
   width: 1px;
@@ -333,7 +370,8 @@ transform: rotate(-45deg);
   bottom: 0;
   margin: auto;
 }
-.plus::after{
+
+.plus::after {
   transform: rotate(90deg);
   width: 0.5px;
 }

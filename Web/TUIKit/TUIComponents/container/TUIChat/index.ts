@@ -8,8 +8,10 @@ import File from './plugin-components/file';
 import Forward from './plugin-components/forward';
 import Words from './plugin-components/words';
 import Evaluate from './plugin-components/evaluate';
+import TypingHeader from './plugin-components/typingHeader';
+import ReadReceiptDialog from './plugin-components/readReceiptDialog';
 
-let sendComponents:any = {
+let sendComponents: any = {
   Face,
   Image,
   Video,
@@ -22,10 +24,13 @@ export const messageComponents: any = {
   Forward,
 };
 
-export const otherComponents: any = {};
+export const otherComponents: any = {
+  TypingHeader,
+  ReadReceiptDialog,
+};
 
-export function getComponents(type:string) {
-  let options:any = {};
+export function getComponents(type: string) {
+  let options: any = {};
   switch (type) {
     case 'send':
       options = sendComponents;
@@ -43,8 +48,8 @@ export function getComponents(type:string) {
 }
 
 const install = (app: any) => {
-  const components:any = { ...sendComponents, ...messageComponents, ...otherComponents };
-  Object.keys(components).forEach((name:any) => {
+  const components: any = { ...sendComponents, ...messageComponents, ...otherComponents };
+  Object.keys(components).forEach((name: any) => {
     components[name].TUIServer = TUIChat.server;
   });
   TUIChatComponent.TUIServer = TUIChat.server;
@@ -53,7 +58,7 @@ const install = (app: any) => {
 };
 
 const plugin = (TUICore: any) => {
-  (TUIChat.server as any)  = new TUIChatServer(TUICore);
+  (TUIChat.server as any) = new TUIChatServer(TUICore);
   TUICore.component(TUIChat.name, TUIChat);
   return TUIChat;
 };
@@ -63,7 +68,7 @@ const setPluginComponents = (Components: any) => {
 };
 
 const removePluginComponents = (nameList: Array<string>) => {
-  nameList.map((name:string) => {
+  nameList.map((name: string) => {
     delete sendComponents[name];
     return name;
   });

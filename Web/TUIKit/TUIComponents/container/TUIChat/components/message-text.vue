@@ -1,8 +1,8 @@
 <template>
-    <template v-for="(item, index) in data.text" :key="index">
-      <span class="text-box" v-if="item.name === 'text'">{{ item.text }}</span>
-      <img class="text-img" v-else-if="item.name === 'img'" :src="item.src"/>
-    </template>
+  <template v-for="(item, index) in data.text" :key="index">
+    <span class="text-box" v-if="item.name === 'text'">{{ item.text }}</span>
+    <img class="text-img" v-else-if="item.name === 'img'" :src="item.src" />
+  </template>
 </template>
 
 <script lang="ts">
@@ -15,7 +15,7 @@ export default defineComponent({
       default: () => ({}),
     },
   },
-  setup(props:any, ctx:any) {
+  setup(props: any, ctx: any) {
     const data = reactive({
       data: {},
     });
@@ -33,5 +33,8 @@ export default defineComponent({
 .text-img {
   width: 20px;
   height: 20px;
+}
+.text-box {
+  white-space: pre-wrap;
 }
 </style>

@@ -13,6 +13,8 @@ import TUIAegis from '../../utils/TUIAegis';
 export default class TUICore extends ITUIServer {
   static instance: TUICore;
   static isLogin = false;
+  public isOfficial = false;
+  public isIntl = false;
 
   public tim: any;
   public TIM: any;
@@ -51,6 +53,7 @@ export default class TUICore extends ITUIServer {
 
     this.bindTIMEvent();
     this.TUIEnv = TUIEnv();
+    this.isOfficial = this.SDKAppID === 1400187352;
   }
 
   /**
@@ -69,11 +72,23 @@ export default class TUICore extends ITUIServer {
       ext3: options.SDKAppID,
     });
     if (TUIEnv().isH5) {
+      Aegis.reportEvent({
+        name: 'SDKAppID',
+        ext1: 'IMTUIKitH5External',
+        ext2: 'IMTUIKitH5External',
+        ext3: options.SDKAppID,
+      });
       Aegis.setAegisOptions({
         ext2: 'TUIKitH5',
         ext3: options.SDKAppID,
       });
     } else {
+      Aegis.reportEvent({
+        name: 'SDKAppID',
+        ext1: 'IMTUIKitWebExternal',
+        ext2: 'IMTUIKitWebExternal',
+        ext3: options.SDKAppID,
+      });
       Aegis.setAegisOptions({
         ext2: 'TUIKitWeb',
         ext3: options.SDKAppID,
