@@ -232,8 +232,9 @@ const TUISearch = defineComponent({
           data.searchUserList = [...data.allUserList];
           return;
         }
-        const searchResult = data.allUserList.filter((item:any) => item.userID === imResponse.data[0].userID);
-        data.searchUserList =  searchResult.length ? searchResult : [...data.allUserList];
+        data.searchUserList = imResponse.data;
+        const searchAllResult = data.allUserList.filter((item:any) => item.userID === imResponse.data[0].userID);
+        data.allUserList = searchAllResult.length ? data.allUserList : [...data.allUserList,...data.searchUserList];
       } catch (error) {
         handleErrorPrompts(t('TUISearch.该用户不存在'), data.env);
         data.searchUserList = [...data.allUserList];
