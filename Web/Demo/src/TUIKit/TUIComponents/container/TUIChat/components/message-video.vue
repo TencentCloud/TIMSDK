@@ -1,7 +1,17 @@
 <template>
- <div class="message-video">
-    <div class="message-video-box" :class="[!data.progress && data.message.status === 'success' && 'message-video-cover']" @click="toggleShow">
-      <img class="message-img" :class="[isWidth ? 'isWidth' : 'isHeight']" :src="data.snapshotUrl" alt="" v-if="data.snapshotUrl && !data.progress">
+  <div class="message-video">
+    <div
+      class="message-video-box"
+      :class="[!data.progress && data.message.status === 'success' && 'message-video-cover']"
+      @click="toggleShow"
+    >
+      <img
+        class="message-img"
+        :class="[isWidth ? 'isWidth' : 'isHeight']"
+        :src="data.snapshotUrl"
+        alt=""
+        v-if="data.snapshotUrl && !data.progress"
+      />
       <video v-else :src="data.url"></video>
       <div class="progress" v-if="data.progress">
         <progress :value="data.progress" max="1"></progress>
@@ -11,17 +21,8 @@
       <header v-if="!isH5">
         <i class="icon icon-close" @click.stop="toggleShow"></i>
       </header>
-      <div
-        class="dialog-video-box"
-        :class="[isH5 ? 'dialog-video-h5' : '']"
-        @click.self="toggleShow"
-      >
-        <video
-          :class="[isWidth ? 'isWidth' : 'isHeight']"
-          :src="data.url"
-          controls
-          autoplay
-        ></video>
+      <div class="dialog-video-box" :class="[isH5 ? 'dialog-video-h5' : '']" @click.self="toggleShow">
+        <video :class="[isWidth ? 'isWidth' : 'isHeight']" :src="data.url" controls autoplay></video>
       </div>
     </div>
   </div>
@@ -52,8 +53,7 @@ export default defineComponent({
     });
 
     const isWidth = computed(() => {
-      const { snapshotWidth = 0, snapshotHeight = 0 } = (data.data as any)
-        ?.message?.payload;
+      const { snapshotWidth = 0, snapshotHeight = 0 } = (data.data as any)?.message?.payload;
       return snapshotWidth >= snapshotHeight;
     });
 
@@ -75,14 +75,14 @@ export default defineComponent({
 .message-video {
   position: relative;
   &-box {
-    max-width: 300px;
+    max-width: min(calc(100vw - 180px), 300px);
     video {
-      max-width: 300px;
-      max-height: 300px;
+      max-width: min(calc(100vw - 180px), 300px);
+      max-height: min(calc(100vw - 180px), 300px);
     }
     img {
-      max-width: 300px;
-      max-height: 300px;
+      max-width: min(calc(100vw - 180px), 300px);
+      max-height: min(calc(100vw - 180px), 300px);
     }
   }
   &-cover {

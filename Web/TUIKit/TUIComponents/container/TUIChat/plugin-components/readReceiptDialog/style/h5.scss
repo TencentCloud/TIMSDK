@@ -1,0 +1,141 @@
+.read-receipt-H5 {
+  z-index: 5;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  transform: none;
+  box-shadow: 0 11px 20px 0 rgba(0, 0, 0, 0.3);
+  background: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+
+  .header {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .body {
+    padding: 0;
+
+    .body-tab,
+    .body-list {
+      width: 100%;
+    }
+
+    .body-list-item {
+      background-color: #ffffff;
+      padding-left: 10px;
+      display: flex;
+      flex-direction: row;
+
+      .avatar {
+        border-radius: 10%;
+        padding: 0;
+        margin: 10px;
+      }
+
+      .name {
+        width: calc(100% - 40px);
+        height: 56px;
+        line-height: 56px;
+        border-bottom: 1px solid #EFEFEF;
+      }
+    }
+
+    .body-tab {
+      height: 22px;
+      padding: 15px;
+      width: calc(100% - 30px);
+      border-bottom: none;
+
+      .tab-item {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: center;
+        align-items: center;
+        font-size: 16px;
+        height: 22px;
+        font-family: PingFangSC-Medium;
+
+        &-title,
+        &-count {
+          height: 22px;
+          font-size: 15px;
+          letter-spacing: 0;
+          text-align: center;
+          line-height: 20px;
+          font-weight: 400;
+          color: #8D8D8D;
+        }
+
+        &-count {
+          font-size: 17px;
+          font-weight: 800;
+        }
+
+        &-now {
+          color: #147AFF;
+          padding-bottom: 3px;
+          border-bottom: 2.6px solid #147AFF;
+
+          .tab-item-title,
+          .tab-item-count {
+            color: #147AFF;
+          }
+        }
+      }
+    }
+
+    .body-message {
+      background-color: #F7F8FA;
+
+      .message {
+        margin: 10px 0;
+        background-color: #ffffff;
+        padding: 5px;
+
+        .message-info {
+          span {
+            padding-left: 10px;
+            padding-right: 10px;
+            width: 94px;
+            height: 30px;
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+            font-size: 12px;
+            color: #999999;
+            letter-spacing: 0;
+            text-align: center;
+            line-height: 30px;
+          }
+        }
+
+        .message-cont {
+          padding: 0 10px 10px 10px;
+          font-family: PingFangSC-Regular;
+          font-weight: 400;
+          font-size: 14px;
+          color: #111111;
+          letter-spacing: 0;
+          max-height: 100px;
+
+          p {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+
+          &-img {
+            max-height: 70px;
+          }
+        }
+      }
+    }
+  }
+}
