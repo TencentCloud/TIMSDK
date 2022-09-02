@@ -20,10 +20,11 @@ public class InitSDK : MonoBehaviour
     Submit = GameObject.Find("Submit").GetComponent<Button>();
     if (CurrentSceneInfo.info != null)
     {
-      Header.text = CurrentSceneInfo.info.apiText + " " + CurrentSceneInfo.info.apiName;
-      Submit.GetComponentInChildren<Text>().text = CurrentSceneInfo.info.apiText;
+      Header.text = Utils.IsCn() ? CurrentSceneInfo.info.apiText + " " + CurrentSceneInfo.info.apiName : CurrentSceneInfo.info.apiName;
+      Submit.GetComponentInChildren<Text>().text = CurrentSceneInfo.info.apiName;
     }
     Copy = GameObject.Find("Copy").GetComponent<Button>();
+    Copy.GetComponentInChildren<Text>().text = Utils.t("Copy");
     Submit.onClick.AddListener(Init);
     Copy.onClick.AddListener(CopyText);
   }

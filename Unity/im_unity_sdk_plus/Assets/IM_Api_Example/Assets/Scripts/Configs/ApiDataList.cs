@@ -5,64 +5,76 @@ namespace com.tencent.im.unity.demo.config.ApiDataList
     public static string ApiDataListStr = @"[
   {
     ""apiManager"": ""V2TimManager"",
-    ""managerName"": ""基础模块"",
+    ""managerName"": ""Base Module"",
     ""apis"": [
       {
-        ""apiName"": ""initSDK"",
+        ""apiName"": ""InitSDK"",
         ""apiText"": ""初始化SDK"",
         ""apiDesc"": ""sdk 初始化"",
         ""scene"": ""InitSDK""
       },
       {
-        ""apiName"": ""addEventListener"",
+        ""apiName"": ""AddEventListener"",
         ""apiText"": ""添加事件监听"",
         ""apiDesc"": ""事件监听应先于登录方法前添加，以防漏消息"",
         ""scene"": ""AddEventListener""
       },
       {
-        ""apiName"": ""getServerTime"",
+        ""apiName"": ""GetServerTime"",
         ""apiText"": ""获取服务端时间"",
         ""apiDesc"": ""sdk 获取服务端时间"",
         ""scene"": ""GetServerTime""
       },
       {
-        ""apiName"": ""login"",
+        ""apiName"": ""Login"",
         ""apiText"": ""登录"",
         ""apiDesc"": ""sdk 登录接口，先初始化"",
         ""scene"": ""Login""
       },
       {
-        ""apiName"": ""logout"",
+        ""apiName"": ""Logout"",
         ""apiText"": ""登出"",
         ""apiDesc"": ""sdk 登录接口，先初始化"",
         ""scene"": ""Logout""
       },
       {
-        ""apiName"": ""getLoginUser"",
+        ""apiName"": ""GetSDKVersion"",
+        ""apiText"": ""获取 SDK 版本"",
+        ""apiDesc"": ""获取 SDK 版本"",
+        ""scene"": ""GetSDKVersion""
+      },
+      {
+        ""apiName"": ""GetLoginUser"",
         ""apiText"": ""获取当前登录用户"",
         ""apiDesc"": ""获取当前登录用户"",
         ""scene"": ""GetLoginUser""
       },
       {
-        ""apiName"": ""profileGetUserProfileList"",
+        ""apiName"": ""GetLoginStatus"",
+        ""apiText"": ""获取当前登录状态"",
+        ""apiDesc"": ""获取当前登录状态"",
+        ""scene"": ""GetLoginStatus""
+      },
+      {
+        ""apiName"": ""ProfileGetUserProfileList"",
         ""apiText"": ""获取用户信息列表"",
         ""apiDesc"": ""获取用户信息列表"",
         ""scene"": ""ProfileGetUserProfileList""
       },
       {
-        ""apiName"": ""groupCreate"",
+        ""apiName"": ""GroupCreate"",
         ""apiText"": ""创建群组"",
         ""apiDesc"": ""创建群组"",
         ""scene"": ""GroupCreate""
       },
       {
-        ""apiName"": ""groupJoin"",
+        ""apiName"": ""GroupJoin"",
         ""apiText"": ""加入群组"",
         ""apiDesc"": ""加入群组"",
         ""scene"": ""GroupJoin""
       },
       {
-        ""apiName"": ""groupDelete"",
+        ""apiName"": ""GroupDelete"",
         ""apiText"": ""退出（解散）群组"",
         ""apiDesc"": ""退出（解散）群组"",
         ""scene"": ""GroupDelete""
@@ -71,55 +83,379 @@ namespace com.tencent.im.unity.demo.config.ApiDataList
   },
   {
     ""apiManager"": ""V2TimMessageManager"",
-    ""managerName"": ""会话模块"",
+    ""managerName"": ""Conversation Module"",
     ""apis"": [
       {
-        ""apiName"": ""convGetConvList"",
+        ""apiName"": ""ConvGetConvList"",
         ""apiText"": ""获取会话列表"",
         ""apiDesc"": ""获取会话列表"",
         ""scene"": ""ConvGetConvList""
+      },
+      {
+        ""apiName"": ""ConvGetConvInfo"",
+        ""apiText"": ""获取会话详情"",
+        ""apiDesc"": ""获取会话详情"",
+        ""scene"": ""ConvGetConvInfo""
+      },
+      {
+        ""apiName"": ""ConvGetTotalUnreadMessageCount"",
+        ""apiText"": ""获取会话未读总数"",
+        ""apiDesc"": ""获取会话未读总数"",
+        ""scene"": ""ConvGetTotalUnreadMessageCount""
+      },
+      {
+        ""apiName"": ""ConvDelete"",
+        ""apiText"": ""删除会话"",
+        ""apiDesc"": ""删除会话"",
+        ""scene"": ""ConvDelete""
+      },
+      {
+        ""apiName"": ""ConvSetDraft"",
+        ""apiText"": ""设置会话为草稿"",
+        ""apiDesc"": ""设置会话为草稿"",
+        ""scene"": ""ConvSetDraft""
+      },
+      {
+        ""apiName"": ""ConvCancelDraft"",
+        ""apiText"": ""取消会话为草稿"",
+        ""apiDesc"": ""取消会话为草稿"",
+        ""scene"": ""ConvCancelDraft""
+      },
+      {
+        ""apiName"": ""ConvPinConversation"",
+        ""apiText"": ""会话置顶"",
+        ""apiDesc"": ""会话置顶"",
+        ""scene"": ""ConvPinConversation""
       }
     ]
   },
   {
     ""apiManager"": ""V2TimMessageManager"",
-    ""managerName"": ""消息模块"",
+    ""managerName"": ""Message Module"",
     ""apis"": [
       {
-        ""apiName"": ""sendTextMessage"",
+        ""apiName"": ""MsgGetMsgList"",
+        ""apiText"": ""获取历史消息列表"",
+        ""apiDesc"": ""获取历史消息列表"",
+        ""scene"": ""MsgGetMsgList""
+      },
+      {
+        ""apiName"": ""SendTextMessage"",
         ""apiText"": ""发送文本消息"",
         ""apiDesc"": ""发送文本消息"",
         ""scene"": ""SendTextMessage""
       },
       {
-        ""apiName"": ""msgGetMsgList"",
-        ""apiText"": ""获取历史消息列表"",
-        ""apiDesc"": ""获取历史消息列表"",
-        ""scene"": ""MsgGetMsgList""
+        ""apiName"": ""SendCustomMessage"",
+        ""apiText"": ""发送自定义消息"",
+        ""apiDesc"": ""发送自定义消息"",
+        ""scene"": ""SendCustomMessage""
+      },
+      {
+        ""apiName"": ""SendImageMessage"",
+        ""apiText"": ""发送图片消息"",
+        ""apiDesc"": ""发送图片消息"",
+        ""scene"": ""SendImageMessage""
+      },
+      {
+        ""apiName"": ""SendVideoMessage"",
+        ""apiText"": ""发送视频消息"",
+        ""apiDesc"": ""发送视频消息"",
+        ""scene"": ""SendVideoMessage""
+      },
+      {
+        ""apiName"": ""SendFileMessage"",
+        ""apiText"": ""发送文件消息"",
+        ""apiDesc"": ""发送文件消息"",
+        ""scene"": ""SendFileMessage""
+      },
+      {
+        ""apiName"": ""SendSoundMessage"",
+        ""apiText"": ""发送录音消息"",
+        ""apiDesc"": ""发送录音消息"",
+        ""scene"": ""SendSoundMessage""
+      },
+      {
+        ""apiName"": ""SendTextAtMessage"",
+        ""apiText"": ""发送文本At消息"",
+        ""apiDesc"": ""发送文本At消息"",
+        ""scene"": ""SendTextAtMessage""
+      },
+      {
+        ""apiName"": ""SendLocationMessage"",
+        ""apiText"": ""发送地理位置消息"",
+        ""apiDesc"": ""发送地理位置消息"",
+        ""scene"": ""SendLocationMessage""
+      },
+      {
+        ""apiName"": ""SendFaceMessage"",
+        ""apiText"": ""发送表情消息"",
+        ""apiDesc"": ""发送表情消息"",
+        ""scene"": ""SendFaceMessage""
+      },
+      {
+        ""apiName"": ""SendMergerMessage"",
+        ""apiText"": ""发送合并消息"",
+        ""apiDesc"": ""发送合并消息"",
+        ""scene"": ""SendMergerMessage""
+      },
+      {
+        ""apiName"": ""SendForwardMessage"",
+        ""apiText"": ""发送逐条转发消息"",
+        ""apiDesc"": ""发送逐条转发消息"",
+        ""scene"": ""SendForwardMessage""
+      },
+      {
+        ""apiName"": ""MsgDelete"",
+        ""apiText"": ""删除消息"",
+        ""apiDesc"": ""删除消息"",
+        ""scene"": ""MsgDelete""
+      },
+      {
+        ""apiName"": ""MsgCancelSend"",
+        ""apiText"": ""取消消息发送"",
+        ""apiDesc"": ""取消消息发送"",
+        ""scene"": ""MsgCancelSend""
+      },
+      {
+        ""apiName"": ""MsgRevoke"",
+        ""apiText"": ""撤回消息"",
+        ""apiDesc"": ""撤回消息"",
+        ""scene"": ""MsgRevoke""
+      },
+      {
+        ""apiName"": ""MsgModifyMessage"",
+        ""apiText"": ""消息变更"",
+        ""apiDesc"": ""消息变更"",
+        ""scene"": ""MsgModifyMessage""
+      },
+      {
+        ""apiName"": ""MsgReportReaded (C2C)"",
+        ""apiText"": ""标记C2C会话已读"",
+        ""apiDesc"": ""标记C2C会话已读"",
+        ""scene"": ""MsgReportReaded""
+      },
+      {
+        ""apiName"": ""MsgSendMessageReadReceipts (Group)"",
+        ""apiText"": ""标记Group会话已读"",
+        ""apiDesc"": ""标记Group会话已读"",
+        ""scene"": ""MsgSendMessageReadReceipts""
+      },
+      {
+        ""apiName"": ""MsgMarkAllMessageAsRead"",
+        ""apiText"": ""标记所有消息为已读"",
+        ""apiDesc"": ""标记所有消息为已读"",
+        ""scene"": ""MsgMarkAllMessageAsRead""
+      },
+      {
+        ""apiName"": ""MsgGetMessageReadReceipts"",
+        ""apiText"": ""获取群已读回执"",
+        ""apiDesc"": ""获取群已读回执"",
+        ""scene"": ""MsgGetMessageReadReceipts""
+      },
+      {
+        ""apiName"": ""GetMsgGroupMessageReadMemberList"",
+        ""apiText"": ""获取群已读（未读）成员列表"",
+        ""apiDesc"": ""获取群已读（未读）成员列表"",
+        ""scene"": ""GetMsgGroupMessageReadMemberList""
       }
     ]
   },
   {
     ""apiManager"": ""V2TimMessageManager"",
-    ""managerName"": ""好友关系链模块"",
+    ""managerName"": ""FriendShip Module"",
     ""apis"": [
       {
-        ""apiName"": ""friendshipGetFriendProfileList"",
+        ""apiName"": ""FriendshipGetFriendProfileList"",
         ""apiText"": ""获取好友列表"",
         ""apiDesc"": ""获取好友列表"",
         ""scene"": ""FriendshipGetFriendProfileList""
+      },
+      {
+        ""apiName"": ""FriendshipGetFriendsInfo"",
+        ""apiText"": ""获取好友信息"",
+        ""apiDesc"": ""获取好友信息"",
+        ""scene"": ""FriendshipGetFriendsInfo""
+      },
+      {
+        ""apiName"": ""FriendshipAddFriend"",
+        ""apiText"": ""添加好友"",
+        ""apiDesc"": ""添加好友"",
+        ""scene"": ""FriendshipAddFriend""
+      },
+      {
+        ""apiName"": ""FriendshipDeleteFriend"",
+        ""apiText"": ""删除好友"",
+        ""apiDesc"": ""删除好友"",
+        ""scene"": ""FriendshipDeleteFriend""
+      },
+      {
+        ""apiName"": ""FriendshipCheckFriendType"",
+        ""apiText"": ""检测好友"",
+        ""apiDesc"": ""检测好友"",
+        ""scene"": ""FriendshipCheckFriendType""
+      },
+      {
+        ""apiName"": ""FriendshipGetPendencyList"",
+        ""apiText"": ""获取好友申请未决"",
+        ""apiDesc"": ""获取好友申请未决"",
+        ""scene"": ""FriendshipGetPendencyList""
+      },
+      {
+        ""apiName"": ""FriendshipHandleFriendAddRequest"",
+        ""apiText"": ""处理好友请求"",
+        ""apiDesc"": ""处理好友请求"",
+        ""scene"": ""FriendshipHandleFriendAddRequest""
+      },
+      {
+        ""apiName"": ""FriendshipReportPendencyReaded"",
+        ""apiText"": ""上报好友申请未决已读"",
+        ""apiDesc"": ""上报好友申请未决已读"",
+        ""scene"": ""FriendshipReportPendencyReaded""
+      },
+      {
+        ""apiName"": ""FriendshipDeletePendency"",
+        ""apiText"": ""删除好友申请未决"",
+        ""apiDesc"": ""删除好友申请未决"",
+        ""scene"": ""FriendshipDeletePendency""
+      },
+      {
+        ""apiName"": ""FriendshipModifyFriendProfile"",
+        ""apiText"": ""修改好友信息"",
+        ""apiDesc"": ""修改好友信息"",
+        ""scene"": ""FriendshipModifyFriendProfile""
+      },
+      {
+        ""apiName"": ""FriendshipGetBlackList"",
+        ""apiText"": ""获取黑名单列表"",
+        ""apiDesc"": ""获取黑名单列表"",
+        ""scene"": ""FriendshipGetBlackList""
+      },
+      {
+        ""apiName"": ""FriendshipAddToBlackList"",
+        ""apiText"": ""添加黑名单"",
+        ""apiDesc"": ""添加黑名单"",
+        ""scene"": ""FriendshipAddToBlackList""
+      },
+      {
+        ""apiName"": ""FriendshipDeleteFromBlackList"",
+        ""apiText"": ""从黑名单删除"",
+        ""apiDesc"": ""从黑名单删除"",
+        ""scene"": ""FriendshipDeleteFromBlackList""
+      },
+      {
+        ""apiName"": ""FriendshipCreateFriendGroup"",
+        ""apiText"": ""创建好友分组"",
+        ""apiDesc"": ""创建好友分组"",
+        ""scene"": ""FriendshipCreateFriendGroup""
+      },
+      {
+        ""apiName"": ""FriendshipGetFriendGroupList"",
+        ""apiText"": ""获取好友分组列表"",
+        ""apiDesc"": ""获取好友分组列表"",
+        ""scene"": ""FriendshipGetFriendGroupList""
+      },
+      {
+        ""apiName"": ""FriendshipModifyFriendGroup"",
+        ""apiText"": ""修改好友分组列表"",
+        ""apiDesc"": ""修改好友分组列表"",
+        ""scene"": ""FriendshipModifyFriendGroup""
+      },
+      {
+        ""apiName"": ""FriendshipDeleteFriendGroup"",
+        ""apiText"": ""删除好友分组列表"",
+        ""apiDesc"": ""删除好友分组列表"",
+        ""scene"": ""FriendshipDeleteFriendGroup""
+      },
+      {
+        ""apiName"": ""FriendshipSearchFriends"",
+        ""apiText"": ""搜索好友"",
+        ""apiDesc"": ""搜索好友"",
+        ""scene"": ""FriendshipSearchFriends""
       }
     ]
   },
   {
     ""apiManager"": ""V2TimMessageManager"",
-    ""managerName"": ""群组模块"",
+    ""managerName"": ""Group Module"",
     ""apis"": [
       {
         ""apiName"": ""GroupGetJoinedGroupList"",
         ""apiText"": ""获取加群列表"",
         ""apiDesc"": ""获取加群列表"",
         ""scene"": ""GroupGetJoinedGroupList""
+      },
+      {
+        ""apiName"": ""GroupGetGroupInfoList"",
+        ""apiText"": ""获取群信息"",
+        ""apiDesc"": ""获取群信息"",
+        ""scene"": ""GroupGetGroupInfoList""
+      },
+      {
+        ""apiName"": ""GroupGetOnlineMemberCount"",
+        ""apiText"": ""获取群在线人数"",
+        ""apiDesc"": ""获取群在线人数"",
+        ""scene"": ""GroupGetOnlineMemberCount""
+      },
+      {
+        ""apiName"": ""GroupInviteMember"",
+        ""apiText"": ""邀请好友进群"",
+        ""apiDesc"": ""邀请好友进群"",
+        ""scene"": ""GroupInviteMember""
+      },
+      {
+        ""apiName"": ""GroupDeleteMember"",
+        ""apiText"": ""踢人出群"",
+        ""apiDesc"": ""踢人出群"",
+        ""scene"": ""GroupDeleteMember""
+      },
+      {
+        ""apiName"": ""GroupQuit"",
+        ""apiText"": ""退出群组"",
+        ""apiDesc"": ""退出群组"",
+        ""scene"": ""GroupQuit""
+      },
+      // {
+      //   ""apiName"": ""GroupModifyGroupInfo"",
+      //   ""apiText"": ""修改群信息"",
+      //   ""apiDesc"": ""修改群信息"",
+      //   ""scene"": ""GroupModifyGroupInfo""
+      // },
+      {
+        ""apiName"": ""GroupGetMemberInfoList"",
+        ""apiText"": ""获取群成员信息"",
+        ""apiDesc"": ""获取群成员信息"",
+        ""scene"": ""GroupGetMemberInfoList""
+      },
+      // {
+      //   ""apiName"": ""GroupModifyMemberInfo"",
+      //   ""apiText"": ""修改群成员信息"",
+      //   ""apiDesc"": ""修改群成员信息"",
+      //   ""scene"": ""GroupModifyMemberInfo""
+      // },
+      {
+        ""apiName"": ""GroupGetPendencyList"",
+        ""apiText"": ""获取群未决信息列表"",
+        ""apiDesc"": ""获取群未决信息列表"",
+        ""scene"": ""GroupGetPendencyList""
+      },
+      {
+        ""apiName"": ""GroupHandlePendency"",
+        ""apiText"": ""处理群未决信息"",
+        ""apiDesc"": ""处理群未决信息"",
+        ""scene"": ""GroupHandlePendency""
+      },
+      {
+        ""apiName"": ""GroupReportPendencyReaded"",
+        ""apiText"": ""上报群未决信息已读"",
+        ""apiDesc"": ""上报群未决信息已读"",
+        ""scene"": ""GroupReportPendencyReaded""
+      },
+      {
+        ""apiName"": ""GroupSearchGroupMembers"",
+        ""apiText"": ""搜索群成员"",
+        ""apiDesc"": ""搜索群成员"",
+        ""scene"": ""GroupSearchGroupMembers""
       }
     ]
   },

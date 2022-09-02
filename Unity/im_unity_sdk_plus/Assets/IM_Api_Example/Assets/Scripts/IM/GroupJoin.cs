@@ -14,9 +14,13 @@ public class GroupJoin : MonoBehaviour
   public Text Result;
   public Button Submit;
   public Button Copy;
-
+  string[] Labels = new string[] { "GroupIDLabel", "GreetingLabel" };
   void Start()
   {
+    foreach (string label in Labels)
+    {
+      GameObject.Find(label).GetComponent<Text>().text = Utils.t(label);
+    }
     GroupID = GameObject.Find("GroupID").GetComponent<InputField>();
     Greeting = GameObject.Find("Greeting").GetComponent<InputField>();
     Result = GameObject.Find("ResultText").GetComponent<Text>();
@@ -24,10 +28,11 @@ public class GroupJoin : MonoBehaviour
     Submit = GameObject.Find("Submit").GetComponent<Button>();
     if (CurrentSceneInfo.info != null)
     {
-      Header.text = CurrentSceneInfo.info.apiText + " " + CurrentSceneInfo.info.apiName;
-      Submit.GetComponentInChildren<Text>().text = CurrentSceneInfo.info.apiText;
+      Header.text = Utils.IsCn() ? CurrentSceneInfo.info.apiText + " " + CurrentSceneInfo.info.apiName : CurrentSceneInfo.info.apiName;
+      Submit.GetComponentInChildren<Text>().text = CurrentSceneInfo.info.apiName;
     }
     Copy = GameObject.Find("Copy").GetComponent<Button>();
+    Copy.GetComponentInChildren<Text>().text = Utils.t("Copy");
     Submit.onClick.AddListener(GroupJoinSDK);
     Copy.onClick.AddListener(CopyText);
   }

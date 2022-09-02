@@ -12,14 +12,15 @@ using System.Text;
 using System.Collections.Generic;
 public class SendTextMessage : MonoBehaviour
 {
+  string[] Labels = new string[] {"MessageLabel", "SelectFriendLabel", "SelectGroupLabel", "SelectPriorityLabel", "IsOnlineLabel", "IsUnreadLabel", "needReceiptLabel"};
   public Text Header;
-
   public InputField Input;
   public Dropdown SelectedFriend;
   public Dropdown SelectedGroup;
   public Dropdown SelectedPriority;
   public Toggle IsOnline;
   public Toggle IsUnread;
+  public Toggle Receipt;
   public Text Result;
   public Button Submit;
   public Button Copy;
@@ -27,6 +28,10 @@ public class SendTextMessage : MonoBehaviour
   private List<string> FriendList;
   void Start()
   {
+    foreach (string label in Labels)
+    {
+      GameObject.Find(label).GetComponent<Text>().text = Utils.t(label);
+    }
     GroupGetJoinedGroupListSDK();
     FriendshipGetFriendProfileListSDK();
     Header = GameObject.Find("HeaderText").GetComponent<Text>();
@@ -50,15 +55,17 @@ public class SendTextMessage : MonoBehaviour
     });
     IsOnline = GameObject.Find("Online").GetComponent<Toggle>();
     IsUnread = GameObject.Find("Unread").GetComponent<Toggle>();
+    Receipt = GameObject.Find("Receipt").GetComponent<Toggle>();
     Result = GameObject.Find("ResultText").GetComponent<Text>();
     Submit = GameObject.Find("Submit").GetComponent<Button>();
     Copy = GameObject.Find("Copy").GetComponent<Button>();
     Submit.onClick.AddListener(SendTextMessageSDK);
+    Copy.GetComponentInChildren<Text>().text = Utils.t("Copy");
     Copy.onClick.AddListener(CopyText);
     if (CurrentSceneInfo.info != null)
     {
-      Header.text = CurrentSceneInfo.info.apiText + " " + CurrentSceneInfo.info.apiName;
-      Submit.GetComponentInChildren<Text>().text = CurrentSceneInfo.info.apiText;
+      Header.text = Utils.IsCn() ? CurrentSceneInfo.info.apiText + " " + CurrentSceneInfo.info.apiName : CurrentSceneInfo.info.apiName;
+      Submit.GetComponentInChildren<Text>().text = CurrentSceneInfo.info.apiName;
     }
   }
 
@@ -83,7 +90,7 @@ public class SendTextMessage : MonoBehaviour
     try
     {
       GroupList = new List<string>();
-      SelectedGroup.options.Clear();
+      SelectedGroup.ClearOptions();
       string text = (string)parameters[1];
       List<GroupBaseInfo> List = Utils.FromJson<List<GroupBaseInfo>>(text);
       Dropdown.OptionData option = new Dropdown.OptionData();
@@ -101,7 +108,7 @@ public class SendTextMessage : MonoBehaviour
     }
     catch (Exception ex)
     {
-      Toast.Show("获取群组失败，请登陆");
+      Toast.Show(Utils.t("getGroupListFailed"));
     }
   }
 
@@ -110,7 +117,7 @@ public class SendTextMessage : MonoBehaviour
     try
     {
       FriendList = new List<string>();
-      SelectedFriend.options.Clear();
+      SelectedFriend.ClearOptions();
       string text = (string)parameters[1];
       List<FriendProfile> List = Utils.FromJson<List<FriendProfile>>(text);
       Dropdown.OptionData option = new Dropdown.OptionData();
@@ -128,7 +135,7 @@ public class SendTextMessage : MonoBehaviour
     }
     catch (Exception ex)
     {
-      Toast.Show("获取好友失败，请登陆");
+      Toast.Show(Utils.t("getFriendListFailed"));
     }
   }
 
@@ -148,15 +155,14 @@ public class SendTextMessage : MonoBehaviour
   {
     var message = new Message
     {
-      message_conv_id = "1234",
       message_conv_type = TIMConvType.kTIMConv_Group,
-      message_cloud_custom_str = "unity local custom data",
+      message_cloud_custom_str = "unity local text data",
       message_elem_array = new List<Elem>{new Elem
       {
         elem_type = TIMElemType.kTIMElem_Text,
         text_elem_content = Input.text
       }},
-      message_need_read_receipt = true,
+      message_need_read_receipt = Receipt.isOn,
       message_priority = (TIMMsgPriority)SelectedPriority.value,
       message_is_excluded_from_unread_count = IsUnread.isOn,
       message_is_online_msg = IsOnline.isOn
