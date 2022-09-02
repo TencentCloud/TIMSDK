@@ -114,6 +114,8 @@ namespace com.tencent.imsdk.unity.native
 
         [DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern int TIMMsgRevoke(string conv_id, int conv_type, IntPtr message_param, CommonValueCallback cb, IntPtr user_data);
+        [DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int TIMMsgModifyMessage(IntPtr message_param, CommonValueCallback cb, IntPtr user_data);
 
         [DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern int TIMMsgFindByMsgLocatorList(string conv_id, int conv_type, IntPtr message_locator_param, CommonValueCallback cb, IntPtr user_data);
@@ -214,9 +216,29 @@ namespace com.tencent.imsdk.unity.native
         [DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern int TIMGroupInitGroupAttributes(IntPtr group_id, IntPtr json_group_atrributes, CommonValueCallback cb, IntPtr user_data);
         [DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int TIMGroupSetGroupAttributes(IntPtr group_id, IntPtr json_group_atrributes, CommonValueCallback cb, IntPtr user_data);
+        [DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern int TIMGroupDeleteGroupAttributes(IntPtr group_id, IntPtr json_keys, CommonValueCallback cb, IntPtr user_data);
         [DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern int TIMGroupGetGroupAttributes(IntPtr group_id, IntPtr json_keys, CommonValueCallback cb, IntPtr user_data);
+        [DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int TIMGroupGetJoinedCommunityList(CommonValueCallback cb, IntPtr user_data);
+        [DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int TIMGroupCreateTopicInCommunity(IntPtr group_id, IntPtr json_topic_info, CommonValueCallback cb, IntPtr user_data);
+        [DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int TIMGroupDeleteTopicFromCommunity(IntPtr group_id, IntPtr json_topic_id_array, CommonValueCallback cb, IntPtr user_data);
+        [DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int TIMGroupSetTopicInfo(IntPtr json_topic_info, CommonValueCallback cb, IntPtr user_data);
+        [DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int TIMGroupGetTopicInfoList(IntPtr group_id, IntPtr json_topic_id_array, CommonValueCallback cb, IntPtr user_data);
+        [DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int TIMGetUserStatus(IntPtr json_identifier_array, CommonValueCallback cb, IntPtr user_data);
+        [DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int TIMSetSelfStatus(IntPtr json_current_user_status, CommonValueCallback cb, IntPtr user_data);
+        [DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int TIMSubscribeUserStatus(IntPtr json_identifier_array, CommonValueCallback cb, IntPtr user_data);
+        [DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int TIMUnsubscribeUserStatus(IntPtr json_identifier_array, CommonValueCallback cb, IntPtr user_data);
         [DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
 
 
@@ -357,6 +379,16 @@ namespace com.tencent.imsdk.unity.native
 
         [DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern int TIMMsgGetGroupMessageReadMemberList(IntPtr json_msg, TIMGroupMessageReadMembersFilter filter, ulong next_seq, int count, TIMMsgGroupMessageReadMemberListCallback cb, IntPtr user_data);
+        [DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int TIMSetGroupTopicCreatedCallback(TIMGroupTopicCreatedCallback cb, IntPtr user_data);
+        [DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int TIMSetGroupTopicDeletedCallback(TIMGroupTopicDeletedCallback cb, IntPtr user_data);
+        [DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int TIMSetGroupTopicChangedCallback(TIMGroupTopicChangedCallback cb, IntPtr user_data);
+        [DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int TIMSetSelfInfoUpdatedCallback(TIMSelfInfoUpdatedCallback cb, IntPtr user_data);
+        [DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int TIMSetUserStatusChangedCallback(TIMUserStatusChangedCallback cb, IntPtr user_data);
 
 
 
@@ -431,6 +463,16 @@ namespace com.tencent.imsdk.unity.native
         public delegate void CommonCallback(int code, IntPtr user_data);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void TIMMsgGroupMessageReadMemberListCallback(IntPtr json_group_member_array, ulong next_seq, bool is_finished, IntPtr user_data);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void TIMGroupTopicCreatedCallback(IntPtr group_id, IntPtr topic_id, IntPtr user_data);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void TIMGroupTopicDeletedCallback(IntPtr group_id, IntPtr topic_id_array, IntPtr user_data);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void TIMGroupTopicChangedCallback(IntPtr group_id, IntPtr topic_info, IntPtr user_data);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void TIMSelfInfoUpdatedCallback(IntPtr json_user_profile, IntPtr user_data);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void TIMUserStatusChangedCallback(IntPtr json_user_status_array, IntPtr user_data);
 
     }
 }

@@ -24,15 +24,23 @@ public class ConvGetConvList : MonoBehaviour
     Submit = GameObject.Find("Submit").GetComponent<Button>();
     if (CurrentSceneInfo.info != null)
     {
-      Header.text = CurrentSceneInfo.info.apiText + " " + CurrentSceneInfo.info.apiName;
-      Submit.GetComponentInChildren<Text>().text = CurrentSceneInfo.info.apiText;
+      Header.text = Utils.IsCn() ? CurrentSceneInfo.info.apiText + " " + CurrentSceneInfo.info.apiName : CurrentSceneInfo.info.apiName;
+      Submit.GetComponentInChildren<Text>().text = CurrentSceneInfo.info.apiName;
     }
     Copy = GameObject.Find("Copy").GetComponent<Button>();
+    Copy.GetComponentInChildren<Text>().text = Utils.t("Copy");
     Submit.onClick.AddListener(ConvGetConvListSDK);
     Copy.onClick.AddListener(CopyText);
   }
   void ConvGetConvListSDK()
   {
+    var Parent = GameObject.Find("ResultPanel");
+    foreach (Transform child in Parent.transform)
+    {
+      GameObject.Destroy(child.gameObject);
+    }
+    Result = Instantiate(Result, Parent.transform);
+    Result.enabled = true;
     TIMResult res = TencentIMSDK.ConvGetConvList(Utils.addAsyncStringDataToScreen(GetResult));
     Result.text = Utils.SynchronizeResult(res);
   }
@@ -40,10 +48,6 @@ public class ConvGetConvList : MonoBehaviour
   void GenerateResultText()
   {
     var Parent = GameObject.Find("ResultPanel");
-    foreach (Transform child in Parent.transform)
-    {
-      GameObject.Destroy(child.gameObject);
-    }
     foreach (string resultText in ResultText)
     {
       var obj = Instantiate(Result, Parent.transform);

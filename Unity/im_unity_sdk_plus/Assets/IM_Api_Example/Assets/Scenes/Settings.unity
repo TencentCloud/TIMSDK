@@ -133,7 +133,6 @@ GameObject:
   - component: {fileID: 6671376}
   - component: {fileID: 6671375}
   - component: {fileID: 6671374}
-  - component: {fileID: 6671377}
   m_Layer: 5
   m_Name: Submit
   m_TagString: Untagged
@@ -203,18 +202,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 6671375}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6671377}
-        m_MethodName: Submit
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &6671375
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -252,21 +240,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6671372}
   m_CullTransparentMesh: 0
---- !u!114 &6671377
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6671372}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93d0a6e688a654c28a6c15a022b79e54, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Sdkappid: {fileID: 0}
-  Secret: {fileID: 0}
-  UserID: {fileID: 0}
 --- !u!1 &26030917
 GameObject:
   m_ObjectHideFlags: 0
@@ -844,7 +817,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 145.9912, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &512488688
@@ -893,7 +866,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "user_sig, \u63A7\u5236\u53F0\u7533\u8BF7"
+  m_Text: UserSig
 --- !u!222 &512488690
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1152,7 +1125,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: user_sig
+  m_Text: usersig
 --- !u!222 &628722295
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1432,6 +1405,7 @@ GameObject:
   - component: {fileID: 848791948}
   - component: {fileID: 848791947}
   - component: {fileID: 848791951}
+  - component: {fileID: 848791952}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1545,6 +1519,24 @@ MonoBehaviour:
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
+--- !u!114 &848791952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 848791946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93d0a6e688a654c28a6c15a022b79e54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Header: {fileID: 0}
+  Sdkappid: {fileID: 0}
+  Secret: {fileID: 0}
+  UserID: {fileID: 0}
+  Submit: {fileID: 0}
+  Reset: {fileID: 0}
 --- !u!1 &880729852
 GameObject:
   m_ObjectHideFlags: 0
@@ -1580,7 +1572,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 104.75704, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &880729854
@@ -1629,7 +1621,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "UserID, \u968F\u4FBF\u586B"
+  m_Text: UserID
 --- !u!222 &880729856
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1728,7 +1720,6 @@ GameObject:
   - component: {fileID: 1075722361}
   - component: {fileID: 1075722360}
   - component: {fileID: 1075722359}
-  - component: {fileID: 1075722362}
   m_Layer: 5
   m_Name: Reset
   m_TagString: Untagged
@@ -1798,18 +1789,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1075722360}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1075722362}
-        m_MethodName: Reset
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1075722360
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1847,21 +1827,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1075722357}
   m_CullTransparentMesh: 0
---- !u!114 &1075722362
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1075722357}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93d0a6e688a654c28a6c15a022b79e54, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Sdkappid: {fileID: 0}
-  Secret: {fileID: 0}
-  UserID: {fileID: 0}
 --- !u!1 &1107875986
 GameObject:
   m_ObjectHideFlags: 0
@@ -2483,7 +2448,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 150.44894, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1409000051
@@ -2518,7 +2483,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "sdkappid, \u63A7\u5236\u53F0\u7533\u8BF7"
+  m_Text: Sdkappid
 --- !u!222 &1409000052
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3596,9 +3561,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93d0a6e688a654c28a6c15a022b79e54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Header: {fileID: 0}
   Sdkappid: {fileID: 1821787819}
   Secret: {fileID: 1703874231}
   UserID: {fileID: 805687576}
+  Submit: {fileID: 0}
+  Reset: {fileID: 0}
 --- !u!1 &2012584548
 GameObject:
   m_ObjectHideFlags: 0

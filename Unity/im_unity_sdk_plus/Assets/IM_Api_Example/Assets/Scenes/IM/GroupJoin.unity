@@ -211,7 +211,7 @@ GameObject:
   - component: {fileID: 87431046}
   - component: {fileID: 87431045}
   m_Layer: 5
-  m_Name: Text
+  m_Name: GroupIDLabel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -736,7 +736,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1169.335, y: 0}
+  m_SizeDelta: {x: 2460.1702, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &777707431
 MonoBehaviour:
@@ -856,8 +856,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 1169.335, y: 0}
-  m_SizeDelta: {x: 1169.335, y: 0}
+  m_AnchoredPosition: {x: 2460.1702, y: 0}
+  m_SizeDelta: {x: 2460.1702, y: 0}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &827959869
 MonoBehaviour:
@@ -1035,8 +1035,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 584.6675, y: 0}
-  m_SizeDelta: {x: 1169.335, y: 0}
+  m_AnchoredPosition: {x: 1230.0851, y: 0}
+  m_SizeDelta: {x: 2460.1702, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &954490131
 MonoBehaviour:
@@ -1925,7 +1925,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u8FDB\u7FA4\u6253\u62DB\u547C Greeting"
+  m_Text: 
 --- !u!222 &1210116936
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1971,7 +1971,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 320, y: 64}
+  m_SizeDelta: {x: 640, y: 64}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1227921645
 MonoBehaviour:
@@ -2826,8 +2826,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 1169.335, y: 0}
-  m_SizeDelta: {x: 1169.335, y: 0}
+  m_AnchoredPosition: {x: 2460.1702, y: 0}
+  m_SizeDelta: {x: 2460.1702, y: 0}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &1673437982
 MonoBehaviour:
@@ -3407,7 +3407,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u7FA4ID"
+  m_Text: 
 --- !u!222 &1923054971
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3452,7 +3452,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1169.335, y: 0}
+  m_SizeDelta: {x: 2460.1702, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1946171118
 MonoBehaviour:
@@ -3521,7 +3521,7 @@ GameObject:
   - component: {fileID: 2022531447}
   - component: {fileID: 2022531446}
   m_Layer: 5
-  m_Name: Text
+  m_Name: GreetingLabel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3872,7 +3872,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1169.335, y: 0}
+  m_SizeDelta: {x: 2460.1702, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &2138052719
 MonoBehaviour:

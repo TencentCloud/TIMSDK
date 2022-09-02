@@ -26,7 +26,7 @@ namespace com.tencent.imsdk.unity.utils
             if(ptr == null){
                 return "";
             }
-            return Marshal.PtrToStringAnsi(ptr);
+            return Marshal.PtrToStringAnsi(ptr) ?? "";
         }
         public static string getRandomStr()
         {
