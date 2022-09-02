@@ -34,8 +34,8 @@ public static class EventListenerInfo
         if (_result != value)
         {
           _result = value;
-          Debug.LogError(this.notifyPropertyChanged);
-          Debug.LogError(value);
+          Debug.Log(this.notifyPropertyChanged);
+          Debug.Log(value);
           if (this.notifyPropertyChanged != null)
           {
             notifyPropertyChanged(value);

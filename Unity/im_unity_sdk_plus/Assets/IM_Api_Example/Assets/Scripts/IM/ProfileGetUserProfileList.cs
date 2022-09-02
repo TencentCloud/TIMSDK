@@ -22,17 +22,19 @@ public class ProfileGetUserProfileList : MonoBehaviour
 
   void Start()
   {
+    GameObject.Find("SelectUserLabel").GetComponent<Text>().text = Utils.t("SelectUserLabel");
     FriendshipGetFriendProfileList();
     Header = GameObject.Find("HeaderText").GetComponent<Text>();
     Result = GameObject.Find("ResultText").GetComponent<Text>();
     Submit = GameObject.Find("Submit").GetComponent<Button>();
     Copy = GameObject.Find("Copy").GetComponent<Button>();
     Submit.onClick.AddListener(ProfileGetUserProfileListSDK);
+    Copy.GetComponentInChildren<Text>().text = Utils.t("Copy");
     Copy.onClick.AddListener(CopyText);
     if (CurrentSceneInfo.info != null)
     {
-      Header.text = CurrentSceneInfo.info.apiText + " " + CurrentSceneInfo.info.apiName;
-      Submit.GetComponentInChildren<Text>().text = CurrentSceneInfo.info.apiText;
+      Header.text = Utils.IsCn() ? CurrentSceneInfo.info.apiText + " " + CurrentSceneInfo.info.apiName : CurrentSceneInfo.info.apiName;
+      Submit.GetComponentInChildren<Text>().text = CurrentSceneInfo.info.apiName;
     }
   }
 
@@ -78,7 +80,7 @@ public class ProfileGetUserProfileList : MonoBehaviour
     catch (Exception ex)
     {
       print(ex);
-      Toast.Show("获取好友失败，请登陆");
+      Toast.Show(Utils.t("getFriendListFailed"));
     }
   }
 

@@ -21,19 +21,21 @@ public class GroupDelete : MonoBehaviour
   private List<string> GroupList;
   void Start()
   {
+    GameObject.Find("SelectGroupLabel").GetComponent<Text>().text = Utils.t("SelectGroupLabel");
     GroupGetJoinedGroupListSDK();
     Header = GameObject.Find("HeaderText").GetComponent<Text>();
     SelectedGroup = GameObject.Find("Dropdown").GetComponent<Dropdown>();
     Result = GameObject.Find("ResultText").GetComponent<Text>();
     Submit = GameObject.Find("Submit").GetComponent<Button>();
     Copy = GameObject.Find("Copy").GetComponent<Button>();
+    Copy.GetComponentInChildren<Text>().text = Utils.t("Copy");
     Submit.onClick.AddListener(GroupDeleteSDK);
     Copy.onClick.AddListener(CopyText);
     SelectedGroup.interactable = true;
     if (CurrentSceneInfo.info != null)
     {
-      Header.text = CurrentSceneInfo.info.apiText + " " + CurrentSceneInfo.info.apiName;
-      Submit.GetComponentInChildren<Text>().text = CurrentSceneInfo.info.apiText;
+      Header.text = Utils.IsCn() ? CurrentSceneInfo.info.apiText + " " + CurrentSceneInfo.info.apiName : CurrentSceneInfo.info.apiName;
+      Submit.GetComponentInChildren<Text>().text = CurrentSceneInfo.info.apiName;
     }
   }
 
@@ -42,7 +44,7 @@ public class GroupDelete : MonoBehaviour
     try
     {
       GroupList = new List<string>();
-      SelectedGroup.options.Clear();
+      SelectedGroup.ClearOptions();
       string text = (string)parameters[1];
       List<GroupBaseInfo> List = Utils.FromJson<List<GroupBaseInfo>>(text);
       foreach (GroupBaseInfo item in List)
@@ -53,10 +55,19 @@ public class GroupDelete : MonoBehaviour
         option.text = item.group_base_info_group_id;
         SelectedGroup.options.Add(option);
       }
+      SelectedGroup.value = 0;
+      if (List.Count > 0)
+      {
+        SelectedGroup.captionText.text = List[0].group_base_info_group_id;
+      }
+      else
+      {
+        SelectedGroup.captionText.text = "";
+      }
     }
     catch (Exception ex)
     {
-      Toast.Show("获取群组失败，请登陆");
+      Toast.Show(Utils.t("getGroupListFailed"));
     }
   }
 
@@ -68,6 +79,10 @@ public class GroupDelete : MonoBehaviour
 
   void GroupDeleteSDK()
   {
+    if (GroupList.Count < 1)
+    {
+      return;
+    }
     print(GroupList[SelectedGroup.value]);
     string groupID = GroupList[SelectedGroup.value];
     TIMResult res = TencentIMSDK.GroupDelete(groupID, Utils.addAsyncNullDataToScreen(GetResult));

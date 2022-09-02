@@ -1,5 +1,7 @@
 //  Main Scene
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
@@ -20,6 +22,8 @@ public class FoldPanel : MonoBehaviour
   [SerializeField]
   private DataItem dataItem;
 
+  private Dropdown Language;
+
   public List<FoldData> dataList;
 
   private void Start()
@@ -27,21 +31,41 @@ public class FoldPanel : MonoBehaviour
     Create();
   }
 
+  void LanguageValueChanged(Dropdown change)
+  {
+    PlayerPrefs.SetString("Language", $"{Consts.Languages[change.value].name}:{change.value}");
+    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+  }
+
   public void Create()
   {
+    Language = GameObject.Find("Language").GetComponent<Dropdown>();
+    foreach (LanguageData item in Consts.Languages)
+    {
+      var option = new Dropdown.OptionData();
+      option.text = item.text;
+      Language.options.Add(option);
+    }
+    string lang = PlayerPrefs.GetString("Language");
+    if (!string.IsNullOrEmpty(lang))
+    {
+      Language.value = int.Parse(lang.Split(':')[1]);
+    }
+    Language.onValueChanged.AddListener(delegate
+    {
+      LanguageValueChanged(Language);
+    });
     dataList = Utils.FromJson<List<FoldData>>(ApiDataList.ApiDataListStr);
     for (int i = 0; i < dataList.Count; i++)
     {
       // 创建标题
       TitleItem title = Instantiate(titleItem).GetComponent<TitleItem>();
-      title.SetTitle(dataList[i].managerName);
+      title.SetTitle(Utils.t(dataList[i].managerName));
       title.transform.SetParent(this.transform);
 
       // 创建子折叠面板
       GameObject panel = Instantiate(panelItem);
       panel.transform.SetParent(this.transform);
-      // 570是折叠页的宽度，30DataItem的高度
-      // panel.GetComponent<RectTransform>().sizeDelta = new Vector3(570, 70 * dataList[i].apis.Count);
       title.SetFoldPanel(panel);
       panel.SetActive(false);
 

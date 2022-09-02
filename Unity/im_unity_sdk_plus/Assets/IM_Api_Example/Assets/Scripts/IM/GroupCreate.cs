@@ -18,9 +18,13 @@ public class GroupCreate : MonoBehaviour
 
   public Button Submit;
   public Button Copy;
-
+  string[] Labels = new string[] { "GroupIDLabel", "GroupNameLabel", "SelectGroupTypeLabel" };
   void Start()
   {
+    foreach (string label in Labels)
+    {
+      GameObject.Find(label).GetComponent<Text>().text = Utils.t(label);
+    }
     Header = GameObject.Find("HeaderText").GetComponent<Text>();
     GroupID = GameObject.Find("GroupID").GetComponent<InputField>();
     GroupName = GameObject.Find("GroupName").GetComponent<InputField>();
@@ -28,13 +32,14 @@ public class GroupCreate : MonoBehaviour
     Result = GameObject.Find("ResultText").GetComponent<Text>();
     Submit = GameObject.Find("Submit").GetComponent<Button>();
     Copy = GameObject.Find("Copy").GetComponent<Button>();
+    Copy.GetComponentInChildren<Text>().text = Utils.t("Copy");
     Submit.onClick.AddListener(GroupCreateSDK);
     Copy.onClick.AddListener(CopyText);
     GroupType.interactable = true;
     if (CurrentSceneInfo.info != null)
     {
-      Header.text = CurrentSceneInfo.info.apiText + " " + CurrentSceneInfo.info.apiName;
-      Submit.GetComponentInChildren<Text>().text = CurrentSceneInfo.info.apiText;
+      Header.text = Utils.IsCn() ? CurrentSceneInfo.info.apiText + " " + CurrentSceneInfo.info.apiName : CurrentSceneInfo.info.apiName;
+      Submit.GetComponentInChildren<Text>().text = CurrentSceneInfo.info.apiName;
     }
     foreach (string name in Enum.GetNames(typeof(TIMGroupType)))
     {

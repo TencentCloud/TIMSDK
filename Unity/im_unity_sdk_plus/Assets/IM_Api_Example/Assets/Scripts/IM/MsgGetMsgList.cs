@@ -23,8 +23,13 @@ public class MsgGetMsgList : MonoBehaviour
   private List<string> GroupList;
   private List<string> FriendList;
   private Message LastMessage;
+  string[] Labels = new string[] { "SelectFriendLabel", "SelectGroupLabel" };
   void Start()
   {
+    foreach (string label in Labels)
+    {
+      GameObject.Find(label).GetComponent<Text>().text = Utils.t(label);
+    }
     GroupGetJoinedGroupListSDK();
     FriendshipGetFriendProfileListSDK();
     Header = GameObject.Find("HeaderText").GetComponent<Text>();
@@ -42,12 +47,13 @@ public class MsgGetMsgList : MonoBehaviour
     Result = GameObject.Find("ResultText").GetComponent<Text>();
     Submit = GameObject.Find("Submit").GetComponent<Button>();
     Copy = GameObject.Find("Copy").GetComponent<Button>();
+    Copy.GetComponentInChildren<Text>().text = Utils.t("Copy");
     Submit.onClick.AddListener(MsgGetMsgListSDK);
     Copy.onClick.AddListener(CopyText);
     if (CurrentSceneInfo.info != null)
     {
-      Header.text = CurrentSceneInfo.info.apiText + " " + CurrentSceneInfo.info.apiName;
-      Submit.GetComponentInChildren<Text>().text = CurrentSceneInfo.info.apiText;
+      Header.text = Utils.IsCn() ? CurrentSceneInfo.info.apiText + " " + CurrentSceneInfo.info.apiName : CurrentSceneInfo.info.apiName;
+      Submit.GetComponentInChildren<Text>().text = CurrentSceneInfo.info.apiName;
     }
   }
 
@@ -72,7 +78,7 @@ public class MsgGetMsgList : MonoBehaviour
     try
     {
       GroupList = new List<string>();
-      SelectedGroup.options.Clear();
+      SelectedGroup.ClearOptions();
       string text = (string)parameters[1];
       List<GroupBaseInfo> List = Utils.FromJson<List<GroupBaseInfo>>(text);
       Dropdown.OptionData option = new Dropdown.OptionData();
@@ -90,7 +96,7 @@ public class MsgGetMsgList : MonoBehaviour
     }
     catch (Exception ex)
     {
-      Toast.Show("获取群组失败，请登陆");
+      Toast.Show(Utils.t("getGroupListFailed"));
     }
   }
 
@@ -99,7 +105,7 @@ public class MsgGetMsgList : MonoBehaviour
     try
     {
       FriendList = new List<string>();
-      SelectedFriend.options.Clear();
+      SelectedFriend.ClearOptions();
       string text = (string)parameters[1];
       List<FriendProfile> List = Utils.FromJson<List<FriendProfile>>(text);
       Dropdown.OptionData option = new Dropdown.OptionData();
@@ -117,7 +123,7 @@ public class MsgGetMsgList : MonoBehaviour
     }
     catch (Exception ex)
     {
-      Toast.Show("获取好友失败，请登陆");
+      Toast.Show(Utils.t("getFriendListFailed"));
     }
   }
 

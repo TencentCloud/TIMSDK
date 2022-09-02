@@ -109,6 +109,36 @@ references:
   commentId: T:com.tencent.imsdk.unity.callback.GroupTipsEventStringCallback
   fullName: com.tencent.imsdk.unity.callback.GroupTipsEventStringCallback
   nameWithType: GroupTipsEventStringCallback
+- uid: com.tencent.imsdk.unity.callback.GroupTopicChangedCallback
+  name: GroupTopicChangedCallback
+  href: api/com.tencent.imsdk.unity.callback.GroupTopicChangedCallback.html
+  commentId: T:com.tencent.imsdk.unity.callback.GroupTopicChangedCallback
+  fullName: com.tencent.imsdk.unity.callback.GroupTopicChangedCallback
+  nameWithType: GroupTopicChangedCallback
+- uid: com.tencent.imsdk.unity.callback.GroupTopicChangedStringCallback
+  name: GroupTopicChangedStringCallback
+  href: api/com.tencent.imsdk.unity.callback.GroupTopicChangedStringCallback.html
+  commentId: T:com.tencent.imsdk.unity.callback.GroupTopicChangedStringCallback
+  fullName: com.tencent.imsdk.unity.callback.GroupTopicChangedStringCallback
+  nameWithType: GroupTopicChangedStringCallback
+- uid: com.tencent.imsdk.unity.callback.GroupTopicCreatedCallback
+  name: GroupTopicCreatedCallback
+  href: api/com.tencent.imsdk.unity.callback.GroupTopicCreatedCallback.html
+  commentId: T:com.tencent.imsdk.unity.callback.GroupTopicCreatedCallback
+  fullName: com.tencent.imsdk.unity.callback.GroupTopicCreatedCallback
+  nameWithType: GroupTopicCreatedCallback
+- uid: com.tencent.imsdk.unity.callback.GroupTopicDeletedCallback
+  name: GroupTopicDeletedCallback
+  href: api/com.tencent.imsdk.unity.callback.GroupTopicDeletedCallback.html
+  commentId: T:com.tencent.imsdk.unity.callback.GroupTopicDeletedCallback
+  fullName: com.tencent.imsdk.unity.callback.GroupTopicDeletedCallback
+  nameWithType: GroupTopicDeletedCallback
+- uid: com.tencent.imsdk.unity.callback.GroupTopicDeletedStringCallback
+  name: GroupTopicDeletedStringCallback
+  href: api/com.tencent.imsdk.unity.callback.GroupTopicDeletedStringCallback.html
+  commentId: T:com.tencent.imsdk.unity.callback.GroupTopicDeletedStringCallback
+  fullName: com.tencent.imsdk.unity.callback.GroupTopicDeletedStringCallback
+  nameWithType: GroupTopicDeletedStringCallback
 - uid: com.tencent.imsdk.unity.callback.KickedOfflineCallback
   name: KickedOfflineCallback
   href: api/com.tencent.imsdk.unity.callback.KickedOfflineCallback.html
@@ -229,6 +259,18 @@ references:
   commentId: T:com.tencent.imsdk.unity.callback.RecvNewMsgStringCallback
   fullName: com.tencent.imsdk.unity.callback.RecvNewMsgStringCallback
   nameWithType: RecvNewMsgStringCallback
+- uid: com.tencent.imsdk.unity.callback.SelfInfoUpdatedCallback
+  name: SelfInfoUpdatedCallback
+  href: api/com.tencent.imsdk.unity.callback.SelfInfoUpdatedCallback.html
+  commentId: T:com.tencent.imsdk.unity.callback.SelfInfoUpdatedCallback
+  fullName: com.tencent.imsdk.unity.callback.SelfInfoUpdatedCallback
+  nameWithType: SelfInfoUpdatedCallback
+- uid: com.tencent.imsdk.unity.callback.SelfInfoUpdatedStringCallback
+  name: SelfInfoUpdatedStringCallback
+  href: api/com.tencent.imsdk.unity.callback.SelfInfoUpdatedStringCallback.html
+  commentId: T:com.tencent.imsdk.unity.callback.SelfInfoUpdatedStringCallback
+  fullName: com.tencent.imsdk.unity.callback.SelfInfoUpdatedStringCallback
+  nameWithType: SelfInfoUpdatedStringCallback
 - uid: com.tencent.imsdk.unity.callback.UpdateFriendProfileCallback
   name: UpdateFriendProfileCallback
   href: api/com.tencent.imsdk.unity.callback.UpdateFriendProfileCallback.html
@@ -247,6 +289,18 @@ references:
   commentId: T:com.tencent.imsdk.unity.callback.UserSigExpiredCallback
   fullName: com.tencent.imsdk.unity.callback.UserSigExpiredCallback
   nameWithType: UserSigExpiredCallback
+- uid: com.tencent.imsdk.unity.callback.UserStatusChangedCallback
+  name: UserStatusChangedCallback
+  href: api/com.tencent.imsdk.unity.callback.UserStatusChangedCallback.html
+  commentId: T:com.tencent.imsdk.unity.callback.UserStatusChangedCallback
+  fullName: com.tencent.imsdk.unity.callback.UserStatusChangedCallback
+  nameWithType: UserStatusChangedCallback
+- uid: com.tencent.imsdk.unity.callback.UserStatusChangedStringCallback
+  name: UserStatusChangedStringCallback
+  href: api/com.tencent.imsdk.unity.callback.UserStatusChangedStringCallback.html
+  commentId: T:com.tencent.imsdk.unity.callback.UserStatusChangedStringCallback
+  fullName: com.tencent.imsdk.unity.callback.UserStatusChangedStringCallback
+  nameWithType: UserStatusChangedStringCallback
 - uid: com.tencent.imsdk.unity.callback.ValueCallback`1
   name: ValueCallback<T>
   href: api/com.tencent.imsdk.unity.callback.ValueCallback-1.html
@@ -1948,6 +2002,36 @@ references:
   commentId: F:com.tencent.imsdk.unity.enums.TIMResult.TIM_SUCC
   fullName: com.tencent.imsdk.unity.enums.TIMResult.TIM_SUCC
   nameWithType: TIMResult.TIM_SUCC
+- uid: com.tencent.imsdk.unity.enums.TIMUserStatusType
+  name: TIMUserStatusType
+  href: api/com.tencent.imsdk.unity.enums.TIMUserStatusType.html
+  commentId: T:com.tencent.imsdk.unity.enums.TIMUserStatusType
+  fullName: com.tencent.imsdk.unity.enums.TIMUserStatusType
+  nameWithType: TIMUserStatusType
+- uid: com.tencent.imsdk.unity.enums.TIMUserStatusType.kTIMUserStatusType_Offline
+  name: kTIMUserStatusType_Offline
+  href: api/com.tencent.imsdk.unity.enums.TIMUserStatusType.html#com_tencent_imsdk_unity_enums_TIMUserStatusType_kTIMUserStatusType_Offline
+  commentId: F:com.tencent.imsdk.unity.enums.TIMUserStatusType.kTIMUserStatusType_Offline
+  fullName: com.tencent.imsdk.unity.enums.TIMUserStatusType.kTIMUserStatusType_Offline
+  nameWithType: TIMUserStatusType.kTIMUserStatusType_Offline
+- uid: com.tencent.imsdk.unity.enums.TIMUserStatusType.kTIMUserStatusType_Online
+  name: kTIMUserStatusType_Online
+  href: api/com.tencent.imsdk.unity.enums.TIMUserStatusType.html#com_tencent_imsdk_unity_enums_TIMUserStatusType_kTIMUserStatusType_Online
+  commentId: F:com.tencent.imsdk.unity.enums.TIMUserStatusType.kTIMUserStatusType_Online
+  fullName: com.tencent.imsdk.unity.enums.TIMUserStatusType.kTIMUserStatusType_Online
+  nameWithType: TIMUserStatusType.kTIMUserStatusType_Online
+- uid: com.tencent.imsdk.unity.enums.TIMUserStatusType.kTIMUserStatusType_Unkown
+  name: kTIMUserStatusType_Unkown
+  href: api/com.tencent.imsdk.unity.enums.TIMUserStatusType.html#com_tencent_imsdk_unity_enums_TIMUserStatusType_kTIMUserStatusType_Unkown
+  commentId: F:com.tencent.imsdk.unity.enums.TIMUserStatusType.kTIMUserStatusType_Unkown
+  fullName: com.tencent.imsdk.unity.enums.TIMUserStatusType.kTIMUserStatusType_Unkown
+  nameWithType: TIMUserStatusType.kTIMUserStatusType_Unkown
+- uid: com.tencent.imsdk.unity.enums.TIMUserStatusType.kTIMUserStatusType_UnLogined
+  name: kTIMUserStatusType_UnLogined
+  href: api/com.tencent.imsdk.unity.enums.TIMUserStatusType.html#com_tencent_imsdk_unity_enums_TIMUserStatusType_kTIMUserStatusType_UnLogined
+  commentId: F:com.tencent.imsdk.unity.enums.TIMUserStatusType.kTIMUserStatusType_UnLogined
+  fullName: com.tencent.imsdk.unity.enums.TIMUserStatusType.kTIMUserStatusType_UnLogined
+  nameWithType: TIMUserStatusType.kTIMUserStatusType_UnLogined
 - uid: com.tencent.imsdk.unity.TencentIMSDK
   name: TencentIMSDK
   href: api/com.tencent.imsdk.unity.TencentIMSDK.html
@@ -2659,6 +2743,31 @@ references:
   isSpec: "True"
   fullName: com.tencent.imsdk.unity.TencentIMSDK.GetServerTime
   nameWithType: TencentIMSDK.GetServerTime
+- uid: com.tencent.imsdk.unity.TencentIMSDK.GetUserStatus(System.Collections.Generic.List{System.String},com.tencent.imsdk.unity.callback.ValueCallback{System.Collections.Generic.List{com.tencent.imsdk.unity.types.UserStatus}})
+  name: GetUserStatus(List<String>, ValueCallback<List<UserStatus>>)
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_GetUserStatus_System_Collections_Generic_List_System_String__com_tencent_imsdk_unity_callback_ValueCallback_System_Collections_Generic_List_com_tencent_imsdk_unity_types_UserStatus___
+  commentId: M:com.tencent.imsdk.unity.TencentIMSDK.GetUserStatus(System.Collections.Generic.List{System.String},com.tencent.imsdk.unity.callback.ValueCallback{System.Collections.Generic.List{com.tencent.imsdk.unity.types.UserStatus}})
+  name.vb: GetUserStatus(List(Of String), ValueCallback(Of List(Of UserStatus)))
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.GetUserStatus(System.Collections.Generic.List<System.String>, com.tencent.imsdk.unity.callback.ValueCallback<System.Collections.Generic.List<com.tencent.imsdk.unity.types.UserStatus>>)
+  fullName.vb: com.tencent.imsdk.unity.TencentIMSDK.GetUserStatus(System.Collections.Generic.List(Of System.String), com.tencent.imsdk.unity.callback.ValueCallback(Of System.Collections.Generic.List(Of com.tencent.imsdk.unity.types.UserStatus)))
+  nameWithType: TencentIMSDK.GetUserStatus(List<String>, ValueCallback<List<UserStatus>>)
+  nameWithType.vb: TencentIMSDK.GetUserStatus(List(Of String), ValueCallback(Of List(Of UserStatus)))
+- uid: com.tencent.imsdk.unity.TencentIMSDK.GetUserStatus(System.Collections.Generic.List{System.String},com.tencent.imsdk.unity.callback.ValueCallback{System.String})
+  name: GetUserStatus(List<String>, ValueCallback<String>)
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_GetUserStatus_System_Collections_Generic_List_System_String__com_tencent_imsdk_unity_callback_ValueCallback_System_String__
+  commentId: M:com.tencent.imsdk.unity.TencentIMSDK.GetUserStatus(System.Collections.Generic.List{System.String},com.tencent.imsdk.unity.callback.ValueCallback{System.String})
+  name.vb: GetUserStatus(List(Of String), ValueCallback(Of String))
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.GetUserStatus(System.Collections.Generic.List<System.String>, com.tencent.imsdk.unity.callback.ValueCallback<System.String>)
+  fullName.vb: com.tencent.imsdk.unity.TencentIMSDK.GetUserStatus(System.Collections.Generic.List(Of System.String), com.tencent.imsdk.unity.callback.ValueCallback(Of System.String))
+  nameWithType: TencentIMSDK.GetUserStatus(List<String>, ValueCallback<String>)
+  nameWithType.vb: TencentIMSDK.GetUserStatus(List(Of String), ValueCallback(Of String))
+- uid: com.tencent.imsdk.unity.TencentIMSDK.GetUserStatus*
+  name: GetUserStatus
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_GetUserStatus_
+  commentId: Overload:com.tencent.imsdk.unity.TencentIMSDK.GetUserStatus
+  isSpec: "True"
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.GetUserStatus
+  nameWithType: TencentIMSDK.GetUserStatus
 - uid: com.tencent.imsdk.unity.TencentIMSDK.GroupCreate(com.tencent.imsdk.unity.types.CreateGroupParam,com.tencent.imsdk.unity.callback.ValueCallback{com.tencent.imsdk.unity.types.CreateGroupResult})
   name: GroupCreate(CreateGroupParam, ValueCallback<CreateGroupResult>)
   href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_GroupCreate_com_tencent_imsdk_unity_types_CreateGroupParam_com_tencent_imsdk_unity_callback_ValueCallback_com_tencent_imsdk_unity_types_CreateGroupResult__
@@ -2684,6 +2793,22 @@ references:
   isSpec: "True"
   fullName: com.tencent.imsdk.unity.TencentIMSDK.GroupCreate
   nameWithType: TencentIMSDK.GroupCreate
+- uid: com.tencent.imsdk.unity.TencentIMSDK.GroupCreateTopicInCommunity(System.String,com.tencent.imsdk.unity.types.GroupTopicInfo,com.tencent.imsdk.unity.callback.ValueCallback{System.String})
+  name: GroupCreateTopicInCommunity(String, GroupTopicInfo, ValueCallback<String>)
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_GroupCreateTopicInCommunity_System_String_com_tencent_imsdk_unity_types_GroupTopicInfo_com_tencent_imsdk_unity_callback_ValueCallback_System_String__
+  commentId: M:com.tencent.imsdk.unity.TencentIMSDK.GroupCreateTopicInCommunity(System.String,com.tencent.imsdk.unity.types.GroupTopicInfo,com.tencent.imsdk.unity.callback.ValueCallback{System.String})
+  name.vb: GroupCreateTopicInCommunity(String, GroupTopicInfo, ValueCallback(Of String))
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.GroupCreateTopicInCommunity(System.String, com.tencent.imsdk.unity.types.GroupTopicInfo, com.tencent.imsdk.unity.callback.ValueCallback<System.String>)
+  fullName.vb: com.tencent.imsdk.unity.TencentIMSDK.GroupCreateTopicInCommunity(System.String, com.tencent.imsdk.unity.types.GroupTopicInfo, com.tencent.imsdk.unity.callback.ValueCallback(Of System.String))
+  nameWithType: TencentIMSDK.GroupCreateTopicInCommunity(String, GroupTopicInfo, ValueCallback<String>)
+  nameWithType.vb: TencentIMSDK.GroupCreateTopicInCommunity(String, GroupTopicInfo, ValueCallback(Of String))
+- uid: com.tencent.imsdk.unity.TencentIMSDK.GroupCreateTopicInCommunity*
+  name: GroupCreateTopicInCommunity
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_GroupCreateTopicInCommunity_
+  commentId: Overload:com.tencent.imsdk.unity.TencentIMSDK.GroupCreateTopicInCommunity
+  isSpec: "True"
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.GroupCreateTopicInCommunity
+  nameWithType: TencentIMSDK.GroupCreateTopicInCommunity
 - uid: com.tencent.imsdk.unity.TencentIMSDK.GroupDelete(System.String,com.tencent.imsdk.unity.callback.NullValueCallback)
   name: GroupDelete(String, NullValueCallback)
   href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_GroupDelete_System_String_com_tencent_imsdk_unity_callback_NullValueCallback_
@@ -2756,6 +2881,31 @@ references:
   isSpec: "True"
   fullName: com.tencent.imsdk.unity.TencentIMSDK.GroupDeleteMember
   nameWithType: TencentIMSDK.GroupDeleteMember
+- uid: com.tencent.imsdk.unity.TencentIMSDK.GroupDeleteTopicFromCommunity(System.String,System.Collections.Generic.List{System.String},com.tencent.imsdk.unity.callback.ValueCallback{System.Collections.Generic.List{com.tencent.imsdk.unity.types.GroupTopicOperationResult}})
+  name: GroupDeleteTopicFromCommunity(String, List<String>, ValueCallback<List<GroupTopicOperationResult>>)
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_GroupDeleteTopicFromCommunity_System_String_System_Collections_Generic_List_System_String__com_tencent_imsdk_unity_callback_ValueCallback_System_Collections_Generic_List_com_tencent_imsdk_unity_types_GroupTopicOperationResult___
+  commentId: M:com.tencent.imsdk.unity.TencentIMSDK.GroupDeleteTopicFromCommunity(System.String,System.Collections.Generic.List{System.String},com.tencent.imsdk.unity.callback.ValueCallback{System.Collections.Generic.List{com.tencent.imsdk.unity.types.GroupTopicOperationResult}})
+  name.vb: GroupDeleteTopicFromCommunity(String, List(Of String), ValueCallback(Of List(Of GroupTopicOperationResult)))
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.GroupDeleteTopicFromCommunity(System.String, System.Collections.Generic.List<System.String>, com.tencent.imsdk.unity.callback.ValueCallback<System.Collections.Generic.List<com.tencent.imsdk.unity.types.GroupTopicOperationResult>>)
+  fullName.vb: com.tencent.imsdk.unity.TencentIMSDK.GroupDeleteTopicFromCommunity(System.String, System.Collections.Generic.List(Of System.String), com.tencent.imsdk.unity.callback.ValueCallback(Of System.Collections.Generic.List(Of com.tencent.imsdk.unity.types.GroupTopicOperationResult)))
+  nameWithType: TencentIMSDK.GroupDeleteTopicFromCommunity(String, List<String>, ValueCallback<List<GroupTopicOperationResult>>)
+  nameWithType.vb: TencentIMSDK.GroupDeleteTopicFromCommunity(String, List(Of String), ValueCallback(Of List(Of GroupTopicOperationResult)))
+- uid: com.tencent.imsdk.unity.TencentIMSDK.GroupDeleteTopicFromCommunity(System.String,System.Collections.Generic.List{System.String},com.tencent.imsdk.unity.callback.ValueCallback{System.String})
+  name: GroupDeleteTopicFromCommunity(String, List<String>, ValueCallback<String>)
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_GroupDeleteTopicFromCommunity_System_String_System_Collections_Generic_List_System_String__com_tencent_imsdk_unity_callback_ValueCallback_System_String__
+  commentId: M:com.tencent.imsdk.unity.TencentIMSDK.GroupDeleteTopicFromCommunity(System.String,System.Collections.Generic.List{System.String},com.tencent.imsdk.unity.callback.ValueCallback{System.String})
+  name.vb: GroupDeleteTopicFromCommunity(String, List(Of String), ValueCallback(Of String))
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.GroupDeleteTopicFromCommunity(System.String, System.Collections.Generic.List<System.String>, com.tencent.imsdk.unity.callback.ValueCallback<System.String>)
+  fullName.vb: com.tencent.imsdk.unity.TencentIMSDK.GroupDeleteTopicFromCommunity(System.String, System.Collections.Generic.List(Of System.String), com.tencent.imsdk.unity.callback.ValueCallback(Of System.String))
+  nameWithType: TencentIMSDK.GroupDeleteTopicFromCommunity(String, List<String>, ValueCallback<String>)
+  nameWithType.vb: TencentIMSDK.GroupDeleteTopicFromCommunity(String, List(Of String), ValueCallback(Of String))
+- uid: com.tencent.imsdk.unity.TencentIMSDK.GroupDeleteTopicFromCommunity*
+  name: GroupDeleteTopicFromCommunity
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_GroupDeleteTopicFromCommunity_
+  commentId: Overload:com.tencent.imsdk.unity.TencentIMSDK.GroupDeleteTopicFromCommunity
+  isSpec: "True"
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.GroupDeleteTopicFromCommunity
+  nameWithType: TencentIMSDK.GroupDeleteTopicFromCommunity
 - uid: com.tencent.imsdk.unity.TencentIMSDK.GroupGetGroupAttributes(System.String,System.Collections.Generic.List{System.String},com.tencent.imsdk.unity.callback.ValueCallback{System.Collections.Generic.List{com.tencent.imsdk.unity.types.GroupAttributes}})
   name: GroupGetGroupAttributes(String, List<String>, ValueCallback<List<GroupAttributes>>)
   href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_GroupGetGroupAttributes_System_String_System_Collections_Generic_List_System_String__com_tencent_imsdk_unity_callback_ValueCallback_System_Collections_Generic_List_com_tencent_imsdk_unity_types_GroupAttributes___
@@ -2806,6 +2956,31 @@ references:
   isSpec: "True"
   fullName: com.tencent.imsdk.unity.TencentIMSDK.GroupGetGroupInfoList
   nameWithType: TencentIMSDK.GroupGetGroupInfoList
+- uid: com.tencent.imsdk.unity.TencentIMSDK.GroupGetJoinedCommunityList(com.tencent.imsdk.unity.callback.ValueCallback{System.Collections.Generic.List{com.tencent.imsdk.unity.types.GroupInfo}})
+  name: GroupGetJoinedCommunityList(ValueCallback<List<GroupInfo>>)
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_GroupGetJoinedCommunityList_com_tencent_imsdk_unity_callback_ValueCallback_System_Collections_Generic_List_com_tencent_imsdk_unity_types_GroupInfo___
+  commentId: M:com.tencent.imsdk.unity.TencentIMSDK.GroupGetJoinedCommunityList(com.tencent.imsdk.unity.callback.ValueCallback{System.Collections.Generic.List{com.tencent.imsdk.unity.types.GroupInfo}})
+  name.vb: GroupGetJoinedCommunityList(ValueCallback(Of List(Of GroupInfo)))
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.GroupGetJoinedCommunityList(com.tencent.imsdk.unity.callback.ValueCallback<System.Collections.Generic.List<com.tencent.imsdk.unity.types.GroupInfo>>)
+  fullName.vb: com.tencent.imsdk.unity.TencentIMSDK.GroupGetJoinedCommunityList(com.tencent.imsdk.unity.callback.ValueCallback(Of System.Collections.Generic.List(Of com.tencent.imsdk.unity.types.GroupInfo)))
+  nameWithType: TencentIMSDK.GroupGetJoinedCommunityList(ValueCallback<List<GroupInfo>>)
+  nameWithType.vb: TencentIMSDK.GroupGetJoinedCommunityList(ValueCallback(Of List(Of GroupInfo)))
+- uid: com.tencent.imsdk.unity.TencentIMSDK.GroupGetJoinedCommunityList(com.tencent.imsdk.unity.callback.ValueCallback{System.String})
+  name: GroupGetJoinedCommunityList(ValueCallback<String>)
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_GroupGetJoinedCommunityList_com_tencent_imsdk_unity_callback_ValueCallback_System_String__
+  commentId: M:com.tencent.imsdk.unity.TencentIMSDK.GroupGetJoinedCommunityList(com.tencent.imsdk.unity.callback.ValueCallback{System.String})
+  name.vb: GroupGetJoinedCommunityList(ValueCallback(Of String))
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.GroupGetJoinedCommunityList(com.tencent.imsdk.unity.callback.ValueCallback<System.String>)
+  fullName.vb: com.tencent.imsdk.unity.TencentIMSDK.GroupGetJoinedCommunityList(com.tencent.imsdk.unity.callback.ValueCallback(Of System.String))
+  nameWithType: TencentIMSDK.GroupGetJoinedCommunityList(ValueCallback<String>)
+  nameWithType.vb: TencentIMSDK.GroupGetJoinedCommunityList(ValueCallback(Of String))
+- uid: com.tencent.imsdk.unity.TencentIMSDK.GroupGetJoinedCommunityList*
+  name: GroupGetJoinedCommunityList
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_GroupGetJoinedCommunityList_
+  commentId: Overload:com.tencent.imsdk.unity.TencentIMSDK.GroupGetJoinedCommunityList
+  isSpec: "True"
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.GroupGetJoinedCommunityList
+  nameWithType: TencentIMSDK.GroupGetJoinedCommunityList
 - uid: com.tencent.imsdk.unity.TencentIMSDK.GroupGetJoinedGroupList(com.tencent.imsdk.unity.callback.ValueCallback{System.Collections.Generic.List{com.tencent.imsdk.unity.types.GroupBaseInfo}})
   name: GroupGetJoinedGroupList(ValueCallback<List<GroupBaseInfo>>)
   href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_GroupGetJoinedGroupList_com_tencent_imsdk_unity_callback_ValueCallback_System_Collections_Generic_List_com_tencent_imsdk_unity_types_GroupBaseInfo___
@@ -2906,6 +3081,31 @@ references:
   isSpec: "True"
   fullName: com.tencent.imsdk.unity.TencentIMSDK.GroupGetPendencyList
   nameWithType: TencentIMSDK.GroupGetPendencyList
+- uid: com.tencent.imsdk.unity.TencentIMSDK.GroupGetTopicInfoList(System.String,System.Collections.Generic.List{System.String},com.tencent.imsdk.unity.callback.ValueCallback{System.Collections.Generic.List{com.tencent.imsdk.unity.types.GroupTopicInfo}})
+  name: GroupGetTopicInfoList(String, List<String>, ValueCallback<List<GroupTopicInfo>>)
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_GroupGetTopicInfoList_System_String_System_Collections_Generic_List_System_String__com_tencent_imsdk_unity_callback_ValueCallback_System_Collections_Generic_List_com_tencent_imsdk_unity_types_GroupTopicInfo___
+  commentId: M:com.tencent.imsdk.unity.TencentIMSDK.GroupGetTopicInfoList(System.String,System.Collections.Generic.List{System.String},com.tencent.imsdk.unity.callback.ValueCallback{System.Collections.Generic.List{com.tencent.imsdk.unity.types.GroupTopicInfo}})
+  name.vb: GroupGetTopicInfoList(String, List(Of String), ValueCallback(Of List(Of GroupTopicInfo)))
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.GroupGetTopicInfoList(System.String, System.Collections.Generic.List<System.String>, com.tencent.imsdk.unity.callback.ValueCallback<System.Collections.Generic.List<com.tencent.imsdk.unity.types.GroupTopicInfo>>)
+  fullName.vb: com.tencent.imsdk.unity.TencentIMSDK.GroupGetTopicInfoList(System.String, System.Collections.Generic.List(Of System.String), com.tencent.imsdk.unity.callback.ValueCallback(Of System.Collections.Generic.List(Of com.tencent.imsdk.unity.types.GroupTopicInfo)))
+  nameWithType: TencentIMSDK.GroupGetTopicInfoList(String, List<String>, ValueCallback<List<GroupTopicInfo>>)
+  nameWithType.vb: TencentIMSDK.GroupGetTopicInfoList(String, List(Of String), ValueCallback(Of List(Of GroupTopicInfo)))
+- uid: com.tencent.imsdk.unity.TencentIMSDK.GroupGetTopicInfoList(System.String,System.Collections.Generic.List{System.String},com.tencent.imsdk.unity.callback.ValueCallback{System.String})
+  name: GroupGetTopicInfoList(String, List<String>, ValueCallback<String>)
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_GroupGetTopicInfoList_System_String_System_Collections_Generic_List_System_String__com_tencent_imsdk_unity_callback_ValueCallback_System_String__
+  commentId: M:com.tencent.imsdk.unity.TencentIMSDK.GroupGetTopicInfoList(System.String,System.Collections.Generic.List{System.String},com.tencent.imsdk.unity.callback.ValueCallback{System.String})
+  name.vb: GroupGetTopicInfoList(String, List(Of String), ValueCallback(Of String))
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.GroupGetTopicInfoList(System.String, System.Collections.Generic.List<System.String>, com.tencent.imsdk.unity.callback.ValueCallback<System.String>)
+  fullName.vb: com.tencent.imsdk.unity.TencentIMSDK.GroupGetTopicInfoList(System.String, System.Collections.Generic.List(Of System.String), com.tencent.imsdk.unity.callback.ValueCallback(Of System.String))
+  nameWithType: TencentIMSDK.GroupGetTopicInfoList(String, List<String>, ValueCallback<String>)
+  nameWithType.vb: TencentIMSDK.GroupGetTopicInfoList(String, List(Of String), ValueCallback(Of String))
+- uid: com.tencent.imsdk.unity.TencentIMSDK.GroupGetTopicInfoList*
+  name: GroupGetTopicInfoList
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_GroupGetTopicInfoList_
+  commentId: Overload:com.tencent.imsdk.unity.TencentIMSDK.GroupGetTopicInfoList
+  isSpec: "True"
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.GroupGetTopicInfoList
+  nameWithType: TencentIMSDK.GroupGetTopicInfoList
 - uid: com.tencent.imsdk.unity.TencentIMSDK.GroupHandlePendency(com.tencent.imsdk.unity.types.GroupHandlePendencyParam,com.tencent.imsdk.unity.callback.NullValueCallback)
   name: GroupHandlePendency(GroupHandlePendencyParam, NullValueCallback)
   href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_GroupHandlePendency_com_tencent_imsdk_unity_types_GroupHandlePendencyParam_com_tencent_imsdk_unity_callback_NullValueCallback_
@@ -2928,21 +3128,24 @@ references:
   isSpec: "True"
   fullName: com.tencent.imsdk.unity.TencentIMSDK.GroupHandlePendency
   nameWithType: TencentIMSDK.GroupHandlePendency
-- uid: com.tencent.imsdk.unity.TencentIMSDK.GroupInitGroupAttributes(System.String,com.tencent.imsdk.unity.types.GroupAttributes,com.tencent.imsdk.unity.callback.NullValueCallback)
-  name: GroupInitGroupAttributes(String, GroupAttributes, NullValueCallback)
-  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_GroupInitGroupAttributes_System_String_com_tencent_imsdk_unity_types_GroupAttributes_com_tencent_imsdk_unity_callback_NullValueCallback_
-  commentId: M:com.tencent.imsdk.unity.TencentIMSDK.GroupInitGroupAttributes(System.String,com.tencent.imsdk.unity.types.GroupAttributes,com.tencent.imsdk.unity.callback.NullValueCallback)
-  fullName: com.tencent.imsdk.unity.TencentIMSDK.GroupInitGroupAttributes(System.String, com.tencent.imsdk.unity.types.GroupAttributes, com.tencent.imsdk.unity.callback.NullValueCallback)
-  nameWithType: TencentIMSDK.GroupInitGroupAttributes(String, GroupAttributes, NullValueCallback)
-- uid: com.tencent.imsdk.unity.TencentIMSDK.GroupInitGroupAttributes(System.String,com.tencent.imsdk.unity.types.GroupAttributes,com.tencent.imsdk.unity.callback.ValueCallback{System.String})
-  name: GroupInitGroupAttributes(String, GroupAttributes, ValueCallback<String>)
-  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_GroupInitGroupAttributes_System_String_com_tencent_imsdk_unity_types_GroupAttributes_com_tencent_imsdk_unity_callback_ValueCallback_System_String__
-  commentId: M:com.tencent.imsdk.unity.TencentIMSDK.GroupInitGroupAttributes(System.String,com.tencent.imsdk.unity.types.GroupAttributes,com.tencent.imsdk.unity.callback.ValueCallback{System.String})
-  name.vb: GroupInitGroupAttributes(String, GroupAttributes, ValueCallback(Of String))
-  fullName: com.tencent.imsdk.unity.TencentIMSDK.GroupInitGroupAttributes(System.String, com.tencent.imsdk.unity.types.GroupAttributes, com.tencent.imsdk.unity.callback.ValueCallback<System.String>)
-  fullName.vb: com.tencent.imsdk.unity.TencentIMSDK.GroupInitGroupAttributes(System.String, com.tencent.imsdk.unity.types.GroupAttributes, com.tencent.imsdk.unity.callback.ValueCallback(Of System.String))
-  nameWithType: TencentIMSDK.GroupInitGroupAttributes(String, GroupAttributes, ValueCallback<String>)
-  nameWithType.vb: TencentIMSDK.GroupInitGroupAttributes(String, GroupAttributes, ValueCallback(Of String))
+- uid: com.tencent.imsdk.unity.TencentIMSDK.GroupInitGroupAttributes(System.String,System.Collections.Generic.List{com.tencent.imsdk.unity.types.GroupAttributes},com.tencent.imsdk.unity.callback.NullValueCallback)
+  name: GroupInitGroupAttributes(String, List<GroupAttributes>, NullValueCallback)
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_GroupInitGroupAttributes_System_String_System_Collections_Generic_List_com_tencent_imsdk_unity_types_GroupAttributes__com_tencent_imsdk_unity_callback_NullValueCallback_
+  commentId: M:com.tencent.imsdk.unity.TencentIMSDK.GroupInitGroupAttributes(System.String,System.Collections.Generic.List{com.tencent.imsdk.unity.types.GroupAttributes},com.tencent.imsdk.unity.callback.NullValueCallback)
+  name.vb: GroupInitGroupAttributes(String, List(Of GroupAttributes), NullValueCallback)
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.GroupInitGroupAttributes(System.String, System.Collections.Generic.List<com.tencent.imsdk.unity.types.GroupAttributes>, com.tencent.imsdk.unity.callback.NullValueCallback)
+  fullName.vb: com.tencent.imsdk.unity.TencentIMSDK.GroupInitGroupAttributes(System.String, System.Collections.Generic.List(Of com.tencent.imsdk.unity.types.GroupAttributes), com.tencent.imsdk.unity.callback.NullValueCallback)
+  nameWithType: TencentIMSDK.GroupInitGroupAttributes(String, List<GroupAttributes>, NullValueCallback)
+  nameWithType.vb: TencentIMSDK.GroupInitGroupAttributes(String, List(Of GroupAttributes), NullValueCallback)
+- uid: com.tencent.imsdk.unity.TencentIMSDK.GroupInitGroupAttributes(System.String,System.Collections.Generic.List{com.tencent.imsdk.unity.types.GroupAttributes},com.tencent.imsdk.unity.callback.ValueCallback{System.String})
+  name: GroupInitGroupAttributes(String, List<GroupAttributes>, ValueCallback<String>)
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_GroupInitGroupAttributes_System_String_System_Collections_Generic_List_com_tencent_imsdk_unity_types_GroupAttributes__com_tencent_imsdk_unity_callback_ValueCallback_System_String__
+  commentId: M:com.tencent.imsdk.unity.TencentIMSDK.GroupInitGroupAttributes(System.String,System.Collections.Generic.List{com.tencent.imsdk.unity.types.GroupAttributes},com.tencent.imsdk.unity.callback.ValueCallback{System.String})
+  name.vb: GroupInitGroupAttributes(String, List(Of GroupAttributes), ValueCallback(Of String))
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.GroupInitGroupAttributes(System.String, System.Collections.Generic.List<com.tencent.imsdk.unity.types.GroupAttributes>, com.tencent.imsdk.unity.callback.ValueCallback<System.String>)
+  fullName.vb: com.tencent.imsdk.unity.TencentIMSDK.GroupInitGroupAttributes(System.String, System.Collections.Generic.List(Of com.tencent.imsdk.unity.types.GroupAttributes), com.tencent.imsdk.unity.callback.ValueCallback(Of System.String))
+  nameWithType: TencentIMSDK.GroupInitGroupAttributes(String, List<GroupAttributes>, ValueCallback<String>)
+  nameWithType.vb: TencentIMSDK.GroupInitGroupAttributes(String, List(Of GroupAttributes), ValueCallback(Of String))
 - uid: com.tencent.imsdk.unity.TencentIMSDK.GroupInitGroupAttributes*
   name: GroupInitGroupAttributes
   href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_GroupInitGroupAttributes_
@@ -3135,6 +3338,53 @@ references:
   isSpec: "True"
   fullName: com.tencent.imsdk.unity.TencentIMSDK.GroupSearchGroups
   nameWithType: TencentIMSDK.GroupSearchGroups
+- uid: com.tencent.imsdk.unity.TencentIMSDK.GroupSetGroupAttributes(System.String,System.Collections.Generic.List{com.tencent.imsdk.unity.types.GroupAttributes},com.tencent.imsdk.unity.callback.NullValueCallback)
+  name: GroupSetGroupAttributes(String, List<GroupAttributes>, NullValueCallback)
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_GroupSetGroupAttributes_System_String_System_Collections_Generic_List_com_tencent_imsdk_unity_types_GroupAttributes__com_tencent_imsdk_unity_callback_NullValueCallback_
+  commentId: M:com.tencent.imsdk.unity.TencentIMSDK.GroupSetGroupAttributes(System.String,System.Collections.Generic.List{com.tencent.imsdk.unity.types.GroupAttributes},com.tencent.imsdk.unity.callback.NullValueCallback)
+  name.vb: GroupSetGroupAttributes(String, List(Of GroupAttributes), NullValueCallback)
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.GroupSetGroupAttributes(System.String, System.Collections.Generic.List<com.tencent.imsdk.unity.types.GroupAttributes>, com.tencent.imsdk.unity.callback.NullValueCallback)
+  fullName.vb: com.tencent.imsdk.unity.TencentIMSDK.GroupSetGroupAttributes(System.String, System.Collections.Generic.List(Of com.tencent.imsdk.unity.types.GroupAttributes), com.tencent.imsdk.unity.callback.NullValueCallback)
+  nameWithType: TencentIMSDK.GroupSetGroupAttributes(String, List<GroupAttributes>, NullValueCallback)
+  nameWithType.vb: TencentIMSDK.GroupSetGroupAttributes(String, List(Of GroupAttributes), NullValueCallback)
+- uid: com.tencent.imsdk.unity.TencentIMSDK.GroupSetGroupAttributes(System.String,System.Collections.Generic.List{com.tencent.imsdk.unity.types.GroupAttributes},com.tencent.imsdk.unity.callback.ValueCallback{System.String})
+  name: GroupSetGroupAttributes(String, List<GroupAttributes>, ValueCallback<String>)
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_GroupSetGroupAttributes_System_String_System_Collections_Generic_List_com_tencent_imsdk_unity_types_GroupAttributes__com_tencent_imsdk_unity_callback_ValueCallback_System_String__
+  commentId: M:com.tencent.imsdk.unity.TencentIMSDK.GroupSetGroupAttributes(System.String,System.Collections.Generic.List{com.tencent.imsdk.unity.types.GroupAttributes},com.tencent.imsdk.unity.callback.ValueCallback{System.String})
+  name.vb: GroupSetGroupAttributes(String, List(Of GroupAttributes), ValueCallback(Of String))
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.GroupSetGroupAttributes(System.String, System.Collections.Generic.List<com.tencent.imsdk.unity.types.GroupAttributes>, com.tencent.imsdk.unity.callback.ValueCallback<System.String>)
+  fullName.vb: com.tencent.imsdk.unity.TencentIMSDK.GroupSetGroupAttributes(System.String, System.Collections.Generic.List(Of com.tencent.imsdk.unity.types.GroupAttributes), com.tencent.imsdk.unity.callback.ValueCallback(Of System.String))
+  nameWithType: TencentIMSDK.GroupSetGroupAttributes(String, List<GroupAttributes>, ValueCallback<String>)
+  nameWithType.vb: TencentIMSDK.GroupSetGroupAttributes(String, List(Of GroupAttributes), ValueCallback(Of String))
+- uid: com.tencent.imsdk.unity.TencentIMSDK.GroupSetGroupAttributes*
+  name: GroupSetGroupAttributes
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_GroupSetGroupAttributes_
+  commentId: Overload:com.tencent.imsdk.unity.TencentIMSDK.GroupSetGroupAttributes
+  isSpec: "True"
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.GroupSetGroupAttributes
+  nameWithType: TencentIMSDK.GroupSetGroupAttributes
+- uid: com.tencent.imsdk.unity.TencentIMSDK.GroupSetTopicInfo(com.tencent.imsdk.unity.types.GroupTopicInfo,com.tencent.imsdk.unity.callback.NullValueCallback)
+  name: GroupSetTopicInfo(GroupTopicInfo, NullValueCallback)
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_GroupSetTopicInfo_com_tencent_imsdk_unity_types_GroupTopicInfo_com_tencent_imsdk_unity_callback_NullValueCallback_
+  commentId: M:com.tencent.imsdk.unity.TencentIMSDK.GroupSetTopicInfo(com.tencent.imsdk.unity.types.GroupTopicInfo,com.tencent.imsdk.unity.callback.NullValueCallback)
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.GroupSetTopicInfo(com.tencent.imsdk.unity.types.GroupTopicInfo, com.tencent.imsdk.unity.callback.NullValueCallback)
+  nameWithType: TencentIMSDK.GroupSetTopicInfo(GroupTopicInfo, NullValueCallback)
+- uid: com.tencent.imsdk.unity.TencentIMSDK.GroupSetTopicInfo(com.tencent.imsdk.unity.types.GroupTopicInfo,com.tencent.imsdk.unity.callback.ValueCallback{System.String})
+  name: GroupSetTopicInfo(GroupTopicInfo, ValueCallback<String>)
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_GroupSetTopicInfo_com_tencent_imsdk_unity_types_GroupTopicInfo_com_tencent_imsdk_unity_callback_ValueCallback_System_String__
+  commentId: M:com.tencent.imsdk.unity.TencentIMSDK.GroupSetTopicInfo(com.tencent.imsdk.unity.types.GroupTopicInfo,com.tencent.imsdk.unity.callback.ValueCallback{System.String})
+  name.vb: GroupSetTopicInfo(GroupTopicInfo, ValueCallback(Of String))
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.GroupSetTopicInfo(com.tencent.imsdk.unity.types.GroupTopicInfo, com.tencent.imsdk.unity.callback.ValueCallback<System.String>)
+  fullName.vb: com.tencent.imsdk.unity.TencentIMSDK.GroupSetTopicInfo(com.tencent.imsdk.unity.types.GroupTopicInfo, com.tencent.imsdk.unity.callback.ValueCallback(Of System.String))
+  nameWithType: TencentIMSDK.GroupSetTopicInfo(GroupTopicInfo, ValueCallback<String>)
+  nameWithType.vb: TencentIMSDK.GroupSetTopicInfo(GroupTopicInfo, ValueCallback(Of String))
+- uid: com.tencent.imsdk.unity.TencentIMSDK.GroupSetTopicInfo*
+  name: GroupSetTopicInfo
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_GroupSetTopicInfo_
+  commentId: Overload:com.tencent.imsdk.unity.TencentIMSDK.GroupSetTopicInfo
+  isSpec: "True"
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.GroupSetTopicInfo
+  nameWithType: TencentIMSDK.GroupSetTopicInfo
 - uid: com.tencent.imsdk.unity.TencentIMSDK.Init(System.Int64,com.tencent.imsdk.unity.types.SdkConfig)
   name: Init(Int64, SdkConfig)
   href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_Init_System_Int64_com_tencent_imsdk_unity_types_SdkConfig_
@@ -3577,6 +3827,31 @@ references:
   isSpec: "True"
   fullName: com.tencent.imsdk.unity.TencentIMSDK.MsgMarkAllMessageAsRead
   nameWithType: TencentIMSDK.MsgMarkAllMessageAsRead
+- uid: com.tencent.imsdk.unity.TencentIMSDK.MsgModifyMessage(com.tencent.imsdk.unity.types.Message,com.tencent.imsdk.unity.callback.ValueCallback{com.tencent.imsdk.unity.types.Message})
+  name: MsgModifyMessage(Message, ValueCallback<Message>)
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_MsgModifyMessage_com_tencent_imsdk_unity_types_Message_com_tencent_imsdk_unity_callback_ValueCallback_com_tencent_imsdk_unity_types_Message__
+  commentId: M:com.tencent.imsdk.unity.TencentIMSDK.MsgModifyMessage(com.tencent.imsdk.unity.types.Message,com.tencent.imsdk.unity.callback.ValueCallback{com.tencent.imsdk.unity.types.Message})
+  name.vb: MsgModifyMessage(Message, ValueCallback(Of Message))
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.MsgModifyMessage(com.tencent.imsdk.unity.types.Message, com.tencent.imsdk.unity.callback.ValueCallback<com.tencent.imsdk.unity.types.Message>)
+  fullName.vb: com.tencent.imsdk.unity.TencentIMSDK.MsgModifyMessage(com.tencent.imsdk.unity.types.Message, com.tencent.imsdk.unity.callback.ValueCallback(Of com.tencent.imsdk.unity.types.Message))
+  nameWithType: TencentIMSDK.MsgModifyMessage(Message, ValueCallback<Message>)
+  nameWithType.vb: TencentIMSDK.MsgModifyMessage(Message, ValueCallback(Of Message))
+- uid: com.tencent.imsdk.unity.TencentIMSDK.MsgModifyMessage(com.tencent.imsdk.unity.types.Message,com.tencent.imsdk.unity.callback.ValueCallback{System.String})
+  name: MsgModifyMessage(Message, ValueCallback<String>)
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_MsgModifyMessage_com_tencent_imsdk_unity_types_Message_com_tencent_imsdk_unity_callback_ValueCallback_System_String__
+  commentId: M:com.tencent.imsdk.unity.TencentIMSDK.MsgModifyMessage(com.tencent.imsdk.unity.types.Message,com.tencent.imsdk.unity.callback.ValueCallback{System.String})
+  name.vb: MsgModifyMessage(Message, ValueCallback(Of String))
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.MsgModifyMessage(com.tencent.imsdk.unity.types.Message, com.tencent.imsdk.unity.callback.ValueCallback<System.String>)
+  fullName.vb: com.tencent.imsdk.unity.TencentIMSDK.MsgModifyMessage(com.tencent.imsdk.unity.types.Message, com.tencent.imsdk.unity.callback.ValueCallback(Of System.String))
+  nameWithType: TencentIMSDK.MsgModifyMessage(Message, ValueCallback<String>)
+  nameWithType.vb: TencentIMSDK.MsgModifyMessage(Message, ValueCallback(Of String))
+- uid: com.tencent.imsdk.unity.TencentIMSDK.MsgModifyMessage*
+  name: MsgModifyMessage
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_MsgModifyMessage_
+  commentId: Overload:com.tencent.imsdk.unity.TencentIMSDK.MsgModifyMessage
+  isSpec: "True"
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.MsgModifyMessage
+  nameWithType: TencentIMSDK.MsgModifyMessage
 - uid: com.tencent.imsdk.unity.TencentIMSDK.MsgReportReaded(System.String,com.tencent.imsdk.unity.enums.TIMConvType,com.tencent.imsdk.unity.types.Message,com.tencent.imsdk.unity.callback.NullValueCallback)
   name: MsgReportReaded(String, TIMConvType, Message, NullValueCallback)
   href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_MsgReportReaded_System_String_com_tencent_imsdk_unity_enums_TIMConvType_com_tencent_imsdk_unity_types_Message_com_tencent_imsdk_unity_callback_NullValueCallback_
@@ -4011,6 +4286,45 @@ references:
   isSpec: "True"
   fullName: com.tencent.imsdk.unity.TencentIMSDK.SetGroupTipsEventCallback
   nameWithType: TencentIMSDK.SetGroupTipsEventCallback
+- uid: com.tencent.imsdk.unity.TencentIMSDK.SetGroupTopicChangedCallback(com.tencent.imsdk.unity.callback.GroupTopicChangedCallback,com.tencent.imsdk.unity.callback.GroupTopicChangedStringCallback)
+  name: SetGroupTopicChangedCallback(GroupTopicChangedCallback, GroupTopicChangedStringCallback)
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_SetGroupTopicChangedCallback_com_tencent_imsdk_unity_callback_GroupTopicChangedCallback_com_tencent_imsdk_unity_callback_GroupTopicChangedStringCallback_
+  commentId: M:com.tencent.imsdk.unity.TencentIMSDK.SetGroupTopicChangedCallback(com.tencent.imsdk.unity.callback.GroupTopicChangedCallback,com.tencent.imsdk.unity.callback.GroupTopicChangedStringCallback)
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.SetGroupTopicChangedCallback(com.tencent.imsdk.unity.callback.GroupTopicChangedCallback, com.tencent.imsdk.unity.callback.GroupTopicChangedStringCallback)
+  nameWithType: TencentIMSDK.SetGroupTopicChangedCallback(GroupTopicChangedCallback, GroupTopicChangedStringCallback)
+- uid: com.tencent.imsdk.unity.TencentIMSDK.SetGroupTopicChangedCallback*
+  name: SetGroupTopicChangedCallback
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_SetGroupTopicChangedCallback_
+  commentId: Overload:com.tencent.imsdk.unity.TencentIMSDK.SetGroupTopicChangedCallback
+  isSpec: "True"
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.SetGroupTopicChangedCallback
+  nameWithType: TencentIMSDK.SetGroupTopicChangedCallback
+- uid: com.tencent.imsdk.unity.TencentIMSDK.SetGroupTopicCreatedCallback(com.tencent.imsdk.unity.callback.GroupTopicCreatedCallback)
+  name: SetGroupTopicCreatedCallback(GroupTopicCreatedCallback)
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_SetGroupTopicCreatedCallback_com_tencent_imsdk_unity_callback_GroupTopicCreatedCallback_
+  commentId: M:com.tencent.imsdk.unity.TencentIMSDK.SetGroupTopicCreatedCallback(com.tencent.imsdk.unity.callback.GroupTopicCreatedCallback)
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.SetGroupTopicCreatedCallback(com.tencent.imsdk.unity.callback.GroupTopicCreatedCallback)
+  nameWithType: TencentIMSDK.SetGroupTopicCreatedCallback(GroupTopicCreatedCallback)
+- uid: com.tencent.imsdk.unity.TencentIMSDK.SetGroupTopicCreatedCallback*
+  name: SetGroupTopicCreatedCallback
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_SetGroupTopicCreatedCallback_
+  commentId: Overload:com.tencent.imsdk.unity.TencentIMSDK.SetGroupTopicCreatedCallback
+  isSpec: "True"
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.SetGroupTopicCreatedCallback
+  nameWithType: TencentIMSDK.SetGroupTopicCreatedCallback
+- uid: com.tencent.imsdk.unity.TencentIMSDK.SetGroupTopicDeletedCallback(com.tencent.imsdk.unity.callback.GroupTopicDeletedCallback,com.tencent.imsdk.unity.callback.GroupTopicDeletedStringCallback)
+  name: SetGroupTopicDeletedCallback(GroupTopicDeletedCallback, GroupTopicDeletedStringCallback)
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_SetGroupTopicDeletedCallback_com_tencent_imsdk_unity_callback_GroupTopicDeletedCallback_com_tencent_imsdk_unity_callback_GroupTopicDeletedStringCallback_
+  commentId: M:com.tencent.imsdk.unity.TencentIMSDK.SetGroupTopicDeletedCallback(com.tencent.imsdk.unity.callback.GroupTopicDeletedCallback,com.tencent.imsdk.unity.callback.GroupTopicDeletedStringCallback)
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.SetGroupTopicDeletedCallback(com.tencent.imsdk.unity.callback.GroupTopicDeletedCallback, com.tencent.imsdk.unity.callback.GroupTopicDeletedStringCallback)
+  nameWithType: TencentIMSDK.SetGroupTopicDeletedCallback(GroupTopicDeletedCallback, GroupTopicDeletedStringCallback)
+- uid: com.tencent.imsdk.unity.TencentIMSDK.SetGroupTopicDeletedCallback*
+  name: SetGroupTopicDeletedCallback
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_SetGroupTopicDeletedCallback_
+  commentId: Overload:com.tencent.imsdk.unity.TencentIMSDK.SetGroupTopicDeletedCallback
+  isSpec: "True"
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.SetGroupTopicDeletedCallback
+  nameWithType: TencentIMSDK.SetGroupTopicDeletedCallback
 - uid: com.tencent.imsdk.unity.TencentIMSDK.SetKickedOfflineCallback(com.tencent.imsdk.unity.callback.KickedOfflineCallback)
   name: SetKickedOfflineCallback(KickedOfflineCallback)
   href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_SetKickedOfflineCallback_com_tencent_imsdk_unity_callback_KickedOfflineCallback_
@@ -4128,6 +4442,41 @@ references:
   isSpec: "True"
   fullName: com.tencent.imsdk.unity.TencentIMSDK.SetOnDeleteFriendCallback
   nameWithType: TencentIMSDK.SetOnDeleteFriendCallback
+- uid: com.tencent.imsdk.unity.TencentIMSDK.SetSelfInfoUpdatedCallback(com.tencent.imsdk.unity.callback.SelfInfoUpdatedCallback,com.tencent.imsdk.unity.callback.SelfInfoUpdatedStringCallback)
+  name: SetSelfInfoUpdatedCallback(SelfInfoUpdatedCallback, SelfInfoUpdatedStringCallback)
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_SetSelfInfoUpdatedCallback_com_tencent_imsdk_unity_callback_SelfInfoUpdatedCallback_com_tencent_imsdk_unity_callback_SelfInfoUpdatedStringCallback_
+  commentId: M:com.tencent.imsdk.unity.TencentIMSDK.SetSelfInfoUpdatedCallback(com.tencent.imsdk.unity.callback.SelfInfoUpdatedCallback,com.tencent.imsdk.unity.callback.SelfInfoUpdatedStringCallback)
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.SetSelfInfoUpdatedCallback(com.tencent.imsdk.unity.callback.SelfInfoUpdatedCallback, com.tencent.imsdk.unity.callback.SelfInfoUpdatedStringCallback)
+  nameWithType: TencentIMSDK.SetSelfInfoUpdatedCallback(SelfInfoUpdatedCallback, SelfInfoUpdatedStringCallback)
+- uid: com.tencent.imsdk.unity.TencentIMSDK.SetSelfInfoUpdatedCallback*
+  name: SetSelfInfoUpdatedCallback
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_SetSelfInfoUpdatedCallback_
+  commentId: Overload:com.tencent.imsdk.unity.TencentIMSDK.SetSelfInfoUpdatedCallback
+  isSpec: "True"
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.SetSelfInfoUpdatedCallback
+  nameWithType: TencentIMSDK.SetSelfInfoUpdatedCallback
+- uid: com.tencent.imsdk.unity.TencentIMSDK.SetSelfStatus(com.tencent.imsdk.unity.types.UserStatus,com.tencent.imsdk.unity.callback.NullValueCallback)
+  name: SetSelfStatus(UserStatus, NullValueCallback)
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_SetSelfStatus_com_tencent_imsdk_unity_types_UserStatus_com_tencent_imsdk_unity_callback_NullValueCallback_
+  commentId: M:com.tencent.imsdk.unity.TencentIMSDK.SetSelfStatus(com.tencent.imsdk.unity.types.UserStatus,com.tencent.imsdk.unity.callback.NullValueCallback)
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.SetSelfStatus(com.tencent.imsdk.unity.types.UserStatus, com.tencent.imsdk.unity.callback.NullValueCallback)
+  nameWithType: TencentIMSDK.SetSelfStatus(UserStatus, NullValueCallback)
+- uid: com.tencent.imsdk.unity.TencentIMSDK.SetSelfStatus(com.tencent.imsdk.unity.types.UserStatus,com.tencent.imsdk.unity.callback.ValueCallback{System.String})
+  name: SetSelfStatus(UserStatus, ValueCallback<String>)
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_SetSelfStatus_com_tencent_imsdk_unity_types_UserStatus_com_tencent_imsdk_unity_callback_ValueCallback_System_String__
+  commentId: M:com.tencent.imsdk.unity.TencentIMSDK.SetSelfStatus(com.tencent.imsdk.unity.types.UserStatus,com.tencent.imsdk.unity.callback.ValueCallback{System.String})
+  name.vb: SetSelfStatus(UserStatus, ValueCallback(Of String))
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.SetSelfStatus(com.tencent.imsdk.unity.types.UserStatus, com.tencent.imsdk.unity.callback.ValueCallback<System.String>)
+  fullName.vb: com.tencent.imsdk.unity.TencentIMSDK.SetSelfStatus(com.tencent.imsdk.unity.types.UserStatus, com.tencent.imsdk.unity.callback.ValueCallback(Of System.String))
+  nameWithType: TencentIMSDK.SetSelfStatus(UserStatus, ValueCallback<String>)
+  nameWithType.vb: TencentIMSDK.SetSelfStatus(UserStatus, ValueCallback(Of String))
+- uid: com.tencent.imsdk.unity.TencentIMSDK.SetSelfStatus*
+  name: SetSelfStatus
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_SetSelfStatus_
+  commentId: Overload:com.tencent.imsdk.unity.TencentIMSDK.SetSelfStatus
+  isSpec: "True"
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.SetSelfStatus
+  nameWithType: TencentIMSDK.SetSelfStatus
 - uid: com.tencent.imsdk.unity.TencentIMSDK.SetUpdateFriendProfileCallback(com.tencent.imsdk.unity.callback.UpdateFriendProfileCallback,com.tencent.imsdk.unity.callback.UpdateFriendProfileStringCallback)
   name: SetUpdateFriendProfileCallback(UpdateFriendProfileCallback, UpdateFriendProfileStringCallback)
   href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_SetUpdateFriendProfileCallback_com_tencent_imsdk_unity_callback_UpdateFriendProfileCallback_com_tencent_imsdk_unity_callback_UpdateFriendProfileStringCallback_
@@ -4154,6 +4503,83 @@ references:
   isSpec: "True"
   fullName: com.tencent.imsdk.unity.TencentIMSDK.SetUserSigExpiredCallback
   nameWithType: TencentIMSDK.SetUserSigExpiredCallback
+- uid: com.tencent.imsdk.unity.TencentIMSDK.SetUserStatusChangedCallback(com.tencent.imsdk.unity.callback.UserStatusChangedCallback,com.tencent.imsdk.unity.callback.UserStatusChangedStringCallback)
+  name: SetUserStatusChangedCallback(UserStatusChangedCallback, UserStatusChangedStringCallback)
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_SetUserStatusChangedCallback_com_tencent_imsdk_unity_callback_UserStatusChangedCallback_com_tencent_imsdk_unity_callback_UserStatusChangedStringCallback_
+  commentId: M:com.tencent.imsdk.unity.TencentIMSDK.SetUserStatusChangedCallback(com.tencent.imsdk.unity.callback.UserStatusChangedCallback,com.tencent.imsdk.unity.callback.UserStatusChangedStringCallback)
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.SetUserStatusChangedCallback(com.tencent.imsdk.unity.callback.UserStatusChangedCallback, com.tencent.imsdk.unity.callback.UserStatusChangedStringCallback)
+  nameWithType: TencentIMSDK.SetUserStatusChangedCallback(UserStatusChangedCallback, UserStatusChangedStringCallback)
+- uid: com.tencent.imsdk.unity.TencentIMSDK.SetUserStatusChangedCallback*
+  name: SetUserStatusChangedCallback
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_SetUserStatusChangedCallback_
+  commentId: Overload:com.tencent.imsdk.unity.TencentIMSDK.SetUserStatusChangedCallback
+  isSpec: "True"
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.SetUserStatusChangedCallback
+  nameWithType: TencentIMSDK.SetUserStatusChangedCallback
+- uid: com.tencent.imsdk.unity.TencentIMSDK.SubscribeUserStatus(System.Collections.Generic.List{System.String},com.tencent.imsdk.unity.callback.NullValueCallback)
+  name: SubscribeUserStatus(List<String>, NullValueCallback)
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_SubscribeUserStatus_System_Collections_Generic_List_System_String__com_tencent_imsdk_unity_callback_NullValueCallback_
+  commentId: M:com.tencent.imsdk.unity.TencentIMSDK.SubscribeUserStatus(System.Collections.Generic.List{System.String},com.tencent.imsdk.unity.callback.NullValueCallback)
+  name.vb: SubscribeUserStatus(List(Of String), NullValueCallback)
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.SubscribeUserStatus(System.Collections.Generic.List<System.String>, com.tencent.imsdk.unity.callback.NullValueCallback)
+  fullName.vb: com.tencent.imsdk.unity.TencentIMSDK.SubscribeUserStatus(System.Collections.Generic.List(Of System.String), com.tencent.imsdk.unity.callback.NullValueCallback)
+  nameWithType: TencentIMSDK.SubscribeUserStatus(List<String>, NullValueCallback)
+  nameWithType.vb: TencentIMSDK.SubscribeUserStatus(List(Of String), NullValueCallback)
+- uid: com.tencent.imsdk.unity.TencentIMSDK.SubscribeUserStatus(System.Collections.Generic.List{System.String},com.tencent.imsdk.unity.callback.ValueCallback{System.String})
+  name: SubscribeUserStatus(List<String>, ValueCallback<String>)
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_SubscribeUserStatus_System_Collections_Generic_List_System_String__com_tencent_imsdk_unity_callback_ValueCallback_System_String__
+  commentId: M:com.tencent.imsdk.unity.TencentIMSDK.SubscribeUserStatus(System.Collections.Generic.List{System.String},com.tencent.imsdk.unity.callback.ValueCallback{System.String})
+  name.vb: SubscribeUserStatus(List(Of String), ValueCallback(Of String))
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.SubscribeUserStatus(System.Collections.Generic.List<System.String>, com.tencent.imsdk.unity.callback.ValueCallback<System.String>)
+  fullName.vb: com.tencent.imsdk.unity.TencentIMSDK.SubscribeUserStatus(System.Collections.Generic.List(Of System.String), com.tencent.imsdk.unity.callback.ValueCallback(Of System.String))
+  nameWithType: TencentIMSDK.SubscribeUserStatus(List<String>, ValueCallback<String>)
+  nameWithType.vb: TencentIMSDK.SubscribeUserStatus(List(Of String), ValueCallback(Of String))
+- uid: com.tencent.imsdk.unity.TencentIMSDK.SubscribeUserStatus*
+  name: SubscribeUserStatus
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_SubscribeUserStatus_
+  commentId: Overload:com.tencent.imsdk.unity.TencentIMSDK.SubscribeUserStatus
+  isSpec: "True"
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.SubscribeUserStatus
+  nameWithType: TencentIMSDK.SubscribeUserStatus
+- uid: com.tencent.imsdk.unity.TencentIMSDK.TIMGroupTopicChangedCallbackInstance(System.IntPtr,System.IntPtr,System.IntPtr)
+  name: TIMGroupTopicChangedCallbackInstance(IntPtr, IntPtr, IntPtr)
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_TIMGroupTopicChangedCallbackInstance_System_IntPtr_System_IntPtr_System_IntPtr_
+  commentId: M:com.tencent.imsdk.unity.TencentIMSDK.TIMGroupTopicChangedCallbackInstance(System.IntPtr,System.IntPtr,System.IntPtr)
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.TIMGroupTopicChangedCallbackInstance(System.IntPtr, System.IntPtr, System.IntPtr)
+  nameWithType: TencentIMSDK.TIMGroupTopicChangedCallbackInstance(IntPtr, IntPtr, IntPtr)
+- uid: com.tencent.imsdk.unity.TencentIMSDK.TIMGroupTopicChangedCallbackInstance*
+  name: TIMGroupTopicChangedCallbackInstance
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_TIMGroupTopicChangedCallbackInstance_
+  commentId: Overload:com.tencent.imsdk.unity.TencentIMSDK.TIMGroupTopicChangedCallbackInstance
+  isSpec: "True"
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.TIMGroupTopicChangedCallbackInstance
+  nameWithType: TencentIMSDK.TIMGroupTopicChangedCallbackInstance
+- uid: com.tencent.imsdk.unity.TencentIMSDK.TIMGroupTopicCreatedCallbackInstance(System.IntPtr,System.IntPtr,System.IntPtr)
+  name: TIMGroupTopicCreatedCallbackInstance(IntPtr, IntPtr, IntPtr)
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_TIMGroupTopicCreatedCallbackInstance_System_IntPtr_System_IntPtr_System_IntPtr_
+  commentId: M:com.tencent.imsdk.unity.TencentIMSDK.TIMGroupTopicCreatedCallbackInstance(System.IntPtr,System.IntPtr,System.IntPtr)
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.TIMGroupTopicCreatedCallbackInstance(System.IntPtr, System.IntPtr, System.IntPtr)
+  nameWithType: TencentIMSDK.TIMGroupTopicCreatedCallbackInstance(IntPtr, IntPtr, IntPtr)
+- uid: com.tencent.imsdk.unity.TencentIMSDK.TIMGroupTopicCreatedCallbackInstance*
+  name: TIMGroupTopicCreatedCallbackInstance
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_TIMGroupTopicCreatedCallbackInstance_
+  commentId: Overload:com.tencent.imsdk.unity.TencentIMSDK.TIMGroupTopicCreatedCallbackInstance
+  isSpec: "True"
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.TIMGroupTopicCreatedCallbackInstance
+  nameWithType: TencentIMSDK.TIMGroupTopicCreatedCallbackInstance
+- uid: com.tencent.imsdk.unity.TencentIMSDK.TIMGroupTopicDeletedCallbackInstance(System.IntPtr,System.IntPtr,System.IntPtr)
+  name: TIMGroupTopicDeletedCallbackInstance(IntPtr, IntPtr, IntPtr)
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_TIMGroupTopicDeletedCallbackInstance_System_IntPtr_System_IntPtr_System_IntPtr_
+  commentId: M:com.tencent.imsdk.unity.TencentIMSDK.TIMGroupTopicDeletedCallbackInstance(System.IntPtr,System.IntPtr,System.IntPtr)
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.TIMGroupTopicDeletedCallbackInstance(System.IntPtr, System.IntPtr, System.IntPtr)
+  nameWithType: TencentIMSDK.TIMGroupTopicDeletedCallbackInstance(IntPtr, IntPtr, IntPtr)
+- uid: com.tencent.imsdk.unity.TencentIMSDK.TIMGroupTopicDeletedCallbackInstance*
+  name: TIMGroupTopicDeletedCallbackInstance
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_TIMGroupTopicDeletedCallbackInstance_
+  commentId: Overload:com.tencent.imsdk.unity.TencentIMSDK.TIMGroupTopicDeletedCallbackInstance
+  isSpec: "True"
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.TIMGroupTopicDeletedCallbackInstance
+  nameWithType: TencentIMSDK.TIMGroupTopicDeletedCallbackInstance
 - uid: com.tencent.imsdk.unity.TencentIMSDK.TIMMsgGroupMessageReadMemberListCallbackInstance(System.IntPtr,System.UInt64,System.Boolean,System.IntPtr)
   name: TIMMsgGroupMessageReadMemberListCallbackInstance(IntPtr, UInt64, Boolean, IntPtr)
   href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_TIMMsgGroupMessageReadMemberListCallbackInstance_System_IntPtr_System_UInt64_System_Boolean_System_IntPtr_
@@ -4180,6 +4606,32 @@ references:
   isSpec: "True"
   fullName: com.tencent.imsdk.unity.TencentIMSDK.TIMMsgUpdateCallbackInstance
   nameWithType: TencentIMSDK.TIMMsgUpdateCallbackInstance
+- uid: com.tencent.imsdk.unity.TencentIMSDK.TIMSelfInfoUpdatedCallbackInstance(System.IntPtr,System.IntPtr)
+  name: TIMSelfInfoUpdatedCallbackInstance(IntPtr, IntPtr)
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_TIMSelfInfoUpdatedCallbackInstance_System_IntPtr_System_IntPtr_
+  commentId: M:com.tencent.imsdk.unity.TencentIMSDK.TIMSelfInfoUpdatedCallbackInstance(System.IntPtr,System.IntPtr)
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.TIMSelfInfoUpdatedCallbackInstance(System.IntPtr, System.IntPtr)
+  nameWithType: TencentIMSDK.TIMSelfInfoUpdatedCallbackInstance(IntPtr, IntPtr)
+- uid: com.tencent.imsdk.unity.TencentIMSDK.TIMSelfInfoUpdatedCallbackInstance*
+  name: TIMSelfInfoUpdatedCallbackInstance
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_TIMSelfInfoUpdatedCallbackInstance_
+  commentId: Overload:com.tencent.imsdk.unity.TencentIMSDK.TIMSelfInfoUpdatedCallbackInstance
+  isSpec: "True"
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.TIMSelfInfoUpdatedCallbackInstance
+  nameWithType: TencentIMSDK.TIMSelfInfoUpdatedCallbackInstance
+- uid: com.tencent.imsdk.unity.TencentIMSDK.TIMUserStatusChangedCallbackInstance(System.IntPtr,System.IntPtr)
+  name: TIMUserStatusChangedCallbackInstance(IntPtr, IntPtr)
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_TIMUserStatusChangedCallbackInstance_System_IntPtr_System_IntPtr_
+  commentId: M:com.tencent.imsdk.unity.TencentIMSDK.TIMUserStatusChangedCallbackInstance(System.IntPtr,System.IntPtr)
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.TIMUserStatusChangedCallbackInstance(System.IntPtr, System.IntPtr)
+  nameWithType: TencentIMSDK.TIMUserStatusChangedCallbackInstance(IntPtr, IntPtr)
+- uid: com.tencent.imsdk.unity.TencentIMSDK.TIMUserStatusChangedCallbackInstance*
+  name: TIMUserStatusChangedCallbackInstance
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_TIMUserStatusChangedCallbackInstance_
+  commentId: Overload:com.tencent.imsdk.unity.TencentIMSDK.TIMUserStatusChangedCallbackInstance
+  isSpec: "True"
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.TIMUserStatusChangedCallbackInstance
+  nameWithType: TencentIMSDK.TIMUserStatusChangedCallbackInstance
 - uid: com.tencent.imsdk.unity.TencentIMSDK.Uninit
   name: Uninit()
   href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_Uninit
@@ -4193,6 +4645,31 @@ references:
   isSpec: "True"
   fullName: com.tencent.imsdk.unity.TencentIMSDK.Uninit
   nameWithType: TencentIMSDK.Uninit
+- uid: com.tencent.imsdk.unity.TencentIMSDK.UnsubscribeUserStatus(System.Collections.Generic.List{System.String},com.tencent.imsdk.unity.callback.NullValueCallback)
+  name: UnsubscribeUserStatus(List<String>, NullValueCallback)
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_UnsubscribeUserStatus_System_Collections_Generic_List_System_String__com_tencent_imsdk_unity_callback_NullValueCallback_
+  commentId: M:com.tencent.imsdk.unity.TencentIMSDK.UnsubscribeUserStatus(System.Collections.Generic.List{System.String},com.tencent.imsdk.unity.callback.NullValueCallback)
+  name.vb: UnsubscribeUserStatus(List(Of String), NullValueCallback)
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.UnsubscribeUserStatus(System.Collections.Generic.List<System.String>, com.tencent.imsdk.unity.callback.NullValueCallback)
+  fullName.vb: com.tencent.imsdk.unity.TencentIMSDK.UnsubscribeUserStatus(System.Collections.Generic.List(Of System.String), com.tencent.imsdk.unity.callback.NullValueCallback)
+  nameWithType: TencentIMSDK.UnsubscribeUserStatus(List<String>, NullValueCallback)
+  nameWithType.vb: TencentIMSDK.UnsubscribeUserStatus(List(Of String), NullValueCallback)
+- uid: com.tencent.imsdk.unity.TencentIMSDK.UnsubscribeUserStatus(System.Collections.Generic.List{System.String},com.tencent.imsdk.unity.callback.ValueCallback{System.String})
+  name: UnsubscribeUserStatus(List<String>, ValueCallback<String>)
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_UnsubscribeUserStatus_System_Collections_Generic_List_System_String__com_tencent_imsdk_unity_callback_ValueCallback_System_String__
+  commentId: M:com.tencent.imsdk.unity.TencentIMSDK.UnsubscribeUserStatus(System.Collections.Generic.List{System.String},com.tencent.imsdk.unity.callback.ValueCallback{System.String})
+  name.vb: UnsubscribeUserStatus(List(Of String), ValueCallback(Of String))
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.UnsubscribeUserStatus(System.Collections.Generic.List<System.String>, com.tencent.imsdk.unity.callback.ValueCallback<System.String>)
+  fullName.vb: com.tencent.imsdk.unity.TencentIMSDK.UnsubscribeUserStatus(System.Collections.Generic.List(Of System.String), com.tencent.imsdk.unity.callback.ValueCallback(Of System.String))
+  nameWithType: TencentIMSDK.UnsubscribeUserStatus(List<String>, ValueCallback<String>)
+  nameWithType.vb: TencentIMSDK.UnsubscribeUserStatus(List(Of String), ValueCallback(Of String))
+- uid: com.tencent.imsdk.unity.TencentIMSDK.UnsubscribeUserStatus*
+  name: UnsubscribeUserStatus
+  href: api/com.tencent.imsdk.unity.TencentIMSDK.html#com_tencent_imsdk_unity_TencentIMSDK_UnsubscribeUserStatus_
+  commentId: Overload:com.tencent.imsdk.unity.TencentIMSDK.UnsubscribeUserStatus
+  isSpec: "True"
+  fullName: com.tencent.imsdk.unity.TencentIMSDK.UnsubscribeUserStatus
+  nameWithType: TencentIMSDK.UnsubscribeUserStatus
 - uid: com.tencent.imsdk.unity.types
   name: com.tencent.imsdk.unity.types
   href: api/com.tencent.imsdk.unity.types.html
@@ -5987,6 +6464,12 @@ references:
   commentId: F:com.tencent.imsdk.unity.types.GroupDetailInfo.group_detial_info_is_shutup_all
   fullName: com.tencent.imsdk.unity.types.GroupDetailInfo.group_detial_info_is_shutup_all
   nameWithType: GroupDetailInfo.group_detial_info_is_shutup_all
+- uid: com.tencent.imsdk.unity.types.GroupDetailInfo.group_detial_info_is_support_topic
+  name: group_detial_info_is_support_topic
+  href: api/com.tencent.imsdk.unity.types.GroupDetailInfo.html#com_tencent_imsdk_unity_types_GroupDetailInfo_group_detial_info_is_support_topic
+  commentId: F:com.tencent.imsdk.unity.types.GroupDetailInfo.group_detial_info_is_support_topic
+  fullName: com.tencent.imsdk.unity.types.GroupDetailInfo.group_detial_info_is_support_topic
+  nameWithType: GroupDetailInfo.group_detial_info_is_support_topic
 - uid: com.tencent.imsdk.unity.types.GroupDetailInfo.group_detial_info_last_info_time
   name: group_detial_info_last_info_time
   href: api/com.tencent.imsdk.unity.types.GroupDetailInfo.html#com_tencent_imsdk_unity_types_GroupDetailInfo_group_detial_info_last_info_time
@@ -6149,6 +6632,198 @@ references:
   commentId: F:com.tencent.imsdk.unity.types.GroupHandlePendencyParam.group_handle_pendency_param_pendency
   fullName: com.tencent.imsdk.unity.types.GroupHandlePendencyParam.group_handle_pendency_param_pendency
   nameWithType: GroupHandlePendencyParam.group_handle_pendency_param_pendency
+- uid: com.tencent.imsdk.unity.types.GroupInfo
+  name: GroupInfo
+  href: api/com.tencent.imsdk.unity.types.GroupInfo.html
+  commentId: T:com.tencent.imsdk.unity.types.GroupInfo
+  fullName: com.tencent.imsdk.unity.types.GroupInfo
+  nameWithType: GroupInfo
+- uid: com.tencent.imsdk.unity.types.GroupInfo.group_base_info_face_url
+  name: group_base_info_face_url
+  href: api/com.tencent.imsdk.unity.types.GroupInfo.html#com_tencent_imsdk_unity_types_GroupInfo_group_base_info_face_url
+  commentId: F:com.tencent.imsdk.unity.types.GroupInfo.group_base_info_face_url
+  fullName: com.tencent.imsdk.unity.types.GroupInfo.group_base_info_face_url
+  nameWithType: GroupInfo.group_base_info_face_url
+- uid: com.tencent.imsdk.unity.types.GroupInfo.group_base_info_group_id
+  name: group_base_info_group_id
+  href: api/com.tencent.imsdk.unity.types.GroupInfo.html#com_tencent_imsdk_unity_types_GroupInfo_group_base_info_group_id
+  commentId: F:com.tencent.imsdk.unity.types.GroupInfo.group_base_info_group_id
+  fullName: com.tencent.imsdk.unity.types.GroupInfo.group_base_info_group_id
+  nameWithType: GroupInfo.group_base_info_group_id
+- uid: com.tencent.imsdk.unity.types.GroupInfo.group_base_info_group_name
+  name: group_base_info_group_name
+  href: api/com.tencent.imsdk.unity.types.GroupInfo.html#com_tencent_imsdk_unity_types_GroupInfo_group_base_info_group_name
+  commentId: F:com.tencent.imsdk.unity.types.GroupInfo.group_base_info_group_name
+  fullName: com.tencent.imsdk.unity.types.GroupInfo.group_base_info_group_name
+  nameWithType: GroupInfo.group_base_info_group_name
+- uid: com.tencent.imsdk.unity.types.GroupInfo.group_base_info_group_type
+  name: group_base_info_group_type
+  href: api/com.tencent.imsdk.unity.types.GroupInfo.html#com_tencent_imsdk_unity_types_GroupInfo_group_base_info_group_type
+  commentId: F:com.tencent.imsdk.unity.types.GroupInfo.group_base_info_group_type
+  fullName: com.tencent.imsdk.unity.types.GroupInfo.group_base_info_group_type
+  nameWithType: GroupInfo.group_base_info_group_type
+- uid: com.tencent.imsdk.unity.types.GroupInfo.group_base_info_info_seq
+  name: group_base_info_info_seq
+  href: api/com.tencent.imsdk.unity.types.GroupInfo.html#com_tencent_imsdk_unity_types_GroupInfo_group_base_info_info_seq
+  commentId: F:com.tencent.imsdk.unity.types.GroupInfo.group_base_info_info_seq
+  fullName: com.tencent.imsdk.unity.types.GroupInfo.group_base_info_info_seq
+  nameWithType: GroupInfo.group_base_info_info_seq
+- uid: com.tencent.imsdk.unity.types.GroupInfo.group_base_info_is_shutup_all
+  name: group_base_info_is_shutup_all
+  href: api/com.tencent.imsdk.unity.types.GroupInfo.html#com_tencent_imsdk_unity_types_GroupInfo_group_base_info_is_shutup_all
+  commentId: F:com.tencent.imsdk.unity.types.GroupInfo.group_base_info_is_shutup_all
+  fullName: com.tencent.imsdk.unity.types.GroupInfo.group_base_info_is_shutup_all
+  nameWithType: GroupInfo.group_base_info_is_shutup_all
+- uid: com.tencent.imsdk.unity.types.GroupInfo.group_base_info_lastest_seq
+  name: group_base_info_lastest_seq
+  href: api/com.tencent.imsdk.unity.types.GroupInfo.html#com_tencent_imsdk_unity_types_GroupInfo_group_base_info_lastest_seq
+  commentId: F:com.tencent.imsdk.unity.types.GroupInfo.group_base_info_lastest_seq
+  fullName: com.tencent.imsdk.unity.types.GroupInfo.group_base_info_lastest_seq
+  nameWithType: GroupInfo.group_base_info_lastest_seq
+- uid: com.tencent.imsdk.unity.types.GroupInfo.group_base_info_msg_flag
+  name: group_base_info_msg_flag
+  href: api/com.tencent.imsdk.unity.types.GroupInfo.html#com_tencent_imsdk_unity_types_GroupInfo_group_base_info_msg_flag
+  commentId: F:com.tencent.imsdk.unity.types.GroupInfo.group_base_info_msg_flag
+  fullName: com.tencent.imsdk.unity.types.GroupInfo.group_base_info_msg_flag
+  nameWithType: GroupInfo.group_base_info_msg_flag
+- uid: com.tencent.imsdk.unity.types.GroupInfo.group_base_info_readed_seq
+  name: group_base_info_readed_seq
+  href: api/com.tencent.imsdk.unity.types.GroupInfo.html#com_tencent_imsdk_unity_types_GroupInfo_group_base_info_readed_seq
+  commentId: F:com.tencent.imsdk.unity.types.GroupInfo.group_base_info_readed_seq
+  fullName: com.tencent.imsdk.unity.types.GroupInfo.group_base_info_readed_seq
+  nameWithType: GroupInfo.group_base_info_readed_seq
+- uid: com.tencent.imsdk.unity.types.GroupInfo.group_base_info_self_info
+  name: group_base_info_self_info
+  href: api/com.tencent.imsdk.unity.types.GroupInfo.html#com_tencent_imsdk_unity_types_GroupInfo_group_base_info_self_info
+  commentId: F:com.tencent.imsdk.unity.types.GroupInfo.group_base_info_self_info
+  fullName: com.tencent.imsdk.unity.types.GroupInfo.group_base_info_self_info
+  nameWithType: GroupInfo.group_base_info_self_info
+- uid: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_add_option
+  name: group_detial_info_add_option
+  href: api/com.tencent.imsdk.unity.types.GroupInfo.html#com_tencent_imsdk_unity_types_GroupInfo_group_detial_info_add_option
+  commentId: F:com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_add_option
+  fullName: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_add_option
+  nameWithType: GroupInfo.group_detial_info_add_option
+- uid: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_create_time
+  name: group_detial_info_create_time
+  href: api/com.tencent.imsdk.unity.types.GroupInfo.html#com_tencent_imsdk_unity_types_GroupInfo_group_detial_info_create_time
+  commentId: F:com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_create_time
+  fullName: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_create_time
+  nameWithType: GroupInfo.group_detial_info_create_time
+- uid: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_custom_info
+  name: group_detial_info_custom_info
+  href: api/com.tencent.imsdk.unity.types.GroupInfo.html#com_tencent_imsdk_unity_types_GroupInfo_group_detial_info_custom_info
+  commentId: F:com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_custom_info
+  fullName: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_custom_info
+  nameWithType: GroupInfo.group_detial_info_custom_info
+- uid: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_face_url
+  name: group_detial_info_face_url
+  href: api/com.tencent.imsdk.unity.types.GroupInfo.html#com_tencent_imsdk_unity_types_GroupInfo_group_detial_info_face_url
+  commentId: F:com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_face_url
+  fullName: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_face_url
+  nameWithType: GroupInfo.group_detial_info_face_url
+- uid: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_group_id
+  name: group_detial_info_group_id
+  href: api/com.tencent.imsdk.unity.types.GroupInfo.html#com_tencent_imsdk_unity_types_GroupInfo_group_detial_info_group_id
+  commentId: F:com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_group_id
+  fullName: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_group_id
+  nameWithType: GroupInfo.group_detial_info_group_id
+- uid: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_group_name
+  name: group_detial_info_group_name
+  href: api/com.tencent.imsdk.unity.types.GroupInfo.html#com_tencent_imsdk_unity_types_GroupInfo_group_detial_info_group_name
+  commentId: F:com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_group_name
+  fullName: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_group_name
+  nameWithType: GroupInfo.group_detial_info_group_name
+- uid: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_group_type
+  name: group_detial_info_group_type
+  href: api/com.tencent.imsdk.unity.types.GroupInfo.html#com_tencent_imsdk_unity_types_GroupInfo_group_detial_info_group_type
+  commentId: F:com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_group_type
+  fullName: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_group_type
+  nameWithType: GroupInfo.group_detial_info_group_type
+- uid: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_info_seq
+  name: group_detial_info_info_seq
+  href: api/com.tencent.imsdk.unity.types.GroupInfo.html#com_tencent_imsdk_unity_types_GroupInfo_group_detial_info_info_seq
+  commentId: F:com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_info_seq
+  fullName: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_info_seq
+  nameWithType: GroupInfo.group_detial_info_info_seq
+- uid: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_introduction
+  name: group_detial_info_introduction
+  href: api/com.tencent.imsdk.unity.types.GroupInfo.html#com_tencent_imsdk_unity_types_GroupInfo_group_detial_info_introduction
+  commentId: F:com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_introduction
+  fullName: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_introduction
+  nameWithType: GroupInfo.group_detial_info_introduction
+- uid: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_is_shutup_all
+  name: group_detial_info_is_shutup_all
+  href: api/com.tencent.imsdk.unity.types.GroupInfo.html#com_tencent_imsdk_unity_types_GroupInfo_group_detial_info_is_shutup_all
+  commentId: F:com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_is_shutup_all
+  fullName: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_is_shutup_all
+  nameWithType: GroupInfo.group_detial_info_is_shutup_all
+- uid: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_is_support_topic
+  name: group_detial_info_is_support_topic
+  href: api/com.tencent.imsdk.unity.types.GroupInfo.html#com_tencent_imsdk_unity_types_GroupInfo_group_detial_info_is_support_topic
+  commentId: F:com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_is_support_topic
+  fullName: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_is_support_topic
+  nameWithType: GroupInfo.group_detial_info_is_support_topic
+- uid: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_last_info_time
+  name: group_detial_info_last_info_time
+  href: api/com.tencent.imsdk.unity.types.GroupInfo.html#com_tencent_imsdk_unity_types_GroupInfo_group_detial_info_last_info_time
+  commentId: F:com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_last_info_time
+  fullName: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_last_info_time
+  nameWithType: GroupInfo.group_detial_info_last_info_time
+- uid: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_last_msg_time
+  name: group_detial_info_last_msg_time
+  href: api/com.tencent.imsdk.unity.types.GroupInfo.html#com_tencent_imsdk_unity_types_GroupInfo_group_detial_info_last_msg_time
+  commentId: F:com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_last_msg_time
+  fullName: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_last_msg_time
+  nameWithType: GroupInfo.group_detial_info_last_msg_time
+- uid: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_max_member_num
+  name: group_detial_info_max_member_num
+  href: api/com.tencent.imsdk.unity.types.GroupInfo.html#com_tencent_imsdk_unity_types_GroupInfo_group_detial_info_max_member_num
+  commentId: F:com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_max_member_num
+  fullName: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_max_member_num
+  nameWithType: GroupInfo.group_detial_info_max_member_num
+- uid: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_member_num
+  name: group_detial_info_member_num
+  href: api/com.tencent.imsdk.unity.types.GroupInfo.html#com_tencent_imsdk_unity_types_GroupInfo_group_detial_info_member_num
+  commentId: F:com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_member_num
+  fullName: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_member_num
+  nameWithType: GroupInfo.group_detial_info_member_num
+- uid: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_next_msg_seq
+  name: group_detial_info_next_msg_seq
+  href: api/com.tencent.imsdk.unity.types.GroupInfo.html#com_tencent_imsdk_unity_types_GroupInfo_group_detial_info_next_msg_seq
+  commentId: F:com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_next_msg_seq
+  fullName: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_next_msg_seq
+  nameWithType: GroupInfo.group_detial_info_next_msg_seq
+- uid: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_notification
+  name: group_detial_info_notification
+  href: api/com.tencent.imsdk.unity.types.GroupInfo.html#com_tencent_imsdk_unity_types_GroupInfo_group_detial_info_notification
+  commentId: F:com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_notification
+  fullName: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_notification
+  nameWithType: GroupInfo.group_detial_info_notification
+- uid: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_online_member_num
+  name: group_detial_info_online_member_num
+  href: api/com.tencent.imsdk.unity.types.GroupInfo.html#com_tencent_imsdk_unity_types_GroupInfo_group_detial_info_online_member_num
+  commentId: F:com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_online_member_num
+  fullName: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_online_member_num
+  nameWithType: GroupInfo.group_detial_info_online_member_num
+- uid: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_owener_identifier
+  name: group_detial_info_owener_identifier
+  href: api/com.tencent.imsdk.unity.types.GroupInfo.html#com_tencent_imsdk_unity_types_GroupInfo_group_detial_info_owener_identifier
+  commentId: F:com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_owener_identifier
+  fullName: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_owener_identifier
+  nameWithType: GroupInfo.group_detial_info_owener_identifier
+- uid: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_searchable
+  name: group_detial_info_searchable
+  href: api/com.tencent.imsdk.unity.types.GroupInfo.html#com_tencent_imsdk_unity_types_GroupInfo_group_detial_info_searchable
+  commentId: F:com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_searchable
+  fullName: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_searchable
+  nameWithType: GroupInfo.group_detial_info_searchable
+- uid: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_visible
+  name: group_detial_info_visible
+  href: api/com.tencent.imsdk.unity.types.GroupInfo.html#com_tencent_imsdk_unity_types_GroupInfo_group_detial_info_visible
+  commentId: F:com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_visible
+  fullName: com.tencent.imsdk.unity.types.GroupInfo.group_detial_info_visible
+  nameWithType: GroupInfo.group_detial_info_visible
 - uid: com.tencent.imsdk.unity.types.GroupInfoCustemString
   name: GroupInfoCustemString
   href: api/com.tencent.imsdk.unity.types.GroupInfoCustemString.html
@@ -6809,6 +7484,120 @@ references:
   commentId: F:com.tencent.imsdk.unity.types.GroupTipsElem.group_tips_elem_user_array
   fullName: com.tencent.imsdk.unity.types.GroupTipsElem.group_tips_elem_user_array
   nameWithType: GroupTipsElem.group_tips_elem_user_array
+- uid: com.tencent.imsdk.unity.types.GroupTopicInfo
+  name: GroupTopicInfo
+  href: api/com.tencent.imsdk.unity.types.GroupTopicInfo.html
+  commentId: T:com.tencent.imsdk.unity.types.GroupTopicInfo
+  fullName: com.tencent.imsdk.unity.types.GroupTopicInfo
+  nameWithType: GroupTopicInfo
+- uid: com.tencent.imsdk.unity.types.GroupTopicInfo.group_modify_info_param_modify_flag
+  name: group_modify_info_param_modify_flag
+  href: api/com.tencent.imsdk.unity.types.GroupTopicInfo.html#com_tencent_imsdk_unity_types_GroupTopicInfo_group_modify_info_param_modify_flag
+  commentId: F:com.tencent.imsdk.unity.types.GroupTopicInfo.group_modify_info_param_modify_flag
+  fullName: com.tencent.imsdk.unity.types.GroupTopicInfo.group_modify_info_param_modify_flag
+  nameWithType: GroupTopicInfo.group_modify_info_param_modify_flag
+- uid: com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_custom_string
+  name: group_topic_info_custom_string
+  href: api/com.tencent.imsdk.unity.types.GroupTopicInfo.html#com_tencent_imsdk_unity_types_GroupTopicInfo_group_topic_info_custom_string
+  commentId: F:com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_custom_string
+  fullName: com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_custom_string
+  nameWithType: GroupTopicInfo.group_topic_info_custom_string
+- uid: com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_draft_text
+  name: group_topic_info_draft_text
+  href: api/com.tencent.imsdk.unity.types.GroupTopicInfo.html#com_tencent_imsdk_unity_types_GroupTopicInfo_group_topic_info_draft_text
+  commentId: F:com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_draft_text
+  fullName: com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_draft_text
+  nameWithType: GroupTopicInfo.group_topic_info_draft_text
+- uid: com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_group_at_info_array
+  name: group_topic_info_group_at_info_array
+  href: api/com.tencent.imsdk.unity.types.GroupTopicInfo.html#com_tencent_imsdk_unity_types_GroupTopicInfo_group_topic_info_group_at_info_array
+  commentId: F:com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_group_at_info_array
+  fullName: com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_group_at_info_array
+  nameWithType: GroupTopicInfo.group_topic_info_group_at_info_array
+- uid: com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_introduction
+  name: group_topic_info_introduction
+  href: api/com.tencent.imsdk.unity.types.GroupTopicInfo.html#com_tencent_imsdk_unity_types_GroupTopicInfo_group_topic_info_introduction
+  commentId: F:com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_introduction
+  fullName: com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_introduction
+  nameWithType: GroupTopicInfo.group_topic_info_introduction
+- uid: com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_is_all_muted
+  name: group_topic_info_is_all_muted
+  href: api/com.tencent.imsdk.unity.types.GroupTopicInfo.html#com_tencent_imsdk_unity_types_GroupTopicInfo_group_topic_info_is_all_muted
+  commentId: F:com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_is_all_muted
+  fullName: com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_is_all_muted
+  nameWithType: GroupTopicInfo.group_topic_info_is_all_muted
+- uid: com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_last_message
+  name: group_topic_info_last_message
+  href: api/com.tencent.imsdk.unity.types.GroupTopicInfo.html#com_tencent_imsdk_unity_types_GroupTopicInfo_group_topic_info_last_message
+  commentId: F:com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_last_message
+  fullName: com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_last_message
+  nameWithType: GroupTopicInfo.group_topic_info_last_message
+- uid: com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_notification
+  name: group_topic_info_notification
+  href: api/com.tencent.imsdk.unity.types.GroupTopicInfo.html#com_tencent_imsdk_unity_types_GroupTopicInfo_group_topic_info_notification
+  commentId: F:com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_notification
+  fullName: com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_notification
+  nameWithType: GroupTopicInfo.group_topic_info_notification
+- uid: com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_recv_opt
+  name: group_topic_info_recv_opt
+  href: api/com.tencent.imsdk.unity.types.GroupTopicInfo.html#com_tencent_imsdk_unity_types_GroupTopicInfo_group_topic_info_recv_opt
+  commentId: F:com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_recv_opt
+  fullName: com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_recv_opt
+  nameWithType: GroupTopicInfo.group_topic_info_recv_opt
+- uid: com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_self_mute_time
+  name: group_topic_info_self_mute_time
+  href: api/com.tencent.imsdk.unity.types.GroupTopicInfo.html#com_tencent_imsdk_unity_types_GroupTopicInfo_group_topic_info_self_mute_time
+  commentId: F:com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_self_mute_time
+  fullName: com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_self_mute_time
+  nameWithType: GroupTopicInfo.group_topic_info_self_mute_time
+- uid: com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_topic_face_url
+  name: group_topic_info_topic_face_url
+  href: api/com.tencent.imsdk.unity.types.GroupTopicInfo.html#com_tencent_imsdk_unity_types_GroupTopicInfo_group_topic_info_topic_face_url
+  commentId: F:com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_topic_face_url
+  fullName: com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_topic_face_url
+  nameWithType: GroupTopicInfo.group_topic_info_topic_face_url
+- uid: com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_topic_id
+  name: group_topic_info_topic_id
+  href: api/com.tencent.imsdk.unity.types.GroupTopicInfo.html#com_tencent_imsdk_unity_types_GroupTopicInfo_group_topic_info_topic_id
+  commentId: F:com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_topic_id
+  fullName: com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_topic_id
+  nameWithType: GroupTopicInfo.group_topic_info_topic_id
+- uid: com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_topic_name
+  name: group_topic_info_topic_name
+  href: api/com.tencent.imsdk.unity.types.GroupTopicInfo.html#com_tencent_imsdk_unity_types_GroupTopicInfo_group_topic_info_topic_name
+  commentId: F:com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_topic_name
+  fullName: com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_topic_name
+  nameWithType: GroupTopicInfo.group_topic_info_topic_name
+- uid: com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_unread_count
+  name: group_topic_info_unread_count
+  href: api/com.tencent.imsdk.unity.types.GroupTopicInfo.html#com_tencent_imsdk_unity_types_GroupTopicInfo_group_topic_info_unread_count
+  commentId: F:com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_unread_count
+  fullName: com.tencent.imsdk.unity.types.GroupTopicInfo.group_topic_info_unread_count
+  nameWithType: GroupTopicInfo.group_topic_info_unread_count
+- uid: com.tencent.imsdk.unity.types.GroupTopicOperationResult
+  name: GroupTopicOperationResult
+  href: api/com.tencent.imsdk.unity.types.GroupTopicOperationResult.html
+  commentId: T:com.tencent.imsdk.unity.types.GroupTopicOperationResult
+  fullName: com.tencent.imsdk.unity.types.GroupTopicOperationResult
+  nameWithType: GroupTopicOperationResult
+- uid: com.tencent.imsdk.unity.types.GroupTopicOperationResult.group_topic_operation_result_error_code
+  name: group_topic_operation_result_error_code
+  href: api/com.tencent.imsdk.unity.types.GroupTopicOperationResult.html#com_tencent_imsdk_unity_types_GroupTopicOperationResult_group_topic_operation_result_error_code
+  commentId: F:com.tencent.imsdk.unity.types.GroupTopicOperationResult.group_topic_operation_result_error_code
+  fullName: com.tencent.imsdk.unity.types.GroupTopicOperationResult.group_topic_operation_result_error_code
+  nameWithType: GroupTopicOperationResult.group_topic_operation_result_error_code
+- uid: com.tencent.imsdk.unity.types.GroupTopicOperationResult.group_topic_operation_result_error_message
+  name: group_topic_operation_result_error_message
+  href: api/com.tencent.imsdk.unity.types.GroupTopicOperationResult.html#com_tencent_imsdk_unity_types_GroupTopicOperationResult_group_topic_operation_result_error_message
+  commentId: F:com.tencent.imsdk.unity.types.GroupTopicOperationResult.group_topic_operation_result_error_message
+  fullName: com.tencent.imsdk.unity.types.GroupTopicOperationResult.group_topic_operation_result_error_message
+  nameWithType: GroupTopicOperationResult.group_topic_operation_result_error_message
+- uid: com.tencent.imsdk.unity.types.GroupTopicOperationResult.group_topic_operation_result_topic_id
+  name: group_topic_operation_result_topic_id
+  href: api/com.tencent.imsdk.unity.types.GroupTopicOperationResult.html#com_tencent_imsdk_unity_types_GroupTopicOperationResult_group_topic_operation_result_topic_id
+  commentId: F:com.tencent.imsdk.unity.types.GroupTopicOperationResult.group_topic_operation_result_topic_id
+  fullName: com.tencent.imsdk.unity.types.GroupTopicOperationResult.group_topic_operation_result_topic_id
+  nameWithType: GroupTopicOperationResult.group_topic_operation_result_topic_id
 - uid: com.tencent.imsdk.unity.types.HttpProxyInfo
   name: HttpProxyInfo
   href: api/com.tencent.imsdk.unity.types.HttpProxyInfo.html
@@ -7013,6 +7802,12 @@ references:
   commentId: F:com.tencent.imsdk.unity.types.Message.message_rand
   fullName: com.tencent.imsdk.unity.types.Message.message_rand
   nameWithType: Message.message_rand
+- uid: com.tencent.imsdk.unity.types.Message.message_receipt_peer_read
+  name: message_receipt_peer_read
+  href: api/com.tencent.imsdk.unity.types.Message.html#com_tencent_imsdk_unity_types_Message_message_receipt_peer_read
+  commentId: F:com.tencent.imsdk.unity.types.Message.message_receipt_peer_read
+  fullName: com.tencent.imsdk.unity.types.Message.message_receipt_peer_read
+  nameWithType: Message.message_receipt_peer_read
 - uid: com.tencent.imsdk.unity.types.Message.message_sender
   name: message_sender
   href: api/com.tencent.imsdk.unity.types.Message.html#com_tencent_imsdk_unity_types_Message_message_sender
@@ -7961,3 +8756,27 @@ references:
   commentId: F:com.tencent.imsdk.unity.types.UserProfileItem.user_profile_item_self_signature
   fullName: com.tencent.imsdk.unity.types.UserProfileItem.user_profile_item_self_signature
   nameWithType: UserProfileItem.user_profile_item_self_signature
+- uid: com.tencent.imsdk.unity.types.UserStatus
+  name: UserStatus
+  href: api/com.tencent.imsdk.unity.types.UserStatus.html
+  commentId: T:com.tencent.imsdk.unity.types.UserStatus
+  fullName: com.tencent.imsdk.unity.types.UserStatus
+  nameWithType: UserStatus
+- uid: com.tencent.imsdk.unity.types.UserStatus.user_status_custom_status
+  name: user_status_custom_status
+  href: api/com.tencent.imsdk.unity.types.UserStatus.html#com_tencent_imsdk_unity_types_UserStatus_user_status_custom_status
+  commentId: F:com.tencent.imsdk.unity.types.UserStatus.user_status_custom_status
+  fullName: com.tencent.imsdk.unity.types.UserStatus.user_status_custom_status
+  nameWithType: UserStatus.user_status_custom_status
+- uid: com.tencent.imsdk.unity.types.UserStatus.user_status_identifier
+  name: user_status_identifier
+  href: api/com.tencent.imsdk.unity.types.UserStatus.html#com_tencent_imsdk_unity_types_UserStatus_user_status_identifier
+  commentId: F:com.tencent.imsdk.unity.types.UserStatus.user_status_identifier
+  fullName: com.tencent.imsdk.unity.types.UserStatus.user_status_identifier
+  nameWithType: UserStatus.user_status_identifier
+- uid: com.tencent.imsdk.unity.types.UserStatus.user_status_status_type
+  name: user_status_status_type
+  href: api/com.tencent.imsdk.unity.types.UserStatus.html#com_tencent_imsdk_unity_types_UserStatus_user_status_status_type
+  commentId: F:com.tencent.imsdk.unity.types.UserStatus.user_status_status_type
+  fullName: com.tencent.imsdk.unity.types.UserStatus.user_status_status_type
+  nameWithType: UserStatus.user_status_status_type

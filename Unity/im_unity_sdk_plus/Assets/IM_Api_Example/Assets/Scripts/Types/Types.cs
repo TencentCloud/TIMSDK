@@ -25,4 +25,18 @@ namespace com.tencent.im.unity.demo.types
     public string eventText { get; set; }
     public string eventDesc { get; set; }
   }
+
+  [System.Serializable]
+  public class LanguageData
+  {
+    public string name { get; set; }
+    public string text { get; set; }
+  }
+
+  [System.Serializable]
+  public class I18nData
+  {
+    public string cn { get; set; }
+    public string en { get; set; }
+  }
 }

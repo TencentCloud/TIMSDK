@@ -6,6 +6,7 @@ using com.tencent.imsdk.unity.enums;
 using com.tencent.imsdk.unity.callback;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using com.tencent.im.unity.demo.types;
 
 namespace com.tencent.im.unity.demo.utils
 {
@@ -40,6 +41,19 @@ namespace com.tencent.im.unity.demo.utils
     };
     }
     public delegate void Callback(params string[] parameters);
+
+    public static MsgGroupMessageReadMemberListStringCallback SetMsgGroupMessageReadMemberListCallback(Callback cb)
+    {
+      var callback = cb;
+      return (string json_group_member_array, ulong next_seq, bool is_finished, string user_data) =>
+        {
+          string head = "\n" + user_data + "Asynchronous return:\n\n";
+          string body = @"{""json_group_member_array"":" + json_group_member_array + "}";
+          JObject json = JObject.Parse(body);
+          string formatted = SyntaxHighlightJson(json.ToString());
+          callback(head + formatted, json_group_member_array, next_seq.ToString(), is_finished.ToString());
+        };
+    }
 
     // EventCallback  ...
 
@@ -102,6 +116,165 @@ namespace com.tencent.im.unity.demo.utils
       JObject json = JObject.Parse(body);
       string formatted = SyntaxHighlightJson(json.ToString());
       callback(eventInfo, head + formatted, message);
+    };
+    }
+    public static GroupAttributeChangedStringCallback SetGroupAttributeChangedCallback(EventCallback cb, EventListenerInfo.EventInfo eventInfo)
+    {
+      var callback = cb;
+      return (string group_id, string group_attributes, string user_data) =>
+    {
+      string head = "\n" + user_data + "Asynchronous return:\n\n";
+      string body = @"{""group_id"":" + group_id + @"{""group_attributes"":" + (string.IsNullOrEmpty(group_attributes) ? "null" : group_attributes) + "}";
+      JObject json = JObject.Parse(body);
+      string formatted = SyntaxHighlightJson(json.ToString());
+      callback(eventInfo, head + formatted);
+    };
+    }
+    public static ConvEventStringCallback SetConvEventCallback(EventCallback cb, EventListenerInfo.EventInfo eventInfo)
+    {
+      var callback = cb;
+      return (TIMConvEvent conv_event, string conv_list, string user_data) =>
+    {
+      string head = "\n" + user_data + "Asynchronous return:\n\n";
+      string body = @"{""conv_event"":""" + conv_event + @""",""conv_list"":" + (string.IsNullOrEmpty(conv_list) ? "null" : conv_list) + "}";
+      JObject json = JObject.Parse(body);
+      string formatted = SyntaxHighlightJson(json.ToString());
+      callback(eventInfo, head + formatted);
+    };
+    }
+    public static ConvTotalUnreadMessageCountChangedCallback SetConvTotalUnreadMessageCountChangedCallback(EventCallback cb, EventListenerInfo.EventInfo eventInfo)
+    {
+      var callback = cb;
+      return (int total_unread_count, string user_data) =>
+    {
+      string head = "\n" + user_data + "Asynchronous return:\n\n";
+      string body = @"{""total_unread_count"":" + total_unread_count + "}";
+      JObject json = JObject.Parse(body);
+      string formatted = SyntaxHighlightJson(json.ToString());
+      callback(eventInfo, head + formatted);
+    };
+    }
+    public static NetworkStatusListenerCallback SetNetworkStatusListenerCallback(EventCallback cb, EventListenerInfo.EventInfo eventInfo)
+    {
+      var callback = cb;
+      return (TIMNetworkStatus status, int code, string desc, string user_data) =>
+    {
+      string head = "\n" + user_data + "Asynchronous return:\n\n";
+      string body = @"{""status"":""" + status + @""",""code"":" + code + @",""desc"":""" + desc + @"""}";
+      JObject json = JObject.Parse(body);
+      string formatted = SyntaxHighlightJson(json.ToString());
+      callback(eventInfo, head + formatted);
+    };
+    }
+    public static KickedOfflineCallback SetKickedOfflineCallback(EventCallback cb, EventListenerInfo.EventInfo eventInfo)
+    {
+      var callback = cb;
+      return (string user_data) =>
+    {
+      string head = "\n" + user_data + "Asynchronous return:\n\n";
+      callback(eventInfo, head);
+    };
+    }
+    public static UserSigExpiredCallback SetUserSigExpiredCallback(EventCallback cb, EventListenerInfo.EventInfo eventInfo)
+    {
+      var callback = cb;
+      return (string user_data) =>
+    {
+      string head = "\n" + user_data + "Asynchronous return:\n\n";
+      callback(eventInfo, head);
+    };
+    }
+    public static OnAddFriendStringCallback SetOnAddFriendCallback(EventCallback cb, EventListenerInfo.EventInfo eventInfo)
+    {
+      var callback = cb;
+      return (string userids, string user_data) =>
+    {
+      string head = "\n" + user_data + "Asynchronous return:\n\n";
+      string body = @"{""user_ids"":" + userids + "}";
+      JObject json = JObject.Parse(body);
+      string formatted = SyntaxHighlightJson(json.ToString());
+      callback(eventInfo, head + formatted);
+    };
+    }
+    public static OnDeleteFriendStringCallback SetOnDeleteFriendCallback(EventCallback cb, EventListenerInfo.EventInfo eventInfo)
+    {
+      var callback = cb;
+      return (string userids, string user_data) =>
+    {
+      string head = "\n" + user_data + "Asynchronous return:\n\n";
+      string body = @"{""user_ids"":" + userids + "}";
+      JObject json = JObject.Parse(body);
+      string formatted = SyntaxHighlightJson(json.ToString());
+      callback(eventInfo, head + formatted);
+    };
+    }
+    public static UpdateFriendProfileStringCallback SetUpdateFriendProfileCallback(EventCallback cb, EventListenerInfo.EventInfo eventInfo)
+    {
+      var callback = cb;
+      return (string friend_profile_update_array, string user_data) =>
+    {
+      string head = "\n" + user_data + "Asynchronous return:\n\n";
+      string body = @"{""friend_profile_update_array"":" + friend_profile_update_array + "}";
+      JObject json = JObject.Parse(body);
+      string formatted = SyntaxHighlightJson(json.ToString());
+      callback(eventInfo, head + formatted);
+    };
+    }
+    public static FriendAddRequestStringCallback SetFriendAddRequestCallback(EventCallback cb, EventListenerInfo.EventInfo eventInfo)
+    {
+      var callback = cb;
+      return (string friend_add_request_pendency_array, string user_data) =>
+    {
+      string head = "\n" + user_data + "Asynchronous return:\n\n";
+      string body = @"{""friend_add_request_pendency_array"":" + friend_add_request_pendency_array + "}";
+      JObject json = JObject.Parse(body);
+      string formatted = SyntaxHighlightJson(json.ToString());
+      callback(eventInfo, head + formatted);
+    };
+    }
+    public static FriendApplicationListDeletedStringCallback SetFriendApplicationListDeletedCallback(EventCallback cb, EventListenerInfo.EventInfo eventInfo)
+    {
+      var callback = cb;
+      return (string userids, string user_data) =>
+    {
+      string head = "\n" + user_data + "Asynchronous return:\n\n";
+      string body = @"{""user_ids"":" + userids + "}";
+      JObject json = JObject.Parse(body);
+      string formatted = SyntaxHighlightJson(json.ToString());
+      callback(eventInfo, head + formatted);
+    };
+    }
+    public static FriendApplicationListReadCallback SetFriendApplicationListReadCallback(EventCallback cb, EventListenerInfo.EventInfo eventInfo)
+    {
+      var callback = cb;
+      return (string user_data) =>
+    {
+      string head = "\n" + user_data + "Asynchronous return:\n\n";
+      callback(eventInfo, head);
+    };
+    }
+    public static FriendBlackListAddedStringCallback SetFriendBlackListAddedCallback(EventCallback cb, EventListenerInfo.EventInfo eventInfo)
+    {
+      var callback = cb;
+      return (string friend_black_added_array, string user_data) =>
+    {
+      string head = "\n" + user_data + "Asynchronous return:\n\n";
+      string body = @"{""friend_black_added_array"":" + friend_black_added_array + "}";
+      JObject json = JObject.Parse(body);
+      string formatted = SyntaxHighlightJson(json.ToString());
+      callback(eventInfo, head + formatted);
+    };
+    }
+    public static FriendBlackListDeletedStringCallback SetFriendBlackListDeletedCallback(EventCallback cb, EventListenerInfo.EventInfo eventInfo)
+    {
+      var callback = cb;
+      return (string userids, string user_data) =>
+    {
+      string head = "\n" + user_data + "Asynchronous return:\n\n";
+      string body = @"{""user_ids"":" + userids + "}";
+      JObject json = JObject.Parse(body);
+      string formatted = SyntaxHighlightJson(json.ToString());
+      callback(eventInfo, head + formatted);
     };
     }
     public delegate void EventCallback(EventListenerInfo.EventInfo eventInfo, params string[] parameters);
@@ -183,6 +356,72 @@ namespace com.tencent.im.unity.demo.utils
       editor.text = text;
       editor.SelectAll();
       editor.Copy();
+    }
+
+    public static bool IsCn()
+    {
+      string lang = PlayerPrefs.GetString("Language", "cn:0");
+      return lang.StartsWith("cn");
+    }
+
+    public static string t(string key)
+    {
+      string lang = PlayerPrefs.GetString("Language", "cn:0").Split(':')[0];
+      if (I18n.dict.TryGetValue(key, out I18nData i18nData))
+      {
+        switch (lang)
+        {
+          case "cn": return i18nData.cn;
+          case "en": return i18nData.en ?? key;
+          default: return i18nData.en ?? key;
+        }
+      }
+      return key;
+    }
+
+    public delegate void PickFileCallback(string path);
+
+    public static void PickImage(PickFileCallback cb)
+    {
+      NativeGallery.Permission permission = NativeGallery.GetImageFromGallery((path) =>
+      {
+        Debug.Log("Image path: " + path);
+        if (path != null)
+        {
+          cb(path);
+          // Create Texture from selected image
+          // Texture2D texture = NativeGallery.LoadImageAtPath(path, maxSize);
+        }
+      });
+
+      Debug.Log("Permission result: " + permission);
+    }
+    public static void PickVideo(PickFileCallback cb)
+    {
+      NativeGallery.Permission permission = NativeGallery.GetVideoFromGallery((path) =>
+      {
+        Debug.Log("Video path: " + path);
+        if (path != null)
+        {
+          cb(path);
+        }
+      });
+
+      Debug.Log("Permission result: " + permission);
+    }
+    public static void PickFile(PickFileCallback cb)
+    {
+      string[] allowedFileTypes = new string[] { "*" };
+      NativeFilePicker.Permission permission = NativeFilePicker.PickFile((path) =>
+      {
+        Debug.Log("File path: " + path);
+        if (path != null)
+        {
+          cb(path);
+        }
+      }, allowedFileTypes);
+
+      Debug.Log("Permission result: " + permission);
     }
   }
 }

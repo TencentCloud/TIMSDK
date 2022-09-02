@@ -50,13 +50,14 @@ public class AotTypeEnforcer : MonoBehaviour
     AotHelper.EnsureType<GroupAttributes>();
     AotHelper.EnsureType<FriendShipGetProfileListParam>();
     AotHelper.EnsureType<FriendshipAddFriendParam>();
-    AotHelper.EnsureType<FriendRespone>();
+    AotHelper.EnsureType<FriendResponse>();
     AotHelper.EnsureType<FriendshipModifyFriendProfileParam>();
     AotHelper.EnsureType<FriendProfileItem>();
     AotHelper.EnsureType<FriendProfileCustemStringInfo>();
     AotHelper.EnsureType<FriendshipDeleteFriendParam>();
     AotHelper.EnsureType<FriendshipCheckFriendTypeParam>();
     AotHelper.EnsureType<FriendGroupInfo>();
+    AotHelper.EnsureType<CreateFriendGroupInfo>();
     AotHelper.EnsureType<FriendshipModifyFriendGroupParam>();
     AotHelper.EnsureType<FriendshipGetPendencyListParam>();
     AotHelper.EnsureType<FriendshipDeletePendencyParam>();
@@ -103,6 +104,10 @@ public class AotTypeEnforcer : MonoBehaviour
     AotHelper.EnsureType<UserInfo>();
     AotHelper.EnsureType<SSODataRes>();
     AotHelper.EnsureType<GroupGetMemberInfoListResult>();
+    AotHelper.EnsureType<GroupTopicInfo>();
+    AotHelper.EnsureType<GroupInfo>();
+    AotHelper.EnsureType<GroupTopicOperationResult>();
+    AotHelper.EnsureType<UserStatus>();
 
     AotHelper.EnsureList<string>();
     AotHelper.EnsureList<ulong>();
@@ -144,13 +149,14 @@ public class AotTypeEnforcer : MonoBehaviour
     AotHelper.EnsureList<GroupAttributes>();
     AotHelper.EnsureList<FriendShipGetProfileListParam>();
     AotHelper.EnsureList<FriendshipAddFriendParam>();
-    AotHelper.EnsureList<FriendRespone>();
+    AotHelper.EnsureList<FriendResponse>();
     AotHelper.EnsureList<FriendshipModifyFriendProfileParam>();
     AotHelper.EnsureList<FriendProfileItem>();
     AotHelper.EnsureList<FriendProfileCustemStringInfo>();
     AotHelper.EnsureList<FriendshipDeleteFriendParam>();
     AotHelper.EnsureList<FriendshipCheckFriendTypeParam>();
     AotHelper.EnsureList<FriendGroupInfo>();
+    AotHelper.EnsureList<CreateFriendGroupInfo>();
     AotHelper.EnsureList<FriendshipModifyFriendGroupParam>();
     AotHelper.EnsureList<FriendshipGetPendencyListParam>();
     AotHelper.EnsureList<FriendshipDeletePendencyParam>();
@@ -197,5 +203,9 @@ public class AotTypeEnforcer : MonoBehaviour
     AotHelper.EnsureList<UserInfo>();
     AotHelper.EnsureList<SSODataRes>();
     AotHelper.EnsureList<GroupGetMemberInfoListResult>();
+    AotHelper.EnsureList<GroupTopicInfo>();
+    AotHelper.EnsureList<GroupInfo>();
+    AotHelper.EnsureList<GroupTopicOperationResult>();
+    AotHelper.EnsureList<UserStatus>();
   }
 }

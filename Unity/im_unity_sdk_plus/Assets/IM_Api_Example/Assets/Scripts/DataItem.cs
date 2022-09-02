@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using com.tencent.im.unity.demo.types;
+using com.tencent.im.unity.demo.utils;
 using UnityEngine.SceneManagement;
 
 public class DataItem : MonoBehaviour, IPointerClickHandler
@@ -27,13 +28,23 @@ public class DataItem : MonoBehaviour, IPointerClickHandler
 
   public void OnPointerClick(PointerEventData eventData)
   {
-    CurrentSceneInfo.info = item;
-    SceneManager.LoadScene(scene);
+    if (!string.IsNullOrEmpty(scene))
+    {
+      SceneManager.LoadScene(scene);
+      CurrentSceneInfo.info = item;
+    }
   }
 
   public void SetInfo(ItemData data)
   {
-    text.text = data.apiText + "   " + data.apiName;
+    if (!Utils.IsCn())
+    {
+      text.text = data.apiName;
+    }
+    else
+    {
+      text.text = data.apiText + "   " + data.apiName;
+    }
     scene = data.scene;
     item = data;
   }

@@ -4,7 +4,9 @@ using com.tencent.im.unity.demo.types;
 using com.tencent.imsdk.unity;
 using com.tencent.imsdk.unity.types;
 using com.tencent.imsdk.unity.enums;
+using System.Linq;
 using com.tencent.im.unity.demo.utils;
+using System.Collections.Generic;
 
 public class FriendshipGetFriendProfileList : MonoBehaviour
 {
@@ -12,6 +14,8 @@ public class FriendshipGetFriendProfileList : MonoBehaviour
   public Text Result;
   public Button Submit;
   public Button Copy;
+  public List<string> ResultText;
+  private string Data;
 
   void Start()
   {
@@ -20,10 +24,11 @@ public class FriendshipGetFriendProfileList : MonoBehaviour
     Submit = GameObject.Find("Submit").GetComponent<Button>();
     if (CurrentSceneInfo.info != null)
     {
-      Header.text = CurrentSceneInfo.info.apiText + " " + CurrentSceneInfo.info.apiName;
-      Submit.GetComponentInChildren<Text>().text = CurrentSceneInfo.info.apiText;
+      Header.text = Utils.IsCn() ? CurrentSceneInfo.info.apiText + " " + CurrentSceneInfo.info.apiName : CurrentSceneInfo.info.apiName;
+      Submit.GetComponentInChildren<Text>().text = CurrentSceneInfo.info.apiName;
     }
     Copy = GameObject.Find("Copy").GetComponent<Button>();
+    Copy.GetComponentInChildren<Text>().text = Utils.t("Copy");
     Submit.onClick.AddListener(FriendshipGetFriendProfileListSDK);
     Copy.onClick.AddListener(CopyText);
   }
@@ -33,14 +38,47 @@ public class FriendshipGetFriendProfileList : MonoBehaviour
     Result.text = Utils.SynchronizeResult(res);
   }
 
+  void GenerateResultText()
+  {
+    var Parent = GameObject.Find("ResultPanel");
+    foreach (Transform child in Parent.transform)
+    {
+      GameObject.Destroy(child.gameObject);
+    }
+    foreach (string resultText in ResultText)
+    {
+      var obj = Instantiate(Result, Parent.transform);
+      obj.text = resultText;
+    }
+  }
+
   void GetResult(params object[] parameters)
   {
-    Result.text += (string)parameters[0];
+    ResultText = new List<string>();
+    // ArgumentException: Mesh can not have more than 65000 vertices
+    // Deal with a single Text cannot render too many words issue
+    string CallbackData = (string)parameters[0];
+    string[] DataList = CallbackData.Split('\n');
+    int count = 0;
+    while (count < DataList.Length)
+    {
+      // Every 400 lines render a new Text
+      int end = count + 400;
+      if (end > DataList.Length)
+      {
+        end = DataList.Length;
+      }
+      string[] textList = DataList.Skip(count).Take(end - count).ToArray();
+      ResultText.Add(string.Join("\n", textList));
+      count = end;
+    }
+    Data = (string)parameters[0];
+    GenerateResultText();
   }
 
   void CopyText()
   {
-    Utils.Copy(Result.text);
+    Utils.Copy(Data);
   }
   void OnApplicationQuit()
   {
