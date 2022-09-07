@@ -5,7 +5,7 @@
 <script lang="ts">
 import { defineComponent, watchEffect, watch, reactive, toRefs, computed, nextTick } from 'vue';
 import { handleName, JSONToString, isTypingMessage } from '../../utils/utils';
-import TUIAegis from '../../../../../../utils/TUIAegis';
+import TUIAegis from '../../../../../utils/TUIAegis';
 import constant from '../../../constant';
 const TypingHeader = defineComponent({
   props: {
@@ -90,13 +90,11 @@ const TypingHeader = defineComponent({
       return conversationName?.value;
     });
 
-    const inputChange = computed(() => {
-      return {
-        inputText: data.inputText,
-        inputBlur: data.inputBlur,
-        inputCompositionCont: data.inputCompositionCont,
-      };
-    });
+    const inputChange = computed(() => ({
+      inputText: data.inputText,
+      inputBlur: data.inputBlur,
+      inputCompositionCont: data.inputCompositionCont,
+    }));
 
     watch(
       inputChange,
@@ -120,7 +118,7 @@ const TypingHeader = defineComponent({
           sendTypingMessage(data.myTypingStatus);
         }
       },
-      { deep: true }
+      { deep: true },
     );
 
     watch(conversationID, (newVal: any, oldVal: any) => {
@@ -137,7 +135,7 @@ const TypingHeader = defineComponent({
           data.otherTypingStatus = 0;
           data.lastOtherMessageTime = 0;
         }
-      }
+      },
     );
 
     watch(
@@ -159,7 +157,7 @@ const TypingHeader = defineComponent({
           }
         });
       },
-      { deep: true }
+      { deep: true },
     );
 
     const handleTypingMessageStatus = (item: any) => {
