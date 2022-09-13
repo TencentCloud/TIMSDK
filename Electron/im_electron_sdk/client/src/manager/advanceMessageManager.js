@@ -142,13 +142,14 @@ const advanceMessageManager = {
             user_data: "123"
         });
     },
-    TIMMsgGetMsgList:() => {
+    TIMMsgGetMsgList:(msg) => {
         return timRenderInstance.TIMMsgGetMsgList({
-            conv_id: "@TGS#1X2AML5H6",
+            conv_id: "@TGS#1MA5WDSOBD",
             conv_type: 2,
             params: {
-                msg_getmsglist_param_last_msg: null,
-                msg_getmsglist_param_count: 1
+                msg_getmsglist_param_last_msg: msg,
+                msg_getmsglist_param_count: 20,
+                msg_getmsglist_param_is_remble: true,
             },
             user_data: "123"
         });

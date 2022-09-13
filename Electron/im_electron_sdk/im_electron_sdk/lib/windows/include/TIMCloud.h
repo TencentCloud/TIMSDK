@@ -105,9 +105,30 @@ TIM_DECL void TIMSetGroupTipsEventCallback(TIMGroupTipsEventCallback cb, const v
 */
 TIM_DECL void TIMSetGroupAttributeChangedCallback(TIMGroupAttributeChangedCallback cb, const void* user_data);
 
+/**
+ * @brief 1.8 话题创建
+ *
+ * @param topicID 话题 ID
+ */
+TIM_DECL void TIMSetGroupTopicCreatedCallback(TIMGroupTopicCreatedCallback cb, const void* user_data);
 
 /**
-* @brief 1.8 设置会话事件回调
+ * @brief 1.9 话题被删除
+ *
+ * @param groupID 话题所属的社群 ID
+ * @param topicIDList 话题列表
+ */
+TIM_DECL void TIMSetGroupTopicDeletedCallback(TIMGroupTopicDeletedCallback cb, const void* user_data);
+
+/**
+* @brief 1.10 话题更新
+*
+* @param topicInfo 话题信息
+*/
+TIM_DECL void TIMSetGroupTopicChangedCallback(TIMGroupTopicChangedCallback cb, const void* user_data);
+
+/**
+* @brief 1.11 设置会话事件回调
 * @param cb 会话事件回调，请参考[TIMConvEventCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 *
@@ -125,7 +146,7 @@ TIM_DECL void TIMSetGroupAttributeChangedCallback(TIMGroupAttributeChangedCallba
 TIM_DECL void TIMSetConvEventCallback(TIMConvEventCallback cb, const void* user_data);
 
 /**
-* @brief 1.9 设置会话未读消息总数变更的回调
+* @brief 1.12 设置会话未读消息总数变更的回调
 * @param cb 会话未读消息总数变更的回调，请参考[TIMConvTotalUnreadMessageCountChangedCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 * 
@@ -133,7 +154,7 @@ TIM_DECL void TIMSetConvEventCallback(TIMConvEventCallback cb, const void* user_
 TIM_DECL void TIMSetConvTotalUnreadMessageCountChangedCallback(TIMConvTotalUnreadMessageCountChangedCallback cb, const void* user_data);
 
 /**
-* @brief 1.10 设置网络连接状态监听回调
+* @brief 1.13 设置网络连接状态监听回调
 * @param cb 连接事件回调，请参考[TIMNetworkStatusListenerCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 * 
@@ -146,7 +167,7 @@ TIM_DECL void TIMSetConvTotalUnreadMessageCountChangedCallback(TIMConvTotalUnrea
 TIM_DECL void TIMSetNetworkStatusListenerCallback(TIMNetworkStatusListenerCallback cb, const void* user_data);
 
 /**
-* @brief 1.11 设置被踢下线通知回调
+* @brief 1.14 设置被踢下线通知回调
 * @param cb 踢下线回调，请参考[TIMKickedOfflineCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 * 
@@ -164,7 +185,7 @@ TIM_DECL void TIMSetNetworkStatusListenerCallback(TIMNetworkStatusListenerCallba
 TIM_DECL void TIMSetKickedOfflineCallback(TIMKickedOfflineCallback cb, const void* user_data);
 
 /**
-* @brief 1.12 设置票据过期回调
+* @brief 1.15 设置票据过期回调
 * @param cb 票据过期回调，请参考[TIMUserSigExpiredCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 *
@@ -175,7 +196,26 @@ TIM_DECL void TIMSetKickedOfflineCallback(TIMKickedOfflineCallback cb, const voi
 TIM_DECL void TIMSetUserSigExpiredCallback(TIMUserSigExpiredCallback cb, const void* user_data);
 
 /**
-* @brief 1.13 设置添加好友的回调
+* @brief 1.16 当前用户的资料发生了更新
+* @param cb 当前用户的资料更新的回调，请参考[TIMSelfInfoUpdatedCallback](TIMCloudCallback.h)
+* @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
+*/
+TIM_DECL void TIMSetSelfInfoUpdatedCallback(TIMSelfInfoUpdatedCallback cb, const void* user_data);
+
+/**
+* @brief 1.17 用户状态变更通知
+* @param cb 用户状态变更的回调，请参考[TIMUserStatusChangedCallback](TIMCloudCallback.h)
+* @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
+*
+* @note 收到通知的情况：
+* 1. 订阅过的用户发生了状态变更（包括在线状态和自定义状态），会触发该回调
+* 2. 在 IM 控制台打开了好友状态通知开关，即使未主动订阅，当好友状态发生变更时，也会触发该回调
+* 3. 同一个账号多设备登录，当其中一台设备修改了自定义状态，所有设备都会收到该回调
+*/
+TIM_DECL void TIMSetUserStatusChangedCallback(TIMUserStatusChangedCallback cb, const void* user_data);
+
+/**
+* @brief 1.18 设置添加好友的回调
 * @param cb 添加好友回调，请参考[TIMOnAddFriendCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 *
@@ -185,7 +225,7 @@ TIM_DECL void TIMSetUserSigExpiredCallback(TIMUserSigExpiredCallback cb, const v
 TIM_DECL void TIMSetOnAddFriendCallback(TIMOnAddFriendCallback cb, const void* user_data);
 
 /**
-* @brief 1.14 设置删除好友的回调
+* @brief 1.19 设置删除好友的回调
 * @param cb 删除好友回调，请参考[TIMOnDeleteFriendCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 *
@@ -195,7 +235,7 @@ TIM_DECL void TIMSetOnAddFriendCallback(TIMOnAddFriendCallback cb, const void* u
 TIM_DECL void TIMSetOnDeleteFriendCallback(TIMOnDeleteFriendCallback cb, const void* user_data);
 
 /**
-* @brief 1.15 设置更新好友资料的回调
+* @brief 1.20 设置更新好友资料的回调
 * @param cb 更新好友资料回调，请参考[TIMUpdateFriendProfileCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 *
@@ -205,7 +245,7 @@ TIM_DECL void TIMSetOnDeleteFriendCallback(TIMOnDeleteFriendCallback cb, const v
 TIM_DECL void TIMSetUpdateFriendProfileCallback(TIMUpdateFriendProfileCallback cb, const void* user_data);
 
 /**
-* @brief 1.16 设置好友添加请求的回调
+* @brief 1.21 设置好友添加请求的回调
 * @param cb 好友添加请求回调，请参考[TIMFriendAddRequestCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 *
@@ -215,7 +255,7 @@ TIM_DECL void TIMSetUpdateFriendProfileCallback(TIMUpdateFriendProfileCallback c
 TIM_DECL void TIMSetFriendAddRequestCallback(TIMFriendAddRequestCallback cb, const void* user_data);
 
 /**
-* @brief 1.17 设置好友申请被删除的回调
+* @brief 1.22 设置好友申请被删除的回调
 * @param cb 好友申请删除回调，请参考[TIMFriendApplicationListDeletedCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 *
@@ -228,7 +268,7 @@ TIM_DECL void TIMSetFriendAddRequestCallback(TIMFriendAddRequestCallback cb, con
 TIM_DECL void TIMSetFriendApplicationListDeletedCallback(TIMFriendApplicationListDeletedCallback cb, const void* user_data);
 
 /**
-* @brief 1.18 设置好友申请已读的回调
+* @brief 1.23 设置好友申请已读的回调
 * @param cb 好友申请已读回调，请参考[TIMFriendApplicationListReadCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 *
@@ -238,7 +278,7 @@ TIM_DECL void TIMSetFriendApplicationListDeletedCallback(TIMFriendApplicationLis
 TIM_DECL void TIMSetFriendApplicationListReadCallback(TIMFriendApplicationListReadCallback cb, const void* user_data);
 
 /**
-* @brief 1.19 设置黑名单新增的回调
+* @brief 1.24 设置黑名单新增的回调
 * @param cb 黑名单新增的回调，请参考[TIMFriendBlackListAddedCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 *
@@ -246,7 +286,7 @@ TIM_DECL void TIMSetFriendApplicationListReadCallback(TIMFriendApplicationListRe
 TIM_DECL void TIMSetFriendBlackListAddedCallback(TIMFriendBlackListAddedCallback cb, const void* user_data);
 
 /**
-* @brief  1.20 设置黑名单删除的回调
+* @brief  1.25 设置黑名单删除的回调
 * @param cb 黑名单删除的回调，请参考[TIMFriendBlackListDeletedCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 *
@@ -254,7 +294,7 @@ TIM_DECL void TIMSetFriendBlackListAddedCallback(TIMFriendBlackListAddedCallback
 TIM_DECL void TIMSetFriendBlackListDeletedCallback(TIMFriendBlackListDeletedCallback cb, const void* user_data);
 
 /**
-* @brief 1.21 设置日志回调
+* @brief 1.26 设置日志回调
 * @param cb 日志回调，请参考[TIMLogCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 *
@@ -265,7 +305,7 @@ TIM_DECL void TIMSetFriendBlackListDeletedCallback(TIMFriendBlackListDeletedCall
 TIM_DECL void TIMSetLogCallback(TIMLogCallback cb, const void* user_data);
 
 /**
-* @brief 1.22 设置消息在云端被修改后回传回来的消息更新通知回调
+* @brief 1.27 设置消息更新的回调
 * @param cb 消息更新回调，请参考[TIMMsgUpdateCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 * 
@@ -881,7 +921,44 @@ TIM_DECL int TIMMsgMarkAllMessageAsRead(TIMCommCallback cb, const void* user_dat
 TIM_DECL int TIMMsgRevoke(const char* conv_id, enum TIMConvType conv_type, const char* json_msg_param, TIMCommCallback cb, const void* user_data);
 
 /**
-* @brief 5.7 根据消息定位精准查找指定会话的消息
+ * @brief 5.7 消息变更
+ * @param json_msg_param  消息json字符串
+ * @param cb 修改消息内容成功与否的回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)
+ * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
+ * @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
+ *
+ * @example
+ * Json::Value json_value_text;
+ * json_value_text[kTIMElemType] = kTIMElem_Text;
+ * json_value_text[kTIMTextElemContent] = "send text";
+ * Json::Value json_value_msg;
+ * json_value_msg[kTIMMsgElemArray].append(json_value_text);
+ *
+ * int ret = TIMMsgSendNewMsg("test_win_03", kTIMConv_C2C, json_value_msg.toStyledString().c_str(), [](int32_t code, const char* desc, const char* json_param, const void* user_data) {
+ *     if (ERR_SUCC != code) {
+ *         // 消息发送失败
+ *         return;
+ *     }
+ *     // 消息发送成功 json_param 返回发送后的消息json字符串
+ *     TIMMsgRevoke(json_param, [](int32_t code, const char* desc, const char* json_param, const void* user_data) {
+ *         if (ERR_SUCC != code) {
+ *             // 修改消息内容失败
+ *             return;
+ *         }
+ *         // 修改消息内容成功
+ *
+ *     }, user_data);
+ * }, this);
+ *
+ * @note
+ *  - 如果消息修改成功，自己和对端用户（C2C）或群组成员（Group）都会收到 TIMMsgMessageModifiedCallback 回调。
+ *  - 如果在修改消息过程中，消息已经被其他人修改，cb 会返回 ERR_SDK_MSG_MODIFY_CONFLICT 错误。
+ *  - 消息无论修改成功或则失败，cb 都会返回最新的消息对象。
+ */
+TIM_DECL int TIMMsgModifyMessage(const char* json_msg_param, TIMCommCallback cb, const void* user_data);
+
+/**
+* @brief 5.8 根据消息定位精准查找指定会话的消息
 *
 * @param conv_id   会话的ID
 * @param conv_type 会话类型，请参考[TIMConvType](TIMCloudDef.h)
@@ -921,7 +998,7 @@ TIM_DECL int TIMMsgRevoke(const char* conv_id, enum TIMConvType conv_type, const
 TIM_DECL int TIMMsgFindByMsgLocatorList(const char* conv_id, enum TIMConvType conv_type, const char* json_msg_Locator_array, TIMCommCallback cb, const void* user_data);
 
 /**
-* @brief 5.8 导入消息列表到指定会话
+* @brief 5.9 导入消息列表到指定会话
 *
 * @param conv_id   会话的ID
 * @param conv_type 会话类型，请参考[TIMConvType](TIMCloudDef.h)
@@ -969,7 +1046,7 @@ TIM_DECL int TIMMsgFindByMsgLocatorList(const char* conv_id, enum TIMConvType co
 TIM_DECL int TIMMsgImportMsgList(const char* conv_id, enum TIMConvType conv_type, const char* json_msg_array, TIMCommCallback cb, const void* user_data);
 
 /**
-* @brief 5.9 保存自定义消息
+* @brief 5.10 保存自定义消息
 *
 * @param conv_id   会话的ID
 * @param conv_type 会话类型，请参考[TIMConvType](TIMCloudDef.h)
@@ -984,7 +1061,7 @@ TIM_DECL int TIMMsgImportMsgList(const char* conv_id, enum TIMConvType conv_type
 TIM_DECL int TIMMsgSaveMsg(const char* conv_id, enum TIMConvType conv_type, const char* json_msg_param, TIMCommCallback cb, const void* user_data);
 
 /**
-* @brief 5.10 获取指定会话的消息列表
+* @brief 5.11 获取指定会话的消息列表
 *
 * @param conv_id   会话的ID
 * @param conv_type 会话类型，请参考[TIMConvType](TIMCloudDef.h)
@@ -1032,7 +1109,7 @@ TIM_DECL int TIMMsgSaveMsg(const char* conv_id, enum TIMConvType conv_type, cons
 TIM_DECL int TIMMsgGetMsgList(const char* conv_id, enum TIMConvType conv_type, const char* json_get_msg_param, TIMCommCallback cb, const void* user_data);
 
 /**
-* @brief 5.11 删除指定会话的消息
+* @brief 5.12 删除指定会话的消息
 *
 * @param conv_id   会话的ID
 * @param conv_type 会话类型，请参考[TIMConvType](TIMCloudDef.h)
@@ -1059,7 +1136,7 @@ TIM_DECL int TIMMsgGetMsgList(const char* conv_id, enum TIMConvType conv_type, c
 TIM_DECL int TIMMsgDelete(const char* conv_id, enum TIMConvType conv_type, const char* json_msgdel_param, TIMCommCallback cb, const void* user_data);
 
 /**
-* @brief 5.12 删除指定会话的本地及漫游消息列表
+* @brief 5.13 删除指定会话的本地及漫游消息列表
 *
 * @param conv_id   会话的ID
 * @param conv_type 会话类型，请参考[TIMConvType](TIMCloudDef.h)
@@ -1111,7 +1188,7 @@ TIM_DECL int TIMMsgDelete(const char* conv_id, enum TIMConvType conv_type, const
 TIM_DECL int TIMMsgListDelete(const char* conv_id, enum TIMConvType conv_type, const char* json_msg_array, TIMCommCallback cb, const void* user_data);
 
 /**
-* @brief 5.13 清空指定会话的消息
+* @brief 5.14 清空指定会话的消息
 *
 * @param conv_id 会话的ID
 * @param conv_type 会话类型，请参考[TIMConvType](TIMCloudDef.h)
@@ -1128,7 +1205,7 @@ TIM_DECL int TIMMsgListDelete(const char* conv_id, enum TIMConvType conv_type, c
 TIM_DECL int TIMMsgClearHistoryMessage(const char* conv_id, enum TIMConvType conv_type, TIMCommCallback cb, const void* user_data);
 
 /**
-* @brief 5.14 设置针对某个用户的 C2C 消息接收选项（支持批量设置）
+* @brief 5.15 设置针对某个用户的 C2C 消息接收选项（支持批量设置）
 *
 * @param json_identifier_array 用户 ID 列表
 * @param opt 消息接收选项，请参考[TIMReceiveMessageOpt](TIMCloudDef.h)
@@ -1152,7 +1229,7 @@ TIM_DECL int TIMMsgClearHistoryMessage(const char* conv_id, enum TIMConvType con
 TIM_DECL int TIMMsgSetC2CReceiveMessageOpt(const char* json_identifier_array, TIMReceiveMessageOpt opt, TIMCommCallback cb, const void* user_data);
 
 /**
-* @brief 5.15 查询针对某个用户的 C2C 消息接收选项
+* @brief 5.16 查询针对某个用户的 C2C 消息接收选项
 *
 * @param json_identifier_array 用户 ID 列表
 * @param cb 查询结果的回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)
@@ -1184,7 +1261,7 @@ TIM_DECL int TIMMsgSetC2CReceiveMessageOpt(const char* json_identifier_array, TI
 TIM_DECL int TIMMsgGetC2CReceiveMessageOpt(const char* json_identifier_array, TIMCommCallback cb, const void* user_data);
 
 /**
-* @brief 5.16 设置群消息的接收选项
+* @brief 5.17 设置群消息的接收选项
 *
 * @param group_id 群 ID
 * @param opt 消息接收选项，请参考[TIMReceiveMessageOpt](TIMCloudDef.h)
@@ -1203,7 +1280,7 @@ TIM_DECL int TIMMsgGetC2CReceiveMessageOpt(const char* json_identifier_array, TI
 TIM_DECL int TIMMsgSetGroupReceiveMessageOpt(const char* group_id, TIMReceiveMessageOpt opt, TIMCommCallback cb, const void* user_data);
 
 /**
-* @brief 5.17 下载消息内元素到指定文件路径(图片、视频、音频、文件)
+* @brief 5.18 下载消息内元素到指定文件路径(图片、视频、音频、文件)
 *
 * @param json_download_elem_param  下载的参数Json字符串
 * @param path 下载文件保存路径
@@ -1230,7 +1307,7 @@ TIM_DECL int TIMMsgSetGroupReceiveMessageOpt(const char* group_id, TIMReceiveMes
 TIM_DECL int TIMMsgDownloadElemToPath(const char* json_download_elem_param, const char* path, TIMCommCallback cb, const void* user_data);
 
 /**
-* @brief 5.18 下载合并消息
+* @brief 5.19 下载合并消息
 *
 * @param json_single_msg  单条消息的 JSON 字符串，接收消息、查找消息或查询历史消息时获取到的消息
 * @param cb 下载成功与否的回调以及下载进度回调。回调函数定义和参数解析请参考 [TIMCommCallback](TIMCloudCallback.h)
@@ -1247,7 +1324,7 @@ TIM_DECL int TIMMsgDownloadElemToPath(const char* json_download_elem_param, cons
 TIM_DECL int TIMMsgDownloadMergerMessage(const char* json_single_msg, TIMCommCallback cb, const void* user_data);
 
 /**
-* @brief 5.19 群发消息，该接口不支持向群组发送消息。
+* @brief 5.20 群发消息，该接口不支持向群组发送消息。
 *
 * @param json_batch_send_param  群发消息json字符串
 * @param cb 群发消息成功与否的回调。回调函数定义和参数解析请参考 [TIMCommCallback](TIMCloudCallback.h)
@@ -1299,7 +1376,7 @@ TIM_DECL int TIMMsgDownloadMergerMessage(const char* json_single_msg, TIMCommCal
 TIM_DECL int TIMMsgBatchSend(const char* json_batch_send_param, TIMCommCallback cb, const void* user_data);
 
 /**
-* @brief 5.20 搜索本地消息（5.4.666 及以上版本支持，需要您购买旗舰版套餐）
+* @brief 5.21 搜索本地消息（5.4.666 及以上版本支持，需要您购买旗舰版套餐）
 *
 * @param json_search_message_param 消息搜索参数
 * @param cb 搜索成功与否的回调。回调函数定义和参数解析请参考 [TIMCommCallback](TIMCloudCallback.h)
@@ -1333,7 +1410,7 @@ TIM_DECL int TIMMsgBatchSend(const char* json_batch_send_param, TIMCommCallback 
 TIM_DECL int TIMMsgSearchLocalMessages(const char* json_search_message_param, TIMCommCallback cb, const void* user_data);
 
 /**
-* @brief 5.21 设置消息自定义数据（本地保存，不会发送到对端，程序卸载重装后失效）
+* @brief 5.22 设置消息自定义数据（本地保存，不会发送到对端，程序卸载重装后失效）
 * 
 * @param json_msg_param  消息json字符串
 * @param cb 保存自定义消息成功与否的回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)
@@ -1363,7 +1440,7 @@ TIM_DECL int TIMMsgSearchLocalMessages(const char* json_search_message_param, TI
 TIM_DECL int TIMMsgSetLocalCustomData(const char* json_msg_param, TIMCommCallback cb, const void* user_data);
 
 /**
-* @brief 5.22 发送消息已读回执 （6.1 及其以上版本支持）
+* @brief 5.23 发送消息已读回执 （6.1 及其以上版本支持）
 *
 * @param json_msg_array  消息列表
 * @param cb 成功与否的回调。回调函数定义和参数解析请参考 [TIMCommCallback](TIMCloudCallback.h)
@@ -1375,14 +1452,12 @@ TIM_DECL int TIMMsgSetLocalCustomData(const char* json_msg_param, TIMCommCallbac
 * }, this);
 *
 * @note 请注意：
-* - 该接口暂时只支持 Group 消息。
-* - messageList 里的消息必须在同一个 Group 会话中。
-* - 该接口调用成功后，会话未读数不会变化，消息发送者会收到 onRecvMessageReadReceipts 回调，回调里面会携带消息的最新已读信息。
+* - 该接口调用成功后，会话未读数不会变化，消息发送者会收到 TIMMsgReadedReceiptCallback 回调，回调里面会携带消息的最新已读信息。
 */
 TIM_DECL int TIMMsgSendMessageReadReceipts(const char* json_msg_array, TIMCommCallback cb, const void* user_data);
 
 /**
-* @brief 5.23 获取消息已读回执（6.1 及其以上版本支持）
+* @brief 5.24 获取消息已读回执（6.1 及其以上版本支持）
 *
 * @param json_msg_array  消息列表
 * @param cb 成功与否的回调。回调函数定义和参数解析请参考 [TIMCommCallback](TIMCloudCallback.h)
@@ -1410,13 +1485,12 @@ TIM_DECL int TIMMsgSendMessageReadReceipts(const char* json_msg_array, TIMCommCa
 *
 *
 * @note 请注意：
-* - 该接口暂时只支持 Group 消息。
-* - messageList 里的消息必须在同一个 Group 会话中。
+* - messageList 里的消息必须在同一个会话中。
 */
 TIM_DECL int TIMMsgGetMessageReadReceipts(const char* json_msg_array, TIMCommCallback cb, const void* user_data);
 
 /**
-* @brief 5.24 获取群消息已读群成员列表（6.1 及其以上版本支持）
+* @brief 5.25 获取群消息已读群成员列表（6.1 及其以上版本支持）
 *
 * @param json_msg 单条群消息
 * @param filter 指定拉取已读或未读群成员列表。
@@ -1452,15 +1526,15 @@ TIM_DECL int TIMMsgGetMessageReadReceipts(const char* json_msg_array, TIMCommCal
 TIM_DECL int TIMMsgGetGroupMessageReadMemberList(const char* json_msg, TIMGroupMessageReadMembersFilter filter, uint64_t next_seq, uint32_t count, TIMMsgGroupMessageReadMemberListCallback cb, const void* user_data);
 
 /*
- * @brief 5.25 设置离线推送配置信息（iOS 和 Android 平台专用）
+ * @brief 5.26 设置离线推送配置信息（iOS 和 Android 平台专用）
  *
- * @param json_token  离线推送配置
+ * @param json_token 离线推送配置，注意 kTIMOfflinePushTokenToken 字段要填写为设备 Token 的 hex 字符串（即 base16 编码）。
  * @param cb 成功与否的回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)
  * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
  * @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
  * @example
  *   Json::Value json_parameters;
- *   json_parameters[kTIMOfflinePushTokenToken] = "xxxxx";
+ *   json_parameters[kTIMOfflinePushTokenToken] = "token base16 string";
  *   json_parameters[kTIMOfflinePushTokenBusinessID] = 1234578;
  *   json_parameters[kTIMOfflinePushTokenIsTPNSToken] = false;
  *   TIMMsgSetOfflinePushToken(json_parameters.toStyledString().c_str(),
@@ -1474,7 +1548,7 @@ TIM_DECL int TIMMsgGetGroupMessageReadMemberList(const char* json_msg, TIMGroupM
 TIM_DECL int TIMMsgSetOfflinePushToken(const char *json_token, TIMCommCallback cb, const void* user_data);
 
 /**
- * @brief 5.26 APP 检测到应用退后台时可以调用此接口，可以用作桌面应用角标的初始化未读数量（iOS 和 Android 平台专用）。
+ * @brief 5.27 APP 检测到应用退后台时可以调用此接口，可以用作桌面应用角标的初始化未读数量（iOS 和 Android 平台专用）。
  *
  * @param unread_count 未读数量
  * @param cb 成功与否的回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)
@@ -1486,7 +1560,7 @@ TIM_DECL int TIMMsgSetOfflinePushToken(const char *json_token, TIMCommCallback c
 TIM_DECL int TIMMsgDoBackground(uint32_t unread_count, TIMCommCallback cb, const void* user_data);
 
 /**
- * @brief 5.27 APP 检测到应用进前台时可以调用此接口（iOS 和 Android 平台专用）。
+ * @brief 5.28 APP 检测到应用进前台时可以调用此接口（iOS 和 Android 平台专用）。
  *
  * @param cb 成功与否的回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)
  * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
@@ -1995,7 +2069,7 @@ TIM_DECL int TIMGroupGetOnlineMemberCount(const char* group_id, TIMCommCallback 
 /**
 * @brief 6.16 搜索群资料（5.4.666 及以上版本支持，需要您购买旗舰版套餐）
 *
-* @param json_group_search_groups_param  群列表的参数 array ，具体参考 [GroupSearchParam](TIMCloudCallback.h)
+* @param json_group_search_groups_param  群列表的参数 array ，具体参考 [GroupSearchParam](TIMCloudDef.h)
 * @param cb 搜索群列表回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 * @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
@@ -2057,7 +2131,7 @@ TIM_DECL int TIMGroupSearchGroups(const char *json_group_search_groups_param, TI
 /**
 * @brief 6.17 搜索群成员（5.4.666 及以上版本支持，需要您购买旗舰版套餐）
 *
-* @param json_group_search_group_members_param 群成员列表的参数 array ，具体参考 [GroupMemberSearchParam](TIMCloudCallback.h)
+* @param json_group_search_group_members_param 群成员列表的参数 array ，具体参考 [GroupMemberSearchParam](TIMCloudDef.h)
 * @param cb 搜索群成员列表的回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 * @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
@@ -2109,7 +2183,7 @@ TIM_DECL int TIMGroupSearchGroupMembers(const char *json_group_search_group_memb
 * @brief 6.18 初始化群属性，会清空原有的群属性列表
 *
 * @param group_id  群 ID
-* @param json_group_atrributes array [GroupAttributes] 群属性列表的参数，具体参考 [GroupAttributes] (TIMCloudCallback.h)
+* @param json_group_atrributes array [GroupAttributes] 群属性列表的参数，具体参考 [GroupAttributes] (TIMCloudDef.h)
 * @param cb  初始化群属性的回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 * @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
@@ -2133,7 +2207,7 @@ TIM_DECL int TIMGroupInitGroupAttributes(const char *group_id, const char *json_
 * @brief 6.19 设置群属性，已有该群属性则更新其 value 值，没有该群属性则添加该群属性
 *
 * @param group_id 群 ID
-* @param json_group_atrributes array [GroupAttributes] 群属性列表的参数，具体请参考 [GroupAttributes] (TIMCloudCallback.h)
+* @param json_group_atrributes array [GroupAttributes] 群属性列表的参数，具体请参考 [GroupAttributes] (TIMCloudDef.h)
 * @param cb 设置群属性的回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 * @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
@@ -2197,6 +2271,115 @@ TIM_DECL int TIMGroupDeleteGroupAttributes(const char *group_id, const char *jso
 *   }]
 */
 TIM_DECL int TIMGroupGetGroupAttributes(const char *group_id, const char *json_keys, TIMCommCallback cb, const void* user_data);
+
+/**
+* @brief  6.22 获取当前用户已经加入的支持话题的社群列表
+*
+* @param cb 获取社群列表的回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)
+* @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
+* @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
+* 
+* @example
+*   TIMGroupGetJoinedCommunityList([](int32_t code, const char* desc, const char* json_param, const void* user_data) {
+*       printf("TIMGroupGetJoinedCommunityList code:%d|desc:%s|json_param %s\r\n", code, desc, json_param);
+*   }, nullptr);
+*
+*/
+TIM_DECL int TIMGroupGetJoinedCommunityList(TIMCommCallback cb, const void* user_data);
+
+/**
+* @brief  6.23 创建话题
+*
+* @param group_id 群 ID
+* @param json_topic_info 话题信息，具体参考 [TIMGroupTopicInfo] (TIMCloudDef.h)
+* @param cb 创建话题的回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)
+* @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
+* @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
+* 
+* @example
+*   const std::string group_id = GetCommunityID();
+*
+*   json::Object topic_info;
+*   topic_info[kTIMGroupTopicInfoTopicID] = GetTopicID();
+*   topic_info[kTIMGroupTopicInfoTopicName] = "topic name";
+*
+*   TIMGroupCreateTopicInCommunity(group_id.c_str(), json::Serialize(topic_info).c_str(), [](int32_t code, const char* desc, const char* json_param, const void* user_data) {
+*       printf("TIMGroupCreateTopicInCommunity code:%d|desc:%s|json_param %s\r\n", code, desc, json_param);
+*   }, nullptr);
+*
+*/
+TIM_DECL int TIMGroupCreateTopicInCommunity(const char *group_id, const char *json_topic_info, TIMCommCallback cb, const void* user_data);
+
+/**
+* @brief  6.24 删除话题
+*
+* @param group_id 群 ID
+* @param json_topic_id_array 话题 ID 列表
+* @param cb 删除话题的回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)
+* @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
+* @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
+* 
+* @example
+*   const std::string group_id = GetCommunityID();
+*
+*   json::Array json_array;
+*   json_array.push_back("id1");
+*   json_array.push_back("id2");
+*
+*   TIMGroupDeleteTopicFromCommunity(group_id.c_str(), json::Serialize(json_array).c_str(), [](int32_t code, const char* desc, const char* json_param, const void* user_data) {
+*       printf("TIMGroupDeleteTopicFromCommunity code:%d|desc:%s|json_param %s\r\n", code, desc, json_param);
+*   }, nullptr);
+*
+*/
+TIM_DECL int TIMGroupDeleteTopicFromCommunity(const char *group_id, const char *json_topic_id_array, TIMCommCallback cb, const void* user_data);
+
+/**
+* @brief  6.25 修改话题信息
+*
+* @param json_topic_info 话题信息，具体参考 [TIMGroupTopicInfo] (TIMCloudDef.h)
+* @param cb 修改话题信息的回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)
+* @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
+* @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
+* 
+* @example
+*   json::Object topic_info;
+*   topic_info[kTIMGroupTopicInfoTopicID] = GetTopicID();
+*   topic_info[kTIMGroupTopicInfoTopicName] = "topic name";
+*   topic_info[kTIMGroupTopicInfoNotification] = "topic notification";
+*   topic_info[kTIMGroupTopicInfoModifyFlag] = kTIMGroupModifyInfoFlag_Name |
+*       kTIMGroupModifyInfoFlag_Notification;
+*
+*   TIMGroupSetTopicInfo(json::Serialize(topic_info).c_str(), [](int32_t code, const char* desc, const char* json_param, const void* user_data) {
+*       printf("TIMGroupSetTopicInfo code:%d|desc:%s|json_param %s\r\n", code, desc, json_param);
+*   }, nullptr);
+*
+*/
+TIM_DECL int TIMGroupSetTopicInfo(const char *json_topic_info, TIMCommCallback cb, const void* user_data);
+
+/**
+* @brief  6.26 获取话题列表
+*
+* @param group_id 群 ID
+* @param json_topic_id_array 话题 ID 列表
+* @param cb 删除话题的回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)
+* @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
+* @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
+* 
+* @example
+*   const std::string group_id = GetCommunityID();
+*
+*   json::Array json_array;
+*   json_array.push_back("id1");
+*   json_array.push_back("id2");
+*
+*   TIMGroupGetTopicInfoList(group_id.c_str(), json::Serialize(json_array).c_str(), [](int32_t code, const char* desc, const char* json_param, const void* user_data) {
+*       printf("TIMGroupGetTopicInfoList code:%d|desc:%s|json_param %s\r\n", code, desc, json_param);
+*   }, nullptr);
+*
+* @note: json_topic_id_array 传空时，获取此社群下的所有话题列表
+*
+*/
+TIM_DECL int TIMGroupGetTopicInfoList(const char *group_id, const char *json_topic_id_array, TIMCommCallback cb, const void* user_data);
 
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -2262,7 +2445,91 @@ TIM_DECL int TIMProfileGetUserProfileList(const char* json_get_user_profile_list
 * 修改自己的资料时，目前支持修改的字段请参考[UserProfileItem](TIMCloudDef.h)，一次可更新多个字段。修改自定义字段时填入的key值可以添加 Tag_Profile_Custom_ 前缀，也可以不添加 Tag_Profile_Custom_ 前缀，当不添加时，SDK内部会自动添加该前缀。
 */
 TIM_DECL int TIMProfileModifySelfUserProfile(const char* json_modify_self_user_profile_param, TIMCommCallback cb, const void* user_data);
-/// @}
+
+/**
+* @brief 7.3 查询用户状态，从 6.3 版本开始支持
+*
+* @param json_identifier_array 用户 ID 列表
+* @param cb 查询用户状态成功与否的回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)
+* @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
+* @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
+*
+* @example
+* json::Array json_array;
+* json_array.push_back("user1");
+* json_array.push_back("user2");
+* TIMGetUserStatus(json::Serialize(json_array).c_str(), [](int32_t code, const char* desc, const char* json_param, const void* user_data) {
+*     Printf("TIMGetUserStatus code:%d|desc:%s|json_param %s\r\n", code, desc, json_param);
+* }, nullptr);
+*
+*  @note 请注意：
+*  - 如果您想查询自己的自定义状态，您只需要传入自己的 userID 即可
+*/
+TIM_DECL int TIMGetUserStatus(const char *json_identifier_array, TIMCommCallback cb, const void* user_data);
+
+/**
+* @brief 7.4 设置自己的状态，从 6.3 版本开始支持
+*
+* @param json_current_user_status 待设置的自定义状态
+* @param cb 设置自己的状态成功与否的回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)
+* @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
+* @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
+*
+* @example
+* json::Object json_current_user_status;
+* json_current_user_status[kTIMUserStatusCustomStatus] = "custom status";
+* TIMSetSelfStatus(json::Serialize(json_current_user_status).c_str(), [](int32_t code, const char* desc, const char* json_param, const void* user_data) {
+*     Printf("TIMSetSelfStatus code:%d|desc:%s|json_param %s\r\n", code, desc, json_param);
+* }, nullptr);
+*
+*  @note 请注意，该接口只支持设置自己的自定义状态，即 V2TIMUserStatus.customStatus
+*/
+TIM_DECL int TIMSetSelfStatus(const char *json_current_user_status, TIMCommCallback cb, const void* user_data);
+
+/**
+* @brief 7.5 订阅用户状态，从 6.3 版本开始支持
+*
+* @param json_identifier_array 待订阅的用户 ID
+* @param cb 订阅用户状态成功与否的回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)
+* @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
+* @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
+*
+* @example
+* json::Array json_array;
+* json_array.push_back("user1");
+* json_array.push_back("user2");
+* TIMSubscribeUserStatus(json::Serialize(json_array).c_str(), [](int32_t code, const char* desc, const char* json_param, const void* user_data) {
+*     Printf("TIMSubscribeUserStatus code:%d|desc:%s|json_param %s\r\n", code, desc, json_param);
+* }, nullptr);
+*
+*  @note 请注意：
+ * - 当成功订阅用户状态后，当对方的状态（包含在线状态、自定义状态）发生变更后，您可以监听 TIMSetUserStatusChangedCallback 回调来感知
+ * - 如果您需要订阅好友列表的状态，您只需要在控制台上打开开关即可，无需调用该接口
+ * - 该接口不支持订阅自己，您可以通过监听 TIMSetUserStatusChangedCallback 回调来感知自身的自定义状态的变更
+ * - 订阅列表有个数限制，超过限制后，会自动淘汰最先订阅的用户
+*/
+TIM_DECL int TIMSubscribeUserStatus(const char *json_identifier_array, TIMCommCallback cb, const void* user_data);
+
+/**
+* @brief 7.6 取消订阅用户状态，从 6.3 版本开始支持
+*
+* @param json_identifier_array 待订阅的用户 ID
+* @param cb 订阅用户状态成功与否的回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)
+* @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
+* @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
+*
+* @example
+* json::Array json_array;
+* json_array.push_back("user1");
+* json_array.push_back("user2");
+* TIMUnsubscribeUserStatus(json::Serialize(json_array).c_str(), [](int32_t code, const char* desc, const char* json_param, const void* user_data) {
+*     Printf("TIMUnsubscribeUserStatus code:%d|desc:%s|json_param %s\r\n", code, desc, json_param);
+* }, nullptr);
+*
+*  @note 请注意：
+ * - 当 userIDList 为空或者 nil 时，取消当前所有的订阅
+*/
+TIM_DECL int TIMUnsubscribeUserStatus(const char *json_identifier_array, TIMCommCallback cb, const void* user_data);
 
 /////////////////////////////////////////////////////////////////////////////////
 //

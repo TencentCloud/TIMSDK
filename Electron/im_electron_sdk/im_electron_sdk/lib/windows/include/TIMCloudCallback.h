@@ -274,6 +274,46 @@ typedef void (*TIMMsgGroupMessageReadMemberListCallback)(const char* json_group_
 typedef void (*TIMMsgRevokeCallback)(const char* json_msg_locator_array, const void* user_data);
 
 /**
+* @brief 消息内容被修改的回调
+*
+* @param json_msg 消息
+* @param user_data ImSDK负责透传的用户自定义数据，未做任何处理
+* 
+* @example
+* void MessageModifiedCallback(const char* json_msg, const void* user_data) {
+*     Json::Value json_value_msg;
+*     Json::Reader reader;
+*     if (!reader.parse(json_msg, json_value_msg)) {
+*         // Json 解析失败
+*         return;
+*     }
+*     Json::Value& elems = json_value_msg[kTIMMsgElemArray];
+*     if (index >= elems.size()) {
+*         // index 超过消息元素个数范围
+*         return;
+*     }
+*     uint32_t elem_type = elems[index][kTIMElemType].asUInt();
+*     if (kTIMElem_File ==  elem_type) {
+* 
+*     }
+*     else if (kTIMElem_Sound == elem_type) {
+* 
+*     }
+*     else if (kTIMElem_Video == elem_type) {
+*
+*     }
+*     else if (kTIMElem_Image == elem_type) {
+*
+*     }
+*     else {
+*         // 其他类型元素
+*     }
+* }
+* 
+*/
+typedef void (*TIMMsgMessageModifiedCallback)(const char* json_msg, const void* user_data);
+
+/**
 * @brief 消息内元素相关文件上传进度回调
 *
 * @param json_msg 新消息
@@ -341,6 +381,27 @@ typedef void (*TIMGroupTipsEventCallback)(const char* json_group_tip, const void
 */
 typedef void (*TIMGroupAttributeChangedCallback)(const char *group_id, const char* json_group_attibute_array, const void* user_data);
 
+/**
+* 话题创建的回调
+*
+* @param topicID 话题 ID
+*/
+typedef void (*TIMGroupTopicCreatedCallback)(const char *group_id, const char *topic_id, const void* user_data);
+
+/**
+* 话题被删除的回调
+*
+* @param groupID 话题所属的社群 ID
+* @param topicIDList 话题列表
+*/
+typedef void (*TIMGroupTopicDeletedCallback)(const char *group_id, const char *topic_id_array, const void* user_data);
+
+/**
+* 话题更新的回调
+*
+* @param topicInfo 话题信息，参见 TIMGroupTopicInfo 类型
+*/
+typedef void (*TIMGroupTopicChangedCallback)(const char *group_id, const char *topic_info, const void* user_data);
 
 /**
 * @brief 会话事件回调
@@ -484,6 +545,22 @@ typedef void (*TIMKickedOfflineCallback)(const void* user_data);
 * @param user_data ImSDK负责透传的用户自定义数据，未做任何处理
 */
 typedef void (*TIMUserSigExpiredCallback)(const void* user_data);
+
+/**
+* @brief 当前用户的资料更新的回调
+*
+* @param json_user_profile 当前用户的资料，请参考[TIMUserStatus](TIMCloudDef.h)
+* @param user_data ImSDK负责透传的用户自定义数据，未做任何处理
+*/
+typedef void (*TIMSelfInfoUpdatedCallback)(const char* json_user_profile, const void* user_data);
+
+/**
+* @brief 用户状态变更的回调
+*
+* @param json_user_profile 用户状态的列表，请参考[TIMUserStatus](TIMCloudDef.h)
+* @param user_data ImSDK负责透传的用户自定义数据，未做任何处理
+*/
+typedef void (*TIMUserStatusChangedCallback)(const char* json_user_status_array, const void* user_data);
 
 /**
 * @brief 添加好友的回调

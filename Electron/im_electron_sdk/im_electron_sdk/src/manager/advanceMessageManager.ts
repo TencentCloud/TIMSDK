@@ -769,102 +769,102 @@ class AdvanceMessageManage {
         const c_user_data = this.stringFormator(user_data);
 
         log.info(`获取消息列表参数:${user_data},${conv_id}`);
-        if (params.msg_getmsglist_param_last_msg) {
-            return this.TIMMsgFindMessages({
-                json_message_id_array: [params.msg_getmsglist_param_last_msg],
-                user_data: user_data,
-            }).then(res => {
-                return new Promise((resolve, reject) => {
-                    const now = `${Date.now()}${randomString()}`;
-                    const json_msg_param_array = res.json_params;
-                    params.msg_getmsglist_param_last_msg = JSON.parse(
-                        json_msg_param_array || JSON.stringify([])
-                    )[0];
-                    const c_params = this.stringFormator(
-                        JSON.stringify(params)
-                    );
-                    const cb: CommonCallbackFuns = (
-                        code,
-                        desc,
-                        json_params,
-                        user_data
-                    ) => {
-                        if (code === 0) {
-                            log.info(
-                                `获取消息列表返回:${code},${desc},${json_params},${user_data}`
-                            );
-                            const us = this._cache
-                                .get("TIMMsgGetMsgList")
-                                ?.get(now)?.user_data;
-                            resolve({ code, desc, json_params, user_data: us });
-                        } else reject(this.getErrorResponse({ code, desc }));
-                        this._cache.get("TIMMsgGetMsgList")?.delete(now);
-                    };
-                    const callback = jsFuncToFFIFun(cb);
-                    let cacheMap = this._cache.get("TIMMsgGetMsgList");
-                    if (cacheMap === undefined) {
-                        cacheMap = new Map();
-                    }
-                    cacheMap.set(now, {
-                        cb,
-                        callback,
-                        user_data: c_user_data,
-                    });
-                    this._cache.set("TIMMsgGetMsgList", cacheMap);
-                    const code = this._sdkconfig.Imsdklib.TIMMsgGetMsgList(
-                        c_conv_id,
-                        conv_type,
-                        c_params,
-                        this._cache.get("TIMMsgGetMsgList")?.get(now)?.callback,
-                        this._cache.get("TIMMsgGetMsgList")?.get(now)?.user_data
-                    );
+        // if (params.msg_getmsglist_param_last_msg) {
+        //     return this.TIMMsgFindMessages({
+        //         json_message_id_array: [params.msg_getmsglist_param_last_msg],
+        //         user_data: user_data,
+        //     }).then(res => {
+        //         return new Promise((resolve, reject) => {
+        //             const now = `${Date.now()}${randomString()}`;
+        //             const json_msg_param_array = res.json_params;
+        //             params.msg_getmsglist_param_last_msg = JSON.parse(
+        //                 json_msg_param_array || JSON.stringify([])
+        //             )[0];
+        //             const c_params = this.stringFormator(
+        //                 JSON.stringify(params)
+        //             );
+        //             const cb: CommonCallbackFuns = (
+        //                 code,
+        //                 desc,
+        //                 json_params,
+        //                 user_data
+        //             ) => {
+        //                 if (code === 0) {
+        //                     log.info(
+        //                         `获取消息列表返回:${code},${desc},${json_params},${user_data}`
+        //                     );
+        //                     const us = this._cache
+        //                         .get("TIMMsgGetMsgList")
+        //                         ?.get(now)?.user_data;
+        //                     resolve({ code, desc, json_params, user_data: us });
+        //                 } else reject(this.getErrorResponse({ code, desc }));
+        //                 this._cache.get("TIMMsgGetMsgList")?.delete(now);
+        //             };
+        //             const callback = jsFuncToFFIFun(cb);
+        //             let cacheMap = this._cache.get("TIMMsgGetMsgList");
+        //             if (cacheMap === undefined) {
+        //                 cacheMap = new Map();
+        //             }
+        //             cacheMap.set(now, {
+        //                 cb,
+        //                 callback,
+        //                 user_data: c_user_data,
+        //             });
+        //             this._cache.set("TIMMsgGetMsgList", cacheMap);
+        //             const code = this._sdkconfig.Imsdklib.TIMMsgGetMsgList(
+        //                 c_conv_id,
+        //                 conv_type,
+        //                 c_params,
+        //                 this._cache.get("TIMMsgGetMsgList")?.get(now)?.callback,
+        //                 this._cache.get("TIMMsgGetMsgList")?.get(now)?.user_data
+        //             );
 
-                    code !== 0 && reject(this.getErrorResponse({ code }));
-                });
+        //             code !== 0 && reject(this.getErrorResponse({ code }));
+        //         });
+        //     });
+        // } else {
+        return new Promise((resolve, reject) => {
+            const now = `${Date.now()}${randomString()}`;
+            const c_params = this.stringFormator(JSON.stringify(params));
+            const cb: CommonCallbackFuns = (
+                code,
+                desc,
+                json_params,
+                user_data
+            ) => {
+                if (code === 0) {
+                    log.info(
+                        `获取消息列表返回:${code},${desc},${json_params},${user_data}`
+                    );
+                    const us = this._cache
+                        .get("TIMMsgGetMsgList")
+                        ?.get(now)?.user_data;
+                    resolve({ code, desc, json_params, user_data: us });
+                } else reject(this.getErrorResponse({ code, desc }));
+                this._cache.get("TIMMsgGetMsgList")?.delete(now);
+            };
+            const callback = jsFuncToFFIFun(cb);
+            let cacheMap = this._cache.get("TIMMsgGetMsgList");
+            if (cacheMap === undefined) {
+                cacheMap = new Map();
+            }
+            cacheMap.set(now, {
+                cb,
+                callback,
+                user_data: c_user_data,
             });
-        } else {
-            return new Promise((resolve, reject) => {
-                const now = `${Date.now()}${randomString()}`;
-                const c_params = this.stringFormator(JSON.stringify(params));
-                const cb: CommonCallbackFuns = (
-                    code,
-                    desc,
-                    json_params,
-                    user_data
-                ) => {
-                    if (code === 0) {
-                        log.info(
-                            `获取消息列表返回:${code},${desc},${json_params},${user_data}`
-                        );
-                        const us = this._cache
-                            .get("TIMMsgGetMsgList")
-                            ?.get(now)?.user_data;
-                        resolve({ code, desc, json_params, user_data: us });
-                    } else reject(this.getErrorResponse({ code, desc }));
-                    this._cache.get("TIMMsgGetMsgList")?.delete(now);
-                };
-                const callback = jsFuncToFFIFun(cb);
-                let cacheMap = this._cache.get("TIMMsgGetMsgList");
-                if (cacheMap === undefined) {
-                    cacheMap = new Map();
-                }
-                cacheMap.set(now, {
-                    cb,
-                    callback,
-                    user_data: c_user_data,
-                });
-                this._cache.set("TIMMsgGetMsgList", cacheMap);
-                const code = this._sdkconfig.Imsdklib.TIMMsgGetMsgList(
-                    c_conv_id,
-                    conv_type,
-                    c_params,
-                    this._cache.get("TIMMsgGetMsgList")?.get(now)?.callback,
-                    this._cache.get("TIMMsgGetMsgList")?.get(now)?.user_data
-                );
+            this._cache.set("TIMMsgGetMsgList", cacheMap);
+            const code = this._sdkconfig.Imsdklib.TIMMsgGetMsgList(
+                c_conv_id,
+                conv_type,
+                c_params,
+                this._cache.get("TIMMsgGetMsgList")?.get(now)?.callback,
+                this._cache.get("TIMMsgGetMsgList")?.get(now)?.user_data
+            );
 
-                code !== 0 && reject(this.getErrorResponse({ code }));
-            });
-        }
+            code !== 0 && reject(this.getErrorResponse({ code }));
+        });
+        // }
     }
 
     /**

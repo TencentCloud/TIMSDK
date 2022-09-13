@@ -9,6 +9,9 @@ const mainInstance = new TimMain({
   sdkappid: 1400597090
 })
 // const mainInstance = new TimMain({
+//   sdkappid: 1400624899
+// })
+// const mainInstance = new TimMain({
 //   sdkappid: 1400619962
 // })
 // const t = new TIM({

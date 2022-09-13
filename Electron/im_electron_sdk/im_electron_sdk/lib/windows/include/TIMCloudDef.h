@@ -75,7 +75,7 @@ enum TIMErrCode {
     ERR_SDK_IMAGE_CONVERT_ERROR                 = 8003,    // 万象优图 HTTP 请求失败。
     ERR_SDK_IMAGE_CI_BLOCK                      = 8004,    // 万象优图因为鉴黄等原因转缩略图失败。
     ERR_MERGER_MSG_LAYERS_OVER_LIMIT            = 8005,    // 合并消息嵌套层数超过上限（上限 100 层）。
-    
+    ERR_SDK_MSG_MODIFY_CONFLICT                 = 8006,    // 消息修改冲突，您请求修改的消息已经被其他人修改。
     ERR_SDK_SIGNALING_INVALID_INVITE_ID         = 8010,    // 信令请求 ID 无效或已经被处理过。（上层接口使用，底层为了不重复也增加一份）
     ERR_SDK_SIGNALING_NO_PERMISSION             = 8011,    // 信令请求无权限，比如取消非自己发起的邀请。（上层接口使用，底层为了不重复也增加一份）
     ERR_SDK_INVALID_CANCEL_MESSAGE              = 8020,    // 取消消息时，取消的消息不存在，或者已经发送成功。取消失败
@@ -226,6 +226,7 @@ enum TIMErrCode {
     ERR_SVR_ACCOUNT_BLACKLIST                   = 70051,  // 帐号被拉入黑名单。
     ERR_SVR_ACCOUNT_COUNT_LIMIT                 = 70398,  // 创建帐号数量超过免费体验版数量限制，请升级为专业版。
     ERR_SVR_ACCOUNT_INTERNAL_ERROR              = 70500,  // 服务端内部错误，请重试。
+    ERR_SVR_ACCOUNT_USER_STATUS_DISABLED        = 72001,  // 用户状态能力需要登录 IM 控制台开启
 
     // 资料错误码
 
@@ -357,7 +358,7 @@ enum TIMErrCode {
 
     ERR_NO_SUCC_RESULT                          = 6003,   // 批量操作无成功结果。
     ERR_TO_USER_INVALID                         = 6011,   // 无效接收方。
-    ERR_REQUEST_TIMEOUT                         = 6012,   // 请求超时。
+    ERR_REQUEST_TIME_OUT                        = 6012,   // 请求超时。
     ERR_INIT_CORE_FAIL                          = 6018,   // INIT CORE 模块失败。
     ERR_EXPIRED_SESSION_NODE                    = 6020,   // SessionNode 为 null 。
     ERR_LOGGED_OUT_BEFORE_LOGIN_FINISHED        = 6023,   // 在登录完成前进行了登出（在登录时返回）。
@@ -660,6 +661,8 @@ static const char* kTIMInternalOperationSetSM4GCMCallback = "internal_operation_
 static const char* kTIMInternalOperationInitLocalStorage = "internal_operation_init_local_storage";
 static const char* kTIMInternalOperationSetCosSaveRegionForConversation = "internal_operation_set_cos_save_region_for_conversation";
 static const char* kTIMInternalOperationSetUIPlatform = "internal_operation_set_ui_platform";
+static const char* kTIMInternalOperationSetDatabaseEncryptInfo = "internal_operation_set_database_encrypt_info";
+static const char* kTIMInternalOperationIsCommercialAbilityEnabled = "internal_operation_is_commercial_ability_enabled";
 // EndStruct
 
 /**
@@ -723,6 +726,21 @@ static const char* kTIMCosSaveRegionForConversationParamCosSaveRegion = "cos_sav
 // EndStruct
 
 /**
+* @brief 数据库加密信息
+*/
+// Struct DatabaseEncryptInfo JsonKey
+static const char* kTIMDatabaseEncryptInfoEncryptType = "database_encrypt_info_encrypt_type";     // int, 只写(必填), 数据库加密类型，0:按位异或，1:TEA，2:国密，3:AES
+static const char* kTIMDatabaseEncryptInfoEncryptKey = "database_encrypt_info_encrypt_key";       // string, 只写(选填), 数据库加密类型 key ，除了 按位异或 算法，其他算法的加密 key，必须是长度是 32 base16 字符串，不填写就使用 IMSDK 内部生成的 key，由于数据库加密数据持久化到文件中，因此，一旦 key 被使用过，不能够再更换
+// EndStruct
+
+/**
+* @brief 商业化能力项的查询结果
+*/
+// Struct CommercialAbilityResult JsonKey
+static const char* kTIMCommercialAbilityResultEnabled = "commercial_ability_result_enabled";     // bool, 只读(必填), 查询是否支持指定的商业化能力项的结果，true：支持，false：不支持
+// EndStruct
+
+/**
  * @brief callExperimentalAPI接口请求的参数
  */
 // Struct ReqeustParam JsonKey
@@ -737,7 +755,9 @@ static const char* kTIMRequestSetCustomServerInfoParam = "request_set_custom_ser
 static const char* kTIMRequestSetSM4GCMCallbackParam = "request_set_sm4_gcm_callback_param"; // object [SM4GCMCallbackParam](), 只写(选填), 国密 SM4 GCM 回调函数地址的参数, 当 kTIMRequestInternalOperation 为 kTIMInternalOperationSetSM4GCMCallback 时需要设置
 static const char* kTIMRequestInitLocalStorageParam = "request_init_local_storage_user_id_param"; // string, 只写(选填), 初始化 Database 的用户 ID, 当 kTIMRequestInternalOperation 为 kTIMInternalOperationInitLocalStorage 时需要设置
 static const char* kTIMRequestSetCosSaveRegionForConversationParam = "request_set_cos_save_region_for_conversation_param"; // object [CosSaveRegionForConversationParam](), 只写(选填), 设置 cos 存储区域的参数, 当 kTIMRequestInternalOperation 为 kTIMInternalOperationSetCosSaveRegionForConversation 时需要设置
-static const char* kTIMRequestSetUIPlatformParam = "request_set_ui_platform_param"; // string, 只写(选填), 设置 UI 平台，当 kTIMRequestInternalOperation 为 kTIMInternalOperationSetUIPlatform 时需要设置
+static const char* kTIMRequestSetUIPlatformParam = "request_set_ui_platform_param"; // uint32, 只写(选填), 设置 UI 平台，当 kTIMRequestInternalOperation 为 kTIMInternalOperationSetUIPlatform 时需要设置
+static const char* kTIMRequestSetDatabaseEncryptInfoParam = "request_set_database_encrypt_info_param"; // object [DatabaseEncryptInfo](), 只写(选填), 设置数据库加密信息, 当 kTIMRequestInternalOperation 为 kTIMInternalOperationSetDatabaseEncryptInfo 时需要设置
+static const char* kTIMRequestIsCommercialAbilityEnabledParam = "request_is_commercial_ability_enabled_param"; // uint64, 只写(选填), 商业化能力项枚举的组合值, 当 kTIMRequestInternalOperation 为 kTIMInternalOperationIsCommercialAbilityEnabled 时需要设置
 // EndStruct
 
 
@@ -762,9 +782,9 @@ static const char* kTIMResponseSetEvnRes         = "response_set_env_res";      
 * @brief 设置离线推送配置信息
 */
 // Struct OfflinePushToken JsonKey
-static const char* kTIMOfflinePushTokenToken        = "offline_push_token_token";          //string, 只写（选填）, 注册应用到厂商平台或者 TPNS 时获取的 token。使用注意事项：当接入推送 TPNS 通道，需要设置 isTPNSToken 为 true，上报注册 TPNS 获取的 token；当接入推送为厂商通道，需要设置 isTPNSToken 为 false，上报注册厂商获取的 token。
-static const char* kTIMOfflinePushTokenBusinessID   = "offline_push_token_business_id";    //uint32, 只写（选填），IM 控制台证书 ID，接入 TPNS 时不需要填写
-static const char* kTIMOfflinePushTokenIsTPNSToken  = "offline_push_token_is_tpns_token";  //bool, 只写（选填），是否接入配置 TPNS, token 是否是从 TPNS 获取
+static const char* kTIMOfflinePushTokenToken        = "offline_push_token_token";          // string, 只写（选填）, 注册应用到厂商平台的 token。注意：填写为设备 Token 的 hex 字符串（即 base16 编码）。
+static const char* kTIMOfflinePushTokenBusinessID   = "offline_push_token_business_id";    // uint32, 只写（选填），IM 控制台证书 ID
+static const char* kTIMOfflinePushTokenIsTPNSToken  = "offline_push_token_is_tpns_token";  // bool, 只写（选填），待废弃，是否接入配置 TPNS, token 是否是从 TPNS 获取。如果您之前通过 TPNS 接入离线推送，并且在 TPNS 控制台配置推送信息，可以继续按照该方式接入推送功能。如果您从未接入 TPNS，从未在 TPNS 控制台配置推送信息，IM 将不在支持 TPNS 方式接入离线推送功能, 推荐参照如下方式接入：https://cloud.tencent.com/document/product/269/74284
 // EndStruct
 
 /// 接收时不会播放声音
@@ -879,11 +899,13 @@ static const char* kTIMMsgIsFormSelf  = "message_is_from_self";  //bool,        
 static const char* kTIMMsgPlatform    = "message_platform";      //uint, [TIMPlatform](), 读写(选填), 发送消息的平台
 static const char* kTIMMsgIsRead      = "message_is_read";       //bool,           读写(选填),       消息是否已读
 static const char* kTIMMsgIsOnlineMsg = "message_is_online_msg"; //bool,           读写(选填),       消息是否是在线消息，false表示普通消息,true表示阅后即焚消息，默认为false
-static const char* kTIMMsgIsPeerRead  = "message_is_peer_read";  //bool,           只读,            消息是否被会话对方已读
-static const char* kTIMMsgNeedReadReceipt    = "message_need_read_receipt";     //bool,           读写(选填),    是否需要已读回执（只有 Group 消息有效）
+static const char* kTIMMsgIsPeerRead  = "message_is_peer_read";                 //bool,           只读,            对方是否已读（会话维度，已读的条件：msg_time <= 对端标记会话已读的时间），该字段为 true 的条件是消息 timestamp <= 对端标记会话已读的时间
+static const char* kTIMMsgReceiptPeerRead  = "message_receipt_peer_read";       //bool,           只读,            对方是否已读（消息维度，已读的条件：对端针对该消息上报了已读）
+static const char* kTIMMsgNeedReadReceipt    = "message_need_read_receipt";     //bool,           读写(选填),    消息是否需要已读回执（6.1 以上版本有效，需要您购买旗舰版套餐），群消息在使用该功能之前，需要先到 IM 控制台设置已读回执支持的群类型
 static const char* kTIMMsgHasSentReceipt     = "message_has_sent_receipt";      //bool,           只读,         是否已经发送了已读回执（只有Group 消息有效）
 static const char* kTIMMsgGroupReceiptReadCount   = "message_group_receipt_read_count";    //int32,          只读,         注意：这个字段是内部字段，不推荐使用，推荐调用 TIMMsgGetMessageReadReceipts 获取群消息已读回执
 static const char* kTIMMsgGroupReceiptUnreadCount = "message_group_receipt_unread_count";  //int32,          只读,         注意：这个字段是内部字段，不推荐使用，推荐调用 TIMMsgGetMessageReadReceipts 获取群消息已读回执
+static const char* kTIMMsgVersion = "message_version";  //uint64,          只读,         注意：这个字段是内部字段，不推荐使用
 static const char* kTIMMsgStatus      = "message_status";        //uint [TIMMsgStatus](), 读写(选填), 消息当前状态
 static const char* kTIMMsgUniqueId    = "message_unique_id";     //uint64,         只读,       消息的唯一标识，推荐使用 kTIMMsgMsgId
 static const char* kTIMMsgMsgId       = "message_msg_id";        //string,         只读,       消息的唯一标识
@@ -908,8 +930,9 @@ static const char* kTIMMsgOfflinePushConfig     = "message_offlie_push_config"; 
 // Struct MessageReceipt JsonKey
 static const char* kTIMMsgReceiptConvId         = "msg_receipt_conv_id";       //string, 只读, 会话ID
 static const char* kTIMMsgReceiptConvType       = "msg_receipt_conv_type";     //uint [TIMConvType](), 只读, 会话类型
-static const char* kTIMMsgReceiptTimeStamp      = "msg_receipt_time_stamp";    //uint64, 只读, 时间戳
 static const char* kTIMMsgReceiptMsgId          = "msg_receipt_msg_id";        //string, 只读, 群消息 ID
+static const char* kTIMMsgReceiptTimeStamp      = "msg_receipt_time_stamp";    //uint64, 只读, 时间戳
+static const char* kTIMMsgReceiptIsPeerRead     = "msg_receipt_is_peer_read";  //bool, C2C 对端消息是否已读
 static const char* kTIMMsgReceiptReadCount      = "msg_receipt_read_count";    //uint64, 只读, 群消息已读人数
 static const char* kTIMMsgReceiptUnreadCount    = "msg_receipt_unread_count";  //uint64, 只读, 群消息未读人数
 // EndStruct
@@ -1159,7 +1182,7 @@ enum TIMGroupTipType {
 // Struct GroupTipsElem JsonKey
 static const char* kTIMGroupTipsElemTipType                     = "group_tips_elem_tip_type";                       // uint [TIMGroupTipType](), 只读, 群消息类型
 static const char* kTIMGroupTipsElemOpUser                      = "group_tips_elem_op_user";                        // string,   只读, 操作者ID
-static const char* kTIMGroupTipsElemGroupName                   = "group_tips_elem_group_name";                     // string,   只读, 群组名称
+static const char* kTIMGroupTipsElemGroupName                   = "group_tips_elem_group_name";                     // string,   只读, 群组名称（已废弃）
 static const char* kTIMGroupTipsElemGroupId                     = "group_tips_elem_group_id";                       // string,   只读, 群组ID
 static const char* kTIMGroupTipsElemTime                        = "group_tips_elem_time";                           // uint,     只读, 群消息时间，已废弃
 static const char* kTIMGroupTipsElemUserArray                   = "group_tips_elem_user_array";                     // array string, 只读, 被操作的帐号列表
@@ -1202,7 +1225,7 @@ enum TIMGroupReportType {
 // Struct GroupReportElem JsonKey
 static const char* kTIMGroupReportElemReportType        = "group_report_elem_report_type";          // uint [TIMGroupReportType](), 只读, 类型
 static const char* kTIMGroupReportElemGroupId           = "group_report_elem_group_id";             // string, 只读, 群组ID
-static const char* kTIMGroupReportElemGroupName         = "group_report_elem_group_name";           // string, 只读, 群组名称
+static const char* kTIMGroupReportElemGroupName         = "group_report_elem_group_name";           // string, 只读, 群组名称（已废弃）
 static const char* kTIMGroupReportElemOpUser            = "group_report_elem_op_user";              // string, 只读, 操作者ID
 static const char* kTIMGroupReportElemMsg               = "group_report_elem_msg";                  // string, 只读, 操作理由
 static const char* kTIMGroupReportElemUserData          = "group_report_elem_user_data";            // string, 只读, 操作者填的自定义数据
@@ -1468,7 +1491,7 @@ static const char* kTIMConvDraft            = "conv_draft";                 // o
 static const char* kTIMConvRecvOpt          = "conv_recv_opt";              // uint [TIMReceiveMessageOpt](), 只读(选填), 消息接收选项
 static const char* kTIMConvGroupAtInfoArray = "conv_group_at_info_array";   // array [GroupAtInfo](), 只读(选填),  群会话 @ 信息列表，用于展示 “有人@我” 或 “@所有人” 这两种提醒状态
 static const char* kTIMConvIsPinned         = "conv_is_pinned";             // bool, 只读,是否置顶
-static const char* kTIMConvShowName         = "conv_show_name";             //string , 只读, 获取会话展示名称，其展示优先级如下：1、群组，群名称 C2C; 2、对方好友备注->对方昵称->对方的 userID
+static const char* kTIMConvShowName         = "conv_show_name";             //string , 只读, 获取会话展示名称，其展示优先级如下：1、群组，群名称 -> 群 ID;C2C; 2、对方好友备注 -> 对方昵称 -> 对方的 userID
 
 // EndStruct
 /// @}
@@ -1661,6 +1684,7 @@ static const char* kTIMGroupBaseInfoSelfInfo     = "group_base_info_self_info"; 
 // Struct GroupDetailInfo JsonKey
 static const char* kTIMGroupDetialInfoGroupId          = "group_detial_info_group_id";           // string, 只读, 群组ID
 static const char* kTIMGroupDetialInfoGroupType        = "group_detial_info_group_type";         // uint [TIMGroupType](), 只读, 群组类型
+static const char* kTIMGroupDetialInfoIsSupportTopic   = "group_detial_info_is_support_topic";   // bool, 只读, 社群是否支持创建话题，只在群类型为 Community 时有效
 static const char* kTIMGroupDetialInfoGroupName        = "group_detial_info_group_name";         // string, 只读, 群组名称
 static const char* kTIMGroupDetialInfoNotification     = "group_detial_info_notification";       // string, 只读, 群组公告
 static const char* kTIMGroupDetialInfoIntroduction     = "group_detial_info_introduction";       // string, 只读, 群组简介
@@ -1691,20 +1715,59 @@ static const char* kTIMGetGroupInfoResultInfo  = "get_groups_info_result_info"; 
 // EndStruct
 
 /**
+* @brief 获取群组信息列表接口的返回
+*/
+// Struct TIMGroupTopicInfo JsonKey
+static const char* kTIMGroupTopicInfoTopicID            = "group_topic_info_topic_id";              // string,   读写, 话题 ID
+static const char* kTIMGroupTopicInfoTopicName          = "group_topic_info_topic_name";            // string,   读写, 话题名称
+static const char* kTIMGroupTopicInfoIntroduction       = "group_topic_info_introduction";          // string,   读写, 话题介绍
+static const char* kTIMGroupTopicInfoNotification       = "group_topic_info_notification";          // string,   读写, 话题公告
+static const char* kTIMGroupTopicInfoTopicFaceURL       = "group_topic_info_topic_face_url";        // string,   读写, 话题头像
+static const char* kTIMGroupTopicInfoIsAllMuted         = "group_topic_info_is_all_muted";          // bool,     读写, 话题全员禁言
+static const char* kTIMGroupTopicInfoSelfMuteTime       = "group_topic_info_self_mute_time";        // uint32,   读写, 当前用户在话题中的禁言时间
+static const char* kTIMGroupTopicInfoCustomString       = "group_topic_info_custom_string";         // string,   读写, 话题自定义字段
+static const char* kTIMGroupTopicInfoRecvOpt            = "group_topic_info_recv_opt";              // uint [TIMReceiveMessageOpt]()  只读，话题消息接收选项，修改话题消息接收选项请调用 setGroupReceiveMessageOpt 接口
+static const char* kTIMGroupTopicInfoDraftText          = "group_topic_info_draft_text";            // string,   读写, 话题草稿
+static const char* kTIMGroupTopicInfoUnreadCount        = "group_topic_info_unread_count";          // uint64,   只读, 话题消息未读数量
+static const char* kTIMGroupTopicInfoLastMessage        = "group_topic_info_last_message";          // object [Message](),      只读, 话题 lastMessage
+static const char* kTIMGroupTopicInfoGroupAtInfoArray   = "group_topic_info_group_at_info_array";   // array [GroupAtInfo](),   只读, 话题 at 信息列表
+static const char* kTIMGroupTopicInfoModifyFlag         = "group_modify_info_param_modify_flag";    // uint [TIMGroupModifyInfoFlag](),  只写(必填), 修改标识,可设置多个值按位或
+// EndStruct
+
+/**
+* @brief 话题操作结果
+*/
+// Struct TIMGroupTopicOperationResult JsonKey
+static const char* kTIMGroupTopicOperationResultErrorCode           = "group_topic_operation_result_error_code";          // int,     只读, 结果 0：成功；非0：失败
+static const char* kTIMGroupTopicOperationResultErrorMessage        = "group_topic_operation_result_error_message";       // string,  只读, 如果删除失败，会返回错误信息
+static const char* kTIMGroupTopicOperationResultTopicID             = "group_topic_operation_result_topic_id";            // string,  只读, 如果删除成功，会返回对应的 topicID
+// EndStruct
+
+/**
+* @brief 获取话题信息的结果
+*/
+// Struct TIMGroupTopicInfoResult JsonKey
+static const char* kTIMGroupTopicInfoResultErrorCode           = "group_topic_info_result_error_code";          // int,     只读, 结果 0：成功；非0：失败
+static const char* kTIMGroupTopicInfoResultErrorMessage        = "group_topic_info_result_error_message";       // string,  只读, 如果删除失败，会返回错误信息
+static const char* kTIMGroupTopicInfoResultTopicInfo           = "group_topic_info_result_topic_info";          // object [TIMGroupTopicInfo](),  只读, 如果获取成功，会返回对应的 info
+// EndStruct
+
+/**
 * @brief 设置(修改)群组信息的类型
 */
 enum TIMGroupModifyInfoFlag {
-    kTIMGroupModifyInfoFlag_None         = 0x00,
-    kTIMGroupModifyInfoFlag_Name         = 0x01,       // 修改群组名称
-    kTIMGroupModifyInfoFlag_Notification = 0x01 << 1,  // 修改群公告
-    kTIMGroupModifyInfoFlag_Introduction = 0x01 << 2,  // 修改群简介
-    kTIMGroupModifyInfoFlag_FaceUrl      = 0x01 << 3,  // 修改群头像URL
-    kTIMGroupModifyInfoFlag_AddOption    = 0x01 << 4,  // 修改群组添加选项
-    kTIMGroupModifyInfoFlag_MaxMmeberNum = 0x01 << 5,  // 修改群最大成员数
-    kTIMGroupModifyInfoFlag_Visible      = 0x01 << 6,  // 修改群是否可见
-    kTIMGroupModifyInfoFlag_Searchable   = 0x01 << 7,  // 修改群是否允许被搜索
-    kTIMGroupModifyInfoFlag_ShutupAll    = 0x01 << 8,  // 修改群是否全体禁言
-    kTIMGroupModifyInfoFlag_Custom       = 0x01 << 9,  // 修改群自定义信息
+    kTIMGroupModifyInfoFlag_None                = 0x00,
+    kTIMGroupModifyInfoFlag_Name                = 0x01,       // 修改群组名称
+    kTIMGroupModifyInfoFlag_Notification        = 0x01 << 1,  // 修改群公告
+    kTIMGroupModifyInfoFlag_Introduction        = 0x01 << 2,  // 修改群简介
+    kTIMGroupModifyInfoFlag_FaceUrl             = 0x01 << 3,  // 修改群头像URL
+    kTIMGroupModifyInfoFlag_AddOption           = 0x01 << 4,  // 修改群组添加选项
+    kTIMGroupModifyInfoFlag_MaxMmeberNum        = 0x01 << 5,  // 修改群最大成员数
+    kTIMGroupModifyInfoFlag_Visible             = 0x01 << 6,  // 修改群是否可见
+    kTIMGroupModifyInfoFlag_Searchable          = 0x01 << 7,  // 修改群是否允许被搜索
+    kTIMGroupModifyInfoFlag_ShutupAll           = 0x01 << 8,  // 修改群是否全体禁言
+    kTIMGroupModifyInfoFlag_Custom              = 0x01 << 9,  // 修改群自定义信息
+    kTIMGroupTopicModifyInfoFlag_CustomString   = 0x01 << 11, // 话题自定义字段
     kTIMGroupModifyInfoFlag_Owner        = 0x01 << 31, // 修改群主
 
 };
@@ -1914,6 +1977,23 @@ static const char* TIMGroupAttributeValue = "group_atrribute_value";  // string 
 // Struct FriendShipGetProfileListParam JsonKey
 static const char* kTIMFriendShipGetProfileListParamIdentifierArray = "friendship_getprofilelist_param_identifier_array";  // array string, 只写, 想要获取目标用户资料的UserID列表
 static const char* kTIMFriendShipGetProfileListParamForceUpdate     = "friendship_getprofilelist_param_force_update";      // bool,         只写, 是否强制更新。false表示优先从本地缓存获取，获取不到则去网络上拉取。true表示直接去网络上拉取资料。默认为false
+// EndStruct
+
+/// 用户状态类型
+enum TIMUserStatusType {
+    kTIMUserStatusType_Unkown           = 0,  // 未知状态
+    kTIMUserStatusType_Online           = 1,  // 在线状态
+    kTIMUserStatusType_Offline          = 2,  // 离线状态
+    kTIMUserStatusType_UnLogined        = 3,  // 未登录（如主动调用 TIMLogout 接口，或者账号注册后还未登录）
+};
+
+/**
+ * @brief 用户状态
+ */
+// Struct TIMUserStatus JsonKey
+static const char* kTIMUserStatusIdentifier         = "user_status_identifier";            // string,                           只读, 用户 ID
+static const char* kTIMUserStatusStatusType         = "user_status_status_type";            // uint [TIMUserStatusType](),      只读, 用户的状态
+static const char* kTIMUserStatusCustomStatus       = "user_status_custom_status";          // string,                          读写, 用户的自定义状态
 // EndStruct
 
 /**
