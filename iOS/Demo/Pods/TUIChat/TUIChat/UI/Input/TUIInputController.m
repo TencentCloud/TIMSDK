@@ -74,9 +74,11 @@ typedef NS_ENUM(NSUInteger, InputStatus) {
 
 - (void)keyboardWillHide:(NSNotification *)notification
 {
-    // http://tapd.oa.com/20398462/bugtrace/bugs/view?bug_id=1020398462072883317&url_cache_key=b8dc0f6bee40dbfe0e702ef8cebd5d81
-    if (_delegate && [_delegate respondsToSelector:@selector(inputController:didChangeHeight:)]){
-        [_delegate inputController:self didChangeHeight:_inputBar.frame.size.height + Bottom_SafeHeight];
+    if (_status == Input_Status_Input_Keyboard) {
+        if (_delegate && [_delegate respondsToSelector:@selector(inputController:didChangeHeight:)]){
+            [_delegate inputController:self didChangeHeight:CGRectGetMaxY(_inputBar.frame) + Bottom_SafeHeight];
+        }
+        _status = Input_Status_Input;
     }
 }
 
@@ -92,15 +94,23 @@ typedef NS_ENUM(NSUInteger, InputStatus) {
         //[self hideFaceAnimation:NO];
         //[self hideMoreAnimation:NO];
     }
-    _status = Input_Status_Input_Keyboard;
+    [self keyboardNotificationHandle:notification];
 }
 
 - (void)keyboardWillChangeFrame:(NSNotification *)notification
 {
+    if (_status == Input_Status_Input_Keyboard || _status == Input_Status_Input) {
+        [self keyboardNotificationHandle:notification];
+    }
+}
+
+- (void)keyboardNotificationHandle:(NSNotification *)notification
+{
     CGRect keyboardFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
     if (_delegate && [_delegate respondsToSelector:@selector(inputController:didChangeHeight:)]){
-        [_delegate inputController:self didChangeHeight:keyboardFrame.size.height + _inputBar.frame.size.height];
+        [_delegate inputController:self didChangeHeight:keyboardFrame.size.height + CGRectGetMaxY(_inputBar.frame)];
     }
+    self.keyboardFrame = keyboardFrame;
 }
 
 - (void)hideFaceAnimation
@@ -218,9 +228,9 @@ typedef NS_ENUM(NSUInteger, InputStatus) {
     if(_status == Input_Status_Input_More){
         [self hideMoreAnimation];
     }
+    _status = Input_Status_Input_Face;
     [_inputBar.inputTextView resignFirstResponder];
     [self showFaceAnimation];
-    _status = Input_Status_Input_Face;
     if (_delegate && [_delegate respondsToSelector:@selector(inputController:didChangeHeight:)]){
         [_delegate inputController:self didChangeHeight:_inputBar.frame.size.height + self.faceView.frame.size.height + self.menuView.frame.size.height + Bottom_SafeHeight];
     }
