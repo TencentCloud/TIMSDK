@@ -403,12 +403,14 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
     public void onItemRemoved(int position) {
         int itemIndex = getItemIndexInAdapter(position);
         notifyItemRemoved(itemIndex);
+        notifyItemRangeChanged(itemIndex,mDataSource.size()-position);
     }
 
     @Override
     public void onItemInserted(int position) {
         int itemIndex = getItemIndexInAdapter(position);
         notifyItemInserted(itemIndex);
+        notifyItemRangeChanged(itemIndex,mDataSource.size()-position);
     }
 
     @Override
