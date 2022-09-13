@@ -224,11 +224,9 @@ public class MainActivity extends BaseLightActivity {
                         }
                         break;
                     case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
                         view.setTranslationX(0);
                         view.setTranslationY(0);
-                        isTriggered = false;
-                        break;
-                    case MotionEvent.ACTION_CANCEL:
                         isTriggered = false;
                         break;
                 }
