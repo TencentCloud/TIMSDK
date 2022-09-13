@@ -10,6 +10,7 @@ let seq = {
     group_get_memeber_info_list_result_next_seq: 0
 };
 let users = [];
+let msg = null;
 const APIS = [
     {
         manager: "timBaseManager",
@@ -1018,10 +1019,15 @@ const APIS = [
             {
                 name: 'TIMMsgGetMsgList',
                 action: (callback) => {
-                    TimAdvanceMessageManager.TIMMsgGetMsgList().then(data => {
+                    TimAdvanceMessageManager.TIMMsgGetMsgList(msg).then(data => {
                         console.log(data)
                         callback(JSON.stringify(data))
+                        const list = JSON.parse(data.data.json_params);
+                        console.log(list)
+                        msg = list[list.length-1]
+                        console.log(msg)
                     }).catch(err => {
+                        console.log(err)
                         callback(err.toString())
                     })
                 }

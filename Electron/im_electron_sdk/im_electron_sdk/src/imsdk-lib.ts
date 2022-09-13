@@ -28,6 +28,7 @@ const callback = function () {
 const Imsdklib = ffi.Library(ffiPath, {
     // timbaseManager start
     // 回调
+    // TIMMsgMessageModifiedCallback: [voidType(), [callback(), voidPtrType()]],
     TIMSetNetworkStatusListenerCallback: [
         voidType(),
         [callback(), voidPtrType()],
