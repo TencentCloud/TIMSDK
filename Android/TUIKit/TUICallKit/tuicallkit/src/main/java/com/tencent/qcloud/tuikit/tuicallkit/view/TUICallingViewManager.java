@@ -20,7 +20,6 @@ import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine;
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.TUILog;
 import com.tencent.qcloud.tuikit.tuicallengine.utils.PermissionUtils;
 import com.tencent.qcloud.tuikit.tuicallengine.utils.TUICallingConstants.Scene;
-import com.tencent.qcloud.tuikit.tuicallkit.ui.R;
 import com.tencent.qcloud.tuikit.tuicallkit.base.BaseCallActivity;
 import com.tencent.qcloud.tuikit.tuicallkit.base.CallingUserModel;
 import com.tencent.qcloud.tuikit.tuicallkit.base.Constants;
@@ -28,6 +27,7 @@ import com.tencent.qcloud.tuikit.tuicallkit.base.TUICallingAction;
 import com.tencent.qcloud.tuikit.tuicallkit.base.TUICallingStatusManager;
 import com.tencent.qcloud.tuikit.tuicallkit.base.UserLayout;
 import com.tencent.qcloud.tuikit.tuicallkit.base.UserLayoutEntity;
+import com.tencent.qcloud.tuikit.tuicallkit.ui.R;
 import com.tencent.qcloud.tuikit.tuicallkit.utils.ImageLoader;
 import com.tencent.qcloud.tuikit.tuicallkit.utils.UserInfoUtils;
 import com.tencent.qcloud.tuikit.tuicallkit.view.component.BaseUserView;
@@ -152,13 +152,6 @@ public class TUICallingViewManager implements ITUINotification {
         mContext.startActivity(intent);
     }
 
-    private void resetSelfUserModel() {
-        mSelfUserModel = new CallingUserModel();
-        mSelfUserModel.userId = TUILogin.getLoginUser();
-        mSelfUserModel.userAvatar = TUILogin.getFaceUrl();
-        mSelfUserModel.userName = TUILogin.getNickName();
-    }
-
     public void closeCallingView() {
         if (null != mBaseCallView) {
             mBaseCallView.finish();
@@ -166,7 +159,7 @@ public class TUICallingViewManager implements ITUINotification {
         mBaseCallView = null;
         BaseCallActivity.finishActivity();
 
-        resetSelfUserModel();
+        mSelfUserModel = null;
         mInviteeList.clear();
         mInviter = new CallingUserModel();
         mMediaType = TUICallDefine.MediaType.Unknown;
