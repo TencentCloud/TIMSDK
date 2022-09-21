@@ -127,7 +127,7 @@
     "ffmpeg-extract-frame": "^1.0.2",
     "ffprobe": "^1.1.2",
     "ffprobe-static": "^3.0.0",
-    "file-type": "^16.5.2",
+    "file-type": "^16.5.4",
     "fluent-ffmpeg": "^2.1.2",
     "get-video-duration": "^3.1.0",
     "im_electron_sdk": "^1.4.20",
