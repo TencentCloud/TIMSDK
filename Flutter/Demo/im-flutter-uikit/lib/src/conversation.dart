@@ -1,5 +1,6 @@
 // ignore_for_file: unused_import
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/controller/tim_uikit_conversation_controller.dart';
@@ -72,7 +73,7 @@ class _ConversationState extends State<Conversation> {
   List<ConversationItemSlidablePanel> _itemSlidableBuilder(
       V2TimConversation conversationItem) {
     return [
-      ConversationItemSlidablePanel(
+      if(!kIsWeb) ConversationItemSlidablePanel(
         onPressed: (context) {
           _clearHistory(conversationItem);
         },

@@ -1,11 +1,10 @@
-// ignore_for_file: prefer_typing_uninitialized_variables, avoid_print
+// ignore_for_file: prefer_typing_uninitialized_variables
 
-import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
-import 'package:tim_ui_kit/ui/controller/tim_uikit_chat_controller.dart';
 import 'package:tim_ui_kit/ui/controller/tim_uikit_conversation_controller.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit_calling_plugin/tim_ui_kit_calling_plugin.dart';
@@ -18,6 +17,7 @@ import 'package:timuikit/src/create_group.dart';
 import 'package:timuikit/src/profile.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';
+import 'package:timuikit/src/provider/local_setting.dart';
 import 'package:timuikit/src/provider/login_user_Info.dart';
 import 'package:timuikit/src/provider/theme.dart';
 import 'package:timuikit/utils/push/channel/channel_push.dart';
@@ -35,8 +35,6 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   bool hasInit = false;
   var subscription;
-  final Connectivity _connectivity = Connectivity();
-  bool hasInternet = true;
   final CoreServicesImpl _coreInstance = TIMUIKitCore.getInstance();
   final V2TIMManager _sdkInstance = TIMUIKitCore.getSDKInstance();
   final TUICalling _calling = TUICalling();
@@ -75,15 +73,6 @@ class HomePageState extends State<HomePage> {
 
   SuperTooltip? tooltip;
 
-  // Widget _emptyAvatarBuilder(context) {
-  //   return Image.asset("assets/default_avatar.png");
-  // }
-
-  _connectivityChange(ConnectivityResult result) {
-    hasInternet = result != ConnectivityResult.none;
-    setState(() {});
-  }
-
   _initTrtc() {
     final loginInfo = _coreInstance.loginInfo;
     final userID = loginInfo.userID;
@@ -100,8 +89,6 @@ class HomePageState extends State<HomePage> {
     // _coreInstance.setEmptyAvatarBuilder(_emptyAvatarBuilder);
     _initTrtc();
     setState(() {});
-    subscription =
-        _connectivity.onConnectivityChanged.listen(_connectivityChange);
     getLoginUserInfo();
     uploadOfflinePushInfoToken();
   }
@@ -121,13 +108,14 @@ class HomePageState extends State<HomePage> {
   @override
   dispose() {
     super.dispose();
-    TIMUIKitChatController().dispose();
     // subscription.cancle();
   }
 
-  Map<int, String> pageTitle() {
+  Map<int, String> pageTitle(LocalSetting localSetting) {
+    final String connectText = localSetting.connectStatus == ConnectStatus.connecting ? imt("连接中...") : imt("连接失败");
     return {
-      0: hasInternet ? imt("消息") : imt("连接中..."),
+      // 0: imt("频道"),
+      0: localSetting.connectStatus == ConnectStatus.success ? imt("消息") : connectText,
       1: imt("通讯录"),
       2: imt("我的"),
     };
@@ -262,12 +250,15 @@ class HomePageState extends State<HomePage> {
   }
 
   uploadOfflinePushInfoToken() async {
-    ChannelPush.requestPermission();
-    final bool isUploadSuccess =
-    await ChannelPush.uploadToken(PushConfig.appInfo);
-    print("offline push info token upload $isUploadSuccess");
+    if (!kIsWeb) {
+      ChannelPush.requestPermission();
+      Future.delayed(const Duration(seconds: 5), () async {
+        final bool isUploadSuccess =
+        await ChannelPush.uploadToken(PushConfig.appInfo);
+        print("Push token upload result: $isUploadSuccess");
+      });
+    }
   }
-
   //如果点击的导航页不是当前项，切换
   void _changePage(int index) {
     if (index != currentIndex) {
@@ -277,9 +268,9 @@ class HomePageState extends State<HomePage> {
     }
   }
 
-  Widget? getTitle() {
+  Widget? getTitle(LocalSetting localSetting) {
     return Text(
-      pageTitle()[currentIndex]!,
+      pageTitle(localSetting)[currentIndex]!,
       style: const TextStyle(
           color: Colors.white, fontSize: IMDemoConfig.appBarTitleFontSize),
     );
@@ -403,7 +394,7 @@ class HomePageState extends State<HomePage> {
       designSize: const Size(750, 1624),
       minTextAdapt: true,
     );
-
+    final LocalSetting localSetting = Provider.of<LocalSetting>(context);
     final theme = Provider.of<DefaultThemeData>(context).theme;
     return Scaffold(
       appBar: AppBar(
@@ -414,7 +405,7 @@ class HomePageState extends State<HomePage> {
         elevation: currentIndex == 0 ? 0 : 1,
         automaticallyImplyLeading: false,
         leading: null,
-        title: getTitle(),
+        title: getTitle(localSetting),
         centerTitle: true,
         flexibleSpace: Container(
           decoration: BoxDecoration(

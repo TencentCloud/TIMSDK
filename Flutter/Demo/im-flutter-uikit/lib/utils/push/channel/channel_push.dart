@@ -8,7 +8,7 @@ class ChannelPush {
   );
 
   static init(PushClickAction pushClickAction) async {
-    cPush.init(
+    await cPush.init(
       pushClickAction: pushClickAction,
       appInfo: PushConfig.appInfo,
     );
@@ -21,6 +21,7 @@ class ChannelPush {
         channelId: "high_system",
         channelName: "新消息提醒",
         channelDescription: "推送新聊天消息");
+    return;
   }
 
   static requestPermission() {

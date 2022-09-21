@@ -1,6 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+enum ConnectStatus{
+  success,
+  failed,
+  connecting
+}
+
 class LocalSetting with ChangeNotifier {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
@@ -9,6 +15,16 @@ class LocalSetting with ChangeNotifier {
 
   /// Record is show online status of other users
   bool? _isShowOnlineStatus;
+
+  /// The connection status to Tencent Server
+  ConnectStatus? _connectStatus;
+
+  ConnectStatus get connectStatus => _connectStatus ?? ConnectStatus.success;
+
+  set connectStatus(ConnectStatus value) {
+    _connectStatus = value;
+    notifyListeners();
+  }
 
   bool get isShowReadingStatus => _isShowReadingStatus ?? true;
 

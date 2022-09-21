@@ -235,5 +235,7 @@
   "k_1f0ms23": "Message read status",
   "k_1c0x9ha": "Determines if the reading status shows for your messages and whether others can know about if you read.",
   "k_1dzhdr5": "Online status",
-  "k_0mwsniq": "Determines if the online status shows for you contacts or friends."
+  "k_0mwsniq": "Determines if the online status shows for you contacts or friends.",
+  "k_0y5drq1": "[Details >>]($option1)",
+  "k_0f7h6ay": "Connection failed"
 }

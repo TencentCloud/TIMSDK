@@ -24,8 +24,6 @@ import 'package:timuikit/utils/toast.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';
 
-var timNewLogo = const AssetImage("assets/im_logo.png");
-
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -89,24 +87,23 @@ class AppLogo extends StatelessWidget {
             child: Image.asset("assets/hero_image.png")),
         Positioned(
           child: Container(
-            padding: EdgeInsets.only(top: height / 30),
+            padding: EdgeInsets.only(top: height / 30, left: 24),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 SizedBox(
                   height: CommonUtils.adaptWidth(380),
-                  width: CommonUtils.adaptWidth(200),
-                  child: Image(
-                      image: timNewLogo,
-                      width: CommonUtils.adaptWidth(380),
-                      height: CommonUtils.adaptHeight(200)),
+                  width: CommonUtils.adaptWidth(140),
+                  child: const Image(
+                    image: AssetImage("assets/logo_transparent.png"),
+                  ),
                 ),
                 Expanded(
                     child: Container(
                       margin: const EdgeInsets.only(right: 5),
                       height: CommonUtils.adaptHeight(180),
-                      padding: const EdgeInsets.only(top: 10, left: 5, right: 15),
+                      padding: const EdgeInsets.only(top: 10, left: 12, right: 15),
                       child: Column(
                         children: <Widget>[
                           Text(

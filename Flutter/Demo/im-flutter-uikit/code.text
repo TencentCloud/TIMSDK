@@ -10614,7 +10614,7 @@ enum ConvType { group, c2c }
 
 enum HistoryMessagePosition { bottom, inTwoScreen, awayTwoScreen }
 
-class TUIChatViewModel extends ChangeNotifier {
+class TUIChatGlobalModel extends ChangeNotifier {
   final MessageService _messageService = serviceLocator<MessageService>();
   final CoreServicesImpl _coreServices = serviceLocator<CoreServicesImpl>();
   final GroupServices _groupServices = serviceLocator<GroupServices>();
@@ -10649,7 +10649,7 @@ class TUIChatViewModel extends ChangeNotifier {
   List<V2TimGroupApplication>? _groupApplicationList;
   String Function(V2TimMessage message)? _abstractMessageBuilder;
 
-  TUIChatViewModel() {
+  TUIChatGlobalModel() {
     initAdvanceListener();
     initMessageMapFromLocal();
     // Future.delayed(const Duration(milliseconds: 200)).then((value) => initMessageMapFromLocal());
@@ -12174,7 +12174,7 @@ class TUIConversationViewModel extends ChangeNotifier {
       serviceLocator<ConversationService>();
   final FriendshipServices _friendshipServices =
       serviceLocator<FriendshipServices>();
-  final TUIChatViewModel _chatViewModel = serviceLocator<TUIChatViewModel>();
+  final TUIChatGlobalModel _chatViewModel = serviceLocator<TUIChatGlobalModel>();
   final MessageService _messageService = serviceLocator<MessageService>();
   V2TimConversationListener? _conversationListener;
   List<V2TimConversation?> _conversationList = [];
@@ -12382,7 +12382,7 @@ class TUIGroupProfileViewModel extends ChangeNotifier {
   final MessageService _messageService = serviceLocator<MessageService>();
   final FriendshipServices _friendshipServices =
       serviceLocator<FriendshipServices>();
-  final TUIChatViewModel chatViewModel = serviceLocator<TUIChatViewModel>();
+  final TUIChatGlobalModel chatViewModel = serviceLocator<TUIChatGlobalModel>();
 
   V2TimGroupInfo? _groupInfo;
   String _groupMemberListSeq = "0";
@@ -13568,7 +13568,7 @@ void setupServiceLocator() {
     serviceLocator.registerSingleton<GroupServices>(GroupServicesImpl());
 
     // view models
-    serviceLocator.registerSingleton<TUIChatViewModel>(TUIChatViewModel());
+    serviceLocator.registerSingleton<TUIChatGlobalModel>(TUIChatGlobalModel());
     serviceLocator.registerSingleton<TUIConversationViewModel>(
         TUIConversationViewModel());
     serviceLocator
@@ -15824,7 +15824,7 @@ import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 
 class TIMUIKitChatController {
-  final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
+  final TUIChatGlobalModel model = serviceLocator<TUIChatGlobalModel>();
 
   Future<bool> loadHistoryMessageList({
     HistoryMsgGetTypeEnum getType =
@@ -18524,7 +18524,7 @@ class TIMUIKitChat extends StatefulWidget {
 }
 
 class _TUIChatState extends TIMUIKitState<TIMUIKitChat> {
-  final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
+  final TUIChatGlobalModel model = serviceLocator<TUIChatGlobalModel>();
   final TUIThemeViewModel themeViewModel = serviceLocator<TUIThemeViewModel>();
   final TUIGroupProfileViewModel groupProfileViewModel =
       serviceLocator<TUIGroupProfileViewModel>();
@@ -18619,7 +18619,7 @@ class _TUIChatState extends TIMUIKitState<TIMUIKitChat> {
           Provider(create: (_) => widget.config),
         ],
         builder: (context, w) {
-          final TUIChatViewModel model = Provider.of<TUIChatViewModel>(context);
+          final TUIChatGlobalModel model = Provider.of<TUIChatGlobalModel>(context);
 
           final isMultiSelect = model.isMultiSelect;
 
@@ -18706,7 +18706,7 @@ class _TUIChatState extends TIMUIKitState<TIMUIKitChat> {
 }
 
 class TIMUIKitChatProviderScope extends StatelessWidget {
-  static final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
+  static final TUIChatGlobalModel model = serviceLocator<TUIChatGlobalModel>();
   final TUIThemeViewModel themeViewModel = serviceLocator<TUIThemeViewModel>();
   final TUIGroupProfileViewModel groupProfileViewModel =
       serviceLocator<TUIGroupProfileViewModel>();
@@ -18850,7 +18850,7 @@ class MultiSelectPanel extends TIMUIKitStatelessWidget {
   MultiSelectPanel({Key? key, required this.conversationType})
       : super(key: key);
   final int conversationType;
-  final TUIChatViewModel _model = serviceLocator<TUIChatViewModel>();
+  final TUIChatGlobalModel _model = serviceLocator<TUIChatGlobalModel>();
 
   _handleForwardMessage(BuildContext context, bool isMergerForward) {
     Navigator.push(
@@ -19058,7 +19058,7 @@ class TIMUIKitHistoryMessageList extends StatefulWidget {
 
 class _TIMUIKitHistoryMessageListState
     extends TIMUIKitState<TIMUIKitHistoryMessageList> {
-  final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
+  final TUIChatGlobalModel model = serviceLocator<TUIChatGlobalModel>();
   LoadingPlace loadingPlace = LoadingPlace.none;
   V2TimMessage? findingMsg;
   String findingSeq = "";
@@ -19397,7 +19397,7 @@ class TIMUIKitHistoryMessageListSelector extends TIMUIKitStatelessWidget {
       : super(key: key);
   @override
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
-    return Selector<TUIChatViewModel, List<V2TimMessage?>>(
+    return Selector<TUIChatGlobalModel, List<V2TimMessage?>>(
         builder: builder,
         selector: (context, model) =>
             model.getMessageListByConvId(conversationID) ?? []);
@@ -19678,7 +19678,7 @@ class _TIMUIKItHistoryMessageListItemState
     extends TIMUIKitState<TIMUIKitHistoryMessageListItem>
     with TickerProviderStateMixin {
   SuperTooltip? tooltip;
-  final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
+  final TUIChatGlobalModel model = serviceLocator<TUIChatGlobalModel>();
   final TUIThemeViewModel themeModel = serviceLocator<TUIThemeViewModel>();
   // bool isChecked = false;
   final GlobalKey _key = GlobalKey();
@@ -20613,7 +20613,7 @@ class TIMUIKitHistoryMessageListContainer extends StatefulWidget {
 
 class _TIMUIKitHistoryMessageListContainerState
     extends TIMUIKitState<TIMUIKitHistoryMessageListContainer> {
-  final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
+  final TUIChatGlobalModel model = serviceLocator<TUIChatGlobalModel>();
   late TIMUIKitHistoryMessageListController _historyMessageListController;
 
   List<V2TimMessage?> historyMessageList = [];
@@ -20847,7 +20847,7 @@ class TIMUIKitHistoryMessageListTongueContainer extends StatefulWidget {
 
 class _TIMUIKitHistoryMessageListTongueContainerState
     extends TIMUIKitState<TIMUIKitHistoryMessageListTongueContainer> {
-  final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
+  final TUIChatGlobalModel model = serviceLocator<TUIChatGlobalModel>();
   bool isFinishJumpToAt = false;
   List<V2TimGroupAtInfo?>? groupAtInfoList = [];
 
@@ -21194,12 +21194,12 @@ class _TIMUIKitAppBarState extends TIMUIKitState<TIMUIKitAppBar> {
           ),
       centerTitle: setAppbar?.centerTitle ?? true,
       leadingWidth: setAppbar?.leadingWidth ?? 70,
-      leading: Selector<TUIChatViewModel, Tuple2<bool, int>>(
+      leading: Selector<TUIChatGlobalModel, Tuple2<bool, int>>(
           builder: (context, data, _) {
             final isMultiSelect = data.item1;
             final unReadCount = data.item2;
             final chatVM =
-                Provider.of<TUIChatViewModel>(context, listen: false);
+                Provider.of<TUIChatGlobalModel>(context, listen: false);
             return isMultiSelect
                 ? TextButton(
                     onPressed: () {
@@ -21529,7 +21529,7 @@ class TIMUIKitFileElem extends StatefulWidget {
 
 class _TIMUIKitFileElemState extends TIMUIKitState<TIMUIKitFileElem> {
   String filePath = "";
-  final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
+  final TUIChatGlobalModel model = serviceLocator<TUIChatGlobalModel>();
 
   Future<bool?> showOpenFileConfirmDialog(
       BuildContext context, String path, TUITheme? theme) async {
@@ -21652,7 +21652,7 @@ class _TIMUIKitFileElemState extends TIMUIKitState<TIMUIKitFileElem> {
     final theme = value.theme;
     return ChangeNotifierProvider.value(
         value: model,
-        child: Consumer<TUIChatViewModel>(builder: (context, value, child) {
+        child: Consumer<TUIChatGlobalModel>(builder: (context, value, child) {
           final received = value.getMessageProgress(widget.messageID);
           final fileName = widget.fileElem!.fileName ?? "";
           final fileSize = widget.fileElem!.fileSize;
@@ -22110,7 +22110,7 @@ class TIMUIKitImageElem extends StatefulWidget {
 class _TIMUIKitImageElem extends TIMUIKitState<TIMUIKitImageElem> {
   bool isShowBorder = false;
   double? networkImagePositionRadio; // 加这个字段用于异步获取被安全打击后的兜底图的比例
-  final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
+  final TUIChatGlobalModel model = serviceLocator<TUIChatGlobalModel>();
   Widget? imageItem;
   bool isSent = false;
 
@@ -22587,7 +22587,7 @@ class TIMUIKitReplyElem extends StatefulWidget {
 }
 
 class _TIMUIKitReplyElemState extends TIMUIKitState<TIMUIKitReplyElem> {
-  TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
+  TUIChatGlobalModel model = serviceLocator<TUIChatGlobalModel>();
   CloudCustomData? repliedMessage;
   V2TimMessage? rawMessage;
   Color backgroundColorNormal = const Color.fromRGBO(236, 236, 236, 1);
@@ -22854,7 +22854,7 @@ class _TIMUIKitSoundElemState extends TIMUIKitState<TIMUIKitSoundElem> {
   final int charLen = 8;
   bool isPlaying = false;
   StreamSubscription<Object>? subscription;
-  final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
+  final TUIChatGlobalModel model = serviceLocator<TUIChatGlobalModel>();
   bool isShowJumpState = false;
 
   _playSound() async {
@@ -23056,7 +23056,7 @@ class TIMUIKitTextElem extends StatefulWidget {
   final BorderRadius? borderRadius;
   final Color? backgroundColor;
   final EdgeInsetsGeometry? textPadding;
-  final TUIChatViewModel chatModel;
+  final TUIChatGlobalModel chatModel;
 
   const TIMUIKitTextElem(
       {Key? key,
@@ -23440,7 +23440,7 @@ import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
 
 class TIMUIKitMergerElem extends TIMUIKitStatelessWidget {
-  final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
+  final TUIChatGlobalModel model = serviceLocator<TUIChatGlobalModel>();
   final V2TimMergerElem mergerElem;
   final String messageID;
   final bool isSelf;
@@ -24175,7 +24175,7 @@ class MorePanel extends StatefulWidget {
 
 class _MorePanelState extends TIMUIKitState<MorePanel> {
   final ImagePicker _picker = ImagePicker();
-  final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
+  final TUIChatGlobalModel model = serviceLocator<TUIChatGlobalModel>();
   final TUISelfInfoViewModel _selfInfoViewModel =
       serviceLocator<TUISelfInfoViewModel>();
 
@@ -24514,7 +24514,7 @@ class SendSoundMessage extends StatefulWidget {
 }
 
 class _SendSoundMessageState extends TIMUIKitState<SendSoundMessage> {
-  final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
+  final TUIChatGlobalModel model = serviceLocator<TUIChatGlobalModel>();
   String soundTipsText = "";
   bool isRecording = false;
   bool isInit = false;
@@ -24874,7 +24874,7 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
   Map<String, V2TimGroupMemberFullInfo> memberInfoMap = {};
 
   late TextEditingController textEditingController;
-  final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
+  final TUIChatGlobalModel model = serviceLocator<TUIChatGlobalModel>();
   final TUIConversationViewModel conversationModel =
       serviceLocator<TUIConversationViewModel>();
   final TUISelfInfoViewModel selfModel = serviceLocator<TUISelfInfoViewModel>();
@@ -25384,7 +25384,7 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
         _handleSoftKeyBoardDelete();
       }
     }, const Duration(milliseconds: 80));
-    return Selector<TUIChatViewModel, V2TimMessage?>(
+    return Selector<TUIChatGlobalModel, V2TimMessage?>(
         builder: ((context, value, child) {
           return Column(
             children: [
@@ -26493,7 +26493,7 @@ class TIMUIKitGroupApplicationList extends StatefulWidget {
 
 class TIMUIKitGroupApplicationListState
     extends TIMUIKitState<TIMUIKitGroupApplicationList> {
-  final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
+  final TUIChatGlobalModel model = serviceLocator<TUIChatGlobalModel>();
   final GroupServices _groupServices = serviceLocator<GroupServices>();
   List<V2TimGroupApplication> groupApplicationList = [];
   List<ApplicationStatus> applicationStatusList = [];
@@ -31940,10 +31940,10 @@ class CenterLoading extends TIMUIKitStatelessWidget {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider.value(
-              value: serviceLocator<TUIChatViewModel>()),
+              value: serviceLocator<TUIChatGlobalModel>()),
         ],
         builder: (context, w) {
-          final progress = Provider.of<TUIChatViewModel>(context)
+          final progress = Provider.of<TUIChatGlobalModel>(context)
               .getMessageProgress(messageID);
           return progress == 0
               ? Container()
@@ -32558,7 +32558,7 @@ class ForwardMessageScreen extends StatefulWidget {
 }
 
 class _ForwardMessageScreenState extends TIMUIKitState<ForwardMessageScreen> {
-  final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
+  final TUIChatGlobalModel model = serviceLocator<TUIChatGlobalModel>();
   List<V2TimConversation> _conversationList = [];
   bool isMultiSelect = false;
 
@@ -34130,7 +34130,7 @@ class MessageReadReceipt extends StatefulWidget {
 }
 
 class _MessageReadReceiptState extends TIMUIKitState<MessageReadReceipt> {
-  final TUIChatViewModel _model = serviceLocator<TUIChatViewModel>();
+  final TUIChatGlobalModel _model = serviceLocator<TUIChatGlobalModel>();
   bool readMemberIsFinished = false;
   bool unreadMemberIsFinished = false;
   int readMemberListNextSeq = 0;
@@ -35700,7 +35700,7 @@ class LinkPreviewEntry {
     }
 
     return ({TextStyle? style}) {
-      return LinkText(
+      return LinkTextMarkdown(
           messageText: messageText, style: style, onLinkTap: onLinkTap);
     };
   }
@@ -36025,7 +36025,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:tencent_im_base/base_widgets/tim_stateless_widget.dart';
 import 'package:tim_ui_kit/ui/widgets/link_preview/common/utils.dart';
 
-class LinkText extends TIMStatelessWidget {
+class LinkTextMarkdown extends TIMStatelessWidget {
   /// Callback for when link is tapped
   final void Function(String)? onLinkTap;
 
@@ -36035,7 +36035,7 @@ class LinkText extends TIMStatelessWidget {
   /// text style for default words
   final TextStyle? style;
 
-  const LinkText(
+  const LinkTextMarkdown(
       {Key? key, required this.messageText, this.onLinkTap, this.style})
       : super(key: key);
 

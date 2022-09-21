@@ -1,6 +1,8 @@
 
+import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import 'package:tim_ui_kit/business_logic/life_cycle/profile_life_cycle.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/utils/permission.dart';
@@ -18,7 +20,8 @@ import 'chat.dart';
 
 class UserProfile extends StatefulWidget {
   final String userID;
-  const UserProfile({Key? key, required this.userID}) : super(key: key);
+  final ValueChanged<String>? onRemarkUpdate;
+  const UserProfile({Key? key, required this.userID, this.onRemarkUpdate}) : super(key: key);
   @override
   State<StatefulWidget> createState() => UserProfileState();
 }
@@ -97,7 +100,7 @@ class UserProfileState extends State<UserProfile> {
 
   _buildBottomOperationList(
       BuildContext context, V2TimConversation conversation, theme) {
-    final operationList = [
+    List operationList = [
       {
         "label": imt("发送消息"),
         "id": "sendMsg",
@@ -111,6 +114,15 @@ class UserProfileState extends State<UserProfile> {
         "id": "videoCall",
       },
     ];
+
+    if (kIsWeb) {
+      operationList = [
+        {
+          "label": imt("发送消息"),
+          "id": "sendMsg",
+        }
+      ];
+    }
 
     return operationList.map((e) {
       return InkWell(
@@ -205,6 +217,12 @@ class UserProfileState extends State<UserProfile> {
       body: Container(
         color: theme.weakBackgroundColor,
         child: TIMUIKitProfile(
+          lifeCycle: ProfileLifeCycle(
+            didRemarkUpdated: (String newRemark) async {
+              if(widget.onRemarkUpdate != null) widget.onRemarkUpdate!(newRemark);
+              return true;
+            }
+          ),
           userID: widget.userID,
           profileWidgetBuilder: ProfileWidgetBuilder(
             searchBar: (conversation) => TIMUIKitProfileWidget.searchBar(context, conversation,

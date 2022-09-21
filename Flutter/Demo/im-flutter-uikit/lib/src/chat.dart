@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tim_ui_kit/business_logic/life_cycle/chat_life_cycle.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_chat_global_model.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/controller/tim_uikit_chat_controller.dart';
 import 'package:tim_ui_kit/ui/utils/permission.dart';
@@ -12,6 +12,7 @@ import 'package:tim_ui_kit_calling_plugin/enum/tim_uikit_trtc_calling_scence.dar
 import 'package:tim_ui_kit_calling_plugin/tim_ui_kit_calling_plugin.dart';
 import 'package:tim_ui_kit_sticker_plugin/tim_ui_kit_sticker_plugin.dart';
 import 'package:timuikit/src/group_application_list.dart';
+
 // import 'package:tim_ui_kit_lbs_plugin/utils/location_utils.dart';
 // import 'package:tim_ui_kit_lbs_plugin/utils/tim_location_model.dart';
 // import 'package:tim_ui_kit_lbs_plugin/widget/location_msg_element.dart';
@@ -47,6 +48,7 @@ class _ChatState extends State<Chat> {
   String? backRemark;
   final V2TIMManager sdkInstance = TIMUIKitCore.getSDKInstance();
   GlobalKey<dynamic> tuiChatField = GlobalKey();
+  String? conversationName;
 
   String _getTitle() {
     return backRemark ?? widget.selectedConversation.showName ?? "";
@@ -78,7 +80,14 @@ class _ChatState extends State<Chat> {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => UserProfile(userID: userID),
+          builder: (context) => UserProfile(
+            userID: userID,
+            onRemarkUpdate: (String newRemark){
+              setState(() {
+                conversationName = newRemark;
+              });
+            },
+          ),
         ));
   }
 
@@ -214,7 +223,8 @@ class _ChatState extends State<Chat> {
         Provider.of<CustomStickerPackageData>(context).customStickerPackageList;
     return StickerPanel(
         sendTextMsg: sendTextMessage,
-        sendFaceMsg: sendFaceMessage,
+        sendFaceMsg: (index, data) =>
+            sendFaceMessage(index + 1, (data.split("/")[3]).split("@")[0]),
         deleteText: deleteText,
         addText: addText,
         customStickerPackageList: customStickerPackageList,
@@ -226,13 +236,13 @@ class _ChatState extends State<Chat> {
   Widget build(BuildContext context) {
     final LocalSetting localSetting = Provider.of<LocalSetting>(context);
     return TIMUIKitChat(
-        lifeCycle: ChatLifeCycle(
-            newMessageWillMount: (V2TimMessage message) async {
-              // This configuration is unnecessary and only for demonstration purpose.
-              // It shows if you tend to avoid a message from rending, you can `return null` here.
-              return message;
-            }
-        ),
+        controller: _timuiKitChatController,
+        lifeCycle:
+            ChatLifeCycle(newMessageWillMount: (V2TimMessage message) async {
+          // This configuration is unnecessary and only for demonstration purpose.
+          // It shows if you tend to avoid a message from rending, you can `return null` here.
+          return message;
+        }),
         onDealWithGroupApplication: (String groupId) {
           Navigator.push(
             context,
@@ -255,16 +265,45 @@ class _ChatState extends State<Chat> {
           isShowGroupReadingStatus: localSetting.isShowReadingStatus,
           notificationTitle: "",
           notificationOPPOChannelID: PushConfig.OPPOChannelID,
-            groupReadReceiptPermisionList: [
-              // The group receipt function only works with `Ultimate Edition`
+          urlPreviewType: UrlPreviewType.previewCardAndHyperlink,
+          groupReadReceiptPermissionList: [
+            // The group receipt function only works with `Ultimate Edition`
 
-              // GroupReceptAllowType.work,
-              // GroupReceptAllowType.meeting,
-              // GroupReceptAllowType.public
-            ]
+            // GroupReceiptAllowType.work,
+            // GroupReceiptAllowType.meeting,
+            // GroupReceiptAllowType.public
+          ],
+          timeDividerConfig: TimeDividerConfig(
+            timeInterval: 300,
+            // timestampParser: (int timestamp) => "$timestamp",
+          ),
+          faceURIPrefix: (String path) {
+            if (path.contains("assets/custom_face_resource/")) {
+              return "";
+            }
+            int? dirNumber;
+            if (path.contains("yz")) {
+              dirNumber = 4350;
+            }
+            if (path.contains("ys")) {
+              dirNumber = 4351;
+            }
+            if (path.contains("gcs")) {
+              dirNumber = 4352;
+            }
+            if (dirNumber != null) {
+              return "assets/custom_face_resource/$dirNumber/";
+            } else {
+              return "";
+            }
+          },
+          faceURISuffix: (String path) {
+            return "@2x.png";
+          },
         ),
         conversationID: _getConvID() ?? '',
-        conversationType: widget.selectedConversation.type ?? ConversationType.V2TIM_C2C,
+        conversationType:
+            ConvType.values[widget.selectedConversation.type ?? 1],
         onTapAvatar: _onTapAvatar,
         conversationShowName: _getTitle(),
         initFindingMsg: widget.initFindingMsg,
@@ -371,7 +410,14 @@ class _ChatState extends State<Chat> {
                     String? newRemark = await Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => UserProfile(userID: userID!),
+                          builder: (context) => UserProfile(
+                            userID: userID!,
+                            onRemarkUpdate: (String newRemark){
+                              setState(() {
+                                conversationName = newRemark;
+                              });
+                            },
+                          ),
                         ));
                     setState(() {
                       backRemark = newRemark;

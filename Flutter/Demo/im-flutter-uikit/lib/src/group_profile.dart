@@ -5,6 +5,7 @@ import 'package:tim_ui_kit/business_logic/view_models/tui_self_info_view_model.d
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
+import 'package:tim_ui_kit/ui/utils/platform.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/group_profile_widget.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/widgets/tim_ui_group_profile_widget.dart';
 import 'package:timuikit/src/pages/home_page.dart';
@@ -47,17 +48,18 @@ class GroupProfilePage extends StatelessWidget {
         body: SafeArea(
           child: TIMUIKitGroupProfile(
             lifeCycle: GroupProfileLifeCycle(didLeaveGroup: () async {
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const HomePage(
-                            pageIndex: 1,
-                          )),
-                  (route) => false);
+              // Shows navigating back to the home page.
+              // You can customize the reaction here.
+              if(PlatformUtils().isWeb){
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              }else{
+                Navigator.of(context).popUntil(ModalRoute.withName("/homePage"));
+              }
             }),
             groupID: groupID,
-            onClickUser: (String userID){
-              if(userID != _selfInfoViewModel.loginInfo?.userID){
+            onClickUser: (String userID) {
+              if (userID != _selfInfoViewModel.loginInfo?.userID) {
                 Navigator.push(
                     context,
                     MaterialPageRoute(

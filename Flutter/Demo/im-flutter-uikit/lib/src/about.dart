@@ -1,11 +1,13 @@
 
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';
 import 'package:timuikit/src/cancel_account.dart';
 import 'package:timuikit/src/provider/theme.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'config.dart';
 import 'package:provider/provider.dart';
 import 'contactPage.dart';
@@ -93,6 +95,13 @@ class AboutState extends State<About>{
             height: 12,
           ),
           aboutItem( "隐私政策", (){
+            if(kIsWeb){
+              launchUrl(
+                Uri.parse("https://privacy.qq.com/document/preview/1cfe904fb7004b8ab1193a55857f7272"),
+                mode: LaunchMode.externalApplication,
+              );
+              return;
+            }
             Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -102,6 +111,13 @@ class AboutState extends State<About>{
                         "https://privacy.qq.com/document/preview/1cfe904fb7004b8ab1193a55857f7272")));
           }),
           aboutItem( "用户协议", (){
+            if(kIsWeb){
+              launchUrl(
+                Uri.parse("https://web.sdk.qcloud.com/document/Tencent-IM-User-Agreement.html"),
+                mode: LaunchMode.externalApplication,
+              );
+              return;
+            }
             Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -139,6 +155,13 @@ class AboutState extends State<About>{
             height: 12,
           ),
           aboutItem( "信息收集清单", (){
+            if(kIsWeb){
+              launchUrl(
+                Uri.parse("https://privacy.qq.com/document/preview/45ba982a1ce6493597a00f8c86b52a1e"),
+                mode: LaunchMode.externalApplication,
+              );
+              return;
+            }
             Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -148,6 +171,13 @@ class AboutState extends State<About>{
                         "https://privacy.qq.com/document/preview/45ba982a1ce6493597a00f8c86b52a1e")));
           }),
           aboutItem( "信息共享清单", (){
+            if(kIsWeb){
+              launchUrl(
+                Uri.parse("https://privacy.qq.com/document/preview/dea84ac4bb88454794928b77126e9246"),
+                mode: LaunchMode.externalApplication,
+              );
+              return;
+            }
             Navigator.push(
                 context,
                 MaterialPageRoute(
