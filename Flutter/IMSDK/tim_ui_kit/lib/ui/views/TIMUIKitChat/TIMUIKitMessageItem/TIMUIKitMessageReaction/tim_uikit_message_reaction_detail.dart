@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
+import 'package:tim_ui_kit/business_logic/separate_models/tui_chat_separate_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_self_info_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
@@ -22,12 +23,15 @@ class TIMUIKitMessageReactionDetail extends StatefulWidget {
   /// the sticker list from message reaction
   final List<int> stickerList;
 
+  final Function(String userID)? onTapAvatar;
+
   const TIMUIKitMessageReactionDetail(
       {required this.currentStickerIndex,
       this.memberList,
       required this.messageReaction,
       Key? key,
-      required this.stickerList})
+      required this.stickerList,
+      this.onTapAvatar})
       : super(key: key);
 
   @override
@@ -37,21 +41,29 @@ class TIMUIKitMessageReactionDetail extends StatefulWidget {
 class TIMUIKitMessageReactionDetailState
     extends TIMUIKitState<TIMUIKitMessageReactionDetail>
     with TickerProviderStateMixin {
-  final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
   final TUISelfInfoViewModel selfInfoModel =
       serviceLocator<TUISelfInfoViewModel>();
 
-  Widget getUserItem(String userID, TUITheme theme) {
+  Widget getUserItem(
+      String userID, TUITheme theme, Function(String userID)? onTapAvatar) {
     V2TimGroupMemberFullInfo? memberInfo;
     String showName = userID;
     try {
       memberInfo =
           widget.memberList?.firstWhere((element) => element?.userID == userID);
       if (memberInfo != null) {
-        showName = memberInfo.friendRemark ??
-            memberInfo.nameCard ??
-            memberInfo.nickName ??
-            memberInfo.userID;
+        if (memberInfo.friendRemark != null &&
+            memberInfo.friendRemark!.isNotEmpty) {
+          showName = memberInfo.friendRemark!;
+        } else if (memberInfo.nameCard != null &&
+            memberInfo.nameCard!.isNotEmpty) {
+          showName = memberInfo.nameCard!;
+        } else if (memberInfo.nickName != null &&
+            memberInfo.nickName!.isNotEmpty) {
+          showName = memberInfo.nickName!;
+        } else {
+          showName = memberInfo.userID;
+        }
       }
     } catch (e) {
       // e
@@ -59,9 +71,9 @@ class TIMUIKitMessageReactionDetailState
 
     return GestureDetector(
       onTap: () {
-        if (model.onTapAvatar != null) {
+        if (onTapAvatar != null) {
           if (userID != selfInfoModel.loginInfo?.userID) {
-            model.onTapAvatar!(userID);
+            onTapAvatar(userID);
           }
         }
       },
@@ -127,13 +139,14 @@ class TIMUIKitMessageReactionDetailState
     );
   }
 
-  Widget getStickerNameList(int sticker, TUITheme theme) {
+  Widget getStickerNameList(
+      int sticker, TUITheme theme, Function(String userID)? onTapAvatar) {
     final nameList = widget.messageReaction[sticker.toString()];
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
-        children: [...nameList.map((e) => getUserItem(e, theme))],
+        children: [...nameList.map((e) => getUserItem(e, theme, onTapAvatar))],
       ),
     );
   }
@@ -142,7 +155,7 @@ class TIMUIKitMessageReactionDetailState
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     final theme = value.theme;
     return DefaultTabController(
-      initialIndex: widget.currentStickerIndex,
+        initialIndex: widget.currentStickerIndex,
         length: widget.stickerList.length,
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -172,8 +185,8 @@ class TIMUIKitMessageReactionDetailState
               Expanded(
                   child: TabBarView(
                       children: widget.stickerList
-                          .map((int sticker) =>
-                              getStickerNameList(sticker, theme))
+                          .map((int sticker) => getStickerNameList(
+                              sticker, theme, widget.onTapAvatar))
                           .toList()))
             ],
           ),

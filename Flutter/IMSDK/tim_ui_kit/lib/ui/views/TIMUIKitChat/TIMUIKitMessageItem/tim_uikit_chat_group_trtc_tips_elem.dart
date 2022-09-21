@@ -43,11 +43,11 @@ class TIMUIKitGroupTrtcTipsElem extends StatefulWidget {
 
   static String getActionType(int actionType) {
     final actionMessage = {
-      1: "发起通话",
-      2: "取消通话",
-      3: "接受通话",
-      4: "拒绝通话",
-      5: "超时未接听",
+      1: TIM_t("发起通话"),
+      2: TIM_t("取消通话"),
+      3: TIM_t("接受通话"),
+      4: TIM_t("拒绝通话"),
+      5: TIM_t("超时未接听"),
     };
     return actionMessage[actionType] ?? "";
   }
@@ -77,7 +77,7 @@ class _TIMUIKitGroupTrtcTipsElemState
     extends TIMUIKitState<TIMUIKitGroupTrtcTipsElem> {
   final GroupServices groupServices = serviceLocator<GroupServices>();
   // CustomMessage最终展示的内容
-  String customMessageShowText = "[自定义]";
+  String customMessageShowText = TIM_t("[自定义]");
 
   @override
   void initState() {
@@ -235,7 +235,7 @@ class _TIMUIKitGroupTrtcTipsElemState
     final customElem = widget.customMessage?.customElem;
     final callingMessage = TIMUIKitGroupTrtcTipsElem.getCallMessage(customElem);
     if (callingMessage != null) {
-      String showText = "[自定义]";
+      String showText = TIM_t("[自定义]");
       // 如果是结束消息
       final isCallEnd = isCallEndExist(callingMessage);
 
@@ -258,7 +258,7 @@ class _TIMUIKitGroupTrtcTipsElemState
         softWrap: true,
       );
     } else {
-      return const Text("[自定义]");
+      return Text(TIM_t("[自定义]"));
     }
   }
 

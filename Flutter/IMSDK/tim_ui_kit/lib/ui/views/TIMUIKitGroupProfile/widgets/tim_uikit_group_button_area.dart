@@ -6,6 +6,7 @@ import 'package:tim_ui_kit/business_logic/separate_models/tui_group_profile_mode
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/controller/tim_uikit_chat_controller.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
+import 'package:tim_ui_kit/ui/utils/platform.dart';
 
 class GroupProfileButtonArea extends TIMUIKitStatelessWidget {
   final String groupID;
@@ -45,11 +46,20 @@ class GroupProfileButtonArea extends TIMUIKitStatelessWidget {
                 Navigator.pop(
                   context,
                 );
-                final res = await sdkInstance
-                    .getMessageManager()
-                    .clearGroupHistoryMessage(groupID: groupID);
-                if (res.code == 0) {
-                  _timuiKitChatController.clearHistory();
+                if (PlatformUtils().isWeb) {
+                  final res = await sdkInstance
+                      .getConversationManager()
+                      .deleteConversation(conversationID: "group_$groupID");
+                  if (res.code == 0) {
+                    _timuiKitChatController.clearHistory(groupID);
+                  }
+                } else {
+                  final res = await sdkInstance
+                      .getMessageManager()
+                      .clearGroupHistoryMessage(groupID: groupID);
+                  if (res.code == 0) {
+                    _timuiKitChatController.clearHistory(groupID);
+                  }
                 }
               },
               child: Text(
@@ -94,7 +104,6 @@ class GroupProfileButtonArea extends TIMUIKitStatelessWidget {
                     model.lifeCycle?.didLeaveGroup();
                   }
                 }
-                model.loadData(groupID);
               },
               child: Text(
                 TIM_t("确定"),
@@ -135,7 +144,6 @@ class GroupProfileButtonArea extends TIMUIKitStatelessWidget {
                       .getConversationManager()
                       .deleteConversation(conversationID: "group_$groupID");
                   model.lifeCycle?.didLeaveGroup();
-                  model.loadData(groupID);
                 }
               },
               child: Text(

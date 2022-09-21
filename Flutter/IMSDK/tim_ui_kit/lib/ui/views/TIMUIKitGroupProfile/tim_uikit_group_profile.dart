@@ -4,6 +4,7 @@ import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/business_logic/life_cycle/group_profile_life_cycle.dart';
 import 'package:tim_ui_kit/business_logic/listener_model/tui_group_listener_model.dart';
 import 'package:tim_ui_kit/business_logic/separate_models/tui_group_profile_model.dart';
+import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/group_profile_widget.dart';
@@ -76,6 +77,8 @@ class TIMUIKitGroupProfile extends StatefulWidget {
 class _TIMUIKitGroupProfileState extends TIMUIKitState<TIMUIKitGroupProfile> {
   bool isSingleUse = false;
   final model = TUIGroupProfileModel();
+  final TUIGroupListenerModel groupListenerModel =
+      serviceLocator<TUIGroupListenerModel>();
 
   @override
   void initState() {
@@ -116,7 +119,7 @@ class _TIMUIKitGroupProfileState extends TIMUIKitState<TIMUIKitGroupProfile> {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider.value(value: model),
-          ChangeNotifierProvider.value(value: TUIGroupListenerModel()),
+          ChangeNotifierProvider.value(value: groupListenerModel),
         ],
         builder: (context, w) {
           final model = Provider.of<TUIGroupProfileModel>(context);
@@ -127,11 +130,12 @@ class _TIMUIKitGroupProfileState extends TIMUIKitState<TIMUIKitGroupProfile> {
             return Container();
           }
 
-          final TUIGroupListenerModel groupListenerModel = Provider.of<TUIGroupListenerModel>(context);
+          final TUIGroupListenerModel groupListenerModel =
+              Provider.of<TUIGroupListenerModel>(context);
           final NeedUpdate? needUpdate = groupListenerModel.needUpdate;
-          if(needUpdate != null && needUpdate.groupID == widget.groupID){
+          if (needUpdate != null && needUpdate.groupID == widget.groupID) {
             groupListenerModel.needUpdate = null;
-            switch(needUpdate.updateType) {
+            switch (needUpdate.updateType) {
               case UpdateType.groupInfo:
                 model.loadGroupInfo(widget.groupID);
                 break;
@@ -220,6 +224,12 @@ class _TIMUIKitGroupProfileState extends TIMUIKitState<TIMUIKitGroupProfile> {
                       ? customBuilder?.groupTypeBar!(groupInfo.groupType)
                       : TIMUIKitGroupProfileWidget.groupType())!;
                 case GroupProfileWidgetEnum.groupJoiningModeBar:
+                  final String groupType = groupInfo.groupType;
+                  if (groupType == "Work" ||
+                      groupType == "Meeting" ||
+                      groupType == "AVChatRoom") {
+                    return Container();
+                  }
                   return (customBuilder?.groupJoiningModeBar != null
                       ? customBuilder?.groupJoiningModeBar!(
                           groupInfo.groupAddOpt ?? 1, model.setGroupAddOpt)
@@ -232,7 +242,8 @@ class _TIMUIKitGroupProfileState extends TIMUIKitState<TIMUIKitGroupProfile> {
                 case GroupProfileWidgetEnum.muteGroupMessageBar:
                   return (customBuilder?.muteGroupMessageBar != null
                       ? customBuilder?.muteGroupMessageBar!(
-                          model.conversation?.recvOpt != 0, model.setMessageDisturb)
+                          model.conversation?.recvOpt != 0,
+                          model.setMessageDisturb)
                       : TIMUIKitGroupProfileWidget.messageDisturb())!;
                 case GroupProfileWidgetEnum.pinedConversationBar:
                   return (customBuilder?.pinedConversationBar != null

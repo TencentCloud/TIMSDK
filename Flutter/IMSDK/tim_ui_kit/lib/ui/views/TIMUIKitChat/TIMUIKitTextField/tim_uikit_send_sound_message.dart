@@ -2,13 +2,15 @@
 
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:provider/provider.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
+import 'package:tim_ui_kit/business_logic/separate_models/tui_chat_separate_view_model.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_chat_global_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 
@@ -27,7 +29,7 @@ class SendSoundMessage extends StatefulWidget {
   final VoidCallback onDownBottom;
 
   /// the conversation type
-  final int conversationType;
+  final ConvType conversationType;
 
   const SendSoundMessage(
       {required this.conversationID,
@@ -41,7 +43,7 @@ class SendSoundMessage extends StatefulWidget {
 }
 
 class _SendSoundMessageState extends TIMUIKitState<SendSoundMessage> {
-  final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
+  final TUIChatGlobalModel model = serviceLocator<TUIChatGlobalModel>();
   String soundTipsText = "";
   bool isRecording = false;
   bool isInit = false;
@@ -51,6 +53,7 @@ class _SendSoundMessageState extends TIMUIKitState<SendSoundMessage> {
 
   OverlayEntry? overlayEntry;
   String voiceIcon = "images/voice_volume_1.png";
+  double volume = 0.1;
 
   buildOverLayView(BuildContext context) {
     if (overlayEntry == null) {
@@ -74,15 +77,46 @@ class _SendSoundMessageState extends TIMUIKitState<SendSoundMessage> {
                     borderRadius: BorderRadius.all(Radius.circular(20.0)),
                   ),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Container(
-                        margin: const EdgeInsets.only(top: 10),
-                        child: Image.asset(
-                          voiceIcon,
-                          width: 100,
-                          height: 100,
-                          package: 'flutter_plugin_record_plus',
-                        ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(top: 10),
+                            child: Image.asset(
+                              "images/microphone.png",
+                              width: 50,
+                              height: 60,
+                              package: 'flutter_plugin_record_plus',
+                            ),
+                          ),
+                          ClipRect(
+                            clipBehavior: Clip.hardEdge,
+                            child: Align(
+                              heightFactor: min(volume, 1),
+                              alignment: Alignment.bottomCenter,
+                              child: SizedBox(
+                                width: 50,
+                                height: 60,
+                                child: Image.asset(
+                                  "images/voice_volume_total.png",
+                                  width: 50,
+                                  height: 60,
+                                  package: 'flutter_plugin_record_plus',
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 20,
                       ),
                       Text(
                         soundTipsText,
@@ -179,10 +213,12 @@ class _SendSoundMessageState extends TIMUIKitState<SendSoundMessage> {
     });
   }
 
-  sendSound({required String path, required int duration}) {
+  sendSound(
+      {required String path,
+      required int duration,
+      required TUIChatSeparateViewModel model}) {
     final convID = widget.conversationID;
-    final convType =
-        widget.conversationType == 1 ? ConvType.c2c : ConvType.group;
+    final convType = widget.conversationType;
 
     if (duration > 0) {
       if (!isCancelSend) {
@@ -213,14 +249,15 @@ class _SendSoundMessageState extends TIMUIKitState<SendSoundMessage> {
     super.dispose();
   }
 
-  initRecordSound() {
+  initRecordSound(TUIChatSeparateViewModel model) {
     final responseSubscription = SoundPlayer.responseListener((recordResponse) {
       final status = recordResponse.msg;
       if (status == "onStop") {
         if (!isCancelSend) {
           final soundPath = recordResponse.path;
           final recordDuration = recordResponse.audioTimeLength;
-          sendSound(path: soundPath!, duration: recordDuration!.ceil());
+          sendSound(
+              path: soundPath!, duration: recordDuration!.ceil(), model: model);
         }
       } else if (status == "onStart") {
         print("start record");
@@ -231,33 +268,16 @@ class _SendSoundMessageState extends TIMUIKitState<SendSoundMessage> {
         print(status);
       }
     });
-    final amplitutdeResponseSubscription =
+    final amplitudesResponseSubscription =
         SoundPlayer.responseFromAmplitudeListener((recordResponse) {
-      final voiceData = double.parse(recordResponse.msg!);
       setState(() {
-        if (voiceData > 0 && voiceData < 0.1) {
-          voiceIcon = "images/voice_volume_2.png";
-        } else if (voiceData > 0.2 && voiceData < 0.3) {
-          voiceIcon = "images/voice_volume_3.png";
-        } else if (voiceData > 0.3 && voiceData < 0.4) {
-          voiceIcon = "images/voice_volume_4.png";
-        } else if (voiceData > 0.4 && voiceData < 0.5) {
-          voiceIcon = "images/voice_volume_5.png";
-        } else if (voiceData > 0.5 && voiceData < 0.6) {
-          voiceIcon = "images/voice_volume_6.png";
-        } else if (voiceData > 0.6 && voiceData < 0.7) {
-          voiceIcon = "images/voice_volume_7.png";
-        } else if (voiceData > 0.7 && voiceData < 1) {
-          voiceIcon = "images/voice_volume_7.png";
-        } else {
-          voiceIcon = "images/voice_volume_1.png";
-        }
+        volume = double.parse(recordResponse.msg!) * 1.1;
         if (overlayEntry != null) {
           overlayEntry!.markNeedsBuild();
         }
       });
     });
-    subscriptions = [responseSubscription, amplitutdeResponseSubscription];
+    subscriptions = [responseSubscription, amplitudesResponseSubscription];
     SoundPlayer.initSoundPlayer();
     isInit = true;
   }
@@ -265,7 +285,8 @@ class _SendSoundMessageState extends TIMUIKitState<SendSoundMessage> {
   @override
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     final TUITheme theme = value.theme;
-
+    final TUIChatSeparateViewModel model =
+        Provider.of<TUIChatSeparateViewModel>(context);
     return GestureDetector(
       onTapDown: (detail) async {
         if (!isInit) {
@@ -274,7 +295,7 @@ class _SendSoundMessageState extends TIMUIKitState<SendSoundMessage> {
           if (!hasMicrophonePermission) {
             return;
           }
-          initRecordSound();
+          initRecordSound(model);
         }
       },
       onLongPressStart: onLongPressStart,

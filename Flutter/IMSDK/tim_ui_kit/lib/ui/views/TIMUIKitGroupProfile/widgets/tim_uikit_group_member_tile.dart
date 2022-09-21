@@ -36,13 +36,14 @@ class GroupMemberTile extends TIMUIKitStatelessWidget {
     return friendRemark != "" ? friendRemark : showName;
   }
 
-  List<Widget> _groupMemberListBuilder(List memberList, TUITheme theme, TUIGroupProfileModel model) {
+  List<Widget> _groupMemberListBuilder(
+      List memberList, TUITheme theme, TUIGroupProfileModel model) {
     return _getMemberList(memberList).map((element) {
       final faceUrl = element?.faceUrl ?? "";
       final showName = _getShowName(element);
       return GestureDetector(
-        onTap: (){
-          if(model.onClickUser != null && element?.userID != null){
+        onTap: () {
+          if (model.onClickUser != null && element?.userID != null) {
             model.onClickUser!(element!.userID);
           }
         },
@@ -55,7 +56,11 @@ class GroupMemberTile extends TIMUIKitStatelessWidget {
               SizedBox(
                 width: 50,
                 height: 50,
-                child: Avatar(faceUrl: faceUrl, showName: showName,type: 1,),
+                child: Avatar(
+                  faceUrl: faceUrl,
+                  showName: showName,
+                  type: 1,
+                ),
               ),
               const SizedBox(
                 height: 8,
@@ -116,15 +121,15 @@ class GroupMemberTile extends TIMUIKitStatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(TIM_t("群成员"),
-                      style: TextStyle(
-                          color: theme.darkTextColor, fontSize: 16)),
+                      style:
+                          TextStyle(color: theme.darkTextColor, fontSize: 16)),
                   Row(
                     children: [
                       Text(
                         TIM_t_para("{{option1}}人", "$option1人")(
                             option1: option1),
-                        style: TextStyle(
-                            color: theme.darkTextColor, fontSize: 16),
+                        style:
+                            TextStyle(color: theme.darkTextColor, fontSize: 16),
                       ),
                       Icon(
                         Icons.keyboard_arrow_right,
@@ -203,8 +208,7 @@ class GroupMemberTile extends TIMUIKitStatelessWidget {
                 margin: const EdgeInsets.only(top: 16),
                 child: Text(
                   TIM_t("查看更多群成员"),
-                  style:
-                  TextStyle(color: theme.weakTextColor, fontSize: 14),
+                  style: TextStyle(color: theme.weakTextColor, fontSize: 14),
                 ),
               ),
               onTap: () async {

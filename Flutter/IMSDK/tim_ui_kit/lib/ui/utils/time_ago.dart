@@ -62,19 +62,31 @@ class TimeAgo {
     final formatedTimeStamp = timeStamp * 1000;
     final DateTime date =
         DateTime.fromMillisecondsSinceEpoch(formatedTimeStamp);
+    final currentTimeStamp = DateTime.now().millisecondsSinceEpoch;
     final Duration duration = DateTime.now().difference(date);
 
-    final diffDays = duration.inDays;
+    int diffDays = duration.inDays;
     final diffMinutes = duration.inMinutes;
     var res;
+
     // 一个礼拜之内
     if (diffDays > 0 && diffDays < 7) {
+      final String formatTodayZero =
+          DateFormat('yyyyMMdd').format(DateTime.now());
+      final todayZero = DateTime.parse(formatTodayZero).millisecondsSinceEpoch;
+      final todayDiff = currentTimeStamp - todayZero;
+
+      final isTwoDay = todayDiff < (diffMinutes - diffDays * 1440) * 60000;
+      if (isTwoDay) {
+        diffDays = diffDays + 1;
+      }
+
       if (diffDays <= 2) {
         res = dayMap()[diffDays - 1];
       } else {
         res = daysMap()[date.weekday];
       }
-    } else if (diffDays > 7) {
+    } else if (diffDays >= 7) {
       //当年内
       if (date.year == DateTime.now().year) {
         res = getMounthDate(date);
@@ -110,7 +122,7 @@ class TimeAgo {
       return '${DateFormat('yyyy-MM-dd').format(ftime)} $preFix $timeStr';
     }
     // 一年内一周外 月日 + 上/下午 + 时间 (12小时制）
-    if (ftime.isBefore(nowTime.subtract(const Duration(days: 7)))) {
+    if (ftime.isBefore(nowTime.subtract(const Duration(days: 6)))) {
       return '${DateFormat('MM-dd').format(ftime)} $preFix $timeStr';
     }
     // 一周内一天外 星期 + 上/下午 + 时间 (12小时制）

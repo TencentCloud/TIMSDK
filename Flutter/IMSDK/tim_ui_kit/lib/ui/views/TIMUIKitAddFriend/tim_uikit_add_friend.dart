@@ -21,7 +21,10 @@ class TIMUIKitAddFriend extends StatefulWidget {
   /// The life cycle hooks for adding friends and contact business logic
   final AddFriendLifeCycle? lifeCycle;
   const TIMUIKitAddFriend(
-      {Key? key, this.isShowDefaultGroup = false, this.lifeCycle, required this.onTapAlreadyFriendsItem})
+      {Key? key,
+      this.isShowDefaultGroup = false,
+      this.lifeCycle,
+      required this.onTapAlreadyFriendsItem})
       : super(key: key);
 
   @override
@@ -33,7 +36,8 @@ class _TIMUIKitAddFriendState extends TIMUIKitState<TIMUIKitAddFriend> {
   final CoreServicesImpl _coreServicesImpl = serviceLocator<CoreServicesImpl>();
   final FriendshipServices _friendshipServices =
       serviceLocator<FriendshipServices>();
-  final TUISelfInfoViewModel _selfInfoViewModel = serviceLocator<TUISelfInfoViewModel>();
+  final TUISelfInfoViewModel _selfInfoViewModel =
+      serviceLocator<TUISelfInfoViewModel>();
   final FocusNode _focusNode = FocusNode();
   bool isFocused = false;
   bool showResult = false;
@@ -43,7 +47,11 @@ class _TIMUIKitAddFriendState extends TIMUIKitState<TIMUIKitAddFriend> {
       V2TimUserFullInfo friendInfo, TUITheme theme) {
     final faceUrl = friendInfo.faceUrl ?? "";
     final userID = friendInfo.userID ?? "";
-    final showName = friendInfo.nickName ?? userID;
+    final String showName =
+        ((friendInfo.nickName != null && friendInfo.nickName!.isNotEmpty)
+                ? friendInfo.nickName
+                : userID) ??
+            "";
     return InkWell(
       onTap: () async {
         final checkFriend = await _friendshipServices.checkFriend(
@@ -59,6 +67,11 @@ class _TIMUIKitAddFriendState extends TIMUIKitState<TIMUIKitAddFriend> {
             widget.onTapAlreadyFriendsItem(userID);
             return;
           }
+        }
+
+        if (userID == _selfInfoViewModel.loginInfo?.userID) {
+          widget.onTapAlreadyFriendsItem(userID);
+          return;
         }
 
         Navigator.pushReplacement(
@@ -135,11 +148,11 @@ class _TIMUIKitAddFriendState extends TIMUIKitState<TIMUIKitAddFriend> {
   searchFriend(String params) async {
     final response = await _coreServicesImpl.getUsersInfo(userIDList: [params]);
     if (response.code == 0) {
-      setState((){
+      setState(() {
         searchResult = response.data;
       });
     } else {
-      setState((){
+      setState(() {
         searchResult = null;
       });
     }

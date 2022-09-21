@@ -13,15 +13,17 @@ import 'package:provider/provider.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_chat_global_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/utils/permission.dart';
 import 'package:open_file/open_file.dart';
+import 'package:tim_ui_kit/ui/utils/platform.dart';
 import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitMessageItem/TIMUIKitMessageReaction/tim_uikit_message_reaction_wrapper.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitMessageItem/tim_uikit_chat_file_icon.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TIMUIKitFileElem extends StatefulWidget {
   final String? messageID;
@@ -49,7 +51,7 @@ class TIMUIKitFileElem extends StatefulWidget {
 
 class _TIMUIKitFileElemState extends TIMUIKitState<TIMUIKitFileElem> {
   String filePath = "";
-  final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
+  final TUIChatGlobalModel model = serviceLocator<TUIChatGlobalModel>();
 
   Future<bool?> showOpenFileConfirmDialog(
       BuildContext context, String path, TUITheme? theme) async {
@@ -86,20 +88,27 @@ class _TIMUIKitFileElemState extends TIMUIKitState<TIMUIKitFileElem> {
   @override
   void initState() {
     super.initState();
-    getTemporaryDirectory().then((appDocDir) {
-      String filePath = widget.fileElem!.path ??
-          (appDocDir.path + '/' + widget.fileElem!.fileName!);
-      hasFile(filePath);
-      if (widget.fileElem!.path != null) {
-        // 防止path路径是其他App本地存储路径
-        hasFile(appDocDir.path + '/' + widget.fileElem!.fileName!);
-      }
-    });
+    if (!PlatformUtils().isWeb) {
+      getTemporaryDirectory().then((appDocDir) {
+        String filePath = widget.fileElem!.path ??
+            (appDocDir.path +
+                '/' +
+                (widget.message.msgID ?? "") +
+                widget.fileElem!.fileName!);
+        hasFile(filePath);
+        if (widget.fileElem!.path != null) {
+          hasFile(appDocDir.path +
+              '/' +
+              (widget.message.msgID ?? "") +
+              widget.fileElem!.fileName!);
+        }
+      });
+    }
   }
 
   bool hasFile(String savePath) {
     File f = File(savePath);
-    if (f.existsSync()) {
+    if (f.existsSync() && widget.messageID != null) {
       filePath = savePath;
       model.setMessageProgress(widget.messageID!, 100);
       return true;
@@ -108,12 +117,23 @@ class _TIMUIKitFileElemState extends TIMUIKitState<TIMUIKitFileElem> {
   }
 
   void _onTap(context, theme, received) async {
-    // not judge self FileElem
+    if (PlatformUtils().isWeb) {
+      launchUrl(
+        Uri.parse(widget.fileElem?.path ?? ""),
+        mode: LaunchMode.externalApplication,
+      );
+      return;
+    }
     var appDocDir = await getTemporaryDirectory();
     String savePath = widget.fileElem!.path ??
-        (appDocDir.path + '/' + widget.fileElem!.fileName!);
-    String savePathWithAppPath =
-        appDocDir.path + '/' + widget.fileElem!.fileName!;
+        (appDocDir.path +
+            '/' +
+            (widget.message.msgID ?? "") +
+            widget.fileElem!.fileName!);
+    String savePathWithAppPath = appDocDir.path +
+        '/' +
+        (widget.message.msgID ?? "") +
+        widget.fileElem!.fileName!;
     if (received == 0) {
       if (!await Permissions.checkPermission(
           context, Permission.storage.value)) {
@@ -163,6 +183,8 @@ class _TIMUIKitFileElemState extends TIMUIKitState<TIMUIKitFileElem> {
         }
       }
     } else if (received == 100) {
+      hasFile(savePath);
+      hasFile(savePathWithAppPath);
       showOpenFileConfirmDialog(context, filePath, theme);
     }
   }
@@ -178,7 +200,8 @@ class _TIMUIKitFileElemState extends TIMUIKitState<TIMUIKitFileElem> {
         message: widget.message,
         child: ChangeNotifierProvider.value(
             value: model,
-            child: Consumer<TUIChatViewModel>(builder: (context, value, child) {
+            child:
+                Consumer<TUIChatGlobalModel>(builder: (context, value, child) {
               final received = value.getMessageProgress(widget.messageID);
               final fileName = widget.fileElem!.fileName ?? "";
               final fileSize = widget.fileElem!.fileSize;
@@ -261,13 +284,14 @@ class _TIMUIKitFileElemState extends TIMUIKitState<TIMUIKitFileElem> {
                                         fontSize: 16,
                                       ),
                                     ),
-                                    Text(
-                                      "${(fileSize! / 1024).ceil()} KB",
-                                      // "${received > 0 ? (received / 1024).ceil() : (received / 1024).ceil()} KB",
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          color: theme.weakTextColor),
-                                    )
+                                    if (fileSize != null)
+                                      Text(
+                                        "${(fileSize / 1024).ceil()} KB",
+                                        // "${received > 0 ? (received / 1024).ceil() : (received / 1024).ceil()} KB",
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: theme.weakTextColor),
+                                      )
                                   ],
                                 )),
                                 TIMUIKitFileIcon(

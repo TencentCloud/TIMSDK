@@ -16,7 +16,8 @@ class TUIProfileViewModel extends ChangeNotifier {
       serviceLocator<ConversationService>();
   final FriendshipServices _friendshipServices =
       serviceLocator<FriendshipServices>();
-  final TUIFriendShipViewModel _friendShipViewModel = serviceLocator<TUIFriendShipViewModel>();
+  final TUIFriendShipViewModel _friendShipViewModel =
+      serviceLocator<TUIFriendShipViewModel>();
   final CoreServicesImpl _coreServices = serviceLocator<CoreServicesImpl>();
   final MessageService _messageService = serviceLocator<MessageService>();
 
@@ -46,12 +47,11 @@ class TUIProfileViewModel extends ChangeNotifier {
     _lifeCycle = value;
   }
 
-  loadData({required String userID}) async {
+  loadData({required String userID, bool isNeedConversation = true}) async {
     V2TimFriendInfo? friendUserInfo;
+    V2TimConversation? conversation;
     final userInfoList =
         await _friendshipServices.getFriendsInfo(userIDList: [userID]);
-    final conversation = await _conversationService.getConversation(
-        conversationID: "c2c_$userID");
     final checkFriend = await _friendshipServices.checkFriend(
         userIDList: [userID],
         checkType: FriendTypeEnum.V2TIM_FRIEND_TYPE_SINGLE);
@@ -65,6 +65,12 @@ class TUIProfileViewModel extends ChangeNotifier {
 
     if (userInfoList != null) {
       friendUserInfo = userInfoList[0].friendInfo;
+    }
+
+    if (isNeedConversation) {
+      conversation = await _conversationService.getConversation(
+          conversationID: "c2c_$userID");
+      _isDisturb = conversation?.recvOpt == 2;
     }
 
     final friendInfo =
@@ -89,7 +95,8 @@ class TUIProfileViewModel extends ChangeNotifier {
     return res;
   }
 
-  Future<List<V2TimFriendOperationResult>?> addToBlackList(bool shouldAdd, String userID) async {
+  Future<List<V2TimFriendOperationResult>?> addToBlackList(
+      bool shouldAdd, String userID) async {
     if (_lifeCycle?.shouldAddToBlockList != null &&
         await _lifeCycle!.shouldAddToBlockList(userID) == false) {
       return null;
@@ -97,7 +104,7 @@ class TUIProfileViewModel extends ChangeNotifier {
     if (shouldAdd) {
       final res =
           await _friendshipServices.addToBlackList(userIDList: [userID]);
-      if (res != null) {
+      if (res != null && res.isNotEmpty) {
         final result = res.first;
         if (result.resultCode == 0) {
           _shouldAddToBlackList = true;
@@ -109,7 +116,7 @@ class TUIProfileViewModel extends ChangeNotifier {
     } else {
       final res =
           await _friendshipServices.deleteFromBlackList(userIDList: [userID]);
-      if (res != null) {
+      if (res != null && res.isNotEmpty) {
         final result = res.first;
         if (result.resultCode == 0) {
           _shouldAddToBlackList = false;
@@ -122,6 +129,7 @@ class TUIProfileViewModel extends ChangeNotifier {
           }
         }
       }
+      _friendShipViewModel.loadBlockListData();
       notifyListeners();
       return res;
     }
@@ -158,7 +166,7 @@ class TUIProfileViewModel extends ChangeNotifier {
   }
 
   // 1：男 女：2
-  updateGender(int gender) async {
+  Future<V2TimCallback> updateGender(int gender) async {
     final res = await _coreServices.setSelfInfo(
       userFullInfo: V2TimUserFullInfo.fromJson(
         {"gender": gender},
@@ -170,9 +178,11 @@ class TUIProfileViewModel extends ChangeNotifier {
     } else {
       print("${res.code},${res.desc}");
     }
+
+    return res;
   }
 
-  updateNickName(String nickName) async {
+  Future<V2TimCallback> updateNickName(String nickName) async {
     final res = await _coreServices.setSelfInfo(
       userFullInfo: V2TimUserFullInfo.fromJson(
         {"nickName": nickName},
@@ -185,9 +195,11 @@ class TUIProfileViewModel extends ChangeNotifier {
     } else {
       print("${res.code},${res.desc}");
     }
+
+    return res;
   }
 
-  updateSelfSignature(String selfSignature) async {
+  Future<V2TimCallback> updateSelfSignature(String selfSignature) async {
     final res = await _coreServices.setSelfInfo(
       userFullInfo: V2TimUserFullInfo.fromJson(
         {"selfSignature": selfSignature},
@@ -199,6 +211,7 @@ class TUIProfileViewModel extends ChangeNotifier {
     } else {
       print("${res.code},${res.desc}");
     }
+    return res;
   }
 
   Future<V2TimFriendOperationResult?> addFriend(String userID) async {
@@ -236,6 +249,57 @@ class TUIProfileViewModel extends ChangeNotifier {
       _isDisturb = isDisturb;
     }
     notifyListeners();
+    return res;
+  }
+
+  updateUserInfo(String key, dynamic value) {
+    if (key == "nickName") {
+      _userProfile?.friendInfo!.userProfile?.nickName = value;
+    }
+    if (key == "faceUrl") {
+      _userProfile?.friendInfo!.userProfile?.faceUrl = value;
+    }
+    if (key == "nickName") {
+      _userProfile?.friendInfo!.userProfile?.nickName = value;
+    }
+    if (key == "selfSignature") {
+      _userProfile?.friendInfo!.userProfile?.selfSignature = value;
+    }
+    if (key == "gender") {
+      _userProfile?.friendInfo!.userProfile?.gender = value;
+    }
+    if (key == "allowType") {
+      _userProfile?.friendInfo!.userProfile?.allowType = value;
+    }
+    if (key == "customInfo") {
+      _userProfile?.friendInfo!.userProfile?.customInfo = value;
+    }
+    if (key == "role") {
+      _userProfile?.friendInfo!.userProfile?.role = value;
+    }
+    if (key == "level") {
+      _userProfile?.friendInfo!.userProfile?.level = value;
+    }
+    if (key == "birthday") {
+      _userProfile?.friendInfo!.userProfile?.birthday = value;
+    }
+  }
+
+  Future<V2TimCallback> updateSelfInfo(Map<String, dynamic> newSelfInfo) async {
+    final res = await _coreServices.setSelfInfo(
+      userFullInfo: V2TimUserFullInfo.fromJson(
+        newSelfInfo,
+      ),
+    );
+    if (res.code == 0) {
+      newSelfInfo.forEach((key, value) {
+        updateUserInfo(key, value);
+      });
+
+      notifyListeners();
+    } else {
+      print("${res.code},${res.desc}");
+    }
     return res;
   }
 }

@@ -53,7 +53,8 @@ class TIMUIKitOperationItem extends TIMUIKitStatelessWidget {
                   if (operationDescription != null)
                     Text(
                       operationDescription!,
-                      style: TextStyle(color: theme.weakTextColor, fontSize: 12),
+                      style:
+                          TextStyle(color: theme.weakTextColor, fontSize: 12),
                     )
                 ],
               ),

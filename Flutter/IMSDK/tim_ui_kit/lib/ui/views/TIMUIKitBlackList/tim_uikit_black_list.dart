@@ -35,7 +35,8 @@ class TIMUIKitBlackList extends StatefulWidget {
 }
 
 class _TIMUIKitBlackListState extends TIMUIKitState<TIMUIKitBlackList> {
-  final TUIFriendShipViewModel _friendshipViewModel = serviceLocator<TUIFriendShipViewModel>();
+  final TUIFriendShipViewModel _friendshipViewModel =
+      serviceLocator<TUIFriendShipViewModel>();
 
   _getShowName(V2TimFriendInfo item) {
     final friendRemark = item.friendRemark ?? "";
@@ -53,7 +54,8 @@ class _TIMUIKitBlackListState extends TIMUIKitState<TIMUIKitBlackList> {
         endActionPane: ActionPane(motion: const DrawerMotion(), children: [
           SlidableAction(
             onPressed: (context) async {
-              await _friendshipViewModel.deleteFromBlockList([friendInfo.userID]);
+              await _friendshipViewModel
+                  .deleteFromBlockList([friendInfo.userID]);
             },
             backgroundColor: theme.cautionColor ?? CommonColor.cautionColor,
             foregroundColor: Colors.white,
@@ -63,7 +65,7 @@ class _TIMUIKitBlackListState extends TIMUIKitState<TIMUIKitBlackList> {
         ]),
         child: GestureDetector(
           onTap: () {
-            if(widget.onTapItem != null){
+            if (widget.onTapItem != null) {
               widget.onTapItem!(friendInfo);
             }
           },
@@ -82,18 +84,18 @@ class _TIMUIKitBlackListState extends TIMUIKitState<TIMUIKitBlackList> {
                 ),
                 Expanded(
                     child: Container(
-                      alignment: Alignment.centerLeft,
-                      padding: const EdgeInsets.only(top: 10, bottom: 20),
-                      decoration: BoxDecoration(
-                          border: Border(
-                              bottom: BorderSide(
-                                  color: theme.weakDividerColor ??
-                                      CommonColor.weakDividerColor))),
-                      child: Text(
-                        showName,
-                        style: const TextStyle(color: Colors.black, fontSize: 18),
-                      ),
-                    ))
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.only(top: 10, bottom: 20),
+                  decoration: BoxDecoration(
+                      border: Border(
+                          bottom: BorderSide(
+                              color: theme.weakDividerColor ??
+                                  CommonColor.weakDividerColor))),
+                  child: Text(
+                    showName,
+                    style: const TextStyle(color: Colors.black, fontSize: 18),
+                  ),
+                ))
               ],
             ),
           ),
@@ -121,6 +123,7 @@ class _TIMUIKitBlackListState extends TIMUIKitState<TIMUIKitBlackList> {
         final blockList = model.blockList;
         if (blockList.isNotEmpty) {
           return ListView.builder(
+            shrinkWrap: true,
             itemCount: blockList.length,
             itemBuilder: (context, index) {
               final friendInfo = blockList[index];

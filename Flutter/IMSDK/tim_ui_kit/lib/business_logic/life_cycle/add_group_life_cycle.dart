@@ -5,7 +5,8 @@ class AddGroupLifeCycle {
   /// Before requesting to add or join to a group,
   /// `true` means can add continually, while `false` will not add.
   /// You can make a second confirmation here by a modal, etc.
-  FutureBool Function(String groupID, String message, [BuildContext? context]) shouldAddGroup;
+  FutureBool Function(String groupID, String message, [BuildContext? context])
+      shouldAddGroup;
 
   AddGroupLifeCycle({
     this.shouldAddGroup = DefaultLifeCycle.defaultAddGroup,

@@ -63,7 +63,7 @@ class TUIFriendShipViewModel extends ChangeNotifier {
   List<V2TimFriendApplication?>? get friendApplicationList =>
       _friendApplicationList;
 
-  TUIFriendShipViewModel(){
+  TUIFriendShipViewModel() {
     friendShipListener = V2TimFriendshipListener(
       onFriendApplicationListAdded: (applicationList) {
         loadContactApplicationData();
@@ -94,7 +94,6 @@ class TUIFriendShipViewModel extends ChangeNotifier {
         loadUserStatus();
       },
     );
-    setFriendshipListener();
   }
 
   initFriendShipModel() {
@@ -108,6 +107,15 @@ class TUIFriendShipViewModel extends ChangeNotifier {
     loadUserStatus();
   }
 
+  clearData() {
+    _friendApplicationList = [];
+    _friendApplicationAmount = 0;
+    _friendList = [];
+    _userStatusList = [];
+    _blockList = [];
+    notifyListeners();
+  }
+
   loadUserStatus() async {
     if (selfInfoViewModel.globalConfig?.isShowOnlineStatus == false ||
         friendList == null ||
@@ -117,18 +125,22 @@ class TUIFriendShipViewModel extends ChangeNotifier {
 
     final List<List<String>> userIDSet = [];
     final int needHowManyRequest = ((friendList!.length) / 500).ceil();
-    final int amountEachRequest = ((friendList!.length) / needHowManyRequest).ceil();
+    final int amountEachRequest =
+        ((friendList!.length) / needHowManyRequest).ceil();
 
     for (int i = 0; i < needHowManyRequest; i++) {
-      userIDSet.add(friendList
-          !.getRange(i * amountEachRequest,
+      userIDSet.add(friendList!
+          .getRange(i * amountEachRequest,
               min(friendList!.length, (i + 1) * amountEachRequest))
-          .map((e) => e.userID).toList());
+          .map((e) => e.userID)
+          .toList());
     }
 
-    final List<List<V2TimUserStatus>> userStatus = await Future.wait([...userIDSet.map((userIDList) async {
-      return await _friendshipServices.getUserStatus(userIDList: userIDList);
-    })]);
+    final List<List<V2TimUserStatus>> userStatus = await Future.wait([
+      ...userIDSet.map((userIDList) async {
+        return await _friendshipServices.getUserStatus(userIDList: userIDList);
+      })
+    ]);
 
     final List<V2TimUserStatus> flatUserStatus = [];
     for (var e in userStatus) {
@@ -236,7 +248,11 @@ class TUIFriendShipViewModel extends ChangeNotifier {
     return res.data ?? [];
   }
 
-  setFriendshipListener({V2TimFriendshipListener? listener}) {
-    _friendshipServices.setFriendshipListener(listener: friendShipListener);
+  addFriendListener({V2TimFriendshipListener? listener}) {
+    _friendshipServices.addFriendListener(listener: friendShipListener);
+  }
+
+  removeFriendshipListener({V2TimFriendshipListener? listener}) {
+    _friendshipServices.removeFriendListener(listener: friendShipListener);
   }
 }

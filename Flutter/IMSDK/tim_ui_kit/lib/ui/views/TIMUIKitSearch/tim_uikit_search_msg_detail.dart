@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
+import 'package:tim_ui_kit/ui/utils/platform.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitSearch/pureUI/tim_uikit_search_input.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitSearch/pureUI/tim_uikit_search_item.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_search_view_model.dart';
@@ -9,6 +10,7 @@ import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitSearch/pureUI/tim_uikit_search_showAll.dart';
 
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
+import 'package:tim_ui_kit/ui/views/TIMUIKitSearch/tim_uikit_search_not_support.dart';
 
 class TIMUIKitSearchMsgDetail extends StatefulWidget {
   /// Conversation need search
@@ -134,6 +136,9 @@ class TIMUIKitSearchMsgDetailState
 
   @override
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    if (PlatformUtils().isWeb) {
+      return TIMUIKitSearchNotSupport();
+    }
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(
@@ -161,9 +166,13 @@ class TIMUIKitSearchMsgDetailState
                   updateMsgResult(value, true);
                 },
                 initValue: widget.keyword,
-                prefixText: Text(widget.currentConversation.showName ??
-                    widget.currentConversation.userID ??
-                    ""),
+                prefixText: Text(
+                  widget.currentConversation.showName ??
+                      widget.currentConversation.userID ??
+                      "",
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
               Expanded(
                   child: ListView(

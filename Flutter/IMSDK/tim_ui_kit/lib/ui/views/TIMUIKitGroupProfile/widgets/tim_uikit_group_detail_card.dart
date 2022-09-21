@@ -147,7 +147,11 @@ class GroupProfileDetailCard extends TIMUIKitStatelessWidget {
             SizedBox(
               width: 48,
               height: 48,
-              child: Avatar(faceUrl: faceUrl, showName: showName,type: 2,),
+              child: Avatar(
+                faceUrl: faceUrl,
+                showName: showName,
+                type: 2,
+              ),
             ),
             Expanded(
               child: Container(

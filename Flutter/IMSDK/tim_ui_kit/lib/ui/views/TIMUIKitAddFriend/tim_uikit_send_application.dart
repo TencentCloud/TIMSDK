@@ -35,8 +35,8 @@ class _SendApplicationState extends TIMUIKitState<SendApplication> {
   @override
   void initState() {
     super.initState();
-    final showName = widget.model.loginInfo?.nickName ??
-        widget.model.loginInfo?.userID;
+    final showName =
+        widget.model.loginInfo?.nickName ?? widget.model.loginInfo?.userID;
     _verficationController.text = "我是: $showName";
   }
 
@@ -44,11 +44,15 @@ class _SendApplicationState extends TIMUIKitState<SendApplication> {
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     final TUITheme theme = value.theme;
     final FriendshipServices _friendshipServices =
-    serviceLocator<FriendshipServices>();
+        serviceLocator<FriendshipServices>();
 
     final faceUrl = widget.friendInfo.faceUrl ?? "";
     final userID = widget.friendInfo.userID ?? "";
-    final showName = widget.friendInfo.nickName ?? userID;
+    final String showName = ((widget.friendInfo.nickName != null &&
+                widget.friendInfo.nickName!.isNotEmpty)
+            ? widget.friendInfo.nickName
+            : userID) ??
+        "";
     final option2 = widget.friendInfo.selfSignature ?? "";
     return Scaffold(
       appBar: AppBar(
@@ -221,10 +225,20 @@ class _SendApplicationState extends TIMUIKitState<SendApplication> {
                         friendGroup: friendGroup);
 
                     if (res.code == 0 && res.data?.resultCode == 0) {
-                      // onTIMCallback(TIMCallback(
-                      //     type: TIMCallbackType.INFO,
-                      //     infoRecommendText: TIM_t("好友申请已发送"),
-                      //     infoCode: 6660101));
+                      onTIMCallback(TIMCallback(
+                          type: TIMCallbackType.INFO,
+                          infoRecommendText: TIM_t("好友添加成功"),
+                          infoCode: 6661202));
+                    } else if (res.code == 0 && res.data?.resultCode == 30539) {
+                      onTIMCallback(TIMCallback(
+                          type: TIMCallbackType.INFO,
+                          infoRecommendText: TIM_t("好友申请已发出"),
+                          infoCode: 6661203));
+                    } else if (res.code == 0 && res.data?.resultCode == 30515) {
+                      onTIMCallback(TIMCallback(
+                          type: TIMCallbackType.INFO,
+                          infoRecommendText: TIM_t("当前用户在黑名单"),
+                          infoCode: 6661204));
                     }
                   },
                   child: Text(TIM_t("发送"))),

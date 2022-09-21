@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
-import 'package:tim_ui_kit/data_services/services_locatar.dart';
+import 'package:tim_ui_kit/business_logic/separate_models/tui_chat_separate_view_model.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_chat_global_model.dart';
 import 'package:tim_ui_kit/ui/constants/history_message_constant.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKItMessageList/TIMUIKitTongue/tim_uikit_chat_history_message_list_tongue.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKItMessageList/tim_uikit_chat_history_message_list_config.dart';
@@ -38,11 +38,12 @@ class TIMUIKitHistoryMessageListContainer extends StatefulWidget {
       [Key? key])? extraTipsActionItemBuilder;
 
   /// conversation type
-  final int conversationType;
+  final ConvType conversationType;
 
   final void Function(String userID)? onTapAvatar;
 
-  @Deprecated("Nickname will not show in one-to-one chat, if you tend to control it in group chat, please use `isShowSelfNameInGroup` and `isShowOthersNameInGroup` from `config: TIMUIKitChatConfig` instead")
+  @Deprecated(
+      "Nickname will not show in one-to-one chat, if you tend to control it in group chat, please use `isShowSelfNameInGroup` and `isShowOthersNameInGroup` from `config: TIMUIKitChatConfig` instead")
   final bool showNickName;
 
   final TIMUIKitHistoryMessageListConfig? mainHistoryListConfig;
@@ -63,7 +64,7 @@ class TIMUIKitHistoryMessageListContainer extends StatefulWidget {
       this.extraTipsActionItemBuilder,
       this.onTapAvatar,
       @Deprecated("Nickname will not show in one-to-one chat, if you tend to control it in group chat, please use `isShowSelfNameInGroup` and `isShowOthersNameInGroup` from `config: TIMUIKitChatConfig` instead")
-      this.showNickName = true,
+          this.showNickName = true,
       this.initFindingMsg,
       this.mainHistoryListConfig,
       this.toolTipsConfig})
@@ -75,19 +76,15 @@ class TIMUIKitHistoryMessageListContainer extends StatefulWidget {
 
 class _TIMUIKitHistoryMessageListContainerState
     extends TIMUIKitState<TIMUIKitHistoryMessageListContainer> {
-  final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
   late TIMUIKitHistoryMessageListController _historyMessageListController;
 
   List<V2TimMessage?> historyMessageList = [];
 
-  Future<void> requestForData(String? lastMsgID, [int? count]) async {
-    final convID = widget.conversationID;
-    final convType = widget.conversationType;
+  Future<void> requestForData(String? lastMsgID, TUIChatSeparateViewModel model,
+      [int? count]) async {
     if (model.haveMoreData) {
       await model.loadData(
-          count: count ?? HistoryMessageDartConstant.getCount, //20
-          userID: convType == 1 ? convID : null,
-          groupID: convType == 2 ? convID : null,
+          count: count ?? HistoryMessageDartConstant.getCount,
           lastMsgID: lastMsgID);
     }
   }
@@ -102,39 +99,45 @@ class _TIMUIKitHistoryMessageListContainerState
   @override
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     final chatConfig = Provider.of<TIMUIKitChatConfig>(context);
+    final TUIChatSeparateViewModel model =
+        Provider.of<TUIChatSeparateViewModel>(context);
+
     return TIMUIKitHistoryMessageListSelector(
+      conversationID: model.conversationID,
       builder: (context, messageList, child) {
         historyMessageList = messageList;
         return TIMUIKitHistoryMessageList(
+          model: model,
           controller: _historyMessageListController,
           groupAtInfoList: widget.groupAtInfoList,
           mainHistoryListConfig: widget.mainHistoryListConfig,
           itemBuilder: (context, message) {
             return TIMUIKitHistoryMessageListItem(
-              onScrollToIndex: _historyMessageListController.scrollToIndex,
-              onScrollToIndexBegin:
-                  _historyMessageListController.scrollToIndexBegin,
-              toolTipsConfig: widget.toolTipsConfig ??
-                  ToolTipsConfig(
-                      additionalItemBuilder: widget.extraTipsActionItemBuilder),
-              message: message!,
-              onTapForOthersPortrait: widget.onTapAvatar,
-              messageItemBuilder: widget.messageItemBuilder,
-              onLongPressForOthersHeadPortrait:
-                  widget.onLongPressForOthersHeadPortrait,
-              allowAtUserWhenReply: chatConfig.isAtWhenReply,
-              allowAvatarTap: chatConfig.isAllowClickAvatar,
-              allowLongPress: chatConfig.isAllowLongPressMessage,
-              isUseMessageReaction: chatConfig.isUseMessageReaction
-            );
+                onScrollToIndex: _historyMessageListController.scrollToIndex,
+                onScrollToIndexBegin:
+                    _historyMessageListController.scrollToIndexBegin,
+                toolTipsConfig: widget.toolTipsConfig ??
+                    ToolTipsConfig(
+                        additionalItemBuilder:
+                            widget.extraTipsActionItemBuilder),
+                message: message!,
+                onTapForOthersPortrait: widget.onTapAvatar,
+                messageItemBuilder: widget.messageItemBuilder,
+                onLongPressForOthersHeadPortrait:
+                    widget.onLongPressForOthersHeadPortrait,
+                allowAtUserWhenReply: chatConfig.isAtWhenReply,
+                allowAvatarTap: chatConfig.isAllowClickAvatar,
+                allowLongPress: chatConfig.isAllowLongPressMessage,
+                isUseMessageReaction: chatConfig.isUseMessageReaction);
           },
           tongueItemBuilder: widget.tongueItemBuilder,
           initFindingMsg: widget.initFindingMsg,
           messageList: messageList,
-          onLoadMore: requestForData,
+          onLoadMore: (String? a, [int? b]) async {
+            return await requestForData(a, model, b);
+          },
         );
       },
-      conversationID: widget.conversationID,
     );
   }
 }

@@ -34,7 +34,7 @@ class _AddGroupMemberPageState extends TIMUIKitState<AddGroupMemberPage> {
                 onPressed: () async {
                   if (selectedContacter.isNotEmpty) {
                     final userIDs =
-                    selectedContacter.map((e) => e.userID).toList();
+                        selectedContacter.map((e) => e.userID).toList();
                     await widget.model.inviteUserToGroup(userIDs);
                     Navigator.pop(context);
                   }

@@ -8,7 +8,8 @@ import 'models/link_preview_content.dart';
 
 class LinkPreviewEntry {
   /// get the text message with hyperlinks
-  static LinkPreviewText? getHyperlinksText(V2TimMessage message,
+  static LinkPreviewText? getHyperlinksText(
+      V2TimMessage message, bool isMarkdown,
       [Function(String)? onLinkTap]) {
     final String? messageText = message.textElem!.text;
 
@@ -17,8 +18,11 @@ class LinkPreviewEntry {
     }
 
     return ({TextStyle? style}) {
-      return LinkText(
-          messageText: messageText, style: style, onLinkTap: onLinkTap);
+      return isMarkdown
+          ? LinkTextMarkdown(
+              messageText: messageText, style: style, onLinkTap: onLinkTap)
+          : LinkText(
+              messageText: messageText, style: style, onLinkTap: onLinkTap);
     };
   }
 

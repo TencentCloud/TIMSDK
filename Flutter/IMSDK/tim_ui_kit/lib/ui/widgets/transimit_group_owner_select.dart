@@ -4,6 +4,7 @@ import 'package:tim_ui_kit/business_logic/separate_models/tui_group_profile_mode
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
+import 'package:tim_ui_kit/ui/utils/platform.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/widgets/tim_ui_group_member_search.dart';
 import 'package:tim_ui_kit/ui/widgets/group_member_list.dart';
 
@@ -14,7 +15,8 @@ class SelectTransimitOwner extends StatefulWidget {
   final TUIGroupProfileModel model;
   const SelectTransimitOwner({
     this.groupID,
-    Key? key, required this.model,
+    Key? key,
+    required this.model,
   }) : super(key: key);
 
   @override
@@ -43,13 +45,19 @@ class _SelectCallInviterState extends TIMUIKitState<SelectTransimitOwner> {
 
   handleSearchGroupMembers(String searchText, context) async {
     searchText = searchText;
-    List<V2TimGroupMemberFullInfo?> currentGroupMember = widget.model.groupMemberList
-                .where((element) =>
-                    element?.userID != _coreServicesImpl.loginInfo.userID)
-                .toList();
-    final res = await widget.model.searchGroupMember(V2TimGroupMemberSearchParam(
+    List<V2TimGroupMemberFullInfo?> currentGroupMember = widget
+        .model.groupMemberList
+        .where(
+            (element) => element?.userID != _coreServicesImpl.loginInfo.userID)
+        .toList();
+    final res =
+        await widget.model.searchGroupMember(V2TimGroupMemberSearchParam(
       keywordList: [searchText],
       groupIDList: [widget.model.groupInfo!.groupID],
+      isSearchMemberNameCard: true,
+      isSearchMemberUserID: true,
+      isSearchMemberNickName: true,
+      isSearchMemberRemark: true,
     ));
 
     if (res.code == 0) {
@@ -130,13 +138,15 @@ class _SelectCallInviterState extends TIMUIKitState<SelectTransimitOwner> {
           ),
         ),
         body: GroupProfileMemberList(
-          customTopArea: GroupMemberSearchTextField(
-            onTextChange: (text) =>
-                handleSearchGroupMembers(text, context),
-          ),
+          customTopArea: PlatformUtils().isWeb
+              ? null
+              : GroupMemberSearchTextField(
+                  onTextChange: (text) =>
+                      handleSearchGroupMembers(text, context),
+                ),
           memberList: (searchMemberList ?? widget.model.groupMemberList)
               .where((element) =>
-          element?.userID != _coreServicesImpl.loginInfo.userID)
+                  element?.userID != _coreServicesImpl.loginInfo.userID)
               .toList(),
           canSlideDelete: false,
           canSelectMember: true,
@@ -145,8 +155,7 @@ class _SelectCallInviterState extends TIMUIKitState<SelectTransimitOwner> {
             selectedMember = member;
             setState(() {});
           },
-          touchBottomCallBack: () {
-          },
+          touchBottomCallBack: () {},
         ));
   }
 }

@@ -93,7 +93,12 @@ class TIMUIKitSearchInputState extends TIMUIKitState<TIMUIKitSearchInput> {
                 prefix: widget.prefixText != null
                     ? Container(
                         margin: const EdgeInsets.only(right: 8),
-                        child: widget.prefixText,
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                              maxWidth:
+                                  MediaQuery.of(context).size.width * 0.2),
+                          child: widget.prefixText,
+                        ),
                       )
                     : null,
                 prefixIcon: widget.prefixIcon,

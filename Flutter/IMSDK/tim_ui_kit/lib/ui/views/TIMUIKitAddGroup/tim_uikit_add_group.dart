@@ -16,9 +16,12 @@ class TIMUIKitAddGroup extends StatefulWidget {
   final AddGroupLifeCycle? lifeCycle;
 
   /// Navigate to group chat, if user is already a member of the current group.
-  final Function(String groupID, V2TimConversation conversation) onTapExistGroup;
+  final Function(String groupID, V2TimConversation conversation)
+      onTapExistGroup;
 
-  const TIMUIKitAddGroup({Key? key, this.lifeCycle, required this.onTapExistGroup}) : super(key: key);
+  const TIMUIKitAddGroup(
+      {Key? key, this.lifeCycle, required this.onTapExistGroup})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _TIMUIKitAddGroupState();
@@ -27,8 +30,10 @@ class TIMUIKitAddGroup extends StatefulWidget {
 class _TIMUIKitAddGroupState extends TIMUIKitState<TIMUIKitAddGroup> {
   final TextEditingController _controller = TextEditingController();
   final GroupServices _groupServices = serviceLocator<GroupServices>();
-  final ConversationService _conversationService = serviceLocator<ConversationService>();
-  final TUIFriendShipViewModel friendShipViewModel = serviceLocator<TUIFriendShipViewModel>();
+  final ConversationService _conversationService =
+      serviceLocator<ConversationService>();
+  final TUIFriendShipViewModel friendShipViewModel =
+      serviceLocator<TUIFriendShipViewModel>();
   List<V2TimGroupInfo>? _addedGroupList;
   List<V2TimGroupInfo>? groupResult = [];
   final FocusNode _focusNode = FocusNode();
@@ -64,8 +69,9 @@ class _TIMUIKitAddGroupState extends TIMUIKitState<TIMUIKitAddGroup> {
     final groupType = _getGroupType(groupInfo.groupType);
     return InkWell(
       onTap: () async {
-        final V2TimConversation? groupConversation = await getGroupConversation(groupID);
-        if(groupConversation != null){
+        final V2TimConversation? groupConversation =
+            await getGroupConversation(groupID);
+        if (groupConversation != null) {
           onTIMCallback(TIMCallback(
               type: TIMCallbackType.INFO,
               infoRecommendText: TIM_t("您已是群成员"),
@@ -141,7 +147,7 @@ class _TIMUIKitAddGroupState extends TIMUIKitState<TIMUIKitAddGroup> {
     }
     try {
       if ((_addedGroupList?.firstWhere((groupItem) {
-        return groupItem.groupID == groupID;
+            return groupItem.groupID == groupID;
           })) !=
           null) {
         V2TimConversation? conversation;
@@ -195,12 +201,14 @@ class _TIMUIKitAddGroupState extends TIMUIKitState<TIMUIKitAddGroup> {
   searchGroup(String params) async {
     final res = await _groupServices.getGroupsInfo(groupIDList: [params]);
     if (res != null) {
-      setState((){
-        groupResult =
-            res.where((e) => e.resultCode == 0).map((e) => e.groupInfo!).toList();
+      setState(() {
+        groupResult = res
+            .where((e) => e.resultCode == 0)
+            .map((e) => e.groupInfo!)
+            .toList();
       });
     } else {
-      setState((){
+      setState(() {
         groupResult = [];
       });
     }
@@ -218,45 +226,45 @@ class _TIMUIKitAddGroupState extends TIMUIKitState<TIMUIKitAddGroup> {
             children: [
               Expanded(
                   child: TextField(
-                    focusNode: _focusNode,
-                    controller: _controller,
-                    onChanged: (value) {
-                      if (value.trim().isEmpty) {
-                        setState(() {
-                          showResult = false;
-                        });
-                      }
-                    },
-                    textInputAction: TextInputAction.search,
-                    onSubmitted: (_) {
-                      final searchParams = _controller.text;
-                      if (searchParams.trim().isNotEmpty) {
-                        searchGroup(searchParams);
-                        showResult = true;
-                        _focusNode.requestFocus();
-                        setState(() {});
-                      }
-                    },
-                    decoration: InputDecoration(
-                        prefixIcon: Icon(
-                          Icons.search_outlined,
-                          color: theme.weakTextColor,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(
-                            width: 0,
-                            style: BorderStyle.none,
-                          ),
-                        ),
-                        contentPadding: EdgeInsets.zero,
-                        hintStyle: const TextStyle(
-                          color: Color(0xffAEA4A3),
-                        ),
-                        fillColor: Colors.white,
-                        filled: true,
-                        hintText: TIM_t("搜索群ID")),
-                  )),
+                focusNode: _focusNode,
+                controller: _controller,
+                onChanged: (value) {
+                  if (value.trim().isEmpty) {
+                    setState(() {
+                      showResult = false;
+                    });
+                  }
+                },
+                textInputAction: TextInputAction.search,
+                onSubmitted: (_) {
+                  final searchParams = _controller.text;
+                  if (searchParams.trim().isNotEmpty) {
+                    searchGroup(searchParams);
+                    showResult = true;
+                    _focusNode.requestFocus();
+                    setState(() {});
+                  }
+                },
+                decoration: InputDecoration(
+                    prefixIcon: Icon(
+                      Icons.search_outlined,
+                      color: theme.weakTextColor,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(
+                        width: 0,
+                        style: BorderStyle.none,
+                      ),
+                    ),
+                    contentPadding: EdgeInsets.zero,
+                    hintStyle: const TextStyle(
+                      color: Color(0xffAEA4A3),
+                    ),
+                    fillColor: Colors.white,
+                    filled: true,
+                    hintText: TIM_t("搜索群ID")),
+              )),
               AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
                 width: isFocused ? 50 : 0,

@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
-import 'package:tim_ui_kit/data_services/services_locatar.dart';
+import 'package:tim_ui_kit/business_logic/separate_models/tui_chat_separate_view_model.dart';
 
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/utils/message.dart';
@@ -25,13 +24,15 @@ class MessageReadReceipt extends StatefulWidget {
   final int unreadCount;
   final int readCount;
   final void Function(String userID)? onTapAvatar;
+  final TUIChatSeparateViewModel model;
 
   const MessageReadReceipt(
       {Key? key,
       required this.messageItem,
       required this.unreadCount,
       required this.readCount,
-      this.onTapAvatar})
+      this.onTapAvatar,
+      required this.model})
       : super(key: key);
 
   @override
@@ -39,7 +40,6 @@ class MessageReadReceipt extends StatefulWidget {
 }
 
 class _MessageReadReceiptState extends TIMUIKitState<MessageReadReceipt> {
-  final TUIChatViewModel _model = serviceLocator<TUIChatViewModel>();
   bool readMemberIsFinished = false;
   bool unreadMemberIsFinished = false;
   int readMemberListNextSeq = 0;
@@ -49,7 +49,7 @@ class _MessageReadReceiptState extends TIMUIKitState<MessageReadReceipt> {
   int currentIndex = 0;
 
   _getUnreadMemberList() async {
-    final unReadMemberRes = await _model.getGroupMessageReadMemberList(
+    final unReadMemberRes = await widget.model.getGroupMessageReadMemberList(
         widget.messageItem.msgID!,
         GetGroupMessageReadMemberListFilter
             .V2TIM_GROUP_MESSAGE_READ_MEMBERS_FILTER_UNREAD,
@@ -66,7 +66,7 @@ class _MessageReadReceiptState extends TIMUIKitState<MessageReadReceipt> {
   }
 
   _getReadMemberList() async {
-    final readMemberRes = await _model.getGroupMessageReadMemberList(
+    final readMemberRes = await widget.model.getGroupMessageReadMemberList(
       widget.messageItem.msgID!,
       GetGroupMessageReadMemberListFilter
           .V2TIM_GROUP_MESSAGE_READ_MEMBERS_FILTER_READ,
@@ -99,6 +99,7 @@ class _MessageReadReceiptState extends TIMUIKitState<MessageReadReceipt> {
         return Text(TIM_t("[自定义]"));
       case MessageElemType.V2TIM_ELEM_TYPE_SOUND:
         return TIMUIKitSoundElem(
+            chatModel: widget.model,
             message: message,
             soundElem: message.soundElem!,
             msgID: message.msgID ?? "",
@@ -113,6 +114,7 @@ class _MessageReadReceiptState extends TIMUIKitState<MessageReadReceipt> {
       // return Text(message.textElem!.text!);
       case MessageElemType.V2TIM_ELEM_TYPE_FACE:
         return TIMUIKitFaceElem(
+            model: widget.model,
             isShowJump: false,
             path: message.faceElem?.data ?? "",
             message: message);
@@ -136,6 +138,7 @@ class _MessageReadReceiptState extends TIMUIKitState<MessageReadReceipt> {
         return Text(TIM_t("[位置]"));
       case MessageElemType.V2TIM_ELEM_TYPE_MERGER:
         return TIMUIKitMergerElem(
+            model: widget.model,
             isShowJump: false,
             message: message,
             mergerElem: message.mergerElem!,
@@ -196,7 +199,6 @@ class _MessageReadReceiptState extends TIMUIKitState<MessageReadReceipt> {
   @override
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     final TUITheme theme = value.theme;
-
     final option1 = widget.readCount;
     final option2 = widget.unreadCount;
     return DefaultTabController(
@@ -337,6 +339,7 @@ class _MessageReadReceiptState extends TIMUIKitState<MessageReadReceipt> {
                 index: currentIndex,
                 children: [
                   ListView.builder(
+                      shrinkWrap: true,
                       itemCount: readMemberList.length,
                       itemBuilder: (context, index) {
                         if (!readMemberIsFinished &&
@@ -346,6 +349,7 @@ class _MessageReadReceiptState extends TIMUIKitState<MessageReadReceipt> {
                         return _memberItemBuilder(readMemberList[index], theme);
                       }),
                   ListView.builder(
+                      shrinkWrap: true,
                       itemCount: unreadMemberList.length,
                       itemBuilder: (context, index) {
                         if (!unreadMemberIsFinished &&

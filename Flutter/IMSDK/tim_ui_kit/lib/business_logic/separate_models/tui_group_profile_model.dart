@@ -91,7 +91,7 @@ class TUIGroupProfileModel extends ChangeNotifier {
     if (nextSeq != null && nextSeq != "0" && nextSeq != "") {
       return await loadGroupMemberList(
           groupID: groupID, count: count, seq: nextSeq);
-    }else{
+    } else {
       notifyListeners();
     }
   }
@@ -108,8 +108,11 @@ class TUIGroupProfileModel extends ChangeNotifier {
         nextSeq: seq ?? _groupMemberListSeq);
     final groupMemberListRes = res.data;
     if (res.code == 0 && groupMemberListRes != null) {
-      final groupMemberList = groupMemberListRes.memberInfoList ?? [];
-      _groupMemberList = [...?_groupMemberList, ...groupMemberList];
+      final groupMemberListTemp = groupMemberListRes.memberInfoList ?? [];
+      // TODO
+      print(
+          "loadGroupMemberListfinish,groupMemberListTemp, ${groupMemberListRes.nextSeq},  ${groupMemberListTemp.length}");
+      _groupMemberList = [...?_groupMemberList, ...groupMemberListTemp];
       _groupMemberListSeq = groupMemberListRes.nextSeq ?? "0";
     }
     return groupMemberListRes?.nextSeq;

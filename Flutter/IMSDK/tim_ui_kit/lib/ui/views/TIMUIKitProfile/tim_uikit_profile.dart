@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/business_logic/life_cycle/profile_life_cycle.dart';
 import 'package:tim_ui_kit/business_logic/separate_models/tui_profile_view_model.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_self_info_view_model.dart';
+import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
@@ -13,7 +15,7 @@ typedef OnSelfAvatarTap = void Function();
 
 typedef ProfileBuilder = Widget Function(
     BuildContext context,
-    V2TimFriendInfo friendInfo,
+    V2TimFriendInfo userInfo,
     V2TimConversation conversation,
     int friendType,
     bool isMute);
@@ -73,6 +75,10 @@ class TIMUIKitProfile extends StatefulWidget {
   /// The life cycle hooks for user profile business logic
   final ProfileLifeCycle? lifeCycle;
 
+  /// If the loading user is self.
+  /// Default: [false].
+  final bool isSelf;
+
   const TIMUIKitProfile(
       {Key? key,
       required this.userID,
@@ -90,6 +96,7 @@ class TIMUIKitProfile extends StatefulWidget {
       this.profileWidgetBuilder,
       this.profileWidgetsOrder,
       this.builder,
+      this.isSelf = false,
       this.lifeCycle})
       : super(key: key);
 
@@ -98,15 +105,14 @@ class TIMUIKitProfile extends StatefulWidget {
 }
 
 class _TIMUIKitProfileState extends TIMUIKitState<TIMUIKitProfile> {
-  late TUIProfileViewModel _model;
+  final TUIProfileViewModel _model = TUIProfileViewModel();
   late TIMUIKitProfileController _controller;
 
   @override
   void initState() {
     _controller = widget.controller ?? TIMUIKitProfileController();
-    _model = _controller.model;
     _model.lifeCycle = widget.lifeCycle;
-    _controller.loadData(widget.userID);
+    _model.loadData(userID: widget.userID, isNeedConversation: !widget.isSelf);
     super.initState();
   }
 
@@ -135,12 +141,20 @@ class _TIMUIKitProfileState extends TIMUIKitState<TIMUIKitProfile> {
       value: _model,
       child: Consumer<TUIProfileViewModel>(
         builder: (context, value, child) {
-          final userInfo = value.userProfile?.friendInfo ??
+          final TUIProfileViewModel model =
+              Provider.of<TUIProfileViewModel>(context);
+          _controller.model = model;
+          final userInfo = model.userProfile?.friendInfo ??
               V2TimFriendInfo(userID: widget.userID);
-          final conversation = value.userProfile?.conversation ??
+          final conversation = model.userProfile?.conversation ??
               V2TimConversation(conversationID: "c2c_${widget.userID}");
-          final isFriend = value.friendType != 0;
-          final isMute = value.isDisturb ?? false;
+          final TUISelfInfoViewModel _selfInfoViewModel =
+              serviceLocator<TUISelfInfoViewModel>();
+
+          final isFriend = model.friendType != 0;
+          final isSelf = (model.userProfile?.friendInfo?.userID ==
+              _selfInfoViewModel.loginInfo?.userID);
+          final isMute = model.isDisturb ?? false;
           Widget profilePage({required Widget child}) {
             return SingleChildScrollView(
               physics: const BouncingScrollPhysics(
@@ -152,27 +166,31 @@ class _TIMUIKitProfileState extends TIMUIKitState<TIMUIKitProfile> {
           }
 
           void handleAddToBlockList(bool value) async {
-            _model.addToBlackList(value, userInfo.userID);
+            model.addToBlackList(value, userInfo.userID);
           }
 
           void handlePinConversation(bool value) async {
-            _model.pinedConversation(value, conversation.conversationID);
+            model.pinedConversation(value, conversation.conversationID);
           }
 
           void handleMuteMessage(bool value) async {
-            _model.setMessageDisturb(userInfo.userID, value);
+            model.setMessageDisturb(userInfo.userID, value);
           }
 
           void handleTapRemarkBar() {
             _controller.showTextInputBottomSheet(
                 context, TIM_t("修改备注名"), TIM_t("仅限中字、字母、数字和下划线"),
-                (String remark) {
-              _controller.updateRemarks(widget.userID, remark);
+                (String remark) async {
+              final res =
+                  await _controller.updateRemarks(widget.userID, remark);
+              if (res.code == 0) {
+                widget.lifeCycle?.didRemarkUpdated(remark);
+              }
             });
           }
 
           void handleAddFriend() async {
-            _model.addFriend(userInfo.userID).then((res) {
+            model.addFriend(userInfo.userID).then((res) {
               if (res == null) {
                 throw Error();
               }
@@ -201,23 +219,21 @@ class _TIMUIKitProfileState extends TIMUIKitState<TIMUIKitProfile> {
           }
 
           void handleDeleteFriend() {
-            _model.deleteFriend(userInfo.userID).then((res) {
+            model.deleteFriend(userInfo.userID).then((res) {
               if (res == null) {
                 throw Error();
               }
-              if (res.resultCode == 0) {
+              if (res.resultCode != 0 && res.resultCode != null) {
+                onTIMCallback(TIMCallback(
+                    type: TIMCallbackType.INFO,
+                    infoRecommendText: TIM_t("好友删除失败"),
+                    infoCode: 6661207));
+              } else {
                 onTIMCallback(TIMCallback(
                     type: TIMCallbackType.INFO,
                     infoRecommendText: TIM_t("好友删除成功"),
                     infoCode: 6661206));
-              } else {
-                throw Error();
               }
-            }).catchError((error) {
-              onTIMCallback(TIMCallback(
-                  type: TIMCallbackType.INFO,
-                  infoRecommendText: TIM_t("好友删除失败"),
-                  infoCode: 6661207));
             });
           }
 
@@ -232,19 +248,21 @@ class _TIMUIKitProfileState extends TIMUIKitState<TIMUIKitProfile> {
                       : TIMUIKitProfileUserInfoCard(
                           userInfo: userInfo.userProfile))!;
                 case ProfileWidgetEnum.addToBlockListBar:
+                  if (isSelf) {
+                    return Container();
+                  }
                   return (customBuilder?.addToBlockListBar != null
                       ? customBuilder?.addToBlockListBar!(
-                          _model.isAddToBlackList ?? false,
-                          handleAddToBlockList)
+                          model.isAddToBlackList ?? false, handleAddToBlockList)
                       : TIMUIKitProfileWidget.addToBlackListBar(
-                          _model.isAddToBlackList ?? false,
+                          model.isAddToBlackList ?? false,
                           context,
                           handleAddToBlockList,
                         ))!;
                 case ProfileWidgetEnum.pinConversationBar:
-                  if (!isFriend) {
-                    return Container();
-                  }
+                  // if (!isFriend) {
+                  //   return Container();
+                  // }
                   return (customBuilder?.pinConversationBar != null
                       ? customBuilder?.pinConversationBar!(
                           conversation.isPinned ?? false, handlePinConversation)
@@ -302,6 +320,9 @@ class _TIMUIKitProfileState extends TIMUIKitState<TIMUIKitProfile> {
                       : TIMUIKitProfileWidget.birthdayBar(
                           userInfo.userProfile?.birthday))!;
                 case ProfileWidgetEnum.addAndDeleteArea:
+                  if (isSelf) {
+                    return Container();
+                  }
                   return (customBuilder?.addAndDeleteArea != null
                       ? customBuilder?.addAndDeleteArea!(
                           userInfo,
@@ -314,7 +335,7 @@ class _TIMUIKitProfileState extends TIMUIKitState<TIMUIKitProfile> {
                           conversation,
                           value.friendType,
                           isMute,
-                          _model.isAddToBlackList ?? false,
+                          model.isAddToBlackList ?? false,
                           theme,
                           handleAddFriend,
                           handleDeleteFriend))!;

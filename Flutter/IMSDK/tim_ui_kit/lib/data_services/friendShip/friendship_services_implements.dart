@@ -77,12 +77,16 @@ class FriendshipServicesImpl with FriendshipServices {
               friendGroup: friendGroup,
               addSource: addSource,
             );
-    if (result.code != 0 || (result.code == 0 && result.data?.resultCode != 0)) {
-      // _coreService.callOnCallback(TIMCallback(
-      //     type: TIMCallbackType.API_ERROR,
-      //     errorMsg: result.code == 0 ? result.data?.resultInfo :  result.desc,
-      //     errorCode: result.code == 0 ? result.data?.resultCode : result.code,
-      //     ));
+    if (result.code != 0 ||
+        (result.code == 0 &&
+            result.data?.resultCode != 0 &&
+            result.data?.resultCode != 30539 &&
+            result.data?.resultCode != 30515)) {
+      _coreService.callOnCallback(TIMCallback(
+        type: TIMCallbackType.API_ERROR,
+        errorMsg: result.code == 0 ? result.data?.resultInfo : result.desc,
+        errorCode: result.code == 0 ? result.data?.resultCode : result.code,
+      ));
     }
     return result;
   }
@@ -176,7 +180,7 @@ class FriendshipServicesImpl with FriendshipServices {
   }
 
   @override
-  Future<void> setFriendshipListener({
+  Future<void> addFriendListener({
     required V2TimFriendshipListener listener,
   }) {
     return TencentImSDKPlugin.v2TIMManager
@@ -293,7 +297,8 @@ class FriendshipServicesImpl with FriendshipServices {
   Future<List<V2TimUserStatus>> getUserStatus({
     required List<String> userIDList,
   }) async {
-    final res = await TencentImSDKPlugin.v2TIMManager.getUserStatus(userIDList: userIDList);
+    final res = await TencentImSDKPlugin.v2TIMManager
+        .getUserStatus(userIDList: userIDList);
     if (res.code == 0) {
       return res.data ?? [];
     } else {

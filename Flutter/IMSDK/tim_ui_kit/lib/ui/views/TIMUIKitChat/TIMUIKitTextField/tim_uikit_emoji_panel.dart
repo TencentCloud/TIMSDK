@@ -1,12 +1,13 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_statelesswidget.dart';
 import 'package:tim_ui_kit/ui/constants/emoji.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
+import 'package:tim_ui_kit/ui/utils/platform.dart';
 import 'package:tim_ui_kit/ui/widgets/emoji.dart';
 
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
+import 'package:tim_ui_kit/ui/widgets/link_preview/common/extensions.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class EmojiPanel extends TIMUIKitStatelessWidget {
   final void Function(int unicode) onTapEmoji;
@@ -24,6 +25,8 @@ class EmojiPanel extends TIMUIKitStatelessWidget {
 
   @override
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    print(TIM_t(
+        "暂未安装表情包插件，如需使用表情相关功能，请根据本文档安装：https://cloud.tencent.com/document/product/269/70746"));
     return SingleChildScrollView(
         child: Column(
       children: [
@@ -31,53 +34,10 @@ class EmojiPanel extends TIMUIKitStatelessWidget {
           height: showBottomContainer ? 190 : 248,
           // color: theme.weakBackgroundColor,
           padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
-          child: Stack(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              GridView(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 8,
-                  childAspectRatio: 1,
-                ),
-                children: [
-                  ...emojiData.map(
-                    (e) {
-                      var item = Emoji.fromJson(e);
-                      return InkWell(
-                        onTap: () {
-                          onTapEmoji(item.unicode);
-                        },
-                        child: EmojiItem(
-                          name: item.name,
-                          unicode: item.unicode,
-                        ),
-                      );
-                    },
-                  ).toList(),
-                ],
-              ),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: SingleChildScrollView(
-                  child: GestureDetector(
-                    onTap: () {
-                      delete();
-                    },
-                    child: Container(
-                        // color: theme.weakBackgroundColor,
-                        margin: const EdgeInsets.only(right: 15),
-                        width: 35,
-                        // height: MediaQuery.of(context).padding.bottom,
-                        child: Center(
-                          child: Image.asset(
-                            'images/delete_emoji.png',
-                            package: 'tim_ui_kit',
-                            width: 35,
-                            height: 20,
-                          ),
-                        )),
-                  ),
-                ),
-              ),
+              Text(TIM_t("暂无表情包")),
             ],
           ),
         ),
@@ -120,7 +80,7 @@ class EmojiItem extends TIMUIKitStatelessWidget {
     return Text(
       String.fromCharCode(unicode),
       style: TextStyle(
-        fontSize: Platform.isAndroid ? 20 : 26,
+        fontSize: (PlatformUtils().isAndroid) ? 20 : 26,
       ),
     );
   }

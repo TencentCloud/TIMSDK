@@ -3,12 +3,14 @@ import 'dart:async';
 import 'package:flutter_plugin_record_plus/const/play_state.dart';
 import 'package:flutter_plugin_record_plus/const/response.dart';
 import 'package:flutter_plugin_record_plus/index.dart';
+import 'package:tim_ui_kit/import_proxy/import_proxy.dart';
 
 typedef PlayStateListener = void Function(PlayState playState);
 typedef SoundInterruptListener = void Function();
 typedef ResponseListener = void Function(RecordResponse recordResponse);
 
 class SoundPlayer {
+  final ImportProxy importProxy = ImportProxy();
   static final FlutterPluginRecord _recorder = FlutterPluginRecord();
   static SoundInterruptListener? _soundInterruptListener;
   static bool isInited = false;

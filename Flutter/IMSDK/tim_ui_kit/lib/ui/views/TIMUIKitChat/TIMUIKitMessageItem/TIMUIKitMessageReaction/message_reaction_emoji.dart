@@ -8,16 +8,13 @@ List<Map<String, Object>> messageReactionEmojiData = [
   {"name": "folded hands", "unicode": 128591},
   {"name": "raised fist", "unicode": 9994},
   {"name": "thumbs down", "unicode": 128078},
-
   {"name": "smiling face with sunglasses", "unicode": 128526},
   {"name": "GRINNING FACE WITH SMILING EYES", "unicode": 128513},
   {"name": "SMILING FACE WITH SMILING EYES", "unicode": 128522},
   {"name": "smiling face with hearts", "unicode": 129392},
   {"name": "SMILING FACE WITH HEART-SHAPED EYES", "unicode": 128525},
-
   {"name": "FACE WITH TEARS OF JOY", "unicode": 128514},
   {"name": "flushed face", "unicode": 128563},
-
   {"name": "SMILING FACE WITH OPEN MOUTH AND COLD SWEAT", "unicode": 128517},
   {"name": "FACE WITH COLD SWEAT", "unicode": 128531},
   {"name": "loudly crying face", "unicode": 128557},

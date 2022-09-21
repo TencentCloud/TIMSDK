@@ -4,6 +4,7 @@ import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_self_info_view_model.dart';
 import 'package:tim_ui_kit/data_services/message/message_services.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
+import 'package:tim_ui_kit/ui/utils/platform.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/tim_uikit_cloud_custom_data.dart';
 
 class MessageReactionUtils {
@@ -41,7 +42,14 @@ class MessageReactionUtils {
     }
     messageReaction["$sticker"] = targetList;
 
-    message.cloudCustomData = json.encode(messageCloudCustomData.toMap());
+    if (PlatformUtils().isWeb) {
+      final decodedMessage = jsonDecode(message.messageFromWeb!);
+      decodedMessage["cloudCustomData"] =
+          jsonEncode(messageCloudCustomData.toMap());
+      message.messageFromWeb = jsonEncode(decodedMessage);
+    } else {
+      message.cloudCustomData = json.encode(messageCloudCustomData.toMap());
+    }
     return await _messageService.modifyMessage(message: message);
   }
 }

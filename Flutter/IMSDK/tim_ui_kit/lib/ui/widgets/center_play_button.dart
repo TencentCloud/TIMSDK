@@ -16,17 +16,20 @@ class CenterPlayButton extends TIMUIKitStatelessWidget {
 
   @override
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
-    return Container(
+    return Material(
       color: Colors.transparent,
-      child: Center(
-        child: AnimatedOpacity(
-          opacity: show ? 1.0 : 0.0,
-          duration: const Duration(milliseconds: 300),
-          child: GestureDetector(
-            child: IconButton(
-              iconSize: 86,
-              icon: Image.asset('images/play.png', package: 'tim_ui_kit'),
-              onPressed: onPressed,
+      child: Container(
+        color: Colors.transparent,
+        child: Center(
+          child: AnimatedOpacity(
+            opacity: show ? 1.0 : 0.0,
+            duration: const Duration(milliseconds: 300),
+            child: GestureDetector(
+              child: IconButton(
+                iconSize: 86,
+                icon: Image.asset('images/play.png', package: 'tim_ui_kit'),
+                onPressed: onPressed,
+              ),
             ),
           ),
         ),

@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitConversation/tim_uikit_conversation.dart';
 
+import 'TIMUIKitChatExample.dart';
+
 class TIMUIKitConversationExample extends StatelessWidget {
   const TIMUIKitConversationExample({Key? key}) : super(key: key);
 
@@ -9,7 +11,13 @@ class TIMUIKitConversationExample extends StatelessWidget {
   Widget build(BuildContext context) {
     return TIMUIKitConversation(
       onTapItem: (value) {
-        print(value);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TIMUIKitChatExample(
+                selectedConversation: value,
+              ),
+            ));
       },
     );
   }

@@ -59,7 +59,7 @@ class ConversationServicesImpl extends ConversationService {
   }
 
   @override
-  Future<void> setConversationListener({
+  Future<void> addConversationListener({
     required V2TimConversationListener listener,
   }) {
     return TencentImSDKPlugin.v2TIMManager
@@ -91,7 +91,7 @@ class ConversationServicesImpl extends ConversationService {
     final result = await TencentImSDKPlugin.v2TIMManager
         .getConversationManager()
         .setConversationDraft(
-        conversationID: conversationID, draftText: draftText);
+            conversationID: conversationID, draftText: draftText);
     if (result.code != 0) {
       _coreService.callOnCallback(TIMCallback(
           type: TIMCallbackType.API_ERROR,
@@ -114,8 +114,7 @@ class ConversationServicesImpl extends ConversationService {
       {required String convID}) async {
     final result = await TencentImSDKPlugin.v2TIMManager
         .getConversationManager()
-        .getConversationListByConversaionIds(
-        conversationIDList: [convID]);
+        .getConversationListByConversaionIds(conversationIDList: [convID]);
     if (result.code != 0) {
       _coreService.callOnCallback(TIMCallback(
           type: TIMCallbackType.API_ERROR,

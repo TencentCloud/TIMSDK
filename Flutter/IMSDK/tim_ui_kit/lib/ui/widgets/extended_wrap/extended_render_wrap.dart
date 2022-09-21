@@ -284,7 +284,7 @@ class ExtendedRenderWrap extends RenderBox
       switch (direction) {
         case Axis.horizontal:
           assert(textDirection != null,
-          'Horizontal $runtimeType with multiple children has a null textDirection, so the layout order is undefined.');
+              'Horizontal $runtimeType with multiple children has a null textDirection, so the layout order is undefined.');
           break;
         case Axis.vertical:
           break;
@@ -294,7 +294,7 @@ class ExtendedRenderWrap extends RenderBox
       switch (direction) {
         case Axis.horizontal:
           assert(textDirection != null,
-          'Horizontal $runtimeType with alignment $alignment has a null textDirection, so the alignment cannot be resolved.');
+              'Horizontal $runtimeType with alignment $alignment has a null textDirection, so the alignment cannot be resolved.');
           break;
         case Axis.vertical:
           break;
@@ -307,7 +307,7 @@ class ExtendedRenderWrap extends RenderBox
           break;
         case Axis.vertical:
           assert(textDirection != null,
-          'Vertical $runtimeType with runAlignment $runAlignment has a null textDirection, so the alignment cannot be resolved.');
+              'Vertical $runtimeType with runAlignment $runAlignment has a null textDirection, so the alignment cannot be resolved.');
           break;
       }
     }
@@ -318,7 +318,7 @@ class ExtendedRenderWrap extends RenderBox
           break;
         case Axis.vertical:
           assert(textDirection != null,
-          'Vertical $runtimeType with crossAxisAlignment $crossAxisAlignment has a null textDirection, so the alignment cannot be resolved.');
+              'Vertical $runtimeType with crossAxisAlignment $crossAxisAlignment has a null textDirection, so the alignment cannot be resolved.');
           break;
       }
     }
@@ -545,7 +545,7 @@ class ExtendedRenderWrap extends RenderBox
         child.layout(const BoxConstraints(maxWidth: 0, maxHeight: 0),
             parentUsesSize: true);
         final LimitWrapParentData childParentData =
-        child.parentData as LimitWrapParentData;
+            child.parentData as LimitWrapParentData;
         child = childParentData.nextSibling;
         continue;
       } else {
@@ -556,7 +556,7 @@ class ExtendedRenderWrap extends RenderBox
       double childCrossAxisExtent = _getCrossAxisExtent(child.size);
 
       final LimitWrapParentData childParentData =
-      child.parentData as LimitWrapParentData;
+          child.parentData as LimitWrapParentData;
       childParentData._isHide = false;
 
       bool needCalculateSpace = true;
@@ -564,11 +564,10 @@ class ExtendedRenderWrap extends RenderBox
       if (hasOverflow) {
         lastChild!.layout(childConstraints, parentUsesSize: true);
         final double overflowMainAxisExtent =
-        _getMainAxisExtent(lastChild!.size);
+            _getMainAxisExtent(lastChild!.size);
         if (isNeedHideOverflow &&
             currentRowNumber == 1 &&
             childParentData.nextSibling == null) {
-
           lastChild!.layout(const BoxConstraints(maxWidth: 0, maxHeight: 0),
               parentUsesSize: true);
           childMainAxisExtent = _getMainAxisExtent(child.size);
@@ -587,9 +586,9 @@ class ExtendedRenderWrap extends RenderBox
 
         if (childCount > 0 &&
             runMainAxisExtent +
-                spacing * 2 +
-                childMainAxisExtent +
-                overflowMainAxisExtent >
+                    spacing * 2 +
+                    childMainAxisExtent +
+                    overflowMainAxisExtent >
                 mainAxisLimit) {
           if (crossAxisExtent + runCrossAxisExtent + childCrossAxisExtent >
               (childCrossAxisExtent * maxLines + spacing * (maxLines - 1))) {
@@ -632,7 +631,7 @@ class ExtendedRenderWrap extends RenderBox
           child.layout(const BoxConstraints(maxWidth: 0, maxHeight: 0),
               parentUsesSize: true);
           final LimitWrapParentData childParentData =
-          child.parentData as LimitWrapParentData;
+              child.parentData as LimitWrapParentData;
           child = childParentData.nextSibling;
           continue;
         }
@@ -676,7 +675,7 @@ class ExtendedRenderWrap extends RenderBox
         containerCrossAxisExtent < crossAxisExtent;
 
     final double crossAxisFreeSpace =
-    math.max(0.0, containerCrossAxisExtent - crossAxisExtent);
+        math.max(0.0, containerCrossAxisExtent - crossAxisExtent);
     double runLeadingSpace = 0.0;
     double runBetweenSpace = 0.0;
     switch (runAlignment) {
@@ -690,7 +689,7 @@ class ExtendedRenderWrap extends RenderBox
         break;
       case WrapAlignment.spaceBetween:
         runBetweenSpace =
-        runCount > 1 ? crossAxisFreeSpace / (runCount - 1) : 0.0;
+            runCount > 1 ? crossAxisFreeSpace / (runCount - 1) : 0.0;
         break;
       case WrapAlignment.spaceAround:
         runBetweenSpace = crossAxisFreeSpace / runCount;
@@ -715,7 +714,7 @@ class ExtendedRenderWrap extends RenderBox
       final int childCount = metrics.childCount;
 
       final double mainAxisFreeSpace =
-      math.max(0.0, containerMainAxisExtent - runMainAxisExtent);
+          math.max(0.0, containerMainAxisExtent - runMainAxisExtent);
       double childLeadingSpace = 0.0;
       double childBetweenSpace = 0.0;
 
@@ -730,7 +729,7 @@ class ExtendedRenderWrap extends RenderBox
           break;
         case WrapAlignment.spaceBetween:
           childBetweenSpace =
-          childCount > 1 ? mainAxisFreeSpace / (childCount - 1) : 0.0;
+              childCount > 1 ? mainAxisFreeSpace / (childCount - 1) : 0.0;
           break;
         case WrapAlignment.spaceAround:
           childBetweenSpace = mainAxisFreeSpace / childCount;
@@ -751,7 +750,7 @@ class ExtendedRenderWrap extends RenderBox
 
       while (child != null) {
         final LimitWrapParentData childParentData =
-        child.parentData as LimitWrapParentData;
+            child.parentData as LimitWrapParentData;
         if (childParentData._runIndex != i) break;
         final double childMainAxisExtent = _getMainAxisExtent(child.size);
 
@@ -802,7 +801,7 @@ class ExtendedRenderWrap extends RenderBox
   }
 
   final LayerHandle<ClipRectLayer> _clipRectLayer =
-  LayerHandle<ClipRectLayer>();
+      LayerHandle<ClipRectLayer>();
 
   @override
   void dispose() {

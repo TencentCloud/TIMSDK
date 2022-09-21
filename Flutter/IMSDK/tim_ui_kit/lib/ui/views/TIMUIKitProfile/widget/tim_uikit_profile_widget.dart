@@ -119,8 +119,13 @@ class TIMUIKitProfileWidget extends TIMUIKitClass {
     return SizedBox(
       width: 48,
       height: 48,
-      child: userInfo != null ? Avatar(
-          faceUrl: userInfo.faceUrl ?? "", showName: userInfo.nickName ?? "",type: 1,) : Container(),
+      child: userInfo != null
+          ? Avatar(
+              faceUrl: userInfo.faceUrl ?? "",
+              showName: userInfo.nickName ?? "",
+              type: 1,
+            )
+          : Container(),
     );
   }
 
@@ -190,7 +195,18 @@ class TIMUIKitProfileWidget extends TIMUIKitClass {
 
   /// birthday
   static Widget birthdayBar(int? birthday) {
-    if (birthday == 0 || birthday == null) {
+    try {
+      final date = DateTime.parse(birthday.toString());
+      DateFormat formatter = DateFormat('yyyy-MM-dd');
+      return InkWell(
+        onTap: () {},
+        child: TIMUIKitOperationItem(
+          showArrowRightIcon: false,
+          operationName: TIM_t("生日"),
+          operationRightWidget: Text(formatter.format(date)),
+        ),
+      );
+    } catch (e) {
       return InkWell(
         onTap: () {},
         child: TIMUIKitOperationItem(
@@ -200,21 +216,10 @@ class TIMUIKitProfileWidget extends TIMUIKitClass {
         ),
       );
     }
-    final date = DateTime.parse(birthday.toString());
-    DateFormat formatter = DateFormat('yyyy-MM-dd');
-    return InkWell(
-      onTap: () {},
-      child: TIMUIKitOperationItem(
-        showArrowRightIcon: false,
-        operationName: TIM_t("生日"),
-        operationRightWidget: Text(formatter.format(date)),
-      ),
-    );
   }
 
   /// default button area
   static Widget addAndDeleteArea(
-
     V2TimFriendInfo friendInfo,
     V2TimConversation conversation,
     int friendType,

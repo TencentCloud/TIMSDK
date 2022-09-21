@@ -3,6 +3,7 @@ import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/data_services/group/group_services.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
+import 'package:tim_ui_kit/ui/utils/platform.dart';
 import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/widgets/tim_ui_group_member_search.dart';
@@ -142,8 +143,11 @@ class _AtTextState extends TIMUIKitState<AtText> {
             touchBottomCallBack: () {
               // Get all by once, unnecessary to load more
             },
-            customTopArea: GroupMemberSearchTextField(
-              onTextChange: (text) => handleSearchGroupMembers(text, context),
-            )));
+            customTopArea: PlatformUtils().isWeb
+                ? null
+                : GroupMemberSearchTextField(
+                    onTextChange: (text) =>
+                        handleSearchGroupMembers(text, context),
+                  )));
   }
 }

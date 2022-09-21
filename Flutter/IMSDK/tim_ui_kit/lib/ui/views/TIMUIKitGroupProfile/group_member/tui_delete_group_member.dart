@@ -32,7 +32,7 @@ class _DeleteGroupMemberPageState extends TIMUIKitState<DeleteGroupMemberPage> {
         Provider.of<TUIGroupProfileModel>(context, listen: false)
             .groupMemberList;
     final res =
-    await widget.model.searchGroupMember(V2TimGroupMemberSearchParam(
+        await widget.model.searchGroupMember(V2TimGroupMemberSearchParam(
       keywordList: [searchText],
       groupIDList: [widget.model.groupInfo!.groupID],
     ));
@@ -54,16 +54,16 @@ class _DeleteGroupMemberPageState extends TIMUIKitState<DeleteGroupMemberPage> {
     }
     setState(() {
       searchMemberList =
-      isSearchTextExist(searchText) ? currentGroupMember : null;
+          isSearchTextExist(searchText) ? currentGroupMember : null;
     });
   }
 
   handleRole(groupMemberList) {
     return groupMemberList
-        ?.where((value) =>
-    value?.role ==
-        GroupMemberRoleType.V2TIM_GROUP_MEMBER_ROLE_MEMBER)
-        .toList() ??
+            ?.where((value) =>
+                value?.role ==
+                GroupMemberRoleType.V2TIM_GROUP_MEMBER_ROLE_MEMBER)
+            .toList() ??
         [];
   }
 
@@ -82,7 +82,7 @@ class _DeleteGroupMemberPageState extends TIMUIKitState<DeleteGroupMemberPage> {
                 onPressed: () async {
                   if (selectedGroupMember.isNotEmpty) {
                     final userIDs =
-                    selectedGroupMember.map((e) => e.userID).toList();
+                        selectedGroupMember.map((e) => e.userID).toList();
                     widget.model.kickOffMember(userIDs);
                     Navigator.pop(context);
                   }
@@ -110,14 +110,13 @@ class _DeleteGroupMemberPageState extends TIMUIKitState<DeleteGroupMemberPage> {
             )),
         body: GroupProfileMemberList(
           memberList:
-          handleRole(searchMemberList ?? widget.model.groupMemberList),
+              handleRole(searchMemberList ?? widget.model.groupMemberList),
           canSelectMember: true,
           canSlideDelete: false,
           onSelectedMemberChange: (selectedMember) {
             selectedGroupMember = selectedMember;
           },
-          touchBottomCallBack: () {
-          },
+          touchBottomCallBack: () {},
         ));
   }
 }

@@ -27,8 +27,8 @@ class GroupProfileNotification extends TIMUIKitStatelessWidget {
           color: Colors.white,
           border: Border(
               bottom: BorderSide(
-                  color: theme.weakDividerColor ??
-                      CommonColor.weakDividerColor))),
+                  color:
+                      theme.weakDividerColor ?? CommonColor.weakDividerColor))),
       child: InkWell(
         onTap: (() {
           Navigator.push(
@@ -47,14 +47,13 @@ class GroupProfileNotification extends TIMUIKitStatelessWidget {
                 children: [
                   Text(
                     TIM_t("群公告"),
-                    style: TextStyle(
-                        color: theme.darkTextColor, fontSize: 16),
+                    style: TextStyle(color: theme.darkTextColor, fontSize: 16),
                   ),
                   Text(notification,
                       overflow: TextOverflow.ellipsis,
                       softWrap: true,
-                      style: TextStyle(
-                          color: theme.weakTextColor, fontSize: 12)),
+                      style:
+                          TextStyle(color: theme.weakTextColor, fontSize: 12)),
                 ],
               ),
             ),

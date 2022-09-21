@@ -1,17 +1,20 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
+import 'package:tim_ui_kit/business_logic/separate_models/tui_chat_separate_view_model.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_chat_global_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_conversation_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_self_info_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/utils/message.dart';
+import 'package:tim_ui_kit/ui/utils/platform.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitTextField/tim_uikit_at_text.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitTextField/tim_uikit_emoji_panel.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
@@ -26,7 +29,7 @@ class TIMUIKitInputTextField extends StatefulWidget {
   final String conversationID;
 
   /// conversation type
-  final int conversationType;
+  final ConvType conversationType;
 
   /// init text, use for draft text re-view
   final String? initText;
@@ -58,9 +61,7 @@ class TIMUIKitInputTextField extends StatefulWidget {
   /// on text changed
   final void Function(String)? onChanged;
 
-  final V2TimGroupInfo? groupInfo;
-
-  final List<V2TimGroupMemberFullInfo?>? groupMemberList;
+  final TUIChatSeparateViewModel model;
 
   /// sticker panel customiziation
   final Widget Function(
@@ -74,8 +75,6 @@ class TIMUIKitInputTextField extends StatefulWidget {
       required this.conversationID,
       required this.conversationType,
       this.initText,
-        this.groupInfo,
-        this.groupMemberList,
       this.hintText,
       this.scrollController,
       this.morePanelConfig,
@@ -85,7 +84,8 @@ class TIMUIKitInputTextField extends StatefulWidget {
       this.showMorePannel = true,
       this.backgroundColor,
       this.controller,
-      this.onChanged})
+      this.onChanged,
+      required this.model})
       : super(key: key);
 
   @override
@@ -93,7 +93,9 @@ class TIMUIKitInputTextField extends StatefulWidget {
 }
 
 class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
+  final TUIChatGlobalModel globalModel = serviceLocator<TUIChatGlobalModel>();
   bool showMore = false;
+  bool showMoreButton = true;
   bool showSendSoundText = false;
   bool showEmojiPanel = false;
   bool showKeyboard = false;
@@ -105,7 +107,6 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
   Map<String, V2TimGroupMemberFullInfo> memberInfoMap = {};
 
   late TextEditingController textEditingController;
-  final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
   final TUIConversationViewModel conversationModel =
       serviceLocator<TUIConversationViewModel>();
   final TUISelfInfoViewModel selfModel = serviceLocator<TUISelfInfoViewModel>();
@@ -150,6 +151,7 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
               final oldText = textEditingController.text;
               final newText = String.fromCharCode(unicode);
               textEditingController.text = "$oldText$newText";
+              setSendButton();
               // handleSetDraftText();
             }, onSubmitted: () {
               onEmojiSubmitted();
@@ -226,10 +228,9 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
 
   handleSetDraftText() async {
     String convID = widget.conversationID;
-    String conversationID =
-        widget.conversationType == ConversationType.V2TIM_C2C
-            ? "c2c_$convID"
-            : "group_$convID";
+    String conversationID = widget.conversationType == ConvType.c2c
+        ? "c2c_$convID"
+        : "group_$convID";
     String text = textEditingController.text;
     String? draftText = _filterU200b(text);
 
@@ -244,7 +245,7 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
     final haveRepliedMessage = repliedMessage != null;
     if (haveRepliedMessage) {
       final text =
-          "${MessageUtils.getDisplayName(model.repliedMessage!)}:${model.abstractMessageBuilder != null ? model.abstractMessageBuilder!(model.repliedMessage!) : MessageUtils.getAbstractMessage(model.repliedMessage!)}";
+          "${MessageUtils.getDisplayName(widget.model.repliedMessage!)}:${widget.model.abstractMessageBuilder != null ? widget.model.abstractMessageBuilder!(widget.model.repliedMessage!) : MessageUtils.getAbstractMessage(widget.model.repliedMessage!)}";
       return Container(
         color: hexToColor("EBF0F6"),
         alignment: Alignment.centerLeft,
@@ -262,7 +263,7 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
             ),
             InkWell(
               onTap: () {
-                model.setRepliedMessage(null);
+                widget.model.repliedMessage = null;
               },
               child: SizedBox(
                 height: 18,
@@ -280,6 +281,21 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
     return Container();
   }
 
+  void setSendButton() {
+    final value = textEditingController.text;
+    if (isWebDevice() || isAndroidDevice()) {
+      if (value.isEmpty && showMoreButton != true) {
+        setState(() {
+          showMoreButton = true;
+        });
+      } else if (value.isNotEmpty && showMoreButton == true) {
+        setState(() {
+          showMoreButton = false;
+        });
+      }
+    }
+  }
+
   backSpaceText() {
     String originalText = textEditingController.text;
     dynamic text;
@@ -292,6 +308,7 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
       textEditingController.text = "$text";
       // handleSetDraftText();
     }
+    setSendButton();
 
     // if (originalText.isNotEmpty) {
     //   text = originalText.characters.skipLast(1);
@@ -302,31 +319,30 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
 // 和onSubmitted一样，只是保持焦点的不同
   onEmojiSubmitted() {
     final text = textEditingController.text.trim();
-    final convType =
-        widget.conversationType == 1 ? ConvType.c2c : ConvType.group;
+    final convType = widget.conversationType;
     if (text.isNotEmpty && text != zeroWidthSpace) {
-      if (model.repliedMessage != null) {
+      if (widget.model.repliedMessage != null) {
         MessageUtils.handleMessageError(
-            model.sendReplyMessage(
+            widget.model.sendReplyMessage(
                 text: text, convID: widget.conversationID, convType: convType),
             context);
       } else {
         MessageUtils.handleMessageError(
-            model.sendTextMessage(
+            widget.model.sendTextMessage(
                 text: text, convID: widget.conversationID, convType: convType),
             context);
       }
       textEditingController.clear();
       goDownBottom();
     }
+    setSendButton();
   }
 
   onCustomEmojiFaceSubmitted(int index, String data) {
-    final convType =
-        widget.conversationType == 1 ? ConvType.c2c : ConvType.group;
-    if (model.repliedMessage != null) {
+    final convType = widget.conversationType;
+    if (widget.model.repliedMessage != null) {
       MessageUtils.handleMessageError(
-          model.sendFaceMessage(
+          widget.model.sendFaceMessage(
               index: index,
               data: data,
               convID: widget.conversationID,
@@ -334,7 +350,7 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
           context);
     } else {
       MessageUtils.handleMessageError(
-          model.sendFaceMessage(
+          widget.model.sendFaceMessage(
               index: index,
               data: data,
               convID: widget.conversationID,
@@ -354,47 +370,53 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
 
   onSubmitted() async {
     final text = textEditingController.text.trim();
-    final convType =
-        widget.conversationType == 1 ? ConvType.c2c : ConvType.group;
+    final convType = widget.conversationType;
     if (text.isNotEmpty && text != zeroWidthSpace) {
-      if (model.repliedMessage != null) {
+      if (widget.model.repliedMessage != null) {
         MessageUtils.handleMessageError(
-            model.sendReplyMessage(
+            widget.model.sendReplyMessage(
                 text: text, convID: widget.conversationID, convType: convType),
             context);
       } else if (memberInfoMap.isNotEmpty) {
-        model.sendTextAtMessage(
+        widget.model.sendTextAtMessage(
             text: text,
-            convType:
-                widget.conversationType == 1 ? ConvType.c2c : ConvType.group,
+            convType: widget.conversationType,
             convID: widget.conversationID,
             atUserList: getUserIdFromMemberInfoMap());
       } else {
         MessageUtils.handleMessageError(
-            model.sendTextMessage(
+            widget.model.sendTextMessage(
                 text: text, convID: widget.conversationID, convType: convType),
             context);
       }
       textEditingController.clear();
-      focusNode.requestFocus();
+      if (showKeyboard) {
+        focusNode.requestFocus();
+      }
       lastText = "";
       memberInfoMap = {};
       setState(() {
-        showKeyboard = true;
+        if (textEditingController.text.isEmpty) {
+          showMoreButton = true;
+        }
       });
       goDownBottom();
-      _handleSendEditStatus("",false);
+      _handleSendEditStatus("", false);
     }
   }
 
   void goDownBottom() {
     Future.delayed(const Duration(milliseconds: 50), () {
-      if (widget.scrollController != null) {
-        widget.scrollController!.animateTo(
-          widget.scrollController!.position.minScrollExtent,
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.ease,
-        );
+      try {
+        if (widget.scrollController != null) {
+          widget.scrollController!.animateTo(
+            widget.scrollController!.position.minScrollExtent,
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.ease,
+          );
+        }
+      } catch (e) {
+        print(e);
       }
     });
   }
@@ -411,24 +433,24 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
   }
 
   void onModelChanged() {
-    if (model.repliedMessage != null) {
+    if (widget.model.repliedMessage != null) {
       focusNode.requestFocus();
       _addDeleteTag();
       setState(() {
         showKeyboard = true;
       });
     } else {}
-    if (model.editRevokedMsg != "") {
+    if (widget.model.editRevokedMsg != "") {
       focusNode.requestFocus();
       setState(() {
         showKeyboard = true;
       });
       textEditingController.clear();
-      textEditingController.text = model.editRevokedMsg;
+      textEditingController.text = widget.model.editRevokedMsg;
       textEditingController.selection = TextSelection.fromPosition(TextPosition(
           affinity: TextAffinity.downstream,
-          offset: model.editRevokedMsg.length));
-      model.editRevokedMsg = "";
+          offset: widget.model.editRevokedMsg.length));
+      widget.model.editRevokedMsg = "";
     }
   }
 
@@ -440,8 +462,8 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
   }
 
   _handleSoftKeyBoardDelete() {
-    if (model.repliedMessage != null) {
-      model.setRepliedMessage(null);
+    if (widget.model.repliedMessage != null) {
+      widget.model.repliedMessage = null;
     }
   }
 
@@ -471,8 +493,8 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
     lastText = text;
   }
 
-  _handleAtText(String text) async {
-    String? groupID = widget.conversationType == ConversationType.V2TIM_GROUP
+  _handleAtText(String text, TUIChatSeparateViewModel model) async {
+    String? groupID = widget.conversationType == ConvType.group
         ? widget.conversationID
         : null;
 
@@ -501,14 +523,15 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
       memberInfoMap = map;
     }
     // 有@的情况并且是文本新增的时候
-    if (text[textLength - 1] == "@" &&
+    if (textLength > 0 &&
+        text[textLength - 1] == "@" &&
         (lastText.length < textLength || text == "@")) {
       V2TimGroupMemberFullInfo? memberInfo = await Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => AtText(
-            groupMemberList: widget.groupMemberList,
-              groupInfo: widget.groupInfo,
+              groupMemberList: model.groupMemberList,
+              groupInfo: model.groupInfo,
               groupID: groupID,
               groupType: conversationModel.selectedConversation?.groupType),
         ),
@@ -525,7 +548,7 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
 
   _debounce(
     Function(String text) fun, [
-    Duration delay = const Duration(milliseconds: 100),
+    Duration delay = const Duration(milliseconds: 30),
   ]) {
     Timer? timer;
     return (String text) {
@@ -557,7 +580,7 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
         }
       });
     }
-    model.addListener(onModelChanged);
+    widget.model.addListener(onModelChanged);
     if (widget.initText != null) {
       textEditingController.text = widget.initText!;
     }
@@ -566,18 +589,18 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
   @override
   void dispose() {
     handleSetDraftText();
-    model.removeListener(onModelChanged);
+    widget.model.removeListener(onModelChanged);
     focusNode.dispose();
-    // textEditingController.dispose();
     super.dispose();
   }
 
   Future<bool> getMemberMuteStatus(String userID) async {
     // Get the mute state of the members recursively
-    if (widget.groupMemberList?.any((item) => (item?.userID == userID)) ?? false) {
-      final int muteUntil = widget.groupMemberList!
-          .firstWhere((item) => (item?.userID == userID))
-          ?.muteUntil ??
+    if (widget.model.groupMemberList?.any((item) => (item?.userID == userID)) ??
+        false) {
+      final int muteUntil = widget.model.groupMemberList
+              ?.firstWhere((item) => (item?.userID == userID))
+              ?.muteUntil ??
           0;
       return muteUntil * 1000 > DateTime.now().millisecondsSinceEpoch;
     } else {
@@ -585,9 +608,9 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
     }
   }
 
-  _getMuteType() async {
-    if (widget.conversationType == 2) {
-      if ((widget.groupInfo?.isAllMuted ?? false) &&
+  _getMuteType(TUIChatSeparateViewModel model) async {
+    if (widget.conversationType == ConvType.group) {
+      if ((model.groupInfo?.isAllMuted ?? false) &&
           muteStatus != MuteStatus.all) {
         Future.delayed(const Duration(seconds: 0), () {
           setState(() {
@@ -602,7 +625,7 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
             muteStatus = MuteStatus.me;
           });
         });
-      } else if (!(widget.groupInfo?.isAllMuted ?? false) &&
+      } else if (!(model.groupInfo?.isAllMuted ?? false) &&
           !(selfModel.loginInfo?.userID != null &&
               await getMemberMuteStatus(selfModel.loginInfo!.userID!)) &&
           muteStatus != MuteStatus.none) {
@@ -615,53 +638,66 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
     }
   }
 
-  _handleSendEditStatus(String value,bool status){
+  _handleSendEditStatus(String value, bool status) {
     int now = DateTime.now().millisecondsSinceEpoch;
-    if(value.isNotEmpty && widget.conversationType == 1 ){
-
-      if(status){
-        if(now - latestSendEditStatusTime < 5 * 1000){
+    if (value.isNotEmpty && widget.conversationType == ConvType.c2c) {
+      if (status) {
+        if (now - latestSendEditStatusTime < 5 * 1000) {
           return;
         }
       }
       // send status
-      model.sendEditStatusMessage(status, widget.conversationID);
+      globalModel.sendEditStatusMessage(status, widget.conversationID);
       latestSendEditStatusTime = now;
-    }else{
-      model.sendEditStatusMessage(false, widget.conversationID);
+    } else {
+      globalModel.sendEditStatusMessage(false, widget.conversationID);
     }
   }
+
   @override
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     final theme = value.theme;
-    _getMuteType();
+    final TUIChatSeparateViewModel model =
+        Provider.of<TUIChatSeparateViewModel>(context);
+    _getMuteType(model);
     final debounceFunc = _debounce((value) {
+      if (isWebDevice() || isAndroidDevice()) {
+        if (value.isEmpty && showMoreButton != true) {
+          setState(() {
+            showMoreButton = true;
+          });
+        } else if (value.isNotEmpty && showMoreButton == true) {
+          setState(() {
+            showMoreButton = false;
+          });
+        }
+      }
       if (widget.onChanged != null) {
         widget.onChanged!(value);
       }
-      _handleAtText(value);
+      _handleAtText(value, model);
       _handleSendEditStatus(value, true);
       final isEmpty = value.isEmpty;
       if (isEmpty) {
         _handleSoftKeyBoardDelete();
       }
-
     }, const Duration(milliseconds: 80));
 
-    return Selector<TUIChatViewModel, V2TimMessage?>(
+    return Selector<TUIChatSeparateViewModel, V2TimMessage?>(
         builder: ((context, value, child) {
           String? getForbiddenText() {
             if (!(model.isGroupExist)) {
               return "群组不存在";
-            } else if(model.isNotAMember) {
+            } else if (model.isNotAMember) {
               return "您不是群成员";
-            } else if(muteStatus == MuteStatus.all){
+            } else if (muteStatus == MuteStatus.all) {
               return "全员禁言中";
-            }else if(muteStatus == MuteStatus.me){
+            } else if (muteStatus == MuteStatus.me) {
               return "您被禁言";
             }
             return null;
           }
+
           final forbiddenText = getForbiddenText();
           return Column(
             children: [
@@ -693,7 +729,8 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
                                   ),
                                 ),
                               )),
-                            if (widget.showSendAudio &&
+                            if (!PlatformUtils().isWeb &&
+                                widget.showSendAudio &&
                                 forbiddenText == null)
                               InkWell(
                                 onTap: () async {
@@ -748,8 +785,10 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
                                             showMore = false;
                                           });
                                         },
-                                        keyboardType: TextInputType.text,
-                                        textInputAction: TextInputAction.send,
+                                        keyboardType: TextInputType.multiline,
+                                        textInputAction: isAndroidDevice()
+                                            ? TextInputAction.send
+                                            : TextInputAction.send,
                                         onEditingComplete: onSubmitted,
                                         textAlignVertical:
                                             TextAlignVertical.center,
@@ -769,42 +808,64 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
                               const SizedBox(
                                 width: 10,
                               ),
-                            if (widget.showSendEmoji &&
-                                forbiddenText == null)
+                            if (widget.showSendEmoji && forbiddenText == null)
                               InkWell(
                                 onTap: () {
                                   _openEmojiPanel();
                                   goDownBottom();
                                 },
-                                child: SvgPicture.asset(
-                                  showEmojiPanel
-                                      ? 'images/keyboard.svg'
-                                      : 'images/face.svg',
-                                  package: 'tim_ui_kit',
-                                  color: const Color.fromRGBO(68, 68, 68, 1),
-                                  height: 28,
-                                  width: 28,
-                                ),
+                                child: kIsWeb
+                                    ? Icon(
+                                        showEmojiPanel
+                                            ? Icons.keyboard_alt_outlined
+                                            : Icons.mood_outlined,
+                                        color: hexToColor("5c6168"),
+                                        size: 32)
+                                    : SvgPicture.asset(
+                                        showEmojiPanel
+                                            ? 'images/keyboard.svg'
+                                            : 'images/face.svg',
+                                        package: 'tim_ui_kit',
+                                        color:
+                                            const Color.fromRGBO(68, 68, 68, 1),
+                                        height: 28,
+                                        width: 28,
+                                      ),
                               ),
                             if (forbiddenText == null)
                               const SizedBox(
                                 width: 10,
                               ),
-                            if (widget.showMorePannel && forbiddenText == null)
+                            if (widget.showMorePannel &&
+                                forbiddenText == null &&
+                                showMoreButton)
                               InkWell(
                                 onTap: () {
                                   // model.sendCustomMessage(data: "a", convID: model.currentSelectedConv, convType: model.currentSelectedConvType == 1 ? ConvType.c2c : ConvType.group);
                                   _openMore();
                                   goDownBottom();
                                 },
-                                child: SvgPicture.asset(
-                                  'images/add.svg',
-                                  package: 'tim_ui_kit',
-                                  color: const Color.fromRGBO(68, 68, 68, 1),
-                                  height: 28,
-                                  width: 28,
+                                child: kIsWeb
+                                    ? Icon(Icons.add_circle_outline_outlined,
+                                        color: hexToColor("5c6168"), size: 32)
+                                    : SvgPicture.asset(
+                                        'images/add.svg',
+                                        package: 'tim_ui_kit',
+                                        color:
+                                            const Color.fromRGBO(68, 68, 68, 1),
+                                        height: 28,
+                                        width: 28,
+                                      ),
+                              ),
+                            if ((isAndroidDevice() || isWebDevice()) &&
+                                !showMoreButton)
+                              SizedBox(
+                                height: 28.0,
+                                child: ElevatedButton(
+                                  onPressed: onSubmitted,
+                                  child: Text(TIM_t("发送")),
                                 ),
-                              )
+                              ),
                           ],
                         ),
                       ),

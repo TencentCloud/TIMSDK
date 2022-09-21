@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
+import 'package:tim_ui_kit/business_logic/separate_models/tui_chat_separate_view_model.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_chat_global_model.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_self_info_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
@@ -11,10 +13,14 @@ import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
 class ForwardMessageScreen extends StatefulWidget {
   final bool isMergerForward;
-  final int conversationType;
+  final ConvType conversationType;
+  final TUIChatSeparateViewModel model;
 
   const ForwardMessageScreen(
-      {Key? key, this.isMergerForward = false, required this.conversationType})
+      {Key? key,
+      this.isMergerForward = false,
+      required this.conversationType,
+      required this.model})
       : super(key: key);
 
   @override
@@ -22,48 +28,53 @@ class ForwardMessageScreen extends StatefulWidget {
 }
 
 class _ForwardMessageScreenState extends TIMUIKitState<ForwardMessageScreen> {
-  final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
+  final TUIChatGlobalModel model = serviceLocator<TUIChatGlobalModel>();
+  final TUISelfInfoViewModel _selfInfoViewModel =
+      serviceLocator<TUISelfInfoViewModel>();
   List<V2TimConversation> _conversationList = [];
   bool isMultiSelect = false;
 
   String _getMergerMessageTitle() {
-    if (widget.conversationType == 1) {
-      final selectedMessage = model.multiSelectedMessageList.first;
-      final sender = selectedMessage.sender;
-      final option1 = selectedMessage.nickName ?? selectedMessage.userID;
-      return sender! +
-          TIM_t_para("与{{option1}}的聊天记录", "与$option1的聊天记录")(option1: option1);
+    if (widget.conversationType == ConvType.c2c) {
+      final option1 = (_selfInfoViewModel.loginInfo?.nickName != null &&
+              _selfInfoViewModel.loginInfo!.nickName!.isNotEmpty)
+          ? _selfInfoViewModel.loginInfo?.nickName
+          : _selfInfoViewModel.loginInfo?.userID;
+      // Chat History for xx
+      return TIM_t_para("{{option1}}的聊天记录", "$option1的聊天记录")(option1: option1);
     } else {
       return TIM_t("群聊的聊天记录");
     }
   }
 
   List<String> _getAbstractList() {
-    return model.multiSelectedMessageList
-        .map((e) =>
-            "${e.sender}: ${model.abstractMessageBuilder != null ? model.abstractMessageBuilder!(e) : MessageUtils.getAbstractMessage(e)}")
-        .toList();
+    return widget.model.multiSelectedMessageList.map((e) {
+      final sender = (e.nickName != null && e.nickName!.isNotEmpty)
+          ? e.nickName
+          : e.sender;
+      return "$sender: ${model.abstractMessageBuilder != null ? model.abstractMessageBuilder!(e) : MessageUtils.getAbstractMessage(e)}";
+    }).toList();
   }
 
   _handleForwardMessage() async {
     if (widget.isMergerForward) {
-      await model.sendMergerMessage(
+      await widget.model.sendMergerMessage(
         conversationList: _conversationList,
         title: _getMergerMessageTitle(),
         abstractList: _getAbstractList(),
         context: context,
       );
     } else {
-      await model.sendForwardMessage(conversationList: _conversationList);
+      await widget.model
+          .sendForwardMessage(conversationList: _conversationList);
     }
-    model.updateMultiSelectStatus(false);
+    widget.model.updateMultiSelectStatus(false);
     Navigator.pop(context);
   }
 
   @override
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     final TUITheme theme = value.theme;
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -90,7 +101,7 @@ class _ForwardMessageScreenState extends TIMUIKitState<ForwardMessageScreen> {
                 _conversationList = [];
               });
             } else {
-              model.updateMultiSelectStatus(false);
+              widget.model.updateMultiSelectStatus(false);
               Navigator.pop(context);
             }
           },

@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 
 class TIMUIKitProfileExample extends StatelessWidget {
-  const TIMUIKitProfileExample({Key? key}) : super(key: key);
+  final String? userID;
+  const TIMUIKitProfileExample({Key? key, this.userID}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const TIMUIKitProfile(
-      userID: "121405", // Please fill in here according to the actual cleaning
+    return TIMUIKitProfile(
+      userID: userID ?? "10040818", // Please fill in here according to the actual cleaning
     );
   }
 }

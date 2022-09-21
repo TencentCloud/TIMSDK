@@ -27,7 +27,7 @@ class RecentForwardList extends StatefulWidget {
 
 class _RecentForwardListState extends TIMUIKitState<RecentForwardList> {
   final TUIConversationViewModel _conversationViewModel =
-      TUIConversationViewModel();
+      serviceLocator<TUIConversationViewModel>();
   final List<V2TimConversation> _selectedConversation = [];
 
   List<ISuspensionBeanImpl<V2TimConversation?>> _buildMemberList(
@@ -94,7 +94,11 @@ class _RecentForwardListState extends TIMUIKitState<RecentForwardList> {
                   height: 40,
                   width: 40,
                   margin: const EdgeInsets.only(right: 12),
-                  child: Avatar(faceUrl: faceUrl, showName: showName,type: conversation.type,),
+                  child: Avatar(
+                    faceUrl: faceUrl,
+                    showName: showName,
+                    type: conversation.type,
+                  ),
                 ),
                 Expanded(
                     child: Container(

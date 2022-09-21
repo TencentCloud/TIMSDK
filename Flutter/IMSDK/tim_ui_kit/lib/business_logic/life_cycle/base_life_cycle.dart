@@ -50,12 +50,14 @@ abstract class DefaultLifeCycle {
     return true;
   }
 
-  static Future<bool> defaultAddFriend(String userID, String? remark,
-      String? friendGroup, String? addWording, [BuildContext? context]) async {
+  static Future<bool> defaultAddFriend(
+      String userID, String? remark, String? friendGroup, String? addWording,
+      [BuildContext? context]) async {
     return true;
   }
 
-  static Future<bool> defaultAddGroup(String groupID, String message, [BuildContext? context]) async {
+  static Future<bool> defaultAddGroup(String groupID, String message,
+      [BuildContext? context]) async {
     return true;
   }
 

@@ -97,15 +97,13 @@ class MessageUtils {
   static String _getGroupChangeType(V2TimGroupChangeInfo info) {
     int? type = info.type;
     var value = info.value;
-    String s = '';
+    String s = TIM_t('群资料信息');
     switch (type) {
       case GroupChangeInfoType.V2TIM_GROUP_INFO_CHANGE_TYPE_CUSTOM:
         s = TIM_t("自定义字段");
-        value = '';
         break;
       case GroupChangeInfoType.V2TIM_GROUP_INFO_CHANGE_TYPE_FACE_URL:
         s = TIM_t("群头像");
-        value = '';
         break;
       case GroupChangeInfoType.V2TIM_GROUP_INFO_CHANGE_TYPE_INTRODUCTION:
         s = TIM_t("群简介");
@@ -114,18 +112,24 @@ class MessageUtils {
         s = TIM_t("群名称");
         break;
       case GroupChangeInfoType.V2TIM_GROUP_INFO_CHANGE_TYPE_NOTIFICATION:
-        s = TIM_t("群通知");
+        s = TIM_t("群公告");
         break;
       case GroupChangeInfoType.V2TIM_GROUP_INFO_CHANGE_TYPE_OWNER:
         s = TIM_t("群主");
         break;
-      case 8:
+      case GroupChangeInfoType.V2TIM_GROUP_INFO_CHANGE_TYPE_SHUT_UP_ALL:
         s = TIM_t("全员禁言状态");
+        break;
+      case GroupChangeInfoType.V2TIM_GROUP_INFO_CHANGE_TYPE_RECEIVE_MESSAGE_OPT:
+        s = TIM_t("消息接收方式");
+        break;
+      case GroupChangeInfoType.V2TIM_GROUP_INFO_CHANGE_TYPE_GROUP_ADD_OPT:
+        s = TIM_t("加群方式");
         break;
     }
 
     final String option8 = s;
-    if (value != null) {
+    if (value != null && value.isNotEmpty) {
       return TIM_t_para("{{option8}}为 ", "$option8为 ")(option8: option8) +
           ' $value';
     } else {
@@ -168,8 +172,11 @@ class MessageUtils {
       case GroupTipsElemType.V2TIM_GROUP_TIPS_TYPE_GROUP_INFO_CHANGE:
         final groupChangeInfoList = groupTipsElem.groupChangeInfoList;
         final String? option7 = opUserNickName ?? "";
-        final changedInfoString =
+        var changedInfoString =
             groupChangeInfoList!.map((e) => _getGroupChangeType(e!)).join("、");
+        if (changedInfoString.isEmpty) {
+          changedInfoString = TIM_t("群资料");
+        }
         displayMessage =
             TIM_t_para("{{option7}}修改", "$option7修改")(option7: option7) +
                 changedInfoString;
@@ -214,17 +221,19 @@ class MessageUtils {
         final adminMember =
             memberList!.map((e) => _getMemberNickName(e!).toString()).join("、");
         final opMember = _getOpUserNick(operationMember);
+        final option1 = adminMember;
         displayMessage = '$opMember' +
-            TIM_t_para("将 {{adminMember}} 设置为管理员", "将 $adminMember 设置为管理员")(
-                adminMember: adminMember);
+            TIM_t_para("将 {{option1}} 设置为管理员", "将 $option1 设置为管理员")(
+                option1: option1);
         break;
       case GroupTipsElemType.V2TIM_GROUP_TIPS_TYPE_CANCEL_ADMIN:
         final adminMember =
             memberList!.map((e) => _getMemberNickName(e!).toString()).join("、");
         final opMember = _getOpUserNick(operationMember);
+        final option1 = adminMember;
         displayMessage = '$opMember' +
-            TIM_t_para("将 {{adminMember}} 取消管理员", "将 $adminMember 取消管理员")(
-                adminMember: adminMember);
+            TIM_t_para("将 {{option1}} 取消管理员", "将 $option1 取消管理员")(
+                option1: option1);
         break;
       default:
         final String option2 = operationType.toString();

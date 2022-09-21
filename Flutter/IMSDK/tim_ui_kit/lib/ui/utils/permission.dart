@@ -83,6 +83,9 @@ class _PermissionRequestInfo extends TIMUIKitState<PermissionRequestInfo>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    const SizedBox(
+                      height: 50,
+                    ),
                     SizedBox(
                       height: 50,
                       width: 50,
@@ -305,7 +308,8 @@ class Permissions {
                         const VerticalDivider(),
                         Expanded(
                           child: TextButton(
-                            child: Text(TIM_t("去开启")),
+                            child: Text(TIM_t("去开启"),
+                                style: const TextStyle(color: Colors.black)),
                             onPressed: getPermission,
                           ),
                         )

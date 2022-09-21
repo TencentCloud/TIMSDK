@@ -2,7 +2,7 @@ import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_conversation_view_model.dart';
 
 class TIMUIKitConversationController {
-  TUIConversationViewModel model = TUIConversationViewModel();
+  late TUIConversationViewModel model;
 
   /// Get the selected conversation currently
   V2TimConversation? get selectedConversation {
@@ -19,30 +19,33 @@ class TIMUIKitConversationController {
     model.conversationList = conversationList;
   }
 
-  /// Load teh conversation list to UI
+  /// Load the conversation list to UI
   loadData({int count = 100}) {
     model.loadData(count: count);
   }
 
-  /// Reload teh conversation list to UI
+  /// Reload the conversation list to UI
   reloadData({int count = 100}) {
     model.refresh(count: count);
   }
 
   /// Pin one conversation to the top
-  Future<V2TimCallback> pinConversation({required String conversationID, required bool isPinned}) {
+  Future<V2TimCallback> pinConversation(
+      {required String conversationID, required bool isPinned}) {
     return model.pinConversation(
         conversationID: conversationID, isPinned: isPinned);
   }
 
   /// Set the draft for a conversation
-  Future<V2TimCallback> setConversationDraft({required String conversationID, String? draftText}) {
+  Future<V2TimCallback> setConversationDraft(
+      {required String conversationID, String? draftText}) {
     return model.setConversationDraft(
         conversationID: conversationID, draftText: draftText);
   }
 
   /// Clear the historical message in a specific conversation
-  Future<V2TimCallback?>? clearHistoryMessage({required V2TimConversation conversation}) {
+  Future<V2TimCallback?>? clearHistoryMessage(
+      {required V2TimConversation conversation}) {
     final convType = conversation.type;
     final convID = convType == 1 ? conversation.userID : conversation.groupID;
     if (convType != null && convID != null) {
@@ -58,6 +61,6 @@ class TIMUIKitConversationController {
 
   /// Clear the conversation list from UI
   dispose() {
-    model.clear();
+    model.clearData();
   }
 }

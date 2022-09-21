@@ -2,7 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
+import 'package:tim_ui_kit/business_logic/separate_models/tui_chat_separate_view_model.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_chat_global_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKItMessageList/TIMUIKitTongue/tim_uikit_chat_history_message_list_tongue.dart';
@@ -13,13 +14,15 @@ class TIMUIKitHistoryMessageListTongueContainer extends StatefulWidget {
   final List<V2TimGroupAtInfo?>? groupAtInfoList;
   final Function(String targetSeq) scrollToIndexBySeq;
   final AutoScrollController scrollController;
+  final TUIChatSeparateViewModel model;
 
   const TIMUIKitHistoryMessageListTongueContainer(
       {Key? key,
       this.tongueItemBuilder,
       this.groupAtInfoList,
       required this.scrollToIndexBySeq,
-      required this.scrollController})
+      required this.scrollController,
+      required this.model})
       : super(key: key);
 
   @override
@@ -29,9 +32,9 @@ class TIMUIKitHistoryMessageListTongueContainer extends StatefulWidget {
 
 class _TIMUIKitHistoryMessageListTongueContainerState
     extends TIMUIKitState<TIMUIKitHistoryMessageListTongueContainer> {
-  final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
   bool isFinishJumpToAt = false;
   List<V2TimGroupAtInfo?>? groupAtInfoList = [];
+  final TUIChatGlobalModel globalModel = serviceLocator<TUIChatGlobalModel>();
 
   @override
   void initState() {
@@ -40,28 +43,32 @@ class _TIMUIKitHistoryMessageListTongueContainerState
     groupAtInfoList = widget.groupAtInfoList?.reversed.toList();
   }
 
-  void initScrollListener() {
-    void changePositionState(HistoryMessagePosition newPosition) {
-      if (model.listPosition != newPosition) {
-        model.listPosition = newPosition;
-      }
+  void changePositionState(HistoryMessagePosition newPosition) {
+    if (globalModel.getMessageListPosition(widget.model.conversationID) !=
+        newPosition) {
+      globalModel.setMessageListPosition(
+          widget.model.conversationID, newPosition);
     }
+  }
 
-    widget.scrollController.addListener(() {
-      final screenHeight = MediaQuery.of(context).size.height;
-      if (widget.scrollController.offset <=
-              widget.scrollController.position.minScrollExtent &&
-          !widget.scrollController.position.outOfRange) {
-        changePositionState(HistoryMessagePosition.bottom);
-      } else if (widget.scrollController.offset <= screenHeight * 1.6 &&
-          widget.scrollController.offset > 0 &&
-          !widget.scrollController.position.outOfRange) {
-        changePositionState(HistoryMessagePosition.inTwoScreen);
-      } else if (widget.scrollController.offset > screenHeight * 1.6 &&
-          !widget.scrollController.position.outOfRange) {
-        changePositionState(HistoryMessagePosition.awayTwoScreen);
-      }
-    });
+  scrollHandler() {
+    final screenHeight = MediaQuery.of(context).size.height;
+    if (widget.scrollController.offset <=
+            widget.scrollController.position.minScrollExtent &&
+        !widget.scrollController.position.outOfRange) {
+      changePositionState(HistoryMessagePosition.bottom);
+    } else if (widget.scrollController.offset <= screenHeight * 1.6 &&
+        widget.scrollController.offset > 0 &&
+        !widget.scrollController.position.outOfRange) {
+      changePositionState(HistoryMessagePosition.inTwoScreen);
+    } else if (widget.scrollController.offset > screenHeight * 1.6 &&
+        !widget.scrollController.position.outOfRange) {
+      changePositionState(HistoryMessagePosition.awayTwoScreen);
+    }
+  }
+
+  void initScrollListener() {
+    widget.scrollController.addListener(scrollHandler);
   }
 
   MessageListTongueType _getTongueValueType(
@@ -76,11 +83,12 @@ class _TIMUIKitHistoryMessageListTongueContainerState
       }
     }
 
-    if (model.unreadCountForConversation > 0) {
+    if (globalModel.unreadCountForConversation > 0) {
       return MessageListTongueType.showUnread;
     }
 
-    if (model.listPosition == HistoryMessagePosition.awayTwoScreen) {
+    if (globalModel.getMessageListPosition(widget.model.conversationID) ==
+        HistoryMessagePosition.awayTwoScreen) {
       return MessageListTongueType.toLatest;
     }
 
@@ -88,20 +96,24 @@ class _TIMUIKitHistoryMessageListTongueContainerState
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    widget.scrollController.removeListener(scrollHandler);
+  }
+
+  @override
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     return Positioned(
       bottom: 16,
-      right: 0,
+      right: 16,
       child: TIMUIKitHistoryMessageListTongue(
         tongueItemBuilder: widget.tongueItemBuilder,
-        unreadCount: model.unreadCountForConversation,
+        unreadCount: globalModel.unreadCountForConversation,
         onClick: () {
           if (groupAtInfoList != null && groupAtInfoList!.isNotEmpty) {
             if (groupAtInfoList?.length == 1) {
               widget.scrollToIndexBySeq(groupAtInfoList![0]!.seq);
-              model.markMessageAsRead(
-                  convID: model.currentSelectedConv,
-                  convType: model.currentSelectedConvType!);
+              widget.model.markMessageAsRead();
               setState(() {
                 groupAtInfoList = [];
                 isFinishJumpToAt = true;
@@ -110,9 +122,10 @@ class _TIMUIKitHistoryMessageListTongueContainerState
               widget.scrollToIndexBySeq(groupAtInfoList!.removeAt(0)!.seq);
             }
           }
-          if (model.listPosition == HistoryMessagePosition.awayTwoScreen ||
-              model.unreadCountForConversation > 0) {
-            model.showLatestUnread(model.currentSelectedConv);
+          if (globalModel.getMessageListPosition(widget.model.conversationID) ==
+                  HistoryMessagePosition.awayTwoScreen ||
+              globalModel.unreadCountForConversation > 0) {
+            widget.model.showLatestUnread();
             widget.scrollController.animateTo(
               widget.scrollController.position.minScrollExtent,
               duration: const Duration(milliseconds: 200),

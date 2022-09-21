@@ -34,9 +34,9 @@ class ExtendedWrap extends MultiChildRenderObjectWidget {
     List<Widget> children = const <Widget>[],
   })  : assert(maxLines >= 1),
         super(key: key, children: [
-        ...children,
-        if (overflowWidget != null) overflowWidget
-      ]);
+          ...children,
+          if (overflowWidget != null) overflowWidget
+        ]);
 
   /// The direction to use as the main axis.
   ///

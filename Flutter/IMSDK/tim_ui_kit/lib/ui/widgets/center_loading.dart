@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_statelesswidget.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_chat_global_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
@@ -16,10 +16,10 @@ class CenterLoading extends TIMUIKitStatelessWidget {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider.value(
-              value: serviceLocator<TUIChatViewModel>()),
+              value: serviceLocator<TUIChatGlobalModel>()),
         ],
         builder: (context, w) {
-          final progress = Provider.of<TUIChatViewModel>(context)
+          final progress = Provider.of<TUIChatGlobalModel>(context)
               .getMessageProgress(messageID);
           return progress == 0
               ? Container()

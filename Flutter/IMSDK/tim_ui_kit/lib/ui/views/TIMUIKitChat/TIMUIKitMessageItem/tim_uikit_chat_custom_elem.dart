@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
@@ -9,11 +10,13 @@ import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_statelesswidget.dart';
 
 import 'package:tim_ui_kit/ui/utils/message.dart';
+import 'package:tim_ui_kit/ui/widgets/link_preview/common/extensions.dart';
 import 'package:tim_ui_kit/ui/widgets/link_preview/common/utils.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'TIMUIKitMessageReaction/tim_uikit_message_reaction_show_panel.dart';
 
-class LinkMessage{
+class LinkMessage {
   String? link;
   String? text;
   String? businessID;
@@ -22,6 +25,18 @@ class LinkMessage{
     link = json["link"];
     text = json["text"];
     businessID = json["businessID"];
+  }
+}
+
+class WebLinkMessage {
+  String? title;
+  String? description;
+  Map<String, dynamic>? hyperlinks_text;
+
+  WebLinkMessage.fromJSON(Map json) {
+    title = json["title"];
+    description = json["description"];
+    hyperlinks_text = json["hyperlinks_text"];
   }
 }
 
@@ -71,6 +86,18 @@ class TIMUIKitCustomElem extends TIMUIKitStatelessWidget {
     }
   }
 
+  static WebLinkMessage? getWebLinkMessage(V2TimCustomElem? customElem) {
+    try {
+      if (customElem?.extension != null) {
+        final customMessage = jsonDecode(customElem!.extension!);
+        return WebLinkMessage.fromJSON(customMessage);
+      }
+      return null;
+    } catch (err) {
+      return null;
+    }
+  }
+
   static String getActionType(int actionType) {
     final actionMessage = {
       1: TIM_t("发起通话"),
@@ -104,9 +131,23 @@ class TIMUIKitCustomElem extends TIMUIKitStatelessWidget {
     return "${twoDigits(minutsShow)}:${twoDigits(secondsShow)}";
   }
 
+  static Future<void> launchWebURL(BuildContext context, String url) async {
+    try {
+      await launchUrl(
+        Uri.parse(url).withScheme,
+        mode: LaunchMode.externalApplication,
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(TIM_t("无法打开URL"))), // Cannot launch the url
+      );
+    }
+  }
+
   Widget _callElemBuilder(BuildContext context) {
     final callingMessage = getCallMessage(customElem);
     final linkMessage = getLinkMessage(customElem);
+    final webLinkMessage = getWebLinkMessage(customElem);
 
     if (callingMessage != null) {
       // 如果是结束消息
@@ -134,7 +175,8 @@ class TIMUIKitCustomElem extends TIMUIKitStatelessWidget {
           isCallEnd
               ? Text(TIM_t_para("通话时间：{{option2}}", "通话时间：$option2")(
                   option2: option2))
-              : Text(getActionType(callingMessage.actionType!),
+              : Text(
+                  getActionType(callingMessage.actionType!),
                   style: messageFontStyle,
                 ),
           if (isFromSelf)
@@ -152,28 +194,72 @@ class TIMUIKitCustomElem extends TIMUIKitStatelessWidget {
         ],
       );
     } else if (linkMessage != null) {
-      final option1 = linkMessage.link;
+      final String option1 = linkMessage.link ?? "";
       return Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(linkMessage.text ?? ""),
           MarkdownBody(
-            data: TIM_t_para("[查看详情 >>]({{option1}})", "[查看详情 >>]($option1)")(option1: option1),
+            data: TIM_t_para("[查看详情 >>]({{option1}})", "[查看详情 >>]($option1)")(
+                option1: option1),
             styleSheet: MarkdownStyleSheet.fromTheme(ThemeData(
-                textTheme: const TextTheme(
-                    bodyText2: TextStyle(fontSize: 16.0))))
+                    textTheme:
+                        const TextTheme(bodyText2: TextStyle(fontSize: 16.0))))
                 .copyWith(
               a: TextStyle(color: LinkUtils.hexToColor("015fff")),
             ),
             onTapLink: (
-                String link,
-                String? href,
-                String title,
-                ) {
+              String link,
+              String? href,
+              String title,
+            ) {
               LinkUtils.launchURL(context, linkMessage.link ?? "");
             },
           )
+        ],
+      );
+    } else if (webLinkMessage != null) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text.rich(TextSpan(
+              style: const TextStyle(
+                fontSize: 16,
+              ),
+              children: [
+                TextSpan(text: webLinkMessage.title),
+                TextSpan(
+                  text: webLinkMessage.hyperlinks_text?["key"],
+                  style: const TextStyle(
+                    color: Color.fromRGBO(0, 110, 253, 1),
+                  ),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      launchWebURL(
+                        context,
+                        webLinkMessage.hyperlinks_text?["value"],
+                      );
+                    },
+                )
+              ])),
+          if (webLinkMessage.description != null &&
+              webLinkMessage.description!.isNotEmpty)
+            Text(
+              webLinkMessage.description!,
+              style: const TextStyle(
+                fontSize: 16,
+              ),
+            )
+        ],
+      );
+    } else if (customElem?.data == "group_create") {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(TIM_t(("群聊创建成功！"))),
         ],
       );
     } else {
@@ -199,19 +285,18 @@ class TIMUIKitCustomElem extends TIMUIKitStatelessWidget {
         ? theme.lightPrimaryMaterialColor.shade50
         : theme.weakBackgroundColor;
     return Container(
-      padding: textPadding ?? const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: messageBackgroundColor ?? backgroundColor,
-        borderRadius: messageBorderRadius ?? borderRadius,
-      ),
-      constraints: const BoxConstraints(maxWidth: 240),
-      child: Column(
-        children: [
-          _callElemBuilder(context),
-          if (isShowMessageReaction ?? true)
-            TIMUIKitMessageReactionShowPanel(message: message)
-        ],
-      )
-    );
+        padding: textPadding ?? const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: messageBackgroundColor ?? backgroundColor,
+          borderRadius: messageBorderRadius ?? borderRadius,
+        ),
+        constraints: const BoxConstraints(maxWidth: 240),
+        child: Column(
+          children: [
+            _callElemBuilder(context),
+            if (isShowMessageReaction ?? true)
+              TIMUIKitMessageReactionShowPanel(message: message)
+          ],
+        ));
   }
 }

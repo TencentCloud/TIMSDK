@@ -36,6 +36,9 @@ class ContactList extends StatefulWidget {
 
   final List<V2TimGroupMemberFullInfo?>? groupMemberList;
 
+  /// the builder for the empty item, especially when there is no contact
+  final Widget Function(BuildContext context)? emptyBuilder;
+
   const ContactList(
       {Key? key,
       required this.contactList,
@@ -48,7 +51,8 @@ class ContactList extends StatefulWidget {
       this.topListItemBuilder,
       this.isShowOnlineStatus = false,
       this.maxSelectNum,
-      this.groupMemberList})
+      this.groupMemberList,
+      this.emptyBuilder})
       : super(key: key);
 
   @override
@@ -57,8 +61,8 @@ class ContactList extends StatefulWidget {
 
 class _ContactListState extends TIMUIKitState<ContactList> {
   List<V2TimFriendInfo> selectedMember = [];
-  final TUIFriendShipViewModel friendShipViewModel = serviceLocator<TUIFriendShipViewModel>();
-
+  final TUIFriendShipViewModel friendShipViewModel =
+      serviceLocator<TUIFriendShipViewModel>();
 
   _getShowName(V2TimFriendInfo item) {
     final friendRemark = item.friendRemark ?? "";
@@ -114,6 +118,11 @@ class _ContactListState extends TIMUIKitState<ContactList> {
     }
     return Container(
       padding: const EdgeInsets.only(top: 8, left: 16, right: 12),
+      decoration: BoxDecoration(
+          border: Border(
+              bottom: BorderSide(
+                  color:
+                      theme.weakDividerColor ?? CommonColor.weakDividerColor))),
       child: Row(
         children: [
           if (widget.isCanSelectMemberItem)
@@ -154,11 +163,6 @@ class _ContactListState extends TIMUIKitState<ContactList> {
               child: Container(
             alignment: Alignment.centerLeft,
             padding: const EdgeInsets.only(top: 10, bottom: 20, right: 28),
-            decoration: BoxDecoration(
-                border: Border(
-                    bottom: BorderSide(
-                        color: theme.weakDividerColor ??
-                            CommonColor.weakDividerColor))),
             child: Text(
               showName,
               style: const TextStyle(color: Colors.black, fontSize: 18),
@@ -167,6 +171,60 @@ class _ContactListState extends TIMUIKitState<ContactList> {
         ],
       ),
     );
+  }
+
+  Widget generateTopItem(memberInfo) {
+    if (widget.topListItemBuilder != null) {
+      final customWidget = widget.topListItemBuilder!(memberInfo);
+      if (customWidget != null) {
+        return customWidget;
+      }
+    }
+    return InkWell(
+        onTap: () {
+          if (memberInfo.onTap != null) {
+            memberInfo.onTap!();
+          }
+        },
+        child: Container(
+          padding: const EdgeInsets.only(top: 8, left: 16),
+          decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: hexToColor("DBDBDB")))),
+          child: Row(
+            children: [
+              Container(
+                height: 40,
+                width: 40,
+                margin: const EdgeInsets.only(right: 12, bottom: 12),
+                child: memberInfo.icon,
+              ),
+              Expanded(
+                  child: Container(
+                padding: const EdgeInsets.only(top: 10, bottom: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      memberInfo.name,
+                      style:
+                          TextStyle(color: hexToColor("111111"), fontSize: 18),
+                    ),
+                    Expanded(child: Container()),
+                    // if (item.id == "newContact")
+                    //   const TIMUIKitUnreadCount(),
+                    Container(
+                      margin: const EdgeInsets.only(right: 16),
+                      child: Icon(
+                        Icons.keyboard_arrow_right,
+                        color: hexToColor('BBBBBB'),
+                      ),
+                    )
+                  ],
+                ),
+              ))
+            ],
+          ),
+        ));
   }
 
   @override
@@ -182,63 +240,24 @@ class _ContactListState extends TIMUIKitState<ContactList> {
       showList.insertAll(0, topList);
     }
 
+    if (widget.contactList.isEmpty) {
+      return Column(
+        children: [
+          ...showList.map((e) => generateTopItem(e.memberInfo)).toList(),
+          Expanded(
+              child: widget.emptyBuilder != null
+                  ? widget.emptyBuilder!(context)
+                  : Container())
+        ],
+      );
+    }
+
     return AZListViewContainer(
       memberList: showList,
       itemBuilder: (context, index) {
         final memberInfo = showList[index].memberInfo;
         if (memberInfo is TopListItem) {
-          if (widget.topListItemBuilder != null) {
-            final customWidget = widget.topListItemBuilder!(memberInfo);
-            if (customWidget != null) {
-              return customWidget;
-            }
-          }
-          return InkWell(
-              onTap: () {
-                if (memberInfo.onTap != null) {
-                  memberInfo.onTap!();
-                }
-              },
-              child: Container(
-                padding: const EdgeInsets.only(top: 8, left: 16),
-                child: Row(
-                  children: [
-                    Container(
-                      height: 40,
-                      width: 40,
-                      margin: const EdgeInsets.only(right: 12, bottom: 12),
-                      child: memberInfo.icon,
-                    ),
-                    Expanded(
-                        child: Container(
-                      padding: const EdgeInsets.only(top: 10, bottom: 20),
-                      decoration: BoxDecoration(
-                          border: Border(
-                              bottom: BorderSide(color: hexToColor("DBDBDB")))),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            memberInfo.name,
-                            style: TextStyle(
-                                color: hexToColor("111111"), fontSize: 18),
-                          ),
-                          Expanded(child: Container()),
-                          // if (item.id == "newContact")
-                          //   const TIMUIKitUnreadCount(),
-                          Container(
-                            margin: const EdgeInsets.only(right: 16),
-                            child: Icon(
-                              Icons.keyboard_arrow_right,
-                              color: hexToColor('BBBBBB'),
-                            ),
-                          )
-                        ],
-                      ),
-                    ))
-                  ],
-                ),
-              ));
+          return generateTopItem(memberInfo);
         } else {
           return InkWell(
             onTap: () {
