@@ -7,6 +7,7 @@ import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/business_logic/separate_models/tui_group_profile_model.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
+import 'package:tim_ui_kit/ui/utils/platform.dart';
 import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/widgets/tim_ui_group_member_search.dart';
 import 'package:tim_ui_kit/ui/widgets/group_member_list.dart';
@@ -42,7 +43,15 @@ class GroupProfileMemberListPageState
     searchText = searchText;
     List<V2TimGroupMemberFullInfo?> currentGroupMember =
         Provider.of<TUIGroupProfileModel>(context, listen: false)
-                .groupMemberList;
+            .groupMemberList;
+
+    if (!isSearchTextExist(searchText)) {
+      setState(() {
+        searchMemberList = null;
+      });
+      return;
+    }
+
     final res =
         await widget.model.searchGroupMember(V2TimGroupMemberSearchParam(
       keywordList: [searchText],
@@ -65,8 +74,7 @@ class GroupProfileMemberListPageState
       currentGroupMember = [];
     }
     setState(() {
-      searchMemberList =
-          isSearchTextExist(searchText) ? currentGroupMember : null;
+      searchMemberList = currentGroupMember;
     });
   }
 
@@ -77,9 +85,9 @@ class GroupProfileMemberListPageState
       providers: [
         ChangeNotifierProvider.value(value: widget.model),
       ],
-      builder: (BuildContext context, Widget? w){
-        final TUIGroupProfileModel groupProfileModel = Provider.of<
-            TUIGroupProfileModel>(context);
+      builder: (BuildContext context, Widget? w) {
+        final TUIGroupProfileModel groupProfileModel =
+            Provider.of<TUIGroupProfileModel>(context);
         String option1 = groupProfileModel.groupInfo?.memberCount.toString() ??
             widget.memberList.length.toString();
         return Scaffold(
@@ -102,15 +110,17 @@ class GroupProfileMemberListPageState
                   color: Colors.white,
                 )),
             body: GroupProfileMemberList(
-              customTopArea: GroupMemberSearchTextField(
-                onTextChange: (text) =>
-                    handleSearchGroupMembers(text, context),
-              ),
+              customTopArea: PlatformUtils().isWeb
+                  ? null
+                  : GroupMemberSearchTextField(
+                      onTextChange: (text) =>
+                          handleSearchGroupMembers(text, context),
+                    ),
               memberList: searchMemberList ?? groupProfileModel.groupMemberList,
               removeMember: _kickedOffMember,
               touchBottomCallBack: () {},
               onTapMemberItem: (friendInfo) {
-                if(widget.model.onClickUser != null){
+                if (widget.model.onClickUser != null) {
                   widget.model.onClickUser!(friendInfo.userID);
                 }
               },

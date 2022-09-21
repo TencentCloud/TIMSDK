@@ -28,25 +28,31 @@ class TIMUIKitConversationItem extends TIMUIKitStatelessWidget {
   final LastMessageBuilder? lastMessageBuilder;
   final V2TimUserStatus? onlineStatus;
   final int? convType;
-  TIMUIKitConversationItem(
-      {Key? key,
-        required this.faceUrl,
-        required this.nickName,
-        required this.lastMsg,
-        this.onlineStatus,
-        required this.isPined,
-        required this.unreadCount,
-        required this.groupAtInfoList,
-        required this.isDisturb,
-      this.draftText,
-      this.draftTimestamp,
-      this.lastMessageBuilder,
-      this.convType,
-      })
-      : super(key: key);
+
+  /// Control if shows the identifier that the conversation has a draft text, inputted in previous.
+  /// Also, you'd better specifying the `draftText` field for `TIMUIKitChat`, from the `draftText` in `V2TimConversation`,
+  /// to meet the identifier shows here.
+  final bool isShowDraft;
+
+  TIMUIKitConversationItem({
+    Key? key,
+    required this.isShowDraft,
+    required this.faceUrl,
+    required this.nickName,
+    required this.lastMsg,
+    this.onlineStatus,
+    required this.isPined,
+    required this.unreadCount,
+    required this.groupAtInfoList,
+    required this.isDisturb,
+    this.draftText,
+    this.draftTimestamp,
+    this.lastMessageBuilder,
+    this.convType,
+  }) : super(key: key);
 
   Widget _getShowMsgWidget(BuildContext context) {
-    if (draftText != null && draftText != "") {
+    if (isShowDraft && draftText != null && draftText != "") {
       return TIMUIKitDraftText(
         context: context,
         draftText: draftText ?? "",
@@ -114,8 +120,7 @@ class TIMUIKitConversationItem extends TIMUIKitStatelessWidget {
                       onlineStatus: onlineStatus,
                       faceUrl: faceUrl,
                       showName: nickName,
-                      type: convType
-                      ),
+                      type: convType),
                   if (unreadCount != 0)
                     Positioned(
                       top: isDisturb ? -2.5 : -4.5,
@@ -157,6 +162,9 @@ class TIMUIKitConversationItem extends TIMUIKitStatelessWidget {
                     )),
                     _getTimeStringForChatWidget(context, theme),
                   ],
+                ),
+                SizedBox(
+                  height: 6,
                 ),
                 Row(
                   children: [

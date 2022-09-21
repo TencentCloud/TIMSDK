@@ -30,8 +30,8 @@ class TIMUIKitTongueItem extends TIMUIKitStatelessWidget {
   }) : super(key: key);
 
   Map<MessageListTongueType, String> textType(BuildContext context) {
-    final option1 = unreadCount;
-    final option2 = atNum;
+    final option1 = unreadCount.toString();
+    final option2 = atNum.toString();
     final String atMeString = option2 != ""
         ? TIM_t_para("有{{option2}}条@我消息", "有$option2条@我消息")(option2: option2)
         : TIM_t("有人@我");

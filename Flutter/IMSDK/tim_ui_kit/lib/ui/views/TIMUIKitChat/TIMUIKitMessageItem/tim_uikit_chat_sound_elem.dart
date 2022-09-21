@@ -5,12 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_plugin_record_plus/const/play_state.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
+import 'package:tim_ui_kit/business_logic/separate_models/tui_chat_separate_view_model.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_chat_global_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/ui/constants/history_message_constant.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:tim_ui_kit/ui/utils/sound_record.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
 
 import 'TIMUIKitMessageReaction/tim_uikit_message_reaction_show_panel.dart';
 
@@ -27,6 +28,7 @@ class TIMUIKitSoundElem extends StatefulWidget {
   final Color? backgroundColor;
   final EdgeInsetsGeometry? textPadding;
   final bool? isShowMessageReaction;
+  final TUIChatSeparateViewModel chatModel;
 
   const TIMUIKitSoundElem(
       {Key? key,
@@ -41,7 +43,8 @@ class TIMUIKitSoundElem extends StatefulWidget {
       this.backgroundColor,
       this.textPadding,
       required this.message,
-      this.isShowMessageReaction})
+      this.isShowMessageReaction,
+      required this.chatModel})
       : super(key: key);
 
   @override
@@ -52,14 +55,14 @@ class _TIMUIKitSoundElemState extends TIMUIKitState<TIMUIKitSoundElem> {
   final int charLen = 8;
   bool isPlaying = false;
   StreamSubscription<Object>? subscription;
-  final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
   bool isShowJumpState = false;
+  final TUIChatGlobalModel globalModel = serviceLocator<TUIChatGlobalModel>();
 
   _playSound() async {
     if (!SoundPlayer.isInited) {
       // bool hasMicrophonePermission = await Permissions.checkPermission(
       //     context, Permission.microphone.value);
-      // bool hasStoragePermission = Platform.isIOS ||
+      // bool hasStoragePermission = isIosDevice ||
       //     await Permissions.checkPermission(context, Permission.storage.value);
       // if (!hasMicrophonePermission || !hasStoragePermission) {
       //   return;
@@ -68,14 +71,15 @@ class _TIMUIKitSoundElemState extends TIMUIKitState<TIMUIKitSoundElem> {
     }
     if (widget.localCustomInt == null ||
         widget.localCustomInt != HistoryMessageDartConstant.read) {
-      model.setLocalCustomInt(widget.msgID, HistoryMessageDartConstant.read);
+      globalModel.setLocalCustomInt(widget.msgID,
+          HistoryMessageDartConstant.read, widget.chatModel.conversationID);
     }
     if (isPlaying) {
       SoundPlayer.stop();
-      model.currentSelectedMsgId = "";
+      widget.chatModel.currentSelectedMsgId = "";
     } else {
       SoundPlayer.play(url: widget.soundElem.url!);
-      model.currentSelectedMsgId = widget.msgID;
+      widget.chatModel.currentSelectedMsgId = widget.msgID;
       // SoundPlayer.setSoundInterruptListener(() {
       //   // setState(() {
       //   isPlaying = false;
@@ -88,8 +92,8 @@ class _TIMUIKitSoundElemState extends TIMUIKitState<TIMUIKitSoundElem> {
   void didUpdateWidget(oldWidget) {
     super.didUpdateWidget(oldWidget);
     setState(() {
-      isPlaying = model.currentSelectedMsgId != '' &&
-          model.currentSelectedMsgId == widget.msgID;
+      isPlaying = widget.chatModel.currentSelectedMsgId != '' &&
+          widget.chatModel.currentSelectedMsgId == widget.msgID;
     });
   }
 
@@ -98,7 +102,7 @@ class _TIMUIKitSoundElemState extends TIMUIKitState<TIMUIKitSoundElem> {
     super.initState();
     subscription = SoundPlayer.playStateListener(listener: (PlayState data) {
       if (data.playState == 'complete') {
-        model.currentSelectedMsgId = "";
+        widget.chatModel.currentSelectedMsgId = "";
         // SoundPlayer.removeSoundInterruptListener();
       }
     });
@@ -108,7 +112,7 @@ class _TIMUIKitSoundElemState extends TIMUIKitState<TIMUIKitSoundElem> {
   void dispose() {
     if (isPlaying) {
       SoundPlayer.stop();
-      model.currentSelectedMsgId = "";
+      widget.chatModel.currentSelectedMsgId = "";
     }
     subscription?.cancel();
     super.dispose();
@@ -175,7 +179,7 @@ class _TIMUIKitSoundElemState extends TIMUIKitState<TIMUIKitSoundElem> {
       });
     }
     return InkWell(
-      onTap: _playSound,
+      onTap: () => _playSound(),
       child: Container(
         padding: widget.textPadding ?? const EdgeInsets.all(10),
         decoration: BoxDecoration(
@@ -191,45 +195,45 @@ class _TIMUIKitSoundElemState extends TIMUIKitState<TIMUIKitSoundElem> {
               mainAxisSize: MainAxisSize.min,
               children: widget.isFromSelf
                   ? [
-                Container(width: _getSoundLen()),
-                Text(
-                  "''${widget.soundElem.duration} ",
-                  style: widget.fontStyle,
-                ),
-                isPlaying
-                    ? Image.asset(
-                  'images/play_voice_send.gif',
-                  package: 'tim_ui_kit',
-                  width: 16,
-                  height: 16,
-                )
-                    : Image.asset(
-                  'images/voice_send.png',
-                  package: 'tim_ui_kit',
-                  width: 16,
-                  height: 16,
-                ),
-              ]
+                      Container(width: _getSoundLen()),
+                      Text(
+                        "''${widget.soundElem.duration} ",
+                        style: widget.fontStyle,
+                      ),
+                      isPlaying
+                          ? Image.asset(
+                              'images/play_voice_send.gif',
+                              package: 'tim_ui_kit',
+                              width: 16,
+                              height: 16,
+                            )
+                          : Image.asset(
+                              'images/voice_send.png',
+                              package: 'tim_ui_kit',
+                              width: 16,
+                              height: 16,
+                            ),
+                    ]
                   : [
-                isPlaying
-                    ? Image.asset(
-                  'images/play_voice_receive.gif',
-                  package: 'tim_ui_kit',
-                  width: 16,
-                  height: 16,
-                )
-                    : Image.asset(
-                  'images/voice_receive.png',
-                  width: 16,
-                  height: 16,
-                  package: 'tim_ui_kit',
-                ),
-                Text(
-                  " ${widget.soundElem.duration}''",
-                  style: widget.fontStyle,
-                ),
-                Container(width: _getSoundLen()),
-              ],
+                      isPlaying
+                          ? Image.asset(
+                              'images/play_voice_receive.gif',
+                              package: 'tim_ui_kit',
+                              width: 16,
+                              height: 16,
+                            )
+                          : Image.asset(
+                              'images/voice_receive.png',
+                              width: 16,
+                              height: 16,
+                              package: 'tim_ui_kit',
+                            ),
+                      Text(
+                        " ${widget.soundElem.duration}''",
+                        style: widget.fontStyle,
+                      ),
+                      Container(width: _getSoundLen()),
+                    ],
             ),
             if (widget.isShowMessageReaction ?? true)
               TIMUIKitMessageReactionShowPanel(

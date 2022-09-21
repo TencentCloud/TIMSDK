@@ -1,8 +1,21 @@
-[English](./README.md)|简体中文
+[English](./README.md) | 简体中文
 
 # Flutter TUIKit
 
 TUIKit 是基于 IM SDK 实现的一套 UI 组件，其包含会话、聊天、搜索、关系链、群组、音视频通话等功能，基于 UI 组件您可以像搭积木一样快速搭建起自己的业务逻辑。
+
+## 建议阅读文档目录
+
+快速使用本TUIKit组件库建议阅读：
+
+- [图文介绍各组件总览](https://cloud.tencent.com/document/product/269/70747)
+- [快速集成本TUIKit至您的Flutter项目](https://cloud.tencent.com/document/product/269/70746)
+
+集成更多高级功能建议阅读：
+
+- [集成本地搜索](https://cloud.tencent.com/document/product/269/79121)
+- [集成离线推送](https://cloud.tencent.com/document/product/269/74605)
+- [集成音视频通话](https://cloud.tencent.com/document/product/269/72485)
 
 ## Widget
 
@@ -19,11 +32,7 @@ TUIKit 是基于 IM SDK 实现的一套 UI 组件，其包含会话、聊天、�
 
 ### 截图
 
-![](https://imgcache.qq.com/operation/dianshi/other/uikit.e8f3557a9e34f99120644b7a4a5645ec30c2cbd2.jpg)
-
-## 介绍及使用
-
-![](https://imgcache.qq.com/operation/dianshi/other/191645543019_.pic.06d8f22e726287c07cf38d362ec40d4deb4799c7.jpg)
+![img](https://qcloudimg.tencent-cloud.cn/raw/f140dd76be01a65abfb7e6ba2bf50ed5.png)
 
 ## 国际化
 
@@ -33,12 +42,16 @@ TUIKit 是基于 IM SDK 实现的一套 UI 组件，其包含会话、聊天、�
 
 ## TIMUIKitCore
 
+[本部分详细文档](https://comm.qq.com/im/doc/flutter/uikit-sdk-api/TIMUIKitCore/)
+
 `TIMUIKitCore`提供两个静态方法`getInstance` 和 `getSDKInstance`。
 
 - `getInstance`: 返回 `CoreServicesImpl` 实例。
-- `getSDKInstance`: 返回 SDK 实例。
+- `getSDKInstance`: 返回 IM SDK 实例。
 
 `CoreServicesImpl` 为`TIMUIKit` 核心类，包含初始化、登录、登出、获取用户信息等方法。
+
+基础用法如下，先初始化IM，再登录用户：
 
 ```dart
 import 'package:tim_ui_kit/tim_ui_kit.dart';
@@ -48,7 +61,7 @@ final V2TIMManager _sdkInstance = TIMUIKitCore.getSDKInstance();
 
 // init
 _coreInstance.init(
-        language: LanguageEnum?, // 初始指定使用语言，`简体中文` `繁体中文` `英语`
+        language: LanguageEnum?, // 初始指定使用语言，`简体中文` `繁体中文` `英语`。不填默认跟随系统语言。
         onTUIKitCallbackListener: ValueChanged<TIMCallback>, // TUIKit信息回调，包含SDK API错误信息/TUIKit界面相关提示信息/Flutter层报错。您可根据需要，选择性自定义展示给用户。详见下方说明
         sdkAppID: 0, // 控制台申请的sdkAppID
         loglevel: LogLevelEnum.V2TIM_LOG_DEBUG,
@@ -59,66 +72,11 @@ _coreInstance.unInit();
 // login
 _coreInstance.login(
     userID: 0, // 用户ID
-    userSig: "" // 参考官方文档userSig
+    userSig: "" // 参考官方文档userSig生成
 )
-
-// logout
-_coreInstance.logout();
-
-// getUsersInfo
-_coreInstance.getUsersInfo(userIDList: ["123", "456"]);
-
-// setOfflinePushConfig
-_coreInstance.setOfflinePushConfig(
-    businessID: businessID, //  IM 控制台证书 ID，接入 TPNS 不需要填写
-    token: token, // 注册应用到厂商平台或者 TPNS 时获取的 token
-    isTPNSToken: false // 是否接入配置 TPNS，token 是否是从TPNS 获取
-)
-
-// setSelfInfo
-_coreInstance.setSelfInfo(userFullInfo: userFullInfo) // 设置用户信息
-
-// setTheme
-_coreInstance.setTheme(TUITheme theme: theme) // 设置主题色
-/*
-  TUITheme(
-    // 应用主色
-    final Color? primaryColor;
-    // 应用次色
-    final Color? secondaryColor;
-    // 提示颜色，用于次级操作或提示
-    final Color? infoColor;
-    // 浅背景颜色，比主背景颜色浅，用于填充缝隙或阴影
-    final Color? weakBackgroundColor;
-    // 浅分割线颜色，用于分割线或边框
-    final Color? weakDividerColor;
-    // 浅字色
-    final Color? weakTextColor;
-    // 深字色
-    final Color? darkTextColor;
-    // 浅主色，用于AppBar或Panels
-    final Color? lightPrimaryColor;
-    // 字色
-    final Color? textColor;
-    // 警示色，用于危险操作
-    final Color? cautionColor;
-    // 群主标识色
-    final Color? ownerColor;
-    // 群管理员标识色
-    final Color? adminColor;)
-*/
 ```
 
-### 静态方法
-
-- **TIMUIKitCore.getInstance()**:
-  返回`CoreServicesImpl` 实例
-- **TIMUIKitCore.getSDKInstance()**:
-  返回为 `V2TIMManager` 为`SDK 实例` 具体使用方式请参考[`Flutter IM SDK 文档`](https://pub.dev/documentation/tencent_im_sdk_plugin/latest/manager_v2_tim_manager/V2TIMManager/initSDK.html)
-
----
-
-### `onTUIKitCallbackListener`监听
+### `onTUIKitCallbackListener` 监听
 
 该监听用于返回包括：SDK API 错误 / Flutter 报错 / 一些可能需要弹窗提示用户的场景信息。
 
@@ -138,11 +96,11 @@ _coreInstance.setTheme(TUITheme theme: theme) // 设置主题色
 
 #### 场景信息（`TIMCallbackType.INFO`）
 
-这些信息建议根据实际情况，弹窗提示用户。具体弹窗规则和弹窗样式可由您决定。
+建议根据实际情况，将这些信息弹窗提示用户。具体弹窗规则和样式可由您决定。
 
-提供`infoCode`场景码帮助您确定当前的场景，并提供默认的提示推荐语`infoRecommendText`。
+提供`infoCode`场景码帮助您确定当前的场景，及默认的提示推荐语`infoRecommendText`。
 
-您可直接弹窗我们的推荐语，也可根据场景码自定义推荐语。推荐语语言根据系统语言自适应，请勿根据推荐语来判断场景。
+您可直接弹窗我们的推荐语，也可根据场景码自定义推荐语。推荐语语言根据系统语言自适应或您指定的语言，请勿根据推荐语来判断场景。
 
 场景码规则如下：
 
@@ -184,6 +142,7 @@ _coreInstance.setTheme(TUITheme theme: theme) // 设置主题色
 | 6660409           | 暂未实现                                                     | 用户在弹窗内选择非标功能                                     |
 | 6660410           | 其他文件正在接收中                                           | 用户点击下载文件消息时，前序下载任务还未完成                 |
 | 6660411           | 正在接收中                                                   | 用户点击下载文件消息                                         |
+| 6660412           | 视频消息仅限 mp4 格式                                                   | 用户发送了一条非 mp4 格式的视频消息                                         |
 | 6661001           | 无网络连接，无法修改                                         | 当用户试图在无网络环境下，修改群资料                         |
 | 6661002           | 无网络连接，无法查看群成员                                   | 当用户试图在无网络环境下，修改群资料                         |
 | 6661003           | 成功取消管理员身份                                           | 用户将群内其他用户移除管理员                                 |
@@ -196,53 +155,15 @@ _coreInstance.setTheme(TUITheme theme: theme) // 设置主题色
 | 6661207           | 好友删除失败                                                 | 在资料页删除其他用户为好友，失败                             |
 | 6661401           | 输入不能为空                                                 | 当用户在录入信息时，输入了空字符串                           |
 | 6661402           | 请传入离开群组生命周期函数，提供返回首页或其他页面的导航方法 | 用户退出群或解散群时，为提供返回首页办法                     |
+| 6661403           | 设备存储空间不足，建议清理，以获得更好使用体验 | 在login成功后，会自动检测设备存储空间，如果不足1GB，会提示存储空间不足                     |
 
 ## TIMUIKitConversation
 
 `TIMUIKitConversation` 为会话组件，拉取用户会话列表，默认提供一套 UI,用户也可自定义会话条目。同时提供对应的`TIMUIKitConversationController`。
 
-```dart
-import 'package:tim_ui_kit/tim_ui_kit.dart';
+[详细参数及用法可参考此文档](https://comm.qq.com/im/doc/flutter/uikit-sdk-api/TIMUIKitConversation/)
 
-final TIMUIKitConversationController _controller =
-      TIMUIKitConversationController();
-void _handleOnConvItemTaped(V2TimConversation? selectedConv) {
-    // 处理逻辑，在此可跳转至聊天界面
-}
-
-List<ConversationItemSlidablePanel> _itemSlidableBuilder(
-      V2TimConversation conversationItem) {
-    return [
-      ConversationItemSlidablePanel(
-        onPressed: (context) {
-          _clearHistory(conversationItem);
-        },
-        backgroundColor: hexToColor("006EFF"),
-        foregroundColor: Colors.white,
-        label: '清除聊天',
-        autoClose: true,
-      ),
-      ConversationItemSlidablePanel(
-        onPressed: (context) {
-          _pinConversation(conversationItem);
-        },
-        backgroundColor: hexToColor("FF9C19"),
-        foregroundColor: Colors.white,
-        label: conversationItem.isPinned! ? '取消置顶' : '置顶',
-      )
-    ];
-  }
-
-TIMUIKitConversation(
-    lifeCycle: ConversationLifeCycle(), // Conversation 组件生命周期钩子函数
-    onTapItem: _handleOnConvItemTaped, // 会话Item tap回调 可用于跳转至聊天界面
-    itemSlidableBuilder: _itemSlidableBuilder, // 会话Item 向左滑动 的操作项， 可自定义会话置顶等
-    controller: _controller, // 会话组件控制器， 可通过其获取会话的数据，设置会话数据，会话置顶等操作
-    itembuilder: (conversationItem) {} // 用于自定义会话Item 的UI。 可结合TIMUIKitConversationController 实现业务逻辑
-    conversationCollector: (conversation) {} // 会话收集器，可自定义会话是否显示
-    lastMessageBuilder: (V2TimMessage, List<V2TimGroupAtInfo?>) {} // 会话item第二行最后一条消息字段
-)
-```
+<img src="https://qcloudimg.tencent-cloud.cn/raw/a27b131d555b1158d150bd9b337c1d9d.png" style="width:60%;"/>
 
 ### TIMUIKitConversationController
 
@@ -278,35 +199,9 @@ TIMUIKitConversation(
 - 合并消息
 - 文件消息
 
-```dart
-import 'package:tim_ui_kit/tim_ui_kit.dart';
+[详细参数及用法可参考此文档](https://comm.qq.com/im/doc/flutter/uikit-sdk-api/TIMUIKitChat/)
 
-TIMUIKitChat(
-    lifeCycle: ChatLifeCycle(), // Chat 组件生命周期钩子函数
-    conversationID: "", // 会话ID
-    conversationType: ConversationType, // 会话类型， 1为单聊，2为群聊
-    conversationShowName: "", // 会话显示名称
-    appBarActions: [], // appBar操作项，可用于跳转至群详情、个人详情页面。
-    onTapAvatar: _onTapAvatar, // 头像tap 回调，可用于跳转至用户详情界面。
-    showNickName: false, // 是否显示昵称
-    messageItemBuilder: (MessageItemBuilder) {
-        // 消息构造器，可选择自定义部分消息类型或消息行布局逻辑。为空字段使用默认交互，全都不传整体使用默认交互。
-    },
-    extraTipsActionItemBuilder: (message) {
-      // 消息长按Tips自定义配置项，可根据业务额外配置
-    },
-    morePanelConfig: MorePanelConfig(), //更多消息能力区域配置
-    appBarConfig: AppBar(), // scafold 顶部
-    mainHistoryListConfig: ListView(), // 历史消息列表一些额外自定义配置
-    textFieldHintText: "", // inputTextField hint
-    draftText: "", // 消息草稿
-    initFindingTimestamp: 0, // 跳转至某条消息的时间戳，为0表示不跳转
-    config: TIMUIKitChatConfig(), // Chat组件配置类
-    onDealWithGroupApplication: (String groupID){
-      // jump to the pages for the page of [TIMUIKitGroupApplicationList] or other pages to handle joining group application for specific group
-    }
-)
-```
+![](https://qcloudimg.tencent-cloud.cn/raw/09b8b9b54fd0caa47069544343eba461.jpg)
 
 ### TIMUIKitChatController
 
@@ -324,23 +219,9 @@ TIMUIKitChat(
 
 `TIMUIKitProfile` 为用户详情展示。同时支持自定义添加操作项.
 
-```dart
-TIMUIKitProfile(
-    userID: "",
-    controller: TIMUIKitProfileController(),  // Profile Controller
-    profileWidgetBuilder: ProfileWidgetBuilder(), // 可自定义一些 Profile Widget 条目
-    profileWidgetsOrder: List<ProfileWidgetEnum>, // 使用默认或自定义 Profile Widget，根据此处传入的纵向顺序，渲染页面
-    builder: (
-      BuildContext context, 
-      V2TimFriendInfo friendInfo, 
-      V2TimConversation conversation, 
-      int friendType, 
-      bool isMute) {
-        // 自定义整页。如自定义，`profileWidgetBuilder` 及 `profileWidgetsOrder` 将不生效。
-      },
-    lifeCycle: ProfileLifeCycle(),// Profile 组件生命周期钩子函数
-)
-```
+[详细参数及用法可参考此文档](https://comm.qq.com/im/doc/flutter/uikit-sdk-api/TIMUIKitProfile/)
+
+![](https://qcloudimg.tencent-cloud.cn/raw/03e88da6f1d63f688d2a8ee446da43ff.png)
 
 ### TIMUIKitProfileController
 
@@ -365,34 +246,9 @@ TIMUIKitProfile(
 
 `TIMUIKitGroupProfile` 为群管理页面。同时支持自定义添加操作项.
 
-```dart
-TIMUIKitGroupProfile(
-    groupID: "", //群ID 必填
-    profileWidgetBuilder: GroupProfileWidgetBuilder(), // 自定义部分Group Profile Widget条目
-    profileWidgetsOrder: List<GroupProfileWidgetEnum>, // 使用默认或自定义Group Profile Widget，根据此处传入的纵向顺序，渲染页面
-    builder: (BuildContext context, V2TimGroupInfo groupInfo, List<V2TimGroupMemberFullInfo?> groupMemberList){
-      // 自定义整页。如自定义，`profileWidgetBuilder` 及 `profileWidgetsOrder` 将不生效。
-    },
-    lifeCycle: GroupProfileLifeCycle, // Group Profile 组件生命周期钩子函数
-)
-```
+[详细参数及用法可参考此文档](https://comm.qq.com/im/doc/flutter/uikit-sdk-api/TIMUIKitGroupProfile/)
 
 `operationListBuilder` 及 `bottomOperationListBuilder` 主要给予用户可配置操作条目的能力，同时可结合子组件配合使用，可以自己选择搭配。
-
-### 静态方法
-
-- **TIMUIKitGroupProfile.memberTile()**:  
-  群成员卡片、用于显示群成员概览、群成员列表、删除群成员等操作
-- **TIMUIKitGroupProfile.groupNotification()**:  
-  群公告显示及群公告更改
-- **TIMUIKitGroupProfile.groupManage()**:  
-  群管理、可设置管理员、禁言等
-- **TIMUIKitGroupProfile.groupType()**:  
-  显示群类型
-- **TIMUIKitGroupProfile.groupAddOpt()**:  
-  加群方式及修改
-- **TIMUIKitGroupProfile.nameCard()**:
-  群昵称及修改
 
 ---
 
@@ -400,14 +256,7 @@ TIMUIKitGroupProfile(
 
 `TIMUIKitBlackList` 为黑名单列表。
 
-```dart
-TIMUIKitBlackList(
-    onTapItem: (_) {}, // tap item 回调
-    emptyBuilder: () {} // 当列表为空时显示
-    itemBuilder: () {} // 自定义 item
-    lifeCycle: BlockListLifeCycle(), // 黑名单组件生命周期钩子函数
-)
-```
+[详细参数及用法可参考此文档](https://comm.qq.com/im/doc/flutter/uikit-sdk-api/TIMUIKitBlackList/)
 
 ---
 
@@ -415,42 +264,24 @@ TIMUIKitBlackList(
 
 `TIMUIKitGroup` 为群列表。
 
-```dart
-TIMUIKitGroup(
-    onTapItem: (_) {}, // tap item 回调
-    emptyBuilder: () {} // 当列表为空时显示
-    itemBuilder: () {} // 自定义 item
-)
-```
+[详细参数及用法可参考此文档](https://comm.qq.com/im/doc/flutter/uikit-sdk-api/TIMUIKitGroup/)
 
 ---
 
 ### TIMUIKitContact
 
-`TIMUIKitContact` 为联系人组件，提供联系人列表。
+`TIMUIKitContact` 为联系人列表组件。
 
-```dart
-import 'package:tim_ui_kit/tim_ui_kit.dart';
+[详细参数及用法可参考此文档](https://comm.qq.com/im/doc/flutter/uikit-sdk-api/TIMUIKitContact/)
 
-TIMUIKitContact(
-      lifeCycle: FriendListLifeCycle(), // 联系人组件生命周期钩子函数
-      topList: [
-        TopListItem(name: "新的联系人", id: "newContact"),
-        TopListItem(name: "我的群聊", id: "groupList"),
-        TopListItem(name: "黑名单", id: "blackList")
-      ], // 顶部操作列表
-      topListItemBuilder: _topListBuilder, // 顶部操作列表构造器
-      onTapItem: (item) { }, // 点击联系人
-      emptyBuilder: (context) => const Center(
-        child: Text("无联系人"),
-      ), // 联系人列表为空时显示
-    );
-```
+---
 
-### TIMUIKitSearch
+### 本地搜索组件
 
 `TIMUIKitSearch` 为全局搜索组件。全局搜索支持"联系人"/"群组"/"聊天记录"。
 `TIMUIKitSearchMsgDetail` 为会话内搜索组件，可搜索会话内聊天记录。
+
+[详细用法可参考此文档](https://cloud.tencent.com/document/product/269/79121)
 
 ```dart
 import 'package:tim_ui_kit/tim_ui_kit.dart';
@@ -458,8 +289,7 @@ import 'package:tim_ui_kit/tim_ui_kit.dart';
 // 全局搜索
 TIMUIKitSearch(
     onTapConversation: _handleOnConvItemTapedWithPlace, // Function(V2TimConversation, V2TimMessage? message), 跳转到特定conversation的特定message
-    conversation： V2TimConversation, // 可选传入，若传入，则表示在该conversation内搜索，若不传入，则表示全局搜索
-    onEnterConversation: (V2TimConversation conversation, String initKeyword){}, // 跳转至对应Conversation的会话内搜索，请手动跳转至TIMUIKitSearchMsg组件。
+    onEnterSearchInConversation: (V2TimConversation conversation, String initKeyword){}, // 跳转至对应Conversation的会话内搜索，请手动跳转至TIMUIKitSearchMsg组件。
 );
 
 // 会话内搜索
@@ -469,6 +299,8 @@ TIMUIKitSearchMsgDetail(
               keyword: initKeyword ?? "",
             );
 ```
+
+---
 
 ### 如何自定义 TIMUIKitChat 组件
 
@@ -667,6 +499,7 @@ class _ChatV2State extends State<ChatV2> {
 基础组件可根据业务需要自行更换以及组合。如若需要控制业务层数据,可通过`TIMUIKitChatController`提供的方法。
 
 
-## 联系我们
+## 联系我们[](id:contact)
+如果您在接入使用过程中有任何疑问，请加入 QQ 群：788910197 咨询。
 
-如果您在接入使用过程中有任何疑问，请加入QQ群：788910197 咨询。
+![](https://qcloudimg.tencent-cloud.cn/raw/eacb194c77a76b5361b2ae983ae63260.png)

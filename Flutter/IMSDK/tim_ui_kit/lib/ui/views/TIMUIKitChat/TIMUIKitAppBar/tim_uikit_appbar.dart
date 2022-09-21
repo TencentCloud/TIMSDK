@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
+import 'package:tim_ui_kit/business_logic/separate_models/tui_chat_separate_view_model.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_chat_global_model.dart';
 import 'package:tim_ui_kit/data_services/friendShip/friendship_services.dart';
 import 'package:tim_ui_kit/data_services/group/group_services.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
@@ -12,28 +13,32 @@ import 'package:tuple/tuple.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
 class TIMUIKitAppBar extends StatefulWidget implements PreferredSizeWidget {
-  /// appbar config
+  /// Appbar config
   final AppBar? config;
 
-  /// allow show conversation total unread count
+  /// Allow show conversation total unread count
   final bool showTotalUnReadCount;
 
-  /// cnversation id
+  /// Conversation id
   final String conversationID;
 
   /// conversation name
   final String conversationShowName;
 
+  /// If allow update the conversation show name automatically.
+  final bool isConversationShowNameFixed;
+
   final bool showC2cMessageEditStaus;
-  const TIMUIKitAppBar(
-      {Key? key,
-      this.config,
-      this.showTotalUnReadCount = true,
-      this.conversationID = "",
-      this.conversationShowName = "",
-      this.showC2cMessageEditStaus = true,
-      })
-      : super(key: key);
+
+  const TIMUIKitAppBar({
+    Key? key,
+    this.config,
+    this.isConversationShowNameFixed = false,
+    this.showTotalUnReadCount = true,
+    this.conversationID = "",
+    this.conversationShowName = "",
+    this.showC2cMessageEditStaus = true,
+  }) : super(key: key);
 
   @override
   Size get preferredSize =>
@@ -56,31 +61,39 @@ class _TIMUIKitAppBarState extends TIMUIKitState<TIMUIKitAppBar> {
   _addConversationShowNameListener() {
     _friendshipListener = V2TimFriendshipListener(
       onFriendInfoChanged: (infoList) {
-        final changedInfo = infoList.firstWhere(
-          (element) => element.userID == widget.conversationID,
-        );
-        if (changedInfo.friendRemark != null) {
-          _conversationShowName = changedInfo.friendRemark!;
-          setState(() {});
+        try {
+          final changedInfo = infoList.firstWhere(
+            (element) => element.userID == widget.conversationID,
+          );
+          if (changedInfo.friendRemark != null) {
+            _conversationShowName = changedInfo.friendRemark!;
+            setState(() {});
+          }
+        } catch (e) {
+          print(e);
         }
       },
     );
     if (_friendshipListener != null) {
-      _friendshipServices.setFriendshipListener(listener: _friendshipListener!);
+      _friendshipServices.addFriendListener(listener: _friendshipListener!);
     }
   }
 
   _addGroupListener() {
     _groupListener = V2TimGroupListener(
       onGroupInfoChanged: (groupID, changeInfos) {
-        if (groupID == widget.conversationID) {
-          final groupNameChangeInfo = changeInfos.firstWhere((element) =>
-              element.type ==
-              GroupChangeInfoType.V2TIM_GROUP_INFO_CHANGE_TYPE_NAME);
-          if (groupNameChangeInfo.value != null) {
-            _conversationShowName = groupNameChangeInfo.value!;
-            setState(() {});
+        try {
+          if (groupID == widget.conversationID) {
+            final groupNameChangeInfo = changeInfos.firstWhere((element) =>
+                element.type ==
+                GroupChangeInfoType.V2TIM_GROUP_INFO_CHANGE_TYPE_NAME);
+            if (groupNameChangeInfo.value != null) {
+              _conversationShowName = groupNameChangeInfo.value!;
+              setState(() {});
+            }
           }
+        } catch (e) {
+          print(e);
         }
       },
     );
@@ -97,15 +110,30 @@ class _TIMUIKitAppBarState extends TIMUIKitState<TIMUIKitAppBar> {
   void initState() {
     super.initState();
     _conversationShowName = widget.conversationShowName;
-    _addConversationShowNameListener();
-    _addGroupListener();
+    if (!widget.isConversationShowNameFixed) {
+      _addConversationShowNameListener();
+      _addGroupListener();
+    }
   }
 
   @override
   void dispose() {
     super.dispose();
-    _groupServices.removeGroupListener(listener: _groupListener);
-    _friendshipServices.removeFriendListener(listener: _friendshipListener);
+    if (!widget.isConversationShowNameFixed) {
+      _groupServices.removeGroupListener(listener: _groupListener);
+      _friendshipServices.removeFriendListener(listener: _friendshipListener);
+    }
+  }
+
+  @override
+  void didUpdateWidget(TIMUIKitAppBar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.conversationShowName != widget.conversationShowName &&
+        widget.conversationShowName.isNotEmpty) {
+      setState(() {
+        _conversationShowName = widget.conversationShowName;
+      });
+    }
   }
 
   @override
@@ -113,6 +141,8 @@ class _TIMUIKitAppBarState extends TIMUIKitState<TIMUIKitAppBar> {
     final TUITheme theme = value.theme;
 
     final setAppbar = widget.config;
+    final TUIChatSeparateViewModel chatVM =
+        Provider.of<TUIChatSeparateViewModel>(context);
     return AppBar(
       backgroundColor: setAppbar?.backgroundColor,
       actionsIconTheme: setAppbar?.actionsIconTheme,
@@ -149,15 +179,18 @@ class _TIMUIKitAppBarState extends TIMUIKitState<TIMUIKitAppBar> {
       //         fontSize: 17,
       //       ),
       //     ),
-      title: TIMUIKitAppBarTitle(title: setAppbar?.title,conversationShowName: _conversationShowName, showC2cMessageEditStaus: widget.showC2cMessageEditStaus,fromUser: widget.conversationID,),
+      title: TIMUIKitAppBarTitle(
+        title: setAppbar?.title,
+        conversationShowName: _conversationShowName,
+        showC2cMessageEditStaus: widget.showC2cMessageEditStaus,
+        fromUser: widget.conversationID,
+      ),
       centerTitle: setAppbar?.centerTitle ?? true,
       leadingWidth: setAppbar?.leadingWidth ?? 70,
-      leading: Selector<TUIChatViewModel, Tuple2<bool, int>>(
+      leading: Selector<TUIChatGlobalModel, Tuple2<bool, int>>(
           builder: (context, data, _) {
             final isMultiSelect = data.item1;
             final unReadCount = data.item2;
-            final chatVM =
-                Provider.of<TUIChatViewModel>(context, listen: false);
             return isMultiSelect
                 ? TextButton(
                     onPressed: () {
@@ -184,7 +217,7 @@ class _TIMUIKitAppBarState extends TIMUIKitState<TIMUIKitAppBar> {
                             width: 34,
                           ),
                           onPressed: () async {
-                            chatVM.setRepliedMessage(null);
+                            chatVM.repliedMessage = null;
                             Navigator.pop(context);
                           },
                         ),
@@ -205,7 +238,7 @@ class _TIMUIKitAppBarState extends TIMUIKitState<TIMUIKitAppBar> {
           shouldRebuild: (prev, next) =>
               prev.item1 != next.item1 || prev.item2 != next.item2,
           selector: (_, model) =>
-              Tuple2(model.isMultiSelect, model.totalUnReadCount)),
+              Tuple2(chatVM.isMultiSelect, model.totalUnReadCount)),
       actions: setAppbar?.actions,
     );
   }

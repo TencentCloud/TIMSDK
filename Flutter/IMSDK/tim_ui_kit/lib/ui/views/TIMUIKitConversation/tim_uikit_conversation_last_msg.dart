@@ -53,6 +53,9 @@ class TIMUIKitLastMsg extends TIMUIKitStatelessWidget {
     final callingMessage = TIMUIKitCustomElem.getCallMessage(customElem);
     final linkMessage = getLinkMessage(customElem);
     String customLastMsgShow = TIM_t("[自定义]");
+    if (customElem?.data == "group_create") {
+      customLastMsgShow = TIM_t("群聊创建成功！");
+    }
     if (callingMessage != null) {
       // 如果是结束消息
       final isCallEnd = TIMUIKitCustomElem.isCallEndExist(callingMessage);
@@ -77,7 +80,7 @@ class TIMUIKitLastMsg extends TIMUIKitStatelessWidget {
               option1: option1)
           : TIM_t_para("[视频通话]：{{option2}}", "[视频通话]：$option2")(
               option2: option2);
-    }else if(linkMessage != null && linkMessage.text != null){
+    } else if (linkMessage != null && linkMessage.text != null) {
       customLastMsgShow = linkMessage.text!;
     }
     return customLastMsgShow;
@@ -92,7 +95,7 @@ class TIMUIKitLastMsg extends TIMUIKitStatelessWidget {
       case MessageElemType.V2TIM_ELEM_TYPE_SOUND:
         return TIM_t("[语音]");
       case MessageElemType.V2TIM_ELEM_TYPE_TEXT:
-        return lastMsg!.textElem!.text as String;
+        return lastMsg?.textElem?.text ?? "";
       case MessageElemType.V2TIM_ELEM_TYPE_FACE:
         return TIM_t("[表情]");
       case MessageElemType.V2TIM_ELEM_TYPE_FILE:
@@ -155,8 +158,9 @@ class TIMUIKitLastMsg extends TIMUIKitStatelessWidget {
           child: Text(
         _getMsgElem(),
         softWrap: true,
+        maxLines: 1,
         overflow: TextOverflow.ellipsis,
-        style: TextStyle(height: 1.5, color: theme.weakTextColor, fontSize: 14),
+        style: TextStyle(height: 1, color: theme.weakTextColor, fontSize: 14),
       )),
     ]);
   }

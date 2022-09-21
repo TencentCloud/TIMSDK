@@ -140,7 +140,7 @@ class _TIMUIKitMessageReactionWrapperState
         child: widget.child,
       );
     }
-    
+
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(

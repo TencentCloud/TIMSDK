@@ -112,7 +112,7 @@ class _TIMUIKitNewContactState extends TIMUIKitState<TIMUIKitNewContact> {
                         applicationInfo.type,
                       );
                       model.loadData();
-                      if(widget.onAccept != null){
+                      if (widget.onAccept != null) {
                         widget.onAccept!(applicationInfo);
                       }
                       // widget?.onAccept();
@@ -145,7 +145,7 @@ class _TIMUIKitNewContactState extends TIMUIKitState<TIMUIKitNewContact> {
                           applicationInfo.type,
                         );
                         model.loadData();
-                        if(widget.onRefuse != null){
+                        if (widget.onRefuse != null) {
                           widget.onRefuse!(applicationInfo);
                         }
                         // refuse(context);
@@ -180,6 +180,7 @@ class _TIMUIKitNewContactState extends TIMUIKitState<TIMUIKitNewContact> {
           final newContactList = model.friendApplicationList;
           if (newContactList != null && newContactList.isNotEmpty) {
             return ListView.builder(
+              shrinkWrap: true,
               itemCount: newContactList.length,
               itemBuilder: (context, index) {
                 final friendInfo = newContactList[index]!;

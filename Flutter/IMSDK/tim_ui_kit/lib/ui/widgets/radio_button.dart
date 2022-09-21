@@ -27,10 +27,9 @@ class CheckBoxButton extends TIMUIKitStatelessWidget {
             color: Colors.white)
         : BoxDecoration(shape: BoxShape.circle, color: theme.primaryColor);
 
-    if(disabled){
-      boxDecoration = const BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.grey);
+    if (disabled) {
+      boxDecoration =
+          const BoxDecoration(shape: BoxShape.circle, color: Colors.grey);
     }
     return Center(
         child: InkWell(

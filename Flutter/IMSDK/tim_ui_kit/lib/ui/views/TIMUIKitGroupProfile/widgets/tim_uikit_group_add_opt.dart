@@ -33,15 +33,9 @@ class GroupProfileAddOpt extends TIMUIKitStatelessWidget {
     }
 
     final actionList = [
-      {
-        "label": TIM_t("禁止加群"),
-        "id": GroupAddOptType.V2TIM_GROUP_ADD_FORBID
-      },
+      {"label": TIM_t("禁止加群"), "id": GroupAddOptType.V2TIM_GROUP_ADD_FORBID},
       {"label": TIM_t("自动审批"), "id": GroupAddOptType.V2TIM_GROUP_ADD_ANY},
-      {
-        "label": TIM_t("管理员审批"),
-        "id": GroupAddOptType.V2TIM_GROUP_ADD_AUTH
-      }
+      {"label": TIM_t("管理员审批"), "id": GroupAddOptType.V2TIM_GROUP_ADD_AUTH}
     ];
 
     _handleActionTap(int addOpt) async {
@@ -58,8 +52,8 @@ class GroupProfileAddOpt extends TIMUIKitStatelessWidget {
           color: Colors.white,
           border: Border(
               bottom: BorderSide(
-                  color: theme.weakDividerColor ??
-                      CommonColor.weakDividerColor))),
+                  color:
+                      theme.weakDividerColor ?? CommonColor.weakDividerColor))),
       child: InkWell(
         onTap: () async {
           showCupertinoModalPopup<String>(
@@ -79,15 +73,15 @@ class GroupProfileAddOpt extends TIMUIKitStatelessWidget {
                 ),
                 actions: actionList
                     .map((e) => CupertinoActionSheetAction(
-                  onPressed: () {
-                    _handleActionTap(e["id"] as int);
-                  },
-                  child: Text(
-                    e["label"] as String,
-                    style: TextStyle(color: theme.primaryColor),
-                  ),
-                  isDefaultAction: false,
-                ))
+                          onPressed: () {
+                            _handleActionTap(e["id"] as int);
+                          },
+                          child: Text(
+                            e["label"] as String,
+                            style: TextStyle(color: theme.primaryColor),
+                          ),
+                          isDefaultAction: false,
+                        ))
                     .toList(),
               );
             },
@@ -104,11 +98,9 @@ class GroupProfileAddOpt extends TIMUIKitStatelessWidget {
               children: [
                 Text(
                   addOpt,
-                  style:
-                  const TextStyle(fontSize: 16, color: Colors.black),
+                  style: const TextStyle(fontSize: 16, color: Colors.black),
                 ),
-                Icon(Icons.keyboard_arrow_right,
-                    color: theme.weakTextColor)
+                Icon(Icons.keyboard_arrow_right, color: theme.weakTextColor)
               ],
             )
           ],

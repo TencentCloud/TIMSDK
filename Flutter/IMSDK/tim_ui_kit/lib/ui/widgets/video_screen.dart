@@ -50,7 +50,7 @@ class _VideoScreenState extends TIMUIKitState<VideoScreen> {
   }
 
   //保存网络视频到本地
-  _savenNetworkVideo(context, String videoUrl, {bool isAsset = true}) async {
+  _saveNetworkVideo(context, String videoUrl, {bool isAsset = true}) async {
     if (PlatformUtils().isIOS) {
       if (!await Permissions.checkPermission(
           context, Permission.photosAddOnly.value)) {
@@ -98,10 +98,10 @@ class _VideoScreenState extends TIMUIKitState<VideoScreen> {
 
   void _saveVideo() {
     if (widget.message.videoElem!.videoUrl == null) {
-      _savenNetworkVideo(context, widget.message.videoElem!.videoPath!,
+      _saveNetworkVideo(context, widget.message.videoElem!.videoPath!,
           isAsset: true);
     } else {
-      _savenNetworkVideo(context, widget.message.videoElem!.videoUrl!,
+      _saveNetworkVideo(context, widget.message.videoElem!.videoUrl!,
           isAsset: false);
     }
   }
@@ -127,7 +127,7 @@ class _VideoScreenState extends TIMUIKitState<VideoScreen> {
   }
 
   setVideoMessage() async {
-    // 当消息发送中时请使用本地资源
+    // Using local path while sending
     VideoPlayerController player = widget.message.videoElem!.videoUrl == null ||
             widget.message.status == MessageStatus.V2TIM_MSG_STATUS_SENDING
         ? VideoPlayerController.file(File(
@@ -143,7 +143,6 @@ class _VideoScreenState extends TIMUIKitState<VideoScreen> {
               ));
     await player.initialize();
     WidgetsBinding.instance?.addPostFrameCallback((_) {
-      // 图片目前按照缩略图尺寸走的，并未走UI图，UI图比例过大图片很糊
       double w = getVideoWidth();
       double h = getVideoHeight();
       ChewieController controller = ChewieController(

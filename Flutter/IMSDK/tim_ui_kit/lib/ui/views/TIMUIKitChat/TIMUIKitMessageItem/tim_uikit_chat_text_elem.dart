@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
+import 'package:tim_ui_kit/business_logic/separate_models/tui_chat_separate_view_model.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/widgets/link_preview/link_preview_entry.dart';
 import 'package:tim_ui_kit/ui/widgets/link_preview/widgets/link_preview.dart';
@@ -20,7 +20,7 @@ class TIMUIKitTextElem extends StatefulWidget {
   final BorderRadius? borderRadius;
   final Color? backgroundColor;
   final EdgeInsetsGeometry? textPadding;
-  final TUIChatViewModel chatModel;
+  final TUIChatSeparateViewModel chatModel;
   final bool? isShowMessageReaction;
   const TIMUIKitTextElem(
       {Key? key,
@@ -85,12 +85,12 @@ class _TIMUIKitTextElemState extends TIMUIKitState<TIMUIKitTextElem> {
         UrlPreviewType.previewCardAndHyperlink) {
       return;
     }
-    try{
+    try {
       if (widget.message.localCustomData != null &&
           widget.message.localCustomData!.isNotEmpty) {
         final String localJSON = widget.message.localCustomData!;
         final LinkPreviewModel? localPreviewInfo =
-        LinkPreviewModel.fromMap(json.decode(localJSON));
+            LinkPreviewModel.fromMap(json.decode(localJSON));
         // If [localCustomData] is not empty, check if the link preview info exists
         if (localPreviewInfo == null || localPreviewInfo.isEmpty()) {
           // If not exists, get it
@@ -100,7 +100,7 @@ class _TIMUIKitTextElemState extends TIMUIKitState<TIMUIKitTextElem> {
         // It [localCustomData] is empty, get the link info
         _initLinkPreview();
       }
-    }catch(e){
+    } catch (e) {
       return null;
     }
   }
@@ -121,21 +121,21 @@ class _TIMUIKitTextElemState extends TIMUIKitState<TIMUIKitTextElem> {
     // Otherwise, it will returns null.
     if (widget.message.localCustomData != null &&
         widget.message.localCustomData!.isNotEmpty) {
-      try{
+      try {
         final String localJSON = widget.message.localCustomData!;
         final LinkPreviewModel? localPreviewInfo =
-        LinkPreviewModel.fromMap(json.decode(localJSON));
+            LinkPreviewModel.fromMap(json.decode(localJSON));
         if (localPreviewInfo != null && !localPreviewInfo.isEmpty()) {
           return Container(
             margin: const EdgeInsets.only(top: 8),
             child:
-            // You can use this default widget [LinkPreviewWidget] to render preview card, or you can use custom widget.
-            LinkPreviewWidget(linkPreview: localPreviewInfo),
+                // You can use this default widget [LinkPreviewWidget] to render preview card, or you can use custom widget.
+                LinkPreviewWidget(linkPreview: localPreviewInfo),
           );
         } else {
           return null;
         }
-      }catch(e){
+      } catch (e) {
         return null;
       }
     } else {
@@ -146,7 +146,10 @@ class _TIMUIKitTextElemState extends TIMUIKitState<TIMUIKitTextElem> {
   @override
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     final theme = value.theme;
-    final textWithLink = LinkPreviewEntry.getHyperlinksText(widget.message);
+    final textWithLink = LinkPreviewEntry.getHyperlinksText(
+        widget.message,
+        widget.chatModel.chatConfig.isSupportMarkdownForTextMessage,
+        widget.chatModel.chatConfig.onTapLink);
     final borderRadius = widget.isFromSelf
         ? const BorderRadius.only(
             topLeft: Radius.circular(10),
@@ -193,7 +196,8 @@ class _TIMUIKitTextElemState extends TIMUIKitState<TIMUIKitTextElem> {
               widget.chatModel.chatConfig.urlPreviewType ==
                   UrlPreviewType.previewCardAndHyperlink)
             _renderPreviewWidget()!,
-            if(widget.isShowMessageReaction ?? true)TIMUIKitMessageReactionShowPanel(message: widget.message)
+          if (widget.isShowMessageReaction ?? true)
+            TIMUIKitMessageReactionShowPanel(message: widget.message)
         ],
       ),
     );

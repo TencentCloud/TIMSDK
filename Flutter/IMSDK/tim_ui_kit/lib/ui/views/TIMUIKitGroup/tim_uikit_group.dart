@@ -36,7 +36,8 @@ class TIMUIKitGroup extends StatefulWidget {
 }
 
 class _TIMUIKitGroupState extends TIMUIKitState<TIMUIKitGroup> {
-  final TUIFriendShipViewModel _friendshipViewModel = serviceLocator<TUIFriendShipViewModel>();
+  final TUIFriendShipViewModel _friendshipViewModel =
+      serviceLocator<TUIFriendShipViewModel>();
 
   List<ISuspensionBeanImpl<V2TimGroupInfo>> _getShowList(
       List<V2TimGroupInfo> groupList) {
@@ -66,6 +67,11 @@ class _TIMUIKitGroupState extends TIMUIKitState<TIMUIKitGroup> {
     final faceUrl = groupInfo.faceUrl ?? "";
     return Container(
       padding: const EdgeInsets.only(top: 10, left: 16),
+      decoration: BoxDecoration(
+          border: Border(
+              bottom: BorderSide(
+                  color:
+                      theme.weakDividerColor ?? CommonColor.weakDividerColor))),
       child: InkWell(
         onTap: (() {
           if (widget.onTapItem != null) {
@@ -80,18 +86,17 @@ class _TIMUIKitGroupState extends TIMUIKitState<TIMUIKitGroup> {
               child: SizedBox(
                 height: 40,
                 width: 40,
-                child: Avatar(faceUrl: faceUrl, showName: showName,type: 2,),
+                child: Avatar(
+                  faceUrl: faceUrl,
+                  showName: showName,
+                  type: 2,
+                ),
               ),
             ),
             Expanded(
                 child: Container(
               alignment: Alignment.centerLeft,
               padding: const EdgeInsets.only(top: 10, bottom: 20),
-              decoration: BoxDecoration(
-                  border: Border(
-                      bottom: BorderSide(
-                          color: theme.weakDividerColor ??
-                              CommonColor.weakDividerColor))),
               child: Text(
                 showName,
                 style: const TextStyle(color: Colors.black, fontSize: 18),

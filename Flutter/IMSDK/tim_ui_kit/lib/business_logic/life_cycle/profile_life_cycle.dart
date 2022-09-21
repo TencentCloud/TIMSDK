@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:tim_ui_kit/business_logic/life_cycle/base_life_cycle.dart';
 
 class ProfileLifeCycle {
@@ -20,7 +21,11 @@ class ProfileLifeCycle {
   /// and before rendering it to the profile page.
   FriendInfoFunction didGetFriendInfo;
 
+  /// The callback after the remark to a friend changed.
+  FutureBool Function(String userID) didRemarkUpdated;
+
   ProfileLifeCycle({
+    this.didRemarkUpdated = DefaultLifeCycle.defaultBooleanSolution,
     this.didGetFriendInfo = DefaultLifeCycle.defaultFriendInfoSolution,
     this.shouldAddToBlockList = DefaultLifeCycle.defaultBooleanSolution,
     this.shouldAddFriend = DefaultLifeCycle.defaultBooleanSolution,

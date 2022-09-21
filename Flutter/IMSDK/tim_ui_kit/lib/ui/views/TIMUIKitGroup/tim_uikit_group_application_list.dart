@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_chat_global_model.dart';
 
 import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/group/group_services.dart';
@@ -39,7 +39,7 @@ class TIMUIKitGroupApplicationList extends StatefulWidget {
 
 class TIMUIKitGroupApplicationListState
     extends TIMUIKitState<TIMUIKitGroupApplicationList> {
-  final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
+  final TUIChatGlobalModel model = serviceLocator<TUIChatGlobalModel>();
   final GroupServices _groupServices = serviceLocator<GroupServices>();
   List<V2TimGroupApplication> groupApplicationList = [];
   List<ApplicationStatus> applicationStatusList = [];
@@ -230,6 +230,7 @@ class TIMUIKitGroupApplicationListState
         return Container(
           decoration: BoxDecoration(color: theme.weakBackgroundColor),
           child: ListView.builder(
+            shrinkWrap: true,
             itemCount: groupApplicationList.length,
             itemBuilder: (context, index) {
               final applicationInfo = groupApplicationList[index];

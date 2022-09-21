@@ -19,7 +19,7 @@ class TIMUIKitContact extends StatefulWidget {
   /// the builder for the list on top
   final Widget? Function(TopListItem item)? topListItemBuilder;
 
-  /// the builder for the empty item, especially when there is no contact
+  /// The widget shows when no contacts exists.
   final Widget Function(BuildContext context)? emptyBuilder;
 
   /// the life cycle hooks for friend list or contacts list business logic
@@ -66,15 +66,14 @@ class _TIMUIKitContactState extends TIMUIKitState<TIMUIKitContact> {
           model.contactListLifeCycle = widget.lifeCycle;
           final memberList = model.friendList ?? [];
 
-          return (memberList.isEmpty && widget.emptyBuilder != null)
-              ? widget.emptyBuilder!(context)
-              : ContactList(
-                  isShowOnlineStatus: widget.isShowOnlineStatus,
-                  contactList: memberList,
-                  onTapItem: widget.onTapItem,
-                  topList: widget.topList,
-                  topListItemBuilder: widget.topListItemBuilder,
-                );
+          return ContactList(
+            emptyBuilder: widget.emptyBuilder,
+            isShowOnlineStatus: widget.isShowOnlineStatus,
+            contactList: memberList,
+            onTapItem: widget.onTapItem,
+            topList: widget.topList,
+            topListItemBuilder: widget.topListItemBuilder,
+          );
         });
   }
 }

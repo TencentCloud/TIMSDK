@@ -118,34 +118,36 @@ class _VideoCustomControlsState extends TIMUIKitState<VideoCustomControls>
   }
 
   Widget _buildBottomBar() {
-    return Container(
-      height: barHeight,
-      margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-      child: Row(
-        children: <Widget>[
-          IconButton(
-            icon: Image.asset(
-              'images/close.png',
-              package: 'tim_ui_kit',
+    return Material(
+      child: Container(
+        height: barHeight,
+        margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+        child: Row(
+          children: <Widget>[
+            IconButton(
+              icon: Image.asset(
+                'images/close.png',
+                package: 'tim_ui_kit',
+              ),
+              iconSize: 30,
+              onPressed: () {
+                if (_latestValue.isPlaying) {
+                  _playPause();
+                }
+                Navigator.of(context).pop();
+              },
             ),
-            iconSize: 30,
-            onPressed: () {
-              if (_latestValue.isPlaying) {
-                _playPause();
-              }
-              Navigator.of(context).pop();
-            },
-          ),
-          Expanded(child: Container()),
-          IconButton(
-            icon: Image.asset(
-              'images/download.png',
-              package: 'tim_ui_kit',
-            ),
-            iconSize: 30,
-            onPressed: widget.downloadFn,
-          )
-        ],
+            Expanded(child: Container()),
+            IconButton(
+              icon: Image.asset(
+                'images/download.png',
+                package: 'tim_ui_kit',
+              ),
+              iconSize: 30,
+              onPressed: widget.downloadFn,
+            )
+          ],
+        ),
       ),
     );
   }

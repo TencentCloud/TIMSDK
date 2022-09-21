@@ -19,7 +19,7 @@ abstract class ConversationService {
     required String conversationID,
   });
 
-  Future<void> setConversationListener({
+  Future<void> addConversationListener({
     required V2TimConversationListener listener,
   });
 
@@ -31,5 +31,6 @@ abstract class ConversationService {
 
   Future<int> getTotalUnreadCount();
 
-  Future<V2TimConversation?> getConversationListByConversationId({required String convID});
+  Future<V2TimConversation?> getConversationListByConversationId(
+      {required String convID});
 }

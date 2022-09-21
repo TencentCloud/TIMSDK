@@ -30,6 +30,7 @@ class TIMUIKitDraftText extends TIMUIKitStatelessWidget {
         draftText,
         softWrap: true,
         overflow: TextOverflow.ellipsis,
+        maxLines: 1,
         style: TextStyle(height: 1.5, color: theme.weakTextColor, fontSize: 14),
       )),
     ]);

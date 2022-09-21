@@ -1,5 +1,6 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:flutter/foundation.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:tim_ui_kit/data_services/core/core_services_implements.dart';
 import 'package:tim_ui_kit/data_services/message/message_services.dart';
@@ -201,12 +202,12 @@ class MessageServiceImpl extends MessageService {
   }
 
   @override
-  Future<V2TimMsgCreateInfoResult?> createImageMessage({
-    required String imagePath,
-  }) async {
+  Future<V2TimMsgCreateInfoResult?> createImageMessage(
+      {String? imagePath, dynamic inputElement}) async {
     final res = await TencentImSDKPlugin.v2TIMManager
         .getMessageManager()
-        .createImageMessage(imagePath: imagePath);
+        .createImageMessage(
+            imagePath: imagePath ?? "", inputElement: inputElement);
     if (res.code == 0) {
       return res.data;
     }
@@ -272,10 +273,20 @@ class MessageServiceImpl extends MessageService {
   @override
   Future<V2TimCallback> deleteMessageFromLocalStorage({
     required String msgID,
+    Object? webMessageInstance,
   }) async {
-    final result = await TencentImSDKPlugin.v2TIMManager
-        .getMessageManager()
-        .deleteMessageFromLocalStorage(msgID: msgID);
+    V2TimCallback result;
+    if (kIsWeb) {
+      result = await TencentImSDKPlugin.v2TIMManager
+          .getMessageManager()
+          .deleteMessages(
+              msgIDs: [], webMessageInstanceList: [webMessageInstance]);
+    } else {
+      result = await TencentImSDKPlugin.v2TIMManager
+          .getMessageManager()
+          .deleteMessageFromLocalStorage(msgID: msgID);
+    }
+
     if (result.code != 0) {
       _coreService.callOnCallback(TIMCallback(
           type: TIMCallbackType.API_ERROR,
@@ -286,10 +297,11 @@ class MessageServiceImpl extends MessageService {
   }
 
   @override
-  Future<V2TimCallback> revokeMessage({required String msgID}) async {
+  Future<V2TimCallback> revokeMessage(
+      {required String msgID, Object? webMessageInstance}) async {
     final result = await TencentImSDKPlugin.v2TIMManager
         .getMessageManager()
-        .revokeMessage(msgID: msgID);
+        .revokeMessage(msgID: msgID, webMessageInstatnce: webMessageInstance);
     if (result.code != 0) {
       _coreService.callOnCallback(TIMCallback(
           type: TIMCallbackType.API_ERROR,
@@ -436,7 +448,8 @@ class MessageServiceImpl extends MessageService {
       List<dynamic>? webMessageInstanceList}) async {
     final result = await TencentImSDKPlugin.v2TIMManager
         .getMessageManager()
-        .deleteMessages(msgIDs: msgIDs);
+        .deleteMessages(
+            msgIDs: msgIDs, webMessageInstanceList: webMessageInstanceList);
     if (result.code != 0) {
       _coreService.callOnCallback(TIMCallback(
           type: TIMCallbackType.API_ERROR,
@@ -448,18 +461,19 @@ class MessageServiceImpl extends MessageService {
 
   @override
   Future<V2TimMsgCreateInfoResult?> createVideoMessage(
-      {required String videoPath,
-      required String type,
-      required int duration,
-      required String snapshotPath}) async {
+      {String? videoPath,
+      String? type,
+      int? duration,
+      String? snapshotPath,
+      dynamic inputElement}) async {
     final res = await TencentImSDKPlugin.v2TIMManager
         .getMessageManager()
         .createVideoMessage(
-          videoFilePath: videoPath,
-          type: type,
-          duration: duration,
-          snapshotPath: snapshotPath,
-        );
+            videoFilePath: videoPath ?? "",
+            type: type ?? "",
+            duration: duration ?? 1,
+            snapshotPath: snapshotPath ?? "",
+            inputElement: inputElement);
     if (res.code == 0) {
       return res.data;
     }
@@ -475,6 +489,7 @@ class MessageServiceImpl extends MessageService {
     required String id, // 自己创建的ID
     required String receiver,
     required String groupID,
+    OfflinePushInfo? offlinePushInfo,
     bool needReadReceipt = false,
     required V2TimMessage replyMessage, // 被回复的消息
   }) async {
@@ -483,6 +498,7 @@ class MessageServiceImpl extends MessageService {
         .sendReplyMessage(
             id: id,
             receiver: receiver,
+            offlinePushInfo: offlinePushInfo,
             groupID: groupID,
             needReadReceipt: needReadReceipt,
             replyMessage: replyMessage);
@@ -497,10 +513,15 @@ class MessageServiceImpl extends MessageService {
 
   @override
   Future<V2TimMsgCreateInfoResult?> createFileMessage(
-      {required String filePath, required String fileName}) async {
+      {String? filePath,
+      required String fileName,
+      dynamic inputElement}) async {
     final res = await TencentImSDKPlugin.v2TIMManager
         .getMessageManager()
-        .createFileMessage(filePath: filePath, fileName: fileName);
+        .createFileMessage(
+            filePath: filePath ?? "",
+            fileName: fileName,
+            inputElement: inputElement);
     if (res.code == 0) {
       return res.data;
     }

@@ -1,10 +1,8 @@
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-
 // The definition of the following parameters is the same with [ListView.builder]
-class TIMUIKitHistoryMessageListConfig{
+class TIMUIKitHistoryMessageListConfig {
   Key? key;
 
   /// {@template flutter.widgets.scroll_view.scrollDirection}

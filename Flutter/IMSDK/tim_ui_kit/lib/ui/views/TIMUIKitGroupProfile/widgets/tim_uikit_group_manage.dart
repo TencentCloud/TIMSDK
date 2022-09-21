@@ -302,8 +302,10 @@ Widget _buildListItem(BuildContext context, V2TimGroupMemberFullInfo memberInfo,
                 width: 36,
                 height: 36,
                 child: Avatar(
-                    faceUrl: memberInfo.faceUrl ?? "",
-                    showName: _getShowName(memberInfo),type: 2,),
+                  faceUrl: memberInfo.faceUrl ?? "",
+                  showName: _getShowName(memberInfo),
+                  type: 2,
+                ),
               ),
               title: Row(
                 children: [
@@ -366,10 +368,8 @@ class _GroupProfileSetManagerPageState
     final TUITheme theme = value.theme;
 
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider.value(value: widget.model)
-      ],
-      builder: (context, w){
+      providers: [ChangeNotifierProvider.value(value: widget.model)],
+      builder: (context, w) {
         final model = Provider.of<TUIGroupProfileModel>(context);
         final memberList = model.groupMemberList;
         final adminList = _getAdminMemberList(memberList);
@@ -396,71 +396,71 @@ class _GroupProfileSetManagerPageState
           ),
           body: SingleChildScrollView(
               child: Column(
-                children: [
-                  Container(
-                    alignment: Alignment.topLeft,
-                    color: theme.weakDividerColor,
-                    padding:
+            children: [
+              Container(
+                alignment: Alignment.topLeft,
+                color: theme.weakDividerColor,
+                padding:
                     const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
-                    child: Text(
-                      TIM_t("群主"),
-                      style: TextStyle(fontSize: 14, color: theme.weakTextColor),
-                    ),
-                  ),
-                  ...ownerList
-                      .map(
-                        (e) => _buildListItem(context, e!, null),
+                child: Text(
+                  TIM_t("群主"),
+                  style: TextStyle(fontSize: 14, color: theme.weakTextColor),
+                ),
+              ),
+              ...ownerList
+                  .map(
+                    (e) => _buildListItem(context, e!, null),
                   )
-                      .toList(),
-                  Container(
-                    alignment: Alignment.topLeft,
-                    color: theme.weakDividerColor,
-                    padding:
+                  .toList(),
+              Container(
+                alignment: Alignment.topLeft,
+                color: theme.weakDividerColor,
+                padding:
                     const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
-                    child: Text(
-                      TIM_t_para("管理员 ({{option2}}/10)", "管理员 ($option2/10)")(
-                          option2: option2),
-                      style: TextStyle(fontSize: 14, color: theme.weakTextColor),
-                    ),
-                  ),
-                  InkWell(
+                child: Text(
+                  TIM_t_para("管理员 ({{option2}}/10)", "管理员 ($option2/10)")(
+                      option2: option2),
+                  style: TextStyle(fontSize: 14, color: theme.weakTextColor),
+                ),
+              ),
+              InkWell(
+                child: Container(
+                    color: Colors.white,
+                    padding: const EdgeInsets.only(left: 16),
                     child: Container(
-                        color: Colors.white,
-                        padding: const EdgeInsets.only(left: 16),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 12,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 12,
+                      ),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border(
+                              bottom: BorderSide(
+                                  color: theme.weakDividerColor ??
+                                      CommonColor.weakDividerColor))),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.add_circle_outline,
+                            color: theme.primaryColor,
+                            size: 20,
                           ),
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              border: Border(
-                                  bottom: BorderSide(
-                                      color: theme.weakDividerColor ??
-                                          CommonColor.weakDividerColor))),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.add_circle_outline,
-                                color: theme.primaryColor,
-                                size: 20,
-                              ),
-                              const SizedBox(
-                                width: 12,
-                              ),
-                              Text(TIM_t("添加管理员"))
-                            ],
+                          const SizedBox(
+                            width: 12,
                           ),
-                        )),
-                    onTap: () async {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => GroupProfileAddAdmin(
+                          Text(TIM_t("添加管理员"))
+                        ],
+                      ),
+                    )),
+                onTap: () async {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => GroupProfileAddAdmin(
                                 memberList: memberList
                                     .where((element) =>
-                                element?.role ==
-                                    GroupMemberRoleType
-                                        .V2TIM_GROUP_MEMBER_ROLE_MEMBER)
+                                        element?.role ==
+                                        GroupMemberRoleType
+                                            .V2TIM_GROUP_MEMBER_ROLE_MEMBER)
                                     .toList(),
                                 appbarTitle: TIM_t("设置管理员"),
                                 selectCompletedHandler:
@@ -473,10 +473,10 @@ class _GroupProfileSetManagerPageState
                                   }
                                 },
                               )));
-                    },
-                  ),
-                  ...adminList
-                      .map((e) => _buildListItem(
+                },
+              ),
+              ...adminList
+                  .map((e) => _buildListItem(
                       context,
                       e!,
                       ActionPane(motion: const DrawerMotion(), children: [
@@ -486,14 +486,14 @@ class _GroupProfileSetManagerPageState
                           },
                           flex: 1,
                           backgroundColor:
-                          theme.cautionColor ?? CommonColor.cautionColor,
+                              theme.cautionColor ?? CommonColor.cautionColor,
                           autoClose: true,
                           label: TIM_t("删除"),
                         )
                       ])))
-                      .toList(),
-                ],
-              )),
+                  .toList(),
+            ],
+          )),
         );
       },
     );
@@ -626,8 +626,10 @@ class _GroupProfileAddAdminState extends TIMUIKitState<GroupProfileAddAdmin> {
                             width: 36,
                             height: 36,
                             child: Avatar(
-                                faceUrl: e?.faceUrl ?? "",
-                                showName: _getShowName(e),type: 2,),
+                              faceUrl: e?.faceUrl ?? "",
+                              showName: _getShowName(e),
+                              type: 2,
+                            ),
                           ),
                           const SizedBox(
                             width: 10,

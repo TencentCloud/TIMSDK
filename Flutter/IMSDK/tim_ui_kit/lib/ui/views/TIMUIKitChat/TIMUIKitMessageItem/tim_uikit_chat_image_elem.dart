@@ -1,20 +1,25 @@
 // ignore_for_file: prefer_typing_uninitialized_variables,  unused_import
 
 import 'dart:async';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:crypto/crypto.dart';
+import 'package:universal_html/html.dart' as html;
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 
-import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_chat_global_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
@@ -52,14 +57,9 @@ class TIMUIKitImageElem extends StatefulWidget {
 
 class _TIMUIKitImageElem extends TIMUIKitState<TIMUIKitImageElem> {
   double? networkImagePositionRadio; // 加这个字段用于异步获取被安全打击后的兜底图的比例
-  final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
+  final TUIChatGlobalModel model = serviceLocator<TUIChatGlobalModel>();
   Widget? imageItem;
   bool isSent = false;
-
-  /*
-  为了解决，重复渲染的跳闪问题
-  当现有图片队列只有一个，且上一个图片队列不存在时才进行更新，因为此时是发送了新的图片
-  */
 
   @override
   didUpdateWidget(oldWidget) {
@@ -87,11 +87,10 @@ class _TIMUIKitImageElem extends TIMUIKitState<TIMUIKitImageElem> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.warning_amber_outlined,
-              color: theme?.cautionColor,
-              size: 16,
-            ),
+            LoadingAnimationWidget.staggeredDotsWave(
+              color: theme?.weakTextColor ?? Colors.grey,
+              size: 28,
+            )
           ],
         ),
       ),
@@ -110,6 +109,21 @@ class _TIMUIKitImageElem extends TIMUIKitState<TIMUIKitImageElem> {
   //保存网络图片到本地
   _saveImageToLocal(context, String imageUrl, {bool isAsset = true}) async {
     var response;
+    if (PlatformUtils().isWeb) {
+      download(imageUrl) async {
+        final http.Response r = await http.get(Uri.parse(imageUrl));
+        final data = r.bodyBytes;
+        final base64data = base64Encode(data);
+        final a =
+            html.AnchorElement(href: 'data:image/jpeg;base64,$base64data');
+        a.download = md5.convert(utf8.encode(imageUrl)).toString();
+        a.click();
+        a.remove();
+      }
+
+      download(imageUrl);
+      return;
+    }
     if (PlatformUtils().isIOS) {
       if (!await Permissions.checkPermission(
           context, Permission.photosAddOnly.value)) {
@@ -179,7 +193,9 @@ class _TIMUIKitImageElem extends TIMUIKitState<TIMUIKitImageElem> {
 
   void _saveImg() {
     String? path = widget.message.imageElem!.path;
-    if (path != null && File(path).existsSync()) {
+    if (path != null && PlatformUtils().isWeb
+        ? true
+        : File(path!).existsSync()) {
       _saveImageToLocal(context, path, isAsset: true);
     } else {
       String imgUrl = getBigPicUrl();
@@ -299,7 +315,7 @@ class _TIMUIKitImageElem extends TIMUIKitState<TIMUIKitImageElem> {
 
   Widget _renderNetworkImage(
       dynamic heroTag, double positionRadio, TUITheme? theme,
-      {V2TimImage? originalImg, V2TimImage? smallImg}) {
+      {String? path, V2TimImage? originalImg, V2TimImage? smallImg}) {
     try {
       String bigImgUrl = originalImg?.url ?? getBigPicUrl();
       if (bigImgUrl.isEmpty && smallImg?.url != null) {
@@ -308,12 +324,12 @@ class _TIMUIKitImageElem extends TIMUIKitState<TIMUIKitImageElem> {
       return Stack(
         alignment: AlignmentDirectional.topStart,
         children: [
-          AspectRatio(
-            aspectRatio: networkImagePositionRadio ?? positionRadio,
-            child: Container(
-              decoration: const BoxDecoration(color: Colors.white),
-            ),
-          ),
+          // AspectRatio(
+          //   aspectRatio: networkImagePositionRadio ?? positionRadio,
+          //   child: Container(
+          //     decoration: const BoxDecoration(color: Colors.white),
+          //   ),
+          // ),
           getImage(
               GestureDetector(
                 onTap: () {
@@ -322,7 +338,7 @@ class _TIMUIKitImageElem extends TIMUIKitState<TIMUIKitImageElem> {
                         opaque: false, // set to false
                         pageBuilder: (_, __, ___) => ImageScreen(
                             imageProvider: CachedNetworkImageProvider(
-                              bigImgUrl,
+                              path ?? bigImgUrl,
                               cacheKey: widget.message.msgID,
                             ),
                             heroTag: heroTag,
@@ -335,13 +351,13 @@ class _TIMUIKitImageElem extends TIMUIKitState<TIMUIKitImageElem> {
                     child:
                         // Image.network(smallImg?.url ?? ""),
                         CachedNetworkImage(
-                      width: double.infinity,
+                      // width: double.infinity,
                       alignment: Alignment.topCenter,
-                      imageUrl: smallImg?.url ?? originalImg!.url!,
+                      imageUrl: path ?? smallImg?.url ?? originalImg!.url!,
                       // use small image in message list as priority
                       errorWidget: (context, error, stackTrace) =>
                           errorPage(theme),
-                      fit: BoxFit.fitWidth,
+                      fit: BoxFit.contain,
                       cacheKey: smallImg?.uuid ?? originalImg!.uuid,
                       placeholder: (context, url) =>
                           Image(image: MemoryImage(kTransparentImage)),
@@ -356,6 +372,13 @@ class _TIMUIKitImageElem extends TIMUIKitState<TIMUIKitImageElem> {
     }
   }
 
+  bool isNeedShowLocalPath() {
+    final current = (DateTime.now().millisecondsSinceEpoch / 1000).ceil();
+    final timeStamp = widget.message.timestamp ?? current;
+    return (widget.message.isSelf ?? false) &&
+        (isSent || current - timeStamp < 300);
+  }
+
   Widget? _renderImage(dynamic heroTag, TUITheme? theme,
       {V2TimImage? originalImg, V2TimImage? smallImg}) {
     double positionRadio = 1.0;
@@ -365,32 +388,45 @@ class _TIMUIKitImageElem extends TIMUIKitState<TIMUIKitImageElem> {
         smallImg?.height != 0) {
       positionRadio = (smallImg!.width! / smallImg.height!);
     }
-    if (isSent ||
-        widget.message.imageElem!.path!.isNotEmpty &&
-            File(widget.message.imageElem!.path!).existsSync()) {
-      try {
+
+    if (PlatformUtils().isWeb && widget.message.imageElem!.path != null) {
+      // Displaying on Web only
+      return _renderNetworkImage(heroTag, positionRadio, theme,
+          smallImg: smallImg,
+          originalImg: originalImg,
+          path: widget.message.imageElem!.path);
+    }
+
+    try {
+      if ((isNeedShowLocalPath() &&
+          widget.message.imageElem!.path != null &&
+          widget.message.imageElem!.path!.isNotEmpty &&
+          File(widget.message.imageElem!.path!).existsSync())) {
         return _renderLocalImage(widget.message.imageElem!.path!, heroTag,
             networkImagePositionRadio ?? positionRadio, theme);
-      } catch (e) {
-        return _renderNetworkImage(heroTag, positionRadio, theme,
-            smallImg: smallImg, originalImg: originalImg);
       }
-    } else if (smallImg?.localUrl != null &&
-        smallImg?.localUrl != "" &&
-        File((smallImg?.localUrl!)!).existsSync()) {
-      try {
+    } catch (e) {
+      print(e);
+    }
+
+    try {
+      if (smallImg?.localUrl != null &&
+          smallImg?.localUrl != "" &&
+          File((smallImg?.localUrl!)!).existsSync()) {
         return _renderLocalImage(smallImg!.localUrl!, heroTag,
             networkImagePositionRadio ?? positionRadio, theme);
-      } catch (e) {
-        return _renderNetworkImage(heroTag, positionRadio, theme,
-            smallImg: smallImg, originalImg: originalImg);
       }
-    } else if ((smallImg?.url ?? originalImg?.url) != null) {
+    } catch (e) {
+      print(e);
+    }
+
+    if ((smallImg?.url ?? originalImg?.url) != null &&
+        (smallImg?.url ?? originalImg?.url)!.isNotEmpty) {
       return _renderNetworkImage(heroTag, positionRadio, theme,
           smallImg: smallImg, originalImg: originalImg);
-    } else {
-      return errorDisplay(context, theme);
     }
+
+    return errorDisplay(context, theme);
   }
 
   @override

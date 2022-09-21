@@ -11,6 +11,8 @@ import 'package:tim_ui_kit/ui/widgets/unread_message.dart';
 typedef unreadCountBuilder = Widget Function(int unreadCount);
 
 class TIMUIKitConversationTotalUnread extends TIMUIKitStatelessWidget {
+  final TUIConversationViewModel model =
+      serviceLocator<TUIConversationViewModel>();
   final int? unreadCount;
   final unreadCountBuilder? builder;
   final double? width;
@@ -26,11 +28,13 @@ class TIMUIKitConversationTotalUnread extends TIMUIKitStatelessWidget {
 
   @override
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
-    return ChangeNotifierProvider(
-      create: (context) => serviceLocator<TUIConversationViewModel>(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: model),
+      ],
       child: Consumer<TUIConversationViewModel>(
         builder: (context, value, child) {
-          if(value.totalUnReadCount == 0){
+          if (value.totalUnReadCount == 0) {
             return Container();
           }
 

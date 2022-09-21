@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_statelesswidget.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
+import 'package:tim_ui_kit/business_logic/separate_models/tui_chat_separate_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 
 import 'package:tim_ui_kit/ui/utils/color.dart';
@@ -16,8 +17,11 @@ import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
 class MergerMessageScreen extends TIMUIKitStatelessWidget {
   final List<V2TimMessage> messageList;
+  final TUIChatSeparateViewModel model;
 
-  MergerMessageScreen({Key? key, required this.messageList}) : super(key: key);
+  MergerMessageScreen(
+      {Key? key, required this.model, required this.messageList})
+      : super(key: key);
 
   bool isReplyMessage(V2TimMessage message) {
     final hasCustomData =
@@ -47,6 +51,7 @@ class MergerMessageScreen extends TIMUIKitStatelessWidget {
         return Text(TIM_t("[自定义]"));
       case MessageElemType.V2TIM_ELEM_TYPE_SOUND:
         return TIMUIKitSoundElem(
+            chatModel: model,
             isShowMessageReaction: false,
             message: message,
             soundElem: message.soundElem!,
@@ -56,7 +61,11 @@ class MergerMessageScreen extends TIMUIKitStatelessWidget {
       case MessageElemType.V2TIM_ELEM_TYPE_TEXT:
         if (isReplyMessage(message)) {
           return TIMUIKitReplyElem(
-              message: message, scrollToIndex: () {}, clearJump: () {});
+              isShowMessageReaction: false,
+              chatModel: model,
+              message: message,
+              scrollToIndex: () {},
+              clearJump: () {});
         }
 
         return Text(
@@ -67,7 +76,8 @@ class MergerMessageScreen extends TIMUIKitStatelessWidget {
       // return Text(message.textElem!.text!);
       case MessageElemType.V2TIM_ELEM_TYPE_FACE:
         return TIMUIKitFaceElem(
-          isShowJump: false,
+            model: model,
+            isShowJump: false,
             isShowMessageReaction: false,
             path: message.faceElem?.data ?? "",
             message: message);
@@ -87,11 +97,13 @@ class MergerMessageScreen extends TIMUIKitStatelessWidget {
           key: Key("${message.seq}_${message.timestamp}"),
         );
       case MessageElemType.V2TIM_ELEM_TYPE_VIDEO:
-        return TIMUIKitVideoElem(message, isFrom: "merger");
+        return TIMUIKitVideoElem(message,
+            isFrom: "merger", isShowMessageReaction: false);
       case MessageElemType.V2TIM_ELEM_TYPE_LOCATION:
         return Text(TIM_t("[位置]"));
       case MessageElemType.V2TIM_ELEM_TYPE_MERGER:
         return TIMUIKitMergerElem(
+            model: model,
             isShowJump: false,
             isShowMessageReaction: false,
             message: message,
@@ -170,6 +182,7 @@ class MergerMessageScreen extends TIMUIKitStatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: ListView.builder(
+          shrinkWrap: true,
           itemCount: messageList.length,
           itemBuilder: (context, index) {
             final messageItem = messageList[index];

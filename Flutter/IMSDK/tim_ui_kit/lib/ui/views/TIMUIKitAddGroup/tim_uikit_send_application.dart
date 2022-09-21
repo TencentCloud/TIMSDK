@@ -170,8 +170,7 @@ class _SendJoinGroupApplicationState
               child: TextButton(
                   onPressed: () async {
                     final addWording = _verficationController.text;
-                    final res =
-                        await addGroup(groupID, addWording);
+                    final res = await addGroup(groupID, addWording);
                     if (res?.code == 0) {
                       onTIMCallback(TIMCallback(
                           type: TIMCallbackType.INFO,

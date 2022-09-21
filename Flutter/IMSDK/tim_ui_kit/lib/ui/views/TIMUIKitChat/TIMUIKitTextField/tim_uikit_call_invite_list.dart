@@ -5,6 +5,7 @@ import 'package:tim_ui_kit/data_services/group/group_services.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
+import 'package:tim_ui_kit/ui/utils/platform.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitGroupProfile/widgets/tim_ui_group_member_search.dart';
 import 'package:tim_ui_kit/ui/widgets/group_member_list.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
@@ -57,8 +58,8 @@ class _SelectCallInviterState extends TIMUIKitState<SelectCallInviter> {
     if (nextSeq != null && nextSeq != "0" && nextSeq != "") {
       return await _loadGroupMemberList(
           groupID: groupID, count: count, seq: nextSeq);
-    }else{
-      setState((){
+    } else {
+      setState(() {
         _groupMemberList = _groupMemberList;
         searchMemberList = _groupMemberList;
         loading = true;
@@ -78,8 +79,8 @@ class _SelectCallInviterState extends TIMUIKitState<SelectCallInviter> {
         nextSeq: seq ?? _groupMemberListSeq);
     final groupMemberListRes = res.data;
     if (res.code == 0 && groupMemberListRes != null) {
-      final groupMemberList = groupMemberListRes.memberInfoList ?? [];
-      _groupMemberList = [...?_groupMemberList, ...groupMemberList];
+      final groupMemberListTemp = groupMemberListRes.memberInfoList ?? [];
+      _groupMemberList = [...?_groupMemberList, ...groupMemberListTemp];
       _groupMemberListSeq = groupMemberListRes.nextSeq ?? "0";
     }
     return groupMemberListRes?.nextSeq;
@@ -88,7 +89,7 @@ class _SelectCallInviterState extends TIMUIKitState<SelectCallInviter> {
   Future<V2TimValueCallback<V2GroupMemberInfoSearchResult>> searchGroupMember(
       V2TimGroupMemberSearchParam searchParam) async {
     final res =
-    await _groupServices.searchGroupMembers(searchParam: searchParam);
+        await _groupServices.searchGroupMembers(searchParam: searchParam);
 
     if (res.code == 0) {}
     return res;
@@ -96,7 +97,7 @@ class _SelectCallInviterState extends TIMUIKitState<SelectCallInviter> {
 
   handleSearchGroupMembers(String searchText, context) async {
     loading = true;
-    if(widget.groupID == null || widget.groupID!.isEmpty){
+    if (widget.groupID == null || widget.groupID!.isEmpty) {
       return;
     }
     List<V2TimGroupMemberFullInfo?> currentGroupMember = [];
@@ -183,27 +184,30 @@ class _SelectCallInviterState extends TIMUIKitState<SelectCallInviter> {
             ),
           ),
         ),
-        body: (( searchMemberList ?? []).isNotEmpty || loading == false) ? GroupProfileMemberList(
-          customTopArea: GroupMemberSearchTextField(
-            onTextChange: (text) =>
-                handleSearchGroupMembers(text, context),
-          ),
-          memberList: (searchMemberList ?? [])
-              .where((element) =>
-          element?.userID != _coreServicesImpl.loginInfo.userID)
-              .toList(),
-          canSlideDelete: false,
-          canSelectMember: true,
-          onSelectedMemberChange: (member) {
-            selectedMember = member;
-            setState(() {});
-          },
-        ) : Center(
-          child: LoadingAnimationWidget.staggeredDotsWave(
-            color: theme.primaryColor ?? Colors.grey,
-            size: 40,
-          ),
-        )
-    );
+        body: ((searchMemberList ?? []).isNotEmpty || loading == false)
+            ? GroupProfileMemberList(
+                customTopArea: PlatformUtils().isWeb
+                    ? null
+                    : GroupMemberSearchTextField(
+                        onTextChange: (text) =>
+                            handleSearchGroupMembers(text, context),
+                      ),
+                memberList: (searchMemberList ?? [])
+                    .where((element) =>
+                        element?.userID != _coreServicesImpl.loginInfo.userID)
+                    .toList(),
+                canSlideDelete: false,
+                canSelectMember: true,
+                onSelectedMemberChange: (member) {
+                  selectedMember = member;
+                  setState(() {});
+                },
+              )
+            : Center(
+                child: LoadingAnimationWidget.staggeredDotsWave(
+                  color: theme.primaryColor ?? Colors.grey,
+                  size: 40,
+                ),
+              ));
   }
 }

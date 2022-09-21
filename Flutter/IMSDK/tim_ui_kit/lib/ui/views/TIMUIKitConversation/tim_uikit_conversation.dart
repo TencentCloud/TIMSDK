@@ -11,19 +11,21 @@ import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart'
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/ui/controller/tim_uikit_conversation_controller.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
+import 'package:tim_ui_kit/ui/utils/platform.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitConversation/tim_uikit_conversation_item.dart';
 import 'package:tim_ui_kit/ui/widgets/customize_ball_pulse_header.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
 
 typedef ConversationItemBuilder = Widget Function(
-    V2TimConversation conversationItem, [V2TimUserStatus? onlineStatus]);
+    V2TimConversation conversationItem,
+    [V2TimUserStatus? onlineStatus]);
 
 typedef ConversationItemSlidableBuilder = List<ConversationItemSlidablePanel>
     Function(V2TimConversation conversationItem);
 
 class TIMUIKitConversation extends StatefulWidget {
-  /// the callback after clicking contact item
+  /// the callback after clicking conversation item
   final ValueChanged<V2TimConversation>? onTapItem;
 
   /// conversation controller
@@ -51,12 +53,18 @@ class TIMUIKitConversation extends StatefulWidget {
   /// Control if shows the online status for each user on its avatar.
   final bool isShowOnlineStatus;
 
+  /// Control if shows the identifier that the conversation has a draft text, inputted in previous.
+  /// Also, you have better specifying the `draftText` field for `TIMUIKitChat`, from the `draftText` in `V2TimConversation`,
+  /// to meet the identifier shows here.
+  final bool isShowDraft;
+
   const TIMUIKitConversation(
       {Key? key,
       this.lifeCycle,
       this.onTapItem,
       this.controller,
       this.itembuilder,
+      this.isShowDraft = true,
       this.itemSlidableBuilder,
       this.conversationCollector,
       this.emptyBuilder,
@@ -126,18 +134,20 @@ class ConversationItemSlidablePanel extends TIMUIKitStatelessWidget {
 }
 
 class _TIMUIKitConversationState extends TIMUIKitState<TIMUIKitConversation> {
-  late TUIConversationViewModel model = serviceLocator<TUIConversationViewModel>();
+  final TUIConversationViewModel model =
+      serviceLocator<TUIConversationViewModel>();
   late TIMUIKitConversationController _timuiKitConversationController;
   final TUIThemeViewModel themeViewModel = serviceLocator<TUIThemeViewModel>();
-  final TUIFriendShipViewModel friendShipViewModel = serviceLocator<TUIFriendShipViewModel>();
+  final TUIFriendShipViewModel friendShipViewModel =
+      serviceLocator<TUIFriendShipViewModel>();
 
   @override
   void initState() {
     super.initState();
     final controller = getController();
-    model = controller.model;
     _timuiKitConversationController = controller;
-    _timuiKitConversationController.loadData();
+    _timuiKitConversationController.model = model;
+    // _timuiKitConversationController.loadData();
   }
 
   TIMUIKitConversationController getController() {
@@ -172,16 +182,17 @@ class _TIMUIKitConversationState extends TIMUIKitState<TIMUIKitConversation> {
   ) {
     final theme = themeViewModel.theme;
     return [
-      ConversationItemSlidablePanel(
-        onPressed: (context) {
-          _clearHistory(conversationItem);
-        },
-        backgroundColor: theme.primaryColor ?? CommonColor.primaryColor,
-        foregroundColor: Colors.white,
-        label: TIM_t("清除聊天"),
-        spacing: 0,
-        autoClose: true,
-      ),
+      if (!PlatformUtils().isWeb)
+        ConversationItemSlidablePanel(
+          onPressed: (context) {
+            _clearHistory(conversationItem);
+          },
+          backgroundColor: theme.primaryColor ?? CommonColor.primaryColor,
+          foregroundColor: Colors.white,
+          label: TIM_t("清除聊天"),
+          spacing: 0,
+          autoClose: true,
+        ),
       ConversationItemSlidablePanel(
         onPressed: (context) {
           _pinConversation(conversationItem);
@@ -224,8 +235,11 @@ class _TIMUIKitConversationState extends TIMUIKitState<TIMUIKitConversation> {
           final _friendShipViewModel =
               Provider.of<TUIFriendShipViewModel>(context);
           _model.lifeCycle = widget.lifeCycle;
-          List<V2TimConversation?> filteredConversationList =
-              _model.conversationList;
+          List<V2TimConversation?> filteredConversationList = _model
+              .conversationList
+              .where((element) =>
+                  (element?.groupID != null || element?.userID != null))
+              .toList();
           bool haveMoreData = _model.haveMoreData;
           if (widget.conversationCollector != null) {
             filteredConversationList = filteredConversationList
@@ -270,24 +284,26 @@ class _TIMUIKitConversationState extends TIMUIKitState<TIMUIKitConversation> {
                             groupTag: 'conversation-list',
                             child: InkWell(
                               child: TIMUIKitConversationItem(
-                                lastMessageBuilder: widget.lastMessageBuilder,
-                                faceUrl: conversationItem.faceUrl ?? "",
-                                nickName: conversationItem.showName ?? "",
-                                isDisturb: conversationItem.recvOpt != 0,
-                                lastMsg: conversationItem.lastMessage,
-                                isPined: conversationItem.isPinned ?? false,
-                                groupAtInfoList:
-                                    conversationItem.groupAtInfoList ?? [],
-                                unreadCount: conversationItem.unreadCount ?? 0,
-                                draftText: conversationItem.draftText,
-                                onlineStatus: (widget.isShowOnlineStatus &&
-                                        conversationItem.userID != null &&
-                                        conversationItem.userID!.isNotEmpty)
-                                    ? onlineStatus
-                                    : null,
-                                draftTimestamp: conversationItem.draftTimestamp,
-                                convType: conversationItem.type
-                              ),
+                                  isShowDraft: widget.isShowDraft,
+                                  lastMessageBuilder: widget.lastMessageBuilder,
+                                  faceUrl: conversationItem.faceUrl ?? "",
+                                  nickName: conversationItem.showName ?? "",
+                                  isDisturb: conversationItem.recvOpt != 0,
+                                  lastMsg: conversationItem.lastMessage,
+                                  isPined: conversationItem.isPinned ?? false,
+                                  groupAtInfoList:
+                                      conversationItem.groupAtInfoList ?? [],
+                                  unreadCount:
+                                      conversationItem.unreadCount ?? 0,
+                                  draftText: conversationItem.draftText,
+                                  onlineStatus: (widget.isShowOnlineStatus &&
+                                          conversationItem.userID != null &&
+                                          conversationItem.userID!.isNotEmpty)
+                                      ? onlineStatus
+                                      : null,
+                                  draftTimestamp:
+                                      conversationItem.draftTimestamp,
+                                  convType: conversationItem.type),
                               onTap: () => onTapConvItem(conversationItem),
                             ),
                             endActionPane: ActionPane(

@@ -4,7 +4,7 @@ import 'package:tim_ui_kit/business_logic/separate_models/tui_profile_view_model
 import 'package:tim_ui_kit/ui/widgets/text_input_bottom_sheet.dart';
 
 class TIMUIKitProfileController {
-  final TUIProfileViewModel model = TUIProfileViewModel();
+  late TUIProfileViewModel model;
 
   /// Remove a user from friend or contact
   Future<V2TimFriendOperationResult?> deleteFriend(String userID) {
@@ -23,7 +23,8 @@ class TIMUIKitProfileController {
   }
 
   /// add a user to block list
-  Future<List<V2TimFriendOperationResult>?> addUserToBlackList(bool shouldAdd, String userID) {
+  Future<List<V2TimFriendOperationResult>?> addUserToBlackList(
+      bool shouldAdd, String userID) {
     return model.addToBlackList(shouldAdd, userID);
   }
 
@@ -68,5 +69,17 @@ class TIMUIKitProfileController {
   /// Add a user as friend or contact
   Future<V2TimFriendOperationResult?> addFriend(String userID) {
     return model.addFriend(userID);
+  }
+
+  Future<V2TimCallback> updateSelfSignature(String selfSignature) {
+    return model.updateSelfSignature(selfSignature);
+  }
+
+  Future<V2TimCallback> updateNickName(String nickName) {
+    return model.updateNickName(nickName);
+  }
+
+  Future<V2TimCallback> updateGender(int gender) {
+    return model.updateGender(gender);
   }
 }

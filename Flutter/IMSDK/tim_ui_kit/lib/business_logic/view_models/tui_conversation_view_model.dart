@@ -3,11 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:tim_ui_kit/business_logic/life_cycle/conversation_life_cycle.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_chat_global_model.dart';
 import 'package:tim_ui_kit/data_services/conversation/conversation_services.dart';
 import 'package:tim_ui_kit/data_services/message/message_services.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/data_services/friendShip/friendship_services.dart';
+import 'package:tim_ui_kit/ui/utils/platform.dart';
 
 List<T> removeDuplicates<T>(
     List<T> list, bool Function(T first, T second) isEqual) {
@@ -32,7 +33,8 @@ class TUIConversationViewModel extends ChangeNotifier {
       serviceLocator<ConversationService>();
   final FriendshipServices _friendshipServices =
       serviceLocator<FriendshipServices>();
-  final TUIChatViewModel _chatViewModel = serviceLocator<TUIChatViewModel>();
+  final TUIChatGlobalModel _chatGlobalModel =
+      serviceLocator<TUIChatGlobalModel>();
   final MessageService _messageService = serviceLocator<MessageService>();
   late V2TimConversationListener _conversationListener;
   List<V2TimConversation?> _conversationList = [];
@@ -44,7 +46,24 @@ class TUIConversationViewModel extends ChangeNotifier {
   ConversationLifeCycle? _lifeCycle;
 
   List<V2TimConversation?> get conversationList {
-    _conversationList.sort((a, b) => b!.orderkey!.compareTo(a!.orderkey!));
+    if (PlatformUtils().isWeb) {
+      try {
+        _conversationList.sort((a, b) {
+          return b!.lastMessage!.timestamp!
+              .compareTo(a!.lastMessage!.timestamp!);
+        });
+
+        final pinnedConversation = _conversationList
+            .where((element) => element?.isPinned == true)
+            .toList();
+        _conversationList.removeWhere((element) => element?.isPinned == true);
+        _conversationList = [...pinnedConversation, ..._conversationList];
+      } catch (e) {
+        print(e);
+      }
+    } else {
+      _conversationList.sort((a, b) => b!.orderkey!.compareTo(a!.orderkey!));
+    }
     return _conversationList;
   }
 
@@ -75,30 +94,30 @@ class TUIConversationViewModel extends ChangeNotifier {
     return _selectedConversation;
   }
 
-  TUIConversationViewModel(){
-    _conversationListener = V2TimConversationListener(
-      onConversationChanged: (conversationList) {
-        _onConversationListChanged(conversationList);
-      },
-      onNewConversation: (conversationList) {
-        _addNewConversation(conversationList);
-      },
-      onTotalUnreadMessageCountChanged: (totalUnread) {
-        _totalUnReadCount = totalUnread;
-        _chatViewModel.totalUnReadCount = totalUnread;
-        notifyListeners();
-      },
-    );
-    setConversationListener();
+  TUIConversationViewModel() {
+    _conversationListener =
+        V2TimConversationListener(onConversationChanged: (conversationList) {
+      _onConversationListChanged(conversationList);
+    }, onNewConversation: (conversationList) {
+      _addNewConversation(conversationList);
+    }, onTotalUnreadMessageCountChanged: (totalUnread) {
+      _totalUnReadCount = totalUnread;
+      _chatGlobalModel.totalUnReadCount = totalUnread;
+      notifyListeners();
+    }, onSyncServerFinish: () {
+      loadData(count: 100);
+    });
   }
 
-  initConversation(){
-    clear();
-    loadData(count: 100);
+  initConversation() async {
+    clearData();
+    await loadData(count: 100);
+    _chatGlobalModel.initMessageMapFromLocalDatabase(_conversationList);
   }
 
-  void loadData({required int count}) async {
+  Future<void> loadData({required int count}) async {
     _haveMoreData = true;
+    final isRefresh = _nextSeq == "0";
     final conversationResult = await _conversationService.getConversationList(
         nextSeq: _nextSeq, count: count);
     _nextSeq = conversationResult!.nextSeq ?? "";
@@ -107,10 +126,12 @@ class TUIConversationViewModel extends ChangeNotifier {
       if (conversationList.isEmpty || conversationList.length < count) {
         _haveMoreData = false;
       }
-      final List<V2TimConversation?> combinedConversationList = [
-        ..._conversationList,
-        ...conversationList
-      ];
+      List<V2TimConversation?> combinedConversationList = [];
+      if (isRefresh) {
+        combinedConversationList = conversationList;
+      } else {
+        combinedConversationList = [..._conversationList, ...conversationList];
+      }
       final List<V2TimConversation?> finalConversationList = await _lifeCycle
               ?.conversationListWillMount(combinedConversationList) ??
           combinedConversationList;
@@ -120,6 +141,8 @@ class TUIConversationViewModel extends ChangeNotifier {
       notifyListeners();
     }
     _totalUnReadCount = await _conversationService.getTotalUnreadCount();
+    notifyListeners();
+    return;
   }
 
   void setSelectedConversation(V2TimConversation conversation) {
@@ -134,7 +157,8 @@ class TUIConversationViewModel extends ChangeNotifier {
         conversationID: conversationID, isPinned: isPinned);
   }
 
-  Future<V2TimCallback?> clearHistoryMessage({required String convID, required int convType}) async {
+  Future<V2TimCallback?> clearHistoryMessage(
+      {required String convID, required int convType}) async {
     if (_lifeCycle?.shouldClearHistoricalMessageForConversation != null &&
         await _lifeCycle!.shouldClearHistoricalMessageForConversation(convID) ==
             false) {
@@ -178,8 +202,7 @@ class TUIConversationViewModel extends ChangeNotifier {
       } else {
         _conversationList.add(list[element]);
       }
-      // ignore: todo
-    } // TODO
+    }
 
     notifyListeners();
   }
@@ -192,8 +215,13 @@ class TUIConversationViewModel extends ChangeNotifier {
   }
 
   setConversationListener() {
-    _conversationService.setConversationListener(
-        listener:  _conversationListener);
+    _conversationService.addConversationListener(
+        listener: _conversationListener);
+  }
+
+  removeConversationListener() {
+    _conversationService.removeConversationListener(
+        listener: _conversationListener);
   }
 
   Future<V2TimCallback> setConversationDraft(
@@ -202,15 +230,17 @@ class TUIConversationViewModel extends ChangeNotifier {
         conversationID: conversationID, draftText: draftText);
   }
 
-  clear() {
+  clearData() {
     _conversationList = [];
     _selectedConversation = null;
     _nextSeq = "0";
     _haveMoreData = true;
+    notifyListeners();
   }
 
   refresh({int count = 100}) {
-    clear();
+    _nextSeq = "0";
+    _haveMoreData = true;
     loadData(count: count);
   }
 }

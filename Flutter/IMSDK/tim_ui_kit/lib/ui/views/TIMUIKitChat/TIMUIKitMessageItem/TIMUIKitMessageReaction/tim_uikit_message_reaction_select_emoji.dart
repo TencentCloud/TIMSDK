@@ -33,44 +33,48 @@ class TIMUIKitMessageReactionEmojiSelectPanelState
 
   _buildSimplePanel(TUITheme theme) {
     final List<Map<String, Object>> emojiData = messageReactionEmojiData;
-    return ExtendedWrap(
-      maxLines: widget.isShowMoreSticker ? 5 : 1,
-      spacing: 18,
-      crossAxisAlignment: WrapCrossAlignment.center,
-      runSpacing: 24,
-      children: [
-        GestureDetector(
-          onTap: () {
-            widget.onClickShowMore(!widget.isShowMoreSticker);
-          },
-          child: SizedBox(
-            height: 34,
-            child: Icon(
-                widget.isShowMoreSticker
-                    ? Icons.cancel_outlined
-                    : Icons.add_circle_outline_outlined,
-                color: hexToColor("444444"),
-                size: 26),
+    return Material(
+      color: Colors.white,
+      child: ExtendedWrap(
+        maxLines: widget.isShowMoreSticker ? 5 : 1,
+        spacing: 18,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        runSpacing: 24,
+        children: [
+          GestureDetector(
+            onTap: () {
+              widget.onClickShowMore(!widget.isShowMoreSticker);
+            },
+            child: SizedBox(
+              height: 34,
+              child: Icon(
+                  widget.isShowMoreSticker
+                      ? Icons.cancel_outlined
+                      : Icons.add_circle_outline_outlined,
+                  color: hexToColor("444444"),
+                  size: 26),
+            ),
           ),
-        ),
-        ...emojiData.map(
-          (e) {
-            var item = Emoji.fromJson(e);
-            return SizedBox(
-              // width: 50,
-              child: InkWell(
-                onTap: () {
-                  widget.onSelect(item.unicode);
-                },
-                child: EmojiItem(
-                  name: item.name,
-                  unicode: item.unicode,
+          ...emojiData.map(
+            (e) {
+              var item = Emoji.fromJson(e);
+              return SizedBox(
+                // width: 50,
+                child: InkWell(
+                  splashColor: Colors.white,
+                  onTap: () {
+                    widget.onSelect(item.unicode);
+                  },
+                  child: EmojiItem(
+                    name: item.name,
+                    unicode: item.unicode,
+                  ),
                 ),
-              ),
-            );
-          },
-        ).toList()
-      ],
+              );
+            },
+          ).toList()
+        ],
+      ),
     );
   }
 

@@ -2,11 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
-import 'package:tim_ui_kit/data_services/services_locatar.dart';
+import 'package:tim_ui_kit/business_logic/separate_models/tui_chat_separate_view_model.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_chat_global_model.dart';
+import 'package:tim_ui_kit/ui/utils/platform.dart';
+import 'package:tim_ui_kit/ui/utils/screen_utils.dart';
 import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKItMessageList/tim_uikit_chat_history_message_list_item.dart';
 import 'package:tim_ui_kit/ui/widgets/forward_message_screen.dart';
@@ -36,15 +39,18 @@ class TIMUIKitMessageTooltip extends StatefulWidget {
   /// on close tooltip area
   final VoidCallback onCloseTooltip;
 
+  final TUIChatSeparateViewModel model;
+
   const TIMUIKitMessageTooltip(
       {Key? key,
       this.toolTipsConfig,
+      required this.model,
       required this.message,
       required this.allowAtUserWhenReply,
       this.onLongPressForOthersHeadPortrait,
       required this.selectEmojiPanelPosition,
       required this.onCloseTooltip,
-        required this.onSelectSticker})
+      required this.onSelectSticker})
       : super(key: key);
 
   @override
@@ -53,11 +59,11 @@ class TIMUIKitMessageTooltip extends StatefulWidget {
 
 class TIMUIKitMessageTooltipState
     extends TIMUIKitState<TIMUIKitMessageTooltip> {
-  final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
   bool isShowMoreSticker = false;
 
-  bool isRevokable(int timestamp) =>
-      (DateTime.now().millisecondsSinceEpoch / 1000).ceil() - timestamp < 120;
+  bool isRevocable(int timestamp, int upperTimeLimit) =>
+      (DateTime.now().millisecondsSinceEpoch / 1000).ceil() - timestamp <
+      upperTimeLimit;
 
   Widget ItemInkWell({
     Widget? child,
@@ -76,8 +82,9 @@ class TIMUIKitMessageTooltipState
     );
   }
 
-  _buildLongPressTipItem(TUITheme theme) {
-    final isCanRevoke = isRevokable(widget.message.timestamp!);
+  _buildLongPressTipItem(TUITheme theme, TUIChatSeparateViewModel model) {
+    final isCanRevoke = isRevocable(
+        widget.message.timestamp!, model.chatConfig.upperRecallTime);
     final shouldShowRevokeAction = isCanRevoke &&
         (widget.message.isSelf ?? false) &&
         widget.message.status != MessageStatus.V2TIM_MSG_STATUS_SEND_FAIL;
@@ -132,7 +139,7 @@ class TIMUIKitMessageTooltipState
           return tooltipsConfig.showReplyMessage;
         }
         if (type == "delete") {
-          return tooltipsConfig.showDeleteMessage;
+          return (!PlatformUtils().isWeb) && tooltipsConfig.showDeleteMessage;
         }
         if (type == "multiSelect") {
           return tooltipsConfig.showMultipleChoiceMessage;
@@ -150,7 +157,7 @@ class TIMUIKitMessageTooltipState
             color: Colors.white,
             child: ItemInkWell(
               onTap: () {
-                _onTap(item["id"]!);
+                _onTap(item["id"]!, model);
               },
               child: Column(
                 children: [
@@ -179,15 +186,15 @@ class TIMUIKitMessageTooltipState
         .toList();
   }
 
-  _onTap(String operation) async {
+  _onTap(String operation, TUIChatSeparateViewModel model) async {
     final messageItem = widget.message;
     final msgID = messageItem.msgID as String;
     switch (operation) {
       case "delete":
-        model.deleteMsg(msgID);
+        model.deleteMsg(msgID, webMessageInstance: messageItem.messageFromWeb);
         break;
       case "revoke":
-        model.revokeMsg(msgID);
+        model.revokeMsg(msgID, messageItem.messageFromWeb);
         break;
       case "multiSelect":
         model.updateMultiSelectStatus(true);
@@ -198,24 +205,30 @@ class TIMUIKitMessageTooltipState
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => const ForwardMessageScreen(
-                      conversationType: 1,
+                builder: (context) => ForwardMessageScreen(
+                      conversationType: ConvType.c2c,
+                      model: model,
                     )));
         break;
       case "copyMessage":
         if (widget.message.elemType == MessageElemType.V2TIM_ELEM_TYPE_TEXT) {
-          await Clipboard.setData(
-              ClipboardData(text: widget.message.textElem?.text ?? ""));
-          onTIMCallback(TIMCallback(
-              type: TIMCallbackType.INFO,
-              infoRecommendText: TIM_t("已复制"),
-              infoCode: 6660408));
+          try {
+            await Clipboard.setData(
+                ClipboardData(text: widget.message.textElem?.text ?? ""));
+            onTIMCallback(TIMCallback(
+                type: TIMCallbackType.INFO,
+                infoRecommendText: TIM_t("已复制"),
+                infoCode: 6660408));
+          } catch (e) {
+            print(e);
+          }
         }
         break;
       case "replyMessage":
-        model.setRepliedMessage(widget.message);
+        model.repliedMessage = widget.message;
         if (widget.allowAtUserWhenReply &&
-            widget.onLongPressForOthersHeadPortrait != null && !(widget.message.isSelf ?? false)) {
+            widget.onLongPressForOthersHeadPortrait != null &&
+            !(widget.message.isSelf ?? false)) {
           widget.onLongPressForOthersHeadPortrait!(
               widget.message.sender, widget.message.nickName);
         }
@@ -232,82 +245,99 @@ class TIMUIKitMessageTooltipState
   @override
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     final TUITheme theme = value.theme;
-    final bool isUseMessageReaction = model.chatConfig.isUseMessageReaction;
-    final bool haveExtraTipsConfig = widget.toolTipsConfig != null &&
-        widget.toolTipsConfig?.additionalItemBuilder != null;
-    Widget? extraTipsActionItem = haveExtraTipsConfig
-        ? widget.toolTipsConfig!.additionalItemBuilder!(
-            widget.message, widget.onCloseTooltip)
-        : null;
-    return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width * 0.6,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (isUseMessageReaction && widget.selectEmojiPanelPosition ==
-                  SelectEmojiPanelPosition.up)
-                TIMUIKitMessageReactionEmojiSelectPanel(
-                  isShowMoreSticker: isShowMoreSticker,
-                  onSelect: (int value) => widget.onSelectSticker(value),
-                  onClickShowMore: (bool value) {
-                    setState(() {
-                      isShowMoreSticker = value;
-                    });
-                  },
-                ),
-              if (isUseMessageReaction && widget.selectEmojiPanelPosition ==
-                      SelectEmojiPanelPosition.up &&
-                  isShowMoreSticker == false)
-                Container(
-                    margin: const EdgeInsets.symmetric(vertical: 6),
-                    child: const Divider(
-                        thickness: 1,
-                        indent: 0,
-                        // endIndent: 10,
-                        color: Colors.black12)),
-              if (isShowMoreSticker == false)
-                Row(
-                  children: [
-                    Expanded(
-                        child: Wrap(
-                      direction: Axis.horizontal,
-                      alignment: WrapAlignment.spaceBetween,
-                      // spacing: 4,
-                      runSpacing: 16,
+
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: widget.model),
+      ],
+      builder: (BuildContext context, Widget? w) {
+        final TUIChatSeparateViewModel model =
+            Provider.of<TUIChatSeparateViewModel>(context);
+        final bool isUseMessageReaction = model.chatConfig.isUseMessageReaction;
+        final bool haveExtraTipsConfig = widget.toolTipsConfig != null &&
+            widget.toolTipsConfig?.additionalItemBuilder != null;
+        Widget? extraTipsActionItem = haveExtraTipsConfig
+            ? widget.toolTipsConfig!.additionalItemBuilder!(
+                widget.message, widget.onCloseTooltip)
+            : null;
+        return Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width * 0.7,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (isUseMessageReaction &&
+                      widget.selectEmojiPanelPosition ==
+                          SelectEmojiPanelPosition.up)
+                    TIMUIKitMessageReactionEmojiSelectPanel(
+                      isShowMoreSticker: isShowMoreSticker,
+                      onSelect: (int value) => widget.onSelectSticker(value),
+                      onClickShowMore: (bool value) {
+                        setState(() {
+                          isShowMoreSticker = value;
+                        });
+                      },
+                    ),
+                  if (isUseMessageReaction &&
+                      widget.selectEmojiPanelPosition ==
+                          SelectEmojiPanelPosition.up &&
+                      isShowMoreSticker == false)
+                    Container(
+                        margin: const EdgeInsets.symmetric(vertical: 6),
+                        child: const Divider(
+                            thickness: 1,
+                            indent: 0,
+                            // endIndent: 10,
+                            color: Colors.black12)),
+                  if (isShowMoreSticker == false)
+                    Row(
                       children: [
-                        ..._buildLongPressTipItem(theme),
-                        if (extraTipsActionItem != null) extraTipsActionItem
+                        Expanded(
+                            child: Wrap(
+                          direction: Axis.horizontal,
+                          alignment: ScreenUtils.getFormFactor(context) ==
+                                  ScreenType.Handset
+                              ? WrapAlignment.spaceAround
+                              : WrapAlignment.start,
+                          spacing: 4,
+                          runSpacing: 16,
+                          children: [
+                            ..._buildLongPressTipItem(theme, model),
+                            if (extraTipsActionItem != null) extraTipsActionItem
+                          ],
+                        ))
                       ],
-                    ))
-                  ],
-                ),
-              if (isUseMessageReaction && widget.selectEmojiPanelPosition ==
-                      SelectEmojiPanelPosition.down &&
-                  isShowMoreSticker == false)
-                Container(
-                    margin: const EdgeInsets.symmetric(vertical: 6),
-                    child: const Divider(
-                        thickness: 1,
-                        indent: 0,
-                        // endIndent: 10,
-                        color: Colors.black12)),
-              if (isUseMessageReaction && widget.selectEmojiPanelPosition ==
-                  SelectEmojiPanelPosition.down)
-                TIMUIKitMessageReactionEmojiSelectPanel(
-                  isShowMoreSticker: isShowMoreSticker,
-                  onSelect: (int value) => widget.onSelectSticker(value),
-                  onClickShowMore: (bool value) {
-                    setState(() {
-                      isShowMoreSticker = value;
-                    });
-                  },
-                ),
-            ],
-          ),
-        ));
+                    ),
+                  if (isUseMessageReaction &&
+                      widget.selectEmojiPanelPosition ==
+                          SelectEmojiPanelPosition.down &&
+                      isShowMoreSticker == false)
+                    Container(
+                        margin: const EdgeInsets.symmetric(vertical: 6),
+                        child: const Divider(
+                            thickness: 1,
+                            indent: 0,
+                            // endIndent: 10,
+                            color: Colors.black12)),
+                  if (isUseMessageReaction &&
+                      widget.selectEmojiPanelPosition ==
+                          SelectEmojiPanelPosition.down)
+                    TIMUIKitMessageReactionEmojiSelectPanel(
+                      isShowMoreSticker: isShowMoreSticker,
+                      onSelect: (int value) => widget.onSelectSticker(value),
+                      onClickShowMore: (bool value) {
+                        setState(() {
+                          isShowMoreSticker = value;
+                        });
+                      },
+                    ),
+                ],
+              ),
+            ));
+      },
+    );
   }
 }

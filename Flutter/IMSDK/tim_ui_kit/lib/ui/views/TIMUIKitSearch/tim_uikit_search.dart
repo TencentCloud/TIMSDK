@@ -4,12 +4,14 @@ import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_search_view_model.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
+import 'package:tim_ui_kit/ui/utils/platform.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitSearch/tim_uikit_search_friend.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitSearch/pureUI/tim_uikit_search_input.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitSearch/tim_uikit_search_group.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitSearch/tim_uikit_search_msg.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
+import 'package:tim_ui_kit/ui/views/TIMUIKitSearch/tim_uikit_search_not_support.dart';
 
 class TIMUIKitSearch extends StatefulWidget {
   /// the callback after clicking the conversation item
@@ -56,6 +58,9 @@ class TIMUIKitSearchState extends TIMUIKitState<TIMUIKitSearch> {
 
   @override
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
+    if (PlatformUtils().isWeb) {
+      return TIMUIKitSearchNotSupport();
+    }
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(

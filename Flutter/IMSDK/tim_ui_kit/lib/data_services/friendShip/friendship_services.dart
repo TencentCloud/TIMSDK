@@ -44,7 +44,7 @@ abstract class FriendshipServices {
     required FriendTypeEnum checkType,
   });
 
-  Future<void> setFriendshipListener({
+  Future<void> addFriendListener({
     required V2TimFriendshipListener listener,
   });
   Future<void> removeFriendListener({

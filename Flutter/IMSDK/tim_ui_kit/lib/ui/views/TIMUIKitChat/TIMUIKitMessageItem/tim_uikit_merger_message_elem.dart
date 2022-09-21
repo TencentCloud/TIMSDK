@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
-import 'package:tim_ui_kit/data_services/services_locatar.dart';
+import 'package:tim_ui_kit/business_logic/separate_models/tui_chat_separate_view_model.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
 import 'package:tim_ui_kit/ui/widgets/merger_message_screen.dart';
@@ -14,7 +14,6 @@ import 'package:tencent_im_base/tencent_im_base.dart';
 import 'TIMUIKitMessageReaction/tim_uikit_message_reaction_show_panel.dart';
 
 class TIMUIKitMergerElem extends StatefulWidget {
-  final TUIChatViewModel model = serviceLocator<TUIChatViewModel>();
   final V2TimMergerElem mergerElem;
   final String messageID;
   final bool isSelf;
@@ -22,22 +21,25 @@ class TIMUIKitMergerElem extends StatefulWidget {
   final VoidCallback? clearJump;
   final V2TimMessage message;
   final bool? isShowMessageReaction;
+  final TUIChatSeparateViewModel model;
 
-  TIMUIKitMergerElem(
+  const TIMUIKitMergerElem(
       {Key? key,
       required this.message,
+      required this.model,
       required this.mergerElem,
       required this.isSelf,
       this.isShowMessageReaction,
-      required this.messageID, required this.isShowJump, this.clearJump})
+      required this.messageID,
+      required this.isShowJump,
+      this.clearJump})
       : super(key: key);
 
   @override
   State<StatefulWidget> createState() => TIMUIKitMergerElemState();
-
 }
 
-class TIMUIKitMergerElemState extends TIMUIKitState<TIMUIKitMergerElem>{
+class TIMUIKitMergerElemState extends TIMUIKitState<TIMUIKitMergerElem> {
   bool isShowJumpState = false;
 
   _showJumpColor() {
@@ -63,18 +65,25 @@ class TIMUIKitMergerElemState extends TIMUIKitState<TIMUIKitMergerElem>{
     });
   }
 
-
-  _handleTap(BuildContext context) async {
-    if (widget.messageID != "") {
-      final mergerMessageList = await widget.model.downloadMergerMessage(widget.messageID);
-      if (mergerMessageList != null) {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) =>
-                  MergerMessageScreen(messageList: mergerMessageList),
-            ));
+  _handleTap(BuildContext context, TUIChatSeparateViewModel model) async {
+    try {
+      if (widget.messageID != "") {
+        final mergerMessageList =
+            await model.downloadMergerMessage(widget.messageID);
+        if (mergerMessageList != null) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MergerMessageScreen(
+                    model: model, messageList: mergerMessageList),
+              ));
+        }
       }
+    } catch (e) {
+      onTIMCallback(TIMCallback(
+          type: TIMCallbackType.INFO,
+          infoRecommendText: TIM_t("无法定位到原消息"),
+          infoCode: 6660401));
     }
   }
 
@@ -95,6 +104,8 @@ class TIMUIKitMergerElemState extends TIMUIKitState<TIMUIKitMergerElem>{
       });
     }
     return Container(
+      constraints:
+          BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.6),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
@@ -104,13 +115,15 @@ class TIMUIKitMergerElemState extends TIMUIKitState<TIMUIKitMergerElem>{
           bottomRight: const Radius.circular(10),
         ),
         border: Border.all(
-          color: isShowJumpState ? const Color.fromRGBO(245, 166, 35, 1) : (theme.weakDividerColor ?? CommonColor.weakDividerColor),
+          color: isShowJumpState
+              ? const Color.fromRGBO(245, 166, 35, 1)
+              : (theme.weakDividerColor ?? CommonColor.weakDividerColor),
           width: 1,
         ),
       ),
       child: GestureDetector(
         onTap: () {
-          _handleTap(context);
+          _handleTap(context, widget.model);
         },
         child: Container(
           padding: const EdgeInsets.all(12),
@@ -144,23 +157,23 @@ class TIMUIKitMergerElemState extends TIMUIKitState<TIMUIKitMergerElem>{
                 children: _getAbstractList()!
                     .map(
                       (e) => Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          e,
-                          textAlign: TextAlign.left,
-                          softWrap: true,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
-                          style: TextStyle(
-                            color: theme.weakTextColor,
-                            fontSize: 12,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              e,
+                              textAlign: TextAlign.left,
+                              softWrap: true,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              style: TextStyle(
+                                color: theme.weakTextColor,
+                                fontSize: 12,
+                              ),
+                            ),
                           ),
-                        ),
+                        ],
                       ),
-                    ],
-                  ),
-                )
+                    )
                     .toList(),
               ),
               const SizedBox(
@@ -182,5 +195,4 @@ class TIMUIKitMergerElemState extends TIMUIKitState<TIMUIKitMergerElem>{
       ),
     );
   }
-
 }

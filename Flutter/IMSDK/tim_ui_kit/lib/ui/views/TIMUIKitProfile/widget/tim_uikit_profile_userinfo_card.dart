@@ -24,7 +24,6 @@ class TIMUIKitProfileUserInfoCard extends TIMUIKitStatelessWidget {
   @override
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     final TUITheme theme = value.theme;
-
     final faceUrl = userInfo?.faceUrl ?? "";
     final nickName = userInfo?.nickName ?? "";
     final signature = userInfo?.selfSignature;
@@ -44,7 +43,11 @@ class TIMUIKitProfileUserInfoCard extends TIMUIKitStatelessWidget {
           SizedBox(
             width: 48,
             height: 48,
-            child: Avatar(faceUrl: faceUrl, showName: showName ?? "",type: 1,),
+            child: Avatar(
+              faceUrl: faceUrl,
+              showName: showName ?? "",
+              type: 1,
+            ),
           ),
           const SizedBox(
             width: 12,

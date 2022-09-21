@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:tim_ui_kit/business_logic/listener_model/tui_group_listener_model.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
+import 'package:tim_ui_kit/business_logic/separate_models/tui_chat_model_tools.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_chat_global_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_conversation_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_friendship_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
@@ -34,7 +35,8 @@ void setupServiceLocator() {
     serviceLocator.registerSingleton<GroupServices>(GroupServicesImpl());
 
     // view models
-    serviceLocator.registerSingleton<TUIChatViewModel>(TUIChatViewModel());
+    serviceLocator.registerSingleton<TUIChatGlobalModel>(TUIChatGlobalModel());
+    serviceLocator.registerSingleton<TUIChatModelTools>(TUIChatModelTools());
     serviceLocator.registerSingleton<TUIConversationViewModel>(
         TUIConversationViewModel());
     serviceLocator
@@ -43,8 +45,8 @@ void setupServiceLocator() {
     serviceLocator.registerSingleton<TUISearchViewModel>(TUISearchViewModel());
 
     // listener models
-    serviceLocator.registerSingleton<TUIGroupListenerModel>(
-        TUIGroupListenerModel());
+    serviceLocator
+        .registerSingleton<TUIGroupListenerModel>(TUIGroupListenerModel());
     boolIsInitailized = true;
   }
 }

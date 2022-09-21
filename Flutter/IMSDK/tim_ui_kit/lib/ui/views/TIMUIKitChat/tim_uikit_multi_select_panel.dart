@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_statelesswidget.dart';
-import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
-import 'package:tim_ui_kit/data_services/services_locatar.dart';
+import 'package:tim_ui_kit/business_logic/separate_models/tui_chat_separate_view_model.dart';
+import 'package:tim_ui_kit/business_logic/view_models/tui_chat_global_model.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
 import 'package:tim_ui_kit/ui/widgets/forward_message_screen.dart';
@@ -11,16 +12,18 @@ import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
 class MultiSelectPanel extends TIMUIKitStatelessWidget {
+  final ConvType conversationType;
+
   MultiSelectPanel({Key? key, required this.conversationType})
       : super(key: key);
-  final int conversationType;
-  final TUIChatViewModel _model = serviceLocator<TUIChatViewModel>();
 
-  _handleForwardMessage(BuildContext context, bool isMergerForward) {
+  _handleForwardMessage(BuildContext context, bool isMergerForward,
+      TUIChatSeparateViewModel model) {
     Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => ForwardMessageScreen(
+                  model: model,
                   isMergerForward: isMergerForward,
                   conversationType: conversationType,
                 )));
@@ -29,6 +32,8 @@ class MultiSelectPanel extends TIMUIKitStatelessWidget {
   @override
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     final TUITheme theme = value.theme;
+    final TUIChatSeparateViewModel model =
+        Provider.of<TUIChatSeparateViewModel>(context);
 
     return Container(
       decoration: BoxDecoration(
@@ -48,7 +53,7 @@ class MultiSelectPanel extends TIMUIKitStatelessWidget {
                     package: 'tim_ui_kit', color: Colors.white),
                 iconSize: 40,
                 onPressed: () {
-                  _handleForwardMessage(context, false);
+                  _handleForwardMessage(context, false, model);
                 },
               ),
               Text(TIM_t("逐条转发"),
@@ -62,7 +67,7 @@ class MultiSelectPanel extends TIMUIKitStatelessWidget {
                     package: 'tim_ui_kit', color: Colors.white),
                 iconSize: 40,
                 onPressed: () {
-                  _handleForwardMessage(context, true);
+                  _handleForwardMessage(context, true, model);
                 },
               ),
               Text(
@@ -96,8 +101,8 @@ class MultiSelectPanel extends TIMUIKitStatelessWidget {
                         actions: [
                           CupertinoActionSheetAction(
                             onPressed: () {
-                              _model.deleteSelectedMsg();
-                              _model.updateMultiSelectStatus(false);
+                              model.deleteSelectedMsg();
+                              model.updateMultiSelectStatus(false);
                               Navigator.pop(
                                 context,
                                 "cancel",

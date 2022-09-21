@@ -23,22 +23,20 @@ class Avatar extends TIMUIKitStatelessWidget {
       required this.showName,
       this.isFromLocal = false,
       this.borderRadius,
-      this.type = 1
-      })
+      this.type = 1})
       : super(key: key);
 
-  
   Widget _getFaceUrlImageWidget(BuildContext context, TUITheme theme) {
-
-    Widget defautAvatar(){
-      if(type==1){
+    Widget defaultAvatar() {
+      if (type == 1) {
         return Image.asset('images/default_c2c_head.png',
-                                    package: 'tim_ui_kit');
-      }else {
+            package: 'tim_ui_kit');
+      } else {
         return Image.asset('images/default_group_head.png',
-                                    package: 'tim_ui_kit');
+            package: 'tim_ui_kit');
       }
     }
+
     // final emptyAvatarBuilder = coreService.emptyAvatarBuilder;
     if (faceUrl != "") {
       if (isFromLocal) {
@@ -48,7 +46,7 @@ class Avatar extends TIMUIKitStatelessWidget {
         imageUrl: faceUrl,
         fadeInDuration: const Duration(milliseconds: 0),
         errorWidget: (BuildContext context, String c, dynamic s) {
-          return defautAvatar();
+          return defaultAvatar();
           // if (emptyAvatarBuilder != null) {
           //   return emptyAvatarBuilder(context);
           // }
@@ -65,7 +63,7 @@ class Avatar extends TIMUIKitStatelessWidget {
         },
       );
     } else {
-      return defautAvatar();
+      return defaultAvatar();
       // return Container(
       //   alignment: Alignment.center,
       //   decoration: BoxDecoration(

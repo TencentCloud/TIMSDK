@@ -52,13 +52,13 @@ class TextInputBottomSheet {
                       ),
                       onPressed: () {
                         String text = _selectionController.text;
-                        if (text == "") {
-                          _coreService.callOnCallback(TIMCallback(
-                              type: TIMCallbackType.INFO,
-                              infoRecommendText: TIM_t("输入不能为空"),
-                              infoCode: 6661401));
-                          return;
-                        }
+                        // if (text == "") {
+                        //   _coreService.callOnCallback(TIMCallback(
+                        //       type: TIMCallbackType.INFO,
+                        //       infoRecommendText: TIM_t("输入不能为空"),
+                        //       infoCode: 6661401));
+                        //   return;
+                        // }
                         onSubmitted(text);
                         Navigator.pop(context);
                       },

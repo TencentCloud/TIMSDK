@@ -46,6 +46,7 @@ abstract class MessageService {
     required String id, // 自己创建的ID
     required String receiver,
     required String groupID,
+    OfflinePushInfo? offlinePushInfo,
     bool needReadReceipt = false,
     required V2TimMessage replyMessage, // 被回复的消息
   });
@@ -57,20 +58,18 @@ abstract class MessageService {
   Future<V2TimValueCallback<V2TimMessageChangeInfo>> modifyMessage(
       {required V2TimMessage message});
 
-  Future<V2TimMsgCreateInfoResult?> createImageMessage({
-    required String imagePath,
-  });
+  Future<V2TimMsgCreateInfoResult?> createImageMessage(
+      {String? imagePath, dynamic inputElement});
 
   Future<V2TimMsgCreateInfoResult?> createVideoMessage(
-      {required String videoPath,
-      required String type,
-      required int duration,
-      required String snapshotPath});
+      {String? videoPath = "",
+      String? type = "",
+      int? duration = 0,
+      String? snapshotPath = "",
+      dynamic inputElement});
 
-  Future<V2TimMsgCreateInfoResult?> createFileMessage({
-    required String filePath,
-    required String fileName,
-  });
+  Future<V2TimMsgCreateInfoResult?> createFileMessage(
+      {String? filePath, required String fileName, dynamic inputElement});
 
   Future<V2TimMsgCreateInfoResult?> createLocationMessage(
       {required String desc,
@@ -95,9 +94,11 @@ abstract class MessageService {
 
   Future<V2TimCallback> deleteMessageFromLocalStorage({
     required String msgID,
+    Object? webMessageInstance,
   });
 
-  Future<V2TimCallback> revokeMessage({required String msgID});
+  Future<V2TimCallback> revokeMessage(
+      {required String msgID, Object? webMessageInstance});
 
   Future<V2TimCallback> clearC2CHistoryMessage({
     required String userID,
