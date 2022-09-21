@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 3
- * Strings: 711 (237.0 per locale)
+ * Strings: 717 (239.0 per locale)
  *
- * Built on 2022-08-03 at 07:36 UTC
+ * Built on 2022-09-05 at 04:10 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -552,6 +552,8 @@ class _StringsEn {
 	String get k_1c0x9ha => 'Determines if the reading status shows for your messages and whether others can know about if you read.';
 	String get k_1dzhdr5 => 'Online status';
 	String get k_0mwsniq => 'Determines if the online status shows for you contacts or friends.';
+	String k_0y5drq1({required Object option1}) => '[Details >>]($option1)';
+	String get k_0f7h6ay => 'Connection failed';
 }
 
 // Path: <root>
@@ -807,6 +809,8 @@ class _StringsZhHans implements _StringsEn {
 	@override String get k_1c0x9ha => '关闭后，您收发的消息均不带消息阅读状态，您将无法看到对方是否已读，同时对方也无法看到你是否已读。';
 	@override String get k_1dzhdr5 => '显示在线状态';
 	@override String get k_0mwsniq => '关闭后，您将不可以在会话列表和通讯录中看到好友在线或离线的状态提示。';
+	@override String k_0y5drq1({required Object option1}) => '[查看详情 >>]($option1)';
+	@override String get k_0f7h6ay => '连接失败';
 }
 
 // Path: <root>
@@ -1062,6 +1066,8 @@ class _StringsZhHant implements _StringsEn {
 	@override String get k_1c0x9ha => '關閉後，您收發的消息均不帶消息閱讀狀態，您將無法看到對方是否已讀，同時對方也無法看到你是否已讀。';
 	@override String get k_1dzhdr5 => '顯示在線狀態';
 	@override String get k_0mwsniq => '關閉後，您將不可以在會話列表和通訊錄中看到好友在線或離線的狀態提示。';
+	@override String k_0y5drq1({required Object option1}) => '[查看詳情 >>]($option1)';
+	@override String get k_0f7h6ay => '連接失敗';
 }
 
 /// Flat map(s) containing all translations.
@@ -1307,6 +1313,8 @@ extension on _StringsEn {
 			'k_1c0x9ha': 'Determines if the reading status shows for your messages and whether others can know about if you read.',
 			'k_1dzhdr5': 'Online status',
 			'k_0mwsniq': 'Determines if the online status shows for you contacts or friends.',
+			'k_0y5drq1': ({required Object option1}) => '[Details >>]($option1)',
+			'k_0f7h6ay': 'Connection failed',
 		};
 	}
 }
@@ -1551,6 +1559,8 @@ extension on _StringsZhHans {
 			'k_1c0x9ha': '关闭后，您收发的消息均不带消息阅读状态，您将无法看到对方是否已读，同时对方也无法看到你是否已读。',
 			'k_1dzhdr5': '显示在线状态',
 			'k_0mwsniq': '关闭后，您将不可以在会话列表和通讯录中看到好友在线或离线的状态提示。',
+			'k_0y5drq1': ({required Object option1}) => '[查看详情 >>]($option1)',
+			'k_0f7h6ay': '连接失败',
 		};
 	}
 }
@@ -1795,6 +1805,8 @@ extension on _StringsZhHant {
 			'k_1c0x9ha': '關閉後，您收發的消息均不帶消息閱讀狀態，您將無法看到對方是否已讀，同時對方也無法看到你是否已讀。',
 			'k_1dzhdr5': '顯示在線狀態',
 			'k_0mwsniq': '關閉後，您將不可以在會話列表和通訊錄中看到好友在線或離線的狀態提示。',
+			'k_0y5drq1': ({required Object option1}) => '[查看詳情 >>]($option1)',
+			'k_0f7h6ay': '連接失敗',
 		};
 	}
 }

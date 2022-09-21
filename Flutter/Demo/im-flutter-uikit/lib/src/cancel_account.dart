@@ -40,10 +40,6 @@ class CancelAccount extends StatelessWidget {
         Utils.log(err);
       }
       Routes().directToLoginPage();
-      // Navigator.of(context).pushAndRemoveUntil(
-      //   MaterialPageRoute(builder: (BuildContext context) => const LoginPage()),
-      //   ModalRoute.withName('/'),
-      // );
     }
   }
 
@@ -134,15 +130,16 @@ class CancelAccount extends StatelessWidget {
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                     ),
-                    height: 64,
-                    width: 64,
+                    height: 80,
+                    width: 80,
                     child: Avatar(
+                      borderRadius: BorderRadius.circular(40),
                         showName: _selfInfoViewModel.loginInfo?.userID ?? "",
                         faceUrl: _selfInfoViewModel.loginInfo?.faceUrl ?? ""),
                   ),
                   Positioned(
-                    right: -16,
-                    bottom: -16,
+                    right: -10,
+                    bottom: -10,
                     child: Icon(
                       Icons.do_not_disturb_on,
                       color: hexToColor('FA5151'),

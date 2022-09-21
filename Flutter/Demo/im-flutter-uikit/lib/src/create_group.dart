@@ -113,6 +113,9 @@ class _CreateGroup extends State<CreateGroup> {
     if (res.code == 0) {
       final groupID = res.data;
       final conversationID = "group_$groupID";
+      if(groupType == "AVChatRoom" && groupID != null){
+        await _sdkInstance.joinGroup(groupID: groupID, message: "Hi");
+      }
       final convRes = await _sdkInstance
           .getConversationManager()
           .getConversation(conversationID: conversationID);

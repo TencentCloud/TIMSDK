@@ -1,10 +1,14 @@
 PODS:
+  - bugly (0.0.1):
+    - Flutter
   - camera_avfoundation (0.0.1):
     - Flutter
   - connectivity_plus (0.0.1):
     - Flutter
     - ReachabilitySwift
   - device_info_plus (0.0.1):
+    - Flutter
+  - disk_space (0.0.1):
     - Flutter
   - DKImagePickerController/Core (4.3.4):
     - DKImagePickerController/ImageDataManager
@@ -48,7 +52,7 @@ PODS:
   - firebase_core (1.12.0):
     - Firebase/CoreOnly (= 8.11.0)
     - Flutter
-  - firebase_messaging (11.2.5):
+  - firebase_messaging (11.2.6):
     - Firebase/Messaging (= 8.11.0)
     - firebase_core
     - Flutter
@@ -95,37 +99,37 @@ PODS:
     - GoogleUtilities/Environment (~> 7.7)
     - nanopb (< 2.30910.0, >= 2.30908.0)
     - PromisesObjC (< 3.0, >= 1.2)
-  - GoogleUtilities/AppDelegateSwizzler (7.7.0):
+  - GoogleUtilities/AppDelegateSwizzler (7.8.0):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
     - GoogleUtilities/Network
-  - GoogleUtilities/Environment (7.7.0):
+  - GoogleUtilities/Environment (7.8.0):
     - PromisesObjC (< 3.0, >= 1.2)
-  - GoogleUtilities/Logger (7.7.0):
+  - GoogleUtilities/Logger (7.8.0):
     - GoogleUtilities/Environment
-  - GoogleUtilities/Network (7.7.0):
+  - GoogleUtilities/Network (7.8.0):
     - GoogleUtilities/Logger
     - "GoogleUtilities/NSData+zlib"
     - GoogleUtilities/Reachability
-  - "GoogleUtilities/NSData+zlib (7.7.0)"
-  - GoogleUtilities/Reachability (7.7.0):
+  - "GoogleUtilities/NSData+zlib (7.8.0)"
+  - GoogleUtilities/Reachability (7.8.0):
     - GoogleUtilities/Logger
-  - GoogleUtilities/UserDefaults (7.7.0):
+  - GoogleUtilities/UserDefaults (7.8.0):
     - GoogleUtilities/Logger
   - HydraAsync (2.0.6)
   - image_gallery_saver (1.5.0):
     - Flutter
   - image_picker_ios (0.0.1):
     - Flutter
-  - libwebp (1.2.1):
-    - libwebp/demux (= 1.2.1)
-    - libwebp/mux (= 1.2.1)
-    - libwebp/webp (= 1.2.1)
-  - libwebp/demux (1.2.1):
+  - libwebp (1.2.3):
+    - libwebp/demux (= 1.2.3)
+    - libwebp/mux (= 1.2.3)
+    - libwebp/webp (= 1.2.3)
+  - libwebp/demux (1.2.3):
     - libwebp/webp
-  - libwebp/mux (1.2.1):
+  - libwebp/mux (1.2.3):
     - libwebp/demux
-  - libwebp/webp (1.2.1)
+  - libwebp/webp (1.2.3)
   - nanopb (2.30908.0):
     - nanopb/decode (= 2.30908.0)
     - nanopb/encode (= 2.30908.0)
@@ -147,9 +151,11 @@ PODS:
     - Flutter
   - PromisesObjC (2.1.1)
   - ReachabilitySwift (5.0.0)
-  - SDWebImage (5.13.2):
-    - SDWebImage/Core (= 5.13.2)
-  - SDWebImage/Core (5.13.2)
+  - rmonitor_base (0.0.1):
+    - Flutter
+  - SDWebImage (5.13.3):
+    - SDWebImage/Core (= 5.13.3)
+  - SDWebImage/Core (5.13.3)
   - shared_preferences_ios (0.0.1):
     - Flutter
   - sqflite (0.0.2):
@@ -159,14 +165,14 @@ PODS:
   - tencent_im_sdk_plugin (4.0.3):
     - Flutter
     - HydraAsync
-    - TXIMSDK_Plus_iOS (= 6.5.2803)
+    - TXIMSDK_Plus_iOS (= 6.6.3002)
   - tencent_trtc_cloud (9.5.11234):
     - Flutter
     - TXLiteAVSDK_Live (= 9.5.11346)
   - tim_ui_kit_push_plugin (0.0.1):
     - Flutter
   - Toast (4.0.0)
-  - TXIMSDK_Plus_iOS (6.5.2803)
+  - TXIMSDK_Plus_iOS (6.6.3002)
   - TXLiteAVSDK_Live (9.5.11346):
     - TXLiteAVSDK_Live/Live (= 9.5.11346)
   - TXLiteAVSDK_Live/Live (9.5.11346)
@@ -185,9 +191,11 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - bugly (from `.symlinks/plugins/bugly/ios`)
   - camera_avfoundation (from `.symlinks/plugins/camera_avfoundation/ios`)
   - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
+  - disk_space (from `.symlinks/plugins/disk_space/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
@@ -205,6 +213,7 @@ DEPENDENCIES:
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - photo_manager (from `.symlinks/plugins/photo_manager/ios`)
   - plain_notification_token (from `.symlinks/plugins/plain_notification_token/ios`)
+  - rmonitor_base (from `.symlinks/plugins/rmonitor_base/ios`)
   - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
   - tencent_im_sdk_plugin (from `.symlinks/plugins/tencent_im_sdk_plugin/ios`)
@@ -242,12 +251,16 @@ SPEC REPOS:
     - TXLiteAVSDK_Live
 
 EXTERNAL SOURCES:
+  bugly:
+    :path: ".symlinks/plugins/bugly/ios"
   camera_avfoundation:
     :path: ".symlinks/plugins/camera_avfoundation/ios"
   connectivity_plus:
     :path: ".symlinks/plugins/connectivity_plus/ios"
   device_info_plus:
     :path: ".symlinks/plugins/device_info_plus/ios"
+  disk_space:
+    :path: ".symlinks/plugins/disk_space/ios"
   file_picker:
     :path: ".symlinks/plugins/file_picker/ios"
   firebase_core:
@@ -282,6 +295,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/photo_manager/ios"
   plain_notification_token:
     :path: ".symlinks/plugins/plain_notification_token/ios"
+  rmonitor_base:
+    :path: ".symlinks/plugins/rmonitor_base/ios"
   shared_preferences_ios:
     :path: ".symlinks/plugins/shared_preferences_ios/ios"
   sqflite:
@@ -306,15 +321,17 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/webview_flutter_wkwebview/ios"
 
 SPEC CHECKSUMS:
+  bugly: b3674afe180564b5464015d0a8a6b174c2356589
   camera_avfoundation: 07c77549ea54ad95d8581be86617c094a46280d9
   connectivity_plus: 413a8857dd5d9f1c399a39130850d02fe0feaf7e
   device_info_plus: e5c5da33f982a436e103237c0c85f9031142abed
+  disk_space: e94d34bbdf77954adfb39e60bde9cc5c7233eda6
   DKImagePickerController: b512c28220a2b8ac7419f21c491fc8534b7601ac
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
   file_picker: 817ab1d8cd2da9d2da412a417162deee3500fc95
   Firebase: 44dd9724c84df18b486639e874f31436eaa9a20c
   firebase_core: 443bccfd6aa6b42f07be365b500773dc69db2d87
-  firebase_messaging: 0da59a1ebb37941edaf338e96ded632088982555
+  firebase_messaging: 8dc3a6f069774a0bf4dac04dd79fdaffcb62e145
   FirebaseCore: 2f4f85b453cc8fea4bb2b37e370007d2bcafe3f0
   FirebaseCoreDiagnostics: 92e07a649aeb66352b319d43bdd2ee3942af84cb
   FirebaseInstallations: 40bd9054049b2eae9a2c38ef1c3dd213df3605cd
@@ -327,11 +344,11 @@ SPEC CHECKSUMS:
   fluwx: 79c66b6d795ab8208262ada215d9e60388cfe492
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   GoogleDataTransport: 1c8145da7117bd68bbbed00cf304edb6a24de00f
-  GoogleUtilities: e0913149f6b0625b553d70dae12b49fc62914fd1
+  GoogleUtilities: 1d20a6ad97ef46f67bbdec158ce00563a671ebb7
   HydraAsync: 8d589bd725b0224f899afafc9a396327405f8063
   image_gallery_saver: 259eab68fb271cfd57d599904f7acdc7832e7ef2
   image_picker_ios: b786a5dcf033a8336a657191401bfdf12017dabb
-  libwebp: 98a37e597e40bfdb4c911fc98f2c53d0b12d05fc
+  libwebp: 60305b2e989864154bd9be3d772730f08fc6a59c
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   open_file: 02eb5cb6b21264bd3a696876f5afbfb7ca4f4b7d
   OpenWeChatSDK: 67375e7d4154c22f7ba6b1c334b121473e7d515c
@@ -342,15 +359,16 @@ SPEC CHECKSUMS:
   plain_notification_token: b36467dc91939a7b6754267c701bbaca14996ee1
   PromisesObjC: ab77feca74fa2823e7af4249b8326368e61014cb
   ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
-  SDWebImage: 72f86271a6f3139cc7e4a89220946489d4b9a866
+  rmonitor_base: f5378ba20d99f4107eb9ee44e4b51d4c8bbf7d03
+  SDWebImage: af5bbffef2cde09f148d826f9733dcde1a9414cd
   shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
   SwiftyGif: 6c3eafd0ce693cad58bb63d2b2fb9bacb8552780
-  tencent_im_sdk_plugin: 3b4deb7f211548b3c73c77161a966a4ec18f04bb
+  tencent_im_sdk_plugin: 70565aa0a08328e32e9cf6dd907de322ce2328a8
   tencent_trtc_cloud: a717270754b3519b473b513b967c0b88b233aa45
   tim_ui_kit_push_plugin: 37913e565d11c4841c254711cba35a3d5b17b02d
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
-  TXIMSDK_Plus_iOS: 968cd84625b842bf7c8bc8fed94d794b906d66b9
+  TXIMSDK_Plus_iOS: b725bdb1521efd26e12e12506a9de736e8ad4a6e
   TXLiteAVSDK_Live: cae30145d70254bdd35838569fcdfefd3a369aa0
   uni_links: d97da20c7701486ba192624d99bffaaffcfc298a
   url_launcher_ios: 839c58cdb4279282219f5e248c3321761ff3c4de

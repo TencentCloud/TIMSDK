@@ -74,7 +74,10 @@ class _ContactState extends State<Contact> {
           _topListItemTap(item.id);
         },
         child: Container(
-          padding: const EdgeInsets.only(top: 10, left: 16),
+          decoration: BoxDecoration(
+              border: Border(
+                  bottom: BorderSide(color: hexToColor("DBDBDB")))),
+          padding: const EdgeInsets.only(top: 12, left: 16, bottom: 12),
           child: Row(
             children: [
               Container(
@@ -89,10 +92,6 @@ class _ContactState extends State<Contact> {
               ),
               Expanded(
                   child: Container(
-                padding: const EdgeInsets.only(top: 10, bottom: 19),
-                decoration: BoxDecoration(
-                    border: Border(
-                        bottom: BorderSide(color: hexToColor("DBDBDB")))),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

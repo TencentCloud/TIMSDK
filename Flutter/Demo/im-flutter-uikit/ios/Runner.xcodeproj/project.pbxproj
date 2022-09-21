@@ -73,8 +73,6 @@
 		3B7E3736C2AF5A61BC31B274 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				AA632ACA286D95C200E66109 /* TXSoundTouch.xcframework */,
-				AA632AC8286D958C00E66109 /* TXFFmpeg.xcframework */,
 				0591C280B734A8203E95ADB7 /* Pods_Runner.framework */,
 			);
 			name = Frameworks;
@@ -261,7 +259,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build";
+			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build\n";
 		};
 		B991F438089B8F74BD570FAD /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;

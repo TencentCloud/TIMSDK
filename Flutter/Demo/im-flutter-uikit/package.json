@@ -7,7 +7,11 @@
     "lib": "lib"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tox:build@dev": "flutter build web",
+    "tox:publish@dev": "tox publish test --silence",
+    "tox:publish@master": "tox publish online --silence",
+    "tox:build@master": "flutter build web"
   },
   "repository": {
     "type": "git",
