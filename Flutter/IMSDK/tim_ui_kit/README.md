@@ -1,4 +1,4 @@
-English | [简体中文](./README_ZH.md)
+English | [简体中文](https://github.com/TencentCloud/TIMSDK/blob/master/Flutter/IMSDK/tim_ui_kit/README_ZH.md)
 
 ## Introduction to TUIKit
 
