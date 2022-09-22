@@ -97,6 +97,41 @@ namespace com.tencent.im.unity.demo.config.EventListenerList
         ""eventName"": ""SetFriendBlackListDeletedCallback"",
         ""eventText"": ""黑名单删除的回调"",
         ""eventDesc"": ""设置黑名单删除的回调""
+      },
+      {
+        ""eventName"": ""SetLogCallback"",
+        ""eventText"": ""日志回调"",
+        ""eventDesc"": ""设置日志回调""
+      },
+      {
+        ""eventName"": ""SetMsgUpdateCallback"",
+        ""eventText"": ""消息在云端被修改后回传回来的消息更新通知回调"",
+        ""eventDesc"": ""设置消息在云端被修改后回传回来的消息更新通知回调""
+      },
+      {
+        ""eventName"": ""SetGroupTopicCreatedCallback"",
+        ""eventText"": ""话题创建回调"",
+        ""eventDesc"": ""设置话题创建回调""
+      },
+      {
+        ""eventName"": ""SetGroupTopicDeletedCallback"",
+        ""eventText"": ""话题被删除回调"",
+        ""eventDesc"": ""设置话题被删除回调""
+      },
+      {
+        ""eventName"": ""SetGroupTopicChangedCallback"",
+        ""eventText"": ""话题更新回调"",
+        ""eventDesc"": ""设置话题更新回调""
+      },
+      {
+        ""eventName"": ""SetSelfInfoUpdatedCallback"",
+        ""eventText"": ""当前用户的资料发生更新时的回调"",
+        ""eventDesc"": ""设置当前用户的资料发生更新时的回调""
+      },
+      {
+        ""eventName"": ""SetUserStatusChangedCallback"",
+        ""eventText"": ""用户状态变更通知回调"",
+        ""eventDesc"": ""设置用户状态变更通知回调""
       }
     ]";
   }

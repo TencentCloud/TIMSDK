@@ -154,6 +154,41 @@ public class AddEventListener : MonoBehaviour
           TencentIMSDK.SetFriendBlackListDeletedCallback(null);
           break;
         }
+      case "SetLogCallback":
+        {
+          TencentIMSDK.SetLogCallback(null);
+          break;
+        }
+      case "SetMsgUpdateCallback":
+        {
+          TencentIMSDK.SetMsgUpdateCallback(null);
+          break;
+        }
+      case "SetGroupTopicCreatedCallback":
+        {
+          TencentIMSDK.SetGroupTopicCreatedCallback(null);
+          break;
+        }
+      case "SetGroupTopicDeletedCallback":
+        {
+          TencentIMSDK.SetGroupTopicDeletedCallback(null);
+          break;
+        }
+      case "SetGroupTopicChangedCallback":
+        {
+          TencentIMSDK.SetGroupTopicChangedCallback(null);
+          break;
+        }
+      case "SetSelfInfoUpdatedCallback":
+        {
+          TencentIMSDK.SetSelfInfoUpdatedCallback(null);
+          break;
+        }
+      case "SetUserStatusChangedCallback":
+        {
+          TencentIMSDK.SetUserStatusChangedCallback(null);
+          break;
+        }
       default:
         {
           print($"Unknown event {eventName}");
@@ -263,6 +298,41 @@ public class AddEventListener : MonoBehaviour
       case "SetFriendBlackListDeletedCallback":
         {
           TencentIMSDK.SetFriendBlackListDeletedCallback(null, Utils.SetFriendBlackListDeletedCallback(GetResult, eventInfo));
+          break;
+        }
+      case "SetLogCallback":
+        {
+          TencentIMSDK.SetLogCallback(Utils.SetLogCallback(GetResult, eventInfo));
+          break;
+        }
+      case "SetMsgUpdateCallback":
+        {
+          TencentIMSDK.SetMsgUpdateCallback(null, Utils.SetMsgUpdateCallback(GetResult, eventInfo));
+          break;
+        }
+      case "SetGroupTopicCreatedCallback":
+        {
+          TencentIMSDK.SetGroupTopicCreatedCallback(Utils.SetGroupTopicCreatedCallback(GetResult, eventInfo));
+          break;
+        }
+      case "SetGroupTopicDeletedCallback":
+        {
+          TencentIMSDK.SetGroupTopicDeletedCallback(null, Utils.SetGroupTopicDeletedCallback(GetResult, eventInfo));
+          break;
+        }
+      case "SetGroupTopicChangedCallback":
+        {
+          TencentIMSDK.SetGroupTopicChangedCallback(null, Utils.SetGroupTopicChangedCallback(GetResult, eventInfo));
+          break;
+        }
+      case "SetSelfInfoUpdatedCallback":
+        {
+          TencentIMSDK.SetSelfInfoUpdatedCallback(null, Utils.SetSelfInfoUpdatedCallback(GetResult, eventInfo));
+          break;
+        }
+      case "SetUserStatusChangedCallback":
+        {
+          TencentIMSDK.SetUserStatusChangedCallback(null, Utils.SetUserStatusChangedCallback(GetResult, eventInfo));
           break;
         }
       default:

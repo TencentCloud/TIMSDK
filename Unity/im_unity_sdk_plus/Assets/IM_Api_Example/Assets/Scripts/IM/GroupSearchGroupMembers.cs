@@ -24,7 +24,7 @@ public class GroupSearchGroupMembers : MonoBehaviour
   public Text Result;
   public Button Submit;
   public Button Copy;
-  string[] Labels = new string[] { "SelectGroupLabel", "KeywordLabel", "GroupSearchKeywordPlaceHolder", "IsSearchUserIdLabel", "IsSearchNickNameLabel", "IsSearchRemarkLabel", "IsSearchNameCardLabel" };
+  string[] Labels = new string[] { "SelectGroupLabel", "KeywordLabel", "KeywordPlaceHolder", "IsSearchUserIdLabel", "IsSearchNickNameLabel", "IsSearchRemarkLabel", "IsSearchNameCardLabel" };
   void Start()
   {
     foreach (string label in Labels)

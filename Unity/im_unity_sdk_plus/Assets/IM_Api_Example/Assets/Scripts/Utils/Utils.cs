@@ -277,6 +277,98 @@ namespace com.tencent.im.unity.demo.utils
       callback(eventInfo, head + formatted);
     };
     }
+
+    public static LogCallback SetLogCallback(EventCallback cb, EventListenerInfo.EventInfo eventInfo)
+    {
+      var callback = cb;
+      return (TIMLogLevel log_level, string log, string user_data) =>
+    {
+      string head = "\n" + user_data + "Asynchronous return:\n\n";
+      string body = @"{""log_level"":""" + log_level + @""",""log"":""" + log + @"""}";
+      JObject json = JObject.Parse(body);
+      string formatted = SyntaxHighlightJson(json.ToString());
+      callback(eventInfo, head + formatted);
+    };
+    }
+
+    public static MsgUpdateStringCallback SetMsgUpdateCallback(EventCallback cb, EventListenerInfo.EventInfo eventInfo)
+    {
+      var callback = cb;
+      return (string message_list, string user_data) =>
+    {
+      string head = "\n" + user_data + "Asynchronous return:\n\n";
+      string body = @"{""message_list"":""" + message_list + @"""}";
+      JObject json = JObject.Parse(body);
+      string formatted = SyntaxHighlightJson(json.ToString());
+      callback(eventInfo, head + formatted);
+    };
+    }
+
+    public static GroupTopicCreatedCallback SetGroupTopicCreatedCallback(EventCallback cb, EventListenerInfo.EventInfo eventInfo)
+    {
+      var callback = cb;
+      return (string group_id, string topic_id, string user_data) =>
+    {
+      string head = "\n" + user_data + "Asynchronous return:\n\n";
+      string body = @"{""group_id"":""" + group_id + @""",""topic_id"":""" + topic_id + @"""}";
+      JObject json = JObject.Parse(body);
+      string formatted = SyntaxHighlightJson(json.ToString());
+      callback(eventInfo, head + formatted);
+    };
+    }
+
+    public static GroupTopicDeletedStringCallback SetGroupTopicDeletedCallback(EventCallback cb, EventListenerInfo.EventInfo eventInfo)
+    {
+      var callback = cb;
+      return (string group_id, string topic_id_array, string user_data) =>
+    {
+      string head = "\n" + user_data + "Asynchronous return:\n\n";
+      string body = @"{""group_id"":""" + group_id + @""",""topic_id_array"":""" + topic_id_array + @"""}";
+      JObject json = JObject.Parse(body);
+      string formatted = SyntaxHighlightJson(json.ToString());
+      callback(eventInfo, head + formatted);
+    };
+    }
+
+    public static GroupTopicChangedStringCallback SetGroupTopicChangedCallback(EventCallback cb, EventListenerInfo.EventInfo eventInfo)
+    {
+      var callback = cb;
+      return (string group_id, string topic_info, string user_data) =>
+    {
+      string head = "\n" + user_data + "Asynchronous return:\n\n";
+      string body = @"{""group_id"":""" + group_id + @""",""topic_info"":""" + topic_info + @"""}";
+      JObject json = JObject.Parse(body);
+      string formatted = SyntaxHighlightJson(json.ToString());
+      callback(eventInfo, head + formatted);
+    };
+    }
+
+    public static SelfInfoUpdatedStringCallback SetSelfInfoUpdatedCallback(EventCallback cb, EventListenerInfo.EventInfo eventInfo)
+    {
+      var callback = cb;
+      return (string json_user_profile, string user_data) =>
+    {
+      string head = "\n" + user_data + "Asynchronous return:\n\n";
+      string body = @"{""json_user_profile"":" + json_user_profile + "}";
+      JObject json = JObject.Parse(body);
+      string formatted = SyntaxHighlightJson(json.ToString());
+      callback(eventInfo, head + formatted);
+    };
+    }
+
+    public static UserStatusChangedStringCallback SetUserStatusChangedCallback(EventCallback cb, EventListenerInfo.EventInfo eventInfo)
+    {
+      var callback = cb;
+      return (string json_user_status_array, string user_data) =>
+    {
+      string head = "\n" + user_data + "Asynchronous return:\n\n";
+      string body = @"{""json_user_status_array"":" + json_user_status_array + "}";
+      JObject json = JObject.Parse(body);
+      string formatted = SyntaxHighlightJson(json.ToString());
+      callback(eventInfo, head + formatted);
+    };
+    }
+
     public delegate void EventCallback(EventListenerInfo.EventInfo eventInfo, params string[] parameters);
 
     public static string PrefixEventCallbackData(string eventName, string data)
