@@ -16,7 +16,6 @@ public class SendTextAtMessage : MonoBehaviour
   public Text Header;
   public InputField Input;
   public Dropdown SelectedGroup;
-  public Dropdown SelectedGroupMember;
   public Dropdown SelectedPriority;
   public Toggle IsOnline;
   public Toggle IsUnread;

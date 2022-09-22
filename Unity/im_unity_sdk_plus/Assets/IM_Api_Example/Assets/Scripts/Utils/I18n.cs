@@ -109,6 +109,18 @@ public static class I18n
       }
     },
     {
+      "SelectMessageFlagLabel", new I18nData{
+        cn = "选择消息接受选项",
+        en = "Select Message Flag"
+      }
+    },
+    {
+      "SelectGroupSearchFieldLabel", new I18nData{
+        cn = "选择搜索域",
+        en = "Select Search Field"
+      }
+    },
+    {
       "SelectConvLabel", new I18nData{
         cn = "选择会话",
         en = "Select Conversation"
@@ -118,6 +130,18 @@ public static class I18n
       "SelectPriorityLabel", new I18nData{
         cn = "选择优先级",
         en = "Select Message Priority"
+      }
+    },
+    {
+      "SelectGenderLabel", new I18nData{
+        cn = "选择性别",
+        en = "Select Gender"
+      }
+    },
+    {
+      "SelectAddPermissionLabel", new I18nData{
+        cn = "选择加好友选项",
+        en = "Select friend permisison type"
       }
     },
     {
@@ -223,9 +247,63 @@ public static class I18n
       }
     },
     {
+      "GroupNotificationLabel", new I18nData{
+        cn = "群公告",
+        en = "Group Notification"
+      }
+    },
+    {
+      "GroupIntroductionLabel", new I18nData{
+        cn = "群简介",
+        en = "Group Introduction"
+      }
+    },
+    {
+      "GroupFaceURLLabel", new I18nData{
+        cn = "群头像URL",
+        en = "Group Avatar URL"
+      }
+    },
+    {
+      "GroupMaxMemberLabel", new I18nData{
+        cn = "最大群人数",
+        en = "Maximum Group Member"
+      }
+    },
+    {
+      "GroupIsMutedAllLabel", new I18nData{
+        cn = "是否全体禁言",
+        en = "Is All Member Muted"
+      }
+    },
+    {
+      "ShutupTimeLabel", new I18nData{
+        cn = "禁言时间",
+        en = "Muted Time"
+      }
+    },
+    {
+      "GroupNameCardLabel", new I18nData{
+        cn = "群名片",
+        en = "Group Name Card"
+      }
+    },
+    {
+      "GroupOwnerLabel", new I18nData{
+        cn = "群主ID",
+        en = "Group Owner UserID"
+      }
+    },
+    {
       "SelectGroupTypeLabel", new I18nData{
         cn = "选择群类型",
         en = "Select Group Type"
+      }
+    },
+    {
+      "SelectGroupAddOptionLabel", new I18nData{
+        cn = "选择加群方式",
+        en = "Select Group Admission Type"
       }
     },
     {
@@ -342,6 +420,41 @@ public static class I18n
       }
     },
     {
+      "SetLogCallback", new I18nData{
+        cn = "日志回调"
+      }
+    },
+    {
+      "SetMsgUpdateCallback", new I18nData{
+        cn = "消息在云端被修改后回传回来的消息更新通知回调"
+      }
+    },
+    {
+      "SetGroupTopicCreatedCallback", new I18nData{
+        cn = "话题创建回调"
+      }
+    },
+    {
+      "SetGroupTopicDeletedCallback", new I18nData{
+        cn = "话题被删除回调"
+      }
+    },
+    {
+      "SetGroupTopicChangedCallback", new I18nData{
+        cn = "话题更新回调"
+      }
+    },
+    {
+      "SetSelfInfoUpdatedCallback", new I18nData{
+        cn = "当前用户的资料发生更新时的回调"
+      }
+    },
+    {
+      "SetUserStatusChangedCallback", new I18nData{
+        cn = "用户状态变更通知回调"
+      }
+    },
+    {
       "FriendIDLabel", new I18nData{
         cn = "好友UserID",
         en = "Friend's UserID"
@@ -450,6 +563,18 @@ public static class I18n
       }
     },
     {
+      "SelectUserStatusLabel", new I18nData{
+        cn = "选择用户状态",
+        en = "Select user status"
+      }
+    },
+    {
+      "CustomStatusLabel", new I18nData{
+        cn = "用户自定义状态",
+        en = "User custom status"
+      }
+    },
+    {
       "GroupHandlePendencyMsgLabel", new I18nData{
         cn = "加群请求处理附言",
         en = "Comments of handling group request"
@@ -528,8 +653,74 @@ public static class I18n
       }
     },
     {
-      "GroupSearchKeywordPlaceHolder", new I18nData{
-        cn = "按,分隔多个关键字，做多支持5个",
+      "MemberCustomKeyLabel", new I18nData{
+        cn = "群成员自定义字段名称",
+        en = "Group member's profile custom key"
+      }
+    },
+    {
+      "MemberCustomValueLabel", new I18nData{
+        cn = "群成员自定义字段值",
+        en = "Group member's profile custom value"
+      }
+    },
+    {
+      "ProfileCustomKeyLabel", new I18nData{
+        cn = "用户自定义字段名称",
+        en = "User's profile custom key"
+      }
+    },
+    {
+      "ProfileCustomValueLabel", new I18nData{
+        cn = "用户自定义字段值",
+        en = "User's profile custom value"
+      }
+    },
+    {
+      "GroupCustomKeyLabel", new I18nData{
+        cn = "群自定义字段名称",
+        en = "Group custom key"
+      }
+    },
+    {
+      "GroupCustomValueLabel", new I18nData{
+        cn = "群自定义字段值",
+        en = "Group custom value"
+      }
+    },
+    {
+      "CustomKeyPlaceHolder", new I18nData{
+        cn = "按,分隔多个key",
+        en = "Keys are separated by ','"
+      }
+    },
+    {
+      "CustomValuePlaceHolder", new I18nData{
+        cn = "按,分隔多个value",
+        en = "Values are separated by ','"
+      }
+    },
+    {
+      "NicknameLabel", new I18nData{
+        cn = "昵称",
+        en = "Nickname"
+      }
+    },
+    {
+      "FaceURLLabel", new I18nData{
+        cn = "头像URL",
+        en = "Avatar URL"
+      }
+    },
+    {
+      "SignatureLabel", new I18nData{
+        cn = "签名",
+        en = "Signature"
+      }
+    },
+    {
+      "KeywordPlaceHolder", new I18nData{
+        cn = "按,分隔多个关键字，最多支持5个",
         en = "Keywords are separated by ',', maximum 5"
       }
     },

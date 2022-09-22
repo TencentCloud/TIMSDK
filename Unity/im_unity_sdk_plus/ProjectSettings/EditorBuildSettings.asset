@@ -224,4 +224,34 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/IM_Api_Example/Assets/Scenes/IM/GroupHandlePendency.unity
     guid: e6927f5ad2b874684b80a06dd1aba838
+  - enabled: 1
+    path: Assets/IM_Api_Example/Assets/Scenes/IM/GetUserStatus.unity
+    guid: f1563dfacc681432aa39750b3160c2a9
+  - enabled: 1
+    path: Assets/IM_Api_Example/Assets/Scenes/IM/SetSelfStatus.unity
+    guid: e31b91a4095fa4e499b399b0dab79c09
+  - enabled: 1
+    path: Assets/IM_Api_Example/Assets/Scenes/IM/SubscribeUserStatus.unity
+    guid: 21ec18a495c6d418bb0544eec227f534
+  - enabled: 1
+    path: Assets/IM_Api_Example/Assets/Scenes/IM/UnsubscribeUserStatus.unity
+    guid: fff7bfd3ba19f4b3c8534b8c6c6b8805
+  - enabled: 1
+    path: Assets/IM_Api_Example/Assets/Scenes/IM/ProfileModifySelfUserProfile.unity
+    guid: ff256ff632d1c4405bee4bde97d77821
+  - enabled: 1
+    path: Assets/IM_Api_Example/Assets/Scenes/IM/GroupModifyGroupInfo.unity
+    guid: 551016c1cf5b443a8b1e9ef0882dc18d
+  - enabled: 1
+    path: Assets/IM_Api_Example/Assets/Scenes/IM/GroupModifyMemberInfo.unity
+    guid: e137855738102459c8cbe2f11718c206
+  - enabled: 1
+    path: Assets/IM_Api_Example/Assets/Scenes/IM/GroupSearchGroups.unity
+    guid: c1fdbfc81c76847df8331ae384ff8315
+  - enabled: 1
+    path: Assets/IM_Api_Example/Assets/Scenes/IM/GroupGetGroupAttributes.unity
+    guid: e41732b5248044b8f97f801f949706fb
+  - enabled: 1
+    path: Assets/IM_Api_Example/Assets/Scenes/IM/GroupInitGroupAttributes.unity
+    guid: 07bd0ea318cac425fbf90025279e1828
   m_configObjects: {}

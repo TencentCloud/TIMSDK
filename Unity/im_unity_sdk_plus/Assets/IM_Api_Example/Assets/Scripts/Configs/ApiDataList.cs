@@ -61,24 +61,36 @@ namespace com.tencent.im.unity.demo.config.ApiDataList
         ""apiDesc"": ""获取用户信息列表"",
         ""scene"": ""ProfileGetUserProfileList""
       },
-      {
-        ""apiName"": ""GroupCreate"",
-        ""apiText"": ""创建群组"",
-        ""apiDesc"": ""创建群组"",
-        ""scene"": ""GroupCreate""
-      },
-      {
-        ""apiName"": ""GroupJoin"",
-        ""apiText"": ""加入群组"",
-        ""apiDesc"": ""加入群组"",
-        ""scene"": ""GroupJoin""
-      },
-      {
-        ""apiName"": ""GroupDelete"",
-        ""apiText"": ""退出（解散）群组"",
-        ""apiDesc"": ""退出（解散）群组"",
-        ""scene"": ""GroupDelete""
-      }
+      // {
+      //   ""apiName"": ""ProfileModifySelfUserProfile"",
+      //   ""apiText"": ""修改自己的信息"",
+      //   ""apiDesc"": ""修改自己的信息"",
+      //   ""scene"": ""ProfileModifySelfUserProfile""
+      // },
+      // {
+      //   ""apiName"": ""GetUserStatus"",
+      //   ""apiText"": ""查询用户状态"",
+      //   ""apiDesc"": ""查询用户状态"",
+      //   ""scene"": ""GetUserStatus""
+      // },
+      // {
+      //   ""apiName"": ""SetSelfStatus"",
+      //   ""apiText"": ""设置自己的状态"",
+      //   ""apiDesc"": ""设置自己的状态"",
+      //   ""scene"": ""SetSelfStatus""
+      // },
+      // {
+      //   ""apiName"": ""SubscribeUserStatus"",
+      //   ""apiText"": ""订阅用户状态"",
+      //   ""apiDesc"": ""订阅用户状态"",
+      //   ""scene"": ""SubscribeUserStatus""
+      // },
+      // {
+      //   ""apiName"": ""UnsubscribeUserStatus"",
+      //   ""apiText"": ""取消订阅用户状态"",
+      //   ""apiDesc"": ""取消订阅用户状态"",
+      //   ""scene"": ""UnsubscribeUserStatus""
+      // }
     ]
   },
   {
@@ -398,6 +410,24 @@ namespace com.tencent.im.unity.demo.config.ApiDataList
         ""scene"": ""GroupGetOnlineMemberCount""
       },
       {
+        ""apiName"": ""GroupCreate"",
+        ""apiText"": ""创建群组"",
+        ""apiDesc"": ""创建群组"",
+        ""scene"": ""GroupCreate""
+      },
+      {
+        ""apiName"": ""GroupJoin"",
+        ""apiText"": ""加入群组"",
+        ""apiDesc"": ""加入群组"",
+        ""scene"": ""GroupJoin""
+      },
+      {
+        ""apiName"": ""GroupDelete"",
+        ""apiText"": ""退出（解散）群组"",
+        ""apiDesc"": ""退出（解散）群组"",
+        ""scene"": ""GroupDelete""
+      },
+      {
         ""apiName"": ""GroupInviteMember"",
         ""apiText"": ""邀请好友进群"",
         ""apiDesc"": ""邀请好友进群"",
@@ -415,24 +445,24 @@ namespace com.tencent.im.unity.demo.config.ApiDataList
         ""apiDesc"": ""退出群组"",
         ""scene"": ""GroupQuit""
       },
-      // {
-      //   ""apiName"": ""GroupModifyGroupInfo"",
-      //   ""apiText"": ""修改群信息"",
-      //   ""apiDesc"": ""修改群信息"",
-      //   ""scene"": ""GroupModifyGroupInfo""
-      // },
+      {
+        ""apiName"": ""GroupModifyGroupInfo"",
+        ""apiText"": ""修改群信息"",
+        ""apiDesc"": ""修改群信息"",
+        ""scene"": ""GroupModifyGroupInfo""
+      },
       {
         ""apiName"": ""GroupGetMemberInfoList"",
         ""apiText"": ""获取群成员信息"",
         ""apiDesc"": ""获取群成员信息"",
         ""scene"": ""GroupGetMemberInfoList""
       },
-      // {
-      //   ""apiName"": ""GroupModifyMemberInfo"",
-      //   ""apiText"": ""修改群成员信息"",
-      //   ""apiDesc"": ""修改群成员信息"",
-      //   ""scene"": ""GroupModifyMemberInfo""
-      // },
+      {
+        ""apiName"": ""GroupModifyMemberInfo"",
+        ""apiText"": ""修改群成员信息"",
+        ""apiDesc"": ""修改群成员信息"",
+        ""scene"": ""GroupModifyMemberInfo""
+      },
       {
         ""apiName"": ""GroupGetPendencyList"",
         ""apiText"": ""获取群未决信息列表"",
@@ -456,7 +486,67 @@ namespace com.tencent.im.unity.demo.config.ApiDataList
         ""apiText"": ""搜索群成员"",
         ""apiDesc"": ""搜索群成员"",
         ""scene"": ""GroupSearchGroupMembers""
-      }
+      },
+      {
+        ""apiName"": ""GroupSearchGroups (Flagship only)"",
+        ""apiText"": ""搜索群资料 (需旗舰版套餐)"",
+        ""apiDesc"": ""搜索群资料 (需旗舰版套餐)"",
+        ""scene"": ""GroupSearchGroups""
+      },
+      {
+        ""apiName"": ""GroupInitGroupAttributes"",
+        ""apiText"": ""初始化群自定义属性"",
+        ""apiDesc"": ""初始化群自定义属性"",
+        ""scene"": ""GroupInitGroupAttributes""
+      },
+      // {
+      //   ""apiName"": ""GroupSetGroupAttributes"",
+      //   ""apiText"": ""设置群属性"",
+      //   ""apiDesc"": ""设置群属性"",
+      //   ""scene"": ""GroupSetGroupAttributes""
+      // },
+      // {
+      //   ""apiName"": ""GroupDeleteGroupAttributes"",
+      //   ""apiText"": ""删除群自定义属性"",
+      //   ""apiDesc"": ""删除群自定义属性"",
+      //   ""scene"": ""GroupDeleteGroupAttributes""
+      // },
+      {
+        ""apiName"": ""GroupGetGroupAttributes"",
+        ""apiText"": ""获取群指定属性"",
+        ""apiDesc"": ""获取群指定属性"",
+        ""scene"": ""GroupGetGroupAttributes""
+      },
+      // {
+      //   ""apiName"": ""GroupGetJoinedCommunityList"",
+      //   ""apiText"": ""获取当前用户已经加入的支持话题的社群列表"",
+      //   ""apiDesc"": ""获取当前用户已经加入的支持话题的社群列表"",
+      //   ""scene"": ""GroupGetJoinedCommunityList""
+      // },
+      // {
+      //   ""apiName"": ""GroupGetTopicInfoList"",
+      //   ""apiText"": ""获取话题列表"",
+      //   ""apiDesc"": ""获取话题列表"",
+      //   ""scene"": ""GroupGetTopicInfoList""
+      // },
+      // {
+      //   ""apiName"": ""GroupCreateTopicInCommunity"",
+      //   ""apiText"": ""创建话题"",
+      //   ""apiDesc"": ""创建话题"",
+      //   ""scene"": ""GroupCreateTopicInCommunity""
+      // },
+      // {
+      //   ""apiName"": ""GroupDeleteTopicFromCommunity"",
+      //   ""apiText"": ""删除话题"",
+      //   ""apiDesc"": ""删除话题"",
+      //   ""scene"": ""GroupDeleteTopicFromCommunity""
+      // },
+      // {
+      //   ""apiName"": ""GroupSetTopicInfo"",
+      //   ""apiText"": ""修改话题信息"",
+      //   ""apiDesc"": ""修改话题信息"",
+      //   ""scene"": ""GroupSetTopicInfo""
+      // },
     ]
   },
 ]

@@ -60,8 +60,7 @@ namespace com.tencent.imsdk.unity
 
 
 
-    [MonoPInvokeCallback(typeof(ValueCallback<ReponseInfo>))]
-    public static void CallExperimentalAPICallback(int code, string desc, ReponseInfo data, string user_data)
+    public static void CallExperimentalAPICallback(int code, string desc, string data, string user_data)
     {
       Utils.Log("Tencent Cloud IM add config success .");
     }
@@ -80,7 +79,7 @@ namespace com.tencent.imsdk.unity
       param.request_internal_operation = TIMInternalOperation.internal_operation_set_ui_platform.ToString();
 
       param.request_set_ui_platform_param = "unity";
-
+      Debug.Log("11111111");
       TIMResult res = CallExperimentalAPI(param, CallExperimentalAPICallback);
 
       string configString = Utils.ToJson(json_sdk_config);
@@ -162,7 +161,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<object>);
 
-      int res = IMNativeSDK.TIMLogin(Utils.string2intptr(user_id), Utils.string2intptr(user_sig), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMLogin(Utils.string2intptr(user_id), Utils.string2intptr(user_sig), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -206,7 +205,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<SetConfig>);
 
-      int res = IMNativeSDK.TIMSetConfig(Utils.string2intptr(Utils.ToJson(config)), ValueCallbackInstance<SetConfig>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMSetConfig(Utils.string2intptr(Utils.ToJson(config)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -248,7 +247,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<object>);
 
-      int timSucc = IMNativeSDK.TIMLogout(ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+      int timSucc = IMNativeSDK.TIMLogout(ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)timSucc;
     }
@@ -303,7 +302,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<List<ConvInfo>>);
 
-      int timSucc = IMNativeSDK.TIMConvGetConvList(ValueCallbackInstance<List<ConvInfo>>, Utils.string2intptr(user_data));
+      int timSucc = IMNativeSDK.TIMConvGetConvList(ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)timSucc;
     }
@@ -336,7 +335,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<object>);
 
-      int timSucc = IMNativeSDK.TIMConvDelete(Utils.string2intptr(conv_id), (int)conv_type, ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+      int timSucc = IMNativeSDK.TIMConvDelete(Utils.string2intptr(conv_id), (int)conv_type, ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)timSucc;
     }
@@ -369,7 +368,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<List<ConvInfo>>);
 
-      int timSucc = IMNativeSDK.TIMConvGetConvInfo(Utils.string2intptr(Utils.ToJson(conv_list_param)), ValueCallbackInstance<List<ConvInfo>>, Utils.string2intptr(user_data));
+      int timSucc = IMNativeSDK.TIMConvGetConvInfo(Utils.string2intptr(Utils.ToJson(conv_list_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)timSucc;
     }
@@ -435,7 +434,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<object>);
 
-      int timSucc = IMNativeSDK.TIMConvPinConversation(conv_id, (int)conv_type, is_pinned, ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+      int timSucc = IMNativeSDK.TIMConvPinConversation(conv_id, (int)conv_type, is_pinned, ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)timSucc;
     }
@@ -467,7 +466,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<GetTotalUnreadNumberResult>);
 
-      int timSucc = IMNativeSDK.TIMConvGetTotalUnreadMessageCount(ValueCallbackInstance<GetTotalUnreadNumberResult>, Utils.string2intptr(user_data));
+      int timSucc = IMNativeSDK.TIMConvGetTotalUnreadMessageCount(ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)timSucc;
     }
@@ -503,7 +502,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<Message>);
 
-      int timSucc = IMNativeSDK.TIMMsgSendMessage(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message)), message_id, ValueCallbackInstance<Message>, Utils.string2intptr(user_data));
+      int timSucc = IMNativeSDK.TIMMsgSendMessage(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message)), message_id, ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)timSucc;
     }
@@ -538,7 +537,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<Message>);
 
-      int timSucc = IMNativeSDK.TIMMsgCancelSend(conv_id, (int)conv_type, Utils.string2intptr(message_id), ValueCallbackInstance<Message>, Utils.string2intptr(user_data));
+      int timSucc = IMNativeSDK.TIMMsgCancelSend(conv_id, (int)conv_type, Utils.string2intptr(message_id), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)timSucc;
     }
@@ -571,7 +570,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<List<Message>>);
 
-      int timSucc = IMNativeSDK.TIMMsgFindMessages(Utils.string2intptr(Utils.ToJson(message_id_array)), ValueCallbackInstance<List<Message>>, Utils.string2intptr(user_data));
+      int timSucc = IMNativeSDK.TIMMsgFindMessages(Utils.string2intptr(Utils.ToJson(message_id_array)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)timSucc;
     }
@@ -606,7 +605,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<object>);
 
-      int timSucc = IMNativeSDK.TIMMsgReportReaded(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+      int timSucc = IMNativeSDK.TIMMsgReportReaded(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)timSucc;
     }
@@ -638,7 +637,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<object>);
 
-      int timSucc = IMNativeSDK.TIMMsgMarkAllMessageAsRead(ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+      int timSucc = IMNativeSDK.TIMMsgMarkAllMessageAsRead(ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)timSucc;
     }
@@ -673,7 +672,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<object>);
 
-      int timSucc = IMNativeSDK.TIMMsgRevoke(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+      int timSucc = IMNativeSDK.TIMMsgRevoke(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)timSucc;
     }
@@ -709,7 +708,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<Message>);
 
-      int timSucc = IMNativeSDK.TIMMsgModifyMessage(Utils.string2intptr(Utils.ToJson(message)), ValueCallbackInstance<Message>, Utils.string2intptr(user_data));
+      int timSucc = IMNativeSDK.TIMMsgModifyMessage(Utils.string2intptr(Utils.ToJson(message)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)timSucc;
     }
@@ -744,7 +743,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<List<Message>>);
 
-      int timSucc = IMNativeSDK.TIMMsgFindByMsgLocatorList(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message_locator)), ValueCallbackInstance<List<Message>>, Utils.string2intptr(user_data));
+      int timSucc = IMNativeSDK.TIMMsgFindByMsgLocatorList(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message_locator)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)timSucc;
     }
@@ -779,7 +778,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<object>);
 
-      int timSucc = IMNativeSDK.TIMMsgImportMsgList(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message_list)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+      int timSucc = IMNativeSDK.TIMMsgImportMsgList(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message_list)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)timSucc;
     }
@@ -814,7 +813,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<object>);
 
-      int timSucc = IMNativeSDK.TIMMsgSaveMsg(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+      int timSucc = IMNativeSDK.TIMMsgSaveMsg(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)timSucc;
     }
@@ -848,7 +847,7 @@ namespace com.tencent.imsdk.unity
 
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<List<Message>>);
-      int timSucc = IMNativeSDK.TIMMsgGetMsgList(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(get_message_list_param)), ValueCallbackInstance<List<Message>>, Utils.string2intptr(user_data));
+      int timSucc = IMNativeSDK.TIMMsgGetMsgList(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(get_message_list_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)timSucc;
     }
@@ -881,7 +880,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<object>);
 
-      int timSucc = IMNativeSDK.TIMMsgDelete(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message_delete_param)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+      int timSucc = IMNativeSDK.TIMMsgDelete(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message_delete_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)timSucc;
     }
@@ -917,7 +916,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<object>);
 
-      int timSucc = IMNativeSDK.TIMMsgListDelete(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message_list)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+      int timSucc = IMNativeSDK.TIMMsgListDelete(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message_list)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)timSucc;
     }
@@ -952,7 +951,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<object>);
 
-      int timSucc = IMNativeSDK.TIMMsgClearHistoryMessage(conv_id, (int)conv_type, ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+      int timSucc = IMNativeSDK.TIMMsgClearHistoryMessage(conv_id, (int)conv_type, ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)timSucc;
     }
@@ -986,7 +985,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<object>);
 
-      int timSucc = IMNativeSDK.TIMMsgSetC2CReceiveMessageOpt(Utils.string2intptr(Utils.ToJson(user_id_list)), (int)opt, ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+      int timSucc = IMNativeSDK.TIMMsgSetC2CReceiveMessageOpt(Utils.string2intptr(Utils.ToJson(user_id_list)), (int)opt, ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)timSucc;
     }
@@ -1019,7 +1018,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<List<GetC2CRecvMsgOptResult>>);
 
-      int timSucc = IMNativeSDK.TIMMsgGetC2CReceiveMessageOpt(Utils.string2intptr(Utils.ToJson(user_id_list)), ValueCallbackInstance<List<GetC2CRecvMsgOptResult>>, Utils.string2intptr(user_data));
+      int timSucc = IMNativeSDK.TIMMsgGetC2CReceiveMessageOpt(Utils.string2intptr(Utils.ToJson(user_id_list)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)timSucc;
     }
@@ -1053,7 +1052,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<object>);
 
-      int timSucc = IMNativeSDK.TIMMsgSetGroupReceiveMessageOpt(Utils.string2intptr(group_id), (int)opt, ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+      int timSucc = IMNativeSDK.TIMMsgSetGroupReceiveMessageOpt(Utils.string2intptr(group_id), (int)opt, ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)timSucc;
     }
@@ -1086,7 +1085,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<object>);
 
-      int timSucc = IMNativeSDK.TIMMsgSetOfflinePushToken(Utils.string2intptr(Utils.ToJson(json_token)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+      int timSucc = IMNativeSDK.TIMMsgSetOfflinePushToken(Utils.string2intptr(Utils.ToJson(json_token)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)timSucc;
     }
@@ -1119,7 +1118,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<object>);
 
-      int timSucc = IMNativeSDK.TIMMsgDoBackground(unread_count, ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+      int timSucc = IMNativeSDK.TIMMsgDoBackground(unread_count, ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)timSucc;
     }
@@ -1150,7 +1149,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<object>);
 
-      int timSucc = IMNativeSDK.TIMMsgDoForeground(ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+      int timSucc = IMNativeSDK.TIMMsgDoForeground(ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)timSucc;
     }
@@ -1184,7 +1183,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<MsgDownloadElemResult>);
 
-      int timSucc = IMNativeSDK.TIMMsgDownloadElemToPath(Utils.string2intptr(Utils.ToJson(download_param)), Utils.string2intptr(path), ValueCallbackInstance<MsgDownloadElemResult>, Utils.string2intptr(user_data));
+      int timSucc = IMNativeSDK.TIMMsgDownloadElemToPath(Utils.string2intptr(Utils.ToJson(download_param)), Utils.string2intptr(path), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)timSucc;
     }
@@ -1217,7 +1216,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<List<Message>>);
 
-      int timSucc = IMNativeSDK.TIMMsgDownloadMergerMessage(Utils.string2intptr(Utils.ToJson(message)), ValueCallbackInstance<List<Message>>, Utils.string2intptr(user_data));
+      int timSucc = IMNativeSDK.TIMMsgDownloadMergerMessage(Utils.string2intptr(Utils.ToJson(message)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)timSucc;
     }
@@ -1250,7 +1249,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<List<MsgBatchSendResult>>);
 
-      int timSucc = IMNativeSDK.TIMMsgBatchSend(Utils.string2intptr(Utils.ToJson(json_batch_send_param)), ValueCallbackInstance<List<MsgBatchSendResult>>, Utils.string2intptr(user_data));
+      int timSucc = IMNativeSDK.TIMMsgBatchSend(Utils.string2intptr(Utils.ToJson(json_batch_send_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)timSucc;
     }
@@ -1283,7 +1282,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<MessageSearchResult>);
 
-      int timSucc = IMNativeSDK.TIMMsgSearchLocalMessages(Utils.string2intptr(Utils.ToJson(message_search_param)), ValueCallbackInstance<MessageSearchResult>, Utils.string2intptr(user_data));
+      int timSucc = IMNativeSDK.TIMMsgSearchLocalMessages(Utils.string2intptr(Utils.ToJson(message_search_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)timSucc;
     }
@@ -1316,7 +1315,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<object>);
 
-      int timSucc = IMNativeSDK.TIMMsgSetLocalCustomData(Utils.string2intptr(Utils.ToJson(message)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+      int timSucc = IMNativeSDK.TIMMsgSetLocalCustomData(Utils.string2intptr(Utils.ToJson(message)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)timSucc;
     }
@@ -1348,7 +1347,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<CreateGroupResult>);
 
-      int timSucc = IMNativeSDK.TIMGroupCreate(Utils.string2intptr(Utils.ToJson(group)), ValueCallbackInstance<CreateGroupResult>, Utils.string2intptr(user_data));
+      int timSucc = IMNativeSDK.TIMGroupCreate(Utils.string2intptr(Utils.ToJson(group)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)timSucc;
     }
@@ -1381,7 +1380,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<object>);
 
-      int timSucc = IMNativeSDK.TIMGroupDelete(Utils.string2intptr(group_id), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+      int timSucc = IMNativeSDK.TIMGroupDelete(Utils.string2intptr(group_id), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)timSucc;
     }
@@ -1415,7 +1414,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<object>);
 
-      int res = IMNativeSDK.TIMGroupJoin(Utils.string2intptr(group_id), Utils.string2intptr(hello_message), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMGroupJoin(Utils.string2intptr(group_id), Utils.string2intptr(hello_message), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -1448,7 +1447,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<object>);
 
-      int res = IMNativeSDK.TIMGroupQuit(Utils.string2intptr(group_id), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMGroupQuit(Utils.string2intptr(group_id), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -1481,7 +1480,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<List<GroupInviteMemberResult>>);
 
-      int res = IMNativeSDK.TIMGroupInviteMember(Utils.string2intptr(Utils.ToJson(param)), ValueCallbackInstance<List<GroupInviteMemberResult>>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMGroupInviteMember(Utils.string2intptr(Utils.ToJson(param)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -1514,7 +1513,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<List<GroupDeleteMemberResult>>);
 
-      int res = IMNativeSDK.TIMGroupDeleteMember(Utils.string2intptr(Utils.ToJson(param)), ValueCallbackInstance<List<GroupDeleteMemberResult>>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMGroupDeleteMember(Utils.string2intptr(Utils.ToJson(param)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -1546,7 +1545,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<List<GroupBaseInfo>>);
 
-      int res = IMNativeSDK.TIMGroupGetJoinedGroupList(ValueCallbackInstance<List<GroupBaseInfo>>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMGroupGetJoinedGroupList(ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -1579,7 +1578,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<List<GetGroupInfoResult>>);
 
-      int res = IMNativeSDK.TIMGroupGetGroupInfoList(Utils.string2intptr(Utils.ToJson(group_id_list)), ValueCallbackInstance<List<GetGroupInfoResult>>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMGroupGetGroupInfoList(Utils.string2intptr(Utils.ToJson(group_id_list)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -1612,7 +1611,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<object>);
 
-      int res = IMNativeSDK.TIMGroupModifyGroupInfo(Utils.string2intptr(Utils.ToJson(json_group_modifyinfo_param)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMGroupModifyGroupInfo(Utils.string2intptr(Utils.ToJson(json_group_modifyinfo_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -1645,7 +1644,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<GroupGetMemberInfoListResult>);
 
-      int res = IMNativeSDK.TIMGroupGetMemberInfoList(Utils.string2intptr(Utils.ToJson(json_group_getmeminfos_param)), ValueCallbackInstance<GroupGetMemberInfoListResult>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMGroupGetMemberInfoList(Utils.string2intptr(Utils.ToJson(json_group_getmeminfos_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -1678,7 +1677,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<object>);
 
-      int res = IMNativeSDK.TIMGroupModifyMemberInfo(Utils.string2intptr(Utils.ToJson(json_group_modifymeminfo_param)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMGroupModifyMemberInfo(Utils.string2intptr(Utils.ToJson(json_group_modifymeminfo_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -1711,7 +1710,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<GroupPendencyResult>);
 
-      int res = IMNativeSDK.TIMGroupGetPendencyList(Utils.string2intptr(Utils.ToJson(json_group_getpendence_list_param)), ValueCallbackInstance<GroupPendencyResult>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMGroupGetPendencyList(Utils.string2intptr(Utils.ToJson(json_group_getpendence_list_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -1744,7 +1743,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<object>);
 
-      int res = IMNativeSDK.TIMGroupReportPendencyReaded(time_stamp, ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMGroupReportPendencyReaded(time_stamp, ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -1777,7 +1776,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<object>);
 
-      int res = IMNativeSDK.TIMGroupHandlePendency(Utils.string2intptr(Utils.ToJson(json_group_handle_pendency_param)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMGroupHandlePendency(Utils.string2intptr(Utils.ToJson(json_group_handle_pendency_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -1810,7 +1809,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<GroupGetOnlineMemberCountResult>);
 
-      int res = IMNativeSDK.TIMGroupGetOnlineMemberCount(Utils.string2intptr(group_id), ValueCallbackInstance<GroupGetOnlineMemberCountResult>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMGroupGetOnlineMemberCount(Utils.string2intptr(group_id), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -1843,7 +1842,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<List<GroupDetailInfo>>);
 
-      int res = IMNativeSDK.TIMGroupSearchGroups(Utils.string2intptr(Utils.ToJson(json_group_search_groups_param)), ValueCallbackInstance<List<GroupDetailInfo>>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMGroupSearchGroups(Utils.string2intptr(Utils.ToJson(json_group_search_groups_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -1876,7 +1875,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<List<GroupGetOnlineMemberCountResult>>);
 
-      int res = IMNativeSDK.TIMGroupSearchGroupMembers(Utils.string2intptr(Utils.ToJson(json_group_search_group_members_param)), ValueCallbackInstance<List<GroupGetOnlineMemberCountResult>>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMGroupSearchGroupMembers(Utils.string2intptr(Utils.ToJson(json_group_search_group_members_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -1910,7 +1909,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<object>);
 
-      int res = IMNativeSDK.TIMGroupInitGroupAttributes(Utils.string2intptr(group_id), Utils.string2intptr(Utils.ToJson(json_group_atrributes)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMGroupInitGroupAttributes(Utils.string2intptr(group_id), Utils.string2intptr(Utils.ToJson(json_group_atrributes)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -1945,7 +1944,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<object>);
 
-      int res = IMNativeSDK.TIMGroupSetGroupAttributes(Utils.string2intptr(group_id), Utils.string2intptr(Utils.ToJson(json_group_atrributes)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMGroupSetGroupAttributes(Utils.string2intptr(group_id), Utils.string2intptr(Utils.ToJson(json_group_atrributes)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -1979,7 +1978,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<object>);
 
-      int res = IMNativeSDK.TIMGroupDeleteGroupAttributes(Utils.string2intptr(group_id), Utils.string2intptr(Utils.ToJson(json_keys)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMGroupDeleteGroupAttributes(Utils.string2intptr(group_id), Utils.string2intptr(Utils.ToJson(json_keys)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -2013,7 +2012,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<List<GroupAttributes>>);
 
-      int res = IMNativeSDK.TIMGroupGetGroupAttributes(Utils.string2intptr(group_id), Utils.string2intptr(Utils.ToJson(json_keys)), ValueCallbackInstance<List<GroupAttributes>>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMGroupGetGroupAttributes(Utils.string2intptr(group_id), Utils.string2intptr(Utils.ToJson(json_keys)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -2045,7 +2044,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<List<GroupInfo>>);
 
-      int res = IMNativeSDK.TIMGroupGetJoinedCommunityList(ValueCallbackInstance<List<GroupInfo>>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMGroupGetJoinedCommunityList(ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -2101,7 +2100,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<List<GroupTopicOperationResult>>);
 
-      int res = IMNativeSDK.TIMGroupDeleteTopicFromCommunity(Utils.string2intptr(group_id), Utils.string2intptr(Utils.ToJson(json_topic_id_array)), ValueCallbackInstance<List<GroupTopicOperationResult>>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMGroupDeleteTopicFromCommunity(Utils.string2intptr(group_id), Utils.string2intptr(Utils.ToJson(json_topic_id_array)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -2134,7 +2133,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<object>);
 
-      int res = IMNativeSDK.TIMGroupSetTopicInfo(Utils.string2intptr(Utils.ToJson(json_topic_info)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMGroupSetTopicInfo(Utils.string2intptr(Utils.ToJson(json_topic_info)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -2169,7 +2168,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<List<GroupTopicInfo>>);
 
-      int res = IMNativeSDK.TIMGroupGetTopicInfoList(Utils.string2intptr(group_id), Utils.string2intptr(Utils.ToJson(json_topic_id_array)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMGroupGetTopicInfoList(Utils.string2intptr(group_id), Utils.string2intptr(Utils.ToJson(json_topic_id_array)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -2203,7 +2202,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<List<UserStatus>>);
 
-      int res = IMNativeSDK.TIMGetUserStatus(Utils.string2intptr(Utils.ToJson(json_identifier_array)), ValueCallbackInstance<List<UserStatus>>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMGetUserStatus(Utils.string2intptr(Utils.ToJson(json_identifier_array)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -2237,7 +2236,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<object>);
 
-      int res = IMNativeSDK.TIMSetSelfStatus(Utils.string2intptr(Utils.ToJson(json_current_user_status)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMSetSelfStatus(Utils.string2intptr(Utils.ToJson(json_current_user_status)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -2274,7 +2273,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<object>);
 
-      int res = IMNativeSDK.TIMSubscribeUserStatus(Utils.string2intptr(Utils.ToJson(json_identifier_array)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMSubscribeUserStatus(Utils.string2intptr(Utils.ToJson(json_identifier_array)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -2308,7 +2307,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<object>);
 
-      int res = IMNativeSDK.TIMUnsubscribeUserStatus(Utils.string2intptr(Utils.ToJson(json_identifier_array)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMUnsubscribeUserStatus(Utils.string2intptr(Utils.ToJson(json_identifier_array)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -2341,7 +2340,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<List<UserProfile>>);
 
-      int res = IMNativeSDK.TIMProfileGetUserProfileList(Utils.string2intptr(Utils.ToJson(json_get_user_profile_list_param)), ValueCallbackInstance<List<UserProfile>>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMProfileGetUserProfileList(Utils.string2intptr(Utils.ToJson(json_get_user_profile_list_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -2374,7 +2373,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<object>);
 
-      int res = IMNativeSDK.TIMProfileModifySelfUserProfile(Utils.string2intptr(Utils.ToJson(json_modify_self_user_profile_param)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMProfileModifySelfUserProfile(Utils.string2intptr(Utils.ToJson(json_modify_self_user_profile_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -2406,7 +2405,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<List<FriendProfile>>);
 
-      int res = IMNativeSDK.TIMFriendshipGetFriendProfileList(ValueCallbackInstance<List<FriendProfile>>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMFriendshipGetFriendProfileList(ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -2439,7 +2438,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<FriendResult>);
 
-      int res = IMNativeSDK.TIMFriendshipAddFriend(Utils.string2intptr(Utils.ToJson(param)), ValueCallbackInstance<FriendResult>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMFriendshipAddFriend(Utils.string2intptr(Utils.ToJson(param)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -2472,7 +2471,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<FriendResult>);
 
-      int res = IMNativeSDK.TIMFriendshipHandleFriendAddRequest(Utils.string2intptr(Utils.ToJson(json_handle_friend_add_param)), ValueCallbackInstance<FriendResult>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMFriendshipHandleFriendAddRequest(Utils.string2intptr(Utils.ToJson(json_handle_friend_add_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -2506,7 +2505,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackDeleStore.Add(user_data, threadOperation<object>);
 
 
-      int res = IMNativeSDK.TIMFriendshipModifyFriendProfile(Utils.string2intptr(Utils.ToJson(json_modify_friend_info_param)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMFriendshipModifyFriendProfile(Utils.string2intptr(Utils.ToJson(json_modify_friend_info_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -2540,7 +2539,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<FriendResult>);
 
-      int res = IMNativeSDK.TIMFriendshipDeleteFriend(Utils.string2intptr(Utils.ToJson(json_delete_friend_param)), ValueCallbackInstance<FriendResult>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMFriendshipDeleteFriend(Utils.string2intptr(Utils.ToJson(json_delete_friend_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -2573,7 +2572,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<List<FriendshipCheckFriendTypeResult>>);
 
-      int res = IMNativeSDK.TIMFriendshipCheckFriendType(Utils.string2intptr(Utils.ToJson(json_check_friend_list_param)), ValueCallbackInstance<List<FriendshipCheckFriendTypeResult>>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMFriendshipCheckFriendType(Utils.string2intptr(Utils.ToJson(json_check_friend_list_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -2606,7 +2605,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<List<FriendResult>>);
 
-      int res = IMNativeSDK.TIMFriendshipCreateFriendGroup(Utils.string2intptr(Utils.ToJson(json_create_friend_group_param)), ValueCallbackInstance<List<FriendResult>>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMFriendshipCreateFriendGroup(Utils.string2intptr(Utils.ToJson(json_create_friend_group_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -2639,7 +2638,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<List<FriendGroupInfo>>);
 
-      int res = IMNativeSDK.TIMFriendshipGetFriendGroupList(Utils.string2intptr(Utils.ToJson(json_get_friend_group_list_param)), ValueCallbackInstance<List<FriendGroupInfo>>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMFriendshipGetFriendGroupList(Utils.string2intptr(Utils.ToJson(json_get_friend_group_list_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -2672,7 +2671,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<List<FriendResult>>);
 
-      int res = IMNativeSDK.TIMFriendshipModifyFriendGroup(Utils.string2intptr(Utils.ToJson(json_modify_friend_group_param)), ValueCallbackInstance<List<FriendResult>>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMFriendshipModifyFriendGroup(Utils.string2intptr(Utils.ToJson(json_modify_friend_group_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -2705,7 +2704,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<object>);
 
-      int res = IMNativeSDK.TIMFriendshipDeleteFriendGroup(Utils.string2intptr(Utils.ToJson(json_delete_friend_group_param)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMFriendshipDeleteFriendGroup(Utils.string2intptr(Utils.ToJson(json_delete_friend_group_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -2738,7 +2737,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<List<FriendResult>>);
 
-      int res = IMNativeSDK.TIMFriendshipAddToBlackList(Utils.string2intptr(Utils.ToJson(json_add_to_blacklist_param)), ValueCallbackInstance<List<FriendResult>>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMFriendshipAddToBlackList(Utils.string2intptr(Utils.ToJson(json_add_to_blacklist_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -2770,7 +2769,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<List<FriendProfile>>);
 
-      int res = IMNativeSDK.TIMFriendshipGetBlackList(ValueCallbackInstance<List<FriendProfile>>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMFriendshipGetBlackList(ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -2803,7 +2802,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<List<FriendResult>>);
 
-      int res = IMNativeSDK.TIMFriendshipDeleteFromBlackList(Utils.string2intptr(Utils.ToJson(json_delete_from_blacklist_param)), ValueCallbackInstance<List<FriendResult>>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMFriendshipDeleteFromBlackList(Utils.string2intptr(Utils.ToJson(json_delete_from_blacklist_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -2836,7 +2835,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<PendencyPage>);
 
-      int res = IMNativeSDK.TIMFriendshipGetPendencyList(Utils.string2intptr(Utils.ToJson(json_get_pendency_list_param)), ValueCallbackInstance<PendencyPage>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMFriendshipGetPendencyList(Utils.string2intptr(Utils.ToJson(json_get_pendency_list_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -2869,7 +2868,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<List<FriendResult>>);
 
-      int res = IMNativeSDK.TIMFriendshipDeletePendency(Utils.string2intptr(Utils.ToJson(json_delete_pendency_param)), ValueCallbackInstance<List<FriendResult>>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMFriendshipDeletePendency(Utils.string2intptr(Utils.ToJson(json_delete_pendency_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -2902,7 +2901,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<object>);
 
-      int res = IMNativeSDK.TIMFriendshipReportPendencyReaded(time_stamp, ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMFriendshipReportPendencyReaded(time_stamp, ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -2935,7 +2934,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<List<FriendInfoGetResult>>);
 
-      int res = IMNativeSDK.TIMFriendshipSearchFriends(Utils.string2intptr(Utils.ToJson(json_search_friends_param)), ValueCallbackInstance<List<FriendInfoGetResult>>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMFriendshipSearchFriends(Utils.string2intptr(Utils.ToJson(json_search_friends_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -2968,7 +2967,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<List<FriendInfoGetResult>>);
 
-      int res = IMNativeSDK.TIMFriendshipGetFriendsInfo(Utils.string2intptr(Utils.ToJson(json_get_friends_info_param)), ValueCallbackInstance<List<FriendInfoGetResult>>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMFriendshipGetFriendsInfo(Utils.string2intptr(Utils.ToJson(json_get_friends_info_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -3001,7 +3000,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<ReponseInfo>);
 
-      int res = IMNativeSDK.callExperimentalAPI(Utils.string2intptr(Utils.ToJson(json_param)), ValueCallbackInstance<ReponseInfo>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.callExperimentalAPI(Utils.string2intptr(Utils.ToJson(json_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -3033,7 +3032,7 @@ namespace com.tencent.imsdk.unity
 
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<List<MessageReceipt>>);
-      int res = IMNativeSDK.TIMMsgGetMessageReadReceipts(Utils.string2intptr(Utils.ToJson(msg_array)), ValueCallbackInstance<List<MessageReceipt>>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMMsgGetMessageReadReceipts(Utils.string2intptr(Utils.ToJson(msg_array)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
       return (TIMResult)res;
     }
@@ -3064,7 +3063,7 @@ namespace com.tencent.imsdk.unity
       ValuecallbackStore.Add(user_data, callback);
       ValuecallbackDeleStore.Add(user_data, threadOperation<object>);
 
-      int res = IMNativeSDK.TIMMsgSendMessageReadReceipts(Utils.string2intptr(Utils.ToJson(msg_array)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+      int res = IMNativeSDK.TIMMsgSendMessageReadReceipts(Utils.string2intptr(Utils.ToJson(msg_array)), ValueCallbackInstance, Utils.string2intptr(user_data));
       return (TIMResult)res;
     }
     public static TIMResult MsgSendMessageReadReceipts(List<Message> msg_array, ValueCallback<string> callback)
@@ -3845,7 +3844,7 @@ namespace com.tencent.imsdk.unity
     }
 
     [MonoPInvokeCallback(typeof(IMNativeSDK.CommonValueCallback))]
-    private static void ValueCallbackInstance<T>(int code, IntPtr desc, IntPtr json_param, IntPtr user_data)
+    private static void ValueCallbackInstance(int code, IntPtr desc, IntPtr json_param, IntPtr user_data)
     {
       string user_data_string = Utils.intptr2string(user_data);
       string desc_string = Utils.intptr2string(desc);
