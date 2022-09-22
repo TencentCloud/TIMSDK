@@ -1,4 +1,4 @@
-## 0.1.4
+## 0.1.5
 
 * Add: Web supports. Now, you could implement TUIKit on iOS/Android/Web platforms.
 * Add: Disk storage checking after log in, and controls in `config` of `init`.

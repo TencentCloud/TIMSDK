@@ -1,4 +1,4 @@
-[English](./README.md) | 简体中文
+[English](https://github.com/TencentCloud/TIMSDK/blob/master/Flutter/IMSDK/tim_ui_kit/README.md) | 简体中文
 
 # Flutter TUIKit
 

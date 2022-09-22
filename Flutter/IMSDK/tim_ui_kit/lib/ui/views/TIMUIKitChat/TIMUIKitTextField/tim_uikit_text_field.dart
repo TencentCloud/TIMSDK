@@ -787,7 +787,7 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
                                         },
                                         keyboardType: TextInputType.multiline,
                                         textInputAction: isAndroidDevice()
-                                            ? TextInputAction.send
+                                            ? TextInputAction.newline
                                             : TextInputAction.send,
                                         onEditingComplete: onSubmitted,
                                         textAlignVertical:
@@ -860,7 +860,7 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
                             if ((isAndroidDevice() || isWebDevice()) &&
                                 !showMoreButton)
                               SizedBox(
-                                height: 28.0,
+                                height: 32.0,
                                 child: ElevatedButton(
                                   onPressed: onSubmitted,
                                   child: Text(TIM_t("发送")),

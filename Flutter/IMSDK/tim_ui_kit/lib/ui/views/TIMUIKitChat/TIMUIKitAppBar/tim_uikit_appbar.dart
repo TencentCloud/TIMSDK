@@ -65,9 +65,14 @@ class _TIMUIKitAppBarState extends TIMUIKitState<TIMUIKitAppBar> {
           final changedInfo = infoList.firstWhere(
             (element) => element.userID == widget.conversationID,
           );
-          if (changedInfo.friendRemark != null) {
+          if (changedInfo.friendRemark != null &&
+              changedInfo.friendRemark!.isNotEmpty) {
             _conversationShowName = changedInfo.friendRemark!;
             setState(() {});
+          } else {
+            _conversationShowName = (changedInfo.userProfile?.nickName ??
+                    changedInfo.userProfile?.userID) ??
+                "";
           }
         } catch (e) {
           print(e);
@@ -128,11 +133,30 @@ class _TIMUIKitAppBarState extends TIMUIKitState<TIMUIKitAppBar> {
   @override
   void didUpdateWidget(TIMUIKitAppBar oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.conversationShowName != widget.conversationShowName &&
-        widget.conversationShowName.isNotEmpty) {
-      setState(() {
-        _conversationShowName = widget.conversationShowName;
-      });
+    if (oldWidget.conversationShowName != widget.conversationShowName) {
+      if (widget.conversationShowName.isNotEmpty) {
+        setState(() {
+          _conversationShowName = widget.conversationShowName;
+        });
+      } else {
+        updateTitleFuture();
+      }
+    }
+  }
+
+  void updateTitleFuture() async {
+    try {
+      final res = await _friendshipServices
+          .getFriendsInfo(userIDList: [widget.conversationID]);
+      if (res != null && res.isNotEmpty && res.first.resultCode == 0) {
+        setState(() {
+          _conversationShowName = res.first.friendInfo?.userProfile?.nickName ??
+              res.first.friendInfo?.userProfile?.userID ??
+              "";
+        });
+      }
+    } catch (e) {
+      print(e);
     }
   }
 
