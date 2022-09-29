@@ -180,15 +180,6 @@
             </LinearLayout>
 
             <com.tencent.qcloud.tuicore.component.LineControllerView
-                android:id="@+id/group_notice"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/group_profile_item_height"
-                android:layout_marginTop="10dp"
-                android:visibility="gone"
-                app:name="@string/group_notice" />
-
-
-            <com.tencent.qcloud.tuicore.component.LineControllerView
                 android:id="@+id/group_manage"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/group_profile_item_height"
