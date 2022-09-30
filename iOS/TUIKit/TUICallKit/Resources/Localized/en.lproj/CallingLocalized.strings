@@ -49,13 +49,23 @@
 "Demo.TRTC.Calling.yournetworkpoor" = "Your network connection is poor";
 "Demo.TRTC.Salon.invitelimited" = "The request is being processed, please try again later";
 "Demo.TRTC.Login.countrycode" = "Country Code";
-
-"Demo.TRTC.Calling.failedtogetcamerapermission" = "Failed to get camera permission. Please go to Privacy > Camera to grant the permission";
-"Demo.TRTC.Calling.failedtogetmicrophonepermission" = "Failed to get mic permission. Please go to Privacy > Microphone to grant the permission";
 "Demo.TRTC.Calling.calleeTip" = "They also";
-
 "Demo.TRTC.Calling.FloatingWindow.waitaccept" = "Waiting";
 "Demo.TRTC.Calling.FloatingWindow.dailing" = "Waiting";
 
 "Demo.TRTC.Calling.User.Exceed.Limit" = "TUICalling currently supports call with up to 9 people.For larger conference calls,try using TUIRoom";
 "Demo.TRTC.Calling.UnableToRestartTheCall" = "Unable to restart the call";
+
+"TUICallKit.failedtogetcamerapermission.Title" = "No access to camera";
+"TUICallKit.failedtogetcamerapermission.Tips"  = "Unable to use the video call function, click \"Authorize Now\" to open the camera permission.";
+"TUICallKit.failedtogetcamerapermission.Later" = "Later";
+"TUICallKit.failedtogetcamerapermission.Enable" = "Authorize Now";
+
+"TUICallKit.failedtogetmicrophonepermission.Title" = "No access to microphone";
+"TUICallKit.failedtogetmicrophonepermission.Tips"  = "Unable to use the function of sending audio and video calls, click \"Authorize Now\" to open the microphone permission";
+"TUICallKit.failedtogetmicrophonepermission.Later" = "Later";
+"TUICallKit.failedtogetmicrophonepermission.Enable" = "Authorize Now";
+
+"TUICallKit.package.not.purchased" = "You do not have TUICallKit package, please open the free experience in the console or purchase the official package";
+"TUICallKit.package.not.support" = "The package you purchased does not support this ability";
+"TUICallKit.have.new.invitation" = "You have a new call";

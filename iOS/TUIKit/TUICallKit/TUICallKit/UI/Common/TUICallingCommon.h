@@ -18,6 +18,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 static NSString * const TUI_CALL_DEFAULT_AVATAR = @"https://imgcache.qq.com/qcloud/public/static//avatar1_100.20191230.png";
 
+typedef NS_ENUM(NSUInteger, AuthorizationDeniedType ) {
+    AuthorizationDeniedTypeAudio,
+    AuthorizationDeniedTypeVideo,
+};
+
 @interface TUICallingCommon : NSObject
 
 + (NSBundle *)callingBundle;
@@ -30,20 +35,19 @@ static NSString * const TUI_CALL_DEFAULT_AVATAR = @"https://imgcache.qq.com/qclo
 
 + (BOOL)checkArrayValid:(id)data;
 
-+ (id)fetchModelWithIndex:(NSInteger)index
-                dataArray:(NSArray *)dataArray;
++ (id)fetchModelWithIndex:(NSInteger)index dataArray:(NSArray *)dataArray;
 
-+ (NSInteger)fetchIndexWithModel:(id)model
-                       dataArray:(NSArray *)dataArray;
++ (NSInteger)fetchIndexWithModel:(id)model dataArray:(NSArray *)dataArray;
 
-+ (BOOL)checkIndexInRangeWith:(NSInteger)index
-                    dataArray:(NSArray *)dataArray;
++ (BOOL)checkIndexInRangeWith:(NSInteger)index dataArray:(NSArray *)dataArray;
 
 + (CallingUserModel *)covertUser:(V2TIMUserFullInfo *)user;
 
 + (CallingUserModel *)covertUser:(V2TIMUserFullInfo *)user isEnter:(BOOL)isEnter;
 
 + (CallingUserModel *)convertUser:(V2TIMUserFullInfo *)user volume:(NSUInteger)volume isEnter:(BOOL)isEnter;
+
++ (void)showAuthorizationAlert:(AuthorizationDeniedType)deniedType;
 
 @end
 

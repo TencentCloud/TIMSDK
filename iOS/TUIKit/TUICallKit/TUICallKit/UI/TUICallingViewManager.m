@@ -29,9 +29,13 @@
 #import "TUICallingFloatingWindowManager.h"
 #import "TUICallingUserManager.h"
 #import "TUIDefine.h"
+#import "TUICallingUserModel.h"
 #import "TUICallEngineHeader.h"
+#import "TUICore.h"
 
-@interface TUICallingViewManager () <TUICallingFloatingWindowManagerDelegate>
+static NSString * const TUICallKit_TUIGroupService_UserDataValue = @"TUICallKit";
+
+@interface TUICallingViewManager () <TUICallingFloatingWindowManagerDelegate, TUINotificationProtocol>
 
 @property (nonatomic, strong) UIWindow *callingWindow;
 @property (nonatomic, strong) UIView *containerView;
@@ -47,9 +51,6 @@
 /// Add other user button
 @property (nonatomic, strong) UIButton *addOtherUserBtn;
 @property (nonatomic, strong) CallingUserModel *remoteUser;
-/// Calling Role
-@property (nonatomic, assign) TUICallRole callRole;
-@property (nonatomic, assign) TUICallScene callScene;
 /// Is Enable FloatWindow
 @property (nonatomic, assign) BOOL enableFloatWindow;
 
@@ -60,10 +61,12 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        self.containerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
+        CGSize screenSize = [UIScreen mainScreen].bounds.size;
+        self.containerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, screenSize.width, screenSize.height)];
         [[TUICallingFloatingWindowManager shareInstance] setFloatingWindowManagerDelegate:self];
         self.containerView.backgroundColor = [UIColor t_colorWithHexString:@"#F2F2F2"];
         self.enableFloatWindow = NO;
+        [TUICore registerEvent:TUICore_TUIGroupNotify subKey:TUICore_TUIGroupNotify_SelectGroupMemberSubKey object:self];
     }
     return self;
 }
@@ -73,7 +76,7 @@
 - (void)initSingleWaitingView {
     [self clearAllSubViews];
     
-    switch ([TUICallingStatusManager shareInstance].callType) {
+    switch ([TUICallingStatusManager shareInstance].callMediaType) {
         case TUICallMediaTypeAudio:{
             [self initSingleAudioWaitingView];
         } break;
@@ -89,7 +92,7 @@
 - (void)initSingleAudioWaitingView {
     self.callingUserView = [[TUICallingUserView alloc] initWithFrame:CGRectZero];
     
-    if (self.callRole == TUICallRoleCall) {
+    if ([TUICallingStatusManager shareInstance].callRole == TUICallRoleCall) {
         self.callingFunctionView = [[TUICallingAudioFunctionView alloc] initWithFrame:CGRectZero];
     } else {
         self.callingFunctionView = [[TUICallingWaitFunctionView alloc] initWithFrame:CGRectZero];
@@ -104,10 +107,12 @@
 }
 
 - (void)initSingleVideoWaitingView {
-    self.backgroundView = [[TUICallingSingleView alloc] initWithFrame:self.containerView.frame localPreView:self.localPreView remotePreView:self.remotePreView];
+    self.backgroundView = [[TUICallingSingleView alloc] initWithFrame:self.containerView.frame
+                                                         localPreView:self.localPreView
+                                                        remotePreView:self.remotePreView];
     self.callingUserView = [[TUICallingSingleVideoUserView alloc] initWithFrame:CGRectZero];
     
-    if (self.callRole == TUICallRoleCall) {
+    if ([TUICallingStatusManager shareInstance].callRole == TUICallRoleCall) {
         self.callingFunctionView = [[TUICallingVideoInviteFunctionView alloc] initWithFrame:CGRectZero];
     } else {
         self.callingFunctionView = [[TUICallingWaitFunctionView alloc] initWithFrame:CGRectZero];
@@ -125,12 +130,12 @@
 - (void)initGroupWaitingView {
     [self clearAllSubViews];
     
-    switch (self.callRole) {
+    switch ([TUICallingStatusManager shareInstance].callRole) {
         case TUICallRoleCall:{
             self.backgroundView = [[TUICallingGroupView alloc] initWithFrame:self.containerView.frame localPreView:self.localPreView];
             [self.containerView addSubview:self.backgroundView];
             self.callingFunctionView = nil;
-            if ([TUICallingStatusManager shareInstance].callType == TUICallMediaTypeVideo) {
+            if ([TUICallingStatusManager shareInstance].callMediaType == TUICallMediaTypeVideo) {
                 self.callingFunctionView = [[TUICallingVideoFunctionView alloc] initWithFrame:CGRectZero];
             } else {
                 self.callingFunctionView = [[TUICallingAudioFunctionView alloc] initWithFrame:CGRectZero];
@@ -155,17 +160,20 @@
     }
     
     [self initMicMute:YES];
+    if ([TUICallingStatusManager shareInstance].callRole == TUICallRoleCall) {
+        [self initAddOtherUserBtn];
+    }
     [self initHandsFree:TUIAudioPlaybackDeviceSpeakerphone];
 }
 
 #pragma mark - Initialize Accept View
 
 - (void)initSingleAcceptCallView {
-    switch ([TUICallingStatusManager shareInstance].callType) {
+    switch ([TUICallingStatusManager shareInstance].callMediaType) {
         case TUICallMediaTypeAudio:{
             [self initSingleAudioAcceptCallView];
             [self initMicMute:[TUICallingStatusManager shareInstance].isMicMute];
-            if (self.callRole == TUICallRoleCalled) {
+            if ([TUICallingStatusManager shareInstance].callRole == TUICallRoleCalled) {
                 [self initHandsFree:TUIAudioPlaybackDeviceEarpiece];
             }
         } break;
@@ -230,7 +238,7 @@
     }
     
     CGFloat functionViewHeight = 0.0;
-    if ([TUICallingStatusManager shareInstance].callType == TUICallMediaTypeVideo) {
+    if ([TUICallingStatusManager shareInstance].callMediaType == TUICallMediaTypeVideo) {
         functionViewHeight = 190.0f;
         if (!(self.callingFunctionView && [self.callingFunctionView isKindOfClass:[TUICallingVideoFunctionView class]])) {
             [self clearCallingFunctionView];
@@ -262,13 +270,13 @@
     [self.floatingWindowBtn removeFromSuperview];
     [self.containerView addSubview:self.floatingWindowBtn];
     [self makeFloatingWindowBtnConstraints];
-    
+    TUICallMediaType callMediaType = [TUICallingStatusManager shareInstance].callMediaType;
+    TUICallScene callScene = [TUICallingStatusManager shareInstance].callScene;
     NSString *imageName = @"ic_min_window_dark";
-    if ((self.callScene != TUICallSceneSingle) || ([TUICallingStatusManager shareInstance].callType == TUICallMediaTypeVideo)) {
+    if ((callScene != TUICallSceneSingle) || (callMediaType == TUICallMediaTypeVideo)) {
         imageName = @"ic_min_window_white";
     }
-    [self.floatingWindowBtn setBackgroundImage:[TUICallingCommon getBundleImageWithName:imageName]
-                                      forState:UIControlStateNormal];
+    [self.floatingWindowBtn setBackgroundImage:[TUICallingCommon getBundleImageWithName:imageName] forState:UIControlStateNormal];
 }
 
 - (void)initMicMute:(BOOL)isMicMute {
@@ -298,57 +306,57 @@
 - (void)clearAllSubViews {
     [self clearCallingUserView];
     [self clearCallingFunctionView];
-    [self clearBackgroundView];
     [self clearSwitchToAudioView];
     [self clearTimerView];
     [self clearCallingCalleeView];
     [self clearAddOtherUserBtn];
+    [self clearBackgroundView];
 }
 
 - (void)clearCallingUserView{
-    if (self.callingUserView != nil && self.callingUserView.superview != nil) {
+    if (_callingUserView != nil) {
         [self.callingUserView removeFromSuperview];
         self.callingUserView = nil;
     }
 }
 
 - (void)clearCallingFunctionView{
-    if (self.callingFunctionView != nil && self.callingFunctionView.superview != nil) {
+    if (_callingFunctionView != nil) {
         [self.callingFunctionView removeFromSuperview];
         self.callingFunctionView = nil;
     }
 }
 
 - (void)clearBackgroundView{
-    if (self.backgroundView != nil && self.backgroundView.superview != nil) {
+    if (_backgroundView != nil) {
         [self.backgroundView removeFromSuperview];
         self.backgroundView = nil;
     }
 }
 
 - (void)clearSwitchToAudioView{
-    if (self.switchToAudioView != nil && self.switchToAudioView.superview != nil) {
+    if (_switchToAudioView != nil) {
         [self.switchToAudioView removeFromSuperview];
         self.switchToAudioView = nil;
     }
 }
 
 - (void)clearTimerView{
-    if (self.timerView != nil && self.timerView.superview != nil) {
+    if (_timerView != nil) {
         [self.timerView removeFromSuperview];
         self.timerView = nil;
     }
 }
 
 - (void)clearCallingCalleeView{
-    if (self.callingCalleeView != nil && self.callingCalleeView.superview != nil) {
+    if (_callingCalleeView != nil) {
         [self.callingCalleeView removeFromSuperview];
         self.callingCalleeView = nil;
     }
 }
 
 - (void)clearAddOtherUserBtn{
-    if (self.addOtherUserBtn != nil && self.addOtherUserBtn.superview != nil) {
+    if (_addOtherUserBtn != nil) {
         [self.addOtherUserBtn removeFromSuperview];
         self.addOtherUserBtn = nil;
     }
@@ -410,28 +418,17 @@
 #pragma mark - Public Method
 
 - (void)createCallingView:(TUICallMediaType)callType callRole:(TUICallRole)callRole callScene:(TUICallScene)callScene {
+    [TUICallingStatusManager shareInstance].callScene = callScene;
+    [TUICallingStatusManager shareInstance].callRole = callRole;
+    [TUICallingStatusManager shareInstance].callMediaType = callType;
     [TUICallingStatusManager shareInstance].callStatus = TUICallStatusWaiting;
-    [TUICallingStatusManager shareInstance].callType = callType;
-    _callRole = callRole;
-    _callScene = callScene;
-    
-    if (self.callScene == TUICallSceneSingle) {
-        [self initSingleWaitingView];
-    } else {
-        [self initGroupWaitingView];
-    }
-    
-    [self updateCallingUserView];
-    [self updateContainerViewBgColor];
-    [self updateViewTextColor];
-    [self initFloatingWindowBtn];
 }
 
 - (void)createGroupCallingAcceptView:(TUICallMediaType)callType callRole:(TUICallRole)callRole callScene:(TUICallScene)callScene {
+    [TUICallingStatusManager shareInstance].callScene = callScene;
+    [TUICallingStatusManager shareInstance].callRole = callRole;
+    [TUICallingStatusManager shareInstance].callMediaType = callType;
     [TUICallingStatusManager shareInstance].callStatus = TUICallStatusAccept;
-    [TUICallingStatusManager shareInstance].callType = callType;
-    _callRole = callRole;
-    _callScene = callScene;
     [self initGroupAcceptCallView];
     [self updateViewTextColor];
     [self initFloatingWindowBtn];
@@ -439,7 +436,7 @@
 
 - (void)updateCallingView:(NSArray<CallingUserModel *> *)inviteeList sponsor:(CallingUserModel *)sponsor {
     self.remoteUser = sponsor;
-    if (self.callRole == TUICallRoleCall) {
+    if ([TUICallingStatusManager shareInstance].callRole == TUICallRoleCall) {
         self.remoteUser = [inviteeList firstObject];
     }
     
@@ -462,13 +459,15 @@
     if (self.backgroundView && [self.backgroundView respondsToSelector:@selector(updateViewWithUserList:sponsor:callType:callRole:)]) {
         [self.backgroundView updateViewWithUserList:[TUICallingUserManager allUserList]
                                             sponsor:sponsor
-                                           callType:[TUICallingStatusManager shareInstance].callType
-                                           callRole:self.callRole];
+                                           callType:[TUICallingStatusManager shareInstance].callMediaType
+                                           callRole:[TUICallingStatusManager shareInstance].callRole];
     }
 }
 
 - (void)showCallingView {
-    [self.callingWindow addSubview:self.containerView];
+    UIViewController *viewController = [[UIViewController alloc] init];
+    [viewController.view addSubview:self.containerView];
+    self.callingWindow.rootViewController = viewController;
     self.callingWindow.hidden = NO;
     dispatch_async(dispatch_get_main_queue(), ^{
         if (self->_callingWindow != nil) {
@@ -482,10 +481,7 @@
     [self.containerView removeFromSuperview];
     self.callingWindow.hidden = YES;
     self.callingWindow = nil;
-    
-    if ([TUICallingFloatingWindowManager shareInstance].isFloating) {
-        [[TUICallingFloatingWindowManager shareInstance] closeWindowCompletion:nil];
-    }
+    [[TUICallingFloatingWindowManager shareInstance] closeMicroFloatingWindow:nil];
 }
 
 - (UIView *)getCallingView {
@@ -494,12 +490,7 @@
 
 - (void)updateCallingTimeStr:(NSString *)timeStr {
     [self.timerView updateTimerText:timeStr];
-    
-    if ([TUICallingFloatingWindowManager shareInstance].isFloating) {
-        [[TUICallingFloatingWindowManager shareInstance] updateMicroWindowText:timeStr
-                                                                    callStatus:[TUICallingStatusManager shareInstance].callType
-                                                                      callRole:self.callRole];
-    }
+    [[TUICallingFloatingWindowManager shareInstance] updateDescribeText:timeStr];
 }
 
 - (void)userEnter:(CallingUserModel *)userModel {
@@ -522,6 +513,9 @@
     if (self.backgroundView && [self.backgroundView respondsToSelector:@selector(updateUserInfo:)]) {
         [self.backgroundView updateUserInfo:userModel];
     }
+    if ([self.remoteUser.userId isEqualToString:userModel.userId]) {
+        [[TUICallingFloatingWindowManager shareInstance] updateUserModel:userModel];
+    }
 }
 
 - (void)enableFloatWindow:(BOOL)enable {
@@ -532,73 +526,73 @@
 
 - (void)floatingWindowTouchEvent:(UIButton *)sender {
     TUICallingVideoRenderView *renderView = nil;
-    
-    if (self.callScene == TUICallSceneSingle && [TUICallingStatusManager shareInstance].callType == TUICallMediaTypeVideo) {
+    TUICallMediaType callMediaType = [TUICallingStatusManager shareInstance].callMediaType;
+    TUICallScene callScene = [TUICallingStatusManager shareInstance].callScene;
+    if (callScene == TUICallSceneSingle && callMediaType == TUICallMediaTypeVideo) {
         if ([TUICallingStatusManager shareInstance].callStatus == TUICallStatusAccept) {
             renderView = self.remotePreView;
         } else {
             renderView = self.localPreView;
         }
     }
-    
     self.localPreView.delegate = [TUICallingFloatingWindowManager shareInstance].floatWindow;
     self.remotePreView.delegate = [TUICallingFloatingWindowManager shareInstance].floatWindow;
-    __weak typeof(self) weakSelf = self;
-    [[TUICallingFloatingWindowManager shareInstance] showMicroFloatingWindowWithCallingWindow:self.callingWindow VideoRenderView:renderView Completion:^(BOOL finished) {
-        if (finished && ([TUICallingStatusManager shareInstance].callType == TUICallMediaTypeAudio || !renderView)) {
-            [[TUICallingFloatingWindowManager shareInstance] updateMicroWindowText:@""
-                                                                        callStatus:[TUICallingStatusManager shareInstance].callStatus
-                                                                          callRole:weakSelf.callRole];
+    [[TUICallingFloatingWindowManager shareInstance] showMicroFloatingWindow:^(BOOL finished) {
+        [[TUICallingFloatingWindowManager shareInstance] setRenderView:renderView];
+        if (finished && ([TUICallingStatusManager shareInstance].callMediaType == TUICallMediaTypeAudio || !renderView)) {
+            [[TUICallingFloatingWindowManager shareInstance] updateDescribeText:@""];
         }
     }];
 }
 
 - (void)addOtherUserTouchEvent:(UIButton *)sender {
-    [TUICallingAction inviteUser:@[@"131313", @"141414"] succ:^(NSArray * _Nonnull userIDs) {
-        __weak typeof(self) weakSelf = self;
-        [[V2TIMManager sharedInstance] getUsersInfo:userIDs succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
-            __strong typeof(self) strongSelf = weakSelf;
-            for (V2TIMUserFullInfo *userInfo in infoList) {
-                CallingUserModel *userModel = [TUICallingCommon covertUser:userInfo];
-                [TUICallingUserManager cacheUser:userModel];
-                if (strongSelf.backgroundView && [strongSelf.backgroundView respondsToSelector:@selector(userAdd:)]) {
-                    [strongSelf.backgroundView userAdd:userModel];
-                }
-            }
-        } fail:nil];
-    } fail:^(int code, NSString * _Nonnull desc) {
-        TRTCLog(@"Calling - addOtherUserTouchEvent error code:%@ desc:%@", code, desc);
-    }];
+    NSDictionary *param = @{
+        TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_GroupIDKey : [TUICallingStatusManager shareInstance].groupId ?: @"",
+        TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_SelectedUserIDListKey : [TUICallingUserManager allUserIdList] ?: @[],
+        TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_UserDataKey : TUICallKit_TUIGroupService_UserDataValue,
+        TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_NameKey : TUIKitLocalizableString(Make-a-call),
+    };
+    UIViewController *viewController = [TUICore callService:TUICore_TUIGroupService
+                                                     method:TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod
+                                                      param:param];
+    TUINavigationController *navigationController = [[TUINavigationController alloc] initWithRootViewController:viewController];
+    navigationController.modalPresentationStyle = UIModalPresentationFullScreen;
+    [self.callingWindow.rootViewController presentViewController:navigationController animated:NO completion:nil];
 }
 
 #pragma mark - TUICallingStatusManagerProtocol
 
 - (void)updateCallType {
+    if (![TUICallingStatusManager shareInstance].callMediaType) {
+        return;
+    }
+    
     [self clearAllSubViews];
     
-    if ([TUICallingStatusManager shareInstance].callStatus == TUICallStatusAccept) {
-        [self initSingleAcceptCallView];
-        [self initHandsFree:[TUICallingStatusManager shareInstance].audioPlaybackDevice];
-        [[TUICallingFloatingWindowManager shareInstance] switchToAudioMicroWindowWith:[TUICallingStatusManager shareInstance].callStatus
-                                                                             callRole:self.callRole];
+    if ([TUICallingStatusManager shareInstance].callScene == TUICallSceneSingle) {
+        if ([TUICallingStatusManager shareInstance].callStatus == TUICallStatusAccept) {
+            [self initSingleAcceptCallView];
+            [self initHandsFree:[TUICallingStatusManager shareInstance].audioPlaybackDevice];
+        } else {
+            [self initSingleWaitingView];
+        }
     } else {
-        [self initSingleWaitingView];
+        [self initGroupWaitingView];
     }
     
     [self updateContainerViewBgColor];
     [self updateCallingUserView];
     [self updateViewTextColor];
     [self initFloatingWindowBtn];
-    
 }
 
 - (void)updateCallStatus {
     if ([TUICallingStatusManager shareInstance].callStatus == TUICallStatusAccept) {
         TUICallingVideoRenderView *renderView = nil;
         
-        if (self.callScene == TUICallSceneSingle) {
+        if ([TUICallingStatusManager shareInstance].callScene == TUICallSceneSingle) {
             [self initSingleAcceptCallView];
-            if ([TUICallingStatusManager shareInstance].callType == TUICallMediaTypeVideo) {
+            if ([TUICallingStatusManager shareInstance].callMediaType == TUICallMediaTypeVideo) {
                 renderView = self.remotePreView;
             }
         } else {
@@ -610,7 +604,8 @@
         [self updateContainerViewBgColor];
         [self updateViewTextColor];
         [self initFloatingWindowBtn];
-        [[TUICallingFloatingWindowManager shareInstance] updateMicroWindowRenderView:renderView];
+        [[TUICallingFloatingWindowManager shareInstance] updateUserModel:self.remoteUser];
+        [[TUICallingFloatingWindowManager shareInstance] setRenderView:renderView];
         
         if (self.backgroundView && [self.backgroundView respondsToSelector:@selector(updateRemoteView)]) {
             [self.backgroundView updateRemoteView];
@@ -654,19 +649,54 @@
     [TUICallingAction hangup];
 }
 
+#pragma mark - TUINotificationProtocol
+
+- (void)onNotifyEvent:(NSString *)key subKey:(NSString *)subKey object:(id)anObject param:(NSDictionary *)param {
+    if ([key isEqualToString:TUICore_TUIGroupNotify] && [subKey isEqualToString:TUICore_TUIGroupNotify_SelectGroupMemberSubKey]) {
+        NSString *userData = param[TUICore_TUIGroupNotify_SelectGroupMemberSubKey_UserDataKey];
+        if (!(userData && [userData isKindOfClass:NSString.class] && [userData isEqualToString:TUICallKit_TUIGroupService_UserDataValue])) {
+            return;
+        }
+        NSArray<TUIUserModel *> *selectUserList = param[TUICore_TUIGroupNotify_SelectGroupMemberSubKey_UserListKey];
+        if (!(selectUserList && [selectUserList isKindOfClass:NSArray.class] && selectUserList.count > 0)) {
+            return;
+        }
+        [TUICallingAction inviteUser:selectUserList succ:^(NSArray * _Nonnull userIDs) {
+            __weak typeof(self) weakSelf = self;
+            [[V2TIMManager sharedInstance] getUsersInfo:userIDs succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
+                __strong typeof(self) strongSelf = weakSelf;
+                for (V2TIMUserFullInfo *userInfo in infoList) {
+                    CallingUserModel *userModel = [TUICallingCommon covertUser:userInfo];
+                    [TUICallingUserManager cacheUser:userModel];
+                    if (strongSelf.backgroundView && [strongSelf.backgroundView respondsToSelector:@selector(userAdd:)]) {
+                        [strongSelf.backgroundView userAdd:userModel];
+                    }
+                }
+            } fail:nil];
+        } fail:^(int code, NSString * _Nonnull desc) {
+            TUILog(@"Calling - addOtherUserTouchEvent error code:%d desc:%@", code, desc);
+            [[TUICallingCommon getKeyWindow] makeToast:desc];
+        }];
+    }
+}
+
 #pragma mark - Private Method
 
 - (void)updateContainerViewBgColor {
+    TUICallMediaType callMediaType = [TUICallingStatusManager shareInstance].callMediaType;
+    TUICallScene callScene = [TUICallingStatusManager shareInstance].callScene;
     UIColor *backgroundColor = [UIColor t_colorWithHexString:@"#F2F2F2"];
-    if ((self.callScene != TUICallSceneSingle) || ([TUICallingStatusManager shareInstance].callType == TUICallMediaTypeVideo)) {
+    if ((callScene != TUICallSceneSingle) || (callMediaType == TUICallMediaTypeVideo)) {
         backgroundColor = [UIColor t_colorWithHexString:@"#242424"];
     }
     self.containerView.backgroundColor = backgroundColor;
 }
 
 - (void)updateViewTextColor {
+    TUICallMediaType callMediaType = [TUICallingStatusManager shareInstance].callMediaType;
+    TUICallScene callScene = [TUICallingStatusManager shareInstance].callScene;
     UIColor *textColor = [UIColor t_colorWithHexString:@"#000000"];
-    if ((self.callScene != TUICallSceneSingle) || ([TUICallingStatusManager shareInstance].callType == TUICallMediaTypeVideo)) {
+    if ((callScene != TUICallSceneSingle) || (callMediaType == TUICallMediaTypeVideo)) {
         textColor = [UIColor t_colorWithHexString:@"#F2F2F2"];
     }
     [self.timerView setTimerTextColor:textColor];
@@ -688,16 +718,16 @@
 
 - (NSString *)getWaitingText {
     NSString *waitingText = @"";
-    switch ([TUICallingStatusManager shareInstance].callType) {
+    switch ([TUICallingStatusManager shareInstance].callMediaType) {
         case TUICallMediaTypeAudio:{
-            if (self.callRole == TUICallRoleCall) {
+            if ([TUICallingStatusManager shareInstance].callRole == TUICallRoleCall) {
                 waitingText = TUICallingLocalize(@"Demo.TRTC.Calling.waitaccept");
             } else {
                 waitingText = TUICallingLocalize(@"Demo.TRTC.calling.invitetoaudiocall");
             }
         } break;
         case TUICallMediaTypeVideo:{
-            if (self.callRole == TUICallRoleCall) {
+            if ([TUICallingStatusManager shareInstance].callRole == TUICallRoleCall) {
                 waitingText = TUICallingLocalize(@"Demo.TRTC.Calling.waitaccept");
             } else {
                 waitingText = TUICallingLocalize(@"Demo.TRTC.calling.invitetovideocall");
@@ -774,7 +804,7 @@
 - (UIButton *)addOtherUserBtn {
     if (!_addOtherUserBtn) {
         _addOtherUserBtn = [UIButton buttonWithType:UIButtonTypeSystem];
-        [_addOtherUserBtn setBackgroundImage:[TUICallingCommon getBundleImageWithName:@"add_user"] forState:UIControlStateNormal];
+        [_addOtherUserBtn setBackgroundImage:[TUICallingCommon getBundleImageWithName:@"ic_add_user"] forState:UIControlStateNormal];
         [_addOtherUserBtn addTarget:self action:@selector(addOtherUserTouchEvent:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _addOtherUserBtn;

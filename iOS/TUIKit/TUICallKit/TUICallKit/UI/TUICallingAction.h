@@ -10,6 +10,8 @@
 #import <UIKit/UIKit.h>
 #import "TUICallEngineHeader.h"
 
+@class TUIUserModel;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TUICallingAction : NSObject
@@ -34,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)selectAudioPlaybackDevice;
 
-+ (void)inviteUser:(NSArray<NSString *> *)userIdList succ:(void(^)(NSArray *userIDs))succ fail:(TUICallFail)fail;
++ (void)inviteUser:(NSArray<TUIUserModel *> *)userList succ:(void(^)(NSArray *userIDs))succ fail:(TUICallFail)fail;
 
 + (void)startRemoteView:(NSString *)userId
               videoView:(TUIVideoView *)videoView

@@ -60,7 +60,11 @@
         [[TUICallEngine createInstance] performSelector:@selector(setOnlineUserOnly:) withObject:@(0)];
     }
     
-    [[TUICallKit createInstance] groupCall:groupID userIdList:userIDs callMediaType:callingType];
+    if (groupID && [groupID isKindOfClass:NSString.class]) {
+        [[TUICallKit createInstance] groupCall:groupID userIdList:userIDs callMediaType:callingType];
+    } else {
+        [[TUICallKit createInstance] call:[userIDs firstObject] callMediaType:callingType];
+    }
 }
 
 #pragma mark - TUIServiceProtocol
@@ -101,12 +105,18 @@
         if ([[TUICallEngine createInstance] respondsToSelector:@selector(onReceiveGroupCallAPNs:)]) {
             [[TUICallEngine createInstance] performSelector:@selector(onReceiveGroupCallAPNs:) withObject:signalingInfo];
         }
+    } else if ([method isEqualToString:TUICore_TUICallingService_EnableMultiDeviceAbilityMethod]) {
+        NSNumber *enableMultiDeviceAbility = [param tui_objectForKey:TUICore_TUICallingService_EnableMultiDeviceAbilityMethod_EnableMultiDeviceAbility asClass:NSNumber.class];
+        [[TUICallEngine createInstance] enableMultiDeviceAbility:[enableMultiDeviceAbility boolValue] succ:^{
+        } fail:^(int code, NSString * _Nullable errMsg) {
+        }];
     }
     
     return nil;
 }
 
 #pragma mark - TUIExtensionProtocol
+
 - (NSDictionary *)getExtensionInfo:(NSString *)key param:(nullable NSDictionary *)param {
     if (!key || ![TUICallingCommon checkDictionaryValid:param]) {
         return nil;
@@ -180,4 +190,5 @@
         }
     }
 }
+
 @end

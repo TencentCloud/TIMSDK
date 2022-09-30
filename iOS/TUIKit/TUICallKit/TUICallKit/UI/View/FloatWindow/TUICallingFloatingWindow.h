@@ -34,7 +34,9 @@ static CGFloat const kMicroVideoViewHeight = 100.0f * 16 / 9.0;
 
 - (void)updateMicroWindowWithText:(NSString *)textStr;
 
-- (void)updateMicroWindowWithRenderView:(TUICallingVideoRenderView *)renderView;
+- (void)updateMicroWindowWithRenderView:(TUICallingVideoRenderView * _Nullable)renderView;
+
+- (void)updateMicroWindowBackgroundAvatar:(NSString *)avatar;
 
 - (void)floatingWindowRoundedRect;
 

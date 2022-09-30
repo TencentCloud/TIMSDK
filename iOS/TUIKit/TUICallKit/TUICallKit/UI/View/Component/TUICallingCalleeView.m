@@ -59,6 +59,7 @@ static CGFloat const kSpacing = 5.0f;
 }
 
 - (void)updateViewWithUserList:(NSArray<CallingUserModel *> *)userList {
+    [self.listDate removeAllObjects];
     [userList enumerateObjectsUsingBlock:^(CallingUserModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if (![obj.userId isEqualToString:TUILogin.getUserID]) {
             [self.listDate addObject:obj];
