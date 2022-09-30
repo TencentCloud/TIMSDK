@@ -33,6 +33,8 @@
 
 @interface AppDelegate () <V2TIMConversationListener, TUILoginListener, ThemeSelectControllerDelegate, LanguageSelectControllerDelegate,V2TIMAPNSListener>
 
+@property (nonatomic,strong) TUILoginConfig *loginConfig;
+
 @end
 
 @implementation AppDelegate
@@ -114,7 +116,8 @@ TUIOfflinePushConfigForTPNS(kTPNSAccessID, kTPNSAccessKey, kTPNSDomain)
 }
 
 - (void)loginSDK:(NSString *)userID userSig:(NSString *)sig succ:(TSucc)succ fail:(TFail)fail {
-    [TUILogin login:SDKAPPID userID:userID userSig:sig succ:^{
+    
+    [TUILogin login:SDKAPPID userID:userID userSig:sig config:self.loginConfig succ:^{
         [self redpoint_setupTotalUnreadCount];
         self.window.rootViewController = [self getMainController];
         [TUITool makeToast:NSLocalizedString(@"AppLoginSucc", nil) duration:1];
@@ -228,6 +231,7 @@ void uncaughtExceptionHandler(NSException*exception) {
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
     TUIConfig.defaultConfig.displayOnlineStatusIcon = [[NSUserDefaults standardUserDefaults] boolForKey:kEnableOnlineStatus];
+    TUIChatConfig.defaultConfig.enableMultiDeviceForCall = YES;
 }
 
 #pragma mark -- Setup UI
@@ -261,6 +265,22 @@ void uncaughtExceptionHandler(NSException*exception) {
     [TUIBaseChatViewController setCustomTopView:tipsView];
 }
 
+- (TUILoginConfig *)loginConfig {
+    if (!_loginConfig) {
+        _loginConfig = [[TUILoginConfig alloc] init];
+#if DEBUG
+        _loginConfig.logLevel = TUI_LOG_DEBUG;
+#else
+        _loginConfig.logLevel = TUI_LOG_INFO;
+#endif
+        @weakify(self);
+        _loginConfig.onLog = ^(NSInteger logLevel, NSString *logContent) {
+            @strongify(self);
+            [self onLog:logLevel logContent:logContent];
+        };
+    }
+    return _loginConfig;
+}
 #pragma mark - V2TIMConversationListener
 - (void)onTotalUnreadMessageCountChanged:(UInt64) totalUnreadCount {
     NSLog(@"%s, totalUnreadCount:%llu", __func__, totalUnreadCount);
@@ -287,6 +307,10 @@ void uncaughtExceptionHandler(NSException*exception) {
     [self onUserStatus:TUser_Status_ForceOffline];
 }
 
+- (void)onLog:(NSInteger)logLevel logContent:(NSString *)logContent {
+    
+}
+
 - (TUIContactViewDataProvider *)contactDataProvider
 {
     if (_contactDataProvider == nil) {
@@ -309,6 +333,7 @@ void uncaughtExceptionHandler(NSException*exception) {
             break;
         case TUser_Status_SigExpired:
         {
+            [self userSigExpiredAction];
             NSLog(@"%s, status:%zd", __func__, status);
         }
             break;
@@ -339,6 +364,17 @@ void uncaughtExceptionHandler(NSException*exception) {
         }];
     }];
 }
+
+- (void)userSigExpiredAction {
+    [TUILogin logout:^{
+        NSLog(@"logout sdk succeed");
+    } fail:^(int code, NSString *msg) {
+        NSLog(@"logout sdk failed, code: %ld, msg: %@", (long)code, msg);
+    }];
+    self.window.rootViewController = [self getLoginController];
+    [[NSNotificationCenter defaultCenter] postNotificationName: @"TUILoginShowPrivacyPopViewNotfication" object:nil];
+}
+
 
 #pragma mark - LanguageSelectControllerDelegate
 - (void)onSelectLanguage:(LanguageSelectCellModel *)cellModel {
@@ -471,8 +507,8 @@ typedef void (^confirmHandler)(UIAlertAction *action, NSString *content);
         }
     }];
     
-    [alertController addAction:cancel];
-    [alertController addAction:confirm];
+    [alertController tuitheme_addAction:cancel];
+    [alertController tuitheme_addAction:confirm];
     
     [self.window.rootViewController presentViewController:alertController animated:NO completion:nil];
 }

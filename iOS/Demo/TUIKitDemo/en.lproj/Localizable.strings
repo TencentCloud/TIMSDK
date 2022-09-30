@@ -198,7 +198,7 @@
 "TUIKitAboutUsCloseAccountSuccessful" = "Account cancelled successfully";
 "TUIKitAboutUsCloseAccountFailed" = "Account cancelled failed";
 
-"TUIPrivateProtocolAlertMsg" = "Welcome to Tencent Cloud Instant Messaging. To protect your personal information, we have updated the \"Privacy Policy\", involving improving the specific contents and purposes of collecting user information, and adding third-party SDKs.\n\n Please carefully read the \"User Agreement\",\"Summary of Privacy Policy\",\"Privacy Policy\",\"Personal Information Collected\" and \"Information Shared with Third Parties\", and tap Agree and Continue to use our products and services if you agree to them.";
+"TUIPrivateProtocolAlertMsg" = " Welcome to Tencent Cloud Instant Messaging. To protect your personal information, we have updated the \"Privacy Policy\", involving improving the specific contents and purposes of collecting user information, and adding third-party SDKs.\n\n Please carefully read the \"User Agreement\",\"Summary of Privacy Policy\",\"Privacy Policy\",\"Personal Information Collected\" and \"Information Shared with Third Parties\", and tap Agree and Continue to use our products and services if you agree to them.";
 "TUIPrivateProtocolHighlight1" = "\"User Agreement\"";
 "TUIPrivateProtocolHighlight2" = "\"Privacy Policy\"";
 "TUIPrivateProtocolHighlight3" = "\"Personal Information Collected\"";
