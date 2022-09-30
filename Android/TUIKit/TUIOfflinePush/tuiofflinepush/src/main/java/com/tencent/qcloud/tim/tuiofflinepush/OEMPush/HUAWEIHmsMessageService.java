@@ -6,6 +6,7 @@ import com.huawei.hms.push.HmsMessageService;
 import com.huawei.hms.push.RemoteMessage;
 import com.tencent.qcloud.tim.tuiofflinepush.TUIOfflinePushConfig;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.BrandUtil;
+import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushErrorBean;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushLog;
 
 public class HUAWEIHmsMessageService extends HmsMessageService {
@@ -39,6 +40,12 @@ public class HUAWEIHmsMessageService extends HmsMessageService {
     @Override
     public void onTokenError(Exception exception) {
         TUIOfflinePushLog.i(TAG, "onTokenError exception=" + exception);
+        if (OEMPushSetting.mPushCallback != null) {
+            TUIOfflinePushErrorBean errorBean = new TUIOfflinePushErrorBean();
+            errorBean.setErrorCode(TUIOfflinePushConfig.REGISTER_TOKEN_ERROR_CODE);
+            errorBean.setErrorDescription("huawei onTokenError exception = " + exception);
+            OEMPushSetting.mPushCallback.onTokenErrorCallBack(errorBean);
+        }
     }
 
     @Override

@@ -514,6 +514,8 @@ public class ContactProvider {
         v2TIMGroupInfo.setGroupType(groupInfo.getGroupType());
         v2TIMGroupInfo.setGroupName(groupInfo.getGroupName());
         v2TIMGroupInfo.setGroupAddOpt(groupInfo.getJoinType());
+        v2TIMGroupInfo.setGroupID(groupInfo.getId());
+        v2TIMGroupInfo.setFaceUrl(groupInfo.getFaceUrl());
         if (TextUtils.equals(v2TIMGroupInfo.getGroupType(), V2TIMManager.GROUP_TYPE_COMMUNITY)) {
             v2TIMGroupInfo.setSupportTopic(groupInfo.isCommunitySupportTopic());
         }
@@ -613,7 +615,7 @@ public class ContactProvider {
     public void loadContactUserStatus(List<ContactItemBean> dataSource, IUIKitCallback<Void> callback) {
         if (dataSource == null || dataSource.size() == 0) {
             TUIContactLog.d(TAG, "loadContactUserStatus datasource is null");
-            ContactUtils.callbackOnSuccess(callback, null);
+            ContactUtils.callbackOnError(callback, -1, "data list is empty");
             return;
         }
 
@@ -631,6 +633,8 @@ public class ContactProvider {
         V2TIMManager.getInstance().getUserStatus(userList, new V2TIMValueCallback<List<V2TIMUserStatus>>() {
             @Override
             public void onSuccess(List<V2TIMUserStatus> v2TIMUserStatuses) {
+                TUIContactLog.i(TAG, "getUserStatus success");
+
                 for (V2TIMUserStatus item : v2TIMUserStatuses) {
                     ContactItemBean bean = dataSourceMap.get(item.getUserID());
                     if (bean != null) {

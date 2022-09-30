@@ -3,6 +3,7 @@ package com.tencent.qcloud.tim.tuiofflinepush.oempush;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushErrorBean;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushLog;
 import com.xiaomi.mipush.sdk.ErrorCode;
 import com.xiaomi.mipush.sdk.MiPushClient;
@@ -67,7 +68,14 @@ public class XiaomiMsgReceiver extends PushMessageReceiver {
 
         TUIOfflinePushLog.d(TAG, "regId: " + mRegId);
         if (OEMPushSetting.mPushCallback != null) {
-            OEMPushSetting.mPushCallback.onTokenCallback(mRegId);
+            if (miPushCommandMessage.getResultCode() != ErrorCode.SUCCESS) {
+                TUIOfflinePushErrorBean errorBean = new TUIOfflinePushErrorBean();
+                errorBean.setErrorCode(miPushCommandMessage.getResultCode());
+                errorBean.setErrorDescription("xiaomi error code: " + String.valueOf(miPushCommandMessage.getResultCode()));
+                OEMPushSetting.mPushCallback.onTokenErrorCallBack(errorBean);
+            } else {
+                OEMPushSetting.mPushCallback.onTokenCallback(mRegId);
+            }
         }
     }
 

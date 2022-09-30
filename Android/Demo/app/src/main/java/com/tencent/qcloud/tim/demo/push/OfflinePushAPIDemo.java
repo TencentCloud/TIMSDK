@@ -50,6 +50,9 @@ public class OfflinePushAPIDemo {
      *   "oppoPushBussinessId": "", // 在腾讯云控制台上传第三方推送证书后分配的证书ID // The certificate ID assigned in the Tencent Cloud console
      *   "oppoPushAppKey": "",// oppo开放平台分配的应用APPID // APPID, Allocated by OPPO Open Platform
      *   "oppoPushAppSecret": "",// oppo开放平台分配的应用APPKEY // APPKEY, Allocated by OPPO Open Platform
+     *
+     *   // honor
+     *   "honorPushBussinessId": "",    // 在腾讯云控制台上传第三方推送证书后分配的证书ID  // The certificate ID assigned in the Tencent Cloud console
      *  }
      *
      */
@@ -73,6 +76,7 @@ public class OfflinePushAPIDemo {
         offlinePushParamBean.setOppoPushBussinessId("");
         offlinePushParamBean.setOppoPushAppKey("");
         offlinePushParamBean.setOppoPushAppSecret("");
+        offlinePushParamBean.setHonorPushBussinessId("");
 
         String jsonStr = new Gson().toJson(offlinePushParamBean);
         if (TextUtils.isEmpty(jsonStr)) {

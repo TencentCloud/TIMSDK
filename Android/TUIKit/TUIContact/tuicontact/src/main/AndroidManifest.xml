@@ -35,6 +35,14 @@
             android:launchMode="singleInstance"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".ui.pages.CreateGroupActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.pages.GroupTypeSelectActivity"
+            android:screenOrientation="portrait" />
+
         <provider
             android:name=".TUIContactService"
             android:authorities="${applicationId}.TUIContact.Init"

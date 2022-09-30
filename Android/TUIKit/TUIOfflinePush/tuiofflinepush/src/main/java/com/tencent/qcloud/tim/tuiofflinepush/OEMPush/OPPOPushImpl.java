@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Build;
 
 import com.heytap.msp.push.callback.ICallBackResultService;
+import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushErrorBean;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushLog;
 
 public class OPPOPushImpl implements ICallBackResultService {
@@ -17,7 +18,14 @@ public class OPPOPushImpl implements ICallBackResultService {
         TUIOfflinePushLog.i(TAG, "onRegister responseCode: " + responseCode + " registerID: " + registerID);
 
         if (OEMPushSetting.mPushCallback != null) {
-            OEMPushSetting.mPushCallback.onTokenCallback(registerID);
+            if (responseCode != 0) {
+                TUIOfflinePushErrorBean errorBean = new TUIOfflinePushErrorBean();
+                errorBean.setErrorCode(responseCode);
+                errorBean.setErrorDescription("oppo error code: " + String.valueOf(responseCode));
+                OEMPushSetting.mPushCallback.onTokenErrorCallBack(errorBean);
+            } else {
+                OEMPushSetting.mPushCallback.onTokenCallback(registerID);
+            }
         }
     }
 

@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuikit.TUICommonDefine;
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.TUILog;
-import com.tencent.qcloud.tuikit.tuicallkit.ui.R;
+import com.tencent.qcloud.tuikit.tuicallkit.R;
 import com.tencent.qcloud.tuikit.tuicallkit.base.CallingUserModel;
 import com.tencent.qcloud.tuikit.tuicallkit.base.TUICallingStatusManager;
 import com.tencent.qcloud.tuikit.tuicallkit.base.UserLayout;
@@ -72,10 +72,6 @@ public class TUICallingSingleView extends BaseCallView {
     @Override
     public void userEnter(CallingUserModel userModel) {
         super.userEnter(userModel);
-    }
-
-    public void updateUserInfo(CallingUserModel userModel) {
-        super.updateUserInfo(userModel);
         UserLayout layout = findUserLayout(userModel.userId);
         if (null == layout) {
             layout = allocUserLayout(userModel);
@@ -99,6 +95,14 @@ public class TUICallingSingleView extends BaseCallView {
 
                     }
                 });
+    }
+
+    public void updateUserInfo(CallingUserModel userModel) {
+        super.updateUserInfo(userModel);
+        UserLayout layout = findUserLayout(userModel.userId);
+        if (layout != null) {
+            layout.setVideoAvailable(userModel.isVideoAvailable);
+        }
     }
 
     @Override

@@ -29,7 +29,6 @@ public class ContactListView extends LinearLayout implements IContactListView {
 
     private static final String TAG = ContactListView.class.getSimpleName();
 
-    private static final String INDEX_STRING_TOP = "↑";
     private RecyclerView mRv;
     private ContactAdapter mAdapter;
     private CustomLinearLayoutManager mManager;
@@ -101,7 +100,6 @@ public class ContactListView extends LinearLayout implements IContactListView {
                 super.onScrolled(recyclerView, dx, dy);
                 LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                 int lastCompletelyVisibleItemPosition = layoutManager.findLastCompletelyVisibleItemPosition();
-                //TUILiveLog.i(TAG, "lastCompletelyVisibleItemPosition: "+lastCompletelyVisibleItemPosition);
                 if(lastCompletelyVisibleItemPosition==layoutManager.getItemCount()-1) {
                     if (presenter.getNextSeq() > 0) {
                         presenter.loadGroupMemberList(groupId);

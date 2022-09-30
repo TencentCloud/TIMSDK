@@ -22,6 +22,7 @@ import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -95,13 +96,15 @@ public class ReplyPresenter {
         for (MessageRepliesBean.ReplyBean replyBean : replyBeanList) {
             msgIdList.add(replyBean.getMessageID());
         }
+        Map<MessageRepliesBean.ReplyBean, TUIMessageBean> messageBeanMap = new LinkedHashMap<>();
+        for (MessageRepliesBean.ReplyBean replyBean : replyBeanList) {
+            messageBeanMap.put(replyBean, null);
+        }
         chatPresenter.findMessage(msgIdList, new IUIKitCallback<List<TUIMessageBean>>() {
             @Override
             public void onSuccess(List<TUIMessageBean> data) {
-                Map<MessageRepliesBean.ReplyBean, TUIMessageBean> messageBeanMap = new LinkedHashMap<>();
                 for (MessageRepliesBean.ReplyBean replyBean : replyBeanList) {
                     Iterator<TUIMessageBean> iterator = data.listIterator();
-                    messageBeanMap.put(replyBean, null);
                     while(iterator.hasNext()) {
                         TUIMessageBean messageBean = iterator.next();
                         if (TextUtils.equals(messageBean.getId(), replyBean.getMessageID())) {
@@ -111,14 +114,54 @@ public class ReplyPresenter {
                         }
                     }
                 }
+                processReplyBeanList(messageBeanMap);
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                processReplyBeanList(messageBeanMap);
+            }
+        });
+    }
+
+    private void processReplyBeanList(Map<MessageRepliesBean.ReplyBean, TUIMessageBean> replyBeanDataMap) {
+        Set<String> userIDSet = new HashSet<>();
+        for (Map.Entry<MessageRepliesBean.ReplyBean, TUIMessageBean> entry : replyBeanDataMap.entrySet()) {
+            if (entry.getValue() == null) {
+                userIDSet.add(entry.getKey().getMessageSender());
+            }
+        }
+        if (userIDSet.isEmpty()) {
+            if (replyHandler != null) {
+                replyHandler.onRepliesMessageFound(replyBeanDataMap);
+            }
+            return;
+        }
+        chatPresenter.getReactUserBean(userIDSet, new IUIKitCallback<Map<String, ReactUserBean>>() {
+            @Override
+            public void onSuccess(Map<String, ReactUserBean> data) {
+                for (Map.Entry<String, ReactUserBean> dataEntry : data.entrySet()) {
+                    if (dataEntry.getValue() != null) {
+                        String userID = dataEntry.getKey();
+                        ReactUserBean userBean = dataEntry.getValue();
+                        for (Map.Entry<MessageRepliesBean.ReplyBean, TUIMessageBean> entry : replyBeanDataMap.entrySet()) {
+                            if (TextUtils.equals(entry.getKey().getMessageSender(), userID)) {
+                                entry.getKey().setSenderShowName(userBean.getDisplayString());
+                                entry.getKey().setSenderFaceUrl(userBean.getFaceUrl());
+                            }
+                        }
+                    }
+                }
                 if (replyHandler != null) {
-                    replyHandler.onRepliesMessageFound(messageBeanMap);
+                    replyHandler.onRepliesMessageFound(replyBeanDataMap);
                 }
             }
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
-                ToastUtil.toastShortMessage("find reply message failed " + errCode + "  " + errMsg);
+                if (replyHandler != null) {
+                    replyHandler.onRepliesMessageFound(replyBeanDataMap);
+                }
             }
         });
     }

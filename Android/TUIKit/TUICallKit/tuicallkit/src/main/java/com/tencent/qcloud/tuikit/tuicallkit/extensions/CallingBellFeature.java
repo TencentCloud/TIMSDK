@@ -11,7 +11,7 @@ import android.util.Log;
 
 import com.tencent.qcloud.tuicore.util.SPUtils;
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.TUILog;
-import com.tencent.qcloud.tuikit.tuicallkit.ui.R;
+import com.tencent.qcloud.tuikit.tuicallkit.R;
 
 import java.io.File;
 import java.io.IOException;

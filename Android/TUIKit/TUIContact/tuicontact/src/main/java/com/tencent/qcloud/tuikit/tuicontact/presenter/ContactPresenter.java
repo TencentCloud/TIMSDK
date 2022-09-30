@@ -37,8 +37,10 @@ public class ContactPresenter {
 
     private final List<ContactItemBean> dataSource = new ArrayList<>();
 
+    // Strong references avoid GC
     private ContactEventListener friendListListener;
     private ContactEventListener blackListListener;
+    private IUIKitCallback<Void> getUserStatusCallback;
 
     private boolean isSelectForCall = false;
 
@@ -124,14 +126,14 @@ public class ContactPresenter {
             @Override
             public void onSuccess(List<ContactItemBean> data) {
                 TUIContactLog.i(TAG, "load data source success , loadType = " + dataSourceType);
-                onDataLoaded(data);
+                onDataLoaded(data, dataSourceType);
             }
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
                 TUIContactLog.e(TAG, "load data source error , loadType = " + dataSourceType +
                         "  " + "errCode = " + errCode + "  errMsg = " + errMsg);
-                onDataLoaded(new ArrayList<>());
+                onDataLoaded(new ArrayList<>(), dataSourceType);
             }
         };
 
@@ -173,37 +175,44 @@ public class ContactPresenter {
             @Override
             public void onSuccess(List<ContactItemBean> data) {
                 TUIContactLog.i(TAG, "load data source success , loadType = " + ContactListView.DataSource.GROUP_MEMBER_LIST);
-                onDataLoaded(data);
+                onDataLoaded(data, ContactListView.DataSource.GROUP_MEMBER_LIST);
             }
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
                 TUIContactLog.e(TAG, "load data source error , loadType = " + ContactListView.DataSource.GROUP_MEMBER_LIST +
                         "  " + "errCode = " + errCode + "  errMsg = " + errMsg);
-                onDataLoaded(new ArrayList<>());
+                onDataLoaded(new ArrayList<>(), ContactListView.DataSource.GROUP_MEMBER_LIST);
 
             }
         });
     }
 
-    private void onDataLoaded(List<ContactItemBean> loadedData) {
+    private void onDataLoaded(List<ContactItemBean> loadedData, int dataSourceType) {
         dataSource.addAll(loadedData);
         notifyDataSourceChanged();
-        loadContactUserStatus(dataSource);
+        if (dataSourceType != ContactListView.DataSource.GROUP_LIST) {
+            loadContactUserStatus(dataSource);
+        }
     }
 
     private void loadContactUserStatus(List<ContactItemBean> loadedData) {
-        provider.loadContactUserStatus(loadedData, new IUIKitCallback<Void>(){
+        getUserStatusCallback = new IUIKitCallback<Void>(){
             @Override
             public void onSuccess(Void result) {
-               notifyDataSourceChanged();
+                TUIContactLog.i(TAG, "loadContactUserStatus success");
+                notifyDataSourceChanged();
             }
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
                 TUIContactLog.e(TAG, "loadContactUserStatus error code = " + errCode + ",des = " + errMsg);
             }
-        });
+        };
+        GetUserStatusHelper.GetUserStatusTask task = new GetUserStatusHelper.GetUserStatusTask();
+        task.setLoadedData(loadedData);
+        task.setCallback(getUserStatusCallback);
+        GetUserStatusHelper.enqueue(task);
     }
 
     private void notifyDataSourceChanged() {

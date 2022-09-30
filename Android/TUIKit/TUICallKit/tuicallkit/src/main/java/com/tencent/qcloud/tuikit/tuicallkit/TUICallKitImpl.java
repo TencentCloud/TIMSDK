@@ -24,10 +24,10 @@ import com.tencent.qcloud.tuikit.tuicallengine.utils.TUICallingConstants.Scene;
 import com.tencent.qcloud.tuikit.tuicallkit.base.CallingUserModel;
 import com.tencent.qcloud.tuikit.tuicallkit.base.Constants;
 import com.tencent.qcloud.tuikit.tuicallkit.base.TUICallingStatusManager;
+import com.tencent.qcloud.tuikit.tuicallkit.config.OfflinePushInfoConfig;
 import com.tencent.qcloud.tuikit.tuicallkit.extensions.CallingBellFeature;
 import com.tencent.qcloud.tuikit.tuicallkit.extensions.CallingKeepAliveFeature;
 import com.tencent.qcloud.tuikit.tuicallkit.extensions.CallingScreenSensorFeature;
-import com.tencent.qcloud.tuikit.tuicallkit.ui.R;
 import com.tencent.qcloud.tuikit.tuicallkit.utils.DeviceUtils;
 import com.tencent.qcloud.tuikit.tuicallkit.utils.PermissionRequest;
 import com.tencent.qcloud.tuikit.tuicallkit.utils.UserInfoUtils;
@@ -39,11 +39,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-/**
- * TUICalling模块对外接口
- */
 public final class TUICallKitImpl extends TUICallKit implements ITUINotification {
-    private static final String TAG = "TUICallKitImpl";
+    private static final String TAG = "TUICallKit";
 
     private static TUICallKitImpl sInstance;
     private final  Context        mContext;
@@ -99,15 +96,11 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
     private void registerCallingEvent() {
         //Login Event
         TUICore.registerEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED,
-                TUIConstants.TUILogin.EVENT_SUB_KEY_USER_KICKED_OFFLINE, this);
-        TUICore.registerEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED,
-                TUIConstants.TUILogin.EVENT_SUB_KEY_USER_SIG_EXPIRED, this);
-        TUICore.registerEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED,
                 TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGIN_SUCCESS, this);
         TUICore.registerEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED,
                 TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGOUT_SUCCESS, this);
 
-        //TUICalling Event
+        //TUICallkit Event
         TUICore.registerEvent(Constants.EVENT_TUICALLING_CHANGED, Constants.EVENT_SUB_CALL_STATUS_CHANGED, this);
     }
 
@@ -125,7 +118,7 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
 
         List<String> list = new ArrayList<>();
         list.add(userId);
-        if (!checkCallingParams(list, "", "", false, callMediaType, TUICallDefine.Role.Caller)) {
+        if (!checkCallingParams(list, "", "", callMediaType, TUICallDefine.Role.Caller)) {
             return;
         }
         checkCallingPermission(new TUICallback() {
@@ -143,8 +136,7 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
 
     @Override
     public void groupCall(String groupId, List<String> userIdList, TUICallDefine.MediaType callMediaType) {
-        if (!checkCallingParams(userIdList, "", groupId, !TextUtils.isEmpty(groupId), callMediaType,
-                TUICallDefine.Role.Caller)) {
+        if (!checkCallingParams(userIdList, "", groupId, callMediaType, TUICallDefine.Role.Caller)) {
             return;
         }
         checkCallingPermission(new TUICallback() {
@@ -160,15 +152,16 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
         });
     }
 
-    private boolean checkCallingParams(List<String> userIdList, String callerId, String groupId, boolean isFromGroup,
+    private boolean checkCallingParams(List<String> userIdList, String callerId, String groupId,
                                        TUICallDefine.MediaType type, TUICallDefine.Role role) {
         if (null == type || null == role) {
-            TUILog.i(TAG, "checkCallingParams, param is error!!!");
+            TUILog.e(TAG, "checkCallingParams, param is error!!!");
             return false;
         }
 
         if (userIdList.size() > TUICallingConstants.MAX_USERS) {
             ToastUtil.toastLongMessage(mContext.getString(R.string.tuicalling_user_exceed_limit));
+            TUILog.e(TAG, "checkCallingParams, exceeding max user number: 9");
             return false;
         }
 
@@ -178,9 +171,6 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
             mCallingBellFeature.startRing();
             return false;
         }
-
-        TUILog.i(TAG, "checkCallingParams, userIdList: " + userIdList + " ,callerId: " + callerId
-                + " ,groupId: " + groupId + " ,type: " + type + " ,role: " + role + " ,isFromGroup: " + isFromGroup);
 
         mUserIDs = userIdList;
         mMediaType = type;
@@ -196,20 +186,29 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
         }
 
         mInviter.userId = callerId;
-        mCallingScene = initCallingScene(groupId, isFromGroup);
+        mCallingScene = initCallingScene(groupId);
         return true;
     }
 
     private void startCall() {
-        TUILog.i(TAG, "startCall, mInviteeList: " + mInviteeList + " , mInviter: " + mInviter
+        TUILog.i(TAG, "startCall, mInviteeList: " + mInviteeList + " ,mInviter: " + mInviter
+                + " ,groupId: " + mGroupId + " ,type: " + mMediaType + " ,role: " + mRole
                 + " , mCallingScene: " + mCallingScene);
+
+        if (Scene.GROUP_CALL.equals(mCallingScene) && mCallingViewManager != null) {
+            mCallingViewManager.enableInviteUser(true);
+        }
 
         if (TUICallDefine.Role.Caller.equals(mRole)) {
             TUICommonDefine.RoomId roomId = new TUICommonDefine.RoomId();
             roomId.intRoomId = generateRoomId();
+
+            TUICallDefine.CallParams params = new TUICallDefine.CallParams();
+            params.offlinePushInfo = OfflinePushInfoConfig.createOfflinePushInfo(mContext);
+
             if (!Scene.SINGLE_CALL.equals(mCallingScene)) {
                 TUICallEngine.createInstance(mContext).groupCall(roomId, mGroupId, mUserIDs, mMediaType,
-                        new TUICommonDefine.Callback() {
+                        params, new TUICommonDefine.Callback() {
                             @Override
                             public void onSuccess() {
                                 showCallingView();
@@ -230,21 +229,23 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
                     return;
                 }
                 String userId = mInviteeList.get(0).userId;
-                TUICallEngine.createInstance(mContext).call(roomId, userId, mMediaType, new TUICommonDefine.Callback() {
-                    @Override
-                    public void onSuccess() {
-                        showCallingView();
-                        mCallingBellFeature.startDialingMusic();
-                    }
+                TUICallEngine.createInstance(mContext).call(roomId, userId, mMediaType, params,
+                        new TUICommonDefine.Callback() {
+                            @Override
+                            public void onSuccess() {
+                                showCallingView();
+                                mCallingBellFeature.startDialingMusic();
+                            }
 
-                    @Override
-                    public void onError(int errCode, String errMsg) {
-                        TUILog.i(TAG, " call error, errCode: " + errCode + " , errMsg: " + errMsg);
-                        if (errCode == TUICallDefine.ERROR_PACKAGE_NOT_PURCHASED) {
-                            ToastUtil.toastLongMessage(mContext.getString(R.string.tuicalling_package_not_purchased));
-                        }
-                    }
-                });
+                            @Override
+                            public void onError(int errCode, String errMsg) {
+                                TUILog.i(TAG, " call error, errCode: " + errCode + " , errMsg: " + errMsg);
+                                if (errCode == TUICallDefine.ERROR_PACKAGE_NOT_PURCHASED) {
+                                    String hint = mContext.getString(R.string.tuicalling_package_not_purchased);
+                                    ToastUtil.toastLongMessage(hint);
+                                }
+                            }
+                        });
             }
         } else {
             showCallingView();
@@ -260,6 +261,7 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
         mCallingKeepAliveFeature.startKeepAlive();
         mCallingScreenSensorFeature.registerSensorEventListener();
 
+        mCallingViewManager.setGroupId(mGroupId);
         mCallingViewManager.showCallingView();
     }
 
@@ -334,19 +336,18 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
         }
 
         @Override
-        public void onCallReceived(String callerId, List<String> calleeIdList, boolean isGroupCall,
+        public void onCallReceived(String callerId, List<String> calleeIdList, String groupId,
                                    TUICallDefine.MediaType callMediaType) {
-            super.onCallReceived(callerId, calleeIdList, isGroupCall, callMediaType);
+            super.onCallReceived(callerId, calleeIdList, groupId, callMediaType);
             TUILog.i(TAG, "onCallReceived, callerId: " + callerId + " ,calleeIdList: " + calleeIdList
-                    + " ,callMediaType: " + callMediaType + " ,isGroupCall: " + isGroupCall);
+                    + " ,callMediaType: " + callMediaType + " ,groupId: " + groupId);
 
             if (!TUICallDefine.Status.None.equals(TUICallingStatusManager.sharedInstance(mContext).getCallStatus())
                     || TUICallDefine.MediaType.Unknown.equals(callMediaType)) {
                 return;
             }
 
-            if (!checkCallingParams(calleeIdList, callerId, "", isGroupCall, callMediaType,
-                    TUICallDefine.Role.Called)) {
+            if (!checkCallingParams(calleeIdList, callerId, groupId, callMediaType, TUICallDefine.Role.Called)) {
                 return;
             }
             checkCallingPermission(new TUICallback() {
@@ -428,10 +429,10 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
                 public void run() {
                     TUILog.i(TAG, "onUserReject, userId: " + userId);
 
-                    mInviteeList.remove(userId);
                     CallingUserModel userModel = findCallingUserModel(userId);
                     mCallingViewManager.userLeave(userModel);
                     showUserToast(userModel, R.string.tuicalling_toast_user_reject_call);
+                    mInviteeList.remove(userModel);
                 }
             });
         }
@@ -444,10 +445,10 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
                 public void run() {
                     TUILog.i(TAG, "onUserNoResponse, userId: " + userId);
 
-                    mInviteeList.remove(userId);
                     CallingUserModel userModel = findCallingUserModel(userId);
                     mCallingViewManager.userLeave(userModel);
                     showUserToast(userModel, R.string.tuicalling_toast_user_not_response);
+                    mInviteeList.remove(userModel);
                 }
             });
         }
@@ -460,10 +461,10 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
                 public void run() {
                     TUILog.i(TAG, "onUserLineBusy, userId: " + userId);
 
-                    mInviteeList.remove(userId);
                     CallingUserModel userModel = findCallingUserModel(userId);
                     mCallingViewManager.userLeave(userModel);
                     showUserToast(userModel, R.string.tuicalling_toast_user_busy);
+                    mInviteeList.remove(userModel);
                 }
             });
         }
@@ -494,10 +495,10 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
                 @Override
                 public void run() {
                     TUILog.i(TAG, "onUserLeave, userId: " + userId + " ,mInviteeList: " + mInviteeList);
-                    mInviteeList.remove(userId);
                     CallingUserModel userModel = findCallingUserModel(userId);
                     mCallingViewManager.userLeave(userModel);
                     showUserToast(userModel, R.string.tuicalling_toast_user_end);
+                    mInviteeList.remove(userModel);
                 }
             });
         }
@@ -564,6 +565,20 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
         public void onUserNetworkQualityChanged(List<TUICommonDefine.NetworkQualityInfo> networkQualityList) {
             super.onUserNetworkQualityChanged(networkQualityList);
             updateNetworkQuality(networkQualityList);
+        }
+
+        @Override
+        public void onKickedOffline() {
+            super.onKickedOffline();
+            TUICallEngine.createInstance(mContext).hangup(null);
+            resetCall();
+        }
+
+        @Override
+        public void onUserSigExpired() {
+            super.onUserSigExpired();
+            TUICallEngine.createInstance(mContext).hangup(null);
+            resetCall();
         }
     };
 
@@ -657,14 +672,14 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
         });
     }
 
-    private Scene initCallingScene(String groupID, boolean isFromGroup) {
+    private Scene initCallingScene(String groupID) {
         if (!TextUtils.isEmpty(groupID)) {
             return Scene.GROUP_CALL;
         }
         if (TUICallDefine.Role.Caller == mRole) {
             return (mUserIDs.size() >= 2) ? Scene.MULTI_CALL : Scene.SINGLE_CALL;
         } else {
-            return (mUserIDs.size() > 1 || isFromGroup) ? Scene.MULTI_CALL : Scene.SINGLE_CALL;
+            return (mUserIDs.size() > 1) ? Scene.MULTI_CALL : Scene.SINGLE_CALL;
         }
     }
 
@@ -828,12 +843,7 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
     public void onNotifyEvent(String key, String subKey, Map<String, Object> param) {
         //Login Event
         if (TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED.equals(key)) {
-            if (TUIConstants.TUILogin.EVENT_SUB_KEY_USER_KICKED_OFFLINE.equals(subKey)
-                    || TUIConstants.TUILogin.EVENT_SUB_KEY_USER_SIG_EXPIRED.equals(subKey)) {
-                //if user is in the call, end the call
-                TUICallEngine.createInstance(mContext).hangup(null);
-                resetCall();
-            } else if (TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGOUT_SUCCESS.equals(subKey)) {
+            if (TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGOUT_SUCCESS.equals(subKey)) {
                 //logout succeed: if user is in the call, end the call first and then clean data
                 TUICallEngine.createInstance(mContext).hangup(null);
                 TUICallEngine.destroyInstance();
@@ -846,7 +856,7 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
             }
         }
 
-        //TUICalling Event
+        //TUICallkit Event
         if (Constants.EVENT_TUICALLING_CHANGED.equals(key)
                 && Constants.EVENT_SUB_CALL_STATUS_CHANGED.equals(subKey) && param != null) {
             if (TUICallDefine.Status.None.equals(param.get(Constants.CALL_STATUS))) {

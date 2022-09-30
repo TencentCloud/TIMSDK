@@ -9,6 +9,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.heytap.msp.push.HeytapPushManager;
+import com.hihonor.push.sdk.HonorInstanceId;
+import com.hihonor.push.sdk.HonorMessaging;
+import com.hihonor.push.sdk.tasks.OnCompleteListener;
 import com.huawei.agconnect.config.AGConnectServicesConfig;
 import com.huawei.hms.aaid.HmsInstanceId;
 import com.huawei.hms.common.ApiException;
@@ -19,6 +22,7 @@ import com.tencent.qcloud.tim.tuiofflinepush.TUIOfflinePushConfig;
 import com.tencent.qcloud.tim.tuiofflinepush.interfaces.PushCallback;
 import com.tencent.qcloud.tim.tuiofflinepush.interfaces.PushSettingInterface;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.BrandUtil;
+import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushErrorBean;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushLog;
 import com.vivo.push.IPushActionListener;
 import com.vivo.push.PushClient;
@@ -34,6 +38,48 @@ public class OEMPushSetting implements PushSettingInterface{
             case TUIOfflinePushConfig.BRAND_XIAOMI:
                 // 小米离线推送
                 MiPushClient.registerPush(context, PrivateConstants.xiaomiPushAppId, PrivateConstants.xiaomiPushAppKey);
+                break;
+            case TUIOfflinePushConfig.BRAND_HONOR:
+                HonorMessaging.getInstance(context).turnOnPush().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(com.hihonor.push.sdk.tasks.Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            TUIOfflinePushLog.i(TAG, "Honor turnOn push successfully.");
+                        } else {
+                            TUIOfflinePushLog.i(TAG, "Honor turnOn push failed." + task.getException());
+                        }
+                    }
+                });
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            String pushToken = HonorInstanceId.getInstance(context).getPushToken();
+                            TUIOfflinePushLog.i(TAG, "Honor get pushToken " + pushToken);
+
+                            //判断pushToken是否为空
+                            if (!TextUtils.isEmpty(pushToken)) {
+                                //PushToken保存到您的服务器上
+                                if (mPushCallback != null) {
+                                    mPushCallback.onTokenCallback(pushToken);
+                                } else {
+                                    TUIOfflinePushLog.e(TAG, "mPushCallback is null");
+                                }
+                            }
+                        } catch (com.hihonor.push.sdk.common.data.ApiException e) {
+                            TUIOfflinePushLog.e(TAG, "Honor get pushToken failed, " + e);
+                            if (mPushCallback != null) {
+                                TUIOfflinePushErrorBean errorBean = new TUIOfflinePushErrorBean();
+                                errorBean.setErrorCode(TUIOfflinePushConfig.REGISTER_TOKEN_ERROR_CODE);
+                                errorBean.setErrorDescription("honor ApiException: " + e);
+                                mPushCallback.onTokenErrorCallBack(errorBean);
+                            } else {
+                                TUIOfflinePushLog.e(TAG, "mPushCallback is null");
+                            }
+                        }
+                    }
+                }).start();
                 break;
             case TUIOfflinePushConfig.BRAND_HUAWEI:
                 // 华为离线推送，设置是否接收Push通知栏消息调用示例
@@ -66,6 +112,14 @@ public class OEMPushSetting implements PushSettingInterface{
                             }
                         } catch (ApiException e) {
                             TUIOfflinePushLog.e(TAG, "huawei get token failed, " + e);
+                            if (mPushCallback != null) {
+                                TUIOfflinePushErrorBean errorBean = new TUIOfflinePushErrorBean();
+                                errorBean.setErrorCode(TUIOfflinePushConfig.REGISTER_TOKEN_ERROR_CODE);
+                                errorBean.setErrorDescription("huawei ApiException: " + e);
+                                mPushCallback.onTokenErrorCallBack(errorBean);
+                            } else {
+                                TUIOfflinePushLog.e(TAG, "mPushCallback is null");
+                            }
                         }
                     }
                 }.start();
@@ -104,7 +158,15 @@ public class OEMPushSetting implements PushSettingInterface{
                             }
                         } else {
                             // 根据vivo推送文档说明，state = 101 表示该vivo机型或者版本不支持vivo推送，链接：https://dev.vivo.com.cn/documentCenter/doc/156
-                            TUIOfflinePushLog.i(TAG, "vivopush open vivo push fail state = " + state);
+                            TUIOfflinePushLog.e(TAG, "vivopush open vivo push fail state = " + state);
+                            if (mPushCallback != null) {
+                                TUIOfflinePushErrorBean errorBean = new TUIOfflinePushErrorBean();
+                                errorBean.setErrorCode(state);
+                                errorBean.setErrorDescription("vivo error code: " + String.valueOf(state));
+                                mPushCallback.onTokenErrorCallBack(errorBean);
+                            } else {
+                                TUIOfflinePushLog.e(TAG, "mPushCallback is null");
+                            }
                         }
                     }
                 });
@@ -116,7 +178,15 @@ public class OEMPushSetting implements PushSettingInterface{
                                 @Override
                                 public void onComplete(Task<InstanceIdResult> task) {
                                     if (!task.isSuccessful()) {
-                                        TUIOfflinePushLog.w(TAG, "getInstanceId failed exception = " + task.getException());
+                                        TUIOfflinePushLog.e(TAG, "getInstanceId failed exception = " + task.getException());
+                                        if (mPushCallback != null) {
+                                            TUIOfflinePushErrorBean errorBean = new TUIOfflinePushErrorBean();
+                                            errorBean.setErrorCode(TUIOfflinePushConfig.REGISTER_TOKEN_ERROR_CODE);
+                                            errorBean.setErrorDescription("fcm exception: " + task.getException());
+                                            mPushCallback.onTokenErrorCallBack(errorBean);
+                                        } else {
+                                            TUIOfflinePushLog.e(TAG, "mPushCallback is null");
+                                        }
                                         return;
                                     }
 

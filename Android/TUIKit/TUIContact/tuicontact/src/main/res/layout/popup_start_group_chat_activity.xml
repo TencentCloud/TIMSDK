@@ -30,8 +30,9 @@
         android:layout_width="match_parent"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:paddingBottom="16dp"
-        android:layout_height="wrap_content">
+        android:paddingBottom="8dp"
+        android:gravity="center_vertical"
+        android:layout_height="@dimen/conversation_list_item_height">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/selected_list"
@@ -43,7 +44,7 @@
             android:id="@+id/confirm_button"
             android:background="@drawable/contact_confirm_button_bg"
             android:textSize="14sp"
-            android:text="@string/sure"
+            android:text="@string/core_next_step"
             android:layout_marginLeft="12dp"
             android:layout_gravity="center_vertical"
             android:paddingLeft="12dp"

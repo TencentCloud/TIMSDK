@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.tencent.qcloud.tuikit.tuichat.R;
 
 
@@ -35,7 +37,10 @@ public class FaceGroupIcon extends RelativeLayout {
         faceTabIcon = findViewById(R.id.face_group_tab_icon);
     }
 
-    public void setFaceTabIcon(Bitmap bitmap) {
-        faceTabIcon.setImageBitmap(bitmap);
+    public void setFaceTabIcon(String faceGroupIconUrl) {
+        Glide.with(this)
+                .load(faceGroupIconUrl)
+                .apply(new RequestOptions().error(android.R.drawable.ic_menu_report_image))
+                .into(faceTabIcon);
     }
 }

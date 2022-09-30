@@ -51,6 +51,8 @@
     <string name="profile_voice_chat">Voice Call</string>
     <string name="profile_video_chat">Video Call</string>
     <string name="profile_clear_message">Clear Chat History</string>
+    <string name="profile_chat_background">Background</string>
+    <string name="chat_background_title">Background</string>
     <string name="contact_signature_tag">Status : </string>
     <string name="contact_no_status">No status</string>
     <string name="contact_account_tag">ID : </string>
@@ -116,4 +118,27 @@
     <string name="contact_no_group">Group chats is empty</string>
     <string name="contact_no_block_list">Block list is emply</string>
 
+    <string name="group_choose_avatar">Choose Avatar</string>
+    <string name="group_avatar_text">Group Avatar</string>
+    <string name="group_name_text">Group Name</string>
+    <string name="modify_group_id">Edit Group ID</string>
+    <string name="group_id_option">Group ID (optional)</string>
+    <string name="group_type_text">Group Type</string>
+    <string name="group_created">Create</string>
+    <string name="group_type_select_text">Select group type</string>
+    <string name="group_work_type">Friends Working group(Work)</string>
+    <string name="group_work_content">Friends work group (Work): Similar to ordinary WeChat groups, after creation, only friends who are already in the group can be invited to join the group, and there is no need for the approval of the invitee or the approval of the group owner.</string>
+    <string name="group_public_type">Stranger Social group(Public）</string>
+    <string name="group_public_des">Stranger social group (Public): Similar to QQ group, the group owner can designate the group administrator after creation. After the user searches for the group ID and initiates a group application, the group owner or administrator must approve it before joining the group.</string>
+    <string name="group_meeting_type">Temporary Meeting group(Meeting）</string>
+    <string name="group_meeting_des">Temporary meeting group (Meeting): After creation, you can enter and leave at will, and support viewing of messages before joining the group; it is suitable for audio and video conference scenarios, online education scenarios, and other scenarios that are combined with real-time audio and video products.</string>
+    <string name="group_commnity_type">Community(Community)</string>
+    <string name="group_commnity_des">Community(Community)：After creation, you can enter and leave at will, support up to 100,000 people, support historical message storage, and after users search for group ID and initiate a group application, they can join the group without administrator approval.</string>
+    <string name="group_name_edit_null_tips">Group name cannot be empty!</string>
+    <string name="group_name_edit_exceed_tips">Group name up to 30 bytes!</string>
+    <string name="group_id_edit_format_tips">Group ID prefix cannot be @TGS# !</string>
+    <string name="group_id_edit_exceed_tips">Group ID up to 48 bytes!</string>
+    <string name="group_type_content_title">See details product documentation</string>
+    <string name="group_type_content_url">product documentation</string>
+    <string name="group_type_content_button">View product documentation</string>
 </resources>

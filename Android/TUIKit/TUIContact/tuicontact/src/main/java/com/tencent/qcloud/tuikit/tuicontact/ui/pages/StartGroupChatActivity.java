@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
+import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.component.LineControllerView;
@@ -41,6 +42,7 @@ import com.tencent.qcloud.tuikit.tuicontact.util.ContactUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class StartGroupChatActivity extends BaseLightActivity {
 
@@ -85,7 +87,7 @@ public class StartGroupChatActivity extends BaseLightActivity {
         mTitleBar.setOnRightClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createGroupChat();
+                toCreateGroupChat();
             }
         });
         mTitleBar.setOnLeftClickListener(new View.OnClickListener() {
@@ -138,14 +140,23 @@ public class StartGroupChatActivity extends BaseLightActivity {
                 }
                 selectedListAdapter.setMembers(mMembers);
                 selectedListAdapter.notifyDataSetChanged();
+                if (mMembers.size() > 0) {
+                    confirmButton.setAlpha(1f);
+                    confirmButton.setEnabled(true);
+                } else {
+                    confirmButton.setAlpha(0.5f);
+                    confirmButton.setEnabled(false);
+                }
             }
         });
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createGroupChat();
+                toCreateGroupChat();
             }
         });
+        confirmButton.setAlpha(0.5f);
+        confirmButton.setEnabled(false);
         Intent intent = getIntent();
         communitySupportTopic = intent.getBooleanExtra(TUIConstants.TUIContact.COMMUNITY_SUPPORT_TOPIC_KEY, false);
         setGroupType(intent.getIntExtra(TUIConstants.TUIContact.GROUP_TYPE_KEY, TUIContactConstants.GroupType.PRIVATE));
@@ -186,6 +197,29 @@ public class StartGroupChatActivity extends BaseLightActivity {
                 mJoinTypeIndex = (Integer) text;
             }
         });
+    }
+
+    private void toCreateGroupChat() {
+        mMembers.add(0, selfInfo);
+        if (mMembers.size() == 1) {
+            ToastUtil.toastLongMessage(getResources().getString(R.string.tips_empty_group_member));
+            return;
+        }
+
+        String groupName = selfInfo.getDisplayName();
+        for (int i = 1; i < mMembers.size(); i++) {
+            groupName = groupName + "、" + mMembers.get(i).getDisplayName();
+        }
+        if (groupName.length() >= 10) {
+            groupName = groupName.substring(0, 7) + "..";
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putString(TUIConstants.TUIGroup.GROUP_NAME, groupName);
+        bundle.putInt(TUIConstants.TUIGroup.JOIN_TYPE_INDEX, mJoinTypeIndex);
+        bundle.putSerializable(TUIConstants.TUIGroup.GROUP_MEMBER_ID_LIST, mMembers);
+        TUICore.startActivity("CreateGroupActivity", bundle);
+        finish();
     }
 
     private void createGroupChat() {

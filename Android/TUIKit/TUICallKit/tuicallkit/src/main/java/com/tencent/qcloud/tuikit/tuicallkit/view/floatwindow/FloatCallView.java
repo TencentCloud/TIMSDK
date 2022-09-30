@@ -14,9 +14,14 @@ import android.widget.TextView;
 
 import com.tencent.qcloud.tuikit.TUIVideoView;
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.TUILog;
-import com.tencent.qcloud.tuikit.tuicallkit.ui.R;
+import com.tencent.qcloud.tuikit.tuicallkit.R;
+import com.tencent.qcloud.tuikit.tuicallkit.base.CallingUserModel;
 import com.tencent.qcloud.tuikit.tuicallkit.base.UserLayout;
+import com.tencent.qcloud.tuikit.tuicallkit.base.UserLayoutEntity;
+import com.tencent.qcloud.tuikit.tuicallkit.utils.ImageLoader;
 import com.tencent.qcloud.tuikit.tuicallkit.view.UserLayoutFactory;
+
+import java.util.Objects;
 
 public class FloatCallView extends RelativeLayout {
     private static final String TAG = "FloatCallView";
@@ -27,19 +32,23 @@ public class FloatCallView extends RelativeLayout {
     private static final int MESSAGE_VIEW_EMPTY   = 2;
     private              int mCount               = 0;
 
+    private final Context mContext;
+
     private RelativeLayout mLayoutVideoView;
-    private TUIVideoView   mTUIVideoView;
     private ImageView      mImageAudio;
     private TextView       mTextHint;
     private TextView       mTextTime;
+    private ImageView      mImageFloatAvatar;
 
     private OnClickListener   mOnClickListener;
     private UserLayoutFactory mUserLayoutFactory;
     private UserLayout        mVideoLayout;
     private String            mCurrentUser;
+    private boolean           mIsVideoAvailable;
 
     public FloatCallView(Context context, UserLayoutFactory factory) {
         super(context);
+        mContext = context;
         mUserLayoutFactory = factory;
         initView(context);
     }
@@ -47,6 +56,7 @@ public class FloatCallView extends RelativeLayout {
     private void initView(Context context) {
         LayoutInflater.from(context).inflate(R.layout.tuicalling_floatwindow_layout, this);
         mLayoutVideoView = findViewById(R.id.rl_video_view);
+        mImageFloatAvatar = findViewById(R.id.img_float_avatar);
         mTextHint = findViewById(R.id.tv_float_hint);
         mImageAudio = findViewById(R.id.float_audioView);
         mTextTime = findViewById(R.id.tv_float_time);
@@ -60,17 +70,40 @@ public class FloatCallView extends RelativeLayout {
         });
     }
 
-    public void updateAudioView(boolean enable) {
-        mImageAudio.setVisibility(enable ? VISIBLE : GONE);
-    }
+    public void updateView(boolean isVideoAvailable, String userId) {
+        mIsVideoAvailable = isVideoAvailable;
+        if (!isVideoAvailable) {
+            mLayoutVideoView.setVisibility(GONE);
+            mImageFloatAvatar.setVisibility(GONE);
+            mImageAudio.setVisibility(VISIBLE);
+            return;
+        }
 
-    public void updateVideoView(String userId) {
         if (null == mUserLayoutFactory || TextUtils.isEmpty(userId)) {
             TUILog.i(TAG, "updateVideoView, mUserLayoutFactory is empty ");
             return;
         }
 
         mCurrentUser = userId;
+        mImageAudio.setVisibility(GONE);
+
+        CallingUserModel model = new CallingUserModel();
+        for (UserLayoutEntity entity : mUserLayoutFactory.mLayoutEntityList) {
+            if (entity != null && Objects.equals(entity.userId, userId)) {
+                model = entity.userModel;
+                break;
+            }
+        }
+
+        if (model != null && !model.isVideoAvailable) {
+            mLayoutVideoView.removeAllViews();
+            mLayoutVideoView.setVisibility(GONE);
+            mImageFloatAvatar.setVisibility(VISIBLE);
+            ImageLoader.loadImage(mContext, mImageFloatAvatar, model.userAvatar, R.drawable.tuicalling_ic_avatar);
+            return;
+        }
+        mImageFloatAvatar.setVisibility(GONE);
+
         mVideoLayout = mUserLayoutFactory.findUserLayout(userId);
         if (null == mVideoLayout) {
             mViewHandler.sendEmptyMessageDelayed(MESSAGE_LAYOUT_EMPTY, UPDATE_INTERVAL);
@@ -80,22 +113,22 @@ public class FloatCallView extends RelativeLayout {
     }
 
     private void reloadVideoView() {
-        if (null == mVideoLayout || null == mVideoLayout.getVideoView()) {
+        if (null == mVideoLayout) {
             TUILog.i(TAG, "reloadVideoView, mVideoLayout is empty");
             return;
         }
-        mImageAudio.setVisibility(GONE);
-        mTUIVideoView = mVideoLayout.getVideoView();
-        if (mTUIVideoView == null) {
+
+        TUIVideoView videoView = mVideoLayout.getVideoView();
+        if (videoView == null) {
             mViewHandler.sendEmptyMessageDelayed(MESSAGE_VIEW_EMPTY, UPDATE_INTERVAL);
             return;
         }
-        if (null != mTUIVideoView.getParent()) {
-            ((ViewGroup) mTUIVideoView.getParent()).removeView(mTUIVideoView);
+        if (null != videoView.getParent()) {
+            ((ViewGroup) videoView.getParent()).removeView(videoView);
         }
         mLayoutVideoView.removeAllViews();
         mLayoutVideoView.setVisibility(VISIBLE);
-        mLayoutVideoView.addView(mTUIVideoView);
+        mLayoutVideoView.addView(videoView);
     }
 
     private final Handler mViewHandler = new Handler(Looper.getMainLooper()) {
@@ -121,7 +154,7 @@ public class FloatCallView extends RelativeLayout {
     }
 
     public void updateCallTimeView(String time) {
-        if (mLayoutVideoView.getVisibility() == VISIBLE) {
+        if (mIsVideoAvailable) {
             mTextTime.setVisibility(GONE);
             return;
         }

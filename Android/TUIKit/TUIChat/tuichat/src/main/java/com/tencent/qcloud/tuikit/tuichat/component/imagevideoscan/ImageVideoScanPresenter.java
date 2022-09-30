@@ -128,12 +128,12 @@ public class ImageVideoScanPresenter {
 
             @Override
             public void onInitComplete() {
-                Log.e(TAG,"onInitComplete");
+                Log.i(TAG,"onInitComplete");
             }
 
             @Override
             public void onPageRelease(boolean isNext, int position) {
-                Log.e(TAG,"释放位置:"+position +" 下一页:"+isNext);
+                Log.i(TAG,"release position :"+position +" next page:"+isNext);
                 int index = 0;
                 if (isNext){
                     index = 0;
@@ -146,7 +146,7 @@ public class ImageVideoScanPresenter {
 
             @Override
             public void onPageSelected(int position,boolean isBottom, boolean isLeftScroll) {
-                Log.e(TAG,"选中位置:"+position+"  是否是滑动到底部:"+isBottom + "是否左滑:"+isBottom);
+                Log.i(TAG,"select:"+position+" isBottom:"+isBottom + "isLeftScroll:"+isBottom);
                 mCurrentPosition = position;
                 if (mIsForwardMode) {
                     return;

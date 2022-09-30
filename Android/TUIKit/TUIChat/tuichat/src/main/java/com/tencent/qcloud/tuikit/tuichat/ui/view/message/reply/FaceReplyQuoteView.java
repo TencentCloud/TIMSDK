@@ -29,36 +29,14 @@ public class FaceReplyQuoteView extends TUIReplyQuoteView {
     public void onDrawReplyQuote(TUIReplyQuoteBean quoteBean) {
         FaceReplyQuoteBean faceReplyQuoteBean = (FaceReplyQuoteBean) quoteBean;
 
-        String filter = new String(faceReplyQuoteBean.getData());
-        if (!filter.contains("@2x")) {
-            filter += "@2x";
-        }
-        Bitmap bitmap = FaceManager.getCustomBitmap(faceReplyQuoteBean.getIndex(), filter);
-        if (bitmap == null) {
-            bitmap = FaceManager.getEmoji(new String(faceReplyQuoteBean.getData()));
-
-        }
-        if (bitmap != null) {
-            contentImage.setLayoutParams(getImageParams(contentImage.getLayoutParams(), bitmap.getWidth(), bitmap.getHeight()));
-            contentImage.setImageBitmap(bitmap);
-        } else {
-            contentImage.setImageDrawable(getContext().getResources().getDrawable(R.drawable.face_delete));
-        }
-    }
-
-    protected ViewGroup.LayoutParams getImageParams(ViewGroup.LayoutParams params, int width, int height) {
-
-        if (width == 0 || height == 0) {
-            return params;
-        }
-        int maxSize = getResources().getDimensionPixelSize(R.dimen.reply_message_image_size);
-        if (width > height) {
+        String faceKey = new String(faceReplyQuoteBean.getData());
+        ViewGroup.LayoutParams params = contentImage.getLayoutParams();
+        if (params != null) {
+            int maxSize = getResources().getDimensionPixelSize(R.dimen.reply_message_image_size);
             params.width = maxSize;
-            params.height = maxSize * height / width;
-        } else {
-            params.width = maxSize * width / height;
             params.height = maxSize;
+            contentImage.setLayoutParams(params);
         }
-        return params;
+        FaceManager.loadFace(faceReplyQuoteBean.getIndex(), faceKey, contentImage);
     }
 }

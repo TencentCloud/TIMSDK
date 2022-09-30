@@ -97,4 +97,8 @@ public class TUIChatConstants {
         public static final String USER_NAMECARD_SELECT = "user_namecard_select";
     }
 
+    public static class DataStore {
+        public static final String DATA_STORE_NAME = "tuichat_datastore";
+    }
+
 }

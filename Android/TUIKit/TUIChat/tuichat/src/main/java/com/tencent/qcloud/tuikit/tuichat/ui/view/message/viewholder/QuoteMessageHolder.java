@@ -102,12 +102,10 @@ public class QuoteMessageHolder extends TextMessageHolder {
 
         performMsgAbstract(quoteMessageBean);
 
-        msgContentFrame.setOnLongClickListener(new View.OnLongClickListener() {
+        msgArea.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onLongClick(View view) {
-                if (onItemClickListener != null) {
-                    onItemClickListener.onMessageLongClick(view, position, msg);
-                }
+            public boolean onLongClick(View v) {
+                selectableTextHelper.selectAll();
                 return true;
             }
         });
@@ -184,22 +182,16 @@ public class QuoteMessageHolder extends TextMessageHolder {
 
         if (replyQuoteBean instanceof FaceReplyQuoteBean) {
             FaceReplyQuoteBean faceReplyQuoteBean = (FaceReplyQuoteBean) replyQuoteBean;
-            String filter = new String(faceReplyQuoteBean.getData());
-            if (!filter.contains("@2x")) {
-                filter += "@2x";
+            String faceKey = new String(faceReplyQuoteBean.getData());
+            ViewGroup.LayoutParams params = imageIv.getLayoutParams();
+            if (params != null) {
+                int maxSize = itemView.getResources().getDimensionPixelSize(R.dimen.reply_message_image_size);
+                params.width = maxSize;
+                params.height = maxSize;
+                imageIv.setLayoutParams(params);
             }
-            Bitmap bitmap = FaceManager.getCustomBitmap(faceReplyQuoteBean.getIndex(), filter);
-            if (bitmap == null) {
-                // if not found custom face, try emoji
-                bitmap = FaceManager.getEmoji(new String(faceReplyQuoteBean.getData()));
+            FaceManager.loadFace(faceReplyQuoteBean.getIndex(), faceKey, imageIv);
 
-            }
-            if (bitmap != null) {
-                imageIv.setLayoutParams(getImageParams(imageIv.getLayoutParams(), bitmap.getWidth(), bitmap.getHeight()));
-                imageIv.setImageBitmap(bitmap);
-            } else {
-                imageIv.setImageDrawable(itemView.getContext().getResources().getDrawable(R.drawable.face_delete));
-            }
         } else if (replyQuoteBean instanceof ImageReplyQuoteBean) {
             ImageMessageBean messageBean = (ImageMessageBean) replyQuoteBean.getMessageBean();
             imageIv.setLayoutParams(getImageParams(imageIv.getLayoutParams(), messageBean.getImgWidth(), messageBean.getImgHeight()));

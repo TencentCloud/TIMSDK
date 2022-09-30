@@ -9,6 +9,7 @@ public class ReactUserBean implements Serializable {
     private String nikeName;
     private String nameCard;
     private String friendRemark;
+    private String faceUrl;
 
     public String getUserId() {
         return userId;
@@ -52,5 +53,13 @@ public class ReactUserBean implements Serializable {
         } else {
             return userId;
         }
+    }
+
+    public String getFaceUrl() {
+        return faceUrl;
+    }
+
+    public void setFaceUrl(String faceUrl) {
+        this.faceUrl = faceUrl;
     }
 }

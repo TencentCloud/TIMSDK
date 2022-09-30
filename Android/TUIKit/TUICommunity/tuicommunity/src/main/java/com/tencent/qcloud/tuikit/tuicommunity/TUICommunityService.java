@@ -161,6 +161,22 @@ public class TUICommunityService extends ServiceInitializer implements ITUINotif
             }
 
             @Override
+            public void onMemberKicked(String groupID, V2TIMGroupMemberInfo opUser, List<V2TIMGroupMemberInfo> memberList) {
+                if (CommunityUtil.isCommunityGroup(groupID)) {
+                    String selfID = V2TIMManager.getInstance().getLoginUser();
+                    for (V2TIMGroupMemberInfo memberInfo : memberList) {
+                        if (TextUtils.equals(memberInfo.getUserID(), selfID)) {
+                            List<CommunityEventListener> listeners = getCommunityEventListenerList();
+                            for (CommunityEventListener communityEventListener : listeners) {
+                                communityEventListener.onCommunityDeleted(groupID);
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
+            @Override
             public void onGroupAttributeChanged(String groupID, Map<String, String> groupAttributeMap) {
                 if (CommunityUtil.isCommunityGroup(groupID)) {
                     TUICommunityLog.i(TAG, "onGroupAttributeChanged groupID = " + groupID);

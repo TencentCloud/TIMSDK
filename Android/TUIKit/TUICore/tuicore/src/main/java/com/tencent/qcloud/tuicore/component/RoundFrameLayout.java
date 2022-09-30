@@ -1,4 +1,4 @@
-package com.tencent.qcloud.tuikit.tuicommunity.component;
+package com.tencent.qcloud.tuicore.component;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -14,7 +14,7 @@ import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.tencent.qcloud.tuikit.tuicommunity.R;
+import com.tencent.qcloud.tuicore.R;
 
 public class RoundFrameLayout extends FrameLayout {
 

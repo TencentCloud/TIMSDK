@@ -5,14 +5,14 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <com.tencent.qcloud.tuikit.tuicallkit.widget.RoundCornerImageView
+    <com.tencent.qcloud.tuicore.component.RoundCornerImageView
         android:id="@+id/iv_user_avatar"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:src="@drawable/tuicalling_ic_avatar"
+        app:corner_radius="15dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:radius="15dp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_user_name"

@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine;
-import com.tencent.qcloud.tuikit.tuicallkit.ui.R;
+import com.tencent.qcloud.tuikit.tuicallkit.R;
 import com.tencent.qcloud.tuikit.tuicallkit.base.TUICallingAction;
 
 public class TUICallingSwitchAudioView extends BaseFunctionView {

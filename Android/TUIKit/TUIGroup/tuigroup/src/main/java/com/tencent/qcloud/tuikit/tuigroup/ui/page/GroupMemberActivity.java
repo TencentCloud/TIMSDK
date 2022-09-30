@@ -6,6 +6,8 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 
 import android.view.View;
+
+import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
@@ -20,17 +22,20 @@ import com.tencent.qcloud.tuikit.tuigroup.ui.view.GroupMemberLayout;
 import com.tencent.qcloud.tuikit.tuigroup.ui.interfaces.IGroupMemberListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GroupMemberActivity extends BaseLightActivity {
 
     private GroupMemberLayout mMemberLayout;
-    private GroupInfo mGroupInfo;
+    private String groupID;
     private GroupInfoPresenter presenter;
 
     private boolean isSelectMode = false;
     private ArrayList<String> excludeList;
     private ArrayList<String> alreadySelectedList;
+    private String userData;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,23 +46,21 @@ public class GroupMemberActivity extends BaseLightActivity {
 
     private void init() {
         Intent intent = getIntent();
-        mGroupInfo = (GroupInfo) intent.getSerializableExtra(TUIGroupConstants.Group.GROUP_INFO);
-
-        int limit = getIntent().getIntExtra(TUIGroupConstants.Selection.LIMIT, Integer.MAX_VALUE);
-
-        isSelectMode = intent.getBooleanExtra(TUIGroupConstants.Selection.IS_SELECT_MODE, false);
-
-        String title = intent.getStringExtra(TUIGroupConstants.Selection.TITLE);
-        excludeList = intent.getStringArrayListExtra(TUIGroupConstants.Selection.EXCLUDE_LIST);
-        alreadySelectedList = intent.getStringArrayListExtra(TUIGroupConstants.Selection.SELECTED_LIST);
-        int filter = intent.getIntExtra(TUIGroupConstants.Selection.FILTER, GroupInfo.GROUP_MEMBER_FILTER_ALL);
+        groupID = intent.getStringExtra(TUIConstants.TUIGroup.GROUP_ID);
+        int limit = getIntent().getIntExtra(TUIConstants.TUIGroup.LIMIT, Integer.MAX_VALUE);
+        isSelectMode = intent.getBooleanExtra(TUIConstants.TUIGroup.IS_SELECT_MODE, true);
+        String title = intent.getStringExtra(TUIConstants.TUIGroup.TITLE);
+        excludeList = intent.getStringArrayListExtra(TUIConstants.TUIGroup.EXCLUDE_LIST);
+        alreadySelectedList = intent.getStringArrayListExtra(TUIConstants.TUIGroup.SELECTED_LIST);
+        userData = intent.getStringExtra(TUIConstants.TUIGroup.USER_DATA);
+        int filter = intent.getIntExtra(TUIConstants.TUIGroup.FILTER, GroupInfo.GROUP_MEMBER_FILTER_ALL);
         mMemberLayout.setSelectMode(isSelectMode);
         mMemberLayout.setTitle(title);
         mMemberLayout.setExcludeList(excludeList);
         mMemberLayout.setAlreadySelectedList(alreadySelectedList);
         presenter = new GroupInfoPresenter(mMemberLayout);
         mMemberLayout.setPresenter(presenter);
-        presenter.loadGroupInfo(mGroupInfo.getId(), filter);
+        presenter.loadGroupInfo(groupID, filter);
 
         mMemberLayout.getTitleBar().setOnLeftClickListener(new View.OnClickListener() {
             @Override
@@ -78,8 +81,14 @@ public class GroupMemberActivity extends BaseLightActivity {
                     return;
                 }
                 Intent result = new Intent();
-                result.putStringArrayListExtra(TUIGroupConstants.Selection.LIST, members);
+                result.putStringArrayListExtra(TUIConstants.TUIGroup.LIST, members);
                 setResult(0, result);
+
+                Map<String, Object> param = new HashMap<>();
+                param.put(TUIConstants.TUIGroup.LIST, members);
+                param.put(TUIConstants.TUIGroup.USER_DATA, userData);
+                TUICore.notifyEvent(TUIConstants.TUIGroup.EVENT_GROUP, TUIConstants.TUIGroup.EVENT_SUB_KEY_GROUP_MEMBER_SELECTED, param);
+
                 finish();
             }
 
@@ -127,10 +136,10 @@ public class GroupMemberActivity extends BaseLightActivity {
     private void deleteGroupMembers(List<String> friends) {
         if (friends != null && friends.size() > 0) {
             if (presenter != null) {
-                presenter.deleteGroupMembers(mGroupInfo.getId(), friends, new IUIKitCallback<List<String>>() {
+                presenter.deleteGroupMembers(groupID, friends, new IUIKitCallback<List<String>>() {
                     @Override
                     public void onSuccess(List<String> data) {
-                        presenter.loadGroupInfo(mGroupInfo.getId());
+                        presenter.loadGroupInfo(groupID);
                     }
 
                     @Override
@@ -145,7 +154,7 @@ public class GroupMemberActivity extends BaseLightActivity {
     private void inviteGroupMembers(List<String> friends) {
         if (friends != null && friends.size() > 0) {
             if (presenter != null) {
-                presenter.inviteGroupMembers(mGroupInfo.getId(), friends, new IUIKitCallback<Object>() {
+                presenter.inviteGroupMembers(groupID, friends, new IUIKitCallback<Object>() {
                     @Override
                     public void onSuccess(Object data) {
                         if (data instanceof String) {

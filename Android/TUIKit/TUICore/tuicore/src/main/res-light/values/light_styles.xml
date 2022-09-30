@@ -32,7 +32,7 @@
         <item name="core_default_group_icon_public">@drawable/core_default_group_icon_public_light</item>
         <item name="core_default_group_icon_work">@drawable/core_default_group_icon_work_light</item>
         <item name="core_default_group_icon_meeting">@drawable/core_default_group_icon_meeting_light</item>
-        <item name="core_default_group_icon_community">@drawable/core_default_group_icon_community</item>
+        <item name="core_default_group_icon_community">@drawable/core_default_group_icon_community_light</item>
         <item name="core_default_user_icon">@drawable/core_default_user_icon_light</item>
         <item name="user_status_online">@drawable/core_online_status_light</item>
 

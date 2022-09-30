@@ -46,23 +46,22 @@ public class HomeWatcher {
     }
 
     class InnerReceiver extends BroadcastReceiver {
-        final String SYSTEM_DIALOG_REASON_KEY            = "reason";
-        final String SYSTEM_DIALOG_REASON_GLOBAL_ACTIONS = "globalactions";
-        final String SYSTEM_DIALOG_REASON_RECENT_APPS    = "recentapps";
-        final String SYSTEM_DIALOG_REASON_HOME_KEY       = "homekey";
+        private static final String SYSTEM_DIALOG_REASON_KEY            = "reason";
+        private static final String SYSTEM_DIALOG_REASON_GLOBAL_ACTIONS = "globalactions";
+        private static final String SYSTEM_DIALOG_REASON_RECENT_APPS    = "recentapps";
+        private static final String SYSTEM_DIALOG_REASON_HOME_KEY       = "homekey";
 
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (action.equals(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)) {
+            if (action != null && action.equals(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)) {
                 String reason = intent.getStringExtra(SYSTEM_DIALOG_REASON_KEY);
-                if (reason != null) {
-                    if (mListener != null) {
-                        if (reason.equals(SYSTEM_DIALOG_REASON_HOME_KEY)) {
-                            mListener.onHomePressed();
-                        } else if (reason.equals(SYSTEM_DIALOG_REASON_RECENT_APPS)) {
-                            mListener.onRecentAppsPressed();
-                        }
+                TUILog.i(TAG, "onReceive, =: " + reason);
+                if (mListener != null) {
+                    if (SYSTEM_DIALOG_REASON_HOME_KEY.equals(reason)) {
+                        mListener.onHomePressed();
+                    } else if (SYSTEM_DIALOG_REASON_RECENT_APPS.equals(reason)) {
+                        mListener.onRecentAppsPressed();
                     }
                 }
             }
@@ -70,9 +69,9 @@ public class HomeWatcher {
     }
 
     public interface OnHomePressedListener {
-        public void onHomePressed();
+        void onHomePressed();
 
-        public void onRecentAppsPressed();
+        void onRecentAppsPressed();
     }
 }
 

@@ -1,0 +1,54 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/core_bg_color"
+    android:layout_marginTop="@dimen/page_margin"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/item_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/group_profile_height"
+        android:background="#FFFFFF">
+
+        <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+            android:id="@+id/group_type_icon"
+            android:layout_width="@dimen/group_profile_face_size"
+            android:layout_height="@dimen/group_profile_face_size"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/group_profile_face_margin_left"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/group_profile_face_margin_right"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:id="@+id/group_type_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/group_type_icon"
+            android:layout_centerVertical="true"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:textSize="@dimen/group_profile_group_name_size"
+            tools:text="群聊" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/group_type_content"
+        android:background="#FFFFFF"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_layout"
+        android:paddingTop="@dimen/page_margin"
+        android:paddingLeft="@dimen/group_profile_face_margin_left"
+        android:paddingRight="@dimen/group_profile_face_margin_right"
+        android:paddingBottom="@dimen/page_margin"
+        android:gravity="center_vertical"
+        android:textSize="@dimen/group_profile_group_id_size"
+        tools:text="99618" />
+
+
+</RelativeLayout>

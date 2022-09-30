@@ -32,12 +32,6 @@
         android:layout_height="40dp"
         android:background="?attr/chat_input_area_bg"
         android:orientation="horizontal">
-
-        <com.tencent.qcloud.tuikit.tuichat.ui.view.input.face.FaceGroupIcon
-            android:id="@+id/face_first_set"
-            android:layout_width="40dp"
-            android:gravity="center_horizontal"
-            android:layout_height="match_parent" />
     </LinearLayout>
 
 </LinearLayout>

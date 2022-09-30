@@ -17,12 +17,12 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -81,7 +81,6 @@ public class ChatView extends LinearLayout  implements IChatLayout {
     protected MessageAdapter mAdapter;
     private ForwardSelectActivityListener mForwardSelectActivityListener;
     private TotalUnreadCountListener unreadCountListener;
-    private TUIMessageBean mConversationLastMessage;
 
     private AnimationDrawable mVolumeAnim;
     private Runnable mTypingRunnable = null;
@@ -141,8 +140,6 @@ public class ChatView extends LinearLayout  implements IChatLayout {
     private View mForwardOneButton;
     private View mForwardMergeButton;
     private View mDeleteButton;
-    private boolean isGroup = false;
-
     private long lastTypingTime = 0;
     private boolean isSupportTyping = false;
 
@@ -335,35 +332,14 @@ public class ChatView extends LinearLayout  implements IChatLayout {
         if (chatInfo == null) {
             return;
         }
-
         mInputView.setChatInfo(chatInfo);
         String chatTitle = chatInfo.getChatName();
         getTitleBar().setTitle(chatTitle, ITitleBarLayout.Position.MIDDLE);
 
-        if (TUIChatUtils.isC2CChat(chatInfo.getType())) {
-            isGroup = false;
-        } else {
-            isGroup = true;
-        }
-
         setChatHandler();
 
-        if (isGroup) {
+        if (!TUIChatUtils.isC2CChat(chatInfo.getType())) {
             loadApplyList();
-            getTitleBar().setOnRightClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (TUIChatUtils.isTopicGroup(chatInfo.getId())) {
-                        Bundle bundle = new Bundle();
-                        bundle.putString(TUIConstants.TUICommunity.TOPIC_ID, chatInfo.getId());
-                        TUICore.startActivity(getContext(), "TopicInfoActivity", bundle);
-                    } else {
-                        Bundle bundle = new Bundle();
-                        bundle.putString(TUIChatConstants.Group.GROUP_ID, chatInfo.getId());
-                        TUICore.startActivity(getContext(), "GroupInfoActivity", bundle);
-                    }
-                }
-            });
             mGroupApplyLayout.setOnNoticeClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -391,10 +367,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
         });
 
         getTitleBar().setRightIcon(TUIThemeManager.getAttrResId(getContext(), R.attr.chat_title_bar_more_menu));
-
-        getConversationLastMessage(TUIChatUtils.getConversationIdByUserId(chatInfo.getId(), isGroup));
         loadMessages(chatInfo.getLocateMessage(), chatInfo.getLocateMessage() == null ? TUIChatConstants.GET_MESSAGE_FORWARD : TUIChatConstants.GET_MESSAGE_TWO_WAY);
-
         setTotalUnread();
     }
 
@@ -731,7 +704,9 @@ public class ChatView extends LinearLayout  implements IChatLayout {
                 post(new Runnable() {
                     @Override
                     public void run() {
-                        scrollToEnd();
+                        if (presenter != null) {
+                            presenter.scrollToNewestMessage();
+                        }
                     }
                 });
             }
@@ -907,24 +882,6 @@ public class ChatView extends LinearLayout  implements IChatLayout {
         }
     }
 
-    public void getConversationLastMessage(String id) {
-        presenter.getConversationLastMessage(id, new IUIKitCallback<TUIMessageBean>() {
-            @Override
-            public void onSuccess(TUIMessageBean data) {
-                if (data == null) {
-                    Log.d(TAG, "getConversationLastMessage failed");
-                    return;
-                }
-                mConversationLastMessage = data;
-            }
-
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
-
-            }
-        });
-    }
-
     protected void deleteMessage(TUIMessageBean msg) {
         presenter.deleteMessage(msg);
     }
@@ -979,7 +936,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
     }
 
     protected void reactMessage(Emoji emoji, TUIMessageBean messageBean) {
-        presenter.reactMessage(emoji.getFilter(), messageBean);
+        presenter.reactMessage(emoji.getFaceKey(), messageBean);
     }
 
     private void resetTitleBar(String leftTitle){

@@ -19,6 +19,7 @@ import android.view.WindowManager;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
 import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
@@ -120,18 +121,18 @@ public class SetGroupManagerActivity extends BaseLightActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SetGroupManagerActivity.this, GroupMemberActivity.class);
-                intent.putExtra(TUIGroupConstants.Selection.IS_SELECT_MODE, true);
+                intent.putExtra(TUIConstants.TUIGroup.IS_SELECT_MODE, true);
                 ArrayList<String> selectedList = new ArrayList<>();
                 if (managerAdapter.getGroupMemberInfoList() != null) {
                     for (GroupMemberInfo memberInfo : managerAdapter.getGroupMemberInfoList()) {
                         selectedList.add(memberInfo.getAccount());
                     }
-                    intent.putExtra(TUIGroupConstants.Selection.SELECTED_LIST, selectedList);
+                    intent.putExtra(TUIConstants.TUIGroup.SELECTED_LIST, selectedList);
                 }
                 ArrayList<String> excludeList = new ArrayList<>();
                 excludeList.add(ownerID);
-                intent.putExtra(TUIGroupConstants.Selection.EXCLUDE_LIST, excludeList);
-                intent.putExtra(TUIGroupConstants.Group.GROUP_INFO, groupInfo);
+                intent.putExtra(TUIConstants.TUIGroup.EXCLUDE_LIST, excludeList);
+                intent.putExtra(TUIConstants.TUIGroup.GROUP_ID, groupInfo.getId());
                 startActivityForResult(intent, 1);
             }
         });

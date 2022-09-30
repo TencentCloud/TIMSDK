@@ -1,6 +1,8 @@
 package com.tencent.qcloud.tuikit.tuicallkit.base;
 
 public class Constants {
+    public static final String TUICALLKIT = "TUICallKit";
+
     public static final int ROOM_ID_MIN = 1;
     public static final int ROOM_ID_MAX = Integer.MAX_VALUE;
 

@@ -1,24 +1,35 @@
 package com.tencent.qcloud.tuikit.tuichat.component.face;
 
-import android.graphics.Bitmap;
+import android.text.TextUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class FaceGroup {
-    private int groupId;
+    private int groupID;
+    private String groupName;
     private String desc;
-    private Bitmap groupIcon;
+    private String faceGroupIconUrl;
     private int pageRowCount;
     private int pageColumnCount;
-    private ArrayList<Emoji> faces;
+    private final Map<String, ChatFace> faces = new LinkedHashMap<>();
 
-
-    public int getGroupId() {
-        return groupId;
+    public int getGroupID() {
+        return groupID;
     }
 
-    public void setGroupId(int groupId) {
-        this.groupId = groupId;
+    public void setGroupID(int groupID) {
+        this.groupID = groupID;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
+    public String getGroupName() {
+        return groupName;
     }
 
     public String getDesc() {
@@ -29,12 +40,12 @@ public class FaceGroup {
         this.desc = desc;
     }
 
-    public Bitmap getGroupIcon() {
-        return groupIcon;
+    public void setFaceGroupIconUrl(String faceGroupIconUrl) {
+        this.faceGroupIconUrl = faceGroupIconUrl;
     }
 
-    public void setGroupIcon(Bitmap groupIcon) {
-        this.groupIcon = groupIcon;
+    public String getFaceGroupIconUrl() {
+        return faceGroupIconUrl;
     }
 
     public int getPageRowCount() {
@@ -53,11 +64,28 @@ public class FaceGroup {
         this.pageColumnCount = pageColumnCount;
     }
 
-    public ArrayList<Emoji> getFaces() {
-        return faces;
+    public ArrayList<ChatFace> getFaces() {
+        return new ArrayList<>(faces.values());
     }
 
-    public void setFaces(ArrayList<Emoji> faces) {
-        this.faces = faces;
+    public void addFace(String faceKey, ChatFace face) {
+        face.setFaceGroup(this);
+        faces.put(faceKey, face);
+    }
+
+    public ChatFace getFace(String faceKey) {
+        if (TextUtils.isEmpty(faceKey)) {
+            return null;
+        }
+        ChatFace face = faces.get(faceKey);
+        if (face == null) {
+            int index = faceKey.lastIndexOf("@2x");
+            if (index == -1) {
+                return null;
+            }
+            String oldFaceKey = faceKey.substring(0, index);
+            face = faces.get(oldFaceKey);
+        }
+        return face;
     }
 }

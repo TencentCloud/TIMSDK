@@ -5,8 +5,14 @@
 
 # Gradle files
 */.gradle/
+*.gradle/
 
 # IDEA Files
 /tuicontact/.idea/
 /tuicontact/build/
 local.properties
+/.codecc/
+/build.yml
+*.iml
+*.idea/
+/captures

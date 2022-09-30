@@ -8,7 +8,7 @@ public class PrivateConstants {
     // 海外证书 ID，需要在海外控制台配置，不使用不用填写  // The overseas certificate ID, which needs to be configured on the overseas console, does not need to be filled in if it is not used.
     public static long huaweiPushBussinessIdAbroad = 0;
     // 角标参数，默认为应用的 launcher 界面的类名  // Angular parameter, defaults to the class name of the application's launcher interface
-    public static String huaweiBadgeClassName = "";
+    public static String huaweiBadgeClassName = "com.tencent.qcloud.tim.demo.SplashActivity";
     /****** huawei end ******/
 
     /****** xiaomi begin ******/
@@ -54,4 +54,11 @@ public class PrivateConstants {
     public static String oppoPushAppKey = "";
     public static String oppoPushAppSecret = "";
     /****** oppo end ******/
+
+    /****** honor start ******/
+    // 在腾讯云控制台上传第三方推送证书后分配的证书ID
+    public static long honorPushBussinessId = 0;
+    // 海外证书 ID，需要在海外控制台配置，不使用不用填写
+    public static long honorPushBussinessIdAbroad = 0;
+    /****** honor end ******/
 }

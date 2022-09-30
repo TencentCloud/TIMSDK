@@ -22,6 +22,7 @@ public class MessageHeaderHolder extends MessageBaseHolder {
 
     public void setLoadingStatus(boolean loading) {
         mLoading = loading;
+        layoutViews(null, 0);
     }
 
     @Override

@@ -6,7 +6,7 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <com.tencent.qcloud.tuikit.tuicommunity.component.RoundFrameLayout
+    <com.tencent.qcloud.tuicore.component.RoundFrameLayout
         android:id="@+id/banner_frame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,7 +20,7 @@
             android:layout_height="150dp"
             android:background="#FFFFFF" />
 
-    </com.tencent.qcloud.tuikit.tuicommunity.component.RoundFrameLayout>
+    </com.tencent.qcloud.tuicore.component.RoundFrameLayout>
 
 
     <LinearLayout

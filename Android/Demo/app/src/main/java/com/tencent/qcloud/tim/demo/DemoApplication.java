@@ -29,6 +29,7 @@ import com.tencent.qcloud.tim.demo.bean.UserInfo;
 
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
+import com.tencent.qcloud.tuicore.interfaces.TUICallback;
 import com.tencent.qcloud.tuicore.interfaces.TUILoginListener;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.PermissionRequester;
@@ -63,7 +64,6 @@ public class DemoApplication extends Application {
             MultiDex.install(this);
 
             // add Demo theme
-            TUIThemeManager.setWebViewLanguage(this);
             TUIThemeManager.addLightTheme(R.style.DemoLightTheme);
             TUIThemeManager.addLivelyTheme(R.style.DemoLivelyTheme);
             TUIThemeManager.addSeriousTheme(R.style.DemoSeriousTheme);
@@ -74,6 +74,12 @@ public class DemoApplication extends Application {
 
             initOfflinePushConfigs();
         }
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        TUIThemeManager.setWebViewLanguage(this);
     }
 
     private void initBugly() {
@@ -139,7 +145,17 @@ public class DemoApplication extends Application {
         @Override
         public void onUserSigExpired() {
             ToastUtil.toastLongMessage(DemoApplication.instance().getString(R.string.expired_login_tip));
-            logout();
+            TUILogin.logout(new TUICallback() {
+                @Override
+                public void onSuccess() {
+                    logout();
+                }
+
+                @Override
+                public void onError(int errorCode, String errorMessage) {
+                    logout();
+                }
+            });
         }
     };
 

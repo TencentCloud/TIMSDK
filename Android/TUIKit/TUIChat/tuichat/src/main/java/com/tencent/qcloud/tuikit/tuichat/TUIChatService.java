@@ -1,7 +1,13 @@
 package com.tencent.qcloud.tuikit.tuichat;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
+
+import androidx.datastore.preferences.core.Preferences;
+import androidx.datastore.preferences.rxjava3.RxPreferenceDataStoreBuilder;
+import androidx.datastore.rxjava3.RxDataStore;
 
 import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
 import com.tencent.imsdk.v2.V2TIMFriendInfo;
@@ -24,6 +30,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.FileMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.LocationMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.MessageTypingBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.QuoteMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ReplyMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.SoundMessageBean;
@@ -31,7 +38,6 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TextAtMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.MessageTypingBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
@@ -58,6 +64,7 @@ import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.TipsMessageH
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.VideoMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
+import com.tencent.qcloud.tuikit.tuichat.util.DataStoreUtil;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
@@ -96,6 +103,8 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
 
     private int viewType = 0;
 
+    private RxDataStore<Preferences> mChatDataStore = null;
+
     @Override
     public void init(Context context) {
         instance = this;
@@ -104,7 +113,8 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
         initService();
         initEvent();
         initIMListener();
-        FaceManager.loadFaceFiles();
+        initDataStore();
+        FaceManager.loadEmojis();
     }
 
     // 初始化自定义消息类型
@@ -178,6 +188,17 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
         TUICore.registerService(TUIConstants.TUIChat.SERVICE_NAME, this);
     }
 
+    private void initDataStore() {
+        if (mChatDataStore == null) {
+            mChatDataStore = new RxPreferenceDataStoreBuilder(getAppContext(), TUIChatConstants.DataStore.DATA_STORE_NAME).build();
+        }
+        DataStoreUtil.getInstance().setDataStore(mChatDataStore);
+    }
+    
+    public RxDataStore<Preferences> getChatDataStore() {
+        return mChatDataStore;
+    }
+
     private void initEvent() {
         TUICore.registerEvent(TUIConstants.TUIGroup.EVENT_GROUP, TUIConstants.TUIGroup.EVENT_SUB_KEY_GROUP_INFO_CHANGED, this);
         TUICore.registerEvent(TUIConstants.TUIGroup.EVENT_GROUP, TUIConstants.TUIGroup.EVENT_SUB_KEY_EXIT_GROUP, this);
@@ -191,6 +212,7 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
         TUICore.registerEvent(TUIConstants.TUIContact.EVENT_USER, TUIConstants.TUIContact.EVENT_SUB_KEY_CLEAR_MESSAGE, this);
         TUICore.registerEvent(TUIConstants.TUIConversation.EVENT_UNREAD, TUIConstants.TUIConversation.EVENT_SUB_KEY_UNREAD_CHANGED, this);
         TUICore.registerEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGIN_SUCCESS, this);
+        TUICore.registerEvent(TUIChatConstants.EVENT_KEY_MESSAGE_STATUS_CHANGED, TUIChatConstants.EVENT_SUB_KEY_MESSAGE_SEND, this);
     }
 
     @Override
@@ -250,6 +272,12 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
                 for (GroupChatEventListener groupChatEventListener : groupChatEventListenerList) {
                     groupChatEventListener.onApplied(number);
                 }
+            }
+        } else if (TextUtils.equals(TUIConstants.TUIChat.METHOD_UPDATE_DATA_STORE_CHAT_URI, method)) {
+            String uri = (String) param.get(TUIConstants.TUIChat.CHAT_BACKGROUND_URI);
+            String chatId = (String) param.get(TUIConstants.TUIChat.CHAT_ID);
+            if (!TextUtils.isEmpty(uri)) {
+                DataStoreUtil.getInstance().putValue(chatId, uri);
             }
         }
         return null;
@@ -341,9 +369,29 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
             if (TextUtils.equals(subKey, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGIN_SUCCESS)) {
                 // 设置音视频通话的悬浮窗是否开启
                 // Set whether to open the floating window for voice and video calls
-                Map<String, Object> data = new HashMap<>();
-                data.put(TUIConstants.TUICalling.PARAM_NAME_ENABLE_FLOAT_WINDOW, getChatConfig().getGeneralConfig().isEnableFloatWindowForCall());
-                TUICore.callService(TUIConstants.TUICalling.SERVICE_NAME, TUIConstants.TUICalling.METHOD_NAME_ENABLE_FLOAT_WINDOW, data);
+                Map<String, Object> enableFloatWindowParam = new HashMap<>();
+                enableFloatWindowParam.put(TUIConstants.TUICalling.PARAM_NAME_ENABLE_FLOAT_WINDOW, getChatConfig().getGeneralConfig().isEnableFloatWindowForCall());
+                TUICore.callService(TUIConstants.TUICalling.SERVICE_NAME, TUIConstants.TUICalling.METHOD_NAME_ENABLE_FLOAT_WINDOW, enableFloatWindowParam);
+
+                // 设置音视频通话开启多端登录功能
+                // Set Whether to enable multi-terminal login function for audio and video calls
+                Map<String, Object> enableMultiDeviceParam = new HashMap<>();
+                enableMultiDeviceParam.put(TUIConstants.TUICalling.PARAM_NAME_ENABLE_MULTI_DEVICE, getChatConfig().getGeneralConfig().isEnableMultiDeviceForCall());
+                TUICore.callService(TUIConstants.TUICalling.SERVICE_NAME, TUIConstants.TUICalling.METHOD_NAME_ENABLE_MULTI_DEVICE, enableMultiDeviceParam);
+            }
+        } else if (TextUtils.equals(key, TUIChatConstants.EVENT_KEY_MESSAGE_STATUS_CHANGED)) {
+            if (TextUtils.equals(subKey, TUIChatConstants.EVENT_SUB_KEY_MESSAGE_SEND)) {
+                Object msgBeanObj = param.get(TUIChatConstants.MESSAGE_BEAN);
+                if (msgBeanObj instanceof TUIMessageBean) {
+                    List<GroupChatEventListener> groupChatEventListenerList = getGroupChatEventListenerList();
+                    for (GroupChatEventListener groupChatEventListener : groupChatEventListenerList) {
+                        groupChatEventListener.onMessageChanged((TUIMessageBean) msgBeanObj);
+                    }
+                    List<C2CChatEventListener> c2CChatEventListenerList = getC2CChatEventListenerList();
+                    for (C2CChatEventListener c2CChatEventListener : c2CChatEventListenerList) {
+                        c2CChatEventListener.onMessageChanged((TUIMessageBean) msgBeanObj);
+                    }
+                }
             }
         }
     }

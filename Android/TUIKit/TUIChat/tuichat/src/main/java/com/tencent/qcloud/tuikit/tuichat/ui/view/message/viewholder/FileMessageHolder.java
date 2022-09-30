@@ -251,6 +251,7 @@ public class FileMessageHolder extends MessageContentHolder {
         }
     }
 
+    @Override
     public void setHighLightBackground(int color) {
         if (normalBackground != null) {
             normalBackground.setColorFilter(color, PorterDuff.Mode.SRC_IN);
@@ -260,7 +261,8 @@ public class FileMessageHolder extends MessageContentHolder {
             progressDrawable.invalidateSelf();
         }
     }
-
+    
+    @Override
     public void clearHighLightBackground() {
         if (normalBackground != null) {
             normalBackground.setColorFilter(null);

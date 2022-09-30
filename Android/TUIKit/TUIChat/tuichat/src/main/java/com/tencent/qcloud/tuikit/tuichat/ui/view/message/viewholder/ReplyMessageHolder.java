@@ -61,21 +61,26 @@ public class ReplyMessageHolder extends MessageContentHolder {
 
         performMsgAbstract(replyMessageBean, position);
 
-        msgContentFrame.setOnLongClickListener(new View.OnLongClickListener() {
+        msgArea.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onLongClick(View view) {
-                if (onItemClickListener != null) {
-                    onItemClickListener.onMessageLongClick(view, position, msg);
-                }
+            public boolean onLongClick(View v) {
+                selectableTextHelper.selectAll();
                 return true;
             }
         });
+
+        msgContentFrame.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                selectableTextHelper.selectAll();
+                return true;
+            }
+        });
+
         originMsgLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if (onItemClickListener != null) {
-                    onItemClickListener.onMessageLongClick(v, position, msg);
-                }
+                selectableTextHelper.selectAll();
                 return true;
             }
         });

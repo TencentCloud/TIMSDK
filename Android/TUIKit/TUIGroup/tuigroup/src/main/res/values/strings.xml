@@ -71,6 +71,8 @@
     <string name="chat_to_top">Sticky on Top</string>
     <string name="profile_msgrev_opt">Mute Notifications</string>
     <string name="fold_this_group_chat">Fold this group chat</string>>
+    <string name="profile_chat_background">Background</string>
+    <string name="chat_background_title">Background</string>
 
     <string name="join_group_tip">You have been invited to the group: </string>
     <string name="joined_tip">You have joined the group: </string>

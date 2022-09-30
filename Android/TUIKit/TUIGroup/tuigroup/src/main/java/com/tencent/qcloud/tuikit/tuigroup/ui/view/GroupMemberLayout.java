@@ -9,11 +9,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.tencent.qcloud.tuicore.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
+import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
 import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuigroup.R;
@@ -30,6 +35,9 @@ import java.util.List;
 
 
 public class GroupMemberLayout extends LinearLayout implements IGroupMemberLayout {
+    // 取一个足够大的偏移保证能一次性滚动到最底部
+    // Take a large enough offset to scroll to the bottom at one time
+    private static final int SCROLL_TO_END_OFFSET = -999999;
 
     private TitleBarLayout mTitleBar;
     private GroupMemberAdapter mAdapter;
@@ -40,6 +48,10 @@ public class GroupMemberLayout extends LinearLayout implements IGroupMemberLayou
     private String title;
     private ArrayList<String> excludeList;
     private ArrayList<String> alreadySelectedList;
+    private RecyclerView selectedList;
+    private SelectedAdapter selectedListAdapter;
+    private View selectArea;
+    private TextView confirmButton;
 
     private GroupInfoPresenter presenter;
 
@@ -116,6 +128,34 @@ public class GroupMemberLayout extends LinearLayout implements IGroupMemberLayou
                 }
             }
         });
+
+        selectArea = findViewById(R.id.select_area);
+        selectedList = findViewById(R.id.selected_list);
+        selectedListAdapter = new SelectedAdapter();
+        selectedList.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
+        selectedList.setAdapter(selectedListAdapter);
+
+        confirmButton = findViewById(R.id.confirm_button);
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                confirmAndFinish();
+            }
+        });
+
+        mAdapter.setOnSelectChangedListener(new OnSelectChangedListener() {
+            @Override
+            public void onSelectChanged() {
+                selectedListAdapter.setMembers(mAdapter.getSelectedMemberInfoList());
+                selectedListAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    private void confirmAndFinish() {
+        if (groupMemberListener != null) {
+            groupMemberListener.setSelectedMember(mAdapter.getSelectedMember());
+        }
     }
 
     public TitleBarLayout getTitleBar() {
@@ -144,6 +184,7 @@ public class GroupMemberLayout extends LinearLayout implements IGroupMemberLayou
                     }
                 }
             });
+            selectArea.setVisibility(VISIBLE);
         }
 
         mAdapter.setSelectMode(isSelectMode);
@@ -216,4 +257,44 @@ public class GroupMemberLayout extends LinearLayout implements IGroupMemberLayou
         this.presenter = presenter;
         mAdapter.setPresenter(presenter);
     }
+
+    public static class SelectedAdapter extends RecyclerView.Adapter<SelectedAdapter.SelectedViewHolder> {
+        private List<GroupMemberInfo> mMembers;
+
+        public void setMembers(List<GroupMemberInfo> mMembers) {
+            this.mMembers = mMembers;
+        }
+
+        @NonNull
+        @Override
+        public SelectedViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            return new SelectedViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.group_member_selected_item, parent, false));
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull SelectedAdapter.SelectedViewHolder holder, int position) {
+            GlideEngine.loadImage(holder.userIconView, mMembers.get(position).getIconUrl());
+        }
+
+        @Override
+        public int getItemCount() {
+            if (mMembers == null) {
+                return 0;
+            }
+            return mMembers.size();
+        }
+
+        public static class SelectedViewHolder extends RecyclerView.ViewHolder {
+            public final ImageView userIconView;
+            public SelectedViewHolder(@NonNull View itemView) {
+                super(itemView);
+                userIconView = (ImageView) itemView.findViewById(R.id.ivAvatar);
+            }
+        }
+    }
+
+    public interface OnSelectChangedListener {
+        void onSelectChanged();
+    }
+
 }

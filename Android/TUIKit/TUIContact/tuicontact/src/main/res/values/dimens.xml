@@ -41,5 +41,6 @@
     <dimen name="search_bar_height">38.4dp</dimen>
     <dimen name="search_bar_margin">15.36dp</dimen>
     <dimen name="contact_add_item_height">90.24dp</dimen>
+    <dimen name="view_margin_bottom">20dp</dimen>
 
 </resources>

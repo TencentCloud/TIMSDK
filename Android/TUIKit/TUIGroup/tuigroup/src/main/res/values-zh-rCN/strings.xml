@@ -69,6 +69,8 @@
     <string name="chat_to_top">置顶聊天</string>
     <string name="profile_msgrev_opt">消息免打扰</string>
     <string name="fold_this_group_chat">折叠该群聊</string>
+    <string name="profile_chat_background">设置当前聊天背景</string>
+    <string name="chat_background_title">更换背景</string>
 
     <string name="join_group_tip">您已被邀请进群: </string>
     <string name="joined_tip">您已加入群: </string>

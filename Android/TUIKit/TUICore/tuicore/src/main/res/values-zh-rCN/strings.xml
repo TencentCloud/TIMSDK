@@ -14,6 +14,10 @@
     <string name="cancel">取消</string>
     <string name="core_permission_dialog_title">权限申请</string>
     <string name="core_permission_dialog_positive_setting_text">去设置</string>
-
+    <string name="setting">设置中</string>
+    <string name="setting_fail">设置失败！</string>
+    <string name="setting_success">设置成功！</string>
+    <string name="default_text">默认背景</string>
+    <string name="core_next_step">下一步</string>
 
 </resources>

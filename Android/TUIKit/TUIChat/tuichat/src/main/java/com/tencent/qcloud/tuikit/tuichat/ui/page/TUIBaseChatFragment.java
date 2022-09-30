@@ -2,6 +2,12 @@ package com.tencent.qcloud.tuikit.tuichat.ui.page;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -9,8 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
@@ -24,12 +34,13 @@ import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemClickListener;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.ChatView;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.input.InputView;
+import com.tencent.qcloud.tuikit.tuichat.ui.view.message.MessageRecyclerView;
+import com.tencent.qcloud.tuikit.tuichat.util.DataStoreUtil;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
@@ -49,6 +60,10 @@ public class TUIBaseChatFragment extends BaseFragment {
 
     private List<TUIMessageBean> mForwardSelectMsgInfos = null;
     private int mForwardMode;
+
+    private MessageRecyclerView messageRecyclerView;
+    protected String mChatBackgroundUrl;
+    protected String mChatBackgroundThumbnailUrl;
 
     @Nullable
     @Override
@@ -165,9 +180,10 @@ public class TUIBaseChatFragment extends BaseFragment {
                 Bundle param = new Bundle();
                 param.putString(TUIChatConstants.GROUP_ID, getChatInfo().getId());
                 TUICore.startActivity(TUIBaseChatFragment.this, "StartGroupMemberSelectActivity", param, 1);
-
             }
         });
+
+        messageRecyclerView = chatView.getMessageLayout();
     }
 
     @Override
@@ -246,6 +262,7 @@ public class TUIBaseChatFragment extends BaseFragment {
         if (getPresenter() != null) {
             getPresenter().setChatFragmentShow(true);
         }
+        initChatViewBackground();
     }
 
     @Override
@@ -273,5 +290,100 @@ public class TUIBaseChatFragment extends BaseFragment {
 
     public ChatPresenter getPresenter() {
         return null;
+    }
+
+    protected void initChatViewBackground() {
+        if (getChatInfo() == null) {
+            TUIChatLog.e(TAG, "initChatViewBackground getChatInfo is null");
+            return;
+        }
+        DataStoreUtil.getInstance().getValueAsync(getChatInfo().getId(), new DataStoreUtil.GetResult<String>() {
+            @Override
+            public void onSuccess(String result) {
+                setChatViewBackground(result);
+            }
+
+            @Override
+            public void onFail() {
+                TUIChatLog.e(TAG, "initChatViewBackground onFail");
+            }
+        }, String.class);
+    }
+
+    protected void setChatViewBackground(String uri){
+        TUIChatLog.d(TAG, "setChatViewBackground uri = " + uri);
+        if (TextUtils.isEmpty(uri)) {
+            return;
+        }
+
+        if (chatView == null) {
+            TUIChatLog.e(TAG, "setChatViewBackground chatview is null");
+            return;
+        }
+
+        if (messageRecyclerView == null) {
+            TUIChatLog.e(TAG, "setChatViewBackground messageRecyclerView is null");
+            return;
+        }
+
+        String[] list = uri.split(",");
+        if (list.length > 0) {
+            mChatBackgroundThumbnailUrl = list[0];
+        }
+
+        if (list.length > 1) {
+            mChatBackgroundUrl = list[1];
+        }
+
+        if (TextUtils.equals(TUIConstants.TUIChat.CHAT_CONVERSATION_BACKGROUND_DEFAULT_URL, mChatBackgroundUrl)) {
+            mChatBackgroundThumbnailUrl = TUIConstants.TUIChat.CHAT_CONVERSATION_BACKGROUND_DEFAULT_URL;
+            messageRecyclerView.setBackgroundResource(R.color.chat_background_color);
+            return;
+        }
+
+        messageRecyclerView.post(new Runnable() {
+            @Override
+            public void run() {
+                int imageWidth = messageRecyclerView.getWidth();
+                int imageHeight = messageRecyclerView.getHeight();
+                TUIChatLog.d(TAG, "messageRecyclerView  width = " + imageWidth + ", height = " + imageHeight);
+                if (imageWidth == 0 || imageHeight == 0) {
+                    return;
+                }
+                Glide.with(getContext()).asBitmap().load(mChatBackgroundUrl).into(new CustomTarget<Bitmap>(imageWidth, imageHeight) {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        TUIChatLog.d(TAG, "messageRecyclerView onGlobalLayout url = " + mChatBackgroundUrl);
+                        Bitmap srcBitmap = zoomImg(resource, imageWidth, imageHeight);
+                        messageRecyclerView.setBackground(new BitmapDrawable(getResources(), resource) {
+                            @Override
+                            public void draw(@NonNull Canvas canvas) {
+                                // TUIChatLog.d(TAG, "draw canvas =" + canvas.getClipBounds());
+                                canvas.drawBitmap(srcBitmap, canvas.getClipBounds(), canvas.getClipBounds(), null);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+
+                    }
+                });
+            }
+        });
+    }
+
+    private Bitmap zoomImg(Bitmap bm, int targetWidth, int targetHeight) {
+        int srcWidth = bm.getWidth();
+        int srcHeight = bm.getHeight();
+        float widthScale = targetWidth * 1.0f / srcWidth;
+        float heightScale = targetHeight * 1.0f / srcHeight;
+        Matrix matrix = new Matrix();
+        matrix.postScale(widthScale, heightScale, 0, 0);
+        Bitmap bmpRet = Bitmap.createBitmap(targetWidth, targetHeight, Bitmap.Config.RGB_565);
+        Canvas canvas = new Canvas(bmpRet);
+        Paint paint = new Paint();
+        canvas.drawBitmap(bm, matrix, paint);
+        return bmpRet;
     }
 }

@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tuicore.util;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -13,7 +12,6 @@ import android.graphics.RectF;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUILogin;
@@ -355,6 +353,24 @@ public class ImageUtil {
         canvas.drawBitmap(bitmap, src, dst, paint);
 
         return output;
+    }
+
+    public static boolean isImageDownloaded(String imagePath) {
+        try {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(imagePath, options);
+//            ImageDecoder.Source src = ImageDecoder.createSource(mContext.getContentResolver(),
+//                    uri, res);
+//            return ImageDecoder.decodeDrawable(src, (decoder, info, s) -> {
+//                decoder.setAllocator(ImageDecoder.ALLOCATOR_SOFTWARE);
+//            });
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     /**

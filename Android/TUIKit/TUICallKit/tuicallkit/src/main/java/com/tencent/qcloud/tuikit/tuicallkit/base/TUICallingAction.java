@@ -7,6 +7,7 @@ import com.tencent.qcloud.tuikit.TUIVideoView;
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine;
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallEngine;
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.TUILog;
+import com.tencent.qcloud.tuikit.tuicallkit.config.OfflinePushInfoConfig;
 
 import java.util.List;
 
@@ -20,7 +21,10 @@ public class TUICallingAction {
     }
 
     public void inviteUser(List<String> userIdList, TUICommonDefine.ValueCallback callback) {
-        TUICallEngine.createInstance(mContext).inviteUser(userIdList, callback);
+        TUICallDefine.CallParams params = new TUICallDefine.CallParams();
+        params.offlinePushInfo = OfflinePushInfoConfig.createOfflinePushInfo(mContext);
+
+        TUICallEngine.createInstance(mContext).inviteUser(userIdList, params, callback);
     }
 
     public void accept(TUICommonDefine.Callback callback) {

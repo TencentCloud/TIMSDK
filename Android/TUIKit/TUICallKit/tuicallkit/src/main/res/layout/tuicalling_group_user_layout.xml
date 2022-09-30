@@ -11,12 +11,12 @@
         android:layout_height="match_parent"
         android:visibility="gone" />
 
-    <com.tencent.qcloud.tuikit.tuicallkit.widget.RoundCornerImageView
+    <com.tencent.qcloud.tuicore.component.RoundCornerImageView
         android:id="@+id/img_head"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
-        android:scaleType="centerCrop"
+        android:scaleType="fitXY"
         android:src="@drawable/tuicalling_ic_avatar" />
 
     <ImageView

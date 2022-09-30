@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="emoji_filter_key">
+    <string-array name="emoji_key">
         <item>[龇牙]</item>
         <item>[调皮]</item>
         <item>[流汗]</item>
@@ -142,7 +142,7 @@
         <item>[青蛙]</item>
     </string-array>
 
-    <string-array name="emoji_filter_value">
+    <string-array name="emoji_name">
         <item>@string/ciya</item>
         <item>@string/tiaopi</item>
         <item>@string/liuhan</item>

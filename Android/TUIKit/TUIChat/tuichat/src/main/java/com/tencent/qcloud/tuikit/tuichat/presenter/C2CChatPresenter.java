@@ -90,6 +90,11 @@ public class C2CChatPresenter extends ChatPresenter {
                     clearMessage();
                 }
             }
+
+            @Override
+            public void onMessageChanged(TUIMessageBean messageBean) {
+                updateMessageInfo(messageBean);
+            }
         };
         TUIChatService.getInstance().addC2CChatEventListener(chatEventListener);
         initMessageSender();
@@ -123,6 +128,9 @@ public class C2CChatPresenter extends ChatPresenter {
                     TUIChatLog.i(TAG, "load c2c message success " + data.size());
                     if (lastMessageInfo == null) {
                         isHaveMoreNewMessage = false;
+                    }
+                    if (data.size() < MSG_PAGE_COUNT) {
+                        isHaveMoreOldMessage = false;
                     }
                     TUIChatUtils.callbackOnSuccess(callback, data);
                     onMessageLoadCompleted(data, type);

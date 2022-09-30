@@ -13,7 +13,8 @@ public class MessageRepliesBean implements Serializable {
         private String messageID;
         private String messageAbstract;
         private String messageSender;
-
+        transient private String senderFaceUrl;
+        transient private String senderShowName;
         public String getMessageID() {
             return messageID;
         }
@@ -36,6 +37,25 @@ public class MessageRepliesBean implements Serializable {
 
         public void setMessageSender(String messageSender) {
             this.messageSender = messageSender;
+        }
+
+        public void setSenderFaceUrl(String senderFaceUrl) {
+            this.senderFaceUrl = senderFaceUrl;
+        }
+
+        public String getSenderFaceUrl() {
+            return senderFaceUrl;
+        }
+
+        public void setSenderShowName(String senderShowName) {
+            this.senderShowName = senderShowName;
+        }
+
+        public String getSenderShowName() {
+            if (TextUtils.isEmpty(senderShowName)) {
+                return messageSender;
+            }
+            return senderShowName;
         }
     }
 

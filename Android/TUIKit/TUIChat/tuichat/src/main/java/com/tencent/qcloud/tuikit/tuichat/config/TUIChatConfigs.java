@@ -1,13 +1,11 @@
 package com.tencent.qcloud.tuikit.tuichat.config;
 
-import com.tencent.qcloud.tuikit.tuichat.component.face.CustomFaceConfig;
 import com.tencent.qcloud.tuikit.tuichat.component.noticelayout.NoticeLayoutConfig;
 
 public class TUIChatConfigs {
 
     private static TUIChatConfigs sConfigs;
     private GeneralConfig generalConfig;
-    private CustomFaceConfig customFaceConfig;
     private NoticeLayoutConfig noticeLayoutConfig;
 
     private TUIChatConfigs() {
@@ -52,39 +50,6 @@ public class TUIChatConfigs {
      */
     public TUIChatConfigs setGeneralConfig(GeneralConfig generalConfig) {
         this.generalConfig = generalConfig;
-        return this;
-    }
-
-    /**
-     * 获取自定义表情包配置
-     * 
-     * Get custom emoji configuration
-     *
-     * @return
-     */
-    public CustomFaceConfig getCustomFaceConfig() {
-        return customFaceConfig;
-    }
-
-    /**
-     * 设置自定义表情包配置
-     * 
-     * @note
-     *  需要注意的是， TUIKit 里面的表情包都是有版权限制的，购买的 IM 服务不包括表情包的使用权，请在上线的时候替换成自己的表情包，否则会面临法律风险
-     * @param customFaceConfig
-     * 
-     * 
-     * 
-     * Set custom emoji configuration
-     * 
-     * @note
-     *  It should be noted that the emoticons in TUIKit are copyrighted. The purchased IM service does not 
-     *  include the right to use the emoticons. Please replace them with your own emoticons when you go online, 
-     *  otherwise you will face legal risks.
-     * @param customFaceConfig
-     */
-    public TUIChatConfigs setCustomFaceConfig(CustomFaceConfig customFaceConfig) {
-        this.customFaceConfig = customFaceConfig;
         return this;
     }
 

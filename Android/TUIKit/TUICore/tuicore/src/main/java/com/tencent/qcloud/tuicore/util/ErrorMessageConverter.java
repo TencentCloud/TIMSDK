@@ -509,7 +509,8 @@ public class ErrorMessageConverter {
                 return getLocalizedString(R.string.TUIKitErrorSVRMsgBodySizeLimit);
             case BaseConstants.ERR_SVR_MSG_LONGPOLLING_COUNT_LIMIT:
                 return getLocalizedString(R.string.TUIKitErrorSVRmsgLongPollingCountLimit);
-
+            case BaseConstants.ERR_SDK_INTERFACE_NOT_SUPPORT:
+                return getLocalizedString(R.string.TUIKitErrorUnsupporInterface);
 
             // 群组错误码
             // Group error codes
