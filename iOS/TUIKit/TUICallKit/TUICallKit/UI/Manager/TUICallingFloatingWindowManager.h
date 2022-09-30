@@ -8,17 +8,11 @@
 
 #import <Foundation/Foundation.h>
 #import "TUICallEngineHeader.h"
-#import "TUICallingVideoRenderView.h"
 #import "TUICallingFloatingWindow.h"
 
-@class TUICallingVideoRenderView;
+@class CallingUserModel, TUICallingVideoRenderView;
 
 NS_ASSUME_NONNULL_BEGIN
-
-typedef NS_ENUM(NSInteger, TUICallingFloatingWindowType) {
-    TUICallingFloatingWindowTypeAudio,
-    TUICallingFloatingWindowTypeVideo,
-};
 
 @protocol TUICallingFloatingWindowManagerDelegate <NSObject>
 
@@ -29,21 +23,20 @@ typedef NS_ENUM(NSInteger, TUICallingFloatingWindowType) {
 @interface TUICallingFloatingWindowManager : NSObject
 
 @property (nonatomic, assign) BOOL isFloating;
-@property (nonatomic, strong) TUICallingFloatingWindow *floatWindow;
+@property (nonatomic, strong) TUICallingFloatingWindow * _Nullable floatWindow;
+@property (nonatomic, strong) TUICallingVideoRenderView * _Nullable renderView;
 
 + (instancetype)shareInstance;
 
-- (void)setFloatingWindowManagerDelegate:(id<TUICallingFloatingWindowManagerDelegate>)delegagte;
+- (void)setFloatingWindowManagerDelegate:(id<TUICallingFloatingWindowManagerDelegate>)delegate;
 
-- (void)showMicroFloatingWindowWithCallingWindow:(nullable UIWindow *)callingWindow VideoRenderView:(nullable TUICallingVideoRenderView *)renderView Completion:(void (^ __nullable)(BOOL finished))completion;
+- (void)showMicroFloatingWindow:(void (^ __nullable)(BOOL finished))completion;
 
-- (void)closeWindowCompletion:(void (^ __nullable)(BOOL finished))completion;
+- (void)closeMicroFloatingWindow:(void (^ __nullable)(BOOL finished))completion;
 
-- (void)switchToAudioMicroWindowWith:(TUICallStatus)callStatus callRole:(TUICallRole)callRole;
+- (void)updateDescribeText:(NSString *)textStr;
 
-- (void)updateMicroWindowText:(NSString *)textStr callStatus:(TUICallStatus)callStatus callRole:(TUICallRole)callRole;
-
-- (void)updateMicroWindowRenderView:(TUICallingVideoRenderView *)renderView;
+- (void)updateUserModel:(CallingUserModel *)userModel;
 
 @end
 

@@ -13,6 +13,7 @@
 #import "UIColor+TUICallingHex.h"
 #import "UIView+TUIUtil.h"
 #import "TUIDefine.h"
+#import "UIImageView+WebCache.h"
 
 static CGFloat const kMicroWindowCornerRatio = 15.0f;
 static CGFloat const kMicroContainerViewOffset = 8;
@@ -23,7 +24,8 @@ static CGFloat const kMicroContainerViewOffset = 8;
 @property (nonatomic, assign) CGPoint beganOrigin;
 
 @property (nonatomic, strong) TUICallingVideoRenderView *renderView;
-@property (nonatomic, strong) UIView *bgView;
+@property (nonatomic, strong) UIView *backView;
+@property (nonatomic, strong) UIImageView *avatarImageView;
 @property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, strong) UILabel *describeLabel;
@@ -44,19 +46,25 @@ static CGFloat const kMicroContainerViewOffset = 8;
 }
 
 - (void)initSubviews {
-    [self addSubview:self.bgView];
+    self.backgroundColor = [UIColor t_colorWithHexString:@"#F2F2F2"];
+    [self addSubview:self.backView];
+    [self addSubview:self.avatarImageView];
     [self addSubview:self.containerView];
-    [self addSubview:self.imageView];
-    [self addSubview:self.describeLabel];
+    [self.containerView addSubview:self.imageView];
+    [self.containerView addSubview:self.describeLabel];
 }
 
 - (void)activateConstraints {
-    [self.bgView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.backView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self);
     }];
+    [self.avatarImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.mas_equalTo(self);
+        make.top.left.mas_equalTo(self).offset(kMicroContainerViewOffset);
+    }];
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.center.mas_equalTo(self.bgView);
-        make.top.left.mas_equalTo(self.bgView).offset(kMicroContainerViewOffset);
+        make.center.mas_equalTo(self);
+        make.top.left.mas_equalTo(self).offset(kMicroContainerViewOffset);
     }];
     [self.imageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.containerView).offset(5);
@@ -89,20 +97,33 @@ static CGFloat const kMicroContainerViewOffset = 8;
         corner = UIRectCornerTopRight | UIRectCornerBottomRight;
     }
     
-    [self.bgView roundedRect:corner withCornerRatio:kMicroWindowCornerRatio];
+    [self.backView roundedRect:corner withCornerRatio:kMicroWindowCornerRatio];
 }
 
-- (void)updateMicroWindowWithRenderView:(TUICallingVideoRenderView *)renderView {
+- (void)updateMicroWindowWithRenderView:(TUICallingVideoRenderView * _Nullable)renderView {
     if (renderView) {
         self.imageView.hidden = YES;
+        self.renderView.hidden = NO;
         self.describeLabel.hidden = YES;
         renderView.frame = CGRectMake(0, 0, kMicroVideoViewWidth - kMicroContainerViewOffset * 2, kMicroVideoViewHeight - kMicroContainerViewOffset * 2);
         [self.renderView removeFromSuperview];
         [self.containerView addSubview:renderView];
         self.renderView = renderView;
     } else {
+        self.renderView.hidden = YES;
         self.imageView.hidden = NO;
         self.describeLabel.hidden = NO;
+    }
+}
+
+- (void)updateMicroWindowBackgroundAvatar:(NSString *)avatar {
+    if (avatar && avatar.length > 0) {
+        self.avatarImageView.hidden = NO;
+        [self.avatarImageView sd_setImageWithURL:[NSURL URLWithString:avatar]];
+        [self bringSubviewToFront:self.avatarImageView];
+    } else {
+        [self sendSubviewToBack:self.avatarImageView];
+        self.avatarImageView.hidden = YES;
     }
 }
 
@@ -123,7 +144,7 @@ static CGFloat const kMicroContainerViewOffset = 8;
         case UIGestureRecognizerStateBegan:{
             self.beganPoint = [panGesture translationInView:panGesture.view];
             self.beganOrigin = self.frame.origin;
-            [self.bgView roundedRect:UIRectCornerAllCorners withCornerRatio:kMicroWindowCornerRatio];
+            [self.backView roundedRect:UIRectCornerAllCorners withCornerRatio:kMicroWindowCornerRatio];
         } break;
         case UIGestureRecognizerStateChanged: {
             CGPoint point = [panGesture translationInView:panGesture.view];
@@ -166,17 +187,26 @@ static CGFloat const kMicroContainerViewOffset = 8;
 
 #pragma mark - Getter And Setter
 
-- (UIView *)bgView {
-    if (!_bgView) {
-        _bgView = [[UIView alloc] init];
-        _bgView.backgroundColor = [UIColor t_colorWithHexString:@"#CCCCCC"];
-        _bgView.alpha = 0.2;
-        _bgView.layer.borderWidth = 1;
-        _bgView.layer.borderColor = [UIColor t_colorWithHexString:@"#999999"].CGColor;
-        _bgView.layer.masksToBounds = YES;
-        _bgView.alpha = 0.8;
+- (UIView *)backView {
+    if (!_backView) {
+        _backView = [[UIView alloc] init];
+        _backView.backgroundColor = [UIColor t_colorWithHexString:@"#CCCCCC"];
+        _backView.alpha = 0.2;
+        _backView.layer.borderWidth = 1;
+        _backView.layer.borderColor = [UIColor t_colorWithHexString:@"#999999"].CGColor;
+        _backView.layer.masksToBounds = YES;
+        _backView.alpha = 0.8;
     }
-    return _bgView;
+    return _backView;
+}
+
+- (UIImageView *)avatarImageView {
+    if (!_avatarImageView) {
+        _avatarImageView = [[UIImageView alloc] init];
+        _avatarImageView.contentMode = UIViewContentModeScaleAspectFill;
+        _avatarImageView.clipsToBounds = YES;
+    }
+    return _avatarImageView;
 }
 
 - (UIView *)containerView {

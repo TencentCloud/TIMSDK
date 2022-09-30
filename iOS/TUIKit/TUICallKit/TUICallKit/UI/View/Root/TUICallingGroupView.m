@@ -44,6 +44,7 @@
 - (void)setupCallingGroupUI {
     self.backgroundColor = [UIColor t_colorWithHexString:@"#242424"];
     [self addSubview:self.groupCollectionView];
+    self.localPreView.hidden = NO;
     
     [self.groupCollectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self).offset(StatusBar_Height + 38);
@@ -120,9 +121,11 @@
     self.userList[index] = userModel;
     [self.delegateManager reloadCallingGroupWithModel:self.userList];
     [self.delegateManager reloadGroupCellWithIndex:index];
-    UIView *renderView = [self.delegateManager getRenderViewFromUser:userModel.userId];
-    [self startRemoteView:userModel.userId view:renderView];
-    [self handleLocalRenderView];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIView *renderView = [self.delegateManager getRenderViewFromUser:userModel.userId];
+        [self startRemoteView:userModel.userId view:renderView];
+        [self handleLocalRenderView];
+    });
 }
 
 - (void)userLeave:(CallingUserModel *)userModel {
@@ -236,6 +239,10 @@
         _groupCollectionView.backgroundColor = [UIColor clearColor];
     }
     return _groupCollectionView;
+}
+
+- (void)dealloc {
+    NSLog(@"%s",__func__);
 }
 
 @end

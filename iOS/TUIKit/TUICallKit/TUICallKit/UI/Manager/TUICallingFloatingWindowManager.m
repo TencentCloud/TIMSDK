@@ -12,11 +12,12 @@
 #import "CallingLocalized.h"
 #import "UIWindow+TUICalling.h"
 #import "TUIDefine.h"
+#import "TUICallingUserModel.h"
+#import "TUICallingStatusManager.h"
 
 @interface TUICallingFloatingWindowManager() <TUICallingFloatingWindowDelegate>
 
 @property (nonatomic, weak) id<TUICallingFloatingWindowManagerDelegate>delegate;
-
 @property (nonatomic, strong) UIWindow *sourceCallingWindow;
 @property (nonatomic, assign) CGRect currentFloatWindowFrame;
 
@@ -38,148 +39,173 @@
     if (self) {
         self.isFloating = NO;
         self.currentFloatWindowFrame = CGRectZero;
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(callMediaTypeChanged)
+                                                     name:EventSubCallMediaTypeChanged object:nil];
     }
     return self;
 }
 
-- (void)setFloatingWindowManagerDelegate:(id<TUICallingFloatingWindowManagerDelegate>)delegagte {
-    self.delegate = delegagte;
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)showMicroFloatingWindowWithCallingWindow:(UIWindow *)callingWindow VideoRenderView:(TUICallingVideoRenderView *)renderView Completion:(void (^ __nullable)(BOOL finished))completion {
-    if (self.isFloating || !callingWindow) {
+- (void)setFloatingWindowManagerDelegate:(id<TUICallingFloatingWindowManagerDelegate>)delegate {
+    self.delegate = delegate;
+}
+
+- (void)showMicroFloatingWindow:(void (^ __nullable)(BOOL finished))completion {
+    if (self.isFloating) {
         return;
     }
-    self.sourceCallingWindow = callingWindow;
+    self.sourceCallingWindow = [TUICallingCommon getKeyWindow];
     self.isFloating = YES;
-    
-    [UIView animateWithDuration:0.4 animations:^{
-        callingWindow.transform = CGAffineTransformMakeScale(0.2, 0.2);
-        if (renderView) {
-            callingWindow.frame = [self getFloatingWindowFrame:TUICallingFloatingWindowTypeVideo];
-        } else {
-            callingWindow.frame = [self getFloatingWindowFrame:TUICallingFloatingWindowTypeAudio];
-        }
-    } completion:^(BOOL finished) {
-        if (completion) {
-            completion(finished);
-        }
-        
-        if (renderView) {
-            self.floatWindow.frame = [self getFloatingWindowFrame:TUICallingFloatingWindowTypeVideo];
-            [self.floatWindow updateMicroWindowWithRenderView:renderView];
-        } else {
-            self.floatWindow.frame = [self getFloatingWindowFrame:TUICallingFloatingWindowTypeAudio];
-        }
-        
-        [self.floatWindow t_makeKeyAndVisible];
-        [self.floatWindow layoutIfNeeded];
-        [self.floatWindow floatingWindowRoundedRect];
-        
-        callingWindow.hidden = YES;
-    }];
+    dispatch_call_main_async_safe(^{
+        [UIView animateWithDuration:0.4 animations:^{
+            self.sourceCallingWindow.transform = CGAffineTransformMakeScale(0.2, 0.2);
+            self.sourceCallingWindow.frame = [self getFloatingWindowFrame];
+        } completion:^(BOOL finished) {
+            if (completion) {
+                completion(finished);
+            }
+            self.floatWindow.frame = [self getFloatingWindowFrame];
+            [self.floatWindow t_makeKeyAndVisible];
+            [self.floatWindow layoutIfNeeded];
+            [self.floatWindow floatingWindowRoundedRect];
+            self.sourceCallingWindow.hidden = YES;
+            [self updateDescribeText:@""];
+        }];
+    });
 }
 
-- (void)hiddenMicroFloatingWindow{
-    self.sourceCallingWindow.hidden = NO;
-    self.floatWindow.hidden = YES;
-    self.floatWindow = nil;
-    [UIView animateWithDuration:0.6 animations:^{
-        self.sourceCallingWindow.transform = CGAffineTransformIdentity;
-        self.sourceCallingWindow.frame = [UIScreen mainScreen].bounds;
-    } completion:^(BOOL finished) {
+- (void)closeMicroFloatingWindow:(void (^ __nullable)(BOOL finished))completion {
+    if (!self.isFloating) {
+        return;
+    }
+    dispatch_call_main_async_safe(^{
+        self.floatWindow.hidden = YES;
+        self.floatWindow = nil;
+        self.renderView = nil;
         self.isFloating = NO;
-    }];
+    });
 }
 
-- (void)closeWindowCompletion:(void (^ __nullable)(BOOL finished))completion {
+- (void)updateDescribeText:(NSString *)textStr {
     if (!self.isFloating) {
         return;
     }
-    self.floatWindow.hidden = YES;
-    self.floatWindow = nil;
-    self.isFloating = NO;
-}
-
-- (void)switchToAudioMicroWindowWith:(TUICallStatus)callStatus callRole:(TUICallRole)callRole {
-    if (!self.isFloating) {
-        return;
-    }
-    [self updateMicroWindowText:@"" callStatus:callStatus callRole:callRole];
-    [UIView animateWithDuration:0.2 animations:^{
-        self.floatWindow.frame = [self getFloatingWindowFrame:TUICallingFloatingWindowTypeAudio];
-    } completion:^(BOOL finished) {
-        [self.floatWindow layoutIfNeeded];
-        [self.floatWindow floatingWindowRoundedRect];
-    }];
-}
-
-- (void)updateMicroWindowText:(NSString *)textStr callStatus:(TUICallStatus)callStatus callRole:(TUICallRole)callRole {
-    if (!self.isFloating) {
-        return;
-    }
-    NSString *desStr;
-    
+    NSString *describeText = [self getCallKitStatusStr];
     if (textStr && textStr.length > 0) {
-        desStr = textStr;
-    } else {
-        desStr = [self callingStateStrWith:callStatus callRole:callRole];
+        describeText = textStr;
     }
-    
-    [self.floatWindow updateMicroWindowWithText:desStr];
+    dispatch_call_main_async_safe(^{
+        [self.floatWindow updateMicroWindowWithText:describeText];
+    });
 }
 
-- (void)updateMicroWindowRenderView:(TUICallingVideoRenderView *)renderView {
-    if (!self.isFloating || !renderView) {
+- (void)updateUserModel:(CallingUserModel *)userModel {
+    if (!self.isFloating) {
         return;
     }
-    self.floatWindow.frame = [self getFloatingWindowFrame:TUICallingFloatingWindowTypeVideo];
-    [self.floatWindow updateMicroWindowWithRenderView:renderView];
+    dispatch_call_main_async_safe(^{
+        if (!userModel.isVideoAvailable && ([TUICallingStatusManager shareInstance].callMediaType == TUICallMediaTypeVideo)) {
+            [self.floatWindow updateMicroWindowBackgroundAvatar:userModel.avatar];
+        } else {
+            [self.floatWindow updateMicroWindowBackgroundAvatar:@""];
+        }
+    });
 }
 
-- (NSString *)callingStateStrWith:(TUICallStatus)callStatus callRole:(TUICallRole)callRole {
-    NSString *callingStateStr;
-    
-    switch (callRole) {
-        case TUICallRoleCall: {
-            if (callStatus == TUICallStatusWaiting) {
-                callingStateStr = TUICallingLocalize(@"Demo.TRTC.Calling.FloatingWindow.dailing");
-            }
-        } break;
-        case TUICallRoleCalled: {
-            if (callStatus == TUICallStatusWaiting) {
-                callingStateStr = TUICallingLocalize(@"Demo.TRTC.Calling.FloatingWindow.waitaccept");
-            }
-        } break;
-        case TUICallRoleNone:
-        default:
-            break;
+#pragma mark - NSNotificationCenter
+
+- (void)callMediaTypeChanged {
+    if (!self.isFloating || ([TUICallingStatusManager shareInstance].callStatus == TUICallStatusNone)) {
+        return;
     }
-    
-    return callingStateStr;
+    dispatch_call_main_async_safe(^{
+        [UIView animateWithDuration:0.2 animations:^{
+            TUICallMediaType callType = [TUICallingStatusManager shareInstance].callMediaType;
+            self.floatWindow.frame = [self getFloatingWindowFrame:callType];
+            if (callType == TUICallMediaTypeVideo) {
+                self.renderView.hidden = NO;
+            } else {
+                [self.floatWindow updateMicroWindowWithRenderView:nil];
+            }
+        } completion:^(BOOL finished) {
+            [self updateDescribeText:@""];
+            [self.floatWindow updateMicroWindowBackgroundAvatar:@""];
+            [self.floatWindow layoutIfNeeded];
+            [self.floatWindow floatingWindowRoundedRect];
+        }];
+    });
 }
 
 #pragma mark - TUICallingFloatingWindowDelegate
 
 - (void)floatingWindowDidClickView {
     [self hiddenMicroFloatingWindow];
-    
     if (self.delegate && [self.delegate respondsToSelector:@selector(floatingWindowDidClickView)]) {
-        [self.delegate floatingWindowDidClickView];
+        dispatch_call_main_async_safe(^{
+            [self.delegate floatingWindowDidClickView];
+        });
     }
 }
 
+- (void)hiddenMicroFloatingWindow {
+    dispatch_call_main_async_safe(^{
+        self.sourceCallingWindow.hidden = NO;
+        self.floatWindow.hidden = YES;
+        self.floatWindow = nil;
+        [UIView animateWithDuration:0.6 animations:^{
+            self.sourceCallingWindow.transform = CGAffineTransformIdentity;
+            self.sourceCallingWindow.frame = [UIScreen mainScreen].bounds;
+        } completion:^(BOOL finished) {
+            self.isFloating = NO;
+        }];
+    });
+}
+
 - (void)floatingWindowChangedFrame {
-    self.currentFloatWindowFrame = self.floatWindow.frame;
-    self.sourceCallingWindow.frame = self.currentFloatWindowFrame;
+    dispatch_call_main_async_safe(^{
+        self.currentFloatWindowFrame = self.floatWindow.frame;
+        self.sourceCallingWindow.frame = self.currentFloatWindowFrame;
+    });
 }
 
 #pragma mark - Private
 
-- (CGRect)getFloatingWindowFrame:(TUICallingFloatingWindowType)floatingWindowType{
+- (NSString *)getCallKitStatusStr {
+    TUICallStatus callStatus = [TUICallingStatusManager shareInstance].callStatus;
+    NSString *callKitStatusStr = @"";
+    switch ([TUICallingStatusManager shareInstance].callRole) {
+        case TUICallRoleCall: {
+            if (callStatus == TUICallStatusWaiting) {
+                callKitStatusStr = TUICallingLocalize(@"Demo.TRTC.Calling.FloatingWindow.dailing");
+            }
+        } break;
+        case TUICallRoleCalled: {
+            if (callStatus == TUICallStatusWaiting) {
+                callKitStatusStr = TUICallingLocalize(@"Demo.TRTC.Calling.FloatingWindow.waitaccept");
+            }
+        } break;
+        case TUICallRoleNone:
+        default:
+            break;
+    }
+    return callKitStatusStr;
+}
+
+- (CGRect)getFloatingWindowFrame {
+    TUICallMediaType callMediaType = [TUICallingStatusManager shareInstance].callMediaType;
+    if ([TUICallingStatusManager shareInstance].callScene != TUICallSceneSingle) {
+        callMediaType = TUICallMediaTypeAudio;
+    }
+    return [self getFloatingWindowFrame:callMediaType];
+}
+
+- (CGRect)getFloatingWindowFrame:(TUICallMediaType)callMediaType {
     CGRect targetFrame = kMicroAudioViewRect;
-    
-    if (floatingWindowType == TUICallingFloatingWindowTypeVideo) {
+    if (callMediaType == TUICallMediaTypeVideo) {
         targetFrame = kMicroVideoViewRect;
     }
     
@@ -202,7 +228,6 @@
         if (targetFrameY <= StatusBar_Height) {
             targetFrameY = StatusBar_Height;
         }
-        
         if ((targetFrameY + targetFrameHeight) >= (Screen_Height - Bottom_SafeHeight)) {
             targetFrameY = Screen_Height - targetFrameHeight - Bottom_SafeHeight;
         }
@@ -214,6 +239,14 @@
 }
 
 #pragma mark - Getter And Setter
+
+- (void)setRenderView:(TUICallingVideoRenderView *)renderView {
+    if (!self.isFloating || !renderView) {
+        return;
+    }
+    self.floatWindow.frame = [self getFloatingWindowFrame:TUICallMediaTypeVideo];
+    [self.floatWindow updateMicroWindowWithRenderView:renderView];
+}
 
 - (TUICallingFloatingWindow *)floatWindow {
     if (!_floatWindow) {

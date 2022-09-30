@@ -37,7 +37,6 @@ static CGFloat const kCallingSingleSmallVideoViewWidth = 100.0f;
         self.remotePreView.delegate = self;
         self.isLocalPreViewLarge = YES;
         [self setupCallingSingleView];
-        
     }
     return self;
 }
@@ -47,6 +46,7 @@ static CGFloat const kCallingSingleSmallVideoViewWidth = 100.0f;
     self.remotePreView.frame = CGRectMake(self.bounds.size.width - 120, 74 + 20, 100, 216);
     [self.localPreView setUserInteractionEnabled:NO];
     self.remotePreView.hidden = YES;
+    self.localPreView.hidden = NO;
     self.backgroundColor = [UIColor t_colorWithHexString:@"#242424"];
     [self addSubview:self.remotePreView];
     [self addSubview:self.localPreView];
@@ -176,7 +176,7 @@ static CGFloat const kCallingSingleSmallVideoViewWidth = 100.0f;
         [self.remotePreView removeFromSuperview];
         [self insertSubview:self.remotePreView belowSubview:self.localPreView];
         self.isLocalPreViewLarge = NO;
-        [[TUICallingFloatingWindowManager shareInstance] updateMicroWindowRenderView:self.remotePreView];
+        [[TUICallingFloatingWindowManager shareInstance] setRenderView:self.remotePreView];
     }];
 }
 

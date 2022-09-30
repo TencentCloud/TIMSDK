@@ -9,6 +9,7 @@
 #import "TUICallEngineHeader.h"
 #import "ImSDK_Plus/ImSDK_Plus.h"
 #import "TUICallingUserModel.h"
+#import "CallingLocalized.h"
 
 @implementation TUICallingCommon
 
@@ -89,6 +90,43 @@
     dstUser.isEnter = isEnter ? YES : NO;
     dstUser.volume = (CGFloat)volume / 100.0f;
     return dstUser;
+}
+
++ (void)showAuthorizationAlert:(AuthorizationDeniedType)deniedType {
+    NSString *title = @"";
+    NSString *message = @"";
+    NSString *laterMessage = @"";
+    NSString *openSettingMessage = @"";
+    
+    switch (deniedType) {
+        case AuthorizationDeniedTypeAudio: {
+            title = TUICallingLocalize(@"TUICallKit.failedtogetmicrophonepermission.Title");
+            message = TUICallingLocalize(@"TUICallKit.failedtogetmicrophonepermission.Tips");
+            laterMessage = TUICallingLocalize(@"TUICallKit.failedtogetmicrophonepermission.Later");
+            openSettingMessage = TUICallingLocalize(@"TUICallKit.failedtogetmicrophonepermission.Enable");
+        } break;
+        case AuthorizationDeniedTypeVideo: {
+            title = TUICallingLocalize(@"TUICallKit.failedtogetcamerapermission.Title");
+            message = TUICallingLocalize(@"TUICallKit.failedtogetcamerapermission.Tips");
+            laterMessage = TUICallingLocalize(@"TUICallKit.failedtogetcamerapermission.Later");
+            openSettingMessage = TUICallingLocalize(@"TUICallKit.failedtogetcamerapermission.Enable");
+        } break;
+        default:
+            break;
+    }
+    
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+    [alertController addAction:[UIAlertAction actionWithTitle:laterMessage style:UIAlertActionStyleCancel handler:nil]];
+    [alertController addAction:[UIAlertAction actionWithTitle:openSettingMessage style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        UIApplication *app = [UIApplication sharedApplication];
+        NSURL *settingsURL = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+        if ([app canOpenURL:settingsURL]) {
+            [app openURL:settingsURL];
+        }
+    }]];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [UIApplication.sharedApplication.keyWindow.rootViewController presentViewController:alertController animated:YES completion:nil];
+    });
 }
 
 @end

@@ -12,6 +12,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 FOUNDATION_EXTERN NSString * const EventSubCallStatusChanged;
+FOUNDATION_EXTERN NSString * const EventSubCallMediaTypeChanged;
 
 /**
  Status Manager Protocol
@@ -37,10 +38,14 @@ FOUNDATION_EXTERN NSString * const EventSubCallStatusChanged;
 
 /// Status Manager Protocol
 @property (nonatomic, weak) id<TUICallingStatusManagerProtocol> delegate;
+/// Calling Role
+@property (nonatomic, assign) TUICallRole callRole;
 /// Calling Media Type
-@property (nonatomic, assign) TUICallMediaType callType;
+@property (nonatomic, assign) TUICallMediaType callMediaType;
 /// Calling Status
 @property (nonatomic, assign) TUICallStatus callStatus;
+/// Calling Scene
+@property (nonatomic, assign) TUICallScene callScene;
 /// is MicMute
 @property (nonatomic, assign) BOOL isMicMute;
 /// is Close Camera
@@ -49,6 +54,9 @@ FOUNDATION_EXTERN NSString * const EventSubCallStatusChanged;
 @property (nonatomic, assign) TUIAudioPlaybackDevice audioPlaybackDevice;
 /// Camera Type
 @property (nonatomic, assign) TUICamera camera;
+/// Group ID
+@property (nonatomic, copy) NSString * _Nullable groupId;
+
 
 + (instancetype)shareInstance;
 

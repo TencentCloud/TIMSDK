@@ -9,6 +9,9 @@
 #import "TUICallingAction.h"
 #import "TUICallEngineHeader.h"
 #import "TUICallingStatusManager.h"
+#import "TUICommonModel.h"
+#import "TUICallKitOfflinePushInfoConfig.h"
+#import "TUICallingUserManager.h"
 
 @implementation TUICallingAction
 
@@ -94,8 +97,30 @@
     [TUICallingStatusManager shareInstance].audioPlaybackDevice = device;
 }
 
-+ (void)inviteUser:(NSArray<NSString *> *)userIdList succ:(void(^)(NSArray *userIDs))succ fail:(TUICallFail)fail {
-    [[TUICallEngine createInstance] inviteUser:userIdList succ:succ fail:fail];
++ (void)inviteUser:(NSArray<TUIUserModel *> *)userList succ:(void(^)(NSArray *userIDs))succ fail:(TUICallFail)fail {
+    NSMutableArray *userIdList = [NSMutableArray array];
+    for (TUIUserModel *userModel in userList) {
+        if (userModel.userId) {
+            [userIdList addObject:userModel.userId];
+        }
+    }
+    if (userIdList.count <= 0) {
+        TUILog(@"Calling - inviteUser invalid userList");
+        if (fail) {
+            fail(TUICALL_RETURN_ERROR, @"inviteUser invalid userList");
+        }
+        return;
+    }
+    if ((userIdList.count + [TUICallingUserManager allUserIdList].count) > 9) {
+        if (fail) {
+            fail(TUICALL_RETURN_ERROR, @"TUICalling currently supports call with up to 9 people.");
+        }
+        return;
+    }
+    TUIOfflinePushInfo *offlinePushInfo = [TUICallKitOfflinePushInfoConfig createOfflinePushInfo];
+    TUICallParams *callParams = [TUICallParams new];
+    callParams.offlinePushInfo = offlinePushInfo;
+    [[TUICallEngine createInstance] inviteUser:[userIdList copy] params:callParams succ:succ fail:fail];
 }
 
 + (void)startRemoteView:(NSString *)userId

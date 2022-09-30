@@ -49,13 +49,23 @@
 "Demo.TRTC.Calling.yournetworkpoor" = "己方网络不佳";
 "Demo.TRTC.Salon.invitelimited" = "请求正在处理，请稍后再试";
 "Demo.TRTC.Login.countrycode" = "国际电话区号";
-
-"Demo.TRTC.Calling.failedtogetcamerapermission" = "获取摄像头权限失败，请前往隐私-相机设置里面打开应用权限";
-"Demo.TRTC.Calling.failedtogetmicrophonepermission" = "获取麦克风权限失败，请前往隐私-麦克风设置里面打开应用权限";
 "Demo.TRTC.Calling.calleeTip" = "他们也在";
-
 "Demo.TRTC.Calling.FloatingWindow.waitaccept" = "等待接听";
 "Demo.TRTC.Calling.FloatingWindow.dailing" = "呼叫中…";
 
 "Demo.TRTC.Calling.User.Exceed.Limit" = "暂支持最多9人通话。如需多人会议，请使用TUIRoom";
 "Demo.TRTC.Calling.UnableToRestartTheCall" = "正在通话中，无法再次发起";
+
+"TUICallKit.failedtogetcamerapermission.Title" = "相机权限未开启";
+"TUICallKit.failedtogetcamerapermission.Tips"  = "无法使用视频通话功能，点击\"去开启\"打开相机权限";
+"TUICallKit.failedtogetcamerapermission.Later" = "以后再说";
+"TUICallKit.failedtogetcamerapermission.Enable" = "去开启";
+
+"TUICallKit.failedtogetmicrophonepermission.Title" = "麦克风权限未开启";
+"TUICallKit.failedtogetmicrophonepermission.Tips"  = "无法使用发送音视频通话功能，点击\"去开启\"打开麦克风权限";
+"TUICallKit.failedtogetmicrophonepermission.Later" = "以后再说";
+"TUICallKit.failedtogetmicrophonepermission.Enable" = "去开启";
+
+"TUICallKit.package.not.purchased" = "您当前未购买音视频通话能力套餐，请前往IM 控制台开通免费体验或加购正式版";
+"TUICallKit.package.not.support" = "您当前购买的音视频通话能力套餐不支持该功能，建议您升级套餐类型";
+"TUICallKit.have.new.invitation" = "您有一个新的通话";

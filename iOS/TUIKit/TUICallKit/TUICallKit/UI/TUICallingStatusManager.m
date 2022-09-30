@@ -9,6 +9,7 @@
 #import "TUICallingStatusManager.h"
 
 NSString * const EventSubCallStatusChanged = @"eventSubCallStatusChanged";
+NSString * const EventSubCallMediaTypeChanged = @"eventSubCallMediaTypeChanged";
 
 @implementation TUICallingStatusManager
 
@@ -22,12 +23,14 @@ NSString * const EventSubCallStatusChanged = @"eventSubCallStatusChanged";
 }
 
 - (void)clearAllStatus {
-    self.callType = TUICallMediaTypeUnknown;
+    self.callRole = TUICallRoleNone;
+    self.callMediaType = TUICallMediaTypeUnknown;
     self.callStatus = TUICallStatusNone;
     self.isMicMute = NO;
     self.isCloseCamera = NO;
     self.audioPlaybackDevice = TUIAudioPlaybackDeviceSpeakerphone;
     self.camera = TUICameraFront;
+    self.groupId = nil;
 }
 
 - (void)setIsMicMute:(BOOL)isMicMute {
@@ -75,12 +78,13 @@ NSString * const EventSubCallStatusChanged = @"eventSubCallStatusChanged";
     }
 }
 
-- (void)setCallType:(TUICallMediaType)callType {
-    if (_callType == callType) {
+- (void)setCallMediaType:(TUICallMediaType)callType {
+    if (_callMediaType == callType) {
         return;
     }
     
-    _callType = callType;
+    _callMediaType = callType;
+    [[NSNotificationCenter defaultCenter] postNotificationName:EventSubCallMediaTypeChanged object:nil];
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(updateCallType)]) {
         [self.delegate updateCallType];
