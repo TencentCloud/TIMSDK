@@ -8,6 +8,7 @@ import android.util.Log;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.BrandUtil;
+import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushErrorBean;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushParamBean;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushLog;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushUtils;
@@ -71,6 +72,9 @@ public class TUIOfflinePushModule extends UniModule {
      *   "oppoPushBussinessId": "", // 在腾讯云控制台上传第三方推送证书后分配的证书ID
      *   "oppoPushAppKey": "",// oppo开放平台分配的应用APPID
      *   "oppoPushAppSecret": "",// oppo开放平台分配的应用APPKEY
+     *
+     *   // honor
+     *   "honorPushBussinessId": "",  // 在腾讯云控制台上传第三方推送证书后分配的证书ID
      *  }
      *
      * 2、回调数据 data 格式为：
@@ -140,17 +144,25 @@ public class TUIOfflinePushModule extends UniModule {
                 @Override
                 public void invokeAndKeepAlive(Object o) {
                     if(callback != null) {
-                        data.put(RESPONSE_CODE_KEY, RESPONSE_CODE_SUCCESS);
-                        data.put(RESPONSE_MSG_KEY, "");
+                        if (o instanceof TUIOfflinePushErrorBean) {
+                            TUIOfflinePushErrorBean errorBean = (TUIOfflinePushErrorBean) o;
+                            data.put(RESPONSE_CODE_KEY, errorBean.getErrorCode());
+                            data.put(RESPONSE_MSG_KEY, errorBean.getErrorDescription());
+                            TUIOfflinePushLog.e(TAG, "invokeAndKeepAlive--"+data);
+                            callback.invokeAndKeepAlive(data);
+                        } else {
+                            data.put(RESPONSE_CODE_KEY, RESPONSE_CODE_SUCCESS);
+                            data.put(RESPONSE_MSG_KEY, "");
 
-                        JSONObject data_data = new JSONObject();
-                        data_data.put(RESPONSE_DATA_DEVICE_TOKEN_KEY, (String) o);
-                        data_data.put(RESPONSE_DATA_DEVICE_TYPE_KEY, BrandUtil.getInstanceType());
-                        data_data.put(RESPONSE_DATA_BUSSINESSID_KEY, bussinessId);
+                            JSONObject data_data = new JSONObject();
+                            data_data.put(RESPONSE_DATA_DEVICE_TOKEN_KEY, (String) o);
+                            data_data.put(RESPONSE_DATA_DEVICE_TYPE_KEY, BrandUtil.getInstanceType());
+                            data_data.put(RESPONSE_DATA_BUSSINESSID_KEY, bussinessId);
 
-                        data.put(RESPONSE_DATA_KEY, data_data);
-                        TUIOfflinePushLog.d(TAG, "invokeAndKeepAlive--"+data);
-                        callback.invokeAndKeepAlive(data);
+                            data.put(RESPONSE_DATA_KEY, data_data);
+                            TUIOfflinePushLog.d(TAG, "invokeAndKeepAlive--" + data);
+                            callback.invokeAndKeepAlive(data);
+                        }
                     }
                 }
             });

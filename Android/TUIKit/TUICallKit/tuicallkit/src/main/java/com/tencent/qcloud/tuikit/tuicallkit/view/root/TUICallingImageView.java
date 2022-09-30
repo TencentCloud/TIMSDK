@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.tencent.qcloud.tuikit.tuicallkit.ui.R;
+import com.tencent.qcloud.tuikit.tuicallkit.R;
 
 public class TUICallingImageView extends BaseCallView {
     private Context        mContext;

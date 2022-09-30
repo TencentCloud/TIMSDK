@@ -2,9 +2,10 @@ package com.tencent.qcloud.tuicore.component.popupcard;
 
 import android.animation.ValueAnimator;
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -32,12 +33,13 @@ public class PopupInputCard {
     private Button positiveBtn;
     private View closeBtn;
     private OnClickListener positiveOnClickListener;
+    private OnTextExceedListener textExceedListener;
 
     private int minLimit = 0;
     private int maxLimit = Integer.MAX_VALUE;
     private String rule;
     private String notMachRuleTip;
-
+    private ByteLengthFilter lengthFilter = new ByteLengthFilter();
     public PopupInputCard(Activity activity) {
         View popupView = LayoutInflater.from(activity).inflate(R.layout.layout_popup_card, null);
         titleTv = popupView.findViewById(R.id.popup_card_title);
@@ -112,7 +114,7 @@ public class PopupInputCard {
                 popupWindow.dismiss();
             }
         });
-
+        editText.setFilters(new InputFilter[] {lengthFilter});
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -184,12 +186,17 @@ public class PopupInputCard {
         positiveOnClickListener = clickListener;
     }
 
+    public void setTextExceedListener(OnTextExceedListener textExceedListener) {
+        this.textExceedListener = textExceedListener;
+    }
+
     public void setSingleLine(boolean isSingleLine) {
         editText.setSingleLine(isSingleLine);
     }
 
     public void setMaxLimit(int maxLimit) {
         this.maxLimit = maxLimit;
+        lengthFilter.setLength(maxLimit);
     }
 
     public void setMinLimit(int minLimit) {
@@ -208,8 +215,70 @@ public class PopupInputCard {
         this.notMachRuleTip = notMachRuleTip;
     }
 
+    class ByteLengthFilter implements InputFilter {
+        private int length = Integer.MAX_VALUE;
+        public ByteLengthFilter() {
+        }
+
+        public void setLength(int length) {
+            this.length = length;
+        }
+
+        @Override
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+            int destLength = 0;
+            int destReplaceLength = 0;
+            int sourceLength = 0;
+            if (!TextUtils.isEmpty(dest)) {
+                destLength = dest.toString().getBytes().length;
+                destReplaceLength= dest.subSequence(dstart, dend).toString().getBytes().length;
+            }
+            if (!TextUtils.isEmpty(source)) {
+                sourceLength = source.subSequence(start, end).toString().getBytes().length;
+            }
+            int keepBytesLength = length - (destLength - destReplaceLength);
+            if (keepBytesLength <= 0) {
+                if (textExceedListener != null) {
+                    textExceedListener.onTextExceedMax();
+                }
+                return "";
+            } else if (keepBytesLength >= sourceLength) {
+                return null;
+            } else {
+                if (textExceedListener != null) {
+                    textExceedListener.onTextExceedMax();
+                }
+                return getSource(source, start, keepBytesLength);
+            }
+        }
+
+        private CharSequence getSource(CharSequence sequence, int start, int keepLength) {
+            int sequenceLength = sequence.length();
+            int end = 0;
+            for (int i = 1; i <= sequenceLength; i++) {
+                if (sequence.subSequence(0, i).toString().getBytes().length <= keepLength) {
+                    end = i;
+                } else {
+                    break;
+                }
+            }
+            if (end > 0 && Character.isHighSurrogate(sequence.charAt(end - 1))) {
+                --end;
+                if (end == start) {
+                    return "";
+                }
+            }
+            return sequence.subSequence(start, end);
+        }
+
+    }
+
     @FunctionalInterface
     public interface OnClickListener {
         void onClick(String result);
+    }
+
+    public interface OnTextExceedListener {
+        void onTextExceedMax();
     }
 }

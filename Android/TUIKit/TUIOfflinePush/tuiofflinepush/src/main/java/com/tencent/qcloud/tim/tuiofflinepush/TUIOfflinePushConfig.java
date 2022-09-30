@@ -23,6 +23,9 @@ public class TUIOfflinePushConfig {
     public static final int BRAND_VIVO = 2005;
     public static final int BRAND_MEIZU = 2003;
     public static final int BRAND_GOOLE_ELSE = 2002;
+    public static final int BRAND_HONOR = 2006;
+
+    public static final int REGISTER_TOKEN_ERROR_CODE = -1;
 
     private Context mContext;
 

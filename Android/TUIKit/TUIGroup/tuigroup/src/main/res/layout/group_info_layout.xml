@@ -267,6 +267,14 @@
                 app:isSwitch="true"
                 app:name="@string/chat_to_top" />
 
+            <com.tencent.qcloud.tuicore.component.LineControllerView
+                android:id="@+id/chat_background"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/group_profile_item_height"
+                app:canNav="true"
+                app:name="@string/profile_chat_background"
+                tools:visibility="visible" />
+
             <TextView
                 android:id="@+id/group_clear_msg_button"
                 android:layout_width="match_parent"

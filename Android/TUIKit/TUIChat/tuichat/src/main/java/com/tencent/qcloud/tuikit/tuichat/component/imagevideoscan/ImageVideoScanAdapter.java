@@ -27,13 +27,14 @@ import android.widget.TextView;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.tencent.imsdk.v2.V2TIMDownloadCallback;
 import com.tencent.imsdk.v2.V2TIMElem;
 import com.tencent.imsdk.v2.V2TIMImageElem;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMVideoElem;
 import com.tencent.qcloud.tuicore.TUIConfig;
-import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
 import com.tencent.qcloud.tuicore.util.BackgroundTasks;
 import com.tencent.qcloud.tuicore.util.DateTimeUtil;
 import com.tencent.qcloud.tuicore.util.FileUtil;
@@ -52,11 +53,11 @@ import com.tencent.qcloud.tuikit.tuichat.component.photoview.listener.OnSingleFl
 import com.tencent.qcloud.tuikit.tuichat.component.photoview.view.PhotoView;
 import com.tencent.qcloud.tuikit.tuichat.component.video.UIKitVideoView;
 import com.tencent.qcloud.tuikit.tuichat.component.video.proxy.IPlayer;
-import com.tencent.qcloud.tuikit.tuichat.util.DeviceUtil;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -197,24 +198,28 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
             }
         }
 
-        V2TIMImageElem.V2TIMImage mCurrentOriginalImage = null;
-        String localImgPath = TUIChatUtils.getOriginImagePath(imageMessageBean);
-        boolean isOriginImg = localImgPath != null;
-        String previewImgPath = localImgPath;
+        V2TIMImageElem.V2TIMImage currentOriginalImage = null;
+        String thumbPath = null;
         for (int i = 0; i < imgs.size(); i++) {
             ImageMessageBean.ImageBean img = imgs.get(i);
             if (img.getType() == ImageMessageBean.IMAGE_TYPE_ORIGIN) {
-                mCurrentOriginalImage = img.getV2TIMImage();
+                currentOriginalImage = img.getV2TIMImage();
             }
             if (img.getType() == ImageMessageBean.IMAGE_TYPE_THUMB) {
-                if (!isOriginImg) {
-                    previewImgPath = ImageUtil.generateImagePath(img.getUUID(), ImageMessageBean.IMAGE_TYPE_THUMB);
-                }
+                thumbPath = ImageUtil.generateImagePath(img.getUUID(), ImageMessageBean.IMAGE_TYPE_THUMB);
             }
         }
-
+        String localImgPath = TUIChatUtils.getOriginImagePath(imageMessageBean);
+        boolean isOriginImg = localImgPath != null && currentOriginalImage != null && !TextUtils.isEmpty(localImgPath)
+                && currentOriginalImage.getSize() == FileUtil.getFileSize(localImgPath);
+        String previewImgPath;
+        if (!isOriginImg) {
+            previewImgPath = thumbPath;
+        } else {
+            previewImgPath = localImgPath;
+        }
         Uri uri = FileUtil.getUriFromPath(previewImgPath);
-        if(uri != null) {
+        if (uri != null) {
             holder.loadingView.setVisibility(View.GONE);
         }
         Matrix mCurrentDisplayMatrix = new Matrix();
@@ -224,11 +229,10 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
         holder.photoView.setOnSingleFlingListener(new SingleFlingListener());
         // 如果是原图就直接显示原图， 否则显示缩略图，点击查看原图按钮后下载原图显示
         // If it is the original image, the original image will be displayed directly, otherwise, the thumbnail image will be displayed. Click the View Original Image button to download the original image and display it.
-        holder.photoView.setImageBitmap(ImageUtil.adaptBitmapFormPath(previewImgPath, DeviceUtil.getScreenSize()[0], DeviceUtil.getScreenSize()[1]));
 
+        loadImageIntoView(holder.photoView, previewImgPath);
         if (!isOriginImg) {
-            holder.viewOriginalButton.setVisibility(View.VISIBLE);
-            V2TIMImageElem.V2TIMImage finalMCurrentOriginalImage = mCurrentOriginalImage;
+            V2TIMImageElem.V2TIMImage finalMCurrentOriginalImage = currentOriginalImage;
             holder.viewOriginalButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -257,7 +261,7 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
                             BackgroundTasks.getInstance().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    holder.photoView.setImageBitmap(ImageUtil.adaptBitmapFormPath(path, DeviceUtil.getScreenSize()[0], DeviceUtil.getScreenSize()[1]));
+                                    loadImageIntoView(holder.photoView, path);
                                     holder.viewOriginalButton.setText(mContext.getString(R.string.completed));
                                     holder.viewOriginalButton.setOnClickListener(null);
                                     holder.viewOriginalButton.setVisibility(View.INVISIBLE);
@@ -271,11 +275,10 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
                     });
                 }
             });
-        } else {
             // 因为图片还没下载下来 ， 加载失败, 接收下载成功的广播来刷新显示
             // Because the picture has not been downloaded yet, the loading fails, receive the broadcast of the successful download to refresh the display
-            if (holder.photoView.getDrawable() == null) {
-                ToastUtil.toastShortMessage("Downloading , please wait.");
+            if (!TextUtils.isEmpty(localImgPath)) {
+                ToastUtil.toastShortMessage(mContext.getString(R.string.downloading));
                 downloadReceiver = new BroadcastReceiver() {
                     @Override
                     public void onReceive(Context context, Intent intent) {
@@ -283,7 +286,7 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
                         if (BROADCAST_DOWNLOAD_COMPLETED_ACTION.equals(action)) {
                             String originImagePath = intent.getStringExtra(DOWNLOAD_ORIGIN_IMAGE_PATH);
                             if (originImagePath != null) {
-                                holder.photoView.setImageBitmap(ImageUtil.adaptBitmapFormPath(originImagePath, DeviceUtil.getScreenSize()[0], DeviceUtil.getScreenSize()[1]));
+                                loadImageIntoView(holder.photoView, originImagePath);
                             }
                         }
                     }
@@ -291,7 +294,12 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
                 IntentFilter filter = new IntentFilter();
                 filter.addAction(BROADCAST_DOWNLOAD_COMPLETED_ACTION);
                 LocalBroadcastManager.getInstance(mContext).registerReceiver(downloadReceiver, filter);
+            } else {
+                holder.viewOriginalButton.setVisibility(View.VISIBLE);
+                holder.viewOriginalButton.setText(R.string.view_original_image);
             }
+        } else {
+            holder.viewOriginalButton.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -315,6 +323,14 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
         loadPhotoView(holder, imageMessageBean, positon);
     }
 
+    private void loadImageIntoView(ImageView imageView, Object resObj) {
+        Glide.with(TUIChatService.getAppContext())
+                .load(resObj)
+                .centerInside()
+                .apply(new RequestOptions().error(android.R.drawable.ic_menu_report_image))
+                .into(imageView);
+    }
+
     private void loadVideoView(ViewHolder holder, VideoMessageBean videoMessageBean, int position) {
         if (TextUtils.isEmpty(videoMessageBean.getDataPath())) {
             final String path = TUIConfig.getImageDownloadDir() + videoMessageBean.getSnapshotUUID();
@@ -336,7 +352,7 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
                     videoMessageBean.setDataPath(path);
                     mCacheImagePath = path;
                     holder.snapImageView.setVisibility(View.VISIBLE);
-                    GlideEngine.loadImage(holder.snapImageView, path);
+                    loadImageIntoView(holder.snapImageView, path);
 
                     Bitmap firstFrame = ImageUtil.getBitmapFormPath(path);
                     if (firstFrame != null) {
@@ -349,7 +365,7 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
         } else {
             String imagePath = videoMessageBean.getDataPath();
             holder.snapImageView.setVisibility(View.VISIBLE);
-            GlideEngine.loadImage(holder.snapImageView, imagePath);
+            loadImageIntoView(holder.snapImageView, imagePath);
             updateVideoViewSize(holder, imagePath);
         }
 

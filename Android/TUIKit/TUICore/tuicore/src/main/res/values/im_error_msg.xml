@@ -202,6 +202,8 @@
     <string name="TUIkitErrorSVRMsgInvalidMsgLifeTime">The type of the MsgLifeTime field in the JSON request packet body is not Integer.</string>
     <string name="TUIKitErrorSVRMsgBodySizeLimit">The length of JSON data packet exceeds the limit. The message packet body shall not exceed 8 KB.</string>
     <string name="TUIKitErrorSVRmsgLongPollingCountLimit">Forced logout on the Web page during long polling (the number of online instances on the Web page exceeds the limit).</string>
+    <string name="TUIKitErrorUnsupporInterface">The package you purchased does not support the feature</string>
+
     <string name="TUIKitErrorSVRGroupApiNameError">The API name in the request is incorrect.</string>
     <string name="TUIKitErrorSVRGroupAccountCountLimit">The number of accounts in the request packet body exceeds the limit.</string>
     <string name="TUIkitErrorSVRGroupFreqLimit">Call frequency is limited. Reduce the call frequency.</string>

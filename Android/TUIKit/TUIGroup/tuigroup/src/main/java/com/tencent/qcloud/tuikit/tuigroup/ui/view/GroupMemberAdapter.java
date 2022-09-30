@@ -36,10 +36,11 @@ public class GroupMemberAdapter extends RecyclerView.Adapter<GroupMemberAdapter.
     private IGroupMemberChangedCallback mCallback;
     private GroupInfo mGroupInfo;
     private List<GroupMemberInfo> mGroupMembers = new ArrayList<>();
+    private List<GroupMemberInfo> selectedGroupMemberInfos = new ArrayList<>();
 
     private GroupInfoPresenter presenter;
     private boolean isSelectMode;
-
+    private GroupMemberLayout.OnSelectChangedListener onSelectChangedListener;
     private ArrayList<String> selectedMember = new ArrayList<>();
     private ArrayList<String> excludeList;
     private ArrayList<String> alreadySelectedList;
@@ -49,6 +50,10 @@ public class GroupMemberAdapter extends RecyclerView.Adapter<GroupMemberAdapter.
 
     public ArrayList<String> getSelectedMember() {
         return selectedMember;
+    }
+
+    public List<GroupMemberInfo> getSelectedMemberInfoList() {
+        return selectedGroupMemberInfos;
     }
 
     public void setPresenter(GroupInfoPresenter presenter) {
@@ -65,6 +70,10 @@ public class GroupMemberAdapter extends RecyclerView.Adapter<GroupMemberAdapter.
 
     public void setAlreadySelectedList(ArrayList<String> alreadySelectedList) {
         this.alreadySelectedList = alreadySelectedList;
+    }
+
+    public void setOnSelectChangedListener(GroupMemberLayout.OnSelectChangedListener onSelectChangedListener) {
+        this.onSelectChangedListener = onSelectChangedListener;
     }
 
     @NonNull
@@ -101,9 +110,14 @@ public class GroupMemberAdapter extends RecyclerView.Adapter<GroupMemberAdapter.
                     if (holder.checkBox.isChecked()) {
                         info.setSelected(true);
                         selectedMember.add(info.getAccount());
+                        selectedGroupMemberInfos.add(info);
                     } else {
                         info.setSelected(false);
                         selectedMember.remove(info.getAccount());
+                        selectedGroupMemberInfos.remove(info);
+                    }
+                    if (onSelectChangedListener != null) {
+                        onSelectChangedListener.onSelectChanged();
                     }
                 }
             });

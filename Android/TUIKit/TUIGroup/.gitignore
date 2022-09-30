@@ -5,8 +5,14 @@
 
 # Gradle files
 */.gradle/
+*.gradle/
 
 # IDEA Files
 /tuigroup/.idea/
 /tuigroup/build/
 local.properties
+/.codecc/
+/build.yml
+*.iml
+*.idea/
+/captures

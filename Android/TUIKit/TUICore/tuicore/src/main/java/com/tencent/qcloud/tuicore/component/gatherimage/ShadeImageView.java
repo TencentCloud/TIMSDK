@@ -62,7 +62,6 @@ public class ShadeImageView extends ImageView {
         canvas.drawBitmap(mRoundBitmap, 0, 0, mShadePaint);
     }
 
-
     /**
      * Get rounded rectangle
      *
@@ -80,7 +79,6 @@ public class ShadeImageView extends ImageView {
         paint.setColor(color);
         canvas.drawRoundRect(rectF, radius, radius, paint);
         return output;
-
     }
 
 

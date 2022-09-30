@@ -2,6 +2,7 @@ package com.tencent.qcloud.tuikit.tuicontact.ui.view;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Pair;
@@ -20,14 +21,17 @@ import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
+import com.tencent.qcloud.tuicore.component.activities.ImageSelectActivity;
 import com.tencent.qcloud.tuicore.component.dialog.TUIKitDialog;
 import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
 import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.component.popupcard.PopupInputCard;
+import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuicore.util.TUIUtil;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuicontact.R;
+import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.bean.FriendApplicationBean;
@@ -36,6 +40,7 @@ import com.tencent.qcloud.tuikit.tuicontact.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.FriendProfilePresenter;
 import com.tencent.qcloud.tuicore.component.LineControllerView;
 import com.tencent.qcloud.tuikit.tuicontact.ui.interfaces.IFriendProfileLayout;
+import com.tencent.qcloud.tuikit.tuicontact.ui.pages.FriendProfileActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,6 +67,7 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
     private LineControllerView mMessageOptionView;
     private LineControllerView addFriendRemarkLv;
     private LineControllerView addFriendGroupLv;
+    private LineControllerView mChatBackground;
     private Button deleteFriendBtn;
     private Button clearMessageBtn;
     private Button chatBtn;
@@ -126,6 +132,8 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
         clearMessageBtn.setOnClickListener(this);
         chatBtn = findViewById(R.id.btn_chat);
         chatBtn.setOnClickListener(this);
+        mChatBackground = findViewById(R.id.chat_background);
+        mChatBackground.setOnClickListener(this);
 
         audioCallBtn = findViewById(R.id.btn_voice);
         audioCallBtn.setOnClickListener(this);
@@ -248,6 +256,7 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
         mRemarkView.setVisibility(GONE);
         mAddBlackView.setVisibility(GONE);
         mMessageOptionView.setVisibility(GONE);
+        mChatBackground.setVisibility(GONE);
         deleteFriendBtn.setText(R.string.refuse);
         deleteFriendBtn.setOnClickListener(new OnClickListener() {
             @Override
@@ -289,6 +298,7 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
         mRemarkView.setVisibility(GONE);
         mAddBlackView.setVisibility(GONE);
         mMessageOptionView.setVisibility(GONE);
+        mChatBackground.setVisibility(GONE);
 
         friendApplicationVerifyArea.setVisibility(VISIBLE);
         friendApplicationAddWording.setText(friendApplicationBean.getAddWording());
@@ -326,6 +336,7 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
                 deleteFriendBtn.setVisibility(VISIBLE);
                 mAddBlackView.setVisibility(VISIBLE);
                 mChatTopView.setVisibility(View.VISIBLE);
+                mChatBackground.setVisibility(VISIBLE);
                 updateMessageOptionView();
             } else {
                 // DO NOTHING
@@ -340,6 +351,7 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
                 mAddBlackView.setVisibility(VISIBLE);
                 mMessageOptionView.setVisibility(VISIBLE);
                 mChatTopView.setVisibility(VISIBLE);
+                mChatBackground.setVisibility(VISIBLE);
             } else {
                 if (!isFriend) {
                     if (isGroup) {
@@ -357,6 +369,7 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
                     deleteFriendBtn.setVisibility(VISIBLE);
                     mAddBlackView.setVisibility(VISIBLE);
                     mChatTopView.setVisibility(View.VISIBLE);
+                    mChatBackground.setVisibility(VISIBLE);
                     updateMessageOptionView();
                 }
             }
@@ -572,6 +585,18 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
                     }
                 });
             }
+        } else if (v == addFriendRemarkLv) {
+            PopupInputCard popupInputCard = new PopupInputCard((Activity) getContext());
+            popupInputCard.setContent(addFriendRemarkLv.getContent());
+            popupInputCard.setTitle(getResources().getString(R.string.contact_friend_remark));
+            popupInputCard.setOnPositive((result -> {
+                addFriendRemarkLv.setContent(result);
+                if (TextUtils.isEmpty(result)) {
+                    result = "";
+                }
+                modifyRemark(result);
+            }));
+            popupInputCard.show(addFriendRemarkLv, Gravity.BOTTOM);
         } else if (v == mRemarkView) {
             PopupInputCard popupInputCard = new PopupInputCard((Activity) getContext());
             popupInputCard.setContent(mRemarkView.getContent());
@@ -588,18 +613,10 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
             }));
             popupInputCard.show(mRemarkView, Gravity.BOTTOM);
 
-        } else if (v == addFriendRemarkLv) {
-            PopupInputCard popupInputCard = new PopupInputCard((Activity) getContext());
-            popupInputCard.setContent(addFriendRemarkLv.getContent());
-            popupInputCard.setTitle(getResources().getString(R.string.contact_friend_remark));
-            popupInputCard.setOnPositive((result -> {
-                addFriendRemarkLv.setContent(result);
-                if (TextUtils.isEmpty(result)) {
-                    result = "";
-                }
-                modifyRemark(result);
-            }));
-            popupInputCard.show(addFriendRemarkLv, Gravity.BOTTOM);
+        } else if (v == mChatBackground) {
+            if (mListener != null) {
+                mListener.onSetChatBackground();
+            }
         }
     }
 
@@ -641,6 +658,8 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
         void onStartConversationClick(ContactItemBean info);
 
         void onDeleteFriendClick(String id);
+
+        default void onSetChatBackground() {};
     }
 
 }

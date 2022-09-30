@@ -10,9 +10,6 @@
             android:name=".component.activities.ImageSelectActivity"
             android:screenOrientation="portrait" />
 
-        <activity android:name=".component.activities.ImageSelectActivity"
-            android:screenOrientation="portrait"/>
-
         <activity
             android:name=".util.PermissionRequester$PermissionActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"

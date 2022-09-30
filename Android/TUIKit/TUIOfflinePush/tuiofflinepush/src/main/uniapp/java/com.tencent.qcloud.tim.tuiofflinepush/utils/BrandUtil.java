@@ -6,7 +6,7 @@ import com.meizu.cloud.pushsdk.util.MzSystemUtils;
 import com.tencent.qcloud.tim.tuiofflinepush.TUIOfflinePushConfig;
 
 public class BrandUtil {
-
+    public static int vendorId = 0;
     public static boolean isBrandXiaoMi() {
         return "xiaomi".equalsIgnoreCase(getBuildBrand())
                 || "xiaomi".equalsIgnoreCase(getBuildManufacturer());
@@ -15,8 +15,7 @@ public class BrandUtil {
     public static boolean isBrandHuawei() {
         return "huawei".equalsIgnoreCase(getBuildBrand()) ||
                 "huawei".equalsIgnoreCase(getBuildManufacturer()) ||
-                "honor".equalsIgnoreCase(getBuildBrand()) ||
-                "honor".equalsIgnoreCase(getBuildManufacturer());
+                "honor".equalsIgnoreCase(getBuildBrand());
     }
 
     public static boolean isBrandMeizu() {
@@ -40,6 +39,10 @@ public class BrandUtil {
                 || "vivo".equalsIgnoreCase(getBuildManufacturer());
     }
 
+    public static boolean isBrandHonor() {
+        return "honor".equalsIgnoreCase(getBuildBrand()) && "honor".equalsIgnoreCase(getBuildManufacturer());
+    }
+
     public static boolean isGoogleServiceSupport() {
         GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
         int resultCode = googleApiAvailability.isGooglePlayServicesAvailable(TUIOfflinePushConfig.getInstance().getContext());
@@ -47,10 +50,15 @@ public class BrandUtil {
     }
 
     public static int getInstanceType() {
-        int vendorId = TUIOfflinePushConfig.BRAND_GOOLE_ELSE;
+        if (vendorId != 0) {
+            return vendorId;
+        }
 
+        int vendorId = TUIOfflinePushConfig.BRAND_GOOLE_ELSE;
         if (isBrandXiaoMi()) {
             vendorId = TUIOfflinePushConfig.BRAND_XIAOMI;
+        } else if (isBrandHonor()) {
+            vendorId = TUIOfflinePushConfig.BRAND_HONOR;
         } else if (isBrandHuawei()) {
             vendorId = TUIOfflinePushConfig.BRAND_HUAWEI;
         } else if (isBrandMeizu()) {

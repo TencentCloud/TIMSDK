@@ -155,9 +155,12 @@ public class CommunitySettingsActivity extends BaseLightActivity implements ICom
             communityAvatarLv.setOnContentClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ArrayList<String> faceList = new ArrayList<>();
+                    ArrayList<ImageSelectActivity.ImageBean> faceList = new ArrayList<>();
                     for (int i = 0; i < CommunityConstants.GROUP_FACE_COUNT; i++) {
-                        faceList.add(String.format(CommunityConstants.GROUP_FACE_URL, (i + 1) + ""));
+                        ImageSelectActivity.ImageBean imageBean= new ImageSelectActivity.ImageBean();
+                        imageBean.setThumbnailUri(String.format(CommunityConstants.GROUP_FACE_URL, (i + 1) + ""));
+                        imageBean.setImageUri(String.format(CommunityConstants.GROUP_FACE_URL, (i + 1) + ""));
+                        faceList.add(imageBean);
                     }
 
                     Intent intent = new Intent(CommunitySettingsActivity.this, ImageSelectActivity.class);
@@ -167,7 +170,7 @@ public class CommunitySettingsActivity extends BaseLightActivity implements ICom
                     intent.putExtra(ImageSelectActivity.ITEM_WIDTH, ScreenUtil.dip2px(77));
                     intent.putExtra(ImageSelectActivity.ITEM_HEIGHT, ScreenUtil.dip2px(77));
                     intent.putExtra(ImageSelectActivity.DATA, faceList);
-                    intent.putExtra(ImageSelectActivity.SELECTED, communityBean.getGroupFaceUrl());
+                    intent.putExtra(ImageSelectActivity.SELECTED, new ImageSelectActivity.ImageBean(communityBean.getGroupFaceUrl(), communityBean.getGroupFaceUrl(), false));
                     startActivityForResult(intent, REQUEST_FOR_CHANGE_AVATAR);
                 }
             });
@@ -181,9 +184,12 @@ public class CommunitySettingsActivity extends BaseLightActivity implements ICom
             communityCoverLv.setOnContentClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ArrayList<String> coverList = new ArrayList<>();
+                    ArrayList<ImageSelectActivity.ImageBean> coverList = new ArrayList<>();
                     for (int i = 0; i < CommunityConstants.COVER_COUNT; i++) {
-                        coverList.add(String.format(CommunityConstants.COVER_URL, (i + 1) + ""));
+                        ImageSelectActivity.ImageBean imageBean= new ImageSelectActivity.ImageBean();
+                        imageBean.setThumbnailUri(String.format(CommunityConstants.COVER_URL, (i + 1) + ""));
+                        imageBean.setImageUri(String.format(CommunityConstants.COVER_URL, (i + 1) + ""));
+                        coverList.add(imageBean);
                     }
 
                     Intent intent = new Intent(CommunitySettingsActivity.this, ImageSelectActivity.class);
@@ -193,7 +199,7 @@ public class CommunitySettingsActivity extends BaseLightActivity implements ICom
                     intent.putExtra(ImageSelectActivity.ITEM_WIDTH, ScreenUtil.dip2px(165));
                     intent.putExtra(ImageSelectActivity.ITEM_HEIGHT, ScreenUtil.dip2px(79));
                     intent.putExtra(ImageSelectActivity.DATA, coverList);
-                    intent.putExtra(ImageSelectActivity.SELECTED, communityBean.getCoverUrl());
+                    intent.putExtra(ImageSelectActivity.SELECTED, new ImageSelectActivity.ImageBean(communityBean.getCoverUrl(), communityBean.getCoverUrl(), false));
                     startActivityForResult(intent, REQUEST_FOR_CHANGE_COVER);
                 }
             });
@@ -385,7 +391,12 @@ public class CommunitySettingsActivity extends BaseLightActivity implements ICom
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null) {
             if (requestCode == REQUEST_FOR_CHANGE_AVATAR) {
-                String avatarUrl = (String) data.getSerializableExtra(ImageSelectActivity.DATA);
+                ImageSelectActivity.ImageBean imageBean = (ImageSelectActivity.ImageBean) data.getSerializableExtra(ImageSelectActivity.DATA);
+                if (imageBean == null) {
+                    return;
+                }
+
+                String avatarUrl = imageBean.getImageUri();
                 presenter.modifyCommunityAvatar(communityBean.getGroupId(), avatarUrl, new IUIKitCallback<Void>() {
                     @Override
                     public void onSuccess(Void data) {
@@ -398,7 +409,12 @@ public class CommunitySettingsActivity extends BaseLightActivity implements ICom
                     }
                 });
             } else if (requestCode == REQUEST_FOR_CHANGE_COVER) {
-                String coverUrl = (String) data.getSerializableExtra(ImageSelectActivity.DATA);
+                ImageSelectActivity.ImageBean imageBean = (ImageSelectActivity.ImageBean) data.getSerializableExtra(ImageSelectActivity.DATA);
+                if (imageBean == null) {
+                    return;
+                }
+
+                String coverUrl = imageBean.getImageUri();
                 presenter.modifyCommunityCover(communityBean.getGroupId(), coverUrl, new IUIKitCallback<Void>() {
                     @Override
                     public void onSuccess(Void data) {

@@ -44,20 +44,19 @@ public class DisplayUtils {
 
     // init one grid layout ,center in the screen
     public static ArrayList<RelativeLayout.LayoutParams> initGrid1Param(Context context, int width, int height) {
-        ArrayList<RelativeLayout.LayoutParams> list = new ArrayList<>();
-
         int margin = dip2px(context, 10);
         int grid4W = (width - margin * 2) / 2;
         int grid4H = (height - margin * 2) / 2;
         RelativeLayout.LayoutParams layoutParams0 = new RelativeLayout.LayoutParams(grid4W, grid4H);
         layoutParams0.addRule(RelativeLayout.CENTER_IN_PARENT);
+
+        ArrayList<RelativeLayout.LayoutParams> list = new ArrayList<>();
         list.add(layoutParams0);
         return list;
     }
 
     // init two grid layout ,split the screen
     public static ArrayList<RelativeLayout.LayoutParams> initGrid2Param(Context context, int width, int height) {
-        ArrayList<RelativeLayout.LayoutParams> list = new ArrayList<>();
         int margin = dip2px(context, 10);
         int grid4W = (width - margin * 2) / 2;
         int grid4H = (height - margin * 2) / 2;
@@ -72,6 +71,7 @@ public class DisplayUtils {
         layoutParams1.addRule(RelativeLayout.CENTER_VERTICAL);
         layoutParams1.rightMargin = margin;
 
+        ArrayList<RelativeLayout.LayoutParams> list = new ArrayList<>();
         list.add(layoutParams0);
         list.add(layoutParams1);
         return list;
@@ -80,8 +80,6 @@ public class DisplayUtils {
     // init three grid layout
     public static ArrayList<RelativeLayout.LayoutParams> initGrid3Param(Context context, int width, int height) {
         int margin = dip2px(context, 10);
-
-        ArrayList<RelativeLayout.LayoutParams> list = new ArrayList<>();
         int grid3W = (width - margin * 2) / 2;
         int grid3H = (height - margin * 2) / 2;
 
@@ -102,6 +100,7 @@ public class DisplayUtils {
         layoutParams2.bottomMargin = margin;
         layoutParams2.topMargin = margin + grid3H;
 
+        ArrayList<RelativeLayout.LayoutParams> list = new ArrayList<>();
         list.add(layoutParams0);
         list.add(layoutParams1);
         list.add(layoutParams2);
@@ -111,10 +110,9 @@ public class DisplayUtils {
     // init four grid layout
     public static ArrayList<RelativeLayout.LayoutParams> initGrid4Param(Context context, int width, int height) {
         int margin = dip2px(context, 10);
-
-        ArrayList<RelativeLayout.LayoutParams> list = new ArrayList<>();
         int grid4W = (width - margin * 2) / 2;
         int grid4H = (height - margin * 2) / 2;
+
         RelativeLayout.LayoutParams layoutParams0 = new RelativeLayout.LayoutParams(grid4W, grid4H);
         layoutParams0.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
         layoutParams0.addRule(RelativeLayout.ALIGN_PARENT_TOP);
@@ -139,6 +137,7 @@ public class DisplayUtils {
         layoutParams3.topMargin = margin + grid4H;
         layoutParams3.rightMargin = margin;
 
+        ArrayList<RelativeLayout.LayoutParams> list = new ArrayList<>();
         list.add(layoutParams0);
         list.add(layoutParams1);
         list.add(layoutParams2);
@@ -149,10 +148,9 @@ public class DisplayUtils {
     // init nine grid layout
     public static ArrayList<RelativeLayout.LayoutParams> initGrid9Param(Context context, int width, int height) {
         int margin = dip2px(context, 10);
-        ArrayList<RelativeLayout.LayoutParams> list = new ArrayList<>();
-
         int grid9W = (width - margin * 2) / 3;
         int grid9H = (height - margin * 2) / 3;
+
         RelativeLayout.LayoutParams layoutParams0 = new RelativeLayout.LayoutParams(grid9W, grid9H);
         layoutParams0.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
         layoutParams0.addRule(RelativeLayout.ALIGN_PARENT_TOP);
@@ -201,6 +199,7 @@ public class DisplayUtils {
         layoutParams8.topMargin = margin + grid9H * 2;
         layoutParams8.rightMargin = margin;
 
+        ArrayList<RelativeLayout.LayoutParams> list = new ArrayList<>();
         list.add(layoutParams0);
         list.add(layoutParams1);
         list.add(layoutParams2);

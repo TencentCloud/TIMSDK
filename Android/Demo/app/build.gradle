@@ -34,7 +34,8 @@ android {
          */
         manifestPlaceholders = [
                 "VIVO_APPKEY" : " ",
-                "VIVO_APPID" : " "
+                "VIVO_APPID" : " ",
+                "HONOR_APPID" : " "
         ]
     }
 

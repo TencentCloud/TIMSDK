@@ -20,11 +20,12 @@
             android:name=".ui.page.TUIC2CChatActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
+            android:windowSoftInputMode="adjustNothing|stateHidden" />
         <activity
             android:name=".ui.page.TUIGroupChatActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing|stateHidden"/>
 
         <activity
             android:name=".ui.page.MessageReceiptDetailActivity"

@@ -8,12 +8,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.tencent.imsdk.v2.V2TIMCallback;
+import com.tencent.imsdk.v2.V2TIMLogListener;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMSDKConfig;
 import com.tencent.imsdk.v2.V2TIMSDKListener;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tuicore.interfaces.TUICallback;
+import com.tencent.qcloud.tuicore.interfaces.TUILogListener;
+import com.tencent.qcloud.tuicore.interfaces.TUILoginConfig;
 import com.tencent.qcloud.tuicore.interfaces.TUILoginListener;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 
@@ -112,7 +115,21 @@ public class TUILogin {
      * @param callback  login callback
      */
     public static void login(@NonNull Context context, int sdkAppId, String  userId, String userSig, TUICallback callback) {
-        getInstance().internalLogin(context, sdkAppId, userId, userSig, callback);
+        getInstance().internalLogin(context, sdkAppId, userId, userSig, null, callback);
+    }
+
+    /**
+     * IMSDK login
+     *
+     * @param context   The context of the application, generally is ApplicationContext
+     * @param sdkAppId  Assigned when you register your app with Tencent Cloud
+     * @param userId    User ID
+     * @param userSig   Obtained from the business server
+     * @param config    log related configs
+     * @param callback  login callback
+     */
+    public static void login(@NonNull Context context, int sdkAppId, String  userId, String userSig, TUILoginConfig config, TUICallback callback) {
+        getInstance().internalLogin(context, sdkAppId, userId, userSig, config, callback);
     }
 
     /**
@@ -131,7 +148,7 @@ public class TUILogin {
         getInstance().internalRemoveLoginListener(listener);
     }
 
-    private void internalLogin(Context context, final int sdkAppId, final String  userId, final String userSig, TUICallback callback) {
+    private void internalLogin(Context context, final int sdkAppId, final String  userId, final String userSig, TUILoginConfig config, TUICallback callback) {
         if (this.sdkAppId != 0 && sdkAppId != this.sdkAppId) {
             logout((TUICallback) null);
         }
@@ -141,7 +158,23 @@ public class TUILogin {
         // Notify init event
         TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_IMSDK_INIT_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_START_INIT, null);
         // User operation initialization, the privacy agreement has been read by default
-        boolean initSuccess = V2TIMManager.getInstance().initSDK(context, sdkAppId, null);
+
+        V2TIMSDKConfig v2TIMSDKConfig = null;
+        if (config != null) {
+            v2TIMSDKConfig = new V2TIMSDKConfig();
+            v2TIMSDKConfig.setLogLevel(config.getLogLevel());
+            TUILogListener logListener = config.getLogListener();
+            if (logListener != null) {
+                v2TIMSDKConfig.setLogListener(new V2TIMLogListener() {
+                    @Override
+                    public void onLog(int logLevel, String logContent) {
+                        logListener.onLog(logLevel, logContent);
+                    }
+                });
+            }
+        }
+
+        boolean initSuccess = V2TIMManager.getInstance().initSDK(context, sdkAppId, v2TIMSDKConfig);
         if (initSuccess) {
             this.userId = userId;
             this.userSig = userSig;

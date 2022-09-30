@@ -208,5 +208,15 @@
         </service>
         <!-- 兼容Q版本 -->
         <!-- ********OPPO 推送 end******** -->
+
+        <!-- ********荣耀推送设置start******** -->
+        <service
+            android:name="com.tencent.qcloud.tim.tuiofflinepush.oempush.MyHonorMessageService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.hihonor.push.action.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <!-- ********荣耀推送设置end******** -->
     </application>
 </manifest>

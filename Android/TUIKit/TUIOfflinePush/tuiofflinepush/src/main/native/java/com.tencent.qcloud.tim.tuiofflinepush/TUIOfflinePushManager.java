@@ -18,6 +18,7 @@ import com.tencent.qcloud.tim.tuiofflinepush.interfaces.PushSettingInterface;
 import com.tencent.qcloud.tim.tuiofflinepush.notification.ParseNotification;
 import com.tencent.qcloud.tim.tuiofflinepush.oempush.OEMPushSetting;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.BrandUtil;
+import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushErrorBean;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushLog;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushParamBean;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushUtils;
@@ -102,6 +103,9 @@ public class TUIOfflinePushManager {
      *   "oppoPushBussinessId": "", // 在腾讯云控制台上传第三方推送证书后分配的证书ID // The certificate ID assigned in the Tencent Cloud console
      *   "oppoPushAppKey": "",// oppo开放平台分配的应用APPID // APPID, Allocated by OPPO Open Platform
      *   "oppoPushAppSecret": "",// oppo开放平台分配的应用APPKEY // APPKEY, Allocated by OPPO Open Platform
+     *
+     *   // honor
+     *   "honorPushBussinessId": "",  // 在腾讯云控制台上传第三方推送证书后分配的证书ID  // The certificate ID assigned in the Tencent Cloud console
      *  }
      *
      */
@@ -178,6 +182,13 @@ public class TUIOfflinePushManager {
             @Override
             public void onBadgeCallback(Context context, int number) {
                 updateBadge(context, number);
+            }
+
+            @Override
+            public void onTokenErrorCallBack(TUIOfflinePushErrorBean errorBean) {
+                if (errorBean != null) {
+                    TUIOfflinePushLog.e(TAG, "onTokenErrorCallBack code = " + errorBean.getErrorCode() + ", code des = " + errorBean.getErrorDescription());
+                }
             }
         });
         pushSetting.initPush(context);
@@ -263,6 +274,9 @@ public class TUIOfflinePushManager {
                     case TUIOfflinePushConfig.BRAND_XIAOMI:
                         mBussinessId = PrivateConstants.xiaomiPushBussinessIdAbroad;
                         break;
+                    case TUIOfflinePushConfig.BRAND_HONOR:
+                        mBussinessId = PrivateConstants.honorPushBussinessIdAbroad;
+                        break;
                     case TUIOfflinePushConfig.BRAND_HUAWEI:
                         mBussinessId = PrivateConstants.huaweiPushBussinessIdAbroad;
                         break;
@@ -286,6 +300,9 @@ public class TUIOfflinePushManager {
                 switch (brand) {
                     case TUIOfflinePushConfig.BRAND_XIAOMI:
                         mBussinessId = PrivateConstants.xiaomiPushBussinessId;
+                        break;
+                    case TUIOfflinePushConfig.BRAND_HONOR:
+                        mBussinessId = PrivateConstants.honorPushBussinessId;
                         break;
                     case TUIOfflinePushConfig.BRAND_HUAWEI:
                         mBussinessId = PrivateConstants.huaweiPushBussinessId;

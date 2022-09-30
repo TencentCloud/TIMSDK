@@ -34,6 +34,16 @@ public class TUIOfflinePushUtils {
 
                 bussinessId = PrivateConstants.xiaomiPushBussinessId;
                 break;
+            case TUIOfflinePushConfig.BRAND_HONOR://honor
+                String honorPushBussinessId = params.getHonorPushBussinessId();
+                if (TextUtils.isEmpty(honorPushBussinessId)) {
+                    TUIOfflinePushLog.e(TAG, "registerPush-- honorPushBussinessId is null");
+                } else {
+                    PrivateConstants.honorPushBussinessId = Long.parseLong(honorPushBussinessId);
+                }
+
+                bussinessId = PrivateConstants.honorPushBussinessId;
+                break;
             case TUIOfflinePushConfig.BRAND_HUAWEI://huawei
                 String huaweiPushBussinessId = params.getHuaweiPushBussinessId();
                 if (TextUtils.isEmpty(huaweiPushBussinessId)) {

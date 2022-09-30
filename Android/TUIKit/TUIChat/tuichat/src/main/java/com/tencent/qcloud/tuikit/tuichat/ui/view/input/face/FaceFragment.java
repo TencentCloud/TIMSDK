@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.tencent.qcloud.tuikit.tuichat.R;
+import com.tencent.qcloud.tuikit.tuichat.component.face.ChatFace;
+import com.tencent.qcloud.tuikit.tuichat.component.face.CustomFace;
 import com.tencent.qcloud.tuikit.tuichat.component.face.EmojiIndicatorView;
 import com.tencent.qcloud.tuikit.tuichat.component.face.RecentEmojiManager;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.input.BaseInputFragment;
@@ -29,32 +31,20 @@ import java.util.List;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-
-public class FaceFragment extends BaseInputFragment implements View.OnClickListener {
+public class FaceFragment extends BaseInputFragment {
 
     ViewPager faceViewPager;
     EmojiIndicatorView faceIndicator;
-    FaceGroupIcon faceFirstSetTv;
     FaceGroupIcon mCurrentSelected;
     LinearLayout faceGroup;
     ArrayList<View> ViewPagerItems = new ArrayList<>();
-    ArrayList<Emoji> emojiList;
     ArrayList<Emoji> recentlyEmojiList;
-    ArrayList<FaceGroup> customFaces;
+    List<FaceGroup> faceGroups;
     private int mCurrentGroupIndex = 0;
-    private int emojiColumns = 8;
-    private int emojiRows = 3;
     private OnEmojiClickListener listener;
     private RecentEmojiManager recentManager;
 
     private boolean showCustomFace = true;
-
-    public static FaceFragment Instance() {
-        FaceFragment instance = new FaceFragment();
-        Bundle bundle = new Bundle();
-        instance.setArguments(bundle);
-        return instance;
-    }
 
     public void setListener(OnEmojiClickListener listener) {
         this.listener = listener;
@@ -76,7 +66,6 @@ public class FaceFragment extends BaseInputFragment implements View.OnClickListe
     @Override
     public void onCreate(Bundle savedInstanceState) {
         try {
-            emojiList = FaceManager.getEmojiList();
             if (recentManager.getCollection(RecentEmojiManager.PREFERENCE_NAME) != null) {
                 recentlyEmojiList = (ArrayList<Emoji>) recentManager.getCollection(RecentEmojiManager.PREFERENCE_NAME);
             } else {
@@ -95,34 +84,34 @@ public class FaceFragment extends BaseInputFragment implements View.OnClickListe
         View view = inflater.inflate(R.layout.fragment_face, container, false);
         faceViewPager = view.findViewById(R.id.face_viewPager);
         faceIndicator = view.findViewById(R.id.face_indicator);
-        faceFirstSetTv = view.findViewById(R.id.face_first_set);
         faceGroup = view.findViewById(R.id.face_view_group);
         initViews();
         return view;
     }
 
     private void initViews() {
-        initViewPager(emojiList, emojiColumns, emojiRows);
-        mCurrentSelected = faceFirstSetTv;
-        faceFirstSetTv.setSelected(true);
-        faceFirstSetTv.setOnClickListener(this);
-        customFaces = FaceManager.getCustomFaceList();
-        mCurrentGroupIndex = 0;
+        faceGroups = FaceManager.getFaceGroupList();
 
-        if (!showCustomFace) {
-            return;
-        }
-        for (int i = 0; i < customFaces.size(); i++) {
-            final FaceGroup group = customFaces.get(i);
+        for (int i = 0; i < faceGroups.size(); i++) {
+            final FaceGroup group = faceGroups.get(i);
+            if (group.getGroupID() != FaceManager.EMOJI_GROUP_ID && !showCustomFace) {
+                continue;
+            }
             FaceGroupIcon faceBtn = new FaceGroupIcon(getActivity());
-            faceBtn.setFaceTabIcon(group.getGroupIcon());
-
+            faceBtn.setFaceTabIcon(group.getFaceGroupIconUrl());
+            if (i == 0) {
+                mCurrentSelected = faceBtn;
+                mCurrentGroupIndex = group.getGroupID();
+                ArrayList<ChatFace> faces = group.getFaces();
+                initViewPager(faces, group.getPageColumnCount(), group.getPageRowCount());
+                mCurrentSelected.setSelected(true);
+            }
             faceBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mCurrentSelected != v) {
-                        mCurrentGroupIndex = group.getGroupId();
-                        ArrayList<Emoji> faces = group.getFaces();
+                        mCurrentGroupIndex = group.getGroupID();
+                        ArrayList<ChatFace> faces = group.getFaces();
                         mCurrentSelected.setSelected(false);
                         initViewPager(faces, group.getPageColumnCount(), group.getPageRowCount());
                         mCurrentSelected = (FaceGroupIcon) v;
@@ -134,7 +123,7 @@ public class FaceFragment extends BaseInputFragment implements View.OnClickListe
         }
     }
 
-    private void initViewPager(ArrayList<Emoji> list, int columns, int rows) {
+    private void initViewPager(ArrayList<? extends ChatFace> list, int columns, int rows) {
         intiIndicator(list, columns, rows);
         ViewPagerItems.clear();
         int pageCont = getPagerCount(list, columns, rows);
@@ -164,22 +153,8 @@ public class FaceFragment extends BaseInputFragment implements View.OnClickListe
         });
     }
 
-    private void intiIndicator(ArrayList<Emoji> list, int columns, int rows) {
+    private void intiIndicator(ArrayList<? extends ChatFace> list, int columns, int rows) {
         faceIndicator.init(getPagerCount(list, columns, rows));
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.face_first_set) {
-            if (mCurrentSelected != v) {
-                mCurrentGroupIndex = 0;
-                mCurrentSelected.setSelected(false);
-                mCurrentSelected = (FaceGroupIcon) v;
-                initViewPager(emojiList, emojiColumns, emojiRows);
-                mCurrentSelected.setSelected(true);
-            }
-
-        }
     }
 
     /**
@@ -189,7 +164,7 @@ public class FaceFragment extends BaseInputFragment implements View.OnClickListe
      *
      * @return
      */
-    private int getPagerCount(ArrayList<Emoji> list, int columns, int rows) {
+    private int getPagerCount(ArrayList<? extends ChatFace> list, int columns, int rows) {
         int count = list.size();
         int dit = 1;
         if (mCurrentGroupIndex > 0)
@@ -198,7 +173,7 @@ public class FaceFragment extends BaseInputFragment implements View.OnClickListe
                 : count / (columns * rows - dit) + 1;
     }
 
-    private View getViewPagerItem(int position, ArrayList<Emoji> list, int columns, int rows) {
+    private View getViewPagerItem(int position, ArrayList<? extends ChatFace> list, int columns, int rows) {
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View layout = inflater.inflate(R.layout.layout_face_grid, null);
         GridView gridview = layout.findViewById(R.id.chart_face_gv);
@@ -208,7 +183,7 @@ public class FaceFragment extends BaseInputFragment implements View.OnClickListe
          * 
          * Because there is a delete icon at the end of each page, the actual emoji of each page columns *　rows　－　1, Empty the last position for the delete icon
          * */
-        final List<Emoji> subList = new ArrayList<>();
+        final List<ChatFace> subList = new ArrayList<>();
         int dit = 1;
         if (mCurrentGroupIndex > 0)
             dit = 0;
@@ -233,7 +208,6 @@ public class FaceFragment extends BaseInputFragment implements View.OnClickListe
             subList.add(deleteEmoji);
         }
 
-
         FaceGVAdapter mGvAdapter = new FaceGVAdapter(subList, getActivity());
         gridview.setAdapter(mGvAdapter);
         gridview.setNumColumns(columns);
@@ -242,7 +216,7 @@ public class FaceFragment extends BaseInputFragment implements View.OnClickListe
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (mCurrentGroupIndex > 0) {
-                    listener.onCustomFaceClick(mCurrentGroupIndex, subList.get(position));
+                    listener.onCustomFaceClick(mCurrentGroupIndex, (CustomFace) subList.get(position));
                 } else {
                     if (position == columns * rows - 1) {
                         if (listener != null) {
@@ -251,7 +225,7 @@ public class FaceFragment extends BaseInputFragment implements View.OnClickListe
                         return;
                     }
                     if (listener != null) {
-                        listener.onEmojiClick(subList.get(position));
+                        listener.onEmojiClick((Emoji) subList.get(position));
                     }
                 }
             }
@@ -270,25 +244,23 @@ public class FaceFragment extends BaseInputFragment implements View.OnClickListe
         }
     }
 
-
     public interface OnEmojiClickListener {
         void onEmojiDelete();
 
         void onEmojiClick(Emoji emoji);
 
-        void onCustomFaceClick(int groupIndex, Emoji emoji);
+        void onCustomFaceClick(int groupIndex, CustomFace customFace);
     }
 
-    class FaceGVAdapter extends BaseAdapter {
-        private List<Emoji> list;
-        private Context mContext;
+    static class FaceGVAdapter extends BaseAdapter {
+        private final List<ChatFace> list;
+        private final Context mContext;
 
-        public FaceGVAdapter(List<Emoji> list, Context mContext) {
+        public FaceGVAdapter(List<ChatFace> list, Context mContext) {
             super();
             this.list = list;
             this.mContext = mContext;
         }
-
 
         @Override
         public int getCount() {
@@ -311,15 +283,15 @@ public class FaceFragment extends BaseInputFragment implements View.OnClickListe
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
-            Emoji emoji = list.get(position);
+            ChatFace chatFace = list.get(position);
             if (convertView == null) {
                 holder = new ViewHolder();
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.item_face, null);
                 holder.iv = convertView.findViewById(R.id.face_image);
                 FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) holder.iv.getLayoutParams();
-                if (emoji != null && emoji.getHeight() != 0 && emoji.getWidth() != 0) {
-                    params.width = emoji.getWidth();
-                    params.height = emoji.getHeight();
+                if (chatFace != null && chatFace.getHeight() != 0 && chatFace.getWidth() != 0) {
+                    params.width = chatFace.getWidth();
+                    params.height = chatFace.getHeight();
                 }
                 holder.iv.setLayoutParams(params);
                 convertView.setTag(holder);
@@ -327,8 +299,8 @@ public class FaceFragment extends BaseInputFragment implements View.OnClickListe
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            if (emoji != null) {
-                holder.iv.setImageBitmap(emoji.getIcon());
+            if (chatFace != null) {
+                FaceManager.loadFace(chatFace, holder.iv);
             }
             return convertView;
         }

@@ -17,8 +17,7 @@ public class BrandUtil {
     public static boolean isBrandHuawei() {
         return "huawei".equalsIgnoreCase(getBuildBrand()) ||
                 "huawei".equalsIgnoreCase(getBuildManufacturer()) ||
-                "honor".equalsIgnoreCase(getBuildBrand()) ||
-                "honor".equalsIgnoreCase(getBuildManufacturer());
+                "honor".equalsIgnoreCase(getBuildBrand());
     }
 
     /**
@@ -52,6 +51,15 @@ public class BrandUtil {
     public static boolean isBrandVivo() {
         return "vivo".equalsIgnoreCase(getBuildBrand())
                 || "vivo".equalsIgnoreCase(getBuildManufacturer());
+    }
+
+    /**
+     * honor device
+     *
+     * @return
+     */
+    public static boolean isBrandHonor() {
+        return "honor".equalsIgnoreCase(getBuildBrand()) && "honor".equalsIgnoreCase(getBuildManufacturer());
     }
 
     public static String getBuildBrand() {

@@ -12,7 +12,7 @@ import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuikit.TUICommonDefine;
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine;
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.TUILog;
-import com.tencent.qcloud.tuikit.tuicallkit.ui.R;
+import com.tencent.qcloud.tuikit.tuicallkit.R;
 import com.tencent.qcloud.tuikit.tuicallkit.base.CallingUserModel;
 import com.tencent.qcloud.tuikit.tuicallkit.base.Constants;
 import com.tencent.qcloud.tuikit.tuicallkit.base.TUICallingStatusManager;
@@ -158,7 +158,6 @@ public class TUICallingGroupView extends BaseCallView {
         }
         layout.startLoading();
         if (TUICallDefine.MediaType.Video.equals(mCallMediaType)) {
-            layout.setVideoAvailable(true);
             mCallingAction.startRemoteView(userModel.userId, layout.getVideoView(),
                     new TUICommonDefine.PlayCallback() {
                         @Override

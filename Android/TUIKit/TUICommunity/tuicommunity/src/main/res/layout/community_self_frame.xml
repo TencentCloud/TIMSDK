@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:background="#EBECF0">
 
-            <com.tencent.qcloud.tuikit.tuicommunity.component.RoundFrameLayout
+            <com.tencent.qcloud.tuicore.component.RoundFrameLayout
                 android:id="@+id/banner_frame"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
                     android:layout_gravity="center"
                     android:background="#FFFFFF" />
 
-            </com.tencent.qcloud.tuikit.tuicommunity.component.RoundFrameLayout>
+            </com.tencent.qcloud.tuicore.component.RoundFrameLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

@@ -77,8 +77,9 @@ public class ReplyDetailsView extends RecyclerView {
             String messageText;
             List<Object> iconList = new ArrayList<>();
             if (messageBean == null) {
-                userName = replyBean.getMessageSender();
+                userName = replyBean.getSenderShowName();
                 messageText = replyBean.getMessageAbstract();
+                iconList.add(replyBean.getSenderFaceUrl());
             } else {
                 messageText = messageBean.getExtra();
                 userName = messageBean.getUserDisplayName();

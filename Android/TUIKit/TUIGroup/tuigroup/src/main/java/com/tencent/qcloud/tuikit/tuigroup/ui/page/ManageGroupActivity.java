@@ -19,6 +19,7 @@ import android.widget.CompoundButton;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tuicore.component.LineControllerView;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
@@ -131,16 +132,16 @@ public class ManageGroupActivity extends BaseLightActivity {
                 }
 
                 Intent intent = new Intent(ManageGroupActivity.this, GroupMemberActivity.class);
-                intent.putExtra(TUIGroupConstants.Selection.IS_SELECT_MODE, true);
-                intent.putExtra(TUIGroupConstants.Selection.FILTER, GroupInfo.GROUP_MEMBER_FILTER_COMMON);
+                intent.putExtra(TUIConstants.TUIGroup.IS_SELECT_MODE, true);
+                intent.putExtra(TUIConstants.TUIGroup.FILTER, GroupInfo.GROUP_MEMBER_FILTER_COMMON);
                 if (mutedMemberAdapter.getGroupMemberInfoList() != null) {
                     ArrayList<String> selectedList = new ArrayList<>();
                     for (GroupMemberInfo memberInfo : mutedMemberAdapter.getGroupMemberInfoList()) {
                         selectedList.add(memberInfo.getAccount());
                     }
-                    intent.putExtra(TUIGroupConstants.Selection.SELECTED_LIST, selectedList);
+                    intent.putExtra(TUIConstants.TUIGroup.SELECTED_LIST, selectedList);
                 }
-                intent.putExtra(TUIGroupConstants.Group.GROUP_INFO, groupInfo);
+                intent.putExtra(TUIConstants.TUIGroup.GROUP_ID, groupInfo.getId());
                 startActivityForResult(intent, 1);
             }
         });

@@ -295,7 +295,7 @@ public class ConversationPresenter {
         return isChanged;
     }
 
-    private void loadAndsubscribeConversationUserStatus(List<ConversationInfo> conversationInfoList) {
+    private void loadAndSubscribeConversationUserStatus(List<ConversationInfo> conversationInfoList) {
         provider.loadConversationUserStatus(conversationInfoList, new IUIKitCallback<Void>() {
             @Override
             public void onSuccess(Void data) {
@@ -406,7 +406,7 @@ public class ConversationPresenter {
             }
         }
 
-        loadAndsubscribeConversationUserStatus(conversationInfoList);
+        loadAndSubscribeConversationUserStatus(conversationInfoList);
     }
 
     /**

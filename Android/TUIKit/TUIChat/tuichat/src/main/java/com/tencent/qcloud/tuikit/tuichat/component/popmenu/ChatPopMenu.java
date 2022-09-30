@@ -176,13 +176,12 @@ public class ChatPopMenu {
             e.printStackTrace();
         }
         if (emojis == null) {
-            emojis = new ArrayList<>();
             List<Emoji> subList = emojiList.subList(0, RECENT_EMOJI_NUM);
             List<String> emojiKeys = new ArrayList<>();
             for (Emoji emoji : subList) {
-                emojiKeys.add(emoji.getFilter());
+                emojiKeys.add(emoji.getFaceKey());
             }
-            emojis.addAll(emojiKeys);
+            emojis = new ArrayList<>(emojiKeys);
             try {
                 RecentEmojiManager.getInstance().putCollection(RECENT_EMOJI_KEY, emojis);
             } catch (IOException e) {
@@ -193,8 +192,8 @@ public class ChatPopMenu {
     }
 
     private void updateRecentEmoji(Emoji emoji) {
-        recentEmojiList.remove(emoji.getFilter());
-        recentEmojiList.add(0, emoji.getFilter());
+        recentEmojiList.remove(emoji.getFaceKey());
+        recentEmojiList.add(0, emoji.getFaceKey());
         try {
             RecentEmojiManager.getInstance().putCollection(RECENT_EMOJI_KEY, recentEmojiList);
         } catch (IOException e) {
@@ -439,7 +438,7 @@ public class ChatPopMenu {
 
         private Emoji getEmoji(String emojiKey) {
             for (Emoji emoji : emojiList) {
-                if (TextUtils.equals(emoji.getFilter(), emojiKey)) {
+                if (TextUtils.equals(emoji.getFaceKey(), emojiKey)) {
                     return emoji;
                 }
             }

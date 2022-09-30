@@ -16,6 +16,6 @@ public abstract class C2CChatEventListener {
     public void onFriendNameChanged(String userId, String newName) {}
     public void onRecvMessageModified(TUIMessageBean messageBean) {}
     public void addMessage(TUIMessageBean messageBean, String chatId) {}
+    public void onMessageChanged(TUIMessageBean messageBean) {}
     public void clearC2CMessage(String userID) {}
-
 }

@@ -30,7 +30,7 @@ public class ImageReplyQuoteView extends TUIReplyQuoteView {
     protected ImageView imageMsgIv;
     protected ImageView videoPlayIv;
 
-    protected static final int DEFAULT_RADIUS = 0;
+    protected static final int DEFAULT_RADIUS = 2;
     protected final List<String> downloadEles = new ArrayList<>();
     protected String mImagePath = null;
 

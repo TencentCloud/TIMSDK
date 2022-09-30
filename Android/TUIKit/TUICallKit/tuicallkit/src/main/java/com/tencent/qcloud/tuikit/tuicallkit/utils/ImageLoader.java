@@ -38,7 +38,8 @@ public class ImageLoader {
         loadImage(context, imageView, url, errorResId, radius);
     }
 
-    public static void loadImage(Context context, ImageView imageView, String url, @DrawableRes int errorResId, int radius) {
+    public static void loadImage(Context context, ImageView imageView, String url, @DrawableRes int errorResId,
+                                 int radius) {
         if (TextUtils.isEmpty(url)) {
             if (imageView != null && errorResId != 0) {
                 imageView.setImageResource(errorResId);
@@ -69,14 +70,6 @@ public class ImageLoader {
             e.printStackTrace();
         }
         return null;
-    }
-
-    public static void loadImageThumbnail(Context context, ImageView imageView, String url, @DrawableRes int resourceId, int radius) {
-        Glide.with(context).load(url)
-                .apply(new RequestOptions().placeholder(resourceId).error(resourceId).centerCrop()
-                        .transform(new GlideRoundTransform(imageView.getContext(), radius)))
-                .thumbnail(loadTransform(imageView.getContext(), resourceId, radius))
-                .into(imageView);
     }
 
     public static void loadGifImage(Context context, ImageView imageView, String url) {
@@ -116,7 +109,9 @@ public class ImageLoader {
         }
 
         private static Bitmap roundCrop(BitmapPool pool, Bitmap source) {
-            if (source == null) return null;
+            if (source == null) {
+                return null;
+            }
 
             Bitmap result = pool.get(source.getWidth(), source.getHeight(), Bitmap.Config.ARGB_8888);
             if (result == null) {

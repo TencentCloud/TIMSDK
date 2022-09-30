@@ -52,6 +52,8 @@
     <string name="profile_video_chat">视频通话</string>
     <string name="profile_clear_message">清除聊天记录</string>
     <string name="profile_delete_friend">删除好友</string>
+    <string name="profile_chat_background">设置当前聊天背景</string>
+    <string name="chat_background_title">更换背景</string>
 
     <string name="contact_signature_tag">个性签名：</string>
     <string name="contact_no_status">暂无个性签名</string>
@@ -118,4 +120,27 @@
     <string name="contact_no_group">暂无群聊</string>
     <string name="contact_no_block_list">暂无黑名单好友</string>
 
+    <string name="group_choose_avatar">选择头像</string>
+    <string name="group_avatar_text">群头像</string>
+    <string name="group_name_text">群名称</string>
+    <string name="modify_group_id">修改群 ID</string>
+    <string name="group_id_option">群ID (选填)</string>
+    <string name="group_type_text">群类型</string>
+    <string name="group_created">创建</string>
+    <string name="group_type_select_text">选择群类型</string>
+    <string name="group_work_type">好友工作群(Work)</string>
+    <string name="group_work_content">好友工作群(Work）：类似普通微信群，创建后仅支持已在群内的好友邀请加群，且无需被邀请方同意或群主审批。</string>
+    <string name="group_public_type">陌生人社交群(Public)</string>
+    <string name="group_public_des">陌生人社交群(Public）：类似 QQ 群，创建后群主可以指定群管理员，用户搜索群 ID 发起加群申请后，需要群主或管理员审批通过才能入群。</string>
+    <string name="group_meeting_type">临时会议群(Meeting)</string>
+    <string name="group_meeting_des">临时会议群(Meeting）：创建后可以随意进出，且支持查看入群前消息；适用于音视频会议场景、在线教育场景等与实时音视频产品结合的场景。</string>
+    <string name="group_commnity_type">社群(Community)</string>
+    <string name="group_commnity_des">社群(Community)：创建后可以随意进出，最多支持100000人，支持历史消息存储，用户搜索群 ID 发起加群申请后，无需管理员审批即可进群。</string>
+    <string name="group_name_edit_null_tips">群组名称不能为空!</string>
+    <string name="group_name_edit_exceed_tips">群组名称最长 30 字节!</string>
+    <string name="group_id_edit_format_tips">群组 ID 前缀不能为 @TGS# !</string>
+    <string name="group_id_edit_exceed_tips">群组 ID 最长 48 字节!</string>
+    <string name="group_type_content_title">详见产品文档</string>
+    <string name="group_type_content_url">产品文档</string>
+    <string name="group_type_content_button">查看产品文档</string>
 </resources>

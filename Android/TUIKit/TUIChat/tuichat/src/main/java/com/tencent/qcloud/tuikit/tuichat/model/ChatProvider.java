@@ -65,6 +65,8 @@ public class ChatProvider {
     private static final String TAG = ChatProvider.class.getSimpleName();
 
     public static final int ERR_REVOKE_TIME_LIMIT_EXCEED = BaseConstants.ERR_REVOKE_TIME_LIMIT_EXCEED;
+    public static final int ERR_REVOKE_TIME_LIMIT_SVR_GROUP = BaseConstants.ERR_SVR_GROUP_REVOKE_MSG_TIME_LIMIT;
+    public static final int ERR_REVOKE_TIME_LIMIT_SVR_MESSAGE = BaseConstants.ERR_SVR_MSG_REVOKE_TIME_LIMIT;
 
     public void loadC2CMessage(String userId, int count, TUIMessageBean lastMessageInfo, IUIKitCallback<List<TUIMessageBean>> callBack) {
         V2TIMMessage lastTIMMsg = null;
@@ -425,34 +427,6 @@ public class ChatProvider {
         });
     }
 
-    public void createGroup(GroupInfo groupInfo, IUIKitCallback<String> callback) {
-        V2TIMGroupInfo v2TIMGroupInfo = new V2TIMGroupInfo();
-        v2TIMGroupInfo.setGroupType(groupInfo.getGroupType());
-        v2TIMGroupInfo.setGroupName(groupInfo.getGroupName());
-        v2TIMGroupInfo.setGroupAddOpt(groupInfo.getJoinType());
-
-        List<V2TIMCreateGroupMemberInfo> v2TIMCreateGroupMemberInfoList = new ArrayList<>();
-        for (int i = 0; i < groupInfo.getMemberDetails().size(); i++) {
-            GroupMemberInfo groupMemberInfo = groupInfo.getMemberDetails().get(i);
-            V2TIMCreateGroupMemberInfo v2TIMCreateGroupMemberInfo = new V2TIMCreateGroupMemberInfo();
-            v2TIMCreateGroupMemberInfo.setUserID(groupMemberInfo.getAccount());
-            v2TIMCreateGroupMemberInfoList.add(v2TIMCreateGroupMemberInfo);
-        }
-
-        V2TIMManager.getGroupManager().createGroup(v2TIMGroupInfo, v2TIMCreateGroupMemberInfoList, new V2TIMValueCallback<String>() {
-            @Override
-            public void onError(int code, String desc) {
-                TUIChatLog.e(TAG, "createGroup failed, code: " + code + "|desc: " + ErrorMessageConverter.convertIMError(code, desc));
-                TUIChatUtils.callbackOnError(callback, TAG, code, desc);
-            }
-
-            @Override
-            public void onSuccess(final String groupId) {
-
-            }
-        });
-    }
-
     public void sendGroupTipsMessage(String groupId, String message, IUIKitCallback<TUIMessageBean> callback) {
         V2TIMMessage createTips = ChatMessageBuilder.buildGroupCustomMessage(message);
         V2TIMManager.getMessageManager().sendMessage(createTips, null, groupId,
@@ -721,6 +695,7 @@ public class ChatProvider {
                     ReactUserBean reactUserBean = new ReactUserBean();
                     reactUserBean.setUserId(result.getFriendInfo().getUserID());
                     reactUserBean.setFriendRemark(result.getFriendInfo().getFriendRemark());
+                    reactUserBean.setFaceUrl(result.getFriendInfo().getUserProfile().getFaceUrl());
                     if (result.getFriendInfo().getUserProfile() != null) {
                         reactUserBean.setNikeName(result.getFriendInfo().getUserProfile().getNickName());
                     }

@@ -14,9 +14,11 @@ import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.interfaces.ITUIExtension;
 import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
 import com.tencent.qcloud.tuicore.interfaces.ITUIService;
+import com.tencent.qcloud.tuikit.TUICommonDefine;
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine;
+import com.tencent.qcloud.tuikit.tuicallengine.TUICallEngine;
 import com.tencent.qcloud.tuikit.tuicallengine.utils.TUICallingConstants;
-import com.tencent.qcloud.tuikit.tuicallkit.ui.R;
+import com.tencent.qcloud.tuikit.tuicallkit.R;
 import com.tencent.qcloud.tuikit.tuicallkit.TUICallKit;
 
 import java.util.ArrayList;
@@ -68,6 +70,21 @@ final class TUICallingService implements ITUINotification, ITUIService, ITUIExte
             boolean enableFloatWindow = (boolean) param.get(TUIConstants.TUICalling.PARAM_NAME_ENABLE_FLOAT_WINDOW);
             Log.i(TAG, "onCall, enableFloatWindow: " + enableFloatWindow);
             mTUICallKit.enableFloatWindow(enableFloatWindow);
+            return null;
+        }
+
+        if (null != param && TextUtils.equals(TUIConstants.TUICalling.METHOD_NAME_ENABLE_MULTI_DEVICE, method)) {
+            boolean enable = (boolean) param.get(TUIConstants.TUICalling.PARAM_NAME_ENABLE_MULTI_DEVICE);
+            Log.i(TAG, "onCall, enableMultiDevice: " + enable);
+            TUICallEngine.createInstance(appContext).enableMultiDeviceAbility(enable, new TUICommonDefine.Callback() {
+                @Override
+                public void onSuccess() {
+                }
+
+                @Override
+                public void onError(int errCode, String errMsg) {
+                }
+            });
             return null;
         }
 

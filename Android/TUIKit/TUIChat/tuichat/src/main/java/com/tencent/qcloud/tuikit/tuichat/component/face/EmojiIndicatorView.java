@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
 
@@ -34,7 +35,7 @@ public class EmojiIndicatorView extends LinearLayout {
         super(context, attrs);
         this.mContext = context;
         this.setOrientation(HORIZONTAL);
-        mMaxHeight = FaceManager.dip2px(mContext, mHeight);
+        mMaxHeight = ScreenUtil.dip2px(mHeight);
         bmpSelect = BitmapFactory.decodeResource(getResources(), R.drawable.indicator_point_select);
         bmpNomal = BitmapFactory.decodeResource(getResources(), R.drawable.indicator_point_nomal);
     }

@@ -20,6 +20,7 @@ public class GeneralConfig {
     private boolean quoteEnable = true;
 
     private boolean enableFloatWindowForCall = true;
+    private boolean enableMultiDeviceForCall = false;
 
     /**
      * 是否开启音视频通话悬浮窗
@@ -31,6 +32,14 @@ public class GeneralConfig {
 
     public boolean isEnableFloatWindowForCall() {
         return enableFloatWindowForCall;
+    }
+
+    public void setEnableMultiDeviceForCall(boolean enableMultiDeviceForCall) {
+        this.enableMultiDeviceForCall = enableMultiDeviceForCall;
+    }
+
+    public boolean isEnableMultiDeviceForCall() {
+        return enableMultiDeviceForCall;
     }
 
     public void setReactEnable(boolean reactEnable) {

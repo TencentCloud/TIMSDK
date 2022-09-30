@@ -66,7 +66,9 @@ public class DeviceUtils {
         }
         ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningServiceInfo> info = am.getRunningServices(0x7FFFFFFF);
-        if (info == null || info.size() == 0) return false;
+        if (info == null || info.size() == 0) {
+            return false;
+        }
         for (ActivityManager.RunningServiceInfo aInfo : info) {
             if (className.equals(aInfo.service.getClassName())) {
                 return true;

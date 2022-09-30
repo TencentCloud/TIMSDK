@@ -300,7 +300,6 @@ public class ConversationProvider {
     public void loadConversationUserStatus(List<ConversationInfo> dataSource, IUIKitCallback<Void> callback) {
         if (dataSource == null || dataSource.size() == 0) {
             TUIConversationLog.d(TAG, "loadConversationUserStatus datasource is null");
-            TUIConversationUtils.callbackOnSuccess(callback, null);
             return;
         }
 
@@ -313,9 +312,14 @@ public class ConversationProvider {
             userList.add(itemBean.getId());
             dataSourceMap.put(itemBean.getId(), itemBean);
         }
+        if (userList.isEmpty()) {
+            TUIConversationLog.d(TAG, "loadConversationUserStatus userList is empty");
+            return;
+        }
         V2TIMManager.getInstance().getUserStatus(userList, new V2TIMValueCallback<List<V2TIMUserStatus>>() {
             @Override
             public void onSuccess(List<V2TIMUserStatus> v2TIMUserStatuses) {
+                TUIConversationLog.i(TAG, "getUserStatus success");
                 for (V2TIMUserStatus item : v2TIMUserStatuses) {
                     ConversationInfo bean = dataSourceMap.get(item.getUserID());
                     if (bean != null) {

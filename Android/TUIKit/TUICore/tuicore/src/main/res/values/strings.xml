@@ -14,5 +14,10 @@
     <string name="sure">Confirm</string>
     <string name="core_permission_dialog_title">Authorization Request</string>
     <string name="core_permission_dialog_positive_setting_text">Settings</string>
+    <string name="setting">setting</string>
+    <string name="setting_fail">Setup failed！</string>
+    <string name="setting_success">Setup Success！</string>
+    <string name="default_text">Default</string>
+    <string name="core_next_step">Next step</string>
 
 </resources>

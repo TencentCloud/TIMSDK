@@ -36,13 +36,6 @@
 
     </declare-styleable>
 
-    <declare-styleable name="RoundFrameLayout" parent="RoundCornerImageView">
-        <attr name="corner_radius" format="dimension" />
-        <attr name="left_top_corner_radius" format="dimension" />
-        <attr name="right_top_corner_radius" format="dimension" />
-        <attr name="right_bottom_corner_radius" format="dimension" />
-        <attr name="left_bottom_corner_radius" format="dimension" />
-    </declare-styleable>
 
 
     <declare-styleable name="CommunityExperienceView">

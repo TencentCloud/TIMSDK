@@ -74,11 +74,14 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
     private LineControllerView mTopSwitchView;
     private LineControllerView mMsgRevOptionSwitchView;
     private LineControllerView mFoldGroupChatSwitchView;
+    private LineControllerView mChatBackground;
     private View mLayoutFold;
     private TextView mDissolveBtn;
     private TextView mClearMsgBtn;
     private TextView mChangeOwnerBtn;
     private GridView memberList;
+
+    private OnButtonClickListener mListener;
 
     private GroupInfo mGroupInfo;
     private GroupInfoPresenter mPresenter;
@@ -191,6 +194,10 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
         // 转让群主
         mChangeOwnerBtn = findViewById(R.id.group_change_owner_button);
         mChangeOwnerBtn.setOnClickListener(this);
+
+        mChatBackground = findViewById(R.id.chat_background);
+        mChatBackground.setOnClickListener(this);
+        mChatBackground.setCanNav(true);
     }
 
     private void initView() {
@@ -412,12 +419,16 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
             ArrayList<String> excludeList = new ArrayList<>();
             excludeList.add(TUILogin.getLoginUser());
             Intent intent = new Intent(getContext(), GroupMemberActivity.class);
-            intent.putExtra(TUIGroupConstants.Selection.IS_SELECT_MODE, true);
-            intent.putExtra(TUIGroupConstants.Group.GROUP_INFO, mGroupInfo);
-            intent.putExtra(TUIGroupConstants.Selection.LIMIT, 1);
-            intent.putExtra(TUIGroupConstants.Selection.EXCLUDE_LIST, excludeList);
-            intent.putExtra(TUIGroupConstants.Selection.TITLE, getResources().getString(R.string.group_transfer_group_owner));
+            intent.putExtra(TUIConstants.TUIGroup.IS_SELECT_MODE, true);
+            intent.putExtra(TUIConstants.TUIGroup.GROUP_ID, mGroupInfo.getId());
+            intent.putExtra(TUIConstants.TUIGroup.LIMIT, 1);
+            intent.putExtra(TUIConstants.TUIGroup.EXCLUDE_LIST, excludeList);
+            intent.putExtra(TUIConstants.TUIGroup.TITLE, getResources().getString(R.string.group_transfer_group_owner));
             ((Activity) getContext()).startActivityForResult(intent, GroupInfoActivity.REQUEST_FOR_CHANGE_OWNER);
+        } else if (v.getId() == R.id.chat_background) {
+            if (mListener != null) {
+                mListener.onSetChatBackground();
+            }
         }
     }
 
@@ -656,6 +667,14 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
     @Override
     public void setParentLayout(Object parent) {
 
+    }
+
+    public void setOnButtonClickListener(OnButtonClickListener l) {
+        mListener = l;
+    }
+
+    public interface OnButtonClickListener {
+        default void onSetChatBackground() {};
     }
 
 }

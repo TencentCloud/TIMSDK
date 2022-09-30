@@ -123,6 +123,17 @@ public class GlideEngine {
                 .get();
     }
 
+    public static Bitmap loadBitmap(Object imageUrl, int width, int height) throws InterruptedException, ExecutionException {
+        if (imageUrl == null) {
+            return null;
+        }
+        return Glide.with(TUILogin.getAppContext()).asBitmap()
+                .load(imageUrl)
+                .apply(new RequestOptions().error(TUIThemeManager.getAttrResId(TUILogin.getAppContext(), R.attr.core_default_user_icon)))
+                .into(width, height)
+                .get();
+    }
+
 
     public void loadImage(Context context, int resizeX, int resizeY, ImageView imageView, Uri uri) {
         Glide.with(context)

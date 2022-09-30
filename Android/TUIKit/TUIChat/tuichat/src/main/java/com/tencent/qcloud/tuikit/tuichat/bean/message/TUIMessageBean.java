@@ -17,7 +17,7 @@ import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
 
 import java.io.Serializable;
 
-public abstract class TUIMessageBean implements Serializable, Comparable<TUIMessageBean> {
+public abstract class TUIMessageBean implements Serializable {
      /**
       * 消息正常状态
       *
@@ -379,28 +379,4 @@ public abstract class TUIMessageBean implements Serializable, Comparable<TUIMess
           return null;
      }
 
-     @Override
-     public int compareTo(TUIMessageBean messageBean) {
-          if (TextUtils.equals(getId(), messageBean.getId())) {
-               return 0;
-          }
-
-          if (messageBean.isGroup()) {
-               if (getMsgSeq() > messageBean.getMsgSeq()) {
-                    return 1;
-               } else if (getMsgSeq() == messageBean.getMsgSeq()) {
-                    return 0;
-               } else {
-                    return -1;
-               }
-          } else {
-               if (getMessageTime() > messageBean.getMessageTime()) {
-                    return 1;
-               } else if (getMessageTime() == messageBean.getMessageTime()) {
-                    return 0;
-               } else {
-                    return -1;
-               }
-          }
-     }
 }

@@ -7,6 +7,7 @@ public class TUIOfflinePushParamBean {
     public String vivoPushBussinessId;
     public String fcmPushBussinessId;
     public String oppoPushBussinessId, oppoPushAppKey, oppoPushAppSecret;
+    public String honorPushBussinessId;
 
     // huawei
     public String getHuaweiPushBussinessId() {
@@ -117,5 +118,14 @@ public class TUIOfflinePushParamBean {
 
     public void setOppoPushBussinessId(String oppoPushBussinessId) {
         this.oppoPushBussinessId = oppoPushBussinessId;
+    }
+
+    // honor
+    public String getHonorPushBussinessId() {
+        return honorPushBussinessId;
+    }
+
+    public void setHonorPushBussinessId(String honorPushBussinessId) {
+        this.honorPushBussinessId = honorPushBussinessId;
     }
 }

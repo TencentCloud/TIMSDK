@@ -19,17 +19,16 @@ import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.bean.UserInfo;
 import com.tencent.qcloud.tim.demo.utils.Constants;
-import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
-import com.tencent.qcloud.tuicore.component.activities.ImageSelectActivity;
-import com.tencent.qcloud.tuicore.component.dialog.TUIKitDialog;
-import com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView;
-import com.tencent.qcloud.tuicore.component.popupcard.PopupInputCard;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tuicore.component.LineControllerView;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
+import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
+import com.tencent.qcloud.tuicore.component.activities.ImageSelectActivity;
 import com.tencent.qcloud.tuicore.component.activities.SelectionActivity;
+import com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView;
 import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
 import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
+import com.tencent.qcloud.tuicore.component.popupcard.PopupInputCard;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
@@ -37,7 +36,6 @@ import com.tencent.qcloud.tuicore.util.ToastUtil;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Random;
 import java.util.regex.Pattern;
 
 public class SelfDetailActivity extends BaseLightActivity implements View.OnClickListener {
@@ -152,19 +150,21 @@ public class SelfDetailActivity extends BaseLightActivity implements View.OnClic
     @Override
     public void onClick(View v) {
         if (v == selfIcon || v == faceArea) {
-            ArrayList<String> faceList = new ArrayList<>();
+            ArrayList<ImageSelectActivity.ImageBean> faceList = new ArrayList<>();
             for (int i = 0; i < Constants.AVATAR_FACE_COUNT; i++) {
-                faceList.add(String.format(Constants.AVATAR_FACE_URL, (i + 1) + ""));
+                ImageSelectActivity.ImageBean imageBean= new ImageSelectActivity.ImageBean();
+                imageBean.setThumbnailUri(String.format(Constants.AVATAR_FACE_URL, (i + 1) + ""));
+                imageBean.setImageUri(String.format(Constants.AVATAR_FACE_URL, (i + 1) + ""));
+                faceList.add(imageBean);
             }
 
             Intent intent = new Intent(SelfDetailActivity.this, ImageSelectActivity.class);
             intent.putExtra(ImageSelectActivity.TITLE, getString(R.string.demo_choose_avatar));
             intent.putExtra(ImageSelectActivity.SPAN_COUNT, 4);
-            intent.putExtra(ImageSelectActivity.PLACEHOLDER, R.drawable.core_default_user_icon_light);
             intent.putExtra(ImageSelectActivity.ITEM_WIDTH, ScreenUtil.dip2px(77));
             intent.putExtra(ImageSelectActivity.ITEM_HEIGHT, ScreenUtil.dip2px(77));
             intent.putExtra(ImageSelectActivity.DATA, faceList);
-            intent.putExtra(ImageSelectActivity.SELECTED, faceUrl);
+            intent.putExtra(ImageSelectActivity.SELECTED, new ImageSelectActivity.ImageBean(faceUrl, faceUrl, false));
             startActivityForResult(intent, CHOOSE_AVATAR_REQUEST_CODE);
         } else if (v == nickNameLv) {
             PopupInputCard popupInputCard = new PopupInputCard(this);
@@ -249,11 +249,9 @@ public class SelfDetailActivity extends BaseLightActivity implements View.OnClic
         V2TIMUserFullInfo v2TIMUserFullInfo = new V2TIMUserFullInfo();
         if (!TextUtils.isEmpty(faceUrl)) {
             v2TIMUserFullInfo.setFaceUrl(faceUrl);
-            UserInfo.getInstance().setAvatar(faceUrl);
         }
 
         v2TIMUserFullInfo.setNickname(nickName);
-        UserInfo.getInstance().setName(nickName);
 
         if (birthday != 0) {
             v2TIMUserFullInfo.setBirthday(birthday);
@@ -273,6 +271,10 @@ public class SelfDetailActivity extends BaseLightActivity implements View.OnClic
             @Override
             public void onSuccess() {
                 DemoLog.i(TAG, "modifySelfProfile success");
+                if (!TextUtils.isEmpty(faceUrl)) {
+                    UserInfo.getInstance().setAvatar(faceUrl);
+                }
+                UserInfo.getInstance().setName(nickName);
             }
         });
     }
@@ -282,7 +284,12 @@ public class SelfDetailActivity extends BaseLightActivity implements View.OnClic
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CHOOSE_AVATAR_REQUEST_CODE && resultCode == ImageSelectActivity.RESULT_CODE_SUCCESS) {
             if (data != null) {
-                faceUrl = data.getStringExtra(ImageSelectActivity.DATA);
+                ImageSelectActivity.ImageBean imageBean = (ImageSelectActivity.ImageBean) data.getSerializableExtra(ImageSelectActivity.DATA);
+                if (imageBean == null) {
+                    return;
+                }
+
+                faceUrl = imageBean.getImageUri();
                 updateProfile();
             }
         }

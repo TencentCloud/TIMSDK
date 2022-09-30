@@ -14,11 +14,10 @@ import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.presenter.GroupChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemClickListener;
-import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
+import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
 public class TUIGroupChatFragment extends TUIBaseChatFragment {
     private static final String TAG = TUIGroupChatFragment.class.getSimpleName();
@@ -103,6 +102,22 @@ public class TUIGroupChatFragment extends TUIBaseChatFragment {
             public void onTextSelected(View view, int position, TUIMessageBean messageInfo) {
                 chatView.getMessageLayout().setSelectedPosition(position);
                 chatView.getMessageLayout().showItemPopMenu(position - 1, messageInfo, view);
+            }
+        });
+
+        chatView.getTitleBar().setOnRightClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (TUIChatUtils.isTopicGroup(groupInfo.getId())) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString(TUIConstants.TUICommunity.TOPIC_ID, groupInfo.getId());
+                    TUICore.startActivity(getContext(), "TopicInfoActivity", bundle);
+                } else {
+                    Bundle bundle = new Bundle();
+                    bundle.putString(TUIChatConstants.Group.GROUP_ID, groupInfo.getId());
+                    bundle.putString(TUIConstants.TUIChat.CHAT_BACKGROUND_URI, mChatBackgroundThumbnailUrl);
+                    TUICore.startActivity(getContext(), "GroupInfoActivity", bundle);
+                }
             }
         });
     }

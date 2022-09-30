@@ -1,5 +1,7 @@
 package com.tencent.qcloud.tuikit.tuicontact.component.indexlib.IndexBar.bean;
 
+import android.text.TextUtils;
+
 import com.tencent.qcloud.tuikit.tuicontact.component.indexlib.suspension.ISuspensionInterface;
 
 import java.io.Serializable;
@@ -20,6 +22,9 @@ public abstract class BaseIndexBean implements ISuspensionInterface, Serializabl
 
     @Override
     public String getSuspensionTag() {
+        if (TextUtils.isEmpty(baseIndexTag)) {
+            return "";
+        }
         return baseIndexTag;
     }
 

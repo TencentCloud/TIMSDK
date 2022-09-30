@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.TUICommonDefine;
-import com.tencent.qcloud.tuikit.tuicallkit.ui.R;
+import com.tencent.qcloud.tuikit.tuicallkit.R;
 
 public class TUICallingAudioFunctionView extends BaseFunctionView {
     private LinearLayout mLayoutMute;

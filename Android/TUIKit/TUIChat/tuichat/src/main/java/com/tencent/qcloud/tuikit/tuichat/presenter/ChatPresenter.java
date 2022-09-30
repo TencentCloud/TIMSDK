@@ -54,6 +54,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -103,7 +104,11 @@ public abstract class ChatPresenter {
 
     // 标识是否有 更新的 消息没有更新下来
     // Identifies whether there is an updated message that has not been updated
-    protected boolean isHaveMoreNewMessage = false;
+    protected boolean isHaveMoreNewMessage = true;
+
+    // 标识是否有 更旧的 消息没有更新下来
+    // Identifies if there are older messages that have not been updated
+    protected boolean isHaveMoreOldMessage = true;
 
     protected boolean isLoading = false;
 
@@ -125,23 +130,31 @@ public abstract class ChatPresenter {
     }
 
     public void loadMessage(int type, TUIMessageBean locateMessage) {
+        if (type == TUIChatConstants.GET_MESSAGE_BACKWARD && !isHaveMoreNewMessage) {
+            return;
+        }
+        if (type == TUIChatConstants.GET_MESSAGE_FORWARD && !isHaveMoreOldMessage) {
+            updateAdapter(MessageRecyclerView.DATA_CHANGE_TYPE_ADD_FRONT, 0);
+            return;
+        }
         loadMessage(type, locateMessage, null);
     }
 
-    public void loadMessage(int type, TUIMessageBean locateMessage, IUIKitCallback<List<TUIMessageBean>> callback) {};
+    public void loadMessage(int type, TUIMessageBean locateMessage, IUIKitCallback<List<TUIMessageBean>> callback) {}
 
     public void clearMessage() {
         loadedMessageInfoList.clear();
         messageListAdapter.onViewNeedRefresh(MessageRecyclerView.DATA_CHANGE_TYPE_REFRESH, 0);
     }
 
-    public void clearMessageAndReLoad() {
+    public void scrollToNewestMessage() {
         if (!isHaveMoreNewMessage) {
             messageListAdapter.onScrollToEnd();
             return;
         }
         loadedMessageInfoList.clear();
         messageListAdapter.onViewNeedRefresh(MessageRecyclerView.DATA_CHANGE_TYPE_REFRESH, 0);
+        isHaveMoreOldMessage = true;
         loadMessage(TUIChatConstants.GET_MESSAGE_FORWARD, null);
     }
 
@@ -206,6 +219,7 @@ public abstract class ChatPresenter {
                     return;
                 }
                 loadedMessageInfoList.clear();
+                updateAdapter(MessageRecyclerView.DATA_CHANGE_TYPE_REFRESH, 0);
                 loadMessage(TUIChatConstants.GET_MESSAGE_LOCATE, data, new IUIKitCallback<List<TUIMessageBean>>() {
                     @Override
                     public void onSuccess(List<TUIMessageBean> data) {
@@ -262,6 +276,11 @@ public abstract class ChatPresenter {
                 provider.loadHistoryMessageList(chatId, isGroup, loadCount / 2, locateMessageInfo, TUIChatConstants.GET_MESSAGE_BACKWARD, new IUIKitCallback<List<TUIMessageBean>>() {
                     @Override
                     public void onSuccess(List<TUIMessageBean> firstData) {
+                        if (firstData.size() >= loadCount / 2) {
+                            isHaveMoreNewMessage = true;
+                        } else {
+                            isHaveMoreNewMessage = false;
+                        }
                         firstLoadedData.addAll(firstData);
                         latch.countDown();
                     }
@@ -284,6 +303,9 @@ public abstract class ChatPresenter {
                 provider.loadHistoryMessageList(chatId, isGroup, loadCount / 2, locateMessageInfo, TUIChatConstants.GET_MESSAGE_FORWARD, new IUIKitCallback<List<TUIMessageBean>>() {
                     @Override
                     public void onSuccess(List<TUIMessageBean> secondData) {
+                        if (secondData.size() < loadCount / 2) {
+                            isHaveMoreOldMessage = false;
+                        }
                         secondLoadedData.addAll(secondData);
                         latch.countDown();
                     }
@@ -388,17 +410,7 @@ public abstract class ChatPresenter {
     }
 
     protected void processLoadedMessage(List<TUIMessageBean> data, int type) {
-
-        List<TUIMessageBean> list = new ArrayList<>();
-        for (int i = 0; i < data.size(); i++) {
-            TUIMessageBean info = data.get(i);
-            if (checkExist(info)) {
-                continue;
-            }
-            list.add(info);
-        }
-
-        preProcessMessage(list, new IUIKitCallback<List<TUIMessageBean>>() {
+        preProcessMessage(data, new IUIKitCallback<List<TUIMessageBean>>() {
             @Override
             public void onSuccess(List<TUIMessageBean> processedData) {
                 onLoadedMessageProcessed(processedData, type);
@@ -416,9 +428,30 @@ public abstract class ChatPresenter {
     }
 
     private void removeDuplication(List<TUIMessageBean> messageBeans) {
-        TreeSet set = new TreeSet(messageBeans);
-        messageBeans.clear();
-        messageBeans.addAll(set);
+        onMessageListDeleted(messageBeans);
+    }
+
+    private void onMessageListDeleted(List<TUIMessageBean> messageBeanList) {
+        if (messageBeanList == null || messageBeanList.isEmpty()) {
+            return;
+        }
+        for (TUIMessageBean messageBean : messageBeanList) {
+            onMessageDeleted(messageBean);
+        }
+    }
+
+    private void onMessageDeleted(TUIMessageBean messageBean) {
+        if (messageBean == null) {
+            return;
+        }
+        Iterator<TUIMessageBean> iterator = loadedMessageInfoList.listIterator();
+        while (iterator.hasNext()) {
+            TUIMessageBean loadedMessageBean = iterator.next();
+            if (TextUtils.equals(loadedMessageBean.getId(), messageBean.getId())) {
+                updateAdapter(MessageRecyclerView.DATA_CHANGE_TYPE_DELETE, loadedMessageBean);
+                iterator.remove();
+            }
+        }
     }
 
     private void onLoadedMessageProcessed(List<TUIMessageBean> data, int type) {
@@ -430,8 +463,8 @@ public abstract class ChatPresenter {
             Collections.reverse(data);
         }
         if (isForward || isTwoWay || isLocate) {
+            removeDuplication(data);
             loadedMessageInfoList.addAll(0, data);
-            removeDuplication(loadedMessageInfoList);
             if (isForward) {
                 // 如果是初次加载，要强制跳转到底部
                 // If it is the first load, force jump to the bottom
@@ -446,8 +479,8 @@ public abstract class ChatPresenter {
                 updateAdapter(MessageRecyclerView.DATA_CHANGE_SCROLL_TO_POSITION, locateMessage);
             }
         } else {
+            removeDuplication(data);
             loadedMessageInfoList.addAll(data);
-            removeDuplication(loadedMessageInfoList);
             updateAdapter(MessageRecyclerView.DATA_CHANGE_TYPE_ADD_BACK, data.size());
         }
 
@@ -817,15 +850,13 @@ public abstract class ChatPresenter {
         }
     }
 
-    public void sendTypingStatusMessage(TUIMessageBean message, String receiver, IUIKitCallback<TUIMessageBean> callBack) {
-
-    }
+    public void sendTypingStatusMessage(TUIMessageBean message, String receiver, IUIKitCallback<TUIMessageBean> callBack) {}
 
     public boolean isSupportTyping(long time) {
         return false;
     }
 
-    private void updateMessageInfo(TUIMessageBean messageInfo) {
+    protected void updateMessageInfo(TUIMessageBean messageInfo) {
         for (int i = 0; i < loadedMessageInfoList.size(); i++) {
             if (loadedMessageInfoList.get(i) == null) {
                 continue;
@@ -839,18 +870,7 @@ public abstract class ChatPresenter {
     }
 
     private void resendMessageInfo(TUIMessageBean messageInfo) {
-        boolean found = false;
-        for (int i = 0; i < loadedMessageInfoList.size(); i++) {
-            if (loadedMessageInfoList.get(i).getId().equals(messageInfo.getId())) {
-                loadedMessageInfoList.remove(i);
-                updateAdapter(MessageRecyclerView.DATA_CHANGE_TYPE_DELETE, i);
-                found = true;
-                break;
-            }
-        }
-        if (!found) {
-            return;
-        }
+        onMessageDeleted(messageInfo);
         addMessageInfo(messageInfo);
     }
 
@@ -866,9 +886,7 @@ public abstract class ChatPresenter {
         provider.deleteMessages(msgs, new IUIKitCallback<Void>() {
             @Override
             public void onSuccess(Void data) {
-                int index = loadedMessageInfoList.indexOf(messageInfo);
-                loadedMessageInfoList.remove(messageInfo);
-                updateAdapter(MessageRecyclerView.DATA_CHANGE_TYPE_DELETE, index);
+                onMessageDeleted(messageInfo);
             }
 
             @Override
@@ -1038,15 +1056,7 @@ public abstract class ChatPresenter {
         provider.deleteMessages(messageInfos, new IUIKitCallback<Void>() {
             @Override
             public void onSuccess(Void data) {
-                for (int i = loadedMessageInfoList.size() -1; i >= 0 ; i--) {
-                    for (int j = messageInfos.size() -1; j >= 0; j--) {
-                        if (loadedMessageInfoList.get(i).getId().equals(messageInfos.get(j).getId())) {
-                            loadedMessageInfoList.remove(i);
-                            updateAdapter(MessageRecyclerView.DATA_CHANGE_TYPE_DELETE, i);
-                            break;
-                        }
-                    }
-                }
+                onMessageListDeleted(messageInfos);
             }
 
             @Override
@@ -1069,10 +1079,7 @@ public abstract class ChatPresenter {
         provider.deleteMessages(msgs, new IUIKitCallback<Void>() {
             @Override
             public void onSuccess(Void data) {
-                for(int i = positions.size() -1 ; i >= 0; i--) {
-                    loadedMessageInfoList.remove(positions.get(i));
-                    updateAdapter(MessageRecyclerView.DATA_CHANGE_TYPE_DELETE, i);
-                }
+                onMessageListDeleted(msgs);
             }
 
             @Override
@@ -1161,7 +1168,9 @@ public abstract class ChatPresenter {
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
-                if (errCode == ChatProvider.ERR_REVOKE_TIME_LIMIT_EXCEED) {
+                if (errCode == ChatProvider.ERR_REVOKE_TIME_LIMIT_EXCEED
+                        || errCode == ChatProvider.ERR_REVOKE_TIME_LIMIT_SVR_GROUP
+                        || errCode == ChatProvider.ERR_REVOKE_TIME_LIMIT_SVR_MESSAGE) {
                     ToastUtil.toastLongMessage(TUIChatService.getAppContext().getString(R.string.send_two_mins));
                 } else {
                     ToastUtil.toastLongMessage(TUIChatService.getAppContext().getString(R.string.revoke_fail) + errCode + "=" + errMsg);
@@ -1711,6 +1720,7 @@ public abstract class ChatPresenter {
                         reactUserBean.setFriendRemark(memberInfo.getFriendRemark());
                         reactUserBean.setNameCard(memberInfo.getNameCard());
                         reactUserBean.setNikeName(memberInfo.getNickName());
+                        reactUserBean.setFaceUrl(memberInfo.getIconUrl());
                         reactUserBeanMap.put(reactUserBean.getUserId(), reactUserBean);
                     }
                     TUIChatUtils.callbackOnSuccess(callback, reactUserBeanMap);

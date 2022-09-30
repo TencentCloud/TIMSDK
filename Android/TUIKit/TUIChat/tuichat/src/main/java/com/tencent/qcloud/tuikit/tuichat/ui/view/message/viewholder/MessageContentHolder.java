@@ -23,7 +23,6 @@ import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageReactBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageRepliesBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.SelectTextHelper;
@@ -235,6 +234,14 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
                     @Override
                     public boolean onLongClick(View v) {
                         onItemClickListener.onMessageLongClick(v, position, msg);
+                        return true;
+                    }
+                });
+
+                msgArea.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        onItemClickListener.onMessageLongClick(msgArea, position, msg);
                         return true;
                     }
                 });
@@ -512,13 +519,12 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
                 msg.setSelectText(selectedText);
                 TUIChatLog.d("TextMessageHolder", "onTextSelected selectedText = " + selectedText);
                 if (onItemClickListener != null) {
-                    onItemClickListener.onTextSelected(msgContentFrame, position, msg);
+                    onItemClickListener.onTextSelected(msgArea, position, msg);
                 }
             }
 
             @Override
             public void onDismiss() {
-                msg.setSelectText(null);
                 msg.setSelectText(msg.getExtra());
             }
 

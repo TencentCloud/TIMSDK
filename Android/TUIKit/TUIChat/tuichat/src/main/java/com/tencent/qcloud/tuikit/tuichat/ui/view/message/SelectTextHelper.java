@@ -285,11 +285,7 @@ public class SelectTextHelper {
      * 全选
      */
     public void selectAll() {
-        hideSelectView();
-        selectText(0, mTextView.getText().length());
-        isHide = false;
-        showCursorHandle(mStartHandle);
-        showCursorHandle(mEndHandle);
+        showAllView();
     }
 
     /**

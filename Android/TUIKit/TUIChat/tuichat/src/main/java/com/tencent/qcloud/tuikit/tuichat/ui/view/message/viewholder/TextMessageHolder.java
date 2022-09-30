@@ -59,10 +59,10 @@ public class TextMessageHolder extends MessageContentHolder {
             }
         }
 
-        msgContentFrame.setOnLongClickListener(new View.OnLongClickListener() {
+        msgArea.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    //mSelectableTextHelper.selectAll();
+                    selectableTextHelper.selectAll();
                     return true;
                 }
             });

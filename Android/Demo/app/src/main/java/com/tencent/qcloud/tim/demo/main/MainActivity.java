@@ -428,26 +428,9 @@ public class MainActivity extends BaseLightActivity {
         action.setActionClickListener(popActionClickListener);
         action.setIconResId(R.drawable.create_c2c);
         menuActions.add(action);
-        action = new PopMenuAction();
-        action.setActionName(getResources().getString(R.string.create_private_group));
-        action.setIconResId(R.drawable.group_icon);
-        action.setActionClickListener(popActionClickListener);
-        menuActions.add(action);
 
         action = new PopMenuAction();
         action.setActionName(getResources().getString(R.string.create_group_chat));
-        action.setIconResId(R.drawable.group_icon);
-        action.setActionClickListener(popActionClickListener);
-        menuActions.add(action);
-
-        action = new PopMenuAction();
-        action.setActionName(getResources().getString(R.string.create_chat_room));
-        action.setIconResId(R.drawable.group_icon);
-        action.setActionClickListener(popActionClickListener);
-        menuActions.add(action);
-
-        action = new PopMenuAction();
-        action.setActionName(getResources().getString(R.string.create_community));
         action.setIconResId(R.drawable.group_icon);
         action.setActionClickListener(popActionClickListener);
         menuActions.add(action);

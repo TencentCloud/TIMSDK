@@ -1,10 +1,8 @@
 package com.tencent.qcloud.tuikit.tuichat.ui.page;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
 
@@ -21,6 +19,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.DraftInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupMemberInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
@@ -37,7 +36,6 @@ public abstract class TUIBaseChatActivity extends BaseLightActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chat_activity);
-
         chat(getIntent());
     }
 

@@ -44,4 +44,7 @@
     <string name="tuicalling_permission_camera_reason">Needs access to your camera, and it can be used for functions such as Video Call, Group Video Call etc. For beauty filters to work, we will collect the facial information captured by your camera in real time to detect your facial features.</string>
     <string name="tuicalling_package_not_purchased">You do not have TUICallKit package, please open the free experience in the console or purchase the official package</string>
     <string name="tuicalling_package_not_support">The package you purchased does not support this ability</string>
+    <string name="tuicalling_status_is_not_accept">You can only use this function after you accept the call</string>
+    <string name="tuicalling_groupid_is_empty">groupId is empty</string>
+    <string name="tuicalling_have_a_new_call">You have a new call</string>
 </resources>

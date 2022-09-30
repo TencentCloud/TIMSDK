@@ -12,6 +12,7 @@ import com.tencent.qcloud.tim.tuiofflinepush.interfaces.PushCallback;
 import com.tencent.qcloud.tim.tuiofflinepush.interfaces.PushSettingInterface;
 import com.tencent.qcloud.tim.tuiofflinepush.notification.ParseNotification;
 import com.tencent.qcloud.tim.tuiofflinepush.oempush.OEMPushSetting;
+import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushErrorBean;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushLog;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.BrandUtil;
 
@@ -91,6 +92,12 @@ public class TUIOfflinePushManager {
             @Override
             public void onBadgeCallback(Context context, int number) {
                 updateBadge(context, number);
+            }
+
+            @Override
+            public void onTokenErrorCallBack(TUIOfflinePushErrorBean errorBean) {
+                TUIOfflinePushLog.e(TAG, "onTokenErrorCallBack-- ");
+                uniJSCallback.invokeAndKeepAlive(errorBean);
             }
         });
         pushSetting.initPush(context);

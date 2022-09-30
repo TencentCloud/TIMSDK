@@ -5,6 +5,7 @@
 
 # Gradle files
 */.gradle/
+*.gradle/
 
 # IDEA Files
 /tuicore/.idea/
@@ -12,3 +13,8 @@
 .gradle/
 /tuicore/build/
 local.properties
+/.codecc/
+/build.yml
+*.iml
+*.idea/
+/captures

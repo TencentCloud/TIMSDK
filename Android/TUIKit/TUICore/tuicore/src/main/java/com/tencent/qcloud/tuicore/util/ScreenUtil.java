@@ -3,6 +3,7 @@ package com.tencent.qcloud.tuicore.util;
 import android.content.Context;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.WindowManager;
 
 import com.tencent.qcloud.tuicore.TUIConfig;
@@ -30,6 +31,29 @@ public class ScreenUtil {
         return (int) (dp * scale + 0.5f);
     }
 
+    public static int getRealScreenHeight(Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        DisplayMetrics dm = new DisplayMetrics();
+        display.getRealMetrics(dm);
+        return dm.heightPixels;
+    }
+
+    public static int getRealScreenWidth(Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        DisplayMetrics dm = new DisplayMetrics();
+        display.getRealMetrics(dm);
+        return dm.widthPixels;
+    }
+
+    public static int getNavigationBarHeight(Context context){
+        int resourceId = context.getResources().getIdentifier("navigation_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            return context.getResources().getDimensionPixelSize(resourceId);
+        }
+        return 0;
+    }
 
     public static int[] scaledSize(int containerWidth, int containerHeight, int realWidth, int realHeight) {
         Log.i(TAG, "scaledSize  containerWidth: " + containerWidth + " containerHeight: " + containerHeight

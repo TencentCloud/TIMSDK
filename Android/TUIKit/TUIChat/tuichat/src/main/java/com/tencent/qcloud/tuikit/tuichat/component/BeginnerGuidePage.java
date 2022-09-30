@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
+import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 
 public class BeginnerGuidePage {
@@ -53,7 +54,6 @@ public class BeginnerGuidePage {
         popupWindow.setTouchable(true);
         popupWindow.setOutsideTouchable(false);
         popupWindow.setAnimationStyle(R.style.BeginnerGuidePopupAnimation);
-
         viewPager.setUserInputEnabled(false);
         viewPager.setAdapter(new GuideAdapter());
     }
@@ -106,6 +106,12 @@ public class BeginnerGuidePage {
 
         @Override
         public void onBindViewHolder(@NonNull GuideViewHolder holder, int position) {
+            ViewGroup.LayoutParams params = holder.image.getLayoutParams();
+            if (params != null) {
+                params.width = ScreenUtil.getScreenWidth(holder.image.getContext());
+                params.height = ScreenUtil.getScreenHeight(holder.image.getContext());
+                holder.image.setLayoutParams(params);
+            }
             GlideEngine.loadImage(holder.image, resIDs[position]);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

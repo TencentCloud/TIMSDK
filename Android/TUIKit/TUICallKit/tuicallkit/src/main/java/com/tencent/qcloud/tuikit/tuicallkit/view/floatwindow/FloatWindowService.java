@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.TUILog;
-import com.tencent.qcloud.tuikit.tuicallkit.ui.R;
+import com.tencent.qcloud.tuikit.tuicallkit.R;
 
 public class FloatWindowService extends Service {
     private static final String TAG = "FloatWindowService";
@@ -83,7 +83,7 @@ public class FloatWindowService extends Service {
 
     private void initWindow() {
         mWindowManager = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
-        mWindowLayoutParams = getParams();
+        mWindowLayoutParams = getViewParams();
         mScreenWidth = mWindowManager.getDefaultDisplay().getWidth();
 
         TUILog.i(TAG, "initWindow: mCallView = " + mCallView);
@@ -95,7 +95,7 @@ public class FloatWindowService extends Service {
         }
     }
 
-    private WindowManager.LayoutParams getParams() {
+    private WindowManager.LayoutParams getViewParams() {
         mWindowLayoutParams = new WindowManager.LayoutParams();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             mWindowLayoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
@@ -181,7 +181,8 @@ public class FloatWindowService extends Service {
                     mWindowLayoutParams.x = (int) (start * (1 - animation.getAnimatedFraction()));
                     mCallView.setBackgroundResource(R.drawable.tuicalling_bg_floatwindow_left);
                 } else {
-                    mWindowLayoutParams.x = (int) (start + (mScreenWidth - start - mWidth) * animation.getAnimatedFraction());
+                    float end = (mScreenWidth - start - mWidth) * animation.getAnimatedFraction();
+                    mWindowLayoutParams.x = (int) (start + end);
                     mCallView.setBackgroundResource(R.drawable.tuicalling_bg_floatwindow_right);
                 }
                 calculateHeight();

@@ -78,9 +78,12 @@ public class CreateCommunityActivity extends BaseLightActivity {
         selectTextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<String> coverList = new ArrayList<>();
+                ArrayList<ImageSelectActivity.ImageBean> coverList = new ArrayList<>();
                 for (int i = 0; i < CommunityConstants.COVER_COUNT; i++) {
-                    coverList.add(String.format(CommunityConstants.COVER_URL, (i + 1) + ""));
+                    ImageSelectActivity.ImageBean imageBean= new ImageSelectActivity.ImageBean();
+                    imageBean.setThumbnailUri(String.format(CommunityConstants.COVER_URL, (i + 1) + ""));
+                    imageBean.setImageUri(String.format(CommunityConstants.COVER_URL, (i + 1) + ""));
+                    coverList.add(imageBean);
                 }
 
                 Intent intent = new Intent(CreateCommunityActivity.this, ImageSelectActivity.class);
@@ -95,9 +98,12 @@ public class CreateCommunityActivity extends BaseLightActivity {
         faceSelectArea.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<String> faceList = new ArrayList<>();
+                ArrayList<ImageSelectActivity.ImageBean> faceList = new ArrayList<>();
                 for (int i = 0; i < CommunityConstants.GROUP_FACE_COUNT; i++) {
-                    faceList.add(String.format(CommunityConstants.GROUP_FACE_URL, (i + 1) + ""));
+                    ImageSelectActivity.ImageBean imageBean= new ImageSelectActivity.ImageBean();
+                    imageBean.setThumbnailUri(String.format(CommunityConstants.GROUP_FACE_URL, (i + 1) + ""));
+                    imageBean.setImageUri(String.format(CommunityConstants.GROUP_FACE_URL, (i + 1) + ""));
+                    faceList.add(imageBean);
                 }
 
                 Intent intent = new Intent(CreateCommunityActivity.this, ImageSelectActivity.class);
@@ -117,13 +123,21 @@ public class CreateCommunityActivity extends BaseLightActivity {
         if (data != null) {
             if (resultCode == ImageSelectActivity.RESULT_CODE_SUCCESS) {
                 if (requestCode == COVER_REQUEST_CODE) {
-                    Object obj = data.getSerializableExtra(ImageSelectActivity.DATA);
-                    coverUrl = (String) obj;
+                    ImageSelectActivity.ImageBean imageBean = (ImageSelectActivity.ImageBean) data.getSerializableExtra(ImageSelectActivity.DATA);
+                    if (imageBean == null) {
+                        return;
+                    }
+
+                    coverUrl = imageBean.getImageUri();
                     coverImage.setBackground(null);
-                    Glide.with(this).load(obj).into(coverImage);
+                    Glide.with(this).load(coverUrl).into(coverImage);
                 } else if (requestCode == FACE_REQUEST_CODE) {
-                    Object obj = data.getSerializableExtra(ImageSelectActivity.DATA);
-                    faceUrl = (String) obj;
+                    ImageSelectActivity.ImageBean imageBean = (ImageSelectActivity.ImageBean) data.getSerializableExtra(ImageSelectActivity.DATA);
+                    if (imageBean == null) {
+                        return;
+                    }
+
+                    faceUrl = imageBean.getImageUri();
                     selectFaceLayout.setVisibility(View.GONE);
                     Glide.with(this).load(faceUrl).into(faceImage);
                 }

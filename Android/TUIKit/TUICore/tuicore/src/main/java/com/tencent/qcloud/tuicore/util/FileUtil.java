@@ -487,4 +487,11 @@ public class FileUtil {
         }
     }
 
+    public static long getFileSize(String path) {
+        File file = new File(path);
+        if (file.exists()) {
+            return file.length();
+        }
+        return 0;
+    }
 }

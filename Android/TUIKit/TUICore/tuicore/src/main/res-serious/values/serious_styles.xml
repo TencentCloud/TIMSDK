@@ -33,7 +33,7 @@
         <item name="core_default_group_icon_public">@drawable/core_default_group_icon_public_serious</item>
         <item name="core_default_group_icon_work">@drawable/core_default_group_icon_work_serious</item>
         <item name="core_default_group_icon_meeting">@drawable/core_default_group_icon_meeting_serious</item>
-        <item name="core_default_group_icon_community">@drawable/core_default_group_icon_community</item>
+        <item name="core_default_group_icon_community">@drawable/core_default_group_icon_community_serious</item>
         <item name="core_default_user_icon">@drawable/core_default_user_icon_serious</item>
         <item name="user_status_online">@drawable/core_online_status_serious</item>
 

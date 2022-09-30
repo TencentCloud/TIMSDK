@@ -1,10 +1,18 @@
-*.iml
-.gradle/
-/local.properties
-.idea/
+# OS X Files
 .DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+**/.DS_Store
+
+
+# Gradle files
+*/.gradle/
+*.gradle/
+
+# IDEA Files
+/tuicommunity/.idea/
+/tuicommunity/build/
 local.properties
+/.codecc/
+/build.yml
+*.iml
+*.idea/
+/captures

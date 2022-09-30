@@ -1,32 +1,48 @@
 package com.tencent.qcloud.tuicore.component.activities;
 
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.tencent.qcloud.tuicore.R;
+import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
+import com.tencent.qcloud.tuicore.component.gatherimage.SynthesizedImageView;
 import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuicore.util.ScreenUtil;
+import com.tencent.qcloud.tuicore.util.ToastUtil;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.List;
 
 
 public class ImageSelectActivity extends BaseLightActivity {
+    private static final String TAG = ImageSelectActivity.class.getSimpleName();
+
     public static final int RESULT_CODE_ERROR = -1;
     public static final int RESULT_CODE_SUCCESS = 0;
     public static final String TITLE = "title";
@@ -36,11 +52,12 @@ public class ImageSelectActivity extends BaseLightActivity {
     public static final String ITEM_WIDTH = "itemWidth";
     public static final String SELECTED = "selected";
     public static final String PLACEHOLDER = "placeholder";
+    public static final String NEED_DOWLOAD_LOCAL = "needdowmload";
 
     private int defaultSpacing;
 
-    private List<Object> data;
-    private Object selected;
+    private List<ImageBean> data;
+    private ImageBean selected;
     private int placeHolder;
     private int columnNum;
     private RecyclerView imageGrid;
@@ -57,6 +74,7 @@ public class ImageSelectActivity extends BaseLightActivity {
         setContentView(R.layout.core_activity_image_select_layout);
         Intent intent = getIntent();
         String title = intent.getStringExtra(TITLE);
+        boolean needDownload = intent.getBooleanExtra(NEED_DOWLOAD_LOCAL, false);
         titleBarLayout = findViewById(R.id.image_select_title);
         titleBarLayout.setTitle(title, ITitleBarLayout.Position.MIDDLE);
         titleBarLayout.setTitle(getString(R.string.sure), ITitleBarLayout.Position.RIGHT);
@@ -75,15 +93,19 @@ public class ImageSelectActivity extends BaseLightActivity {
                 if (selected == null) {
                     return;
                 }
-                Intent resultIntent = new Intent();
-                resultIntent.putExtra(DATA, (Serializable) selected);
-                setResult(RESULT_CODE_SUCCESS, resultIntent);
-                finish();
+                if (needDownload) {
+                    DownloadUrl();
+                } else {
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra(DATA, (Serializable) selected);
+                    setResult(RESULT_CODE_SUCCESS, resultIntent);
+                    finish();
+                }
             }
         });
 
-        data = (List<Object>) intent.getSerializableExtra(DATA);
-        selected = intent.getSerializableExtra(SELECTED);
+        data = (List<ImageBean>) intent.getSerializableExtra(DATA);
+        selected = (ImageBean) intent.getSerializableExtra(SELECTED);
         placeHolder = intent.getIntExtra(PLACEHOLDER, 0);
         itemHeight = intent.getIntExtra(ITEM_HEIGHT, 0);
         itemWidth = intent.getIntExtra(ITEM_WIDTH, 0);
@@ -98,12 +120,8 @@ public class ImageSelectActivity extends BaseLightActivity {
         gridAdapter.setSelected(selected);
         gridAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onClick(Object obj) {
-                if (selected != null && selected.equals(obj)) {
-                    selected = null;
-                } else {
-                    selected = obj;
-                }
+            public void onClick(ImageBean obj) {
+                selected = obj;
                 setSelectedStatus();
             }
         });
@@ -113,6 +131,74 @@ public class ImageSelectActivity extends BaseLightActivity {
         gridAdapter.setData(data);
         setSelectedStatus();
         gridAdapter.notifyDataSetChanged();
+    }
+
+    private void DownloadUrl() {
+        if (selected == null) {
+            return;
+        }
+
+        if (selected.isDefault()) {
+            selected.setLocalPath(TUIConstants.TUIChat.CHAT_CONVERSATION_BACKGROUND_DEFAULT_URL);
+            setResult(selected);
+            ToastUtil.toastShortMessage(getResources().getString(R.string.setting_success));
+            finish();
+            return;
+        }
+
+        String url = selected.getImageUri();
+        if (TextUtils.isEmpty(url)) {
+            Log.d(TAG, "DownloadUrl is null");
+            return;
+        }
+
+        final ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                // TODO Auto-generated method stub
+                finish();
+            }
+        });
+        dialog.setMessage(getResources().getString(R.string.setting));
+        dialog.show();
+
+        ImageBean finalBean = selected;
+        Glide.with(this)
+                .downloadOnly()
+                .load(url)
+                .listener(new RequestListener<File>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<File> target, boolean isFirstResource) {
+                        dialog.cancel();
+                        Log.e(TAG, "DownloadUrl onLoadFailed e = " + e);
+                        ToastUtil.toastShortMessage(getResources().getString(R.string.setting_fail));
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(File resource, Object model, Target<File> target, DataSource dataSource, boolean isFirstResource) {
+                        dialog.cancel();
+                        String path = resource.getAbsolutePath();
+                        Log.e(TAG, "DownloadUrl resource path = " + path);
+                        finalBean.setLocalPath(path);
+                        setResult(finalBean);
+                        ToastUtil.toastShortMessage(getResources().getString(R.string.setting_success));
+                        return false;
+                    }
+                })
+                .preload();
+    }
+
+    private void setResult(ImageBean bean) {
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra(DATA, (Serializable) bean);
+        setResult(RESULT_CODE_SUCCESS, resultIntent);
+        finish();
     }
 
     private void setSelectedStatus() {
@@ -130,24 +216,21 @@ public class ImageSelectActivity extends BaseLightActivity {
         private int itemWidth;
         private int itemHeight;
 
-        private List<Object> data;
-        private Object selected;
+        private List<ImageBean> data;
+        private ImageBean selected;
         private int placeHolder;
         private OnItemClickListener onItemClickListener;
 
-        public void setData(List<Object> data) {
+        public void setData(List<ImageBean> data) {
             this.data = data;
         }
 
-        public void setSelected(Object selected) {
+        public void setSelected(ImageBean selected) {
             if (data == null || data.isEmpty()) {
                 this.selected = selected;
             } else {
-                int beforeSelectedIndex = data.indexOf(this.selected);
-                notifyItemChanged(beforeSelectedIndex);
                 this.selected = selected;
-                int currentSelectedIndex = data.indexOf(this.selected);
-                notifyItemChanged(currentSelectedIndex);
+                notifyDataSetChanged();
             }
         }
 
@@ -178,22 +261,38 @@ public class ImageSelectActivity extends BaseLightActivity {
         public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
             ImageView imageView = holder.imageView;
             setItemLayoutParams(holder);
-            Object obj = data.get(position);
-            if (selected != null && selected.equals(obj)) {
+            ImageBean imageBean = data.get(position);
+            if (selected != null && imageBean != null && TextUtils.equals(selected.getThumbnailUri(), imageBean.getThumbnailUri())) {
                 holder.selectBorderLayout.setVisibility(View.VISIBLE);
             } else {
                 holder.selectBorderLayout.setVisibility(View.GONE);
             }
-            Glide.with(holder.itemView.getContext()).asBitmap()
-                    .load(obj)
-                    .placeholder(placeHolder)
-                    .apply(new RequestOptions().error(placeHolder))
-                    .into(imageView);
+
+            if (imageBean.getGroupGridAvatar() != null) {
+                holder.defaultLayout.setVisibility(View.GONE);
+                if (imageView instanceof SynthesizedImageView) {
+                    SynthesizedImageView synthesizedImageView = ((SynthesizedImageView) (imageView));
+                    String imageId = imageBean.getImageId();
+                    synthesizedImageView.setImageId(imageId);
+                    synthesizedImageView.displayImage(imageBean.getGroupGridAvatar()).load(imageId);
+                }
+            } else if (imageBean.isDefault()) {
+                holder.defaultLayout.setVisibility(View.VISIBLE);
+                imageView.setImageResource(android.R.color.transparent);
+            } else {
+                holder.defaultLayout.setVisibility(View.GONE);
+                Glide.with(holder.itemView.getContext()).asBitmap()
+                        .load(imageBean.getThumbnailUri())
+                        .placeholder(placeHolder)
+                        .apply(new RequestOptions().error(placeHolder))
+                        .into(imageView);
+            }
+
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (onItemClickListener != null) {
-                        onItemClickListener.onClick(obj);
+                        onItemClickListener.onClick(imageBean);
                     }
                 }
             });
@@ -230,12 +329,14 @@ public class ImageSelectActivity extends BaseLightActivity {
             private final ImageView imageView;
             private final ImageView selectedBorder;
             private final RelativeLayout selectBorderLayout;
+            private final Button defaultLayout;
 
             public ImageViewHolder(@NonNull View itemView) {
                 super(itemView);
                 imageView = itemView.findViewById(R.id.content_image);
                 selectedBorder = itemView.findViewById(R.id.select_border);
                 selectBorderLayout = itemView.findViewById(R.id.selected_border_area);
+                defaultLayout = itemView.findViewById(R.id.default_image_layout);
             }
         }
     }
@@ -271,6 +372,73 @@ public class ImageSelectActivity extends BaseLightActivity {
     }
 
     public interface OnItemClickListener {
-        void onClick(Object obj);
+        void onClick(ImageBean obj);
+    }
+
+    public static class ImageBean implements Serializable{
+        String thumbnailUri; // for display
+        String imageUri; // for download
+        String localPath; // for local path
+        boolean isDefault = false; // for default display
+        List<Object> groupGridAvatar = null; // for group grid avatar
+        String imageId;
+
+        public ImageBean() {
+
+        }
+
+        public ImageBean(String thumbnailUri, String imageUri, boolean isDefault) {
+            this.thumbnailUri = thumbnailUri;
+            this.imageUri = imageUri;
+            this.isDefault = isDefault;
+        }
+
+        public String getImageUri() {
+            return imageUri;
+        }
+
+        public String getThumbnailUri() {
+            return thumbnailUri;
+        }
+
+        public void setImageUri(String imageUri) {
+            this.imageUri = imageUri;
+        }
+
+        public void setThumbnailUri(String thumbnailUri) {
+            this.thumbnailUri = thumbnailUri;
+        }
+
+        public String getLocalPath() {
+            return localPath;
+        }
+
+        public void setLocalPath(String localPath) {
+            this.localPath = localPath;
+        }
+
+        public boolean isDefault() {
+            return isDefault;
+        }
+
+        public void setDefault(boolean aDefault) {
+            isDefault = aDefault;
+        }
+
+        public List<Object> getGroupGridAvatar() {
+            return groupGridAvatar;
+        }
+
+        public void setGroupGridAvatar(List<Object> groupGridAvatar) {
+            this.groupGridAvatar = groupGridAvatar;
+        }
+
+        public String getImageId() {
+            return imageId;
+        }
+
+        public void setImageId(String imageId) {
+            this.imageId = imageId;
+        }
     }
 }

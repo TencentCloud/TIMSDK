@@ -18,6 +18,7 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
@@ -46,6 +47,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.InputMoreActionUnit;
 import com.tencent.qcloud.tuikit.tuichat.bean.ReplyPreviewBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FileMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.component.face.CustomFace;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 import com.tencent.qcloud.tuikit.tuichat.component.face.Emoji;
@@ -251,7 +253,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     if (presenter != null) {
-                        presenter.clearMessageAndReLoad();
+                        presenter.scrollToNewestMessage();
                     }
                     showSoftInput();
                 }
@@ -754,6 +756,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                 mSendAudioButton.setVisibility(VISIBLE);
                 mTextInput.setVisibility(GONE);
                 mAudioInputSwitchButton.setImageResource(R.drawable.chat_input_keyboard);
+                hideInputMoreLayout();
                 hideSoftInput();
             } else {
                 mAudioInputSwitchButton.setImageResource(R.drawable.action_audio_selector);
@@ -770,7 +773,6 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             }
             if (mCurrentState == STATE_FACE_INPUT) {
                 mCurrentState = STATE_SOFT_INPUT;
-                mInputMoreView.setVisibility(View.GONE);
                 mEmojiInputButton.setImageResource(R.drawable.action_face_selector);
                 mTextInput.setVisibility(VISIBLE);
                 showSoftInput();
@@ -788,11 +790,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             } else {
                 if (mCurrentState == STATE_ACTION_INPUT) {
                     mCurrentState = STATE_NONE_INPUT;
-                    if (mInputMoreView.getVisibility() == View.VISIBLE) {
-                        mInputMoreView.setVisibility(View.GONE);
-                    } else {
-                        mInputMoreView.setVisibility(View.VISIBLE);
-                    }
+                    mInputMoreView.setVisibility(View.VISIBLE);
                 } else {
                     showInputMoreLayout();
                     mCurrentState = STATE_ACTION_INPUT;
@@ -840,18 +838,30 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
 
     public void showSoftInput() {
         TUIChatLog.i(TAG, "showSoftInput");
-        hideInputMoreLayout();
-        mAudioInputSwitchButton.setImageResource(R.drawable.action_audio_selector);
-        mEmojiInputButton.setImageResource(R.drawable.chat_input_face);
         mCurrentState = STATE_SOFT_INPUT;
-        mSendAudioButton.setVisibility(GONE);
-        mTextInput.setVisibility(VISIBLE);
-
-        mTextInput.requestFocus();
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         if (!isSoftInputShown()) {
             imm.toggleSoftInput(0, 0);
         }
+        BackgroundTasks.getInstance().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                hideInputMoreLayout();
+                mAudioInputSwitchButton.setImageResource(R.drawable.action_audio_selector);
+                mEmojiInputButton.setImageResource(R.drawable.chat_input_face);
+                mSendAudioButton.setVisibility(GONE);
+                mTextInput.setVisibility(VISIBLE);
+                mTextInput.requestFocus();
+                Context context = getContext();
+                if (context instanceof Activity) {
+                    Window window = ((Activity) context).getWindow();
+                    if (window != null) {
+                        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+                    }
+                }
+            }
+        }, 200);
+
         if (mChatInputHandler != null) {
             postDelayed(new Runnable() {
                 @Override
@@ -867,12 +877,19 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(mTextInput.getWindowToken(), 0);
         mTextInput.clearFocus();
-        mInputMoreView.setVisibility(View.GONE);
+        Context context = getContext();
+        if (context instanceof Activity) {
+            Window window = ((Activity) context).getWindow();
+            if (window != null) {
+                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
+            }
+        }
     }
 
     public void onEmptyClick() {
         hideSoftInput();
         mCurrentState = STATE_SOFT_INPUT;
+        hideInputMoreLayout();
         mEmojiInputButton.setImageResource(R.drawable.action_face_selector);
         mAudioInputSwitchButton.setImageResource(R.drawable.action_audio_selector);
         mSendAudioButton.setVisibility(GONE);
@@ -947,13 +964,13 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             public void onEmojiClick(Emoji emoji) {
                 int index = mTextInput.getSelectionStart();
                 Editable editable = mTextInput.getText();
-                editable.insert(index, emoji.getFilter());
-                FaceManager.handlerEmojiText(mTextInput, editable.toString(), true);
+                editable.insert(index, emoji.getFaceKey());
+                FaceManager.handlerEmojiText(mTextInput, editable, true);
             }
 
             @Override
-            public void onCustomFaceClick(int groupIndex, Emoji emoji) {
-                mMessageHandler.sendMessage(ChatMessageBuilder.buildFaceMessage(groupIndex, emoji.getFilter()));
+            public void onCustomFaceClick(int groupIndex, CustomFace customFace) {
+                mMessageHandler.sendMessage(ChatMessageBuilder.buildFaceMessage(groupIndex, customFace.getFaceKey()));
             }
         });
         mFragmentManager.beginTransaction().replace(R.id.more_groups, mFaceFragment).commitAllowingStateLoss();
@@ -1069,7 +1086,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                 }
             }
             if (!TextUtils.equals(mInputContent, mTextInput.getText().toString())) {
-                FaceManager.handlerEmojiText(mTextInput, mTextInput.getText().toString(), true);
+                FaceManager.handlerEmojiText(mTextInput, mTextInput.getText(), true);
             }
         }
 

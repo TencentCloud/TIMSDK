@@ -9,19 +9,18 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tencent.qcloud.tuikit.TUIVideoView;
-import com.tencent.qcloud.tuikit.tuicallkit.ui.R;
+import com.tencent.qcloud.tuikit.tuicallkit.R;
 import com.tencent.qcloud.tuikit.tuicallkit.utils.ImageLoader;
-import com.tencent.qcloud.tuikit.tuicallkit.widget.RoundCornerImageView;
 
 public class UserLayout extends RelativeLayout {
-    private TUIVideoView         mTUIVideoView;
-    private RoundCornerImageView mImgUserAvatar;
-    private TextView             mTextUserName;
-    private ImageView            mImgAudioInput;
-    private ImageView            mImgLoading;
-    private boolean              mMoveAble;
-    private boolean              mMuteAudio         = false;
-    private boolean              mDisableAudioImage = false;
+    private TUIVideoView mTUIVideoView;
+    private ImageView    mImgUserAvatar;
+    private TextView     mTextUserName;
+    private ImageView    mImgAudioInput;
+    private ImageView    mImgLoading;
+    private boolean      mMoveAble;
+    private boolean      mMuteAudio         = false;
+    private boolean      mDisableAudioImage = false;
 
     public UserLayout(Context context) {
         this(context, null);
@@ -56,7 +55,7 @@ public class UserLayout extends RelativeLayout {
         this.addView(this.mTUIVideoView);
     }
 
-    public RoundCornerImageView getAvatarImage() {
+    public ImageView getAvatarImage() {
         return mImgUserAvatar;
     }
 

@@ -202,6 +202,15 @@
                 app:name="@string/chat_to_top" />
 
             <com.tencent.qcloud.tuicore.component.LineControllerView
+                android:id="@+id/chat_background"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/contact_profile_item_height"
+                android:visibility="gone"
+                app:canNav="true"
+                app:name="@string/profile_chat_background"
+                tools:visibility="visible" />
+
+            <com.tencent.qcloud.tuicore.component.LineControllerView
                 android:id="@+id/blackList"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/contact_profile_item_height"

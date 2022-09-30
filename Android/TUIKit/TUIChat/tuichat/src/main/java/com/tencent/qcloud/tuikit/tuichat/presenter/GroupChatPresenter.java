@@ -99,6 +99,11 @@ public class GroupChatPresenter extends ChatPresenter {
                     addMessageInfo(messageBean);
                 }
             }
+
+            @Override
+            public void onMessageChanged(TUIMessageBean messageBean) {
+                updateMessageInfo(messageBean);
+            }
         };
         TUIChatService.getInstance().addGroupChatEventListener(groupChatEventListener);
         initMessageSender();
@@ -132,6 +137,9 @@ public class GroupChatPresenter extends ChatPresenter {
                     TUIChatLog.i(TAG, "load group message success " + data.size());
                     if (lastMessageInfo == null) {
                         isHaveMoreNewMessage = false;
+                    }
+                    if (data.size() < MSG_PAGE_COUNT) {
+                        isHaveMoreOldMessage = false;
                     }
                     onMessageLoadCompleted(data, type);
                     TUIChatUtils.callbackOnSuccess(callback, data);

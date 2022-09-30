@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder;
 
-import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.view.View;
@@ -9,16 +8,18 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FaceMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
 
 public class FaceMessageHolder extends MessageContentHolder {
+    private static final int DEFAULT_FACE_MAX_SIZE = 80; // dp
 
-    private ImageView contentImage;
-    private ImageView videoPlayBtn;
-    private TextView videoDurationText;
+    private final ImageView contentImage;
+    private final ImageView videoPlayBtn;
+    private final TextView videoDurationText;
 
     public FaceMessageHolder(View itemView) {
         super(itemView);
@@ -34,35 +35,27 @@ public class FaceMessageHolder extends MessageContentHolder {
 
     @Override
     public void layoutVariableViews(TUIMessageBean msg, int position) {
-        performCustomFace((FaceMessageBean) msg, position);
+        performCustomFace((FaceMessageBean) msg);
         if (msg.getMessageReactBean() == null || msg.getMessageReactBean().getReactSize() <= 0) {
             msgArea.setBackground(null);
             msgArea.setPadding(0, 0, 0, 0);
         }
     }
 
-    private void performCustomFace(final FaceMessageBean msg, final int position) {
+    private void performCustomFace(final FaceMessageBean msg) {
+        int defaultFaceSize = ScreenUtil.dip2px(DEFAULT_FACE_MAX_SIZE);
         videoPlayBtn.setVisibility(View.GONE);
         videoDurationText.setVisibility(View.GONE);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.CENTER_IN_PARENT);
+        params.width = defaultFaceSize;
+        params.height = defaultFaceSize;
         contentImage.setLayoutParams(params);
-
-        String filter = new String(msg.getData());
-        if (!filter.contains("@2x")) {
-            filter += "@2x";
+        String faceKey = null;
+        if (msg.getData() != null) {
+            faceKey = new String(msg.getData());
         }
-        Bitmap bitmap = FaceManager.getCustomBitmap(msg.getIndex(), filter);
-        if (bitmap == null) {
-            bitmap = FaceManager.getEmoji(new String(msg.getData()));
-            if (bitmap == null) {
-                contentImage.setImageDrawable(itemView.getContext().getResources().getDrawable(R.drawable.face_delete));
-            } else {
-                contentImage.setImageBitmap(bitmap);
-            }
-        } else {
-            contentImage.setImageBitmap(bitmap);
-        }
+        FaceManager.loadFace(msg.getIndex(), faceKey, contentImage);
     }
 
     @Override

@@ -133,6 +133,15 @@ public final class TUIConstants {
         public static final String INPUT_MORE_TITLE = "title";
         public static final String INPUT_MORE_ACTION_ID = "actionId";
         public static final String INPUT_MORE_VIEW = "inputMoreView";
+
+        // Background
+        public static final String CHAT_CONVERSATION_BACKGROUND_URL = "https://sdk-im-1252463788.file.myqcloud.com/download/tuikit-resource/conversation-backgroundImage/backgroundImage_%s_full.png";
+        public static final String CHAT_CONVERSATION_BACKGROUND_THUMBNAIL_URL = "https://sdk-im-1252463788.file.myqcloud.com/download/tuikit-resource/conversation-backgroundImage/backgroundImage_%s.png";
+        public static final int CHAT_CONVERSATION_BACKGROUND_COUNT = 7;
+        public static final String CHAT_CONVERSATION_BACKGROUND_DEFAULT_URL = "chat/conversation/background/default/url";
+        public static final int CHAT_REQUEST_BACKGROUND_CODE = 1001;
+        public static final String METHOD_UPDATE_DATA_STORE_CHAT_URI = "updateDatastoreChatUri";
+        public static final String CHAT_BACKGROUND_URI = "chatBackgroundUri";
     }
 
     public static final class TUIConversation {
@@ -185,6 +194,9 @@ public final class TUIConstants {
         public static final int GROUP_TYPE_PUBLIC = 1;
         public static final int GROUP_TYPE_CHAT_ROOM = 2;
         public static final int GROUP_TYPE_COMMUNITY = 3;
+
+        public static final String GROUP_FACE_URL = "https://im.sdk.cloud.tencent.cn/download/tuikit-resource/group-avatar/group_avatar_%s.png";
+        public static final int GROUP_FACE_COUNT = 24;
     }
 
     public static final class TUICalling {
@@ -193,12 +205,14 @@ public final class TUIConstants {
         public static final String METHOD_NAME_CALL = "call";
         public static final String METHOD_NAME_RECEIVEAPNSCALLED = "receiveAPNSCalled";
         public static final String METHOD_NAME_ENABLE_FLOAT_WINDOW = "methodEnableFloatWindow";
+        public static final String METHOD_NAME_ENABLE_MULTI_DEVICE = "methodEnableMultiDeviceAbility";
 
         public static final String PARAM_NAME_TYPE = "type";
         public static final String PARAM_NAME_USERIDS = "userIDs";
         public static final String PARAM_NAME_GROUPID = "groupId";
         public static final String PARAM_NAME_CALLMODEL = "call_model_data";
         public static final String PARAM_NAME_ENABLE_FLOAT_WINDOW = "enableFloatWindow";
+        public static final String PARAM_NAME_ENABLE_MULTI_DEVICE = "enableMultiDeviceAbility";
 
         public static final String METHOD_START_CALL = "startCall";
 
@@ -265,6 +279,7 @@ public final class TUIConstants {
         public static final String EVENT_SUB_KEY_INVITED_GROUP = "eventSubKeyInvitedGroup";
         public static final String EVENT_SUB_KEY_GROUP_INFO_CHANGED = "eventSubKeyGroupInfoChanged";
         public static final String EVENT_SUB_KEY_CLEAR_MESSAGE = "eventSubKeyGroupClearMessage";
+        public static final String EVENT_SUB_KEY_GROUP_MEMBER_SELECTED = "eventSubKeyGroupMemberSelected";
 
         public static final String GROUP_ID = "groupId";
         public static final String GROUP_NAME = "groupName";
@@ -276,6 +291,7 @@ public final class TUIConstants {
 
         public static final String SELECT_FRIENDS = "select_friends";
         public static final String SELECT_FOR_CALL = "isSelectForCall";
+        public static final String USER_DATA = "userData";
         public static final String IS_SELECT_MODE = "isSelectMode";
         public static final String EXCLUDE_LIST = "excludeList";
         public static final String SELECTED_LIST = "selectedList";
@@ -285,6 +301,8 @@ public final class TUIConstants {
         public static final String LIST = "list";
         public static final String LIMIT = "limit";
         public static final String FILTER = "filter";
+        public static final String JOIN_TYPE_INDEX = "joinTypeIndex";
+
     }
 
 

@@ -44,4 +44,7 @@
     <string name="tuicalling_permission_mic_reason">需要访问您的麦克风权限，开启后用于语音通话、多人语音通话、视频通话、多人视频通话等功能，并且开启后录制的视频才会有声音</string>
     <string name="tuicalling_package_not_purchased">您当前未购买音视频通话能力套餐，请前往 IM 控制台开通免费体验或加购正式版</string>
     <string name="tuicalling_package_not_support">您当前购买的音视频通话能力套餐不支持该功能，建议您升级套餐类型</string>
+    <string name="tuicalling_status_is_not_accept">接听后才能使用该功能</string>
+    <string name="tuicalling_groupid_is_empty">群ID为空</string>
+    <string name="tuicalling_have_a_new_call">您有一个新的通话</string>
 </resources>
