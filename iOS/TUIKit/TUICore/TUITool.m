@@ -277,6 +277,8 @@
             return TUIKitLocalizableString(TUIKitErrorEmptyFile);
         case ERR_SDK_COMM_FILE_OPEN_FAILED:
             return TUIKitLocalizableString(TUIKitErrorFileOpenFailed);
+        case ERR_SDK_INTERFACE_NOT_SUPPORT:
+            return TUIKitLocalizableString(TUIKitErrorUnsupporInterface);
 
             // Account
 
@@ -1113,8 +1115,8 @@
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:key];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }];
-    [alertController addAction:left];
-    [alertController addAction:right];
+    [alertController tuitheme_addAction:left];
+    [alertController tuitheme_addAction:right];
     [vc presentViewController:alertController animated:NO completion:nil];
 }
 

@@ -18,6 +18,8 @@
 #import "TUIGroupNoticeController.h"
 #import "TUISelectGroupMemberViewController.h"
 #import "TUISelectAvatarController.h"
+#import "TUILogin.h"
+
 #define ADD_TAG @"-1"
 #define DEL_TAG @"-2"
 
@@ -192,16 +194,16 @@
     __weak typeof(self) weakSelf = self;
     UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:TUIKitLocalizableString(TUIKitGroupProfileJoinType) preferredStyle:UIAlertControllerStyleActionSheet];
 
-    [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitGroupProfileJoinDisable) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitGroupProfileJoinDisable) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [weakSelf.dataProvider setGroupAddOpt:V2TIM_GROUP_ADD_FORBID];
     }]];
-    [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitGroupProfileAdminApprove) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitGroupProfileAdminApprove) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [weakSelf.dataProvider setGroupAddOpt:V2TIM_GROUP_ADD_AUTH];
     }]];
-    [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitGroupProfileAutoApproval) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitGroupProfileAutoApproval) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [weakSelf.dataProvider setGroupAddOpt:V2TIM_GROUP_ADD_ANY];
     }]];
-    [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:nil]];
+    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:nil]];
     [self presentViewController:ac animated:YES completion:nil];
 }
 
@@ -224,7 +226,7 @@
 
     __weak typeof(self) weakSelf = self;
     if ([self.dataProvider.groupInfo isPrivate] || [TUIGroupInfoDataProvider isMeOwner:self.dataProvider.groupInfo]) {
-        [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitGroupProfileEditGroupName) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitGroupProfileEditGroupName) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
 
             TModifyViewData *data = [[TModifyViewData alloc] init];
             data.title = TUIKitLocalizableString(TUIKitGroupProfileEditGroupName);
@@ -239,7 +241,7 @@
         }]];
     }
     if ([TUIGroupInfoDataProvider isMeOwner:self.dataProvider.groupInfo]) {
-        [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitGroupProfileEditAnnouncement) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitGroupProfileEditAnnouncement) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
 
             TModifyViewData *data = [[TModifyViewData alloc] init];
             data.title = TUIKitLocalizableString(TUIKitGroupProfileEditAnnouncement);
@@ -253,7 +255,7 @@
 
     if ([TUIGroupInfoDataProvider isMeOwner:self.dataProvider.groupInfo]) {
         @weakify(self)
-        [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitGroupProfileEditAvatar) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitGroupProfileEditAvatar) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             @strongify(self)
             TUISelectAvatarController * vc = [[TUISelectAvatarController alloc] init];
             vc.selectAvatarType = TUISelectAvatarTypeGroupAvatar;
@@ -274,7 +276,7 @@
         }]];
     }
     
-    [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:nil]];
+    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:nil]];
 
     [self presentViewController:ac animated:YES completion:nil];
 }
@@ -323,7 +325,7 @@
     UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:TUIKitLocalizableString(TUIKitGroupProfileDeleteGroupTips) preferredStyle:UIAlertControllerStyleActionSheet];
 
     @weakify(self)
-    [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Confirm) style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Confirm) style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
 
         @strongify(self)
         @weakify(self)
@@ -365,7 +367,7 @@
         }
     }]];
 
-    [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:nil]];
+    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:nil]];
     [self presentViewController:ac animated:YES completion:nil];
 }
 - (UIViewController *)findConversationListViewController {
@@ -394,6 +396,62 @@
         @strongify(self)
         [self updateGroupInfo];
     }];
+}
+
+- (void)didSelectOnChangeBackgroundImage:(TUICommonTextCell *)cell {
+    @weakify(self)
+    NSString *conversationID = [NSString stringWithFormat:@"group_%@",self.groupId];
+    TUISelectAvatarController * vc = [[TUISelectAvatarController alloc] init];
+    vc.selectAvatarType = TUISelectAvatarTypeConversationBackGroundCover;
+    vc.profilFaceURL =  [self getBackgroundImageUrlByConversationID:conversationID];
+    [self.navigationController pushViewController:vc animated:YES];
+    vc.selectCallBack = ^(NSString * _Nonnull urlStr) {
+        @strongify(self)
+        [self appendBackgroundImage:urlStr conversationID:conversationID];
+        if (IS_NOT_EMPTY_NSSTRING(conversationID)) {
+            [TUICore notifyEvent:TUICore_TUIGroupNotify subKey:TUICore_TUIGroupNotify_UpdateConversationBackgroundImageSubKey object:self param:@{TUICore_TUIGroupNotify_UpdateConversationBackgroundImageSubKey_ConversationID : conversationID}];
+        }
+    };
+}
+
+- (NSString *)getBackgroundImageUrlByConversationID:(NSString *)targerConversationID {
+    if (targerConversationID.length == 0) {
+        return nil;
+    }
+    NSDictionary *dict = [NSUserDefaults.standardUserDefaults objectForKey:@"conversation_backgroundImage_map"];
+    if (dict == nil) {
+        dict = @{};
+    }
+    NSString *conversationID_UserID = [NSString stringWithFormat:@"%@_%@",targerConversationID,[TUILogin getUserID]];
+    if (![dict isKindOfClass:NSDictionary.class] || ![dict.allKeys containsObject:conversationID_UserID]) {
+        return nil;
+    }
+    return [dict objectForKey:conversationID_UserID];
+}
+
+- (void)appendBackgroundImage:(NSString *)imgUrl conversationID:(NSString *)conversationID {
+    if (conversationID.length == 0) {
+        return;
+    }
+    NSDictionary *dict = [NSUserDefaults.standardUserDefaults objectForKey:@"conversation_backgroundImage_map"];
+    if (dict == nil) {
+        dict = @{};
+    }
+    if (![dict isKindOfClass:NSDictionary.class]) {
+        return;
+    }
+    
+    NSString *conversationID_UserID = [NSString stringWithFormat:@"%@_%@",conversationID,[TUILogin getUserID]];
+    NSMutableDictionary *originDataDict = [NSMutableDictionary dictionaryWithDictionary:dict];
+    if (imgUrl.length == 0) {
+        [originDataDict removeObjectForKey:conversationID_UserID];
+    }
+    else {
+        [originDataDict setObject:imgUrl forKey:conversationID_UserID];
+    }
+    
+    [NSUserDefaults.standardUserDefaults setObject:originDataDict forKey:@"conversation_backgroundImage_map"];
+    [NSUserDefaults.standardUserDefaults synchronize];
 }
 
 - (void)didTransferGroup:(TUIButtonCell *)cell {
@@ -425,7 +483,7 @@
 {
     @weakify(self)
     UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:TUIKitLocalizableString(TUIKitClearAllChatHistoryTips) preferredStyle:UIAlertControllerStyleAlert];
-    [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Confirm) style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Confirm) style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
         @strongify(self)
         [self.dataProvider clearAllHistory:^{
             [TUICore notifyEvent:TUICore_TUIConversationNotify
@@ -437,7 +495,7 @@
             [TUITool makeToastError:code msg:desc];
         }];
     }]];
-    [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:nil]];
+    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:nil]];
     [self presentViewController:ac animated:YES completion:nil];
 }
 

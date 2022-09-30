@@ -36,14 +36,7 @@
     self.bottomIndicatorView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
     self.tableView.tableFooterView = self.bottomIndicatorView;
     
-    UIImageView *backgroudView = [[UIImageView alloc] init];
-    self.tableView.backgroundView = backgroudView;
-    self.backgroudView = backgroudView;
-    self.backgroudView.backgroundColor = TUIChatConfig.defaultConfig.backgroudColor ? TUIChatConfig.defaultConfig.backgroudColor : TUIChatDynamicColor(@"chat_controller_bg_color", @"#FFFFFF");
-    if (TUIChatConfig.defaultConfig.backgroudImage) {
-        self.backgroudView.backgroundColor = UIColor.clearColor;
-        self.backgroudView.image = TUIChatConfig.defaultConfig.backgroudImage;
-    }
+    self.tableView.backgroundColor = UIColor.clearColor;
     
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(keyboardWillShow) name:UIKeyboardWillShowNotification object:nil];
     
@@ -225,10 +218,13 @@
              * 在消息回复等跳转场景中，先将 tableview 滚动到最底部，再结合 scrollLocateMessage 来实现滚动定位效果
              * In jump scenarios such as message reply, first scroll the tableview to the bottom, and then combine scrollLocateMessage to achieve scroll positioning effect
              */
-            NSInteger index = self.messageDataProvider.uiMsgs.count > 0 ? self.messageDataProvider.uiMsgs.count - 1 : 0;
-            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]
-                                  atScrollPosition:UITableViewScrollPositionBottom
-                                          animated:NO];
+            
+            NSInteger count = self.messageDataProvider.uiMsgs.count;
+            if (count > 0) {
+                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:count - 1 inSection:0]
+                                      atScrollPosition:UITableViewScrollPositionBottom
+                                              animated:NO];
+            }
         }
         [self.tableView layoutIfNeeded];
         

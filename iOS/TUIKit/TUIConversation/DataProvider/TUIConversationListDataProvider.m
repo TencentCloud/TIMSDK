@@ -20,7 +20,8 @@
                                                 V2TIMConversationListener,
                                                 V2TIMGroupListener,
                                                 V2TIMSDKListener,
-                                                V2TIMAdvancedMsgListener
+                                                V2TIMAdvancedMsgListener,
+                                                TUINotificationProtocol
                                                 >
 
 @property (nonatomic, strong) NSMutableArray<TUIConversationCellData *> *conversationList;
@@ -48,6 +49,8 @@
         [[V2TIMManager sharedInstance] addGroupListener:self];
         [[V2TIMManager sharedInstance] addIMSDKListener:self];
         [[V2TIMManager sharedInstance] addAdvancedMsgListener:self];
+
+        [TUICore registerEvent:TUICore_TUIConversationNotify subKey:TUICore_TUIConversationNotify_RemoveConversationSubKey object:self];
 
     }
     return self;
@@ -462,6 +465,35 @@
     self.startIndexOfUnpinedConversation = index;
 }
 
+#pragma mark - TUICore
+- (void)onNotifyEvent:(NSString *)key subKey:(NSString *)subKey object:(nullable id)anObject param:(nullable NSDictionary *)param {
+    
+    if ([key isEqualToString:TUICore_TUIConversationNotify]
+        && [subKey isEqualToString:TUICore_TUIConversationNotify_RemoveConversationSubKey]
+        ) {
+        NSString *conversationID = param[TUICore_TUIConversationNotify_RemoveConversationSubKey_ConversationID];
+        if (IS_NOT_EMPTY_NSSTRING(conversationID)) {
+            TUIConversationCellData *removeConversation = nil;
+            for (TUIConversationCellData *item in self.conversationList) {
+                if ([conversationID isEqualToString:item.conversationID]) {
+                    removeConversation = item;
+                    break;
+                }
+            }
+            if (removeConversation) {
+                [self removeConversation:removeConversation];
+            }
+            else {
+                @weakify(self)
+                [[V2TIMManager sharedInstance] deleteConversation:conversationID succ:^{
+                    @strongify(self)
+                    [self updateMarkUnreadCount];
+                } fail:nil];
+            }
+        }
+        
+    }
+}
 #pragma mark - User Status
 - (void)updateOnlineStatus:(NSArray<TUIConversationCellData *> *)conversationList {
     if (conversationList.count == 0) {

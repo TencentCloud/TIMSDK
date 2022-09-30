@@ -54,6 +54,8 @@ static UIView *customTopView;
 
 @property (nonatomic, copy) NSString *mainTitle;
 
+@property (nonatomic, strong) UIImageView *backgroudView;
+
 @end
 
 @implementation TUIBaseChatViewController
@@ -79,6 +81,10 @@ static UIView *customTopView;
     self.view.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#FFFFFF");
     self.edgesForExtendedLayout = UIRectEdgeNone;
 
+    [self configBackgroundView];
+    
+    [self configNotify];
+
     // setup UI
     [self setupNavigator];
     if (customTopView) {
@@ -91,10 +97,6 @@ static UIView *customTopView;
     self.dataProvider = [[TUIChatDataProvider alloc] init];
     self.dataProvider.forwardDelegate = self;
     
-    [[V2TIMManager sharedInstance] addConversationListener:self];
-    [TUICore registerEvent:TUICore_TUIConversationNotify subKey:TUICore_TUIConversationNotify_SelectConversationSubKey object:self];
-    [TUICore registerEvent:TUICore_TUIConversationNotify subKey:TUICore_TUIConversationNotify_ClearConversationUIHistorySubKey object:self];
-    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onFriendInfoChanged:) name:@"FriendInfoChangedNotification" object:nil];
 }
 
 - (void)dealloc {
@@ -122,6 +124,7 @@ static UIView *customTopView;
     [super viewWillDisappear:animated];
     self.responseKeyboard = NO;
     [self openMultiChooseBoard:NO];
+    [self.messageController enableMultiSelectedMode:NO];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -211,6 +214,36 @@ static UIView *customTopView;
     _inputController.view.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
     [self addChildViewController:_inputController];
     [self.view addSubview:_inputController.view];
+}
+
+- (void)configBackgroundView {
+    self.backgroudView = [[UIImageView alloc] init];
+    self.backgroudView.backgroundColor = TUIChatConfig.defaultConfig.backgroudColor ? TUIChatConfig.defaultConfig.backgroudColor : TUIChatDynamicColor(@"chat_controller_bg_color", @"#FFFFFF");
+    NSString *conversationID = [self getConversationID];
+    NSString *imgUrl = [self getBackgroundImageUrlByConversationID:conversationID];
+
+    if (TUIChatConfig.defaultConfig.backgroudImage) {
+        self.backgroudView.backgroundColor = UIColor.clearColor;
+        self.backgroudView.image = TUIChatConfig.defaultConfig.backgroudImage;
+    }
+    else if (IS_NOT_EMPTY_NSSTRING(imgUrl)) {
+        [self.backgroudView sd_setImageWithURL:[NSURL URLWithString:imgUrl] placeholderImage:nil];
+    }
+    self.backgroudView.frame = CGRectMake(0, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height - TTextView_Height - Bottom_SafeHeight);
+    
+    [self.view insertSubview:self.backgroudView atIndex:0];
+}
+
+- (void)configNotify {
+
+    [[V2TIMManager sharedInstance] addConversationListener:self];
+    [TUICore registerEvent:TUICore_TUIConversationNotify subKey:TUICore_TUIConversationNotify_SelectConversationSubKey object:self];
+    [TUICore registerEvent:TUICore_TUIConversationNotify subKey:TUICore_TUIConversationNotify_ClearConversationUIHistorySubKey object:self];
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onFriendInfoChanged:) name:@"FriendInfoChangedNotification" object:nil];
+
+    [TUICore registerEvent:TUICore_TUIContactNotify subKey:TUICore_TUIContactNotify_UpdateConversationBackgroundImageSubKey object:self];
+    [TUICore registerEvent:TUICore_TUIGroupNotify subKey:TUICore_TUIGroupNotify_UpdateConversationBackgroundImageSubKey object:self];
+
 }
 
 #pragma mark - Public Methods
@@ -461,7 +494,63 @@ static UIView *customTopView;
     else if ([key isEqualToString:TUICore_TUIConversationNotify] && [subKey isEqualToString:TUICore_TUIConversationNotify_ClearConversationUIHistorySubKey]) {
         [self.messageController clearUImsg];
     }
+    else if ([key isEqualToString:TUICore_TUIContactNotify]
+             && [subKey isEqualToString:TUICore_TUIContactNotify_UpdateConversationBackgroundImageSubKey]) {
+        NSString *conversationID = param[TUICore_TUIContactNotify_UpdateConversationBackgroundImageSubKey_ConversationID];
+        if (IS_NOT_EMPTY_NSSTRING(conversationID)) {
+            [self updateBackgroundImageUrlByConversationID:conversationID];
+        }
+    }
+    else if ([key isEqualToString:TUICore_TUIGroupNotify]
+             && [subKey isEqualToString:TUICore_TUIGroupNotify_UpdateConversationBackgroundImageSubKey]) {
+        NSString *conversationID = param[TUICore_TUIGroupNotify_UpdateConversationBackgroundImageSubKey_ConversationID];
+        if (IS_NOT_EMPTY_NSSTRING(conversationID)) {
+            [self updateBackgroundImageUrlByConversationID:conversationID];
+        }
+    }
     
+}
+
+- (void)updateBackgroundImageUrlByConversationID:(NSString *)conversationID {
+    if ([[self getConversationID]  isEqualToString:conversationID]) {
+        self.backgroudView.backgroundColor = UIColor.clearColor;
+        NSString *imgUrl = [self getBackgroundImageUrlByConversationID:conversationID];
+        if (IS_NOT_EMPTY_NSSTRING(imgUrl)) {
+             [self.backgroudView sd_setImageWithURL:[NSURL URLWithString:imgUrl] placeholderImage:nil];
+        }
+        else {
+            self.backgroudView.image = nil;
+        }
+    }
+}
+
+- (NSString *)getBackgroundImageUrlByConversationID:(NSString *)targerConversationID {
+    if (targerConversationID.length == 0) {
+        return nil;
+    }
+    NSDictionary *dict = [NSUserDefaults.standardUserDefaults objectForKey:@"conversation_backgroundImage_map"];
+    if (dict == nil) {
+        dict = @{};
+    }
+    NSString *conversationID_UserID = [NSString stringWithFormat:@"%@_%@",targerConversationID,[TUILogin getUserID]];
+    if (![dict isKindOfClass:NSDictionary.class] || ![dict.allKeys containsObject:conversationID_UserID]) {
+        return nil;
+    }
+    return [dict objectForKey:conversationID_UserID];
+}
+
+- (NSString *)getConversationID {
+    NSString *conversationID = @"";
+    if (self.conversationData.conversationID.length > 0) {
+        conversationID = self.conversationData.conversationID;
+    }
+    else if (self.conversationData.userID.length > 0) {
+        conversationID = [NSString stringWithFormat:@"c2c_%@",self.conversationData.userID];
+    }
+    else if (self.conversationData.groupID.length > 0) {
+        conversationID = [NSString stringWithFormat:@"group_%@",self.conversationData.groupID];
+    }
+    return conversationID;
 }
 
 #pragma mark - TInputControllerDelegate
@@ -700,6 +789,8 @@ static UIView *customTopView;
     }
     
     [self.messageController deleteMessages:uiMsgs];
+    [self openMultiChooseBoard:NO];
+    [self.messageController enableMultiSelectedMode:NO];
 }
 
 - (void)prepareForwardMessages:(NSArray<TUIMessageCellData *> *)uiMsgs
@@ -719,7 +810,7 @@ static UIView *customTopView;
     
     if (hasUnsupportMsg) {
         UIAlertController *vc = [UIAlertController alertControllerWithTitle:TUIKitLocalizableString(TUIKitRelayUnsupportForward) message:nil preferredStyle:UIAlertControllerStyleAlert];
-        [vc addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Confirm) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [vc tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Confirm) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             
         }]];
         [self presentViewController:vc animated:YES completion:nil];
@@ -743,14 +834,14 @@ static UIView *customTopView;
      * 逐条转发
      * Forward one-by-one
      */
-    [tipsVc addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitRelayOneByOneForward) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    [tipsVc tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitRelayOneByOneForward) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         if (uiMsgs.count <= 30) {
             chooseTarget(NO);
             return;
         }
         UIAlertController *vc = [UIAlertController alertControllerWithTitle:TUIKitLocalizableString(TUIKitRelayOneByOnyOverLimit) message:nil preferredStyle:UIAlertControllerStyleAlert];
-        [vc addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel) style:UIAlertActionStyleDefault handler:nil]];
-        [vc addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitRelayCombineForwad) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [vc tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel) style:UIAlertActionStyleDefault handler:nil]];
+        [vc tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitRelayCombineForwad) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             chooseTarget(YES);
         }]];
         [weakSelf presentViewController:vc animated:YES completion:nil];
@@ -760,10 +851,10 @@ static UIView *customTopView;
      * 合并转发
      * Merge-forward
      */
-    [tipsVc addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitRelayCombineForwad) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    [tipsVc tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitRelayCombineForwad) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         chooseTarget(YES);
     }]];
-    [tipsVc addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel) style:UIAlertActionStyleDefault handler:nil]];
+    [tipsVc tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel) style:UIAlertActionStyleDefault handler:nil]];
     [self presentViewController:tipsVc animated:YES completion:nil];
 }
 

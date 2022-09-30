@@ -11,8 +11,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIOfflinePushManager ()
 
-#pragma mark - Private - Override
+#pragma mark - Private - Override for New Ability
 - (BOOL)supportTPNS;
+- (void)registerForVOIPPush;
+
+#pragma mark - Private - Base
 - (void)applyPushToken;
 
 #pragma mark - Private - Response

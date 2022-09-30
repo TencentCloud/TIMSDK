@@ -131,6 +131,7 @@ typedef NS_OPTIONS(NSInteger, emojiFaceType) {
 
         [self addFaceToCache:emojiGroup.menuPath];
         [self addFaceToCache:TUIChatFaceImagePath(@"del_normal")];
+        [self addFaceToCache:TUIChatFaceImagePath(@"ic_unknown_image")];
         return emojiGroup;
     }
     
@@ -144,7 +145,7 @@ typedef NS_OPTIONS(NSInteger, emojiFaceType) {
     self.defaultGroupAvatarImage_Public = TUICoreBundleThemeImage(@"default_group_head_public_img", @"default_group_head_public");
     self.defaultGroupAvatarImage_Meeting = TUICoreBundleThemeImage(@"default_group_head_meeting_img", @"default_group_head_meeting");
     self.defaultGroupAvatarImage_AVChatRoom = TUICoreBundleThemeImage(@"default_group_head_avchatroom_img", @"default_group_head_avchatroom");
-    self.defaultGroupAvatarImage_Community = TUICoreBundleThemeImage(@"", @"default_group_head_community");
+    self.defaultGroupAvatarImage_Community = TUICoreBundleThemeImage(@"default_group_head_community_img", @"default_group_head_community");
 }
 
 - (TUIFaceGroup *)getDefaultFaceGroup
@@ -174,6 +175,7 @@ typedef NS_OPTIONS(NSInteger, emojiFaceType) {
         emojiGroup.menuPath = TUIChatFaceImagePath(@"emoji/menu");
         [self addFaceToCache:emojiGroup.menuPath];
         [self addFaceToCache:TUIChatFaceImagePath(@"del_normal")];
+        [self addFaceToCache:TUIChatFaceImagePath(@"ic_unknown_image")];
         return emojiGroup;
     }
     

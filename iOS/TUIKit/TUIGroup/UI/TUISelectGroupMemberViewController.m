@@ -180,19 +180,38 @@
         [users addObject:[model copy]];
     }
     if (self.selectedFinished) {
-        [self.navigationController popViewControllerAnimated:NO];
+        [self cancel];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             self.selectedFinished(users);
         });
     }
     if (self.optionalStyle == TUISelectMemberOptionalStyleTransferOwner) {
+        [self cancel];
         return;
     }
-    [TUICore notifyEvent:TUICore_TUIGroupNotify subKey:TUICore_TUIGroupNotify_SelectGroupMemberSubKey object:self param:@{TUICore_TUIGroupNotify_SelectGroupMemberSubKey_UserListKey : users}];
+    [self cancel];
+    
+    NSDictionary *result = @{
+        TUICore_TUIGroupNotify_SelectGroupMemberSubKey_UserListKey : users,
+        TUICore_TUIGroupNotify_SelectGroupMemberSubKey_UserDataKey: self.userData?:@""
+    };
+    [TUICore notifyEvent:TUICore_TUIGroupNotify subKey:TUICore_TUIGroupNotify_SelectGroupMemberSubKey object:self param:result];
 }
 
 - (void)cancel {
-    [self.navigationController popViewControllerAnimated:YES];
+    if (self.isModal) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    } else {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
+
+- (BOOL)isModal {
+    NSArray *viewControllers = self.navigationController.viewControllers;
+    if (viewControllers.count > 1 && [viewControllers.lastObject isEqual:self]) {
+        return NO;
+    }
+    return YES;
 }
 
 #pragma mark UITableViewDelegate
@@ -394,6 +413,11 @@
                 if (isSuper || isAdMin) {
                     continue;
                 }
+            }
+            
+            if (self.selectedUserIDList &&
+                [self.selectedUserIDList containsObject:info.userID]) {
+                continue;
             }
             
             TUIUserModel *model = [[TUIUserModel alloc] init];

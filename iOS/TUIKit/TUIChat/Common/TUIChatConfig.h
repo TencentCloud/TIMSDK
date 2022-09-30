@@ -88,6 +88,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) BOOL enableFloatWindowForCall;
 
 
+/**
+ * 设置音视频通话开启多端登录功能，默认关闭
+ * Whether to enable multi-terminal login function for audio and video calls, default is NO
+ */
+@property(nonatomic, assign) BOOL enableMultiDeviceForCall;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)didSelectOnNotDisturb:(TUICommonSwitchCell *)cell;
 - (void)didSelectOnTop:(TUICommonSwitchCell *)cell;
 - (void)didSelectOnFoldConversation:(TUICommonSwitchCell *)cell;
+- (void)didSelectOnChangeBackgroundImage:(TUICommonTextCell *)cell;
 - (void)didDeleteGroup:(TUIButtonCell *)cell;
 - (void)didClearAllHistory:(TUIButtonCell *)cell;
 - (void)didSelectGroupManage;

@@ -92,6 +92,7 @@
 "ProfileDeleteFirend" = "删除好友";
 "ProfileEditAlia" = "修改备注";
 "ProfileDetails" = "详细资料";
+"ProfileSetBackgroundImage" = "设置当前聊天背景";
 "FriendRequestFormat" = "我是%@";
 "FriendRequestFillInfo" = "添加好友";
 "FriendOneWay" = "单向好友";
@@ -554,6 +555,7 @@
 "TUIKitErrorRequestNoNetOnReq" = "请求时没有网络，请等网络恢复后重试";
 "TUIKitErrorRequestNoNetOnRsp" = "响应时没有网络，请等网络恢复后重试";
 "TUIKitErrorRequestOnverLoaded" = "请求队列満";
+"TUIKitErrorUnsupporInterface" = "您购买的套餐包不支持该功能";
 "TUIKitErrorUnsupportIntefaceSearch" = "搜索";
 "TUIKitErrorUnsupportIntefaceMessageRead" = "消息已读回执";
 "TUIKitErrorUnsupportIntefaceCommunity" = "社群";
@@ -702,6 +704,11 @@
 
 "TUIKitChooseAvatar" = "选择头像";
 "TUIKitChooseCover" = "选择封面";
+"TUIKitChooseBackground" = "更换背景";
+"TUIKitDefaultBackground" = "默认背景";
+
+"TUIKitChooseBackgroundSuccess" = "设置成功！";
+"TUIKitChooseBackgroundFailed" = "设置失败！";
 
 "TUIKitContactNoNewApplicationRequest" = "暂无新的联系人好友";
 "TUIKitContactNoGroupChats" = "暂无群聊";
@@ -709,3 +716,21 @@
 "TUIKitTyping" = "对方正在输入";
 
 "TUIKitMessageTipsEditGroupAddOptFormat" = "%@修改加群方式为\"%@\"、";
+
+"TUIKitCreatGroupNamed" = "群名称";
+"TUIKitCreatGroupID" = "群ID（选填）";
+"TUIKitCreatGroupNamed_Placeholder" = "输入群名称";
+"TUIKitCreatGroupID_Placeholder" = "输入群ID";
+"TUIKitCreatGroupAvatar" = "群头像";
+"TUIKitCreatGroupType" = "群类型";
+"TUIKitCreatGroupType_Work" = "好友工作群(Work)";
+"TUIKitCreatGroupType_Public" = "陌生人社交群(Public）";
+"TUIKitCreatGroupType_Meeting" = "临时会议群(Meeting）";
+"TUIKitCreatGroupType_Community" = "社群(Community)";
+"TUIKitCreatGroupType_Work_Desc" = "好友工作群(Work）：类似普通微信群，创建后仅支持已在群内的好友邀请加群，且无需被邀请方同意或群主审批。";
+"TUIKitCreatGroupType_Public_Desc" = "陌生人社交群(Public）：类似 QQ 群，创建后群主可以指定群管理员，用户搜索群 ID 发起加群申请后，需要群主或管理员审批通过才能入群。";
+"TUIKitCreatGroupType_Meeting_Desc" = "临时会议群(Meeting）：创建后可以随意进出，且支持查看入群前消息；适用于音视频会议场景、在线教育场景等与实时音视频产品结合的场景。";
+"TUIKitCreatGroupType_Community_Desc" = "社群(Community)：创建后可以随意进出，最多支持100000人，支持历史消息存储，用户搜索群 ID 发起加群申请后，无需管理员审批即可进群。";
+"TUIKitCreatGroupType_See_Doc" ="详见产品文档";
+"TUIKitCreatGroupType_Desc_Highlight" = "产品文档";
+"TUIKitCreatGroupType_See_Doc_Simple" = "查看产品文档";

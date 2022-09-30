@@ -7,6 +7,33 @@
 
 typedef void (^TFail)(int code, NSString * msg);
 typedef void (^TSucc)(void);
+typedef NS_ENUM(NSInteger, TUILogLevel) {
+    /**
+     * < 不输出任何 sdk log
+     * < Do not output any SDK logs
+     */
+    TUI_LOG_NONE                         = 0,
+    /**
+     * < 输出 DEBUG，INFO，WARNING，ERROR 级别的 log
+     * < Output logs at the DEBUG, INFO, WARNING, and ERROR levels
+     */
+    TUI_LOG_DEBUG                        = 3,
+    /**
+     * < 输出 INFO，WARNING，ERROR 级别的 log
+     * < Output logs at the INFO, WARNING, and ERROR levels
+     */
+    TUI_LOG_INFO                         = 4,
+    /**
+     * < 输出 WARNING，ERROR 级别的 log
+     * < Output logs at the WARNING and ERROR levels
+     */
+    TUI_LOG_WARN                         = 5,
+    /**
+     * < 输出 ERROR 级别的 log
+     * < Output logs at the ERROR level
+     */
+    TUI_LOG_ERROR                        = 6,
+};
 
 /**
  * 登录成功的通知
@@ -67,6 +94,14 @@ FOUNDATION_EXTERN NSString * const TUILogoutFailNotification;
 
 @end
 
+@interface TUILoginConfig : NSObject
+
+@property (nonatomic,assign) TUILogLevel logLevel;
+
+@property (nonatomic,copy) void(^onLog)(NSInteger logLevel, NSString * logContent);
+
+@end
+
 @interface TUILogin : NSObject
 
 + (void)initWithSdkAppID:(int)sdkAppID __attribute__((deprecated("use login:userID:userSig:succ:fail:")));
@@ -79,6 +114,13 @@ FOUNDATION_EXTERN NSString * const TUILogoutFailNotification;
 + (void)login:(int)sdkAppID
        userID:(NSString *)userID
       userSig:(NSString *)userSig
+         succ:(TSucc)succ
+         fail:(TFail)fail;
+
++ (void)login:(int)sdkAppID
+       userID:(NSString *)userID
+      userSig:(NSString *)userSig
+       config:(TUILoginConfig *)config
          succ:(TSucc)succ
          fail:(TFail)fail;
 

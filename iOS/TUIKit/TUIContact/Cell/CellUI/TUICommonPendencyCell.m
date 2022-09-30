@@ -122,7 +122,6 @@
     } else if (self.pendencyData.isAccepted && !self.pendencyData.isRejected) {
         self.agreeButton.hidden = NO;
         self.rejectButton.hidden = YES;
-        self.agreeButton.frame = self.rejectButton.frame;
     } else {
         self.agreeButton.hidden = NO;
         self.rejectButton.hidden = NO;

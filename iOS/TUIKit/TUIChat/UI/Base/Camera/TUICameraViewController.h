@@ -8,6 +8,7 @@
 - (void)cameraViewController:(TUICameraViewController *)controller didFinishPickingMediaWithVideoURL:(NSURL *)url;
 - (void)cameraViewController:(TUICameraViewController *)controller didFinishPickingMediaWithImageData:(NSData *)data;
 - (void)cameraViewControllerDidCancel:(TUICameraViewController *)controller;
+- (void)cameraViewControllerDidPictureLib:(TUICameraViewController *)controller finishCallback:(void(^)(void))callback;
 @end
 
 

@@ -28,7 +28,7 @@
         [self.selectButton setImage:[UIImage imageNamed:TUICoreImagePath(@"icon_select_normal")] forState:UIControlStateNormal];
         [self.selectButton setImage:[UIImage imageNamed:TUICoreImagePath(@"icon_select_pressed")] forState:UIControlStateHighlighted];
         [self.selectButton setImage:[UIImage imageNamed:TUICoreImagePath(@"icon_select_selected")] forState:UIControlStateSelected];
-        [self.selectButton setImage:[UIImage imageNamed:TUICoreImagePath(@"icon_selected_disable")] forState:UIControlStateDisabled];
+        [self.selectButton setImage:[UIImage imageNamed:TUICoreImagePath(@"icon_select_selected_disable")] forState:UIControlStateDisabled];
         self.selectButton.mm_sizeToFit().mm__centerY(self.mm_centerY).mm_left(12);
         self.selectButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
 

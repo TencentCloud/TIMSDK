@@ -314,8 +314,7 @@
                 emojiTextAttachment.image =  [[TUIImageCache sharedInstance] getFaceFromCache:face.path];
                 
                 //Set emoji size
-                emojiTextAttachment.emojiSize = CGSizeMake(15,15);
-
+                emojiTextAttachment.emojiSize = kChatDefaultEmojiSize;
                 
                 NSAttributedString *imageStr = [NSAttributedString attributedStringWithAttachment:emojiTextAttachment];
 

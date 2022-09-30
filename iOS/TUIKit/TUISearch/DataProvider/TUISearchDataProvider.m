@@ -205,6 +205,7 @@ typedef void(^TUISearchResultCallback)(BOOL succ, NSString * __nullable errMsg, 
             cellModel.groupID = result.groupInfo.groupID;
             cellModel.groupType = result.groupInfo.groupType;
             cellModel.avatarImage = DefaultGroupAvatarImageByGroupType(result.groupInfo.groupType);
+            cellModel.avatarUrl =  result.groupInfo.faceURL;
             cellModel.context = result.groupInfo;
             [arrayM addObject:cellModel];
             

@@ -87,9 +87,6 @@ static NSArray *customMessageInfo = nil;
     self = [super init];
     if (self) {
         _conversationModel = conversationModel;
-        _uiMsgs_ = [NSMutableArray arrayWithCapacity:10];
-        _heightCache_ = [NSMutableDictionary dictionaryWithCapacity:10];
-        _sentReadGroupMsgSet = [NSMutableSet setWithCapacity:10];
         _isLoadingData = NO;
         _isNoMoreMsg = NO;
         _pageCount = 20;
@@ -101,6 +98,27 @@ static NSArray *customMessageInfo = nil;
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (NSMutableSet<NSString *> *)sentReadGroupMsgSet {
+    if (_sentReadGroupMsgSet == nil) {
+        _sentReadGroupMsgSet = [NSMutableSet setWithCapacity:10];
+    }
+    return _sentReadGroupMsgSet;
+}
+
+- (NSMutableArray<TUIMessageCellData *> *)uiMsgs_ {
+    if (_uiMsgs_ == nil) {
+        _uiMsgs_ = [NSMutableArray arrayWithCapacity:10];
+    }
+    return _uiMsgs_;
+}
+
+- (NSMutableDictionary<NSString *,NSNumber *> *)heightCache_ {
+    if (_heightCache_ == nil) {
+        _heightCache_ = [NSMutableDictionary dictionaryWithCapacity:10];
+    }
+    return _heightCache_;
 }
 
 - (NSArray<TUIMessageCellData *> *)uiMsgs {
@@ -1654,7 +1672,8 @@ static NSArray *customMessageInfo = nil;
                     NSString *userId = [(V2TIMGroupMemberChangeInfo *)info userID];
                     int32_t muteTime = [(V2TIMGroupMemberChangeInfo *)info muteTime];
                     NSString *myId = V2TIMManager.sharedInstance.getLoginUser;
-                    str = [NSString stringWithFormat:@"%@ %@", [userId isEqualToString:myId] ? TUIKitLocalizableString(You) : userId, muteTime == 0 ? TUIKitLocalizableString(TUIKitMessageTipsUnmute): TUIKitLocalizableString(TUIKitMessageTipsMute)];
+                    NSString *showName = [self.class getUserName:tips with:userId];
+                    str = [NSString stringWithFormat:@"%@ %@", [userId isEqualToString:myId] ? TUIKitLocalizableString(You) : showName, muteTime == 0 ? TUIKitLocalizableString(TUIKitMessageTipsUnmute): TUIKitLocalizableString(TUIKitMessageTipsMute)];
                     break;
                 }
             }
@@ -1666,6 +1685,25 @@ static NSArray *customMessageInfo = nil;
     return str;
 }
 
++ (NSString *)getUserName:(V2TIMGroupTipsElem *)tips with:(NSString *)userId{
+    NSString *str = @"";
+    for (V2TIMGroupMemberInfo *info in tips.memberList) {
+        if ([info.userID isEqualToString:userId]) {
+            if (info.nameCard.length > 0) {
+                str = info.nameCard;
+            } else if (info.friendRemark.length > 0) {
+                str = info.friendRemark;
+            } else if (info.nickName.length > 0) {
+                str = info.nickName;
+            }
+            else {
+                str = userId;
+            }
+            break;
+        }
+  }
+  return str;
+}
 + (NSString *)getCustomDisplayString:(V2TIMMessage *)message{
     NSDictionary *param = [NSJSONSerialization JSONObjectWithData:message.customElem.data options:NSJSONReadingAllowFragments error:nil];
     if (!param || ![param isKindOfClass:[NSDictionary class]]) {

@@ -19,6 +19,8 @@
 #import "TUICore.h"
 #import "TUIThemeManager.h"
 #import "TUICommonModel.h"
+#import "TUISelectAvatarController.h"
+#import "TUILogin.h"
 
 @interface TUIFriendProfileController ()
 @property NSArray<NSArray *> *dataList;
@@ -162,11 +164,21 @@
         [inlist addObject:({
             TUICommonContactTextCellData *data = TUICommonContactTextCellData.new;
             data.key = TUIKitLocalizableString(TUIKitClearAllChatHistory);
-            data.showAccessory = NO;
+            data.showAccessory = YES;
             data.cselector = @selector(onClearHistoryChatMessage:);
             data.reuseId = @"TextCell";
             data;
         })];
+        
+        [inlist addObject:({
+            TUICommonContactTextCellData *data = TUICommonContactTextCellData.new;
+            data.key = TUIKitLocalizableString(ProfileSetBackgroundImage);
+            data.showAccessory = YES;
+            data.cselector = @selector(onChangeBackgroundImage:);
+            data.reuseId = @"TextCell";
+            data;
+        })];
+        
         inlist;
     })];
 
@@ -287,7 +299,7 @@
         NSString *userID = self.friendProfile.userID;
         @weakify(self)
         UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:TUIKitLocalizableString(TUIKitClearAllChatHistoryTips) preferredStyle:UIAlertControllerStyleAlert];
-        [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Confirm) style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Confirm) style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
             @strongify(self)
             [V2TIMManager.sharedInstance clearC2CHistoryMessage:userID succ:^{
                 [TUICore notifyEvent:TUICore_TUIConversationNotify
@@ -299,11 +311,68 @@
                 [TUITool makeToastError:code msg:desc];
             }];
         }]];
-        [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:nil]];
+        [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:nil]];
         [self presentViewController:ac animated:YES completion:nil];
 
     }
     
+}
+
+
+- (void)onChangeBackgroundImage:(TUICommonContactTextCell *)cell {
+    @weakify(self)
+    NSString *conversationID = [NSString stringWithFormat:@"c2c_%@",self.friendProfile.userID];
+    TUISelectAvatarController * vc = [[TUISelectAvatarController alloc] init];
+    vc.selectAvatarType = TUISelectAvatarTypeConversationBackGroundCover;
+    vc.profilFaceURL =  [self getBackgroundImageUrlByConversationID:conversationID];
+    [self.navigationController pushViewController:vc animated:YES];
+    vc.selectCallBack = ^(NSString * _Nonnull urlStr) {
+        @strongify(self)
+        [self appendBackgroundImage:urlStr conversationID:conversationID];
+        if (IS_NOT_EMPTY_NSSTRING(conversationID)) {
+            [TUICore notifyEvent:TUICore_TUIContactNotify subKey:TUICore_TUIContactNotify_UpdateConversationBackgroundImageSubKey object:self param:@{TUICore_TUIContactNotify_UpdateConversationBackgroundImageSubKey_ConversationID : conversationID}];
+        }
+    };
+}
+
+- (NSString *)getBackgroundImageUrlByConversationID:(NSString *)targerConversationID {
+    if (targerConversationID.length == 0) {
+        return nil;
+    }
+    NSDictionary *dict = [NSUserDefaults.standardUserDefaults objectForKey:@"conversation_backgroundImage_map"];
+    if (dict == nil) {
+        dict = @{};
+    }
+    NSString *conversationID_UserID = [NSString stringWithFormat:@"%@_%@",targerConversationID,[TUILogin getUserID]];
+    if (![dict isKindOfClass:NSDictionary.class] || ![dict.allKeys containsObject:conversationID_UserID]) {
+        return nil;
+    }
+    return [dict objectForKey:conversationID_UserID];
+}
+
+- (void)appendBackgroundImage:(NSString *)imgUrl conversationID:(NSString *)conversationID {
+    if (conversationID.length == 0) {
+        return;
+    }
+    NSDictionary *dict = [NSUserDefaults.standardUserDefaults objectForKey:@"conversation_backgroundImage_map"];
+    if (dict == nil) {
+        dict = @{};
+    }
+    if (![dict isKindOfClass:NSDictionary.class]) {
+        return;
+    }
+    
+    NSString *conversationID_UserID = [NSString stringWithFormat:@"%@_%@",conversationID,[TUILogin getUserID]];
+    NSMutableDictionary *originDataDict = [NSMutableDictionary dictionaryWithDictionary:dict];
+    if (imgUrl.length == 0) {
+        [originDataDict removeObjectForKey:conversationID_UserID];
+    }
+    else {
+        [originDataDict setObject:imgUrl forKey:conversationID_UserID];
+    }
+    
+    [NSUserDefaults.standardUserDefaults setObject:originDataDict forKey:@"conversation_backgroundImage_map"];
+    [NSUserDefaults.standardUserDefaults synchronize];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -402,7 +471,11 @@
     [[V2TIMManager sharedInstance] deleteFromFriendList:@[self.friendProfile.userID] deleteType:V2TIM_FRIEND_TYPE_BOTH succ:^(NSArray<V2TIMFriendOperationResult *> *resultList) {
         weakSelf.modified = YES;
         [[TUIConversationPin sharedInstance] removeTopConversation:[NSString stringWithFormat:@"c2c_%@",weakSelf.friendProfile.userID] callback:nil];
-        [weakSelf.navigationController popViewControllerAnimated:YES];
+        NSString * conversationID = [NSString stringWithFormat:@"c2c_%@",weakSelf.friendProfile.userID];
+        if (IS_NOT_EMPTY_NSSTRING(conversationID)) {
+            [TUICore notifyEvent:TUICore_TUIConversationNotify subKey:TUICore_TUIConversationNotify_RemoveConversationSubKey object:self param:@{TUICore_TUIConversationNotify_RemoveConversationSubKey_ConversationID : conversationID}];
+        }
+        [weakSelf.navigationController popToRootViewControllerAnimated:YES];
     } fail:nil];
 }
 

@@ -334,14 +334,14 @@ static NSString *const Id = @"con";
     UIAlertController *alertVc = [UIAlertController alertControllerWithTitle:TUIKitLocalizableString(TUIKitRelayConfirmForward)
                                                                      message:nil
                                                               preferredStyle:UIAlertControllerStyleAlert];
-    [alertVc addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel)
+    [alertVc tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel)
                                                 style:UIAlertActionStyleDefault
                                               handler:^(UIAlertAction * _Nonnull action) {
         if (handler) {
             handler(NO);
         }
     }]];
-    [alertVc addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Confirm)
+    [alertVc tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Confirm)
                                                 style:UIAlertActionStyleDefault
                                               handler:^(UIAlertAction * _Nonnull action) {
         if (handler) {

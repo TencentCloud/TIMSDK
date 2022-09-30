@@ -28,14 +28,65 @@
     return vc;
 }
 
-- (TUISelectGroupMemberViewController *)createSelectGroupMemberViewController:(NSString *)groupID name:(NSString *)name optionalStyle:(TUISelectMemberOptionalStyle)optionalStyle {
+- (TUISelectGroupMemberViewController *)createSelectGroupMemberViewController:(NSString *)groupID
+                                                                         name:(NSString *)name
+                                                                optionalStyle:(TUISelectMemberOptionalStyle)optionalStyle {
+    return [self createSelectGroupMemberViewController:groupID
+                                                  name:name
+                                         optionalStyle:optionalStyle
+                                    selectedUserIDList:@[]];
+}
+
+- (TUISelectGroupMemberViewController *)createSelectGroupMemberViewController:(NSString *)groupID
+                                                                         name:(NSString *)name
+                                                                optionalStyle:(TUISelectMemberOptionalStyle)optionalStyle
+                                                           selectedUserIDList:(NSArray *)userIDList {
+    return [self createSelectGroupMemberViewController:groupID
+                                                  name:name
+                                         optionalStyle:optionalStyle
+                                    selectedUserIDList:@[]
+                                              userData:@""];
+}
+
+- (TUISelectGroupMemberViewController *)createSelectGroupMemberViewController:(NSString *)groupID
+                                                                         name:(NSString *)name
+                                                                optionalStyle:(TUISelectMemberOptionalStyle)optionalStyle
+                                                           selectedUserIDList:(NSArray *)userIDList
+                                                                     userData:(NSString *)userData {
     TUISelectGroupMemberViewController *vc = [[TUISelectGroupMemberViewController alloc] init];
     vc.groupId = groupID;
     vc.name = name;
     vc.optionalStyle = optionalStyle;
+    vc.selectedUserIDList = userIDList;
+    vc.userData = userData;
     return vc;
 }
 
+- (void)getGroupNameNormalFormatByContacts:(NSArray<TUICommonContactSelectCellData *> *)contacts completion:(void (^)(BOOL success,NSString *groupName))completion {
+    NSString *loginUser = [[V2TIMManager sharedInstance] getLoginUser];
+    [[V2TIMManager sharedInstance] getUsersInfo:@[loginUser] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
+        NSString *showName = loginUser;
+        if (infoList.firstObject.nickName.length > 0) {
+            showName = infoList.firstObject.nickName;
+        }
+        NSMutableString *groupName = [NSMutableString stringWithString:showName];
+        for (TUICommonContactSelectCellData *item in contacts) {
+            [groupName appendFormat:@"、%@", item.title];
+        }
+
+        if ([groupName length] > 10) {
+            groupName = [groupName substringToIndex:10].mutableCopy;
+        }
+        if (completion) {
+            completion(YES,groupName);
+        }
+    } fail:^(int code, NSString *desc) {
+        if (completion) {
+            completion(NO,@"");
+        }
+    }];
+
+}
 - (void)createGroup:(NSString *)groupType
        createOption:(V2TIMGroupAddOpt)createOption
            contacts:(NSArray<TUICommonContactSelectCellData *> *)contacts
@@ -111,16 +162,32 @@
 
 #pragma mark - TUIServiceProtocol
 - (id)onCall:(NSString *)method param:(nullable NSDictionary *)param {
+    id returnObject = nil;
     if ([method isEqualToString:TUICore_TUIGroupService_GetGroupInfoControllerMethod]) {
-        return [self createGroupInfoController:[param tui_objectForKey:TUICore_TUIGroupService_GetGroupInfoControllerMethod_GroupIDKey asClass:NSString.class]];
-    }
-    else if ([method isEqualToString:TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod]) {
-        NSNumber *optionalStyleNum = [param tui_objectForKey:TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_OptionalStyleKey asClass:NSNumber.class];
-        return [self createSelectGroupMemberViewController:[param tui_objectForKey:TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_GroupIDKey asClass:NSString.class] name:[param tui_objectForKey:TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_NameKey asClass:NSString.class] optionalStyle:optionalStyleNum.integerValue];
+        returnObject = [self createGroupInfoController:[param tui_objectForKey:TUICore_TUIGroupService_GetGroupInfoControllerMethod_GroupIDKey
+                                                                       asClass:NSString.class]];
+        
+    } else if ([method isEqualToString:TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod]) {
+        NSString *groupID            = [param tui_objectForKey:TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_GroupIDKey
+                                                      asClass:NSString.class];
+        NSString *title              = [param tui_objectForKey:TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_NameKey
+                                                      asClass:NSString.class];
+        NSNumber *optionalStyleNum   = [param tui_objectForKey:TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_OptionalStyleKey
+                                                     asClass:NSNumber.class];
+        NSArray  *selectedUserIDList = [param tui_objectForKey:TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_SelectedUserIDListKey
+                                                      asClass:NSArray.class];
+        NSString *userData           = [param tui_objectForKey:TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_UserDataKey asClass:NSString.class];
+        
+        returnObject = [self createSelectGroupMemberViewController:groupID
+                                                              name:title
+                                                     optionalStyle:[optionalStyleNum integerValue]
+                                                selectedUserIDList:selectedUserIDList
+                                                          userData:userData];
+        
     } else if ([method isEqualToString:TUICore_TUIGroupService_CreateGroupMethod]) {
         NSString *groupType = [param tui_objectForKey:TUICore_TUIGroupService_CreateGroupMethod_GroupTypeKey asClass:NSString.class];
-        NSNumber *option = [param tui_objectForKey:TUICore_TUIGroupService_CreateGroupMethod_OptionKey asClass:NSNumber.class];
-        NSArray *contacts = [param tui_objectForKey:TUICore_TUIGroupService_CreateGroupMethod_ContactsKey asClass:NSArray.class];
+        NSNumber *option    = [param tui_objectForKey:TUICore_TUIGroupService_CreateGroupMethod_OptionKey asClass:NSNumber.class];
+        NSArray  *contacts  = [param tui_objectForKey:TUICore_TUIGroupService_CreateGroupMethod_ContactsKey asClass:NSArray.class];
         void (^completion)(BOOL, NSString *, NSString *) = [param objectForKey:TUICore_TUIGroupService_CreateGroupMethod_CompletionKey];
         
         [self createGroup:groupType
@@ -128,6 +195,6 @@
                  contacts:contacts
                completion:completion];
     }
-    return nil;
+    return returnObject;
 }
 @end

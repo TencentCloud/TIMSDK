@@ -164,8 +164,6 @@
         NSAttributedString *spaceString = [[NSAttributedString alloc] initWithString:atText attributes:@{NSFontAttributeName: textFont}];
         [self.inputController.inputBar.inputTextView.textStorage insertAttributedString:spaceString atIndex:self.inputController.inputBar.inputTextView.textStorage.length];
         [self.inputController.inputBar updateTextViewFrame];
-        
-        [self.atSelectGroupMemberVC.navigationController popViewControllerAnimated:YES];
     }
     else if ([key isEqualToString:TUICore_TUIGroupNotify]
              && [subKey isEqualToString:TUICore_TUIGroupNotify_SelectGroupMemberSubKey]
@@ -177,8 +175,6 @@
             NSParameterAssert(user.userId);
             [userIDs addObject:user.userId];
         }
-        [self.callingSelectGroupMemberVC.navigationController popViewControllerAnimated:YES];
-        
         
         // 显示通话VC
         NSDictionary *param = @{
@@ -278,7 +274,7 @@
     if ([key isEqualToString:TUIInputMoreCellKey_VideoCall]
         || [key isEqualToString:TUIInputMoreCellKey_AudioCall]) {
         NSDictionary *param = @{
-            TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_GroupIDKey : self.conversationData.groupID,
+            TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_GroupIDKey : self.conversationData.groupID?:@"",
             TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_NameKey : TUIKitLocalizableString(Make-a-call),
         };
         UIViewController *vc = [TUICore callService:TUICore_TUIGroupService

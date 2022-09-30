@@ -104,7 +104,7 @@
 
     _inputTextView = [[TUIResponderTextView alloc] init];
     _inputTextView.delegate = self;
-    [_inputTextView setFont:[UIFont systemFontOfSize:16]];
+    [_inputTextView setFont:kTUIInputNoramlFont];
     _inputTextView.backgroundColor = TUIChatDynamicColor(@"chat_input_bg_color", @"#FFFFFF");
     _inputTextView.textColor = TUIChatDynamicColor(@"chat_input_text_color", @"#000000");
     [_inputTextView setReturnKeyType:UIReturnKeySend];
@@ -233,8 +233,8 @@
         [AVAudioSession.sharedInstance requestRecordPermission:^(BOOL granted) {
             if (!granted) {
                 UIAlertController *ac = [UIAlertController alertControllerWithTitle:TUIKitLocalizableString(TUIKitInputNoMicTitle) message:TUIKitLocalizableString(TUIKitInputNoMicTips) preferredStyle:UIAlertControllerStyleAlert];
-                [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitInputNoMicOperateLater) style:UIAlertActionStyleCancel handler:nil]];
-                [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitInputNoMicOperateEnable) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitInputNoMicOperateLater) style:UIAlertActionStyleCancel handler:nil]];
+                [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitInputNoMicOperateEnable) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                     UIApplication *app = [UIApplication sharedApplication];
                     NSURL *settingsURL = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
                     if ([app canOpenURL:settingsURL]) {
@@ -424,7 +424,7 @@
             NSString *sp = [[textView.textStorage getPlainString] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
             if (sp.length == 0) {
                 UIAlertController *ac = [UIAlertController alertControllerWithTitle:TUIKitLocalizableString(TUIKitInputBlankMessageTitle) message:nil preferredStyle:UIAlertControllerStyleAlert];
-                [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Confirm) style:UIAlertActionStyleDefault handler:nil]];
+                [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Confirm) style:UIAlertActionStyleDefault handler:nil]];
                 [self.mm_viewController presentViewController:ac animated:YES completion:nil];
             } else {
                 [_delegate inputBar:self didSendText:[textView.textStorage getPlainString]];
@@ -520,7 +520,7 @@
     emojiTextAttachment.image =  [[TUIImageCache sharedInstance] getFaceFromCache:emoji.path];
     
     //Set emoji size
-    emojiTextAttachment.emojiSize = CGSizeMake(15,15);
+    emojiTextAttachment.emojiSize = kChatDefaultEmojiSize;
     NSAttributedString *str = [NSAttributedString attributedStringWithAttachment:emojiTextAttachment];
 
     NSRange selectedRange = _inputTextView.selectedRange;

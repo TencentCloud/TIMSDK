@@ -512,7 +512,8 @@
 #define TUICore_TUIConversationNotify_SelectConversationSubKey_ItemGroupIDKey @"TUICore_TUIConversationNotify_SelectConversationSubKey_ItemGroupIDKey"
 #define TUICore_TUIConversationNotify_SelectConversationSubKey_ItemUserIDKey @"TUICore_TUIConversationNotify_SelectConversationSubKey_ItemUserIDKey"
 #define TUICore_TUIConversationNotify_SelectConversationSubKey_ItemTitleKey @"TUICore_TUIConversationNotify_SelectConversationSubKey_ItemTitleKey"
-
+#define TUICore_TUIConversationNotify_RemoveConversationSubKey @"TUICore_TUIConversationNotify_RemoveConversationSubKey"
+#define TUICore_TUIConversationNotify_RemoveConversationSubKey_ConversationID @"TUICore_TUIConversationNotify_RemoveConversationSubKey_ConversationID"
 #define TUICore_TUIConversationNotify_ClearConversationUIHistorySubKey @"TUICore_TUIConversationNotify_ClearConversationUIHistorySubKey"
 
 #pragma mark - TUICore_TUIConversationExtension
@@ -544,6 +545,9 @@
 #define TUICore_TUIContactNotify_SelectedContactsSubKey @"TUICore_TUIContactNotify_SelectedContacts"
 #define TUICore_TUIContactNotify_SelectedContactsSubKey_ListKey @"TUICore_TUIContactEvent_SelectedContactsSubKey_ListKey"
 
+#define TUICore_TUIContactNotify_UpdateConversationBackgroundImageSubKey @"TUICore_TUIContactNotify_UpdateConversationBackgroundImageSubKey"
+#define TUICore_TUIContactNotify_UpdateConversationBackgroundImageSubKey_ConversationID @"TUICore_TUIContactNotify_UpdateConversationBackgroundImageSubKey_ConversationID"
+
 #pragma mark - TUICore_TUIGroupService
 #define TUICore_TUIGroupService @"TUICore_TUIGroupService"
 #define TUICore_TUIGroupService_GetGroupInfoControllerMethod @"TUICore_TUIGroupService_GetGroupInfoControllerMethod"
@@ -552,6 +556,8 @@
 #define TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_GroupIDKey @"TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod"
 #define TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_NameKey @"TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_NameKey"
 #define TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_OptionalStyleKey @"TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_optionalStyleKey"
+#define TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_SelectedUserIDListKey @"TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_SelectedUserIDListKey"
+#define TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_UserDataKey @"TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_UserDataKey"
 #define TUICore_TUIGroupService_CreateGroupMethod @"TUICore_TUIGroupService_CreateGroupMethod"
 #define TUICore_TUIGroupService_CreateGroupMethod_GroupTypeKey @"TUICore_TUIGroupService_CreateGroupMethod_GroupTypeKey"
 #define TUICore_TUIGroupService_CreateGroupMethod_OptionKey @"TUICore_TUIGroupService_CreateGroupMethod_OptionKey"
@@ -562,8 +568,12 @@
 #define TUICore_TUIGroupNotify @"TUICore_TUIContactNotify"
 #define TUICore_TUIGroupNotify_SelectGroupMemberSubKey @"TUICore_TUIGroupNotify_SelectGroupMemberSubKey"
 #define TUICore_TUIGroupNotify_SelectGroupMemberSubKey_UserListKey @"TUICore_TUIGroupNotify_SelectGroupMemberSubKey_UserListKey"
+#define TUICore_TUIGroupNotify_SelectGroupMemberSubKey_UserDataKey @"TUICore_TUIGroupNotify_SelectGroupMemberSubKey_UserDataKey"
 #define TUICore_TUIGroupNotify_CreateGroupSubKey @"TUICore_TUIGroupNotify_CreateGroupSubKey"
 #define TUICore_TUIGroupNotify_CreateGroupSubKey_ConversationDataKey @"TUICore_TUIGroupNotify_CreateGroupSubKey_ConversationDataKey"
+
+#define TUICore_TUIGroupNotify_UpdateConversationBackgroundImageSubKey @"TUICore_TUIGroupNotify_UpdateConversationBackgroundImageSubKey"
+#define TUICore_TUIGroupNotify_UpdateConversationBackgroundImageSubKey_ConversationID @"TUICore_TUIGroupNotify_UpdateConversationBackgroundImageSubKey_ConversationID"
 
 #pragma mark - TUICore_TUICallingService
 #define TUICore_TUICallingService @"TUICore_TUICallingService"
@@ -577,10 +587,11 @@
 #define TUICore_TUICallingService_ReceivePushCallingMethod @"TUICore_TUICallingService_ReceivePushCallingMethod"
 #define TUICore_TUICallingService_ShowCallingViewMethod_SignalingInfo @"TUICore_TUICallingService_ShowCallingViewMethod_SignalingInfo"
 
+#define TUICore_TUICallingService_EnableMultiDeviceAbilityMethod @"TUICore_TUICallingService_EnableMultiDeviceAbilityMethod"
+#define TUICore_TUICallingService_EnableMultiDeviceAbilityMethod_EnableMultiDeviceAbility @"TUICore_TUICallingService_EnableMultiDeviceAbilityMethod_EnableMultiDeviceAbility"
 
 #define TUICore_TUICallingService_EnableFloatWindowMethod @"TUICore_TUICallingService_EnableFloatWindowMethod"
 #define TUICore_TUICallingService_EnableFloatWindowMethod_EnableFloatWindow @"TUICore_TUICallingService_EnableFloatWindowMethod_EnableFloatWindow"
-
 
 #pragma mark - TUICore_TUIGiftExtension
 #define TUICore_TUIGiftExtension_GetEnterBtn    @"TUICore_TUIGiftExtension_GetEnterBtn"
@@ -638,6 +649,14 @@
 //            TUIOfflinePush
 //
 /////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * 设置 VoIP 的证书 ID
+ * Set certificate IDs for VoIP
+ */
+#define TUIOfflinePushCertificateIDForVoIP(value) - (int)push_certificateIDForVoIP {return value;}
+
+
 /**
  * 设置 APNs 的证书 ID
  * Set certificate IDs for APNs

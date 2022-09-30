@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUIOfflinePush'
-  spec.version      = '6.6.3002'
+  spec.version      = '6.7.3184'
   spec.platform     = :ios 
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
@@ -15,9 +15,15 @@ Pod::Spec.new do |spec|
   
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/6.6.3002/ios/TUIOfflinePush.zip'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/6.7.3184/ios/TUIOfflinePush.zip'}
   
   spec.default_subspec = 'APNS'
+  
+  spec.subspec 'VoIP' do |ss|
+    ss.dependency 'TUIOfflinePush/APNS'
+    ss.source_files = '**/TUIOfflinePush/VoIP/**/*.{h,m,mm}'
+    ss.frameworks = 'CallKit'
+  end
   
   spec.subspec 'APNS' do |ss|
     ss.dependency 'TUIOfflinePush/Base'
@@ -31,7 +37,7 @@ Pod::Spec.new do |spec|
   end
   
   spec.subspec 'Base' do |ss|
-    ss.dependency 'TUICore', '6.6.3002'
+    ss.dependency 'TUICore','6.7.3184'
     ss.source_files = '**/TUIOfflinePush/Base/**/*.{h,m,mm}'
   end
   
