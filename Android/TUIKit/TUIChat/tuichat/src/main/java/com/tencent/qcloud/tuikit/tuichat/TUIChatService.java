@@ -114,7 +114,6 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
         initEvent();
         initIMListener();
         initDataStore();
-        FaceManager.loadEmojis();
     }
 
     // 初始化自定义消息类型
@@ -367,6 +366,9 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
             }
         } else if (TextUtils.equals(key, TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED)) {
             if (TextUtils.equals(subKey, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGIN_SUCCESS)) {
+                // 加载默认 emoji 小表情
+                // load default emojis
+                FaceManager.loadEmojis();
                 // 设置音视频通话的悬浮窗是否开启
                 // Set whether to open the floating window for voice and video calls
                 Map<String, Object> enableFloatWindowParam = new HashMap<>();
