@@ -125,7 +125,7 @@
     UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Accept", nil) style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
 
     }];
-    [alvc addAction:confirmAction];
+    [alvc tuitheme_addAction:confirmAction];
     [self presentViewController:alvc animated:YES completion:^{
     }];
 }

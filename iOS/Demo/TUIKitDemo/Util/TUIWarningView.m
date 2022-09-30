@@ -24,8 +24,8 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.buttonAction = action;
-        self.backgroundColor = [UIColor colorWithHex:@"FF9500" alpha:0.1];
-        
+        self.backgroundColor = [UIColor colorWithHex:@"fdf4e7" alpha:1];
+
         if (tips.length > 0) {
             self.tipsLabel = [[UILabel alloc] initWithFrame:CGRectZero];
             [self addSubview:self.tipsLabel];

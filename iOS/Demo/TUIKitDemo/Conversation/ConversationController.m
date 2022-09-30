@@ -19,6 +19,7 @@
 #import "TCUtil.h"
 #import "TUIGroupService.h"
 #import "TUIFoldListViewController.h"
+#import "TUIGroupCreateController.h"
 
 @interface ConversationController () <TUIConversationListControllerListener, TPopViewDelegate, V2TIMSDKListener>
 @property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
@@ -154,28 +155,11 @@
     friend.image = TUIDemoDynamicImage(@"pop_icon_new_chat_img", [UIImage imageNamed:TUIDemoImagePath(@"new_chat")]);
     friend.title = NSLocalizedString(@"ChatsNewChatText", nil);
     [menus addObject:friend];
-
-    TPopCellData *group3 = [[TPopCellData alloc] init];
-    group3.image =
-    TUIDemoDynamicImage(@"pop_icon_new_group_img", [UIImage imageNamed:TUIDemoImagePath(@"new_groupchat")]);
-    group3.title = NSLocalizedString(@"ChatsNewPrivateGroupText", nil);
-    [menus addObject:group3];
-
+    
     TPopCellData *group = [[TPopCellData alloc] init];
     group.image = TUIDemoDynamicImage(@"pop_icon_new_group_img", [UIImage imageNamed:TUIDemoImagePath(@"new_groupchat")]);
     group.title = NSLocalizedString(@"ChatsNewGroupText", nil);
     [menus addObject:group];
-
-    TPopCellData *room = [[TPopCellData alloc] init];
-    room.image = TUIDemoDynamicImage(@"pop_icon_new_group_img", [UIImage imageNamed:TUIDemoImagePath(@"new_groupchat")]);
-    room.title = NSLocalizedString(@"ChatsNewChatRoomText", nil);
-    [menus addObject:room];
-    
-    TPopCellData *community = [[TPopCellData alloc] init];
-    community.image = TUIDemoDynamicImage(@"pop_icon_new_group_img", [UIImage imageNamed:TUIDemoImagePath(@"new_groupchat")]);
-    community.title = NSLocalizedString(@"ChatsNewCommunityText", nil);
-    [menus addObject:community];
-
 
     CGFloat height = [TPopCell getHeight] * menus.count + TPopView_Arrow_Size.height;
     CGFloat orginY = StatusBar_Height + NavBar_Height;
@@ -211,52 +195,60 @@
         };
         return;
     }
-    else if(index == 1){
+    else {
         // create discuss group
         TUIContactSelectController *vc = [TUIContactSelectController new];
         vc.title = NSLocalizedString(@"ChatsSelectContact", nil);
         [self.navigationController pushViewController:vc animated:YES];
         vc.finishBlock = ^(NSArray<TUICommonContactSelectCellData *> *array) {
             @strongify(self)
-            [self addGroup:GroupType_Work addOption:0 withContacts:array];
-        };
-        return;
-    } else if(index == 2){
-        // create group chat
-        TUIContactSelectController *vc = [TUIContactSelectController new];
-        vc.title = NSLocalizedString(@"ChatsSelectContact", nil);
-        [self.navigationController pushViewController:vc animated:YES];
-        vc.finishBlock = ^(NSArray<TUICommonContactSelectCellData *> *array) {
-            @strongify(self)
-            [self addGroup:GroupType_Public addOption:V2TIM_GROUP_ADD_ANY withContacts:array];
-        };
-        return;
-    } else if(index == 3){
-        // create chat room
-        TUIContactSelectController *vc = [TUIContactSelectController new];
-        vc.title = NSLocalizedString(@"ChatsSelectContact", nil);
-        [self.navigationController pushViewController:vc animated:YES];
-        vc.finishBlock = ^(NSArray<TUICommonContactSelectCellData *> *array) {
-            @strongify(self)
-            [self addGroup:GroupType_Meeting addOption:V2TIM_GROUP_ADD_ANY withContacts:array];
-        };
-        return;
-    } else if(index == 4){
-        // create community
-        TUIContactSelectController *vc = [TUIContactSelectController new];
-        vc.title = NSLocalizedString(@"ChatsSelectContact", nil);
-        [self.navigationController pushViewController:vc animated:YES];
-        vc.finishBlock = ^(NSArray<TUICommonContactSelectCellData *> *array) {
-            @strongify(self)
-            [self addGroup:GroupType_Community addOption:V2TIM_GROUP_ADD_ANY withContacts:array];
+
+            TUIGroupCreateController * groupCreateController = [[TUIGroupCreateController alloc] init];
+            groupCreateController.title = @"";
+            [[TUIGroupService shareInstance] getGroupNameNormalFormatByContacts:array completion:^(BOOL success, NSString * _Nonnull groupName) {
+                V2TIMGroupInfo * createGroupInfo = [[V2TIMGroupInfo alloc] init];
+                createGroupInfo.groupID = @"";
+                createGroupInfo.groupName = groupName;
+                createGroupInfo.groupType = @"Work";
+                groupCreateController.createGroupInfo = createGroupInfo;
+                groupCreateController.createContactArray = [NSArray arrayWithArray:array];
+                [self.navigationController pushViewController:groupCreateController animated:YES];
+
+            }];
+            
+            groupCreateController.submitCallback = ^(BOOL isSuccess, V2TIMGroupInfo * _Nonnull info) {
+                [self jumpToNewChatVCWhenCreatGroupSuccess:isSuccess info:info];
+            };
+            return;
         };
         return;
     }
-    else {
-        return;
-    }
+
 }
 
+- (void)jumpToNewChatVCWhenCreatGroupSuccess:(BOOL)isSuccess info:(V2TIMGroupInfo *)info {
+    if (!isSuccess) {
+        return;
+    }
+    TUIChatConversationModel *conversationData = [[TUIChatConversationModel alloc] init];
+    conversationData.groupID = info.groupID;
+    conversationData.title = info.groupName;
+    conversationData.groupType = info.groupType;
+    
+    TUIGroupChatViewController *vc = [[TUIGroupChatViewController alloc] init];
+    vc.conversationData = conversationData;
+    
+    [self.navigationController pushViewController:vc animated:YES];
+    NSMutableArray *tempArray = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
+    for (UIViewController * vc in self.navigationController.viewControllers) {
+        if ([vc isKindOfClass:NSClassFromString(@"TUIGroupCreateController")] ||
+            [vc isKindOfClass:NSClassFromString(@"TUIContactSelectController")]) {
+            [tempArray removeObject:vc];
+        }
+    }
+    
+    self.navigationController.viewControllers = tempArray;
+}
 - (void)addGroup:(NSString *)groupType
        addOption:(V2TIMGroupAddOpt)addOption
     withContacts:(NSArray<TUICommonContactSelectCellData *> *)contacts {
