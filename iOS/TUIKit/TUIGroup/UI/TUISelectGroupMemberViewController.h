@@ -26,6 +26,8 @@ typedef void(^SelectedFinished)(NSMutableArray <TUIUserModel *> *modelList);
 @property(nonatomic,copy) NSString *name;
 @property(nonatomic,strong) SelectedFinished selectedFinished;
 @property(nonatomic,assign) TUISelectMemberOptionalStyle optionalStyle;
+@property(nonatomic,strong) NSArray *selectedUserIDList;
+@property(nonatomic,copy) NSString *userData;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -904,10 +904,10 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     _reSendUIMsg = cell.messageData;
     __weak typeof(self) weakSelf = self;
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:TUIKitLocalizableString(TUIKitTipsConfirmResendMessage) message:nil preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Re-send) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    [alert tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Re-send) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [weakSelf sendUIMessage:weakSelf.reSendUIMsg];
     }]] ;
-    [alert addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+    [alert tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
 
     }]];
     [self.navigationController presentViewController:alert animated:YES completion:nil];
@@ -991,14 +991,14 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 {
     @weakify(self)
     UIAlertController *vc = [UIAlertController alertControllerWithTitle:nil message:TUIKitLocalizableString(ConfirmDeleteMessage) preferredStyle:UIAlertControllerStyleActionSheet];
-    [vc addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Delete) style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+    [vc tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Delete) style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
         @strongify(self)
         [self.messageDataProvider deleteUIMsgs:@[self.menuUIMsg] SuccBlock:nil FailBlock:^(int code, NSString *desc) {
             NSLog(@"remove msg failed!");
             NSAssert(NO, desc);
         }];
     }]];
-    [vc addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:nil]];
+    [vc tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:nil]];
     [self presentViewController:vc animated:YES completion:nil];
 }
 

@@ -12,6 +12,7 @@ static CGFloat progressLayerLineWidth = 5.0;
 @property (nonatomic) UIView *contentView;
 @property (nonatomic) UIButton *switchCameraButton;
 @property (nonatomic) UIButton *closeButton;
+@property (nonatomic,strong) UIButton *pictureLibButton;
 @property (nonatomic) UIView *focusView;
 @property (nonatomic) UISlider *slider;
 @property (nonatomic) UIView *photoBtn;
@@ -47,6 +48,7 @@ static CGFloat progressLayerLineWidth = 5.0;
     [self.contentView addSubview:self.switchCameraButton];
     [self.contentView addSubview:self.photoBtn];
     [self.contentView addSubview:self.closeButton];
+    [self.contentView addSubview:self.pictureLibButton];
     [self.previewView addSubview:self.focusView];
     [self.previewView addSubview:self.slider];
     
@@ -141,6 +143,10 @@ static CGFloat progressLayerLineWidth = 5.0;
         CGFloat closeButtonY = self.photoBtn.center.y - closeButtonWidth / 2.0;
         self.closeButton.frame = CGRectMake(closeButtonX, closeButtonY, closeButtonWidth, closeButtonWidth);
         
+        CGFloat pictureButtonWidth = 30.0;
+
+        self.pictureLibButton.frame = CGRectMake(self.contentView.frame.size.width - closeButtonX, closeButtonY, pictureButtonWidth, pictureButtonWidth);
+        
         self.slider.transform = CGAffineTransformMakeRotation(M_PI_2);
         self.slider.frame = CGRectMake(self.bounds.size.width-50, 50, 15, 200);
     }
@@ -222,6 +228,13 @@ static CGFloat progressLayerLineWidth = 5.0;
     }
 }
 
+- (void)pictureLibClick:(UIButton *)btn {
+
+    if ([self.delegate respondsToSelector:@selector(pictureLibAction:)]) {
+        [self.delegate pictureLibAction:self];
+    }
+}
+
 - (void)longPressGesture:(UILongPressGestureRecognizer *)gesture {
     switch (gesture.state) {
         case UIGestureRecognizerStateBegan:{
@@ -249,6 +262,8 @@ static CGFloat progressLayerLineWidth = 5.0;
     
     self.isVideoRecording = YES;
     
+    self.pictureLibButton.hidden = YES;
+    
     [self.timer startTimer];
     
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -273,6 +288,8 @@ static CGFloat progressLayerLineWidth = 5.0;
     self.closeButton.hidden = NO;
     
     self.isVideoRecording = NO;
+    
+    self.pictureLibButton.hidden = NO;
     
     [self.timer stopTimer];
     
@@ -331,6 +348,16 @@ static CGFloat progressLayerLineWidth = 5.0;
         [_closeButton addTarget:self action:@selector(closeButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _closeButton;
+}
+
+- (UIButton *)pictureLibButton {
+    if (!_pictureLibButton) {
+        _pictureLibButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        UIImage *pictureImage = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"more_picture")];
+        [_pictureLibButton setBackgroundImage:pictureImage forState:UIControlStateNormal];
+        [_pictureLibButton addTarget:self action:@selector(pictureLibClick:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _pictureLibButton;
 }
 
 - (UIView *)photoBtn {

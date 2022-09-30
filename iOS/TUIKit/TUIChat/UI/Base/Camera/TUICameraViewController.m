@@ -291,6 +291,16 @@
     [self popViewControllerAnimated:YES];
 }
 
+- (void)pictureLibAction:(TUICameraView *)cameraView {
+    
+    @weakify(self)
+    [self.delegate cameraViewControllerDidPictureLib:self finishCallback:^{
+        @strongify(self);
+        [self popViewControllerAnimated:NO];
+    }];
+
+}
+
 #pragma mark - - Record
 -(void)startRecordVideoAction:(TUICameraView *)cameraView {
    

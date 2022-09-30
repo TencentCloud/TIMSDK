@@ -241,6 +241,13 @@
         [personalArray addObject:switchData];
         
         [dataList addObject:personalArray];
+        
+        TUICommonTextCellData *changeBackgroundImageItem = [[TUICommonTextCellData alloc] init];
+        changeBackgroundImageItem.key = TUIKitLocalizableString(ProfileSetBackgroundImage);
+        changeBackgroundImageItem.cselector = @selector(didSelectOnChangeBackgroundImage:);
+        changeBackgroundImageItem.showAccessory = YES;
+        [dataList addObject:@[changeBackgroundImageItem]];
+
 
         NSMutableArray *buttonArray = [NSMutableArray array];
         TUIButtonCellData *clearHistory = [[TUIButtonCellData alloc] init];
@@ -349,6 +356,12 @@
 
 }
 
+- (void)didSelectOnChangeBackgroundImage:(TUICommonTextCell *)cell {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didSelectOnChangeBackgroundImage:)]) {
+        [self.delegate didSelectOnChangeBackgroundImage:cell];
+    }
+
+}
 - (void)didTransferGroup:(TUIButtonCell *)cell  {
     if (self.delegate && [self.delegate respondsToSelector:@selector(didTransferGroup:)]) {
         [self.delegate didTransferGroup:cell];

@@ -15,11 +15,14 @@ typedef NS_ENUM(NSUInteger, TUISelectAvatarType) {
     TUISelectAvatarTypeUserAvatar,
     TUISelectAvatarTypeGroupAvatar,
     TUISelectAvatarTypeCover,
+    TUISelectAvatarTypeConversationBackGroundCover,
 };
 @interface TUISelectAvatarController : UIViewController
 @property (nonatomic, copy) void (^selectCallBack)(NSString *urlStr);
 @property (nonatomic, assign) TUISelectAvatarType selectAvatarType;
 @property (nonatomic, copy) NSString *profilFaceURL;
+@property (nonatomic, strong) UIImage *cacheGroupGridAvatarImage;
+@property (nonatomic, copy) NSString *createGroupType;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -150,8 +150,8 @@
     }
     if (@available(iOS 8.0, *)) {
         UIAlertController *ac = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
-        [ac addAction:[UIAlertAction actionWithTitle:laterMessage style:UIAlertActionStyleCancel handler:nil]];
-        [ac addAction:[UIAlertAction actionWithTitle:openSettingMessage style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [ac tuitheme_addAction:[UIAlertAction actionWithTitle:laterMessage style:UIAlertActionStyleCancel handler:nil]];
+        [ac tuitheme_addAction:[UIAlertAction actionWithTitle:openSettingMessage style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             UIApplication *app = [UIApplication sharedApplication];
             NSURL *settingsURL = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
             if ([app canOpenURL:settingsURL]) {

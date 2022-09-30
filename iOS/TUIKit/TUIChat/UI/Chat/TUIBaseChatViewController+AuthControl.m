@@ -30,10 +30,25 @@
 #import "TUIThemeManager.h"
 #import "PhotosUI/PhotosUI.h"
 #import "TUIUserAuthorizationCenter.h"
+#import <objc/runtime.h>
 
 @interface TUIBaseChatViewController (AuthControl)<UIImagePickerControllerDelegate, UIDocumentPickerDelegate, UINavigationControllerDelegate, TUICameraViewControllerDelegate, TUINotificationProtocol,PHPickerViewControllerDelegate>
+
+@property (nonatomic, copy) void (^cameraViewControllerDidPictureLibCallback)(void);
+
 @end
+
 @implementation TUIBaseChatViewController (AuthControl)
+
+
+- (void (^)(void))cameraViewControllerDidPictureLibCallback  {
+    return objc_getAssociatedObject(self, @selector(cameraViewControllerDidPictureLibCallback));
+}
+
+- (void)setCameraViewControllerDidPictureLibCallback:(void (^)(void))cameraViewControllerDidPictureLibCallback {
+    objc_setAssociatedObject(self, @selector(cameraViewControllerDidPictureLibCallback), cameraViewControllerDidPictureLibCallback, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+
+}
 #pragma mark - UIImagePickerController & UIDocumentPickerViewController
 - (void)selectPhotoForSend
 {
@@ -152,6 +167,7 @@
             
             V2TIMMessage *message = [[V2TIMManager sharedInstance] createImageMessage:path];
             [self sendMessage:message];
+            [self excuteCallbackAfterMediaDataSelected];
         }
         else if([mediaType isEqualToString:(NSString *)kUTTypeMovie]){
             NSURL *url = [info objectForKey:UIImagePickerControllerMediaURL];
@@ -349,6 +365,7 @@
     [TUITool dispatchMainAsync:^{
         V2TIMMessage *message = [TUIMessageDataProvider getVideoMessageWithURL:url];
         [self sendMessage:message];
+        [self excuteCallbackAfterMediaDataSelected];
     }];
 }
 
@@ -414,12 +431,19 @@
     
     V2TIMMessage *message = [[V2TIMManager sharedInstance] createImageMessage:path];
     [self sendMessage:message];
+    [self excuteCallbackAfterMediaDataSelected];
 }
 
 
 - (void)cameraViewControllerDidCancel:(TUICameraViewController *)controller {
 }
 
+- (void)cameraViewControllerDidPictureLib:(TUICameraViewController *)controller finishCallback:(void (^)(void))callback{
+    [self selectPhotoForSendV2];
+    if (callback) {
+        self.cameraViewControllerDidPictureLibCallback = callback;
+    }
+}
 #pragma mark - New version for Assets in iOS 14
 - (void)selectPhotoForSendV2 {
     
@@ -526,6 +550,13 @@
     });
 }
 
+
+- (void)excuteCallbackAfterMediaDataSelected {
+    if (self.cameraViewControllerDidPictureLibCallback) {
+        self.cameraViewControllerDidPictureLibCallback();
+    }
+}
+
 #pragma mark - PHPickerViewControllerDelegate
 - (void)picker:(PHPickerViewController *)picker didFinishPicking:(NSArray<PHPickerResult*> *)results API_AVAILABLE(ios(14)){
     
@@ -561,6 +592,7 @@
                     [[NSFileManager defaultManager] createFileAtPath:path contents:jpegData attributes:nil];
                     V2TIMMessage *message = [[V2TIMManager sharedInstance] createImageMessage:path];
                     [strongSelf sendMessage:message];
+                    [strongSelf excuteCallbackAfterMediaDataSelected];
                 });
             }];
         }

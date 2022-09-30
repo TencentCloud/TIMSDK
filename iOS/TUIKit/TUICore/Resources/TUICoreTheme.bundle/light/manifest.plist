@@ -74,6 +74,8 @@
 	<string>default_group_head_meeting.png</string>
 	<key>default_group_head_avchatroom_img</key>
 	<string>default_group_head_avchatroom.png</string>
+	<key>default_group_head_community_img</key>
+	<string>default_group_head_community.png</string>
 	<key>default_group_head_img</key>
 	<string>default_group_head.png</string>
 	<key>default_c2c_head_img</key>

@@ -109,7 +109,7 @@
     }
 
     if ([self.dataProvider.groupInfo canInviteMember]) {
-        [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitGroupProfileManageAdd) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitGroupProfileManageAdd) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             // add
             self.tag = 1;
             self.showContactSelectVC = [TUICore callService:TUICore_TUIContactService
@@ -120,7 +120,7 @@
         }]];
     }
     if ([self.dataProvider.groupInfo canRemoveMember]) {
-        [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitGroupProfileManageDelete) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitGroupProfileManageDelete) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             // delete
             self.tag = 2;
             self.showContactSelectVC = [TUICore callService:TUICore_TUIContactService
@@ -130,7 +130,7 @@
             [self.navigationController pushViewController:self.showContactSelectVC animated:YES];
         }]];
     }
-    [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:nil]];
+    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:nil]];
 
     [self presentViewController:ac animated:YES completion:nil];
 }

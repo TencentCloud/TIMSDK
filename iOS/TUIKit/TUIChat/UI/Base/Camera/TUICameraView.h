@@ -56,6 +56,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)cancelAction:(TUICameraView *)cameraView;
 
+- (void)pictureLibAction:(TUICameraView *)cameraView;
+
 - (void)takePhotoAction:(TUICameraView *)cameraView;
 
 - (void)stopRecordVideoAction:(TUICameraView *)cameraView RecordDuration:(CGFloat)duration;

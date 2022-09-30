@@ -39,6 +39,9 @@
     [TUICore callService:TUICore_TUICallingService
                   method:TUICore_TUICallingService_EnableFloatWindowMethod
                    param:@{TUICore_TUICallingService_EnableFloatWindowMethod_EnableFloatWindow:@(TUIChatConfig.defaultConfig.enableFloatWindowForCall)}];
+    [TUICore callService:TUICore_TUICallingService
+                  method:TUICore_TUICallingService_EnableMultiDeviceAbilityMethod
+                   param:@{TUICore_TUICallingService_EnableMultiDeviceAbilityMethod_EnableMultiDeviceAbility:@(TUIChatConfig.defaultConfig.enableMultiDeviceForCall)}];
 }
 
 - (NSString *)getDisplayString:(V2TIMMessage *)message {

@@ -9,6 +9,8 @@
 #import "TUIDefine.h"
 #import "NSString+TUIUtil.h"
 
+#define kGetUserStatusPageCount 500
+
 @interface TUIContactViewDataProvider() <V2TIMFriendshipListener, V2TIMSDKListener>
 @property NSDictionary<NSString *, NSArray<TUICommonContactCellData *> *> *dataDict;
 @property NSArray *groupList;
@@ -21,8 +23,7 @@
 
 @implementation TUIContactViewDataProvider
 
-- (instancetype)init
-{
+- (instancetype)init {
     if (self = [super init]) {
         [[V2TIMManager sharedInstance] addFriendListener:self];
         [[V2TIMManager sharedInstance] addIMSDKListener:self];
@@ -30,13 +31,11 @@
     return self;
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)loadContacts
-{
+- (void)loadContacts {
     self.isLoadFinished = NO;
     @weakify(self)
     [[V2TIMManager sharedInstance] getFriendList:^(NSArray<V2TIMFriendInfo *> *infoList) {
@@ -94,8 +93,7 @@
     [self loadFriendApplication];
 }
 
-- (void)loadFriendApplication
-{
+- (void)loadFriendApplication {
     @weakify(self)
     [[V2TIMManager sharedInstance] getFriendApplicationList:^(V2TIMFriendApplicationResult *result) {
         @strongify(self)
@@ -103,8 +101,7 @@
     } fail:nil];
 }
 
-- (void)asyncGetOnlineStatus:(NSArray *)userIDList
-{
+- (void)asyncGetOnlineStatus:(NSArray *)userIDList {
     if (NSThread.isMainThread) {
         @weakify(self)
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
@@ -119,16 +116,33 @@
     }
     
     @weakify(self)
-    [V2TIMManager.sharedInstance getUserStatus:userIDList succ:^(NSArray<V2TIMUserStatus *> *result) {
+    void(^GetUserStatus)(NSArray *userIDList) = ^(NSArray *userIDList) {
         @strongify(self)
-        [self handleOnlineStatus:result];
-    } fail:^(int code, NSString *desc) {
-#if DEBUG
-        if (code == ERR_SDK_INTERFACE_NOT_SUPPORT && TUIConfig.defaultConfig.displayOnlineStatusIcon) {
-            [TUITool makeToast:desc];
-        }
-#endif
-    }];
+        @weakify(self)
+        [V2TIMManager.sharedInstance getUserStatus:userIDList succ:^(NSArray<V2TIMUserStatus *> *result) {
+            @strongify(self)
+            [self handleOnlineStatus:result];
+        } fail:^(int code, NSString *desc) {
+    #if DEBUG
+            if (code == ERR_SDK_INTERFACE_NOT_SUPPORT && TUIConfig.defaultConfig.displayOnlineStatusIcon) {
+                [TUITool makeToast:desc];
+            }
+    #endif
+        }];
+    };
+    
+    NSInteger count = kGetUserStatusPageCount;
+    if (userIDList.count > count) {
+        NSArray *subUserIDList = [userIDList subarrayWithRange:NSMakeRange(0, count)];
+        NSArray *pendingUserIDList = [userIDList subarrayWithRange:NSMakeRange(count, userIDList.count - count)];
+        GetUserStatus(subUserIDList);
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            @strongify(self)
+            [self asyncGetOnlineStatus:pendingUserIDList];
+        });
+    } else {
+        GetUserStatus(userIDList);
+    }
 }
 
 - (void)asyncUpdateOnlineStatus {
@@ -161,8 +175,7 @@
     });
 }
 
-- (void)handleOnlineStatus:(NSArray<V2TIMUserStatus *> *)userStatusList
-{
+- (void)handleOnlineStatus:(NSArray<V2TIMUserStatus *> *)userStatusList {
     NSInteger changed = 0;
     for (V2TIMUserStatus *userStatus in userStatusList) {
         if ([self.contactMap.allKeys containsObject:userStatus.userID]) {
@@ -183,8 +196,7 @@
     });
 }
 
-- (void)clearApplicationCnt
-{
+- (void)clearApplicationCnt {
     @weakify(self)
     [[V2TIMManager sharedInstance] setFriendApplicationRead:^{
         @strongify(self)

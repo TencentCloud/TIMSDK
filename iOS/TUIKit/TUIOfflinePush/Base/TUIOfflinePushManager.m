@@ -72,6 +72,14 @@ static id _instance;
     [self loadApplicationDelegateIfNeeded];
     
     /**
+     * 新能力分发
+     * Distrubute new ability
+     */
+    if ([self respondsToSelector:@selector(registerForVOIPPush)]) {
+        [self registerForVOIPPush];
+    }
+    
+    /**
      * 申请 token
      * Apply the push token
      */
@@ -100,7 +108,7 @@ static id _instance;
         confg.token = deviceToken;
         confg.isTPNSToken = supportTPNS;
         [[V2TIMManager sharedInstance] setAPNS:confg succ:^{
-             NSLog(@"%s, succ, %@", __func__, supportTPNS ? @"TPNS": @"APNS");
+             NSLog(@"%s, succ, %@, id:%zd", __func__, supportTPNS ? @"TPNS": @"APNS", confg.businessID);
         } fail:^(int code, NSString *msg) {
              NSLog(@"%s, fail, %d, %@", __func__, code, msg);
         }];

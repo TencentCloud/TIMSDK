@@ -91,6 +91,7 @@
 "ProfileDeleteFirend" = "Delete Friend";
 "ProfileEditAlia" = "Alias";
 "ProfileDetails" = "Details";
+"ProfileSetBackgroundImage" = "Background";
 "FriendRequestFormat" = "I'm %@";
 "FriendRequestFillInfo" = "Add Friend";
 "FriendOneWay" = "One-way Friend";
@@ -553,6 +554,7 @@
 "TUIKitErrorRequestNoNetOnReq" = "No network connection when sending request. Try again once network connection is restored.";
 "TUIKitErrorRequestNoNetOnRsp" = "No network connection when sending response. Try again once network connection is restored.";
 "TUIKitErrorRequestOnverLoaded" = "Request queue is full.";
+"TUIKitErrorUnsupporInterface" = "The package you purchased does not support the feature";
 "TUIKitErrorUnsupportIntefaceSearch" = "Search";
 "TUIKitErrorUnsupportIntefaceMessageRead" = "Message Read Receipt";
 "TUIKitErrorUnsupportIntefaceCommunity" = "Community";
@@ -703,6 +705,11 @@
 
 "TUIKitChooseAvatar" = "Choose Avatar";
 "TUIKitChooseCover" = "Choose a cover";
+"TUIKitChooseBackground" = "Choose a Wallpaper";
+"TUIKitDefaultBackground" = "Default background";
+
+"TUIKitChooseBackgroundSuccess" = "Setup Success！";
+"TUIKitChooseBackgroundFailed" = "Setup failed！";
 
 "TUIKitContactNoNewApplicationRequest" = "Friend request is empty";
 "TUIKitContactNoGroupChats" = "Group chats is empty";
@@ -710,3 +717,21 @@
 "TUIKitTyping" = "Typing";
 
 "TUIKitMessageTipsEditGroupAddOptFormat" = "%@ changed group add option to \"%@\"、";
+
+"TUIKitCreatGroupNamed" = "Group Nickname";
+"TUIKitCreatGroupID" = "Group ID（optional）";
+"TUIKitCreatGroupNamed_Placeholder" = "Enter group nickname";
+"TUIKitCreatGroupID_Placeholder" = "Enter group ID";
+"TUIKitCreatGroupAvatar" = "Group Avatar";
+"TUIKitCreatGroupType" = "Group Type";
+"TUIKitCreatGroupType_Work" = "Friends Working group(Work)";
+"TUIKitCreatGroupType_Public" = "Stranger Social group(Public）";
+"TUIKitCreatGroupType_Meeting" = "Temporary Meeting group(Meeting）";
+"TUIKitCreatGroupType_Community" = "Community(Community)";
+"TUIKitCreatGroupType_Work_Desc" = "Friends work group (Work): Similar to ordinary WeChat groups, after creation, only friends who are already in the group can be invited to join the group, and there is no need for the approval of the invitee or the approval of the group owner.";
+"TUIKitCreatGroupType_Public_Desc" = "Stranger social group (Public): Similar to QQ group, the group owner can designate the group administrator after creation. After the user searches for the group ID and initiates a group application, the group owner or administrator must approve it before joining the group.";
+"TUIKitCreatGroupType_Meeting_Desc" = "Temporary meeting group (Meeting): After creation, you can enter and leave at will, and support viewing of messages before joining the group; it is suitable for audio and video conference scenarios, online education scenarios, and other scenarios that are combined with real-time audio and video products.";
+"TUIKitCreatGroupType_Community_Desc" = "Community(Community)：After creation, you can enter and leave at will, support up to 100,000 people, support historical message storage, and after users search for group ID and initiate a group application, they can join the group without administrator approval.";
+"TUIKitCreatGroupType_See_Doc" ="See product documentation for details";
+"TUIKitCreatGroupType_Desc_Highlight" = "product documentation";
+"TUIKitCreatGroupType_See_Doc_Simple" = "See product documentation";

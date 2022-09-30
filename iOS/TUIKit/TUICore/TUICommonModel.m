@@ -1265,7 +1265,7 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
     if(!image){
         image = [UIImage imageWithContentsOfFile:path];
         if (!image) {
-            image = [_faceCache objectForKey:TUIChatFaceImagePath(@"del_normal")];
+            image = [_faceCache objectForKey:TUIChatFaceImagePath(@"ic_unknown_image")];
         }
     }
     return image;
@@ -1601,49 +1601,13 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
 @end
 
 @implementation UIAlertController (TUITheme)
-
-+ (void)load {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        [self hookMethod:self originSelector:@selector(addAction:) swizzledSelector:@selector(tuitheme_addAction:) classMethod:NO];
-    });
-}
  
 - (void)tuitheme_addAction:(UIAlertAction *)action {
     if (action.style == UIAlertActionStyleDefault || action.style == UIAlertActionStyleCancel) {
         UIColor *tempColor = TUICoreDynamicColor(@"primary_theme_color", @"#147AFF");
         [action setValue:tempColor forKey:@"_titleTextColor"];
     }
-    [self tuitheme_addAction:action];
-}
-
-+ (void)hookMethod:(Class)cls originSelector:(SEL)originSelector swizzledSelector:(SEL)swizzledSelector classMethod:(BOOL)clsMethod {
-    
-    Method origin_method;
-    Method swizzled_method;
-    
-    if (clsMethod) {
-        origin_method = class_getClassMethod(cls, originSelector);
-        swizzled_method = class_getClassMethod(cls, swizzledSelector);
-    } else {
-        origin_method = class_getInstanceMethod(cls, originSelector);
-        swizzled_method = class_getInstanceMethod(cls, swizzledSelector);
-    }
-    
-    BOOL addSuccess = class_addMethod(cls,
-                                      originSelector,
-                                      method_getImplementation(swizzled_method),
-                                      method_getTypeEncoding(swizzled_method)
-                                      );
-    if (addSuccess) {
-        class_replaceMethod(cls,
-                            swizzledSelector,
-                            method_getImplementation(origin_method),
-                            method_getTypeEncoding(origin_method)
-                            );
-    } else {
-        method_exchangeImplementations(origin_method, swizzled_method);
-    }
+    [self addAction:action];
 }
 
 @end

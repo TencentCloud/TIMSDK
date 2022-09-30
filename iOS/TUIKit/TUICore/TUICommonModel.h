@@ -502,6 +502,8 @@ typedef void(^TUIContactListPickerOnCancel)(TUICommonContactSelectCellData *data
 
 @interface UIAlertController (TUITheme)
 
+- (void)tuitheme_addAction:(UIAlertAction *)action;
+
 @end
 
 NS_ASSUME_NONNULL_END

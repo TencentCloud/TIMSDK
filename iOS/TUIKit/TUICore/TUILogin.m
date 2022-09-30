@@ -10,6 +10,18 @@ NSString * const TUILoginFailNotification = @"TUILoginFailNotification";
 NSString * const TUILogoutSuccessNotification = @"TUILogoutSuccessNotification";
 NSString * const TUILogoutFailNotification = @"TUILogoutFailNotification";
 
+
+@implementation TUILoginConfig
+
+- (instancetype)init {
+    if (self = [super init]) {
+        self.logLevel = TUI_LOG_INFO;
+    }
+    return self;
+}
+
+@end
+
 @interface TUILogin () <V2TIMSDKListener>
 
 @property (nonatomic, strong) NSHashTable *loginListenerSet;
@@ -35,7 +47,11 @@ NSString * const TUILogoutFailNotification = @"TUILogoutFailNotification";
 }
 
 + (void)login:(int)sdkAppID userID:(NSString *)userID userSig:(NSString *)userSig succ:(TSucc)succ fail:(TFail)fail {
-    [TUILogin.shareInstance login:sdkAppID userID:userID userSig:userSig succ:succ fail:fail];
+    [TUILogin.shareInstance login:sdkAppID userID:userID userSig:userSig config:nil succ:succ fail:fail];
+}
+
++ (void)login:(int)sdkAppID userID:(NSString *)userID userSig:(NSString *)userSig config:(TUILoginConfig *)config succ:(TSucc)succ fail:(TFail)fail {
+    [TUILogin.shareInstance login:sdkAppID userID:userID userSig:userSig config:config succ:succ fail:fail];
 }
 
 + (void)getSelfUserInfo {
@@ -141,6 +157,7 @@ NSString * const TUILogoutFailNotification = @"TUILogoutFailNotification";
 - (void)login:(int)sdkAppID
        userID:(NSString *)userID
       userSig:(NSString *)userSig
+    config:(TUILoginConfig *)config
          succ:(TSucc)succ
          fail:(TFail)fail {
     self.loginWithInit = YES;
@@ -149,9 +166,20 @@ NSString * const TUILogoutFailNotification = @"TUILogoutFailNotification";
         [[V2TIMManager sharedInstance] unInitSDK];
     }
     self.sdkAppID = sdkAppID;
-    V2TIMSDKConfig *config = [[V2TIMSDKConfig alloc] init];
-    config.logLevel = V2TIM_LOG_INFO;
-    [[V2TIMManager sharedInstance] initSDK:sdkAppID config:config];
+    V2TIMSDKConfig *sdkConfig = [[V2TIMSDKConfig alloc] init];
+    if (config != nil) {
+        sdkConfig.logLevel = (V2TIMLogLevel)config.logLevel;
+        sdkConfig.logListener = ^(V2TIMLogLevel logLevel, NSString *logContent) {
+            if (config.onLog) {
+                config.onLog(logLevel, logContent);
+            }
+        };
+    }
+    else {
+        sdkConfig.logLevel = V2TIM_LOG_INFO;
+    }
+    
+    [[V2TIMManager sharedInstance] initSDK:sdkAppID config:sdkConfig];
     
     [V2TIMManager.sharedInstance addIMSDKListener:self];
     

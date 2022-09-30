@@ -9,6 +9,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#define kChatDefaultEmojiSize CGSizeMake(15,15)
+
 @interface NSString (emoji)
 
 /**

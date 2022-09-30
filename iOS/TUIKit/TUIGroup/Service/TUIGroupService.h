@@ -90,6 +90,9 @@ NS_ASSUME_NONNULL_BEGIN
        createOption:(V2TIMGroupAddOpt)createOption
            contacts:(NSArray<TUICommonContactSelectCellData *> *)contacts
          completion:(void (^)(BOOL success, NSString *groupID, NSString *groupName))completion;
+
+- (void)getGroupNameNormalFormatByContacts:(NSArray<TUICommonContactSelectCellData *> *)contacts
+                                completion:(void (^)(BOOL success,NSString *groupName))completion;
 @end
 
 NS_ASSUME_NONNULL_END
