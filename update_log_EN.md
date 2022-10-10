@@ -2,6 +2,36 @@ English | [简体中文](./版本历史.md)
 
 # TIMSDK
 
+## 6.7.3184 @2022.09.29 - Enhanced Edition
+
+### SDK
+
+- Supported the messaging extension.
+- Supported the signaling editing.
+- Supported VoIP for iOS offline push.
+- Supported Android offline push in HONOR phones.
+- Added the backup domain name in the access layer.
+- Fixed the issue where login and logout callbacks cannot be executed in a special network environment.
+- Fixed the issue where keeping the group profile empty did not trigger the notification callback.
+- Fixed the issue where Mute Notifications for group conversations were not updated after the user leaved a group and joined it again.
+- Fixed the crash triggered by sending message read receipts.
+- Fixed the issue for C-based APIs where read receipts for one-to-one messages cannot be sent with the SDK.
+- For the issue for PC where `TIMGroupModifyGroupInfo` cannot modify combined group attributes.
+
+### TUIKit and demo
+
+- Optimized the group chat creation process.
+- Supported setting the background image for the chat area.
+- Optimized the theme logic.
+- Supported inviting new group members during a group call.
+- Supported animoji for Android.
+- Fixed the occasional messaging missing in the message list for Android.
+- Fixed the occasional error of message sending state in the message list for Android.
+- Fixed the issue for Android where the offline push component tried to get the phone model for several times.
+- Removed the global style modification for `UIAlertController` from iOS TUICore.
+- Added redirecting to the gallery during the shooting for iOS.
+- Fixed the issue for iOS where clicking the button triggered a crash after the chat history was cleared.
+
 ## 6.6.3002 @2022.08.18 - Enhanced Edition
 
 ### SDK
