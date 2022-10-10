@@ -146,31 +146,35 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 [API Upgrade Guidelines](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
 
-## Latest Enhanced Version 6.6.3002 @2022.08.18
+## Latest Enhanced Edition 6.7.3184 @2022.09.29
 
 ### SDK
 
-- Supported labeling a member of an audio-video group.
-- Supported removing a member from an audio-video group.
-- Fixed the occasional crash of the topic update callback for Android.
-- Fixed incorrect enumerated values in notifications of group joining option changes.
-- Fixed the issue where no callback for `onTopicInfoChanged` was received after custom topic fields were set.
-- Optimized the issue for Android where the network IP was requested repeatedly.
+- Supported the messaging extension.
+- Supported the signaling editing.
+- Supported VoIP for iOS offline push.
+- Supported Android offline push in HONOR phones.
+- Added the backup domain name in the access layer.
+- Fixed the issue where login and logout callbacks cannot be executed in a special network environment.
+- Fixed the issue where keeping the group profile empty did not trigger the notification callback.
+- Fixed the issue where Mute Notifications for group conversations were not updated after the user leaved a group and joined it again.
+- Fixed the crash triggered by sending message read receipts.
+- Fixed the issue for C-based APIs where read receipts for one-to-one messages cannot be sent with the SDK.
+- For the issue for PC where `TIMGroupModifyGroupInfo` cannot modify combined group attributes.
 
 ### TUIKit and demo
 
-- Supported marking conversations as unread/read, hiding conversations, and folding group conversations.
-- Replaced TUICalling with TUICallKit.
-- TUICallKit supported displaying the audio or video call in a floating window.
-- Supported enabling or disabling group grid profile photos as needed.
-- TUIChat supported customizing background images.
-- Optimized the TUIOfflinePush component for Android to support calling back the app when users click received messages in the notification bar and to support packaging into native plugins for uni-app.
-- The TUIKit  for Android supported a three-tier community mode: community - group - topic.
-- Supported showing emoji in the input box for iOS.
-- Supported showing default profile photos by group type.
-- Supported showing security tips all the time in the Demo.
-- Fixed the compatibility and compliance issues arising from using the WebView in the TUICore theme component.
-- Fixed the issue where repeated messages displayed occasionally when users clicked messages pushed offline to enter the chat interface.
+- Optimized the group chat creation process.
+- Supported setting the background image for the chat area.
+- Optimized the theme logic.
+- Supported inviting new group members during a group call.
+- Supported animoji for Android.
+- Fixed the occasional messaging missing in the message list for Android.
+- Fixed the occasional error of message sending state in the message list for Android.
+- Fixed the issue for Android where the offline push component tried to get the phone model for several times.
+- Removed the global style modification for `UIAlertController` from iOS TUICore.
+- Added redirecting to the gallery during the shooting for iOS.
+- Fixed the issue for iOS where clicking the button triggered a crash after the chat history was cleared.
 
 
 ## Latest Basic Version 5.1.66 @2021.09.22
