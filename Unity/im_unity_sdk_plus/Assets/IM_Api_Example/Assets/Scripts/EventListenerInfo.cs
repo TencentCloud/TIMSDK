@@ -7,7 +7,6 @@ using com.tencent.imsdk.unity.utils;
 using com.tencent.imsdk.unity.callback;
 using com.tencent.imsdk.unity.enums;
 using com.tencent.imsdk.unity.types;
-using Newtonsoft.Json;
 using UnityEngine;
 using AOT;
 using System.Text;

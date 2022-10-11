@@ -10,7 +10,6 @@ using com.tencent.imsdk.unity.callback;
 using System;
 using System.Text;
 using AOT;
-using Newtonsoft.Json;
 using System.Reflection;
 using UnityEngine.UI;
 using demo.tencent.im.unity;
@@ -192,9 +191,7 @@ public class TestApi : MonoBehaviour
 
     void Start()
     {
-
-
-
+        
     }
     void OnDestroy()
     {
@@ -487,6 +484,8 @@ public class TestApi : MonoBehaviour
         TIMResult res = TencentIMSDK.ConvGetTotalUnreadMessageCount(addAsyncDataToConsole);
         addDataToConsole(res);
     }
+    public static List<int> random = new List<int>(){1,2,3,4,5,6,7};
+    public static int count = 0;
     public static void MsgSendMessage()
     {
         string conv_id = touserid;
@@ -496,7 +495,9 @@ public class TestApi : MonoBehaviour
         List<Elem> messageElems = new List<Elem>();
         Elem textMessage = new Elem();
         textMessage.elem_type = TIMElemType.kTIMElem_Text;
-        textMessage.text_elem_content = "圣女峰";
+        textMessage.text_elem_content = "圣女峰" + random[count];
+        count = count + 1;
+        Utils.Log(count.ToString());
         messageElems.Add(textMessage);
         message.message_elem_array = messageElems;
         message.message_cloud_custom_str = "unity local custom data";
@@ -587,7 +588,7 @@ public class TestApi : MonoBehaviour
         get_message_list_param.msg_getmsglist_param_count = 1;
         TIMResult res = TencentIMSDK.MsgGetMsgList(conv_id, TIMConvType.kTIMConv_C2C, get_message_list_param, (int code, string desc, string json_param, string user_data) =>
         {
-            List<Message> messages = JsonConvert.DeserializeObject<List<Message>>(json_param);
+            List<Message> messages = Utils.FromJson<List<Message>>(json_param);
             if (messages.Count > 0)
             {
                 lastMsg = messages[messages.Count - 1];
@@ -616,7 +617,7 @@ public class TestApi : MonoBehaviour
 
         TIMResult res = TencentIMSDK.MsgGetMsgList(conv_id, TIMConvType.kTIMConv_C2C, get_message_list_param, (int code, string desc, string json_param, string user_data) =>
         {
-            List<Message> messages = JsonConvert.DeserializeObject<List<Message>>(json_param);
+            List<Message> messages = Utils.FromJson<List<Message>>(json_param);
             if (messages.Count > 0)
             {
                 lastMsg = lastMsg = messages[messages.Count - 1];
