@@ -69,7 +69,7 @@ namespace com.tencent.imsdk.unity.types
   }
 
   [JsonObject(MemberSerialization.OptOut)]
-  public class Message : ExtraData
+  public class Message
   {
     /// <value>读写(必填), 消息内元素列表 (Read & Write (Required), element list in the message)</value>
     public List<Elem> message_elem_array;
@@ -1256,7 +1256,7 @@ namespace com.tencent.imsdk.unity.types
     /// <value>只写(选填), 设置 cos 存储区域的参数, 当 kTIMRequestInternalOperation 为 kTIMInternalOperationSetCosSaveRegionForConversation 时需要设置 (Write only (Optional), set COS save region param, required when kTIMRequestInternalOperation sets to kTIMInternalOperationSetCosSaveRegionForConversation)</value>
     public CosSaveRegionForConversationParam request_set_cos_save_region_for_conversation_param;
     /// <value>只写(选填), 设置 UI 平台，当 kTIMRequestInternalOperation 为 kTIMInternalOperationSetUIPlatform 时需要设置 (Write only (Optional), set ui platform, required when kTIMRequestInternalOperation sets to kTIMInternalOperationSetUIPlatform)</value>
-    public string request_set_ui_platform_param;
+    public int request_set_ui_platform_param;
   }
 
   [JsonObject(MemberSerialization.OptOut)]
