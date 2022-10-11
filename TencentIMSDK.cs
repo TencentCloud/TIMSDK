@@ -3,7 +3,6 @@ using com.tencent.imsdk.unity.utils;
 using com.tencent.imsdk.unity.callback;
 using com.tencent.imsdk.unity.enums;
 using com.tencent.imsdk.unity.types;
-using Newtonsoft.Json;
 using UnityEngine;
 using AOT;
 using System.Text;
@@ -74,12 +73,15 @@ namespace com.tencent.imsdk.unity
     /// <returns><see cref="TIMResult"/></returns>
     public static TIMResult Init(long sdk_app_id, SdkConfig json_sdk_config)
     {
+      
+      
+
       ExperimentalAPIReqeustParam param = new ExperimentalAPIReqeustParam();
 
       param.request_internal_operation = TIMInternalOperation.internal_operation_set_ui_platform.ToString();
 
-      param.request_set_ui_platform_param = "unity";
-      Debug.Log("11111111");
+      param.request_set_ui_platform_param = 5;
+
       TIMResult res = CallExperimentalAPI(param, CallExperimentalAPICallback);
 
       string configString = Utils.ToJson(json_sdk_config);
@@ -87,6 +89,8 @@ namespace com.tencent.imsdk.unity
       Utils.Log(configString);
 
       int timSucc = IMNativeSDK.TIMInit(sdk_app_id, Utils.string2intptr(configString));
+      
+      Utils.LoadMessage();
 
       return (TIMResult)timSucc;
     }
