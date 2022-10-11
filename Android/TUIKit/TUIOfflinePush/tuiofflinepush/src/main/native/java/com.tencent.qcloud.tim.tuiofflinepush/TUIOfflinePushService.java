@@ -33,6 +33,7 @@ public class TUIOfflinePushService extends ServiceInitializer implements ITUINot
         appContext = context;
         userId = V2TIMManager.getInstance().getLoginUser();
 
+        initContext();
         initListener();
         initActivityLifecycle();
         initFlavor();
@@ -165,6 +166,10 @@ public class TUIOfflinePushService extends ServiceInitializer implements ITUINot
         }
 
         TUIOfflinePushManager.getInstance().setInternationalFlavor(isInternationalFlavor);
+    }
+
+    void initContext(){
+        TUIOfflinePushConfig.getInstance().setContext(appContext);
     }
 
     private static Object getBuildConfigValue(String fieldName) {
