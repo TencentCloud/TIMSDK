@@ -157,9 +157,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             if (callbackValue.errorCode == 10004 &&
                 callbackValue.errorMsg!.contains("not support @all")) {
               Utils.toast(imt("当前群组不支持@全体成员"));
-            } else if (callbackValue.errorCode == 80001 &&
-                callbackValue.errorMsg!.contains("not support @all")) {
-              Utils.toast(imt("发言中有非法语句"));
             } else {
               Utils.toast(
                   callbackValue.errorMsg ?? callbackValue.errorCode.toString());
@@ -289,6 +286,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   setCustomSticker() async {
     // 添加自定义表情包
+    // Add custom sticker package
     List<CustomStickerPackage> customStickerPackageList = [];
     final defEmojiList = emojiData.asMap().keys.map((emojiIndex) {
       final emo = Emoji.fromJson(emojiData[emojiIndex]);

@@ -24,7 +24,7 @@ class _LoginCaptchaState extends State<LoginCaptcha> {
   double getSize() {
     switch (captchaStatus) {
       case CaptchaStatus.unReady:
-        return 0;
+        return 260;
       case CaptchaStatus.loading:
         return 130;
       case CaptchaStatus.ready:

@@ -1,4 +1,12 @@
 PODS:
+  - BaiduMapKit/Base (6.5.1)
+  - BaiduMapKit/Map (6.5.1):
+    - BaiduMapKit/Base
+  - BaiduMapKit/Search (6.5.1):
+    - BaiduMapKit/Base
+  - BaiduMapKit/Utils (6.5.1):
+    - BaiduMapKit/Base
+  - BMKLocationKit (2.0.4)
   - bugly (0.0.1):
     - Flutter
   - camera_avfoundation (0.0.1):
@@ -82,6 +90,25 @@ PODS:
   - Flutter (1.0.0)
   - flutter_apns_only (0.0.1):
     - Flutter
+  - flutter_baidu_mapapi_base (3.1.0):
+    - BaiduMapKit/Utils (= 6.5.1)
+    - Flutter
+  - flutter_baidu_mapapi_map (3.1.0):
+    - BaiduMapKit/Map (= 6.5.1)
+    - Flutter
+    - flutter_baidu_mapapi_base
+  - flutter_baidu_mapapi_search (3.1.0):
+    - BaiduMapKit/Search (= 6.5.1)
+    - Flutter
+    - flutter_baidu_mapapi_base
+  - flutter_bmflocation (2.0.1):
+    - BMKLocationKit
+    - Flutter
+  - flutter_image_compress (1.0.0):
+    - Flutter
+    - Mantle
+    - SDWebImage
+    - SDWebImageWebPCoder
   - flutter_local_notifications (0.0.1):
     - Flutter
   - flutter_plugin_record_plus (0.0.1):
@@ -130,6 +157,11 @@ PODS:
   - libwebp/mux (1.2.3):
     - libwebp/demux
   - libwebp/webp (1.2.3)
+  - location (0.0.1):
+    - Flutter
+  - Mantle (2.2.0):
+    - Mantle/extobjc (= 2.2.0)
+  - Mantle/extobjc (2.2.0)
   - nanopb (2.30908.0):
     - nanopb/decode (= 2.30908.0)
     - nanopb/encode (= 2.30908.0)
@@ -153,9 +185,12 @@ PODS:
   - ReachabilitySwift (5.0.0)
   - rmonitor_base (0.0.1):
     - Flutter
-  - SDWebImage (5.13.3):
-    - SDWebImage/Core (= 5.13.3)
-  - SDWebImage/Core (5.13.3)
+  - SDWebImage (5.13.4):
+    - SDWebImage/Core (= 5.13.4)
+  - SDWebImage/Core (5.13.4)
+  - SDWebImageWebPCoder (0.9.1):
+    - libwebp (~> 1.0)
+    - SDWebImage/Core (~> 5.13)
   - shared_preferences_ios (0.0.1):
     - Flutter
   - sqflite (0.0.2):
@@ -201,12 +236,18 @@ DEPENDENCIES:
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
   - flutter_apns_only (from `.symlinks/plugins/flutter_apns_only/ios`)
+  - flutter_baidu_mapapi_base (from `.symlinks/plugins/flutter_baidu_mapapi_base/ios`)
+  - flutter_baidu_mapapi_map (from `.symlinks/plugins/flutter_baidu_mapapi_map/ios`)
+  - flutter_baidu_mapapi_search (from `.symlinks/plugins/flutter_baidu_mapapi_search/ios`)
+  - flutter_bmflocation (from `.symlinks/plugins/flutter_bmflocation/ios`)
+  - flutter_image_compress (from `.symlinks/plugins/flutter_image_compress/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_plugin_record_plus (from `.symlinks/plugins/flutter_plugin_record_plus/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - fluwx (from `.symlinks/plugins/fluwx/ios`)
   - image_gallery_saver (from `.symlinks/plugins/image_gallery_saver/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
+  - location (from `.symlinks/plugins/location/ios`)
   - open_file (from `.symlinks/plugins/open_file/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
@@ -228,6 +269,8 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - BaiduMapKit
+    - BMKLocationKit
     - DKImagePickerController
     - DKPhotoGallery
     - Firebase
@@ -240,11 +283,13 @@ SPEC REPOS:
     - GoogleUtilities
     - HydraAsync
     - libwebp
+    - Mantle
     - nanopb
     - OpenWeChatSDK
     - PromisesObjC
     - ReachabilitySwift
     - SDWebImage
+    - SDWebImageWebPCoder
     - SwiftyGif
     - Toast
     - TXIMSDK_Plus_iOS
@@ -271,6 +316,16 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_apns_only:
     :path: ".symlinks/plugins/flutter_apns_only/ios"
+  flutter_baidu_mapapi_base:
+    :path: ".symlinks/plugins/flutter_baidu_mapapi_base/ios"
+  flutter_baidu_mapapi_map:
+    :path: ".symlinks/plugins/flutter_baidu_mapapi_map/ios"
+  flutter_baidu_mapapi_search:
+    :path: ".symlinks/plugins/flutter_baidu_mapapi_search/ios"
+  flutter_bmflocation:
+    :path: ".symlinks/plugins/flutter_bmflocation/ios"
+  flutter_image_compress:
+    :path: ".symlinks/plugins/flutter_image_compress/ios"
   flutter_local_notifications:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
   flutter_plugin_record_plus:
@@ -283,6 +338,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/image_gallery_saver/ios"
   image_picker_ios:
     :path: ".symlinks/plugins/image_picker_ios/ios"
+  location:
+    :path: ".symlinks/plugins/location/ios"
   open_file:
     :path: ".symlinks/plugins/open_file/ios"
   package_info_plus:
@@ -321,6 +378,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/webview_flutter_wkwebview/ios"
 
 SPEC CHECKSUMS:
+  BaiduMapKit: f227cfb43581e91466fb4f1344f655eab5788777
+  BMKLocationKit: 688d8e1194980b96fc9a6585c0eb42e62fbaf780
   bugly: b3674afe180564b5464015d0a8a6b174c2356589
   camera_avfoundation: 07c77549ea54ad95d8581be86617c094a46280d9
   connectivity_plus: 413a8857dd5d9f1c399a39130850d02fe0feaf7e
@@ -336,8 +395,13 @@ SPEC CHECKSUMS:
   FirebaseCoreDiagnostics: 92e07a649aeb66352b319d43bdd2ee3942af84cb
   FirebaseInstallations: 40bd9054049b2eae9a2c38ef1c3dd213df3605cd
   FirebaseMessaging: 02e248e8997f71fa8cc9d78e9d49ec1a701ba14a
-  Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_apns_only: 3d91c0ca9dbef4439874858590909a19f8ed06a4
+  flutter_baidu_mapapi_base: cb406be78c3a949fb58a45dc6627f139d580bd37
+  flutter_baidu_mapapi_map: 81c4e6e93dc668e311d9b521421deaf292390434
+  flutter_baidu_mapapi_search: 13a360334e91abea0bcf820546b2ef4548e42e08
+  flutter_bmflocation: d6efa0fd0e191aa7673075cf1407b408119f1954
+  flutter_image_compress: 5a5e9aee05b6553048b8df1c3bc456d0afaac433
   flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
   flutter_plugin_record_plus: 79b8e13ee7ed9a94f6c067018653599528cee1fc
   fluttertoast: 16fbe6039d06a763f3533670197d01fc73459037
@@ -349,6 +413,8 @@ SPEC CHECKSUMS:
   image_gallery_saver: 259eab68fb271cfd57d599904f7acdc7832e7ef2
   image_picker_ios: b786a5dcf033a8336a657191401bfdf12017dabb
   libwebp: 60305b2e989864154bd9be3d772730f08fc6a59c
+  location: 3a2eed4dd2fab25e7b7baf2a9efefe82b512d740
+  Mantle: c5aa8794a29a022dfbbfc9799af95f477a69b62d
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   open_file: 02eb5cb6b21264bd3a696876f5afbfb7ca4f4b7d
   OpenWeChatSDK: 67375e7d4154c22f7ba6b1c334b121473e7d515c
@@ -360,7 +426,8 @@ SPEC CHECKSUMS:
   PromisesObjC: ab77feca74fa2823e7af4249b8326368e61014cb
   ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
   rmonitor_base: f5378ba20d99f4107eb9ee44e4b51d4c8bbf7d03
-  SDWebImage: af5bbffef2cde09f148d826f9733dcde1a9414cd
+  SDWebImage: e5cc87bf736e60f49592f307bdf9e157189298a3
+  SDWebImageWebPCoder: 18503de6621dd2c420d680e33d46bf8e1d5169b0
   shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
   SwiftyGif: 6c3eafd0ce693cad58bb63d2b2fb9bacb8552780
@@ -377,6 +444,6 @@ SPEC CHECKSUMS:
   wakelock: d0fc7c864128eac40eba1617cb5264d9c940b46f
   webview_flutter_wkwebview: b7e70ef1ddded7e69c796c7390ee74180182971f
 
-PODFILE CHECKSUM: ab5bb493e60330e19ee94181d69dc6a95e946a33
+PODFILE CHECKSUM: 9186a3e03440823b5d5909fc8040be7364ad0583
 
 COCOAPODS: 1.11.3

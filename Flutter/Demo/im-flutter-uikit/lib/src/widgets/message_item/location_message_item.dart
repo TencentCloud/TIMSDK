@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
+import 'package:tim_ui_kit_lbs_plugin/utils/tim_location_model.dart';
+import 'package:tim_ui_kit_lbs_plugin/widget/location_msg_element.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';
 import 'package:timuikit/src/provider/theme.dart';
 import 'package:provider/provider.dart';
+import 'package:timuikit/utils/baidu_implements/map_service_baidu_implement.dart';
+import 'package:timuikit/utils/baidu_implements/map_widget_baidu_implement.dart';
 
 class LocationMessageItem extends StatelessWidget{
   final bool? isSelf;

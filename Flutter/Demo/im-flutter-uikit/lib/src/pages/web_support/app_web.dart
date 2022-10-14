@@ -118,9 +118,6 @@ class _MyAppState extends State<WebApp> with WidgetsBindingObserver {
             if (callbackValue.errorCode == 10004 &&
                 callbackValue.errorMsg!.contains("not support @all")) {
               Utils.toast(imt("当前群组不支持@全体成员"));
-            } else if (callbackValue.errorCode == 80001 &&
-                callbackValue.errorMsg!.contains("not support @all")) {
-              Utils.toast(imt("发言中有非法语句"));
             } else {
               Utils.toast(
                   callbackValue.errorMsg ?? callbackValue.errorCode.toString());
