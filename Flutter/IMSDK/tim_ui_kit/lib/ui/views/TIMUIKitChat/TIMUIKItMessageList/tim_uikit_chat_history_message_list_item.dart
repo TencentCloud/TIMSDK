@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
@@ -57,6 +58,9 @@ typedef MessageRowBuilder = Widget? Function(
   Function onScrollToIndexBegin,
 );
 
+typedef MessageNickNameBuilder = Widget Function(
+    BuildContext context, V2TimMessage message, TUIChatSeparateViewModel model);
+
 typedef MessageItemContent = Widget? Function(
   V2TimMessage message,
   bool isShowJump,
@@ -105,6 +109,9 @@ class MessageItemBuilder {
   /// [Update] You can only re-define the message types you need, returns null means using default row layout.
   final MessageRowBuilder? messageRowBuilder;
 
+  /// message nick name builder
+  final MessageNickNameBuilder? messageNickNameBuilder;
+
   MessageItemBuilder({
     this.locationMessageItemBuilder,
     this.textMessageItemBuilder,
@@ -119,6 +126,7 @@ class MessageItemBuilder {
     this.mergerMessageItemBuilder,
     this.messageRowBuilder,
     this.groupTRTCTipsItemBuilder,
+    this.messageNickNameBuilder,
   });
 }
 
@@ -130,7 +138,7 @@ class ToolTipsConfig {
   final bool showCopyMessage;
   final bool showForwardMessage;
   final Widget? Function(V2TimMessage message, Function() closeTooltip,
-      [Key? key])? additionalItemBuilder;
+      [Key? key, BuildContext? context])? additionalItemBuilder;
 
   ToolTipsConfig(
       {this.showDeleteMessage = true,
@@ -329,11 +337,10 @@ class _TIMUIKItHistoryMessageListItemState
     final MessageItemBuilder? messageItemBuilder = widget.messageItemBuilder;
     final isFromSelf = messageItem.isSelf ?? false;
     void clearJump() {
-      // Future.delayed(const Duration(milliseconds: 100), () {
-      model.jumpMsgID = "";
-      // });
+      Future.delayed(const Duration(milliseconds: 100), () {
+        model.jumpMsgID = "";
+      });
     }
-
     switch (msgType) {
       case MessageElemType.V2TIM_ELEM_TYPE_CUSTOM:
         if (messageItemBuilder?.customMessageItemBuilder != null) {
@@ -387,7 +394,7 @@ class _TIMUIKItHistoryMessageListItemState
           }
           return TIMUIKitReplyElem(
             message: messageItem,
-            clearJump: () => model.jumpMsgID = "",
+            clearJump: clearJump,
             isShowJump: isShowJump,
             scrollToIndex: widget.onScrollToIndex ?? () {},
             borderRadius: widget.themeData?.messageBorderRadius,
@@ -409,7 +416,7 @@ class _TIMUIKItHistoryMessageListItemState
           chatModel: model,
           message: messageItem,
           isFromSelf: messageItem.isSelf ?? false,
-          clearJump: () => model.jumpMsgID = "",
+          clearJump: clearJump,
           isShowJump: isShowJump,
           borderRadius: widget.themeData?.messageBorderRadius,
           fontStyle: widget.themeData?.messageTextStyle,
@@ -442,6 +449,7 @@ class _TIMUIKItHistoryMessageListItemState
           )!;
         }
         return TIMUIKitFileElem(
+          chatModel: model,
           message: messageItem,
           messageID: messageItem.msgID,
           fileElem: messageItem.fileElem,
@@ -468,8 +476,9 @@ class _TIMUIKItHistoryMessageListItemState
           )!;
         }
         return TIMUIKitImageElem(
-          clearJump: () => model.jumpMsgID = "",
+          clearJump: clearJump,
           isShowJump: isShowJump,
+          chatModel: model,
           message: messageItem,
           isShowMessageReaction: widget.isUseMessageReaction,
           key: Key("${messageItem.seq}_${messageItem.timestamp}"),
@@ -485,7 +494,8 @@ class _TIMUIKItHistoryMessageListItemState
         return TIMUIKitVideoElem(
           messageItem,
           isShowJump: isShowJump,
-          clearJump: () => model.jumpMsgID = "",
+          chatModel: model,
+          clearJump: clearJump,
           isShowMessageReaction: widget.isUseMessageReaction,
         );
       case MessageElemType.V2TIM_ELEM_TYPE_LOCATION:
@@ -626,14 +636,24 @@ class _TIMUIKItHistoryMessageListItemState
     bool isLongMessage = false,
     required TUIChatSeparateViewModel model,
   }) {
+    final isSelf = widget.message.isSelf ?? false;
     double arrowTipDistance = 30;
     TooltipDirection popupDirection = TooltipDirection.up;
+    double? left;
+    double? right;
     SelectEmojiPanelPosition selectEmojiPanelPosition =
         SelectEmojiPanelPosition.down;
     if (context != null) {
       RenderBox? box = _key.currentContext?.findRenderObject() as RenderBox?;
       if (box != null) {
+        double screenWidth = MediaQuery.of(context).size.width;
         Offset offset = box.localToGlobal(Offset.zero);
+        double boxWidth = box.size.width;
+        if (isSelf) {
+          right = screenWidth - offset.dx - boxWidth;
+        } else {
+          left = offset.dx;
+        }
         if (offset.dy < 300 && !isLongMessage) {
           selectEmojiPanelPosition = SelectEmojiPanelPosition.up;
           popupDirection = TooltipDirection.down;
@@ -649,8 +669,10 @@ class _TIMUIKItHistoryMessageListItemState
       arrowTipDistance: arrowTipDistance,
       arrowBaseWidth: 10.0,
       arrowLength: 10.0,
-      right: kIsWeb ? null : (widget.message.isSelf! ? 60 : null),
-      left: kIsWeb ? null : (widget.message.isSelf! ? null : 60),
+      // right: kIsWeb ? right : (widget.message.isSelf! ? 60 : null),
+      // left: kIsWeb ? left : (widget.message.isSelf! ? null : 60),
+      right: right,
+      left: left,
       borderColor: Colors.white,
       backgroundColor: Colors.white,
       shadowColor: Colors.black26,
@@ -661,6 +683,9 @@ class _TIMUIKItHistoryMessageListItemState
       content: TIMUIKitMessageTooltip(
         model: model,
         toolTipsConfig: widget.toolTipsConfig,
+        isUseMessageReaction: widget.message.elemType == 2
+            ? false
+            : model.chatConfig.isUseMessageReaction,
         message: widget.message,
         allowAtUserWhenReply: widget.allowAtUserWhenReply,
         onLongPressForOthersHeadPortrait:
@@ -739,7 +764,6 @@ class _TIMUIKItHistoryMessageListItemState
     final TUIChatSeparateViewModel model =
         Provider.of<TUIChatSeparateViewModel>(context);
     final TUITheme theme = value.theme;
-    final TUIChatGlobalModel globalModel = serviceLocator<TUIChatGlobalModel>();
     final message = widget.message;
     final msgType = message.elemType;
     final isSelf = message.isSelf ?? false;
@@ -761,7 +785,9 @@ class _TIMUIKItHistoryMessageListItemState
       return _timeDividerBuilder(theme, message.timestamp ?? 0, model);
     }
     void clearJump() {
-      model.jumpMsgID = "";
+      Future.delayed(const Duration(milliseconds: 100), () {
+        model.jumpMsgID = "";
+      });
     }
 
     if (isGroupTipsMsg) {
@@ -812,9 +838,6 @@ class _TIMUIKItHistoryMessageListItemState
         return customRow;
       }
     }
-
-    final messageReadReceipt =
-        globalModel.getMessageReadReceipt(widget.message.msgID ?? '');
 
     return LayoutBuilder(
       builder: (context, constraints) => Container(
@@ -951,13 +974,10 @@ class _TIMUIKItHistoryMessageListItemState
                                   model.conversationType == ConvType.group &&
                                   isSelf &&
                                   message.status ==
-                                      MessageStatus
-                                          .V2TIM_MSG_STATUS_SEND_SUCC &&
-                                  messageReadReceipt != null)
+                                      MessageStatus.V2TIM_MSG_STATUS_SEND_SUCC)
                                 TIMUIKitMessageReadReceipt(
                                   messageItem: widget.message,
                                   onTapAvatar: widget.onTapForOthersPortrait,
-                                  messageReadReceipt: messageReadReceipt,
                                 ),
                               if (widget.showMessageSending &&
                                   isSelf &&

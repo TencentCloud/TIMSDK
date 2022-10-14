@@ -56,7 +56,7 @@ class TUIGroupListenerModel extends ChangeNotifier {
       onReceiveJoinApplication:
           (String groupID, V2TimGroupMemberInfo member, String opReason) async {
         _onReceiveJoinApplication(groupID, member, opReason);
-        _needUpdate = NeedUpdate(groupID, UpdateType.joinApplicationList);
+        chatViewModel.refreshGroupApplicationList();
         notifyListeners();
       },
     );

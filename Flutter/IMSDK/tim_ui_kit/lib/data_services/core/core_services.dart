@@ -37,6 +37,8 @@ abstract class CoreServices {
 
   Future logout();
 
+  Future logoutWithoutClearData();
+
   Future unInit();
 
   Future<V2TimValueCallback<List<V2TimUserFullInfo>>> getUsersInfo({

@@ -105,14 +105,22 @@ class TUIConversationViewModel extends ChangeNotifier {
       _chatGlobalModel.totalUnReadCount = totalUnread;
       notifyListeners();
     }, onSyncServerFinish: () {
-      loadData(count: 100);
+      if (!PlatformUtils().isWeb) {
+        loadInitConversation();
+      }
     });
+  }
+
+  loadInitConversation() async {
+    await loadData(count: 20);
+    _chatGlobalModel.initMessageMapFromLocalDatabase(_conversationList);
   }
 
   initConversation() async {
     clearData();
-    await loadData(count: 100);
-    _chatGlobalModel.initMessageMapFromLocalDatabase(_conversationList);
+    if(PlatformUtils().isWeb){
+      loadInitConversation();
+    }
   }
 
   Future<void> loadData({required int count}) async {

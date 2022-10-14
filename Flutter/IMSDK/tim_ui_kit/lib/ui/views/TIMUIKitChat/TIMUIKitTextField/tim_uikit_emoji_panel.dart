@@ -77,10 +77,12 @@ class EmojiItem extends TIMUIKitStatelessWidget {
   // final Function close;
   @override
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
-    return Text(
-      String.fromCharCode(unicode),
+    return DefaultTextStyle(
       style: TextStyle(
         fontSize: (PlatformUtils().isAndroid) ? 20 : 26,
+      ),
+      child: Text(
+        String.fromCharCode(unicode),
       ),
     );
   }

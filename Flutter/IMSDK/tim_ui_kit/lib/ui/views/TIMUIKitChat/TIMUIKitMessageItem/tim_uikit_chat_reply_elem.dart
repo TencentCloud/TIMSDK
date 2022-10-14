@@ -5,7 +5,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:provider/provider.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
@@ -60,6 +59,7 @@ class _TIMUIKitReplyElemState extends TIMUIKitState<TIMUIKitReplyElem> {
   MessageRepliedData? repliedMessage;
   V2TimMessage? rawMessage;
   bool isShowJumpState = false;
+  bool isShining = false;
 
   MessageRepliedData? _getRepliedMessage() {
     try {
@@ -101,8 +101,14 @@ class _TIMUIKitReplyElemState extends TIMUIKitState<TIMUIKitReplyElem> {
   }
 
   _rawMessageBuilder(V2TimMessage? message, TUITheme? theme) {
+    if(repliedMessage == null){
+      return const SizedBox(width: 0, height: 12);
+    }
     if (message == null) {
-      return _defaultRawMessageText(repliedMessage!.messageAbstract, theme);
+      if(repliedMessage?.messageAbstract != null){
+        return _defaultRawMessageText(repliedMessage!.messageAbstract, theme);
+      }
+      return const SizedBox(width: 0, height: 12);
     }
     final messageType = message.elemType;
     final isSelf = message.isSelf ?? false;
@@ -129,6 +135,7 @@ class _TIMUIKitReplyElemState extends TIMUIKitState<TIMUIKitReplyElem> {
         );
       case MessageElemType.V2TIM_ELEM_TYPE_FILE:
         return TIMUIKitFileElem(
+            chatModel: widget.chatModel,
             isShowMessageReaction: false,
             message: message,
             messageID: message.msgID,
@@ -137,9 +144,11 @@ class _TIMUIKitReplyElemState extends TIMUIKitState<TIMUIKitReplyElem> {
             isShowJump: false);
       case MessageElemType.V2TIM_ELEM_TYPE_IMAGE:
         return TIMUIKitImageElem(
+            chatModel: widget.chatModel,
             message: message, isFrom: "reply", isShowMessageReaction: false);
       case MessageElemType.V2TIM_ELEM_TYPE_VIDEO:
         return TIMUIKitVideoElem(message,
+            chatModel: widget.chatModel,
             isFrom: "reply", isShowMessageReaction: false);
       case MessageElemType.V2TIM_ELEM_TYPE_LOCATION:
         return _defaultRawMessageText(TIM_t("[位置]"), theme);
@@ -165,19 +174,21 @@ class _TIMUIKitReplyElemState extends TIMUIKitState<TIMUIKitReplyElem> {
 
   @override
   void didUpdateWidget(covariant TIMUIKitReplyElem oldWidget) {
-    WidgetsBinding.instance.addPostFrameCallback((mag) {
+    WidgetsBinding.instance?.addPostFrameCallback((mag) {
       super.didUpdateWidget(oldWidget);
       _getMessageByMessageID();
     });
   }
 
   _showJumpColor() {
+    if ((widget.chatModel.jumpMsgID != widget.message.msgID) &&
+        (widget.message.msgID?.isNotEmpty ?? true)) {
+      return;
+    }
+    isShining = true;
     int shineAmount = 6;
     setState(() {
       isShowJumpState = true;
-    });
-    Future.delayed(const Duration(milliseconds: 100), () {
-      widget.clearJump();
     });
     Timer.periodic(const Duration(milliseconds: 300), (timer) {
       if (mounted) {
@@ -186,10 +197,12 @@ class _TIMUIKitReplyElemState extends TIMUIKitState<TIMUIKitReplyElem> {
         });
       }
       if (shineAmount == 0 || !mounted) {
+        isShining = false;
         timer.cancel();
       }
       shineAmount--;
     });
+    widget.clearJump();
   }
 
   void _jumpToRawMsg() {
@@ -234,9 +247,16 @@ class _TIMUIKitReplyElemState extends TIMUIKitState<TIMUIKitReplyElem> {
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     final theme = value.theme;
     if (widget.isShowJump) {
-      Future.delayed(Duration.zero, () {
-        _showJumpColor();
-      });
+      if (!isShining) {
+        Future.delayed(Duration.zero, () {
+          _showJumpColor();
+        });
+      } else {
+        if ((widget.chatModel.jumpMsgID == widget.message.msgID) &&
+            (widget.message.msgID?.isNotEmpty ?? false)) {
+          widget.clearJump();
+        }
+      }
     }
     final defaultStyle = (widget.message.isSelf ?? false)
         ? theme.lightPrimaryMaterialColor.shade50
@@ -244,9 +264,6 @@ class _TIMUIKitReplyElemState extends TIMUIKitState<TIMUIKitReplyElem> {
     final backgroundColor = isShowJumpState
         ? const Color.fromRGBO(245, 166, 35, 1)
         : (widget.backgroundColor ?? defaultStyle);
-    if (repliedMessage == null) {
-      return Container();
-    }
     final isFromSelf = widget.message.isSelf ?? false;
 
     final borderRadius = isFromSelf
@@ -290,7 +307,7 @@ class _TIMUIKitReplyElemState extends TIMUIKitState<TIMUIKitReplyElem> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "${repliedMessage!.messageSender}:",
+                    repliedMessage != null ? "${repliedMessage!.messageSender}:" : "",
                     style: TextStyle(
                         fontSize: 12,
                         color: theme.weakTextColor,

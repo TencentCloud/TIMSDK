@@ -39,6 +39,7 @@ class _PermissionRequestInfo extends TIMUIKitState<PermissionRequestInfo>
 
   @override
   void dispose() {
+    widget.removeOverLay();
     super.dispose();
     WidgetsBinding.instance?.removeObserver(this);
   }
@@ -203,13 +204,13 @@ class Permissions {
     return _prefix + appName + _postfixList[value];
   }
 
-  static Future<bool> checkPermission(BuildContext context, int value) async {
+  static Future<bool> checkPermission(BuildContext context, int value, [bool isShowPermissionPage = true]) async {
     final status = await Permission.byValue(value).status;
     if (status.isGranted) {
       return true;
     }
     final bool? shouldRequestPermission =
-        await showPermissionConfirmDialog(context, value);
+        await showPermissionConfirmDialog(context, value, isShowPermissionPage);
     if (shouldRequestPermission != null && shouldRequestPermission) {
       return await Permission.byValue(value).request().isGranted;
     }
@@ -245,12 +246,12 @@ class Permissions {
   }
 
   static Future<bool?> showPermissionConfirmDialog(
-      BuildContext context, value) async {
+      BuildContext context, value, [bool isShowPermissionPage = true]) async {
     final platformUtils = PlatformUtils();
     // 第一次直接走系统文案
     if (!await checkPermissionSetBefore(value)) {
       await setLocalPermission(value);
-      if (platformUtils.isAndroid) {
+      if (platformUtils.isAndroid && isShowPermissionPage) {
         showPermissionRequestInfoDialog(context, value);
       }
       return true;

@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:extended_image/extended_image.dart';
@@ -9,7 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-
+import 'package:universal_html/html.dart' as html;
 import 'package:chewie/chewie.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/ui/utils/permission.dart';
@@ -51,6 +53,22 @@ class _VideoScreenState extends TIMUIKitState<VideoScreen> {
 
   //保存网络视频到本地
   _saveNetworkVideo(context, String videoUrl, {bool isAsset = true}) async {
+    if (PlatformUtils().isWeb) {
+      RegExp exp = RegExp(r"((\.){1}[^?]{2,4})");
+      String? suffix = exp.allMatches(videoUrl).last.group(0);
+      var xhr = html.HttpRequest();
+      xhr.open('get', videoUrl);
+      xhr.responseType = 'arraybuffer';
+      xhr.onLoad.listen((event) {
+        final a = html.AnchorElement(
+            href: html.Url.createObjectUrl(html.Blob([xhr.response])));
+        a.download = '${md5.convert(utf8.encode(videoUrl)).toString()}$suffix';
+        a.click();
+        a.remove();
+      });
+      xhr.send();
+      return;
+    }
     if (PlatformUtils().isIOS) {
       if (!await Permissions.checkPermission(
           context, Permission.photosAddOnly.value)) {
@@ -187,7 +205,8 @@ class _VideoScreenState extends TIMUIKitState<VideoScreen> {
   @override
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     return OrientationBuilder(builder: ((context, orientation) {
-      return Container(
+      return Scaffold(
+          body: Container(
         color: Colors.transparent,
         constraints: BoxConstraints.expand(
           height: MediaQuery.of(context).size.height,
@@ -234,7 +253,7 @@ class _VideoScreenState extends TIMUIKitState<VideoScreen> {
                 );
               },
             )),
-      );
+      ));
     }));
   }
 }

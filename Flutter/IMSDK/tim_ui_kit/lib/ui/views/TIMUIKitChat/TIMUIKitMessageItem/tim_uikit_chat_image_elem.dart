@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:crypto/crypto.dart';
+import 'package:tim_ui_kit/business_logic/separate_models/tui_chat_separate_view_model.dart';
 import 'package:universal_html/html.dart' as html;
 import 'dart:io';
 import 'dart:math';
@@ -41,10 +42,12 @@ class TIMUIKitImageElem extends StatefulWidget {
   final VoidCallback? clearJump;
   final String? isFrom;
   final bool? isShowMessageReaction;
+  final TUIChatSeparateViewModel chatModel;
 
   const TIMUIKitImageElem(
       {required this.message,
       this.isShowJump = false,
+        required this.chatModel,
       this.clearJump,
       this.isFrom,
       Key? key,
@@ -322,7 +325,9 @@ class _TIMUIKitImageElem extends TIMUIKitState<TIMUIKitImageElem> {
         bigImgUrl = smallImg!.url!;
       }
       return Stack(
-        alignment: AlignmentDirectional.topStart,
+        alignment: widget.message.isSelf ?? false
+            ? AlignmentDirectional.topEnd
+            : AlignmentDirectional.topStart,
         children: [
           // AspectRatio(
           //   aspectRatio: networkImagePositionRadio ?? positionRadio,
@@ -442,6 +447,7 @@ class _TIMUIKitImageElem extends TIMUIKitState<TIMUIKitImageElem> {
         getImageFromList(V2_TIM_IMAGE_TYPES_ENUM.original);
     V2TimImage? smallImg = getImageFromList(V2_TIM_IMAGE_TYPES_ENUM.small);
     return TIMUIKitMessageReactionWrapper(
+      chatModel: widget.chatModel,
         isShowJump: widget.isShowJump,
         clearJump: widget.clearJump,
         isFromSelf: widget.message.isSelf ?? true,

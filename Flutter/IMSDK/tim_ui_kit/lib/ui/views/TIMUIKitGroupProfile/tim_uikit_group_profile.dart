@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/business_logic/life_cycle/group_profile_life_cycle.dart';
@@ -127,7 +128,12 @@ class _TIMUIKitGroupProfileState extends TIMUIKitState<TIMUIKitGroupProfile> {
           final V2TimGroupInfo? groupInfo = model.groupInfo;
           final memberList = model.groupMemberList;
           if (groupInfo == null) {
-            return Container();
+            return Center(
+              child: LoadingAnimationWidget.staggeredDotsWave(
+                color: theme.weakTextColor ?? Colors.grey,
+                size: 48,
+              ),
+            );
           }
 
           final TUIGroupListenerModel groupListenerModel =

@@ -266,18 +266,6 @@ class CoreServicesImpl with CoreServices {
     if (PlatformUtils().isIOS || PlatformUtils().isAndroid) {
       didLoginSuccess();
     }
-    // if (PlatformUtils().isWeb){
-    //   Future.delayed(const Duration(milliseconds: 1000), (){
-    //     final TUISelfInfoViewModel selfInfoViewModel =
-    //     serviceLocator<TUISelfInfoViewModel>();
-    //     if(selfInfoViewModel.loginInfo == null){
-    //       didLoginSuccess();
-    //       if(webLoginSuccess != null){
-    //         webLoginSuccess!();
-    //       }
-    //     }
-    //   });
-    // }
     if (result.code != 0) {
       callOnCallback(TIMCallback(
           type: TIMCallbackType.API_ERROR,
@@ -316,6 +304,7 @@ class CoreServicesImpl with CoreServices {
     }
   }
 
+  // Deprecated
   void didLoginOut() {
     removeListener();
     clearData();
@@ -332,9 +321,18 @@ class CoreServicesImpl with CoreServices {
   Future<V2TimCallback> logout() async {
     final result = await TencentImSDKPlugin.v2TIMManager.logout();
     isLoginSuccess = false;
-    final TUIChatGlobalModel tuiChatViewModel =
-        serviceLocator<TUIChatGlobalModel>();
-    tuiChatViewModel.clearMessageMapFromLocal();
+    removeListener();
+    clearData();
+    serviceLocator<TUISelfInfoViewModel>().setLoginInfo(null);
+    return result;
+  }
+
+  @override
+  Future<V2TimCallback> logoutWithoutClearData() async {
+    final result = await TencentImSDKPlugin.v2TIMManager.logout();
+    isLoginSuccess = false;
+    removeListener();
+    serviceLocator<TUISelfInfoViewModel>().setLoginInfo(null);
     return result;
   }
 

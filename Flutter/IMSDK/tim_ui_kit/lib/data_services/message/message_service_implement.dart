@@ -18,6 +18,7 @@ class MessageServiceImpl extends MessageService {
     int lastMsgSeq = -1,
     required int count,
     String? lastMsgID,
+    List<int>? messageTypeList,
   }) async {
     final res = await TencentImSDKPlugin.v2TIMManager
         .getMessageManager()
@@ -27,7 +28,9 @@ class MessageServiceImpl extends MessageService {
             userID: userID,
             groupID: groupID,
             lastMsgID: lastMsgID,
-            lastMsgSeq: lastMsgSeq);
+            lastMsgSeq: lastMsgSeq,
+            messageTypeList: messageTypeList
+    );
     final List<V2TimMessage> messageList = res.data ?? [];
     if (res.code != 0) {
       _coreService.callOnCallback(TIMCallback(

@@ -131,9 +131,13 @@ class TUIChatModelTools {
         );
       }
 
-      return response.firstWhere((item) {
-        return item.msgID == msgID;
-      });
+      try{
+        return response.firstWhere((item) {
+          return item.msgID == msgID;
+        });
+      }catch(e){
+        return null;
+      }
     } else {
       return null;
     }

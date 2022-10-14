@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
@@ -257,6 +258,7 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
               child: Text(
                 text,
                 softWrap: true,
+                maxLines: 3,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(color: hexToColor("8F96A0"), fontSize: 14),
               ),
@@ -565,7 +567,18 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
   @override
   void initState() {
     super.initState();
-    focusNode = FocusNode();
+    if(PlatformUtils().isWeb){
+      focusNode = FocusNode(
+        onKey: (node, event) {
+          if (event.isKeyPressed(LogicalKeyboardKey.enter)) {
+            return KeyEventResult.handled;
+          }
+          return KeyEventResult.ignored;
+        },
+      );
+    }else{
+      focusNode = FocusNode();
+    }
     textEditingController =
         widget.controller?.textEditingController ?? TextEditingController();
     if (widget.controller != null) {
@@ -786,7 +799,7 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
                                           });
                                         },
                                         keyboardType: TextInputType.multiline,
-                                        textInputAction: isAndroidDevice()
+                                        textInputAction: PlatformUtils().isAndroid
                                             ? TextInputAction.newline
                                             : TextInputAction.send,
                                         onEditingComplete: onSubmitted,

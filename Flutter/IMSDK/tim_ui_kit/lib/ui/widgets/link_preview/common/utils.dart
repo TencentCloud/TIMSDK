@@ -9,7 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class LinkUtils {
   static RegExp urlReg = RegExp(
-      r"[-a-zA-Z0-9@:%_+.~#?&//=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)?");
+      r"(https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]");
 
   /// Get all the URL from a text message
   static List<String> getURLMatches(String textMessage) {

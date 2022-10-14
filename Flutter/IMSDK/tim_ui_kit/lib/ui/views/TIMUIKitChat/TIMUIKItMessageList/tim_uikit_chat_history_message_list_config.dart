@@ -151,6 +151,8 @@ class TIMUIKitHistoryMessageListConfig {
   /// Defaults to [Clip.hardEdge].
   Clip? clipBehavior;
 
+  bool? shrinkWrap;
+
   TIMUIKitHistoryMessageListConfig(
       {this.key,
       this.scrollDirection,
@@ -164,5 +166,6 @@ class TIMUIKitHistoryMessageListConfig {
       this.dragStartBehavior,
       this.keyboardDismissBehavior,
       this.restorationId,
+      this.shrinkWrap,
       this.clipBehavior});
 }

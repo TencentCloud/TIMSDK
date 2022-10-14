@@ -8,6 +8,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
+import 'package:tim_ui_kit/business_logic/separate_models/tui_chat_separate_view_model.dart';
 
 import 'package:tim_ui_kit/ui/utils/message.dart';
 import 'package:tim_ui_kit/ui/utils/platform.dart';
@@ -21,6 +22,7 @@ class TIMUIKitVideoElem extends StatefulWidget {
   final bool isShowJump;
   final VoidCallback? clearJump;
   final String? isFrom;
+  final TUIChatSeparateViewModel chatModel;
   final bool? isShowMessageReaction;
 
   const TIMUIKitVideoElem(this.message,
@@ -28,7 +30,7 @@ class TIMUIKitVideoElem extends StatefulWidget {
       this.isShowJump = false,
       this.clearJump,
       this.isFrom,
-      this.isShowMessageReaction})
+      this.isShowMessageReaction, required this.chatModel})
       : super(key: key);
 
   @override
@@ -129,6 +131,7 @@ class _TIMUIKitVideoElemState extends TIMUIKitState<TIMUIKitVideoElem> {
           return Hero(
               tag: heroTag,
               child: TIMUIKitMessageReactionWrapper(
+                chatModel: widget.chatModel,
                   message: widget.message,
                   isShowJump: widget.isShowJump,
                   isShowMessageReaction: widget.isShowMessageReaction ?? true,

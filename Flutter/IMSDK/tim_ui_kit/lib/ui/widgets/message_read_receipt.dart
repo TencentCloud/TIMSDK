@@ -99,6 +99,7 @@ class _MessageReadReceiptState extends TIMUIKitState<MessageReadReceipt> {
         return Text(TIM_t("[自定义]"));
       case MessageElemType.V2TIM_ELEM_TYPE_SOUND:
         return TIMUIKitSoundElem(
+            isShowMessageReaction: false,
             chatModel: widget.model,
             message: message,
             soundElem: message.soundElem!,
@@ -114,12 +115,15 @@ class _MessageReadReceiptState extends TIMUIKitState<MessageReadReceipt> {
       // return Text(message.textElem!.text!);
       case MessageElemType.V2TIM_ELEM_TYPE_FACE:
         return TIMUIKitFaceElem(
+            isShowMessageReaction: false,
             model: widget.model,
             isShowJump: false,
             path: message.faceElem?.data ?? "",
             message: message);
       case MessageElemType.V2TIM_ELEM_TYPE_FILE:
         return TIMUIKitFileElem(
+          chatModel: widget.model,
+          isShowMessageReaction: false,
           message: message,
           messageID: message.msgID,
           fileElem: message.fileElem,
@@ -128,16 +132,21 @@ class _MessageReadReceiptState extends TIMUIKitState<MessageReadReceipt> {
         );
       case MessageElemType.V2TIM_ELEM_TYPE_IMAGE:
         return TIMUIKitImageElem(
+          chatModel: widget.model,
+          isShowMessageReaction: false,
           message: message,
           isFrom: "merger",
           key: Key("${message.seq}_${message.timestamp}"),
         );
       case MessageElemType.V2TIM_ELEM_TYPE_VIDEO:
-        return TIMUIKitVideoElem(message, isFrom: "merger");
+        return TIMUIKitVideoElem(message,
+            chatModel: widget.model,
+            isShowMessageReaction: false, isFrom: "merger");
       case MessageElemType.V2TIM_ELEM_TYPE_LOCATION:
         return Text(TIM_t("[位置]"));
       case MessageElemType.V2TIM_ELEM_TYPE_MERGER:
         return TIMUIKitMergerElem(
+            isShowMessageReaction: false,
             model: widget.model,
             isShowJump: false,
             message: message,

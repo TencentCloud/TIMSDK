@@ -17,7 +17,7 @@ class TUISelfInfoViewModel extends ChangeNotifier {
     return _loginInfo;
   }
 
-  setLoginInfo(V2TimUserFullInfo value) {
+  setLoginInfo(V2TimUserFullInfo? value) {
     _loginInfo = value;
     notifyListeners();
   }
