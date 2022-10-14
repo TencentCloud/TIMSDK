@@ -299,11 +299,13 @@ class _SelectionListState extends State<SelectionList> {
     int scrollPosition =
         (_controllerScroll!.position.pixels / _itemsizeheight).round();
     if (scrollPosition < countries.length) {
-      String? countryName = countries.elementAt(scrollPosition).name;
-      setState(() {
-        posSelected =
-            countryName![0].toUpperCase().codeUnitAt(0) - 'A'.codeUnitAt(0);
-      });
+      try{
+        String? countryName = countries.elementAt(scrollPosition).name;
+        setState(() {
+          posSelected =
+              countryName![0].toUpperCase().codeUnitAt(0) - 'A'.codeUnitAt(0);
+        });
+      }catch(e){}
     }
 
     if ((_controllerScroll!.offset) >=

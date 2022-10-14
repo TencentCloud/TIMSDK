@@ -3,7 +3,7 @@ description: tencent im uikit
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -32,8 +32,40 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
+  # Tencent Cloud Chat dependencies:
+  tim_ui_kit: ^0.1.6
+  # tim_ui_kit:
+  #   path: package_src/tim_ui_kit
+  tim_ui_kit_calling_plugin: 0.3.5
+#  tim_ui_kit_calling_plugin:
+#    path: /Users/wangrunlin/Documents/GitHub/im-flutter-uikit-calling
+  tim_ui_kit_sticker_plugin: ^0.0.9
+#  tim_ui_kit_sticker_plugin:
+#    path: /Users/wangrunlin/Documents/GitHub/tim_ui_kit_sticker_plugin
+#  tim_ui_kit_lbs_plugin:
+#    path:
+#      /Users/wangrunlin/Documents/GitHub/im-flutter-uikit-lbs
+  tim_ui_kit_push_plugin: ^0.4.2
+#  tim_ui_kit_push_plugin:
+#    path: /Users/wangrunlin/Documents/GitHub/im-flutter-uikit-push
+#  tencent_trtc_cloud: ^2.3.8
+
+  # Location message and Baidu Map:
+  tim_ui_kit_lbs_plugin: ^1.1.11
+  flutter_baidu_mapapi_map: ^3.1.0+1
+  flutter_baidu_mapapi_search: ^3.1.0
+  flutter_bmflocation: ^3.1.0+1
+#  tim_ui_kit_lbs_plugin:
+#    path: /Users/wangrunlin/Documents/GitHub/im-flutter-uikit-lbs
+
+  # Tencent internal dependencies:
+  # bugly:
+  #   hosted:
+  #     name: bugly
+  #     url: http://pub.oa.com
+  #   version: ^0.2.1
+
+  # Third party dependencies:
   cupertino_icons: ^1.0.2
   localstorage: ^4.0.0+1
   archive: ^3.1.6
@@ -48,38 +80,16 @@ dependencies:
   webview_flutter: ^3.0.0
   flutter_easyloading: ^3.0.3
   i18n: any
-  tim_ui_kit: ^0.1.5
-  # tim_ui_kit:
-  #   path: package_src/tim_ui_kit
-  tim_ui_kit_calling_plugin: ^0.3.3
-#  tim_ui_kit_calling_plugin:
-#    path: /Users/wangrunlin/Documents/GitHub/im-flutter-uikit-calling
-  tim_ui_kit_sticker_plugin: ^0.0.6
-  # tim_ui_kit_sticker_plugin:
-  #   path: ../tim_ui_kit_sticker_plugin
   super_tooltip: ^1.0.1
   flutter_svg: ^1.0.3
-#  tim_ui_kit_lbs_plugin: ^1.1.2
-  tim_ui_kit_push_plugin: ^0.4.2
-#  tim_ui_kit_push_plugin:
-#    path: /Users/wangrunlin/Documents/GitHub/im-flutter-uikit-push
   uni_links: ^0.5.1
   fluwx: ^3.8.5
   device_info_plus: ^3.2.3
   firebase_core: 1.12.0
   flutter_launcher_icons: ^0.9.2
   loading_animation_widget: ^1.2.0+2
-  tencent_trtc_cloud: 2.2.4
   path_provider: ^2.0.11
   universal_io: ^2.0.4
-  # 开源版把这个去掉
-  # bugly:
-  #   hosted:
-  #     name: bugly
-  #     url: http://pub.oa.com
-  #   version: ^0.2.1
-#  tim_ui_kit_lbs_plugin:
-#    path: /Users/owennwang/Documents/GitHub/im-flutter-uikit-lbs
 
 dependency_overrides:
   path: ^1.8.2
@@ -99,7 +109,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

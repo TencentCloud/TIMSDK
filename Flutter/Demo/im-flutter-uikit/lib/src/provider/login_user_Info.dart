@@ -30,7 +30,7 @@ class LoginUserInfo with ChangeNotifier {
   ];
 
   setRandomAvatar() async {
-    String avatar = avatarURL[Random().nextInt(7)];
+    String avatar = avatarURL[Random().nextInt(6)];
     await _coreServices.setSelfInfo(
         userFullInfo: V2TimUserFullInfo.fromJson({
           "faceUrl": avatar,

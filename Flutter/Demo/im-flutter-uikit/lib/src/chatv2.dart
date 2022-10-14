@@ -21,6 +21,7 @@ class _ChatV2State extends State<ChatV2> {
   final TIMUIKitInputTextFieldController _textFieldController =
       TIMUIKitInputTextFieldController();
   bool _haveMoreData = true;
+  bool isInit = false;
 
   String? _getConvID() {
     return widget.selectedConversation.type == 1
@@ -41,7 +42,10 @@ class _ChatV2State extends State<ChatV2> {
 
   @override
   Widget build(BuildContext context) {
+    final isBuild = isInit;
+    isInit = true;
     return TIMUIKitChatProviderScope(
+      isBuild: isBuild,
       controller: _controller, // `TIMUIKitChatController` needs to be provided if you use it.
       config: const TIMUIKitChatConfig(
         // You can define anything here up to your business needs.

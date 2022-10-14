@@ -1,21 +1,25 @@
 // ignore_for_file: avoid_print, unused_field, unused_element
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tim_ui_kit/business_logic/life_cycle/chat_life_cycle.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_global_model.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/controller/tim_uikit_chat_controller.dart';
+import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/utils/permission.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitTextField/tim_uikit_call_invite_list.dart';
 import 'package:tim_ui_kit_calling_plugin/enum/tim_uikit_trtc_calling_scence.dart';
 import 'package:tim_ui_kit_calling_plugin/tim_ui_kit_calling_plugin.dart';
+import 'package:tim_ui_kit_lbs_plugin/pages/location_picker.dart';
+import 'package:tim_ui_kit_lbs_plugin/utils/location_utils.dart';
+import 'package:tim_ui_kit_lbs_plugin/utils/tim_location_model.dart';
+import 'package:tim_ui_kit_lbs_plugin/widget/location_msg_element.dart';
 import 'package:tim_ui_kit_sticker_plugin/tim_ui_kit_sticker_plugin.dart';
+import 'package:timuikit/src/config.dart';
 import 'package:timuikit/src/group_application_list.dart';
 
-// import 'package:tim_ui_kit_lbs_plugin/utils/location_utils.dart';
-// import 'package:tim_ui_kit_lbs_plugin/utils/tim_location_model.dart';
-// import 'package:tim_ui_kit_lbs_plugin/widget/location_msg_element.dart';
 import 'package:timuikit/src/group_profile.dart';
 import 'package:timuikit/src/provider/custom_sticker_package.dart';
 import 'package:timuikit/src/provider/local_setting.dart';
@@ -24,8 +28,10 @@ import 'package:timuikit/src/user_profile.dart';
 import 'package:provider/provider.dart';
 
 import 'package:timuikit/i18n/i18n_utils.dart';
-import 'package:timuikit/src/widgets/message_item/location_message_item.dart';
+import 'package:timuikit/utils/baidu_implements/map_service_baidu_implement.dart';
+import 'package:timuikit/utils/baidu_implements/map_widget_baidu_implement.dart';
 import 'package:timuikit/utils/push/push_constant.dart';
+import 'package:timuikit/utils/toast.dart';
 
 class Chat extends StatefulWidget {
   final V2TimConversation selectedConversation;
@@ -91,39 +97,40 @@ class _ChatState extends State<Chat> {
         ));
   }
 
-  // _onTapLocation() {
-  //   if (IMDemoConfig.baiduMapIOSAppKey.isNotEmpty) {
-  //     tuiChatField.currentState.inputextField.currentState.hideAllPanel();
-  //     Navigator.push(
-  //         context,
-  //         MaterialPageRoute(
-  //           builder: (context) => LocationPicker(
-  //             onChange: (LocationMessage location) async {
-  //               final locationMessageInfo =
-  //                   await sdkInstance.v2TIMMessageManager.createLocationMessage(
-  //                       desc: location.desc,
-  //                       longitude: location.longitude,
-  //                       latitude: location.latitude);
-  //               final messageInfo = locationMessageInfo.data!.messageInfo;
-  //               _timuiKitChatController.sendMessage(
-  //                   receiverID: _getConvID(),
-  //                   groupID: _getConvID(),
-  //                   convType: _getConvType(),
-  //                   messageInfo: messageInfo);
-  //             },
-  //             mapBuilder: (onMapLoadDone, mapKey, onMapMoveEnd) => BaiduMap(
-  //               onMapMoveEnd: onMapMoveEnd,
-  //               onMapLoadDone: onMapLoadDone,
-  //               key: mapKey,
-  //             ),
-  //             locationUtils: LocationUtils(BaiduMapService()),
-  //           ),
-  //         ));
-  //   } else {
-  //     Utils.toast("请根据Demo的README指引，配置百度AK，体验DEMO的位置消息能力");
-  //     print("请根据本文档指引 https://docs.qq.com/doc/DSVliWE9acURta2dL ， 快速体验位置消息能力");
-  //   }
-  // }
+  _onTapLocation() {
+    if(kIsWeb){
+      Utils.toast(imt("百度地图插件暂不支持网页版，请使用手机APP DEMO体验位置消息能力。"));
+      return;
+    }
+    if (IMDemoConfig.baiduMapIOSAppKey.isNotEmpty) {
+      tuiChatField.currentState.inputextField.currentState.hideAllPanel();
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => LocationPicker(
+              onChange: (LocationMessage location) async {
+                final locationMessageInfo =
+                    await sdkInstance.v2TIMMessageManager.createLocationMessage(
+                        desc: location.desc,
+                        longitude: location.longitude,
+                        latitude: location.latitude);
+                final messageInfo = locationMessageInfo.data!.messageInfo;
+                _timuiKitChatController.sendMessage(
+                    messageInfo: messageInfo);
+              },
+              mapBuilder: (onMapLoadDone, mapKey, onMapMoveEnd) => BaiduMap(
+                onMapMoveEnd: onMapMoveEnd,
+                onMapLoadDone: onMapLoadDone,
+                key: mapKey,
+              ),
+              locationUtils: LocationUtils(BaiduMapService()),
+            ),
+          ));
+    } else {
+      Utils.toast("请根据Demo的README指引，配置百度AK，体验DEMO的位置消息能力");
+      print("请根据本文档指引 https://docs.qq.com/doc/DSVliWE9acURta2dL ， 快速体验位置消息能力");
+    }
+  }
 
   _goToVideoUI() async {
     final hasCameraPermission =
@@ -155,7 +162,7 @@ class _ChatState extends State<Chat> {
       OfflinePushInfo offlinePush = OfflinePushInfo(
         title: "",
         desc: imt("邀请你视频通话"),
-        ext: "{\"conversationID\": \"c2c_$myId\"}",
+        ext: "{\"conversationID\": \"\"}",
         disablePush: false,
         androidOPPOChannelID: PushConfig.OPPOChannelID,
         ignoreIOSBadge: false,
@@ -194,7 +201,7 @@ class _ChatState extends State<Chat> {
       OfflinePushInfo offlinePush = OfflinePushInfo(
         title: "",
         desc: imt("邀请你语音通话"),
-        ext: "{\"conversationID\": \"c2c_$myId\"}",
+        ext: "{\"conversationID\": \"\"}",
         disablePush: false,
         androidOPPOChannelID: PushConfig.OPPOChannelID,
         ignoreIOSBadge: false,
@@ -310,50 +317,47 @@ class _ChatState extends State<Chat> {
         draftText: _getDraftText(),
         messageItemBuilder: MessageItemBuilder(
           locationMessageItemBuilder: (message, isShowJump, clearJump) {
-            // return LocationMsgElement(
-            //   messageID: message.msgID,
-            //   locationElem: LocationMessage(
-            //     longitude: message.locationElem!.longitude,
-            //     latitude: message.locationElem!.longitude,
-            //     desc: message.locationElem?.desc ?? "",
-            //   ),
-            //   isFromSelf: message.isSelf ?? false,
-            //   isShowJump: isShowJump,
-            //   clearJump: clearJump,
-            //   mapBuilder: (onMapLoadDone, mapKey) => BaiduMap(
-            //     onMapLoadDone: onMapLoadDone,
-            //     key: mapKey,
-            //   ),
-            //   locationUtils: LocationUtils(BaiduMapService()),
-            // );
-            return LocationMessageItem(
-              message: message,
-              isSelf: message.isSelf,
+            return LocationMsgElement(
+              isAllowCurrentLocation: false,
+              messageID: message.msgID,
+              locationElem: LocationMessage(
+                longitude: message.locationElem!.longitude,
+                latitude: message.locationElem!.latitude,
+                desc: message.locationElem?.desc ?? "",
+              ),
+              isFromSelf: message.isSelf ?? false,
+              isShowJump: isShowJump,
+              clearJump: clearJump,
+              mapBuilder: (onMapLoadDone, mapKey) => BaiduMap(
+                onMapLoadDone: onMapLoadDone,
+                key: mapKey,
+              ),
+              locationUtils: LocationUtils(BaiduMapService()),
             );
           },
         ),
         morePanelConfig: MorePanelConfig(
           extraAction: [
-            // MorePanelItem(
-            //     // 使用前，清先根据本文档配置AK。https://docs.qq.com/doc/DSVliWE9acURta2dL
-            //     id: "location",
-            //     title: imt("位置"),
-            //     onTap: (c) {
-            //       _onTapLocation();
-            //     },
-            //     icon: Container(
-            //       height: 64,
-            //       width: 64,
-            //       margin: const EdgeInsets.only(bottom: 4),
-            //       decoration: const BoxDecoration(
-            //           color: Colors.white,
-            //           borderRadius: BorderRadius.all(Radius.circular(5))),
-            //       child: Icon(
-            //         Icons.location_on,
-            //         color: hexToColor("5c6168"),
-            //         size: 32,
-            //       ),
-            //     )),
+            MorePanelItem(
+                // 使用前，清先根据本文档配置AK。https://docs.qq.com/doc/DSVliWE9acURta2dL
+                id: "location",
+                title: imt("位置"),
+                onTap: (c) {
+                  _onTapLocation();
+                },
+                icon: Container(
+                  height: 64,
+                  width: 64,
+                  margin: const EdgeInsets.only(bottom: 4),
+                  decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(5))),
+                  child: Icon(
+                    Icons.location_on,
+                    color: hexToColor("5c6168"),
+                    size: 32,
+                  ),
+                )),
             MorePanelItem(
                 id: "voiceCall",
                 title: imt("语音通话"),

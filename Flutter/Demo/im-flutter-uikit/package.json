@@ -8,10 +8,10 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "tox:build@dev": "flutter build web",
-    "tox:publish@dev": "tox publish test --silence",
+    "tox:build@dev": "echo \"Error: no test specified\"",
+    "tox:publish@dev": "tox publish online --silence",
     "tox:publish@master": "tox publish online --silence",
-    "tox:build@master": "flutter build web"
+    "tox:build@master": "echo \"Error: no test specified\""
   },
   "repository": {
     "type": "git",
