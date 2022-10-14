@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using com.tencent.imsdk.unity.enums;
 using com.tencent.imsdk.unity.callback;
-using Newtonsoft.Json;
 using UnityEngine;
 using AOT;
 using System.Text;
