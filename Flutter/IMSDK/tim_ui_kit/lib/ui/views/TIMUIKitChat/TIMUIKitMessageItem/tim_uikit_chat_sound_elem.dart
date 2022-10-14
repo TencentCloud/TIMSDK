@@ -56,6 +56,7 @@ class _TIMUIKitSoundElemState extends TIMUIKitState<TIMUIKitSoundElem> {
   bool isPlaying = false;
   StreamSubscription<Object>? subscription;
   bool isShowJumpState = false;
+  bool isShining = false;
   final TUIChatGlobalModel globalModel = serviceLocator<TUIChatGlobalModel>();
 
   _playSound() async {
@@ -136,12 +137,14 @@ class _TIMUIKitSoundElemState extends TIMUIKitState<TIMUIKitSoundElem> {
   }
 
   _showJumpColor() {
+    if ((widget.chatModel.jumpMsgID != widget.message.msgID) &&
+        (widget.message.msgID?.isNotEmpty ?? true)) {
+      return;
+    }
+    isShining = true;
     int shineAmount = 6;
     setState(() {
       isShowJumpState = true;
-    });
-    Future.delayed(const Duration(milliseconds: 100), () {
-      widget.clearJump!();
     });
     Timer.periodic(const Duration(milliseconds: 300), (timer) {
       if (mounted) {
@@ -150,10 +153,12 @@ class _TIMUIKitSoundElemState extends TIMUIKitState<TIMUIKitSoundElem> {
         });
       }
       if (shineAmount == 0 || !mounted) {
+        isShining = false;
         timer.cancel();
       }
       shineAmount--;
     });
+    widget.clearJump!();
   }
 
   @override
@@ -174,9 +179,16 @@ class _TIMUIKitSoundElemState extends TIMUIKitState<TIMUIKitSoundElem> {
             bottomLeft: Radius.circular(10),
             bottomRight: Radius.circular(10));
     if (widget.isShowJump) {
-      Future.delayed(Duration.zero, () {
-        _showJumpColor();
-      });
+      if (!isShining) {
+        Future.delayed(Duration.zero, () {
+          _showJumpColor();
+        });
+      } else {
+        if ((widget.chatModel.jumpMsgID == widget.message.msgID) &&
+            (widget.message.msgID?.isNotEmpty ?? false)) {
+          widget.clearJump!();
+        }
+      }
     }
     return InkWell(
       onTap: () => _playSound(),

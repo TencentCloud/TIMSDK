@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
+import 'package:tim_ui_kit/business_logic/separate_models/tui_chat_separate_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_global_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
 
@@ -23,6 +24,7 @@ import 'package:tim_ui_kit/ui/utils/platform.dart';
 import 'package:tim_ui_kit/ui/utils/tui_theme.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitMessageItem/TIMUIKitMessageReaction/tim_uikit_message_reaction_wrapper.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitMessageItem/tim_uikit_chat_file_icon.dart';
+import 'package:tim_ui_kit/ui/widgets/textSize.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class TIMUIKitFileElem extends StatefulWidget {
@@ -33,9 +35,11 @@ class TIMUIKitFileElem extends StatefulWidget {
   final VoidCallback? clearJump;
   final V2TimMessage message;
   final bool? isShowMessageReaction;
+  final TUIChatSeparateViewModel chatModel;
 
   const TIMUIKitFileElem(
       {Key? key,
+        required this.chatModel,
       required this.messageID,
       required this.fileElem,
       required this.isSelf,
@@ -189,10 +193,23 @@ class _TIMUIKitFileElemState extends TIMUIKitState<TIMUIKitFileElem> {
     }
   }
 
+  String showFileSize(int fileSize) {
+    if (fileSize < 1024) {
+      return fileSize.toString() + "B";
+    } else if (fileSize < 1024 * 1024) {
+      return (fileSize / 1024).toStringAsFixed(2) + "KB";
+    } else if (fileSize < 1024 * 1024 * 1024) {
+      return (fileSize / 1024 / 1024).toStringAsFixed(2) + "MB";
+    } else {
+      return (fileSize / 1024 / 1024 / 1024).toStringAsFixed(2) + "GB";
+    }
+  }
+
   @override
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     final theme = value.theme;
     return TIMUIKitMessageReactionWrapper(
+      chatModel: widget.chatModel,
         isShowJump: widget.isShowJump,
         clearJump: widget.clearJump,
         isFromSelf: widget.message.isSelf ?? true,
@@ -275,18 +292,26 @@ class _TIMUIKitFileElemState extends TIMUIKitState<TIMUIKitFileElem> {
                                     child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      fileName,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        color: theme.darkTextColor,
-                                        fontSize: 16,
+                                    Container(
+                                      constraints:
+                                          const BoxConstraints(maxWidth: 160),
+                                      child: LayoutBuilder(
+                                        builder:
+                                            (buildContext, boxConstraints) {
+                                          return ExtendText(
+                                            fileName,
+                                            width: boxConstraints.maxWidth,
+                                            style: TextStyle(
+                                              color: theme.darkTextColor,
+                                              fontSize: 16,
+                                            ),
+                                          );
+                                        },
                                       ),
                                     ),
                                     if (fileSize != null)
                                       Text(
-                                        "${(fileSize / 1024).ceil()} KB",
+                                        showFileSize(fileSize),
                                         // "${received > 0 ? (received / 1024).ceil() : (received / 1024).ceil()} KB",
                                         style: TextStyle(
                                             fontSize: 14,

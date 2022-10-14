@@ -9,6 +9,7 @@ abstract class MessageService {
     int lastMsgSeq,
     required int count,
     String? lastMsgID,
+    List<int>? messageTypeList,
   });
 
   Future addSimpleMsgListener({

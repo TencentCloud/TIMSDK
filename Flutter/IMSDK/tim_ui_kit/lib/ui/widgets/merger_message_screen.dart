@@ -83,6 +83,7 @@ class MergerMessageScreen extends TIMUIKitStatelessWidget {
             message: message);
       case MessageElemType.V2TIM_ELEM_TYPE_FILE:
         return TIMUIKitFileElem(
+            chatModel: model,
             isShowMessageReaction: false,
             message: message,
             messageID: message.msgID,
@@ -91,6 +92,7 @@ class MergerMessageScreen extends TIMUIKitStatelessWidget {
             isShowJump: false);
       case MessageElemType.V2TIM_ELEM_TYPE_IMAGE:
         return TIMUIKitImageElem(
+          chatModel: model,
           isShowMessageReaction: false,
           message: message,
           isFrom: "merger",
@@ -98,6 +100,7 @@ class MergerMessageScreen extends TIMUIKitStatelessWidget {
         );
       case MessageElemType.V2TIM_ELEM_TYPE_VIDEO:
         return TIMUIKitVideoElem(message,
+            chatModel: model,
             isFrom: "merger", isShowMessageReaction: false);
       case MessageElemType.V2TIM_ELEM_TYPE_LOCATION:
         return Text(TIM_t("[位置]"));

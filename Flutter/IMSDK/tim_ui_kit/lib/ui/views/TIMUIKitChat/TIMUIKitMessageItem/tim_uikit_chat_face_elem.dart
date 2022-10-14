@@ -52,6 +52,7 @@ class _TIMUIKitTextElemState extends TIMUIKitState<TIMUIKitFaceElem> {
   @override
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     return TIMUIKitMessageReactionWrapper(
+      chatModel: widget.model,
         isShowJump: widget.isShowJump,
         isFromSelf: widget.message.isSelf ?? true,
         clearJump: widget.clearJump,

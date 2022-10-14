@@ -1,3 +1,5 @@
+import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -100,11 +102,11 @@ class TIMUIKitHistoryMessageList extends StatefulWidget {
 
 class _TIMUIKitHistoryMessageListState
     extends TIMUIKitState<TIMUIKitHistoryMessageList> {
-  LoadingPlace loadingPlace = LoadingPlace.none;
   V2TimMessage? findingMsg;
   String findingSeq = "";
   late TIMUIKitHistoryMessageListController _controller;
   late AutoScrollController _autoScrollController;
+  LoadingPlace loadingPlace = LoadingPlace.none;
 
   @override
   void initState() {
@@ -153,29 +155,24 @@ class _TIMUIKitHistoryMessageListState
     return widget.messageList[index]!.msgID;
   }
 
+  void showCantFindMsg() {
+    findingMsg = null;
+    findingSeq = "";
+    loadingPlace = LoadingPlace.none;
+    onTIMCallback(TIMCallback(
+        type: TIMCallbackType.INFO,
+        infoRecommendText: TIM_t("无法定位到原消息"),
+        infoCode: 6660401));
+  }
+
   _onScrollToIndex(V2TimMessage targetMsg) {
     // This method called by @ messages or messages been searched, aims to jump to target message
-    // setState(() {
-    if (loadingPlace != LoadingPlace.top) {
       loadingPlace = LoadingPlace.top;
-    }
-    // });
-    const int singleLoadAmount = 40;
+    const int singleLoadAmount = kIsWeb ? 15 : 40;
     final lastTimestamp =
         widget.messageList[widget.messageList.length - 1]?.timestamp;
     final msgList = widget.messageList;
     final targetTimeStamp = targetMsg.timestamp!;
-
-    void showCantFindMsg() {
-      // setState(() {
-      findingMsg = null;
-      loadingPlace = LoadingPlace.none;
-      // });
-      onTIMCallback(TIMCallback(
-          type: TIMCallbackType.INFO,
-          infoRecommendText: TIM_t("无法定位到原消息"),
-          infoCode: 6660401));
-    }
 
     if (targetTimeStamp >= lastTimestamp!) {
       // 当前列表里应该有这个消息，试试能不能直接定位到那去
@@ -194,29 +191,27 @@ class _TIMUIKitHistoryMessageListState
       }
 
       if (isFound && targetIndex != 1) {
-        // setState(() {
         findingMsg = null;
-        // });
         _autoScrollController.scrollToIndex(
           targetIndex,
           preferPosition: AutoScrollPosition.middle,
         );
+
+        // execute twice for accurate position, as the position located firstly can be wrong
         _autoScrollController.scrollToIndex(targetIndex,
             preferPosition: AutoScrollPosition.middle);
-        // execute twice for accurate position, as the position located firstly can be wrong
+        _autoScrollController.scrollToIndex(targetIndex,
+            preferPosition: AutoScrollPosition.middle);
+
         widget.model.jumpMsgID = targetMsg.msgID!;
-        // setState(() {
         loadingPlace = LoadingPlace.none;
-        // });
       } else {
         showCantFindMsg();
       }
     } else {
       if (widget.model.haveMoreData) {
         // if the target message not in current message list, load more
-        // setState(() {
         findingMsg = targetMsg;
-        // });
         final lastMsgId = _getMessageId(widget.messageList.length - 1);
         widget.onLoadMore(lastMsgId, singleLoadAmount);
       } else {
@@ -227,11 +222,7 @@ class _TIMUIKitHistoryMessageListState
 
   _onScrollToIndexBySeq(String targetSeq) {
     // This method called by tongue request jumping to target @ message
-    setState(() {
-      if (loadingPlace != LoadingPlace.top) {
-        loadingPlace = LoadingPlace.top;
-      }
-    });
+    loadingPlace = LoadingPlace.top;
     const int singleLoadAmount = 40;
     final msgList = widget.messageList;
     String lastSeq = "";
@@ -241,17 +232,6 @@ class _TIMUIKitHistoryMessageListState
         lastSeq = currentMsg.seq!;
         break;
       }
-    }
-
-    void showCantFindMsg() {
-      // setState(() {
-      findingSeq = "";
-      loadingPlace = LoadingPlace.none;
-      // });
-      onTIMCallback(TIMCallback(
-          type: TIMCallbackType.INFO,
-          infoRecommendText: TIM_t("无法定位到原消息"),
-          infoCode: 6660401));
     }
 
     if (int.parse(lastSeq) <= int.parse(targetSeq)) {
@@ -269,9 +249,7 @@ class _TIMUIKitHistoryMessageListState
       }
 
       if (isFound && targetIndex != 1) {
-        // setState(() {
         findingSeq = "";
-        // });
         _autoScrollController.scrollToIndex(
           targetIndex,
           preferPosition: AutoScrollPosition.middle,
@@ -279,20 +257,15 @@ class _TIMUIKitHistoryMessageListState
         _autoScrollController.scrollToIndex(targetIndex,
             preferPosition: AutoScrollPosition.middle);
         if (targetMsgID != null && targetMsgID != "") {
-          // widget.updateMsgID(targetMsgID);
           widget.model.jumpMsgID = targetMsgID;
         }
-        // setState(() {
         loadingPlace = LoadingPlace.none;
-        // });
       } else {
         showCantFindMsg();
       }
     } else {
       if (widget.model.haveMoreData) {
-        // setState(() {
         findingSeq = targetSeq;
-        // });
         widget.onLoadMore(
             _getMessageId(widget.messageList.length - 1), singleLoadAmount);
       } else {
@@ -332,9 +305,6 @@ class _TIMUIKitHistoryMessageListState
   @override
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     final theme = value.theme;
-    final TUIChatSeparateViewModel model =
-        Provider.of<TUIChatSeparateViewModel>(context);
-
     if (widget.messageList.isEmpty) {
       return Container();
     }
@@ -343,23 +313,14 @@ class _TIMUIKitHistoryMessageListState
     final throteFunction = OptimizeUtils.throttle((index) async {
       final msgID =
           TIMUIKitChatUtils.getMessageIDWithinIndex(messageList, index);
-      setState(() {
-        loadingPlace = LoadingPlace.top;
-      });
       await widget.onLoadMore(msgID);
-      setState(() {
-        loadingPlace = LoadingPlace.none;
-      });
     }, 20);
 
-    // Future.delayed(const Duration(milliseconds: 600), (){
     if (findingMsg != null) {
       _onScrollToIndex(findingMsg!);
     } else if (findingSeq != "") {
       _onScrollToIndexBySeq(findingSeq);
     }
-    // }
-    // );
 
     String getMessageIdentifier(V2TimMessage? message, int index) {
       return "${message?.msgID} - ${message?.timestamp} - ${message?.seq} - ${message?.id}";
@@ -377,7 +338,7 @@ class _TIMUIKitHistoryMessageListState
               padding: widget.mainHistoryListConfig?.padding ?? EdgeInsets.zero,
               itemExtent: widget.mainHistoryListConfig?.itemExtent,
               prototypeItem: widget.mainHistoryListConfig?.prototypeItem,
-              cacheExtent: widget.mainHistoryListConfig?.cacheExtent ?? 400,
+              cacheExtent: widget.mainHistoryListConfig?.cacheExtent ?? 1500,
               semanticChildCount:
                   widget.mainHistoryListConfig?.semanticChildCount,
               dragStartBehavior:
@@ -390,7 +351,7 @@ class _TIMUIKitHistoryMessageListState
               clipBehavior:
                   widget.mainHistoryListConfig?.clipBehavior ?? Clip.hardEdge,
               reverse: true,
-              shrinkWrap: true,
+              shrinkWrap: widget.mainHistoryListConfig?.shrinkWrap ?? true,
               controller: _autoScrollController,
               childrenDelegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
@@ -398,6 +359,27 @@ class _TIMUIKitHistoryMessageListState
                     if (index == messageList.length - 1) {
                       if (widget.model.haveMoreData) {
                         throteFunction(index);
+                        return Column(
+                          children: [
+                            LoadingAnimationWidget.staggeredDotsWave(
+                              color: theme.weakTextColor ?? Colors.grey,
+                              size: 28,
+                            ),
+                            AutoScrollTag(
+                              controller: _autoScrollController,
+                              index: -index,
+                              key: ValueKey(
+                                  getMessageIdentifier(messageItem, index)),
+                              highlightColor: Colors.black.withOpacity(0.1),
+                              child: KeepAliveWrapper(
+                                  child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16),
+                                      child:
+                                          _getMessageItemBuilder(messageItem))),
+                            ),
+                          ],
+                        );
                       }
                     }
                     return AutoScrollTag(
@@ -408,7 +390,7 @@ class _TIMUIKitHistoryMessageListState
                       child: KeepAliveWrapper(
                           child: Container(
                               padding:
-                                  const EdgeInsets.symmetric(horizontal: 16),
+                              const EdgeInsets.symmetric(horizontal: 16),
                               child: _getMessageItemBuilder(messageItem))),
                     );
                   },
@@ -428,14 +410,6 @@ class _TIMUIKitHistoryMessageListState
           groupAtInfoList: widget.groupAtInfoList,
           tongueItemBuilder: widget.tongueItemBuilder,
         ),
-        if (loadingPlace == LoadingPlace.bottom)
-          Positioned(
-            bottom: 0,
-            child: LoadingAnimationWidget.staggeredDotsWave(
-              color: theme.weakTextColor ?? Colors.grey,
-              size: 28,
-            ),
-          ),
         if (loadingPlace == LoadingPlace.top)
           Positioned(
             top: 8,
@@ -459,7 +433,14 @@ class TIMUIKitHistoryMessageListSelector extends TIMUIKitStatelessWidget {
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     return Selector<TUIChatGlobalModel, List<V2TimMessage?>>(
         builder: builder,
-        selector: (context, model) =>
-            model.getMessageList(conversationID) ?? []);
+        shouldRebuild: (previous, next) {
+          final isEquals =
+              const DeepCollectionEquality.unordered().equals(previous, next);
+          return !isEquals;
+        },
+        selector: (context, model) {
+          final messageList = model.getMessageList(conversationID) ?? [];
+          return messageList;
+        });
   }
 }

@@ -1,8 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:tim_ui_kit/business_logic/life_cycle/chat_life_cycle.dart';
 import 'package:tim_ui_kit/business_logic/separate_models/tui_chat_model_tools.dart';
@@ -14,6 +18,7 @@ import 'package:tim_ui_kit/data_services/services_locatar.dart';
 import 'package:tim_ui_kit/ui/constants/history_message_constant.dart';
 import 'package:tim_ui_kit/ui/utils/platform.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/tim_uikit_chat_config.dart';
+import 'package:uuid/uuid.dart';
 
 class TUIChatSeparateViewModel extends ChangeNotifier {
   final FriendshipServices _friendshipServices =
@@ -22,13 +27,15 @@ class TUIChatSeparateViewModel extends ChangeNotifier {
   final GroupServices _groupServices = serviceLocator<GroupServices>();
   final TUIChatGlobalModel globalModel = serviceLocator<TUIChatGlobalModel>();
   final TUIChatModelTools tools = serviceLocator<TUIChatModelTools>();
+  final _uuid = const Uuid();
 
   ChatLifeCycle? lifeCycle;
   int _totalUnreadCount = 0;
   bool _isMultiSelect = false;
+  bool _isInit = false;
   String conversationID = "";
   ConvType? conversationType;
-  bool haveMoreData = true;
+  bool haveMoreData = false;
   String _currentSelectedMsgId = "";
   String _editRevokedMsg = "";
   GroupReceiptAllowType? _groupType;
@@ -46,7 +53,6 @@ class TUIChatSeparateViewModel extends ChangeNotifier {
   V2TimGroupInfo? _groupInfo;
   String groupMemberListSeq = "0";
   List<V2TimGroupMemberFullInfo?>? groupMemberList = [];
-
   V2TimGroupInfo? get groupInfo => _groupInfo;
 
   set groupInfo(V2TimGroupInfo? value) {
@@ -131,9 +137,25 @@ class TUIChatSeparateViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  setLoadingMessageMap(String conversationID, V2TimMessage messageInfo) {
+    if (PlatformUtils().isWeb) {
+      if (globalModel.loadingMessage[conversationID] != null &&
+          globalModel.loadingMessage[conversationID]!.isNotEmpty) {
+        globalModel.loadingMessage[conversationID]!.add(messageInfo);
+      } else {
+        globalModel.loadingMessage[conversationID] = <V2TimMessage>[
+          messageInfo
+        ];
+      }
+    }
+  }
+
   void initForEachConversation(ConvType convType, String convID,
       ValueChanged<String>? onChangeInputField,
       {String? groupID}) async {
+    if (_isInit) {
+      return;
+    }
     setInputField = onChangeInputField;
     conversationType = convType;
     conversationID = convID;
@@ -173,6 +195,7 @@ class TUIChatSeparateViewModel extends ChangeNotifier {
     globalModel.setMessageListPosition(
         conversationID, HistoryMessagePosition.bottom);
     globalModel.setChatConfig(chatConfig);
+    _isInit = true;
   }
 
   Future<bool> loadData({
@@ -195,21 +218,32 @@ class TUIChatSeparateViewModel extends ChangeNotifier {
       final newList = [...currentHistoryMsgList, ...response];
       final List<V2TimMessage> msgList =
           await lifeCycle?.didGetHistoricalMessageList(newList) ?? newList;
-      globalModel.setMessageList(conversationID, msgList);
+      globalModel.setMessageList(conversationID, msgList, needDuration: false);
     } else {
-      final List<V2TimMessage> messageList =
+      List<V2TimMessage> messageList =
           await lifeCycle?.didGetHistoricalMessageList(response) ?? response;
-      globalModel.setMessageList(conversationID, messageList);
+      if (globalModel.loadingMessage[conversationID] != null) {
+        if (globalModel.loadingMessage[conversationID]!.isNotEmpty) {
+          messageList = [
+            ...?globalModel.loadingMessage[conversationID],
+            ...messageList
+          ];
+        } else {
+          globalModel.loadingMessage.remove(conversationID);
+        }
+      }
+      globalModel.setMessageList(conversationID, messageList,
+          needDuration: false);
       // The messages in first screen
     }
     if (response.isEmpty ||
         (!PlatformUtils().isWeb && response.length < count) ||
-        (PlatformUtils().isWeb && response.length < 15)) {
+        (PlatformUtils().isWeb && response.length < min(count, 20))) {
       haveMoreData = false;
     } else {
       haveMoreData = true;
     }
-    notifyListeners();
+    // notifyListeners();
     if (chatConfig.isShowGroupReadingStatus &&
         conversationType == ConvType.group &&
         response.isNotEmpty) {
@@ -373,6 +407,7 @@ class TUIChatSeparateViewModel extends ChangeNotifier {
     required String id,
     required String convID,
     required ConvType convType,
+    V2TimMessage? messageInfo,
     OfflinePushInfo? offlinePushInfo,
     bool? onlineUserOnly = false,
     bool? isEditStatusMessage = false,
@@ -382,6 +417,9 @@ class TUIChatSeparateViewModel extends ChangeNotifier {
     final oldGroupType = _groupType != null
         ? GroupReceptAllowType.values[_groupType!.index]
         : null;
+    if (messageInfo != null) {
+      setLoadingMessageMap(convID, messageInfo);
+    }
     final sendMsgRes = await _messageService.sendMessage(
       id: id,
       receiver: receiver,
@@ -415,6 +453,10 @@ class TUIChatSeparateViewModel extends ChangeNotifier {
 
   List<V2TimMessage> getOriginMessageList() {
     return globalModel.messageListMap[conversationID] ?? [];
+  }
+
+  List<V2TimMessage> getTempMessageList() {
+    return globalModel.tempMessageListMap[conversationID] ?? [];
   }
 
   Future<V2TimValueCallback<V2TimMessage>?> sendTextAtMessage(
@@ -520,6 +562,7 @@ class TUIChatSeparateViewModel extends ChangeNotifier {
           convID: convID,
           id: textMessageInfo.id as String,
           convType: convType,
+          messageInfo: lifeCycleMsg ?? messageInfoWithSender,
           offlinePushInfo: tools.buildMessagePushInfo(
               textMessageInfo.messageInfo!, convID, convType));
     }
@@ -667,13 +710,47 @@ class TUIChatSeparateViewModel extends ChangeNotifier {
     return null;
   }
 
+  double getFileSize(File file) {
+    int sizeInBytes = file.lengthSync();
+    double sizeInMb = sizeInBytes / (1024 * 1024);
+    return sizeInMb;
+  }
+
+  Future<String> getTempPath() async {
+    final id = _uuid.v4();
+    return getTemporaryDirectory().then((appDocDir) {
+      String filePath = appDocDir.path + id + ".jpeg";
+      return filePath;
+    });
+  }
+
   Future<V2TimValueCallback<V2TimMessage>?> sendImageMessage(
       {String? imagePath,
       required String convID,
       dynamic inputElement,
       required ConvType convType}) async {
+    String? image;
+    if ((PlatformUtils().isAndroid || PlatformUtils().isIOS) &&
+        imagePath != null &&
+        imagePath.isNotEmpty) {
+      try {
+        final size = getFileSize(File(imagePath));
+        final format =
+            imagePath.split(".")[imagePath.split(".").length - 1].toLowerCase();
+        if (size > 20 ||
+            (format != "jpg" && format != "png" && format != "gif")) {
+          final target = await getTempPath();
+          final result = await FlutterImageCompress.compressAndGetFile(
+              imagePath, target,
+              format: CompressFormat.jpeg, quality: 85);
+          image = result?.path;
+        }
+      } catch (e) {
+        print(e);
+      }
+    }
     final imageMessageInfo = await _messageService.createImageMessage(
-        imagePath: imagePath, inputElement: inputElement);
+        imagePath: image ?? imagePath, inputElement: inputElement);
     List<V2TimMessage> currentHistoryMsgList = getOriginMessageList();
     final messageInfo = imageMessageInfo!.messageInfo;
     if (messageInfo != null) {
@@ -696,6 +773,7 @@ class TUIChatSeparateViewModel extends ChangeNotifier {
       notifyListeners();
       return _sendMessage(
         convID: convID,
+        messageInfo: lifeCycleMsg ?? messageInfoWithSender,
         id: imageMessageInfo.id as String,
         convType: convType,
         offlinePushInfo: tools.buildMessagePushInfo(
@@ -739,6 +817,7 @@ class TUIChatSeparateViewModel extends ChangeNotifier {
       notifyListeners();
       return _sendMessage(
         convID: convID,
+        messageInfo: lifeCycleMsg ?? messageInfoWithSender,
         id: videoMessageInfo.id as String,
         convType: convType,
         offlinePushInfo: tools.buildMessagePushInfo(
@@ -781,6 +860,7 @@ class TUIChatSeparateViewModel extends ChangeNotifier {
       notifyListeners();
       return _sendMessage(
         convID: convID,
+        messageInfo: lifeCycleMsg ?? messageInfoWithSender,
         id: fileMessageInfo.id as String,
         convType: convType,
         offlinePushInfo: tools.buildMessagePushInfo(
@@ -943,7 +1023,8 @@ class TUIChatSeparateViewModel extends ChangeNotifier {
       {required V2TimMessage message,
       required String convID,
       required ConvType convType}) async {
-    await deleteMsg(message.msgID ?? "", id: message.id);
+    await deleteMsg(message.msgID ?? "",
+        id: message.id, webMessageInstance: message.messageFromWeb);
     int messageType = message.elemType;
     V2TimValueCallback<V2TimMessage>? res;
     if (messageType == MessageElemType.V2TIM_ELEM_TYPE_TEXT) {
@@ -987,7 +1068,11 @@ class TUIChatSeparateViewModel extends ChangeNotifier {
       res = await sendFileMessage(
           filePath: filePath, size: size, convID: convID, convType: convType);
     }
-
+    if (messageType == MessageElemType.V2TIM_ELEM_TYPE_CUSTOM) {
+      String data = message.customElem?.data ?? "";
+      res = await sendCustomMessage(
+          convID: convID, convType: convType, data: data);
+    }
     return res;
   }
 
@@ -1030,6 +1115,9 @@ class TUIChatSeparateViewModel extends ChangeNotifier {
 
   Future<V2TimValueCallback<V2TimMessage>?>? sendMessageFromController({
     required V2TimMessage? messageInfo,
+
+    /// Offline push info
+    OfflinePushInfo? offlinePushInfo,
   }) {
     List<V2TimMessage> currentHistoryMsgList = getOriginMessageList();
     if (messageInfo != null) {
@@ -1042,8 +1130,9 @@ class TUIChatSeparateViewModel extends ChangeNotifier {
         convID: conversationID,
         id: messageInfo.id as String,
         convType: conversationType ?? ConvType.c2c,
-        offlinePushInfo: tools.buildMessagePushInfo(
-            messageInfo, conversationID, conversationType ?? ConvType.c2c),
+        offlinePushInfo: offlinePushInfo ??
+            tools.buildMessagePushInfo(
+                messageInfo, conversationID, conversationType ?? ConvType.c2c),
       );
     }
     return null;
@@ -1172,6 +1261,7 @@ class TUIChatSeparateViewModel extends ChangeNotifier {
   @override
   void dispose() {
     globalModel.clearCurrentConversation();
+    _isInit = false;
     super.dispose();
   }
 }

@@ -49,6 +49,7 @@ class TUIChatGlobalModel extends ChangeNotifier {
 
   late V2TimAdvancedMsgListener advancedMsgListener;
   int _unreadCountForConversation = 0;
+  int testCount = 0;
   TIMUIKitChatConfig chatConfig = const TIMUIKitChatConfig();
   List<V2TimGroupApplication>? _groupApplicationList;
   String Function(V2TimMessage message)? _abstractMessageBuilder;
@@ -58,6 +59,7 @@ class TUIChatGlobalModel extends ChangeNotifier {
   final Map<String, Timer> _c2cMessageActiveTimer = Map.from({});
   bool _showC2cMessageEditStaus = true;
   final Map<String, Timer> _c2cMessageStatusShowTimer = Map.from({});
+  Map<String, List> loadingMessage = {};
 
   TUIChatGlobalModel() {
     advancedMsgListener = V2TimAdvancedMsgListener(
@@ -122,9 +124,10 @@ class TUIChatGlobalModel extends ChangeNotifier {
 
   clearCurrentConversation() {
     _currentConversationList.removeLast();
+    notifyListeners();
   }
 
-  getMessageReadReceipt(String msgID) {
+  V2TimMessageReceipt? getMessageReadReceipt(String msgID) {
     return messageReadReceiptMap[msgID];
   }
 
@@ -187,6 +190,7 @@ class TUIChatGlobalModel extends ChangeNotifier {
 
   initMessageMapFromLocalDatabase(
       List<V2TimConversation?> conversations) async {
+    int index = 0;
     for (V2TimConversation? conversationItem in conversations) {
       if (conversationItem == null || conversationItem.type == null) {
         return;
@@ -196,9 +200,12 @@ class TUIChatGlobalModel extends ChangeNotifier {
           conversationItem.conversationID;
       if (messageListMap[conversationID] == null ||
           messageListMap[conversationID]!.isEmpty) {
-        preloadMessageForConversation(
-            conversationID: conversationID,
-            conversationType: ConvType.values[conversationItem.type!]);
+        index++;
+        Future.delayed(Duration(milliseconds: 500 * index), () {
+          preloadMessageForConversation(
+              conversationID: conversationID,
+              conversationType: ConvType.values[conversationItem.type!]);
+        });
       }
     }
   }
@@ -208,9 +215,10 @@ class TUIChatGlobalModel extends ChangeNotifier {
     required String conversationID,
   }) async {
     final response = await _messageService.getHistoryMessageList(
-        count: 20,
+        count: 10,
         getType: HistoryMsgGetTypeEnum.V2TIM_GET_LOCAL_OLDER_MSG,
         userID: conversationType == ConvType.c2c ? conversationID : null,
+        messageTypeList: [1],
         groupID: conversationType == ConvType.group ? conversationID : null);
     if (_messageListMap[conversationID] == null ||
         _messageListMap[conversationID]!.isEmpty) {
@@ -381,12 +389,10 @@ class TUIChatGlobalModel extends ChangeNotifier {
       try {
         Map<String, dynamic> data = json.decode(msg.cloudCustomData ?? "");
         Map<String, dynamic>? messageFeature = data["messageFeature"];
-        print("看看对方带来的数据是啥");
         print(data);
         if (messageFeature != null) {
           int needTyping = messageFeature["needTyping"];
           if (needTyping == 1) {
-            print("设置对方在线状态");
             _c2cMessageFromUserActiveMap[msg.sender ?? ""] = true;
 
             if (_c2cMessageActiveTimer[msg.sender ?? ""] != null) {
@@ -525,24 +531,34 @@ class TUIChatGlobalModel extends ChangeNotifier {
   onMessageRevoked(String msgID, [String? convID]) {
     final activeMessageList = _messageListMap[convID ?? currentSelectedConv];
     if (activeMessageList != null) {
-      _messageListMap[convID ?? currentSelectedConv] =
-          activeMessageList.map((item) {
-        if (item.msgID == msgID) {
-          item.status = MessageStatus.V2TIM_MSG_STATUS_LOCAL_REVOKED;
+      final findeIndex =
+          activeMessageList.indexWhere((element) => element.msgID == msgID);
+      if (findeIndex != -1) {
+        final findeIndex =
+            activeMessageList.indexWhere((element) => element.msgID == msgID);
+        if (findeIndex != -1) {
+          final targetItem = activeMessageList[findeIndex];
+          targetItem.status = MessageStatus.V2TIM_MSG_STATUS_LOCAL_REVOKED;
+          targetItem.id = DateTime.now().millisecondsSinceEpoch.toString();
+          activeMessageList[findeIndex] = targetItem;
         }
-        return item;
-      }).toList();
+      }
+      _messageListMap[convID ?? currentSelectedConv] = activeMessageList;
       notifyListeners();
     }
   }
 
   onMessageModified(V2TimMessage modifiedMessage, [String? convID]) async {
+    modifiedMessage.id = DateTime.now().millisecondsSinceEpoch.toString();
     final activeMessageList = _messageListMap[convID ?? currentSelectedConv];
+    if (activeMessageList == null || activeMessageList.isEmpty) {
+      return;
+    }
     final V2TimMessage newMsg =
         await _lifeCycle?.modifiedMessageWillMount(modifiedMessage) ??
             modifiedMessage;
     final msgID = newMsg.msgID;
-    _messageListMap[currentSelectedConv] = activeMessageList!.map((item) {
+    _messageListMap[currentSelectedConv] = activeMessageList.map((item) {
       if (item.msgID == msgID) {
         return newMsg;
       }
@@ -607,11 +623,13 @@ class TUIChatGlobalModel extends ChangeNotifier {
     _messageService.markGroupMessageAsRead(groupID: convID);
   }
 
-  Future<V2TimValueCallback<V2TimMessage>?>? sendMessageFromController(
-      {required V2TimMessage? messageInfo,
-      required ConvType convType,
-      required String convID,
-      ValueChanged<String>? setInputField}) {
+  Future<V2TimValueCallback<V2TimMessage>?>? sendMessageFromController({
+    required V2TimMessage? messageInfo,
+    required ConvType convType,
+    required String convID,
+    ValueChanged<String>? setInputField,
+    OfflinePushInfo? offlinePushInfo,
+  }) {
     final TUIChatModelTools tools = serviceLocator<TUIChatModelTools>();
     List<V2TimMessage> currentHistoryMsgList = _messageListMap[convID] ?? [];
     if (messageInfo != null) {
@@ -620,13 +638,20 @@ class TUIChatGlobalModel extends ChangeNotifier {
           : messageInfo;
       currentHistoryMsgList = [messageInfoWithSender, ...currentHistoryMsgList];
       setMessageList(convID, currentHistoryMsgList);
+      if (loadingMessage[convID] != null &&
+          loadingMessage[convID]!.isNotEmpty) {
+        loadingMessage[convID]!.add(messageInfoWithSender);
+      } else {
+        loadingMessage[convID] = <V2TimMessage>[messageInfoWithSender];
+      }
       return _sendMessage(
         convID: convID,
         setInputField: setInputField,
         id: messageInfo.id as String,
         convType: ConvType.values[convType.index],
-        offlinePushInfo: tools.buildMessagePushInfo(
-            messageInfo, convID, ConvType.values[convType.index]),
+        offlinePushInfo: offlinePushInfo ??
+            tools.buildMessagePushInfo(
+                messageInfo, convID, ConvType.values[convType.index]),
       );
     }
     return null;
@@ -709,9 +734,16 @@ class TUIChatGlobalModel extends ChangeNotifier {
     return sendMsgRes;
   }
 
-  void setMessageList(String conversationID, List<V2TimMessage> messageList) {
+  void setMessageList(String conversationID, List<V2TimMessage> messageList,
+      {bool needDuration = false}) {
     _messageListMap[conversationID] = messageList;
-    notifyListeners();
+    if (needDuration) {
+      Future.delayed(const Duration(milliseconds: 800), () {
+        notifyListeners();
+      });
+    } else {
+      notifyListeners();
+    }
   }
 
   void setTempMessageList(
@@ -746,7 +778,9 @@ class TUIChatGlobalModel extends ChangeNotifier {
     } else {
       currentHistoryMsgList = [sendMsgResData, ...currentHistoryMsgList];
     }
-
+    if (loadingMessage[convID] != null && loadingMessage[convID]!.isNotEmpty) {
+      loadingMessage[convID]!.removeWhere((element) => element.id == id);
+    }
     final oldGroupType =
         groupType != null ? GroupReceptAllowType.values[groupType.index] : null;
     if (chatConfig.isShowGroupReadingStatus &&
@@ -766,7 +800,7 @@ class TUIChatGlobalModel extends ChangeNotifier {
 
   List<V2TimMessage>? getMessageList(String conversationID) {
     final list = messageListMap[conversationID]?.reversed.toList() ?? [];
-    List<V2TimMessage> listWithTimestamp = [];
+    final List<V2TimMessage> listWithTimestamp = [];
     final interval = chatConfig.timeDividerConfig?.timeInterval ?? 300;
     for (var item in list) {
       {
@@ -785,10 +819,12 @@ class TUIChatGlobalModel extends ChangeNotifier {
             timestamp: item.timestamp,
           ));
         }
-        listWithTimestamp.add(item);
+        listWithTimestamp.add(V2TimMessage.fromJson(item.toJson()));
       }
     }
-    return listWithTimestamp.reversed.toList();
+
+    final returnValue = listWithTimestamp.reversed.toList();
+    return returnValue;
   }
 
   HistoryMessagePosition getMessageListPosition(String conversationID) {

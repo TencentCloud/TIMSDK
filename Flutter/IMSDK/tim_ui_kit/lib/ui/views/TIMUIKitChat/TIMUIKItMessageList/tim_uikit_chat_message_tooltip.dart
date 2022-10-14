@@ -1,5 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -30,6 +32,8 @@ class TIMUIKitMessageTooltip extends StatefulWidget {
   final Function(String? userId, String? nickName)?
       onLongPressForOthersHeadPortrait;
 
+  final bool isUseMessageReaction;
+
   /// direction
   final SelectEmojiPanelPosition selectEmojiPanelPosition;
 
@@ -44,6 +48,7 @@ class TIMUIKitMessageTooltip extends StatefulWidget {
   const TIMUIKitMessageTooltip(
       {Key? key,
       this.toolTipsConfig,
+      this.isUseMessageReaction = true,
       required this.model,
       required this.message,
       required this.allowAtUserWhenReply,
@@ -253,23 +258,22 @@ class TIMUIKitMessageTooltipState
       builder: (BuildContext context, Widget? w) {
         final TUIChatSeparateViewModel model =
             Provider.of<TUIChatSeparateViewModel>(context);
-        final bool isUseMessageReaction = model.chatConfig.isUseMessageReaction;
         final bool haveExtraTipsConfig = widget.toolTipsConfig != null &&
             widget.toolTipsConfig?.additionalItemBuilder != null;
         Widget? extraTipsActionItem = haveExtraTipsConfig
             ? widget.toolTipsConfig!.additionalItemBuilder!(
-                widget.message, widget.onCloseTooltip)
+                widget.message, widget.onCloseTooltip, null, context)
             : null;
         return Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width * 0.7,
+                maxWidth: min(MediaQuery.of(context).size.width * 0.7, 350),
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (isUseMessageReaction &&
+                  if (widget.isUseMessageReaction &&
                       widget.selectEmojiPanelPosition ==
                           SelectEmojiPanelPosition.up)
                     TIMUIKitMessageReactionEmojiSelectPanel(
@@ -281,7 +285,7 @@ class TIMUIKitMessageTooltipState
                         });
                       },
                     ),
-                  if (isUseMessageReaction &&
+                  if (widget.isUseMessageReaction &&
                       widget.selectEmojiPanelPosition ==
                           SelectEmojiPanelPosition.up &&
                       isShowMoreSticker == false)
@@ -294,24 +298,42 @@ class TIMUIKitMessageTooltipState
                             color: Colors.black12)),
                   if (isShowMoreSticker == false)
                     Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Expanded(
-                            child: Wrap(
-                          direction: Axis.horizontal,
-                          alignment: ScreenUtils.getFormFactor(context) ==
-                                  ScreenType.Handset
-                              ? WrapAlignment.spaceAround
-                              : WrapAlignment.start,
-                          spacing: 4,
-                          runSpacing: 16,
-                          children: [
-                            ..._buildLongPressTipItem(theme, model),
-                            if (extraTipsActionItem != null) extraTipsActionItem
-                          ],
-                        ))
+                        if (widget.isUseMessageReaction)
+                          Expanded(
+                              child: Wrap(
+                            direction: Axis.horizontal,
+                            alignment: ScreenUtils.getFormFactor(context) ==
+                                    ScreenType.Handset
+                                ? WrapAlignment.spaceAround
+                                : WrapAlignment.start,
+                            spacing: 4,
+                            runSpacing: 16,
+                            children: [
+                              ..._buildLongPressTipItem(theme, model),
+                              if (extraTipsActionItem != null)
+                                extraTipsActionItem
+                            ],
+                          )),
+                        if (!widget.isUseMessageReaction)
+                          Wrap(
+                            direction: Axis.horizontal,
+                            alignment: ScreenUtils.getFormFactor(context) ==
+                                    ScreenType.Handset
+                                ? WrapAlignment.spaceAround
+                                : WrapAlignment.start,
+                            spacing: 4,
+                            runSpacing: 16,
+                            children: [
+                              ..._buildLongPressTipItem(theme, model),
+                              if (extraTipsActionItem != null)
+                                extraTipsActionItem
+                            ],
+                          )
                       ],
                     ),
-                  if (isUseMessageReaction &&
+                  if (widget.isUseMessageReaction &&
                       widget.selectEmojiPanelPosition ==
                           SelectEmojiPanelPosition.down &&
                       isShowMoreSticker == false)
@@ -322,7 +344,7 @@ class TIMUIKitMessageTooltipState
                             indent: 0,
                             // endIndent: 10,
                             color: Colors.black12)),
-                  if (isUseMessageReaction &&
+                  if (widget.isUseMessageReaction &&
                       widget.selectEmojiPanelPosition ==
                           SelectEmojiPanelPosition.down)
                     TIMUIKitMessageReactionEmojiSelectPanel(

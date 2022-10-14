@@ -119,6 +119,7 @@ class _VideoCustomControlsState extends TIMUIKitState<VideoCustomControls>
 
   Widget _buildBottomBar() {
     return Material(
+      color: Colors.transparent,
       child: Container(
         height: barHeight,
         margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),

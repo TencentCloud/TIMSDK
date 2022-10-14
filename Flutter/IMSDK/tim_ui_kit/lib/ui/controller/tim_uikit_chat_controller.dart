@@ -100,15 +100,21 @@ class TIMUIKitChatController {
       String? convID,
 
       /// The method for updating the input field when message sending failed
-      ValueChanged<String>? setInputField}) {
+      ValueChanged<String>? setInputField,
+
+        /// Offline push info
+        OfflinePushInfo? offlinePushInfo,
+      }) {
     if (convID != null && convType != null) {
       return globalChatModel.sendMessageFromController(
           messageInfo: messageInfo,
           convType: convType,
           convID: convID,
-          setInputField: setInputField);
+          setInputField: setInputField,
+        offlinePushInfo: offlinePushInfo
+      );
     } else if (model != null) {
-      return model!.sendMessageFromController(messageInfo: messageInfo);
+      return model!.sendMessageFromController(messageInfo: messageInfo, offlinePushInfo: offlinePushInfo);
     }
     return null;
   }

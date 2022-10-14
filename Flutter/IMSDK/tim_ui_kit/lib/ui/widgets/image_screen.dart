@@ -136,7 +136,7 @@ class _ImageScreenState extends TIMUIKitState<ImageScreen>
                                 extendedImageGestureKey:
                                     extendedImageGestureKey,
                                 enableSlideOutPage: true,
-                                // fit: BoxFit.contain,
+                                // fit: BoxFit.scaleDown,
                                 initGestureConfigHandler: (state) {
                                   return GestureConfig(
                                     minScale: 0.8,
@@ -177,7 +177,7 @@ class _ImageScreenState extends TIMUIKitState<ImageScreen>
                                           screenRatio / imgRatio;
                                       if (screenRatio > imgRatio) {
                                         // Long Image
-                                        initialScale = fitWidthScale;
+                                        // initialScale = fitWidthScale;
                                         fittedScale = fitWidthScale;
                                         doubleTapScales[1] = fitWidthScale;
                                       } else {

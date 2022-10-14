@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
+import 'package:tim_ui_kit/business_logic/separate_models/tui_chat_separate_view_model.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitMessageItem/TIMUIKitMessageReaction/tim_uikit_message_reaction_show_panel.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/tim_uikit_cloud_custom_data.dart';
 
@@ -17,6 +18,7 @@ class TIMUIKitMessageReactionWrapper extends StatefulWidget {
   final bool isShowJump;
   final VoidCallback? clearJump;
   final bool isShowMessageReaction;
+  final TUIChatSeparateViewModel chatModel;
 
   const TIMUIKitMessageReactionWrapper(
       {Key? key,
@@ -24,6 +26,7 @@ class TIMUIKitMessageReactionWrapper extends StatefulWidget {
       this.clearJump,
       required this.isFromSelf,
       this.backgroundColor,
+        required this.chatModel,
       required this.message,
       this.borderRadius,
       required this.child,
@@ -37,18 +40,19 @@ class TIMUIKitMessageReactionWrapper extends StatefulWidget {
 class _TIMUIKitMessageReactionWrapperState
     extends TIMUIKitState<TIMUIKitMessageReactionWrapper> {
   bool isShowJumpState = false;
+  bool isShining = false;
   bool isShowBorder = false;
 
   _showJumpColor() {
+    if ((widget.chatModel.jumpMsgID != widget.message.msgID) &&
+        (widget.message.msgID?.isNotEmpty ?? true)) {
+      return;
+    }
+    isShining = true;
     int shineAmount = 6;
     setState(() {
       isShowJumpState = true;
       isShowBorder = true;
-    });
-    Future.delayed(const Duration(milliseconds: 100), () {
-      if (widget.clearJump != null) {
-        widget.clearJump!();
-      }
     });
     Timer.periodic(const Duration(milliseconds: 300), (timer) {
       if (mounted) {
@@ -58,10 +62,14 @@ class _TIMUIKitMessageReactionWrapperState
         });
       }
       if (shineAmount == 0 || !mounted) {
+        isShining = false;
         timer.cancel();
       }
       shineAmount--;
     });
+    if (widget.clearJump != null) {
+      widget.clearJump!();
+    }
   }
 
   bool isHaveMessageReaction() {
@@ -117,10 +125,20 @@ class _TIMUIKitMessageReactionWrapperState
             topRight: Radius.circular(10),
             bottomLeft: Radius.circular(10),
             bottomRight: Radius.circular(10));
+
     if (widget.isShowJump) {
-      Future.delayed(Duration.zero, () {
-        _showJumpColor();
-      });
+      if (!isShining) {
+        Future.delayed(Duration.zero, () {
+          _showJumpColor();
+        });
+      } else {
+        if ((widget.chatModel.jumpMsgID == widget.message.msgID) &&
+            (widget.message.msgID?.isNotEmpty ?? false)) {
+          if(widget.clearJump != null){
+            widget.clearJump!();
+          }
+        }
+      }
     }
 
     final defaultStyle = widget.isFromSelf

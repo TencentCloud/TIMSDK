@@ -42,6 +42,9 @@ class TIMUIKitChat extends StatefulWidget {
   /// Conversation type.
   final ConvType conversationType;
 
+  /// use for customize avatar
+  final Widget Function(BuildContext context, V2TimMessage message)? userAvatarBuilder;
+
   /// Use for show conversation name.
   final String conversationShowName;
 
@@ -62,11 +65,11 @@ class TIMUIKitChat extends StatefulWidget {
 
   /// Deprecated("Please use [extraTipsActionItemBuilder] instead")
   final Widget? Function(V2TimMessage message, Function() closeTooltip,
-      [Key? key])? exteraTipsActionItemBuilder;
+      [Key? key, BuildContext? context])? exteraTipsActionItemBuilder;
 
   /// The builder for extra tips action.
   final Widget? Function(V2TimMessage message, Function() closeTooltip,
-      [Key? key])? extraTipsActionItemBuilder;
+      [Key? key, BuildContext? context])? extraTipsActionItemBuilder;
 
   /// The text of draft shows in TextField.
   /// [Recommend]: You can specify this field with the draftText from V2TimConversation.
@@ -121,6 +124,9 @@ class TIMUIKitChat extends StatefulWidget {
       void Function() deleteText,
       void Function(int unicode) addText})? customStickerPanel;
 
+  /// Custom text field
+  final Widget Function(BuildContext context)? textFieldBuilder;
+
   TIMUIKitChat({
     Key? key,
     this.groupID,
@@ -139,6 +145,7 @@ class TIMUIKitChat extends StatefulWidget {
     this.draftText,
     this.textFieldHintText,
     this.initFindingMsg,
+    this.userAvatarBuilder,
     this.appBarConfig,
     this.controller,
     this.morePanelConfig,
@@ -151,6 +158,7 @@ class TIMUIKitChat extends StatefulWidget {
     this.toolTipsConfig,
     this.lifeCycle,
     this.topFixWidget = const SizedBox(),
+    this.textFieldBuilder,
   }) : super(key: key) {
     startTime = DateTime.now().millisecondsSinceEpoch;
   }
@@ -164,6 +172,7 @@ class _TUIChatState extends TIMUIKitState<TIMUIKitChat> {
   final TUIThemeViewModel themeViewModel = serviceLocator<TUIThemeViewModel>();
   final TIMUIKitInputTextFieldController textFieldController =
       TIMUIKitInputTextFieldController();
+  bool isInit = false;
 
   late AutoScrollController autoController = AutoScrollController(
     viewportBoundaryGetter: () =>
@@ -204,7 +213,9 @@ class _TUIChatState extends TIMUIKitState<TIMUIKitChat> {
       decoration: BoxDecoration(color: hexToColor("f6eabc")),
       child: GestureDetector(
         onTap: () {
-          widget.onDealWithGroupApplication!(widget.conversationID);
+          if (widget.onDealWithGroupApplication != null) {
+            widget.onDealWithGroupApplication!(widget.conversationID);
+          }
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -235,6 +246,9 @@ class _TUIChatState extends TIMUIKitState<TIMUIKitChat> {
     final TUITheme theme = value.theme;
     final closePanel =
         OptimizeUtils.throttle((_) => textFieldController.hideAllPanel(), 60);
+    final isBuild = isInit;
+    isInit = true;
+
     return TIMUIKitChatProviderScope(
         model: model,
         groupID: widget.groupID,
@@ -243,17 +257,15 @@ class _TUIChatState extends TIMUIKitState<TIMUIKitChat> {
         conversationType: widget.conversationType,
         lifeCycle: widget.lifeCycle,
         config: widget.config,
+        isBuild: isBuild,
         providers: [
           Provider(create: (_) => widget.config),
         ],
         builder: (context, model, w) {
           final TUIChatGlobalModel chatGlobalModel =
-              Provider.of<TUIChatGlobalModel>(context);
-          final TUIChatSeparateViewModel model =
-              Provider.of<TUIChatSeparateViewModel>(context);
+              Provider.of<TUIChatGlobalModel>(context, listen: true);
 
           widget.controller?.model = model;
-          final isMultiSelect = model.isMultiSelect;
           List<V2TimGroupApplication> filteredApplicationList = [];
           if (widget.conversationType == ConvType.group &&
               widget.onDealWithGroupApplication != null) {
@@ -265,7 +277,7 @@ class _TUIChatState extends TIMUIKitState<TIMUIKitChat> {
           }
 
           final TUIGroupListenerModel groupListenerModel =
-              Provider.of<TUIGroupListenerModel>(context);
+              Provider.of<TUIGroupListenerModel>(context, listen: false);
           final NeedUpdate? needUpdate = groupListenerModel.needUpdate;
           if (needUpdate != null &&
               needUpdate.groupID == widget.conversationID) {
@@ -301,13 +313,14 @@ class _TUIChatState extends TIMUIKitState<TIMUIKitChat> {
                     if (filteredApplicationList.isNotEmpty)
                       _renderJoinGroupApplication(
                           filteredApplicationList.length, theme),
-                    widget.topFixWidget!,
+                    if (widget.topFixWidget != null) widget.topFixWidget!,
                     Expanded(
                         child: Align(
                             alignment: Alignment.topCenter,
                             child: Listener(
                               onPointerMove: closePanel,
                               child: TIMUIKitHistoryMessageListContainer(
+                                userAvatarBuilder: widget.userAvatarBuilder,
                                 toolTipsConfig: widget.toolTipsConfig,
                                 groupAtInfoList: widget.groupAtInfoList,
                                 tongueItemBuilder: widget.tongueItemBuilder,
@@ -333,27 +346,40 @@ class _TUIChatState extends TIMUIKitState<TIMUIKitChat> {
                                 conversationID: widget.conversationID,
                               ),
                             ))),
-                    isMultiSelect
-                        ? MultiSelectPanel(
-                            conversationType: widget.conversationType,
-                          )
-                        : TIMUIKitInputTextField(
-                            model: model,
-                            controller: textFieldController,
-                            customStickerPanel: widget.customStickerPanel,
-                            morePanelConfig: widget.morePanelConfig,
-                            scrollController: autoController,
-                            conversationID: widget.conversationID,
-                            conversationType: widget.conversationType,
-                            initText: widget.draftText,
-                            hintText: widget.textFieldHintText,
-                            showMorePannel:
-                                widget.config?.isAllowShowMorePanel ?? true,
-                            showSendAudio:
-                                widget.config?.isAllowSoundMessage ?? true,
-                            showSendEmoji:
-                                widget.config?.isAllowEmojiPanel ?? true,
-                          )
+                    Selector<TUIChatSeparateViewModel, bool>(
+                      builder: (context, value, child) {
+                        return value
+                            ? MultiSelectPanel(
+                                conversationType: widget.conversationType,
+                              )
+                            : (widget.textFieldBuilder != null
+                                ? widget.textFieldBuilder!(context)
+                                : TIMUIKitInputTextField(
+                                    model: model,
+                                    controller: textFieldController,
+                                    customStickerPanel:
+                                        widget.customStickerPanel,
+                                    morePanelConfig: widget.morePanelConfig,
+                                    scrollController: autoController,
+                                    conversationID: widget.conversationID,
+                                    conversationType: widget.conversationType,
+                                    initText: widget.draftText,
+                                    hintText: widget.textFieldHintText,
+                                    showMorePannel:
+                                        widget.config?.isAllowShowMorePanel ??
+                                            true,
+                                    showSendAudio:
+                                        widget.config?.isAllowSoundMessage ??
+                                            true,
+                                    showSendEmoji:
+                                        widget.config?.isAllowEmojiPanel ??
+                                            true,
+                                  ));
+                      },
+                      selector: (c, model) {
+                        return model.isMultiSelect;
+                      },
+                    )
                   ],
                 )),
           );
@@ -394,6 +420,8 @@ class TIMUIKitChatProviderScope extends StatelessWidget {
   /// The controller for text field.
   final TIMUIKitInputTextFieldController? textFieldController;
 
+  final bool? isBuild;
+
   TIMUIKitChatProviderScope(
       {Key? key,
       this.child,
@@ -402,12 +430,16 @@ class TIMUIKitChatProviderScope extends StatelessWidget {
       required this.builder,
       this.model,
       this.groupID,
+        this.isBuild,
       required this.conversationID,
       required this.conversationType,
       this.controller,
       this.config,
       this.lifeCycle})
       : super(key: key) {
+    if(isBuild ?? false){
+      return;
+    }
     model ??= TUIChatSeparateViewModel();
     controller?.model = model;
     if (config != null) {
@@ -429,11 +461,9 @@ class TIMUIKitChatProviderScope extends StatelessWidget {
   }
 
   loadData() {
-    if (model!.haveMoreData) {
-      model!.loadData(
-        count: HistoryMessageDartConstant.getCount,
-      );
-    }
+    // if (model!.haveMoreData) {
+    model!.loadData(count: kIsWeb ? 15 : HistoryMessageDartConstant.getCount);
+    // }
   }
 
   @override

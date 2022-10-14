@@ -2,13 +2,13 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/business_logic/separate_models/tui_chat_separate_view_model.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/widgets/link_preview/link_preview_entry.dart';
 import 'package:tim_ui_kit/ui/widgets/link_preview/widgets/link_preview.dart';
-
 import 'TIMUIKitMessageReaction/tim_uikit_message_reaction_show_panel.dart';
 
 class TIMUIKitTextElem extends StatefulWidget {
@@ -22,6 +22,7 @@ class TIMUIKitTextElem extends StatefulWidget {
   final EdgeInsetsGeometry? textPadding;
   final TUIChatSeparateViewModel chatModel;
   final bool? isShowMessageReaction;
+
   const TIMUIKitTextElem(
       {Key? key,
       required this.message,
@@ -42,6 +43,7 @@ class TIMUIKitTextElem extends StatefulWidget {
 
 class _TIMUIKitTextElemState extends TIMUIKitState<TIMUIKitTextElem> {
   bool isShowJumpState = false;
+  bool isShining = false;
 
   @override
   void initState() {
@@ -59,12 +61,14 @@ class _TIMUIKitTextElemState extends TIMUIKitState<TIMUIKitTextElem> {
   }
 
   _showJumpColor() {
+    if ((widget.chatModel.jumpMsgID != widget.message.msgID) &&
+        (widget.message.msgID?.isNotEmpty ?? true)) {
+      return;
+    }
+    isShining = true;
     int shineAmount = 6;
     setState(() {
       isShowJumpState = true;
-    });
-    Future.delayed(const Duration(milliseconds: 100), () {
-      widget.clearJump();
     });
     Timer.periodic(const Duration(milliseconds: 300), (timer) {
       if (mounted) {
@@ -73,9 +77,13 @@ class _TIMUIKitTextElemState extends TIMUIKitState<TIMUIKitTextElem> {
         });
       }
       if (shineAmount == 0 || !mounted) {
+        isShining = false;
         timer.cancel();
       }
       shineAmount--;
+    });
+    Future.delayed(const Duration(milliseconds: 100), () {
+      widget.clearJump();
     });
   }
 
@@ -161,10 +169,19 @@ class _TIMUIKitTextElemState extends TIMUIKitState<TIMUIKitTextElem> {
             topRight: Radius.circular(10),
             bottomLeft: Radius.circular(10),
             bottomRight: Radius.circular(10));
+    if((widget.chatModel.jumpMsgID == widget.message.msgID)){
+    }
     if (widget.isShowJump) {
-      Future.delayed(Duration.zero, () {
-        _showJumpColor();
-      });
+      if (!isShining) {
+        Future.delayed(Duration.zero, () {
+          _showJumpColor();
+        });
+      } else {
+        if ((widget.chatModel.jumpMsgID == widget.message.msgID) &&
+            (widget.message.msgID?.isNotEmpty ?? false)) {
+          widget.clearJump();
+        }
+      }
     }
     final defaultStyle = widget.isFromSelf
         ? theme.lightPrimaryMaterialColor.shade50

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
@@ -31,11 +32,14 @@ class TIMUIKitHistoryMessageListContainer extends StatefulWidget {
   /// message item builder, works for customize all message types and row layout.
   final MessageItemBuilder? messageItemBuilder;
 
+  /// the builder for avatar
+  final Widget Function(BuildContext context, V2TimMessage message)? userAvatarBuilder;
+
   /// the builder for tongue
   final TongueItemBuilder? tongueItemBuilder;
 
   final Widget? Function(V2TimMessage message, Function() closeTooltip,
-      [Key? key])? extraTipsActionItemBuilder;
+      [Key? key, BuildContext? context])? extraTipsActionItemBuilder;
 
   /// conversation type
   final ConvType conversationType;
@@ -57,6 +61,7 @@ class TIMUIKitHistoryMessageListContainer extends StatefulWidget {
       this.scrollController,
       required this.conversationID,
       required this.conversationType,
+      this.userAvatarBuilder,
       this.onLongPressForOthersHeadPortrait,
       this.groupAtInfoList,
       this.messageItemBuilder,
@@ -84,9 +89,20 @@ class _TIMUIKitHistoryMessageListContainerState
       [int? count]) async {
     if (model.haveMoreData) {
       await model.loadData(
-          count: count ?? HistoryMessageDartConstant.getCount,
+          count: count ?? (kIsWeb ? 15 : HistoryMessageDartConstant.getCount),
           lastMsgID: lastMsgID);
     }
+  }
+
+  Widget Function(BuildContext, V2TimMessage)? _getTopRowBuilder(
+      TUIChatSeparateViewModel model) {
+    if (widget.messageItemBuilder?.messageNickNameBuilder != null) {
+      return (BuildContext context, V2TimMessage message) {
+        return widget.messageItemBuilder!.messageNickNameBuilder!(
+            context, message, model);
+      };
+    }
+    return null;
   }
 
   @override
@@ -100,12 +116,11 @@ class _TIMUIKitHistoryMessageListContainerState
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     final chatConfig = Provider.of<TIMUIKitChatConfig>(context);
     final TUIChatSeparateViewModel model =
-        Provider.of<TUIChatSeparateViewModel>(context);
+        Provider.of<TUIChatSeparateViewModel>(context, listen: false);
 
     return TIMUIKitHistoryMessageListSelector(
       conversationID: model.conversationID,
       builder: (context, messageList, child) {
-        historyMessageList = messageList;
         return TIMUIKitHistoryMessageList(
           model: model,
           controller: _historyMessageListController,
@@ -113,6 +128,8 @@ class _TIMUIKitHistoryMessageListContainerState
           mainHistoryListConfig: widget.mainHistoryListConfig,
           itemBuilder: (context, message) {
             return TIMUIKitHistoryMessageListItem(
+                userAvatarBuilder: widget.userAvatarBuilder,
+                topRowBuilder: _getTopRowBuilder(model),
                 onScrollToIndex: _historyMessageListController.scrollToIndex,
                 onScrollToIndexBegin:
                     _historyMessageListController.scrollToIndexBegin,

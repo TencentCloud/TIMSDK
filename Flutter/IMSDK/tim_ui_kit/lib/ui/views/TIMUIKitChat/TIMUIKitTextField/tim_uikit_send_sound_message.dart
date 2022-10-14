@@ -99,7 +99,7 @@ class _SendSoundMessageState extends TIMUIKitState<SendSoundMessage> {
                           ClipRect(
                             clipBehavior: Clip.hardEdge,
                             child: Align(
-                              heightFactor: min(volume, 1),
+                              heightFactor: max(min(volume, 1), 0.1),
                               alignment: Alignment.bottomCenter,
                               child: SizedBox(
                                 width: 50,

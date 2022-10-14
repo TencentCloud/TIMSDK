@@ -20,7 +20,7 @@ class TIMUIKitConversationController {
   }
 
   /// Load the conversation list to UI
-  loadData({int count = 100}) {
+  loadData({int count = 20}) {
     model.loadData(count: count);
   }
 

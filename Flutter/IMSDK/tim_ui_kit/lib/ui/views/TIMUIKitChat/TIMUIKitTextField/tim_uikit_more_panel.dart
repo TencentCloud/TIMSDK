@@ -357,7 +357,7 @@ class _MorePanelState extends TIMUIKitState<MorePanel> {
     try {
       final pickedFile = await _picker.pickVideo(source: ImageSource.gallery);
       final videoContent = await pickedFile!.readAsBytes();
-      fileName = pickedFile.name ?? "";
+      fileName = pickedFile.name;
       tempFile = File(pickedFile.path);
       fileContent = videoContent;
 

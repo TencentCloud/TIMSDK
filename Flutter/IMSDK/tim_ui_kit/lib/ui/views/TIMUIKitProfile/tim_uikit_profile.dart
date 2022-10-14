@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/business_logic/life_cycle/profile_life_cycle.dart';
@@ -144,8 +145,17 @@ class _TIMUIKitProfileState extends TIMUIKitState<TIMUIKitProfile> {
           final TUIProfileViewModel model =
               Provider.of<TUIProfileViewModel>(context);
           _controller.model = model;
-          final userInfo = model.userProfile?.friendInfo ??
-              V2TimFriendInfo(userID: widget.userID);
+          final V2TimFriendInfo? userInfo = model.userProfile?.friendInfo;
+
+          if(userInfo == null){
+            return Center(
+              child: LoadingAnimationWidget.staggeredDotsWave(
+                color: theme.weakTextColor ?? Colors.grey,
+                size: 48,
+              ),
+            );
+          }
+
           final conversation = model.userProfile?.conversation ??
               V2TimConversation(conversationID: "c2c_${widget.userID}");
           final TUISelfInfoViewModel _selfInfoViewModel =
@@ -271,9 +281,9 @@ class _TIMUIKitProfileState extends TIMUIKitState<TIMUIKitProfile> {
                           context,
                           handlePinConversation))!;
                 case ProfileWidgetEnum.messageMute:
-                  if (!isFriend) {
-                    return Container();
-                  }
+                  // if (!isFriend) {
+                  //   return Container();
+                  // }
                   return (customBuilder?.messageMute != null
                       ? customBuilder?.messageMute!(isMute, handleMuteMessage)
                       : TIMUIKitProfileWidget.messageDisturb(
