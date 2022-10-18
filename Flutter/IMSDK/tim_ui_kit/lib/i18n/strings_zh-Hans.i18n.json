@@ -235,7 +235,6 @@
   "k_0wm4xeb": "系统消息 $option2",
   "k_0nbq9v3": "通话时间：$option2",
   "k_0i1kf53": "[文件] $option2",
-  "k_1gnnby6": "想访问您的$option2",
   "k_1wh4atg": "$option2 分钟前",
   "k_07sh7g1": "昨天 $option2",
   "k_1pj8xzh": "我的用户ID: $option2",
@@ -370,5 +369,6 @@
   "k_1gbg1v8": "将 $option1 取消管理员",
   "k_17k64g4": "群聊创建成功！",
   "k_05mn217": "暂未安装表情包插件，如需使用表情相关功能，请根据本文档安装：https://cloud.tencent.com/document/product/269/70746",
-  "k_14j17nz": "暂无表情包"
+  "k_14j17nz": "暂无表情包",
+  "k_1gnnby6": " 想访问您的$option2"
 }

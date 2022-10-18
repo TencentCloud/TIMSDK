@@ -70,7 +70,7 @@ class TIMUIKitLastMsg extends TIMUIKitStatelessWidget {
 
       final option3 = callTime;
       customLastMsgShow = isCallEnd
-          ? TIM_t_para("通话时间：{{option1}}", "通话时间：$option3")(option1: option3)
+          ? TIM_t_para("通话时间：{{option3}}", "通话时间：$option3")(option3: option3)
           : TIMUIKitCustomElem.getActionType(callingMessage.actionType!);
 
       final option1 = customLastMsgShow;

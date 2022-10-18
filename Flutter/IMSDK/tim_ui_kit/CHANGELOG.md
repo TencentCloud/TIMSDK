@@ -1,10 +1,11 @@
-## 0.1.6
+## 0.1.7
 
 * Add: Big and RAW images supports, especially for those captured from latest version of iOS and iPhone 14 Pro series, compress and format before sending automatically.
 * Optimize: Performance and stability, especially for history message list and launching.
 * Optimize: Makes initializing the `TIMUIKitChat` an idempotent operation.
 * Optimize: Load latest messages when scrolling back to bottom.
 * Optimize: Supports Flutter both 2.x and 3.x series.
+* Fix: The issue of select photos permission.
 * Fix: Several bugs.
 
 ## 0.1.5
