@@ -70,6 +70,7 @@ dependencies:
   localstorage: ^4.0.0+1
   archive: ^3.1.6
   expandable: ^5.0.1
+  device_info_plus: ^3.2.3
   flutter_tags: ^0.4.9+1
   image_picker: ^0.8.4+4
   flutter_plugin_record_plus: ^0.0.8
@@ -84,15 +85,16 @@ dependencies:
   flutter_svg: ^1.0.3
   uni_links: ^0.5.1
   fluwx: ^3.8.5
-  device_info_plus: ^3.2.3
   firebase_core: 1.12.0
   flutter_launcher_icons: ^0.9.2
   loading_animation_widget: ^1.2.0+2
   path_provider: ^2.0.11
   universal_io: ^2.0.4
+  tencent_im_sdk_plugin_web: ^0.3.2
 
 dependency_overrides:
   path: ^1.8.2
+
 dev_dependencies:
   fast_i18n: ^5.12.0
   build_runner: any
