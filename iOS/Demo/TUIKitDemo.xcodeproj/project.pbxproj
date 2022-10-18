@@ -877,7 +877,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Tencent Technology (Shenzhen) Co., Ltd";
 				CODE_SIGN_STYLE = Manual;
 				COMPRESS_PNG_FILES = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 1.1.1.1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = HKB8WPFBR9;
 				ENABLE_BITCODE = NO;
@@ -901,11 +901,22 @@
 					"$(SRCROOT)/../../../source/project/ios/imsdk/ImSDK/include/**",
 				);
 				INFOPLIST_FILE = TUIKitDemo/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "腾讯云IM";
+				INFOPLIST_KEY_NSCameraUsageDescription = "云通讯IM需要访问您的相机权限，开启后才能发送图片或视频";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "云通讯IM需要访问您的麦克风权限，开启后才能发送语音";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "云通讯IM需要访问您的相册权限，开启后保存图片或视频";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "云通讯IM需要访问您的相册权限，开启后才能发送图片或视频";
+				INFOPLIST_KEY_UILaunchStoryboardName = Main;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIRequiredDeviceCapabilities = armv7;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tencent.tuikit.demo.db;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "com.tencent.tuikit.demo.db InHouse";
@@ -1044,7 +1055,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				COMPRESS_PNG_FILES = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 1.1.1.1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = F8A3GH6Q4W;
 				ENABLE_BITCODE = NO;
@@ -1068,11 +1079,22 @@
 					"$(SRCROOT)/../../../source/project/ios/imsdk/ImSDK/include/**",
 				);
 				INFOPLIST_FILE = TUIKitDemo/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "腾讯云IM";
+				INFOPLIST_KEY_NSCameraUsageDescription = "云通讯IM需要访问您的相机权限，开启后才能发送图片或视频";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "云通讯IM需要访问您的麦克风权限，开启后才能发送语音";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "云通讯IM需要访问您的相册权限，开启后保存图片或视频";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "云通讯IM需要访问您的相册权限，开启后才能发送图片或视频";
+				INFOPLIST_KEY_UILaunchStoryboardName = Main;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIRequiredDeviceCapabilities = armv7;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tencent.tuikit.demo.xa;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = tuikitdemo_dev;
@@ -1100,7 +1122,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				COMPRESS_PNG_FILES = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 1.1.1.1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = F8A3GH6Q4W;
 				ENABLE_BITCODE = NO;
@@ -1124,11 +1146,22 @@
 					"$(SRCROOT)/../../../source/project/ios/imsdk/ImSDK/include/**",
 				);
 				INFOPLIST_FILE = TUIKitDemo/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "腾讯云IM";
+				INFOPLIST_KEY_NSCameraUsageDescription = "云通讯IM需要访问您的相机权限，开启后才能发送图片或视频";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "云通讯IM需要访问您的麦克风权限，开启后才能发送语音";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "云通讯IM需要访问您的相册权限，开启后保存图片或视频";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "云通讯IM需要访问您的相册权限，开启后才能发送图片或视频";
+				INFOPLIST_KEY_UILaunchStoryboardName = Main;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIRequiredDeviceCapabilities = armv7;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tencent.tuikit.demo.xa;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = tuikitdemo_dev;
