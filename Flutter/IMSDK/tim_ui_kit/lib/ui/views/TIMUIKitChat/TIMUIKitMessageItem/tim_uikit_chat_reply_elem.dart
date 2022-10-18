@@ -82,14 +82,18 @@ class _TIMUIKitReplyElemState extends TIMUIKitState<TIMUIKitReplyElem> {
       final messageID = cloudCustomData.messageID;
       final message = await widget.chatModel.findMessage(messageID);
       if (message != null) {
-        setState(() {
-          rawMessage = message;
-        });
+        if(this.mounted){
+          setState(() {
+            rawMessage = message;
+          });
+        }
       }
     }
-    setState(() {
-      repliedMessage = cloudCustomData;
-    });
+    if(this.mounted){
+      setState(() {
+        repliedMessage = cloudCustomData;
+      });
+    }
   }
 
   Widget _defaultRawMessageText(String text, TUITheme? theme) {

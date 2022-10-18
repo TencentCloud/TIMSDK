@@ -639,13 +639,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.2"
-  mime_type:
-    dependency: transitive
-    description:
-      name: mime_type
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.0"
   nested:
     dependency: transitive
     description:
@@ -1077,28 +1070,21 @@ packages:
       name: tencent_im_base
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.40"
+    version: "0.0.47"
   tencent_im_sdk_plugin:
     dependency: transitive
     description:
       name: tencent_im_sdk_plugin
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.1.3"
+    version: "4.1.8"
   tencent_im_sdk_plugin_platform_interface:
     dependency: transitive
     description:
       name: tencent_im_sdk_plugin_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.4"
-  tencent_im_sdk_plugin_web:
-    dependency: transitive
-    description:
-      name: tencent_im_sdk_plugin_web
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.1"
+    version: "0.3.5"
   term_glyph:
     dependency: transitive
     description:
