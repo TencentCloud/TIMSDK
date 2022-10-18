@@ -200,14 +200,14 @@ PODS:
   - tencent_im_sdk_plugin (4.0.3):
     - Flutter
     - HydraAsync
-    - TXIMSDK_Plus_iOS (= 6.6.3002)
+    - TXIMSDK_Plus_iOS (= 6.7.3184)
   - tencent_trtc_cloud (9.5.11234):
     - Flutter
     - TXLiteAVSDK_Live (= 9.5.11346)
   - tim_ui_kit_push_plugin (0.0.1):
     - Flutter
   - Toast (4.0.0)
-  - TXIMSDK_Plus_iOS (6.6.3002)
+  - TXIMSDK_Plus_iOS (6.7.3184)
   - TXLiteAVSDK_Live (9.5.11346):
     - TXLiteAVSDK_Live/Live (= 9.5.11346)
   - TXLiteAVSDK_Live/Live (9.5.11346)
@@ -431,11 +431,11 @@ SPEC CHECKSUMS:
   shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
   SwiftyGif: 6c3eafd0ce693cad58bb63d2b2fb9bacb8552780
-  tencent_im_sdk_plugin: 70565aa0a08328e32e9cf6dd907de322ce2328a8
+  tencent_im_sdk_plugin: 26c668a5d2f456a5541e2c820dcfcb3d15fdba9a
   tencent_trtc_cloud: a717270754b3519b473b513b967c0b88b233aa45
   tim_ui_kit_push_plugin: 37913e565d11c4841c254711cba35a3d5b17b02d
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
-  TXIMSDK_Plus_iOS: b725bdb1521efd26e12e12506a9de736e8ad4a6e
+  TXIMSDK_Plus_iOS: 5412f55a77f058b2b5a8575900334daccbae3b08
   TXLiteAVSDK_Live: cae30145d70254bdd35838569fcdfefd3a369aa0
   uni_links: d97da20c7701486ba192624d99bffaaffcfc298a
   url_launcher_ios: 839c58cdb4279282219f5e248c3321761ff3c4de

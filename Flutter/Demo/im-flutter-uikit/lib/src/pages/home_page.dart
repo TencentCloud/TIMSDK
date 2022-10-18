@@ -1,15 +1,19 @@
 // ignore_for_file: prefer_typing_uninitialized_variables
 
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
+import 'package:tim_ui_kit/ui/controller/tim_uikit_chat_controller.dart';
 import 'package:tim_ui_kit/ui/controller/tim_uikit_conversation_controller.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit_calling_plugin/tim_ui_kit_calling_plugin.dart';
 import 'package:timuikit/src/add_friend.dart';
 import 'package:timuikit/src/add_group.dart';
+import 'package:timuikit/src/chat.dart';
 import 'package:timuikit/src/config.dart';
 import 'package:timuikit/src/contact.dart';
 import 'package:timuikit/src/conversation.dart';
@@ -40,6 +44,8 @@ class HomePageState extends State<HomePage> {
   final TUICalling _calling = TUICalling();
   final TIMUIKitConversationController _conversationController =
   TIMUIKitConversationController();
+  final TIMUIKitChatController _timuiKitChatController =
+  TIMUIKitChatController();
   final contactTooltip = [
     {"id": "addFriend", "asset": "assets/add_friend.png", "label": imt("添加好友")},
     {"id": "addGroup", "asset": "assets/add_group.png", "label": imt("添加群聊")}
@@ -90,7 +96,7 @@ class HomePageState extends State<HomePage> {
     _initTrtc();
     setState(() {});
     getLoginUserInfo();
-    uploadOfflinePushInfoToken();
+    initOfflinePush();
   }
 
   getLoginUserInfo() async {
@@ -119,6 +125,40 @@ class HomePageState extends State<HomePage> {
       1: imt("通讯录"),
       2: imt("我的"),
     };
+  }
+
+  initOfflinePush()async {
+    await ChannelPush.init(handleClickNotification);
+    uploadOfflinePushInfoToken();
+  }
+
+  void handleClickNotification(Map<String, dynamic> msg) async {
+    String ext = msg['ext'] ?? "";
+    Map<String, dynamic> extMsp = jsonDecode(ext);
+    String convId = extMsp["conversationID"] ?? "";
+    final currentConvID = _timuiKitChatController.getCurrentConversation();
+
+    if (convId.split("_").length < 2 || currentConvID == convId.split("_")[1]) {
+      return;
+    }
+    final targetConversationRes = await _sdkInstance
+        .getConversationManager()
+        .getConversation(conversationID: convId);
+
+    V2TimConversation? targetConversation = targetConversationRes.data;
+
+    if (targetConversation != null) {
+      ChannelPush.clearAllNotification();
+      Future.delayed(const Duration(milliseconds: 100), () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Chat(
+                selectedConversation: targetConversation,
+              ),
+            ));
+      });
+    }
   }
 
   List<NavigationBarData> getBottomNavigatorList(BuildContext context, theme) {

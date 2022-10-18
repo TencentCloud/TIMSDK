@@ -228,30 +228,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     
   }
 
-  void handleClickNotification(Map<String, dynamic> msg) async {
-    String ext = msg['ext'] ?? "";
-    Map<String, dynamic> extMsp = jsonDecode(ext);
-    String convId = extMsp["conversationID"] ?? "";
-    final currentConvID = _timuiKitChatController.getCurrentConversation();
-    if(currentConvID == convId.split("_")[1]){
-      return;
-    }
-    V2TimConversation? targetConversation =
-    await _conversationService.getConversation(conversationID: convId);
-    if (targetConversation != null) {
-      ChannelPush.clearAllNotification();
-      Future.delayed(const Duration(milliseconds: 100), () {
-        Navigator.push(
-            _cachedContext ?? context,
-            MaterialPageRoute(
-              builder: (context) => Chat(
-                selectedConversation: targetConversation,
-              ),
-            ));
-      });
-    }
-  }
-
   initRouteListener() {
     final routes = Routes();
     routes.addListener(() {
@@ -269,11 +245,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    initRouteListener();
     WidgetsBinding.instance?.addObserver(this);
     _cachedContext = context;
-    ChannelPush.init(handleClickNotification);
     initApp();
+    initRouteListener();
   }
 
   @override
