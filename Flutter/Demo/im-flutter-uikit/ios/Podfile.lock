@@ -102,7 +102,7 @@ PODS:
     - Flutter
     - flutter_baidu_mapapi_base
   - flutter_bmflocation (2.0.1):
-    - BMKLocationKit
+    - BMKLocationKit (~> 2.0.4)
     - Flutter
   - flutter_image_compress (1.0.0):
     - Flutter
@@ -118,7 +118,7 @@ PODS:
     - Toast
   - fluwx (0.0.1):
     - Flutter
-    - "OpenWeChatSDK (~> 1.9.2+1)"
+    - OpenWeChatSDK (~> 1.9.6)
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
@@ -169,7 +169,7 @@ PODS:
   - nanopb/encode (2.30908.0)
   - open_file (0.0.1):
     - Flutter
-  - "OpenWeChatSDK (1.9.2+1)"
+  - OpenWeChatSDK (1.9.6)
   - package_info_plus (0.4.5):
     - Flutter
   - path_provider_ios (0.0.1):
@@ -400,12 +400,12 @@ SPEC CHECKSUMS:
   flutter_baidu_mapapi_base: cb406be78c3a949fb58a45dc6627f139d580bd37
   flutter_baidu_mapapi_map: 81c4e6e93dc668e311d9b521421deaf292390434
   flutter_baidu_mapapi_search: 13a360334e91abea0bcf820546b2ef4548e42e08
-  flutter_bmflocation: d6efa0fd0e191aa7673075cf1407b408119f1954
+  flutter_bmflocation: 1bd73181196567fe1529f765aa4f8e2615a8a3cf
   flutter_image_compress: 5a5e9aee05b6553048b8df1c3bc456d0afaac433
   flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
   flutter_plugin_record_plus: 79b8e13ee7ed9a94f6c067018653599528cee1fc
-  fluttertoast: 16fbe6039d06a763f3533670197d01fc73459037
-  fluwx: 79c66b6d795ab8208262ada215d9e60388cfe492
+  fluttertoast: 74526702fea2c060ea55dde75895b7e1bde1c86b
+  fluwx: 1649fdbdb0a7e24f3a371ca0f302e25dc1c022ab
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   GoogleDataTransport: 1c8145da7117bd68bbbed00cf304edb6a24de00f
   GoogleUtilities: 1d20a6ad97ef46f67bbdec158ce00563a671ebb7
@@ -417,7 +417,7 @@ SPEC CHECKSUMS:
   Mantle: c5aa8794a29a022dfbbfc9799af95f477a69b62d
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   open_file: 02eb5cb6b21264bd3a696876f5afbfb7ca4f4b7d
-  OpenWeChatSDK: 67375e7d4154c22f7ba6b1c334b121473e7d515c
+  OpenWeChatSDK: 8fb6c3c7ce9a57f37d001060282de1f138d09940
   package_info_plus: 6c92f08e1f853dc01228d6f553146438dafcd14e
   path_provider_ios: 14f3d2fd28c4fdb42f44e0f751d12861c43cee02
   permission_handler_apple: 44366e37eaf29454a1e7b1b7d736c2cceaeb17ce
@@ -444,6 +444,6 @@ SPEC CHECKSUMS:
   wakelock: d0fc7c864128eac40eba1617cb5264d9c940b46f
   webview_flutter_wkwebview: b7e70ef1ddded7e69c796c7390ee74180182971f
 
-PODFILE CHECKSUM: 9186a3e03440823b5d5909fc8040be7364ad0583
+PODFILE CHECKSUM: e1dda821af50dd070ec4964cb8e8e1618553bb11
 
 COCOAPODS: 1.11.3

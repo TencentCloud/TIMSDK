@@ -19,11 +19,11 @@ class IMDemoConfig {
   // static const String captchaUrl =
   // 'https://imgcache.qq.com/operation/dianshi/other/captcha.11f3ef11e3657473779f28383735c6a680a87180.html';
   static const String captchaUrl =
-      'https://imgcache.qq.com/operation/dianshi/other/captcha.b7104193bf789d667fbc2ed45d8bbd31434876ad.html';
+      'https://comm.qq.com/login/captcha/app.html';
   static const String webCaptchaUrl =
       'https://comm.qq.com/login/captcha/index.html';
   static const int loglevel = 3;
-  static String appName = imt("云通信·IM");
+  static String appName = imt("Tencent IM");
   static const pushConfig = <String, Map<String, double>>{
     "ios": {
       "dev": 30626,

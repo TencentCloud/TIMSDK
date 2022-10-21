@@ -31,20 +31,31 @@ class GroupProfilePage extends StatelessWidget {
         appBar: AppBar(
             title: Text(
               imt("群聊"),
-              style: const TextStyle(color: Colors.white, fontSize: 17),
+              style: TextStyle(color: hexToColor("1f2329"), fontSize: 17),
             ),
             shadowColor: Colors.white,
-            flexibleSpace: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(colors: [
-                  theme.lightPrimaryColor ?? CommonColor.lightPrimaryColor,
-                  theme.primaryColor ?? CommonColor.primaryColor
-                ]),
+            // flexibleSpace: Container(
+            //   decoration: BoxDecoration(
+            //     gradient: LinearGradient(colors: [
+            //       theme.lightPrimaryColor ?? CommonColor.lightPrimaryColor,
+            //       theme.primaryColor ?? CommonColor.primaryColor
+            //     ]),
+            //   ),
+            // ),
+            backgroundColor: hexToColor("f2f3f5"),
+            leading: IconButton(
+              padding: const EdgeInsets.only(left: 16),
+              icon: Icon(
+                Icons.arrow_back_ios,
+                color:
+                hexToColor("2a2e35"),
+                size: 20,
               ),
-            ),
-            iconTheme: const IconThemeData(
-              color: Colors.white,
-            )),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            )
+        ),
         body: SafeArea(
           child: TIMUIKitGroupProfile(
             lifeCycle: GroupProfileLifeCycle(didLeaveGroup: () async {

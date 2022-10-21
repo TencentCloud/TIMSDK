@@ -33,10 +33,10 @@ dependencies:
     sdk: flutter
 
   # Tencent Cloud Chat dependencies:
-  tim_ui_kit: ^0.1.7
+  tim_ui_kit: ^0.1.8
   # tim_ui_kit:
   #   path: package_src/tim_ui_kit
-  tim_ui_kit_calling_plugin: 0.3.5
+  tim_ui_kit_calling_plugin: 0.4.2
 #  tim_ui_kit_calling_plugin:
 #    path: /Users/wangrunlin/Documents/GitHub/im-flutter-uikit-calling
   tim_ui_kit_sticker_plugin: ^0.0.9
@@ -51,7 +51,7 @@ dependencies:
 #  tencent_trtc_cloud: ^2.3.8
 
   # Location message and Baidu Map:
-  tim_ui_kit_lbs_plugin: ^1.1.11
+  tim_ui_kit_lbs_plugin: ^1.1.15
   flutter_baidu_mapapi_map: ^3.1.0+1
   flutter_baidu_mapapi_search: ^3.1.0
   flutter_bmflocation: ^3.1.0+1
@@ -91,9 +91,6 @@ dependencies:
   path_provider: ^2.0.11
   universal_io: ^2.0.4
   tencent_im_sdk_plugin_web: ^0.3.2
-
-dependency_overrides:
-  path: ^1.8.2
 
 dev_dependencies:
   fast_i18n: ^5.12.0
