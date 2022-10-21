@@ -30,7 +30,7 @@ class _WebLoginCaptchaState extends State<WebLoginCaptcha> {
       case CaptchaStatus.loading:
         return 130;
       case CaptchaStatus.ready:
-        return 260;
+        return 360;
     }
   }
 

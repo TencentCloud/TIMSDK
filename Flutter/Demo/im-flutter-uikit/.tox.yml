@@ -1,7 +1,7 @@
 tox:
   type: cloud
   target: flutter
-  dist: build/web
+  dist: web_publish/web
   wework:
     ? chatid
   product:

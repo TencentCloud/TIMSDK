@@ -32,6 +32,7 @@ import 'package:timuikit/utils/baidu_implements/map_service_baidu_implement.dart
 import 'package:timuikit/utils/baidu_implements/map_widget_baidu_implement.dart';
 import 'package:timuikit/utils/push/push_constant.dart';
 import 'package:timuikit/utils/toast.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Chat extends StatefulWidget {
   final V2TimConversation selectedConversation;
@@ -317,6 +318,78 @@ class _ChatState extends State<Chat> {
         draftText: _getDraftText(),
         messageItemBuilder: MessageItemBuilder(
           locationMessageItemBuilder: (message, isShowJump, clearJump) {
+            if (kIsWeb) {
+              String dividerForDesc = "/////";
+              String address = message.locationElem?.desc ?? "";
+              String addressName = address;
+              String? addressLocation;
+              if(RegExp(dividerForDesc).hasMatch(address)){
+                addressName = address.split(dividerForDesc)[0];
+                addressLocation = address.split(dividerForDesc)[1] != "null" ? address.split(dividerForDesc)[1] : null;
+              }
+              final borderRadius = (message.isSelf ?? true)
+                  ? const BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  topRight: Radius.circular(2),
+                  bottomLeft: Radius.circular(10),
+                  bottomRight: Radius.circular(10))
+                  : const BorderRadius.only(
+                  topLeft: Radius.circular(2),
+                  topRight: Radius.circular(10),
+                  bottomLeft: Radius.circular(10),
+                  bottomRight: Radius.circular(10));
+              const backgroundColor = Colors.white;
+              return GestureDetector(
+                onTap: () {
+                  launchUrl(
+                    Uri.parse("http://api.map.baidu.com/marker?location=${message.locationElem?.latitude},${message.locationElem?.longitude}&title=$addressName&content=$addressLocation&output=html"),
+                    mode: LaunchMode.externalApplication,
+                  );
+                },
+                child: Material(
+                  color: Colors.transparent,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: backgroundColor,
+                      borderRadius: borderRadius,
+                      border: Border.all(color: hexToColor("DDDDDD")),
+                    ),
+                    constraints: const BoxConstraints(maxWidth: 240),
+                    padding: const EdgeInsets.fromLTRB(6, 10, 6, 10),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.location_on,
+                          color: hexToColor("5c6168"),
+                          size: 32,
+                        ),
+                        const SizedBox(width: 4),
+                        Expanded(child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if(addressName.isNotEmpty)Text(
+                              addressName,
+                              softWrap: true,
+                              style: const TextStyle(fontSize: 16),
+                            ),
+
+                            if(addressLocation != null &&
+                                addressLocation.isNotEmpty) Text(
+                              addressLocation,
+                              softWrap: true,
+                              style: const TextStyle(
+                                  fontSize: 12,
+                                  color: CommonColor.weakTextColor
+                              ),
+                            ),
+                          ],
+                        ))
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }
             return LocationMsgElement(
               isAllowCurrentLocation: false,
               messageID: message.msgID,
@@ -403,6 +476,13 @@ class _ChatState extends State<Chat> {
           ],
         ),
         appBarConfig: AppBar(
+          backgroundColor: hexToColor("f2f3f5"),
+          textTheme: TextTheme(
+              titleMedium: TextStyle(
+                  color: hexToColor("010000"),
+                  fontSize: 16
+              )
+          ),
           actions: [
             IconButton(
                 padding: const EdgeInsets.only(left: 8, right: 16),
@@ -439,11 +519,10 @@ class _ChatState extends State<Chat> {
                     }
                   }
                 },
-                icon: Image.asset(
-                  'images/more.png',
-                  package: 'tim_ui_kit',
-                  height: 34,
-                  width: 34,
+                icon: Icon(
+                  Icons.more_horiz,
+                  color: hexToColor("010000"),
+                  size: 20,
                 ))
           ],
         ));

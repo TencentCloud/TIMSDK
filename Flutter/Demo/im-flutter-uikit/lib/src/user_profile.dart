@@ -188,26 +188,27 @@ class UserProfileState extends State<UserProfile> {
         shadowColor: Colors.white,
         title: Text(
           imt("详细资料"),
-          style: const TextStyle(color: Colors.white, fontSize: 17),
+          style: TextStyle(color: hexToColor("1f2329"), fontSize: 17),
         ),
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [
-              theme.lightPrimaryColor ?? CommonColor.lightPrimaryColor,
-              theme.primaryColor ?? CommonColor.primaryColor
-            ]),
-          ),
-        ),
+        backgroundColor: hexToColor("f2f3f5"),
+        // flexibleSpace: Container(
+        //   decoration: BoxDecoration(
+        //     gradient: LinearGradient(colors: [
+        //       theme.lightPrimaryColor ?? CommonColor.lightPrimaryColor,
+        //       theme.primaryColor ?? CommonColor.primaryColor
+        //     ]),
+        //   ),
+        // ),
         iconTheme: const IconThemeData(
           color: Colors.white,
         ),
         leading: IconButton(
           padding: const EdgeInsets.only(left: 16),
-          icon: Image.asset(
-            'images/arrow_back.png',
-            package: 'tim_ui_kit',
-            height: 34,
-            width: 34,
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: 
+                hexToColor("2a2e35"),
+            size: 20,
           ),
           onPressed: () {
             Navigator.pop(context, newUserMARK);
