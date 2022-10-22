@@ -121,6 +121,18 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     );
   }
 
+  getLoginUserInfo() async {
+    final res = await _sdkInstance.getLoginUser();
+    if (res.code == 0) {
+      final result = await _sdkInstance.getUsersInfo(userIDList: [res.data!]);
+
+      if (result.code == 0) {
+        Provider.of<LoginUserInfo>(context, listen: false)
+            .setLoginUserInfo(result.data![0]);
+      }
+    }
+  }
+
   onKickedOffline() async {
     try {
       directToLogin();
@@ -143,6 +155,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         isShowOnlineStatus: true,
         isCheckDiskStorageSpace: true,
       ),
+      onWebLoginSuccess: getLoginUserInfo,
       onTUIKitCallbackListener: (TIMCallback callbackValue) {
         switch (callbackValue.type) {
           case TIMCallbackType.INFO:
