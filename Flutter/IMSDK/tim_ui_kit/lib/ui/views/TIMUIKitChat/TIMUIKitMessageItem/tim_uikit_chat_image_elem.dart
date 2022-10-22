@@ -47,7 +47,7 @@ class TIMUIKitImageElem extends StatefulWidget {
   const TIMUIKitImageElem(
       {required this.message,
       this.isShowJump = false,
-        required this.chatModel,
+      required this.chatModel,
       this.clearJump,
       this.isFrom,
       Key? key,
@@ -127,6 +127,7 @@ class _TIMUIKitImageElem extends TIMUIKitState<TIMUIKitImageElem> {
       download(imageUrl);
       return;
     }
+
     if (PlatformUtils().isIOS) {
       if (!await Permissions.checkPermission(
           context, Permission.photosAddOnly.value)) {
@@ -271,19 +272,23 @@ class _TIMUIKitImageElem extends TIMUIKitState<TIMUIKitImageElem> {
                     ),
                   );
                 },
-                child: Hero(
-                  tag: heroTag,
-                  child: preloadImage != null
-                      ? RawImage(
-                          image: preloadImage,
-                          fit: BoxFit.fitWidth,
-                          width: double.infinity,
-                        )
-                      : Image.file(
-                          File(imgPath),
-                          fit: BoxFit.fitWidth,
-                          width: double.infinity,
-                        ),
+                child: Container(
+                  constraints:
+                      const BoxConstraints(minWidth: 20, minHeight: 20),
+                  child: Hero(
+                    tag: heroTag,
+                    child: preloadImage != null
+                        ? RawImage(
+                            image: preloadImage,
+                            fit: BoxFit.fitWidth,
+                            width: double.infinity,
+                          )
+                        : Image.file(
+                            File(imgPath),
+                            fit: BoxFit.fitWidth,
+                            width: double.infinity,
+                          ),
+                  ),
                 )),
             imageElem: null)
       ],
@@ -351,23 +356,27 @@ class _TIMUIKitImageElem extends TIMUIKitState<TIMUIKitImageElem> {
                             downloadFn: () => _saveImg())),
                   );
                 },
-                child: Hero(
-                    tag: heroTag,
-                    child:
-                        // Image.network(smallImg?.url ?? ""),
-                        CachedNetworkImage(
-                      // width: double.infinity,
-                      alignment: Alignment.topCenter,
-                      imageUrl: path ?? smallImg?.url ?? originalImg!.url!,
-                      // use small image in message list as priority
-                      errorWidget: (context, error, stackTrace) =>
-                          errorPage(theme),
-                      fit: BoxFit.contain,
-                      cacheKey: smallImg?.uuid ?? originalImg!.uuid,
-                      placeholder: (context, url) =>
-                          Image(image: MemoryImage(kTransparentImage)),
-                      fadeInDuration: const Duration(milliseconds: 0),
-                    )),
+                child: Container(
+                  constraints:
+                      const BoxConstraints(minWidth: 20, minHeight: 20),
+                  child: Hero(
+                      tag: heroTag,
+                      child:
+                          // Image.network(smallImg?.url ?? ""),
+                          CachedNetworkImage(
+                        // width: double.infinity,
+                        alignment: Alignment.topCenter,
+                        imageUrl: path ?? smallImg?.url ?? originalImg!.url!,
+                        // use small image in message list as priority
+                        errorWidget: (context, error, stackTrace) =>
+                            errorPage(theme),
+                        fit: BoxFit.contain,
+                        cacheKey: smallImg?.uuid ?? originalImg!.uuid,
+                        placeholder: (context, url) =>
+                            Image(image: MemoryImage(kTransparentImage)),
+                        fadeInDuration: const Duration(milliseconds: 0),
+                      )),
+                ),
               ),
               imageElem: e)
         ],
@@ -447,7 +456,7 @@ class _TIMUIKitImageElem extends TIMUIKitState<TIMUIKitImageElem> {
         getImageFromList(V2_TIM_IMAGE_TYPES_ENUM.original);
     V2TimImage? smallImg = getImageFromList(V2_TIM_IMAGE_TYPES_ENUM.small);
     return TIMUIKitMessageReactionWrapper(
-      chatModel: widget.chatModel,
+        chatModel: widget.chatModel,
         isShowJump: widget.isShowJump,
         clearJump: widget.clearJump,
         isFromSelf: widget.message.isSelf ?? true,

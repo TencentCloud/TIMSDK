@@ -43,7 +43,8 @@ class TIMUIKitChat extends StatefulWidget {
   final ConvType conversationType;
 
   /// use for customize avatar
-  final Widget Function(BuildContext context, V2TimMessage message)? userAvatarBuilder;
+  final Widget Function(BuildContext context, V2TimMessage message)?
+      userAvatarBuilder;
 
   /// Use for show conversation name.
   final String conversationShowName;
@@ -277,7 +278,7 @@ class _TUIChatState extends TIMUIKitState<TIMUIKitChat> {
           }
 
           final TUIGroupListenerModel groupListenerModel =
-              Provider.of<TUIGroupListenerModel>(context, listen: false);
+              Provider.of<TUIGroupListenerModel>(context, listen: true);
           final NeedUpdate? needUpdate = groupListenerModel.needUpdate;
           if (needUpdate != null &&
               needUpdate.groupID == widget.conversationID) {
@@ -430,14 +431,14 @@ class TIMUIKitChatProviderScope extends StatelessWidget {
       required this.builder,
       this.model,
       this.groupID,
-        this.isBuild,
+      this.isBuild,
       required this.conversationID,
       required this.conversationType,
       this.controller,
       this.config,
       this.lifeCycle})
       : super(key: key) {
-    if(isBuild ?? false){
+    if (isBuild ?? false) {
       return;
     }
     model ??= TUIChatSeparateViewModel();

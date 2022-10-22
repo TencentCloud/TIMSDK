@@ -147,7 +147,7 @@ class _TIMUIKitProfileState extends TIMUIKitState<TIMUIKitProfile> {
           _controller.model = model;
           final V2TimFriendInfo? userInfo = model.userProfile?.friendInfo;
 
-          if(userInfo == null){
+          if (userInfo == null) {
             return Center(
               child: LoadingAnimationWidget.staggeredDotsWave(
                 color: theme.weakTextColor ?? Colors.grey,

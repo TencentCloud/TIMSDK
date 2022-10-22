@@ -36,6 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   tim_ui_kit:
     path: ../../tim_ui_kit
+  tencent_im_sdk_plugin_web: ^0.3.2
   archive: ^3.3.0
 
 dev_dependencies:

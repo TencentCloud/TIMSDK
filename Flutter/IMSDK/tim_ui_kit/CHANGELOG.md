@@ -1,3 +1,13 @@
+## 0.1.8
+
+* Optimize: File batch downloading queue, allow click multiple file messages once.
+* Optimize: Group list widgets can be updated automatically.
+* Optimize: Camera capture supports relatively lower performance devices, adjust resolution automatically. 
+* Optimize: Supports customize the color and text style of the app bar, especially on TIMUIKitChat widget.
+* Fix: Friend remark or nickname can not show on group tips.
+* Fix: Crash on video playing.
+* Fix: Several bugs.
+
 ## 0.1.7
 
 * Add: Big and RAW images supports, especially for those captured from latest version of iOS and iPhone 14 Pro series, compress and format before sending automatically.

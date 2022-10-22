@@ -29,8 +29,7 @@ class MessageServiceImpl extends MessageService {
             groupID: groupID,
             lastMsgID: lastMsgID,
             lastMsgSeq: lastMsgSeq,
-            messageTypeList: messageTypeList
-    );
+            messageTypeList: messageTypeList);
     final List<V2TimMessage> messageList = res.data ?? [];
     if (res.code != 0) {
       _coreService.callOnCallback(TIMCallback(

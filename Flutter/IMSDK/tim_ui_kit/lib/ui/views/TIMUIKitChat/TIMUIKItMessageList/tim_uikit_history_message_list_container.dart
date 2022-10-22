@@ -33,7 +33,8 @@ class TIMUIKitHistoryMessageListContainer extends StatefulWidget {
   final MessageItemBuilder? messageItemBuilder;
 
   /// the builder for avatar
-  final Widget Function(BuildContext context, V2TimMessage message)? userAvatarBuilder;
+  final Widget Function(BuildContext context, V2TimMessage message)?
+      userAvatarBuilder;
 
   /// the builder for tongue
   final TongueItemBuilder? tongueItemBuilder;

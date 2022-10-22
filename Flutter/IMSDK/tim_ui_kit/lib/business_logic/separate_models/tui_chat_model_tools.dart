@@ -131,11 +131,11 @@ class TUIChatModelTools {
         );
       }
 
-      try{
+      try {
         return response.firstWhere((item) {
           return item.msgID == msgID;
         });
-      }catch(e){
+      } catch (e) {
         return null;
       }
     } else {

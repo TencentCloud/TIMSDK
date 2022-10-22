@@ -6,6 +6,7 @@ import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:open_file/open_file.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
@@ -39,7 +40,7 @@ class TIMUIKitFileElem extends StatefulWidget {
 
   const TIMUIKitFileElem(
       {Key? key,
-        required this.chatModel,
+      required this.chatModel,
       required this.messageID,
       required this.fileElem,
       required this.isSelf,
@@ -55,6 +56,7 @@ class TIMUIKitFileElem extends StatefulWidget {
 
 class _TIMUIKitFileElemState extends TIMUIKitState<TIMUIKitFileElem> {
   String filePath = "";
+  bool isDownloading = false;
   final TUIChatGlobalModel model = serviceLocator<TUIChatGlobalModel>();
 
   Future<bool?> showOpenFileConfirmDialog(
@@ -93,24 +95,24 @@ class _TIMUIKitFileElemState extends TIMUIKitState<TIMUIKitFileElem> {
   void initState() {
     super.initState();
     if (!PlatformUtils().isWeb) {
-      getTemporaryDirectory().then((appDocDir) {
-        String filePath = widget.fileElem!.path ??
-            (appDocDir.path +
-                '/' +
-                (widget.message.msgID ?? "") +
-                widget.fileElem!.fileName!);
-        hasFile(filePath);
-        if (widget.fileElem!.path != null) {
-          hasFile(appDocDir.path +
-              '/' +
-              (widget.message.msgID ?? "") +
-              widget.fileElem!.fileName!);
-        }
-      });
+      hasFile();
     }
   }
 
-  bool hasFile(String savePath) {
+  Future<String> getSavePath() async {
+    var appDocDir = await getTemporaryDirectory();
+    String savePathWithAppPath = appDocDir.path +
+        '/' +
+        (widget.message.msgID ?? "") +
+        widget.fileElem!.fileName!;
+    return savePathWithAppPath;
+  }
+
+  Future<bool> hasFile() async {
+    if (PlatformUtils().isWeb) {
+      return true;
+    }
+    String savePath = await getSavePath();
     File f = File(savePath);
     if (f.existsSync() && widget.messageID != null) {
       filePath = savePath;
@@ -118,79 +120,6 @@ class _TIMUIKitFileElemState extends TIMUIKitState<TIMUIKitFileElem> {
       return true;
     }
     return false;
-  }
-
-  void _onTap(context, theme, received) async {
-    if (PlatformUtils().isWeb) {
-      launchUrl(
-        Uri.parse(widget.fileElem?.path ?? ""),
-        mode: LaunchMode.externalApplication,
-      );
-      return;
-    }
-    var appDocDir = await getTemporaryDirectory();
-    String savePath = widget.fileElem!.path ??
-        (appDocDir.path +
-            '/' +
-            (widget.message.msgID ?? "") +
-            widget.fileElem!.fileName!);
-    String savePathWithAppPath = appDocDir.path +
-        '/' +
-        (widget.message.msgID ?? "") +
-        widget.fileElem!.fileName!;
-    if (received == 0) {
-      if (!await Permissions.checkPermission(
-          context, Permission.storage.value)) {
-        return;
-      }
-      try {
-        if (hasFile(savePath)) {
-          showOpenFileConfirmDialog(context, savePath, theme);
-          return;
-        }
-
-        if (hasFile(savePathWithAppPath)) {
-          showOpenFileConfirmDialog(context, savePathWithAppPath, theme);
-          return;
-        }
-        model.setMessageProgress(widget.messageID!, 1);
-        print('start downloading');
-
-        await Dio().download(widget.fileElem!.url!, savePath,
-            onReceiveProgress: (recv, total) {
-          if (total != -1) {
-            // print((received / total * 100).toStringAsFixed(0) + "%");
-            model.setMessageProgress(
-                widget.messageID!, (recv / total * 100).ceil());
-            //you can build progressbar feature too
-          }
-        });
-        filePath = savePath;
-        print("File is saved to download folder.");
-      } catch (e) {
-        try {
-          await Dio().download(widget.fileElem!.url!, savePathWithAppPath,
-              onReceiveProgress: (recv, total) {
-            if (total != -1) {
-              // print((received / total * 100).toStringAsFixed(0) + "%");
-              model.setMessageProgress(
-                  widget.messageID!, (recv / total * 100).ceil());
-              //you can build progressbar feature too
-            }
-          });
-          filePath = savePathWithAppPath;
-        } catch (e) {
-          model.setMessageProgress(widget.messageID!, 0);
-          print('Error $e');
-          onTIMCallback(
-              TIMCallback(type: TIMCallbackType.FLUTTER_ERROR, catchError: e));
-        }
-      }
-    } else if (received == 100) {
-      hasFile(savePath);
-      hasFile(savePathWithAppPath);
-      showOpenFileConfirmDialog(context, filePath, theme);
-    }
   }
 
   String showFileSize(int fileSize) {
@@ -205,11 +134,57 @@ class _TIMUIKitFileElemState extends TIMUIKitState<TIMUIKitFileElem> {
     }
   }
 
+  addUrlToWaitingPath() async {
+    try {
+      if (widget.fileElem!.url!.isNotEmpty) {
+        String savePath = await getSavePath();
+        model.addWaitingList(
+            widget.messageID!, widget.fileElem!.url!, savePath);
+        print("add path success");
+      }
+    } catch (err) {
+      // err
+    }
+  }
+
+  checkIsWaiting() {
+    bool res = false;
+    try {
+      if (widget.messageID!.isNotEmpty) {
+        res = model.isWaiting(widget.messageID!);
+      }
+    } catch (err) {
+      // err
+    }
+    return res;
+  }
+
+  downloadFile() async {
+    if (!await Permissions.checkPermission(context, Permission.storage.value)) {
+      return;
+    }
+    await model.downloadFile();
+  }
+
+  tryOpenFile(context, theme) async {
+    if (PlatformUtils().isWeb) {
+      launchUrl(
+        Uri.parse(widget.fileElem?.path ?? ""),
+        mode: LaunchMode.externalApplication,
+      );
+      return;
+    }
+    if (!await Permissions.checkPermission(context, Permission.storage.value)) {
+      return;
+    }
+    showOpenFileConfirmDialog(context, filePath, theme);
+  }
+
   @override
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     final theme = value.theme;
     return TIMUIKitMessageReactionWrapper(
-      chatModel: widget.chatModel,
+        chatModel: widget.chatModel,
         isShowJump: widget.isShowJump,
         clearJump: widget.clearJump,
         isFromSelf: widget.message.isSelf ?? true,
@@ -241,23 +216,36 @@ class _TIMUIKitFileElemState extends TIMUIKitState<TIMUIKitFileElem> {
                     fileName.split(".")[max(fileName.split(".").length - 1, 0)];
               }
               return GestureDetector(
-                  onTap: () {
-                    if (value.isDownloading) {
-                      onTIMCallback(TIMCallback(
-                          type: TIMCallbackType.INFO,
-                          infoRecommendText: TIM_t("其他文件正在接收中"),
-                          infoCode: 6660410));
+                  onTap: () async {
+                    if (await hasFile()) {
+                      if (received == 100) {
+                        tryOpenFile(context, theme);
+                      } else {
+                        // 正在下载中，文件可能不完整
+                        onTIMCallback(
+                          TIMCallback(
+                            type: TIMCallbackType.INFO,
+                            infoRecommendText: TIM_t("正在下载中"),
+                            infoCode: 6660411,
+                          ),
+                        );
+                      }
+
                       return;
                     }
-                    //if downloaded or not download can tap
-                    if (received == 0 || received == 100) {
-                      _onTap(context, theme, received);
+
+                    if (checkIsWaiting()) {
+                      onTIMCallback(
+                        TIMCallback(
+                            type: TIMCallbackType.INFO,
+                            infoRecommendText: TIM_t("已加入待下载队列，其他文件下载中"),
+                            infoCode: 6660413),
+                      );
+                      return;
                     } else {
-                      onTIMCallback(TIMCallback(
-                          type: TIMCallbackType.INFO,
-                          infoRecommendText: TIM_t("正在接收中"),
-                          infoCode: 6660411));
+                      await addUrlToWaitingPath();
                     }
+                    await downloadFile();
                   },
                   child: Container(
                     width: 237,

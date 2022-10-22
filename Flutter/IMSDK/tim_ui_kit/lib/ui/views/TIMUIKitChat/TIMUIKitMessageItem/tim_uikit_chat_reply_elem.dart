@@ -82,14 +82,14 @@ class _TIMUIKitReplyElemState extends TIMUIKitState<TIMUIKitReplyElem> {
       final messageID = cloudCustomData.messageID;
       final message = await widget.chatModel.findMessage(messageID);
       if (message != null) {
-        if(this.mounted){
+        if (this.mounted) {
           setState(() {
             rawMessage = message;
           });
         }
       }
     }
-    if(this.mounted){
+    if (this.mounted) {
       setState(() {
         repliedMessage = cloudCustomData;
       });
@@ -105,11 +105,11 @@ class _TIMUIKitReplyElemState extends TIMUIKitState<TIMUIKitReplyElem> {
   }
 
   _rawMessageBuilder(V2TimMessage? message, TUITheme? theme) {
-    if(repliedMessage == null){
+    if (repliedMessage == null) {
       return const SizedBox(width: 0, height: 12);
     }
     if (message == null) {
-      if(repliedMessage?.messageAbstract != null){
+      if (repliedMessage?.messageAbstract != null) {
         return _defaultRawMessageText(repliedMessage!.messageAbstract, theme);
       }
       return const SizedBox(width: 0, height: 12);
@@ -149,11 +149,14 @@ class _TIMUIKitReplyElemState extends TIMUIKitState<TIMUIKitReplyElem> {
       case MessageElemType.V2TIM_ELEM_TYPE_IMAGE:
         return TIMUIKitImageElem(
             chatModel: widget.chatModel,
-            message: message, isFrom: "reply", isShowMessageReaction: false);
+            message: message,
+            isFrom: "reply",
+            isShowMessageReaction: false);
       case MessageElemType.V2TIM_ELEM_TYPE_VIDEO:
         return TIMUIKitVideoElem(message,
             chatModel: widget.chatModel,
-            isFrom: "reply", isShowMessageReaction: false);
+            isFrom: "reply",
+            isShowMessageReaction: false);
       case MessageElemType.V2TIM_ELEM_TYPE_LOCATION:
         return _defaultRawMessageText(TIM_t("[位置]"), theme);
       case MessageElemType.V2TIM_ELEM_TYPE_MERGER:
@@ -311,7 +314,9 @@ class _TIMUIKitReplyElemState extends TIMUIKitState<TIMUIKitReplyElem> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    repliedMessage != null ? "${repliedMessage!.messageSender}:" : "",
+                    repliedMessage != null
+                        ? "${repliedMessage!.messageSender}:"
+                        : "",
                     style: TextStyle(
                         fontSize: 12,
                         color: theme.weakTextColor,

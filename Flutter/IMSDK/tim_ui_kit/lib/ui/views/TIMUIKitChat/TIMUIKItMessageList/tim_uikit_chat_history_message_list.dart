@@ -167,7 +167,7 @@ class _TIMUIKitHistoryMessageListState
 
   _onScrollToIndex(V2TimMessage targetMsg) {
     // This method called by @ messages or messages been searched, aims to jump to target message
-      loadingPlace = LoadingPlace.top;
+    loadingPlace = LoadingPlace.top;
     const int singleLoadAmount = kIsWeb ? 15 : 40;
     final lastTimestamp =
         widget.messageList[widget.messageList.length - 1]?.timestamp;
@@ -390,7 +390,7 @@ class _TIMUIKitHistoryMessageListState
                       child: KeepAliveWrapper(
                           child: Container(
                               padding:
-                              const EdgeInsets.symmetric(horizontal: 16),
+                                  const EdgeInsets.symmetric(horizontal: 16),
                               child: _getMessageItemBuilder(messageItem))),
                     );
                   },

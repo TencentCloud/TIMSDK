@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tencent_im_base/i18n/i18n_utils.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_global_model.dart';
 
 class TIMUIKitAppBarTitle extends StatelessWidget {
@@ -7,10 +8,12 @@ class TIMUIKitAppBarTitle extends StatelessWidget {
   final String conversationShowName;
   final bool showC2cMessageEditStaus;
   final String fromUser;
+  final TextStyle? textStyle;
 
   const TIMUIKitAppBarTitle(
       {Key? key,
       this.title,
+      this.textStyle,
       required this.conversationShowName,
       required this.showC2cMessageEditStaus,
       required this.fromUser})
@@ -27,19 +30,21 @@ class TIMUIKitAppBarTitle extends StatelessWidget {
       }
       return Text(
         conversationShowName,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 17,
-        ),
+        style: textStyle ??
+            const TextStyle(
+              color: Colors.white,
+              fontSize: 17,
+            ),
       );
     } else {
       if (showC2cMessageEditStaus) {
-        return const Text(
-          "对方正在输入中...",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 17,
-          ),
+        return Text(
+          TIM_t("对方正在输入中..."),
+          style: textStyle ??
+              const TextStyle(
+                color: Colors.white,
+                fontSize: 17,
+              ),
         );
       } else {
         if (title != null) {
@@ -47,10 +52,11 @@ class TIMUIKitAppBarTitle extends StatelessWidget {
         }
         return Text(
           conversationShowName,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 17,
-          ),
+          style: textStyle ??
+              const TextStyle(
+                color: Colors.white,
+                fontSize: 17,
+              ),
         );
       }
     }

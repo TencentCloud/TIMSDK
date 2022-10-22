@@ -1,4 +1,31 @@
-English | [简体中文](https://github.com/TencentCloud/TIMSDK/blob/master/Flutter/IMSDK/tim_ui_kit/README_ZH.md)
+
+<br>
+
+<p align="center">
+  <a href="https://www.tencentcloud.com/products/im">
+    <img src="https://qcloudimg.tencent-cloud.cn/raw/fd589e1dc7dc3752f320a3b0251189f0.png" width="288px" alt="Tencent Chat Logo" />
+  </a>
+</p>
+
+<h1 align="center"> Tencent Cloud IM Chat UIKIt</h1>
+
+<p align="center">
+  Globally interconnected In-App Chat, user profile and relationship chains and offline push.
+</p>
+
+<p align="center">
+More languages:
+  <a href="https://cloud.tencent.com/document/product/269/70746">简体中文-快速入门</a>
+  <a href="https://github.com/TencentCloud/TIMSDK/blob/master/Flutter/IMSDK/tim_ui_kit/README_ZH.md">简体中文-README</a>
+</p>
+
+
+![](https://qcloudimg.tencent-cloud.cn/raw/193ec650f17da6bb33edf5df5d978091.png)
+
+<p align="center">
+    TUIKit has Chat SDK, UI components and basic business logic inside. You can choose our pure Chat SDK <a href="https://pub.dev/packages/tencent_im_sdk_plugin">tencent_im_sdk_plugin</a> if you tend to build the UI yourself.
+</p>
+
 
 ## Introduction to TUIKit
 
@@ -368,7 +395,7 @@ Please do not hesitate to contact us in the following place, if you have any fur
 
 - Telegram Group: <https://t.me/+1doS9AUBmndhNGNl>
 - WhatsApp Group: <https://chat.whatsapp.com/Gfbxk7rQBqc8Rz4pzzP27A>
-- QQ Group: 788910197
+- QQ Group: 788910197, chat in Chinese
 
 Our Website: <https://www.tencentcloud.com/products/im>
 
@@ -531,6 +558,7 @@ All info codes are listed below:
 | 6660410           | You are receiving other files        | When the user clicks the download file message, the previous download task has not yet been completed.                 |
 | 6660411           | Receiving                                                   | User clicks to download file message.                                         |
 | 6660412           | Video is available with .mp4 only                                                   | The user sent a video message in non-mp4 format                                         |
+| 6660413           | Added to download queue and waiting                                                   | Added to the queue to be downloaded, while other files are downloading                                      |
 | 6661001           | Modification failed due to network disconnection      | When users try to modify group data in a non-network environment.                         |
 | 6661002           | Failed to view the group members due to network disconnection     | When users try to modify group data in a non-network environment.                         |
 | 6661003           | Admin role canceled successfully                   | The user removes the other users from the administrator in the group.                                 |
@@ -760,3 +788,13 @@ TIMUIKitSearchMsgDetail(
               keyword: initKeyword ?? "",
             );
 ```
+
+## Contact Us
+
+Please do not hesitate to contact us in the following place, if you have any further questions or tend to learn more about the use cases.
+
+- Telegram Group: <https://t.me/+1doS9AUBmndhNGNl>
+- WhatsApp Group: <https://chat.whatsapp.com/Gfbxk7rQBqc8Rz4pzzP27A>
+- QQ Group: 788910197, chat in Chinese
+
+Our Website: <https://www.tencentcloud.com/products/im>

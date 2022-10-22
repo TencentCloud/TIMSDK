@@ -46,17 +46,20 @@ class _VideoCustomControlsState extends TIMUIKitState<VideoCustomControls>
   @override
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     if (_latestValue.hasError) {
-      return chewieController.errorBuilder?.call(
-            context,
-            chewieController.videoPlayerController.value.errorDescription!,
-          ) ??
-          const Center(
-            child: Icon(
-              Icons.error,
-              color: Colors.white,
-              size: 42,
+      return Container(
+        color: Colors.transparent,
+        child: chewieController.errorBuilder?.call(
+              context,
+              chewieController.videoPlayerController.value.errorDescription!,
+            ) ??
+            const Center(
+              child: Icon(
+                Icons.error,
+                color: Colors.white,
+                size: 42,
+              ),
             ),
-          );
+      );
     }
 
     return MouseRegion(
@@ -314,7 +317,7 @@ class _VideoCustomControlsState extends TIMUIKitState<VideoCustomControls>
           if (isFinished) {
             controller.seekTo(const Duration());
           }
-          controller.play();
+          Timer(const Duration(milliseconds: 100), () => controller.play());
         }
       }
     });

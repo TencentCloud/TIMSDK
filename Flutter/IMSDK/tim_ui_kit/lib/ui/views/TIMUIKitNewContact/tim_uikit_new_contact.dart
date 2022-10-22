@@ -129,8 +129,7 @@ class _TIMUIKitNewContactState extends TIMUIKitState<TIMUIKitNewContact> {
                             border: Border.all(
                                 width: 1,
                                 color: theme.weakTextColor ??
-                                    CommonColor.weakTextColor)
-                        ),
+                                    CommonColor.weakTextColor)),
                         padding: const EdgeInsets.symmetric(
                             horizontal: 14, vertical: 6),
                         child: Text(

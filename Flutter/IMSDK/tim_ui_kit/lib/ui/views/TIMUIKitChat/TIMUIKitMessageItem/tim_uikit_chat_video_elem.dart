@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
@@ -30,7 +31,8 @@ class TIMUIKitVideoElem extends StatefulWidget {
       this.isShowJump = false,
       this.clearJump,
       this.isFrom,
-      this.isShowMessageReaction, required this.chatModel})
+      this.isShowMessageReaction,
+      required this.chatModel})
       : super(key: key);
 
   @override
@@ -131,7 +133,7 @@ class _TIMUIKitVideoElemState extends TIMUIKitState<TIMUIKitVideoElem> {
           return Hero(
               tag: heroTag,
               child: TIMUIKitMessageReactionWrapper(
-                chatModel: widget.chatModel,
+                  chatModel: widget.chatModel,
                   message: widget.message,
                   isShowJump: widget.isShowJump,
                   isShowMessageReaction: widget.isShowMessageReaction ?? true,
@@ -156,50 +158,56 @@ class _TIMUIKitVideoElemState extends TIMUIKitState<TIMUIKitVideoElem> {
                               maxWidth: PlatformUtils().isWeb
                                   ? 300
                                   : constraints.maxWidth * 0.5,
-                              maxHeight: constraints.maxHeight * 0.8,
-                              minWidth: 0),
-                          child: Stack(
-                            children: <Widget>[
-                              if (widget.message.videoElem!.snapshotUrl !=
-                                      null ||
-                                  widget.message.videoElem!.snapshotUrl != null)
-                                AspectRatio(
-                                  aspectRatio: positionRadio,
-                                  child: Container(
-                                    decoration: const BoxDecoration(
-                                        color: Colors.transparent),
+                              maxHeight: min(constraints.maxHeight * 0.8, 300),
+                              minHeight: 20,
+                              minWidth: 20),
+                          child: AspectRatio(
+                            aspectRatio: positionRadio,
+                            child: Stack(
+                              children: <Widget>[
+                                if (widget.message.videoElem!.snapshotUrl !=
+                                        null ||
+                                    widget.message.videoElem!.snapshotUrl !=
+                                        null)
+                                  AspectRatio(
+                                    aspectRatio: positionRadio,
+                                    child: Container(
+                                      decoration: const BoxDecoration(
+                                          color: Colors.transparent),
+                                    ),
                                   ),
+                                Row(
+                                  children: [
+                                    Expanded(child: generateSnapshot(theme))
+                                  ],
                                 ),
-                              Row(
-                                children: [
-                                  Expanded(child: generateSnapshot(theme))
-                                ],
-                              ),
-                              if (widget.message.status !=
-                                          MessageStatus
-                                              .V2TIM_MSG_STATUS_SENDING &&
-                                      widget.message.videoElem!.videoPath !=
-                                          null ||
-                                  widget.message.videoElem!.videoUrl != null)
-                                Positioned.fill(
-                                  // alignment: Alignment.center,
-                                  child: Center(
-                                      child: Image.asset('images/play.png',
-                                          package: 'tim_ui_kit', height: 64)),
-                                ),
-                              Positioned(
-                                  right: 10,
-                                  bottom: 10,
-                                  child: Text(
-                                      MessageUtils.formatVideoTime(widget
-                                                  .message
-                                                  .videoElem
-                                                  ?.duration ??
-                                              0)
-                                          .toString(),
-                                      style: const TextStyle(
-                                          color: Colors.white, fontSize: 12))),
-                            ],
+                                if (widget.message.status !=
+                                            MessageStatus
+                                                .V2TIM_MSG_STATUS_SENDING &&
+                                        widget.message.videoElem!.videoPath !=
+                                            null ||
+                                    widget.message.videoElem!.videoUrl != null)
+                                  Positioned.fill(
+                                    // alignment: Alignment.center,
+                                    child: Center(
+                                        child: Image.asset('images/play.png',
+                                            package: 'tim_ui_kit', height: 64)),
+                                  ),
+                                Positioned(
+                                    right: 10,
+                                    bottom: 10,
+                                    child: Text(
+                                        MessageUtils.formatVideoTime(widget
+                                                    .message
+                                                    .videoElem
+                                                    ?.duration ??
+                                                0)
+                                            .toString(),
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12))),
+                              ],
+                            ),
                           ));
                     }),
                   )));

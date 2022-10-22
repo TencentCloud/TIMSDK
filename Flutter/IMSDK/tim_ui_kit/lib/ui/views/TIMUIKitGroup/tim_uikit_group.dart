@@ -4,6 +4,7 @@ import 'package:lpinyin/lpinyin.dart';
 import 'package:provider/provider.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
+import 'package:tim_ui_kit/business_logic/listener_model/tui_group_listener_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_friendship_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_theme_view_model.dart';
 import 'package:tim_ui_kit/data_services/services_locatar.dart';
@@ -38,6 +39,8 @@ class TIMUIKitGroup extends StatefulWidget {
 class _TIMUIKitGroupState extends TIMUIKitState<TIMUIKitGroup> {
   final TUIFriendShipViewModel _friendshipViewModel =
       serviceLocator<TUIFriendShipViewModel>();
+  final TUIGroupListenerModel _groupListenerModel =
+      serviceLocator<TUIGroupListenerModel>();
 
   List<ISuspensionBeanImpl<V2TimGroupInfo>> _getShowList(
       List<V2TimGroupInfo> groupList) {
@@ -123,10 +126,26 @@ class _TIMUIKitGroupState extends TIMUIKitState<TIMUIKitGroup> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: _friendshipViewModel),
+        ChangeNotifierProvider.value(value: _groupListenerModel),
         ChangeNotifierProvider.value(
             value: serviceLocator<TUIThemeViewModel>()),
       ],
       builder: (BuildContext context, Widget? w) {
+        final NeedUpdate? needUpdate =
+            Provider.of<TUIGroupListenerModel>(context).needUpdate;
+        if (needUpdate != null) {
+          _groupListenerModel.needUpdate = null;
+          switch (needUpdate.updateType) {
+            case UpdateType.groupInfo:
+              Provider.of<TUIFriendShipViewModel>(context).loadGroupListData();
+              break;
+            case UpdateType.memberList:
+              Provider.of<TUIFriendShipViewModel>(context).loadGroupListData();
+              break;
+            default:
+              break;
+          }
+        }
         List<V2TimGroupInfo> groupList =
             Provider.of<TUIFriendShipViewModel>(context).groupList;
         if (widget.groupCollector != null) {

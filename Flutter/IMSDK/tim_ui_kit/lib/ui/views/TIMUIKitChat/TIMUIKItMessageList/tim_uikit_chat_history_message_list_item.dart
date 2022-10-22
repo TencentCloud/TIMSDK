@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
@@ -341,6 +342,7 @@ class _TIMUIKItHistoryMessageListItemState
         model.jumpMsgID = "";
       });
     }
+
     switch (msgType) {
       case MessageElemType.V2TIM_ELEM_TYPE_CUSTOM:
         if (messageItemBuilder?.customMessageItemBuilder != null) {
@@ -763,6 +765,7 @@ class _TIMUIKItHistoryMessageListItemState
   Widget tuiBuild(BuildContext context, TUIKitBuildValue value) {
     final TUIChatSeparateViewModel model =
         Provider.of<TUIChatSeparateViewModel>(context);
+    final TUIChatGlobalModel globalModel = serviceLocator<TUIChatGlobalModel>();
     final TUITheme theme = value.theme;
     final message = widget.message;
     final msgType = message.elemType;
@@ -1056,6 +1059,15 @@ class _TIMUIKItHistoryMessageListItemState
                         ],
                       ),
                     ),
+                    if (widget.message.elemType == 6 &&
+                        globalModel.isWaiting(widget.message.msgID ?? ""))
+                      Container(
+                        margin: const EdgeInsets.only(top: 24, left: 6),
+                        child: LoadingAnimationWidget.threeArchedCircle(
+                          color: theme.weakTextColor ?? Colors.grey,
+                          size: 20,
+                        ),
+                      ),
                     if (isSelf && widget.showAvatar)
                       widget.userAvatarBuilder != null
                           ? widget.userAvatarBuilder!(context, message)

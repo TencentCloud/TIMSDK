@@ -12,6 +12,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:tencent_im_base/tencent_im_base.dart';
+import 'package:tencent_wechat_camera_picker/tencent_wechat_camera_picker.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_state.dart';
 import 'package:tim_ui_kit/business_logic/separate_models/tui_chat_separate_view_model.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_global_model.dart';
@@ -27,7 +28,6 @@ import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitTextField/intl_camer_pi
 import 'package:tim_ui_kit/ui/widgets/toast.dart';
 import 'package:video_thumbnail/video_thumbnail.dart' as video_thumbnail;
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
-import 'package:wechat_camera_picker/wechat_camera_picker.dart';
 import 'package:tim_ui_kit/base_widgets/tim_ui_kit_base.dart';
 
 import 'package:tim_ui_kit/ui/utils/shared_theme.dart';
@@ -292,14 +292,13 @@ class _MorePanelState extends TIMUIKitState<MorePanel> {
 
   _sendImageFromCamera(TUIChatSeparateViewModel model) async {
     try {
-      if (!await Permissions.checkPermission(
-          context, Permission.camera.value)) {
+      if (PlatformUtils().isIOS &&
+          !await Permissions.checkPermission(
+              context, Permission.camera.value)) {
         return;
       }
       final convID = widget.conversationID;
       final convType = widget.conversationType;
-      // If here shows in English, not your language, you can add 'Localized resources can be mixed' with TRUE in "ios => Runner => info.plist"
-      // final imageFile = await _picker.pickImage(source: ImageSource.camera);
       final pickedFile = await CameraPicker.pickFromCamera(context,
           pickerConfig: CameraPickerConfig(
               enableRecording: true,
@@ -315,7 +314,6 @@ class _MorePanelState extends TIMUIKitState<MorePanel> {
                   convType: convType),
               context);
         }
-
         if (type == AssetType.video) {
           _sendVideoMessage(pickedFile, model);
         }
