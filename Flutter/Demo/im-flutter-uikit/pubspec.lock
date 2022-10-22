@@ -1406,7 +1406,7 @@ packages:
       name: tencent_im_base
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.48"
+    version: "0.0.51"
   tencent_im_sdk_plugin:
     dependency: transitive
     description:
@@ -1462,7 +1462,7 @@ packages:
       name: tim_ui_kit_calling_plugin
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.2"
+    version: "0.4.3"
   tim_ui_kit_lbs_plugin:
     dependency: "direct main"
     description:
