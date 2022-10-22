@@ -169,8 +169,7 @@ class _TIMUIKitTextElemState extends TIMUIKitState<TIMUIKitTextElem> {
             topRight: Radius.circular(10),
             bottomLeft: Radius.circular(10),
             bottomRight: Radius.circular(10));
-    if((widget.chatModel.jumpMsgID == widget.message.msgID)){
-    }
+    if ((widget.chatModel.jumpMsgID == widget.message.msgID)) {}
     if (widget.isShowJump) {
       if (!isShining) {
         Future.delayed(Duration.zero, () {

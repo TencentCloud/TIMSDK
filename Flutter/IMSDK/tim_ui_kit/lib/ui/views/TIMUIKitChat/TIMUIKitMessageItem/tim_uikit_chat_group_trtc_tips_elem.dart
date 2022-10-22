@@ -89,7 +89,15 @@ class _TIMUIKitGroupTrtcTipsElemState
   }
 
   String getShowName(V2TimGroupMemberFullInfo info) {
-    return info.friendRemark ?? info.nickName ?? info.nameCard ?? info.userID;
+    if (info.friendRemark != null && info.friendRemark!.isNotEmpty) {
+      return info.friendRemark!;
+    } else if (info.nickName != null && info.nickName!.isNotEmpty) {
+      return info.nickName!;
+    } else if (info.nameCard != null && info.nameCard!.isNotEmpty) {
+      return info.nameCard!;
+    } else {
+      return info.userID;
+    }
   }
 
   getShowNameListFromGroupList(
@@ -114,7 +122,7 @@ class _TIMUIKitGroupTrtcTipsElemState
     }
     nameStr = nameStr.substring(1);
     setState(() {
-      customMessageShowText = "$nameStr$actionTypeText";
+      customMessageShowText = "$nameStr $actionTypeText";
     });
   }
 
@@ -127,7 +135,7 @@ class _TIMUIKitGroupTrtcTipsElemState
     if (mounted) {
       if (showNameList.length == 1) {
         setState(() {
-          customMessageShowText = "${showNameList[0]}$actionTypeText";
+          customMessageShowText = "${showNameList[0]} $actionTypeText";
         });
       } else {
         String nameStr = "";
@@ -136,7 +144,7 @@ class _TIMUIKitGroupTrtcTipsElemState
         }
         nameStr = nameStr.substring(1);
         setState(() {
-          customMessageShowText = "$nameStr$actionTypeText";
+          customMessageShowText = "$nameStr $actionTypeText";
         });
       }
     }
@@ -163,7 +171,7 @@ class _TIMUIKitGroupTrtcTipsElemState
     //     });
   }
 
-  getShowActionType(CallingMessage callingMessage, {String? groupId}) {
+  getShowActionType(CallingMessage callingMessage, {String? groupId}) async {
     final actionType = callingMessage.actionType!;
     final actionTypeText = TIMUIKitGroupTrtcTipsElem.getActionType(actionType);
     // 1发起通话
@@ -177,9 +185,8 @@ class _TIMUIKitGroupTrtcTipsElemState
           final showName = getShowName(element);
           nameStr = "$nameStr$showName";
         }
-
         setState(() {
-          customMessageShowText = "$nameStr$actionTypeText";
+          customMessageShowText = "$nameStr $actionTypeText";
         });
       });
     }
@@ -195,6 +202,21 @@ class _TIMUIKitGroupTrtcTipsElemState
     }
     // 4为拒绝
     if (actionType == 4 && groupId != null) {
+      List<String> inviteeShowNameList = [];
+      V2TimValueCallback<List<V2TimGroupMemberFullInfo>>
+          getGroupMembersInfoRes = await TencentImSDKPlugin.v2TIMManager
+              .getGroupManager()
+              .getGroupMembersInfo(
+                groupID: groupId, // 需要获取的群组id
+                memberList: callingMessage.inviteeList ?? [], // 需要获取的用户id列表
+              );
+      if (getGroupMembersInfoRes.code == 0) {
+        // 获取成功
+        getGroupMembersInfoRes.data?.forEach((element) {
+          inviteeShowNameList.add(getShowName(element));
+        });
+      }
+      callingMessage.inviteeList = inviteeShowNameList;
       handleThrotGetShwoName(groupId, actionTypeText, callingMessage);
     }
     // 5 为超时
@@ -212,7 +234,7 @@ class _TIMUIKitGroupTrtcTipsElemState
         nameStr = nameStr.substring(1);
 
         setState(() {
-          customMessageShowText = "$nameStr$actionTypeText";
+          customMessageShowText = "$nameStr $actionTypeText";
         });
       });
     }

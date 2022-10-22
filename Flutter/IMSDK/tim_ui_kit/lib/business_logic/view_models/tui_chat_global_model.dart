@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -38,11 +39,13 @@ class TUIChatGlobalModel extends ChangeNotifier {
   final Map<String, int> _messageListProgressMap = {};
   final Map<String, dynamic> _preloadImageMap = {};
   final Map<String, HistoryMessagePosition> _historyMessagePositionMap = {};
-  List<CurrentConversation> _currentConversationList = [];
+  final List<CurrentConversation> _currentConversationList = [];
   Map<String, dynamic> get preloadImageMap => _preloadImageMap;
 
   ChatLifeCycle? _lifeCycle;
   bool _isDownloading = false;
+  final List<Map<String, String>> _waitingDownloadList =
+      List.empty(growable: true); // example {"savePath":"","url":"",msgId:""}
   int _totalUnreadCount = 0;
   String localKeyPrefix = "TUIKit_conversation_stored_";
   String localMsgIDListKey = "TUIKit_conversation_list";
@@ -80,6 +83,81 @@ class TUIChatGlobalModel extends ChangeNotifier {
   }
 
   bool get isDownloading => _isDownloading;
+  bool get hasWaiting => _waitingDownloadList.isNotEmpty;
+  Map<String, String> get currentDownLoad => _waitingDownloadList.first;
+  void addWaitingList(String msgID, String url, String savePath) {
+    print("add $url to waiting list success");
+    bool contains = false;
+    for (Map<String, String> element in _waitingDownloadList) {
+      String msgIDItem = element["msgID"] ?? "";
+      if (msgIDItem.isNotEmpty) {
+        if (msgID == msgIDItem) {
+          contains = true;
+          break;
+        }
+      }
+    }
+    if (!contains) {
+      _waitingDownloadList.add(Map.from({
+        "msgID": msgID,
+        "url": url,
+        "savePath": savePath,
+      }));
+      // setMessageProgress(msgID, 1); // 有一点进度条，表示等待中
+    }
+  }
+
+  downloadFile() async {
+    bool hasWait = _waitingDownloadList.isNotEmpty;
+    print(_waitingDownloadList);
+    print(_isDownloading);
+    print(!hasWaiting);
+    if (_isDownloading || !hasWait) {
+      print("no download return");
+      return;
+    }
+
+    Map<String, String> nextDownLoad = _waitingDownloadList.first;
+    String downLoadMsgID = nextDownLoad["msgID"] ?? "";
+    String downLoadMsgUrl = nextDownLoad["url"] ?? "";
+    String downLoadMsgSavePath = nextDownLoad["savePath"] ?? "";
+    if (downLoadMsgID.isEmpty ||
+        downLoadMsgUrl.isEmpty ||
+        downLoadMsgSavePath.isEmpty) {
+      return;
+    }
+    print("new download $downLoadMsgSavePath");
+    await Dio().download(downLoadMsgUrl, downLoadMsgSavePath,
+        onReceiveProgress: (recv, total) {
+      if (total != -1) {
+        // print((received / total * 100).toStringAsFixed(0) + "%");
+        int progrss = (recv / total * 100).ceil();
+        if (progrss > 1) {
+          setMessageProgress(downLoadMsgID, progrss);
+        }
+        //you can build progressbar feature too
+      }
+    });
+    // startDownloadProcess(context, theme, received);
+    print("start another download");
+    downloadFile();
+  }
+
+  int getRecevied(msgID) {
+    return messageListProgressMap[msgID] ?? 0;
+  }
+
+  bool isWaiting(String msgID) {
+    return _waitingDownloadList.where((element) {
+      String msgIDItem = element["msgID"] ?? "";
+      if (msgIDItem.isNotEmpty) {
+        if (msgID == msgIDItem) {
+          return true;
+        }
+      }
+      return false;
+    }).isNotEmpty;
+  }
 
   Map<String, int> get messageListProgressMap {
     return _messageListProgressMap;
@@ -339,7 +417,18 @@ class TUIChatGlobalModel extends ChangeNotifier {
       _isDownloading = true;
     } else {
       _isDownloading = false;
+      _waitingDownloadList.removeWhere((element) {
+        String msgIDItem = element["msgID"] ?? "";
+        if (msgIDItem.isNotEmpty) {
+          if (msgID == msgIDItem) {
+            print("remove download");
+            return true;
+          }
+        }
+        return false;
+      });
     }
+
     notifyListeners();
   }
 

@@ -141,7 +141,8 @@ class _MessageReadReceiptState extends TIMUIKitState<MessageReadReceipt> {
       case MessageElemType.V2TIM_ELEM_TYPE_VIDEO:
         return TIMUIKitVideoElem(message,
             chatModel: widget.model,
-            isShowMessageReaction: false, isFrom: "merger");
+            isShowMessageReaction: false,
+            isFrom: "merger");
       case MessageElemType.V2TIM_ELEM_TYPE_LOCATION:
         return Text(TIM_t("[位置]"));
       case MessageElemType.V2TIM_ELEM_TYPE_MERGER:

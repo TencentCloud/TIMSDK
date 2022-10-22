@@ -90,31 +90,31 @@ class TIMUIKitChatController {
   /// Send message;
   /// 发送消息
   /// Please provide `convType` and `convID`, if you use `TIMUIKitChatController` without specifying to a `TIMUIKitChat`.
-  Future<V2TimValueCallback<V2TimMessage>?>? sendMessage(
-      {required V2TimMessage? messageInfo,
+  Future<V2TimValueCallback<V2TimMessage>?>? sendMessage({
+    required V2TimMessage? messageInfo,
 
-      /// The type of the target conversation
-      ConvType? convType,
+    /// The type of the target conversation
+    ConvType? convType,
 
-      /// The ID of the target conversation
-      String? convID,
+    /// The ID of the target conversation
+    String? convID,
 
-      /// The method for updating the input field when message sending failed
-      ValueChanged<String>? setInputField,
+    /// The method for updating the input field when message sending failed
+    ValueChanged<String>? setInputField,
 
-        /// Offline push info
-        OfflinePushInfo? offlinePushInfo,
-      }) {
+    /// Offline push info
+    OfflinePushInfo? offlinePushInfo,
+  }) {
     if (convID != null && convType != null) {
       return globalChatModel.sendMessageFromController(
           messageInfo: messageInfo,
           convType: convType,
           convID: convID,
           setInputField: setInputField,
-        offlinePushInfo: offlinePushInfo
-      );
+          offlinePushInfo: offlinePushInfo);
     } else if (model != null) {
-      return model!.sendMessageFromController(messageInfo: messageInfo, offlinePushInfo: offlinePushInfo);
+      return model!.sendMessageFromController(
+          messageInfo: messageInfo, offlinePushInfo: offlinePushInfo);
     }
     return null;
   }

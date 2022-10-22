@@ -1,5 +1,5 @@
 import 'package:tencent_im_base/tencent_im_base.dart';
-import 'package:wechat_camera_picker/wechat_camera_picker.dart';
+import 'package:tencent_wechat_camera_picker/tencent_wechat_camera_picker.dart';
 
 class IntlCameraPickerTextDelegate extends CameraPickerTextDelegate {
   /// Confirm string for the confirm button.

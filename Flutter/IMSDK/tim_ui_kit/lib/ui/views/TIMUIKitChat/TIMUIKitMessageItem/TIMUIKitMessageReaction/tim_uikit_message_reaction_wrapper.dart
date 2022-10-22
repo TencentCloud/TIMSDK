@@ -26,7 +26,7 @@ class TIMUIKitMessageReactionWrapper extends StatefulWidget {
       this.clearJump,
       required this.isFromSelf,
       this.backgroundColor,
-        required this.chatModel,
+      required this.chatModel,
       required this.message,
       this.borderRadius,
       required this.child,
@@ -134,7 +134,7 @@ class _TIMUIKitMessageReactionWrapperState
       } else {
         if ((widget.chatModel.jumpMsgID == widget.message.msgID) &&
             (widget.message.msgID?.isNotEmpty ?? false)) {
-          if(widget.clearJump != null){
+          if (widget.clearJump != null) {
             widget.clearJump!();
           }
         }

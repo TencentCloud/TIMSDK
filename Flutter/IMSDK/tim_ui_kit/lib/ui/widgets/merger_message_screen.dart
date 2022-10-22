@@ -100,8 +100,7 @@ class MergerMessageScreen extends TIMUIKitStatelessWidget {
         );
       case MessageElemType.V2TIM_ELEM_TYPE_VIDEO:
         return TIMUIKitVideoElem(message,
-            chatModel: model,
-            isFrom: "merger", isShowMessageReaction: false);
+            chatModel: model, isFrom: "merger", isShowMessageReaction: false);
       case MessageElemType.V2TIM_ELEM_TYPE_LOCATION:
         return Text(TIM_t("[位置]"));
       case MessageElemType.V2TIM_ELEM_TYPE_MERGER:

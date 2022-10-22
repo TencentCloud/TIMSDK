@@ -73,8 +73,9 @@ class TIMUIKitConversationItem extends TIMUIKitStatelessWidget {
     );
   }
 
-  bool isHaveSecondLine(){
-    return (isShowDraft && draftText != null && draftText != "") || (lastMsg != null);
+  bool isHaveSecondLine() {
+    return (isShowDraft && draftText != null && draftText != "") ||
+        (lastMsg != null);
   }
 
   Widget _getTimeStringForChatWidget(BuildContext context, TUITheme theme) {
@@ -167,9 +168,10 @@ class TIMUIKitConversationItem extends TIMUIKitStatelessWidget {
                     _getTimeStringForChatWidget(context, theme),
                   ],
                 ),
-                if(isHaveSecondLine()) const SizedBox(
-                  height: 6,
-                ),
+                if (isHaveSecondLine())
+                  const SizedBox(
+                    height: 6,
+                  ),
                 Row(
                   children: [
                     Expanded(child: _getShowMsgWidget(context)),

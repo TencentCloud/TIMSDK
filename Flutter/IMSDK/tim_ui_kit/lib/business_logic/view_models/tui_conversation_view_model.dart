@@ -118,7 +118,7 @@ class TUIConversationViewModel extends ChangeNotifier {
 
   initConversation() async {
     clearData();
-    if(PlatformUtils().isWeb){
+    if (PlatformUtils().isWeb) {
       loadInitConversation();
     }
   }

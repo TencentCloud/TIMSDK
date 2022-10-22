@@ -567,7 +567,7 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
   @override
   void initState() {
     super.initState();
-    if(PlatformUtils().isWeb){
+    if (PlatformUtils().isWeb) {
       focusNode = FocusNode(
         onKey: (node, event) {
           if (event.isKeyPressed(LogicalKeyboardKey.enter)) {
@@ -576,7 +576,7 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
           return KeyEventResult.ignored;
         },
       );
-    }else{
+    } else {
       focusNode = FocusNode();
     }
     textEditingController =
@@ -716,7 +716,7 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
             children: [
               _buildRepliedMessage(value),
               Container(
-                color: widget.backgroundColor ?? hexToColor("EBF0F6"),
+                color: widget.backgroundColor ?? hexToColor("f7f6f6"),
                 child: SafeArea(
                   child: Column(
                     children: [
@@ -799,9 +799,10 @@ class _InputTextFieldState extends TIMUIKitState<TIMUIKitInputTextField> {
                                           });
                                         },
                                         keyboardType: TextInputType.multiline,
-                                        textInputAction: PlatformUtils().isAndroid
-                                            ? TextInputAction.newline
-                                            : TextInputAction.send,
+                                        textInputAction:
+                                            PlatformUtils().isAndroid
+                                                ? TextInputAction.newline
+                                                : TextInputAction.send,
                                         onEditingComplete: onSubmitted,
                                         textAlignVertical:
                                             TextAlignVertical.center,

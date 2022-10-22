@@ -182,15 +182,18 @@ class _TIMUIKitAppBarState extends TIMUIKitState<TIMUIKitAppBar> {
       titleTextStyle: setAppbar?.titleTextStyle,
       toolbarOpacity: setAppbar?.toolbarOpacity ?? 1.0,
       toolbarTextStyle: setAppbar?.toolbarTextStyle,
-      flexibleSpace: setAppbar?.flexibleSpace ??
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [
-                theme.lightPrimaryColor ?? CommonColor.lightPrimaryColor,
-                theme.primaryColor ?? CommonColor.primaryColor
-              ]),
-            ),
-          ),
+      textTheme: setAppbar?.textTheme,
+      flexibleSpace: setAppbar?.backgroundColor == null
+          ? setAppbar?.flexibleSpace ??
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: [
+                    theme.lightPrimaryColor ?? CommonColor.lightPrimaryColor,
+                    theme.primaryColor ?? CommonColor.primaryColor
+                  ]),
+                ),
+              )
+          : null,
       iconTheme: setAppbar?.iconTheme ??
           const IconThemeData(
             color: Colors.white,
@@ -205,6 +208,7 @@ class _TIMUIKitAppBarState extends TIMUIKitState<TIMUIKitAppBar> {
       //     ),
       title: TIMUIKitAppBarTitle(
         title: setAppbar?.title,
+        textStyle: setAppbar?.textTheme?.titleMedium,
         conversationShowName: _conversationShowName,
         showC2cMessageEditStaus: widget.showC2cMessageEditStaus,
         fromUser: widget.conversationID,
@@ -222,10 +226,11 @@ class _TIMUIKitAppBarState extends TIMUIKitState<TIMUIKitAppBar> {
                     },
                     child: Text(
                       TIM_t('取消'),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                      ),
+                      style: setAppbar?.textTheme?.titleMedium ??
+                          const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
                     ),
                   )
                 : setAppbar?.leading ??
@@ -234,11 +239,11 @@ class _TIMUIKitAppBarState extends TIMUIKitState<TIMUIKitAppBar> {
                         IconButton(
                           padding: const EdgeInsets.only(left: 16),
                           constraints: const BoxConstraints(),
-                          icon: Image.asset(
-                            'images/arrow_back.png',
-                            package: 'tim_ui_kit',
-                            height: 34,
-                            width: 34,
+                          icon: Icon(
+                            Icons.arrow_back_ios,
+                            color: setAppbar?.textTheme?.titleMedium?.color ??
+                                Colors.white,
+                            size: 17,
                           ),
                           onPressed: () async {
                             chatVM.repliedMessage = null;
