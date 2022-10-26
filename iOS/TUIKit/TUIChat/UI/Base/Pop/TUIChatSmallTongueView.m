@@ -196,6 +196,14 @@ static UIWindow *g_window = nil;
 }
 
 + (void)removeTongue {
+    if (g_tongueView) {
+        [g_tongueView removeFromSuperview];
+    }
+    if (g_window) {
+        if (@available(iOS 13.0, *)) {
+            g_window.windowScene = nil;
+        }
+    }
     g_tongue = nil;
     g_tongueView =  nil;
     g_window = nil;
