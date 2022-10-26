@@ -125,10 +125,16 @@ export default {
 	methods: {
 		refresh() {
 			if (this.isCompleted) {
-				this.setData({
-					isCompleted: true,
-					triggered: false
-				});
+				// 修复下拉刷新加载中状态无法隐藏的问题
+				setTimeout(()=>{
+					this.triggered = true
+					this.$nextTick(() => {
+						this.setData({
+							isCompleted: true,
+							triggered: false
+						});
+					})
+				}, 500);
 				return;
 			}
 			this.getMessageList(this.conversation);
