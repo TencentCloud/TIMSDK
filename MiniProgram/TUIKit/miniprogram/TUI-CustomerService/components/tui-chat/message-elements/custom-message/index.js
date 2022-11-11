@@ -81,8 +81,13 @@ Component({
     },
     parseCustom(message) {
       const { conversationType_text, businessID_text } = constant;
+      let customMessage = null;
       try {
-        const customMessage = JSON.parse(message.payload.data);
+        customMessage = JSON.parse(message.payload.data);
+      } catch (e) {
+        customMessage = {};
+      }
+      try {
         // 约定自定义消息的 data 字段作为区分，不解析的不进行展示
         if (customMessage.businessID === businessID_text.typeOrder) {
           const renderDom = [{

@@ -11,6 +11,7 @@
   border: 1px solid #abdcff;
   background-color: #f0faff;
   border-radius: 12px;
+  word-break: break-all;
 }
 .time {
 
