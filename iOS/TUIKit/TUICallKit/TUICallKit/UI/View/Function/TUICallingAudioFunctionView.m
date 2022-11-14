@@ -94,7 +94,9 @@
 - (TUICallingControlButton *)muteBtn {
     if (!_muteBtn) {
         __weak typeof(self) weakSelf = self;
-        _muteBtn = [TUICallingControlButton createWithFrame:CGRectZero titleText:TUICallingLocalize(@"Demo.TRTC.Calling.mic") buttonAction:^(UIButton * _Nonnull sender) {
+        _muteBtn = [TUICallingControlButton createWithFrame:CGRectZero
+                                                  titleText:TUICallingLocalize(@"Demo.TRTC.Calling.mic")
+                                               buttonAction:^(UIButton * _Nonnull sender) {
             [weakSelf muteTouchEvent:sender];
         } imageSize:kBtnSmallSize];
         [_muteBtn updateImage:[TUICallingCommon getBundleImageWithName:@"ic_mute"]];
@@ -105,7 +107,9 @@
 - (TUICallingControlButton *)hangupBtn {
     if (!_hangupBtn) {
         __weak typeof(self) weakSelf = self;
-        _hangupBtn = [TUICallingControlButton createWithFrame:CGRectZero titleText:TUICallingLocalize(@"Demo.TRTC.Calling.hangup") buttonAction:^(UIButton * _Nonnull sender) {
+        _hangupBtn = [TUICallingControlButton createWithFrame:CGRectZero
+                                                    titleText:TUICallingLocalize(@"Demo.TRTC.Calling.hangup")
+                                                 buttonAction:^(UIButton * _Nonnull sender) {
             [weakSelf hangupTouchEvent:sender];
         } imageSize:kBtnLargeSize];
         [_hangupBtn updateImage:[TUICallingCommon getBundleImageWithName:@"ic_hangup"]];
@@ -116,7 +120,9 @@
 - (TUICallingControlButton *)handsfreeBtn {
     if (!_handsfreeBtn) {
         __weak typeof(self) weakSelf = self;
-        _handsfreeBtn = [TUICallingControlButton createWithFrame:CGRectZero titleText:TUICallingLocalize(@"Demo.TRTC.Calling.speaker") buttonAction:^(UIButton * _Nonnull sender) {
+        _handsfreeBtn = [TUICallingControlButton createWithFrame:CGRectZero
+                                                       titleText:TUICallingLocalize(@"Demo.TRTC.Calling.speaker")
+                                                    buttonAction:^(UIButton * _Nonnull sender) {
             [weakSelf hangsfreeTouchEvent:sender];
         } imageSize:kBtnSmallSize];
         [_handsfreeBtn updateImage:[TUICallingCommon getBundleImageWithName:@"ic_handsfree_on"]];

@@ -3,6 +3,7 @@
 //  TUICalling
 //
 //  Created by noah on 2022/5/31.
+//  Copyright © 2022 Tencent. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

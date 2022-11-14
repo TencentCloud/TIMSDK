@@ -9,9 +9,16 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_ENUM(NSInteger, TUIMessageSendingResultType) {
+    TUIMessageSendingResultTypeSucc   = 0,
+    TUIMessageSendingResultTypeFail   = 1
+};
+
 @protocol TUIMessageProgressManagerDelegate <NSObject>
 
 - (void)onProgress:(NSString *)msgID progress:(NSInteger)progress;
+
+- (void)onMessageSendingResultChanged:(TUIMessageSendingResultType)type messageID:(NSString *)msgID;
 
 @end
 
@@ -25,6 +32,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)appendProgress:(NSString *)msgID
               progress:(NSInteger)progress;
 - (NSInteger)progressForMessage:(NSString *)msgID;
+
+- (void)notifyMessageSendingResult:(NSString *)msgID
+                            result:(TUIMessageSendingResultType)result;
 
 @end
 

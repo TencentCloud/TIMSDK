@@ -139,6 +139,46 @@
 
 }
 
+- (void)handleImagePick:(NSData *)imageData
+{
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (imageData == nil) {
+            [weakSelf excuteCallbackAfterMediaDataSelected];
+            return;
+        }
+        
+        UIImage *image = [UIImage imageWithData:imageData];
+        NSData *data = imageData;
+        NSString *path = [TUIKit_Image_Path stringByAppendingString:[TUITool genImageName:nil]];
+        if (image.sd_imageFormat == SDImageFormatGIF) {
+            path = [path stringByAppendingPathExtension:@"gif"];
+        }
+        
+
+        if (image.sd_imageFormat != SDImageFormatGIF) {
+            UIImage *newImage = image;
+            UIImageOrientation imageOrientation = image.imageOrientation;
+            if(imageOrientation != UIImageOrientationUp) {
+                CGFloat aspectRatio = MIN ( 1920 / image.size.width, 1920 / image.size.height );
+                CGFloat aspectWidth = image.size.width * aspectRatio;
+                CGFloat aspectHeight = image.size.height * aspectRatio;
+
+                UIGraphicsBeginImageContext(CGSizeMake(aspectWidth, aspectHeight));
+                [image drawInRect:CGRectMake(0, 0, aspectWidth, aspectHeight)];
+                newImage = UIGraphicsGetImageFromCurrentImageContext();
+                UIGraphicsEndImageContext();
+            }
+            data = UIImageJPEGRepresentation(newImage, 0.75);
+        }
+        
+        [[NSFileManager defaultManager] createFileAtPath:path contents:data attributes:nil];
+        V2TIMMessage *message = [[V2TIMManager sharedInstance] createImageMessage:path];
+        [weakSelf sendMessage:message];
+        [weakSelf excuteCallbackAfterMediaDataSelected];
+    });
+}
+
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
 {
     @weakify(self)
@@ -147,27 +187,19 @@
         @strongify(self)
         NSString *mediaType = [info objectForKey:UIImagePickerControllerMediaType];
         if([mediaType isEqualToString:(NSString *)kUTTypeImage]){
-            UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
-            UIImageOrientation imageOrientation = image.imageOrientation;
-            if(imageOrientation != UIImageOrientationUp)
-            {
-                CGFloat aspectRatio = MIN ( 1920 / image.size.width, 1920 / image.size.height );
-                CGFloat aspectWidth = image.size.width * aspectRatio;
-                CGFloat aspectHeight = image.size.height * aspectRatio;
-
-                UIGraphicsBeginImageContext(CGSizeMake(aspectWidth, aspectHeight));
-                [image drawInRect:CGRectMake(0, 0, aspectWidth, aspectHeight)];
-                image = UIGraphicsGetImageFromCurrentImageContext();
-                UIGraphicsEndImageContext();
-            }
-
-            NSData *data = UIImageJPEGRepresentation(image, 0.75);
-            NSString *path = [TUIKit_Image_Path stringByAppendingString:[TUITool genImageName:nil]];
-            [[NSFileManager defaultManager] createFileAtPath:path contents:data attributes:nil];
             
-            V2TIMMessage *message = [[V2TIMManager sharedInstance] createImageMessage:path];
-            [self sendMessage:message];
-            [self excuteCallbackAfterMediaDataSelected];
+            NSURL *url = nil;
+            if (@available(iOS 11.0, *)) {
+                url = [info objectForKey:UIImagePickerControllerImageURL];
+            } else {
+                url = [info objectForKey:UIImagePickerControllerReferenceURL];
+            }
+            if (url) {
+                NSData *imageData = [NSData dataWithContentsOfURL:url];
+                [self handleImagePick:imageData];
+            } else {
+                [self excuteCallbackAfterMediaDataSelected];
+            }
         }
         else if([mediaType isEqualToString:(NSString *)kUTTypeMovie]){
             NSURL *url = [info objectForKey:UIImagePickerControllerMediaURL];
@@ -572,27 +604,8 @@
         __weak typeof(self) weakSelf = self;
          if ([itemProvoider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeImage]) {
             [itemProvoider loadDataRepresentationForTypeIdentifier:(NSString *)kUTTypeImage completionHandler:^(NSData * _Nullable data, NSError * _Nullable error) {
-                __strong typeof(self) strongSelf = weakSelf;
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    NSString *path = [TUIKit_Image_Path stringByAppendingString:[TUITool genImageName:nil]];
-                    UIImage *transImg = [[UIImage alloc] initWithData:data];
-                    UIImageOrientation imageOrientation = transImg.imageOrientation;
-                    if(imageOrientation != UIImageOrientationUp)
-                    {
-                        CGFloat aspectRatio = MIN ( 1920 / transImg.size.width, 1920 / transImg.size.height );
-                        CGFloat aspectWidth = transImg.size.width * aspectRatio;
-                        CGFloat aspectHeight = transImg.size.height * aspectRatio;
-
-                        UIGraphicsBeginImageContext(CGSizeMake(aspectWidth, aspectHeight));
-                        [transImg drawInRect:CGRectMake(0, 0, aspectWidth, aspectHeight)];
-                        transImg = UIGraphicsGetImageFromCurrentImageContext();
-                        UIGraphicsEndImageContext();
-                    }
-                    NSData * jpegData = UIImageJPEGRepresentation(transImg, 0.75);
-                    [[NSFileManager defaultManager] createFileAtPath:path contents:jpegData attributes:nil];
-                    V2TIMMessage *message = [[V2TIMManager sharedInstance] createImageMessage:path];
-                    [strongSelf sendMessage:message];
-                    [strongSelf excuteCallbackAfterMediaDataSelected];
+                    [weakSelf handleImagePick:data];
                 });
             }];
         }

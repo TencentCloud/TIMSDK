@@ -11,9 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIColor (TUIHexColor)
 
-+ (UIColor *)colorWithHex:(NSString *)hex;
++ (UIColor *)tui_colorWithHex:(NSString *)hex;
 
-+ (UIColor *)colorWithHex:(NSString *)hex alpha:(CGFloat)alpha;
++ (UIColor *)tui_colorWithHex:(NSString *)hex alpha:(CGFloat)alpha;
 
 @end
 

@@ -54,7 +54,8 @@
 #pragma mark - TUICallingUserViewProtocol
 
 - (void)updateUserInfo:(CallingUserModel *)userModel hint:(NSString *)hint {
-    [self.userHeadImageView sd_setImageWithURL:[NSURL URLWithString:userModel.avatar] placeholderImage:[TUICallingCommon getBundleImageWithName:@"userIcon"]];
+    [self.userHeadImageView sd_setImageWithURL:[NSURL URLWithString:userModel.avatar]
+                              placeholderImage:[TUICallingCommon getBundleImageWithName:@"userIcon"]];
     [_userNameLabel setText:userModel.name ?: userModel.userId];
     self.waitingInviteLabel.text = hint;
 }

@@ -20,7 +20,7 @@
 @end
 
 @implementation UIColor (TUIHexColor)
-+ (UIColor *)colorWithHex:(NSString *)hex {
++ (UIColor *)tui_colorWithHex:(NSString *)hex {
     if ([hex isEqualToString:@""]) {
         return [UIColor clearColor];
     }
@@ -57,7 +57,7 @@
     return [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
 }
 
-+ (UIColor *)colorWithHex:(NSString *)hex alpha:(CGFloat)alpha {
++ (UIColor *)tui_colorWithHex:(NSString *)hex alpha:(CGFloat)alpha {
     if ([hex isEqualToString:@""]) {
         return [UIColor clearColor];
     }

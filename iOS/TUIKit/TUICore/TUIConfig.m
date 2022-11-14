@@ -74,6 +74,12 @@ typedef NS_OPTIONS(NSInteger, emojiFaceType) {
     self.chatPopDetailGroups = [self updateFaceGroups:self.chatPopDetailGroups type:emojiFaceTypePopDetail];
 }
 
+- (void)appendFaceGroup:(TUIFaceGroup *)faceGroup {
+    NSMutableArray *faceGroupMenu = [NSMutableArray arrayWithArray:self.faceGroups];
+    [faceGroupMenu addObject:faceGroup];
+    self.faceGroups = faceGroupMenu;
+}
+
 - (NSArray *)updateFaceGroups:(NSArray *)groups type:(emojiFaceType)type {
     
     if (groups.count) {

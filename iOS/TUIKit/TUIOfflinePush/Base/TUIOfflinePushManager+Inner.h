@@ -30,6 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *tpnsConfigAccessKey;
 
 @property (nonatomic, strong, nullable) id<UIApplicationDelegate> applicationDelegate;
+@property (nonatomic, assign) BOOL serviceRegistered;
 - (void)loadApplicationDelegateIfNeeded;
 - (void)unloadApplicationDelegateIfNeeded;
 

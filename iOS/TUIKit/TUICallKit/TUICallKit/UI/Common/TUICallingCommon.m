@@ -3,6 +3,7 @@
 //  TUICalling
 //
 //  Created by noah on 2022/5/31.
+//  Copyright © 2022 Tencent. All rights reserved.
 //
 
 #import "TUICallingCommon.h"
@@ -115,9 +116,13 @@
             break;
     }
     
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title
+                                                                             message:message
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
     [alertController addAction:[UIAlertAction actionWithTitle:laterMessage style:UIAlertActionStyleCancel handler:nil]];
-    [alertController addAction:[UIAlertAction actionWithTitle:openSettingMessage style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    [alertController addAction:[UIAlertAction actionWithTitle:openSettingMessage
+                                                        style:UIAlertActionStyleDefault
+                                                      handler:^(UIAlertAction * _Nonnull action) {
         UIApplication *app = [UIApplication sharedApplication];
         NSURL *settingsURL = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
         if ([app canOpenURL:settingsURL]) {

@@ -8,31 +8,41 @@ typedef void(^ContactSelectFinishBlock)(NSArray<TUICommonContactSelectCellData *
 
 @interface TUIContactSelectController : UIViewController
 
-@property (nonatomic) TUIContactSelectViewDataProvider * _Nullable viewModel;
+@property (nonatomic, strong, nullable) TUIContactSelectViewDataProvider *viewModel;
 
 /**
  * 选择结束回调
  * Callback for contact selection end
  */
-@property (nonatomic, copy) ContactSelectFinishBlock _Nullable finishBlock;
+@property (nonatomic, copy, nullable) ContactSelectFinishBlock finishBlock;
 
 /**
  * 最多选择个数
  * Maximum number of selected contacts
  */
-@property NSInteger maxSelectCount;
+@property (nonatomic, assign) NSInteger maxSelectCount;
 
 /**
  * 自定义的数据列表
  * List of pre-selected users
  */
-@property NSArray * _Nullable sourceIds;
+@property (nonatomic, strong, nullable) NSArray *sourceIds;
 
 /**
  * 需要禁用的数据列表
  * List of pre-banned users
  */
-@property NSArray * _Nullable disableIds;
+@property (nonatomic, strong, nullable) NSArray *disableIds;
+
+/**
+ * Display name for sourceIds or disableIds
+ */
+@property (nonatomic, strong, nullable) NSDictionary *displayNames;
+
+/**
+ * Navigation title for view controller
+ */
+@property (nonatomic, copy, nullable) NSString *title;
 
 @end
 

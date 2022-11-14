@@ -3,6 +3,7 @@
 //  TUICalling
 //
 //  Created by noah on 2021/8/20.
+//  Copyright © 2021 Tencent. All rights reserved.
 //
 
 #import "TUICallingService.h"
@@ -79,7 +80,8 @@
     }
     
     if ([method isEqualToString:TUICore_TUICallingService_EnableFloatWindowMethod]) {
-        NSNumber *enableFloatWindow = [param tui_objectForKey:TUICore_TUICallingService_EnableFloatWindowMethod_EnableFloatWindow asClass:NSNumber.class];
+        NSString *keyStr = TUICore_TUICallingService_EnableFloatWindowMethod_EnableFloatWindow;
+        NSNumber *enableFloatWindow = [param tui_objectForKey:keyStr asClass:NSNumber.class];
         [[TUICallKit createInstance] enableFloatWindow:[enableFloatWindow boolValue]];
     } else if ([method isEqualToString:TUICore_TUICallingService_ShowCallingViewMethod]) {
         NSArray *userIDs = [param tui_objectForKey:TUICore_TUICallingService_ShowCallingViewMethod_UserIDsKey asClass:NSArray.class];
@@ -95,7 +97,8 @@
         
         [self startCall:groupID userIDs:userIDs callingType:callingType];
     } else if ([method isEqualToString:TUICore_TUICallingService_ReceivePushCallingMethod]) {
-        V2TIMSignalingInfo *signalingInfo = [param tui_objectForKey:TUICore_TUICallingService_ShowCallingViewMethod_SignalingInfo asClass:V2TIMSignalingInfo.class];
+        NSString *keyStr = TUICore_TUICallingService_ShowCallingViewMethod_SignalingInfo;
+        V2TIMSignalingInfo *signalingInfo = [param tui_objectForKey:keyStr asClass:V2TIMSignalingInfo.class];
         NSString *groupID = signalingInfo.groupID;
         
         if ([[TUICallKit createInstance] respondsToSelector:@selector(setGroupID:)]) {
@@ -106,7 +109,8 @@
             [[TUICallEngine createInstance] performSelector:@selector(onReceiveGroupCallAPNs:) withObject:signalingInfo];
         }
     } else if ([method isEqualToString:TUICore_TUICallingService_EnableMultiDeviceAbilityMethod]) {
-        NSNumber *enableMultiDeviceAbility = [param tui_objectForKey:TUICore_TUICallingService_EnableMultiDeviceAbilityMethod_EnableMultiDeviceAbility asClass:NSNumber.class];
+        NSString *keyStr = TUICore_TUICallingService_EnableMultiDeviceAbilityMethod_EnableMultiDeviceAbility;
+        NSNumber *enableMultiDeviceAbility = [param tui_objectForKey:keyStr asClass:NSNumber.class];
         [[TUICallEngine createInstance] enableMultiDeviceAbility:[enableMultiDeviceAbility boolValue] succ:^{
         } fail:^(int code, NSString * _Nullable errMsg) {
         }];

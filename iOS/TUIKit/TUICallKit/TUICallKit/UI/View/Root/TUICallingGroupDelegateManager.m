@@ -32,7 +32,8 @@
         }
     }];
     if (index >= 0) {
-        TUICallingGroupCell *cell = (TUICallingGroupCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0]];
+        TUICallingGroupCell *cell = (TUICallingGroupCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:index
+                                                                                                                           inSection:0]];
         return cell.renderView;
     }
     return nil;
@@ -40,7 +41,8 @@
 
 - (void)reloadGroupCellWithIndex:(NSInteger)index {
     if (index >= 0 && (self.listDate.count > index)) {
-        TUICallingGroupCell *cell = (TUICallingGroupCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0]];
+        TUICallingGroupCell *cell = (TUICallingGroupCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:index
+                                                                                                                           inSection:0]];
         cell.model = self.listDate[index];
     }
 }
@@ -53,13 +55,17 @@
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    TUICallingGroupCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[NSString stringWithFormat:@"TUICallingGroupCell_%d", (int)indexPath.item] forIndexPath:indexPath];
+    NSString *reuseIdentifier = [NSString stringWithFormat:@"TUICallingGroupCell_%d", (int)indexPath.item];
+    TUICallingGroupCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier
+                                                                          forIndexPath:indexPath];
     CallingUserModel *model = self.listDate[indexPath.item];
     cell.model = model;
     return cell;
 }
 
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+- (CGSize)collectionView:(UICollectionView *)collectionView
+                  layout:(UICollectionViewLayout *)collectionViewLayout
+  sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     CGFloat side = collectionView.bounds.size.width / 2.0 - 0.5;
     if (self.listDate.count >= 5) {
         side = collectionView.bounds.size.width / 3.0 - 0.5;
@@ -67,11 +73,13 @@
     return CGSizeMake(side, side);
 }
 
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
+- (CGSize)collectionView:(UICollectionView *)collectionView
+                  layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
     return CGSizeMake(collectionView.frame.size.width, 0.1);
 }
 
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section {
+- (CGSize)collectionView:(UICollectionView *)collectionView
+                  layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section {
     return CGSizeMake(collectionView.frame.size.width, 0.1);
 }
 

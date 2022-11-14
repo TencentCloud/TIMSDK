@@ -46,8 +46,17 @@
 
 - (void)unregisterService
 {
-    // 恢复系统 delegate
-    [self unloadApplicationDelegateIfNeeded];
+    self.serviceRegistered = NO;
+    
+    /**
+     * Continue to take over, for the following reasons：
+     * 1. The UIApplication not keep strong refrence to the delegate object, and When UIApplication.sharedApplication.delegate is set to self.applicationDelegate,
+     *   the reference count of the delegate object will not be incremented.
+     * 2. The delegate object will be dealloced if TUIOfflinePush try to recover delegate and self.applicationDelegate setted to nil.
+     *
+     * For component stability considerations，delegate recovery is ignored. Do noting...
+     * // [self unloadApplicationDelegateIfNeeded];
+     */
     
     // 移除前后台监听
     [V2TIMManager.sharedInstance removeConversationListener:self];
@@ -90,25 +99,27 @@
 #pragma mark - 系统的通知相关回调
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
-    NSDictionary *custom = nil;
-    if ([userInfo.allKeys containsObject:@"custom"]) {
-        NSString *customStr = userInfo[@"custom"];
-        custom = [self jsonSring2Dictionary:customStr];
+    if (self.serviceRegistered && userInfo && [userInfo.allKeys containsObject:@"ext"]) {
+        NSDictionary *extParam = [self jsonSring2Dictionary:userInfo[@"ext"]];
+        if (extParam && [extParam.allKeys containsObject:@"entity"]) {
+            NSDictionary *entity = extParam[@"entity"];
+            [self onReceiveOfflinePushEntity:entity];
+        }
     }
     
-    if (custom == nil || ![custom isKindOfClass:NSDictionary.class]) {
-        completionHandler(UIBackgroundFetchResultFailed);
-        return;
+    
+    // Forward
+    __block BOOL callback = NO;
+    if ([self.applicationDelegate respondsToSelector:@selector(application:didReceiveRemoteNotification:fetchCompletionHandler:)]) {
+        [self.applicationDelegate application:application didReceiveRemoteNotification:userInfo fetchCompletionHandler:^(UIBackgroundFetchResult result) {
+            completionHandler(result);
+            callback = YES;
+        }];
     }
     
-    if (![custom.allKeys containsObject:@"entity"]) {
-        completionHandler(UIBackgroundFetchResultFailed);
-        return;
+    if (!callback) {
+        completionHandler(UIBackgroundFetchResultNewData);
     }
-    
-    [self onReceiveOfflinePushEntity:custom[@"entity"]];
-    
-    completionHandler(UIBackgroundFetchResultNewData);
 }
 
 #pragma mark - TPNS 回调

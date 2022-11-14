@@ -30,26 +30,38 @@
         for (V2TIMFriendInfo *fr in infoList) {
             [arr addObject:fr.userFullInfo];
         }
-        [self fillList:arr];
+        [self fillList:arr displayNames:nil];
     } fail:nil];
 }
 
 - (void)setSourceIds:(NSArray<NSString *> *)ids
 {
+    [self setSourceIds:ids displayNames:nil];
+}
+
+- (void)setSourceIds:(NSArray<NSString *> *)ids displayNames:(NSDictionary * __nullable)displayNames
+{
     [[V2TIMManager sharedInstance] getUsersInfo:ids succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
-        [self fillList:infoList];
+        [self fillList:infoList displayNames:displayNames];
     } fail:nil];
 }
     
-- (void)fillList:(NSArray<V2TIMUserFullInfo *> *)profiles
+- (void)fillList:(NSArray<V2TIMUserFullInfo *> *)profiles displayNames:(NSDictionary * __nullable)displayNames
 {
     NSMutableDictionary *dataDict = @{}.mutableCopy;
     NSMutableArray *groupList = @[].mutableCopy;
     NSMutableArray *nonameList = @[].mutableCopy;
 
     for (V2TIMUserFullInfo *profile in profiles) {
-        TUICommonContactSelectCellData *data = [TUICommonContactSelectCellData new];
-        data.title = [profile showName];
+        TUICommonContactSelectCellData *data = [[TUICommonContactSelectCellData alloc] init];
+        NSString *showName = @"";
+        if (displayNames && [displayNames.allKeys containsObject:profile.userID]) {
+            showName = [displayNames objectForKey:profile.userID];
+        }
+        if (showName.length == 0) {
+            showName = profile.showName;
+        }
+        data.title = showName;
         if (profile.faceURL.length) {
             data.avatarUrl = [NSURL URLWithString:profile.faceURL];
         }

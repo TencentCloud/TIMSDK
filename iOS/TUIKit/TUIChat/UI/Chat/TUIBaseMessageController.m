@@ -40,10 +40,12 @@
 #import "TUIMessageReadViewController.h"
 #import "TUIRepliesDetailViewController.h"
 #import "TUIOrderCell.h"
+#import "TUIMessageProgressManager.h"
 
 @interface TUIBaseMessageController () <TUIMessageCellDelegate,
-TUIJoinGroupMessageCellDelegate,
-TUIMessageDataProviderDataSource>
+                                        TUIJoinGroupMessageCellDelegate,
+                                        TUIMessageDataProviderDataSource,
+                                        TUIMessageProgressManagerDelegate>
 
 @property (nonatomic, strong) TUIMessageDataProvider *messageDataProvider;
 @property (nonatomic, strong) TUIMessageCellData *menuUIMsg;
@@ -64,11 +66,13 @@ TUIMessageDataProviderDataSource>
     [self setupViews];
     self.isActive = YES;
     [TUITool addUnsupportNotificationInVC:self];
+    [TUIMessageProgressManager.shareManager addDelegate:self];
 }
 
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [TUIMessageProgressManager.shareManager removeDelegate:self];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -244,7 +248,14 @@ TUIMessageDataProviderDataSource>
         [self changeMsg:cellData status:Msg_Status_Succ];
     } FailBlock:^(int code, NSString *desc) {
         @strongify(self)
-        [TUITool makeToastError:code msg:desc];
+        if (self.isMsgNeedReadReceipt && code == ERR_SDK_INTERFACE_NOT_SUPPORT) {
+            NSString *msg = [NSString stringWithFormat:@"%@%@",
+                             TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceMessageRead),
+                             TUIKitLocalizableString(TUIKitErrorUnsupporInterfaceSuffix)];
+            [TUITool makeToast:msg];
+        } else {
+            [TUITool makeToastError:code msg:desc];
+        }
         [self changeMsg:cellData status:Msg_Status_Fail];
     }];
 }
@@ -280,6 +291,20 @@ TUIMessageDataProviderDataSource>
         @"status": [NSNumber numberWithUnsignedInteger:status],
         @"msgSender": self,
     }];
+}
+
+#pragma mark - TUIMessageProgressManagerDelegate
+- (void)onMessageSendingResultChanged:(TUIMessageSendingResultType)type messageID:(NSString *)msgID
+{
+    // async
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        for (TUIMessageCellData *cellData in weakSelf.messageDataProvider.uiMsgs) {
+            if ([cellData.msgID isEqual:msgID]) {
+                [weakSelf changeMsg:cellData status:(type == TUIMessageSendingResultTypeSucc) ? Msg_Status_Succ: Msg_Status_Fail];
+            }
+        }
+    });
 }
 
 #pragma mark - TUIMessageDataProviderDataSource
@@ -985,6 +1010,13 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 - (BOOL)canBecomeFirstResponder
 {
     return YES;
+}
+
+- (void)buildMenuWithBuilder:(id<UIMenuBuilder>)builder API_AVAILABLE(ios(13.0))  {
+    if (@available(iOS 16.0, *)) {
+        [builder removeMenuForIdentifier:UIMenuLookup];
+    }
+    [super buildMenuWithBuilder:builder];
 }
 
 - (void)onDelete:(id)sender

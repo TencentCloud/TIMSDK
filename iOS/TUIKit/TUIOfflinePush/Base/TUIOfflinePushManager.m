@@ -53,10 +53,6 @@ static id _instance;
 
 + (void)onApplicationDidLaunch:(NSNotification *)notice
 {
-    if ([self.shareManager respondsToSelector:@selector(loadApplicationDelegateIfNeeded)]) {
-        [self.shareManager loadApplicationDelegateIfNeeded];
-    }
-    
     if ([self.shareManager respondsToSelector:@selector(handleLanuchInfoIfNeeded:)] ) {
         [self.shareManager handleLanuchInfoIfNeeded:notice.userInfo];
     }
@@ -65,6 +61,9 @@ static id _instance;
 - (void)registerService
 {
     NSLog(@"[TUIOfflinePushManager] %s", __func__);
+    
+    self.serviceRegistered = YES;
+    
     /**
      * 接管 appDelegate
      * Take over appDelegate

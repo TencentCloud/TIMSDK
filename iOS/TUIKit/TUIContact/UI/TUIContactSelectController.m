@@ -92,12 +92,13 @@ static NSString *kReuseIdentifier = @"ContactSelectCell";
 
     [self setupBinds];
     if (self.sourceIds) {
-        [self.viewModel setSourceIds:self.sourceIds];
+        [self.viewModel setSourceIds:self.sourceIds displayNames:self.displayNames];
     } else {
         [self.viewModel loadContacts];
     }
 
     self.view.backgroundColor = RGB(42,42,40);
+    self.navigationItem.title = self.title;
 }
 
 - (void)setupBinds

@@ -83,14 +83,37 @@ static NSString * const TUI_CALLING_BELL_KEY = @"CallingBell";
 #pragma mark - Public Method
 
 - (void)call:(NSString *)userId callMediaType:(TUICallMediaType)callMediaType {
+    [self call:userId callMediaType:callMediaType params:[self getCallParams] succ:nil fail:nil];
+}
+
+- (void)call:(NSString *)userId
+callMediaType:(TUICallMediaType)callMediaType
+      params:(TUICallParams *)params
+        succ:(TUICallSucc __nullable)succ
+        fail:(TUICallFail __nullable)fail {
     if (!userId || ![userId isKindOfClass:[NSString class]] || userId.length <= 0) {
+        if (fail) {
+            fail(ERROR_PARAM_INVALID, @"call failed, invalid params 'userId'");
+        }
+        return;
+    }
+    if (![TUILogin getUserID]) {
+        if (fail) {
+            fail(ERROR_INIT_FAIL, @"call failed, please login");
+        }
         return;
     }
     if ([[TUICallingFloatingWindowManager shareInstance] isFloating]) {
+        if (fail) {
+            fail(ERROR_PARAM_INVALID, @"call failed, Unable to restart the call");
+        }
         [self makeToast:TUICallingLocalize(@"Demo.TRTC.Calling.UnableToRestartTheCall")];
         return;
     }
-    if ([self checkAuthorizationStatusIsDenied:callMediaType] || ![TUILogin getUserID]) {
+    if ([self checkAuthorizationStatusIsDenied:callMediaType]) {
+        if (fail) {
+            fail(ERROR_PARAM_INVALID, @"call failed, callMediaType is Unknown");
+        }
         return;
     }
     
@@ -99,34 +122,70 @@ static NSString * const TUI_CALLING_BELL_KEY = @"CallingBell";
     TUIRoomId *roomId = [[TUIRoomId alloc] init];
     roomId.intRoomId = 1 + arc4random() % (INT32_MAX - 1);
     __weak typeof(self) weakSelf = self;
-    [[TUICallEngine createInstance] call:roomId userId:userId callMediaType:callMediaType params:[self getCallParams] succ:^{
+    [[TUICallEngine createInstance] call:roomId userId:userId callMediaType:callMediaType params:params succ:^{
         __strong typeof(self) strongSelf = weakSelf;
+        if (succ) {
+            succ();
+        }
         [strongSelf.callingViewManager createCallingView:callMediaType callRole:TUICallRoleCall callScene:TUICallSceneSingle];
         [strongSelf callStart:@[userId] type:callMediaType role:TUICallRoleCall];
         [strongSelf updateCallingView:@[userId] callScene:TUICallSceneSingle sponsor:[TUILogin getUserID]];
     } fail:^(int code, NSString *errMsg) {
         __strong typeof(self) strongSelf = weakSelf;
+        if (fail) {
+            fail(code, errMsg);
+        }
         [strongSelf handleAbilityFailErrorMessage:code errorMessage:errMsg];
     }];
 }
 
 - (void)groupCall:(NSString *)groupId userIdList:(NSArray<NSString *> *)userIdList callMediaType:(TUICallMediaType)callMediaType {
+    [self groupCall:groupId userIdList:userIdList callMediaType:callMediaType params:[self getCallParams] succ:nil fail:nil];
+}
+
+- (void)groupCall:(NSString *)groupId
+       userIdList:(NSArray<NSString *> *)userIdList
+    callMediaType:(TUICallMediaType)callMediaType
+           params:(TUICallParams *)params
+             succ:(TUICallSucc __nullable)succ
+             fail:(TUICallFail __nullable)fail {
     if (![TUICallingCommon checkArrayValid:userIdList]) {
+        if (fail) {
+            fail(ERROR_PARAM_INVALID, @"groupCall failed, invalid params 'userIdList'");
+        }
         return;
     }
-    
+    if (![TUILogin getUserID]) {
+        if (fail) {
+            fail(ERROR_PARAM_INVALID, @"groupCall failed, please login");
+        }
+        return;
+    }
+    if (!(groupId && [groupId isKindOfClass:[NSString class]] && groupId.length > 0)) {
+        if (fail) {
+            fail(ERROR_PARAM_INVALID, @"groupCall failed, invalid params 'groupId'");
+        }
+        return;
+    }
     if ([[TUICallingFloatingWindowManager shareInstance] isFloating]) {
+        if (fail) {
+            fail(ERROR_PARAM_INVALID, @"groupCall failed, invalid params 'userIdList'");
+        }
         [self makeToast:TUICallingLocalize(@"Demo.TRTC.Calling.UnableToRestartTheCall")];
         return;
     }
-    
     // Maximum support 9 people More than 9 people cannot initiate a call
     if (userIdList.count >= 9) {
+        if (fail) {
+            fail(ERROR_PARAM_INVALID, @"groupCall failed, currently supports call with up to 9 people");
+        }
         [self makeToast:TUICallingLocalize(@"Demo.TRTC.Calling.User.Exceed.Limit")];
         return;
     }
-    
-    if ([self checkAuthorizationStatusIsDenied:callMediaType] || ![TUILogin getUserID]) {
+    if ([self checkAuthorizationStatusIsDenied:callMediaType]) {
+        if (fail) {
+            fail(ERROR_PARAM_INVALID, @"groupCall failed, callMediaType is Unknown");
+        }
         return;
     }
     
@@ -136,14 +195,24 @@ static NSString * const TUI_CALLING_BELL_KEY = @"CallingBell";
     TUIRoomId *roomId = [[TUIRoomId alloc] init];
     roomId.intRoomId = 1 + arc4random() % (INT32_MAX - 1);
     __weak typeof(self) weakSelf = self;
-    [[TUICallEngine createInstance] groupCall:roomId groupId:groupId userIdList:userIdList callMediaType:callMediaType params:[self getCallParams] succ:^{
+    [[TUICallEngine createInstance] groupCall:roomId groupId:groupId
+                                   userIdList:userIdList
+                                callMediaType:callMediaType
+                                       params:params
+                                         succ:^{
         __strong typeof(self) strongSelf = weakSelf;
+        if (succ) {
+            succ();
+        }
         TUICallScene callScene = [strongSelf getCallScene:userIdList];
         [strongSelf.callingViewManager createCallingView:callMediaType callRole:TUICallRoleCall callScene:callScene];
         [strongSelf callStart:userIdList type:callMediaType role:TUICallRoleCall];
         [strongSelf updateCallingView:userIdList callScene:callMediaType sponsor:[TUILogin getUserID]];
     } fail:^(int code, NSString *errMsg) {
         __strong typeof(self) strongSelf = weakSelf;
+        if (fail) {
+            fail(code, errMsg);
+        }
         [strongSelf handleAbilityFailErrorMessage:code errorMessage:errMsg];
     }];
 }
@@ -596,6 +665,20 @@ static NSString * const TUI_CALLING_BELL_KEY = @"CallingBell";
     [[TUICallEngine createInstance] init:[TUILogin getSdkAppID] userId:[TUILogin getUserID] userSig:[TUILogin getUserSig] succ:^{
     } fail:^(int code, NSString *errMsg) {
     }];
+    
+    TUIVideoEncoderParams *videoEncoderParams = [[TUIVideoEncoderParams alloc] init];
+    videoEncoderParams.resolution = TUIVideoEncoderParamsResolution_640_360;
+    videoEncoderParams.resolutionMode = TUIVideoEncoderParamsResolutionModePortrait;
+    [[TUICallEngine createInstance] setVideoEncoderParams:videoEncoderParams succ:nil fail:nil];
+    
+    TUIVideoRenderParams *videoRenderParams = [[TUIVideoRenderParams alloc] init];
+    videoRenderParams.fillMode = TUIVideoRenderParamsFillModeFill;
+    videoRenderParams.rotation = TUIVideoRenderParamsRotation_0;
+    [[TUICallEngine createInstance] setVideoRenderParams:[TUILogin getUserID] params:videoRenderParams succ:nil fail:nil];
+    
+    TXBeautyManager *beauty = [[[TUICallEngine createInstance] getTRTCCloudInstance] getBeautyManager];
+    [beauty setBeautyStyle:TXBeautyStyleNature];
+    [beauty setBeautyLevel:6];
 }
 
 - (void)stopCurrentCall {

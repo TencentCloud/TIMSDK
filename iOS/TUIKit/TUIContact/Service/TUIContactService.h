@@ -100,8 +100,13 @@ NS_ASSUME_NONNULL_BEGIN
  *  获取联系人选择列表
  *  Getting contact picker view controller
  */
-- (TUIContactSelectController *)createContactSelectController:(NSArray *)sourceIds
-                                                   disableIds:(NSArray *)disableIds;
+- (TUIContactSelectController *)createContactSelectController:(NSArray * __nullable)sourceIds
+                                                   disableIds:(NSArray * __nullable)disableIds;
+
+- (TUIContactSelectController *)createContactSelectController:(NSArray * __nullable)sourceIds
+                                                   disableIds:(NSArray * __nullable)disableIds
+                                                        title:(NSString * __nullable)title
+                                                 displayNames:(NSDictionary * __nullable)displayNames;
 
 /**
  *  获取好友资料 VC

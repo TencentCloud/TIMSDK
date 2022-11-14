@@ -646,10 +646,21 @@ static NSArray *customMessageInfo = nil;
                                              isOnlineUserOnly:NO
                                                      priority:V2TIM_PRIORITY_NORMAL
                                                      Progress:^(uint32_t progress) {
-                [TUIMessageProgressManager.shareManager appendProgress:uiMsg.msgID progress:progress];
-            }
-                                                    SuccBlock:succ
-                                                    FailBlock:fail];
+                [TUIMessageProgressManager.shareManager appendProgress:uiMsg.msgID
+                                                              progress:progress];
+            } SuccBlock:^{
+                if (succ) {
+                    succ();
+                }
+                [TUIMessageProgressManager.shareManager notifyMessageSendingResult:uiMsg.msgID
+                                                                            result:TUIMessageSendingResultTypeSucc];
+            } FailBlock:^(int code, NSString *desc) {
+                if (fail) {
+                    fail(code, desc);
+                }
+                [TUIMessageProgressManager.shareManager notifyMessageSendingResult:uiMsg.msgID
+                                                                            result:TUIMessageSendingResultTypeFail];
+            }];
             uiMsg.name = [TUIMessageDataProvider getShowName:uiMsg.innerMessage];
             
             /**
@@ -702,8 +713,20 @@ static NSArray *customMessageInfo = nil;
     NSMutableArray *imMsgList = [NSMutableArray array];
     for (TUIMessageCellData *uiMsg in uiMsgs) {
         if ([self.uiMsgs containsObject:uiMsg]) {
+            // Check content cell
             [uiMsgList addObject:uiMsg];
             [imMsgList addObject:uiMsg.innerMessage];
+            
+            // Check time cell which also needed to delete
+            NSInteger index = [self.uiMsgs indexOfObject:uiMsg];
+            index--;
+            if (index >= 0 && index < self.uiMsgs.count &&
+                [[self.uiMsgs objectAtIndex:index] isKindOfClass:TUISystemMessageCellData.class]) {
+                TUISystemMessageCellData *systemCellData = (TUISystemMessageCellData *)[self.uiMsgs objectAtIndex:index];
+                if (systemCellData.type == TUISystemMessageTypeDate) {
+                    [uiMsgList addObject:systemCellData];
+                }
+            }
         }
     }
     
@@ -1216,6 +1239,7 @@ static NSArray *customMessageInfo = nil;
         TUISystemMessageCellData *system = [[TUISystemMessageCellData alloc] initWithDirection:MsgDirectionOutgoing];
         system.content = [TUITool convertDateToStr:date];
         system.reuseId = TSystemMessageCell_ReuseId;
+        system.type = TUISystemMessageTypeDate;
         return system;
     }
     return nil;

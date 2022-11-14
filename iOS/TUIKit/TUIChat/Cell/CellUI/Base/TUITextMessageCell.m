@@ -112,4 +112,11 @@
     return NO;
 }
 
+- (void)buildMenuWithBuilder:(id<UIMenuBuilder>)builder API_AVAILABLE(ios(13.0))  {
+    if (@available(iOS 16.0, *)) {
+        [builder removeMenuForIdentifier:UIMenuLookup];
+    }
+    [super buildMenuWithBuilder:builder];
+}
+
 @end

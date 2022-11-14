@@ -545,27 +545,35 @@
 - (void)groupMembersCell:(TUIGroupMembersCell *)cell didSelectItemAtIndex:(NSInteger)index
 {
     TUIGroupMemberCellData *mem = self.dataProvider.groupMembersCellData.members[index];
-    NSMutableArray *ids = NSMutableArray.new;
+    NSMutableArray *ids = [NSMutableArray array];
+    NSMutableDictionary *displayNames = [NSMutableDictionary dictionary];
     for (TUIGroupMemberCellData *cd in self.dataProvider.membersData) {
         if (![cd.identifier isEqualToString:[[V2TIMManager sharedInstance] getLoginUser]]) {
             [ids addObject:cd.identifier];
+            [displayNames setObject:cd.name?:@"" forKey:cd.identifier?:@""];
         }
     }
     
     self.tag = mem.tag;
     if(self.tag == 1){
         // add
+        NSMutableDictionary *param = [NSMutableDictionary dictionary];
+        param[TUICore_TUIContactService_GetContactSelectControllerMethod_TitleKey] = TUIKitLocalizableString(GroupAddFirend);
+        param[TUICore_TUIContactService_GetContactSelectControllerMethod_DisableIdsKey] = ids;
+        param[TUICore_TUIContactService_GetContactSelectControllerMethod_DisplayNamesKey] = displayNames;
         self.showContactSelectVC = [TUICore callService:TUICore_TUIContactService
-                                             method:TUICore_TUIContactService_GetContactSelectControllerMethod
-                                              param:@{TUICore_TUIContactService_GetContactSelectControllerMethod_TitleKey :                 TUIKitLocalizableString(GroupAddFirend),
-                                                      TUICore_TUIContactService_GetContactSelectControllerMethod_DisableIdsKey:ids}];
+                                                 method:TUICore_TUIContactService_GetContactSelectControllerMethod
+                                                  param:param];
         [self.navigationController pushViewController:self.showContactSelectVC animated:YES];
     } else if(self.tag == 2) {
         // delete
+        NSMutableDictionary *param = [NSMutableDictionary dictionary];
+        param[TUICore_TUIContactService_GetContactSelectControllerMethod_TitleKey] = TUIKitLocalizableString(GroupDeleteFriend);
+        param[TUICore_TUIContactService_GetContactSelectControllerMethod_SourceIdsKey] = ids;
+        param[TUICore_TUIContactService_GetContactSelectControllerMethod_DisplayNamesKey] = displayNames;
         self.showContactSelectVC = [TUICore callService:TUICore_TUIContactService
-                                             method:TUICore_TUIContactService_GetContactSelectControllerMethod
-                                              param:@{TUICore_TUIContactService_GetContactSelectControllerMethod_TitleKey : TUIKitLocalizableString(GroupDeleteFriend),
-                                                      TUICore_TUIContactService_GetContactSelectControllerMethod_SourceIdsKey:ids}];
+                                                 method:TUICore_TUIContactService_GetContactSelectControllerMethod
+                                                  param:param];
         [self.navigationController pushViewController:self.showContactSelectVC animated:YES];
     } else {
         // TODO:
