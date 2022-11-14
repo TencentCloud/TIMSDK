@@ -8,6 +8,8 @@
 
 #import "TCLoginModel.h"
 #import "TCConstants.h"
+#import "TCUtil.h"
+#import "TUIGlobalization.h"
 
 static NSString * const kKeySavedLoginInfoAppID = @"Key_Login_Info_AppID";
 static NSString * const kKeySavedLoginInfoUserID = @"Key_Login_UserID";
@@ -92,7 +94,7 @@ static TCLoginModel *_sharedInstance = nil;
                     succeed(@{kKeyLoginInfoSessionID: self.sessionID});
                 } else {
                     NSLog(@"getSmsVerificationCodeWithSucceedBlock failed, error: %ld, errorMsg: %@", (long)errorCode, errorMsg);
-                    fail(-1, @"get sms code error, please try again later");
+                    fail(errorCode, errorMsg);
                 }
             });
         }];
@@ -312,13 +314,29 @@ static TCLoginModel *_sharedInstance = nil;
                                         completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         if (data) {
             NSDictionary *result = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-            int code = [result[@"errorCode"] intValue];
-            NSString *msg = result[@"errorMessage"];
+            int errorCode = [result[@"errorCode"] intValue];
             NSDictionary *data = result[@"data"];
-            if (block) {
-                block(code, msg, data);
+            
+            // Message priority: local error > parsed en/zh message > original result["errorMessage"]
+            NSString *message = [TCLoginErrorCode messageOfCode:errorCode];
+            if (message.length == 0) {
+                NSDictionary *dict = result[@"notice"];
+                if (dict != nil) {
+                    NSString *serverError = dict[@"en"];
+                    NSString *lang = [TUIGlobalization tk_localizableLanguageKey];
+                    if ([lang isEqualToString:@"zh-Hans"] || [lang isEqualToString:@"zh-Hant"]) {
+                        serverError = dict[@"zh"];
+                    }
+                    message = serverError;
+                }
             }
-            NSLog(@"\n---------------response---------------\nurl: %@\ncode: %d\nmsg: %@\ndata: %@", url, code, msg, data);
+            if (message.length == 0) {
+                message = result[@"errorMessage"];
+            }
+            if (block) {
+                block(errorCode, message, data);
+            }
+            NSLog(@"\n---------------response---------------\nurl: %@\ncode: %d\nmsg: %@\ndata: %@", url, errorCode, message, data);
         } else {
             if (block) {
                 block(error.code, error.userInfo[NSLocalizedDescriptionKey], nil);
@@ -461,6 +479,42 @@ static TCLoginModel *_sharedInstance = nil;
     NSURL *url = [NSURL URLWithString:self.serviceUrl];
     NSURLComponents *components = [[NSURLComponents alloc] initWithURL:url resolvingAgainstBaseURL:NO];
     return components.host;
+}
+
+@end
+
+
+@implementation TCLoginErrorCode
+
++ (NSString *)messageOfCode:(NSInteger)code {
+    NSString *message = [[TCLoginErrorCode errorCodeDict] objectForKey:@(code)];
+    if (message.length > 0) {
+        return message;
+    }
+    return @"";
+}
+
++ (NSDictionary *)errorCodeDict {
+    return @{
+        @98: NSLocalizedString(@"TipsSystemVerifyError", nil),
+        @99: NSLocalizedString(@"TipsSystemError", nil),
+        @100: NSLocalizedString(@"TipsServiceUnavailable", nil),
+        @101: NSLocalizedString(@"TipsServiceResponseInvalid", nil),
+        @102: NSLocalizedString(@"TipsServiceSmsFailed", nil),
+        @103: NSLocalizedString(@"TipsServiceDBFailed", nil),
+        @104: NSLocalizedString(@"TipsServiceUnknownError", nil),
+        @200: NSLocalizedString(@"TipsUserCodeInvalid", nil),
+        @201: NSLocalizedString(@"TipsUserCodeExpired", nil),
+        @202: NSLocalizedString(@"TipsUserCodeConsumed", nil),
+        @203: NSLocalizedString(@"TipsUserTokenExpired", nil),
+        @204: NSLocalizedString(@"TipsUserTokenInvalid", nil),
+        @205: NSLocalizedString(@"TipsUseInfoEmpty", nil),
+        @206: NSLocalizedString(@"TipsUserNotExists", nil),
+        @207: NSLocalizedString(@"TipsUserEmailInvalid", nil),
+        @208: NSLocalizedString(@"TipsUserQueryParams", nil),
+        @209: NSLocalizedString(@"TipsUserQueryLimit", nil),
+        @210: NSLocalizedString(@"TipsUserOAuthParams", nil),
+    };
 }
 
 @end
