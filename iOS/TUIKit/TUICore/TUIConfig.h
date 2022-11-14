@@ -48,6 +48,7 @@ typedef NS_ENUM(NSInteger, TUIKitAvatarType) {
  * It should be noted that the emoticons in TUIKit are copyrighted. The purchased IM service does not include the right to use the emoticons. Please replace them with your own emoticons when you go online, otherwise you will face legal risks.
  */
 @property (nonatomic, strong) NSArray<TUIFaceGroup *> *faceGroups;
+- (void)appendFaceGroup:(TUIFaceGroup *)faceGroup;
 
 /**
  * 聊天界面上长按消息后显示的表情列表

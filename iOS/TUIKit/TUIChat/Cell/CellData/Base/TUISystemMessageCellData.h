@@ -10,6 +10,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_ENUM(NSInteger, TUISystemMessageType) {
+    TUISystemMessageTypeUnknown = 0,
+    TUISystemMessageTypeDate    = 1,
+};
+
 /** 
  * 【模块名称】TUISystemMessageCellData
  * 【功能说明】系统消息单元数据源。
@@ -40,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  Mutable string
  *  The recalled message can be re-edited within 2 minutes, which is displayed here based on attributedString.
  */
-@property (nonatomic, strong) NSMutableAttributedString *attributedString;
+@property (nonatomic, strong, nullable) NSMutableAttributedString *attributedString;
 
 /**
  *  内容字体
@@ -48,7 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  The font of label which displays the system message content.
  */
-@property UIFont *contentFont;
+@property (nonatomic, strong, nullable) UIFont *contentFont;
 
 /**
  *  内容颜色
@@ -56,7 +61,13 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  The color of label which displays the system message content.
  */
-@property UIColor *contentColor;
+@property (nonatomic, strong, nullable) UIColor *contentColor;
+
+/**
+ * 系统消息的类型, 默认是 Unknown
+ * The type of system message type, default is TUISystemMessageTypeUnknown
+ */
+@property (nonatomic, assign) TUISystemMessageType type;
 
 @end
 

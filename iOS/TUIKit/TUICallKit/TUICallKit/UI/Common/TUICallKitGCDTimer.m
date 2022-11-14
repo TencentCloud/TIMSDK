@@ -10,13 +10,13 @@
 
 @implementation TUICallKitGCDTimer
 
-static NSMutableDictionary *callKitTimers;
+static NSMutableDictionary *gCallKitTimers;
 dispatch_semaphore_t callKitTimerSemaphore;
 
 + (void)initialize {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        callKitTimers = [NSMutableDictionary dictionary];
+        gCallKitTimers = [NSMutableDictionary dictionary];
         callKitTimerSemaphore = dispatch_semaphore_create(1);
     });
 }
@@ -33,8 +33,8 @@ dispatch_semaphore_t callKitTimerSemaphore;
     dispatch_queue_t queue = async ? dispatch_get_global_queue(0, 0) : dispatch_get_main_queue();
     dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
     dispatch_semaphore_wait(callKitTimerSemaphore, DISPATCH_TIME_FOREVER);
-    NSString *timerName = [NSString stringWithFormat:@"%zd", callKitTimers.count];
-    callKitTimers[timerName] = timer;
+    NSString *timerName = [NSString stringWithFormat:@"%zd", gCallKitTimers.count];
+    gCallKitTimers[timerName] = timer;
     dispatch_semaphore_signal(callKitTimerSemaphore);
     dispatch_source_set_timer(timer, dispatch_time(DISPATCH_TIME_NOW, start * NSEC_PER_SEC), interval * NSEC_PER_SEC, 0);
     dispatch_source_set_event_handler(timer, ^{
@@ -53,11 +53,11 @@ dispatch_semaphore_t callKitTimerSemaphore;
     }
     
     dispatch_semaphore_wait(callKitTimerSemaphore, DISPATCH_TIME_FOREVER);
-    dispatch_source_t timer = callKitTimers[timerName];
+    dispatch_source_t timer = gCallKitTimers[timerName];
     
     if (timer) {
         dispatch_source_cancel(timer);
-        [callKitTimers removeObjectForKey:timerName];
+        [gCallKitTimers removeObjectForKey:timerName];
     }
     
     dispatch_semaphore_signal(callKitTimerSemaphore);

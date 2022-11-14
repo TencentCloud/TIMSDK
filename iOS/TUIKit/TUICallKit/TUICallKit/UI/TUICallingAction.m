@@ -107,13 +107,13 @@
     if (userIdList.count <= 0) {
         TUILog(@"Calling - inviteUser invalid userList");
         if (fail) {
-            fail(TUICALL_RETURN_ERROR, @"inviteUser invalid userList");
+            fail(ERROR_PARAM_INVALID, @"inviteUser invalid userList");
         }
         return;
     }
     if ((userIdList.count + [TUICallingUserManager allUserIdList].count) > 9) {
         if (fail) {
-            fail(TUICALL_RETURN_ERROR, @"TUICalling currently supports call with up to 9 people.");
+            fail(ERROR_PARAM_INVALID, @"TUICalling currently supports call with up to 9 people.");
         }
         return;
     }

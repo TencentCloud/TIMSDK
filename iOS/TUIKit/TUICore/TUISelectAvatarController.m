@@ -144,7 +144,7 @@
 
 - (void)setupMaskView {
     self.maskView = [[UIView alloc] initWithFrame:CGRectZero];
-    self.maskView.backgroundColor = [UIColor colorWithHex:@"cccccc"];
+    self.maskView.backgroundColor = [UIColor tui_colorWithHex:@"cccccc"];
     [self.imageView addSubview:self.maskView];
     self.descLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     self.descLabel.text = TUIKitLocalizableString(TUIKitDefaultBackground);

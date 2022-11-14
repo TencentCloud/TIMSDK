@@ -129,26 +129,26 @@
             return [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traitCollection) {
                 switch (traitCollection.userInterfaceStyle) {
                     case UIUserInterfaceStyleDark:
-                        return [darkTheme dynamicColor:colorKey defaultColor:hex] ?: [UIColor colorWithHex:hex];
+                        return [darkTheme dynamicColor:colorKey defaultColor:hex] ?: [UIColor tui_colorWithHex:hex];
                     case UIUserInterfaceStyleLight:
                     case UIUserInterfaceStyleUnspecified:
                     default:
-                        return [UIColor colorWithHex:hex];
+                        return [UIColor tui_colorWithHex:hex];
                 }
             }];
         } else {
-            return [UIColor colorWithHex:hex];
+            return [UIColor tui_colorWithHex:hex];
         }
     }
 }
 
 - (UIColor *)dynamicColor:(NSString *)colorKey defaultColor:(NSString *)hex
 {
-    UIColor *color = [UIColor colorWithHex:hex];
+    UIColor *color = [UIColor tui_colorWithHex:hex];
     if ([self.manifest.allKeys containsObject:colorKey]) {
         NSString *colorHex = [self.manifest objectForKey:colorKey];
         if ([colorHex isKindOfClass:NSString.class]) {
-            color = [UIColor colorWithHex:colorHex];
+            color = [UIColor tui_colorWithHex:colorHex];
         }
     }
     return color;

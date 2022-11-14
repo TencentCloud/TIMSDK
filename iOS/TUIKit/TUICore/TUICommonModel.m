@@ -1231,7 +1231,9 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
     __weak typeof(self) ws = self;
     [TUITool asyncDecodeImage:path complete:^(NSString *key, UIImage *image) {
         __strong __typeof(ws) strongSelf = ws;
-        [strongSelf.resourceCache setValue:image forKey:key];
+        if (key && image) {        
+            [strongSelf.resourceCache setValue:image forKey:key];
+        }
     }];
 }
 
@@ -1252,7 +1254,9 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
     __weak typeof(self) ws = self;
     [TUITool asyncDecodeImage:path complete:^(NSString *key, UIImage *image) {
         __strong __typeof(ws) strongSelf = ws;
-        [strongSelf.faceCache setValue:image forKey:key];
+        if (key && image) {
+            [strongSelf.faceCache setValue:image forKey:key];
+        }
     }];
 }
 

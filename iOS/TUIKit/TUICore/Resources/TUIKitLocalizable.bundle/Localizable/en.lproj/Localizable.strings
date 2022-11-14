@@ -554,11 +554,12 @@
 "TUIKitErrorRequestNoNetOnReq" = "No network connection when sending request. Try again once network connection is restored.";
 "TUIKitErrorRequestNoNetOnRsp" = "No network connection when sending response. Try again once network connection is restored.";
 "TUIKitErrorRequestOnverLoaded" = "Request queue is full.";
-"TUIKitErrorUnsupporInterface" = "The package you purchased does not support the feature";
+"TUIKitErrorUnsupporInterface" = "This feature is available only to the Ultimate edition. Please upgrade.";
+"TUIKitErrorUnsupporInterfaceSuffix" = " feature is available only to the Ultimate edition. Please upgrade.";
 "TUIKitErrorUnsupportIntefaceSearch" = "Search";
 "TUIKitErrorUnsupportIntefaceMessageRead" = "Message Read Receipt";
 "TUIKitErrorUnsupportIntefaceCommunity" = "Community";
-"TUIKitErrorUnsupportIntefaceDesc" = " features are IM Flagship Edition features, which can be used after purchasing the Flagship Edition. See the price guidelines for details.";
+"TUIKitErrorUnsupportIntefaceDesc" = " feature is only available to the Ultimate edition, which can be used after purchasing the Ultimate Edition. See the price guidelines for details.";
 "TUIKitErrorUnsupportIntefaceCommunityDesc" = "\nNote: The community can accommodate millions of members, and can be divided into groups and topics. It is suitable for interest making friends, game social networking, fan operation, organization management and other scenarios.";
 "TUIKitErrorUnsupportIntefaceGuidelines" = "price guidelines";
 "TUIKitErrorUnsupportIntefaceTitle" = "Tips";

@@ -109,6 +109,15 @@ static id _instance;
     [self callback:msgID];
 }
 
+- (void)notifyMessageSendingResult:(NSString *)msgID result:(TUIMessageSendingResultType)result
+{
+    for (id<TUIMessageProgressManagerDelegate> delegate in self.delegates) {
+        if ([delegate respondsToSelector:@selector(onMessageSendingResultChanged:messageID:)]) {
+            [delegate onMessageSendingResultChanged:result messageID:msgID];
+        }
+    }
+}
+
 - (NSInteger)progressForMessage:(NSString *)msgID
 {
     if (![self.uploadProgress.allKeys containsObject:msgID]) {

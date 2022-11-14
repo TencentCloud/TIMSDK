@@ -13,7 +13,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TUICallingSingleView : UIView <BaseCallViewProtocol>
 
-- (instancetype)initWithFrame:(CGRect)frame localPreView:(TUICallingVideoRenderView *)localPreView remotePreView:(TUICallingVideoRenderView *)remotePreView;
+- (instancetype)initWithFrame:(CGRect)frame
+                 localPreView:(TUICallingVideoRenderView *)localPreView
+                remotePreView:(TUICallingVideoRenderView *)remotePreView;
 
 @end
 

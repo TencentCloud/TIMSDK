@@ -29,21 +29,23 @@
     if ([method isEqualToString:TUICore_TUIContactService_GetContactControllerMethod]) {
         return [self createContactController];
     } else if ([method isEqualToString:TUICore_TUIContactService_GetContactSelectControllerMethod]) {
-        NSArray *sourceIds = param[TUICore_TUIContactService_GetContactSelectControllerMethod_SourceIdsKey];
-        NSArray *disableIds = param[TUICore_TUIContactService_GetContactSelectControllerMethod_DisableIdsKey];
-        return [self createContactSelectController:sourceIds disableIds:disableIds];
+        NSString *title = [param objectForKey:TUICore_TUIContactService_GetContactSelectControllerMethod_TitleKey];
+        NSArray *sourceIds = [param objectForKey:TUICore_TUIContactService_GetContactSelectControllerMethod_SourceIdsKey];
+        NSArray *disableIds = [param objectForKey:TUICore_TUIContactService_GetContactSelectControllerMethod_DisableIdsKey];
+        NSDictionary *displayNames = [param objectForKey:TUICore_TUIContactService_GetContactSelectControllerMethod_DisplayNamesKey];
+        return [self createContactSelectController:sourceIds disableIds:disableIds title:title displayNames:displayNames];
     } else if ([method isEqualToString:TUICore_TUIContactService_GetFriendProfileControllerMethod]) {
-        V2TIMFriendInfo *friendInfo = param[TUICore_TUIContactService_GetFriendProfileControllerMethod_FriendProfileKey];
+        V2TIMFriendInfo *friendInfo = [param objectForKey:TUICore_TUIContactService_GetFriendProfileControllerMethod_FriendProfileKey];
         return [self createFriendProfileController:friendInfo];
     } else if ([method isEqualToString:TUICore_TUIContactService_GetUserProfileControllerMethod]) {
-        V2TIMUserFullInfo *userInfo = param[TUICore_TUIContactService_GetUserProfileControllerMethod_UserProfileKey];
-        TUICommonCellData * cellData = param[TUICore_TUIContactService_GetUserProfileControllerMethod_PendencyDataKey];
-        ProfileControllerAction action = (ProfileControllerAction)([param[TUICore_TUIContactService_GetUserProfileControllerMethod_ActionTypeKey] unsignedIntegerValue]);
+        V2TIMUserFullInfo *userInfo = [param objectForKey:TUICore_TUIContactService_GetUserProfileControllerMethod_UserProfileKey];
+        TUICommonCellData * cellData = [param objectForKey:TUICore_TUIContactService_GetUserProfileControllerMethod_PendencyDataKey];
+        ProfileControllerAction action = (ProfileControllerAction)([[param objectForKey:TUICore_TUIContactService_GetUserProfileControllerMethod_ActionTypeKey] unsignedIntegerValue]);
         return [self createUserProfileController:userInfo pendencyData:cellData actionType:action];
     } else if ([method isEqualToString:TUICore_TUIContactService_GetUserOrFriendProfileVCMethod]) {
-        NSString *userID = param[TUICore_TUIContactService_GetUserOrFriendProfileVCMethod_UserIDKey];
-        void(^succ)(UIViewController *vc) = param[TUICore_TUIContactService_GetUserOrFriendProfileVCMethod_SuccKey];
-        V2TIMFail fail = param[TUICore_TUIContactService_GetUserOrFriendProfileVCMethod_FailKey];
+        NSString *userID = [param objectForKey:TUICore_TUIContactService_GetUserOrFriendProfileVCMethod_UserIDKey];
+        void(^succ)(UIViewController *vc) = [param objectForKey:TUICore_TUIContactService_GetUserOrFriendProfileVCMethod_SuccKey];
+        V2TIMFail fail = [param objectForKey:TUICore_TUIContactService_GetUserOrFriendProfileVCMethod_FailKey];
         [self createUserOrFriendProfileVCWithUserID:userID succBlock:succ failBlock:fail];
     }
     return nil;
@@ -53,8 +55,18 @@
     return [[TUIContactController alloc] init];
 }
 
-- (TUIContactSelectController *)createContactSelectController:(NSArray *)sourceIds disableIds:(NSArray *)disableIds {
+- (TUIContactSelectController *)createContactSelectController:(NSArray *)sourceIds
+                                                   disableIds:(NSArray *)disableIds {
+    return [self createContactSelectController:sourceIds disableIds:disableIds title:nil displayNames:nil];
+}
+
+- (TUIContactSelectController *)createContactSelectController:(NSArray *)sourceIds
+                                                   disableIds:(NSArray *)disableIds
+                                                        title:(NSString *)title
+                                                 displayNames:(NSDictionary *)displayNames {
     TUIContactSelectController *vc = [[TUIContactSelectController alloc] init];
+    vc.displayNames = displayNames;
+    vc.title = title;
     if (sourceIds.count > 0) {
         vc.sourceIds = sourceIds;
     } else if (disableIds.count > 0) {

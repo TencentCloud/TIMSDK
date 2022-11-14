@@ -555,7 +555,8 @@
 "TUIKitErrorRequestNoNetOnReq" = "请求时没有网络，请等网络恢复后重试";
 "TUIKitErrorRequestNoNetOnRsp" = "响应时没有网络，请等网络恢复后重试";
 "TUIKitErrorRequestOnverLoaded" = "请求队列満";
-"TUIKitErrorUnsupporInterface" = "您购买的套餐包不支持该功能";
+"TUIKitErrorUnsupporInterface" = "该功能仅限旗舰版使用，请升级至旗舰版。";
+"TUIKitErrorUnsupporInterfaceSuffix" = "功能仅限旗舰版使用，请升级至旗舰版。";
 "TUIKitErrorUnsupportIntefaceSearch" = "搜索";
 "TUIKitErrorUnsupportIntefaceMessageRead" = "消息已读回执";
 "TUIKitErrorUnsupportIntefaceCommunity" = "社群";

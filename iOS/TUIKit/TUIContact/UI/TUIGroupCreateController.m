@@ -135,7 +135,7 @@
     [paragraphStyle setLineBreakMode:NSLineBreakByWordWrapping];
     [paragraphStyle setAlignment:NSTextAlignmentLeft];
     NSDictionary * dictionary = @{NSFontAttributeName:[UIFont systemFontOfSize:12],
-                                  NSForegroundColorAttributeName:[UIColor colorWithHex:@"#888888"],
+                                  NSForegroundColorAttributeName:[UIColor tui_colorWithHex:@"#888888"],
                                   NSParagraphStyleAttributeName : paragraphStyle
     };
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:descStr attributes:dictionary];

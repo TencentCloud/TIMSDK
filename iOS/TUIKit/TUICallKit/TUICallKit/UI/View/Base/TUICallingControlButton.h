@@ -14,7 +14,10 @@ typedef void(^TUICallingButtonActionBlock) (UIButton *sender);
 
 @interface TUICallingControlButton : UIView
 
-+ (instancetype)createWithFrame:(CGRect)frame titleText:(NSString *)titleText  buttonAction:(TUICallingButtonActionBlock)buttonAction imageSize:(CGSize)imageSize;
++ (instancetype)createWithFrame:(CGRect)frame
+                      titleText:(NSString *)titleText
+                   buttonAction:(TUICallingButtonActionBlock)buttonAction
+                      imageSize:(CGSize)imageSize;
 
 - (void)updateImage:(UIImage *)image;
 

@@ -7,7 +7,7 @@
 //
 
 #import "TUICallKitOfflinePushInfoConfig.h"
-#import "TUIOfflinePushInfo.h"
+#import "TUICallDefine.h"
 #import "TUILogin.h"
 #import "CallingLocalized.h"
 

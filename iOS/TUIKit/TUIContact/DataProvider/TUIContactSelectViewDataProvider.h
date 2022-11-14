@@ -72,6 +72,7 @@ typedef BOOL(^ContactSelectFilterBlock)(TUICommonContactSelectCellData *data);
 - (void)loadContacts;
 
 - (void)setSourceIds:(NSArray<NSString *> *)ids;
+- (void)setSourceIds:(NSArray<NSString *> *)ids displayNames:(NSDictionary * __nullable)displayNames;
 
 @end
 

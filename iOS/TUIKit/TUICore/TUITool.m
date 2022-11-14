@@ -10,6 +10,7 @@
 #import "TUILogin.h"
 #import "UIView+TUIToast.h"
 #import "TUIGlobalization.h"
+#import <SDWebImage/SDImageCoderHelper.h>
 
 @import ImSDK_Plus;
 
@@ -74,68 +75,73 @@
     dispatch_once(&onceToken, ^{
         queue = dispatch_queue_create("com.tuikit.asyncDecodeImage", DISPATCH_QUEUE_SERIAL);
     });
-
-    dispatch_async(queue, ^{
-        if(path == nil){
+    
+    // callback on main thread
+    void (^callback)(NSString *, UIImage *) = ^(NSString *path, UIImage *image) {
+        if (complete == nil) {
             return;
         }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            complete(path, image);
+        });
+    };
+    
+    if(path == nil){
+        callback(nil, nil);
+        return;
+    }
 
-        UIImage *image = nil;
-        
+    dispatch_async(queue, ^{
+        // gif
         if ([path containsString:@".gif"]) {
-            image = [UIImage sd_imageWithGIFData:[NSData dataWithContentsOfFile:path]];
-            if(complete){
-                complete(path, image);
-            }
+            UIImage *image = [UIImage sd_imageWithGIFData:[NSData dataWithContentsOfFile:path]];
+            callback(path, image);
             return;
-        } else {
-            image = [UIImage d_imagePath:path];
+        }
+        
+        // load origin image
+        UIImage *image = [UIImage imageNamed:path];
+        if (image == nil) {
+            image = [UIImage imageWithContentsOfFile:path];
         }
         
         if (image == nil) {
+            callback(path, image);
+            return;
+        }
+        
+        // SDWebImage is priority
+        UIImage *decodeImage = [SDImageCoderHelper decodedImageWithImage:image];
+        if (decodeImage) {
+            callback(path, decodeImage);
             return;
         }
 
+        // Bitmap
         CGImageRef cgImage = image.CGImage;
-
-        // alphaInfo
-        CGImageAlphaInfo alphaInfo = CGImageGetAlphaInfo(cgImage) & kCGBitmapAlphaInfoMask;
-        BOOL hasAlpha = NO;
-        if (alphaInfo == kCGImageAlphaPremultipliedLast ||
-            alphaInfo == kCGImageAlphaPremultipliedFirst ||
-            alphaInfo == kCGImageAlphaLast ||
-            alphaInfo == kCGImageAlphaFirst) {
-            hasAlpha = YES;
+        if (cgImage) {
+            CGImageAlphaInfo alphaInfo = CGImageGetAlphaInfo(cgImage) & kCGBitmapAlphaInfoMask;
+            BOOL hasAlpha = NO;
+            if (alphaInfo == kCGImageAlphaPremultipliedLast ||
+                alphaInfo == kCGImageAlphaPremultipliedFirst ||
+                alphaInfo == kCGImageAlphaLast ||
+                alphaInfo == kCGImageAlphaFirst) {
+                hasAlpha = YES;
+            }
+            CGBitmapInfo bitmapInfo = kCGBitmapByteOrder32Host;
+            bitmapInfo |= hasAlpha ? kCGImageAlphaPremultipliedFirst : kCGImageAlphaNoneSkipFirst;
+            size_t width = CGImageGetWidth(cgImage);
+            size_t height = CGImageGetHeight(cgImage);
+            CGContextRef context = CGBitmapContextCreate(NULL, width, height, 8, 0, CGColorSpaceCreateDeviceRGB(), bitmapInfo);
+            if (context) {
+                CGContextDrawImage(context, CGRectMake(0, 0, width, height), cgImage);
+                cgImage = CGBitmapContextCreateImage(context);
+                decodeImage = [UIImage imageWithCGImage:cgImage scale:image.scale orientation:image.imageOrientation];
+                CGContextRelease(context);
+                CGImageRelease(cgImage);
+            }
         }
-
-        // bitmapInfo
-        CGBitmapInfo bitmapInfo = kCGBitmapByteOrder32Host;
-        bitmapInfo |= hasAlpha ? kCGImageAlphaPremultipliedFirst : kCGImageAlphaNoneSkipFirst;
-
-        // size
-        size_t width = CGImageGetWidth(cgImage);
-        size_t height = CGImageGetHeight(cgImage);
-
-        // context
-        CGContextRef context = CGBitmapContextCreate(NULL, width, height, 8, 0, CGColorSpaceCreateDeviceRGB(), bitmapInfo);
-
-        // draw
-        CGContextDrawImage(context, CGRectMake(0, 0, width, height), cgImage);
-
-        // get CGImage
-        cgImage = CGBitmapContextCreateImage(context);
-
-        // into UIImage
-        UIImage *newImage = [UIImage imageWithCGImage:cgImage scale:image.scale orientation:image.imageOrientation];
-
-        // release
-        if(context) CGContextRelease(context);
-        if(cgImage) CGImageRelease(cgImage);
-
-        //callback
-        if(complete){
-            complete(path, newImage);
-        }
+        callback(path, decodeImage);
     });
 }
 

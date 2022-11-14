@@ -208,7 +208,9 @@ static NSString * const TUICallKit_TUIGroupService_UserDataValue = @"TUICallKit"
 - (void)initSingleVideoAcceptCallView {
     if (!(self.backgroundView && [self.backgroundView isKindOfClass:[TUICallingSingleView class]])) {
         [self clearBackgroundView];
-        self.backgroundView = [[TUICallingSingleView alloc] initWithFrame:self.containerView.frame localPreView:self.localPreView remotePreView:self.remotePreView];
+        self.backgroundView = [[TUICallingSingleView alloc] initWithFrame:self.containerView.frame
+                                                             localPreView:self.localPreView
+                                                            remotePreView:self.remotePreView];
     }
     
     if (!(self.callingFunctionView && [self.callingFunctionView isKindOfClass:[TUICallingVideoFunctionView class]])) {

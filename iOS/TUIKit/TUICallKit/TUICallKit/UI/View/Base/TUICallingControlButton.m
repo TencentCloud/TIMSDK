@@ -20,7 +20,10 @@
 
 @implementation TUICallingControlButton
 
-+ (instancetype)createWithFrame:(CGRect)frame titleText:(NSString *)titleText  buttonAction:(TUICallingButtonActionBlock)buttonAction imageSize:(CGSize)imageSize {
++ (instancetype)createWithFrame:(CGRect)frame
+                      titleText:(NSString *)titleText
+                   buttonAction:(TUICallingButtonActionBlock)buttonAction
+                      imageSize:(CGSize)imageSize {
     TUICallingControlButton *controlView = [[TUICallingControlButton alloc] initWithFrame:frame imageSize:imageSize];
     controlView.buttonActionBlock = buttonAction;
     controlView.titleLabel.text = titleText;

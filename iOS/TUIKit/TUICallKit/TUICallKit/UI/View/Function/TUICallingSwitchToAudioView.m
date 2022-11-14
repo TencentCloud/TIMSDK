@@ -44,7 +44,9 @@
 - (TUICallingControlButton *)switchToAudioBtn {
     if (!_switchToAudioBtn) {
         __weak typeof(self) weakSelf = self;
-        _switchToAudioBtn = [TUICallingControlButton createWithFrame:CGRectZero titleText:TUICallingLocalize(@"Demo.TRTC.Calling.switchtoaudio") buttonAction:^(UIButton * _Nonnull sender) {
+        _switchToAudioBtn = [TUICallingControlButton createWithFrame:CGRectZero
+                                                           titleText:TUICallingLocalize(@"Demo.TRTC.Calling.switchtoaudio")
+                                                        buttonAction:^(UIButton * _Nonnull sender) {
             [weakSelf switchToAudioTouchEvent:sender];
         } imageSize:CGSizeMake(28, 18)];
         [_switchToAudioBtn updateTitleColor:[UIColor t_colorWithHexString:@"#FFFFFF"]];

@@ -13,6 +13,7 @@
 #import "Masonry.h"
 #import "TUICallEngineHeader.h"
 #import "TUICallingUserModel.h"
+#import "UIImage+GIF.h"
 
 @interface TUICallingGroupCell ()
 
@@ -31,7 +32,8 @@
 - (void)setModel:(CallingUserModel *)model {
     _model = model;
     self.titleLabel.text = model.name ?: model.userId;
-    [self.avatarImageView sd_setImageWithURL:[NSURL URLWithString:model.avatar] placeholderImage:[TUICallingCommon getBundleImageWithName:@"userIcon"]];
+    [self.avatarImageView sd_setImageWithURL:[NSURL URLWithString:model.avatar]
+                            placeholderImage:[TUICallingCommon getBundleImageWithName:@"userIcon"]];
     self.avatarImageView.hidden = model.isVideoAvailable;
     
     if (model.isEnter || model.isVideoAvailable || model.isAudioAvailable) {
@@ -81,21 +83,12 @@
         self.maskView = maskView;
         
         // loadingImageView
-        NSMutableArray *imageArray = [NSMutableArray array];
-        for (int i = 1; i <= 8; i++) {
-            NSString *iamgeName = [NSString stringWithFormat:@"loading-%d", i];
-            [imageArray addObject:[TUICallingCommon getBundleImageWithName:iamgeName]];
-        }
-        
-        UIImageView *loadingImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
-        loadingImageView.contentMode = UIViewContentModeScaleAspectFill;
-        loadingImageView.animationImages = [imageArray copy];
-        loadingImageView.animationDuration = 2;
-        loadingImageView.animationRepeatCount = 0;
-        [loadingImageView startAnimating];
+        NSString *filePath = [[TUICallingCommon callingBundle] pathForResource:@"loading" ofType:@"gif"];
+        NSData *imageData = [NSData dataWithContentsOfFile:filePath];
+        UIImageView *loadingImageView = [[UIImageView alloc] init];
+        loadingImageView.image = [UIImage sd_imageWithGIFData:imageData];
         self.loadingImageView = loadingImageView;
         [self.maskView addSubview:loadingImageView];
-        
         // titleLabel
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
         label.textColor = [UIColor t_colorWithHexString:@"#FFFFFF"];

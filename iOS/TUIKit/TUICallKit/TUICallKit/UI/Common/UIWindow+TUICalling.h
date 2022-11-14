@@ -3,7 +3,7 @@
 //  TUICalling
 //
 //  Created by noah on 2022/1/17.
-//  Copyright © 2021 Tencent. All rights reserved
+//  Copyright © 2022 Tencent. All rights reserved
 //
 
 #import <UIKit/UIKit.h>

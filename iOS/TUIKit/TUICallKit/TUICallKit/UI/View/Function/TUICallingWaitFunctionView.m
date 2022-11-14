@@ -66,7 +66,9 @@
 - (TUICallingControlButton *)acceptBtn {
     if (!_acceptBtn) {
         __weak typeof(self) weakSelf = self;
-        _acceptBtn = [TUICallingControlButton createWithFrame:CGRectZero titleText:TUICallingLocalize(@"Demo.TRTC.Calling.answer") buttonAction:^(UIButton * _Nonnull sender) {
+        _acceptBtn = [TUICallingControlButton createWithFrame:CGRectZero
+                                                    titleText:TUICallingLocalize(@"Demo.TRTC.Calling.answer")
+                                                 buttonAction:^(UIButton * _Nonnull sender) {
             [weakSelf acceptTouchEvent:sender];
         } imageSize:CGSizeMake(64, 64)];
         [_acceptBtn updateTitleColor:[UIColor t_colorWithHexString:@"#666666"]];
@@ -78,7 +80,9 @@
 - (TUICallingControlButton *)rejectBtn {
     if (!_rejectBtn) {
         __weak typeof(self) weakSelf = self;
-        _rejectBtn = [TUICallingControlButton createWithFrame:CGRectZero titleText:TUICallingLocalize(@"Demo.TRTC.Calling.decline") buttonAction:^(UIButton * _Nonnull sender) {
+        _rejectBtn = [TUICallingControlButton createWithFrame:CGRectZero
+                                                    titleText:TUICallingLocalize(@"Demo.TRTC.Calling.decline")
+                                                 buttonAction:^(UIButton * _Nonnull sender) {
             [weakSelf rejectTouchEvent:sender];
         } imageSize:CGSizeMake(64, 64)];
         [_rejectBtn updateTitleColor:[UIColor t_colorWithHexString:@"#666666"]];
