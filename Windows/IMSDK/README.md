@@ -4,9 +4,9 @@ English | [简体中文](./README_ZH.md)
 
 ## Download Links
 
-[Latest C++ API download](https://im.sdk.cloudcachetci.com/download/plus/6.8.3373/cross_platform/ImSDK_Windows_CPP_6.8.3373.zip)
+[Latest C++ API download](https://im.sdk.qcloud.com/download/plus/6.8.3373/cross_platform/ImSDK_Windows_CPP_6.8.3373.zip)
 
-[Latest C API download](https://im.sdk.cloudcachetci.com/download/plus/6.8.3373/cross_platform/ImSDK_Windows_C_6.8.3373.zip)
+[Latest C API download](https://im.sdk.qcloud.com/download/plus/6.8.3373/cross_platform/ImSDK_Windows_C_6.8.3373.zip)
 
 ## TIMSDK for Windows
 
