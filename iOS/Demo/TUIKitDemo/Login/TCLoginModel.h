@@ -69,3 +69,10 @@ typedef void (^TCFail)(NSInteger errorCode, NSString *errorMsg);
                           userSig:(NSString *)userSig;
 
 @end
+
+
+@interface TCLoginErrorCode : NSObject
+
++ (NSString *)messageOfCode:(NSInteger)code;
+
+@end

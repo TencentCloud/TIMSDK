@@ -142,11 +142,11 @@
 
 "TipsCheckCodeHasSent" = "Verification code sent";
 "TipsGetCheckcode" = "Send Code";
-"TipsCheckCodeFailedFormat" = "Failed to get verification code. Code: %d errMsg: %@";
+"TipsCheckCodeFailedFormat" = "Failed to get verification code. ErrorCode: %d. ErrorMsg: %@";
 "TipsPhoneCodeNotNull" = "Mobile number and verification code are required.";
 "TipsPhoneNotMatch" = "This mobile number is not the one that receives the verification code. Please confirm.";
 "TipsLoginErrorWithUserIdfailed" = "Login failed. Failed to get userId or userSig.";
-"TipsLoginErrorFormat" = "Login failed. Code: %d errMsg: %@";
+"TipsLoginErrorFormat" = "Login failed. ErrorCode: %d. ErrorMsg: %@";
 "TipsLoginWithAccountPassword" = "Log in via password";
 "TipsLoginWithAccountDirectly" = "Log in without password";
 "TipsOldVersionRegisterAccount" =  "Users who use older versions and have a registered account can log in by directly entering the account name and password.";
@@ -206,6 +206,25 @@
 "TUIPrivateProtocolHighlight5" = "\"Summary of Privacy Policy\"";
 "TUIPrivateProtocolAlertActionAgree" = "Agree and Continue";
 "TUIPrivateProtocolAlertActionDisagree" = "Disagree and Exit";
+
+"TipsSystemVerifyError" = "Failed to verify user actions or parameter";
+"TipsSystemError" = "System unknown error occurred";
+"TipsServiceUnavailable" = "Service is unavailable";
+"TipsServiceResponseInvalid" = "Response is invalid";
+"TipsServiceSmsFailed" = "Failed to send SMS message";
+"TipsServiceDBFailed" = "Service DB error occurred";
+"TipsServiceUnknownError" = "Service unknown error occurred";
+"TipsUserCodeInvalid" = "SMS verification code is invalid";
+"TipsUserCodeExpired" = "SMS verification code is expired";
+"TipsUserCodeConsumed" = "The verification code has already been used";
+"TipsUserTokenExpired" = "User token is expired, please login again";
+"TipsUserTokenInvalid" = "User token is invalid, please login again";
+"TipsUseInfoEmpty" = "User's info is empty";
+"TipsUserNotExists" = "User does not exist";
+"TipsUserEmailInvalid" = "User's email is invalid";
+"TipsUserQueryParams" = "Query parameter is error";
+"TipsUserQueryLimit" = "Too much query data, flow restriction is triggered";
+"TipsUserOAuthParams" = "User OAuth parameter is error";
 
 //未翻译---start
 "TUIThemeNameSystemFollowTitle" = "Automatic";

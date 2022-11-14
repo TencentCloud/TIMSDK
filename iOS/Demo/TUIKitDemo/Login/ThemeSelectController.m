@@ -560,7 +560,7 @@
 
     NSMutableArray *array = [NSMutableArray array];
     for(NSString *hex in hexColors) {
-        UIColor *color = [UIColor colorWithHex:hex];
+        UIColor *color = [UIColor tui_colorWithHex:hex];
         [array addObject:(__bridge id)color.CGColor];
     }
     
@@ -569,7 +569,7 @@
     UIGraphicsBeginImageContextWithOptions(imageSize, YES, 1);
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextSaveGState(context);
-    CGColorSpaceRef colorSpace = CGColorGetColorSpace([UIColor colorWithHex:hexColors.lastObject].CGColor);
+    CGColorSpaceRef colorSpace = CGColorGetColorSpace([UIColor tui_colorWithHex:hexColors.lastObject].CGColor);
     CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (CFArrayRef)array, locations);
     CGPoint start;
     CGPoint end;

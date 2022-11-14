@@ -24,14 +24,14 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.buttonAction = action;
-        self.backgroundColor = [UIColor colorWithHex:@"fdf4e7" alpha:1];
+        self.backgroundColor = [UIColor tui_colorWithHex:@"fdf4e7" alpha:1];
 
         if (tips.length > 0) {
             self.tipsLabel = [[UILabel alloc] initWithFrame:CGRectZero];
             [self addSubview:self.tipsLabel];
             self.tipsLabel.font = [UIFont systemFontOfSize:12];
             self.tipsLabel.numberOfLines = 0;
-            self.tipsLabel.textColor = [UIColor colorWithHex:@"FF8C39"];
+            self.tipsLabel.textColor = [UIColor tui_colorWithHex:@"FF8C39"];
             
             NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
             paragraphStyle.minimumLineHeight = 18;
@@ -61,7 +61,7 @@
             [self addSubview:self.tipsButton];
             [self.tipsButton setTitle:buttonTitle forState:UIControlStateNormal];
             [self.tipsButton.titleLabel setFont:[UIFont systemFontOfSize:12]];
-            [self.tipsButton setTitleColor:[UIColor colorWithHex:@"006EFF"] forState:UIControlStateNormal];
+            [self.tipsButton setTitleColor:[UIColor tui_colorWithHex:@"006EFF"] forState:UIControlStateNormal];
             [self.tipsButton addTarget:self action:@selector(onButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
             self.tipsButton.mm_sizeToFit().mm_right(16).mm_bottom(10);
         }

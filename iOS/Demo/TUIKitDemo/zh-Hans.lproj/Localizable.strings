@@ -144,11 +144,11 @@
 
 "TipsCheckCodeHasSent" = "验证码已发出";
 "TipsGetCheckcode" = "获取验证码";
-"TipsCheckCodeFailedFormat" = "获取验证码失败，code：%d errMsg:%@";
+"TipsCheckCodeFailedFormat" = "获取验证码失败。错误码：%d。错误信息：%@";
 "TipsPhoneCodeNotNull" = "手机号和验证码不能为空";
 "TipsPhoneNotMatch" = "当前手机号与获取验证码手机号不一致，请确认";
-"TipsLoginErrorWithUserIdfailed" = "登录失败,userId or userSig 获取失败";
-"TipsLoginErrorFormat" = "登录失败，code：%d errMsg:%@";
+"TipsLoginErrorWithUserIdfailed" = "登录失败，userId or userSig 获取失败";
+"TipsLoginErrorFormat" = "登录失败。错误码：%d。错误信息：%@";
 "TipsLoginWithAccountPassword" = "账号密码登录";
 "TipsLoginWithAccountDirectly" = "账号直接登录";
 "TipsOldVersionRegisterAccount" =  "老版本用户如果注册了账号密码，可以直接输入账号密码登录";
@@ -210,6 +210,25 @@
 "TUIPrivateProtocolHighlight5" = "《隐私政策摘要》";
 "TUIPrivateProtocolAlertActionAgree" = "同意并继续";
 "TUIPrivateProtocolAlertActionDisagree" = "不同意并退出";
+
+"TipsSystemVerifyError" = "验证用户操作或参数错误";
+"TipsSystemError" = "后端未知的系统错误";
+"TipsServiceUnavailable" = "后端依赖的服务不可用";
+"TipsServiceResponseInvalid" = "后端服务返回的结果不符合规范";
+"TipsServiceSmsFailed" = "SMS发送短信服务失败";
+"TipsServiceDBFailed" = "后端服务DB错误，SQL语句执行失败";
+"TipsServiceUnknownError" = "服务未知错误";
+"TipsUserCodeInvalid" = "用户登录失败，错误的验证码";
+"TipsUserCodeExpired" = "用户登录失败，验证码已过期";
+"TipsUserCodeConsumed" = "验证码已经使用过了，请重新获取";
+"TipsUserTokenExpired" = "用户Token已经过期，请重新登录";
+"TipsUserTokenInvalid" = "用户Token不正确，请重新登录";
+"TipsUseInfoEmpty" = "用户的信息为空";
+"TipsUserNotExists" = "用户不存在";
+"TipsUserEmailInvalid" = "给用户发送邮件时参数错误";
+"TipsUserQueryParams" = "用户查询时参数错误";
+"TipsUserQueryLimit" = "用户查询数据过多，触发限流";
+"TipsUserOAuthParams" = "用户OAuth参数异常";
 
 "TUIThemeNameSystemFollowTitle" = "跟随系统自动切换";
 "TUIThemeNameSystemFollowSubTitle" = "开启后仅展示默认皮肤 (轻快/深色)，不可切换其他皮肤样式";
