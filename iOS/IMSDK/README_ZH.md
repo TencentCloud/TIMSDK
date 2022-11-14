@@ -16,7 +16,7 @@
 ### 增强版 xcframework 版本（支持 mac catalyst、支持 bitcode）
 [最新 ImSDK_Plus_Bitcode.xcframework.zip下载](https://im.sdk.qcloud.com/download/plus/6.8.3374/ImSDK_Plus_6.8.3374_Bitcode.xcframework.zip)
 
-### 基础版
+### 基础版 
 [最新 ImSDK.framework 下载](https://im.sdk.qcloud.com/download/standard/5.1.62/TIM_SDK_iOS_latest_framework.zip)
 
 ### C 接口版
