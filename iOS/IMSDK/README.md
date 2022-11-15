@@ -108,5 +108,6 @@ source 'https://github.com/CocoaPods/Specs.git'
 target 'App' do
 pod 'TXIMSDK_Plus_Pro_iOS'
 end
+```
 
 For more integration modes, see <a href="https://intl.cloud.tencent.com/document/product/1047/34305">SDK Integration</a>.
