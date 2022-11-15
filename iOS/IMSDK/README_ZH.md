@@ -4,25 +4,35 @@
 
 ## 下载地址
 
-### 增强版（推荐）
+### 增强版（Objective-C）
+
+#### 增强版（推荐）
+
 [最新 ImSDK_Plus.framework下载](https://im.sdk.qcloud.com/download/plus/6.8.3374/ImSDK_Plus_6.8.3374.framework.zip)
 
-[最新 ImSDK_Plus_Swift.framework下载](https://im.sdk.cloud.tencent.cn/download/plus/6.8.3374/ImSDK_Plus_Swift_6.8.3374.framework.zip)
+#### 增强版 bitcode 版本
 
-### 增强版 bitcode 版本
 [最新 ImSDK_Plus_Bitcode.framework下载](https://im.sdk.qcloud.com/download/plus/6.8.3374/ImSDK_Plus_6.8.3374_Bitcode.framework.zip)
 
-[最新 ImSDK_Plus_Swift_Bitcode.framework下载](https://im.sdk.cloud.tencent.cn/download/plus/6.8.3374/ImSDK_Plus_Swift_6.8.3374_Bitcode.framework.zip)
+#### 增强版 xcframework 版本（支持 mac catalyst）
 
-### 增强版 xcframework 版本（支持 mac catalyst）
 [最新 ImSDK_Plus.xcframework.zip下载](https://im.sdk.qcloud.com/download/plus/6.8.3374/ImSDK_Plus_6.8.3374.xcframework.zip)
+
+#### 增强版 xcframework 版本（支持 mac catalyst、支持 bitcode）
+
+[最新 ImSDK_Plus_Bitcode.xcframework.zip下载](https://im.sdk.qcloud.com/download/plus/6.8.3374/ImSDK_Plus_6.8.3374_Bitcode.xcframework.zip)
+
+
+
+### 增强版（Swift）
+
+#### 增强版 xcframework 版本（支持 mac catalyst）
 
 [最新 ImSDK_Plus_Swift.xcframework.zip下载](https://im.sdk.cloud.tencent.cn/download/plus/6.8.3374/ImSDK_Plus_Swift_6.8.3374.xcframework.zip)
 
-### 增强版 xcframework 版本（支持 mac catalyst、支持 bitcode）
-[最新 ImSDK_Plus_Bitcode.xcframework.zip下载](https://im.sdk.qcloud.com/download/plus/6.8.3374/ImSDK_Plus_6.8.3374_Bitcode.xcframework.zip)
 
-[最新 ImSDK_Plus_Swift_Bitcode.xcframework.zip下载](https://im.sdk.cloud.tencent.cn/download/plus/6.8.3374/ImSDK_Plus_Swift_6.8.3374_Bitcode.xcframework.zip)
+
+
 
 ### 基础版 
 [最新 ImSDK.framework 下载](https://im.sdk.qcloud.com/download/standard/5.1.62/TIM_SDK_iOS_latest_framework.zip)
