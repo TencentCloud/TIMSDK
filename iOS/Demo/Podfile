@@ -9,12 +9,12 @@ target 'TUIKitDemo' do
   use_modular_headers!
 
   # Pods for Example
-  pod 'TUIChat', '6.8.3373'
-  pod 'TUIConversation', '6.8.3373'
-  pod 'TUIContact', '6.8.3373'
-  pod 'TUIGroup', '6.8.3373'
-  pod 'TUISearch', '6.8.3373'
-  pod 'TUIOfflinePush', '6.8.3373'
+  pod 'TUIChat', '6.7.3184'
+  pod 'TUIConversation', '6.7.3184'
+  pod 'TUIContact', '6.7.3184'
+  pod 'TUIGroup', '6.7.3184'
+  pod 'TUISearch', '6.7.3184'
+  pod 'TUIOfflinePush', '6.7.3184'
   pod 'TUICallKit'
   pod 'MJRefresh'
 
