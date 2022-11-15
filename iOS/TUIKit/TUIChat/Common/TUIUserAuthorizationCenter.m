@@ -57,34 +57,6 @@
     }
 }
 
-+ (BOOL)isEnablePhotoAuthorization {
-    
-    if (@available(iOS 8, *)) {
-        return [PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized;
-    } else {
-        return YES;
-    }
-}
-
-+ (void)photoStateActionWithPopCompletion:(void (^)(void))completion {
-    PHAuthorizationStatus authStatus = [PHPhotoLibrary authorizationStatus];
-    if (authStatus == PHAuthorizationStatusNotDetermined) {
-        [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
-            if (status == PHAuthorizationStatusAuthorized && completion) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    completion();
-                });
-            }
-        }];
-    } else if (authStatus == PHAuthorizationStatusAuthorized && completion) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            completion();
-        });
-    } else {
-        [self showAlert:TUIChatAuthControlTypePhoto];
-    }
-}
-
 + (BOOL)isEnableMicroAuthorization {
     
     if (@available(iOS 7.0, *)) {
