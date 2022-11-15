@@ -22,15 +22,15 @@ English | [简体中文](./README_ZH.md)
 
 [Latest ImSDK_Plus_Bitcode.xcframework.zip download](https://im.sdk.cloud.tencent.cn/download/plus/6.8.3374/ImSDK_Plus_6.8.3374_Bitcode.xcframework.zip)
 
-
-
 ### Enhanced Edition (Swift)
 
 #### Enhanced XCFramework edition (supporting Mac Catalyst)
 
 [Latest ImSDK_Plus_Swift.xcframework.zip download](https://im.sdk.cloud.tencent.cn/download/plus/6.8.3374/ImSDK_Plus_Swift_6.8.3374.xcframework.zip)
 
+#### Enhanced Edition Pro
 
+[Latest ImSDK_Plus_Pro.framework download](https://im.sdk.qcloud.com/download/plus/6.8.3374/ImSDK_Plus_Pro_6.8.3374.framework.zip)
 
 ### Basic Edition
 
@@ -99,5 +99,14 @@ pod 'TXIMSDK_Plus_iOS_Bitcode_XCFramework'
 # pod 'TXIMSDK_Plus_Swift_iOS_Bitcode_XCFramework'
 end
 ```
+
+If you are using the SDK enhanced edition Pro, edit the Podfile as follows:
+```
+platform :ios, '8.0'
+source 'https://github.com/CocoaPods/Specs.git'
+
+target 'App' do
+pod 'TXIMSDK_Plus_Pro_iOS'
+end
 
 For more integration modes, see <a href="https://intl.cloud.tencent.com/document/product/1047/34305">SDK Integration</a>.
