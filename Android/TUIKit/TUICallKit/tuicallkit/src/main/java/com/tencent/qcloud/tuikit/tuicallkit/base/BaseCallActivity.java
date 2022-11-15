@@ -24,7 +24,7 @@ public class BaseCallActivity extends AppCompatActivity {
     private static AppCompatActivity mActivity;
     private static BaseCallView      mBaseCallView;
     private static RelativeLayout    mLayoutContainer;
-    
+
     public static void updateBaseView(BaseCallView view) {
         mBaseCallView = view;
         if (null != mLayoutContainer && null != mBaseCallView) {
@@ -51,7 +51,6 @@ public class BaseCallActivity extends AppCompatActivity {
         setContentView(R.layout.tuicalling_base_activity);
         initStatusBar();
     }
-
 
     private void initStatusBar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

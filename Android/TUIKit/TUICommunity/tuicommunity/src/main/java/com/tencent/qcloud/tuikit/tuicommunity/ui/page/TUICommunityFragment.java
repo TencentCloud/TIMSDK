@@ -1,17 +1,14 @@
 package com.tencent.qcloud.tuikit.tuicommunity.ui.page;
 
-import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
-
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView;
 import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
@@ -101,6 +98,11 @@ public class TUICommunityFragment extends Fragment implements ICommunityFragment
 
         connectFailed = baseView.findViewById(R.id.network_connect_failed);
         connecting = baseView.findViewById(R.id.network_connecting);
+    }
+
+    @Override
+    public void onSelfFaceChanged(String newFaceUrl) {
+        GlideEngine.loadUserIcon(selfFace, newFaceUrl);
     }
 
     private void clearSelected() {

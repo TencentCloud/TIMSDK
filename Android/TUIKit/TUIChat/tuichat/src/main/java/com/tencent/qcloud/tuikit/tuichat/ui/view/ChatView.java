@@ -22,7 +22,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -1097,10 +1096,15 @@ public class ChatView extends LinearLayout  implements IChatLayout {
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
+                String toastMsg = errCode + ", " + errMsg;
                 if (errCode == TUIConstants.BuyingFeature.ERR_SDK_INTERFACE_NOT_SUPPORT) {
                     showNotSupportDialog();
+                    if (msg.isNeedReadReceipt()) {
+                        toastMsg = getResources().getString(R.string.chat_message_read_receipt)
+                                + getResources().getString(R.string.TUIKitErrorUnsupporInterfaceSuffix);
+                    }
                 }
-                ToastUtil.toastLongMessage(errMsg);
+                ToastUtil.toastLongMessage(toastMsg);
             }
 
             @Override
@@ -1130,10 +1134,15 @@ public class ChatView extends LinearLayout  implements IChatLayout {
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
+                String toastMsg = errCode + ", " + errMsg;
                 if (errCode == TUIConstants.BuyingFeature.ERR_SDK_INTERFACE_NOT_SUPPORT) {
                     showNotSupportDialog();
+                    if (msg.isNeedReadReceipt()) {
+                        toastMsg = getResources().getString(R.string.chat_message_read_receipt)
+                                + getResources().getString(R.string.TUIKitErrorUnsupporInterfaceSuffix);
+                    }
                 }
-                ToastUtil.toastLongMessage(errMsg);
+                ToastUtil.toastLongMessage(toastMsg);
             }
         });
     }

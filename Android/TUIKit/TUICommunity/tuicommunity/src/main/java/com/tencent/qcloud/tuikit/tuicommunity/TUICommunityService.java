@@ -54,6 +54,7 @@ public class TUICommunityService extends ServiceInitializer implements ITUINotif
         TUICore.registerEvent(TUIConstants.TUICommunity.EVENT_KEY_COMMUNITY_EXPERIENCE, TUIConstants.TUICommunity.EVENT_SUB_KEY_DISBAND_COMMUNITY, this);
         TUICore.registerEvent(TUIConstants.TUICommunity.EVENT_KEY_COMMUNITY_EXPERIENCE, TUIConstants.TUICommunity.EVENT_SUB_KEY_CREATE_TOPIC, this);
         TUICore.registerEvent(TUIConstants.TUICommunity.EVENT_KEY_COMMUNITY_EXPERIENCE, TUIConstants.TUICommunity.EVENT_SUB_KEY_DELETE_TOPIC, this);
+        TUICore.registerEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_INFO_UPDATED, this);
     }
 
     private void initSdkListener() {
@@ -287,6 +288,16 @@ public class TUICommunityService extends ServiceInitializer implements ITUINotif
                 List<CommunityEventListener> listeners = getCommunityEventListenerList();
                 for (CommunityEventListener communityEventListener : listeners) {
                     communityEventListener.onCommunityExperienceChanged(experienceName);
+                }
+            }
+        } else if (TextUtils.equals(key,  TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED)) {
+            if (TextUtils.equals(subKey, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_INFO_UPDATED)) {
+                if (param != null) {
+                    String faceUrl = (String) param.get(TUIConstants.TUILogin.SELF_FACE_URL);
+                    List<CommunityEventListener> listeners = getCommunityEventListenerList();
+                    for (CommunityEventListener communityEventListener : listeners) {
+                        communityEventListener.onSelfFaceChanged(faceUrl);
+                    }
                 }
             }
         }

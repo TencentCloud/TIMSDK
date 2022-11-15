@@ -34,6 +34,17 @@ public abstract class TUICallKit {
     }
 
     /**
+     * Make a call
+     *
+     * @param userId        callees
+     * @param callMediaType Call type
+     * @param params        Extension param: eg: offlinePushInfo
+     */
+    public void call(String userId, TUICallDefine.MediaType callMediaType,
+                     TUICallDefine.CallParams params, TUICommonDefine.Callback callback) {
+    }
+
+    /**
      * Make a group call
      *
      * @param groupId       GroupId
@@ -41,6 +52,19 @@ public abstract class TUICallKit {
      * @param callMediaType Call type
      */
     public void groupCall(String groupId, List<String> userIdList, TUICallDefine.MediaType callMediaType) {
+    }
+
+    /**
+     * Make a group call
+     *
+     * @param groupId       GroupId
+     * @param userIdList    List of userId
+     * @param callMediaType Call type
+     * @param params        Extension param: eg: offlinePushInfo
+     */
+    public void groupCall(String groupId, List<String> userIdList,
+                          TUICallDefine.MediaType callMediaType, TUICallDefine.CallParams params,
+                          TUICommonDefine.Callback callback) {
     }
 
     /**

@@ -22,7 +22,6 @@ import com.tencent.qcloud.tuikit.tuicommunity.utils.CommunityUtil;
 import com.tencent.qcloud.tuikit.tuicommunity.utils.TUICommunityLog;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -179,16 +178,22 @@ public class TopicPresenter {
     private void setTopic() {
         List<TreeNode<ITopicBean>> dataList = topicBeanTreeNode.toList();
         for (TopicBean topicBean : loadedTopicBeanList) {
-            addTopic(dataList, topicBean);
+            addTopicToTree(dataList, topicBean);
         }
     }
 
     private void addTopic(TopicBean topicBean) {
+        for (TopicBean loadedTopicBean : loadedTopicBeanList) {
+            if (TextUtils.equals(topicBean.getID(), loadedTopicBean.getID())) {
+                return;
+            }
+        }
+        loadedTopicBeanList.add(topicBean);
         List<TreeNode<ITopicBean>> dataList = topicBeanTreeNode.toList();
-        addTopic(dataList, topicBean);
+        addTopicToTree(dataList, topicBean);
     }
 
-    private void addTopic(List<TreeNode<ITopicBean>> dataList, TopicBean topicBean) {
+    private void addTopicToTree(List<TreeNode<ITopicBean>> dataList, TopicBean topicBean) {
         for (TreeNode<ITopicBean> loadedTopicBean : dataList) {
             if (loadedTopicBean.getData() instanceof TopicBean) {
                 if (TextUtils.equals(topicBean.getID(), ((TopicBean) loadedTopicBean.getData()).getID())) {

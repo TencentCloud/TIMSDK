@@ -212,7 +212,7 @@
     <string name="chat_no_more_reminders">No more reminders</string>
     <string name="chat_im_flagship">Ultimate Edition</string>
     <string name="chat_buying_guidelines">price description</string>
-    <string name="chat_im_flagship_edition_update_tip">%s function is the IM Ultimate Edition function, which can be used after purchasing the Ultimate Edition package. Please refer to the price description for details.</string>
+    <string name="chat_im_flagship_edition_update_tip">%s feature is only available to the Ultimate edition, which can be used after purchasing the Ultimate Edition. See the price guidelines for details.</string>
 
     <string name="chat_reply_num">%d replied</string>
     <string name="chat_reply_detail">Reply detail</string>

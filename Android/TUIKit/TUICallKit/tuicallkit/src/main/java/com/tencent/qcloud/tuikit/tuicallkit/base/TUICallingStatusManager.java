@@ -18,6 +18,25 @@ public class TUICallingStatusManager {
     private TUICommonDefine.Camera              mIsFrontCamera = TUICommonDefine.Camera.Front;
     private TUICommonDefine.AudioPlaybackDevice mAudioDevice   = TUICommonDefine.AudioPlaybackDevice.Speakerphone;
     private TUICallDefine.Status                mCallStatus    = TUICallDefine.Status.None;
+    private TUICallDefine.Role                  mCallRole      = TUICallDefine.Role.None;
+    private TUICallDefine.MediaType             mMediaType     = TUICallDefine.MediaType.Unknown;
+    private TUICallDefine.Scene                 mCallScene;
+    private String                              mGroupId;
+
+    public static TUICallingStatusManager sharedInstance(Context context) {
+        if (null == sInstance) {
+            synchronized (TUICallKitImpl.class) {
+                if (null == sInstance) {
+                    sInstance = new TUICallingStatusManager(context);
+                }
+            }
+        }
+        return sInstance;
+    }
+
+    private TUICallingStatusManager(Context context) {
+        mContext = context.getApplicationContext();
+    }
 
     public boolean isCameraOpen() {
         return mIsCameraOpen;
@@ -39,21 +58,6 @@ public class TUICallingStatusManager {
         return mCallStatus;
     }
 
-    public static TUICallingStatusManager sharedInstance(Context context) {
-        if (null == sInstance) {
-            synchronized (TUICallKitImpl.class) {
-                if (null == sInstance) {
-                    sInstance = new TUICallingStatusManager(context);
-                }
-            }
-        }
-        return sInstance;
-    }
-
-    private TUICallingStatusManager(Context context) {
-        mContext = context.getApplicationContext();
-    }
-
     public void updateCallStatus(TUICallDefine.Status status) {
         if (mCallStatus.equals(status)) {
             return;
@@ -66,9 +70,6 @@ public class TUICallingStatusManager {
     }
 
     public void updateCameraOpenStatus(boolean isOpen, TUICommonDefine.Camera isFrontCamera) {
-        if (mIsCameraOpen == isOpen) {
-            return;
-        }
         mIsCameraOpen = isOpen;
 
         HashMap<String, Object> map = new HashMap<>();
@@ -80,9 +81,6 @@ public class TUICallingStatusManager {
     }
 
     public void updateFrontCameraStatus(TUICommonDefine.Camera isFrontCamera) {
-        if (mIsFrontCamera.equals(isFrontCamera)) {
-            return;
-        }
         mIsFrontCamera = isFrontCamera;
 
         HashMap<String, Object> map = new HashMap<>();
@@ -109,11 +107,50 @@ public class TUICallingStatusManager {
         TUICore.notifyEvent(Constants.EVENT_TUICALLING_CHANGED, Constants.EVENT_SUB_AUDIOPLAYDEVICE_CHANGED, map);
     }
 
+    public void setGroupId(String groupId) {
+        mGroupId = groupId;
+    }
+
+    public String getGroupId() {
+        return mGroupId;
+    }
+
+    public void setCallRole(TUICallDefine.Role role) {
+        mCallRole = role;
+    }
+
+    public TUICallDefine.Role getCallRole() {
+        return mCallRole;
+    }
+
+    public TUICallDefine.MediaType getMediaType() {
+        return mMediaType;
+    }
+
+    public void setMediaType(TUICallDefine.MediaType type) {
+        mMediaType = type;
+        HashMap<String, Object> map = new HashMap<>();
+        map.put(Constants.CALL_MEDIA_TYPE, mMediaType);
+        TUICore.notifyEvent(Constants.EVENT_TUICALLING_CHANGED, Constants.EVENT_SUB_CALL_TYPE_CHANGED, map);
+    }
+
+    public TUICallDefine.Scene getCallScene() {
+        return mCallScene;
+    }
+
+    public void setCallScene(TUICallDefine.Scene scene) {
+        this.mCallScene = scene;
+    }
+
     public void clear() {
         mIsCameraOpen = false;
         mIsFrontCamera = TUICommonDefine.Camera.Front;
         mIsMicMute = false;
         mAudioDevice = TUICommonDefine.AudioPlaybackDevice.Speakerphone;
         mCallStatus = TUICallDefine.Status.None;
+        mCallRole = TUICallDefine.Role.None;
+        mMediaType = TUICallDefine.MediaType.Unknown;
+        mCallScene = null;
+        mGroupId = "";
     }
 }

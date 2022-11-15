@@ -1,6 +1,5 @@
 <resources>
     <string name="tuicalling_contact_default_name">测试123</string>
-    <string name="tuicalling_invite_video_call">邀请您进行视频通话…</string>
     <string name="tuicalling_toast_call_error_msg">发生错误[%1$d]:%2$s</string>
     <string name="tuicalling_toast_user_reject_call">%1$s拒绝通话</string>
     <string name="tuicalling_toast_user_not_response">%1$s无响应</string>
@@ -20,6 +19,7 @@
     <string name="tuicalling_toast_disable_camera">关闭摄像头</string>
     <string name="tuicalling_waiting_accept">正在等待对方接受邀请...</string>
     <string name="tuicalling_invite_audio_call">邀请您进行语音通话…</string>
+    <string name="tuicalling_invite_video_call">邀请您进行视频通话…</string>
     <string name="tuicalling_text_microphone">麦克风</string>
     <string name="tuicalling_text_hangup">挂断</string>
     <string name="tuicalling_text_reject">拒接</string>
