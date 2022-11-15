@@ -203,7 +203,8 @@
     <string name="TUIkitErrorSVRMsgInvalidMsgLifeTime">JSON 格式请求包体中 MsgLifeTime 字段不是 Integer 类型</string>
     <string name="TUIKitErrorSVRMsgBodySizeLimit">JSON 数据包超长，消息包体请不要超过8k。</string>
     <string name="TUIKitErrorSVRmsgLongPollingCountLimit">Web 端长轮询被踢（Web 端同时在线实例个数超出限制）。</string>
-    <string name="TUIKitErrorUnsupporInterface">您购买的套餐包不支持该功能</string>
+    <string name="TUIKitErrorUnsupporInterface">该功能仅限旗舰版使用，请升级至旗舰版。</string>
+    <string name="TUIKitErrorUnsupporInterfaceSuffix">功能仅限旗舰版使用，请升级至旗舰版。</string>
 
     <string name="TUIKitErrorSVRGroupApiNameError">请求中的接口名称错误</string>
     <string name="TUIKitErrorSVRGroupAccountCountLimit">请求包体中携带的帐号数量过多。</string>

@@ -45,6 +45,11 @@ public class TUICallingSingleView extends BaseCallView {
         mContext = context.getApplicationContext();
         mUserLayoutFactory = factory;
         initView();
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
         initData();
     }
 
@@ -62,9 +67,14 @@ public class TUICallingSingleView extends BaseCallView {
         for (UserLayoutEntity entity : mUserLayoutFactory.mLayoutEntityList) {
             if (null != entity && !TextUtils.isEmpty(entity.userId) && entity.userId.equals(TUILogin.getLoginUser())) {
                 UserLayout layout = allocUserLayout(entity.userModel);
+                if (layout == null) {
+                    continue;
+                }
                 layout.setVideoAvailable(true);
-                TUICommonDefine.Camera frontCamera = TUICallingStatusManager.sharedInstance(mContext).getFrontCamera();
-                mCallingAction.openCamera(frontCamera, layout.getVideoView(), null);
+                if (!TUICallingStatusManager.sharedInstance(mContext).isCameraOpen()) {
+                    TUICommonDefine.Camera frontCamera = TUICallingStatusManager.sharedInstance(mContext).getFrontCamera();
+                    mCallingAction.openCamera(frontCamera, layout.getVideoView(), null);
+                }
             }
         }
     }

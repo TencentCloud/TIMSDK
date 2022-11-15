@@ -1,6 +1,5 @@
 <resources>
     <string name="tuicalling_contact_default_name">test 123</string>
-    <string name="tuicalling_invite_video_call">Invites you to a video call…</string>
     <string name="tuicalling_toast_call_error_msg">Error [%1$d]:%2$s.</string>
     <string name="tuicalling_toast_user_reject_call">%1$s declined the call.</string>
     <string name="tuicalling_toast_user_not_response">%1$s didn’t answer.</string>
@@ -19,7 +18,8 @@
     <string name="tuicalling_toast_enable_camera">Camera On</string>
     <string name="tuicalling_toast_disable_camera">Camera Off</string>
     <string name="tuicalling_waiting_accept">Waiting for the user to accept…</string>
-    <string name="tuicalling_invite_audio_call">Invited you to an voice call…</string>
+    <string name="tuicalling_invite_audio_call">Invited you to a voice call…</string>
+    <string name="tuicalling_invite_video_call">Invites you to a video call…</string>
     <string name="tuicalling_text_microphone">Mic</string>
     <string name="tuicalling_text_hangup">Hang Up</string>
     <string name="tuicalling_text_reject">Decline</string>

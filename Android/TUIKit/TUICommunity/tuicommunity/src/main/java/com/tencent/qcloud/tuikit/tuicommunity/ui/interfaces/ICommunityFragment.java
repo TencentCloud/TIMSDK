@@ -12,4 +12,5 @@ public interface ICommunityFragment {
     void onItemRemoved(int index);
     void onNetworkStateChanged(int state);
     void onCommunitySelected(CommunityBean communityBean);
+    void onSelfFaceChanged(String newFaceUrl);
 }

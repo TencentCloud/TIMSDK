@@ -22,9 +22,9 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:includeFontPadding="false"
         android:layout_marginTop="6.5dp"
-        android:textColor="@color/text_color_gray"
+        android:includeFontPadding="false"
+        android:textColor="@color/tuicalling_color_gray"
         android:textSize="10sp" />
 
 </LinearLayout>

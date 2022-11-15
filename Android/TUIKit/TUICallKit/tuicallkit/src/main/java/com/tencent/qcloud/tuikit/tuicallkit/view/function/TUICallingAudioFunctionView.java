@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.TUICommonDefine;
 import com.tencent.qcloud.tuikit.tuicallkit.R;
+import com.tencent.qcloud.tuikit.tuicallkit.base.TUICallingStatusManager;
 
 public class TUICallingAudioFunctionView extends BaseFunctionView {
     private LinearLayout mLayoutMute;
@@ -36,7 +37,8 @@ public class TUICallingAudioFunctionView extends BaseFunctionView {
         mLayoutMute.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mIsMicMute) {
+                boolean isMicMute = TUICallingStatusManager.sharedInstance(mContext).isMicMute();
+                if (isMicMute) {
                     mCallingAction.openMicrophone(new TUICommonDefine.Callback() {
                         @Override
                         public void onSuccess() {
@@ -51,8 +53,8 @@ public class TUICallingAudioFunctionView extends BaseFunctionView {
                 } else {
                     mCallingAction.closeMicrophone();
                 }
-                ToastUtil.toastShortMessage(mContext.getString(mIsMicMute ? R.string.tuicalling_toast_enable_mute :
-                        R.string.tuicalling_toast_disable_mute));
+                int resId = isMicMute ? R.string.tuicalling_toast_disable_mute : R.string.tuicalling_toast_enable_mute;
+                ToastUtil.toastShortMessage(mContext.getString(resId));
             }
         });
         mLayoutHangup.setOnClickListener(new OnClickListener() {
@@ -65,13 +67,15 @@ public class TUICallingAudioFunctionView extends BaseFunctionView {
         mLayoutHandsFree.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                TUICommonDefine.AudioPlaybackDevice device = TUICommonDefine.AudioPlaybackDevice.Speakerphone;
-                if (mIsHandsFree) {
-                    device = TUICommonDefine.AudioPlaybackDevice.Earpiece;
+                boolean isSpeaker = TUICommonDefine.AudioPlaybackDevice.Speakerphone
+                        .equals(TUICallingStatusManager.sharedInstance(mContext).getAudioPlaybackDevice());
+                if (isSpeaker) {
+                    mCallingAction.selectAudioPlaybackDevice(TUICommonDefine.AudioPlaybackDevice.Earpiece);
+                } else {
+                    mCallingAction.selectAudioPlaybackDevice(TUICommonDefine.AudioPlaybackDevice.Speakerphone);
                 }
-                mCallingAction.selectAudioPlaybackDevice(device);
-                ToastUtil.toastShortMessage(mContext.getString(mIsHandsFree ? R.string.tuicalling_toast_speaker :
-                        R.string.tuicalling_toast_use_handset));
+                int resId = isSpeaker ? R.string.tuicalling_toast_use_handset : R.string.tuicalling_toast_speaker;
+                ToastUtil.toastShortMessage(mContext.getString(resId));
             }
         });
     }
@@ -79,12 +83,12 @@ public class TUICallingAudioFunctionView extends BaseFunctionView {
     @Override
     public void updateMicMuteStatus(boolean isMicMute) {
         super.updateMicMuteStatus(isMicMute);
-        mImageMute.setActivated(mIsMicMute);
+        mImageMute.setActivated(isMicMute);
     }
 
     @Override
-    public void updateHandsFreeStatus(boolean isHandsFree) {
-        super.updateHandsFreeStatus(isHandsFree);
-        mImageHandsFree.setActivated(mIsHandsFree);
+    public void updateAudioPlayDevice(boolean isSpeaker) {
+        super.updateAudioPlayDevice(isSpeaker);
+        mImageHandsFree.setActivated(isSpeaker);
     }
 }

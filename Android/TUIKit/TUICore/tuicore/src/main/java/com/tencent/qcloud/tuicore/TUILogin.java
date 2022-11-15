@@ -152,7 +152,7 @@ public class TUILogin {
         if (this.sdkAppId != 0 && sdkAppId != this.sdkAppId) {
             logout((TUICallback) null);
         }
-        this.appContext = context;
+        this.appContext = context.getApplicationContext();
         this.sdkAppId = sdkAppId;
         V2TIMManager.getInstance().addIMSDKListener(imSdkListener);
         // Notify init event
@@ -259,7 +259,7 @@ public class TUILogin {
             logout((V2TIMCallback) null);
             unInit();
         }
-        getInstance().appContext = context;
+        getInstance().appContext = context.getApplicationContext();
         getInstance().sdkAppId = sdkAppId;
         V2TIMManager.getInstance().addIMSDKListener(new V2TIMSDKListener() {
             @Override

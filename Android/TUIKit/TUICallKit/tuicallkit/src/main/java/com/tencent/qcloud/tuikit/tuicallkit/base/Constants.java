@@ -13,14 +13,16 @@ public class Constants {
     public static final String EVENT_TUICALLING_CHANGED = "eventTUICallingChanged";
 
     public static final String EVENT_SUB_CALL_STATUS_CHANGED     = "eventSubCallStatusChanged";
+    public static final String EVENT_SUB_CALL_TYPE_CHANGED       = "eventSubMediaTypeChanged";
     public static final String EVENT_SUB_CAMERA_OPEN             = "eventSubCameraOpen";
     public static final String EVENT_SUB_CAMERA_FRONT            = "eventSubCameraFront";
     public static final String EVENT_SUB_MIC_STATUS_CHANGED      = "eventSubMicStatusChanged";
     public static final String EVENT_SUB_AUDIOPLAYDEVICE_CHANGED = "eventSubAudioPlayDeviceChanged";
 
-    public static final String OPEN_CAMERA   = "openCamera";
-    public static final String SWITCH_CAMERA = "switchCamera";
-    public static final String MUTE_MIC      = "muteMic";
-    public static final String HANDS_FREE    = "handsFree";
-    public static final String CALL_STATUS   = "callStatus";
+    public static final String OPEN_CAMERA     = "openCamera";
+    public static final String SWITCH_CAMERA   = "switchCamera";
+    public static final String MUTE_MIC        = "muteMic";
+    public static final String HANDS_FREE      = "handsFree";
+    public static final String CALL_STATUS     = "callStatus";
+    public static final String CALL_MEDIA_TYPE = "callMediaType";
 }

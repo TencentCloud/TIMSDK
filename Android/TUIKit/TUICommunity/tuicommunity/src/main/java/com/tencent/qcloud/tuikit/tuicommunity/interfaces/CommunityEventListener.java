@@ -17,4 +17,5 @@ public abstract class CommunityEventListener {
     public void onJoinedCommunity(String groupID) {}
     public void onCommunityExperienceChanged(String experienceName) {}
     public void onNetworkStateChanged(int state) {}
+    public void onSelfFaceChanged(String newFaceUrl) {}
 }

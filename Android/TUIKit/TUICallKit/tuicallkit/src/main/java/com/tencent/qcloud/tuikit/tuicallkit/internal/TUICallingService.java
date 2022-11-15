@@ -17,10 +17,10 @@ import com.tencent.qcloud.tuicore.interfaces.ITUIService;
 import com.tencent.qcloud.tuikit.TUICommonDefine;
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine;
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallEngine;
-import com.tencent.qcloud.tuikit.tuicallengine.utils.TUICallingConstants;
 import com.tencent.qcloud.tuikit.tuicallkit.R;
 import com.tencent.qcloud.tuikit.tuicallkit.TUICallKit;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -28,15 +28,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * `TUICore` call (if the `TUICore` module is not imported, use `TUICallingImpl` instead)
+ * `TUICore` call (if the `TUICore` module is not imported, use `TUICallKitImpl` instead)
  */
 final class TUICallingService implements ITUINotification, ITUIService, ITUIExtension {
 
     private static final String TAG = "TUICallingService";
 
     private static final TUICallingService INSTANCE = new TUICallingService();
-
-    private TUICallKit mTUICallKit;
 
     static TUICallingService sharedInstance() {
         return INSTANCE;
@@ -56,20 +54,13 @@ final class TUICallingService implements ITUINotification, ITUIService, ITUIExte
 
     @Override
     public Object onCall(String method, Map<String, Object> param) {
-        Log.d(TAG, String.format("onCall, method=%s, param=%s", method, null == param ? "" : param.toString()));
-        TUICallingConstants.component = TUICallingConstants.TC_TIMCALLING_COMPONENT;
-        if (param != null && param.containsKey("component")) {
-            TUICallingConstants.component = (int) param.get("component");
-        }
-        if (null == mTUICallKit) {
-            Log.e(TAG, "mTUICallKit is null!!!");
-            return null;
-        }
+        Log.i(TAG, "onCall, method: " + method + " ,param: " + param);
+        adaptiveComponentReport(param);
 
         if (null != param && TextUtils.equals(TUIConstants.TUICalling.METHOD_NAME_ENABLE_FLOAT_WINDOW, method)) {
             boolean enableFloatWindow = (boolean) param.get(TUIConstants.TUICalling.PARAM_NAME_ENABLE_FLOAT_WINDOW);
             Log.i(TAG, "onCall, enableFloatWindow: " + enableFloatWindow);
-            mTUICallKit.enableFloatWindow(enableFloatWindow);
+            TUICallKit.createInstance(appContext).enableFloatWindow(enableFloatWindow);
             return null;
         }
 
@@ -94,22 +85,28 @@ final class TUICallingService implements ITUINotification, ITUIService, ITUIExte
             String groupID = (String) param.get(TUIConstants.TUICalling.PARAM_NAME_GROUPID);
 
             List<String> userIdList = new ArrayList<>(Arrays.asList(userIDs));
+            TUICallDefine.MediaType mediaType = TUICallDefine.MediaType.Unknown;
             if (TUIConstants.TUICalling.TYPE_AUDIO.equals(typeString)) {
-                mTUICallKit.groupCall(groupID, userIdList, TUICallDefine.MediaType.Audio);
+                mediaType = TUICallDefine.MediaType.Audio;
             } else if (TUIConstants.TUICalling.TYPE_VIDEO.equals(typeString)) {
-                mTUICallKit.groupCall(groupID, userIdList, TUICallDefine.MediaType.Video);
+                mediaType = TUICallDefine.MediaType.Video;
+            }
+            if (!TextUtils.isEmpty(groupID)) {
+                TUICallKit.createInstance(appContext).groupCall(groupID, userIdList, mediaType);
+            } else if (userIdList.size() == 1) {
+                TUICallKit.createInstance(appContext).call(userIdList.get(0), mediaType);
+            } else {
+                Log.e(TAG, "onCall ignored, groupId is empty and userList is not 1, cannot start call or groupCall");
             }
         }
         return null;
     }
 
     @Override
-    public Map<String, Object> onGetExtensionInfo(final String key, Map<String, Object> param) {
-        Log.d(TAG, String.format("onGetExtensionInfo, key=%s, param=%s", key, null == param ? "" : param.toString()));
-        TUICallingConstants.component = TUICallingConstants.TC_TIMCALLING_COMPONENT;
-        if (param != null && param.containsKey("component")) {
-            TUICallingConstants.component = (int) param.get("component");
-        }
+    public Map<String, Object> onGetExtensionInfo(String key, Map<String, Object> param) {
+        Log.i(TAG, "onGetExtensionInfo, key: " + key + " ,param: " + param);
+        adaptiveComponentReport(param);
+
         Context inflateContext = (Context) param.get(TUIConstants.TUIChat.CONTEXT);
         if (inflateContext == null) {
             inflateContext = appContext;
@@ -118,17 +115,17 @@ final class TUICallingService implements ITUINotification, ITUIService, ITUIExte
             return null;
         }
         HashMap<String, Object> extensionMap = new HashMap<>();
-        View unitView = LayoutInflater.from(inflateContext).inflate(R.layout.chat_input_more_actoin, null);
+        View unitView = LayoutInflater.from(inflateContext).inflate(R.layout.chat_input_more_action, null);
+        ImageView imageView = unitView.findViewById(R.id.imageView);
+        TextView textView = unitView.findViewById(R.id.textView);
         int actionId = 0;
-        if (key.equals(TUIConstants.TUIChat.EXTENSION_INPUT_MORE_AUDIO_CALL)) {
-            ((ImageView) unitView.findViewById(R.id.imageView)).setImageResource(R.drawable.tuicalling_ic_audio_call);
-            ((TextView) unitView.findViewById(R.id.textView))
-                    .setText(inflateContext.getString(R.string.tuicalling_audio_call));
+        if (TUIConstants.TUIChat.EXTENSION_INPUT_MORE_AUDIO_CALL.equals(key)) {
+            imageView.setImageResource(R.drawable.tuicalling_ic_audio_call);
+            textView.setText(inflateContext.getString(R.string.tuicalling_audio_call));
             actionId = TUIConstants.TUICalling.ACTION_ID_AUDIO_CALL;
-        } else if (key.equals(TUIConstants.TUIChat.EXTENSION_INPUT_MORE_VIDEO_CALL)) {
-            ((ImageView) unitView.findViewById(R.id.imageView)).setImageResource(R.drawable.tuicalling_ic_video_call);
-            ((TextView) unitView.findViewById(R.id.textView))
-                    .setText(inflateContext.getString(R.string.tuicalling_video_call));
+        } else if (TUIConstants.TUIChat.EXTENSION_INPUT_MORE_VIDEO_CALL.equals(key)) {
+            imageView.setImageResource(R.drawable.tuicalling_ic_video_call);
+            textView.setText(inflateContext.getString(R.string.tuicalling_video_call));
             actionId = TUIConstants.TUICalling.ACTION_ID_VIDEO_CALL;
         }
         final String chatId = (String) param.get(TUIConstants.TUIChat.CHAT_ID);
@@ -139,16 +136,14 @@ final class TUICallingService implements ITUINotification, ITUIService, ITUIExte
             unitView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (null == mTUICallKit) {
-                        Log.e(TAG, "mTUICallKit is null!!!");
-                        return;
+                    TUICallDefine.MediaType mediaType = TUICallDefine.MediaType.Unknown;
+                    if (TUIConstants.TUIChat.EXTENSION_INPUT_MORE_AUDIO_CALL.equals(key)) {
+                        mediaType = TUICallDefine.MediaType.Audio;
+                    } else if (TUIConstants.TUIChat.EXTENSION_INPUT_MORE_VIDEO_CALL.equals(key)) {
+                        mediaType = TUICallDefine.MediaType.Video;
                     }
-
-                    if (key.equals(TUIConstants.TUIChat.EXTENSION_INPUT_MORE_AUDIO_CALL)) {
-                        mTUICallKit.call(chatId, TUICallDefine.MediaType.Audio);
-                    } else if (key.equals(TUIConstants.TUIChat.EXTENSION_INPUT_MORE_VIDEO_CALL)) {
-                        mTUICallKit.call(chatId, TUICallDefine.MediaType.Video);
-                    }
+                    Log.i(TAG, "onGetExtensionInfo, mediaType: " + mediaType + " ,chatId: " + chatId);
+                    TUICallKit.createInstance(appContext).call(chatId, mediaType);
                 }
             });
         }
@@ -161,7 +156,24 @@ final class TUICallingService implements ITUINotification, ITUIService, ITUIExte
     public void onNotifyEvent(String key, String subKey, Map<String, Object> param) {
         if (TUIConstants.TUILogin.EVENT_IMSDK_INIT_STATE_CHANGED.equals(key)
                 && TUIConstants.TUILogin.EVENT_SUB_KEY_START_INIT.equals(subKey)) {
-            mTUICallKit = TUICallKit.createInstance(appContext);
+            TUICallKit.createInstance(appContext);
+        }
+    }
+
+    private void adaptiveComponentReport(Map<String, Object> param) {
+        try {
+            Class clz = Class.forName("com.tencent.qcloud.tuikit.tuicallengine.utils.TUICallingConstants");
+
+            Field temp = clz.getField("TC_TIMCALLING_COMPONENT");
+            int value = (int) temp.get(clz);
+            if (param != null && param.containsKey("component")) {
+                value = (int) param.get("component");
+            }
+
+            Field field = clz.getField("component");
+            field.set("component", value);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

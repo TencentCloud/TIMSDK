@@ -29,6 +29,7 @@ import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
 import com.tencent.qcloud.tuicore.component.fragments.BaseFragment;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
@@ -245,6 +246,7 @@ public class TUIBaseChatFragment extends BaseFragment {
                         @Override
                         public void onError(String module, int errCode, String errMsg) {
                             TUIChatLog.v(TAG, "sendMessage fail:" + errCode + "=" + errMsg);
+                            ToastUtil.toastLongMessage(getString(R.string.send_failed) + ", " + errMsg);
                         }
                     });
                 }

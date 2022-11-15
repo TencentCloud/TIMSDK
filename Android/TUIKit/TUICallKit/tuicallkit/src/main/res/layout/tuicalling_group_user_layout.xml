@@ -33,7 +33,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="10dp"
         android:layout_marginBottom="4dp"
-        android:background="@android:color/transparent"
+        android:background="@color/tuicalling_color_transparent"
         android:textColor="@color/tuicalling_color_white"
         android:textSize="14sp" />
 
