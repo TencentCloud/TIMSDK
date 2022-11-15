@@ -16,11 +16,9 @@ typedef NS_OPTIONS(NSUInteger, TUIChatAuthControlType) {
 };
 @interface TUIUserAuthorizationCenter : NSObject
 @property (nonatomic, assign, class, readonly) BOOL isEnableCameraAuthorization;
-@property (nonatomic, assign, class, readonly) BOOL isEnablePhotoAuthorization;
 @property (nonatomic, assign, class, readonly) BOOL isEnableMicroAuthorization;
 
 + (void)cameraStateActionWithPopCompletion:(void (^)(void))completion API_AVAILABLE(ios(8.0));
-+ (void)photoStateActionWithPopCompletion:(void (^)(void))completion API_AVAILABLE(ios(8.0));
 + (void)microStateActionWithPopCompletion:(void (^)(void))completion API_AVAILABLE(ios(8.0));
 
 + (void)openSettingPage;

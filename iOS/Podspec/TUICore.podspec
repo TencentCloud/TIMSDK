@@ -1,7 +1,7 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUICore'
-  spec.version      = '6.7.3188'
-  spec.platform     = :ios 
+  spec.version      = '6.8.3374'
+  spec.platform     = :ios
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
       :text => <<-LICENSE
@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
 
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/6.7.3188/ios/TUICore.zip'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/6.8.3374/ios/TUICore.zip'}
   
   spec.default_subspec = 'ImSDK_Plus'
 
@@ -24,12 +24,12 @@ Pod::Spec.new do |spec|
   spec.dependency 'SDWebImage'
   
   spec.subspec 'ImSDK_Plus' do |ss|
-      ss.dependency 'TXIMSDK_Plus_iOS','6.7.3184'
+      ss.dependency 'TXIMSDK_Plus_iOS','6.8.3374'
       ss.dependency 'TUICore/Base'
   end
   
   spec.subspec 'ImSDK_Scenario' do |ss|
-      ss.dependency 'TXIMSDK_Customer_iOS','6.7.3186'
+      ss.dependency 'TXIMSDK_Customer_iOS','6.8.3374'
       ss.dependency 'TUICore/Base'
   end
   

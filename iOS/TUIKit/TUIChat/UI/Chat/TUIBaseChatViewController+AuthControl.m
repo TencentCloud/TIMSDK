@@ -287,46 +287,40 @@
     if (completion == nil) {
         return;
     }
-    [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
-        if (status != PHAuthorizationStatusAuthorized) {
+        
+    NSArray<PHAssetResource *> *resources = [PHAssetResource assetResourcesForAsset:asset];
+    if (resources.count == 0) {
+        completion(NO, nil);
+        return;
+    }
+    
+    PHAssetResourceRequestOptions *options = [[PHAssetResourceRequestOptions alloc] init];
+    options.networkAccessAllowed = NO;
+    __block BOOL invoked = NO;
+    [PHAssetResourceManager.defaultManager requestDataForAssetResource:resources.firstObject options:options dataReceivedHandler:^(NSData * _Nonnull data) {
+        /**
+         * 此处会有重复回调的问题
+         * There will be a problem of repeated callbacks here
+         */
+        if (invoked) {
+            return;
+        }
+        invoked = YES;
+        if (data == nil) {
             completion(NO, nil);
             return;
         }
-        
-        NSArray<PHAssetResource *> *resources = [PHAssetResource assetResourcesForAsset:asset];
-        if (resources.count == 0) {
-            completion(NO, nil);
-            return;
+        NSString *fileName = @"temp.mp4";
+        NSString* tempPath = NSTemporaryDirectory();
+        NSString *filePath = [tempPath stringByAppendingPathComponent:fileName];
+        if ([NSFileManager.defaultManager isDeletableFileAtPath:filePath]) {
+            [NSFileManager.defaultManager removeItemAtPath:filePath error:nil];
         }
-        
-        PHAssetResourceRequestOptions *options = [[PHAssetResourceRequestOptions alloc] init];
-        options.networkAccessAllowed = NO;
-        __block BOOL invoked = NO;
-        [PHAssetResourceManager.defaultManager requestDataForAssetResource:resources.firstObject options:options dataReceivedHandler:^(NSData * _Nonnull data) {
-            /**
-             * 此处会有重复回调的问题
-             * There will be a problem of repeated callbacks here
-             */
-            if (invoked) {
-                return;
-            }
-            invoked = YES;
-            if (data == nil) {
-                completion(NO, nil);
-                return;
-            }
-            NSString *fileName = @"temp.mp4";
-            NSString* tempPath = NSTemporaryDirectory();
-            NSString *filePath = [tempPath stringByAppendingPathComponent:fileName];
-            if ([NSFileManager.defaultManager isDeletableFileAtPath:filePath]) {
-                [NSFileManager.defaultManager removeItemAtPath:filePath error:nil];
-            }
-            NSURL *newUrl = [NSURL fileURLWithPath:filePath];
-            BOOL flag = [NSFileManager.defaultManager createFileAtPath:filePath contents:data attributes:nil];
-            completion(flag, newUrl);
-        } completionHandler:^(NSError * _Nullable error) {
-            completion(NO, nil);
-        }];
+        NSURL *newUrl = [NSURL fileURLWithPath:filePath];
+        BOOL flag = [NSFileManager.defaultManager createFileAtPath:filePath contents:data attributes:nil];
+        completion(flag, newUrl);
+    } completionHandler:^(NSError * _Nullable error) {
+        completion(NO, nil);
     }];
 }
 
@@ -478,82 +472,7 @@
 }
 #pragma mark - New version for Assets in iOS 14
 - (void)selectPhotoForSendV2 {
-    
-    if (@available(iOS 14, *)) {
-        PHAccessLevel level =  PHAccessLevelReadWrite;
-        PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatusForAccessLevel:level];
-          switch (status) {
-              case PHAuthorizationStatusLimited:
-                  NSLog(@"limited");
-                  [self _takeImagePhoto];
-                  break;
-              case PHAuthorizationStatusDenied:
-                  [TUIUserAuthorizationCenter showAlert:TUIChatAuthControlTypePhoto];
-                  break;
-              case PHAuthorizationStatusAuthorized:
-                  NSLog(@"authorized");
-                  [self _takeImagePhoto];
-                  break;
-              case PHAuthorizationStatusNotDetermined:
-                  NSLog(@"denied");
-                  [self _requestPhotoAuthorization];
-                  break;
-
-              default:
-                  break;
-        }
-    } else {
-        PHAuthorizationStatus photoAuthorStatus = [PHPhotoLibrary authorizationStatus];
-        if (photoAuthorStatus ==PHAuthorizationStatusAuthorized ) {
-            [self _takeImagePhoto];
-        }else{
-            [self _requestPhotoAuthorization];
-        }
-    }
-
-}
-
-- (void)_requestPhotoAuthorization {
-    if (@available(iOS 14, *)) {
-        PHAccessLevel level = PHAccessLevelReadWrite;
-        /**
-         * 请求权限，需注意 limited 权限仅在 accessLevel 为 readAndWrite 时生效
-         * Request permission, it should be noted that limited permission only takes effect when the accessLevel is readAndWrite
-         */
-        [PHPhotoLibrary requestAuthorizationForAccessLevel:level handler:^(PHAuthorizationStatus status) {
-            switch (status) {
-                case PHAuthorizationStatusLimited: {
-                    NSLog(@"limited");
-                }
-                    break;
-                case PHAuthorizationStatusDenied:
-                    NSLog(@"denied");
-                    [TUIUserAuthorizationCenter showAlert:TUIChatAuthControlTypePhoto];
-                    break;
-                case PHAuthorizationStatusAuthorized:
-                    NSLog(@"authorized");
-                    [self _takeImagePhoto];
-                    break;
-                default:
-                    break;
-            }
-        }];
-    } else {
-        /**
-         * 获取相册访问权限 ios8 之后推荐用这种方法
-         * 该方法提示用户授权对相册的访问
-         *
-         * This method is recommended for obtaining album access permissions after ios8
-         * This method prompts the user to authorize access to the album
-         */
-        [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
-            if (status == PHAuthorizationStatusDenied) {
-                [TUIUserAuthorizationCenter showAlert:TUIChatAuthControlTypePhoto];
-            }else if (status == PHAuthorizationStatusAuthorized){
-                [self _takeImagePhoto];
-            }
-        }];
-    }
+    [self _takeImagePhoto];
 }
 
 - (void)_takeImagePhoto {
