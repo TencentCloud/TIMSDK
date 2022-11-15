@@ -18,18 +18,17 @@
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rl_float_view" />
+        app:layout_constraintTop_toBottomOf="@+id/rl_add_user_view" />
 
     <RelativeLayout
         android:id="@+id/rl_float_view"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="32dp"
         android:background="@color/tuicalling_color_transparent"
+        app:layout_constraintBottom_toBottomOf="@+id/rl_add_user_view"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/gl_horizontal_top" />
+        app:layout_constraintTop_toTopOf="@+id/rl_add_user_view" />
 
     <RelativeLayout
         android:id="@+id/rl_add_user_view"
@@ -37,10 +36,9 @@
         android:layout_height="32dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
         android:background="@color/tuicalling_color_transparent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/gl_horizontal_top" />
+        app:layout_constraintTop_toBottomOf="@+id/gl_horizontal_top" />
 
     <TextView
         android:id="@+id/tv_group_call_hint"

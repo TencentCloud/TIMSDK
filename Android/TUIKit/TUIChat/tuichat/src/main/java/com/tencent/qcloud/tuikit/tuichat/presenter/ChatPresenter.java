@@ -58,7 +58,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.concurrent.CountDownLatch;
 
 public abstract class ChatPresenter {
@@ -1267,8 +1266,9 @@ public abstract class ChatPresenter {
                     if (message == null || message.getStatus() == TUIMessageBean.MSG_STATUS_SENDING) {
                         continue;
                     }
-                    assembleGroupMessage(message);
-
+                    if (isGroup) {
+                        filterGroupMessageReceipt(message, id);
+                    }
                     OfflineMessageContainerBean containerBean = new OfflineMessageContainerBean();
                     OfflineMessageBean entity = new OfflineMessageBean();
                     entity.content = message.getExtra().toString();
@@ -1304,6 +1304,13 @@ public abstract class ChatPresenter {
         Thread forwardThread = new Thread(forwardMessageRunnable);
         forwardThread.setName("ForwardMessageThread");
         ThreadHelper.INST.execute(forwardThread);
+    }
+
+
+    private void filterGroupMessageReceipt(TUIMessageBean messageBean, String groupID) {
+        if (TUIChatUtils.isCommunityGroup(groupID)) {
+            messageBean.setNeedReadReceipt(false);
+        }
     }
 
     protected void assembleGroupMessage(TUIMessageBean message) {
@@ -1353,8 +1360,9 @@ public abstract class ChatPresenter {
             sendMessage(msgInfo, false, callBack);
             return;
         }
-
-        assembleGroupMessage(msgInfo);
+        if (isGroup) {
+            filterGroupMessageReceipt(msgInfo, id);
+        }
 
         OfflineMessageContainerBean containerBean = new OfflineMessageContainerBean();
         OfflineMessageBean entity = new OfflineMessageBean();
@@ -1397,10 +1405,7 @@ public abstract class ChatPresenter {
                     return;
                 }
 
-                if (callBack != null) {
-                    callBack.onSuccess(data);
-                }
-
+                TUIChatUtils.callbackOnSuccess(callBack, data);
                 message.setStatus(TUIMessageBean.MSG_STATUS_SEND_SUCCESS);
                 updateMessageInfo(message);
                 Map<String, Object> param = new HashMap<>();
@@ -1415,9 +1420,7 @@ public abstract class ChatPresenter {
                     TUIChatLog.w(TAG, "sendMessage unSafetyCall");
                     return;
                 }
-                if (callBack != null) {
-                    callBack.onError(TAG, errCode, errMsg);
-                }
+                TUIChatUtils.callbackOnError(callBack, errCode, errMsg);
                 message.setStatus(TUIMessageBean.MSG_STATUS_SEND_FAIL);
                 updateMessageInfo(message);
             }

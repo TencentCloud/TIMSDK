@@ -76,6 +76,11 @@ public class CommunityPresenter {
             public void onNetworkStateChanged(int state) {
                 CommunityPresenter.this.onNetworkStateChanged(state);
             }
+
+            @Override
+            public void onSelfFaceChanged(String newFaceUrl) {
+                CommunityPresenter.this.onSelfFaceChanged(newFaceUrl);
+            }
         };
     }
 
@@ -90,6 +95,12 @@ public class CommunityPresenter {
     private void onNetworkStateChanged(int state) {
         if (communityFragment != null) {
             communityFragment.onNetworkStateChanged(state);
+        }
+    }
+
+    private void onSelfFaceChanged(String newFaceUrl) {
+        if (communityFragment != null) {
+            communityFragment.onSelfFaceChanged(newFaceUrl);
         }
     }
 

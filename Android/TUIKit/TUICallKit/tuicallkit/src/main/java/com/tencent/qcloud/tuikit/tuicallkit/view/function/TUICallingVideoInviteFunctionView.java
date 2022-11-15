@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.TUICommonDefine;
 import com.tencent.qcloud.tuikit.tuicallkit.R;
+import com.tencent.qcloud.tuikit.tuicallkit.base.TUICallingStatusManager;
 
 public class TUICallingVideoInviteFunctionView extends BaseFunctionView {
     private LinearLayout mLayoutCancel;
@@ -37,7 +38,8 @@ public class TUICallingVideoInviteFunctionView extends BaseFunctionView {
         mImageSwitchCamera.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCallingAction.switchCamera(TUICommonDefine.Camera.Front.equals(mCamera)
+                TUICommonDefine.Camera camera = TUICallingStatusManager.sharedInstance(mContext).getFrontCamera();
+                mCallingAction.switchCamera(TUICommonDefine.Camera.Front.equals(camera)
                         ? TUICommonDefine.Camera.Back : TUICommonDefine.Camera.Front);
                 ToastUtil.toastShortMessage(mContext.getString(R.string.tuicalling_toast_switch_camera));
             }

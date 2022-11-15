@@ -8,4 +8,5 @@
     <color name="tuicalling_color_transparent">#00000000</color>
     <color name="tuicalling_color_green">#FF29CC85</color>
     <color name="tuicalling_color_bg_float_view">#FFBBBBBB</color>
+    <color name="tuicalling_color_gray">#696969</color>
 </resources>

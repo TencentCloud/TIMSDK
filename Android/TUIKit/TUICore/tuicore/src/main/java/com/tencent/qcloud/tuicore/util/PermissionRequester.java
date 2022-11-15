@@ -297,6 +297,7 @@ public final class PermissionRequester {
             }
             mFullCallback = null;
         }
+        mDialogCallback = null;
     }
 
     private void onRequestPermissionsResult(final Activity activity) {
