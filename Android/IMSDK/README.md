@@ -8,7 +8,7 @@ English | [简体中文](./README_ZH.md)
 [Latest Enhanced Edition IM SDK download](https://im.sdk.qcloud.com/download/plus/6.8.3374/imsdk-plus-6.8.3374.aar) 
 
 ### Enhanced Edition Pro
-[Latest Enhanced Edition IM SDK download](https://im.sdk.qcloud.com/download/plus/6.8.3374/imsdk-pro-plus-6.8.3374.aar) 
+[Latest Enhanced Edition Pro IM SDK download](https://im.sdk.qcloud.com/download/plus/6.8.3374/imsdk-pro-plus-6.8.3374.aar) 
 
 ### Basic Edition
 [Latest Basic Edition IM SDK download](https://im.sdk.qcloud.com/download/standard/5.1.66/imsdk-5.1.66.aar)
