@@ -34,3 +34,10 @@ English | [简体中文](./README_ZH.md)
    api 'com.tencent.imsdk:imsdk-plus:Version number'
  }
  ```
+ 
+  If you use the Enhanced Edition Pro SDK, add the following dependencies to the `gradle` file:
+ ```
+ dependencies {
+   api 'com.tencent.imsdk:imsdk-plus-pro:Version number'
+ }
+ ```
