@@ -34,3 +34,10 @@
    api 'com.tencent.imsdk:imsdk-plus:版本号'
  }
  ```
+ 
+  如果使用增强版 Pro SDK，请在 gradle 里添加如下依赖
+ ```
+ dependencies {
+   api 'com.tencent.imsdk:imsdk-plus-pro:版本号'
+ }
+ ```
