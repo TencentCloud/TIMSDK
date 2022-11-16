@@ -91,7 +91,7 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 - Compared with the Basic Edition, the Enhanced Edition has greatly reduced the SDK size and installation package increment.
 - Compared with the Basic Edition, the Enhanced Edition provides more new features.
 - Subsequent development of new features will only be supported on the Enhanced Edition. The Basic Edition supports only routine maintenance and fixing of existing problems.
-- SDK Enhanced Pro，supports database encryption and dual network acceleration.
+- Enhanced Edition Pro has been released from SDK 6.8 version which supports dual line acceleration on network layer and provides better performance for bad network environment.
 
 ### Comparison of the SDK sizes
 <table>
