@@ -22,16 +22,16 @@
 
 [最新 ImSDK_Plus_Bitcode.xcframework.zip下载](https://im.sdk.qcloud.com/download/plus/6.8.3374/ImSDK_Plus_6.8.3374_Bitcode.xcframework.zip)
 
+#### 增强版 Pro
+
+[最新 ImSDK_Plus_Pro.framework下载](https://im.sdk.qcloud.com/download/plus/6.8.3374/ImSDK_Plus_Pro_6.8.3374.framework.zip)
+
 
 ### 增强版（Swift）
 
 #### 增强版 xcframework 版本（支持 mac catalyst）
 
 [最新 ImSDK_Plus_Swift.xcframework.zip下载](https://im.sdk.cloud.tencent.cn/download/plus/6.8.3374/ImSDK_Plus_Swift_6.8.3374.xcframework.zip)
-
-#### 增强版 Pro
-
-[最新 ImSDK_Plus_Pro.framework下载](https://im.sdk.qcloud.com/download/plus/6.8.3374/ImSDK_Plus_Pro_6.8.3374.framework.zip)
 
 
 ### 基础版 
