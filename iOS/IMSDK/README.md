@@ -22,15 +22,15 @@ English | [简体中文](./README_ZH.md)
 
 [Latest ImSDK_Plus_Bitcode.xcframework.zip download](https://im.sdk.cloud.tencent.cn/download/plus/6.8.3374/ImSDK_Plus_6.8.3374_Bitcode.xcframework.zip)
 
+#### Enhanced Edition Pro
+
+[Latest ImSDK_Plus_Pro.framework download](https://im.sdk.qcloud.com/download/plus/6.8.3374/ImSDK_Plus_Pro_6.8.3374.framework.zip)
+
 ### Enhanced Edition (Swift)
 
 #### Enhanced XCFramework edition (supporting Mac Catalyst)
 
 [Latest ImSDK_Plus_Swift.xcframework.zip download](https://im.sdk.cloud.tencent.cn/download/plus/6.8.3374/ImSDK_Plus_Swift_6.8.3374.xcframework.zip)
-
-#### Enhanced Edition Pro
-
-[Latest ImSDK_Plus_Pro.framework download](https://im.sdk.qcloud.com/download/plus/6.8.3374/ImSDK_Plus_Pro_6.8.3374.framework.zip)
 
 ### Basic Edition
 
