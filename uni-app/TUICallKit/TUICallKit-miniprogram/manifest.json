@@ -1,6 +1,6 @@
 {
     "name" : "TUICalling-miniprogram",
-    "appid" : "__UNI__C42E036",
+    "appid" : "xxx",
     "description" : "",
     "versionName" : "1.0.0",
     "versionCode" : "100",
@@ -50,7 +50,7 @@
     "quickapp" : {},
     /* 小程序特有相关 */
     "mp-weixin" : {
-        "appid" : "wx649acbec87e200b4",
+        "appid" : "xxx",
         "setting" : {
             "urlCheck" : false,
             "es6" : true,
