@@ -1,6 +1,5 @@
 import TUICallEngine, { EVENT, MEDIA_TYPE, AUDIO_PLAYBACK_DEVICE, STATUS } from '../TUICallEngine/tuicall-engine-wx.js';
 
-const TAG_NAME = 'TUICallKit';
 // 组件旨在跨终端维护一个通话状态管理机，以事件发布机制驱动上层进行管理，并通过API调用进行状态变更。
 // 组件设计思路将UI和状态管理分离。您可以通过修改`component`文件夹下的文件，适配您的业务场景，
 // 在UI展示上，您可以通过属性的方式，将上层的用户头像，名称等数据传入组件内部，`static`下的icon和默认头像图片，
@@ -29,27 +28,43 @@ Component({
 
   data: {
     callStatus: STATUS.IDLE, // idle、calling、connection
-    isSponsor: false,
+    isSponsor: false,  // 呼叫者身份 true为呼叫者 false为被叫者
     pusher: {}, // TRTC 本地流
     playerList: [], // TRTC 远端流
-    remoteUsers: [], // 远程用户资料
+    playerProcess: {}, // 经过处理的的远端流(多人通话)
+    isGroup: false, // 是否为多人通话
+    remoteUsers: [], // 单人通话远程用户资料(不包含自身)
+    allUsers: [],   // 多人通话用户资料(包含自身)
+    sponsor: '',      // 主叫方
     screen: 'pusher', // 视屏通话中，显示大屏幕的流（只限1v1聊天
     soundMode: AUDIO_PLAYBACK_DEVICE.SPEAKER, // 声音模式 听筒/扬声器
-    userList: null, // 接受邀请的用户信息
+    showToatTime: 0,   // 弹窗时长
+    ownUserId: '',
   },
 
 
   methods: {
-    initCall() {
+    resetUI() {
       // 收起键盘
       wx.hideKeyboard();
     },
     // 新的邀请回调事件
     handleNewInvitationReceived(event) {
-      this.initCall();
-      console.log(`${TAG_NAME}, handleNewInvitationReceived, event${JSON.stringify(event)}`);
+      this.resetUI();
       this.data.config.type = event.data.inviteData.callType;
-      this.getUserProfile([event.data.sponsor]);
+      // 判断是否为多人通话
+      if (event.data.isFromGroup) {
+        this.setData({
+          isGroup: true,
+          sponsor: event.data.sponsor,
+        });
+        // 将主叫方和被叫列表合并在一起 组成全部通话人数
+        const newList = [...event.data.inviteeList, event.data.sponsor];
+        // 获取用户信息
+        this.getUserProfile(newList);
+      } else {
+        this.getUserProfile([event.data.sponsor]);
+      }
       this.setData({
         config: this.data.config,
         callStatus: STATUS.CALLING,
@@ -59,33 +74,61 @@ Component({
 
     // 用户接听
     handleUserAccept(event) {
-      console.log(`${TAG_NAME}, handleUserAccept, event${JSON.stringify(event)}`);
-      this.setData({
-        callStatus: STATUS.CONNECTED,
-        userList: event.data.userList,
-      });
+      // 主叫方则唤起通话页面
+      if (this.data.isSponsor) {
+        this.setData({
+          callStatus: STATUS.CONNECTED,
+        });
+      }
     },
 
     // 远端用户进入通话
     handleUserEnter(res) {
+      const newList = this.data.allUsers;
+      // 多人通话
+      if (this.data.isGroup) {
+        // 改变远端用户信息中的isEnter属性
+        for (let i = 0;i < newList.length;i++) {
+          if (newList[i].userID === res.data.userID) {
+            newList[i].isEnter = true;
+          }
+        }
+      }
       this.setData({
         playerList: res.playerList,
+        allUsers: newList,
       });
     },
     // 远端用户离开通话
     handleUserLeave(res) {
+      // 多人通话
+      if (this.data.isGroup) {
+        wx.showToast({
+          title: `${res.data.userID}离开通话`,
+        });
+        this.deleteUsers(this.data.allUsers, res.data.userID);
+      }
       this.setData({
         playerList: res.data.playerList,
       });
     },
     // 用户数据更新
     handleUserUpdate(res) {
-      console.log(`${TAG_NAME}, handleUserUpdate, res`);
-      console.log(res);
       this.handleNetStatus(res.data);
+      const newplayer = {};
+      const newres = res.data.playerList;
+      // 多人通话
+      if (this.data.isGroup) {
+        // 处理远端流
+        for (let i = 0;i < newres.length;i++) {
+          const  { userID } = newres[i];
+          newplayer[userID] = newres[i];
+        }
+      };
       this.setData({
         pusher: res.data.pusher,
         playerList: res.data.playerList,
+        playerProcess: newplayer,
       });
     },
     // 判断网络状态
@@ -109,52 +152,69 @@ Component({
     },
     // 用户拒绝
     handleInviteeReject(event) {
-      console.log(`${TAG_NAME}, handleInviteeReject, event${JSON.stringify(event)}`);
-      if (this.data.playerList.length === 0) {
-        this.reset();
+      if (this.data.isGroup) {
+        this.deleteUsers(this.data.allUsers, event.data.invitee);
       }
       wx.showToast({
-        title: `${this.handleCallingUser([event.data.invitee])}已拒绝`,
+        title: `${event.data.invitee}已拒绝`,
       });
     },
     // 用户不在线
     handleNoResponse(event) {
-      console.log(`${TAG_NAME}, handleNoResponse, event${JSON.stringify(event)}`);
-      if (this.data.playerList.length === 0) {
-        this.reset();
+      if (this.data.isGroup) {
+        this.deleteUsers(this.data.allUsers, event.data.timeoutUserList);
       }
       wx.showToast({
-        title: `${this.handleCallingUser(event.data.timeoutUserList)}不在线`,
+        icon: 'none',
+        title: `${event.data.timeoutUserList}无应答`,
       });
     },
     // 用户忙线
     handleLineBusy(event) {
-      console.log(`${TAG_NAME}, handleLineBusy, event${JSON.stringify(event)}`);
-      if (this.data.playerList.length === 0) {
-        this.reset();
+      if (this.data.isGroup) {
+        this.deleteUsers(this.data.allUsers, event.data.invitee);
       }
-      wx.showToast({
-        title: `${this.handleCallingUser([event.data.invitee])}忙线中`,
-      });
+      this.showToast(event.data.invitee);
     },
+
+    showToast(event) {
+      this.setData({
+        showToatTime: this.data.showToatTime + 500,
+      });
+      setTimeout(() => {
+        wx.showToast({
+          title: `${event}忙线中`,
+        });
+      }, this.data.showToatTime);
+    },
+
     // 用户取消
     handleCallingCancel(event) {
-      console.log(`${TAG_NAME}, handleCallingCancel, event${JSON.stringify(event)}`);
-      if (this.data.playerList.length === 0) {
-        this.reset();
+      if (event.data.invitee !== this.data.config.userID) {
+        wx.showToast({
+          title: `${event.data.invitee}取消通话`,
+        });
       }
-      wx.showToast({
-        title: `${this.handleCallingUser([event.data.invitee])}取消通话`,
-      });
+      this.reset();
     },
     // 通话超时未应答
     handleCallingTimeout(event) {
-      console.log(`${TAG_NAME}, handleCallingTimeout, event${JSON.stringify(event)}`);
+      if (this.data.isGroup) {
+        // 若是自身未应答 则不弹窗
+        if (this.data.config.userID === event.data.timeoutUserList[0]) {
+          this.reset();
+          return;
+        }
+        const newList = this.deleteUsers(this.data.allUsers, event.data.timeoutUserList);
+        this.setData({
+          allUsers: newList,
+        });
+      }
       if (this.data.playerList.length === 0) {
         this.reset();
       }
       wx.showToast({
-        title: `${this.handleCallingUser(event.data.timeoutUserList)}超时无应答`,
+        title: `${event.data.timeoutUserList[0]}超时无应答`,
       });
     },
     handleCallingUser(userIDList) {
@@ -163,7 +223,6 @@ Component({
       this.setData({
         remoteUsers: remoteUsers.filter(item => userIDList.some(userItem => userItem !== item.userID)),
       });
-      console.log(`${TAG_NAME}, handleCallingUser, userProfile`, userProfile);
       let nick = '';
       for (let i = 0; i < userProfile.length; i++) {
         nick += `${userProfile[i].nick}、`;
@@ -172,17 +231,11 @@ Component({
     },
     // 通话结束
     handleCallingEnd(event) {
-      console.log(`${TAG_NAME}, handleCallingEnd`);
-      this.reset();
-      if (event.data.message) {
-        this.triggerEvent('sendMessage', {
-          message: event.data.message,
-        });
-      }
       wx.showToast({
         title: '通话结束',
         duration: 800,
       });
+      this.reset();
     },
 
     // SDK Ready 回调
@@ -202,10 +255,31 @@ Component({
       this.setData({
         config: this.data.config,
       });
-      this.triggerEvent('sendMessage', {
-        message: event.data.message,
+    },
+
+    // 删除用户列表操作
+    deleteUsers(usersList, userID) {
+      // 若userID不是数组,则将其转换为数组
+      if (!Array.isArray(userID)) {
+        userID = [userID];
+      }
+      const list = usersList.filter(item => !userID.includes(item.userID));
+      this.setData({
+        allUsers: list,
       });
     },
+
+    // 增加用户列表操作
+    addUsers(usersList, userID) {
+      // 若userID不是数组,则将其转换为数组
+      if (!Array.isArray(userID)) {
+        userID = [userID];
+      }
+      const newList = [...usersList, ...userID];
+      return newList;
+    },
+
+
     // 增加 tsignaling 事件监听
     _addTSignalingEvent() {
       // 被邀请通话
@@ -216,7 +290,7 @@ Component({
       wx.$TUICallEngine.on(EVENT.USER_ENTER, this.handleUserEnter, this);
       // 用户离开通话
       wx.$TUICallEngine.on(EVENT.USER_LEAVE, this.handleUserLeave, this);
-      // 用户离开通话
+      // 用户更新数据
       wx.$TUICallEngine.on(EVENT.USER_UPDATE, this.handleUserUpdate, this);
       // 用户拒绝通话
       wx.$TUICallEngine.on(EVENT.REJECT, this.handleInviteeReject, this);
@@ -236,6 +310,8 @@ Component({
       wx.$TUICallEngine.on(EVENT.KICKED_OUT, this.handleKickedOut, this);
       // 切换通话模式
       wx.$TUICallEngine.on(EVENT.CALL_MODE, this.handleCallMode, this);
+      // 自己发送消息
+      wx.$TUICallEngine.on(EVENT.MESSAGE_SENT_BY_ME, this.messageSentByMe, this);
     },
     // 取消 tsignaling 事件监听
     _removeTSignalingEvent() {
@@ -247,7 +323,7 @@ Component({
       wx.$TUICallEngine.off(EVENT.USER_ENTER, this.handleUserEnter);
       // 用户离开通话
       wx.$TUICallEngine.off(EVENT.USER_LEAVE, this.handleUserLeave);
-      // 用户离开通话
+      // 用户更新数据
       wx.$TUICallEngine.off(EVENT.USER_UPDATE, this.handleUserUpdate);
       // 用户拒绝通话
       wx.$TUICallEngine.off(EVENT.REJECT, this.handleInviteeReject);
@@ -267,6 +343,8 @@ Component({
       wx.$TUICallEngine.off(EVENT.KICKED_OUT, this.handleKickedOut);
       // 切换通话模式
       wx.$TUICallEngine.off(EVENT.CALL_MODE, this.handleCallMode);
+      // 自己发送消息
+      wx.$TUICallEngine.off(EVENT.MESSAGE_SENT_BY_ME, this.messageSentByMe);
     },
     /**
      * C2C邀请通话，被邀请方会收到的回调
@@ -276,9 +354,8 @@ Component({
      * @param type 0-为之， 1-语音通话，2-视频通话
      */
     async call(params) {
-      this.initCall();
+      this.resetUI();
       if (this.data.callStatus !== STATUS.IDLE) {
-        console.warn(`${TAG_NAME}, call callStatus isn't idle`);
         return;
       }
 
@@ -292,9 +369,6 @@ Component({
           isSponsor: true,
         });
         this.setSoundMode(this.data.config.type === MEDIA_TYPE.AUDIO ? AUDIO_PLAYBACK_DEVICE.EAR : AUDIO_PLAYBACK_DEVICE.SPEAKER);
-        this.triggerEvent('sendMessage', {
-          message: res.data.message,
-        });
       });
     },
     /**
@@ -306,20 +380,42 @@ Component({
      * @param groupID IM群组ID
      */
     async groupCall(params) {
-      this.initCall();
+      // 判断是否存在groupID
+      if (!params.groupID) {
+        wx.showToast({
+          title: '群ID为空',
+        });
+        return;
+      }
+      // 查看群是否有效
+      this.getTim().searchGroupByID(params.groupID)
+        .then((imResponse) => {
+        })
+        .catch(() => {
+          wx.showToast({
+            title: '未搜索到该群',
+          });
+          return;
+        });
+      this.resetUI();
       if (this.data.callStatus !== STATUS.IDLE) {
-        console.warn(`${TAG_NAME}, groupCall callStatus isn't idle`);
         return;
       }
       wx.$TUICallEngine.groupCall({ userIDList: params.userIDList, type: params.type, groupID: params.groupID }).then((res) => {
         this.data.config.type = params.type;
-        this.getUserProfile(params.userIDList);
         this.setData({
           pusher: res.pusher,
           config: this.data.config,
           callStatus: STATUS.CALLING,
           isSponsor: true,
+          isGroup: true,
+          sponsor: this.data.config.userID,
         });
+        // 将自身的userID插入到邀请列表中,组成完整的用户信息
+        const list = JSON.parse(JSON.stringify(params.userIDList));
+        list.unshift(this.data.config.userID);
+        // 获取用户信息
+        this.getUserProfile(list);
       });
     },
     /**
@@ -327,14 +423,23 @@ Component({
      */
     async accept() {
       wx.$TUICallEngine.accept().then((res) => {
-        console.log('accept', res);
         this.setData({
           pusher: res.pusher,
           callStatus: STATUS.CONNECTED,
         });
-        this.triggerEvent('sendMessage', {
-          message: res.message,
-        });
+        // 多人通话需要对自身位置进行修正,将其放到首位
+        if (this.data.isGroup) {
+          const newList = this.data.allUsers;
+          for (let i = 0;i < newList.length;i++) {
+            if (newList[i].userID === this.data.config.userID) {
+              newList[i].isEnter = true;
+              [newList[i], newList[0]] = [newList[0], newList[i]];
+            }
+          }
+          this.setData({
+            allUsers: newList,
+          });
+        }
       })
         .catch((error) => {
           wx.showModal({
@@ -345,17 +450,22 @@ Component({
           });
         });
     },
+
+
     /**
      * 当您作为被邀请方收到的回调时，可以调用该函数拒绝来电
      */
     async reject() {
-      console.log(`${TAG_NAME}, reject`);
       wx.$TUICallEngine.reject().then((res) => {
-        this.triggerEvent('sendMessage', {
-          message: res.data.message,
-        });
+        this.reset();
       });
-      this.reset();
+    },
+
+    messageSentByMe(event) {
+      const message = event.data.data;
+      this.triggerEvent('sendMessage', {
+        message,
+      });
     },
 
     // xml层，是否开启扬声器
@@ -366,9 +476,8 @@ Component({
     },
 
     // xml层，挂断
-    _hangUp() {
-      console.log(`${TAG_NAME}, hangup`);
-      wx.$TUICallEngine.hangup();
+    async _hangUp() {
+      await wx.$TUICallEngine.hangup();
       this.reset();
     },
 
@@ -384,9 +493,11 @@ Component({
       this.setData({
         callStatus: STATUS.IDLE,
         isSponsor: false,
+        isGroup: false,
         soundMode: AUDIO_PLAYBACK_DEVICE.SPEAKER,
         pusher: {}, // TRTC 本地流
         playerList: [], // TRTC 远端流
+        showToatTime: 0,
       });
     },
     // 呼叫中的事件处理
@@ -413,9 +524,6 @@ Component({
             this.setData({
               config: this.data.config,
             });
-            this.triggerEvent('sendMessage', {
-              message: res.data.message,
-            });
           });
           break;
         default:
@@ -424,7 +532,6 @@ Component({
     },
     // 通话中的事件处理
     handleConnectedEvent(data) {
-      console.log(`${TAG_NAME}, handleVideoEvent--`, data);
       const { name, event } = data.detail;
       switch (name) {
         case 'toggleViewSize':
@@ -470,9 +577,6 @@ Component({
               config: this.data.config,
             });
             this.setSoundMode(AUDIO_PLAYBACK_DEVICE.EAR);
-            this.triggerEvent('sendMessage', {
-              message: res.data.message,
-            });
           });
           break;
         default:
@@ -488,10 +592,35 @@ Component({
     // 获取用户资料
     async getUserProfile(userList) {
       const imResponse = await this.getTim().getUserProfile({ userIDList: userList });
+      // 修正用户资料
+      this.modifyUser(imResponse.data);
+    },
+
+    // 修正用户资料
+    modifyUser(userIDList) {
+      const { sponsor } = this.data;
+      if (this.data.isGroup) {
+        // 多人通话需要将呼叫者放到第一位 isEnter的作用是区分用户是否进入房间
+        for (let i = 0;i < userIDList.length;i++) {
+          // 主叫方的标志位设置成true
+          if (userIDList[i].userID === sponsor) {
+            userIDList[i].isEnter = true;
+            // 对主叫方位置进行修正 将其放到首位
+            [userIDList[i], userIDList[0]] = [userIDList[0], userIDList[i]];
+          } else {
+          // 其他用户默认未进入房间 设置为false
+            userIDList[i].isEnter = false;
+          }
+        }
+        this.setData({
+          allUsers: userIDList,
+        });
+      }
       this.setData({
-        remoteUsers: imResponse.data,
+        remoteUsers: userIDList,
       });
     },
+
     // 获取 tim 实例
     getTim() {
       return wx.$TUICallEngine.getTim();
@@ -499,24 +628,16 @@ Component({
     // 初始化TRTCCalling
     async init() {
       this._addTSignalingEvent();
-      try {
-        const res = await wx.$TUICallEngine.login({
-          userID: this.data.config.userID,
-          userSig: this.data.config.userSig,
-        });
-        return res;
-      } catch (error) {
-        throw new Error('TUICallEngine login failure', error);
-      }
+      const res = await wx.$TUICallEngine.init({
+        userID: this.data.config.userID,
+        userSig: this.data.config.userSig,
+      });
+      return res;
     },
     // 销毁 TUICallEngine
     destroyed() {
       this._removeTSignalingEvent();
-      if (this.data.config.tim) {
-        wx.$TUICallEngine.destroyed();
-      } else {
-        wx.$TUICallEngine.logout();
-      }
+      TUICallEngine.destroyInstance();
     },
   },
 
@@ -531,13 +652,17 @@ Component({
 
     },
     ready() {
+      this.setData({
+        ownUserId: this.data.config.userID,
+      });
       wx.$TUICallEngine = TUICallEngine.createInstance({
+        tim: this.data.config.tim,
         sdkAppID: this.data.config.sdkAppID,
-		tim: wx.$TIM
       });
       this.reset();
     },
     detached() {
+      this.destroyed();
       this.reset();
     },
     error() {

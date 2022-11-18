@@ -59,7 +59,7 @@
                     <text>挂断</text>
                 </view>
                 <view class="btn-operate-item">
-                    <view class="call-operate" catch:tap="accept">
+                    <view class="call-operate" catchtap="{{isClick ? 'accept' :''}}">
                         <image src="../../static/dialing.png" />
                     </view>
                     <text>接听</text>
@@ -68,24 +68,16 @@
         </view>
     </view>
 </view>
+
+
 <view class="incoming-call audio-call" wx:if="{{callType === 1}}">
-    <view class="invite-calling-single" wx:if="{{remoteUsers.length === 1}}">
+    <view class="invite-calling-single">
         <image class="avatar" src="{{remoteUsers[0].avatar || '../../static/default_avatar.png'}}"
             id="{{remoteUsers[0].userID}}" binderror="handleErrorImage" />
         <view class="tips">{{remoteUsers[0].nick || remoteUsers[0].userID}}</view>
         <view wx:if="{{isSponsor && callType === 1}}" class="tips-subtitle">{{'等待对方接受'}}</view>
     </view>
-    <view class="invite-calling-header invite-calling-list" wx:else>
-        <view class="invite-calling-item" wx:for="{{remoteUsers}}" wx:key="userID">
-            <image class="avatar" src="{{item.avatar || '../../static/default_avatar.png'}}" id="{{item.userID}}"
-                binderror="handleErrorImage" />
-            <view class="invite-calling-item-message">
-                <label class="tips">{{item.nick || item.userID}}</label>
-                <text class="tips-subtitle" wx:if="{{!isSponsor}}">邀请你视频通话</text>
-                <text class="tips-subtitle" wx:else>等待对方接受</text>
-            </view>
-        </view>
-    </view>
+   
     <view class="footer">
         <view wx:if="{{!isSponsor && callType === 1}}" class="btn-operate">
             <view class="button-container">
@@ -95,7 +87,7 @@
                 <view style="margin-top:10px">挂断</view>
             </view>
             <view class="button-container">
-                <view class="call-operate" catch:tap="accept">
+                <view class="call-operate" catchtap="{{isClick ? 'accept' :''}}">
                     <image src="../../static/dialing.png"/>
                 </view>
                 <view style="margin-top:10px">接听</view>

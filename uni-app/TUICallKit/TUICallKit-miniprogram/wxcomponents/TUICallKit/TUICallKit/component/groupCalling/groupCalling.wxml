@@ -1,0 +1,137 @@
+<view class="trtc-calling-index">
+    <!-- 视频通话 -->
+    <view class="invite-call" wx:if="{{callType === 2}}">
+        <live-pusher class="local-video" wx:if="{{isGroup===false}}" device-position="{{pusher.frontCamera}}" />
+        <view class="invite-calling">
+            <!-- 主叫方 -->
+            <swiper class="swiper" wx:if="{{isSponsor}}" indicator-dots="{{allUsers.length/4 > 1}}" indicator-color="white" indicator-active-color="black">
+                <block wx:for="{{(allUsers.length)/4}}" wx:key="*this" wx:for-index="pos">
+                    <swiper-item class="invite-calling-list">
+                        <view wx:for="{{allUsers}}" wx:key="userID" class="invite-calling-item" wx:if="{{index >= pos*4 && index < pos*4+4}}">
+                            <view id="{{item.userID}}" class="invite-calling-item-message" wx:if="{{item.userID !== ownUserId}}">
+                                <view class="invite-calling-item-loadimg">
+                                    <image src="../../static/loading.png"></image>
+                                </view>
+                                <view class="invite-calling-item-id">{{item.userID}}</view>
+                            </view>
+                            <image class="avatar" src="{{item.avatar || '../../static/default_avatar.png'}}" binderror="handleErrorImage" />
+                            <view class="invite-calling-item-id">{{item.userID}}</view>
+                        </view>
+                    </swiper-item>
+                </block>
+            </swiper>
+            <!-- 被叫方 -->
+            <view wx:else>
+                <view class="invite-calling-single">
+                    <image class="avatar" src="{{allUsers[0].avatar || '../../static/default_avatar.png'}}" id="{{allUsers[0].userID}}" binderror="handleErrorImage" />
+                    <view class="tips">{{allUsers[0].userID}}</view>
+                    <view class="invite-txt">邀请你参加多人通话</view>
+                </view>
+                <view class="invite-other-txt">参与通话的还有：</view>
+                <view class="invite-other-list">
+                    <view class="invite-other-item" wx:if="{{index>0}}" wx:for="{{allUsers}}" wx:key="item">
+                        <image class="avatar" src="{{item.avatar || '../../static/default_avatar.png'}}" binderror="handleErrorImage" />
+                        <view class="invite-other-item-name">{{ item.userID}}</view>
+                    </view>
+                </view>
+            </view>
+            <view class="footer">
+                <!-- <view class="btn-operate" wx:if="{{isSponsor}}">
+                <view class="btn-operate-item call-switch" catch:tap="switchAudioCall">
+                    <view class="call-operate">
+                        <image src="../../static/trans.png" />
+                    </view>
+                    <text>切到语音通话</text>
+                </view>
+            </view> -->
+                <view class="btn-operate" wx:if="{{isSponsor}}">
+                    <view class="btn-operate-item">
+                        <view class="btn-container">
+                            <view class="call-operate" catch:tap="hangup">
+                                <image src="../../static/hangup.png" />
+                            </view>
+                            <!-- <view class="invite-calling-header-left">
+                                <image src="../../static/switch_camera.png" data-device="{{pusher.frontCamera}}" catch:tap="toggleSwitchCamera" />
+                            </view> -->
+                        </view>
+                        <text style="color: #666666">挂断</text>
+                    </view>
+                </view>
+                <view class="btn-operate" wx:if="{{!isSponsor}}">
+                    <view class="btn-operate-item">
+                        <view class="call-operate" style="background-color: red" catch:tap="reject">
+                            <image src="../../static/hangup.png" />
+                        </view>
+                        <text style="color: #666666">挂断</text>
+                    </view>
+                    <view class="btn-operate-item">
+                        <view class="call-operate" catchtap="{{isClick ? 'accept' :''}}">
+                            <image src="../../static/dialing.png" />
+                        </view>
+                        <text style="color: #666666">接听</text>
+                    </view>
+                </view>
+            </view>
+        </view>
+    </view>
+    <!-- 语音通话 -->
+    <view class="incoming-call audio-call" wx:if="{{callType === 1}}">
+        <!-- 主叫方 -->
+        <swiper class="swiper" wx:if="{{isSponsor}}" indicator-dots="{{allUsers.length/4 > 1}}" indicator-color="white" indicator-active-color="black">
+            <block wx:for="{{(allUsers.length)/4}}" wx:key="*this" wx:for-index="pos">
+                <swiper-item class="invite-calling-list">
+                    <view wx:for="{{allUsers}}" wx:key="userID" class="invite-calling-item" wx:if="{{index >= pos*4 && index < pos*4+4}}">
+                        <view id="{{item.userID}}" class="invite-calling-item-message" wx:if="{{item.userID !== ownUserId}}">
+                            <view class="invite-calling-item-loadimg">
+                                <image src="../../static/loading.png"></image>
+                            </view>
+                            <view class="invite-calling-item-id">{{item.userID}}</view>
+                        </view>
+                        <image class="avatar" src="{{item.avatar || '../../static/default_avatar.png'}}" binderror="handleErrorImage" />
+                        <view class="invite-calling-item-id">{{item.userID}}</view>
+                    </view>
+                </swiper-item>
+            </block>
+        </swiper>
+        <!-- 被叫方 -->
+        <view wx:else>
+            <view class="invite-calling-single">
+                <image class="avatar" src="{{allUsers[0].avatar || '../../static/default_avatar.png'}}" id="{{allUsers[0].userID}}" binderror="handleErrorImage" />
+                <view class="tips">{{allUsers[0].userID}}</view>
+                <view class="invite-txt">邀请你参加多人通话</view>
+            </view>
+            <view class="invite-other-txt">参与通话的还有：</view>
+            <view class="invite-other-list">
+                <view class="invite-other-item" wx:if="{{index>0}}" wx:for="{{allUsers}}" wx:key="item">
+                    <image class="avatar" src="{{item.avatar || '../../static/default_avatar.png'}}" binderror="handleErrorImage" />
+                    <view class="invite-other-item-name">{{item.userID}}</view>
+                </view>
+            </view>
+        </view>
+        <!-- 菜单 -->
+        <view class="footer">
+            <view wx:if="{{!isSponsor && callType === 1}}" class="btn-operate">
+                <view class="button-container">
+                    <view class="call-operate" style="background-color: red" catch:tap="reject">
+                        <image src="../../static/hangup.png" />
+                    </view>
+                    <view style="margin-top:10px;color: #666666">挂断</view>
+                </view>
+                <view class="button-container">
+                    <view class="call-operate" catchtap="{{isClick ? 'accept' :''}}">
+                        <image src="../../static/dialing.png" />
+                    </view>
+                    <view style="margin-top:10px;color: #666666">接听</view>
+                </view>
+            </view>
+            <view wx:if="{{isSponsor && callType === 1}}" class="btn-operate">
+                <view class="button-container">
+                    <view class="call-operate" style="background-color: red" catch:tap="hangup">
+                        <image src="../../static/hangup.png" />
+                    </view>
+                    <view style="margin-top:10px;color: #666666">挂断</view>
+                </view>
+            </view>
+        </view>
+    </view>
+</view>
