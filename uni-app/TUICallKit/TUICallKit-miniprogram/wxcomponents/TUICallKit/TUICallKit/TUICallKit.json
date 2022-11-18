@@ -2,7 +2,9 @@
   "component": true,
   "usingComponents": {
     "TUI-Calling": "./component/calling/calling",
-    "TUI-Connected": "./component/connected/connected"
+    "TUI-Connected": "./component/connected/connected",
+    "TUI-groupCalling": "./component/groupCalling/groupCalling",
+    "TUI-groupConnected": "./component/groupConnected/groupConnected"
   },
   "navigationStyle": "custom",
   "disableScroll": true

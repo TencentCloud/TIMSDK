@@ -50,10 +50,10 @@ function genTestUserSig(userID) {
   const userSig = generator.genTestUserSig(userID);
   return {
     sdkAppID: SDKAPPID,
-    userSig
+    userSig,
   };
 }
 
 module.exports = {
-  genTestUserSig
+  genTestUserSig,
 };

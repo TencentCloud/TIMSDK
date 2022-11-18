@@ -6,7 +6,6 @@ Component({
   properties: {
     isSponsor: {
       type: Boolean,
-      value: false,
     },
     pusher: {
       type: Object,
@@ -14,11 +13,14 @@ Component({
     callType: {
       type: Number,
     },
-    remoteUsers: {
+    allUsers: {
       type: Array,
     },
     isGroup: {
       type: Boolean,
+    },
+    ownUserId: {
+      type: String,
     },
   },
 
@@ -26,6 +28,7 @@ Component({
    * 组件的初始数据
    */
   data: {
+    userID: null,
     isClick: true,
   },
 
@@ -34,13 +37,14 @@ Component({
    */
   lifetimes: {
     created() {
-
     },
     attached() {
     },
     ready() {
+
     },
     detached() {
+
     },
     error() {
     },
@@ -76,14 +80,14 @@ Component({
     },
     handleErrorImage(e) {
       const { id } = e.target;
-      const remoteUsers = this.data.remoteUsers.map((item) => {
+      const allUsers = this.data.allUsers.map((item) => {
         if (item.userID === id) {
           item.avatar = '../../static/default_avatar.png';
         }
         return item;
       });
       this.setData({
-        remoteUsers,
+        allUsers,
       });
     },
     toggleSwitchCamera(event) {

@@ -1,0 +1,106 @@
+<view class="{{callType === 2?'TUICalling-connected-video':'TUICalling-connected-layout'}}">
+    <!-- 语音通话 -->
+    <view wx:if="{{callType === 1}}">
+        <swiper class="swiper" indicator-dots="{{allUsers.length/4 > 1}}" indicator-color="white" indicator-active-color="black">
+            <block wx:for="{{(allUsers.length)/4}}" wx:key="*this" wx:for-index="pos">
+                <swiper-item class="invite-calling-list">
+                    <view wx:for="{{allUsers}}" wx:key="userID" class="invite-calling-item" wx:if="{{index >= pos*4 && index < pos*4+4}}">
+                        <view id="{{item.userID}}" class="invite-calling-item-message" wx:if="{{!item.isEnter}}">
+                            <view class="invite-calling-item-loadimg">
+                                <image src="../../static/loading.png"></image>
+                            </view>
+                            <view class="invite-calling-item-id">{{item.userID}}</view>
+                        </view>
+                        <image class="avatar" src="{{item.avatar || '../../static/default_avatar.png'}}" binderror="handleErrorImage" />
+                        <!-- 音量图标 -->
+                        <view class="player-control">
+                            <image src="{{item.avatar || '../../static/default_avatar.png'}}"></image>
+                            <view class="name">{{item.userID===ownUserId?'我':item.userID}}</view>
+                        </view>
+                    </view>
+                </swiper-item>
+            </block>
+        </swiper>
+    </view>
+    <view class="{{callType === 1 ? 'pusher-audio' : ''}}">
+        <swiper class="swiper" indicator-dots="{{allUsers.length/4 > 1}}" indicator-color="white" indicator-active-color="black">
+            <block wx:for="{{(allUsers.length)/4}}" wx:key="*this" wx:for-index="pos">
+                <swiper-item class="invite-calling-list">
+                    <view wx:for="{{allUsers}}" wx:key="userID" class="invite-calling-item" wx:if="{{index >= pos*4 && index < pos*4+4}}">
+                        <view id="{{item.userID}}" class="invite-calling-item-message" wx:if="{{!item.isEnter}}">
+                            <view class="invite-calling-item-loadimg">
+                                <image src="../../static/loading.png"></image>
+                            </view>
+                            <image class="avatar" src="{{item.avatar || '../../static/default_avatar.png'}}" binderror="handleErrorImage" />
+                            <view class="invite-calling-item-id">{{item.userID}}</view>
+                        </view>
+                        <view wx:else>
+                            <!-- 本地流 -->
+                            <view wx:if="{{item.userID===ownUserId}}" class="{{callType === 1 ? 'pusher-audio' : 'play-item'}}" data-screen="pusher" catch:tap="toggleViewSize">
+                                <live-pusher class="{{callType === 1 ? 'pusher-audio' : 'pusher-ownvideo'}}" url="{{pusher.url}}" mode="{{pusher.mode}}" autopush="{{true}}" enable-camera="{{pusher.enableCamera}}" enable-mic="{{true}}" muted="{{!pusher.enableMic}}" enable-agc="{{true}}" enable-ans="{{true}}" enable-ear-monitor="{{pusher.enableEarMonitor}}" auto-focus="{{pusher.enableAutoFocus}}" zoom="{{pusher.enableZoom}}" min-bitrate="{{pusher.minBitrate}}" max-bitrate="{{pusher.maxBitrate}}" video-width="{{pusher.videoWidth}}" video-height="{{pusher.videoHeight}}" beauty="{{pusher.beautyLevel}}" whiteness="{{pusher.whitenessLevel}}" orientation="{{pusher.videoOrientation}}" aspect="{{pusher.videoAspect}}" device-position="{{pusher.frontCamera}}" remote-mirror="{{pusher.enableRemoteMirror}}" local-mirror="{{pusher.localMirror}}" background-mute="{{pusher.enableBackgroundMute}}" audio-quality="{{pusher.audioQuality}}" audio-volume-type="{{pusher.audioVolumeType}}" audio-reverb-type="{{pusher.audioReverbType}}" waiting-image="{{pusher.waitingImage}}" beauty-style="{{pusher.beautyStyle}}" filter="{{pusher.filter}}" bindstatechange="pusherStateChangeHandler" bindnetstatus="pusherNetStatus" binderror="pusherErrorHandler" bindaudiovolumenotify="pusherAudioVolumeNotify" />
+                                <view class="player-control">
+                                    <image src="{{item.avatar || '../../static/default_avatar.png'}}"></image>
+                                    <view class="name">我</view>
+                                </view>
+                            </view>
+                            <!-- 远端流 -->
+                            <view catch:tap="toggleViewSize" class="{{callType === 1 ? 'pusher-audio' : 'play-item'}}" wx:else>
+                                <live-player class="{{callType === 1 ? 'pusher-audio' : 'pusher-ownvideo'}}" id="{{playerProcess[item.userID].id}}" data-userid="{{playerProcess[item.userID].userID}}" data-streamid="{{playerProcess[item.userID].streamID}}" data-streamtype="{{playerProcess[item.userID].streamType}}" src="{{playerProcess[item.userID].src}}" mode="RTC" autoplay="{{playerProcess[item.userID].autoplay}}" mute-audio="{{playerProcess[item.userID].muteAudio}}" mute-video="{{playerProcess[item.userID].muteVideo}}" orientation="{{playerProcess[item.userID].orientation}}" object-fit="{{playerProcess[item.userID].objectFit}}" background-mute="{{playerProcess[item.userID].enableBackgroundMute}}" min-cache="{{playerProcess[item.userID].minCache}}" max-cache="{{playerProcess[item.userID].maxCache}}" sound-mode="{{soundMode}}" enable-recv-message="{{playerProcess[item.userID].enableRecvMessage}}" auto-pause-if-navigate="{{playerProcess[item.userID].autoPauseIfNavigate}}" auto-pause-if-open-native="{{playerProcess[item.userID].autoPauseIfOpenNative}}" bindstatechange="playerStateChange" bindfullscreenchange="playerFullscreenChange" bindnetstatus="playNetStatus" bindaudiovolumenotify="playerAudioVolumeNotify" />
+                                <!-- 音量图标 -->
+                                <view class="player-control">
+                                    <image src="{{item.avatar || '../../static/default_avatar.png'}}"></image>
+                                    <view class="name">{{item.userID}}</view>
+                                </view>
+                            </view>
+                        </view>
+                    </view>
+                </swiper-item>
+            </block>
+        </swiper>
+    </view>
+    <!-- 菜单 -->
+    <view class="handle-btns">
+        <view class="other-view {{callType === 1 ? 'black' : 'white'}}">
+            <text>{{pusher.chatTime}}</text>
+        </view>
+        <view class="btn-list">
+            <view class="button-container">
+                <view class="btn-normal" bindtap="pusherAudioHandler">
+                    <image class="btn-image" src="{{pusher.enableMic? '../../static/audio-true.png': '../../static/audio-false.png'}} "></image>
+                </view>
+                <view class="{{callType === 2 ? 'white' : ''}}">麦克风</view>
+            </view>
+            <view class="button-container" wx:if="{{callType === 1}}">
+                <view class="btn-hangup" bindtap="hangup">
+                    <image class="btn-image" src="../../static/hangup.png"></image>
+                </view>
+                <view class="{{callType === 2 ? 'white' : ''}}">挂断</view>
+            </view>
+            <view class="button-container">
+                <view class="btn-normal" bindtap="toggleSoundMode">
+                    <image class="btn-image" src="{{soundMode === 'ear' ? '../../static/speaker-false.png': '../../static/speaker-true.png'}} "></image>
+                </view>
+                <text class="{{callType === 2 ? 'white' : ''}}">扬声器</text>
+            </view>
+            <view class="button-container" wx:if="{{callType === 2}}">
+                <view class="btn-normal" bindtap="pusherVideoHandler">
+                    <image class="btn-image" src="{{pusher.enableCamera ? '../../static/camera-true.png': '../../static/camera-false.png'}} "></image>
+                </view>
+                <text class="white">摄像头</text>
+            </view>
+        </view>
+        <view class="btn-list" wx:if="{{callType===2}}">
+            <view class="btn-list-item other-view">
+                <view class="btn-container">
+                    <view class="btn-hangup" bindtap="hangup">
+                        <image class="btn-image" src="../../static/hangup.png"></image>
+                    </view>
+                    <view wx:if="{{pusher.enableCamera}}" class="invite-calling-header-left">
+                        <image src="../../static/switch_camera.png" data-device="{{pusher.frontCamera}}" catch:tap="toggleSwitchCamera" />
+                    </view>
+                </view>
+                <text class="white">挂断</text>
+            </view>
+        </view>
+    </view>
+</view>
