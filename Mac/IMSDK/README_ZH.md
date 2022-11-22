@@ -17,7 +17,7 @@
 [最新C++接口下载](https://im.sdk.qcloud.com/download/plus/6.8.3374/cross_platform/ImSDK_Mac_CPP_6.8.3374.framework.zip)
 
 ### C接口版
-[最新C接口下载](https://im.sdk.qcloud.com/download/plus/6.8.3374/cross_platform/ImSDK_Mac_C_6.8.3374.framework.zip)
+[最新C接口下载](https://im.sdk.qcloud.com/download/plus/6.8.3381/cross_platform/ImSDK_Mac_C_6.8.3381.framework.zip)
 
 ## cocoaPods 集成
 如果使用基础版 SDK，请您按照如下方式设置 Podfile 文件
