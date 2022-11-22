@@ -16,7 +16,7 @@
 ### [基础版与增强版差异对比](https://github.com/tencentyun/TIMSDK#%E5%9F%BA%E7%A1%80%E7%89%88%E4%B8%8E%E5%A2%9E%E5%BC%BA%E7%89%88%E5%B7%AE%E5%BC%82%E5%AF%B9%E6%AF%94)
 
 ### C 接口版
-[最新C接口下载](https://im.sdk.qcloud.com/download/plus/6.8.3374/cross_platform/ImSDK_Android_C_6.8.3374.zip)
+[最新C接口下载](https://im.sdk.qcloud.com/download/plus/6.8.3381/cross_platform/ImSDK_Android_C_6.8.3381.zip)
 
 ### C++ 接口版
 [最新C++接口下载](https://im.sdk.qcloud.com/download/plus/6.8.3374/cross_platform/ImSDK_Android_CPP_6.8.3374.zip)
