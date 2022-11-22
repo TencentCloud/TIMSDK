@@ -38,7 +38,7 @@
 [最新 ImSDK.framework 下载](https://im.sdk.qcloud.com/download/standard/5.1.62/TIM_SDK_iOS_latest_framework.zip)
 
 ### C 接口版
-[最新 C 接口下载](https://im.sdk.qcloud.com/download/plus/6.8.3374/cross_platform/ImSDK_iOS_C_6.8.3374.framework.zip)
+[最新 C 接口下载](https://im.sdk.qcloud.com/download/plus/6.8.3381/cross_platform/ImSDK_iOS_C_6.8.3381.framework.zip)
 
 ### C++ 接口版
 [最新 C++ 接口下载](https://im.sdk.cloud.tencent.cn/download/plus/6.8.3374/cross_platform/ImSDK_iOS_CPP_6.8.3374.framework.zip)
