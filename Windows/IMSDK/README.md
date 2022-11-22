@@ -8,7 +8,7 @@ English | [简体中文](./README_ZH.md)
 
 [Latest C++ API Pro download](https://im.sdk.qcloud.com/download/plus/6.8.3374/cross_platform/ImSDK_Windows_CPP_Pro_6.8.3374.zip)
 
-[Latest C API download](https://im.sdk.qcloud.com/download/plus/6.8.3381/cross_platform/ImSDK_Windows_C_6.8.3381.zip)
+[Latest C API download](https://im.sdk.qcloud.com/download/plus/6.8.3381/ImSDK_Windows_C_6.8.3381.zip)
 
 ## TIMSDK for Windows
 
