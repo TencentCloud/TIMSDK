@@ -16,7 +16,7 @@ English | [简体中文](./README_ZH.md)
 ### [Differences Between the Basic Edition and the Enhanced Edition](https://github.com/TencentCloud/TIMSDK/blob/master/README_EN.md#differences-between-the-basic-edition-and-the-enhanced-edition)
 
 ### C API edition
-[Latest C API download](https://im.sdk.qcloud.com/download/plus/6.8.3374/cross_platform/ImSDK_Android_C_6.8.3374.zip)
+[Latest C API download](https://im.sdk.qcloud.com/download/plus/6.8.3381/cross_platform/ImSDK_Android_C_6.8.3381.zip)
 
 ### C++ API edition
 [Latest C++ API download](https://im.sdk.qcloud.com/download/plus/6.8.3374/cross_platform/ImSDK_Android_CPP_6.8.3374.zip)
