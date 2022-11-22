@@ -8,7 +8,7 @@
 
 [最新 C++ 接口 Pro 下载](https://im.sdk.qcloud.com/download/plus/6.8.3374/cross_platform/ImSDK_Windows_CPP_Pro_6.8.3374.zip)
 
-[最新 C 接口下载](https://im.sdk.qcloud.com/download/plus/6.8.3374/cross_platform/ImSDK_Windows_C_6.8.3374.zip)
+[最新 C 接口下载](https://im.sdk.qcloud.com/download/plus/6.8.3381/cross_platform/ImSDK_Windows_C_6.8.3381.zip)
 
 ## TIMSDK for Windows
 
