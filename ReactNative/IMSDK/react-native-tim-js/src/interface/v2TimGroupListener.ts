@@ -41,7 +41,7 @@ export interface V2TimGroupListener {
     onApplicationProcessed?: (
         groupID: string,
         opUser: V2TimGroupMemberInfo,
-        isAgreeJoin: Boolean,
+        isAgreeJoin: boolean,
         opReason: string
     ) => void;
     onGrantAdministrator?: (
