@@ -3,7 +3,6 @@ package com.tencent.qcloud.tuikit.tuicallkit.utils;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -88,22 +87,21 @@ public class PermissionRequest {
         String reason = null;
         String reasonTitle = null;
         String deniedAlert = null;
-        ApplicationInfo applicationInfo = context.getApplicationContext().getApplicationInfo();
-        Resources resources = context.getResources();
-        String appName = resources.getString(applicationInfo.labelRes);
+        ApplicationInfo applicationInfo = context.getApplicationInfo();
+        String appName = context.getPackageManager().getApplicationLabel(applicationInfo).toString();
         switch (type) {
             case PERMISSION_MICROPHONE: {
                 permission = PermissionRequester.PermissionConstants.MICROPHONE;
-                reasonTitle = resources.getString(R.string.tuicalling_permission_mic_reason_title, appName);
-                reason = resources.getString(R.string.tuicalling_permission_mic_reason);
-                deniedAlert = resources.getString(R.string.tuicalling_tips_start_audio);
+                reasonTitle = context.getString(R.string.tuicalling_permission_mic_reason_title, appName);
+                reason = context.getString(R.string.tuicalling_permission_mic_reason);
+                deniedAlert = context.getString(R.string.tuicalling_tips_start_audio);
                 break;
             }
             case PERMISSION_CAMERA: {
                 permission = PermissionRequester.PermissionConstants.CAMERA;
-                reasonTitle = resources.getString(R.string.tuicalling_permission_camera_reason_title, appName);
-                reason = resources.getString(R.string.tuicalling_permission_camera_reason);
-                deniedAlert = resources.getString(R.string.tuicalling_tips_start_camera);
+                reasonTitle = context.getString(R.string.tuicalling_permission_camera_reason_title, appName);
+                reason = context.getString(R.string.tuicalling_permission_camera_reason);
+                deniedAlert = context.getString(R.string.tuicalling_tips_start_camera);
                 break;
             }
             default:

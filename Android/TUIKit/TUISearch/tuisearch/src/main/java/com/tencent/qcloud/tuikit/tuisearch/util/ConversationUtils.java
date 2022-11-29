@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tuikit.tuisearch.util;
 
-import android.content.Context;
 import android.text.TextUtils;
 
 import com.tencent.imsdk.v2.V2TIMConversation;
@@ -10,6 +9,7 @@ import com.tencent.imsdk.v2.V2TIMGroupMemberInfoResult;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
+import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.util.DateTimeUtil;
 import com.tencent.qcloud.tuicore.util.SPUtils;
@@ -18,7 +18,6 @@ import com.tencent.qcloud.tuikit.tuisearch.TUISearchService;
 import com.tencent.qcloud.tuikit.tuisearch.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuisearch.bean.DraftInfo;
 import com.tencent.qcloud.tuikit.tuisearch.bean.MessageInfo;
-import com.tencent.qcloud.tuicore.TUILogin;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -96,7 +95,7 @@ public class ConversationUtils {
         } else {
             List<Object> faceList = new ArrayList<>();
             if (TextUtils.isEmpty(conversation.getFaceUrl())) {
-                faceList.add(TUIThemeManager.getAttrResId(TUISearchService.getAppContext(), R.attr.core_default_user_icon));
+                faceList.add(TUIThemeManager.getAttrResId(TUISearchService.getAppContext(), com.tencent.qcloud.tuicore.R.attr.core_default_user_icon));
             } else {
                 faceList.add(conversation.getFaceUrl());
                 info.setIconPath(conversation.getFaceUrl());
@@ -192,7 +191,7 @@ public class ConversationUtils {
                 for (int i = 0; i < faceSize; i++) {
                     V2TIMGroupMemberFullInfo v2TIMGroupMemberFullInfo = v2TIMGroupMemberFullInfoList.get(i);
                     if (TextUtils.isEmpty(v2TIMGroupMemberFullInfo.getFaceUrl())) {
-                        urlList.add(TUIThemeManager.getAttrResId(TUISearchService.getAppContext(), R.attr.core_default_user_icon));
+                        urlList.add(TUIThemeManager.getAttrResId(TUISearchService.getAppContext(), com.tencent.qcloud.tuicore.R.attr.core_default_user_icon));
                     } else {
                         urlList.add(v2TIMGroupMemberFullInfo.getFaceUrl());
                     }

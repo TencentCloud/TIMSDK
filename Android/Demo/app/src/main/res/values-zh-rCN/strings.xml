@@ -11,6 +11,7 @@
     <string name="demo_login_country_or_region_label">国家/地区</string>
     <string name="demo_area_code_title">选择国家或地区</string>
     <string name="demo_language_title">选择语言</string>
+    <string name="demo_style_title">选择风格</string>
     <string name="demo_login_chinese_mainland">中国大陆</string>
     <string name="demo_login_mobile_phone_number">手机号</string>
     <string name="demo_login_verification_code_label">验证码</string>
@@ -61,6 +62,9 @@
     <string name="lively_theme">明媚</string>
     <string name="serious_theme">深沉</string>
     <string name="modify_language">切换语言</string>
+    <string name="modify_style">切换风格</string>
+    <string name="style_classic">经典版</string>
+    <string name="style_minimalist">简约版</string>
 
     <string name="demo_language">简体中文</string>
     <string name="demo_theme_light">轻快</string>
@@ -95,7 +99,10 @@
     // 主页Tab相关
     <string name="tab_contact_tab_text">通讯录</string>
     <string name="tab_conversation_tab_text">消息</string>
+    <string name="demo_tab_overseas_conversation_tab_text">聊天</string>
     <string name="tab_profile_tab_text">我</string>
+    <string name="minimalist_tab_settings_tab_text">设置</string>
+    <string name="minimalist_tab_contacts_tab_text">联系人</string>
     <string name="tab_community_tab_text">社群</string>
 
     <string name="test_excluded_from_unread_count_action">不计入未读数消息</string>

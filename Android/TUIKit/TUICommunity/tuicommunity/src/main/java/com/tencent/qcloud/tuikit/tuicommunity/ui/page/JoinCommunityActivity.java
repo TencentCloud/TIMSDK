@@ -88,7 +88,7 @@ public class JoinCommunityActivity extends BaseLightActivity {
     private void setCommunityArea(CommunityBean data) {
         communityBean = data;
         GlideEngine.loadImageSetDefault(avatar, data.getGroupFaceUrl(),
-                TUIThemeManager.getAttrResId(this, R.attr.core_default_group_icon_community));
+                TUIThemeManager.getAttrResId(this, com.tencent.qcloud.tuicore.R.attr.core_default_group_icon_community));
         name.setText(data.getCommunityName());
         owner.setText(getString(R.string.community_owner) + ": " + data.getOwner());
         setJoinButton(data.getRole() != CommunityBean.ROLE_UNDEFINED);

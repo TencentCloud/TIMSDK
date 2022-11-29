@@ -20,7 +20,7 @@
         android:visibility="gone"
         app:name="@string/group_join_type" />
 
-    <com.tencent.qcloud.tuikit.tuicontact.ui.view.ContactListView
+    <com.tencent.qcloud.tuikit.tuicontact.classicui.widget.ContactListView
         android:id="@+id/group_create_member_list"
         android:layout_below="@+id/group_create_title_bar"
         android:layout_width="match_parent"

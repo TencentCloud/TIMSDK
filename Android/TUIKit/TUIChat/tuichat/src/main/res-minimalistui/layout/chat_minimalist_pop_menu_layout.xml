@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent"
+    android:paddingStart="56dp"
+    android:paddingEnd="16dp">
+
+    <RelativeLayout
+        android:id="@+id/dialog_content_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/transparent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recent_faces"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/chat_minimalist_menu_emoji_list_border"
+            android:paddingStart="8dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="10dp" />
+
+        <ScrollView
+            android:id="@+id/scroll_container"
+            android:scrollbars="none"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/recent_faces"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <FrameLayout
+                android:id="@+id/message_frame"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                tools:background="#006666"
+                tools:layout_height="30dp"
+                tools:layout_width="150dp" />
+
+        </ScrollView>
+
+        <LinearLayout
+            android:id="@+id/action_area"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/scroll_container"
+            android:background="@drawable/chat_minimalist_menu_popup_border"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/chat_pop_menu_action_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="16dp"
+                android:paddingTop="6dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="6dp" />
+
+
+            <LinearLayout
+                android:id="@+id/more_btn"
+                android:layout_width="180dp"
+                android:layout_height="40dp"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#DDDDDD" />
+
+                <LinearLayout
+                    android:layout_width="180dp"
+                    android:layout_height="40dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="6dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/chat_minimalist_pop_more"
+                        android:textColor="#147AFF"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:background="@drawable/chat_minimalist_pop_menu_more" />
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+</FrameLayout>

@@ -1,0 +1,31 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/more_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="34dp"
+    android:background="@color/transparent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:visibility="visible"
+    tools:visibility="visible">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:background="@drawable/gray_round_rect_border"
+        android:id="@+id/input_extra_area"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/cancel_button"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_below="@id/input_extra_area"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/white_round_rect_border"
+        android:gravity="center"
+        android:text="@string/cancel"
+        android:textColor="#007AFF"
+        android:textSize="17sp" />
+
+</RelativeLayout>

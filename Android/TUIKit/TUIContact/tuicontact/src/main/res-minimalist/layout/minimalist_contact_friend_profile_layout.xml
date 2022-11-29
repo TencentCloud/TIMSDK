@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/core_bg_color"
+    android:orientation="vertical">
+
+    <com.tencent.qcloud.tuicore.component.TitleBarLayout
+        android:id="@+id/friend_titlebar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/page_title_height" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/friend_detail_area"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/contact_profile_self_height"
+                android:background="#FFFFFF"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="@dimen/page_margin">
+
+                <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+                    android:id="@+id/friend_icon"
+                    android:layout_width="@dimen/contact_profile_face_size"
+                    android:layout_height="@dimen/contact_profile_face_size"
+                    android:layout_gravity="start"
+                    app:round_radius="24dp"
+                    android:layout_marginLeft="@dimen/contact_profile_face_margin_left"
+                    android:layout_marginTop="@dimen/contact_profile_face_margin_top"
+                    android:layout_marginRight="@dimen/contact_profile_face_margin_right"
+                    android:scaleType="centerCrop" />
+
+                <TextView
+                    android:id="@+id/friend_nick_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/friend_icon"
+                    android:layout_toEndOf="@id/friend_icon"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:textSize="@dimen/contact_profile_nick_name_text_size"
+                    tools:text="林" />
+
+                <TextView
+                    android:id="@+id/friend_account_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/friend_nick_name"
+                    android:layout_alignStart="@id/friend_nick_name"
+                    android:layout_marginTop="@dimen/contact_profile_text_margin"
+                    android:gravity="center_vertical"
+                    android:text="@string/contact_account_tag"
+                    android:textSize="@dimen/contact_profile_account_text_size" />
+
+                <TextView
+                    android:id="@+id/friend_account"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/friend_nick_name"
+                    android:layout_alignTop="@+id/friend_account_tag"
+                    android:layout_toEndOf="@id/friend_account_tag"
+                    android:gravity="center_vertical"
+                    android:textSize="@dimen/contact_profile_account_text_size"
+                    tools:text="99618" />
+
+                <TextView
+                    android:id="@+id/friend_signature_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/friend_account_tag"
+                    android:layout_alignStart="@id/friend_account_tag"
+                    android:layout_marginTop="@dimen/contact_profile_text_margin"
+                    android:gravity="center_vertical"
+                    android:text="@string/contact_signature_tag"
+                    android:textSize="@dimen/contact_profile_account_text_size" />
+
+
+                <TextView
+                    android:id="@+id/friend_signature"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/friend_signature_tag"
+                    android:layout_toEndOf="@id/friend_signature_tag"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:textSize="@dimen/contact_profile_signature_text_size"
+                    tools:text="相信光" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/friend_application_verify_area"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:background="@color/white"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15.36dp"
+                    android:text="@string/contact_add_wording" />
+
+                <TextView
+                    android:id="@+id/friend_application_add_wording"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="你好啊" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/add_friend_verify_area"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15.36dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/contact_set_add_wording" />
+
+                <EditText
+                    android:id="@+id/add_wording_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="138dp"
+                    android:background="@color/white"
+                    android:gravity="top"
+                    android:maxLines="5" />
+
+                <TextView
+                    android:id="@+id/remark_and_group_tip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15.36dp"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/contact_set_remark_and_group" />
+
+                <com.tencent.qcloud.tuicore.component.LineControllerView
+                    android:id="@+id/friend_remark_lv"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/contact_profile_item_height"
+                    android:layout_marginTop="10dp"
+                    app:canNav="true"
+                    app:name="@string/contact_friend_remark" />
+
+                <com.tencent.qcloud.tuicore.component.LineControllerView
+                    android:id="@+id/friend_group_lv"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/contact_profile_item_height"
+                    app:canNav="true"
+                    app:name="@string/contact_friend_group" />
+
+            </LinearLayout>
+
+            <com.tencent.qcloud.tuicore.component.LineControllerView
+                android:id="@+id/remark"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/contact_profile_item_height"
+                android:layout_marginTop="10dp"
+                android:visibility="gone"
+                app:canNav="true"
+                app:name="@string/profile_remark"
+                tools:visibility="visible" />
+
+            <com.tencent.qcloud.tuicore.component.LineControllerView
+                android:id="@+id/msg_rev_opt"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/contact_profile_item_height"
+                android:layout_marginTop="10dp"
+                android:visibility="gone"
+                app:isSwitch="true"
+                app:name="@string/profile_msgrev_opt" />
+
+            <com.tencent.qcloud.tuicore.component.LineControllerView
+                android:id="@+id/chat_to_top"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/contact_profile_item_height"
+                android:visibility="gone"
+                app:isSwitch="true"
+                app:isTop="true"
+                app:name="@string/chat_to_top" />
+
+            <com.tencent.qcloud.tuicore.component.LineControllerView
+                android:id="@+id/chat_background"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/contact_profile_item_height"
+                android:visibility="gone"
+                app:canNav="true"
+                app:name="@string/profile_chat_background"
+                tools:visibility="visible" />
+
+            <com.tencent.qcloud.tuicore.component.LineControllerView
+                android:id="@+id/blackList"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/contact_profile_item_height"
+                android:layout_marginTop="10dp"
+                android:visibility="gone"
+                app:isSwitch="true"
+                app:name="@string/profile_black" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/add_friend_send_btn"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/contact_profile_btn_height"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/btn_bg_color"
+                    android:text="@string/contact_add"
+                    android:textColor="?attr/core_primary_color"
+                    android:textSize="@dimen/contact_profile_btn_text_size"
+                    android:textAllCaps="false"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+                <Button
+                    android:id="@+id/accept_friend_send_btn"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/contact_profile_btn_height"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/btn_bg_color"
+                    android:text="@string/accept"
+                    android:textColor="?attr/core_primary_color"
+                    android:textSize="@dimen/contact_profile_btn_text_size"
+                    android:textAllCaps="false"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+                <Button
+                    android:id="@+id/btn_chat"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/contact_profile_btn_height"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/btn_bg_color"
+                    android:text="@string/profile_chat"
+                    android:textColor="?attr/core_primary_color"
+                    android:textSize="@dimen/contact_profile_btn_text_size"
+                    android:textAllCaps="false"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+                <Button
+                    android:id="@+id/btn_voice"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/contact_profile_btn_height"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginTop="0.68dp"
+                    android:background="@drawable/btn_bg_color"
+                    android:text="@string/profile_voice_chat"
+                    android:textColor="?attr/core_primary_color"
+                    android:textSize="@dimen/contact_profile_btn_text_size"
+                    android:textAllCaps="false"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+                <Button
+                    android:id="@+id/btn_video"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/contact_profile_btn_height"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginTop="0.68dp"
+                    android:background="@drawable/btn_bg_color"
+                    android:text="@string/profile_video_chat"
+                    android:textColor="?attr/core_primary_color"
+                    android:textSize="@dimen/contact_profile_btn_text_size"
+                    android:textAllCaps="false"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+                <Button
+                    android:id="@+id/btn_clear_chat_history"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/contact_profile_btn_height"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginTop="0.68dp"
+                    android:background="@drawable/btn_bg_color"
+                    android:text="@string/profile_clear_message"
+                    android:textColor="?attr/core_error_tip_color"
+                    android:textSize="@dimen/contact_profile_btn_text_size"
+                    android:visibility="gone"
+                    android:textAllCaps="false"
+                    tools:visibility="visible" />
+
+                <Button
+                    android:id="@+id/btn_delete"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/contact_profile_btn_height"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginTop="0.68dp"
+                    android:background="@drawable/btn_bg_color"
+                    android:text="@string/profile_delete_friend"
+                    android:textColor="?attr/core_error_tip_color"
+                    android:textSize="@dimen/contact_profile_btn_text_size"
+                    android:visibility="gone"
+                    android:textAllCaps="false"
+                    tools:visibility="visible" />
+
+                <Button
+                    android:id="@+id/refuse_friend_send_btn"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/contact_profile_btn_height"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginTop="0.6dp"
+                    android:background="@drawable/btn_bg_color"
+                    android:text="@string/refuse"
+                    android:textColor="?attr/core_error_tip_color"
+                    android:textAllCaps="false"
+                    android:textSize="@dimen/contact_profile_btn_text_size"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

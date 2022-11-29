@@ -6,6 +6,41 @@
     android:layout_height="match_parent"
     android:background="#fff">
 
+    <LinearLayout
+        android:id="@+id/modify_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="19dp"
+        android:layout_toStartOf="@id/modify_theme"
+        android:orientation="horizontal"
+        tools:visibility="visible">
+
+        <ImageView
+            android:id="@+id/demo_login_style_icon"
+            android:layout_width="17.28dp"
+            android:layout_height="17.28dp"
+            android:layout_gravity="center"
+            android:background="@drawable/demo_login_style_icon" />
+
+        <TextView
+            android:id="@+id/demo_login_style_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5.7dp"
+            android:layout_marginRight="5.7dp"
+            android:text="@string/modify_style"
+            android:textColor="?attr/demo_login_theme_language_text_color"
+            android:textSize="13.44sp" />
+
+        <ImageView
+            android:id="@+id/demo_login_style_arrow"
+            android:layout_width="9.6dp"
+            android:layout_height="9.6dp"
+            android:layout_gravity="center"
+            android:background="?attr/demo_login_language_arrow" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/modify_theme"

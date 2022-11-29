@@ -67,6 +67,32 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".login.LanguageSelectActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".login.StyleSelectActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".main.MainMinimalistActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize|stateHidden">
+
+            <!-- 离线推送打开应用内页面 -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="com.tencent.qcloud"
+                    android:path="/detail"
+                    android:scheme="pushscheme" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".profile.SelfDetailMinamalistActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".profile.AboutIMMinamalistActivity"
+            android:screenOrientation="portrait" />
 
     </application>
 

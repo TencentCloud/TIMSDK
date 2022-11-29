@@ -27,6 +27,7 @@
     <string name="forward_button">Forward</string>
     <string name="reply_button">Reply</string>
     <string name="quote_button">Quote</string>
+    <string name="info_button">Info</string>
     <string name="delete_button">Delete</string>
     <string name="chat_delete_msg_tip">Delete now</string>
 
@@ -103,7 +104,7 @@
     <string name="group_add_opt_join_disable">Prohibited from Joining</string>
 
     <string name="typing">Typing...</string>
-    <string name="titlebar_mutiselect">MultiSelect</string>
+    <string name="titlebar_mutiselect">Select</string>
     <string name="audio_permission_error">Need audio permission</string>
     <string name="record_occupied">record occupied</string>
     <string name="record_null">record is null</string>
@@ -113,6 +114,7 @@
 
     <string name="has_read">Read</string>
     <string name="unread">Unread</string>
+    <string name="delivered">Delivered to</string>
     <string name="has_all_read">All read</string>
     <string name="someone_has_read">%d read</string>
     <string name="someone_unread">%d unread</string>
@@ -220,4 +222,12 @@
     <string name="chat_not_read">Unread</string>
 
     <string name="custom_evaluation_message">Evaluation of this service</string>
+    
+    <string name="chat_input_edit_hint_text">Send a message</string>
+    <string name="chat_header_not_desc">No description yet.</string>
+    <string name="chat_tips_not_login">Not logged in.</string>
+
+    <string name="chat_user_status_online">online</string>
+    <string name="chat_user_status_offline">offline</string>
+    <string name="chat_user_status_unknown">unknown</string>
 </resources>

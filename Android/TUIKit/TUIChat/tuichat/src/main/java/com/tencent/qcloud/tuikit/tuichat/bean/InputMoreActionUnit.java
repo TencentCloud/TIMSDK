@@ -15,6 +15,9 @@ public class InputMoreActionUnit {
     
     private View unitView;
 
+    // 0, not need onActivityResult; 1, need onActivityResult
+    private int actionType = 0;
+
     // 数字越小优先级越高
     // The lower the number, the higher the priority
     private int priority = 0;
@@ -95,6 +98,14 @@ public class InputMoreActionUnit {
     
     public void onAction(String chatInfoId, int chatType) {
 
+    }
+
+    public int getActionType() {
+        return actionType;
+    }
+
+    public void setActionType(int actionType) {
+        this.actionType = actionType;
     }
 
     public class OnActionClickListener {

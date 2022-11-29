@@ -82,7 +82,7 @@ public class CommunityMorePopupView extends FrameLayout implements IPopupView {
     public void setCommunityBean(CommunityBean communityBean) {
         this.communityBean = communityBean;
         GlideEngine.loadImageSetDefault(groupFace, communityBean.getGroupFaceUrl(),
-                TUIThemeManager.getAttrResId(getContext(), R.attr.core_default_group_icon_community));
+                TUIThemeManager.getAttrResId(getContext(), com.tencent.qcloud.tuicore.R.attr.core_default_group_icon_community));
         communityName.setText(communityBean.getCommunityName());
         communityID.setText(communityBean.getGroupId());
 

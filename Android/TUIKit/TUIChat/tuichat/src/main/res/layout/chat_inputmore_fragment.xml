@@ -4,7 +4,7 @@
     android:layout_height="240dp"
     android:orientation="vertical">
 
-    <com.tencent.qcloud.tuikit.tuichat.ui.view.input.inputmore.InputMoreLayout
+    <com.tencent.qcloud.tuikit.tuichat.classicui.widget.input.inputmore.InputMoreLayout
         android:id="@+id/input_extra_area"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

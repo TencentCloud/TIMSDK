@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/reply_container"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:minWidth="@dimen/reply_message_content_min_width"
+    app:maxWidth="@dimen/reply_message_content_max_width"
+    android:orientation="vertical">
+
+    <!--原始消息摘要-->
+    <LinearLayout
+        android:id="@+id/origin_msg_abs_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="?attr/chat_self_reply_quote_bg_color"
+        android:orientation="horizontal">
+
+        <!--左边细线-->
+        <View
+            android:id="@+id/reply_line"
+            android:layout_width="6dp"
+            android:layout_height="match_parent"
+            android:background="#D9D9D9"
+            android:layout_marginRight="@dimen/reply_line_margin_right"
+            android:layout_marginEnd="@dimen/reply_line_margin_right" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/reply_sender_margin_top"
+            android:paddingBottom="@dimen/reply_abstract_padding_bottom"
+            android:orientation="vertical">
+
+            <!--发送者昵称-->
+            <TextView
+                android:id="@+id/sender_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6.5dp"
+                android:layout_marginRight="6.5dp"
+                android:layout_marginBottom="@dimen/reply_abstract_margin_bottom"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:textSize="14sp" />
+
+            <FrameLayout
+                android:id="@+id/quote_frame_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.TimeInLineTextLayout
+        android:id="@+id/time_in_line_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-3dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/origin_msg_abs_layout" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

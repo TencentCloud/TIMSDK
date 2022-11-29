@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.tencent.qcloud.tuikit.tuichat.ui.view.message.MaxWidthLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MaxWidthLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="7.68dp"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
     <TextView
+        android:layout_weight="1"
         android:id="@+id/sender_name_tv"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:ellipsize="middle"
+        android:singleLine="true" />
 
     <FrameLayout
         android:id="@+id/text_msg_area"
@@ -72,4 +75,4 @@
             android:layout_height="wrap_content"/>
     </FrameLayout>
 
-</com.tencent.qcloud.tuikit.tuichat.ui.view.message.MaxWidthLinearLayout>
+</com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MaxWidthLinearLayout>

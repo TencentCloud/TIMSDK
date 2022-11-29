@@ -8,7 +8,7 @@
     android:orientation="vertical">
 
 
-    <com.tencent.qcloud.tuikit.tuigroup.ui.view.GroupMemberLayout
+    <com.tencent.qcloud.tuikit.tuigroup.classicui.view.GroupMemberLayout
         android:id="@+id/group_member_grid_layout"
         android:layout_weight="1"
         android:layout_width="match_parent"

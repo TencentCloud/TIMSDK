@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:background="@color/white"
+    android:paddingTop="9dp"
+    android:paddingEnd="16dp"
+    android:paddingStart="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="34sp"
+        android:lineHeight="41dp"
+        android:textStyle="bold"
+        android:textColor="@color/black_font_color"
+        android:text="@string/contact_minimalist_contacts"/>
+
+    <ImageView
+        android:id="@+id/create_new_button"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginStart="25dp"
+        android:background="@drawable/contact_minimalist_create_icon" />
+
+</LinearLayout>

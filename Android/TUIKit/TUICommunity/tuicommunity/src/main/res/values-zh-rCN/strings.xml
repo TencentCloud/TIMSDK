@@ -105,5 +105,6 @@
 
     <string name="community_copy_success_tip">复制成功</string>
     <string name="community_coming_soon">敬请期待</string>
-
+    <string name="community_accept">同意</string>
+    <string name="community_refuse">拒绝</string>
 </resources>

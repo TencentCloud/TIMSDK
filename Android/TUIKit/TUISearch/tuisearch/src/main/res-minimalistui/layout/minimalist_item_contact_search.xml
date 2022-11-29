@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFFFFF"
+    android:paddingTop="12dp"
+    android:paddingLeft="14.85dp"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/search_avatar_height" >
+
+        <com.tencent.qcloud.tuicore.component.RoundCornerImageView
+            android:id="@+id/ivAvatar"
+            android:layout_width="@dimen/search_avatar_width"
+            android:layout_height="@dimen/search_avatar_height"
+            app:corner_radius="25dp"
+            android:clickable="false"
+            android:focusable="false"/>
+
+        <RelativeLayout
+            android:layout_toRightOf="@id/ivAvatar"
+            android:layout_width="match_parent"
+            android:paddingTop="1.37dp"
+            android:paddingLeft="11.43dp"
+            android:paddingRight="18.11dp"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/conversation_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="@color/black_font_color"
+                android:text="aaa"
+                android:textSize="16.3sp" />
+
+            <TextView
+                android:id="@+id/conversation_sub_title_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="2dp"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="aaa"
+                android:textColor="@color/list_bottom_text_bg"
+                android:textSize="12.86sp" />
+
+            <TextView
+                android:id="@+id/conversation_sub_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_toEndOf="@id/conversation_sub_title_label"
+                android:layout_alignTop="@id/conversation_sub_title_label"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:layout_marginRight="48dp"
+                android:text="aaa"
+                android:textColor="@color/list_bottom_text_bg"
+                android:textSize="12.86sp" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/view_line"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="60dp"
+        android:layout_width="match_parent"
+        android:layout_height="0.3dp"
+        android:background="@color/split_lint_color" />
+
+</LinearLayout>

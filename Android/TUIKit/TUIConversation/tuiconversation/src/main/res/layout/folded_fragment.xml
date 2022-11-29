@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/conversation_page_bg">
 
-    <com.tencent.qcloud.tuikit.tuiconversation.ui.view.FoldedConversationLayout
+    <com.tencent.qcloud.tuikit.tuiconversation.classicui.widget.FoldedConversationLayout
         android:id="@+id/folded_conversation_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

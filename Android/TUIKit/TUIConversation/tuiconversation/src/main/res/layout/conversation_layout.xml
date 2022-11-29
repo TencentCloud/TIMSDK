@@ -3,7 +3,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.tencent.qcloud.tuikit.tuiconversation.ui.view.ConversationListLayout
+    <com.tencent.qcloud.tuikit.tuiconversation.classicui.widget.ConversationListLayout
         android:id="@+id/conversation_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

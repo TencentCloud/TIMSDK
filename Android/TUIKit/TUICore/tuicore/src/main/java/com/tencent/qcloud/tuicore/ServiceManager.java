@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.tencent.qcloud.tuicore.interfaces.ITUIService;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -33,6 +32,22 @@ class ServiceManager {
             return;
         }
         serviceMap.put(serviceName, service);
+    }
+
+    public void unregisterService(String serviceName) {
+        Log.i(TAG, "unregisterService : " + serviceName);
+        if (TextUtils.isEmpty(serviceName)) {
+            return;
+        }
+        serviceMap.remove(serviceName);
+    }
+
+    public ITUIService getService(String serviceName) {
+        Log.i(TAG, "getService : " + serviceName);
+        if (TextUtils.isEmpty(serviceName)) {
+            return null;
+        }
+        return serviceMap.get(serviceName);
     }
 
     public Object callService(String serviceName, String method, Map<String, Object> param) {

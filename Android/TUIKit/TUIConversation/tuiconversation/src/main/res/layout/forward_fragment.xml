@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.tencent.qcloud.tuikit.tuiconversation.ui.view.ForwardSelectLayout
+    <com.tencent.qcloud.tuikit.tuiconversation.classicui.widget.ForwardSelectLayout
         android:id="@+id/forward_conversation_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

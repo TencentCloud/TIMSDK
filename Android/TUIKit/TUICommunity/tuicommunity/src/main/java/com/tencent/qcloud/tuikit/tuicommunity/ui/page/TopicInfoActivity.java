@@ -21,7 +21,6 @@ import com.tencent.qcloud.tuikit.tuicommunity.bean.TopicBean;
 import com.tencent.qcloud.tuikit.tuicommunity.component.SelectListPopupView;
 import com.tencent.qcloud.tuikit.tuicommunity.component.SettingsLinearView;
 import com.tencent.qcloud.tuikit.tuicommunity.component.bottompopupcard.BottomPopupCard;
-import com.tencent.qcloud.tuikit.tuicommunity.presenter.CommunityPresenter;
 import com.tencent.qcloud.tuikit.tuicommunity.presenter.TopicPresenter;
 import com.tencent.qcloud.tuikit.tuicommunity.ui.interfaces.ITopicInfoActivity;
 import com.tencent.qcloud.tuikit.tuicommunity.utils.TUICommunityLog;
@@ -188,7 +187,7 @@ public class TopicInfoActivity extends BaseLightActivity implements ITopicInfoAc
                     .setCancelOutside(true)
                     .setTitle(getString(R.string.community_delete_topic_tip))
                     .setDialogWidth(0.75f)
-                    .setPositiveButton(getString(R.string.sure), new View.OnClickListener() {
+                    .setPositiveButton(getString(com.tencent.qcloud.tuicore.R.string.sure), new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             presenter.deleteTopic(topicBean.getID(), new IUIKitCallback<Void>() {

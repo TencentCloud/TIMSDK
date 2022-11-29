@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="conversation_minimalist_chat">Chat</string>
+    <string name="conversation_minimalist_search">Search</string>
+    <string name="conversation_minimalist_done">Done</string>
+    <string name="has_all_read">Read All</string>
+    <string name="start_conversation">New Chat</string>
+    <string name="create_group_chat">Create Group Chat</string>
+    <string name="more_text">More</string>
+    <string name="clear_message">Clear Chat History</string>
+</resources>

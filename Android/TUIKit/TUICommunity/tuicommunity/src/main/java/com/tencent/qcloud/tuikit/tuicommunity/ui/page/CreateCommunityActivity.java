@@ -62,7 +62,7 @@ public class CreateCommunityActivity extends BaseLightActivity {
     private void init() {
         communityPresenter = new CommunityPresenter();
 
-        titleBarLayout.setTitle(getString(R.string.sure), ITitleBarLayout.Position.RIGHT);
+        titleBarLayout.setTitle(getString(com.tencent.qcloud.tuicore.R.string.sure), ITitleBarLayout.Position.RIGHT);
         titleBarLayout.getRightIcon().setVisibility(View.GONE);
         titleBarLayout.setOnRightClickListener(new View.OnClickListener() {
             @Override

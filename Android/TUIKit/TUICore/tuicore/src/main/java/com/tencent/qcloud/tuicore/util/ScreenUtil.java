@@ -3,6 +3,7 @@ package com.tencent.qcloud.tuicore.util;
 import android.content.Context;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.WindowManager;
 
@@ -76,4 +77,9 @@ public class ScreenUtil {
         final float scale = TUIConfig.getAppContext().getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
     }
+
+    public static float dp2px(float dpValue, DisplayMetrics displayMetrics) {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, displayMetrics);
+    }
+
 }

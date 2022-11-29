@@ -14,7 +14,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
@@ -75,7 +74,7 @@ public class Menu {
         mMenuAdapter = new PopMenuAdapter();
         mMenuAdapter.setDataSource(mActions);
         View menuView = LayoutInflater.from(mActivity).inflate(R.layout.core_pop_menu, null);
-
+        menuView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         mMenuWindow.setContentView(menuView);
         mMenuList = menuView.findViewById(R.id.menu_pop_list);
         mMenuList.setAdapter(mMenuAdapter);

@@ -7,8 +7,8 @@ import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactService;
 import com.tencent.qcloud.tuikit.tuicontact.bean.FriendApplicationBean;
 import com.tencent.qcloud.tuikit.tuicontact.interfaces.ContactEventListener;
+import com.tencent.qcloud.tuikit.tuicontact.interfaces.INewFriendActivity;
 import com.tencent.qcloud.tuikit.tuicontact.model.ContactProvider;
-import com.tencent.qcloud.tuikit.tuicontact.ui.interfaces.INewFriendActivity;
 import com.tencent.qcloud.tuikit.tuicontact.util.ContactUtils;
 import com.tencent.qcloud.tuikit.tuicontact.util.TUIContactLog;
 

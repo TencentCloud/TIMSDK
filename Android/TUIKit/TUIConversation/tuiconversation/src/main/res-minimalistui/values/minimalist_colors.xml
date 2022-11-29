@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="conversation_delete_swipe_bg">#F24D4C</color>
+    <color name="conversation_mark_swipe_bg">#147AFF</color>
+    <color name="conversation_mark_swipe_dark_bg">#666666</color>
+    <color name="conversation_hide_swipe_bg">#F29340</color>
+    <color name="conversation_bottom_bg">#F9F9F9</color>
+
+</resources>

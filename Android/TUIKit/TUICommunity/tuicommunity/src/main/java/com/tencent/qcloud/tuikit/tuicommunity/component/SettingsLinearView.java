@@ -85,7 +85,7 @@ public class SettingsLinearView extends LinearLayout {
             isShowContentText = ta.getBoolean(R.styleable.SettingsLinearView_setting_is_show_content_text, true);
             isShowContentImage = ta.getBoolean(R.styleable.SettingsLinearView_setting_is_show_content_image, false);
             name = ta.getString(R.styleable.SettingsLinearView_setting_name);
-            isShowBottomLine = ta.getBoolean(R.styleable.LineControllerView_isBottom, false);
+            isShowBottomLine = ta.getBoolean(com.tencent.qcloud.tuicore.R.styleable.LineControllerView_isBottom, false);
             isShowCopy = ta.getBoolean(R.styleable.SettingsLinearView_setting_is_show_copy, false);
             isShowArrow = ta.getBoolean(R.styleable.SettingsLinearView_setting_is_show_arrow, true);
             isShowTopLine = ta.getBoolean(R.styleable.SettingsLinearView_setting_is_show_top_line, false);

@@ -19,7 +19,7 @@
         android:visibility="gone"
         app:name="@string/group_join_type" />
 
-    <com.tencent.qcloud.tuikit.tuicontact.ui.view.ContactListView
+    <com.tencent.qcloud.tuikit.tuicontact.classicui.widget.ContactListView
         android:layout_weight="1"
         android:id="@+id/group_create_member_list"
         android:layout_width="match_parent"
@@ -32,7 +32,7 @@
         android:paddingRight="16dp"
         android:paddingBottom="8dp"
         android:gravity="center_vertical"
-        android:layout_height="@dimen/conversation_list_item_height">
+        android:layout_height="69.91dp">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/selected_list"

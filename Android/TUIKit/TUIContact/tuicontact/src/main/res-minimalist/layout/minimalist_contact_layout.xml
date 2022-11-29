@@ -1,0 +1,17 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/core_bg_color"
+    android:orientation="vertical">
+
+    <include layout="@layout/contact_minimalist_header_view_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <com.tencent.qcloud.tuikit.tuicontact.minimalistui.widget.ContactListView
+        android:id="@+id/contact_listview"
+        android:background="?attr/core_bg_color"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

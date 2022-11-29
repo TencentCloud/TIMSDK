@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <com.tencent.qcloud.tuikit.tuiconversation.ui.view.FoldedConversationListLayout
+    <com.tencent.qcloud.tuikit.tuiconversation.classicui.widget.FoldedConversationListLayout
         android:id="@+id/folded_conversation_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

@@ -1,7 +1,6 @@
 package com.tencent.qcloud.tuikit.tuichat.bean.message.reply;
 
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.message.reply.TUIReplyQuoteView;
 
 import java.io.Serializable;
 
@@ -36,7 +35,4 @@ public abstract class TUIReplyQuoteBean implements Serializable {
         return defaultAbstract;
     }
 
-    public Class<? extends TUIReplyQuoteView> getReplyQuoteViewClass() {
-        return null;
-    }
 }

@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/status_bar_color"
-    tools:context="com.tencent.qcloud.tim.tuisearch.com.tencent.qcloud.tuikit.tuisearch.ui.page.SearchMainActivity">
+    android:background="@color/status_bar_color">
 
     <!-- search-->
     <RelativeLayout
@@ -295,7 +292,7 @@
                     android:layout_height="0.3dp"
                     android:background="@color/split_lint_color" />
 
-                <com.tencent.qcloud.tuikit.tuisearch.ui.view.PageRecycleView
+                <com.tencent.qcloud.tuikit.tuisearch.classicui.view.PageRecycleView
                     android:id="@+id/conversation_rc_search"
                     android:layout_below="@+id/view_line_three"
                     android:layout_width="match_parent"

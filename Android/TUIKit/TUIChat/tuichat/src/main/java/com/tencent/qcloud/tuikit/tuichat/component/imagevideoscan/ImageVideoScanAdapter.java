@@ -47,17 +47,16 @@ import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.component.photoview.listener.OnMatrixChangedListener;
-import com.tencent.qcloud.tuikit.tuichat.component.photoview.listener.OnPhotoTapListener;
-import com.tencent.qcloud.tuikit.tuichat.component.photoview.listener.OnSingleFlingListener;
-import com.tencent.qcloud.tuikit.tuichat.component.photoview.view.PhotoView;
-import com.tencent.qcloud.tuikit.tuichat.component.video.UIKitVideoView;
-import com.tencent.qcloud.tuikit.tuichat.component.video.proxy.IPlayer;
+import com.tencent.qcloud.tuikit.tuichat.classicui.component.photoview.listener.OnMatrixChangedListener;
+import com.tencent.qcloud.tuikit.tuichat.classicui.component.photoview.listener.OnPhotoTapListener;
+import com.tencent.qcloud.tuikit.tuichat.classicui.component.photoview.listener.OnSingleFlingListener;
+import com.tencent.qcloud.tuikit.tuichat.classicui.component.photoview.view.PhotoView;
+import com.tencent.qcloud.tuikit.tuichat.classicui.component.video.UIKitVideoView;
+import com.tencent.qcloud.tuikit.tuichat.classicui.component.video.proxy.IPlayer;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.ArrayList;
 import java.util.List;
 

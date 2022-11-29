@@ -1,6 +1,6 @@
 package com.tencent.qcloud.tuikit.tuichat.config;
 
-import com.tencent.qcloud.tuikit.tuichat.component.noticelayout.NoticeLayoutConfig;
+import com.tencent.qcloud.tuikit.tuichat.classicui.component.noticelayout.NoticeLayoutConfig;
 
 public class TUIChatConfigs {
 

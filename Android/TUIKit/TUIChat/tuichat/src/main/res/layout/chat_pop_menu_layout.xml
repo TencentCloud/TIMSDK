@@ -37,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-        <com.tencent.qcloud.tuikit.tuichat.component.face.EmojiIndicatorView
+        <com.tencent.qcloud.tuikit.tuichat.classicui.component.EmojiIndicatorView
             android:id="@+id/face_indicator"
             android:layout_marginTop="7.44dp"
             android:layout_width="match_parent"

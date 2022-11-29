@@ -129,7 +129,7 @@ public class CommunityMemberList extends LinearLayout implements ICommunityMembe
     public void setSelectMode(boolean selectMode) {
         isSelectMode = selectMode;
         if (isSelectMode) {
-            titleBar.setTitle(getContext().getString(R.string.sure), ITitleBarLayout.Position.RIGHT);
+            titleBar.setTitle(getContext().getString(com.tencent.qcloud.tuicore.R.string.sure), ITitleBarLayout.Position.RIGHT);
             titleBar.getRightGroup().setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {

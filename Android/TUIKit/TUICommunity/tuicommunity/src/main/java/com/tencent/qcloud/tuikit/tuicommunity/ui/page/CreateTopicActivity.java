@@ -20,8 +20,8 @@ import com.tencent.qcloud.tuikit.tuicommunity.TUICommunityService;
 import com.tencent.qcloud.tuikit.tuicommunity.bean.CommunityBean;
 import com.tencent.qcloud.tuikit.tuicommunity.bean.TopicBean;
 import com.tencent.qcloud.tuikit.tuicommunity.component.SelectListPopupView;
-import com.tencent.qcloud.tuikit.tuicommunity.component.bottompopupcard.BottomPopupCard;
 import com.tencent.qcloud.tuikit.tuicommunity.component.SettingsLinearView;
+import com.tencent.qcloud.tuikit.tuicommunity.component.bottompopupcard.BottomPopupCard;
 import com.tencent.qcloud.tuikit.tuicommunity.presenter.CommunityPresenter;
 import com.tencent.qcloud.tuikit.tuicommunity.presenter.TopicPresenter;
 import com.tencent.qcloud.tuikit.tuicommunity.ui.interfaces.ICreateTopicActivity;
@@ -62,7 +62,7 @@ public class CreateTopicActivity extends BaseLightActivity implements ICreateTop
         videoTypeArea = findViewById(R.id.video_type_area);
         liveTypeArea = findViewById(R.id.live_type_area);
         topicCategoryView = findViewById(R.id.topic_category_linear);
-        titleBarLayout.setTitle(getString(R.string.sure), ITitleBarLayout.Position.RIGHT);
+        titleBarLayout.setTitle(getString(com.tencent.qcloud.tuicore.R.string.sure), ITitleBarLayout.Position.RIGHT);
         titleBarLayout.getRightIcon().setVisibility(View.GONE);
         titleBarLayout.setOnRightClickListener(new View.OnClickListener() {
             @Override

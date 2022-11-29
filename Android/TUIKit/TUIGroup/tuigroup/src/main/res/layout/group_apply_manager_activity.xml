@@ -8,7 +8,7 @@
     android:focusableInTouchMode="true"
     android:orientation="vertical">
 
-    <com.tencent.qcloud.tuikit.tuigroup.ui.view.GroupApplyManagerLayout
+    <com.tencent.qcloud.tuikit.tuigroup.classicui.view.GroupApplyManagerLayout
         android:id="@+id/group_apply_manager_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

@@ -16,6 +16,7 @@ import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
+import com.tencent.qcloud.tuicore.interfaces.ITUIService;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.TUICommonDefine;
 import com.tencent.qcloud.tuikit.TUIVideoView;
@@ -67,10 +68,9 @@ public class TUICallingViewManager implements ITUINotification {
     private final TUICallingAction  mCallingAction;
 
     private CallingUserModel       mSelfUserModel;
-    private List<CallingUserModel> mInviteeList      = new ArrayList<>();
+    private List<CallingUserModel> mInviteeList     = new ArrayList<>();
     private CallingUserModel       mInviter;
-    private boolean                mEnableFloatView  = false;
-    private boolean                mEnableInviteUser = false;
+    private boolean                mEnableFloatView = false;
 
     private BaseCallView     mBaseCallView;
     private BaseFunctionView mFunctionView;
@@ -160,7 +160,6 @@ public class TUICallingViewManager implements ITUINotification {
         mSelfUserModel = null;
         mInviteeList.clear();
         mInviter = new CallingUserModel();
-        mEnableInviteUser = false;
 
         TUICallingStatusManager.sharedInstance(mContext).clear();
 
@@ -751,14 +750,12 @@ public class TUICallingViewManager implements ITUINotification {
         return null;
     }
 
-    public void enableInviteUser(boolean enable) {
-        mEnableInviteUser = enable;
-    }
-
     private void initInviteUserFunction() {
-        TUILog.i(TAG, "initInviteUserFunction, mEnableInviteUser: " + mEnableInviteUser);
+        ITUIService service = TUICore.getService(TUIConstants.TUIGroup.SERVICE_NAME);
+        boolean enableInviteUser = (service != null);
+        TUILog.i(TAG, "initInviteUserFunction, enableInviteUser: " + enableInviteUser);
 
-        if (mEnableInviteUser && mBaseCallView != null) {
+        if (enableInviteUser && mBaseCallView != null) {
             Button inviteUserBtn = new Button(mContext);
             TUICallDefine.MediaType mediaType = TUICallingStatusManager.sharedInstance(mContext).getMediaType();
             int resId = TUICallDefine.MediaType.Video.equals(mediaType)

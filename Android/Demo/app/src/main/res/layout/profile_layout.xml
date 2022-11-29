@@ -42,6 +42,8 @@
                         android:layout_alignTop="@id/self_icon"
                         android:layout_toEndOf="@id/self_icon"
                         android:layout_marginBottom="@dimen/demo_profile_text_margin"
+                        android:maxLines="1"
+                        android:ellipsize="end"
                         android:gravity="center_vertical"
                         android:textSize="@dimen/demo_profile_nick_name_text_size"
                         tools:text="林"/>

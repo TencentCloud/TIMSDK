@@ -1,45 +1,48 @@
 package com.tencent.qcloud.tuicore.component;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 
 import androidx.appcompat.widget.AppCompatTextView;
 
 import com.tencent.qcloud.tuicore.R;
-import com.tencent.qcloud.tuicore.util.ScreenUtil;
 
 
 public class UnreadCountTextView extends AppCompatTextView {
 
-    private int mNormalSize = ScreenUtil.getPxByDp(18.4f);
+    private int mNormalSize;
     private Paint mPaint;
 
     public UnreadCountTextView(Context context) {
         super(context);
-        init();
+        init(context, null);
     }
 
     public UnreadCountTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
+        init(context, attrs);
     }
 
     public UnreadCountTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
+        init(context, attrs);
     }
 
-    private void init() {
+    private void init(Context context, AttributeSet attrs) {
+        mNormalSize = dp2px(18.4f);
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.UnreadCountTextView);
+        int paintColor = typedArray.getColor(R.styleable.UnreadCountTextView_paint_color, getResources().getColor(R.color.read_dot_bg));
+        typedArray.recycle();
+
         mPaint = new Paint();
-        mPaint.setColor(getResources().getColor(R.color.read_dot_bg));
+        mPaint.setColor(paintColor);
         mPaint.setAntiAlias(true);
-        setTextColor(Color.WHITE);
-        setTextSize(TypedValue.COMPLEX_UNIT_SP, 13.6f);
     }
 
     public void setPaintColor(int color) {
@@ -51,7 +54,7 @@ public class UnreadCountTextView extends AppCompatTextView {
     @Override
     protected void onDraw(Canvas canvas) {
         if (getText().length() == 0) {
-            int l = (getMeasuredWidth() - ScreenUtil.getPxByDp(6)) / 2;
+            int l = (getMeasuredWidth() - dp2px(6)) / 2;
             int t = l;
             int r = getMeasuredWidth() - l;
             int b = r;
@@ -70,8 +73,13 @@ public class UnreadCountTextView extends AppCompatTextView {
         int width = mNormalSize;
         int height = mNormalSize;
         if (getText().length() > 1) {
-            width = mNormalSize + ScreenUtil.getPxByDp((getText().length() - 1) * 10);
+            width = mNormalSize + dp2px((getText().length() - 1) * 10);
         }
         setMeasuredDimension(width, height);
+    }
+
+    private int dp2px(float dp) {
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        return  (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, displayMetrics);
     }
 }

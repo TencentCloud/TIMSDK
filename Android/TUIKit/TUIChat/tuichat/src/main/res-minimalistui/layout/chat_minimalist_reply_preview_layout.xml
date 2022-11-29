@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+
+    <ImageView
+        android:id="@+id/first_avatar"
+        android:scaleType="centerCrop"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        tools:src="@android:drawable/ic_menu_gallery"
+        />
+
+
+    <ImageView
+        android:id="@+id/second_avatar"
+        android:scaleType="centerCrop"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginStart="-8dp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        tools:src="@android:drawable/ic_menu_gallery"
+        />
+
+
+    <ImageView
+        android:id="@+id/third_avatar"
+        android:scaleType="centerCrop"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginStart="-8dp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        tools:src="@android:drawable/ic_menu_gallery"
+        />
+
+    <TextView
+        android:id="@+id/reply_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:textColor="#FF005FFF"
+        tools:text="3Reply"
+        />
+
+</LinearLayout>

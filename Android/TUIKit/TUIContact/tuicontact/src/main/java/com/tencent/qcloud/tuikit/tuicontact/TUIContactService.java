@@ -1,7 +1,6 @@
 package com.tencent.qcloud.tuikit.tuicontact;
 
 import android.content.Context;
-import android.os.Bundle;
 
 import com.tencent.imsdk.v2.V2TIMFriendApplication;
 import com.tencent.imsdk.v2.V2TIMFriendInfo;
@@ -12,8 +11,6 @@ import com.tencent.imsdk.v2.V2TIMUserStatus;
 import com.tencent.qcloud.tuicore.ServiceInitializer;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
-import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
-import com.tencent.qcloud.tuicore.interfaces.ITUIService;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.bean.FriendApplicationBean;
 import com.tencent.qcloud.tuikit.tuicontact.interfaces.ContactEventListener;

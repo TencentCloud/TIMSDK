@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.page.GroupNoticeActivity">
+    tools:context=".classicui.page.GroupNoticeActivity">
 
     <com.tencent.qcloud.tuicore.component.TitleBarLayout
         android:id="@+id/group_notice_title_bar"
