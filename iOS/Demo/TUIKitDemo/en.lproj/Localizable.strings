@@ -100,7 +100,7 @@
 "ProfileAlia" = "Alias";
 "ProfileBlocked" = "Block";
 "ProfileMessageDoNotDisturb" = "Mute Notifications";
-"ProfileStickyonTop" = "Sticky on Top";
+"ProfileStickyonTop" = "Pin";
 "ProfileSendMessages" = "Send Message";
 "ProfileDeleteFirend" = "Delete Friend";
 
@@ -168,13 +168,16 @@
 "MessageTipsYouRecallMessage" = "You recalled a message.";
 "MessageTipsOthersRecallMessageFormat" = "\"%@\" recalled a message.";
 "MessageTipsOthersRecallMessage" = "The other user recalled a message.";
-"SignatureFormat" = "Signature:%@";
+"SignatureFormat" = "Status:%@";
 
+"ChangeStyle" = "Style";
 "ChangeSkin" = "Theme";
 "ChangeLanguage" = "Language";
 "SimpleChinese" = "Chinese,Simplified";
 "English" = "English";
 "CurrentLanguage" = "English";
+"Classic" = "Classic";
+"Minimalist" = "Minimalist";
 
 "ThemeNameSerious" = "Solemn";
 "ThemeNameLight" = "Light";
@@ -237,3 +240,20 @@
 "ShowOnlineStatusCloseDesc" = "If enabled, the users' online status will displayed in your session and contact list.";
 "OnlineStatus" = "Online status";
 "ShowPackageToast" = "This is the feature of ultimate edition";
+
+
+
+
+
+
+//----------------Mini begin------------
+"Chat" = "Chat";
+"TabBarItemMessageText_mini" = "Chats";
+"TabBarItemContactText_mini" = "Contact";
+"TabBarItemSettingText_mini"      = "Settings";
+"ReadAll" = "Read All";
+"Hide"    = "Hide";
+"Delete"    = "Delete";
+"MarkAsRead"= "Mark As Read";
+"TUIKitDone" = "Done";
+//----------------Mini end------------

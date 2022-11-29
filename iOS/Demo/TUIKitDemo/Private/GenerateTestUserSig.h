@@ -57,6 +57,10 @@ typedef NS_ENUM(NSInteger, TUIDemoServerType) {
     TUIDemoServerTypeKorea          = 4,    // 韩国
     TUIDemoServerTypeGermany        = 5,    // 德国
     TUIDemoServerTypeIndia          = 6,    // 印度
+    TUIDemoServerTypeSingaporeNew   = 7,    // 新加坡(跨站)
+    TUIDemoServerTypeKoreaNew       = 8,    // 韩国(跨站)
+    TUIDemoServerTypeGermanyNew     = 9,    // 德国(跨站)
+    TUIDemoServerTypeIndiaNew       = 10,   // 印度(跨站)
 };
 
 /**
@@ -83,6 +87,7 @@ static const int public_SDKAPPID = 0;
  * SDKAppId in the environment in Singapore
  */
 static const int singapore_SDKAPPID = 0;
+static const int singapore_new_SDKAPPID = 0;
 
 /**
  * 韩国环境下的 SDKAppId
@@ -92,6 +97,7 @@ static const int singapore_SDKAPPID = 0;
  * SDKAppId in the environment in South Korea
  */
 static const int korea_SDKAPPID = 0;
+static const int korea_new_SDKAPPID = 0;
 
 /**
  * 德国环境下的 SDKAppId
@@ -101,6 +107,7 @@ static const int korea_SDKAPPID = 0;
  * SDKAppId in the environment in Germany
  */
 static const int germany_SDKAPPID = 0;
+static const int germany_new_SDKAPPID = 0;
 
 /**
  * 印度环境下的 SDKAppId
@@ -110,6 +117,7 @@ static const int germany_SDKAPPID = 0;
  * SDKAppId in the environment in India
  */
 static const int india_SDKAPPID = 0;
+static const int india_new_SDKAPPID = 0;
 
 /**
  *  签名过期时间，建议不要设置的过短
@@ -157,6 +165,7 @@ static NSString * const public_SECRETKEY = @"";
  * Encryption key in the environment in Singapore
  */
 static NSString * const singapore_SECRETKEY = @"";
+static NSString * const singapore_new_SECRETKEY = @"";
 
 /**
  * 韩国环境下的加密秘钥
@@ -166,6 +175,7 @@ static NSString * const singapore_SECRETKEY = @"";
  * Encryption key in the environment in South Korea
  */
 static NSString * const korea_SECRETKEY = @"";
+static NSString * const korea_new_SECRETKEY = @"";
 
 /**
  * 德国环境下的加密秘钥
@@ -175,6 +185,7 @@ static NSString * const korea_SECRETKEY = @"";
  * Encryption key in the environment in Germany
  */
 static NSString * const germany_SECRETKEY = @"";
+static NSString * const germany_new_SECRETKEY = @"";
 
 /**
  * 印度环境下的加密秘钥
@@ -184,6 +195,7 @@ static NSString * const germany_SECRETKEY = @"";
  * Encryption key in the environment in India
  */
 static NSString * const india_SECRETKEY = @"";
+static NSString * const india_new_SECRETKEY = @"";
 
 @interface GenerateTestUserSig : NSObject
 
