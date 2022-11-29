@@ -14,6 +14,10 @@
         @(TUIDemoServerTypeGermany): @"德国",
         @(TUIDemoServerTypeKorea): @"韩国",
         @(TUIDemoServerTypeIndia): @"印度",
+        @(TUIDemoServerTypeSingaporeNew): @"新加坡(跨站)",
+        @(TUIDemoServerTypeGermanyNew): @"德国(跨站)",
+        @(TUIDemoServerTypeKoreaNew): @"韩国(跨站)",
+        @(TUIDemoServerTypeIndiaNew): @"印度(跨站)",
     };
     
     NSString *name = tuidemo_serverName[@(serverType)];
@@ -75,6 +79,14 @@
         appid = germany_SDKAPPID;
     } else if ([self currentServer] == TUIDemoServerTypeIndia) {
         appid = india_SDKAPPID;
+    } else if ([self currentServer] == TUIDemoServerTypeSingaporeNew) {
+        appid = singapore_new_SDKAPPID;
+    } else if ([self currentServer] == TUIDemoServerTypeKoreaNew) {
+        appid = korea_new_SDKAPPID;
+    } else if ([self currentServer] == TUIDemoServerTypeGermanyNew) {
+        appid = germany_new_SDKAPPID;
+    } else if ([self currentServer] == TUIDemoServerTypeIndiaNew) {
+        appid = india_new_SDKAPPID;
     }
     return appid;
 }
@@ -89,6 +101,14 @@
         secret = germany_SECRETKEY;
     } else if ([self currentServer] == TUIDemoServerTypeIndia) {
         secret = india_SECRETKEY;
+    } else if ([self currentServer] == TUIDemoServerTypeSingaporeNew) {
+        secret = singapore_new_SECRETKEY;
+    } else if ([self currentServer] == TUIDemoServerTypeKoreaNew) {
+        secret = korea_new_SECRETKEY;
+    } else if ([self currentServer] == TUIDemoServerTypeGermanyNew) {
+        secret = germany_new_SECRETKEY;
+    } else if ([self currentServer] == TUIDemoServerTypeIndiaNew) {
+        secret = india_new_SECRETKEY;
     }
     return secret;
 }

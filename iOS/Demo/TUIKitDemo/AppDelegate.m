@@ -31,8 +31,20 @@
 #import "TUIChatConfig.h"
 #import "TUIWarningView.h"
 
+#if DEBUG
+#import <CallKit/CallKit.h>
+#endif
+
+//Minimalist
+#import "ConversationController_Minimalist.h"
+#import "ContactsController_Minimalist.h"
+#import "SettingController_Minimalist.h"
+//Minimalist
+
+
 @interface AppDelegate () <V2TIMConversationListener, TUILoginListener, ThemeSelectControllerDelegate, LanguageSelectControllerDelegate,V2TIMAPNSListener>
 
+@property (nonatomic, strong) TUIContactViewDataProvider *contactDataProvider;
 @property (nonatomic,strong) TUILoginConfig *loginConfig;
 
 @end
@@ -41,48 +53,6 @@
 
 
 #pragma mark - 推送的配置及统一跳转
-
-/**
- * APNs 证书 ID 配置
- * APNs certificate ID configuration
- */
-TUIOfflinePushCertificateIDForAPNS(kAPNSBusiId)
-
-/**
- * TPNS 自定义域名、key 配置
- * TPNS custom domain name, key configuration
- */
-TUIOfflinePushConfigForTPNS(kTPNSAccessID, kTPNSAccessKey, kTPNSDomain)
-
-/**
- * 统一点击跳转
- * Click the notification bar to jump
- */
-- (void)navigateToTUIChatViewController:(NSString *)userID groupID:(NSString *)groupID
-{
-    UITabBarController *tab = [self getMainController];
-    if (![tab isKindOfClass: UITabBarController.class]) {
-        // 正在登录中
-        return;
-    }
-    if (tab.selectedIndex != 0) {
-        [tab setSelectedIndex:0];
-    }
-    self.window.rootViewController = tab;
-    UINavigationController *nav = (UINavigationController *)tab.selectedViewController;
-    if (![nav isKindOfClass:UINavigationController.class]) {
-        return;
-    }
-
-    UIViewController *vc = nav.viewControllers.firstObject;
-    if (![vc isKindOfClass:NSClassFromString(@"ConversationController")]) {
-        return;
-    }
-    if ([vc respondsToSelector:NSSelectorFromString(@"pushToChatViewController:userID:")]) {
-        [vc performSelector:NSSelectorFromString(@"pushToChatViewController:userID:") withObject:groupID withObject:userID];
-    }
-}
-
 #pragma mark - Life cycle
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     app = self;
@@ -133,46 +103,6 @@ TUIOfflinePushConfigForTPNS(kTPNSAccessID, kTPNSAccessKey, kTPNSDomain)
     }];
 }
 
-- (UITabBarController *)getMainController {
-    TUITabBarController *tbc = [[TUITabBarController alloc] init];
-    NSMutableArray *items = [NSMutableArray array];
-    TUITabBarItem *msgItem = [[TUITabBarItem alloc] init];
-    msgItem.title = NSLocalizedString(@"TabBarItemMessageText", nil);
-    msgItem.selectedImage = TUIDemoDynamicImage(@"tab_msg_selected_img", [UIImage imageNamed:@"session_selected"]);
-    msgItem.normalImage = TUIDemoDynamicImage(@"tab_msg_normal_img", [UIImage imageNamed:@"session_normal"]);
-    msgItem.controller = [[TUINavigationController alloc] initWithRootViewController:[[ConversationController alloc] init]];
-    msgItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
-    msgItem.badgeView = [[TUIBadgeView alloc] init];
-    @weakify(self)
-    msgItem.badgeView.clearCallback = ^{
-        @strongify(self)
-        [self redpoint_clearUnreadMessage];
-    };
-    [items addObject:msgItem];
-
-    TUITabBarItem *contactItem = [[TUITabBarItem alloc] init];
-    contactItem.title = NSLocalizedString(@"TabBarItemContactText", nil);
-    contactItem.selectedImage = TUIDemoDynamicImage(@"tab_contact_selected_img", [UIImage imageNamed:@"contact_selected"]);
-    contactItem.normalImage = TUIDemoDynamicImage(@"tab_contact_normal_img", [UIImage imageNamed:@"contact_normal"]);
-    contactItem.controller = [[TUINavigationController alloc] initWithRootViewController:[[ContactsController alloc] init]];
-    contactItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
-    contactItem.badgeView = [[TUIBadgeView alloc] init];
-    [items addObject:contactItem];
-    
-    TUITabBarItem *setItem = [[TUITabBarItem alloc] init];
-    setItem.title = NSLocalizedString(@"TabBarItemMeText", nil);
-    setItem.selectedImage = TUIDemoDynamicImage(@"tab_me_selected_img", [UIImage imageNamed:@"myself_selected"]);
-    setItem.normalImage = TUIDemoDynamicImage(@"tab_me_normal_img", [UIImage imageNamed:@"myself_normal"]);
-    setItem.controller = [[TUINavigationController alloc] initWithRootViewController:[[SettingController alloc] init]];
-    setItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
-    [items addObject:setItem];
-    tbc.tabBarItems = items;
-
-    return tbc;
-}
-
-
-
 #pragma mark - Private
 - (void)setupListener {
     [TUILogin addLoginListener:self];
@@ -220,18 +150,6 @@ void uncaughtExceptionHandler(NSException*exception) {
         self.window.rootViewController = [self getLoginController];
         [[NSNotificationCenter defaultCenter] postNotificationName: @"TUILoginShowPrivacyPopViewNotfication" object:nil];
     }];
-}
-
-- (void)setupConfig {
-    if ([[NSUserDefaults standardUserDefaults] objectForKey:kEnableMsgReadStatus]) {
-        TUIChatConfig.defaultConfig.msgNeedReadReceipt = [[NSUserDefaults standardUserDefaults] boolForKey:kEnableMsgReadStatus];
-    } else {
-        TUIChatConfig.defaultConfig.msgNeedReadReceipt = NO;
-        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kEnableMsgReadStatus];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    }
-    TUIConfig.defaultConfig.displayOnlineStatusIcon = [[NSUserDefaults standardUserDefaults] boolForKey:kEnableOnlineStatus];
-    TUIChatConfig.defaultConfig.enableMultiDeviceForCall = YES;
 }
 
 #pragma mark -- Setup UI
@@ -310,6 +228,7 @@ void uncaughtExceptionHandler(NSException*exception) {
 - (void)onLog:(NSInteger)logLevel logContent:(NSString *)logContent {
     
 }
+
 
 - (TUIContactViewDataProvider *)contactDataProvider
 {
@@ -483,6 +402,7 @@ void uncaughtExceptionHandler(NSException*exception) {
     });
 }
 
+
 #pragma mark - NSNotification
 
 - (void)updateMarkUnreadCount:(NSNotification *)note {}
@@ -511,6 +431,179 @@ typedef void (^confirmHandler)(UIAlertAction *action, NSString *content);
     [alertController tuitheme_addAction:confirm];
     
     [self.window.rootViewController presentViewController:alertController animated:NO completion:nil];
+}
+
+#pragma mark - Classic  & Minimalist
+- (void)setupConfig {
+   
+    if ([StyleSelectViewController isClassicEntrance]) {
+        [self setupConfig_Classic];
+    }
+    else {
+        [self setupConfig_Minimalist];
+    }
+}
+
+- (UITabBarController *)getMainController {
+    if ([StyleSelectViewController isClassicEntrance]) {
+        return [self getMainController_Classic];
+    }
+    else {
+        return [self getMainController_Minimalist];
+    }
+    
+}
+
+- (UITabBarController *)getMainController_Classic {
+    TUITabBarController *tbc = [[TUITabBarController alloc] init];
+    NSMutableArray *items = [NSMutableArray array];
+    TUITabBarItem *msgItem = [[TUITabBarItem alloc] init];
+    msgItem.title = NSLocalizedString(@"TabBarItemMessageText", nil);
+    msgItem.selectedImage = TUIDemoDynamicImage(@"tab_msg_selected_img", [UIImage imageNamed:@"session_selected"]);
+    msgItem.normalImage = TUIDemoDynamicImage(@"tab_msg_normal_img", [UIImage imageNamed:@"session_normal"]);
+    msgItem.controller = [[TUINavigationController alloc] initWithRootViewController:[[ConversationController alloc] init]];
+    msgItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
+    msgItem.badgeView = [[TUIBadgeView alloc] init];
+    @weakify(self)
+    msgItem.badgeView.clearCallback = ^{
+        @strongify(self)
+        [self redpoint_clearUnreadMessage];
+    };
+    [items addObject:msgItem];
+
+    TUITabBarItem *contactItem = [[TUITabBarItem alloc] init];
+    contactItem.title = NSLocalizedString(@"TabBarItemContactText", nil);
+    contactItem.selectedImage = TUIDemoDynamicImage(@"tab_contact_selected_img", [UIImage imageNamed:@"contact_selected"]);
+    contactItem.normalImage = TUIDemoDynamicImage(@"tab_contact_normal_img", [UIImage imageNamed:@"contact_normal"]);
+    contactItem.controller = [[TUINavigationController alloc] initWithRootViewController:[[ContactsController alloc] init]];
+    contactItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
+    contactItem.badgeView = [[TUIBadgeView alloc] init];
+    [items addObject:contactItem];
+    
+    TUITabBarItem *setItem = [[TUITabBarItem alloc] init];
+    setItem.title = NSLocalizedString(@"TabBarItemMeText", nil);
+    setItem.selectedImage = TUIDemoDynamicImage(@"tab_me_selected_img", [UIImage imageNamed:@"myself_selected"]);
+    setItem.normalImage = TUIDemoDynamicImage(@"tab_me_normal_img", [UIImage imageNamed:@"myself_normal"]);
+    setItem.controller = [[TUINavigationController alloc] initWithRootViewController:[[SettingController alloc] init]];
+    setItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
+    [items addObject:setItem];
+    tbc.tabBarItems = items;
+
+    return tbc;
+}
+
+- (void)setupConfig_Classic {
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:kEnableMsgReadStatus]) {
+        TUIChatConfig.defaultConfig.msgNeedReadReceipt = [[NSUserDefaults standardUserDefaults] boolForKey:kEnableMsgReadStatus];
+    } else {
+        TUIChatConfig.defaultConfig.msgNeedReadReceipt = NO;
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kEnableMsgReadStatus];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    TUIConfig.defaultConfig.displayOnlineStatusIcon = [[NSUserDefaults standardUserDefaults] boolForKey:kEnableOnlineStatus];
+    TUIChatConfig.defaultConfig.enableMultiDeviceForCall = NO;
+}
+
+- (void)setupConfig_Minimalist {
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:kEnableMsgReadStatus_mini]) {
+        TUIChatConfig.defaultConfig.msgNeedReadReceipt = [[NSUserDefaults standardUserDefaults] boolForKey:kEnableMsgReadStatus_mini];
+    } else {
+        TUIChatConfig.defaultConfig.msgNeedReadReceipt = NO;
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kEnableMsgReadStatus_mini];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    TUIConfig.defaultConfig.displayOnlineStatusIcon = [[NSUserDefaults standardUserDefaults] boolForKey:kEnableOnlineStatus_mini];
+    TUIChatConfig.defaultConfig.enableMultiDeviceForCall = NO;
+    TUIConfig.defaultConfig.avatarType = TAvatarTypeRounded;
+}
+
+- (void)onSelectStyle:(StyleSelectCellModel *)cellModel {
+    [NSUserDefaults.standardUserDefaults setBool:YES forKey:@"need_recover_login_page_info"];
+    [NSUserDefaults.standardUserDefaults synchronize];
+    [self reloadCombineData];
+    
+    /**
+     * 1. 重新创建登录控制器以及根导航控制器
+     * 1. Recreate the login controller and root navigation controller
+     */
+    UIViewController *loginVc = [self getLoginController];
+    UINavigationController *navVc = nil;
+    if ([loginVc isKindOfClass:UINavigationController.class]) {
+        navVc = (UINavigationController *)loginVc;
+    } else {
+        navVc = loginVc.navigationController;
+    }
+    if (navVc == nil) {
+        return;
+    }
+    
+    StyleSelectViewController *styleSelectVC = [[StyleSelectViewController alloc] init];
+    styleSelectVC.delegate = self;
+    [navVc pushViewController:styleSelectVC animated:NO];
+
+    /**
+     * 3. 切换根控制器
+     * 3. Switch root controller
+     */
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIApplication.sharedApplication.keyWindow.rootViewController = navVc;
+        if (![StyleSelectViewController isClassicEntrance]) {
+            [ThemeSelectController applyTheme:@"light"];
+            [NSUserDefaults.standardUserDefaults setObject:@"light" forKey:@"current_theme_id"];
+            [NSUserDefaults.standardUserDefaults synchronize];
+        }
+        /**
+         * 4. 重新配置安全警告视图
+         * 4. Recofig the security warning view in ChatVC
+         */
+        [self setupChatSecurityWarningView];
+    });
+}
+- (void)reloadCombineData {
+    [self setupConfig];
+}
+
+- (UITabBarController *)getMainController_Minimalist {
+    
+    TUITabBarController *tbc = [[TUITabBarController alloc] init];
+    NSMutableArray *items = [NSMutableArray array];
+    TUITabBarItem *msgItem = [[TUITabBarItem alloc] init];
+
+    msgItem.title = NSLocalizedString(@"TabBarItemMessageText_mini", nil);
+    msgItem.selectedImage = TUIDynamicImage(@"", TUIThemeModuleDemo_Minimalist, [UIImage imageNamed:TUIDemoImagePath_Minimalist(@"session_selected")]);
+    msgItem.normalImage = TUIDynamicImage(@"", TUIThemeModuleDemo_Minimalist, [UIImage imageNamed:TUIDemoImagePath_Minimalist(@"session_normal")]);
+    msgItem.controller = [[TUINavigationController alloc] initWithRootViewController:[[ConversationController_Minimalist alloc] init]];
+    msgItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:[UIColor whiteColor] dark:TController_Background_Color_Dark];
+    msgItem.badgeView = [[TUIBadgeView alloc] init];
+    @weakify(self)
+    msgItem.badgeView.clearCallback = ^{
+        @strongify(self)
+        [self redpoint_clearUnreadMessage];
+    };
+    [items addObject:msgItem];
+
+    TUITabBarItem *contactItem = [[TUITabBarItem alloc] init];
+    contactItem.title = NSLocalizedString(@"TabBarItemContactText_mini", nil);
+    contactItem.selectedImage = TUIDynamicImage(@"", TUIThemeModuleDemo_Minimalist, [UIImage imageNamed:TUIDemoImagePath_Minimalist(@"contact_selected")]);
+    contactItem.normalImage = TUIDynamicImage(@"", TUIThemeModuleDemo_Minimalist, [UIImage imageNamed:TUIDemoImagePath_Minimalist(@"contact_normal")]);
+    contactItem.controller = [[TUINavigationController alloc] initWithRootViewController:[[ContactsController_Minimalist alloc] init]];
+    contactItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:[UIColor whiteColor] dark:TController_Background_Color_Dark];
+    contactItem.badgeView = [[TUIBadgeView alloc] init];
+    [items addObject:contactItem];
+    
+    TUITabBarItem *setItem = [[TUITabBarItem alloc] init];
+    setItem.title = NSLocalizedString(@"TabBarItemSettingText_mini", nil);
+    
+    setItem.selectedImage = TUIDynamicImage(@"", TUIThemeModuleDemo_Minimalist, [UIImage imageNamed:TUIDemoImagePath_Minimalist(@"setting_selected")]);
+    setItem.normalImage = TUIDynamicImage(@"", TUIThemeModuleDemo_Minimalist, [UIImage imageNamed:TUIDemoImagePath_Minimalist(@"setting_normal")]);
+    setItem.controller = [[TUINavigationController alloc] initWithRootViewController:[[SettingController_Minimalist alloc] init]];
+    setItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:[UIColor whiteColor] dark:TController_Background_Color_Dark];
+    [items addObject:setItem];
+    tbc.tabBarItems = items;
+    
+    tbc.tabBar.backgroundColor = [UIColor whiteColor];
+    tbc.tabBar.barTintColor = [UIColor whiteColor];
+    return tbc;
 }
 
 @end

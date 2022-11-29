@@ -14,16 +14,17 @@
 #import "TUILogin.h"
 #import "TUIContactViewDataProvider.h"
 #import "TCConstants.h"
+#import "StyleSelectViewController.h"
 
 @class AppDelegate;
 static AppDelegate *app = nil;
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate,StyleSelectControllerDelegate>
 
 @property (nonatomic, strong) UIWindow *window;
 
 @property (nonatomic, assign) NSUInteger unReadCount;
-@property (nonatomic, strong) TUIContactViewDataProvider *contactDataProvider;
+@property (nonatomic, strong, readonly) TUIContactViewDataProvider *contactDataProvider;
 
 + (id)sharedInstance;
 

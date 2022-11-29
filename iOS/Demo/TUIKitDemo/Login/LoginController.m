@@ -20,6 +20,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *logView;
 @property (weak, nonatomic) IBOutlet UIButton *loginButton;
 
+@property (nonatomic, strong) UIView *changeStyleView;
 @property (nonatomic, strong) UIView *changeSkinView;
 @property (nonatomic, strong) UIView *changeLanguageView;
 
@@ -40,6 +41,11 @@
     [self.loginButton setTitle:NSLocalizedString(@"login", nil) forState:UIControlStateNormal];
     
     
+    self.changeStyleView = [self createOptionalView:NSLocalizedString(@"ChangeStyle", nil)
+                                          leftIcon:TUIDemoDynamicImage(@"", [UIImage imageNamed:@"icon_style"])
+                                         rightIcon:TUIDemoDynamicImage(@"login_drop_img", [UIImage imageNamed:@"icon_drop_arraw"])];
+    [self.changeStyleView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onChangeStyle)]];
+    
     self.changeSkinView = [self createOptionalView:NSLocalizedString(@"ChangeSkin", nil)
                                           leftIcon:[UIImage imageNamed:@"icon_skin"]
                                          rightIcon:[UIImage imageNamed:@"icon_drop_arraw"]];
@@ -49,6 +55,7 @@
                                              rightIcon:[UIImage imageNamed:@"icon_drop_arraw"]];
     [self.changeLanguageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onChangeLanguage)]];
     
+    [self.view addSubview:self.changeStyleView];
     [self.view addSubview:self.changeSkinView];
     [self.view addSubview:self.changeLanguageView];
 }
@@ -65,8 +72,20 @@
             weakSelf.changeLanguageView.mm_y = 10;
         }
         
-        weakSelf.changeSkinView.mm_right(20 + weakSelf.changeLanguageView.mm_w + 20);
-        weakSelf.changeSkinView.mm_y = weakSelf.changeLanguageView.mm_y;
+        if ([StyleSelectViewController isClassicEntrance]) {
+            self.changeSkinView.hidden = NO;
+            self.changeSkinView.mm_right(20 + self.changeLanguageView.mm_w + 20);
+            self.changeSkinView.mm_y = self.changeLanguageView.mm_y;
+            
+            self.changeStyleView.mm_right(40 + self.changeSkinView.mm_w + self.changeLanguageView.mm_w + 20);
+            self.changeStyleView.mm_y = self.changeLanguageView.mm_y;
+        }
+        else {
+            self.changeSkinView.hidden = YES;
+            self.changeStyleView.mm_right(20 + self.changeLanguageView.mm_w + 20);
+            self.changeStyleView.mm_y = self.changeLanguageView.mm_y;
+        }
+        
     });
 }
 
@@ -80,6 +99,11 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
+- (void)onChangeStyle {
+    StyleSelectViewController *vc = [[StyleSelectViewController alloc] init];
+    vc.delegate = AppDelegate.sharedInstance;
+    [self.navigationController pushViewController:vc animated:YES];
+}
 - (void)onChangeSkin {
     ThemeSelectController *vc = [[ThemeSelectController alloc] init];
     vc.delegate = AppDelegate.sharedInstance;

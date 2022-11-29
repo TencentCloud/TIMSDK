@@ -9,15 +9,14 @@
 #import <UIKit/UIKit.h>
 #import "AppDelegate.h"
 
-
 int main(int argc, char * argv[]) {
     @autoreleasepool {
         NSString * delegateClass = @"AppDelegate";
-        Class cls = NSClassFromString(@"TUIAppDelegate");
-        NSString *clsStr = NSStringFromClass(cls);
-        if (clsStr.length>0) {
-            delegateClass = @"TUIAppDelegate";
-        }
+        Class combineCls = NSClassFromString(@"TUICombineDelegate");
+        NSString *combineClsStr = NSStringFromClass(combineCls);
+        if (combineClsStr.length>0) {
+            delegateClass = @"TUICombineDelegate";
+        }        
         return UIApplicationMain(argc, argv, nil, delegateClass);
     }
 }

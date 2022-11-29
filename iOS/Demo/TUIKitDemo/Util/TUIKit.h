@@ -12,7 +12,6 @@
 #import <UIKit/UIKit.h>
 #import "TUIDefine.h"
 #import "TUIProfileCardCell.h"
-#import "TUIBubbleMessageCell.h"
 #import "TUICommonModel.h"
 #import "TUIConversationCell.h"
 #import "TUILogin.h"

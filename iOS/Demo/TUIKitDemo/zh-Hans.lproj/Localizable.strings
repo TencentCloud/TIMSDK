@@ -172,11 +172,15 @@
 "MessageTipsOthersRecallMessage" = "对方撤回了一条消息";
 "SignatureFormat" = "个性签名:%@";
 
+"ChangeStyle" = "切换风格";
 "ChangeSkin" = "切换皮肤";
 "ChangeLanguage" = "切换语言";
 "SimpleChinese" = "简体中文";
 "English" = "英语(English)";
 "CurrentLanguage" = "简体中文";
+"Classic" = "经典版";
+"Minimalist" = "简约版";
+
 
 "ThemeNameSerious" = "深沉";
 "ThemeNameLight" = "轻量";
@@ -240,3 +244,17 @@
 "ShowOnlineStatusCloseDesc" = "开启后，您将可以在会话列表和通讯录中看到好友在线或离线的状态提示。";
 "OnlineStatus" = "在线状态";
 "ShowPackageToast" = "该功能为旗舰版功能";
+
+//----------------Mini begin------------
+"Chat" = "聊天";
+"TabBarItemMessageText_mini" = "聊天";
+"TabBarItemContactText_mini" = "联系人";
+"TabBarItemSettingText_mini" = "设置";
+
+"ReadAll" = "全部已读";
+"Hide"    = "隐藏";
+"Delete"    = "删除";
+"MarkAsRead"= "标记已读";
+"TUIKitDone" = "完成";
+
+//----------------Mini end------------

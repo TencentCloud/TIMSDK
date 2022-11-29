@@ -5,19 +5,18 @@
 //  Created by kennethmiao on 2018/10/19.
 //  Copyright © 2018年 Tencent. All rights reserved.
 //
-#import "SettingController.h"
+#import "SettingController_Minimalist.h"
 #import "AppDelegate.h"
 #import "TUIProfileCardCell.h"
-#import "TUITextEditController.h"
 #import "TUIDateEditController.h"
 #import "TUICommonTextCell.h"
 #import "UIView+TUILayout.h"
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "TUIKit.h"
 #import "TUILogin.h"
-#import "ProfileController.h"
+#import "ProfileController_Minimalist.h"
 #import "PAirSandbox.h"
-#import "TUIAvatarViewController.h"
+#import "TUIAvatarViewController_Minimalist.h"
 #import "TUICommonSwitchCell.h"
 #import "TCUtil.h"
 #import "TCLoginModel.h"
@@ -25,14 +24,13 @@
 #import "TUICommonModel.h"
 #import "TUIThemeManager.h"
 #import "TUIAboutUsViewController.h"
-#import "TUIBaseChatViewController.h"
 #import "TUIChatConfig.h"
 #import <TUICore/TUIConfig.h>
 
-NSString * kEnableMsgReadStatus = @"TUIKitDemo_EnableMsgReadStatus";
-NSString * kEnableOnlineStatus = @"TUIKitDemo_EnableOnlineStatus";
+NSString * kEnableMsgReadStatus_mini = @"TUIKitDemo_EnableMsgReadStatus";
+NSString * kEnableOnlineStatus_mini = @"TUIKitDemo_EnableOnlineStatus";
 
-@interface SettingController () <UIActionSheetDelegate, V2TIMSDKListener>
+@interface SettingController_Minimalist () <UIActionSheetDelegate, V2TIMSDKListener>
 @property (nonatomic, strong) NSMutableArray *data;
 @property (nonatomic, strong) dispatch_source_t timer;
 @property (nonatomic, assign) BOOL memoryReport;
@@ -41,7 +39,7 @@ NSString * kEnableOnlineStatus = @"TUIKitDemo_EnableOnlineStatus";
 @property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
 @end
 
-@implementation SettingController
+@implementation SettingController_Minimalist
 
 #pragma mark - Life cycle
 - (void)viewDidLoad {
@@ -53,6 +51,8 @@ NSString * kEnableOnlineStatus = @"TUIKitDemo_EnableOnlineStatus";
 }
 
 - (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    
     NSString *loginUser = [[V2TIMManager sharedInstance] getLoginUser];
     if (loginUser.length > 0) {
         @weakify(self)
@@ -61,17 +61,48 @@ NSString * kEnableOnlineStatus = @"TUIKitDemo_EnableOnlineStatus";
             self.profile = infoList.firstObject;
         } fail:nil];
     }
+    if (@available(iOS 15.0, *)) {
+        UINavigationBarAppearance *appearance = [UINavigationBarAppearance new];
+        [appearance configureWithDefaultBackground];
+        appearance.shadowColor = nil;
+        appearance.backgroundEffect = nil;
+        appearance.backgroundColor =  [self navBackColor];
+        UINavigationBar *navigationBar = self.navigationController.navigationBar;
+        navigationBar.backgroundColor = [self navBackColor];
+        navigationBar.barTintColor = [self navBackColor];
+        navigationBar.shadowImage = [UIImage new];
+        navigationBar.standardAppearance = appearance;
+        navigationBar.scrollEdgeAppearance= appearance;
+    }
+    else {
+        UINavigationBar *navigationBar = self.navigationController.navigationBar;
+        navigationBar.backgroundColor = [self navBackColor];
+        navigationBar.barTintColor = [self navBackColor];
+        navigationBar.shadowImage = [UIImage new];
+        [[UINavigationBar appearance] setTranslucent:NO];
+    }
+}
+
+- (UIColor *)navBackColor {
+    return  [UIColor whiteColor];
 }
 
 #pragma mark - Debug
 - (void)setupViews
 {
-    _titleView = [[TUINaviBarIndicatorView alloc] init];
-    [_titleView setTitle:NSLocalizedString(@"TabBarItemMeText", nil)];
-    self.navigationItem.titleView = _titleView;
-    self.navigationItem.title = @"";
     
-    self.parentViewController.title = NSLocalizedString(@"TabBarItemMeText", nil);
+    _titleView = [[TUINaviBarIndicatorView alloc] init];
+    _titleView.label.font = [UIFont boldSystemFontOfSize:34];
+    [_titleView setTitle:NSLocalizedString(@"TabBarItemSettingText_mini", nil)];
+    _titleView.label.textColor = TUIDynamicColor(@"nav_title_text_color", TUIThemeModuleDemo_Minimalist, @"#000000");
+    
+    UIBarButtonItem * titleItem = [[UIBarButtonItem alloc] initWithCustomView:_titleView];
+    
+    UIBarButtonItem *leftSpaceItem = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    leftSpaceItem.width = kScale390(13);
+    
+    self.navigationItem.title = @"";
+    self.navigationItem.leftBarButtonItems = @[leftSpaceItem,titleItem];
     
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapTest:)];
@@ -241,7 +272,7 @@ NSString * kEnableOnlineStatus = @"TUIKitDemo_EnableOnlineStatus";
 #pragma mark -- Event
 - (void)didSelectCommon {
     [self setupData];
-    ProfileController *test = [[ProfileController alloc] init];
+    ProfileController_Minimalist *test = [[ProfileController_Minimalist alloc] init];
     [self.navigationController pushViewController:test animated:YES];
 }
 
@@ -278,7 +309,7 @@ NSString * kEnableOnlineStatus = @"TUIKitDemo_EnableOnlineStatus";
     [self setupData];
 }
 
-- (void)didLogoutInSettingController:(SettingController *)controller {
+- (void)didLogoutInSettingController:(SettingController_Minimalist *)controller {
     UIViewController *loginVc = [AppDelegate.sharedInstance getLoginController];
     self.view.window.rootViewController = loginVc;
     [[NSNotificationCenter defaultCenter] postNotificationName: @"TUILoginShowPrivacyPopViewNotfication" object:nil];
@@ -303,7 +334,7 @@ NSString * kEnableOnlineStatus = @"TUIKitDemo_EnableOnlineStatus";
 }
 
 - (void)didTapOnAvatar:(TUIProfileCardCell *)cell{
-    TUIAvatarViewController *image = [[TUIAvatarViewController alloc] init];
+    TUIAvatarViewController_Minimalist *image = [[TUIAvatarViewController_Minimalist alloc] init];
     image.avatarData = cell.cardData;
     [self.navigationController pushViewController:image animated:YES];
 }
@@ -325,12 +356,12 @@ NSString * kEnableOnlineStatus = @"TUIKitDemo_EnableOnlineStatus";
 }
 
 - (BOOL)msgReadStatus {
-    return [[NSUserDefaults standardUserDefaults] boolForKey:kEnableMsgReadStatus];
+    return [[NSUserDefaults standardUserDefaults] boolForKey:kEnableMsgReadStatus_mini];
 }
 
 - (void)setReadStatus:(BOOL)on {
     [TUIChatConfig defaultConfig].msgNeedReadReceipt = on;
-    [[NSUserDefaults standardUserDefaults] setBool:on forKey:kEnableMsgReadStatus];
+    [[NSUserDefaults standardUserDefaults] setBool:on forKey:kEnableMsgReadStatus_mini];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
@@ -345,7 +376,7 @@ NSString * kEnableOnlineStatus = @"TUIKitDemo_EnableOnlineStatus";
     }
     
     TUIConfig.defaultConfig.displayOnlineStatusIcon = on;
-    [NSUserDefaults.standardUserDefaults setBool:on forKey:kEnableOnlineStatus];
+    [NSUserDefaults.standardUserDefaults setBool:on forKey:kEnableOnlineStatus_mini];
     [NSUserDefaults.standardUserDefaults synchronize];
     
     if (on) {
@@ -357,7 +388,7 @@ NSString * kEnableOnlineStatus = @"TUIKitDemo_EnableOnlineStatus";
 }
 
 - (BOOL)onlineStatus {
-    return [NSUserDefaults.standardUserDefaults boolForKey:kEnableOnlineStatus];
+    return [NSUserDefaults.standardUserDefaults boolForKey:kEnableOnlineStatus_mini];
 }
 
 @end
