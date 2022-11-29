@@ -103,6 +103,7 @@
 #define Bottom_SafeHeight   (Is_IPhoneX ? (34.0):(0))
 #define RGBA(r, g, b, a)    [UIColor colorWithRed:(r)/255.0f green:(g)/255.0f blue:(b)/255.0f alpha:a]
 #define RGB(r, g, b)    [UIColor colorWithRed:(r)/255.0f green:(g)/255.0f blue:(b)/255.0f alpha:1.f]
+#define kScale390(x) (x * (UIScreen.mainScreen.bounds.size.width / 390.0))
 
 /////////////////////////////////////////////////////////////////////////////////
 //
@@ -148,6 +149,30 @@
 #define TUIContactImagePath(imageName) [TUIBundlePath(TUIContactBundle,TUIContactBundle_Key_Class) stringByAppendingPathComponent:imageName]
 #define TUIGroupImagePath(imageName) [TUIBundlePath(TUIGroupBundle,TUIGroupBundle_Key_Class) stringByAppendingPathComponent:imageName]
 #define TUISearchImagePath(imageName) [TUIBundlePath(TUISearchBundle,TUISearchBundle_Key_Class) stringByAppendingPathComponent:imageName]
+
+//-----Minimalist-------
+#define TUIDemoBundle_Minimalist            @"TUIDemo_Minimalist"
+#define TUICoreBundle_Minimalist            @"TUICore_Minimalist"
+#define TUIChatBundle_Minimalist            @"TUIChat_Minimalist"
+#define TUIChatFaceBundle_Minimalist        @"TUIChatFace_Minimalist"
+#define TUIConversationBundle_Minimalist    @"TUIConversation_Minimalist"
+#define TUIContactBundle_Minimalist         @"TUIContact_Minimalist"
+#define TUIGroupBundle_Minimalist           @"TUIGroup_Minimalist"
+#define TUISearchBundle_Minimalist          @"TUISearch_Minimalist"
+//#define TUIKitLocalizableBundle  @"TUIKitLocalizable"
+
+//#define TUIKitLocalizable(bundleName) [NSBundle bundleWithPath:TUIBundlePath(bundleName, TUIKitLocalizableBundle_Key_Class)]
+
+#define TUIDemoImagePath_Minimalist(imageName) [TUIBundlePath(TUIDemoBundle_Minimalist,TUIDemoBundle_Key_Class) stringByAppendingPathComponent:imageName]
+#define TUICoreImagePath_Minimalist(imageName) [TUIBundlePath(TUICoreBundle_Minimalist,TUICoreBundle_Key_Class) stringByAppendingPathComponent:imageName]
+#define TUIChatImagePath_Minimalist(imageName) [TUIBundlePath(TUIChatBundle_Minimalist,TUIChatBundle_Key_Class) stringByAppendingPathComponent:imageName]
+#define TUIChatFaceImagePath_Minimalist(imageName) [TUIBundlePath(TUIChatFaceBundle_Minimalist,TUIChatFaceBundle_Key_Class) stringByAppendingPathComponent:imageName]
+#define TUIConversationImagePath_Minimalist(imageName) [TUIBundlePath(TUIConversationBundle_Minimalist,TUIConversationBundle_Key_Class) stringByAppendingPathComponent:imageName]
+#define TUIContactImagePath_Minimalist(imageName) [TUIBundlePath(TUIContactBundle_Minimalist,TUIContactBundle_Key_Class) stringByAppendingPathComponent:imageName]
+#define TUIGroupImagePath_Minimalist(imageName) [TUIBundlePath(TUIGroupBundle_Minimalist,TUIGroupBundle_Key_Class) stringByAppendingPathComponent:imageName]
+#define TUISearchImagePath_Minimalist(imageName) [TUIBundlePath(TUISearchBundle_Minimalist,TUISearchBundle_Key_Class) stringByAppendingPathComponent:imageName]
+
+//-----
 
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -474,6 +499,7 @@
 
 #pragma mark - TUICore_TUIChatService
 #define TUICore_TUIChatService @"TUICore_TUIChatService"
+#define TUICore_TUIChatService_Minimalist @"TUICore_TUIChatService_Minimalist"
 
 #define TUICore_TUIChatService_GetDisplayStringMethod @"TUICore_TUIChatService_GetDisplayStringMethod"
 #define TUICore_TUIChatService_GetDisplayStringMethod_MsgKey @"msg"
@@ -483,6 +509,7 @@
 #define TUICore_TUIChatService_GetChatViewControllerMethod_UserIDKey @"TUICore_TUIChatService_GetChatViewControllerMethod_UserIDKey"
 #define TUICore_TUIChatService_GetChatViewControllerMethod_GroupIDKey @"TUICore_TUIChatService_GetChatViewControllerMethod_GroupIDKey"
 #define TUICore_TUIChatService_GetChatViewControllerMethod_ConversationIDKey @"TUICore_TUIChatService_GetChatViewControllerMethod_ConversationIDKey"
+#define TUICore_TUIChatService_GetChatViewControllerMethod_AvatarImageKey @"TUICore_TUIChatService_GetChatViewControllerMethod_AvatarImageKey"
 #define TUICore_TUIChatService_GetChatViewControllerMethod_HighlightKeywordKey @"TUICore_TUIChatService_GetChatViewControllerMethod_HighlightKeywordKey"
 #define TUICore_TUIChatService_GetChatViewControllerMethod_LocateMessageKey @"TUICore_TUIChatService_GetChatViewControllerMethod_LocateMessageKey"
 
@@ -495,11 +522,12 @@
 #define TUICore_TUIChatExtension_GetMoreCellInfo_VideoCall    @"TUICore_TUIChatExtension_GetMoreCellInfo_VideoCall"
 #define TUICore_TUIChatExtension_GetMoreCellInfo_AudioCall    @"TUICore_TUIChatExtension_GetMoreCellInfo_AudioCall"
 #define TUICore_TUIChatExtension_GetMoreCellInfo_UserID       @"TUICore_TUIChatExtension_GetMoreCellInfo_UserID"
-#define TUICore_TUIChatExtension_GetMoreCellInfo_GroupID       @"TUICore_TUIChatExtension_GetMoreCellInfo_GroupID"
-#define TUICore_TUIChatExtension_GetMoreCellInfo_View       @"TUICore_TUIChatExtension_GetMoreCellInfo_View"
+#define TUICore_TUIChatExtension_GetMoreCellInfo_GroupID      @"TUICore_TUIChatExtension_GetMoreCellInfo_GroupID"
+#define TUICore_TUIChatExtension_GetMoreCellInfo_View         @"TUICore_TUIChatExtension_GetMoreCellInfo_View"
 
 #pragma mark - TUICore_TUIConversationService
 #define TUICore_TUIConversationService @"TUICore_TUIConversationService"
+#define TUICore_TUIConversationService_Minimalist @"TUICore_TUIConversationService_Minimalist"
 #define TUICore_TUIConversationService_GetConversationControllerMethod @"TUICore_TUIConversationService_GetConversationControllerMethod"
 #define TUICore_TUIConversationService_GetConversationSelectControllerMethod @"TUICore_TUIConversationService_GetConversationSelectControllerMethod"
 
@@ -517,13 +545,15 @@
 #define TUICore_TUIConversationNotify_ClearConversationUIHistorySubKey @"TUICore_TUIConversationNotify_ClearConversationUIHistorySubKey"
 
 #pragma mark - TUICore_TUIConversationExtension
-#define TUICore_TUIConversationExtension @"TUICore_TUIConversationExtension"
 #define TUICore_TUIConversationExtension_GetSearchBar @"TUICore_TUIConversationExtension_GetSearchBar"
+#define TUICore_TUIConversationExtension_GetSearchBar_Minimalist @"TUICore_TUIConversationExtension_GetSearchBar_Minimalist"
 #define TUICore_TUIConversationExtension_ParentVC @"TUICore_TUIConversationExtension_ParentVC" //UIViewController
 #define TUICore_TUIConversationExtension_SearchBar @"TUICore_TUIConversationExtension_SearchBar" // UIView
 
 #pragma mark - TUICore_TUIContactService
 #define TUICore_TUIContactService @"TUICore_TUIContactService"
+#define TUICore_TUIContactService_Minimalist @"TUICore_TUIContactService_Minimalist"
+
 #define TUICore_TUIContactService_GetContactControllerMethod @"TUICore_TUIContactService_GetContactControllerMethod"
 #define TUICore_TUIContactService_GetContactSelectControllerMethod @"TUICore_TUIContactService_GetContactSelectControllerMethod"
 #define TUICore_TUIContactService_GetContactSelectControllerMethod_TitleKey @"TUICore_TUIContactService_GetContactSelectControllerMethod_TitleKey"
@@ -553,6 +583,8 @@
 
 #pragma mark - TUICore_TUIGroupService
 #define TUICore_TUIGroupService @"TUICore_TUIGroupService"
+#define TUICore_TUIGroupService_Minimalist @"TUICore_TUIGroupService_Minimalist"
+
 #define TUICore_TUIGroupService_GetGroupInfoControllerMethod @"TUICore_TUIGroupService_GetGroupInfoControllerMethod"
 #define TUICore_TUIGroupService_GetGroupInfoControllerMethod_GroupIDKey @"TUICore_TUIGroupService_GetGroupInfoControllerMethod_GroupIDKey"
 #define TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod @"TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod"

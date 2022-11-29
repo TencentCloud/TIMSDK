@@ -66,7 +66,7 @@
 "delete_success" = "Deleted";
 "my_friend" = "My Friends";
 "no_personal_signature" = "No status";
-"SignatureFormat" = "Signature:%@";
+"SignatureFormat" = "Status:%@";
 "choose_avatar_for_you" = "The App randomly assigns you a system avatar.";
 "SearchGroupPlaceholder" = "User ID";
 "please_fill_in_verification_information" = "Enter verification information";
@@ -85,7 +85,7 @@
 "GroupMember" = "Group Members";
 "ProfileAlia" = "Alias";
 "ProfileMessageDoNotDisturb" = "Mute Notifications";
-"ProfileStickyonTop" = "Sticky on Top";
+"ProfileStickyonTop" = "Pin";
 "ProfileBlocked" = "Block";
 "ProfileSendMessages" = "Send Message";
 "ProfileDeleteFirend" = "Delete Friend";
@@ -136,7 +136,7 @@
 "TUIKitGroupProfileAutoApproval" = "Auto Approval";
 "TUIKitGroupProfileAlias" = "My Alias in Group";
 "TUIKitGroupProfileMessageDoNotDisturb" = "Mute Notifications";
-"TUIKitGroupProfileStickyOnTop" = "Sticky on Top";
+"TUIKitGroupProfileStickyOnTop" = "Pin";
 "TUIKitGroupProfileDeleteAndExit" = "Delete and Leave";
 "TUIKitGroupProfileDissolve" = "Disband Group";
 "TUIKitGroupProfileJoinDisable" = "Prohibited from Joining";
@@ -196,12 +196,18 @@
 "TUIKitSignalingNoResponse" = "No answer";
 "TUIkitSignalingUnrecognlize" = "Unrecognized call instruction";
 
+"TUIKitUserStatusUnknown" = "unknown";
+"TUIKitUserStatusOnline" = "online";
+"TUIKitUserStatusOffline" = "offline";
+"TUIKitUserStatusUnlogined" = "unlogined";
+
 "TUIkitMessageTypeImage" = "[Image]";
 "TUIKitMessageTypeVoice" = "[Voice]";
 "TUIkitMessageTypeVideo" = "[Video]";
 "TUIkitMessageTypeFile" = "[File]";
 "TUIKitMessageTypeAnimateEmoji" = "[Animated Sticker]";
 "TUIKitMessageTypeDraftFormat" = "[Drafts]";
+"TUIKitMessageTypeLastMsgCountFormat" = "messages";
 
 "TUIKitMessageReadPartRead" = "read";
 "TUIKitMessageReadPartUnread" = "unread";
@@ -574,6 +580,10 @@
 "Revoke" = "Revoke";
 "Resend" = "Resend";
 "Search" = "Search";
+"Recall" = "Recall";
+"MultiSelect" = "Select";
+"Quote" = "Quote";
+
 "TUIKitCallMicCamAuthTips" = "Allow access to your microphone and camera";
 "TUIKitCallMicAuthTips" = "Allow access to your microphone";
 "TUIKitMessageTipsSureToResend" = "Are you sure you want to resend the message?";
@@ -677,13 +687,18 @@
 "TUIKitInputNoPhotoOperateLater" = "Later";
 "TUIKitInputNoPhotoerateEnable" = "Authorize Now";
 
-"StickyonTop" = "Sticky on Top";
-"CancelStickonTop" = "Remove from Top";
+"TUIKitInputRecordTipsTitle" = "Swipe left to cancel or release to send";
+"TUIKitInputRecordCancelTipsTitle" = "Release to cancel";
+
+"StickyonTop" = "Pin";
+"CancelStickonTop" = "UnPin";
 "ClearHistoryChatMessage" = "Clear messages";
 "MarkAsRead" = "Mark As Read";
 "MarkAsUnRead" = "Mark As UnRead";
 "MarkHide" = "Hide";
 "MinimizeGroup" = "Minimize Group";
+"More" = "More";
+"Info" = "Info";
 
 "TUIKitConversationMarkHide" = "Conversation Hide";
 "TUIKitConversationMarkHideDescriptionOn" = "After opening, this conversation will not appear in the conversation list, and the chat history will still be preserved";
@@ -736,3 +751,15 @@
 "TUIKitCreatGroupType_See_Doc" ="See product documentation for details";
 "TUIKitCreatGroupType_Desc_Highlight" = "product documentation";
 "TUIKitCreatGroupType_See_Doc_Simple" = "See product documentation";
+
+//----mini---
+"Pin" = "Pin";
+"UnPin" = "UnPin";
+"TUIKitSelected" = "Selected";
+"TUIKitThreadQuote" = "Thread Quote";
+"MessageInfo" = "Message Info";
+"C2CReadBy" = "Read";
+"C2CDeliveredTo" = "Delivered";
+"GroupReadBy" = "Read By";
+"GroupDeliveredTo" = "Delivered To";
+//----mini---

@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUIGroup'
-  spec.version      = '6.8.3374'
+  spec.version      = '6.9.3557'
   spec.platform     = :ios 
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
@@ -16,47 +16,85 @@ Pod::Spec.new do |spec|
 
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/6.8.3374/ios/TUIGroup.zip'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/6.9.3557/ios/TUIGroup.zip'}
 
-  spec.subspec 'Header' do |header|
-      header.source_files = '**/TUIGroup/Header/*.{h,m,mm}'
+  spec.default_subspec = 'ALL'
+
+  spec.subspec 'CommonModel' do |commonModel|
+    commonModel.source_files = '**/TUIGroup/CommonModel/*.{h,m,mm}'
+    commonModel.dependency 'TUICore','6.9.3557'
   end
-  
-  spec.subspec 'Cell' do |cell|
-    cell.subspec 'CellData' do |cellData|
-      cellData.source_files = '**/TUIGroup/Cell/CellData/*.{h,m,mm}'
-      cellData.dependency 'TUICore','6.8.3374'
+
+  spec.subspec 'BaseCell' do |baseCell|
+    baseCell.subspec 'CellData' do |cellData|
+      cellData.source_files = '**/TUIGroup/BaseCell/CellData/*.{h,m,mm}'
+      cellData.dependency "TUIGroup/CommonModel"
     end
-
-    cell.subspec 'CellUI' do |cellUI|
-      cellUI.source_files = '**/TUIGroup/Cell/CellUI/*.{h,m,mm}'
-      cellUI.dependency 'TUIGroup/Cell/CellData'
+    baseCell.subspec 'CellUI' do |cellUI|
+      cellUI.source_files = '**/TUIGroup/BaseCell/CellUI/*.{h,m,mm}'
+      cellUI.dependency "TUIGroup/BaseCell/CellData"
     end
   end
 
-  spec.subspec 'DataProvider' do |dataProvider|
-    dataProvider.source_files = '**/TUIGroup/DataProvider/*.{h,m,mm}'
-    dataProvider.dependency 'TUIGroup/Cell'
+  spec.subspec 'BaseDataProvider' do |baseDataProvider|
+    baseDataProvider.source_files = '**/TUIGroup/BaseDataProvider/*.{h,m,mm}'
+    baseDataProvider.dependency "TUIGroup/BaseCell"
   end
 
-  spec.subspec 'UI' do |ui|
-    ui.source_files = '**/TUIGroup/UI/*.{h,m,mm}'
-    ui.dependency 'TUIGroup/DataProvider'
+  spec.subspec 'CommonUI' do |commonUI|
+    commonUI.source_files = '**/TUIGroup/CommonUI/*.{h,m,mm}'
+    commonUI.dependency "TUIGroup/BaseDataProvider"
   end
 
-  spec.subspec 'Service' do |service|
-    service.source_files = '**/TUIGroup/Service/*.{h,m,mm}'
-    service.dependency 'TUIGroup/UI'
-  end
-  
-  spec.resource = [
+  spec.subspec 'UI_Classic' do |uiClassic|
+    uiClassic.subspec 'UI' do |ui|
+      ui.source_files = '**/TUIGroup/UI_Classic/UI/*.{h,m,mm}'
+      ui.dependency "TUIGroup/CommonUI"
+    end
+    uiClassic.subspec 'Service' do |service|
+      service.source_files = '**/TUIGroup/UI_Classic/Service/*.{h,m,mm}'
+      service.dependency "TUIGroup/UI_Classic/UI"
+    end
+    uiClassic.subspec 'Header' do |header|
+      header.source_files = '**/TUIGroup/UI_Classic/Header/*.{h,m,mm}'
+      header.dependency "TUIGroup/UI_Classic/Service"
+    end
+    uiClassic.resource = [
       '**/TUIGroup/Resources/*.bundle'
-  ]
+    ]
+  end
+
+  spec.subspec 'UI_Minimalist' do |uiMinimalist|
+    uiMinimalist.subspec 'UI' do |ui|
+      ui.source_files = '**/TUIGroup/UI_Minimalist/UI/*.{h,m,mm}'
+      ui.dependency "TUIGroup/CommonUI"
+    end
+    uiMinimalist.subspec 'Service' do |service|
+      service.source_files = '**/TUIGroup/UI_Minimalist/Service/*.{h,m,mm}'
+      service.dependency "TUIGroup/UI_Minimalist/UI"
+    end
+    uiMinimalist.subspec 'Header' do |header|
+      header.source_files = '**/TUIGroup/UI_Minimalist/Header/*.{h,m,mm}'
+      header.dependency "TUIGroup/UI_Minimalist/Service"
+    end
+    uiMinimalist.resource = [
+      '**/TUIGroup/Resources/*.bundle'
+    ]
+  end
+
+  spec.subspec 'ALL' do |all|
+    all.dependency "TUIGroup/UI_Classic"
+    all.dependency "TUIGroup/UI_Minimalist"
+  end
 
   spec.pod_target_xcconfig = {
-    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64'
+    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64',
+    'GENERATE_INFOPLIST_FILE' => 'YES'
   }
-  spec.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
+  spec.user_target_xcconfig = {
+   'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64',
+   'GENERATE_INFOPLIST_FILE' => 'YES'
+  }
 end
 
 # pod trunk push TUIGroup.podspec --use-libraries --allow-warnings

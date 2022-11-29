@@ -200,8 +200,7 @@
     }
 }
 
-+ (NSString *)convertDateToStr:(NSDate *)date
-{
++ (NSString *)convertDateToStr:(NSDate *)date {
     if (!date) {
         return nil;
     }
@@ -243,6 +242,21 @@
         dateFmt.dateFormat = @"yyyy/MM/dd";
     }
     
+    NSString *str = [dateFmt stringFromDate:date];
+    return str;
+}
+
++ (NSString *)convertDateToHMStr:(NSDate *)date {
+    if (!date) {
+        return nil;
+    }
+    
+    if ([date isEqualToDate:[NSDate distantPast]]) {
+        return @"";
+    }
+    
+    NSDateFormatter *dateFmt = [[NSDateFormatter alloc] init];
+    dateFmt.dateFormat = @"HH:mm";
     NSString *str = [dateFmt stringFromDate:date];
     return str;
 }

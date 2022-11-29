@@ -117,6 +117,11 @@
 "TUIKitOpenWithOtherApp" = "用其他应用程序打开";
 "TUIKitTipsContactListNil" = "联系人列表为空，请先添加好友";
 
+"TUIKitUserStatusUnknown" = "未知";
+"TUIKitUserStatusOnline" = "在线";
+"TUIKitUserStatusOffline" = "离线";
+"TUIKitUserStatusUnlogined" = "未登录";
+
 "TUIKitInputHoldToTalk" = "按住 说话";
 "TUIKitInputReleaseToSend" = "松开 结束";
 "TUIKitInputReleaseToCancel" = "松开 取消";
@@ -203,6 +208,7 @@
 "TUIkitMessageTypeFile" = "[文件]";
 "TUIKitMessageTypeAnimateEmoji" = "[动画表情]";
 "TUIKitMessageTypeDraftFormat" = "[草稿] ";
+"TUIKitMessageTypeLastMsgCountFormat" = "条";
 
 "TUIKitMessageReadPartRead" = "人已读";
 "TUIKitMessageReadPartUnread" = "人未读";
@@ -576,6 +582,10 @@
 "Revoke" = "撤回";
 "Resend" = "重发";
 "Search" = "搜索";
+"Recall" = "撤回";
+"MultiSelect" = "多选";
+"Quote" = "引用";
+
 "TUIKitCallMicCamAuthTips" = "请开启麦克风和摄像头权限";
 "TUIKitCallMicAuthTips" = "请开启麦克风权限";
 "TUIKitMessageTipsSureToResend" = "确定重发消息?";
@@ -677,6 +687,9 @@
 "TUIKitInputNoPhotoOperateLater" = "以后再说";
 "TUIKitInputNoPhotoerateEnable" = "去开启";
 
+"TUIKitInputRecordTipsTitle" = "松开手指发送，左滑取消发送";
+"TUIKitInputRecordCancelTipsTitle" = "松开手指，取消发送";
+
 "StickyonTop" = "置顶";
 "CancelStickonTop" = "取消置顶";
 "ClearHistoryChatMessage" = "清空消息";
@@ -684,6 +697,8 @@
 "MarkAsUnRead" = "标记未读";
 "MarkHide" = "不显示";
 "MinimizeGroup" = "会话折叠";
+"More" = "更多";
+"Info" = "详情";
 
 "TUIKitConversationMarkHide" = "会话隐藏";
 "TUIKitConversationMarkHideDescriptionOn" = "开启后，此会话将不会出现在会话列表中，聊天记录仍会被保留。";
@@ -735,3 +750,15 @@
 "TUIKitCreatGroupType_See_Doc" ="详见产品文档";
 "TUIKitCreatGroupType_Desc_Highlight" = "产品文档";
 "TUIKitCreatGroupType_See_Doc_Simple" = "查看产品文档";
+
+//----mini---
+"Pin" = "置顶";
+"UnPin" = "取消置顶";
+"TUIKitSelected" = "条选中";
+"TUIKitThreadQuote" = "条回复";
+"MessageInfo" = "消息详情";
+"C2CReadBy" = "已读";
+"C2CDeliveredTo" = "未读";
+"GroupReadBy" = "已读列表";
+"GroupDeliveredTo" = "未读列表";
+//----mini---

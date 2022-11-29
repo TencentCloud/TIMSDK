@@ -130,6 +130,16 @@ typedef NS_ENUM(NSInteger, TUIThemeModule) {
     TUIThemeModuleGroup        = 0x1 << 5,
     TUIThemeModuleSearch       = 0x1 << 6,
     TUIThemeModuleCalling      = 0x1 << 7,
+    
+    TUIThemeModuleDemo_Minimalist         = 0x1 << 8,
+    TUIThemeModuleCore_Minimalist         = 0x1 << 9,
+    TUIThemeModuleChat_Minimalist         = 0x1 << 10,
+    TUIThemeModuleConversation_Minimalist = 0x1 << 11,
+    TUIThemeModuleContact_Minimalist      = 0x1 << 12,
+    TUIThemeModuleGroup_Minimalist        = 0x1 << 13,
+    TUIThemeModuleSearch_Minimalist       = 0x1 << 14,
+    TUIThemeModuleCalling_Minimalist      = 0x1 << 15,
+
 };
 
 @interface TUITheme : NSObject
