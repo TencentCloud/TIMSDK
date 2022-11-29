@@ -5,16 +5,16 @@ English | [简体中文](./README_ZH.md)
 ## Download Links
 
 ### Enhanced Edition(Recommend)
-[Latest ImSDKForMac_Plus.framework download](https://sdk-im-1252463788.cos.ap-hongkong.myqcloud.com/download/plus/6.8.3374/ImSDKForMac_Plus_6.8.3374.framework.zip)
+[Latest ImSDKForMac_Plus.framework download](https://sdk-im-1252463788.cos.ap-hongkong.myqcloud.com/download/plus/6.9.3557/ImSDKForMac_Plus_6.9.3557.framework.zip)
 
 ### Enhanced Edition Pro
-[Latest ImSDKForMac_Plus_Pro.framework download](https://im.sdk.qcloud.com/download/plus/6.8.3374/ImSDKForMac_Plus_Pro_6.8.3374.framework.zip)
+[Latest ImSDKForMac_Plus_Pro.framework download](https://im.sdk.qcloud.com/download/plus/6.9.3557/ImSDKForMac_Plus_Pro_6.9.3557.framework.zip)
 
 ### Basic Edition
 [Latest ImSDKForMac.framework download](https://im.sdk.qcloud.com/download/standard/5.1.62/TIM_SDK_Mac_latest_framework.zip)
 
 ### C++ API edition
-[Latest C++ API download](https://im.sdk.qcloud.com/download/plus/6.8.3374/cross_platform/ImSDK_Mac_CPP_6.8.3374.framework.zip)
+[Latest C++ API download](https://im.sdk.qcloud.com/download/plus/6.9.3557/cross_platform/ImSDK_Mac_CPP_6.9.3557.framework.zip)
 
 ### C API edition
 [Latest C API download](https://im.sdk.qcloud.com/download/plus/6.8.3381/cross_platform/ImSDK_Mac_C_6.8.3381.framework.zip)
