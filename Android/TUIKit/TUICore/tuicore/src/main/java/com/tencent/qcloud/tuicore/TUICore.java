@@ -28,7 +28,26 @@ public class TUICore {
     }
 
     /**
-     *  Call Service
+     * unregister Service
+     *
+     * @param serviceName service name
+     */
+    public static void unregisterService(String serviceName) {
+        ServiceManager.getInstance().unregisterService(serviceName);
+    }
+
+    /**
+     * get Service
+     *
+     * @param serviceName service name
+     * @return service
+     */
+    public static ITUIService getService(String serviceName) {
+        return ServiceManager.getInstance().getService(serviceName);
+    }
+
+    /**
+     * Call Service
      *
      *  @param serviceName     service name
      *  @param method          method name

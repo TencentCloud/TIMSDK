@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.MessageRecyclerView
+        android:id="@+id/message_view"
+        android:layout_marginTop="12.6dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <View
+        android:id="@+id/divide_line"
+        android:layout_width="match_parent"
+        android:layout_height="0.48dp"
+        android:background="#DBDBDB" />
+
+    <com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.reply.ReplyDetailsView
+        android:id="@+id/replies_detail"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.input.InputView
+        android:id="@+id/reply_input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

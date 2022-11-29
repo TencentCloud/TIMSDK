@@ -109,6 +109,7 @@ public final class TUIConstants {
         public static final String LOCATE_MESSAGE = "locateMessage";
         public static final String AT_INFO_LIST = "atInfoList";
         public static final String FACE_URL = "faceUrl";
+        public static final String FACE_URL_LIST = "faceUrlList";
         public static final String JOIN_TYPE = "joinType";
         public static final String MEMBER_COUNT = "memberCount";
         public static final String RECEIVE_OPTION = "receiveOption";
@@ -158,7 +159,8 @@ public final class TUIConstants {
         public static final String EVENT_UNREAD = "eventTotalUnreadCount";
         public static final String EVENT_SUB_KEY_UNREAD_CHANGED = "unreadCountChanged";
 
-        public static final String EXTENSION_SEARCH = "extensionSearch";
+        public static final String EXTENSION_CLASSIC_SEARCH = "extensionClassicSearch";
+        public static final String EXTENSION_MINIMALIST_SEARCH = "extensionMinimalistSearch";
 
         public static final String CHAT_ID = "chatId";
         public static final String CONVERSATION_ID = "conversationId";
@@ -171,6 +173,9 @@ public final class TUIConstants {
 
         public static final String CONVERSATION_C2C_PREFIX = "c2c_";
         public static final String CONVERSATION_GROUP_PREFIX = "group_";
+
+        public static final String EVENT_KEY_MESSAGE_SEND_FOR_CONVERSATION = "eventKeyMessageSendForConversation";
+        public static final String EVENT_SUB_KEY_MESSAGE_SEND_FOR_CONVERSATION = "eventSubKeyMessageSendForConversation";
     }
 
     public static final class TUIContact {

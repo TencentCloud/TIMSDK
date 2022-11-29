@@ -1,5 +1,7 @@
 package com.tencent.qcloud.tuikit.tuichat.bean;
 
+import android.text.TextUtils;
+
 import com.tencent.imsdk.v2.V2TIMGroupMemberFullInfo;
 import com.tencent.imsdk.v2.V2TIMGroupMemberInfo;
 
@@ -123,6 +125,21 @@ public class GroupMemberInfo implements Serializable {
 
     public void setFriendRemark(String friendRemark) {
         this.friendRemark = friendRemark;
+    }
+
+    public String getDisplayName() {
+        String displayName;
+
+        if (!TextUtils.isEmpty(nameCard)) {
+            displayName = nameCard;
+        } else if (!TextUtils.isEmpty(friendRemark)) {
+            displayName = friendRemark;
+        } else if (!TextUtils.isEmpty(nickName)) {
+            displayName = nickName;
+        } else {
+            displayName = account;
+        }
+        return displayName;
     }
 
     public GroupMemberInfo covertTIMGroupMemberInfo(V2TIMGroupMemberInfo info) {

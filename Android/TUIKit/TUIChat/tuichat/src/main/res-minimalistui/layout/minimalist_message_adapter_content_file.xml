@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingLeft="16dp"
+    android:paddingTop="8dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="8dp"
+    app:maxWidth="270dp">
+
+
+    <LinearLayout
+        android:id="@+id/file_content"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:background="@drawable/white_round_rect_border"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/file_icon_iv"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginRight="8dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/chat_file_type_icon_none" />
+
+        <TextView
+            android:id="@+id/file_name_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="middle"
+            android:lineHeight="16.71sp"
+            android:singleLine="true"
+            android:textColor="@color/black_font_color"
+            android:textFontWeight="500"
+            android:textSize="14sp"
+            tools:text="数字生态大会.ppt" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/file_size_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="11dp"
+        android:textColor="#FF7A7A7A"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@id/file_msg_time_in_line_text"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/file_content" />
+
+        <com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.TimeInLineTextLayout
+            android:id="@+id/file_msg_time_in_line_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-3dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/file_size_tv"
+            app:layout_constraintTop_toTopOf="@id/file_size_tv" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -33,6 +33,7 @@ import com.tencent.imsdk.v2.V2TIMFriendApplicationResult;
 import com.tencent.imsdk.v2.V2TIMFriendshipListener;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
+import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.SplashActivity;
 import com.tencent.qcloud.tim.demo.profile.ProfileFragment;
@@ -53,9 +54,9 @@ import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuicommunity.ui.page.TUICommunityFragment;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
-import com.tencent.qcloud.tuikit.tuicontact.ui.pages.TUIContactFragment;
+import com.tencent.qcloud.tuikit.tuicontact.classicui.pages.TUIContactFragment;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationConstants;
-import com.tencent.qcloud.tuikit.tuiconversation.ui.page.TUIConversationFragment;
+import com.tencent.qcloud.tuikit.tuiconversation.classicui.page.TUIConversationFragment;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -468,13 +469,13 @@ public class MainActivity extends BaseLightActivity {
         };
         PopMenuAction action = new PopMenuAction();
         action.setActionName(getResources().getString(R.string.add_friend));
-        action.setIconResId(R.drawable.demo_add_friend);
+        action.setIconResId(com.tencent.qcloud.tuikit.tuicontact.R.drawable.contact_add_friend);
         action.setActionClickListener(popActionClickListener);
         menuActionList.add(action);
 
         action = new PopMenuAction();
         action.setActionName(getResources().getString(R.string.add_group));
-        action.setIconResId(R.drawable.demo_add_group);
+        action.setIconResId(com.tencent.qcloud.tuikit.tuicontact.R.drawable.contact_add_group);
         action.setActionClickListener(popActionClickListener);
         menuActionList.add(action);
         menu.setMenuAction(menuActionList);
@@ -554,6 +555,19 @@ public class MainActivity extends BaseLightActivity {
         }
 
         if (OfflinePushConfigs.getOfflinePushConfigs().getClickNotificationCallbackMode() == OfflinePushConfigs.CLICK_NOTIFICATION_CALLBACK_INTENT) {
+            if (DemoApplication.tuikit_demo_style == 1) {
+                Intent minimalistIntent = new Intent(this, MainMinimalistActivity.class);
+                minimalistIntent.putExtras(intent);
+                if (intent != null) {
+                    String ext = intent.getStringExtra(TUIConstants.TUIOfflinePush.NOTIFICATION_EXT_KEY);
+                    minimalistIntent.putExtra(TUIConstants.TUIOfflinePush.NOTIFICATION_EXT_KEY, ext);
+                }
+                minimalistIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(minimalistIntent);
+                finish();
+                return;
+            }
+
             TUIUtils.handleOfflinePush(intent, new HandleOfflinePushCallBack() {
                 @Override
                 public void onHandleOfflinePush(boolean hasLogged) {

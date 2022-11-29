@@ -7,12 +7,7 @@ import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ImageUtil;
-import com.tencent.qcloud.tuicore.util.SPUtils;
-import com.tencent.qcloud.tuicore.util.SoftKeyBoardUtil;
-import com.tencent.qcloud.tuikit.tuichat.R;
-import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.component.BeginnerGuidePage;
 
 import java.io.File;
 
@@ -20,9 +15,6 @@ import static com.tencent.qcloud.tuicore.TUIConstants.TUIConversation.CONVERSATI
 import static com.tencent.qcloud.tuicore.TUIConstants.TUIConversation.CONVERSATION_GROUP_PREFIX;
 
 import android.text.TextUtils;
-import android.app.Activity;
-import android.view.Gravity;
-import android.view.View;
 
 public class TUIChatUtils {
 
@@ -124,25 +116,5 @@ public class TUIChatUtils {
 
     public static long getServerTime() {
         return V2TIMManager.getInstance().getServerTime();
-    }
-
-    public static void showBeginnerGuideThen(View view, Runnable runnable) {
-        boolean isShowGuide = SPUtils.getInstance(TUIChatConstants.CHAT_SETTINGS_SP_NAME).getBoolean(TUIChatConstants.CHAT_REPLY_GUIDE_SHOW_SP_KEY, true);
-        if (isShowGuide) {
-            SoftKeyBoardUtil.hideKeyBoard(view.getWindowToken());
-            SPUtils.getInstance(TUIChatConstants.CHAT_SETTINGS_SP_NAME).put(TUIChatConstants.CHAT_REPLY_GUIDE_SHOW_SP_KEY, false);
-
-            BeginnerGuidePage guidePage = new BeginnerGuidePage((Activity) view.getContext());
-            guidePage.setPagesResIDs(R.drawable.chat_reply_guide, R.drawable.chat_quote_guide);
-            guidePage.setOnFinishListener(new BeginnerGuidePage.OnFinishListener() {
-                @Override
-                public void onFinish() {
-                    runnable.run();
-                }
-            });
-            guidePage.show(view, Gravity.NO_GRAVITY);
-        } else {
-            runnable.run();
-        }
     }
 }

@@ -16,7 +16,7 @@
         android:layout_height="0.3dp"
         android:background="@color/chat_title_line_color" />
 
-    <com.tencent.qcloud.tuikit.tuichat.ui.view.message.MessageRecyclerView
+    <com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MessageRecyclerView
         android:id="@+id/chat_message_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

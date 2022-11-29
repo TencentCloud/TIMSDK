@@ -6,16 +6,29 @@
 
     <TextView
         android:id="@+id/test_custom_message_tv"
-        android:textColor="?attr/chat_self_custom_msg_text_color"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:textColor="?attr/chat_self_custom_msg_text_color" />
 
-    <TextView
-        android:id="@+id/link_tv"
-        android:text="@string/test_custom_message"
-        android:textColor="?attr/chat_self_custom_msg_link_color"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/link_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/test_custom_message"
+            android:textColor="?attr/chat_self_custom_msg_link_color" />
+
+        <com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.TimeInLineTextLayout
+            android:id="@+id/time_in_line_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
 
 </LinearLayout>

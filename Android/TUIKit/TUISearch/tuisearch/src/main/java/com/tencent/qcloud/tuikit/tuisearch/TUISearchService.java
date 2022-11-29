@@ -21,7 +21,8 @@ public class TUISearchService extends ServiceInitializer implements ITUISearchSe
     }
 
     private void initExtension() {
-        TUICore.registerExtension(TUIConstants.TUIConversation.EXTENSION_SEARCH, this);
+        TUICore.registerExtension(TUIConstants.TUIConversation.EXTENSION_CLASSIC_SEARCH, this);
+        TUICore.registerExtension(TUIConstants.TUIConversation.EXTENSION_MINIMALIST_SEARCH, this);
     }
 
     @Override
@@ -30,14 +31,25 @@ public class TUISearchService extends ServiceInitializer implements ITUISearchSe
         if (param != null) {
             Context context = (Context) param.get(TUIConstants.TUIConversation.CONTEXT);
             if (context != null) {
-                View searchView = LayoutInflater.from(context).inflate(R.layout.search_bar_layout, null);
-                searchView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        TUICore.startActivity("SearchMainActivity", new Bundle());
-                    }
-                });
-                result.put(TUIConstants.TUIConversation.SEARCH_VIEW, searchView);
+                if (TUIConstants.TUIConversation.EXTENSION_CLASSIC_SEARCH.equals(key)) {
+                    View searchView = LayoutInflater.from(context).inflate(R.layout.search_bar_layout, null);
+                    searchView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            TUICore.startActivity("SearchMainActivity", new Bundle());
+                        }
+                    });
+                    result.put(TUIConstants.TUIConversation.SEARCH_VIEW, searchView);
+                } else if (TUIConstants.TUIConversation.EXTENSION_MINIMALIST_SEARCH.equals(key)) {
+                    View searchView = LayoutInflater.from(context).inflate(R.layout.minimalist_search_view_layout, null);
+                    searchView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            TUICore.startActivity("SearchMainMinimalistActivity", new Bundle());
+                        }
+                    });
+                    result.put(TUIConstants.TUIConversation.SEARCH_VIEW, searchView);
+                }
             }
         }
         return result;

@@ -6,7 +6,7 @@
     <ImageView
         android:id="@+id/face_iv"
         android:scaleType="fitCenter"
-        android:layout_width="24.48dp"
-        android:layout_height="30.72dp"/>
+        android:layout_width="20dp"
+        android:layout_height="20dp"/>
 
 </FrameLayout>

@@ -4,23 +4,23 @@
 
 ## 下载地址
 
-[最新 TUIChat 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/6.8.3374/android/TUIChat.zip)
+[最新 TUIChat 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/6.9.3557/android/TUIChat.zip)
 
-[最新 TUIConversation 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/6.8.3374/android/TUIConversation.zip)
+[最新 TUIConversation 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/6.9.3557/android/TUIConversation.zip)
 
-[最新 TUIContact 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/6.8.3374/android/TUIContact.zip)
+[最新 TUIContact 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/6.9.3557/android/TUIContact.zip)
 
-[最新 TUIGroup 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/6.8.3374/android/TUIGroup.zip)
+[最新 TUIGroup 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/6.9.3557/android/TUIGroup.zip)
 
-[最新 TUISearch 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/6.8.3374/android/TUISearch.zip)
+[最新 TUISearch 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/6.9.3557/android/TUISearch.zip)
 
-[最新 TUICallKit 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/6.8.3374/android/TUICallKit.zip)
+[最新 TUICallKit 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/6.9.3557/android/TUICallKit.zip)
 
-[最新 TUIOfflinePush 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/6.8.3374/android/TUIOfflinePush.zip)
+[最新 TUIOfflinePush 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/6.9.3557/android/TUIOfflinePush.zip)
 
-[最新 TUICommunity 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/6.8.3374/android/TUICommunity.zip)
+[最新 TUICommunity 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/6.9.3557/android/TUICommunity.zip)
 
-[最新 TUICore 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/6.8.3374/android/TUICore.zip)
+[最新 TUICore 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/6.9.3557/android/TUICore.zip)
 
 ## 交流&反馈
 

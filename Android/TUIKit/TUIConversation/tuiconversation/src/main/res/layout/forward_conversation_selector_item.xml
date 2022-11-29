@@ -6,7 +6,7 @@
     android:layout_marginBottom="@dimen/btn_margin_bottom"
     android:clickable="true">
 
-    <com.tencent.qcloud.tuikit.tuiconversation.ui.view.ConversationIconView
+    <com.tencent.qcloud.tuikit.tuiconversation.classicui.widget.ConversationIconView
         android:id="@+id/conversation_user_icon_view"
         android:layout_width="41dp"
         android:layout_height="41dp"

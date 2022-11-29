@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center_vertical"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:orientation="horizontal">
+
+    <RelativeLayout
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <com.tencent.qcloud.tuikit.tuiconversation.minimalistui.widget.ConversationIconView
+            android:id="@+id/conversation_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            tools:background="@android:drawable/ic_menu_gallery"/>
+
+        <View
+            android:id="@+id/user_status"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_alignBottom="@id/conversation_icon"
+            android:layout_alignEnd="@id/conversation_icon"
+            android:layout_alignRight="@id/conversation_icon"
+            android:visibility="visible"
+            android:background="@drawable/conversation_minimalist_online_icon" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:gravity="center_vertical"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/conversation_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="180dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:ellipsize="end"
+            android:gravity="top|start"
+            android:singleLine="true"
+            android:textColor="@color/black_font_color"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            tools:text="Daniel"/>
+
+        <TextView
+            android:id="@+id/conversation_at_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/conversation_title"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="#FF666666"
+            android:textSize="12sp"
+            android:visibility="gone"
+            android:layout_marginEnd="4dp"
+            android:layout_marginRight="4dp"
+            tools:visibility="visible"
+            tools:text="\@You" />
+
+        <TextView
+            android:id="@+id/conversation_last_msg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:layout_gravity="start"
+            android:layout_below="@id/conversation_title"
+            android:layout_toEndOf="@id/conversation_at_msg"
+            android:layout_toStartOf="@id/message_status_layout"
+            android:layout_marginEnd="29dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="#FF666666"
+            android:textSize="12sp"
+            tools:text="Hello"
+            android:layout_toRightOf="@id/conversation_at_msg"
+            android:layout_toLeftOf="@id/message_status_layout"
+            android:layout_marginRight="29dp" />
+
+        <RelativeLayout
+            android:id="@+id/message_status_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/view_line"
+            android:layout_toStartOf="@id/conversation_time"
+            android:layout_alignBottom="@id/conversation_time"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:visibility="gone"
+            android:layout_marginRight="2dp"
+            tools:visibility="visible"
+            android:layout_toLeftOf="@id/conversation_time">
+
+            <ImageView
+                android:id="@+id/message_status_sending"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/ic_sending_status"
+                android:visibility="gone"
+                tools:visibility="visible"/>
+
+            <ImageView
+                android:id="@+id/message_status_failed"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_gravity="center_vertical"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_send_failed"
+                android:visibility="gone"/>
+        </RelativeLayout>
+
+
+        <TextView
+            android:id="@+id/conversation_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/conversation_title"
+            android:layout_alignParentRight="true"
+            android:textColor="#FF666666"
+            android:textSize="12sp"
+            android:lineHeight="14.32sp"
+            android:layout_alignParentEnd="true"
+            tools:text="12:00"/>
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="3dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/not_disturb"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:includeFontPadding="false"
+                android:background="@drawable/conversation_minimalist_not_disturb_icon"
+                android:visibility="gone"
+                tools:visibility="visible"/>
+
+            <com.tencent.qcloud.tuicore.component.UnreadCountTextView
+                android:id="@+id/conversation_unread"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/conversation_time"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:textColor="#FFFFFF"
+                android:textSize="11sp"
+                app:paint_color="#FF584C"
+                android:layout_alignParentEnd="true"
+                tools:text="2"
+                tools:visibility="visible"/>
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>

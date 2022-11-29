@@ -44,7 +44,7 @@ public class ProfileFragment extends BaseFragment {
                         .setCancelOutside(true)
                         .setTitle(getString(R.string.logout_tip))
                         .setDialogWidth(0.75f)
-                        .setPositiveButton(getString(R.string.sure), new View.OnClickListener() {
+                        .setPositiveButton(getString(com.tencent.qcloud.tuicore.R.string.sure), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 TUILogin.logout(new TUICallback() {
@@ -67,7 +67,7 @@ public class ProfileFragment extends BaseFragment {
                             }
 
                         })
-                        .setNegativeButton(getString(R.string.cancel), new View.OnClickListener() {
+                        .setNegativeButton(getString(com.tencent.qcloud.tuicore.R.string.cancel), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
 

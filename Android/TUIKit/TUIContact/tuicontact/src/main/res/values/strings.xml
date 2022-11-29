@@ -61,7 +61,7 @@
 
     <string name="select_chat">Select Chat User</string>
 
-    <string name="chat_to_top">Sticky on Top</string>
+    <string name="chat_to_top">Pin</string>
 
     <string name="clear_msg_tip">Are you sure you want to clear the chat history?</string>
     // 群信息相关

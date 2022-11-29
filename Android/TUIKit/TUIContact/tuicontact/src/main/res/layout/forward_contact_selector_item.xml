@@ -16,8 +16,7 @@
         app:corner_radius="3.2dp"
         android:scaleType="centerCrop"
         android:clickable="false"
-        android:focusable="false"
-        android:background="?attr/core_default_user_icon" />
+        android:focusable="false" />
 
 </LinearLayout>
 

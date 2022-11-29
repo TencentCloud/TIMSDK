@@ -17,9 +17,8 @@ import com.tencent.qcloud.tuikit.tuicontact.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuicontact.bean.MessageCustom;
 import com.tencent.qcloud.tuikit.tuicontact.config.TUIContactConfig;
 import com.tencent.qcloud.tuikit.tuicontact.interfaces.ContactEventListener;
+import com.tencent.qcloud.tuikit.tuicontact.interfaces.IContactListView;
 import com.tencent.qcloud.tuikit.tuicontact.model.ContactProvider;
-import com.tencent.qcloud.tuikit.tuicontact.ui.interfaces.IContactListView;
-import com.tencent.qcloud.tuikit.tuicontact.ui.view.ContactListView;
 import com.tencent.qcloud.tuikit.tuicontact.util.ContactUtils;
 import com.tencent.qcloud.tuikit.tuicontact.util.TUIContactLog;
 
@@ -139,16 +138,16 @@ public class ContactPresenter {
 
         dataSource.clear();
         switch (dataSourceType) {
-            case ContactListView.DataSource.FRIEND_LIST:
+            case IContactListView.DataSource.FRIEND_LIST:
                 provider.loadFriendListDataAsync(callback);
                 break;
-            case ContactListView.DataSource.BLACK_LIST:
+            case IContactListView.DataSource.BLACK_LIST:
                 provider.loadBlackListData(callback);
                 break;
-            case ContactListView.DataSource.GROUP_LIST:
+            case IContactListView.DataSource.GROUP_LIST:
                 provider.loadGroupListData(callback);
                 break;
-            case ContactListView.DataSource.CONTACT_LIST:
+            case IContactListView.DataSource.CONTACT_LIST:
                 dataSource.add((ContactItemBean) new ContactItemBean(TUIContactService.getAppContext().getResources().getString(R.string.new_friend))
                         .setTop(true).setBaseIndexTag(ContactItemBean.INDEX_STRING_TOP));
                 dataSource.add((ContactItemBean) new ContactItemBean(TUIContactService.getAppContext().getResources().getString(R.string.group)).
@@ -174,15 +173,15 @@ public class ContactPresenter {
         provider.loadGroupMembers(groupId, new IUIKitCallback<List<ContactItemBean>>() {
             @Override
             public void onSuccess(List<ContactItemBean> data) {
-                TUIContactLog.i(TAG, "load data source success , loadType = " + ContactListView.DataSource.GROUP_MEMBER_LIST);
-                onDataLoaded(data, ContactListView.DataSource.GROUP_MEMBER_LIST);
+                TUIContactLog.i(TAG, "load data source success , loadType = " + IContactListView.DataSource.GROUP_MEMBER_LIST);
+                onDataLoaded(data, IContactListView.DataSource.GROUP_MEMBER_LIST);
             }
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
-                TUIContactLog.e(TAG, "load data source error , loadType = " + ContactListView.DataSource.GROUP_MEMBER_LIST +
+                TUIContactLog.e(TAG, "load data source error , loadType = " + IContactListView.DataSource.GROUP_MEMBER_LIST +
                         "  " + "errCode = " + errCode + "  errMsg = " + errMsg);
-                onDataLoaded(new ArrayList<>(), ContactListView.DataSource.GROUP_MEMBER_LIST);
+                onDataLoaded(new ArrayList<>(), IContactListView.DataSource.GROUP_MEMBER_LIST);
 
             }
         });
@@ -191,7 +190,7 @@ public class ContactPresenter {
     private void onDataLoaded(List<ContactItemBean> loadedData, int dataSourceType) {
         dataSource.addAll(loadedData);
         notifyDataSourceChanged();
-        if (dataSourceType != ContactListView.DataSource.GROUP_LIST) {
+        if (dataSourceType != IContactListView.DataSource.GROUP_LIST) {
             loadContactUserStatus(dataSource);
         }
     }
@@ -368,7 +367,7 @@ public class ContactPresenter {
     }
 
     public void onFriendRemarkChanged(String id, String remark) {
-        loadDataSource(ContactListView.DataSource.CONTACT_LIST);
+        loadDataSource(IContactListView.DataSource.CONTACT_LIST);
     }
 
     public void sendGroupTipsMessage(String groupId, String messageData, IUIKitCallback<String> callback) {

@@ -6,7 +6,7 @@
     android:background="@color/status_bar_color"
     android:orientation="vertical">
 
-    <com.tencent.qcloud.tuikit.tuicontact.ui.view.FriendProfileLayout
+    <com.tencent.qcloud.tuikit.tuicontact.classicui.widget.FriendProfileLayout
         android:id="@+id/friend_profile"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

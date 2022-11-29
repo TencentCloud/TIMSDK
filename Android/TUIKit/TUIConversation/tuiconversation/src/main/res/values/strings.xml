@@ -2,11 +2,11 @@
 <resources>
     // 云通信
     <string name="chat_top">Pin</string>
-    <string name="chat_delete">Delete Chat</string>
+    <string name="chat_delete">Delete</string>
     <string name="quit_chat_top">Unpin</string>
-    <string name="mark_unread">Mark unread</string>
-    <string name="mark_read">Mark read</string>
-    <string name="not_display">Not display</string>
+    <string name="mark_unread">Unread</string>
+    <string name="mark_read">Read</string>
+    <string name="not_display">Hide</string>
 
     <string name="forward_select_new_chat">Create new chat</string>
     <string name="forward_select_from_contact">Select from contact</string>
@@ -18,7 +18,7 @@
     <string name="ui_at_me">[Someone @ me]</string>
     <string name="ui_at_all_me">[@All][Someone @ me]</string>
     <string name="drafts">[Drafts]</string>
-    <string name="titlebar_mutiselect">MultiSelect</string>
+    <string name="titlebar_mutiselect">Select</string>
     <string name="message_num">messages</string>
 
     <string name="folded_group_chat">folded group chat</string>

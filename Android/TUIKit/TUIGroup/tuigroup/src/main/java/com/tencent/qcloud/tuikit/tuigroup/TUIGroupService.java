@@ -34,6 +34,7 @@ public class TUIGroupService extends ServiceInitializer implements ITUIGroupServ
     @Override
     public void init(Context context) {
         instance = this;
+        TUICore.registerService(TUIConstants.TUIGroup.SERVICE_NAME, this);
         initIMListener();
     }
 

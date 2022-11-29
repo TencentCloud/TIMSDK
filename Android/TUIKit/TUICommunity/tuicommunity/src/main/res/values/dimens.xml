@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="community_profile_height">69.12dp</dimen>
+    <dimen name="community_profile_item_height">46.08dp</dimen>
+    <dimen name="community_profile_face_size">46.08dp</dimen>
+    <dimen name="community_profile_group_name_size">17.28sp</dimen>
+    <dimen name="community_profile_group_id_size">12.48dp</dimen>
+    <dimen name="community_profile_face_margin_left">15.36dp</dimen>
+    <dimen name="community_profile_face_margin_right">15.36dp</dimen>
+    <dimen name="community_profile_face_margin_top">11.5dp</dimen>
+
+    <dimen name="community_profile_member_grid_padding_left_right">19.2dp</dimen>
+    <dimen name="community_profile_member_grid_padding_top">11.52dp</dimen>
+    <dimen name="community_profile_member_item_width">48dp</dimen>
+    <dimen name="community_profile_member_item_name_size">9.6sp</dimen>
+    <color name="community_profile_member_name_text_color">#888888</color>
+
+</resources>

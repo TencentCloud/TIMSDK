@@ -2,7 +2,6 @@ package com.tencent.qcloud.tim.demo.login;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
@@ -90,17 +89,17 @@ public class ThemeSelectActivity extends BaseLightActivity {
     }
 
     private void changeTitleBackground() {
-        int color = getResources().getColor(R.color.core_header_start_color_light);
-        int titleColor = getResources().getColor(R.color.core_title_bar_text_bg_light);
-        int backIconId = R.drawable.core_title_bar_back_light;
+        int color = getResources().getColor(com.tencent.qcloud.tuicore.R.color.core_header_start_color_light);
+        int titleColor = getResources().getColor(com.tencent.qcloud.tuicore.R.color.core_title_bar_text_bg_light);
+        int backIconId = com.tencent.qcloud.tuicore.R.drawable.core_title_bar_back_light;
         if (currentThemeId == TUIThemeManager.THEME_LIVELY) {
-            color = getResources().getColor(R.color.core_header_start_color_lively);
-            titleColor = getResources().getColor(R.color.core_title_bar_text_bg_lively);
-            backIconId = R.drawable.core_title_bar_back_lively;
+            color = getResources().getColor(com.tencent.qcloud.tuicore.R.color.core_header_start_color_lively);
+            titleColor = getResources().getColor(com.tencent.qcloud.tuicore.R.color.core_title_bar_text_bg_lively);
+            backIconId = com.tencent.qcloud.tuicore.R.drawable.core_title_bar_back_lively;
         } else if (currentThemeId == TUIThemeManager.THEME_SERIOUS) {
-            color = getResources().getColor(R.color.core_header_start_color_serious);
-            titleColor = getResources().getColor(R.color.core_title_bar_text_bg_serious);
-            backIconId = R.drawable.core_title_bar_back_serious;
+            color = getResources().getColor(com.tencent.qcloud.tuicore.R.color.core_header_start_color_serious);
+            titleColor = getResources().getColor(com.tencent.qcloud.tuicore.R.color.core_title_bar_text_bg_serious);
+            backIconId = com.tencent.qcloud.tuicore.R.drawable.core_title_bar_back_serious;
         }
         if (TUIBuild.getVersionInt() >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(color);

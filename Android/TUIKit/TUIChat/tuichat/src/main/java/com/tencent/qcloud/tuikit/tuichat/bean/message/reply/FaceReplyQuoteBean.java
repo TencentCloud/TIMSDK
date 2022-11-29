@@ -2,8 +2,6 @@ package com.tencent.qcloud.tuikit.tuichat.bean.message.reply;
 
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FaceMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.message.reply.FaceReplyQuoteView;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.message.reply.TUIReplyQuoteView;
 
 public class FaceReplyQuoteBean extends TUIReplyQuoteBean {
     private byte[] data;
@@ -26,12 +24,6 @@ public class FaceReplyQuoteBean extends TUIReplyQuoteBean {
 
     public int getIndex() {
         return index;
-    }
-
-
-    @Override
-    public Class<? extends TUIReplyQuoteView> getReplyQuoteViewClass() {
-        return FaceReplyQuoteView.class;
     }
 
 }

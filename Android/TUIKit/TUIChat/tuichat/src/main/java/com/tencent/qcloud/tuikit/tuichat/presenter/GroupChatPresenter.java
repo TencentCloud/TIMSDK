@@ -6,14 +6,14 @@ import android.util.Pair;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
+import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupApplyInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupMemberInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageReceiptInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.GroupChatEventListener;
-import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
-import com.tencent.qcloud.tuikit.tuichat.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
@@ -84,6 +84,14 @@ public class GroupChatPresenter extends ChatPresenter {
                     return;
                 }
                 GroupChatPresenter.this.onGroupNameChanged(newName);
+            }
+
+            @Override
+            public void onGroupFaceUrlChanged(String groupId, String faceUrl) {
+                if (groupInfo == null || !TextUtils.equals(groupId, groupInfo.getId())) {
+                    return;
+                }
+                GroupChatPresenter.this.onGroupFaceUrlChanged(faceUrl);
             }
 
             @Override
@@ -255,6 +263,10 @@ public class GroupChatPresenter extends ChatPresenter {
         }
     }
 
+    public void loadGroupMembers(String groupID, IUIKitCallback<List<GroupMemberInfo>> callback) {
+        provider.loadGroupMembers(groupID, 0, callback);
+    }
+
     public void onGroupForceExit(String groupId) {
         if (chatNotifyHandler != null && TextUtils.equals(groupId, groupInfo.getId())) {
             chatNotifyHandler.onGroupForceExit();
@@ -270,6 +282,12 @@ public class GroupChatPresenter extends ChatPresenter {
     public void onGroupNameChanged(String newName) {
         if (chatNotifyHandler != null) {
             chatNotifyHandler.onGroupNameChanged(newName);
+        }
+    }
+
+    public void onGroupFaceUrlChanged(String faceUrl) {
+        if (chatNotifyHandler != null) {
+            chatNotifyHandler.onGroupFaceUrlChanged(faceUrl);
         }
     }
 

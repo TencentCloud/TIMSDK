@@ -21,4 +21,5 @@ public interface ConversationEventListener {
     void onUserStatusChanged(List<V2TIMUserStatus> userStatusList);
     void refreshUserStatusFragmentUI();
     void onReceiveMessage(String conversationID, boolean isTypingMessage);
+    void onMessageSendForHideConversation(String conversationID);
 }

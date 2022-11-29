@@ -28,6 +28,7 @@ android {
             res.srcDirs += "src/main/res-light"
             res.srcDirs += "src/main/res-lively"
             res.srcDirs += "src/main/res-serious"
+            res.srcDirs += "src/main/res-minimalist"
         }
     }
 

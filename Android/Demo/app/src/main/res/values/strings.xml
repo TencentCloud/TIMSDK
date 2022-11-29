@@ -11,6 +11,7 @@
     <string name="demo_login_country_or_region_label">Country/Region</string>
     <string name="demo_area_code_title">Select a country or region</string>
     <string name="demo_language_title">Language</string>
+    <string name="demo_style_title">Style</string>
     <string name="demo_login_chinese_mainland">Chinese Mainland</string>
     <string name="demo_login_mobile_phone_number">Phone Number</string>
     <string name="demo_login_verification_code_label">Verification Code</string>
@@ -59,6 +60,9 @@
     <string name="lively_theme">Lively</string>
     <string name="serious_theme">Solemn</string>
     <string name="modify_language">Language</string>
+    <string name="modify_style">Style</string>
+    <string name="style_classic">Classic</string>
+    <string name="style_minimalist">Minimalist</string>
 
     <string name="demo_language">English</string>
     <string name="demo_theme_light">light</string>
@@ -85,7 +89,10 @@
     // 主页Tab相关
     <string name="tab_contact_tab_text">Contacts</string>
     <string name="tab_conversation_tab_text">Message</string>
+    <string name="demo_tab_overseas_conversation_tab_text">Chats</string>
     <string name="tab_profile_tab_text">Me</string>
+    <string name="minimalist_tab_settings_tab_text">Settings</string>
+    <string name="minimalist_tab_contacts_tab_text">Contacts</string>
     <string name="tab_community_tab_text">Community</string>
 
 

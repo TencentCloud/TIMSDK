@@ -26,14 +26,14 @@
         android:layout_marginTop="0dp"
         android:visibility="gone" />
 
-    <com.tencent.qcloud.tuikit.tuichat.component.noticelayout.NoticeLayout
+    <com.tencent.qcloud.tuikit.tuichat.classicui.component.noticelayout.NoticeLayout
         android:id="@+id/chat_group_apply_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/custom_layout"
         android:visibility="gone" />
 
-    <com.tencent.qcloud.tuikit.tuichat.component.noticelayout.NoticeLayout
+    <com.tencent.qcloud.tuikit.tuichat.classicui.component.noticelayout.NoticeLayout
         android:id="@+id/chat_notice_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
         android:layout_marginTop="1dp"
         android:visibility="gone" />
 
-    <com.tencent.qcloud.tuikit.tuichat.ui.view.message.MessageRecyclerView
+    <com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MessageRecyclerView
         android:id="@+id/chat_message_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -100,7 +100,7 @@
     </androidx.cardview.widget.CardView>
 
 
-    <com.tencent.qcloud.tuikit.tuichat.ui.view.input.InputView
+    <com.tencent.qcloud.tuikit.tuichat.classicui.widget.input.InputView
         android:id="@+id/chat_input_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

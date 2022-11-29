@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/reply_preview_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="62dp"
+        android:background="#F0F9F9F9"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <View
+            android:id="@+id/reply_preview_bar_line"
+            android:layout_width="6dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:background="#D9D9D9" />
+
+        <TextView
+            android:id="@+id/reply_preview_bar_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="10dp"
+            android:layout_toStartOf="@id/reply_preview_bar_close_btn"
+            android:layout_toEndOf="@id/reply_preview_bar_line"
+            android:textColor="#000000"
+            android:textSize="14sp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            tools:text="name" />
+
+        <TextView
+            android:id="@+id/reply_preview_bar_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/reply_preview_bar_name"
+            android:layout_alignStart="@id/reply_preview_bar_name"
+            android:layout_toStartOf="@id/reply_preview_bar_close_btn"
+            android:layout_marginTop="8dp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textColor="#99000000"
+            android:textSize="14sp"
+            tools:text="desc" />
+
+        <ImageView
+            android:id="@+id/reply_preview_bar_close_btn"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/reply_close_btn" />
+
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingTop="7dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="7dp">
+
+        <ImageView
+            android:id="@+id/input_more_btn"
+            android:layout_width="21dp"
+            android:layout_height="21dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/chat_minimalist_input_add_icon" />
+
+        <ImageView
+            android:id="@+id/voice_delete"
+            android:layout_width="21dp"
+            android:layout_height="21dp"
+            android:layout_gravity="center_vertical"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/text_input_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="1"
+            android:background="@drawable/chat_minimalist_input_edittext_border"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
+
+            <com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.input.TIMMentionEditText
+                android:id="@+id/input_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@null"
+                android:hint="@string/chat_input_edit_hint_text"
+                android:paddingTop="9.5dp"
+                android:paddingBottom="9.5dp"
+                android:textColor="@color/black_font_color"
+                android:textColorHint="#666666"
+                android:textCursorDrawable="@drawable/my_cursor"
+                android:textFontWeight="400"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/input_face_btn"
+                android:layout_width="18.76dp"
+                android:layout_height="18.76dp"
+                android:layout_gravity="bottom"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginBottom="9.5dp"
+                android:background="@drawable/chat_minimalist_input_face_icon" />
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/chat_voice_input_layout"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="14dp"
+            android:layout_marginRight="16dp"
+            android:layout_height="36dp"
+            android:layout_weight="1"
+            android:visibility="gone">
+        <Button
+            android:id="@+id/chat_voice_input"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_gravity="center_vertical"
+            android:gravity="left|center_vertical"
+            android:text="0:00"
+            android:textAllCaps="false"
+            android:textColor="@color/text_color_gray"
+            android:visibility="visible" />
+
+            <com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.input.waveview.VoiceWaveView.VoiceWaveView
+                android:id="@+id/voice_wave_view"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_gravity="center_vertical"
+                app:lineWidth="2dp"
+                app:lineSpace="2dp"
+                android:layout_marginLeft="55dp"
+                app:lineColor="@color/white"
+                app:waveMode="left_right"
+                android:gravity="center" />
+        </FrameLayout>
+
+        <Button
+            android:id="@+id/input_voice_btn"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/chat_minimalist_input_voice_icon" />
+
+        <ImageView
+            android:id="@+id/input_image_btn"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/chat_minimalist_input_camera_icon" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/quote_preview_bar"
+        android:orientation="horizontal"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/quote_text"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginLeft="12dp"
+            tools:text="test"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textSize="@dimen/reply_text_size"/>
+
+        <ImageView
+            android:id="@+id/quote_close_btn"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/reply_close_btn" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/more_groups"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+</LinearLayout>

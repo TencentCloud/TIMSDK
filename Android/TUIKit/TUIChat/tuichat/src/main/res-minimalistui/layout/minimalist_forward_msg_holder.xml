@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/forward_msg_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/forward_msg_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/msg_forward_title"
+            android:layout_width="@dimen/forward_text_max_length"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxWidth="@dimen/forward_text_max_length"
+            android:maxLines="1"
+            android:textColor="#CC000000"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/msg_forward_content"
+            android:layout_width="@dimen/forward_text_max_length"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:includeFontPadding="false"
+            android:lineHeight="20sp"
+            android:maxWidth="@dimen/forward_text_max_length"
+            android:maxLines="4"
+            android:textColor="#999999"
+            android:textSize="12sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="6dp"
+            android:background="#EEEEEE" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/chat_record_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/forward_chat_record"
+        android:textColor="#999999"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toStartOf="@id/merge_msg_time_in_line_text"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/forward_msg_content" />
+
+    <com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.TimeInLineTextLayout
+        android:id="@+id/merge_msg_time_in_line_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-3dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/chat_record_tv"
+        app:layout_constraintTop_toTopOf="@id/chat_record_tv" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+

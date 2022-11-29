@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:lines="1"
-            android:textColor="@color/text_color_black" />
+            android:textColor="#FF000000" />
 
         <TextView
             android:id="@+id/group_apply_reason"
@@ -43,9 +43,9 @@
         android:layout_width="60dp"
         android:layout_height="40dp"
         android:layout_marginRight="10dp"
-        android:background="@color/bg_positive_btn"
+        android:background="@color/community_bg_positive_btn"
         android:onClick="startConversation"
-        android:text="@string/accept"
+        android:text="@string/community_accept"
         android:textColor="#fff" />
 
     <Button
@@ -53,8 +53,8 @@
         android:layout_width="60dp"
         android:layout_height="40dp"
         android:layout_marginRight="10dp"
-        android:background="@color/bg_negative_btn"
+        android:background="@color/community_bg_negative_btn"
         android:onClick="startConversation"
-        android:text="@string/refuse"
+        android:text="@string/community_refuse"
         android:textColor="#fb6155" />
 </LinearLayout>

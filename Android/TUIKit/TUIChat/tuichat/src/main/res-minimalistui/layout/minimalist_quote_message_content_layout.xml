@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MaxWidthLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="7.68dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_weight="1"
+        android:id="@+id/sender_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="middle"
+        android:singleLine="true" />
+
+    <FrameLayout
+        android:id="@+id/text_msg_area"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/msg_abstract_tv"
+            android:textSize="14sp"
+            android:textColor="#66000000"
+            android:maxLines="3"
+            android:ellipsize="end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/image_video_msg_area"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/msg_image_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <ImageView
+            android:id="@+id/msg_play_iv"
+            android:src="@drawable/ic_chat_play_icon"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/file_msg_area"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/file_name_tv"
+            android:textSize="14sp"
+            android:textColor="#66000000"
+            android:maxLines="2"
+            android:ellipsize="middle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <ImageView
+            android:id="@+id/file_icon_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/sound_msg_area"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/sound_msg_icon_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/sound_msg_time_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </FrameLayout>
+
+</com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MaxWidthLinearLayout>

@@ -77,6 +77,25 @@ public class DateTimeUtil {
         return timeText;
     }
 
+    /**
+     * HH:MM
+     * @param date current time
+     * @return format text e.g. "12:12"
+     */
+    public static String getHMTimeString(Date date) {
+        if (date == null) {
+            return "";
+        }
+        Context context = TUIConfig.getAppContext();
+        Locale locale;
+        if (context == null) {
+            locale = Locale.getDefault();
+        } else {
+            locale = TUIThemeManager.getInstance().getLocale(context);
+        }
+        return String.format(locale, "%tR", date);
+    }
+
     public static String formatSeconds(long seconds) {
         Context context = TUIConfig.getAppContext();
         String timeStr = seconds + context.getString(R.string.date_second_short);

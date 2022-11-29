@@ -83,7 +83,7 @@
         android:background="@drawable/shape_search"
         android:visibility="visible">
 
-        <com.tencent.qcloud.tuikit.tuisearch.ui.view.PageRecycleView
+        <com.tencent.qcloud.tuikit.tuisearch.classicui.view.PageRecycleView
             android:id="@+id/message_rc_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

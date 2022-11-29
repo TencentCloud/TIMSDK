@@ -28,6 +28,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.OfflineMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.OfflineMessageContainerBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.OfflinePushInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.ReactUserBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.UserStatusBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FaceMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FileMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
@@ -41,9 +42,9 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.IBaseMessageSender;
+import com.tencent.qcloud.tuikit.tuichat.interfaces.IMessageAdapter;
+import com.tencent.qcloud.tuikit.tuichat.interfaces.IMessageRecyclerView;
 import com.tencent.qcloud.tuikit.tuichat.model.ChatProvider;
-import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.IMessageAdapter;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.message.MessageRecyclerView;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
 import com.tencent.qcloud.tuikit.tuichat.util.OfflinePushInfoUtils;
@@ -79,7 +80,7 @@ public abstract class ChatPresenter {
 
     protected IMessageAdapter messageListAdapter;
 
-    private MessageRecyclerView messageRecyclerView;
+    private IMessageRecyclerView messageRecyclerView;
     private int currentChatUnreadCount = 0;
     private TUIMessageBean mCacheNewMessage = null;
 
@@ -133,7 +134,7 @@ public abstract class ChatPresenter {
             return;
         }
         if (type == TUIChatConstants.GET_MESSAGE_FORWARD && !isHaveMoreOldMessage) {
-            updateAdapter(MessageRecyclerView.DATA_CHANGE_TYPE_ADD_FRONT, 0);
+            updateAdapter(IMessageRecyclerView.DATA_CHANGE_TYPE_ADD_FRONT, 0);
             return;
         }
         loadMessage(type, locateMessage, null);
@@ -143,7 +144,7 @@ public abstract class ChatPresenter {
 
     public void clearMessage() {
         loadedMessageInfoList.clear();
-        messageListAdapter.onViewNeedRefresh(MessageRecyclerView.DATA_CHANGE_TYPE_REFRESH, 0);
+        messageListAdapter.onViewNeedRefresh(IMessageRecyclerView.DATA_CHANGE_TYPE_REFRESH, 0);
     }
 
     public void scrollToNewestMessage() {
@@ -152,7 +153,7 @@ public abstract class ChatPresenter {
             return;
         }
         loadedMessageInfoList.clear();
-        messageListAdapter.onViewNeedRefresh(MessageRecyclerView.DATA_CHANGE_TYPE_REFRESH, 0);
+        messageListAdapter.onViewNeedRefresh(IMessageRecyclerView.DATA_CHANGE_TYPE_REFRESH, 0);
         isHaveMoreOldMessage = true;
         loadMessage(TUIChatConstants.GET_MESSAGE_FORWARD, null);
     }
@@ -171,6 +172,10 @@ public abstract class ChatPresenter {
                     return;
                 }
                 TUIMessageBean messageBean = data.get(0);
+                if (messageBean.getMsgSeq() != seq) {
+                    TUIChatUtils.callbackOnError(callback, - 1, "can't find origin message");
+                    return;
+                }
                 if (messageBean.getStatus() == TUIMessageBean.MSG_STATUS_REVOKE) {
                     TUIChatUtils.callbackOnError(callback, -1, "origin msg is revoked");
                     return;
@@ -205,7 +210,7 @@ public abstract class ChatPresenter {
                     TUIChatUtils.callbackOnError(callback, -1, "origin msg is revoked");
                     return;
                 }
-                updateAdapter(MessageRecyclerView.SCROLL_TO_POSITION, loadedMessage);
+                updateAdapter(IMessageRecyclerView.SCROLL_TO_POSITION, loadedMessage);
                 return;
             }
         }
@@ -218,7 +223,7 @@ public abstract class ChatPresenter {
                     return;
                 }
                 loadedMessageInfoList.clear();
-                updateAdapter(MessageRecyclerView.DATA_CHANGE_TYPE_REFRESH, 0);
+                updateAdapter(IMessageRecyclerView.DATA_CHANGE_TYPE_REFRESH, 0);
                 loadMessage(TUIChatConstants.GET_MESSAGE_LOCATE, data, new IUIKitCallback<List<TUIMessageBean>>() {
                     @Override
                     public void onSuccess(List<TUIMessageBean> data) {
@@ -255,7 +260,7 @@ public abstract class ChatPresenter {
         this.messageListAdapter = messageListAdapter;
     }
 
-    public void setMessageRecycleView(MessageRecyclerView recycleView) {
+    public void setMessageRecycleView(IMessageRecyclerView recycleView) {
         this.messageRecyclerView = recycleView;
         this.currentChatUnreadCount = 0;
         this.mCacheNewMessage = null;
@@ -447,7 +452,7 @@ public abstract class ChatPresenter {
         while (iterator.hasNext()) {
             TUIMessageBean loadedMessageBean = iterator.next();
             if (TextUtils.equals(loadedMessageBean.getId(), messageBean.getId())) {
-                updateAdapter(MessageRecyclerView.DATA_CHANGE_TYPE_DELETE, loadedMessageBean);
+                updateAdapter(IMessageRecyclerView.DATA_CHANGE_TYPE_DELETE, loadedMessageBean);
                 iterator.remove();
             }
         }
@@ -468,19 +473,19 @@ public abstract class ChatPresenter {
                 // 如果是初次加载，要强制跳转到底部
                 // If it is the first load, force jump to the bottom
                 if (loadedMessageInfoList.size() == data.size()) {
-                    updateAdapter(MessageRecyclerView.DATA_CHANGE_TYPE_LOAD, data.size());
+                    updateAdapter(IMessageRecyclerView.DATA_CHANGE_TYPE_LOAD, data.size());
                 } else {
-                    updateAdapter(MessageRecyclerView.DATA_CHANGE_TYPE_ADD_FRONT, data.size());
+                    updateAdapter(IMessageRecyclerView.DATA_CHANGE_TYPE_ADD_FRONT, data.size());
                 }
             } else if (isTwoWay) {
-                updateAdapter(MessageRecyclerView.DATA_CHANGE_LOCATE_TO_POSITION, locateMessage);
+                updateAdapter(IMessageRecyclerView.DATA_CHANGE_LOCATE_TO_POSITION, locateMessage);
             } else {
-                updateAdapter(MessageRecyclerView.DATA_CHANGE_SCROLL_TO_POSITION, locateMessage);
+                updateAdapter(IMessageRecyclerView.DATA_CHANGE_SCROLL_TO_POSITION, locateMessage);
             }
         } else {
             removeDuplication(data);
             loadedMessageInfoList.addAll(data);
-            updateAdapter(MessageRecyclerView.DATA_CHANGE_TYPE_ADD_BACK, data.size());
+            updateAdapter(IMessageRecyclerView.DATA_CHANGE_TYPE_ADD_BACK, data.size());
         }
 
         isLoading = false;
@@ -560,6 +565,7 @@ public abstract class ChatPresenter {
             @Override
             public void run() {
                 Set<String> userIdSet = getReactUserNames(data);
+                userIdSet.addAll(getReplyUserNames(data));
                 if (userIdSet.isEmpty()) {
                     latch.countDown();
                     return;
@@ -571,6 +577,10 @@ public abstract class ChatPresenter {
                             MessageReactBean reactBean = messageBean.getMessageReactBean();
                             if (reactBean != null) {
                                 reactBean.setReactUserBeanMap(map);
+                            }
+                            MessageRepliesBean repliesBean = messageBean.getMessageRepliesBean();
+                            if (repliesBean != null) {
+                                setMessageReplyBean(repliesBean, map);
                             }
                         }
                         latch.countDown();
@@ -607,6 +617,33 @@ public abstract class ChatPresenter {
         ThreadHelper.INST.execute(mergeRunnable);
     }
 
+    public void setMessageReplyBean(MessageRepliesBean repliesBean, Map<String, ReactUserBean> map) {
+        List<MessageRepliesBean.ReplyBean> replyBeanList = repliesBean.getReplies();
+        if (replyBeanList != null && replyBeanList.size() > 0) {
+            for (MessageRepliesBean.ReplyBean replyBean : replyBeanList) {
+                ReactUserBean userBean = map.get(replyBean.getMessageSender());
+                if (userBean != null) {
+                    replyBean.setSenderFaceUrl(userBean.getFaceUrl());
+                    replyBean.setSenderShowName(userBean.getDisplayString());
+                }
+            }
+        }
+    }
+
+    public Set<String> getReplyUserNames(List<TUIMessageBean> messageBeans) {
+        Set<String> userIdSet = new HashSet<>();
+        for (TUIMessageBean messageBean : messageBeans) {
+            MessageRepliesBean messageRepliesBean = messageBean.getMessageRepliesBean();
+            if (messageRepliesBean != null && messageRepliesBean.getRepliesSize() > 0) {
+                List<MessageRepliesBean.ReplyBean> replyBeanList = messageRepliesBean.getReplies();
+                for (MessageRepliesBean.ReplyBean replyBean : replyBeanList) {
+                    userIdSet.add(replyBean.getMessageSender());
+                }
+            }
+        }
+        return userIdSet;
+    }
+
     public Set<String> getReactUserNames(List<TUIMessageBean> messageBeans) {
         Set<String> userIdSet = new HashSet<>();
         for (TUIMessageBean messageBean : messageBeans) {
@@ -633,7 +670,7 @@ public abstract class ChatPresenter {
             return;
         }
         loadedMessageInfoList.add(messageInfo);
-        updateAdapter(MessageRecyclerView.DATA_CHANGE_NEW_MESSAGE, 1);
+        updateAdapter(IMessageRecyclerView.DATA_CHANGE_NEW_MESSAGE, 1);
     }
 
     protected void onRecvNewMessage(TUIMessageBean msg) {
@@ -744,7 +781,7 @@ public abstract class ChatPresenter {
                 TUIMessageBean messageBean = loadedMessageInfoList.get(i);
                 if (TextUtils.equals(messageBean.getId(), receiptInfo.getMsgID())) {
                     messageBean.setMessageReceiptInfo(receiptInfo);
-                    updateAdapter(MessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, i);
+                    updateAdapter(IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, i);
                 }
             }
         }
@@ -797,6 +834,7 @@ public abstract class ChatPresenter {
             return;
         }
         assembleGroupMessage(message);
+        notifyConversationInfo(getChatInfo());
 
         String msgId = provider.sendMessage(message, getChatInfo(), new IUIKitCallback<TUIMessageBean>() {
 
@@ -849,6 +887,19 @@ public abstract class ChatPresenter {
         }
     }
 
+    private void notifyConversationInfo(ChatInfo chatInfo) {
+        String conversationId;
+        if (ChatInfo.TYPE_GROUP == chatInfo.getType()) {
+            conversationId = "group_" + chatInfo.getId();
+        } else {
+            conversationId = "c2c_" + chatInfo.getId();
+        }
+
+        Map<String, Object> param = new HashMap<>();
+        param.put(TUIConstants.TUIConversation.CONVERSATION_ID, conversationId);
+        TUICore.notifyEvent(TUIConstants.TUIConversation.EVENT_KEY_MESSAGE_SEND_FOR_CONVERSATION, TUIConstants.TUIConversation.EVENT_SUB_KEY_MESSAGE_SEND_FOR_CONVERSATION, param);
+    }
+
     public void sendTypingStatusMessage(TUIMessageBean message, String receiver, IUIKitCallback<TUIMessageBean> callBack) {}
 
     public boolean isSupportTyping(long time) {
@@ -862,7 +913,7 @@ public abstract class ChatPresenter {
             }
             if (loadedMessageInfoList.get(i).getId().equals(messageInfo.getId())) {
                 loadedMessageInfoList.set(i, messageInfo);
-                updateAdapter(MessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, i);
+                updateAdapter(IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, messageInfo);
                 return;
             }
         }
@@ -910,7 +961,7 @@ public abstract class ChatPresenter {
             // so the following judgment cannot return even if the conditions are met
             if (messageInfo.getId().equals(msgId)) {
                 messageInfo.setStatus(TUIMessageBean.MSG_STATUS_REVOKE);
-                updateAdapter(MessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, i);
+                updateAdapter(IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, i);
 
                 if (isChatFragmentShow()) {
                     if (messageRecyclerView != null && messageRecyclerView.isDisplayJumpMessageLayout()) {
@@ -1186,7 +1237,7 @@ public abstract class ChatPresenter {
             // so the following judgment cannot return even if the conditions are met
             if (messageInfo.getId().equals(msgId)) {
                 messageInfo.setStatus(TUIMessageBean.MSG_STATUS_REVOKE);
-                updateAdapter(MessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, i);
+                updateAdapter(IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, i);
             }
         }
         return false;
@@ -1572,7 +1623,7 @@ public abstract class ChatPresenter {
 
     private void refreshData(TUIMessageBean messageBean) {
         if (messageListAdapter != null) {
-            messageListAdapter.onViewNeedRefresh(MessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, messageBean);
+            messageListAdapter.onViewNeedRefresh(IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, messageBean);
         }
     }
 
@@ -1752,6 +1803,10 @@ public abstract class ChatPresenter {
         }
     }
 
+    public void loadUserStatus(List<String> userIDs, IUIKitCallback<Map<String, UserStatusBean>> callback) {
+        provider.loadUserStatus(userIDs, callback);
+    }
+
     static class MessageReadReportHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
@@ -1773,6 +1828,8 @@ public abstract class ChatPresenter {
         default void onFriendNameChanged(String newName) {}
 
         default void onApplied(int size) {}
+        default void onFriendFaceUrlChanged(String faceUrl){}
+        default void onGroupFaceUrlChanged(String faceUrl){}
 
         void onExitChat(String chatId);
     }

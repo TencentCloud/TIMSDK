@@ -149,7 +149,7 @@ public class CommunitySettingsActivity extends BaseLightActivity implements ICom
     private void setAvatarView() {
         RoundCornerImageView cornerImageView = communityAvatarLv.getContentImage();
         GlideEngine.loadImageSetDefault(cornerImageView, communityBean.getGroupFaceUrl(),
-                TUIThemeManager.getAttrResId(this, R.attr.core_default_group_icon_community));
+                TUIThemeManager.getAttrResId(this, com.tencent.qcloud.tuicore.R.attr.core_default_group_icon_community));
         if (communityBean.isOwner()) {
             communityAvatarLv.setShowArrow(true);
             communityAvatarLv.setOnContentClickListener(new View.OnClickListener() {
@@ -166,7 +166,7 @@ public class CommunitySettingsActivity extends BaseLightActivity implements ICom
                     Intent intent = new Intent(CommunitySettingsActivity.this, ImageSelectActivity.class);
                     intent.putExtra(ImageSelectActivity.TITLE, getResources().getString(R.string.community_choose_avatar));
                     intent.putExtra(ImageSelectActivity.SPAN_COUNT, 4);
-                    intent.putExtra(ImageSelectActivity.PLACEHOLDER, R.drawable.core_default_user_icon_light);
+                    intent.putExtra(ImageSelectActivity.PLACEHOLDER, com.tencent.qcloud.tuicore.R.drawable.core_default_user_icon_light);
                     intent.putExtra(ImageSelectActivity.ITEM_WIDTH, ScreenUtil.dip2px(77));
                     intent.putExtra(ImageSelectActivity.ITEM_HEIGHT, ScreenUtil.dip2px(77));
                     intent.putExtra(ImageSelectActivity.DATA, faceList);

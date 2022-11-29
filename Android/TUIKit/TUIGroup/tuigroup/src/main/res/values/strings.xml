@@ -68,7 +68,7 @@
 
     <string name="input_tip">No nickname. Enter again.</string>
 
-    <string name="chat_to_top">Sticky on Top</string>
+    <string name="chat_to_top">Pin</string>
     <string name="profile_msgrev_opt">Mute Notifications</string>
     <string name="fold_this_group_chat">Fold this group chat</string>>
     <string name="profile_chat_background">Background</string>

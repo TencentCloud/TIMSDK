@@ -1,8 +1,6 @@
 package com.tencent.qcloud.tuikit.tuichat;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
 
 import androidx.datastore.preferences.core.Preferences;
@@ -21,24 +19,11 @@ import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageReceiptInfo;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomEvaluationMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomLinkMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomOrderMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.FaceMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.FileMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.LocationMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MessageTypingBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.QuoteMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.ReplyMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.SoundMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TextAtMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.C2CChatEventListener;
@@ -46,22 +31,6 @@ import com.tencent.qcloud.tuikit.tuichat.interfaces.GroupChatEventListener;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.IBaseMessageSender;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.NetworkConnectionListener;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.TotalUnreadCountListener;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.CallingMessageHolder;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.CustomEvaluationMessageHolder;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.CustomLinkMessageHolder;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.CustomOrderMessageHolder;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.FaceMessageHolder;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.FileMessageHolder;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.ImageMessageHolder;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.LocationMessageHolder;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.MergeMessageHolder;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.MessageBaseHolder;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.QuoteMessageHolder;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.ReplyMessageHolder;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.SoundMessageHolder;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.TextMessageHolder;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.TipsMessageHolder;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.VideoMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
 import com.tencent.qcloud.tuikit.tuichat.util.DataStoreUtil;
@@ -83,8 +52,6 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
         return instance;
     }
 
-    private static TUIChatConfigs chatConfig;
-
     private final List<WeakReference<GroupChatEventListener>> groupChatEventListenerList = new ArrayList<>();
 
     private final List<WeakReference<C2CChatEventListener>> c2CChatEventListenerList = new ArrayList<>();
@@ -93,94 +60,20 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
 
     private final List<WeakReference<TotalUnreadCountListener>> unreadCountListenerList = new ArrayList<>();
 
-    private final Map<String, Class<? extends TUIMessageBean>> messageBusinessIdMap = new HashMap<>();
-
-    private final Map<Class<? extends TUIMessageBean>, Integer> messageViewTypeMap = new HashMap<>();
-
-    private final Map<Integer, Class<? extends MessageBaseHolder>> messageViewHolderMap = new HashMap<>();
-
     private final List<WeakReference<NetworkConnectionListener>> connectListenerList = new ArrayList<>();
 
-    private int viewType = 0;
+    private final Map<String, Class<? extends TUIMessageBean>> customMessageMap = new HashMap<>();
 
     private RxDataStore<Preferences> mChatDataStore = null;
 
     @Override
     public void init(Context context) {
         instance = this;
-        initDefaultMessageType();
         initMessageType();
         initService();
         initEvent();
         initIMListener();
         initDataStore();
-    }
-
-    // 初始化自定义消息类型
-    // Initialize custom message types
-    private void initMessageType() {
-        addCustomMessageType(TUIChatConstants.BUSINESS_ID_CUSTOM_HELLO, CustomLinkMessageBean.class, CustomLinkMessageHolder.class);
-        addCustomMessageType(TUIChatConstants.BUSINESS_ID_CUSTOM_EVALUATION, CustomEvaluationMessageBean.class, CustomEvaluationMessageHolder.class);
-        addCustomMessageType(TUIChatConstants.BUSINESS_ID_CUSTOM_ORDER, CustomOrderMessageBean.class, CustomOrderMessageHolder.class);
-        addCustomMessageType(TUIChatConstants.BUSINESS_ID_CUSTOM_TYPING, MessageTypingBean.class, null);
-    }
-
-    /**
-     * 注册自定义消息类型
-     * @param businessId 自定义消息唯一标识（注意不能重复）
-     * @param beanClass 消息 MessageBean 类型
-     * @param holderClass 消息 MessageBaseHolder 类型
-     * 
-     * Register a custom message type
-     * @param businessId Custom message unique identifier（cannot be repeated）
-     * @param beanClass  MessageBean type
-     * @param holderClass  MessageBaseHolder type
-     */
-    private void addCustomMessageType(String businessId, Class<? extends TUIMessageBean> beanClass,
-                                      Class<? extends MessageBaseHolder> holderClass) {
-        viewType++;
-        messageBusinessIdMap.put(businessId, beanClass);
-        messageViewTypeMap.put(beanClass, viewType);
-        messageViewHolderMap.put(viewType, holderClass);
-    }
-
-    public Class<? extends TUIMessageBean> getMessageBeanClass(String businessId) {
-        return messageBusinessIdMap.get(businessId);
-    }
-
-    public Class<? extends MessageBaseHolder> getMessageViewHolderClass(int viewType) {
-        return messageViewHolderMap.get(viewType);
-    }
-
-    public int getViewType(Class<? extends TUIMessageBean> messageBeanClass) {
-        Integer viewType = messageViewTypeMap.get(messageBeanClass);
-        if (viewType != null) {
-            return viewType;
-        } else {
-            return 0;
-        }
-    }
-
-    private void initDefaultMessageType() {
-        addDefaultMessageType(FaceMessageBean.class, FaceMessageHolder.class);
-        addDefaultMessageType(FileMessageBean.class, FileMessageHolder.class);
-        addDefaultMessageType(ImageMessageBean.class, ImageMessageHolder.class);
-        addDefaultMessageType(LocationMessageBean.class, LocationMessageHolder.class);
-        addDefaultMessageType(MergeMessageBean.class, MergeMessageHolder.class);
-        addDefaultMessageType(SoundMessageBean.class, SoundMessageHolder.class);
-        addDefaultMessageType(TextAtMessageBean.class, TextMessageHolder.class);
-        addDefaultMessageType(TextMessageBean.class, TextMessageHolder.class);
-        addDefaultMessageType(TipsMessageBean.class, TipsMessageHolder.class);
-        addDefaultMessageType(VideoMessageBean.class, VideoMessageHolder.class);
-        addDefaultMessageType(ReplyMessageBean.class, ReplyMessageHolder.class);
-        addDefaultMessageType(QuoteMessageBean.class, QuoteMessageHolder.class);
-        addDefaultMessageType(CallingMessageBean.class, CallingMessageHolder.class);
-    }
-
-    private void addDefaultMessageType(Class<? extends TUIMessageBean> beanClazz, Class<? extends MessageBaseHolder> holderClazz) {
-        viewType++;
-        messageViewTypeMap.put(beanClazz, viewType);
-        messageViewHolderMap.put(viewType, holderClazz);
     }
 
     private void initService() {
@@ -302,13 +195,23 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
                 }
                 String newGroupName = (String) getOrDefault(param.get(TUIConstants.TUIGroup.GROUP_NAME), null);
                 String groupId = (String) getOrDefault(param.get(TUIConstants.TUIGroup.GROUP_ID), "");
+                String groupFaceUrl = (String) getOrDefault(param.get(TUIConstants.TUIGroup.GROUP_FACE_URL), null);
 
-                if (TextUtils.isEmpty(newGroupName) || TextUtils.isEmpty(groupId)) {
+
+                if (TextUtils.isEmpty(groupId)) {
                     return;
                 }
-                List<GroupChatEventListener> groupChatEventListenerList = getGroupChatEventListenerList();
-                for(GroupChatEventListener groupChatEventListener : groupChatEventListenerList) {
-                    groupChatEventListener.onGroupNameChanged(groupId, newGroupName);
+                if (!TextUtils.isEmpty(newGroupName)) {
+                    List<GroupChatEventListener> groupChatEventListenerList = getGroupChatEventListenerList();
+                    for (GroupChatEventListener groupChatEventListener : groupChatEventListenerList) {
+                        groupChatEventListener.onGroupNameChanged(groupId, newGroupName);
+                    }
+                }
+                if (!TextUtils.isEmpty(groupFaceUrl)) {
+                    List<GroupChatEventListener> groupChatEventListenerList = getGroupChatEventListenerList();
+                    for (GroupChatEventListener groupChatEventListener : groupChatEventListenerList) {
+                        groupChatEventListener.onGroupFaceUrlChanged(groupId, groupFaceUrl);
+                    }
                 }
             } else if (TextUtils.equals(subKey, TUIConstants.TUIGroup.EVENT_SUB_KEY_MEMBER_KICKED_GROUP)) {
                 if (param == null) {
@@ -372,13 +275,13 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
                 // 设置音视频通话的悬浮窗是否开启
                 // Set whether to open the floating window for voice and video calls
                 Map<String, Object> enableFloatWindowParam = new HashMap<>();
-                enableFloatWindowParam.put(TUIConstants.TUICalling.PARAM_NAME_ENABLE_FLOAT_WINDOW, getChatConfig().getGeneralConfig().isEnableFloatWindowForCall());
+                enableFloatWindowParam.put(TUIConstants.TUICalling.PARAM_NAME_ENABLE_FLOAT_WINDOW, TUIChatConfigs.getConfigs().getGeneralConfig().isEnableFloatWindowForCall());
                 TUICore.callService(TUIConstants.TUICalling.SERVICE_NAME, TUIConstants.TUICalling.METHOD_NAME_ENABLE_FLOAT_WINDOW, enableFloatWindowParam);
 
                 // 设置音视频通话开启多端登录功能
                 // Set Whether to enable multi-terminal login function for audio and video calls
                 Map<String, Object> enableMultiDeviceParam = new HashMap<>();
-                enableMultiDeviceParam.put(TUIConstants.TUICalling.PARAM_NAME_ENABLE_MULTI_DEVICE, getChatConfig().getGeneralConfig().isEnableMultiDeviceForCall());
+                enableMultiDeviceParam.put(TUIConstants.TUICalling.PARAM_NAME_ENABLE_MULTI_DEVICE, TUIChatConfigs.getConfigs().getGeneralConfig().isEnableMultiDeviceForCall());
                 TUICore.callService(TUIConstants.TUICalling.SERVICE_NAME, TUIConstants.TUICalling.METHOD_NAME_ENABLE_MULTI_DEVICE, enableMultiDeviceParam);
             }
         } else if (TextUtils.equals(key, TUIChatConstants.EVENT_KEY_MESSAGE_STATUS_CHANGED)) {
@@ -504,6 +407,7 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
                         } else {
                             c2CChatEventListener.onFriendNameChanged(info.getUserID(), info.getFriendRemark());
                         }
+                        c2CChatEventListener.onFriendFaceUrlChanged(info.getUserID(), info.getUserProfile().getFaceUrl());
                     }
                 }
             }
@@ -538,14 +442,33 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
         connectListenerList.add(weakReference);
     }
 
-    public static TUIChatConfigs getChatConfig() {
-        if (chatConfig == null) {
-            chatConfig = TUIChatConfigs.getConfigs();
-        }
-        return chatConfig;
+    // 初始化自定义消息类型
+    // Initialize custom message types
+    private void initMessageType() {
+        addCustomMessageType(TUIChatConstants.BUSINESS_ID_CUSTOM_HELLO, CustomLinkMessageBean.class);
+        addCustomMessageType(TUIChatConstants.BUSINESS_ID_CUSTOM_EVALUATION, CustomEvaluationMessageBean.class);
+        addCustomMessageType(TUIChatConstants.BUSINESS_ID_CUSTOM_ORDER, CustomOrderMessageBean.class);
+        addCustomMessageType(TUIChatConstants.BUSINESS_ID_CUSTOM_TYPING, MessageTypingBean.class);
     }
 
-    public List<GroupChatEventListener> getGroupChatEventListenerList() {
+    /**
+     * 注册自定义消息类型
+     * @param businessId 自定义消息唯一标识（注意不能重复）
+     * @param beanClass 消息 MessageBean 类型
+     *
+     * Register a custom message type
+     * @param businessId Custom message unique identifier（cannot be repeated）
+     * @param beanClass  MessageBean type
+     */
+    private void addCustomMessageType(String businessId, Class<? extends TUIMessageBean> beanClass) {
+        customMessageMap.put(businessId, beanClass);
+    }
+
+    public Class<? extends TUIMessageBean> getMessageBeanClass(String businessId) {
+        return customMessageMap.get(businessId);
+    }
+
+    private List<GroupChatEventListener> getGroupChatEventListenerList() {
         List<GroupChatEventListener> listeners = new ArrayList<>();
         Iterator<WeakReference<GroupChatEventListener>> iterator = groupChatEventListenerList.listIterator();
         while(iterator.hasNext()) {
@@ -572,7 +495,7 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
         groupChatEventListenerList.add(new WeakReference<>(groupChatListener));
     }
 
-    public List<C2CChatEventListener> getC2CChatEventListenerList() {
+    private List<C2CChatEventListener> getC2CChatEventListenerList() {
         List<C2CChatEventListener> listeners = new ArrayList<>();
         Iterator<WeakReference<C2CChatEventListener>> iterator = c2CChatEventListenerList.listIterator();
         while(iterator.hasNext()) {
@@ -615,7 +538,7 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
     }
 
 
-    public List<TotalUnreadCountListener> getUnreadCountListenerList() {
+    private List<TotalUnreadCountListener> getUnreadCountListenerList() {
         List<TotalUnreadCountListener> listeners = new ArrayList<>();
         Iterator<WeakReference<TotalUnreadCountListener>> iterator = unreadCountListenerList.listIterator();
         while(iterator.hasNext()) {
@@ -630,25 +553,10 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
         return listeners;
     }
 
-    public IBaseMessageSender getMessageSender() {
+    private IBaseMessageSender getMessageSender() {
         if (messageSender != null) {
             return messageSender.get();
         }
         return null;
-    }
-
-    @Override
-    public int getLightThemeResId() {
-        return R.style.TUIChatLightTheme;
-    }
-
-    @Override
-    public int getLivelyThemeResId() {
-        return R.style.TUIChatLivelyTheme;
-    }
-
-    @Override
-    public int getSeriousThemeResId() {
-        return R.style.TUIChatSeriousTheme;
     }
 }

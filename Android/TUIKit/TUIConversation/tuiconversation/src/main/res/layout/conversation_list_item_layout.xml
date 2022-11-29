@@ -24,7 +24,7 @@
         android:layout_width="60.78dp"
         android:layout_height="match_parent">
 
-        <com.tencent.qcloud.tuikit.tuiconversation.ui.view.ConversationIconView
+        <com.tencent.qcloud.tuikit.tuiconversation.classicui.widget.ConversationIconView
             android:id="@+id/conversation_icon"
             android:layout_width="@dimen/conversation_list_avatar_width"
             android:layout_height="@dimen/conversation_list_avatar_height" />
@@ -39,8 +39,8 @@
             android:layout_marginTop="-8dp"
             android:gravity="center"
             android:includeFontPadding="false"
-            android:textColor="#fff"
-            android:textSize="8sp" />
+            android:textColor="#FFFFFF"
+            android:textSize="11.52sp" />
 
         <View
             android:id="@+id/user_status"

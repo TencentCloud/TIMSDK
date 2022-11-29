@@ -1,5 +1,8 @@
 package com.tencent.qcloud.tuikit.tuichat.model;
 
+import static com.tencent.imsdk.BaseConstants.ERR_SDK_MSG_MODIFY_CONFLICT;
+import static com.tencent.imsdk.v2.V2TIMMessage.V2TIM_MSG_STATUS_SEND_FAIL;
+
 import android.util.Log;
 import android.util.Pair;
 
@@ -9,14 +12,13 @@ import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMCompleteCallback;
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMConversationOperationResult;
-import com.tencent.imsdk.v2.V2TIMCreateGroupMemberInfo;
 import com.tencent.imsdk.v2.V2TIMFriendInfoResult;
 import com.tencent.imsdk.v2.V2TIMGroupApplication;
 import com.tencent.imsdk.v2.V2TIMGroupApplicationResult;
 import com.tencent.imsdk.v2.V2TIMGroupChangeInfo;
-import com.tencent.imsdk.v2.V2TIMGroupInfo;
 import com.tencent.imsdk.v2.V2TIMGroupMemberFullInfo;
 import com.tencent.imsdk.v2.V2TIMGroupMemberInfo;
+import com.tencent.imsdk.v2.V2TIMGroupMemberInfoResult;
 import com.tencent.imsdk.v2.V2TIMGroupMessageReadMemberList;
 import com.tencent.imsdk.v2.V2TIMGroupTipsElem;
 import com.tencent.imsdk.v2.V2TIMManager;
@@ -26,27 +28,28 @@ import com.tencent.imsdk.v2.V2TIMMessageListGetOption;
 import com.tencent.imsdk.v2.V2TIMMessageReceipt;
 import com.tencent.imsdk.v2.V2TIMOfflinePushInfo;
 import com.tencent.imsdk.v2.V2TIMSendCallback;
+import com.tencent.imsdk.v2.V2TIMUserStatus;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
+import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageFeature;
-import com.tencent.qcloud.tuikit.tuichat.bean.ReactUserBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupApplyInfo;
-import com.tencent.qcloud.tuikit.tuichat.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupMemberInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.MessageFeature;
+import com.tencent.qcloud.tuikit.tuichat.bean.MessageReceiptInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.OfflineMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.OfflineMessageContainerBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.OfflinePushInfo;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageReceiptInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.ReactUserBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.UserStatusBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.GroupMessageReadMembersInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
-import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
 import com.tencent.qcloud.tuikit.tuichat.util.OfflinePushInfoUtils;
@@ -57,9 +60,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.tencent.imsdk.BaseConstants.ERR_SDK_MSG_MODIFY_CONFLICT;
-import static com.tencent.imsdk.v2.V2TIMMessage.V2TIM_MSG_STATUS_SEND_FAIL;
 
 public class ChatProvider {
     private static final String TAG = ChatProvider.class.getSimpleName();
@@ -572,7 +572,7 @@ public class ChatProvider {
     public void getGroupMessageBySeq(String chatId, long seq, IUIKitCallback<List<TUIMessageBean>> callback) {
         V2TIMMessageListGetOption optionBackward = new V2TIMMessageListGetOption();
         optionBackward.setCount(1);
-        optionBackward.setGetType(V2TIMMessageListGetOption.V2TIM_GET_CLOUD_OLDER_MSG);
+        optionBackward.setGetType(V2TIMMessageListGetOption.V2TIM_GET_LOCAL_OLDER_MSG);
         optionBackward.setLastMsgSeq(seq);
         optionBackward.setGroupID(chatId);
 
@@ -728,6 +728,56 @@ public class ChatProvider {
             @Override
             public void onError(int code, String desc) {
                 TUIChatUtils.callbackOnError(callback, code, desc);
+            }
+        });
+    }
+
+    public void loadUserStatus(List<String> userIDs, IUIKitCallback<Map<String, UserStatusBean>> callback) {
+        if (userIDs == null || userIDs.size() == 0) {
+            TUIChatLog.d(TAG, "loadContactUserStatus datasource is null");
+            TUIChatUtils.callbackOnError(callback, -1, "data list is empty");
+            return;
+        }
+
+        V2TIMManager.getInstance().getUserStatus(userIDs, new V2TIMValueCallback<List<V2TIMUserStatus>>() {
+            @Override
+            public void onSuccess(List<V2TIMUserStatus> v2TIMUserStatuses) {
+                TUIChatLog.i(TAG, "getUserStatus success");
+                Map<String, UserStatusBean> userStatusBeanMap = new HashMap<>();
+                for (V2TIMUserStatus item : v2TIMUserStatuses) {
+                    UserStatusBean statusBean = new UserStatusBean();
+                    statusBean.setUserID(item.getUserID());
+                    statusBean.setOnlineStatus(item.getStatusType());
+                    userStatusBeanMap.put(item.getUserID(), statusBean);
+                }
+                TUIChatUtils.callbackOnSuccess(callback, userStatusBeanMap);
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                TUIChatLog.e(TAG, "getUserStatus error code = " + code + ",des = " + desc);
+                TUIChatUtils.callbackOnError(callback, code, desc);
+            }
+        });
+    }
+
+    public void loadGroupMembers(String groupID, long nextSeq, final IUIKitCallback<List<GroupMemberInfo>> callBack) {
+        int filter = V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_FILTER_ALL;
+        V2TIMManager.getGroupManager().getGroupMemberList(groupID, filter, nextSeq, new V2TIMValueCallback<V2TIMGroupMemberInfoResult>() {
+            @Override
+            public void onError(int code, String desc) {
+                TUIChatLog.e(TAG, "loadGroupMembers failed, code: " + code + "|desc: " + ErrorMessageConverter.convertIMError(code, desc));
+                TUIChatUtils.callbackOnError(callBack, code, desc);
+            }
+
+            @Override
+            public void onSuccess(V2TIMGroupMemberInfoResult v2TIMGroupMemberInfoResult) {
+                List<GroupMemberInfo> members = new ArrayList<>();
+                for (int i = 0; i < v2TIMGroupMemberInfoResult.getMemberInfoList().size(); i++) {
+                    GroupMemberInfo member = new GroupMemberInfo();
+                    members.add(member.covertTIMGroupMemberInfo(v2TIMGroupMemberInfoResult.getMemberInfoList().get(i)));
+                }
+                TUIChatUtils.callbackOnSuccess(callBack, members);
             }
         });
     }

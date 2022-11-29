@@ -225,7 +225,6 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
                                 TUICallingStatusManager.sharedInstance(mContext).setCallScene(Scene.GROUP_CALL);
                                 TUICallingStatusManager.sharedInstance(mContext).setGroupId(groupId);
 
-                                mCallingViewManager.enableInviteUser(true);
                                 showCallingView();
                                 mCallingBellFeature.startDialingMusic();
                                 callbackSuccess(callback);
@@ -396,9 +395,6 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
                     TUICallingStatusManager.sharedInstance(mContext).setCallScene(scene);
                     TUICallingStatusManager.sharedInstance(mContext).setGroupId(groupId);
 
-                    if (!TextUtils.isEmpty(groupId)) {
-                        mCallingViewManager.enableInviteUser(true);
-                    }
                     showCallingView();
                     mCallingBellFeature.startRing();
                 }

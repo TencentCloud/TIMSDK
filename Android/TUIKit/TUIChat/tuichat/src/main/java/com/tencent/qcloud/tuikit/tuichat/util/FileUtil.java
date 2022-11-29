@@ -12,8 +12,6 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 
-import com.tencent.qcloud.tuikit.tuichat.component.imagevideoscan.ImageVideoScanPresenter;
-
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,7 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class FileUtil {
-    private static final String TAG = ImageVideoScanPresenter.class.getSimpleName();
+    private static final String TAG = FileUtil.class.getSimpleName();
 
     public static boolean saveVideoToGallery(Context context, String videoPath) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

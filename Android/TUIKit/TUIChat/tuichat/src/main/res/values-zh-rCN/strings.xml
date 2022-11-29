@@ -27,6 +27,7 @@
     <string name="forward_button">转发</string>
     <string name="reply_button">回复</string>
     <string name="quote_button">引用</string>
+    <string name="info_button">详情</string>
     <string name="delete_button">删除</string>
     <string name="chat_delete_msg_tip">确定删除已选消息</string>
     <string name="forward_chats">群聊的聊天记录</string>
@@ -110,6 +111,7 @@
     <string name="input_tip">没有输入昵称，请重新填写</string>
 
     <string name="has_read">已读</string>
+    <string name="delivered">已送达</string>
     <string name="unread">未读</string>
     <string name="has_all_read">全部已读</string>
     <string name="someone_has_read">%d人已读</string>
@@ -219,4 +221,13 @@
     <string name="chat_not_read">尚未阅读</string>
 
     <string name="custom_evaluation_message">对本次服务评价</string>
+
+    <string name="chat_input_edit_hint_text">发送消息</string>
+    <string name="chat_header_not_desc">暂无简介</string>
+    <string name="chat_tips_not_login">未登录</string>
+
+    <string name="chat_user_status_online">在线</string>
+    <string name="chat_user_status_offline">离线</string>
+    <string name="chat_user_status_unknown">未知</string>
+
 </resources>

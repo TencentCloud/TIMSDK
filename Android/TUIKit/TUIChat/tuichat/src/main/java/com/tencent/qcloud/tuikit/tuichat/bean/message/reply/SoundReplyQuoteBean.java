@@ -3,8 +3,6 @@ package com.tencent.qcloud.tuikit.tuichat.bean.message.reply;
 import com.tencent.imsdk.v2.V2TIMSoundElem;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.SoundMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.message.reply.SoundReplyQuoteView;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.message.reply.TUIReplyQuoteView;
 
 public class SoundReplyQuoteBean extends TUIReplyQuoteBean {
     private String dataPath;
@@ -25,8 +23,4 @@ public class SoundReplyQuoteBean extends TUIReplyQuoteBean {
         return 0;
     }
 
-    @Override
-    public Class<? extends TUIReplyQuoteView> getReplyQuoteViewClass() {
-        return SoundReplyQuoteView.class;
-    }
 }

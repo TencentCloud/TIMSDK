@@ -4,12 +4,12 @@ import android.text.TextUtils;
 import android.util.Pair;
 
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.tuisearch.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuisearch.bean.MessageInfo;
 import com.tencent.qcloud.tuikit.tuisearch.bean.SearchDataBean;
 import com.tencent.qcloud.tuikit.tuisearch.bean.SearchMessageBean;
-import com.tencent.qcloud.tuikit.tuisearch.bean.ChatInfo;
+import com.tencent.qcloud.tuikit.tuisearch.interfaces.ISearchMoreMsgAdapter;
 import com.tencent.qcloud.tuikit.tuisearch.model.SearchDataProvider;
-import com.tencent.qcloud.tuikit.tuisearch.ui.interfaces.ISearchMoreMsgAdapter;
 import com.tencent.qcloud.tuikit.tuisearch.util.TUISearchLog;
 import com.tencent.qcloud.tuikit.tuisearch.util.TUISearchUtils;
 

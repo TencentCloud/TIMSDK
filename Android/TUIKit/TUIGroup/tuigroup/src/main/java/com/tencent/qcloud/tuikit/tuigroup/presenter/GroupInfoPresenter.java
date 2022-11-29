@@ -9,8 +9,8 @@ import com.tencent.qcloud.tuikit.tuigroup.TUIGroupService;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupMemberInfo;
 import com.tencent.qcloud.tuikit.tuigroup.interfaces.GroupEventListener;
+import com.tencent.qcloud.tuikit.tuigroup.interfaces.IGroupMemberLayout;
 import com.tencent.qcloud.tuikit.tuigroup.model.GroupInfoProvider;
-import com.tencent.qcloud.tuikit.tuigroup.ui.interfaces.IGroupMemberLayout;
 import com.tencent.qcloud.tuikit.tuigroup.util.TUIGroupLog;
 import com.tencent.qcloud.tuikit.tuigroup.util.TUIGroupUtils;
 

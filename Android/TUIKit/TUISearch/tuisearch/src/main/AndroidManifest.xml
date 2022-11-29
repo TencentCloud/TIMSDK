@@ -3,23 +3,43 @@
     package="com.tencent.qcloud.tuikit.tuisearch">
 
     <application>
-        <activity
-            android:name=".ui.page.SearchMainActivity"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".ui.page.SearchMoreListActivity"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".ui.page.SearchMoreMsgListActivity"
-            android:screenOrientation="portrait" />
-
         <provider
             android:name=".TUISearchService"
             android:authorities="${applicationId}.TUISearch.Init"
             android:enabled="true"
-            android:exported="false"/>
+            android:exported="false" />
+
+
+        <!-- **************** Classic UI Activity Start **************** -->
+        <activity
+            android:name=".classicui.page.SearchMainActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".classicui.page.SearchMoreListActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".classicui.page.SearchMoreMsgListActivity"
+            android:screenOrientation="portrait" />
+        <!-- **************** Classic UI Activity End **************** -->
+
+
+
+
+        <!-- **************** Minimalist UI Activity Start **************** -->
+        <activity
+            android:name=".minimalistui.page.SearchMainMinimalistActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".minimalistui.page.SearchMoreListMinimalistActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".minimalistui.page.SearchMoreMsgListMinimalistActivity"
+            android:screenOrientation="portrait" />
+        <!-- **************** Minimalist UI Activity End **************** -->
 
     </application>
 </manifest>

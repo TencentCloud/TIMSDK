@@ -24,6 +24,6 @@
         android:layout_marginBottom="@dimen/view_margin_bottom"
         android:text="@string/group_type_content_button"
         android:textColor="@color/font_blue"
-        android:textSize="@dimen/group_profile_group_id_size" />
+        android:textSize="@dimen/contact_group_profile_group_id_size" />
 
 </RelativeLayout>

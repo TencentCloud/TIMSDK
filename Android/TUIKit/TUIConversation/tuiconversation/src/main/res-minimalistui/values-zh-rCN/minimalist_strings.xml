@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="conversation_minimalist_chat">聊天</string>
+    <string name="conversation_minimalist_search">搜索</string>
+    <string name="conversation_minimalist_done">完成</string>
+    <string name="has_all_read">全部已读</string>
+    <string name="start_conversation">发起会话</string>
+    <string name="create_group_chat">创建群聊</string>
+    <string name="more_text">更多</string>
+    <string name="clear_message">清除聊天记录</string>
+</resources>
