@@ -8,7 +8,7 @@
 [最新增强版 IM SDK 下载](https://im.sdk.qcloud.com/download/plus/6.9.3557/imsdk-plus-6.9.3557.aar) 
 
 ### 增强版 Pro
-[最新增强版 Pro IM SDK 下载](https://im.sdk.qcloud.com/download/plus/6.9.3557/imsdk-pro-plus-6.9.3557.aar) 
+[最新增强版 Pro IM SDK 下载](https://im.sdk.qcloud.com/download/plus/6.9.3557/imsdk-plus-pro-6.9.3557.aar) 
 
 ### 基础版
 [最新基础版 IM SDK 下载](https://im.sdk.qcloud.com/download/standard/5.1.66/imsdk-5.1.66.aar)
