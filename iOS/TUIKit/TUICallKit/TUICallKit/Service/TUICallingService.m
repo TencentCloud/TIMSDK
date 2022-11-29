@@ -54,6 +54,7 @@
 
 - (void)loginSuccessNotification {
     [TUICallKit createInstance];
+    [self adaptiveComponentReport];
 }
 
 - (void)startCall:(NSString *)groupID userIDs:(NSArray *)userIDs callingType:(TUICallMediaType)callingType {
@@ -73,10 +74,6 @@
 - (id)onCall:(NSString *)method param:(nullable NSDictionary *)param {
     if (![TUICallingCommon checkDictionaryValid:param]) {
         return nil;
-    }
-    TUILog.component = TC_TIMCALLING_COMPONENT;
-    if (param && [param tui_objectForKey:@"component" asClass:NSNumber.class]) {
-        TUILog.component = [[param tui_objectForKey:@"component" asClass:NSNumber.class] intValue];
     }
     
     if ([method isEqualToString:TUICore_TUICallingService_EnableFloatWindowMethod]) {
@@ -125,10 +122,7 @@
     if (!key || ![TUICallingCommon checkDictionaryValid:param]) {
         return nil;
     }
-    TUILog.component = TC_TIMCALLING_COMPONENT;
-    if (param && [param tui_objectForKey:@"component" asClass:NSNumber.class]) {
-        TUILog.component = [[param tui_objectForKey:@"component" asClass:NSNumber.class] intValue];
-    }
+    
     NSString *call_groupID = [param tui_objectForKey:TUICore_TUIChatExtension_GetMoreCellInfo_GroupID asClass:NSString.class];
     NSString *call_userID = [param tui_objectForKey:TUICore_TUIChatExtension_GetMoreCellInfo_UserID asClass:NSString.class];
     if (call_groupID.length == 0 && call_userID.length == 0) {
@@ -193,6 +187,23 @@
             return;
         }
     }
+}
+
+- (void)adaptiveComponentReport {
+    if (![TUICore getService:TUICore_TUIChatService]) {
+        return;
+    }
+    
+    NSDictionary *jsonDic = @{@"api": @"setFramework",
+                              @"params": @{@"framework": @(1),
+                                           @"component": @(15)}};
+    NSError *error = nil;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDic options:NSJSONWritingPrettyPrinted error:&error];
+    if (error) {
+        NSAssert(NO, @"invalid jsonDic");
+        return;
+    }
+    [[TUICallEngine createInstance] callExperimentalAPI:[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]];
 }
 
 @end

@@ -69,7 +69,7 @@ BOOL playAudio(CallingAudioType type) {
             return [[TUICallingAudioPlayer sharedInstance] playAudio:url params:param];
         } break;
         case CallingAudioTypeCalled: {
-            NSString *path = [[[bundle bundlePath] stringByAppendingPathComponent:@"AudioFile"] stringByAppendingPathComponent:@"phone_ringing.flac"];
+            NSString *path = [[[bundle bundlePath] stringByAppendingPathComponent:@"AudioFile"] stringByAppendingPathComponent:@"phone_ringing.mp3"];
             NSURL *url = [NSURL fileURLWithPath:path];
             if (!url) {
                 return NO;

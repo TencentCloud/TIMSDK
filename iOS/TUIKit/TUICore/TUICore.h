@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TUICore : NSObject
 
 + (void)registerService:(NSString *)serviceName object:(id<TUIServiceProtocol>)object;
++ (id<TUIServiceProtocol>)getService:(NSString *)serviceName;
 + (id)callService:(NSString *)serviceName method:(NSString *)method param:(nullable NSDictionary *)param;
 
 

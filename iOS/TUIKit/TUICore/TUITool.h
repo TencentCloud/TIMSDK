@@ -26,6 +26,7 @@ typedef void (^TAsyncImageComplete)(NSString *path, UIImage *image);
 
 // date
 + (NSString *)convertDateToStr:(NSDate *)date;
++ (NSString *)convertDateToHMStr:(NSDate *)date;
 
 // msg code convert
 + (NSString *)convertIMError:(NSInteger)code msg:(NSString *)msg;

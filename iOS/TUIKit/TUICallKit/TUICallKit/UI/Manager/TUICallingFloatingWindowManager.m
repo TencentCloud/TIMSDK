@@ -60,7 +60,7 @@
     }
     self.sourceCallingWindow = [TUICallingCommon getKeyWindow];
     self.isFloating = YES;
-    dispatch_call_main_async_safe(^{
+    dispatch_callkit_main_async_safe(^{
         [UIView animateWithDuration:0.4 animations:^{
             self.sourceCallingWindow.transform = CGAffineTransformMakeScale(0.2, 0.2);
             self.sourceCallingWindow.frame = [self getFloatingWindowFrame];
@@ -82,7 +82,7 @@
     if (!self.isFloating) {
         return;
     }
-    dispatch_call_main_async_safe(^{
+    dispatch_callkit_main_async_safe(^{
         self.floatWindow.hidden = YES;
         self.floatWindow = nil;
         self.renderView = nil;
@@ -98,7 +98,7 @@
     if (textStr && textStr.length > 0) {
         describeText = textStr;
     }
-    dispatch_call_main_async_safe(^{
+    dispatch_callkit_main_async_safe(^{
         [self.floatWindow updateMicroWindowWithText:describeText];
     });
 }
@@ -107,7 +107,7 @@
     if (!self.isFloating) {
         return;
     }
-    dispatch_call_main_async_safe(^{
+    dispatch_callkit_main_async_safe(^{
         if (!userModel.isVideoAvailable && ([TUICallingStatusManager shareInstance].callMediaType == TUICallMediaTypeVideo)) {
             [self.floatWindow updateMicroWindowBackgroundAvatar:userModel.avatar];
         } else {
@@ -122,7 +122,7 @@
     if (!self.isFloating || ([TUICallingStatusManager shareInstance].callStatus == TUICallStatusNone)) {
         return;
     }
-    dispatch_call_main_async_safe(^{
+    dispatch_callkit_main_async_safe(^{
         [UIView animateWithDuration:0.2 animations:^{
             TUICallMediaType callType = [TUICallingStatusManager shareInstance].callMediaType;
             self.floatWindow.frame = [self getFloatingWindowFrame:callType];
@@ -145,14 +145,14 @@
 - (void)floatingWindowDidClickView {
     [self hiddenMicroFloatingWindow];
     if (self.delegate && [self.delegate respondsToSelector:@selector(floatingWindowDidClickView)]) {
-        dispatch_call_main_async_safe(^{
+        dispatch_callkit_main_async_safe(^{
             [self.delegate floatingWindowDidClickView];
         });
     }
 }
 
 - (void)hiddenMicroFloatingWindow {
-    dispatch_call_main_async_safe(^{
+    dispatch_callkit_main_async_safe(^{
         self.sourceCallingWindow.hidden = NO;
         self.floatWindow.hidden = YES;
         self.floatWindow = nil;
@@ -166,7 +166,7 @@
 }
 
 - (void)floatingWindowChangedFrame {
-    dispatch_call_main_async_safe(^{
+    dispatch_callkit_main_async_safe(^{
         self.currentFloatWindowFrame = self.floatWindow.frame;
         self.sourceCallingWindow.frame = self.currentFloatWindowFrame;
     });

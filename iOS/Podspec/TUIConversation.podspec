@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUIConversation'
-  spec.version      = '6.8.3374'
+  spec.version      = '6.9.3557'
   spec.platform     = :ios 
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
@@ -16,47 +16,98 @@ Pod::Spec.new do |spec|
 
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/6.8.3374/ios/TUIConversation.zip'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/6.9.3557/ios/TUIConversation.zip'}
 
-  spec.subspec 'Header' do |header|
-      header.source_files = '**/TUIConversation/Header/*.{h,m,mm}'
+  spec.default_subspec = 'ALL'
+
+  spec.subspec 'CommonModel' do |commonModel|
+    commonModel.source_files = '**/TUIConversation/CommonModel/*.{h,m,mm}'
+    commonModel.dependency 'TUICore','6.9.3557'
   end
-  
-  spec.subspec 'Cell' do |cell|
-    cell.subspec 'CellData' do |cellData|
-      cellData.source_files = '**/TUIConversation/Cell/CellData/*.{h,m,mm}'
-      cellData.dependency 'TUICore','6.8.3374'
+
+  spec.subspec 'BaseCell' do |baseCell|
+    baseCell.subspec 'CellData' do |cellData|
+      cellData.source_files = '**/TUIConversation/BaseCell/CellData/*.{h,m,mm}'
+      cellData.dependency "TUIConversation/CommonModel"
     end
-
-    cell.subspec 'CellUI' do |cellUI|
-      cellUI.source_files = '**/TUIConversation/Cell/CellUI/*.{h,m,mm}'
-      cellUI.dependency 'TUIConversation/Cell/CellData'
+    baseCell.subspec 'CellUI' do |cellUI|
+      cellUI.source_files = '**/TUIConversation/BaseCell/CellUI/*.{h,m,mm}'
+      cellUI.dependency "TUIConversation/BaseCell/CellData"
     end
   end
 
-  spec.subspec 'DataProvider' do |dataProvider|
-    dataProvider.source_files = '**/TUIConversation/DataProvider/*.{h,m,mm}'
-    dataProvider.dependency 'TUIConversation/Cell'
+  spec.subspec 'BaseDataProvider' do |baseDataProvider|
+    baseDataProvider.source_files = '**/TUIConversation/BaseDataProvider/*.{h,m,mm}'
+    baseDataProvider.dependency "TUIConversation/BaseCell"
   end
 
-  spec.subspec 'UI' do |ui|
-    ui.source_files = '**/TUIConversation/UI/*.{h,m,mm}'
-    ui.dependency 'TUIConversation/DataProvider'
-  end
-
-  spec.subspec 'Service' do |service|
-    service.source_files = '**/TUIConversation/Service/*.{h,m,mm}'
-    service.dependency 'TUIConversation/UI'
-  end
-  
-  spec.resource = [
+  spec.subspec 'UI_Classic' do |uiClassic|
+    uiClassic.subspec 'DataProvider' do |dataProvider|
+      dataProvider.source_files = '**/TUIConversation/UI_Classic/DataProvider/*.{h,m,mm}'
+      dataProvider.dependency "TUIConversation/BaseDataProvider"
+    end
+    uiClassic.subspec 'UI' do |ui|
+      ui.source_files = '**/TUIConversation/UI_Classic/UI/*.{h,m,mm}'
+      ui.dependency "TUIConversation/UI_Classic/DataProvider"
+    end
+    uiClassic.subspec 'Service' do |service|
+      service.source_files = '**/TUIConversation/UI_Classic/Service/*.{h,m,mm}'
+      service.dependency "TUIConversation/UI_Classic/UI"
+    end
+    uiClassic.subspec 'Header' do |header|
+      header.source_files = '**/TUIConversation/UI_Classic/Header/*.{h,m,mm}'
+      header.dependency "TUIConversation/UI_Classic/Service"
+    end
+    uiClassic.resource = [
       '**/TUIConversation/Resources/*.bundle'
-  ]
+    ]
+  end
+
+  spec.subspec 'UI_Minimalist' do |uiMinimalist|
+    uiMinimalist.subspec 'Cell' do |cell|
+      cell.subspec 'CellData' do |cellData|
+        cellData.source_files = '**/TUIConversation/UI_Minimalist/Cell/CellData/*.{h,m,mm}'
+        cellData.dependency "TUIConversation/BaseDataProvider"
+      end
+      cell.subspec 'CellUI' do |cellUI|
+        cellUI.source_files = '**/TUIConversation/UI_Minimalist/Cell/CellUI/*.{h,m,mm}'
+        cellUI.dependency "TUIConversation/UI_Minimalist/Cell/CellData"
+      end
+    end
+    uiMinimalist.subspec 'DataProvider' do |dataProvider|
+      dataProvider.source_files = '**/TUIConversation/UI_Minimalist/DataProvider/*.{h,m,mm}'
+      dataProvider.dependency "TUIConversation/UI_Minimalist/Cell"
+    end
+    uiMinimalist.subspec 'UI' do |ui|
+      ui.source_files = '**/TUIConversation/UI_Minimalist/UI/*.{h,m,mm}'
+      ui.dependency "TUIConversation/UI_Minimalist/DataProvider"
+    end
+    uiMinimalist.subspec 'Service' do |service|
+      service.source_files = '**/TUIConversation/UI_Minimalist/Service/*.{h,m,mm}'
+      service.dependency "TUIConversation/UI_Minimalist/UI"
+    end
+    uiMinimalist.subspec 'Header' do |header|
+      header.source_files = '**/TUIConversation/UI_Minimalist/Header/*.{h,m,mm}'
+      header.dependency "TUIConversation/UI_Minimalist/Service"
+    end
+    uiMinimalist.resource = [
+      '**/TUIConversation/Resources/*.bundle'
+    ]
+  end
+
+  spec.subspec 'ALL' do |all|
+    all.dependency "TUIConversation/UI_Classic"
+    all.dependency "TUIConversation/UI_Minimalist"
+  end
 
   spec.pod_target_xcconfig = {
-    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64'
+    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64',
+    'GENERATE_INFOPLIST_FILE' => 'YES'
   }
-  spec.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
+  spec.user_target_xcconfig = {
+   'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64',
+   'GENERATE_INFOPLIST_FILE' => 'YES'
+  }
 end
 
 # pod trunk push TUIConversation.podspec --use-libraries --allow-warnings

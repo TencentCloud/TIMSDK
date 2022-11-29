@@ -557,6 +557,11 @@ static NSString * const TUICallKit_TUIGroupService_UserDataValue = @"TUICallKit"
     UIViewController *viewController = [TUICore callService:TUICore_TUIGroupService
                                                      method:TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod
                                                       param:param];
+    if (!viewController) {
+        viewController = [TUICore callService:TUICore_TUIGroupService_Minimalist
+                                       method:TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod
+                                        param:param];
+    }
     TUINavigationController *navigationController = [[TUINavigationController alloc] initWithRootViewController:viewController];
     navigationController.modalPresentationStyle = UIModalPresentationFullScreen;
     [self.callingWindow.rootViewController presentViewController:navigationController animated:NO completion:nil];

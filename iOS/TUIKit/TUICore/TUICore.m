@@ -23,6 +23,8 @@ static NSMutableDictionary *objectHashMap = nil;
     extensionList = [NSMutableArray array];
     objectHashMap = [NSMutableDictionary dictionary];
     TUIRegisterThemeResourcePath(TUICoreThemePath, TUIThemeModuleCore);
+    TUIRegisterThemeResourcePath(TUIBundlePath(@"TUICoreTheme_Minimalist",TUICoreBundle_Key_Class), TUIThemeModuleCore_Minimalist);
+
 }
 
 + (void)registerService:(NSString *)serviceName object:(id<TUIServiceProtocol>)object {
@@ -40,6 +42,24 @@ static NSMutableDictionary *objectHashMap = nil;
     [serviceList addObject:param];
 }
 
++ (id<TUIServiceProtocol>)getService:(NSString *)serviceName {
+    if (serviceName.length == 0) {
+        NSLog(@"invalid serviceName");
+        NSAssert(NO, @"invalid serviceName");
+        return nil;
+    }
+    
+    for (NSDictionary *service in serviceList) {
+        NSString *pServiceName = service[@"serviceName"];
+        if ([pServiceName isEqualToString:serviceName]) {
+            id<TUIServiceProtocol> pObject = service[@"object"];
+            return pObject;
+        }
+    }
+    
+    return nil;
+}
+
 + (id)callService:(NSString *)serviceName method:(NSString *)method param:(nullable NSDictionary *)param {
     if (serviceName.length == 0) {
         NSLog(@"invalid serviceName");
@@ -55,7 +75,7 @@ static NSMutableDictionary *objectHashMap = nil;
         NSString *pServiceName = service[@"serviceName"];
         if ([pServiceName isEqualToString:serviceName]) {
             id<TUIServiceProtocol> pObject = service[@"object"];
-            if (pObject) {
+            if (pObject && [pObject respondsToSelector:@selector(onCall:param:)]) {
                 return [pObject onCall:method param:param];
             }
         }
@@ -87,7 +107,7 @@ static NSMutableDictionary *objectHashMap = nil;
     [self unRegisterEvent:nil subKey:nil object:object];
 }
 + (void)unRegisterEvent:(nullable NSString *)key subKey:(nullable NSString *)subKey object:(nullable id<TUINotificationProtocol>)object {
-
+    
     @synchronized (eventList) {
         
         NSMutableArray *removeEventList = [NSMutableArray array];

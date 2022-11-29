@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUIContact'
-  spec.version      = '6.8.3374'
+  spec.version      = '6.9.3557'
   spec.platform     = :ios 
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
@@ -16,47 +16,75 @@ Pod::Spec.new do |spec|
 
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/6.8.3374/ios/TUIContact.zip'}
-  
-  spec.subspec 'Header' do |header|
-      header.source_files = '**/TUIContact/Header/*.{h,m,mm}'
-  end
-  
-  spec.subspec 'Cell' do |cell|
-    cell.subspec 'CellData' do |cellData|
-      cellData.source_files = '**/TUIContact/Cell/CellData/*.{h,m,mm}'
-      cellData.dependency 'TUICore','6.8.3374'
-    end
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/6.9.3557/ios/TUIContact.zip'}
 
-    cell.subspec 'CellUI' do |cellUI|
-      cellUI.source_files = '**/TUIContact/Cell/CellUI/*.{h,m,mm}'
-      cellUI.dependency 'TUIContact/Cell/CellData'
+  spec.default_subspec = 'ALL'
+  
+  spec.subspec 'BaseCell' do |baseCell|
+    baseCell.subspec 'CellData' do |cellData|
+      cellData.source_files = '**/TUIContact/BaseCell/CellData/*.{h,m,mm}'
+      cellData.dependency 'TUICore','6.9.3557'
+    end
+    baseCell.subspec 'CellUI' do |cellUI|
+      cellUI.source_files = '**/TUIContact/BaseCell/CellUI/*.{h,m,mm}'
+      cellUI.dependency "TUIContact/BaseCell/CellData"
     end
   end
 
-  spec.subspec 'DataProvider' do |dataProvider|
-    dataProvider.source_files = '**/TUIContact/DataProvider/*.{h,m,mm}'
-    dataProvider.dependency 'TUIContact/Cell'
+  spec.subspec 'BaseDataProvider' do |baseDataProvider|
+    baseDataProvider.source_files = '**/TUIContact/BaseDataProvider/*.{h,m,mm}'
+    baseDataProvider.dependency "TUIContact/BaseCell"
   end
 
-  spec.subspec 'UI' do |ui|
-    ui.source_files = '**/TUIContact/UI/*.{h,m,mm}'
-    ui.dependency 'TUIContact/DataProvider'
-  end
-
-  spec.subspec 'Service' do |service|
-    service.source_files = '**/TUIContact/Service/*.{h,m,mm}'
-    service.dependency 'TUIContact/UI'
-  end
-  
-  spec.resource = [
+  spec.subspec 'UI_Classic' do |uiClassic|
+    uiClassic.subspec 'UI' do |ui|
+      ui.source_files = '**/TUIContact/UI_Classic/UI/*.{h,m,mm}'
+      ui.dependency "TUIContact/BaseDataProvider"
+    end
+    uiClassic.subspec 'Service' do |service|
+      service.source_files = '**/TUIContact/UI_Classic/Service/*.{h,m,mm}'
+      service.dependency "TUIContact/UI_Classic/UI"
+    end
+    uiClassic.subspec 'Header' do |header|
+      header.source_files = '**/TUIContact/UI_Classic/Header/*.{h,m,mm}'
+      header.dependency "TUIContact/UI_Classic/Service"
+    end
+    uiClassic.resource = [
       '**/TUIContact/Resources/*.bundle'
-  ]
+    ]
+  end
+
+  spec.subspec 'UI_Minimalist' do |uiMinimalist|
+    uiMinimalist.subspec 'UI' do |ui|
+      ui.source_files = '**/TUIContact/UI_Minimalist/UI/*.{h,m,mm}'
+      ui.dependency "TUIContact/BaseDataProvider"
+    end
+    uiMinimalist.subspec 'Service' do |service|
+      service.source_files = '**/TUIContact/UI_Minimalist/Service/*.{h,m,mm}'
+      service.dependency "TUIContact/UI_Minimalist/UI"
+    end
+    uiMinimalist.subspec 'Header' do |header|
+      header.source_files = '**/TUIContact/UI_Minimalist/Header/*.{h,m,mm}'
+      header.dependency "TUIContact/UI_Minimalist/Service"
+    end
+    uiMinimalist.resource = [
+      '**/TUIContact/Resources/*.bundle'
+    ]
+  end
+
+  spec.subspec 'ALL' do |all|
+    all.dependency "TUIContact/UI_Classic"
+    all.dependency "TUIContact/UI_Minimalist"
+  end
 
   spec.pod_target_xcconfig = {
-    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64'
+    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64',
+    'GENERATE_INFOPLIST_FILE' => 'YES'
   }
-  spec.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
+  spec.user_target_xcconfig = {
+   'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64',
+   'GENERATE_INFOPLIST_FILE' => 'YES'
+  }
 end
 
 # pod trunk push TUIContact.podspec --use-libraries --allow-warnings

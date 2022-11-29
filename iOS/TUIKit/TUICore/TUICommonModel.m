@@ -1320,6 +1320,17 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
     return self;
 }
 
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {
+        _avatar.layer.masksToBounds = YES;
+        _avatar.layer.cornerRadius = _avatar.frame.size.height / 2;
+    } else if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRadiusCorner) {
+        _avatar.layer.masksToBounds = YES;
+        _avatar.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
+    }
+}
+
 @end
 
 /////////////////////////////////////////////////////////////////////////////////
