@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_marginEnd="4dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/face_iv"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_gravity="center"
+        android:scaleType="fitCenter" />
+
+</FrameLayout>

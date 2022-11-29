@@ -3,13 +3,13 @@ package com.tencent.qcloud.tuikit.tuichat.presenter;
 import android.text.TextUtils;
 
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
-import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageFeature;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageReceiptInfo;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MessageTypingBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.C2CChatEventListener;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
@@ -67,6 +67,11 @@ public class C2CChatPresenter extends ChatPresenter {
                     return;
                 }
                 C2CChatPresenter.this.onFriendInfoChanged();
+            }
+
+            @Override
+            public void onFriendFaceUrlChanged(String userId, String newFaceUrl) {
+                C2CChatPresenter.this.onFriendFaceUrlChanged(userId, newFaceUrl);
             }
 
             @Override
@@ -183,6 +188,15 @@ public class C2CChatPresenter extends ChatPresenter {
             chatNotifyHandler.onFriendNameChanged(newName);
         }
     }
+
+    public void onFriendFaceUrlChanged(String userID, String faceUrl) {
+        if (TextUtils.equals(userID, chatInfo.getId())) {
+            if (chatNotifyHandler != null) {
+                chatNotifyHandler.onFriendFaceUrlChanged(faceUrl);
+            }
+        }
+    }
+
 
     public void onReadReport(List<MessageReceiptInfo> receiptList) {
         if (chatInfo != null) {

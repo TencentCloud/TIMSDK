@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="camera">相机</string>
+    <string name="left_cancle_send">松开手指发送，左滑取消发送</string>
+    <string name="chat_tap_to_remove">点击删除</string>
+    <string name="chat_forward_checked_num">已选择 %d 个</string>
+    <string name="chat_minimalist_pop_more">更多</string>
+</resources>

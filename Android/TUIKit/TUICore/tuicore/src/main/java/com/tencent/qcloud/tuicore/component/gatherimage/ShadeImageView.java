@@ -26,7 +26,7 @@ public class ShadeImageView extends ImageView {
     private static SparseArray<Bitmap> sRoundBitmapArray = new SparseArray();
     private Paint mShadePaint = new Paint();
     private Bitmap mRoundBitmap;
-    private int radius = ScreenUtil.getPxByDp(4);
+    private int radius;
 
     public ShadeImageView(Context context) {
         super(context);
@@ -43,6 +43,7 @@ public class ShadeImageView extends ImageView {
     }
 
     private void init(Context context, AttributeSet attrs) {
+        radius = (int) ScreenUtil.dp2px(4.0f, getResources().getDisplayMetrics());
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.core_round_rect_image_style);
         radius = array.getDimensionPixelSize(R.styleable.core_round_rect_image_style_round_radius, radius);
         array.recycle();

@@ -3,7 +3,6 @@ package com.tencent.qcloud.tuikit.tuichat.component.face;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 

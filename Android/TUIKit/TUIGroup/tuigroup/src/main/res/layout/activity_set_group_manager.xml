@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#F2F3F5"
     android:orientation="vertical"
-    tools:context=".ui.page.SetGroupManagerActivity">
+    tools:context=".classicui.page.SetGroupManagerActivity">
 
     <com.tencent.qcloud.tuicore.component.TitleBarLayout
         android:id="@+id/set_group_manager_title_bar"

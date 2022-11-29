@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/page_title_height" />
 
-    <com.tencent.qcloud.tuikit.tuicontact.ui.view.ContactListView
+    <com.tencent.qcloud.tuikit.tuicontact.classicui.widget.ContactListView
         android:id="@+id/contact_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

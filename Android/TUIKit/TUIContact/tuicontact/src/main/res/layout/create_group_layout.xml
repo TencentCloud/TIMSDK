@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/core_bg_color"
@@ -25,7 +24,7 @@
             <com.tencent.qcloud.tuicore.component.LineControllerView
                 android:id="@+id/group_name_layout"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/group_profile_item_height"
+                android:layout_height="@dimen/contact_profile_item_height"
                 android:layout_marginTop="10dp"
                 app:canNav="true"
                 app:name="@string/group_name_text" />
@@ -33,46 +32,46 @@
             <com.tencent.qcloud.tuicore.component.LineControllerView
                 android:id="@+id/group_id_layout"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/group_profile_item_height"
+                android:layout_height="@dimen/contact_profile_item_height"
                 app:canNav="true"
                 app:name="@string/group_id_option" />
 
             <com.tencent.qcloud.tuicore.component.LineControllerView
                 android:id="@+id/group_type_layout"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/group_profile_item_height"
+                android:layout_height="@dimen/contact_profile_item_height"
                 android:layout_marginTop="10dp"
                 app:canNav="true"
                 app:isTop="true"
-                app:name="@string/group_type" />
+                app:name="@string/group_type_text" />
 
             <TextView
                 android:id="@+id/group_type_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/page_margin"
-                android:layout_marginStart="@dimen/group_profile_face_margin_right"
+                android:layout_marginStart="@dimen/contact_profile_face_margin_right"
                 android:layout_marginEnd="@dimen/contact_profile_face_margin_right"
                 android:gravity="center_vertical"
                 android:text="@string/group_type_select_text"
-                android:textColor="@color/group_profile_member_name_text_color"
-                android:textSize="@dimen/group_profile_group_id_size" />
+                android:textColor="@color/contact_profile_member_name_text_color"
+                android:textSize="@dimen/contact_group_profile_group_id_size" />
             <TextView
                 android:id="@+id/group_type_text_url"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/page_margin"
-                android:layout_marginStart="@dimen/group_profile_face_margin_right"
+                android:layout_marginStart="@dimen/contact_profile_face_margin_right"
                 android:layout_marginEnd="@dimen/contact_profile_face_margin_right"
                 android:gravity="center_vertical"
                 android:text="@string/group_type_content_title"
-                android:textColor="@color/group_profile_member_name_text_color"
-                android:textSize="@dimen/group_profile_group_id_size" />
+                android:textColor="@color/contact_profile_member_name_text_color"
+                android:textSize="@dimen/contact_group_profile_group_id_size" />
 
             <LinearLayout
                 android:id="@+id/group_avatar_layout"
                 android:layout_width="fill_parent"
-                android:layout_height="@dimen/group_profile_height"
+                android:layout_height="@dimen/contact_group_profile_height"
                 android:background="#FFFFFF"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
@@ -81,7 +80,7 @@
                     android:id="@+id/group_icon_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/group_profile_face_margin_right"
+                    android:layout_marginStart="@dimen/contact_profile_face_margin_right"
                     android:gravity="center_vertical"
                     android:text="@string/group_avatar_text"
                     android:textColor="@color/core_line_controller_title_color"
@@ -94,8 +93,8 @@
 
                     <com.tencent.qcloud.tuicore.component.gatherimage.SynthesizedImageView
                         android:id="@+id/group_avatar"
-                        android:layout_width="@dimen/group_profile_face_size"
-                        android:layout_height="@dimen/group_profile_face_size"
+                        android:layout_width="@dimen/contact_profile_face_size"
+                        android:layout_height="@dimen/contact_profile_face_size"
                         android:layout_gravity="center"
                         android:layout_marginEnd="10.56dp"
                         android:scaleType="centerCrop" />

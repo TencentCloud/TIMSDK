@@ -10,11 +10,11 @@ import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationService;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
+import com.tencent.qcloud.tuikit.tuiconversation.commonutil.ConversationUtils;
+import com.tencent.qcloud.tuikit.tuiconversation.commonutil.TUIConversationLog;
 import com.tencent.qcloud.tuikit.tuiconversation.interfaces.ConversationEventListener;
+import com.tencent.qcloud.tuikit.tuiconversation.interfaces.IConversationListAdapter;
 import com.tencent.qcloud.tuikit.tuiconversation.model.ConversationProvider;
-import com.tencent.qcloud.tuikit.tuiconversation.ui.interfaces.IConversationListAdapter;
-import com.tencent.qcloud.tuikit.tuiconversation.util.ConversationUtils;
-import com.tencent.qcloud.tuikit.tuiconversation.util.TUIConversationLog;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -113,6 +113,11 @@ public class ConversationFoldPresenter {
             @Override
             public void onReceiveMessage(String conversationID, boolean isTypingMessage) {
                 processNewMessage(conversationID, isTypingMessage);
+            }
+
+            @Override
+            public void onMessageSendForHideConversation(String conversationID) {
+
             }
         };
         TUIConversationService.getInstance().addConversationEventListener(conversationEventForMarkObserver);

@@ -4,16 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.TextPaint;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -29,27 +22,23 @@ import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMSDKListener;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
-import com.tencent.qcloud.tim.demo.BuildConfig;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.demo.utils.TUIKitConstants;
-import com.tencent.qcloud.tuicore.TUIConstants;
-import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.component.LineControllerView;
 import com.tencent.qcloud.tuicore.component.activities.SelectionActivity;
-import com.tencent.qcloud.tuicore.component.dialog.TUIKitDialog;
 import com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView;
 import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
-import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
+import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactService;
 import com.tencent.qcloud.tuikit.tuicontact.config.TUIContactConfig;
 import com.tencent.qcloud.tuikit.tuicontact.interfaces.ContactEventListener;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationService;
 import com.tencent.qcloud.tuikit.tuiconversation.interfaces.ConversationEventListener;
-import com.tencent.qcloud.tuikit.tuiconversation.setting.TUIConversationConfig;
+import com.tencent.qcloud.tuikit.tuiconversation.config.TUIConversationConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -213,7 +202,7 @@ public class ProfileLayout extends FrameLayout implements View.OnClickListener {
     }
 
     private void setMessageReadStatus(boolean isShowReadStatus, boolean needUpdate) {
-        TUIChatService.getChatConfig().getGeneralConfig().setShowRead(isShowReadStatus);
+        TUIChatConfigs.getConfigs().getGeneralConfig().setShowRead(isShowReadStatus);
         if (needUpdate) {
             SharedPreferences sharedPreferences = getContext().getSharedPreferences(Constants.DEMO_SETTING_SP_NAME, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();

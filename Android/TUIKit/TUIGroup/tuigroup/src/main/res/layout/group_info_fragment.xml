@@ -7,7 +7,7 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <com.tencent.qcloud.tuikit.tuigroup.ui.view.GroupInfoLayout
+    <com.tencent.qcloud.tuikit.tuigroup.classicui.view.GroupInfoLayout
         android:id="@+id/group_info_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

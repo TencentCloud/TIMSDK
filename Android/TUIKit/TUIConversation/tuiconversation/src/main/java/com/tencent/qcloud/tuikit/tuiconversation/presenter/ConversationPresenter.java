@@ -17,13 +17,13 @@ import com.tencent.qcloud.tuicore.util.SPUtils;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationConstants;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationService;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
+import com.tencent.qcloud.tuikit.tuiconversation.commonutil.ConversationUtils;
+import com.tencent.qcloud.tuikit.tuiconversation.commonutil.TUIConversationLog;
+import com.tencent.qcloud.tuikit.tuiconversation.commonutil.TUIConversationUtils;
+import com.tencent.qcloud.tuikit.tuiconversation.config.TUIConversationConfig;
 import com.tencent.qcloud.tuikit.tuiconversation.interfaces.ConversationEventListener;
+import com.tencent.qcloud.tuikit.tuiconversation.interfaces.IConversationListAdapter;
 import com.tencent.qcloud.tuikit.tuiconversation.model.ConversationProvider;
-import com.tencent.qcloud.tuikit.tuiconversation.setting.TUIConversationConfig;
-import com.tencent.qcloud.tuikit.tuiconversation.ui.interfaces.IConversationListAdapter;
-import com.tencent.qcloud.tuikit.tuiconversation.util.ConversationUtils;
-import com.tencent.qcloud.tuikit.tuiconversation.util.TUIConversationLog;
-import com.tencent.qcloud.tuikit.tuiconversation.util.TUIConversationUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -147,6 +147,11 @@ public class ConversationPresenter {
             @Override
             public void onReceiveMessage(String conversationID, boolean isTypingMessage) {
                 processNewMessage(conversationID, isTypingMessage);
+            }
+
+            @Override
+            public void onMessageSendForHideConversation(String conversationID) {
+                ConversationPresenter.this.onMessageSendForHideConversation(conversationID);
             }
         };
         TUIConversationService.getInstance().setConversationEventListener(conversationEventListener);
@@ -434,6 +439,7 @@ public class ConversationPresenter {
             return;
         }
 
+        adapter.onConversationChanged(changedInfoList);
         refreshChangedInfo(uiSourceInfoList, changedInfoList);
     }
 
@@ -792,7 +798,7 @@ public class ConversationPresenter {
             }
         }
 
-        TUIConversationLog.e(TAG, "updateTotalUnreadMessageCount sdkUnreadCount:" + sdkUnreadCount + ", markUnreadCount:" + markUnreadCount + ", markHiddenCount:" + markHiddenCount);
+        TUIConversationLog.i(TAG, "updateTotalUnreadMessageCount sdkUnreadCount:" + sdkUnreadCount + ", markUnreadCount:" + markUnreadCount + ", markHiddenCount:" + markHiddenCount);
 
         totalUnreadCount = sdkUnreadCount + markUnreadCount - markHiddenCount;
         if (totalUnreadCount < 0) {
@@ -1107,6 +1113,36 @@ public class ConversationPresenter {
         }
     }
 
+    public void onMessageSendForHideConversation(String id) {
+        if (TextUtils.isEmpty(id)) {
+            return;
+        }
+
+        boolean isHide = false;
+        ConversationInfo conversationInfo = markUnreadAndHiddenMap.get(id);
+        if (conversationInfo!= null && conversationInfo.isMarkHidden()) {
+            isHide = true;
+        }
+
+        if (!isHide) {
+            return;
+        }
+
+        provider.markConversationHidden(id, false, new IUIKitCallback<Void>() {
+            @Override
+            public void onSuccess(Void data) {
+                TUIConversationLog.i(TAG, "onMessageSendForHideConversation markConversationHidden success, conversationID:" +
+                        id + ", isHidden:false");
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                TUIConversationLog.e(TAG, "onMessageSendForHideConversation markConversationHidden error, conversationID:" +
+                        id + ", code:" + errCode + "|msg:" + errMsg);
+            }
+        });
+    }
+
     public void onUserStatusChanged(List<V2TIMUserStatus> userStatusList) {
         if (!TUIConversationConfig.getInstance().isShowUserStatus()) {
             return;
@@ -1133,6 +1169,20 @@ public class ConversationPresenter {
                 }
             }
         }
+    }
+
+    public void clearAllUnreadMessage() {
+        provider.clearAllUnreadMessage(new IUIKitCallback<Void>() {
+            @Override
+            public void onSuccess(Void data) {
+
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+
+            }
+        });
     }
 
     /**

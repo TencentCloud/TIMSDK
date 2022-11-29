@@ -15,9 +15,9 @@ import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
+import com.tencent.qcloud.tuikit.tuiconversation.commonutil.ConversationUtils;
+import com.tencent.qcloud.tuikit.tuiconversation.commonutil.TUIConversationLog;
 import com.tencent.qcloud.tuikit.tuiconversation.interfaces.ConversationEventListener;
-import com.tencent.qcloud.tuikit.tuiconversation.util.ConversationUtils;
-import com.tencent.qcloud.tuikit.tuiconversation.util.TUIConversationLog;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -59,6 +59,7 @@ public class TUIConversationService extends ServiceInitializer implements ITUICo
         TUICore.registerEvent(TUIConstants.TUIGroup.EVENT_GROUP, TUIConstants.TUIGroup.EVENT_SUB_KEY_CLEAR_MESSAGE, this);
         TUICore.registerEvent(TUIConstants.TUIContact.EVENT_USER, TUIConstants.TUIContact.EVENT_SUB_KEY_CLEAR_MESSAGE, this);
         TUICore.registerEvent(TUIConstants.TUIChat.EVENT_KEY_RECEIVE_MESSAGE, TUIConstants.TUIChat.EVENT_SUB_KEY_CONVERSATION_ID, this);
+        TUICore.registerEvent(TUIConstants.TUIConversation.EVENT_KEY_MESSAGE_SEND_FOR_CONVERSATION, TUIConstants.TUIConversation.EVENT_SUB_KEY_MESSAGE_SEND_FOR_CONVERSATION, this);
     }
 
     @Override
@@ -213,6 +214,17 @@ public class TUIConversationService extends ServiceInitializer implements ITUICo
                 }
             }
 
+        } else if (TextUtils.equals(key, TUIConstants.TUIConversation.EVENT_KEY_MESSAGE_SEND_FOR_CONVERSATION)) {
+            if (TextUtils.equals(subKey, TUIConstants.TUIConversation.EVENT_SUB_KEY_MESSAGE_SEND_FOR_CONVERSATION)) {
+                if (param == null || param.isEmpty()) {
+                    return;
+                }
+                String conversationID = (String) param.get(TUIConstants.TUIConversation.CONVERSATION_ID);
+                ConversationEventListener eventListener = getConversationEventListener();
+                if (eventListener != null) {
+                    eventListener.onMessageSendForHideConversation(conversationID);
+                }
+            }
         }
     }
 

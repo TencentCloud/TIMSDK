@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.tencent.qcloud.tuikit.tuiconversation.minimalistui.widget.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipe"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:background="#FFFFFF"
+    app:clickToClose="false">
+
+    <LinearLayout
+        android:id="@+id/bottom_wrapper_2"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:tag="Bottom4">
+
+        <RelativeLayout
+            android:id="@+id/more_view"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:background="@color/black"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/more_image"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/conversation_minimalist_more_icon" />
+
+            <TextView
+                android:id="@+id/more_text"
+                android:layout_width="70dp"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/more_image"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="@string/more_text"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/mark_read"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:background="@color/conversation_mark_swipe_bg"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/mark_read_image"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true" />
+
+            <TextView
+                android:id="@+id/mark_read_text"
+                android:layout_width="70dp"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/mark_read_image"
+                android:layout_centerInParent="true"
+                android:background="@color/transparent"
+                android:gravity="center"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="@string/mark_read"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/not_display"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:background="@color/conversation_mark_swipe_bg"
+            android:gravity="center"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="@string/not_display"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/item_left"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:background="#FFFFFF"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <CheckBox
+            android:id="@+id/select_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="6.23dp"
+            android:button="@drawable/checkbox_selector"
+            android:visibility="gone" />
+
+        <include
+            layout="@layout/minimalist_conversation_list_item_sub_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            android:tag="Hover" />
+
+    </LinearLayout>
+</com.tencent.qcloud.tuikit.tuiconversation.minimalistui.widget.swipe.SwipeLayout>

@@ -15,6 +15,7 @@ public abstract class GroupChatEventListener {
     public void onRecvNewMessage(TUIMessageBean message) {}
     public void onReadReport(List<MessageReceiptInfo> receiptInfoList) {}
     public void onGroupNameChanged(String groupId, String newName) {}
+    public void onGroupFaceUrlChanged(String groupId, String faceUrl) {}
     public void exitGroupChat(String chatId) {}
     public void clearGroupMessage(String chatId) {}
     public void onRecvMessageModified(TUIMessageBean messageBean) {}

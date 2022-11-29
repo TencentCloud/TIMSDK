@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:minHeight="1000dp"
+    android:background="@drawable/chat_bottom_sheet_dialog_border"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="22dp"
+        android:paddingBottom="22dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:fillViewport="true">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/emoji_grid_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>

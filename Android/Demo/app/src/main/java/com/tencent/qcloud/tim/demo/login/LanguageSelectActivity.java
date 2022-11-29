@@ -74,7 +74,7 @@ public class LanguageSelectActivity extends BaseLightActivity {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new CustomLinearLayoutManager(this));
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
-        dividerItemDecoration.setDrawable(getResources().getDrawable(R.drawable.core_list_divider));
+        dividerItemDecoration.setDrawable(getResources().getDrawable(com.tencent.qcloud.tuicore.R.drawable.core_list_divider));
         recyclerView.addItemDecoration(dividerItemDecoration);
 
         onItemClickListener = new OnItemClickListener() {
@@ -136,7 +136,7 @@ public class LanguageSelectActivity extends BaseLightActivity {
         @NonNull
         @Override
         public SelectAdapter.SelectViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(LanguageSelectActivity.this).inflate(R.layout.core_select_item_layout,parent, false);
+            View view = LayoutInflater.from(LanguageSelectActivity.this).inflate(com.tencent.qcloud.tuicore.R.layout.core_select_item_layout,parent, false);
             return new SelectAdapter.SelectViewHolder(view);
         }
 

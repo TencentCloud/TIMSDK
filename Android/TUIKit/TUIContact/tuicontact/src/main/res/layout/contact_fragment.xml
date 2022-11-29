@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.tencent.qcloud.tuikit.tuicontact.ui.view.ContactLayout
+    <com.tencent.qcloud.tuikit.tuicontact.classicui.widget.ContactLayout
         android:id="@+id/contact_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

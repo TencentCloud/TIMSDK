@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="camera">Camera</string>
+    <string name="left_cancle_send">Swipe left to cancel or release to send</string>
+    <string name="chat_tap_to_remove">Tap to remove</string>
+    <string name="chat_forward_checked_num">%d Selected</string>
+    <string name="chat_minimalist_pop_more">More</string>
+</resources>

@@ -106,4 +106,6 @@
     <string name="community_copy_success_tip">Copy Success</string>
     <string name="community_coming_soon">coming_soon</string>
 
+    <string name="community_accept">Agree</string>
+    <string name="community_refuse">Decline</string>
 </resources>

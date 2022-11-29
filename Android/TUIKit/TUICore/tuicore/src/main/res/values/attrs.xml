@@ -62,5 +62,7 @@
         <attr name="left_bottom_corner_radius"  />
     </declare-styleable>
 
-
+    <declare-styleable name="UnreadCountTextView">
+        <attr name="paint_color" format="color|reference"/>
+    </declare-styleable>
 </resources>

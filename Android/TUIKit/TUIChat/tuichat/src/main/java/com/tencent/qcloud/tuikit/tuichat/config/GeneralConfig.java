@@ -15,9 +15,13 @@ public class GeneralConfig {
     private boolean isEnableMessageTyping = true;
 
     private boolean showRead = false;
+
     private boolean reactEnable = true;
     private boolean replyEnable = true;
     private boolean quoteEnable = true;
+
+    private boolean enableVoiceCall = true;
+    private boolean enableVideoCall = true;
 
     private boolean enableFloatWindowForCall = true;
     private boolean enableMultiDeviceForCall = false;
@@ -64,6 +68,22 @@ public class GeneralConfig {
 
     public boolean isQuoteEnable() {
         return quoteEnable;
+    }
+
+    public void setEnableVideoCall(boolean enableVideoCall) {
+        this.enableVideoCall = enableVideoCall;
+    }
+
+    public void setEnableVoiceCall(boolean enableVoiceCall) {
+        this.enableVoiceCall = enableVoiceCall;
+    }
+
+    public boolean isEnableVideoCall() {
+        return enableVideoCall;
+    }
+
+    public boolean isEnableVoiceCall() {
+        return enableVoiceCall;
     }
 
     public String getUserNickname() {

@@ -12,13 +12,17 @@ import androidx.annotation.RequiresApi;
 
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.qcloud.tim.demo.BuildConfig;
 import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.SplashActivity;
+import com.tencent.qcloud.tim.demo.main.MainActivity;
+import com.tencent.qcloud.tim.demo.main.MainMinimalistActivity;
 import com.tencent.qcloud.tim.demo.push.HandleOfflinePushCallBack;
 import com.tencent.qcloud.tim.demo.push.OfflineMessageBean;
 import com.tencent.qcloud.tim.demo.push.OfflineMessageDispatcher;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuicore.interfaces.TUILoginConfig;
 import com.tencent.qcloud.tuicore.util.TUIBuild;
 
 import java.util.Locale;
@@ -36,10 +40,18 @@ public class TUIUtils {
         bundle.putString(TUIConstants.TUIChat.CHAT_ID, chatId);
         bundle.putString(TUIConstants.TUIChat.CHAT_NAME, chatName);
         bundle.putInt(TUIConstants.TUIChat.CHAT_TYPE, chatType);
-        if (chatType == V2TIMConversation.V2TIM_C2C) {
-            TUICore.startActivity(TUIConstants.TUIChat.C2C_CHAT_ACTIVITY_NAME, bundle);
-        } else if (chatType == V2TIMConversation.V2TIM_GROUP) {
-            TUICore.startActivity(TUIConstants.TUIChat.GROUP_CHAT_ACTIVITY_NAME, bundle);
+        if (DemoApplication.tuikit_demo_style == 0) {
+            if (chatType == V2TIMConversation.V2TIM_C2C) {
+                TUICore.startActivity(TUIConstants.TUIChat.C2C_CHAT_ACTIVITY_NAME, bundle);
+            } else if (chatType == V2TIMConversation.V2TIM_GROUP) {
+                TUICore.startActivity(TUIConstants.TUIChat.GROUP_CHAT_ACTIVITY_NAME, bundle);
+            }
+        } else {
+            if (chatType == V2TIMConversation.V2TIM_C2C) {
+                TUICore.startActivity("TUIC2CChatMinimalistActivity", bundle);
+            } else if (chatType == V2TIMConversation.V2TIM_GROUP) {
+                TUICore.startActivity("TUIGroupChatMinimalistActivity", bundle);
+            }
         }
     }
 

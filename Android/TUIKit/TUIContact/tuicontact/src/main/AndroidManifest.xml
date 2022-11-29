@@ -2,51 +2,103 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.tencent.qcloud.tuikit.tuicontact">
     <application>
-        <activity
-            android:name=".ui.pages.AddMoreActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.pages.FriendProfileActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.pages.NewFriendActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.pages.BlackListActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.pages.GroupListActivity"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".ui.pages.StartC2CChatActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.pages.StartGroupChatActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
-
-        <activity
-            android:name=".ui.pages.ForwardSelectGroupActivity"
-            android:launchMode="singleInstance"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.pages.StartGroupMemberSelectActivity"
-            android:launchMode="singleInstance"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".ui.pages.CreateGroupActivity"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".ui.pages.GroupTypeSelectActivity"
-            android:screenOrientation="portrait" />
-
         <provider
             android:name=".TUIContactService"
             android:authorities="${applicationId}.TUIContact.Init"
             android:enabled="true"
             android:exported="false"/>
+
+
+
+        <!-- **************** Classic UI Activity Start **************** -->
+        <activity
+            android:name=".classicui.pages.AddMoreActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".classicui.pages.FriendProfileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".classicui.pages.NewFriendActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".classicui.pages.BlackListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".classicui.pages.GroupListActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".classicui.pages.StartC2CChatActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".classicui.pages.StartGroupChatActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+
+        <activity
+            android:name=".classicui.pages.ForwardSelectGroupActivity"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".classicui.pages.StartGroupMemberSelectActivity"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".classicui.pages.CreateGroupActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".classicui.pages.GroupTypeSelectActivity"
+            android:screenOrientation="portrait" />
+        <!-- **************** Classic UI Activity End **************** -->
+
+
+
+
+
+        <!-- **************** Minimalist UI Activity Start **************** -->
+        <activity
+            android:name=".minimalistui.pages.AddMoreMinimalistActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".minimalistui.pages.FriendProfileMinimalistActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".minimalistui.pages.NewFriendMinimalistActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".minimalistui.pages.BlackListMinimalistActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".minimalistui.pages.GroupListMinimalistActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".minimalistui.pages.StartC2CChatMinimalistActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".minimalistui.pages.StartGroupChatMinimalistActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+
+        <activity
+            android:name=".minimalistui.pages.ForwardSelectGroupMinimalistActivity"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".minimalistui.pages.StartGroupMemberSelectMinimalistActivity"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".minimalistui.pages.CreateGroupMinimalistActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".minimalistui.pages.GroupTypeSelectMinimalistActivity"
+            android:screenOrientation="portrait" />
+        <!-- **************** Minimalist UI Activity End **************** -->
+
     </application>
 </manifest>

@@ -3,19 +3,36 @@
     package="com.tencent.qcloud.tuikit.tuiconversation">
 
     <application>
-        <activity
-            android:name=".ui.page.TUIForwardSelectActivity"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".ui.page.TUIFoldedConversationActivity"
-            android:screenOrientation="portrait" />
-
         <provider
             android:name=".TUIConversationService"
             android:authorities="${applicationId}.TUIConversation.Init"
             android:enabled="true"
             android:exported="false"/>
+
+
+        <!-- **************** Classic UI Activity Start **************** -->
+        <activity
+            android:name=".classicui.page.TUIForwardSelectActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".classicui.page.TUIFoldedConversationActivity"
+            android:screenOrientation="portrait" />
+        <!-- **************** Classic UI Activity End **************** -->
+
+
+
+
+
+        <!-- **************** Minimalist UI Activity Start **************** -->
+        <activity
+            android:name=".minimalistui.page.TUIForwardSelectMinimalistActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".minimalistui.page.TUIFoldedConversationMinimalistActivity"
+            android:screenOrientation="portrait" />
+        <!-- **************** Minimalist UI Activity End **************** -->
 
     </application>
 

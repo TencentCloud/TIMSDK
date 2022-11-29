@@ -1,0 +1,64 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottom_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/conversation_bottom_bg"
+    android:orientation="vertical"
+    android:visibility="visible"
+    tools:visibility="visible">
+
+    <TextView
+        android:id="@+id/divide_line"
+        android:layout_width="match_parent"
+        android:layout_marginTop="1dp"
+        android:layout_height="1dp"
+        android:background="@color/dialog_line_bg" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/conversation_bottom_bg"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:paddingLeft="38.4dp"
+        android:paddingRight="38.4dp"
+        android:layout_marginTop="1.36dp"
+        android:layout_marginBottom="46.08dp"
+        android:orientation="horizontal" >
+    <TextView
+        android:id="@+id/not_display"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_marginTop="5.76dp"
+        android:text="@string/not_display"
+        android:textColor="#147AFF"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/mark_read"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="5.76dp"
+        android:layout_weight="1"
+        android:text="@string/mark_read"
+        android:textColor="#147AFF"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/delete_chat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_weight="1"
+        android:layout_marginTop="5.76dp"
+        android:text="@string/chat_delete"
+        android:textColor="#147AFF"
+        android:textSize="14sp" />
+
+    </LinearLayout>
+
+</RelativeLayout>

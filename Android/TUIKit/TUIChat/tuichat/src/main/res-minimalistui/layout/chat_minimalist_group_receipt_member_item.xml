@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/selectable_contact_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFFFFF"
+    android:focusable="true"
+    android:paddingStart="24dp"
+    android:paddingTop="7.5dp"
+    android:paddingBottom="7.5dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+        android:id="@+id/avatar_img"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        app:round_radius="16dp" />
+
+    <TextView
+        android:id="@+id/name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:ellipsize="end"
+        android:lineHeight="23.04sp"
+        android:singleLine="true"
+        android:textColor="@color/black_font_color"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        tools:text="Bob"/>
+
+</LinearLayout>

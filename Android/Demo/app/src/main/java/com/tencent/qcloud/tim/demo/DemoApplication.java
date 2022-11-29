@@ -17,7 +17,9 @@ import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tim.demo.login.LoginForDevActivity;
+import com.tencent.qcloud.tim.demo.login.ThemeSelectActivity;
 import com.tencent.qcloud.tim.demo.main.MainActivity;
+import com.tencent.qcloud.tim.demo.main.MainMinimalistActivity;
 import com.tencent.qcloud.tim.demo.push.OfflinePushAPIDemo;
 import com.tencent.qcloud.tim.demo.push.OfflinePushConfigs;
 import com.tencent.qcloud.tim.demo.push.OfflinePushLocalReceiver;
@@ -54,6 +56,7 @@ public class DemoApplication extends Application {
     private int sdkAppId = 0;
     private OfflinePushLocalReceiver offlinePushLocalReceiver = null;
     private OfflinePushAPIDemo offlinePushAPIDemo;
+    public static int tuikit_demo_style = 0; //0,classic; 1,minimalist
     @Override
     public void onCreate() {
         Log.i(TAG, "onCreate");
@@ -73,6 +76,7 @@ public class DemoApplication extends Application {
             setPermissionRequestContent();
 
             initOfflinePushConfigs();
+            initDemoStyle();
         }
     }
 
@@ -80,6 +84,10 @@ public class DemoApplication extends Application {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         TUIThemeManager.setWebViewLanguage(this);
+    }
+    private void initDemoStyle() {
+        final SharedPreferences sharedPreferences = getSharedPreferences("TUIKIT_DEMO_SETTINGS", MODE_PRIVATE);
+        tuikit_demo_style = sharedPreferences.getInt("tuikit_demo_style", 0);
     }
 
     private void initBugly() {
@@ -168,7 +176,11 @@ public class DemoApplication extends Application {
         intent.putExtra("LOGOUT", true);
         startActivity(intent);
 
-        MainActivity.finishMainActivity();
+        if (DemoApplication.tuikit_demo_style == 0) {
+            MainActivity.finishMainActivity();
+        } else {
+            MainMinimalistActivity.finishMainActivity();
+        }
     }
 
     class StatisticActivityLifecycleCallback implements ActivityLifecycleCallbacks {
@@ -248,8 +260,8 @@ public class DemoApplication extends Application {
 
     private void initOfflinePushConfigs() {
         final SharedPreferences sharedPreferences = getSharedPreferences("TUIKIT_DEMO_SETTINGS", MODE_PRIVATE);
-        int registerMode= sharedPreferences.getInt("test_OfflinePushRegisterMode_v2", 0);
-        int callbackMode= sharedPreferences.getInt("test_OfflinePushCallbackMode_v2", 0);
+        int registerMode= sharedPreferences.getInt("test_OfflinePushRegisterMode_v2", 1);
+        int callbackMode= sharedPreferences.getInt("test_OfflinePushCallbackMode_v2", 1);
         Log.i(TAG, "initOfflinePushConfigs registerMode = " + registerMode);
         Log.i(TAG, "initOfflinePushConfigs callbackMode = " + callbackMode);
 

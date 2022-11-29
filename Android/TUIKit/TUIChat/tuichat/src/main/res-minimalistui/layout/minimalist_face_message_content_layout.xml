@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/face_message_content_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:clickable="false">
+
+    <ImageView
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/face_image"
+        android:background="#F0F9F9F9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.TimeInLineTextLayout
+        android:layout_marginTop="8dp"
+        android:id="@+id/time_in_line_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

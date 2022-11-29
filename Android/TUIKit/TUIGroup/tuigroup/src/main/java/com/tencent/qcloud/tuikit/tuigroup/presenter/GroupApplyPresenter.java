@@ -3,8 +3,8 @@ import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupApplyInfo;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
+import com.tencent.qcloud.tuikit.tuigroup.interfaces.IGroupApplyLayout;
 import com.tencent.qcloud.tuikit.tuigroup.model.GroupInfoProvider;
-import com.tencent.qcloud.tuikit.tuigroup.ui.interfaces.IGroupApplyLayout;
 
 import java.util.List;
 

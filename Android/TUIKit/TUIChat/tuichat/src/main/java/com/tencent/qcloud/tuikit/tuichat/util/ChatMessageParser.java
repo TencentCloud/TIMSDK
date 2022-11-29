@@ -237,8 +237,11 @@ public class ChatMessageParser {
     }
 
     private static String getCustomBusinessId(V2TIMMessage v2TIMMessage) {
-        byte[] customData = v2TIMMessage.getCustomElem().getData();
-        String data = new String(customData);
+        V2TIMCustomElem customElem =  v2TIMMessage.getCustomElem();
+        if (customElem == null || customElem.getData() == null || customElem.getData().length == 0) {
+            return null;
+        }
+        String data = new String(customElem.getData());
 
         Gson gson = new Gson();
         HashMap customJsonMap = null;
@@ -397,6 +400,9 @@ public class ChatMessageParser {
 
     private static TUIMessageBean parseGroupCreateMessage(V2TIMMessage v2TIMMessage) {
         V2TIMCustomElem customElem = v2TIMMessage.getCustomElem();
+        if (customElem == null || customElem.getData() == null || customElem.getData().length == 0) {
+            return null;
+        }
         String data = new String(customElem.getData());
         Gson gson = new Gson();
 

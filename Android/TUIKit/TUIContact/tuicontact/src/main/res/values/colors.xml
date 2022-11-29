@@ -44,5 +44,6 @@
     <color name="contact_profile_btn_negative_color">#FF584C</color>
 
     <color name="contact_profile_btn_pressed_color">#E6E9EB</color>
+    <color name="contact_profile_member_name_text_color">#888888</color>
 
 </resources>

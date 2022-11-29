@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <com.tencent.qcloud.tuicore.component.RoundCornerImageView
+        android:id="@+id/content_image_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:clickable="false"
+        android:scaleType="fitCenter" />
+
+    <ImageView
+        android:id="@+id/video_play_btn"
+        android:layout_width="43dp"
+        android:layout_height="43dp"
+        android:layout_centerInParent="true"
+        android:clickable="false"
+        android:src="@drawable/chat_minimalist_play_icon" />
+
+    <com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.TimeInLineTextLayout
+        android:id="@+id/image_msg_time_in_line_text"
+        android:layout_alignEnd="@id/content_image_iv"
+        android:layout_alignBottom="@id/content_image_iv"
+        android:layout_marginEnd="9dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+
+</RelativeLayout>

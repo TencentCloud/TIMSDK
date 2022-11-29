@@ -80,10 +80,12 @@ public class ImageMessageBean  extends TUIMessageBean {
             List<V2TIMImageElem.V2TIMImage> imgs = imageElem.getImageList();
             for (int i = 0; i < imgs.size(); i++) {
                 V2TIMImageElem.V2TIMImage img = imgs.get(i);
-                if (img.getType() == V2TIMImageElem.V2TIM_IMAGE_TYPE_THUMB) {
-                    final String path = ImageUtil.generateImagePath(img.getUUID(), V2TIMImageElem.V2TIM_IMAGE_TYPE_THUMB);
+                if (img.getType() == V2TIMImageElem.V2TIM_IMAGE_TYPE_ORIGIN) {
                     imgWidth = img.getWidth();
                     imgHeight = img.getHeight();
+                }
+                if (img.getType() == V2TIMImageElem.V2TIM_IMAGE_TYPE_THUMB) {
+                    final String path = ImageUtil.generateImagePath(img.getUUID(), V2TIMImageElem.V2TIM_IMAGE_TYPE_THUMB);
                     File file = new File(path);
                     if (file.exists()) {
                         dataPath = path;

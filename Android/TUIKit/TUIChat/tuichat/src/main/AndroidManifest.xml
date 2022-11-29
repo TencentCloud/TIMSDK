@@ -9,40 +9,98 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application>
-        <activity
-            android:name=".ui.page.MessageReplyDetailActivity"
-            android:windowSoftInputMode="adjustResize|stateHidden"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.page.TUIForwardChatActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.page.TUIC2CChatActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustNothing|stateHidden" />
-        <activity
-            android:name=".ui.page.TUIGroupChatActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustNothing|stateHidden"/>
-
-        <activity
-            android:name=".ui.page.MessageReceiptDetailActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".component.camera.CameraActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".component.imagevideoscan.ImageVideoScanActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
-
         <provider
             android:name=".TUIChatService"
             android:authorities="${applicationId}.TUIChat.Init"
             android:enabled="true"
             android:exported="false" />
+
+        <activity
+            android:name=".component.imagevideoscan.ImageVideoScanActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+
+
+
+
+        <!-- **************** Classic UI Start **************** -->
+        <activity
+            android:name=".classicui.page.MessageReplyDetailActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".classicui.page.TUIForwardChatActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".classicui.page.TUIC2CChatActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing|stateHidden" />
+
+
+        <activity
+            android:name=".classicui.page.TUIGroupChatActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing|stateHidden"/>
+
+        <activity
+            android:name=".classicui.page.MessageReceiptDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".classicui.component.camera.CameraActivity"
+            android:screenOrientation="portrait" />
+
+        <provider
+            android:name=".classicui.ClassicUIService"
+            android:authorities="${applicationId}.TUIChat.ClassicUI.Init"
+            android:enabled="true"
+            android:exported="false"/>
+        <!-- **************** Classic UI End **************** -->
+
+
+
+
+
+        <!-- **************** Minimalist UI Start **************** -->
+        <activity
+            android:name=".minimalistui.component.camera.CameraActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".minimalistui.widget.messagepopmenu.ChatPopActivity"
+            android:theme="@style/ChatTransparentPopActivityStyle"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustNothing|stateHidden" />
+
+        <activity
+            android:name=".minimalistui.page.TUIC2CChatMinimalistActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing|stateHidden" />
+
+        <activity
+            android:name=".minimalistui.page.TUIGroupChatMinimalistActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing|stateHidden" />
+
+        <activity
+            android:name=".minimalistui.page.MessageDetailMinimalistActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".minimalistui.page.TUIForwardChatMinimalistActivity"
+            android:screenOrientation="portrait" />
+
+        <provider
+            android:name=".minimalistui.MinimalistUIService"
+            android:authorities="${applicationId}.TUIChat.MinimalistUI.Init"
+            android:enabled="true"
+            android:exported="false"/>
+        <!-- **************** Minimalist UI End **************** -->
+
+
     </application>
 
 </manifest>

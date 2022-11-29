@@ -20,7 +20,9 @@ import com.tencent.qcloud.tuikit.tuicallengine.TUICallEngine;
 import com.tencent.qcloud.tuikit.tuicallkit.R;
 import com.tencent.qcloud.tuikit.tuicallkit.TUICallKit;
 
-import java.lang.reflect.Field;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -55,7 +57,6 @@ final class TUICallingService implements ITUINotification, ITUIService, ITUIExte
     @Override
     public Object onCall(String method, Map<String, Object> param) {
         Log.i(TAG, "onCall, method: " + method + " ,param: " + param);
-        adaptiveComponentReport(param);
 
         if (null != param && TextUtils.equals(TUIConstants.TUICalling.METHOD_NAME_ENABLE_FLOAT_WINDOW, method)) {
             boolean enableFloatWindow = (boolean) param.get(TUIConstants.TUICalling.PARAM_NAME_ENABLE_FLOAT_WINDOW);
@@ -105,7 +106,6 @@ final class TUICallingService implements ITUINotification, ITUIService, ITUIExte
     @Override
     public Map<String, Object> onGetExtensionInfo(String key, Map<String, Object> param) {
         Log.i(TAG, "onGetExtensionInfo, key: " + key + " ,param: " + param);
-        adaptiveComponentReport(param);
 
         Context inflateContext = (Context) param.get(TUIConstants.TUIChat.CONTEXT);
         if (inflateContext == null) {
@@ -157,22 +157,26 @@ final class TUICallingService implements ITUINotification, ITUIService, ITUIExte
         if (TUIConstants.TUILogin.EVENT_IMSDK_INIT_STATE_CHANGED.equals(key)
                 && TUIConstants.TUILogin.EVENT_SUB_KEY_START_INIT.equals(subKey)) {
             TUICallKit.createInstance(appContext);
+            adaptiveComponentReport();
         }
     }
 
-    private void adaptiveComponentReport(Map<String, Object> param) {
+    private void adaptiveComponentReport() {
+        ITUIService service = TUICore.getService(TUIConstants.TUIChat.SERVICE_NAME);
+        if (service == null) {
+            return;
+        }
+
         try {
-            Class clz = Class.forName("com.tencent.qcloud.tuikit.tuicallengine.utils.TUICallingConstants");
+            JSONObject params = new JSONObject();
+            params.put("framework", 1);
+            params.put("component", 15);
 
-            Field temp = clz.getField("TC_TIMCALLING_COMPONENT");
-            int value = (int) temp.get(clz);
-            if (param != null && param.containsKey("component")) {
-                value = (int) param.get("component");
-            }
-
-            Field field = clz.getField("component");
-            field.set("component", value);
-        } catch (Exception e) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("api", "setFramework");
+            jsonObject.put("params", params);
+            TUICallEngine.createInstance(appContext).callExperimentalAPI(jsonObject.toString());
+        } catch (JSONException e) {
             e.printStackTrace();
         }
     }

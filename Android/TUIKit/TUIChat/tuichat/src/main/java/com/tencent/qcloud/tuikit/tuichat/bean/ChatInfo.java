@@ -5,6 +5,7 @@ import com.tencent.imsdk.v2.V2TIMGroupAtInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ChatInfo implements Serializable {
@@ -18,6 +19,7 @@ public class ChatInfo implements Serializable {
     protected String chatName;
     // other's face url
     protected String faceUrl;
+    private List<Object> iconUrlList = new ArrayList<>();
     private int type = V2TIMConversation.V2TIM_C2C;
     private String id;
     private String groupType;
@@ -168,4 +170,11 @@ public class ChatInfo implements Serializable {
         return this.draft;
     }
 
+    public List<Object> getIconUrlList() {
+        return iconUrlList;
+    }
+
+    public void setIconUrlList(List<Object> iconUrlList) {
+        this.iconUrlList = iconUrlList;
+    }
 }

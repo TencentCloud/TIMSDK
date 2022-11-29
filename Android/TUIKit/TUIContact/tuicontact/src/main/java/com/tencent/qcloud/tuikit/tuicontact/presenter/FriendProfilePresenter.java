@@ -17,8 +17,8 @@ import com.tencent.qcloud.tuikit.tuicontact.bean.ContactGroupApplyInfo;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.bean.FriendApplicationBean;
 import com.tencent.qcloud.tuikit.tuicontact.bean.GroupInfo;
+import com.tencent.qcloud.tuikit.tuicontact.interfaces.IFriendProfileLayout;
 import com.tencent.qcloud.tuikit.tuicontact.model.ContactProvider;
-import com.tencent.qcloud.tuikit.tuicontact.ui.interfaces.IFriendProfileLayout;
 import com.tencent.qcloud.tuikit.tuicontact.util.ContactUtils;
 
 import java.util.ArrayList;

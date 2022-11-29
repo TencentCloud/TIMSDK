@@ -42,5 +42,19 @@
     <dimen name="search_bar_margin">15.36dp</dimen>
     <dimen name="contact_add_item_height">90.24dp</dimen>
     <dimen name="view_margin_bottom">20dp</dimen>
+    <dimen name="contact_list_item_height">69.91dp</dimen>
+
+    <dimen name="contact_group_profile_height">69.12dp</dimen>
+    <dimen name="contact_group_profile_item_height">46.08dp</dimen>
+    <dimen name="contact_group_profile_face_size">46.08dp</dimen>
+    <dimen name="contact_group_profile_group_name_size">17.28sp</dimen>
+    <dimen name="contact_group_profile_group_id_size">12.48dp</dimen>
+    <dimen name="contact_group_profile_face_margin_left">15.36dp</dimen>
+    <dimen name="contact_group_profile_face_margin_right">15.36dp</dimen>
+    <dimen name="contact_group_profile_face_margin_top">11.5dp</dimen>
+    <dimen name="contact_group_profile_member_grid_padding_left_right">19.2dp</dimen>
+    <dimen name="contact_group_profile_member_grid_padding_top">11.52dp</dimen>
+    <dimen name="contact_group_profile_member_item_width">48dp</dimen>
+    <dimen name="contact_group_profile_member_item_name_size">9.6sp</dimen>
 
 </resources>

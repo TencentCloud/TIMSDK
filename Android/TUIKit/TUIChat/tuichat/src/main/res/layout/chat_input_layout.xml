@@ -11,7 +11,7 @@
         android:layout_height="1px"
         android:background="@color/input_title_line_color" />
 
-    <com.tencent.qcloud.tuikit.tuichat.ui.view.input.ReplyPreviewBar
+    <com.tencent.qcloud.tuikit.tuichat.classicui.widget.input.ReplyPreviewBar
         android:id="@+id/reply_preview_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
             android:scaleType="fitXY"
             android:src="@drawable/action_audio_selector" />
 
-        <com.tencent.qcloud.tuikit.tuichat.ui.view.input.TIMMentionEditText
+        <com.tencent.qcloud.tuikit.tuichat.classicui.widget.input.TIMMentionEditText
             android:id="@+id/chat_message_input"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -76,19 +76,24 @@
             android:scaleType="fitXY"
             android:src="@drawable/action_more_selector" />
 
-        <Button
+        <TextView
             android:id="@+id/send_btn"
-            android:layout_width="40dp"
+            android:layout_width="wrap_content"
             android:layout_height="@dimen/chat_input_icon_size"
             android:background="@drawable/message_send_border"
             android:text="@string/send"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:gravity="center"
             android:textColor="#fff"
             android:textSize="13sp"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:maxLines="1"
+            tools:visibility="visible"/>
 
     </LinearLayout>
 
-    <com.tencent.qcloud.tuikit.tuichat.ui.view.input.ReplyPreviewBar
+    <com.tencent.qcloud.tuikit.tuichat.classicui.widget.input.ReplyPreviewBar
         android:id="@+id/quote_preview_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tuicore.component.activities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.tencent.qcloud.tuicore.R;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
-import com.tencent.qcloud.tuicore.component.TitleBarLayout;
 
 
 public class BaseLightActivity extends AppCompatActivity {

@@ -34,18 +34,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:src="@drawable/ic_camera" />
+            android:src="@drawable/chat_camera_switchcamera" />
 
     </LinearLayout>
 
 
-    <com.tencent.qcloud.tuikit.tuichat.component.camera.view.CaptureLayout
+    <com.tencent.qcloud.tuikit.tuichat.classicui.component.camera.view.CaptureLayout
         android:id="@+id/capture_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom" />
 
-    <com.tencent.qcloud.tuikit.tuichat.component.camera.view.FoucsView
+    <com.tencent.qcloud.tuikit.tuichat.classicui.component.camera.view.FoucsView
         android:id="@+id/fouce_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
