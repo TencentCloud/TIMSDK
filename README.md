@@ -147,37 +147,17 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 [API Upgrade Guidelines](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
 
-## Latest Enhanced Edition 6.7.3184 @2022.09.29
-
-## Latest Enhanced Edition 6.8.3374 @2022.11.14
+## Latest Enhanced Edition 6.9.3557 @2022.11.29
 
 ### SDK
 
-- Supported local text moderation on clients.
-- Released the Swift SDK.
-- Supported the group attribute feature for non-audio-video groups.
-- Optimized the logic for updating the number of members in a non-audio-video groups when someone entered the group.
-- Optimized the COS upload process.
-- Optimized the issue of unread message count after operations such as message recall in a community group.
-- Fixed the failure to deliver a notification when a custom friend field is set independently.
-- Fixed the double callbacks for group listening.
-- Fixed the issue where the topic profile under a community group would not be updated timely when a user left the group and then joined the group again.
-- Fixed the issue that sender’s profile photo is empty in the callback for inserting a local message successfully.
-- Fixed the occasional error when setting message extension after repeated login.
-- Fixed the failure to update the message read receipt status in the conversation update callback after all messages in the conversation are marked as read.
-- Fixed the occasional emptiness of `send_user_id` in a message when a user sends a message immediately after login callback.
-- C++ API: Added an API to check whether a message is read.
-- C++ API: Fixed the failure to update the cursor in the result of the paged pulling of the conversation list.
+- Fix the occasional crash of getting V2TIMOfflinePushInfo content from the message on the Android platform
+- Fix the occasional crash of the enhanced-pro version on the Android platform
+- Improve the json data content returned by the C interface TIMConvGetConvList
 
 ### TUIKit and demo
 
-- Fixed the issue where a search webpage window popped out when a user long pressed a text message on iOS 16.
-- TUIChat-iOS: Supported sending GIF images.
-- TUIChat-iOS: Fixed image sending status exceptions.
-- TUIChat-iOS: Supported the deletion of time when deleting a message.
-- Fixed system exceptions caused by iOS TUIOfflinePush.
-- Fixed the issue where Android TUIOfflinePush push parameter settings did not take effect.
-
+- Released a new simplified version of the theme, which is more in line with the style of international apps
 
 
 ## Latest Basic Version 5.1.66 @2021.09.22
