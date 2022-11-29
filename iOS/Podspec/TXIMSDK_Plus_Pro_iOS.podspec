@@ -1,6 +1,6 @@
 
 Pod::Spec.new do |spec|
-  spec.name         = 'TXIMSDK_Plus_iOS_Bitcode'
+  spec.name         = 'TXIMSDK_Plus_Pro_iOS'
   spec.version      = '6.9.3557'
   spec.platform     = :ios 
   spec.ios.deployment_target = '8.0'
@@ -12,20 +12,21 @@ Pod::Spec.new do |spec|
   spec.homepage     = 'https://cloud.tencent.com/document/product/269/3794'
   spec.documentation_url = 'https://cloud.tencent.com/document/product/269/9147'
   spec.authors      = 'tencent video cloud'
-  spec.summary      = 'TXIMSDK_Plus_iOS_Bitcode'
+  spec.summary      = 'TXIMSDK_Plus_Pro_iOS'
   
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/plus/6.9.3557/ImSDK_Plus_6.9.3557_Bitcode.framework.zip'}
-  spec.preserve_paths = '**/ImSDK_Plus.framework'
-  spec.source_files = '**/ImSDK_Plus.framework/Headers/*.h'
-  spec.public_header_files = '**/ImSDK_Plus.framework/Headers/*.h'
-  spec.vendored_frameworks = '**/ImSDK_Plus.framework'
-  spec.xcconfig = { 'HEADER_SEARCH_PATHS' => '${PODS_ROOT}/TXIMSDK_Plus_iOS_Bitcode/ImSDK_Plus.framework/Headers/'}
+  spec.source = { :http => 'https://im.sdk.qcloud.com/download/plus/6.9.3557/ImSDK_Plus_Pro_6.9.3557.framework.zip'}
+  spec.preserve_paths = '**/ImSDK_Plus_Pro.framework'
+  spec.source_files = '**/ImSDK_Plus_Pro.framework/Headers/*.h'
+  spec.public_header_files = '**/ImSDK_Plus_Pro.framework/Headers/*.h'
+  spec.vendored_frameworks = '**/ImSDK_Plus_Pro.framework'
+  spec.xcconfig = { 'HEADER_SEARCH_PATHS' => '${PODS_ROOT}/TXIMSDK_Plus_Pro_iOS/ImSDK_Plus_Pro.framework/Headers/'}
   spec.pod_target_xcconfig = {
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64'
   }
   spec.user_target_xcconfig = { 
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' 
   } 
+
 end
