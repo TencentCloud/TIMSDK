@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -28,7 +27,6 @@ import com.tencent.imsdk.v2.V2TIMFriendApplicationResult;
 import com.tencent.imsdk.v2.V2TIMFriendshipListener;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
-import com.tencent.qcloud.tim.demo.BuildConfig;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.profile.ProfileMinimalistFragment;
 import com.tencent.qcloud.tim.demo.push.HandleOfflinePushCallBack;
@@ -41,7 +39,7 @@ import com.tencent.qcloud.tuicore.component.activities.BaseMinimalistLightActivi
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuicontact.minimalistui.pages.TUIContactMinimalistFragment;
-import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.page.ConversationMinimalistFragment;
+import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.page.TUIConversationMinimalistFragment;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -125,7 +123,7 @@ public class MainMinimalistActivity extends BaseMinimalistLightActivity {
         mNewFriendUnread = findViewById(R.id.new_friend_total_unread);
 
         fragments = new ArrayList<>();
-        fragments.add(new ConversationMinimalistFragment());
+        fragments.add(new TUIConversationMinimalistFragment());
         fragments.add(new TUIContactMinimalistFragment());
         fragments.add(new ProfileMinimalistFragment());
 
