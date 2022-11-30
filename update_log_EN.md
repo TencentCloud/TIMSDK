@@ -6,13 +6,13 @@ English | [简体中文](./版本历史.md)
 
 ### SDK
 
-- Fix the occasional crash of getting V2TIMOfflinePushInfo content from the message on the Android platform
-- Fix the occasional crash of the enhanced-pro version on the Android platform
-- Improve the json data content returned by the C interface TIMConvGetConvList
+- Fix an occasional crash of getting V2TIMOfflinePushInfo content from the message on the Android platform
+- Fix an occasional crash of the enhanced-pro version on the Android platform
+- Optimize the json data content returned by the C interface TIMConvGetConvList
 
 ### TUIKit and demo
 
-- Released a new simplified version of the theme, which is more in line with the style of international apps
+- Released a new simplified version of the theme, which is more consistent with the style of international apps
 
 
 ## 6.8.3374 @2022.11.14 - Enhanced Edition
