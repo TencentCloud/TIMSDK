@@ -151,13 +151,13 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 ### SDK
 
-- Fix the occasional crash of getting V2TIMOfflinePushInfo content from the message on the Android platform
-- Fix the occasional crash of the enhanced-pro version on the Android platform
-- Improve the json data content returned by the C interface TIMConvGetConvList
+- Fix an occasional crash of getting V2TIMOfflinePushInfo content from the message on the Android platform
+- Fix an occasional crash of the enhanced-pro version on the Android platform
+- Optimize the json data content returned by the C interface TIMConvGetConvList
 
 ### TUIKit and demo
 
-- Released a new simplified version of the theme, which is more in line with the style of international apps
+- Released a new simplified version of the theme, which is more consistent with the style of international apps
 
 
 ## Latest Basic Version 5.1.66 @2021.09.22
