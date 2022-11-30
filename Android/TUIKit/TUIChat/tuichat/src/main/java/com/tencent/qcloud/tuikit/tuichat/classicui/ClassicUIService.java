@@ -83,7 +83,6 @@ public class ClassicUIService extends ServiceInitializer {
     @Override
     public void init(Context context) {
         instance = this;
-        FaceManager.loadEmojis();
         initMessage();
         initReplyMessage();
     }
