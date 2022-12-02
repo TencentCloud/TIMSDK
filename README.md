@@ -146,6 +146,8 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 [API Upgrade Guidelines](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
+[Restoring The Old Version of C2C Read Report Guidelines for TUIKit](https://docs.qq.com/doc/DWWRPaHpSQ0hpZlVI)
+
 
 ## Latest Enhanced Edition 6.9.3557 @2022.11.29
 
