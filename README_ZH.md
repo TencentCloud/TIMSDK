@@ -145,6 +145,7 @@
 ## IMSDK 升级 V2API 接口指引
 
 [接口升级指引](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
+[TUIKit 恢复旧版 C2C 已读上报指引](https://docs.qq.com/doc/DWWRPaHpSQ0hpZlVI)
 
 ## 最新增强版 6.9.3557 @2022.11.29
 
