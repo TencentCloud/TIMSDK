@@ -5,10 +5,10 @@ English | [简体中文](./README_ZH.md)
 ## Download Links
 
 ### Enhanced Edition(Recommend)
-[Latest Enhanced Edition IM SDK download](https://im.sdk.qcloud.com/download/plus/6.9.3557/imsdk-plus-6.9.3557.aar) 
+[Latest Enhanced Edition IM SDK download](https://im.sdk.qcloud.com/download/plus/6.9.3560/imsdk-plus-6.9.3560.aar) 
 
 ### Enhanced Edition Pro
-[Latest Enhanced Edition Pro IM SDK download](https://im.sdk.qcloud.com/download/plus/6.9.3557/imsdk-plus-pro-6.9.3557.aar) 
+[Latest Enhanced Edition Pro IM SDK download](https://im.sdk.qcloud.com/download/plus/6.9.3560/imsdk-plus-pro-6.9.3560.aar) 
 
 ### Basic Edition
 [Latest Basic Edition IM SDK download](https://im.sdk.qcloud.com/download/standard/5.1.66/imsdk-5.1.66.aar)
@@ -16,10 +16,10 @@ English | [简体中文](./README_ZH.md)
 ### [Differences Between the Basic Edition and the Enhanced Edition](https://github.com/TencentCloud/TIMSDK/blob/master/README_EN.md#differences-between-the-basic-edition-and-the-enhanced-edition)
 
 ### C API edition
-[Latest C API download](https://im.sdk.qcloud.com/download/plus/6.9.3557/cross_platform/ImSDK_Android_C_6.9.3557.zip)
+[Latest C API download](https://im.sdk.qcloud.com/download/plus/6.9.3560/cross_platform/ImSDK_Android_C_6.9.3560.zip)
 
 ### C++ API edition
-[Latest C++ API download](https://im.sdk.qcloud.com/download/plus/6.9.3557/cross_platform/ImSDK_Android_CPP_6.9.3557.zip)
+[Latest C++ API download](https://im.sdk.qcloud.com/download/plus/6.9.3560/cross_platform/ImSDK_Android_CPP_6.9.3560.zip)
 
 #### Maven integration (Android)
  If you use the Basic Edition SDK, add the following dependencies to the `gradle` file:
