@@ -17,7 +17,7 @@ English | [简体中文](./README_ZH.md)
 [Latest C++ API download](https://im.sdk.qcloud.com/download/plus/6.9.3560/cross_platform/ImSDK_Mac_CPP_6.9.3560.framework.zip)
 
 ### C API edition
-[Latest C API download](https://im.sdk.qcloud.com/download/plus/6.8.3381/cross_platform/ImSDK_Mac_C_6.8.3381.framework.zip)
+[Latest C API download](https://im.sdk.qcloud.com/download/plus/6.9.3560/cross_platform/ImSDK_Mac_C_6.9.3560.framework.zip)
 
 ## CocoaPods Integration
 If you are using the SDK basic edition, edit the Podfile as follows:
