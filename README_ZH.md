@@ -6,6 +6,18 @@
 
 腾讯云分流下载地址： [DOWNLOAD](https://im.sdk.qcloud.com/download/github/TIMSDK.zip)
 
+## Demo体验
+<table style="text-align:center; vertical-align:middle; width:600px">
+  <tr>
+    <th style="text-align:center;" width="300px">Android</th>
+    <th style="text-align:center;" width="300px">iOS</th>
+  </tr>
+  <tr>
+    <td><img style="width:500px" src="https://qcloudimg.tencent-cloud.cn/raw/078fbb462abd2253e4732487cad8a66d.png"/></td>
+    <td><img style="width:500px" src="https://qcloudimg.tencent-cloud.cn/raw/b1ea5318e1cfce38e4ef6249de7a4106.png"/></td>
+     </tr>
+</table>
+
 ## SDK下载
 
 <table>
@@ -48,6 +60,17 @@
   </tr>
 
   <tr >
+​    <td rowspan='2' style="text-align:center">TUIKit 界面库</td>
+​    <td style="text-align:center">iOS</td>
+​    <td style="text-align:center"><a href="https://cloud.tencent.com/document/product/269/37190">TUIKit-iOS界面库</a></td>
+  </tr>
+
+  <tr>
+​    <td style="text-align:center">Android</td>
+​    <td style="text-align:center"><a href="https://cloud.tencent.com/document/product/269/37190">TUIKit-Android界面库</a></td>
+  </tr>
+    
+  <tr >
 ​    <td rowspan='2' style="text-align:center">快速集成</td>
 ​    <td style="text-align:center">iOS</td>
 ​    <td style="text-align:center"><a href="https://cloud.tencent.com/document/product/269/37060">TUIKit-iOS快速集成</a></td>
@@ -59,26 +82,69 @@
   </tr>
 
   <tr>
-​    <td rowspan='2' style="text-align:center">修改界面样式</td>
+​    <td rowspan='2' style="text-align:center">修改界面主题</td>
 ​    <td style="text-align:center">iOS</td>
-​    <td style="text-align:center"><a href="https://cloud.tencent.com/document/product/269/37065">TUIKit-iOS修改界面样式</a></td>
-
+​    <td style="text-align:center"><a href="https://cloud.tencent.com/document/product/269/79705">TUIKit-iOS修改界面主题</a></td>
   </tr>
 
   <tr>
 ​    <td style="text-align:center">Android</td>
-​    <td style="text-align:center"><a href="https://cloud.tencent.com/document/product/269/37064">TUIKit-Android修改界面样式</a></td>
+​    <td style="text-align:center"><a href="https://cloud.tencent.com/document/product/269/79704">TUIKit-Android修改界面主题</a></td>
   </tr>
 
   <tr>
-​    <td rowspan='2' style="text-align:center">自定义消息</td>
+​    <td rowspan='2' style="text-align:center">设置界面风格</td>
 ​    <td style="text-align:center">iOS</td>
-​    <td style="text-align:center"><a href="https://cloud.tencent.com/document/product/269/37067">TUIKit-iOS自定义消息</a></td>
+​    <td style="text-align:center"><a href="https://cloud.tencent.com/document/product/269/79082">TUIKit-iOS设置界面风格</a></td>
   </tr>
 
   <tr>
 ​    <td style="text-align:center">Android</td>
-​    <td style="text-align:center"><a href="https://cloud.tencent.com/document/product/269/37066">TUIKit-Android自定义消息</a></td>
+​    <td style="text-align:center"><a href="https://cloud.tencent.com/document/product/269/79081">TUIKit-Android设置界面风格</a></td>
+  </tr>
+
+  <tr>
+​    <td rowspan='2' style="text-align:center">添加自定义消息</td>
+​    <td style="text-align:center">iOS</td>
+​    <td style="text-align:center"><a href="https://cloud.tencent.com/document/product/269/37067">TUIKit-iOS添加自定义消息</a></td>
+  </tr>
+
+  <tr>
+​    <td style="text-align:center">Android</td>
+​    <td style="text-align:center"><a href="https://cloud.tencent.com/document/product/269/37066">TUIKit-Android添加自定义消息</a></td>
+  </tr>
+    
+    <tr> 
+​    <td rowspan='2' style="text-align:center">添加自定义表情</td>
+​    <td style="text-align:center">iOS</td>
+​    <td style="text-align:center"><a href="https://cloud.tencent.com/document/product/269/81912">TUIKit-iOS添加自定义表情</a></td>
+  </tr>
+
+  <tr>
+​    <td style="text-align:center">Android</td>
+​    <td style="text-align:center"><a href="https://cloud.tencent.com/document/product/269/81911">TUIKit-Android添加自定义表情</a></td>
+  </tr>
+    
+    <tr>
+​    <td rowspan='2' style="text-align:center">实现本地搜索</td>
+​    <td style="text-align:center">iOS</td>
+​    <td style="text-align:center"><a href="https://cloud.tencent.com/document/product/269/76103">TUIKit-iOS实现本地搜索</a></td>
+  </tr>
+
+  <tr>
+​    <td style="text-align:center">Android</td>
+​    <td style="text-align:center"><a href="https://cloud.tencent.com/document/product/269/76102">TUIKit-Android实现本地搜索</a></td>
+  </tr>
+    
+    <tr>
+​    <td rowspan='2' style="text-align:center">接入离线推送</td>
+​    <td style="text-align:center">iOS</td>
+​    <td style="text-align:center"><a href="https://cloud.tencent.com/document/product/269/74284">TUIKit-iOS接入离线推送</a></td>
+  </tr>
+
+  <tr>
+​    <td style="text-align:center">Android</td>
+​    <td style="text-align:center"><a href="https://cloud.tencent.com/document/product/269/74285">TUIKit-Android接入离线推送</a></td>
   </tr>
 
 </table>
