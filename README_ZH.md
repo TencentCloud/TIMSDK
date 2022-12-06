@@ -2,21 +2,28 @@
 
 公告：TUIKit Android 与 iOS 端开放 Pull Request，merge 成功后会在 README.md 上留下您的大名并超链到您的 Github 主页！
 
+# 即时通信 IM
+## 产品简介
+即时通信 IM（Instant Messaging）基于 QQ 底层 IM 能力开发，仅需植入 IM SDK 即可轻松集成聊天、会话、群组、资料管理和直播弹幕能力，也支持通过信令消息与白板等其他产品打通，全面覆盖您的业务场景，支持各大平台小程序接入使用，全面满足通信需要。
+
+<table style="text-align:center; vertical-align:middle; width:400px">
+  <tr>
+    <th style="text-align:center;" width="200px">Android 体验 App</th>
+    <th style="text-align:center;" width="200px">iOS 体验 App</th>
+  </tr>
+  <tr>
+    <td><img style="width:200px" src="https://qcloudimg.tencent-cloud.cn/raw/078fbb462abd2253e4732487cad8a66d.png"/></td>
+    <td><img style="width:200px" src="https://qcloudimg.tencent-cloud.cn/raw/b1ea5318e1cfce38e4ef6249de7a4106.png"/></td>
+   </tr>
+</table>
+
+我们提供了一套基于 IM SDK 的 TUIKit 组件库，组件库包含了会话、聊天、搜索、关系链、群组、音视频通话等功能。基于 UI 组件您可以像搭积木一样快速搭建起自己的业务逻辑。
+
+<img src="https://qcloudimg.tencent-cloud.cn/raw/40795a52d2df3d6c1f9ed41a51638da5.png" style="zoom:50%;"/>
+
 ## 镜像下载
 
 腾讯云分流下载地址： [DOWNLOAD](https://im.sdk.qcloud.com/download/github/TIMSDK.zip)
-
-## Demo体验
-<table style="text-align:center; vertical-align:middle; width:600px">
-  <tr>
-    <th style="text-align:center;" width="300px">Android</th>
-    <th style="text-align:center;" width="300px">iOS</th>
-  </tr>
-  <tr>
-    <td><img style="width:500px" src="https://qcloudimg.tencent-cloud.cn/raw/078fbb462abd2253e4732487cad8a66d.png"/></td>
-    <td><img style="width:500px" src="https://qcloudimg.tencent-cloud.cn/raw/b1ea5318e1cfce38e4ef6249de7a4106.png"/></td>
-     </tr>
-</table>
 
 ## SDK下载
 
