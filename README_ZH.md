@@ -114,7 +114,7 @@
      <td style="text-align:center"><a href="https://cloud.tencent.com/document/product/269/37066">TUIKit-Android添加自定义消息</a></td>
   </tr>
     
-    <tr> 
+   <tr> 
      <td rowspan='2' style="text-align:center">添加自定义表情</td>
      <td style="text-align:center">iOS</td>
      <td style="text-align:center"><a href="https://cloud.tencent.com/document/product/269/81912">TUIKit-iOS添加自定义表情</a></td>
@@ -125,7 +125,7 @@
      <td style="text-align:center"><a href="https://cloud.tencent.com/document/product/269/81911">TUIKit-Android添加自定义表情</a></td>
   </tr>
     
-    <tr>
+   <tr>
      <td rowspan='2' style="text-align:center">实现本地搜索</td>
      <td style="text-align:center">iOS</td>
      <td style="text-align:center"><a href="https://cloud.tencent.com/document/product/269/76103">TUIKit-iOS实现本地搜索</a></td>
@@ -136,7 +136,7 @@
      <td style="text-align:center"><a href="https://cloud.tencent.com/document/product/269/76102">TUIKit-Android实现本地搜索</a></td>
   </tr>
     
-    <tr>
+  <tr>
      <td rowspan='2' style="text-align:center">接入离线推送</td>
      <td style="text-align:center">iOS</td>
      <td style="text-align:center"><a href="https://cloud.tencent.com/document/product/269/74284">TUIKit-iOS接入离线推送</a></td>
