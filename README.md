@@ -2,6 +2,25 @@ English | [简体中文](./README_ZH.md)
 
 Notice: If you open a pull request in TUIKit Android or iOS and the corresponding changes are successfully merged, your name will be included in README.md with a hyperlink to your homepage on GitHub.
 
+# Instant Messaging
+## Product Introduction
+Build real-time social messaging capabilities with all the features into your applications and websites based on powerful and feature-rich chat APIs, SDKs and UIKit components.
+
+<table style="text-align:center; vertical-align:middle; width:400px">
+  <tr>
+    <th style="text-align:center;" width="200px">Android Experience App</th>
+    <th style="text-align:center;" width="200px">iOS Experience App</th>
+  </tr>
+  <tr>
+    <td><img style="width:200px" src="https://qcloudimg.tencent-cloud.cn/raw/078fbb462abd2253e4732487cad8a66d.png"/></td>
+    <td><img style="width:200px" src="https://qcloudimg.tencent-cloud.cn/raw/b1ea5318e1cfce38e4ef6249de7a4106.png"/></td>
+   </tr>
+</table>
+
+TUIKit is a UI component library based on Tencent Cloud IM SDK. It provides universal UI components to offer features such as conversation, chat, search, relationship chain, group, and audio/video call features.
+
+<img src="https://qcloudimg.tencent-cloud.cn/raw/9c893f1a9c6368c82d44586907d5293d.png" style="zoom:50%;"/>
+
 ## Image Download
 
 Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/download/github/TIMSDK.zip)
@@ -18,23 +37,23 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 <tr>
 <td style="text-align:center">Android  </td>
 <td style="text-align:center" ><a href="https://github.com/tencentyun/TIMSDK/tree/master/Android/IMSDK">GitHub (Recommended)</a></td>
-<td style="text-align:left" ><a href="https://intl.cloud.tencent.com/document/product/1047/34286">[Quick Integration] SDK Integration (Android)</a><br><a href="https://intl.cloud.tencent.com/document/product/1047/34306">[General Integration] SDK Integration (Android)</a></td>
+<td style="text-align:left" ><a href="https://www.tencentcloud.com/document/product/1047/50057">[Quick Integration] TUIKit Integration (Android)</a><br><a href="https://www.tencentcloud.com/document/product/1047/34306">[General Integration] SDK Integration (Android)</a></td>
 <td style="text-align:center" rowspan='4'><a href="https://intl.cloud.tencent.com/document/product/1047/34282">Update Log (Native)</a> </td>
 </tr>
 <tr>
 <td style="text-align:center">iOS  </td>
 <td style="text-align:center" ><a href="https://github.com/tencentyun/TIMSDK/tree/master/iOS/IMSDK">GitHub (Recommended)</a></td>
-<td style="text-align:left" ><a href="https://intl.cloud.tencent.com/document/product/1047/34287">[Quick Integration] SDK Integration (iOS)</a><br><a href="https://intl.cloud.tencent.com/document/product/1047/34307">[General Integration] SDK Integration (iOS)</a></td>
+<td style="text-align:left" ><a href="https://www.tencentcloud.com/document/product/1047/50056">[Quick Integration] TUIKit Integration (iOS)</a><br><a href="https://www.tencentcloud.com/document/product/1047/34307">[General Integration] SDK Integration (iOS)</a></td>
 </tr>
 <tr>
 <td style="text-align:center">Mac  </td>
 <td style="text-align:center" ><a href="https://github.com/tencentyun/TIMSDK/tree/master/Mac/IMSDK">GitHub (Recommended)</a></td>
-<td style="text-align:left" ><a href="https://intl.cloud.tencent.com/document/product/1047/34308">[General Integration] SDK Integration (Mac)</a></td>
+<td style="text-align:left" ><a href="https://www.tencentcloud.com/document/product/1047/34308">[General Integration] SDK Integration (Mac)</a></td>
 </tr>
 <tr>
 <td style="text-align:center">Windows  </td>
 <td style="text-align:center" ><a href="https://github.com/tencentyun/TIMSDK/tree/master/Windows/IMSDK">GitHub (Recommended)</a></td>
-<td style="text-align:left" ><a href="https://intl.cloud.tencent.com/document/product/1047/34310">[General Integration] SDK Integration (Windows)</a></td>
+<td style="text-align:left" ><a href="https://www.tencentcloud.com/document/product/1047/34310">[General Integration] SDK Integration (Windows)</a></td>
 </tr>
 </table>
 
@@ -42,43 +61,86 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 <table >
   <tr>
-    <th width="180px" style="text-align:center">Module</th>
-    <th width="180px" style="text-align:center">Platform</th>
-    <th width="500px" style="text-align:center">Document Link</th>
+    <th width="180px" style="text-align:center">功能模块</th>
+    <th width="180px" style="text-align:center">平台</th>
+    <th width="500px" style="text-align:center">文档链接</th>
   </tr>
 
   <tr >
-​    <td rowspan='2' style="text-align:center">Quick Integration</td>
-​    <td style="text-align:center">iOS</td>
-​    <td style="text-align:center"><a href="https://intl.cloud.tencent.com/document/product/1047/34287">TUIKit-iOS Quick Integration</a></td>
+     <td rowspan='2' style="text-align:center">TUIKit Library</td>
+     <td style="text-align:center">iOS</td>
+     <td style="text-align:center"><a href="https://www.tencentcloud.com/document/product/1047/50062">TUIKit-iOS Library</a></td>
   </tr>
 
   <tr>
-​    <td style="text-align:center">Android</td>
-​    <td style="text-align:center"><a href="https://intl.cloud.tencent.com/document/product/1047/34286">TUIKit-Android Quick Integration</a></td>
+     <td style="text-align:center">Android</td>
+     <td style="text-align:center"><a href="https://www.tencentcloud.com/document/product/1047/50062">TUIKit-Android Library</a></td>
+  </tr>
+    
+  <tr >
+     <td rowspan='2' style="text-align:center">Quick Integration</td>
+     <td style="text-align:center">iOS</td>
+     <td style="text-align:center"><a href="https://www.tencentcloud.com/document/product/1047/50056">TUIKit-iOS Quick Integration</a></td>
   </tr>
 
   <tr>
-​    <td rowspan='2' style="text-align:center">Setting UI Styles</td>
-​    <td style="text-align:center">iOS</td>
-​    <td style="text-align:center"><a href="https://intl.cloud.tencent.com/document/product/1047/34290">Setting UI Styles (TUIKit-iOS)</a></td>
-
+     <td style="text-align:center">Android</td>
+     <td style="text-align:center"><a href="https://www.tencentcloud.com/document/product/1047/50057">TUIKit-Android Quick Integration</a></td>
   </tr>
 
   <tr>
-​    <td style="text-align:center">Android</td>
-​    <td style="text-align:center"><a href="https://intl.cloud.tencent.com/document/product/1047/34289">Setting UI Styles (TUIKit-Android)</a></td>
+     <td rowspan='2' style="text-align:center">Modifying UI Themes</td>
+     <td style="text-align:center">iOS</td>
+     <td style="text-align:center"><a href="https://www.tencentcloud.com/document/product/1047/50051">TUIKit-iOS Modifying UI Themes</a></td>
   </tr>
 
   <tr>
-​    <td rowspan='2' style="text-align:center">Adding Custom Messages</td>
-​    <td style="text-align:center">iOS</td>
-​    <td style="text-align:center"><a href="https://intl.cloud.tencent.com/document/product/1047/34293">Adding Custom Messages (TUIKit-iOS)</a></td>
+     <td style="text-align:center">Android</td>
+     <td style="text-align:center"><a href="https://www.tencentcloud.com/document/product/1047/50052">TUIKit-Android Modifying UI Themes</a></td>
   </tr>
 
   <tr>
-​    <td style="text-align:center">Android</td>
-​    <td style="text-align:center"><a href="https://intl.cloud.tencent.com/document/product/1047/34292">Adding Custom Messages (TUIKit-Android)</a></td>
+     <td rowspan='2' style="text-align:center">Setting UI Styles</td>
+     <td style="text-align:center">iOS</td>
+     <td style="text-align:center"><a href="https://www.tencentcloud.com/document/product/1047/50048">TUIKit-iOS Setting UI Styles</a></td>
+  </tr>
+
+  <tr>
+     <td style="text-align:center">Android</td>
+     <td style="text-align:center"><a href="https://www.tencentcloud.com/document/product/1047/50049">TUIKit-Android Setting UI Styles</a></td>
+  </tr>
+
+  <tr>
+     <td rowspan='2' style="text-align:center">Adding Custom Messages</td>
+     <td style="text-align:center">iOS</td>
+     <td style="text-align:center"><a href="https://www.tencentcloud.com/document/product/1047/50043">TUIKit-iOS Adding Custom Messages</a></td>
+  </tr>
+
+  <tr>
+     <td style="text-align:center">Android</td>
+     <td style="text-align:center"><a href="https://www.tencentcloud.com/document/product/1047/50044">TUIKit-Android Adding Custom Messages</a></td>
+  </tr>
+    
+   <tr>
+     <td rowspan='2' style="text-align:center">Implementing Local Search</td>
+     <td style="text-align:center">iOS</td>
+     <td style="text-align:center"><a href="https://www.tencentcloud.com/document/product/1047/50037">TUIKit-iOS Implementing Local Search</a></td>
+  </tr>
+
+  <tr>
+     <td style="text-align:center">Android</td>
+     <td style="text-align:center"><a href="https://www.tencentcloud.com/document/product/1047/50038">TUIKit-Android Implementing Local Search</a></td>
+  </tr>
+    
+  <tr>
+     <td rowspan='2' style="text-align:center">Integrating Offline Push</td>
+     <td style="text-align:center">iOS</td>
+     <td style="text-align:center"><a href="https://www.tencentcloud.com/document/product/1047/50033">TUIKit-iOS Integrating Offline Push</a></td>
+  </tr>
+
+  <tr>
+     <td style="text-align:center">Android</td>
+     <td style="text-align:center"><a href="https://www.tencentcloud.com/document/product/1047/50034">TUIKit-Android Integrating Offline Push</a></td>
   </tr>
 
 </table>
