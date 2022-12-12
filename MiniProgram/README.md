@@ -18,6 +18,6 @@ chat-uikit-wechat 效果如下图所示：
 - npm 仓库地址（无 UI ）：[**tim-js-sdk**](https://www.npmjs.com/package/tim-js-sdk)
 
 ### 文档
-- 快速入门(小程序)：https://cloud.tencent.com/document/product/269/68376
-- SDK API 手册：https://web.sdk.qcloud.com/im/doc/zh-cn/SDK.html
-- SDK 更新日志：https://cloud.tencent.com/document/product/269/38492
+- [快速入门(小程序)](https://cloud.tencent.com/document/product/269/68376)
+- [SDK API 手册](https://web.sdk.qcloud.com/im/doc/zh-cn/SDK.html)
+- [SDK 更新日志](https://cloud.tencent.com/document/product/269/38492)

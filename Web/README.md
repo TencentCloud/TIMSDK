@@ -19,6 +19,6 @@ chat-uikit-vue Web 端 和 H5 端界面效果如下图所示：
 - npm 仓库地址（无 UI ）：[**tim-js-sdk**](https://www.npmjs.com/package/tim-js-sdk)
 
 ### 文档
-- 快速入门( Web & H5 )：https://cloud.tencent.com/document/product/269/68433
-- SDK API 手册：https://web.sdk.qcloud.com/im/doc/zh-cn/SDK.html
-- SDK 更新日志：https://cloud.tencent.com/document/product/269/38492
+- [快速入门( Web & H5 )](https://cloud.tencent.com/document/product/269/68433)
+- [SDK API 手册](https://web.sdk.qcloud.com/im/doc/zh-cn/SDK.html)
+- [SDK 更新日志](https://cloud.tencent.com/document/product/269/38492)
