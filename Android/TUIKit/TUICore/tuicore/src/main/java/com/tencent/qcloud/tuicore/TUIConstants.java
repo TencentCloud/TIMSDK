@@ -27,6 +27,7 @@ public final class TUIConstants {
         public static final String TUI_SEARCH = "TUISearchService";
         public static final String TUI_GROUP = "TUIGroupService";
         public static final String TUI_CALLING = "TUICallingService";
+        public static final String TUI_AUDIO_RECORD = "TUIAudioMessageRecordService";
         public static final String TUI_LIVE = "TUILiveService";
         public static final String TUI_BEAUTY = "TUIBeauty";
         public static final String TUI_OFFLINEPUSH = "TUIOfflinePushService";
@@ -239,6 +240,37 @@ public final class TUIConstants {
         public static final String EVENT_KEY_CALLING = "calling";
         public static final String EVENT_KEY_NAME = "event_name";
         public static final String EVENT_ACTIVE_HANGUP = "active_hangup";
+
+        public static final String SERVICE_NAME_AUDIO_RECORD              = Service.TUI_AUDIO_RECORD;
+        public static final String METHOD_NAME_START_RECORD_AUDIO_MESSAGE = "methodStartRecordAudioMessage";
+        public static final String METHOD_NAME_STOP_RECORD_AUDIO_MESSAGE  = "methodStopRecordAudioMessage";
+
+        public static final String EVENT_KEY_RECORD_AUDIO_MESSAGE = "eventRecordAudioMessage";
+        public static final String EVENT_SUB_KEY_RECORD_START     = "eventSubKeyStartRecordAudioMessage";
+        public static final String EVENT_SUB_KEY_RECORD_STOP      = "eventSubKeyStopRecordAudioMessage";
+
+        public static final String PARAM_NAME_SDK_APP_ID      = "sdkappid";
+        public static final String PARAM_NAME_AUDIO_SIGNATURE = "signature";
+        public static final String PARAM_NAME_AUDIO_PATH      = "path";
+
+        //Error Code
+        public static final int ERROR_NONE                       = 0;     // init success or record success
+        public static final int ERROR_INVALID_PARAM              = -1001; // param is invalid
+        public static final int ERROR_STATUS_IN_CALL             = -1002; // recording rejected, currently in call
+        public static final int ERROR_STATUS_IS_AUDIO_RECORDING  = -1003; // recording rejected, the current recording is not finished
+        public static final int ERROR_MIC_PERMISSION_REFUSED     = -1004; // recording rejected, failed to obtain microphone permission
+        public static final int ERROR_REQUEST_AUDIO_FOCUS_FAILED = -1005; // recording rejected, failed to obtain audio focus
+        public static final int ERROR_RECORD_INIT_FAILED         = -2001; // -1, init failed(onLocalRecordBegin)
+        public static final int ERROR_PATH_FORMAT_NOT_SUPPORT    = -2002; // -2, file format is invalid(onLocalRecordBegin)
+        public static final int ERROR_RECORD_FAILED              = -2003; // -1, record failed(onLocalRecordComplete)
+        public static final int ERROR_NO_MESSAGE_TO_RECORD       = -2004; // -3, The audio data has not arrived(onLocalRecordComplete)
+        public static final int ERROR_SIGNATURE_ERROR            = -3001; // -4, signature error(onLocalRecordBegin)
+        public static final int ERROR_SIGNATURE_EXPIRED          = -3002; // -5, signature expired(onLocalRecordBegin)
+        //TRTC-SDK MIC Error Code
+        public static final int ERR_MIC_START_FAIL               = -1302; // start microphone failed
+        public static final int ERR_MIC_NOT_AUTHORIZED           = -1317; // microphone authorize failed
+        public static final int ERR_MIC_SET_PARAM_FAIL           = -1318; // microphone param is invalid
+        public static final int ERR_MIC_OCCUPY                   = -1319; // microphone is occupied
     }
 
     public static final class TUILive {

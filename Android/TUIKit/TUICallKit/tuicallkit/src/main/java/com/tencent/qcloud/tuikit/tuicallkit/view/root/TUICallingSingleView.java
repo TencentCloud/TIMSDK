@@ -2,7 +2,6 @@ package com.tencent.qcloud.tuikit.tuicallkit.view.root;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuikit.TUICommonDefine;
-import com.tencent.qcloud.tuikit.tuicallengine.impl.base.TUILog;
 import com.tencent.qcloud.tuikit.tuicallkit.R;
 import com.tencent.qcloud.tuikit.tuicallkit.base.CallingUserModel;
 import com.tencent.qcloud.tuikit.tuicallkit.base.TUICallingStatusManager;
@@ -26,8 +24,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class TUICallingSingleView extends BaseCallView {
-    private static final String TAG = "TUICallingSingleView";
-
     private Context           mContext;
     private UserLayoutFactory mUserLayoutFactory;
     private TextView          mTextTime;
@@ -72,8 +68,8 @@ public class TUICallingSingleView extends BaseCallView {
                 }
                 layout.setVideoAvailable(true);
                 if (!TUICallingStatusManager.sharedInstance(mContext).isCameraOpen()) {
-                    TUICommonDefine.Camera frontCamera = TUICallingStatusManager.sharedInstance(mContext).getFrontCamera();
-                    mCallingAction.openCamera(frontCamera, layout.getVideoView(), null);
+                    TUICommonDefine.Camera camera = TUICallingStatusManager.sharedInstance(mContext).getFrontCamera();
+                    mCallingAction.openCamera(camera, layout.getVideoView(), null);
                 }
             }
         }
@@ -195,7 +191,6 @@ public class TUICallingSingleView extends BaseCallView {
     }
 
     private void recyclerAllUserLayout() {
-        TUILog.i(TAG, "recyclerAllUserLayout , mUserLayoutFactory: " + mUserLayoutFactory);
         if (null == mUserLayoutFactory || null == mLayoutUserContainer) {
             return;
         }
@@ -288,7 +283,6 @@ public class TUICallingSingleView extends BaseCallView {
     }
 
     private void makeFullVideoView(String userId) {
-        Log.i(TAG, "makeFullVideoView: from = " + userId);
         UserLayoutEntity entity = findEntity(userId);
         mUserLayoutFactory.mLayoutEntityList.remove(entity);
         mUserLayoutFactory.mLayoutEntityList.addLast(entity);

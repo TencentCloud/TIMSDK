@@ -8,6 +8,7 @@ public class TUIOfflinePushParamBean {
     public String fcmPushBussinessId;
     public String oppoPushBussinessId, oppoPushAppKey, oppoPushAppSecret;
     public String honorPushBussinessId;
+    public String fcmPushChannelId, fcmPushChannelSoundName;
 
     // huawei
     public String getHuaweiPushBussinessId() {
@@ -93,6 +94,22 @@ public class TUIOfflinePushParamBean {
 
     public void setFcmPushBussinessId(String fcmPushBussinessId) {
         this.fcmPushBussinessId = fcmPushBussinessId;
+    }
+
+    public String getFcmPushChannelId() {
+        return fcmPushChannelId;
+    }
+
+    public void setFcmPushChannelId(String fcmPushChannelId) {
+        this.fcmPushChannelId = fcmPushChannelId;
+    }
+
+    public String getFcmPushChannelSoundName() {
+        return fcmPushChannelSoundName;
+    }
+
+    public void setFcmPushChannelSoundName(String fcmPushChannelSoundName) {
+        this.fcmPushChannelSoundName = fcmPushChannelSoundName;
     }
 
     // oppo

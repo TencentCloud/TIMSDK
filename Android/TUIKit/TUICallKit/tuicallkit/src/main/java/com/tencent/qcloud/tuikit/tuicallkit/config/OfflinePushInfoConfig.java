@@ -18,6 +18,8 @@ public class OfflinePushInfoConfig {
         pushInfo.setAndroidOPPOChannelID("tuikit");
         pushInfo.setIgnoreIOSBadge(false);
         pushInfo.setIOSSound("phone_ringing.mp3");
+        //VIVO message type: 0-push message, 1-System message(have a higher delivery rate)
+        pushInfo.setAndroidVIVOClassification(1);
         return pushInfo;
     }
 }

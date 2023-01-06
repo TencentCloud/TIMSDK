@@ -103,7 +103,6 @@ public class TUICallingViewManager implements ITUINotification {
         mInviter = inviter;
         mInviteeList = inviteeList;
         initHomeWatcher();
-
         TUILog.i(TAG, "createCallingView mInviter: " + mInviter + " ,mInviteeList: " + mInviteeList);
 
         if (Scene.SINGLE_CALL.equals(TUICallingStatusManager.sharedInstance(mContext).getCallScene())) {
@@ -121,7 +120,6 @@ public class TUICallingViewManager implements ITUINotification {
     }
 
     public void updateCallingUserView(List<CallingUserModel> inviteeList, CallingUserModel inviter) {
-        TUILog.i(TAG, "updateCallingView: inviteeList = " + inviteeList + " ,inviter = " + inviter);
         mInviter = inviter;
         mInviteeList = inviteeList;
 
@@ -177,8 +175,6 @@ public class TUICallingViewManager implements ITUINotification {
     }
 
     private void updateCallStatus(TUICallDefine.Status status) {
-        TUILog.i(TAG, "updateCallStatus: status: " + status);
-
         if (TUICallDefine.Status.None.equals(status)) {
             closeCallingView();
             return;
@@ -201,17 +197,14 @@ public class TUICallingViewManager implements ITUINotification {
 
     private void updateCallType(TUICallDefine.MediaType type) {
         if (TUICallDefine.MediaType.Unknown.equals(type)) {
-            TUILog.w(TAG, "updateCallType, callType is empty");
             return;
         }
 
         if (mBaseCallView == null) {
-            TUILog.w(TAG, "updateCallType, mBaseCallView is empty");
             return;
         }
         mBaseCallView.finish();
         mBaseCallView = null;
-        TUILog.i(TAG, "updateCallType, type: " + type);
 
         if (TUICallDefine.Status.Waiting.equals(TUICallingStatusManager.sharedInstance(mContext).getCallStatus())) {
             initSingleWaitingView();
@@ -244,7 +237,6 @@ public class TUICallingViewManager implements ITUINotification {
     }
 
     public void userEnter(CallingUserModel userModel) {
-        TUILog.i(TAG, "userEnter, userModel: " + userModel);
         if (null == userModel || TextUtils.isEmpty(userModel.userId)) {
             return;
         }
@@ -261,7 +253,6 @@ public class TUICallingViewManager implements ITUINotification {
     }
 
     public void userLeave(CallingUserModel userModel) {
-        TUILog.i(TAG, "userLeave, userModel: " + userModel);
         if (userModel == null || TextUtils.isEmpty(userModel.userId)) {
             return;
         }
@@ -320,7 +311,6 @@ public class TUICallingViewManager implements ITUINotification {
     }
 
     private void initSingleAudioWaitingView() {
-        TUILog.i(TAG, "initSingleAudioWaitingView");
         mBaseCallView = new TUICallingImageView(mContext);
         String hint;
         TUICallDefine.Role callRole = TUICallingStatusManager.sharedInstance(mContext).getCallRole();
@@ -350,7 +340,6 @@ public class TUICallingViewManager implements ITUINotification {
     }
 
     private void initSingleVideoWaitingView() {
-        TUILog.i(TAG, "initSingleVideoWaitingView");
         mUserLayoutFactory.allocUserLayout(mSelfUserModel);
         mBaseCallView = new TUICallingSingleView(mContext, mUserLayoutFactory);
         String hint = "";
@@ -376,7 +365,6 @@ public class TUICallingViewManager implements ITUINotification {
     }
 
     private void initGroupWaitingView() {
-        TUILog.i(TAG, "initGroupWaitingView");
         initSelfModel();
         initAudioPlayDevice();
 
@@ -424,7 +412,6 @@ public class TUICallingViewManager implements ITUINotification {
     }
 
     private void initSingleAudioAcceptCallView() {
-        TUILog.i(TAG, "initSingleAudioAcceptCallView, mBaseCallView: " + mBaseCallView);
         if (mBaseCallView != null) {
             mBaseCallView.finish();
             mBaseCallView = null;
@@ -450,7 +437,6 @@ public class TUICallingViewManager implements ITUINotification {
     }
 
     private void initSingleVideoAcceptCallView() {
-        TUILog.i(TAG, "initSingleVideoAcceptCallView, mBaseCallView: " + mBaseCallView);
         if (null == mBaseCallView) {
             mBaseCallView = new TUICallingSingleView(mContext, mUserLayoutFactory);
             mBaseCallView.updateSwitchAudioView(new TUICallingSwitchAudioView(mContext));
@@ -469,7 +455,6 @@ public class TUICallingViewManager implements ITUINotification {
 
     private void initGroupAcceptCallView() {
         TUICallDefine.MediaType mediaType = TUICallingStatusManager.sharedInstance(mContext).getMediaType();
-        TUILog.i(TAG, "initGroupAcceptCallView, mediaType: " + mediaType + " ,mInviteeList: " + mInviteeList);
 
         if (TUICallDefine.Role.Caller.equals(TUICallingStatusManager.sharedInstance(mContext).getCallRole())) {
             if (null == mBaseCallView) {
@@ -514,7 +499,6 @@ public class TUICallingViewManager implements ITUINotification {
         }
 
         List<CallingUserModel> otherInviteeList = mInviteeList;
-        TUILog.i(TAG, "initOtherInviteeView, otherInviteeList: " + otherInviteeList);
 
         int squareWidth = mContext.getResources().getDimensionPixelOffset(R.dimen.tuicalling_small_image_size);
         int leftMargin = mContext.getResources().getDimensionPixelOffset(R.dimen.tuicalling_small_image_left_margin);
@@ -582,7 +566,6 @@ public class TUICallingViewManager implements ITUINotification {
         mSelfUserModel.userId = TUILogin.getLoginUser();
         mSelfUserModel.userAvatar = TUILogin.getFaceUrl();
         mSelfUserModel.userName = TUILogin.getNickName();
-        TUILog.i(TAG, "initSelfModel, mSelfUserModel: " + mSelfUserModel);
     }
 
     private void reloadUserModel(CallingUserModel model) {
@@ -590,7 +573,6 @@ public class TUICallingViewManager implements ITUINotification {
             return;
         }
         UserLayout layout = mUserLayoutFactory.findUserLayout(model.userId);
-        TUILog.i(TAG, "reloadUserModel, model: " + model + " , layout: " + layout);
         if (null != layout) {
             layout.setUserName(model.userName);
             ImageLoader.loadImage(mContext, layout.getAvatarImage(), model.userAvatar, R.drawable.tuicalling_ic_avatar);
@@ -627,7 +609,6 @@ public class TUICallingViewManager implements ITUINotification {
 
     private void startFloatService() {
         if (!mEnableFloatView) {
-            TUILog.w(TAG, "startFloatService, FloatView is unsupported");
             return;
         }
 
@@ -640,7 +621,6 @@ public class TUICallingViewManager implements ITUINotification {
             FloatWindowService.startFloatService(mContext, mFloatCallView);
             BaseCallActivity.finishActivity();
         } else {
-            TUILog.i(TAG, "please open Display over other apps permission");
             PermissionRequest.requestFloatPermission(mContext);
         }
     }
@@ -677,7 +657,6 @@ public class TUICallingViewManager implements ITUINotification {
 
     private void resetVideoCloudView(CallingUserModel model) {
         UserLayout userLayout = mUserLayoutFactory.findUserLayout(model.userId);
-        TUILog.i(TAG, "resetVideoCloudView, model: " + model + " , userLayout: " + userLayout);
         if (null == userLayout) {
             userLayout = mUserLayoutFactory.allocUserLayout(model);
         }
@@ -693,12 +672,10 @@ public class TUICallingViewManager implements ITUINotification {
 
     private void updateFloatView(TUICallDefine.Status status) {
         if (null == mFloatCallView) {
-            TUILog.i(TAG, "updateFloatView, floatView is empty");
             return;
         }
         TUICallDefine.MediaType type = TUICallingStatusManager.sharedInstance(mContext).getMediaType();
         Scene scene = TUICallingStatusManager.sharedInstance(mContext).getCallScene();
-        TUILog.i(TAG, "updateFloatView, status: " + status + " ,mediaType: " + type + " ,scene: " + scene);
 
         if (TUICallDefine.MediaType.Video.equals(type) && Scene.SINGLE_CALL.equals(scene)) {
             mFloatCallView.enableCallingHint(false);
@@ -753,7 +730,6 @@ public class TUICallingViewManager implements ITUINotification {
     private void initInviteUserFunction() {
         ITUIService service = TUICore.getService(TUIConstants.TUIGroup.SERVICE_NAME);
         boolean enableInviteUser = (service != null);
-        TUILog.i(TAG, "initInviteUserFunction, enableInviteUser: " + enableInviteUser);
 
         if (enableInviteUser && mBaseCallView != null) {
             Button inviteUserBtn = new Button(mContext);
@@ -767,7 +743,6 @@ public class TUICallingViewManager implements ITUINotification {
                     String groupId = TUICallingStatusManager.sharedInstance(mContext).getGroupId();
                     if (TextUtils.isEmpty(groupId)) {
                         ToastUtil.toastShortMessage(mContext.getString(R.string.tuicalling_groupid_is_empty));
-                        TUILog.w(TAG, "initInviteUserFunction, groupId is empty");
                         return;
                     }
 
@@ -775,7 +750,6 @@ public class TUICallingViewManager implements ITUINotification {
                     TUICallDefine.Role role = TUICallingStatusManager.sharedInstance(mContext).getCallRole();
                     if (TUICallDefine.Role.Called.equals(role) && !TUICallDefine.Status.Accept.equals(status)) {
                         ToastUtil.toastShortMessage(mContext.getString(R.string.tuicalling_status_is_not_accept));
-                        TUILog.w(TAG, "initInviteUserFunction, status is not accept: " + status);
                         return;
                     }
 
@@ -809,13 +783,10 @@ public class TUICallingViewManager implements ITUINotification {
             return;
         }
 
-        TUILog.i(TAG, "inviteUsersToGroupCall, userIdList: " + userIdList);
-
         mCallingAction.inviteUser(userIdList, new TUICommonDefine.ValueCallback() {
             @Override
             public void onSuccess(Object data) {
                 if (!(data instanceof List)) {
-                    TUILog.e(TAG, "inviteUsersToGroupCall failed, data is not List, value is: " + data);
                     return;
                 }
 
@@ -833,7 +804,6 @@ public class TUICallingViewManager implements ITUINotification {
 
             @Override
             public void onError(int errCode, String errMsg) {
-                TUILog.e(TAG, "inviteUser failed, errCode: " + errCode + " , errMsg: " + errMsg);
             }
         });
     }
@@ -851,13 +821,11 @@ public class TUICallingViewManager implements ITUINotification {
     private void loadUserInfo(CallingUserModel model) {
         UserLayout userLayout = mUserLayoutFactory.allocUserLayout(model);
         if (userLayout == null) {
-            TUILog.w(TAG, "loadUserInfo, userLayout is empty");
             return;
         }
         mUserInfoUtils.getUserInfo(model.userId, new UserInfoUtils.UserCallback() {
             @Override
             public void onSuccess(List<CallingUserModel> list) {
-                TUILog.i(TAG, "loadUserInfo success, list: " + list);
                 if (list != null && !list.isEmpty()) {
                     CallingUserModel tempModel = list.get(0);
                     if (tempModel != null && model.userId.equals(tempModel.userId)) {
@@ -879,16 +847,19 @@ public class TUICallingViewManager implements ITUINotification {
     @Override
     public void onNotifyEvent(String key, String subKey, Map<String, Object> param) {
         if (param == null) {
-            TUILog.w(TAG, "onNotifyEvent: param is empty");
             return;
         }
         if (Constants.EVENT_TUICALLING_CHANGED.equals(key)) {
             switch (subKey) {
                 case Constants.EVENT_SUB_CAMERA_OPEN:
-                    mSelfUserModel.isVideoAvailable = (boolean) param.get(Constants.OPEN_CAMERA);
+                    if (mSelfUserModel != null) {
+                        mSelfUserModel.isVideoAvailable = (boolean) param.get(Constants.OPEN_CAMERA);
+                    }
                     break;
                 case Constants.EVENT_SUB_MIC_STATUS_CHANGED:
-                    mSelfUserModel.isAudioAvailable = ((Boolean) param.get(Constants.MUTE_MIC));
+                    if (mSelfUserModel != null) {
+                        mSelfUserModel.isAudioAvailable = ((Boolean) param.get(Constants.MUTE_MIC));
+                    }
                     UserLayout layout = mUserLayoutFactory.findUserLayout(TUILogin.getLoginUser());
                     if (null != layout) {
                         layout.muteMic(mSelfUserModel.isAudioAvailable);

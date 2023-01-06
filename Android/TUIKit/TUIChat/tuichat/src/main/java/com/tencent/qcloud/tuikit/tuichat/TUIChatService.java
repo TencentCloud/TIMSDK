@@ -26,6 +26,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.MessageTypingBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
+import com.tencent.qcloud.tuikit.tuichat.interfaces.AudioRecordEventListener;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.C2CChatEventListener;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.GroupChatEventListener;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.IBaseMessageSender;
@@ -63,6 +64,7 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
     private final List<WeakReference<NetworkConnectionListener>> connectListenerList = new ArrayList<>();
 
     private final Map<String, Class<? extends TUIMessageBean>> customMessageMap = new HashMap<>();
+    private final List<WeakReference<AudioRecordEventListener>> audioRecordEventListenerList = new ArrayList<>();
 
     private RxDataStore<Preferences> mChatDataStore = null;
 
@@ -105,6 +107,9 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
         TUICore.registerEvent(TUIConstants.TUIConversation.EVENT_UNREAD, TUIConstants.TUIConversation.EVENT_SUB_KEY_UNREAD_CHANGED, this);
         TUICore.registerEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGIN_SUCCESS, this);
         TUICore.registerEvent(TUIChatConstants.EVENT_KEY_MESSAGE_STATUS_CHANGED, TUIChatConstants.EVENT_SUB_KEY_MESSAGE_SEND, this);
+        TUICore.registerEvent(TUIConstants.TUICalling.EVENT_KEY_RECORD_AUDIO_MESSAGE, TUIConstants.TUICalling.EVENT_SUB_KEY_RECORD_START, this);
+        TUICore.registerEvent(TUIConstants.TUICalling.EVENT_KEY_RECORD_AUDIO_MESSAGE, TUIConstants.TUICalling.EVENT_SUB_KEY_RECORD_STOP, this);
+        TUICore.registerEvent(TUIChatConstants.EVENT_KEY_OFFLINE_MESSAGE_PRIVATE_RING, TUIChatConstants.EVENT_SUB_KEY_OFFLINE_MESSAGE_PRIVATE_RING, this);
     }
 
     @Override
@@ -297,6 +302,25 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
                         c2CChatEventListener.onMessageChanged((TUIMessageBean) msgBeanObj);
                     }
                 }
+            }
+        } else if (TextUtils.equals(key, TUIConstants.TUICalling.EVENT_KEY_RECORD_AUDIO_MESSAGE)) {
+            if (param == null) {
+                return;
+            }
+
+            int errorCode = (int) getOrDefault(param.get("errorCode"), TUIConstants.TUICalling.ERROR_INVALID_PARAM);
+            String path = (String) getOrDefault(param.get(TUIConstants.TUICalling.PARAM_NAME_AUDIO_PATH), "");
+            for (AudioRecordEventListener audioRecordEventListener : getAudioRecordEventListenerList()) {
+                if (TextUtils.equals(subKey, TUIConstants.TUICalling.EVENT_SUB_KEY_RECORD_START)) {
+                    audioRecordEventListener.onRecordBegin(errorCode, path);
+                } else if (TextUtils.equals(subKey, TUIConstants.TUICalling.EVENT_SUB_KEY_RECORD_STOP)) {
+                    audioRecordEventListener.onRecordComplete(errorCode, path);
+                }
+            }
+        } else if (TextUtils.equals(key, TUIChatConstants.EVENT_KEY_OFFLINE_MESSAGE_PRIVATE_RING)) {
+            if (TextUtils.equals(subKey, TUIChatConstants.EVENT_SUB_KEY_OFFLINE_MESSAGE_PRIVATE_RING)) {
+                Boolean isPrivateRing = (Boolean) param.get(TUIChatConstants.OFFLINE_MESSAGE_PRIVATE_RING);
+                TUIChatConfigs.getConfigs().getGeneralConfig().setAndroidPrivateRing(isPrivateRing);
             }
         }
     }
@@ -544,6 +568,34 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
         while(iterator.hasNext()) {
             WeakReference<TotalUnreadCountListener> listenerWeakReference = iterator.next();
             TotalUnreadCountListener listener = listenerWeakReference.get();
+            if (listener == null) {
+                iterator.remove();
+            } else {
+                listeners.add(listener);
+            }
+        }
+        return listeners;
+    }
+
+    public void addAudioRecordEventListener(AudioRecordEventListener audioRecordEventListener) {
+        if (audioRecordEventListener == null) {
+            return;
+        }
+
+        for (WeakReference<AudioRecordEventListener> listenerWeakReference : audioRecordEventListenerList) {
+            if (listenerWeakReference.get() == audioRecordEventListener) {
+                return;
+            }
+        }
+        audioRecordEventListenerList.add(new WeakReference<>(audioRecordEventListener));
+    }
+
+    public List<AudioRecordEventListener> getAudioRecordEventListenerList() {
+        List<AudioRecordEventListener> listeners = new ArrayList<>();
+        Iterator<WeakReference<AudioRecordEventListener>> iterator = audioRecordEventListenerList.listIterator();
+        while(iterator.hasNext()) {
+            WeakReference<AudioRecordEventListener> listenerWeakReference = iterator.next();
+            AudioRecordEventListener listener = listenerWeakReference.get();
             if (listener == null) {
                 iterator.remove();
             } else {

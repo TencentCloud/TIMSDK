@@ -13,7 +13,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tencent.qcloud.tuikit.TUIVideoView;
-import com.tencent.qcloud.tuikit.tuicallengine.impl.base.TUILog;
 import com.tencent.qcloud.tuikit.tuicallkit.R;
 import com.tencent.qcloud.tuikit.tuicallkit.base.CallingUserModel;
 import com.tencent.qcloud.tuikit.tuicallkit.base.UserLayout;
@@ -24,8 +23,6 @@ import com.tencent.qcloud.tuikit.tuicallkit.view.UserLayoutFactory;
 import java.util.Objects;
 
 public class FloatCallView extends RelativeLayout {
-    private static final String TAG = "FloatCallView";
-
     private static final int UPDATE_COUNT         = 3;
     private static final int UPDATE_INTERVAL      = 300;
     private static final int MESSAGE_LAYOUT_EMPTY = 1;
@@ -80,7 +77,6 @@ public class FloatCallView extends RelativeLayout {
         }
 
         if (null == mUserLayoutFactory || TextUtils.isEmpty(userId)) {
-            TUILog.i(TAG, "updateVideoView, mUserLayoutFactory is empty ");
             return;
         }
 
@@ -114,7 +110,6 @@ public class FloatCallView extends RelativeLayout {
 
     private void reloadVideoView() {
         if (null == mVideoLayout) {
-            TUILog.i(TAG, "reloadVideoView, mVideoLayout is empty");
             return;
         }
 

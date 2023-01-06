@@ -56,7 +56,9 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
     protected MessageAdapter mAdapter;
     protected List<ChatPopMenu.ChatPopMenuAction> mPopActions = new ArrayList<>();
     protected List<ChatPopMenu.ChatPopMenuAction> mMorePopActions = new ArrayList<>();
+    protected List<ChatPopMenu.ChatPopMenuAction> mTranslationPopActions = new ArrayList<>();
     protected MessageRecyclerView.OnPopActionClickListener mOnPopActionClickListener;
+    protected MessageRecyclerView.OnTranslationPopActionClickListener mOnTranslationPopActionClickListener;
     private final MessageProperties properties = MessageProperties.getInstance();
 
     private OnMenuEmojiClickListener menuEmojiOnClickListener;
@@ -65,6 +67,7 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
 
     private int mSelectedPosition = -1;
     private ChatPopMenu mChatPopMenu;
+    private ChatPopMenu mTranslationChatPopMenu;
 
     public MessageRecyclerView(Context context) {
         super(context);
@@ -168,7 +171,60 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
                 }
             }
         });
-         mChatPopMenu.show(view, location[1]);
+        mChatPopMenu.show(view, location[1]);
+    }
+
+    public void showTranslationItemPopMenu(int index, TUIMessageBean messageInfo, View view) {
+        initTranslationPopActions(messageInfo);
+        if (mTranslationPopActions.size() == 0) {
+            return;
+        }
+
+        if (mTranslationChatPopMenu != null) {
+            mTranslationChatPopMenu.hide();
+            mTranslationChatPopMenu = null;
+        }
+        mTranslationChatPopMenu = new ChatPopMenu(getContext());
+        mTranslationChatPopMenu.setShowFaces(false);
+        mTranslationChatPopMenu.setChatPopMenuActionList(mTranslationPopActions);
+
+        int[] location = new int[2];
+        getLocationOnScreen(location);
+        mTranslationChatPopMenu.show(view, location[1]);
+    }
+
+    private void initTranslationPopActions(TUIMessageBean msg) {
+        if (msg == null) {
+            return;
+        }
+
+        ChatPopMenu.ChatPopMenuAction copyAction = null;
+        ChatPopMenu.ChatPopMenuAction forwardAction = null;
+        ChatPopMenu.ChatPopMenuAction hiddenAction = null;
+
+        copyAction = new ChatPopMenu.ChatPopMenuAction();
+        copyAction.setActionName(getContext().getString(R.string.copy_action));
+        copyAction.setActionIcon(R.drawable.pop_menu_copy);
+        copyAction.setActionClickListener(() -> mOnTranslationPopActionClickListener.onCopyTranslationClick(msg.getTranslation()));
+
+        if (msg.getStatus() != TUIMessageBean.MSG_STATUS_SEND_FAIL) {
+            forwardAction = new ChatPopMenu.ChatPopMenuAction();
+            forwardAction.setActionName(getContext().getString(R.string.forward_button));
+            forwardAction.setActionIcon(R.drawable.pop_menu_forward);
+            forwardAction.setActionClickListener(()-> mOnTranslationPopActionClickListener.onForwardTranslationClick(msg));
+        }
+
+        hiddenAction = new ChatPopMenu.ChatPopMenuAction();
+        hiddenAction.setActionName(getContext().getString(R.string.hide_action));
+        hiddenAction.setActionIcon(R.drawable.pop_menu_hide);
+        hiddenAction.setActionClickListener(() -> mOnTranslationPopActionClickListener.onHideTranslationClick(msg));
+
+        mTranslationPopActions.clear();
+        mTranslationPopActions.add(copyAction);
+        if (forwardAction != null) {
+            mTranslationPopActions.add(forwardAction);
+        }
+        mTranslationPopActions.add(hiddenAction);
     }
 
     public void onMsgAddBack() {
@@ -226,6 +282,7 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         ChatPopMenu.ChatPopMenuAction multiSelectAction = null;
         ChatPopMenu.ChatPopMenuAction quoteAction = null;
         ChatPopMenu.ChatPopMenuAction replyAction = null;
+        ChatPopMenu.ChatPopMenuAction translateAction = null;
         ChatPopMenu.ChatPopMenuAction revokeAction = null;
         ChatPopMenu.ChatPopMenuAction deleteAction = null;
 
@@ -257,6 +314,14 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
             multiSelectAction.setActionName(getContext().getString(R.string.titlebar_mutiselect));
             multiSelectAction.setActionIcon(R.drawable.pop_menu_multi_select);
             multiSelectAction.setActionClickListener(() -> mOnPopActionClickListener.onMultiSelectMessageClick(msg));
+
+            if (TUIChatConfigs.getConfigs().getGeneralConfig().isEnableTextTranslation() &&
+                    msg.getTranslationStatus() != TUIMessageBean.MSG_TRANSLATE_STATUS_SHOWN) {
+                translateAction = new ChatPopMenu.ChatPopMenuAction();
+                translateAction.setActionName(getContext().getString(R.string.translate_action));
+                translateAction.setActionIcon(R.drawable.pop_menu_translate);
+                translateAction.setActionClickListener(() -> mOnPopActionClickListener.onTranslateMessageClick(msg));
+            }
         }
 
         if (msg.getStatus() != TUIMessageBean.MSG_STATUS_SEND_FAIL) {
@@ -301,6 +366,9 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         }
         if (deleteAction != null) {
             mPopActions.add(deleteAction);
+        }
+        if (translateAction != null) {
+            mPopActions.add(translateAction);
         }
         mPopActions.addAll(mMorePopActions);
     }
@@ -404,6 +472,10 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         mOnPopActionClickListener = listener;
     }
 
+    public void setTranslationPopActionClickListener(OnTranslationPopActionClickListener listener) {
+        mOnTranslationPopActionClickListener = listener;
+    }
+
     public void setMenuEmojiOnClickListener(OnMenuEmojiClickListener menuEmojiOnClickListener) {
         this.menuEmojiOnClickListener = menuEmojiOnClickListener;
     }
@@ -499,6 +571,12 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
                 }
             }
 
+            @Override
+            public void onTranslationLongClick(View view, int position, TUIMessageBean messageInfo) {
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.onTranslationLongClick(view, position, messageInfo);
+                }
+            }
         });
     }
 
@@ -803,6 +881,8 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
 
         void onDeleteMessageClick(TUIMessageBean msg);
 
+        void onTranslateMessageClick(TUIMessageBean msg);
+
         void onRevokeMessageClick(TUIMessageBean msg);
 
         void onMultiSelectMessageClick(TUIMessageBean msg);
@@ -812,5 +892,13 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         void onReplyMessageClick(TUIMessageBean msg);
 
         void onQuoteMessageClick(TUIMessageBean msg);
+    }
+
+    public interface OnTranslationPopActionClickListener {
+        void onCopyTranslationClick(String translationContent);
+
+        void onForwardTranslationClick(TUIMessageBean msg);
+
+        void onHideTranslationClick(TUIMessageBean msg);
     }
 }

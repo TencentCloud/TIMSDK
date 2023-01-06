@@ -1,7 +1,13 @@
 package com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder;
 
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tencent.qcloud.tuicore.TUIThemeManager;

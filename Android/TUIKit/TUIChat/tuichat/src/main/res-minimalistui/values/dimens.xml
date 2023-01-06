@@ -5,4 +5,5 @@
     <dimen name="chat_minimalist_message_area_padding_top_bottom">8dp</dimen>
     <dimen name="chat_minimalist_message_quato_line_width">1dp</dimen>
     <dimen name="chat_minimalist_message_reply_quato_line_offset">2dp</dimen>
+    <dimen name="chat_minimalist_message_text_size">14sp</dimen>
 </resources>

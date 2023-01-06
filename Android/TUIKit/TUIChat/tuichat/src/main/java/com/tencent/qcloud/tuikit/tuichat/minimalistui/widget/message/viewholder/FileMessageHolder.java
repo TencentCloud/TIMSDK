@@ -19,17 +19,20 @@ public class FileMessageHolder extends MessageContentHolder {
 
     private TextView fileNameText;
     private TextView fileSizeText;
+    private View fileContent;
 
     private ProgressPresenter.ProgressListener progressListener;
     private NetworkConnectionListener networkConnectionListener;
 
     private Drawable normalBackground;
+    private Drawable fileContentBackground;
     private String msgId;
 
     public FileMessageHolder(View itemView) {
         super(itemView);
         fileNameText = itemView.findViewById(R.id.file_name_tv);
         fileSizeText = itemView.findViewById(R.id.file_size_tv);
+        fileContent = itemView.findViewById(R.id.file_content);
         timeInLineTextLayout = itemView.findViewById(R.id.file_msg_time_in_line_text);
     }
 
@@ -46,6 +49,7 @@ public class FileMessageHolder extends MessageContentHolder {
             fileStatusImage.setVisibility(View.GONE);
         }
         normalBackground = msgArea.getBackground();
+        fileContentBackground = fileContent.getBackground();
 
         progressListener = new ProgressPresenter.ProgressListener() {
             @Override
@@ -190,12 +194,18 @@ public class FileMessageHolder extends MessageContentHolder {
         if (normalBackground != null) {
             normalBackground.setColorFilter(color, PorterDuff.Mode.SRC_IN);
         }
+        if (fileContentBackground != null) {
+            fileContentBackground.setColorFilter(color, PorterDuff.Mode.SRC_OVER);
+        }
     }
     
     @Override
     public void clearHighLightBackground() {
         if (normalBackground != null) {
             normalBackground.setColorFilter(null);
+        }
+        if (fileContentBackground != null) {
+            fileContentBackground.setColorFilter(null);
         }
     }
 

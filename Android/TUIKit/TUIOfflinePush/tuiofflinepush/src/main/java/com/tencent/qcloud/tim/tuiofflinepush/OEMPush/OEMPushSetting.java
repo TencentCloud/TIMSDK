@@ -1,6 +1,11 @@
 package com.tencent.qcloud.tim.tuiofflinepush.oempush;
 
+import android.app.NotificationChannel;
+import android.app.NotificationChannelGroup;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.net.Uri;
+import android.os.Build;
 import android.text.TextUtils;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -193,7 +198,7 @@ public class OEMPushSetting implements PushSettingInterface{
                                     // Get new Instance ID token
                                     String token = task.getResult().getToken();
                                     TUIOfflinePushLog.i(TAG, "google fcm getToken = " + token);
-
+                                    createPrivateNotification(context);
                                     if (mPushCallback != null) {
                                         mPushCallback.onTokenCallback(token);
                                     } else {
@@ -214,6 +219,30 @@ public class OEMPushSetting implements PushSettingInterface{
         GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
         int resultCode = googleApiAvailability.isGooglePlayServicesAvailable(TUIOfflinePushConfig.getInstance().getContext());
         return resultCode == ConnectionResult.SUCCESS;
+    }
+
+    private void createPrivateNotification(Context context) {
+        if (context == null) {
+            TUIOfflinePushLog.e(TAG, "createPrivateNotification context is null");
+            return;
+        }
+        if (TUIOfflinePushConfig.getInstance().isAndroidPrivateRing() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager nm = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
+            if (nm != null){
+                NotificationChannelGroup notificationChannelGroup = new NotificationChannelGroup("MyGroupId", "CustomGroup");
+                nm.createNotificationChannelGroup(notificationChannelGroup);
+
+                NotificationChannel notificationChannel = new NotificationChannel(PrivateConstants.fcmPushChannelId, "CustomGroup", NotificationManager.IMPORTANCE_HIGH);
+                notificationChannel.setGroup("MyGroupId");
+                notificationChannel.enableLights(true);
+                notificationChannel.enableVibration(true);
+                // "android.resource://com.tencent.qcloud.tim.tuikit/raw/private_ring"
+                String soundUri = "android.resource://" + context.getPackageName() + "/raw/" + PrivateConstants.fcmPushChannelSoundName;
+                notificationChannel.setSound(Uri.parse(soundUri), null);
+
+                nm.createNotificationChannel(notificationChannel);
+            }
+        }
     }
 
 }

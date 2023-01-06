@@ -6,14 +6,11 @@ import com.tencent.qcloud.tuikit.TUICommonDefine;
 import com.tencent.qcloud.tuikit.TUIVideoView;
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine;
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallEngine;
-import com.tencent.qcloud.tuikit.tuicallengine.impl.base.TUILog;
 import com.tencent.qcloud.tuikit.tuicallkit.config.OfflinePushInfoConfig;
 
 import java.util.List;
 
 public class TUICallingAction {
-    private static final String TAG = "TUICallingAction";
-
     private final Context mContext;
 
     public TUICallingAction(Context context) {
@@ -23,7 +20,7 @@ public class TUICallingAction {
     public void inviteUser(List<String> userIdList, TUICommonDefine.ValueCallback callback) {
         TUICallDefine.CallParams params = new TUICallDefine.CallParams();
         params.offlinePushInfo = OfflinePushInfoConfig.createOfflinePushInfo(mContext);
-
+        params.timeout = Constants.SIGNALING_MAX_TIME;
         TUICallEngine.createInstance(mContext).inviteUser(userIdList, params, callback);
     }
 
@@ -31,7 +28,6 @@ public class TUICallingAction {
         TUICallEngine.createInstance(mContext).accept(new TUICommonDefine.Callback() {
             @Override
             public void onSuccess() {
-                TUILog.i(TAG, "accept");
                 TUICallingStatusManager.sharedInstance(mContext).updateCallStatus(TUICallDefine.Status.Accept);
                 if (callback != null) {
                     callback.onSuccess();
@@ -52,7 +48,6 @@ public class TUICallingAction {
         TUICallEngine.createInstance(mContext).reject(new TUICommonDefine.Callback() {
             @Override
             public void onSuccess() {
-                TUILog.i(TAG, "reject");
                 TUICallingStatusManager.sharedInstance(mContext).updateCallStatus(TUICallDefine.Status.None);
                 if (callback != null) {
                     callback.onSuccess();
@@ -73,7 +68,6 @@ public class TUICallingAction {
         TUICallEngine.createInstance(mContext).hangup(new TUICommonDefine.Callback() {
             @Override
             public void onSuccess() {
-                TUILog.i(TAG, "hangup");
                 TUICallingStatusManager.sharedInstance(mContext).updateCallStatus(TUICallDefine.Status.None);
                 if (callback != null) {
                     callback.onSuccess();
@@ -98,11 +92,12 @@ public class TUICallingAction {
         TUICallEngine.createInstance(mContext).openCamera(camera, videoView, new TUICommonDefine.Callback() {
             @Override
             public void onSuccess() {
-                TUILog.i(TAG, "openCamera success, camera: " + camera);
-
-                TUICommonDefine.Camera camera = TUICallingStatusManager.sharedInstance(mContext).getFrontCamera();
-                TUICallingStatusManager.sharedInstance(mContext).updateCameraOpenStatus(true, camera);
-                TUICallingStatusManager.sharedInstance(mContext).updateFrontCameraStatus(camera);
+                TUICallDefine.Status status = TUICallingStatusManager.sharedInstance(mContext).getCallStatus();
+                if (!TUICallDefine.Status.None.equals(status)) {
+                    TUICommonDefine.Camera camera = TUICallingStatusManager.sharedInstance(mContext).getFrontCamera();
+                    TUICallingStatusManager.sharedInstance(mContext).updateCameraOpenStatus(true, camera);
+                    TUICallingStatusManager.sharedInstance(mContext).updateFrontCameraStatus(camera);
+                }
 
                 if (callback != null) {
                     callback.onSuccess();
@@ -111,7 +106,6 @@ public class TUICallingAction {
 
             @Override
             public void onError(int errCode, String errMsg) {
-                TUILog.i(TAG, "openCamera failed, errCode: " + errCode + " , errMsg: " + errMsg);
                 if (callback != null) {
                     callback.onError(errCode, errMsg);
                 }

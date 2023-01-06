@@ -149,22 +149,32 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/quote_and_reply_area"
+        android:id="@+id/extra_info_area"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="start"
-        android:paddingStart="16dp"
-        android:layout_marginTop="6dp"
-        android:paddingEnd="16dp"
+        android:layout_marginTop="4dp"
         android:layout_below="@id/msg_content_ll"
         android:layout_toLeftOf="@id/right_user_icon_view"
         android:layout_toRightOf="@id/left_user_icon_view">
+        <!-- translation content area -->
+        <com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MaxWidthFrameLayout
+            android:id="@+id/translate_content_fl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/minimalist_translation_area_bg"
+            app:maxWidth="@dimen/chat_message_content_max_width"
+            android:visibility="gone"
+            tools:visibility="visible"/>
         <!-- message quote area -->
         <com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.MaxWidthFrameLayout
             android:id="@+id/quote_content_fl"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:background="@drawable/chat_gray_round_rect_bg"
             android:visibility="gone"
             app:maxWidth="@dimen/chat_message_content_max_width"
@@ -175,6 +185,9 @@
             android:id="@+id/msg_reply_preview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_below="@id/quote_content_fl" />
     </LinearLayout>
 </com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.MinimalistMessageLayout>

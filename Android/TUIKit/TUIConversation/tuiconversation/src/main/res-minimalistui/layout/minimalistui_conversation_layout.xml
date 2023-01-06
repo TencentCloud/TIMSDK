@@ -1,29 +1,46 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/minimalist_header_view_layout"
+    <include
+        layout="@layout/minimalist_header_view_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="9dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"/>
+        android:layout_marginEnd="16dp" />
 
-    <FrameLayout
-        android:id="@+id/search_layout"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="32dp"
-        android:layout_marginTop="9dp"
-        android:layout_marginBottom="15dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:visibility="gone"
-        />
+        android:layout_height="wrap_content">
 
-    <com.tencent.qcloud.tuikit.tuiconversation.minimalistui.widget.ConversationListLayout
-        android:id="@+id/conversation_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        <com.google.android.material.appbar.AppBarLayout
+            android:background="@color/transparent"
+            app:elevation="0dp"
+            app:layout_insetEdge="none"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <FrameLayout
+                android:id="@+id/search_layout"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="9dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="15dp"
+                android:visibility="gone"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed" />
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <com.tencent.qcloud.tuikit.tuiconversation.minimalistui.widget.ConversationListLayout
+            android:id="@+id/conversation_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </LinearLayout>

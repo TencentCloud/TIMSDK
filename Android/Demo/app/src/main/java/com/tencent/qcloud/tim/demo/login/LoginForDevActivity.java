@@ -116,7 +116,7 @@ public class LoginForDevActivity extends BaseLightActivity {
                 UserInfo.getInstance().setUserId(mUserAccount.getText().toString());
                 String userSig = GenerateTestUserSig.genTestUserSig(mUserAccount.getText().toString());
                 UserInfo.getInstance().setUserSig(userSig);
-                TUILogin.login(DemoApplication.instance(), DemoApplication.instance().getSdkAppId(), mUserAccount.getText().toString(), userSig, new TUICallback() {
+                TUILogin.login(DemoApplication.instance(), DemoApplication.instance().getSdkAppId(), mUserAccount.getText().toString(), userSig, TUIUtils.getLoginConfig(), new TUICallback() {
                     @Override
                     public void onError(final int code, final String desc) {
                         runOnUiThread(new Runnable() {

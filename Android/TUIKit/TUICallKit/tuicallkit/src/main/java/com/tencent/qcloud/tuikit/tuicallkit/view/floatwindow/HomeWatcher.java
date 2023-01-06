@@ -5,11 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
-import com.tencent.qcloud.tuikit.tuicallengine.impl.base.TUILog;
-
 public class HomeWatcher {
-    private static final String TAG = "HomeWatcher";
-
     private Context               mContext;
     private IntentFilter          mFilter;
     private OnHomePressedListener mListener;
@@ -40,7 +36,6 @@ public class HomeWatcher {
                 mContext.unregisterReceiver(mReceiver);
             }
         } catch (Exception e) {
-            TUILog.e(TAG, "stopWatch, e: " + e);
             e.printStackTrace();
         }
     }
@@ -56,7 +51,6 @@ public class HomeWatcher {
             String action = intent.getAction();
             if (action != null && action.equals(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)) {
                 String reason = intent.getStringExtra(SYSTEM_DIALOG_REASON_KEY);
-                TUILog.i(TAG, "onReceive, =: " + reason);
                 if (mListener != null) {
                     if (SYSTEM_DIALOG_REASON_HOME_KEY.equals(reason)) {
                         mListener.onHomePressed();

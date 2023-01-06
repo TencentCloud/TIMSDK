@@ -5,6 +5,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.OfflinePushInfo;
 
 public class OfflinePushInfoUtils {
     public static final String PRIVATE_RING_NAME   = "private_ring";
+    public static final String FCM_PUSH_CHANNEL_ID   = "fcm_push_channel";
     public static V2TIMOfflinePushInfo convertOfflinePushInfoToV2PushInfo(OfflinePushInfo offlinePushInfo) {
         if (offlinePushInfo == null) {
             return null;

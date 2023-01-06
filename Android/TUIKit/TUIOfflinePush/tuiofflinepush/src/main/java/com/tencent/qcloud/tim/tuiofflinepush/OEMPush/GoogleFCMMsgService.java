@@ -10,7 +10,7 @@ public class GoogleFCMMsgService extends FirebaseMessagingService {
     @Override
     public void onNewToken(String token) {
         super.onNewToken(token);
-        TUIOfflinePushLog.i(TAG, "google fcm onNewToken : " + token);
+        TUIOfflinePushLog.i(TAG, "onNewToken google fcm onNewToken : " + token);
 
         if (OEMPushSetting.mPushCallback != null) {
             OEMPushSetting.mPushCallback.onTokenCallback(token);

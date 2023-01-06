@@ -6,7 +6,6 @@ import android.widget.RelativeLayout;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
 import com.tencent.qcloud.tuikit.TUICommonDefine;
-import com.tencent.qcloud.tuikit.tuicallengine.impl.base.TUILog;
 import com.tencent.qcloud.tuikit.tuicallkit.base.Constants;
 import com.tencent.qcloud.tuikit.tuicallkit.base.TUICallingAction;
 import com.tencent.qcloud.tuikit.tuicallkit.base.UserLayout;
@@ -14,8 +13,6 @@ import com.tencent.qcloud.tuikit.tuicallkit.base.UserLayout;
 import java.util.Map;
 
 public abstract class BaseFunctionView extends RelativeLayout {
-    private static final String TAG = "BaseFunctionView";
-
     protected Context          mContext;
     protected TUICallingAction mCallingAction;
     protected UserLayout       mLocalUserLayout;
@@ -39,7 +36,6 @@ public abstract class BaseFunctionView extends RelativeLayout {
         @Override
         public void onNotifyEvent(String key, String subKey, Map<String, Object> param) {
             if (Constants.EVENT_TUICALLING_CHANGED.equals(key) && param != null) {
-                TUILog.i(TAG, "onNotifyEvent, key: " + key + " , param: " + param);
                 switch (subKey) {
                     case Constants.EVENT_SUB_CAMERA_OPEN:
                         updateCameraOpenStatus((boolean) param.get(Constants.OPEN_CAMERA));

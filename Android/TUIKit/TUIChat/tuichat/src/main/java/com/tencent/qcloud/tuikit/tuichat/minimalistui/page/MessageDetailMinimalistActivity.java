@@ -202,6 +202,7 @@ public class MessageDetailMinimalistActivity extends BaseMinimalistLightActivity
         RecyclerView.ViewHolder holder = MessageViewHolderFactory.getInstance(messageArea, null, type);
         if (holder instanceof MessageContentHolder) {
             ((MessageContentHolder) holder).layoutViews(messageBean, 0);
+            ((MessageContentHolder) holder).setTranslationContent(messageBean, 0);
         }
         messageArea.addView(holder.itemView);
     }

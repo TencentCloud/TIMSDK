@@ -18,14 +18,17 @@ import com.tencent.qcloud.tuikit.tuichat.R;
 public class MinimalistMessageLayout extends RelativeLayout {
     private View msgArea;
     private View quoteArea;
+    private View translationArea;
     private View replyArea;
 
     private boolean isStart = false;
     private Paint paint;
     private Path quotePath;
+    private Path translationPath;
     private Path replyPath;
 
     private Rect msgAreaRect;
+    private Rect translationRect;
     private Rect quoteRect;
     private Rect replyRect;
     private float strokeWidth;
@@ -54,8 +57,10 @@ public class MinimalistMessageLayout extends RelativeLayout {
     private void init() {
         setWillNotDraw(false);
         quotePath = new Path();
+        translationPath = new Path();
         replyPath = new Path();
         msgAreaRect = new Rect();
+        translationRect = new Rect();
         quoteRect = new Rect();
         replyRect = new Rect();
         paint = new Paint();
@@ -69,6 +74,7 @@ public class MinimalistMessageLayout extends RelativeLayout {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         msgArea = findViewById(R.id.msg_area);
+        translationArea = findViewById(R.id.translate_content_fl);
         quoteArea = findViewById(R.id.quote_content_fl);
         replyArea = findViewById(R.id.msg_reply_preview);
         drawLine(canvas);
@@ -106,6 +112,22 @@ public class MinimalistMessageLayout extends RelativeLayout {
                 msgX = msgAreaRect.right - strokeWidth / 2;
             }
             msgCenterY = msgAreaRect.top + msgAreaRect.height() * 1.0f / 2;
+            if (translationArea.getVisibility() == VISIBLE) {
+                float translationX, translationCenterY;
+                translationRect = getChildRectInParent(translationArea);
+                if (isStart) {
+                    translationX = translationRect.left;
+                } else {
+                    translationX = translationRect.right;
+                }
+                translationCenterY = translationRect.top + translationRect.height() * 1.0f / 2;
+                int translationControlRadius = (int) Math.abs(translationX - msgX);
+                translationPath.reset();
+                translationPath.moveTo(msgX, msgCenterY);
+                translationPath.quadTo(msgX, translationCenterY - translationControlRadius, msgX, translationCenterY - translationControlRadius);
+                translationPath.quadTo(msgX, translationCenterY, translationX, translationCenterY);
+                canvas.drawPath(translationPath, paint);
+            }
             if (quoteArea.getVisibility() == VISIBLE) {
                 float quoteX, quoteCenterY;
                 quoteRect = getChildRectInParent(quoteArea);

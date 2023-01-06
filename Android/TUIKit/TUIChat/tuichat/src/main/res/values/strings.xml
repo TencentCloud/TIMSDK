@@ -10,14 +10,18 @@
     <string name="hold_say">Hold to Talk</string>
 
     <string name="copy_action">Copy</string>
+    <string name="translate_action">Translate</string>
     <string name="delete_action">Delete</string>
     <string name="revoke_action">Recall</string>
     <string name="resend_action">Resend</string>
+    <string name="hide_action">Hide</string>
 
     <string name="copy_success_tip">Copy Success</string>
 
     <string name="chat_message_detail">Message details</string>
 
+    <string name="translation_support">Translated by IM</string>
+    <string name="translation_fail">Translation failed</string>
     <!-- 消息转发 -->
 
     <string name="titlebar_back">Back</string>
@@ -109,6 +113,8 @@
     <string name="record_occupied">record occupied</string>
     <string name="record_null">record is null</string>
     <string name="record_limit_tips">Maximum voice length reached</string>
+    <string name="record_rejected_for_in_call">An audio and video call is in progress, please try again later</string>
+    <string name="record_rejected_for_in_recording">The current recording is not over</string>
     <string name="play_error_tip">The voice file is damaged or does not exist</string>
     <string name="input_tip">No nickname. Enter again.</string>
 
@@ -149,6 +155,7 @@
     <string name="completed">completed</string>
     <string name="view_original_image">View Full Image</string>
 
+    <string name="at_all">All</string>
     <string name="ui_at_all">[@All]</string>
     <string name="ui_at_me">[Someone @ me]</string>
     <string name="ui_at_all_me">[@All][Someone @ me]</string>

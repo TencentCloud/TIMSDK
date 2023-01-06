@@ -229,16 +229,15 @@ public class ConversationPresenter {
     private void loadMarkedConversation() {
         TUIConversationLog.i(TAG, "loadMarkedConversation");
         V2TIMConversationListFilter filter = new V2TIMConversationListFilter();
-        filter.setCount(GET_CONVERSATION_COUNT);
         long markType = V2TIMConversation.V2TIM_CONVERSATION_MARK_TYPE_FOLD |
                 V2TIMConversation.V2TIM_CONVERSATION_MARK_TYPE_UNREAD |
                 V2TIMConversation.V2TIM_CONVERSATION_MARK_TYPE_HIDE;
         filter.setMarkType(markType);
-        filter.setNextSeq(0);
-        provider.getMarkConversationList(filter, true, new IUIKitCallback<List<ConversationInfo>>() {
+        provider.getMarkConversationList(filter, 0, GET_CONVERSATION_COUNT, true, new IUIKitCallback<List<ConversationInfo>>() {
             @Override
             public void onSuccess(List<ConversationInfo> conversationInfoList) {
                 if (conversationInfoList.size() == 0) {
+                    refreshUnreadCount();
                     return;
                 }
 
@@ -277,6 +276,7 @@ public class ConversationPresenter {
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
+                refreshUnreadCount();
                 TUIConversationLog.e(TAG, "loadMarkedConversation error:" + errCode + ", " + errMsg);
             }
         });

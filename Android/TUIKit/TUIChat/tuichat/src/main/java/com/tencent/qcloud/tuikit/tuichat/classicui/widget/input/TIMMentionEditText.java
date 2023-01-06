@@ -12,6 +12,8 @@ import android.view.inputmethod.InputConnectionWrapper;
 import android.widget.EditText;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +27,7 @@ public class TIMMentionEditText extends EditText {
     private boolean mIsSelected;
     private Range mLastSelectedRange;
     private List<Range> mRangeArrayList = new ArrayList<>();
-    private Map<String, String> mentionList = new HashMap<>();
+    private Map<String, String> mentionMap = new HashMap<>();
 
     private OnMentionInputListener mOnMentionInputListener;
 
@@ -97,11 +99,15 @@ public class TIMMentionEditText extends EditText {
     }
 
     public void setMentionMap(Map<String, String> mentionList) {
-        this.mentionList.putAll(mentionList);
+        this.mentionMap.putAll(mentionList);
     }
 
     public List<String> getMentionIdList() {
-        return new ArrayList<>(mentionList.values());
+        List<String> mentionIDList = new ArrayList<>();
+        for (Range range : mRangeArrayList) {
+            mentionIDList.add(range.userID);
+        }
+        return mentionIDList;
     }
 
     private void setMentionStringRange() {
@@ -120,7 +126,7 @@ public class TIMMentionEditText extends EditText {
         if (TextUtils.isEmpty(text)) {
             return;
         }
-        for (String name : mentionList.keySet()) {
+        for (String name : mentionMap.keySet()) {
             if (TextUtils.isEmpty(name)) {
                 continue;
             }
@@ -131,16 +137,22 @@ public class TIMMentionEditText extends EditText {
                     break;
                 } else {
                     int end = findIndex + name.length();
-                    mRangeArrayList.add(new Range(findIndex, end));
+                    mRangeArrayList.add(new Range(findIndex, end, mentionMap.get(name)));
                     nameStartIndex = end;
                 }
             }
-
         }
+
+        Collections.sort(mRangeArrayList, new Comparator<Range>() {
+            @Override
+            public int compare(Range lhs, Range rhs) {
+                return lhs.from - rhs.from;
+            }
+        });
     }
 
     private void updateMentionList() {
-        if (mentionList == null) {
+        if (mentionMap == null) {
             return;
         }
         Editable spannableText = getText();
@@ -149,11 +161,11 @@ public class TIMMentionEditText extends EditText {
         }
         String text = spannableText.toString();
         if (TextUtils.isEmpty(text)) {
-            mentionList.clear();
+            mentionMap.clear();
         }
-        for (String name : new ArrayList<>(mentionList.keySet())) {
+        for (String name : new ArrayList<>(mentionMap.keySet())) {
             if (!text.contains(name)) {
-                mentionList.remove(name);
+                mentionMap.remove(name);
             }
         }
     }
@@ -253,10 +265,12 @@ public class TIMMentionEditText extends EditText {
     private class Range {
         int from;
         int to;
+        String userID;
 
-        Range(int from, int to) {
+        Range(int from, int to, String userID) {
             this.from = from;
             this.to = to;
+            this.userID = userID;
         }
 
         boolean isWrappedBy(int start, int end) {

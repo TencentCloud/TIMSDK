@@ -13,14 +13,11 @@ import android.widget.RelativeLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.tencent.qcloud.tuikit.tuicallengine.impl.base.TUILog;
 import com.tencent.qcloud.tuikit.tuicallkit.R;
 import com.tencent.qcloud.tuikit.tuicallkit.utils.DeviceUtils;
 import com.tencent.qcloud.tuikit.tuicallkit.view.root.BaseCallView;
 
 public class BaseCallActivity extends AppCompatActivity {
-    private static final String TAG = "BaseCallActivity";
-
     private static AppCompatActivity mActivity;
     private static BaseCallView      mBaseCallView;
     private static RelativeLayout    mLayoutContainer;
@@ -45,7 +42,6 @@ public class BaseCallActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        TUILog.i(TAG, "onCreate");
         DeviceUtils.setScreenLockParams(getWindow());
         mActivity = this;
         setContentView(R.layout.tuicalling_base_activity);
@@ -68,7 +64,6 @@ public class BaseCallActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        TUILog.i(TAG, "onResume");
         initView();
         // clear notifications after a call is processed
         NotificationManager notificationManager =
@@ -101,6 +96,5 @@ public class BaseCallActivity extends AppCompatActivity {
         mBaseCallView = null;
         mLayoutContainer = null;
         mActivity = null;
-        TUILog.i(TAG, "onDestroy");
     }
 }

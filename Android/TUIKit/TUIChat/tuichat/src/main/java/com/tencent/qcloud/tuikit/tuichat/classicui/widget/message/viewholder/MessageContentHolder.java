@@ -3,8 +3,11 @@ package com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,6 +28,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.MessageRepliesBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.SelectTextHelper;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.reply.ChatFlowReactView;
+import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
@@ -44,6 +48,10 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
     public TextView isReadText;
     public TextView unreadAudioText;
     public TextView messageDetailsTimeTv;
+    private FrameLayout translationContentFrameLayout;
+    private ImageView translationLoadingImage;
+    private LinearLayout translationResultLayout;
+    private RotateAnimation translationRotateAnimation;
 
     public boolean isForwardMode = false;
     public boolean isReplyDetailMode = false;
@@ -66,6 +74,10 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
         isReadText = itemView.findViewById(R.id.is_read_tv);
         unreadAudioText = itemView.findViewById(R.id.audio_unread);
         messageDetailsTimeTv = itemView.findViewById(R.id.msg_detail_time_tv);
+        translationContentFrameLayout = itemView.findViewById(R.id.translate_content_fl);
+        LayoutInflater.from(itemView.getContext()).inflate(R.layout.translation_contant_layout, translationContentFrameLayout);
+        translationLoadingImage = translationContentFrameLayout.findViewById(R.id.translate_loading_iv);
+        translationResultLayout = translationContentFrameLayout.findViewById(R.id.translate_result_ll);
     }
 
     public void setPresenter(ChatPresenter chatPresenter) {
@@ -347,7 +359,9 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
 
         setReplyContent(msg);
         setReactContent(msg);
-
+        if (presenter.isNeedShowTranslation()) {
+            setTranslationContent(msg, position);
+        }
         setMessageAreaPadding();
 
         layoutVariableViews(msg, position);
@@ -557,6 +571,52 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
             public void onScrolling() {
             }
         });
+    }
+
+    protected void setTranslationContent(TUIMessageBean msg, int position) {
+        int translationStatus = msg.getTranslationStatus();
+        if (translationStatus == TUIMessageBean.MSG_TRANSLATE_STATUS_SHOWN) {
+            translationContentFrameLayout.setVisibility(View.VISIBLE);
+            stopTranslationLoading();
+            translationResultLayout.setVisibility(View.VISIBLE);
+            TextView translationText = translationContentFrameLayout.findViewById(R.id.translate_tv);
+            if (properties.getChatContextFontSize() != 0) {
+                translationText.setTextSize(properties.getChatContextFontSize());
+            }
+            FaceManager.handlerEmojiText(translationText, msg.getTranslation(), false);
+            translationContentFrameLayout.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    if (onItemClickListener != null) {
+                        onItemClickListener.onTranslationLongClick(view, position, msg);
+                    }
+                    return true;
+                }
+            });
+        } else if (translationStatus == TUIMessageBean.MSG_TRANSLATE_STATUS_LOADING) {
+            translationContentFrameLayout.setVisibility(View.VISIBLE);
+            startTranslationLoading();
+            translationResultLayout.setVisibility(View.GONE);
+            translationContentFrameLayout.setOnLongClickListener(null);
+        } else {
+            stopTranslationLoading();
+            translationContentFrameLayout.setVisibility(View.GONE);
+            translationContentFrameLayout.setOnLongClickListener(null);
+        }
+    }
+
+    private void startTranslationLoading() {
+        translationLoadingImage.setVisibility(View.VISIBLE);
+        translationRotateAnimation = new RotateAnimation(0, 360, RotateAnimation.RELATIVE_TO_SELF, 0.5f, RotateAnimation.RELATIVE_TO_SELF, 0.5f);
+        translationRotateAnimation.setRepeatCount(-1);
+        translationRotateAnimation.setDuration(1000);
+        translationRotateAnimation.setInterpolator(new LinearInterpolator());
+        translationLoadingImage.startAnimation(translationRotateAnimation);
+    }
+
+    private void stopTranslationLoading() {
+        translationLoadingImage.clearAnimation();
+        translationLoadingImage.setVisibility(View.GONE);
     }
 
 }

@@ -72,6 +72,8 @@ public class OfflinePushAPIDemo {
         offlinePushParamBean.setVivoPushBussinessId("");
 
         offlinePushParamBean.setFcmPushBussinessId("");
+        offlinePushParamBean.setFcmPushChannelId("");
+        offlinePushParamBean.setFcmPushChannelSoundName("");
 
         offlinePushParamBean.setOppoPushBussinessId("");
         offlinePushParamBean.setOppoPushAppKey("");

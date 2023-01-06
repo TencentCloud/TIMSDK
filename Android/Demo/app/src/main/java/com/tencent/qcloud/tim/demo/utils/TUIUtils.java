@@ -146,4 +146,12 @@ public class TUIUtils {
         }
     }
 
+    public static TUILoginConfig getLoginConfig() {
+        TUILoginConfig config = new TUILoginConfig();
+        if (BuildConfig.DEBUG) {
+            config.setLogLevel(TUILoginConfig.TUI_LOG_DEBUG);
+        }
+        return config;
+    }
+
 }

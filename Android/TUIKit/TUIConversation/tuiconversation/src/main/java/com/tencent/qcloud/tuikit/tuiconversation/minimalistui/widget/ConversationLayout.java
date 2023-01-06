@@ -18,7 +18,7 @@ import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.interfaces.IConversationListAdapter;
 import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.interfaces.IConversationLayout;
-import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.page.TUIConversationMinimalistFragment;
+import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.page.ConversationMinimalistFragment;
 import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.setting.ConversationLayoutSetting;
 import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.widget.swipe.Attributes;
 import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationPresenter;
@@ -35,7 +35,7 @@ public class ConversationLayout extends RelativeLayout implements IConversationL
     private ConversationPresenter presenter;
     private ImageView conversationEditView, createChatView;
     private TextView conversationEditDoneView;
-    private TUIConversationMinimalistFragment.OnClickListener mClickListener = null;
+    private ConversationMinimalistFragment.OnClickListener mClickListener = null;
     private boolean isMultiSelected = false;
     private List<ConversationInfo> mSelectConversations = new ArrayList<>();
 
@@ -119,7 +119,7 @@ public class ConversationLayout extends RelativeLayout implements IConversationL
         conversationMutiSelectEnd();
     }
 
-    public void setOnClickListener(TUIConversationMinimalistFragment.OnClickListener listener) {
+    public void setOnClickListener(ConversationMinimalistFragment.OnClickListener listener) {
         mClickListener = listener;
     }
     public boolean isMultiSelected() {

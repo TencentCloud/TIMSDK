@@ -4,6 +4,12 @@
 
     <application>
         <activity
+            android:name=".permission.PermissionActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask"
+            android:theme="@style/CoreActivityTranslucent"
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
+        <activity
             android:name=".component.activities.SelectionActivity"
             android:screenOrientation="portrait" />
         <activity

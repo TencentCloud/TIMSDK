@@ -90,6 +90,7 @@ public class ChatReplyDialogFragment extends DialogFragment implements IReplyMes
             RecyclerView.ViewHolder holder = MessageViewHolderFactory.getInstance(messageContent, null, type);
             if (holder instanceof MessageBaseHolder) {
                 ((MessageContentHolder) holder).isMessageDetailMode = true;
+                ((MessageContentHolder) holder).setTranslationContent(originMessage, 0);
                 ((MessageBaseHolder) holder).layoutViews(originMessage, 0);
             }
             messageContent.addView(holder.itemView);

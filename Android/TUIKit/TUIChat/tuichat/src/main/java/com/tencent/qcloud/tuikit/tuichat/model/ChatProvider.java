@@ -1,13 +1,16 @@
 package com.tencent.qcloud.tuikit.tuichat.model;
 
 import static com.tencent.imsdk.BaseConstants.ERR_SDK_MSG_MODIFY_CONFLICT;
+import static com.tencent.imsdk.v2.V2TIMMessage.V2TIM_ELEM_TYPE_TEXT;
 import static com.tencent.imsdk.v2.V2TIMMessage.V2TIM_MSG_STATUS_SEND_FAIL;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 
 import com.google.gson.Gson;
 import com.tencent.imsdk.BaseConstants;
+import com.tencent.imsdk.message.MessageAtInfo;
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMCompleteCallback;
 import com.tencent.imsdk.v2.V2TIMConversation;
@@ -28,13 +31,18 @@ import com.tencent.imsdk.v2.V2TIMMessageListGetOption;
 import com.tencent.imsdk.v2.V2TIMMessageReceipt;
 import com.tencent.imsdk.v2.V2TIMOfflinePushInfo;
 import com.tencent.imsdk.v2.V2TIMSendCallback;
+import com.tencent.imsdk.v2.V2TIMTextElem;
+import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.imsdk.v2.V2TIMUserStatus;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
+import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
+import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupApplyInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupMemberInfo;
@@ -55,6 +63,8 @@ import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
 import com.tencent.qcloud.tuikit.tuichat.util.OfflinePushInfoUtils;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
+
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -269,7 +279,9 @@ public class ChatProvider {
         v2TIMOfflinePushInfo.setAndroidOPPOChannelID("tuikit");
         if (TUIChatConfigs.getConfigs().getGeneralConfig().isAndroidPrivateRing()) {
             v2TIMOfflinePushInfo.setAndroidSound(OfflinePushInfoUtils.PRIVATE_RING_NAME);
+            v2TIMOfflinePushInfo.setAndroidFCMChannelID(OfflinePushInfoUtils.FCM_PUSH_CHANNEL_ID);
         }
+        v2TIMOfflinePushInfo.setAndroidHuaWeiCategory("IM");
 
         final V2TIMMessage v2TIMMessage = message.getV2TIMMessage();
         v2TIMMessage.setExcludedFromUnreadCount(TUIChatConfigs.getConfigs().getGeneralConfig().isExcludedFromUnreadCount());
@@ -682,6 +694,137 @@ public class ChatProvider {
                 } else {
                     TUIChatUtils.callbackOnSuccess(callback, modifiedMessage);
                 }
+            }
+        });
+    }
+
+    public void translateMessage(TUIMessageBean messageBean, IUIKitCallback<String> callback) {
+        V2TIMMessage v2TIMMessage = messageBean.getV2TIMMessage();
+        if (v2TIMMessage == null) {
+            TUIChatUtils.callbackOnError(callback, TAG, BaseConstants.ERR_INVALID_PARAMETERS, "translateMessage v2TIMMessage is null");
+            return;
+        }
+
+        if (v2TIMMessage.getElemType() != V2TIM_ELEM_TYPE_TEXT) {
+            TUIChatUtils.callbackOnError(callback, TAG, BaseConstants.ERR_INVALID_PARAMETERS, "translateMessage v2TIMMessage is not text type");
+            return;
+        }
+
+        if (messageBean.getTranslationStatus() == TUIMessageBean.MSG_TRANSLATE_STATUS_HIDDEN) {
+            messageBean.setTranslationStatus(TUIMessageBean.MSG_TRANSLATE_STATUS_SHOWN);
+            TUIChatUtils.callbackOnSuccess(callback, messageBean.getTranslation());
+            return;
+        }
+
+        messageBean.setTranslationStatus(TUIMessageBean.MSG_TRANSLATE_STATUS_LOADING);
+        String targetLanguage;
+        if (TextUtils.equals(TUIThemeManager.getInstance().getCurrentLanguage(), TUIThemeManager.LANGUAGE_ZH_CN)) {
+            targetLanguage = TUIThemeManager.LANGUAGE_ZH_CN;
+        } else {
+            targetLanguage = TUIThemeManager.LANGUAGE_EN;
+        }
+
+        List<String> atUserIDList = v2TIMMessage.getGroupAtUserList();
+        List<String> atRealUserIDList = new ArrayList<>();
+        List<String> groupAtUserNicknameList = new ArrayList<>();
+        List<Integer> atAllIndexList = new ArrayList<>();
+        for (int i = 0; i < atUserIDList.size(); i++) {
+            String userID = atUserIDList.get(i);
+            if (userID.equals(MessageAtInfo.AT_ALL_TAG)) {
+                atAllIndexList.add(i);
+            } else {
+                atRealUserIDList.add(userID);
+            }
+        }
+
+        if (atRealUserIDList.size() == 0) {
+            for (Integer atAllIndex : atAllIndexList) {
+                groupAtUserNicknameList.add(TUIChatService.getAppContext().getString(R.string.at_all));
+            }
+
+            translateMessage(messageBean, groupAtUserNicknameList, targetLanguage, callback);
+        } else {
+            V2TIMManager.getInstance().getUsersInfo(atRealUserIDList, new V2TIMValueCallback<List<V2TIMUserFullInfo>>() {
+                @Override
+                public void onSuccess(List<V2TIMUserFullInfo> v2TIMUserFullInfos) {
+                    for (String userID : v2TIMMessage.getGroupAtUserList()) {
+                        for (V2TIMUserFullInfo userFullInfo : v2TIMUserFullInfos) {
+                            if (userID.equals(MessageAtInfo.AT_ALL_TAG)) {
+                                groupAtUserNicknameList.add(userID);
+                                break;
+                            }
+
+                            if (userID.equals(userFullInfo.getUserID())) {
+                                groupAtUserNicknameList.add(userFullInfo.getNickName());
+                                break;
+                            }
+                        }
+                    }
+
+                    for (Integer atAllIndex : atAllIndexList) {
+                        groupAtUserNicknameList.set(atAllIndex, TUIChatService.getAppContext().getString(R.string.at_all));
+                    }
+
+                    translateMessage(messageBean, groupAtUserNicknameList, targetLanguage, callback);
+                }
+
+                @Override
+                public void onError(int code, String desc) {
+                    messageBean.setTranslationStatus(TUIMessageBean.MSG_TRANSLATE_STATUS_UNKNOWN);
+                    TUIChatLog.e(TAG, "translateMessage getUsersInfo error code = " + code + ",des = " + desc);
+                    TUIChatUtils.callbackOnError(callback, TAG, BaseConstants.ERR_INVALID_PARAMETERS, "translateMessage-getUsersInfo failed");
+                }
+            });
+        }
+    }
+
+    private void translateMessage(TUIMessageBean messageBean, List<String> groupAtUserNicknameList, String targetLanguage, IUIKitCallback<String> callback) {
+        V2TIMMessage v2TIMMessage = messageBean.getV2TIMMessage();
+        V2TIMTextElem timTextElem = v2TIMMessage.getTextElem();
+        HashMap<String, List<String>> splitMap = TUIChatUtils.splitTextByEmojiAndAtUsers(timTextElem.getText(), groupAtUserNicknameList);
+        List<String> toTranslateTextList = splitMap.get(TUIChatUtils.SPLIT_TEXT_FOR_TRANSLATION);
+
+        if (toTranslateTextList == null || toTranslateTextList.isEmpty()) {
+            List<String> splitTextList = splitMap.get(TUIChatUtils.SPLIT_TEXT);
+            String translateResult = "";
+            if (splitTextList != null) {
+                for (String result : splitTextList) {
+                    translateResult += result;
+                }
+            }
+            messageBean.setTranslation(translateResult);
+            TUIChatUtils.callbackOnSuccess(callback, translateResult);
+            return;
+        }
+
+        V2TIMManager.getMessageManager().translateText(toTranslateTextList, null, targetLanguage, new V2TIMValueCallback<HashMap<String, String>>() {
+            @Override
+            public void onSuccess(HashMap<String, String> translateHashMap) {
+                List<String> splitTextList = splitMap.get(TUIChatUtils.SPLIT_TEXT);
+                List<String> translationIndexList = splitMap.get(TUIChatUtils.SPLIT_TEXT_INDEX_FOR_TRANSLATION);
+                for (String indexString : translationIndexList) {
+                    int index = Integer.valueOf(indexString);
+                    String originText = splitTextList.get(index);
+                    String translatedResult = translateHashMap.get(originText);
+                    if (!TextUtils.isEmpty(translatedResult)) {
+                        splitTextList.set(index, translatedResult);
+                    }
+                }
+
+                String translateResult = "";
+                for (String result : splitTextList) {
+                    translateResult += result;
+                }
+
+                messageBean.setTranslation(translateResult);
+                TUIChatUtils.callbackOnSuccess(callback, translateResult);
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                messageBean.setTranslationStatus(TUIMessageBean.MSG_TRANSLATE_STATUS_UNKNOWN);
+                TUIChatLog.e(TAG, "translateText error code = " + code + ",des = " + desc);
+                TUIChatUtils.callbackOnError(callback, code, desc);
             }
         });
     }

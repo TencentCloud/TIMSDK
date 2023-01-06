@@ -35,7 +35,7 @@ import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.classicui.component.AudioPlayer;
+import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 import com.tencent.qcloud.tuikit.tuichat.classicui.interfaces.OnItemClickListener;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.ChatView;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.input.InputView;
@@ -61,10 +61,12 @@ public class TUIBaseChatFragment extends BaseFragment {
 
     private List<TUIMessageBean> mForwardSelectMsgInfos = null;
     private int mForwardMode;
+    private boolean mOnlyForTranslation;
 
     private MessageRecyclerView messageRecyclerView;
     protected String mChatBackgroundUrl;
     protected String mChatBackgroundThumbnailUrl;
+    private int messageViewBackgroundHeight;
 
     @Nullable
     @Override
@@ -95,9 +97,10 @@ public class TUIBaseChatFragment extends BaseFragment {
 
         chatView.setForwardSelectActivityListener(new ChatView.ForwardSelectActivityListener(){
             @Override
-            public void onStartForwardSelectActivity(int mode, List<TUIMessageBean> msgIds) {
+            public void onStartForwardSelectActivity(int mode, List<TUIMessageBean> msgIds, boolean onlyForTranslation) {
                 mForwardMode = mode;
                 mForwardSelectMsgInfos = msgIds;
+                mOnlyForTranslation = onlyForTranslation;
                 Bundle bundle = new Bundle();
                 bundle.putInt(TUIChatConstants.FORWARD_MODE, mode);
                 TUICore.startActivity(TUIBaseChatFragment.this, "TUIForwardSelectActivity", bundle, TUIChatConstants.FORWARD_SELECT_ACTIVTY_CODE);
@@ -163,14 +166,24 @@ public class TUIBaseChatFragment extends BaseFragment {
                 chatView.getMessageLayout().setSelectedPosition(position);
                 chatView.getMessageLayout().showItemPopMenu(position - 1, messageInfo, view);
             }
+
+            @Override
+            public void onTranslationLongClick(View view, int position, TUIMessageBean messageInfo) {
+                chatView.getMessageLayout().showTranslationItemPopMenu(position - 1, messageInfo, view);
+            }
         });
 
-        chatView.getInputLayout().setStartActivityListener(new InputView.OnStartActivityListener() {
+        chatView.getInputLayout().setOnInputViewListener(new InputView.OnInputViewListener() {
             @Override
             public void onStartGroupMemberSelectActivity() {
                 Bundle param = new Bundle();
                 param.putString(TUIChatConstants.GROUP_ID, getChatInfo().getId());
                 TUICore.startActivity(TUIBaseChatFragment.this, "StartGroupMemberSelectActivity", param, 1);
+            }
+
+            @Override
+            public void onUpdateChatBackground() {
+                setChatViewBackground(mChatBackgroundUrl);
             }
         });
 
@@ -227,7 +240,7 @@ public class TUIBaseChatFragment extends BaseFragment {
                     }
 
                     ChatPresenter chatPresenter = getPresenter();
-                    chatPresenter.forwardMessage(mForwardSelectMsgInfos, isGroup, id, title, mForwardMode, selfConversation, new IUIKitCallback() {
+                    chatPresenter.forwardMessage(mForwardSelectMsgInfos, isGroup, id, title, mForwardMode, selfConversation, mOnlyForTranslation, new IUIKitCallback() {
                         @Override
                         public void onSuccess(Object data) {
                             TUIChatLog.v(TAG, "sendMessage onSuccess:");
@@ -338,15 +351,18 @@ public class TUIBaseChatFragment extends BaseFragment {
             public void run() {
                 int imageWidth = messageRecyclerView.getWidth();
                 int imageHeight = messageRecyclerView.getHeight();
-                TUIChatLog.d(TAG, "messageRecyclerView  width = " + imageWidth + ", height = " + imageHeight);
-                if (imageWidth == 0 || imageHeight == 0) {
+                if (imageHeight > messageViewBackgroundHeight) {
+                    messageViewBackgroundHeight = imageHeight;
+                }
+                TUIChatLog.d(TAG, "messageRecyclerView  width = " + imageWidth + ", height = " + messageViewBackgroundHeight);
+                if (imageWidth == 0 || messageViewBackgroundHeight == 0) {
                     return;
                 }
-                Glide.with(getContext()).asBitmap().load(mChatBackgroundUrl).into(new CustomTarget<Bitmap>(imageWidth, imageHeight) {
+                Glide.with(getContext()).asBitmap().load(mChatBackgroundUrl).into(new CustomTarget<Bitmap>(imageWidth, messageViewBackgroundHeight) {
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                         TUIChatLog.d(TAG, "messageRecyclerView onGlobalLayout url = " + mChatBackgroundUrl);
-                        Bitmap srcBitmap = zoomImg(resource, imageWidth, imageHeight);
+                        Bitmap srcBitmap = zoomImg(resource, imageWidth, messageViewBackgroundHeight);
                         messageRecyclerView.setBackground(new BitmapDrawable(getResources(), resource) {
                             @Override
                             public void draw(@NonNull Canvas canvas) {
