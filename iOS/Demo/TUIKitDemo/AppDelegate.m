@@ -31,10 +31,6 @@
 #import "TUIChatConfig.h"
 #import "TUIWarningView.h"
 
-#if DEBUG
-#import <CallKit/CallKit.h>
-#endif
-
 //Minimalist
 #import "ConversationController_Minimalist.h"
 #import "ContactsController_Minimalist.h"
@@ -52,7 +48,6 @@
 @implementation AppDelegate
 
 
-#pragma mark - 推送的配置及统一跳转
 #pragma mark - Life cycle
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     app = self;
@@ -502,6 +497,7 @@ typedef void (^confirmHandler)(UIAlertAction *action, NSString *content);
     }
     TUIConfig.defaultConfig.displayOnlineStatusIcon = [[NSUserDefaults standardUserDefaults] boolForKey:kEnableOnlineStatus];
     TUIChatConfig.defaultConfig.enableMultiDeviceForCall = NO;
+    TUIChatConfig.defaultConfig.enableTextTranslation = YES;
 }
 
 - (void)setupConfig_Minimalist {
@@ -515,6 +511,7 @@ typedef void (^confirmHandler)(UIAlertAction *action, NSString *content);
     TUIConfig.defaultConfig.displayOnlineStatusIcon = [[NSUserDefaults standardUserDefaults] boolForKey:kEnableOnlineStatus_mini];
     TUIChatConfig.defaultConfig.enableMultiDeviceForCall = NO;
     TUIConfig.defaultConfig.avatarType = TAvatarTypeRounded;
+    TUIChatConfig.defaultConfig.enableTextTranslation = YES;
 }
 
 - (void)onSelectStyle:(StyleSelectCellModel *)cellModel {

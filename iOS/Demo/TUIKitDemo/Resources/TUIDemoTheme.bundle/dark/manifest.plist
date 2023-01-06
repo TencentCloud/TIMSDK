@@ -24,10 +24,6 @@
 	<string>tab_me_normal.png</string>
 	<key>tab_me_selected_img</key>
 	<string>tab_me_selected.png</string>
-	<key>nav_back_img</key>
-	<string>nav_back.png</string>
-	<key>nav_more_img</key>
-	<string>nav_more.png</string>
 	<key>nav_title_text_color</key>
 	<string>#F4F5F9</string>
 	<key>tab_title_text_select_color</key>
@@ -62,13 +58,5 @@
 	<string>arrow_n</string>
 	<key>separator_color</key>
 	<string>#39393B</string>
-	<key>pop_icon_new_chat_img</key>
-	<string>new_chat.png</string>
-	<key>pop_icon_new_group_img</key>
-	<string>new_groupchat</string>
-	<key>pop_icon_add_group_img</key>
-	<string>add_group</string>
-	<key>pop_icon_add_friend_img</key>
-	<string>add_friend</string>
 </dict>
 </plist>

@@ -8,8 +8,8 @@
 
 #import "TUIAboutUsViewController.h"
 #import "TUIThemeManager.h"
-#import "TUICommonTextCell.h"
 #import "TCUtil.h"
+
 @interface TUIAboutUsViewController ()<UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
 @property (nonatomic, strong) UITableView *tableView;

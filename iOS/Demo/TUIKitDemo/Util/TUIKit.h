@@ -11,7 +11,6 @@
 
 #import <UIKit/UIKit.h>
 #import "TUIDefine.h"
-#import "TUIProfileCardCell.h"
 #import "TUICommonModel.h"
 #import "TUIConversationCell.h"
 #import "TUILogin.h"
@@ -38,30 +37,6 @@ typedef NS_ENUM(NSUInteger, TUIUserStatus) {
     TUser_Status_SigExpired,
 };
 
-/**
- *  TUIKit网络状态枚举
- *
- *  TNet_Status_Succ        连接成功
- *  TNet_Status_Connecting  正在连接
- *  TNet_Status_ConnFailed  连接失败
- *  TNet_Status_Disconnect  断开链接
- */
-/**
- *  The definition of network status in TUIKit
- *
- *  TNet_Status_Succ        Connection success
- *  TNet_Status_Connecting  Connecting
- *  TNet_Status_ConnFailed  Connection failure
- *  TNet_Status_Disconnect  disconnected
- */
-typedef NS_ENUM(NSUInteger, TUINetStatus) {
-    TNet_Status_Succ,
-    TNet_Status_Connecting,
-    TNet_Status_ConnFailed,
-    TNet_Status_Disconnect,
-};
-
-
 @interface TUIKit : NSObject
 
 + (instancetype)sharedInstance;
@@ -80,11 +55,6 @@ typedef NS_ENUM(NSUInteger, TUINetStatus) {
  *  TUIKit configuration class, including default emoji, default icon resources, etc.
  */
 @property (nonatomic, strong) TUIConfig *config;
-
-/**
- *  Network status
- */
-@property (readonly) TUINetStatus netStatus;
 
 
 /**

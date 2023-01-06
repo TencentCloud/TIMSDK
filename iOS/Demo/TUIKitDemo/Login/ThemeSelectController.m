@@ -257,7 +257,7 @@
     self.navigationItem.titleView = _titleView;
     self.navigationItem.title = @"";
     
-    UIImage *image = TUIDemoDynamicImage(@"nav_back_img", [UIImage imageNamed:@"ic_back_white"]);
+    UIImage *image = TUICoreDynamicImage(@"nav_back_img", [UIImage imageNamed:@"ic_back_white"]);
     image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton setImage:image forState:UIControlStateNormal];
@@ -419,9 +419,6 @@
     return cell;
 }
 - (void)onSelectFollowSystem:(ThemeSelectCollectionViewCellModel *)cellModel {
-    
-    
-    
     [self.class changeFollowSystemChangeThemeSwitch:cellModel.selected];
 
     if (cellModel.selected) {
@@ -611,9 +608,6 @@
 - (void)onThemeChanged {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.collectionView reloadData];
-        if ([self.delegate respondsToSelector:@selector(onSelectTheme:)]) {
-            [self.delegate onSelectTheme:self.selectModel];
-        }
     });
     
 }
