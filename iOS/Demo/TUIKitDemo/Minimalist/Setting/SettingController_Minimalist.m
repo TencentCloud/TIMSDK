@@ -40,6 +40,7 @@ NSString * kEnableOnlineStatus_mini = @"TUIKitDemo_EnableOnlineStatus";
     
     TUISettingController_Minimalist *vc = [[TUISettingController_Minimalist alloc] init];
     vc.delegate = self;
+    vc.msgNeedReadReceipt = [TUIChatConfig defaultConfig].msgNeedReadReceipt;
     vc.aboutCellText = NSLocalizedString(@"MeAbout", nil);
     vc.view.frame = self.view.bounds;
     [self addChildViewController:vc];
@@ -55,6 +56,7 @@ NSString * kEnableOnlineStatus_mini = @"TUIKitDemo_EnableOnlineStatus";
 
 #pragma mark TUISettingControllerDelegate_Minimalist
 - (void)onSwitchMsgReadStatus:(BOOL)isOn {
+    [TUIChatConfig defaultConfig].msgNeedReadReceipt = isOn;
     [[NSUserDefaults standardUserDefaults] setBool:isOn forKey:kEnableMsgReadStatus_mini];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
