@@ -93,11 +93,15 @@ public class TUIGroupChatFragment extends TUIBaseChatFragment {
                 }
             }
 
-
             @Override
             public void onTextSelected(View view, int position, TUIMessageBean messageInfo) {
                 chatView.getMessageLayout().setSelectedPosition(position);
                 chatView.getMessageLayout().showItemPopMenu(position - 1, messageInfo, view);
+            }
+
+            @Override
+            public void onTranslationLongClick(View view, int position, TUIMessageBean messageInfo) {
+                chatView.getMessageLayout().showTranslationItemPopMenu(position - 1, messageInfo, view);
             }
         });
 

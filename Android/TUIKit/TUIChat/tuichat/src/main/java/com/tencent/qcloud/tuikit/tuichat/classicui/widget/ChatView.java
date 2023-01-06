@@ -50,13 +50,14 @@ import com.tencent.qcloud.tuikit.tuichat.bean.MessageTyping;
 import com.tencent.qcloud.tuikit.tuichat.bean.ReplyPreviewBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ReplyMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.classicui.component.AudioPlayer;
+import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 import com.tencent.qcloud.tuikit.tuichat.classicui.component.noticelayout.NoticeLayout;
 import com.tencent.qcloud.tuikit.tuichat.classicui.interfaces.IChatLayout;
 import com.tencent.qcloud.tuikit.tuichat.classicui.setting.ChatLayoutSetting;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.input.InputView;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MessageAdapter;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MessageRecyclerView;
+import com.tencent.qcloud.tuikit.tuichat.component.AudioRecorder;
 import com.tencent.qcloud.tuikit.tuichat.component.face.Emoji;
 import com.tencent.qcloud.tuikit.tuichat.component.progress.ProgressPresenter;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
@@ -607,7 +608,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
 
             @Override
             public void onForwardMessageClick(TUIMessageBean msg){
-                forwardMessage(msg);
+                forwardMessage(msg, false);
             }
 
             @Override
@@ -618,6 +619,36 @@ public class ChatView extends LinearLayout  implements IChatLayout {
             @Override
             public void onQuoteMessageClick(TUIMessageBean msg) {
                 quoteMessage(msg);
+            }
+
+            @Override
+            public void onTranslateMessageClick(TUIMessageBean msg) {
+                translateMessage(msg);
+            }
+
+        });
+        getMessageLayout().setTranslationPopActionClickListener(new MessageRecyclerView.OnTranslationPopActionClickListener() {
+            @Override
+            public void onCopyTranslationClick(String translationContent) {
+                ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                if (clipboard == null || TextUtils.isEmpty(translationContent)) {
+                    return;
+                }
+                ClipData clip = ClipData.newPlainText("message", translationContent);
+                clipboard.setPrimaryClip(clip);
+                String copySuccess = getResources().getString(R.string.copy_success_tip);
+                ToastUtil.toastShortMessage(copySuccess);
+            }
+
+            @Override
+            public void onForwardTranslationClick(TUIMessageBean msg) {
+                forwardMessage(msg, true);
+            }
+
+            @Override
+            public void onHideTranslationClick(TUIMessageBean msg) {
+                msg.setTranslationStatus(TUIMessageBean.MSG_TRANSLATE_STATUS_HIDDEN);
+                presenter.updateTranslationMessage(msg);
             }
         });
         getMessageLayout().setLoadMoreMessageHandler(new MessageRecyclerView.OnLoadMoreHandler() {
@@ -912,12 +943,12 @@ public class ChatView extends LinearLayout  implements IChatLayout {
         }
     }
 
-    protected void forwardMessage(TUIMessageBean msg) {
+    protected void forwardMessage(TUIMessageBean msg, boolean onlyForTranslation) {
         if (mAdapter != null) {
             mInputView.hideSoftInput();
             mAdapter.setItemChecked(msg.getId(), true);
             mAdapter.notifyDataSetChanged();
-            showForwardDialog(false, true);
+            showForwardDialog(false, true, onlyForTranslation);
         }
     }
 
@@ -936,6 +967,10 @@ public class ChatView extends LinearLayout  implements IChatLayout {
 
     protected void reactMessage(Emoji emoji, TUIMessageBean messageBean) {
         presenter.reactMessage(emoji.getFaceKey(), messageBean);
+    }
+
+    protected void translateMessage(TUIMessageBean messageBean) {
+        presenter.translateMessage(messageBean);
     }
 
     private void resetTitleBar(String leftTitle){
@@ -988,13 +1023,13 @@ public class ChatView extends LinearLayout  implements IChatLayout {
         getForwardOneButton().setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                showForwardDialog(true, true);
+                showForwardDialog(true, true, false);
             }
         });
         getForwardMergeButton().setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                showForwardDialog(true, false);
+                showForwardDialog(true, false, false);
             }
         });
         getDeleteButton().setOnClickListener(new View.OnClickListener(){
@@ -1014,7 +1049,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
         });
     }
 
-    private void showForwardDialog(boolean isMultiSelect, boolean isOneByOne) {
+    private void showForwardDialog(boolean isMultiSelect, boolean isOneByOne, boolean onlyForTranslation) {
         if (mAdapter == null){
             return;
         }
@@ -1026,7 +1061,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
             return;
         }
 
-        if(checkFailedMessageInfos(messageInfoList)){
+        if(!onlyForTranslation && checkFailedMessageInfos(messageInfoList)){
             ToastUtil.toastShortMessage(getContext().getString(R.string.forward_failed_tip));
             return;
         }
@@ -1039,11 +1074,11 @@ public class ChatView extends LinearLayout  implements IChatLayout {
             if (messageInfoList.size() > FORWARD_MSG_NUM_LIMIT) {
                 showForwardLimitDialog(messageInfoList);
             } else {
-                startSelectForwardActivity(TUIChatConstants.FORWARD_MODE_ONE_BY_ONE, messageInfoList);
+                startSelectForwardActivity(TUIChatConstants.FORWARD_MODE_ONE_BY_ONE, messageInfoList, onlyForTranslation);
                 resetForwardState("");
             }
         } else {
-            startSelectForwardActivity(TUIChatConstants.FORWARD_MODE_MERGE, messageInfoList);
+            startSelectForwardActivity(TUIChatConstants.FORWARD_MODE_MERGE, messageInfoList, onlyForTranslation);
             resetForwardState("");
         }
     }
@@ -1058,7 +1093,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
                 .setPositiveButton(getContext().getString(R.string.forward_mode_merge), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startSelectForwardActivity(TUIChatConstants.FORWARD_MODE_MERGE, messageInfoList);
+                        startSelectForwardActivity(TUIChatConstants.FORWARD_MODE_MERGE, messageInfoList, false);
                         resetForwardState("");
                     }
                 })
@@ -1071,9 +1106,9 @@ public class ChatView extends LinearLayout  implements IChatLayout {
         tipsDialog.show();
     }
 
-    private void startSelectForwardActivity(int mode, List<TUIMessageBean> msgIds){
+    private void startSelectForwardActivity(int mode, List<TUIMessageBean> msgIds, boolean onlyForTranslation){
         if (mForwardSelectActivityListener != null) {
-            mForwardSelectActivityListener.onStartForwardSelectActivity(mode, msgIds);
+            mForwardSelectActivityListener.onStartForwardSelectActivity(mode, msgIds, onlyForTranslation);
         }
     }
 
@@ -1175,7 +1210,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
 
     public void exitChat() {
         getTitleBar().getMiddleTitle().removeCallbacks(mTypingRunnable);
-        AudioPlayer.getInstance().stopRecord();
+        AudioRecorder.getInstance().stopRecord();
         AudioPlayer.getInstance().stopPlay();
         presenter.markMessageAsRead(mChatInfo);
     }
@@ -1188,7 +1223,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
     }
 
     public interface ForwardSelectActivityListener {
-        public void onStartForwardSelectActivity(int mode, List<TUIMessageBean> msgIds);
+        public void onStartForwardSelectActivity(int mode, List<TUIMessageBean> msgIds, boolean onlyForTranslation);
     }
 
     @Override

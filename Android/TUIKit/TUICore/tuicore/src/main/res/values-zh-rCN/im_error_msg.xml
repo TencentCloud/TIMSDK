@@ -125,7 +125,7 @@
     <string name="TUIKitErrorSVRCommonReqFreqLimit">请求过于频繁，请稍后重试。</string>
     <string name="TUIKitErrorSVRCommonInvalidService">您的专业版套餐包已到期并停用，请登录 即时通信 IM 购买页面 重新购买套餐包。购买后，将在5分钟后生效。</string>
     <string name="TUIKitErrorSVRCommonSensitiveText">文本安全打击，文本中可能包含敏感词汇。</string>
-    <string name="TUIKitErrorSVRCommonBodySizeLimit">发消息包体过长，目前支持最大8k消息包体长度，请减少包体大小重试。</string>
+    <string name="TUIKitErrorSVRCommonBodySizeLimit">发消息包体过长，目前支持最大12k消息包体长度，请减少包体大小重试。</string>
     <string name="TUIKitErrorSVRAccountUserSigExpired">UserSig 已过期，请重新生成 UserSig</string>
     <string name="TUIKitErrorSVRAccountUserSigEmpty">UserSig 长度为0</string>
     <string name="TUIKitErrorSVRAccountUserSigCheckFailed">UserSig 校验失败</string>
@@ -201,7 +201,7 @@
     <string name="TUIKitErrorSVRMsgTimeLimit">消息离线存储时间错误（最多不能超过7天）。</string>
     <string name="TUIKitErrorSVRMsgInvalidSyncOtherMachine">JSON 格式请求包体中 SyncOtherMachine 字段不是 Integer 类型</string>
     <string name="TUIkitErrorSVRMsgInvalidMsgLifeTime">JSON 格式请求包体中 MsgLifeTime 字段不是 Integer 类型</string>
-    <string name="TUIKitErrorSVRMsgBodySizeLimit">JSON 数据包超长，消息包体请不要超过8k。</string>
+    <string name="TUIKitErrorSVRMsgBodySizeLimit">JSON 数据包超长，消息包体请不要超过12k。</string>
     <string name="TUIKitErrorSVRmsgLongPollingCountLimit">Web 端长轮询被踢（Web 端同时在线实例个数超出限制）。</string>
     <string name="TUIKitErrorUnsupporInterface">该功能仅限旗舰版使用，请升级至旗舰版。</string>
     <string name="TUIKitErrorUnsupporInterfaceSuffix">功能仅限旗舰版使用，请升级至旗舰版。</string>

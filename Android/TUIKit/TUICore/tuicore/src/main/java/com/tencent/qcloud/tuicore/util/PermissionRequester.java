@@ -134,7 +134,7 @@ public final class PermissionRequester {
     }
 
     private static boolean isGranted(final String permission) {
-        return Build.VERSION.SDK_INT < Build.VERSION_CODES.M
+        return TUIBuild.getVersionInt() < Build.VERSION_CODES.M
                 || PackageManager.PERMISSION_GRANTED
                 == ContextCompat.checkSelfPermission(getApplicationContext(), permission);
     }
@@ -231,7 +231,7 @@ public final class PermissionRequester {
         instance = this;
         mPermissionsGranted = new ArrayList<>();
         mPermissionsRequest = new ArrayList<>();
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+        if (TUIBuild.getVersionInt() < Build.VERSION_CODES.M) {
             mPermissionsGranted.addAll(mPermissions);
             isRequesting = false;
             requestCallback();
@@ -333,14 +333,12 @@ public final class PermissionRequester {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public static class PermissionActivity extends Activity {
-        private static final int SHOW_TIP_DELAY = 150; // ms
-
-        private boolean isDenied = false;
+        private View mContentView;
 
         @Override
         protected void onCreate(@Nullable Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            if (TUIBuild.getVersionInt() >= 21) {
+            if (TUIBuild.getVersionInt() >= Build.VERSION_CODES.LOLLIPOP) {
                 View decorView = getWindow().getDecorView();
                 decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
@@ -356,21 +354,12 @@ public final class PermissionRequester {
         }
 
         private void requestPermission() {
-            isDenied = false;
             if (instance.mPermissionsRequest != null) {
                 int size = instance.mPermissionsRequest.size();
                 if (size <= 0) {
                     instance.onRequestPermissionsResult(this);
                 } else {
-                    BackgroundTasks.getInstance().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (!isDenied) {
-                                fillContentView();
-                            }
-                        }
-                    }, SHOW_TIP_DELAY);
-
+                    fillContentView();
                     requestPermissions(instance.mPermissionsRequest.toArray(new String[size]), 1);
                 }
             }
@@ -396,7 +385,7 @@ public final class PermissionRequester {
                 return;
             }
             setContentView(R.layout.permission_activity_layout);
-
+            mContentView = findViewById(R.id.tuicore_permission_layout);
             TextView permissionReasonTitle = findViewById(R.id.permission_reason_title);
             TextView permissionReason = findViewById(R.id.permission_reason);
             ImageView permissionIcon = findViewById(R.id.permission_icon);
@@ -407,16 +396,20 @@ public final class PermissionRequester {
             }
         }
 
+        private void hideContentView() {
+            if (mContentView != null) {
+                mContentView.setVisibility(View.INVISIBLE);
+            }
+        }
+
         @Override
         public void onRequestPermissionsResult(int requestCode,
                                                @NonNull String[] permissions,
                                                @NonNull int[] grantResults) {
 
             if (instance.mPermissionsRequest != null) {
+                hideContentView();
                 instance.onRequestPermissionsResult(this);
-                if (instance.mPermissionsDenied != null && !instance.mPermissionsDenied.isEmpty()) {
-                    isDenied = true;
-                }
             }
         }
 
@@ -518,7 +511,7 @@ public final class PermissionRequester {
                 case MICROPHONE:
                     return GROUP_MICROPHONE;
                 case PHONE:
-                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                    if (TUIBuild.getVersionInt() < Build.VERSION_CODES.O) {
                         return GROUP_PHONE_BELOW_O;
                     } else {
                         return GROUP_PHONE;

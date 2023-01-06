@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.text.Layout;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -35,7 +36,7 @@ public class TimeInLineTextLayout extends FrameLayout {
     private void init(Context context, AttributeSet attrs) {
         textView = new TextView(context, null, R.style.ChatMinimalistMessageTextStyle);
         textView.setTextColor(Color.BLACK);
-        textView.setTextSize(14);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textView.getResources().getDimension(R.dimen.chat_minimalist_message_text_size));
         LayoutParams textViewParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         addView(textView, textViewParams);
         statusArea = new MessageStatusTimeView(context);

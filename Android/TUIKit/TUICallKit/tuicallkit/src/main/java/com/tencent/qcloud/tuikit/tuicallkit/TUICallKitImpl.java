@@ -85,7 +85,6 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
         mCallingViewManager = new TUICallingViewManager(mContext);
         mUserInfoUtils = new UserInfoUtils();
         createTimeHandler();
-        TUILog.i(TAG, "TUICallKitImpl init success.");
         registerCallingEvent();
     }
 
@@ -109,6 +108,7 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
     public void call(String userId, TUICallDefine.MediaType callMediaType) {
         TUICallDefine.CallParams params = new TUICallDefine.CallParams();
         params.offlinePushInfo = OfflinePushInfoConfig.createOfflinePushInfo(mContext);
+        params.timeout = Constants.SIGNALING_MAX_TIME;
         call(userId, callMediaType, params, null);
     }
 
@@ -150,11 +150,10 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
 
                             @Override
                             public void onError(int errCode, String errMsg) {
-                                TUILog.e(TAG, "call failed, errCode: " + errCode + " ,errMsg: " + errMsg);
                                 if (errCode == TUICallDefine.ERROR_PACKAGE_NOT_PURCHASED) {
-                                    String hint = mContext.getString(R.string.tuicalling_package_not_purchased);
-                                    ToastUtil.toastLongMessage(hint);
+                                    errMsg = mContext.getString(R.string.tuicalling_package_not_purchased);
                                 }
+                                ToastUtil.toastLongMessage(errMsg);
                                 callbackError(callback, errCode, errMsg);
                             }
                         });
@@ -172,6 +171,7 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
     public void groupCall(String groupId, List<String> userIdList, TUICallDefine.MediaType callMediaType) {
         TUICallDefine.CallParams params = new TUICallDefine.CallParams();
         params.offlinePushInfo = OfflinePushInfoConfig.createOfflinePushInfo(mContext);
+        params.timeout = Constants.SIGNALING_MAX_TIME;
         groupCall(groupId, userIdList, callMediaType, params, null);
     }
 
@@ -232,11 +232,10 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
 
                             @Override
                             public void onError(int errCode, String errMsg) {
-                                TUILog.e(TAG, "groupCall failed, errCode: " + errCode + " ,errMsg: " + errMsg);
                                 if (errCode == TUICallDefine.ERROR_PACKAGE_NOT_SUPPORTED) {
-                                    String hint = mContext.getString(R.string.tuicalling_package_not_support);
-                                    ToastUtil.toastLongMessage(hint);
+                                    errMsg = mContext.getString(R.string.tuicalling_package_not_support);
                                 }
+                                ToastUtil.toastLongMessage(errMsg);
                                 callbackError(callback, errCode, errMsg);
                             }
                         });
@@ -289,8 +288,6 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
                                 TUICallingStatusManager.sharedInstance(mContext).setCallScene(Scene.GROUP_CALL);
                                 TUICallingStatusManager.sharedInstance(mContext).setCallRole(TUICallDefine.Role.Called);
                                 TUICallingStatusManager.sharedInstance(mContext).setGroupId(groupId);
-                                TUILog.i(TAG, "joinInGroupCall, roomId: " + roomId + " ,groupId: " + groupId
-                                        + " ,mediaType: " + mediaType);
 
                                 mCallingViewManager.createGroupCallingAcceptView();
                                 mCallingViewManager.showCallingView();
@@ -300,9 +297,9 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
                             @Override
                             public void onError(int errCode, String errMsg) {
                                 if (errCode == TUICallDefine.ERROR_PACKAGE_NOT_SUPPORTED) {
-                                    String hint = mContext.getString(R.string.tuicalling_package_not_support);
-                                    ToastUtil.toastLongMessage(hint);
+                                    errMsg = mContext.getString(R.string.tuicalling_package_not_support);
                                 }
+                                ToastUtil.toastLongMessage(errMsg);
                             }
                         });
             }
@@ -330,14 +327,15 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
     }
 
     public void queryOfflineCall() {
-        TUICallEngine.createInstance(mContext).queryOfflineCall();
+        if (Status.None.equals(TUICallingStatusManager.sharedInstance(mContext).getCallStatus())) {
+            TUICallEngine.createInstance(mContext).queryOfflineCall();
+        }
     }
 
     private final TUICallObserver mTUICallObserver = new TUICallObserver() {
         @Override
         public void onError(int code, String msg) {
             super.onError(code, msg);
-            TUILog.e(TAG, "onError: code = " + code + " , msg = " + msg);
             ToastUtil.toastLongMessage(mContext.getString(R.string.tuicalling_toast_call_error_msg, code, msg));
         }
 
@@ -347,27 +345,21 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
             super.onCallReceived(callerId, calleeIdList, groupId, callMediaType);
 
             if (TUICallDefine.MediaType.Unknown.equals(callMediaType)) {
-                TUILog.e(TAG, "onCallReceived, callMediaType is Unknown");
                 return;
             }
 
             if (calleeIdList == null || calleeIdList.isEmpty()) {
-                TUILog.e(TAG, "onCallReceived, calleeIdList is empty");
                 return;
             }
 
             if (calleeIdList.size() >= Constants.MAX_USER) {
                 ToastUtil.toastLongMessage(mContext.getString(R.string.tuicalling_user_exceed_limit));
-                TUILog.e(TAG, "onCallReceived, exceeding max user number: 9");
                 return;
             }
 
-            TUILog.i(TAG, "onCallReceived, callerId: " + callerId + " ,calleeIdList: " + calleeIdList
-                    + " ,callMediaType: " + callMediaType + " ,groupId: " + groupId);
-
             //when app comes back to foreground, start the call
             if (!DeviceUtils.isAppRunningForeground(mContext) && !PermissionUtils.hasPermission(mContext)) {
-                TUILog.i(TAG, "isAppRunningForeground is false");
+                TUILog.w(TAG, "App is in background");
                 mCallingBellFeature.startRing();
                 return;
             }
@@ -410,7 +402,6 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
         @Override
         public void onCallCancelled(String callerId) {
             super.onCallCancelled(callerId);
-            TUILog.i(TAG, "onCallCancelled");
             resetCall();
         }
 
@@ -418,9 +409,6 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
         public void onCallBegin(TUICommonDefine.RoomId roomId, TUICallDefine.MediaType callMediaType,
                                 TUICallDefine.Role callRole) {
             super.onCallBegin(roomId, callMediaType, callRole);
-            TUILog.i(TAG, "onCallBegin, roomId: " + roomId + " , callMediaType: " + callMediaType
-                    + " , callRole: " + callRole);
-
             mCallingBellFeature.stopMusic();
             TUICallingStatusManager.sharedInstance(mContext).updateCallStatus(TUICallDefine.Status.Accept);
             showTimeCount();
@@ -437,8 +425,6 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
         public void onCallMediaTypeChanged(TUICallDefine.MediaType oldCallMediaType,
                                            TUICallDefine.MediaType newCallMediaType) {
             super.onCallMediaTypeChanged(oldCallMediaType, newCallMediaType);
-            TUILog.i(TAG, "onCallMediaTypeChanged, oldCallMediaType: "
-                    + oldCallMediaType + " , newCallMediaType: " + newCallMediaType);
             if (!oldCallMediaType.equals(newCallMediaType)) {
                 TUICallingStatusManager.sharedInstance(mContext).setMediaType(newCallMediaType);
             }
@@ -447,8 +433,6 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
         @Override
         public void onUserReject(String userId) {
             super.onUserReject(userId);
-            TUILog.i(TAG, "onUserReject, userId: " + userId);
-
             CallingUserModel userModel = findCallingUserModel(userId);
             mCallingViewManager.userLeave(userModel);
             showUserToast(userModel, R.string.tuicalling_toast_user_reject_call);
@@ -458,8 +442,6 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
         @Override
         public void onUserNoResponse(String userId) {
             super.onUserNoResponse(userId);
-            TUILog.i(TAG, "onUserNoResponse, userId: " + userId);
-
             CallingUserModel userModel = findCallingUserModel(userId);
             mCallingViewManager.userLeave(userModel);
             showUserToast(userModel, R.string.tuicalling_toast_user_not_response);
@@ -469,8 +451,6 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
         @Override
         public void onUserLineBusy(String userId) {
             super.onUserLineBusy(userId);
-            TUILog.i(TAG, "onUserLineBusy, userId: " + userId);
-
             CallingUserModel userModel = findCallingUserModel(userId);
             mCallingViewManager.userLeave(userModel);
             showUserToast(userModel, R.string.tuicalling_toast_user_busy);
@@ -480,8 +460,6 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
         @Override
         public void onUserJoin(String userId) {
             super.onUserJoin(userId);
-            TUILog.i(TAG, "onUserJoin, userId: " + userId);
-
             CallingUserModel userModel = findCallingUserModel(userId);
             if (userModel == null) {
                 userModel = new CallingUserModel();
@@ -493,7 +471,6 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
         @Override
         public void onUserLeave(String userId) {
             super.onUserLeave(userId);
-            TUILog.i(TAG, "onUserLeave, userId: " + userId + " ,mInviteeList: " + mInviteeList);
             CallingUserModel userModel = findCallingUserModel(userId);
             mCallingViewManager.userLeave(userModel);
             showUserToast(userModel, R.string.tuicalling_toast_user_end);
@@ -503,8 +480,6 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
         @Override
         public void onUserVideoAvailable(String userId, boolean isVideoAvailable) {
             super.onUserVideoAvailable(userId, isVideoAvailable);
-            TUILog.i(TAG, "onUserVideoAvailable, userId: " + userId + " ,isVideoAvailable: " + isVideoAvailable);
-
             CallingUserModel model = findCallingUserModel(userId);
             if (model != null && model.isVideoAvailable != isVideoAvailable) {
                 model.isVideoAvailable = isVideoAvailable;
@@ -515,8 +490,6 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
         @Override
         public void onUserAudioAvailable(String userId, boolean isAudioAvailable) {
             super.onUserAudioAvailable(userId, isAudioAvailable);
-            TUILog.i(TAG, "onUserAudioAvailable, userId: " + userId + " ,isAudioAvailable: " + isAudioAvailable);
-
             CallingUserModel model = findCallingUserModel(userId);
             if (model != null && model.isAudioAvailable != isAudioAvailable) {
                 model.isAudioAvailable = isAudioAvailable;
@@ -566,7 +539,6 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
         runOnMainThread(new Runnable() {
             @Override
             public void run() {
-                TUILog.i(TAG, "resetCall");
 
                 stopTimeCount();
                 mCallingBellFeature.stopMusic();
@@ -606,20 +578,17 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
                         }
                     }
                 }
-                TUILog.i(TAG, "queryUserInfo, mInviteeList: " + mInviteeList);
                 mCallingViewManager.updateCallingUserView(mInviteeList, mInviter);
             }
 
             @Override
             public void onFailed(int errorCode, String errorMsg) {
-                TUILog.i(TAG, "queryUserInfo failed, errorCode: " + errorCode + " ,errorMsg: " + errorMsg);
             }
         });
     }
 
     private void showUserToast(CallingUserModel model, int msgId) {
         if (null == model || TextUtils.isEmpty(model.userId)) {
-            TUILog.w(TAG, "showUserToast, model or userId is empty, model: " + model);
             return;
         }
         if (!TextUtils.isEmpty(model.userName)) {
@@ -673,7 +642,6 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
         if (mTimeRunnable != null) {
             return;
         }
-        TUILog.i(TAG, "showTimeCount");
         mTimeCount = 0;
         mTimeRunnable = new Runnable() {
             @Override
@@ -683,11 +651,7 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
                 mTimeHandler.postDelayed(mTimeRunnable, 1000);
             }
         };
-        boolean isOk = mTimeHandler.postDelayed(mTimeRunnable, 1000);
-        if (!isOk) {
-            createTimeHandler();
-            mTimeHandler.postDelayed(mTimeRunnable, 1000);
-        }
+        mTimeHandler.post(mTimeRunnable);
     }
 
     private String getShowTime(int count) {
@@ -695,10 +659,8 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
     }
 
     private void stopTimeCount() {
-        TUILog.i(TAG, "stopTimeCount");
         mTimeHandler.removeCallbacks(mTimeRunnable);
         mTimeRunnable = null;
-        mTimeHandlerThread.quit();
         mTimeCount = 0;
     }
 

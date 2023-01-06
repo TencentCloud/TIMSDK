@@ -27,4 +27,6 @@ public abstract class OnItemClickListener {
     public  void onSendFailBtnClick(View view, int position, TUIMessageBean messageInfo) {};
 
     public  void onTextSelected(View view, int position, TUIMessageBean messageInfo) {};
+
+    public void onTranslationLongClick(View view, int position, TUIMessageBean messageInfo) {};
 }

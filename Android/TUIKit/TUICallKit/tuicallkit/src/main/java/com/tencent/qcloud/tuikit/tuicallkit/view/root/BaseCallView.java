@@ -4,14 +4,12 @@ import android.content.Context;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.tencent.qcloud.tuikit.tuicallengine.impl.base.TUILog;
 import com.tencent.qcloud.tuikit.tuicallkit.base.CallingUserModel;
 import com.tencent.qcloud.tuikit.tuicallkit.base.TUICallingAction;
 
 public abstract class BaseCallView extends RelativeLayout {
-    private static final String           TAG = "BaseCallView";
-    protected            Context          mContext;
-    protected            TUICallingAction mCallingAction;
+    protected Context          mContext;
+    protected TUICallingAction mCallingAction;
 
     public BaseCallView(Context context) {
         super(context);
@@ -62,7 +60,6 @@ public abstract class BaseCallView extends RelativeLayout {
     }
 
     public void finish() {
-        TUILog.i(TAG, "finish");
         clearAllViews();
         removeAllViews();
         detachAllViewsFromParent();

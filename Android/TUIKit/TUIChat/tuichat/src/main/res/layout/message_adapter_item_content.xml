@@ -180,13 +180,27 @@
 
         </LinearLayout>
 
-        <!-- message content area -->
+        <!-- translation content area -->
+        <com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MaxWidthFrameLayout
+            android:id="@+id/translate_content_fl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/msg_content_ll"
+            android:layout_marginTop="4dp"
+            android:layout_toLeftOf="@id/right_user_icon_view"
+            android:layout_toRightOf="@id/left_user_icon_view"
+            android:background="@drawable/translation_area_bg"
+            app:maxWidth="@dimen/chat_message_content_max_width"
+            android:visibility="gone"
+            tools:visibility="visible"/>
+
+        <!-- quote content area -->
         <com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MaxWidthFrameLayout
             android:id="@+id/quote_content_fl"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5.76dp"
-            android:layout_below="@id/msg_content_ll"
+            android:layout_below="@id/translate_content_fl"
             android:layout_toRightOf="@id/left_user_icon_view"
             android:layout_toLeftOf="@id/right_user_icon_view"
             android:background="@drawable/quote_message_area_bg"

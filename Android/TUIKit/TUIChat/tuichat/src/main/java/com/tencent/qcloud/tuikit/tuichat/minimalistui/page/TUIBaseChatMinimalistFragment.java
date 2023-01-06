@@ -38,7 +38,7 @@ import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.AudioPlayer;
+import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.camera.CameraActivity;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.camera.view.JCameraView;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.interfaces.OnItemClickListener;
@@ -73,6 +73,7 @@ public class TUIBaseChatMinimalistFragment extends BaseFragment {
 
     private List<TUIMessageBean> mForwardSelectMsgInfos = null;
     private int mForwardMode;
+    private boolean mOnlyForTranslation;
 
     private MessageRecyclerView messageRecyclerView;
     private int messageViewBackgroundHeight;
@@ -114,9 +115,10 @@ public class TUIBaseChatMinimalistFragment extends BaseFragment {
 
         chatView.setForwardSelectActivityListener(new ChatView.ForwardSelectActivityListener(){
             @Override
-            public void onStartForwardSelectActivity(int mode, List<TUIMessageBean> msgIds) {
+            public void onStartForwardSelectActivity(int mode, List<TUIMessageBean> msgIds, boolean onlyForTranslation) {
                 mForwardMode = mode;
                 mForwardSelectMsgInfos = msgIds;
+                mOnlyForTranslation = onlyForTranslation;
                 Bundle bundle = new Bundle();
                 bundle.putInt(TUIChatConstants.FORWARD_MODE, mode);
                 TUICore.startActivity(TUIBaseChatMinimalistFragment.this, "TUIForwardSelectMinimalistActivity", bundle, TUIChatConstants.FORWARD_SELECT_ACTIVTY_CODE);
@@ -184,9 +186,14 @@ public class TUIBaseChatMinimalistFragment extends BaseFragment {
                 chatView.getMessageLayout().setSelectedPosition(position);
                 chatView.getMessageLayout().showItemPopMenu(messageInfo, view);
             }
+
+            @Override
+            public void onTranslationLongClick(View view, int position, TUIMessageBean messageInfo) {
+                chatView.getMessageLayout().showTranslationItemPopMenu(position - 1, messageInfo, view);
+            }
         });
 
-        chatView.getInputLayout().setStartActivityListener(new InputView.OnInputViewListener() {
+        chatView.getInputLayout().setOnInputViewListener(new InputView.OnInputViewListener() {
             @Override
             public void onStartGroupMemberSelectActivity() {
                 Bundle param = new Bundle();
@@ -258,7 +265,7 @@ public class TUIBaseChatMinimalistFragment extends BaseFragment {
                     }
 
                     ChatPresenter chatPresenter = getPresenter();
-                    chatPresenter.forwardMessage(mForwardSelectMsgInfos, isGroup, id, title, mForwardMode, selfConversation, new IUIKitCallback() {
+                    chatPresenter.forwardMessage(mForwardSelectMsgInfos, isGroup, id, title, mForwardMode, selfConversation, false, new IUIKitCallback() {
                         @Override
                         public void onSuccess(Object data) {
                             TUIChatLog.v(TAG, "sendMessage onSuccess:");

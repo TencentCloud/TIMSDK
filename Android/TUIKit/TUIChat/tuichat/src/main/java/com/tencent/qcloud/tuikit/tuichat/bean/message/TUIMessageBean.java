@@ -15,6 +15,9 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TUIReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Serializable;
 
 public abstract class TUIMessageBean implements Serializable {
@@ -80,6 +83,33 @@ public abstract class TUIMessageBean implements Serializable {
       * message downloaded
       */
      public static final int MSG_STATUS_DOWNLOADED = 6;
+     /**
+      * 消息翻译初始化状态
+      *
+      * message translation unknown
+      */
+     public static final int MSG_TRANSLATE_STATUS_UNKNOWN = 0;
+     /**
+      * 消息翻译隐藏状态
+      *
+      * message translation hidden
+      */
+     public static final int MSG_TRANSLATE_STATUS_HIDDEN  = 1;
+     /**
+      * 消息翻译进行中状态
+      *
+      * message translation loading
+      */
+     public static final int MSG_TRANSLATE_STATUS_LOADING = 2;
+     /**
+      * 消息翻译展示状态
+      *
+      * message translation shown
+      */
+     public static final int MSG_TRANSLATE_STATUS_SHOWN   = 3;
+
+     public static final String TRANSLATION_KEY = "translation";
+     public static final String TRANSLATION_VIEW_STATUS_KEY = "translation_view_status";
 
      private V2TIMMessage v2TIMMessage;
      private long msgTime;
@@ -89,6 +119,7 @@ public abstract class TUIMessageBean implements Serializable {
      private int status;
      private int downloadStatus;
      private String selectText;
+     private int translationStatus = MSG_TRANSLATE_STATUS_UNKNOWN;
 
      private MessageReceiptInfo messageReceiptInfo;
      private MessageRepliesBean messageRepliesBean;
@@ -347,6 +378,99 @@ public abstract class TUIMessageBean implements Serializable {
           if (v2TIMMessage != null) {
                v2TIMMessage.setNeedReadReceipt(isNeedReceipt);
           }
+     }
+
+     public void setTranslationStatus(int status) {
+          if (status != MSG_TRANSLATE_STATUS_UNKNOWN &&
+              status != MSG_TRANSLATE_STATUS_HIDDEN &&
+              status != MSG_TRANSLATE_STATUS_SHOWN &&
+              status != MSG_TRANSLATE_STATUS_LOADING) {
+               return;
+          }
+
+          if (status == translationStatus) {
+               return;
+          }
+
+          if (status == MSG_TRANSLATE_STATUS_LOADING) {
+               translationStatus = MSG_TRANSLATE_STATUS_LOADING;
+               return;
+          }
+
+          translationStatus = status;
+
+          if (v2TIMMessage != null) {
+               String localCustomData = v2TIMMessage.getLocalCustomData();
+               JSONObject customJson = new JSONObject();
+               try {
+                    if (!TextUtils.isEmpty(localCustomData)) {
+                         customJson = new JSONObject(localCustomData);
+                    }
+                    customJson.put(TRANSLATION_VIEW_STATUS_KEY, status);
+                    v2TIMMessage.setLocalCustomData(customJson.toString());
+               } catch (JSONException e) {
+                    e.printStackTrace();
+               }
+          }
+     }
+
+     public int getTranslationStatus() {
+          if (translationStatus != MSG_TRANSLATE_STATUS_UNKNOWN) {
+               return translationStatus;
+          }
+
+          if (v2TIMMessage != null) {
+               String localCustomData = v2TIMMessage.getLocalCustomData();
+               if (TextUtils.isEmpty(localCustomData)) {
+                    return translationStatus;
+               }
+               try {
+                    JSONObject customJson = new JSONObject(localCustomData);
+                    if (customJson.has(TRANSLATION_VIEW_STATUS_KEY)) {
+                         translationStatus = customJson.getInt(TRANSLATION_VIEW_STATUS_KEY);
+                    }
+               } catch (JSONException e) {
+                    e.printStackTrace();
+               }
+          }
+          return translationStatus;
+     }
+
+     public void setTranslation(String translation) {
+          if (v2TIMMessage != null) {
+               String localCustomData = v2TIMMessage.getLocalCustomData();
+               JSONObject customJson = new JSONObject();
+               try {
+                    if (!TextUtils.isEmpty(localCustomData)) {
+                         customJson = new JSONObject(localCustomData);
+                    }
+                    customJson.put(TRANSLATION_KEY, translation);
+                    customJson.put(TRANSLATION_VIEW_STATUS_KEY, MSG_TRANSLATE_STATUS_SHOWN);
+                    v2TIMMessage.setLocalCustomData(customJson.toString());
+               } catch (JSONException e) {
+                    e.printStackTrace();
+               }
+               translationStatus = MSG_TRANSLATE_STATUS_SHOWN;
+          }
+     }
+
+     public String getTranslation() {
+          String translation = "";
+          if (v2TIMMessage != null) {
+               String localCustomData = v2TIMMessage.getLocalCustomData();
+               if (TextUtils.isEmpty(localCustomData)) {
+                    return translation;
+               }
+               try {
+                    JSONObject customJson = new JSONObject(localCustomData);
+                    if (customJson.has(TRANSLATION_KEY)) {
+                         translation = customJson.getString(TRANSLATION_KEY);
+                    }
+               } catch (JSONException e) {
+                    e.printStackTrace();
+               }
+          }
+          return translation;
      }
 
      public void setV2TIMMessage(V2TIMMessage v2TIMMessage) {

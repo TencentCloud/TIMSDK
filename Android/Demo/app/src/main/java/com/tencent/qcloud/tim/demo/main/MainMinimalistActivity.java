@@ -39,7 +39,7 @@ import com.tencent.qcloud.tuicore.component.activities.BaseMinimalistLightActivi
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuicontact.minimalistui.pages.TUIContactMinimalistFragment;
-import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.page.TUIConversationMinimalistFragment;
+import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.page.ConversationMinimalistFragment;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -123,7 +123,7 @@ public class MainMinimalistActivity extends BaseMinimalistLightActivity {
         mNewFriendUnread = findViewById(R.id.new_friend_total_unread);
 
         fragments = new ArrayList<>();
-        fragments.add(new TUIConversationMinimalistFragment());
+        fragments.add(new ConversationMinimalistFragment());
         fragments.add(new TUIContactMinimalistFragment());
         fragments.add(new ProfileMinimalistFragment());
 
@@ -200,10 +200,8 @@ public class MainMinimalistActivity extends BaseMinimalistLightActivity {
         });
 
         V2TIMConversationListFilter filter = new V2TIMConversationListFilter();
-        filter.setCount(100);
         filter.setMarkType(V2TIMConversation.V2TIM_CONVERSATION_MARK_TYPE_UNREAD);
-        filter.setNextSeq(0);
-        getMarkUnreadConversationList(filter, true, new V2TIMValueCallback<HashMap<String, V2TIMConversation>>() {
+        getMarkUnreadConversationList(filter, 0, 100, true, new V2TIMValueCallback<HashMap<String, V2TIMConversation>>() {
             @Override
             public void onSuccess(HashMap<String, V2TIMConversation> stringV2TIMConversationHashMap) {
                 if (stringV2TIMConversationHashMap.size() == 0) {
@@ -246,11 +244,11 @@ public class MainMinimalistActivity extends BaseMinimalistLightActivity {
         });
     }
 
-    private void getMarkUnreadConversationList(V2TIMConversationListFilter filter, boolean fromStart, V2TIMValueCallback<HashMap<String, V2TIMConversation>> callback) {
+    private void getMarkUnreadConversationList(V2TIMConversationListFilter filter, long nextSeq, int count, boolean fromStart, V2TIMValueCallback<HashMap<String, V2TIMConversation>> callback) {
         if (fromStart) {
             markUnreadMap.clear();
         }
-        V2TIMManager.getConversationManager().getConversationListByFilter(filter, new V2TIMValueCallback<V2TIMConversationResult>() {
+        V2TIMManager.getConversationManager().getConversationListByFilter(filter, nextSeq, count, new V2TIMValueCallback<V2TIMConversationResult>() {
             @Override
             public void onSuccess(V2TIMConversationResult v2TIMConversationResult) {
                 List<V2TIMConversation> conversationList = v2TIMConversationResult.getConversationList();
@@ -259,7 +257,7 @@ public class MainMinimalistActivity extends BaseMinimalistLightActivity {
                 }
 
                 if (!v2TIMConversationResult.isFinished()) {
-                    getMarkUnreadConversationList(filter, false, callback);
+                    getMarkUnreadConversationList(filter, v2TIMConversationResult.getNextSeq(), count, false, callback);
                 } else {
                     if (callback != null) {
                         callback.onSuccess(markUnreadMap);

@@ -46,7 +46,7 @@ import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationPresenter
 import java.util.ArrayList;
 import java.util.List;
 
-public class TUIConversationMinimalistFragment extends BaseFragment {
+public class ConversationMinimalistFragment extends BaseFragment {
     private View mBaseView;
     private ConversationLayout mConversationLayout;
     private ListView mConversationPopList;

@@ -51,10 +51,11 @@ import com.tencent.qcloud.tuikit.tuichat.bean.InputMoreActionUnit;
 import com.tencent.qcloud.tuikit.tuichat.bean.ReplyPreviewBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FileMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
+import com.tencent.qcloud.tuikit.tuichat.component.AudioRecorder;
 import com.tencent.qcloud.tuikit.tuichat.component.face.CustomFace;
 import com.tencent.qcloud.tuikit.tuichat.component.face.Emoji;
 import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
-import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.AudioPlayer;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.camera.CameraActivity;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.camera.view.JCameraView;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.interfaces.IChatLayout;
@@ -371,14 +372,14 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         if (mSendEnable) {
             if (mMessageHandler != null) {
                 if (mChatLayout == null) {
-                    mMessageHandler.sendMessage(ChatMessageBuilder.buildTextMessage(mTextInput.getText().toString().trim()));
+                    mMessageHandler.sendMessage(ChatMessageBuilder.buildTextMessage(mTextInput.getText().toString()));
                 } else {
                     if ((isQuoteModel || isReplyModel) && replyPreviewBean != null) {
                         if (TUIChatUtils.isGroupChat(mChatLayout.getChatInfo().getType()) && !mTextInput.getMentionIdList().isEmpty()) {
                             List<String> atUserList = new ArrayList<>(mTextInput.getMentionIdList());
-                            mMessageHandler.sendMessage(ChatMessageBuilder.buildAtReplyMessage(mTextInput.getText().toString().trim(), atUserList, replyPreviewBean));
+                            mMessageHandler.sendMessage(ChatMessageBuilder.buildAtReplyMessage(mTextInput.getText().toString(), atUserList, replyPreviewBean));
                         } else {
-                            mMessageHandler.sendMessage(ChatMessageBuilder.buildReplyMessage(mTextInput.getText().toString().trim(), replyPreviewBean));
+                            mMessageHandler.sendMessage(ChatMessageBuilder.buildReplyMessage(mTextInput.getText().toString(), replyPreviewBean));
                         }
                         exitReply();
                     } else {
@@ -387,12 +388,12 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                             // When sending, get the ID list from the map by getting the nickname list that matches the @ in the input box.
                             List<String> atUserList = new ArrayList<>(mTextInput.getMentionIdList());
                             if (atUserList.isEmpty()) {
-                                mMessageHandler.sendMessage(ChatMessageBuilder.buildTextMessage(mTextInput.getText().toString().trim()));
+                                mMessageHandler.sendMessage(ChatMessageBuilder.buildTextMessage(mTextInput.getText().toString()));
                             } else {
-                                mMessageHandler.sendMessage(ChatMessageBuilder.buildTextAtMessage(atUserList, mTextInput.getText().toString().trim()));
+                                mMessageHandler.sendMessage(ChatMessageBuilder.buildTextAtMessage(atUserList, mTextInput.getText().toString()));
                             }
                         } else {
-                            mMessageHandler.sendMessage(ChatMessageBuilder.buildTextMessage(mTextInput.getText().toString().trim()));
+                            mMessageHandler.sendMessage(ChatMessageBuilder.buildTextMessage(mTextInput.getText().toString()));
                         }
                     }
                 }
@@ -770,7 +771,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         this.mMessageHandler = handler;
     }
 
-    public void setStartActivityListener(OnInputViewListener listener) {
+    public void setOnInputViewListener(OnInputViewListener listener) {
         this.mOnInputViewListener = listener;
     }
 
@@ -1244,7 +1245,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             }
         }, 0, 1000);
 
-        AudioPlayer.getInstance().startRecord(new AudioPlayer.Callback() {
+        AudioRecorder.getInstance().startRecord(new AudioRecorder.Callback() {
             @Override
             public void onCompletion(Boolean success) {
                 recordComplete(success);
@@ -1265,7 +1266,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         if (mChatInputHandler != null) {
             mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_STOP);
         }
-        AudioPlayer.getInstance().stopRecord();
+        AudioRecorder.getInstance().stopRecord();
         if (mVoiceWaveView != null) {
             mVoiceWaveView.stop();
         }
@@ -1303,7 +1304,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     }
 
     private void recordComplete(boolean success) {
-        int duration = AudioPlayer.getInstance().getDuration();
+        int duration = AudioRecorder.getInstance().getDuration();
         TUIChatLog.i(TAG, "recordComplete duration:" + duration);
         if (mChatInputHandler != null) {
             if (!success || duration == 0) {
@@ -1322,7 +1323,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         }
 
         if (mMessageHandler != null && success) {
-            mMessageHandler.sendMessage(ChatMessageBuilder.buildAudioMessage(AudioPlayer.getInstance().getPath(), duration));
+            mMessageHandler.sendMessage(ChatMessageBuilder.buildAudioMessage(AudioRecorder.getInstance().getPath(), duration));
         }
     }
 

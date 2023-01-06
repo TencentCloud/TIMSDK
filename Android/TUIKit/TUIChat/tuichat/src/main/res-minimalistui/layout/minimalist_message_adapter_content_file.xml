@@ -24,6 +24,7 @@
 
         <ImageView
             android:id="@+id/file_icon_iv"
+            android:background="@color/transparent"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginRight="8dp"

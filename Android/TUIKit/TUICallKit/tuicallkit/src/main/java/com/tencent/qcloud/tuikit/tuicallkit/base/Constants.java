@@ -6,6 +6,9 @@ public class Constants {
     public static final int ROOM_ID_MIN = 1;
     public static final int ROOM_ID_MAX = Integer.MAX_VALUE;
 
+    //信令超时时长，默认 30s
+    public static int SIGNALING_MAX_TIME = 30;
+
     public static final int MIN_AUDIO_VOLUME              = 10;
     public static final int MAX_USER                      = 9;
     public static final int MIN_DURATION_SHOW_LOW_QUALITY = 5000; //Minimum interval for displaying poor network

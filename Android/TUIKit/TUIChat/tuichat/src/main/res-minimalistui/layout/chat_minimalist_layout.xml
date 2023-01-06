@@ -49,6 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/chat_input_layout"
         android:layout_below="@+id/chat_notice_layout"
+        android:layout_marginBottom="-20dp"
         android:baselineAligned="false"
         android:clickable="false"
         android:descendantFocusability="blocksDescendants" />
@@ -102,6 +103,7 @@
         android:id="@+id/chat_input_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         android:layout_above="@id/forward_area"
         android:layout_marginBottom="20dp"
         android:layout_alignParentBottom="true" />

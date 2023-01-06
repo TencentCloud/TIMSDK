@@ -10,14 +10,18 @@
     <string name="hold_say">按住说话</string>
 
     <string name="copy_action">复制</string>
+    <string name="translate_action">翻译</string>
     <string name="delete_action">删除</string>
     <string name="revoke_action">撤回</string>
     <string name="resend_action">重发</string>
+    <string name="hide_action">隐藏</string>
 
     <string name="copy_success_tip">复制成功</string>
 
     <string name="chat_message_detail">消息详情</string>
 
+    <string name="translation_support">由腾讯云 IM 提供翻译支持</string>
+    <string name="translation_fail">翻译失败</string>
     <!-- 消息转发 -->
 
     <string name="titlebar_back">返回</string>
@@ -107,6 +111,8 @@
     <string name="record_occupied">录音机被占用</string>
     <string name="record_null">录音的结果为空</string>
     <string name="record_limit_tips">已达到最大语音长度</string>
+    <string name="record_rejected_for_in_call">正在音视频通话，请稍后再试</string>
+    <string name="record_rejected_for_in_recording">当前录音未结束</string>
     <string name="play_error_tip">语音文件已损坏或不存在</string>
     <string name="input_tip">没有输入昵称，请重新填写</string>
 
@@ -147,6 +153,7 @@
     <string name="completed">已完成</string>
     <string name="view_original_image">查看原图</string>
 
+    <string name="at_all">所有人</string>
     <string name="ui_at_all">[@所有人]</string>
     <string name="ui_at_me">[有人@我]</string>
     <string name="ui_at_all_me">[@所有人][有人@我]</string>

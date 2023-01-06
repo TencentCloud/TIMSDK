@@ -16,8 +16,8 @@ import androidx.multidex.MultiDex;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
+import com.tencent.qcloud.tim.demo.bean.UserInfo;
 import com.tencent.qcloud.tim.demo.login.LoginForDevActivity;
-import com.tencent.qcloud.tim.demo.login.ThemeSelectActivity;
 import com.tencent.qcloud.tim.demo.main.MainActivity;
 import com.tencent.qcloud.tim.demo.main.MainMinimalistActivity;
 import com.tencent.qcloud.tim.demo.push.OfflinePushAPIDemo;
@@ -27,8 +27,6 @@ import com.tencent.qcloud.tim.demo.signature.GenerateTestUserSig;
 import com.tencent.qcloud.tim.demo.utils.BrandUtil;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.demo.utils.PrivateConstants;
-import com.tencent.qcloud.tim.demo.bean.UserInfo;
-
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.interfaces.TUICallback;
@@ -37,11 +35,10 @@ import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.PermissionRequester;
 import com.tencent.qcloud.tuicore.util.TUIUtil;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.List;
 
 public class DemoApplication extends Application {
 
@@ -74,7 +71,8 @@ public class DemoApplication extends Application {
             registerActivityLifecycleCallbacks(new StatisticActivityLifecycleCallback());
             initLoginStatusListener();
             setPermissionRequestContent();
-
+            TUIChatConfigs.getConfigs().getGeneralConfig().setEnableMultiDeviceForCall(true);
+            TUIChatConfigs.getConfigs().getGeneralConfig().setEnableTextTranslation(true);
             initOfflinePushConfigs();
             initDemoStyle();
         }

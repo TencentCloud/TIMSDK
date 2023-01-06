@@ -7,11 +7,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.PowerManager;
 
-import com.tencent.qcloud.tuikit.tuicallengine.impl.base.TUILog;
-
 public class CallingScreenSensorFeature {
-    private static final String TAG = "CallingScreenSensorFeature";
-
     private Context             mContext;
     private SensorManager       mSensorManager;
     private SensorEventListener mSensorEventListener;
@@ -27,13 +23,11 @@ public class CallingScreenSensorFeature {
 
     public void registerSensorEventListener() {
         if (!mEnableCloseScreenNearEar) {
-            TUILog.i(TAG, "you have already reject screen sensor");
             return;
         }
         if (null != mSensorManager) {
             return;
         }
-        TUILog.i(TAG, "registerSensorEventListener");
         mSensorManager = (SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE);
         Sensor sensor = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
         PowerManager pm = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
@@ -70,7 +64,6 @@ public class CallingScreenSensorFeature {
 
     public void unregisterSensorEventListener() {
         if (null != mSensorManager && null != mSensorEventListener) {
-            TUILog.i(TAG, "unregisterSensorEventListener");
             Sensor sensor = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
             mSensorManager.unregisterListener(mSensorEventListener, sensor);
             mSensorManager = null;

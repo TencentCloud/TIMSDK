@@ -42,6 +42,7 @@ public class TUIForwardChatMinimalistActivity extends BaseMinimalistLightActivit
         mForwardChatAdapter.setForwardMode(true);
         presenter = new ForwardPresenter();
         presenter.setMessageListAdapter(mForwardChatAdapter);
+        presenter.setNeedShowTranslation(false);
         mForwardChatAdapter.setPresenter(presenter);
 
         mFowardChatMessageRecyclerView.setAdapter(mForwardChatAdapter);

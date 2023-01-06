@@ -123,6 +123,20 @@ public class TUIOfflinePushUtils {
                     PrivateConstants.fcmPushBussinessId = Long.parseLong(fcmPushBussinessId);
                 }
 
+                String fcmPushChannelId = params.getFcmPushChannelId();
+                if (TextUtils.isEmpty(fcmPushChannelId)) {
+                    TUIOfflinePushLog.e(TAG, "registerPush-- fcmPushChannelId is null");
+                } else {
+                    PrivateConstants.fcmPushChannelId = fcmPushChannelId;
+                }
+
+                String fcmPushChannelSoundName = params.getFcmPushChannelSoundName();
+                if (TextUtils.isEmpty(fcmPushChannelSoundName)) {
+                    TUIOfflinePushLog.e(TAG, "registerPush-- fcmPushChannelSoundName is null");
+                } else {
+                    PrivateConstants.fcmPushChannelSoundName = fcmPushChannelSoundName;
+                }
+
                 bussinessId = PrivateConstants.fcmPushBussinessId;
                 break;
         }

@@ -44,6 +44,7 @@ import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.IBaseMessageSender;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.IMessageAdapter;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.IMessageRecyclerView;
+import com.tencent.qcloud.tuikit.tuichat.model.AIDenoiseSignatureManager;
 import com.tencent.qcloud.tuikit.tuichat.model.ChatProvider;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
@@ -112,10 +113,15 @@ public abstract class ChatPresenter {
 
     protected boolean isLoading = false;
 
+    // 是否显示翻译的内容。合并转发的消息详情界面不用展示翻译内容。
+    // Whether to display the translated content. The merged-forwarded message details activity does not display the translated content.
+    protected boolean isNeedShowTranslation = true;
+
     public ChatPresenter() {
         TUIChatLog.i(TAG, "ChatPresenter Init");
 
         provider = new ChatProvider();
+        AIDenoiseSignatureManager.getInstance().updateSignature();
     }
 
     protected void initMessageSender() {
@@ -763,7 +769,6 @@ public abstract class ChatPresenter {
         provider.sendMessageReadReceipt(messageBeans, new IUIKitCallback<Void>() {
             @Override
             public void onSuccess(Void data) {
-                TUIChatLog.i(TAG, "sendMessageReadReceipt success");
                 TUIChatUtils.callbackOnSuccess(callback, null);
             }
 
@@ -798,6 +803,14 @@ public abstract class ChatPresenter {
 
     public void setChatFragmentShow(boolean isChatFragmentShow) {
         this.isChatFragmentShow = isChatFragmentShow;
+    }
+
+    public boolean isNeedShowTranslation() {
+        return isNeedShowTranslation;
+    }
+
+    public void setNeedShowTranslation(boolean needShowTranslation) {
+        isNeedShowTranslation = needShowTranslation;
     }
 
     private void notifyTyping() {
@@ -1265,7 +1278,7 @@ public abstract class ChatPresenter {
             return msgInfos;
         }
     }
-    public void forwardMessage(List<TUIMessageBean> msgInfos, boolean isGroup, String id, String offlineTitle, int forwardMode, boolean selfConversation, final IUIKitCallback callBack) {
+    public void forwardMessage(List<TUIMessageBean> msgInfos, boolean isGroup, String id, String offlineTitle, int forwardMode, boolean selfConversation, boolean onlyForTranslation, final IUIKitCallback callBack) {
         if (!safetyCall()) {
             TUIChatLog.w(TAG, "sendMessage unSafetyCall");
             return;
@@ -1281,7 +1294,7 @@ public abstract class ChatPresenter {
         // If forwarding is selected, no special treatment will be performed for the time being, and the original message will be forwarded.
         //List<TUIMessageBean> forwardMsgInfos = forwardTextMessageForSelected(msgInfos);
         if (forwardMode == TUIChatConstants.FORWARD_MODE_ONE_BY_ONE) {
-            forwardMessageOneByOne(msgInfos, isGroup, id, offlineTitle, selfConversation, callBack);
+            forwardMessageOneByOne(msgInfos, isGroup, id, offlineTitle, selfConversation, onlyForTranslation, callBack);
         } else if (forwardMode == TUIChatConstants.FORWARD_MODE_MERGE) {
             forwardMessageMerge(msgInfos, isGroup, id, offlineTitle, selfConversation, callBack);
         } else {
@@ -1291,7 +1304,7 @@ public abstract class ChatPresenter {
 
     public void forwardMessageOneByOne(final List<TUIMessageBean> msgInfos, final boolean isGroup,
                                        final String id, final String offlineTitle, final boolean selfConversation,
-                                       final IUIKitCallback callBack) {
+                                       final boolean onlyForTranslation, final IUIKitCallback callBack) {
         if (msgInfos == null || msgInfos.isEmpty()){
             return;
         }
@@ -1302,7 +1315,12 @@ public abstract class ChatPresenter {
                 int timeInterval = isGroup ? FORWARD_GROUP_INTERVAL : FORWARD_C2C_INTERVAL;
                 for(int j = 0; j < msgInfos.size(); j++){
                     TUIMessageBean info = msgInfos.get(j);
-                    TUIMessageBean message = ChatMessageBuilder.buildForwardMessage(info.getV2TIMMessage());
+                    TUIMessageBean message;
+                    if (onlyForTranslation) {
+                        message = ChatMessageBuilder.buildTextMessage(info.getTranslation());
+                    } else {
+                        message = ChatMessageBuilder.buildForwardMessage(info.getV2TIMMessage());
+                    }
 
                     if (selfConversation) {
                         sendMessage(message, false, callBack);
@@ -1742,6 +1760,28 @@ public abstract class ChatPresenter {
             }
         };
         ChatModifyMessageHelper.enqueueTask(task);
+    }
+
+    public void translateMessage(TUIMessageBean messageBean) {
+        provider.translateMessage(messageBean, new IUIKitCallback<String>() {
+            @Override
+            public void onSuccess(String data) {
+                TUIChatLog.i(TAG, "translateMessage success:" + data);
+                updateAdapter(IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, messageBean);
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                TUIChatLog.e(TAG, "translateMessage failed code:" + errCode + ", msg:" + errMsg);
+                ToastUtil.toastShortMessage(TUIChatService.getAppContext().getString(R.string.translation_fail));
+                updateAdapter(IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, messageBean);
+            }
+        });
+        updateAdapter(IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, messageBean);
+    }
+
+    public void updateTranslationMessage(TUIMessageBean messageBean) {
+        updateMessageInfo(messageBean);
     }
 
     public void modifyMessage(TUIMessageBean messageBean) {

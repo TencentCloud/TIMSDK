@@ -180,6 +180,7 @@ public class TUILogin {
             this.userSig = userSig;
             if (TextUtils.equals(userId, V2TIMManager.getInstance().getLoginUser()) && !TextUtils.isEmpty(userId)) {
                 TUICallback.onSuccess(callback);
+                TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGIN_SUCCESS, null);
                 getUserInfo(userId);
                 return;
             }

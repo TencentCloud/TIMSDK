@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuikit.TUICommonDefine;
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine;
-import com.tencent.qcloud.tuikit.tuicallengine.impl.base.TUILog;
 import com.tencent.qcloud.tuikit.tuicallkit.R;
 import com.tencent.qcloud.tuikit.tuicallkit.base.CallingUserModel;
 import com.tencent.qcloud.tuikit.tuicallkit.base.Constants;
@@ -27,8 +26,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class TUICallingGroupView extends BaseCallView {
-    private static final String TAG = "TUICallingGroupView";
-
     private TextView          mTextCallHint;
     private RelativeLayout    mLayoutFunction;
     private TextView          mTextTime;
@@ -120,7 +117,6 @@ public class TUICallingGroupView extends BaseCallView {
     public void userEnter(CallingUserModel userModel) {
         super.userEnter(userModel);
         UserLayout layout = mUserLayoutFactory.findUserLayout(userModel.userId);
-        TUILog.i(TAG, "userEnter, layout: " + layout + " , userModel: " + userModel);
         if (null == layout) {
             layout = allocUserLayout(userModel);
         }
@@ -152,7 +148,6 @@ public class TUICallingGroupView extends BaseCallView {
     public void userAdd(CallingUserModel userModel) {
         super.userAdd(userModel);
         UserLayout layout = mUserLayoutFactory.findUserLayout(userModel.userId);
-        TUILog.i(TAG, "userAdd, layout: " + layout + " , userModel: " + userModel);
         if (null == layout) {
             layout = allocUserLayout(userModel);
         }
@@ -299,7 +294,6 @@ public class TUICallingGroupView extends BaseCallView {
     }
 
     private void recyclerAllUserLayout() {
-        TUILog.i(TAG, "recyclerAllUserLayout");
         if (null == mUserLayoutFactory) {
             return;
         }

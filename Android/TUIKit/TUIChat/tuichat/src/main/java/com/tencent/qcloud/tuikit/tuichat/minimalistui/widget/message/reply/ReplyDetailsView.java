@@ -3,10 +3,14 @@ package com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.reply;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +25,7 @@ import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageRepliesBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
+import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.MessageProperties;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.TimeInLineTextLayout;
 
 import java.util.ArrayList;
@@ -31,6 +36,8 @@ import java.util.Map;
 public class ReplyDetailsView extends RecyclerView {
     private ReplyDetailsAdapter adapter;
     private LinearLayoutManager layoutManager;
+    private FrameLayout translationContentFrameLayout;
+    private LinearLayout translationResultLayout;
 
     public ReplyDetailsView(@NonNull Context context) {
         super(context);
@@ -59,7 +66,7 @@ public class ReplyDetailsView extends RecyclerView {
         adapter.notifyDataSetChanged();
     }
 
-    public static class ReplyDetailsAdapter extends Adapter<ReplyDetailsViewHolder> {
+    public class ReplyDetailsAdapter extends Adapter<ReplyDetailsViewHolder> {
         Map<MessageRepliesBean.ReplyBean, TUIMessageBean> data;
 
         public void setData(Map<MessageRepliesBean.ReplyBean, TUIMessageBean> messageBeanMap) {
@@ -70,6 +77,9 @@ public class ReplyDetailsView extends RecyclerView {
         @Override
         public ReplyDetailsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_minimalist_reply_details_item_layout, parent, false);
+            translationContentFrameLayout = view.findViewById(R.id.translate_content_fl);
+            LayoutInflater.from(view.getContext()).inflate(R.layout.translation_contant_layout, translationContentFrameLayout);
+            translationResultLayout = translationContentFrameLayout.findViewById(R.id.translate_result_ll);
             return new ReplyDetailsViewHolder(view);
         }
 
@@ -80,10 +90,12 @@ public class ReplyDetailsView extends RecyclerView {
             TUIMessageBean messageBean = data.get(replyBean);
             String messageText;
             String faceUrl;
+            int translationStatus = TUIMessageBean.MSG_TRANSLATE_STATUS_UNKNOWN;
             if (messageBean == null) {
                 messageText = replyBean.getMessageAbstract();
                 faceUrl = replyBean.getSenderFaceUrl();
             } else {
+                translationStatus = messageBean.getTranslationStatus();
                 messageText = messageBean.getExtra();
                 faceUrl = messageBean.getFaceUrl();
                 holder.timeInLineTextLayout.setTimeText(DateTimeUtil.getTimeFormatText(new Date(messageBean.getMessageTime() * 1000)));
@@ -93,6 +105,23 @@ public class ReplyDetailsView extends RecyclerView {
                     .apply(new RequestOptions().error(com.tencent.qcloud.tuicore.R.drawable.core_default_user_icon_light))
                     .into(holder.userFaceView);
             FaceManager.handlerEmojiText(holder.timeInLineTextLayout.getTextView(), messageText, false);
+
+            if (translationStatus == TUIMessageBean.MSG_TRANSLATE_STATUS_SHOWN) {
+                translationContentFrameLayout.setVisibility(View.VISIBLE);
+                translationResultLayout.setVisibility(View.VISIBLE);
+                TextView translationText = translationContentFrameLayout.findViewById(R.id.translate_tv);
+                translationText.setTextSize(TypedValue.COMPLEX_UNIT_PX, translationText.getResources().getDimension(R.dimen.chat_minimalist_message_text_size));
+                if (MessageProperties.getInstance().getChatContextFontSize() != 0) {
+                    translationText.setTextSize(MessageProperties.getInstance().getChatContextFontSize());
+                }
+                FaceManager.handlerEmojiText(translationText, messageBean.getTranslation(), false);
+            } else if (translationStatus == TUIMessageBean.MSG_TRANSLATE_STATUS_LOADING) {
+                translationContentFrameLayout.setVisibility(View.VISIBLE);
+                translationResultLayout.setVisibility(View.GONE);
+            } else {
+                translationContentFrameLayout.setVisibility(View.GONE);
+            }
+
             optimizeBackgroundAndAvatar(holder, replyBeanList, position);
         }
 

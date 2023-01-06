@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/item_left"
     android:layout_width="match_parent"
-    android:layout_height="69.6dp"
+    android:layout_height="wrap_content"
     android:background="#FFFFFF"
     android:paddingLeft="12.6dp"
     android:paddingTop="11.52dp">
@@ -50,6 +50,20 @@
         android:textColor="@color/black"
         android:textSize="15.36sp"
         tools:text="吃饭" />
+
+    <!-- translation content area -->
+    <com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MaxWidthFrameLayout
+        android:id="@+id/translate_content_fl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/user_icon"
+        android:layout_below="@id/msg_abstract"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/translation_area_bg"
+        app:maxWidth="@dimen/chat_message_content_max_width"
+        android:visibility="gone"
+        tools:visibility="visible"/>
 
     <TextView
         android:id="@+id/msg_time"

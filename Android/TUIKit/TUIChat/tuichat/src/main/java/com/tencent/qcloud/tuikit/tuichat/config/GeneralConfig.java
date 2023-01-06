@@ -26,6 +26,16 @@ public class GeneralConfig {
     private boolean enableFloatWindowForCall = true;
     private boolean enableMultiDeviceForCall = false;
 
+    private boolean enableTextTranslation = false;
+
+    public boolean isEnableTextTranslation() {
+        return enableTextTranslation;
+    }
+
+    public void setEnableTextTranslation(boolean enableTextTranslation) {
+        this.enableTextTranslation = enableTextTranslation;
+    }
+
     /**
      * 是否开启音视频通话悬浮窗
      * Set to enable the floating window for call

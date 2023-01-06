@@ -55,6 +55,10 @@ public class TUIOfflinePushService extends ServiceInitializer implements ITUINot
                 TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGOUT_SUCCESS,
                 this);
 
+        TUICore.registerEvent(TUIOfflinePushConfig.EVENT_KEY_OFFLINE_MESSAGE_PRIVATE_RING,
+                TUIOfflinePushConfig.EVENT_SUB_KEY_OFFLINE_MESSAGE_PRIVATE_RING,
+                this);
+
     }
 
     private void initActivityLifecycle() {
@@ -213,6 +217,11 @@ public class TUIOfflinePushService extends ServiceInitializer implements ITUINot
                 logout();
             } else if (TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGIN_SUCCESS.equals(subKey)) {
                 logined();
+            }
+        } else if (TextUtils.equals(key, TUIOfflinePushConfig.EVENT_KEY_OFFLINE_MESSAGE_PRIVATE_RING)) {
+            if (TextUtils.equals(subKey, TUIOfflinePushConfig.EVENT_SUB_KEY_OFFLINE_MESSAGE_PRIVATE_RING)) {
+                Boolean isPrivateRing = (Boolean) param.get(TUIOfflinePushConfig.OFFLINE_MESSAGE_PRIVATE_RING);
+                TUIOfflinePushConfig.getInstance().setAndroidPrivateRing(isPrivateRing);
             }
         }
     }
