@@ -5,112 +5,15 @@
 
 @implementation GenerateTestUserSig
 
-+ (NSString *)serverName:(TUIDemoServerType)serverType isTest:(BOOL)isTest {
-    NSDictionary * tuidemo_serverName = @{
-        @(TUIDemoServerTypePublic): @"公有云",
-        @(TUIDemoServerTypePrivate): @"私有云",
-        @(TUIDemoServerTypeSingapore): @"新加坡",
-        @(TUIDemoServerTypeCustomPrivate): @"自定义私有云",
-        @(TUIDemoServerTypeGermany): @"德国",
-        @(TUIDemoServerTypeKorea): @"韩国",
-        @(TUIDemoServerTypeIndia): @"印度",
-        @(TUIDemoServerTypeSingaporeNew): @"新加坡(跨站)",
-        @(TUIDemoServerTypeGermanyNew): @"德国(跨站)",
-        @(TUIDemoServerTypeKoreaNew): @"韩国(跨站)",
-        @(TUIDemoServerTypeIndiaNew): @"印度(跨站)",
-    };
-    
-    NSString *name = tuidemo_serverName[@(serverType)];
-    if (serverType != TUIDemoServerTypeCustomPrivate) {
-        name = [name stringByAppendingFormat:@"%@", isTest?@"测试环境":@"正式环境"];
-    }
-    
-    return name;
-}
-
-+ (void)switchServer:(TUIDemoServerType)serverType {
-    [NSUserDefaults.standardUserDefaults setInteger:serverType forKey:@"server_type"];
-    [NSUserDefaults.standardUserDefaults setBool:YES forKey:@"server_switched"];
-    [NSUserDefaults.standardUserDefaults synchronize];
-}
-
-+ (BOOL)isServerSwitched {
-    return [NSUserDefaults.standardUserDefaults boolForKey:@"server_switched"];
-}
-
-+ (TUIDemoServerType)currentServer {
-    return (TUIDemoServerType)[NSUserDefaults.standardUserDefaults integerForKey:@"server_type"];
-}
-
-+ (BOOL)isTestEnvironment {
-    return [NSUserDefaults.standardUserDefaults boolForKey:@"test_environment"];
-}
-
-+ (void)switchTestEnvironmenet:(BOOL)test {
-    [NSUserDefaults.standardUserDefaults setBool:test forKey:@"test_environment"];
-    [NSUserDefaults.standardUserDefaults synchronize];
-}
-
-+ (void)setCustomPrivateServer:(NSString *)server {
-    [NSUserDefaults.standardUserDefaults setObject:server forKey:@"custom_private_server"];
-    [NSUserDefaults.standardUserDefaults synchronize];
-}
-+ (NSString *)customPrivateServer {
-    return [NSUserDefaults.standardUserDefaults objectForKey:@"custom_private_server"];
-}
-+ (void)setCustomPrivatePort:(NSUInteger)port {
-    [NSUserDefaults.standardUserDefaults setInteger:port forKey:@"custom_private_port"];
-    [NSUserDefaults.standardUserDefaults synchronize];
-}
-+ (NSUInteger)customPrivatePort {
-    return [NSUserDefaults.standardUserDefaults integerForKey:@"custom_private_port"];;
-}
-
 + (unsigned int)currentSDKAppid {
     if (![TCLoginModel sharedInstance].isDirectlyLoginSDK) {
         return (unsigned int)[TCLoginModel sharedInstance].SDKAppID;
     }
-    int appid = public_SDKAPPID;
-    if ([self currentServer] == TUIDemoServerTypeSingapore) {
-        appid = singapore_SDKAPPID;
-    } else if ([self currentServer] == TUIDemoServerTypeKorea) {
-        appid = korea_SDKAPPID;
-    } else if ([self currentServer] == TUIDemoServerTypeGermany) {
-        appid = germany_SDKAPPID;
-    } else if ([self currentServer] == TUIDemoServerTypeIndia) {
-        appid = india_SDKAPPID;
-    } else if ([self currentServer] == TUIDemoServerTypeSingaporeNew) {
-        appid = singapore_new_SDKAPPID;
-    } else if ([self currentServer] == TUIDemoServerTypeKoreaNew) {
-        appid = korea_new_SDKAPPID;
-    } else if ([self currentServer] == TUIDemoServerTypeGermanyNew) {
-        appid = germany_new_SDKAPPID;
-    } else if ([self currentServer] == TUIDemoServerTypeIndiaNew) {
-        appid = india_new_SDKAPPID;
-    }
-    return appid;
+    return public_SDKAPPID;
 }
 
 + (NSString *)currentSecretkey {
-    NSString *secret = public_SECRETKEY;
-    if ([self currentServer] == TUIDemoServerTypeSingapore) {
-        secret = singapore_SECRETKEY;
-    } else if ([self currentServer] == TUIDemoServerTypeKorea) {
-        secret = korea_SECRETKEY;
-    } else if ([self currentServer] == TUIDemoServerTypeGermany) {
-        secret = germany_SECRETKEY;
-    } else if ([self currentServer] == TUIDemoServerTypeIndia) {
-        secret = india_SECRETKEY;
-    } else if ([self currentServer] == TUIDemoServerTypeSingaporeNew) {
-        secret = singapore_new_SECRETKEY;
-    } else if ([self currentServer] == TUIDemoServerTypeKoreaNew) {
-        secret = korea_new_SECRETKEY;
-    } else if ([self currentServer] == TUIDemoServerTypeGermanyNew) {
-        secret = germany_new_SECRETKEY;
-    } else if ([self currentServer] == TUIDemoServerTypeIndiaNew) {
-        secret = india_new_SECRETKEY;
-    }
-    return secret;
+    return public_SECRETKEY;
 }
 
 

@@ -41,28 +41,6 @@ NS_ASSUME_NONNULL_BEGIN
 #define SDKAPPID [GenerateTestUserSig currentSDKAppid]
 #define SECRETKEY [GenerateTestUserSig currentSecretkey]
 
-#define TUIDemoServerName(name, test) [GenerateTestUserSig serverName:name isTest:test]
-#define TUIDemoSwitchServer(name) [GenerateTestUserSig switchServer:name]
-#define TUIDemoCurrentServer [GenerateTestUserSig currentServer]
-#define TUIDemoSwitchTest(test) [GenerateTestUserSig switchTestEnvironmenet:test]
-#define TUIDemoIsTestEnvironment [GenerateTestUserSig isTestEnvironment]
-
-// 服务器类型
-// Server Type
-typedef NS_ENUM(NSInteger, TUIDemoServerType) {
-    TUIDemoServerTypePublic         = 0,    // 公有云
-    TUIDemoServerTypePrivate        = 1,    // 私有云
-    TUIDemoServerTypeSingapore      = 2,    // 新加坡
-    TUIDemoServerTypeCustomPrivate  = 3,    // 自定义私有云
-    TUIDemoServerTypeKorea          = 4,    // 韩国
-    TUIDemoServerTypeGermany        = 5,    // 德国
-    TUIDemoServerTypeIndia          = 6,    // 印度
-    TUIDemoServerTypeSingaporeNew   = 7,    // 新加坡(跨站)
-    TUIDemoServerTypeKoreaNew       = 8,    // 韩国(跨站)
-    TUIDemoServerTypeGermanyNew     = 9,    // 德国(跨站)
-    TUIDemoServerTypeIndiaNew       = 10,   // 印度(跨站)
-};
-
 /**
  * 公有云 SDKAppId，需要替换为您自己账号下的 SDKAppId。
  *
@@ -78,46 +56,6 @@ typedef NS_ENUM(NSInteger, TUIDemoServerType) {
  */
 
 static const int public_SDKAPPID = 0;
-
-/**
- * 新加坡环境下的 SDKAppId。
- */
-
-/**
- * SDKAppId in the environment in Singapore
- */
-static const int singapore_SDKAPPID = 0;
-static const int singapore_new_SDKAPPID = 0;
-
-/**
- * 韩国环境下的 SDKAppId
- */
-
-/**
- * SDKAppId in the environment in South Korea
- */
-static const int korea_SDKAPPID = 0;
-static const int korea_new_SDKAPPID = 0;
-
-/**
- * 德国环境下的 SDKAppId
- */
-
-/**
- * SDKAppId in the environment in Germany
- */
-static const int germany_SDKAPPID = 0;
-static const int germany_new_SDKAPPID = 0;
-
-/**
- * 印度环境下的 SDKAppId
- */
-
-/**
- * SDKAppId in the environment in India
- */
-static const int india_SDKAPPID = 0;
-static const int india_new_SDKAPPID = 0;
 
 /**
  *  签名过期时间，建议不要设置的过短
@@ -157,78 +95,14 @@ static const int EXPIRETIME = 604800;
  */
 static NSString * const public_SECRETKEY = @"";
 
-/**
- * 新加坡环境下的加密密钥
- */
-
-/**
- * Encryption key in the environment in Singapore
- */
-static NSString * const singapore_SECRETKEY = @"";
-static NSString * const singapore_new_SECRETKEY = @"";
-
-/**
- * 韩国环境下的加密秘钥
- */
-
-/**
- * Encryption key in the environment in South Korea
- */
-static NSString * const korea_SECRETKEY = @"";
-static NSString * const korea_new_SECRETKEY = @"";
-
-/**
- * 德国环境下的加密秘钥
- */
-
-/**
- * Encryption key in the environment in Germany
- */
-static NSString * const germany_SECRETKEY = @"";
-static NSString * const germany_new_SECRETKEY = @"";
-
-/**
- * 印度环境下的加密秘钥
- */
-
-/**
- * Encryption key in the environment in India
- */
-static NSString * const india_SECRETKEY = @"";
-static NSString * const india_new_SECRETKEY = @"";
 
 @interface GenerateTestUserSig : NSObject
 
-// 获取服务器名称
-// Get the server name
-+ (NSString *)serverName:(TUIDemoServerType)serverType isTest:(BOOL)isTest;
-
-// 切换服务器
-// Switch the server
-+ (void)switchServer:(TUIDemoServerType)serverType;
-
-// 服务器是否切换过
-+ (BOOL)isServerSwitched;
-
-// 获取当前服务器类型
-// Get the current server type
-+ (TUIDemoServerType)currentServer;
-
-// 环境相关
-// Environment-related
-+ (BOOL)isTestEnvironment;
-+ (void)switchTestEnvironmenet:(BOOL)test;
-
-// 设置/获取自定义私有化服务器信息
-// Set/Get custom private server information
-+ (void)setCustomPrivateServer:(NSString *)server;
-+ (NSString *)customPrivateServer;
-+ (void)setCustomPrivatePort:(NSUInteger)port;
-+ (NSUInteger)customPrivatePort;
-
 // 获取当前的 sdkappid 和 secretKey
 // Get the current SDKAppID and SecretKey
+
 + (unsigned int)currentSDKAppid;
+
 + (NSString *)currentSecretkey;
 
 
