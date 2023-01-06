@@ -20,10 +20,6 @@
 extern NSString * kEnableMsgReadStatus;
 extern NSString * kEnableOnlineStatus;
 
-#define SHEET_COMMON 1
-#define SHEET_AGREE  2
-#define SHEET_SEX    3
-#define SHEET_V2API  4
-@interface SettingController : UITableViewController
+@interface SettingController : UIViewController
 
 @end

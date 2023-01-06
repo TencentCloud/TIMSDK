@@ -22,9 +22,6 @@
 "logout" = "Log Out";
 "login" = "Log In";
 
-"Male" = "Male";
-"Female" = "Female";
-
 "confirm" = "OK";
 
 "save" = "Save";
@@ -33,8 +30,6 @@
 "None" = "None";
 
 "confirm_log_out" = "Leave now?";
-"no_personal_signature" = "No status";
-"no_set" = "Not set";
 
 "choose_avatar_for_you" = "The App randomly assigns you a system avatar.";
 
@@ -52,29 +47,11 @@
 "TabBarItemMessageText" = "Message";
 "TabBarItemContactText" = "Contacts";
 "TabBarItemMeText"      = "Me";
-"TabBarItemLiveText"    = "Video Live Stream";
-"TabBarItemLiveConnectingText" = "Connecting…";
-"TabBarItemLiveDisconnectText" = "Video Live Stream (not connected)";
-
-"ChatsNewChatText"    = "New Chat";
-"ChatsNewPrivateGroupText"   = "Create Discussion Group";
-"ChatsNewGroupText"  = "Create Group Chat";
-"ChatsNewChatRoomText" = "Create Chat Room";
-"ChatsNewCommunityText" = "Create Community";
 
 "ChatsCreateFailed" = "Create Group Failed";
 
-"ChatsSelectContact" = "Select Contact";
 "ChatSecurityWarning" = "[Security Reminder] This App is only used to experience the features of Tencent Cloud IM products, and cannot be used for business negotiation and expansion. Please do not trust remittance, winning the lottery and other information related to money, do not easily make strange phone calls, beware of being deceived.";
 "ChatSecurityWarningReport" = "Report";
-
-"ContactsAddFriends" = "Add to Contacts";
-"ContactsJoinGroup"  = "Add Group";
-
-"MeFriendRequest" = "Friend Request";
-"MeFriendRequestMethodAgreeAll" = "Allow any user to add you as friend";
-"MeFriendRequestMethodNeedConfirm" = "Anyone upon Request";
-"MeFriendRequestMethodDenyAll" = "Decline friend request from any user";
 
 "MeAbout" = "About TencentCloud·IM";
 "MeDevelop" = "Develop and Debug";
@@ -82,31 +59,6 @@
 
 "MeSwitchSkin" = "Change Skin";
 "MeSwitchLaunguage" = "Change Launguage";
-"MeMessageReadStatus" = "Message read status";
-"MeMessageReadStatusOpenDesc" = "If disabled, the message read status is hidden for all your messages and for all the messages sent by members in a chat.";
-"MeMessageReadStatusCloseDesc" = "If enabled, the message read status is displayed for all your messages and for all the messages sent by members in a chat.";
-
-"ProfilePhoto" = "Profile Photo";
-"ProfileName"  = "Name";
-"ProfileAccount" = "Account";
-"ProfileSignature" = "Status";
-"ProfileGender" = "Gender";
-"ProfileEditName" = "Name";
-"ProfileEditNameDesc" = "Only letters, digits, underscores, and Chinese characters.";
-"ProfileEditSignture" = "Status";
-"ProfileEditGender" = "Gender";
-"ProfileEditAlia" = "Alias";
-"ProfileDetails" = "Details";
-"ProfileAlia" = "Alias";
-"ProfileBlocked" = "Block";
-"ProfileMessageDoNotDisturb" = "Mute Notifications";
-"ProfileStickyonTop" = "Pin";
-"ProfileSendMessages" = "Send Message";
-"ProfileDeleteFirend" = "Delete Friend";
-
-"LiveDropRefresh" = "Swipe down to refresh";
-"LiveRefreshing" = "Refreshing...";
-"LiveOnlineCountFormat" = "%ld is online.";
 
 "GroupRequestJoinGroupFormat" = "%@ requests to join group chat.";
 "GroupJoin" = "Add Group";
@@ -153,8 +105,6 @@
 
 "exclued_from_unread_count" = "IgnoreReadCountMsg";
 
-"birthday" = "Birthday";
-
 // ---- 2021-04-22 新增
 "TipsPhoneNotNull" = "Mobile number is required.";
 
@@ -164,11 +114,6 @@
 "MarkAllMessageAsReadErrFormat" = "Error, %d, %@";
 
 "ChooseNationOrRegion" = "Choose Nation or Region";
-
-"MessageTipsYouRecallMessage" = "You recalled a message.";
-"MessageTipsOthersRecallMessageFormat" = "\"%@\" recalled a message.";
-"MessageTipsOthersRecallMessage" = "The other user recalled a message.";
-"SignatureFormat" = "Status:%@";
 
 "ChangeStyle" = "Style";
 "ChangeSkin" = "Theme";
@@ -235,15 +180,7 @@
 
 "UpgradeNow" = "Upgrade";
 
-"ShowOnlineStatus" = "Display online status";
-"ShowOnlineStatusOpenDesc" = "If disabled, the users' online status will not displayed in your session and contact list.";
-"ShowOnlineStatusCloseDesc" = "If enabled, the users' online status will displayed in your session and contact list.";
 "OnlineStatus" = "Online status";
-"ShowPackageToast" = "This is the feature of ultimate edition";
-
-
-
-
 
 
 //----------------Mini begin------------
@@ -251,9 +188,4 @@
 "TabBarItemMessageText_mini" = "Chats";
 "TabBarItemContactText_mini" = "Contact";
 "TabBarItemSettingText_mini"      = "Settings";
-"ReadAll" = "Read All";
-"Hide"    = "Hide";
-"Delete"    = "Delete";
-"MarkAsRead"= "Mark As Read";
-"TUIKitDone" = "Done";
 //----------------Mini end------------

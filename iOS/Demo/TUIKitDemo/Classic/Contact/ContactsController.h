@@ -16,7 +16,6 @@
  *  - This class depends on Tencent Cloud TUIKit and IMSDK.
  */
 #import <UIKit/UIKit.h>
-#import "TUIContactController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

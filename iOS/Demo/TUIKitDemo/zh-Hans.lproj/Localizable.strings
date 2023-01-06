@@ -22,9 +22,6 @@
 "logout" = "退出登录";
 "login" = "登录";
 
-"Male" = "男";
-"Female" = "女";
-
 "confirm" = "确定";
 
 "save" = "保存";
@@ -33,8 +30,6 @@
 "None" = "无";
 
 "confirm_log_out" = "确定退出吗";
-"no_personal_signature" = "暂无个性签名";
-"no_set" = "未设置";
 
 "choose_avatar_for_you" = "App随机为您分配一个系统头像";
 
@@ -52,31 +47,11 @@
 "TabBarItemMessageText" = "消息";
 "TabBarItemContactText" = "通讯录";
 "TabBarItemMeText"      = "我";
-"TabBarItemLiveText"    = "视频直播";
-"TabBarItemLiveConnectingText" = "连接中...";
-"TabBarItemLiveDisconnectText" = "视频直播(未连接)";
-
-"ChatsNewChatText"    = "发起会话";
-"ChatsNewPrivateGroupText"   = "创建讨论组";
-"ChatsNewGroupText"  = "创建群聊";
-"ChatsNewChatRoomText" = "创建聊天室";
-"ChatsNewCommunityText" = "创建社群";
-
 
 "ChatsCreateFailed" = "创建群失败";
 
-"ChatsSelectContact" = "选择联系人";
-
 "ChatSecurityWarning" = "【安全提示】本 APP 仅用于体验腾讯云即时通信 IM 产品功能，不可用于业务洽谈与拓展。请勿轻信汇款、中奖等涉及钱款的信息，勿轻易拨打陌生电话，谨防上当受骗。";
 "ChatSecurityWarningReport" = "点此举报";
-
-"ContactsAddFriends" = "添加好友";
-"ContactsJoinGroup"  = "添加群聊";
-
-"MeFriendRequest" = "加我为好友时";
-"MeFriendRequestMethodAgreeAll" = "同意任何用户加好友";
-"MeFriendRequestMethodNeedConfirm" = "需要验证";
-"MeFriendRequestMethodDenyAll" = "拒绝任何人加好友";
 
 "MeAbout" = "关于腾讯云·IM";
 "MeDevelop" = "开发调试";
@@ -84,31 +59,6 @@
 
 "MeSwitchSkin" = "更换主题";
 "MeSwitchLaunguage" = "切换语言";
-"MeMessageReadStatus" = "消息阅读状态";
-"MeMessageReadStatusOpenDesc" = "关闭后，您收发的消息均不带消息阅读状态，您将无法看到对方是否已读，同时对方也无法看到您是否已读。";
-"MeMessageReadStatusCloseDesc" = "开启后，您在群聊中收发的消息均带有消息阅读状态，并且可以看到对方是否已读。与您单聊的好友若也开启了消息阅读状态，您与好友在单聊中收发的消息也将带有消息阅读状态。";
-
-"ProfilePhoto" = "头像";
-"ProfileName"  = "昵称";
-"ProfileAccount" = "账号";
-"ProfileSignature" = "个性签名";
-"ProfileGender" = "性别";
-"ProfileEditName" = "修改昵称";
-"ProfileEditNameDesc" = "仅限中文、字母、数字和下划线";
-"ProfileEditSignture" = "修改个性签名";
-"ProfileEditGender" = "修改性别";
-"ProfileEditAlia" = "修改备注";
-"ProfileDetails" = "详细资料";
-"ProfileAlia" = "备注名";
-"ProfileBlocked" = "加入黑名单";
-"ProfileMessageDoNotDisturb" = "消息免打扰";
-"ProfileStickyonTop" = "置顶聊天";
-"ProfileSendMessages" = "发送消息";
-"ProfileDeleteFirend" = "删除好友";
-
-"LiveDropRefresh" = "下拉刷新";
-"LiveRefreshing" = "刷新中...";
-"LiveOnlineCountFormat" = "%ld在线";
 
 "GroupRequestJoinGroupFormat" = "%@ 申请加入群聊";
 "GroupJoin" = "添加群组";
@@ -155,8 +105,6 @@
 
 "exclued_from_unread_count" = "不计入未读数消息";
 
-"birthday" = "生日";
-
 // ---- 2021-04-22 新增
 "TipsPhoneNotNull" = "手机号不能为空";
 
@@ -166,11 +114,6 @@
 "MarkAllMessageAsReadErrFormat" = "清空未读失败, %d, %@";
 
 "ChooseNationOrRegion" = "选择国家或地区";
-
-"MessageTipsYouRecallMessage" = "你撤回了一条消息";
-"MessageTipsOthersRecallMessageFormat" = "\"%@\" 撤回了一条消息";
-"MessageTipsOthersRecallMessage" = "对方撤回了一条消息";
-"SignatureFormat" = "个性签名:%@";
 
 "ChangeStyle" = "切换风格";
 "ChangeSkin" = "切换皮肤";
@@ -239,22 +182,11 @@
 
 "UpgradeNow" = "立即升级";
 
-"ShowOnlineStatus" = "显示在线状态";
-"ShowOnlineStatusOpenDesc" = "关闭后，您将不可以在会话列表和通讯录中看到好友在线或离线的状态提示。";
-"ShowOnlineStatusCloseDesc" = "开启后，您将可以在会话列表和通讯录中看到好友在线或离线的状态提示。";
 "OnlineStatus" = "在线状态";
-"ShowPackageToast" = "该功能为旗舰版功能";
 
 //----------------Mini begin------------
 "Chat" = "聊天";
 "TabBarItemMessageText_mini" = "聊天";
 "TabBarItemContactText_mini" = "联系人";
 "TabBarItemSettingText_mini" = "设置";
-
-"ReadAll" = "全部已读";
-"Hide"    = "隐藏";
-"Delete"    = "删除";
-"MarkAsRead"= "标记已读";
-"TUIKitDone" = "完成";
-
 //----------------Mini end------------

@@ -24,7 +24,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.buttonAction = action;
-        self.backgroundColor = [UIColor tui_colorWithHex:@"fdf4e7" alpha:1];
+        self.backgroundColor = [UIColor tui_colorWithHex:@"FF9500" alpha:0.1];
 
         if (tips.length > 0) {
             self.tipsLabel = [[UILabel alloc] initWithFrame:CGRectZero];

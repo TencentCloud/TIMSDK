@@ -149,7 +149,7 @@
     self.navigationItem.titleView = _titleView;
     self.navigationItem.title = @"";
     
-    UIImage *image = TUIDemoDynamicImage(@"nav_back_img", [UIImage imageNamed:@"ic_back_white"]);
+    UIImage *image = TUICoreDynamicImage(@"nav_back_img", [UIImage imageNamed:@"ic_back_white"]);
     image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton setImage:image forState:UIControlStateNormal];
