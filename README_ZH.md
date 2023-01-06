@@ -219,18 +219,29 @@
 
 [接口升级指引](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
-## 最新增强版 6.9.3557 @2022.11.29
+## 最新增强版 7.0.3754 @2023.01.06
 
 ### SDK
 
-- 修复 Android 从消息中获取 V2TIMOfflinePushInfo 内容偶现的崩溃问题
-- 修复 Android 增强版 pro 偶现的崩溃
-- 完善 C 接口 TIMConvGetConvList 返回的 json 数据内容
-
+- 所有消息类型都可支持 @ 群成员
+- 支持按照会话的 filter 获取未读总数
+- 普通群和直播群支持群计数器 meta counter
+- 支持文本消息翻译
+- 社群支持群自定义属性
+- 离线推送支持华为的 category 和小米的 channel ID 设置
+- 优化 quic 断网重连逻辑
+- Cos 富媒体文件下载增加兜底 IP 逻辑
+- Windows 平台发送富媒体消息文件路径兼容 emoji 特殊字符
+- Windows 平台 C++ SDK 日志和初始化路径兼容 emoji 特殊字符
+- 修复 v7a 架构下，设置会话自定义标记失败问题
+- 修复缩略图和大图的高度赋值错误问题
 
 ### TUIKit & Demo
 
-- 发布全新的简约版主题，更加符合国际化 App 的风格
+- TUIChat 语音消息的录制支持音量增益和 AI 降噪
+- TUIChat 增加消息翻译的能力 
+- Android FCM 推送支持自定义铃音
+- iOS 平台下 TUIChat 加载历史消息性能优化
 
  
 ## 最新基础版 5.1.66 @2021.09.22
