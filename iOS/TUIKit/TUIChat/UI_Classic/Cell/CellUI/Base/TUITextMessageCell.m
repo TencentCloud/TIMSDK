@@ -9,6 +9,7 @@
 #import "TUIFaceView.h"
 #import "TUICommonModel.h"
 #import "TUIDefine.h"
+#import "TUIGlobalization.h"
 
 @implementation TUITextMessageCell
 
@@ -24,11 +25,26 @@
         self.textView.editable = NO;
         self.textView.delegate = self;
         [self.bubbleView addSubview:self.textView];
+        
+        self.translationView = [[TUITranslationView alloc] init];
+        self.translationView.delegate = self;
+        [self.contentView addSubview:self.translationView];
     }
     return self;
 }
 
-- (void)fillWithData:(TUITextMessageCellData *)data;
+- (void)setupRAC {
+    @weakify(self);
+    [[[RACObserve(self, textData.translationViewData.status) distinctUntilChanged] skip:1] subscribeNext:^(NSNumber *status) {
+        @strongify(self);
+        if (self.textData == nil) {
+            return;
+        }
+        [self refreshTranslationView];
+    }];
+}
+
+- (void)fillWithData:(TUITextMessageCellData *)data
 {
     //set data
     [super fillWithData:data];
@@ -37,32 +53,31 @@
     self.textView.attributedText = data.attributedString;
     self.textView.textColor = data.textColor;
     self.textView.font = data.textFont;
+    
+    [self.textData.translationViewData setMessage:data.innerMessage];
+    [self refreshTranslationView];
 }
 
-//- (void)highlightWhenMatchKeyword:(NSString *)keyword
-//{
-//    // 子类重写高亮文本效果
-//    TUITextMessageCellData *data = (TUITextMessageCellData *)self.data;
-//    if (data.highlightKeyword == nil) {
-//        return;
-//    }
-//
-//    NSRange range = [data.attributedString.string rangeOfString:data.highlightKeyword];
-//    if (range.location == NSNotFound) {
-//        return;
-//    }
-//    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithAttributedString:data.attributedString];
-//    [attr addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:range];
-//    self.textView.attributedText = attr;
-//}
-
+- (void)refreshTranslationView {
+    if (self.textData.translationViewData.status == TUITranslationViewStatusLoading) {
+        [self.translationView startLoading];
+    } else {
+        [self.translationView stopLoading];
+    }
+    
+    self.translationView.hidden = [self.textData.translationViewData isHidden];
+    [self.textData.translationViewData calcSize];
+    [self.translationView updateTransaltion:self.textData.translationViewData.text];
+    [self layoutTranslationView];
+}
 
 - (void)layoutSubviews
 {
     [super layoutSubviews];
     self.textView.frame = (CGRect){.origin = self.textData.textOrigin, .size = self.textData.textSize};
+    
+    [self layoutTranslationView];
 }
-
 
 - (void)textViewDidChangeSelection:(UITextView *)textView {
     NSAttributedString *selectedString = [textView.attributedText attributedSubstringFromRange:textView.selectedRange];
@@ -97,6 +112,36 @@
         self.selectContent = attributedString.string;
     } else {
         self.selectContent = nil;
+    }
+}
+
+- (void)layoutTranslationView {
+    if (self.translationView.hidden) {
+        return;
+    }
+    
+    CGSize size = self.textData.translationViewData.size;
+    CGFloat topMargin = self.bubbleView.mm_maxY + self.nameLabel.mm_h + 6;
+    
+    if (self.textData.direction == MsgDirectionOutgoing) {
+        self.translationView
+            .mm_top(topMargin)
+            .mm_width(size.width)
+            .mm_height(size.height)
+            .mm_right(self.mm_w - self.container.mm_maxX);
+    } else {
+        self.translationView
+            .mm_top(topMargin)
+            .mm_width(size.width)
+            .mm_height(size.height)
+            .mm_left(self.container.mm_minX);
+    }
+    
+    if (!self.messageModifyRepliesButton.hidden) {
+        CGRect oldRect = self.messageModifyRepliesButton.frame;
+        CGRect newRect = CGRectMake(oldRect.origin.x, CGRectGetMaxY(self.translationView.frame),
+                                    oldRect.size.width, oldRect.size.height);
+        self.messageModifyRepliesButton.frame = newRect;
     }
 }
 

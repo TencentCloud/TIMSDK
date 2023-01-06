@@ -10,6 +10,7 @@
 #import "TUIContactSelectController_Minimalist.h"
 #import "TUIFriendProfileController_Minimalist.h"
 #import "TUIUserProfileController_Minimalist.h"
+#import "TUIGroupCreateController_Minimalist.h"
 
 @implementation TUIContactService_Minimalist
 
@@ -35,7 +36,9 @@
         NSArray *sourceIds = [param objectForKey:TUICore_TUIContactService_GetContactSelectControllerMethod_SourceIdsKey];
         NSArray *disableIds = [param objectForKey:TUICore_TUIContactService_GetContactSelectControllerMethod_DisableIdsKey];
         NSDictionary *displayNames = [param objectForKey:TUICore_TUIContactService_GetContactSelectControllerMethod_DisplayNamesKey];
-        return [self createContactSelectController:sourceIds disableIds:disableIds title:title displayNames:displayNames];
+        NSNumber *maxSelectCount = [param objectForKey:TUICore_TUIContactService_GetContactSelectControllerMethod_MaxSelectCount];
+        void (^completion)(NSArray<TUICommonContactSelectCellData *> *)  = [param objectForKey:TUICore_TUIContactService_GetContactSelectControllerMethod_CompletionKey];
+        return [self createContactSelectController:sourceIds disableIds:disableIds title:title displayNames:displayNames maxSelectCount:[maxSelectCount intValue] completion:completion];
     } else if ([method isEqualToString:TUICore_TUIContactService_GetFriendProfileControllerMethod]) {
         V2TIMFriendInfo *friendInfo = [param objectForKey:TUICore_TUIContactService_GetFriendProfileControllerMethod_FriendProfileKey];
         return [self createFriendProfileController:friendInfo];
@@ -44,6 +47,14 @@
         TUICommonCellData * cellData = [param objectForKey:TUICore_TUIContactService_GetUserProfileControllerMethod_PendencyDataKey];
         ProfileControllerAction_Minimalist action = (ProfileControllerAction_Minimalist)([[param objectForKey:TUICore_TUIContactService_GetUserProfileControllerMethod_ActionTypeKey] unsignedIntegerValue]);
         return [self createUserProfileController:userInfo pendencyData:cellData actionType:action];
+    } else if ([method isEqualToString:TUICore_TUIContactService_GetGroupCreateControllerMethod]) {
+        NSString *title = [param tui_objectForKey:TUICore_TUIContactService_GetGroupCreateControllerMethod_TitleKey asClass:NSString.class];
+        NSString *groupName = [param tui_objectForKey:TUICore_TUIContactService_GetGroupCreateControllerMethod_GroupNameKey asClass:NSString.class];
+        NSString  *groupType  = [param tui_objectForKey:TUICore_TUIContactService_GetGroupCreateControllerMethod_GroupTypeKey asClass:NSString.class];
+        NSArray *contactList = [param tui_objectForKey:TUICore_TUIContactService_GetGroupCreateControllerMethod_ContactListKey asClass:NSArray.class];
+        void (^completion)(BOOL, V2TIMGroupInfo *) = [param objectForKey:TUICore_TUIContactService_GetGroupCreateControllerMethod_CompletionKey];
+        return [self createGroupCreateController:title groupName:groupName groupType:groupType contactList:contactList completion:completion];
+        
     } else if ([method isEqualToString:TUICore_TUIContactService_GetUserOrFriendProfileVCMethod]) {
         NSString *userID = [param objectForKey:TUICore_TUIContactService_GetUserOrFriendProfileVCMethod_UserIDKey];
         void(^succ)(UIViewController *vc) = [param objectForKey:TUICore_TUIContactService_GetUserOrFriendProfileVCMethod_SuccKey];
@@ -58,17 +69,15 @@
 }
 
 - (UIViewController *)createContactSelectController:(NSArray *)sourceIds
-                                                   disableIds:(NSArray *)disableIds {
-    return [self createContactSelectController:sourceIds disableIds:disableIds title:nil displayNames:nil];
-}
-
-- (UIViewController *)createContactSelectController:(NSArray *)sourceIds
                                                    disableIds:(NSArray *)disableIds
-                                                        title:(NSString *)title
-                                                 displayNames:(NSDictionary *)displayNames {
+                                              title:(NSString *)title
+                                       displayNames:(NSDictionary *)displayNames
+                                     maxSelectCount:(int)maxSelectCount
+                                         completion:(void(^)(NSArray<TUICommonContactSelectCellData *> *selectArray))completion{
     TUIContactSelectController_Minimalist *vc = [[TUIContactSelectController_Minimalist alloc] init];
-    vc.displayNames = displayNames;
     vc.title = title;
+    vc.displayNames = displayNames;
+    vc.maxSelectCount = maxSelectCount;
     if (sourceIds.count > 0) {
         vc.sourceIds = sourceIds;
     } else if (disableIds.count > 0) {
@@ -81,6 +90,11 @@
             return NO;
         };
     }
+    vc.finishBlock = ^(NSArray<TUICommonContactSelectCellData *> * _Nonnull selectArray) {
+        if (completion) {        
+            completion(selectArray);
+        }
+    };
     return vc;
 }
 
@@ -114,6 +128,30 @@
     }
     return vc;
 }
+
+- (UIViewController *)createGroupCreateController:(NSString *)title
+                                        groupName:(NSString *)groupName
+                                        groupType:(NSString *)groupType
+                                      contactList:(NSArray<TUICommonContactSelectCellData *> *)contactList
+                                       completion:(void (^)(BOOL isSuccess, V2TIMGroupInfo * _Nonnull info))completion {
+    TUIGroupCreateController_Minimalist * vc = [[TUIGroupCreateController_Minimalist alloc] init];
+    vc.title = @"";
+
+    V2TIMGroupInfo * createGroupInfo = [[V2TIMGroupInfo alloc] init];
+    createGroupInfo.groupID = @"";
+    createGroupInfo.groupName = groupName;
+    createGroupInfo.groupType = groupType;
+    vc.createGroupInfo = createGroupInfo;
+    vc.createContactArray = [NSArray arrayWithArray:contactList];
+
+    vc.submitCallback = ^(BOOL isSuccess, V2TIMGroupInfo * _Nonnull info) {
+         if (completion) {
+            completion(isSuccess, info);
+         }
+    };
+    return vc;
+ }
+
 - (void)createUserOrFriendProfileVCWithUserID:(NSString *)userID
                                     succBlock:(void(^)(UIViewController *vc))succ
                                     failBlock:(nullable V2TIMFail)fail {

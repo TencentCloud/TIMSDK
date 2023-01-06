@@ -28,7 +28,7 @@
 #import "TUITextMessageCellData_Minimalist.h"
 #import "TUIMergeMessageCellData_Minimalist.h"
 #import "TUIMessageCellLayout.h"
-#import "NSString+emoji.h"
+#import "NSString+TUIEmoji.h"
 
 #import "TUITextReplyQuoteViewData_Minimalist.h"
 #import "TUIImageReplyQuoteViewData_Minimalist.h"
@@ -70,6 +70,24 @@
     }];
     
     return replyData;
+}
+
+// Override, the height of whole tableview cell.
+- (CGFloat)heightOfWidth:(CGFloat)width {
+    CGFloat height = [super heightOfWidth:width];
+    
+    // load translationView's saved data to render translationView
+    if ([self.translationViewData shouldLoadSavedData]) {
+        [self.translationViewData setMessage:self.innerMessage];
+        [self.translationViewData loadSavedData];
+    }
+    [self.translationViewData calcSize];
+    
+    if (![self.translationViewData isHidden]) {
+        height += self.translationViewData.size.height + 6;
+    }
+    
+    return height;
 }
 
 - (CGSize)contentSize
@@ -140,6 +158,10 @@
     }
     
     return CGSizeMake(quoteWidth + kReplyQuoteViewMarginWidth, height);
+}
+
+- (BOOL)canTranslate {
+    return YES;
 }
 
 - (CGSize)quotePlaceholderSizeWithType:(V2TIMElemType)type data:(TUIReplyQuoteViewData_Minimalist *)data

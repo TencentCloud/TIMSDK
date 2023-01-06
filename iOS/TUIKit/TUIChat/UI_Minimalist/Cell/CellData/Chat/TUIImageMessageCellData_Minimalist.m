@@ -16,6 +16,10 @@
 
 @implementation TUIImageMessageCellData_Minimalist
 
+- (CGFloat)estimatedHeight {
+    return 139.f;
+}
+
 + (TUIMessageCellData *)getCellData:(V2TIMMessage *)message {
     V2TIMImageElem *elem = message.imageElem;
     TUIImageMessageCellData_Minimalist *imageData = [[TUIImageMessageCellData_Minimalist alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];

@@ -7,9 +7,7 @@
 
 #import "TUIGroupTypeListController.h"
 #import "UIView+TUILayout.h"
-#import "TUICommonContactProfileCardCell.h"
 #import "TUICommonModel.h"
-#import "TUIContactAvatarViewController.h"
 #import "TUIDefine.h"
 
 @interface TUIGroupTypeData : NSObject

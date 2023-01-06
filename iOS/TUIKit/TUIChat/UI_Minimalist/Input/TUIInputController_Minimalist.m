@@ -18,7 +18,7 @@
 #import "TUIDefine.h"
 #import "TUIDarkModel.h"
 #import "TUIMessageDataProvider_Minimalist.h"
-#import "NSString+emoji.h"
+#import "NSString+TUIEmoji.h"
 #import "TUIThemeManager.h"
 #import "TUICloudCustomDataTypeCenter.h"
 #import "TUIChatDataProvider_Minimalist.h"

@@ -24,6 +24,8 @@
 #import "TUITagsModel.h"
 #import "TUITagsView.h"
 #import "TUIFitButton.h"
+#import "TUIChatDefine.h"
+#import "TUITranslationView.h"
 
 @class TUIMessageCell;
 
@@ -265,5 +267,14 @@
  * Add a container view to the container
  */
 - (void)prepareReactTagUI:(UIView *)containerView;
+
+/// If you translate text message, translationView will be displayed.
+@property (nonatomic, strong) TUITranslationView *translationView;
+
+/// Callback of hiding translationView.
+@property (nonatomic, strong) TUIChatHideTranslationCallback hideTranslationCallback;
+
+/// Callback of forwarding translated text.
+@property (nonatomic, strong) TUIChatForwardTranslationCallback forwardTranslationCallback;
 
 @end

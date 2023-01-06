@@ -27,7 +27,7 @@
 #import "TUIVoiceMessageCellData.h"
 #import "TUITextMessageCellData.h"
 #import "TUIMergeMessageCellData.h"
-#import "NSString+emoji.h"
+#import "NSString+TUIEmoji.h"
 
 #import "TUITextReplyQuoteViewData.h"
 #import "TUIImageReplyQuoteViewData.h"
@@ -37,6 +37,7 @@
 #import "TUIMergeReplyQuoteViewData.h"
 #import "TUIReplyPreviewData.h"
 #import "TUICloudCustomDataTypeCenter.h"
+
 #define kReplyQuoteViewMaxWidth 175
 #define kReplyQuoteViewMarginWidth 35
 
@@ -83,6 +84,24 @@
     }
     return self;
 }
+// Override, the height of whole tableview cell.
+- (CGFloat)heightOfWidth:(CGFloat)width {
+    CGFloat height = [super heightOfWidth:width];
+    
+    // load translationView's saved data to render translationView
+    if ([self.translationViewData shouldLoadSavedData]) {
+        [self.translationViewData setMessage:self.innerMessage];
+        [self.translationViewData loadSavedData];
+    }
+    [self.translationViewData calcSize];
+    
+    if (![self.translationViewData isHidden]) {
+        height += self.translationViewData.size.height + 6;
+    }
+    
+    return height;
+}
+
 - (CGSize)contentSize
 {
     CGFloat height = 0;
@@ -153,9 +172,6 @@
     return [data contentSize:kReplyQuoteViewMaxWidth - 12];
 }
 
-
-
-
 - (TUIReplyQuoteViewData *)getQuoteData:(TUIMessageCellData *)originCellData
 {
     
@@ -183,6 +199,10 @@
         }
     };
     return quoteData;
+}
+
+- (BOOL)canTranslate {
+    return YES;
 }
 
 @end

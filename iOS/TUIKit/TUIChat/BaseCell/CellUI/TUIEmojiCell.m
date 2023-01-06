@@ -7,7 +7,7 @@
 #import "TUIEmojiCell.h"
 #import "TUIEmojiCellData.h"
 #import "TUICommonModel.h"
-#import "NSString+emoji.h"
+#import "NSString+TUIEmoji.h"
 
 #define Avatar_Size 40
 

@@ -1,5 +1,8 @@
 
 #import "TUIGroupService_Minimalist.h"
+#import "TUIGroupRequestViewController_Minimalist.h"
+#import "TUIGroupInfoController_Minimalist.h"
+#import "TUISelectGroupMemberViewController_Minimalist.h"
 #import "TUIDefine.h"
 #import "NSDictionary+TUISafe.h"
 #import "TUIThemeManager.h"
@@ -18,6 +21,13 @@
         g_sharedInstance = [[TUIGroupService_Minimalist alloc] init];
     });
     return g_sharedInstance;
+}
+
+- (UIViewController *)createGroupRequestViewController:(V2TIMGroupInfo *)groupInfo
+{
+    TUIGroupRequestViewController_Minimalist *vc = [[TUIGroupRequestViewController_Minimalist alloc] init];
+    vc.groupInfo = groupInfo;
+    return vc;
 }
 
 - (UIViewController *)createGroupInfoController:(NSString *)groupID
@@ -48,10 +58,10 @@
 }
 
 - (UIViewController *)createSelectGroupMemberViewController:(NSString *)groupID
-                                                                         name:(NSString *)name
-                                                                optionalStyle:(TUISelectMemberOptionalStyle)optionalStyle
-                                                           selectedUserIDList:(NSArray *)userIDList
-                                                                     userData:(NSString *)userData {
+                                                       name:(NSString *)name
+                                              optionalStyle:(TUISelectMemberOptionalStyle)optionalStyle
+                                         selectedUserIDList:(NSArray *)userIDList
+                                                   userData:(NSString *)userData {
     TUISelectGroupMemberViewController_Minimalist *vc = [[TUISelectGroupMemberViewController_Minimalist alloc] init];
     vc.groupId = groupID;
     vc.name = name;
@@ -61,31 +71,6 @@
     return vc;
 }
 
-- (void)getGroupNameNormalFormatByContacts:(NSArray<TUICommonContactSelectCellData *> *)contacts completion:(void (^)(BOOL success,NSString *groupName))completion {
-    NSString *loginUser = [[V2TIMManager sharedInstance] getLoginUser];
-    [[V2TIMManager sharedInstance] getUsersInfo:@[loginUser] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
-        NSString *showName = loginUser;
-        if (infoList.firstObject.nickName.length > 0) {
-            showName = infoList.firstObject.nickName;
-        }
-        NSMutableString *groupName = [NSMutableString stringWithString:showName];
-        for (TUICommonContactSelectCellData *item in contacts) {
-            [groupName appendFormat:@"、%@", item.title];
-        }
-
-        if ([groupName length] > 10) {
-            groupName = [groupName substringToIndex:10].mutableCopy;
-        }
-        if (completion) {
-            completion(YES,groupName);
-        }
-    } fail:^(int code, NSString *desc) {
-        if (completion) {
-            completion(NO,@"");
-        }
-    }];
-
-}
 - (void)createGroup:(NSString *)groupType
        createOption:(V2TIMGroupAddOpt)createOption
            contacts:(NSArray<TUICommonContactSelectCellData *> *)contacts
@@ -162,7 +147,11 @@
 #pragma mark - TUIServiceProtocol
 - (id)onCall:(NSString *)method param:(NSDictionary *)param{
     id returnObject = nil;
-    if ([method isEqualToString:TUICore_TUIGroupService_GetGroupInfoControllerMethod]) {
+    if ([method isEqualToString:TUICore_TUIGroupService_GetGroupRequestViewControllerMethod]) {
+        returnObject = [self createGroupRequestViewController:[param tui_objectForKey:TUICore_TUIGroupService_GetGroupRequestViewControllerMethod_GroupInfoKey
+                                                                       asClass:V2TIMGroupInfo.class]];
+        
+    } else if ([method isEqualToString:TUICore_TUIGroupService_GetGroupInfoControllerMethod]) {
         returnObject = [self createGroupInfoController:[param tui_objectForKey:TUICore_TUIGroupService_GetGroupInfoControllerMethod_GroupIDKey
                                                                        asClass:NSString.class]];
         

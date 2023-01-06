@@ -26,6 +26,10 @@ typedef void(^TUIReferenceSelectAllContentCallback)(BOOL);
 
 typedef void(^TUIReplySelectAllContentCallback)(BOOL);
 
+typedef void(^TUIChatHideTranslationCallback)(BOOL);
+
+typedef void(^TUIChatForwardTranslationCallback)(NSString *);
+
 typedef NS_ENUM(NSInteger, TUIMultiResultOption) {
     /**
      * 获取所有选中的结果

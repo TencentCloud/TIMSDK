@@ -16,7 +16,6 @@
 #import "TUIFileMessageCell.h"
 #import "TUIJoinGroupMessageCell.h"
 #import "TUIMergeMessageCell.h"
-#import "TUIGroupLiveMessageCell.h"
 #import "TUILinkCell.h"
 #import "TUILinkCell.h"
 #import "TUIReplyMessageCell.h"
@@ -228,7 +227,6 @@
     [self.tableView registerClass:[TUIFileMessageCell class] forCellReuseIdentifier:TFileMessageCell_ReuseId];
     [self.tableView registerClass:[TUIJoinGroupMessageCell class] forCellReuseIdentifier:TJoinGroupMessageCell_ReuseId];
     [self.tableView registerClass:[TUIMergeMessageCell class] forCellReuseIdentifier:TRelayMessageCell_ReuserId];
-    [self.tableView registerClass:[TUIGroupLiveMessageCell class] forCellReuseIdentifier:TGroupLiveMessageCell_ReuseId];
     [self.tableView registerClass:[TUIReplyMessageCell class] forCellReuseIdentifier:TReplyMessageCell_ReuseId];
     [self.tableView registerClass:[TUIReferenceMessageCell class] forCellReuseIdentifier:TUIReferenceMessageCell_ReuseId];
     
@@ -295,9 +293,6 @@
         relayVc.mergerElem = [(TUIMergeMessageCell *)cell relayData].mergerElem;
         relayVc.delegate = self.delegate;
         [self.navigationController pushViewController:relayVc animated:YES];
-    }
-    if ([cell isKindOfClass:[TUIGroupLiveMessageCell class]]) {
-        [self showLiveMessage:(TUIGroupLiveMessageCell *)cell];
     }
     if ([cell isKindOfClass:[TUILinkCell class]]) {
         [self showLinkMessage:(TUILinkCell *)cell];
@@ -487,16 +482,6 @@
     if (cellData.link) {
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:cellData.link]];
     }
-}
-
-- (void)showLiveMessage:(TUIGroupLiveMessageCell *)cell {
-    TUIGroupLiveMessageCellData *celldata = cell.customData;
-    NSDictionary *roomInfo = celldata.roomInfo;
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"kTUINotifyGroupLiveOnSelectMessage" object:nil userInfo:@{
-        @"roomInfo": roomInfo,
-        @"groupID": celldata.innerMessage.groupID?:@"",
-        @"msgSender": self,
-    }];
 }
 
 - (NSMutableDictionary *)stylesCache

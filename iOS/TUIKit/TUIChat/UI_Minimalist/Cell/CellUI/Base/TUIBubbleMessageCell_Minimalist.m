@@ -8,7 +8,6 @@
 #import "TUIBubbleMessageCell_Minimalist.h"
 #import "TUICommonModel.h"
 #import "TUIDefine.h"
-#import "NSString+emoji.h"
 
 @implementation TUIBubbleMessageCell_Minimalist
 
@@ -16,9 +15,8 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        _bubbleView = [[UIImageView alloc] initWithFrame:CGRectZero];
+        _bubbleView = [[UIImageView alloc] initWithFrame:self.container.bounds];
         [self.container addSubview:_bubbleView];
-        _bubbleView.mm_fill();
         _bubbleView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     }
     return self;
@@ -88,4 +86,5 @@
         });
     });
 }
+
 @end

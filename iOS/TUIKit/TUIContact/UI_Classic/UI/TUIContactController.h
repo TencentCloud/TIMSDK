@@ -1,6 +1,7 @@
 
 #import <UIKit/UIKit.h>
 #import "TUIContactViewDataProvider.h"
+#import "TUIFindContactCellModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -17,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak) id<TUIContactControllerListener> delegate;
 @property UITableView *tableView;
 
+- (void)addToContactsOrGroups:(TUIFindContactType)type;
 @end
 
 NS_ASSUME_NONNULL_END

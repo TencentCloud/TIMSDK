@@ -7,7 +7,7 @@
 
 #import "TUITextReplyQuoteView.h"
 #import "TUITextReplyQuoteViewData.h"
-#import "NSString+emoji.h"
+#import "NSString+TUIEmoji.h"
 #import "TUIThemeManager.h"
 
 @implementation TUITextReplyQuoteView

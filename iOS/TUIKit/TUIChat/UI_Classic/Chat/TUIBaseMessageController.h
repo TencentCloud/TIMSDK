@@ -85,4 +85,9 @@
 - (void)willShowMediaMessage:(TUIMessageCell *)cell;
 - (void)didCloseMediaMessage:(TUIMessageCell *)cell;
 
+// Reload the specific cell UI.
+- (void)reloadCellOfMessage:(NSString *)messageID;
+- (void)reloadAndScrollToBottomOfMessage:(NSString *)messageID;
+- (void)scrollCellToBottomOfMessage:(NSString *)messageID;
+
 @end

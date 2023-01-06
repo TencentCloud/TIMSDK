@@ -89,4 +89,11 @@
  * 子类实现点击删除消息
  */
 - (void)onDelete:(TUIMessageCellData *)cellData;
+
+
+// Reload the specific cell UI.
+- (void)reloadCellOfMessage:(NSString *)messageID;
+- (void)reloadAndScrollToBottomOfMessage:(NSString *)messageID;
+- (void)scrollCellToBottomOfMessage:(NSString *)messageID;
+
 @end

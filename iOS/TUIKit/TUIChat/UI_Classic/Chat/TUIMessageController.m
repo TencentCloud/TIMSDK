@@ -189,7 +189,7 @@
     self.messageDataProvider = [[TUIMessageSearchDataProvider alloc] initWithConversationModel:self.conversationData];
     self.messageDataProvider.dataSource = self;
     if (self.locateMessage) {
-        [self loadLocateMessages:YES];
+        [self loadLocateMessages:NO];
     } else {
         [[self messageSearchDataProvider] removeAllSearchData];
         [self loadMessages:YES];
@@ -364,7 +364,6 @@
                 
         [self.tableView reloadData];
         [self.tableView layoutIfNeeded];
-        
         [newUIMsgs enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(TUIMessageCellData * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             if (obj.direction == MsgDirectionIncoming) {
                 self.C2CIncomingLastMsg = obj.innerMessage;
@@ -377,19 +376,13 @@
             [self scrollToBottom:NO];
         } else {
             if (order) {
-                CGFloat visibleHeight = 0;
-                for (NSInteger i = 0; i < newUIMsgs.count; ++i) {
-                    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
-                    visibleHeight += [self tableView:self.tableView heightForRowAtIndexPath:indexPath];
+                NSInteger index = 0;
+                if (newUIMsgs.count > 0) {
+                    index = newUIMsgs.count - 1;
                 }
-                if (isOlderNoMoreMsg) {
-                    visibleHeight -= TMessageController_Header_Height;
-                }
-                [self.tableView setContentOffset:CGPointMake(0, self.tableView.contentOffset.y + visibleHeight)
-                                        animated:NO];
+                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
             }
         }
-        
     } FailBlock:^(int code, NSString *desc) {
         
     }];

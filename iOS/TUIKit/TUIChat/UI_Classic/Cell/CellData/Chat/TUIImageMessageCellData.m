@@ -227,6 +227,10 @@
     return nil;
 }
 
+- (CGFloat)estimatedHeight {
+    return 186.f;
+}
+
 - (CGSize)contentSize
 {
     CGSize size = CGSizeZero;

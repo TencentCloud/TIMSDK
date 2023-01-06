@@ -8,7 +8,7 @@
 #import "TUIChatPopContextRecentView.h"
 #import "TUICommonModel.h"
 #import "TUIDefine.h"
-#import "NSString+emoji.h"
+#import "NSString+TUIEmoji.h"
 #import "TUIFitButton.h"
 
 @interface TUIChatPopContextRecentView()

@@ -1,29 +1,23 @@
 #import "TUIGroupInfoController.h"
-#import "TUIProfileCardCell.h"
 #import "TUIGroupMembersCell.h"
 #import "TUIGroupMemberCell.h"
-#import "TUICommonSwitchCell.h"
 #import "TUIGroupMemberController.h"
-#import "TUIModifyView.h"
 #import "TUIAddCell.h"
-#import "TUICommonTextCell.h"
 #import "TUIDefine.h"
 #import "TUICore.h"
 #import "TIMGroupInfo+TUIDataProvider.h"
 #import "TUIGroupInfoDataProvider.h"
-#import "TUIAvatarViewController.h"
 #import "TUIGroupManageController.h"
 #import "TUIThemeManager.h"
 #import "TUIGroupNoticeCell.h"
 #import "TUIGroupNoticeController.h"
 #import "TUISelectGroupMemberViewController.h"
-#import "TUISelectAvatarController.h"
 #import "TUILogin.h"
 
 #define ADD_TAG @"-1"
 #define DEL_TAG @"-2"
 
-@interface TUIGroupInfoController () <TModifyViewDelegate, TUIGroupMembersCellDelegate, TUIProfileCardDelegate, TUIGroupInfoDataProviderDelegate, TUINotificationProtocol>
+@interface TUIGroupInfoController () <TUIModifyViewDelegate, TUIGroupMembersCellDelegate, TUIProfileCardDelegate, TUIGroupInfoDataProviderDelegate, TUINotificationProtocol>
 @property(nonatomic, strong) TUIGroupInfoDataProvider *dataProvider;
 @property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
 @property (nonatomic, strong) UIViewController *showContactSelectVC;
@@ -209,7 +203,7 @@
 
 - (void)didSelectGroupNick:(TUICommonTextCell *)cell
 {
-    TModifyViewData *data = [[TModifyViewData alloc] init];
+    TUIModifyViewData *data = [[TUIModifyViewData alloc] init];
     data.title = TUIKitLocalizableString(TUIKitGroupProfileEditAlias);
     data.content = self.dataProvider.selfInfo.nameCard;
     data.desc = TUIKitLocalizableString(TUIKitGroupProfileEditAliasDesc);
@@ -228,7 +222,7 @@
     if ([self.dataProvider.groupInfo isPrivate] || [TUIGroupInfoDataProvider isMeOwner:self.dataProvider.groupInfo]) {
         [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitGroupProfileEditGroupName) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
 
-            TModifyViewData *data = [[TModifyViewData alloc] init];
+            TUIModifyViewData *data = [[TUIModifyViewData alloc] init];
             data.title = TUIKitLocalizableString(TUIKitGroupProfileEditGroupName);
             data.content = weakSelf.dataProvider.groupInfo.groupName;
             data.desc = TUIKitLocalizableString(TUIKitGroupProfileEditGroupName);
@@ -243,7 +237,7 @@
     if ([TUIGroupInfoDataProvider isMeOwner:self.dataProvider.groupInfo]) {
         [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitGroupProfileEditAnnouncement) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
 
-            TModifyViewData *data = [[TModifyViewData alloc] init];
+            TUIModifyViewData *data = [[TUIModifyViewData alloc] init];
             data.title = TUIKitLocalizableString(TUIKitGroupProfileEditAnnouncement);
             TUIModifyView *modify = [[TUIModifyView alloc] init];
             modify.tag = 1;
@@ -605,7 +599,7 @@
     }];
 }
 
-#pragma mark TModifyViewDelegate
+#pragma mark TUIModifyViewDelegate
 
 - (void)modifyView:(TUIModifyView *)modifyView didModiyContent:(NSString *)content
 {

@@ -130,7 +130,27 @@
 #define TUISearchBundle_Key_Class          @"TUISearchService"
 #define TUIKitLocalizableBundle_Key_Class  @"TUICore"
 
-#define TUIBundlePath(bundleName, bundleKeyClass) [[NSBundle mainBundle] pathForResource:bundleName ofType:@"bundle"].length > 0 ? [[NSBundle mainBundle] pathForResource:bundleName ofType:@"bundle"] : [[NSBundle bundleForClass:NSClassFromString(bundleKeyClass)] pathForResource:bundleName ofType:@"bundle"]
+static inline NSString * TUIGetBundlePath(NSString *bundleName, NSString *bundleKeyClass) {
+    static NSMutableDictionary *bundlePathCache = nil;
+    if (bundlePathCache == nil) {
+        bundlePathCache = [NSMutableDictionary dictionary];
+    }
+    NSString *bundlePathKey = [NSString stringWithFormat:@"%@_%@", bundleName, bundleKeyClass];
+    NSString *bundlePath = [bundlePathCache objectForKey:bundlePathKey];
+    if (bundlePath == nil) {
+        bundlePath = [[NSBundle mainBundle] pathForResource:bundleName ofType:@"bundle"];
+    }
+    if (bundlePath.length == 0) {
+        bundlePath = [[NSBundle bundleForClass:NSClassFromString(bundleKeyClass)] pathForResource:bundleName ofType:@"bundle"];
+    }
+    
+    if (bundlePath && bundlePathKey) {
+        [bundlePathCache setObject:bundlePath forKey:bundlePathKey];
+    }
+    return bundlePath;
+}
+
+#define TUIBundlePath(bundleName, bundleKeyClass) TUIGetBundlePath(bundleName, bundleKeyClass)
 
 #define TUICoreThemePath TUIBundlePath(@"TUICoreTheme",TUICoreBundle_Key_Class)
 #define TUIChatThemePath TUIBundlePath(@"TUIChatTheme",TUIChatBundle_Key_Class)
@@ -193,7 +213,6 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 //input
-#define TUIInputMoreCellKey_GroupLive @"TUIInputMoreCellKey_GroupLive"
 #define TUIInputMoreCellKey_VideoCall @"TUIInputMoreCellKey_VideoCall"
 #define TUIInputMoreCellKey_AudioCall @"TUIInputMoreCellKey_AudioCall"
 #define TUIInputMoreCellKey_Link @"TUIInputMoreCellKey_Link"
@@ -339,15 +358,15 @@
 #define TUIVideoCallUserCell_ReuseId @"TUIVideoCallUserCell"
 
 //pop view
-#define TPopView_Arrow_Size CGSizeMake(15, 10)
-#define TPopView_Background_Color RGBA(188, 188, 188, 0.5)
-#define TPopView_Background_Color_Dark RGBA(76, 76, 76, 0.5)
+#define TUIPopView_Arrow_Size CGSizeMake(15, 10)
+#define TUIPopView_Background_Color RGBA(188, 188, 188, 0.5)
+#define TUIPopView_Background_Color_Dark RGBA(76, 76, 76, 0.5)
 
 //pop cell
-#define TPopCell_ReuseId @"TPopCell"
-#define TPopCell_Height 45
-#define TPopCell_Margin 18
-#define TPopCell_Padding 12
+#define TUIPopCell_ReuseId @"TUIPopCell"
+#define TUIPopCell_Height 45
+#define TUIPopCell_Margin 18
+#define TUIPopCell_Padding 12
 
 //unRead
 #define TUnReadView_Margin_TB 2
@@ -510,8 +529,11 @@
 #define TUICore_TUIChatService_GetChatViewControllerMethod_GroupIDKey @"TUICore_TUIChatService_GetChatViewControllerMethod_GroupIDKey"
 #define TUICore_TUIChatService_GetChatViewControllerMethod_ConversationIDKey @"TUICore_TUIChatService_GetChatViewControllerMethod_ConversationIDKey"
 #define TUICore_TUIChatService_GetChatViewControllerMethod_AvatarImageKey @"TUICore_TUIChatService_GetChatViewControllerMethod_AvatarImageKey"
+#define TUICore_TUIChatService_GetChatViewControllerMethod_AvatarUrlKey @"TUICore_TUIChatService_GetChatViewControllerMethod_AvatarUrlKey"
 #define TUICore_TUIChatService_GetChatViewControllerMethod_HighlightKeywordKey @"TUICore_TUIChatService_GetChatViewControllerMethod_HighlightKeywordKey"
 #define TUICore_TUIChatService_GetChatViewControllerMethod_LocateMessageKey @"TUICore_TUIChatService_GetChatViewControllerMethod_LocateMessageKey"
+#define TUICore_TUIChatService_GetChatViewControllerMethod_AtMsgSeqsKey @"TUICore_TUIChatService_GetChatViewControllerMethod_AtMsgSeqsKey"
+#define TUICore_TUIChatService_GetChatViewControllerMethod_DraftKey @"TUICore_TUIChatService_GetChatViewControllerMethod_DraftKey"
 
 
 #pragma mark - TUICore_TUIChatNotify
@@ -555,11 +577,14 @@
 #define TUICore_TUIContactService_Minimalist @"TUICore_TUIContactService_Minimalist"
 
 #define TUICore_TUIContactService_GetContactControllerMethod @"TUICore_TUIContactService_GetContactControllerMethod"
+
 #define TUICore_TUIContactService_GetContactSelectControllerMethod @"TUICore_TUIContactService_GetContactSelectControllerMethod"
 #define TUICore_TUIContactService_GetContactSelectControllerMethod_TitleKey @"TUICore_TUIContactService_GetContactSelectControllerMethod_TitleKey"
+#define TUICore_TUIContactService_GetContactSelectControllerMethod_MaxSelectCount @"TUICore_TUIContactService_GetContactSelectControllerMethod_MaxSelectCount"
 #define TUICore_TUIContactService_GetContactSelectControllerMethod_SourceIdsKey @"TUICore_TUIContactService_GetContactSelectControllerMethod_SourceIdsKey"
 #define TUICore_TUIContactService_GetContactSelectControllerMethod_DisableIdsKey @"TUICore_TUIContactService_GetContactSelectControllerMethod_DisableIdsKey"
 #define TUICore_TUIContactService_GetContactSelectControllerMethod_DisplayNamesKey @"TUICore_TUIContactService_GetContactSelectControllerMethod_DisplayNamesKey"
+#define TUICore_TUIContactService_GetContactSelectControllerMethod_CompletionKey @"TUICore_TUIContactService_GetContactSelectControllerMethod_CompletionKey"
 
 #define TUICore_TUIContactService_GetFriendProfileControllerMethod @"TUICore_TUIContactService_GetFriendProfileControllerMethod"
 #define TUICore_TUIContactService_GetFriendProfileControllerMethod_FriendProfileKey @"TUICore_TUIContactService_GetFriendProfileControllerMethod_FriendProfileKey"
@@ -567,6 +592,13 @@
 #define TUICore_TUIContactService_GetUserProfileControllerMethod_UserProfileKey @"TUICore_TUIContactService_GetUserProfileControllerMethod_UserProfileKey"
 #define TUICore_TUIContactService_GetUserProfileControllerMethod_PendencyDataKey @"TUICore_TUIContactService_GetUserProfileControllerMethod_PendencyDataKey"
 #define TUICore_TUIContactService_GetUserProfileControllerMethod_ActionTypeKey @"TUICore_TUIContactService_GetUserProfileControllerMethod_ActionTypeKey"
+
+#define TUICore_TUIContactService_GetGroupCreateControllerMethod @"TUICore_TUIContactService_GetGroupCreateControllerMethod"
+#define TUICore_TUIContactService_GetGroupCreateControllerMethod_TitleKey @"TUICore_TUIContactService_GetGroupCreateControllerMethod_TitleKey"
+#define TUICore_TUIContactService_GetGroupCreateControllerMethod_GroupNameKey @"TUICore_TUIContactService_GetGroupCreateControllerMethod_GroupNameKey"
+#define TUICore_TUIContactService_GetGroupCreateControllerMethod_GroupTypeKey @"TUICore_TUIContactService_GetGroupCreateControllerMethod_GroupTypeKey"
+#define TUICore_TUIContactService_GetGroupCreateControllerMethod_ContactListKey @"TUICore_TUIContactService_GetGroupCreateControllerMethod_ContactListKey"
+#define TUICore_TUIContactService_GetGroupCreateControllerMethod_CompletionKey @"TUICore_TUIContactService_GetGroupCreateControllerMethod_CompletionKey"
 
 #define TUICore_TUIContactService_GetUserOrFriendProfileVCMethod @"TUICore_TUIContactService_GetUserOrFriendProfileVCMethod"
 #define TUICore_TUIContactService_GetUserOrFriendProfileVCMethod_UserIDKey @"TUICore_TUIContactService_etUserOrFriendProfileVCMethod_UserIDKey"
@@ -585,14 +617,19 @@
 #define TUICore_TUIGroupService @"TUICore_TUIGroupService"
 #define TUICore_TUIGroupService_Minimalist @"TUICore_TUIGroupService_Minimalist"
 
+#define TUICore_TUIGroupService_GetGroupRequestViewControllerMethod @"TUICore_TUIGroupService_GetGroupRequestViewControllerMethod"
+#define TUICore_TUIGroupService_GetGroupRequestViewControllerMethod_GroupInfoKey @"TUICore_TUIGroupService_GetGroupRequestViewControllerMethod_GroupInfoKey"
+
 #define TUICore_TUIGroupService_GetGroupInfoControllerMethod @"TUICore_TUIGroupService_GetGroupInfoControllerMethod"
 #define TUICore_TUIGroupService_GetGroupInfoControllerMethod_GroupIDKey @"TUICore_TUIGroupService_GetGroupInfoControllerMethod_GroupIDKey"
+
 #define TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod @"TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod"
 #define TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_GroupIDKey @"TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod"
 #define TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_NameKey @"TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_NameKey"
 #define TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_OptionalStyleKey @"TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_optionalStyleKey"
 #define TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_SelectedUserIDListKey @"TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_SelectedUserIDListKey"
 #define TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_UserDataKey @"TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_UserDataKey"
+
 #define TUICore_TUIGroupService_CreateGroupMethod @"TUICore_TUIGroupService_CreateGroupMethod"
 #define TUICore_TUIGroupService_CreateGroupMethod_GroupTypeKey @"TUICore_TUIGroupService_CreateGroupMethod_GroupTypeKey"
 #define TUICore_TUIGroupService_CreateGroupMethod_OptionKey @"TUICore_TUIGroupService_CreateGroupMethod_OptionKey"
@@ -604,13 +641,14 @@
 #define TUICore_TUIGroupNotify_SelectGroupMemberSubKey @"TUICore_TUIGroupNotify_SelectGroupMemberSubKey"
 #define TUICore_TUIGroupNotify_SelectGroupMemberSubKey_UserListKey @"TUICore_TUIGroupNotify_SelectGroupMemberSubKey_UserListKey"
 #define TUICore_TUIGroupNotify_SelectGroupMemberSubKey_UserDataKey @"TUICore_TUIGroupNotify_SelectGroupMemberSubKey_UserDataKey"
+
 #define TUICore_TUIGroupNotify_CreateGroupSubKey @"TUICore_TUIGroupNotify_CreateGroupSubKey"
 #define TUICore_TUIGroupNotify_CreateGroupSubKey_ConversationDataKey @"TUICore_TUIGroupNotify_CreateGroupSubKey_ConversationDataKey"
 
 #define TUICore_TUIGroupNotify_UpdateConversationBackgroundImageSubKey @"TUICore_TUIGroupNotify_UpdateConversationBackgroundImageSubKey"
 #define TUICore_TUIGroupNotify_UpdateConversationBackgroundImageSubKey_ConversationID @"TUICore_TUIGroupNotify_UpdateConversationBackgroundImageSubKey_ConversationID"
 
-#pragma mark - TUICore_TUICallingService
+#pragma mark - TUICore_TUICallKit_TUICallingService
 #define TUICore_TUICallingService @"TUICore_TUICallingService"
 
 #define TUICore_TUICallingService_ShowCallingViewMethod @"TUICore_TUICallingService_ShowCallingViewMethod"
@@ -627,6 +665,59 @@
 
 #define TUICore_TUICallingService_EnableFloatWindowMethod @"TUICore_TUICallingService_EnableFloatWindowMethod"
 #define TUICore_TUICallingService_EnableFloatWindowMethod_EnableFloatWindow @"TUICore_TUICallingService_EnableFloatWindowMethod_EnableFloatWindow"
+
+#pragma mark - TUICore_TUICallKit_TUIAudioMessageRecordService
+#define TUICore_TUIAudioMessageRecordService @"TUIAudioMessageRecordService"
+#define TUICore_TUIAudioMessageRecordService_StartRecordAudioMessageMethod @"TUICore_TUIAudioMessageRecordService_StartRecordAudioMessageMethod"
+#define TUICore_TUIAudioMessageRecordService_StopRecordAudioMessageMethod @"TUICore_TUIAudioMessageRecordService_StopRecordAudioMessageMethod"
+
+#define TUICore_TUIAudioMessageRecordService_StartRecordAudioMessageMethod_SdkappidKey @"sdkappid"
+#define TUICore_TUIAudioMessageRecordService_StartRecordAudioMessageMethod_SignatureKey @"signature"
+#define TUICore_TUIAudioMessageRecordService_StartRecordAudioMessageMethod_PathKey @"path"
+
+#pragma mark - TUICore_TUICallKit_RecordAudioMessage
+#define TUICore_RecordAudioMessageNotify @"TUICore_RecordAudioMessageNotify"
+#define TUICore_RecordAudioMessageNotify_StartRecordAudioMessageSubKey @"TUICore_RecordAudioMessageNotify_StartRecordAudioMessageSubKey"
+#define TUICore_RecordAudioMessageNotify_StopRecordAudioMessageSubKey @"TUICore_RecordAudioMessageNotify_StopRecordAudioMessageSubKey"
+
+#define TUICore_RecordAudioMessageNotify_RecordAudioVoiceVolumeSubKey @"TUICore_RecordAudioMessageNotify_RecordAudioVoiceVolumeSubKey"
+#define TUICore_RecordAudioMessageNotify_RecordAudioVoiceVolumeSubKey_VolumeKey @"volume"
+
+// 初始化录制成功,录制成功
+#define TUICore_RecordAudioMessageNotifyError_None 0
+// 参数为空
+#define TUICore_RecordAudioMessageNotifyError_InvalidParam -1001
+// 录音被拒绝,当前在通话中
+#define TUICore_RecordAudioMessageNotifyError_StatusInCall -1002
+// 录音被拒绝,当前录音未结束
+#define TUICore_RecordAudioMessageNotifyError_StatusIsAudioRecording -1003
+// 录音被拒绝,获取麦克风权限失败
+#define TUICore_RecordAudioMessageNotifyError_MicPermissionRefused -1004
+// 录音被拒绝,获取音频焦点失败
+#define TUICore_RecordAudioMessageNotifyError_RequestAudioFocusFailed -1005
+
+// -1, 初始化录制失败(onLocalRecordBegin)
+#define TUICore_RecordAudioMessageNotifyError_RecordInitFailed -2001
+// -2, 文件后缀名有误(onLocalRecordBegin)
+#define TUICore_RecordAudioMessageNotifyError_PathFormatNotSupport -2002
+// -1, 录制失败
+#define TUICore_RecordAudioMessageNotifyError_RecordFailed -2003
+// -3, 音频数据或者视频数据一直没有到达导致没有开始正式录制
+#define TUICore_RecordAudioMessageNotifyError_NoMessageToRecord -2004
+
+// -4, 签名错误(onLocalRecordBegin)
+#define TUICore_RecordAudioMessageNotifyError_SignatureError  -3001
+// -5, 签名过期(onLocalRecordBegin)
+#define TUICore_RecordAudioMessageNotifyError_SignatureExpired -3002
+
+// 打开麦克风失败，例如在 Windows 或 Mac 设备，麦克风的配置程序（驱动程序）异常，禁用后重新启用设备，或者重启机器，或者更新配置程序
+#define TUICore_RecordAudioMessageNotifyError_MicStartFail -1302
+// 麦克风设备未授权，通常在移动设备出现，可能是权限被用户拒绝了
+#define TUICore_RecordAudioMessageNotifyError_MicNotAuthorized -1317
+// 麦克风设置参数失败
+#define TUICore_RecordAudioMessageNotifyError_MicSetParamFail -1318
+// 麦克风正在被占用中，例如移动设备正在通话时，打开麦克风会失败
+#define TUICore_RecordAudioMessageNotifyError_MicOccupy -1319
 
 #pragma mark - TUICore_TUIGiftExtension
 #define TUICore_TUIGiftExtension_GetEnterBtn    @"TUICore_TUIGiftExtension_GetEnterBtn"

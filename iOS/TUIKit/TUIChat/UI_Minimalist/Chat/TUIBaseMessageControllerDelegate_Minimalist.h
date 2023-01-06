@@ -179,6 +179,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)messageController:(TUIBaseMessageController_Minimalist *)controller onSelectMessageWhenMultiCheckboxAppear:(TUIMessageCellData *)data;
 
+/// Translate message.
+- (void)messageController:(TUIBaseMessageController_Minimalist *)controller onTranslateMessage:(TUIMessageCell *)cell;
+
+/// Forward translated text.
+- (void)messageController:(TUIBaseMessageController_Minimalist *)controller onForwardTranslation:(NSString *)text;
+
 @end
 
 NS_ASSUME_NONNULL_END

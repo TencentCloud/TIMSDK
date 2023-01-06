@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <TUICore/TUIDefine.h>
+#import "TUIDefine.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

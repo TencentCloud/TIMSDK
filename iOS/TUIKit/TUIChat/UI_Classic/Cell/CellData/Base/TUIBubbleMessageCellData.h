@@ -13,6 +13,7 @@
 #import "TUIMessageCellData.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
 /** 
  * 【模块名称】TUIBubbleMessageCellData
  * 【功能说明】气泡消息数据源。
@@ -40,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
  * - If the value is abnormal or set arbitrarily, UI exceptions such as message dislocation will occur.
  *
  */
-@property CGFloat bubbleTop;
+@property (nonatomic, assign) CGFloat bubbleTop;
 
 /**
  *  气泡图标（正常）
@@ -50,7 +51,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  - The bubble icon changes depending on whether the message is sent or received, and the relevant business logic has been implemented in the data source.
  *  - You can also personalize it according to your needs.
  */
-@property UIImage *bubble;
+@property (nonatomic, strong) UIImage *bubble;
 
 /**
  *  气泡图标（高亮）
@@ -60,14 +61,14 @@ NS_ASSUME_NONNULL_BEGIN
  *  - The bubble icon changes depending on whether the message is sent or received, and the relevant business logic has been implemented in the data source.
  *  - You can also personalize it according to your needs.
  */
-@property UIImage *highlightedBubble;
+@property (nonatomic, strong) UIImage *highlightedBubble;
 
 /**
  *  气泡图标（动画闪烁）
  *  Bubble icon (animated blinking state)
  */
-@property UIImage *animateHighlightBubble_alpha50;
-@property UIImage *animateHighlightBubble_alpha20;
+@property (nonatomic, strong) UIImage *animateHighlightBubble_alpha50;
+@property (nonatomic, strong) UIImage *animateHighlightBubble_alpha20;
 
 
 /**

@@ -7,9 +7,7 @@
 
 #import "TUIGroupTypeListController_Minimalist.h"
 #import "UIView+TUILayout.h"
-#import "TUICommonContactProfileCardCell.h"
 #import "TUICommonModel.h"
-#import "TUIContactAvatarViewController_Minimalist.h"
 #import "TUIDefine.h"
 
 @interface TUIGroupTypeData_Minimalist : NSObject

@@ -12,6 +12,7 @@
 #import "TUIMessageProgressManager.h"
 #import "TUICloudCustomDataTypeCenter.h"
 #import "TUIChatConfig.h"
+#import "NSString+TUIEmoji.h"
 
 /**
  * 消息上方的日期时间间隔, 单位秒 , default is (5 * 60)
@@ -20,15 +21,15 @@
 #define MaxDateMessageDelay 5 * 60
 
 @interface TUIMessageBaseDataProvider ()<V2TIMAdvancedMsgListener, TUIMessageProgressManagerDelegate>
-@property (nonatomic) TUIChatConversationModel *conversationModel;
-@property (nonatomic) NSMutableArray<TUIMessageCellData *> *uiMsgs_;
-@property (nonatomic) NSMutableSet<NSString *> *sentReadGroupMsgSet;
-@property (nonatomic) NSMutableDictionary<NSString *, NSNumber *> *heightCache_;
-@property (nonatomic) BOOL isLoadingData;
-@property (nonatomic) BOOL isNoMoreMsg;
-@property (nonatomic) BOOL isFirstLoad;
-@property (nonatomic) V2TIMMessage *lastMsg;
-@property (nonatomic) V2TIMMessage *msgForDate;
+@property (nonatomic, strong) TUIChatConversationModel *conversationModel;
+@property (nonatomic, strong) NSMutableArray<TUIMessageCellData *> *uiMsgs_;
+@property (nonatomic, strong) NSMutableSet<NSString *> *sentReadGroupMsgSet;
+@property (nonatomic, strong) NSMutableDictionary<NSString *, NSNumber *> *heightCache_;
+@property (nonatomic, assign) BOOL isLoadingData;
+@property (nonatomic, assign) BOOL isNoMoreMsg;
+@property (nonatomic, assign) BOOL isFirstLoad;
+@property (nonatomic, strong) V2TIMMessage *lastMsg;
+@property (nonatomic, strong) V2TIMMessage *msgForDate;
 @end
 
 @implementation TUIMessageBaseDataProvider
@@ -59,14 +60,14 @@
 
 - (NSMutableArray<TUIMessageCellData *> *)uiMsgs_ {
     if (_uiMsgs_ == nil) {
-        _uiMsgs_ = [NSMutableArray arrayWithCapacity:10];
+        _uiMsgs_ = [NSMutableArray array];
     }
     return _uiMsgs_;
 }
 
 - (NSMutableDictionary<NSString *,NSNumber *> *)heightCache_ {
     if (_heightCache_ == nil) {
-        _heightCache_ = [NSMutableDictionary dictionaryWithCapacity:10];
+        _heightCache_ = [NSMutableDictionary dictionary];
     }
     return _heightCache_;
 }
@@ -137,12 +138,14 @@
     [self preProcessMessage:cellDataList callback:^{
         @strongify(self)
         [self.dataSource dataProviderDataSourceWillChange:self];
-        for (TUIMessageCellData *uiMsg in cellDataList) {
-            [self addUIMsg:uiMsg];
-            [self.dataSource dataProviderDataSourceChange:self
-                                                 withType:TUIMessageBaseDataProviderDataSourceChangeTypeInsert
-                                                  atIndex:(self.uiMsgs_.count - 1)
-                                                animation:YES];
+        @autoreleasepool {        
+            for (TUIMessageCellData *uiMsg in cellDataList) {
+                [self addUIMsg:uiMsg];
+                [self.dataSource dataProviderDataSourceChange:self
+                                                     withType:TUIMessageBaseDataProviderDataSourceChangeTypeInsert
+                                                      atIndex:(self.uiMsgs_.count - 1)
+                                                    animation:YES];
+            }
         }
         [self.dataSource dataProviderDataSourceDidChange:self];
         
@@ -453,16 +456,17 @@
             }
             
             __weak typeof(myData) weakMyData = myData;
-            TUIMessageCell * cell = [[TUIMessageCell alloc] initWithFrame:CGRectZero];
+            static TUIMessageCell * cell = nil;
+            if (cell == nil) {
+                cell = [[TUIMessageCell alloc] initWithFrame:CGRectZero];
+            }
             if ([myData.messageModifyReacts isKindOfClass:NSDictionary.class] && [myData.messageModifyReacts allKeys].count >0 ) {
                 [cell prepareReactTagUI:cell.container];
                 [cell fillWithData:myData];
                 [cell layoutIfNeeded];
-                [cell.tagView layoutIfNeeded];
                 [cell.tagView updateView];
                 weakMyData.messageModifyReactsSize = cell.tagView.frame.size;
             }
-        
         }
         
         if (reactCallback) {
@@ -713,29 +717,53 @@
     }
     return NO;
 }
+
+- (BOOL)removeHeightCacheOfData:(TUIMessageCellData *)data {
+    for (TUIMessageCellData *cellData in self.uiMsgs) {
+        if (data != nil && cellData == data) {
+            NSString *key = [self heightCacheKeyFromMsg:data];
+            if ([self.heightCache_ objectForKey:key]) {
+                [self.heightCache_ removeObjectForKey:key];
+                return YES;
+            }
+        }
+    }
+    return NO;
+}
+
 - (CGFloat)getCellDataHeightAtIndex:(NSUInteger)index Width:(CGFloat)width {
-    TUIMessageCellData *msg = nil;
-    if (index < self.uiMsgs.count) {
-        msg = self.uiMsgs[index];
-    }
-    if (!msg) {
-        return 0;
-    }
-    
     CGFloat height = 0;
-    if(self.heightCache.count > index) {
-        height = self.heightCache_[msg.msgID].floatValue;
+    @autoreleasepool {
+        if (index < self.uiMsgs_.count) {
+            TUIMessageCellData *msg = self.uiMsgs_[index];
+            NSString *key = [self heightCacheKeyFromMsg:msg];
+            height = [[self.heightCache_ objectForKey:key] floatValue];
+            if (height == 0) {
+                height = [msg heightOfWidth:width];
+                [self.heightCache_ setObject:@(height) forKey:key];
+            }
+        }
     }
-    if (height) {
-        return height;
-    }
-    height = [msg heightOfWidth:width];
-    [self.heightCache_ setObject:@(height) forKey:[self heightCacheKeyFromMsg:msg]];
     return height;
 }
 
 - (NSString *)heightCacheKeyFromMsg:(TUIMessageCellData *)msg {
-    return msg.msgID ?: [NSString stringWithFormat:@"%p", msg];
+    return msg.msgID.length == 0 ? [NSString stringWithFormat:@"%p", msg] : msg.msgID;
+}
+
+- (CGFloat)getEstimatedHeightForRowAtIndex:(NSUInteger)index {
+    @autoreleasepool {
+        if (index < self.uiMsgs_.count) {
+            TUIMessageCellData *msg = self.uiMsgs_[index];
+            CGFloat height = [[self.heightCache_ objectForKey:[self heightCacheKeyFromMsg:msg]] floatValue];
+            if (height == 0) {
+                height = [msg estimatedHeight];
+            }
+            return height;
+        } else {
+            return 60;
+        }
+    }
 }
 
 - (void)sendLatestMessageReadReceipt {
@@ -845,7 +873,7 @@
         NSDictionary *ext = @{
             @"entity": @{
                     @"action": @1,
-                    @"content": [self getDisplayString:message],
+                    @"content": [self getDisplayString:message]?:@"",
                     @"sender": senderId,
                     @"nickname": nickName,
                     @"faceUrl": [TUILogin getFaceUrl]?:@"",
@@ -856,6 +884,7 @@
         pushInfo.ext = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         pushInfo.AndroidOPPOChannelID = @"tuikit";
         pushInfo.AndroidSound = TUIConfig.defaultConfig.enableCustomRing ? @"private_ring" : nil;
+        pushInfo.AndroidHuaWeiCategory = @"IM";
     }
     if ([self isGroupCommunity:conversationData.groupType groupID:conversationData.groupID] ||
         [self isGroupAVChatRoom:conversationData.groupType]) {
@@ -969,6 +998,9 @@
                          succ:(nullable V2TIMMessageReadReceiptsSucc)succ
                          fail:(nullable V2TIMFail)fail {
     if (messages.count == 0) {
+        if (fail) {
+            fail(-1, @"messages empty");
+        }
         return;
     }
     [[V2TIMManager sharedInstance] getMessageReadReceipts:messages succ:succ fail:fail];
@@ -1169,32 +1201,6 @@
     return [[V2TIMManager sharedInstance] createCustomMessage:data];
 }
 
-+ (V2TIMMessage *)getVideoMessageWithURL:(NSURL *)url {
-    NSData *videoData = [NSData dataWithContentsOfURL:url];
-    NSString *videoPath = [NSString stringWithFormat:@"%@%@.mp4", TUIKit_Video_Path, [TUITool genVideoName:nil]];
-    [[NSFileManager defaultManager] createFileAtPath:videoPath contents:videoData attributes:nil];
-    
-    NSDictionary *opts = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO] forKey:AVURLAssetPreferPreciseDurationAndTimingKey];
-    AVURLAsset *urlAsset =  [AVURLAsset URLAssetWithURL:url options:opts];
-    NSInteger duration = (NSInteger)urlAsset.duration.value / urlAsset.duration.timescale;
-    AVAssetImageGenerator *gen = [[AVAssetImageGenerator alloc] initWithAsset:urlAsset];
-    gen.appliesPreferredTrackTransform = YES;
-    gen.maximumSize = CGSizeMake(192, 192);
-    NSError *error = nil;
-    CMTime actualTime;
-    CMTime time = CMTimeMakeWithSeconds(0.5, 30);
-    CGImageRef imageRef = [gen copyCGImageAtTime:time actualTime:&actualTime error:&error];
-    UIImage *image = [[UIImage alloc] initWithCGImage:imageRef];
-    CGImageRelease(imageRef);
-    
-    NSData *imageData = UIImagePNGRepresentation(image);
-    NSString *imagePath = [TUIKit_Video_Path stringByAppendingString:[TUITool genSnapshotName:nil]];
-    [[NSFileManager defaultManager] createFileAtPath:imagePath contents:imageData attributes:nil];
-    
-    V2TIMMessage *message = [[V2TIMManager sharedInstance] createVideoMessage:videoPath type:url.pathExtension duration:duration snapshotPath:imagePath];
-    return message;
-}
-
 + (NSString *)getOpUserName:(V2TIMGroupMemberInfo *)info{
     NSString *opUser;
     if (info.nameCard.length > 0){
@@ -1263,6 +1269,153 @@
         }
   }
   return str;
+}
+
+#pragma mark -- Translate
+- (void)translateCellData:(TUIMessageCellData *)data
+           containerWidth:(float)containerWidth {
+    if (data.innerMessage.elemType != V2TIM_ELEM_TYPE_TEXT) {
+        return;
+    }
+    V2TIMTextElem *textElem = data.innerMessage.textElem;
+    if (textElem == nil) {
+        return;
+    }
+    if (![data respondsToSelector:@selector(canTranslate)] ||
+        ![data canTranslate]) {
+        return;
+    }
+    
+    /// Get at user's nickname by userID
+    NSMutableArray *atUserIDs = [data.innerMessage.groupAtUserList mutableCopy];
+    if (atUserIDs.count == 0) {
+        /// There's no any @user info.
+        [self translateData:data atUsers:nil containerWidth:containerWidth];
+        return;
+    }
+    
+    /// Find @All info.
+    NSMutableArray *atUserIDsExcludingAtAll = [NSMutableArray new];
+    NSMutableIndexSet *atAllIndex = [NSMutableIndexSet new];
+    for (int i = 0; i < atUserIDs.count; i++) {
+        NSString *userID = atUserIDs[i];
+        if (![userID isEqualToString:kImSDK_MesssageAtALL]) {
+            /// Exclude @All.
+            [atUserIDsExcludingAtAll addObject:userID];
+        } else {
+            /// Record @All's location for later restore.
+            [atAllIndex addIndex:i];
+        }
+    }
+    if (atUserIDsExcludingAtAll.count == 0) {
+        /// There's only @All info.
+        NSMutableArray *atAllNames = [NSMutableArray new];
+        for (int i = 0; i < atAllIndex.count; i++) {
+            [atAllNames addObject:TUIKitLocalizableString(All)];
+        }
+        [self translateData:data atUsers:atAllNames containerWidth:containerWidth];
+        return;
+    }
+    [[V2TIMManager sharedInstance] getUsersInfo:atUserIDsExcludingAtAll
+                                           succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
+        NSMutableArray *atUserNames = [NSMutableArray new];
+        for (NSString *userID in atUserIDsExcludingAtAll) {
+            for (V2TIMUserFullInfo *user in infoList) {
+                if ([userID isEqualToString:user.userID]) {
+                    [atUserNames addObject:user.nickName ? : user.userID];
+                    break;
+                }
+            }
+        }
+        
+        // Restore @All.
+        if (atAllIndex.count > 0) {
+            [atAllIndex enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL * _Nonnull stop) {
+                [atUserNames insertObject:TUIKitLocalizableString(All) atIndex:idx];
+            }];
+        }
+        [self translateData:data atUsers:atUserNames containerWidth:containerWidth];
+    } fail:^(int code, NSString *desc) {
+        [self translateData:data atUsers:atUserIDs containerWidth:containerWidth];
+    }];
+}
+
+- (void)translateData:(TUIMessageCellData *)data
+              atUsers:(NSArray *)atUsers
+       containerWidth:(float)containerWidth {
+    V2TIMTextElem *textElem = data.innerMessage.textElem;
+    [data.translationViewData setContainerWidth:containerWidth];
+    [self removeHeightCacheOfData:data];
+    
+    NSString *target = [self targetLanguage];
+    NSDictionary *splitResult = [textElem.text splitTextByEmojiAndAtUsers:atUsers];
+    NSArray *textArray = splitResult[kSplitStringTextKey];
+    
+    if (textArray.count == 0) {
+        /// Nothing need to be translated.
+        data.translationViewData.text = textElem.text;
+        data.translationViewData.status = TUITranslationViewStatusShown;
+        if ([self.dataSource respondsToSelector:@selector(dataProvider:didChangeTranslationData:)]) {
+            [self.dataSource dataProvider:self didChangeTranslationData:data];
+        }
+        return;
+    }
+    
+    if (data.translationViewData.text.length > 0) {
+        data.translationViewData.status = TUITranslationViewStatusShown;
+        if ([self.dataSource respondsToSelector:@selector(dataProvider:didChangeTranslationData:)]) {
+            [self.dataSource dataProvider:self didChangeTranslationData:data];
+        }
+        return;
+    } else {
+        data.translationViewData.status = TUITranslationViewStatusLoading;
+        if ([self.dataSource respondsToSelector:@selector(dataProvider:didChangeTranslationData:)]) {
+            [self.dataSource dataProvider:self didChangeTranslationData:data];
+        }
+    }
+    
+    /// Send translate request.
+    @weakify(self);
+    [[V2TIMManager sharedInstance] translateText:textArray
+                                  sourceLanguage:nil
+                                  targetLanguage:target
+                                      completion:^(int code, NSString *desc, NSDictionary<NSString *,NSString *> *result) {
+        @strongify(self);
+        [self removeHeightCacheOfData:data];
+        
+        /// Translate failed.
+        if (code != 0 || result.count == 0) {
+            if (self) {
+                [TUITool makeToastError:code msg:desc];
+            }
+            data.translationViewData.status = TUITranslationViewStatusHidden;
+            if ([self.dataSource respondsToSelector:@selector(dataProvider:didChangeTranslationData:)]) {
+                [self.dataSource dataProvider:self didChangeTranslationData:data];
+            }
+            return;
+        }
+
+        /// Translate succeeded.
+        NSString *text = [NSString replacedStringWithArray:splitResult[kSplitStringResultKey]
+                                                     index:splitResult[kSplitStringTextIndexKey]
+                                               replaceDict:result];
+        data.translationViewData.text = text;
+        data.translationViewData.status = TUITranslationViewStatusShown;
+        if ([self.dataSource respondsToSelector:@selector(dataProvider:didChangeTranslationData:)]) {
+            [self.dataSource dataProvider:self didChangeTranslationData:data];
+        }
+    }];
+}
+
+- (NSString *)targetLanguage {
+    NSString *target = nil;
+    NSString *curAppLang = [TUIGlobalization tk_localizableLanguageKey];
+    if ([curAppLang isEqualToString:@"zh-Hans"] || [curAppLang isEqualToString:@"zh-Hant"]) {
+        target = @"zh";
+    } else {
+        target = @"en";
+    }
+    return target;
 }
 
 @end

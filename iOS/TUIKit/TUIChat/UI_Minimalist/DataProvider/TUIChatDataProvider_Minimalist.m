@@ -92,15 +92,6 @@ static NSArray *customInputBtnInfo = nil;
         }
     }
 
-    if (isNeedGroupLive && groupID.length > 0) {
-        TUIInputMoreCellData_Minimalist *liveMenusData = [TUIInputMoreCellData_Minimalist new];
-        liveMenusData.key = TUIInputMoreCellKey_GroupLive;
-        liveMenusData.title = TUIKitLocalizableString(TUIKitMoreGroupLive);
-        liveMenusData.image = TUIChatBundleThemeImage(@"chat_more_group_live", @"more_group_live");
-        [moreMenus addObject:liveMenusData];
-
-    }
-
     for (NSDictionary *buttonInfo in [self customInputBtnInfo]) {
         NSString *key = buttonInfo[Input_SendBtn_Key];
         NSString *title = buttonInfo[Input_SendBtn_Title];

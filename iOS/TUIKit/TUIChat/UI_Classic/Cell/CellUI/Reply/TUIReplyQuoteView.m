@@ -7,7 +7,7 @@
 
 #import "TUIReplyQuoteView.h"
 #import "TUIReplyQuoteViewData.h"
-#import "NSString+emoji.h"
+#import "NSString+TUIEmoji.h"
 
 @implementation TUIReplyQuoteView
 

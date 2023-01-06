@@ -46,7 +46,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, class) CGFloat incommingVoiceTop;
 @property (nonatomic, class) CGFloat outgoingVoiceTop;
 
-
 - (void)stopVoiceMessage;
 
 /**

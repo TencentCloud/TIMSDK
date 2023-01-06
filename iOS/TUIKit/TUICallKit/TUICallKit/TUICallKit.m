@@ -25,6 +25,7 @@
 #import "TUICallKitGCDTimer.h"
 #import "TUICallEngineHeader.h"
 #import "TUICallKitOfflinePushInfoConfig.h"
+#import "TUICallKitConstants.h"
 
 typedef NS_ENUM(NSUInteger, TUICallingUserRemoveReason) {
     TUICallingUserRemoveReasonLeave,
@@ -218,15 +219,18 @@ callMediaType:(TUICallMediaType)callMediaType
 }
 
 - (void)joinInGroupCall:(TUIRoomId *)roomId groupId:(NSString *)groupId callMediaType:(TUICallMediaType)callMediaType {
-    TUILog(@"log: joinInCall");
     if (!(roomId)) {
-        TUILog(@"Calling - joinToCall invalid roomID");
+        TUILog(@"Calling - joinInGroupCall failed, roomId is invalid");
+        return;
+    }
+    if (!groupId) {
+        TUILog(@"Calling - joinInGroupCall failed, groupId is invalid");
         return;
     }
     if ([self checkAuthorizationStatusIsDenied:callMediaType]) {
+        TUILog(@"Calling - joinInGroupCall failed, mediaType is unknown");
         return;
     }
-    
     self.currentCallingRole = TUICallRoleCalled;
     self.currentCallingType = callMediaType;
     [self.callingViewManager createGroupCallingAcceptView:callMediaType callRole:TUICallRoleCalled callScene:TUICallSceneGroup];
@@ -308,7 +312,6 @@ callMediaType:(TUICallMediaType)callMediaType
                                                                                 NSURLResponse * _Nullable response,
                                                                                 NSError * _Nullable error) {
             if (error != nil) {
-                TUILog(@"SetCallingBell Error: %@", error.localizedDescription);
                 return;
             }
             
@@ -655,8 +658,6 @@ callMediaType:(TUICallMediaType)callMediaType
         errMsg = TUICallingLocalize(@"TUICallKit.package.not.purchased");
     } else if (errorCode == ERROR_PACKAGE_NOT_SUPPORTED) {
         errMsg = TUICallingLocalize(@"TUICallKit.package.not.support");
-    } else {
-        TUILog(@"log: call error code: %ld errMsg: %@", errorCode, errorMessage);
     }
     [self makeToast:errMsg duration:4 position:nil];
 }
@@ -819,6 +820,7 @@ callMediaType:(TUICallMediaType)callMediaType
     TUIOfflinePushInfo *offlinePushInfo = [TUICallKitOfflinePushInfoConfig createOfflinePushInfo];
     TUICallParams *callParams = [TUICallParams new];
     callParams.offlinePushInfo = offlinePushInfo;
+    callParams.timeout = TUI_CALLKIT_SIGNALING_MAX_TIME;
     return callParams;
 }
 

@@ -12,6 +12,7 @@
 #import "TUICommonModel.h"
 #import "TUICallKitOfflinePushInfoConfig.h"
 #import "TUICallingUserManager.h"
+#import "TUICallKitConstants.h"
 
 @implementation TUICallingAction
 
@@ -105,7 +106,6 @@
         }
     }
     if (userIdList.count <= 0) {
-        TUILog(@"Calling - inviteUser invalid userList");
         if (fail) {
             fail(ERROR_PARAM_INVALID, @"inviteUser invalid userList");
         }
@@ -120,6 +120,7 @@
     TUIOfflinePushInfo *offlinePushInfo = [TUICallKitOfflinePushInfoConfig createOfflinePushInfo];
     TUICallParams *callParams = [TUICallParams new];
     callParams.offlinePushInfo = offlinePushInfo;
+    callParams.timeout = TUI_CALLKIT_SIGNALING_MAX_TIME;
     [[TUICallEngine createInstance] inviteUser:[userIdList copy] params:callParams succ:succ fail:fail];
 }
 

@@ -14,5 +14,9 @@
 	<string>#F4F4F4</string>
 	<key>conversation_bg_color</key>
 	<string>#FFFFFF</string>
+	<key>pop_icon_new_chat_img</key>
+	<string>new_chat.png</string>
+	<key>pop_icon_new_group_img</key>
+	<string>new_groupchat.png</string>
 </dict>
 </plist>

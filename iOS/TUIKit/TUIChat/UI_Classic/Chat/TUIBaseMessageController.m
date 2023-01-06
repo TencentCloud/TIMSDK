@@ -16,7 +16,6 @@
 #import "TUIFileMessageCell.h"
 #import "TUIJoinGroupMessageCell.h"
 #import "TUIMergeMessageCell.h"
-#import "TUIGroupLiveMessageCell.h"
 #import "TUILinkCell.h"
 #import "TUIReplyMessageCell.h"
 #import "TUIReplyMessageCellData.h"
@@ -29,7 +28,6 @@
 #import "TUIChatDataProvider.h"
 #import "TUIChatConversationModel.h"
 #import "TUIMessageDataProvider+Call.h"
-#import "TUIMessageDataProvider+Live.h"
 #import "TUIChatPopMenu.h"
 #import "TUIDefine.h"
 #import "TUIConfig.h"
@@ -118,7 +116,6 @@
     [self.view addGestureRecognizer:tap];
     
     self.tableView.scrollsToTop = NO;
-    self.tableView.estimatedRowHeight = 0;
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     self.tableView.backgroundColor = TUIChatDynamicColor(@"chat_controller_bg_color", @"#FFFFFF");
 
@@ -131,7 +128,6 @@
     [self.tableView registerClass:[TUIFileMessageCell class] forCellReuseIdentifier:TFileMessageCell_ReuseId];
     [self.tableView registerClass:[TUIJoinGroupMessageCell class] forCellReuseIdentifier:TJoinGroupMessageCell_ReuseId];
     [self.tableView registerClass:[TUIMergeMessageCell class] forCellReuseIdentifier:TRelayMessageCell_ReuserId];
-    [self.tableView registerClass:[TUIGroupLiveMessageCell class] forCellReuseIdentifier:TGroupLiveMessageCell_ReuseId];
     [self.tableView registerClass:[TUIReplyMessageCell class] forCellReuseIdentifier:TReplyMessageCell_ReuseId];
     [self.tableView registerClass:[TUIReferenceMessageCell class] forCellReuseIdentifier:TUIReferenceMessageCell_ReuseId];
     
@@ -203,6 +199,56 @@
     [self.tableView layoutIfNeeded];
 }
 
+- (void)reloadCellOfMessage:(NSString *)messageID {
+    NSIndexPath *indexPath = [self indexPathOfMessage:messageID];
+    
+    // Disable animation when loading to avoid cell jumping.
+    [self reloadCellOfIndexPath:indexPath];
+}
+
+- (void)reloadCellOfIndexPath:(NSIndexPath *)indexPath {
+    // Disable animation when loading to avoid cell jumping
+    [UIView performWithoutAnimation:^{
+        [self.tableView reloadRowsAtIndexPaths:@[indexPath]
+                              withRowAnimation:UITableViewRowAnimationNone];
+    }];
+}
+
+- (void)reloadAndScrollToBottomOfMessage:(NSString *)messageID {
+    // Dispatch the task to RunLoop to ensure that they are executed after the UITableView refresh is complete.
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self reloadCellOfMessage:messageID];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self scrollCellToBottomOfMessage:messageID];
+        });
+    });
+}
+
+- (void)scrollCellToBottomOfMessage:(NSString *)messageID {
+    NSIndexPath *indexPath = [self indexPathOfMessage:messageID];
+    
+    // Scroll the tableView only if the bottom of the cell is invisible.
+    CGRect cellRect = [self.tableView rectForRowAtIndexPath:indexPath];
+    CGRect tableViewRect = self.tableView.bounds;
+    BOOL isBottomInvisible = cellRect.origin.y < CGRectGetMaxY(tableViewRect) && CGRectGetMaxY(cellRect) > CGRectGetMaxY(tableViewRect);
+    if (isBottomInvisible) {
+        [self.tableView scrollToRowAtIndexPath:indexPath
+                              atScrollPosition:UITableViewScrollPositionBottom
+                                      animated:YES];
+    }
+}
+
+- (NSIndexPath *)indexPathOfMessage:(NSString *)messageID {
+    for (int i = 0; i < self.messageDataProvider.uiMsgs.count; i++) {
+        TUIMessageCellData *data = self.messageDataProvider.uiMsgs[i];
+        if ([data.innerMessage.msgID isEqualToString:messageID]) {
+            return [NSIndexPath indexPathForRow:i inSection:0];
+        }
+    }
+    return nil;
+}
+
+
 #pragma mark - Event Response
 - (void)scrollToBottom:(BOOL)animate
 {
@@ -245,6 +291,7 @@
         
     } SuccBlock:^{
         @strongify(self);
+        [self reloadUIMessage:cellData];
         [self changeMsg:cellData status:Msg_Status_Succ];
     } FailBlock:^(int code, NSString *desc) {
         @strongify(self)
@@ -273,6 +320,18 @@
     if (cellData) {
         [self sendUIMessage:cellData];
     }
+}
+
+- (void)reloadUIMessage:(TUIMessageCellData *)msg
+{
+    // innerMessage maybe changed, reload it
+    NSInteger index = [self.messageDataProvider.uiMsgs indexOfObject:msg];
+    TUIMessageCellData *newData = [self.messageDataProvider transUIMsgFromIMMsg:@[msg.innerMessage]].lastObject;
+    __weak typeof(self) weakSelf = self;
+    [self.messageDataProvider preProcessMessage:@[newData] callback:^{
+        [weakSelf.messageDataProvider replaceUIMsg:newData atIndex:index];
+        [weakSelf.tableView reloadData];
+    }];
 }
 
 - (void)changeMsg:(TUIMessageCellData *)msg status:(TMsgStatus)status
@@ -419,6 +478,10 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     return;
 }
 
+- (void)dataProvider:(TUIMessageBaseDataProvider *)dataProvider
+didChangeTranslationData:(TUIMessageCellData *)data {
+    [self reloadAndScrollToBottomOfMessage:data.innerMessage.msgID];
+}
 
 #pragma mark - Private
 - (void)limitReadReport
@@ -549,7 +612,18 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return [self.messageDataProvider getCellDataHeightAtIndex:indexPath.row Width:Screen_Width];
+    static CGFloat screenWidth = 0;
+    if (screenWidth == 0) {
+        screenWidth = Screen_Width;
+    }
+    return [self.messageDataProvider getCellDataHeightAtIndex:indexPath.row Width:screenWidth];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if ([self.messageDataProvider respondsToSelector:@selector(getEstimatedHeightForRowAtIndex:)]) {
+        return [self.messageDataProvider getEstimatedHeightForRowAtIndex:indexPath.row];
+    }
+    return 60.f;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -572,7 +646,23 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     cell = [tableView dequeueReusableCellWithIdentifier:data.reuseId forIndexPath:indexPath];
     cell.delegate = self;
     [cell fillWithData:data];
-
+    
+    if ([data respondsToSelector:@selector(canTranslate)] && [data canTranslate]) {
+        NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+        @weakify(self);
+        cell.hideTranslationCallback = ^(BOOL hide) {
+            @strongify(self);
+            [self.messageDataProvider removeHeightCache:indexPath.row];
+            [self reloadCellOfIndexPath:indexPath];
+        };
+        cell.forwardTranslationCallback = ^(NSString *text) {
+            @strongify(self);
+            if (self.delegate) {
+                [self.delegate messageController:self onForwardTranslation:text];
+            }
+        };
+    }
+   
     return cell;
 }
 
@@ -665,9 +755,6 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     else if ([cell isKindOfClass:[TUIMergeMessageCell class]]) {
         [self showRelayMessage:(TUIMergeMessageCell *)cell];
     }
-    else if ([cell isKindOfClass:[TUIGroupLiveMessageCell class]]) {
-        [self showLiveMessage:(TUIGroupLiveMessageCell *)cell];
-    }
     else if ([cell isKindOfClass:[TUILinkCell class]]) {
         [self showLinkMessage:(TUILinkCell *)cell];
     }
@@ -745,7 +832,7 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     self.menuUIMsg = data;
 
     __weak typeof(self) weakSelf = self;
-    TUIChatPopMenu *menu = [[TUIChatPopMenu alloc] init];
+    TUIChatPopMenu *menu = [[TUIChatPopMenu alloc] initWithEmojiView:YES frame:CGRectZero];
     __weak typeof(menu) weakMenu = menu;
     menu.reactClickCallback = ^(NSString * _Nonnull faceName) {
         __weak typeof(weakSelf) strongSelf = weakSelf;
@@ -768,7 +855,6 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
         }];
         [menu addAction:copyAction];
     }
-
     
     TUIChatPopMenuAction *deleteAction = [[TUIChatPopMenuAction alloc]
                                           initWithTitle:TUIKitLocalizableString(Delete)
@@ -834,6 +920,19 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
         }];
         [menu addAction:referenceAction];
     }
+    
+    TUIChatPopMenuAction *translateAction = [[TUIChatPopMenuAction alloc]
+                                             initWithTitle:TUIKitLocalizableString(TUIKitTranslate)
+                                             image: TUIChatBundleThemeImage(@"chat_icon_translate_img", @"icon_translate")
+                                             rank:8
+                                             callback:^{
+        [weakSelf onTranslate:cell];
+    }];
+    if ([data respondsToSelector:@selector(canTranslate)] && [data canTranslate]
+        && [data.translationViewData isHidden]
+        && TUIChatConfig.defaultConfig.enableTextTranslation) {
+        [menu addAction:translateAction];
+    }
 
     BOOL isFirstResponder = NO;
     if(_delegate && [_delegate respondsToSelector:@selector(messageController:willShowMenuInCell:)]){
@@ -879,6 +978,10 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
                 [menu addAction:forwardAction];
                 [menu addAction:quoteAction];
                 [menu addAction:referenceAction];
+                if ([data.translationViewData isHidden]
+                    && TUIChatConfig.defaultConfig.enableTextTranslation) {
+                    [menu addAction:translateAction];
+                }
             } else {
                 [menu addAction:copyAction];
                 [menu addAction:forwardAction];
@@ -907,6 +1010,10 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
                 [menu addAction:forwardAction];
                 [menu addAction:quoteAction];
                 [menu addAction:referenceAction];
+                if ([data.translationViewData isHidden]
+                    && TUIChatConfig.defaultConfig.enableTextTranslation) {
+                    [menu addAction:translateAction];
+                }
             } else {
                 [menu addAction:copyAction];
                 [menu addAction:forwardAction];
@@ -1120,6 +1227,13 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     }
 }
 
+- (void)onTranslate:(TUIMessageCell *)cell {
+    TUIMessageCellData *data = cell.messageData;
+    if ([data respondsToSelector:@selector(canTranslate)] && [data canTranslate]) {
+        [self.messageDataProvider translateCellData:data containerWidth:cell.container.mm_w];
+    }
+}
+
 - (BOOL)supportCheckBox:(TUIMessageCellData *)data
 {
     if ([data isKindOfClass:TUISystemMessageCellData.class]) {
@@ -1167,6 +1281,10 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 
 - (void)deleteMessages:(NSArray<TUIMessageCellData *> *)uiMsgs
 {
+    if (uiMsgs.count == 0 || uiMsgs.count > 30) {
+        NSLog(@"The size of messages must be between 0 and 30");
+        return;
+    }
     [self.messageDataProvider deleteUIMsgs:uiMsgs SuccBlock:nil FailBlock:^(int code, NSString *desc) {
         NSLog(@"deleteMessages failed!");
         NSAssert(NO, desc);
@@ -1303,16 +1421,6 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 
 - (void)showReplyMessage:(TUIReplyMessageCell *)cell
 {
-}
-
-- (void)showLiveMessage:(TUIGroupLiveMessageCell *)cell {
-    TUIGroupLiveMessageCellData *celldata = cell.customData;
-    NSDictionary *roomInfo = celldata.roomInfo;
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"kTUINotifyGroupLiveOnSelectMessage" object:nil userInfo:@{
-        @"roomInfo": roomInfo,
-        @"groupID": celldata.innerMessage.groupID?:@"",
-        @"msgSender": self,
-    }];
 }
 
 - (void)willShowMediaMessage:(TUIMessageCell *)cell

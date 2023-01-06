@@ -92,6 +92,10 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
  */
 - (nullable TUIMessageCellData *)dataProvider:(TUIMessageBaseDataProvider *)dataProvider
                CustomCellDataFromNewIMMessage:(V2TIMMessage *)msg;
+
+/// The translationData of MessageCellData changed.
+- (void)dataProvider:(TUIMessageBaseDataProvider *)dataProvider didChangeTranslationData:(TUIMessageCellData *)data;
+
 @end
 
 /**
@@ -110,18 +114,18 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 
 @property (nonatomic, weak) id<TUIMessageBaseDataProviderDataSource>     dataSource;
 
-@property (nonatomic, readonly) NSArray<TUIMessageCellData *> *uiMsgs;
-@property (nonatomic, readonly) NSDictionary<NSString *, NSNumber *> *heightCache;
-@property (nonatomic, readonly) BOOL isLoadingData;
-@property (nonatomic, readonly) BOOL isNoMoreMsg;
-@property (nonatomic, readonly) BOOL isFirstLoad;
+@property (nonatomic, strong, readonly) NSArray<TUIMessageCellData *> *uiMsgs;
+@property (nonatomic, strong, readonly) NSDictionary<NSString *, NSNumber *> *heightCache;
+@property (nonatomic, assign, readonly) BOOL isLoadingData;
+@property (nonatomic, assign, readonly) BOOL isNoMoreMsg;
+@property (nonatomic, assign, readonly) BOOL isFirstLoad;
 
 /**
  * loadMessage 请求的分页大小, default is 20
  *
  * Count of per page, default is 20.
  */
-@property (nonatomic) int pageCount;
+@property (nonatomic, assign) NSInteger pageCount;
 
 - (instancetype)initWithConversationModel:(TUIChatConversationModel *)conversationModel;
 
@@ -152,8 +156,12 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 - (void)replaceUIMsg:(TUIMessageCellData *)cellData atIndex:(NSUInteger)index;
 
 - (BOOL)removeHeightCache:(NSUInteger)index;
+- (BOOL)removeHeightCacheOfData:(TUIMessageCellData *)data;
 
 - (CGFloat)getCellDataHeightAtIndex:(NSUInteger)index Width:(CGFloat)width;
+
+- (CGFloat)getEstimatedHeightForRowAtIndex:(NSUInteger)index;
+
 /**
  * 预处理互动消息、回复消息(异步加载原始消息以及下载对应的缩略图)
  * Preprocessing interactive messages, reply messages (asynchronously loading original messages and downloading corresponding thumbnails)
@@ -255,12 +263,15 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 
 /// message <-> info
 + (V2TIMMessage *)getCustomMessageWithJsonData:(NSData *)data;
-+ (V2TIMMessage *)getVideoMessageWithURL:(NSURL *)url;
 + (NSMutableArray *)getUserIDList:(NSArray<V2TIMGroupMemberInfo *> *)infoList;
 + (NSString *)getShowName:(V2TIMMessage *)message;
 + (NSString *)getOpUserName:(V2TIMGroupMemberInfo *)info;
 + (NSMutableArray *)getUserNameList:(NSArray<V2TIMGroupMemberInfo *> *)infoList;
 + (NSString *)getUserName:(V2TIMGroupTipsElem *)tips with:(NSString *)userId;
+
+/// translate
+- (void)translateCellData:(TUIMessageCellData *)data
+           containerWidth:(float)containerWidth;
 
 @end
 

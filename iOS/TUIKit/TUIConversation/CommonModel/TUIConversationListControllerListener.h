@@ -37,10 +37,16 @@ typedef NS_ENUM(NSInteger, TUISearchType) {
  */
 - (void)conversationListController:(UIViewController *)conversationController didSelectConversation:(TUIConversationCellData *)conversation;
 
-- (void)searchController:(UIViewController *)searchVC
-                 withKey:(NSString *)searchKey
-           didSelectType:(TUISearchType)searchType
-                    item:(NSObject *)searchItem
-    conversationCellData:(TUIConversationCellData *)conversationCellData;
+/**
+ *  清空所有会话未读数回调。
+ *  The callback to clear all conversation unread count.
+ */
+- (void)onClearAllConversationUnreadCount;
+
+/**
+ *  会话列表多选面板关闭。
+ *  The callback to close conversation multiple choose board.
+ */
+- (void)onCloseConversationMultiChooseBoard;
 @end
 NS_ASSUME_NONNULL_END

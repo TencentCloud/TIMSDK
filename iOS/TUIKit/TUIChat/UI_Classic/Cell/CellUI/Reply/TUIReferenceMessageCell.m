@@ -17,7 +17,7 @@
 #import "TUITextMessageCellData.h"
 #import "TUIMergeMessageCellData.h"
 #import "TUILinkCellData.h"
-#import "NSString+emoji.h"
+#import "NSString+TUIEmoji.h"
 #import "TUIThemeManager.h"
 
 #import "TUIReplyQuoteView.h"
@@ -29,17 +29,15 @@
 #import "TUIMergeReplyQuoteView.h"
 #import "TUITextMessageCell.h"
 
-@interface TUIReferenceMessageCell ()<UITextViewDelegate>
+@interface TUIReferenceMessageCell () <UITextViewDelegate>
 
 @property (nonatomic, strong) TUIReplyQuoteView *currentOriginView;
-
 @property (nonatomic, strong) NSMutableDictionary<NSString *, TUIReplyQuoteView *> *customOriginViewsCache;
 
-
 @end
+
+
 @implementation TUIReferenceMessageCell
-
-
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
@@ -53,6 +51,10 @@
     [self setupContentTextView];
     [self.quoteView addSubview:self.senderLabel];
     [self.contentView addSubview:self.quoteView];
+    
+    self.translationView = [[TUITranslationView alloc] init];
+    self.translationView.delegate = self;
+    [self.contentView addSubview:self.translationView];
         
 }
 - (void)setupContentTextView {
@@ -69,6 +71,18 @@
     [self.bubbleView addSubview:self.textView];
 }
 
+- (void)setupRAC {
+    @weakify(self);
+    [[[RACObserve(self, referenceData.translationViewData.status) distinctUntilChanged] skip:1] subscribeNext:^(NSNumber *status) {
+        @strongify(self);
+        if (self.referenceData == nil) {
+            return;
+        }
+        
+        [self refreshTranslationView];
+    }];
+}
+
 - (void)fillWithData:(TUIReferenceMessageCellData *)data
 {
     [super fillWithData:data];
@@ -78,6 +92,8 @@
     self.selectContent = data.content;
     self.textView.attributedText = [data.content getFormatEmojiStringWithFont:self.textView.font emojiLocations:self.referenceData.emojiLocations];
     
+    [self refreshTranslationView];
+    
     @weakify(self)
     [[RACObserve(data, originMessage) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(V2TIMMessage *originMessage) {
         @strongify(self)
@@ -86,6 +102,19 @@
     }];
     
     [self layoutIfNeeded];
+}
+
+- (void)refreshTranslationView {
+    if (self.referenceData.translationViewData.status == TUITranslationViewStatusLoading) {
+        [self.translationView startLoading];
+    } else {
+        [self.translationView stopLoading];
+    }
+    
+    self.translationView.hidden = [self.referenceData.translationViewData isHidden];
+    [self.referenceData.translationViewData calcSize];
+    [self.translationView updateTransaltion:self.referenceData.translationViewData.text];
+    [self layoutTranslationView];
 }
 
 - (void)updateUI:(TUIReferenceMessageCellData *)referenceData
@@ -219,6 +248,44 @@
     [super layoutSubviews];
     
     [self updateUI:self.referenceData];
+    
+    [self layoutTranslationView];
+}
+
+- (void)layoutTranslationView {
+    if (self.translationView.hidden) {
+        return;
+    }
+    
+    CGSize size = self.referenceData.translationViewData.size;
+    CGFloat topMargin = self.bubbleView.mm_maxY + self.nameLabel.mm_h + 6;
+    
+    if (self.referenceData.direction == MsgDirectionOutgoing) {
+        self.translationView
+            .mm_top(topMargin)
+            .mm_width(size.width)
+            .mm_height(size.height)
+            .mm_right(self.mm_w - self.container.mm_maxX);
+    } else {
+        self.translationView
+            .mm_top(topMargin)
+            .mm_width(size.width)
+            .mm_height(size.height)
+            .mm_left(self.container.mm_minX);
+    }
+    
+    if (!self.quoteView.hidden) {
+        CGRect oldRect = self.quoteView.frame;
+        CGRect newRect = CGRectMake(oldRect.origin.x, CGRectGetMaxY(self.translationView.frame) + 5,
+                                    oldRect.size.width, oldRect.size.height);
+        self.quoteView.frame = newRect;
+    }
+    if (!self.messageModifyRepliesButton.hidden) {
+        CGRect oldRect = self.messageModifyRepliesButton.frame;
+        CGRect newRect = CGRectMake(oldRect.origin.x, CGRectGetMaxY(self.quoteView.frame),
+                                    oldRect.size.width, oldRect.size.height);
+        self.messageModifyRepliesButton.frame = newRect;
+    }
 }
 
 - (UILabel *)senderLabel
@@ -251,7 +318,6 @@
     }
 
 }
-
 
 - (NSMutableDictionary *)customOriginViewsCache
 {
@@ -293,4 +359,5 @@
         self.selectContent = nil;
     }
 }
+
 @end

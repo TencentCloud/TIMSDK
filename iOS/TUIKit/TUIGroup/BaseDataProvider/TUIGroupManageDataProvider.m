@@ -7,8 +7,6 @@
 
 #import "TUIGroupManageDataProvider.h"
 #import "TUIGlobalization.h"
-#import "TUICommonTextCell.h"
-#import "TUICommonSwitchCell.h"
 #import "TUISelectGroupMemberCell.h"
 #import "TUIAddCellData.h"
 #import "TUIMemberInfoCellData.h"

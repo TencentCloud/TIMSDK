@@ -3,7 +3,6 @@
 
 #import "TUIMessageDataProvider.h"
 #import "TUIMessageDataProvider+Call.h"
-#import "TUIMessageDataProvider+Live.h"
 #import "TUIMessageDataProvider+MessageDeal.h"
 #import "TUITextMessageCellData.h"
 #import "TUISystemMessageCellData.h"
@@ -200,8 +199,6 @@ static NSArray *customMessageInfo = nil;
         {
             if ([self isCallMessage:message]) {
                 data = [self getCallCellData:message];
-            } else if ([self isLiveMessage:message]) {
-                data = [self getLiveCellData:message];
             } else if ([self isEvaluationCustomMessage:message]) {
                 data = [self getEvalutionCustomCellData:message];
             } else if ([self isOrderCustomMessage:message]) {
@@ -540,11 +537,7 @@ static NSArray *customMessageInfo = nil;
             {
                 if ([self isCallMessage:message]) {
                     str = [self getCallMessageDisplayString:message];
-                }
-                else if ([self isLiveMessage:message]) {
-                    str = [self getLiveMessageDisplayString:message];
-                }
-                else {
+                } else {
                     str = [self getCustomDisplayString:message];
                 }
                 if (!str) {

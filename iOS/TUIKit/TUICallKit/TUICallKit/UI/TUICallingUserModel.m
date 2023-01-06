@@ -7,7 +7,7 @@
 //
 
 #import "TUICallingUserModel.h"
-#import "TUICallingCommon.h"
+#import "TUICallKitConstants.h"
 
 @implementation CallingUserModel
 

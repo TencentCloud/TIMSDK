@@ -23,27 +23,38 @@
     return self;
 }
 
+- (CGFloat)estimatedHeight {
+    return 42.f;
+}
+
 - (CGSize)contentSize
 {
-    CGSize size = [self.attributedString.string textSizeIn:CGSizeMake(TSystemMessageCell_Text_Width_Max, MAXFLOAT) font:self.contentFont];
+    static CGSize maxSystemSize;
+    if (CGSizeEqualToSize(maxSystemSize, CGSizeZero)) {
+        maxSystemSize = CGSizeMake(TSystemMessageCell_Text_Width_Max, MAXFLOAT);
+    }
+    CGSize size = [self.attributedString.string textSizeIn:maxSystemSize font:self.contentFont];
     size.height += 10;
     size.width += 16;
     return size;
 }
 
 - (NSMutableAttributedString *)attributedString {
-    NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] initWithString:self.content];
-    NSDictionary *attributeDict = @{NSForegroundColorAttributeName:[UIColor d_systemGrayColor]};
-    [attributeString setAttributes:attributeDict range:NSMakeRange(0, attributeString.length)];
-    if (self.supportReEdit) {
-        NSString *reEditStr = TUIKitLocalizableString(TUIKitMessageTipsReEditMessage);
-        [attributeString appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %@", reEditStr]]];
-        NSDictionary *attributeDict = @{NSForegroundColorAttributeName:[UIColor d_systemBlueColor]};
-        [attributeString setAttributes:attributeDict range:NSMakeRange(self.content.length + 1, reEditStr.length)];
-        [attributeString addAttribute:NSUnderlineStyleAttributeName value:
-                [NSNumber numberWithInteger:NSUnderlineStyleNone] range:NSMakeRange(self.content.length + 1, reEditStr.length)];
+    if (_attributedString == nil) {
+        NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] initWithString:self.content];
+        NSDictionary *attributeDict = @{NSForegroundColorAttributeName:[UIColor d_systemGrayColor]};
+        [attributeString setAttributes:attributeDict range:NSMakeRange(0, attributeString.length)];
+        if (self.supportReEdit) {
+            NSString *reEditStr = TUIKitLocalizableString(TUIKitMessageTipsReEditMessage);
+            [attributeString appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %@", reEditStr]]];
+            NSDictionary *attributeDict = @{NSForegroundColorAttributeName:[UIColor d_systemBlueColor]};
+            [attributeString setAttributes:attributeDict range:NSMakeRange(self.content.length + 1, reEditStr.length)];
+            [attributeString addAttribute:NSUnderlineStyleAttributeName value:
+                    [NSNumber numberWithInteger:NSUnderlineStyleNone] range:NSMakeRange(self.content.length + 1, reEditStr.length)];
+        }
+        _attributedString = attributeString;
     }
-    return attributeString;
+    return _attributedString;
 }
 
 - (CGFloat)heightOfWidth:(CGFloat)width

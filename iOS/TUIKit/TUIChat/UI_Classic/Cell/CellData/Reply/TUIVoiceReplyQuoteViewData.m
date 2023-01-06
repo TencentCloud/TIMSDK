@@ -6,7 +6,7 @@
 //
 
 #import "TUIVoiceReplyQuoteViewData.h"
-#import "NSString+emoji.h"
+#import "NSString+TUIEmoji.h"
 #import "TUIVoiceMessageCellData.h"
 #import "TUIThemeManager.h"
 @implementation TUIVoiceReplyQuoteViewData

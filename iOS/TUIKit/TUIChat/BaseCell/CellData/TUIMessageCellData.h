@@ -13,6 +13,7 @@
 #import "TUICommonModel.h"
 #import "TUIMessageCellLayout.h"
 #import "TUIDefine.h"
+#import "TUITranslationViewData.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -92,7 +93,7 @@ typedef NS_ENUM(NSUInteger, TMsgDirection) {
 /**
  *  Sender's avatar
  */
-@property (nonatomic, strong) UIImage *__nullable avatarImage;
+@property (nonatomic, strong) UIImage *__nullable avatarImage __attribute__((deprecated("not supported")));
 
 /**
  *  信息发送者昵称
@@ -158,7 +159,7 @@ typedef NS_ENUM(NSUInteger, TMsgDirection) {
  * Message direction
  * - Message direction affects UI styles such as bubble icons, bubble positions, etc.
  */
-@property TMsgDirection direction;
+@property (nonatomic, assign) TMsgDirection direction;
 
 /**
  * 消息状态
@@ -184,7 +185,7 @@ typedef NS_ENUM(NSUInteger, TMsgDirection) {
  * The font of nickname
  * When the nickname needs to be displayed, set/get the nickname font from this variable.
  */
-@property UIFont *nameFont;
+@property (nonatomic, strong) UIFont *nameFont;
 
 /**
  *  昵称颜色
@@ -194,7 +195,7 @@ typedef NS_ENUM(NSUInteger, TMsgDirection) {
  *  When the nickname needs to be displayed, set/get the nickname color from this variable.
  *
  */
-@property UIColor *nameColor;
+@property (nonatomic, strong) UIColor *nameColor;
 
 /**
  *  接收时昵称颜色
@@ -242,7 +243,7 @@ typedef NS_ENUM(NSUInteger, TMsgDirection) {
  *  It includes UI information such as message margins, bubble padding, avatar margins, and avatar size.
  *  For details, please refer to Section\Chat\CellLayout\TUIMessageCellLayout.h
  */
-@property TUIMessageCellLayout *cellLayout;
+@property (nonatomic, strong) TUIMessageCellLayout *cellLayout;
 
 /**
  * 是否显示已读回执
@@ -300,6 +301,15 @@ typedef NS_ENUM(NSUInteger, TMsgDirection) {
  */
 
 @property (nonatomic, strong) NSDictionary *messageModifyUserInfos;
+
+/// Data for translation view.
+@property (nonatomic, strong) TUITranslationViewData *translationViewData;
+
+/// If cell can be translated.
+- (BOOL)canTranslate;
+
+/// If canTranslate is YES, use this method to translate.
+- (void)translateWithContainerWidth:(float)containerWidth;
 
 /**
  *  内容大小

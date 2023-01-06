@@ -108,7 +108,7 @@
     } else{
         index = ceil((power - 25) / 5.0) + 1;
     }
-
+    index = MIN(index, 8);
     return [NSString stringWithFormat:@"record_%d", index];
 }
 

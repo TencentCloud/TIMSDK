@@ -6,6 +6,7 @@
 //
 
 #import "TUIConversationListController.h"
+#import "TUIFoldListViewController.h"
 #import "TUIConversationCell.h"
 #import "TUICore.h"
 #import "TUIDefine.h"
@@ -20,9 +21,10 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
                                              UITableViewDataSource,
                                              UIPopoverPresentationControllerDelegate,
                                              TUINotificationProtocol,
-                                             TUIConversationListDataProviderDelegate
+                                             TUIConversationListDataProviderDelegate,
+                                             TUIPopViewDelegate
                                             >
-
+@property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
 @end
 
 @implementation TUIConversationListController
@@ -38,13 +40,57 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
 #pragma mark - Life Cycle
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self setupNavigation];
     [self setupViews];
-    [self.provider loadNexPageConversations];
+    [self.dataProvider loadNexPageConversations];
+    
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onFriendInfoChanged:) name:@"FriendInfoChangedNotification" object:nil];
+}
+
+- (void)dealloc
+{
+    [NSNotificationCenter.defaultCenter removeObserver:self];
+    [TUICore unRegisterEventByObject:self];
+}
+
+- (void)onFriendInfoChanged:(NSNotification *)notice
+{
+    V2TIMFriendInfo *friendInfo = notice.object;
+    if (friendInfo == nil) {
+        return;
+    }
+    for (TUIConversationCellData *cellData in self.dataProvider.conversationList) {
+        if ([cellData.userID isEqualToString:friendInfo.userID]) {
+            NSString *title = friendInfo.friendRemark;
+            if (title.length == 0) {
+                title = friendInfo.userFullInfo.nickName;
+            }
+            if (title.length == 0) {
+                title = friendInfo.userID;
+            }
+            cellData.title = title;
+            [self.tableView reloadData];
+            break;
+        }
+    }
+}
+
+- (void)setupNavigation
+{
+    UIButton *moreButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [moreButton setImage:TUICoreDynamicImage(@"nav_more_img", [UIImage imageNamed:TUICoreImagePath(@"more")]) forState:UIControlStateNormal];
+    [moreButton addTarget:self action:@selector(rightBarButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    moreButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
+    [moreButton.widthAnchor constraintEqualToConstant:24].active = YES;
+    [moreButton.heightAnchor constraintEqualToConstant:24].active = YES;
+    UIBarButtonItem *moreItem = [[UIBarButtonItem alloc] initWithCustomView:moreButton];
+    self.navigationController.navigationItem.rightBarButtonItem = moreItem;
+    
+    self.navigationController.interactivePopGestureRecognizer.enabled = YES;
+    self.navigationController.interactivePopGestureRecognizer.delegate = self;
 }
 
 - (void)setupViews {
-    self.navigationController.interactivePopGestureRecognizer.enabled = YES;
-    self.navigationController.interactivePopGestureRecognizer.delegate = self;
     self.view.backgroundColor = TUIConversationDynamicColor(@"conversation_bg_color", @"#FFFFFF");
     
     UIView *searchBar = nil;
@@ -78,22 +124,176 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
     [_tableView setSeparatorColor:TUICoreDynamicColor(@"separator_color", @"#DBDBDB")];
 }
 
-- (void)dealloc {
-    [TUICore unRegisterEventByObject:self];
+- (void)rightBarButtonClick:(UIButton *)rightBarButton
+{
+    NSMutableArray *menus = [NSMutableArray array];
+    TUIPopCellData *friend = [[TUIPopCellData alloc] init];
+    
+    friend.image = TUIConversationDynamicImage(@"pop_icon_new_chat_img", [UIImage imageNamed:TUIConversationImagePath(@"new_chat")]);
+    friend.title = TUIKitLocalizableString(ChatsNewChatText);
+    [menus addObject:friend];
+    
+    TUIPopCellData *group = [[TUIPopCellData alloc] init];
+    group.image = TUIConversationDynamicImage(@"pop_icon_new_group_img", [UIImage imageNamed:TUIConversationImagePath(@"new_groupchat")]);
+    group.title = TUIKitLocalizableString(ChatsNewGroupText);
+    [menus addObject:group];
+
+    CGFloat height = [TUIPopCell getHeight] * menus.count + TUIPopView_Arrow_Size.height;
+    CGFloat orginY = StatusBar_Height + NavBar_Height;
+    TUIPopView *popView = [[TUIPopView alloc] initWithFrame:CGRectMake(Screen_Width - 155, orginY, 145, height)];
+    CGRect frameInNaviView = [self.navigationController.view convertRect:rightBarButton.frame fromView:rightBarButton.superview];
+    popView.arrowPoint = CGPointMake(frameInNaviView.origin.x + frameInNaviView.size.width * 0.5, orginY);
+    popView.delegate = self;
+    [popView setData:menus];
+    [popView showInWindow:self.view.window];
 }
 
-- (TUIConversationListDataProvider *)provider {
-    if (!_provider) {
-        _provider = [[TUIConversationListDataProvider alloc] init];
-        _provider.delegate = self;
+#pragma TUIPopViewDelegate
+- (void)popView:(TUIPopView *)popView didSelectRowAtIndex:(NSInteger)index
+{
+    if (0 == index) {
+        [self startConversation:V2TIM_C2C];
+    } else {
+        [self startConversation:V2TIM_GROUP];
     }
-    return (TUIConversationListBaseDataProvider *)_provider;
+}
+
+- (void)startConversation:(V2TIMConversationType)type {
+    void (^selectContactCompletion)(NSArray<TUICommonContactSelectCellData *> *) = ^(NSArray<TUICommonContactSelectCellData *> *array){
+        if (V2TIM_C2C == type) {
+            NSDictionary *param = @{
+                TUICore_TUIChatService_GetChatViewControllerMethod_TitleKey : array.firstObject.title ?: @"",
+                TUICore_TUIChatService_GetChatViewControllerMethod_UserIDKey : array.firstObject.identifier ?: @"",
+                TUICore_TUIChatService_GetChatViewControllerMethod_AvatarImageKey : array.firstObject.avatarImage ? : [UIImage new],
+                TUICore_TUIChatService_GetChatViewControllerMethod_AvatarUrlKey : array.firstObject.avatarUrl.absoluteString ? : @""
+            };
+            
+            UIViewController *chatVC = (UIViewController *)[TUICore callService:TUICore_TUIChatService
+                                                                         method:TUICore_TUIChatService_GetChatViewControllerMethod
+                                                                          param:param];
+            [self.navigationController pushViewController:(UIViewController *)chatVC animated:YES];
+
+            NSMutableArray *tempArray = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
+            [tempArray removeObjectAtIndex:tempArray.count-2];
+            self.navigationController.viewControllers = tempArray;
+        } else {
+            @weakify(self)
+            NSString *loginUser = [[V2TIMManager sharedInstance] getLoginUser];
+            [[V2TIMManager sharedInstance] getUsersInfo:@[loginUser] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
+                @strongify(self)
+                NSString *showName = loginUser;
+                if (infoList.firstObject.nickName.length > 0) {
+                    showName = infoList.firstObject.nickName;
+                }
+                NSMutableString *groupName = [NSMutableString stringWithString:showName];
+                for (TUICommonContactSelectCellData *item in array) {
+                    [groupName appendFormat:@"、%@", item.title];
+                }
+
+                if ([groupName length] > 10) {
+                    groupName = [groupName substringToIndex:10].mutableCopy;
+                }
+                void(^createGroupCompletion)(BOOL , V2TIMGroupInfo *) = ^(BOOL isSuccess, V2TIMGroupInfo * _Nonnull info) {
+                    NSDictionary *param = @{
+                        TUICore_TUIChatService_GetChatViewControllerMethod_TitleKey : info.groupName ?: @"",
+                        TUICore_TUIChatService_GetChatViewControllerMethod_GroupIDKey : info.groupID ?: @"",
+                        TUICore_TUIChatService_GetChatViewControllerMethod_AvatarUrlKey : info.faceURL ?: @""
+                    };
+                    
+                    UIViewController *chatVC = (UIViewController *)[TUICore callService:TUICore_TUIChatService
+                                                                                 method:TUICore_TUIChatService_GetChatViewControllerMethod
+                                                                                  param:param];
+                    [self.navigationController pushViewController:(UIViewController *)chatVC animated:YES];
+                    
+                    NSMutableArray *tempArray = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
+                        for (UIViewController * vc in self.navigationController.viewControllers) {
+                            if ([vc isKindOfClass:NSClassFromString(@"TUIGroupCreateController")] ||
+                                [vc isKindOfClass:NSClassFromString(@"TUIContactSelectController")]) {
+                                [tempArray removeObject:vc];
+                            }
+                        }
+                        
+                    self.navigationController.viewControllers = tempArray;
+
+                };
+                
+                NSDictionary *param = @{
+                    TUICore_TUIContactService_GetGroupCreateControllerMethod_TitleKey : array.firstObject.title ?: @"",
+                    TUICore_TUIContactService_GetGroupCreateControllerMethod_GroupNameKey : groupName ?: @"",
+                    TUICore_TUIContactService_GetGroupCreateControllerMethod_GroupTypeKey : GroupType_Work,
+                    TUICore_TUIContactService_GetGroupCreateControllerMethod_CompletionKey : createGroupCompletion,
+                    TUICore_TUIContactService_GetGroupCreateControllerMethod_ContactListKey: array?:@[]
+                };
+                
+                UIViewController *groupVC = (UIViewController *)[TUICore callService:TUICore_TUIContactService
+                                                                              method:TUICore_TUIContactService_GetGroupCreateControllerMethod
+                                                                               param:param];
+                [self.navigationController pushViewController:(UIViewController *)groupVC animated:YES];
+            } fail:nil];
+        }
+    };
+    NSDictionary *param = @{
+        TUICore_TUIContactService_GetContactSelectControllerMethod_TitleKey:  TUIKitLocalizableString(ChatsSelectContact),
+        TUICore_TUIContactService_GetContactSelectControllerMethod_MaxSelectCount: @(type == V2TIM_C2C ? 1 : INT_MAX),
+        TUICore_TUIContactService_GetContactSelectControllerMethod_CompletionKey : selectContactCompletion
+    };
+    UIViewController *vc = [TUICore callService:TUICore_TUIContactService
+                                         method:TUICore_TUIContactService_GetContactSelectControllerMethod
+                                          param:param];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (TUIConversationListBaseDataProvider *)dataProvider {
+    if (!_dataProvider) {
+        _dataProvider = [[TUIConversationListDataProvider alloc] init];
+        _dataProvider.delegate = self;
+    }
+    return _dataProvider;
 }
 
 #pragma mark TUIConversationListDataProviderDelegate
 - (NSString *)getConversationDisplayString:(V2TIMConversation *)conversation {
     if (self.delegate && [self.delegate respondsToSelector:@selector(getConversationDisplayString:)]) {
         return [self.delegate getConversationDisplayString:conversation];
+    }
+    V2TIMMessage *msg = conversation.lastMessage;
+    if (msg.customElem == nil || msg.customElem.data == nil) {
+        return nil;
+    }
+    NSDictionary *param = [TUITool jsonData2Dictionary:msg.customElem.data];
+    if (param != nil && [param isKindOfClass:[NSDictionary class]]) {
+        NSString *businessID = param[@"businessID"];
+        if (![businessID isKindOfClass:[NSString class]]) {
+            return nil;
+        }
+
+        // whether custom jump message
+        if ([businessID isEqualToString:BussinessID_TextLink] || ([(NSString *)param[@"text"] length] > 0 && [(NSString *)param[@"link"] length] > 0)) {
+            NSString *desc = param[@"text"];
+            if (msg.status == V2TIM_MSG_STATUS_LOCAL_REVOKED) {
+                if(msg.isSelf){
+                    desc = TUIKitLocalizableString(TUIKitMessageTipsYouRecallMessage);
+                } else if (msg.userID.length > 0){
+                    desc = TUIKitLocalizableString(TUIkitMessageTipsOthersRecallMessage);
+                } else if (msg.groupID.length > 0) {
+                    /**
+                     * 对于群组消息的名称显示，优先显示群名片，昵称优先级其次，用户ID优先级最低。
+                     * For the name display of group messages, the group business card is displayed first, the nickname has the second priority, and the user ID has the lowest priority.
+                     */
+                    NSString *userName = msg.nameCard;
+                    if (userName.length == 0) {
+                        userName = msg.nickName?:msg.sender;
+                    }
+                    desc = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsRecallMessageFormat), userName];
+                }
+            }
+            return desc;
+        }
+
+        // whether the tips message of creating group
+        else if ([businessID isEqualToString:BussinessID_GroupCreate] || [param.allKeys containsObject:BussinessID_GroupCreate]) {
+            return [NSString stringWithFormat:@"\"%@\"%@",param[@"opUser"],param[@"content"]];
+        }
     }
     return nil;
 }
@@ -149,9 +349,9 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (self.dataSourceChanged) {
-        self.dataSourceChanged(self.provider.conversationList.count);
+        self.dataSourceChanged(self.dataProvider.conversationList.count);
     }
-    return self.provider.conversationList.count;
+    return self.dataProvider.conversationList.count;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -160,35 +360,35 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
 
 - (NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSMutableArray *rowActions = [NSMutableArray array];
-    TUIConversationCellData *cellData = self.provider.conversationList[indexPath.row];
+    TUIConversationCellData *cellData = self.dataProvider.conversationList[indexPath.row];
     __weak typeof(self) weakSelf = self;
 
     UITableViewRowAction *deleteAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDestructive title:TUIKitLocalizableString(Delete) handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
-        [weakSelf.provider removeConversation:cellData];
+        [weakSelf.dataProvider removeConversation:cellData];
     }];
     deleteAction.backgroundColor = RGB(242, 77, 76);
 
     UITableViewRowAction *stickyonTopAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:cellData.isOnTop?TUIKitLocalizableString(CancelStickonTop):TUIKitLocalizableString(StickyonTop) handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
-        [weakSelf.provider pinConversation:cellData pin:!cellData.isOnTop];
+        [weakSelf.dataProvider pinConversation:cellData pin:!cellData.isOnTop];
     }];
     stickyonTopAction.backgroundColor = RGB(242, 147, 64);
     
 
     UITableViewRowAction *clearHistoryAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:TUIKitLocalizableString(ClearHistoryChatMessage) handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
-        [weakSelf.provider clearHistoryMessage:cellData];
+        [weakSelf.dataProvider clearHistoryMessage:cellData];
     }];
     clearHistoryAction.backgroundColor = RGB(32, 124, 231);
     
     
     UITableViewRowAction *markAsReadAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:(cellData.isMarkAsUnread||cellData.unreadCount > 0)  ? TUIKitLocalizableString(MarkAsRead) : TUIKitLocalizableString(MarkAsUnRead) handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
         if (cellData.isMarkAsUnread||cellData.unreadCount > 0) {
-            [weakSelf.provider markConversationAsRead:cellData];
+            [weakSelf.dataProvider markConversationAsRead:cellData];
             if (cellData.isLocalConversationFoldList) {
                 [TUIConversationListDataProvider  cacheConversationFoldListSettings_FoldItemIsUnread:NO];
             }
         }
         else {
-            [weakSelf.provider markConversationAsUnRead:cellData];
+            [weakSelf.dataProvider markConversationAsUnRead:cellData];
             if (cellData.isLocalConversationFoldList) {
                 [TUIConversationListDataProvider  cacheConversationFoldListSettings_FoldItemIsUnread:YES];
             }
@@ -199,7 +399,7 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
         
     
     UITableViewRowAction *markHideAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:TUIKitLocalizableString(MarkHide) handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
-        [weakSelf.provider markConversationHide:cellData];
+        [weakSelf.dataProvider markConversationHide:cellData];
         if (cellData.isLocalConversationFoldList) {
             [TUIConversationListDataProvider  cacheConversationFoldListSettings_HideFoldItem:YES];
         }
@@ -229,39 +429,39 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
 // available ios 11 +
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath API_AVAILABLE(ios(11.0)) {
     __weak typeof(self) weakSelf = self;
-    TUIConversationCellData *cellData = self.provider.conversationList[indexPath.row];
+    TUIConversationCellData *cellData = self.dataProvider.conversationList[indexPath.row];
     NSMutableArray *arrayM = [NSMutableArray array];
     
     UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:TUIKitLocalizableString(Delete) handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
         completionHandler(YES);
         weakSelf.tableView.editing = NO;
-        [weakSelf.provider removeConversation:cellData];
+        [weakSelf.dataProvider removeConversation:cellData];
     }];
     deleteAction.backgroundColor = RGB(242, 77, 76);
         
     UIContextualAction *stickyonTopAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:cellData.isOnTop?TUIKitLocalizableString(CancelStickonTop):TUIKitLocalizableString(StickyonTop) handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
         completionHandler(YES);
         weakSelf.tableView.editing = NO;
-        [weakSelf.provider pinConversation:cellData pin:!cellData.isOnTop];
+        [weakSelf.dataProvider pinConversation:cellData pin:!cellData.isOnTop];
     }];
     stickyonTopAction.backgroundColor = RGB(242, 147, 64);
 
     UIContextualAction *clearHistoryAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:TUIKitLocalizableString(ClearHistoryChatMessage) handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
         completionHandler(YES);
         weakSelf.tableView.editing = NO;
-        [weakSelf.provider clearHistoryMessage:cellData];
+        [weakSelf.dataProvider clearHistoryMessage:cellData];
     }];
     clearHistoryAction.backgroundColor = RGB(32, 124, 231);
     
     UIContextualAction *markAsReadAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:(cellData.isMarkAsUnread||cellData.unreadCount > 0)  ? TUIKitLocalizableString(MarkAsRead) : TUIKitLocalizableString(MarkAsUnRead) handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
         if (cellData.isMarkAsUnread||cellData.unreadCount > 0) {
-            [weakSelf.provider markConversationAsRead:cellData];
+            [weakSelf.dataProvider markConversationAsRead:cellData];
             if (cellData.isLocalConversationFoldList) {
                 [TUIConversationListDataProvider  cacheConversationFoldListSettings_FoldItemIsUnread:NO];
             }
         }
         else {
-            [weakSelf.provider markConversationAsUnRead:cellData];
+            [weakSelf.dataProvider markConversationAsUnRead:cellData];
             if (cellData.isLocalConversationFoldList) {
                 [TUIConversationListDataProvider  cacheConversationFoldListSettings_FoldItemIsUnread:YES];
             }
@@ -270,7 +470,7 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
     markAsReadAction.backgroundColor = RGB(20, 122, 255);
     
     UIContextualAction *markHideAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:TUIKitLocalizableString(MarkHide) handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
-        [weakSelf.provider markConversationHide:cellData];
+        [weakSelf.dataProvider markConversationHide:cellData];
         if (cellData.isLocalConversationFoldList) {
             [TUIConversationListDataProvider  cacheConversationFoldListSettings_HideFoldItem:YES];
         }
@@ -307,15 +507,62 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     TUIConversationCell *cell = [tableView dequeueReusableCellWithIdentifier:kConversationCell_ReuseId forIndexPath:indexPath];
-    TUIConversationCellData *data = [self.provider.conversationList objectAtIndex:indexPath.row];
+    TUIConversationCellData *data = [self.dataProvider.conversationList objectAtIndex:indexPath.row];
     [cell fillWithData:data];
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    TUIConversationCellData *data = [self.provider.conversationList objectAtIndex:indexPath.row];
+    TUIConversationCellData *data = [self.dataProvider.conversationList objectAtIndex:indexPath.row];
+    if (data.isLocalConversationFoldList) {
+        [TUIConversationListDataProvider cacheConversationFoldListSettings_FoldItemIsUnread:NO];
+        
+        TUIFoldListViewController *foldVC = [[TUIFoldListViewController alloc] init];
+        [self.navigationController pushViewController:foldVC animated:YES];
+        
+        @weakify(self)
+        foldVC.dismissCallback = ^(NSMutableAttributedString * _Nonnull foldStr, NSArray * _Nonnull sortArr , NSArray * _Nonnull needRemoveFromCacheMapArray) {
+            @strongify(self)
+            data.foldSubTitle  = foldStr;
+            data.subTitle = data.foldSubTitle;
+            data.isMarkAsUnread = NO;
+            
+            if (sortArr.count <= 0 ) {
+                data.orderKey = 0;
+                if ([self.dataProvider.conversationList  containsObject:data]) {
+                    [self.dataProvider hideConversation:data];
+                }
+            }
+            
+            for (NSString * removeId in needRemoveFromCacheMapArray) {
+                if ([self.dataProvider.markFoldMap objectForKey:removeId] ) {
+                    [self.dataProvider.markFoldMap removeObjectForKey:removeId];
+                }
+            }
+            
+            [TUIConversationListDataProvider cacheConversationFoldListSettings_FoldItemIsUnread:NO];
+            [self.tableView reloadData];
+        };
+        return;
+    }
     if (self.delegate && [self.delegate respondsToSelector:@selector(conversationListController:didSelectConversation:)]) {
         [self.delegate conversationListController:self didSelectConversation:data];
+    } else {
+        NSDictionary *param = @{
+            TUICore_TUIChatService_GetChatViewControllerMethod_TitleKey : data.title ?: @"",
+            TUICore_TUIChatService_GetChatViewControllerMethod_UserIDKey : data.userID ?: @"",
+            TUICore_TUIChatService_GetChatViewControllerMethod_GroupIDKey : data.groupID ?: @"",
+            TUICore_TUIChatService_GetChatViewControllerMethod_AvatarImageKey : data.avatarImage ?: [UIImage new],
+            TUICore_TUIChatService_GetChatViewControllerMethod_AvatarUrlKey : data.faceUrl ?: @"",
+            TUICore_TUIChatService_GetChatViewControllerMethod_ConversationIDKey : data.conversationID ?: @"",
+            TUICore_TUIChatService_GetChatViewControllerMethod_AtMsgSeqsKey : data.atMsgSeqs ?: @[],
+            TUICore_TUIChatService_GetChatViewControllerMethod_DraftKey: data.draftText ?: @""
+        };
+        
+        UIViewController *chatVC = (UIViewController *)[TUICore callService:TUICore_TUIChatService
+                                                                     method:TUICore_TUIChatService_GetChatViewControllerMethod
+                                                                      param:param];
+        [self.navigationController pushViewController:(UIViewController *)chatVC animated:YES];
     }
 }
 
@@ -325,7 +572,7 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
     BOOL needLastLineFromZeroToMax = NO;
     if ([cell respondsToSelector:@selector(setSeparatorInset:)]) {
            [cell setSeparatorInset:UIEdgeInsetsMake(0, 75, 0, 0)];
-        if (needLastLineFromZeroToMax && indexPath.row == (self.provider.conversationList.count - 1)) {
+        if (needLastLineFromZeroToMax && indexPath.row == (self.dataProvider.conversationList.count - 1)) {
             [cell setSeparatorInset:UIEdgeInsetsZero];
         }
     }
@@ -346,7 +593,7 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    [self.provider loadNexPageConversations];
+    [self.dataProvider loadNexPageConversations];
 }
 
 @end

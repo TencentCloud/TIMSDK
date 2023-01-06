@@ -8,7 +8,7 @@
 #import "TUIMessageCell_Minimalist.h"
 #import "TUICommonModel.h"
 #import "TUIDefine.h"
-#import "NSString+emoji.h"
+#import "NSString+TUIEmoji.h"
 
 @interface TUIMessageCell_Minimalist()
 @property (nonatomic, assign) TUIMessageStatus status;
@@ -274,7 +274,9 @@
 {
     [super layoutSubviews];
     self.tagView.frame = CGRectZero;
-    self.retryView.mm__centerY(self.messageDataMini.contentSize.height / 2);
+    if (!self.retryView.hidden) {    
+        self.retryView.mm__centerY(self.messageDataMini.contentSize.height / 2);
+    }
     self.avatarView.mm_y = self.messageDataMini.contentSize.height - self.avatarView.mm_h + 4;
     
     if (self.messageDataMini.messageModifyReacts.count > 0) {

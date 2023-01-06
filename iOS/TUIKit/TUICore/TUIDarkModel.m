@@ -100,7 +100,6 @@
 }
 
 + (void)d_fixResizableImage{
-    [[NSBundle mainBundle] pathForResource:@"" ofType:@"bundle"].length > 0 ;
     if (@available(iOS 13.0, *)) {
         Class klass = UIImage.class;
         SEL selector = @selector(resizableImageWithCapInsets:resizingMode:);

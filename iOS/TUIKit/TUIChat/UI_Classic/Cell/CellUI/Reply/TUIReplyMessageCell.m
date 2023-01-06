@@ -16,7 +16,7 @@
 #import "TUITextMessageCellData.h"
 #import "TUIMergeMessageCellData.h"
 #import "TUILinkCellData.h"
-#import "NSString+emoji.h"
+#import "NSString+TUIEmoji.h"
 #import "TUIThemeManager.h"
 
 #import "TUIReplyQuoteView.h"
@@ -27,7 +27,7 @@
 #import "TUIFileReplyQuoteView.h"
 #import "TUIMergeReplyQuoteView.h"
 
-@interface TUIReplyMessageCell ()<UITextViewDelegate>
+@interface TUIReplyMessageCell () <UITextViewDelegate>
 
 @property (nonatomic, strong) TUIReplyQuoteView *currentOriginView;
 
@@ -52,13 +52,28 @@
     
     [self.bubbleView addSubview:self.quoteView];
     [self.bubbleView addSubview:self.textView];
+    
+    self.translationView = [[TUITranslationView alloc] init];
+    self.translationView.delegate = self;
+    [self.contentView addSubview:self.translationView];
+}
+
+- (void)setupRAC {
+    @weakify(self);
+    [[[RACObserve(self, replyData.translationViewData.status) distinctUntilChanged] skip:1] subscribeNext:^(NSNumber *status) {
+        @strongify(self);
+        if (self.replyData == nil) {
+            return;
+        }
+        
+        [self refreshTranslationView];
+    }];
 }
 
 - (void)fillWithData:(TUIReplyMessageCellData *)data
 {
     [super fillWithData:data];
     self.replyData = data;
-    
     self.senderLabel.text = [NSString stringWithFormat:@"%@:", data.sender];
     if (data.direction == MsgDirectionIncoming) {
         self.textView.textColor =
@@ -75,6 +90,8 @@
     }
     self.textView.attributedText = [data.content getFormatEmojiStringWithFont:self.textView.font emojiLocations:self.replyData.emojiLocations];
     
+    [self refreshTranslationView];
+    
     @weakify(self)
     [[RACObserve(data, originMessage) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(V2TIMMessage *originMessage) {
         @strongify(self)
@@ -83,6 +100,19 @@
     }];
     
     [self layoutIfNeeded];
+}
+
+- (void)refreshTranslationView {
+    if (self.replyData.translationViewData.status == TUITranslationViewStatusLoading) {
+        [self.translationView startLoading];
+    } else {
+        [self.translationView stopLoading];
+    }
+    
+    self.translationView.hidden = [self.replyData.translationViewData isHidden];
+    [self.replyData.translationViewData calcSize];
+    [self.translationView updateTransaltion:self.replyData.translationViewData.text];
+    [self layoutTranslationView];
 }
 
 - (void)updateUI:(TUIReplyMessageCellData *)replyData
@@ -185,6 +215,38 @@
     [super layoutSubviews];
     
     [self updateUI:self.replyData];
+    
+    [self layoutTranslationView];
+}
+
+- (void)layoutTranslationView {
+    if (self.translationView.hidden) {
+        return;
+    }
+    
+    CGSize size = self.replyData.translationViewData.size;
+    CGFloat topMargin = self.bubbleView.mm_maxY + self.nameLabel.mm_h + 6;
+    
+    if (self.replyData.direction == MsgDirectionOutgoing) {
+        self.translationView
+            .mm_top(topMargin)
+            .mm_width(size.width)
+            .mm_height(size.height)
+            .mm_right(self.mm_w - self.container.mm_maxX);
+    } else {
+        self.translationView
+            .mm_top(topMargin)
+            .mm_width(size.width)
+            .mm_height(size.height)
+            .mm_left(self.container.mm_minX);
+    }
+    
+    if (!self.messageModifyRepliesButton.hidden) {
+        CGRect oldRect = self.messageModifyRepliesButton.frame;
+        CGRect newRect = CGRectMake(oldRect.origin.x, CGRectGetMaxY(self.translationView.frame),
+                                    oldRect.size.width, oldRect.size.height);
+        self.messageModifyRepliesButton.frame = newRect;
+    }
 }
 
 - (UILabel *)senderLabel
@@ -271,4 +333,5 @@
         self.selectContent = nil;
     }
 }
+
 @end

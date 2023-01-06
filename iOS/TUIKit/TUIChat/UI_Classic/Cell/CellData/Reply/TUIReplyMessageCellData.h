@@ -106,6 +106,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (TUIReplyQuoteViewData *)getQuoteData:(TUIMessageCellData *)originCellData;
 
+
 @end
 
 @interface TUIReferenceMessageCellData : TUIReplyMessageCellData

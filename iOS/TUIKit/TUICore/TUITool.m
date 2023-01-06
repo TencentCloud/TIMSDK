@@ -209,7 +209,12 @@
         return @"";
     }
     
-    NSDateFormatter *dateFmt = [[NSDateFormatter alloc] init];
+    static NSDateFormatter *dateFmt = nil;
+    if (dateFmt == nil) {
+        dateFmt = [[NSDateFormatter alloc] init];
+    }
+    NSString *identifer = [TUIGlobalization tk_localizableLanguageKey];
+    dateFmt.locale = [NSLocale localeWithLocaleIdentifier:identifer];
 
     NSCalendar *calendar = [NSCalendar currentCalendar];
     calendar.firstWeekday = 7;

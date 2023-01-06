@@ -10,17 +10,19 @@
 #import "TUIDefine.h"
 #import "TUITool.h"
 #import "TUIDefine.h"
-#import <AVFoundation/AVFoundation.h>
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "UIView+TUILayout.h"
 #import "TUIDarkModel.h"
 #import "TUIGlobalization.h"
-#import "NSTimer+Safe.h"
-#import "NSString+emoji.h"
+#import "NSTimer+TUISafe.h"
+#import "NSString+TUIEmoji.h"
+#import "TUICore.h"
+#import "TUIAudioRecorder.h"
 
-@interface TUIInputBar_Minimalist() <UITextViewDelegate, AVAudioRecorderDelegate>
+@interface TUIInputBar_Minimalist() <UITextViewDelegate, TUIAudioRecorderDelegate>
+
 @property (nonatomic, strong) NSDate *recordStartTime;
-@property (nonatomic, strong) AVAudioRecorder *recorder;
+@property (nonatomic, strong) TUIAudioRecorder *recorder;
 @property (nonatomic, strong) NSTimer *recordTimer;
 
 @property (nonatomic, assign) BOOL isFocusOn;
@@ -296,56 +298,19 @@
 
 - (void)recordBtnDown:(UIButton *)sender
 {
-    AVAudioSessionRecordPermission permission = AVAudioSession.sharedInstance.recordPermission;
-    /**
-     * 新安装后第一次请求授权，需要再次判断是否为 Undetermined，避免出现错误
-     * For the first request for authorization after a new installation, it is necessary to determine whether it is Undetermined again to avoid errors.
-     */
-    if (permission == AVAudioSessionRecordPermissionDenied || permission == AVAudioSessionRecordPermissionUndetermined) {
-        [AVAudioSession.sharedInstance requestRecordPermission:^(BOOL granted) {
-            if (!granted) {
-                UIAlertController *ac = [UIAlertController alertControllerWithTitle:TUIKitLocalizableString(TUIKitInputNoMicTitle) message:TUIKitLocalizableString(TUIKitInputNoMicTips) preferredStyle:UIAlertControllerStyleAlert];
-                [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitInputNoMicOperateLater) style:UIAlertActionStyleCancel handler:nil]];
-                [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitInputNoMicOperateEnable) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                    UIApplication *app = [UIApplication sharedApplication];
-                    NSURL *settingsURL = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
-                    if ([app canOpenURL:settingsURL]) {
-                        [app openURL:settingsURL];
-                    }
-                }]];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.mm_viewController presentViewController:ac animated:YES completion:nil];
-                });
-            }
-        }];
-        return;
-    }
-
-    if(permission == AVAudioSessionRecordPermissionGranted){
-        [self setRecordStatus:TUIRecordStatus_Record];
-        _recordStartTime = [NSDate date];
-        [self showHapticFeedback];
-        [self startRecord];
-    }
+    [self.recorder record];
 }
-
 
 - (void)recordBtnUp:(UIButton *)sender
 {
-    if (AVAudioSession.sharedInstance.recordPermission == AVAudioSessionRecordPermissionDenied) {
-        return;
-    }
     NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:_recordStartTime];
-    if(interval < 1){
-        [self cancelRecord];
-
-    } else if(interval > 60) {
-        if (self.recordTimer == nil) {
-            return;
-        }
-        [self cancelRecord];
-    } else{
-        NSString *path = [self stopRecord];
+    if (interval < 1) {
+        [self.recorder cancel];
+    } else if (interval > 60) {
+        [self.recorder cancel];
+    } else {
+        [self.recorder stop];
+        NSString *path = self.recorder.recordedFilePath;
         if (path) {
             if(_delegate && [_delegate respondsToSelector:@selector(inputBar:didSendVoice:)]){
                 [_delegate inputBar:self didSendVoice:path];
@@ -358,7 +323,7 @@
 - (void)recordBtnCancel:(UIGestureRecognizer *)gesture
 {
     [self setRecordStatus:TUIRecordStatus_Cancel];
-    [self cancelRecord];
+    [self.recorder cancel];
 }
 
 - (void)recordBtnDragExit:(UIButton *)sender
@@ -625,76 +590,56 @@
     [self clickKeyboardBtn:self.keyboardButton];
 }
 
-- (void)startRecord
-{
-    AVAudioSession *session = [AVAudioSession sharedInstance];
-    NSError *error = nil;
-    [session setCategory:AVAudioSessionCategoryPlayAndRecord error:&error];
-    [session setActive:YES error:&error];
-
-    NSDictionary *recordSetting = [[NSDictionary alloc] initWithObjectsAndKeys:
-                                   /**
-                                    * 采样率：8000/11025/22050/44100/96000（该参数影响音频的质量）
-                                    * Sampling rate: 8000/11025/22050/44100/96000 (this parameter affects the audio quality)
-                                    */
-                                   [NSNumber numberWithFloat: 8000.0],AVSampleRateKey,
-                                   /**
-                                    * 音频格式
-                                    * Audio format
-                                    */
-                                   [NSNumber numberWithInt: kAudioFormatMPEG4AAC],AVFormatIDKey,
-                                   /**
-                                    * 采样位数：  8、16、24、32 默认为16
-                                    * Sampling bits: 8, 16, 24, 32 The default is 16
-                                    */
-                                   [NSNumber numberWithInt:16],AVLinearPCMBitDepthKey,
-                                   /**
-                                    * 音频通道数 1 或 2
-                                    * Number of audio channels 1 or 2
-                                    */
-                                   [NSNumber numberWithInt: 1], AVNumberOfChannelsKey,
-                                   /**
-                                    * 录音质量
-                                    * Recording quality
-                                    */
-                                   [NSNumber numberWithInt:AVAudioQualityHigh],AVEncoderAudioQualityKey,
-                                   nil];
-
-    NSString *path = [TUIKit_Voice_Path stringByAppendingString:[TUITool genVoiceName:nil withExtension:@"m4a"]];
-    NSURL *url = [NSURL fileURLWithPath:path];
-    _recorder = [[AVAudioRecorder alloc] initWithURL:url settings:recordSetting error:nil];
-    _recorder.meteringEnabled = YES;
-    [_recorder prepareToRecord];
-    [_recorder record];
-    [_recorder updateMeters];
-
-    _recordTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(recordTick:) userInfo:nil repeats:YES];
+- (void)onThemeChanged {
+    [self applyBorderTheme];
 }
 
-- (void)recordTick:(NSTimer *)timer{
-    [_recorder updateMeters];
-
-    /**
-     * 此处需要判断录制时长，如果时长超过 60 s，则取消录制，并提示时间过长，同时不再显示 recordView。
-     * 为了使录音结果尽量精准，此处使用 recorder 的属性。
-     * 注意：由于语音的时长为整型，所以 60.X 秒的情况会被向下取整。但因为 ticker 每0.5秒执行一次，理论上都会显示 60 秒。
-     *
-     * The recording duration needs to be judged here. If the duration exceeds 60 s, the recording will be canceled, and a message will be displayed that the duration is too long, and recordView will no longer be displayed.
-     * In order to make the recording result as accurate as possible, the properties of recorder are used here.
-     * Since the duration of the speech is an integer, the case of 60.X seconds will be rounded down. But since the ticker executes every 0.5 seconds, it will theoretically show 60 seconds.
-     */
-    NSTimeInterval interval = _recorder.currentTime;
+#pragma mark - TUIAudioRecorderDelegate
+- (void)audioRecorder:(TUIAudioRecorder *)recorder
+   didCheckPermission:(BOOL)isGranted
+          isFirstTime:(BOOL)isFirstTime {
+    if (isFirstTime) {
+        if (!isGranted) {
+            [self showRequestMicAuthorizationAlert];
+        }
+        return;
+    }
     
-    _recordTimeLabel.text = [NSString stringWithFormat:@"%d:%.2d", (int)interval / 60, (int)interval % 60];
+    [self setRecordStatus:TUIRecordStatus_Record];
+    _recordStartTime = [NSDate date];
+    [self showHapticFeedback];
+}
+
+- (void)showRequestMicAuthorizationAlert {
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:TUIKitLocalizableString(TUIKitInputNoMicTitle) message:TUIKitLocalizableString(TUIKitInputNoMicTips) preferredStyle:UIAlertControllerStyleAlert];
+    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitInputNoMicOperateLater) style:UIAlertActionStyleCancel handler:nil]];
+    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitInputNoMicOperateEnable) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        UIApplication *app = [UIApplication sharedApplication];
+        NSURL *settingsURL = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+        if ([app canOpenURL:settingsURL]) {
+            [app openURL:settingsURL];
+        }
+    }]];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.mm_viewController presentViewController:ac animated:YES completion:nil];
+    });
+}
+
+- (void)audioRecorder:(TUIAudioRecorder *)recorder didRecordTimeChanged:(NSTimeInterval)time {
+    _recordTimeLabel.text = [NSString stringWithFormat:@"%d:%.2d", (int)time / 60, (int)time % 60];
     CGFloat width = _recordAnimateCoverViewFrame.size.width;
-    int interval_ms = (int)(_recorder.currentTime * 1000);
+    int interval_ms = (int)(time * 1000);
     int runloop_ms = 5 * 1000;
     CGFloat offset_x =  width * (interval_ms % runloop_ms) / runloop_ms;
-    _recordAnimateCoverView.frame = CGRectMake(_recordAnimateCoverViewFrame.origin.x + offset_x, _recordAnimateCoverViewFrame.origin.y, width - offset_x,  _recordAnimateCoverViewFrame.size.height);
+    _recordAnimateCoverView.frame = CGRectMake(_recordAnimateCoverViewFrame.origin.x + offset_x,
+                                               _recordAnimateCoverViewFrame.origin.y,
+                                               width - offset_x,
+                                               _recordAnimateCoverViewFrame.size.height);
     
-    if(interval >= 60){
+    if (time >= 60) {
         [self setRecordStatus:TUIRecordStatus_Cancel];
-        NSString *path = [self stopRecord];
+        [self.recorder stop];
+        NSString *path = self.recorder.recordedFilePath;
         if (path) {
             if(_delegate && [_delegate respondsToSelector:@selector(inputBar:didSendVoice:)]){
                 [_delegate inputBar:self didSendVoice:path];
@@ -703,37 +648,13 @@
     }
 }
 
-
-- (NSString *)stopRecord
-{
-    if(_recordTimer){
-        [_recordTimer invalidate];
-        _recordTimer = nil;
+#pragma mark - Getter
+- (TUIAudioRecorder *)recorder {
+    if (!_recorder) {
+        _recorder = [[TUIAudioRecorder alloc] init];
+        _recorder.delegate = self;
     }
-    if([_recorder isRecording]){
-        [_recorder stop];
-    }
-    return _recorder.url.path;
+    return _recorder;
 }
-
-- (void)cancelRecord
-{
-    if(_recordTimer){
-        [_recordTimer invalidate];
-        _recordTimer = nil;
-    }
-    if([_recorder isRecording]){
-        [_recorder stop];
-    }
-    NSString *path = _recorder.url.path;
-    if([[NSFileManager defaultManager] fileExistsAtPath:path]){
-        [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
-    }
-}
-
-- (void)onThemeChanged {
-    [self applyBorderTheme];
-}
-
 
 @end
