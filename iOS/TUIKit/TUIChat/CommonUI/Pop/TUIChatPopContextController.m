@@ -7,7 +7,7 @@
 
 #import "TUIChatPopContextController.h"
 #import "UIImage+ImageEffects.h"
-#import "TUICore/TUIDefine.h"
+#import "TUIDefine.h"
 #import "TUIChatContextEmojiDetailController.h"
 
 @interface TUIChatPopContextController ()<TUIChatPopContextRecentEmojiDelegate>

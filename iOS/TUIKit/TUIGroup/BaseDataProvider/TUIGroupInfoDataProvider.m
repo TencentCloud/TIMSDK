@@ -1,12 +1,10 @@
 
 #import "TUIGroupInfoDataProvider.h"
 #import "TIMGroupInfo+TUIDataProvider.h"
-#import "TUIProfileCardCell.h"
+#import "TUICommonModel.h"
 #import "TUIAddCellData.h"
-#import "TUICommonTextCell.h"
 #import "TUIGroupMemberCellData.h"
 #import "TUIGroupMembersCellData.h"
-#import "TUICommonSwitchCell.h"
 #import "TUIDefine.h"
 #import "TUIGroupNoticeCell.h"
 

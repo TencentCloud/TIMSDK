@@ -28,9 +28,10 @@
 
 
 #import <UIKit/UIKit.h>
-#import "TUIConversationCell.h"
 #import "TUIConversationListDataProvider_Minimalist.h"
+#import "TUIConversationMultiChooseView_Minimalist.h"
 #import "TUIConversationListControllerListener.h"
+#import "TUIConversationCell.h"
 #import "TUIDefine.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -61,9 +62,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) UITableView *tableView;
 
+@property (nonatomic, strong) TUIConversationMultiChooseView_Minimalist *multiChooseView;
+
 @property (nonatomic, weak) id<TUIConversationListControllerListener> delegate;
 
-@property (nonatomic, strong) TUIConversationListBaseDataProvider *provider;
+@property (nonatomic, strong) TUIConversationListBaseDataProvider *dataProvider;
 
 /**
  *  是否展示搜索框，如果集成了 TUICalling 组件，默认会展示
@@ -73,10 +76,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic,copy) void(^dataSourceChanged)(NSInteger count);
 
+- (void)openMultiChooseBoard:(BOOL)open;
+
 - (void)enableMultiSelectedMode:(BOOL)enable;
 
 - (NSArray<TUIConversationCellData *> *)getMultiSelectedResult;
 
+- (void)startConversation:(V2TIMConversationType)type;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -7,9 +7,7 @@
 //
 #import "TUIGroupRequestViewController.h"
 #import "TUICommonModel.h"
-#import "TUIProfileCardCell.h"
 #import "TUIDefine.h"
-#import "TUIAvatarViewController.h"
 
 @interface TUIGroupRequestViewController ()<UITableViewDataSource, UITableViewDelegate, TUIProfileCardDelegate>
 @property UITableView *tableView;

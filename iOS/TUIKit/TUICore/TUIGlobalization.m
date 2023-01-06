@@ -13,12 +13,26 @@
 
 + (NSString *)g_localizedStringForKey:(NSString *)key value:(nullable NSString *)value bundle:(nonnull NSString *)bundleName
 {
+    static NSMutableDictionary *bundleCache = nil;
+    if (bundleCache == nil) {
+        bundleCache = [NSMutableDictionary dictionary];
+    }
     NSString *language = [self tk_localizableLanguageKey];
     language = [@"Localizable" stringByAppendingPathComponent:language];
-    NSBundle *bundle = [NSBundle bundleWithPath:[TUIKitLocalizable(bundleName) pathForResource:language ofType:@"lproj"]];
+    NSString *cacheKey = [NSString stringWithFormat:@"%@_%@", bundleName, language];
+    NSBundle *bundle = [bundleCache objectForKey:cacheKey];
+    if (bundle == nil) {
+        bundle = [NSBundle bundleWithPath:[TUIKitLocalizable(bundleName) pathForResource:language ofType:@"lproj"]];
+        if (bundle) {        
+            [bundleCache setObject:bundle forKey:cacheKey];
+        }
+    }
     value = [bundle localizedStringForKey:key value:value table:nil];
-    NSString *resultStr = [[NSBundle mainBundle] localizedStringForKey:key value:value table:nil];
-    return resultStr;
+    
+    // It's not necessary to query at main bundle, cause it's a long-time operation
+    // NSString *resultStr = [[NSBundle mainBundle] localizedStringForKey:key value:value table:nil];
+    return value;
+
 }
 
 + (NSString *)g_localizedStringForKey:(NSString *)key bundle:(nonnull NSString *)bundleName
@@ -62,8 +76,10 @@
     return language;
 }
 
+static NSString *_customLanguage;
 + (void)setCustomLanguage:(NSString *)language
 {
+    _customLanguage = language;
     [NSUserDefaults.standardUserDefaults setObject:language?:@"" forKey:TUICustomLanguageKey];
     [NSUserDefaults.standardUserDefaults synchronize];
     
@@ -75,7 +91,10 @@
 
 + (NSString *)getCustomLanguage
 {
-    return [NSUserDefaults.standardUserDefaults objectForKey:TUICustomLanguageKey];
+    if (_customLanguage == nil) {
+        _customLanguage = [NSUserDefaults.standardUserDefaults objectForKey:TUICustomLanguageKey];
+    }
+    return _customLanguage;
 }
 
 @end
@@ -99,12 +118,21 @@
 
 + (NSBundle *)private_mainBundle
 {
+    static NSMutableDictionary *bundleCache;
+    if (bundleCache == nil) {
+        bundleCache = [NSMutableDictionary dictionary];
+    }
     NSString *customLanguage = [TUIGlobalization tk_localizableLanguageKey];
     if (customLanguage.length) {
-        NSString *path = [[NSBundle mainBundle] pathForResource:customLanguage ofType:@"lproj"];
-        if (path.length) {
-            return [NSBundle bundleWithPath:path];
+        NSString *path = [[NSBundle mainBundle] pathForResource:customLanguage ofType:@"lproj"] ?: @"";
+        NSBundle *bundle = [bundleCache objectForKey:path];
+        if (bundle == nil) {
+            bundle = [NSBundle bundleWithPath:path];
+            if (bundle) {
+                [bundleCache setObject:bundle forKey:path];
+            }
         }
+        return bundle;
     }
     return nil;
 }

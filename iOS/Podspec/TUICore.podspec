@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
 
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/7.0.3754/ios/TUICore.zip'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/7.0.3754/ios/TUICore.zip?time=2'}
 
   spec.default_subspec = 'ImSDK_Plus'
 

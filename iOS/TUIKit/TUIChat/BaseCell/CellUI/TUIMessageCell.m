@@ -11,9 +11,9 @@
 #import "TUIDefine.h"
 #import "TUITool.h"
 #import "TUIThemeManager.h"
-#import "NSString+emoji.h"
+#import "NSString+TUIEmoji.h"
 #import "TUITagsView.h"
-@interface TUIMessageCell() <CAAnimationDelegate>
+@interface TUIMessageCell() <CAAnimationDelegate, TUITranslationViewProtocol>
 @property (nonatomic, strong) TUIMessageCellData *messageData;
 
 @end
@@ -44,7 +44,7 @@
 
     //nameLabel
     _nameLabel = [[UILabel alloc] init];
-    _nameLabel.font = [UIFont systemFontOfSize:13];
+    _nameLabel.font = [self fontWithSize:13];
     _nameLabel.textColor = [UIColor d_systemGrayColor];
     [self.contentView addSubview:_nameLabel];
 
@@ -61,6 +61,7 @@
     //indicator
     _indicator = [[UIActivityIndicatorView alloc] init];
     _indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
+    [_indicator sizeToFit];
     [self.contentView addSubview:_indicator];
     
     //error
@@ -71,18 +72,19 @@
     [self.contentView addSubview:_retryView];
     
     //messageModifyRepliesLabel
-    _messageModifyRepliesButton = [[TUIFitButton alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+    _messageModifyRepliesButton = [[TUIFitButton alloc] initWithFrame:CGRectMake(0, 0, 12, 12)];
     _messageModifyRepliesButton.imageSize = CGSizeMake(12, 12);
     [_messageModifyRepliesButton addTarget:self action:@selector(onJumpToRepliesDetailPage:) forControlEvents:UIControlEventTouchUpInside];
-
-    [_messageModifyRepliesButton.titleLabel setFont:[UIFont systemFontOfSize:12]];
-    [_messageModifyRepliesButton setTitleColor:TUIChatDynamicColor(@"chat_message_read_name_date_text_color", @"#999999")forState:UIControlStateNormal];
-//    TUIChatDynamicColor(@"chat_drop_down_color", @"#147AFF")
+    [_messageModifyRepliesButton.titleLabel setFont:[self fontWithSize:12]];
+    [_messageModifyRepliesButton setTitleColor:TUIChatDynamicColor(@"chat_message_read_name_date_text_color", @"#999999")
+                                      forState:UIControlStateNormal];
+    [_messageModifyRepliesButton setImage:TUIChatBundleThemeImage(@"chat_messageReplyIcon_img", @"messageReplyIcon")
+                                     forState:UIControlStateNormal];
     [self.contentView addSubview:_messageModifyRepliesButton];
     
     _readReceiptLabel = [[UILabel alloc] init];
     _readReceiptLabel.hidden = YES;
-    _readReceiptLabel.font = [UIFont systemFontOfSize:12];
+    _readReceiptLabel.font = [self fontWithSize:12];
     _readReceiptLabel.textColor = [UIColor d_systemGrayColor];
     _readReceiptLabel.lineBreakMode = NSLineBreakByCharWrapping;
     UITapGestureRecognizer *showReadReceiptTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onSelectReadReceipt:)];
@@ -103,7 +105,7 @@
     // timeLabel
     _timeLabel = [[UILabel alloc] init];
     _timeLabel.textColor = [UIColor darkGrayColor];
-    _timeLabel.font = [UIFont systemFontOfSize:11.0];
+    _timeLabel.font = [self fontWithSize:11.0];
     [self.contentView addSubview:_timeLabel];
     
     self.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -123,37 +125,26 @@
     }
 
     if (self.messageData.showCheckBox) {
-        _selectedIcon.mm_width(20).mm_height(20);
-        _selectedIcon.mm_x = 10;
-        _selectedIcon.mm_centerY = _avatarView.mm_centerY;
+        _selectedIcon.frame = CGRectMake(10, _avatarView.mm_centerY - 10, 20, 20);
         _selectedIcon.hidden = NO;
         _selectedView.hidden = NO;
     } else {
-        _selectedIcon.mm_width(0).mm_height(0);
-        _selectedIcon.mm_x = 0;
-        _selectedIcon.mm_y = 0;
+        _selectedIcon.frame = CGRectZero;
         _selectedIcon.hidden = YES;
         _selectedView.hidden = YES;
     }
     
     if (self.messageData.showMessageTime) {
-        _timeLabel.mm_sizeToFit();
         _timeLabel.mm_y = self.avatarView.mm_y;
         _timeLabel.mm_x = self.contentView.bounds.size.width - 10 - _timeLabel.mm_w;
-        _timeLabel.hidden = NO;
     } else {
         _timeLabel.mm_y = 0;
         _timeLabel.mm_r = 0;
-        _timeLabel.mm_sizeToFit();
-        _timeLabel.hidden = YES;
     }
     
     CGSize csize = [self.messageData contentSize];
 
-    _selectedView.mm_x = 0;
-    _selectedView.mm_y = 0;
-    _selectedView.mm_w = self.contentView.mm_w;
-    _selectedView.mm_h = self.contentView.mm_h;
+    _selectedView.frame = self.contentView.bounds;
     
     CGFloat contentWidth =  csize.width;
     CGFloat contentHeight = csize.height;
@@ -174,26 +165,32 @@
 
     TUIMessageCellLayout *cellLayout = self.messageData.cellLayout;
     if (self.messageData.direction == MsgDirectionIncoming) {
-        if (self.messageData.showAvatar) {
-            self.avatarView.hidden = NO;
-        } else {
-            self.avatarView.hidden = YES;
-        }
-        self.avatarView.mm_x = _selectedIcon.mm_maxX + cellLayout.avatarInsets.left;
-        self.avatarView.mm_y = cellLayout.avatarInsets.top;
-        self.avatarView.mm_w = cellLayout.avatarSize.width;
-        self.avatarView.mm_h = cellLayout.avatarSize.height;
+        self.avatarView.hidden = !self.messageData.showAvatar;
+        self.avatarView.frame = CGRectMake(_selectedIcon.mm_maxX + cellLayout.avatarInsets.left,
+                                           cellLayout.avatarInsets.top,
+                                           cellLayout.avatarSize.width,
+                                           cellLayout.avatarSize.height);
         
-        self.nameLabel.mm_top(self.avatarView.mm_y);
-                
+        
+        
         CGFloat ctop = cellLayout.messageInsets.top + _nameLabel.mm_h;
-    
-        self.container.mm_left(cellLayout.messageInsets.left+self.avatarView.mm_maxX)
-        .mm_top(ctop).mm_width(contentWidth).mm_height(contentHeight);
+        self.container.frame = CGRectMake(cellLayout.messageInsets.left + self.avatarView.mm_maxX,
+                                          ctop,
+                                          contentWidth,
+                                          contentHeight);
         
-        self.nameLabel.mm_left(_container.mm_x + 7) ;
-        self.indicator.mm_sizeToFit().mm__centerY(_container.mm_centerY).mm_left(_container.mm_maxX + 8);
-        self.retryView.frame = self.indicator.frame;
+        CGRect nameLabelFrame = self.nameLabel.frame;
+        nameLabelFrame.origin = CGPointMake(_container.mm_x + 7, self.avatarView.mm_y);
+        self.nameLabel.frame = nameLabelFrame;
+        
+        CGRect indicatorFrame = self.indicator.frame;
+        indicatorFrame.origin = CGPointMake(_container.mm_maxX + 8,
+                                            _container.mm_centerY - 0.5 * self.indicator.mm_h);
+        self.indicator.frame = indicatorFrame;
+        if (!self.retryView.isHidden) {        
+            self.retryView.frame = indicatorFrame;
+        }
+        
         self.readReceiptLabel.hidden = YES;
         
     } else {
@@ -219,11 +216,12 @@
         self.retryView.frame = self.indicator.frame;
         
         self.readReceiptLabel.mm_sizeToFit().mm_bottom(self.container.mm_b).mm_left(_container.mm_x - 8 - _readReceiptLabel.mm_w);
-        
     }
         
-    self.messageModifyRepliesButton.mm_sizeToFit();
-    self.messageModifyRepliesButton.frame = CGRectMake(_container.mm_x, CGRectGetMaxY(_container.frame) , self.messageModifyRepliesButton.frame.size.width +10, 30);
+    if (!self.messageModifyRepliesButton.isHidden) {
+        self.messageModifyRepliesButton.mm_sizeToFit();
+        self.messageModifyRepliesButton.frame = CGRectMake(_container.mm_x, CGRectGetMaxY(_container.frame) , self.messageModifyRepliesButton.frame.size.width +10, 30);
+    }
     
     if (self.tagView) {
         self.tagView.frame = CGRectMake(0, _container.frame.size.height - self.messageData.messageModifyReactsSize.height, contentWidth, self.messageData.messageModifyReactsSize.height);
@@ -263,11 +261,11 @@
     [super fillWithData:data];
     self.messageData = data;
 
-    [self.avatarView setImage:data.avatarImage];
+    [self.avatarView setImage:DefaultAvatarImage];
     @weakify(self)
     [[[RACObserve(data, avatarUrl) takeUntil:self.rac_prepareForReuseSignal] ignore:nil] subscribeNext:^(NSURL *url) {
         @strongify(self)
-        [self.avatarView sd_setImageWithURL:url placeholderImage:self.messageData.avatarImage];
+        [self.avatarView sd_setImageWithURL:url placeholderImage:DefaultAvatarImage];
     }];
 
 
@@ -285,10 +283,12 @@
     
     [self updateReadLabelText];
     
+    self.retryView.image = [UIImage imageNamed:TUIChatImagePath(@"msg_error")];
+    
     if (data.status == Msg_Status_Fail ){
         [_indicator stopAnimating];
-        self.retryView.image = [UIImage imageNamed:TUIChatImagePath(@"msg_error")];
         _readReceiptLabel.hidden = YES;
+        self.retryView.hidden = NO;
     } else {
         if (data.status == Msg_Status_Sending_2) {
             [_indicator startAnimating];
@@ -313,16 +313,14 @@
             [_indicator stopAnimating];
             _readReceiptLabel.hidden = YES;
         }
-        self.retryView.image = nil;
+        self.retryView.hidden = YES;
     }
     
-    [self.messageModifyRepliesButton setImage:TUIChatBundleThemeImage(@"chat_messageReplyIcon_img", @"messageReplyIcon") forState:UIControlStateNormal];
-    
-    self.messageModifyRepliesButton.hidden = YES;
+    self.messageModifyRepliesButton.hidden = !data.showMessageModifyReplies;
     if (data.showMessageModifyReplies) {
-        self.messageModifyRepliesButton.hidden = NO;
         NSString *title = [NSString stringWithFormat:@"%ld%@", data.messageModifyReplies.count, TUIKitLocalizableString(TUIKitRepliesNum)];
         [self.messageModifyRepliesButton setTitle:title forState:UIControlStateNormal];
+        [self.messageModifyRepliesButton sizeToFit];
     }
     
     if (data.messageModifyReacts) {
@@ -336,6 +334,8 @@
     self.selectedIcon.image = [UIImage imageNamed:imageName];
     
     _timeLabel.text = [TUITool convertDateToStr:data.innerMessage.timestamp];
+    [_timeLabel sizeToFit];
+    _timeLabel.hidden = !data.showMessageTime;
     
     /**
      * 文本高亮显示 - 此处的异步操作是为了让其执行顺序与子类一致
@@ -550,6 +550,33 @@
     }
     self.tagView.listArrM = self.reactlistArr;
     [self.tagView updateView];
+}
+
+- (UIFont *)fontWithSize:(CGFloat)size {
+    static NSCache *fontCache;
+    if (fontCache == nil) {
+        fontCache = [[NSCache alloc] init];
+    }
+    UIFont *font = [fontCache objectForKey:@(size)];
+    if (font == nil) {
+        font = [UIFont systemFontOfSize:size];
+        [fontCache setObject:font forKey:@(size)];
+    }
+    return font;
+}
+
+#pragma mark - TUITranslationViewProtocol
+- (void)translationViewWillHide:(TUITranslationView *)view {
+    self.messageData.translationViewData.status = TUITranslationViewStatusHidden;
+    if (self.hideTranslationCallback) {
+        self.hideTranslationCallback(YES);
+    }
+}
+
+- (void)translationViewWillForward:(NSString *)text {
+    if (self.forwardTranslationCallback) {
+        self.forwardTranslationCallback(text);
+    }
 }
 
 @end

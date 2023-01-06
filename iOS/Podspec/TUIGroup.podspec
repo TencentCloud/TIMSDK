@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUIGroup'
-  spec.version      = '6.9.3557'
+  spec.version      = '7.0.3754'
   spec.platform     = :ios 
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
@@ -16,13 +16,13 @@ Pod::Spec.new do |spec|
 
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/6.9.3557/ios/TUIGroup.zip'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/7.0.3754/ios/TUIGroup.zip?time=2'}
 
   spec.default_subspec = 'ALL'
 
   spec.subspec 'CommonModel' do |commonModel|
     commonModel.source_files = '**/TUIGroup/CommonModel/*.{h,m,mm}'
-    commonModel.dependency 'TUICore','6.9.3557'
+    commonModel.dependency 'TUICore','7.0.3754'
   end
 
   spec.subspec 'BaseCell' do |baseCell|

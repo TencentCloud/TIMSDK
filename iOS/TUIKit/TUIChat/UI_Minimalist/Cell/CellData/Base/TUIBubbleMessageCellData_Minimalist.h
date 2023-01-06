@@ -40,7 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
  * - If the value is abnormal or set arbitrarily, UI exceptions such as message dislocation will occur.
  *
  */
-@property CGFloat bubbleTop;
+@property (nonatomic, assign) CGFloat bubbleTop;
 
 /**
  *  气泡图标（正常）
@@ -62,16 +62,16 @@ NS_ASSUME_NONNULL_BEGIN
  *  - The bubble icon changes depending on whether the message is sent or received, and the relevant business logic has been implemented in the data source.
  *  - You can also personalize it according to your needs.
  */
-@property UIImage *highlightedBubble;
+@property (nonatomic, strong) UIImage *highlightedBubble;
 
-@property UIImage *highlightedBubble_SameMsg;
+@property (nonatomic, strong) UIImage *highlightedBubble_SameMsg;
 
 /**
  *  气泡图标（动画闪烁）
  *  Bubble icon (animated blinking state)
  */
-@property UIImage *animateHighlightBubble_alpha50;
-@property UIImage *animateHighlightBubble_alpha20;
+@property (nonatomic, strong) UIImage *animateHighlightBubble_alpha50;
+@property (nonatomic, strong) UIImage *animateHighlightBubble_alpha20;
 
 
 /**

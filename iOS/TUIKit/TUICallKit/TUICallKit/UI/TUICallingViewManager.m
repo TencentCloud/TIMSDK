@@ -137,6 +137,7 @@ static NSString * const TUICallKit_TUIGroupService_UserDataValue = @"TUICallKit"
             self.callingFunctionView = nil;
             if ([TUICallingStatusManager shareInstance].callMediaType == TUICallMediaTypeVideo) {
                 self.callingFunctionView = [[TUICallingVideoFunctionView alloc] initWithFrame:CGRectZero];
+                self.callingFunctionView.localPreView = self.localPreView;
             } else {
                 self.callingFunctionView = [[TUICallingAudioFunctionView alloc] initWithFrame:CGRectZero];
             }
@@ -681,7 +682,6 @@ static NSString * const TUICallKit_TUIGroupService_UserDataValue = @"TUICallKit"
                 }
             } fail:nil];
         } fail:^(int code, NSString * _Nonnull desc) {
-            TUILog(@"Calling - addOtherUserTouchEvent error code:%d desc:%@", code, desc);
             [[TUICallingCommon getKeyWindow] makeToast:desc];
         }];
     }

@@ -2,6 +2,11 @@
 #import "TUITextMessageCellData.h"
 #import "TUITextView.h"
 #import "TUIChatDefine.h"
+#import "TUITranslationView.h"
+
+@class TUITextView;
+
+typedef void(^TUIChatSelectAllContentCallback)(BOOL);
 
 @interface TUITextMessageCell : TUIBubbleMessageCell<UITextViewDelegate>
 
@@ -23,8 +28,8 @@
  */
 @property (nonatomic, strong) TUIChatSelectAllContentCallback selectAllContentContent;
 
-
-@property TUITextMessageCellData *textData;
+/// Data for text message cell.
+@property (nonatomic, strong) TUITextMessageCellData *textData;
 
 - (void)fillWithData:(TUITextMessageCellData *)data;
 

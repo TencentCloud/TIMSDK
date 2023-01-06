@@ -1,8 +1,7 @@
 
 #import <Foundation/Foundation.h>
-#import "TUIGroupInfoController.h"
-#import "TUISelectGroupMemberViewController.h"
 #import "TUICore.h"
+#import "TUICommonModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -70,13 +69,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (TUIGroupService *)shareInstance;
 
-- (void)getGroupNameNormalFormatByContacts:(NSArray<TUICommonContactSelectCellData *> *)contacts
-                                completion:(void (^)(BOOL success,NSString *groupName))completion;
-
-- (void)createGroup:(NSString *)groupType
-       createOption:(V2TIMGroupAddOpt)createOption
-           contacts:(NSArray<TUICommonContactSelectCellData *> *)contacts
-         completion:(void (^)(BOOL success, NSString *groupID, NSString *groupName))completion;
 @end
 
 NS_ASSUME_NONNULL_END

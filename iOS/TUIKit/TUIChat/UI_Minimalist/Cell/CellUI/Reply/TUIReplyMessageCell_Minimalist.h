@@ -6,6 +6,7 @@
 //
 
 #import "TUIBubbleMessageCell_Minimalist.h"
+#import "TUIChatDefine.h"
 
 @class TUIReplyMessageCellData_Minimalist;
 @class TUIReplyQuoteViewData_Minimalist;
@@ -21,7 +22,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIView *quoteView;
 @property (nonatomic, strong) UILabel *contentLabel;
 @property (nonatomic, strong) UILabel *senderLabel;
-
 
 @property (nonatomic, strong) TUIReplyMessageCellData_Minimalist *replyData;
 

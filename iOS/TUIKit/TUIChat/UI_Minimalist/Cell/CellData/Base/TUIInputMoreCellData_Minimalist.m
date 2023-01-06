@@ -9,7 +9,6 @@ static TUIInputMoreCellData_Minimalist *TUI_Video_MoreCell;
 static TUIInputMoreCellData_Minimalist *TUI_File_MoreCell;
 static TUIInputMoreCellData_Minimalist *TUI_VideoCall_MoreCell;
 static TUIInputMoreCellData_Minimalist *TUI_AudioCall_MoreCell;
-static TUIInputMoreCellData_Minimalist *TUI_GroupLivePlay_MoreCell;
 
 @implementation TUIInputMoreCellData_Minimalist
 
@@ -101,7 +100,6 @@ static TUIInputMoreCellData_Minimalist *TUI_GroupLivePlay_MoreCell;
     TUI_File_MoreCell = nil;
     TUI_VideoCall_MoreCell = nil;
     TUI_AudioCall_MoreCell = nil;
-    TUI_GroupLivePlay_MoreCell = nil;
 }
 
 @end

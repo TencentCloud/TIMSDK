@@ -19,7 +19,7 @@
 #import "TUICore.h"
 #import "TUIDefine.h"
 #import "NSDictionary+TUISafe.h"
-#import "NSString+emoji.h"
+#import "NSString+TUIEmoji.h"
 
 @interface TUIGroupChatViewController () <V2TIMGroupListener, TUINotificationProtocol>
 
@@ -288,15 +288,6 @@
         } else if ([key isEqualToString:TUIInputMoreCellKey_AudioCall]) {
             self.callingType = @"0";
         }
-    }
-    else if ([key isEqualToString:TUIInputMoreCellKey_GroupLive]) {
-        NSDictionary *param = @{@"serviceID"   : @"kTUINotifyGroupLiveOnSelectGroupLive",
-                                @"groupID"     : self.conversationData.groupID ? : @"",
-                                @"userID"      : self.conversationData.userID ? : @"",
-                                @"msgSender"   : self};
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"kTUINotifyMenusServiceAction"
-                                                            object:self
-                                                            userInfo:param];
     }
     else if ([key isEqualToString:TUIInputMoreCellKey_Link]) {
         NSString *text = TUIKitLocalizableString(TUIKitWelcome);

@@ -43,14 +43,13 @@
     self.avatarView.hidden = YES;
     self.retryView.hidden = YES;
     [self.indicator stopAnimating];
-    [self setNeedsLayout];
 }
 
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    self.container.mm_center();
-    self.messageLabel.mm_fill();
+    self.container.center = self.contentView.center;
+    self.messageLabel.frame = self.container.bounds;
 }
 
 @end

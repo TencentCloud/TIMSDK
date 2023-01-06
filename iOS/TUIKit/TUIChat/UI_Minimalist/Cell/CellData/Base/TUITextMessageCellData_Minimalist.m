@@ -9,7 +9,7 @@
 #import "TUIMessageCellLayout.h"
 #import "TUICommonModel.h"
 #import "TUIDefine.h"
-#import "NSString+emoji.h"
+#import "NSString+TUIEmoji.h"
 #import "TUIThemeManager.h"
 
 #ifndef CGFLOAT_CEIL
@@ -21,8 +21,9 @@
 #endif
 
 @interface TUITextMessageCellData_Minimalist()
-@property CGSize textSize;
-@property CGPoint textOrigin;
+@property (nonatomic, assign) CGSize textSize;
+@property (nonatomic, assign) CGPoint textOrigin;
+@property (nonatomic, assign) CGSize size;
 
 @end
 
@@ -37,12 +38,17 @@
     TUITextMessageCellData_Minimalist *textData = [[TUITextMessageCellData_Minimalist alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
     textData.content = message.textElem.text;
     textData.reuseId = TTextMessageCell_ReuseId;
+    textData.status = Msg_Status_Init;
     return textData;
 }
 
 + (NSString *)getDisplayString:(V2TIMMessage *)message {
     NSString *content = message.textElem.text;
     return content.getLocalizableStringWithFaceContent;
+}
+
+- (BOOL)canTranslate {
+    return YES;
 }
 
 - (Class)getReplyQuoteViewDataClass
@@ -73,8 +79,35 @@
     return self;
 }
 
+- (CGFloat)estimatedHeight{
+    return 44.f;
+}
+
+// Override, the height of whole tableview cell.
+- (CGFloat)heightOfWidth:(CGFloat)width
+{
+    CGFloat height = [super heightOfWidth:width];
+    
+    // load translationView's saved data to render translationView
+    if ([self.translationViewData shouldLoadSavedData]) {
+        [self.translationViewData setMessage:self.innerMessage];
+        [self.translationViewData loadSavedData];
+    }
+    [self.translationViewData calcSize];
+    
+    if (![self.translationViewData isHidden]) {
+        height += self.translationViewData.size.height + 6;
+    }
+
+    return height;
+}
+
 - (CGSize)contentSize
 {
+    if (!CGSizeEqualToSize(self.size, CGSizeZero)) {
+        return self.size;
+    }
+
     CGRect rect = [self.attributedString boundingRectWithSize:CGSizeMake(TTextMessageCell_Text_Width_Max, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil];
     CGSize size = rect.size;
     
@@ -100,13 +133,13 @@
     size.width += self.cellLayout.bubbleInsets.left+self.cellLayout.bubbleInsets.right;
 
     if (self.direction == MsgDirectionIncoming) {
-//        size.width = MAX(size.width, [TUIBubbleMessageCellData incommingBubble].size.width);
         size.height = MAX(size.height, [TUIBubbleMessageCellData_Minimalist incommingBubble].size.height);
     } else {
-//        size.width = MAX(size.width, [TUIBubbleMessageCellData outgoingBubble].size.width);
         size.height = MAX(size.height, [TUIBubbleMessageCellData_Minimalist outgoingBubble].size.height);
     }
-    return size;
+    
+    self.size = size;
+    return self.size;
 }
 
 - (NSMutableAttributedString *)attributedString

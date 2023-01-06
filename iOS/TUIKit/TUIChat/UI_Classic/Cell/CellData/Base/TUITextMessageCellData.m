@@ -8,7 +8,7 @@
 #import "TUITextMessageCellData.h"
 #import "TUICommonModel.h"
 #import "TUIDefine.h"
-#import "NSString+emoji.h"
+#import "NSString+TUIEmoji.h"
 #import "TUIThemeManager.h"
 
 #ifndef CGFLOAT_CEIL
@@ -20,8 +20,11 @@
 #endif
 
 @interface TUITextMessageCellData()
-@property CGSize textSize;
-@property CGPoint textOrigin;
+
+@property (nonatomic, assign) CGSize textSize;
+@property (nonatomic, assign) CGPoint textOrigin;
+@property (nonatomic, assign) CGSize size;
+@property (nonatomic, assign) CGFloat containerWidth;
 
 @end
 
@@ -36,12 +39,17 @@
     TUITextMessageCellData *textData = [[TUITextMessageCellData alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
     textData.content = message.textElem.text;
     textData.reuseId = TTextMessageCell_ReuseId;
+    textData.status = Msg_Status_Init;
     return textData;
 }
 
 + (NSString *)getDisplayString:(V2TIMMessage *)message {
     NSString *content = message.textElem.text;
     return content.getLocalizableStringWithFaceContent;
+}
+
+- (BOOL)canTranslate {
+    return YES;
 }
 
 - (Class)getReplyQuoteViewDataClass
@@ -53,7 +61,6 @@
 {
     return NSClassFromString(@"TUITextReplyQuoteView");
 }
-
 
 - (instancetype)initWithDirection:(TMsgDirection)direction
 {
@@ -72,25 +79,64 @@
     return self;
 }
 
-- (CGSize)contentSize
+- (CGFloat)estimatedHeight {
+    return 60.f;
+}
+
+// Override, the height of whole tableview cell.
+- (CGFloat)heightOfWidth:(CGFloat)width
 {
-    CGRect rect = [self.attributedString boundingRectWithSize:CGSizeMake(TTextMessageCell_Text_Width_Max, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil];
-    CGSize size = CGSizeMake(CGFLOAT_CEIL(rect.size.width), CGFLOAT_CEIL(rect.size.height));
-    self.textSize = size;
-    self.textOrigin = CGPointMake(self.cellLayout.bubbleInsets.left, self.cellLayout.bubbleInsets.top+self.bubbleTop);
-
-    size.height += self.cellLayout.bubbleInsets.top+self.cellLayout.bubbleInsets.bottom;
-    size.width += self.cellLayout.bubbleInsets.left+self.cellLayout.bubbleInsets.right;
-
-    if (self.direction == MsgDirectionIncoming) {
-//        size.width = MAX(size.width, [TUIBubbleMessageCellData incommingBubble].size.width);
-        size.height = MAX(size.height, [TUIBubbleMessageCellData incommingBubble].size.height);
-    } else {
-//        size.width = MAX(size.width, [TUIBubbleMessageCellData outgoingBubble].size.width);
-        size.height = MAX(size.height, [TUIBubbleMessageCellData outgoingBubble].size.height);
+    CGFloat height = [super heightOfWidth:width];
+    
+    // load translationView's saved data to render translationView
+    if ([self.translationViewData shouldLoadSavedData]) {
+        [self.translationViewData setMessage:self.innerMessage];
+        [self.translationViewData loadSavedData];
+    }
+    [self.translationViewData calcSize];
+    
+    if (![self.translationViewData isHidden]) {
+        height += self.translationViewData.size.height + 6;
     }
 
-    return size;
+    return height;
+}
+
+// Override, the size of bubble content.
+- (CGSize)contentSize
+{
+    if (!CGSizeEqualToSize(self.size, CGSizeZero)) {
+        return self.size;
+    }
+    
+    static CGSize maxTextSize;
+    if (CGSizeEqualToSize(maxTextSize, CGSizeZero)) {
+        maxTextSize = CGSizeMake(TTextMessageCell_Text_Width_Max, MAXFLOAT);
+    }
+    CGRect rect = [self.attributedString boundingRectWithSize:maxTextSize options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil];
+    
+    CGFloat width = CGFLOAT_CEIL(rect.size.width);
+    CGFloat height = CGFLOAT_CEIL(rect.size.height);
+    
+    self.textSize = CGSizeMake(width, height);
+    
+    static CGPoint textOrigin;
+    if (CGPointEqualToPoint(CGPointZero, textOrigin)) {
+        textOrigin = CGPointMake(self.cellLayout.bubbleInsets.left, self.cellLayout.bubbleInsets.top + self.bubbleTop);
+    }
+    self.textOrigin = textOrigin;
+
+    height += self.cellLayout.bubbleInsets.top + self.cellLayout.bubbleInsets.bottom;
+    width += self.cellLayout.bubbleInsets.left+self.cellLayout.bubbleInsets.right;
+
+    if (self.direction == MsgDirectionIncoming) {
+        height = MAX(height, [TUIBubbleMessageCellData incommingBubble].size.height);
+    } else {
+        height = MAX(height, [TUIBubbleMessageCellData outgoingBubble].size.height);
+    }
+    
+    self.size = CGSizeMake(width, height);
+    return self.size;
 }
 
 - (NSMutableAttributedString *)attributedString
@@ -127,6 +173,7 @@
     return _attributedString;
 }
 
+#pragma mark - Color
 static UIColor *sOutgoingTextColor;
 
 + (UIColor *)outgoingTextColor

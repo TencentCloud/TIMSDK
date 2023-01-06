@@ -17,7 +17,7 @@
 #import "TUILinkCellData_Minimalist.h"
 #import "TUIThemeManager.h"
 #import "TUIDarkModel.h"
-#import "NSString+emoji.h"
+#import "NSString+TUIEmoji.h"
 #import "UIView+TUILayout.h"
 
 #import "TUIReplyQuoteView_Minimalist.h"
@@ -30,16 +30,14 @@
 #import "TUITextMessageCell_Minimalist.h"
 
 @interface TUIReferenceMessageCell_Minimalist ()<UITextViewDelegate>
-
 @property (nonatomic, strong) TUIReplyQuoteView_Minimalist *currentOriginView;
 
 @property (nonatomic, strong) NSMutableDictionary<NSString *, TUIReplyQuoteView_Minimalist *> *customOriginViewsCache;
 
-
 @end
+
+
 @implementation TUIReferenceMessageCell_Minimalist
-
-
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
@@ -54,6 +52,10 @@
     [self.quoteView addSubview:self.senderLabel];
     [self.contentView addSubview:self.quoteLineView];
     [self.contentView addSubview:self.quoteView];
+    
+    self.translationView = [[TUITranslationView alloc] initWithBackgroundColor: TUIChatDynamicColor(@"chat_message_translation_bg_color_minimalist", @"#F2F7FF")];
+    self.translationView.delegate = self;
+    [self.contentView addSubview:self.translationView];
         
 }
 - (void)setupContentTextView {
@@ -68,6 +70,18 @@
     self.textView.textColor = TUIChatDynamicColor(@"chat_reference_message_content_text_color", @"#000000");
 
     [self.bubbleView addSubview:self.textView];
+}
+
+- (void)setupRAC {
+    @weakify(self);
+    [[[RACObserve(self, referenceData.translationViewData.status) distinctUntilChanged] skip:1] subscribeNext:^(NSNumber *status) {
+        @strongify(self);
+        if (self.referenceData == nil) {
+            return;
+        }
+        
+        [self refreshTranslationView];
+    }];
 }
 
 - (void)fillWithData:(TUIReferenceMessageCellData_Minimalist *)data
@@ -87,6 +101,8 @@
     }
     self.quoteLineView.image = [lineImage resizableImageWithCapInsets:UIEdgeInsetsFromString(@"{10,0,20,0}") resizingMode:UIImageResizingModeStretch];
     
+    [self refreshTranslationView];
+    
     @weakify(self)
     [[RACObserve(data, originMessage) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(V2TIMMessage *originMessage) {
         @strongify(self)
@@ -95,6 +111,19 @@
     }];
     
     [self layoutIfNeeded];
+}
+
+- (void)refreshTranslationView {
+    if (self.referenceData.translationViewData.status == TUITranslationViewStatusLoading) {
+        [self.translationView startLoading];
+    } else {
+        [self.translationView stopLoading];
+    }
+    
+    self.translationView.hidden = [self.referenceData.translationViewData isHidden];
+    [self.referenceData.translationViewData calcSize];
+    [self.translationView updateTransaltion:self.referenceData.translationViewData.text];
+    [self layoutTranslationView];
 }
 
 - (void)updateUI:(TUIReferenceMessageCellData_Minimalist *)referenceData
@@ -226,6 +255,59 @@
     [super layoutSubviews];
     
     [self updateUI:self.referenceData];
+    [self layoutTranslationView];
+}
+
+- (void)layoutTranslationView {
+    if (self.translationView.hidden) {
+        return;
+    }
+    
+    CGSize size = self.referenceData.translationViewData.size;
+    /// TransitionView should not cover the replyView.
+    /// Add an extra tiny offset to the left or right of TransitionView if replyView is visible.
+    CGFloat offset = self.quoteLineView.hidden ? 0 : 1;
+    UIView *view = self.replyEmojiView.hidden ? self.bubbleView : self.replyEmojiView;
+    CGFloat topMargin = view.mm_maxY + self.nameLabel.mm_h + 6;
+    
+    if (self.referenceData.direction == MsgDirectionOutgoing) {
+        self.translationView
+            .mm_top(topMargin)
+            .mm_width(size.width)
+            .mm_height(size.height)
+            .mm_right(self.mm_w - self.container.mm_maxX + offset);
+    } else {
+        self.translationView
+            .mm_top(topMargin)
+            .mm_width(size.width)
+            .mm_height(size.height)
+            .mm_left(self.container.mm_minX + offset);
+    }
+    
+    if (!self.quoteView.hidden) {
+        CGRect oldRect = self.quoteView.frame;
+        CGRect newRect = CGRectMake(oldRect.origin.x, CGRectGetMaxY(self.translationView.frame) + 5,
+                                    oldRect.size.width, oldRect.size.height);
+        self.quoteView.frame = newRect;
+    }
+    if (!self.messageModifyRepliesButton.hidden) {
+        CGRect oldRect = self.messageModifyRepliesButton.frame;
+        CGRect newRect = CGRectMake(oldRect.origin.x, CGRectGetMaxY(self.quoteView.frame) + 5,
+                                    oldRect.size.width, oldRect.size.height);
+        self.messageModifyRepliesButton.frame = newRect;
+    }
+    for (UIView *view in self.replyAvatarImageViews) {
+        CGRect oldRect = view.frame;
+        CGRect newRect = CGRectMake(oldRect.origin.x, CGRectGetMaxY(self.quoteView.frame) + 5,
+                                    oldRect.size.width, oldRect.size.height);
+        view.frame = newRect;
+    }
+    if (!self.quoteLineView.hidden) {
+        CGRect oldRect = self.quoteLineView.frame;
+        CGRect newRect = CGRectMake(oldRect.origin.x, oldRect.origin.y,
+                                    oldRect.size.width, oldRect.size.height + self.translationView.mm_h);
+        self.quoteLineView.frame = newRect;
+    }
 }
 
 - (UILabel *)senderLabel
@@ -305,4 +387,5 @@
         self.selectContent = nil;
     }
 }
+
 @end

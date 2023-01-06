@@ -8,7 +8,7 @@
 #import "TUIReplyPreviewBar.h"
 #import "TUIDarkModel.h"
 #import "TUIDefine.h"
-#import "NSString+emoji.h"
+#import "NSString+TUIEmoji.h"
 #import "TUIThemeManager.h"
 
 

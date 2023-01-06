@@ -17,8 +17,8 @@ typedef void(^ContactSelectFinishBlock_Minimalist)(NSArray<TUICommonContactSelec
 @property (nonatomic, copy, nullable) ContactSelectFinishBlock_Minimalist finishBlock;
 
 /**
- * 最多选择个数
- * Maximum number of selected contacts
+ * 最多选择个数，默认值为 0 表示不限制
+ * Maximum number of selected contacts, defalut value is 0 which means no limit
  */
 @property (nonatomic, assign) NSInteger maxSelectCount;
 

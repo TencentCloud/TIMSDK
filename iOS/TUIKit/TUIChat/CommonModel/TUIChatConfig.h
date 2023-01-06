@@ -98,6 +98,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSArray<TUIFaceGroup *> *chatContextEmojiDetailGroups;
 
+
+/**
+ * 是否开启文本消息翻译，默认关闭
+ * Whether to enable text translation function, default is NO
+ */
+@property(nonatomic, assign) BOOL enableTextTranslation;
+
 @end
 
 NS_ASSUME_NONNULL_END

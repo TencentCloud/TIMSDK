@@ -1,5 +1,5 @@
 //
-//  TUIMessageDataProvider+Live.m
+//  TUIMessageDataProvider_Minimalist+Call.m
 //  TXIMSDK_TUIKit_iOS
 //
 //  Created by kayev on 2021/8/10.

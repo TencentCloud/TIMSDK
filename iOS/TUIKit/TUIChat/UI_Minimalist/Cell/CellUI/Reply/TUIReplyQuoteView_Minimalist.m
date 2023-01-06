@@ -7,7 +7,7 @@
 
 #import "TUIReplyQuoteView_Minimalist.h"
 #import "TUIReplyQuoteViewData_Minimalist.h"
-#import "NSString+emoji.h"
+#import "NSString+TUIEmoji.h"
 
 @implementation TUIReplyQuoteView_Minimalist
 

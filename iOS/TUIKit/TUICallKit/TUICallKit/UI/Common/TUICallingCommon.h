@@ -26,8 +26,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-static NSString * const TUI_CALL_DEFAULT_AVATAR = @"https://imgcache.qq.com/qcloud/public/static//avatar1_100.20191230.png";
-
 typedef NS_ENUM(NSUInteger, AuthorizationDeniedType ) {
     AuthorizationDeniedTypeAudio,
     AuthorizationDeniedTypeVideo,

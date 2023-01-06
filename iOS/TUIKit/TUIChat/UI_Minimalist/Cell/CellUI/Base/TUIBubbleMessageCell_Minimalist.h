@@ -12,6 +12,7 @@
  */
 #import "TUIMessageCell_Minimalist.h"
 #import "TUIBubbleMessageCellData_Minimalist.h"
+#import "TUIChatDefine.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIBubbleMessageCell_Minimalist : TUIMessageCell_Minimalist

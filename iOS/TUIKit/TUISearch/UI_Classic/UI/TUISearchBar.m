@@ -131,6 +131,8 @@
         }
         cancelBtn.enabled = YES;
         cancelBtn.userInteractionEnabled = YES;
+
+        [UIBarButtonItem appearanceWhenContainedInInstancesOfClasses:@[[UISearchBar class]]].title = TUIKitLocalizableString(TUIKitSearchItemCancel);;
     });
 }
 

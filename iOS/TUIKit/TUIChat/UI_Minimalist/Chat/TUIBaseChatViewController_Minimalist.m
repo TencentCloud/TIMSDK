@@ -16,6 +16,8 @@
 #import "TUIVideoMessageCellData_Minimalist.h"
 #import "TUIFileMessageCellData_Minimalist.h"
 #import "TUIVoiceMessageCellData_Minimalist.h"
+#import "TUITextMessageCellData_Minimalist.h"
+#import "TUIReplyMessageCellData_Minimalist.h"
 #import "TUIDefine.h"
 #import "TUIMessageMultiChooseView_Minimalist.h"
 #import "TUIMessageController_Minimalist.h"
@@ -26,9 +28,9 @@
 #import "TUICore.h"
 #import "TUIDefine.h"
 #import "NSDictionary+TUISafe.h"
-#import "NSString+emoji.h"
+#import "NSString+TUIEmoji.h"
 #import "TUIThemeManager.h"
-#import "TUIBaseChatViewController_Minimalist+AuthControl.h"
+#import "TUIChatMediaDataProvider.h"
 #import "TUIMessageReadViewController_Minimalist.h"
 #import "TUIJoinGroupMessageCell_Minimalist.h"
 #import "TUICloudCustomDataTypeCenter.h"
@@ -36,10 +38,25 @@
 #import "TUIChatConfig.h"
 #import "TUIChatModifyMessageHelper.h"
 #import "TUIChatMembersReactController.h"
+#import "TUIAIDenoiseSignatureManager.h"
+#import "TUIBubbleMessageCell_Minimalist.h"
 
 static UIView *customTopView;
 
-@interface TUIBaseChatViewController_Minimalist () <TUIBaseMessageControllerDelegate_Minimalist, TUIInputControllerDelegate_Minimalist, UIImagePickerControllerDelegate, UIDocumentPickerDelegate, UINavigationControllerDelegate, TUIMessageMultiChooseViewDelegate_Minimalist, TUIChatBaseDataProviderForwardDelegate, TUINotificationProtocol, TUIJoinGroupMessageCellDelegate_Minimalist, V2TIMConversationListener, TUINavigationControllerDelegate, V2TIMSDKListener>
+@interface TUIBaseChatViewController_Minimalist () <TUIBaseMessageControllerDelegate_Minimalist,
+                                                    TUIInputControllerDelegate_Minimalist,
+                                                    UIImagePickerControllerDelegate,
+                                                    UIDocumentPickerDelegate,
+                                                    UINavigationControllerDelegate,
+                                                    TUIMessageMultiChooseViewDelegate_Minimalist,
+                                                    TUIChatBaseDataProviderForwardDelegate,
+                                                    TUINotificationProtocol,
+                                                    TUIJoinGroupMessageCellDelegate_Minimalist,
+                                                    V2TIMConversationListener,
+                                                    TUINavigationControllerDelegate,
+                                                    V2TIMSDKListener,
+                                                    TUIChatMediaDataListener>
+
 @property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
 @property (nonatomic, strong) TUIMessageMultiChooseView_Minimalist *multiChooseView;
 @property (nonatomic, assign) BOOL responseKeyboard;
@@ -63,6 +80,10 @@ static UIView *customTopView;
 
 @property (nonatomic, strong) UILabel *subTitleLabel;
 
+@property (nonatomic, copy) NSString *translatedText;
+
+@property (nonatomic, strong) TUIChatMediaDataProvider *mediaProvider;
+
 @end
 
 @implementation TUIBaseChatViewController_Minimalist
@@ -72,12 +93,12 @@ static UIView *customTopView;
     self = [super init];
     if (self) {
         [TUIBaseChatViewController_Minimalist createCachePath];
+        [[TUIAIDenoiseSignatureManager sharedInstance] updateSignature];
     }
     return self;
 }
 
-- (void)setTitle:(NSString *)title
-{
+- (void)setTitle:(NSString *)title {
     self.mainTitle = title;
 }
 
@@ -111,8 +132,7 @@ static UIView *customTopView;
     [TUICore unRegisterEventByObject:self];
 }
 
-- (void)willMoveToParentViewController:(UIViewController *)parent
-{
+- (void)willMoveToParentViewController:(UIViewController *)parent {
     if (parent == nil) {
         [self saveDraft];
     }
@@ -137,8 +157,7 @@ static UIView *customTopView;
     [self.messageController enableMultiSelectedMode:NO];
 }
 
-- (void)viewDidDisappear:(BOOL)animated
-{
+- (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     
     if (self.inputController.status == Input_Status_Input ||
@@ -155,10 +174,11 @@ static UIView *customTopView;
     }
 }
 
-- (void)setupNavigator
-{
+- (void)setupNavigator {
     TUINavigationController *naviController = (TUINavigationController *)self.navigationController;
-    naviController.uiNaviDelegate = self;
+    if ([naviController isKindOfClass:TUINavigationController.class]) {
+        naviController.uiNaviDelegate = self;
+    }
    
     UIButton *backButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 24, 24)];
     [backButton addTarget:self action:@selector(backButtonClick) forControlEvents:UIControlEventTouchUpInside];
@@ -246,7 +266,10 @@ static UIView *customTopView;
                     break;
                 }
             }
-            self.subTitleLabel.text = [title substringToIndex:title.length - 1];
+            if (title.length > 0) {
+                title = [NSMutableString stringWithString:[title substringToIndex:title.length - 1]];
+            }
+            self.subTitleLabel.text = title;
         } fail:nil];
     }
 }
@@ -390,13 +413,11 @@ static UIView *customTopView;
 
 #pragma mark - Public Methods
 
-- (void)sendMessage:(V2TIMMessage *)message
-{
+- (void)sendMessage:(V2TIMMessage *)message {
     [self.messageController sendMessage:message];
 }
 
-- (void)saveDraft
-{
+- (void)saveDraft {
     NSString *content = [self.inputController.inputBar.inputTextView.textStorage getPlainString];
     
     TUIReplyPreviewData_Minimalist * previewData = nil;
@@ -435,8 +456,7 @@ static UIView *customTopView;
 
 }
 
-- (void)loadDraft
-{
+- (void)loadDraft {
     NSString *draft = self.conversationData.draftText;
     if (draft.length == 0) {
         return;
@@ -562,13 +582,11 @@ static UIView *customTopView;
     }
 }
 
--(void)leftBarButtonClick
-{
+-(void)leftBarButtonClick {
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-- (void)rightBarButtonClick
-{
+- (void)rightBarButtonClick {
     if (_conversationData.userID.length > 0) {
         
         [self getUserOrFriendProfileVCWithUserID:self.conversationData.userID
@@ -621,6 +639,11 @@ static UIView *customTopView;
         
         [self forwardMessages:self.forwardSelectUIMsgs toTargets:targetList merge:self.isMergeForward];
         self.forwardSelectUIMsgs = nil;
+        
+        if (self.translatedText.length > 0) {
+            [self forwardTranslationText:self.translatedText toConverations:targetList];
+            self.translatedText = nil;
+        }
     }
     
     else if ([key isEqualToString:TUICore_TUIConversationNotify] && [subKey isEqualToString:TUICore_TUIConversationNotify_ClearConversationUIHistorySubKey]) {
@@ -686,8 +709,7 @@ static UIView *customTopView;
 }
 
 #pragma mark - TUIInputControllerDelegate
-- (void)inputController:(TUIInputController_Minimalist *)inputController didChangeHeight:(CGFloat)height
-{
+- (void)inputController:(TUIInputController_Minimalist *)inputController didChangeHeight:(CGFloat)height {
     if (!self.responseKeyboard) {
         return;
     }
@@ -704,21 +726,18 @@ static UIView *customTopView;
     } completion:nil];
 }
 
-- (void)inputController:(TUIInputController_Minimalist *)inputController didSendMessage:(V2TIMMessage *)msg
-{
+- (void)inputController:(TUIInputController_Minimalist *)inputController didSendMessage:(V2TIMMessage *)msg {
     [self.messageController sendMessage:msg];
 }
 
-- (void)inputControllerDidInputAt:(TUIInputController_Minimalist *)inputController
-{
+- (void)inputControllerDidInputAt:(TUIInputController_Minimalist *)inputController {
     /**
      * 交给 GroupChatVC 去处理
      * Handle to GroupChatVC
      */
 }
 
-- (void)inputController:(TUIInputController_Minimalist *)inputController didDeleteAt:(NSString *)atText
-{
+- (void)inputController:(TUIInputController_Minimalist *)inputController didDeleteAt:(NSString *)atText {
     /**
      * 交给 GroupChatVC 去处理
      * Handle to GroupChatVC
@@ -735,33 +754,27 @@ static UIView *customTopView;
 }
 
 - (void)inputController:(TUIInputController_Minimalist *)inputController didSelectMoreCellAction:(NSString *)actionName {
-    
     if ([actionName isEqualToString:@"Album"]) {
-        [self selectPhotoForSendV2];
-    }
-    else if ([actionName isEqualToString:@"RecordVideo"]) {
-        [self takeVideoForSend];
-    }
-    else if ([actionName isEqualToString:@"File"]) {
-        [self selectFileForSend];
-    }
-    else if ([actionName isEqualToString:@"TakePhoto"]) {
-        [self takePictureForSend];
+        [self.mediaProvider selectPhoto];
+    } else if ([actionName isEqualToString:@"RecordVideo"]) {
+        [self.mediaProvider takeVideo];
+    } else if ([actionName isEqualToString:@"File"]) {
+        [self.mediaProvider selectFile];
+    } else if ([actionName isEqualToString:@"TakePhoto"]) {
+        [self.mediaProvider takePicture];
     }
 }
 
 - (void)inputControllerDidSelectCamera:(TUIInputController_Minimalist *)inputController {
-    [self takePictureForSend];
+    [self.mediaProvider takePicture];
 }
 
 #pragma mark - TUIBaseMessageControllerDelegate
-- (void)didTapInMessageController:(TUIBaseMessageController_Minimalist *)controller
-{
+- (void)didTapInMessageController:(TUIBaseMessageController_Minimalist *)controller {
     [self.inputController reset];
 }
 
-- (BOOL)messageController:(TUIBaseMessageController_Minimalist *)controller willShowMenuInCell:(TUIMessageCell *)cell
-{
+- (BOOL)messageController:(TUIBaseMessageController_Minimalist *)controller willShowMenuInCell:(TUIMessageCell *)cell {
     if([self.inputController.inputBar.inputTextView isFirstResponder]){
         self.inputController.inputBar.inputTextView.overrideNextResponder = cell;
         return YES;
@@ -769,13 +782,11 @@ static UIView *customTopView;
     return NO;
 }
 
-- (TUIMessageCellData *)messageController:(TUIBaseMessageController_Minimalist *)controller onNewMessage:(V2TIMMessage *)message
-{
+- (TUIMessageCellData *)messageController:(TUIBaseMessageController_Minimalist *)controller onNewMessage:(V2TIMMessage *)message {
     return nil;
 }
 
-- (TUIMessageCell *)messageController:(TUIBaseMessageController_Minimalist *)controller onShowMessageData:(TUIMessageCellData *)data
-{
+- (TUIMessageCell *)messageController:(TUIBaseMessageController_Minimalist *)controller onShowMessageData:(TUIMessageCellData *)data {
     return nil;
 }
 
@@ -786,8 +797,7 @@ static UIView *customTopView;
     }
 }
 
-- (void)messageController:(TUIBaseMessageController_Minimalist *)controller onSelectMessageAvatar:(TUIMessageCell *)cell
-{
+- (void)messageController:(TUIBaseMessageController_Minimalist *)controller onSelectMessageAvatar:(TUIMessageCell *)cell {
     if (cell.messageData.identifier == nil) {
         return;
     }
@@ -797,26 +807,22 @@ static UIView *customTopView;
     } failBlock:nil];
 }
 
-- (void)messageController:(TUIBaseMessageController_Minimalist *)controller onSelectMessageContent:(TUIMessageCell *)cell
-{
+- (void)messageController:(TUIBaseMessageController_Minimalist *)controller onSelectMessageContent:(TUIMessageCell *)cell {
     cell.disableDefaultSelectAction = NO;
     if (cell.disableDefaultSelectAction) {
         return;
     }
 }
 
-- (void)messageController:(TUIBaseMessageController_Minimalist *)controller onSelectMessageMenu:(NSInteger)menuType withData:(TUIMessageCellData *)data
-{
+- (void)messageController:(TUIBaseMessageController_Minimalist *)controller onSelectMessageMenu:(NSInteger)menuType withData:(TUIMessageCellData *)data {
     [self onSelectMessageMenu:menuType withData:data];
 }
 
-- (void)didHideMenuInMessageController:(TUIBaseMessageController_Minimalist *)controller
-{
+- (void)didHideMenuInMessageController:(TUIBaseMessageController_Minimalist *)controller {
     self.inputController.inputBar.inputTextView.overrideNextResponder = nil;
 }
 
-- (void)messageController:(TUIBaseMessageController_Minimalist *)controller onReEditMessage:(TUIMessageCellData *)data
-{
+- (void)messageController:(TUIBaseMessageController_Minimalist *)controller onReEditMessage:(TUIMessageCellData *)data {
     V2TIMMessage *message = data.innerMessage;
     if (message.elemType == V2TIM_ELEM_TYPE_TEXT) {
         NSString *text = message.textElem.text;
@@ -871,8 +877,7 @@ static UIView *customTopView;
     }
 }
 
-- (void)openMultiChooseBoard:(BOOL)open
-{
+- (void)openMultiChooseBoard:(BOOL)open {
     [self.view endEditing:YES];
     
     if (_multiChooseView) {
@@ -906,20 +911,17 @@ static UIView *customTopView;
     }
 }
 
-- (void)messageMultiChooseViewOnCancelClicked:(TUIMessageMultiChooseView_Minimalist *)multiChooseView
-{
+- (void)messageMultiChooseViewOnCancelClicked:(TUIMessageMultiChooseView_Minimalist *)multiChooseView {
     [self openMultiChooseBoard:NO];
     [self.messageController enableMultiSelectedMode:NO];
 }
 
-- (void)messageMultiChooseViewOnRelayClicked:(TUIMessageMultiChooseView_Minimalist *)multiChooseView
-{
+- (void)messageMultiChooseViewOnRelayClicked:(TUIMessageMultiChooseView_Minimalist *)multiChooseView {
     NSArray *uiMsgs = [self.messageController multiSelectedResult:TUIMultiResultOptionAll];
     [self prepareForwardMessages:uiMsgs];
 }
 
-- (void)messageMultiChooseViewOnDeleteClicked:(TUIMessageMultiChooseView_Minimalist *)multiChooseView
-{
+- (void)messageMultiChooseViewOnDeleteClicked:(TUIMessageMultiChooseView_Minimalist *)multiChooseView {
     NSArray *uiMsgs = [self.messageController multiSelectedResult:TUIMultiResultOptionAll];
     if (uiMsgs.count == 0) {
         [TUITool makeToast:TUIKitLocalizableString(TUIKitRelayNoMessageTips)];
@@ -931,8 +933,7 @@ static UIView *customTopView;
     [self.messageController enableMultiSelectedMode:NO];
 }
 
-- (void)prepareForwardMessages:(NSArray<TUIMessageCellData *> *)uiMsgs
-{
+- (void)prepareForwardMessages:(NSArray<TUIMessageCellData *> *)uiMsgs {
     if (uiMsgs.count == 0) {
         [TUITool makeToast:TUIKitLocalizableString(TUIKitRelayNoMessageTips)];
         return;
@@ -998,8 +999,7 @@ static UIView *customTopView;
 
 - (void)forwardMessages:(NSArray<TUIMessageCellData *> *)uiMsgs
               toTargets:(NSArray<TUIChatConversationModel *> *)targets
-                  merge:(BOOL)merge
-{
+                  merge:(BOOL)merge {
     if (uiMsgs.count == 0 || targets.count == 0) {
         return ;
     }
@@ -1071,14 +1071,12 @@ static UIView *customTopView;
     }];
 }
 
-- (NSString *)forwardTitleWithMyName:(NSString *)nameStr
-{
+- (NSString *)forwardTitleWithMyName:(NSString *)nameStr {
     return @"";
 }
 
 #pragma mark - Message reply
-- (void)messageController:(TUIBaseMessageController_Minimalist *)controller onRelyMessage:(nonnull TUIMessageCellData *)data
-{
+- (void)messageController:(TUIBaseMessageController_Minimalist *)controller onRelyMessage:(nonnull TUIMessageCellData *)data {
     @weakify(self)
     [self.inputController exitReplyAndReference:^{
         @strongify(self)
@@ -1179,9 +1177,55 @@ static UIView *customTopView;
 
 }
 
-#pragma mark - Privete Methods
-+ (void)createCachePath
-{
+#pragma mark - Translation forward
+- (void)messageController:(TUIBaseMessageController_Minimalist *)controller
+     onForwardTranslation:(NSString *)text {
+    if (text.length == 0) {
+        return;
+    }
+    self.translatedText = text;
+    [self presentConverationSelectVC];
+}
+
+- (void)presentConverationSelectVC {
+    UIViewController *vc = (UIViewController *)[TUICore callService:TUICore_TUIConversationService method:TUICore_TUIConversationService_GetConversationSelectControllerMethod param:nil];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:(UIViewController *)vc];
+    nav.modalPresentationStyle = UIModalPresentationFullScreen;
+    self.forwardConversationSelectVC = (UIViewController *)vc;
+    [self presentViewController:nav animated:YES completion:nil];
+}
+
+- (void)forwardTranslationText:(NSString *)text
+                toConverations:(NSArray <TUIChatConversationModel *> *)conversations {
+    for (TUIChatConversationModel *conversation in conversations) {
+        V2TIMMessage *message = [[V2TIMManager sharedInstance] createTextMessage:text];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([conversation.conversationID isEqualToString:self.conversationData.conversationID]) {
+                // Send translated text to myself
+                [self.messageController sendMessage:message];
+            } else {
+                // Send to other conversation
+                message.needReadReceipt = [TUIChatConfig defaultConfig].msgNeedReadReceipt;
+                [TUIMessageBaseDataProvider sendMessage:message
+                                     toConversation:conversation
+                                     isSendPushInfo:YES
+                                   isOnlineUserOnly:NO
+                                           priority:V2TIM_PRIORITY_NORMAL
+                                           Progress:nil
+                                          SuccBlock:^{
+                    [NSNotificationCenter.defaultCenter postNotificationName:TUIKitNotification_onMessageStatusChanged
+                                                                      object:message.msgID];
+                } FailBlock:^(int code, NSString *desc) {
+                    [NSNotificationCenter.defaultCenter postNotificationName:TUIKitNotification_onMessageStatusChanged
+                                                                      object:message.msgID];
+                }];
+            }
+        });
+    }
+}
+
+#pragma mark - Private Methods
++ (void)createCachePath {
     NSFileManager *fileManager = [NSFileManager defaultManager];
     if(![fileManager fileExistsAtPath:TUIKit_Image_Path]){
         [fileManager createDirectoryAtPath:TUIKit_Image_Path withIntermediateDirectories:YES attributes:nil error:nil];
@@ -1224,8 +1268,45 @@ static UIView *customTopView;
 }
 
 #pragma mark - FriendInfoChangedNotification
-- (void)onFriendInfoChanged:(NSNotification *)notice
-{
+- (void)onFriendInfoChanged:(NSNotification *)notice {
     [self checkTitle:YES];
 }
+
+#pragma mark - Media Provider
+- (TUIChatMediaDataProvider *)mediaProvider {
+    if (_mediaProvider == nil) {
+        _mediaProvider = [[TUIChatMediaDataProvider alloc] init];
+        _mediaProvider.listener = self;
+        _mediaProvider.presentViewController = self;
+    }
+    return _mediaProvider;
+}
+
+- (void)onProvideImage:(NSString *)imageUrl {
+    V2TIMMessage *message = [V2TIMManager.sharedInstance createImageMessage:imageUrl];
+    [self sendMessage:message];
+}
+
+- (void)onProvideImageError:(NSString *)errorMessage {
+    [TUITool makeToast:errorMessage];
+}
+
+- (void)onProvideVideo:(NSString *)videoUrl snapshot:(NSString *)snapshotUrl duration:(NSInteger)duration {
+    V2TIMMessage *message = [V2TIMManager.sharedInstance createVideoMessage:videoUrl type:videoUrl.pathExtension duration:(int)duration snapshotPath:snapshotUrl];
+    [self sendMessage:message];
+}
+
+- (void)onProvideVideoError:(NSString *)errorMessage {
+    [TUITool makeToast:errorMessage];
+}
+
+- (void)onProvideFile:(NSString *)fileUrl filename:(NSString *)filename fileSize:(NSInteger)fileSize {
+    V2TIMMessage *message = [V2TIMManager.sharedInstance createFileMessage:fileUrl fileName:filename];
+    [self sendMessage:message];
+}
+
+- (void)onProvideFileError:(NSString *)errorMessage {
+    [TUITool makeToast:errorMessage];
+}
+
 @end

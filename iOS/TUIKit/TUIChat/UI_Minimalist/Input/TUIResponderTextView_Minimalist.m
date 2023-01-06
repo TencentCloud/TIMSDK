@@ -7,7 +7,7 @@
 //
 
 #import "TUIResponderTextView_Minimalist.h"
-#import "NSString+emoji.h"
+#import "NSString+TUIEmoji.h"
 
 @implementation TUIResponderTextView_Minimalist
 

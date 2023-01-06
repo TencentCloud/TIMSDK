@@ -20,5 +20,9 @@
 	<string>#999999</string>
 	<key>contact_add_agree_bg_color</key>
 	<string>#217081</string>
+	<key>pop_icon_add_friend_img</key>
+	<string>add_friend.png</string>
+	<key>pop_icon_add_group_img</key>
+	<string>add_group.png</string>
 </dict>
 </plist>

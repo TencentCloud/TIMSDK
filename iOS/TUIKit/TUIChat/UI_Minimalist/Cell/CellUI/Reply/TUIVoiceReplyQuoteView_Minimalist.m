@@ -9,7 +9,7 @@
 #import "TUIVoiceReplyQuoteViewData_Minimalist.h"
 #import "TUIDarkModel.h"
 #import "TUIDefine.h"
-#import "NSString+emoji.h"
+#import "NSString+TUIEmoji.h"
 
 @implementation TUIVoiceReplyQuoteView_Minimalist
 

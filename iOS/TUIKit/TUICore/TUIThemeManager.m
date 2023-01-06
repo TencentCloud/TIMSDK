@@ -129,7 +129,7 @@
             return [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traitCollection) {
                 switch (traitCollection.userInterfaceStyle) {
                     case UIUserInterfaceStyleDark:
-                        return [darkTheme dynamicColor:colorKey defaultColor:hex] ?: [UIColor tui_colorWithHex:hex];
+                        return [darkTheme dynamicColor:colorKey defaultColor:hex];
                     case UIUserInterfaceStyleLight:
                     case UIUserInterfaceStyleUnspecified:
                     default:
@@ -144,12 +144,15 @@
 
 - (UIColor *)dynamicColor:(NSString *)colorKey defaultColor:(NSString *)hex
 {
-    UIColor *color = [UIColor tui_colorWithHex:hex];
-    if ([self.manifest.allKeys containsObject:colorKey]) {
-        NSString *colorHex = [self.manifest objectForKey:colorKey];
-        if ([colorHex isKindOfClass:NSString.class]) {
-            color = [UIColor tui_colorWithHex:colorHex];
-        }
+    UIColor *color = nil;
+    
+    NSString *colorHex = [self.manifest objectForKey:colorKey];
+    if (colorHex && [colorHex isKindOfClass:NSString.class]) {
+        color = [UIColor tui_colorWithHex:colorHex];
+    }
+    
+    if (color == nil) {
+        color = [UIColor tui_colorWithHex:hex];
     }
     return color;
 }
@@ -169,17 +172,18 @@
 
 - (UIImage *)dynamicImage:(NSString *)imageKey defaultImage:(UIImage *)image
 {
-    UIImage *dynamic = image;
-    if ([self.manifest.allKeys containsObject:imageKey]) {
-        NSString *imageName = [self.manifest objectForKey:imageKey];
-        if ([imageName isKindOfClass:NSString.class]) {
-            imageName = [self.resourcePath stringByAppendingPathComponent:imageName];
-            dynamic = [UIImage imageWithContentsOfFile:imageName];
-        }
+    UIImage *dynamic = nil;
+    
+    NSString *imageName = [self.manifest objectForKey:imageKey];
+    if ([imageName isKindOfClass:NSString.class]) {
+        imageName = [self.resourcePath stringByAppendingPathComponent:imageName];
+        dynamic = [UIImage imageWithContentsOfFile:imageName];
     }
+    
     if (dynamic == nil) {
         dynamic = image;
     }
+    
     return dynamic;
 }
 
@@ -229,8 +233,10 @@
 @end
 
 @implementation TUIThemeManager
+#ifdef TUIThreadSafe
 dispatch_queue_t _queue;
 dispatch_queue_t _read_write_queue;
+#endif
 static id _instance;
 
 + (instancetype)shareManager
@@ -245,8 +251,10 @@ static id _instance;
 - (instancetype)init
 {
     if (self = [super init]) {
+#ifdef TUIThreadSafe
         _queue = dispatch_queue_create("theme_manager_queue", DISPATCH_QUEUE_SERIAL);
         _read_write_queue = dispatch_queue_create("read_write_secure_queue", DISPATCH_QUEUE_CONCURRENT);
+#endif
         _themeResourcePathCache = [NSMutableDictionary dictionary];
         _currentThemeCache = [NSMutableDictionary dictionary];
         _darkThemeCache = [NSMutableDictionary dictionary];
@@ -257,22 +265,28 @@ static id _instance;
 
 - (void)addListener:(id<TUIThemeManagerListener>)listener
 {
-    __weak typeof(self) weakSelf = self;
+#ifdef TUIThreadSafe
     dispatch_async(_queue, ^{
-        if (![weakSelf.listeners containsObject:listener]) {
-            [weakSelf.listeners addObject:listener];
+#endif
+        if (![self.listeners containsObject:listener]) {
+            [self.listeners addObject:listener];
         }
+#ifdef TUIThreadSafe
     });
+#endif
 }
 
 - (void)removeListener:(id<TUIThemeManagerListener>)listener
 {
-    __weak typeof(self) weakSelf = self;
+#ifdef TUIThreadSafe
     dispatch_async(_queue, ^{
-        if ([weakSelf.listeners containsObject:listener]) {
-            [weakSelf.listeners removeObject:listener];
+#endif
+        if ([self.listeners containsObject:listener]) {
+            [self.listeners removeObject:listener];
         }
+#ifdef TUIThreadSafe
     });
+#endif
 }
 
 - (void)registerThemeResourcePath:(NSString *)path darkThemeID:(NSString *)darkThemeID forModule:(TUIThemeModule)module
@@ -280,16 +294,19 @@ static id _instance;
     if (path.length == 0) {
         return;
     }
-    
-    __weak typeof(self) weakSelf = self;
+
+#ifdef TUIThreadSafe
     dispatch_async(_queue, ^{
-        [weakSelf.themeResourcePathCache setObject:path forKey:@(module)];
+#endif
+        [self.themeResourcePathCache setObject:path forKey:@(module)];
         
-        TUITheme *theme = [weakSelf loadTheme:darkThemeID module:module];
+        TUITheme *theme = [self loadTheme:darkThemeID module:module];
         if (theme) {
-            [weakSelf setDarkTheme:theme forModule:module];
+            [self setDarkTheme:theme forModule:module];
         }
+#ifdef TUIThreadSafe
     });
+#endif
 }
 
 - (void)registerThemeResourcePath:(NSString *)path forModule:(TUIThemeModule)module
@@ -300,51 +317,61 @@ static id _instance;
 - (TUITheme *)currentThemeForModule:(TUIThemeModule)module
 {
     __block TUITheme *theme = nil;
-    __weak typeof(self) weakSelf = self;
+#ifdef TUIThreadSafe
     dispatch_sync(_read_write_queue, ^{
-        if ([weakSelf.currentThemeCache.allKeys containsObject:@(module)]) {
-            theme = [weakSelf.currentThemeCache objectForKey:@(module)];
-        }
+#endif
+        theme = [self.currentThemeCache objectForKey:@(module)];
+#ifdef TUIThreadSafe
     });
+#endif
     return theme;
 }
 
 - (void)setCurrentTheme:(TUITheme *)theme forModule:(TUIThemeModule)module
 {
-    __weak typeof(self) weakSelf = self;
+#ifdef TUIThreadSafe
     dispatch_barrier_async(_read_write_queue, ^{
-        if ([weakSelf.currentThemeCache.allKeys containsObject:@(module)]) {
-            [weakSelf.currentThemeCache removeObjectForKey:@(module)];
+#endif
+        if ([self.currentThemeCache.allKeys containsObject:@(module)]) {
+            [self.currentThemeCache removeObjectForKey:@(module)];
         }
         if (theme) {
-            [weakSelf.currentThemeCache setObject:theme forKey:@(module)];
+            [self.currentThemeCache setObject:theme forKey:@(module)];
         }
+#ifdef TUIThreadSafe
     });
+#endif
 }
 
 - (TUITheme *)darkThemeForModule:(TUIThemeModule)module
 {
     __block TUITheme *theme = nil;
-    __weak typeof(self) weakSelf = self;
+#ifdef TUIThreadSafe
     dispatch_sync(_read_write_queue, ^{
-        if ([weakSelf.darkThemeCache.allKeys containsObject:@(module)]) {
-            theme = [weakSelf.darkThemeCache objectForKey:@(module)];
+#endif
+        if ([self.darkThemeCache.allKeys containsObject:@(module)]) {
+            theme = [self.darkThemeCache objectForKey:@(module)];
         }
+#ifdef TUIThreadSafe
     });
+#endif
     return theme;
 }
 
 - (void)setDarkTheme:(TUITheme *)theme forModule:(TUIThemeModule)module
 {
-    __weak typeof(self) weakSelf = self;
+#ifdef TUIThreadSafe
     dispatch_barrier_async(_read_write_queue, ^{
-        if ([weakSelf.darkThemeCache.allKeys containsObject:@(module)]) {
-            [weakSelf.darkThemeCache removeObjectForKey:@(module)];
+#endif
+        if ([self.darkThemeCache.allKeys containsObject:@(module)]) {
+            [self.darkThemeCache removeObjectForKey:@(module)];
         }
         if (theme) {
-            [weakSelf.darkThemeCache setObject:theme forKey:@(module)];
+            [self.darkThemeCache setObject:theme forKey:@(module)];
         }
+#ifdef TUIThreadSafe
     });
+#endif
 }
 
 - (void)applyTheme:(NSString *)themeID forModule:(TUIThemeModule)module
@@ -353,11 +380,11 @@ static id _instance;
         NSLog(@"[theme][applyTheme] invalid themeID, module:%zd", module);
         return;
     }
-    
-    __weak typeof(self) weakSelf = self;
+#ifdef TUIThreadSafe
     dispatch_async(_queue, ^{
+#endif
         BOOL isAll = NO;
-        NSMutableArray *allKeys = [NSMutableArray arrayWithArray:weakSelf.themeResourcePathCache.allKeys];
+        NSMutableArray *allKeys = [NSMutableArray arrayWithArray:self.themeResourcePathCache.allKeys];
         if (module == TUIThemeModuleAll ||
             ((module & TUIThemeModuleAll) == TUIThemeModuleAll)) {
             isAll = YES;
@@ -366,25 +393,28 @@ static id _instance;
         if (isAll) {
             for (NSNumber *moduleObject in allKeys) {
                 TUIThemeModule tmpModue = (TUIThemeModule)[moduleObject integerValue];
-                [weakSelf doApplyTheme:themeID forSingleModule:tmpModue];
+                [self doApplyTheme:themeID forSingleModule:tmpModue];
             }
         } else {
             for (NSNumber *moduleObject in allKeys) {
                 TUIThemeModule tmpModue = (TUIThemeModule)[moduleObject integerValue];
                 if ((module & tmpModue) == tmpModue) {
-                    [weakSelf doApplyTheme:themeID forSingleModule:tmpModue];
+                    [self doApplyTheme:themeID forSingleModule:tmpModue];
                 }
             }
         }
+#ifdef TUIThreadSafe
     });
+#endif
 }
 
 - (void)unApplyThemeForModule:(TUIThemeModule)module
 {
-    __weak typeof(self) weakSelf = self;
+#ifdef TUIThreadSafe
     dispatch_async(_queue, ^{
+#endif
         BOOL isAll = NO;
-        NSMutableArray *allKeys = [NSMutableArray arrayWithArray:weakSelf.themeResourcePathCache.allKeys];
+        NSMutableArray *allKeys = [NSMutableArray arrayWithArray:self.themeResourcePathCache.allKeys];
         if (module == TUIThemeModuleAll ||
             ((module & TUIThemeModuleAll) == TUIThemeModuleAll)) {
             isAll = YES;
@@ -393,7 +423,7 @@ static id _instance;
         if (isAll) {
             for (NSNumber *moduleObject in allKeys) {
                 TUIThemeModule tmpModue = (TUIThemeModule)[moduleObject integerValue];
-                [weakSelf setCurrentTheme:nil forModule:tmpModue];
+                [self setCurrentTheme:nil forModule:tmpModue];
             }
             
             [NSNotificationCenter.defaultCenter postNotificationName:TUIDidApplyingThemeChangedNotfication
@@ -403,11 +433,13 @@ static id _instance;
             for (NSNumber *moduleObject in allKeys) {
                 TUIThemeModule tmpModue = (TUIThemeModule)[moduleObject integerValue];
                 if ((module & tmpModue) == tmpModue) {
-                    [weakSelf setCurrentTheme:nil forModule:tmpModue];
+                    [self setCurrentTheme:nil forModule:tmpModue];
                 }
             }
         }
+#ifdef TUIThreadSafe
     });
+#endif
 }
 
 #pragma mark - Not thread safe

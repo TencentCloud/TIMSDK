@@ -90,5 +90,7 @@
 	<string>icon_online_status.png</string>
 	<key>icon_offline_status_img</key>
 	<string>icon_offline_status.png</string>
+	<key>nav_more_img</key>
+	<string>nav_more.png</string>
 </dict>
 </plist>

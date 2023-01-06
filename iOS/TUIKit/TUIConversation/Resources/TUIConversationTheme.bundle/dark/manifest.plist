@@ -16,5 +16,9 @@
 	<string>#111111</string>
 	<key>conversation_message_not_disturb_img</key>
 	<string>message_not_disturb</string>
+	<key>pop_icon_new_chat_img</key>
+	<string>new_chat.png</string>
+	<key>pop_icon_new_group_img</key>
+	<string>new_groupchat.png</string>
 </dict>
 </plist>

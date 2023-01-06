@@ -46,8 +46,6 @@
 "Make-a-call" = "发起呼叫"; 
 "Done" = "完成";
 "All" = "所有人";
-"Living" = "正在直播";
-"Live-finished" = "直播结束";
 "Agreed" = "已同意";
 "Disclined" = "已拒绝";
 "Agree" = "同意";
@@ -72,18 +70,33 @@
 "SearchGroupPlaceholder" = "用户ID";
 "please_fill_in_verification_information" = "请填写验证信息";
 "please_fill_in_remarks_group_info" = "请填写备注和分组";
+
+"no_set" = "未设置";
+"no_personal_signature" = "暂无个性签名";
+"logout" = "退出登录";
+"login" = "登录";
+"ReadAll" = "全部已读";
+"Hide"    = "隐藏";
+"Delete"    = "删除";
+
 "ContactsJoinGroup"  = "添加群聊";
 "ContactsAddFriends" = "添加好友";
+
+"ChatsNewChatText"    = "发起会话";
+"ChatsNewGroupText"  = "创建群聊";
+"ChatsSelectContact" = "选择联系人";
 "ChatsCreatePrivateGroupTips" = "创建讨论组";
 "ChatsCreateGroupTips" = "创建群聊";
 "ChatsCreateChatRoomTips" = "创建聊天室";
 "ChatsCreateDefaultTips" = "创建群组";
 "ChatsCreateCommunityTips" = "创建社群";
+
 "GroupJoin" = "添加群组";
 "GroupRequestJoinGroupFormat" = "%@ 申请加入群聊";
 "GroupDeleteFriend" = "删除联系人";
 "GroupAddFirend" = "添加联系人";
 "GroupMember" = "群成员";
+
 "ProfileAlia" = "备注名";
 "ProfileMessageDoNotDisturb" = "消息免打扰";
 "ProfileStickyonTop" = "置顶聊天";
@@ -93,6 +106,25 @@
 "ProfileEditAlia" = "修改备注";
 "ProfileDetails" = "详细资料";
 "ProfileSetBackgroundImage" = "设置当前聊天背景";
+"ProfilePhoto" = "头像";
+"ProfileName"  = "昵称";
+"ProfileAccount" = "账号";
+"ProfileSignature" = "个性签名";
+"ProfileGender" = "性别";
+"ProfileEditName" = "修改昵称";
+"ProfileEditNameDesc" = "仅限中文、字母、数字和下划线";
+"ProfileEditSignture" = "修改个性签名";
+"ProfileEditGender" = "修改性别";
+"ProfileEditAlia" = "修改备注";
+"ProfileAlia" = "备注名";
+"ProfileBlocked" = "加入黑名单";
+"ProfileMessageDoNotDisturb" = "消息免打扰";
+"ProfileStickyonTop" = "置顶聊天";
+"ProfileSendMessages" = "发送消息";
+"ProfileDeleteFirend" = "删除好友";
+"ProfileBirthday" = "生日";
+"SignatureFormat" = "个性签名:%@";
+
 "FriendRequestFormat" = "我是%@";
 "FriendRequestFillInfo" = "添加好友";
 "FriendOneWay" = "单向好友";
@@ -102,14 +134,26 @@
 "FriendAddResultForbid" = "对方禁止添加";
 "FriendAddResultSuccess" = "已添加到好友列表";
 "FriendAddResultExists" = "对方已是您的好友";
+"MeFriendRequest" = "加我为好友时";
+"MeFriendRequestMethodAgreeAll" = "同意任何用户加好友";
+"MeFriendRequestMethodNeedConfirm" = "需要验证";
+"MeFriendRequestMethodDenyAll" = "拒绝任何人加好友";
+"MeMessageReadStatus" = "消息阅读状态";
+"MeMessageReadStatusOpenDesc" = "关闭后，您收发的消息均不带消息阅读状态，您将无法看到对方是否已读，同时对方也无法看到您是否已读。";
+"MeMessageReadStatusCloseDesc" = "开启后，您在群聊中收发的消息均带有消息阅读状态，并且可以看到对方是否已读。与您单聊的好友若也开启了消息阅读状态，您与好友在单聊中收发的消息也将带有消息阅读状态。";
 
+"ShowOnlineStatus" = "显示在线状态";
+"ShowOnlineStatusOpenDesc" = "关闭后，您将不可以在会话列表和通讯录中看到好友在线或离线的状态提示。";
+"ShowOnlineStatusCloseDesc" = "开启后，您将可以在会话列表和通讯录中看到好友在线或离线的状态提示。";
+"ShowPackageToast" = "该功能为旗舰版功能";
+
+"TUIKitDone" = "完成";
 "TUIKitWelcome" = "欢迎加入腾讯云 IM 大家庭！";
 "TUIKitMicCamerAuthTips" = "请开启麦克风和摄像头权限";
 "TUIKitMicAuth" = "请开启麦克风权限";
 "TUIKitTipsConfirmResendMessage" = "确定重发此消息吗? ";
 "TUIKitTipsSystemError" = "系统错误";
 "TUIKitTipsEnterRoomErrorFormat" = "进房失败: %d";
-"TUIKitWhosLiveFormat" = "%@的直播";
 "TUIKitWhoRequestForJoinGroupFormat" = "%@申请加入群聊";
 "TUIKitAgreedByAdministor" = "管理员同意申请";
 "TUIkitDiscliedByAdministor" = "管理员拒绝申请";
@@ -219,6 +263,8 @@
 "TUIKitMessageReadC2CUnReadDetail" = "尚未阅读";
 "TUIKitMessageReadDetail" = "消息详情";
 "TUIKitMessageReadNoMoreData" = "没有更多数据了";
+"TUIKitMessageReadGetReadMembersFail" = "获取已读成员失败";
+"TUIKitMessageReadGetUnreadMembersFail" = "获取未读成员失败";
 
 "TUIKitMoreCamera" = "拍照";
 "TUIKitMorePhoto" = "图片";
@@ -227,7 +273,6 @@
 "TUIKitMoreFile" = "文件";
 "TUIKitMoreVideoCall" = "视频通话";
 "TUIKitMoreVoiceCall" = "语音通话";
-"TUIKitMoreGroupLive" = "群直播";
 "TUIKitMoreLink" = "自定义";
 "TUIKitMoreLinkDetails" = "查看详情>>";
 
@@ -263,16 +308,6 @@
 "TUIKitChatTipsAtMe" = "有人@我";
 "TUIKitChatBackToLatestLocation" = "回到最新位置";
 "TUIKitChatNewMessages" = "%@条新消息";
-
-"TUIKitSignalingLiveRequestForMic" = "直播间申请上麦";
-"TUIKitSignalingLiveRequestForMicRejected" = "直播间申请上麦被拒绝";
-"TUIKitSignalingAgreeMicRequest" = "直播间同意上麦";
-"TUIKitSignalingCloseLinkMicRequest" = "直播间申请关闭连麦";
-"TUIKitSignalingCloseLinkMic" = "直播间关闭连麦";
-"TUIKitSignalingRequestForPK" = "直播间申请PK";
-"TUIKitSignalingRequestForPKRejected" = "直播间申请PK被拒绝";
-"TUIKitSignalingRequestForPKAgree" = "直播间同意PK";
-"TUIKitSignalingPKExit" = "直播间退出PK";
 
 "TUIKitAllowTypeAcceptOne" = "同意任何用户加好友";
 "TUIKitAllowTypeNeedConfirm" = "需要验证";
@@ -402,7 +437,7 @@
 "TUIKitErrorSVRCommonReqFreqLimit" = "请求过于频繁，请稍后重试。";
 "TUIKitErrorSVRCommonInvalidService" = "您的专业版套餐包已到期并停用，请登录 即时通信 IM 购买页面 重新购买套餐包。购买后，将在5分钟后生效。";
 "TUIKitErrorSVRCommonSensitiveText" = "文本安全打击，文本中可能包含敏感词汇。";
-"TUIKitErrorSVRCommonBodySizeLimit" = "发消息包体过长，目前支持最大8k消息包体长度，请减少包体大小重试。";
+"TUIKitErrorSVRCommonBodySizeLimit" = "发消息包体过长，目前支持最大12k消息包体长度，请减少包体大小重试。";
 "TUIKitErrorSVRAccountUserSigExpired" = "UserSig 已过期，请重新生成 UserSig";
 "TUIKitErrorSVRAccountUserSigEmpty" = "UserSig 长度为0";
 "TUIKitErrorSVRAccountUserSigCheckFailed" = "UserSig 校验失败";
@@ -478,7 +513,7 @@
 "TUIKitErrorSVRMsgTimeLimit" = "消息离线存储时间错误（最多不能超过7天）。";
 "TUIKitErrorSVRMsgInvalidSyncOtherMachine" = "JSON 格式请求包体中 SyncOtherMachine 字段不是 Integer 类型";
 "TUIkitErrorSVRMsgInvalidMsgLifeTime" = "JSON 格式请求包体中 MsgLifeTime 字段不是 Integer 类型";
-"TUIKitErrorSVRMsgBodySizeLimit" = "JSON 数据包超长，消息包体请不要超过8k。";
+"TUIKitErrorSVRMsgBodySizeLimit" = "JSON 数据包超长，消息包体请不要超过12k。";
 "TUIKitErrorSVRmsgLongPollingCountLimit" = "Web 端长轮询被踢（Web 端同时在线实例个数超出限制）。";
 "TUIKitErrorSVRGroupApiNameError" = "请求中的接口名称错误";
 "TUIKitErrorSVRGroupAccountCountLimit" = "请求包体中携带的帐号数量过多。";
@@ -689,6 +724,8 @@
 
 "TUIKitInputRecordTipsTitle" = "松开手指发送，左滑取消发送";
 "TUIKitInputRecordCancelTipsTitle" = "松开手指，取消发送";
+"TUIKitInputRecordRejectedInCall" = "正在音视频通话，请稍后再试";
+"TUIKitInputRecordRejectedIsRecording" = "当前录音未结束";
 
 "StickyonTop" = "置顶";
 "CancelStickonTop" = "取消置顶";
@@ -711,6 +748,11 @@
 "TUIKitRepliesNum" = "条回复";
 "TUIKitReference" = "引用";
 "TUIKitNotSupportThisMessage" = "[暂时不支持该消息展示]";
+
+"TUIKitTranslate" = "翻译";
+"TUIKitTranslateDefaultTips" = "由腾讯云 IM 提供翻译支持";
+"TUIKitTranslateFailed" = "翻译失败";
+"Hide" = "隐藏";
 
 "TUIKitSignalingSwitchToAudio" = "视频转语音";
 "TUIKitSignalingUnsupportedCalling" = "未知邀请";
@@ -750,6 +792,7 @@
 "TUIKitCreatGroupType_See_Doc" ="详见产品文档";
 "TUIKitCreatGroupType_Desc_Highlight" = "产品文档";
 "TUIKitCreatGroupType_See_Doc_Simple" = "查看产品文档";
+"TUIKitSearchItemCancel" = "取消";
 
 //----mini---
 "Pin" = "置顶";

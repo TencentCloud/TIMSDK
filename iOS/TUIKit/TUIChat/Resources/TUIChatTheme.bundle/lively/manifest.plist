@@ -132,5 +132,17 @@
 	<string>#999999</string>
 	<key>chat_messageReplyIcon_img</key>
 	<string>messageReplyIcon</string>
+	<key>chat_message_translation_loading_img</key>
+	<string>message_translation_loading.png</string>
+	<key>chat_message_translation_tips_img</key>
+	<string>message_translation_tips.png</string>
+	<key>chat_message_translation_bg_color</key>
+	<string>#F2F7FF</string>
+	<key>chat_message_translation_bg_color_minimalist</key>
+	<string>#F3F5F9</string>
+	<key>chat_message_translation_text_color</key>
+	<string>#000000</string>
+	<key>chat_message_translation_text_color_minimalist</key>
+	<string>#000000</string>
 </dict>
 </plist>

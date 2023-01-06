@@ -6,15 +6,11 @@
 //
 
 #import "TUIGroupCreateController_Minimalist.h"
+#import "TUIGroupTypeListController_Minimalist.h"
 #import "UIView+TUILayout.h"
-#import "TUICommonContactProfileCardCell.h"
 #import "TUICommonModel.h"
-#import "TUICommonContactSwitchCell.h"
-#import "TUIContactAvatarViewController_Minimalist.h"
 #import "TUIDefine.h"
 #import "TUIThemeManager.h"
-#import "TUIGroupTypeListController_Minimalist.h"
-#import "TUISelectAvatarController.h"
 #import "TUILogin.h"
 
 @interface TUIGroupCreateController_Minimalist () <UITableViewDataSource, UITableViewDelegate,UITextFieldDelegate>

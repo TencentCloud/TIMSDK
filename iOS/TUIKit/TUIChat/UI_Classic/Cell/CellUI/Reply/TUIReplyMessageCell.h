@@ -28,7 +28,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) UILabel *senderLabel;
 
-
 @property (nonatomic, strong) TUIReplyMessageCellData *replyData;
 
 - (void)fillWithData:(TUIReplyMessageCellData *)data;

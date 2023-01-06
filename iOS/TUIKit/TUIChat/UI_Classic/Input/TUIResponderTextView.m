@@ -7,7 +7,7 @@
 //
 
 #import "TUIResponderTextView.h"
-#import "NSString+emoji.h"
+#import "NSString+TUIEmoji.h"
 
 @implementation TUIResponderTextView
 

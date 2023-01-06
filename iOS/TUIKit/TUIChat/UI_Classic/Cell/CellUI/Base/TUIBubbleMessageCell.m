@@ -15,9 +15,8 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        _bubbleView = [[UIImageView alloc] initWithFrame:CGRectZero];
+        _bubbleView = [[UIImageView alloc] initWithFrame:self.container.bounds];
         [self.container addSubview:_bubbleView];
-        _bubbleView.mm_fill();
         _bubbleView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [self prepareReactTagUI:self.container];
     }
@@ -35,8 +34,15 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    self.bubbleView.mm_top(self.bubbleData.bubbleTop);
-    self.retryView.mm__centerY(self.bubbleView.mm_centerY);
+    
+    CGRect frame = self.bubbleView.frame;
+    frame.origin.x = self.bubbleData.bubbleTop;
+    self.bubbleView.frame = frame;
+    
+    CGPoint center = self.retryView.center;
+    center.y = self.bubbleView.center.y;
+    self.retryView.center = center;
+
 }
 
 - (void)highlightWhenMatchKeyword:(NSString *)keyword

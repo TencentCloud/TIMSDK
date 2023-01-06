@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TUIChatSmallTongue : NSObject
 
 @property(nonatomic, assign) TUIChatSmallTongueType type;
-@property(nonatomic, assign) uint64_t unreadMsgCount;
+@property(nonatomic, assign) NSInteger unreadMsgCount;
 @property(nonatomic, strong) NSArray *atMsgSeqs;
 
 @end

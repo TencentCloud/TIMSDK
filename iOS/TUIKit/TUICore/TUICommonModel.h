@@ -44,6 +44,64 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic) UIImageView *imageView;
 @end
 
+/////////////////////////////////////////////////////////////////////////////////
+//
+//                           TUIPopView
+//
+/////////////////////////////////////////////////////////////////////////////////
+@class TUIPopView;
+@protocol TUIPopViewDelegate <NSObject>
+- (void)popView:(TUIPopView *)popView didSelectRowAtIndex:(NSInteger)index;
+@end
+
+@interface TUIPopView : UIView
+@property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, assign) CGPoint arrowPoint;
+@property (nonatomic, weak) id<TUIPopViewDelegate> delegate;
+- (void)setData:(NSMutableArray *)data;
+- (void)showInWindow:(UIWindow *)window;
+@end
+
+@interface TUIPopCellData : NSObject
+@property (nonatomic, strong) UIImage *image;
+@property (nonatomic, strong) NSString *title;
+@end
+
+@interface TUIPopCell : UITableViewCell
+@property (nonatomic, strong) UIImageView *image;
+@property (nonatomic, strong) UILabel *title;
++ (CGFloat)getHeight;
+- (void)setData:(TUIPopCellData *)data;
+@end
+
+/////////////////////////////////////////////////////////////////////////////////
+//
+//                           TUIModifyView
+//
+/////////////////////////////////////////////////////////////////////////////////
+@class TUIModifyView;
+@protocol TUIModifyViewDelegate <NSObject>
+- (void)modifyView:(TUIModifyView *)modifyView didModiyContent:(NSString *)content;
+@end
+
+@interface TUIModifyViewData : NSObject
+@property (nonatomic, strong) NSString *title;
+@property (nonatomic, strong) NSString *content;
+@property (nonatomic, strong) NSString *desc;
+@property (nonatomic, assign) BOOL enableNull;
+@end
+
+@interface TUIModifyView : UIView
+@property (nonatomic, strong) UIView *container;
+@property (nonatomic, strong) UILabel *title;
+@property (nonatomic, strong) UITextField *content;
+@property (nonatomic, strong) UILabel *descLabel;
+@property (nonatomic, strong) UIButton *confirm;
+@property (nonatomic, strong) UIView *hLine;
+@property (nonatomic, weak) id<TUIModifyViewDelegate> delegate;
+- (void)setData:(TUIModifyViewData *)data;
+- (void)showInWindow:(UIWindow *)window;
+@end
 
 /////////////////////////////////////////////////////////////////////////////////
 //
@@ -75,6 +133,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) SEL cselector;
 @property (nonatomic, strong) NSDictionary *ext;
 - (CGFloat)heightOfWidth:(CGFloat)width;
+- (CGFloat)estimatedHeight;
 @end
 
 @interface TUICommonTableViewCell : UITableViewCell
@@ -84,6 +143,63 @@ NS_ASSUME_NONNULL_BEGIN
 @property BOOL changeColorWhenTouched;
 
 - (void)fillWithData:(TUICommonCellData *)data;
+
+@end
+
+/////////////////////////////////////////////////////////////////////////////////
+//
+//                           TUICommonTextCell & data
+//
+/////////////////////////////////////////////////////////////////////////////////
+@interface TUICommonTextCellData : TUICommonCellData
+
+@property NSString *key;
+@property NSString *value;
+@property BOOL showAccessory;
+@property UIColor *keyColor;
+@property UIColor *valueColor;
+@property BOOL enableMultiLineValue;
+
+@property (nonatomic, assign) UIEdgeInsets keyEdgeInsets;
+
+@end
+
+@interface TUICommonTextCell : TUICommonTableViewCell
+@property UILabel *keyLabel;
+@property UILabel *valueLabel;
+@property (readonly) TUICommonTextCellData *textData;
+
+- (void)fillWithData:(TUICommonTextCellData *)data;
+
+@end
+
+/////////////////////////////////////////////////////////////////////////////////
+//
+//                           TUICommonSwitchCell & data
+//
+/////////////////////////////////////////////////////////////////////////////////
+@interface TUICommonSwitchCellData : TUICommonCellData
+
+@property NSString *title;
+@property NSString *desc;
+@property (getter=isOn) BOOL on;
+@property CGFloat margin;
+@property SEL cswitchSelector;
+
+@property (nonatomic,assign) BOOL displaySeparatorLine;
+
+@property (nonatomic,assign) BOOL disableChecked;
+
+@end
+
+@interface TUICommonSwitchCell : TUICommonTableViewCell
+@property UILabel *titleLabel; // main title label
+@property UILabel *descLabel; // detail title label below the main title label, used for explaining details
+@property UISwitch *switcher;
+
+@property (readonly) TUICommonSwitchCellData *switchData;
+
+- (void)fillWithData:(TUICommonSwitchCellData *)data;
 
 @end
 
@@ -476,6 +592,84 @@ typedef void(^TUIContactListPickerOnCancel)(TUICommonContactSelectCellData *data
 @property (nonatomic, strong, readonly) UIButton *accessoryBtn;
 @property (nonatomic, strong) NSArray<TUICommonContactSelectCellData *> *selectArray;
 @property (nonatomic, copy) TUIContactListPickerOnCancel onCancel;
+
+@end
+
+/////////////////////////////////////////////////////////////////////////////////
+//
+//                             TUIProfileCardCell & vc
+//
+/////////////////////////////////////////////////////////////////////////////////
+@class TUIProfileCardCell;
+@protocol TUIProfileCardDelegate <NSObject>
+- (void)didTapOnAvatar:(TUIProfileCardCell *)cell;
+@end
+
+@interface TUIProfileCardCellData : TUICommonCellData
+@property (nonatomic, strong) UIImage *avatarImage;
+@property (nonatomic, strong) NSURL *avatarUrl;
+@property (nonatomic, strong) NSString *name;
+@property (nonatomic, strong) NSString *identifier;
+@property (nonatomic, strong) NSString *signature;
+@property (nonatomic, strong) UIImage *genderIconImage;
+@property (nonatomic, strong) NSString *genderString;
+@property BOOL showAccessory;
+@property BOOL showSignature;
+@end
+
+@interface TUIProfileCardCell : TUICommonTableViewCell
+@property (nonatomic, strong) UIImageView *avatar;
+@property (nonatomic, strong) UILabel *name;
+@property (nonatomic, strong) UILabel *identifier;
+@property (nonatomic, strong) UILabel *signature;
+@property (nonatomic, strong) UIImageView *genderIcon;
+@property (nonatomic, strong) TUIProfileCardCellData *cardData;
+@property (nonatomic, weak)  id<TUIProfileCardDelegate> delegate;
+- (void)fillWithData:(TUIProfileCardCellData *)data;
+@end
+
+@interface TUIAvatarViewController : UIViewController
+
+@property (nonatomic, strong) TUIProfileCardCellData *avatarData;
+
+@end
+
+typedef NS_ENUM(NSUInteger, TUISelectAvatarType) {
+    TUISelectAvatarTypeUserAvatar,
+    TUISelectAvatarTypeGroupAvatar,
+    TUISelectAvatarTypeCover,
+    TUISelectAvatarTypeConversationBackGroundCover,
+};
+@interface TUISelectAvatarController : UIViewController
+@property (nonatomic, copy) void (^selectCallBack)(NSString *urlStr);
+@property (nonatomic, assign) TUISelectAvatarType selectAvatarType;
+@property (nonatomic, copy) NSString *profilFaceURL;
+@property (nonatomic, strong) UIImage *cacheGroupGridAvatarImage;
+@property (nonatomic, copy) NSString *createGroupType;
+@end
+
+/////////////////////////////////////////////////////////////////////////////////
+//
+//                             TUICommonAvatarCell & Data
+//
+/////////////////////////////////////////////////////////////////////////////////
+@interface TUICommonAvatarCellData : TUICommonCellData;
+@property (nonatomic, strong) NSString *key;
+@property (nonatomic, strong) NSString *value;
+@property BOOL showAccessory;
+@property (nonatomic, strong) UIImage *avatarImage;
+@property (nonatomic, strong) NSURL *avatarUrl;
+
+@end
+
+@interface TUICommonAvatarCell :TUICommonTableViewCell
+@property UILabel *keyLabel;
+@property UILabel *valueLabel;
+@property UIImageView *avatar;
+@property (readonly) TUICommonAvatarCellData *avatarData;
+
+
+- (void)fillWithData:(TUICommonAvatarCellData *) avatarData;
 
 @end
 

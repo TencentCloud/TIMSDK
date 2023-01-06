@@ -42,10 +42,10 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  The color of label which displays the text message content
  */
-@property (nonatomic) UIColor *textColor;
+@property (nonatomic, strong) UIColor *textColor;
 
-@property (nonatomic) BOOL isAudioCall;
-@property (nonatomic) BOOL isVideoCall;
+@property (nonatomic, assign) BOOL isAudioCall;
+@property (nonatomic, assign) BOOL isVideoCall;
 
 /**
  *  可变字符串
@@ -77,7 +77,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  The size of the label which displays the text message content.
  *  Position the text message with the @textOrigin.
  */
-@property (readonly) CGSize textSize;
+@property (nonatomic, assign, readonly) CGSize textSize;
 
 /**
  *  文本内容原点。
@@ -86,7 +86,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  The origin of label which displays the text message content.
  *  Position the text message with the @textSize.
  */
-@property (readonly) CGPoint textOrigin;
+@property (nonatomic, assign, readonly) CGPoint textOrigin;
 
 /**
  *  文本消息颜色（发送）

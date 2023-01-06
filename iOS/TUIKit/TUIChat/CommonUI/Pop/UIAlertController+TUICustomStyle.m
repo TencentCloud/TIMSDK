@@ -7,7 +7,7 @@
 
 #import "UIAlertController+TUICustomStyle.h"
 #import <objc/runtime.h>
-#import "TUICore/TUIDefine.h"
+#import "TUIDefine.h"
 
 @implementation TUICustomActionSheetItem
 

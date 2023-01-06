@@ -6,7 +6,6 @@
 //
 
 #import "TUIMessageDataProvider+Call.h"
-#import "TUIGroupLiveMessageCell.h"
 #import "TUITextMessageCell.h"
 #import "TUISystemMessageCell.h"
 #import "TUIDefine.h"

@@ -20,22 +20,22 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * The insets of message
  */
-@property UIEdgeInsets messageInsets;
+@property (nonatomic, assign) UIEdgeInsets messageInsets;
 
 /**
  * The insets of bubble content.
  */
-@property UIEdgeInsets bubbleInsets;
+@property (nonatomic, assign) UIEdgeInsets bubbleInsets;
 
 /**
  * The insets of avatar
  */
-@property UIEdgeInsets avatarInsets;
+@property (nonatomic, assign) UIEdgeInsets avatarInsets;
 
 /**
  * The size of avatar
  */
-@property CGSize avatarSize;
+@property (nonatomic, assign) CGSize avatarSize;
 
 
 /////////////////////////////////////////////////////////////////////////////////

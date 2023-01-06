@@ -29,6 +29,10 @@
     TUIChatSmallTongue *_tongue;
 }
 
++ (void)load {
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onThemeChanged:) name:TUIDidApplyingThemeChangedNotfication object:nil];
+}
+
 - (instancetype) initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
@@ -85,51 +89,34 @@
 }
 
 + (NSString *)getTongueText:(TUIChatSmallTongue *)tongue {
-    NSString *tongueText = nil;
-    switch (tongue.type) {
-        case TUIChatSmallTongueType_ScrollToBoom:
-        {
-            tongueText = TUIKitLocalizableString(TUIKitChatBackToLatestLocation);
-        }
-            break;
-        case TUIChatSmallTongueType_ReceiveNewMsg:
-        {
-            tongueText = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitChatNewMessages),tongue.unreadMsgCount > 99 ? @"99+" : @(tongue.unreadMsgCount)];
-            break;
-        }
-        case TUIChatSmallTongueType_SomeoneAtMe:
-        {
-            tongueText = TUIKitLocalizableString(TUIKitChatTipsAtMe);
-        }
-            break;
-        default:
-            break;
+    static NSMutableDictionary *titleCacheFormat;
+    if (titleCacheFormat == nil) {
+        titleCacheFormat = [NSMutableDictionary dictionary];
+        [titleCacheFormat setObject:TUIKitLocalizableString(TUIKitChatBackToLatestLocation) forKey:@(TUIChatSmallTongueType_ScrollToBoom)];
+        [titleCacheFormat setObject:TUIKitLocalizableString(TUIKitChatNewMessages) forKey:@(TUIChatSmallTongueType_ReceiveNewMsg)];
+        [titleCacheFormat setObject:TUIKitLocalizableString(TUIKitChatTipsAtMe) forKey:@(TUIChatSmallTongueType_SomeoneAtMe)];
     }
-    return tongueText;
+    
+    if (tongue.type == TUIChatSmallTongueType_ReceiveNewMsg) {
+        return [NSString stringWithFormat:[titleCacheFormat objectForKey:@(TUIChatSmallTongueType_ReceiveNewMsg)], tongue.unreadMsgCount > 99 ? @"99+" : @(tongue.unreadMsgCount)];
+    } else {
+        return [titleCacheFormat objectForKey:@(tongue.type)];
+    }
 }
 
+static NSMutableDictionary *imageCache;
 + (UIImage *)getTongueImage:(TUIChatSmallTongue *)tongue {
-    UIImage *tongueImage = nil;
-    switch (tongue.type) {
-        case TUIChatSmallTongueType_ScrollToBoom:
-        {
-            tongueImage = TUIChatBundleThemeImage(@"chat_drop_down_img", @"drop_down");
-        }
-            break;
-        case TUIChatSmallTongueType_ReceiveNewMsg:
-        {
-            tongueImage = TUIChatBundleThemeImage(@"chat_drop_down_img", @"drop_down");
-            break;
-        }
-        case TUIChatSmallTongueType_SomeoneAtMe:
-        {
-            tongueImage = TUIChatBundleThemeImage(@"chat_pull_up_img", @"pull_up");
-        }
-            break;
-        default:
-            break;
+    if (imageCache == nil) {
+        imageCache = [NSMutableDictionary dictionary];
+        [imageCache setObject:TUIChatBundleThemeImage(@"chat_drop_down_img", @"drop_down")?:UIImage.new forKey:@(TUIChatSmallTongueType_ScrollToBoom)];
+        [imageCache setObject:TUIChatBundleThemeImage(@"chat_drop_down_img", @"drop_down")?:UIImage.new forKey:@(TUIChatSmallTongueType_ReceiveNewMsg)];
+        [imageCache setObject:TUIChatBundleThemeImage(@"chat_pull_up_img", @"pull_up")?:UIImage.new forKey:@(TUIChatSmallTongueType_SomeoneAtMe)];
     }
-    return tongueImage;
+    return [imageCache objectForKey:@(tongue.type)];
+}
+
++ (void)onThemeChanged:(NSNotification *)notice {
+    imageCache = nil;
 }
 
 @end

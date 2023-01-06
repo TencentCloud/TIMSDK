@@ -45,8 +45,6 @@
 "Make-a-call" = "Start Call";
 "Done" = "OK";
 "All" = "All";
-"Living" = "In Progress";
-"Live-finished" = "Ended";
 "Agreed" = "Agreed";
 "Disclined" = "Declined";
 "Agree" = "Agree";
@@ -71,6 +69,18 @@
 "SearchGroupPlaceholder" = "User ID";
 "please_fill_in_verification_information" = "Enter verification information";
 "please_fill_in_remarks_group_info" = "Enter remark and list name";
+
+"no_set" = "Not set";
+"no_personal_signature" = "No status";
+"logout" = "Log Out";
+"login" = "Log In";
+"ReadAll" = "Read All";
+"Hide"    = "Hide";
+"Delete"    = "Delete";
+
+"ChatsNewChatText"    = "New Chat";
+"ChatsNewGroupText"  = "Create Group Chat";
+"ChatsSelectContact" = "Select Contact";
 "ContactsJoinGroup"  = "Add Group";
 "ContactsAddFriends" = "Add to Contacts";
 "ChatsCreatePrivateGroupTips" = "Create Discussion Group";
@@ -92,6 +102,25 @@
 "ProfileEditAlia" = "Alias";
 "ProfileDetails" = "Details";
 "ProfileSetBackgroundImage" = "Background";
+"ProfilePhoto" = "Profile Photo";
+"ProfileName"  = "Name";
+"ProfileAccount" = "Account";
+"ProfileSignature" = "Status";
+"ProfileGender" = "Gender";
+"ProfileEditName" = "Name";
+"ProfileEditNameDesc" = "Only letters, digits, underscores, and Chinese characters.";
+"ProfileEditSignture" = "Status";
+"ProfileEditGender" = "Gender";
+"ProfileEditAlia" = "Alias";
+"ProfileAlia" = "Alias";
+"ProfileBlocked" = "Block";
+"ProfileMessageDoNotDisturb" = "Mute Notifications";
+"ProfileStickyonTop" = "Pin";
+"ProfileSendMessages" = "Send Message";
+"ProfileDeleteFirend" = "Delete Friend";
+"ProfileBirthday" = "Birthday";
+"SignatureFormat" = "Status:%@";
+
 "FriendRequestFormat" = "I'm %@";
 "FriendRequestFillInfo" = "Add Friend";
 "FriendOneWay" = "One-way Friend";
@@ -101,13 +130,26 @@
 "FriendAddResultForbid" = "The other user disabled friend request.";
 "FriendAddResultSuccess" = "Added to friend list";
 "FriendAddResultExists" = "You're already friends.";
+"MeFriendRequest" = "Friend Request";
+"MeFriendRequestMethodAgreeAll" = "Allow any user to add you as friend";
+"MeFriendRequestMethodNeedConfirm" = "Anyone upon Request";
+"MeFriendRequestMethodDenyAll" = "Decline friend request from any user";
+"MeMessageReadStatus" = "Message read status";
+"MeMessageReadStatusOpenDesc" = "If disabled, the message read status is hidden for all your messages and for all the messages sent by members in a chat.";
+"MeMessageReadStatusCloseDesc" = "If enabled, the message read status is displayed for all your messages and for all the messages sent by members in a chat.";
+
+"ShowOnlineStatus" = "Display online status";
+"ShowOnlineStatusOpenDesc" = "If disabled, the users' online status will not displayed in your session and contact list.";
+"ShowOnlineStatusCloseDesc" = "If enabled, the users' online status will displayed in your session and contact list.";
+"ShowPackageToast" = "This is the feature of ultimate edition";
+
+"TUIKitDone" = "Done";
 "TUIKitWelcome" = "Welcome to Tencent Cloud Instant Messaging!";
 "TUIKitMicCamerAuthTips" = "Enable mic and camera permissions";
 "TUIKitMicAuth" = "Enable mic permission";
 "TUIKitTipsConfirmResendMessage" = "Resend this message? ";
 "TUIKitTipsSystemError" = "System error";
 "TUIKitTipsEnterRoomErrorFormat" = "Failed to enter the room: %d";
-"TUIKitWhosLiveFormat" = "%@'s live stream";
 "TUIKitWhoRequestForJoinGroupFormat" = "%@ requests to join group chat.";
 "TUIKitAgreedByAdministor" = "Request approved by admin";
 "TUIkitDiscliedByAdministor" = "Admin declined the request.";
@@ -218,6 +260,8 @@
 "TUIKitMessageReadC2CUnReadDetail" = "Unread";
 "TUIKitMessageReadDetail" = "Message Detail";
 "TUIKitMessageReadNoMoreData" = "There is no more data";
+"TUIKitMessageReadGetReadMembersFail" = "Get Read Members Failed.";
+"TUIKitMessageReadGetUnreadMembersFail" = "Get Unread Members Failed.";
 
 "TUIKitMoreCamera" = "Take Photo";
 "TUIKitMorePhoto" = "Album";
@@ -226,7 +270,6 @@
 "TUIKitMoreFile" = "File";
 "TUIKitMoreVideoCall" = "Video Call";
 "TUIKitMoreVoiceCall" = "Voice Call";
-"TUIKitMoreGroupLive" = "Group Live";
 "TUIKitMoreLink" = "Custom";
 "TUIKitMoreLinkDetails" = "View Details>>";
 
@@ -262,16 +305,6 @@
 "TUIKitChatTipsAtMe" = "You were mentioned";
 "TUIKitChatBackToLatestLocation" = "back to latest location";
 "TUIKitChatNewMessages" = "%@new messages";
-
-"TUIKitSignalingLiveRequestForMic" = "Apply to Turn on Mic in Live Room";
-"TUIKitSignalingLiveRequestForMicRejected" = "Application for turning on mic in live room declined";
-"TUIKitSignalingAgreeMicRequest" = "Application for turning on mic in live room approved";
-"TUIKitSignalingCloseLinkMicRequest" = "Apply to End Co-anchor in Live Room";
-"TUIKitSignalingCloseLinkMic" = "End Co-anchor in Live Room";
-"TUIKitSignalingRequestForPK" = "Request to PK in Live Room";
-"TUIKitSignalingRequestForPKRejected" = "Request to PK in live room declined";
-"TUIKitSignalingRequestForPKAgree" = "Request to PK in live room approved";
-"TUIKitSignalingPKExit" = "Exit PK in Live Room";
 
 "TUIKitAllowTypeAcceptOne" = "Allow any user to add you as friend";
 "TUIKitAllowTypeNeedConfirm" = "Anyone upon Request";
@@ -401,7 +434,7 @@
 "TUIKitErrorSVRCommonReqFreqLimit" = "Too many requests. Try again later.";
 "TUIKitErrorSVRCommonInvalidService" = "Your professional package has expired and been deactivated. Please log in to the im purchase page to re purchase the package. After purchase, it will take effect in 5 minutes.";
 "TUIKitErrorSVRCommonSensitiveText" = "Text is filtered due to security reasons, which may contain sensitive words.";
-"TUIKitErrorSVRCommonBodySizeLimit" = "The sending message package is too long. Currently, the maximum 8K message package length is supported. Please reduce the package size and try again.";
+"TUIKitErrorSVRCommonBodySizeLimit" = "The sending message package is too long. Currently, the maximum 12K message package length is supported. Please reduce the package size and try again.";
 "TUIKitErrorSVRAccountUserSigExpired" = "UserSig has expired. Generate a new one.";
 "TUIKitErrorSVRAccountUserSigEmpty" = "UserSig length is 0.";
 "TUIKitErrorSVRAccountUserSigCheckFailed" = "UserSig verification failed.";
@@ -477,7 +510,7 @@
 "TUIKitErrorSVRMsgTimeLimit" = "Invalid offline message storage time (up to 7 days).";
 "TUIKitErrorSVRMsgInvalidSyncOtherMachine" = "The type of the SyncOtherMachine field in the JSON request packet body is not Integer.";
 "TUIkitErrorSVRMsgInvalidMsgLifeTime" = "The type of the MsgLifeTime field in the JSON request packet body is not Integer.";
-"TUIKitErrorSVRMsgBodySizeLimit" = "The length of JSON data packet exceeds the limit. The message packet body shall not exceed 8 KB.";
+"TUIKitErrorSVRMsgBodySizeLimit" = "The length of JSON data packet exceeds the limit. The message packet body shall not exceed 12 KB.";
 "TUIKitErrorSVRmsgLongPollingCountLimit" = "Forced logout on the Web page during long polling (the number of online instances on the Web page exceeds the limit).";
 "TUIKitErrorSVRGroupApiNameError" = "The API name in the request is incorrect.";
 "TUIKitErrorSVRGroupAccountCountLimit" = "The number of accounts in the request packet body exceeds the limit.";
@@ -689,6 +722,8 @@
 
 "TUIKitInputRecordTipsTitle" = "Swipe left to cancel or release to send";
 "TUIKitInputRecordCancelTipsTitle" = "Release to cancel";
+"TUIKitInputRecordRejectedInCall" = "Audio or video call is in progress, please try again later";
+"TUIKitInputRecordRejectedIsRecording" = "The current recording is not finished";
 
 "StickyonTop" = "Pin";
 "CancelStickonTop" = "UnPin";
@@ -712,6 +747,11 @@
 "TUIKitRepliesNum" = " replies";
 "TUIKitReference" = "reference";
 "TUIKitNotSupportThisMessage" = "[This message display is not currently supported]";
+
+"TUIKitTranslate" = "Translate";
+"TUIKitTranslateDefaultTips" = "Translated by IM";
+"TUIKitTranslateFailed" = "Unable to translate";
+"Hide" = "Hide";
 
 "TUIKitSignalingSwitchToAudio" = "Switch to voice call";
 "TUIKitSignalingUnsupportedCalling" = "Unknown invitation";
@@ -751,6 +791,7 @@
 "TUIKitCreatGroupType_See_Doc" ="See product documentation for details";
 "TUIKitCreatGroupType_Desc_Highlight" = "product documentation";
 "TUIKitCreatGroupType_See_Doc_Simple" = "See product documentation";
+"TUIKitSearchItemCancel" = "Cancel";
 
 //----mini---
 "Pin" = "Pin";

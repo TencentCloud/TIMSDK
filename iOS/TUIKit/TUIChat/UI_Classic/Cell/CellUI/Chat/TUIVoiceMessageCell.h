@@ -9,6 +9,7 @@
  */
 #import "TUIBubbleMessageCell.h"
 #import "TUIVoiceMessageCellData.h"
+
 @import AVFoundation;
 
 /**
@@ -47,7 +48,6 @@
 @property (nonatomic, strong) UILabel *duration;
 
 @property (nonatomic, strong) UIImageView *voiceReadPoint;
-
 
 @property TUIVoiceMessageCellData *voiceData;
 

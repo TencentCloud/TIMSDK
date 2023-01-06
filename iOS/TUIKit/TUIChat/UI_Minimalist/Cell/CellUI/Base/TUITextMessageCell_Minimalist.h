@@ -23,7 +23,6 @@
  */
 @property (nonatomic, strong) TUIChatSelectAllContentCallback selectAllContentContent;
 
-
 @property TUITextMessageCellData_Minimalist *textData;
 
 - (void)fillWithData:(TUITextMessageCellData_Minimalist *)data;

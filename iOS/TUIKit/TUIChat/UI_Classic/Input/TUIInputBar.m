@@ -11,19 +11,21 @@
 #import "TUIDefine.h"
 #import "TUITool.h"
 #import "TUIDefine.h"
-#import <AVFoundation/AVFoundation.h>
+
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "UIView+TUILayout.h"
 #import "TUIDarkModel.h"
 #import "TUIGlobalization.h"
-#import "NSTimer+Safe.h"
-#import "NSString+emoji.h"
+#import "NSTimer+TUISafe.h"
+#import "NSString+TUIEmoji.h"
+#import "TUICore.h"
+#import "TUIAudioRecorder.h"
 
-@interface TUIInputBar() <UITextViewDelegate, AVAudioRecorderDelegate>
-@property (nonatomic, strong) TUIRecordView *record;
+@interface TUIInputBar() <UITextViewDelegate, TUIAudioRecorderDelegate>
+@property (nonatomic, strong) TUIRecordView *recordView;
 @property (nonatomic, strong) NSDate *recordStartTime;
-@property (nonatomic, strong) AVAudioRecorder *recorder;
-@property (nonatomic, strong) NSTimer *recordTimer;
+
+@property (nonatomic, strong) TUIAudioRecorder *recorder;
 
 @property (nonatomic, assign) BOOL isFocusOn;
 @property (nonatomic, strong) NSTimer *sendTypingStatusTimer;
@@ -32,17 +34,7 @@
 
 @implementation TUIInputBar
 
-- (void)dealloc {
-    
-    if(_sendTypingStatusTimer){
-        [_sendTypingStatusTimer invalidate];
-        _sendTypingStatusTimer = nil;
-    }
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-- (id)initWithFrame:(CGRect)frame
-{
+- (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if(self){
         [self setupViews];
@@ -52,31 +44,38 @@
     return self;
 }
 
-- (void)setupViews
-{
+- (void)dealloc {
+    if (_sendTypingStatusTimer) {
+        [_sendTypingStatusTimer invalidate];
+        _sendTypingStatusTimer = nil;
+    }
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+#pragma mark - UI
+- (void)setupViews {
     self.backgroundColor = TUIChatDynamicColor(@"chat_input_controller_bg_color", @"#EBF0F6");
 
     _lineView = [[UIView alloc] init];
     _lineView.backgroundColor = TUICoreDynamicColor(@"separator_color", @"#FFFFFF");
 
     _micButton = [[UIButton alloc] init];
-    [_micButton addTarget:self action:@selector(clickVoiceBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [_micButton addTarget:self action:@selector(onMicButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [_micButton setImage:TUIChatBundleThemeImage(@"chat_ToolViewInputVoice_img",@"ToolViewInputVoice")         forState:UIControlStateNormal];
     [_micButton setImage: TUIChatBundleThemeImage(@"chat_ToolViewInputVoiceHL_img", @"ToolViewInputVoiceHL")
                 forState:UIControlStateHighlighted];
     [self addSubview:_micButton];
 
     _faceButton = [[UIButton alloc] init];
-    [_faceButton addTarget:self action:@selector(clickFaceBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [_faceButton addTarget:self action:@selector(onFaceEmojiButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [_faceButton setImage: TUIChatBundleThemeImage(@"chat_ToolViewEmotion_img", @"ToolViewEmotion")
                  forState:UIControlStateNormal];
     [_faceButton setImage: TUIChatBundleThemeImage(@"chat_ToolViewEmotionHL_img",@"ToolViewEmotionHL")
                  forState:UIControlStateHighlighted];
     [self addSubview:_faceButton];
-
     
     _keyboardButton = [[UIButton alloc] init];
-    [_keyboardButton addTarget:self action:@selector(clickKeyboardBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [_keyboardButton addTarget:self action:@selector(onKeyboardButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [_keyboardButton setImage:TUIChatBundleThemeImage(@"chat_ToolViewKeyboard_img", @"ToolViewKeyboard") forState:UIControlStateNormal];
     [_keyboardButton setImage:TUIChatBundleThemeImage(@"chat_ToolViewKeyboardHL_img", @"ToolViewKeyboardHL")
                      forState:UIControlStateHighlighted];
@@ -84,7 +83,7 @@
     [self addSubview:_keyboardButton];
 
     _moreButton = [[UIButton alloc] init];
-    [_moreButton addTarget:self action:@selector(clickMoreBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [_moreButton addTarget:self action:@selector(onMoreButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [_moreButton setImage:TUIChatBundleThemeImage(@"chat_TypeSelectorBtn_Black_img",@"TypeSelectorBtn_Black")          forState:UIControlStateNormal];
     [_moreButton setImage:TUIChatBundleThemeImage(@"chat_TypeSelectorBtnHL_Black_img",@"TypeSelectorBtnHL_Black")
                  forState:UIControlStateHighlighted];
@@ -92,11 +91,11 @@
 
     _recordButton = [[UIButton alloc] init];
     [_recordButton.titleLabel setFont:[UIFont systemFontOfSize:15.0f]];
-    [_recordButton addTarget:self action:@selector(recordBtnDown:) forControlEvents:UIControlEventTouchDown];
-    [_recordButton addTarget:self action:@selector(recordBtnUp:) forControlEvents:UIControlEventTouchUpInside];
-    [_recordButton addTarget:self action:@selector(recordBtnCancel:) forControlEvents:UIControlEventTouchUpOutside | UIControlEventTouchCancel];
-    [_recordButton addTarget:self action:@selector(recordBtnExit:) forControlEvents:UIControlEventTouchDragExit];
-    [_recordButton addTarget:self action:@selector(recordBtnEnter:) forControlEvents:UIControlEventTouchDragEnter];
+    [_recordButton addTarget:self action:@selector(onRecordButtonTouchDown:) forControlEvents:UIControlEventTouchDown];
+    [_recordButton addTarget:self action:@selector(onRecordButtonTouchUpInside:) forControlEvents:UIControlEventTouchUpInside];
+    [_recordButton addTarget:self action:@selector(onRecordButtonTouchCancel:) forControlEvents:UIControlEventTouchUpOutside | UIControlEventTouchCancel];
+    [_recordButton addTarget:self action:@selector(onRecordButtonTouchDragExit:) forControlEvents:UIControlEventTouchDragExit];
+    [_recordButton addTarget:self action:@selector(onRecordButtonTouchDragEnter:) forControlEvents:UIControlEventTouchDragEnter];
     [_recordButton setTitle:TUIKitLocalizableString(TUIKitInputHoldToTalk) forState:UIControlStateNormal];
     [_recordButton setTitleColor:TUIChatDynamicColor(@"chat_input_text_color", @"#000000") forState:UIControlStateNormal];
     _recordButton.hidden = YES;
@@ -112,6 +111,11 @@
 
     [self applyBorderTheme];
 }
+
+- (void)onThemeChanged {
+    [self applyBorderTheme];
+}
+
 - (void)applyBorderTheme {
     if (_recordButton) {
         [_recordButton.layer setMasksToBounds:YES];
@@ -126,10 +130,9 @@
         [_inputTextView.layer setBorderWidth:0.5f];
         [_inputTextView.layer setBorderColor:TUICoreDynamicColor(@"separator_color", @"#DBDBDB").CGColor];
     }
-    
 }
-- (void)defaultLayout
-{
+
+- (void)defaultLayout {
     _lineView.frame = CGRectMake(0, 0, Screen_Width, TLine_Heigh);
     CGSize buttonSize = TTextView_Button_Size;
     CGFloat buttonOriginY = (TTextView_Height - buttonSize.height) * 0.5;
@@ -144,8 +147,7 @@
     _inputTextView.frame = _recordButton.frame;
 }
 
-- (void)layoutButton:(CGFloat)height
-{
+- (void)layoutButton:(CGFloat)height {
     CGRect frame = self.frame;
     CGFloat offset = height - frame.size.height;
     frame.size.height = height;
@@ -174,8 +176,8 @@
     }
 }
 
-- (void)clickVoiceBtn:(UIButton *)sender
-{
+#pragma mark - Event response
+- (void)onMicButtonClicked:(UIButton *)sender {
     _recordButton.hidden = NO;
     _inputTextView.hidden = YES;
     _micButton.hidden = YES;
@@ -183,145 +185,105 @@
     _faceButton.hidden = NO;
     [_inputTextView resignFirstResponder];
     [self layoutButton:TTextView_Height];
-    if(_delegate && [_delegate respondsToSelector:@selector(inputBarDidTouchMore:)]){
+    if (_delegate && [_delegate respondsToSelector:@selector(inputBarDidTouchMore:)]) {
         [_delegate inputBarDidTouchVoice:self];
     }
     _keyboardButton.frame = _micButton.frame;
 }
 
-- (void)clickKeyboardBtn:(UIButton *)sender
-{
+- (void)onKeyboardButtonClicked:(UIButton *)sender {
     _micButton.hidden = NO;
     _keyboardButton.hidden = YES;
     _recordButton.hidden = YES;
     _inputTextView.hidden = NO;
     _faceButton.hidden = NO;
     [self layoutButton:_inputTextView.frame.size.height + 2 * TTextView_Margin];
-    if(_delegate && [_delegate respondsToSelector:@selector(inputBarDidTouchKeyboard:)]){
+    if (_delegate && [_delegate respondsToSelector:@selector(inputBarDidTouchKeyboard:)]) {
         [_delegate inputBarDidTouchKeyboard:self];
     }
 }
 
-- (void)clickFaceBtn:(UIButton *)sender
-{
+- (void)onFaceEmojiButtonClicked:(UIButton *)sender {
     _micButton.hidden = NO;
     _faceButton.hidden = YES;
     _keyboardButton.hidden = NO;
     _recordButton.hidden = YES;
     _inputTextView.hidden = NO;
-    if(_delegate && [_delegate respondsToSelector:@selector(inputBarDidTouchFace:)]){
+    if (_delegate && [_delegate respondsToSelector:@selector(inputBarDidTouchFace:)]) {
         [_delegate inputBarDidTouchFace:self];
     }
     _keyboardButton.frame = _faceButton.frame;
 }
 
-- (void)clickMoreBtn:(UIButton *)sender
-{
-    if(_delegate && [_delegate respondsToSelector:@selector(inputBarDidTouchMore:)]){
+- (void)onMoreButtonClicked:(UIButton *)sender {
+    if (_delegate && [_delegate respondsToSelector:@selector(inputBarDidTouchMore:)]) {
         [_delegate inputBarDidTouchMore:self];
     }
 }
 
-- (void)recordBtnDown:(UIButton *)sender
-{
-    AVAudioSessionRecordPermission permission = AVAudioSession.sharedInstance.recordPermission;
-    /**
-     * 新安装后第一次请求授权，需要再次判断是否为 Undetermined，避免出现错误
-     * For the first request for authorization after a new installation, it is necessary to determine whether it is Undetermined again to avoid errors.
-     */
-    if (permission == AVAudioSessionRecordPermissionDenied || permission == AVAudioSessionRecordPermissionUndetermined) {
-        [AVAudioSession.sharedInstance requestRecordPermission:^(BOOL granted) {
-            if (!granted) {
-                UIAlertController *ac = [UIAlertController alertControllerWithTitle:TUIKitLocalizableString(TUIKitInputNoMicTitle) message:TUIKitLocalizableString(TUIKitInputNoMicTips) preferredStyle:UIAlertControllerStyleAlert];
-                [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitInputNoMicOperateLater) style:UIAlertActionStyleCancel handler:nil]];
-                [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitInputNoMicOperateEnable) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                    UIApplication *app = [UIApplication sharedApplication];
-                    NSURL *settingsURL = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
-                    if ([app canOpenURL:settingsURL]) {
-                        [app openURL:settingsURL];
+- (void)onRecordButtonTouchDown:(UIButton *)sender {
+    [self.recorder record];
+}
+
+- (void)onRecordButtonTouchUpInside:(UIButton *)sender {
+    self.recordButton.backgroundColor = [UIColor clearColor];
+    [self.recordButton setTitle:TUIKitLocalizableString(TUIKitInputHoldToTalk)
+                       forState:UIControlStateNormal];
+    
+    NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:self.recordStartTime];
+    @weakify(self);
+    if (interval < 1) {
+        [self.recordView setStatus:Record_Status_TooShort];
+        [self.recorder cancel];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            @strongify(self);
+            [self.recordView removeFromSuperview];
+        });
+    } else if (interval > 60) {
+        [self.recordView setStatus:Record_Status_TooLong];
+        [self.recorder cancel];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            @strongify(self);
+            [self.recordView removeFromSuperview];
+        });
+    } else {
+        dispatch_queue_t main_queue = dispatch_get_main_queue();
+        dispatch_async(main_queue, ^{
+            @strongify(self);
+            /// TUICallKit may need some time to stop all services, so remove UI immediately then stop the recorder.
+            [self.recordView removeFromSuperview];
+            self.recordView = nil;
+            dispatch_async(main_queue, ^{
+                [self.recorder stop];
+                NSString *path = self.recorder.recordedFilePath;
+                if (path) {
+                    if (self.delegate && [self.delegate respondsToSelector:@selector(inputBar:didSendVoice:)]){
+                        [self.delegate inputBar:self didSendVoice:path];
                     }
-                }]];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.mm_viewController presentViewController:ac animated:YES completion:nil];
-                });
-            }
-        }];
-        return;
-    }
-
-    if(permission == AVAudioSessionRecordPermissionGranted){
-        if(!_record){
-            _record = [[TUIRecordView alloc] init];
-            _record.frame = [UIScreen mainScreen].bounds;
-        }
-        [self.window addSubview:_record];
-        _recordStartTime = [NSDate date];
-        [_record setStatus:Record_Status_Recording];
-        _recordButton.backgroundColor = [UIColor lightGrayColor];
-        [_recordButton setTitle:TUIKitLocalizableString(TUIKitInputReleaseToSend) forState:UIControlStateNormal];
-        [self showHapticFeedback];
-        [self startRecord];
-    }
-}
-
-- (void)recordBtnUp:(UIButton *)sender
-{
-    if (AVAudioSession.sharedInstance.recordPermission == AVAudioSessionRecordPermissionDenied) {
-        return;
-    }
-    _recordButton.backgroundColor = [UIColor clearColor];
-    [_recordButton setTitle:TUIKitLocalizableString(TUIKitInputHoldToTalk) forState:UIControlStateNormal];
-    NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:_recordStartTime];
-    if(interval < 1){
-        [_record setStatus:Record_Status_TooShort];
-        [self cancelRecord];
-        __weak typeof(self) ws = self;
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [ws.record removeFromSuperview];
+                }
+            });
         });
-    } else if(interval > 60) {
-        [_record setStatus:Record_Status_TooLong];
-        if (self.recordTimer == nil) {
-            return;
-        }
-        [self cancelRecord];
-        __weak typeof(self) ws = self;
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [ws.record removeFromSuperview];
-        });
-    } else{
-        [_record removeFromSuperview];
-        NSString *path = [self stopRecord];
-        _record = nil;
-        if (path) {
-            if(_delegate && [_delegate respondsToSelector:@selector(inputBar:didSendVoice:)]){
-                [_delegate inputBar:self didSendVoice:path];
-            }
-        }
     }
 }
 
-- (void)recordBtnCancel:(UIButton *)sender
-{
-    [_record removeFromSuperview];
-    _recordButton.backgroundColor = [UIColor clearColor];
-    [_recordButton setTitle:TUIKitLocalizableString(TUIKitInputHoldToTalk) forState:UIControlStateNormal];
-    [self cancelRecord];
+- (void)onRecordButtonTouchCancel:(UIButton *)sender {
+    [self.recordView removeFromSuperview];
+    self.recordButton.backgroundColor = [UIColor clearColor];
+    [self.recordButton setTitle:TUIKitLocalizableString(TUIKitInputHoldToTalk) forState:UIControlStateNormal];
+    [self.recorder cancel];
 }
 
-- (void)recordBtnExit:(UIButton *)sender
-{
-    [_record setStatus:Record_Status_Cancel];
+- (void)onRecordButtonTouchDragExit:(UIButton *)sender {
+    [self.recordView setStatus:Record_Status_Cancel];
     [_recordButton setTitle:TUIKitLocalizableString(TUIKitInputReleaseToCancel) forState:UIControlStateNormal];
 }
 
-- (void)recordBtnEnter:(UIButton *)sender
-{
-    [_record setStatus:Record_Status_Recording];
+- (void)onRecordButtonTouchDragEnter:(UIButton *)sender {
+    [self.recordView setStatus:Record_Status_Recording];
     [_recordButton setTitle:TUIKitLocalizableString(TUIKitInputReleaseToSend) forState:UIControlStateNormal];
 }
 
-- (void)showHapticFeedback{
+- (void)showHapticFeedback {
     if (@available(iOS 10.0, *)) {
         dispatch_async(dispatch_get_main_queue(), ^{
             UIImpactFeedbackGenerator *generator = [[UIImpactFeedbackGenerator alloc] initWithStyle: UIImpactFeedbackStyleMedium];
@@ -333,8 +295,9 @@
         // Fallback on earlier versions
     }
 }
-#pragma mark - talk
 
+#pragma mark - Text input
+#pragma mark -- UITextViewDelegate
 - (void)textViewDidBeginEditing:(UITextView *)textView
 {
     self.keyboardButton.hidden = YES;
@@ -343,7 +306,6 @@
     
     self.isFocusOn = YES;
     self.allowSendTypingStatusByChangeWord  = YES;
-
     
     __weak typeof(self) weakSelf = self;
     self.sendTypingStatusTimer = [NSTimer tui_scheduledTimerWithTimeInterval:4 repeats:YES block:^(NSTimer * _Nonnull timer) {
@@ -506,7 +468,6 @@
     return [_inputTextView.textStorage getPlainString];
 }
 
-
 - (void)addEmoji:(TUIFaceCellData *)emoji
 {
     //Create emoji attachment
@@ -538,7 +499,6 @@
         [_inputTextView scrollRectToVisible:CGRectMake(0, offset, _inputTextView.frame.size.width, _inputTextView.frame.size.height) animated:YES];
     }
     [self textViewDidChange:_inputTextView];
-    
 }
 
 - (void)resetTextStyle {
@@ -553,92 +513,74 @@
 
     [_inputTextView.textStorage addAttribute:NSFontAttributeName value:kTUIInputNoramlFont range:wholeRange];
     [_inputTextView setFont:kTUIInputNoramlFont];
-
+    
+    // In iOS 15.0 and later, you need set styles again as belows
+    _inputTextView.textColor = kTUIInputNormalTextColor;
+    _inputTextView.font = kTUIInputNoramlFont;
 }
 
-- (void)backDelete
-{
-
+- (void)backDelete {
     if (_inputTextView.textStorage.length > 0) {
         [_inputTextView.textStorage deleteCharactersInRange:NSMakeRange(_inputTextView.textStorage.length - 1, 1)];
         [self textViewDidChange:_inputTextView];
     }
-    
 }
 
-- (void)updateTextViewFrame
-{
+- (void)updateTextViewFrame {
     [self textViewDidChange:[UITextView new]];
 }
 
-- (void)changeToKeyboard
-{
-    [self clickKeyboardBtn:self.keyboardButton];
+- (void)changeToKeyboard {
+    [self onKeyboardButtonClicked:self.keyboardButton];
 }
 
-- (void)startRecord
-{
-    AVAudioSession *session = [AVAudioSession sharedInstance];
-    NSError *error = nil;
-    [session setCategory:AVAudioSessionCategoryPlayAndRecord error:&error];
-    [session setActive:YES error:&error];
-
-    NSDictionary *recordSetting = [[NSDictionary alloc] initWithObjectsAndKeys:
-                                   /**
-                                    * 采样率：8000/11025/22050/44100/96000（该参数影响音频的质量）
-                                    * Sampling rate: 8000/11025/22050/44100/96000 (this parameter affects the audio quality)
-                                    */
-                                   [NSNumber numberWithFloat: 8000.0],AVSampleRateKey,
-                                   /**
-                                    * 音频格式
-                                    * Audio format
-                                    */
-                                   [NSNumber numberWithInt: kAudioFormatMPEG4AAC],AVFormatIDKey,
-                                   /**
-                                    * 采样位数：  8、16、24、32 默认为16
-                                    * Sampling bits: 8, 16, 24, 32 The default is 16
-                                    */
-                                   [NSNumber numberWithInt:16],AVLinearPCMBitDepthKey,
-                                   /**
-                                    * 音频通道数 1 或 2
-                                    * Number of audio channels 1 or 2
-                                    */
-                                   [NSNumber numberWithInt: 1], AVNumberOfChannelsKey,
-                                   /**
-                                    * 录音质量
-                                    * Recording quality
-                                    */
-                                   [NSNumber numberWithInt:AVAudioQualityHigh],AVEncoderAudioQualityKey,
-                                   nil];
-
-    NSString *path = [TUIKit_Voice_Path stringByAppendingString:[TUITool genVoiceName:nil withExtension:@"m4a"]];
-    NSURL *url = [NSURL fileURLWithPath:path];
-    _recorder = [[AVAudioRecorder alloc] initWithURL:url settings:recordSetting error:nil];
-    _recorder.meteringEnabled = YES;
-    [_recorder prepareToRecord];
-    [_recorder record];
-    [_recorder updateMeters];
-
-    _recordTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(recordTick:) userInfo:nil repeats:YES];
-}
-
-- (void)recordTick:(NSTimer *)timer{
-    [_recorder updateMeters];
-    float power = [_recorder averagePowerForChannel:0];
-    [_record setPower:power];
+#pragma mark - TUIAudioRecorderDelegate
+- (void)audioRecorder:(TUIAudioRecorder *)recorder
+   didCheckPermission:(BOOL)isGranted
+          isFirstTime:(BOOL)isFirstTime {
+    if (isFirstTime) {
+        if (!isGranted) {
+            [self showRequestMicAuthorizationAlert];
+        }
+        return;
+    }
     
-    /**
-     * 此处需要判断录制时长，如果时长超过 60 s，则取消录制，并提示时间过长，同时不再显示 recordView。
-     * 为了使录音结果尽量精准，此处使用 recorder 的属性。
-     * 注意：由于语音的时长为整型，所以 60.X 秒的情况会被向下取整。但因为 ticker 每0.5秒执行一次，理论上都会显示 60 秒。
-     *
-     * The recording duration needs to be judged here. If the duration exceeds 60 s, the recording will be canceled, and a message will be displayed that the duration is too long, and recordView will no longer be displayed.
-     * In order to make the recording result as accurate as possible, the properties of recorder are used here.
-     * Since the duration of the speech is an integer, the case of 60.X seconds will be rounded down. But since the ticker executes every 0.5 seconds, it will theoretically show 60 seconds.
-     */
-    NSTimeInterval interval = _recorder.currentTime;
-    if(interval >= 55 && interval < 60){
-        NSInteger seconds = 60 - interval;
+    [self updateViewsToRecordingStatus];
+}
+
+- (void)showRequestMicAuthorizationAlert {
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:TUIKitLocalizableString(TUIKitInputNoMicTitle) message:TUIKitLocalizableString(TUIKitInputNoMicTips) preferredStyle:UIAlertControllerStyleAlert];
+    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitInputNoMicOperateLater) style:UIAlertActionStyleCancel handler:nil]];
+    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitInputNoMicOperateEnable) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        UIApplication *app = [UIApplication sharedApplication];
+        NSURL *settingsURL = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+        if ([app canOpenURL:settingsURL]) {
+            [app openURL:settingsURL];
+        }
+    }]];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.mm_viewController presentViewController:ac animated:YES completion:nil];
+    });
+}
+
+- (void)updateViewsToRecordingStatus {
+    [self.window addSubview:self.recordView];
+    self.recordStartTime = [NSDate date];
+    [self.recordView setStatus:Record_Status_Recording];
+    self.recordButton.backgroundColor = [UIColor lightGrayColor];
+    [self.recordButton setTitle:TUIKitLocalizableString(TUIKitInputReleaseToSend) forState:UIControlStateNormal];
+    [self showHapticFeedback];
+}
+
+- (void)audioRecorder:(TUIAudioRecorder *)recorder didPowerChanged:(float)power {
+    if (!self.recordView.hidden) {
+        [self.recordView setPower:power];
+    }
+}
+
+- (void)audioRecorder:(TUIAudioRecorder *)recorder didRecordTimeChanged:(NSTimeInterval)time {
+    if (time >= 55 && time < 60) {
+        NSInteger seconds = 60 - time;
         /**
          * 此处强转了 long 型，是为了消除编译器警告。
          * 此处 +1 是为了向上取整，优化时间逻辑。
@@ -646,56 +588,40 @@
          * The long type is cast here to eliminate compiler warnings.
          * Here +1 is to round up and optimize the time logic.
          */
-        NSString *secondsString = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitInputWillFinishRecordInSeconds),(long)seconds + 1];
-        _record.title.text = secondsString;
-    }
-    if(interval >= 60){
-        NSString *path = [self stopRecord];
-        [_record setStatus:Record_Status_TooLong];
-        __weak typeof(self) ws = self;
+        self.recordView.title.text = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitInputWillFinishRecordInSeconds), (long)seconds + 1];
+    } else if (time >= 60) {
+        [self.recorder stop];
+        NSString *path = self.recorder.recordedFilePath;
+        [self.recordView setStatus:Record_Status_TooLong];
+
+        @weakify(self);
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [ws.record removeFromSuperview];
+            @strongify(self);
+            [self.recordView removeFromSuperview];
         });
         if (path) {
-            if(_delegate && [_delegate respondsToSelector:@selector(inputBar:didSendVoice:)]){
+            if (_delegate && [_delegate respondsToSelector:@selector(inputBar:didSendVoice:)]) {
                 [_delegate inputBar:self didSendVoice:path];
             }
         }
     }
-    
 }
 
-
-- (NSString *)stopRecord
-{
-    if(_recordTimer){
-        [_recordTimer invalidate];
-        _recordTimer = nil;
+#pragma mark - Getter
+- (TUIAudioRecorder *)recorder {
+    if (!_recorder) {
+        _recorder = [[TUIAudioRecorder alloc] init];
+        _recorder.delegate = self;
     }
-    if([_recorder isRecording]){
-        [_recorder stop];
-    }
-    return _recorder.url.path;
+    return _recorder;
 }
 
-- (void)cancelRecord
-{
-    if(_recordTimer){
-        [_recordTimer invalidate];
-        _recordTimer = nil;
+- (TUIRecordView *)recordView {
+    if (!_recordView) {
+        _recordView = [[TUIRecordView alloc] init];
+        _recordView.frame = [UIScreen mainScreen].bounds;
     }
-    if([_recorder isRecording]){
-        [_recorder stop];
-    }
-    NSString *path = _recorder.url.path;
-    if([[NSFileManager defaultManager] fileExistsAtPath:path]){
-        [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
-    }
+    return _recordView;
 }
-
-- (void)onThemeChanged {
-    [self applyBorderTheme];
-}
-
 
 @end

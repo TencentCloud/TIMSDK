@@ -107,6 +107,7 @@
     return nil;
 }
 
+// Override, the size of bubble content.
 - (CGSize)contentSize
 {
     CGFloat bubbleWidth = TVoiceMessageCell_Back_Width_Min + self.duration / TVoiceMessageCell_Max_Duration * Screen_Width;
@@ -122,9 +123,8 @@
         bubbleWidth = MAX(bubbleWidth, [TUIBubbleMessageCellData outgoingBubble].size.width);
         bubbleHeight = self.voiceImage.size.height + 2 * self.voiceTop; // [TUIBubbleMessageCellData outgoingBubble].size.height;
     }
+    
     return CGSizeMake(bubbleWidth+TVoiceMessageCell_Duration_Size.width, bubbleHeight);
-//    CGFloat width = bubbleWidth + TVoiceMessageCell_Duration_Size.width;
-//    return CGSizeMake(width, TVoiceMessageCell_Duration_Size.height);
 }
 
 - (void)playVoiceMessage

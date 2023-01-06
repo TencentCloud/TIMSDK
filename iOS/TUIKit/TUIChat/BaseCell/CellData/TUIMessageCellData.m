@@ -8,6 +8,12 @@
 #import "TUIMessageCellData.h"
 #import "TUIDefine.h"
 
+@interface TUIMessageCellData ()
+
+@property (nonatomic, assign) CGFloat cellHeight;
+
+@end
+
 @implementation TUIMessageCellData
 
 + (TUIMessageCellData *)getCellData:(V2TIMMessage *)message
@@ -40,7 +46,6 @@
         _showReadReceipt = YES;
         _sameToNextMsgSender = NO;
         _showAvatar = YES;
-        _avatarImage = DefaultAvatarImage;
         _cellLayout = [self cellLayout:direction];
         if (direction == MsgDirectionIncoming) {
             _nameFont = [[self class] incommingNameFont];
@@ -63,11 +68,16 @@
 
 - (CGFloat)heightOfWidth:(CGFloat)width
 {
+    if (self.cellHeight) {
+        return self.cellHeight;
+    }
+    
     CGFloat height = 0;
 
 
-    if (self.showName)
+    if (self.showName) {
         height += 20;
+    }
     if (self.showMessageModifyReplies) {
         height += 22;
     }
@@ -82,7 +92,8 @@
     if (height < 55)
         height = 55;
 
-    return height;
+    self.cellHeight = height;
+    return self.cellHeight;
 }
 
 - (CGSize)contentSize
@@ -90,6 +101,16 @@
     return CGSizeZero;
 }
 
+- (BOOL)canTranslate {
+    return NO;
+}
+
+- (TUITranslationViewData *)translationViewData {
+    if (!_translationViewData) {
+        _translationViewData = [[TUITranslationViewData alloc] init];
+    }
+    return _translationViewData;
+}
 
 static UIColor *sOutgoingNameColor;
 

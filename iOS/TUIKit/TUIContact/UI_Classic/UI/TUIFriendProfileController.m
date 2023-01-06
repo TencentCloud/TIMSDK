@@ -19,7 +19,6 @@
 #import "TUICore.h"
 #import "TUIThemeManager.h"
 #import "TUICommonModel.h"
-#import "TUISelectAvatarController.h"
 #import "TUILogin.h"
 
 @interface TUIFriendProfileController ()

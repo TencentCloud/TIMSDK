@@ -49,7 +49,7 @@ static NSString *kReuseIdentifier = @"ContactSelectCell";
 
 - (void)initData
 {
-    self.maxSelectCount = INT_MAX;
+    self.maxSelectCount = 0;
     self.selectArray = @[].mutableCopy;
     self.viewModel = [TUIContactSelectViewDataProvider new];
 }
@@ -196,7 +196,7 @@ static NSString *kReuseIdentifier = @"ContactSelectCell";
 {
     TUICommonContactSelectCellData *data = cell.selectData;
     if (!data.isSelected) {
-        if (self.selectArray.count + 1 > self.maxSelectCount) {
+        if (maxSelectCount > 0 && self.selectArray.count + 1 > self.maxSelectCount) {
             [TUITool makeToast:[NSString stringWithFormat:TUIKitLocalizableString(TUIKitTipsMostSelectTextFormat),(long)self.maxSelectCount]];
             return;
         }

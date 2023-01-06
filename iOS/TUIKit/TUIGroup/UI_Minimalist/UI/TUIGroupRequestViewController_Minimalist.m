@@ -7,9 +7,7 @@
 //
 #import "TUIGroupRequestViewController_Minimalist.h"
 #import "TUICommonModel.h"
-#import "TUIProfileCardCell.h"
 #import "TUIDefine.h"
-#import "TUIAvatarViewController_Minimalist.h"
 
 @interface TUIGroupRequestViewController_Minimalist ()<UITableViewDataSource, UITableViewDelegate, TUIProfileCardDelegate>
 @property UITableView *tableView;
@@ -166,7 +164,7 @@
 }
 
 -(void)didTapOnAvatar:(TUIProfileCardCell *)cell{
-    TUIAvatarViewController_Minimalist *image = [[TUIAvatarViewController_Minimalist alloc] init];
+    TUIAvatarViewController *image = [[TUIAvatarViewController alloc] init];
     image.avatarData = cell.cardData;
     [self.navigationController pushViewController:image animated:YES];
 }

@@ -7,7 +7,7 @@
 
 #import "TUITextReplyQuoteViewData_Minimalist.h"
 #import "TUITextMessageCellData_Minimalist.h"
-#import "NSString+emoji.h"
+#import "NSString+TUIEmoji.h"
 
 @implementation TUITextReplyQuoteViewData_Minimalist
 

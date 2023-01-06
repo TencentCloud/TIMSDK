@@ -6,15 +6,11 @@
 //
 
 #import "TUIGroupCreateController.h"
+#import "TUIGroupTypeListController.h"
 #import "UIView+TUILayout.h"
-#import "TUICommonContactProfileCardCell.h"
 #import "TUICommonModel.h"
-#import "TUICommonContactSwitchCell.h"
-#import "TUIContactAvatarViewController.h"
 #import "TUIDefine.h"
 #import "TUIThemeManager.h"
-#import "TUIGroupTypeListController.h"
-#import "TUISelectAvatarController.h"
 #import "TUILogin.h"
 
 @interface TUIGroupCreateController () <UITableViewDataSource, UITableViewDelegate,UITextFieldDelegate>

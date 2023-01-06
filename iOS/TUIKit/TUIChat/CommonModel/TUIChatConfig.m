@@ -6,7 +6,7 @@
 //
 
 #import "TUIChatConfig.h"
-#import <TUICore/TUIDefine.h>
+#import "TUIDefine.h"
 
 @implementation TUIChatConfig
 
@@ -24,6 +24,7 @@
         self.enableTypingStatus = YES;
         self.enableFloatWindowForCall = YES;
         self.enableMultiDeviceForCall = NO;
+        self.enableTextTranslation = NO;
         
         [self updateEmojiGroups];
     }

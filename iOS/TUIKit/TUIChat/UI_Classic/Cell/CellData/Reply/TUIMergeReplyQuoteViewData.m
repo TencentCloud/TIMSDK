@@ -6,7 +6,7 @@
 //
 
 #import "TUIMergeReplyQuoteViewData.h"
-#import "NSString+emoji.h"
+#import "NSString+TUIEmoji.h"
 #import "TUIMergeMessageCellData.h"
 
 @implementation TUIMergeReplyQuoteViewData

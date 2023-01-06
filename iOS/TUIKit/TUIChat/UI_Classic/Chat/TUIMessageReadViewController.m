@@ -335,9 +335,19 @@
 
 - (void)loadMembers {
     [self getReadMembersWithCompletion:^(int code, NSString *desc, NSArray *members, BOOL isFinished) {
+        if (code != 0) {
+            [TUITool makeToast:TUIKitLocalizableString(TUIKitMessageReadGetReadMembersFail)];
+            NSLog(@"get read members failed, code: %d, desc: %@", code, desc);
+            return;
+        }
         [self.tableView reloadData];
     }];
     [self getUnreadMembersWithCompletion:^(int code, NSString *desc, NSArray *members, BOOL isFinished) {
+        if (code != 0) {
+            [TUITool makeToast:TUIKitLocalizableString(TUIKitMessageReadGetUnreadMembersFail)];
+            NSLog(@"get unread members failed, code: %d, desc: %@", code, desc);
+            return;
+        }
         [self.tableView reloadData];
     }];
 }
@@ -350,6 +360,9 @@
                                          completion:^(int code, NSString * _Nonnull desc, NSArray * _Nonnull members, NSUInteger nextSeq, BOOL isFinished) {
         @strongify(self);
         if (code != 0) {
+            if (completion) {
+                completion(code, desc, nil, NO);
+            }
             return;
         }
         [self.readMembers addObjectsFromArray:members];
@@ -369,6 +382,9 @@
                                          completion:^(int code, NSString * _Nonnull desc, NSArray * _Nonnull members, NSUInteger nextSeq, BOOL isFinished) {
         @strongify(self);
         if (code != 0) {
+            if (completion) {
+                completion(code, desc, nil, NO);
+            }
             return;
         }
         [self.unreadMembers addObjectsFromArray:members];
@@ -468,7 +484,7 @@
                 [self.indicatorView stopAnimating];
                 [self refreshTableView];
                 
-                if (members.count == 0) {
+                if (members != nil && members.count == 0) {
                     [TUITool makeToast:TUIKitLocalizableString(TUIKitMessageReadNoMoreData)];
                     [self.tableView setContentOffset:CGPointMake(0, scrollView.contentOffset.y - TMessageController_Header_Height) animated:YES];
                 }
@@ -481,7 +497,7 @@
                 [self.indicatorView stopAnimating];
                 [self refreshTableView];
                 
-                if (members.count == 0) {
+                if (members != nil && members.count == 0) {
                     [TUITool makeToast:TUIKitLocalizableString(TUIKitMessageReadNoMoreData)];
                     [self.tableView setContentOffset:CGPointMake(0, scrollView.contentOffset.y - TMessageController_Header_Height) animated:YES];
                 }

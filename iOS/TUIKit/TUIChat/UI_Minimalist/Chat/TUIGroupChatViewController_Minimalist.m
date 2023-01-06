@@ -19,7 +19,7 @@
 #import "TUICore.h"
 #import "TUIDefine.h"
 #import "NSDictionary+TUISafe.h"
-#import "NSString+emoji.h"
+#import "NSString+TUIEmoji.h"
 
 @interface TUIGroupChatViewController_Minimalist () <V2TIMGroupListener, TUINotificationProtocol>
 

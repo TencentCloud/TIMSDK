@@ -56,14 +56,20 @@
                                        groupID:(NSString *)groupID
                                 conversationID:(NSString *)conversationID
                                    avatarImage:(UIImage *)avatarImage
+                                     avatarUrl:(NSString *)avatarUrl
                               highlightKeyword:(NSString *)highlightKeyword
-                                 locateMessage:(V2TIMMessage *)locateMessage {
+                                 locateMessage:(V2TIMMessage *)locateMessage
+                                    atMsgSeqs:(NSArray<NSNumber *> *)atMsgSeqs
+                                        draft:(NSString *)draft {
     TUIChatConversationModel *conversationModel = [TUIChatConversationModel new];
     conversationModel.title = title;
     conversationModel.userID = userID;
     conversationModel.groupID = groupID;
     conversationModel.conversationID = conversationID;
     conversationModel.avatarImage = avatarImage;
+    conversationModel.faceUrl = avatarUrl;
+    conversationModel.atMsgSeqs = [NSMutableArray arrayWithArray:atMsgSeqs];
+    conversationModel.draftText = draft;
     
     TUIBaseChatViewController *chatVC = nil;
     if (conversationModel.groupID.length > 0) {
@@ -84,7 +90,16 @@
         return [self getDisplayString:param[TUICore_TUIChatService_GetDisplayStringMethod_MsgKey]];
     }
     else if ([method isEqualToString:TUICore_TUIChatService_GetChatViewControllerMethod]) {
-        return [self createChatViewController:[param tui_objectForKey:TUICore_TUIChatService_GetChatViewControllerMethod_TitleKey asClass:NSString.class] userID:[param tui_objectForKey:TUICore_TUIChatService_GetChatViewControllerMethod_UserIDKey asClass:NSString.class] groupID:[param tui_objectForKey:TUICore_TUIChatService_GetChatViewControllerMethod_GroupIDKey asClass:NSString.class] conversationID:[param tui_objectForKey:TUICore_TUIChatService_GetChatViewControllerMethod_ConversationIDKey asClass:NSString.class] avatarImage:[param tui_objectForKey:TUICore_TUIChatService_GetChatViewControllerMethod_AvatarImageKey asClass:UIImage.class] highlightKeyword:[param tui_objectForKey:TUICore_TUIChatService_GetChatViewControllerMethod_HighlightKeywordKey asClass:NSString.class] locateMessage:[param tui_objectForKey:TUICore_TUIChatService_GetChatViewControllerMethod_LocateMessageKey asClass:V2TIMMessage.class]];
+        return [self createChatViewController:[param tui_objectForKey:TUICore_TUIChatService_GetChatViewControllerMethod_TitleKey asClass:NSString.class]
+                                       userID:[param tui_objectForKey:TUICore_TUIChatService_GetChatViewControllerMethod_UserIDKey asClass:NSString.class]
+                                      groupID:[param tui_objectForKey:TUICore_TUIChatService_GetChatViewControllerMethod_GroupIDKey asClass:NSString.class]
+                               conversationID:[param tui_objectForKey:TUICore_TUIChatService_GetChatViewControllerMethod_ConversationIDKey asClass:NSString.class]
+                                  avatarImage:[param tui_objectForKey:TUICore_TUIChatService_GetChatViewControllerMethod_AvatarImageKey asClass:UIImage.class]
+                                    avatarUrl:[param tui_objectForKey:TUICore_TUIChatService_GetChatViewControllerMethod_AvatarUrlKey asClass:NSString.class]
+                             highlightKeyword:[param tui_objectForKey:TUICore_TUIChatService_GetChatViewControllerMethod_HighlightKeywordKey asClass:NSString.class]
+                                locateMessage:[param tui_objectForKey:TUICore_TUIChatService_GetChatViewControllerMethod_LocateMessageKey asClass:V2TIMMessage.class]
+                                    atMsgSeqs:[param tui_objectForKey:TUICore_TUIChatService_GetChatViewControllerMethod_AtMsgSeqsKey asClass:NSArray.class]
+                                        draft:[param tui_objectForKey:TUICore_TUIChatService_GetChatViewControllerMethod_DraftKey asClass:NSString.class]];
     }
     
     return nil;
