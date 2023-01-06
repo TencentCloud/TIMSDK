@@ -2,24 +2,24 @@
 
 # TUIKit（iOS）
 
-## 下载地址6.9.3557
+## 下载地址7.0.3754
 
-[最新 TUIChat 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/6.9.3557/ios/TUIChat.zip)
+[最新 TUIChat 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.0.3754/ios/TUIChat.zip)
 
-[最新 TUIConversation 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/6.9.3557/ios/TUIConversation.zip)
+[最新 TUIConversation 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.0.3754/ios/TUIConversation.zip)
 
-[最新 TUIContact 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/6.9.3557/ios/TUIContact.zip)
+[最新 TUIContact 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.0.3754/ios/TUIContact.zip)
 
-[最新 TUIGroup 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/6.9.3557/ios/TUIGroup.zip)
+[最新 TUIGroup 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.0.3754/ios/TUIGroup.zip)
 
-[最新 TUISearch 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/6.9.3557/ios/TUISearch.zip)
+[最新 TUISearch 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.0.3754/ios/TUISearch.zip)
 
-[最新 TUICallKit 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/6.9.3557/ios/TUICallKit.zip)
+[最新 TUICallKit 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.0.3754/ios/TUICallKit.zip)
 
-[最新 TUIOfflinePush 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/6.9.3557/ios/TUIOfflinePush.zip)
+[最新 TUIOfflinePush 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.0.3754/ios/TUIOfflinePush.zip)
 
 
-[最新 TUICore 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/6.9.3557/ios/TUICore.zip)
+[最新 TUICore 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.0.3754/ios/TUICore.zip)
 
 
 ## 交流&反馈
