@@ -208,17 +208,30 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 [API Upgrade Guidelines](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
-## Latest Enhanced Edition 6.9.3557 @2022.11.29
+
+## Latest Enhanced Edition 7.0.3754 @2023.01.06
 
 ### SDK
 
-- Fix an occasional crash of getting V2TIMOfflinePushInfo content from the message on the Android platform
-- Fix an occasional crash of the enhanced-pro version on the Android platform
-- Optimize the json data content returned by the C interface TIMConvGetConvList
+- Supported mentioning (@) group members in all types of messages.
+- Supported getting the total message unread count by conversation filter.
+- Supported the meta counter for common groups and audio-video groups.
+- Supported text message translation.
+- Supported custom attributes for community groups.
+- Supported setting the Huawei category and Mi channel ID for offline push.
+- Optimized the QUIC network reconnection logic.
+- Added the base IP logic for COS rich media file download.
+- Supported emoji characters in the file paths of rich media messages sent in Windows.
+- Supported emoji characters in the C++ SDK log and initialization paths in Windows.
+- Fixed the failure in setting custom conversation marks in the v7a architecture.
+- Fixed the errors in setting the height of thumbnails or large images.
 
 ### TUIKit and demo
 
-- Released a new simplified version of the theme, which is more consistent with the style of international apps
+- Supported gain control and AI-based noise reduction for TUIChat voice message recording.
+- Added the message translation capability in TUIChat. 
+- Supported custom ringtones for Android FCM push.
+- Optimized the TUIChat performance in loading historical messages in iOS.
 
 
 ## Latest Basic Version 5.1.66 @2021.09.22
