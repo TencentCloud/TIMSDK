@@ -2,6 +2,30 @@ English | [简体中文](./版本历史.md)
 
 # TIMSDK
 
+## 7.0.3754 @2023.01.06 - Enhanced Edition
+
+### SDK
+
+- Supported mentioning (@) group members in all types of messages.
+- Supported getting the total message unread count by conversation filter.
+- Supported the meta counter for common groups and audio-video groups.
+- Supported text message translation.
+- Supported custom attributes for community groups.
+- Supported setting the Huawei category and Mi channel ID for offline push.
+- Optimized the QUIC network reconnection logic.
+- Added the base IP logic for COS rich media file download.
+- Supported emoji characters in the file paths of rich media messages sent in Windows.
+- Supported emoji characters in the C++ SDK log and initialization paths in Windows.
+- Fixed the failure in setting custom conversation marks in the v7a architecture.
+- Fixed the errors in setting the height of thumbnails or large images.
+
+### TUIKit and demo
+
+- Supported gain control and AI-based noise reduction for TUIChat voice message recording.
+- Added the message translation capability in TUIChat. 
+- Supported custom ringtones for Android FCM push.
+- Optimized the TUIChat performance in loading historical messages in iOS.
+
 ## 6.9.3557 @2022.11.29 - Enhanced Edition
 
 ### SDK
