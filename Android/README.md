@@ -66,6 +66,9 @@ This document introduces how to quickly run through the IM demo.
 ## Step 4: Compile and Run the Demo (All Features)
 Import the demo project with Android Studio, and then compile and run it.
 
+> **The demo integrates the audio and video call function by default. Since the audio and video SDK that this function depends on does not support the emulator, please use a real device to debug or run the demo.**
+
+
 ## Step 5: Compile and Run the Demo (Removing the Audio/Video Call Feature)
 If you do not need the audio/video call feature, you only delete the audio/video call integration code as shown in the figure below from the `build.gradle` file under the `app` module:
 
