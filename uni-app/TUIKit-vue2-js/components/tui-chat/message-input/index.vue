@@ -97,7 +97,7 @@ import TUIEmoji from '../message-elements/emoji/index';
 import TUICommonWords from '../message-private/common-words/index';
 import TUIOrderList from '../message-private/order-list/index';
 import TUIServiceEvaluation from '../message-private/service-evaluation/index';
-
+import logger from '../../../utils/logger';
 export default {
 	data() {
 		return {
@@ -437,7 +437,7 @@ export default {
 			const { userID } = this.conversation.userProfile;
 
 			// #ifdef APP-PLUS
-			if(typeof(uni.$TUICalling) === 'undefined') {
+			if(typeof(uni.$TUICallKit) === 'undefined') {
 					logger.error('请使用真机运行并且自定义基座调试，可能影响音视频功能～ 插件地址：https://ext.dcloud.net.cn/plugin?id=7097 , 调试地址：https://nativesupport.dcloud.net.cn/NativePlugin/use/use');
 					uni.showToast({
 						title: '请使用真机运行并且自定义基座调试，可能影响音视频功能～ ',
@@ -445,10 +445,10 @@ export default {
 						duration: 3000
 					});
 			} else {
-				uni.$TUICalling.call(
+				uni.$TUICallKit.call(
 					{
 						userID: userID,
-						type: value
+						callMediaType: value
 					},
 					res => {
 						console.log(JSON.stringify(res));
