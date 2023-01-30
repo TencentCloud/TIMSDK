@@ -79,8 +79,8 @@ uni.$TUIKit.login({userID: 'your userID', userSig: 'your userSig'})
 ```
 
 ## 开启音视频通话
--  打包 App 集成，请参见原生音视频插件接入 [原生音视频插件](https://ext.dcloud.net.cn/plugin?id=7097)。
-- 打包小程序集成 ，请参见小程序音视频插件接入 [腾讯云小程序音视频插件](https://ext.dcloud.net.cn/plugin?id=7151)。
+- 打包到 APP 请参考官网文档： [音视频通话（uniapp-客户端）](https://cloud.tencent.com/document/product/269/83857)
+- 打包到小程序请参考官网文档：[音视频通话（uniapp-小程序）](https://cloud.tencent.com/document/product/269/83858)
 
 ## 常见问题
 [](id:Q1)

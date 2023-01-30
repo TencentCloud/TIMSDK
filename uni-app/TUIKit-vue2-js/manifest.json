@@ -1,6 +1,6 @@
 {
     "name" : "云通信IM",
-    "appid" : "__UNI__C42E036",
+    "appid" : "__UNI__6E2D796",
     "description" : "基于 TIM 实现场景化接入方案",
     "versionName" : "1.0.1",
     "versionCode" : "100",
@@ -55,24 +55,25 @@
                     "NSPhotoLibraryAddUsageDescription" : "app 想访问你的相册",
                     "NSCameraUsageDescription" : "app 想访问你的摄像头",
                     "NSMicrophoneUsageDescription" : "app 想访问你的麦克风"
-                }
+                },
+                "dSYMs" : false
             },
             "sdkConfigs" : {
                 "ad" : {}
             }
         },
         "nativePlugins" : {
-            "TUICallingUniPlugin-TUICallingModule" : {
+            "TencentCloud-TUICallKit" : {
                 "__plugin_info__" : {
-                    "name" : "【官方】腾讯云原生音视频插件",
-                    "description" : "TUICalling 是 腾讯云官方推出 的基于腾讯云实时音视频 TRTC 和即时通信 IM 服务组合而成的插件，支持双人和多人音视频通话。插件提供了全套定制UI，开发者仅需三个 API 就可实现",
+                    "name" : "【官方】腾讯云音视频通话插件TencentCloud-TUICallKit",
+                    "description" : "TUICallKit 是腾讯云官方推出的音视频通话插件，支持 1v1 通话和群组通话，并提供“类微信\"的 UI 交互，开发者仅需三个 API 就可实现。",
                     "platforms" : "Android,iOS",
-                    "url" : "https://ext.dcloud.net.cn/plugin?id=7097",
-                    "android_package_name" : "",
-                    "ios_bundle_id" : "",
+                    "url" : "https://ext.dcloud.net.cn/plugin?id=9035",
+                    "android_package_name" : "com.tencent.tuikit.demo.xa",
+                    "ios_bundle_id" : "com.tencent.tuikit.demo.xa",
                     "isCloud" : true,
                     "bought" : 1,
-                    "pid" : "7097",
+                    "pid" : "9035",
                     "parameters" : {}
                 }
             }
@@ -80,7 +81,7 @@
     },
     "quickapp" : {},
     "mp-weixin" : {
-        "appid": "appid",
+        "appid" : "appid",
         "setting" : {
             "urlCheck" : false,
             "es6" : true,

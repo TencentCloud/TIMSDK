@@ -35,10 +35,10 @@
 	uni.$aegis = aegis
 	// 首先需要通过 uni.requireNativePlugin("ModuleName") 获取 module
 	// #ifdef APP-PLUS
-	const TUICalling = uni.requireNativePlugin('TUICallingUniPlugin-TUICallingModule');
-	logger.log(`| app |  TUICallingUniPlugin-TUICallingModule | TUICalling: ${TUICalling}`);
-	if(typeof(TUICalling) == 'undefined') {
-		logger.error('如果需要音视频功能，请集成原生插件，使用真机运行并且自定义基座调试哦～ 插件地址：https://ext.dcloud.net.cn/plugin?id=7097 , 调试地址：https://nativesupport.dcloud.net.cn/NativePlugin/use/use');
+	const TUICallKit = uni.requireNativePlugin('TencentCloud-TUICallKit');
+	logger.log(`| app |  TencentCloud-TUICallKit | TUICalling: ${TUICallKit}`);
+	if(typeof(TUICallKit) == 'undefined') {
+		logger.error('如果需要音视频功能，请集成原生插件，使用真机运行并且自定义基座调试哦～ 插件地址：https://ext.dcloud.net.cn/plugin?id=9035 , 调试地址：https://nativesupport.dcloud.net.cn/NativePlugin/use/use');
 	}
 	// #endif
 	export default {
@@ -67,9 +67,9 @@
 			// #endif
 			// 将原生插件挂载在 uni 上
 			// #ifdef APP-PLUS
-			uni.$TUICalling = TUICalling;
+			uni.$TUICallKit = TUICallKit;
 			// #endif
-			// 如果您已创建了 tim，请将 tim 实例挂载在 wx 上，且不可以修改 wx.$TIM（修改变量可能导致 TUICalling 组件无法正常使用）, 完成 TUICalling 初始化，
+			// 如果您已创建了 tim，请将 tim 实例挂载在 wx 上，且不可以修改 wx.$TIM（修改变量可能导致 TUICallKit 组件无法正常使用）, 完成 TUICallKit 初始化，
 			// 如果您没有创建，可以不传
 			// #ifdef MP-WEIXIN
 			wx.$TIM = uni.$TUIKit;
