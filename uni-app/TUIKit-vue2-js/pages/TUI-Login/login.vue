@@ -193,17 +193,17 @@ export default {
 			
 			// 登录原生插件
 			// #ifdef APP-PLUS
-			if(typeof(uni.$TUICalling) == 'undefined') {
+			if(typeof(uni.$TUICallKit) == 'undefined') {
 				uni.showToast({
 					title: '如果需要音视频功能，请集成插件使用真机运行并且自定义基座调试哦～',
 					icon: 'none',
 					duration: 3000
 				});
-				logger.error('请使用真机运行并且自定义基座调试，否则影响音视频功能～ 插件地址：https://ext.dcloud.net.cn/plugin?id=7097 , 调试地址：https://nativesupport.dcloud.net.cn/NativePlugin/use/use');
+				logger.error('请使用真机运行并且自定义基座调试，否则影响音视频功能～ 插件地址：https://ext.dcloud.net.cn/plugin?id=9035 , 调试地址：https://nativesupport.dcloud.net.cn/NativePlugin/use/use');
 			} else {
-				uni.$TUICalling.login(
+				uni.$TUICallKit.login(
 					{
-						sdkAppID: SDKAppID,
+						SDKAppID: SDKAppID,
 						userID: userID,
 						userSig: userSig
 					},
