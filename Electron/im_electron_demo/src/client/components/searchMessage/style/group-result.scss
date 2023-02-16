@@ -1,0 +1,26 @@
+.group-result {
+    padding-left: 8px;
+    height: calc(80vh - 123px);
+    overflow: hidden;
+    box-sizing: border-box;
+
+    &__item {
+        display: flex;
+        align-items: center;
+        padding: 14px 0;
+        border-bottom: 1px solid #eee;
+        cursor: pointer;
+
+        &--nick-name {
+            margin-left: 8px;
+        }
+
+        &:hover {
+            background-color: #E8F2FF;
+        }
+    }
+
+    &__content {
+        height: 100%;
+    }
+}

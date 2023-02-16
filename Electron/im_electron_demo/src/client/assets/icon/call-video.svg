@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="36px" height="36px" viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>视频 icon</title>
+    <defs>
+        <filter id="filter-1">
+            <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0.400000 0 0 0 0 0.400000 0 0 0 0 0.400000 0 0 0 1.000000 0"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="PC补齐界面" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="视频-icon" transform="translate(-92.000000, -401.000000)" filter="url(#filter-1)">
+            <g transform="translate(92.000000, 401.000000)">
+                <rect id="矩形" x="0" y="0" width="36" height="36"></rect>
+                <rect id="矩形" stroke="#FFFFFF" stroke-width="2.25" x="6.1875" y="10.125" width="16.875" height="15.1875" rx="3.7125"></rect>
+                <path d="M26.2513526,11.7260042 L29.8125,15.3984375 L29.8125,15.3984375 L29.8125,20.0390625 L26.2513526,23.7114958 C25.5376788,24.4474718 24.3625054,24.4655514 23.6265293,23.7518776 C23.2659919,23.4022657 23.0625,22.9214859 23.0625,22.419275 L23.0625,13.018225 C23.0625,11.9930464 23.8935714,11.161975 24.91875,11.161975 C25.4209608,11.161975 25.9017406,11.3654669 26.2513526,11.7260042 Z" id="矩形" stroke="#FFFFFF" stroke-width="2.25" transform="translate(26.437500, 17.718750) scale(-1, 1) translate(-26.437500, -17.718750) "></path>
+            </g>
+        </g>
+    </g>
+</svg>

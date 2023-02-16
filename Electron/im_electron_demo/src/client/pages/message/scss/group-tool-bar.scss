@@ -1,0 +1,41 @@
+.tool-bar {
+  position: relative;
+  height: 100%;
+  width: 48px;
+  background: #f1f2f6;
+  // border-radius: 8px 0px 0px 8px;
+  // opacity: 0.6;
+  padding-top: 30px;
+
+  &--item {
+    text-align: center;
+    margin-bottom: 10px;
+
+    &__icon {
+      width: 24px;
+      height: 24px;
+      display: inline-block;
+
+      &.query-message {
+        background-image: url("../../../assets/icon/group-query-message.svg");
+        &.is-active {
+          background-image: url("../../../assets/icon/group-query-message-active.svg");
+        }
+      }
+
+      &.announcement {
+        background-image: url("../../../assets/icon/group-announcement.svg");
+        &.is-active {
+          background-image: url("../../../assets/icon/group-announcement-active.svg");
+        }
+      }
+
+      &.setting {
+        background-image: url("../../../assets/icon/group-settings.svg");
+        &.is-active {
+          background-image: url("../../../assets/icon/group-settings-active.svg");
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,228 @@
+.meeting {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    .meeting-header {
+        display: flex;
+        height: 36px;
+        line-height: 36px;
+        font-size: 14px;
+        color: #666;
+        font-weight: 400;
+        -webkit-app-region: drag;
+
+        .group-name {
+            color: #000;
+            font-weight: 500;
+            margin: 0 auto;
+        }
+
+        .windows {
+            background-color: #fff;
+        }
+
+        .call-time-content {
+            margin-left: 15px;
+        }
+    }
+
+    .meeting-body {
+        display: flex;
+        flex: 1;
+        overflow: hidden;
+        background-color: #efeeef;
+
+        .meeting-left {
+            overflow: hidden;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .meeting-content {
+            flex: 1;
+            overflow: hidden;
+        }
+    }
+
+    .customize-scroll-style {
+        overflow-y: overlay;
+        overflow-x: hidden;
+        box-sizing: border-box;
+        &:hover {
+            &::-webkit-scrollbar {
+                width:6px;
+                background-color:transparent;
+            }
+            &::-webkit-scrollbar-thumb {
+                border-radius:6px;
+                box-shadow:inset 0 0 2px rgba(0,0,0,.3);
+                background-color:#d1d1d1;
+            }
+        } 
+        &::-webkit-scrollbar {
+            width:0px;
+            background-color:transparent;
+        }
+    
+        &::-webkit-scrollbar-track {
+            background-color:transparent;
+        }
+        
+        &::-webkit-scrollbar-thumb {
+            width: 8px;
+            background-color: transparent;
+        }
+    }
+
+    .meeting-member-list {
+        display: flex;
+        flex-direction: column;
+        width: 300px;
+        // padding: 11px 12px;
+
+        &__item-container {
+            height: 276px;
+            padding: 12px;
+        }
+
+        &__item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+
+            .wrapper {
+                display: flex;
+            }
+
+            &--text {
+                display: flex;
+                flex-direction: column;
+                margin-left: 8px;
+                color: #000;
+                font-size: 14px;
+
+                .owner {
+                    font-size: 12px;
+                    color: #999999
+                }
+            }
+
+            &--mic {
+                width: 24px;
+                height: 24px;
+                background-size: cover;
+                background-image: url('../../../assets/icon/禁言 icon.svg');
+                // margin-left: 100px;
+
+                &.mic-open {
+                    background-image: url('../../../assets/icon/call-voice.svg');
+                }
+            }
+
+            &--video {
+                width: 24px;
+                height: 24px;
+                background-size: cover;
+                background-image: url('../../../assets/icon/call-video-forbiden.svg');
+                margin-left: 8px;
+                &.video-open {
+                    background-image: url('../../../assets/icon/call-video.svg');
+                }
+            }
+        }
+
+        .member-list-title {
+            height: 40px;
+            background: #F5F5F5;
+            line-height: 40px;
+            font-size: 14px;
+            padding: 0 12px;
+        }
+
+        .meeting-chat {
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+            flex-direction: column;
+            overflow: hidden;
+            &__content {
+                flex: 1;
+                padding: 12px;
+                display: flex;
+                flex-direction: column-reverse;
+            }
+
+            &__item {
+                margin-bottom: 8px;
+            }
+
+            &__item-name {
+                font-size: 16px;
+                font-weight: 400;
+                color: #999999;
+                margin-right: 4px;
+                display: inline-block;
+
+                &.is-self {
+                    color: #006EFF;
+                }
+            }
+
+            &__item-text {
+                color: #000;
+                font-size: 14px;
+            }
+        }
+
+        textarea {
+            background-color: #F5F5F5;
+            border: none;
+            height: 77px;
+        }
+
+        .send-btn {
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+        }
+
+        &__mute-btn-group {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+
+            .open-btn {
+                margin-left: 12px;
+            }
+        }
+    }
+
+    
+}
+.share-item__content {
+    display: flex;
+    margin-bottom: 30px;
+
+    .share-screen-item {
+        display: flex;
+        padding: 12px;
+        margin-right: 16px;
+        color: #999999;
+        border: 1px solid #EEEEEE;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+
+        span {
+            margin-top: 10px;
+        }
+        
+        &.active {
+            background: #006EFF ;
+            color: #FFFFFF;
+        }
+    }
+}

@@ -1,0 +1,28 @@
+.emoji-popup{
+    position: absolute;
+    border: 1px solid #eee;
+    background-color: white;
+    padding: 17px 6px 17px 17px;
+    left: 0;
+    bottom: 34px;
+    width: 300px;
+    animation:animate .5s;
+    box-shadow:  0 1px 8px rgba(0,32,96,.1)
+}
+.emoji-popup span {
+    width: 20px;
+    height: 20px;
+    padding: 3px;
+    display: inline-block;
+}
+.emoji-popup span:hover {
+    cursor: pointer;
+}
+.emoji-popup img {
+    width: 20px;
+    height: 20px;
+}
+@keyframes animate {
+    0%   {opacity:0;}
+	100%   {opacity:1;}
+}

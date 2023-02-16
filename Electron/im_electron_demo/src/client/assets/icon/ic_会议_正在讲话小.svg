@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>ic_会议_正在讲话小</title>
+    <g id="PC补齐界面" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-16.000000, -548.000000)">
+            <g id="ic_会议_正在讲话小" transform="translate(16.000000, 548.000000)">
+                <rect id="矩形" x="-8.52651283e-14" y="0" width="24" height="24"></rect>
+                <rect id="矩形" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" x="10.3636364" y="4.125" width="4.29545455" height="10.0227273" rx="2.14772727"></rect>
+                <path d="M14.659,10 L14.6590909,12 C14.6590909,13.186157 13.6975207,14.1477273 12.5113636,14.1477273 C11.3252066,14.1477273 10.3636364,13.186157 10.3636364,12 L10.363,10 L14.659,10 Z" id="形状结合" fill="#D8D8D8"></path>
+                <path d="M17.5227273,16.9426604 C17.5227273,16.2267513 17.5227273,16.2267513 17.5227273,15.5108422 C17.5227273,12.7431425 15.2790633,10.4994786 12.5113636,10.4994786 C9.74366392,10.4994786 7.5,12.7431425 7.5,15.5108422 C7.5,18.278542 7.5,16.2267513 7.5,16.9426604" id="椭圆形" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" transform="translate(12.511364, 13.755421) rotate(-180.000000) translate(-12.511364, -13.755421) "></path>
+                <line x1="10.0056818" y1="19.5170455" x2="15.0170455" y2="19.5170455" id="直线-13" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></line>
+                <line x1="12.421875" y1="19.3125" x2="12.421875" y2="17.0625" id="直线-14" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></line>
+            </g>
+        </g>
+    </g>
+</svg>

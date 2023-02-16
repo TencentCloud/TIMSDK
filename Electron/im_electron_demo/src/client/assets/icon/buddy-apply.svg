@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="36px" height="36px" viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>ic_列表_好友申请</title>
+    <defs>
+        <circle id="path-1" cx="18" cy="18" r="18"></circle>
+    </defs>
+    <g id="PC补齐界面" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-116.000000, -350.000000)">
+            <g id="ic_列表_好友申请" transform="translate(116.000000, 350.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <use id="蒙版" fill="#7ED321" xlink:href="#path-1"></use>
+                <path d="M22,12 C22,14.2088 20.2088,16 18,16 C15.7912,16 14,14.2088 14,12 C14,9.7912 15.7912,8 18,8 C20.2088,8 22,9.7912 22,12" id="Fill-286" fill="#FFFFFF"></path>
+                <path d="M18,18 C14.1336667,18 11,20.5641818 11,23.7272727 L11,26.5909091 C11,26.8167273 11.1843333,27 11.4114444,27 L24.5885556,27 C24.8156667,27 25,26.8167273 25,26.5909091 L25,23.7272727 C25,20.5641818 21.8663333,18 18,18" id="Fill-287" fill="#FFFFFF"></path>
+            </g>
+        </g>
+    </g>
+</svg>

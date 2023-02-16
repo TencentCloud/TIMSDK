@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="36px" height="36px" viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>声音icon</title>
+    <defs>
+        <filter id="filter-1">
+            <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0.400000 0 0 0 0 0.400000 0 0 0 0 0.400000 0 0 0 1.000000 0"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="PC补齐界面" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="声音icon" transform="translate(-156.000000, -400.000000)" filter="url(#filter-1)">
+            <g transform="translate(156.000000, 400.000000)">
+                <rect id="矩形" x="0" y="0" width="36" height="36"></rect>
+                <path d="M7.485,13.5 L11.7777778,13.5 L11.7777778,13.5 L19,9 L19,27 L11.7777778,22.5 L7.485,22.5 C6.66485715,22.5 6,21.8351429 6,21.015 L6,14.985 C6,14.1648571 6.66485715,13.5 7.485,13.5 Z" id="矩形" stroke="#999999" stroke-width="2" stroke-linejoin="round"></path>
+                <path d="M26.3055482,10.3421602 C28.1198575,12.7627955 29.0270122,15.3154088 29.0270122,18 C29.0270122,20.6845912 28.1198575,23.4571778 26.3055482,26.3177597" id="路径-6" stroke="#999999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M23.0068737,12.7824593 C24.3158397,14.1926985 24.9703226,15.9318787 24.9703226,18 C24.9703226,20.0681213 24.3158397,22.0506025 23.0068737,23.9474437" id="路径-6" stroke="#999999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+            </g>
+        </g>
+    </g>
+</svg>

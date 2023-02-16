@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon 警示</title>
+    <g id="PC补齐界面" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-246.000000, -239.000000)">
+            <g id="icon-警示" transform="translate(246.000000, 239.000000)">
+                <rect id="矩形备份-46" fill="#FFFFFF" opacity="0" x="0" y="0" width="24" height="24"></rect>
+                <path d="M12,2 C17.5228475,2 22,6.4771525 22,12 C22,17.5228475 17.5228475,22 12,22 C6.4771525,22 2,17.5228475 2,12 C2,6.4771525 6.4771525,2 12,2 Z M15.4294679,7 L12,10.429 L8.57053211,7 L6.94418651,8.6263456 L10.373,12.055 L6.94418651,15.4852814 L8.57053211,17.111627 L12,13.682 L15.4294679,17.111627 L17.0558135,15.4852814 L13.626,12.055 L17.0558135,8.6263456 L15.4294679,7 Z" id="失败-告警-错误提示备份" fill="#FF584C"></path>
+            </g>
+        </g>
+    </g>
+</svg>

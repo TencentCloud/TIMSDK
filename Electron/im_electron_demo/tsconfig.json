@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "module": "esnext",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "noImplicitAny": false,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "outDir": "dist",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "jsx": "react",
+    "paths": {
+      "*": ["node_modules/*"]
+    },
+    "types": ["im_electron_sdk"]
+  },
+  "include": [
+    "src/**/*",
+    "png.d.ts",
+    "node_modules/im_electron_sdk/dist/interface/index.d.ts"
+  ]
+}

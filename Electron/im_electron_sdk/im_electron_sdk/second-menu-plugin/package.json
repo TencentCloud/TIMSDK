@@ -1,0 +1,22 @@
+{
+  "name": "second-menu-plugin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "typedoc": "^0.22.4"
+  },
+  "peerDependencies": {
+    "typedoc": "0.22.x"
+  },
+  "keywords": [
+    "documentation",
+    "typedocplugin",
+    "typedoc"
+]
+}
