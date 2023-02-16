@@ -9,8 +9,11 @@ let createdGroupId;
 let seq = {
     group_get_memeber_info_list_result_next_seq: 0
 };
+<<<<<<< HEAD
 let users = [];
 let msg = null;
+=======
+>>>>>>> cc863a101 (update im electron sdk to 1.4.10)
 const APIS = [
     {
         manager: "timBaseManager",
@@ -474,10 +477,16 @@ const APIS = [
                 action: (callback) => {
                     
                     TimGroupManager.TIMGroupGetMemberInfoList(createdGroupId,seq.group_get_memeber_info_list_result_next_seq).then(data => {
+<<<<<<< HEAD
                         const d = JSON.parse(data.data.json_param);
                         //  seq = JSON.parse(data.data.json_param).group_get_memeber_info_list_result_next_seq
                         seq = d;
                         console.log('本次获取数据',d.group_get_memeber_info_list_result_info_array.map((item)=>{ console.log(item.group_member_info_identifier);return item; }));
+=======
+                        console.log(data.data.json_param)
+                        //  seq = JSON.parse(data.data.json_param).group_get_memeber_info_list_result_next_seq
+                        seq = JSON.parse(data.data.json_param);
+>>>>>>> cc863a101 (update im electron sdk to 1.4.10)
                         callback(JSON.stringify(data))
 
                     }).catch(err => {

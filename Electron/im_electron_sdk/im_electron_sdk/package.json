@@ -1,6 +1,10 @@
 {
   "name": "im_electron_sdk",
+<<<<<<< HEAD
   "version": "1.4.23",
+=======
+  "version": "1.4.20",
+>>>>>>> cc863a101 (update im electron sdk to 1.4.10)
   "description": "tencent cloud im for electron base c++ apis.",
   "main": "dist/main.js",
   "browser": "dist/renderer.js",
