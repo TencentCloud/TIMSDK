@@ -1,0 +1,23 @@
+.overlay-content {
+  background: #ffffff;
+  box-shadow: 0px 1px 8px 0px rgba(0, 50, 150, 0.1);
+  border-radius: 8px;
+  padding: 8px;
+
+  &--input {
+    width: 164px;
+    border-radius: 4px;
+    border: 1px solid #dddddd;
+  }
+}
+
+.add-icon {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  background-image: url("../../../assets/icon/add-user-join-group.svg");
+
+  &.is-active {
+    background-image: url("../../../assets/icon/add-user-join-group__light.svg");
+  }
+}

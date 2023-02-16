@@ -1,0 +1,116 @@
+.friend-apply {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  &--title {
+    height: 36px;
+    display: flex;
+    padding: 20px;
+    border-bottom: 1px solid #eeeeee;
+    align-items: center;
+
+    &__icon {
+      display: inline-block;
+      height: 36px;
+      width: 36px;
+      background-image: url("../../../assets/icon/buddy-apply.svg");
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+
+    &__text {
+      margin-left: 12px;
+      font-size: 16px;
+      font-weight: 500;
+      color: #000000;
+    }
+  }
+
+  &--list {
+    flex: 1;
+    &__item {
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      & .item-left {
+        display: flex;
+        &__info {
+          margin-left: 8px;
+          display: flex;
+          align-items: center;
+          &__name {
+            font-size: 14px;
+            font-weight: 400;
+            color: #000000;
+          }
+          &__dep {
+            font-size: 12px;
+            font-weight: 400;
+            color: #999999;
+          }
+        }
+      }
+
+      & .item-right {
+        &__approve,
+        &__refuse {
+          display: inline-block;
+          height: 20px;
+          width: 20px;
+          background-repeat: no-repeat;
+          background-size: cover;
+        }
+        &__approve {
+          background-image: url("../../../assets/icon/friend-apply-approve.svg");
+        }
+        &__refuse {
+          margin-left: 24px;
+          background-image: url("../../../assets/icon/friend-apply-refuse.svg");
+        }
+      }
+    }
+  }
+
+  &--table {
+    & .tea-table__body {
+      border: 0;
+
+      overflow-y: overlay !important;
+      overflow-x: hidden;
+
+      &:hover {
+        &::-webkit-scrollbar {
+          width: 8px;
+          background-color: transparent;
+        }
+        &::-webkit-scrollbar-thumb {
+          border-radius: 8px;
+          box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.3);
+          background-color: #d1d1d1;
+        }
+      }
+      &::-webkit-scrollbar {
+        width: 0px;
+        background-color: transparent;
+      }
+
+      &::-webkit-scrollbar-track {
+        background-color: transparent;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        border-radius: 8px;
+        box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.3);
+        background-color: #d1d1d1;
+      }
+    }
+
+    td {
+      border: none;
+      padding: 0;
+    }
+  }
+}

@@ -1,0 +1,30 @@
+.loading-container {
+  position: relative;
+
+  &--modal {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    z-index: -999999;
+    background-color: transparent;
+    &__tip {
+      display: none;
+    }
+  }
+
+  &.is-loading &--modal {
+    // background-color: rgba(0, 0, 0, 0.068);
+    // background-color: rgba(54, 58, 80, 0.032);
+    z-index: 100;
+    // transition: background linear 0.36s;
+    &__tip {
+      display: block;
+    }
+  }
+}

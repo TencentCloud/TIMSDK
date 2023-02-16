@@ -1,0 +1,184 @@
+.call-video {
+    width: 100%;
+    height: 100%;
+    background: #E8F2FF;
+    overflow: hidden;
+    position: relative;
+
+    .c2c-content {
+        width: 100%;
+        height: 100%;
+
+        &--self, &--remote {
+            height: 488px;
+            background-image: url('../../../assets/icon/forbiden_video.svg');
+            background-repeat: no-repeat;
+            background-position: center;
+
+            &.active {
+                position: absolute;
+                width: 160px;
+                height: 120px;
+                top: 20px;
+                right: 40px;
+                background-color: #000;
+                background-size: 30px;
+            }
+        }
+
+
+        &--voice-call {
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            background: #000;
+            text-align: center;
+            display: flex;
+
+            &__nick-name {
+                margin-top: 20px;
+                font-size: 12px;
+                color: #ddd;
+            }
+
+            &__text {
+                margin-top: 20px;
+                font-size: 12px;
+                color: #fff;
+            }
+        }
+    }
+}
+
+.group-video-content {
+    width: 100%;
+    height: 100%;
+
+    &__video {
+        width: 100%;
+        height: 100%;
+        position: relative;
+    }
+
+    &__share-screen {
+        width: 100%;
+        height: 100%;
+    }
+
+    &:hover {
+        .prev-button,  .next-button {
+            display: block;
+        }
+    }
+   
+
+    &__page {
+        width: 100%;
+        height: 100%;
+        animation: hideIndex 0.3s;
+        flex-wrap: wrap;
+        align-content: flex-start;
+    }
+
+    @keyframes hideIndex{
+        0%{ opacity: 0; }
+        100%{ opacity: 1;}
+    }
+
+    &__page-item {
+        position: relative;
+        display: inline-block;
+        // background-image: url('../../../assets/icon/forbiden_video.svg');
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 100% 100%;
+        overflow: hidden;
+        transition: width 0.3s;
+        transition: height 0.3s;
+        background-color: #000;
+
+        &.is-speaking {
+            &::after {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                border: 1.5px solid rgba(255, 0, 0, 0.658);
+              }
+        }
+
+        &--loading {
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+            bottom: 0;
+            color: #fff;
+            vertical-align: middle;
+            background: #000;
+            text-align: center;
+            opacity: 0.6;
+            line-height: 5;
+            height: 100%;
+        }
+
+        &--user-id {
+            font-size: 14px;
+            color: #999;
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            z-index: 5;
+        }
+
+        &--mic-status {
+            width: 24px;
+            height: 24px;
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            z-index: 5;
+            background-position: center;
+            background-image: url('../../../assets/icon/mic-icon.svg');
+
+            &.not-active {
+                background-size: 150%;
+                border-radius: 50%;
+                background-image:  url('../../../assets/icon/mic-forbiden.svg');
+            }
+        }
+    }
+
+    .prev-button {
+        cursor: pointer;
+        position: absolute;
+        top: 50%;
+        left: 20px;
+        display: none;
+        font-size: 0.8em;
+        padding: 0.4em;
+        width: 14px;
+        height: 14px;
+        border-top: 3px solid #b9b9b9;
+        border-right: 3px solid #b9b9b9;
+        transform: rotate(-135deg);
+    }
+
+    .next-button {
+        cursor: pointer;
+        position: absolute;
+        top: 50%;
+        right: 20px;
+        display: none;
+        font-size: 0.8em;
+        padding: 0.4em;
+        width: 14px;
+        height: 14px;
+        border-top: 3px solid #b9b9b9;
+        border-right: 3px solid #b9b9b9;
+        transform: rotate(45deg);
+    }
+}

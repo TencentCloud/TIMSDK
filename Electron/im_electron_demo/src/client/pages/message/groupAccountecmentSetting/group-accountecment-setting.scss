@@ -1,0 +1,17 @@
+.group-accountecment-setting {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &--textarea {
+    border: none;
+    flex: 1;
+  }
+
+  &--button {
+    height: 36px;
+    background: #006eff;
+    border-radius: 4px;
+  }
+}

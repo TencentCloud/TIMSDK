@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>ic_浮窗_关闭</title>
+    <g id="PC补齐界面" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-191.000000, -210.000000)">
+            <g id="ic_浮窗_关闭" transform="translate(191.000000, 210.000000)">
+                <polygon id="路径" fill="#000000" points="19.0710678 6.34314575 13.4142136 12 19.0710678 17.6568542 17.6568542 19.0710678 11.9992929 13.4135065 6.34314575 19.0710678 4.92893219 17.6568542 10.5850793 11.9992929 4.92893219 6.34314575 6.34314575 4.92893219 12 10.5857864 17.6568542 4.92893219"></polygon>
+                <rect id="矩形" x="0" y="0" width="24" height="24"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

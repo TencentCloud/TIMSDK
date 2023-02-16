@@ -1,0 +1,92 @@
+{
+  "name": "im-electron-sdk",
+  "version": "1.0.3",
+  "description": "A minimal Electron application",
+  "main": "main.js",
+  "homepage": "https://cloud.tencent.com/product/im",
+  "email": "946834832@qq.com",
+  "scripts": {
+    "start": "electron . --inspect",
+    "prepare": "husky install",
+    "build-w": "electron-builder -m",
+    "build-l": "electron-builder --linux",
+    "pack": "electron-builder --dir"
+  },
+  "maintainer": "xingchenhe@tencent.com",
+  "repository": "https://github.com/electron/electron-quick-start",
+  "keywords": [
+    "Electron",
+    "quick",
+    "start",
+    "tutorial",
+    "demo"
+  ],
+  "lint-staged": {
+    "im_electron_sdk/src/**/*.ts": [
+      "prettier --write im_electron_sdk/src/",
+      "git add"
+    ]
+  },
+  "build": {
+    "appId": "electron-sdk",
+    "mac": {
+      "extraFiles": [
+        {
+          "from": "./node_modules/im_electron_sdk/lib/",
+          "to": "./Resources",
+          "filter": [
+            "**/*"
+          ]
+        }
+      ]
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "extraFiles": [
+        {
+          "from": "./node_modules/im_electron_sdk/lib/",
+          "to": "./resources",
+          "filter": [
+            "**/*"
+          ]
+        }
+      ]
+    },
+    "linux": {
+      "target": "deb",
+      "extraFiles": [
+        {
+          "from": "./node_modules/im_electron_sdk/lib/",
+          "to": "./resources",
+          "filter": [
+            "**/*"
+          ]
+        }
+      ]
+    }
+  },
+  "author": {
+    "name": "tencent",
+    "email": "xingchenhe@tencent.com",
+    "url": "https://cloud.tencent.com/product/im"
+  },
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "electron": "^17.1.2",
+    "electron-builder": "^23.0.3",
+    "electron-devtools-installer": "^3.2.0",
+    "husky": "^7.0.0",
+    "lint-staged": "^11.0.0",
+    "prettier": "^2.3.2"
+  },
+  "dependencies": {
+    "im_electron_sdk": "^1.4.20"
+  }
+}

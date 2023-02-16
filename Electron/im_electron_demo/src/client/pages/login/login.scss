@@ -1,0 +1,59 @@
+@use 'sass:math';
+
+@function toRem($value) {
+    $remValue: math.div($value, 16) + rem; 
+    @return $remValue;
+}
+
+.login {
+    padding: toRem(103) toRem(80);
+    display: flex;
+    justify-content: space-between;
+
+    &--context {
+        box-shadow: 0px 1px 16px 0px rgba(0, 50, 150, 0.08);
+        border-radius: 8px;
+        padding: toRem(70) toRem(22);
+        width: 360px;
+        .customize-tab-bar {
+            margin-bottom: toRem(5);
+            padding: 0;
+            &.is-active {
+                color:#006eff
+            }
+        }
+        &__title {
+            margin-bottom: toRem(30);
+        }
+    }
+
+    &--input {
+        width: 100%;
+        margin-bottom: toRem(10);
+    }
+
+    &--button {
+        width: 100%;
+    }
+
+    &--auto {
+        color: #888888;
+        margin-bottom: toRem(30);
+    }
+}
+.captche-row{
+    display: flex;
+    justify-content:space-between;
+    align-items: center;  
+    height: 50px;
+    .login--input{
+        margin: 0;
+    }  
+    .cap-btn{
+        text-align: center;
+        padding: 0;
+        width: 100px;
+        height: 30px;
+        line-height: 30px;
+    }
+}

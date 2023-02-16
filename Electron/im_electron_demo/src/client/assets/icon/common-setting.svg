@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="36px" height="36px" viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>ic_列表_通用设置</title>
+    <g id="PC补齐界面" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-66.000000, -410.000000)">
+            <g id="ic_列表_通用设置" transform="translate(66.000000, 410.000000)">
+                <circle id="椭圆形" fill="#7ED321" fill-rule="nonzero" cx="18" cy="18" r="18"></circle>
+                <g id="segmentation" transform="translate(8.000000, 9.000000)" fill="#FFFFFF">
+                    <path d="M13.6,13.5992 L13.6,16.7992 L1.15463195e-14,16.7992 L1.15463195e-14,13.5992 L13.6,13.5992 Z M19.2,13.5992 L19.2,16.7992 L15.2,16.7992 L15.2,13.5992 L19.2,13.5992 Z M4,7.1992 L4,10.3992 L0,10.3992 L0,7.1992 L4,7.1992 Z M19.2,7.1992 L19.2,10.3992 L5.6,10.3992 L5.6,7.1992 L19.2,7.1992 Z M19.2,0.7992 L19.2,3.9992 L15.2,3.9992 L15.2,0.7992 L19.2,0.7992 Z M13.6,0.7992 L13.6,3.9992 L1.15463195e-14,3.9992 L1.15463195e-14,0.7992 L13.6,0.7992 Z" id="形状"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

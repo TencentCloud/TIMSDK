@@ -1,0 +1,27 @@
+.group-introduction {
+  padding: 12px 0;
+
+  &--title {
+    &__text {
+      font-size: 14px;
+      font-weight: 400;
+      color: #333333;
+      line-height: 20px;
+      margin-right: 8px;
+    }
+  }
+
+  &--info {
+    font-size: 12px;
+    font-weight: 400;
+    color: #999999;
+    line-height: 16px;
+    min-height: 12px;
+  }
+
+  &--input {
+    height: 32px;
+    border-radius: 4px;
+    border: 1px solid #dddddd;
+  }
+}

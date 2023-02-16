@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="36px" height="36px" viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>ic_会议_PPT展开icon</title>
+    <g id="PC补齐界面" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-217.000000, -488.000000)">
+            <g id="ic_会议_PPT展开icon" transform="translate(217.000000, 488.000000)">
+                <rect id="矩形" x="0" y="0" width="36" height="36"></rect>
+                <polygon id="直线-2备份-2" stroke="#FFFFFF" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" points="18 21.375 12.375 27.5625 23.625 27.5625"></polygon>
+                <path d="M25.875,7.875 L27,7.875 C28.2426407,7.875 29.25,8.88235931 29.25,10.125 L29.25,21.375 C29.25,22.6176407 28.2426407,23.625 27,23.625 L9,23.625 C7.75735931,23.625 6.75,22.6176407 6.75,21.375 L6.75,12.375 L6.75,12.375 L6.75,10.125 C6.75,8.88235931 7.75735931,7.875 9,7.875 L10.125,7.875 L10.125,7.875" id="矩形" stroke="#FFFFFF" stroke-width="2.25" stroke-linecap="round" transform="translate(18.000000, 15.750000) scale(-1, -1) translate(-18.000000, -15.750000) "></path>
+            </g>
+        </g>
+    </g>
+</svg>

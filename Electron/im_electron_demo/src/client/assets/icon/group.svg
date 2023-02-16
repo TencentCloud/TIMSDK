@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="36px" height="36px" viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>ic_列表_群组</title>
+    <defs>
+        <circle id="path-1" cx="18" cy="18" r="18"></circle>
+    </defs>
+    <g id="PC补齐界面" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-168.000000, -350.000000)">
+            <g id="ic_列表_群组" transform="translate(168.000000, 350.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <use id="蒙版" fill="#494FCF" xlink:href="#path-1"></use>
+                <g id="列表/头像" transform="translate(10.000000, 10.000000)" fill="#FFFFFF">
+                    <rect id="矩形" x="0" y="0" width="7.2" height="7.2" rx="0.8"></rect>
+                    <rect id="矩形备份-2" x="0" y="8.8" width="7.2" height="7.2" rx="0.8"></rect>
+                    <rect id="矩形备份" x="8.8" y="8.8" width="7.2" height="7.2" rx="0.8"></rect>
+                    <rect id="矩形备份-3" x="8.8" y="0" width="7.2" height="7.2" rx="0.8"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

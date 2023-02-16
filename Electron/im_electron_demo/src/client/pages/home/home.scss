@@ -1,0 +1,93 @@
+// @function getIcon($name) {
+//     @return `../../assets/icon/${$name}.png`
+// }
+
+.home {
+    flex: 1;
+    overflow:hidden;
+    display: flex;
+    .nav {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 60px;
+        list-style: none;
+        background: #f5f5f5;
+        position: relative;
+        &--item {
+            margin-top: 24px;
+            position: relative;
+            // &:nth-child(2) {
+            //     margin-bottom: auto;
+            // }
+            
+            //单独对设置按钮设置样式
+            &:last-child {
+                position: absolute;
+                bottom: 20px;
+            }
+            .unread {
+                position: absolute;
+                width: 16px;
+                height: 16px;
+                background-color: #FF584C;
+                right: -8px;
+                top: 0;
+                border-radius: 8px;
+                font-size: 10px;
+                transform: scale(10 / 12);
+                transform-origin: left center;
+                line-height: 16px;
+                text-align: center;
+                color: #fff;
+            }
+        }
+
+        &--link {
+            width: 24px;
+            height: 24px;
+            display: block;
+
+            &.message {
+                background: url('../../assets/icon/message.svg');
+                &.is-active {
+                    background:  url('../../assets/icon/message-active.svg');
+                }
+            }
+
+            &.contacts {
+                background: url('../../assets/icon/contacts.svg');
+                &.is-active {
+                    background:  url('../../assets/icon/contacts-active.svg');
+                }
+            }
+
+            &.settings {
+                
+                background: url('../../assets/icon/settings.svg');
+                &.is-active {
+                    background:  url('../../assets/icon/settings-active.svg');
+                }
+            }
+
+            &.meeting {
+                background: url('../../assets/icon/meeting.svg');
+                &.is-active {
+                    background:  url('../../assets/icon/meeting-active.svg');
+                }
+            }
+           
+        }
+    }
+    .content {
+        flex: 1;
+        overflow:hidden;
+    }
+    
+    .userinfo-avatar{
+        &.ismac{
+            margin-top: 62px;
+        }
+        margin-top: 24px;
+    }
+}

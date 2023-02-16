@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>ic_列表_选中蓝色底</title>
+    <g id="PC补齐界面" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-113.000000, -213.000000)">
+            <g id="ic_列表_选中蓝色底" transform="translate(113.000000, 213.000000)">
+                <circle id="椭圆形" fill="#006EFF" cx="7" cy="7" r="7"></circle>
+                <path d="M3.56586399,4.31586399 L5.06586399,4.31586399 L5.06586399,7.31486399 L10.565864,7.31586399 L10.565864,8.81586399 L3.56586399,8.81586399 L3.56586399,4.31586399 Z" id="形状结合" fill="#FFFFFF" transform="translate(7.065864, 6.565864) rotate(-45.000000) translate(-7.065864, -6.565864) "></path>
+            </g>
+        </g>
+    </g>
+</svg>
