@@ -134,7 +134,7 @@
     "image-size": "^1.0.0",
     "install": "^0.13.0",
     "node-fetch": "^2.6.1",
-    "npm": "^7.23.0",
+    "npm": "^8.11.0",
     "progress-stream": "^2.0.0",
     "save": "^2.5.0",
     "trtc-electron-sdk": "^8.6.102-beta.0",
