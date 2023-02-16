@@ -1,0 +1,143 @@
+{
+  "name": "im-electron-demo",
+  "productName": "腾讯云即时通讯IM",
+  "version": "1.0.0",
+  "description": "腾讯云即时通讯IM",
+  "main": "src/app/main.js",
+  "homepage":"",
+  "scripts": {
+    "start": "concurrently --kill-others \"npm run dev:electron\" \"npm run dev:react\"",
+    "build:mac": "npm run build:react && npm run build:electron:mac",
+    "build:windows": "npm run build:react && npm run build:electron:windows",
+    "build:linux": "npm run build:react && npm run build:electron:linux",
+    "build:react": "cd ./src/client && npm run build:react",
+    "build:electron:mac": "cross-env NODE_ENV=production electron-builder --m",
+    "build:electron:windows": "cross-env NODE_ENV=production electron-builder -w",
+    "build:electron:linux": "cross-env NODE_ENV=production electron-builder --linux",
+    "dev:electron": "cross-env NODE_ENV=development electron .",
+    "dev:react": "cd ./src/client && npm run dev:react &"
+  },
+  "keywords": [],
+  "author": {
+    "name": "Jingfeng",
+    "email": "joyxian@tencent.com"
+  },
+  "build": {
+    "files": [
+      "src/app",
+      "bundle",
+      "icon"
+    ],
+    "appId": "im-electron-demo",
+    "mac": {
+      "gatekeeperAssess": false,
+      "hardenedRuntime": true,
+      "entitlements": "./signing/entitlements.mac.plist",
+      "entitlementsInherit": "./signing/entitlements.mac.plist",
+      "extendInfo": {
+        "NSMicrophoneUsageDescription": "Please give us access to your microphone",
+        "NSCameraUsageDescription": "Allow your conversational partners to see you in a Grape Call. You can turn off your video anytime during a call."
+      },
+      "icon": "./icon/im_electron_logo.png",
+      "extraFiles": [
+        {
+          "from": "./node_modules/im_electron_sdk/lib/",
+          "to": "./Resources",
+          "filter": [
+            "**/*"
+          ]
+        },
+        {
+          "from": "node_modules/trtc-electron-sdk/build/Release/",
+          "to": "./Resources",
+          "filter": [
+            "**/*"
+          ]
+        },
+        {
+          "from": "./icon/",
+          "to": "./Resources",
+          "filter": [
+            "**/*"
+          ]
+        }
+      ]
+    },
+    "win": {
+      "icon": "./icon/im_electron_logo.png",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "extraFiles": [
+        {
+          "from": "./node_modules/im_electron_sdk/lib/",
+          "to": "./resources",
+          "filter": [
+            "**/*"
+          ]
+        },
+        {
+          "from": "node_modules/trtc-electron-sdk/build/Release/",
+          "to": "./resources",
+          "filter": [
+            "**/*"
+          ]
+        }
+      ]
+    },
+    "linux": {
+      "target": "deb",
+      "extraFiles": [
+        {
+          "from": "./node_modules/im_electron_sdk/lib/",
+          "to": "./resources",
+          "filter": [
+            "**/*"
+          ]
+        },
+        {
+          "from": "node_modules/trtc-electron-sdk/build/Release/",
+          "to": "./resources",
+          "filter": [
+            "**/*"
+          ]
+        }
+      ]
+    }
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^6.2.0",
+    "cross-env": "^7.0.3",
+    "electron": "^17.1.2",
+    "electron-builder": "^23.0.3",
+    "i18n-helper-cli": "^0.1.6",
+    "native-ext-loader": "^2.3.0",
+    "node-gyp": "^7.1.2"
+  },
+  "dependencies": {
+    "@electron/remote": "^2.0.7",
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
+    "electron-store": "^8.0.0",
+    "ffmpeg-extract-frame": "^1.0.2",
+    "ffprobe": "^1.1.2",
+    "ffprobe-static": "^3.0.0",
+    "file-type": "^16.5.2",
+    "fluent-ffmpeg": "^2.1.2",
+    "get-video-duration": "^3.1.0",
+    "im_electron_sdk": "^1.4.20",
+    "image-size": "^1.0.0",
+    "install": "^0.13.0",
+    "node-fetch": "^2.6.1",
+    "npm": "^7.23.0",
+    "progress-stream": "^2.0.0",
+    "save": "^2.5.0",
+    "trtc-electron-sdk": "^8.6.102-beta.0",
+    "vue-router": "^3.5.2"
+  }
+}

@@ -1,0 +1,31 @@
+.group-base-info {
+  padding-bottom: 20px;
+  display: flex;
+  align-items: center;
+
+  &--avatar {
+    img {
+      width: 36;
+      height: 36px;
+    }
+  }
+
+  &--text {
+    display: flex;
+    flex-direction: column;
+    margin-left: 8px;
+
+    &__name {
+      font-size: 14px;
+      font-weight: 400;
+      color: #000000;
+      margin-right: 8px;
+    }
+
+    &__type {
+      font-size: 12px;
+      font-weight: 400;
+      color: #999999;
+    }
+  }
+}

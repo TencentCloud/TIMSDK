@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="36px" height="36px" viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>发言icon</title>
+    <defs>
+        <filter id="filter-1">
+            <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0.400000 0 0 0 0 0.400000 0 0 0 0 0.400000 0 0 0 1.000000 0"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="PC补齐界面" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="发言icon" transform="translate(-20.000000, -401.000000)" filter="url(#filter-1)">
+            <g transform="translate(20.000000, 401.000000)">
+                <rect id="矩形" x="-1.27897692e-13" y="0" width="36" height="36"></rect>
+                <rect id="矩形" stroke="#FFFFFF" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" x="15.5454545" y="6.1875" width="6.44318182" height="15.0340909" rx="3.22159091"></rect>
+                <path d="M26.2840909,25.4139906 C26.2840909,24.340127 26.2840909,24.340127 26.2840909,23.2662634 C26.2840909,19.1147138 22.918595,15.7492179 18.7670455,15.7492179 C14.6154959,15.7492179 11.25,19.1147138 11.25,23.2662634 C11.25,27.4178129 11.25,24.340127 11.25,25.4139906" id="椭圆形" stroke="#FFFFFF" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" transform="translate(18.767045, 20.633132) rotate(-180.000000) translate(-18.767045, -20.633132) "></path>
+                <line x1="15.0085227" y1="29.2755682" x2="22.5255682" y2="29.2755682" id="直线-13" stroke="#FFFFFF" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"></line>
+                <line x1="18.6328125" y1="28.96875" x2="18.6328125" y2="25.59375" id="直线-14" stroke="#FFFFFF" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"></line>
+            </g>
+        </g>
+    </g>
+</svg>

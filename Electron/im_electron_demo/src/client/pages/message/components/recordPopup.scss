@@ -1,0 +1,28 @@
+.record-popup{
+    position: absolute;
+    background-color: #E8F2FF;
+    padding: 0 12px;
+    height: 48px;
+    left: 0;
+    bottom: 149px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    &__icon {
+        width: 16px;
+        height: 16px;
+        background-color: #07C160;
+        border-radius: 8px;
+        margin-right: 8px;
+    }
+    &__tips {
+        flex: 1;
+    }
+    &__btn-send {
+    }
+    &__btn-cancel {
+        margin-left: 12px;
+    }
+}
+

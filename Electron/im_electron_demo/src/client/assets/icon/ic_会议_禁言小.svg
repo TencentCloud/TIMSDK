@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>ic_会议_禁言小</title>
+    <g id="PC补齐界面" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-116.000000, -548.000000)">
+            <g id="ic_会议_禁言小" transform="translate(116.000000, 548.000000)">
+                <rect id="矩形" x="0" y="0" width="24" height="24"></rect>
+                <path d="M13.9090909,4.125 L13.9090909,8.25 C13.9090909,9.43615702 12.9475207,10.3977273 11.7613636,10.3977273 C10.5758226,10.3977273 9.61475178,9.43665641 9.61475178,8.25111541 C9.61475178,8.25074371 9.61475187,8.250372 9.61475207,8.25000029 L9.615,7.77272727 L9.615,7.77272727" id="矩形" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" transform="translate(11.761364, 7.261364) scale(1, -1) translate(-11.761364, -7.261364) "></path>
+                <path d="M13.9090909,14.1477273 L11.8636364,14.1477273 C10.6209957,14.1488958 9.61363636,13.1415365 9.61363636,11.8988958 C9.61363636,11.8985062 9.61363646,11.8981166 9.61480519,11.8977276 L9.615,11.5227273 L9.615,11.5227273 L9.615,10.5" id="矩形" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M15.3603296,17.0113636 C15.3603296,16.2954545 15.3603296,16.2954545 15.3603296,15.5795455 C15.3603296,12.8118457 13.1166657,10.5681818 10.348966,10.5681818 C8.93671529,10.5681818 7.66090612,11.1523575 6.75,12.0922473" id="椭圆形" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" transform="translate(11.055165, 13.789773) rotate(-180.000000) translate(-11.055165, -13.789773) "></path>
+                <path d="M16.7727273,10.4994786 C16.644686,10.9422475 16.5760666,11.4102407 16.5760666,11.8942609 C16.5760666,14.6619606 16.5760666,12.61017 16.5760666,13.3260791" id="椭圆形" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" transform="translate(16.674397, 11.947130) rotate(-180.000000) translate(-16.674397, -11.947130) "></path>
+                <line x1="9.25568182" y1="19.5170455" x2="14.2670455" y2="19.5170455" id="直线-13" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></line>
+                <line x1="11.671875" y1="19.3125" x2="11.671875" y2="17.0625" id="直线-14" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></line>
+                <line x1="11.763841" y1="20.5831016" x2="12.1364854" y2="3.51148539" id="直线-14" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" transform="translate(11.995860, 12.323985) scale(-1, 1) rotate(45.000000) translate(-11.995860, -12.323985) "></line>
+            </g>
+        </g>
+    </g>
+</svg>

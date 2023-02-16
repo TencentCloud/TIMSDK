@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="36px" height="36px" viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>禁言 icon</title>
+    <defs>
+        <filter id="filter-1">
+            <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 1.000000 0 0 0 0 0.345098 0 0 0 0 0.298039 0 0 0 1.000000 0"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="PC补齐界面" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="禁言-icon" transform="translate(-20.000000, -466.000000)" filter="url(#filter-1)">
+            <g transform="translate(20.000000, 466.000000)">
+                <rect id="矩形" x="0" y="0" width="36" height="36"></rect>
+                <path d="M20.8636364,6.1875 L20.8636364,12.375 C20.8636364,14.1542355 19.421281,15.5965909 17.6420455,15.5965909 C15.863734,15.5965909 14.4221277,14.1549846 14.4221277,12.3766731 C14.4221277,12.3761156 14.4221278,12.375558 14.4221281,12.3750004 L14.4225,11.6590909 L14.4225,11.6590909" id="矩形" stroke="#FFFFFF" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" transform="translate(17.642045, 10.892045) scale(1, -1) translate(-17.642045, -10.892045) "></path>
+                <path d="M20.8636364,21.2215909 L17.7954545,21.2215909 C15.9314935,21.2233437 14.4204545,19.7123047 14.4204545,17.8483437 C14.4204545,17.8477593 14.4204547,17.8471749 14.4222078,17.8465914 L14.4225,17.2840909 L14.4225,17.2840909 L14.4225,15.75" id="矩形" stroke="#FFFFFF" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M23.0404944,25.5170455 C23.0404944,24.4431818 23.0404944,24.4431818 23.0404944,23.3693182 C23.0404944,19.2177686 19.6749986,15.8522727 15.523449,15.8522727 C13.4050729,15.8522727 11.4913592,16.7285362 10.125,18.138371" id="椭圆形" stroke="#FFFFFF" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" transform="translate(16.582747, 20.684659) rotate(-180.000000) translate(-16.582747, -20.684659) "></path>
+                <path d="M25.1590909,15.7492179 C24.967029,16.4133712 24.8640999,17.1153611 24.8640999,17.8413913 C24.8640999,21.9929409 24.8640999,18.9152549 24.8640999,19.9891186" id="椭圆形" stroke="#FFFFFF" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" transform="translate(25.011595, 17.920696) rotate(-180.000000) translate(-25.011595, -17.920696) "></path>
+                <line x1="13.8835227" y1="29.2755682" x2="21.4005682" y2="29.2755682" id="直线-13" stroke="#FFFFFF" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"></line>
+                <line x1="17.5078125" y1="28.96875" x2="17.5078125" y2="25.59375" id="直线-14" stroke="#FFFFFF" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"></line>
+                <line x1="17.6457615" y1="30.8746525" x2="18.2047281" y2="5.26722808" id="直线-14" stroke="#FFFFFF" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" transform="translate(17.993791, 18.485978) scale(-1, 1) rotate(45.000000) translate(-17.993791, -18.485978) "></line>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,35 @@
+.mac-bars{ 
+    width: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .bars {
+        width: 12px;
+        height: 12px;
+        margin: 0px 3px;
+        background-size: 12px 12px;
+        background-position: center;
+        cursor: pointer;
+    }
+    .close {
+        background-image: url('../../assets/icon/close_normal.png');
+    }
+    .min {
+        background-image: url('../../assets/icon/min_normal.png');
+    }
+    .max {
+        background-image: url('../../assets/icon/max_normal.png');
+    }
+
+    &:hover {
+        .close {
+            background-image: url('../../assets/icon/close_hover.png');
+        }
+        .min {
+            background-image: url('../../assets/icon/min_hover.png');
+        }
+        .max {
+            background-image: url('../../assets/icon/max_hover.png');
+        }
+    }
+}

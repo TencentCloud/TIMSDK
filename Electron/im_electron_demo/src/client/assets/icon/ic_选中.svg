@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>ic_选中</title>
+    <g id="PC补齐界面" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-154.000000, -239.000000)">
+            <g id="ic_选中" transform="translate(154.000000, 239.000000)">
+                <g id="编组-4">
+                    <rect id="矩形" fill="#006EFF" x="0" y="0" width="14" height="14"></rect>
+                    <path d="M3.56586399,4 L5.06586399,4 L5.06586399,6.999 L10.565864,7 L10.565864,8.5 L3.56586399,8.5 L3.56586399,4 Z" id="形状结合" fill="#FFFFFF" transform="translate(7.065864, 6.250000) rotate(-45.000000) translate(-7.065864, -6.250000) "></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

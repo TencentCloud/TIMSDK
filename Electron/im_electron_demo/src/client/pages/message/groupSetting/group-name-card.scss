@@ -1,0 +1,21 @@
+.group-name-card {
+  padding: 12px 0;
+
+  &--title {
+    margin-bottom: 8px;
+
+    &__text {
+      font-size: 14px;
+      font-weight: 400;
+      color: #333333;
+      line-height: 20px;
+      margin-right: 8px;
+    }
+  }
+
+  &--input {
+    height: 32px;
+    border-radius: 4px;
+    border: 1px solid #dddddd;
+  }
+}

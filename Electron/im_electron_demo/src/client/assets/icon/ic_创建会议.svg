@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>ic_创建会议</title>
+    <g id="PC补齐界面" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-146.000000, -278.000000)">
+            <g id="ic_创建会议" transform="translate(146.000000, 278.000000)">
+                <circle id="椭圆形备份" fill="#50E3C2" cx="24" cy="24" r="24"></circle>
+                <g id="card-alert" transform="translate(14.000000, 11.000000)" fill="#272226">
+                    <polygon id="Fill-166" points="16 12.9997 16 19.9997 4 19.9997 4 7.9997 10 7.9997 10 3.9997 0 3.9997 0 23.9997 20 23.9997 20 12.9997"></polygon>
+                    <path d="M22,4.9997 C22,7.7607 19.761,9.9997 17,9.9997 C14.239,9.9997 12,7.7607 12,4.9997 C12,2.2387 14.239,-0.0003 17,-0.0003 C19.761,-0.0003 22,2.2387 22,4.9997" id="Fill-167"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,88 @@
+.block-file {
+  height: 50px;
+  width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-radius: 10px;
+  &--file {
+    width: 236px;
+    height: 70px;
+    background: #ffffff;
+    border-radius: 2px 8px 8px 8px;
+    border: 1px solid #eeeeee;
+    display: flex;
+    cursor: pointer;
+
+    &___close {
+      width: 18px;
+      height: 18px;
+      margin-left: 9px;
+      margin-top: 28px;
+    }
+
+    &___open,
+    &___download {
+      width: 18px;
+      height: 18px;
+      margin-left: 10px;
+      margin-top: 35px;
+      background-image: url("../../../assets/icon/file-message.svg");
+    }
+
+    &___download {
+      background-image: url("../../../assets/icon/download.svg");
+    }
+
+    &___ext {
+      width: 50px;
+      height: 70px;
+      line-height: 70px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: bold;
+      color: #000;
+    }
+
+    &___content {
+      width: 146px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      &____name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-weight: 400;
+        color: #000000;
+        line-height: 16px;
+        font-size: 12px;
+      }
+
+      &____size {
+        font-weight: 400;
+        color: #999999;
+        line-height: 18px;
+        font-size: 12px;
+      }
+    }
+  }
+}
+
+.block-image {
+  display: inline-block;
+  & img {
+    max-width: 200px;
+    max-height: 70px;
+  }
+}
+
+.block-reply-msg {
+  border-left: 3px solid #ccc;
+  padding-left: 10px;
+  color: #666;
+  &--name {
+    font-size: 14px;
+    font-weight: 400;
+  }
+}

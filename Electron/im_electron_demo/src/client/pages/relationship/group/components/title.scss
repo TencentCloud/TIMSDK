@@ -1,0 +1,39 @@
+.title {
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 76px;
+  border-bottom: 1px solid #eeeeee;
+
+  &--left {
+    display: flex;
+    align-items: center;
+
+    &__icon {
+      width: 36px;
+      height: 36px;
+      background-image: url("../../../../assets/icon/group.svg");
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+
+    &__text {
+      margin-left: 12px;
+      font-size: 16px;
+      font-weight: 500;
+      color: #000000;
+      line-height: 24px;
+    }
+  }
+
+  &--right {
+    &__button {
+      background: #006eff;
+      padding: 0 12px;
+      border-radius: 4px;
+      height: 36px;
+      cursor: pointer;
+    }
+  }
+}

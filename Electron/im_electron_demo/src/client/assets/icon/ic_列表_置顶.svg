@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>ic_列表_置顶</title>
+    <g id="PC补齐界面" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-284.000000, -244.000000)">
+            <g id="ic_列表_置顶" transform="translate(284.000000, 244.000000)">
+                <rect id="矩形" stroke="#000000" stroke-width="1.5" x="2.75" y="2.75" width="12.5" height="12.5" rx="1"></rect>
+                <rect id="矩形" fill="#000000" x="6" y="6" width="6" height="1.5"></rect>
+                <path d="M6.5,11.5 L8.375,9.74264069 C8.72017797,9.41911977 9.27982203,9.41911977 9.625,9.74264069 L11.5,11.5 L11.5,11.5" id="路径" stroke="#000000" stroke-width="1.5" stroke-linecap="round"></path>
+            </g>
+        </g>
+    </g>
+</svg>

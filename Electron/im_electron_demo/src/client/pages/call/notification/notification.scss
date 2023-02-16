@@ -1,0 +1,59 @@
+.notification {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    padding-bottom: 0;
+
+    &__title {
+        border-bottom: 1px solid #ccc;
+        display: inline-block;
+        vertical-align: middle;
+        &--nick-name {
+            display: inline-block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        &--text {
+            display: inline-block;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+    }
+    &__avatar {
+        width: 30px;
+        height: 30px;
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 10px;
+    }
+    &__btn {
+        margin-top: 15px;
+        align-self: flex-end;
+        display: flex;
+
+        &--refuse, &--apply  {
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+            background-repeat: no-repeat;
+            background-position: center;
+            border: none;
+            cursor: pointer;
+        }
+
+        &--refuse {
+            background-image: url('../../../assets/icon/refuse.png');
+            background-size: 70%;
+            background-color: #f35f5f;
+        }
+
+        &--apply {
+            background-image: url('../../../assets/icon/accept.png');
+            background-size: 60%;
+            background-color: #0ac160;
+            margin-right: 20px;
+        }
+    }
+}
