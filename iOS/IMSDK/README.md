@@ -22,7 +22,7 @@ English | [简体中文](./README_ZH.md)
 
 [Latest ImSDK_Plus_Bitcode.xcframework.zip download](https://im.sdk.cloud.tencent.cn/download/plus/7.0.3754/ImSDK_Plus_7.0.3754_Bitcode.xcframework.zip)
 
-#### Enhanced Edition Pro
+#### Enhanced Edition Pro (Providing dual line acceleration to achieve best network performance)
 
 [Latest ImSDK_Plus_Pro.framework download](https://im.sdk.qcloud.com/download/plus/7.0.3754/ImSDK_Plus_Pro_7.0.3754.framework.zip)
 
