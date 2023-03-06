@@ -22,7 +22,7 @@
 
 [最新 ImSDK_Plus_Bitcode.xcframework.zip下载](https://im.sdk.qcloud.com/download/plus/7.0.3754/ImSDK_Plus_7.0.3754_Bitcode.xcframework.zip)
 
-#### 增强版 Pro
+#### 增强版 Pro (支持网络层双线路加速，弱网抗性更加优异)
 
 [最新 ImSDK_Plus_Pro.framework下载](https://im.sdk.qcloud.com/download/plus/7.0.3754/ImSDK_Plus_Pro_7.0.3754.framework.zip)
 
