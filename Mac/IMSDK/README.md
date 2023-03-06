@@ -7,7 +7,7 @@ English | [简体中文](./README_ZH.md)
 ### Enhanced Edition(Recommend)
 [Latest ImSDKForMac_Plus.framework download](https://sdk-im-1252463788.cos.ap-hongkong.myqcloud.com/download/plus/7.0.3754/ImSDKForMac_Plus_7.0.3754.framework.zip)
 
-### Enhanced Edition Pro
+### Enhanced Edition Pro (Providing dual line acceleration to achieve best network performance)
 [Latest ImSDKForMac_Plus_Pro.framework download](https://im.sdk.qcloud.com/download/plus/7.0.3754/ImSDKForMac_Plus_Pro_7.0.3754.framework.zip)
 
 ### Basic Edition
