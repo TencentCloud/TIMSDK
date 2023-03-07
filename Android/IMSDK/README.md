@@ -7,7 +7,7 @@ English | [简体中文](./README_ZH.md)
 ### Enhanced Edition(Recommend)
 [Latest Enhanced Edition IM SDK download](https://im.sdk.qcloud.com/download/plus/7.0.3754/imsdk-plus-7.0.3754.aar) 
 
-### Enhanced Edition Pro (Providing axp-quic multiplex transmission protocol to achieve best network performance)
+### Enhanced Edition Pro (Providing axp-quic multiplex transmission protocol to enhance network performance)
 [Latest Enhanced Edition Pro IM SDK download](https://im.sdk.qcloud.com/download/plus/7.0.3754/imsdk-plus-pro-7.0.3754.aar) 
 
 ### Basic Edition
