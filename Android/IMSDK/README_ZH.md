@@ -7,7 +7,7 @@
 ### 增强版（推荐）
 [最新增强版 IM SDK 下载](https://im.sdk.qcloud.com/download/plus/7.0.3754/imsdk-plus-7.0.3754.aar) 
 
-### 增强版 Pro (支持网络层双线路加速，弱网抗性更加优异)
+### 增强版 Pro (网络层增加axp-quic多路传输协议，弱网抗性更加优异)
 [最新增强版 Pro IM SDK 下载](https://im.sdk.qcloud.com/download/plus/7.0.3754/imsdk-plus-pro-7.0.3754.aar) 
 
 ### 基础版
