@@ -7,7 +7,7 @@
 ### 增强版（推荐）
 [最新 ImSDKForMac_Plus.framework 下载](https://im.sdk.qcloud.com/download/plus/7.0.3754/ImSDKForMac_Plus_7.0.3754.framework.zip)
 
-### 增强版 Pro (支持网络层双线路加速，弱网抗性更加优异)
+### 增强版 Pro (网络层增加axp-quic多路传输协议，弱网抗性更加优异)
 [最新 ImSDKForMac_Plus_Pro.framework 下载](https://im.sdk.qcloud.com/download/plus/7.0.3754/ImSDKForMac_Plus_Pro_7.0.3754.framework.zip)
 
 ### 基础版
