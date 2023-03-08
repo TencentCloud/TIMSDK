@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/page_title_layout">
+
+    <LinearLayout
+        android:id="@+id/page_title_left_group"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:gravity="center_vertical"
+        android:minWidth="80dp"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp">
+
+        <ImageView
+            android:id="@+id/page_title_left_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:clickable="false"
+            android:background="@drawable/contact_minimalist_back_icon" />
+
+        <TextView
+            android:id="@+id/page_title_left_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#147AFF"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/page_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:maxWidth="200dp"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:textAlignment="gravity"
+        android:textColor="?attr/core_title_bar_text_bg"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        tools:text="Title"/>
+
+    <LinearLayout
+        android:id="@+id/page_title_right_group"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:gravity="center_vertical|right"
+        android:minWidth="80dp"
+        android:orientation="horizontal"
+        android:paddingRight="16dp">
+
+        <TextView
+            android:id="@+id/page_title_right_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:textColor="?attr/core_title_bar_text_bg"
+            android:textSize="14sp"
+            android:textStyle="bold"/>
+
+        <ImageView
+            android:id="@+id/page_title_right_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:clickable="false" />
+    </LinearLayout>
+
+</RelativeLayout>

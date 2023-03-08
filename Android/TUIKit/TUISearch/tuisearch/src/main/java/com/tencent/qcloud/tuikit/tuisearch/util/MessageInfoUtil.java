@@ -595,7 +595,7 @@ public class MessageInfoUtil {
             msgInfo.setDataPath(finalPath);
             msgInfo.setExtra(context.getString(R.string.file_extra));
         } else if (type == V2TIMMessage.V2TIM_ELEM_TYPE_MERGER) {
-            msgInfo.setExtra("[聊天记录]");
+            msgInfo.setExtra(context.getString(R.string.forward_extra));
         }
         msgInfo.setMsgType(convertTIMElemType2MessageInfoType(type));
         return msgInfo;

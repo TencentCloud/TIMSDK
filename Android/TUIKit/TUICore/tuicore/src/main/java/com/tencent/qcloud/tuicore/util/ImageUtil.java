@@ -447,9 +447,9 @@ public class ImageUtil {
     }
 
 
-    public static String getGroupConversationAvatar(String groupId) {
+    public static String getGroupConversationAvatar(String conversationID) {
         SPUtils spUtils = SPUtils.getInstance(TUILogin.getSdkAppId() + SP_IMAGE);
-        final String savedIcon = spUtils.getString(groupId, "");
+        final String savedIcon = spUtils.getString(conversationID, "");
         if (!TextUtils.isEmpty(savedIcon) && new File(savedIcon).isFile() && new File(savedIcon).exists()) {
             return savedIcon;
         }

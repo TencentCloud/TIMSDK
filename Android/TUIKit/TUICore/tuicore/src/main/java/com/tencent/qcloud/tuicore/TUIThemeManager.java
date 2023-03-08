@@ -12,7 +12,6 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.webkit.WebView;
 
-import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -81,6 +80,7 @@ public class TUIThemeManager {
                 ((Application) appContext).registerActivityLifecycleCallbacks(new ThemeAndLanguageCallback());
             }
 
+            notifySetLanguageEvent();
             Locale defaultLocale = getLocale(appContext);
             SPUtils spUtils = SPUtils.getInstance(SP_THEME_AND_LANGUAGE_NAME);
             currentLanguage = spUtils.getString(SP_KEY_LANGUAGE, defaultLocale.getLanguage());
@@ -93,12 +93,17 @@ public class TUIThemeManager {
         applyTheme(appContext);
     }
 
+    private void notifySetLanguageEvent() {
+        TUICore.notifyEvent(TUIConstants.TUICore.LANGUAGE_EVENT, TUIConstants.TUICore.LANGUAGE_EVENT_SUB_KEY, null);
+    }
+
     /**
      * Solve the problem that WebView on Android 7 and above causes failure to switch languages.
      * Solve the problem of using WebView Crash for multiple processes above Android 9.
      */
     public static void setWebViewLanguage(Context appContext) {
         try {
+            Log.i(TAG, "setWebViewLanguage");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 WebView.setDataDirectorySuffix(TUIUtil.getProcessName());
             }

@@ -42,6 +42,7 @@
     <string name="forward_chat_record">Chat Record</string>
 
     <string name="forward_failed_tip">Unable to forward failed messages.</string>
+    <string name="forward_group_note_or_poll_failed_tip">Unable to forward group-note or poll messages.</string>
     <string name="forward_oneByOne_limit_number_tip">Unable to forward the messages one by one because there are too many messages.</string>
 
     <string name="and_and"> </string>
@@ -77,6 +78,8 @@
     <string name="audio_extra">[Voice]</string>
     <string name="file_extra">[File]</string>
     <string name="location_extra">[Location]</string>
+    <string name="group_note_extra">[Group Note]</string>
+    <string name="group_poll_extra">[Poll]</string>
 
     <string name="locate_origin_msg_failed_tip">Unable to locate the original message.</string>
 
@@ -169,7 +172,7 @@
     <string name="live_group_live_end">Live Over</string>
     <string name="live_group_user_live">%s Live</string>
     <string name="live_group_live">Live Group</string>
-
+    <string name="chat_time_today">Today</string>
 
     <string name="start_group_call">Start Group Call</string>
     <string name="start_call">Start Call</string>
@@ -237,4 +240,23 @@
     <string name="chat_user_status_online">online</string>
     <string name="chat_user_status_offline">offline</string>
     <string name="chat_user_status_unknown">unknown</string>
+
+    <string name="chat_start_audio_call">Voice Call</string>
+    <string name="chat_start_video_call">Video Call</string>
+
+    <string name="chat_call_reject_caller">Call declined by user</string>
+    <string name="chat_call_reject_callee">Declined</string>
+    <string name="chat_call_cancel_caller">Canceled</string>
+    <string name="chat_call_cancel_callee">Call canceled by caller</string>
+    <string name="chat_call_timeout_caller">Call wasn\'t answered</string>
+    <string name="chat_call_timeout_callee">Call canceled by caller</string>
+    <string name="chat_call_line_busy_caller">Line busy</string>
+    <string name="chat_call_line_busy_callee">Call canceled by caller</string>
+    <string name="chat_group_call_send">initiated a group call</string>
+    <string name="chat_group_call_end">End group call</string>
+    <string name="chat_group_call_no_answer">no answer</string>
+    <string name="chat_group_call_reject_format">Call declined by %s</string>
+    <string name="chat_group_call_accept_format">Answered by %s</string>
+    <string name="chat_group_call_switch_to_audio_format">Switch to audio call by %s</string>
+    <string name="chat_group_call_confirm_switch_to_audio_format">Confirm to audio call by %s</string>
 </resources>

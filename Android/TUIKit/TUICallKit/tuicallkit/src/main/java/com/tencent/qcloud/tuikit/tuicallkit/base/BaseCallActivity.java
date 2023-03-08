@@ -37,6 +37,12 @@ public class BaseCallActivity extends AppCompatActivity {
         if (null != mActivity) {
             mActivity.finish();
         }
+        mActivity = null;
+        if (null != mBaseCallView && null != mBaseCallView.getParent()) {
+            ((ViewGroup) mBaseCallView.getParent()).removeView(mBaseCallView);
+        }
+        mBaseCallView = null;
+        mLayoutContainer = null;
     }
 
     @Override
@@ -90,11 +96,5 @@ public class BaseCallActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (null != mBaseCallView && null != mBaseCallView.getParent()) {
-            ((ViewGroup) mBaseCallView.getParent()).removeView(mBaseCallView);
-        }
-        mBaseCallView = null;
-        mLayoutContainer = null;
-        mActivity = null;
     }
 }

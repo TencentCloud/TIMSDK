@@ -1,17 +1,40 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/core_bg_color"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <include layout="@layout/contact_minimalist_header_view_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:background="@color/transparent"
+        app:elevation="0dp"
+        app:layout_insetEdge="none"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/contact_minimalist_search_bar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            android:visibility="gone"/>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
     <com.tencent.qcloud.tuikit.tuicontact.minimalistui.widget.ContactListView
         android:id="@+id/contact_listview"
-        android:background="?attr/core_bg_color"
+        android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </LinearLayout>

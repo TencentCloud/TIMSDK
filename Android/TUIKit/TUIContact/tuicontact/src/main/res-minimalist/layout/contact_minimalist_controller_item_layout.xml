@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:background="#F0F9F9F9"
+    android:layout_marginBottom="1dp"
+    android:layout_width="match_parent"
+    android:layout_height="52dp">
+
+    <TextView
+        android:id="@+id/controller_name"
+        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@color/black"/>
+
+    <com.tencent.qcloud.tuicore.component.UnreadCountTextView
+        android:id="@+id/unread_count"
+        app:paint_color="@color/read_dot_bg"
+        android:textColor="@color/white"
+        android:layout_marginStart="4dp"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:visibility="gone"
+        tools:text="99"
+        tools:visibility="visible"/>
+
+    <ImageView
+        android:layout_marginStart="4dp"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:background="@drawable/contact_minimalist_forward_icon"/>
+
+</LinearLayout>

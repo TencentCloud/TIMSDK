@@ -36,6 +36,7 @@ public class CallingMessageHolder extends TextMessageHolder {
             }
             appendIcon(false, stringBuilder, resID);
             timeInLineTextLayout.setText(stringBuilder);
+            unreadAudioText.setVisibility(View.GONE);
         } else {
             if (callingMessageBean.getCallType() == CallingMessageBean.ACTION_ID_AUDIO_CALL) {
                 resID = R.drawable.ic_audio_call;
@@ -44,6 +45,7 @@ public class CallingMessageHolder extends TextMessageHolder {
             }
             appendIcon(true, stringBuilder, resID);
             timeInLineTextLayout.setText(stringBuilder);
+            unreadAudioText.setVisibility(callingMessageBean.isShowUnreadPoint() ? View.VISIBLE : View.GONE);
         }
 
         if (callingMessageBean.getCallType() == CallingMessageBean.ACTION_ID_AUDIO_CALL ||

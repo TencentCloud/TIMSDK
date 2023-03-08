@@ -400,6 +400,7 @@ public class TUICallingViewManager implements ITUINotification {
         mBaseCallView.updateFunctionView(mFunctionView);
 
         updateViewColor();
+        updateFunctionStatus();
         initFloatingWindowBtn();
     }
 

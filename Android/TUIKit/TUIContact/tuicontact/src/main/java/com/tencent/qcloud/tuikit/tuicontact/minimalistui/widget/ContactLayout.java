@@ -9,14 +9,14 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
 import com.tencent.qcloud.tuicore.component.action.PopActionClickListener;
 import com.tencent.qcloud.tuicore.component.action.PopMenuAction;
 import com.tencent.qcloud.tuikit.tuicontact.R;
-import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
 import com.tencent.qcloud.tuikit.tuicontact.minimalistui.interfaces.IContactLayout;
-import com.tencent.qcloud.tuikit.tuicontact.minimalistui.pages.AddMoreMinimalistActivity;
+import com.tencent.qcloud.tuikit.tuicontact.minimalistui.pages.AddMoreMinimalistDialogFragment;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
 
 import java.util.ArrayList;
@@ -81,10 +81,9 @@ public class ContactLayout extends LinearLayout implements IContactLayout {
                 if (TextUtils.equals(action.getActionName(), getResources().getString(R.string.add_group))) {
                     isGroup = true;
                 }
-                Intent intent = new Intent(getContext(), AddMoreMinimalistActivity.class);
-                intent.putExtra(TUIContactConstants.GroupType.GROUP, isGroup);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                getContext().startActivity(intent);
+                AddMoreMinimalistDialogFragment addFragment = new AddMoreMinimalistDialogFragment();
+                addFragment.setIsGroup(isGroup);
+                addFragment.show(((AppCompatActivity) getContext()).getSupportFragmentManager(), "AddMoreDialog");
                 menu.hide();
             }
         };

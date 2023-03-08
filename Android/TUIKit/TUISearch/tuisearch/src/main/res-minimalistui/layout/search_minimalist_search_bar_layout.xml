@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- search-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical">
+
+    <TextView
+        android:id="@+id/cancel_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/font_blue"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="23dp"
+        android:text="@string/cancle"
+        android:textSize="16sp" />
+
+    <ImageView
+        android:id="@+id/search_back_icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:scaleType="fitCenter"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="-8dp"
+        android:layout_centerVertical="true"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:background="@drawable/search_minimalist_back_icon" />
+
+    <LinearLayout
+        android:id="@+id/search_bar"
+        android:focusable="true"
+        android:layout_toStartOf="@+id/cancel_button"
+        android:layout_toEndOf="@id/search_back_icon"
+        android:focusableInTouchMode="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="14dp"
+        android:background="@drawable/search_minimalist_search_bar_shape"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_marginStart="8dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_gravity="center"
+            android:scaleType="fitCenter"
+            android:src="@drawable/search_minimalist_search_icon" />
+
+        <EditText
+            android:id="@+id/edt_search"
+            android:layout_width="0dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:layout_marginLeft="10dp"
+            android:background="@null"
+            android:imeOptions="actionSearch"
+            android:textCursorDrawable="@drawable/search_minimalist_cursor_shape"
+            android:hint="@string/search"
+            android:textColorHint="#8E8E93"
+            android:lines="1"
+            android:textSize="16sp"
+            android:singleLine="true" />
+
+        <ImageView
+            android:id="@+id/imgv_delete"
+            android:layout_width="13.82dp"
+            android:layout_height="13.82dp"
+            android:layout_gravity="center"
+            android:scaleType="centerInside"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/core_delete_icon"
+            tools:visibility="visible"
+            android:visibility="gone" />
+    </LinearLayout>
+</RelativeLayout>

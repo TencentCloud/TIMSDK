@@ -20,9 +20,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.component.CustomLinearLayoutManager;
-import com.tencent.qcloud.tuicore.component.LineControllerView;
+import com.tencent.qcloud.tuicore.component.MinimalistLineControllerView;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
-import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
+import com.tencent.qcloud.tuicore.component.activities.BaseMinimalistLightActivity;
 import com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView;
 import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
 import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
@@ -38,11 +38,10 @@ import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupManagerPresenter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ManageGroupMinimalistActivity extends BaseLightActivity {
+public class ManageGroupMinimalistActivity extends BaseMinimalistLightActivity {
 
     private TitleBarLayout titleBarLayout;
-    private LineControllerView setManagerView;
-    private LineControllerView muteAllView;
+    private MinimalistLineControllerView muteAllView;
     private View addMuteMemberView;
     private RecyclerView mutedList;
     private MutedMemberAdapter mutedMemberAdapter;
@@ -53,10 +52,9 @@ public class ManageGroupMinimalistActivity extends BaseLightActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_group_manager);
+        setContentView(R.layout.group_minimalist_manager);
         presenter = new GroupManagerPresenter();
         titleBarLayout = findViewById(R.id.group_manage_title_bar);
-        setManagerView = findViewById(R.id.group_manage_set_manager);
         muteAllView = findViewById(R.id.group_manage_mute_all);
         addMuteMemberView = findViewById(R.id.group_manage_add_mute_member);
         mutedList = findViewById(R.id.group_manage_muted_member_list);
@@ -107,20 +105,6 @@ public class ManageGroupMinimalistActivity extends BaseLightActivity {
                 }
         });
 
-        setManagerView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (TextUtils.equals(groupInfo.getGroupType(), GroupInfo.GROUP_TYPE_AVCHATROOM)
-                        || TextUtils.equals(groupInfo.getGroupType(), GroupInfo.GROUP_TYPE_WORK)) {
-                    ToastUtil.toastShortMessage(getString(R.string.group_not_support_set_manager));
-                    return;
-                }
-                Intent intent = new Intent(ManageGroupMinimalistActivity.this, SetGroupManagerMinimalistActivity.class);
-                intent.putExtra(TUIGroupConstants.Group.GROUP_INFO, groupInfo);
-                startActivity(intent);
-            }
-        });
-
         addMuteMemberView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -145,9 +129,9 @@ public class ManageGroupMinimalistActivity extends BaseLightActivity {
             }
         });
 
-        mutedMemberAdapter.setOnItemLongClickListener(new SetGroupManagerMinimalistActivity.OnItemLongClickListener() {
+        mutedMemberAdapter.setOnItemLongClickListener(new OnItemLongClickListener() {
             @Override
-            public void onClick(View view, GroupMemberInfo memberInfo, int position) {
+            public void onClick(View view, GroupMemberInfo memberInfo) {
                 Drawable drawable = view.getBackground();
                 if (drawable != null) {
                     drawable.setColorFilter(0xd9d9d9, PorterDuff.Mode.SRC_IN);
@@ -236,9 +220,9 @@ public class ManageGroupMinimalistActivity extends BaseLightActivity {
 
         private List<GroupMemberInfo> groupMemberInfoList;
 
-        private SetGroupManagerMinimalistActivity.OnItemLongClickListener onItemLongClickListener;
+        private OnItemLongClickListener onItemLongClickListener;
 
-        public void setOnItemLongClickListener(SetGroupManagerMinimalistActivity.OnItemLongClickListener onItemLongClickListener) {
+        public void setOnItemLongClickListener(OnItemLongClickListener onItemLongClickListener) {
             this.onItemLongClickListener = onItemLongClickListener;
         }
 
@@ -260,7 +244,7 @@ public class ManageGroupMinimalistActivity extends BaseLightActivity {
         @NonNull
         @Override
         public MutedMemberViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.group_manager_item, parent, false);
+            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.group_minimalist_manager_item, parent, false);
             return new MutedMemberViewHolder(itemView);
         }
 
@@ -271,7 +255,7 @@ public class ManageGroupMinimalistActivity extends BaseLightActivity {
                 @Override
                 public boolean onLongClick(View v) {
                     if (onItemLongClickListener != null) {
-                        onItemLongClickListener.onClick(v, groupMemberInfo, position);
+                        onItemLongClickListener.onClick(v, groupMemberInfo);
                     }
                     return false;
                 }
@@ -295,7 +279,7 @@ public class ManageGroupMinimalistActivity extends BaseLightActivity {
             public MutedMemberViewHolder(@NonNull View itemView) {
                 super(itemView);
                 faceIcon = itemView.findViewById(R.id.group_manager_face);
-                faceIcon.setRadius(ScreenUtil.dip2px(20));
+                faceIcon.setRadius(ScreenUtil.dip2px(25));
                 managerName = itemView.findViewById(R.id.group_manage_name);
             }
         }

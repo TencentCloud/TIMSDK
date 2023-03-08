@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.qcloud.tuikit.tuichat.R;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomGroupNoteTipsMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.classicui.ClassicUIService;
 import com.tencent.qcloud.tuikit.tuichat.classicui.interfaces.ICommonMessageAdapter;
@@ -31,6 +32,9 @@ public class MessageViewHolderFactory {
         if (viewType == ClassicUIService.getInstance().getViewType(TipsMessageBean.class)) {
             view = inflater.inflate(R.layout.message_adapter_item_empty, parent, false);
             holder = new TipsMessageHolder(view);
+        } else if (viewType == ClassicUIService.getInstance().getViewType(CustomGroupNoteTipsMessageBean.class)) {
+            view = inflater.inflate(R.layout.message_adapter_item_empty, parent, false);
+            holder = getViewHolder(view, viewType);
         } else {
             view = inflater.inflate(R.layout.message_adapter_item_content, parent, false);
             holder = getViewHolder(view, viewType);

@@ -14,7 +14,10 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.imsdk.v2.V2TIMUserFullInfo;
+import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.component.gatherimage.UserIconView;
@@ -190,22 +193,7 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
             usernameText.setText(msg.getSender());
         }
 
-        if (!TextUtils.isEmpty(msg.getFaceUrl())) {
-            List<Object> urllist = new ArrayList<>();
-            urllist.add(msg.getFaceUrl());
-            if (isForwardMode || isReplyDetailMode) {
-                leftUserIcon.setIconUrls(urllist);
-            } else {
-                if (msg.isSelf()) {
-                    rightUserIcon.setIconUrls(urllist);
-                } else {
-                    leftUserIcon.setIconUrls(urllist);
-                }
-            }
-        } else {
-            rightUserIcon.setIconUrls(null);
-            leftUserIcon.setIconUrls(null);
-        }
+        loadAvatar(msg);
 
         if (isForwardMode || isReplyDetailMode) {
             sendingProgress.setVisibility(View.GONE);
@@ -367,10 +355,60 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
         layoutVariableViews(msg, position);
     }
 
+    private void loadAvatar(TUIMessageBean msg) {
+        if (msg.isUseMsgReceiverAvatar()) {
+            String userId = "";
+            if (TextUtils.equals(msg.getSender(), V2TIMManager.getInstance().getLoginUser())) {
+                userId = msg.getUserId();
+            } else {
+                userId = V2TIMManager.getInstance().getLoginUser();
+            }
+            List<String> idList = new ArrayList<>();
+            idList.add(userId);
+            V2TIMManager.getInstance().getUsersInfo(idList, new V2TIMValueCallback<List<V2TIMUserFullInfo>>() {
+                @Override
+                public void onSuccess(List<V2TIMUserFullInfo> v2TIMUserFullInfos) {
+                    V2TIMUserFullInfo userInfo = v2TIMUserFullInfos.get(0);
+                    if (userInfo == null) {
+                        setupAvatar("", msg.isSelf());
+                    } else {
+                        setupAvatar(userInfo.getFaceUrl(), msg.isSelf());
+                    }
+                }
+
+                @Override
+                public void onError(int code, String desc) {
+                    setupAvatar("", msg.isSelf());
+                }
+            });
+        } else {
+            setupAvatar(msg.getFaceUrl(), msg.isSelf());
+        }
+    }
+
+    private void setupAvatar(String faceUrl, boolean right) {
+        if (!TextUtils.isEmpty(faceUrl)) {
+            List<Object> urllist = new ArrayList<>();
+            urllist.add(faceUrl);
+            if (isForwardMode || isReplyDetailMode) {
+                leftUserIcon.setIconUrls(urllist);
+            } else {
+                if (right) {
+                    rightUserIcon.setIconUrls(urllist);
+                } else {
+                    leftUserIcon.setIconUrls(urllist);
+                }
+            }
+        } else {
+            rightUserIcon.setIconUrls(null);
+            leftUserIcon.setIconUrls(null);
+        }
+    }
+
     protected void setMessageAreaPadding() {
         // after setting background, the padding will be reset
         int paddingHorizontal = itemView.getResources().getDimensionPixelSize(R.dimen.chat_message_area_padding_left_right);
-        int paddingVertical = itemView.getResources().getDimensionPixelSize(R.dimen.chat_message_area_padding_top_bottom);;
+        int paddingVertical = itemView.getResources().getDimensionPixelSize(R.dimen.chat_message_area_padding_top_bottom);
         msgArea.setPadding(paddingHorizontal, paddingVertical, paddingHorizontal, paddingVertical);
     }
 

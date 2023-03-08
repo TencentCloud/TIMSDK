@@ -6,13 +6,14 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 
 import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
+import com.tencent.qcloud.tuicore.component.activities.BaseMinimalistLightActivity;
 import com.tencent.qcloud.tuikit.tuigroup.R;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupConstants;
 
 import java.util.List;
 
 
-public class GroupInfoMinimalistActivity extends BaseLightActivity {
+public class GroupInfoMinimalistActivity extends BaseMinimalistLightActivity {
 
     public static final int REQUEST_FOR_CHANGE_OWNER = 1;
 

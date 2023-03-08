@@ -27,6 +27,7 @@ public class GroupInfo extends ChatInfo {
     private boolean messageReceiveOption;
     private String faceUrl;
     private boolean communitySupportTopic = false;
+    private List<Object> iconUrlList = new ArrayList<>();
 
     public GroupInfo() {
         setType(V2TIMConversation.V2TIM_GROUP);
@@ -212,6 +213,14 @@ public class GroupInfo extends ChatInfo {
 
     public void setCommunitySupportTopic(boolean communitySupportTopic) {
         this.communitySupportTopic = communitySupportTopic;
+    }
+
+    public void setIconUrlList(List<Object> iconUrlList) {
+        this.iconUrlList = iconUrlList;
+    }
+
+    public List<Object> getIconUrlList() {
+        return iconUrlList;
     }
 
     /**

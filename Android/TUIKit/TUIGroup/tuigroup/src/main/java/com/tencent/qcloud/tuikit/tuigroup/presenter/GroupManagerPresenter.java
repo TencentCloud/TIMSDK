@@ -35,7 +35,7 @@ public class GroupManagerPresenter {
     }
 
     public void setGroupManager(String groupId, String userId, IUIKitCallback<Void> callback) {
-        provider.setGroupManager(groupId, userId, callback);
+        provider.setGroupManagerRole(groupId, userId, callback);
     }
 
     public void clearGroupManager(String groupId, String userId, IUIKitCallback<Void> callback) {

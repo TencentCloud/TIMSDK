@@ -12,36 +12,33 @@ import com.tencent.qcloud.tuicore.util.SPUtils;
 import com.tencent.qcloud.tuikit.tuicallkit.R;
 
 import java.io.File;
-import java.io.IOException;
 
 public class CallingBellFeature {
-    public static final String PROFILE_TUICALLING = "per_profile_tuicalling";
+    public static final String PROFILE_TUICALLKIT = "per_profile_tuicallkit";
     public static final String PROFILE_CALL_BELL  = "per_call_bell";
     public static final String PROFILE_MUTE_MODE  = "per_mute_mode";
 
     private       Context     mContext;
     private final MediaPlayer mMediaPlayer;
     private       Handler     mHandler;
-    private       int         mCallingBellResourceId;
+    private       int         mCallingBellResourceId = -1;
     private       String      mCallingBellResourcePath;
 
     public CallingBellFeature(Context context) {
         mContext = context.getApplicationContext();
         mMediaPlayer = new MediaPlayer();
-        mCallingBellResourceId = -1;
-        mCallingBellResourcePath = "";
     }
 
     public void startDialingMusic() {
-        start("", R.raw.phone_dialing, 0);
+        start("", R.raw.phone_dialing);
     }
 
     public void startRing() {
-        String path = SPUtils.getInstance(PROFILE_TUICALLING).getString(PROFILE_CALL_BELL, "");
+        String path = SPUtils.getInstance(PROFILE_TUICALLKIT).getString(PROFILE_CALL_BELL, "");
         if (TextUtils.isEmpty(path)) {
-            start("", R.raw.phone_ringing, 0);
+            start("", R.raw.phone_ringing);
         } else {
-            start(path, -1, 0);
+            start(path, -1);
         }
     }
 
@@ -49,7 +46,7 @@ public class CallingBellFeature {
         stop();
     }
 
-    private void start(String resPath, final int resId, long duration) {
+    private void start(String resPath, int resId) {
         preHandler();
         if (TextUtils.isEmpty(resPath) && (-1 == resId)) {
             return;
@@ -58,17 +55,17 @@ public class CallingBellFeature {
                 || (!TextUtils.isEmpty(resPath) && TextUtils.equals(mCallingBellResourcePath, resPath))) {
             return;
         }
-        AssetFileDescriptor afd0 = null;
+
         if (!TextUtils.isEmpty(resPath) && isUrl(resPath)) {
             return;
-        } else if (!TextUtils.isEmpty(resPath) && new File(resPath).exists()) {
+        }
+
+        AssetFileDescriptor afd0 = null;
+        if (!TextUtils.isEmpty(resPath) && new File(resPath).exists()) {
             mCallingBellResourcePath = resPath;
         } else if (-1 != resId) {
             mCallingBellResourceId = resId;
             afd0 = mContext.getResources().openRawResourceFd(resId);
-            if (afd0 == null) {
-                return;
-            }
         }
 
         final AssetFileDescriptor afd = afd0;
@@ -78,9 +75,9 @@ public class CallingBellFeature {
                 if (mMediaPlayer.isPlaying()) {
                     mMediaPlayer.stop();
                 }
-                mMediaPlayer.setOnCompletionListener(null);
                 mMediaPlayer.reset();
                 mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
                 try {
                     if (null != afd) {
                         mMediaPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
@@ -89,31 +86,16 @@ public class CallingBellFeature {
                     } else {
                         return;
                     }
+
+                    mMediaPlayer.setLooping(true);
+                    mMediaPlayer.prepare();
+                    mMediaPlayer.start();
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                    @Override
-                    public void onCompletion(MediaPlayer mp) {
-                        stop();
-                    }
-                });
-                try {
-                    mMediaPlayer.prepare();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                mMediaPlayer.start();
             }
         });
-        if (duration > 0) {
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    stop();
-                }
-            }, duration);
-        }
     }
 
     private boolean isUrl(String url) {
@@ -124,22 +106,16 @@ public class CallingBellFeature {
         if (null != mHandler) {
             return;
         }
-        HandlerThread thread = new HandlerThread("Handler-MediaPlayer");
+        HandlerThread thread = new HandlerThread("CallingBell");
         thread.start();
         mHandler = new Handler(thread.getLooper());
-    }
-
-    private int getResId() {
-        return mCallingBellResourceId;
     }
 
     private void stop() {
         if (null == mHandler) {
             return;
         }
-        if ((-1 == getResId()) && TextUtils.isEmpty(mCallingBellResourcePath)) {
-            return;
-        }
+
         mHandler.post(new Runnable() {
             @Override
             public void run() {

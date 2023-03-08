@@ -59,13 +59,13 @@
 
         <!-- **************** Minimalist UI Activity Start **************** -->
         <activity
-            android:name=".minimalistui.pages.AddMoreMinimalistActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".minimalistui.pages.FriendProfileMinimalistActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".minimalistui.pages.NewFriendMinimalistActivity"
+            android:name=".minimalistui.pages.NewFriendApplicationMinimalistActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".minimalistui.pages.NewFriendApplicationDetailMinimalistActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".minimalistui.pages.BlackListMinimalistActivity"
@@ -76,16 +76,14 @@
 
         <activity
             android:name=".minimalistui.pages.StartC2CChatMinimalistActivity"
+            android:theme="@style/ContactTransparentPopActivityStyle"
             android:screenOrientation="portrait" />
         <activity
             android:name=".minimalistui.pages.StartGroupChatMinimalistActivity"
             android:screenOrientation="portrait"
+            android:theme="@style/ContactTransparentPopActivityStyle"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
-        <activity
-            android:name=".minimalistui.pages.ForwardSelectGroupMinimalistActivity"
-            android:launchMode="singleInstance"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".minimalistui.pages.StartGroupMemberSelectMinimalistActivity"
             android:launchMode="singleInstance"
@@ -93,10 +91,12 @@
 
         <activity
             android:name=".minimalistui.pages.CreateGroupMinimalistActivity"
+            android:theme="@style/ContactTransparentPopActivityStyle"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".minimalistui.pages.GroupTypeSelectMinimalistActivity"
+            android:theme="@style/ContactTransparentPopActivityStyle"
             android:screenOrientation="portrait" />
         <!-- **************** Minimalist UI Activity End **************** -->
 

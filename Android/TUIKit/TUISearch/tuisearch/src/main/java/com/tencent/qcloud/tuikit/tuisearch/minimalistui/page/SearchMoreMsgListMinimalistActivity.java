@@ -18,14 +18,15 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
+import com.tencent.qcloud.tuicore.component.activities.BaseMinimalistLightActivity;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuisearch.R;
 import com.tencent.qcloud.tuikit.tuisearch.TUISearchConstants;
 import com.tencent.qcloud.tuikit.tuisearch.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuisearch.bean.SearchDataBean;
 import com.tencent.qcloud.tuikit.tuisearch.minimalistui.util.MinimalistSearchUtils;
-import com.tencent.qcloud.tuikit.tuisearch.minimalistui.view.PageRecycleView;
-import com.tencent.qcloud.tuikit.tuisearch.minimalistui.view.SearchMoreMsgAdapter;
+import com.tencent.qcloud.tuikit.tuisearch.minimalistui.widget.PageRecycleView;
+import com.tencent.qcloud.tuikit.tuisearch.minimalistui.widget.SearchMoreMsgAdapter;
 import com.tencent.qcloud.tuikit.tuisearch.model.SearchDataProvider;
 import com.tencent.qcloud.tuikit.tuisearch.presenter.SearchMoreMsgPresenter;
 import com.tencent.qcloud.tuikit.tuisearch.util.TUISearchLog;
@@ -34,13 +35,15 @@ import com.tencent.qcloud.tuikit.tuisearch.util.TUISearchUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchMoreMsgListMinimalistActivity extends BaseLightActivity {
+public class SearchMoreMsgListMinimalistActivity extends BaseMinimalistLightActivity {
     private static final String TAG = SearchMoreMsgListMinimalistActivity.class.getSimpleName();
 
     private EditText mEdtSearch;
 
     private ImageView mImgvDelete;
     private TextView mCancleView;
+    private View searchBackButton;
+    private View notFoundArea;
 
     private PageRecycleView mMessageRcSearch;
 
@@ -94,6 +97,24 @@ public class SearchMoreMsgListMinimalistActivity extends BaseLightActivity {
             doChangeColor(mKeyWords);
         }
         setListener();
+    }
+
+    private void initView() {
+        mEdtSearch = (EditText) findViewById(R.id.edt_search);
+        mImgvDelete = (ImageView) findViewById(R.id.imgv_delete);
+        searchBackButton = (ImageView) findViewById(R.id.search_back_icon);
+        searchBackButton.setVisibility(View.VISIBLE);
+        searchBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+        mMessageRcSearch = (PageRecycleView) findViewById(R.id.message_rc_search);
+        mCancleView = (TextView) findViewById(R.id.cancel_button);
+        mMessageRcSearch.setLayoutManager(new LinearLayoutManager(this));
+        mMessageLayout = (RelativeLayout) findViewById(R.id.message_layout);
+        notFoundArea = findViewById(R.id.not_found_area);
     }
 
     private void initPresenter() {
@@ -198,12 +219,14 @@ public class SearchMoreMsgListMinimalistActivity extends BaseLightActivity {
                             mMessageRcSearchAdapter.setConversationVisible(true);
                             mMessageLayout.setVisibility(View.VISIBLE);
                         }
+                        invalidNotFoundInfo();
                     }
 
                     @Override
                     public void onError(String module, int errCode, String errMsg) {
                         mMessageRcSearchAdapter.setConversationVisible(false);
                         mMessageLayout.setVisibility(View.GONE);
+                        invalidNotFoundInfo();
                     }
                 });
             }
@@ -234,6 +257,14 @@ public class SearchMoreMsgListMinimalistActivity extends BaseLightActivity {
         });
     }
 
+    private void invalidNotFoundInfo() {
+        if (mMessageLayout.getVisibility() == View.GONE) {
+            notFoundArea.setVisibility(View.VISIBLE);
+        } else {
+            notFoundArea.setVisibility(View.GONE);
+        }
+    }
+
     private void doChangeColor(String text) {
         if (text.equals("")) {
             mMessageRcSearchAdapter.setText(null);
@@ -245,6 +276,7 @@ public class SearchMoreMsgListMinimalistActivity extends BaseLightActivity {
     private void initData(final String keyWords) {
         if (keyWords == null || TextUtils.isEmpty(keyWords)){
             mMessageLayout.setVisibility(View.GONE);
+            notFoundArea.setVisibility(View.GONE);
             return;
         }
 
@@ -262,24 +294,18 @@ public class SearchMoreMsgListMinimalistActivity extends BaseLightActivity {
                     mMessageRcSearchAdapter.setConversationVisible(true);
                     mMessageLayout.setVisibility(View.VISIBLE);
                 }
+                invalidNotFoundInfo();
             }
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
                 mMessageRcSearchAdapter.setConversationVisible(false);
                 mMessageLayout.setVisibility(View.GONE);
+                invalidNotFoundInfo();
             }
         });
     }
 
-    private void initView() {
-        mEdtSearch = (EditText) findViewById(R.id.edt_search);
-        mImgvDelete = (ImageView) findViewById(R.id.imgv_delete);
-        mMessageRcSearch = (PageRecycleView) findViewById(R.id.message_rc_search);
-        mCancleView = (TextView) findViewById(R.id.cancel_button);
-        mMessageRcSearch.setLayoutManager(new LinearLayoutManager(this));
-        mMessageLayout = (RelativeLayout) findViewById(R.id.message_layout);
-    }
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {

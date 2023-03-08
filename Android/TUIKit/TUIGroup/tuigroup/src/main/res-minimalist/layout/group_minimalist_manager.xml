@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F0F9F9F9"
+    android:orientation="vertical">
+
+    <com.tencent.qcloud.tuicore.component.MinimalistTitleBar
+        android:id="@+id/group_manage_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/page_title_height" />
+
+    <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+        android:id="@+id/group_manage_mute_all"
+        android:layout_width="match_parent"
+        android:layout_marginTop="7dp"
+        android:layout_height="56dp"
+        app:name="@string/group_mute_all"
+        app:isSwitch="true"
+        app:canNav="false"/>
+
+    <TextView
+        android:text="@string/group_mute_tip"
+        android:textSize="12sp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:id="@+id/group_manage_add_mute_member"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:background="@color/white"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="45dp">
+
+        <ImageView
+            android:background="@drawable/group_manager_add_icon"
+            android:scaleType="centerCrop"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginRight="8dp"/>
+
+        <TextView
+            android:text="@string/group_add_mute_member_tip"
+            android:textSize="12sp"
+            android:textColor="#147AFF"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/group_manage_muted_member_list"
+        android:layout_marginTop="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    tools:context=".profile.AboutIMActivity">
+
+    <com.tencent.qcloud.tuicore.component.MinimalistTitleBar
+        android:id="@+id/about_im_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="52dp" />
+
+    <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+        android:id="@+id/about_sdk_version_lv"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        app:name="@string/demo_about_sdk_version" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="#1A000000"/>
+
+
+    <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+        android:id="@+id/about_im_privacy_lv"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        app:canNav="true"
+        app:name="@string/im_privacy" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="#1A000000"/>
+
+    <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+        android:id="@+id/about_user_agreement_lv"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        app:canNav="true"
+        app:name="@string/im_user_agreement" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="#1A000000"/>
+
+    <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+        android:id="@+id/about_statement_lv"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        app:canNav="true"
+        app:name="@string/im_statement" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="#1A000000"/>
+
+    <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+        android:id="@+id/self_infomation_collection_lv"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        app:canNav="true"
+        app:name="@string/self_infomation_collection_list" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="#1A000000"/>
+
+    <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+        android:id="@+id/third_part_shared_lv"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        app:canNav="true"
+        app:name="@string/third_part_shared_list" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="#1A000000"/>
+
+    <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+        android:id="@+id/cancel_account_lv"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        app:canNav="true"
+        app:name="@string/cancel_account" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="#1A000000"/>
+
+    <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+        android:id="@+id/about_im_lv"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        app:canNav="true"
+        app:name="@string/demo_contact_us" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="#1A000000"/>
+
+</LinearLayout>

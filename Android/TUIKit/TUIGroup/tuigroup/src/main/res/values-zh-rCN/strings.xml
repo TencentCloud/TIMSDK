@@ -9,6 +9,10 @@
     <string name="group_members">群成员</string>
     <string name="group_type">群类型</string>
     <string name="add_group_member">添加成员</string>
+    <string name="group_member_info">详情</string>
+    <string name="group_delete">删除</string>
+    <string name="group_set_admin">设置为管理员</string>
+    <string name="group_plus_add_group_member">+ 添加成员</string>
     <string name="remove_group_member">移除成员</string>
     <string name="join_group_type">加群方式</string>
     <string name="in_group_nick_name">我的群昵称</string>
@@ -18,6 +22,7 @@
     <string name="modify_nick_name_in_goup">修改我的群昵称</string>
     <string name="group_edit">编辑</string>
     <string name="group_modify_remark_rule">仅限中文、字母、数字和下划线</string>
+    <string name="group_clear_message">清除聊天记录</string>
 
     <string name="group_detail">群聊详情</string>
 
@@ -28,6 +33,10 @@
     <string name="modify_group_notice_success">修改群公告成功</string>
     <string name="exit_group">退出群聊</string>
     <string name="modify_nickname_success">修改昵称成功</string>
+
+    <string name="group_profile_message">发送消息</string>
+    <string name="group_profile_audio_call">语音通话</string>
+    <string name="group_profile_video_call">视频通话</string>
 
     <string name="search_call_hint">输入群成员名称</string>
 
@@ -90,6 +99,7 @@
     <string name="group_add_mute_member_tip">添加需要禁言的群成员</string>
     <string name="group_owner_label">群主</string>
     <string name="group_manager_label">管理员</string>
+    <string name="group_member_label">成员</string>
     <string name="group_add_manager_count_label">管理员（%d）</string>
     <string name="group_add_manager_label">添加管理员</string>
     <string name="group_remove_manager_label">取消管理员</string>
@@ -102,4 +112,7 @@
     <string name="group_not_support_mute_member">当前类型群聊不支持禁言指定群成员。</string>
 
     <string name="group_choose_avatar">选择头像</string>
+
+    <string name="group_you">你</string>
+
 </resources>

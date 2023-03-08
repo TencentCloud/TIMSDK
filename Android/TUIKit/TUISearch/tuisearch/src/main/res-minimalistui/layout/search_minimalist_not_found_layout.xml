@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- search-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:showIn="@layout/minimalist_search_main_activity">
+
+    <ImageView
+        android:layout_width="105dp"
+        android:layout_height="105dp"
+        android:background="@drawable/search_not_found_icon" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textSize="14sp"
+        android:textColor="#99000000"
+        android:text="@string/search_not_found_info"
+        />
+
+</LinearLayout>

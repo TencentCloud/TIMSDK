@@ -91,7 +91,7 @@
         <activity
             android:name=".profile.SelfDetailMinamalistActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".profile.AboutIMMinamalistActivity"
+        <activity android:name=".profile.AboutIMMinimalistActivity"
             android:screenOrientation="portrait" />
 
     </application>

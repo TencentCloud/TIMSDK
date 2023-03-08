@@ -8,6 +8,9 @@
     <string name="more_conversation_label">更多聊天记录</string>
     <string name="chat_record_reference">相关聊天记录</string>
     <string name="chat_records">条相关聊天记录</string>
+    <string name="search_more_label">更多</string>
+    <string name="search_ID_label">ID: </string>
+
     <string name="nick_name">昵称: </string>
     <string name="include_group_id">包含群 ID: </string>
     <string name="include_group_member">包含群成员: </string>
@@ -45,6 +48,8 @@
     <!-- 搜索 -->
     <string name="search">搜索</string>
     <string name="cancle">取消</string>
+
+    <string name="search_not_found_info">无相关会话、联系人或消息记录</string>
 
     <string name="live">的直播</string>
     <string name="start_group_call">发起群通话</string>

@@ -39,7 +39,7 @@ import com.tencent.qcloud.tuicore.component.activities.BaseMinimalistLightActivi
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuicontact.minimalistui.pages.TUIContactMinimalistFragment;
-import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.page.ConversationMinimalistFragment;
+import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.page.TUIConversationMinimalistFragment;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -123,7 +123,7 @@ public class MainMinimalistActivity extends BaseMinimalistLightActivity {
         mNewFriendUnread = findViewById(R.id.new_friend_total_unread);
 
         fragments = new ArrayList<>();
-        fragments.add(new ConversationMinimalistFragment());
+        fragments.add(new TUIConversationMinimalistFragment());
         fragments.add(new TUIContactMinimalistFragment());
         fragments.add(new ProfileMinimalistFragment());
 

@@ -4,57 +4,57 @@ import android.graphics.Bitmap;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
-import com.tencent.qcloud.tuikit.tuichat.R;
-import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
-import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.camera.view.CameraInterface;
-import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.camera.view.JCameraView;
+import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.camera.view.CameraManager;
+import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.camera.view.CameraView;
+import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.camera.view.ICameraView;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
-class PreviewState implements State {
+class PreviewState extends State {
     public static final String TAG = "PreviewState";
 
-    private CameraMachine machine;
-
-    PreviewState(CameraMachine machine) {
-        this.machine = machine;
+    PreviewState(ICameraView cameraView) {
+        super(cameraView);
     }
 
     @Override
     public void start(SurfaceHolder holder, float screenProp) {
-        CameraInterface.getInstance().doStartPreview(holder, screenProp);
+        TUIChatLog.i(TAG, "start");
+        CameraManager.getInstance().doStartPreview(holder, screenProp);
     }
 
     @Override
     public void stop() {
-        CameraInterface.getInstance().doStopPreview();
+        TUIChatLog.i(TAG, "stop");
+        CameraManager.getInstance().doStopPreview();
     }
 
-
     @Override
-    public void foucs(float x, float y, CameraInterface.FocusCallback callback) {
-        TUIChatLog.i(TAG, "preview state foucs");
-        if (machine.getView().handlerFoucs(x, y)) {
-            CameraInterface.getInstance().handleFocus(machine.getContext(), x, y, callback);
+    public void focus(float x, float y, CameraManager.FocusCallback callback) {
+        TUIChatLog.i(TAG, "focus");
+        if (cameraView.handlerFoucs(x, y)) {
+            CameraManager.getInstance().handleFocus(cameraView.getContext(), x, y, callback);
         }
     }
 
     @Override
-    public void swtich(SurfaceHolder holder, float screenProp) {
-        CameraInterface.getInstance().switchCamera(holder, screenProp);
+    public void switchCamera(SurfaceHolder holder, float screenProp) {
+        TUIChatLog.i(TAG, "switch ");
+        CameraManager.getInstance().switchCamera(holder, screenProp);
     }
 
     @Override
     public void restart() {
-
+        TUIChatLog.i(TAG, "restart ");
+        CameraManager.getInstance().doDestroyCamera();
     }
 
     @Override
     public void capture() {
-        CameraInterface.getInstance().takePicture(new CameraInterface.TakePictureCallback() {
+        TUIChatLog.i(TAG, "capture ");
+        CameraManager.getInstance().takePicture(new CameraManager.TakePictureCallback() {
             @Override
             public void captureResult(Bitmap bitmap, boolean isVertical) {
-                machine.getView().showPicture(bitmap, isVertical);
-                machine.setState(machine.getBorrowPictureState());
+                cameraView.showPicture(bitmap, isVertical);
                 TUIChatLog.i(TAG, "capture");
             }
         });
@@ -62,42 +62,34 @@ class PreviewState implements State {
 
     @Override
     public void record(Surface surface, float screenProp) {
-        CameraInterface.getInstance().startRecord(surface, screenProp, null);
+        TUIChatLog.i(TAG, "record");
+        CameraManager.getInstance().startRecord(surface, screenProp, null);
     }
 
     @Override
     public void stopRecord(final boolean isShort, long time) {
-        CameraInterface.getInstance().stopRecord(isShort, new CameraInterface.StopRecordCallback() {
+        TUIChatLog.i(TAG, "stopRecord " + isShort + " " + time);
+        CameraManager.getInstance().stopRecord(isShort, new CameraManager.StopRecordCallback() {
             @Override
             public void recordResult(String url, Bitmap firstFrame) {
                 if (isShort) {
-                    machine.getView().resetState(JCameraView.TYPE_SHORT);
+                    cameraView.resetState(CameraView.TYPE_SHORT);
                 } else {
-                    machine.getView().playVideo(firstFrame, url);
-                    machine.setState(machine.getBorrowVideoState());
+                    cameraView.playVideo(firstFrame, url);
                 }
             }
         });
     }
 
     @Override
-    public void cancle(SurfaceHolder holder, float screenProp) {
-        TUIChatLog.i(TAG, TUIChatService.getAppContext().getString(R.string.no_event_cancle_tip));
-    }
-
-    @Override
-    public void confirm() {
-        TUIChatLog.i(TAG, TUIChatService.getAppContext().getString(R.string.no_event_confirm_tip));
-    }
-
-    @Override
     public void zoom(float zoom, int type) {
         TUIChatLog.i(TAG, "zoom");
-        CameraInterface.getInstance().setZoom(zoom, type);
+        CameraManager.getInstance().setZoom(zoom, type);
     }
 
     @Override
     public void flash(String mode) {
-        CameraInterface.getInstance().setFlashMode(mode);
+        TUIChatLog.i(TAG, "flash " + mode);
+        CameraManager.getInstance().setFlashMode(mode);
     }
 }

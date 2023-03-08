@@ -1,6 +1,7 @@
 package com.tencent.qcloud.tuikit.tuicontact.minimalistui.widget;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.qcloud.tuicore.component.CustomLinearLayoutManager;
+import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.component.indexlib.IndexBar.widget.IndexBar;
@@ -90,7 +92,12 @@ public class ContactListView extends LinearLayout implements IContactListView {
 
         mAdapter = new ContactAdapter(mData);
         mRv.setAdapter(mAdapter);
-        mRv.addItemDecoration(mDecoration = new SuspensionDecoration(getContext(), mData));
+        mDecoration = new SuspensionDecoration(getContext(), mData);
+        mDecoration.setColorTitleBg(Color.WHITE);
+        mDecoration.setColorTitleFont(Color.BLACK);
+        mDecoration.setTitleHeight(ScreenUtil.dip2px(44));
+        mDecoration.setShowLine(false);
+        mRv.addItemDecoration(mDecoration);
         mRv.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
             @Override

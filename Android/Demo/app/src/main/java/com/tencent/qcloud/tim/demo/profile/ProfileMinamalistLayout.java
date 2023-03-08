@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -16,6 +15,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SwitchCompat;
 
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMManager;
@@ -27,7 +27,9 @@ import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.demo.utils.TUIKitConstants;
 import com.tencent.qcloud.tuicore.component.LineControllerView;
+import com.tencent.qcloud.tuicore.component.MinimalistLineControllerView;
 import com.tencent.qcloud.tuicore.component.activities.SelectionActivity;
+import com.tencent.qcloud.tuicore.component.activities.SelectionMinimalistActivity;
 import com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView;
 import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
@@ -54,12 +56,12 @@ public class ProfileMinamalistLayout extends FrameLayout implements View.OnClick
     private TextView signatureView;
     private TextView signatureTagView;
 
-    private LineControllerView modifyAllowTypeView;
-    private LineControllerView aboutIM;
+    private MinimalistLineControllerView modifyAllowTypeView;
+    private MinimalistLineControllerView aboutIM;
     private RelativeLayout selfDetailArea;
-    private Switch messageReadStatusSwitch;
+    private SwitchCompat messageReadStatusSwitch;
     private TextView messageReadStatusSubtitle;
-    private Switch userStatusSwitch;
+    private SwitchCompat userStatusSwitch;
     private TextView userStatusSubTitle;
     private View profileHeader;
     private SharedPreferences mSharedPreferences;
@@ -94,7 +96,7 @@ public class ProfileMinamalistLayout extends FrameLayout implements View.OnClick
         selfDetailArea.setOnClickListener(this);
 
         userIcon = findViewById(R.id.self_icon);
-        int radius = ScreenUtil.dip2px(25);
+        int radius = ScreenUtil.dip2px(33);
         userIcon.setRadius(radius);
         accountView = findViewById(R.id.self_account);
         nickNameView = findViewById(R.id.self_nick_name);
@@ -189,15 +191,6 @@ public class ProfileMinamalistLayout extends FrameLayout implements View.OnClick
         }
     }
 
-    private void openWebUrl(String url) {
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_VIEW);
-        Uri contentUrl = Uri.parse(url);
-        intent.setData(contentUrl);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        getContext().startActivity(intent);
-    }
-
     private void initMessageReadStatus() {
         SharedPreferences sharedPreferences = getContext().getSharedPreferences(Constants.DEMO_SETTING_SP_NAME, Context.MODE_PRIVATE );
         boolean messageReadStatus = sharedPreferences.getBoolean(Constants.DEMO_SP_KEY_MESSAGE_READ_STATUS, false);
@@ -272,7 +265,7 @@ public class ProfileMinamalistLayout extends FrameLayout implements View.OnClick
             bundle.putString(TUIKitConstants.Selection.TITLE, getResources().getString(R.string.add_rule));
             bundle.putStringArrayList(TUIKitConstants.Selection.LIST, joinTypeTextList);
             bundle.putInt(TUIKitConstants.Selection.DEFAULT_SELECT_ITEM_INDEX, mJoinTypeIndex);
-            SelectionActivity.startListSelection((Activity) getContext(), bundle, new SelectionActivity.OnResultReturnListener() {
+            SelectionMinimalistActivity.startListSelection((Activity) getContext(), bundle, new SelectionMinimalistActivity.OnResultReturnListener() {
                 @Override
                 public void onReturn(Object text) {
                     mJoinTypeIndex = (Integer) text;
@@ -280,7 +273,7 @@ public class ProfileMinamalistLayout extends FrameLayout implements View.OnClick
                 }
             });
         } else if (v.getId() == R.id.about_im) {
-            Intent intent = new Intent(getContext(), AboutIMMinamalistActivity.class);
+            Intent intent = new Intent(getContext(), AboutIMMinimalistActivity.class);
             getContext().startActivity(intent);
         }
     }

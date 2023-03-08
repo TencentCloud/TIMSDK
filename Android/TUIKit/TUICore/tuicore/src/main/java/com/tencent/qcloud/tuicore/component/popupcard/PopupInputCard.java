@@ -76,7 +76,8 @@ public class PopupInputCard {
         popupWindow.setTouchable(true);
         popupWindow.setOutsideTouchable(false);
         popupWindow.setAnimationStyle(R.style.PopupInputCardAnim);
-
+        popupWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
+        popupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {

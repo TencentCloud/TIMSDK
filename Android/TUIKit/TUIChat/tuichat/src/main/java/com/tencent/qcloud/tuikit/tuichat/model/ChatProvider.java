@@ -35,6 +35,7 @@ import com.tencent.imsdk.v2.V2TIMTextElem;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.imsdk.v2.V2TIMUserStatus;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
+import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
@@ -63,8 +64,6 @@ import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
 import com.tencent.qcloud.tuikit.tuichat.util.OfflinePushInfoUtils;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
-
-import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -257,7 +256,7 @@ public class ChatProvider {
         entity.content = message.getExtra();
         entity.sender = message.getSender();
         entity.nickname = chatInfo.getChatName();
-        entity.faceUrl = TUIChatConfigs.getConfigs().getGeneralConfig().getUserFaceUrl();
+        entity.faceUrl = TUIConfig.getSelfFaceUrl();
         containerBean.entity = entity;
 
         String userID = "";
@@ -297,6 +296,9 @@ public class ChatProvider {
                     @Override
                     public void onError(int code, String desc) {
                         TUIChatUtils.callbackOnError(callBack, TAG, code, desc);
+                        Map<String, Object> param = new HashMap<>();
+                        param.put(TUIConstants.TUIChat.V2TIMMESSAGE, v2TIMMessage);
+                        TUICore.notifyEvent(TUIConstants.TUIChat.EVENT_KEY_MESSAGE_EVENT, TUIConstants.TUIChat.EVENT_SUB_KEY_SEND_MESSAGE_FAILED, param);
                     }
 
                     @Override
@@ -306,6 +308,7 @@ public class ChatProvider {
                         TUIChatUtils.callbackOnSuccess(callBack, message);
                         Map<String, Object> param = new HashMap<>();
                         param.put(TUIConstants.TUIChat.CHAT_ID, chatInfo.getId());
+                        param.put(TUIConstants.TUIChat.V2TIMMESSAGE, v2TIMMessage);
                         TUICore.notifyEvent(TUIConstants.TUIChat.EVENT_KEY_MESSAGE_EVENT, TUIConstants.TUIChat.EVENT_SUB_KEY_SEND_MESSAGE_SUCCESS, param);
                     }
                 });
@@ -578,7 +581,6 @@ public class ChatProvider {
                 TUIChatUtils.callbackOnError(callback, code, desc);
             }
         });
-
     }
 
     public void getGroupMessageBySeq(String chatId, long seq, IUIKitCallback<List<TUIMessageBean>> callback) {

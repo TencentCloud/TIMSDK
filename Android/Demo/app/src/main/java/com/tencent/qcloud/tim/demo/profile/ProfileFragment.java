@@ -1,12 +1,11 @@
 package com.tencent.qcloud.tim.demo.profile;
 
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.Nullable;
 
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.bean.UserInfo;

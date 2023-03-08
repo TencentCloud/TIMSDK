@@ -2,5 +2,9 @@
 <resources>
 
     <string name="contact_minimalist_contacts">Contacts</string>
+    <string name="contact_new_application_title">%d New Application</string>
+    <string name="contact_validation_message">Validation Message</string>
+    <string name="contact_friend_application_detail_title">Info</string>
+    <string name="contact_not_found_info">No information</string>
 
 </resources>

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#99000000"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    android:paddingTop="40dp">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="20dp"
+        android:paddingBottom="40dp"
+        android:background="@drawable/contact_bottom_sheet_dialog_border"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="12dp">
+
+                <TextView
+                    android:id="@+id/cancel_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.33"
+                    android:text="@string/cancel"
+                    android:textColor="#0365F9"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.33"
+                    android:gravity="center_horizontal"
+                    android:text="@string/create_group"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/create_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.33"
+                    android:gravity="end"
+                    android:text="@string/contact_create"
+                    android:textColor="#0365F9"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/group_name_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@null"
+                    android:hint="@string/group_name_text"
+                    android:textColor="@color/black"
+                    android:textColorHint="#99000000"
+                    android:textSize="16sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#EFEFF3" />
+
+                <EditText
+                    android:id="@+id/group_id_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@null"
+                    android:hint="@string/group_id_option"
+                    android:textColor="@color/black"
+                    android:textColorHint="#99000000"
+                    android:textSize="16sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#EFEFF3" />
+
+                <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+                    android:id="@+id/group_type_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/contact_profile_item_height"
+                    android:layout_marginTop="10dp"
+                    app:canNav="true"
+                    app:name="@string/group_type_text" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#EFEFF3" />
+
+                <TextView
+                    android:id="@+id/group_type_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/contact_profile_face_margin_right"
+                    android:layout_marginTop="@dimen/page_margin"
+                    android:layout_marginEnd="@dimen/contact_profile_face_margin_right"
+                    android:gravity="center_vertical"
+                    android:text="@string/group_type_select_text"
+                    android:textColor="#66000000"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="27dp"
+                    android:text="@string/group_avatar_text"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/group_avatar_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="27dp"
+                    android:text="@string/contact_selected_group_member"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/selected_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</FrameLayout>

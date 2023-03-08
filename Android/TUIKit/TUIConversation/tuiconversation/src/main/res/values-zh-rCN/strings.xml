@@ -19,6 +19,11 @@
     <string name="drafts">[草稿]</string>
     <string name="titlebar_mutiselect">多选</string>
     <string name="message_num">条</string>
+    
+    <string name="conversation_forward">转发</string>
 
     <string name="folded_group_chat">折叠的群聊</string>
+
+    <string name="conversation_title_edit">编辑</string>
+
 </resources>

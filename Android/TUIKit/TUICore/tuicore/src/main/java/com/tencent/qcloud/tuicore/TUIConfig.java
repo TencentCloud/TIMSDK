@@ -46,6 +46,11 @@ public class TUIConfig {
     private static int defaultAvatarImage;
     private static int defaultGroupAvatarImage;
 
+    public final static int TUIKIT_DEMO_IM = 0;
+    public final static int TUIKIT_DEMO_RTCUBE = 1;
+    // 0,im demo; 1,rtcube demo
+    private static int tuikitDemoType = TUIKIT_DEMO_IM;
+
     public static void init(Context context) {
         if (initialized) {
             return;
@@ -154,6 +159,14 @@ public class TUIConfig {
 
     public static int getGender() {
         return gender;
+    }
+
+    public static void setTUIKitDemoType(int type) {
+        TUIConfig.tuikitDemoType = type;
+    }
+
+    public static int getTUIKitDemoType() {
+        return tuikitDemoType;
     }
 
     /**

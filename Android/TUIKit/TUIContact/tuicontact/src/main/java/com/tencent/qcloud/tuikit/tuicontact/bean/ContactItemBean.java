@@ -14,6 +14,9 @@ public class ContactItemBean extends BaseIndexPinyinBean {
     public static final int TYPE_GROUP = V2TIMConversation.V2TIM_GROUP;
     public static final int TYPE_INVALID = V2TIMConversation.CONVERSATION_TYPE_INVALID;
 
+    public static final int ITEM_BEAN_TYPE_CONTACT = 1;
+    public static final int ITEM_BEAN_TYPE_CONTROLLER = 2;
+
     public static final String INDEX_STRING_TOP = "↑";
     private String id;
     private boolean isTop;
@@ -28,6 +31,7 @@ public class ContactItemBean extends BaseIndexPinyinBean {
     private boolean isFriend = false;
     private boolean isEnable = true;
     private int statusType = V2TIMUserStatus.V2TIM_USER_STATUS_UNKNOWN;
+    private int itemBeanType = ITEM_BEAN_TYPE_CONTACT;
 
     public ContactItemBean() {
     }
@@ -43,6 +47,15 @@ public class ContactItemBean extends BaseIndexPinyinBean {
     public ContactItemBean setId(String id) {
         this.id = id;
         return this;
+    }
+
+    public ContactItemBean setItemBeanType(int itemBeanType) {
+        this.itemBeanType = itemBeanType;
+        return this;
+    }
+
+    public int getItemBeanType() {
+        return itemBeanType;
     }
 
     public boolean isTop() {

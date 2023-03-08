@@ -40,6 +40,11 @@ public class GroupInfoPresenter {
             public void onGroupInfoChanged(String groupID) {
                 GroupInfoPresenter.this.onGroupInfoChanged(groupID);
             }
+
+            @Override
+            public void onGroupMemberCountChanged(String groupID) {
+                GroupInfoPresenter.this.onGroupCountChanged(groupID);
+            }
         };
         TUIGroupService.getInstance().addGroupEventListener(groupEventListener);
     }
@@ -69,6 +74,12 @@ public class GroupInfoPresenter {
     }
 
     private void onGroupInfoChanged(String groupID) {
+        if (groupInfo != null && TextUtils.equals(groupID, groupInfo.getId())) {
+            loadGroupInfo(groupID);
+        }
+    }
+
+    private void onGroupCountChanged(String groupID) {
         if (groupInfo != null && TextUtils.equals(groupID, groupInfo.getId())) {
             loadGroupInfo(groupID);
         }
@@ -359,11 +370,23 @@ public class GroupInfoPresenter {
         return provider.isAdmin(memberType);
     }
 
+    public boolean isOwner(int memberType) {
+        return provider.isOwner(memberType);
+    }
+
     public boolean isSelf(String userId) {
         return provider.isSelf(userId);
     }
 
     public void transferGroupOwner(String groupId, String userId, IUIKitCallback<Void> callback) {
         provider.transferGroupOwner(groupId, userId, callback);
+    }
+
+    public void setGroupManager(String groupId, String userId, IUIKitCallback<Void> callback) {
+        provider.setGroupManagerRole(groupId, userId, callback);
+    }
+
+    public void setGroupMemberRole(String groupId, String userId, IUIKitCallback<Void> callback) {
+        provider.setGroupMemberRole(groupId, userId, callback);
     }
 }

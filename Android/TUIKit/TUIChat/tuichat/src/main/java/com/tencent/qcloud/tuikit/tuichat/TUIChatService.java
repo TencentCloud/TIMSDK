@@ -12,6 +12,7 @@ import com.tencent.imsdk.v2.V2TIMFriendInfo;
 import com.tencent.imsdk.v2.V2TIMFriendshipListener;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.imsdk.v2.V2TIMMessageExtension;
 import com.tencent.imsdk.v2.V2TIMMessageReceipt;
 import com.tencent.imsdk.v2.V2TIMSDKListener;
 import com.tencent.qcloud.tuicore.ServiceInitializer;
@@ -19,9 +20,12 @@ import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageReceiptInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomGroupNoteMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomEvaluationMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomGroupNoteTipsMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomLinkMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomOrderMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomPollMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MessageTypingBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
@@ -110,6 +114,7 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
         TUICore.registerEvent(TUIConstants.TUICalling.EVENT_KEY_RECORD_AUDIO_MESSAGE, TUIConstants.TUICalling.EVENT_SUB_KEY_RECORD_START, this);
         TUICore.registerEvent(TUIConstants.TUICalling.EVENT_KEY_RECORD_AUDIO_MESSAGE, TUIConstants.TUICalling.EVENT_SUB_KEY_RECORD_STOP, this);
         TUICore.registerEvent(TUIChatConstants.EVENT_KEY_OFFLINE_MESSAGE_PRIVATE_RING, TUIChatConstants.EVENT_SUB_KEY_OFFLINE_MESSAGE_PRIVATE_RING, this);
+        TUICore.registerEvent(TUIConstants.TUIGroupNote.EVENT_KEY_GROUP_NOTE_EVENT, TUIConstants.TUIGroupNote.EVENT_SUB_KEY_MESSAGE_MODIFIED_DUE_TO_EXTENSION_CHANGES, this);
     }
 
     @Override
@@ -123,7 +128,7 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
             IBaseMessageSender messageSender = getMessageSender();
             if (messageSender != null) {
                 TUIMessageBean message = ChatMessageBuilder.buildCustomMessage(content, description, extension.getBytes());
-                messageSender.sendMessage(message, chatId, TUIChatUtils.isGroupChat(chatType));
+                return messageSender.sendMessage(message, chatId, TUIChatUtils.isGroupChat(chatType));
             }
         } else if (TextUtils.equals(TUIConstants.TUIChat.METHOD_EXIT_CHAT, method)) {
             String chatId = (String) param.get(TUIConstants.TUIChat.CHAT_ID);
@@ -175,6 +180,18 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
             String chatId = (String) param.get(TUIConstants.TUIChat.CHAT_ID);
             if (!TextUtils.isEmpty(uri)) {
                 DataStoreUtil.getInstance().putValue(chatId, uri);
+            }
+        } else if (TextUtils.equals(TUIConstants.TUIChat.METHOD_SET_CHAT_EXTENSION, method)) {
+            for (Map.Entry<String, Object> entry : param.entrySet()) {
+                String key = entry.getKey();
+                Object value = entry.getValue();
+                if (TextUtils.equals(key, TUIConstants.TUIChat.ENABLE_VIDEO_CALL)) {
+                    TUIChatConfigs.getConfigs().getGeneralConfig().setEnableVideoCall((Boolean) value);
+                } else if (TextUtils.equals(key, TUIConstants.TUIChat.ENABLE_AUDIO_CALL)) {
+                    TUIChatConfigs.getConfigs().getGeneralConfig().setEnableVoiceCall((Boolean) value);
+                } else if (TextUtils.equals(key, TUIConstants.TUIChat.ENABLE_LINK)) {
+                    TUIChatConfigs.getConfigs().getGeneralConfig().setEnableLink((Boolean) value);
+                }
             }
         }
         return null;
@@ -473,6 +490,9 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
         addCustomMessageType(TUIChatConstants.BUSINESS_ID_CUSTOM_EVALUATION, CustomEvaluationMessageBean.class);
         addCustomMessageType(TUIChatConstants.BUSINESS_ID_CUSTOM_ORDER, CustomOrderMessageBean.class);
         addCustomMessageType(TUIChatConstants.BUSINESS_ID_CUSTOM_TYPING, MessageTypingBean.class);
+        addCustomMessageType(TUIConstants.TUIPlugin.BUSINESS_ID_PLUGIN_GROUP_NOTE, CustomGroupNoteMessageBean.class);
+        addCustomMessageType(TUIConstants.TUIPlugin.BUSINESS_ID_PLUGIN_GROUP_NOTE_TIPS, CustomGroupNoteTipsMessageBean.class);
+        addCustomMessageType(TUIConstants.TUIPlugin.BUSINESS_ID_PLUGIN_POLL, CustomPollMessageBean.class);
     }
 
     /**

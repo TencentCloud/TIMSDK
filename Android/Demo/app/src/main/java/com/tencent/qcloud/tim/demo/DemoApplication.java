@@ -27,18 +27,25 @@ import com.tencent.qcloud.tim.demo.signature.GenerateTestUserSig;
 import com.tencent.qcloud.tim.demo.utils.BrandUtil;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.demo.utils.PrivateConstants;
+import com.tencent.qcloud.tuicore.TUIConstants;
+import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
+import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
 import com.tencent.qcloud.tuicore.interfaces.TUICallback;
 import com.tencent.qcloud.tuicore.interfaces.TUILoginListener;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.PermissionRequester;
 import com.tencent.qcloud.tuicore.util.TUIUtil;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class DemoApplication extends Application {
 
@@ -68,6 +75,14 @@ public class DemoApplication extends Application {
             TUIThemeManager.addLivelyTheme(R.style.DemoLivelyTheme);
             TUIThemeManager.addSeriousTheme(R.style.DemoSeriousTheme);
 
+            // add language changed listener
+            TUICore.registerEvent(TUIConstants.TUICore.LANGUAGE_EVENT, TUIConstants.TUICore.LANGUAGE_EVENT_SUB_KEY, new ITUINotification() {
+                @Override
+                public void onNotifyEvent(String key, String subKey, Map<String, Object> param) {
+                    TUIThemeManager.setWebViewLanguage(DemoApplication.this);
+                }
+            });
+
             registerActivityLifecycleCallbacks(new StatisticActivityLifecycleCallback());
             initLoginStatusListener();
             setPermissionRequestContent();
@@ -78,11 +93,6 @@ public class DemoApplication extends Application {
         }
     }
 
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-        TUIThemeManager.setWebViewLanguage(this);
-    }
     private void initDemoStyle() {
         final SharedPreferences sharedPreferences = getSharedPreferences("TUIKIT_DEMO_SETTINGS", MODE_PRIVATE);
         tuikit_demo_style = sharedPreferences.getInt("tuikit_demo_style", 0);
@@ -266,6 +276,7 @@ public class DemoApplication extends Application {
         OfflinePushConfigs.getOfflinePushConfigs().setRegisterPushMode(registerMode);
         OfflinePushConfigs.getOfflinePushConfigs().setClickNotificationCallbackMode(callbackMode);
 
+        // register callback
         registerNotify();
     }
 

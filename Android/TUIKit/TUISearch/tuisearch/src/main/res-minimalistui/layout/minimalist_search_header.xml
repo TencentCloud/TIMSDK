@@ -3,20 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/conversation_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="5dp"
+    android:layout_height="64dp"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
     android:orientation="horizontal"
-    android:background="@color/transparent"
-    android:paddingTop="12dp">
+    android:background="@color/transparent">
 
     <com.tencent.qcloud.tuicore.component.RoundCornerImageView
         android:id="@+id/icon_conversation"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_alignParentLeft="true"
-        app:corner_radius="10dp"
-        android:layout_gravity="center"
-        android:layout_marginLeft="14.85dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:corner_radius="20dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
         android:background="#FFFFFF"
         android:scaleType="fitCenter" />
 
@@ -24,63 +23,32 @@
         android:id="@+id/conversation_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/btn_margin_left"
-        android:layout_toRightOf="@+id/icon_conversation"
+        android:layout_marginStart="8dp"
+        android:layout_toEndOf="@id/icon_conversation"
+        android:layout_toStartOf="@id/more_conversation_arrow"
         android:ellipsize="end"
-        android:gravity="center|left"
         android:singleLine="true"
         android:background="#FFFFFF"
+        android:layout_centerVertical="true"
         android:text="@string/more_conversation_label"
-        android:textColor="@color/black_font_color"
-        android:textSize="16.3sp" />
+        android:textColor="@color/black"
+        android:textSize="14sp" />
 
     <ImageView
         android:id="@+id/more_conversation_arrow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:scaleType="centerInside"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:gravity="center|right"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="16dp"
         android:background="#FFFFFF"
-        android:paddingRight="14.85dp"
-        android:src="@drawable/arrow_right"
-        android:textSize="11.14sp" />
+        android:src="@drawable/search_minimalist_forward_icon" />
 
-    <LinearLayout
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/conversation_title"
-        android:layout_gravity="center"
-        android:orientation="vertical"
-        android:background="@color/transparent"
-        android:paddingTop="12dp">
+        android:layout_alignParentBottom="true"
+        android:layout_height="1dp"
+        android:background="#EEEEEE"/>
 
-        <View
-            android:id="@+id/view_line_one"
-            android:layout_width="match_parent"
-            android:layout_height="4dp"
-            android:background="@color/split_lint_color" />
-
-        <TextView
-            android:id="@+id/conversation_tip"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginRight="20dp"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:text="@string/chat_record_reference"
-            android:textColor="@color/list_bottom_text_bg"
-            android:textSize="12.86sp" />
-
-        <View
-            android:id="@+id/view_line_three"
-            android:layout_width="match_parent"
-            android:layout_height="0.3dp"
-            android:layout_marginTop="4dp"
-            android:background="@color/split_lint_color" />
-    </LinearLayout>
 </RelativeLayout>

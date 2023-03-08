@@ -313,12 +313,12 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
 
     @Override
     public void setCallingBell(String filePath) {
-        SPUtils.getInstance(CallingBellFeature.PROFILE_TUICALLING).put(CallingBellFeature.PROFILE_CALL_BELL, filePath);
+        SPUtils.getInstance(CallingBellFeature.PROFILE_TUICALLKIT).put(CallingBellFeature.PROFILE_CALL_BELL, filePath);
     }
 
     @Override
     public void enableMuteMode(boolean enable) {
-        SPUtils.getInstance(CallingBellFeature.PROFILE_TUICALLING).put(CallingBellFeature.PROFILE_MUTE_MODE, enable);
+        SPUtils.getInstance(CallingBellFeature.PROFILE_TUICALLKIT).put(CallingBellFeature.PROFILE_MUTE_MODE, enable);
     }
 
     @Override
@@ -364,9 +364,15 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
                 return;
             }
 
+            mInviter.userId = callerId;
+
             checkCallingPermission(callMediaType, new TUICallback() {
                 @Override
                 public void onSuccess() {
+                    if (TextUtils.isEmpty(mInviter.userId)) {
+                        return;
+                    }
+
                     for (String userId : calleeIdList) {
                         if (!TextUtils.isEmpty(userId)) {
                             CallingUserModel model = new CallingUserModel();
@@ -375,7 +381,6 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
                         }
                     }
 
-                    mInviter.userId = callerId;
                     Scene scene;
                     if (!TextUtils.isEmpty(groupId)) {
                         scene = Scene.GROUP_CALL;

@@ -68,43 +68,43 @@
                             android:textColor="#000000"
                             android:textSize="16sp" />
 
-                        <com.tencent.qcloud.tuikit.tuicommunity.ui.view.CommunityExperienceView
+                        <com.tencent.qcloud.tuikit.tuicommunity.ui.widget.CommunityExperienceView
                             android:id="@+id/create_community_experience"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:content_text="@string/community_experience_create_community" />
 
-                        <com.tencent.qcloud.tuikit.tuicommunity.ui.view.CommunityExperienceView
+                        <com.tencent.qcloud.tuikit.tuicommunity.ui.widget.CommunityExperienceView
                             android:id="@+id/add_community_experience"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:content_text="@string/community_experience_add_community" />
 
-                        <com.tencent.qcloud.tuikit.tuicommunity.ui.view.CommunityExperienceView
+                        <com.tencent.qcloud.tuikit.tuicommunity.ui.widget.CommunityExperienceView
                             android:id="@+id/send_message_experience"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:content_text="@string/community_experience_send_message" />
 
-                        <com.tencent.qcloud.tuikit.tuicommunity.ui.view.CommunityExperienceView
+                        <com.tencent.qcloud.tuikit.tuicommunity.ui.widget.CommunityExperienceView
                             android:id="@+id/reply_message_experience"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:content_text="@string/community_experience_reply_message" />
 
-                        <com.tencent.qcloud.tuikit.tuicommunity.ui.view.CommunityExperienceView
+                        <com.tencent.qcloud.tuikit.tuicommunity.ui.widget.CommunityExperienceView
                             android:id="@+id/disband_community_experience"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:content_text="@string/community_experience_disband_community" />
 
-                        <com.tencent.qcloud.tuikit.tuicommunity.ui.view.CommunityExperienceView
+                        <com.tencent.qcloud.tuikit.tuicommunity.ui.widget.CommunityExperienceView
                             android:id="@+id/create_topic_experience"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:content_text="@string/community_experience_create_topic" />
 
-                        <com.tencent.qcloud.tuikit.tuicommunity.ui.view.CommunityExperienceView
+                        <com.tencent.qcloud.tuikit.tuicommunity.ui.widget.CommunityExperienceView
                             android:id="@+id/delete_topic_experience"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -138,14 +138,14 @@
                             android:textColor="#000000"
                             android:textSize="16sp" />
 
-                        <com.tencent.qcloud.tuikit.tuicommunity.ui.view.CommunityIndexLinkView
+                        <com.tencent.qcloud.tuikit.tuicommunity.ui.widget.CommunityIndexLinkView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:content_index="1"
                             app:content_link="@string/community_integration_download_code_link"
                             app:content_link_text="@string/community_integration_download_code" />
 
-                        <com.tencent.qcloud.tuikit.tuicommunity.ui.view.CommunityIndexLinkView
+                        <com.tencent.qcloud.tuikit.tuicommunity.ui.widget.CommunityIndexLinkView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
@@ -153,7 +153,7 @@
                             app:content_link="@string/community_integration_login_link"
                             app:content_link_text="@string/community_integration_login" />
 
-                        <com.tencent.qcloud.tuikit.tuicommunity.ui.view.CommunityIndexLinkView
+                        <com.tencent.qcloud.tuikit.tuicommunity.ui.widget.CommunityIndexLinkView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
@@ -161,7 +161,7 @@
                             app:content_link="@string/community_integration_create_viewPager_link"
                             app:content_link_text="@string/community_integration_create_viewPager" />
 
-                        <com.tencent.qcloud.tuikit.tuicommunity.ui.view.CommunityIndexLinkView
+                        <com.tencent.qcloud.tuikit.tuicommunity.ui.widget.CommunityIndexLinkView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
@@ -169,7 +169,7 @@
                             app:content_link="@string/community_integration_build_fragment_link"
                             app:content_link_text="@string/community_integration_build_fragment" />
 
-                        <com.tencent.qcloud.tuikit.tuicommunity.ui.view.CommunityIndexLinkView
+                        <com.tencent.qcloud.tuikit.tuicommunity.ui.widget.CommunityIndexLinkView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"

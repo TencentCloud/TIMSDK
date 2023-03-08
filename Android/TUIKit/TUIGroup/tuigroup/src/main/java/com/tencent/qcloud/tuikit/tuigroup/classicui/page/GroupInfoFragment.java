@@ -23,7 +23,7 @@ import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupMemberInfo;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupInfoPresenter;
 import com.tencent.qcloud.tuikit.tuigroup.classicui.interfaces.IGroupMemberListener;
-import com.tencent.qcloud.tuikit.tuigroup.classicui.view.GroupInfoLayout;
+import com.tencent.qcloud.tuikit.tuigroup.classicui.widget.GroupInfoLayout;
 import com.tencent.qcloud.tuikit.tuigroup.util.TUIGroupLog;
 
 import java.util.ArrayList;

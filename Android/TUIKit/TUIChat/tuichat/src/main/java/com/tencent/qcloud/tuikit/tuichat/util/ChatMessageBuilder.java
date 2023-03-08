@@ -241,6 +241,7 @@ public class ChatMessageBuilder {
     public static TUIMessageBean buildCustomMessage(String data, String description, byte[] extension) {
         V2TIMMessage v2TIMMessage = V2TIMManager.getMessageManager().createCustomMessage(data.getBytes(), description, extension);
         v2TIMMessage.setNeedReadReceipt(TUIChatConfigs.getConfigs().getGeneralConfig().isShowRead());
+        v2TIMMessage.setSupportMessageExtension(true);
 
         TUIMessageBean message = ChatMessageParser.parseMessage(v2TIMMessage);
         if (message.getExtra() == null) {

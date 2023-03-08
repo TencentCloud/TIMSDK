@@ -21,6 +21,7 @@
     <string name="set_in_blacklist">您已被被对方设置为黑名单</string>
     <string name="wait_agree_friend">等待好友审核同意</string>
     <string name="send_request">加群请求已发送</string>
+    <string name="contact_add_more_send_request_text">发送</string>
     <string name="contact_search">搜索</string>
 
     <string name="add_group_permission_deny">禁止加群</string>
@@ -35,12 +36,15 @@
     <string name="profile_detail">详细资料</string>
     <string name="profile_remark_edit">修改备注</string>
     <string name="contact_friend_remark">备注</string>
+    <string name="contact_add_friend_remark">备注</string>
     <string name="contact_friend_group">分组</string>
     <string name="contact_set_add_wording">请填写验证信息</string>
     <string name="contact_set_remark_and_group">请填写备注和分组</string>
     <string name="contact_add_wording">验证信息：</string>
     <string name="contact_my_friend">我的朋友</string>
     <string name="contact_modify_remark_rule">仅限中文、字母、数字和下划线</string>
+    <string name="contact_profile_title_edit">编辑</string>
+    <string name="contact_add_more_info">详情</string>
 
     <!-- 好友资料 -->
     <string name="profile_id">帐号</string>
@@ -55,6 +59,10 @@
     <string name="profile_chat_background">设置当前聊天背景</string>
     <string name="chat_background_title">更换背景</string>
 
+    <string name="contact_profile_message">发送消息</string>
+    <string name="contact_profile_audio_call">语音通话</string>
+    <string name="contact_profile_video_call">视频通话</string>
+
     <string name="contact_signature_tag">个性签名：</string>
     <string name="contact_no_status">暂无个性签名</string>
 
@@ -64,6 +72,7 @@
     <string name="select_chat">请选择聊天对象</string>
 
     <string name="clear_msg_tip">确认清除聊天记录？</string>
+    <string name="contact_delete_friend_tip">确认删除联系人？</string>
     // 群信息相关
     <string name="tips_empty_group_member">请选择群成员</string>
     <string name="tips_empty_group_type">请选择加群方式</string>
@@ -87,10 +96,13 @@
     <string name="hint_search_user_id">搜索用户ID</string>
     <string name="hint_search_group_id">搜索群组ID</string>
     <string name="hint_add_wording">请输入验证消息</string>
+    <string name="contact_add_friend_default_validation">我是%s</string>
     <string name="contact_add">添加</string>
     <string name="user_id">对方ID</string>
     <string name="add_wording">验证消息</string>
     <string name="create_group">创建群组</string>
+    <string name="contact_create">创建</string>
+    <string name="contact_next_step">下一步</string>
 
 
     <string name="modify_group_name">修改群名称</string>
@@ -119,6 +131,7 @@
     <string name="contact_no_new_friend_application">暂无新的联系人请求</string>
     <string name="contact_no_group">暂无群聊</string>
     <string name="contact_no_block_list">暂无黑名单好友</string>
+    <string name="contact_selected_group_member">已选择的群成员</string>
 
     <string name="group_choose_avatar">选择头像</string>
     <string name="group_avatar_text">群头像</string>

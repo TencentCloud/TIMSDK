@@ -27,13 +27,12 @@ import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> {
+public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     protected List<ContactItemBean> mData;
     private ContactListView.OnSelectChangedListener mOnSelectChangedListener;
     private ContactListView.OnItemClickListener mOnClickListener;
 
-    private int mPreSelectedPosition;
     private boolean isSingleSelectMode;
     private ContactPresenter presenter;
     private boolean isGroupList = false;
@@ -57,109 +56,130 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_selecable_adapter_item, parent, false));
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == ContactItemBean.ITEM_BEAN_TYPE_CONTACT) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_minimalist_selecable_adapter_item, parent, false);
+            return new ContactItemViewHolder(view);
+        } else {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_minimalist_controller_item_layout, parent, false);
+            return new ContactControllerViewHolder(view);
+        }
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder viewHolder, final int position) {
         final ContactItemBean contactBean = mData.get(position);
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)holder.line.getLayoutParams();
-        if (position < mData.size() - 1) {
-            String tag1 = contactBean.getSuspensionTag();
-            String tag2 = mData.get(position + 1).getSuspensionTag();
-
-            if (TextUtils.equals(tag1, tag2)) {
-                params.leftMargin = holder.tvName.getLeft();
+        if (viewHolder instanceof ContactItemViewHolder) {
+            ContactItemViewHolder itemViewHolder = (ContactItemViewHolder) viewHolder;
+            if (!TextUtils.isEmpty(contactBean.getRemark())) {
+                itemViewHolder.tvName.setText(contactBean.getRemark());
+            } else if (!TextUtils.isEmpty(contactBean.getNickName())) {
+                itemViewHolder.tvName.setText(contactBean.getNickName());
             } else {
-                params.leftMargin = 0;
+                itemViewHolder.tvName.setText(contactBean.getId());
             }
-        } else {
-            params.leftMargin = 0;
-        }
-        holder.line.setLayoutParams(params);
-        if (!TextUtils.isEmpty(contactBean.getRemark())) {
-            holder.tvName.setText(contactBean.getRemark());
-        } else if (!TextUtils.isEmpty(contactBean.getNickName())) {
-            holder.tvName.setText(contactBean.getNickName());
-        } else {
-            holder.tvName.setText(contactBean.getId());
-        }
-        if (mOnSelectChangedListener != null) {
-            holder.ccSelect.setVisibility(View.VISIBLE);
-            holder.ccSelect.setChecked(contactBean.isSelected());
-        }
-
-        holder.content.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!contactBean.isEnable()) {
-                    return;
-                }
-                holder.ccSelect.setChecked(!holder.ccSelect.isChecked());
-                if (mOnSelectChangedListener != null) {
-                    mOnSelectChangedListener.onSelectChanged(getItem(position), holder.ccSelect.isChecked());
-                }
-                contactBean.setSelected(holder.ccSelect.isChecked());
-                if (mOnClickListener != null) {
-                    mOnClickListener.onItemClick(position, contactBean);
-                }
-                if (isSingleSelectMode && position != mPreSelectedPosition && contactBean.isSelected()) {
-                    mData.get(mPreSelectedPosition).setSelected(false);
-                    notifyItemChanged(mPreSelectedPosition);
-                }
-                mPreSelectedPosition = position;
+            if (!isSingleSelectMode && mOnSelectChangedListener != null) {
+                itemViewHolder.ccSelect.setVisibility(View.VISIBLE);
+                itemViewHolder.ccSelect.setChecked(contactBean.isSelected());
             }
-        });
-        holder.unreadText.setVisibility(View.GONE);
-        holder.userStatusView.setVisibility(View.GONE);
-        if (TextUtils.equals(TUIContactService.getAppContext().getResources().getString(R.string.new_friend), contactBean.getId())) {
-            holder.avatar.setImageResource(TUIThemeManager.getAttrResId(holder.itemView.getContext(), R.attr.contact_new_friend_icon));
 
-            presenter.getFriendApplicationUnreadCount(new IUIKitCallback<Integer>() {
+            itemViewHolder.content.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onSuccess(Integer data) {
-                    if (data == 0) {
-                        holder.unreadText.setVisibility(View.GONE);
-                    } else {
-                        holder.unreadText.setVisibility(View.VISIBLE);
-                        holder.unreadText.setText("" + data);
+                public void onClick(View v) {
+                    if (!contactBean.isEnable()) {
+                        return;
+                    }
+
+                    itemViewHolder.ccSelect.setChecked(!itemViewHolder.ccSelect.isChecked());
+                    if (mOnSelectChangedListener != null) {
+                        mOnSelectChangedListener.onSelectChanged(getItem(position), itemViewHolder.ccSelect.isChecked());
+                    }
+                    contactBean.setSelected(itemViewHolder.ccSelect.isChecked());
+                    if (mOnClickListener != null) {
+                        mOnClickListener.onItemClick(position, contactBean);
                     }
                 }
-
-                @Override
-                public void onError(String module, int errCode, String errMsg) {
-                    ToastUtil.toastShortMessage("Error code = " + errCode + ", desc = " + errMsg);
-                }
             });
-
-        } else if (TextUtils.equals(TUIContactService.getAppContext().getResources().getString(R.string.group), contactBean.getId())) {
-            holder.avatar.setImageResource(TUIThemeManager.getAttrResId(holder.itemView.getContext(), R.attr.contact_group_list_icon));
-        } else if (TextUtils.equals(TUIContactService.getAppContext().getResources().getString(R.string.blacklist), contactBean.getId())) {
-            holder.avatar.setImageResource(TUIThemeManager.getAttrResId(holder.itemView.getContext(), R.attr.contact_black_list_icon));
-        } else {
-            int radius = holder.itemView.getResources().getDimensionPixelSize(R.dimen.contact_profile_face_radius);
+            itemViewHolder.unreadText.setVisibility(View.GONE);
+            itemViewHolder.userStatusView.setVisibility(View.GONE);
+            int radius = ScreenUtil.dip2px(20);
             if (isGroupList) {
-                int defaultIconResId = TUIUtil.getDefaultGroupIconResIDByGroupType(holder.itemView.getContext(), contactBean.getGroupType());
-                GlideEngine.loadUserIcon(holder.avatar, contactBean.getAvatarUrl(), defaultIconResId, radius);
+                int defaultIconResId = TUIUtil.getDefaultGroupIconResIDByGroupType(itemViewHolder.itemView.getContext(), contactBean.getGroupType());
+                GlideEngine.loadUserIcon(itemViewHolder.avatar, contactBean.getAvatarUrl(), defaultIconResId, radius);
             } else {
-                GlideEngine.loadUserIcon(holder.avatar, contactBean.getAvatarUrl(), radius);
+                GlideEngine.loadUserIcon(itemViewHolder.avatar, contactBean.getAvatarUrl(), radius);
             }
             if (dataSourceType == ContactListView.DataSource.CONTACT_LIST && TUIContactConfig.getInstance().isShowUserStatus()) {
-                holder.userStatusView.setVisibility(View.VISIBLE);
+                itemViewHolder.userStatusView.setVisibility(View.VISIBLE);
                 if (contactBean.getStatusType() == V2TIMUserStatus.V2TIM_USER_STATUS_ONLINE) {
-                    holder.userStatusView.setBackgroundResource(TUIThemeManager.getAttrResId(TUIContactService.getAppContext(), com.tencent.qcloud.tuicore.R.attr.user_status_online));
+                    itemViewHolder.userStatusView.setBackgroundResource(TUIThemeManager.getAttrResId(TUIContactService.getAppContext(), com.tencent.qcloud.tuicore.R.attr.user_status_online));
                 } else {
-                    holder.userStatusView.setBackgroundResource(TUIThemeManager.getAttrResId(TUIContactService.getAppContext(), com.tencent.qcloud.tuicore.R.attr.user_status_offline));
+                    itemViewHolder.userStatusView.setBackgroundResource(TUIThemeManager.getAttrResId(TUIContactService.getAppContext(), com.tencent.qcloud.tuicore.R.attr.user_status_offline));
                 }
             } else {
-                holder.userStatusView.setVisibility(View.GONE);
+                itemViewHolder.userStatusView.setVisibility(View.GONE);
             }
+            setAlreadySelected(itemViewHolder, contactBean);
+        } else {
+            ContactControllerViewHolder controllerViewHolder = (ContactControllerViewHolder) viewHolder;
+            String newFriendString = TUIContactService.getAppContext().getResources().getString(R.string.new_friend);
+            String myGroupString = TUIContactService.getAppContext().getResources().getString(R.string.group);
+            String blokeListString = TUIContactService.getAppContext().getResources().getString(R.string.blacklist);
+            if (TextUtils.equals(newFriendString, contactBean.getId())) {
+                controllerViewHolder.controllerName.setText(newFriendString);
+                presenter.getFriendApplicationUnreadCount(new IUIKitCallback<Integer>() {
+                    @Override
+                    public void onSuccess(Integer data) {
+                        if (data == 0) {
+                            controllerViewHolder.unreadText.setVisibility(View.GONE);
+                        } else {
+                            controllerViewHolder.unreadText.setVisibility(View.VISIBLE);
+                            controllerViewHolder.unreadText.setText("" + data);
+                        }
+                    }
+
+                    @Override
+                    public void onError(String module, int errCode, String errMsg) {
+                        ToastUtil.toastShortMessage("Error code = " + errCode + ", desc = " + errMsg);
+                    }
+                });
+            } else if (TextUtils.equals(myGroupString, contactBean.getId())) {
+                controllerViewHolder.controllerName.setText(myGroupString);
+                controllerViewHolder.unreadText.setVisibility(View.GONE);
+            } else if (TextUtils.equals(blokeListString, contactBean.getId())) {
+                controllerViewHolder.controllerName.setText(blokeListString);
+                controllerViewHolder.unreadText.setVisibility(View.GONE);
+            }
+            controllerViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnClickListener != null) {
+                        mOnClickListener.onItemClick(position, contactBean);
+                    }
+                }
+            });
         }
-        setAlreadySelected(holder, contactBean);
     }
 
-    private void setAlreadySelected(ViewHolder holder, ContactItemBean contactItemBean) {
+    public void setSelected(String userID, boolean isSelected) {
+        ContactItemBean contact = null;
+        for (ContactItemBean item : mData) {
+            if (TextUtils.equals(item.getId(), userID)) {
+                contact = item;
+                break;
+            }
+        }
+        if (contact == null) {
+            return;
+        }
+        contact.setSelected(isSelected);
+        if (mOnSelectChangedListener != null) {
+            mOnSelectChangedListener.onSelectChanged(contact, isSelected);
+        }
+        notifyDataSetChanged();
+    }
+
+    private void setAlreadySelected(ContactItemViewHolder holder, ContactItemBean contactItemBean) {
         if (alreadySelectedList != null && alreadySelectedList.contains(contactItemBean.getId())) {
             holder.ccSelect.setChecked(true);
             holder.itemView.setEnabled(false);
@@ -172,11 +192,16 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     }
 
     @Override
-    public void onViewRecycled(ViewHolder holder) {
-        if (holder != null) {
-            GlideEngine.clear(holder.avatar);
-            holder.avatar.setImageResource(0);
+    public int getItemViewType(int position) {
+        final ContactItemBean contactBean = mData.get(position);
+        return contactBean.getItemBeanType();
+    }
 
+    @Override
+    public void onViewRecycled(RecyclerView.ViewHolder holder) {
+        if (holder instanceof ContactItemViewHolder) {
+            GlideEngine.clear(((ContactItemViewHolder) holder).avatar);
+            ((ContactItemViewHolder) holder).avatar.setImageResource(0);
         }
         super.onViewRecycled(holder);
     }
@@ -214,16 +239,15 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         this.dataSourceType = dataSourceType;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ContactItemViewHolder extends RecyclerView.ViewHolder {
         TextView tvName;
         TextView unreadText;
         ShadeImageView avatar;
         CheckBox ccSelect;
         View content;
-        View line;
         View userStatusView;
 
-        public ViewHolder(View itemView) {
+        public ContactItemViewHolder(View itemView) {
             super(itemView);
             tvName = itemView.findViewById(R.id.tvCity);
             unreadText = itemView.findViewById(R.id.conversation_unread);
@@ -231,10 +255,22 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
             avatar = itemView.findViewById(R.id.ivAvatar);
             ccSelect = itemView.findViewById(R.id.contact_check_box);
             content = itemView.findViewById(R.id.selectable_contact_item);
-            line = itemView.findViewById(R.id.view_line);
             userStatusView = itemView.findViewById(R.id.user_status);
 
             avatar.setRadius(ScreenUtil.dip2px(20));
+        }
+    }
+
+
+    public static class ContactControllerViewHolder extends RecyclerView.ViewHolder {
+        TextView controllerName;
+        TextView unreadText;
+
+        public ContactControllerViewHolder(View itemView) {
+            super(itemView);
+            controllerName = itemView.findViewById(R.id.controller_name);
+            unreadText = itemView.findViewById(R.id.unread_count);
+            unreadText.setVisibility(View.GONE);
         }
     }
 }

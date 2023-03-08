@@ -27,6 +27,7 @@
         <!-- **************** Minimalist UI Activity Start **************** -->
         <activity
             android:name=".minimalistui.page.TUIForwardSelectMinimalistActivity"
+            android:theme="@style/ConversationTransparentPopActivityStyle"
             android:screenOrientation="portrait" />
 
         <activity

@@ -34,6 +34,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
@@ -50,7 +51,6 @@ import com.tencent.qcloud.tuikit.tuichat.bean.InputMoreActionUnit;
 import com.tencent.qcloud.tuikit.tuichat.bean.ReplyPreviewBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FileMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 import com.tencent.qcloud.tuikit.tuichat.classicui.component.camera.CameraActivity;
 import com.tencent.qcloud.tuikit.tuichat.classicui.component.camera.view.JCameraView;
 import com.tencent.qcloud.tuikit.tuichat.classicui.interfaces.IChatLayout;
@@ -60,6 +60,7 @@ import com.tencent.qcloud.tuikit.tuichat.component.AudioRecorder;
 import com.tencent.qcloud.tuikit.tuichat.component.face.CustomFace;
 import com.tencent.qcloud.tuikit.tuichat.component.face.Emoji;
 import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
+import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
@@ -294,7 +295,6 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
 
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                TUIChatLog.i(TAG, "mSendAudioButton onTouch action:" + motionEvent.getAction());
                 PermissionHelper.requestPermission(PermissionHelper.PERMISSION_MICROPHONE, new PermissionHelper.PermissionCallback() {
                     @Override
                     public void onGranted() {
@@ -1244,23 +1244,45 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         param.put(TUIConstants.TUIChat.CHAT_NAME, mChatInfo.getChatName());
         param.put(TUIConstants.TUIChat.CHAT_TYPE, mChatInfo.getType());
         param.put(TUIConstants.TUIChat.CONTEXT, getContext());
-        Map<String, Object> customMessageExtension = TUICore.getExtensionInfo(TUIConstants.TUIChat.EXTENSION_INPUT_MORE_CUSTOM_MESSAGE, param);
-        if (customMessageExtension != null) {
-            Integer icon = (Integer) customMessageExtension.get(TUIConstants.TUIChat.INPUT_MORE_ICON);
-            Integer title = (Integer) customMessageExtension.get(TUIConstants.TUIChat.INPUT_MORE_TITLE);
-            Integer id = (Integer) customMessageExtension.get(TUIConstants.TUIChat.INPUT_MORE_ACTION_ID);
-            InputMoreActionUnit unit = new InputMoreActionUnit();
-            unit.setActionId(id);
-            unit.setIconResId(icon);
-            unit.setTitleId(title);
-            unit.setPriority(10);
-            unit.setOnClickListener(unit.new OnActionClickListener() {
-                @Override
-                public void onClick() {
-                    onCustomActionClick(unit.getActionId());
-                }
-            });
-            mInputMoreActionList.add(unit);
+
+        // groupNote only exists in group
+        if (mChatInfo.getType() == V2TIMConversation.V2TIM_GROUP) {
+            Map<String, Object> groupNoteExtension = TUICore.getExtensionInfo(TUIConstants.TUIChat.EXTENSION_INPUT_MORE_GROUP_NOTE, param);
+            if (groupNoteExtension != null) {
+                View groupNoteView = (View) groupNoteExtension.get(TUIConstants.TUIChat.INPUT_MORE_VIEW);
+                int groupNoteActionId = (Integer) groupNoteExtension.get(TUIConstants.TUIChat.INPUT_MORE_ACTION_ID);
+                InputMoreActionUnit groupNoteUnit = new InputMoreActionUnit();
+                groupNoteUnit.setActionId(groupNoteActionId);
+                groupNoteUnit.setUnitView(groupNoteView);
+                groupNoteUnit.setPriority(4);
+                groupNoteUnit.setOnClickListener(groupNoteUnit.new OnActionClickListener() {
+                    @Override
+                    public void onClick() {
+                        onCustomActionClick(groupNoteUnit.getActionId());
+                    }
+                });
+                mInputMoreActionList.add(groupNoteUnit);
+            }
+        }
+
+        // poll only exists in group
+        if (mChatInfo.getType() == V2TIMConversation.V2TIM_GROUP) {
+            Map<String, Object> groupNoteExtension = TUICore.getExtensionInfo(TUIConstants.TUIChat.EXTENSION_INPUT_MORE_POLL, param);
+            if (groupNoteExtension != null) {
+                View groupNoteView = (View) groupNoteExtension.get(TUIConstants.TUIChat.INPUT_MORE_VIEW);
+                int groupNoteActionId = (Integer) groupNoteExtension.get(TUIConstants.TUIChat.INPUT_MORE_ACTION_ID);
+                InputMoreActionUnit groupNoteUnit = new InputMoreActionUnit();
+                groupNoteUnit.setActionId(groupNoteActionId);
+                groupNoteUnit.setUnitView(groupNoteView);
+                groupNoteUnit.setPriority(3);
+                groupNoteUnit.setOnClickListener(groupNoteUnit.new OnActionClickListener() {
+                    @Override
+                    public void onClick() {
+                        onCustomActionClick(groupNoteUnit.getActionId());
+                    }
+                });
+                mInputMoreActionList.add(groupNoteUnit);
+            }
         }
 
         // topic not support call yet.
@@ -1268,70 +1290,73 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             return;
         }
 
-        Map<String, Object> audioCallExtension = TUICore.getExtensionInfo(TUIConstants.TUIChat.EXTENSION_INPUT_MORE_AUDIO_CALL, param);
-        if (audioCallExtension != null) {
-            View audioView = (View) audioCallExtension.get(TUIConstants.TUIChat.INPUT_MORE_VIEW);
-            int audioActionId = (Integer) audioCallExtension.get(TUIConstants.TUIChat.INPUT_MORE_ACTION_ID);
-            InputMoreActionUnit audioUnit = new InputMoreActionUnit();
-            audioUnit.setActionId(audioActionId);
-            audioUnit.setUnitView(audioView);
-            audioUnit.setPriority(2);
-            audioUnit.setOnClickListener(audioUnit.new OnActionClickListener() {
-                @Override
-                public void onClick() {
-                    PermissionHelper.requestPermission(PermissionHelper.PERMISSION_MICROPHONE, new PermissionHelper.PermissionCallback() {
-                        @Override
-                        public void onGranted() {
-                            onCustomActionClick(audioUnit.getActionId());
-                        }
+        if (TUIChatConfigs.getConfigs().getGeneralConfig().isEnableVoiceCall()) {
+            Map<String, Object> audioCallExtension = TUICore.getExtensionInfo(TUIConstants.TUIChat.EXTENSION_INPUT_MORE_AUDIO_CALL, param);
+            if (audioCallExtension != null) {
+                View audioView = (View) audioCallExtension.get(TUIConstants.TUIChat.INPUT_MORE_VIEW);
+                int audioActionId = (Integer) audioCallExtension.get(TUIConstants.TUIChat.INPUT_MORE_ACTION_ID);
+                InputMoreActionUnit audioUnit = new InputMoreActionUnit();
+                audioUnit.setActionId(audioActionId);
+                audioUnit.setUnitView(audioView);
+                audioUnit.setPriority(2);
+                audioUnit.setOnClickListener(audioUnit.new OnActionClickListener() {
+                    @Override
+                    public void onClick() {
+                        PermissionHelper.requestPermission(PermissionHelper.PERMISSION_MICROPHONE, new PermissionHelper.PermissionCallback() {
+                            @Override
+                            public void onGranted() {
+                                onCustomActionClick(audioUnit.getActionId());
+                            }
 
-                        @Override
-                        public void onDenied() {
+                            @Override
+                            public void onDenied() {
 
-                        }
-                    });
-                }
-            });
-            mInputMoreActionList.add(audioUnit);
+                            }
+                        });
+                    }
+                });
+                mInputMoreActionList.add(audioUnit);
+            }
         }
+        
+        if (TUIChatConfigs.getConfigs().getGeneralConfig().isEnableVideoCall()) {
+            Map<String, Object> videoCallExtension = TUICore.getExtensionInfo(TUIConstants.TUIChat.EXTENSION_INPUT_MORE_VIDEO_CALL, param);
+            if (videoCallExtension != null) {
+                View videoView = (View) videoCallExtension.get(TUIConstants.TUIChat.INPUT_MORE_VIEW);
+                int videoActionId = (Integer) videoCallExtension.get(TUIConstants.TUIChat.INPUT_MORE_ACTION_ID);
+                InputMoreActionUnit videoUnit = new InputMoreActionUnit();
+                videoUnit.setActionId(videoActionId);
+                videoUnit.setUnitView(videoView);
+                videoUnit.setPriority(1);
+                videoUnit.setOnClickListener(videoUnit.new OnActionClickListener() {
+                    @Override
+                    public void onClick() {
+                        PermissionHelper.requestPermission(PermissionHelper.PERMISSION_MICROPHONE, new PermissionHelper.PermissionCallback() {
+                            @Override
+                            public void onGranted() {
+                                PermissionHelper.requestPermission(PermissionHelper.PERMISSION_CAMERA, new PermissionHelper.PermissionCallback() {
+                                    @Override
+                                    public void onGranted() {
+                                        onCustomActionClick(videoUnit.getActionId());
+                                    }
 
-        Map<String, Object> videoCallExtension = TUICore.getExtensionInfo(TUIConstants.TUIChat.EXTENSION_INPUT_MORE_VIDEO_CALL, param);
-        if (videoCallExtension != null) {
-            View videoView = (View) videoCallExtension.get(TUIConstants.TUIChat.INPUT_MORE_VIEW);
-            int videoActionId = (Integer) videoCallExtension.get(TUIConstants.TUIChat.INPUT_MORE_ACTION_ID);
-            InputMoreActionUnit videoUnit = new InputMoreActionUnit();
-            videoUnit.setActionId(videoActionId);
-            videoUnit.setUnitView(videoView);
-            videoUnit.setPriority(1);
-            videoUnit.setOnClickListener(videoUnit.new OnActionClickListener() {
-                @Override
-                public void onClick() {
-                    PermissionHelper.requestPermission(PermissionHelper.PERMISSION_MICROPHONE, new PermissionHelper.PermissionCallback() {
-                        @Override
-                        public void onGranted() {
-                            PermissionHelper.requestPermission(PermissionHelper.PERMISSION_CAMERA, new PermissionHelper.PermissionCallback() {
-                                @Override
-                                public void onGranted() {
-                                    onCustomActionClick(videoUnit.getActionId());
-                                }
+                                    @Override
+                                    public void onDenied() {
 
-                                @Override
-                                public void onDenied() {
+                                    }
+                                });
+                            }
 
-                                }
-                            });
-                        }
+                            @Override
+                            public void onDenied() {
 
-                        @Override
-                        public void onDenied() {
-
-                        }
-                    });
-                }
-            });
-            mInputMoreActionList.add(videoUnit);
+                            }
+                        });
+                    }
+                });
+                mInputMoreActionList.add(videoUnit);
+            }
         }
-
     }
 
     private void onCustomActionClick(int id) {
@@ -1348,13 +1373,20 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                 TUICore.startActivity(getContext(), "StartGroupMemberSelectActivity", bundle, 11);
             }
             return;
+        } else if (id == TUIConstants.TUIPoll.ACTION_ID_POLL) {
+            TUICore.startActivity(getContext(), TUIConstants.TUIPoll.POLL_CREATOR_ACTIVITY_NAME, null);
+            hideInputMoreLayout();
+        } else if (id == TUIConstants.TUIGroupNote.ACTION_ID_GROUP_NOTE) {
+            TUICore.startActivity(getContext(), TUIConstants.TUIGroupNote.GROUP_NOTE_CREATOR_ACTIVITY_NAME, null);
+            hideInputMoreLayout();
+        } else {
+            HashMap<String, Object> param = new HashMap<>();
+            param.put(TUIConstants.TUIChat.INPUT_MORE_ACTION_ID, id);
+            param.put(TUIConstants.TUIChat.CHAT_ID, mChatInfo.getId());
+            param.put(TUIConstants.TUIChat.CHAT_NAME, mChatInfo.getChatName());
+            param.put(TUIConstants.TUIChat.CHAT_TYPE, mChatInfo.getType());
+            TUICore.notifyEvent(TUIConstants.TUIChat.EVENT_KEY_INPUT_MORE, TUIConstants.TUIChat.EVENT_SUB_KEY_ON_CLICK, param);
         }
-        HashMap<String, Object> param = new HashMap<>();
-        param.put(TUIConstants.TUIChat.INPUT_MORE_ACTION_ID, id);
-        param.put(TUIConstants.TUIChat.CHAT_ID, mChatInfo.getId());
-        param.put(TUIConstants.TUIChat.CHAT_NAME, mChatInfo.getChatName());
-        param.put(TUIConstants.TUIChat.CHAT_TYPE, mChatInfo.getType());
-        TUICore.notifyEvent(TUIConstants.TUIChat.EVENT_KEY_INPUT_MORE, TUIConstants.TUIChat.EVENT_SUB_KEY_ON_CLICK, param);
     }
 
     public void disableAudioInput(boolean disable) {

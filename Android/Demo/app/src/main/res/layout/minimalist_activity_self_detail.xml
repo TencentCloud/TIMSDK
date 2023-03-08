@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <com.tencent.qcloud.tuicore.component.MinimalistTitleBar
+        android:id="@+id/self_detail_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+                android:id="@+id/self_icon"
+                android:layout_width="94dp"
+                android:layout_height="94dp"
+                android:layout_marginTop="42dp"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:id="@+id/modify_nick_name_lv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textColor="#0365F9"
+                android:textSize="14sp"
+                android:text="@string/demo_profile_edit" />
+
+            <TextView
+                android:id="@+id/user_nick_name_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/modify_nick_name"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="22dp"
+                android:textSize="16sp"
+                android:textColor="@color/black" />
+
+            <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+                android:id="@+id/modify_account_lv"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:layout_marginTop="33dp"
+                app:name="@string/demo_profile_user_id" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="#1A000000"/>
+
+
+            <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+                android:id="@+id/modify_signature_lv"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:layout_marginTop="10dp"
+                app:canNav="true"
+                app:name="@string/modify_signature" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="#1A000000"/>
+
+
+            <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+                android:id="@+id/modify_gender_lv"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                app:canNav="true"
+                app:name="@string/modify_gender" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="#1A000000"/>
+
+            <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+                android:id="@+id/modify_birthday_lv"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                app:canNav="true"
+                app:name="@string/modify_birthday" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="#1A000000"/>
+
+        </LinearLayout>
+
+
+    </ScrollView>
+</LinearLayout>

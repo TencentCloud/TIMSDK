@@ -47,6 +47,7 @@
     <string name="modify_signature">个性签名</string>
     <string name="demo_no_status">暂无个性签名</string>
     <string name="modify_account">账号</string>
+    <string name="demo_profile_user_id">账号</string>
     <string name="cancel_account">注销账号</string>
     <string name="cancel_account_alert_tip">您确定要注销账号吗？</string>
     <string name="cancel_account_tip">注销后，您将无法使用当前账号，相关数据也将删除无法找回。当前账号 %s </string>
@@ -82,6 +83,7 @@
     <string name="demo_self_detail_modify_nickname">修改昵称</string>
     <string name="demo_self_detail_modify_signature">修改个性签名</string>
     <string name="demo_self_detail_modify_gender">修改性别</string>
+    <string name="demo_profile_edit">编辑</string>
 
     <string name="demo_self_detail_modify_nickname_rule">仅限中文、字母、数字和下划线</string>
 
@@ -170,6 +172,7 @@
     <string name="mark_all_message_as_read_err_format">清空未读失败, %d, %s</string>
 
     <string name="demo_profile_detail">详细资料</string>
+    <string name="demo_profile_back">返回</string>
 
     <string name="demo_message_read_switch_title">消息阅读状态</string>
     <string name="demo_message_read_switch_open_tip">该功能为旗舰版功能</string>

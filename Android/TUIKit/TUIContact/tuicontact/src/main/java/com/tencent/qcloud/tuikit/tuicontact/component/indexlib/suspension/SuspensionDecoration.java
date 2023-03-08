@@ -25,6 +25,7 @@ public class SuspensionDecoration extends RecyclerView.ItemDecoration {
     private Paint mPaint;
     private Rect mBounds;
     private int mTitleHeight;
+    private boolean isShowLine = true;
     private int mHeaderViewCount = 0;
 
 
@@ -45,6 +46,10 @@ public class SuspensionDecoration extends RecyclerView.ItemDecoration {
         return this;
     }
 
+    public SuspensionDecoration setShowLine(boolean isShowLine) {
+        this.isShowLine = isShowLine;
+        return this;
+    }
 
     public SuspensionDecoration setColorTitleBg(int colorTitleBg) {
         COLOR_TITLE_BG = colorTitleBg;
@@ -123,8 +128,10 @@ public class SuspensionDecoration extends RecyclerView.ItemDecoration {
         mPaint.setColor(COLOR_TITLE_BG);
         c.drawRect(left, child.getTop() - params.topMargin - mTitleHeight, right, child.getTop() - params.topMargin, mPaint);
 
-        mPaint.setColor(COLOR_TITLE_BOTTOM_LINE);
-        c.drawRect(left, child.getTop() - params.topMargin - 1, right, child.getTop() - params.topMargin, mPaint);
+        if (isShowLine) {
+            mPaint.setColor(COLOR_TITLE_BOTTOM_LINE);
+            c.drawRect(left, child.getTop() - params.topMargin - 1, right, child.getTop() - params.topMargin, mPaint);
+        }
 
         mPaint.setColor(COLOR_TITLE_FONT);
         mPaint.getTextBounds(mDatas.get(position).getSuspensionTag(), 0, mDatas.get(position).getSuspensionTag().length(), mBounds);

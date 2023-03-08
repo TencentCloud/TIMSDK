@@ -10,14 +10,13 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuicommunity.R;
 import com.tencent.qcloud.tuikit.tuicommunity.bean.CommunityBean;
 import com.tencent.qcloud.tuikit.tuicommunity.bean.CommunityMemberBean;
 import com.tencent.qcloud.tuikit.tuicommunity.presenter.CommunityPresenter;
 import com.tencent.qcloud.tuikit.tuicommunity.ui.interfaces.ICommunityMemberActivity;
-import com.tencent.qcloud.tuikit.tuicommunity.ui.view.CommunityMemberList;
+import com.tencent.qcloud.tuikit.tuicommunity.ui.widget.CommunityMemberList;
 import com.tencent.qcloud.tuikit.tuicommunity.utils.CommunityConstants;
 
 import java.util.ArrayList;

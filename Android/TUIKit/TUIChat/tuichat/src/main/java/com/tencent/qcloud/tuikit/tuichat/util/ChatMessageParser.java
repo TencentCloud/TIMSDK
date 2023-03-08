@@ -108,17 +108,24 @@ public class ChatMessageParser {
 
     private static TUIMessageBean parseCustomMessage(V2TIMMessage v2TIMMessage) {
         TUIMessageBean messageBean = parseCallingMessage(v2TIMMessage);
-        if (messageBean == null) {
+        if (messageBean != null) {
+            // Calling message
+            if (messageBean.isExcludeFromHistory()) {
+                messageBean = null;
+            }
+        } else {
+            // Other custom message
             messageBean = parseGroupCreateMessage(v2TIMMessage);
+            if (messageBean == null) {
+                messageBean = parseCustomMessageFromMap(v2TIMMessage);
+            }
+            if (messageBean == null) {
+                messageBean = new TextMessageBean();
+                String text = TUIChatService.getAppContext().getString(R.string.no_support_msg);
+                ((TextMessageBean) messageBean).setText(text);
+            }
         }
-        if (messageBean == null) {
-            messageBean = parseCustomMessageFromMap(v2TIMMessage);
-        }
-        if (messageBean == null) {
-            messageBean = new TextMessageBean();
-            String text = TUIChatService.getAppContext().getString(R.string.no_support_msg);
-            ((TextMessageBean) messageBean).setText(text);
-        }
+
         return messageBean;
     }
 
@@ -285,116 +292,31 @@ public class ChatMessageParser {
     }
 
     private static TUIMessageBean parseCallingMessage(V2TIMMessage v2TIMMessage) {
-        V2TIMSignalingInfo signalingInfo = V2TIMManager.getSignalingManager().getSignalingInfo(v2TIMMessage);
-        if (signalingInfo != null) {
-            String businessId = null;
-            Double businessIdForTimeout = 0.0;
-            Object businessIdObj = null;
-            Gson gson = new Gson();
-            try {
-                HashMap signalDataMap = gson.fromJson(signalingInfo.getData(), HashMap.class);
-                if (signalDataMap != null) {
-                    businessIdObj = signalDataMap.get(TUIConstants.Message.CUSTOM_BUSINESS_ID_KEY);
-                }
-            } catch (JsonSyntaxException e) {
-                TUIChatLog.e(TAG, " get signalingInfoCustomJsonMap error ");
-            }
-            if (businessIdObj instanceof String) {
-                businessId = (String) businessIdObj;
-            } else if (businessIdObj instanceof Double) {
-                businessIdForTimeout = (Double) businessIdObj;
-            }
-
-            if (TextUtils.equals(businessId, TUIConstants.TUICalling.CUSTOM_MESSAGE_BUSINESS_ID) ||
-                    Math.abs(businessIdForTimeout - TUIConstants.TUICalling.CALL_TIMEOUT_BUSINESS_ID) < 0.000001) {
-                return getCallingMessage(v2TIMMessage);
-            } else {
-                return null;
-            }
-        }
-        return null;
-    }
-
-    private static TUIMessageBean getCallingMessage(V2TIMMessage timMessage) {
-        TUIMessageBean message;
-        boolean isGroup = !TextUtils.isEmpty(timMessage.getGroupID());
-
-        CallModel callModel = CallModel.convert2VideoCallData(timMessage);
+        CallModel callModel = CallModel.convert2VideoCallData(v2TIMMessage);
         if (callModel == null) {
             return null;
         }
-        String senderShowName = getDisplayName(timMessage);
-        String content = "";
-        Context context = TUIChatService.getAppContext();
-        switch (callModel.action) {
-            case CallModel.VIDEO_CALL_ACTION_DIALING:
-                content = isGroup ? ("\"" + senderShowName + "\"" +
-                        context.getString(R.string.start_group_call)) : (context.getString(R.string.start_call));
-                break;
-            case CallModel.VIDEO_CALL_ACTION_SPONSOR_CANCEL:
-                content = isGroup ? context.getString(R.string.cancle_group_call) : context.getString(R.string.cancle_call);
-                break;
-            case CallModel.VIDEO_CALL_ACTION_LINE_BUSY:
-                content = isGroup ? ("\"" + senderShowName + "\"" +
-                        context.getString(R.string.line_busy)) : context.getString(R.string.other_line_busy);
-                break;
-            case CallModel.VIDEO_CALL_ACTION_REJECT:
-                content = isGroup ? ("\"" + senderShowName + "\"" +
-                        context.getString(R.string.reject_group_calls)) : context.getString(R.string.reject_calls);
-                break;
-            case CallModel.VIDEO_CALL_ACTION_SPONSOR_TIMEOUT:
-                if (isGroup && callModel.invitedList != null && callModel.invitedList.size() == 1
-                        && callModel.invitedList.get(0).equals(timMessage.getSender())) {
-                    content = "\"" + senderShowName + "\"" + context.getString(R.string.no_response_call);
-                } else {
-                    StringBuilder inviteeShowStringBuilder = new StringBuilder();
-                    if (callModel.invitedList != null && callModel.invitedList.size() > 0) {
-                        for (String invitee : callModel.invitedList) {
-                            inviteeShowStringBuilder.append(invitee).append("、");
-                        }
-                        if (inviteeShowStringBuilder.length() > 0) {
-                            inviteeShowStringBuilder.delete(inviteeShowStringBuilder.length() - 1, inviteeShowStringBuilder.length());
-                        }
-                    }
-                    content = isGroup ? ("\"" + inviteeShowStringBuilder.toString() + "\""
-                            + context.getString(R.string.no_response_call)) : context.getString(R.string.no_response_call);
-                }
-                break;
-            case CallModel.VIDEO_CALL_ACTION_ACCEPT:
-                content = isGroup ? ("\"" + senderShowName + "\"" +
-                        context.getString(R.string.accept_call)) : context.getString(R.string.accept_call);
-                break;
-            case CallModel.VIDEO_CALL_ACTION_HANGUP:
-                content = isGroup ? context.getString(R.string.stop_group_call) :
-                        context.getString(R.string.stop_call_tip) + DateTimeUtil.formatSecondsTo00(callModel.duration);
-                break;
-            case CallModel.VIDEO_CALL_ACTION_SWITCH_TO_AUDIO:
-                content = context.getString(R.string.chat_calling_switch_to_audio);
-                break;
-            case CallModel.VIDEO_CALL_ACTION_SWITCH_TO_AUDIO_ACCEPT:
-                content = context.getString(R.string.chat_calling_switch_to_audio_accept);
-                break;
-            case CallModel.VIDEO_CALL_ACTION_UNKNOWN_INVITE:
-                content = context.getString(R.string.chat_calling_unknown_invitation);
-                break;
-            default:
-                content = context.getString(R.string.invalid_command);
-                break;
-        }
+        
+        TUIMessageBean message;
+        boolean isGroup = (callModel.getParticipantType() == CallModel.CALL_PARTICIPANT_TYPE_GROUP);
         if (isGroup) {
             TipsMessageBean tipsMessageBean = new TipsMessageBean();
-            tipsMessageBean.setCommonAttribute(timMessage);
-            tipsMessageBean.setText(content);
-            tipsMessageBean.setExtra(content);
+            tipsMessageBean.setCommonAttribute(v2TIMMessage);
+            tipsMessageBean.setText(callModel.getContent());
+            tipsMessageBean.setExtra(callModel.getContent());
             message = tipsMessageBean;
         } else {
             CallingMessageBean callingMessageBean = new CallingMessageBean();
-            callingMessageBean.setCommonAttribute(timMessage);
-            callingMessageBean.setText(content);
-            callingMessageBean.setExtra(content);
-            callingMessageBean.setCallType(callModel.callType);
+            callingMessageBean.setCommonAttribute(v2TIMMessage);
+            callingMessageBean.setText(callModel.getContent());
+            callingMessageBean.setExtra(callModel.getContent());
+            callingMessageBean.setCallType(callModel.getStreamMediaType());
+            callingMessageBean.setCaller(callModel.getDirection() == CallModel.CALL_MESSAGE_DIRECTION_OUTGOING);
+            callingMessageBean.setShowUnreadPoint(callModel.isShowUnreadPoint());
+            callingMessageBean.setUseMsgReceiverAvatar(callModel.isUseReceiverAvatar());
             message = callingMessageBean;
         }
+        message.setExcludeFromHistory(callModel.isExcludeFromHistory());
         return message;
     }
 

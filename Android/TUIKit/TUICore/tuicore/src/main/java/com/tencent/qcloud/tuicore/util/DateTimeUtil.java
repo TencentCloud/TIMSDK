@@ -149,4 +149,9 @@ public class DateTimeUtil {
         }
         return date.getTime();
     }
+
+    public static String getTimeStringFromDate(Date date, String pattern) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        return simpleDateFormat.format(date);
+    }
 }

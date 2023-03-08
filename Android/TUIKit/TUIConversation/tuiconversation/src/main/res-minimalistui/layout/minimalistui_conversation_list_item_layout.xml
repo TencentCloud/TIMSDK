@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.tencent.qcloud.tuikit.tuiconversation.minimalistui.widget.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.tencent.qcloud.tuicore.component.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/swipe"
     android:layout_width="match_parent"
     android:layout_height="64dp"
@@ -107,7 +108,8 @@
             android:layout_gravity="center_vertical"
             android:layout_marginRight="6.23dp"
             android:button="@drawable/checkbox_selector"
-            android:visibility="gone" />
+            android:visibility="gone"
+            tools:visibility="visible"/>
 
         <include
             layout="@layout/minimalist_conversation_list_item_sub_layout"
@@ -117,4 +119,4 @@
             android:tag="Hover" />
 
     </LinearLayout>
-</com.tencent.qcloud.tuikit.tuiconversation.minimalistui.widget.swipe.SwipeLayout>
+</com.tencent.qcloud.tuicore.component.swipe.SwipeLayout>

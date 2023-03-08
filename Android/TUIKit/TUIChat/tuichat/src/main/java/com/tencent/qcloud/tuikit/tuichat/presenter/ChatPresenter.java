@@ -2,11 +2,11 @@ package com.tencent.qcloud.tuikit.tuichat.presenter;
 
 import android.content.Context;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
+import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
@@ -29,6 +29,10 @@ import com.tencent.qcloud.tuikit.tuichat.bean.OfflineMessageContainerBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.OfflinePushInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.ReactUserBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.UserStatusBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomGroupNoteMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomGroupNoteTipsMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomPollMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FaceMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FileMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
@@ -128,8 +132,8 @@ public abstract class ChatPresenter {
         baseMessageSender = new IBaseMessageSender() {
 
             @Override
-            public void sendMessage(TUIMessageBean message, String receiver, boolean isGroup) {
-                ChatPresenter.this.sendMessage(message, receiver, isGroup);
+            public String sendMessage(TUIMessageBean message, String receiver, boolean isGroup) {
+                return ChatPresenter.this.sendMessage(message, receiver, isGroup);
             }
         };
         TUIChatService.getInstance().setMessageSender(baseMessageSender);
@@ -179,7 +183,7 @@ public abstract class ChatPresenter {
                 }
                 TUIMessageBean messageBean = data.get(0);
                 if (messageBean.getMsgSeq() != seq) {
-                    TUIChatUtils.callbackOnError(callback, - 1, "can't find origin message");
+                    TUIChatUtils.callbackOnError(callback, -1, "can't find origin message");
                     return;
                 }
                 if (messageBean.getStatus() == TUIMessageBean.MSG_STATUS_REVOKE) {
@@ -238,7 +242,7 @@ public abstract class ChatPresenter {
 
                     @Override
                     public void onError(String module, int errCode, String errMsg) {
-                       TUIChatUtils.callbackOnError(callback, errCode, errMsg);
+                        TUIChatUtils.callbackOnError(callback, errCode, errMsg);
                     }
                 });
             }
@@ -256,11 +260,11 @@ public abstract class ChatPresenter {
 
     protected void c2cReadReport(String userId) {
         provider.c2cReadReport(userId);
-    };
+    }
 
     protected void groupReadReport(String groupId) {
         provider.groupReadReport(groupId);
-    };
+    }
 
     public void setMessageListAdapter(IMessageAdapter messageListAdapter) {
         this.messageListAdapter = messageListAdapter;
@@ -360,7 +364,7 @@ public abstract class ChatPresenter {
     }
 
     public void loadHistoryMessageList(String chatId, boolean isGroup, int getType, int loadCount,
-                                          TUIMessageBean locateMessageInfo, IUIKitCallback<List<TUIMessageBean>> callback) {
+                                       TUIMessageBean locateMessageInfo, IUIKitCallback<List<TUIMessageBean>> callback) {
         // 如果是前后同时拉取消息，需要拉取两次，第一次向后拉取，第二次向前拉取
         // 例如现在有消息 1,2,3,4,5,6,7  locateMessageInfo 是 4
         // 如果 getType 为 GET_MESSAGE_FORWARD， 就会拉取到消息 1,2,3
@@ -394,7 +398,10 @@ public abstract class ChatPresenter {
         });
     }
 
-    protected void onMessageLoadCompleted(List<TUIMessageBean> data, int getType) {};
+    protected void onMessageLoadCompleted(List<TUIMessageBean> data, int getType) {
+    }
+
+    ;
 
     // 加载消息成功之后会调用此方法
     // This method is called after the message is loaded successfully
@@ -506,21 +513,21 @@ public abstract class ChatPresenter {
                 if (data != null && data.size() == 1) {
                     TUIChatUtils.callbackOnSuccess(callback, data.get(0));
                 } else {
-                    TUIChatUtils.callbackOnError(callback, -1 , "preProcessReplyMessage failed");
+                    TUIChatUtils.callbackOnError(callback, -1, "preProcessReplyMessage failed");
                 }
 
             }
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
-                TUIChatUtils.callbackOnError(callback, errCode , "preProcessReplyMessage failed");
+                TUIChatUtils.callbackOnError(callback, errCode, "preProcessReplyMessage failed");
             }
         });
     }
 
     /**
      * 预查找回复消息，成功说明成功查找到原始消息，否则未查找到原始消息
-     * 
+     * <p>
      * Pre-find the reply message, success indicates that the original message was found successfully,
      * otherwise the original message was not found
      */
@@ -724,13 +731,13 @@ public abstract class ChatPresenter {
             if (isChatFragmentShow()) {
                 if (messageRecyclerView != null && messageRecyclerView.isDisplayJumpMessageLayout()) {
                     if (messageInfo.getStatus() != TUIMessageBean.MSG_STATUS_REVOKE) {
-                        currentChatUnreadCount ++;
+                        currentChatUnreadCount++;
                         if (mCacheNewMessage == null) {
                             mCacheNewMessage = messageInfo;
                         }
                         messageRecyclerView.displayBackToNewMessage(true, mCacheNewMessage.getId(), currentChatUnreadCount);
-                    } else if (messageInfo.getStatus() == TUIMessageBean.MSG_STATUS_REVOKE){
-                        currentChatUnreadCount --;
+                    } else if (messageInfo.getStatus() == TUIMessageBean.MSG_STATUS_REVOKE) {
+                        currentChatUnreadCount--;
                         if (currentChatUnreadCount == 0) {
                             messageRecyclerView.displayBackToNewMessage(false, "", 0);
                             mCacheNewMessage = null;
@@ -780,6 +787,15 @@ public abstract class ChatPresenter {
         });
     }
 
+    public void markCallingMsgRead(List<CallingMessageBean> messageBeanList) {
+        for (CallingMessageBean messageBean : messageBeanList) {
+            if (messageBean.isShowUnreadPoint()) {
+                messageBean.setShowUnreadPoint(false);
+                messageBean.getV2TIMMessage().setLocalCustomInt(1);
+            }
+        }
+    }
+
     public void onMessageReadReceiptUpdated(List<TUIMessageBean> messageBeanList, List<MessageReceiptInfo> data) {
         for (MessageReceiptInfo receiptInfo : data) {
             for (int i = 0; i < messageBeanList.size(); i++) {
@@ -820,31 +836,22 @@ public abstract class ChatPresenter {
         }
     }
 
-    public void sendMessage(final TUIMessageBean messageInfo, String receiver, boolean isGroup) {
+    public String sendMessage(final TUIMessageBean messageInfo, String receiver, boolean isGroup) {
         if (!TextUtils.isEmpty(receiver)) {
             if (!TextUtils.equals(getChatInfo().getId(), receiver) || isGroup != TUIChatUtils.isGroupChat(getChatInfo().getType())) {
-                return;
+                return null;
             }
         }
-        sendMessage(messageInfo, false, null);
+        return sendMessage(messageInfo, false, null);
     }
 
-    public void sendMessage(final TUIMessageBean message, boolean retry, final IUIKitCallback<TUIMessageBean> callBack) {
-        if (Thread.currentThread() != Looper.getMainLooper().getThread()) {
-            BackgroundTasks.getInstance().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    sendMessage(message, retry, callBack);
-                }
-            });
-            return;
-        }
+    public String sendMessage(final TUIMessageBean message, boolean retry, final IUIKitCallback<TUIMessageBean> callBack) {
         if (!safetyCall()) {
             TUIChatLog.w(TAG, "sendMessage unSafetyCall");
-            return;
+            return null;
         }
         if (message == null || message.getStatus() == TUIMessageBean.MSG_STATUS_SENDING) {
-            return;
+            return null;
         }
         assembleGroupMessage(message);
         notifyConversationInfo(getChatInfo());
@@ -898,6 +905,8 @@ public abstract class ChatPresenter {
         } else {
             addMessageInfo(message);
         }
+
+        return msgId;
     }
 
     private void notifyConversationInfo(ChatInfo chatInfo) {
@@ -913,7 +922,8 @@ public abstract class ChatPresenter {
         TUICore.notifyEvent(TUIConstants.TUIConversation.EVENT_KEY_MESSAGE_SEND_FOR_CONVERSATION, TUIConstants.TUIConversation.EVENT_SUB_KEY_MESSAGE_SEND_FOR_CONVERSATION, param);
     }
 
-    public void sendTypingStatusMessage(TUIMessageBean message, String receiver, IUIKitCallback<TUIMessageBean> callBack) {}
+    public void sendTypingStatusMessage(TUIMessageBean message, String receiver, IUIKitCallback<TUIMessageBean> callBack) {
+    }
 
     public boolean isSupportTyping(long time) {
         return false;
@@ -978,8 +988,8 @@ public abstract class ChatPresenter {
 
                 if (isChatFragmentShow()) {
                     if (messageRecyclerView != null && messageRecyclerView.isDisplayJumpMessageLayout()) {
-                        if (messageInfo.getStatus() == TUIMessageBean.MSG_STATUS_REVOKE){
-                            currentChatUnreadCount --;
+                        if (messageInfo.getStatus() == TUIMessageBean.MSG_STATUS_REVOKE) {
+                            currentChatUnreadCount--;
                             if (currentChatUnreadCount <= 0) {
                                 messageRecyclerView.displayBackToNewMessage(false, "", 0);
                                 mCacheNewMessage = null;
@@ -1044,10 +1054,11 @@ public abstract class ChatPresenter {
 
     /**
      * 收到消息上报已读加频率限制
-     * @param chatId 如果是 C2C 消息， chatId 是 userId, 如果是 Group 消息 chatId 是 groupId
+     *
+     * @param chatId  如果是 C2C 消息， chatId 是 userId, 如果是 Group 消息 chatId 是 groupId
      * @param isGroup 是否为 Group 消息
-     * 
-     * Receive a message and report that it has been read and add frequency limit
+     *                <p>
+     *                Receive a message and report that it has been read and add frequency limit
      */
     private void limitReadReport(final String chatId, boolean isGroup) {
         final long currentTime = System.currentTimeMillis();
@@ -1135,7 +1146,7 @@ public abstract class ChatPresenter {
             return;
         }
         List<TUIMessageBean> msgs = new ArrayList<>();
-        for(int i = 0; i < positions.size(); i++) {
+        for (int i = 0; i < positions.size(); i++) {
             msgs.add(loadedMessageInfoList.get(positions.get(i)));
         }
 
@@ -1152,7 +1163,7 @@ public abstract class ChatPresenter {
         });
     }
 
-    public boolean checkFailedMessageInfos(final List<TUIMessageBean> messageInfos){
+    public boolean checkFailedMessageInfos(final List<TUIMessageBean> messageInfos) {
         if (!safetyCall() || messageInfos == null || messageInfos.isEmpty()) {
             TUIChatLog.w(TAG, "checkFailedMessagesById unSafetyCall");
             return false;
@@ -1169,14 +1180,14 @@ public abstract class ChatPresenter {
         return failed;
     }
 
-    public List<TUIMessageBean> getSelectPositionMessage(final List<Integer> positions){
+    public List<TUIMessageBean> getSelectPositionMessage(final List<Integer> positions) {
         if (!safetyCall() || positions == null || positions.isEmpty()) {
             TUIChatLog.w(TAG, "getSelectPositionMessage unSafetyCall");
             return null;
         }
 
         List<TUIMessageBean> msgs = new ArrayList<>();
-        for(int i = 0; i < positions.size(); i++) {
+        for (int i = 0; i < positions.size(); i++) {
             if (positions.get(i) < loadedMessageInfoList.size()) {
                 msgs.add(loadedMessageInfoList.get(positions.get(i)));
             } else {
@@ -1186,7 +1197,7 @@ public abstract class ChatPresenter {
         return msgs;
     }
 
-    public List<TUIMessageBean> getSelectPositionMessageById(final List<String> msgIds){
+    public List<TUIMessageBean> getSelectPositionMessageById(final List<String> msgIds) {
         if (!safetyCall() || msgIds == null || msgIds.isEmpty()) {
             TUIChatLog.w(TAG, "getSelectPositionMessageById unSafetyCall");
             return null;
@@ -1259,7 +1270,7 @@ public abstract class ChatPresenter {
     public List<TUIMessageBean> forwardTextMessageForSelected(List<TUIMessageBean> msgInfos) {
         // 选择文字转发只能是一条消息的操作
         // Selecting text forwarding can only be a message operation
-        if (msgInfos != null && msgInfos.size() >1) {
+        if (msgInfos != null && msgInfos.size() > 1) {
             return msgInfos;
         }
 
@@ -1278,6 +1289,7 @@ public abstract class ChatPresenter {
             return msgInfos;
         }
     }
+
     public void forwardMessage(List<TUIMessageBean> msgInfos, boolean isGroup, String id, String offlineTitle, int forwardMode, boolean selfConversation, boolean onlyForTranslation, final IUIKitCallback callBack) {
         if (!safetyCall()) {
             TUIChatLog.w(TAG, "sendMessage unSafetyCall");
@@ -1285,7 +1297,7 @@ public abstract class ChatPresenter {
         }
 
         for (TUIMessageBean messageBean : msgInfos) {
-            if (messageBean instanceof  TextMessageBean) {
+            if (messageBean instanceof TextMessageBean) {
                 TUIChatLog.d(TAG, "chatprensetor forwardMessage onTextSelected selectedText = " + ((TextMessageBean) messageBean).getSelectText());
             }
         }
@@ -1305,7 +1317,7 @@ public abstract class ChatPresenter {
     public void forwardMessageOneByOne(final List<TUIMessageBean> msgInfos, final boolean isGroup,
                                        final String id, final String offlineTitle, final boolean selfConversation,
                                        final boolean onlyForTranslation, final IUIKitCallback callBack) {
-        if (msgInfos == null || msgInfos.isEmpty()){
+        if (msgInfos == null || msgInfos.isEmpty()) {
             return;
         }
 
@@ -1313,7 +1325,7 @@ public abstract class ChatPresenter {
             @Override
             public void run() {
                 int timeInterval = isGroup ? FORWARD_GROUP_INTERVAL : FORWARD_C2C_INTERVAL;
-                for(int j = 0; j < msgInfos.size(); j++){
+                for (int j = 0; j < msgInfos.size(); j++) {
                     TUIMessageBean info = msgInfos.get(j);
                     TUIMessageBean message;
                     if (onlyForTranslation) {
@@ -1342,8 +1354,8 @@ public abstract class ChatPresenter {
                     OfflineMessageBean entity = new OfflineMessageBean();
                     entity.content = message.getExtra().toString();
                     entity.sender = message.getSender();
-                    entity.nickname = TUIChatConfigs.getConfigs().getGeneralConfig().getUserNickname();
-                    entity.faceUrl = TUIChatConfigs.getConfigs().getGeneralConfig().getUserFaceUrl();
+                    entity.nickname = TUIConfig.getSelfNickName();
+                    entity.faceUrl = TUIConfig.getSelfFaceUrl();
                     containerBean.entity = entity;
 
                     if (isGroup) {
@@ -1386,7 +1398,7 @@ public abstract class ChatPresenter {
     }
 
     public void forwardMessageMerge(List<TUIMessageBean> msgInfos, boolean isGroup, String id, String offlineTitle, boolean selfConversation, final IUIKitCallback callBack) {
-        if (msgInfos == null || msgInfos.isEmpty()){
+        if (msgInfos == null || msgInfos.isEmpty()) {
             return;
         }
 
@@ -1397,7 +1409,7 @@ public abstract class ChatPresenter {
         }
         //abstractList
         List<String> abstractList = new ArrayList<>();
-        for(int j = 0; j < msgInfos.size() && j < 3; j++){
+        for (int j = 0; j < msgInfos.size() && j < 3; j++) {
             TUIMessageBean messageBean = msgInfos.get(j);
             String userid = ChatMessageParser.getDisplayName(messageBean.getV2TIMMessage());
             if (messageBean instanceof TipsMessageBean) {
@@ -1437,8 +1449,8 @@ public abstract class ChatPresenter {
         OfflineMessageBean entity = new OfflineMessageBean();
         entity.content = msgInfo.getExtra().toString();
         entity.sender = msgInfo.getSender();
-        entity.nickname = TUIChatConfigs.getConfigs().getGeneralConfig().getUserNickname();
-        entity.faceUrl = TUIChatConfigs.getConfigs().getGeneralConfig().getUserFaceUrl();
+        entity.nickname = TUIConfig.getSelfNickName();
+        entity.faceUrl = TUIConfig.getSelfFaceUrl();
         containerBean.entity = entity;
 
         if (isGroup) {
@@ -1669,7 +1681,7 @@ public abstract class ChatPresenter {
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
-                ToastUtil.toastShortMessage("modifyRootMessageRemoveReply failed code=" + errCode + " msg=" +errMsg);
+                ToastUtil.toastShortMessage("modifyRootMessageRemoveReply failed code=" + errCode + " msg=" + errMsg);
             }
         };
         ChatModifyMessageHelper.ModifyMessageTask task = new ChatModifyMessageHelper.ModifyMessageTask(rootMessage, callback) {
@@ -1714,7 +1726,7 @@ public abstract class ChatPresenter {
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
-                ToastUtil.toastShortMessage("modifyRootMessageAddReply failed code=" + errCode + " msg=" +errMsg);
+                ToastUtil.toastShortMessage("modifyRootMessageAddReply failed code=" + errCode + " msg=" + errMsg);
             }
         };
         ChatModifyMessageHelper.ModifyMessageTask task = new ChatModifyMessageHelper.ModifyMessageTask(rootMessage, callback) {
@@ -1742,7 +1754,7 @@ public abstract class ChatPresenter {
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
-                ToastUtil.toastShortMessage("reactMessage failed code=" + errCode + " msg=" +errMsg);
+                ToastUtil.toastShortMessage("reactMessage failed code=" + errCode + " msg=" + errMsg);
             }
         };
         ChatModifyMessageHelper.ModifyMessageTask task = new ChatModifyMessageHelper.ModifyMessageTask(messageBean, callback) {
@@ -1767,7 +1779,7 @@ public abstract class ChatPresenter {
             @Override
             public void onSuccess(String data) {
                 TUIChatLog.i(TAG, "translateMessage success:" + data);
-                updateAdapter(IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, messageBean);
+                updateAdapter(IMessageRecyclerView.DATA_CHANGE_LOCATE_TO_POSITION, messageBean);
             }
 
             @Override
@@ -1793,7 +1805,7 @@ public abstract class ChatPresenter {
 
             @Override
             public void onError(int errCode, String errMsg, TUIMessageBean data) {
-                ToastUtil.toastShortMessage("modify failed code=" + errCode + " msg=" +errMsg);
+                ToastUtil.toastShortMessage("modify failed code=" + errCode + " msg=" + errMsg);
             }
         });
     }
@@ -1868,8 +1880,10 @@ public abstract class ChatPresenter {
         default void onFriendNameChanged(String newName) {}
 
         default void onApplied(int size) {}
-        default void onFriendFaceUrlChanged(String faceUrl){}
-        default void onGroupFaceUrlChanged(String faceUrl){}
+
+        default void onFriendFaceUrlChanged(String faceUrl) {}
+
+        default void onGroupFaceUrlChanged(String faceUrl) {}
 
         void onExitChat(String chatId);
     }

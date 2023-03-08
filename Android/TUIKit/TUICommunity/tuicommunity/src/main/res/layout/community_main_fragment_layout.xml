@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.tencent.qcloud.tuikit.tuicommunity.ui.view.CommunityGroupList
+            <com.tencent.qcloud.tuikit.tuicommunity.ui.widget.CommunityGroupList
                 android:id="@+id/community_group_list"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"

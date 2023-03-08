@@ -1,74 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical">
-
-    <com.tencent.qcloud.tuicore.component.TitleBarLayout
-        android:id="@+id/group_create_title_bar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/page_title_height" />
-
-    <com.tencent.qcloud.tuicore.component.LineControllerView
-        android:id="@+id/group_type_join"
-        android:layout_width="match_parent"
-        android:layout_height="46.08dp"
-        android:layout_marginTop="1dp"
-        android:visibility="gone"
-        app:name="@string/group_join_type" />
-
-    <com.tencent.qcloud.tuikit.tuicontact.minimalistui.widget.ContactListView
-        android:layout_weight="1"
-        android:id="@+id/group_create_member_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+    android:background="#99000000"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    android:paddingTop="40dp">
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingBottom="8dp"
-        android:gravity="center_vertical"
-        android:layout_height="@dimen/contact_list_item_height">
+        android:layout_height="match_parent"
+        android:background="@drawable/contact_bottom_sheet_dialog_border"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingTop="22dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="12dp">
+
+            <TextView
+                android:id="@+id/cancel_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.33"
+                android:text="@string/cancel"
+                android:textColor="#0365F9"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.33"
+                android:gravity="center_horizontal"
+                android:text="@string/create_group_chat"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/next_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.33"
+                android:gravity="end"
+                android:text="@string/contact_next_step"
+                android:textColor="#0365F9"
+                android:textSize="16sp" />
+
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/selected_list"
-            android:layout_weight="1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="@dimen/contact_list_item_height"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="8dp" />
+
+        <com.tencent.qcloud.tuikit.tuicontact.minimalistui.widget.ContactListView
+            android:id="@+id/group_create_member_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
         <TextView
-            android:id="@+id/confirm_button"
-            android:background="@drawable/contact_confirm_button_bg"
-            android:textSize="14sp"
-            android:text="@string/core_next_step"
-            android:layout_marginLeft="12dp"
-            android:layout_gravity="center_vertical"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp"
-            android:paddingTop="4dp"
-            android:paddingBottom="4dp"
-            android:textColor="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"/>
+            android:id="@+id/limit_tips"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="#F6F6F6"
+            android:gravity="center"
+            android:paddingTop="12dp"
+            android:paddingBottom="36dp"
+            android:textColor="#999999"
+            android:textSize="12sp"
+            android:visibility="gone"
+            tools:text="123"
+            tools:visibility="visible" />
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/limit_tips"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center"
-        android:paddingBottom="36dp"
-        android:paddingTop="12dp"
-        android:background="#F6F6F6"
-        android:textColor="#999999"
-        android:textSize="12sp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:visibility="visible"
-        tools:text="123"
-        android:visibility="gone"/>
-</LinearLayout>
+</FrameLayout>

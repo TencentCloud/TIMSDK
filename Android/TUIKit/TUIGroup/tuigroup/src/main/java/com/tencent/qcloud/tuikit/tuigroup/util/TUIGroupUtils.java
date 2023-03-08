@@ -1,18 +1,24 @@
 package com.tencent.qcloud.tuikit.tuigroup.util;
 
+import android.os.Bundle;
 import android.text.TextUtils;
 
+import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMGroupInfo;
 import com.tencent.imsdk.v2.V2TIMGroupInfoResult;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
+import com.tencent.qcloud.tuicore.TUIConstants;
+import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuigroup.R;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupService;
+import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -94,5 +100,17 @@ public class TUIGroupUtils {
         if (toastString != null) {
             ToastUtil.toastLongMessage(toastString);
         }
+    }
+
+    public static void startGroupChatActivity(GroupInfo groupInfo) {
+        if (groupInfo == null || TextUtils.isEmpty(groupInfo.getId())) {
+            return;
+        }
+        Bundle param = new Bundle();
+        param.putInt(TUIConstants.TUIChat.CHAT_TYPE, V2TIMConversation.V2TIM_GROUP);
+        param.putString(TUIConstants.TUIChat.CHAT_ID, groupInfo.getId());
+        param.putString(TUIConstants.TUIChat.CHAT_NAME, groupInfo.getGroupName());
+        param.putString(TUIConstants.TUIChat.FACE_URL, groupInfo.getFaceUrl());
+        TUICore.startActivity("TUIGroupChatMinimalistActivity", param);
     }
 }

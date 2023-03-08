@@ -32,6 +32,15 @@ public final class TUIConstants {
         public static final String TUI_BEAUTY = "TUIBeauty";
         public static final String TUI_OFFLINEPUSH = "TUIOfflinePushService";
         public static final String TUI_COMMUNITY = "TUICommunityService";
+        public static final String TUI_POLL = "TUIPollService";
+        public static final String TUI_GROUP_NOTE = "TUIGroupNoteService";
+        public static final String TUI_DEMO = "TIMAppService";
+    }
+
+    public static final class TUICore {
+        public static final String LANGUAGE_EVENT = "TUIThemeManager";
+        public static final String LANGUAGE_EVENT_SUB_KEY = "onInitLanguage";
+
     }
 
     public static final class TUILogin {
@@ -80,12 +89,14 @@ public final class TUIConstants {
         public static final String METHOD_ADD_MESSAGE_TO_CHAT = "addMessageToChat";
         // 处理完群申请 // Process the group application
         public static final String METHOD_GROUP_APPLICAITON_PROCESSED = "groupApplicationProcessed";
+        // Set chat extension
+        public static final String METHOD_SET_CHAT_EXTENSION = "setChatExtension";
 
         // More actions
-        public static final String EXTENSION_INPUT_MORE_CUSTOM_MESSAGE = "inputMoreCustomMessage";
-        public static final String EXTENSION_INPUT_MORE_LIVE = "inputMoreLive";
         public static final String EXTENSION_INPUT_MORE_VIDEO_CALL = "inputMoreVideoCall";
         public static final String EXTENSION_INPUT_MORE_AUDIO_CALL = "inputMoreAudioCall";
+        public static final String EXTENSION_INPUT_MORE_GROUP_NOTE = "inputMoreGroupNote";
+        public static final String EXTENSION_INPUT_MORE_POLL = "inputMoreGroupPoll";
 
         public static final String EVENT_KEY_RECEIVE_MESSAGE = "eventReceiveMessage";
         public static final String EVENT_SUB_KEY_CONVERSATION_ID = "eventConversationID";
@@ -95,6 +106,7 @@ public final class TUIConstants {
 
         public static final String EVENT_KEY_MESSAGE_EVENT = "eventKeyMessageEvent";
         public static final String EVENT_SUB_KEY_SEND_MESSAGE_SUCCESS = "eventSubKeySendMessageSuccess";
+        public static final String EVENT_SUB_KEY_SEND_MESSAGE_FAILED = "eventSubKeySendMessageFailed";
         public static final String EVENT_SUB_KEY_REPLY_MESSAGE_SUCCESS = "eventSubKeyReplyMessageSuccess";
 
         public static final String C2C_CHAT_ACTIVITY_NAME = "TUIC2CChatActivity";
@@ -123,6 +135,9 @@ public final class TUIConstants {
         public static final String GROUP_APPLY_NUM = "groupApplicaitonNumber";
         public static final String CONVERSATION_ID = "conversationID";
         public static final String IS_TYPING_MESSAGE = "isTypingMessage";
+        public static final String CALL_BACK = "callback";
+        public static final String PLUGIN_ITEM_VIEW = "pluginItemView";
+        public static final String PLUGIN_BEAN_OBJECT = "pluginBeanObject";
 
         // Send custom message fields
         public static final String MESSAGE_CONTENT = "messageContent";
@@ -144,6 +159,11 @@ public final class TUIConstants {
         public static final int CHAT_REQUEST_BACKGROUND_CODE = 1001;
         public static final String METHOD_UPDATE_DATA_STORE_CHAT_URI = "updateDatastoreChatUri";
         public static final String CHAT_BACKGROUND_URI = "chatBackgroundUri";
+
+        // Chat plugin
+        public static final String ENABLE_VIDEO_CALL = "enableVideoCall";
+        public static final String ENABLE_AUDIO_CALL = "enableAudioCall";
+        public static final String ENABLE_LINK = "enableLink";
     }
 
     public static final class TUIConversation {
@@ -383,6 +403,87 @@ public final class TUIConstants {
         public static final String EVENT_SUB_KEY_DELETE_TOPIC = "eventSubKeyDeleteTopic";
     }
 
+    public static final class TUIPlugin {
+        public static final String PLUGIN_BUSINESS_ID = "businessID";
+        public static final String PLUGIN_TITLE = "title";
+        public static final String PLUGIN_DESCRIPTION = "description";
+        public static final String PLUGIN_CONTENT = "content";
+        public static final String PLUGIN_EXTENSION_CONFIG = "config";
+        public static final String PLUGIN_ORIGINAL_MESSAGE_ID = "original_msg_id";
+        public static final String PLUGIN_ORIGINAL_MESSAGE_SEQUENCE = "original_msg_seq";
+
+        public static final String BUSINESS_ID_PLUGIN_GROUP_NOTE = "group_note";
+        public static final String BUSINESS_ID_PLUGIN_GROUP_NOTE_TIPS = "group_note_tips";
+        public static final String BUSINESS_ID_PLUGIN_POLL = "group_poll";
+
+        public static final String KEY_EXTENSIONS = "key_extensions";
+    }
+
+    public static final class TUIPoll {
+        public static final String SERVICE_NAME = Service.TUI_POLL;
+        public static final int ACTION_ID_POLL = 3;
+
+        public static final String POLL_CREATOR_ACTIVITY_NAME = "TUIPollCreatorActivity";
+        public static final String PLUGIN_POLL_OPTION_LIST = "option_list";
+        public static final String PLUGIN_POLL_OPTION_INDEX = "index";
+        public static final String PLUGIN_POLL_OPTION_CONTENT = "option";
+        public static final String PLUGIN_POLL_ENABLE_PUBLIC = "public";
+        public static final String PLUGIN_POLL_ENABLE_MULTI_VOTE = "allow_multi_vote";
+        public static final String PLUGIN_POLL_ANONYMOUS = "anonymous";
+        public static final String METHOD_GET_POLL_MESSAGE_LAYOUT = "getPollMessageLayout";
+        public static final String EVENT_KEY_POLL_MESSAGE_LAYOUT = "eventKeyPollMessageLayout";
+        public static final String EVENT_SUB_KEY_REFRESH_POLL_MESSAGE_LAYOUT = "eventKeyRefreshPollMessageLayout";
+
+        public static final String EVENT_KEY_POLL_EVENT = "eventKeyPollEvent";
+        public static final String EVENT_SUB_KEY_POLL_VOTE_CHANGED = "eventSubKeyVoteChanged";
+    }
+
+    public static final class TUIGroupNote {
+        public static final String SERVICE_NAME = Service.TUI_GROUP_NOTE;
+
+        public static final int ACTION_ID_GROUP_NOTE = 4;
+
+        public static final String GROUP_NOTE_CREATOR_ACTIVITY_NAME = "TUIGroupNoteCreatorActivity";
+
+        public static final String PLUGIN_GROUP_NOTE_CREATOR = "creator";
+        public static final String PLUGIN_GROUP_NOTE_FORMAT = "format";
+        public static final String PLUGIN_GROUP_NOTE_ENABLE_MULTIPLE_SUBMISSION = "multi_submit";
+        public static final String PLUGIN_GROUP_NOTE_DEADLINE = "deadline";
+        public static final String PLUGIN_GROUP_NOTE_ENABLE_NOTIFICATION = "notify";
+
+        public static final String METHOD_GET_GROUP_NOTE_MESSAGE_LAYOUT = "getGroupNoteMessageLayout";
+        public static final String METHOD_GET_GROUP_NOTE_TIPS_MESSAGE_LAYOUT = "getGroupNoteTipsMessageLayout";
+
+        public static final String EVENT_KEY_GROUP_NOTE_MESSAGE_LAYOUT = "eventKeyGroupNoteMessageLayout";
+        public static final String EVENT_SUB_KEY_REFRESH_GROUP_NOTE_MESSAGE_LAYOUT = "eventKeyRefreshGroupNoteMessageLayout";
+        public static final String EVENT_SUB_KEY_REFRESH_GROUP_NOTE_TIPS_MESSAGE_LAYOUT = "eventKeyRefreshGroupNoteTipsMessageLayout";
+
+        public static final String EVENT_KEY_GROUP_NOTE_EVENT = "eventKeyGroupNoteEvent";
+        public static final String EVENT_SUB_KEY_GROUP_NOTE_CHANGED = "eventSubKeyGroupNoteChanged";
+        public static final String EVENT_SUB_KEY_MESSAGE_MODIFIED_DUE_TO_EXTENSION_CHANGES = "eventSubKeyMessageModifiedDueToExtensionChanges";
+    }
+
+    public static final class TIMAppKit {
+        public static final String SERVICE_NAME = Service.TUI_DEMO;
+
+        public static final String METHOD_INIT_IM_BEFORE_LOGIN = "initIMBeforeLogin";
+        public static final String METHOD_ENTER_IM_FROM_RTCUBE = "enterIMFromRTCube";
+        public static final String SDK_APP_ID = "sdkAppId";
+        public static final String IM_DEMO_ITEM_TYPE_KEY = "imDemoItemTypeKey";
+        public static final String IM_DEMO_ITEM_TYPE_CHAT = "imDemoItemTypeChat";
+        public static final String IM_DEMO_ITEM_TYPE_COMMUNITY = "imDemoItemTypeCommunity";
+        public static final String IM_DEMO_ITEM_TYPE_CONTACT = "imDemoItemTypeContact";
+        public static final String IM_DEMO_ITEM_TYPE_PROFILE = "imDemoItemTypeProfile";
+        public static final String BACK_TO_RTCUBE_DEMO_TYPE_KEY = "backToRTCubeDemoTypeKey";
+        public static final String BACK_TO_RTCUBE_DEMO_TYPE_IM = "backToRTCubeDemoTypeIM";
+        public static final String NOTIFY_RTCUBE_EVENT_KEY = "notifyRTCubeEventKey";
+        public static final String NOTIFY_RTCUBE_LOGIN_SUB_KEY = "notifyRTCubeLoginSubKey";
+        public static final String NOFITY_IMLOGIN_SUCCESS_SUB_KEY = "nofityIMLoginSuccessSubKey";
+
+        public static final int BACK_RTCUBE_HOME_ICON_WIDTH = 40;
+        public static final int BACK_RTCUBE_HOME_ICON_HEIGHT = 32;
+    }
+
     public static final class Message {
         public static final String CUSTOM_BUSINESS_ID_KEY = "businessID";
         public static final String CALLING_TYPE_KEY = "call_type";
@@ -409,6 +510,11 @@ public final class TUIConstants {
         public static final String BUYING_FEATURE_COMMUNITY = "buying_community";
         public static final String BUYING_FEATURE_SEARCH = "buying_search";
         public static final String BUYING_FEATURE_ONLINE_STATUS = "buying_online_status";
+    }
+
+    public static final class TUIVideoSeat {
+        public static final String SERVICE_VIDEO_SEAT = "com.tencent.cloud.tuikit.videoseat.core.TUIVideoSeatExtension";
+        public static final String METHOD_SWITCH_VIDEO_LAYOUT = "switchVideoLayout";
     }
 
     // localBroadcast

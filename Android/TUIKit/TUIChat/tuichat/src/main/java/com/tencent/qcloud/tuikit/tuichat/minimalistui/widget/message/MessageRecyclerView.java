@@ -340,8 +340,9 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
             multiSelectAction.setActionIcon(R.drawable.chat_minimalist_pop_menu_multi_select);
             multiSelectAction.setActionClickListener(() -> mOnPopActionClickListener.onMultiSelectMessageClick(msg));
 
-            if (TUIChatConfigs.getConfigs().getGeneralConfig().isEnableTextTranslation() &&
-                    msg.getTranslationStatus() != TUIMessageBean.MSG_TRANSLATE_STATUS_SHOWN) {
+            if ((msg instanceof TextMessageBean || msg instanceof QuoteMessageBean)
+                    && TUIChatConfigs.getConfigs().getGeneralConfig().isEnableTextTranslation()
+                    && msg.getTranslationStatus() != TUIMessageBean.MSG_TRANSLATE_STATUS_SHOWN) {
                 translateAction = new ChatPopActivity.ChatPopMenuAction();
                 translateAction.setActionName(getContext().getString(R.string.translate_action));
                 translateAction.setActionIcon(R.drawable.chat_minimalist_pop_menu_translation);

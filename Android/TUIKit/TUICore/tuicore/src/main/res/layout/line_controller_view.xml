@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent" >
 
     <View
         android:id="@+id/top_line"
         android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line" />
+
+    <View
+        android:id="@+id/bottom_line"
+        android:layout_width="match_parent"
         android:layout_height="1px"
+        android:layout_alignParentBottom="true"
         android:background="@color/line" />
 
     <RelativeLayout
+        android:id="@+id/view_container"
+        android:layout_below="@id/top_line"
+        android:layout_above="@id/bottom_line"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white">
@@ -84,10 +93,4 @@
             android:visibility="gone"
             android:background="@color/core_line_controller_white_translucent_color"/>
     </RelativeLayout>
-
-    <View
-        android:id="@+id/bottom_line"
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/line" />
-</LinearLayout>
+</RelativeLayout>

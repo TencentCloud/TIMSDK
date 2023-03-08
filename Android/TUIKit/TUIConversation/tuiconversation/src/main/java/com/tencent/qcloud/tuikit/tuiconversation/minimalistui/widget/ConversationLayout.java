@@ -18,9 +18,9 @@ import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.interfaces.IConversationListAdapter;
 import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.interfaces.IConversationLayout;
-import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.page.ConversationMinimalistFragment;
+import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.page.TUIConversationMinimalistFragment;
 import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.setting.ConversationLayoutSetting;
-import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.widget.swipe.Attributes;
+import com.tencent.qcloud.tuicore.component.swipe.Attributes;
 import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationPresenter;
 
 import java.util.ArrayList;
@@ -33,9 +33,10 @@ public class ConversationLayout extends RelativeLayout implements IConversationL
     private ConversationListLayout mConversationList;
     private ViewGroup searchLayout;
     private ConversationPresenter presenter;
-    private ImageView conversationEditView, createChatView;
+    private TextView conversationEditView;
+    private ImageView createChatView;
     private TextView conversationEditDoneView;
-    private ConversationMinimalistFragment.OnClickListener mClickListener = null;
+    private TUIConversationMinimalistFragment.OnClickListener mClickListener = null;
     private boolean isMultiSelected = false;
     private List<ConversationInfo> mSelectConversations = new ArrayList<>();
 
@@ -82,7 +83,7 @@ public class ConversationLayout extends RelativeLayout implements IConversationL
                 conversationEditDoneView.setVisibility(VISIBLE);
                 createChatView.setVisibility(GONE);
 
-                conversationMutiSelectStart();
+                conversationMultiSelectStart();
             }
         });
         createChatView.setOnClickListener(new OnClickListener() {
@@ -103,7 +104,7 @@ public class ConversationLayout extends RelativeLayout implements IConversationL
                 conversationEditDoneView.setVisibility(GONE);
                 createChatView.setVisibility(VISIBLE);
 
-                conversationMutiSelectEnd();
+                conversationMultiSelectEnd();
             }
         });
     }
@@ -112,21 +113,21 @@ public class ConversationLayout extends RelativeLayout implements IConversationL
         return createChatView;
     }
 
-    public void resetTitileBar() {
+    public void resetTitleBar() {
         conversationEditView.setVisibility(VISIBLE);
         conversationEditDoneView.setVisibility(GONE);
         createChatView.setVisibility(VISIBLE);
-        conversationMutiSelectEnd();
+        conversationMultiSelectEnd();
     }
 
-    public void setOnClickListener(ConversationMinimalistFragment.OnClickListener listener) {
+    public void setOnClickListener(TUIConversationMinimalistFragment.OnClickListener listener) {
         mClickListener = listener;
     }
     public boolean isMultiSelected() {
         return isMultiSelected;
     }
 
-    private void conversationMutiSelectStart() {
+    private void conversationMultiSelectStart() {
         ConversationListAdapter adapter = mConversationList.getAdapter();
         if (adapter != null) {
             adapter.setShowMultiSelectCheckBox(true);
@@ -138,7 +139,7 @@ public class ConversationLayout extends RelativeLayout implements IConversationL
         mSelectConversations.clear();
     }
 
-    private void conversationMutiSelectEnd() {
+    private void conversationMultiSelectEnd() {
         ConversationListAdapter adapter = mConversationList.getAdapter();
         if (adapter != null) {
             adapter.setShowMultiSelectCheckBox(false);

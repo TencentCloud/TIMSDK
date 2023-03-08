@@ -89,9 +89,6 @@ public class TUICallingStatusManager {
     }
 
     public void updateMicMuteStatus(boolean isMicMute) {
-        if (mIsMicMute == isMicMute) {
-            return;
-        }
         mIsMicMute = isMicMute;
 
         HashMap<String, Object> map = new HashMap<>();

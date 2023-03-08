@@ -59,11 +59,19 @@ public class TUIGroupService extends ServiceInitializer implements ITUIGroupServ
                 if (userIds.contains(TUILogin.getLoginUser())) {
                     TUIGroupUtils.toastGroupEvent(TUIGroupUtils.GROUP_EVENT_TIP_JOINED, groupID);
                 }
+                List<GroupEventListener> groupEventListeners = getGroupEventListenerList();
+                for (GroupEventListener groupEventListener : groupEventListeners) {
+                    groupEventListener.onGroupMemberCountChanged(groupID);
+                }
             }
 
             @Override
             public void onMemberLeave(String groupID, V2TIMGroupMemberInfo member) {
                 super.onMemberLeave(groupID, member);
+                List<GroupEventListener> groupEventListeners = getGroupEventListenerList();
+                for (GroupEventListener groupEventListener : groupEventListeners) {
+                    groupEventListener.onGroupMemberCountChanged(groupID);
+                }
             }
 
             @Override
@@ -79,6 +87,10 @@ public class TUIGroupService extends ServiceInitializer implements ITUIGroupServ
                 if (userIds.contains(TUILogin.getLoginUser())) {
                     TUIGroupUtils.toastGroupEvent(TUIGroupUtils.GROUP_EVENT_TIP_INVITED, groupID);
                 }
+                List<GroupEventListener> groupEventListeners = getGroupEventListenerList();
+                for (GroupEventListener groupEventListener : groupEventListeners) {
+                    groupEventListener.onGroupMemberCountChanged(groupID);
+                }
             }
 
             @Override
@@ -93,6 +105,10 @@ public class TUIGroupService extends ServiceInitializer implements ITUIGroupServ
                 TUICore.notifyEvent(TUIConstants.TUIGroup.EVENT_GROUP, TUIConstants.TUIGroup.EVENT_SUB_KEY_MEMBER_KICKED_GROUP, param);
                 if (userIds.contains(TUILogin.getLoginUser())) {
                     TUIGroupUtils.toastGroupEvent(TUIGroupUtils.GROUP_EVENT_TIP_KICKED, groupID);
+                }
+                List<GroupEventListener> groupEventListeners = getGroupEventListenerList();
+                for (GroupEventListener groupEventListener : groupEventListeners) {
+                    groupEventListener.onGroupMemberCountChanged(groupID);
                 }
             }
 

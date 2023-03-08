@@ -20,6 +20,9 @@ public class TUIChatConstants {
     public static final String BUSINESS_ID_CUSTOM_ORDER = "order";
     public static final String BUSINESS_ID_CUSTOM_TYPING = "user_typing_status";
 
+    public static final int PLUGIN_NORMAL_MESSAGE = 1;
+    public static final int PLUGIN_TIPS_MESSAGE   = 2;
+
     public static final String FORWARD_SELECT_CONVERSATION_KEY = "forward_select_conversation_key";
     public static final int FORWARD_SELECT_ACTIVTY_CODE = 101;
     public static final String FORWARD_MERGE_MESSAGE_KEY = "forward_merge_message_key";
@@ -96,6 +99,7 @@ public class TUIChatConstants {
     public static class Selection {
         public static final String SELECT_ALL = "select_all";
         public static final String LIMIT = "limit";
+        public static final String TITLE = "title";
 
         public static final String USER_ID_SELECT = "user_id_select";
         public static final String USER_NAMECARD_SELECT = "user_namecard_select";

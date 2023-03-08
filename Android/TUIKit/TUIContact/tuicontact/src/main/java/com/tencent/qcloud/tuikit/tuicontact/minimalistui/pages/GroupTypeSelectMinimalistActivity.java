@@ -7,19 +7,13 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
-import com.tencent.qcloud.tuicore.component.TitleBarLayout;
-import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
-import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
-import com.tencent.qcloud.tuicore.util.TUIUtil;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
 
@@ -27,20 +21,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class GroupTypeSelectMinimalistActivity extends BaseLightActivity implements View.OnClickListener {
+public class GroupTypeSelectMinimalistActivity extends AppCompatActivity {
     private static final String TAG = GroupTypeSelectMinimalistActivity.class.getSimpleName();
 
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView.Adapter mAdapter;
+    private TextView cancelButton;
+    private TextView confirmButton;
     private List<String> mDatas = new ArrayList<>();
-    private TitleBarLayout titleBarLayout;
     private TextView groupTypeTextView;
+    private String groupType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.group_type_select_layout);
+        setContentView(R.layout.contact_minimalist_group_type_select_layout);
 
         initData();
         initView();
@@ -49,13 +45,24 @@ public class GroupTypeSelectMinimalistActivity extends BaseLightActivity impleme
     private void initView() {
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mAdapter = new MyAdapter(mDatas);
+        cancelButton = findViewById(R.id.cancel_button);
+        confirmButton = findViewById(R.id.confirm_button);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
-        titleBarLayout = findViewById(R.id.create_group_bar);
-        titleBarLayout.getRightIcon().setVisibility(View.GONE);
-        titleBarLayout.setTitle(getString(R.string.group_type_select_text), ITitleBarLayout.Position.MIDDLE);
-        titleBarLayout.setOnLeftClickListener(this);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setResult();
+            }
+        });
+
         groupTypeTextView = findViewById(R.id.group_type_text);
         groupTypeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,15 +86,20 @@ public class GroupTypeSelectMinimalistActivity extends BaseLightActivity impleme
     private void initData() {
         String[] array = getResources().getStringArray(R.array.group_type);
         mDatas.addAll(Arrays.asList(array));
-    }
-
-    @Override
-    public void onClick(View view) {
-        if (view == titleBarLayout.getLeftGroup()) {
-            finish();
+        groupType = mDatas.get(0);
+        Intent intent = getIntent();
+        String groupTypeTemp = intent.getStringExtra(TUIContactConstants.Selection.GROUP_TYPE);
+        if (!TextUtils.isEmpty(groupTypeTemp)) {
+            groupType = groupTypeTemp;
         }
     }
 
+    private void setResult() {
+        Intent intent = new Intent();
+        intent.putExtra(TUIContactConstants.Selection.TYPE, groupType);
+        setResult(0, intent);
+        finish();
+    }
 
     public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
         private List<String> mDatas;
@@ -98,7 +110,7 @@ public class GroupTypeSelectMinimalistActivity extends BaseLightActivity impleme
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.group_type_item, parent, false);
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_minimalist_group_type_item, parent, false);
             ViewHolder viewHolder = new ViewHolder(v);
             return viewHolder;
         }
@@ -106,37 +118,38 @@ public class GroupTypeSelectMinimalistActivity extends BaseLightActivity impleme
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             String type = this.mDatas.get(position);
-            holder.imageView.setImageResource(TUIUtil.getDefaultGroupIconResIDByGroupType(getApplicationContext(), type));
             switch(type) {
-                case V2TIMManager.GROUP_TYPE_WORK:
+                case TUIContactConstants.GroupType.TYPE_WORK:
                     holder.textView.setText(getString(R.string.group_work_type));
                     holder.subTextView.setText(getString(R.string.group_work_content));
                     break;
-                case V2TIMManager.GROUP_TYPE_PUBLIC:
+                case TUIContactConstants.GroupType.TYPE_PUBLIC:
                     holder.textView.setText(getString(R.string.group_public_type));
                     holder.subTextView.setText(getString(R.string.group_public_des));
                     break;
-                case V2TIMManager.GROUP_TYPE_MEETING:
+                case TUIContactConstants.GroupType.TYPE_MEETING:
                     holder.textView.setText(getString(R.string.group_meeting_type));
                     holder.subTextView.setText(getString(R.string.group_meeting_des));
                     break;
-                case V2TIMManager.GROUP_TYPE_COMMUNITY:
+                case TUIContactConstants.GroupType.TYPE_COMMUNITY:
                     holder.textView.setText(getString(R.string.group_commnity_type));
                     holder.subTextView.setText(getString(R.string.group_commnity_des));
                     break;
                 default:
-                    holder.textView.setText(getString(R.string.group_work_type));
-                    holder.subTextView.setText(getString(R.string.group_work_content));
                     break;
+            }
+
+            if (TextUtils.equals(groupType, type)) {
+                holder.showSelected();
+            } else {
+                holder.hideSelected();
             }
 
             holder.rootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent();
-                    intent.putExtra(TUIContactConstants.Selection.TYPE, type);
-                    setResult(0, intent);
-                    finish();
+                    groupType = type;
+                    notifyDataSetChanged();
                 }
             });
         }
@@ -148,20 +161,30 @@ public class GroupTypeSelectMinimalistActivity extends BaseLightActivity impleme
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             View rootView;
-            RelativeLayout itemLayout;
-            ImageView imageView;
             TextView textView, subTextView;
-
+            View selectedBorder, notSelectedBorder, selectedIcon;
             public ViewHolder(View itemView) {
                 super(itemView);
                 rootView = itemView;
-                itemLayout = (RelativeLayout) itemView.findViewById(R.id.item_layout);
-                imageView = (ImageView) itemView.findViewById(R.id.group_type_icon);
-                textView = (TextView) itemView.findViewById(R.id.group_type_text);
-                subTextView = (TextView) itemView.findViewById(R.id.group_type_content);
+                selectedIcon = itemView.findViewById(R.id.checked_icon);
+                selectedBorder = itemView.findViewById(R.id.selected_border);
+                notSelectedBorder = itemView.findViewById(R.id.not_selected_border);
+                textView = itemView.findViewById(R.id.group_type_text);
+                subTextView = itemView.findViewById(R.id.group_type_content);
+            }
+
+            public void showSelected() {
+                selectedBorder.setVisibility(View.VISIBLE);
+                notSelectedBorder.setVisibility(View.GONE);
+                selectedIcon.setVisibility(View.VISIBLE);
+            }
+
+            public void hideSelected() {
+                selectedBorder.setVisibility(View.GONE);
+                notSelectedBorder.setVisibility(View.VISIBLE);
+                selectedIcon.setVisibility(View.GONE);
             }
         }
     }
-
 
 }

@@ -40,7 +40,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.camera.CameraActivity;
-import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.camera.view.JCameraView;
+import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.camera.view.CameraView;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.interfaces.OnItemClickListener;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.ChatView;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.input.InputView;
@@ -431,7 +431,7 @@ public class TUIBaseChatMinimalistFragment extends BaseFragment {
             @Override
             public void onGranted() {
                 Intent captureIntent = new Intent(getContext(), CameraActivity.class);
-                captureIntent.putExtra(TUIChatConstants.CAMERA_TYPE, JCameraView.BUTTON_STATE_ONLY_CAPTURE);
+                captureIntent.putExtra(TUIChatConstants.CAMERA_TYPE, CameraView.BUTTON_STATE_ONLY_CAPTURE);
                 CameraActivity.mCallBack = new IUIKitCallback() {
                     @Override
                     public void onSuccess(Object data) {

@@ -57,7 +57,7 @@ import com.tencent.qcloud.tuikit.tuichat.component.face.CustomFace;
 import com.tencent.qcloud.tuikit.tuichat.component.face.Emoji;
 import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.camera.CameraActivity;
-import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.camera.view.JCameraView;
+import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.camera.view.CameraView;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.interfaces.IChatLayout;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.input.face.FaceFragment;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.input.inputmore.InputMoreDialogFragment;
@@ -656,7 +656,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             @Override
             public void onGranted() {
                 Intent captureIntent = new Intent(getContext(), CameraActivity.class);
-                captureIntent.putExtra(TUIChatConstants.CAMERA_TYPE, JCameraView.BUTTON_STATE_ONLY_CAPTURE);
+                captureIntent.putExtra(TUIChatConstants.CAMERA_TYPE, CameraView.BUTTON_STATE_ONLY_CAPTURE);
                 CameraActivity.mCallBack = new IUIKitCallback() {
                     @Override
                     public void onSuccess(Object data) {
@@ -694,7 +694,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                     @Override
                     public void onGranted() {
                         Intent captureIntent = new Intent(getContext(), CameraActivity.class);
-                        captureIntent.putExtra(TUIChatConstants.CAMERA_TYPE, JCameraView.BUTTON_STATE_ONLY_RECORDER);
+                        captureIntent.putExtra(TUIChatConstants.CAMERA_TYPE, CameraView.BUTTON_STATE_ONLY_RECORDER);
                         CameraActivity.mCallBack = new IUIKitCallback() {
                             @Override
                             public void onSuccess(Object data) {
@@ -1501,106 +1501,6 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                 return o1.getPriority() - o2.getPriority();
             }
         });
-    }
-
-    private void addActionsFromListeners() {
-        if (mChatInfo == null) {
-            return;
-        }
-
-        HashMap<String, Object> param = new HashMap<>();
-        param.put(TUIConstants.TUIChat.CHAT_ID, mChatInfo.getId());
-        param.put(TUIConstants.TUIChat.CHAT_NAME, mChatInfo.getChatName());
-        param.put(TUIConstants.TUIChat.CHAT_TYPE, mChatInfo.getType());
-        param.put(TUIConstants.TUIChat.CONTEXT, getContext());
-        Map<String, Object> customMessageExtension = TUICore.getExtensionInfo(TUIConstants.TUIChat.EXTENSION_INPUT_MORE_CUSTOM_MESSAGE, param);
-        if (customMessageExtension != null) {
-            Integer icon = (Integer) customMessageExtension.get(TUIConstants.TUIChat.INPUT_MORE_ICON);
-            Integer title = (Integer) customMessageExtension.get(TUIConstants.TUIChat.INPUT_MORE_TITLE);
-            Integer id = (Integer) customMessageExtension.get(TUIConstants.TUIChat.INPUT_MORE_ACTION_ID);
-            InputMoreActionUnit unit = new InputMoreActionUnit();
-            unit.setActionId(id);
-            unit.setIconResId(icon);
-            unit.setTitleId(title);
-            unit.setPriority(10);
-            unit.setOnClickListener(unit.new OnActionClickListener() {
-                @Override
-                public void onClick() {
-                    onCustomActionClick(unit.getActionId());
-                }
-            });
-            mInputMoreActionList.add(unit);
-        }
-
-        // topic not support call yet.
-        if (TUIChatUtils.isTopicGroup(mChatInfo.getId())) {
-            return;
-        }
-
-        Map<String, Object> audioCallExtension = TUICore.getExtensionInfo(TUIConstants.TUIChat.EXTENSION_INPUT_MORE_AUDIO_CALL, param);
-        if (audioCallExtension != null) {
-            View audioView = (View) audioCallExtension.get(TUIConstants.TUIChat.INPUT_MORE_VIEW);
-            int audioActionId = (Integer) audioCallExtension.get(TUIConstants.TUIChat.INPUT_MORE_ACTION_ID);
-            InputMoreActionUnit audioUnit = new InputMoreActionUnit();
-            audioUnit.setActionId(audioActionId);
-            audioUnit.setUnitView(audioView);
-            audioUnit.setPriority(2);
-            audioUnit.setOnClickListener(audioUnit.new OnActionClickListener() {
-                @Override
-                public void onClick() {
-                    PermissionHelper.requestPermission(PermissionHelper.PERMISSION_MICROPHONE, new PermissionHelper.PermissionCallback() {
-                        @Override
-                        public void onGranted() {
-                            onCustomActionClick(audioUnit.getActionId());
-                        }
-
-                        @Override
-                        public void onDenied() {
-
-                        }
-                    });
-                }
-            });
-            mInputMoreActionList.add(audioUnit);
-        }
-
-        Map<String, Object> videoCallExtension = TUICore.getExtensionInfo(TUIConstants.TUIChat.EXTENSION_INPUT_MORE_VIDEO_CALL, param);
-        if (videoCallExtension != null) {
-            View videoView = (View) videoCallExtension.get(TUIConstants.TUIChat.INPUT_MORE_VIEW);
-            int videoActionId = (Integer) videoCallExtension.get(TUIConstants.TUIChat.INPUT_MORE_ACTION_ID);
-            InputMoreActionUnit videoUnit = new InputMoreActionUnit();
-            videoUnit.setActionId(videoActionId);
-            videoUnit.setUnitView(videoView);
-            videoUnit.setPriority(1);
-            videoUnit.setOnClickListener(videoUnit.new OnActionClickListener() {
-                @Override
-                public void onClick() {
-                    PermissionHelper.requestPermission(PermissionHelper.PERMISSION_MICROPHONE, new PermissionHelper.PermissionCallback() {
-                        @Override
-                        public void onGranted() {
-                            PermissionHelper.requestPermission(PermissionHelper.PERMISSION_CAMERA, new PermissionHelper.PermissionCallback() {
-                                @Override
-                                public void onGranted() {
-                                    onCustomActionClick(videoUnit.getActionId());
-                                }
-
-                                @Override
-                                public void onDenied() {
-
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onDenied() {
-
-                        }
-                    });
-                }
-            });
-            mInputMoreActionList.add(videoUnit);
-        }
-
     }
 
     private void onCustomActionClick(int id) {

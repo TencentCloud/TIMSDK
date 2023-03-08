@@ -4,10 +4,11 @@ public class GeneralConfig {
 
     public final static int DEFAULT_AUDIO_RECORD_MAX_TIME = 60;
     public final static int DEFAULT_VIDEO_RECORD_MAX_TIME = 15;
-    private String appCacheDir;
     private int audioRecordMaxTime = DEFAULT_AUDIO_RECORD_MAX_TIME;
     private int videoRecordMaxTime = DEFAULT_VIDEO_RECORD_MAX_TIME;
-    private String userNickname = "";
+
+    private boolean useSystemCamera = false;
+
     private boolean excludedFromUnreadCount;
     private boolean excludedFromLastMessage;
 
@@ -19,6 +20,9 @@ public class GeneralConfig {
     private boolean reactEnable = true;
     private boolean replyEnable = true;
     private boolean quoteEnable = true;
+
+
+    private boolean enableLink = true;
 
     private boolean enableVoiceCall = true;
     private boolean enableVideoCall = true;
@@ -96,48 +100,6 @@ public class GeneralConfig {
         return enableVoiceCall;
     }
 
-    public String getUserNickname() {
-        return userNickname;
-    }
-
-    public void setUserNickname(String userNickname) {
-        this.userNickname = userNickname;
-    }
-
-    public String getUserFaceUrl() {
-        return userFaceUrl;
-    }
-
-    public void setUserFaceUrl(String userFaceUrl) {
-        this.userFaceUrl = userFaceUrl;
-    }
-
-    private String userFaceUrl = "";
-
-    /**
-     * 获取TUIKit缓存路径
-     * 
-     * Get TUIKit cache path
-     *
-     * @return
-     */
-    public String getAppCacheDir() {
-        return appCacheDir;
-    }
-
-    /**
-     * 设置TUIKit缓存路径
-     * 
-     * Set TUIKit cache path
-     *
-     * @param appCacheDir
-     * @return
-     */
-    public GeneralConfig setAppCacheDir(String appCacheDir) {
-        this.appCacheDir = appCacheDir;
-        return this;
-    }
-
     /**
      * 获取录音最大时长
      * 
@@ -179,7 +141,6 @@ public class GeneralConfig {
      * Maximum camera time
      *
      * @param videoRecordMaxTime
-     * @return
      */
     public GeneralConfig setVideoRecordMaxTime(int videoRecordMaxTime) {
         this.videoRecordMaxTime = videoRecordMaxTime;
@@ -191,7 +152,6 @@ public class GeneralConfig {
      * 
      * Whether the view read by the other party is displayed
      *
-     * @return
      */
     public boolean isShowRead() {
         return showRead;
@@ -202,7 +162,6 @@ public class GeneralConfig {
      * 
      * Set whether the view read by the other party is displayed
      *
-     * @return
      */
     public void setShowRead(boolean showRead) {
         this.showRead = showRead;
@@ -278,5 +237,17 @@ public class GeneralConfig {
      */
     public void setEnableMessageTyping(boolean enableMessageTyping) {
         isEnableMessageTyping = enableMessageTyping;
+    }
+
+    /**
+     *  是否展示自定义消息按钮，默认 YES
+     *  Display custom message button, default YES
+     */
+    public boolean isEnableLink() {
+        return enableLink;
+    }
+    
+    public void setEnableLink(boolean enableLink) {
+        this.enableLink = enableLink;
     }
 }

@@ -3,6 +3,7 @@ package com.tencent.qcloud.tuikit.tuichat.classicui.widget.message;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
@@ -17,9 +18,12 @@ import androidx.recyclerview.widget.SimpleItemAnimator;
 import com.tencent.qcloud.tuicore.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tuicore.component.dialog.TUIKitDialog;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuicore.util.BackgroundTasks;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomGroupNoteMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomPollMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.QuoteMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ReplyMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
@@ -315,8 +319,9 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
             multiSelectAction.setActionIcon(R.drawable.pop_menu_multi_select);
             multiSelectAction.setActionClickListener(() -> mOnPopActionClickListener.onMultiSelectMessageClick(msg));
 
-            if (TUIChatConfigs.getConfigs().getGeneralConfig().isEnableTextTranslation() &&
-                    msg.getTranslationStatus() != TUIMessageBean.MSG_TRANSLATE_STATUS_SHOWN) {
+            if ((msg instanceof TextMessageBean || msg instanceof QuoteMessageBean)
+                    && TUIChatConfigs.getConfigs().getGeneralConfig().isEnableTextTranslation()
+                    && msg.getTranslationStatus() != TUIMessageBean.MSG_TRANSLATE_STATUS_SHOWN) {
                 translateAction = new ChatPopMenu.ChatPopMenuAction();
                 translateAction.setActionName(getContext().getString(R.string.translate_action));
                 translateAction.setActionIcon(R.drawable.pop_menu_translate);
@@ -324,7 +329,9 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
             }
         }
 
-        if (msg.getStatus() != TUIMessageBean.MSG_STATUS_SEND_FAIL) {
+        if (msg.getStatus() != TUIMessageBean.MSG_STATUS_SEND_FAIL
+                && !(msg instanceof CustomGroupNoteMessageBean)
+                && !(msg instanceof CustomPollMessageBean)) {
             forwardAction = new ChatPopMenu.ChatPopMenuAction();
             forwardAction.setActionName(getContext().getString(R.string.forward_button));
             forwardAction.setActionIcon(R.drawable.pop_menu_forward);
@@ -424,6 +431,16 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
     }
 
     public void scrollToEnd() {
+        if (Thread.currentThread() != Looper.getMainLooper().getThread()) {
+            BackgroundTasks.getInstance().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    scrollToEnd();
+                }
+            });
+            return;
+        }
+
         if (getAdapter() != null) {
             RecyclerView.LayoutManager layoutManager = getLayoutManager();
             int itemCount = getAdapter().getItemCount();

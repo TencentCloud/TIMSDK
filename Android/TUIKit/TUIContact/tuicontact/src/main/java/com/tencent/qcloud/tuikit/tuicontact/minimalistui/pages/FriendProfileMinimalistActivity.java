@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 import com.tencent.imsdk.v2.V2TIMGroupApplication;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
-import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
+import com.tencent.qcloud.tuicore.component.activities.BaseMinimalistLightActivity;
 import com.tencent.qcloud.tuicore.component.activities.ImageSelectActivity;
 import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuicontact.R;
@@ -24,7 +24,7 @@ import com.tencent.qcloud.tuikit.tuicontact.util.TUIContactLog;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class FriendProfileMinimalistActivity extends BaseLightActivity {
+public class FriendProfileMinimalistActivity extends BaseMinimalistLightActivity {
 
     private FriendProfilePresenter presenter;
     private FriendProfileLayout layout;
@@ -69,7 +69,7 @@ public class FriendProfileMinimalistActivity extends BaseLightActivity {
                 } else if (!TextUtils.isEmpty(info.getNickName())) {
                     chatName = info.getNickName();
                 }
-                ContactStartChatUtils.startChatActivity(info.getId(), ContactItemBean.TYPE_C2C, chatName, "");
+                ContactStartChatUtils.startChatActivity(info.getId(), ContactItemBean.TYPE_C2C, chatName, info.getAvatarUrl(), null);
             }
 
             @Override

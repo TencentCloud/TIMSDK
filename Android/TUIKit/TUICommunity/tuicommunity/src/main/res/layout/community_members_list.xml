@@ -8,7 +8,7 @@
     android:orientation="vertical">
 
 
-    <com.tencent.qcloud.tuikit.tuicommunity.ui.view.CommunityMemberList
+    <com.tencent.qcloud.tuikit.tuicommunity.ui.widget.CommunityMemberList
         android:id="@+id/member_list_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

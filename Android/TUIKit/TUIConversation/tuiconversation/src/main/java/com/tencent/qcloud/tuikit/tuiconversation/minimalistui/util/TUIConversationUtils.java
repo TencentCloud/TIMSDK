@@ -8,7 +8,6 @@ import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class TUIConversationUtils {
     public static void startChatActivity(ConversationInfo conversationInfo) {

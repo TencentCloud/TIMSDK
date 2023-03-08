@@ -255,14 +255,14 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
     }
 
     public void onResume() {
-        TUIChatLog.i(TAG, "JCameraView onResume");
+        TUIChatLog.i(TAG, "CameraView onResume");
         resetState(TYPE_DEFAULT);
         CameraInterface.getInstance().registerSensorManager(mContext);
         machine.start(mVideoView.getHolder(), screenProp);
     }
 
     public void onPause() {
-        TUIChatLog.i(TAG, "JCameraView onPause");
+        TUIChatLog.i(TAG, "CameraView onPause");
         machine.stop();
         CameraInterface.getInstance().unregisterSensorManager(mContext);
     }
@@ -277,7 +277,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        TUIChatLog.i(TAG, "JCameraView SurfaceCreated");
+        TUIChatLog.i(TAG, "CameraView SurfaceCreated");
         new Thread() {
             @Override
             public void run() {
@@ -292,7 +292,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        TUIChatLog.i(TAG, "JCameraView SurfaceDestroyed");
+        TUIChatLog.i(TAG, "CameraView SurfaceDestroyed");
         CameraInterface.getInstance().doDestroyCamera();
     }
 

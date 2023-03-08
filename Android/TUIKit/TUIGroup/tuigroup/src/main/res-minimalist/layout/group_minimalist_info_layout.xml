@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:paddingBottom="40dp">
+
+    <com.tencent.qcloud.tuicore.component.MinimalistTitleBar
+        android:id="@+id/group_info_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#1F000000" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+                android:id="@+id/group_icon"
+                android:layout_width="94dp"
+                android:layout_height="94dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="42dp"
+                android:scaleType="centerCrop"
+                app:round_radius="50dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_marginTop="13dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/group_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    tools:text="群聊" />
+
+                <ImageView
+                    android:id="@+id/edit_group_name"
+                    android:layout_marginStart="12dp"
+                    android:background="@drawable/group_edit_name_icon"
+                    android:layout_width="14.8dp"
+                    android:layout_height="14.8dp"
+                    android:visibility="gone"
+                    tools:visibility="visible"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/group_account_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="@string/group_account_tag"
+                    android:textColor="#666666"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/group_account"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:textColor="#666666"
+                    android:textIsSelectable="true"
+                    android:textSize="12sp"
+                    tools:text="99618" />
+            </LinearLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:layout_marginBottom="15dp">
+
+                <LinearLayout
+                    android:id="@+id/message_btn"
+                    android:layout_width="92dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/group_profile_btn_shape"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    app:layout_constraintEnd_toStartOf="@id/audio_call_btn"
+                    app:layout_constraintHorizontal_chainStyle="spread"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:background="@drawable/group_minimalist_message_icon"
+                        android:scaleType="centerCrop" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:text="@string/group_profile_message"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/audio_call_btn"
+                    android:layout_width="92dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/group_profile_btn_shape"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:paddingStart="8dp"
+                    android:paddingTop="16dp"
+                    android:paddingEnd="8dp"
+                    android:paddingBottom="16dp"
+                    app:layout_constraintEnd_toStartOf="@id/video_call_btn"
+                    app:layout_constraintStart_toEndOf="@id/message_btn"
+                    app:layout_constraintTop_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:background="@drawable/group_minimalist_audio_icon"
+                        android:scaleType="centerCrop" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:text="@string/group_profile_audio_call"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/video_call_btn"
+                    android:layout_width="92dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/group_profile_btn_shape"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:paddingStart="8dp"
+                    android:paddingTop="16dp"
+                    android:paddingEnd="8dp"
+                    android:paddingBottom="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/audio_call_btn"
+                    app:layout_constraintTop_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:background="@drawable/group_minimalist_video_icon"
+                        android:scaleType="centerCrop" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:text="@string/group_profile_video_call"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+                android:id="@+id/msg_rev_option"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                app:isSwitch="true"
+                app:name="@string/profile_msgrev_opt" />
+
+
+            <RelativeLayout
+                android:id="@+id/layout_fold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white">
+
+                <View
+                    android:id="@+id/fold_top_line"
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/line" />
+
+                <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+                    android:id="@+id/fold_group_chat"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/group_profile_item_height"
+                    android:layout_below="@id/fold_top_line"
+                    android:layout_marginLeft="20dp"
+                    app:isSwitch="true"
+                    app:name="@string/fold_this_group_chat" />
+
+                <View
+                    android:id="@+id/left_line"
+                    android:layout_width="10dp"
+                    android:layout_height="2px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"
+                    android:background="@color/dark_line" />
+
+                <View
+                    android:id="@+id/fold_bottom_line"
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_below="@id/fold_group_chat"
+                    android:background="@color/line" />
+            </RelativeLayout>
+
+
+            <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+                android:id="@+id/chat_to_top_switch"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_marginTop="1dp"
+                app:isSwitch="true"
+                app:name="@string/chat_to_top" />
+
+
+            <LinearLayout
+                android:id="@+id/group_notice"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/group_profile_face_margin_left"
+                android:paddingRight="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="11.52dp"
+                    android:lineHeight="23.04sp"
+                    android:text="@string/group_notice"
+                    android:textColor="#444444"
+                    android:textSize="15.36sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="15.36dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/group_notice_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:lineHeight="17.28sp"
+                        android:singleLine="true"
+                        android:text="@string/group_notice_empty_tip"
+                        android:textColor="#888888"
+                        android:textSize="11.52sp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/arrow_right" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+                android:id="@+id/group_manage"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_marginTop="1dp"
+                android:visibility="gone"
+                app:canNav="true"
+                app:name="@string/group_manager"
+                tools:visibility="visible" />
+
+            <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+                android:id="@+id/group_type_bar"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:layout_marginTop="1dp"
+                app:name="@string/group_type" />
+
+            <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+                android:id="@+id/join_type_bar"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:layout_marginTop="1dp"
+                app:name="@string/join_group_type" />
+
+            <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+                android:id="@+id/self_nickname_bar"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:layout_marginTop="16dp"
+                app:canNav="true"
+                app:name="@string/in_group_nick_name" />
+
+
+            <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+                android:id="@+id/chat_background"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                app:canNav="true"
+                app:name="@string/profile_chat_background"
+                tools:visibility="visible" />
+
+            <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+                android:id="@+id/group_member_bar"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:layout_marginTop="16dp"
+                app:name="@string/group_members" />
+
+            <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+                android:id="@+id/add_group_members"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:layout_marginTop="1dp"
+                app:name="@string/group_plus_add_group_member" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/group_members"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:background="@color/white"
+                android:fadeScrollbars="true"
+                android:scrollbars="none" />
+
+
+            <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+                android:id="@+id/group_clear_msg_button"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_marginTop="10dp"
+                android:background="#F0F9F9F9"
+                app:isSwitch="false"
+                app:name="@string/group_clear_message"
+                tools:visibility="visible" />
+
+            <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+                android:id="@+id/group_change_owner_button"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_marginTop="1dp"
+                android:background="#F0F9F9F9"
+                app:name="@string/group_transfer_group_owner"
+                tools:visibility="visible" />
+
+            <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+                android:id="@+id/group_dissolve_button"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_marginTop="1dp"
+                app:isSwitch="false"
+                app:name="@string/exit_group"
+                tools:visibility="visible" />
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+</LinearLayout>
+

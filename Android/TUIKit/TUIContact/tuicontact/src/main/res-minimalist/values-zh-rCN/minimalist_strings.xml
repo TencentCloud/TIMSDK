@@ -2,5 +2,9 @@
 <resources>
 
     <string name="contact_minimalist_contacts">联系人</string>
+    <string name="contact_new_application_title">%d 个新的好友申请</string>
+    <string name="contact_validation_message">校验信息</string>
+    <string name="contact_friend_application_detail_title">详情</string>
+    <string name="contact_not_found_info">无内容</string>
 
 </resources>

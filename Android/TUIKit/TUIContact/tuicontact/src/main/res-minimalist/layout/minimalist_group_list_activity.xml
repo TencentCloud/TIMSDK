@@ -4,10 +4,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.tencent.qcloud.tuicore.component.TitleBarLayout
+    <com.tencent.qcloud.tuicore.component.MinimalistTitleBar
         android:id="@+id/group_list_titlebar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/page_title_height" />
+        android:layout_height="56dp" />
 
     <com.tencent.qcloud.tuikit.tuicontact.minimalistui.widget.ContactListView
         android:id="@+id/group_list"

@@ -1,22 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/status_bar_color"
+    android:background="#99000000"
+    android:paddingTop="40dp"
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:orientation="vertical">
 
-    <com.tencent.qcloud.tuicore.component.TitleBarLayout
-        android:id="@+id/start_c2c_chat_title"
+    <LinearLayout
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:background="@drawable/contact_bottom_sheet_dialog_border"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/page_title_height" />
+        android:layout_height="match_parent">
 
-    <com.tencent.qcloud.tuikit.tuicontact.minimalistui.widget.ContactListView
-        android:id="@+id/contact_list_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="22dp"
+            android:paddingBottom="12dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-</LinearLayout>
+            <TextView
+                android:id="@+id/cancel_button"
+                android:layout_weight="0.33"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="#0365F9"
+                android:text="@string/cancel"
+                />
+
+            <TextView
+                android:layout_weight="0.33"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:gravity="center_horizontal"
+                android:textStyle="bold"
+                android:text="@string/start_conversation"/>
+
+            <TextView
+                android:layout_weight="0.33"
+                android:layout_width="0dp"
+                android:layout_height="8dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/create_group_button"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:gravity="center_vertical"
+            android:layout_gravity="start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_marginEnd="8dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/contact_minimalist_add_icon"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/create_group_chat"
+                android:textSize="14sp"
+                android:textColor="#0365F9"/>
+
+        </LinearLayout>
+
+
+        <com.tencent.qcloud.tuikit.tuicontact.minimalistui.widget.ContactListView
+            android:id="@+id/contact_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+
+    </LinearLayout>
+
+</FrameLayout>

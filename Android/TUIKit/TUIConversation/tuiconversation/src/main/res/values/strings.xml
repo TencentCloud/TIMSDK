@@ -20,6 +20,8 @@
     <string name="drafts">[Drafts]</string>
     <string name="titlebar_mutiselect">Select</string>
     <string name="message_num">messages</string>
+    <string name="conversation_forward">Forward</string>
 
     <string name="folded_group_chat">folded group chat</string>
+    <string name="conversation_title_edit">Edit</string>
 </resources>

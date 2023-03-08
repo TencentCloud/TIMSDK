@@ -13,10 +13,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 
+import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.component.RoundCornerImageView;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
 import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
+import com.tencent.qcloud.tuicore.component.activities.BaseMinimalistLightActivity;
 import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
 import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuicore.util.ScreenUtil;
@@ -33,7 +36,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class StartGroupMemberSelectMinimalistActivity extends BaseLightActivity {
+public class StartGroupMemberSelectMinimalistActivity extends BaseMinimalistLightActivity {
 
     private static final String TAG = StartGroupMemberSelectMinimalistActivity.class.getSimpleName();
 
@@ -82,12 +85,19 @@ public class StartGroupMemberSelectMinimalistActivity extends BaseLightActivity 
         mMembers.clear();
 
         String groupId = getIntent().getStringExtra(TUIContactConstants.Group.GROUP_ID);
+        if (TextUtils.isEmpty(groupId)) {
+            groupId = getIntent().getStringExtra(TUIConstants.TUIGroup.GROUP_ID);
+        }
         boolean isSelectFriends = getIntent().getBooleanExtra(TUIContactConstants.Selection.SELECT_FRIENDS, false);
         boolean isSelectForCall = getIntent().getBooleanExtra(TUIContactConstants.Selection.SELECT_FOR_CALL, false);
+        String title = getIntent().getStringExtra(TUIContactConstants.Selection.TITLE);
         limit = getIntent().getIntExtra(TUIContactConstants.Selection.LIMIT, Integer.MAX_VALUE);
         alreadySelectedList = getIntent().getStringArrayListExtra(TUIContactConstants.Selection.SELECTED_LIST);
         mTitleBar = findViewById(R.id.group_create_title_bar);
         mTitleBar.setTitle(getResources().getString(com.tencent.qcloud.tuicore.R.string.sure), ITitleBarLayout.Position.RIGHT);
+        if (!TextUtils.isEmpty(title)) {
+            mTitleBar.setTitle(title, ITitleBarLayout.Position.MIDDLE);
+        }
         mTitleBar.getRightIcon().setVisibility(View.GONE);
         mTitleBar.setOnRightClickListener(new View.OnClickListener() {
             @Override

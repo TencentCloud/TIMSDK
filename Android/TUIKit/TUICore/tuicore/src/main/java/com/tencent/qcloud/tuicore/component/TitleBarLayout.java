@@ -83,20 +83,24 @@ public class TitleBarLayout extends LinearLayout implements ITitleBarLayout {
         mRightIcon.setLayoutParams(iconParams);
 
         if (canReturn) {
-            mLeftGroup.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (context instanceof Activity) {
-                        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(TitleBarLayout.this.getWindowToken(), 0);
-                        ((Activity) context).finish();
-                    }
-                }
-            });
+            setLeftReturnListener(context);
         }
         if (!TextUtils.isEmpty(middleTitle)) {
             mCenterTitle.setText(middleTitle);
         }
+    }
+
+    public void setLeftReturnListener(Context context) {
+        mLeftGroup.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (context instanceof Activity) {
+                    InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(TitleBarLayout.this.getWindowToken(), 0);
+                    ((Activity) context).finish();
+                }
+            }
+        });
     }
 
     @Override

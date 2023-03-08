@@ -19,10 +19,10 @@ import com.tencent.qcloud.tuikit.tuicommunity.R;
 import com.tencent.qcloud.tuikit.tuicommunity.bean.CommunityBean;
 import com.tencent.qcloud.tuikit.tuicommunity.presenter.CommunityPresenter;
 import com.tencent.qcloud.tuikit.tuicommunity.ui.interfaces.ICommunityFragment;
-import com.tencent.qcloud.tuikit.tuicommunity.ui.view.AddCommunityView;
-import com.tencent.qcloud.tuikit.tuicommunity.ui.view.CommunityDetailView;
-import com.tencent.qcloud.tuikit.tuicommunity.ui.view.CommunityGroupList;
-import com.tencent.qcloud.tuikit.tuicommunity.ui.view.CommunitySelfView;
+import com.tencent.qcloud.tuikit.tuicommunity.ui.widget.AddCommunityView;
+import com.tencent.qcloud.tuikit.tuicommunity.ui.widget.CommunityDetailView;
+import com.tencent.qcloud.tuikit.tuicommunity.ui.widget.CommunityGroupList;
+import com.tencent.qcloud.tuikit.tuicommunity.ui.widget.CommunitySelfView;
 import com.tencent.qcloud.tuikit.tuicommunity.utils.CommunityConstants;
 
 import java.util.List;

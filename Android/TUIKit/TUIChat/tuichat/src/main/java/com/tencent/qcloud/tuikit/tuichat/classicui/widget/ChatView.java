@@ -30,6 +30,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
+import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMGroupAtInfo;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
@@ -48,15 +49,18 @@ import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupApplyInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageTyping;
 import com.tencent.qcloud.tuikit.tuichat.bean.ReplyPreviewBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomGroupNoteMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomPollMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ReplyMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 import com.tencent.qcloud.tuikit.tuichat.classicui.component.noticelayout.NoticeLayout;
 import com.tencent.qcloud.tuikit.tuichat.classicui.interfaces.IChatLayout;
 import com.tencent.qcloud.tuikit.tuichat.classicui.setting.ChatLayoutSetting;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.input.InputView;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MessageAdapter;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MessageRecyclerView;
+import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioRecorder;
 import com.tencent.qcloud.tuikit.tuichat.component.face.Emoji;
 import com.tencent.qcloud.tuikit.tuichat.component.progress.ProgressPresenter;
@@ -69,6 +73,8 @@ import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -356,6 +362,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
                 int firstVisiblePosition = linearLayoutManager.findFirstCompletelyVisibleItemPosition();
                 int lastVisiblePosition = linearLayoutManager.findLastCompletelyVisibleItemPosition();
                 sendMsgReadReceipt(firstVisiblePosition, lastVisiblePosition);
+                markCallingMsgRead(firstVisiblePosition, lastVisiblePosition);
             }
         });
 
@@ -389,6 +396,20 @@ public class ChatView extends LinearLayout  implements IChatLayout {
                 }
             }
         });
+    }
+
+    private void markCallingMsgRead(int firstPosition, int lastPosition) {
+        if (mAdapter == null || presenter == null) {
+            return;
+        }
+        List<CallingMessageBean> tuiMessageBeans = new ArrayList<CallingMessageBean>();
+        for (TUIMessageBean bean : mAdapter.getItemList(firstPosition, lastPosition)) {
+            if (bean instanceof CallingMessageBean) {
+                tuiMessageBeans.add((CallingMessageBean) bean);
+            }
+        }
+
+        presenter.markCallingMsgRead(tuiMessageBeans);
     }
 
     private void setTotalUnread() {
@@ -808,7 +829,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
             }
 
             private void stopRecording() {
-                postDelayed(new Runnable() {
+                post(new Runnable() {
                     @Override
                     public void run() {
                         if (mVolumeAnim != null) {
@@ -816,7 +837,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
                         }
                         mRecordingGroup.setVisibility(View.GONE);
                     }
-                }, 500);
+                });
             }
 
             private void stopAbnormally(final int status) {
@@ -833,12 +854,12 @@ public class ChatView extends LinearLayout  implements IChatLayout {
                         }
                     }
                 });
-                postDelayed(new Runnable() {
+                post(new Runnable() {
                     @Override
                     public void run() {
                         mRecordingGroup.setVisibility(View.GONE);
                     }
-                }, 1000);
+                });
             }
 
             private void cancelRecording() {
@@ -1064,6 +1085,13 @@ public class ChatView extends LinearLayout  implements IChatLayout {
         if(!onlyForTranslation && checkFailedMessageInfos(messageInfoList)){
             ToastUtil.toastShortMessage(getContext().getString(R.string.forward_failed_tip));
             return;
+        }
+
+        for (TUIMessageBean tuiMessageBean : messageInfoList) {
+            if (tuiMessageBean instanceof CustomGroupNoteMessageBean || tuiMessageBean instanceof CustomPollMessageBean) {
+                ToastUtil.toastShortMessage(getContext().getString(R.string.forward_group_note_or_poll_failed_tip));
+                return;
+            }
         }
 
         if (!isMultiSelect) {

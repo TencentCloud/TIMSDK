@@ -11,7 +11,7 @@ import com.tencent.qcloud.tuikit.tuigroup.TUIGroupConstants;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupApplyInfo;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupApplyPresenter;
-import com.tencent.qcloud.tuikit.tuigroup.classicui.view.GroupApplyManagerLayout;
+import com.tencent.qcloud.tuikit.tuigroup.classicui.widget.GroupApplyManagerLayout;
 
 public class GroupApplyManagerActivity extends BaseLightActivity {
 

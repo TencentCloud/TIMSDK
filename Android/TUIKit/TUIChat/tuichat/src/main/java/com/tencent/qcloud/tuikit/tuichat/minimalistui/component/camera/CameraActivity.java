@@ -18,8 +18,8 @@ import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.camera.listener.ClickListener;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.camera.listener.ErrorListener;
-import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.camera.listener.JCameraListener;
-import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.camera.view.JCameraView;
+import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.camera.listener.CameraListener;
+import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.camera.view.CameraView;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
 public class CameraActivity extends Activity {
@@ -27,7 +27,7 @@ public class CameraActivity extends Activity {
     private static final String TAG = CameraActivity.class.getSimpleName();
     private static final int REQUEST_CODE_PHOTO_AND_VIDEO = 1000;
     public static IUIKitCallback mCallBack;
-    private JCameraView jCameraView;
+    private CameraView jCameraView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,15 +40,15 @@ public class CameraActivity extends Activity {
         jCameraView = findViewById(R.id.jcameraview);
         //jCameraView.setSaveVideoPath(Environment.getExternalStorageDirectory().getPath() + File.separator + "JCamera");
 
-        int state = getIntent().getIntExtra(TUIChatConstants.CAMERA_TYPE, JCameraView.BUTTON_STATE_BOTH);
+        int state = getIntent().getIntExtra(TUIChatConstants.CAMERA_TYPE, CameraView.BUTTON_STATE_BOTH);
         jCameraView.setFeatures(state);
-        if (state == JCameraView.BUTTON_STATE_ONLY_CAPTURE) {
+        if (state == CameraView.BUTTON_STATE_ONLY_CAPTURE) {
             jCameraView.setTip(getString(R.string.tap_capture));
-        } else if (state == JCameraView.BUTTON_STATE_ONLY_RECORDER) {
+        } else if (state == CameraView.BUTTON_STATE_ONLY_RECORDER) {
             jCameraView.setTip(getString(R.string.tap_video));
         }
 
-        jCameraView.setMediaQuality(JCameraView.MEDIA_QUALITY_MIDDLE);
+        jCameraView.setMediaQuality(CameraView.MEDIA_QUALITY_MIDDLE);
         jCameraView.setErrorLisenter(new ErrorListener() {
             @Override
             public void onError() {
@@ -64,7 +64,7 @@ public class CameraActivity extends Activity {
             }
         });
 
-        jCameraView.setJCameraLisenter(new JCameraListener() {
+        jCameraView.setJCameraLisenter(new CameraListener() {
             @Override
             public void captureSuccess(Bitmap bitmap) {
                 String path = FileUtil.saveBitmap("JCamera", bitmap);

@@ -2,13 +2,13 @@ package com.tencent.qcloud.tuicore.component;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -19,7 +19,7 @@ import com.tencent.qcloud.tuicore.util.ScreenUtil;
 /**
  * Custom LineControllerView
  */
-public class LineControllerView extends LinearLayout {
+public class LineControllerView extends RelativeLayout {
 
     private String mName;
     private boolean mIsBottom;
@@ -28,11 +28,13 @@ public class LineControllerView extends LinearLayout {
     private boolean mIsJump;
     private boolean mIsSwitch;
 
-    private TextView mNameText;
-    private TextView mContentText;
+    protected TextView mNameText;
+    protected TextView mContentText;
     private ImageView mNavArrowView;
-    private Switch mSwitchView;
+    protected Switch mSwitchView;
+    protected View bottomLine;
     private View mMask;
+    private View container;
 
     public LineControllerView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -56,7 +58,7 @@ public class LineControllerView extends LinearLayout {
         mNameText.setText(mName);
         mContentText = findViewById(R.id.content);
         mContentText.setText(mContent);
-        View bottomLine = findViewById(R.id.bottom_line);
+        bottomLine = findViewById(R.id.bottom_line);
         View topLine = findViewById(R.id.top_line);
         bottomLine.setVisibility(mIsBottom ? VISIBLE : GONE);
         topLine.setVisibility(mIsTop ? VISIBLE : GONE);
@@ -67,6 +69,12 @@ public class LineControllerView extends LinearLayout {
         mSwitchView = findViewById(R.id.btnSwitch);
         mSwitchView.setVisibility(mIsSwitch ? VISIBLE : GONE);
         mMask = findViewById(R.id.disable_mask);
+        container = findViewById(R.id.view_container);
+    }
+
+    public void setBackground(Drawable drawable) {
+        super.setBackground(drawable);
+        container.setBackground(drawable);
     }
 
     public String getContent() {

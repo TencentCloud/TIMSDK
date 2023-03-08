@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
@@ -20,11 +21,11 @@ import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.bean.UserInfo;
 import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
-import com.tencent.qcloud.tuicore.component.LineControllerView;
+import com.tencent.qcloud.tuicore.component.MinimalistLineControllerView;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
-import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
-import com.tencent.qcloud.tuicore.component.activities.ImageSelectActivity;
-import com.tencent.qcloud.tuicore.component.activities.SelectionActivity;
+import com.tencent.qcloud.tuicore.component.activities.BaseMinimalistLightActivity;
+import com.tencent.qcloud.tuicore.component.activities.ImageSelectMinimalistActivity;
+import com.tencent.qcloud.tuicore.component.activities.SelectionMinimalistActivity;
 import com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView;
 import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
 import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
@@ -38,18 +39,18 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class SelfDetailMinamalistActivity extends BaseLightActivity implements View.OnClickListener {
+public class SelfDetailMinamalistActivity extends BaseMinimalistLightActivity implements View.OnClickListener {
     private static final String TAG = SelfDetailMinamalistActivity.class.getSimpleName();
 
     private static final int CHOOSE_AVATAR_REQUEST_CODE = 1;
     private TitleBarLayout titleBarLayout;
     private ShadeImageView selfIcon;
-    private View faceArea;
-    private LineControllerView nickNameLv;
-    private LineControllerView accountLv;
-    private LineControllerView genderLv;
-    private LineControllerView birthdayLv;
-    private LineControllerView signatureLv;
+    private TextView modifyNickNameTv;
+    private TextView nickNameTv;
+    private MinimalistLineControllerView accountLv;
+    private MinimalistLineControllerView genderLv;
+    private MinimalistLineControllerView birthdayLv;
+    private MinimalistLineControllerView signatureLv;
 
     private String faceUrl;
     private String nickName;
@@ -60,12 +61,12 @@ public class SelfDetailMinamalistActivity extends BaseLightActivity implements V
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_self_detail);
+        setContentView(R.layout.minimalist_activity_self_detail);
 
         titleBarLayout = findViewById(R.id.self_detail_title_bar);
-        faceArea = findViewById(R.id.face_url_area);
         selfIcon = findViewById(R.id.self_icon);
-        nickNameLv = findViewById(R.id.modify_nick_name_lv);
+        modifyNickNameTv = findViewById(R.id.modify_nick_name_lv);
+        nickNameTv = findViewById(R.id.user_nick_name_tv);
         accountLv = findViewById(R.id.modify_account_lv);
         genderLv = findViewById(R.id.modify_gender_lv);
         birthdayLv = findViewById(R.id.modify_birthday_lv);
@@ -77,13 +78,11 @@ public class SelfDetailMinamalistActivity extends BaseLightActivity implements V
     private void setupViews() {
         titleBarLayout.getRightIcon().setVisibility(View.GONE);
         titleBarLayout.setTitle(getString(R.string.demo_profile_detail), ITitleBarLayout.Position.MIDDLE);
-        titleBarLayout.setOnLeftClickListener(this);
 
-        int radius = ScreenUtil.dip2px(25);
+        int radius = ScreenUtil.dip2px(48);
         selfIcon.setRadius(radius);
         selfIcon.setOnClickListener(this);
-        faceArea.setOnClickListener(this);
-        nickNameLv.setOnClickListener(this);
+        modifyNickNameTv.setOnClickListener(this);
         accountLv.setOnClickListener(this);
         genderLv.setOnClickListener(this);
         birthdayLv.setOnClickListener(this);
@@ -111,7 +110,7 @@ public class SelfDetailMinamalistActivity extends BaseLightActivity implements V
         int radius = getResources().getDimensionPixelSize(R.dimen.demo_profile_face_radius);
         GlideEngine.loadUserIcon(selfIcon, faceUrl, radius);
         nickName = info.getNickName();
-        nickNameLv.setContent(nickName);
+        nickNameTv.setText(nickName);
         birthday = info.getBirthday();
         String birthdayStr = String.valueOf(info.getBirthday());
         if (TextUtils.isEmpty(birthdayStr) || birthdayStr.length() < 8) {
@@ -146,27 +145,26 @@ public class SelfDetailMinamalistActivity extends BaseLightActivity implements V
         });
     }
 
-
     @Override
     public void onClick(View v) {
-        if (v == selfIcon || v == faceArea) {
-            ArrayList<ImageSelectActivity.ImageBean> faceList = new ArrayList<>();
+        if (v == selfIcon) {
+            ArrayList<ImageSelectMinimalistActivity.ImageBean> faceList = new ArrayList<>();
             for (int i = 0; i < Constants.AVATAR_FACE_COUNT; i++) {
-                ImageSelectActivity.ImageBean imageBean= new ImageSelectActivity.ImageBean();
+                ImageSelectMinimalistActivity.ImageBean imageBean= new ImageSelectMinimalistActivity.ImageBean();
                 imageBean.setThumbnailUri(String.format(Constants.AVATAR_FACE_URL, (i + 1) + ""));
                 imageBean.setImageUri(String.format(Constants.AVATAR_FACE_URL, (i + 1) + ""));
                 faceList.add(imageBean);
             }
 
-            Intent intent = new Intent(SelfDetailMinamalistActivity.this, ImageSelectActivity.class);
-            intent.putExtra(ImageSelectActivity.TITLE, getString(R.string.demo_choose_avatar));
-            intent.putExtra(ImageSelectActivity.SPAN_COUNT, 4);
-            intent.putExtra(ImageSelectActivity.ITEM_WIDTH, ScreenUtil.dip2px(77));
-            intent.putExtra(ImageSelectActivity.ITEM_HEIGHT, ScreenUtil.dip2px(77));
-            intent.putExtra(ImageSelectActivity.DATA, faceList);
-            intent.putExtra(ImageSelectActivity.SELECTED, new ImageSelectActivity.ImageBean(faceUrl, faceUrl, false));
+            Intent intent = new Intent(SelfDetailMinamalistActivity.this, ImageSelectMinimalistActivity.class);
+            intent.putExtra(ImageSelectMinimalistActivity.TITLE, getString(R.string.demo_choose_avatar));
+            intent.putExtra(ImageSelectMinimalistActivity.SPAN_COUNT, 4);
+            intent.putExtra(ImageSelectMinimalistActivity.ITEM_WIDTH, ScreenUtil.dip2px(77));
+            intent.putExtra(ImageSelectMinimalistActivity.ITEM_HEIGHT, ScreenUtil.dip2px(77));
+            intent.putExtra(ImageSelectMinimalistActivity.DATA, faceList);
+            intent.putExtra(ImageSelectMinimalistActivity.SELECTED, new ImageSelectMinimalistActivity.ImageBean(faceUrl, faceUrl, false));
             startActivityForResult(intent, CHOOSE_AVATAR_REQUEST_CODE);
-        } else if (v == nickNameLv) {
+        } else if (v == modifyNickNameTv) {
             PopupInputCard popupInputCard = new PopupInputCard(this);
             popupInputCard.setContent(nickName);
             popupInputCard.setTitle(getString(R.string.demo_self_detail_modify_nickname));
@@ -206,8 +204,6 @@ public class SelfDetailMinamalistActivity extends BaseLightActivity implements V
             }));
             View rootView = findViewById(android.R.id.content);
             popupInputCard.show(rootView, Gravity.BOTTOM);
-        } else if (v == titleBarLayout.getLeftGroup()) {
-            finish();
         }
     }
 
@@ -216,11 +212,11 @@ public class SelfDetailMinamalistActivity extends BaseLightActivity implements V
         ArrayList<String> genderList = new ArrayList<>();
         genderList.add(getString(R.string.demo_self_detail_gender_male));
         genderList.add(getString(R.string.demo_self_detail_gender_female));
-        bundle.putString(SelectionActivity.Selection.TITLE, getString(R.string.modify_gender));
-        bundle.putStringArrayList(SelectionActivity.Selection.LIST, genderList);
-        bundle.putInt(SelectionActivity.Selection.DEFAULT_SELECT_ITEM_INDEX, gender - 1);
+        bundle.putString(SelectionMinimalistActivity.Selection.TITLE, getString(R.string.modify_gender));
+        bundle.putStringArrayList(SelectionMinimalistActivity.Selection.LIST, genderList);
+        bundle.putInt(SelectionMinimalistActivity.Selection.DEFAULT_SELECT_ITEM_INDEX, gender - 1);
 
-        SelectionActivity.startListSelection(this, bundle, new SelectionActivity.OnResultReturnListener() {
+        SelectionMinimalistActivity.startListSelection(this, bundle, new SelectionMinimalistActivity.OnResultReturnListener() {
             @Override
             public void onReturn(Object res) {
                 gender = (Integer) res + 1;
@@ -282,9 +278,9 @@ public class SelfDetailMinamalistActivity extends BaseLightActivity implements V
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CHOOSE_AVATAR_REQUEST_CODE && resultCode == ImageSelectActivity.RESULT_CODE_SUCCESS) {
+        if (requestCode == CHOOSE_AVATAR_REQUEST_CODE && resultCode == ImageSelectMinimalistActivity.RESULT_CODE_SUCCESS) {
             if (data != null) {
-                ImageSelectActivity.ImageBean imageBean = (ImageSelectActivity.ImageBean) data.getSerializableExtra(ImageSelectActivity.DATA);
+                ImageSelectMinimalistActivity.ImageBean imageBean = (ImageSelectMinimalistActivity.ImageBean) data.getSerializableExtra(ImageSelectMinimalistActivity.DATA);
                 if (imageBean == null) {
                     return;
                 }

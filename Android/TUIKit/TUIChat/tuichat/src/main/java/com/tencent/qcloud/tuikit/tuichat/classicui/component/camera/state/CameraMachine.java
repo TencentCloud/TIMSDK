@@ -12,7 +12,7 @@ public class CameraMachine implements State {
     private Context context;
     private State state;
     private CameraView view;
-//    private CameraInterface.CameraOpenOverCallback cameraOpenOverCallback;
+//    private CameraManager.CameraOpenOverCallback cameraOpenOverCallback;
 
     private State previewState;
     private State borrowPictureState;

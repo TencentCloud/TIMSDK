@@ -33,8 +33,6 @@
         <!-- **************** Minimalist UI Activity Start **************** -->
         <activity android:name=".minimalistui.page.GroupNoticeMinimalistActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".minimalistui.page.SetGroupManagerMinimalistActivity"
-            android:screenOrientation="portrait" />
         <activity android:name=".minimalistui.page.GroupMemberMinimalistActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".minimalistui.page.ManageGroupMinimalistActivity"

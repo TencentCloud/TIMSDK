@@ -120,6 +120,24 @@ public abstract class TUIMessageBean implements Serializable {
      private int downloadStatus;
      private String selectText;
      private int translationStatus = MSG_TRANSLATE_STATUS_UNKNOWN;
+     private boolean excludeFromHistory;
+     private boolean isUseMsgReceiverAvatar = false;
+
+     public void setExcludeFromHistory(boolean excludeFromHistory) {
+          this.excludeFromHistory = excludeFromHistory;
+     }
+
+     public boolean isExcludeFromHistory() {
+          return excludeFromHistory;
+     }
+
+     public void setUseMsgReceiverAvatar(boolean useMsgReceiverAvatar) {
+          isUseMsgReceiverAvatar = useMsgReceiverAvatar;
+     }
+
+     public boolean isUseMsgReceiverAvatar() {
+          return isUseMsgReceiverAvatar;
+     }
 
      private MessageReceiptInfo messageReceiptInfo;
      private MessageRepliesBean messageRepliesBean;

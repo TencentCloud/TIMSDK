@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:background="@color/white"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp">
+
+    <CheckBox
+        android:id="@+id/group_member_check_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/group_checkbox_selector"
+        android:button="@null"
+        android:clickable="false"
+        android:focusable="false"
+        android:gravity="center"
+        android:visibility="gone" />
+
+    <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+        android:id="@+id/group_member_icon"
+        android:layout_width="38.4dp"
+        android:layout_height="38.4dp"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical"
+        android:layout_marginRight="12dp"
+        android:layout_toEndOf="@id/group_member_check_box"
+        android:scaleType="centerCrop" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/group_member_icon"
+        android:layout_toStartOf="@id/rightArrow">
+
+        <TextView
+            android:id="@+id/group_member_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:maxWidth="220dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:lines="1"
+            android:textColor="#ff111111"
+            android:textSize="17.28sp"
+            tools:text="L" />
+
+        <TextView
+            android:id="@+id/member_role_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/group_member_role_border"
+            android:gravity="center"
+            android:maxLines="1"
+            android:minWidth="20dp"
+            android:paddingStart="8dp"
+            android:paddingTop="2dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="2dp"
+            android:textColor="#1890FF"
+            android:textSize="10sp"
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:text="Administrator" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/rightArrow"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/group_minimalist_forward_icon"
+        android:scaleType="centerInside" />
+
+    <View
+        android:id="@+id/view_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignStart="@id/group_member_name"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:background="#D9D9D9" />
+</RelativeLayout>

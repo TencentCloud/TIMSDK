@@ -3,6 +3,7 @@ package com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder
 import android.animation.Animator;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.view.View;
@@ -13,7 +14,8 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.tencent.qcloud.tuicore.util.DateTimeUtil;
+import com.tencent.qcloud.tuicore.TUIConfig;
+import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.MessageProperties;
@@ -21,7 +23,9 @@ import com.tencent.qcloud.tuikit.tuichat.minimalistui.interfaces.ICommonMessageA
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.interfaces.OnItemClickListener;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.reply.ChatReactView;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
     public static final int MSG_TYPE_HEADER_VIEW = -99;
@@ -100,15 +104,60 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
             if (last != null) {
                 if (msg.getMessageTime() - last.getMessageTime() >= 5 * 60) {
                     chatTimeText.setVisibility(View.VISIBLE);
-                    chatTimeText.setText(DateTimeUtil.getTimeFormatText(new Date(msg.getMessageTime() * 1000)));
+                    chatTimeText.setText(getTimeFormatText(new Date(msg.getMessageTime() * 1000)));
                 } else {
                     chatTimeText.setVisibility(View.GONE);
                 }
             }
         } else {
             chatTimeText.setVisibility(View.VISIBLE);
-            chatTimeText.setText(DateTimeUtil.getTimeFormatText(new Date(msg.getMessageTime() * 1000)));
+            chatTimeText.setText(getTimeFormatText(new Date(msg.getMessageTime() * 1000)));
         }
+    }
+
+    public static String getTimeFormatText(Date date) {
+        if (date == null) {
+            return "";
+        }
+        Context context = TUIConfig.getAppContext();
+        Locale locale;
+        if (context == null) {
+            locale = Locale.getDefault();
+        } else {
+            locale = TUIThemeManager.getInstance().getLocale(context);
+        }
+        String timeText;
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        long dayStartTimeInMillis = calendar.getTimeInMillis();
+        calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_WEEK, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        long weekStartTimeInMillis = calendar.getTimeInMillis();
+        calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_YEAR, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        long yearStartTimeInMillis = calendar.getTimeInMillis();
+        long outTimeMillis = date.getTime();
+        if (outTimeMillis < yearStartTimeInMillis) {
+            timeText = String.format(locale, "%1$tY/%1$tm/%1$td", date);
+        } else if (outTimeMillis < weekStartTimeInMillis) {
+            timeText = String.format(locale, "%1$tm/%1$td", date);
+        } else if (outTimeMillis < dayStartTimeInMillis) {
+            timeText = String.format(locale, "%tA", date);
+        } else {
+            timeText = context.getResources().getString(R.string.chat_time_today);
+        }
+        return timeText;
     }
 
     public void setFloatMode(boolean floatMode) {

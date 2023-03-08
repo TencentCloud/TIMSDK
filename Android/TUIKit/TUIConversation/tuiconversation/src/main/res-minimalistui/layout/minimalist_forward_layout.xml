@@ -1,16 +1,59 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:background="#99000000"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    android:paddingTop="40dp">
 
-    <com.tencent.qcloud.tuicore.component.TitleBarLayout
-        android:id="@+id/conversation_title"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        android:background="@drawable/conversation_forward_selected_page_border"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
-    <com.tencent.qcloud.tuikit.tuiconversation.minimalistui.widget.ConversationListLayout
-        android:id="@+id/conversation_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingTop="22dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="12dp">
 
-</LinearLayout>
+            <TextView
+                android:id="@+id/cancel_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.33"
+                android:text="@string/cancel"
+                android:textColor="#0365F9"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.33"
+                android:gravity="center_horizontal"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="8dp"
+                android:layout_weight="0.33" />
+
+        </LinearLayout>
+
+        <com.tencent.qcloud.tuikit.tuiconversation.minimalistui.widget.ConversationListLayout
+            android:id="@+id/conversation_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+</FrameLayout>

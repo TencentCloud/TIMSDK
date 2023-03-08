@@ -1,5 +1,7 @@
 package com.tencent.qcloud.tuikit.tuigroup.bean;
 
+import android.text.TextUtils;
+
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMGroupInfoResult;
 import com.tencent.imsdk.v2.V2TIMGroupMemberFullInfo;
@@ -23,6 +25,11 @@ public class GroupInfo extends ChatInfo {
     public static final int GROUP_MEMBER_FILTER_ADMIN = V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_FILTER_ADMIN;
     public static final int GROUP_MEMBER_FILTER_COMMON = V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_FILTER_COMMON;
 
+    public static final int GROUP_MEMBER_ROLE_MEMBER = V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_ROLE_MEMBER;
+    public static final int GROUP_MEMBER_ROLE_OWNER = V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_ROLE_OWNER;
+    public static final int GROUP_MEMBER_ROLE_ADMIN = V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_ROLE_ADMIN;
+
+
     private String groupType;
     private int memberCount;
     private String groupName;
@@ -35,6 +42,7 @@ public class GroupInfo extends ChatInfo {
     private long mNextSeq = 0;
     private boolean canManagerGroup;
     private boolean isAllMuted;
+    private int role;
 
     public GroupInfo() {
         setType(V2TIMConversation.V2TIM_GROUP);
@@ -227,6 +235,14 @@ public class GroupInfo extends ChatInfo {
         return isAllMuted;
     }
 
+    public void setRole(int role) {
+        this.role = role;
+    }
+
+    public int getRole() {
+        return role;
+    }
+
     public GroupInfo covertTIMGroupDetailInfo(V2TIMGroupInfoResult infoResult) {
         if (infoResult.getResultCode() != 0) {
             return this;
@@ -241,10 +257,10 @@ public class GroupInfo extends ChatInfo {
         setJoinType(infoResult.getGroupInfo().getGroupAddOpt());
         setMessageReceiveOption(infoResult.getGroupInfo().getRecvOpt() == V2TIMMessage.V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE ? true : false);
         setFaceUrl(infoResult.getGroupInfo().getFaceUrl());
-        int role = infoResult.getGroupInfo().getRole();
+        role = infoResult.getGroupInfo().getRole();
         canManagerGroup = role == V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_ROLE_OWNER
                 || role == V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_ROLE_ADMIN
-                || groupType == V2TIMManager.GROUP_TYPE_WORK;
+                || TextUtils.equals(groupType, V2TIMManager.GROUP_TYPE_WORK);
         isAllMuted = infoResult.getGroupInfo().isAllMuted();
         return this;
     }

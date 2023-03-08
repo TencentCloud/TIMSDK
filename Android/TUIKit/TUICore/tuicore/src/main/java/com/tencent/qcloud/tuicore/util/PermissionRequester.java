@@ -235,6 +235,7 @@ public final class PermissionRequester {
             mPermissionsGranted.addAll(mPermissions);
             isRequesting = false;
             requestCallback();
+            mDialogCallback = null;
         } else {
             for (String permission : mPermissions) {
                 if (isGranted(permission)) {
@@ -246,6 +247,7 @@ public final class PermissionRequester {
             if (mPermissionsRequest.isEmpty()) {
                 isRequesting = false;
                 requestCallback();
+                mDialogCallback = null;
             } else {
                 startPermissionActivity();
             }
@@ -297,7 +299,6 @@ public final class PermissionRequester {
             }
             mFullCallback = null;
         }
-        mDialogCallback = null;
     }
 
     private void onRequestPermissionsResult(final Activity activity) {

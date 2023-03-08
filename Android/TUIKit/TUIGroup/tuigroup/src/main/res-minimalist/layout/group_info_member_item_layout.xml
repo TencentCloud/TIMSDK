@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:background="#F0F9F9F9"
+    android:layout_marginBottom="1dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+        android:id="@+id/group_member_icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:scaleType="centerCrop"
+        android:background="?attr/core_default_user_icon" />
+
+    <TextView
+        android:id="@+id/group_member_name"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:lines="1"
+        android:maxEms="3"
+        android:ellipsize="end"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        tools:text="Tom"/>
+
+    <TextView
+        android:id="@+id/role_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:textSize="16sp"
+        android:textColor="#666666"
+        tools:text="Admin"/>
+
+    <ImageView
+        android:id="@+id/rightArrow"
+        android:layout_marginStart="12dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/arrow_right"/>
+
+</LinearLayout>

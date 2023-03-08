@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
 import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
+import com.tencent.qcloud.tuicore.component.activities.BaseMinimalistLightActivity;
 import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
@@ -15,7 +16,7 @@ import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.minimalistui.widget.ContactListView;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
 
-public class BlackListMinimalistActivity extends BaseLightActivity {
+public class BlackListMinimalistActivity extends BaseMinimalistLightActivity {
 
     private TitleBarLayout mTitleBar;
     private ContactListView mListView;

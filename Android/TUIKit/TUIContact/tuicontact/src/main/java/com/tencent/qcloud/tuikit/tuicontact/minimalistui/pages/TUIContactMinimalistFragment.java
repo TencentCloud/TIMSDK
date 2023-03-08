@@ -45,7 +45,7 @@ public class TUIContactMinimalistFragment extends BaseFragment {
             @Override
             public void onItemClick(int position, ContactItemBean contact) {
                 if (position == 0) {
-                    Intent intent = new Intent(TUIContactService.getAppContext(), NewFriendMinimalistActivity.class);
+                    Intent intent = new Intent(TUIContactService.getAppContext(), NewFriendApplicationMinimalistActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     TUIContactService.getAppContext().startActivity(intent);
                 } else if (position == 1) {

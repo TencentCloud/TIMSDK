@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
-import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
+import com.tencent.qcloud.tuicore.component.activities.BaseMinimalistLightActivity;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuigroup.R;
@@ -17,15 +17,16 @@ import com.tencent.qcloud.tuikit.tuigroup.TUIGroupService;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupMemberInfo;
 import com.tencent.qcloud.tuikit.tuigroup.minimalistui.interfaces.IGroupMemberListener;
-import com.tencent.qcloud.tuikit.tuigroup.minimalistui.view.GroupMemberLayout;
+import com.tencent.qcloud.tuikit.tuigroup.minimalistui.widget.GroupMemberLayout;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupInfoPresenter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GroupMemberMinimalistActivity extends BaseLightActivity {
+public class GroupMemberMinimalistActivity extends BaseMinimalistLightActivity {
 
     private GroupMemberLayout mMemberLayout;
     private String groupID;
@@ -117,6 +118,81 @@ public class GroupMemberMinimalistActivity extends BaseLightActivity {
                 TUICore.startActivity(GroupMemberMinimalistActivity.this, "StartGroupMemberSelectMinimalistActivity", param, 2);
             }
         });
+
+        mMemberLayout.setOnGroupMemberClickListener(new GroupMemberLayout.OnGroupMemberClickListener() {
+
+            @Override
+            public void onShowInfo(GroupMemberInfo groupMemberInfo) {
+                Bundle bundle = new Bundle();
+                bundle.putString(TUIConstants.TUIChat.CHAT_ID, groupMemberInfo.getAccount());
+                TUICore.startActivity("FriendProfileMinimalistActivity", bundle);
+            }
+
+            @Override
+            public void onAdminRoleChanged(GroupMemberInfo groupMemberInfo) {
+                if (!presenter.isAdmin(groupMemberInfo.getMemberType())) {
+                    presenter.setGroupManager(groupID, groupMemberInfo.getAccount(), new IUIKitCallback<Void>() {
+                        @Override
+                        public void onSuccess(Void data) {
+                            ToastUtil.toastLongMessage(getString(com.tencent.qcloud.tuicore.R.string.setting_success));
+                            GroupMemberMinimalistActivity.this.onAdminRoleChanged(groupMemberInfo);
+                        }
+
+                        @Override
+                        public void onError(String module, int errCode, String errMsg) {
+                            ToastUtil.toastLongMessage(getString(com.tencent.qcloud.tuicore.R.string.setting_fail)
+                                    + ", errCode = " + errCode + ", errMsg = " + errMsg);
+                        }
+                    });
+                } else {
+                    presenter.setGroupMemberRole(groupID, groupMemberInfo.getAccount(), new IUIKitCallback<Void>() {
+                        @Override
+                        public void onSuccess(Void data) {
+                            ToastUtil.toastLongMessage(getString(com.tencent.qcloud.tuicore.R.string.setting_success));
+                            GroupMemberMinimalistActivity.this.onAdminRoleChanged(groupMemberInfo);
+                        }
+
+                        @Override
+                        public void onError(String module, int errCode, String errMsg) {
+                            ToastUtil.toastLongMessage(getString(com.tencent.qcloud.tuicore.R.string.setting_fail)
+                                    + ", errCode = " + errCode + ", errMsg = " + errMsg);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onDelete(GroupMemberInfo groupMemberInfo) {
+                presenter.deleteGroupMembers(groupID, Collections.singletonList(groupMemberInfo.getAccount()),
+                        new IUIKitCallback<List<String>>() {
+                    @Override
+                    public void onSuccess(List<String> data) {
+                        ToastUtil.toastLongMessage(getString(R.string.remove_tip_suc));
+                        onMemberDeleted(data);
+
+                    }
+
+                    @Override
+                    public void onError(String module, int errCode, String errMsg) {
+                        ToastUtil.toastLongMessage(getString(R.string.remove_fail_tip)
+                                + ", errCode = " + errCode + ", errMsg = " + errMsg);
+                    }
+                });
+            }
+        });
+    }
+
+    private void onMemberDeleted(List<String> memberIDs) {
+        mMemberLayout.deleteMember(memberIDs);
+    }
+
+    private void onAdminRoleChanged(GroupMemberInfo groupMemberInfo) {
+        if (presenter.isAdmin(groupMemberInfo.getMemberType())) {
+            groupMemberInfo.setMemberType(GroupInfo.GROUP_MEMBER_ROLE_MEMBER);
+        } else {
+            groupMemberInfo.setMemberType(GroupInfo.GROUP_MEMBER_ROLE_ADMIN);
+        }
+        mMemberLayout.memberChanged(groupMemberInfo);
     }
 
     @Override

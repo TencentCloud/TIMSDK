@@ -6,7 +6,7 @@
     <string name="blacklist">Blocked List</string>
     <string name="contact_count">%d contact(s)</string>
     <string name="contact_title">Contacts</string>
-
+    <string name="contact_add_friend_remark">Remark</string>
     <string name="no_friend_apply">No friend request</string>
     <string name="at_all">All</string>
 
@@ -21,6 +21,8 @@
     <string name="set_in_blacklist">You have been blocked.</string>
     <string name="wait_agree_friend">Request sent</string>
     <string name="send_request">Request sent</string>
+    <string name="contact_add_more_info">Info</string>
+    <string name="contact_add_more_send_request_text">Send</string>
 
     <string name="add_group_permission_deny">Prohibited from Joining</string>
     <string name="add_group_allready_member">The user is a group member</string>
@@ -38,7 +40,9 @@
     <string name="contact_friend_group">Group</string>
     <string name="contact_set_add_wording">Verification Message</string>
     <string name="contact_add_wording">Verification Message：</string>
+    <string name="contact_add_friend_default_validation">I am %s</string>
     <string name="contact_set_remark_and_group">Remark And Group</string>
+    <string name="contact_profile_title_edit">Edit</string>
 
 
     <!-- 好友资料 -->
@@ -59,11 +63,17 @@
     <string name="contact_group_type_tag">Group Type : </string>
     <string name="contact_my_friend">My Friend</string>
 
+    <string name="contact_profile_message">Message</string>
+    <string name="contact_profile_audio_call">Audio</string>
+    <string name="contact_profile_video_call">Video</string>
+
     <string name="select_chat">Select Chat User</string>
 
     <string name="chat_to_top">Pin</string>
 
     <string name="clear_msg_tip">Are you sure you want to clear the chat history?</string>
+    <string name="contact_delete_friend_tip">Are you sure you want to delete the contact?</string>
+
     // 群信息相关
     <string name="tips_empty_group_member">Select members</string>
     <string name="tips_empty_group_type">Select a method to join the group</string>
@@ -89,6 +99,8 @@
     <string name="user_id">ID</string>
     <string name="add_wording">Verification Message</string>
     <string name="create_group">Create Group</string>
+    <string name="contact_create">Create</string>
+    <string name="contact_next_step">Next</string>
 
     <string name="modify_group_name">Edit Group Name</string>
     <string name="add_group_member">Add Member</string>
@@ -116,7 +128,8 @@
 
     <string name="contact_no_new_friend_application">Friend request is empty</string>
     <string name="contact_no_group">Group chats is empty</string>
-    <string name="contact_no_block_list">Block list is emply</string>
+    <string name="contact_no_block_list">Block list is empty</string>
+    <string name="contact_selected_group_member">Participants</string>
 
     <string name="group_choose_avatar">Choose Avatar</string>
     <string name="group_avatar_text">Group Avatar</string>

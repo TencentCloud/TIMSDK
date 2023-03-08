@@ -21,8 +21,11 @@ import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.camera.listener.
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.camera.listener.ClickListener;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.camera.listener.ReturnListener;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.camera.listener.TypeListener;
+import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
 public class CaptureLayout extends FrameLayout {
+
+    private static final String TAG = "CaptureLayout";
 
     private CaptureListener captureLisenter;    //拍照按钮监听 Camera button Lisenter
     private TypeListener typeLisenter;          //拍照或录制后接结果按钮监听 Take a picture or record followed by the result button Lisenter
@@ -131,9 +134,10 @@ public class CaptureLayout extends FrameLayout {
         LayoutParams btn_capture_param = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         btn_capture_param.gravity = Gravity.CENTER;
         btn_capture.setLayoutParams(btn_capture_param);
-        btn_capture.setCaptureLisenter(new CaptureListener() {
+        btn_capture.setCaptureListener(new CaptureListener() {
             @Override
             public void takePictures() {
+                TUIChatLog.i(TAG, "takePictures");
                 if (captureLisenter != null) {
                     captureLisenter.takePictures();
                 }
@@ -141,6 +145,7 @@ public class CaptureLayout extends FrameLayout {
 
             @Override
             public void recordShort(long time) {
+                TUIChatLog.i(TAG, "recordShort");
                 if (captureLisenter != null) {
                     captureLisenter.recordShort(time);
                 }
@@ -149,6 +154,7 @@ public class CaptureLayout extends FrameLayout {
 
             @Override
             public void recordStart() {
+                TUIChatLog.i(TAG, "recordStart");
                 if (captureLisenter != null) {
                     captureLisenter.recordStart();
                 }
@@ -157,6 +163,7 @@ public class CaptureLayout extends FrameLayout {
 
             @Override
             public void recordEnd(long time) {
+                TUIChatLog.i(TAG, "recordEnd");
                 if (captureLisenter != null) {
                     captureLisenter.recordEnd(time);
                 }
@@ -166,6 +173,7 @@ public class CaptureLayout extends FrameLayout {
 
             @Override
             public void recordZoom(float zoom) {
+                TUIChatLog.i(TAG, "recordZoom");
                 if (captureLisenter != null) {
                     captureLisenter.recordZoom(zoom);
                 }
@@ -173,6 +181,7 @@ public class CaptureLayout extends FrameLayout {
 
             @Override
             public void recordError() {
+                TUIChatLog.i(TAG, "recordError");
                 if (captureLisenter != null) {
                     captureLisenter.recordError();
                 }

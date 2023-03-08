@@ -57,7 +57,7 @@ public class CaptureButton extends View {
     private RectF rectF;
 
     private LongPressRunnable longPressRunnable;    //长按后处理的逻辑Runnable Logic of post-processing after long press
-    private CaptureListener captureLisenter;        //按钮回调接口 button callback interface
+    private CaptureListener captureListener;        //按钮回调接口 button callback interface
     private RecordCountDownTimer timer;             //计时器 timer
 
     public CaptureButton(Context context) {
@@ -83,10 +83,8 @@ public class CaptureButton extends View {
         longPressRunnable = new LongPressRunnable();
 
         state = STATE_IDLE;
-        button_state = JCameraView.BUTTON_STATE_BOTH;
-        TUIChatLog.i(TAG, "CaptureButtom start");
+        button_state = CameraView.BUTTON_STATE_BOTH;
         duration = 10 * 1000;
-        TUIChatLog.i(TAG, "CaptureButtom end");
         min_duration = 1500;
 
         center_X = (button_size + outside_add_size * 2) / 2;
@@ -133,25 +131,21 @@ public class CaptureButton extends View {
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                TUIChatLog.i(TAG, "state = " + state);
-                if (event.getPointerCount() > 1 || state != STATE_IDLE)
+                TUIChatLog.d(TAG, "capture button down");
+                if (event.getPointerCount() > 1 || state != STATE_IDLE) {
                     break;
+                }
                 event_Y = event.getY();
                 state = STATE_PRESS;
 
-                if ((button_state == JCameraView.BUTTON_STATE_ONLY_RECORDER || button_state == JCameraView.BUTTON_STATE_BOTH))
-                    postDelayed(longPressRunnable, 500);
-                break;
-            case MotionEvent.ACTION_MOVE:
-                if (captureLisenter != null
-                        && state == STATE_RECORDERING
-                        && (button_state == JCameraView.BUTTON_STATE_ONLY_RECORDER || button_state == JCameraView.BUTTON_STATE_BOTH)) {
-                    // 记录当前Y值与按下时候Y值的差值，调用缩放回调接口
-                    // Record the difference between the current Y value and the Y value when pressed, and call the zoom callback interface
-                    captureLisenter.recordZoom(event_Y - event.getY());
+                if ((button_state == CameraView.BUTTON_STATE_ONLY_RECORDER || button_state == CameraView.BUTTON_STATE_BOTH)) {
+                    postDelayed(longPressRunnable, 200);
                 }
                 break;
+            case MotionEvent.ACTION_MOVE:
+                break;
             case MotionEvent.ACTION_UP:
+                TUIChatLog.d(TAG, "capture button up");
                 // 根据当前按钮的状态进行相应的处理
                 // Perform corresponding processing according to the current state of the button
                 handlerUnpressByState();
@@ -164,8 +158,8 @@ public class CaptureButton extends View {
         removeCallbacks(longPressRunnable);
         switch (state) {
             case STATE_PRESS:
-                if (captureLisenter != null && (button_state == JCameraView.BUTTON_STATE_ONLY_CAPTURE || button_state ==
-                        JCameraView.BUTTON_STATE_BOTH)) {
+                if (captureListener != null && (button_state == CameraView.BUTTON_STATE_ONLY_CAPTURE || button_state ==
+                        CameraView.BUTTON_STATE_BOTH)) {
                     startCaptureAnimation(button_inside_radius);
                 } else {
                     state = STATE_IDLE;
@@ -179,11 +173,11 @@ public class CaptureButton extends View {
     }
 
     private void recordEnd() {
-        if (captureLisenter != null) {
+        if (captureListener != null) {
             if (recorded_time < min_duration)
-                captureLisenter.recordShort(recorded_time);
+                captureListener.recordShort(recorded_time);
             else
-                captureLisenter.recordEnd(recorded_time);
+                captureListener.recordEnd(recorded_time);
         }
         resetRecordAnim();
     }
@@ -213,7 +207,7 @@ public class CaptureButton extends View {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                captureLisenter.takePictures();
+                captureListener.takePictures();
                 state = STATE_BAN;
             }
         });
@@ -244,8 +238,8 @@ public class CaptureButton extends View {
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
                 if (state == STATE_LONG_PRESS) {
-                    if (captureLisenter != null)
-                        captureLisenter.recordStart();
+                    if (captureListener != null)
+                        captureListener.recordStart();
                     state = STATE_RECORDERING;
                     timer.start();
                 }
@@ -281,8 +275,8 @@ public class CaptureButton extends View {
 
     // 设置回调接口
     // Set callback interface
-    public void setCaptureLisenter(CaptureListener captureLisenter) {
-        this.captureLisenter = captureLisenter;
+    public void setCaptureListener(CaptureListener captureListener) {
+        this.captureListener = captureListener;
     }
 
     // 设置按钮功能（拍照和录像）
@@ -330,8 +324,8 @@ public class CaptureButton extends View {
             state = STATE_LONG_PRESS;
             if (CheckPermission.getRecordState() != CheckPermission.STATE_SUCCESS) {
                 state = STATE_IDLE;
-                if (captureLisenter != null) {
-                    captureLisenter.recordError();
+                if (captureListener != null) {
+                    captureListener.recordError();
                     return;
                 }
             }

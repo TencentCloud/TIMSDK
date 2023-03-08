@@ -5,9 +5,12 @@ import android.content.Context;
 import com.tencent.qcloud.tuicore.ServiceInitializer;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomGroupNoteMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomEvaluationMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomLinkMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomOrderMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomGroupNoteTipsMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomPollMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FaceMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FileMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
@@ -23,6 +26,8 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.CustomEvaluationMessageReplyQuoteBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.CustomGroupNoteReplyQuoteBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.CustomGroupPollReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.CustomLinkReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.CustomOrderMessageReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.FaceReplyQuoteBean;
@@ -48,6 +53,9 @@ import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.Cal
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.CustomEvaluationMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.CustomLinkMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.CustomOrderMessageHolder;
+import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.CustomGroupNoteMessageHolder;
+import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.CustomGroupNoteTipsMessageHolder;
+import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.CustomPollMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.FaceMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.FileMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.ImageMessageHolder;
@@ -60,7 +68,6 @@ import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.Sou
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.TextMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.TipsMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.VideoMessageHolder;
-import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -104,6 +111,9 @@ public class ClassicUIService extends ServiceInitializer {
         addMessageType(CustomLinkMessageBean.class, CustomLinkMessageHolder.class);
         addMessageType(CustomEvaluationMessageBean.class, CustomEvaluationMessageHolder.class);
         addMessageType(CustomOrderMessageBean.class, CustomOrderMessageHolder.class);
+        addMessageType(CustomGroupNoteMessageBean.class, CustomGroupNoteMessageHolder.class);
+        addMessageType(CustomGroupNoteTipsMessageBean.class, CustomGroupNoteTipsMessageHolder.class);
+        addMessageType(CustomPollMessageBean.class, CustomPollMessageHolder.class);
         addMessageType(MessageTypingBean.class, null);
     }
 
@@ -117,6 +127,8 @@ public class ClassicUIService extends ServiceInitializer {
         replyMessageViewMap.put(CustomEvaluationMessageReplyQuoteBean.class, TextReplyQuoteView.class);
         replyMessageViewMap.put(CustomLinkReplyQuoteBean.class, TextReplyQuoteView.class);
         replyMessageViewMap.put(CustomOrderMessageReplyQuoteBean.class, TextReplyQuoteView.class);
+        replyMessageViewMap.put(CustomGroupNoteReplyQuoteBean.class, TextReplyQuoteView.class);
+        replyMessageViewMap.put(CustomGroupPollReplyQuoteBean.class, TextReplyQuoteView.class);
         replyMessageViewMap.put(FaceReplyQuoteBean.class, FaceReplyQuoteView.class);
         replyMessageViewMap.put(FileReplyQuoteBean.class, FileReplyQuoteView.class);
         replyMessageViewMap.put(ImageReplyQuoteBean.class, ImageReplyQuoteView.class);

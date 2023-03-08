@@ -19,8 +19,8 @@ import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuigroup.R;
-import com.tencent.qcloud.tuikit.tuigroup.TUIGroupService;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupConstants;
+import com.tencent.qcloud.tuikit.tuigroup.TUIGroupService;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupApplyInfo;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupMemberInfo;
@@ -468,6 +468,11 @@ public class GroupInfoProvider {
         return memberType == V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_ROLE_ADMIN;
     }
 
+    public boolean isOwner(int memberType) {
+        return memberType == V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_ROLE_OWNER;
+    }
+
+
     public boolean isSelf(String userId) {
         return TextUtils.equals(userId, V2TIMManager.getInstance().getLoginUser());
     }
@@ -606,8 +611,23 @@ public class GroupInfoProvider {
         });
     }
 
-    public void setGroupManager(String groupId, String userId, IUIKitCallback<Void> callback) {
+    public void setGroupManagerRole(String groupId, String userId, IUIKitCallback<Void> callback) {
         int role = V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_ROLE_ADMIN;
+        V2TIMManager.getGroupManager().setGroupMemberRole(groupId, userId, role, new V2TIMCallback() {
+            @Override
+            public void onSuccess() {
+                TUIGroupUtils.callbackOnSuccess(callback, null);
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                TUIGroupUtils.callbackOnError(callback, code, desc);
+            }
+        });
+    }
+
+    public void setGroupMemberRole(String groupId, String userId, IUIKitCallback<Void> callback) {
+        int role = V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_ROLE_MEMBER;
         V2TIMManager.getGroupManager().setGroupMemberRole(groupId, userId, role, new V2TIMCallback() {
             @Override
             public void onSuccess() {

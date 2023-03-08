@@ -61,7 +61,7 @@
 
     </RelativeLayout>
 
-    <com.tencent.qcloud.tuikit.tuicommunity.ui.view.CommunityTopicList
+    <com.tencent.qcloud.tuikit.tuicommunity.ui.widget.CommunityTopicList
         android:paddingTop="10dp"
         android:id="@+id/community_topic_list"
         android:layout_width="match_parent"

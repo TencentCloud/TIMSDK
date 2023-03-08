@@ -35,8 +35,8 @@ dependencies {
     if (projects.contains("tuicore")) {
         api project(':tuicore')
     } else {
-        api "com.tencent.imsdk:imsdk-plus:7.0.3754"
-        api "com.tencent.liteav.tuikit:tuicore:1.1.18"
+        api "com.tencent.imsdk:imsdk-plus:7.1.3925"
+        api "com.tencent.liteav.tuikit:tuicore:1.1.22"
     }
 
     if (projects.contains("tuicallengine")) {
@@ -44,6 +44,6 @@ dependencies {
     } else {
         api "com.google.code.gson:gson:2.9.1"
         api "com.tencent.liteav:LiteAVSDK_TRTC:10.9.0.13092"
-        api 'com.tencent.liteav.tuikit:tuicallengine:1.4.0.255'
+        api 'com.tencent.liteav.tuikit:tuicallengine:1.5.0.305'
     }
 }

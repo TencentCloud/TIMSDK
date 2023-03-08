@@ -198,24 +198,26 @@ public class ChatLayoutSetting {
 
         // 增加一个欢迎提示富文本
         // Add a welcome prompt with rich text
-        InputMoreActionUnit unit = new InputMoreActionUnit() {};
-        unit.setIconResId(R.drawable.chat_minimalist_more_action_custom_icon);
-        unit.setTitleId(R.string.test_custom_action);
-        unit.setActionId(CustomHelloMessage.CUSTOM_HELLO_ACTION_ID);
-        unit.setPriority(10);
-        unit.setOnClickListener(unit.new OnActionClickListener() {
-            @Override
-            public void onClick() {
-                Gson gson = new Gson();
-                CustomHelloMessage customHelloMessage = new CustomHelloMessage();
-                customHelloMessage.version = TUIChatConstants.version;
+        if (TUIChatConfigs.getConfigs().getGeneralConfig().isEnableLink()) {
+            InputMoreActionUnit unit = new InputMoreActionUnit() {};
+            unit.setIconResId(R.drawable.chat_minimalist_more_action_custom_icon);
+            unit.setTitleId(R.string.test_custom_action);
+            unit.setActionId(CustomHelloMessage.CUSTOM_HELLO_ACTION_ID);
+            unit.setPriority(10);
+            unit.setOnClickListener(unit.new OnActionClickListener() {
+                @Override
+                public void onClick() {
+                    Gson gson = new Gson();
+                    CustomHelloMessage customHelloMessage = new CustomHelloMessage();
+                    customHelloMessage.version = TUIChatConstants.version;
 
-                String data = gson.toJson(customHelloMessage);
-                TUIMessageBean info = ChatMessageBuilder.buildCustomMessage(data, customHelloMessage.text, customHelloMessage.text.getBytes());
-                layout.sendMessage(info, false);
-            }
-        });
-        inputView.addAction(unit);
+                    String data = gson.toJson(customHelloMessage);
+                    TUIMessageBean info = ChatMessageBuilder.buildCustomMessage(data, customHelloMessage.text, customHelloMessage.text.getBytes());
+                    layout.sendMessage(info, false);
+                }
+            });
+            inputView.addAction(unit);
+        }
     }
 
 //    public static class CustomInputFragment extends BaseInputFragment {

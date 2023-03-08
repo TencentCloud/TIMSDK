@@ -8,6 +8,9 @@
     <string name="more_group_label">More Group Chat</string>
     <string name="more_conversation_label">More Conversations</string>
     <string name="chat_record_reference">Chat Record</string>
+    <string name="search_more_label">More</string>
+    <string name="search_ID_label">ID: </string>
+
     <string name="chat_records">message(s)</string>
     <string name="nick_name">nick name: </string>
     <string name="include_group_id">Contains group ID: </string>
@@ -51,6 +54,7 @@
 
     <string name="search">Search</string>
     <string name="cancle">Cancle</string>
+    <string name="search_not_found_info">No conversations, contacts, or messages found</string>
 
     <string name="live">\'s live stream</string>
     <string name="start_group_call">Start Group Call</string>

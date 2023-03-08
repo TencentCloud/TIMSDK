@@ -3,31 +3,36 @@ package com.tencent.qcloud.tuikit.tuichat.minimalistui.component.camera.state;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
-import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.camera.view.CameraInterface;
+import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.camera.view.CameraManager;
+import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.camera.view.ICameraView;
 
-public interface State {
+public abstract class State {
+    protected ICameraView cameraView;
+    public State(ICameraView cameraView) {
+        this.cameraView = cameraView;
+    }
 
-    void start(SurfaceHolder holder, float screenProp);
+    public void start(SurfaceHolder holder, float screenProp) {}
 
-    void stop();
+    public void stop() {}
 
-    void foucs(float x, float y, CameraInterface.FocusCallback callback);
+    public void focus(float x, float y, CameraManager.FocusCallback callback) {}
 
-    void swtich(SurfaceHolder holder, float screenProp);
+    public void switchCamera(SurfaceHolder holder, float screenProp) {}
 
-    void restart();
+    public void restart() {}
 
-    void capture();
+    public void capture() {}
 
-    void record(Surface surface, float screenProp);
+    public void record(Surface surface, float screenProp) {}
 
-    void stopRecord(boolean isShort, long time);
+    public void stopRecord(boolean isShort, long time) {}
 
-    void cancle(SurfaceHolder holder, float screenProp);
+    public void cancel(SurfaceHolder holder, float screenProp) {}
 
-    void confirm();
+    public void confirm() {}
 
-    void zoom(float zoom, int type);
+    public void zoom(float zoom, int type) {}
 
-    void flash(String mode);
+    public void flash(String mode) {}
 }

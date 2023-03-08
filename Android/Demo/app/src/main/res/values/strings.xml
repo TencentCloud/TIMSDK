@@ -81,8 +81,10 @@
     <string name="demo_self_detail_modify_nickname">Name</string>
     <string name="demo_self_detail_modify_signature">Status</string>
     <string name="demo_no_status">No status</string>
+    <string name="demo_profile_user_id">User ID</string>
 
     <string name="demo_self_detail_modify_gender">Gender</string>
+    <string name="demo_profile_edit">Edit</string>
 
     <string name="demo_self_detail_modify_nickname_rule">Only letters, digits, underscores, and Chinese characters.</string>
 
@@ -172,6 +174,7 @@
     <string name="mark_all_message_as_read_err_format">Failed to clear unread messages. %d, %s</string>
 
     <string name="demo_profile_detail">Details</string>
+    <string name="demo_profile_back">Back</string>
 
     <string name="demo_message_read_switch_title">Message read status</string>
     <string name="demo_message_read_switch_open_tip">This feature is the flagship version feature</string>

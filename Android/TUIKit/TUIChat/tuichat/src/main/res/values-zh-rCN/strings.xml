@@ -40,6 +40,7 @@
     <string name="forward_compatible_text">不支持合并转发消息，请升级到新版本。</string>
 
     <string name="forward_failed_tip">发送失败消息不支持转发！</string>
+    <string name="forward_group_note_or_poll_failed_tip">投票/接龙消息不支持转发！</string>
     <string name="forward_chat_record">聊天记录</string>
     <string name="forward_oneByOne_limit_number_tip">转发消息过多，暂不支持逐条转发</string>
 
@@ -75,6 +76,8 @@
     <string name="audio_extra">[语音]</string>
     <string name="file_extra">[文件]</string>
     <string name="location_extra">[地理位置]</string>
+    <string name="group_note_extra">[群接龙]</string>
+    <string name="group_poll_extra">[投票]</string>
 
     <string name="locate_origin_msg_failed_tip">无法定位到原消息</string>
 
@@ -104,6 +107,7 @@
     <string name="group_add_opt_auto_approval">自动审批</string>
     <string name="group_add_opt_admin_approve">管理员审批</string>
     <string name="group_add_opt_join_disable">禁止加群</string>
+
 
     <string name="typing">对方正在输入...</string>
     <string name="titlebar_mutiselect">多选</string>
@@ -168,6 +172,8 @@
     <string name="live_group_user_live">%s的直播</string>
     <string name="live_group_live">群直播</string>
 
+    <string name="chat_time_today">今天</string>
+    
     <string name="start_group_call">发起群通话</string>
     <string name="start_call">发起通话</string>
     <string name="cancle_group_call">取消群通话</string>
@@ -236,5 +242,24 @@
     <string name="chat_user_status_online">在线</string>
     <string name="chat_user_status_offline">离线</string>
     <string name="chat_user_status_unknown">未知</string>
+
+    <string name="chat_start_audio_call">语音通话</string>
+    <string name="chat_start_video_call">视频通话</string>
+
+    <string name="chat_call_reject_caller">对方已拒绝</string>
+    <string name="chat_call_reject_callee">已拒绝</string>
+    <string name="chat_call_cancel_caller">已取消</string>
+    <string name="chat_call_cancel_callee">对方已取消</string>
+    <string name="chat_call_timeout_caller">对方无应答</string>
+    <string name="chat_call_timeout_callee">对方已取消</string>
+    <string name="chat_call_line_busy_caller">对方忙线中</string>
+    <string name="chat_call_line_busy_callee">对方已取消</string>
+    <string name="chat_group_call_send">发起了群通话</string>
+    <string name="chat_group_call_end">通话结束</string>
+    <string name="chat_group_call_no_answer">未接听</string>
+    <string name="chat_group_call_reject_format">%s拒绝群通话</string>
+    <string name="chat_group_call_accept_format">%s接听</string>
+    <string name="chat_group_call_switch_to_audio_format">%s视频转语音</string>
+    <string name="chat_group_call_confirm_switch_to_audio_format">%s同意视频转语音</string>
 
 </resources>

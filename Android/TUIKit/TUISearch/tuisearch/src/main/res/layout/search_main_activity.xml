@@ -292,7 +292,7 @@
                     android:layout_height="0.3dp"
                     android:background="@color/split_lint_color" />
 
-                <com.tencent.qcloud.tuikit.tuisearch.classicui.view.PageRecycleView
+                <com.tencent.qcloud.tuikit.tuisearch.classicui.widget.PageRecycleView
                     android:id="@+id/conversation_rc_search"
                     android:layout_below="@+id/view_line_three"
                     android:layout_width="match_parent"

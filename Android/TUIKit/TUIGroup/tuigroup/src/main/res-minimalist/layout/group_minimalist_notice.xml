@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.tencent.qcloud.tuicore.component.MinimalistTitleBar
+        android:id="@+id/group_notice_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/page_title_height" />
+
+    <EditText
+        android:id="@+id/group_notice_text"
+        android:paddingTop="10dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:background="@null"
+        android:gravity="start"
+        android:lines="8"
+        android:maxLines="10"
+        android:textSize="16sp"
+        android:textColor="#666666"
+        android:hint="@string/group_notice_empty_tip"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

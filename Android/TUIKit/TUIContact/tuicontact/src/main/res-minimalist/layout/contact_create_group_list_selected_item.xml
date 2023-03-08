@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="40dp"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/transparent"
+    android:orientation="vertical"
+    android:layout_marginEnd="16dp"
+    android:gravity="center_horizontal">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.tencent.qcloud.tuicore.component.RoundCornerImageView
+            android:id="@+id/ivAvatar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:clickable="false"
+            android:focusable="false"
+            android:scaleType="centerCrop"
+            app:corner_radius="3.2dp"
+            tools:background="@android:drawable/ic_menu_gallery"/>
+
+        <ImageView
+            android:id="@+id/remove_icon"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_gravity="end|top"
+            android:background="@drawable/contact_selected_remove_icon"/>
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/user_name_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        android:gravity="center"
+        tools:text="A"/>
+
+</LinearLayout>
+

@@ -6,14 +6,15 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 
 import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
+import com.tencent.qcloud.tuicore.component.activities.BaseMinimalistLightActivity;
 import com.tencent.qcloud.tuikit.tuigroup.R;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupConstants;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupApplyInfo;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
-import com.tencent.qcloud.tuikit.tuigroup.minimalistui.view.GroupApplyManagerLayout;
+import com.tencent.qcloud.tuikit.tuigroup.minimalistui.widget.GroupApplyManagerLayout;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupApplyPresenter;
 
-public class GroupApplyManagerMinimalistActivity extends BaseLightActivity {
+public class GroupApplyManagerMinimalistActivity extends BaseMinimalistLightActivity {
 
     private GroupApplyManagerLayout mManagerLayout;
 

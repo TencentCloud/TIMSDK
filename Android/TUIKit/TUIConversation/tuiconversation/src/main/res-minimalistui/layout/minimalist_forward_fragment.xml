@@ -1,41 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <com.tencent.qcloud.tuikit.tuiconversation.minimalistui.widget.ForwardSelectLayout
         android:id="@+id/forward_conversation_layout"
+        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/btn_height"/>
+        android:layout_height="0dp" />
 
-    <RelativeLayout
-        android:id="@+id/forward_select_list_layout"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/forward_list_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:paddingLeft="14.85dp"
-        android:paddingRight="14.85dp"
-        android:orientation="horizontal">
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/forward_select_list"
-            android:layout_width="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/forward_margin"/>
+        app:cardBackgroundColor="@color/white"
+        app:cardElevation="16dp"
+        app:contentPaddingBottom="40dp"
+        app:contentPaddingLeft="16dp"
+        app:contentPaddingRight="16dp"
+        app:contentPaddingTop="14dp">
 
-        <TextView
-            android:id="@+id/btn_msg_ok"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/forward_select_list_layout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/btn_margin_right"
-            android:text="@string/sure"
-            android:textColor="@color/bg_positive_btn"
-            android:textSize="14sp"
-            android:visibility="visible" />
+            android:background="@color/white"
+            android:orientation="horizontal">
 
-    </RelativeLayout>
-</RelativeLayout>
+            <HorizontalScrollView
+                android:layout_weight="1"
+                android:layout_marginEnd="16dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/conversation_name_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="@color/black"/>
+
+            </HorizontalScrollView>
+
+            <TextView
+                android:id="@+id/btn_msg_ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/conversation_forward"
+                android:textColor="#0365F9"
+                android:textSize="14sp"
+                android:visibility="visible" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

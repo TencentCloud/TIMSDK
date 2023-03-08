@@ -11,7 +11,7 @@ public class CallingScreenSensorFeature {
     private Context             mContext;
     private SensorManager       mSensorManager;
     private SensorEventListener mSensorEventListener;
-    private boolean             mEnableCloseScreenNearEar = true;
+    private boolean             mEnableCloseScreenNearEar = false;
 
     public CallingScreenSensorFeature(Context context) {
         mContext = context;

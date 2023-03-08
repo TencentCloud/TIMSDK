@@ -137,6 +137,7 @@ public class FloatWindowService extends Service {
                     }
                     mTouchStartX = mTouchCurrentX;
                     mTouchStartY = mTouchCurrentY;
+                    break;
                 case MotionEvent.ACTION_UP:
                     mStopX = (int) event.getRawX();
                     mStopY = (int) event.getRawY();

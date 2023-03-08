@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tuikit.tuicontact.minimalistui.pages;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -8,7 +7,7 @@ import android.view.View;
 import androidx.annotation.Nullable;
 
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
-import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
+import com.tencent.qcloud.tuicore.component.activities.BaseMinimalistLightActivity;
 import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
@@ -16,7 +15,7 @@ import com.tencent.qcloud.tuikit.tuicontact.minimalistui.util.ContactStartChatUt
 import com.tencent.qcloud.tuikit.tuicontact.minimalistui.widget.ContactListView;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
 
-public class GroupListMinimalistActivity extends BaseLightActivity {
+public class GroupListMinimalistActivity extends BaseMinimalistLightActivity {
 
     private static final String TAG = GroupListMinimalistActivity.class.getSimpleName();
 
@@ -40,22 +39,11 @@ public class GroupListMinimalistActivity extends BaseLightActivity {
 
     private void init() {
         mTitleBar = findViewById(R.id.group_list_titlebar);
-        mTitleBar.setTitle(getResources().getString(R.string.group), ITitleBarLayout.Position.LEFT);
+        mTitleBar.setTitle(getResources().getString(R.string.group), ITitleBarLayout.Position.MIDDLE);
         mTitleBar.setOnLeftClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
-            }
-        });
-        mTitleBar.setTitle(getResources().getString(R.string.add_group), ITitleBarLayout.Position.RIGHT);
-        mTitleBar.getRightIcon().setVisibility(View.GONE);
-        mTitleBar.setOnRightClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(GroupListMinimalistActivity.this, AddMoreMinimalistActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("isGroup", true);
-                startActivity(intent);
             }
         });
 
@@ -69,7 +57,7 @@ public class GroupListMinimalistActivity extends BaseLightActivity {
                 } else if (!TextUtils.isEmpty(contact.getNickName())) {
                     chatName = contact.getNickName();
                 }
-                ContactStartChatUtils.startChatActivity(contact.getId(), ContactItemBean.TYPE_GROUP, chatName, contact.getGroupType());
+                ContactStartChatUtils.startChatActivity(contact.getId(), ContactItemBean.TYPE_GROUP, chatName, contact.getAvatarUrl(), null);
             }
         });
     }

@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,9 +16,9 @@ import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationService;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.interfaces.OnConversationAdapterListener;
 import com.tencent.qcloud.tuikit.tuiconversation.interfaces.IConversationListAdapter;
-import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.widget.swipe.RecyclerSwipeAdapter;
-import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.widget.swipe.SimpleSwipeListener;
-import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.widget.swipe.SwipeLayout;
+import com.tencent.qcloud.tuicore.component.swipe.RecyclerSwipeAdapter;
+import com.tencent.qcloud.tuicore.component.swipe.SimpleSwipeListener;
+import com.tencent.qcloud.tuicore.component.swipe.SwipeLayout;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -174,14 +173,15 @@ public class ConversationListAdapter extends RecyclerSwipeAdapter<RecyclerView.V
         } else if (viewType == ITEM_TYPE_FOOTER_LOADING) {
             view = inflater.inflate(R.layout.loading_progress_bar, parent, false);
             return new FooterViewHolder(view);
-        } else if (viewType == ConversationInfo.TYPE_FORWAR_SELECT) {
-            view = inflater.inflate(R.layout.conversation_forward_select_adapter, parent, false);
-            return new ForwardSelectHolder(view);
         }  else if (viewType == ConversationInfo.TYPE_RECENT_LABEL) {
-            view = inflater.inflate(R.layout.conversation_forward_label_adapter, parent, false);
+            view = inflater.inflate(R.layout.conversation_minimalist_forward_label_adapter, parent, false);
             return new ForwardLabelHolder(view);
         } else {
-            view = inflater.inflate(R.layout.minimalistui_conversation_list_item_layout, parent, false);
+            if (isForwardFragment) {
+                view = inflater.inflate(R.layout.minimalistui_conversation_forward_list_item_layout, parent, false);
+            } else {
+                view = inflater.inflate(R.layout.minimalistui_conversation_list_item_layout, parent, false);
+            }
             holder = new ConversationCommonHolder(view);
             ((ConversationCommonHolder) holder).setForwardMode(isForwardFragment);
             ((ConversationCommonHolder) holder).setShowFoldedStyle(showFoldedStyle);
@@ -206,12 +206,6 @@ public class ConversationListAdapter extends RecyclerSwipeAdapter<RecyclerView.V
                 if (holder instanceof FooterViewHolder) {
                     ((ConversationBaseHolder) holder).layoutViews(null, position);
                 }
-                break;
-            }
-            case ConversationInfo.TYPE_FORWAR_SELECT : {
-                ForwardSelectHolder selectHolder = (ForwardSelectHolder) holder;
-                selectHolder.refreshTitle(!isShowMultiSelectCheckBox);
-                setOnClickListener(holder, getItemViewType(position), conversationInfo);
                 break;
             }
             default: {
@@ -447,7 +441,7 @@ public class ConversationListAdapter extends RecyclerSwipeAdapter<RecyclerView.V
 
         int dataPosition;
         if (isForwardFragment) {
-            dataPosition = position - SELECT_COUNT - SELECT_LABEL_COUNT;
+            dataPosition = position - SELECT_LABEL_COUNT;
         } else {
             dataPosition = position - HEADER_COUNT;
         }
@@ -462,7 +456,7 @@ public class ConversationListAdapter extends RecyclerSwipeAdapter<RecyclerView.V
     public int getItemCount() {
         int listSize = mDataSource.size();
         if (isForwardFragment) {
-            return listSize + SELECT_COUNT + SELECT_LABEL_COUNT + FOOTER_COUNT;
+            return listSize + SELECT_LABEL_COUNT + FOOTER_COUNT;
         }
         return listSize + HEADER_COUNT + FOOTER_COUNT;
     }
@@ -471,8 +465,6 @@ public class ConversationListAdapter extends RecyclerSwipeAdapter<RecyclerView.V
     public int getItemViewType(int position) {
         if (isForwardFragment) {
             if (position == 0) {
-                return ConversationInfo.TYPE_FORWAR_SELECT;
-            } else if (position == 1) {
                 return ConversationInfo.TYPE_RECENT_LABEL;
             }
         } else {
@@ -494,7 +486,7 @@ public class ConversationListAdapter extends RecyclerSwipeAdapter<RecyclerView.V
     private int getItemIndexInAdapter(int index) {
         int itemIndex;
         if (isForwardFragment) {
-            itemIndex = index + SELECT_LABEL_COUNT + SELECT_COUNT;
+            itemIndex = index + SELECT_LABEL_COUNT;
         } else {
             itemIndex = index + HEADER_COUNT;
         }
@@ -625,29 +617,6 @@ public class ConversationListAdapter extends RecyclerSwipeAdapter<RecyclerView.V
         @Override
         public void layoutViews(ConversationInfo conversationInfo, int position) {
 
-        }
-    }
-
-    static class ForwardSelectHolder extends ConversationBaseHolder {
-        private final TextView titleView;
-        public ForwardSelectHolder(View itemView) {
-            super(itemView);
-            titleView = itemView.findViewById(R.id.forward_title);
-        }
-
-        @Override
-        public void layoutViews(ConversationInfo conversationInfo, int position) {
-
-        }
-
-        public void refreshTitle(boolean isCreateGroup){
-            if (titleView == null)return;
-
-            if (isCreateGroup){
-                titleView.setText(TUIConversationService.getAppContext().getString(R.string.forward_select_new_chat));
-            } else {
-                titleView.setText(TUIConversationService.getAppContext().getString(R.string.forward_select_from_contact));
-            }
         }
     }
 

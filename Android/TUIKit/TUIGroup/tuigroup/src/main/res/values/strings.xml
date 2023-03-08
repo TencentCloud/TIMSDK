@@ -9,6 +9,10 @@
     <string name="group_members">Group Members</string>
     <string name="group_type">Group Type</string>
     <string name="add_group_member">Add Member</string>
+    <string name="group_plus_add_group_member">+ Add members</string>
+    <string name="group_member_info">Info</string>
+    <string name="group_delete">Delete</string>
+    <string name="group_set_admin">Set Administrator</string>
     <string name="remove_group_member">Delete Member</string>
     <string name="join_group_type">Group Joining Method</string>
     <string name="in_group_nick_name">My Alias in Group</string>
@@ -18,6 +22,11 @@
     <string name="modify_nick_name_in_goup">Edit My Alias in Group</string>
     <string name="group_edit">Edit</string>
     <string name="group_modify_remark_rule">Only letters, digits, underscores, and Chinese characters.</string>
+    <string name="group_clear_message">Clear Chat History</string>
+
+    <string name="group_profile_message">Message</string>
+    <string name="group_profile_audio_call">Audio</string>
+    <string name="group_profile_video_call">Video</string>
 
     <string name="group_detail">Group Chat Details</string>
 
@@ -91,7 +100,8 @@
     <string name="group_mute_tip">When Mute All is enabled, only the group owner and admins are allowed to send messages.</string>
     <string name="group_add_mute_member_tip">Add members to mute</string>
     <string name="group_owner_label">Group Owner</string>
-    <string name="group_manager_label">Admin</string>
+    <string name="group_manager_label">Administrator</string>
+    <string name="group_member_label">Member</string>
     <string name="group_add_manager_count_label">Manager (%d)</string>
     <string name="group_add_manager_label">Add Admin</string>
     <string name="group_remove_manager_label">Cancel Admin</string>
@@ -104,4 +114,6 @@
     <string name="group_not_support_mute_member">Unable to mute specified members for this type of group chat.</string>
 
     <string name="group_choose_avatar">Choose Avatar</string>
+    <string name="group_you">You</string>
+
 </resources>

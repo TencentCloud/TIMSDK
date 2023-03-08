@@ -14,8 +14,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.imsdk.v2.V2TIMUserFullInfo;
+import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
+import com.tencent.qcloud.tuicore.component.UnreadCountTextView;
 import com.tencent.qcloud.tuicore.component.gatherimage.UserIconView;
 import com.tencent.qcloud.tuicore.util.DateTimeUtil;
 import com.tencent.qcloud.tuicore.util.ScreenUtil;
@@ -41,10 +45,10 @@ import java.util.List;
 public abstract class MessageContentHolder extends MessageBaseHolder {
 
     protected static final int READ_STATUS_UNREAD = 1;
-    protected static final  int READ_STATUS_PART_READ = 2;
-    protected static final  int READ_STATUS_ALL_READ = 3;
-    protected static final  int READ_STATUS_HIDE = 4;
-    protected static final  int READ_STATUS_SENDING = 5;
+    protected static final int READ_STATUS_PART_READ = 2;
+    protected static final int READ_STATUS_ALL_READ = 3;
+    protected static final int READ_STATUS_HIDE = 4;
+    protected static final int READ_STATUS_SENDING = 5;
 
     public UserIconView leftUserIcon;
     public UserIconView rightUserIcon;
@@ -52,6 +56,7 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
     public LinearLayout msgContentLinear;
     public ImageView messageStatusImage;
     public ImageView fileStatusImage;
+    public UnreadCountTextView unreadAudioText;
     public TextView messageDetailsTimeTv;
     public LinearLayout extraInfoArea;
     private FrameLayout translationContentFrameLayout;
@@ -82,6 +87,7 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
         msgContentLinear = itemView.findViewById(R.id.msg_content_ll);
         messageStatusImage = itemView.findViewById(R.id.message_status_iv);
         fileStatusImage = itemView.findViewById(R.id.file_status_iv);
+        unreadAudioText = itemView.findViewById(R.id.unread_audio_text);
         messageDetailsTimeTv = itemView.findViewById(R.id.msg_detail_time_tv);
         replyPreviewView = itemView.findViewById(R.id.msg_reply_preview);
         extraInfoArea = itemView.findViewById(R.id.extra_info_area);
@@ -166,6 +172,10 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
             usernameText.setText(msg.getNickName());
         } else {
             usernameText.setText(msg.getSender());
+        }
+
+        if (isForwardMode) {
+            chatTimeText.setVisibility(View.GONE);
         }
 
         if (isForwardMode || isMessageDetailMode) {
@@ -302,13 +312,44 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
     }
 
     private void loadAvatar(TUIMessageBean msg) {
-        if (!TextUtils.isEmpty(msg.getFaceUrl())) {
+        if (msg.isUseMsgReceiverAvatar()) {
+            String userId = "";
+            if (TextUtils.equals(msg.getSender(), V2TIMManager.getInstance().getLoginUser())) {
+                userId = msg.getUserId();
+            } else {
+                userId = V2TIMManager.getInstance().getLoginUser();
+            }
+            List<String> idList = new ArrayList<>();
+            idList.add(userId);
+            V2TIMManager.getInstance().getUsersInfo(idList, new V2TIMValueCallback<List<V2TIMUserFullInfo>>() {
+                @Override
+                public void onSuccess(List<V2TIMUserFullInfo> v2TIMUserFullInfos) {
+                    V2TIMUserFullInfo userInfo = v2TIMUserFullInfos.get(0);
+                    if (userInfo == null) {
+                        setupAvatar("", msg.isSelf());
+                    } else {
+                        setupAvatar(userInfo.getFaceUrl(), msg.isSelf());
+                    }
+                }
+
+                @Override
+                public void onError(int code, String desc) {
+                    setupAvatar("", msg.isSelf());
+                }
+            });
+        } else {
+            setupAvatar(msg.getFaceUrl(), msg.isSelf());
+        }
+    }
+
+    private void setupAvatar(String faceUrl, boolean right) {
+        if (!TextUtils.isEmpty(faceUrl)) {
             List<Object> urllist = new ArrayList<>();
-            urllist.add(msg.getFaceUrl());
+            urllist.add(faceUrl);
             if (isForwardMode || isMessageDetailMode) {
                 leftUserIcon.setIconUrls(urllist);
             } else {
-                if (msg.isSelf()) {
+                if (right) {
                     rightUserIcon.setIconUrls(urllist);
                 } else {
                     leftUserIcon.setIconUrls(urllist);
@@ -318,6 +359,7 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
             rightUserIcon.setIconUrls(null);
             leftUserIcon.setIconUrls(null);
         }
+
         if (isShowSelfAvatar) {
             rightUserIcon.setVisibility(View.VISIBLE);
         } else {

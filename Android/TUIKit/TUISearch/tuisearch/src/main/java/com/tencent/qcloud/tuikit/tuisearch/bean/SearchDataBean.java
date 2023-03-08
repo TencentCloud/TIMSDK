@@ -180,6 +180,13 @@ public class SearchDataBean implements Parcelable {
         this.locateTimMessage = locateTimMessage;
     }
 
+    public long getMessageTime() {
+        if (locateTimMessage != null) {
+            return locateTimMessage.getTimestamp();
+        }
+        return 0;
+    }
+
     @Override
     public int describeContents() {
         return 0;

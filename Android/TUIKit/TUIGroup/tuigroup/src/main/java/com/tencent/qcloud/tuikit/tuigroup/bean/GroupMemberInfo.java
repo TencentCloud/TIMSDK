@@ -1,5 +1,7 @@
 package com.tencent.qcloud.tuikit.tuigroup.bean;
 
+import android.text.TextUtils;
+
 import com.tencent.imsdk.v2.V2TIMGroupMemberFullInfo;
 import com.tencent.imsdk.v2.V2TIMGroupMemberInfo;
 
@@ -101,14 +103,6 @@ public class GroupMemberInfo implements Serializable {
         this.joinTime = joinTime;
     }
 
-    public long getTinyId() {
-        return tinyId;
-    }
-
-    public void setTinyId(long tinyId) {
-        this.tinyId = tinyId;
-    }
-
     public int getMemberType() {
         return memberType;
     }
@@ -125,9 +119,21 @@ public class GroupMemberInfo implements Serializable {
         return isSelected;
     }
 
+    public String getDisplayName() {
+        if (!TextUtils.isEmpty(nameCard)) {
+            return nameCard;
+        } else if (!TextUtils.isEmpty(nickName)) {
+            return nickName;
+        } else if (!TextUtils.isEmpty(account)) {
+            return account;
+        } else {
+            return "";
+        }
+    }
+
     public GroupMemberInfo covertTIMGroupMemberInfo(V2TIMGroupMemberInfo info) {
         if (info instanceof V2TIMGroupMemberFullInfo) {
-            V2TIMGroupMemberFullInfo v2TIMGroupMemberFullInfo = (V2TIMGroupMemberFullInfo)info;
+            V2TIMGroupMemberFullInfo v2TIMGroupMemberFullInfo = (V2TIMGroupMemberFullInfo) info;
             setJoinTime(v2TIMGroupMemberFullInfo.getJoinTime());
             setMemberType(v2TIMGroupMemberFullInfo.getRole());
         }

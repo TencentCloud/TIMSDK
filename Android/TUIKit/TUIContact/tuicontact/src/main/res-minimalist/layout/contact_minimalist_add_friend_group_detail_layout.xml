@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginTop="10dp"
+    android:background="@drawable/contact_bottom_sheet_dialog_border"
+    android:minHeight="1000dp"
+    android:orientation="vertical"
+    android:paddingTop="28dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="23dp"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <TextView
+            android:id="@+id/cancel_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:text="@string/cancel"
+            android:textColor="#0365F9"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/title_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:gravity="center"
+            android:text="@string/contact_add_more_info"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="0.33" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/friend_detail_area"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/contact_profile_self_height"
+        android:background="#FFFFFF"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+            android:id="@+id/friend_icon"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="start"
+            android:layout_marginRight="18dp"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:id="@+id/friend_nick_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/friend_icon"
+            android:layout_toEndOf="@id/friend_icon"
+            android:gravity="center_vertical"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="林" />
+
+        <TextView
+            android:id="@+id/friend_account_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/friend_nick_name"
+            android:layout_alignStart="@id/friend_nick_name"
+            android:layout_marginTop="@dimen/contact_profile_text_margin"
+            android:gravity="center_vertical"
+            android:text="@string/contact_account_tag"
+            android:textColor="@color/black"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/friend_account"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/friend_nick_name"
+            android:layout_alignTop="@+id/friend_account_tag"
+            android:layout_toEndOf="@id/friend_account_tag"
+            android:gravity="center_vertical"
+            android:textColor="@color/font_blue"
+            android:textSize="12sp"
+            tools:text="99618" />
+
+        <TextView
+            android:id="@+id/group_type_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/friend_account_tag"
+            android:layout_alignStart="@id/friend_account_tag"
+            android:layout_marginTop="@dimen/contact_profile_text_margin"
+            android:gravity="center_vertical"
+            android:text="@string/contact_group_type_tag"
+            android:textColor="#CC000000"
+            android:textSize="12sp" />
+
+
+        <TextView
+            android:id="@+id/group_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/group_type_tag"
+            android:layout_toEndOf="@id/group_type_tag"
+            android:gravity="center_vertical"
+            android:textSize="12sp"
+            android:textColor="#CC000000"
+            tools:text="相信光" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/validation_message_area"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/contact_set_add_wording"
+            android:textColor="@color/black"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/validation_message_input"
+            android:layout_width="match_parent"
+            android:layout_height="123dp"
+            android:layout_marginTop="4dp"
+            android:gravity="start|top"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:textColor="#99000000"
+            android:textSize="16sp"
+            android:background="#F0F9F9F9" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/remark_area"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:text="@string/contact_set_remark_and_group"
+            android:textSize="14sp"
+            android:textColor="@color/black"/>
+
+        <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+            android:id="@+id/remarks_controller"
+            app:name="@string/contact_add_friend_remark"
+            app:canNav="true"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"/>
+
+        <View
+            android:background="#1A000000"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+
+        <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+            android:id="@+id/group_controller"
+            app:name="@string/contact_friend_group"
+            app:subject="@string/contact_my_friend"
+            app:canNav="false"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"/>
+
+        <View
+            android:background="#1A000000"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/send_button"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/contact_minimalist_result_bg"
+        android:text="@string/contact_add_more_send_request_text"
+        android:textColor="#147AFF"
+        android:textSize="16sp" />
+
+</LinearLayout>

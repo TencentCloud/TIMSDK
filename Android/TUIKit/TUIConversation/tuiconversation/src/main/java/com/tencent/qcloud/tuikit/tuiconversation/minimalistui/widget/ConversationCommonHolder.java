@@ -15,7 +15,6 @@ import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMUserStatus;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
-import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.component.UnreadCountTextView;
 import com.tencent.qcloud.tuicore.util.DateTimeUtil;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
@@ -23,7 +22,7 @@ import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.DraftInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.config.TUIConversationConfig;
 import com.tencent.qcloud.tuikit.tuiconversation.commonutil.TUIConversationLog;
-import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.widget.swipe.SwipeLayout;
+import com.tencent.qcloud.tuicore.component.swipe.SwipeLayout;
 
 import java.util.Date;
 import java.util.HashMap;

@@ -149,11 +149,11 @@ public class ContactPresenter {
                 break;
             case IContactListView.DataSource.CONTACT_LIST:
                 dataSource.add((ContactItemBean) new ContactItemBean(TUIContactService.getAppContext().getResources().getString(R.string.new_friend))
-                        .setTop(true).setBaseIndexTag(ContactItemBean.INDEX_STRING_TOP));
-                dataSource.add((ContactItemBean) new ContactItemBean(TUIContactService.getAppContext().getResources().getString(R.string.group)).
-                        setTop(true).setBaseIndexTag(ContactItemBean.INDEX_STRING_TOP));
-                dataSource.add((ContactItemBean) new ContactItemBean(TUIContactService.getAppContext().getResources().getString(R.string.blacklist)).
-                        setTop(true).setBaseIndexTag(ContactItemBean.INDEX_STRING_TOP));
+                        .setItemBeanType(ContactItemBean.ITEM_BEAN_TYPE_CONTROLLER).setTop(true).setBaseIndexTag(ContactItemBean.INDEX_STRING_TOP));
+                dataSource.add((ContactItemBean) new ContactItemBean(TUIContactService.getAppContext().getResources().getString(R.string.group))
+                        .setItemBeanType(ContactItemBean.ITEM_BEAN_TYPE_CONTROLLER).setTop(true).setBaseIndexTag(ContactItemBean.INDEX_STRING_TOP));
+                dataSource.add((ContactItemBean) new ContactItemBean(TUIContactService.getAppContext().getResources().getString(R.string.blacklist))
+                        .setItemBeanType(ContactItemBean.ITEM_BEAN_TYPE_CONTROLLER).setTop(true).setBaseIndexTag(ContactItemBean.INDEX_STRING_TOP));
                 provider.loadFriendListDataAsync(callback);
                 break;
             default:

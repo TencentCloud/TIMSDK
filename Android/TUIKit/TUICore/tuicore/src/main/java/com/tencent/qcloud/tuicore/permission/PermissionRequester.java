@@ -177,23 +177,21 @@ public class PermissionRequester {
     }
 
     private void afterPermissionGranted() {
-        Log.i(TAG, "afterPermissionGranted");
+        TUICore.unRegisterEvent(PERMISSION_NOTIFY_EVENT_KEY, PERMISSION_NOTIFY_EVENT_SUB_KEY, mPermissionNotification);
+        sIsRequesting.set(false);
         if (mPermissionCallback != null) {
             mPermissionCallback.onGranted();
             mPermissionCallback = null;
         }
-        TUICore.unRegisterEvent(PERMISSION_NOTIFY_EVENT_KEY, PERMISSION_NOTIFY_EVENT_SUB_KEY, mPermissionNotification);
-        sIsRequesting.set(false);
     }
 
     private void afterPermissionDenied() {
-        Log.i(TAG, "afterPermissionDenied");
+        TUICore.unRegisterEvent(PERMISSION_NOTIFY_EVENT_KEY, PERMISSION_NOTIFY_EVENT_SUB_KEY, mPermissionNotification);
+        sIsRequesting.set(false);
         if (mPermissionCallback != null) {
             mPermissionCallback.onDenied();
             mPermissionCallback = null;
         }
-        TUICore.unRegisterEvent(PERMISSION_NOTIFY_EVENT_KEY, PERMISSION_NOTIFY_EVENT_SUB_KEY, mPermissionNotification);
-        sIsRequesting.set(false);
     }
 
     private String[] findUnauthorizedPermissions(String[] permissions) {
@@ -219,6 +217,8 @@ public class PermissionRequester {
         }
         Intent intent = new Intent(context, PermissionActivity.class);
         intent.putExtra(PERMISSION_REQUEST_KEY, request);
+        // 在Activity之外startActivity需要添加FLAG_ACTIVITY_NEW_TASK，否则会crash
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 

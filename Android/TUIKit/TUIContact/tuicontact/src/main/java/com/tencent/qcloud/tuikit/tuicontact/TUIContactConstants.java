@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tuikit.tuicontact;
 
-import com.tencent.imsdk.BaseConstants;
 import com.tencent.imsdk.v2.V2TIMGroupAtInfo;
 
 public class TUIContactConstants {
@@ -39,6 +38,7 @@ public class TUIContactConstants {
         public static final String SELECT_FOR_CALL = "isSelectForCall";
         public static final String CONTENT = "content";
         public static final String TYPE = "type";
+        public static final String GROUP_TYPE = "groupType";
         public static final String TITLE = "title";
         public static final String INIT_CONTENT = "init_content";
         public static final String DEFAULT_SELECT_ITEM_INDEX = "default_select_item_index";
@@ -66,6 +66,9 @@ public class TUIContactConstants {
         public static final int COMMUNITY = 3;
 
         public static final String TYPE_PUBLIC = "Public";
+        public static final String TYPE_MEETING = "Meeting";
+        public static final String TYPE_WORK = "Work";
+        public static final String TYPE_COMMUNITY = "Community";
     }
 
 }
