@@ -104,7 +104,7 @@ dependencies {
     api project(':tuicallkit')
     api project(':tuiofflinepush')
 
-    /*def projects = this.rootProject.getAllprojects().stream().map { project -> project.name }.collect()
+    def projects = this.rootProject.getAllprojects().stream().map { project -> project.name }.collect()
     if (projects.contains("tuigroupnote")) {
         api project(':tuigroupnote')
     } else {
@@ -115,5 +115,5 @@ dependencies {
         api project(':tuipoll')
     } else {
         api "com.tencent.imsdk.tuiplugin:tuipoll:7.1.3925"
-    }*/
+    }
 }
