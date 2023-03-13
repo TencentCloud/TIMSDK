@@ -116,6 +116,7 @@
 "ProfileEditSignture" = "修改个性签名";
 "ProfileEditGender" = "修改性别";
 "ProfileEditAlia" = "修改备注";
+"ProfileEdit" = "编辑";
 "ProfileAlia" = "备注名";
 "ProfileBlocked" = "加入黑名单";
 "ProfileMessageDoNotDisturb" = "消息免打扰";
@@ -201,6 +202,8 @@
 "TUIKitGroupProfileManage" = "管理";
 "TUIKitGroupProfileManageAdd" = "添加成员";
 "TUIKitGroupProfileManageDelete" = "删除成员";
+"TUIKitGroupProfileAdmainAdd" = "设置为管理员";
+"TUIKitGroupProfileAdmainDelete" = "取消管理员";
 "TUIKitGroupTransferOwner" = "转让群主";
 "TUIKitGroupTransferOwnerSuccess" = "转让群主成功";
 
@@ -275,6 +278,8 @@
 "TUIKitMoreVoiceCall" = "语音通话";
 "TUIKitMoreLink" = "自定义";
 "TUIKitMoreLinkDetails" = "查看详情>>";
+"TUIKitMorePoll" = "投票";
+"TUIKitMoreGroupNote" = "群接龙";
 
 "TUIKitCallInviteYouVideoCall" = "邀请你视频通话";
 "TUIKitCallTurningOnMute" = "开启静音";
@@ -602,6 +607,7 @@
 "TUIKitErrorUnsupportIntefaceMessageRead" = "消息已读回执";
 "TUIKitErrorUnsupportIntefaceCommunity" = "社群";
 "TUIKitErrorUnsupportIntefaceDesc" = "功能为 IM 旗舰版功能，购买旗舰版套餐包后可使用，详见价格说明。";
+"TUIKitErrorValueAddedUnsupportIntefaceDesc" = "是增值付费功能，当前处于内测阶段，请联系腾讯云商务为您开通后继续使用";
 "TUIKitErrorUnsupportIntefaceCommunityDesc" = "\n备注: 社群可容纳百万成员，可划分分组、话题，适用于兴趣交友、游戏社交、粉丝运营、组织管理等场景。";
 "TUIKitErrorUnsupportIntefaceGuidelines" = "价格说明";
 "TUIKitErrorUnsupportIntefaceTitle" = "提示";
@@ -637,6 +643,7 @@
 "TUIKitRelayChatHistoryForSomebodyFormat" = "%@和%@的聊天记录";
 "TUIKitRelayErrorForwardFormat" = "@\"转发失败, code:%d, desc:%@\"";
 "TUIKitRelayTargetCreateNewChat" = "创建新聊天";
+"TUIKitRelayTargetCreateNewGroup" = "创建新群聊";
 "TUIKitRelayTargetSelectFromContacts" = "从联系人中选择";
 "TUIKitRelayTargetCrateGroupError" = "创建群失败";
 "TUIKitRelayTargetNoneTips" = "请选择联系人或会话";
@@ -644,6 +651,7 @@
 "TUIKitRelayCompatibleText" = "不支持合并转发消息，请升级到最新版本。";
 "TUIKitRelayUnsupportForward" = "发送失败的消息不支持转发";
 "TUIKitRelayOneByOnyOverLimit" = "转发消息过多，暂不支持逐条转发";
+"TUIKitRelayPluginNotAllowed" = "投票/接龙消息不支持转发";
 
 // 消息搜索
 "TUIKitSearchItemHeaderTitleContact" = "联系人";
@@ -771,6 +779,7 @@
 "TUIKitContactNoNewApplicationRequest" = "暂无新的联系人好友";
 "TUIKitContactNoGroupChats" = "暂无群聊";
 "TUIKitContactNoBlockList" = "暂无黑名单好友";
+"TUIKitSearchNoResultLists" = "无相关会话、联系人或消息记录";
 "TUIKitTyping" = "对方正在输入";
 
 "TUIKitMessageTipsEditGroupAddOptFormat" = "%@修改加群方式为\"%@\"、";
@@ -804,4 +813,105 @@
 "C2CDeliveredTo" = "未读";
 "GroupReadBy" = "已读列表";
 "GroupDeliveredTo" = "未读列表";
+"TUIKitMessage" = "发送消息";
+"TUIKitAudio" = "语音通话";
+"TUIKitVideo" = "视频通话";
+"TUIKitAddMembers" = "+ 添加成员";
+"TUIKitMembersRoleMember" = "成员";
+"TUIKitMembersRoleAdmin" = "管理员";
+"TUIKitMembersRoleSuper" = "群主";
+"TUIKitCreateCancel" = "取消";
+"TUIKitCreateNext" = "下一步";
+"TUIKitCreateFinish" = "创建";
+"TUIKitCreateMemebers" = "已选成员";
+"TUIKitDateToday" = "今天";
 //----mini---
+
+"TUIPollCreateNew" = "发起投票";
+"TUIPollCreateSucceed" = "创建成功";
+"TUIPollCreateFail" = "创建失败";
+"TUIPollEnterTitle" = "请输入投票主题";
+"TUIPollEnterOption" = "请输入选项";
+"TUIPollAddOption" = "添加选项";
+"TUIPollEnableMultiSelect" = "允许多选";
+"TUIPollSingleSelect" = "单选";
+"TUIPollMultiSelect" = "多选";
+"TUIPollAnonymousVote" = "匿名投票";
+"TUIPollPublic" = "公开结果";
+"TUIPollNonPublic" = "不公开结果";
+"TUIPollNonAnonymous" = "不匿名";
+"TUIPollAnonymous" = "匿名";
+"TUIPollEnableNotification" = "有新提交时在群里发通知";
+"TUIPolllPublish" = "发布";
+"TUIPollOneCount" = "票";
+"TUIPollMoreCount" = "票";
+"TUIPollInvitedParticipants" = "应参与人数：%d";
+"TUIPollRespondedParticipants" = "实际参与人数：%d";
+"TUIPollResend" = "再次发送";
+"TUIPollResendFail" = "再次发送失败，错误码：%d";
+"TUIPollEnd" = "结束投票";
+"TUIPollEndFail" = "结束投票失败，错误码：%d";
+"TUIPollVoteNow" = "立即投票";
+"TUIPollConfirmVote" = "确定";
+"TUIPollCancelVote" = "取消";
+"TUIPollPercent" = "已投%d票，占比%.0f%%";
+"TUIPollEnded" = "投票已结束";
+"TUIPollVoteSucceed" = "投票成功";
+"TUIPollVoteFail" = "投票失败";
+"TUIPollPublicResult" = "公开结果";
+"TUIPollViewAllOptions" = "查看全部选项";
+"TUIPollDisplayString" = "[投票]";
+"TUIPollTextFieldExceedLimit" = "超过最大字符数 50";
+"TUIPollVoted" = "已投票";
+"TUIPoll" = "投票";
+
+"TUIGroupNote" = "接龙";
+"TUIGroupNoteTitle" = "群接龙";
+"TUIGroupNoteSettings" = "设置";
+"TUIGroupNoteDeadline" = "截止时间 %@";
+"TUIGroupNoteTitleHint" = "添加接龙主题";
+"TUIGroupNoteDescriptionHint" = "添加接龙说明";
+"TUIGroupNoteFormatExample" = "例";
+"TUIGroupNoteFormatHint" = "可填写接龙格式";
+"TUIGroupNoteFillIn" = "请填写";
+"TUIGroupNoteMultipleSettings" = "允许每人提交多份";
+"TUIGroupNoteDeadlineSettings" = "设置截止时间";
+"TUIGroupNoteDeadlineNotSet" = "未设置";
+"TUIGroupNoteNotifySettings" = "有新提交时在群里发通知";
+"TUIGroupNoteSend" = "发送";
+"TUIGroupNoteNow" = "立即接龙";
+"TUIGroupNoteMessageTitle" = "群接龙";
+"TUIGroupNoteMessageTitleInfo" = "由%@发起，已有%d人参加";
+"TUIGroupNoteTipsMessagePrefix" = "%@已参加群接龙";
+"TUIGroupNoteHasStopped" = "已停止接龙";
+"TUIGroupNoteDeadlineMustBeLater" = "截止时间不能早于当前时间";
+"TUIGroupNoteDisplayString" = "[群接龙]";
+"TUIGroupNoteSendSucceed" = "发送成功";
+"TUIGroupNoteSendFail" = "发送失败";
+"TUIGroupNoteSubmitExceedLimit" = "接龙数量超过上限";
+"TUIGroupNoteTextFieldExceedLimit" = "超过最大字符数 50";
+"TUIGroupNoteSubmitOnce" = "只允许提交一次";
+"TUIGroupNoteSubmitNotAllowed" = "不允许提交";
+"TUIGroupNoteExceedDeadline" = "超过截止时间，已停止接龙";
+"TUIGroupNoteNotChanged" = "接龙信息没有变化";
+"TUIGroupNoteExpand" = "...展开...";
+"TUIGroupNoteNotDatePickerConfirm" = "确定";
+"TUIGroupNoteNotDatePickerCancel" = "取消";
+"TUIGroupNoteNotDatePickerDone" = "完成";
+"TUIGroupNoteNotDatePickerYear" = " 年";
+"TUIGroupNoteNotDatePickerMonth" = " 月";
+"TUIGroupNoteNotDatePickerDay" = " 日";
+"TUIGroupNoteNotDatePickerHour" = " 时";
+"TUIGroupNoteNotDatePickerMinute" = " 分";
+"TUIGroupNoteNotDatePickerSecond" = " 秒";
+"TUIGroupNoteNotDatePickerAM" = "上午";
+"TUIGroupNoteNotDatePickerPM" = "下午";
+"TUIGroupNoteNotDatePickerNow" = " 至今";
+"TUIGroupNoteNotDatePickerToday" = " 今天";
+"TUIGroupNoteNotDatePickerMon" = " 周一";
+"TUIGroupNoteNotDatePickerTue" = " 周二";
+"TUIGroupNoteNotDatePickerWed" = " 周三";
+"TUIGroupNoteNotDatePickerTHR" = " 周四";
+"TUIGroupNoteNotDatePickerFRI" = " 周五";
+"TUIGroupNoteNotDatePickerSAT" = " 周六";
+"TUIGroupNoteNotDatePickerSUN" = " 周日";

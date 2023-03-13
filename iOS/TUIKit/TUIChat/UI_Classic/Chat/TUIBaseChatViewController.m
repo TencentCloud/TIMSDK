@@ -39,6 +39,8 @@
 #import "TUIChatModifyMessageHelper.h"
 #import "TUIAIDenoiseSignatureManager.h"
 #import "NSString+TUIEmoji.h"
+#import "TUIPollContainerCellData.h"
+#import "TUIGroupNoteContainerCellData.h"
 
 static UIView *customTopView;
 
@@ -75,6 +77,8 @@ static UIView *customTopView;
 @property (nonatomic, copy) NSString *translatedText;
 
 @property (nonatomic, strong) TUIChatMediaDataProvider *mediaProvider;
+
+@property (nonatomic, assign) BOOL needScrollToBottom;
 
 @end
 
@@ -135,6 +139,11 @@ static UIView *customTopView;
     if (self.firstAppear) {
         [self loadDraft];
         self.firstAppear = NO;
+    }
+    
+    if (self.needScrollToBottom) {
+        [self.messageController scrollToBottom:YES];
+        self.needScrollToBottom = NO;
     }
 }
 
@@ -261,7 +270,7 @@ static UIView *customTopView;
 
     [TUICore registerEvent:TUICore_TUIContactNotify subKey:TUICore_TUIContactNotify_UpdateConversationBackgroundImageSubKey object:self];
     [TUICore registerEvent:TUICore_TUIGroupNotify subKey:TUICore_TUIGroupNotify_UpdateConversationBackgroundImageSubKey object:self];
-
+    [TUICore registerEvent:TUICore_TUIPollNotify subKey:TUICore_TUIPollNotify_PollCreatedSubKey object:self];
 }
 
 #pragma mark - Public Methods
@@ -389,10 +398,14 @@ static UIView *customTopView;
     _conversationData = conversationData;
     self.resgisterParam = [NSMutableArray array];
     _moreMenus = ({
-        NSMutableArray<TUIInputMoreCellData *> *moreMenus = [TUIChatDataProvider moreMenuCellDataArray:conversationData.groupID userID:conversationData.userID isNeedVideoCall:[TUIChatConfig defaultConfig].enableVideoCall isNeedAudioCall:[TUIChatConfig defaultConfig].enableAudioCall isNeedGroupLive:NO isNeedLink:[TUIChatConfig defaultConfig].enableLink];
+        NSMutableArray<TUIInputMoreCellData *> *moreMenus = [TUIChatDataProvider moreMenuCellDataArray:conversationData.groupID
+                                                                                                userID:conversationData.userID
+                                                                                       isNeedVideoCall:[TUIChatConfig defaultConfig].enableVideoCall
+                                                                                       isNeedAudioCall:[TUIChatConfig defaultConfig].enableAudioCall
+                                                                                       isNeedGroupLive:NO
+                                                                                            isNeedLink:[TUIChatConfig defaultConfig].enableLink];
         moreMenus;
     });
-    
 }
 
 - (CGFloat)topMarginByCustomView {
@@ -526,7 +539,6 @@ static UIView *customTopView;
             [self updateBackgroundImageUrlByConversationID:conversationID];
         }
     }
-    
 }
 
 - (void)updateBackgroundImageUrlByConversationID:(NSString *)conversationID {
@@ -631,6 +643,22 @@ static UIView *customTopView;
         [self.mediaProvider selectFile];
     } else if ([cell.data.key isEqualToString:[TUIInputMoreCellData pictureData].key]) {
         [self.mediaProvider takePicture];
+    } else if ([cell.data.key isEqualToString:TUIInputMoreCellKey_Poll]) {
+        NSDictionary *param = @{TUICore_TUIPollService_GetCreatePollVCMethod_GroupIDKey: self.conversationData.groupID};
+        UIViewController *vc = (UIViewController *)[TUICore callService:TUICore_TUIPollService
+                                                                 method:TUICore_TUIPollService_GetCreatePollVCMethod
+                                                                  param:param];
+        [self.navigationController pushViewController:vc animated:YES];
+        [self.inputController reset];
+        self.needScrollToBottom = YES;
+    } else if ([cell.data.key isEqualToString:TUIInputMoreCellKey_GroupNote]) {
+        NSDictionary *param = @{TUICore_TUIGroupNoteService_GetGroupNoteCreateVCMethod_GroupIDKey: self.conversationData.groupID};
+        UIViewController *vc = (UIViewController *)[TUICore callService:TUICore_TUIGroupNoteService
+                                                                 method:TUICore_TUIGroupNoteService_GetGroupNoteCreateVCMethod
+                                                                  param:param];
+        [self.navigationController pushViewController:vc animated:YES];
+        [self.inputController reset];
+        self.needScrollToBottom = YES;
     }
 }
 
@@ -797,16 +825,32 @@ static UIView *customTopView;
         return;
     }
 
-    BOOL hasUnsupportMsg = NO;
+    BOOL hasSendFailedMsg = NO;
+    BOOL hasPluginMsg = NO;
     for (TUIMessageCellData *data in uiMsgs) {
         if (data.status != Msg_Status_Succ) {
-            hasUnsupportMsg = YES;
+            hasSendFailedMsg = YES;
+        }
+        if ([data isKindOfClass:TUIPollContainerCellData.class] ||
+            [data isKindOfClass:TUIGroupNoteContainerCellData.class]) {
+            hasPluginMsg = YES;
+        }
+        if (hasSendFailedMsg && hasPluginMsg) {
             break;
         }
     }
     
-    if (hasUnsupportMsg) {
+    if (hasSendFailedMsg) {
         UIAlertController *vc = [UIAlertController alertControllerWithTitle:TUIKitLocalizableString(TUIKitRelayUnsupportForward) message:nil preferredStyle:UIAlertControllerStyleAlert];
+        [vc tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Confirm) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            
+        }]];
+        [self presentViewController:vc animated:YES completion:nil];
+        return;
+    }
+    
+    if (hasPluginMsg) {
+        UIAlertController *vc = [UIAlertController alertControllerWithTitle:TUIKitLocalizableString(TUIKitRelayPluginNotAllowed) message:nil preferredStyle:UIAlertControllerStyleAlert];
         [vc tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Confirm) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             
         }]];

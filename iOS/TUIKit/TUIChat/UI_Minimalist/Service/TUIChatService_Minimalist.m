@@ -88,8 +88,7 @@
 - (id)onCall:(NSString *)method param:(nullable NSDictionary *)param {
     if ([method isEqualToString:TUICore_TUIChatService_GetDisplayStringMethod]) {
         return [self getDisplayString:param[TUICore_TUIChatService_GetDisplayStringMethod_MsgKey]];
-    }
-    else if ([method isEqualToString:TUICore_TUIChatService_GetChatViewControllerMethod]) {
+    } else if ([method isEqualToString:TUICore_TUIChatService_GetChatViewControllerMethod]) {
         return [self createChatViewController:[param tui_objectForKey:TUICore_TUIChatService_GetChatViewControllerMethod_TitleKey asClass:NSString.class]
                                        userID:[param tui_objectForKey:TUICore_TUIChatService_GetChatViewControllerMethod_UserIDKey asClass:NSString.class]
                                       groupID:[param tui_objectForKey:TUICore_TUIChatService_GetChatViewControllerMethod_GroupIDKey asClass:NSString.class]
@@ -100,6 +99,19 @@
                                 locateMessage:[param tui_objectForKey:TUICore_TUIChatService_GetChatViewControllerMethod_LocateMessageKey asClass:V2TIMMessage.class]
                                     atMsgSeqs:[param tui_objectForKey:TUICore_TUIChatService_GetChatViewControllerMethod_AtMsgSeqsKey asClass:NSArray.class]
                                         draft:[param tui_objectForKey:TUICore_TUIChatService_GetChatViewControllerMethod_DraftKey asClass:NSString.class]];
+    } else if ([method isEqualToString:TUICore_TUIChatService_SetChatExtensionMethod]) {
+        [param enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSNumber *obj, BOOL * _Nonnull stop) {
+            if (![key isKindOfClass:NSString.class] || ![obj isKindOfClass:NSNumber.class]) {
+                return;
+            }
+            if ([key isEqualToString:TUICore_TUIChatService_SetChatExtensionMethod_EnableVideoCallKey]) {
+                TUIChatConfig.defaultConfig.enableVideoCall = obj.boolValue;
+            } else if ([key isEqualToString:TUICore_TUIChatService_SetChatExtensionMethod_EnableAudioCallKey]) {
+                TUIChatConfig.defaultConfig.enableAudioCall = obj.boolValue;
+            } else if ([key isEqualToString:TUICore_TUIChatService_SetChatExtensionMethod_EnableLinkKey]) {
+                TUIChatConfig.defaultConfig.enableLink = obj.boolValue;
+            }
+        }];
     }
     
     return nil;

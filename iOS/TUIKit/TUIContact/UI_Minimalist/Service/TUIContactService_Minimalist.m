@@ -10,12 +10,15 @@
 #import "TUIContactSelectController_Minimalist.h"
 #import "TUIFriendProfileController_Minimalist.h"
 #import "TUIUserProfileController_Minimalist.h"
+#import "TUICommonContactSelectCell_Minimalist.h"
 #import "TUIGroupCreateController_Minimalist.h"
+#import "TUICommonPendencyCellData.h"
 
 @implementation TUIContactService_Minimalist
 
 + (void)load {
     [TUICore registerService:TUICore_TUIContactService_Minimalist object:[TUIContactService_Minimalist shareInstance]];
+    TUIRegisterThemeResourcePath(TUIBundlePath(@"TUIContactTheme_Minimalist",TUIContactBundle_Key_Class), TUIThemeModuleContact_Minimalist);
 }
 
 + (TUIContactService_Minimalist *)shareInstance {
@@ -52,7 +55,7 @@
         NSString *groupName = [param tui_objectForKey:TUICore_TUIContactService_GetGroupCreateControllerMethod_GroupNameKey asClass:NSString.class];
         NSString  *groupType  = [param tui_objectForKey:TUICore_TUIContactService_GetGroupCreateControllerMethod_GroupTypeKey asClass:NSString.class];
         NSArray *contactList = [param tui_objectForKey:TUICore_TUIContactService_GetGroupCreateControllerMethod_ContactListKey asClass:NSArray.class];
-        void (^completion)(BOOL, V2TIMGroupInfo *) = [param objectForKey:TUICore_TUIContactService_GetGroupCreateControllerMethod_CompletionKey];
+        void (^completion)(BOOL, V2TIMGroupInfo *,UIImage *) = [param objectForKey:TUICore_TUIContactService_GetGroupCreateControllerMethod_CompletionKey];
         return [self createGroupCreateController:title groupName:groupName groupType:groupType contactList:contactList completion:completion];
         
     } else if ([method isEqualToString:TUICore_TUIContactService_GetUserOrFriendProfileVCMethod]) {
@@ -81,7 +84,7 @@
     if (sourceIds.count > 0) {
         vc.sourceIds = sourceIds;
     } else if (disableIds.count > 0) {
-        vc.viewModel.disableFilter = ^BOOL(TUICommonContactSelectCellData *data) {
+        vc.viewModel.disableFilter = ^BOOL(TUICommonContactSelectCellData_Minimalist *data) {
             for (NSString *identifier in disableIds) {
                 if ([identifier isEqualToString:data.identifier]) {
                     return YES;
@@ -133,7 +136,7 @@
                                         groupName:(NSString *)groupName
                                         groupType:(NSString *)groupType
                                       contactList:(NSArray<TUICommonContactSelectCellData *> *)contactList
-                                       completion:(void (^)(BOOL isSuccess, V2TIMGroupInfo * _Nonnull info))completion {
+                                       completion:(void (^)(BOOL isSuccess, V2TIMGroupInfo * _Nonnull info, UIImage * _Nonnull submitShowImage))completion {
     TUIGroupCreateController_Minimalist * vc = [[TUIGroupCreateController_Minimalist alloc] init];
     vc.title = @"";
 
@@ -144,11 +147,12 @@
     vc.createGroupInfo = createGroupInfo;
     vc.createContactArray = [NSArray arrayWithArray:contactList];
 
-    vc.submitCallback = ^(BOOL isSuccess, V2TIMGroupInfo * _Nonnull info) {
-         if (completion) {
-            completion(isSuccess, info);
-         }
+    vc.submitCallback = ^(BOOL isSuccess, V2TIMGroupInfo * _Nonnull info, UIImage * _Nonnull submitShowImage) {
+        if (completion) {
+           completion(isSuccess, info,submitShowImage);
+        }
     };
+
     return vc;
  }
 

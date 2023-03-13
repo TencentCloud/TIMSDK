@@ -1,6 +1,6 @@
 
 #import <UIKit/UIKit.h>
-#import "TUICommonPendencyCell.h"
+#import "TUICommonPendencyCell_Minimalist.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface TUINewFriendViewController_Minimalist : UIViewController
 
-@property (nonatomic) void (^cellClickBlock)(TUICommonPendencyCell *cell);
+@property (nonatomic) void (^cellClickBlock)(TUICommonPendencyCell_Minimalist *cell);
 
 @end
 

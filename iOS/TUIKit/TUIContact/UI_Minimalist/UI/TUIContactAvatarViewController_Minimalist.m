@@ -42,7 +42,7 @@
     self.avatarScrollView.delegate = self;
 
     self.avatarView.image = self.avatarData.avatarImage;
-    TUICommonContactProfileCardCellData *data = self.avatarData;
+    TUICommonContactProfileCardCellData_Minimalist *data = self.avatarData;
     /*
      @weakify(self)
     [RACObserve(data, avatarUrl) subscribeNext:^(NSURL *x) {

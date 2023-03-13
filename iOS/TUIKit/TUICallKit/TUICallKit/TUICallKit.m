@@ -220,15 +220,15 @@ callMediaType:(TUICallMediaType)callMediaType
 
 - (void)joinInGroupCall:(TUIRoomId *)roomId groupId:(NSString *)groupId callMediaType:(TUICallMediaType)callMediaType {
     if (!(roomId)) {
-        TUILog(@"Calling - joinInGroupCall failed, roomId is invalid");
+        TUILog(@"TUICallKit - joinInGroupCall failed, roomId is invalid");
         return;
     }
     if (!groupId) {
-        TUILog(@"Calling - joinInGroupCall failed, groupId is invalid");
+        TUILog(@"TUICallKit - joinInGroupCall failed, groupId is invalid");
         return;
     }
     if ([self checkAuthorizationStatusIsDenied:callMediaType]) {
-        TUILog(@"Calling - joinInGroupCall failed, mediaType is unknown");
+        TUILog(@"TUICallKit - joinInGroupCall failed, mediaType is unknown");
         return;
     }
     self.currentCallingRole = TUICallRoleCalled;
@@ -369,6 +369,8 @@ callMediaType:(TUICallMediaType)callMediaType
     
     if (code == ERR_ROOM_ENTER_FAIL) {
         [self makeToast:toast duration:3 position:TUICSToastPositionCenter];
+    } else if(code == ERROR_REQUEST_REPEATED) {
+        [self makeToast:TUICallingLocalize(@"Demo.TRTC.Calling.UnableToRestartTheCall")];
     } else if (code != ERR_INVALID_PARAMETERS) {
         [self makeToast:toast];
     }
@@ -725,6 +727,7 @@ callMediaType:(TUICallMediaType)callMediaType
     [self enableAutoLockScreen:YES];
     self.timerName = nil;
     self.groupID = nil;
+    [[TUICallEngine createInstance] selectAudioPlaybackDevice:TUIAudioPlaybackDeviceSpeakerphone];
     [[TUICallingStatusManager shareInstance] clearAllStatus];
 }
 

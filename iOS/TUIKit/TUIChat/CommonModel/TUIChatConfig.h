@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TUIChatConfig : NSObject
 
 + (TUIChatConfig *)defaultConfig;
+@property(nonatomic, strong) NSArray<TUIFaceGroup *> *chatContextEmojiDetailGroups;
 
 /**
  *  发送消息是否需要已读回执，默认 NO
@@ -94,10 +95,6 @@ NS_ASSUME_NONNULL_BEGIN
  * Whether to enable multi-terminal login function for audio and video calls, default is NO
  */
 @property(nonatomic, assign) BOOL enableMultiDeviceForCall;
-
-
-@property (nonatomic, strong) NSArray<TUIFaceGroup *> *chatContextEmojiDetailGroups;
-
 
 /**
  * 是否开启文本消息翻译，默认关闭

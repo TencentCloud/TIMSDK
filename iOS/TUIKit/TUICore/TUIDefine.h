@@ -26,10 +26,16 @@
 #define BussinessID @"businessID"
 #define BussinessID_GroupCreate @"group_create"
 #define BussinessID_TextLink @"text_link"
-#define BussinessID_Evaluation @"web_evaluation"
-#define BussinessID_Order @"web_order"
+// Supported in 6.5 and later, created by web
+#define BussinessID_Evaluation @"evaluation"
+// Supported in 6.5 and later, created by web
+#define BussinessID_Order @"order"
+// Supported in 6.5 and later
 #define BussinessID_Typing @"user_typing_status"
-
+// Supported in 7.1 and later
+#define BussinessID_GroupPoll @"group_poll"
+#define BussinessID_GroupNote @"group_note"
+#define BussinessID_GroupNoteTips @"group_note_tips"
 
 /**
  * 创建群自定义消息业务版本
@@ -118,7 +124,16 @@
 #define TUIContactBundle         @"TUIContact"
 #define TUIGroupBundle           @"TUIGroup"
 #define TUISearchBundle          @"TUISearch"
-#define TUIKitLocalizableBundle  @"TUIKitLocalizable"
+#define TUIPollBundle            @"TUIPoll"
+#define TUIGroupNoteBundle       @"TUIGroupNote"
+
+#define TUIKitLocalizableBundle          @"TUIKitLocalizable"
+#define TUICoreLocalizableBundle         TUIKitLocalizableBundle
+#define TUIChatLocalizableBundle         @"TUIChatLocalizable"
+#define TUIConversationLocalizableBundle @"TUIConversationLocalizable"
+#define TUIContactLocalizableBundle      @"TUIContactLocalizable"
+#define TUIGroupLocalizableBundle        @"TUIGroupLocalizable"
+#define TUISearchLocalizableBundle       @"TUISearchLocalizable"
 
 #define TUIDemoBundle_Key_Class            @"TUIKit"
 #define TUICoreBundle_Key_Class            @"TUICore"
@@ -128,7 +143,41 @@
 #define TUIContactBundle_Key_Class         @"TUIContactService"
 #define TUIGroupBundle_Key_Class           @"TUIGroupService"
 #define TUISearchBundle_Key_Class          @"TUISearchService"
+#define TUIPollBundle_Key_Class            @"TUIPollService"
+#define TUIGroupNoteBundle_Key_Class       @"TUIGroupNoteService"
 #define TUIKitLocalizableBundle_Key_Class  @"TUICore"
+#define TUIChatLocalizableBundle_Key_Class @"TUIChatService"
+
+static inline NSString *TUIGetFrameWorkName(NSString *bundleKeyClass) {
+    if ([bundleKeyClass isEqualToString:TUICoreBundle_Key_Class] ||
+        [bundleKeyClass isEqualToString:TUIKitLocalizableBundle_Key_Class]) {
+        return @"TUICore";
+    }
+    if ([bundleKeyClass isEqualToString:TUIChatBundle_Key_Class] ||
+        [bundleKeyClass isEqualToString:TUIChatFaceBundle_Key_Class] ||
+        [bundleKeyClass isEqualToString:TUIChatLocalizableBundle_Key_Class]) {
+        return @"TUIChat";
+    }
+    if ([bundleKeyClass isEqualToString:TUIConversationBundle_Key_Class]) {
+        return @"TUIConversation";
+    }
+    if ([bundleKeyClass isEqualToString:TUIContactBundle_Key_Class]) {
+        return @"TUIContact";
+    }
+    if ([bundleKeyClass isEqualToString:TUIGroupBundle_Key_Class]) {
+        return @"TUIGroup";
+    }
+    if ([bundleKeyClass isEqualToString:TUISearchBundle_Key_Class]) {
+        return @"TUISearch";
+    }
+    if ([bundleKeyClass isEqualToString:TUIPollBundle_Key_Class]) {
+        return @"TUIPull";
+    }
+    if ([bundleKeyClass isEqualToString:TUIGroupNoteBundle_Key_Class]) {
+        return @"TUIGroupNote";
+    }
+    return @"";
+}
 
 static inline NSString * TUIGetBundlePath(NSString *bundleName, NSString *bundleKeyClass) {
     static NSMutableDictionary *bundlePathCache = nil;
@@ -143,7 +192,14 @@ static inline NSString * TUIGetBundlePath(NSString *bundleName, NSString *bundle
     if (bundlePath.length == 0) {
         bundlePath = [[NSBundle bundleForClass:NSClassFromString(bundleKeyClass)] pathForResource:bundleName ofType:@"bundle"];
     }
-    
+    if (bundlePath.length == 0) {
+        bundlePath = [NSBundle mainBundle].bundlePath;
+        bundlePath = [bundlePath stringByAppendingPathComponent:@"Frameworks"];
+        bundlePath = [bundlePath stringByAppendingPathComponent:TUIGetFrameWorkName(bundleKeyClass)];
+        bundlePath = [bundlePath stringByAppendingPathExtension:@"framework"];
+        bundlePath = [bundlePath stringByAppendingPathComponent:bundleName];
+        bundlePath = [bundlePath stringByAppendingPathExtension:@"bundle"];
+    }
     if (bundlePath && bundlePathKey) {
         [bundlePathCache setObject:bundlePath forKey:bundlePathKey];
     }
@@ -158,8 +214,18 @@ static inline NSString * TUIGetBundlePath(NSString *bundleName, NSString *bundle
 #define TUIContactThemePath TUIBundlePath(@"TUIContactTheme",TUIContactBundle_Key_Class)
 #define TUIGroupThemePath TUIBundlePath(@"TUIGroupTheme",TUIGroupBundle_Key_Class)
 #define TUISearchThemePath TUIBundlePath(@"TUISearchTheme",TUISearchBundle_Key_Class)
+#define TUIPollThemePath TUIBundlePath(@"TUIPollTheme",TUIPollBundle_Key_Class)
+#define TUIGroupNoteThemePath TUIBundlePath(@"TUIGroupNoteTheme",TUIGroupNoteBundle_Key_Class)
 
-#define TUIKitLocalizable(bundleName) [NSBundle bundleWithPath:TUIBundlePath(bundleName, TUIKitLocalizableBundle_Key_Class)]
+static inline NSBundle *TUIGetLocalizable(NSString *bundleName) {
+    if ([bundleName isEqualToString:TUIChatLocalizableBundle] ||
+        [bundleName isEqualToString:TUIChatFaceBundle]) {
+        return [NSBundle bundleWithPath:TUIBundlePath(bundleName, TUIChatLocalizableBundle_Key_Class)];
+    } else {
+        return [NSBundle bundleWithPath:TUIBundlePath(bundleName, TUIKitLocalizableBundle_Key_Class)];
+    }
+}
+#define TUIKitLocalizable(bundleName) TUIGetLocalizable(bundleName)
 
 #define TUIDemoImagePath(imageName) [TUIBundlePath(TUIDemoBundle,TUIDemoBundle_Key_Class) stringByAppendingPathComponent:imageName]
 #define TUICoreImagePath(imageName) [TUIBundlePath(TUICoreBundle,TUICoreBundle_Key_Class) stringByAppendingPathComponent:imageName]
@@ -169,6 +235,8 @@ static inline NSString * TUIGetBundlePath(NSString *bundleName, NSString *bundle
 #define TUIContactImagePath(imageName) [TUIBundlePath(TUIContactBundle,TUIContactBundle_Key_Class) stringByAppendingPathComponent:imageName]
 #define TUIGroupImagePath(imageName) [TUIBundlePath(TUIGroupBundle,TUIGroupBundle_Key_Class) stringByAppendingPathComponent:imageName]
 #define TUISearchImagePath(imageName) [TUIBundlePath(TUISearchBundle,TUISearchBundle_Key_Class) stringByAppendingPathComponent:imageName]
+#define TUIPollImagePath(imageName) [TUIBundlePath(TUIPollBundle,TUIPollBundle_Key_Class) stringByAppendingPathComponent:imageName]
+#define TUIGroupNoteImagePath(imageName) [TUIBundlePath(TUIGroupNoteBundle,TUIGroupNoteBundle_Key_Class) stringByAppendingPathComponent:imageName]
 
 //-----Minimalist-------
 #define TUIDemoBundle_Minimalist            @"TUIDemo_Minimalist"
@@ -179,6 +247,8 @@ static inline NSString * TUIGetBundlePath(NSString *bundleName, NSString *bundle
 #define TUIContactBundle_Minimalist         @"TUIContact_Minimalist"
 #define TUIGroupBundle_Minimalist           @"TUIGroup_Minimalist"
 #define TUISearchBundle_Minimalist          @"TUISearch_Minimalist"
+#define TUIPollBundle_Minimalist            @"TUIPoll_Minimalist"
+#define TUIGroupNoteBundle_Minimalist       @"TUIGroupNote_Minimalist"
 //#define TUIKitLocalizableBundle  @"TUIKitLocalizable"
 
 //#define TUIKitLocalizable(bundleName) [NSBundle bundleWithPath:TUIBundlePath(bundleName, TUIKitLocalizableBundle_Key_Class)]
@@ -191,6 +261,8 @@ static inline NSString * TUIGetBundlePath(NSString *bundleName, NSString *bundle
 #define TUIContactImagePath_Minimalist(imageName) [TUIBundlePath(TUIContactBundle_Minimalist,TUIContactBundle_Key_Class) stringByAppendingPathComponent:imageName]
 #define TUIGroupImagePath_Minimalist(imageName) [TUIBundlePath(TUIGroupBundle_Minimalist,TUIGroupBundle_Key_Class) stringByAppendingPathComponent:imageName]
 #define TUISearchImagePath_Minimalist(imageName) [TUIBundlePath(TUISearchBundle_Minimalist,TUISearchBundle_Key_Class) stringByAppendingPathComponent:imageName]
+#define TUIPollImagePath_Minimalist(imageName) [TUIBundlePath(TUIPollBundle_Minimalist,TUIPollBundle_Key_Class) stringByAppendingPathComponent:imageName]
+#define TUIGroupNoteImagePath_Minimalist(imageName) [TUIBundlePath(TUIGroupNoteBundle_Minimalist,TUIGroupNoteBundle_Key_Class) stringByAppendingPathComponent:imageName]
 
 //-----
 
@@ -216,6 +288,8 @@ static inline NSString * TUIGetBundlePath(NSString *bundleName, NSString *bundle
 #define TUIInputMoreCellKey_VideoCall @"TUIInputMoreCellKey_VideoCall"
 #define TUIInputMoreCellKey_AudioCall @"TUIInputMoreCellKey_AudioCall"
 #define TUIInputMoreCellKey_Link @"TUIInputMoreCellKey_Link"
+#define TUIInputMoreCellKey_Poll @"TUIInputMoreCellKey_Poll"
+#define TUIInputMoreCellKey_GroupNote @"TUIInputMoreCellKey_GroupNote"
 
 //cell
 #define TMessageCell_Name @"TMessageCell_Name"
@@ -505,6 +579,12 @@ static inline NSString * TUIGetBundlePath(NSString *bundleName, NSString *bundle
 #define TUIKitNotification_onReceivedUnsupportInterfaceError @"TUIKitNotification_onReceivedUnsupportInterfaceError"
 
 /**
+ * 收到增值包不支持接口的错误通知
+ * Received error notification that the package is not supported
+ */
+#define TUIKitNotification_onReceivedValueAddedUnsupportInterfaceError @"TUIKitNotification_onReceivedValueAddedUnsupportInterfaceError"
+
+/**
  * 会话列表更新时收到的未读数更新通知
  * Unread update notifications received when the Conversation list is updated
  */
@@ -535,10 +615,20 @@ static inline NSString * TUIGetBundlePath(NSString *bundleName, NSString *bundle
 #define TUICore_TUIChatService_GetChatViewControllerMethod_AtMsgSeqsKey @"TUICore_TUIChatService_GetChatViewControllerMethod_AtMsgSeqsKey"
 #define TUICore_TUIChatService_GetChatViewControllerMethod_DraftKey @"TUICore_TUIChatService_GetChatViewControllerMethod_DraftKey"
 
+#define TUICore_TUIChatService_SendMessageMethod @"TUICore_TUIChatService_SendMessageMethod"
+#define TUICore_TUIChatService_SendMessageMethod_MsgKey @"TUICore_TUIChatService_SendMessageMethod_MsgKey"
+
+#define TUICore_TUIChatService_SetChatExtensionMethod @"TUICore_TUIChatService_SetChatExtensionMethod"
+#define TUICore_TUIChatService_SetChatExtensionMethod_EnableVideoCallKey @"TUICore_TUIChatService_SetChatExtensionMethod_EnableVideoCallKey"
+#define TUICore_TUIChatService_SetChatExtensionMethod_EnableAudioCallKey @"TUICore_TUIChatService_SetChatExtensionMethod_EnableAudioCallKey"
+#define TUICore_TUIChatService_SetChatExtensionMethod_EnableLinkKey @"TUICore_TUIChatService_SetChatExtensionMethod_EnableLinkKey"
 
 #pragma mark - TUICore_TUIChatNotify
 #define TUICore_TUIChatNotify @"TUICore_TUIChatNotify"
-
+#define TUICore_TUIChatNotify_SendMessageSubKey @"TUICore_TUIChatNotify_SendMessageSubKey"
+#define TUICore_TUIChatNotify_SendMessageSubKey_Code @"TUICore_TUIChatNotify_SendMessageSubKey_Code"
+#define TUICore_TUIChatNotify_SendMessageSubKey_Desc @"TUICore_TUIChatNotify_SendMessageSubKey_Desc"
+#define TUICore_TUIChatNotify_SendMessageSubKey_Message @"TUICore_TUIChatNotify_SendMessageSubKey_Message"
 
 #pragma mark - TUICore_TUIChatExtension
 #define TUICore_TUIChatExtension_GetMoreCellInfo_VideoCall    @"TUICore_TUIChatExtension_GetMoreCellInfo_VideoCall"
@@ -546,6 +636,8 @@ static inline NSString * TUIGetBundlePath(NSString *bundleName, NSString *bundle
 #define TUICore_TUIChatExtension_GetMoreCellInfo_UserID       @"TUICore_TUIChatExtension_GetMoreCellInfo_UserID"
 #define TUICore_TUIChatExtension_GetMoreCellInfo_GroupID      @"TUICore_TUIChatExtension_GetMoreCellInfo_GroupID"
 #define TUICore_TUIChatExtension_GetMoreCellInfo_View         @"TUICore_TUIChatExtension_GetMoreCellInfo_View"
+#define TUICore_TUIChatExtension_GetMoreCellInfo_Poll         @"TUICore_TUIChatExtension_GetMoreCellInfo_Poll"
+#define TUICore_TUIChatExtension_GetMoreCellInfo_GroupNote    @"TUICore_TUIChatExtension_GetMoreCellInfo_GroupNote"
 
 #pragma mark - TUICore_TUIConversationService
 #define TUICore_TUIConversationService @"TUICore_TUIConversationService"
@@ -682,6 +774,52 @@ static inline NSString * TUIGetBundlePath(NSString *bundleName, NSString *bundle
 
 #define TUICore_RecordAudioMessageNotify_RecordAudioVoiceVolumeSubKey @"TUICore_RecordAudioMessageNotify_RecordAudioVoiceVolumeSubKey"
 #define TUICore_RecordAudioMessageNotify_RecordAudioVoiceVolumeSubKey_VolumeKey @"volume"
+
+#pragma mark - TUICore_TUIPollService
+#define TUICore_TUIPollService @"TUICore_TUIPollService"
+#define TUICore_TUIPollService_Minimalist @"TUICore_TUIPollService_Minimalist"
+
+#define TUICore_TUIPollService_GetCreatePollVCMethod @"TUICore_TUIPollService_GetCreatePollVCMethod"
+#define TUICore_TUIPollService_GetCreatePollVCMethod_GroupIDKey @"TUICore_TUIPollService_GetCreatePollVCMethod_GroupIDKey"
+#define TUICore_TUIPollService_GetCreatePollVCMethod_MessageKey @"TUICore_TUIPollService_GetCreatePollVCMethod_MessageKey"
+
+#define TUICore_TUIPollService_GetPollViewControllerMethod @"TUICore_TUIPollService_GetPollViewControllerMethod"
+#define TUICore_TUIPollService_GetPollViewControllerMethod_MessageKey @"TUICore_TUIPollService_GetPollViewControllerMethod_MessageKey"
+
+#pragma mark - TUICore_TUIPollNotify
+#define TUICore_TUIPollNotify @"TUICore_TUIPollNotify"
+#define TUICore_TUIPollNotify_PollViewSizeChangedSubKey @"TUICore_TUIPollNotify_PollViewSizeChangedSubKey"
+#define TUICore_TUIPollNotify_PollViewSizeKey @"TUICore_TUIPollNotify_PollViewSizeKey"
+#define TUICore_TUIPollNotify_PollViewMessageKey @"TUICore_TUIPollNotify_PollViewMessageKey"
+
+#define TUICore_TUIPollNotify_PollClosedSubKey @"TUICore_TUIPollNotify_PollClosedSubKey"
+#define TUICore_TUIPollNotify_PollOriginMessageIDKey @"TUICore_TUIPollNotify_PollOriginMessageIDKey"
+
+#define TUICore_TUIPollNotify_PollCreatedSubKey @"TUICore_TUIPollNotify_PollCreatedSubKey"
+
+#pragma mark - TUICore_TUIGroupNoteService
+#define TUICore_TUIGroupNoteService @"TUICore_TUIGroupNoteService"
+#define TUICore_TUIGroupNoteService_Minimalist @"TUICore_TUIGroupNoteService_Minimalist"
+
+#define TUICore_TUIGroupNoteService_GetGroupNoteCreateVCMethod @"TUICore_TUIGroupNoteService_GetGroupNoteCreateVCMethod"
+#define TUICore_TUIGroupNoteService_GetGroupNoteCreateVCMethod_GroupIDKey @"TUICore_TUIGroupNoteService_GetGroupNoteCreateVCMethod_GroupIDKey"
+
+#define TUICore_TUIGroupNoteService_GetGroupNoteDetailVCMethod @"TUICore_TUIGroupNoteService_GetGroupNoteDetailVCMethod"
+#define TUICore_TUIGroupNoteService_GetGroupNoteDetailVCMethod_GroupIDKey @"TUICore_TUIGroupNoteService_GetGroupNoteDetailVCMethod_GroupIDKey"
+#define TUICore_TUIGroupNoteService_GetGroupNoteDetailVCMethod_MessageKey @"TUICore_TUIGroupNoteService_GetGroupNoteDetailVCMethod_MessageKey"
+
+#define TUICore_TUIGroupNoteService_GetGroupNotePreviewVCMethod @"TUICore_TUIGroupNoteService_GetGroupNotePreviewVCMethod"
+#define TUICore_TUIGroupNoteService_GetGroupNotePreviewVCMethod_MessageKey @"TUICore_TUIGroupNoteService_GetGroupNotePreviewVCMethod_MessageKey"
+
+#pragma mark - TUICore_TUIGroupNoteNotify
+#define TUICore_TUIGroupNoteNotify @"TUICore_TUIGroupNoteNotify"
+#define TUICore_TUIGroupNoteNotify_NoteVCSizeChangedSubKey @"TUICore_TUIGroupNoteNotify_NoteVCSizeChangedSubKey"
+
+#define TUICore_TUIGroupNoteNotify_NoteCreatedSubKey @"TUICore_TUIGroupNoteNotify_NoteCreatedSubKey"
+
+#define TUICore_TUIGroupNoteNotify_PreviewSizeChangedSubKey @"TUICore_TUIGroupNoteNotify_PreviewSizeChangedSubKey"
+#define TUICore_TUIGroupNoteNotify_PreviewSizeKey @"TUICore_TUIGroupNoteNotify_PreviewSizeKey"
+#define TUICore_TUIGroupNoteNotify_PreviewMessageKey @"TUICore_TUIGroupNoteNotify_PreviewMessageKey"
 
 // 初始化录制成功,录制成功
 #define TUICore_RecordAudioMessageNotifyError_None 0

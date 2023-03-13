@@ -35,6 +35,11 @@ NS_ASSUME_NONNULL_BEGIN
  *  method ：TUICore_TUIChatService_GetDisplayStringMethod
  *  param: @{TUICore_TUIChatService_GetDisplayStringMethod_MsgKey:V2TIMMessage};
  *
+ * > 发送消息
+ *  serviceName: TUICore_TUIChatService
+ *  method: TUICore_TUIChatService_SendMessageMethod
+ *  param: @{TUICore_TUIChatService_SendMessageMethod_MsgKey:V2TIMMessage};
+ *
  *
  * TUIChatService currently provides two services:
  * 1. Creating chat class
@@ -57,6 +62,11 @@ NS_ASSUME_NONNULL_BEGIN
  *    serviceName: TUICore_TUIChatService
  *    method ：TUICore_TUIChatService_GetDisplayStringMethod
  *    param: @{TUICore_TUIChatService_GetDisplayStringMethod_MsgKey:V2TIMMessage};
+ *
+ *  > Send Message
+ *  serviceName: TUICore_TUIChatService
+ *  method: TUICore_TUIChatService_SendMessageMethod
+ *  param: @{TUICore_TUIChatService_SendMessageMethod_MsgKey:V2TIMMessage};
  */
 
 

@@ -7,7 +7,7 @@
 //
 
 #import "TUIUserProfileController_Minimalist.h"
-#import "TUICommonContactProfileCardCell.h"
+#import "TUICommonContactProfileCardCell_Minimalist.h"
 #import "TUIFriendRequestViewController_Minimalist.h"
 #import "TUICommonContactTextCell.h"
 #import "TUICommonModel.h"
@@ -15,9 +15,10 @@
 #import "TUIContactAvatarViewController_Minimalist.h"
 #import "TUIContactConversationCellData.h"
 #import "TUIThemeManager.h"
+#import "TUIContactAcceptRejectCell_Minimalist.h"
+#import "TUIContactButtonCell_Minimalist.h"
 
-
-@interface TUIUserProfileController_Minimalist ()<TUIContactProfileCardDelegate>
+@interface TUIUserProfileController_Minimalist ()<TUIContactProfileCardDelegate_Minimalist>
 @property NSMutableArray<NSArray *> *dataList;
 @property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
 @end
@@ -48,11 +49,14 @@
         self.tableView.sectionHeaderTopPadding = 0;
     }
     [self.tableView registerClass:[TUICommonContactTextCell class] forCellReuseIdentifier:@"TextCell"];
-    [self.tableView registerClass:[TUICommonContactProfileCardCell class] forCellReuseIdentifier:@"CardCell"];
-    [self.tableView registerClass:[TUIButtonCell class] forCellReuseIdentifier:@"ButtonCell"];
+    [self.tableView registerClass:[TUICommonContactProfileCardCell_Minimalist class] forCellReuseIdentifier:@"CardCell"];
+    [self.tableView registerClass:[TUIContactButtonCell_Minimalist class] forCellReuseIdentifier:@"ButtonCell"];
+    [self.tableView registerClass:[TUIContactAcceptRejectCell_Minimalist class] forCellReuseIdentifier:@"ButtonAcceptCell"];
+
     self.tableView.delaysContentTouches = NO;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-
+    self.tableView.backgroundColor = [UIColor whiteColor];
+    
     [self loadData];
 }
 
@@ -63,7 +67,7 @@
     [list addObject:({
         NSMutableArray *inlist = @[].mutableCopy;
         [inlist addObject:({
-            TUICommonContactProfileCardCellData *personal = [[TUICommonContactProfileCardCellData alloc] init];
+            TUICommonContactProfileCardCellData_Minimalist *personal = [[TUICommonContactProfileCardCellData_Minimalist alloc] init];
             personal.identifier = self.userFullInfo.userID;
             personal.avatarImage = DefaultAvatarImage;
             personal.avatarUrl = [NSURL URLWithString:self.userFullInfo.faceURL];
@@ -113,9 +117,10 @@
             [self.dataList addObject:({
                 NSMutableArray *inlist = @[].mutableCopy;
                 [inlist addObject:({
-                    TUIButtonCellData *data = TUIButtonCellData.new;
+                    TUIContactButtonCellData_Minimalist *data = TUIContactButtonCellData_Minimalist.new;
                     data.title = TUIKitLocalizableString(FriendAddTitle);
-                    data.style = ButtonWhite;
+                    data.style = ButtonBule;
+                    data.textColor = [UIColor tui_colorWithHex:@"147AFF"];
                     data.cbuttonSelector = @selector(onAddFriend);
                     data.reuseId = @"ButtonCell";
                     data.hideSeparatorLine = YES;
@@ -135,22 +140,22 @@
         [self.dataList addObject:({
             NSMutableArray *inlist = @[].mutableCopy;
             [inlist addObject:({
-                TUIButtonCellData *data = TUIButtonCellData.new;
-                data.title = TUIKitLocalizableString(Accept);
-                data.style = ButtonWhite;
-                data.textColor = [UIColor colorWithRed:20/255.0 green:122/255.0 blue:255/255.0 alpha:1/1.0];
-                data.cbuttonSelector = @selector(onAgreeFriend);
-                data.reuseId = @"ButtonCell";
+                TUIContactAcceptRejectCellData_Minimalist *data = TUIContactAcceptRejectCellData_Minimalist.new;
+                __weak typeof(data)weakData = data;
+                data.agreeClickCallback = ^{
+                    [self onAgreeFriend];
+                    weakData.isAccepted = YES;
+                    [self.tableView reloadData];
+                };
+                data.rejectClickCallback = ^{
+                    [self onRejectFriend];
+                    weakData.isRejected = YES;
+                    [self.tableView reloadData];
+                };
+                data.reuseId = @"ButtonAcceptCell";
                 data;
             })];
-            [inlist addObject:({
-                TUIButtonCellData *data = TUIButtonCellData.new;
-                data.title = TUIKitLocalizableString(Decline);
-                data.style = ButtonRedText;
-                data.cbuttonSelector =  @selector(onRejectFriend);
-                data.reuseId = @"ButtonCell";
-                data;
-            })];
+   
             inlist;
         })];
     }
@@ -159,7 +164,7 @@
         [self.dataList addObject:({
             NSMutableArray *inlist = @[].mutableCopy;
             [inlist addObject:({
-                TUIButtonCellData *data = TUIButtonCellData.new;
+                TUIContactButtonCellData_Minimalist *data = TUIContactButtonCellData_Minimalist.new;
                 data.title = TUIKitLocalizableString(Accept);
                 data.style = ButtonWhite;
                 data.textColor = TUICoreDynamicColor(@"primary_theme_color", @"#147AFF");
@@ -168,7 +173,7 @@
                 data;
             })];
             [inlist addObject:({
-                TUIButtonCellData *data = TUIButtonCellData.new;
+                TUIContactButtonCellData_Minimalist *data = TUIContactButtonCellData_Minimalist.new;
                 data.title = TUIKitLocalizableString(Decline);
                 data.style = ButtonRedText;
                 data.cbuttonSelector =  @selector(onRejectGroup);
@@ -196,8 +201,8 @@
 
     TUICommonCellData *data = self.dataList[indexPath.section][indexPath.row];
     TUICommonTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:data.reuseId forIndexPath:indexPath];
-    if ([cell isKindOfClass:[TUICommonContactProfileCardCell class]]) {
-        TUICommonContactProfileCardCell *cardCell = (TUICommonContactProfileCardCell *)cell;
+    if ([cell isKindOfClass:[TUICommonContactProfileCardCell_Minimalist class]]) {
+        TUICommonContactProfileCardCell_Minimalist *cardCell = (TUICommonContactProfileCardCell_Minimalist *)cell;
         cardCell.delegate = self;
         cell = cardCell;
     }
@@ -293,7 +298,7 @@
     [self.navigationController pushViewController:image animated:YES];
 }
 
-- (void)didTapOnAvatar:(TUICommonContactProfileCardCell *)cell {
+- (void)didTapOnAvatar:(TUICommonContactProfileCardCell_Minimalist *)cell {
     TUIContactAvatarViewController_Minimalist *image = [[TUIContactAvatarViewController_Minimalist alloc] init];
     image.avatarData = cell.cardData;
     [self.navigationController pushViewController:image animated:YES];

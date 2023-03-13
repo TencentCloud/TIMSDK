@@ -101,6 +101,7 @@
         _textView = [[UITextView alloc] init];
         _textView.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
         _textView.textColor = TUICoreDynamicColor(@"form_title_color", @"#000000");
+        _textView.font = [UIFont systemFontOfSize:17];
     }
     return _textView;
 }

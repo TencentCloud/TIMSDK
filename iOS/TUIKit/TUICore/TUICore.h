@@ -56,4 +56,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSDictionary *)getExtensionInfo:(NSString *)key param:(nullable NSDictionary *)param;
 @end
 
+@interface TUIWeakProxy : NSProxy
+
+@property (nonatomic, weak, readonly, nullable) id target;
+
+- (nonnull instancetype)initWithTarget:(nonnull id)target;
++ (nonnull instancetype)proxyWithTarget:(nonnull id)target;
+
+@end
+
 NS_ASSUME_NONNULL_END

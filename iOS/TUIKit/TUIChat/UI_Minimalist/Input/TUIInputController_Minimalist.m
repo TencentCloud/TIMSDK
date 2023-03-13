@@ -24,6 +24,7 @@
 #import "TUIChatDataProvider_Minimalist.h"
 #import "TUIChatModifyMessageHelper.h"
 #import "UIAlertController+TUICustomStyle.h"
+#import "TUIChatConfig.h"
 
 @interface TUIInputController_Minimalist () <TUIInputBarDelegate_Minimalist, TUIMenuViewDelegate_Minimalist, TUIFaceViewDelegate, TUIMoreViewDelegate_Minimalist>
 @property (nonatomic, assign) InputStatus status;
@@ -205,37 +206,32 @@
 {
     
     UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-    NSArray *titles = @[TUIKitLocalizableString(TUIKitMorePhoto),
-                        TUIKitLocalizableString(TUIKitMoreCamera),
-                        TUIKitLocalizableString(TUIKitMoreVideo),
-                        TUIKitLocalizableString(TUIKitMoreFile),
-                        TUIKitLocalizableString(TUIKitMoreLink)];
+    NSMutableArray *titles = [NSMutableArray arrayWithArray:@[
+                                                                TUIKitLocalizableString(TUIKitMorePhoto),
+                                                                TUIKitLocalizableString(TUIKitMoreCamera),
+                                                                TUIKitLocalizableString(TUIKitMoreVideo),
+                                                                TUIKitLocalizableString(TUIKitMoreFile)
+                                                            ]];
     
-    NSArray *images = @[[UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_more_photo")],
-                        [UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_more_camera")],
-                        [UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_more_video")],
-                        [UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_more_document")],
-                        [UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_more_custom")],
-    ];
+    NSMutableArray *images = [NSMutableArray arrayWithArray:@[
+                                                                [UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_more_photo")],
+                                                                [UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_more_camera")],
+                                                                [UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_more_video")],
+                                                                [UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_more_document")],
+                                                            ]];
 
-    NSArray *actionHandles = @[
-                               
-                               ^(UIAlertAction *action){
-                                   [self excuteAction:@"Album"];
-                               },
-                                ^(UIAlertAction *action){
-                                    [self excuteAction:@"TakePhoto"];
-                                },
-                                ^(UIAlertAction *action){
-                                    [self excuteAction:@"RecordVideo"];
-                                },
-                                ^(UIAlertAction *action){
-                                    [self excuteAction:@"File"];
-                                },
-                                ^(UIAlertAction *action){
-                                    [self excuteAction:TUIInputMoreCellKey_Link];
-                                },
-    ];
+    NSMutableArray *actionHandles = [NSMutableArray arrayWithArray:@[
+                                        ^(UIAlertAction *action){ [self excuteAction:@"Album"]; },
+                                        ^(UIAlertAction *action){ [self excuteAction:@"TakePhoto"]; },
+                                        ^(UIAlertAction *action){ [self excuteAction:@"RecordVideo"]; },
+                                        ^(UIAlertAction *action){ [self excuteAction:@"File"]; }
+                                    ]];
+    
+    if (TUIChatConfig.defaultConfig.enableLink) {
+        [titles addObject:TUIKitLocalizableString(TUIKitMoreLink)];
+        [images addObject:[UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_more_custom")]];
+        [actionHandles addObject:^(UIAlertAction *action){ [self excuteAction:TUIInputMoreCellKey_Link];}];
+    }
     
     NSMutableArray *items = [NSMutableArray array];
     for (int i = 0 ; i< titles.count; i++) {

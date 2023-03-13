@@ -379,9 +379,8 @@
         [members addObject:member];
     }
     
-    NSString *loginUser = [[V2TIMManager sharedInstance] getLoginUser];
-    NSString *showName = loginUser.length>0?loginUser:@"";
-    
+    NSString *showName = [TUILogin getNickName]?:[TUILogin getUserID];
+
     @weakify(self)
     [[V2TIMManager sharedInstance] createGroup:info memberList:members succ:^(NSString *groupID) {
         @strongify(self)

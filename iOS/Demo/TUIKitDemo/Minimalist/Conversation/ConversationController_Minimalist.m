@@ -81,8 +81,8 @@
     
     
     UIButton *editButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [editButton setImage:[UIImage imageNamed:TUIConversationImagePath_Minimalist(@"nav_edit")]
-                forState:UIControlStateNormal];
+    [editButton setTitle:TUIKitLocalizableString(Edit) forState:UIControlStateNormal];
+    [editButton setTitleColor:[UIColor systemBlueColor] forState:UIControlStateNormal];
     [editButton addTarget:self action:@selector(editBarButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     editButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
     [editButton setFrame:CGRectMake(0, 0, 18 + 21 * 2, 18)];
@@ -202,20 +202,5 @@
     self.navigationItem.rightBarButtonItems = @[self.moreItem,self.editItem];
 }
 
-#pragma mark - V2TIMSDKListener
-- (void)onConnecting {
-    [self.titleView setTitle:NSLocalizedString(@"AppMainConnectingTitle", nil)];
-    [self.titleView startAnimating];
-}
-
-- (void)onConnectSuccess {
-    [self.titleView setTitle:NSLocalizedString(@"AppMainTitle", nil)];
-    [self.titleView stopAnimating];
-}
-
-- (void)onConnectFailed:(int)code err:(NSString*)err {
-    [self.titleView setTitle:NSLocalizedString(@"AppMainDisconnectTitle", nil)];
-    [self.titleView stopAnimating];
-}
 
 @end

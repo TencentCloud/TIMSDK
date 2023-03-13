@@ -27,7 +27,6 @@
 #import "TUIMergeMessageListController_Minimalist.h"
 #import "TUIChatDataProvider_Minimalist.h"
 #import "TUIChatConversationModel.h"
-#import "TUIMessageDataProvider_Minimalist+Call.h"
 #import "TUIChatPopMenu.h"
 #import "TUIDefine.h"
 #import "TUIConfig.h"
@@ -42,6 +41,7 @@
 #import "TUIChatPopContextRecentView.h"
 #import "TUIChatPopContextController.h"
 #import "TUIMessageProgressManager.h"
+#import "TUIChatCallingDataProvider.h"
 
 @interface TUIBaseMessageController_Minimalist () <TUIMessageCellDelegate,
 TUIJoinGroupMessageCellDelegate_Minimalist,
@@ -709,6 +709,19 @@ didChangeTranslationData:(TUIMessageCellData *)data {
     }
 }
 
+- (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.row < self.messageDataProvider.uiMsgs.count) {
+        TUITextMessageCellData_Minimalist *cellData = (TUITextMessageCellData_Minimalist *)self.messageDataProvider.uiMsgs[indexPath.row];
+        if ([cellData isKindOfClass:TUITextMessageCellData_Minimalist.class]) {
+            if ((cellData.isAudioCall || cellData.isVideoCall) && cellData.showUnreadPoint) {
+                cellData.innerMessage.localCustomInt = 1;
+                cellData.showUnreadPoint = NO;
+            }
+        }
+    }
+}
+
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
@@ -1298,28 +1311,8 @@ didChangeTranslationData:(TUIMessageCellData *)data {
     if (0 == message.userID.length) {
         return;
     }
-    NSInteger callType = 0;
-    NSDictionary *param = nil;
-    if ([TUIMessageDataProvider_Minimalist isCallMessage:message callTye:&callType]) {
-        if (1 == callType) {
-            param = @{
-                TUICore_TUICallingService_ShowCallingViewMethod_UserIDsKey : @[message.userID],
-                TUICore_TUICallingService_ShowCallingViewMethod_CallTypeKey : @"0"
-            };
-        } else if (2 == callType) {
-            param = @{
-                TUICore_TUICallingService_ShowCallingViewMethod_UserIDsKey : @[message.userID],
-                TUICore_TUICallingService_ShowCallingViewMethod_CallTypeKey : @"1"
-            };
-        }
-        if (param) {
-            [TUICore callService:TUICore_TUICallingService
-                          method:TUICore_TUICallingService_ShowCallingViewMethod
-                           param:param];
-        }
-    }
+    [TUIMessageDataProvider_Minimalist.callingDataProvider redialFromMessage:message];
 }
-
 - (void)clickSystemMessage:(TUISystemMessageCell *)cell
 {
     TUISystemMessageCellData *data = (TUISystemMessageCellData *)cell.messageData;

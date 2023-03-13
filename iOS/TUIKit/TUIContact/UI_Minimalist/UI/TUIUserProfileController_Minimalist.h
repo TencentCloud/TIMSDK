@@ -12,7 +12,9 @@
 
 #import <UIKit/UIKit.h>
 #import "TUIDefine.h"
+#import "TUICommonModel.h"
 #import "TUICommonPendencyCellData.h"
+#import "TUICommonPendencyCellData_Minimalist.h"
 
 typedef enum : NSUInteger {
     PCA_NONE_MINI,

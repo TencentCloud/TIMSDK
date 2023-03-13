@@ -323,7 +323,7 @@
 
         @strongify(self)
         @weakify(self)
-        if ([self.dataProvider.groupInfo canDelete]) {
+        if ([self.dataProvider.groupInfo canDismissGroup]) {
             [self.dataProvider dismissGroup:^{
                 @strongify(self)
                 @weakify(self)

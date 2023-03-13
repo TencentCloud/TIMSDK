@@ -46,8 +46,8 @@
      */
     CGFloat margin = 12;
     CGFloat rightmargin = 12;
-    CGFloat topMargin = 12;
-    CGFloat bottomMargin = 12;
+    CGFloat topMargin = 3;
+    CGFloat bottomMargin = 3;
 
     /**
      * 水平内边距

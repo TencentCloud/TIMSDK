@@ -268,7 +268,7 @@
             [buttonArray addObject:transferButton];
         }
 
-        if ([self.groupInfo canDelete]) {
+        if ([self.groupInfo canDismissGroup]) {
               TUIButtonCellData *Deletebutton = [[TUIButtonCellData alloc] init];
               Deletebutton.title = TUIKitLocalizableString(TUIKitGroupProfileDissolve);
               Deletebutton.style = ButtonRedText;

@@ -25,6 +25,8 @@
 
 @property TUITextMessageCellData_Minimalist *textData;
 
+@property (nonatomic, strong) UIImageView *voiceReadPoint;
+
 - (void)fillWithData:(TUITextMessageCellData_Minimalist *)data;
 
 @end

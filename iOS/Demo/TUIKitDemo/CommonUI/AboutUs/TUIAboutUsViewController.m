@@ -35,7 +35,32 @@
     self.navigationItem.title = @"";
     self.tableView.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
     [self.tableView registerClass:[TUICommonTextCell class] forCellReuseIdentifier:@"textCell"];
+//    [self setupNabigationItem];
 }
+
+- (void)setupNabigationItem {
+    UIButton *backButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 24, 24)];
+    [backButton addTarget:self action:@selector(backButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    [backButton setImage:[[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath_Minimalist(@"vc_back")] forState:UIControlStateNormal];
+    UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+    
+    UIView *infoView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kScale390(50), 40)];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backButtonClick)];
+    [infoView addGestureRecognizer:tap];
+    
+    UILabel *backTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, kScale390(200), 40)];
+    backTitleLabel.font = [UIFont boldSystemFontOfSize:14];
+    backTitleLabel.text = @"Back";
+    backTitleLabel.textColor = [UIColor systemBlueColor];
+    [infoView addSubview:backTitleLabel];
+    
+    UIBarButtonItem *infoViewItem = [[UIBarButtonItem alloc] initWithCustomView:infoView];
+
+    self.navigationItem.leftBarButtonItems = @[backButtonItem, infoViewItem];
+
+
+}
+
 - (void)applyData {
     //PRIVATEMARK
     if (self.data) {
@@ -128,6 +153,10 @@
     [alvc tuitheme_addAction:confirmAction];
     [self presentViewController:alvc animated:YES completion:^{
     }];
+}
+
+- (void)backButtonClick {
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 //MARK: delegate

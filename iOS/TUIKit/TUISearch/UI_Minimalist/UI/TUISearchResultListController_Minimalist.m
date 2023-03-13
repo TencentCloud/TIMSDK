@@ -9,9 +9,10 @@
 #import "TUISearchResultHeaderFooterView_Minimalist.h"
 #import "TUISearchBar_Minimalist.h"
 #import "TUISearchResultCellModel.h"
-#import "TUISearchResultCell.h"
+#import "TUISearchResultCell_Minimalist.h"
 #import "TUICore.h"
 #import "TUIDefine.h"
+#import "TUISearchEmptyView_Minimalist.h"
 
 @interface TUISearchResultListController_Minimalist () <UITableViewDelegate, UITableViewDataSource, TUISearchBarDelegate_Minimalist, TUISearchResultDelegate>
 
@@ -23,6 +24,7 @@
 
 @property (nonatomic, strong) TUISearchBar_Minimalist *searchBar;
 @property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) TUISearchEmptyView_Minimalist *noDataEmptyView;
 
 @property (nonatomic, assign) BOOL allowPageRequest;
 @property (nonatomic, assign) NSUInteger pageIndex;
@@ -32,6 +34,7 @@
 @implementation TUISearchResultListController_Minimalist
 static NSString * const Id = @"cell";
 static NSString * const HFId  = @"HFId";
+static NSString * const HistoryHFId  = @"HistoryHFId";
 
 - (instancetype)initWithResults:(NSArray<TUISearchResultCellModel *> * __nullable)results
                         keyword:(NSString * __nullable)keyword
@@ -54,10 +57,10 @@ static NSString * const HFId  = @"HFId";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.navigationController.navigationBar.backgroundColor = [UIColor groupTableViewBackgroundColor];
-    [self.navigationController.navigationBar setBackgroundImage:[self imageWithColor:[UIColor groupTableViewBackgroundColor]] forBarMetrics:UIBarMetricsDefault];
+    self.navigationController.navigationBar.backgroundColor = [UIColor whiteColor];
+    [self.navigationController.navigationBar setBackgroundImage:[self imageWithColor:[UIColor whiteColor]] forBarMetrics:UIBarMetricsDefault];
     self.navigationController.navigationBar.shadowImage = [UIImage new];
-    self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
+    self.view.backgroundColor = [UIColor whiteColor];
     
     UIImage *image = [UIImage imageNamed:@"ic_back_white"];
     image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
@@ -74,12 +77,15 @@ static NSString * const HFId  = @"HFId";
     _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
     _tableView.delegate = self;
     _tableView.dataSource = self;
-    _tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
+    _tableView.backgroundColor = [UIColor whiteColor];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _tableView.rowHeight = 60.f;
-    [_tableView registerClass:TUISearchResultCell.class forCellReuseIdentifier:Id];
+    [_tableView registerClass:TUISearchResultCell_Minimalist.class forCellReuseIdentifier:Id];
     [_tableView registerClass:TUISearchResultHeaderFooterView_Minimalist.class forHeaderFooterViewReuseIdentifier:HFId];
+    [_tableView registerClass:TUISearchChatHistoryResultHeaderView_Minimalist.class forHeaderFooterViewReuseIdentifier:HistoryHFId];
     [self.view addSubview:_tableView];
+    self.noDataEmptyView.frame = CGRectMake(0, kScale390(42), self.view.bounds.size.width - 20, 200);
+    [self.tableView addSubview:self.noDataEmptyView];
     
     if (self.module == TUISearchResultModuleChatHistory) {
         [self.dataProvider searchForKeyword:self.searchBar.searchBar.text forModules:self.module param:self.param];
@@ -101,8 +107,8 @@ static NSString * const HFId  = @"HFId";
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.navigationController.navigationBar.backgroundColor = [UIColor groupTableViewBackgroundColor];
-    [self.navigationController.navigationBar setBackgroundImage:[self imageWithColor:[UIColor groupTableViewBackgroundColor]] forBarMetrics:UIBarMetricsDefault];
+    self.navigationController.navigationBar.backgroundColor = [UIColor whiteColor];
+    [self.navigationController.navigationBar setBackgroundImage:[self imageWithColor:[UIColor whiteColor]] forBarMetrics:UIBarMetricsDefault];
     self.navigationController.navigationBar.shadowImage = [UIImage new];
 }
 
@@ -114,6 +120,14 @@ static NSString * const HFId  = @"HFId";
     self.navigationController.navigationBar.shadowImage = nil;
 }
 
+-  (TUISearchEmptyView_Minimalist *)noDataEmptyView {
+    if (_noDataEmptyView == nil) {
+        _noDataEmptyView = [[TUISearchEmptyView_Minimalist alloc] initWithImage:TUISearchBundleThemeImage(@"", @"search_not_found_icon") Text:TUIKitLocalizableString(TUIKitSearchNoResultLists)];
+        _noDataEmptyView.hidden = YES;
+    }
+    return _noDataEmptyView;
+}
+
 #pragma mark - Table view data source
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.results.count;
@@ -121,7 +135,7 @@ static NSString * const HFId  = @"HFId";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    TUISearchResultCell *cell = [tableView dequeueReusableCellWithIdentifier:Id forIndexPath:indexPath];
+    TUISearchResultCell_Minimalist *cell = [tableView dequeueReusableCellWithIdentifier:Id forIndexPath:indexPath];
     if (indexPath.row >= self.results.count) {
         return cell;
     }
@@ -138,7 +152,7 @@ static NSString * const HFId  = @"HFId";
         return;
     }
     TUISearchResultCellModel *cellModel = self.results[indexPath.row];
-    TUISearchResultCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    TUISearchResultCell_Minimalist *cell = [tableView cellForRowAtIndexPath:indexPath];
     cellModel.avatarImage = cell.avatarView.image;
     cellModel.title = cell.title_label.text;
     [self onSelectModel:cellModel module:self.module];
@@ -151,15 +165,43 @@ static NSString * const HFId  = @"HFId";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return self.results.count == 0 ? 0 : 30;
+    if (self.module == TUISearchResultModuleChatHistory) {
+        if (self.results.count == 0) {
+            return 0;
+        }
+        else {
+            TUISearchResultCellModel *cellModel = self.results[0];
+            if ([cellModel.context isKindOfClass:NSDictionary.class]){
+                return 0;
+            }
+            else {
+                return kScale390(64);
+            }
+        }
+    }
+    else {
+        return self.results.count == 0 ? 0 : 30;
+    }
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    TUISearchResultHeaderFooterView_Minimalist *headerView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:HFId];
-    headerView.isFooter = NO;
-    headerView.title = titleForModule(self.module, YES);
-    return headerView;
+    if(self.module == TUISearchResultModuleChatHistory) {
+        TUISearchChatHistoryResultHeaderView_Minimalist *headerView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:HistoryHFId];
+        TUISearchResultCellModel *cellModel = self.results[0];
+        [headerView configPlaceHolderImage:self.headerConversationAvatar imgUrl:self.headerConversationURL Text:self.headerConversationShowName];
+        headerView.onTap = ^{
+            [self headerViewJump2ChatViewController:cellModel];
+        };
+        return headerView;
+    }
+    else {
+        TUISearchResultHeaderFooterView_Minimalist *headerView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:HFId];
+        headerView.showMoreBtn = NO;
+        headerView.title = titleForModule(self.module, YES);
+        headerView.isFooter = NO;
+        return headerView;
+    }
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
@@ -187,6 +229,38 @@ static NSString * const HFId  = @"HFId";
     [self.navigationController popViewControllerAnimated:YES];
 }
 
+- (void)headerViewJump2ChatViewController:(TUISearchResultCellModel*)cellModel {
+
+    if ([cellModel.context isKindOfClass:V2TIMMessage.class]) {
+        V2TIMMessage *message = cellModel.context;
+        NSDictionary *param = @{TUICore_TUIChatService_GetChatViewControllerMethod_TitleKey : self.headerConversationShowName ?: @"",
+                                TUICore_TUIChatService_GetChatViewControllerMethod_UserIDKey : message.userID ?: @"",
+                                TUICore_TUIChatService_GetChatViewControllerMethod_GroupIDKey : message.groupID ?: @"",
+                                TUICore_TUIChatService_GetChatViewControllerMethod_AvatarImageKey : self.headerConversationAvatar ?: [[UIImage alloc] init],
+                                TUICore_TUIChatService_GetChatViewControllerMethod_AvatarUrlKey: self.headerConversationURL?:@"",
+        };
+        UIViewController *chatVC = [TUICore callService:TUICore_TUIChatService_Minimalist
+                                                 method:TUICore_TUIChatService_GetChatViewControllerMethod
+                                                  param:param];
+        [chatVC setTitle:message.userID];
+        [self.navigationController pushViewController:chatVC animated:YES];
+    }
+     else if (([cellModel.context isKindOfClass:NSDictionary.class])) {
+        NSDictionary *convInfo = cellModel.context;
+        V2TIMConversation *conversation = convInfo[kSearchChatHistoryConverationInfo];
+        NSDictionary *param = @{TUICore_TUIChatService_GetChatViewControllerMethod_TitleKey : self.headerConversationShowName ?: @"",
+                                    TUICore_TUIChatService_GetChatViewControllerMethod_UserIDKey : conversation.userID ?: @"",
+                                    TUICore_TUIChatService_GetChatViewControllerMethod_GroupIDKey : conversation.groupID ?: @"",
+                                TUICore_TUIChatService_GetChatViewControllerMethod_AvatarImageKey : self.headerConversationAvatar ?: [[UIImage alloc] init],
+                                TUICore_TUIChatService_GetChatViewControllerMethod_AvatarUrlKey: self.headerConversationURL?:@"",
+        };
+        UIViewController *chatVC = [TUICore callService:TUICore_TUIChatService_Minimalist
+                                                 method:TUICore_TUIChatService_GetChatViewControllerMethod
+                                                  param:param];
+        [chatVC setTitle:cellModel.title?:cellModel.titleAttributeString.string];
+        [self.navigationController pushViewController:chatVC animated:YES];
+    }
+}
 - (void)onSelectModel:(TUISearchResultCellModel *)cellModel module:(TUISearchResultModule)module
 {
     [self.searchBar endEditing:YES];
@@ -214,21 +288,6 @@ static NSString * const HFId  = @"HFId";
         NSString *conversationId = convInfo[kSearchChatHistoryConversationId];
         V2TIMConversation *conversation = convInfo[kSearchChatHistoryConverationInfo];
         NSArray *msgs = convInfo[kSearchChatHistoryConversationMsgs];
-        if (msgs.count == 1) {
-            NSDictionary *param = @{TUICore_TUIChatService_GetChatViewControllerMethod_TitleKey : cellModel.title ?: @"",
-                                    TUICore_TUIChatService_GetChatViewControllerMethod_UserIDKey : conversation.userID ?: @"",
-                                    TUICore_TUIChatService_GetChatViewControllerMethod_GroupIDKey : conversation.groupID ?: @"",
-                                    TUICore_TUIChatService_GetChatViewControllerMethod_AvatarImageKey : cellModel.avatarImage ?: [UIImage new],
-                                    TUICore_TUIChatService_GetChatViewControllerMethod_HighlightKeywordKey : self.searchBar.searchBar.text ?: @"",
-                                    TUICore_TUIChatService_GetChatViewControllerMethod_LocateMessageKey : msgs.firstObject,
-            };
-            UIViewController *chatVC = [TUICore callService:TUICore_TUIChatService_Minimalist
-                                                     method:TUICore_TUIChatService_GetChatViewControllerMethod
-                                                      param:param];
-            [chatVC setTitle:cellModel.title?:cellModel.titleAttributeString.string];
-            [self.navigationController pushViewController:chatVC animated:YES];
-            return;
-        }
         
         NSMutableArray *results = [NSMutableArray array];
         for (V2TIMMessage *message in msgs) {
@@ -246,6 +305,8 @@ static NSString * const HFId  = @"HFId";
                                                                                            keyword:self.searchBar.searchBar.text
                                                                                             module:module
                                                                                              param:@{TUISearchChatHistoryParamKeyConversationId:conversationId}];
+        vc.headerConversationAvatar =  cellModel.avatarImage;
+        vc.headerConversationShowName = cellModel.title;
         [self.navigationController pushViewController:vc animated:YES];
         return;
     }
@@ -299,6 +360,13 @@ static NSString * const HFId  = @"HFId";
     NSArray *arrayM = [results objectForKey:@(modules)];
     if (arrayM == nil) {
         arrayM = @[];
+    }
+    self.noDataEmptyView.hidden = YES;
+    if ((arrayM.count  == 0) && (self.results.count ==0)) {
+        self.noDataEmptyView.hidden = NO;
+        if(self.searchBar.searchBar.text.length == 0) {
+            self.noDataEmptyView.hidden = YES;
+        }
     }
     
     [self.results addObjectsFromArray:arrayM];

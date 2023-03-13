@@ -11,13 +11,16 @@ NS_ASSUME_NONNULL_BEGIN
 @class TUIVideoMessageCellData;
 @class TUIFileMessageCellData;
 @class TUISystemMessageCellData;
+@class TUIChatCallingDataProvider;
 
 @interface TUIMessageDataProvider : TUIMessageBaseDataProvider
 - (void)preProcessReplyMessageV2:(NSArray<TUIMessageCellData *> *)uiMsgs callback:(void(^)(void))callback;
 
 + (NSArray *)getCustomMessageInfo;
 
-+ (TUIMessageCellData *)getCellData:(V2TIMMessage *)message;
++ (TUIChatCallingDataProvider *)callingDataProvider;
+
++ (TUIMessageCellData * __nullable)getCellData:(V2TIMMessage *)message;
 
 + (nullable TUIMessageCellData *)getSystemMsgFromDate:(NSDate *)date;
 

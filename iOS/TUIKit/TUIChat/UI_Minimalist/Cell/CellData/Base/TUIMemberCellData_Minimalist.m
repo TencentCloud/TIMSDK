@@ -2,7 +2,7 @@
 //  TUIMemberCellData_Minimalist.m
 //  TUIChat
 //
-//  Created by summeryxia on 2022/3/14.
+//  Created by xia on 2022/3/14.
 //
 
 #import "TUIMemberCellData_Minimalist.h"

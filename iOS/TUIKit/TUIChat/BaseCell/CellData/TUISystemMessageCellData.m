@@ -40,7 +40,7 @@
 }
 
 - (NSMutableAttributedString *)attributedString {
-    if (_attributedString == nil) {
+    if (_attributedString == nil && self.content.length > 0) {
         NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] initWithString:self.content];
         NSDictionary *attributeDict = @{NSForegroundColorAttributeName:[UIColor d_systemGrayColor]};
         [attributeString setAttributes:attributeDict range:NSMakeRange(0, attributeString.length)];

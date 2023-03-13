@@ -112,6 +112,7 @@
 "ProfileEditSignture" = "Status";
 "ProfileEditGender" = "Gender";
 "ProfileEditAlia" = "Alias";
+"ProfileEdit" = "Edit";
 "ProfileAlia" = "Alias";
 "ProfileBlocked" = "Block";
 "ProfileMessageDoNotDisturb" = "Mute Notifications";
@@ -193,6 +194,8 @@
 "TUIKitGroupProfileManage" = "Manage";
 "TUIKitGroupProfileManageAdd" = "Add Member";
 "TUIKitGroupProfileManageDelete" = "Delete Member";
+"TUIKitGroupProfileAdmainAdd" = "Set Administrator";
+"TUIKitGroupProfileAdmainDelete" = "Rmove Administrator";
 "TUIKitGroupTransferOwner" = "Transfer group";
 "TUIKitGroupTransferOwnerSuccess" = "Successful transfer";
 
@@ -272,6 +275,8 @@
 "TUIKitMoreVoiceCall" = "Voice Call";
 "TUIKitMoreLink" = "Custom";
 "TUIKitMoreLinkDetails" = "View Details>>";
+"TUIKitMorePoll" = "Poll";
+"TUIKitMoreGroupNote" = "Group Note";
 
 "TUIKitCallInviteYouVideoCall" = "invited you to a video call.";
 "TUIKitCallTurningOnMute" = "Mute On";
@@ -599,6 +604,7 @@
 "TUIKitErrorUnsupportIntefaceMessageRead" = "Message Read Receipt";
 "TUIKitErrorUnsupportIntefaceCommunity" = "Community";
 "TUIKitErrorUnsupportIntefaceDesc" = " feature is only available to the Ultimate edition, which can be used after purchasing the Ultimate Edition. See the price guidelines for details.";
+"TUIKitErrorValueAddedUnsupportIntefaceDesc" = " is a value-added payment feature, which is currently in the internal testing stage. Please contact Tencent Cloud Commerce to activate it for you and continue to use it.";
 "TUIKitErrorUnsupportIntefaceCommunityDesc" = "\nNote: The community can accommodate millions of members, and can be divided into groups and topics. It is suitable for interest making friends, game social networking, fan operation, organization management and other scenarios.";
 "TUIKitErrorUnsupportIntefaceGuidelines" = "price guidelines";
 "TUIKitErrorUnsupportIntefaceTitle" = "Tips";
@@ -633,6 +639,7 @@
 "TUIKitRelayChatHistoryForSomebodyFormat" = "Chat History of %@ and %@";
 "TUIKitRelayErrorForwardFormat" = "@\"Failed to forward: code:%d, desc:%@\"";
 "TUIKitRelayTargetCreateNewChat" = "New Chat";
+"TUIKitRelayTargetCreateNewGroup" = "New Group";
 "TUIKitRelayTargetSelectFromContacts" = "Select from contacts";
 "TUIKitRelayTargetCrateGroupError" = "Failed to create the group.";
 "TUIKitRelayTargetNoneTips" = "Select a contact or conversation";
@@ -640,6 +647,7 @@
 "TUIKitRelayCompatibleText" = "Combine and Forward is not available. Upgrade to the latest version first.";
 "TUIKitRelayUnsupportForward" = "Unable to forward failed messages.";
 "TUIKitRelayOneByOnyOverLimit" = "Unable to forward the messages one by one because there are too many messages.";
+"TUIKitRelayPluginNotAllowed" = "Unable to forward group note or poll messages.";
 
 // 消息搜索
 "TUIKitSearchItemHeaderTitleContact" = "Contacts";
@@ -770,6 +778,8 @@
 "TUIKitContactNoNewApplicationRequest" = "Friend request is empty";
 "TUIKitContactNoGroupChats" = "Group chats is empty";
 "TUIKitContactNoBlockList" = "Block list is emply";
+"TUIKitSearchNoResultLists" = "No conversations, contacts, or messages found";
+
 "TUIKitTyping" = "Typing";
 
 "TUIKitMessageTipsEditGroupAddOptFormat" = "%@ changed group add option to \"%@\"、";
@@ -803,4 +813,105 @@
 "C2CDeliveredTo" = "Delivered";
 "GroupReadBy" = "Read By";
 "GroupDeliveredTo" = "Delivered To";
+"TUIKitMessage" = "Message";
+"TUIKitAudio" = "Audio";
+"TUIKitVideo" = "Video";
+"TUIKitAddMembers" = "+ Add members";
+"TUIKitMembersRoleMember" = "Member";
+"TUIKitMembersRoleAdmin" = "Admin";
+"TUIKitMembersRoleSuper" = "Super";
+"TUIKitCreateCancel" = "Cancel";
+"TUIKitCreateNext" = "Next";
+"TUIKitCreateFinish" = "Done";
+"TUIKitCreateMemebers" = "Participants";
+"TUIKitDateToday" = "Today";
 //----mini---
+
+"TUIPollCreateNew" = "Create Poll";
+"TUIPollCreateSucceed" = "Create Succeeded";
+"TUIPollCreateFail" = "Create Failed";
+"TUIPollEnterTitle" = "Enter a poll question";
+"TUIPollEnterOption" = "Enter an option";
+"TUIPollAddOption" = "Add Option";
+"TUIPollEnableMultiSelect" = "Allow selecting multiple options";
+"TUIPollSingleSelect" = "Single";
+"TUIPollMultiSelect" = "Multiple";
+"TUIPollAnonymousVote" = "Anonymous votes";
+"TUIPollPublic" = "Public";
+"TUIPollNonPublic" = "Non-Public";
+"TUIPollNonAnonymous" = "Non-Anonymous";
+"TUIPollAnonymous" = "Anonymous";
+"TUIPollEnableNotification" = "Allow notification for new submit";
+"TUIPolllPublish" = "Publish";
+"TUIPollOneCount" = "vote";
+"TUIPollMoreCount" = "votes";
+"TUIPollInvitedParticipants" = "Invited: %d";
+"TUIPollRespondedParticipants" = "Responded: %d";
+"TUIPollResend" = "Resend";
+"TUIPollResendFail" = "Resend poll failed, error code: %d";
+"TUIPollEnd" = "Close Poll";
+"TUIPollEndFail" = "Close poll failed, error code: %d";
+"TUIPollVoteNow" = "Vote now";
+"TUIPollConfirmVote" = "Confirm";
+"TUIPollCancelVote" = "Cancel";
+"TUIPollPercent" = "votes %d, percent %.0f%%";
+"TUIPollEnded" = "Poll is closed";
+"TUIPollVoteSucceed" = "Vote succeeded";
+"TUIPollVoteFail" = "Vote failed";
+"TUIPollPublicResult" = "Public results";
+"TUIPollViewAllOptions" = "View all options";
+"TUIPollDisplayString" = "[Poll]";
+"TUIPollTextFieldExceedLimit" = "Maximum 50 characters";
+"TUIPollVoted" = "Voted";
+"TUIPoll" = "Poll";
+
+"TUIGroupNote" = "Group note";
+"TUIGroupNoteTitle" = "Group note";
+"TUIGroupNoteSettings" = "Settings";
+"TUIGroupNoteDeadline" = "Deadline %@";
+"TUIGroupNoteTitleHint" = "Enter group note title";
+"TUIGroupNoteDescriptionHint" = "Enter group note description";
+"TUIGroupNoteFormatExample" = "eg.";
+"TUIGroupNoteFormatHint" = "Fill in the group note form";
+"TUIGroupNoteFillIn" = "Please fill in";
+"TUIGroupNoteMultipleSettings" = "Allow multiple submission";
+"TUIGroupNoteDeadlineSettings" = "Set deadline";
+"TUIGroupNoteDeadlineNotSet" = "Not set";
+"TUIGroupNoteNotifySettings" = "Submission Result Notification";
+"TUIGroupNoteSend" = "Send";
+"TUIGroupNoteNow" = "Join group note now";
+"TUIGroupNoteMessageTitle" = "Group note";
+"TUIGroupNoteMessageTitleInfo" = "Started by %@, %d participated";
+"TUIGroupNoteTipsMessagePrefix" = "%@ participated in group note";
+"TUIGroupNoteHasStopped" = "Group note has stopped";
+"TUIGroupNoteDeadlineMustBeLater" = "The deadline must be later than the current time";
+"TUIGroupNoteDisplayString" = "[Group Note]";
+"TUIGroupNoteSendSucceed" = "Send succeeded";
+"TUIGroupNoteSendFail" = "Send failed";
+"TUIGroupNoteSubmitExceedLimit" = "The count of group notes exceeds the upper limit";
+"TUIGroupNoteTextFieldExceedLimit" = "Maximum 50 characters";
+"TUIGroupNoteSubmitOnce" = "Only one submission is allowed";
+"TUIGroupNoteSubmitNotAllowed" = "You are not allow to submit";
+"TUIGroupNoteExceedDeadline" = "Exceed deadline, collection stopped";
+"TUIGroupNoteNotChanged" = "Group note's content is not changed";
+"TUIGroupNoteExpand" = "...Expand...";
+"TUIGroupNoteNotDatePickerConfirm" = "OK";
+"TUIGroupNoteNotDatePickerCancel" = "Cancel";
+"TUIGroupNoteNotDatePickerDone" = "Done";
+"TUIGroupNoteNotDatePickerYear" = " ";
+"TUIGroupNoteNotDatePickerMonth" = " ";
+"TUIGroupNoteNotDatePickerDay" = " ";
+"TUIGroupNoteNotDatePickerHour" = " ";
+"TUIGroupNoteNotDatePickerMinute" = " ";
+"TUIGroupNoteNotDatePickerSecond" = " ";
+"TUIGroupNoteNotDatePickerAM" = "AM";
+"TUIGroupNoteNotDatePickerPM" = "PM";
+"TUIGroupNoteNotDatePickerNow" = " Now";
+"TUIGroupNoteNotDatePickerToday" = " Today";
+"TUIGroupNoteNotDatePickerMon" = " Mon";
+"TUIGroupNoteNotDatePickerTue" = " Tue";
+"TUIGroupNoteNotDatePickerWed" = " Wed";
+"TUIGroupNoteNotDatePickerTHR" = " Thu";
+"TUIGroupNoteNotDatePickerFRI" = " Fri";
+"TUIGroupNoteNotDatePickerSAT" = " Sat";
+"TUIGroupNoteNotDatePickerSUN" = " Sun";

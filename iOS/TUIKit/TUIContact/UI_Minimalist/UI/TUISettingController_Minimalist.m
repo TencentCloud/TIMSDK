@@ -13,11 +13,28 @@
 #import "TUICommonModel.h"
 #import "TUIThemeManager.h"
 #import "TUIConfig.h"
+#import "TUIContactProfileCardCell_Minimalist.h"
+
+@interface TUILogOutButtonCell : TUIButtonCell
+
+@end
+@implementation TUILogOutButtonCell
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    self.button.mm_width(Screen_Width - 2 * kScale390(16))
+    .mm_height(self.mm_h - TButtonCell_Margin)
+    .mm_left(kScale390(16));
+    self.button.layer.cornerRadius = kScale390(10);
+    self.button.layer.masksToBounds = YES;
+    self.button.backgroundColor = [UIColor tui_colorWithHex:@"f9f9f9"];
+}
+@end
 
 @interface TUISettingController_Minimalist () <UIActionSheetDelegate, V2TIMSDKListener, TUIProfileCardDelegate>
 @property (nonatomic, strong) NSMutableArray *dataList;
 @property (nonatomic, strong) V2TIMUserFullInfo *profile;
-@property (nonatomic, strong) TUIProfileCardCellData *profileCellData;
+@property (nonatomic, strong) TUIContactProfileCardCellData_Minimalist *profileCellData;
 @property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
 @end
 
@@ -57,7 +74,7 @@
 {
     self.tableView.delaysContentTouches = NO;
     self.tableView.tableFooterView = [[UIView alloc] init];
-    self.tableView.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
+    self.tableView.backgroundColor = [UIColor whiteColor];
     
     //Fix  translucent = NO;
     CGRect rect = self.view.bounds;
@@ -67,8 +84,8 @@
     }
     
     [self.tableView registerClass:[TUICommonTextCell class] forCellReuseIdentifier:@"textCell"];
-    [self.tableView registerClass:[TUIProfileCardCell class] forCellReuseIdentifier:@"personalCell"];
-    [self.tableView registerClass:[TUIButtonCell class] forCellReuseIdentifier:@"buttonCell"];
+    [self.tableView registerClass:[TUIContactProfileCardCell_Minimalist class] forCellReuseIdentifier:@"personalCell"];
+    [self.tableView registerClass:[TUILogOutButtonCell class] forCellReuseIdentifier:@"buttonCell"];
     [self.tableView registerClass:[TUICommonSwitchCell class] forCellReuseIdentifier:@"switchCell"];
     
     if (@available(iOS 15.0, *)) {
@@ -90,12 +107,27 @@
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     UIView *view = [[UIView alloc] init];
     view.backgroundColor = [UIColor clearColor];
+    UIView *line = [[UIView alloc] init];
+    if(section != 1 ) {
+        line.backgroundColor = TUIDemoDynamicColor(@"separator_color", @"#DBDBDB");;
+        line.frame = CGRectMake(kScale390(16), view.frame.size.height - 0.5, Screen_Width - kScale390(32), 0.5);
+        [view addSubview:line];
+    }
     return view;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return section == 0 ? 0 : 10;
-}
+    CGFloat height = 0;
+    if (section == 0) {
+        height = 0;
+    }
+    else if (section == self.dataList.count -1) {
+        height = kScale390(37);
+    }
+    else {
+        height = 10;
+    }
+    return height;}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     NSMutableArray *array = self.dataList[section];
@@ -110,18 +142,18 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSMutableArray *array = self.dataList[indexPath.section];
+    NSMutableArray *array = _dataList[indexPath.section];
     NSObject *data = array[indexPath.row];
-    if([data isKindOfClass:[TUIProfileCardCellData class]]){
-        TUIProfileCardCell *cell = [tableView dequeueReusableCellWithIdentifier:@"personalCell" forIndexPath:indexPath];
+    if([data isKindOfClass:[TUIContactProfileCardCellData_Minimalist class]]){
+        TUIContactProfileCardCell_Minimalist *cell = [tableView dequeueReusableCellWithIdentifier:@"personalCell" forIndexPath:indexPath];
         cell.delegate = self;
-        [cell fillWithData:(TUIProfileCardCellData *)data];
+        [cell fillWithData:(TUIContactProfileCardCellData_Minimalist *)data];
         return cell;
     }
     else if([data isKindOfClass:[TUIButtonCellData class]]){
-        TUIButtonCell *cell = [tableView dequeueReusableCellWithIdentifier:TButtonCell_ReuseId];
+        TUILogOutButtonCell *cell = [tableView dequeueReusableCellWithIdentifier:TButtonCell_ReuseId];
         if(!cell){
-            cell = [[TUIButtonCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TButtonCell_ReuseId];
+            cell = [[TUILogOutButtonCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TButtonCell_ReuseId];
         }
         [cell fillWithData:(TUIButtonCellData *)data];
         return cell;
@@ -142,7 +174,7 @@
 - (void)setupData {
     self.dataList = [NSMutableArray array];
 
-    TUIProfileCardCellData *personal = [[TUIProfileCardCellData alloc] init];
+    TUIContactProfileCardCellData_Minimalist *personal = [[TUIContactProfileCardCellData_Minimalist alloc] init];
     personal.identifier = self.profile.userID;
     personal.avatarImage = DefaultAvatarImage;
     personal.avatarUrl = [NSURL URLWithString:self.profile.faceURL];
@@ -150,7 +182,7 @@
     personal.genderString = [self.profile showGender];
     personal.signature = self.profile.selfSignature.length ? [NSString stringWithFormat:TUIKitLocalizableString(SignatureFormat), self.profile.selfSignature] : TUIKitLocalizableString(no_personal_signature);
     personal.cselector = @selector(didSelectCommon);
-    personal.showAccessory = YES;
+    personal.showAccessory = NO;
     personal.showSignature = YES;
     self.profileCellData = personal;
     [self.dataList addObject:@[personal]];

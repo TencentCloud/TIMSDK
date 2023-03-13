@@ -2,7 +2,7 @@
 //  TUIOrderCell.m
 //  TUIChat
 //
-//  Created by summeryxia on 2022/6/13.
+//  Created by xia on 2022/6/13.
 //
 
 #import "TUIOrderCell.h"

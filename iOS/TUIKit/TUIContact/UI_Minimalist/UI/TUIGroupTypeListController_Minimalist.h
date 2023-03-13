@@ -10,7 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIGroupTypeListController_Minimalist : UIViewController
-
+@property (nonatomic, copy) NSString *cacheGroupType;
 @property (nonatomic, copy) void (^selectCallBack)(NSString *groupType);
 
 

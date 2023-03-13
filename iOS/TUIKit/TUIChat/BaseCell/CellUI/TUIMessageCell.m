@@ -85,7 +85,7 @@
     _readReceiptLabel = [[UILabel alloc] init];
     _readReceiptLabel.hidden = YES;
     _readReceiptLabel.font = [self fontWithSize:12];
-    _readReceiptLabel.textColor = [UIColor d_systemGrayColor];
+    _readReceiptLabel.textColor = TUIChatDynamicColor(@"chat_message_read_status_text_gray_color", @"#BBBBBB");
     _readReceiptLabel.lineBreakMode = NSLineBreakByCharWrapping;
     UITapGestureRecognizer *showReadReceiptTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onSelectReadReceipt:)];
     [_readReceiptLabel addGestureRecognizer:showReadReceiptTap];
@@ -220,11 +220,21 @@
         
     if (!self.messageModifyRepliesButton.isHidden) {
         self.messageModifyRepliesButton.mm_sizeToFit();
-        self.messageModifyRepliesButton.frame = CGRectMake(_container.mm_x, CGRectGetMaxY(_container.frame) , self.messageModifyRepliesButton.frame.size.width +10, 30);
+        CGFloat repliesBtnX = 0;
+        CGFloat repliesBtnTextWidth = self.messageModifyRepliesButton.frame.size.width;
+        CGFloat repliesBtnPadding = 10;
+        CGFloat repliesBtnWidth = repliesBtnTextWidth + repliesBtnPadding;
+        if (self.messageData.direction == MsgDirectionIncoming) {
+            repliesBtnX = _container.mm_x;
+        }
+        else {
+            repliesBtnX =  CGRectGetMaxX(_container.frame) -  repliesBtnWidth;
+        }
+        self.messageModifyRepliesButton.frame = CGRectMake(repliesBtnX, CGRectGetMaxY(_container.frame) , repliesBtnWidth, 30);
     }
     
     if (self.tagView) {
-        self.tagView.frame = CGRectMake(0, _container.frame.size.height - self.messageData.messageModifyReactsSize.height, contentWidth, self.messageData.messageModifyReactsSize.height);
+        self.tagView.frame = CGRectMake(0, _container.frame.size.height - self.messageData.messageModifyReactsSize.height - 6 , contentWidth, self.messageData.messageModifyReactsSize.height);
     }
 }
 
@@ -260,13 +270,8 @@
 {
     [super fillWithData:data];
     self.messageData = data;
-
-    [self.avatarView setImage:DefaultAvatarImage];
-    @weakify(self)
-    [[[RACObserve(data, avatarUrl) takeUntil:self.rac_prepareForReuseSignal] ignore:nil] subscribeNext:^(NSURL *url) {
-        @strongify(self)
-        [self.avatarView sd_setImageWithURL:url placeholderImage:DefaultAvatarImage];
-    }];
+    
+    [self loadAvatar:data];
 
 
     if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {
@@ -347,6 +352,34 @@
     });
 }
 
+- (void)loadAvatar:(TUIMessageCellData *)data
+{
+    [self.avatarView setImage:DefaultAvatarImage];
+    @weakify(self)
+    [[[RACObserve(data, avatarUrl) takeUntil:self.rac_prepareForReuseSignal] ignore:nil] subscribeNext:^(NSURL *url) {
+        @strongify(self)
+        [self.avatarView sd_setImageWithURL:url placeholderImage:DefaultAvatarImage];
+    }];
+    
+    if (data.isUseMsgReceiverAvatar) {
+        NSString *userId = @"";
+        if ([data.innerMessage.sender isEqualToString:V2TIMManager.sharedInstance.getLoginUser]) {
+            userId = data.innerMessage.userID;
+        } else {
+            userId = V2TIMManager.sharedInstance.getLoginUser;
+        }
+        
+        [V2TIMManager.sharedInstance getUsersInfo:@[userId] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
+            V2TIMUserFullInfo *info = infoList.firstObject;
+            if (info && [data isEqual:self.messageData]) {
+                data.avatarUrl = [NSURL URLWithString:info.faceURL];
+            }
+        } fail:^(int code, NSString *desc) {
+            
+        }];
+    }
+}
+
 - (void)highlightWhenMatchKeyword:(NSString *)keyword
 {
     static NSString * const key = @"highlightAnimation";
@@ -396,6 +429,7 @@
         self.readReceiptLabel.text = text;
     }
     self.readReceiptLabel.mm_sizeToFit().mm_bottom(self.container.mm_b).mm_left(_container.mm_x - 8 - _readReceiptLabel.mm_w);
+    self.readReceiptLabel.textColor = [self shouldHighlightReadReceiptLabel] ? TUIChatDynamicColor(@"chat_message_read_status_text_color", @"#147AFF") : TUIChatDynamicColor(@"chat_message_read_status_text_gray_color", @"#BBBBBB");
 }
 
 - (UIView *)highlightAnimateView

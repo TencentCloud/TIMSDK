@@ -1,0 +1,31 @@
+/* 
+  Localizable.strings
+  English
+  
+  Created by harvy on 2020/10/9.
+  
+*/
+"TUIChatCallDurationFormat" = "Duration %.2d:%.2d";
+"TUIChatCallCancelInCaller" = "Canceled";
+"TUIChatCallCancelInCallee" = "Call canceled by caller";
+"TUIChatCallRejectInCaller" = "Call declined by user";
+"TUIChatCallRejectInCallee" = "Declined";
+"TUIChatCallTimeoutInCaller" = "Call wasn't answered";
+"TUIChatCallTimeoutInCallee" = "Call canceled by caller";
+"TUIChatCallLinebusyInCaller" = "Line busy";
+"TUIChatCallLinebusyInCallee" = "Call canceled by caller";
+"TUIChatCallSend" = "Start call";
+"TUIChatCallAccept" = "Answered";
+"TUIChatCallSwitchToAudio" = "Switch to audio call";
+"TUIChatCallConfirmSwitchToAudio" = "Confirm to audio call";
+"TUIChatCallUnrecognized" = "Others call instruction";
+"TUIChatGroupCallSendFormat" = "%@ initiated a group call";
+"TUIChatGroupCallEnd" = "End group call";
+"TUIChatGroupCallNoAnswer" = "no answer";
+"TUIChatGroupCallRejectFormat" = "Call declined by %@";
+"TUIChatGroupCallAcceptFormat" = "Answered by %@";
+"TUIChatGroupCallSwitchToAudioFormat" = "Switch to audio call by %@";
+"TUIChatGroupCallConfirmSwitchToAudioFormat" = "Confirm to audio call by %@";
+"TUIChatVideoCall" = "Video call";
+"TUIChatAudioCall" = "Audio call";
+"TUIChatUnknownCall" = "Unknown call";

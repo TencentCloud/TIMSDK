@@ -305,9 +305,11 @@
         self.conversationModel.otherSideTyping = NO;
     }
 }
+
 - (void)resetTypingStatus {
     self.conversationModel.otherSideTyping = NO;
 }
+
 #pragma mark - Msgs
 - (void)loadMessageSucceedBlock:(void (^)(BOOL isFirstLoad, BOOL isNoMoreMsg, NSArray<TUIMessageCellData *> *newMsgs))SucceedBlock FailBlock:(V2TIMFail)FailBlock
 {
@@ -967,6 +969,7 @@
 
 + (void)sendMessageReadReceipts:(NSArray *)msgs {
     [[V2TIMManager sharedInstance] sendMessageReadReceipts:msgs succ:^{
+        NSLog(@"sendMessageReadReceipts succeed");
     } fail:^(int code, NSString *desc) {
         if (code == ERR_SDK_INTERFACE_NOT_SUPPORT) {
             [TUITool postUnsupportNotificationOfService:TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceMessageRead)];
@@ -1006,7 +1009,7 @@
     [[V2TIMManager sharedInstance] getMessageReadReceipts:messages succ:succ fail:fail];
 }
 
-+ (TUIMessageCellData *)getCellData:(V2TIMMessage *)message {
++ (TUIMessageCellData * __nullable)getCellData:(V2TIMMessage *)message {
     // subclass override required
     return nil;
 }

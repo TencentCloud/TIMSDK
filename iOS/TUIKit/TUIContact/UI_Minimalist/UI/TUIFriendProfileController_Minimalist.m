@@ -20,12 +20,18 @@
 #import "TUIThemeManager.h"
 #import "TUICommonModel.h"
 #import "TUILogin.h"
+#import "TUIContactButtonCellData_Minimalist.h"
+#import "TUIContactButtonCell_Minimalist.h"
+#import "TUICommonContactTextCell_Minimalist.h"
+#import "TUICommonContactSwitchCell_Minimalist.h"
+#import "TUIFriendProfileHeaderView_Minimalist.h"
 
 @interface TUIFriendProfileController_Minimalist ()
 @property NSArray<NSArray *> *dataList;
 @property BOOL modified;
 @property V2TIMUserFullInfo *userFullInfo;
 @property TUINaviBarIndicatorView *titleView;
+@property (nonatomic,strong) TUIFriendProfileHeaderView_Minimalist *headerView;
 @end
 
 @implementation TUIFriendProfileController_Minimalist
@@ -55,45 +61,84 @@
     if (@available(iOS 15.0, *)) {
         self.tableView.sectionHeaderTopPadding = 0;
     }
-    self.tableView.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
-
-    [self.tableView registerClass:[TUICommonContactTextCell class] forCellReuseIdentifier:@"TextCell"];
-    [self.tableView registerClass:[TUICommonContactSwitchCell class] forCellReuseIdentifier:@"SwitchCell"];
-    [self.tableView registerClass:[TUICommonContactProfileCardCell class] forCellReuseIdentifier:@"CardCell"];
-    [self.tableView registerClass:[TUIButtonCell class] forCellReuseIdentifier:@"ButtonCell"];
+    self.tableView.backgroundColor = TUICoreDynamicColor(@"", @"#FFFFFF");
+    
+    [self.tableView registerClass:[TUICommonContactTextCell_Minimalist class] forCellReuseIdentifier:@"TextCell"];
+    [self.tableView registerClass:[TUICommonContactSwitchCell_Minimalist class] forCellReuseIdentifier:@"SwitchCell"];
+    [self.tableView registerClass:[TUIContactButtonCell_Minimalist class] forCellReuseIdentifier:@"ButtonCell"];
     self.tableView.delaysContentTouches = NO;
+    [self.tableView setSeparatorColor:[UIColor clearColor]];
+
     _titleView = [[TUINaviBarIndicatorView alloc] init];
     [_titleView setTitle:TUIKitLocalizableString(ProfileDetails)];
     self.navigationItem.titleView = _titleView;
     self.navigationItem.title = @"";
     
+    [self setupHeaderViewData];
+    
     [self loadData];
+    
 }
+- (void)setupHeaderViewData {
+    
+    self.headerView = [[TUIFriendProfileHeaderView_Minimalist alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, kScale390(355))];
+    [self.headerView.headImg sd_setImageWithURL:[NSURL URLWithString:self.userFullInfo.faceURL] placeholderImage:DefaultAvatarImage];
+    self.headerView.descriptionLabel.text = [self.userFullInfo showName];
+    
+    @weakify(self)
+    [self.headerView.itemMessage.iconView setImage:
+         TUIDynamicImage(@"", TUIThemeModuleContact_Minimalist, [UIImage imageNamed:TUIContactImagePath_Minimalist(@"contact_info_message")])
+    ];
+    self.headerView.itemMessage.textLabel.text = TUIKitLocalizableString(TUIKitMessage);
+    self.headerView.itemMessage.messageBtnClickBlock = ^{
+        @strongify(self)
+        [self onSendMessage:nil];
+    };
+    
+    [self.headerView.itemAudio.iconView setImage:
+         TUIDynamicImage(@"", TUIThemeModuleContact_Minimalist, [UIImage imageNamed:TUIContactImagePath_Minimalist(@"contact_info_audio")])
+    ];
+    self.headerView.itemAudio.textLabel.text = TUIKitLocalizableString(TUIKitAudio);
+    self.headerView.itemAudio.messageBtnClickBlock = ^{
+        @strongify(self)
+        [self  onVoiceCall:nil];
+    };
+    
+    [self.headerView.itemVideo.iconView setImage:
+         TUIDynamicImage(@"", TUIThemeModuleContact_Minimalist, [UIImage imageNamed:TUIContactImagePath_Minimalist(@"contact_info_video")])
+    ];
+    self.headerView.itemVideo.textLabel.text = TUIKitLocalizableString(TUIKitVideo);
 
+    self.headerView.itemVideo.messageBtnClickBlock = ^{
+        @strongify(self)
+        [self onVideoCall:nil];
+    };
+    
+    NSString *groupID = nil;
+    NSString *userID = self.userFullInfo.userID;
+    NSDictionary *param = @{TUICore_TUIChatExtension_GetMoreCellInfo_GroupID : groupID ? groupID : @"",TUICore_TUIChatExtension_GetMoreCellInfo_UserID : userID ? userID : @""};
+    NSDictionary *videoExtentionInfo = [TUICore getExtensionInfo:TUICore_TUIChatExtension_GetMoreCellInfo_VideoCall param:param];
+    NSDictionary *audioExtentionInfo = [TUICore getExtensionInfo:TUICore_TUIChatExtension_GetMoreCellInfo_AudioCall param:param];
+    
+    self.headerView.itemVideo.hidden = YES;
+    self.headerView.itemAudio.hidden = YES;
+    if (audioExtentionInfo) {
+        self.headerView.itemAudio.hidden = NO;
+    }
+    if (videoExtentionInfo) {
+        self.headerView.itemVideo.hidden = NO;
+    }
+    
+    self.tableView.tableHeaderView = self.headerView;
+}
 - (void)loadData
 {
     NSMutableArray *list = @[].mutableCopy;
+    
     [list addObject:({
         NSMutableArray *inlist = @[].mutableCopy;
         [inlist addObject:({
-            TUICommonContactProfileCardCellData *personal = [[TUICommonContactProfileCardCellData alloc] init];
-            personal.identifier = self.userFullInfo.userID;
-            personal.avatarImage = DefaultAvatarImage;
-            personal.avatarUrl = [NSURL URLWithString:self.userFullInfo.faceURL];
-            personal.name = [self.userFullInfo showName];
-            personal.genderString = [self.userFullInfo showGender];
-            personal.signature = self.userFullInfo.selfSignature.length ? [NSString stringWithFormat:TUIKitLocalizableString(SignatureFormat), self.userFullInfo.selfSignature] : TUIKitLocalizableString(no_personal_signature);
-            personal.reuseId = @"CardCell";
-            personal.showSignature = YES;
-            personal;
-        })];
-        inlist;
-    })];
-
-    [list addObject:({
-        NSMutableArray *inlist = @[].mutableCopy;
-        [inlist addObject:({
-            TUICommonContactTextCellData *data = TUICommonContactTextCellData.new;
+            TUICommonContactTextCellData_Minimalist *data = TUICommonContactTextCellData_Minimalist.new;
             data.key = TUIKitLocalizableString(ProfileAlia);
             data.value = self.friendProfile.friendRemark;
             if (data.value.length == 0)
@@ -111,7 +156,7 @@
     [list addObject:({
         NSMutableArray *inlist = @[].mutableCopy;
         [inlist addObject:({
-            TUICommonContactSwitchCellData *data = TUICommonContactSwitchCellData.new;
+            TUICommonContactSwitchCellData_Minimalist *data = TUICommonContactSwitchCellData_Minimalist.new;
             data.title = TUIKitLocalizableString(ProfileMessageDoNotDisturb);
             data.cswitchSelector =  @selector(onMessageDoNotDisturb:);
             data.reuseId = @"SwitchCell";
@@ -130,7 +175,7 @@
         })];
         
         [inlist addObject:({
-            TUICommonContactSwitchCellData *data = TUICommonContactSwitchCellData.new;
+            TUICommonContactSwitchCellData_Minimalist *data = TUICommonContactSwitchCellData_Minimalist.new;
             data.title = TUIKitLocalizableString(ProfileStickyonTop);
             data.on = NO;
 #ifndef SDKPlaceTop
@@ -157,20 +202,10 @@
         inlist;
     })];
     
-    
     [list addObject:({
         NSMutableArray *inlist = @[].mutableCopy;
         [inlist addObject:({
-            TUICommonContactTextCellData *data = TUICommonContactTextCellData.new;
-            data.key = TUIKitLocalizableString(TUIKitClearAllChatHistory);
-            data.showAccessory = YES;
-            data.cselector = @selector(onClearHistoryChatMessage:);
-            data.reuseId = @"TextCell";
-            data;
-        })];
-        
-        [inlist addObject:({
-            TUICommonContactTextCellData *data = TUICommonContactTextCellData.new;
+            TUICommonContactTextCellData_Minimalist *data = TUICommonContactTextCellData_Minimalist.new;
             data.key = TUIKitLocalizableString(ProfileSetBackgroundImage);
             data.showAccessory = YES;
             data.cselector = @selector(onChangeBackgroundImage:);
@@ -185,7 +220,7 @@
     [list addObject:({
         NSMutableArray *inlist = @[].mutableCopy;
         [inlist addObject:({
-            TUICommonContactSwitchCellData *data = TUICommonContactSwitchCellData.new;
+            TUICommonContactSwitchCellData_Minimalist *data = TUICommonContactSwitchCellData_Minimalist.new;
             data.title = TUIKitLocalizableString(ProfileBlocked);
             data.cswitchSelector =  @selector(onChangeBlackList:);
             data.reuseId = @"SwitchCell";
@@ -208,51 +243,25 @@
     
     [list addObject:({
         NSMutableArray *inlist = @[].mutableCopy;
+
         [inlist addObject:({
-            TUIButtonCellData *data = TUIButtonCellData.new;
-            data.title = TUIKitLocalizableString(ProfileSendMessages);
-            data.style = ButtonWhite;
-            data.textColor = TUICoreDynamicColor(@"primary_theme_color", @"147AFF");
-            data.cbuttonSelector = @selector(onSendMessage:);
+            TUIContactButtonCellData_Minimalist *data = TUIContactButtonCellData_Minimalist.new;
+            data.title = TUIKitLocalizableString(TUIKitClearAllChatHistory);
+            data.style = ButtonRedText;
+            data.cbuttonSelector = @selector(onClearHistoryChatMessage:);
             data.reuseId = @"ButtonCell";
             data;
         })];
-        NSString *groupID = nil;
-        NSString *userID = self.userFullInfo.userID;
-        NSDictionary *param = @{TUICore_TUIChatExtension_GetMoreCellInfo_GroupID : groupID ? groupID : @"",TUICore_TUIChatExtension_GetMoreCellInfo_UserID : userID ? userID : @""};
-        NSDictionary *videoExtentionInfo = [TUICore getExtensionInfo:TUICore_TUIChatExtension_GetMoreCellInfo_VideoCall param:param];
-        NSDictionary *audioExtentionInfo = [TUICore getExtensionInfo:TUICore_TUIChatExtension_GetMoreCellInfo_AudioCall param:param];
-        if (audioExtentionInfo) {
-            [inlist addObject:({
-                TUIButtonCellData *data = TUIButtonCellData.new;
-                data.title = TUIKitLocalizableString(TUIKitMoreVoiceCall);
-                data.style = ButtonWhite;
-                data.textColor = TUICoreDynamicColor(@"primary_theme_color", @"147AFF");
-                data.cbuttonSelector = @selector(onVoiceCall:);
-                data.reuseId = @"ButtonCell";
-                data;
-            })];
-        }
-        if (videoExtentionInfo) {
-            [inlist addObject:({
-                TUIButtonCellData *data = TUIButtonCellData.new;
-                data.title = TUIKitLocalizableString(TUIKitMoreVideoCall);
-                data.style = ButtonWhite;
-                data.textColor = TUICoreDynamicColor(@"primary_theme_color", @"147AFF");
-                data.cbuttonSelector = @selector(onVideoCall:);
-                data.reuseId = @"ButtonCell";
-                data;
-            })];
-        }
+        
         [inlist addObject:({
-            TUIButtonCellData *data = TUIButtonCellData.new;
+            TUIContactButtonCellData_Minimalist *data = TUIContactButtonCellData_Minimalist.new;
             data.title = TUIKitLocalizableString(ProfileDeleteFirend);
             data.style = ButtonRedText;
             data.cbuttonSelector =  @selector(onDeleteFriend:);
             data.reuseId = @"ButtonCell";
             data;
         })];
-        TUIButtonCellData *lastdata = [inlist lastObject];
+        TUIContactButtonCellData_Minimalist *lastdata = [inlist lastObject];
         lastdata.hideSeparatorLine = YES;
         inlist;
     })];
@@ -385,13 +394,13 @@
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     UIView *view = [[UIView alloc] init];
-    view.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
+    view.backgroundColor = TUICoreDynamicColor(@"", @"#FFFFFF");
     return view;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
     UIView *view = [[UIView alloc] init];
-    view.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
+    view.backgroundColor = TUICoreDynamicColor(@"", @"#FFFFFF");
     return view;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -404,28 +413,24 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 
     NSObject *data = self.dataList[indexPath.section][indexPath.row];
-    if([data isKindOfClass:[TUICommonContactProfileCardCellData class]]){
-        TUICommonContactProfileCardCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CardCell" forIndexPath:indexPath];
-        cell.delegate = self;
-        [cell fillWithData:(TUICommonContactProfileCardCellData *)data];
-        return cell;
-
-    }   else if([data isKindOfClass:[TUIButtonCellData class]]){
-        TUIButtonCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ButtonCell"];
+    
+    if([data isKindOfClass:[TUIContactButtonCellData_Minimalist class]]){
+        TUIContactButtonCell_Minimalist *cell = [tableView dequeueReusableCellWithIdentifier:@"ButtonCell"];
         if(!cell){
-            cell = [[TUIButtonCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ButtonCell"];
+            cell = [[TUIContactButtonCell_Minimalist alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ButtonCell"];
         }
-        [cell fillWithData:(TUIButtonCellData *)data];
+        [cell fillWithData:(TUIContactButtonCellData_Minimalist *)data];
+        cell.backgroundColor = [UIColor tui_colorWithHex:@"#f9f9f9"];
         return cell;
 
-    }  else if([data isKindOfClass:[TUICommonContactTextCellData class]]) {
-        TUICommonContactTextCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TextCell" forIndexPath:indexPath];
-        [cell fillWithData:(TUICommonContactTextCellData *)data];
+    }  else if([data isKindOfClass:[TUICommonContactTextCellData_Minimalist class]]) {
+        TUICommonContactTextCell_Minimalist *cell = [tableView dequeueReusableCellWithIdentifier:@"TextCell" forIndexPath:indexPath];
+        [cell fillWithData:(TUICommonContactTextCellData_Minimalist *)data];
         return cell;
 
-    }  else if([data isKindOfClass:[TUICommonContactSwitchCellData class]]) {
-        TUICommonContactSwitchCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SwitchCell" forIndexPath:indexPath];
-        [cell fillWithData:(TUICommonContactSwitchCellData *)data];
+    }  else if([data isKindOfClass:[TUICommonContactSwitchCellData_Minimalist class]]) {
+        TUICommonContactSwitchCell_Minimalist *cell = [tableView dequeueReusableCellWithIdentifier:@"SwitchCell" forIndexPath:indexPath];
+        [cell fillWithData:(TUICommonContactSwitchCellData_Minimalist *)data];
         return cell;
     }
 
@@ -480,12 +485,9 @@
 
 - (void)onSendMessage:(id)sender
 {
-    TUICommonContactProfileCardCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
-    UIImage *avataImage = nil;
-    if (cell && [cell isKindOfClass:[TUICommonContactProfileCardCell class]]) {
-        avataImage = cell.avatar.image;
-    } else {
-        avataImage = [UIImage new];
+    UIImage *avataImage = [UIImage new];
+    if (self.headerView.headImg.image) {
+        avataImage = self.headerView.headImg.image;
     }
     
     NSString * title = [self.friendProfile.userFullInfo showName];
@@ -558,8 +560,8 @@
                 NSString *toastString = [NSString stringWithFormat:@"已将 %@ 复制到粘贴板",textCell.textData.key];
                 [TUITool makeToast:toastString];
             }
-        }else if([data isKindOfClass:[TUICommonContactProfileCardCell class]]){
-            TUICommonContactProfileCardCell *profileCard = (TUICommonContactProfileCardCell *)data;
+        }else if([data isKindOfClass:[TUICommonContactProfileCardCell_Minimalist class]]){
+            TUICommonContactProfileCardCell_Minimalist *profileCard = (TUICommonContactProfileCardCell_Minimalist *)data;
             if(profileCard.cardData.identifier){
                 UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
                 pasteboard.string = profileCard.cardData.identifier;
@@ -571,7 +573,7 @@
     }
 }
 
--(void)didTapOnAvatar:(TUICommonContactProfileCardCell *)cell{
+-(void)didTapOnAvatar:(TUICommonContactProfileCardCell_Minimalist *)cell{
     TUIContactAvatarViewController_Minimalist *image = [[TUIContactAvatarViewController_Minimalist alloc] init];
     image.avatarData = cell.cardData;
     [self.navigationController pushViewController:image animated:YES];

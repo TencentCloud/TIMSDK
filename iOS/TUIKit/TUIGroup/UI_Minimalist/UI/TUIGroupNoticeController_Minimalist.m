@@ -22,7 +22,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.view.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
+    self.view.backgroundColor = [UIColor tui_colorWithHex:@"#f9f9f9"];
     [self.view addSubview:self.textView];
     
     UIButton *rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -101,6 +101,7 @@
         _textView = [[UITextView alloc] init];
         _textView.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
         _textView.textColor = TUICoreDynamicColor(@"form_title_color", @"#000000");
+        _textView.font = [UIFont systemFontOfSize:17];
     }
     return _textView;
 }

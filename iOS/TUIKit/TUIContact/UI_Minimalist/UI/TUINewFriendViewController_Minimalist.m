@@ -7,14 +7,14 @@
 //
 
 #import "TUINewFriendViewController_Minimalist.h"
-#import "TUINewFriendViewDataProvider.h"
+#import "TUINewFriendViewDataProvider_Minimalist.h"
 #import "TUIDefine.h"
 #import "TUIThemeManager.h"
 
 @interface TUINewFriendViewController_Minimalist ()<UITableViewDelegate,UITableViewDataSource>
 @property UITableView *tableView;
 @property UIButton  *moreBtn;
-@property TUINewFriendViewDataProvider *viewModel;
+@property TUINewFriendViewDataProvider_Minimalist *viewModel;
 @property (nonatomic, strong) UILabel *noDataTipsLabel;
 @end
 
@@ -28,10 +28,8 @@
     titleLabel.font = [UIFont boldSystemFontOfSize:17.0];
     titleLabel.textColor = TUICoreDynamicColor(@"nav_title_text_color", @"#000000");
     [titleLabel sizeToFit];
-    self.navigationItem.titleView = titleLabel;
-    
-    
-    self.view.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
+    self.navigationItem.titleView = titleLabel;    
+    self.view.backgroundColor = [UIColor whiteColor];
     
     //Fix  translucent = NO;
     CGRect rect = self.view.bounds;
@@ -46,21 +44,36 @@
     [self.view addSubview:_tableView];
     _tableView.delegate = self;
     _tableView.dataSource = self;
-    [_tableView registerClass:[TUICommonPendencyCell class] forCellReuseIdentifier:@"PendencyCell"];
+    [_tableView registerClass:[TUICommonPendencyCell_Minimalist class] forCellReuseIdentifier:@"PendencyCell"];
     self.tableView.allowsMultipleSelectionDuringEditing = NO;
+    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _tableView.separatorInset = UIEdgeInsetsMake(0, 94, 0, 0);
     _tableView.backgroundColor = self.view.backgroundColor;
 
-    _viewModel = TUINewFriendViewDataProvider.new;
+    _viewModel = TUINewFriendViewDataProvider_Minimalist.new;
 
     _moreBtn = [UIButton buttonWithType:UIButtonTypeSystem];
     _moreBtn.mm_h = 20;
     _tableView.tableFooterView = _moreBtn;
     _moreBtn.hidden = YES;
 
+    UIView *messageBackView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+    messageBackView.backgroundColor = [UIColor clearColor];
+    messageBackView.userInteractionEnabled = YES;
+    _tableView.tableHeaderView = messageBackView;
+    
     @weakify(self)
     [RACObserve(_viewModel, dataList) subscribeNext:^(id  _Nullable x) {
        @strongify(self)
+        NSInteger count = self.viewModel.dataList.count;
+        if(count == 0) {
+            titleLabel.text = TUIKitLocalizableString(TUIKitContactsNewFriends);
+        }
+        else {
+            titleLabel.text = [NSString stringWithFormat:@"%ld %@",(long)count,TUIKitLocalizableString(TUIKitContactsNewFriends)];
+        }
+        [titleLabel sizeToFit];
+        self.navigationItem.titleView = titleLabel;  
        [self.tableView reloadData];
     }];
     
@@ -87,9 +100,12 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 86;
+    return kScale390(57);
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    return 20;
+}
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
     return 20;
@@ -97,8 +113,8 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    TUICommonPendencyCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"PendencyCell" forIndexPath:indexPath];
-    TUICommonPendencyCellData *data = self.viewModel.dataList[indexPath.row];
+    TUICommonPendencyCell_Minimalist *cell = [self.tableView dequeueReusableCellWithIdentifier:@"PendencyCell" forIndexPath:indexPath];
+    TUICommonPendencyCellData_Minimalist *data = self.viewModel.dataList[indexPath.row];
     data.cselector = @selector(cellClick:);
     data.cbuttonSelector = @selector(btnClick:);
     data.cRejectButtonSelector = @selector(rejectBtnClick:);
@@ -122,26 +138,26 @@
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         //add code here for when you hit delete
         [self.tableView beginUpdates];
-        TUICommonPendencyCellData *data = self.viewModel.dataList[indexPath.row];
+        TUICommonPendencyCellData_Minimalist *data = self.viewModel.dataList[indexPath.row];
         [self.viewModel removeData:data];
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
         [self.tableView endUpdates];
     }
 }
 
-- (void)btnClick:(TUICommonPendencyCell *)cell
+- (void)btnClick:(TUICommonPendencyCell_Minimalist *)cell
 {
     [self.viewModel agreeData:cell.pendencyData];
     [self.tableView reloadData];
 }
 
-- (void)rejectBtnClick:(TUICommonPendencyCell *)cell
+- (void)rejectBtnClick:(TUICommonPendencyCell_Minimalist *)cell
 {
     [self.viewModel rejectData:cell.pendencyData];
     [self.tableView reloadData];
 }
 
-- (void)cellClick:(TUICommonPendencyCell *)cell
+- (void)cellClick:(TUICommonPendencyCell_Minimalist *)cell
 {
     if (self.cellClickBlock) {
         self.cellClickBlock(cell);

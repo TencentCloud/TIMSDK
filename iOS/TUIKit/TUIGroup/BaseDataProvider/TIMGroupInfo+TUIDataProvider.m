@@ -23,12 +23,12 @@
     return [self isMeOwner] && (self.memberCount > 1);
 }
 
-- (BOOL)canDelete{
+- (BOOL)canDismissGroup{
     if([self isPrivate]){
         return NO;
     }
     else{
-        if([self isMeOwner]){
+        if([self.owner isEqualToString:[[V2TIMManager sharedInstance] getLoginUser]] || (self.role == V2TIM_GROUP_MEMBER_ROLE_SUPER)){
             return YES;
         }
         else{
@@ -37,4 +37,12 @@
     }
 }
 
+- (BOOL)canSupportSetAdmain{
+    
+    BOOL isMeSuper = [self.owner isEqualToString:[[V2TIMManager sharedInstance] getLoginUser]] || (self.role == V2TIM_GROUP_MEMBER_ROLE_SUPER);
+    
+    BOOL isCurrentGroupTypeSupportSetAdmain = ([self.groupType isEqualToString:@"Public"] ||[self.groupType isEqualToString:@"Meeting"]||[self.groupType isEqualToString:@"Community"]||[self.groupType isEqualToString:@"Private"]);
+    
+    return isMeSuper && isCurrentGroupTypeSupportSetAdmain && (self.memberCount > 1);
+}
 @end

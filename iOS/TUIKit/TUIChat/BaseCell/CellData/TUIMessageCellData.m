@@ -112,6 +112,10 @@
     return _translationViewData;
 }
 
+- (void)clearCachedCellHeight {
+    self.cellHeight = 0;
+}
+
 static UIColor *sOutgoingNameColor;
 
 + (UIColor *)outgoingNameColor

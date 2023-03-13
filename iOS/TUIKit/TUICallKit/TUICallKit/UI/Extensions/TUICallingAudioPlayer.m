@@ -120,6 +120,7 @@ void stopAudio(void) {
     if (self.player != nil) {
         [self stopAudio];
     }
+    [self setAudioSessionPlayback];
     NSError *error = nil;
     self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
     if (error) {
@@ -145,6 +146,13 @@ void stopAudio(void) {
         [self startDisplayLink];
     }
     return res;
+}
+
+- (void)setAudioSessionPlayback {
+    NSError *error = nil;
+    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+    [audioSession setCategory:AVAudioSessionCategorySoloAmbient error:nil];
+    [audioSession setActive:YES error:&error];
 }
 
 - (void)resetStatus {

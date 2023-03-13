@@ -103,7 +103,12 @@ static NSString * const TUICallKit_TUIGroupService_UserDataValue = @"TUICallKit"
     [self makeUserViewConstraints:75.0f];
     [self makeFunctionViewConstraints:92.0f];
     [self initMicMute:YES];
-    [self initHandsFree:TUIAudioPlaybackDeviceEarpiece];
+    
+    if ([TUICallingStatusManager shareInstance].callRole == TUICallRoleCall) {
+        [self initHandsFree:TUIAudioPlaybackDeviceEarpiece];
+    } else {
+        [self initHandsFree:TUIAudioPlaybackDeviceSpeakerphone];
+    }
 }
 
 - (void)initSingleVideoWaitingView {
@@ -125,6 +130,7 @@ static NSString * const TUICallKit_TUIGroupService_UserDataValue = @"TUICallKit"
     [self makeUserViewConstraints:20.0f];
     [self makeSwitchToAudioViewConstraints:8.0f];
     [self makeFunctionViewConstraints:92.0f];
+    [self initHandsFree:TUIAudioPlaybackDeviceSpeakerphone];
 }
 
 - (void)initGroupWaitingView {
@@ -297,6 +303,9 @@ static NSString * const TUICallKit_TUIGroupService_UserDataValue = @"TUICallKit"
 }
 
 - (void)initAddOtherUserBtn {
+    if (![TUICore getService:TUICore_TUIGroupService]) {
+        return;
+    }
     [self.addOtherUserBtn removeFromSuperview];
     [self.containerView addSubview:self.addOtherUserBtn];
     [self.addOtherUserBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -581,15 +590,17 @@ static NSString * const TUICallKit_TUIGroupService_UserDataValue = @"TUICallKit"
         if ([TUICallingStatusManager shareInstance].callStatus == TUICallStatusAccept) {
             [self initSingleAcceptCallView];
             [self initHandsFree:[TUICallingStatusManager shareInstance].audioPlaybackDevice];
+            [self updateCallingUserView:@""];
         } else {
             [self initSingleWaitingView];
+            [self updateCallingUserView];
         }
     } else {
         [self initGroupWaitingView];
+        [self updateCallingUserView];
     }
     
     [self updateContainerViewBgColor];
-    [self updateCallingUserView];
     [self updateViewTextColor];
     [self initFloatingWindowBtn];
 }

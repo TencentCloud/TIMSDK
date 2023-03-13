@@ -31,6 +31,8 @@ typedef void(^TUIChatSelectAllContentCallback)(BOOL);
 /// Data for text message cell.
 @property (nonatomic, strong) TUITextMessageCellData *textData;
 
+@property (nonatomic, strong) UIImageView *voiceReadPoint;
+
 - (void)fillWithData:(TUITextMessageCellData *)data;
 
 @end

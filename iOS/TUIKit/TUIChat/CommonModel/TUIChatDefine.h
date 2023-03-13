@@ -76,4 +76,7 @@ typedef NS_ENUM(NSInteger,TUIChatSmallTongueType) {
 
 #define TUITencentCloudHomePageCN @"https://cloud.tencent.com/document/product/269/68228"
 #define TUITencentCloudHomePageEN @"https://www.tencentcloud.com/document/product/1047/45913"
+
+#define TUIChatSendMessageNotification @"TUIChatSendMessageNotification"
+
 #endif /* TUIChatDefine_h */

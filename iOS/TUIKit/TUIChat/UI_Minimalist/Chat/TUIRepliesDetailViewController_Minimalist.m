@@ -601,7 +601,9 @@
         TUIMergeMessageListController_Minimalist *relayVc = [[TUIMergeMessageListController_Minimalist alloc] init];
         relayVc.mergerElem = [(TUIMergeMessageCell_Minimalist *)cell relayData].mergerElem;
         relayVc.delegate = self.delegate;
-        [self.navigationController pushViewController:relayVc animated:YES];
+        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:relayVc];
+        nav.modalPresentationStyle = UIModalPresentationFullScreen;
+        [self presentViewController:nav animated:NO completion:nil];
     }
     if ([cell isKindOfClass:[TUILinkCell_Minimalist class]]) {
         [self showLinkMessage:(TUILinkCell_Minimalist *)cell];

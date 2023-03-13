@@ -6,7 +6,7 @@
 //
 
 #import "TUIConversationSelectController_Minimalist.h"
-#import "TUIConversationCell_Minimalist.h"
+#import "TUIConversationForwardSelectCell_Minimalist.h"
 #import "TUIConversationCellData_Minimalist.h"
 #import "TUIConversationSelectDataProvider_Minimalist.h"
 #import "TUICommonModel.h"
@@ -16,10 +16,157 @@
 
 typedef void(^TUIConversationSelectCompletHandler)(BOOL);
 
+@interface TUIConversationSelectCollectionCell : UICollectionViewCell
+@property (nonatomic,strong) UILabel *textLabel;
+@end
+@implementation TUIConversationSelectCollectionCell
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        _textLabel = [[UILabel alloc] init];
+        _textLabel.font = [UIFont systemFontOfSize:kScale390(14)];
+        _textLabel.textColor = [UIColor tui_colorWithHex:@"#000000"];
+        [self.contentView addSubview:_textLabel];
+    }
+    return self;
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    [_textLabel sizeToFit];
+    _textLabel.frame = CGRectMake(0, kScale390(14), _textLabel.frame.size.width, _textLabel.frame.size.height);
+}
+@end
+@interface TUIConversationSelectListPicker : UIControl<UICollectionViewDelegate, UICollectionViewDataSource>
+@property (nonatomic, strong) UIView *line;
+@property (nonatomic, strong) UICollectionView *collectionView;
+@property (nonatomic, strong) UIButton *accessoryBtn;
+@property (nonatomic, strong) NSArray<TUICommonContactSelectCellData *> *selectArray;
+@property (nonatomic, copy) TUIContactListPickerOnCancel onCancel;
+
+@end
+
+@implementation TUIConversationSelectListPicker
+
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+
+    [self initControl];
+    [self setupBinding];
+
+    return self;
+}
+
+- (void)initControl
+{
+    self.line = [[UIView alloc] init];
+    self.line.backgroundColor = [UIColor tui_colorWithHex:@"#000000" alpha:0.1];
+    [self addSubview:self.line];
+    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+    layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+    layout.minimumLineSpacing = 0;
+    layout.minimumInteritemSpacing = 0;
+    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
+    self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    self.collectionView.showsHorizontalScrollIndicator = NO;
+    self.collectionView.decelerationRate = UIScrollViewDecelerationRateNormal;
+
+    [self.collectionView registerClass:[TUIConversationSelectCollectionCell class] forCellWithReuseIdentifier:@"PickerIdentifier"];
+    [self.collectionView setBackgroundColor:[UIColor clearColor]];
+    [self.collectionView setDelegate:self];
+    [self.collectionView setDataSource:self];
+    
+    
+    [self addSubview:_collectionView];
+
+    self.accessoryBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.accessoryBtn setTitle:[NSString stringWithFormat:@" %@ ", TUIKitLocalizableString(Forward)] forState:UIControlStateNormal];
+    [self.accessoryBtn setTitleColor:[UIColor systemBlueColor] forState:UIControlStateNormal];
+    self.accessoryBtn.titleLabel.font = [UIFont boldSystemFontOfSize:kScale390(14)];
+    self.accessoryBtn.enabled = NO;
+    [self addSubview:self.accessoryBtn];
+}
+
+- (void)setupBinding
+{
+    [self addObserver:self forKeyPath:@"selectArray" options:NSKeyValueObservingOptionNew context:nil];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
+    if ([keyPath isEqualToString:@"selectArray"]) {
+        [self.collectionView reloadData];
+        NSArray *newSelectArray = change[NSKeyValueChangeNewKey];
+        if ([newSelectArray isKindOfClass:NSArray.class]) {
+            self.accessoryBtn.enabled = [newSelectArray count];
+        }
+    }
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    return [self.selectArray count];
+}
+
+- (CGSize)collectionView:(nonnull UICollectionView *)collectionView layout:(nonnull UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(nonnull NSIndexPath *)indexPath {
+    
+    TUICommonContactSelectCellData *model = self.selectArray[indexPath.row];
+    NSString *formatTitle = @"";
+    if (indexPath.row != 0) {
+        formatTitle = [NSString stringWithFormat:@",%@",model.title];
+    }
+    else {
+        formatTitle = model.title;
+    }
+    CGSize size = [formatTitle boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, 20) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:kScale390(14)]} context:nil].size;
+    return CGSizeMake(size.width, self.collectionView.frame.size.height);
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    TUIConversationSelectCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"PickerIdentifier" forIndexPath:indexPath];
+
+    TUICommonContactSelectCellData *data = self.selectArray[indexPath.row];
+    
+    
+    if (indexPath.row != 0) {
+        cell.textLabel.text = [NSString stringWithFormat:@",%@",data.title];
+    }
+    else {
+        cell.textLabel.text = data.title;
+    }
+    
+    return cell;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    [collectionView deselectItemAtIndexPath:indexPath animated:NO];
+    if (indexPath.item >= self.selectArray.count) {
+        return;
+    }
+    TUICommonContactSelectCellData *data = self.selectArray[indexPath.item];
+    if (self.onCancel) {
+        self.onCancel(data);
+    }
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    self.line.frame = CGRectMake(0, 0, self.mm_w, kScale390(1));
+    self.accessoryBtn.mm_sizeToFit().mm_height(30).mm_right(15).mm_top(13);
+    self.collectionView.mm_left(kScale390(16)).mm_height(40).mm_width(self.accessoryBtn.mm_x - 30).mm__centerY(self.accessoryBtn.mm_centerY);
+
+}
+
+@end
+
+
 @interface TUIConversationSelectController_Minimalist () <UITableViewDelegate, UITableViewDataSource, TUINotificationProtocol>
 
 @property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) TUIContactListPicker *pickerView;
+@property (nonatomic, strong) TUIConversationSelectListPicker *pickerView;
 @property (nonatomic, strong) TUICommonTableViewCell *headerView;
 
 @property (nonatomic, assign) BOOL enableMuliple;
@@ -177,13 +324,13 @@ static NSString *const Id = @"con";
     _tableView.delegate = self;
     _tableView.dataSource = self;
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    _tableView.tableHeaderView = self.headerView;
-    [_tableView registerClass:TUIConversationCell.class forCellReuseIdentifier:Id];
+//    _tableView.tableHeaderView = self.headerView;
+    [_tableView registerClass:TUIConversationForwardSelectCell_Minimalist.class forCellReuseIdentifier:Id];
     [self.view addSubview:_tableView];
     
-    _pickerView = [[TUIContactListPicker alloc] init];
+    _pickerView = [[TUIConversationSelectListPicker alloc] init];
     
-    [_pickerView setBackgroundColor:[UIColor groupTableViewBackgroundColor]];
+    [_pickerView setBackgroundColor:[UIColor whiteColor]];
     [_pickerView setHidden:YES];
     [_pickerView.accessoryBtn addTarget:self action:@selector(doPickerDone) forControlEvents:UIControlEventTouchUpInside];
     __weak typeof(self) weakSelf = self;
@@ -409,7 +556,7 @@ static NSString *const Id = @"con";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    TUIConversationCell *cell = [tableView dequeueReusableCellWithIdentifier:Id forIndexPath:indexPath];
+    TUIConversationForwardSelectCell_Minimalist *cell = [tableView dequeueReusableCellWithIdentifier:Id forIndexPath:indexPath];
     if (indexPath.row < 0 || indexPath.row >= self.dataProvider.dataList.count) {
         return cell;
     }
@@ -453,15 +600,15 @@ static NSString *const Id = @"con";
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     UIView *titleView = [[UIView alloc] init];
-    titleView.backgroundColor = [UIColor groupTableViewBackgroundColor];
+    titleView.backgroundColor = [UIColor whiteColor];
     titleView.bounds = CGRectMake(0, 0, self.tableView.bounds.size.width, 30);
     UILabel *label = [[UILabel alloc] init];
     label.text = TUIKitLocalizableString(TUIKitRelayRecentMessages);
-    label.font = [UIFont systemFontOfSize:12.0];
-    label.textColor = [UIColor darkGrayColor];
+    label.font = [UIFont boldSystemFontOfSize:kScale390(14)];
+    label.textColor = [UIColor tui_colorWithHex:@"#000000"];
     label.textAlignment = NSTextAlignmentLeft;
     [titleView addSubview:label];
-    label.frame = CGRectMake(10, 0, self.tableView.bounds.size.width - 10, 30);
+    label.frame = CGRectMake(kScale390(14), 0, self.tableView.bounds.size.width - 10, 30);
     return titleView;
 }
 
@@ -474,5 +621,15 @@ static NSString *const Id = @"con";
     }
     return _currentSelectedList;
 }
+
+#pragma mark - TUIChatFloatSubViewControllerProtocol
+- (void)floatControllerLeftButtonClick {
+    [self doCancel];
+}
+
+- (void)floatControllerRightButtonClick {
+    [self doMultiple];
+}
+
 
 @end

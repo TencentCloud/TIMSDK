@@ -5,11 +5,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface V2TIMGroupInfo(TUIDataProvider)
 
+- (BOOL)isMeOwner;
 - (BOOL)isPrivate;
 - (BOOL)canInviteMember;
 - (BOOL)canRemoveMember;
-- (BOOL)canDelete;
-
+- (BOOL)canDismissGroup;
+- (BOOL)canSupportSetAdmain;
 
 @end
 

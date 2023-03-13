@@ -46,6 +46,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) BOOL isAudioCall;
 @property (nonatomic, assign) BOOL isVideoCall;
+@property (nonatomic, assign) BOOL isCaller;
+@property (nonatomic, assign) BOOL showUnreadPoint;
 
 /**
  *  可变字符串

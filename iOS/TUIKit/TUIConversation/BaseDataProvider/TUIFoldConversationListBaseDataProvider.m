@@ -13,6 +13,7 @@
 #import "TUIConversationCellData.h"
 
 @interface TUIFoldConversationListBaseDataProvider (private)
+@property (nonatomic, assign, getter=isLastPage) BOOL lastPage;
 
 - (BOOL)filteConversation:(V2TIMConversation *)conv;
 - (TUIConversationCellData *)cellDataForConversation:(V2TIMConversation *)conversation;
@@ -30,6 +31,29 @@
 @implementation TUIFoldConversationListBaseDataProvider
 
 
+- (void)loadNexPageConversations {
+    if (self.isLastPage) {
+        return;
+    }
+    @weakify(self);
+    V2TIMConversationListFilter *filter = [[V2TIMConversationListFilter alloc] init];
+    filter.type = V2TIM_GROUP;
+    filter.conversationGroup = nil;
+    filter.markType = V2TIM_CONVERSATION_MARK_TYPE_FOLD;
+
+    [V2TIMManager.sharedInstance getConversationListByFilter:filter nextSeq:self.pageIndex count:(int)self.pageSize succ:^(NSArray<V2TIMConversation *> *list, uint64_t nextSeq, BOOL isFinished) {
+        @strongify(self);
+        self.pageIndex = nextSeq;
+        self.lastPage = isFinished;
+        [self preprocess:list];
+
+        
+    } fail:^(int code, NSString *desc) {
+        @strongify(self);
+        self.lastPage = YES;
+
+    }];
+}
 - (void)preprocess:(NSArray<V2TIMConversation *> *)v2Convs {
     if (!NSThread.isMainThread) {
         __weak typeof(self) weakSelf = self;

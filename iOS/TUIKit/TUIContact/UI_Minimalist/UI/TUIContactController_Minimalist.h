@@ -1,20 +1,20 @@
 
 #import <UIKit/UIKit.h>
-#import "TUIContactViewDataProvider.h"
-#import "TUIFindContactCellModel.h"
+#import "TUIContactViewDataProvider_Minimalist.h"
+#import "TUIFindContactCellModel_Minimalist.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol TUIContactControllerListener_Minimalist <NSObject>
 @optional
-- (void)onSelectFriend:(TUICommonContactCell *)cell;
+- (void)onSelectFriend:(TUICommonContactCell_Minimalist *)cell;
 - (void)onAddNewFriend:(TUICommonTableViewCell *)cell;
 - (void)onGroupConversation:(TUICommonTableViewCell *)cell;
 @end
 
 @interface TUIContactController_Minimalist : UIViewController
 
-@property (nonatomic, strong) TUIContactViewDataProvider *viewModel;
+@property (nonatomic, strong) TUIContactViewDataProvider_Minimalist *viewModel;
 @property (nonatomic, weak) id<TUIContactControllerListener_Minimalist> delegate;
 @property UITableView *tableView;
 

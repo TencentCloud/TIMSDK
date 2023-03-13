@@ -11,8 +11,8 @@
 #import "TUIDefine.h"
 
 static NSMutableArray *serviceList = nil;
-static NSMutableArray<NSMapTable *> *eventList = nil;
-static NSMutableArray<NSMapTable *> *extensionList = nil;
+static NSMutableArray<NSDictionary *> *eventList = nil;
+static NSMutableArray<NSDictionary *> *extensionList = nil;
 static NSMutableDictionary *objectHashMap = nil;
 
 @implementation TUICore
@@ -93,10 +93,16 @@ static NSMutableDictionary *objectHashMap = nil;
         subKey = @"";
     }
     
-    NSMapTable *event = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsStrongMemory valueOptions:NSPointerFunctionsWeakMemory capacity:3];
-    [event setObject:[key copy] forKey:@"key"];
-    [event setObject:[subKey copy] forKey:@"subKey"];
-    [event setObject:object forKey:@"object"];
+    if (object == nil) {
+        NSLog(@"invalid object");
+        return;
+    }
+    
+    NSDictionary *event = @{
+        @"key"    : [key copy],
+        @"subKey" : [subKey copy],
+        @"object" : [TUIWeakProxy proxyWithTarget:object]
+    };
     
     @synchronized (eventList) {
         [eventList addObject:event];
@@ -111,12 +117,12 @@ static NSMutableDictionary *objectHashMap = nil;
     @synchronized (eventList) {
         
         NSMutableArray *removeEventList = [NSMutableArray array];
-        for (NSMapTable *event in eventList) {
+        for (NSDictionary *event in eventList) {
             NSString *pkey = [event objectForKey:@"key"];
             NSString *pSubKey = [event objectForKey:@"subKey"];
             id pObject = [event objectForKey:@"object"];
             
-            if (pObject == nil) {
+            if (pObject == nil || [(TUIWeakProxy *)pObject target] == nil) {
                 [removeEventList addObject:event];
             }
             if (key == nil && subKey == nil && pObject == object) {
@@ -146,7 +152,7 @@ static NSMutableDictionary *objectHashMap = nil;
     }
     
     @synchronized (eventList) {
-        for (NSMapTable *event in eventList) {
+        for (NSDictionary *event in eventList) {
             NSString *pkey = [event objectForKey:@"key"];
             NSString *pSubKey = [event objectForKey:@"subKey"];
             
@@ -169,9 +175,11 @@ static NSMutableDictionary *objectHashMap = nil;
         NSLog(@"invalid object");
         return;
     }
-    NSMapTable *extension = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsStrongMemory valueOptions:NSPointerFunctionsWeakMemory capacity:3];
-    [extension setObject:[key copy] forKey:@"key"];
-    [extension setObject:object forKey:@"object"];
+    
+    NSDictionary *extension = @{
+        @"key" : [key copy],
+        @"object" : [TUIWeakProxy proxyWithTarget:object]
+    };
     
     @synchronized (extensionList) {
         [extensionList addObject:extension];
@@ -186,11 +194,11 @@ static NSMutableDictionary *objectHashMap = nil;
     
     @synchronized (extensionList) {
         NSMutableArray *removeExtensionList = [NSMutableArray array];
-        for (NSMapTable *extension in extensionList) {
+        for (NSDictionary *extension in extensionList) {
             NSString *pkey = [extension objectForKey:@"key"];
             id pObject = [extension objectForKey:@"object"];
             
-            if (pObject == nil) {
+            if (pObject == nil || [(TUIWeakProxy *)pObject target] == nil) {
                 [removeExtensionList addObject:extension];
             }
             else if ([pkey isEqualToString:key]) {
@@ -208,7 +216,7 @@ static NSMutableDictionary *objectHashMap = nil;
     }
     
     @synchronized (extensionList) {
-        for (NSMapTable *extension in extensionList) {
+        for (NSDictionary *extension in extensionList) {
             NSString *pkey = [extension objectForKey:@"key"];
             if ([pkey isEqualToString:key]) {
                 id<TUIExtensionProtocol> pObject = [extension objectForKey:@"object"];
@@ -223,4 +231,75 @@ static NSMutableDictionary *objectHashMap = nil;
     }
     return nil;
 }
+@end
+
+
+@implementation TUIWeakProxy
+
+- (instancetype)initWithTarget:(id)target {
+    _target = target;
+    return self;
+}
+
++ (instancetype)proxyWithTarget:(id)target {
+    return [[self alloc] initWithTarget:target];
+}
+
+- (id)forwardingTargetForSelector:(SEL)selector {
+    return _target;
+}
+
+- (void)forwardInvocation:(NSInvocation *)invocation {
+    void *null = NULL;
+    [invocation setReturnValue:&null];
+}
+
+- (NSMethodSignature *)methodSignatureForSelector:(SEL)selector {
+    return [NSObject instanceMethodSignatureForSelector:@selector(init)];
+}
+
+- (BOOL)respondsToSelector:(SEL)aSelector {
+    return [_target respondsToSelector:aSelector];
+}
+
+- (BOOL)isEqual:(id)object {
+    return [_target isEqual:object];
+}
+
+- (NSUInteger)hash {
+    return [_target hash];
+}
+
+- (Class)superclass {
+    return [_target superclass];
+}
+
+- (Class)class {
+    return [_target class];
+}
+
+- (BOOL)isKindOfClass:(Class)aClass {
+    return [_target isKindOfClass:aClass];
+}
+
+- (BOOL)isMemberOfClass:(Class)aClass {
+    return [_target isMemberOfClass:aClass];
+}
+
+- (BOOL)conformsToProtocol:(Protocol *)aProtocol {
+    return [_target conformsToProtocol:aProtocol];
+}
+
+- (BOOL)isProxy {
+    return YES;
+}
+
+- (NSString *)description {
+    return [_target description];
+}
+
+- (NSString *)debugDescription {
+    return [_target debugDescription];
+}
+
 @end

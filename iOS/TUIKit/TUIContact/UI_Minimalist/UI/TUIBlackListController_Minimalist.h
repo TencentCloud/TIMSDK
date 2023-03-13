@@ -1,5 +1,5 @@
 #import <UIKit/UIKit.h>
-#import "TUIBlackListViewDataProvider.h"
+#import "TUIBlackListViewDataProvider_Minimalist.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -16,9 +16,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface TUIBlackListController_Minimalist : UITableViewController
 
-@property TUIBlackListViewDataProvider *viewModel;
+@property TUIBlackListViewDataProvider_Minimalist *viewModel;
 
-@property (nonatomic, copy) void (^didSelectCellBlock)(TUICommonContactCell *cell);
+@property (nonatomic, copy) void (^didSelectCellBlock)(TUICommonContactCell_Minimalist *cell);
 @end
 
 NS_ASSUME_NONNULL_END

@@ -2388,19 +2388,7 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
 
 #define BackGroundCoverCount 7
 
-@interface TUISelectAvatarCardItem : NSObject
 
-@property (nonatomic, strong) NSString *posterUrlStr;
-@property (nonatomic, assign) BOOL isSelect;
-
-@property (nonatomic, copy) NSString *fullUrlStr;
-@property (nonatomic, assign) BOOL isDefaultBackgroundItem;
-
-@property (nonatomic, assign) BOOL isGroupGridAvatar;
-@property (nonatomic, copy) NSString *createGroupType;
-@property (nonatomic, strong) UIImage *cacheGroupGridAvatarImage;
-
-@end
 
 @implementation TUISelectAvatarCardItem
 
@@ -3012,7 +3000,7 @@ static NSString * const reuseIdentifier = @"TUISelectAvatarCollectionCell";
         viewController.hidesBottomBarWhenPushed = YES;
         self.tabBarController.tabBar.hidden = YES;
         
-        UIImage *image = TUICoreDynamicImage(@"nav_back_img", [UIImage imageNamed:@"ic_back_white"]);
+        UIImage *image = self.navigationItemBackArrowImage;
         image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
         UIBarButtonItem *back = [[UIBarButtonItem alloc] initWithImage:image style:UIBarButtonItemStylePlain target:self action:@selector(back)];
         viewController.navigationItem.leftBarButtonItems = @[back];
@@ -3020,6 +3008,14 @@ static NSString * const reuseIdentifier = @"TUISelectAvatarCollectionCell";
     }
     [super pushViewController:viewController animated:animated];
 }
+
+- (UIImage *)navigationItemBackArrowImage {
+    if (!_navigationItemBackArrowImage) {
+        _navigationItemBackArrowImage = TUICoreDynamicImage(@"nav_back_img", [UIImage imageNamed:@"ic_back_white"]);
+    }
+    return _navigationItemBackArrowImage;
+}
+
 
 // fix: https://developer.apple.com/forums/thread/660750
 - (NSArray<__kindof UIViewController *> *)popToRootViewControllerAnimated:(BOOL)animated

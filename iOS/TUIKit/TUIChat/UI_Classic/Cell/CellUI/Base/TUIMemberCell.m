@@ -2,7 +2,7 @@
 //  TUIMemberCell.m
 //  TUIChat
 //
-//  Created by summeryxia on 2022/3/11.
+//  Created by xia on 2022/3/11.
 //
 
 #import "TUIMemberCell.h"

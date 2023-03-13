@@ -14,17 +14,19 @@
 #import "TUIBlackListController_Minimalist.h"
 #import "TUINewFriendViewController_Minimalist.h"
 #import "TUIGroupConversationListController_Minimalist.h"
-#import "TUIContactActionCell.h"
+#import "TUICommonContactCell_Minimalist.h"
+#import "TUIContactActionCell_Minimalist.h"
 #import "TUIThemeManager.h"
 #import "TUIDefine.h"
 #import "TUICore.h"
 #import "ReactiveObjC.h"
+#import "TUIContactFloatController.h"
 
 #define kContactCellReuseId @"ContactCellReuseId"
 #define kContactActionCellReuseId @"ContactActionCellReuseId"
 
 @interface TUIContactController_Minimalist () <UITableViewDelegate, UITableViewDataSource, V2TIMFriendshipListener, TUIPopViewDelegate>
-@property NSArray<TUIContactActionCellData *> *firstGroupData;
+@property NSArray<TUIContactActionCellData_Minimalist *> *firstGroupData;
 @end
 
 @implementation TUIContactController_Minimalist
@@ -34,24 +36,22 @@
     [super viewDidLoad];
     NSMutableArray *list = @[].mutableCopy;
     [list addObject:({
-        TUIContactActionCellData *data = [[TUIContactActionCellData alloc] init];
-        data.icon = TUIContactDynamicImage(@"contact_new_friend_img", [UIImage imageNamed:TUIContactImagePath(@"new_friend")]);
+        TUIContactActionCellData_Minimalist *data = [[TUIContactActionCellData_Minimalist alloc] init];
         data.title = TUIKitLocalizableString(TUIKitContactsNewFriends);
         data.cselector = @selector(onAddNewFriend:);
         data;
     })];
     [list addObject:({
-        TUIContactActionCellData *data = [[TUIContactActionCellData alloc] init];
-        data.icon = TUIContactDynamicImage(@"contact_public_group_img", [UIImage imageNamed:TUIContactImagePath(@"public_group")]);
+        TUIContactActionCellData_Minimalist *data = [[TUIContactActionCellData_Minimalist alloc] init];
         data.title = TUIKitLocalizableString(TUIKitContactsGroupChats);
         data.cselector = @selector(onGroupConversation:);
         data;
     })];
     [list addObject:({
-        TUIContactActionCellData *data = [[TUIContactActionCellData alloc] init];
-        data.icon = TUIContactDynamicImage(@"contact_blacklist_img", [UIImage imageNamed:TUIContactImagePath(@"blacklist")]);
+        TUIContactActionCellData_Minimalist *data = [[TUIContactActionCellData_Minimalist alloc] init];
         data.title = TUIKitLocalizableString(TUIKitContactsBlackList);
         data.cselector = @selector(onBlackList:);
+        data.needBottomLine = NO;
         data;
     })];
     self.firstGroupData = [NSArray arrayWithArray:list];
@@ -81,10 +81,10 @@
     self.navigationItem.rightBarButtonItem = moreItem;
 
     self.navigationController.interactivePopGestureRecognizer.enabled = YES;
+    self.view.backgroundColor = TUICoreDynamicColor(@"", @"#FFFFFF");
 }
 
 - (void)setupViews {
-    self.view.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
     CGRect rect = self.view.bounds;
     if (![UINavigationBar appearance].isTranslucent && [[[UIDevice currentDevice] systemVersion] doubleValue]<15.0) {
         rect = CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height - TabBar_Height - NavBar_Height );
@@ -94,9 +94,8 @@
     _tableView.dataSource = self;
     [_tableView setSectionIndexBackgroundColor:[UIColor clearColor]];
     _tableView.contentInset = UIEdgeInsetsMake(0, 0, 8, 0);
-    [_tableView setSectionIndexColor:[UIColor darkGrayColor]];
+    [_tableView setSectionIndexColor:[UIColor systemBlueColor]];
     [_tableView setBackgroundColor:self.view.backgroundColor];
-    
     _tableView.delaysContentTouches = NO;
     if (@available(iOS 15.0, *)) {
         _tableView.sectionHeaderTopPadding = 0;
@@ -105,9 +104,10 @@
     
     UIView *v = [[UIView alloc] initWithFrame:CGRectZero];
     [_tableView setTableFooterView:v];
+    _tableView.separatorColor = [UIColor clearColor];
     _tableView.separatorInset = UIEdgeInsetsMake(0, 58, 0, 0);
-    [_tableView registerClass:[TUICommonContactCell class] forCellReuseIdentifier:kContactCellReuseId];
-    [_tableView registerClass:[TUIContactActionCell class] forCellReuseIdentifier:kContactActionCellReuseId];
+    [_tableView registerClass:[TUICommonContactCell_Minimalist class] forCellReuseIdentifier:kContactCellReuseId];
+    [_tableView registerClass:[TUIContactActionCell_Minimalist class] forCellReuseIdentifier:kContactActionCellReuseId];
     
     @weakify(self)
     [RACObserve(self.viewModel, isLoadFinished) subscribeNext:^(id finished) {
@@ -159,39 +159,82 @@
 
 - (void)addToContacts {
     TUIFindContactViewController_Minimalist *add = [[TUIFindContactViewController_Minimalist alloc] init];
-    add.type = TUIFindContactTypeC2C;
+    add.type = TUIFindContactTypeC2C_Minimalist;
     @weakify(self)
-    add.onSelect = ^(TUIFindContactCellModel * cellModel) {
+    add.onSelect = ^(TUIFindContactCellModel_Minimalist * cellModel) {
         @strongify(self)
-        TUIFriendRequestViewController_Minimalist *frc = [[TUIFriendRequestViewController_Minimalist alloc] init];
-        frc.profile = cellModel.userInfo;
-        [self.navigationController popViewControllerAnimated:NO];
-        [self.navigationController pushViewController:frc animated:YES];
+        [self dismissViewControllerAnimated:NO completion:^{
+            TUIFriendRequestViewController_Minimalist *frc = [[TUIFriendRequestViewController_Minimalist alloc] init];
+            frc.profile = cellModel.userInfo;
+            
+            TUIContactFloatController *bfloatVC = [[TUIContactFloatController alloc] init];
+            [bfloatVC appendChildViewController:(id)frc topMargin:kScale390(87.5)];
+            [bfloatVC.topGestureView setTitleText:TUIKitLocalizableString(Info) subTitleText:@"" leftBtnText:TUIKitLocalizableString(TUIKitCreateCancel) rightBtnText:@""];
+            bfloatVC.topGestureView.rightButton.hidden = YES;
+            bfloatVC.topGestureView.subTitleLabel.hidden = YES;
+            [self presentViewController:bfloatVC animated:YES completion:nil];
+            bfloatVC.topGestureView.leftButtonClickCallback = ^{
+                [self dismissViewControllerAnimated:YES completion:^{}];
+            };
+        }];
+
     };
-    [self.navigationController pushViewController:add animated:YES];
+        
+    TUIContactFloatController *floatVC = [[TUIContactFloatController alloc] init];
+    [floatVC appendChildViewController:(id)add topMargin:kScale390(87.5)];
+    [floatVC.topGestureView setTitleText:TUIKitLocalizableString(TUIKitAddFriend) subTitleText:@"" leftBtnText:TUIKitLocalizableString(TUIKitCreateCancel) rightBtnText:@""];
+    floatVC.topGestureView.rightButton.hidden = YES;
+    floatVC.topGestureView.subTitleLabel.hidden = YES;
+    floatVC.topGestureView.leftButtonClickCallback = ^{
+        [self dismissViewControllerAnimated:YES completion:^{}];
+    };
+    [self presentViewController:floatVC animated:YES completion:nil];
 }
 
 - (void)addGroups {
     TUIFindContactViewController_Minimalist *add = [[TUIFindContactViewController_Minimalist alloc] init];
-    add.type = TUIFindContactTypeGroup;
+    add.type = TUIFindContactTypeGroup_Minimalist;
     @weakify(self)
-    add.onSelect = ^(TUIFindContactCellModel * cellModel) {
+    add.onSelect = ^(TUIFindContactCellModel_Minimalist * cellModel) {
         @strongify(self)
-        NSDictionary *param = @{
-            TUICore_TUIGroupService_GetGroupRequestViewControllerMethod_GroupInfoKey: cellModel.groupInfo
-        };
-        UIViewController *vc = [TUICore callService:TUICore_TUIGroupService_Minimalist
-                                             method:TUICore_TUIGroupService_GetGroupRequestViewControllerMethod
-                                              param:param];
-        [self.navigationController pushViewController:vc animated:YES];
+        
+        [self dismissViewControllerAnimated:YES completion:^{
+            
+            NSDictionary *param = @{
+                TUICore_TUIGroupService_GetGroupRequestViewControllerMethod_GroupInfoKey: cellModel.groupInfo
+            };
+            UIViewController *vc = [TUICore callService:TUICore_TUIGroupService_Minimalist
+                                                 method:TUICore_TUIGroupService_GetGroupRequestViewControllerMethod
+                                                  param:param];
+            
+            TUIContactFloatController *bfloatVC = [[TUIContactFloatController alloc] init];
+            [bfloatVC appendChildViewController:(id)vc topMargin:kScale390(87.5)];
+            [bfloatVC.topGestureView setTitleText:TUIKitLocalizableString(Info) subTitleText:@"" leftBtnText:TUIKitLocalizableString(TUIKitCreateCancel) rightBtnText:@""];
+            bfloatVC.topGestureView.rightButton.hidden = YES;
+            bfloatVC.topGestureView.subTitleLabel.hidden = YES;
+            [self presentViewController:bfloatVC animated:YES completion:nil];
+            bfloatVC.topGestureView.leftButtonClickCallback = ^{
+                [self dismissViewControllerAnimated:YES completion:^{}];
+            };
+            
+        }];
     };
-    [self.navigationController pushViewController:add animated:YES];
+    
+    TUIContactFloatController *floatVC = [[TUIContactFloatController alloc] init];
+    [floatVC appendChildViewController:(id)add topMargin:kScale390(87.5)];
+    [floatVC.topGestureView setTitleText:TUIKitLocalizableString(TUIKitAddGroup) subTitleText:@"" leftBtnText:TUIKitLocalizableString(TUIKitCreateCancel) rightBtnText:@""];
+    floatVC.topGestureView.rightButton.hidden = YES;
+    floatVC.topGestureView.subTitleLabel.hidden = YES;
+    floatVC.topGestureView.leftButtonClickCallback = ^{
+        [self dismissViewControllerAnimated:YES completion:^{}];
+    };
+    [self presentViewController:floatVC animated:YES completion:nil];
 }
 
-- (TUIContactViewDataProvider *)viewModel
+- (TUIContactViewDataProvider_Minimalist *)viewModel
 {
     if (_viewModel == nil) {
-        _viewModel = [TUIContactViewDataProvider new];
+        _viewModel = [TUIContactViewDataProvider_Minimalist new];
         [_viewModel loadContacts];
     }
     return _viewModel;
@@ -236,20 +279,24 @@
         UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         textLabel.tag = TEXT_TAG;
         textLabel.font = [UIFont systemFontOfSize:16];
-        textLabel.textColor = RGB(0x80, 0x80, 0x80);
+        textLabel.textColor = [UIColor tui_colorWithHex:@"#000000"];
         [headerView addSubview:textLabel];
         textLabel.mm_fill().mm_left(12);
         textLabel.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     }
     UILabel *label = [headerView viewWithTag:TEXT_TAG];
     label.text = self.viewModel.groupList[section-1];
-    headerView.contentView.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
+    headerView.backgroundColor = [UIColor whiteColor];
+    headerView.contentView.backgroundColor = [UIColor whiteColor];
     return headerView;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 56;
+    if (indexPath.section == 0) {
+        return kScale390(52);
+    }
+    return kScale390(52);
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -269,18 +316,19 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 0) {
-        TUIContactActionCell *cell = [tableView dequeueReusableCellWithIdentifier:kContactActionCellReuseId forIndexPath:indexPath];
+        TUIContactActionCell_Minimalist *cell = [tableView dequeueReusableCellWithIdentifier:kContactActionCellReuseId forIndexPath:indexPath];
         [cell fillWithData:self.firstGroupData[indexPath.row]];
         cell.changeColorWhenTouched = YES;
         return cell;
     } else {
-        TUICommonContactCell *cell = [tableView dequeueReusableCellWithIdentifier:kContactCellReuseId forIndexPath:indexPath];
+        TUICommonContactCell_Minimalist *cell = [tableView dequeueReusableCellWithIdentifier:kContactCellReuseId forIndexPath:indexPath];
         NSString *group = self.viewModel.groupList[indexPath.section-1];
         NSArray *list = self.viewModel.dataDict[group];
-        TUICommonContactCellData *data = list[indexPath.row];
+        TUICommonContactCellData_Minimalist *data = list[indexPath.row];
         data.cselector = @selector(onSelectFriend:);
         [cell fillWithData:data];
         cell.changeColorWhenTouched = YES;
+        cell.separtorView.hidden = YES;
         return cell;
     }
 }
@@ -290,13 +338,13 @@
 }
 
 #pragma mark -
-- (void)onSelectFriend:(TUICommonContactCell *)cell
+- (void)onSelectFriend:(TUICommonContactCell_Minimalist *)cell
 {
     if (self.delegate && [self.delegate respondsToSelector:@selector(onSelectFriend:)]) {
         [self.delegate onSelectFriend:cell];
         return;
     }
-    TUICommonContactCellData *data = cell.contactData;
+    TUICommonContactCellData_Minimalist *data = cell.contactData;
     TUIFriendProfileController_Minimalist *vc = [[TUIFriendProfileController_Minimalist alloc] init];
     vc.friendProfile = data.friendProfile;
     [self.navigationController pushViewController:(UIViewController *)vc animated:YES];
@@ -309,7 +357,7 @@
         return;
     }
     TUINewFriendViewController_Minimalist *vc = TUINewFriendViewController_Minimalist.new;
-    vc.cellClickBlock = ^(TUICommonPendencyCell * _Nonnull cell) {
+    vc.cellClickBlock = ^(TUICommonPendencyCell_Minimalist * _Nonnull cell) {
         TUIUserProfileController_Minimalist *controller = [[TUIUserProfileController_Minimalist alloc] init];
         [[V2TIMManager sharedInstance] getUsersInfo:@[cell.pendencyData.identifier] succ:^(NSArray<V2TIMUserFullInfo *> *profiles) {
             controller.userFullInfo = profiles.firstObject;
@@ -330,11 +378,14 @@
     }
     TUIGroupConversationListController_Minimalist *vc = TUIGroupConversationListController_Minimalist.new;
     @weakify(self)
-    vc.onSelect = ^(TUICommonContactCellData * _Nonnull cellData) {
+    vc.onSelect = ^(TUICommonContactCellData_Minimalist * _Nonnull cellData) {
         @strongify(self)
         
         NSDictionary *param = @{
-            TUICore_TUIChatService_GetChatViewControllerMethod_GroupIDKey : cellData.identifier ?: @""
+            TUICore_TUIChatService_GetChatViewControllerMethod_GroupIDKey : cellData.identifier ?: @"",
+            TUICore_TUIChatService_GetChatViewControllerMethod_TitleKey:cellData.title?:@"",
+            TUICore_TUIChatService_GetChatViewControllerMethod_AvatarImageKey:cellData.avatarImage,
+            TUICore_TUIChatService_GetChatViewControllerMethod_AvatarUrlKey:[cellData.avatarUrl absoluteString]?:@"",
         };
         
         UIViewController *chatVC = (UIViewController *)[TUICore callService:TUICore_TUIChatService_Minimalist
@@ -345,11 +396,11 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
-- (void)onBlackList:(TUICommonContactCell *)cell
+- (void)onBlackList:(TUICommonContactCell_Minimalist *)cell
 {
     TUIBlackListController_Minimalist *vc = TUIBlackListController_Minimalist.new;
     @weakify(self);
-    vc.didSelectCellBlock = ^(TUICommonContactCell * _Nonnull cell) {
+    vc.didSelectCellBlock = ^(TUICommonContactCell_Minimalist * _Nonnull cell) {
         @strongify(self);
         [self onSelectFriend:cell];
     };

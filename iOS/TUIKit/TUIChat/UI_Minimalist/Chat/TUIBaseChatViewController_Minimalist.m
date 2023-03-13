@@ -40,6 +40,7 @@
 #import "TUIChatMembersReactController.h"
 #import "TUIAIDenoiseSignatureManager.h"
 #import "TUIBubbleMessageCell_Minimalist.h"
+#import "TUIChatFloatController.h"
 
 static UIView *customTopView;
 
@@ -138,6 +139,12 @@ static UIView *customTopView;
     }
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    if (customTopView) {
+        [self setupCustomTopView];
+    }
+}
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
@@ -959,12 +966,14 @@ static UIView *customTopView;
     __weak typeof(self) weakSelf = self;
     void(^chooseTarget)(BOOL) = ^(BOOL mergeForward) {
         UIViewController * vc = (UIViewController *)[TUICore callService:TUICore_TUIConversationService_Minimalist method:TUICore_TUIConversationService_GetConversationSelectControllerMethod param:nil];
-        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:(UIViewController *)vc];
-        nav.modalPresentationStyle = UIModalPresentationFullScreen;
+        TUIChatFloatController *floatVC = [[TUIChatFloatController alloc] init];
+        [floatVC appendChildViewController:(id)vc topMargin:kScale390(87.5)];
+        [floatVC.topGestureView setTitleText:@"" subTitleText:@"" leftBtnText:TUIKitLocalizableString(TUIKitCreateCancel) rightBtnText:TUIKitLocalizableString(MultiSelect)];
+        floatVC.topGestureView.subTitleLabel.hidden = YES;
         weakSelf.forwardConversationSelectVC = (UIViewController *)vc;
         weakSelf.forwardSelectUIMsgs = uiMsgs;
         weakSelf.isMergeForward = mergeForward;
-        [weakSelf presentViewController:nav animated:YES completion:nil];
+        [self presentViewController:floatVC animated:YES completion:nil];
     };
     
     UIAlertController *tipsVc = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
@@ -1188,11 +1197,13 @@ static UIView *customTopView;
 }
 
 - (void)presentConverationSelectVC {
-    UIViewController *vc = (UIViewController *)[TUICore callService:TUICore_TUIConversationService method:TUICore_TUIConversationService_GetConversationSelectControllerMethod param:nil];
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:(UIViewController *)vc];
-    nav.modalPresentationStyle = UIModalPresentationFullScreen;
+    UIViewController *vc = (UIViewController *)[TUICore callService:TUICore_TUIConversationService_Minimalist method:TUICore_TUIConversationService_GetConversationSelectControllerMethod param:nil];
+    TUIChatFloatController *floatVC = [[TUIChatFloatController alloc] init];
+    [floatVC appendChildViewController:(id)vc topMargin:kScale390(87.5)];
+    [floatVC.topGestureView setTitleText:@"" subTitleText:@"" leftBtnText:TUIKitLocalizableString(TUIKitCreateCancel) rightBtnText:TUIKitLocalizableString(MultiSelect)];
+    floatVC.topGestureView.subTitleLabel.hidden = YES;
     self.forwardConversationSelectVC = (UIViewController *)vc;
-    [self presentViewController:nav animated:YES completion:nil];
+    [self presentViewController:floatVC animated:YES completion:nil];
 }
 
 - (void)forwardTranslationText:(NSString *)text

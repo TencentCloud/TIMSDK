@@ -13,6 +13,38 @@
 #import "TUIThemeManager.h"
 
 #define kScale UIScreen.mainScreen.bounds.size.width / 375.0
+@implementation TUIMemberTagView : UIView
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.backgroundColor = [UIColor tui_colorWithHex:@"#E7F3FC"];
+        self.layer.borderWidth = kScale390(1);
+        self.layer.cornerRadius = kScale390(3);
+        self.layer.borderColor = [UIColor tui_colorWithHex:@"#1890FF"].CGColor;
+        [self addSubview:self.tagname];
+    }
+    return self;
+}
+
+- (UILabel *)tagname {
+    if (!_tagname) {
+        _tagname = [[UILabel alloc] init];
+        _tagname.text = @"";
+        _tagname.textColor = [UIColor tui_colorWithHex:@"#1890FF"];
+        _tagname.font = [UIFont systemFontOfSize:kScale390(10)];
+    }
+    return _tagname;
+}
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    [_tagname sizeToFit];
+    _tagname.frame = CGRectMake(kScale390(8), 0, _tagname.frame.size.width, self.frame.size.height);
+    
+}
+
+@end
+
 
 @implementation TUIMemberInfoCell
 
@@ -28,6 +60,7 @@
 {
     [self.contentView addSubview:self.avatarImageView];
     [self.contentView addSubview:self.nameLabel];
+    [self.contentView addSubview:self.tagView];
 }
 
 - (void)layoutSubviews
@@ -44,7 +77,25 @@
     UIImage *defaultImage = TUIConfig.defaultConfig.defaultAvatarImage;
     [self.avatarImageView sd_setImageWithURL:[NSURL URLWithString:data.avatarUrl] placeholderImage:data.avatar?:defaultImage];
     self.nameLabel.text = data.name;
-    
+    self.tagView.hidden = NO;
+    if (data.role == V2TIM_GROUP_MEMBER_ROLE_SUPER) {
+        self.tagView.tagname.text = TUIKitLocalizableString(TUIKitMembersRoleSuper);
+    }
+    else if (data.role == V2TIM_GROUP_MEMBER_ROLE_ADMIN) {
+        self.tagView.tagname.text = TUIKitLocalizableString(TUIKitMembersRoleAdmin);
+    }
+    else {
+        self.tagView.tagname.text = @"";
+        self.tagView.hidden = YES;
+    }
+
+    if (data.showAccessory) {
+        self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        
+    } else {
+        self.accessoryType = UITableViewCellAccessoryNone;
+        
+    }
     [self updateUI];
 }
 
@@ -62,8 +113,21 @@
         self.nameLabel.textColor = TUICoreDynamicColor(@"form_value_text_color", @"#000000");
     }
     
+    if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {
+        self.avatarImageView.layer.masksToBounds = YES;
+        self.avatarImageView.layer.cornerRadius = self.avatarImageView.frame.size.height / 2;
+    } else if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRadiusCorner) {
+        self.avatarImageView.layer.masksToBounds = YES;
+        self.avatarImageView.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
+    }
+    
     self.avatarImageView.mm_centerY = self.contentView.mm_centerY;
-    self.nameLabel.mm_height(self.contentView.mm_h).mm_left(CGRectGetMaxX(self.avatarImageView.frame) + 14).mm_flexToRight(16 * kScale);
+    [self.nameLabel sizeToFit];
+    self.nameLabel.mm_height(self.contentView.mm_h).mm_left(CGRectGetMaxX(self.avatarImageView.frame) + 14);
+    [self.tagView.tagname sizeToFit];
+    self.tagView.frame = CGRectMake(self.nameLabel.frame.origin.x + self.nameLabel.frame.size.width +kScale390(10), 0, self.tagView.tagname.frame.size.width + kScale390(16), kScale390(15));
+    self.tagView.mm_centerY = self.contentView.mm_centerY;
+        
 }
 
 - (UIImageView *)avatarImageView
@@ -84,6 +148,12 @@
     return _nameLabel;
 }
 
+- (TUIMemberTagView *)tagView {
+    if (_tagView == nil) {
+        _tagView = [[TUIMemberTagView alloc] init];
+    }
+    return _tagView;
+}
 
 
 

@@ -105,6 +105,8 @@
     [[V2TIMManager sharedInstance] setAPNSListener:self];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateMarkUnreadCount:) name:TUIKitNotification_onConversationMarkUnreadCountChanged object:nil];
+    
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onLogoutSucc) name:TUILogoutSuccessNotification object:nil];
 }
 
 void uncaughtExceptionHandler(NSException*exception) {
@@ -147,6 +149,9 @@ void uncaughtExceptionHandler(NSException*exception) {
     }];
 }
 
+- (void)onLogoutSucc {
+    UIApplication.sharedApplication.applicationIconBadgeNumber = 0;
+}
 #pragma mark -- Setup UI
 - (void)setupGlobalUI {
     [UIViewController aspect_hookSelector:@selector(setTitle:)
@@ -569,7 +574,9 @@ typedef void (^confirmHandler)(UIAlertAction *action, NSString *content);
     msgItem.title = NSLocalizedString(@"TabBarItemMessageText_mini", nil);
     msgItem.selectedImage = TUIDynamicImage(@"", TUIThemeModuleDemo_Minimalist, [UIImage imageNamed:TUIDemoImagePath_Minimalist(@"session_selected")]);
     msgItem.normalImage = TUIDynamicImage(@"", TUIThemeModuleDemo_Minimalist, [UIImage imageNamed:TUIDemoImagePath_Minimalist(@"session_normal")]);
-    msgItem.controller = [[TUINavigationController alloc] initWithRootViewController:[[ConversationController_Minimalist alloc] init]];
+    TUINavigationController *msgNav = [[TUINavigationController alloc] initWithRootViewController:[[ConversationController_Minimalist alloc] init]];
+    msgItem.controller = msgNav;
+    msgNav.navigationItemBackArrowImage = [UIImage imageNamed:@"icon_back_blue"];
     msgItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:[UIColor whiteColor] dark:TController_Background_Color_Dark];
     msgItem.badgeView = [[TUIBadgeView alloc] init];
     @weakify(self)
@@ -583,7 +590,9 @@ typedef void (^confirmHandler)(UIAlertAction *action, NSString *content);
     contactItem.title = NSLocalizedString(@"TabBarItemContactText_mini", nil);
     contactItem.selectedImage = TUIDynamicImage(@"", TUIThemeModuleDemo_Minimalist, [UIImage imageNamed:TUIDemoImagePath_Minimalist(@"contact_selected")]);
     contactItem.normalImage = TUIDynamicImage(@"", TUIThemeModuleDemo_Minimalist, [UIImage imageNamed:TUIDemoImagePath_Minimalist(@"contact_normal")]);
-    contactItem.controller = [[TUINavigationController alloc] initWithRootViewController:[[ContactsController_Minimalist alloc] init]];
+    TUINavigationController *contactNav = [[TUINavigationController alloc] initWithRootViewController:[[ContactsController_Minimalist alloc] init]];
+    contactNav.navigationItemBackArrowImage = [UIImage imageNamed:@"icon_back_blue"];
+    contactItem.controller = contactNav;
     contactItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:[UIColor whiteColor] dark:TController_Background_Color_Dark];
     contactItem.badgeView = [[TUIBadgeView alloc] init];
     [items addObject:contactItem];
@@ -593,7 +602,9 @@ typedef void (^confirmHandler)(UIAlertAction *action, NSString *content);
     
     setItem.selectedImage = TUIDynamicImage(@"", TUIThemeModuleDemo_Minimalist, [UIImage imageNamed:TUIDemoImagePath_Minimalist(@"setting_selected")]);
     setItem.normalImage = TUIDynamicImage(@"", TUIThemeModuleDemo_Minimalist, [UIImage imageNamed:TUIDemoImagePath_Minimalist(@"setting_normal")]);
-    setItem.controller = [[TUINavigationController alloc] initWithRootViewController:[[SettingController_Minimalist alloc] init]];
+    TUINavigationController *setNav = [[TUINavigationController alloc] initWithRootViewController:[[SettingController_Minimalist alloc] init]];
+    setNav.navigationItemBackArrowImage = [UIImage imageNamed:@"icon_back_blue"];
+    setItem.controller = setNav;
     setItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:[UIColor whiteColor] dark:TController_Background_Color_Dark];
     [items addObject:setItem];
     tbc.tabBarItems = items;

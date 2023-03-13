@@ -27,7 +27,6 @@
 #import "TUIMergeMessageListController.h"
 #import "TUIChatDataProvider.h"
 #import "TUIChatConversationModel.h"
-#import "TUIMessageDataProvider+Call.h"
 #import "TUIChatPopMenu.h"
 #import "TUIDefine.h"
 #import "TUIConfig.h"
@@ -39,11 +38,16 @@
 #import "TUIRepliesDetailViewController.h"
 #import "TUIOrderCell.h"
 #import "TUIMessageProgressManager.h"
+#import "TUIChatCallingDataProvider.h"
+#import "TUIPollContainerCell.h"
+#import "TUIGroupNoteContainerCell.h"
+#import "TUIGroupNoteTipsCell.h"
 
 @interface TUIBaseMessageController () <TUIMessageCellDelegate,
                                         TUIJoinGroupMessageCellDelegate,
                                         TUIMessageBaseDataProviderDataSource,
-                                        TUIMessageProgressManagerDelegate>
+                                        TUIMessageProgressManagerDelegate,
+                                        TUINotificationProtocol>
 
 @property (nonatomic, strong) TUIMessageDataProvider *messageDataProvider;
 @property (nonatomic, strong) TUIMessageCellData *menuUIMsg;
@@ -65,12 +69,17 @@
     self.isActive = YES;
     [TUITool addUnsupportNotificationInVC:self];
     [TUIMessageProgressManager.shareManager addDelegate:self];
+    
+    [TUICore registerEvent:TUICore_TUIPollNotify subKey:TUICore_TUIPollNotify_PollViewSizeChangedSubKey object:self];
+    [TUICore registerEvent:TUICore_TUIPollNotify subKey:TUICore_TUIPollNotify_PollClosedSubKey object:self];
+    [TUICore registerEvent:TUICore_TUIGroupNoteNotify subKey:TUICore_TUIGroupNoteNotify_PreviewSizeChangedSubKey object:self];
 }
 
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [TUIMessageProgressManager.shareManager removeDelegate:self];
+    [TUICore unRegisterEventByObject:self];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -107,6 +116,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationBecomeActive) name:UIApplicationWillEnterForegroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationEnterBackground) name: UIApplicationDidEnterBackgroundNotification object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onReceivedSendMessageRequest:) name:TUIChatSendMessageNotification object:nil];
+    
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapViewController)];
     /**
      * 解决触摸事件没有往下传递，导致手势和 collectionView didselect 冲突的问题
@@ -118,7 +129,7 @@
     self.tableView.scrollsToTop = NO;
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     self.tableView.backgroundColor = TUIChatDynamicColor(@"chat_controller_bg_color", @"#FFFFFF");
-
+    
     [self.tableView registerClass:[TUITextMessageCell class] forCellReuseIdentifier:TTextMessageCell_ReuseId];
     [self.tableView registerClass:[TUIVoiceMessageCell class] forCellReuseIdentifier:TVoiceMessageCell_ReuseId];
     [self.tableView registerClass:[TUIImageMessageCell class] forCellReuseIdentifier:TImageMessageCell_ReuseId];
@@ -140,7 +151,7 @@
             [self.tableView registerClass:cls forCellReuseIdentifier:bussinessID];
         }
     }
-
+    
     self.indicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, TMessageController_Header_Height)];
     self.indicatorView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhite;
     self.tableView.tableHeaderView = self.indicatorView;
@@ -187,7 +198,7 @@
                 [weakSelf.tableView scrollRectToVisible:CGRectMake(0, weakSelf.tableView.contentOffset.y + visibleHeight, weakSelf.tableView.frame.size.width, weakSelf.tableView.frame.size.height) animated:NO];
             }
         }
-//        [weakSelf.indicatorView stopAnimating];
+        //        [weakSelf.indicatorView stopAnimating];
     } FailBlock:^(int code, NSString *desc) {
         [TUITool makeToastError:code msg:desc];
     }];
@@ -208,6 +219,9 @@
 
 - (void)reloadCellOfIndexPath:(NSIndexPath *)indexPath {
     // Disable animation when loading to avoid cell jumping
+    if (indexPath == nil) {
+        return;
+    }
     [UIView performWithoutAnimation:^{
         [self.tableView reloadRowsAtIndexPaths:@[indexPath]
                               withRowAnimation:UITableViewRowAnimationNone];
@@ -275,7 +289,7 @@
                           willSendBlock:^(BOOL isReSend, TUIMessageCellData * _Nonnull dateUIMsg) {
         @strongify(self);
         [self scrollToBottom:YES];
-
+        
         int delay = 1;
         if ([cellData isKindOfClass:[TUIImageMessageCellData class]]) {
             delay = 0;
@@ -293,6 +307,14 @@
         @strongify(self);
         [self reloadUIMessage:cellData];
         [self changeMsg:cellData status:Msg_Status_Succ];
+        
+        NSDictionary *param = @{TUICore_TUIChatNotify_SendMessageSubKey_Code: @0,
+                                TUICore_TUIChatNotify_SendMessageSubKey_Desc: @"",
+                                TUICore_TUIChatNotify_SendMessageSubKey_Message: cellData.innerMessage};
+        [TUICore notifyEvent:TUICore_TUIChatNotify
+                      subKey:TUICore_TUIChatNotify_SendMessageSubKey
+                      object:self
+                       param:nil];
     } FailBlock:^(int code, NSString *desc) {
         @strongify(self)
         if (self.isMsgNeedReadReceipt && code == ERR_SDK_INTERFACE_NOT_SUPPORT) {
@@ -304,6 +326,13 @@
             [TUITool makeToastError:code msg:desc];
         }
         [self changeMsg:cellData status:Msg_Status_Fail];
+        
+        NSDictionary *param = @{TUICore_TUIChatNotify_SendMessageSubKey_Code: @(code),
+                                TUICore_TUIChatNotify_SendMessageSubKey_Desc:desc};
+        [TUICore notifyEvent:TUICore_TUIChatNotify
+                      subKey:TUICore_TUIChatNotify_SendMessageSubKey
+                      object:self
+                       param:param];
     }];
 }
 
@@ -350,6 +379,68 @@
         @"status": [NSNumber numberWithUnsignedInteger:status],
         @"msgSender": self,
     }];
+}
+
+- (void)onReceivedSendMessageRequest:(NSNotification *)notification {
+    NSDictionary *userInfo = notification.userInfo;
+    if (userInfo == nil) {
+        return;
+    }
+    V2TIMMessage *message = [userInfo objectForKey:TUICore_TUIChatService_SendMessageMethod_MsgKey];
+    if (message == nil) {
+        return;
+    }
+    [self sendMessage:message];
+}
+
+#pragma mark - TUINotificationProtocol
+- (void)onNotifyEvent:(NSString *)key
+               subKey:(NSString *)subKey
+               object:(id)anObject
+                param:(NSDictionary *)param {
+    if ([key isEqualToString:TUICore_TUIPollNotify]
+        && [subKey isEqualToString:TUICore_TUIPollNotify_PollViewSizeChangedSubKey]) {
+        V2TIMMessage *message = param[TUICore_TUIPollNotify_PollViewMessageKey];
+        for (TUIMessageCellData *data in self.messageDataProvider.uiMsgs) {
+            if ([data isKindOfClass:TUIPollContainerCellData.class] && data.innerMessage == message) {
+                [data clearCachedCellHeight];
+                [self.messageDataProvider removeHeightCacheOfData:data];
+            }
+        }
+        [self.tableView reloadData];
+    } else if ([key isEqualToString:TUICore_TUIPollNotify]
+               && [subKey isEqualToString:TUICore_TUIPollNotify_PollClosedSubKey]) {
+        NSString *originMessageID = param[TUICore_TUIPollNotify_PollOriginMessageIDKey];
+        for (TUIMessageCellData *data in self.messageDataProvider.uiMsgs) {
+            if (![data isKindOfClass:TUIPollContainerCellData.class]) {
+                continue;
+            }
+            if (![data.innerMessage.msgID isEqualToString:originMessageID]) {
+                NSDictionary *dict = [TUITool jsonData2Dictionary:data.innerMessage.customElem.data];
+                NSDictionary *content = dict[@"content"];
+                if ([content[@"original_msg_id"] isEqualToString:originMessageID]) {
+                    [data clearCachedCellHeight];
+                    [self.messageDataProvider removeHeightCacheOfData:data];
+                }
+            } else {
+                [data clearCachedCellHeight];
+                [self.messageDataProvider removeHeightCacheOfData:data];
+            }
+        }
+        // TODO: 优化成刷新指定 cell
+        [self.tableView reloadData];
+    } else if ([key isEqualToString:TUICore_TUIGroupNoteNotify]
+               && [subKey isEqualToString:TUICore_TUIGroupNoteNotify_PreviewSizeChangedSubKey]) {
+        V2TIMMessage *message = param[TUICore_TUIGroupNoteNotify_PreviewMessageKey];
+        for (TUIMessageCellData *data in self.messageDataProvider.uiMsgs) {
+            if ([data isKindOfClass:TUIGroupNoteContainerCellData.class] && data.innerMessage == message) {
+                [data clearCachedCellHeight];
+                [self.messageDataProvider removeHeightCacheOfData:data];
+            }
+        }
+        // TODO: 优化成刷新指定 cell
+        [self.tableView reloadData];
+    }
 }
 
 #pragma mark - TUIMessageProgressManagerDelegate
@@ -675,6 +766,19 @@ didChangeTranslationData:(TUIMessageCellData *)data {
     }
 }
 
+- (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.row < self.messageDataProvider.uiMsgs.count) {
+        TUITextMessageCellData *cellData = (TUITextMessageCellData *)self.messageDataProvider.uiMsgs[indexPath.row];
+        if ([cellData isKindOfClass:TUITextMessageCellData.class]) {
+            if ((cellData.isAudioCall || cellData.isVideoCall) && cellData.showUnreadPoint) {
+                cellData.innerMessage.localCustomInt = 1;
+                cellData.showUnreadPoint = NO;
+            }
+        }
+    }
+}
+
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
@@ -737,6 +841,9 @@ didChangeTranslationData:(TUIMessageCellData *)data {
     if ([cell isKindOfClass:[TUITextMessageCell class]]) {
         [self clickTextMessage:(TUITextMessageCell *)cell];
     }
+    else if ([cell isKindOfClass:TUIGroupNoteTipsCell.class]) {
+        [self clickGroupNoteTipsMessage:(TUIGroupNoteTipsCell *)cell];
+    }
     else if ([cell isKindOfClass:[TUISystemMessageCell class]]) {
         [self clickSystemMessage:(TUISystemMessageCell *)cell];
     }
@@ -767,6 +874,7 @@ didChangeTranslationData:(TUIMessageCellData *)data {
     else if ([cell isKindOfClass:TUIOrderCell.class]) {
         [self showOrderMessage:(TUIOrderCell *)cell];
     }
+    
 
     if ([self.delegate respondsToSelector:@selector(messageController:onSelectMessageContent:)]) {
         [self.delegate messageController:self onSelectMessageContent:cell];
@@ -901,7 +1009,9 @@ didChangeTranslationData:(TUIMessageCellData *)data {
                                                            callback:^{
             [weakSelf onForward:nil];
         }];
-        [menu addAction:forwardAction];
+        if ([self canForward:data]) {
+            [menu addAction:forwardAction];
+        }
         
         quoteAction = [[TUIChatPopMenuAction alloc] initWithTitle:TUIKitLocalizableString(Reply)
                                                             image:
@@ -975,7 +1085,9 @@ didChangeTranslationData:(TUIMessageCellData *)data {
                 [menu addAction:copyAction];
                 [menu addAction:deleteAction];
                 [menu addAction:multiAction];
-                [menu addAction:forwardAction];
+                if ([self canForward:data]) {
+                    [menu addAction:forwardAction];
+                }
                 [menu addAction:quoteAction];
                 [menu addAction:referenceAction];
                 if ([data.translationViewData isHidden]
@@ -984,7 +1096,9 @@ didChangeTranslationData:(TUIMessageCellData *)data {
                 }
             } else {
                 [menu addAction:copyAction];
-                [menu addAction:forwardAction];
+                if ([self canForward:data]) {
+                    [menu addAction:forwardAction];
+                }
             }
             [menu layoutSubview];
         };
@@ -1007,7 +1121,9 @@ didChangeTranslationData:(TUIMessageCellData *)data {
                 [menu addAction:copyAction];
                 [menu addAction:deleteAction];
                 [menu addAction:multiAction];
-                [menu addAction:forwardAction];
+                if ([self canForward:data]) {
+                    [menu addAction:forwardAction];
+                }
                 [menu addAction:quoteAction];
                 [menu addAction:referenceAction];
                 if ([data.translationViewData isHidden]
@@ -1016,7 +1132,9 @@ didChangeTranslationData:(TUIMessageCellData *)data {
                 }
             } else {
                 [menu addAction:copyAction];
-                [menu addAction:forwardAction];
+                if ([self canForward:data]) {
+                    [menu addAction:forwardAction];
+                }
             }
             [menu layoutSubview];
         };
@@ -1024,6 +1142,10 @@ didChangeTranslationData:(TUIMessageCellData *)data {
             [textCell.textView setSelectedTextRange:nil];
         };
     }
+}
+
+- (BOOL)canForward:(TUIMessageCellData *)data {
+    return ![data isKindOfClass:TUIPollContainerCellData.class] && ![data isKindOfClass:TUIGroupNoteContainerCellData.class];
 }
 
 - (void)onLongSelectMessageAvatar:(TUIMessageCell *)cell
@@ -1297,26 +1419,7 @@ didChangeTranslationData:(TUIMessageCellData *)data {
     if (0 == message.userID.length) {
         return;
     }
-    NSInteger callType = 0;
-    NSDictionary *param = nil;
-    if ([TUIMessageDataProvider isCallMessage:message callTye:&callType]) {
-        if (1 == callType) {
-            param = @{
-                TUICore_TUICallingService_ShowCallingViewMethod_UserIDsKey : @[message.userID],
-                TUICore_TUICallingService_ShowCallingViewMethod_CallTypeKey : @"0"
-            };
-        } else if (2 == callType) {
-            param = @{
-                TUICore_TUICallingService_ShowCallingViewMethod_UserIDsKey : @[message.userID],
-                TUICore_TUICallingService_ShowCallingViewMethod_CallTypeKey : @"1"
-            };
-        }
-        if (param) {
-            [TUICore callService:TUICore_TUICallingService
-                          method:TUICore_TUICallingService_ShowCallingViewMethod
-                           param:param];
-        }
-    }
+    [TUIMessageDataProvider.callingDataProvider redialFromMessage:message];
 }
 
 - (void)clickSystemMessage:(TUISystemMessageCell *)cell
@@ -1417,6 +1520,27 @@ didChangeTranslationData:(TUIMessageCellData *)data {
     if (cellData.link) {
         [TUITool openLinkWithURL:[NSURL URLWithString:cellData.link]];
     }
+}
+
+- (void)showPollMessage:(TUIPollContainerCell *)cell {
+    NSDictionary *param = @{
+        TUICore_TUIPollService_GetPollViewControllerMethod_MessageKey : cell.customData.message
+    };
+    UIViewController *vc = (UIViewController *)[TUICore callService:TUICore_TUIPollService
+                                                             method:TUICore_TUIPollService_GetPollViewControllerMethod
+                                                              param:param];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)clickGroupNoteTipsMessage:(TUIGroupNoteTipsCell *)cell {
+    TUIGroupNoteTipsCellData *data = (TUIGroupNoteTipsCellData *)cell.messageData;
+    NSDictionary *param = @{TUICore_TUIGroupNoteService_GetGroupNoteDetailVCMethod_GroupIDKey: data.msgID,
+                            TUICore_TUIGroupNoteService_GetGroupNoteDetailVCMethod_MessageKey: data.innerMessage
+    };
+    UIViewController *vc = (UIViewController *)[TUICore callService:TUICore_TUIGroupNoteService
+                                                             method:TUICore_TUIGroupNoteService_GetGroupNoteDetailVCMethod
+                                                              param:param];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)showReplyMessage:(TUIReplyMessageCell *)cell

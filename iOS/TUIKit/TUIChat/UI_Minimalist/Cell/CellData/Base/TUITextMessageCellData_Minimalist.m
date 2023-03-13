@@ -154,7 +154,7 @@
                 image = TUIChatCommonBundleImage(@"audio_call");
             }
             if (self.isVideoCall) {
-                if (self.innerMessage.isSelf) {
+                if (self.isCaller) {
                     image = TUIChatCommonBundleImage(@"video_call_self");
                 } else {
                     image = TUIChatCommonBundleImage(@"video_call");
@@ -164,7 +164,7 @@
             attchment.bounds = CGRectMake(0, -(self.textFont.lineHeight-self.textFont.pointSize)/2, 16, 16);
             NSAttributedString *imageString = [NSAttributedString attributedStringWithAttachment:(NSTextAttachment *)(attchment)];
             NSAttributedString *spaceString = [[NSAttributedString alloc] initWithString:@"  " attributes:@{NSFontAttributeName: self.textFont}];
-            if (self.innerMessage.isSelf) {
+            if (self.isCaller) {
                 [_attributedString appendAttributedString:spaceString];
                 [_attributedString appendAttributedString:imageString];
             } else {

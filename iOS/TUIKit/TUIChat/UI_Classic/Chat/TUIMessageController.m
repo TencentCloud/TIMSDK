@@ -380,7 +380,9 @@
                 if (newUIMsgs.count > 0) {
                     index = newUIMsgs.count - 1;
                 }
-                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+                if (self.messageDataProvider.uiMsgs.count > 0) {
+                    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+                }
             }
         }
     } FailBlock:^(int code, NSString *desc) {

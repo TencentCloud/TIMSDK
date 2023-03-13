@@ -2,7 +2,7 @@
 //  TUIMessageReadViewController_Minimalist.h
 //  TUIChat
 //
-//  Created by summeryxia on 2022/3/10.
+//  Created by xia on 2022/3/10.
 //
 
 #import <UIKit/UIKit.h>

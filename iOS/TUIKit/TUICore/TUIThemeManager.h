@@ -81,6 +81,8 @@ NS_ASSUME_NONNULL_BEGIN
 #define TUIGroupDynamicColor(colorKey, defaultHex) TUIDynamicColor(colorKey, TUIThemeModuleGroup, defaultHex)
 #define TUISearchDynamicColor(colorKey, defaultHex) TUIDynamicColor(colorKey, TUIThemeModuleSearch, defaultHex)
 #define TUICallingDynamicColor(colorKey, defaultHex) TUIDynamicColor(colorKey, TUIThemeModuleCalling, defaultHex)
+#define TUIPollDynamicColor(colorKey, defaultHex) TUIDynamicColor(colorKey, TUIThemeModulePoll, defaultHex)
+#define TUIGroupNoteDynamicColor(colorKey, defaultHex) TUIDynamicColor(colorKey, TUIThemeModuleGroupNote, defaultHex)
 
 /**
  * 动态获取图片
@@ -94,6 +96,8 @@ NS_ASSUME_NONNULL_BEGIN
 #define TUIGroupBundleThemeImage(imageKey,defaultImageName) TUIGroupDynamicImage(imageKey,TUIGroupCommonBundleImage(defaultImageName))
 #define TUISearchBundleThemeImage(imageKey,defaultImageName) TUISearchDynamicImage(imageKey,TUISearchCommonBundleImage(defaultImageName))
 #define TUICallingBundleThemeImage(imageKey,defaultImageName) TUICallingDynamicImage(imageKey,TUICallingCommonBundleImage(defaultImageName))
+#define TUIPollBundleThemeImage(imageKey,defaultImageName) TUIPollDynamicImage(imageKey,TUIPollCommonBundleImage(defaultImageName))
+#define TUIGroupNoteBundleThemeImage(imageKey,defaultImageName) TUIGroupNoteDynamicImage(imageKey,TUIGroupNoteCommonBundleImage(defaultImageName))
 
 #define TUIDynamicImage(imageKey, themeModule, defaultImg) [TUITheme dynamicImage:imageKey module:themeModule defaultImage:defaultImg]
 #define TUIDemoDynamicImage(imageKey, defaultImg) TUIDynamicImage(imageKey, TUIThemeModuleDemo, defaultImg)
@@ -104,6 +108,8 @@ NS_ASSUME_NONNULL_BEGIN
 #define TUIGroupDynamicImage(imageKey, defaultImg) TUIDynamicImage(imageKey, TUIThemeModuleGroup, defaultImg)
 #define TUISearchDynamicImage(imageKey, defaultImg) TUIDynamicImage(imageKey, TUIThemeModuleSearch, defaultImg)
 #define TUICallingDynamicImage(imageKey, defaultImg) TUIDynamicImage(imageKey, TUIThemeModuleCalling, defaultImg)
+#define TUIPollDynamicImage(imageKey, defaultImg) TUIDynamicImage(imageKey, TUIThemeModulePoll, defaultImg)
+#define TUIGroupNoteDynamicImage(imageKey, defaultImg) TUIDynamicImage(imageKey, TUIThemeModuleGroupNote, defaultImg)
 
 #define __TUIDefaultBundleImage(imageBundlePath) [UIImage imageWithContentsOfFile:imageBundlePath]
 #define TUIDemoCommonBundleImage(imageName) __TUIDefaultBundleImage(TUIDemoImagePath(imageName))
@@ -114,7 +120,8 @@ NS_ASSUME_NONNULL_BEGIN
 #define TUIGroupCommonBundleImage(imageName) __TUIDefaultBundleImage(TUIGroupImagePath(imageName))
 #define TUISearchCommonBundleImage(imageName) __TUIDefaultBundleImage(TUISearchImagePath(imageName))
 #define TUICallingCommonBundleImage(imageName) __TUIDefaultBundleImage(TUICallingImagePath(imageName))
-
+#define TUIPollCommonBundleImage(imageName) __TUIDefaultBundleImage(TUIPollImagePath(imageName))
+#define TUIGroupNoteCommonBundleImage(imageName) __TUIDefaultBundleImage(TUIGroupNoteImagePath(imageName))
 
 /**
  * 主题模块
@@ -140,6 +147,9 @@ typedef NS_ENUM(NSInteger, TUIThemeModule) {
     TUIThemeModuleSearch_Minimalist       = 0x1 << 14,
     TUIThemeModuleCalling_Minimalist      = 0x1 << 15,
 
+    // UI Plugins
+    TUIThemeModulePoll                    = 0x1 << 16,
+    TUIThemeModuleGroupNote               = 0x1 << 17,
 };
 
 @interface TUITheme : NSObject

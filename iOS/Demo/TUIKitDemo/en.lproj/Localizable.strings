@@ -60,6 +60,7 @@
 "MeSwitchSkin" = "Change Skin";
 "MeSwitchLaunguage" = "Change Launguage";
 
+
 "GroupRequestJoinGroupFormat" = "%@ requests to join group chat.";
 "GroupJoin" = "Add Group";
 

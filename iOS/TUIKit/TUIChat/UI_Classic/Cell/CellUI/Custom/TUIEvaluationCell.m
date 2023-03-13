@@ -2,7 +2,7 @@
 //  TUIEvaluationCell.m
 //  TUIChat
 //
-//  Created by summeryxia on 2022/6/10.
+//  Created by xia on 2022/6/10.
 //
 
 #import "TUIEvaluationCell.h"

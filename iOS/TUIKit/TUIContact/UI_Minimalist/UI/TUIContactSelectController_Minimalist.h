@@ -1,14 +1,15 @@
 #import <UIKit/UIKit.h>
 #import "TUIDefine.h"
-#import "TUIContactSelectViewDataProvider.h"
-
+#import "TUIContactSelectViewDataProvider_Minimalist.h"
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^ContactSelectFinishBlock_Minimalist)(NSArray<TUICommonContactSelectCellData *> * _Nonnull selectArray);
+typedef void(^ContactSelectFinishBlock_Minimalist)(NSArray<TUICommonContactSelectCellData_Minimalist *> * _Nonnull selectArray);
 
 @interface TUIContactSelectController_Minimalist : UIViewController
 
-@property (nonatomic, strong, nullable) TUIContactSelectViewDataProvider *viewModel;
+@property (nonatomic,strong,readonly) NSMutableArray<TUICommonContactSelectCellData *> *selectArray;
+
+@property (nonatomic, strong, nullable) TUIContactSelectViewDataProvider_Minimalist *viewModel;
 
 /**
  * 选择结束回调
@@ -44,6 +45,7 @@ typedef void(^ContactSelectFinishBlock_Minimalist)(NSArray<TUICommonContactSelec
  */
 @property (nonatomic, copy, nullable) NSString *title;
 
+- (void)finishTask;
 @end
 
 NS_ASSUME_NONNULL_END

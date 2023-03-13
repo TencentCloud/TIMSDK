@@ -16,11 +16,14 @@
 @property (nonatomic, copy) NSString *describeText;
 @property (nonatomic, copy) NSString *groupType;
 @property (nonatomic, assign) CGFloat cellHeight;
+@property (nonatomic, assign) BOOL isSelect;
 - (void)caculateCellHeight;
 @end
 
 @interface TUIGroupTypeCell_Minimalist : UITableViewCell
+@property (nonatomic, strong) UIView *maskView;
 @property (nonatomic, strong) UIImageView *image;
+@property (nonatomic, strong) UIImageView *selectedView;
 @property (nonatomic, strong) UILabel *title;
 @property (nonatomic, strong) UITextView *describeTextView;
 @property (nonatomic, assign) CGRect describeTextViewRect;
@@ -37,7 +40,7 @@
         paragraphStyle.allowsDefaultTighteningForTruncation = YES;
     }
     paragraphStyle.alignment = NSTextAlignmentJustified;
-    CGRect rect = [descStr boundingRectWithSize:CGSizeMake(Screen_Width - 32, MAXFLOAT)
+    CGRect rect = [descStr boundingRectWithSize:CGSizeMake(Screen_Width - kScale390(32) - kScale390(30), MAXFLOAT)
                                         options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                      attributes:@{ NSFontAttributeName : [UIFont systemFontOfSize:12],
                                                    NSParagraphStyleAttributeName : paragraphStyle }
@@ -50,7 +53,7 @@
     
     //Image Height
     height+= 12;
-    height+= 40;
+    height+= 22;
     
     //Image Describe Height
     height+= 8;
@@ -74,33 +77,47 @@
 
 - (void)setupViews
 {
-    self.backgroundColor = TUICoreDynamicColor(@"form_bg_color", @"#FFFFFF");
+    self.backgroundColor = TUICoreDynamicColor(@"", @"#FFFFFF");
 
-    _image = [[UIImageView alloc] init];
-    _image.contentMode = UIViewContentModeScaleAspectFit;
-    [self addSubview:_image];
+    self.maskView = [[UIView alloc] initWithFrame:CGRectZero];
+    self.maskView.layer.masksToBounds = YES;
+    self.maskView.layer.borderWidth = kScale390(1);
+    self.maskView.layer.borderColor = [UIColor tui_colorWithHex:@"#DDDDDD"].CGColor;
+    self.maskView.layer.cornerRadius = kScale390(16);
+    [self addSubview:self.maskView];
 
     _title = [[UILabel alloc] init];
     _title.font = [UIFont systemFontOfSize:16];
     _title.textColor = TUICoreDynamicColor(@"form_title_color", @"#000000");
     _title.numberOfLines = 0;
-    [self addSubview:_title];
-
-    [self addSubview:self.describeTextView];
+    [self.maskView addSubview:_title];
+    
+    [self.maskView addSubview:self.describeTextView];
+    
+    [self.maskView addSubview:self.selectedView];
 }
 
 - (void)layoutSubviews
 {
-    self.image.frame = CGRectMake(16, 12, 40, 40);
+    [super layoutSubviews];
     
-    CGFloat x = _image.frame.origin.x + _image.frame.size.width + 10;
-    self.title.frame = CGRectMake(x, 0, self.frame.size.width - x -10, 24);
-    self.title.center = CGPointMake(self.title.center.x, self.image.center.y);
+    [self updateCellView];
+
+    CGFloat x = 0;
+
+    if (self.selectedView.isHidden) {
+        x = kScale390(16);
+    }
+    else {
+        self.selectedView.frame = CGRectMake(kScale390(16), kScale390(15), kScale390(16), kScale390(16));
+        x = self.selectedView.frame.origin.x + self.selectedView.frame.size.width + 10;
+    }
+    self.title.frame = CGRectMake(x, kScale390(12), self.maskView.frame.size.width - x -10, 24);
     self.describeTextView
-        .mm_width(self.mm_w -32)
+        .mm_width(self.maskView.mm_w -32)
         .mm_height(_describeTextViewRect.size.height)
-        .mm_top(12+ 40 + 8)
-        .mm_left(16);
+        .mm_top(self.title.frame.origin.y + self.title.frame.size.height + kScale390(8))
+        .mm_left(kScale390(16));
 }
 
 - (void)setData:(TUIGroupTypeData_Minimalist *)data
@@ -111,6 +128,21 @@
     [self updateRectAndTextForDescribeTextView:self.describeTextView groupType:data.groupType];
 }
 
+- (void)updateCellView {
+    [self updateSelectedUI];
+    self.maskView.frame = CGRectMake(kScale390(16), 0, self.frame.size.width - kScale390(32), self.frame.size.height);
+}
+
+- (void)updateSelectedUI {
+    if (self.cellData.isSelect){
+        self.maskView.layer.borderColor = TUICoreDynamicColor(@"", @"#006EFF").CGColor;
+        self.selectedView.hidden = NO;
+    }
+    else {
+        self.maskView.layer.borderColor =  [UIColor tui_colorWithHex:@"#DDDDDD"].CGColor;
+        self.selectedView.hidden = YES;
+    }
+}
 - (UITextView *)describeTextView {
     if (!_describeTextView) {
        _describeTextView = [[UITextView alloc] init];
@@ -120,6 +152,14 @@
        _describeTextView.textContainerInset = UIEdgeInsetsMake(0.f, 0.f, 0.f, 0.f);
     }
     return  _describeTextView;
+}
+
+- (UIImageView *)selectedView {
+    if (!_selectedView) {
+        _selectedView = [[UIImageView alloc]initWithFrame:CGRectZero];
+        _selectedView.image = [UIImage imageNamed:TUICoreImagePath(@"icon_avatar_selected")];
+    }
+    return _selectedView;
 }
 
 
@@ -188,6 +228,9 @@
         dataWork.describeText = [NSString stringWithFormat:@"%@%@",TUIKitLocalizableString(TUIKitCreatGroupType_Work_Desc) ,TUIKitLocalizableString(TUIKitCreatGroupType_See_Doc)];
         [dataWork caculateCellHeight];
         [self.data addObject:dataWork];
+        if (self.cacheGroupType == GroupType_Work){
+            dataWork.isSelect = YES;
+        }
     }
     
     {
@@ -199,6 +242,9 @@
         dataPublic.describeText = [NSString stringWithFormat:@"%@%@",TUIKitLocalizableString(TUIKitCreatGroupType_Public_Desc) ,TUIKitLocalizableString(TUIKitCreatGroupType_See_Doc)];
         [dataPublic caculateCellHeight];
         [self.data addObject:dataPublic];
+        if (self.cacheGroupType == GroupType_Public){
+            dataPublic.isSelect = YES;
+        }
     }
     
     
@@ -211,6 +257,9 @@
         dataMeeting.describeText = [NSString stringWithFormat:@"%@%@",TUIKitLocalizableString(TUIKitCreatGroupType_Meeting_Desc) ,TUIKitLocalizableString(TUIKitCreatGroupType_See_Doc)];
         [dataMeeting caculateCellHeight];
         [self.data addObject:dataMeeting];
+        if (self.cacheGroupType == GroupType_Meeting){
+            dataMeeting.isSelect = YES;
+        }
     }
     
     {
@@ -222,6 +271,10 @@
         dataCommunity.describeText = [NSString stringWithFormat:@"%@%@",TUIKitLocalizableString(TUIKitCreatGroupType_Community_Desc) ,TUIKitLocalizableString(TUIKitCreatGroupType_See_Doc)];
         [dataCommunity caculateCellHeight];
         [self.data addObject:dataCommunity];
+        if (self.cacheGroupType == GroupType_Community){
+            dataCommunity.isSelect = YES;
+        };
+
     }
 
 }
@@ -230,12 +283,15 @@
 {
     self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     [self.view addSubview:self.tableView];
-    self.tableView.frame = self.view.frame;
+    CGRect rect = self.view.bounds;
+    rect = CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height - kScale390(87.5) );
+
+    self.tableView.frame = rect;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     [self.tableView setSeparatorInset:UIEdgeInsetsMake(0, 0, 0, 0)];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    self.tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
+    self.tableView.backgroundColor = [UIColor whiteColor];
     if (@available(iOS 15.0, *)) {
         self.tableView.sectionHeaderTopPadding = 0;
     }
@@ -253,7 +309,7 @@
     self.bottomButton.titleLabel.font = [UIFont systemFontOfSize:13];
     [self.bottomButton setTitle:TUIKitLocalizableString(TUIKitCreatGroupType_See_Doc_Simple) forState:UIControlStateNormal];
     [self.bottomButton setTitleColor:[UIColor systemBlueColor] forState:UIControlStateNormal];
-    self.bottomButton.mm_width(self.view.mm_w - 30).mm_bottom(40).mm__centerX(self.view.mm_w/2.0).mm_height(18);
+    self.bottomButton.mm_width(self.view.mm_w - 30).mm_top(30).mm__centerX(self.view.mm_w/2.0).mm_height(18);
     [self.bottomButton addTarget:self action:@selector(bottomButtonClick) forControlEvents:UIControlEventTouchUpInside];
 }
 
@@ -306,14 +362,28 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     TUIGroupTypeData_Minimalist * data =  self.data[indexPath.section];
+    for (TUIGroupTypeData_Minimalist * obj in self.data) {
+        obj.isSelect = NO;
+    }
+    data.isSelect = YES;
+    [self.tableView reloadData];
+    
     if (self.selectCallBack) {
         self.selectCallBack(data.groupType);
     }
-    [self.navigationController popViewControllerAnimated:YES];
 }
 - (void)bottomButtonClick {
     NSURL * url = [NSURL URLWithString:@"https://cloud.tencent.com/product/im"];
     [TUITool openLinkWithURL:url];
+}
+
+#pragma mark - TUIChatFloatSubViewControllerProtocol
+- (void)floatControllerLeftButtonClick {
+    [self dismissViewControllerAnimated:YES completion:^{}];
+}
+
+- (void)floatControllerRightButtonClick {
+    [self dismissViewControllerAnimated:YES completion:^{}];
 }
 
 @end

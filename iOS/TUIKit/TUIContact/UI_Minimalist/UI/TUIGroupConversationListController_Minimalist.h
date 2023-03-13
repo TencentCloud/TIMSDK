@@ -1,9 +1,9 @@
 #import <UIKit/UIKit.h>
-#import "TUIGroupConversationListViewDataProvider.h"
+#import "TUIGroupConversationListViewDataProvider_Minimalist.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^TUIGroupConversationListSelectCallback_Minimalist)(TUICommonContactCellData *cellData);
+typedef void(^TUIGroupConversationListSelectCallback_Minimalist)(TUICommonContactCellData_Minimalist *cellData);
 
 /**
  * 【模块名称】群组列表界面（TUIGroupConversationListController）
@@ -19,7 +19,7 @@ typedef void(^TUIGroupConversationListSelectCallback_Minimalist)(TUICommonContac
 @property (nonatomic, strong) UITableView *tableView;
 
 
-@property (nonatomic, strong) TUIGroupConversationListViewDataProvider *viewModel;
+@property (nonatomic, strong) TUIGroupConversationListViewDataProvider_Minimalist *viewModel;
 
 /**
  * 选中后的回调，如果为空，TUIKit 内部会自己跳转

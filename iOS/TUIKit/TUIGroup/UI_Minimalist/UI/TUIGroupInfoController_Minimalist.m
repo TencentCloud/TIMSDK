@@ -2,27 +2,33 @@
 #import "TUICommonModel.h"
 #import "TUIGroupMembersCell.h"
 #import "TUIGroupMemberCell.h"
+#import "TUIGroupProfileCardViewCell_Minimalist.h"
 #import "TUIGroupMemberController_Minimalist.h"
 #import "TUIAddCell.h"
 #import "TUIDefine.h"
 #import "TUICore.h"
 #import "TIMGroupInfo+TUIDataProvider.h"
-#import "TUIGroupInfoDataProvider.h"
+#import "TUIGroupInfoDataProvider_Minimalist.h"
 #import "TUIGroupManageController_Minimalist.h"
 #import "TUIThemeManager.h"
 #import "TUIGroupNoticeCell.h"
 #import "TUIGroupNoticeController_Minimalist.h"
 #import "TUISelectGroupMemberViewController_Minimalist.h"
 #import "TUILogin.h"
+#import "TUIGroupMemberTableViewCell_Minimalist.h"
+#import "TUIGroupButtonCell_Minimalist.h"
 
 #define ADD_TAG @"-1"
 #define DEL_TAG @"-2"
 
-@interface TUIGroupInfoController_Minimalist () <TUIModifyViewDelegate, TUIGroupMembersCellDelegate, TUIProfileCardDelegate, TUIGroupInfoDataProviderDelegate, TUINotificationProtocol>
-@property(nonatomic, strong) TUIGroupInfoDataProvider *dataProvider;
+@interface TUIGroupInfoController_Minimalist () <TUIModifyViewDelegate, TUIGroupMembersCellDelegate, TUIProfileCardDelegate, TUIGroupInfoDataProviderDelegate_Minimalist, TUINotificationProtocol>
+@property(nonatomic, strong) TUIGroupInfoDataProvider_Minimalist *dataProvider;
 @property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
 @property (nonatomic, strong) UIViewController *showContactSelectVC;
 @property NSInteger tag;
+@property (nonatomic, weak) UIViewController *callingSelectGroupMemberVC;
+@property (nonatomic, copy) NSString *callingType;
+
 @end
 
 @implementation TUIGroupInfoController_Minimalist
@@ -30,7 +36,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupViews];
-    self.dataProvider = [[TUIGroupInfoDataProvider alloc] initWithGroupID:self.groupId];
+    self.dataProvider = [[TUIGroupInfoDataProvider_Minimalist alloc] initWithGroupID:self.groupId];
     self.dataProvider.delegate = self;
     [self.dataProvider loadData];
     
@@ -46,12 +52,18 @@
     [_titleView setTitle:TUIKitLocalizableString(ProfileDetails)];
     
     [TUICore registerEvent:TUICore_TUIContactNotify subKey:TUICore_TUIContactNotify_SelectedContactsSubKey object:self];
+    
+    [TUICore registerEvent:TUICore_TUIGroupNotify subKey:TUICore_TUIGroupNotify_SelectGroupMemberSubKey object:self];
+    
 }
 
 - (void)setupViews {
     self.tableView.tableFooterView = [[UIView alloc] init];
-    self.tableView.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
+    self.tableView.backgroundColor = TUICoreDynamicColor(@"", @"#FFFFFF");
     self.tableView.delaysContentTouches = NO;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    self.tableView.separatorColor = [UIColor whiteColor];
+    self.tableView.separatorInset = UIEdgeInsetsMake(0, -58, 0, 0);
     if (@available(iOS 15.0, *)) {
         self.tableView.sectionHeaderTopPadding = 0;
     }
@@ -93,14 +105,14 @@
 {
     NSMutableArray *array = self.dataProvider.dataList[indexPath.section];
     NSObject *data = array[indexPath.row];
-    if([data isKindOfClass:[TUIProfileCardCellData class]]){
-        return [(TUIProfileCardCellData *)data heightOfWidth:Screen_Width];
+    if([data isKindOfClass:[TUIGroupProfileCardCellData_Minimalist class]]){
+        return [(TUIGroupProfileCardCellData_Minimalist *)data heightOfWidth:Screen_Width];
     }
-    else if([data isKindOfClass:[TUIGroupMembersCellData class]]){
-        return [TUIGroupMembersCell getHeight:(TUIGroupMembersCellData *)data];
+    else if([data isKindOfClass:[TUIGroupMemberCellData_Minimalist class]]){
+        return [(TUIGroupMemberCellData_Minimalist *)data heightOfWidth:Screen_Width];
     }
-    else if([data isKindOfClass:[TUIButtonCellData class]]){
-        return [(TUIButtonCellData *)data heightOfWidth:Screen_Width];;
+    else if([data isKindOfClass:[TUIGroupButtonCellData_Minimalist class]]){
+        return [(TUIGroupButtonCellData_Minimalist *)data heightOfWidth:Screen_Width];;
     }
     else if ([data isKindOfClass:[TUICommonSwitchCellData class]]) {
         return [(TUICommonSwitchCellData *)data heightOfWidth:Screen_Width];;
@@ -108,19 +120,35 @@
     else if ([data isKindOfClass:TUIGroupNoticeCellData.class]) {
         return 72.0;
     }
-    return 44;
+    return kScale390(55);
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSMutableArray *array = self.dataProvider.dataList[indexPath.section];
     NSObject *data = array[indexPath.row];
-    if([data isKindOfClass:[TUIProfileCardCellData class]]){
-        TUIProfileCardCell *cell = [tableView dequeueReusableCellWithIdentifier:TGroupCommonCell_ReuseId];
+    @weakify(self)
+
+    if([data isKindOfClass:[TUIGroupProfileCardCellData_Minimalist class]]){
+        TUIGroupProfileCardViewCell_Minimalist *cell = [tableView dequeueReusableCellWithIdentifier:TGroupCommonCell_ReuseId];
         if(!cell){
-            cell = [[TUIProfileCardCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TGroupCommonCell_ReuseId];
+            cell = [[TUIGroupProfileCardViewCell_Minimalist alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TGroupCommonCell_ReuseId];
         }
-        cell.delegate = self;
-        [cell fillWithData:(TUIProfileCardCellData *)data];
+        [cell fillWithData:(TUIGroupProfileCardCellData_Minimalist *)data];
+        __weak typeof(cell)weakCell = cell;
+        cell.headerView.itemMessage.messageBtnClickBlock = ^{
+            @strongify(self)
+            [self onSendMessage:weakCell];
+        };
+        
+        cell.headerView.itemAudio.messageBtnClickBlock = ^{
+            @strongify(self)
+            [self groupCall:self.dataProvider.groupInfo.groupID isVideoCall:NO];
+        };
+        
+        cell.headerView.itemVideo.messageBtnClickBlock = ^{
+            @strongify(self)
+            [self groupCall:self.dataProvider.groupInfo.groupID isVideoCall:YES];
+        };
         return cell;
     }
     else if([data isKindOfClass:[TUICommonTextCellData class]]){
@@ -129,15 +157,20 @@
             cell = [[TUICommonTextCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TKeyValueCell_ReuseId];
         }
         [cell fillWithData:(TUICommonTextCellData *)data];
+        cell.backgroundColor = TUICoreDynamicColor(@"", @"#f9f9f9");
+        cell.contentView.backgroundColor = TUICoreDynamicColor(@"", @"#f9f9f9");
+
         return cell;
     }
-    else if([data isKindOfClass:[TUIGroupMembersCellData class]]){
-        TUIGroupMembersCell *cell = [tableView dequeueReusableCellWithIdentifier:TGroupMembersCell_ReuseId];
+    else if([data isKindOfClass:[TUIGroupMemberCellData_Minimalist class]]){
+        TUIGroupMemberTableViewCell_Minimalist *cell = [tableView dequeueReusableCellWithIdentifier:TGroupMembersCell_ReuseId];
         if(!cell){
-            cell = [[TUIGroupMembersCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TGroupMembersCell_ReuseId];
-            cell.delegate = self;
+            cell = [[TUIGroupMemberTableViewCell_Minimalist alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TGroupMembersCell_ReuseId];
         }
-        [cell setData:(TUIGroupMembersCellData *)data];
+        [cell fillWithData:(TUIGroupMemberCellData_Minimalist *)data];
+        cell.backgroundColor = TUICoreDynamicColor(@"", @"#f9f9f9");
+        cell.contentView.backgroundColor = TUICoreDynamicColor(@"", @"#f9f9f9");
+
         return cell;
     }
     else if([data isKindOfClass:[TUICommonSwitchCellData class]]){
@@ -146,14 +179,16 @@
             cell = [[TUICommonSwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TSwitchCell_ReuseId];
         }
         [cell fillWithData:(TUICommonSwitchCellData *)data];
+        cell.backgroundColor = TUICoreDynamicColor(@"", @"#f9f9f9");
+        cell.contentView.backgroundColor = TUICoreDynamicColor(@"", @"#f9f9f9");
         return cell;
     }
-    else if([data isKindOfClass:[TUIButtonCellData class]]){
-        TUIButtonCell *cell = [tableView dequeueReusableCellWithIdentifier:TButtonCell_ReuseId];
+    else if([data isKindOfClass:[TUIGroupButtonCellData_Minimalist class]]){
+        TUIGroupButtonCell_Minimalist *cell = [tableView dequeueReusableCellWithIdentifier:TButtonCell_ReuseId];
         if(!cell){
-            cell = [[TUIButtonCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TButtonCell_ReuseId];
+            cell = [[TUIGroupButtonCell_Minimalist alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TButtonCell_ReuseId];
         }
-        [cell fillWithData:(TUIButtonCellData *)data];
+        [cell fillWithData:(TUIGroupButtonCellData_Minimalist *)data];
         return cell;
     }
     else if([data isKindOfClass:TUIGroupNoticeCellData.class]) {
@@ -161,6 +196,8 @@
         if (cell == nil) {
             cell = [[TUIGroupNoticeCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"TUIGroupNoticeCell"];
         }
+        cell.backgroundColor = TUICoreDynamicColor(@"", @"#f9f9f9");
+        cell.contentView.backgroundColor = TUICoreDynamicColor(@"", @"#f9f9f9");
         cell.cellData = data;
         return cell;
     }
@@ -175,6 +212,42 @@
 }
 
 #pragma mark TUIGroupInfoDataProviderDelegate
+
+- (void)onSendMessage:(TUIGroupProfileCardViewCell_Minimalist *)cell
+{
+    TUIGroupProfileCardCellData_Minimalist *cellData = cell.cardData;
+    
+    UIImage *avataImage = [UIImage new];
+    if (cell.headerView.headImg.image) {
+        avataImage = cell.headerView.headImg.image;
+    }
+    
+    NSDictionary *param = @{
+        TUICore_TUIChatService_GetChatViewControllerMethod_TitleKey : cellData.name ?: @"",
+        TUICore_TUIChatService_GetChatViewControllerMethod_GroupIDKey : cellData.identifier ?: @"",
+        TUICore_TUIChatService_GetChatViewControllerMethod_AvatarImageKey : avataImage ?: [UIImage new]
+    };
+    
+    UIViewController *chatVC = (UIViewController *)[TUICore callService:TUICore_TUIChatService_Minimalist
+                                                                 method:TUICore_TUIChatService_GetChatViewControllerMethod
+                                                                  param:param];
+    [self.navigationController pushViewController:(UIViewController *)chatVC animated:YES];
+}
+
+- (void)groupCall:(NSString *)groupID isVideoCall:(BOOL)isVideoCall {
+    NSDictionary *param = @{
+        TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_GroupIDKey : groupID,
+        TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_NameKey : TUIKitLocalizableString(Make-a-call),
+    };
+    UIViewController *vc = [TUICore callService:TUICore_TUIGroupService_Minimalist
+                                         method:TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod
+                                          param:param];
+    [self.navigationController pushViewController:vc animated:YES];
+    
+    self.callingSelectGroupMemberVC = vc;
+    self.callingType = isVideoCall ? @"1" : @"0";
+}
+
 
 - (void)didSelectMembers
 {
@@ -220,7 +293,7 @@
     UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
 
     __weak typeof(self) weakSelf = self;
-    if ([self.dataProvider.groupInfo isPrivate] || [TUIGroupInfoDataProvider isMeOwner:self.dataProvider.groupInfo]) {
+    if ([self.dataProvider.groupInfo isPrivate] || [TUIGroupInfoDataProvider_Minimalist isMeOwner:self.dataProvider.groupInfo]) {
         [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitGroupProfileEditGroupName) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
 
             TUIModifyViewData *data = [[TUIModifyViewData alloc] init];
@@ -235,7 +308,7 @@
 
         }]];
     }
-    if ([TUIGroupInfoDataProvider isMeOwner:self.dataProvider.groupInfo]) {
+    if ([TUIGroupInfoDataProvider_Minimalist isMeOwner:self.dataProvider.groupInfo]) {
         [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitGroupProfileEditAnnouncement) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
 
             TUIModifyViewData *data = [[TUIModifyViewData alloc] init];
@@ -248,7 +321,7 @@
         }]];
     }
 
-    if ([TUIGroupInfoDataProvider isMeOwner:self.dataProvider.groupInfo]) {
+    if ([TUIGroupInfoDataProvider_Minimalist isMeOwner:self.dataProvider.groupInfo]) {
         @weakify(self)
         [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitGroupProfileEditAvatar) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             @strongify(self)
@@ -324,7 +397,7 @@
 
         @strongify(self)
         @weakify(self)
-        if ([self.dataProvider.groupInfo canDelete]) {
+        if ([self.dataProvider.groupInfo canDismissGroup]) {
             [self.dataProvider dismissGroup:^{
                 @strongify(self)
                 @weakify(self)
@@ -537,9 +610,9 @@
 
 #pragma mark TUIGroupMembersCellDelegate
 
-- (void)groupMembersCell:(TUIGroupMembersCell *)cell didSelectItemAtIndex:(NSInteger)index
-{
-    TUIGroupMemberCellData *mem = self.dataProvider.groupMembersCellData.members[index];
+- (void)didAddMemebers {
+    
+//    TUIGroupMemberCellData *mem = self.dataProvider.groupMembersCellData.members[index];
     NSMutableArray *ids = [NSMutableArray array];
     NSMutableDictionary *displayNames = [NSMutableDictionary dictionary];
     for (TUIGroupMemberCellData *cd in self.dataProvider.membersData) {
@@ -549,32 +622,51 @@
         }
     }
     
-    self.tag = mem.tag;
-    if(self.tag == 1){
-        // add
-        NSMutableDictionary *param = [NSMutableDictionary dictionary];
-        param[TUICore_TUIContactService_GetContactSelectControllerMethod_TitleKey] = TUIKitLocalizableString(GroupAddFirend);
-        param[TUICore_TUIContactService_GetContactSelectControllerMethod_DisableIdsKey] = ids;
-        param[TUICore_TUIContactService_GetContactSelectControllerMethod_DisplayNamesKey] = displayNames;
-        self.showContactSelectVC = [TUICore callService:TUICore_TUIContactService_Minimalist
-                                                 method:TUICore_TUIContactService_GetContactSelectControllerMethod
-                                                  param:param];
-        [self.navigationController pushViewController:self.showContactSelectVC animated:YES];
-    } else if(self.tag == 2) {
-        // delete
-        NSMutableDictionary *param = [NSMutableDictionary dictionary];
-        param[TUICore_TUIContactService_GetContactSelectControllerMethod_TitleKey] = TUIKitLocalizableString(GroupDeleteFriend);
-        param[TUICore_TUIContactService_GetContactSelectControllerMethod_SourceIdsKey] = ids;
-        param[TUICore_TUIContactService_GetContactSelectControllerMethod_DisplayNamesKey] = displayNames;
-        self.showContactSelectVC = [TUICore callService:TUICore_TUIContactService_Minimalist
-                                                 method:TUICore_TUIContactService_GetContactSelectControllerMethod
-                                                  param:param];
-        [self.navigationController pushViewController:self.showContactSelectVC animated:YES];
-    } else {
-        // TODO:
-    }
+    
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    param[TUICore_TUIContactService_GetContactSelectControllerMethod_TitleKey] = TUIKitLocalizableString(GroupAddFirend);
+    param[TUICore_TUIContactService_GetContactSelectControllerMethod_DisableIdsKey] = ids;
+    param[TUICore_TUIContactService_GetContactSelectControllerMethod_DisplayNamesKey] = displayNames;
+    self.showContactSelectVC = [TUICore callService:TUICore_TUIContactService_Minimalist
+                                             method:TUICore_TUIContactService_GetContactSelectControllerMethod
+                                              param:param];
+    [self.navigationController pushViewController:self.showContactSelectVC animated:YES];
+    self.tag = 1;
 }
 
+- (void)didCurrentMemberAtCell:(TUIGroupMemberTableViewCell_Minimalist *)cell {
+    TUIGroupMemberCellData_Minimalist *mem = (TUIGroupMemberCellData_Minimalist *)cell.data;
+    NSMutableArray *ids = [NSMutableArray array];
+    NSMutableDictionary *displayNames = [NSMutableDictionary dictionary];
+    for (TUIGroupMemberCellData *cd in self.dataProvider.membersData) {
+        if (![cd.identifier isEqualToString:[[V2TIMManager sharedInstance] getLoginUser]]) {
+            [ids addObject:cd.identifier];
+            [displayNames setObject:cd.name?:@"" forKey:cd.identifier?:@""];
+        }
+    }
+    
+    NSString *userID = mem.identifier;
+    @weakify(self)
+    [self getUserOrFriendProfileVCWithUserID:userID SuccBlock:^(UIViewController *vc) {
+        @strongify(self)
+        [self.navigationController pushViewController:vc animated:YES];
+    } failBlock:^(int code, NSString *desc) {
+        
+    }];
+}
+
+- (void)getUserOrFriendProfileVCWithUserID:(NSString *)userID
+                                 SuccBlock:(void(^)(UIViewController *vc))succ
+                                 failBlock:(nullable V2TIMFail)fail {
+    NSDictionary *param = @{
+        TUICore_TUIContactService_GetUserOrFriendProfileVCMethod_UserIDKey: userID ? : @"",
+        TUICore_TUIContactService_GetUserOrFriendProfileVCMethod_SuccKey: succ ? : ^(UIViewController *vc){},
+        TUICore_TUIContactService_GetUserOrFriendProfileVCMethod_FailKey: fail ? : ^(int code, NSString * desc){}
+    };
+    [TUICore callService:TUICore_TUIContactService_Minimalist
+                  method:TUICore_TUIContactService_GetUserOrFriendProfileVCMethod
+                   param:param];
+}
 
 - (void)addGroupId:(NSString *)groupId memebers:(NSArray *)members
 {
@@ -604,8 +696,13 @@
 
 - (void)modifyView:(TUIModifyView *)modifyView didModiyContent:(NSString *)content
 {
+    @weakify(self)
     if(modifyView.tag == 0){
-        [self.dataProvider setGroupName:content];
+        [self.dataProvider setGroupName:content succ:^{
+            @strongify(self)
+            [self.tableView reloadData];
+        } fail:^(int code, NSString *desc) {
+        }];
     }
     else if(modifyView.tag == 1){
         [self.dataProvider setGroupNotification:content];
@@ -643,7 +740,27 @@
             [self.navigationController popToViewController:self animated:YES];
             [self deleteGroupId:_groupId memebers:list];
         }
-    }
+    }else if ([key isEqualToString:TUICore_TUIContactNotify]
+              && [subKey isEqualToString:TUICore_TUIGroupNotify_SelectGroupMemberSubKey]
+              && self.callingSelectGroupMemberVC == anObject) {
+         
+         NSArray<TUIUserModel *> *modelList = [param tui_objectForKey:TUICore_TUIGroupNotify_SelectGroupMemberSubKey_UserListKey asClass:NSArray.class];
+         NSMutableArray *userIDs = [NSMutableArray arrayWithCapacity:modelList.count];
+         for (TUIUserModel *user in modelList) {
+             NSParameterAssert(user.userId);
+             [userIDs addObject:user.userId];
+         }
+         
+         // 显示通话VC
+         NSDictionary *param = @{
+             TUICore_TUICallingService_ShowCallingViewMethod_GroupIDKey : self.dataProvider.groupInfo.groupID,
+             TUICore_TUICallingService_ShowCallingViewMethod_UserIDsKey : userIDs,
+             TUICore_TUICallingService_ShowCallingViewMethod_CallTypeKey : self.callingType
+         };
+         [TUICore callService:TUICore_TUICallingService
+                       method:TUICore_TUICallingService_ShowCallingViewMethod
+                        param:param];
+     }
 }
 @end
 

@@ -7,19 +7,20 @@
 
 #import "TUIGroupManageController_Minimalist.h"
 #import "TUIGlobalization.h"
-#import "TUIGroupManageDataProvider.h"
+#import "TUIGroupManageDataProvider_Minimalist.h"
+#import "TUICommonModel.h"
 #import "TUIAddCellData.h"
 #import "TUIAddCell.h"
-#import "TUIMemberInfoCellData.h"
-#import "TUIMemberInfoCell.h"
+#import "TUIMemberInfoCellData_Minimalist.h"
+#import "TUIMemberInfoCell_Minimalist.h"
 #import "TUISelectGroupMemberViewController_Minimalist.h"
 #import "TUISettingAdminController_Minimalist.h"
 #import "TUIThemeManager.h"
 
-@interface TUIGroupManageController_Minimalist () <UITableViewDelegate, UITableViewDataSource, TUIGroupManageDataProviderDelegate>
+@interface TUIGroupManageController_Minimalist () <UITableViewDelegate, UITableViewDataSource, TUIGroupManageDataProviderDelegate_Minimalist>
 
 @property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) TUIGroupManageDataProvider *dataProvider;
+@property (nonatomic, strong) TUIGroupManageDataProvider_Minimalist *dataProvider;
 @property (nonatomic, strong) UIView *coverView;
 
 @end
@@ -157,9 +158,9 @@
     } else if ([data isKindOfClass:TUIAddCellData.class]) {
         cell = [[TUIAddCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:NSStringFromClass(TUIAddCell.class)];
         [(TUIAddCell *)cell setData:(TUIAddCellData *)data];
-    } else if ([data isKindOfClass:TUIMemberInfoCellData.class]) {
-        cell = [[TUIMemberInfoCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:NSStringFromClass(TUIMemberInfoCell.class)];
-        [(TUIMemberInfoCell *)cell setData:(TUIMemberInfoCellData *)data];
+    } else if ([data isKindOfClass:TUIMemberInfoCellData_Minimalist.class]) {
+        cell = [[TUIMemberInfoCell_Minimalist alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:NSStringFromClass(TUIMemberInfoCell_Minimalist.class)];
+        [(TUIMemberInfoCell_Minimalist *)cell setData:(TUIMemberInfoCellData_Minimalist *)data];
     } else {
         cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
         cell.textLabel.text = @"";
@@ -176,7 +177,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
-    return section == 0 ? 30 : 0;
+    return section == 0 ? kScale390(53) : 0;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -187,15 +188,19 @@
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
     UIView *view = [[UIView alloc] init];
-    view.backgroundColor = [UIColor groupTableViewBackgroundColor];
+    view.backgroundColor = [UIColor tui_colorWithHex:@"#f9f9f9"];
     UILabel *label = [[UILabel alloc] init];
     label.text = TUIKitLocalizableString(TUIKitGroupManageShutupAllTips);
     label.textColor = [UIColor colorWithRed:136/255.0 green:136/255.0 blue:136/255.0 alpha:1/1.0];
     label.font = [UIFont systemFontOfSize:14.0];
+    label.numberOfLines = 0;
+    label.lineBreakMode = NSLineBreakByWordWrapping;
+    label.textAlignment = NSTextAlignmentJustified;
+    
     [view addSubview:label];
     [label sizeToFit];
-    label.mm_x = 20;
-    label.mm_y = 10;
+    label.frame = CGRectMake(kScale390(20), kScale390(3), Screen_Width - 2 *kScale390(20), kScale390(53));
+
     return view;
 }
 
@@ -239,8 +244,8 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        TUIMemberInfoCellData *cellData = self.dataProvider.datas[indexPath.section][indexPath.row];
-        if (![cellData isKindOfClass:TUIMemberInfoCellData.class]) {
+        TUIMemberInfoCellData_Minimalist *cellData = self.dataProvider.datas[indexPath.section][indexPath.row];
+        if (![cellData isKindOfClass:TUIMemberInfoCellData_Minimalist.class]) {
             return;
         }
         
@@ -259,7 +264,7 @@
 {
     if (_tableView == nil) {
         _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
-        _tableView.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
+        _tableView.backgroundColor = [UIColor tui_colorWithHex:@"#f9f9f9"];
         _tableView.delaysContentTouches = NO;
         _tableView.delegate = self;
         _tableView.dataSource = self;
@@ -267,10 +272,10 @@
     return _tableView;
 }
 
-- (TUIGroupManageDataProvider *)dataProvider
+- (TUIGroupManageDataProvider_Minimalist *)dataProvider
 {
     if (_dataProvider == nil) {
-        _dataProvider = [[TUIGroupManageDataProvider alloc] init];
+        _dataProvider = [[TUIGroupManageDataProvider_Minimalist alloc] init];
         _dataProvider.delegate = self;
     }
     return _dataProvider;

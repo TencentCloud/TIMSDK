@@ -9,12 +9,16 @@
 @class TUIMemberInfoCellData;
 
 NS_ASSUME_NONNULL_BEGIN
+@interface TUIMemberTagView : UIView
+@property (nonatomic,strong) UILabel *tagname;
+@end
 
 @interface TUIMemberInfoCell : UITableViewCell
 
 @property (nonatomic, strong) UIImageView *avatarImageView;
 @property (nonatomic, strong) UILabel *nameLabel;
 @property (nonatomic, strong) TUIMemberInfoCellData *data;
+@property (nonatomic, strong) TUIMemberTagView *tagView;
 
 @end
 

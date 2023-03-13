@@ -640,6 +640,17 @@ typedef NS_ENUM(NSUInteger, TUISelectAvatarType) {
     TUISelectAvatarTypeCover,
     TUISelectAvatarTypeConversationBackGroundCover,
 };
+
+@interface TUISelectAvatarCardItem : NSObject
+@property (nonatomic, strong) NSString *posterUrlStr;
+@property (nonatomic, assign) BOOL isSelect;
+@property (nonatomic, copy) NSString *fullUrlStr;
+@property (nonatomic, assign) BOOL isDefaultBackgroundItem;
+@property (nonatomic, assign) BOOL isGroupGridAvatar;
+@property (nonatomic, copy) NSString *createGroupType;
+@property (nonatomic, strong) UIImage *cacheGroupGridAvatarImage;
+@end
+
 @interface TUISelectAvatarController : UIViewController
 @property (nonatomic, copy) void (^selectCallBack)(NSString *urlStr);
 @property (nonatomic, assign) TUISelectAvatarType selectAvatarType;
@@ -690,7 +701,7 @@ typedef NS_ENUM(NSUInteger, TUISelectAvatarType) {
 
 @property(nonatomic,weak) UIViewController* currentShowVC;
 @property (nonatomic, weak) id<TUINavigationControllerDelegate> uiNaviDelegate;
-
+@property (nonatomic, strong) UIImage *navigationItemBackArrowImage;
 @end
 
 

@@ -43,6 +43,14 @@
     [super layoutSubviews];
     
     self.avatarView.mm_left(16 * kScale).mm_top(12 * kScale).mm_width(48 * kScale).mm_height(48 * kScale);
+    if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {
+        self.avatarView.layer.masksToBounds = YES;
+        self.avatarView.layer.cornerRadius = self.avatarView.frame.size.height / 2;
+    } else if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRadiusCorner) {
+        self.avatarView.layer.masksToBounds = YES;
+        self.avatarView.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
+    }
+    
     self.mainTitleLabel.mm_sizeToFit();
     self.mainTitleLabel.mm_x = CGRectGetMaxX(self.avatarView.frame) + 12 * kScale;
     self.mainTitleLabel.mm_y = self.avatarView.mm_y;

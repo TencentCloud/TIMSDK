@@ -252,7 +252,7 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
                          fail:(nullable V2TIMFail)fail;
 
 /// message -> cellData
-+ (TUIMessageCellData *)getCellData:(V2TIMMessage *)message;
++ (TUIMessageCellData * __nullable)getCellData:(V2TIMMessage *)message;
 + (nullable TUIMessageCellData *)getSystemMsgFromDate:(NSDate *)date;
 + (TUIMessageCellData *)getRevokeCellData:(V2TIMMessage *)message;
 

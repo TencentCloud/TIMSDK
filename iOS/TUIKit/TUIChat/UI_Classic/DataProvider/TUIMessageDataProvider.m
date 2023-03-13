@@ -2,7 +2,6 @@
 #import <AVFoundation/AVFoundation.h>
 
 #import "TUIMessageDataProvider.h"
-#import "TUIMessageDataProvider+Call.h"
 #import "TUIMessageDataProvider+MessageDeal.h"
 #import "TUITextMessageCellData.h"
 #import "TUISystemMessageCellData.h"
@@ -17,6 +16,7 @@
 #import "TUIReplyMessageCellData.h"
 #import "TUICloudCustomDataTypeCenter.h"
 #import "TUIMessageProgressManager.h"
+#import "TUIChatCallingDataProvider.h"
 
 /**
  * 消息撤回后最大可编辑时间 , default is (2 * 60)
@@ -28,98 +28,11 @@ static NSArray *customMessageInfo = nil;
 
 @implementation TUIMessageDataProvider
 
-- (void)preProcessReplyMessageV2:(NSArray<TUIMessageCellData *> *)uiMsgs callback:(void(^)(void))callback {
-    if (uiMsgs.count == 0) {
-        if (callback) {
-            callback();
-        }
-        return;
-    }
-    
-    @weakify(self)
-    dispatch_group_t group = dispatch_group_create();
-    for (TUIMessageCellData *cellData in uiMsgs) {
-        if (![cellData isKindOfClass:TUIReplyMessageCellData.class]) {
-            continue;
-        }
-        
-        TUIReplyMessageCellData *myData = (TUIReplyMessageCellData *)cellData;
-        __weak typeof(myData) weakMyData = myData;
-        myData.onFinish = ^{
-            @strongify(self)
-            [self.dataSource dataProviderDataSourceWillChange:self];
-            NSUInteger index = [self.uiMsgs indexOfObject:weakMyData];
-            [self.dataSource dataProviderDataSourceChange:self
-                                                 withType:TUIMessageBaseDataProviderDataSourceChangeTypeReload
-                                                  atIndex:index
-                                                animation:NO];
-            [self.dataSource dataProviderDataSourceDidChange:self];
-        };
-        dispatch_group_enter(group);
-        [self loadOriginMessageFromReplyData:myData dealCallback:^{
-            dispatch_group_leave(group);
-        }];
-    }
-    
-    dispatch_group_notify(group, dispatch_get_main_queue(), ^{
-        if (callback) {
-            callback();
-        }
-    });
-}
-- (void)deleteUIMsgs:(NSArray<TUIMessageCellData *> *)uiMsgs
-           SuccBlock:(nullable V2TIMSucc)succ
-           FailBlock:(nullable V2TIMFail)fail {
-    NSMutableArray *uiMsgList = [NSMutableArray array];
-    NSMutableArray *imMsgList = [NSMutableArray array];
-    for (TUIMessageCellData *uiMsg in uiMsgs) {
-        if ([self.uiMsgs containsObject:uiMsg]) {
-            // Check content cell
-            [uiMsgList addObject:uiMsg];
-            [imMsgList addObject:uiMsg.innerMessage];
-            
-            // Check time cell which also needed to delete
-            NSInteger index = [self.uiMsgs indexOfObject:uiMsg];
-            index--;
-            if (index >= 0 && index < self.uiMsgs.count &&
-                [[self.uiMsgs objectAtIndex:index] isKindOfClass:TUISystemMessageCellData.class]) {
-                TUISystemMessageCellData *systemCellData = (TUISystemMessageCellData *)[self.uiMsgs objectAtIndex:index];
-                if (systemCellData.type == TUISystemMessageTypeDate) {
-                    [uiMsgList addObject:systemCellData];
-                }
-            }
-        }
-    }
-    
-    if (imMsgList.count == 0) {
-        if (fail) {
-            fail(ERR_INVALID_PARAMETERS, @"not found uiMsgs");
-        }
-        return;
-    }
-    
-    @weakify(self);
-    [self.class deleteMessages:imMsgList succ:^{
-        @strongify(self);
-        [self.dataSource dataProviderDataSourceWillChange:self];
-        for (TUIMessageCellData *uiMsg in uiMsgList) {
-            NSInteger index = [self.uiMsgs indexOfObject:uiMsg];
-            [self.dataSource dataProviderDataSourceChange:self withType:TUIMessageBaseDataProviderDataSourceChangeTypeDelete atIndex:index animation:YES];
-        }
-        [self removeUIMsgList:uiMsgList];
-        
-        [self.dataSource dataProviderDataSourceDidChange:self];
-        if (succ) {
-            succ();
-        }
-    } fail:fail];
-}
-
-- (void)removeUIMsgList:(NSArray<TUIMessageCellData *> *)cellDatas {
-    for (TUIMessageCellData *uiMsg in cellDatas) {
-        [self removeUIMsg:uiMsg];
-    }
-}
+#pragma mark - Custom Message Configuration
+// *************************************************************************
+//                      自定义消息配置
+//                      Custom Message Configuration
+// *************************************************************************
 + (void)load {
     customMessageInfo = @[@{BussinessID : BussinessID_TextLink,
                             TMessageCell_Name : @"TUILinkCell",
@@ -140,7 +53,19 @@ static NSArray *customMessageInfo = nil;
                           @{BussinessID : BussinessID_Typing,
                             TMessageCell_Name : @"TUIMessageCell",
                             TMessageCell_Data_Name : @"TUITypingStatusCellData"
-                          }
+                          },
+                          @{BussinessID : BussinessID_GroupPoll,
+                            TMessageCell_Name : @"TUIPollContainerCell",
+                            TMessageCell_Data_Name : @"TUIPollContainerCellData"
+                          },
+                          @{BussinessID : BussinessID_GroupNote,
+                            TMessageCell_Name : @"TUIGroupNoteContainerCell",
+                            TMessageCell_Data_Name : @"TUIGroupNoteContainerCellData"
+                          },
+                          @{BussinessID : BussinessID_GroupNoteTips,
+                            TMessageCell_Name : @"TUIGroupNoteTipsCell",
+                            TMessageCell_Data_Name : @"TUIGroupNoteTipsCellData"
+                          },
     ];
 }
 
@@ -148,102 +73,146 @@ static NSArray *customMessageInfo = nil;
     return customMessageInfo;
 }
 
-+ (TUIMessageCellData *)getCellData:(V2TIMMessage *)message {
-    if (message.status == V2TIM_MSG_STATUS_LOCAL_REVOKED) {
-        return [TUIMessageDataProvider getRevokeCellData:message];
-    }
-    
+
+#pragma mark - Differentiated internal Message cell appearance configuration
+// *************************************************************************
+//            差异化的内置消息 Cell 外观配置
+//            Differentiated internal Message cell appearance configuration
+// *************************************************************************
++ (TUIMessageCellData * __nullable)getCellData:(V2TIMMessage *)message {
     TUIMessageCellData *data = nil;
-    switch (message.elemType) { 
-        case V2TIM_ELEM_TYPE_TEXT:
-        {
-            data = [TUITextMessageCellData getCellData:message];
-        }
-            break;
-        case V2TIM_ELEM_TYPE_IMAGE:
-        {
-            data = [TUIImageMessageCellData getCellData:message];
-        }
-            break;
-        case V2TIM_ELEM_TYPE_SOUND:
-        {
-            data = [TUIVoiceMessageCellData getCellData:message];
-        }
-            break;
-        case V2TIM_ELEM_TYPE_VIDEO:
-        {
-            data = [TUIVideoMessageCellData getCellData:message];
-        }
-            break;
-        case V2TIM_ELEM_TYPE_FILE:
-        {
-            data = [TUIFileMessageCellData getCellData:message];
-        }
-            break;
-        case V2TIM_ELEM_TYPE_FACE:
-        {
-            data = [TUIFaceMessageCellData getCellData:message];
-        }
-            break;
-        case V2TIM_ELEM_TYPE_GROUP_TIPS:
-        {
-            data = [self getSystemCellData:message];
-        }
-            break;
-        case V2TIM_ELEM_TYPE_MERGER:
-        {
-            data = [TUIMergeMessageCellData getCellData:message];
-        }
-            break;
-        case V2TIM_ELEM_TYPE_CUSTOM:
-        {
-            if ([self isCallMessage:message]) {
-                data = [self getCallCellData:message];
-            } else if ([self isEvaluationCustomMessage:message]) {
-                data = [self getEvalutionCustomCellData:message];
-            } else if ([self isOrderCustomMessage:message]) {
-                data = [self getOrderCustomCellData:message];
-            } else {
-                data = [self getNativeCustomCellData:message];
-            }
-        }
-            break;
-
-        default:
-            break;
-    }
-
-    if (!data) {
-        TUITextMessageCellData *cantSupportCellData = [[TUITextMessageCellData alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
-        cantSupportCellData.content = TUIKitLocalizableString(TUIKitNotSupportThisMessage);
-        data = cantSupportCellData;
-        data.reuseId = TTextMessageCell_ReuseId;
+    
+    // 1 Parse cell data
+    // 1.1 Parse cell data from message status
+    if (message.status == V2TIM_MSG_STATUS_LOCAL_REVOKED) {
+        data = [TUIMessageDataProvider getRevokeCellData:message];
     }
     
-    /**
-     * 判断是否包含「云自定义消息」
-     * Determine whether contains cloud custom data
-     */
-    if (message.cloudCustomData) {
-        /**
-         * 判断是否包含「回复消息」
-         * Determine whether to include "reply-message"
-         */
+    // 1.2 Parse cell data from message custom data
+    if (data == nil) {
+        
         if ([message isContainsCloudCustomOfDataType:TUICloudCustomDataType_MessageReply]) {
-            TUIMessageCellData *replyData = [TUIReplyMessageCellData getCellData:message];
-            if (replyData) {
-                data = replyData;
+            /**
+             * 判断是否包含「回复消息」
+             * Determine whether to include "reply-message"
+             */
+            data = [TUIReplyMessageCellData getCellData:message];
+        } else if ([message isContainsCloudCustomOfDataType:TUICloudCustomDataType_MessageReference]) {
+            /**
+             * 判断是否包含「引用消息」
+             * Determine whether to include "quote-message"
+             */
+            data = [TUIReferenceMessageCellData getCellData:message];
+        }
+    }
+    
+    // 1.3 Parse cell data from message element type
+    if (data == nil) {
+        switch (message.elemType) {
+            case V2TIM_ELEM_TYPE_TEXT: {
+                data = [TUITextMessageCellData getCellData:message];
             }
+                break;
+            case V2TIM_ELEM_TYPE_IMAGE: {
+                data = [TUIImageMessageCellData getCellData:message];
+            }
+                break;
+            case V2TIM_ELEM_TYPE_SOUND: {
+                data = [TUIVoiceMessageCellData getCellData:message];
+            }
+                break;
+            case V2TIM_ELEM_TYPE_VIDEO: {
+                data = [TUIVideoMessageCellData getCellData:message];
+            }
+                break;
+            case V2TIM_ELEM_TYPE_FILE: {
+                data = [TUIFileMessageCellData getCellData:message];
+            }
+                break;
+            case V2TIM_ELEM_TYPE_FACE: {
+                data = [TUIFaceMessageCellData getCellData:message];
+            }
+                break;
+            case V2TIM_ELEM_TYPE_GROUP_TIPS: {
+                data = [self getSystemCellData:message];
+            }
+                break;
+            case V2TIM_ELEM_TYPE_MERGER: {
+                data = [TUIMergeMessageCellData getCellData:message];
+            }
+                break;
+            case V2TIM_ELEM_TYPE_CUSTOM: {
+                id<TUIChatCallingInfoProtocol> callingInfo = nil;
+                if ([self.callingDataProvider isCallingMessage:message callingInfo:&callingInfo]) {
+                    // Voice-video-call message
+                    if (callingInfo) {
+                        // Supported voice-video-call message
+                        if (callingInfo.excludeFromHistory) {
+                            // This message will be ignore in chat page
+                            data = nil;
+                        } else {
+                            // Translate to cell data
+                            data = [self getCallingCellData:callingInfo];
+                            if (data == nil) {
+                                data = [self getUnsupportedCellData:message];
+                            }
+                        }
+                    } else {
+                        // Unsupported voice-video-call message
+                        data = [self getUnsupportedCellData:message];
+                    }
+                } else {
+                    // Others custom message
+                    data = [self getCustomMessage:message];
+                    if (data == nil) {
+                        data = [self getUnsupportedCellData:message];
+                    }
+                }
+            }
+                break;
+            default:
+                data = [self getUnsupportedCellData:message];
+                break;
+        }
+    }
+    
+    // 2 Fill in property if needed
+    if (data) {
+        data.innerMessage = message;
+        data.msgID = message.msgID;
+        data.identifier = message.sender;
+        data.name = [TUIMessageDataProvider getShowName:message];
+        data.avatarUrl = [NSURL URLWithString:message.faceURL];
+        if (message.groupID.length > 0 && !message.isSelf
+           && ![data isKindOfClass:[TUISystemMessageCellData class]]) {
+            data.showName = YES;
+        }
+        switch (message.status) {
+            case V2TIM_MSG_STATUS_SEND_SUCC:
+                data.status = Msg_Status_Succ;
+                break;
+            case V2TIM_MSG_STATUS_SEND_FAIL:
+                data.status = Msg_Status_Fail;
+                break;
+            case V2TIM_MSG_STATUS_SENDING:
+                data.status = Msg_Status_Sending_2;
+                break;
+            default:
+                break;
         }
         
         /**
-         * 判断是否包含「引用消息」
-         * Determine whether to include "quote-message"
+         * 更新消息的上传/下载进度
+         * Update progress of message uploading/downloading
          */
-        if ([message isContainsCloudCustomOfDataType:TUICloudCustomDataType_MessageReference]) {
-            TUIMessageCellData *referenceData = [TUIReferenceMessageCellData getCellData:message];
-            if (referenceData) {
-                data = referenceData;
+        {
+            NSInteger progress = [TUIMessageProgressManager.shareManager progressForMessage:message.msgID];
+            if ([data conformsToProtocol:@protocol(TUIMessageCellDataFileUploadProtocol)]) {
+                ((id<TUIMessageCellDataFileUploadProtocol>)data).uploadProgress = progress;
+            }
+            if ([data conformsToProtocol:@protocol(TUIMessageCellDataFileDownloadProtocol)]) {
+                ((id<TUIMessageCellDataFileDownloadProtocol>)data).downladProgress = progress;
+                ((id<TUIMessageCellDataFileDownloadProtocol>)data).isDownloading = (progress != 0) && (progress != 100);
             }
         }
         
@@ -285,69 +254,14 @@ static NSArray *customMessageInfo = nil;
                 }
             }];
         }
+    } else {
+        NSLog(@"current message will be ignored in chat page, msg:%@", message);
     }
     
-    if (data) {
-        data.innerMessage = message;
-        data.msgID = message.msgID;
-        data.direction = message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming;
-        data.identifier = message.sender;
-        data.name = [TUIMessageDataProvider getShowName:message];
-        data.avatarUrl = [NSURL URLWithString:message.faceURL];
-
-        /**
-         * 展示 showName 字段的条件：
-         * 1. 当前消息是群消息
-         * 2. 当前消息并非自己发送的消息
-         * 3. 当前消息不是系统消息
-         *
-         * Conditions to display the showName field:
-         * 1. The current message is a group message
-         * 2. The current message is not a message sent by yourself
-         * 3. The current message is not a system message
-         */
-        if (message.groupID.length > 0 && !message.isSelf
-           && ![data isKindOfClass:[TUISystemMessageCellData class]]) {
-            data.showName = YES;
-        }
-        
-        /**
-         * 更新消息状态
-         * Update message status
-         */
-        switch (message.status) {
-            case V2TIM_MSG_STATUS_SEND_SUCC:
-                data.status = Msg_Status_Succ;
-                break;
-            case V2TIM_MSG_STATUS_SEND_FAIL:
-                data.status = Msg_Status_Fail;
-                break;
-            case V2TIM_MSG_STATUS_SENDING:
-                data.status = Msg_Status_Sending_2;
-                break;
-            default:
-                break;
-        }
-        
-        /**
-         * 更新消息的上传/下载进度
-         * Update progress of message uploading/downloading
-         */
-        {
-            NSInteger progress = [TUIMessageProgressManager.shareManager progressForMessage:message.msgID];
-            if ([data conformsToProtocol:@protocol(TUIMessageCellDataFileUploadProtocol)]) {
-                ((id<TUIMessageCellDataFileUploadProtocol>)data).uploadProgress = progress;
-            }
-            if ([data conformsToProtocol:@protocol(TUIMessageCellDataFileDownloadProtocol)]) {
-                ((id<TUIMessageCellDataFileDownloadProtocol>)data).downladProgress = progress;
-                ((id<TUIMessageCellDataFileDownloadProtocol>)data).isDownloading = (progress != 0) && (progress != 100);
-            }
-        }
-    }
     return data;
 }
 
-+ (TUIMessageCellData *)getNativeCustomCellData:(V2TIMMessage *)message {
++ (TUIMessageCellData * __nullable)getCustomMessage:(V2TIMMessage *)message {
     NSError *error;
     NSDictionary *param = [NSJSONSerialization JSONObjectWithData:message.customElem.data options:NSJSONReadingAllowFragments error:&error];
     if (error) {
@@ -361,53 +275,7 @@ static NSArray *customMessageInfo = nil;
     if (!businessID || ![businessID isKindOfClass:[NSString class]]) {
         return nil;
     }
-    for (NSDictionary *messageInfo in customMessageInfo) {
-        if ([businessID isEqualToString:messageInfo[BussinessID]]) {
-            NSString *cellDataName = messageInfo[TMessageCell_Data_Name];
-            Class cls = NSClassFromString(cellDataName);
-            if (cls && [cls respondsToSelector:@selector(getCellData:)]) {
-                TUIMessageCellData *data = [cls getCellData:message];
-                data.reuseId = businessID;
-                return data;
-            }
-        }
-    }
-    return nil;
-}
-
-+ (BOOL)isEvaluationCustomMessage:(V2TIMMessage *)message {
-    NSArray *evaluations = @[@"evaluate", @"evaluation"];
-    return [evaluations containsObject:[self dataParsedFromWebCustomData:message]];
-}
-
-+ (BOOL)isOrderCustomMessage:(V2TIMMessage *)message {
-    NSArray *orders = @[@"order"];
-    return [orders containsObject:[self dataParsedFromWebCustomData:message]];
-}
-
-+ (NSString *)dataParsedFromWebCustomData:(V2TIMMessage *)message {
-    NSError *error;
-    NSDictionary *data = [NSJSONSerialization JSONObjectWithData:message.customElem.data options:NSJSONReadingAllowFragments error:&error];
-    if (error) {
-        NSLog(@"parse customElem data error: %@", error);
-        return nil;
-    }
-    if (!data || ![data isKindOfClass:[NSDictionary class]]) {
-        return nil;
-    }
     
-    return data[@"businessID"];
-}
-
-+ (TUIMessageCellData *)getEvalutionCustomCellData:(V2TIMMessage *)message {
-    return [self getWebCustomCellData:message businessID:BussinessID_Evaluation];
-}
-
-+ (TUIMessageCellData *)getOrderCustomCellData:(V2TIMMessage *)message {
-    return [self getWebCustomCellData:message businessID:BussinessID_Order];
-}
-
-+ (TUIMessageCellData *)getWebCustomCellData:(V2TIMMessage *)message businessID:(NSString *)businessID {
     for (NSDictionary *messageInfo in customMessageInfo) {
         if ([businessID isEqualToString:messageInfo[BussinessID]]) {
             NSString *cellDataName = messageInfo[TMessageCell_Data_Name];
@@ -420,6 +288,13 @@ static NSArray *customMessageInfo = nil;
         }
     }
     return nil;
+}
+
++ (TUIMessageCellData *)getUnsupportedCellData:(V2TIMMessage *)message {
+    TUITextMessageCellData *cellData = [[TUITextMessageCellData alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
+    cellData.content = TUIKitLocalizableString(TUIKitNotSupportThisMessage);
+    cellData.reuseId = TTextMessageCell_ReuseId;
+    return cellData;
 }
 
 + (TUISystemMessageCellData *)getSystemCellData:(V2TIMMessage *)message {
@@ -486,6 +361,48 @@ static NSArray *customMessageInfo = nil;
     return system;
 }
 
+static TUIChatCallingDataProvider *_callingDataProvider;
++ (TUIChatCallingDataProvider *)callingDataProvider {
+    if (_callingDataProvider == nil) {
+        _callingDataProvider = [[TUIChatCallingDataProvider alloc] init];
+    }
+    return _callingDataProvider;
+}
+
++ (TUIMessageCellData *)getCallingCellData:(id<TUIChatCallingInfoProtocol>)callingInfo {
+    TMsgDirection direction = MsgDirectionIncoming;
+    if (callingInfo.direction == TUICallMessageDirectionIncoming) {
+        direction = MsgDirectionIncoming;
+    } else if (callingInfo.direction == TUICallMessageDirectionOutgoing) {
+        direction = MsgDirectionOutgoing;
+    }
+    
+    if (callingInfo.participantType == TUICallParticipantTypeC2C) {
+        TUITextMessageCellData *cellData = [[TUITextMessageCellData alloc] initWithDirection:direction];
+        if (callingInfo.streamMediaType == TUICallStreamMediaTypeVoice) {
+            cellData.isAudioCall = YES;
+        } else if (callingInfo.streamMediaType == TUICallStreamMediaTypeVideo) {
+            cellData.isVideoCall = YES;
+        } else {
+            cellData.isAudioCall = NO;
+            cellData.isVideoCall = NO;
+        }
+        cellData.content = callingInfo.content;
+        cellData.isCaller = (callingInfo.participantRole == TUICallParticipantRoleCaller);
+        cellData.showUnreadPoint = callingInfo.showUnreadPoint;
+        cellData.isUseMsgReceiverAvatar = callingInfo.isUseReceiverAvatar;
+        cellData.reuseId = TTextMessageCell_ReuseId;
+        return cellData;
+    } else if (callingInfo.participantType == TUICallParticipantTypeGroup) {
+        TUISystemMessageCellData *cellData = [[TUISystemMessageCellData alloc] initWithDirection:direction];
+        cellData.content = callingInfo.content;
+        cellData.reuseId = TSystemMessageCell_ReuseId;
+        return cellData;
+    } else {
+        return nil;
+    }
+}
+
 + (NSString *)getDisplayString:(V2TIMMessage *)message
 {
     NSString *str;
@@ -493,61 +410,72 @@ static NSArray *customMessageInfo = nil;
         str = [self getRevokeDispayString:message];
     } else {
         switch (message.elemType) {
-            case V2TIM_ELEM_TYPE_TEXT:
-            {
+            case V2TIM_ELEM_TYPE_TEXT: {
                 str = [TUITextMessageCellData getDisplayString:message];
             }
                 break;
-            case V2TIM_ELEM_TYPE_IMAGE:
-            {
+            case V2TIM_ELEM_TYPE_IMAGE: {
                 str = [TUIImageMessageCellData getDisplayString:message];
             }
                 break;
-            case V2TIM_ELEM_TYPE_SOUND:
-            {
+            case V2TIM_ELEM_TYPE_SOUND: {
                 str = [TUIVoiceMessageCellData getDisplayString:message];
             }
                 break;
-            case V2TIM_ELEM_TYPE_VIDEO:
-            {
+            case V2TIM_ELEM_TYPE_VIDEO: {
                 str = [TUIVideoMessageCellData getDisplayString:message];
             }
                 break;
-            case V2TIM_ELEM_TYPE_FILE:
-            {
+            case V2TIM_ELEM_TYPE_FILE: {
                 str = [TUIFileMessageCellData getDisplayString:message];
             }
                 break;
-            case V2TIM_ELEM_TYPE_FACE:
-            {
+            case V2TIM_ELEM_TYPE_FACE: {
                 str = [TUIFaceMessageCellData getDisplayString:message];
             }
                 break;
-            case V2TIM_ELEM_TYPE_MERGER:
-            {
+            case V2TIM_ELEM_TYPE_MERGER: {
                 str = [TUIMergeMessageCellData getDisplayString:message];
             }
                 break;
-            case V2TIM_ELEM_TYPE_GROUP_TIPS:
-            {
+            case V2TIM_ELEM_TYPE_GROUP_TIPS: {
                 str = [self getGroupTipsDisplayString:message];
             }
                 break;
-            case V2TIM_ELEM_TYPE_CUSTOM:
-            {
-                if ([self isCallMessage:message]) {
-                    str = [self getCallMessageDisplayString:message];
+            case V2TIM_ELEM_TYPE_CUSTOM: {
+                id<TUIChatCallingInfoProtocol> callingInfo = nil;
+                if ([self.callingDataProvider isCallingMessage:message callingInfo:&callingInfo]) {
+                    // Voice-video-call message
+                    if (callingInfo) {
+                        // Supported voice-video-call message
+                        if (callingInfo.excludeFromHistory) {
+                            // This message will be ignore in chat page
+                            str = nil;
+                        } else {
+                            // Get display text
+                            str = callingInfo.content ?: TUIKitLocalizableString(TUIKitMessageTipsUnsupportCustomMessage);
+                        }
+                    } else {
+                        // Unsupported voice-video-call message
+                        str = TUIKitLocalizableString(TUIKitMessageTipsUnsupportCustomMessage);
+                    }
                 } else {
+                    // Others custom message
                     str = [self getCustomDisplayString:message];
-                }
-                if (!str) {
-                    str = TUIKitLocalizableString(TUIKitMessageTipsUnsupportCustomMessage);
+                    if (str == nil) {
+                        str = TUIKitLocalizableString(TUIKitMessageTipsUnsupportCustomMessage);
+                    }
                 }
             }
                 break;
             default:
+                str = TUIKitLocalizableString(TUIKitMessageTipsUnsupportCustomMessage);
                 break;
         }
+    }
+    
+    if (str == nil) {
+        NSLog(@"current message will be ignored in chat page or conversation list page, msg:%@", message);
     }
     return str;
 }
@@ -571,6 +499,110 @@ static NSArray *customMessageInfo = nil;
         }
     }
     return nil;
+}
+
+
+#pragma mark - Differentiated interaction logic
+// *************************************************************************
+//                       差异化交互逻辑
+//                       Differentiated interaction logic
+// *************************************************************************
+- (void)dealloc {
+    _callingDataProvider = nil;
+}
+
+- (void)preProcessReplyMessageV2:(NSArray<TUIMessageCellData *> *)uiMsgs callback:(void(^)(void))callback {
+    if (uiMsgs.count == 0) {
+        if (callback) {
+            callback();
+        }
+        return;
+    }
+    
+    @weakify(self)
+    dispatch_group_t group = dispatch_group_create();
+    for (TUIMessageCellData *cellData in uiMsgs) {
+        if (![cellData isKindOfClass:TUIReplyMessageCellData.class]) {
+            continue;
+        }
+        
+        TUIReplyMessageCellData *myData = (TUIReplyMessageCellData *)cellData;
+        __weak typeof(myData) weakMyData = myData;
+        myData.onFinish = ^{
+            @strongify(self)
+            [self.dataSource dataProviderDataSourceWillChange:self];
+            NSUInteger index = [self.uiMsgs indexOfObject:weakMyData];
+            [self.dataSource dataProviderDataSourceChange:self
+                                                 withType:TUIMessageBaseDataProviderDataSourceChangeTypeReload
+                                                  atIndex:index
+                                                animation:NO];
+            [self.dataSource dataProviderDataSourceDidChange:self];
+        };
+        dispatch_group_enter(group);
+        [self loadOriginMessageFromReplyData:myData dealCallback:^{
+            dispatch_group_leave(group);
+        }];
+    }
+    
+    dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+        if (callback) {
+            callback();
+        }
+    });
+}
+
+- (void)deleteUIMsgs:(NSArray<TUIMessageCellData *> *)uiMsgs
+           SuccBlock:(nullable V2TIMSucc)succ
+           FailBlock:(nullable V2TIMFail)fail {
+    NSMutableArray *uiMsgList = [NSMutableArray array];
+    NSMutableArray *imMsgList = [NSMutableArray array];
+    for (TUIMessageCellData *uiMsg in uiMsgs) {
+        if ([self.uiMsgs containsObject:uiMsg]) {
+            // Check content cell
+            [uiMsgList addObject:uiMsg];
+            [imMsgList addObject:uiMsg.innerMessage];
+            
+            // Check time cell which also need to be deleted
+            NSInteger index = [self.uiMsgs indexOfObject:uiMsg];
+            index--;
+            if (index >= 0 && index < self.uiMsgs.count &&
+                [[self.uiMsgs objectAtIndex:index] isKindOfClass:TUISystemMessageCellData.class]) {
+                TUISystemMessageCellData *systemCellData = (TUISystemMessageCellData *)[self.uiMsgs objectAtIndex:index];
+                if (systemCellData.type == TUISystemMessageTypeDate) {
+                    [uiMsgList addObject:systemCellData];
+                }
+            }
+        }
+    }
+    
+    if (imMsgList.count == 0) {
+        if (fail) {
+            fail(ERR_INVALID_PARAMETERS, @"not found uiMsgs");
+        }
+        return;
+    }
+    
+    @weakify(self);
+    [self.class deleteMessages:imMsgList succ:^{
+        @strongify(self);
+        [self.dataSource dataProviderDataSourceWillChange:self];
+        for (TUIMessageCellData *uiMsg in uiMsgList) {
+            NSInteger index = [self.uiMsgs indexOfObject:uiMsg];
+            [self.dataSource dataProviderDataSourceChange:self withType:TUIMessageBaseDataProviderDataSourceChangeTypeDelete atIndex:index animation:YES];
+        }
+        [self removeUIMsgList:uiMsgList];
+        
+        [self.dataSource dataProviderDataSourceDidChange:self];
+        if (succ) {
+            succ();
+        }
+    } fail:fail];
+}
+
+- (void)removeUIMsgList:(NSArray<TUIMessageCellData *> *)cellDatas {
+    for (TUIMessageCellData *uiMsg in cellDatas) {
+        [self removeUIMsg:uiMsg];
+    }
 }
 
 @end

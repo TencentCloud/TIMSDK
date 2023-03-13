@@ -18,6 +18,9 @@ NS_ASSUME_NONNULL_BEGIN
                          module:(TUISearchResultModule)module
                           param:(NSDictionary<TUISearchParamKey, id> * __nullable)param;
 
+@property(nonatomic,copy) NSString *headerConversationShowName;
+@property(nonatomic,copy) NSString *headerConversationURL;
+@property(nonatomic,strong) UIImage *headerConversationAvatar;
 @end
 
 NS_ASSUME_NONNULL_END

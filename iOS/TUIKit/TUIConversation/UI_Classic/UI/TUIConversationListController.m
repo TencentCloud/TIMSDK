@@ -306,7 +306,9 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
         });
         return;
     }
-    [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
+    [UIView performWithoutAnimation:^{
+        [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
+    }];
 }
 
 - (void)reloadConversationsAtIndexPaths:(NSArray *)indexPaths {
@@ -320,7 +322,9 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
     if (self.tableView.isEditing) {
         self.tableView.editing = NO;
     }
-    [self.tableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
+    [UIView performWithoutAnimation:^{
+        [self.tableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
+    }];
 }
 
 - (void)deleteConversationAtIndexPaths:(NSArray *)indexPaths {

@@ -96,6 +96,11 @@ typedef NS_ENUM(NSUInteger, TMsgDirection) {
 @property (nonatomic, strong) UIImage *__nullable avatarImage __attribute__((deprecated("not supported")));
 
 /**
+ * Whether to use the receiver's avatar, default is NO
+ */
+@property (nonatomic, assign) BOOL isUseMsgReceiverAvatar;
+
+/**
  *  信息发送者昵称
  *  昵称与 ID 不一定相同，在聊天界面默认展示昵称。
  *
@@ -332,6 +337,8 @@ typedef NS_ENUM(NSUInteger, TMsgDirection) {
 - (instancetype)initWithDirection:(TMsgDirection)direction NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)init NS_UNAVAILABLE;
+
+- (void)clearCachedCellHeight;
 
 @end
 

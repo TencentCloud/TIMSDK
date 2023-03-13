@@ -1145,6 +1145,98 @@
     [vc presentViewController:alertController animated:NO completion:nil];
 }
 
++ (void)addValueAddedUnsupportNotificationInVC:(UIViewController *)vc {
+    [self addValueAddedUnsupportNotificationInVC:vc debugOnly:YES];
+}
+
++ (void)addValueAddedUnsupportNotificationInVC:(UIViewController *)vc debugOnly:(BOOL)debugOnly {
+    BOOL enable = YES;
+    if (debugOnly) {
+#if DEBUG
+        enable = YES;
+#else
+        enable = NO;
+#endif
+    }
+    
+    if (!enable) {
+        return;
+    }
+    
+    @weakify(vc);
+    [[NSNotificationCenter defaultCenter] addObserverForName:TUIKitNotification_onReceivedValueAddedUnsupportInterfaceError object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        @strongify(vc);
+        NSDictionary *userInfo = note.userInfo;
+        NSString *service = [userInfo objectForKey:@"service"];
+        NSString *serviceDesc = [userInfo objectForKey:@"serviceDesc"];
+        [TUITool showValueAddedUnsupportAlertOfService:service serviceDesc:serviceDesc onVC:vc];
+    }];
+}
+
++ (void)postValueAddedUnsupportNotificationOfService:(NSString *)service {
+    [self postValueAddedUnsupportNotificationOfService:service serviceDesc:nil debugOnly:YES];
+}
+
++ (void)postValueAddedUnsupportNotificationOfService:(NSString *)service serviceDesc:(NSString *)serviceDesc debugOnly:(BOOL)debugOnly {
+    BOOL enable = YES;
+    if (debugOnly) {
+#if DEBUG
+        enable = YES;
+#else
+        enable = NO;
+#endif
+    }
+    
+    if (!enable) {
+        return;
+    }
+
+    if (!service) {
+        NSLog(@"postNotificationOfService, service is nil");
+        return;
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:TUIKitNotification_onReceivedValueAddedUnsupportInterfaceError
+                                                        object:nil
+                                                      userInfo:@{@"service": service?:@"", @"serviceDesc":serviceDesc?:@""}];
+}
+
++ (void)showValueAddedUnsupportAlertOfService:(NSString *)service serviceDesc:(NSString *)serviceDesc onVC:(UIViewController *)vc {
+    NSString *desc = [NSString stringWithFormat:@"%@%@%@", service, TUIKitLocalizableString(TUIKitErrorValueAddedUnsupportIntefaceDesc), serviceDesc?:@""];
+    NSString *button = TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceIGotIt);
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceTitle)
+                                                                             message:desc
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *ok = [UIAlertAction actionWithTitle:button style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    }];
+    [alertController tuitheme_addAction:ok];
+    [vc presentViewController:alertController animated:NO completion:nil];
+}
+
++ (void)checkCommercialAbility:(long long)param succ:(void(^)(BOOL enabled))succ fail:(void(^)(int code, NSString *desc))fail {
+    NSLog(@"checkCommercialAbility param: %lld", param);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSNumber *paramNum = [NSNumber numberWithLongLong:param];
+        [[V2TIMManager sharedInstance] callExperimentalAPI:@"isCommercialAbilityEnabled"
+                                                     param:paramNum
+                                                      succ:^(NSObject *result) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                BOOL isEnabled = [(NSNumber *)result boolValue];
+                NSLog(@"checkCommercialAbility enabled: %d", isEnabled);
+                if (succ) {
+                    succ(isEnabled);
+                }
+            });
+        } fail:^(int code, NSString *desc) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                NSLog(@"checkCommercialAbility error, code:%d, desc:%@", code, desc);
+                if (fail) {
+                    fail(code, desc);
+                }
+            });
+        }];
+    });
+}
+
 + (void)onTapLabel:(UIGestureRecognizer *)ges {
     NSString *chinesePurchase = @"https://cloud.tencent.com/document/product/269/11673#.E5.9F.BA.E7.A1.80.E6.9C.8D.E5.8A.A1.E8.AF.A6.E6.83.85";
     NSString *englishPurchase = @"https://intl.cloud.tencent.com/document/product/1047/36021?lang=en&pg=#changing-configuration";

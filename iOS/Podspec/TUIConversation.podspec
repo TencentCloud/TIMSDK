@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUIConversation'
-  spec.version      = '7.0.3754'
+  spec.version      = '7.1.3925'
   spec.platform     = :ios 
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
@@ -15,14 +15,16 @@ Pod::Spec.new do |spec|
   spec.xcconfig     = { 'VALID_ARCHS' => 'armv7 arm64 x86_64', }
 
   spec.requires_arc = true
-
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/7.0.3754/ios/TUIConversation.zip?time=2'}
+  
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/7.1.3925/ios/TUIConversation.zip?time=3'}
 
   spec.default_subspec = 'ALL'
 
   spec.subspec 'CommonModel' do |commonModel|
     commonModel.source_files = '**/TUIConversation/CommonModel/*.{h,m,mm}'
-    commonModel.dependency 'TUICore','7.0.3754'
+    commonModel.dependency 'TXIMSDK_Plus_iOS','7.1.3925'
+    commonModel.dependency 'TUICore','7.1.3925'
+    commonModel.dependency 'ReactiveObjC'
   end
 
   spec.subspec 'BaseCell' do |baseCell|

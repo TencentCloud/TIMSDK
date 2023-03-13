@@ -160,6 +160,12 @@ typedef NS_ENUM(NSInteger, TUIConversationOnlineStatus) {
 @property (nonatomic, assign) BOOL isMarkAsHide;
 
 /**
+ * 会话标记- 当前会话被标记为折叠
+ * Conversation Mark - The current conversation is marked as folded
+ */
+@property (nonatomic, assign) BOOL isMarkAsFolded;
+
+/**
  * 会话标记- 会话折叠，当存在被折叠的会话时，本地会产生一条折叠群组去收纳他们，此标记是折叠群组标记
  * Conversation Mark - Conversation folded, when there are folded conversations, a folded group will be generated locally to accommodate them, this tag is the folded group tag
  */

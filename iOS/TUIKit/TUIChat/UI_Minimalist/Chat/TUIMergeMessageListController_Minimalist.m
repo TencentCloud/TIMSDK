@@ -166,7 +166,14 @@
     self.tableView.estimatedRowHeight = 0;
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     self.tableView.backgroundColor = TUIChatDynamicColor(@"chat_controller_bg_color", @"#FFFFFF");;
-
+    
+    UIImage *image = TUICoreDynamicImage(@"nav_back_img", [UIImage imageNamed:@"ic_back_white"]);
+    image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [backButton setImage:image forState:UIControlStateNormal];
+    [backButton addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+    
     [self.tableView registerClass:[TUITextMessageCell_Minimalist class] forCellReuseIdentifier:TTextMessageCell_ReuseId];
     [self.tableView registerClass:[TUIVoiceMessageCell_Minimalist class] forCellReuseIdentifier:TVoiceMessageCell_ReuseId];
     [self.tableView registerClass:[TUIImageMessageCell_Minimalist class] forCellReuseIdentifier:TImageMessageCell_ReuseId];
@@ -190,6 +197,12 @@
     }
     
     self.tableView.contentInset = UIEdgeInsetsMake(5, 0, 0, 0);
+}
+
+- (void)back
+{
+    [self.navigationController popViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:^{}];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

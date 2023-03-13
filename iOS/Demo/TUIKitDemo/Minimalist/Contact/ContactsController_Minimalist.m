@@ -20,35 +20,78 @@
 @interface ContactsController_Minimalist () <TUIPopViewDelegate>
 @property (nonatomic, strong) TUIContactController_Minimalist *contactVC;
 @property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
+@property (nonatomic, strong) UIBarButtonItem *moreItem;
+
 @end
 
 @implementation ContactsController_Minimalist
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (UIColor *)navBackColor {
+    return  [UIColor whiteColor];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    if (@available(iOS 15.0, *)) {
+        UINavigationBarAppearance *appearance = [UINavigationBarAppearance new];
+        [appearance configureWithDefaultBackground];
+        appearance.shadowColor = nil;
+        appearance.backgroundEffect = nil;
+        appearance.backgroundColor =  [self navBackColor];
+        UINavigationBar *navigationBar = self.navigationController.navigationBar;
+        navigationBar.backgroundColor = [self navBackColor];
+        navigationBar.barTintColor = [self navBackColor];
+        navigationBar.shadowImage = [UIImage new];
+        navigationBar.standardAppearance = appearance;
+        navigationBar.scrollEdgeAppearance= appearance;
+    }
+    else {
+        UINavigationBar *navigationBar = self.navigationController.navigationBar;
+        navigationBar.backgroundColor = [self navBackColor];
+        navigationBar.barTintColor = [self navBackColor];
+        navigationBar.shadowImage = [UIImage new];
+        [[UINavigationBar appearance] setTranslucent:NO];
+    }
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    UIButton *moreButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
-    [moreButton setImage:TUICoreDynamicImage(@"nav_more_img", [UIImage imageNamed:TUICoreImagePath(@"more")]) forState:UIControlStateNormal];
-    [moreButton addTarget:self action:@selector(onRightItem:) forControlEvents:UIControlEventTouchUpInside];
-    [moreButton.widthAnchor constraintEqualToConstant:24].active = YES;
-    [moreButton.heightAnchor constraintEqualToConstant:24].active = YES;
-    UIBarButtonItem *moreItem = [[UIBarButtonItem alloc] initWithCustomView:moreButton];
-    self.navigationItem.rightBarButtonItem = moreItem;
-
-    _titleView = [[TUINaviBarIndicatorView alloc] init];
-    [_titleView setTitle:NSLocalizedString(@"TabBarItemContactText", nil)];
-    self.navigationItem.titleView = _titleView;
-    self.navigationItem.title = @"";
+    [self setupNavigation];
     
     self.contactVC = [[TUIContactController_Minimalist alloc] init];
     [self addChildViewController:self.contactVC];
     [self.view addSubview:self.contactVC.view];
 
+}
+
+
+- (void)setupNavigation
+{
+    _titleView = [[TUINaviBarIndicatorView alloc] init];
+    _titleView.label.font = [UIFont boldSystemFontOfSize:34];
+    [_titleView setTitle:NSLocalizedString(@"TabBarItemContactText_mini", nil)];
+    _titleView.label.textColor = TUIDynamicColor(@"nav_title_text_color", TUIThemeModuleDemo_Minimalist, @"#000000");
+    
+    UIBarButtonItem * titleItem = [[UIBarButtonItem alloc] initWithCustomView:_titleView];
+    
+    UIBarButtonItem *leftSpaceItem = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    leftSpaceItem.width = kScale390(13);
+    
+    self.navigationItem.title = @"";
+    self.navigationItem.leftBarButtonItems = @[leftSpaceItem,titleItem];
+    
+    UIButton *moreButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [moreButton setImage:TUIDemoDynamicImage(@"", [UIImage imageNamed:TUIDemoImagePath_Minimalist(@"nav_add")]) forState:UIControlStateNormal];
+    [moreButton addTarget:self action:@selector(onRightItem:) forControlEvents:UIControlEventTouchUpInside];
+    moreButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
+    [moreButton setFrame:CGRectMake(0, 0, 20, 20)];
+
+    
+    self.moreItem = [[UIBarButtonItem alloc] initWithCustomView:moreButton];
+    
+    self.navigationItem.rightBarButtonItems = @[self.moreItem];
+    
 }
 
 - (void)onRightItem:(UIButton *)rightBarButton;

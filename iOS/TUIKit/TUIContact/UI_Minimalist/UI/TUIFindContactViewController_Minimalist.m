@@ -8,8 +8,11 @@
 #import "TUIFindContactViewController_Minimalist.h"
 #import "TUIGlobalization.h"
 #import "TUICore.h"
-#import "TUIFindContactCell.h"
-#import "TUIFindContactViewDataProvider.h"
+#import "TUIFindContactCell_Minimalist.h"
+#import "TUIFindContactViewDataProvider_Minimalist.h"
+#import "TUIThemeManager.h"
+#import "TUIContactEmptyView_Minimalist.h"
+#import "TUIDefine.h"
 #import "TUIThemeManager.h"
 
 @interface TUIFindContactViewController_Minimalist () <UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource>
@@ -17,8 +20,9 @@
 @property (nonatomic, strong) UISearchBar *searchBar;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) UILabel *tipsLabel;
-@property (nonatomic, strong) UILabel *noDataTipsLabel;
-@property (nonatomic, strong) TUIFindContactViewDataProvider *provider;
+@property (nonatomic, strong) TUIContactEmptyView_Minimalist *noDataEmptyView;
+
+@property (nonatomic, strong) TUIFindContactViewDataProvider_Minimalist *provider;
 
 @end
 
@@ -34,7 +38,7 @@
     
     [self setupView];
     NSString * tipsLabelText = [self.provider getMyUserIDDescription];
-    if (self.type == TUIFindContactTypeGroup) {
+    if (self.type == TUIFindContactTypeGroup_Minimalist) {
         tipsLabelText = @"";
     }
     self.tipsLabel.text = tipsLabelText;
@@ -47,14 +51,16 @@
     self.definesPresentationContext = YES;//不设置会导致一些位置错乱，无动画等问题
     
     UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.text =self.type == TUIFindContactTypeC2C ? TUIKitLocalizableString(TUIKitAddFriend) : TUIKitLocalizableString(TUIKitAddGroup);
+    titleLabel.text =self.type == TUIFindContactTypeC2C_Minimalist ? TUIKitLocalizableString(TUIKitAddFriend) : TUIKitLocalizableString(TUIKitAddGroup);
     titleLabel.font = [UIFont boldSystemFontOfSize:17.0];
     titleLabel.textColor = TUICoreDynamicColor(@"nav_title_text_color", @"#000000");
     [titleLabel sizeToFit];
     self.navigationItem.titleView = titleLabel;
-    self.view.backgroundColor = self.searchBar.backgroundColor;
+    self.view.backgroundColor = [UIColor whiteColor];
     
-    self.searchBar.frame = CGRectMake(10, 0, self.view.bounds.size.width - 20, 60);
+    self.searchBar.frame = CGRectMake(10, 0, self.view.bounds.size.width - 20, kScale390(38));
+    self.searchBar.layer.cornerRadius = kScale390(10);
+    self.searchBar.layer.masksToBounds = YES;
     [self.view addSubview:self.searchBar];
     
     self.tableView.frame = CGRectMake(0, 60, self.view.bounds.size.width, self.view.bounds.size.height - 60);
@@ -62,26 +68,33 @@
     
     self.tipsLabel.frame = CGRectMake(10, 10, self.view.bounds.size.width - 20, 40);
     [self.tableView addSubview:self.tipsLabel];
-    
-    self.noDataTipsLabel.frame = CGRectMake(10, 60, self.view.bounds.size.width - 20, 40);
-    [self.tableView addSubview:self.noDataTipsLabel];
+        
+    self.noDataEmptyView.frame = CGRectMake(0, kScale390(42), self.view.bounds.size.width - 20, 200);
+    [self.tableView addSubview:self.noDataEmptyView];
     
 }
-
+-  (TUIContactEmptyView_Minimalist *)noDataEmptyView {
+    if (_noDataEmptyView == nil) {
+        _noDataEmptyView = [[TUIContactEmptyView_Minimalist alloc] initWithImage:
+                            [UIImage imageNamed:TUIContactImagePath_Minimalist(@"contact_not_found_icon")]
+                                                                            Text:(self.type == TUIFindContactTypeC2C_Minimalist ? TUIKitLocalizableString(TUIKitAddUserNoDataTips) : TUIKitLocalizableString(TUIKitAddGroupNoDataTips))];
+        _noDataEmptyView.hidden = YES;
+    }
+    return _noDataEmptyView;
+}
 #pragma mark - UITableViewDelegate/UITableViewDataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSInteger count = self.type == TUIFindContactTypeC2C ? self.provider.users.count : self.provider.groups.count;
-    self.noDataTipsLabel.hidden = !self.tipsLabel.hidden || count || self.searchBar.text.length == 0;
-    self.noDataTipsLabel.text = self.type == TUIFindContactTypeC2C ? TUIKitLocalizableString(TUIKitAddUserNoDataTips) : TUIKitLocalizableString(TUIKitAddGroupNoDataTips);
+    NSInteger count = self.type == TUIFindContactTypeC2C_Minimalist ? self.provider.users.count : self.provider.groups.count;
+    self.noDataEmptyView.hidden = !self.tipsLabel.hidden || count || self.searchBar.text.length == 0;
     return count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    TUIFindContactCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
-    NSArray *result = self.type == TUIFindContactTypeC2C ? self.provider.users : self.provider.groups;
-    TUIFindContactCellModel *cellModel = result[indexPath.row];
+    TUIFindContactCell_Minimalist *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+    NSArray *result = self.type == TUIFindContactTypeC2C_Minimalist ? self.provider.users : self.provider.groups;
+    TUIFindContactCellModel_Minimalist *cellModel = result[indexPath.row];
     cell.data = cellModel;
     return cell;
 }
@@ -90,12 +103,12 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
     
-    NSArray *result = self.type == TUIFindContactTypeC2C ? self.provider.users : self.provider.groups;
-    TUIFindContactCellModel *cellModel = result[indexPath.row];
+    NSArray *result = self.type == TUIFindContactTypeC2C_Minimalist ? self.provider.users : self.provider.groups;
+    TUIFindContactCellModel_Minimalist *cellModel = result[indexPath.row];
     [self onSelectCellModel:cellModel];
 }
 
-- (void)onSelectCellModel:(TUIFindContactCellModel *)cellModel
+- (void)onSelectCellModel:(TUIFindContactCellModel_Minimalist *)cellModel
 {
     if (self.onSelect) {
         self.onSelect(cellModel);
@@ -136,7 +149,7 @@
 - (void)doSearchWithKeyword:(NSString *)keyword
 {
     __weak typeof(self) weakSelf = self;
-    if (self.type == TUIFindContactTypeC2C) {
+    if (self.type == TUIFindContactTypeC2C_Minimalist) {
         [self.provider findUser:keyword completion:^{
             [weakSelf.tableView reloadData];
         }];
@@ -151,13 +164,13 @@
 {
     if (_searchBar == nil) {
         _searchBar = [[UISearchBar alloc] init];
-        _searchBar.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"F3F4F5");
-        _searchBar.placeholder = self.type == TUIFindContactTypeC2C ? TUIKitLocalizableString(TUIKitSearchUserID) : TUIKitLocalizableString(TUIKitSearchGroupID);
+        _searchBar.backgroundColor = [UIColor tui_colorWithHex:@"f9f9f9"];
+        _searchBar.placeholder = self.type == TUIFindContactTypeC2C_Minimalist ? TUIKitLocalizableString(TUIKitSearchUserID) : TUIKitLocalizableString(TUIKitSearchGroupID);
         _searchBar.backgroundImage = [[UIImage alloc] init];
         _searchBar.delegate = self;
         UITextField *searchField = [_searchBar valueForKey:@"searchField"];
         if (searchField) {
-            searchField.backgroundColor = TUICoreDynamicColor(@"search_textfield_bg_color", @"#FEFEFE");
+            searchField.backgroundColor = [UIColor tui_colorWithHex:@"f9f9f9"];
         }
         
         [[UIBarButtonItem appearanceWhenContainedInInstancesOfClasses:@[[UISearchBar class]]] setTitle:TUIKitLocalizableString(Search)];
@@ -169,12 +182,12 @@
 {
     if (_tableView == nil) {
         _tableView = [[UITableView alloc] init];
-        _tableView.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"F3F4F5");
+        _tableView.backgroundColor = [UIColor whiteColor];
         _tableView.delegate = self;
         _tableView.dataSource = self;
-        [_tableView registerClass:TUIFindContactCell.class forCellReuseIdentifier:@"cell"];
+        [_tableView registerClass:TUIFindContactCell_Minimalist.class forCellReuseIdentifier:@"cell"];
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        _tableView.rowHeight = self.type == TUIFindContactTypeC2C ? 72 : 94;
+        _tableView.rowHeight = self.type == TUIFindContactTypeC2C_Minimalist ? kScale390(63) : kScale390(93);
     }
     return _tableView;
 }
@@ -190,21 +203,11 @@
     return _tipsLabel;
 }
 
-- (UILabel *)noDataTipsLabel
-{
-    if (_noDataTipsLabel == nil) {
-        _noDataTipsLabel = [[UILabel alloc] init];
-        _noDataTipsLabel.textColor = TUIContactDynamicColor(@"contact_add_contact_nodata_tips_text_color", @"#999999");
-        _noDataTipsLabel.font = [UIFont systemFontOfSize:14.0];
-        _noDataTipsLabel.textAlignment = NSTextAlignmentCenter;
-    }
-    return _noDataTipsLabel;
-}
 
-- (TUIFindContactViewDataProvider *)provider
+- (TUIFindContactViewDataProvider_Minimalist *)provider
 {
     if (_provider == nil) {
-        _provider = [[TUIFindContactViewDataProvider alloc] init];
+        _provider = [[TUIFindContactViewDataProvider_Minimalist alloc] init];
     }
     return _provider;
 }

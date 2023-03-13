@@ -768,6 +768,7 @@
         data.onlineStatus   = TUIConversationOnlineStatusUnknown;
         data.isMarkAsUnread = [TUIConversationCellData isMarkedByUnReadType:conversation.markList];
         data.isMarkAsHide = [TUIConversationCellData isMarkedByHideType:conversation.markList];
+        data.isMarkAsFolded = [TUIConversationCellData isMarkedByFoldType:conversation.markList];
         data.lastMessage    = conversation.lastMessage;
         return data;
     }

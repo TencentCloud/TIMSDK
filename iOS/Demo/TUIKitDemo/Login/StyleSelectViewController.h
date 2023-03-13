@@ -10,6 +10,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#define kTUIKitFirstInitAppStyleID @"Classic";  // Classic / Minimalist
+
 @class StyleSelectCellModel;
 typedef void(^StyleSelectCallback)(StyleSelectCellModel *);
 

@@ -7,16 +7,31 @@
 //
 
 #import "CallingLocalized.h"
+#import "TUICore/TUIGlobalization.h"
 
 #pragma mark - Base
 
 NSBundle *TUICallingBundle(void) {
-    NSURL *callingKitBundleURL = [[NSBundle mainBundle] URLForResource:@"TUICallingKitBundle" withExtension:@"bundle"];
-    return [NSBundle bundleWithURL:callingKitBundleURL];
+    static NSBundle *bundle = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSURL *bundleUrl = [[NSBundle mainBundle] URLForResource:@"TUICallingKitBundle" withExtension:@"bundle"];
+        if (!bundleUrl) {
+            bundleUrl = [[NSBundle mainBundle] URLForResource:@"Frameworks" withExtension:nil];
+            bundleUrl = [bundleUrl URLByAppendingPathComponent:@"TUICallKit"];
+            bundleUrl = [bundleUrl URLByAppendingPathExtension:@"framework"];
+            NSBundle *associateBundle = [NSBundle bundleWithURL:bundleUrl];
+            bundleUrl = [associateBundle URLForResource:@"TUICallingKitBundle" withExtension:@"bundle"];
+        }
+        bundle = [NSBundle bundleWithURL:bundleUrl];
+    });
+    return bundle;
 }
 
 NSString *TUICallingLocalizeFromTable(NSString *key, NSString *table) {
-    return [TUICallingBundle() localizedStringForKey:key value:@"" table:table];
+    NSString *bundlePath = [TUICallingBundle() pathForResource:[TUIGlobalization tk_localizableLanguageKey] ?: @"" ofType:@"lproj"];
+    NSBundle *bundle = [NSBundle bundleWithPath:bundlePath];
+    return [bundle localizedStringForKey:key value:@"" table:table];
 }
 
 NSString *TUICallingLocalizeFromTableAndCommon(NSString *key, NSString *common, NSString *table) {

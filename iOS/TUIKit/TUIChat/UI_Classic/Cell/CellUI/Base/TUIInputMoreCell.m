@@ -36,6 +36,7 @@
 {
     //set data
     _data = data;
+    self.hidden = (data == nil)?YES:NO;
     _image.image = data.image;
     [_title setText:data.title];
     //update layout

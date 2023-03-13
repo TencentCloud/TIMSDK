@@ -26,7 +26,7 @@
 
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    self.view.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
+    self.view.backgroundColor = [UIColor whiteColor];
 
     UILabel *titleLabel = [[UILabel alloc] init];
     titleLabel.text = TUIKitLocalizableString(TUIKitContactsBlackList);
@@ -37,7 +37,7 @@
     self.tableView.delaysContentTouches = NO;
 
     if (!self.viewModel) {
-        self.viewModel = TUIBlackListViewDataProvider.new;
+        self.viewModel = TUIBlackListViewDataProvider_Minimalist.new;
         @weakify(self)
         [RACObserve(self.viewModel, isLoadFinished) subscribeNext:^(id finished) {
             @strongify(self)
@@ -47,10 +47,11 @@
         [self.viewModel loadBlackList];
     }
 
-    [self.tableView registerClass:[TUICommonContactCell class] forCellReuseIdentifier:@"FriendCell"];
+    [self.tableView registerClass:[TUICommonContactCell_Minimalist class] forCellReuseIdentifier:@"FriendCell"];
     self.tableView.tableFooterView = [UIView new];
     self.tableView.backgroundColor = self.view.backgroundColor;
-    
+    [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+
     [[V2TIMManager sharedInstance] addFriendListener:self];
     
     [self.tableView addSubview:self.noDataTipsLabel];
@@ -81,9 +82,10 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    TUICommonContactCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FriendCell" forIndexPath:indexPath];
-    TUICommonContactCellData *data = self.viewModel.blackListData[indexPath.row];
+    TUICommonContactCell_Minimalist *cell = [tableView dequeueReusableCellWithIdentifier:@"FriendCell" forIndexPath:indexPath];
+    TUICommonContactCellData_Minimalist *data = self.viewModel.blackListData[indexPath.row];
     data.cselector = @selector(didSelectBlackList:);
+    cell.separtorView.hidden = YES;
     [cell fillWithData:data];
     return cell;
 }
@@ -93,7 +95,7 @@
     return 56;
 }
 
--(void)didSelectBlackList:(TUICommonContactCell *)cell
+-(void)didSelectBlackList:(TUICommonContactCell_Minimalist *)cell
 {
     if (self.didSelectCellBlock) {
         self.didSelectCellBlock(cell);

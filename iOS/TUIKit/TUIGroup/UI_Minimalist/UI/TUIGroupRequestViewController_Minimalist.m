@@ -7,12 +7,15 @@
 //
 #import "TUIGroupRequestViewController_Minimalist.h"
 #import "TUICommonModel.h"
+#import "TUIProfileCardCell_Minimalist.h"
 #import "TUIDefine.h"
+#import "TUIGroupButtonCell_Minimalist.h"
+
 
 @interface TUIGroupRequestViewController_Minimalist ()<UITableViewDataSource, UITableViewDelegate, TUIProfileCardDelegate>
 @property UITableView *tableView;
 @property UITextView  *addMsgTextView;
-@property TUIProfileCardCellData *cardCellData;
+@property TUIProfileCardCellData_Minimalist *cardCellData;
 @end
 
 @implementation TUIGroupRequestViewController_Minimalist
@@ -24,17 +27,32 @@
     self.tableView.mm_fill();
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-
+    self.tableView.backgroundColor = [UIColor whiteColor];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    
     self.addMsgTextView = [[UITextView alloc] initWithFrame:CGRectZero];
     self.addMsgTextView.font = [UIFont systemFontOfSize:14];
+    self.addMsgTextView.backgroundColor = [UIColor tui_colorWithHex:@"f9f9f9"];
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    paragraphStyle.lineSpacing = 5;
+    paragraphStyle.firstLineHeadIndent = kScale390(12.5);
+    paragraphStyle.alignment = NSTextAlignmentLeft;
+    NSDictionary *attributes = @{
+                   NSFontAttributeName:[UIFont systemFontOfSize:kScale390(16)],
+                   NSParagraphStyleAttributeName:paragraphStyle
+                   };
     NSString *loginUser = [[V2TIMManager sharedInstance] getLoginUser];
     [[V2TIMManager sharedInstance] getUsersInfo:@[loginUser] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
-        self.addMsgTextView.text = [NSString stringWithFormat:TUIKitLocalizableString(GroupRequestJoinGroupFormat), [[infoList firstObject] showName]];
+        NSString *text = [NSString stringWithFormat:TUIKitLocalizableString(GroupRequestJoinGroupFormat), [[infoList firstObject] showName]];
+        self.addMsgTextView.attributedText = [[NSAttributedString alloc] initWithString:text attributes:attributes];
     } fail:^(int code, NSString *msg) {
     }];
-    TUIProfileCardCellData *data = [TUIProfileCardCellData new];
+    
+    TUIProfileCardCellData_Minimalist *data = [TUIProfileCardCellData_Minimalist new];
     data.name = self.groupInfo.groupName;
     data.identifier = self.groupInfo.groupID;
+    data.signature = [NSString stringWithFormat:@"%@: %@",TUIKitLocalizableString(TUIKitCreatGroupType),self.groupInfo.groupType];
+    data.showSignature  = YES;
     data.avatarImage = DefaultGroupAvatarImageByGroupType(self.groupInfo.groupType);
     data.avatarUrl = [NSURL URLWithString:self.groupInfo.faceURL];
     self.cardCellData = data;
@@ -56,10 +74,10 @@
         return [self.cardCellData heightOfWidth:Screen_Width];
     }
     if (indexPath.section == 1) {
-        return 120;
+        return kScale390(123);
     }
     if (indexPath.section == 2) {
-        return 54;
+        return kScale390(42);
     }
     return 0.;
 }
@@ -77,10 +95,10 @@
     
     UILabel *label = [[UILabel alloc] init];
     label.text = TUIKitLocalizableString(please_fill_in_verification_information);
-    label.textColor = [UIColor colorWithRed:136/255.0 green:136/255.0 blue:136/255.0 alpha:1/1.0];
+    label.textColor = [UIColor tui_colorWithHex:@"000000"];
     label.font = [UIFont systemFontOfSize:14.0];
     
-    label.frame = CGRectMake(10, 0, self.tableView.bounds.size.width - 20, 40);
+    label.frame = CGRectMake(kScale390(16), kScale390(12), self.tableView.bounds.size.width - 20, kScale390(28));
     [view addSubview:label];
     
     return section == 1 ? view : nil;
@@ -93,11 +111,14 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
+    if (section == 0) {
+        return kScale390(10);
+    }
     if (section == 1) {
-        return 40;
+        return kScale390(40);
     }
     if (section == 2) {
-        return 10;
+        return kScale390(20);
     }
     
     return 0;
@@ -115,7 +136,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 0) {
-        TUIProfileCardCell *cell = [[TUIProfileCardCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"TPersonalCommonCell_ReuseId"];
+        TUIProfileCardCell_Minimalist *cell = [[TUIProfileCardCell_Minimalist alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"TPersonalCommonCell_ReuseId"];
         cell.delegate = self;
         [cell fillWithData:self.cardCellData];
         return cell;
@@ -123,16 +144,16 @@
     if (indexPath.section == 1) {
         UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AddWord"];
         [cell.contentView addSubview:self.addMsgTextView];
-        self.addMsgTextView.mm_width(Screen_Width).mm_height(120);
+        self.addMsgTextView.mm_width(Screen_Width).mm_height(kScale390(123));
         return cell;
     }
     if (indexPath.section == 2) {
-        TUIButtonCell *cell = [[TUIButtonCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"send"];
-        TUIButtonCellData *cellData = [[TUIButtonCellData alloc] init];
+        TUIGroupButtonCell_Minimalist *cell = [[TUIGroupButtonCell_Minimalist alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"send"];
+        TUIGroupButtonCellData_Minimalist *cellData = [[TUIGroupButtonCellData_Minimalist alloc] init];
         cellData.title = TUIKitLocalizableString(Send);
-        cellData.style = ButtonWhite;
+        cellData.style = ButtonBule;
         cellData.cselector = @selector(onSend);
-        cellData.textColor = [UIColor colorWithRed:20/255.0 green:122/255.0 blue:255/255.0 alpha:1/1.0];
+        cellData.textColor = [UIColor tui_colorWithHex:@"#147AFF"];
         [cell fillWithData:cellData];
         return cell;
     }
@@ -151,22 +172,54 @@
     [TUITool makeToastActivity];
     [[V2TIMManager sharedInstance] joinGroup:self.groupInfo.groupID msg:self.addMsgTextView.text succ:^{
         [TUITool hideToastActivity];
-        [TUITool makeToast:TUIKitLocalizableString(send_success)
-                 duration:3.0
-                 idposition:TUICSToastPositionBottom];
+        [self showHud:YES msgText:TUIKitLocalizableString(send_success)];
     } fail:^(int code, NSString *desc) {
         [TUITool hideToastActivity];
-        [TUITool makeToastError:code msg:desc];
+        NSString *msg = [TUITool convertIMError:code msg:desc];
+        [self showHud:NO msgText:msg];
         if (code == ERR_SDK_INTERFACE_NOT_SUPPORT) {
             [TUITool postUnsupportNotificationOfService:TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceCommunity) serviceDesc:TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceCommunityDesc) debugOnly:YES];
         }
     }];
 }
 
--(void)didTapOnAvatar:(TUIProfileCardCell *)cell{
+
+- (void)didTapOnAvatar:(TUIProfileCardCell_Minimalist *)cell{
     TUIAvatarViewController *image = [[TUIAvatarViewController alloc] init];
     image.avatarData = cell.cardData;
     [self.navigationController pushViewController:image animated:YES];
 }
+- (void)showHud:(BOOL)isSuccess msgText:(NSString *)msgText{
+    
+    UIView * hudView = [[UIView alloc] init];
+    hudView.frame = CGRectMake(0, 0, Screen_Width, Screen_Height);
+    hudView.backgroundColor = [UIColor tui_colorWithHex:@"#000000" alpha:0.6];
+    
+    UIView *msgView = [[UIView alloc] init];
+    [hudView addSubview:msgView];
+    msgView.layer.masksToBounds = YES;
+    msgView.layer.cornerRadius = kScale390(10);
+    msgView.backgroundColor =  [UIColor tui_colorWithHex:@"FFFFFF"];
+    
+    UIImageView *icon = [[UIImageView alloc] init];
+    [msgView addSubview:icon];
+    icon.image = isSuccess?[UIImage imageNamed:TUIContactImagePath_Minimalist(@"contact_add_success")]:[UIImage imageNamed:TUIContactImagePath_Minimalist(@"contact_add_failed")];
+    
+    UILabel *descLabel = [[UILabel alloc] init];
+    [msgView addSubview:descLabel];
+    descLabel.font = [UIFont systemFontOfSize:kScale390(14)];
+    descLabel.text = msgText;
+    [descLabel sizeToFit];
+    
+    icon.frame = CGRectMake(kScale390(12), kScale390(10), kScale390(16), kScale390(16));
+    descLabel.frame = CGRectMake(icon.frame.origin.x + icon.frame.size.width +kScale390(8), kScale390(8), descLabel.frame.size.width, kScale390(20));
+    msgView.frame = CGRectMake(0, 0, descLabel.frame.origin.x + descLabel.frame.size.width + kScale390(12) , kScale390(36));
+    msgView.mm__centerX(hudView.mm_centerX);
+    msgView.mm__centerY(hudView.mm_centerY);
 
+    
+    [[UIApplication sharedApplication].keyWindow showToast:hudView duration:3.0 position:TUICSToastPositionCenter completion:^(BOOL didTap) {
+        
+    }];
+}
 @end

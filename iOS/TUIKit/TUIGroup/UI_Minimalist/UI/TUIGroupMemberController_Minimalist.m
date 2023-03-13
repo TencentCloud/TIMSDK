@@ -17,6 +17,8 @@
 #import "TUIMemberInfoCell.h"
 #import "TUIMemberInfoCellData.h"
 #import "TUIThemeManager.h"
+#import "TUILogin.h"
+#import "TUISettingAdminDataProvider.h"
 
 @interface TUIGroupMemberController_Minimalist () </*TUIGroupMembersViewDelegate*/UITableViewDelegate, UITableViewDataSource, TUINotificationProtocol>
 @property(nonatomic,strong) UIActivityIndicatorView *indicatorView;
@@ -25,6 +27,7 @@
 @property(nonatomic, strong) TUIGroupMemberDataProvider *dataProvider;
 @property (nonatomic, strong) NSMutableArray<TUIMemberInfoCellData *> *members;
 @property NSInteger tag;
+@property (nonatomic,strong) TUISettingAdminDataProvider *adminDataprovier;
 @end
 
 @implementation TUIGroupMemberController_Minimalist
@@ -35,7 +38,13 @@
     
     self.dataProvider = [[TUIGroupMemberDataProvider alloc] initWithGroupID:self.groupId];
     self.dataProvider.groupInfo = self.groupInfo;
-    [self refreshData];
+
+    self.adminDataprovier = [[TUISettingAdminDataProvider alloc] init];
+    self.adminDataprovier.groupID = self.groupId;
+    
+    [self.adminDataprovier loadData:^(int code, NSString *error) {
+        [self refreshData];
+    }];
     
     [TUICore registerEvent:TUICore_TUIContactNotify subKey:TUICore_TUIContactNotify_SelectedContactsSubKey object:self];
 }
@@ -54,7 +63,7 @@
 
 - (void)setupViews
 {
-    self.view.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
+    self.view.backgroundColor = [UIColor whiteColor];
 
     //left
     UIImage *image = TUIGroupDynamicImage(@"group_nav_back_img", [UIImage imageNamed:TUIGroupImagePath(@"back")]);
@@ -63,13 +72,9 @@
     [leftButton setImage:image forState:UIControlStateNormal];
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
     UIBarButtonItem *spaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
-    spaceItem.width = -10.0f;
-    if (([[TUITool deviceVersion] floatValue] >= 11.0)) {
-        leftButton.contentEdgeInsets =UIEdgeInsetsMake(0, -15, 0, 0);
-        leftButton.imageEdgeInsets =UIEdgeInsetsMake(0, -15, 0, 0);
-    }
-    self.navigationItem.leftBarButtonItems = @[spaceItem,leftItem];
-    self.parentViewController.navigationItem.leftBarButtonItems = @[spaceItem,leftItem];
+    spaceItem.width = 10.0f;
+    self.navigationItem.leftBarButtonItems = @[leftItem];
+    self.parentViewController.navigationItem.leftBarButtonItems = @[leftItem];
 
     //right
     UIButton *rightButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
@@ -78,9 +83,6 @@
     [rightButton setTitleColor:TUICoreDynamicColor(@"nav_title_text_color", @"#000000") forState:UIControlStateNormal];
     rightButton.titleLabel.font = [UIFont systemFontOfSize:16];
     UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
-    self.navigationItem.rightBarButtonItem = rightItem;
-    self.parentViewController.navigationItem.rightBarButtonItem = rightItem;
-    
     
     self.indicatorView.frame = CGRectMake(0, 0, self.view.bounds.size.width, TMessageController_Header_Height);
     
@@ -167,6 +169,20 @@
     }];
 }
 
+- (void)getUserOrFriendProfileVCWithUserID:(NSString *)userID
+                                 SuccBlock:(void(^)(UIViewController *vc))succ
+                                 failBlock:(nullable V2TIMFail)fail {
+    NSDictionary *param = @{
+        TUICore_TUIContactService_GetUserOrFriendProfileVCMethod_UserIDKey: userID ? : @"",
+        TUICore_TUIContactService_GetUserOrFriendProfileVCMethod_SuccKey: succ ? : ^(UIViewController *vc){},
+        TUICore_TUIContactService_GetUserOrFriendProfileVCMethod_FailKey: fail ? : ^(int code, NSString * desc){}
+    };
+    [TUICore callService:TUICore_TUIContactService_Minimalist
+                  method:TUICore_TUIContactService_GetUserOrFriendProfileVCMethod
+                   param:param];
+}
+
+
 #pragma mark - UITableViewDelegate, UITableViewDataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -175,12 +191,97 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    TUIMemberInfoCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+    TUIMemberInfoCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TUIMemberInfoCell"];
     TUIMemberInfoCellData *data = self.members[indexPath.row];
+    data.showAccessory = YES;
     cell.data = data;
     cell.avatarImageView.layer.cornerRadius = cell.avatarImageView.mm_h / 2;
     cell.avatarImageView.layer.masksToBounds = YES;
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:NO];
+    TUIMemberInfoCellData *data = self.members[indexPath.row];
+    
+    if ([data.identifier isEqualToString:TUILogin.getUserID]) {
+        //Can't manage yourself
+        return;
+    }
+    
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    __weak typeof(self)weakSelf = self;
+    
+    UIAlertAction *actionInfo = [UIAlertAction actionWithTitle:TUIKitLocalizableString(Info) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        __strong typeof(weakSelf)strongSelf = weakSelf;
+        [self getUserOrFriendProfileVCWithUserID:data.identifier SuccBlock:^(UIViewController *vc) {
+            [strongSelf.navigationController pushViewController:vc animated:YES];
+        } failBlock:^(int code, NSString *desc) {
+            
+        }];
+    }];
+    
+    UIAlertAction *actionDelete = [UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitGroupProfileManageDelete) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        // delete
+        NSMutableArray *list = @[].mutableCopy;
+        [list addObject:data.identifier];
+        [weakSelf deleteGroupId:weakSelf.groupId memebers:list];
+        
+    }];
+    
+    UIAlertAction *actionAddAdmin = [UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitGroupProfileAdmainAdd) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        
+        TUIUserModel *user = [[TUIUserModel alloc] init];
+        user.userId = data.identifier;
+        [self.adminDataprovier  settingAdmins:@[user] callback:^(int code, NSString *errorMsg) {
+            if (code != 0) {
+                [weakSelf.view makeToast:errorMsg];
+            }
+            else {
+                data.role = V2TIM_GROUP_MEMBER_ROLE_ADMIN;
+            }
+            [weakSelf.tableView reloadData];
+        }];
+        
+    }];
+    UIAlertAction *actionRemoveAdmin = [UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitGroupProfileAdmainDelete) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        
+        TUIUserModel *user = [[TUIUserModel alloc] init];
+        user.userId = data.identifier;
+        [self.adminDataprovier removeAdmin:data.identifier callback:^(int code, NSString *errorMsg) {
+            if (code != 0) {
+                [weakSelf.view makeToast:errorMsg];
+            }
+            else {
+                data.role = V2TIM_GROUP_MEMBER_ROLE_MEMBER;
+            }
+            [weakSelf.tableView reloadData];
+        }];;
+        
+    }];
+    
+    
+    [ac tuitheme_addAction: actionInfo];
+    
+    if( ([self.dataProvider.groupInfo canSupportSetAdmain])) {
+        if (data.role == V2TIM_GROUP_MEMBER_ROLE_MEMBER || data.role == V2TIM_GROUP_MEMBER_UNDEFINED) {
+            [ac tuitheme_addAction: actionAddAdmin];
+        }
+        else {
+            [ac tuitheme_addAction: actionRemoveAdmin];
+        }
+    }
+    
+    if([self.dataProvider.groupInfo canRemoveMember]) {
+        if ((data.role < self.dataProvider.groupInfo.role )) {
+            [ac tuitheme_addAction: actionDelete];
+        }
+    }
+
+    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:nil]];
+    
+    [self presentViewController:ac animated:YES completion:nil];
+    
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
@@ -249,11 +350,11 @@
 {
     if (_tableView == nil) {
         _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
-        _tableView.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
+        _tableView.backgroundColor = [UIColor whiteColor];
         _tableView.delegate = self;
         _tableView.dataSource = self;
-        [_tableView registerClass:TUIMemberInfoCell.class forCellReuseIdentifier:@"cell"];
-        _tableView.rowHeight = 48.0;
+        [_tableView registerClass:TUIMemberInfoCell.class forCellReuseIdentifier:@"TUIMemberInfoCell"];
+        _tableView.rowHeight = kScale390(52);
     }
     return _tableView;
 }

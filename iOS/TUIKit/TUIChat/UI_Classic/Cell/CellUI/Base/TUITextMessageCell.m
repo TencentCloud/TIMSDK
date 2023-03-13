@@ -29,6 +29,15 @@
         self.translationView = [[TUITranslationView alloc] init];
         self.translationView.delegate = self;
         [self.contentView addSubview:self.translationView];
+        
+        self.voiceReadPoint = [[UIImageView alloc] init];
+        self.voiceReadPoint.backgroundColor = [UIColor redColor];
+        self.voiceReadPoint.frame = CGRectMake(0, 0, 5, 5);
+        self.voiceReadPoint.hidden = YES;
+        [self.voiceReadPoint.layer setCornerRadius:self.voiceReadPoint.frame.size.width/2];
+        [self.voiceReadPoint.layer setMasksToBounds:YES];
+        [self.bubbleView addSubview:self.voiceReadPoint];
+        
     }
     return self;
 }
@@ -53,6 +62,7 @@
     self.textView.attributedText = data.attributedString;
     self.textView.textColor = data.textColor;
     self.textView.font = data.textFont;
+    self.voiceReadPoint.hidden = !data.showUnreadPoint;
     
     [self.textData.translationViewData setMessage:data.innerMessage];
     [self refreshTranslationView];
@@ -75,6 +85,9 @@
 {
     [super layoutSubviews];
     self.textView.frame = (CGRect){.origin = self.textData.textOrigin, .size = self.textData.textSize};
+    if (self.voiceReadPoint.hidden == NO) {
+        self.voiceReadPoint.frame = CGRectMake(CGRectGetMaxX(self.bubbleView.frame), 0, 5, 5);
+    }
     
     [self layoutTranslationView];
 }

@@ -8,6 +8,7 @@
 #import "TUICore.h"
 #import "NSDictionary+TUISafe.h"
 #import "TUIThemeManager.h"
+#import "TUIChatConfig.h"
 
 #define Input_SendBtn_Key @"Input_SendBtn_Key"
 #define Input_SendBtn_Title @"Input_SendBtn_Title"
@@ -91,6 +92,24 @@ static NSArray *customInputBtnInfo = nil;
             [moreMenus addObject:audioCallMenusData];
         }
     }
+    
+    if (groupID.length > 0) {
+        NSDictionary *pollInfo = [TUICore getExtensionInfo:TUICore_TUIChatExtension_GetMoreCellInfo_Poll param:param];
+        if (pollInfo) {
+            TUIInputMoreCellData *pollMenuData = [TUIInputMoreCellData new];
+            pollMenuData.key = TUIInputMoreCellKey_Poll;
+            pollMenuData.extentionView = [pollInfo tui_objectForKey:TUICore_TUIChatExtension_GetMoreCellInfo_View asClass:UIView.class];
+            [moreMenus addObject:pollMenuData];
+        }
+        
+        NSDictionary *groupNoteInfo = [TUICore getExtensionInfo:TUICore_TUIChatExtension_GetMoreCellInfo_GroupNote param:param];
+        if (groupNoteInfo) {
+            TUIInputMoreCellData *groupNoteMenuData = [TUIInputMoreCellData new];
+            groupNoteMenuData.key = TUIInputMoreCellKey_GroupNote;
+            groupNoteMenuData.extentionView = [groupNoteInfo tui_objectForKey:TUICore_TUIChatExtension_GetMoreCellInfo_View asClass:UIView.class];
+            [moreMenus addObject:groupNoteMenuData];
+        }
+    }
 
     for (NSDictionary *buttonInfo in [self customInputBtnInfo]) {
         NSString *key = buttonInfo[Input_SendBtn_Key];
@@ -105,6 +124,7 @@ static NSArray *customInputBtnInfo = nil;
         linkMenusData.image = TUIChatBundleThemeImage(imageName, imageName);
         [moreMenus addObject:linkMenusData];
     }
+    
     return moreMenus;
 }
 

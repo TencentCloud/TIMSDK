@@ -15,10 +15,103 @@
 #define SHEET_AGREE  2
 #define SHEET_SEX    3
 
+
+typedef void(^TUIProfileClickback)(void);
+
+@interface ProfileControllerHeaderView_Minimalist : UIView
+@property (nonatomic, copy) void(^headImgClickBlock)(void);
+@property (nonatomic, copy) void(^editButtonClickBlock)(void);
+@property (nonatomic, strong) UIImageView *headImg;
+@property (nonatomic, strong) UIButton *editButton;
+@property (nonatomic, strong) UILabel *descriptionLabel;
+@end
+
+@implementation ProfileControllerHeaderView_Minimalist
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if(self) {
+        [self setupView];
+    }
+    return self;
+}
+
+- (void)setupView {
+    self.headImg = [[UIImageView alloc] initWithImage:DefaultAvatarImage];
+    [self addSubview:self.headImg];
+    self.headImg.userInteractionEnabled = YES;
+    self.headImg.contentMode = UIViewContentModeScaleAspectFit;
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(headImageClick)];
+    [self.headImg addGestureRecognizer:tap];
+
+    self.editButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [self addSubview: self.editButton];
+    [self.editButton setTitle:TUIKitLocalizableString(ProfileEdit) forState:UIControlStateNormal];
+    [self.editButton addTarget:self action:@selector(editButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    
+    self.descriptionLabel = [[UILabel alloc] init];
+    [self addSubview:self.descriptionLabel];
+    NSString *loginUser = [[V2TIMManager sharedInstance] getLoginUser];
+    self.descriptionLabel.text = loginUser;
+}
+
+- (void)applyData {
+    NSString *loginUser = [[V2TIMManager sharedInstance] getLoginUser];
+    if (loginUser.length > 0) {
+        @weakify(self)
+        [[V2TIMManager sharedInstance] getUsersInfo:@[loginUser] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
+            @strongify(self)
+            V2TIMUserFullInfo *profile = infoList.firstObject;
+            if (profile && profile.faceURL) {
+                [self.headImg sd_setImageWithURL:[NSURL URLWithString:profile.faceURL] placeholderImage:DefaultAvatarImage];
+            }
+        } fail:nil];
+    }
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    self.headImg.frame = CGRectMake((self.bounds.size.width - kScale390(94)) *0.5 , kScale390(42), kScale390(94), kScale390(94));
+    if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {
+        self.headImg.layer.masksToBounds = YES;
+        self.headImg.layer.cornerRadius = self.headImg.frame.size.height / 2.0;
+    } else if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRadiusCorner) {
+        self.headImg.layer.masksToBounds = YES;
+        self.headImg.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
+    }
+    [self.editButton.titleLabel sizeToFit];
+    self.editButton.frame = CGRectMake((self.bounds.size.width - self.editButton.titleLabel.frame.size.width) *0.5 ,
+                                       self.headImg.frame.origin.y + self.headImg.frame.size.height + kScale390(10) ,
+                                       self.editButton.titleLabel.frame.size.width,
+                                       self.editButton.titleLabel.frame.size.height);
+    
+    [self.descriptionLabel sizeToFit];
+    self.descriptionLabel.frame = CGRectMake((self.bounds.size.width - self.descriptionLabel.frame.size.width) *0.5 ,
+                                       self.editButton.frame.origin.y + self.editButton.frame.size.height + kScale390(10),
+                                       self.descriptionLabel.frame.size.width,
+                                       self.descriptionLabel.frame.size.height);
+    
+}
+
+//MARK: action
+- (void)headImageClick {
+    if (self.headImgClickBlock) {
+        self.headImgClickBlock();
+    }
+}
+- (void)editButtonClick {
+    if (self.editButtonClickBlock) {
+        self.editButtonClickBlock();
+    }
+}
+
+@end
 @interface TUIProfileController_Minimalist () <UIActionSheetDelegate, V2TIMSDKListener, TUIModifyViewDelegate>
 @property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
 @property (nonatomic, strong) NSMutableArray *data;
 @property V2TIMUserFullInfo *profile;
+@property (nonatomic, strong) ProfileControllerHeaderView_Minimalist *headerView;
 @property (nonatomic, weak) UIDatePicker *picker;
 @property (nonatomic, strong) UIView *datePicker;
 @end
@@ -48,7 +141,7 @@
     if (@available(iOS 15.0, *)) {
         self.tableView.sectionHeaderTopPadding = 0;
     }
-    self.tableView.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
+    self.tableView.backgroundColor = [UIColor whiteColor];
 
     [self.tableView registerClass:[TUICommonTextCell class] forCellReuseIdentifier:@"textCell"];
     [self.tableView registerClass:[TUICommonAvatarCell class] forCellReuseIdentifier:@"avatarCell"];
@@ -59,6 +152,11 @@
         self.profile = infoList.firstObject;
         [self setupData];
     } fail:nil];
+
+    self.headerView = [[ProfileControllerHeaderView_Minimalist alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, kScale390(240))];
+    
+    self.tableView.tableHeaderView = self.headerView;
+
 }
 
 - (void)setupData
@@ -66,24 +164,37 @@
 
     _data = [NSMutableArray array];
 
-    TUICommonAvatarCellData *avatarData = [TUICommonAvatarCellData new];
-    avatarData.key = TUIKitLocalizableString(ProfilePhoto);
-    avatarData.showAccessory = YES;
-    avatarData.cselector = @selector(didSelectAvatar);
-    avatarData.avatarUrl = [NSURL URLWithString:self.profile.faceURL];
-    [_data addObject:@[avatarData]];
+    [self.headerView.headImg sd_setImageWithURL:[NSURL URLWithString:self.profile.faceURL] placeholderImage:DefaultAvatarImage];
+    self.headerView.descriptionLabel.text = self.profile.showName;
+    @weakify(self)
+    self.headerView.headImgClickBlock = ^{
+        @strongify(self)
+        [self didSelectAvatar];
+    };
+    
+    self.headerView.editButtonClickBlock = ^{
+        @strongify(self)
+        [self didSelectChangeNick];
+    };
+    
+//    TUICommonAvatarCellData *avatarData = [TUICommonAvatarCellData new];
+//    avatarData.key = TUIKitLocalizableString(ProfilePhoto);
+//    avatarData.showAccessory = YES;
+//    avatarData.cselector = @selector(didSelectAvatar);
+//    avatarData.avatarUrl = [NSURL URLWithString:self.profile.faceURL];
+//    [_data addObject:@[avatarData]];
 
-    TUICommonTextCellData *nicknameData = [TUICommonTextCellData new];
-    nicknameData.key = TUIKitLocalizableString(ProfileName);
-    nicknameData.value = self.profile.showName;
-    nicknameData.showAccessory = YES;
-    nicknameData.cselector = @selector(didSelectChangeNick);
+//    TUICommonTextCellData *nicknameData = [TUICommonTextCellData new];
+//    nicknameData.key = TUIKitLocalizableString(ProfileName);
+//    nicknameData.value = self.profile.showName;
+//    nicknameData.showAccessory = YES;
+//    nicknameData.cselector = @selector(didSelectChangeNick);
 
     TUICommonTextCellData *IDData = [TUICommonTextCellData new];
     IDData.key = TUIKitLocalizableString(ProfileAccount);
     IDData.value = [NSString stringWithFormat:@"%@      ", self.profile.userID];
     IDData.showAccessory = NO;
-    [_data addObject:@[nicknameData, IDData]];
+    [_data addObject:@[IDData]];
 
     TUICommonTextCellData *signatureData = [TUICommonTextCellData new];
     signatureData.key = TUIKitLocalizableString(ProfileSignature);
@@ -111,7 +222,8 @@
 
     [_data addObject:@[signatureData, sexData, birthdayData]];
 
-
+    [self.headerView setNeedsLayout];
+    
     [self.tableView reloadData];
 }
 
@@ -132,12 +244,18 @@
 {
     UIView *view = [[UIView alloc] init];
     view.backgroundColor = [UIColor clearColor];
+    UIView *line = [[UIView alloc] init];
+    if(section != 0 ) {
+        line.backgroundColor = TUIDemoDynamicColor(@"separator_color", @"#DBDBDB");;
+        line.frame = CGRectMake(kScale390(16), view.frame.size.height - 0.5, Screen_Width - kScale390(16), 0.5);
+        [view addSubview:line];
+    }
     return view;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return section == 0 ? 0 : 10;
+    return section == 0 ? 0 : kScale390(20);
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {

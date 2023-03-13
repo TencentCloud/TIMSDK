@@ -36,6 +36,7 @@
         for (V2TIMGroupMemberFullInfo *member in memberList) {
             TUIMemberInfoCellData *user = [[TUIMemberInfoCellData alloc] init];
             user.identifier = member.userID;
+            user.role = member.role;
             if (member.nameCard.length > 0) {
                 user.name = member.nameCard;
             } else if (member.friendRemark.length > 0) {

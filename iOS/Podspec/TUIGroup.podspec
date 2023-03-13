@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUIGroup'
-  spec.version      = '7.0.3754'
+  spec.version      = '7.1.3925'
   spec.platform     = :ios 
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
@@ -16,13 +16,15 @@ Pod::Spec.new do |spec|
 
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/7.0.3754/ios/TUIGroup.zip?time=2'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/7.1.3925/ios/TUIGroup.zip?time=2'}
 
   spec.default_subspec = 'ALL'
 
   spec.subspec 'CommonModel' do |commonModel|
     commonModel.source_files = '**/TUIGroup/CommonModel/*.{h,m,mm}'
-    commonModel.dependency 'TUICore','7.0.3754'
+    commonModel.dependency 'TXIMSDK_Plus_iOS','7.1.3925'
+    commonModel.dependency 'TUICore','7.1.3925'
+    commonModel.dependency 'ReactiveObjC'
   end
 
   spec.subspec 'BaseCell' do |baseCell|
@@ -65,9 +67,23 @@ Pod::Spec.new do |spec|
   end
 
   spec.subspec 'UI_Minimalist' do |uiMinimalist|
+    uiMinimalist.subspec 'Cell' do |cell|
+        cell.subspec 'CellData' do |cellData|
+        cellData.source_files = '**/TUIGroup/UI_Minimalist/Cell/CellData/*.{h,m,mm}'
+        cellData.dependency "TUIGroup/CommonUI"
+        end
+        cell.subspec 'CellUI' do |cellUI|
+        cellUI.source_files = '**/TUIGroup/UI_Minimalist/Cell/CellUI/*.{h,m,mm}'
+        cellUI.dependency "TUIGroup/UI_Minimalist/Cell/CellData"
+        end
+    end
+    uiMinimalist.subspec 'DataProvider' do |dataProvider|
+      dataProvider.source_files = '**/TUIGroup/UI_Minimalist/DataProvider/*.{h,m,mm}'
+      dataProvider.dependency "TUIGroup/UI_Minimalist/Cell"
+    end
     uiMinimalist.subspec 'UI' do |ui|
       ui.source_files = '**/TUIGroup/UI_Minimalist/UI/*.{h,m,mm}'
-      ui.dependency "TUIGroup/CommonUI"
+      ui.dependency "TUIGroup/UI_Minimalist/DataProvider"
     end
     uiMinimalist.subspec 'Service' do |service|
       service.source_files = '**/TUIGroup/UI_Minimalist/Service/*.{h,m,mm}'

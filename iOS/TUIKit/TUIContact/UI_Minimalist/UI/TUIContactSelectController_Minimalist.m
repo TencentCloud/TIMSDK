@@ -7,19 +7,80 @@
 
 #import "TUIContactSelectController_Minimalist.h"
 #import "TUICommonContactSelectCell.h"
-#import "TUIContactSelectViewDataProvider.h"
+#import "TUICommonContactSelectCell_Minimalist.h"
+#import "TUIContactSelectViewDataProvider_Minimalist.h"
 #import "TUICore.h"
 #import "TUIDefine.h"
 #import "TUIThemeManager.h"
+#import "TUIContactUserPanelHeaderView_Minimalist.h"
 
-static NSString *kReuseIdentifier = @"ContactSelectCell";
+
+@interface TUIContactSelectControllerHeaderView_Minimalist : UIView
+
+@property (nonatomic, strong) UIImageView *avatarImageView;
+
+@property (nonatomic, strong) UILabel *nameLabel;
+
+@end
+
+@implementation TUIContactSelectControllerHeaderView_Minimalist
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self setupViews];
+    }
+    return self;
+    
+}
+- (void)setupViews
+{
+    [self addSubview:self.avatarImageView];
+    [self addSubview:self.nameLabel];
+    self.avatarImageView.image = [UIImage imageNamed:TUIContactImagePath_Minimalist(@"contact_info_add_icon")];
+    self.nameLabel.text = @"";
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    [self updateUI];
+}
+- (void)updateUI
+{
+    self.avatarImageView.mm_width(kScale390(20)).mm_height(kScale390(20));
+    self.avatarImageView.mm_left(kScale390(18));
+    self.nameLabel.font = [UIFont systemFontOfSize:kScale390(16)];
+    self.nameLabel.textColor = [UIColor tui_colorWithHex:@"#147AFF"];
+    self.avatarImageView.mm_centerY = self.mm_centerY;
+    self.nameLabel.mm_height(self.mm_h).mm_left(CGRectGetMaxX(self.avatarImageView.frame) + 14).mm_flexToRight(kScale390(16));
+}
+
+- (UIImageView *)avatarImageView
+{
+    if (_avatarImageView == nil) {
+        _avatarImageView = [[UIImageView alloc] init];
+    }
+    return _avatarImageView;
+}
+
+- (UILabel *)nameLabel
+{
+    if (_nameLabel == nil) {
+        _nameLabel = [[UILabel alloc] init];
+        _nameLabel.font = [UIFont systemFontOfSize:kScale390(18)];
+    }
+    return _nameLabel;
+}
+@end
 
 @interface TUIContactSelectController_Minimalist ()<UITableViewDelegate,UITableViewDataSource>
 
 @property UITableView *tableView;
 @property UIView *emptyView;
-@property TUIContactListPicker *pickerView;
 @property NSMutableArray<TUICommonContactSelectCellData *> *selectArray;
+@property (nonatomic,strong) TUIContactSelectControllerHeaderView_Minimalist *addNewGroupHeaderView;
+@property (nonatomic,strong) TUIContactUserPanelHeaderView_Minimalist *userPanelHeaderView;
+@property (nonatomic, copy) void(^floatDataSourceChanged)(NSArray *arr);
 
 @end
 
@@ -51,26 +112,33 @@ static NSString *kReuseIdentifier = @"ContactSelectCell";
 {
     self.maxSelectCount = 0;
     self.selectArray = @[].mutableCopy;
-    self.viewModel = [TUIContactSelectViewDataProvider new];
+    self.viewModel = [TUIContactSelectViewDataProvider_Minimalist new];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    self.view.backgroundColor =  TUICoreDynamicColor(@"controller_bg_color", @"#F3F5F9");
+    
+    self.view.backgroundColor =  [UIColor whiteColor];
     self.navigationController.interactivePopGestureRecognizer.enabled = YES;
-
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:TUIKitLocalizableString(Done)
+                                                                              style:UIBarButtonItemStylePlain
+                                                                             target:self
+                                                                             action:@selector(finishTask)];
+    
     _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+    
     [self.view addSubview:_tableView];
     _tableView.delegate = self;
     _tableView.dataSource = self;
     [_tableView setSectionIndexBackgroundColor:[UIColor clearColor]];
-    [_tableView setSectionIndexColor:[UIColor darkGrayColor]];
+    [_tableView setSectionIndexColor:[UIColor systemBlueColor]];
     [_tableView setBackgroundColor:self.view.backgroundColor];
+    [_tableView setSeparatorInset:UIEdgeInsetsMake(0, 0, 0, 0)];
+    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    
     UIView *v = [[UIView alloc] initWithFrame:CGRectZero];
     [_tableView setTableFooterView:v];
-    _tableView.separatorInset = UIEdgeInsetsMake(0, 58, 0, 0);
-    [_tableView registerClass:[TUICommonContactSelectCell class] forCellReuseIdentifier:kReuseIdentifier];
+    [_tableView registerClass:[TUICommonContactSelectCell_Minimalist class] forCellReuseIdentifier:@"TUICommonContactSelectCell_Minimalist"];
     if (@available(iOS 15.0, *)) {
         _tableView.sectionHeaderTopPadding = 0;
     }
@@ -78,26 +146,25 @@ static NSString *kReuseIdentifier = @"ContactSelectCell";
     [self.view addSubview:_emptyView];
     _emptyView.mm_fill();
     _emptyView.hidden = YES;
-
+    
     UILabel *tipsLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     [_emptyView addSubview:tipsLabel];
     tipsLabel.text = TUIKitLocalizableString(TUIKitTipsContactListNil);
     tipsLabel.mm_sizeToFit().mm_center();
-
-
-    _pickerView = [[TUIContactListPicker alloc] initWithFrame:CGRectZero];
-    [_pickerView setBackgroundColor:[UIColor groupTableViewBackgroundColor]];
-    [self.view addSubview:_pickerView];
-    [_pickerView.accessoryBtn addTarget:self action:@selector(finishTask) forControlEvents:UIControlEventTouchUpInside];
-
+    
+    _addNewGroupHeaderView = [[TUIContactSelectControllerHeaderView_Minimalist alloc] init];
+    _addNewGroupHeaderView.nameLabel.text = TUIKitLocalizableString(TUIKitRelayTargetCreateNewGroup);
+    _addNewGroupHeaderView.nameLabel.font = [UIFont systemFontOfSize:15.0];
+    [_addNewGroupHeaderView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onCreateSessionOrSelectContact)]];
+    _tableView.tableHeaderView = _addNewGroupHeaderView;
+    
     [self setupBinds];
     if (self.sourceIds) {
         [self.viewModel setSourceIds:self.sourceIds displayNames:self.displayNames];
     } else {
         [self.viewModel loadContacts];
     }
-
-    self.view.backgroundColor = RGB(42,42,40);
+    
     self.navigationItem.title = self.title;
 }
 
@@ -119,8 +186,15 @@ static NSString *kReuseIdentifier = @"ContactSelectCell";
 - (void)viewDidLayoutSubviews
 {
     [super viewDidLayoutSubviews];
-    _pickerView.mm_width(self.view.mm_w).mm_height(60+_pickerView.mm_safeAreaBottomGap).mm_bottom(0);
-    _tableView.mm_width(self.view.mm_w).mm_flexToBottom(_pickerView.mm_h);
+    _tableView.mm_width(self.view.mm_w).mm_flexToBottom(0);
+    if (self.maxSelectCount == 1) {
+        self.addNewGroupHeaderView.frame =  CGRectMake(0, 0, self.view.bounds.size.width, 55);
+        self.addNewGroupHeaderView.hidden = NO;
+    }
+    else {
+        self.addNewGroupHeaderView.frame =  CGRectZero;
+        self.addNewGroupHeaderView.hidden = YES;
+    }
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;
@@ -145,15 +219,17 @@ static NSString *kReuseIdentifier = @"ContactSelectCell";
         headerView = [[UITableViewHeaderFooterView alloc] initWithReuseIdentifier:headerViewId];
         UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         textLabel.tag = TEXT_TAG;
-        textLabel.font = [UIFont systemFontOfSize:16];
-        textLabel.textColor = RGB(0x80, 0x80, 0x80);
+        textLabel.font = [UIFont boldSystemFontOfSize:16];
+        textLabel.textColor = [UIColor tui_colorWithHex:@"#000000"];
         [headerView addSubview:textLabel];
         textLabel.mm_fill().mm_left(12);
         textLabel.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     }
     UILabel *label = [headerView viewWithTag:TEXT_TAG];
     label.text = self.viewModel.groupList[section];
-
+    headerView.backgroundColor = [UIColor whiteColor];
+    headerView.contentView.backgroundColor = [UIColor whiteColor];
+    
     return headerView;
 }
 
@@ -178,8 +254,8 @@ static NSString *kReuseIdentifier = @"ContactSelectCell";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    TUICommonContactSelectCell *cell = [tableView dequeueReusableCellWithIdentifier:kReuseIdentifier forIndexPath:indexPath];
-
+    TUICommonContactSelectCell_Minimalist *cell = [tableView dequeueReusableCellWithIdentifier:@"TUICommonContactSelectCell_Minimalist" forIndexPath:indexPath];
+    
     NSString *group = self.viewModel.groupList[indexPath.section];
     NSArray *list = self.viewModel.dataDict[group];
     TUICommonContactSelectCellData *data = list[indexPath.row];
@@ -188,7 +264,12 @@ static NSString *kReuseIdentifier = @"ContactSelectCell";
     } else {
         data.cselector = NULL;
     }
+    if (self.maxSelectCount == 1) {
+        cell.selectButton.hidden = YES;
+    }
+    
     [cell fillWithData:data];
+    
     return cell;
 }
 
@@ -208,8 +289,57 @@ static NSString *kReuseIdentifier = @"ContactSelectCell";
     } else {
         [self.selectArray removeObject:data];
     }
-    self.pickerView.selectArray = [self.selectArray copy];
+    if(self.floatDataSourceChanged) {
+        self.floatDataSourceChanged(self.selectArray);
+    }
+    
+    if (self.maxSelectCount != 1 ) {
+        if (self.selectArray.count > 0) {
+            self.userPanelHeaderView.hidden = NO;
+            self.userPanelHeaderView.frame = CGRectMake(0, kScale390(22), self.view.bounds.size.width, kScale390(62));
+            self.userPanelHeaderView.selectedUsers = self.selectArray;
+            @weakify(self)
+            self.userPanelHeaderView.clickCallback = ^{
+                @strongify(self)
+                self.selectArray = self.userPanelHeaderView.selectedUsers;
+                if(self.floatDataSourceChanged) {
+                    self.floatDataSourceChanged(self.selectArray);
+                }
+                [self.userPanelHeaderView.userPanel reloadData];
+                [self.tableView reloadData];
+                if (self.selectArray.count == 0) {
+                    [self hidePanelHeaderViewWhenUserSelectCountZero];
+                }
+            };
+            self.tableView.tableHeaderView = self.userPanelHeaderView;
+            self.tableView.tableHeaderView.userInteractionEnabled = YES;
+            [self.userPanelHeaderView.userPanel reloadData];
+        }
+        else {
+            [self hidePanelHeaderViewWhenUserSelectCountZero];
+        }
+    }
+    else {
+        [self finishTask];
+        [self dismissViewControllerAnimated:YES completion:^{}];
+    }
+
 }
+- (void)hidePanelHeaderViewWhenUserSelectCountZero {
+    self.userPanelHeaderView.hidden = YES;
+    self.userPanelHeaderView.frame = CGRectZero;
+    self.tableView.tableHeaderView = self.userPanelHeaderView;
+    
+}
+
+- (void)onCreateSessionOrSelectContact
+{
+    [self dismissViewControllerAnimated:YES completion:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"kTUIConversationCreatGroupNotification" object:nil];
+    }];
+    
+}
+
 
 - (void)finishTask
 {
@@ -217,12 +347,29 @@ static NSString *kReuseIdentifier = @"ContactSelectCell";
                   subKey:TUICore_TUIContactNotify_SelectedContactsSubKey
                   object:self
                    param:@{
-                       TUICore_TUIContactNotify_SelectedContactsSubKey_ListKey : self.selectArray,
-                   }];
+        TUICore_TUIContactNotify_SelectedContactsSubKey_ListKey : self.selectArray,
+    }];
     
     if (self.finishBlock) {
         self.finishBlock(self.selectArray);
     }
 }
 
+
+- (TUIContactUserPanelHeaderView_Minimalist *)userPanelHeaderView {
+    if(!_userPanelHeaderView) {
+        _userPanelHeaderView = [[TUIContactUserPanelHeaderView_Minimalist alloc] init];
+    }
+    return _userPanelHeaderView;
+}
+
+#pragma mark - TUIChatFloatSubViewControllerProtocol
+- (void)floatControllerLeftButtonClick {
+    [self dismissViewControllerAnimated:YES completion:^{}];
+}
+
+- (void)floatControllerRightButtonClick {
+    [self finishTask];
+    [self dismissViewControllerAnimated:YES completion:^{}];
+}
 @end

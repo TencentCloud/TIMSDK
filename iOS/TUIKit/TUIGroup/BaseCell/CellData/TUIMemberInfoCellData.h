@@ -21,6 +21,8 @@ typedef NS_ENUM(NSInteger, TUIMemberInfoCellStyle) {
 @property (nonatomic, copy) NSString *avatarUrl;
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, assign) TUIMemberInfoCellStyle style;
+@property (nonatomic, assign) NSInteger role;
+@property (nonatomic, assign) BOOL showAccessory;
 
 @end
 

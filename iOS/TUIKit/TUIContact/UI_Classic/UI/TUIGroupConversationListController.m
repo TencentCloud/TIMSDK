@@ -148,7 +148,8 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
     }
     UILabel *label = [headerView viewWithTag:TEXT_TAG];
     label.text = self.viewModel.groupList[section];
-
+    headerView.backgroundColor = [UIColor whiteColor];
+    headerView.contentView.backgroundColor = [UIColor whiteColor];
     return headerView;
 }
 

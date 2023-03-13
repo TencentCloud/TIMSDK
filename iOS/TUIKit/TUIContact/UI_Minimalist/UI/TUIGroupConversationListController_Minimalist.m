@@ -31,9 +31,7 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
     [titleLabel sizeToFit];
 
     self.navigationItem.titleView = titleLabel;
-    
-
-    self.view.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
+    self.view.backgroundColor = [UIColor whiteColor];
     //Fix  translucent = NO;
     CGRect rect = self.view.bounds;
     if (![UINavigationBar appearance].isTranslucent && [[[UIDevice currentDevice] systemVersion] doubleValue]<15.0) {
@@ -44,20 +42,18 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
     _tableView.delegate = self;
     _tableView.dataSource = self;
     [_tableView setSectionIndexBackgroundColor:[UIColor clearColor]];
-    [_tableView setSectionIndexColor:[UIColor darkGrayColor]];
+    [_tableView setSectionIndexColor:[UIColor whiteColor]];
     [_tableView setBackgroundColor:self.view.backgroundColor];
     if (@available(iOS 15.0, *)) {
         _tableView.sectionHeaderTopPadding = 0;
     }
     UIView *v = [[UIView alloc] initWithFrame:CGRectZero];
     [_tableView setTableFooterView:v];
-
-    _tableView.separatorInset = UIEdgeInsetsMake(0, 58, 0, 0);
-
-    [_tableView registerClass:[TUICommonContactCell class] forCellReuseIdentifier:kConversationCell_ReuseId];
-
-
-    self.viewModel = [TUIGroupConversationListViewDataProvider new];
+    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    
+    [_tableView registerClass:[TUICommonContactCell_Minimalist class] forCellReuseIdentifier:kConversationCell_ReuseId];
+    
+    self.viewModel = [TUIGroupConversationListViewDataProvider_Minimalist new];
     [self updateConversations];
 
     @weakify(self)
@@ -94,7 +90,7 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    TUICommonContactCellData *data = self.viewModel.dataDict[self.viewModel.groupList[indexPath.section]][indexPath.row];
+    TUICommonContactCellData_Minimalist *data = self.viewModel.dataDict[self.viewModel.groupList[indexPath.section]][indexPath.row];
     return [data heightOfWidth:Screen_Width];
 }
 
@@ -122,7 +118,7 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         [tableView beginUpdates];
-        TUICommonContactCellData *data = self.viewModel.dataDict[self.viewModel.groupList[indexPath.section]][indexPath.row];
+        TUICommonContactCellData_Minimalist *data = self.viewModel.dataDict[self.viewModel.groupList[indexPath.section]][indexPath.row];
         [self.viewModel removeData:data];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationNone];
         [tableView endUpdates];
@@ -139,25 +135,33 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
     if (!headerView)
     {
         headerView = [[UITableViewHeaderFooterView alloc] initWithReuseIdentifier:headerViewId];
+        headerView.contentView.backgroundColor = [UIColor whiteColor];
+        headerView.backgroundColor = [UIColor whiteColor];
         UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         textLabel.tag = TEXT_TAG;
-        textLabel.textColor = RGB(0x80, 0x80, 0x80);
-        [headerView addSubview:textLabel];
-        textLabel.mm_fill().mm_left(12);
+        textLabel.textColor = [UIColor tui_colorWithHex:@"#000000"];
+        textLabel.font = [UIFont systemFontOfSize:kScale390(14)];
+        [headerView.contentView addSubview:textLabel];
+        textLabel.mm_fill().mm_left(kScale390(16));
         textLabel.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        
+        UIView *clearBackgroundView = [[UIView alloc] init];
+        clearBackgroundView.mm_fill();
+        headerView.backgroundView = clearBackgroundView;
+        
     }
     UILabel *label = [headerView viewWithTag:TEXT_TAG];
-    label.text = self.viewModel.groupList[section];
-
+    NSString *formatiStr = [NSString stringWithFormat:@"%@ (%lu)",self.viewModel.groupList[section],(unsigned long)self.viewModel.dataDict[self.viewModel.groupList[section]].count];
+    label.text = formatiStr;
     return headerView;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 33;
+    return kScale390(28);
 }
 
-- (void)didSelectConversation:(TUICommonContactCell *)cell
+- (void)didSelectConversation:(TUICommonContactCell_Minimalist *)cell
 {
     if (self.onSelect) {
         self.onSelect(cell.contactData);
@@ -176,8 +180,8 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    TUICommonContactCell *cell = [tableView dequeueReusableCellWithIdentifier:kConversationCell_ReuseId forIndexPath:indexPath];
-    TUICommonContactCellData *data = self.viewModel.dataDict[self.viewModel.groupList[indexPath.section]][indexPath.row];
+    TUICommonContactCell_Minimalist *cell = [tableView dequeueReusableCellWithIdentifier:kConversationCell_ReuseId forIndexPath:indexPath];
+    TUICommonContactCellData_Minimalist *data = self.viewModel.dataDict[self.viewModel.groupList[indexPath.section]][indexPath.row];
     if (!data.cselector) {
         data.cselector = @selector(didSelectConversation:);
     }
