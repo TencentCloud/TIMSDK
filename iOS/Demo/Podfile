@@ -9,7 +9,6 @@ target 'TUIKitDemo' do
   use_modular_headers!
 
   # Pods for Example
-  pod 'TUICore', '7.1.3925'
   pod 'TUIChat', '7.1.3925'
   pod 'TUIConversation', '7.1.3925'
   pod 'TUIContact', '7.1.3925'
