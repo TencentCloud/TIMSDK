@@ -5,18 +5,19 @@ install! 'cocoapods', :disable_input_output_paths => true
 
 target 'TUIKitDemo' do
   # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
-  #use_frameworks!
+  use_frameworks!
   use_modular_headers!
 
   # Pods for Example
+  pod 'TUICore', '7.1.3925'
   pod 'TUIChat', '7.1.3925'
   pod 'TUIConversation', '7.1.3925'
   pod 'TUIContact', '7.1.3925'
   pod 'TUIGroup', '7.1.3925'
   pod 'TUISearch', '7.1.3925'
   pod 'TUIOfflinePush', '7.1.3925'
-  #pod 'TUIPoll', '7.1.3925'
-  #pod 'TUIGroupNote', '7.1.3925'
+  pod 'TUIPoll', '7.1.3925'
+  pod 'TUIGroupNote', '7.1.3925'
   pod 'TUICallKit'
   pod 'MJRefresh'
 
