@@ -209,29 +209,34 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 [API Upgrade Guidelines](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
 
-## Latest Enhanced Edition 7.0.3754 @2023.01.06
+## Latest Enhanced Edition 7.1.3925 @2023.03.07
 
 ### SDK
 
-- Supported mentioning (@) group members in all types of messages.
-- Supported getting the total message unread count by conversation filter.
-- Supported the meta counter for common groups and audio-video groups.
-- Supported text message translation.
-- Supported custom attributes for community groups.
-- Supported setting the Huawei category and Mi channel ID for offline push.
-- Optimized the QUIC network reconnection logic.
-- Added the base IP logic for COS rich media file download.
-- Supported emoji characters in the file paths of rich media messages sent in Windows.
-- Supported emoji characters in the C++ SDK log and initialization paths in Windows.
-- Fixed the failure in setting custom conversation marks in the v7a architecture.
-- Fixed the errors in setting the height of thumbnails or large images.
+- Supported pulling historical group messages by sequence list
+- Supported setting whether to clear historical messages when you delete a conversation
+- Added an API for deleting conversations in batches
+- Supported modifying the approval method of group member invitations
+- Supported group counters for community groups
+- Added a parameter for setting a message object to bypass the content moderation
+- Supported reporting one-to-one message read by timestamp
+- Supported reporting group message read by sequence
+- Supported getting timestamp of the read message in one-to-one chats
+- Supported getting sequence of the read message in group chats
+- Fixed the issue that intercepted messages due to local moderation were not saved in the local message database.
+- Fixed the issue that unread message count displayed when offline group members logged in again even though the messages had been excluded from the unread count.
+- Fixed the occasional issue of inaccurate `isRead` status of messages when users sent and received messages again after a one-to-one chat is deleted.
+- Fixed the occasional inconsistency of unread one-to-one message count in multi-device login scenarios.
+- Fixed the occasional crashes when file uploading failed.
+- Changed enumerated values of `V2TIMGroupApplicationGetType` to those of `V2TIMGroupApplicationType`
+- Changed the attribute name `getType` of `V2TIMGroupApplication` to `applicationType`
+
 
 ### TUIKit and demo
 
-- Supported gain control and AI-based noise reduction for TUIChat voice message recording.
-- Added the message translation capability in TUIChat. 
-- Supported custom ringtones for Android FCM push.
-- Optimized the TUIChat performance in loading historical messages in iOS.
+- Supported group polling and one-by-one notes
+- Improved the minimalist theme
+- Optimized the signaling display logic
 
 
 ## Latest Basic Version 5.1.66 @2021.09.22
