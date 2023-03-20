@@ -2,6 +2,35 @@ English | [简体中文](./版本历史.md)
 
 # TIMSDK
 
+## 7.1.3925 @2023.03.07 - Enhanced Edition
+
+### SDK
+
+- Supported pulling historical group messages by sequence list
+- Supported setting whether to clear historical messages when you delete a conversation
+- Added an API for deleting conversations in batches
+- Supported modifying the approval method of group member invitations
+- Supported group counters for community groups
+- Added a parameter for setting a message object to bypass the content moderation
+- Supported reporting one-to-one message read by timestamp
+- Supported reporting group message read by sequence
+- Supported getting timestamp of the read message in one-to-one chats
+- Supported getting sequence of the read message in group chats
+- Fixed the issue that intercepted messages due to local moderation were not saved in the local message database.
+- Fixed the issue that unread message count displayed when offline group members logged in again even though the messages had been excluded from the unread count.
+- Fixed the occasional issue of inaccurate `isRead` status of messages when users sent and received messages again after a one-to-one chat is deleted.
+- Fixed the occasional inconsistency of unread one-to-one message count in multi-device login scenarios.
+- Fixed the occasional crashes when file uploading failed.
+- Changed enumerated values of `V2TIMGroupApplicationGetType` to those of `V2TIMGroupApplicationType`
+- Changed the attribute name `getType` of `V2TIMGroupApplication` to `applicationType`
+
+
+### TUIKit and demo
+
+- Supported group polling and one-by-one notes
+- Improved the minimalist theme
+- Optimized the signaling display logic
+
 ## 7.0.3754 @2023.01.06 - Enhanced Edition
 
 ### SDK
