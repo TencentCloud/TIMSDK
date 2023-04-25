@@ -15,6 +15,6 @@
 
 ## TIMSDK for Windows
 
-[集成SDK](https://cloud.tencent.com/document/product/269/33489)
+[集成SDK](https://cloud.tencent.com/document/product/269/75287)
 
-[概述](https://cloud.tencent.com/document/product/269/33490)
+[概述](https://cloud.tencent.com/document/product/269/1498)
