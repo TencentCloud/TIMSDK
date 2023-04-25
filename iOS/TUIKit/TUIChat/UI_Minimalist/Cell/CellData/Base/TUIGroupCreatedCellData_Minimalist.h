@@ -4,7 +4,7 @@
  *  This file declares the data source for TUIGroupCreatedCell
  */
 
-#import "TUISystemMessageCellData.h"
+#import <TIMCommon/TUISystemMessageCellData.h>
 
 @interface TUIGroupCreatedCellData_Minimalist : TUISystemMessageCellData
 

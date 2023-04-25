@@ -6,14 +6,14 @@
 //
 
 #import "TUIFindContactViewController_Minimalist.h"
-#import "TUIGlobalization.h"
-#import "TUICore.h"
+#import <TUICore/TUIGlobalization.h>
+#import <TUICore/TUICore.h>
 #import "TUIFindContactCell_Minimalist.h"
 #import "TUIFindContactViewDataProvider_Minimalist.h"
-#import "TUIThemeManager.h"
+#import <TUICore/TUIThemeManager.h>
 #import "TUIContactEmptyView_Minimalist.h"
-#import "TUIDefine.h"
-#import "TUIThemeManager.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
 
 @interface TUIFindContactViewController_Minimalist () <UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource>
 
@@ -30,7 +30,7 @@
 
 - (void)dealloc
 {
-    [[UIBarButtonItem appearanceWhenContainedInInstancesOfClasses:@[[UISearchBar class]]] setTitle:TUIKitLocalizableString(Cancel)];
+    [[UIBarButtonItem appearanceWhenContainedInInstancesOfClasses:@[[UISearchBar class]]] setTitle:TIMCommonLocalizableString(Cancel)];
 }
 
 - (void)viewDidLoad {
@@ -51,9 +51,9 @@
     self.definesPresentationContext = YES;//不设置会导致一些位置错乱，无动画等问题
     
     UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.text =self.type == TUIFindContactTypeC2C_Minimalist ? TUIKitLocalizableString(TUIKitAddFriend) : TUIKitLocalizableString(TUIKitAddGroup);
+    titleLabel.text =self.type == TUIFindContactTypeC2C_Minimalist ? TIMCommonLocalizableString(TUIKitAddFriend) : TIMCommonLocalizableString(TUIKitAddGroup);
     titleLabel.font = [UIFont boldSystemFontOfSize:17.0];
-    titleLabel.textColor = TUICoreDynamicColor(@"nav_title_text_color", @"#000000");
+    titleLabel.textColor = TIMCommonDynamicColor(@"nav_title_text_color", @"#000000");
     [titleLabel sizeToFit];
     self.navigationItem.titleView = titleLabel;
     self.view.backgroundColor = [UIColor whiteColor];
@@ -77,7 +77,7 @@
     if (_noDataEmptyView == nil) {
         _noDataEmptyView = [[TUIContactEmptyView_Minimalist alloc] initWithImage:
                             [UIImage imageNamed:TUIContactImagePath_Minimalist(@"contact_not_found_icon")]
-                                                                            Text:(self.type == TUIFindContactTypeC2C_Minimalist ? TUIKitLocalizableString(TUIKitAddUserNoDataTips) : TUIKitLocalizableString(TUIKitAddGroupNoDataTips))];
+                                                                            Text:(self.type == TUIFindContactTypeC2C_Minimalist ? TIMCommonLocalizableString(TUIKitAddUserNoDataTips) : TIMCommonLocalizableString(TUIKitAddGroupNoDataTips))];
         _noDataEmptyView.hidden = YES;
     }
     return _noDataEmptyView;
@@ -165,7 +165,7 @@
     if (_searchBar == nil) {
         _searchBar = [[UISearchBar alloc] init];
         _searchBar.backgroundColor = [UIColor tui_colorWithHex:@"f9f9f9"];
-        _searchBar.placeholder = self.type == TUIFindContactTypeC2C_Minimalist ? TUIKitLocalizableString(TUIKitSearchUserID) : TUIKitLocalizableString(TUIKitSearchGroupID);
+        _searchBar.placeholder = self.type == TUIFindContactTypeC2C_Minimalist ? TIMCommonLocalizableString(TUIKitSearchUserID) : TIMCommonLocalizableString(TUIKitSearchGroupID);
         _searchBar.backgroundImage = [[UIImage alloc] init];
         _searchBar.delegate = self;
         UITextField *searchField = [_searchBar valueForKey:@"searchField"];
@@ -173,7 +173,7 @@
             searchField.backgroundColor = [UIColor tui_colorWithHex:@"f9f9f9"];
         }
         
-        [[UIBarButtonItem appearanceWhenContainedInInstancesOfClasses:@[[UISearchBar class]]] setTitle:TUIKitLocalizableString(Search)];
+        [[UIBarButtonItem appearanceWhenContainedInInstancesOfClasses:@[[UISearchBar class]]] setTitle:TIMCommonLocalizableString(Search)];
     }
     return _searchBar;
 }

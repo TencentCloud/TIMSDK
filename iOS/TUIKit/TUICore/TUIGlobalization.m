@@ -11,13 +11,19 @@
 
 @implementation TUIGlobalization
 
-+ (NSString *)g_localizedStringForKey:(NSString *)key value:(nullable NSString *)value bundle:(nonnull NSString *)bundleName
-{
+static NSString *_customLanguage = nil;
+static BOOL ignoreTraditionChinese = YES;
+
++ (NSString *)getLocalizedStringForKey:(NSString *)key bundle:(NSString *)bundleName {
+    return [self getLocalizedStringForKey:key value:nil bundle:bundleName];
+}
+
++ (NSString *)getLocalizedStringForKey:(NSString *)key value:(nullable NSString *)value bundle:(nonnull NSString *)bundleName {
     static NSMutableDictionary *bundleCache = nil;
     if (bundleCache == nil) {
         bundleCache = [NSMutableDictionary dictionary];
     }
-    NSString *language = [self tk_localizableLanguageKey];
+    NSString *language = [self getPreferredLanguage];
     language = [@"Localizable" stringByAppendingPathComponent:language];
     NSString *cacheKey = [NSString stringWithFormat:@"%@_%@", bundleName, language];
     NSBundle *bundle = [bundleCache objectForKey:cacheKey];
@@ -31,21 +37,17 @@
     
     // It's not necessary to query at main bundle, cause it's a long-time operation
     // NSString *resultStr = [[NSBundle mainBundle] localizedStringForKey:key value:value table:nil];
-    return value;
+    return value ?: @"";
 
 }
 
-+ (NSString *)g_localizedStringForKey:(NSString *)key bundle:(nonnull NSString *)bundleName
-{
-    return [self g_localizedStringForKey:key value:nil bundle:bundleName];
-}
-
-+ (NSString *)tk_localizableLanguageKey
-{
++ (NSString *)getPreferredLanguage {
     // Custom language in app
-    NSString *customLanguage = [self getCustomLanguage];
-    if (customLanguage.length) {
-        return customLanguage;
+    if (_customLanguage == nil) {
+        _customLanguage = [NSUserDefaults.standardUserDefaults objectForKey:TUICustomLanguageKey];
+    }
+    if (_customLanguage.length > 0) {
+        return _customLanguage;
     }
     
     // Follow system changes by default
@@ -68,33 +70,35 @@
         language = @"en";
     }
     
-    // harvy, since traditional Chinese is not supported for the time being, avoid using English in traditional Chinese, and force the use of simplified Chinese here
-    if ([language hasPrefix:@"zh"]) {
+    // Since traditional Chinese is not supported for the time being, avoid using English in traditional Chinese, and force the use of simplified Chinese here
+    if (ignoreTraditionChinese && [language hasPrefix:@"zh"]) {
         language = @"zh-Hans";
     }
     
     return language;
 }
 
-static NSString *_customLanguage;
-+ (void)setCustomLanguage:(NSString *)language
-{
++ (void)setPreferredLanguage:(NSString *)language {
     _customLanguage = language;
     [NSUserDefaults.standardUserDefaults setObject:language?:@"" forKey:TUICustomLanguageKey];
     [NSUserDefaults.standardUserDefaults synchronize];
-    
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [NSNotificationCenter.defaultCenter postNotificationName:TUIChangeLanguageNotification object:nil];
     });
 }
 
-+ (NSString *)getCustomLanguage
-{
-    if (_customLanguage == nil) {
-        _customLanguage = [NSUserDefaults.standardUserDefaults objectForKey:TUICustomLanguageKey];
-    }
-    return _customLanguage;
++ (void)ignoreTraditionChinese:(BOOL)ignore {
+    ignoreTraditionChinese = ignore;
+}
+
+#pragma mark - Deprecated
++ (NSString *)g_localizedStringForKey:(NSString *)key bundle:(nonnull NSString *)bundleName {
+    return [self getLocalizedStringForKey:key value:nil bundle:bundleName];
+}
+
++ (NSString *)tk_localizableLanguageKey {
+    return [self getPreferredLanguage];
 }
 
 @end
@@ -107,8 +111,7 @@ static NSString *_customLanguage;
 
 @implementation TUIBundle
 
-- (NSString *)localizedStringForKey:(NSString *)key value:(NSString *)value table:(NSString *)tableName
-{
+- (NSString *)localizedStringForKey:(NSString *)key value:(NSString *)value table:(NSString *)tableName {
     if ([TUIBundle private_mainBundle]) {
         return [[TUIBundle private_mainBundle] localizedStringForKey:key value:value table:tableName];
     } else {
@@ -116,13 +119,12 @@ static NSString *_customLanguage;
     }
 }
 
-+ (NSBundle *)private_mainBundle
-{
++ (NSBundle *)private_mainBundle {
     static NSMutableDictionary *bundleCache;
     if (bundleCache == nil) {
         bundleCache = [NSMutableDictionary dictionary];
     }
-    NSString *customLanguage = [TUIGlobalization tk_localizableLanguageKey];
+    NSString *customLanguage = [TUIGlobalization getPreferredLanguage];
     if (customLanguage.length) {
         NSString *path = [[NSBundle mainBundle] pathForResource:customLanguage ofType:@"lproj"] ?: @"";
         NSBundle *bundle = [bundleCache objectForKey:path];
@@ -145,8 +147,7 @@ static NSString *_customLanguage;
 
 @implementation NSBundle (Localization)
 
-+ (void)load
-{
++ (void)load {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         object_setClass([NSBundle mainBundle], [TUIBundle class]);

@@ -7,7 +7,7 @@
 //
 
 #import "TUIGroupCreatedCellData_Minimalist.h"
-#import "NSString+TUIUtil.h"
+#import <TUICore/NSString+TUIUtil.h>
 
 @implementation TUIGroupCreatedCellData_Minimalist
 

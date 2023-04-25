@@ -6,9 +6,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TUIMessageCellData.h"
+#import <TIMCommon/TUIMessageCellData.h>
 #import "TUIChatDefine.h"
-#import "TUIMessageCell_Minimalist.h"
+#import <TIMCommon/TUIMessageCell_Minimalist.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

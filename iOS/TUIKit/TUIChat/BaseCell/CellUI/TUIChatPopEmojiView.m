@@ -6,9 +6,9 @@
 //
 
 #import "TUIChatPopEmojiView.h"
-#import "TUICommonModel.h"
-#import "TUIDefine.h"
-#import "NSString+TUIEmoji.h"
+#import <TIMCommon/TIMCommonModel.h>
+#import <TIMCommon/TIMDefine.h>
+#import <TIMCommon/NSString+TUIEmoji.h>
 
 
 

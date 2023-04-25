@@ -8,9 +8,9 @@
 #import "TUIFoldListViewController.h"
 #import "TUIConversationListController.h"
 #import "TUIFoldConversationListDataProvider.h"
-#import "TUIDefine.h"
-#import "TUITool.h"
-#import "TUICore.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUITool.h>
+#import <TUICore/TUICore.h>
 
 static NSString *kConversationCell_ReuseId = @"TConversationCell";
 
@@ -35,7 +35,7 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
     self.conv = [[TUIConversationListController alloc] init];
     self.conv.dataProvider = [[TUIFoldConversationListDataProvider alloc] init];
     self.conv.dataProvider.delegate = (id)self.conv;
-    self.conv.isEnableSearch = NO;
+    self.conv.isShowBanner = NO;
     self.conv.delegate = self;
     
     @weakify(self)
@@ -64,12 +64,12 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
     naviController.uiNaviDelegate = self;
     _titleView = [[TUINaviBarIndicatorView alloc] init];
     self.navigationItem.titleView = _titleView;
-    [self.titleView setTitle:TUIKitLocalizableString(TUIKitConversationMarkFoldGroups)];
+    [self.titleView setTitle:TIMCommonLocalizableString(TUIKitConversationMarkFoldGroups)];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.noDataTipsLabel.frame = CGRectMake(10, 60, self.view.bounds.size.width - 20, 40);
+    self.noDataTipsLabel.frame = CGRectMake(10, 120, self.view.bounds.size.width - 20, 40);
 }
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
@@ -130,16 +130,16 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
             NSString *desc = param[@"text"];
             if (msg.status == V2TIM_MSG_STATUS_LOCAL_REVOKED) {
                 if(msg.isSelf){
-                    desc = TUIKitLocalizableString(TUIKitMessageTipsYouRecallMessage);
+                    desc = TIMCommonLocalizableString(TUIKitMessageTipsYouRecallMessage);
                 } else if (msg.userID.length > 0){
-                    desc = TUIKitLocalizableString(TUIkitMessageTipsOthersRecallMessage);
+                    desc = TIMCommonLocalizableString(TUIkitMessageTipsOthersRecallMessage);
                 } else if (msg.groupID.length > 0) {
                     //对于群组消息的名称显示，优先显示群名片，昵称优先级其次，用户ID优先级最低。
                     NSString *userName = msg.nameCard;
                     if (userName.length == 0) {
                         userName = msg.nickName?:msg.sender;
                     }
-                    desc = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsRecallMessageFormat), userName];
+                    desc = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsRecallMessageFormat), userName];
                 }
             }
             return desc;
@@ -154,19 +154,17 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
 - (void)conversationListController:(TUIConversationListController *)conversationController didSelectConversation:(TUIConversationCellData *)conversation
 {
     NSDictionary *param = @{
-        TUICore_TUIChatService_GetChatViewControllerMethod_ConversationIDKey : conversation.conversationID ?: @"",
-        TUICore_TUIChatService_GetChatViewControllerMethod_UserIDKey : conversation.userID ?: @"",
-        TUICore_TUIChatService_GetChatViewControllerMethod_GroupIDKey : conversation.groupID ?: @"",
-        TUICore_TUIChatService_GetChatViewControllerMethod_TitleKey : conversation.title ?: @"",
-        TUICore_TUIChatService_GetChatViewControllerMethod_AvatarUrlKey : conversation.faceUrl ?: @"",
-        TUICore_TUIChatService_GetChatViewControllerMethod_AvatarImageKey : conversation.avatarImage ? : [UIImage new],
-        TUICore_TUIChatService_GetChatViewControllerMethod_DraftKey : conversation.draftText ?: @"",
-        TUICore_TUIChatService_GetChatViewControllerMethod_AtMsgSeqsKey : conversation.atMsgSeqs ?: @[]
+        TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_ConversationIDKey : conversation.conversationID ?: @"",
+        TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_UserIDKey : conversation.userID ?: @"",
+        TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_GroupIDKey : conversation.groupID ?: @"",
+        TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_TitleKey : conversation.title ?: @"",
+        TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_AvatarUrlKey : conversation.faceUrl ?: @"",
+        TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_AvatarImageKey : conversation.avatarImage ? : [UIImage new],
+        TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_DraftKey : conversation.draftText ?: @"",
+        TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_AtMsgSeqsKey : conversation.atMsgSeqs ?: @[]
     };
     
-    UIViewController *chatVC = (UIViewController *)[TUICore callService:TUICore_TUIChatService
-                                                                 method:TUICore_TUIChatService_GetChatViewControllerMethod
-                                                                  param:param];
+    UIViewController *chatVC = (UIViewController *)[TUICore createObject:TUICore_TUIChatObjectFactory key:TUICore_TUIChatObjectFactory_GetChatViewControllerMethod param:param];
     [self.navigationController pushViewController:(UIViewController *)chatVC animated:YES];
 }
 
@@ -177,7 +175,7 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
         _noDataTipsLabel.textColor = TUIContactDynamicColor(@"contact_add_contact_nodata_tips_text_color", @"#999999");
         _noDataTipsLabel.font = [UIFont systemFontOfSize:14.0];
         _noDataTipsLabel.textAlignment = NSTextAlignmentCenter;
-        _noDataTipsLabel.text = TUIKitLocalizableString(TUIKitContactNoGroupChats);
+        _noDataTipsLabel.text = TIMCommonLocalizableString(TUIKitContactNoGroupChats);
         _noDataTipsLabel.hidden = YES;
 
     }

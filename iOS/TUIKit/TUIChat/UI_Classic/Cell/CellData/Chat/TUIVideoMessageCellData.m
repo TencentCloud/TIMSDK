@@ -6,8 +6,8 @@
 //
 
 #import "TUIVideoMessageCellData.h"
-#import "TUIDefine.h"
-#import "NSString+TUIUtil.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/NSString+TUIUtil.h>
 
 #define TVideo_Block_Progress @"TVideo_Block_Progress";
 #define TVideo_Block_Response @"TVideo_Block_Response";
@@ -43,7 +43,7 @@
 }
 
 + (NSString *)getDisplayString:(V2TIMMessage *)message {
-    return TUIKitLocalizableString(TUIkitMessageTypeVideo);
+    return TIMCommonLocalizableString(TUIkitMessageTypeVideo);
 }
 
 - (Class)getReplyQuoteViewDataClass

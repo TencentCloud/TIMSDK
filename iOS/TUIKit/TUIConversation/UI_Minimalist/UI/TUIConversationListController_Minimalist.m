@@ -9,10 +9,10 @@
 #import "TUIFoldListViewController_Minimalist.h"
 #import "TUIConversationCell_Minimalist.h"
 #import "TUIConversationCellData_Minimalist.h"
-#import "TUICore.h"
-#import "TUIDefine.h"
-#import "TUIThemeManager.h"
-#import "TUIConversationFloatController.h"
+#import <TUICore/TUICore.h>
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
+#import "TUIFloatViewController.h"
 
 static NSString *kConversationCell_Minimalist_ReuseId = @"kConversationCell_Minimalist_ReuseId";
 
@@ -36,7 +36,7 @@ static NSString *kConversationCell_Minimalist_ReuseId = @"kConversationCell_Mini
 - (instancetype)init {
     self = [super init];
     if (self) {
-        self.isEnableSearch = YES;
+        self.isShowBanner = YES;
     }
     return self;
 }
@@ -85,7 +85,6 @@ static NSString *kConversationCell_Minimalist_ReuseId = @"kConversationCell_Mini
         navigationBar.backgroundColor = [self navBackColor];
         navigationBar.barTintColor = [self navBackColor];
         navigationBar.shadowImage = [UIImage new];
-        [[UINavigationBar appearance] setTranslucent:NO];
     }
 }
 
@@ -127,7 +126,7 @@ static NSString *kConversationCell_Minimalist_ReuseId = @"kConversationCell_Mini
     [moreButton setFrame:CGRectMake(0, 0, 20, 20)];
 
     UIButton *doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [doneButton setTitle:TUIKitLocalizableString(TUIKitDone) forState:UIControlStateNormal];
+    [doneButton setTitle:TIMCommonLocalizableString(TUIKitDone) forState:UIControlStateNormal];
     [doneButton setTitleColor:[UIColor systemBlueColor] forState:UIControlStateNormal];
     [doneButton addTarget:self action:@selector(doneBarButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     [doneButton setFrame:CGRectMake(0, 0, 30, 30)];
@@ -144,19 +143,7 @@ static NSString *kConversationCell_Minimalist_ReuseId = @"kConversationCell_Mini
 
 - (void)setupViews {
     self.view.backgroundColor = TUIConversationDynamicColor(@"conversation_bg_color", @"#FFFFFF");
-    
-    UIView *searchBar = nil;
-    if (self.isEnableSearch) {
-        NSDictionary *searchExtension = [TUICore getExtensionInfo:TUICore_TUIConversationExtension_GetSearchBar_Minimalist param:@{TUICore_TUIConversationExtension_ParentVC : self}];
-        if (searchExtension) {
-            searchBar = [searchExtension tui_objectForKey:TUICore_TUIConversationExtension_SearchBar asClass:UIView.class];
-        }
-    }
-    //Fix  translucent = NO;
     CGRect rect = self.view.bounds;
-    if (![UINavigationBar appearance].isTranslucent && [[[UIDevice currentDevice] systemVersion] doubleValue]<15.0) {
-        rect = CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height - TabBar_Height - NavBar_Height );
-    }
     _tableView = [[UITableView alloc] initWithFrame:rect];
     _tableView.tableFooterView = [[UIView alloc] init];
     _tableView.backgroundColor = self.view.backgroundColor;
@@ -166,14 +153,19 @@ static NSString *kConversationCell_Minimalist_ReuseId = @"kConversationCell_Mini
     _tableView.dataSource = self;
     _tableView.estimatedRowHeight = 0;
     _tableView.rowHeight = 64.0;
-    if (searchBar) {
-        [searchBar setFrame: CGRectMake(0, 0, self.view.bounds.size.width, 60)];
-        searchBar.backgroundColor = [UIColor whiteColor];
-        _tableView.tableHeaderView = searchBar;
-    }
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _tableView.delaysContentTouches = NO;
     [self.view addSubview:_tableView];
+    
+    if (self.isShowBanner) {
+        CGSize size = CGSizeMake(self.view.bounds.size.width, 60);
+        UIView *bannerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
+        self.tableView.tableHeaderView = bannerView;
+        NSMutableDictionary *param = [NSMutableDictionary dictionary];
+        param[TUICore_TUIConversationExtension_ConversationListBanner_BannerSize] = NSStringFromCGSize(size);
+        param[TUICore_TUIConversationExtension_ConversationListBanner_ModalVC] = self;
+        [TUICore raiseExtension:TUICore_TUIConversationExtension_ConversationListBanner_MinimalistExtensionID  parentView:bannerView param:param];
+    }
 }
 
 - (void)doneBarButtonClick:(UIBarButtonItem *)doneBarButton {
@@ -195,12 +187,12 @@ static NSString *kConversationCell_Minimalist_ReuseId = @"kConversationCell_Mini
     TUIPopCellData *friend = [[TUIPopCellData alloc] init];
     
     friend.image = TUIConversationDynamicImage(@"pop_icon_new_chat_img", [UIImage imageNamed:TUIConversationImagePath(@"new_chat")]);
-    friend.title = TUIKitLocalizableString(ChatsNewChatText);
+    friend.title = TIMCommonLocalizableString(ChatsNewChatText);
     [menus addObject:friend];
     
     TUIPopCellData *group = [[TUIPopCellData alloc] init];
     group.image = TUIConversationDynamicImage(@"pop_icon_new_group_img", [UIImage imageNamed:TUIConversationImagePath(@"new_groupchat")]);
-    group.title = TUIKitLocalizableString(ChatsNewGroupText);
+    group.title = TIMCommonLocalizableString(ChatsNewGroupText);
     [menus addObject:group];
 
     CGFloat height = [TUIPopCell getHeight] * menus.count + TUIPopView_Arrow_Size.height;
@@ -224,20 +216,18 @@ static NSString *kConversationCell_Minimalist_ReuseId = @"kConversationCell_Mini
 }
 
 - (void)startConversation:(V2TIMConversationType)type {
-    TUIConversationFloatController * floatVC = [[TUIConversationFloatController alloc] init];
+    TUIFloatViewController * floatVC = [[TUIFloatViewController alloc] init];
 
     void (^selectContactCompletion)(NSArray<TUICommonContactSelectCellData *> *) = ^(NSArray<TUICommonContactSelectCellData *> *array){
         if (V2TIM_C2C == type) {
             NSDictionary *param = @{
-                TUICore_TUIChatService_GetChatViewControllerMethod_TitleKey : array.firstObject.title ?: @"",
-                TUICore_TUIChatService_GetChatViewControllerMethod_UserIDKey : array.firstObject.identifier ?: @"",
-                TUICore_TUIChatService_GetChatViewControllerMethod_AvatarImageKey : array.firstObject.avatarImage ? : DefaultAvatarImage,
-                TUICore_TUIChatService_GetChatViewControllerMethod_AvatarUrlKey : array.firstObject.avatarUrl.absoluteString ? : @""
+                TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_TitleKey : array.firstObject.title ?: @"",
+                TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_UserIDKey : array.firstObject.identifier ?: @"",
+                TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_AvatarImageKey : array.firstObject.avatarImage ? : DefaultAvatarImage,
+                TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_AvatarUrlKey : array.firstObject.avatarUrl.absoluteString ? : @""
             };
 
-            UIViewController *chatVC = (UIViewController *)[TUICore callService:TUICore_TUIChatService_Minimalist
-                                                                         method:TUICore_TUIChatService_GetChatViewControllerMethod
-                                                                          param:param];
+            UIViewController *chatVC = (UIViewController *)[TUICore createObject:TUICore_TUIChatObjectFactory_Minimalist key:TUICore_TUIChatObjectFactory_GetChatViewControllerMethod param:param];
             [self.navigationController pushViewController:(UIViewController *)chatVC animated:YES];
         } else {
             @weakify(self)
@@ -258,15 +248,13 @@ static NSString *kConversationCell_Minimalist_ReuseId = @"kConversationCell_Mini
                 }
                 void(^createGroupCompletion)(BOOL , V2TIMGroupInfo *,UIImage *) = ^(BOOL isSuccess, V2TIMGroupInfo * _Nonnull info,UIImage * _Nonnull submitShowImage) {
                     NSDictionary *param = @{
-                        TUICore_TUIChatService_GetChatViewControllerMethod_TitleKey : info.groupName ?: @"",
-                        TUICore_TUIChatService_GetChatViewControllerMethod_GroupIDKey : info.groupID ?: @"",
-                        TUICore_TUIChatService_GetChatViewControllerMethod_AvatarUrlKey : info.faceURL ?: @"",
-                        TUICore_TUIChatService_GetChatViewControllerMethod_AvatarImageKey : submitShowImage ? : [UIImage new],
+                        TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_TitleKey : info.groupName ?: @"",
+                        TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_GroupIDKey : info.groupID ?: @"",
+                        TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_AvatarUrlKey : info.faceURL ?: @"",
+                        TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_AvatarImageKey : submitShowImage ? : [UIImage new],
                     };
                     
-                    UIViewController *chatVC = (UIViewController *)[TUICore callService:TUICore_TUIChatService_Minimalist
-                                                                                 method:TUICore_TUIChatService_GetChatViewControllerMethod
-                                                                                  param:param];
+                    UIViewController *chatVC = (UIViewController *)[TUICore createObject:TUICore_TUIChatObjectFactory_Minimalist key:TUICore_TUIChatObjectFactory_GetChatViewControllerMethod param:param];
                     [self.navigationController pushViewController:(UIViewController *)chatVC animated:YES];
                     
                     NSMutableArray *tempArray = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
@@ -281,35 +269,33 @@ static NSString *kConversationCell_Minimalist_ReuseId = @"kConversationCell_Mini
 
                 };
                 NSDictionary *param = @{
-                    TUICore_TUIContactService_GetGroupCreateControllerMethod_TitleKey : array.firstObject.title ?: @"",
-                    TUICore_TUIContactService_GetGroupCreateControllerMethod_GroupNameKey : groupName ?: @"",
-                    TUICore_TUIContactService_GetGroupCreateControllerMethod_GroupTypeKey : GroupType_Work,
-                    TUICore_TUIContactService_GetGroupCreateControllerMethod_CompletionKey : createGroupCompletion,
-                    TUICore_TUIContactService_GetGroupCreateControllerMethod_ContactListKey: array?:@[]
+                    TUICore_TUIContactObjectFactory_GetGroupCreateControllerMethod_TitleKey : array.firstObject.title ?: @"",
+                    TUICore_TUIContactObjectFactory_GetGroupCreateControllerMethod_GroupNameKey : groupName ?: @"",
+                    TUICore_TUIContactObjectFactory_GetGroupCreateControllerMethod_GroupTypeKey : GroupType_Work,
+                    TUICore_TUIContactObjectFactory_GetGroupCreateControllerMethod_CompletionKey : createGroupCompletion,
+                    TUICore_TUIContactObjectFactory_GetGroupCreateControllerMethod_ContactListKey: array?:@[]
                 };
                 
-                UIViewController *groupVC = (UIViewController *)[TUICore callService:TUICore_TUIContactService_Minimalist
-                                                                              method:TUICore_TUIContactService_GetGroupCreateControllerMethod
-                                                                               param:param];
+                UIViewController *groupVC = (UIViewController *)[TUICore createObject:TUICore_TUIContactObjectFactory_Minimalist
+                                                                                  key:TUICore_TUIContactObjectFactory_GetGroupCreateControllerMethod
+                                                                                param:param];
         
-                TUIConversationFloatController * afloatVC = [[TUIConversationFloatController alloc] init];
+                TUIFloatViewController * afloatVC = [[TUIFloatViewController alloc] init];
                 [afloatVC appendChildViewController:groupVC topMargin:kScale390(87.5)];
-                [afloatVC.topGestureView setTitleText:TUIKitLocalizableString(ChatsNewGroupText) subTitleText:@"" leftBtnText:TUIKitLocalizableString(TUIKitCreateCancel) rightBtnText:TUIKitLocalizableString(TUIKitCreateFinish)];
+                [afloatVC.topGestureView setTitleText:TIMCommonLocalizableString(ChatsNewGroupText) subTitleText:@"" leftBtnText:TIMCommonLocalizableString(TUIKitCreateCancel) rightBtnText:TIMCommonLocalizableString(TUIKitCreateFinish)];
                 [self presentViewController:afloatVC animated:YES completion:nil];
                 
             } fail:nil];
         }
     };
     NSDictionary *param = @{
-        TUICore_TUIContactService_GetContactSelectControllerMethod_TitleKey: TUIKitLocalizableString(ChatsSelectContact),
-        TUICore_TUIContactService_GetContactSelectControllerMethod_MaxSelectCount: @(type == V2TIM_C2C ? 1 : INT_MAX),
-        TUICore_TUIContactService_GetContactSelectControllerMethod_CompletionKey : selectContactCompletion
+        TUICore_TUIContactObjectFactory_GetContactSelectControllerMethod_TitleKey: TIMCommonLocalizableString(ChatsSelectContact),
+        TUICore_TUIContactObjectFactory_GetContactSelectControllerMethod_MaxSelectCount: @(type == V2TIM_C2C ? 1 : INT_MAX),
+        TUICore_TUIContactObjectFactory_GetContactSelectControllerMethod_CompletionKey : selectContactCompletion
     };
-    UIViewController *vc = [TUICore callService:TUICore_TUIContactService_Minimalist
-                                         method:TUICore_TUIContactService_GetContactSelectControllerMethod
-                                          param:param];
+    UIViewController *vc = [TUICore createObject:TUICore_TUIContactObjectFactory_Minimalist key:TUICore_TUIContactObjectFactory_GetContactSelectControllerMethod param:param];
     [floatVC appendChildViewController:vc topMargin:kScale390(87.5)];
-    [floatVC.topGestureView setTitleText:((V2TIM_C2C == type))?TUIKitLocalizableString(ChatsNewChatText):TUIKitLocalizableString(ChatsNewGroupText) subTitleText:@"" leftBtnText:TUIKitLocalizableString(TUIKitCreateCancel) rightBtnText:(V2TIM_C2C == type)?@"":TUIKitLocalizableString(TUIKitCreateNext)];
+    [floatVC.topGestureView setTitleText:((V2TIM_C2C == type))?TIMCommonLocalizableString(ChatsNewChatText):TIMCommonLocalizableString(ChatsNewGroupText) subTitleText:@"" leftBtnText:TIMCommonLocalizableString(TUIKitCreateCancel) rightBtnText:(V2TIM_C2C == type)?@"":TIMCommonLocalizableString(TUIKitCreateNext)];
 
     floatVC.topGestureView.rightButton.enabled = NO;
 
@@ -352,9 +338,9 @@ static NSString *kConversationCell_Minimalist_ReuseId = @"kConversationCell_Mini
         _multiChooseView.titleLabel.text = @"";
         _multiChooseView.toolView.hidden = YES;
 
-        [_multiChooseView.readButton setTitle:TUIKitLocalizableString(ReadAll) forState:UIControlStateNormal];
-        [_multiChooseView.hideButton setTitle:TUIKitLocalizableString(Hide) forState:UIControlStateNormal];
-        [_multiChooseView.deleteButton setTitle:TUIKitLocalizableString(Delete) forState:UIControlStateNormal];
+        [_multiChooseView.readButton setTitle:TIMCommonLocalizableString(ReadAll) forState:UIControlStateNormal];
+        [_multiChooseView.hideButton setTitle:TIMCommonLocalizableString(Hide) forState:UIControlStateNormal];
+        [_multiChooseView.deleteButton setTitle:TIMCommonLocalizableString(Delete) forState:UIControlStateNormal];
         _multiChooseView.readButton.enabled = YES;
         _multiChooseView.hideButton.enabled = NO;
         _multiChooseView.deleteButton.enabled = NO;
@@ -464,9 +450,9 @@ static NSString *kConversationCell_Minimalist_ReuseId = @"kConversationCell_Mini
             NSString *desc = param[@"text"];
             if (msg.status == V2TIM_MSG_STATUS_LOCAL_REVOKED) {
                 if(msg.isSelf){
-                    desc = TUIKitLocalizableString(TUIKitMessageTipsYouRecallMessage);
+                    desc = TIMCommonLocalizableString(TUIKitMessageTipsYouRecallMessage);
                 } else if (msg.userID.length > 0){
-                    desc = TUIKitLocalizableString(TUIkitMessageTipsOthersRecallMessage);
+                    desc = TIMCommonLocalizableString(TUIkitMessageTipsOthersRecallMessage);
                 } else if (msg.groupID.length > 0) {
                     /**
                      * 对于群组消息的名称显示，优先显示群名片，昵称优先级其次，用户ID优先级最低。
@@ -476,7 +462,7 @@ static NSString *kConversationCell_Minimalist_ReuseId = @"kConversationCell_Mini
                     if (userName.length == 0) {
                         userName = msg.nickName?:msg.sender;
                     }
-                    desc = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsRecallMessageFormat), userName];
+                    desc = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsRecallMessageFormat), userName];
                 }
             }
             return desc;
@@ -562,7 +548,7 @@ static NSString *kConversationCell_Minimalist_ReuseId = @"kConversationCell_Mini
     __weak typeof(self) weakSelf = self;
 
     // Mark as read action
-    UITableViewRowAction *markAsReadAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:(cellData.isMarkAsUnread||cellData.unreadCount > 0)  ? TUIKitLocalizableString(MarkAsRead) : TUIKitLocalizableString(MarkAsUnRead) handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
+    UITableViewRowAction *markAsReadAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:(cellData.isMarkAsUnread||cellData.unreadCount > 0)  ? TIMCommonLocalizableString(MarkAsRead) : TIMCommonLocalizableString(MarkAsUnRead) handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
         if (cellData.isMarkAsUnread||cellData.unreadCount > 0) {
             [weakSelf.dataProvider markConversationAsRead:cellData];
             if (cellData.isLocalConversationFoldList) {
@@ -580,7 +566,7 @@ static NSString *kConversationCell_Minimalist_ReuseId = @"kConversationCell_Mini
     markAsReadAction.backgroundColor = RGB(20, 122, 255);
         
     // Mark as hide action
-    UITableViewRowAction *markHideAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:TUIKitLocalizableString(MarkHide) handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
+    UITableViewRowAction *markHideAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:TIMCommonLocalizableString(MarkHide) handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
         [weakSelf.dataProvider markConversationHide:cellData];
         if (cellData.isLocalConversationFoldList) {
             [TUIConversationListDataProvider_Minimalist  cacheConversationFoldListSettings_HideFoldItem:YES];
@@ -640,7 +626,7 @@ static NSString *kConversationCell_Minimalist_ReuseId = @"kConversationCell_Mini
     markAsReadAction.image = TUIDynamicImage(@"", TUIThemeModuleConversation_Minimalist,[UIImage imageNamed:TUIConversationImagePath_Minimalist(markAsReadImageName)]);
     
     // Mark as hide action
-    UIContextualAction *markHideAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:TUIKitLocalizableString(MarkHide) handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+    UIContextualAction *markHideAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:TIMCommonLocalizableString(MarkHide) handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
         completionHandler(YES);
         [weakSelf.dataProvider markConversationHide:cellData];
         if (cellData.isLocalConversationFoldList) {
@@ -752,7 +738,7 @@ static NSString *kConversationCell_Minimalist_ReuseId = @"kConversationCell_Mini
         if (uiMsgs.count > 0) {
             self.multiChooseView.hideButton.enabled = YES;
             self.multiChooseView.deleteButton.enabled = YES;
-            [self.multiChooseView.readButton setTitle:TUIKitLocalizableString(MarkAsRead) forState:UIControlStateNormal];
+            [self.multiChooseView.readButton setTitle:TIMCommonLocalizableString(MarkAsRead) forState:UIControlStateNormal];
             self.multiChooseView.readButton.clickCallBack = ^(id  _Nonnull button) {
                 @strongify(self)
                 [self chooseViewActionRead];
@@ -803,19 +789,17 @@ static NSString *kConversationCell_Minimalist_ReuseId = @"kConversationCell_Mini
         [self.delegate conversationListController:self didSelectConversation:data];
     } else {
         NSDictionary *param = @{
-            TUICore_TUIChatService_GetChatViewControllerMethod_TitleKey : data.title ?: @"",
-            TUICore_TUIChatService_GetChatViewControllerMethod_UserIDKey : data.userID ?: @"",
-            TUICore_TUIChatService_GetChatViewControllerMethod_GroupIDKey : data.groupID ?: @"",
-            TUICore_TUIChatService_GetChatViewControllerMethod_AvatarImageKey : data.avatarImage ?: [UIImage new],
-            TUICore_TUIChatService_GetChatViewControllerMethod_AvatarUrlKey : data.faceUrl ?: @"",
-            TUICore_TUIChatService_GetChatViewControllerMethod_ConversationIDKey : data.conversationID ?: @"",
-            TUICore_TUIChatService_GetChatViewControllerMethod_AtMsgSeqsKey : data.atMsgSeqs ?: @[],
-            TUICore_TUIChatService_GetChatViewControllerMethod_DraftKey: data.draftText ?: @""
+            TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_TitleKey : data.title ?: @"",
+            TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_UserIDKey : data.userID ?: @"",
+            TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_GroupIDKey : data.groupID ?: @"",
+            TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_AvatarImageKey : data.avatarImage ?: [UIImage new],
+            TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_AvatarUrlKey : data.faceUrl ?: @"",
+            TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_ConversationIDKey : data.conversationID ?: @"",
+            TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_AtMsgSeqsKey : data.atMsgSeqs ?: @[],
+            TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_DraftKey: data.draftText ?: @""
         };
 
-        UIViewController *chatVC = (UIViewController *)[TUICore callService:TUICore_TUIChatService_Minimalist
-                                                                     method:TUICore_TUIChatService_GetChatViewControllerMethod
-                                                                      param:param];
+        UIViewController *chatVC = (UIViewController *)[TUICore createObject:TUICore_TUIChatObjectFactory_Minimalist key:TUICore_TUIChatObjectFactory_GetChatViewControllerMethod param:param];
         [self.navigationController pushViewController:(UIViewController *)chatVC animated:YES];
     }
 }
@@ -879,7 +863,7 @@ static NSString *kConversationCell_Minimalist_ReuseId = @"kConversationCell_Mini
         
     UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     __weak typeof(self)weakSelf = self;
-    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(MarkHide) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(MarkHide) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
         [strongSelf.dataProvider markConversationHide:cellData];
         if (cellData.isLocalConversationFoldList) {
@@ -888,25 +872,25 @@ static NSString *kConversationCell_Minimalist_ReuseId = @"kConversationCell_Mini
     }]];
 
     if (!cellData.isMarkAsFolded){
-        [ac tuitheme_addAction:[UIAlertAction actionWithTitle:cellData.isOnTop?TUIKitLocalizableString(UnPin):TUIKitLocalizableString(Pin) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [ac tuitheme_addAction:[UIAlertAction actionWithTitle:cellData.isOnTop?TIMCommonLocalizableString(UnPin):TIMCommonLocalizableString(Pin) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             __strong typeof(weakSelf)strongSelf = weakSelf;
             [strongSelf.dataProvider pinConversation:cellData pin:!cellData.isOnTop];
         }]];
     }
 
-    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(ClearHistoryChatMessage) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(ClearHistoryChatMessage) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
         [strongSelf.dataProvider markConversationAsRead:cellData];
         [strongSelf.dataProvider clearHistoryMessage:cellData];
     }]];
 
     
-    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Delete) style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(Delete) style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
         [strongSelf.dataProvider removeConversation:cellData];
     }]];
     
-    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:nil]];
+    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:nil]];
     [self presentViewController:ac animated:YES completion:nil];
 }
 

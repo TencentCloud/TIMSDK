@@ -37,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) UIFont *titleFont;
 
-@property (nonatomic, assign) CGFloat rank;
+@property (nonatomic, assign) CGFloat weight;
 
 @property (nonatomic, strong) UIImage *markIcon;
 
@@ -47,7 +47,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy) void (^actionHandler)(TUIChatPopContextExtionItem * item);
 
-- (instancetype)initWithTitle:(NSString *)title markIcon:(UIImage *)markIcon rank:(NSInteger)rank withActionHandler:(void (^)(id action)) actionHandler;
+- (instancetype)initWithTitle:(NSString *)title markIcon:(UIImage *)markIcon weight:(NSInteger)weight withActionHandler:(void (^)(id action)) actionHandler;
 
 @end
 

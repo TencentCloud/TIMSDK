@@ -1,0 +1,677 @@
+/* 
+  Localizable.strings
+  English
+  
+  Created by harvy on 2020/10/9.
+  
+*/
+/***************************** 日期格式化 Start *************************/
+"YesterdayDateFormat" = "HH:mma";       // 英文是 HH:mma 不要动
+/***************************** 日期格式化 End ***************************/
+
+"TUIKitTipsMostSelectTextFormat" = "Select %ld at most";
+
+"Confirm" = "OK";
+"Cancel" = "Cancel";
+"Send" = "Send";
+"Save" = "Save";
+"You" = "You";
+"you" = "you";
+"Male" = "Male";
+"Female" = "Female";
+"File" = "Files";
+"Download" = "Download";
+"Unsetted" = "Not set";
+
+"Monday" = "Mon";
+"Tuesday" = "Tue";
+"Wednesday" = "Wed";
+"Thursday" = "Thur";
+"Friday" = "Fri";
+"Saturday" = "Sat";
+"Sunday" = "Sun";
+"Yesterday" = "Yesterday";
+"am" = "AM";
+"pm" = "PM";
+
+"Read" = "Read";
+"Unread" = "Unread";
+
+"Copy" = "Copy";
+"Delete" = "Delete";
+"Revoke" = "Recall";
+"Retry" = "Retry";
+"Re-send" = "Resend";
+"Make-a-call" = "Start Call";
+"Done" = "OK";
+"All" = "All";
+"Agreed" = "Agreed";
+"Disclined" = "Declined";
+"Agree" = "Agree";
+"Have-been-sent" = "Sent";
+"View-the-original" = "View Full Image";
+
+"OK" = "OK";
+"None" = "None";
+"Send" = "Send";
+"Cancel" = "Cancel";
+"Alia" = "Remark";
+"Group" = "List";
+"Accept" = "Agree";
+"Decline" = "Decline";
+"send_success" = "Sent";
+"add_success" = "Added";
+"delete_success" = "Deleted";
+"my_friend" = "My Friends";
+"no_personal_signature" = "No status";
+"SignatureFormat" = "Status:%@";
+"choose_avatar_for_you" = "The App randomly assigns you a system avatar.";
+"SearchGroupPlaceholder" = "User ID";
+"please_fill_in_verification_information" = "Enter verification information";
+"please_fill_in_remarks_group_info" = "Enter remark and list name";
+
+"no_set" = "Not set";
+"no_personal_signature" = "No status";
+"logout" = "Log Out";
+"login" = "Log In";
+"ReadAll" = "Read All";
+"Hide"    = "Hide";
+"Delete"    = "Delete";
+
+"ChatsNewChatText"    = "New Chat";
+"ChatsNewGroupText"  = "Create Group Chat";
+"ChatsSelectContact" = "Select Contact";
+"ContactsJoinGroup"  = "Add Group";
+"ContactsAddFriends" = "Add to Contacts";
+"ChatsCreatePrivateGroupTips" = "Create Discussion Group";
+"ChatsCreateGroupTips" = "Create Group Chat";
+"ChatsCreateChatRoomTips" = "Create Chat Room";
+"ChatsCreateDefaultTips" = "Create Group";
+"ChatsCreateCommunityTips" = "Create Community";
+"GroupJoin" = "Add Group";
+"GroupRequestJoinGroupFormat" = "%@ requests to join group chat.";
+"GroupDeleteFriend" = "Delete Contact";
+"GroupAddFirend" = "Add Contact";
+"GroupMember" = "Group Members";
+"ProfileAlia" = "Alias";
+"ProfileMessageDoNotDisturb" = "Mute Notifications";
+"ProfileStickyonTop" = "Pin";
+"ProfileBlocked" = "Block";
+"ProfileSendMessages" = "Send Message";
+"ProfileDeleteFirend" = "Delete Friend";
+"ProfileEditAlia" = "Alias";
+"ProfileDetails" = "Details";
+"ProfileSetBackgroundImage" = "Background";
+"ProfilePhoto" = "Profile Photo";
+"ProfileName"  = "Name";
+"ProfileAccount" = "Account";
+"ProfileSignature" = "Status";
+"ProfileGender" = "Gender";
+"ProfileEditName" = "Name";
+"ProfileEditNameDesc" = "Only letters, digits, underscores, and Chinese characters.";
+"ProfileEditSignture" = "Status";
+"ProfileEditGender" = "Gender";
+"ProfileEditAlia" = "Alias";
+"ProfileEdit" = "Edit";
+"ProfileAlia" = "Alias";
+"ProfileBlocked" = "Block";
+"ProfileMessageDoNotDisturb" = "Mute Notifications";
+"ProfileStickyonTop" = "Pin";
+"ProfileSendMessages" = "Send Message";
+"ProfileDeleteFirend" = "Delete Friend";
+"ProfileBirthday" = "Birthday";
+"SignatureFormat" = "Status:%@";
+
+"FriendRequestFormat" = "I'm %@";
+"FriendRequestFillInfo" = "Add Friend";
+"FriendOneWay" = "One-way Friend";
+"FriendAddTitle" = "Add Friend";
+"FriendAddVerificationMessage" = "Verification Message";
+"FriendAddResultSuccessWait" = "Sent successfully. Wait for approval.";
+"FriendAddResultForbid" = "The other user disabled friend request.";
+"FriendAddResultSuccess" = "Added to friend list";
+"FriendAddResultExists" = "You're already friends.";
+"MeFriendRequest" = "Friend Request";
+"MeFriendRequestMethodAgreeAll" = "Allow any user to add you as friend";
+"MeFriendRequestMethodNeedConfirm" = "Anyone upon Request";
+"MeFriendRequestMethodDenyAll" = "Decline friend request from any user";
+"MeMessageReadStatus" = "Message read status";
+"MeMessageReadStatusOpenDesc" = "If disabled, the message read status is hidden for all your messages and for all the messages sent by members in a chat.";
+"MeMessageReadStatusCloseDesc" = "If enabled, the message read status is displayed for all your messages and for all the messages sent by members in a chat.";
+
+"ShowOnlineStatus" = "Display online status";
+"ShowOnlineStatusOpenDesc" = "If disabled, the users' online status will not displayed in your session and contact list.";
+"ShowOnlineStatusCloseDesc" = "If enabled, the users' online status will displayed in your session and contact list.";
+"ShowPackageToast" = "This is the feature of ultimate edition";
+
+"ShowCallsRecord" = "Display calls record";
+
+"TUIKitClassic" = "Classic";
+"TUIKitMinimalist" = "Minimalist";
+"TUIKitThemeNameSystemFollowTitle" = "Automatic";
+"TUIKitThemeNameSystemFollowSubTitle" = "After this function is enabled, only the default skin (light/dark) will be displayed. Other skin styles cannot be switched";
+"TUIKitThemeNameSerious" = "Solemn";
+"TUIKitThemeNameLight" = "Light";
+"TUIKitThemeNameLivey" = "Lively";
+"TUIKitThemeNameDark" = "Dark";
+"TUIKitThemeNameSystem" = "System";
+
+"TUIKitDone" = "Done";
+"TUIKitWelcome" = "Welcome to Tencent Cloud Instant Messaging!";
+"TUIKitMicCamerAuthTips" = "Enable mic and camera permissions";
+"TUIKitMicAuth" = "Enable mic permission";
+"TUIKitTipsConfirmResendMessage" = "Resend this message? ";
+"TUIKitTipsSystemError" = "System error";
+"TUIKitTipsEnterRoomErrorFormat" = "Failed to enter the room: %d";
+"TUIKitWhoRequestForJoinGroupFormat" = "%@ requests to join group chat.";
+"TUIKitInviteJoinGroupFormat" = "invite %@ to join group chat.";
+"TUIKitAgreedByAdministor" = "Request approved by admin";
+"TUIkitDiscliedByAdministor" = "Admin declined the request.";
+"TUIKitDownloadProgressFormat" = "Downloading %d%%";
+"TUIKitOpenWithOtherApp" = "Open with another app";
+"TUIKitTipsContactListNil" = "Contact list is empty. Add friends first.";
+
+"TUIKitInputHoldToTalk" = "Hold to Talk";
+"TUIKitInputReleaseToSend" = "Release to End";
+"TUIKitInputReleaseToCancel" = "Release to Cancel";
+
+"TUIKitInputBlankMessageTitle" = "Unable to send blank message";
+"TUIKitInputWillFinishRecordInSeconds" = "Recording will end in %ld seconds.";
+"TUIKitInputRecordSlideToCancel" = "Slide up to cancel";
+"TUIKitInputRecordReleaseToCancel" = "Release to Cancel";
+"TUIKitInputRecordTimeshort" = "Message too short";
+"TUIKitInputRecordTimeLong" = "Message too long";
+
+"TUIKitGroupProfileDetails" = "Details";
+"TUIKitGroupProfileMember" = "Group Members";
+"TUIKitGroupProfileMemberCount" = "%d member(s)";
+"TUIKitGroupProfileMemberCountlu" = "%lu member(s)";
+"TUIKitGroupProfileType" = "Group Type";
+"TUIKitGroupProfileJoinType" = "Group Joining Method";
+"TUIKitGroupProfileInviteJoin" = "Invite";
+"TUIKitGroupProfileAutoApproval" = "Auto Approval";
+"TUIKitGroupProfileAlias" = "My Alias in Group";
+"TUIKitGroupProfileMessageDoNotDisturb" = "Mute Notifications";
+"TUIKitGroupProfileStickyOnTop" = "Pin";
+"TUIKitGroupProfileDeleteAndExit" = "Delete and Leave";
+"TUIKitGroupProfileDissolve" = "Disband Group";
+"TUIKitGroupProfileJoinDisable" = "Prohibited from Joining";
+"TUIKitGroupProfileAdminApprove" = "Admin Approval";
+"TUIKitGroupProfileEditAlias" = "Edit My Alias in Group";
+"TUIKitGroupProfileEditAliasDesc" = "Only letters, digits, underscores, and Chinese characters.";
+"TUIKitGroupProfileEditGroupName" = "Edit Group Name";
+"TUIKitGroupProfileEditAnnouncement" = "Edit Group Notice";
+"TUIKitGroupProfileEditAvatar" = "Change Group Profile Photo";
+"TUIKitGroupProfileDeleteGroupTips" = "After leaving, you will no longer receive messages from this group chat.";
+"TUIKitGroupProfileGroupCountFormat" = "Group members (%ld in total)";
+"TUIKitGroupProfileManage" = "Manage";
+"TUIKitGroupProfileManageAdd" = "Add Member";
+"TUIKitGroupProfileManageDelete" = "Delete Member";
+"TUIKitGroupProfileAdmainAdd" = "Set Administrator";
+"TUIKitGroupProfileAdmainDelete" = "Rmove Administrator";
+"TUIKitGroupTransferOwner" = "Transfer group";
+"TUIKitGroupTransferOwnerSuccess" = "Successful transfer";
+
+"TUIKitGroupApplicant" = "Request to Join Group";
+"TUIKitGroupDismssTipsFormat" = "Group %@ disbanded";
+"TUIKitGroupRecycledTipsFormat" = "%@ group has been reclaimed.";
+"TUIKitGroupKickOffTipsFormat" = "You were removed from the group %@.";
+"TUIKitGroupDropoutTipsFormat" = "You have left the group %@.";
+
+"TUIKitMessageTipsYouRecallMessage" = "You recalled a message.";
+"TUIKitMessageTipsReEditMessage" = "re-edit";
+"TUIKitMessageTipsRecallMessageFormat" = "\"%@\" recalled a message.";
+"TUIkitMessageTipsOthersRecallMessage" = "The other user recalled a message.";
+"TUIKitMessageTipsJoinGroupFormat" = "\"%@\" joined the group.";
+"TUIKitMessageTipsInviteJoinGroupFormat" = "\"%@\" invited \"%@\" to join the group.";
+"TUIKitMessageTipsLeaveGroupFormat" = "\"%@\" left the group chat.";
+"TUIKitMessageTipsKickoffGroupFormat" = "\"%@\" removed \"%@\" from the group.";
+"TUIKitMessageTipsSettAdminFormat" = "\"%@\" is set as admin.";
+"TUIKitMessageTipsCancelAdminFormat" = "The admin status of \"%@\" is terminated.";
+"TUIkitMessageTipsEditGroupNameFormat" = "%@ changed the group name to\"%@\",";
+"TUIKitMessageTipsEditGroupIntroFormat" = "%@ changed the group description to \"%@\".";
+"TUIKitMessageTipsEditGroupAnnounceFormat" = "%@ changed the group notice to \"%@\".";
+"TUIKitMessageTipsDeleteGroupAnnounceFormat" = "%@ deleted the group notice.";
+"TUIKitMessageTipsEditGroupAvatarFormat" = "%@ changed the group profile photo.";
+"TUIKitMessageTipsEditGroupOwnerFormat" = "%@ changed the group owner to \"%@\".";
+"TUIKitMessageTipsCreateGroupFormat" = "\"%@\" created a group.";
+"TUIKitMessageTipsUnsupportCustomMessage" = "[Custom Messages]";
+"TUIKitMessageTipsMute" = "is blocked from posting";
+"TUIKitMessageTipsUnmute" = "unblocked";
+
+"TUIKitSignalingFinishGroupChat" = "End Group Chat";
+"TUIKitSignalingFinishConversationAndTimeFormat" = "Duration: %.2d:%.2d.";
+"TUIKitSignalingNewCall" = "Start Call";
+"TUIKitSignalingNewGroupCallFormat" = "\"%@\" initiated a group call.";
+"TUIkitSignalingCancelCall" = "Cancel Call";
+"TUIkitSignalingCancelGroupCallFormat" = "\"%@\" canceled the group call.";
+"TUIkitSignalingHangonCall" = "Answered";
+"TUIKitSignalingHangonCallFormat" = "\"%@\" answered.";
+"TUIKitSignalingBusyFormat" = "\"%@\" is busy.";
+"TUIKitSignalingDeclineFormat" = "\"%@\" declined the call.";
+"TUIKitSignalingCallBusy" = "Line busy";
+"TUIkitSignalingDecline" = "Decline Call";
+"TUIKitSignalingNoResponse" = "No answer";
+"TUIkitSignalingUnrecognlize" = "Unrecognized call instruction";
+
+"TUIKitUserStatusUnknown" = "unknown";
+"TUIKitUserStatusOnline" = "online";
+"TUIKitUserStatusOffline" = "offline";
+"TUIKitUserStatusUnlogined" = "unlogined";
+
+"TUIkitMessageTypeImage" = "[Image]";
+"TUIKitMessageTypeVoice" = "[Voice]";
+"TUIkitMessageTypeVideo" = "[Video]";
+"TUIkitMessageTypeFile" = "[File]";
+"TUIKitMessageTypeAnimateEmoji" = "[Animated Sticker]";
+"TUIKitMessageTypeDraftFormat" = "[Drafts]";
+"TUIKitMessageTypeLastMsgCountFormat" = "messages";
+
+"TUIKitMessageReadPartRead" = "read";
+"TUIKitMessageReadPartUnread" = "unread";
+"TUIKitMessageReadPartDisable" = "disable read";
+"TUIKitMessageReadAllRead" = "All read";
+"TUIKitMessageReadC2CRead" = "Read";
+"TUIKitMessageReadC2CUnRead" = "Unread";
+"TUIKitMessageReadC2CUnReadDetail" = "Unread";
+"TUIKitMessageReadDetail" = "Message Detail";
+"TUIKitMessageReadNoMoreData" = "There is no more data";
+"TUIKitMessageReadGetReadMembersFail" = "Get Read Members Failed.";
+"TUIKitMessageReadGetUnreadMembersFail" = "Get Unread Members Failed.";
+
+"TUIKitMoreCamera" = "Take Photo";
+"TUIKitMorePhoto" = "Album";
+"TUIKitMoreVideo" = "Record Video";
+"TUIKitMoreVideoCaptureDurationTip" = "record time is too short";
+"TUIKitMoreFile" = "File";
+"TUIKitMoreVideoCall" = "Video Call";
+"TUIKitMoreVoiceCall" = "Voice Call";
+"TUIKitMoreLink" = "Custom";
+"TUIKitMoreLinkDetails" = "View Details>>";
+"TUIKitMorePoll" = "Poll";
+"TUIKitMoreGroupNote" = "Group Note";
+
+"TUIKitCallInviteYouVideoCall" = "invited you to a video call.";
+"TUIKitCallTurningOnMute" = "Mute On";
+"TUIKitCallTurningOffMute" = "Mute Off";
+"TUIKitCallUsingSpeaker" = "Turn On Speaker";
+"TUIKitCallUsingHeadphone" = "Turn Off Speaker";
+"TUIKitCallCancelCallingFormat" = "%@ canceled the call.";
+
+"TUIKitAtSelectMemberTitle" = "Select Group Members";
+
+"TUIKitConversationTipsAtMe" = "[You were mentioned]";
+"TUIKitConversationTipsAtAll" = "[@All]";
+"TUIKitConversationTipsAtMeAndAll" = "[I was mentioned][@All]";
+
+"TUIKitPublicGroup" = "Public Group";
+"TUIKitWorkGroup" = "Discussion Group";
+"TUIKitChatRoom" = "Chatroom";
+"TUIKitCommunity" = "Community";
+
+"TUIKitContactsNewFriends" = "New Contacts";
+"TUIKitContactsGroupChats" = "Group Chats";
+"TUIKitContactsBlackList" = "Blocked List";
+"TUIKitAddFriendSourceFormat" = "Source: %@";
+"TUIKitFriendApplicationApproved" = "Friend request accepted";
+"TUIKitFirendRequestRejected" = "Friend request declined";
+
+"TUIKitOfflinePushCallTips" = "You have a call request.";
+
+"TUIKitChatTap2Remove" = "Tap to remove";
+"TUIKitChatPendencyTitle" = "Tap to Process";
+"TUIKitChatPendencyRequestToJoinGroupFormat" = "%@ group joining request(s)";
+"TUIKitChatTipsAtMe" = "You were mentioned";
+"TUIKitChatBackToLatestLocation" = "back to latest location";
+"TUIKitChatNewMessages" = "%@new messages";
+
+"TUIKitAllowTypeAcceptOne" = "Allow any user to add you as friend";
+"TUIKitAllowTypeNeedConfirm" = "Anyone upon Request";
+"TUIKitAllowTypeDeclineAll" = "Decline friend request from any user";
+
+/***************************** 消息转发 & 消息搜索 *************************/
+// 补充
+"Multiple" = "Multiple";
+"Forward" = "Forward";
+"Delete" = "Delete";
+"Copy" = "Copy";
+"Revoke" = "Revoke";
+"Resend" = "Resend";
+"Search" = "Search";
+"Recall" = "Recall";
+"MultiSelect" = "Select";
+"Quote" = "Quote";
+
+"TUIKitCallMicCamAuthTips" = "Allow access to your microphone and camera";
+"TUIKitCallMicAuthTips" = "Allow access to your microphone";
+"TUIKitMessageTipsSureToResend" = "Are you sure you want to resend the message?";
+
+// 消息转发
+"TUIKitRelayNoMessageTips" = "Select messages";
+"TUIKitRelayRecentMessages" = "Recent Chats";
+"TUIKitRelayChatHistory" = "Chat History";
+"TUIKitRelaySepcialForbid" = "Cannot forward some selected messages (e.g., voice messages).";
+"TUIKitRelayConfirmForward" = "Are you sure you want to forward the messages?";
+"TUIKitRelayOneByOneForward" = "One-by-One Forward";
+"TUIKitRelayCombineForwad" = "Combine and Forward";
+"TUIKitRelayGroupChatHistory" = "Group Chat History";
+"TUIKitRelayChatHistoryForSomebodyFormat" = "Chat History of %@ and %@";
+"TUIKitRelayErrorForwardFormat" = "@\"Failed to forward: code:%d, desc:%@\"";
+"TUIKitRelayTargetCreateNewChat" = "New Chat";
+"TUIKitRelayTargetCreateNewGroup" = "New Group";
+"TUIKitRelayTargetSelectFromContacts" = "Select from contacts";
+"TUIKitRelayTargetCrateGroupError" = "Failed to create the group.";
+"TUIKitRelayTargetNoneTips" = "Select a contact or conversation";
+"TUIKitRelayLayerLimitTips" = "The current nesting level exceeds the limit.";
+"TUIKitRelayCompatibleText" = "Combine and Forward is not available. Upgrade to the latest version first.";
+"TUIKitRelayUnsupportForward" = "Unable to forward failed messages.";
+"TUIKitRelayOneByOnyOverLimit" = "Unable to forward the messages one by one because there are too many messages.";
+"TUIKitRelayPluginNotAllowed" = "Unable to forward group note or poll messages.";
+
+// 消息搜索
+"TUIKitSearchItemHeaderTitleContact" = "Contacts";
+"TUIKitSearchItemFooterTitleContact" = "More";
+"TUIKitSearchItemHeaderTitleGroup" = "Group Chat";
+"TUIKitSearchItemFooterTitleGroup" = "More";
+"TUIkitSearchItemHeaderTitleChatHistory" = "Chat History";
+"TUIKitSearchItemFooterTitleChatHistory" = "More";
+"TUIKitSearchResultMatchFormat" = "Contains: %@";
+"TUIKitSearchResultMatchGroupIDFormat" = "Contains group ID: %@";
+"TUIKitSearchResultMatchGroupMember" = "Contains group members:";
+"TUIKitSearchResultDisplayChatHistoryCountFormat" = "%zd message(s)";
+/***************************** 消息转发 & 消息搜索 *************************/
+
+
+/***************************** 消息回复 & 换肤 *************************/
+"Reply" = "Reply";
+"TUIKitReplyMessageNotFoundOriginMessage" = "Unable to locate the original message.";
+"TUIKitClearAllChatHistory" = "Clear Chat History";
+"TUIKitClearAllChatHistoryTips" = "Are you sure you want to clear the chat history?";
+"Discline" = "Decline";
+"Copied" = "Copied";
+"ConfirmDeleteMessage" = "Delete now";
+"TUIKitAddFriend" = "Add Contact";
+"TUIKitAddGroup" = "Add Group";
+"TUIKitSearchUserID" = "Search by user ID";
+"TUIKitSearchGroupID" = "Search by group ID";
+"TUIKitNoSelfSignature" = "No status";
+"TUIKitSelfSignatureFormat" = "Status: %@";
+"TUIKitGroupProfileManage" = "Manage";
+"TUIKitGroupManageShutupAllTips" = "When Mute All is enabled, only the group owner and admins are allowed to send messages.";
+"TUIKitGroupManageAdminSetting" = "Set as Admin";
+"TUIKitGroupManageShutAll" = "Mute All";
+"TUIKitGroupAddShutupMember" = "Add members to mute";
+"TUIKitGroupOwner" = "Group Owner";
+"TUIKitGroupManagerFormat" = "Admin (%zd/%zd)";
+"TUIKitSetShutupAllFormat" = "%@ enabled Mute All";
+"TUIKitCancelShutupAllFormat" = "%@ disabled Mute All";
+"TUIKitGroupNotice" = "Group Notice";
+"TUIKitGroupNoticeNull" = "No group notice";
+"Edit" = "Edit";
+"Done" = "OK";
+"TUIKitAddContactMyUserIDFormat" = "My User ID: %@";
+"TUIKitAddUserNoDataTips" = "This user does not exist.";
+"TUIKitAddGroupNoDataTips" = "This group chat does not exist.";
+/***************************** 消息回复 & 换肤 *************************/
+
+
+/***************************** 视频、图片加载 & 保存 *************************/
+"TUIKitVideoTranscoding" = "Transcoding video...";
+"TUIKitVideoDownloading" = "Downloading video...";
+"TUIKitVideoSavedSuccess" = "Video saved successfully.";
+"TUIKitVideoSavedFailed" = "Failed to save video.";
+"TUIKitPictureSavedSuccess" = "Image saved successfully.";
+"TUIKitPictureSavedFailed" = "Failed to save image.";
+/***************************** 视频、图片加载 & 保存 *************************/
+
+"TUIKitGroupSetAdminsForbidden" = "Unable to set an admin for this type of group chat.";
+"TUIKitGroupAddAdmins" = "Add Admin";
+"TUIKitGroupAddMemberOfBlockedForbidden" = "Unable to mute specified members for this type of group chat.";
+
+
+"TUIKitNotDownload"= "Not download";
+"TUIKitInputNoCameraTitle" = "No access to camera";
+"TUIKitInputNoCameraTips"  = "Unable to take photos, record videos, or make video calls. Click Authorize Now to allow access to your camera.";
+"TUIKitInputNoCameraOperateLater" = "Later";
+"TUIKitInputNoCameraOperateEnable" = "Authorize Now";
+
+
+"TUIKitInputNoMicTitle" = "No access to microphone";
+"TUIKitInputNoMicTips"  = "Unable to send voice messages, record videos, or make voice and video calls. Click Authorize Now to allow access to your microphone.";
+"TUIKitInputNoMicOperateLater" = "Later";
+"TUIKitInputNoMicOperateEnable" = "Authorize Now";
+
+
+"TUIKitInputNoPhotoTitle" = "No access to images";
+"TUIKitInputNoPhotoTips"  = "Unable to view or select images in a chat. Click Authorize Now to allow access to your images.";
+"TUIKitInputNoPhotoOperateLater" = "Later";
+"TUIKitInputNoPhotoerateEnable" = "Authorize Now";
+
+"TUIKitInputRecordTipsTitle" = "Swipe left to cancel or release to send";
+"TUIKitInputRecordCancelTipsTitle" = "Release to cancel";
+"TUIKitInputRecordRejectedInCall" = "Audio or video call is in progress, please try again later";
+"TUIKitInputRecordRejectedIsRecording" = "The current recording is not finished";
+
+"StickyonTop" = "Pin";
+"CancelStickonTop" = "UnPin";
+"ClearHistoryChatMessage" = "Clear messages";
+"MarkAsRead" = "Mark As Read";
+"MarkAsUnRead" = "Mark As UnRead";
+"MarkHide" = "Hide";
+"MinimizeGroup" = "Minimize Group";
+"More" = "More";
+"Info" = "Info";
+
+"TUIKitConversationMarkHide" = "Conversation Hide";
+"TUIKitConversationMarkHideDescriptionOn" = "After opening, this conversation will not appear in the conversation list, and the chat history will still be preserved";
+"TUIKitConversationMarkHideDescriptionOff" = "After closing, this conversation will appear in the conversation list and the chat history will still be preserved.";
+
+"TUIKitConversationMarkFoldGroups" = "Minimized Groups";
+"TUIKitConversationMarkFold" = "Minimize Group";
+
+
+"TUIKitRepliesDetailTitle" = "Reply Details";
+"TUIKitRepliesNum" = " replies";
+"TUIKitReference" = "reference";
+"TUIKitNotSupportThisMessage" = "[This message display is not currently supported]";
+
+"TUIKitTranslate" = "Translate";
+"TUIKitTranslateDefaultTips" = "Translated by IM";
+"TUIKitTranslateFailed" = "Unable to translate";
+"Hide" = "Hide";
+"TranslateMessage" = "Translate message to language";
+"TranslateLanguageNotSupport" = "Translation is not supported between current languages, please switch to another language.";
+
+"TUIKitSignalingSwitchToAudio" = "Switch to voice call";
+"TUIKitSignalingUnsupportedCalling" = "Unknown invitation";
+"TUIKitSignalingComfirmSwitchToAudio" = "Comfirm video to voice";
+
+"TUIKitErrorEnableUserStatusOnConsole" = "The user status not supported. Please enable the ability in the console first.";
+
+"TUIKitChooseAvatar" = "Choose Avatar";
+"TUIKitChooseCover" = "Choose a cover";
+"TUIKitChooseBackground" = "Choose a Wallpaper";
+"TUIKitDefaultBackground" = "Default background";
+
+"TUIKitChooseBackgroundSuccess" = "Setup Success！";
+"TUIKitChooseBackgroundFailed" = "Setup failed！";
+
+"TUIKitContactNoNewApplicationRequest" = "Friend request is empty";
+"TUIKitContactNoGroupChats" = "Group chats is empty";
+"TUIKitContactNoBlockList" = "Block list is emply";
+"TUIKitSearchNoResultLists" = "No conversations, contacts, or messages found";
+
+"TUIKitTyping" = "Typing";
+
+"TUIKitMessageTipsEditGroupAddOptFormat" = "%@ changed group add option to \"%@\"、";
+"TUIKitMessageTipsEditGroupInviteOptFormat" = "%@ changed group inviting option to \"%@\"、";
+
+"TUIKitCreatGroupNamed" = "Group Nickname";
+"TUIKitCreatGroupID" = "Group ID（optional）";
+"TUIKitCreatGroupNamed_Placeholder" = "Enter group nickname";
+"TUIKitCreatGroupID_Placeholder" = "Enter group ID";
+"TUIKitCreatGroupAvatar" = "Group Avatar";
+"TUIKitCreatGroupType" = "Group Type";
+"TUIKitCreatGroupType_Work" = "Friends Working group(Work)";
+"TUIKitCreatGroupType_Public" = "Stranger Social group(Public）";
+"TUIKitCreatGroupType_Meeting" = "Temporary Meeting group(Meeting）";
+"TUIKitCreatGroupType_Community" = "Community(Community)";
+"TUIKitCreatGroupType_Work_Desc" = "Friends work group (Work): Similar to ordinary WeChat groups, after creation, only friends who are already in the group can be invited to join the group, and there is no need for the approval of the invitee or the approval of the group owner.";
+"TUIKitCreatGroupType_Public_Desc" = "Stranger social group (Public): Similar to QQ group, the group owner can designate the group administrator after creation. After the user searches for the group ID and initiates a group application, the group owner or administrator must approve it before joining the group.";
+"TUIKitCreatGroupType_Meeting_Desc" = "Temporary meeting group (Meeting): After creation, you can enter and leave at will, and support viewing of messages before joining the group; it is suitable for audio and video conference scenarios, online education scenarios, and other scenarios that are combined with real-time audio and video products.";
+"TUIKitCreatGroupType_Community_Desc" = "Community(Community)：After creation, you can enter and leave at will, support up to 100,000 people, support historical message storage, and after users search for group ID and initiate a group application, they can join the group without administrator approval.";
+"TUIKitCreatGroupType_See_Doc" ="See product documentation for details";
+"TUIKitCreatGroupType_Desc_Highlight" = "product documentation";
+"TUIKitCreatGroupType_See_Doc_Simple" = "See product documentation";
+"TUIKitSearchItemCancel" = "Cancel";
+
+//----mini---
+"Pin" = "Pin";
+"UnPin" = "UnPin";
+"TUIKitSelected" = "Selected";
+"TUIKitThreadQuote" = "Thread Quote";
+"MessageInfo" = "Message Info";
+"C2CReadBy" = "Read";
+"C2CDeliveredTo" = "Delivered";
+"GroupReadBy" = "Read By";
+"GroupDeliveredTo" = "Delivered To";
+"TUIKitMessage" = "Message";
+"TUIKitAudio" = "Audio";
+"TUIKitVideo" = "Video";
+"TUIKitAddMembers" = "+ Add members";
+"TUIKitMembersRoleMember" = "Member";
+"TUIKitMembersRoleAdmin" = "Admin";
+"TUIKitMembersRoleSuper" = "Super";
+"TUIKitCreateCancel" = "Cancel";
+"TUIKitCreateNext" = "Next";
+"TUIKitCreateFinish" = "Done";
+"TUIKitCreateMemebers" = "Participants";
+"TUIKitDateToday" = "Today";
+//----mini---
+
+"TUIPollCreateNew" = "Create Poll";
+"TUIPollCreateSucceed" = "Create Succeeded";
+"TUIPollCreateFail" = "Create Failed";
+"TUIPollEnterTitle" = "Enter a poll question";
+"TUIPollEnterOption" = "Enter an option";
+"TUIPollAddOption" = "Add Option";
+"TUIPollEnableMultiSelect" = "Allow selecting multiple options";
+"TUIPollSingleSelect" = "Single";
+"TUIPollMultiSelect" = "Multiple";
+"TUIPollAnonymousVote" = "Anonymous votes";
+"TUIPollPublic" = "Public";
+"TUIPollNonPublic" = "Non-Public";
+"TUIPollNonAnonymous" = "Non-Anonymous";
+"TUIPollAnonymous" = "Anonymous";
+"TUIPollEnableNotification" = "Allow notification for new submit";
+"TUIPolllPublish" = "Publish";
+"TUIPollOneCount" = "vote";
+"TUIPollMoreCount" = "votes";
+"TUIPollInvitedParticipants" = "Invited: %d";
+"TUIPollRespondedParticipants" = "Responded: %d";
+"TUIPollResend" = "Resend";
+"TUIPollResendFail" = "Resend poll failed, error code: %d";
+"TUIPollEnd" = "Close Poll";
+"TUIPollEndFail" = "Close poll failed, error code: %d";
+"TUIPollVoteNow" = "Vote now";
+"TUIPollConfirmVote" = "Confirm";
+"TUIPollCancelVote" = "Cancel";
+"TUIPollPercent" = "votes %d, percent %.0f%%";
+"TUIPollEnded" = "Poll is closed";
+"TUIPollVoteSucceed" = "Vote succeeded";
+"TUIPollVoteFail" = "Vote failed";
+"TUIPollPublicResult" = "Public results";
+"TUIPollViewAllOptions" = "View all options";
+"TUIPollDisplayString" = "[Poll]";
+"TUIPollTextFieldExceedLimit" = "Maximum 50 characters";
+"TUIPollVoted" = "Voted";
+"TUIPoll" = "Poll";
+
+"TUIGroupNote" = "Group note";
+"TUIGroupNoteTitle" = "Group note";
+"TUIGroupNoteSettings" = "Settings";
+"TUIGroupNoteDeadline" = "Deadline %@";
+"TUIGroupNoteTitleHint" = "Enter group note title";
+"TUIGroupNoteDescriptionHint" = "Enter group note description";
+"TUIGroupNoteFormatExample" = "eg.";
+"TUIGroupNoteFormatHint" = "Fill in the group note form";
+"TUIGroupNoteFillIn" = "Please fill in";
+"TUIGroupNoteMultipleSettings" = "Allow multiple submission";
+"TUIGroupNoteDeadlineSettings" = "Set deadline";
+"TUIGroupNoteDeadlineNotSet" = "Not set";
+"TUIGroupNoteNotifySettings" = "Submission Result Notification";
+"TUIGroupNoteSend" = "Send";
+"TUIGroupNoteNow" = "Join group note now";
+"TUIGroupNoteMessageTitle" = "Group note";
+"TUIGroupNoteMessageTitleInfo" = "Started by %@, %d participated";
+"TUIGroupNoteTipsMessagePrefix" = "%@ participated in group note";
+"TUIGroupNoteHasStopped" = "Group note has stopped";
+"TUIGroupNoteDeadlineMustBeLater" = "The deadline must be later than the current time";
+"TUIGroupNoteDisplayString" = "[Group Note]";
+"TUIGroupNoteSendSucceed" = "Send succeeded";
+"TUIGroupNoteSendFail" = "Send failed";
+"TUIGroupNoteSubmitExceedLimit" = "The count of group notes exceeds the upper limit";
+"TUIGroupNoteTextFieldExceedLimit" = "Maximum 50 characters";
+"TUIGroupNoteSubmitOnce" = "Only one submission is allowed";
+"TUIGroupNoteSubmitNotAllowed" = "You are not allow to submit";
+"TUIGroupNoteExceedDeadline" = "Exceed deadline, collection stopped";
+"TUIGroupNoteNotChanged" = "Group note's content is not changed";
+"TUIGroupNoteExpand" = "...Expand...";
+"TUIGroupNoteNotDatePickerConfirm" = "OK";
+"TUIGroupNoteNotDatePickerCancel" = "Cancel";
+"TUIGroupNoteNotDatePickerDone" = "Done";
+"TUIGroupNoteNotDatePickerYear" = " ";
+"TUIGroupNoteNotDatePickerMonth" = " ";
+"TUIGroupNoteNotDatePickerDay" = " ";
+"TUIGroupNoteNotDatePickerHour" = " ";
+"TUIGroupNoteNotDatePickerMinute" = " ";
+"TUIGroupNoteNotDatePickerSecond" = " ";
+"TUIGroupNoteNotDatePickerAM" = "AM";
+"TUIGroupNoteNotDatePickerPM" = "PM";
+"TUIGroupNoteNotDatePickerNow" = " Now";
+"TUIGroupNoteNotDatePickerToday" = " Today";
+"TUIGroupNoteNotDatePickerMon" = " Mon";
+"TUIGroupNoteNotDatePickerTue" = " Tue";
+"TUIGroupNoteNotDatePickerWed" = " Wed";
+"TUIGroupNoteNotDatePickerTHR" = " Thu";
+"TUIGroupNoteNotDatePickerFRI" = " Fri";
+"TUIGroupNoteNotDatePickerSAT" = " Sat";
+"TUIGroupNoteNotDatePickerSUN" = " Sun";
+
+//----timApp---
+"TIMAppMainTitle" = "TencentCloud·IM";
+"TIMAppMainConnectingTitle" = "Connecting…";
+"TIMAppMainDisconnectTitle" = "TencentCloud·IM (not connected)";
+"TIMAppTabBarItemMessageText" = "Message";
+"TIMAppTabBarItemContactText" = "Contacts";
+"TIMAppTabBarItemMeText"      = "Me";
+"TIMAppTabBarItemMessageText_mini" = "Chats";
+"TIMAppTabBarItemContactText_mini" = "Contact";
+"TIMAppTabBarItemSettingText_mini" = "Settings";
+"TIMAppTabBarItemCallsRecordText_mini" = "Calls";
+"TIMAppChat" = "Chat";
+"TIMAppChatDisconnectTitle" = "Chat(not connected)";
+"TIMAppChatSecurityWarning" = "[Security Reminder] This App is only used to experience the features of Tencent Cloud IM products, and cannot be used for business negotiation and expansion. Please do not trust remittance, winning the lottery and other information related to money, do not easily make strange phone calls, beware of being deceived.";
+"TIMAppChatSecurityWarningReport" = "Report";
+"TIMAppTencentCloudIM" = "TencentCloudIM";
+"TIMAppWelcomeToChat" = " Welcome to Chat demo!";
+"TIMAppWelcomeToChatDetails" = "Welcome to Chat demo! You can try out various features such as sending text/emoji/rich media messages, checking message read status and friend relationship. You can also start one-to-one chats or group chats and manage groups with three no-replying bot friends equipped for you.";
+"TIMAppSelectStyle" = "Select Style";
+"TIMAppChatStyles" = "Chat styles";
+"TIMAppChangeTheme" = "Change Theme";
+"TIMAppChatThemes" = "Chat themes";
+"TIMAppEnterChat" = "Enter Chat";
+"TIMAppRunDemo" = "Run a demo in 1 minute with a few lines of code changes";
+"TIMAppCustomers" = "Over 10,000 customers per month";
+"TIMAppMessagingSuccess" = "Over 99.99% messaging success rate and service reliability";
+"TIMAppActiveUsers" = "Over 1 billion active users per month";
+"TIMAppOK" = "OK";
+"TIMApp1Billion+" = "1 billion+";
+"TIMApp10000+" = "10,000+";
+"TIMApp1Minute" = "1 minute";
+"TIMAppMeAbout" = "About TencentCloud·IM";
+"TIMAppConfirmLogout" = "Leave now?";
+"TIMAppConfirm" = "OK";
+"TIMAppCancel" = "Cancel";
+"TIMChangeLanguage" = "Language";
+//----timApp---

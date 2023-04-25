@@ -7,8 +7,8 @@
 
 #import "TUIVideoReplyQuoteView_Minimalist.h"
 #import "TUIVideoReplyQuoteViewData_Minimalist.h"
-#import "TUIDarkModel.h"
-#import "TUIDefine.h"
+#import <TUICore/TUIDarkModel.h>
+#import <TIMCommon/TIMDefine.h>
 
 @implementation TUIVideoReplyQuoteView_Minimalist
 

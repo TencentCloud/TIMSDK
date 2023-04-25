@@ -13,7 +13,7 @@
 static NSMutableArray *serviceList = nil;
 static NSMutableArray<NSDictionary *> *eventList = nil;
 static NSMutableArray<NSDictionary *> *extensionList = nil;
-static NSMutableDictionary *objectHashMap = nil;
+static NSMutableArray *objectFactoryList = nil;
 
 @implementation TUICore
 
@@ -21,7 +21,7 @@ static NSMutableDictionary *objectHashMap = nil;
     serviceList = [NSMutableArray array];
     eventList = [NSMutableArray array];
     extensionList = [NSMutableArray array];
-    objectHashMap = [NSMutableDictionary dictionary];
+    objectFactoryList = [NSMutableArray array];
     TUIRegisterThemeResourcePath(TUICoreThemePath, TUIThemeModuleCore);
     TUIRegisterThemeResourcePath(TUIBundlePath(@"TUICoreTheme_Minimalist",TUICoreBundle_Key_Class), TUIThemeModuleCore_Minimalist);
 
@@ -42,7 +42,7 @@ static NSMutableDictionary *objectHashMap = nil;
     [serviceList addObject:param];
 }
 
-+ (id<TUIServiceProtocol>)getService:(NSString *)serviceName {
++ (nullable id<TUIServiceProtocol>)getService:(NSString *)serviceName {
     if (serviceName.length == 0) {
         NSLog(@"invalid serviceName");
         NSAssert(NO, @"invalid serviceName");
@@ -61,6 +61,10 @@ static NSMutableDictionary *objectHashMap = nil;
 }
 
 + (id)callService:(NSString *)serviceName method:(NSString *)method param:(nullable NSDictionary *)param {
+    return [self.class callService:serviceName method:method param:param resultCallback:nil];
+}
+
++ (id)callService:(NSString *)serviceName method:(NSString *)method param:(nullable NSDictionary *)param resultCallback:(nullable TUICallServiceResultCallback) resultCallback{
     if (serviceName.length == 0) {
         NSLog(@"invalid serviceName");
         NSAssert(NO, @"invalid serviceName");
@@ -75,13 +79,21 @@ static NSMutableDictionary *objectHashMap = nil;
         NSString *pServiceName = service[@"serviceName"];
         if ([pServiceName isEqualToString:serviceName]) {
             id<TUIServiceProtocol> pObject = service[@"object"];
-            if (pObject && [pObject respondsToSelector:@selector(onCall:param:)]) {
-                return [pObject onCall:method param:param];
+            if(resultCallback){
+                if (pObject && [pObject respondsToSelector:@selector(onCall:param:resultCallback:)]) {
+                    return [pObject onCall:method param:param resultCallback:resultCallback];
+                }
+            }
+            else {
+                if (pObject && [pObject respondsToSelector:@selector(onCall:param:)]) {
+                    return [pObject onCall:method param:param];
+                }
             }
         }
     }
     
     return nil;
+    
 }
 
 + (void)registerEvent:(NSString *)key subKey:(NSString *)subKey object:(id<TUINotificationProtocol>)object {
@@ -166,9 +178,9 @@ static NSMutableDictionary *objectHashMap = nil;
     }
 }
 
-+ (void)registerExtension:(NSString *)key object:(id<TUIExtensionProtocol>)object {
-    if (key.length == 0) {
-        NSLog(@"invalid key");
++ (void)registerExtension:(NSString *)extensionID object:(id<TUIExtensionProtocol>)object {
+    if (extensionID.length == 0) {
+        NSLog(@"invalid extensionID");
         return;
     }
     if (object == nil) {
@@ -177,7 +189,7 @@ static NSMutableDictionary *objectHashMap = nil;
     }
     
     NSDictionary *extension = @{
-        @"key" : [key copy],
+        @"extensionID" : [extensionID copy],
         @"object" : [TUIWeakProxy proxyWithTarget:object]
     };
     
@@ -186,22 +198,22 @@ static NSMutableDictionary *objectHashMap = nil;
     }
 }
 
-+ (void)unRegisterExtension:(NSString *)key object:(id<TUIExtensionProtocol>)object {
-    if (key.length == 0) {
-        NSLog(@"invalid key");
++ (void)unRegisterExtension:(NSString *)extensionID object:(id<TUIExtensionProtocol>)object {
+    if (extensionID.length == 0) {
+        NSLog(@"invalid extensionID");
         return;
     }
     
     @synchronized (extensionList) {
         NSMutableArray *removeExtensionList = [NSMutableArray array];
         for (NSDictionary *extension in extensionList) {
-            NSString *pkey = [extension objectForKey:@"key"];
+            NSString *pkey = [extension objectForKey:@"extensionID"];
             id pObject = [extension objectForKey:@"object"];
             
             if (pObject == nil || [(TUIWeakProxy *)pObject target] == nil) {
                 [removeExtensionList addObject:extension];
             }
-            else if ([pkey isEqualToString:key]) {
+            else if ([pkey isEqualToString:extensionID]) {
                 [removeExtensionList addObject:extension];
             }
         }
@@ -209,19 +221,19 @@ static NSMutableDictionary *objectHashMap = nil;
     }
 }
 
-+ (NSDictionary *)getExtensionInfo:(NSString *)key param:(nullable NSDictionary *)param {
-    if (key.length == 0) {
-        NSLog(@"invalid key");
++ (NSDictionary *)getExtensionInfo:(NSString *)extensionID param:(nullable NSDictionary *)param {
+    if (extensionID.length == 0) {
+        NSLog(@"invalid extensionID");
         return nil;
     }
     
     @synchronized (extensionList) {
         for (NSDictionary *extension in extensionList) {
-            NSString *pkey = [extension objectForKey:@"key"];
-            if ([pkey isEqualToString:key]) {
+            NSString *pkey = [extension objectForKey:@"extensionID"];
+            if ([pkey isEqualToString:extensionID]) {
                 id<TUIExtensionProtocol> pObject = [extension objectForKey:@"object"];
-                if (pObject) {
-                    NSDictionary *info = [pObject getExtensionInfo:key param:param];
+                if (pObject && [pObject respondsToSelector:@selector(getExtensionInfo:param:)]) {
+                    NSDictionary *info = [pObject getExtensionInfo:extensionID param:param];
                     if (info) {
                         return info;
                     }
@@ -231,6 +243,119 @@ static NSMutableDictionary *objectHashMap = nil;
     }
     return nil;
 }
+
++ (NSArray<TUIExtensionInfo *> *)getExtensionList:(NSString *)extensionID param:(nullable NSDictionary *)param {
+    if (extensionID.length == 0) {
+        NSLog(@"invalid extensionID");
+        return @[];
+    }
+    
+    @synchronized (extensionList) {
+        NSMutableArray *resultExtensionInfoList = [NSMutableArray array];
+        for (NSDictionary *extension in extensionList) {
+            NSString *pkey = [extension objectForKey:@"extensionID"];
+            if ([pkey isEqualToString:extensionID]) {
+                id<TUIExtensionProtocol> pObject = [extension objectForKey:@"object"];
+                if (pObject && [pObject respondsToSelector:@selector(onGetExtension:param:)]) {
+                    NSArray<TUIExtensionInfo *> *infoList = [pObject onGetExtension:extensionID param:param];
+                    if (infoList) {
+                        [resultExtensionInfoList addObjectsFromArray:infoList];
+                    }
+                }
+            }
+        }
+        
+        // sort
+        NSArray *result = [resultExtensionInfoList sortedArrayUsingComparator:^NSComparisonResult(TUIExtensionInfo *obj1, TUIExtensionInfo *obj2) {
+            if (obj1.weight > obj2.weight) {
+                return NSOrderedAscending;
+            } else {
+                return NSOrderedDescending;
+            }
+        }];
+        return result;
+    }
+    return @[];
+}
+
++ (void)raiseExtension:(NSString *)extensionID parentView:(UIView *)parentView param:(nullable NSDictionary *)param {
+    if (extensionID.length == 0) {
+        NSLog(@"invalid extensionID");
+        return ;
+    }
+    @synchronized (extensionList) {
+        for (NSDictionary *extension in extensionList) {
+            NSString *pkey = [extension objectForKey:@"extensionID"];
+            if ([pkey isEqualToString:extensionID]) {
+                id<TUIExtensionProtocol> pObject = [extension objectForKey:@"object"];
+                if (pObject && [pObject respondsToSelector:@selector(onRaiseExtension:parentView:param:)]) {
+                    return [pObject onRaiseExtension:extensionID parentView:parentView param:param];
+                }
+            }
+        }
+    }
+
+}
+
++ (void)registerObjectFactoryName:(NSString *)factoryName objectFactory:(id<TUIObjectProtocol>)objectFactory {
+    if (factoryName.length == 0) {
+        NSLog(@"invalid factoryName");
+        return;
+    }
+    if (objectFactory == nil) {
+        NSLog(@"invalid objectFactory");
+        return;
+    }
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    param[@"factoryName"] = factoryName;
+    param[@"objectFactory"] = objectFactory;
+    [objectFactoryList addObject:param];
+}
+
++ (void)unRegisterObjectFactory:(NSString *)factoryName {
+    @synchronized (objectFactoryList) {
+        
+        NSMutableArray *removeObjectFactoryList = [NSMutableArray array];
+        for (NSDictionary *objectFactory in objectFactoryList) {
+            NSString *pFactoryName = [objectFactory objectForKey:@"factoryName"];
+            id pFactoryObject = [objectFactory objectForKey:@"objectFactory"];
+            
+            if ([pFactoryName isEqualToString:factoryName] && pFactoryObject != nil){
+                [removeObjectFactoryList addObject:pFactoryObject];
+            }
+        }
+        [objectFactoryList removeObjectsInArray:removeObjectFactoryList];
+    }
+}
+
++ (id)createObject:(NSString *)factoryName key:(NSString *)key param:(NSDictionary *)param  {
+    return [self _createObject:factoryName key:key param:param];
+}
+
++ (id)_createObject:(NSString *)factoryName key:(NSString *)key param:(NSDictionary *)param {
+    if (factoryName.length == 0) {
+        NSLog(@"invalid factoryName");
+        NSAssert(NO, @"invalid factoryName");
+        return nil;
+    }
+    if (key.length == 0) {
+        NSLog(@"invalid key");
+        NSAssert(NO, @"invalid key");
+        return nil;
+    }
+    for (NSDictionary *factory in objectFactoryList) {
+        NSString *pFactoryName = factory[@"factoryName"];
+        if ([pFactoryName isEqualToString:factoryName]) {
+            id<TUIObjectProtocol> pObject = factory[@"objectFactory"];
+            if (pObject && [pObject respondsToSelector:@selector(onCreateObject:param:)]) {
+                return [pObject onCreateObject:key param:param];
+            }
+        }
+    }
+    
+    return nil;
+}
+
 @end
 
 
@@ -301,5 +426,10 @@ static NSMutableDictionary *objectHashMap = nil;
 - (NSString *)debugDescription {
     return [_target debugDescription];
 }
+
+@end
+
+
+@implementation TUIExtensionInfo
 
 @end

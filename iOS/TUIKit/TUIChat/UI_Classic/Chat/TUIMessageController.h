@@ -1,6 +1,6 @@
 
 #import "TUIBaseMessageController.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

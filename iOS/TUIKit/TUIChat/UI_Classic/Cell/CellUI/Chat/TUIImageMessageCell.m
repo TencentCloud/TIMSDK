@@ -6,7 +6,7 @@
 //
 
 #import "TUIImageMessageCell.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 
 @interface TUIImageMessageCell ()
 
@@ -70,21 +70,23 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    
-    CGFloat topMargin = 0;
-    CGFloat height = self.container.mm_h;
-    
     if (self.messageData.messageModifyReactsSize.height > 0) {
-        topMargin = 10;
-        height = (self.container.mm_h - self.messageData.messageModifyReactsSize.height - topMargin);
+        if (self.tagView) {
+            CGFloat topMargin = 10;
+            CGFloat tagViewTopMargin = 6;
+            CGFloat thumbHeight = self.container.mm_h - topMargin - self.messageData.messageModifyReactsSize.height - tagViewTopMargin;
+            _thumb.mm_height(thumbHeight ).mm_left(0).mm_top(topMargin).mm_width(self.container.mm_w);
+            self.tagView.frame = CGRectMake(0, self.container.mm_h - self.messageData.messageModifyReactsSize.height - tagViewTopMargin , self.container.frame.size.width, self.messageData.messageModifyReactsSize.height);
+        }
         self.bubbleView.hidden = NO;
     }
     else {
+        CGFloat topMargin = 0;
+        CGFloat height = self.container.mm_h;
+        _thumb.mm_height(height ).mm_left(0).mm_top(topMargin).mm_width(self.container.mm_w);
         self.bubbleView.hidden = YES;
     }
     
-    _thumb.mm_height(height ).mm_left(0).mm_top(topMargin).mm_width(self.container.mm_w);
-
     _thumb.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
     _progress.mm_fill();

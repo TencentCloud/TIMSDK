@@ -6,11 +6,11 @@
 //
 
 #import "TUIMemberInfoCell_Minimalist.h"
-#import "UIView+TUILayout.h"
+#import <TUICore/UIView+TUILayout.h>
 #import "TUIMemberInfoCellData.h"
 #import "UIImageView+WebCache.h"
-#import "TUIDefine.h"
-#import "TUIThemeManager.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
 
 #define kScale UIScreen.mainScreen.bounds.size.width / 375.0
 
@@ -34,7 +34,7 @@
 {
     _data = data;
     
-    UIImage *defaultImage = TUIConfig.defaultConfig.defaultAvatarImage;
+    UIImage *defaultImage = DefaultAvatarImage;
     [self.avatarImageView sd_setImageWithURL:[NSURL URLWithString:data.avatarUrl] placeholderImage:data.avatar?:defaultImage];
     self.nameLabel.text = data.name;
     
@@ -52,7 +52,7 @@
         self.avatarImageView.mm_width(34.0 * kScale).mm_height(34.0 * kScale);
         self.avatarImageView.mm_left(16.0 * kScale);
         self.nameLabel.font = [UIFont systemFontOfSize:16.0 * kScale];
-        self.nameLabel.textColor = TUICoreDynamicColor(@"form_value_text_color", @"#000000");
+        self.nameLabel.textColor = TIMCommonDynamicColor(@"form_value_text_color", @"#000000");
     }
     
     if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {

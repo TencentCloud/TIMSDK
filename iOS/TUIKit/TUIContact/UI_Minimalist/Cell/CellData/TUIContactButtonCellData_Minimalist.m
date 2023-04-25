@@ -6,7 +6,7 @@
 //
 
 #import "TUIContactButtonCellData_Minimalist.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 
 @implementation TUIContactButtonCellData_Minimalist
 - (CGFloat)heightOfWidth:(CGFloat)width

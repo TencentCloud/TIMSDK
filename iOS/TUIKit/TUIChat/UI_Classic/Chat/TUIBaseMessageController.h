@@ -12,7 +12,7 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "TUIMessageCell.h"
+#import <TIMCommon/TUIMessageCell.h>
 
 #import "TUIBaseMessageControllerDelegate.h"
 #import "TUIChatConversationModel.h"

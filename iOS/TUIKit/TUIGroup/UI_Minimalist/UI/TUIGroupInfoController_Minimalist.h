@@ -11,8 +11,9 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-@interface TUIGroupInfoController_Minimalist : UITableViewController
+@interface TUIGroupInfoController_Minimalist : UIViewController
 
+@property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSString *groupId;
 
 

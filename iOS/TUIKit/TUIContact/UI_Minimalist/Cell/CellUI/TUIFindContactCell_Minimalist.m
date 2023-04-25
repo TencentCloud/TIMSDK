@@ -6,9 +6,9 @@
 //
 
 #import "TUIFindContactCell_Minimalist.h"
-#import "UIView+TUILayout.h"
-#import "TUIDefine.h"
-#import "TUIThemeManager.h"
+#import <TUICore/UIView+TUILayout.h>
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
 #define kScale UIScreen.mainScreen.bounds.size.width / 375.0
 
 @implementation TUIFindContactCell_Minimalist
@@ -80,7 +80,7 @@
     if (_mainTitleLabel == nil) {
         _mainTitleLabel = [[UILabel alloc] init];
         _mainTitleLabel.text = @"mainTitle";
-        _mainTitleLabel.textColor = TUICoreDynamicColor(@"form_title_color", @"#000000");
+        _mainTitleLabel.textColor = TIMCommonDynamicColor(@"form_title_color", @"#000000");
         _mainTitleLabel.font = [UIFont boldSystemFontOfSize:kScale390(16)];
     }
     return _mainTitleLabel;
@@ -100,7 +100,7 @@
     if (_descLabel == nil) {
         _descLabel = [[UILabel alloc] init];
         _descLabel.text = @"descLabel";
-        _descLabel.textColor = TUICoreDynamicColor(@"form_desc_color", @"#888888");
+        _descLabel.textColor = TIMCommonDynamicColor(@"form_desc_color", @"#888888");
         _descLabel.font = [UIFont systemFontOfSize:kScale390(12)];
     }
     return _descLabel;
@@ -124,7 +124,7 @@
     while (len > 0) {
         NSRange range = [text.lowercaseString rangeOfString:key.lowercaseString options:NSCaseInsensitiveSearch range:NSMakeRange(loc, len)];
         if (range.length) {
-            [attr addAttribute:NSForegroundColorAttributeName value:TUICoreDynamicColor(@"primary_theme_color", @"#147AFF") range:range];
+            [attr addAttribute:NSForegroundColorAttributeName value:TIMCommonDynamicColor(@"primary_theme_color", @"#147AFF") range:range];
             loc = range.location + 1;
             len = text.length - loc;
         }else {

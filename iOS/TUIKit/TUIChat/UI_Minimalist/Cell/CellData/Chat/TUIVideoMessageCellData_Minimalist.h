@@ -13,7 +13,7 @@
   *  2. The business logic for obtaining video information and cover information has been implemented in this document. When you need to get video and cover data, you can directly call the relevant member functions declared in this file
   */
 
-#import "TUIBubbleMessageCellData_Minimalist.h"
+#import <TIMCommon/TUIBubbleMessageCellData_Minimalist.h>
 #import "TUIMessageItem.h"
 #import "TUIChatDefine.h"
 

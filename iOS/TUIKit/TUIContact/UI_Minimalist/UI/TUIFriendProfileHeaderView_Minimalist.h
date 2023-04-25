@@ -17,9 +17,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TUIFriendProfileHeaderView_Minimalist : UIView
 @property (nonatomic, strong) UIImageView *headImg;
 @property (nonatomic, strong) UILabel *descriptionLabel;
-@property (nonatomic, strong) TUIFriendProfileHeaderItemView * itemMessage;
-@property (nonatomic, strong) TUIFriendProfileHeaderItemView * itemAudio;
-@property (nonatomic, strong) TUIFriendProfileHeaderItemView * itemVideo;
+@property (nonatomic, strong) UIView *functionListView;
+
+- (void)setItemViewList:(NSArray<TUIFriendProfileHeaderItemView *> *)itemList;
 
 @end
 

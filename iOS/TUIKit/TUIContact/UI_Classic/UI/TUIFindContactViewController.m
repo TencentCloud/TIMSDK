@@ -6,11 +6,11 @@
 //
 
 #import "TUIFindContactViewController.h"
-#import "TUIGlobalization.h"
-#import "TUICore.h"
+#import <TUICore/TUIGlobalization.h>
+#import <TUICore/TUICore.h>
 #import "TUIFindContactCell.h"
 #import "TUIFindContactViewDataProvider.h"
-#import "TUIThemeManager.h"
+#import <TUICore/TUIThemeManager.h>
 
 @interface TUIFindContactViewController () <UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource>
 
@@ -26,7 +26,7 @@
 
 - (void)dealloc
 {
-    [[UIBarButtonItem appearanceWhenContainedInInstancesOfClasses:@[[UISearchBar class]]] setTitle:TUIKitLocalizableString(Cancel)];
+    [[UIBarButtonItem appearanceWhenContainedInInstancesOfClasses:@[[UISearchBar class]]] setTitle:TIMCommonLocalizableString(Cancel)];
 }
 
 - (void)viewDidLoad {
@@ -47,9 +47,9 @@
     self.definesPresentationContext = YES;//不设置会导致一些位置错乱，无动画等问题
     
     UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.text =self.type == TUIFindContactTypeC2C ? TUIKitLocalizableString(TUIKitAddFriend) : TUIKitLocalizableString(TUIKitAddGroup);
+    titleLabel.text =self.type == TUIFindContactTypeC2C ? TIMCommonLocalizableString(TUIKitAddFriend) : TIMCommonLocalizableString(TUIKitAddGroup);
     titleLabel.font = [UIFont boldSystemFontOfSize:17.0];
-    titleLabel.textColor = TUICoreDynamicColor(@"nav_title_text_color", @"#000000");
+    titleLabel.textColor = TIMCommonDynamicColor(@"nav_title_text_color", @"#000000");
     [titleLabel sizeToFit];
     self.navigationItem.titleView = titleLabel;
     self.view.backgroundColor = self.searchBar.backgroundColor;
@@ -73,7 +73,7 @@
 {
     NSInteger count = self.type == TUIFindContactTypeC2C ? self.provider.users.count : self.provider.groups.count;
     self.noDataTipsLabel.hidden = !self.tipsLabel.hidden || count || self.searchBar.text.length == 0;
-    self.noDataTipsLabel.text = self.type == TUIFindContactTypeC2C ? TUIKitLocalizableString(TUIKitAddUserNoDataTips) : TUIKitLocalizableString(TUIKitAddGroupNoDataTips);
+    self.noDataTipsLabel.text = self.type == TUIFindContactTypeC2C ? TIMCommonLocalizableString(TUIKitAddUserNoDataTips) : TIMCommonLocalizableString(TUIKitAddGroupNoDataTips);
     return count;
 }
 
@@ -151,16 +151,16 @@
 {
     if (_searchBar == nil) {
         _searchBar = [[UISearchBar alloc] init];
-        _searchBar.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"F3F4F5");
-        _searchBar.placeholder = self.type == TUIFindContactTypeC2C ? TUIKitLocalizableString(TUIKitSearchUserID) : TUIKitLocalizableString(TUIKitSearchGroupID);
+        _searchBar.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"F3F4F5");
+        _searchBar.placeholder = self.type == TUIFindContactTypeC2C ? TIMCommonLocalizableString(TUIKitSearchUserID) : TIMCommonLocalizableString(TUIKitSearchGroupID);
         _searchBar.backgroundImage = [[UIImage alloc] init];
         _searchBar.delegate = self;
         UITextField *searchField = [_searchBar valueForKey:@"searchField"];
         if (searchField) {
-            searchField.backgroundColor = TUICoreDynamicColor(@"search_textfield_bg_color", @"#FEFEFE");
+            searchField.backgroundColor = TIMCommonDynamicColor(@"search_textfield_bg_color", @"#FEFEFE");
         }
         
-        [[UIBarButtonItem appearanceWhenContainedInInstancesOfClasses:@[[UISearchBar class]]] setTitle:TUIKitLocalizableString(Search)];
+        [[UIBarButtonItem appearanceWhenContainedInInstancesOfClasses:@[[UISearchBar class]]] setTitle:TIMCommonLocalizableString(Search)];
     }
     return _searchBar;
 }
@@ -169,7 +169,7 @@
 {
     if (_tableView == nil) {
         _tableView = [[UITableView alloc] init];
-        _tableView.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"F3F4F5");
+        _tableView.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"F3F4F5");
         _tableView.delegate = self;
         _tableView.dataSource = self;
         [_tableView registerClass:TUIFindContactCell.class forCellReuseIdentifier:@"cell"];

@@ -7,13 +7,13 @@
 //
 
 #import "TUIFileViewController_Minimalist.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 #import <QuickLook/QuickLook.h>
 #import "ReactiveObjC/ReactiveObjC.h"
-#import "UIView+TUILayout.h"
+#import <TUICore/UIView+TUILayout.h>
 #import "UIView+TUIToast.h"
-#import "TUIGlobalization.h"
-#import "TUIThemeManager.h"
+#import <TUICore/TUIGlobalization.h>
+#import <TUICore/TUIThemeManager.h>
 
 @interface TUIFileViewController_Minimalist () <UIDocumentInteractionControllerDelegate>
 @property (nonatomic, strong) UIImageView *image;
@@ -30,9 +30,9 @@
     self.view.backgroundColor = [UIColor whiteColor];
 
     UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.text = TUIKitLocalizableString(File);
+    titleLabel.text = TIMCommonLocalizableString(File);
     titleLabel.font = [UIFont boldSystemFontOfSize:17.0];
-    titleLabel.textColor = TUICoreDynamicColor(@"nav_title_text_color", @"#000000");
+    titleLabel.textColor = TIMCommonDynamicColor(@"nav_title_text_color", @"#000000");
     [titleLabel sizeToFit];
     self.navigationItem.titleView = titleLabel;
     
@@ -40,7 +40,7 @@
     UIImage *defaultImage = [UIImage imageNamed:TUIChatImagePath(@"back")];
     UIButton *leftButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
     [leftButton addTarget:self action:@selector(onBack:) forControlEvents:UIControlEventTouchUpInside];
-    [leftButton setImage:TUICoreDynamicImage(@"nav_back_img", defaultImage) forState:UIControlStateNormal];
+    [leftButton setImage:TIMCommonDynamicImage(@"nav_back_img", defaultImage) forState:UIControlStateNormal];
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
     self.navigationItem.leftBarButtonItem = leftItem;
     
@@ -71,16 +71,16 @@
         @strongify(self)
         int progress = [x intValue];
         if (progress < 100 && progress > 0) {
-            [self.button setTitle:[NSString stringWithFormat:TUIKitLocalizableString(TUIKitDownloadProgressFormat), progress] forState:UIControlStateNormal];
+            [self.button setTitle:[NSString stringWithFormat:TIMCommonLocalizableString(TUIKitDownloadProgressFormat), progress] forState:UIControlStateNormal];
         } else {
-            [self.button setTitle:TUIKitLocalizableString(TUIKitOpenWithOtherApp) forState:UIControlStateNormal];
+            [self.button setTitle:TIMCommonLocalizableString(TUIKitOpenWithOtherApp) forState:UIControlStateNormal];
         }
     }];
     if ([_data isLocalExist]) {
-        [self.button setTitle:TUIKitLocalizableString(TUIKitOpenWithOtherApp) forState:UIControlStateNormal];
+        [self.button setTitle:TIMCommonLocalizableString(TUIKitOpenWithOtherApp) forState:UIControlStateNormal];
 
     } else {
-        [self.button setTitle:TUIKitLocalizableString(Download) forState:UIControlStateNormal];
+        [self.button setTitle:TIMCommonLocalizableString(Download) forState:UIControlStateNormal];
     }
 
 }

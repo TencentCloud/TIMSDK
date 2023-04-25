@@ -6,10 +6,10 @@
 //
 
 #import "TUIChatPopContextRecentView.h"
-#import "TUICommonModel.h"
-#import "TUIDefine.h"
-#import "NSString+TUIEmoji.h"
-#import "TUIFitButton.h"
+#import <TIMCommon/TIMCommonModel.h>
+#import <TIMCommon/TIMDefine.h>
+#import <TIMCommon/NSString+TUIEmoji.h>
+#import <TIMCommon/TUIFitButton.h>
 
 @interface TUIChatPopContextRecentView()
 @property (nonatomic, strong) NSMutableArray *sectionIndexInGroup;
@@ -90,7 +90,7 @@
         
         UIView *line = [[UIView alloc] initWithFrame:CGRectMake(margin, self.frame.size.height - 1, self.frame.size.width - 2 *margin, 0.5)];;
         [self addSubview:line];
-        line.backgroundColor = TUICoreDynamicColor(@"separator_color", @"#DBDBDB");
+        line.backgroundColor = TIMCommonDynamicColor(@"separator_color", @"#DBDBDB");
     }
 }
 
@@ -196,12 +196,12 @@
 
 @implementation TUIChatPopContextExtionItem
 
-- (instancetype)initWithTitle:(NSString *)title markIcon:(UIImage *)markIcon rank:(NSInteger)rank withActionHandler:(void (^)(id action)) actionHandler {
+- (instancetype)initWithTitle:(NSString *)title markIcon:(UIImage *)markIcon weight:(NSInteger)weight withActionHandler:(void (^)(id action)) actionHandler {
     self = [super init];
     if (self) {
         _title = title;
         _markIcon = markIcon;
-        _rank = rank;
+        _weight = weight;
         _actionHandler = actionHandler;
     }
     return self;

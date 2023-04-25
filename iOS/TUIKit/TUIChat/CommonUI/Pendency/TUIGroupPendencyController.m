@@ -6,7 +6,7 @@
 //
 
 #import "TUIGroupPendencyController.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 
 @interface TUIGroupPendencyController ()
 
@@ -20,7 +20,7 @@
 
     self.tableView.tableFooterView = [UIView new];
 
-    self.title = TUIKitLocalizableString(TUIKitGroupApplicant);
+    self.title = TIMCommonLocalizableString(TUIKitGroupApplicant);
 }
 
 - (void)dealloc

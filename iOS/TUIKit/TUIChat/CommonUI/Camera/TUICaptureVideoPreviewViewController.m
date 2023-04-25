@@ -1,7 +1,7 @@
 
 #import "TUICaptureVideoPreviewViewController.h"
-#import "TUICommonModel.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMCommonModel.h>
+#import <TIMCommon/TIMDefine.h>
 
 @import AVFoundation;
 

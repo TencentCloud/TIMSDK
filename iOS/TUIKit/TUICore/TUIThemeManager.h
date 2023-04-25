@@ -80,9 +80,11 @@ NS_ASSUME_NONNULL_BEGIN
 #define TUIContactDynamicColor(colorKey, defaultHex) TUIDynamicColor(colorKey, TUIThemeModuleContact, defaultHex)
 #define TUIGroupDynamicColor(colorKey, defaultHex) TUIDynamicColor(colorKey, TUIThemeModuleGroup, defaultHex)
 #define TUISearchDynamicColor(colorKey, defaultHex) TUIDynamicColor(colorKey, TUIThemeModuleSearch, defaultHex)
-#define TUICallingDynamicColor(colorKey, defaultHex) TUIDynamicColor(colorKey, TUIThemeModuleCalling, defaultHex)
+#define TUICallKitDynamicColor(colorKey, defaultHex) TUIDynamicColor(colorKey, TUIThemeModuleCalling, defaultHex)
 #define TUIPollDynamicColor(colorKey, defaultHex) TUIDynamicColor(colorKey, TUIThemeModulePoll, defaultHex)
 #define TUIGroupNoteDynamicColor(colorKey, defaultHex) TUIDynamicColor(colorKey, TUIThemeModuleGroupNote, defaultHex)
+#define TIMCommonDynamicColor(colorKey, defaultHex) TUIDynamicColor(colorKey, TUIThemeModuleTIMCommon, defaultHex)
+#define TUITranslationDynamicColor(colorKey, defaultHex) TUIDynamicColor(colorKey, TUIThemeModuleTranslation, defaultHex)
 
 /**
  * 动态获取图片
@@ -98,6 +100,8 @@ NS_ASSUME_NONNULL_BEGIN
 #define TUICallingBundleThemeImage(imageKey,defaultImageName) TUICallingDynamicImage(imageKey,TUICallingCommonBundleImage(defaultImageName))
 #define TUIPollBundleThemeImage(imageKey,defaultImageName) TUIPollDynamicImage(imageKey,TUIPollCommonBundleImage(defaultImageName))
 #define TUIGroupNoteBundleThemeImage(imageKey,defaultImageName) TUIGroupNoteDynamicImage(imageKey,TUIGroupNoteCommonBundleImage(defaultImageName))
+#define TIMCommonBundleThemeImage(imageKey,defaultImageName) TIMCommonDynamicImage(imageKey,TIMCommonBundleImage(defaultImageName))
+#define TUITranslationBundleThemeImage(imageKey,defaultImageName) TUITranslationDynamicImage(imageKey,TUITranslationCommonBundleImage(defaultImageName))
 
 #define TUIDynamicImage(imageKey, themeModule, defaultImg) [TUITheme dynamicImage:imageKey module:themeModule defaultImage:defaultImg]
 #define TUIDemoDynamicImage(imageKey, defaultImg) TUIDynamicImage(imageKey, TUIThemeModuleDemo, defaultImg)
@@ -110,6 +114,8 @@ NS_ASSUME_NONNULL_BEGIN
 #define TUICallingDynamicImage(imageKey, defaultImg) TUIDynamicImage(imageKey, TUIThemeModuleCalling, defaultImg)
 #define TUIPollDynamicImage(imageKey, defaultImg) TUIDynamicImage(imageKey, TUIThemeModulePoll, defaultImg)
 #define TUIGroupNoteDynamicImage(imageKey, defaultImg) TUIDynamicImage(imageKey, TUIThemeModuleGroupNote, defaultImg)
+#define TIMCommonDynamicImage(imageKey, defaultImg) TUIDynamicImage(imageKey, TUIThemeModuleTIMCommon, defaultImg)
+#define TUITranslationDynamicImage(imageKey, defaultImg) TUIDynamicImage(imageKey, TUIThemeModuleTranslation, defaultImg)
 
 #define __TUIDefaultBundleImage(imageBundlePath) [UIImage imageWithContentsOfFile:imageBundlePath]
 #define TUIDemoCommonBundleImage(imageName) __TUIDefaultBundleImage(TUIDemoImagePath(imageName))
@@ -122,13 +128,15 @@ NS_ASSUME_NONNULL_BEGIN
 #define TUICallingCommonBundleImage(imageName) __TUIDefaultBundleImage(TUICallingImagePath(imageName))
 #define TUIPollCommonBundleImage(imageName) __TUIDefaultBundleImage(TUIPollImagePath(imageName))
 #define TUIGroupNoteCommonBundleImage(imageName) __TUIDefaultBundleImage(TUIGroupNoteImagePath(imageName))
+#define TIMCommonBundleImage(imageName) __TUIDefaultBundleImage(TIMCommonImagePath(imageName))
+#define TUITranslationCommonBundleImage(imageName) __TUIDefaultBundleImage(TUITranslationImagePath(imageName))
 
 /**
  * 主题模块
  * The module of the theme
  */
 typedef NS_ENUM(NSInteger, TUIThemeModule) {
-    TUIThemeModuleAll          = 0xFF,
+    TUIThemeModuleAll          = 0xFFFFFF,
     TUIThemeModuleDemo         = 0x1 << 0,
     TUIThemeModuleCore         = 0x1 << 1,
     TUIThemeModuleChat         = 0x1 << 2,
@@ -150,6 +158,8 @@ typedef NS_ENUM(NSInteger, TUIThemeModule) {
     // UI Plugins
     TUIThemeModulePoll                    = 0x1 << 16,
     TUIThemeModuleGroupNote               = 0x1 << 17,
+    TUIThemeModuleTIMCommon               = 0x1 << 18,
+    TUIThemeModuleTranslation             = 0x1 << 19,
 };
 
 @interface TUITheme : NSObject

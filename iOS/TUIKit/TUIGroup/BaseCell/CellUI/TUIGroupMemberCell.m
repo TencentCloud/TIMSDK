@@ -1,7 +1,7 @@
 #import "TUIGroupMemberCell.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 #import "ReactiveObjC/ReactiveObjC.h"
-#import "UIView+TUILayout.h"
+#import <TUICore/UIView+TUILayout.h>
 #import "SDWebImage/UIImageView+WebCache.h"
 
 @implementation TUIGroupMemberCell

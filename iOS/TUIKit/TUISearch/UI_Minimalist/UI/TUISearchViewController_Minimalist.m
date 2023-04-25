@@ -5,7 +5,7 @@
 //  Created by harvy on 2020/12/24.
 //
 
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 #import "TUISearchViewController_Minimalist.h"
 #import "TUISearchBar_Minimalist.h"
 #import "TUISearchResultHeaderFooterView_Minimalist.h"
@@ -13,7 +13,7 @@
 #import "TUISearchResultCellModel.h"
 #import "TUISearchResultListController_Minimalist.h"
 #import "TUISearchDataProvider.h"
-#import "TUICore.h"
+#import <TUICore/TUICore.h>
 #import "TUISearchEmptyView_Minimalist.h"
 
 @interface TUISearchViewController_Minimalist () <UITableViewDelegate, UITableViewDataSource, TUISearchBarDelegate_Minimalist, TUISearchResultDelegate>
@@ -97,7 +97,6 @@ static NSString * const HFId = @"HFId";
         navigationBar.backgroundColor = [self navBackColor];
         navigationBar.barTintColor = [self navBackColor];
         navigationBar.shadowImage = [UIImage new];
-        [[UINavigationBar appearance] setTranslucent:NO];
     }
 }
 
@@ -108,7 +107,7 @@ static NSString * const HFId = @"HFId";
 
 -  (TUISearchEmptyView_Minimalist *)noDataEmptyView {
     if (_noDataEmptyView == nil) {
-        _noDataEmptyView = [[TUISearchEmptyView_Minimalist alloc] initWithImage:TUISearchBundleThemeImage(@"", @"search_not_found_icon") Text:TUIKitLocalizableString(TUIKitSearchNoResultLists)];
+        _noDataEmptyView = [[TUISearchEmptyView_Minimalist alloc] initWithImage:TUISearchBundleThemeImage(@"", @"search_not_found_icon") Text:TIMCommonLocalizableString(TUIKitSearchNoResultLists)];
         _noDataEmptyView.hidden = YES;
     }
     return _noDataEmptyView;
@@ -251,22 +250,20 @@ static NSString * const HFId = @"HFId";
 
     if (module == TUISearchResultModuleContact && [cellModel.context isKindOfClass:V2TIMFriendInfo.class]) {
         V2TIMFriendInfo *friend = cellModel.context;
-        param = @{TUICore_TUIChatService_GetChatViewControllerMethod_TitleKey : cellModel.title ?: @"",
-                  TUICore_TUIChatService_GetChatViewControllerMethod_UserIDKey : friend.userID ?: @"",
-                  TUICore_TUIChatService_GetChatViewControllerMethod_AvatarImageKey : cellModel.avatarImage ?: [UIImage new],
+        param = @{TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_TitleKey : cellModel.title ?: @"",
+                  TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_UserIDKey : friend.userID ?: @"",
+                  TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_AvatarImageKey : cellModel.avatarImage ?: [UIImage new],
         };
     }
 
     if (module == TUISearchResultModuleGroup && [cellModel.context isKindOfClass:V2TIMGroupInfo.class]) {
         V2TIMGroupInfo *group = cellModel.context;
-        param = @{TUICore_TUIChatService_GetChatViewControllerMethod_TitleKey : cellModel.title ?: @"",
-                  TUICore_TUIChatService_GetChatViewControllerMethod_GroupIDKey : group.groupID ?: @"",
-                  TUICore_TUIChatService_GetChatViewControllerMethod_AvatarImageKey : cellModel.avatarImage ?: [UIImage new],
+        param = @{TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_TitleKey : cellModel.title ?: @"",
+                  TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_GroupIDKey : group.groupID ?: @"",
+                  TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_AvatarImageKey : cellModel.avatarImage ?: [UIImage new],
         };
     }
-    UIViewController *chatVc = [TUICore callService:TUICore_TUIChatService_Minimalist
-                                             method:TUICore_TUIChatService_GetChatViewControllerMethod
-                                              param:param];
+    UIViewController *chatVc = [TUICore createObject:TUICore_TUIChatObjectFactory_Minimalist key:TUICore_TUIChatObjectFactory_GetChatViewControllerMethod param:param];
     NSParameterAssert(chatVc);
     [(UIViewController *)chatVc setTitle:cellModel.title?:cellModel.titleAttributeString.string];
     [self.navigationController pushViewController:(UIViewController *)chatVc animated:YES];

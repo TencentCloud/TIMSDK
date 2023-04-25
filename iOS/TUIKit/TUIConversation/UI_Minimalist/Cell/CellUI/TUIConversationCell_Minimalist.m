@@ -40,7 +40,7 @@
     }];
 
 
-    NSString *imageName = (convData.showCheckBox && convData.selected) ? TUICoreImagePath(@"icon_select_selected") : TUICoreImagePath(@"icon_select_normal");
+    NSString *imageName = (convData.showCheckBox && convData.selected) ? TIMCommonImagePath(@"icon_select_selected") : TIMCommonImagePath(@"icon_select_normal");
     self.selectedIcon.image = [UIImage imageNamed:imageName];
 
     UIImage *image = TUIDynamicImage(@"", TUIThemeModuleConversation_Minimalist,[UIImage imageNamed:TUIConversationImagePath_Minimalist(@"message_not_disturb")]);

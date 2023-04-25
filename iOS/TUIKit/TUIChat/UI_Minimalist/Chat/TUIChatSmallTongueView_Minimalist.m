@@ -6,8 +6,9 @@
 //
 
 #import "TUIChatSmallTongueView_Minimalist.h"
-#import "TUIThemeManager.h"
-#import "TUIDarkModel.h"
+#import <TUICore/TUIThemeManager.h>
+#import <TUICore/TUIDarkModel.h>
+#import <TIMCommon/TIMDefine.h>
 
 #define TongueMiddleSpace 5.f
 #define TongueRightSpace 10.f

@@ -6,7 +6,7 @@
 //
 
 #import "TUIFaceMessageCellData_Minimalist.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 
 @implementation TUIFaceMessageCellData_Minimalist
 
@@ -15,7 +15,7 @@
     TUIFaceMessageCellData_Minimalist *faceData = [[TUIFaceMessageCellData_Minimalist alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
     faceData.groupIndex = elem.index;
     faceData.faceName = [[NSString alloc] initWithData:elem.data encoding:NSUTF8StringEncoding];
-    for (TUIFaceGroup *group in [TUIConfig defaultConfig].faceGroups) {
+    for (TUIFaceGroup *group in [TIMConfig defaultConfig].faceGroups) {
         if(group.groupIndex == faceData.groupIndex){
             NSString *path = [group.groupPath stringByAppendingPathComponent:faceData.faceName];
             faceData.path = path;
@@ -27,7 +27,7 @@
 }
 
 + (NSString *)getDisplayString:(V2TIMMessage *)message {
-    return TUIKitLocalizableString(TUIKitMessageTypeAnimateEmoji);
+    return TIMCommonLocalizableString(TUIKitMessageTypeAnimateEmoji);
 }
 
 - (CGSize)contentSize

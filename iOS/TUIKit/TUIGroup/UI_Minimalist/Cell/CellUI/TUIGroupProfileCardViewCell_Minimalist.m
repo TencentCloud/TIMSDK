@@ -6,9 +6,10 @@
 //
 
 #import "TUIGroupProfileCardViewCell_Minimalist.h"
-#import "TUICore.h"
-#import "TUIThemeManager.h"
-#import "TUICommonModel.h"
+#import <TUICore/TUICore.h>
+#import <TUICore/TUIThemeManager.h>
+#import <TIMCommon/TIMDefine.h>
+#import <TIMCommon/TIMCommonModel.h>
 
 @implementation TUIGroupProfileHeaderItemView_Minimalist
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -27,6 +28,7 @@
     self.textLabel = [[UILabel alloc] init];
     self.textLabel.font = [UIFont systemFontOfSize:kScale390(16)];
     self.textLabel.textColor = [UIColor tui_colorWithHex:@"#000000"];
+    self.textLabel.userInteractionEnabled = YES;
     [self addSubview:self.textLabel];
     self.textLabel.text = @"Message";
     
@@ -76,22 +78,47 @@
     
     self.descriptionLabel = [[UILabel alloc] init];
     self.descriptionLabel.font = [UIFont boldSystemFontOfSize:kScale390(24)];
+    self.descriptionLabel.textAlignment = NSTextAlignmentCenter;
+    self.descriptionLabel.userInteractionEnabled = YES;
     [self addSubview:self.descriptionLabel];
     
     self.idLabel = [[UILabel alloc] init];
     self.idLabel.font = [UIFont systemFontOfSize:kScale390(12)];
     self.idLabel.textColor = [UIColor tui_colorWithHex:@"666666"];
+    self.idLabel.textAlignment = NSTextAlignmentCenter;
+    self.idLabel.userInteractionEnabled = YES;
     [self addSubview:self.idLabel];
     
-    self.itemMessage = [[TUIGroupProfileHeaderItemView_Minimalist alloc] init];
-    [self addSubview:self.itemMessage];
-    
-    self.itemAudio = [[TUIGroupProfileHeaderItemView_Minimalist alloc] init];
-    [self addSubview:self.itemAudio];
-    
-    self.itemVideo = [[TUIGroupProfileHeaderItemView_Minimalist alloc] init];
-    [self addSubview:self.itemVideo];
+    self.functionListView = [[UIView alloc] init];
+    self.functionListView.userInteractionEnabled = YES;
+    [self addSubview:self.functionListView];
+}
 
+- (void)setGroupInfo:(V2TIMGroupInfo *)groupInfo {
+    _groupInfo = groupInfo;
+    [self.headImg sd_setImageWithURL:[NSURL URLWithString:self.groupInfo.faceURL] placeholderImage:DefaultGroupAvatarImageByGroupType(self.groupInfo.groupType)];
+    self.descriptionLabel.text = groupInfo.groupName;
+    self.idLabel.text = self.groupInfo.groupID;
+}
+
+- (void)setItemViewList:(NSArray<TUIGroupProfileHeaderItemView_Minimalist *> *)itemList {
+    for (UIView *subView in self.functionListView.subviews) {
+        [subView removeFromSuperview];
+    }
+    if (itemList.count > 0) {
+        for (TUIGroupProfileHeaderItemView_Minimalist *itemView in itemList) {
+            [self.functionListView addSubview:itemView];
+        }
+        CGFloat width = kScale390(92);
+        CGFloat height = kScale390(95);
+        CGFloat space = kScale390(18);
+        CGFloat contentWidth = itemList.count * width + (itemList.count - 1) * space;
+        CGFloat x = 0.5 * (self.bounds.size.width - contentWidth);
+        for (TUIGroupProfileHeaderItemView_Minimalist *itemView in itemList) {
+            itemView.frame = CGRectMake(x, 0, width, height);
+            x = CGRectGetMaxX(itemView.frame) + space;
+        }
+    }
 }
 
 - (void)layoutSubviews {
@@ -106,28 +133,11 @@
         self.headImg.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
     }
     
-    [self.descriptionLabel sizeToFit];
-    self.descriptionLabel.frame = CGRectMake((self.bounds.size.width - self.descriptionLabel.frame.size.width) *0.5 ,
-                                             self.headImg.frame.origin.y + self.headImg.frame.size.height + kScale390(10),
-                                       self.descriptionLabel.frame.size.width,
-                                       self.descriptionLabel.frame.size.height);
-
-    [self.idLabel sizeToFit];
-    self.idLabel.frame = CGRectMake((self.bounds.size.width - self.idLabel.frame.size.width) *0.5 ,
-                                             self.descriptionLabel.frame.origin.y + self.descriptionLabel.frame.size.height + kScale390(8),
-                                       self.idLabel.frame.size.width,
-                                       self.idLabel.frame.size.height);
-
+    self.descriptionLabel.frame = CGRectMake(0, self.headImg.frame.origin.y + self.headImg.frame.size.height + kScale390(10), self.bounds.size.width, 30);
+    self.idLabel.frame = CGRectMake(0, self.descriptionLabel.frame.origin.y + self.descriptionLabel.frame.size.height + kScale390(8), self.bounds.size.width, 30);
     
-    CGFloat width = self.bounds.size.width;
-    CGFloat padding = kScale390(24);
-    if(!self.itemVideo.isHidden && !self.itemAudio.isHidden) {
-        self.itemMessage.frame = CGRectMake(kScale390(33), self.idLabel.frame.origin.y + self.idLabel.frame.size.height + kScale390(18), kScale390(92), kScale390(95));
-        self.itemAudio.frame = CGRectMake(self.itemMessage.frame.origin.x +self.itemMessage.frame.size.width + kScale390(24), self.idLabel.frame.origin.y + self.idLabel.frame.size.height + kScale390(18), kScale390(92), kScale390(95));
-        self.itemVideo.frame = CGRectMake(self.itemAudio.frame.origin.x +self.itemMessage.frame.size.width + kScale390(24), self.idLabel.frame.origin.y + self.idLabel.frame.size.height + kScale390(18), kScale390(92), kScale390(95));
-    }
-    else {
-        self.itemMessage.frame = CGRectMake((self.bounds.size.width - kScale390(92)) *0.5, self.idLabel.frame.origin.y + self.idLabel.frame.size.height + kScale390(18), kScale390(92), kScale390(95));
+    if (self.functionListView.subviews.count > 0) {
+        self.functionListView.frame = CGRectMake(0, CGRectGetMaxY(self.idLabel.frame) + kScale390(18), self.bounds.size.width, kScale390(95));
     }
 }
 
@@ -145,7 +155,7 @@
 }
 
 - (void)setupViews {
-    self.headerView = [[TUIGroupProfileHeaderView_Minimalist alloc] initWithFrame:CGRectMake(0, 0, self.contentView.bounds.size.width, kScale390(355))];
+    self.headerView = [[TUIGroupProfileHeaderView_Minimalist alloc] initWithFrame:CGRectMake(0, 0, Screen_Width, kScale390(355))];
 
     [self.contentView addSubview:self.headerView];
 }
@@ -157,44 +167,19 @@
     [self.headerView.headImg sd_setImageWithURL:data.avatarUrl placeholderImage:data.avatarImage];
     self.headerView.descriptionLabel.text = data.name;
     self.headerView.idLabel.text = [NSString stringWithFormat:@"ID: %@",data.identifier];
-    [self setupHeaderViewData];
+    [self setupExtesionList];
 }
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.headerView.frame = CGRectMake(0, 0, self.contentView.bounds.size.width, kScale390(355));
+    if (self.headerView.functionListView.subviews.count > 0) {
+        self.headerView.frame = CGRectMake(0, 0, self.contentView.bounds.size.width, kScale390(355));
+    } else{
+        self.headerView.frame = CGRectMake(0, 0, self.contentView.bounds.size.width, kScale390(257));
+    }
     [self.headerView.descriptionLabel sizeToFit];
+    self.headerView.itemViewList = self.itemViewList;
 }
-- (void)setupHeaderViewData {
-    
-    [self.headerView.itemMessage.iconView setImage:
-         TUIDynamicImage(@"", TUIThemeModuleContact_Minimalist, [UIImage imageNamed:TUIContactImagePath_Minimalist(@"contact_info_message")])
-    ];
-    self.headerView.itemMessage.textLabel.text = TUIKitLocalizableString(TUIKitMessage);
-    
-    [self.headerView.itemAudio.iconView setImage:
-         TUIDynamicImage(@"", TUIThemeModuleContact_Minimalist, [UIImage imageNamed:TUIContactImagePath_Minimalist(@"contact_info_audio")])
-    ];
-    self.headerView.itemAudio.textLabel.text = TUIKitLocalizableString(TUIKitAudio);
-    
-    [self.headerView.itemVideo.iconView setImage:
-         TUIDynamicImage(@"", TUIThemeModuleContact_Minimalist, [UIImage imageNamed:TUIContactImagePath_Minimalist(@"contact_info_video")])
-    ];
-    self.headerView.itemVideo.textLabel.text = TUIKitLocalizableString(TUIKitVideo);
-    
-    NSString *groupID = self.cardData.identifier;
-    NSString *userID = nil;
-    NSDictionary *param = @{TUICore_TUIChatExtension_GetMoreCellInfo_GroupID : groupID ? groupID : @"",TUICore_TUIChatExtension_GetMoreCellInfo_UserID : userID ? userID : @""};
-    NSDictionary *videoExtentionInfo = [TUICore getExtensionInfo:TUICore_TUIChatExtension_GetMoreCellInfo_VideoCall param:param];
-    NSDictionary *audioExtentionInfo = [TUICore getExtensionInfo:TUICore_TUIChatExtension_GetMoreCellInfo_AudioCall param:param];
-    
-    self.headerView.itemVideo.hidden = YES;
-    self.headerView.itemAudio.hidden = YES;
-    if (audioExtentionInfo) {
-        self.headerView.itemAudio.hidden = NO;
-    }
-    if (videoExtentionInfo) {
-        self.headerView.itemVideo.hidden = NO;
-    }
-    
+- (void)setupExtesionList {
+
 }
 @end

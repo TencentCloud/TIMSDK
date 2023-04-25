@@ -6,7 +6,8 @@
 //  Copyright © 2016年 AlexiChen. All rights reserved.
 //
 #import <UIKit/UIKit.h>
-#import "TUIDefine.h"
+#import <TIMCommon/TIMCommonModel.h>
+#import <TIMCommon/TIMDefine.h>
 
 @interface TUISearchFriendViewController_Minimalist : UIViewController
 

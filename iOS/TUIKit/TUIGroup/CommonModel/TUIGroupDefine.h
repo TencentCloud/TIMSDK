@@ -5,7 +5,7 @@
 //  Created by xiangzhang on 2022/10/14.
 //
 
-#import "TUICommonModel.h"
+#import <TIMCommon/TIMCommonModel.h>
 
 #ifndef TUIGroupDefine_h
 #define TUIGroupDefine_h

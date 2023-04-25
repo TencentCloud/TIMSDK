@@ -7,8 +7,8 @@
 //
 
 #import "TUIMenuCell_Minimalist.h"
-#import "TUIThemeManager.h"
-#import "TUIDefine.h"
+#import <TUICore/TUIThemeManager.h>
+#import <TIMCommon/TIMDefine.h>
 
 @implementation TUIMenuCell_Minimalist
 - (id)initWithFrame:(CGRect)frame

@@ -36,34 +36,12 @@
 }
 
 #pragma mark - Override Methods
-- (NSString *)forwardTitleWithMyName:(NSString *)nameStr
-{
-    return [NSString stringWithFormat:TUIKitLocalizableString(TUIKitRelayChatHistoryForSomebodyFormat), self.conversationData.title, nameStr];
+- (NSString *)forwardTitleWithMyName:(NSString *)nameStr {
+    return [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitRelayChatHistoryForSomebodyFormat), self.conversationData.title, nameStr];
 }
 
-- (void)inputController:(TUIInputController *)inputController didSelectMoreCell:(TUIInputMoreCell *)cell
-{
+- (void)inputController:(TUIInputController *)inputController didSelectMoreCell:(TUIInputMoreCell *)cell {
     [super inputController:inputController didSelectMoreCell:cell];
-    
-    NSString *key = cell.data.key;
-    if([key isEqualToString:TUIInputMoreCellKey_Link]) {  // 自定义消息
-        NSString *text = TUIKitLocalizableString(TUIKitWelcome);
-        NSString *link = TUITencentCloudHomePageEN;
-        NSString *language = [TUIGlobalization tk_localizableLanguageKey];
-        if ([language containsString:@"zh-"]) {
-            link =  TUITencentCloudHomePageCN;
-        }
-        NSError *error = nil;
-        NSDictionary *param = @{BussinessID: BussinessID_TextLink, @"text":text, @"link":link};
-        NSData *data = [NSJSONSerialization dataWithJSONObject:param options:0 error:&error];
-        if(error)
-        {
-            NSLog(@"[%@] Post Json Error", [self class]);
-            return;
-        }
-        V2TIMMessage *message = [TUIMessageDataProvider getCustomMessageWithJsonData:data];
-        [self sendMessage:message];
-    }
 }
 
 - (void)inputControllerBeginTyping:(TUIInputController *)inputController {

@@ -4,7 +4,7 @@
 #import "TUIMessageDataProvider_Minimalist.h"
 #import "TUIMessageDataProvider_Minimalist+MessageDeal.h"
 #import "TUITextMessageCellData_Minimalist.h"
-#import "TUISystemMessageCellData.h"
+#import <TIMCommon/TUISystemMessageCellData.h>
 #import "TUIVoiceMessageCellData_Minimalist.h"
 #import "TUIImageMessageCellData_Minimalist.h"
 #import "TUIVideoMessageCellData_Minimalist.h"
@@ -23,7 +23,8 @@
  */
 #define MaxReEditMessageDelay 2 * 60
 
-static NSArray *customMessageInfo = nil;
+static NSMutableArray *customMessageInfo = nil;
+static NSMutableArray *pluginCustomMessageInfo = nil;
 
 @implementation TUIMessageDataProvider_Minimalist
 
@@ -33,32 +34,39 @@ static NSArray *customMessageInfo = nil;
 //                      Custom Message Configuration
 // *************************************************************************
 + (void)load {
-    customMessageInfo = @[@{BussinessID : BussinessID_TextLink,
-                            TMessageCell_Name : @"TUILinkCell_Minimalist",
-                            TMessageCell_Data_Name : @"TUILinkCellData_Minimalist"
-                          },
-                          @{BussinessID : BussinessID_GroupCreate,
-                            TMessageCell_Name : @"TUIGroupCreatedCell_Minimalist",
-                            TMessageCell_Data_Name : @"TUIGroupCreatedCellData_Minimalist"
-                          },
-                          @{BussinessID : BussinessID_Evaluation,
-                            TMessageCell_Name : @"TUIEvaluationCell_Minimalist",
-                            TMessageCell_Data_Name : @"TUIEvaluationCellData_Minimalist"
-                          },
-                          @{BussinessID : BussinessID_Order,
-                            TMessageCell_Name : @"TUIOrderCell_Minimalist",
-                            TMessageCell_Data_Name : @"TUIOrderCellData_Minimalist"
-                          },
-                          @{BussinessID : BussinessID_Typing,
-                            TMessageCell_Name : @"TUIMessageCell",
-                            TMessageCell_Data_Name : @"TUITypingStatusCellData"
-                          }
+    customMessageInfo =  [NSMutableArray arrayWithArray:@[@{BussinessID : BussinessID_TextLink,
+                                                            TMessageCell_Name : @"TUILinkCell_Minimalist",
+                                                            TMessageCell_Data_Name : @"TUILinkCellData_Minimalist"
+                                                          },
+                                                          @{BussinessID : BussinessID_GroupCreate,
+                                                            TMessageCell_Name : @"TUIGroupCreatedCell_Minimalist",
+                                                            TMessageCell_Data_Name : @"TUIGroupCreatedCellData_Minimalist"
+                                                          },
+                                                          @{BussinessID : BussinessID_Evaluation,
+                                                            TMessageCell_Name : @"TUIEvaluationCell_Minimalist",
+                                                            TMessageCell_Data_Name : @"TUIEvaluationCellData_Minimalist"
+                                                          },
+                                                          @{BussinessID : BussinessID_Order,
+                                                            TMessageCell_Name : @"TUIOrderCell_Minimalist",
+                                                            TMessageCell_Data_Name : @"TUIOrderCellData_Minimalist"
+                                                          },
+                                                          @{BussinessID : BussinessID_Typing,
+                                                            TMessageCell_Name : @"TUIMessageCell",
+                                                            TMessageCell_Data_Name : @"TUITypingStatusCellData"
+                                                          }
+                                                        ]
     ];
+    pluginCustomMessageInfo = [NSMutableArray array];
 }
 
-+ (NSArray *)getCustomMessageInfo {
++ (NSMutableArray *)getCustomMessageInfo {
     return customMessageInfo;
 }
+
++ (NSMutableArray *)getPluginCustomMessageInfo {
+    return pluginCustomMessageInfo;
+}
+
 
 #pragma mark - Differentiated internal Message cell appearance configuration
 // *************************************************************************
@@ -142,7 +150,6 @@ static NSArray *customMessageInfo = nil;
                             // This message will be ignore in chat page
                             data = nil;
                         } else {
-                            // Translate to cell data
                             data = [self getCallingCellData:callingInfo];
                             if (data == nil) {
                                 data = [self getUnsupportedCellData:message];
@@ -280,7 +287,7 @@ static NSArray *customMessageInfo = nil;
 
 + (TUIMessageCellData *)getUnsupportedCellData:(V2TIMMessage *)message {
     TUITextMessageCellData_Minimalist *cellData = [[TUITextMessageCellData_Minimalist alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
-    cellData.content = TUIKitLocalizableString(TUIKitNotSupportThisMessage);
+    cellData.content = TIMCommonLocalizableString(TUIKitNotSupportThisMessage);
     cellData.reuseId = TTextMessageCell_ReuseId;
     return cellData;
 }
@@ -318,11 +325,11 @@ static NSArray *customMessageInfo = nil;
         if (message.elemType == V2TIM_ELEM_TYPE_TEXT && fabs([[NSDate date] timeIntervalSinceDate:message.timestamp]) < MaxReEditMessageDelay) {
             revoke.supportReEdit = YES;
         }
-        revoke.content = TUIKitLocalizableString(TUIKitMessageTipsYouRecallMessage);
+        revoke.content = TIMCommonLocalizableString(TUIKitMessageTipsYouRecallMessage);
         revoke.innerMessage = message;
         return revoke;
     } else if (message.userID.length > 0){
-        revoke.content = TUIKitLocalizableString(TUIkitMessageTipsOthersRecallMessage);
+        revoke.content = TIMCommonLocalizableString(TUIkitMessageTipsOthersRecallMessage);
         revoke.innerMessage = message;
         return revoke;
     } else if (message.groupID.length > 0) {
@@ -332,7 +339,7 @@ static NSArray *customMessageInfo = nil;
          */
         NSString *userName = [TUIMessageDataProvider_Minimalist getShowName:message];
         TUIJoinGroupMessageCellData_Minimalist *joinGroupData = [[TUIJoinGroupMessageCellData_Minimalist alloc] initWithDirection:MsgDirectionIncoming];
-        joinGroupData.content = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsRecallMessageFormat), userName];
+        joinGroupData.content = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsRecallMessageFormat), userName];
         joinGroupData.opUserID = message.sender;
         joinGroupData.opUserName = userName;
         joinGroupData.reuseId = TJoinGroupMessageCell_ReuseId;
@@ -442,23 +449,23 @@ static TUIChatCallingDataProvider *_callingDataProvider;
                             str = nil;
                         } else {
                             // Get display text
-                            str = callingInfo.content ?: TUIKitLocalizableString(TUIKitMessageTipsUnsupportCustomMessage);
+                            str = callingInfo.content ?: TIMCommonLocalizableString(TUIKitMessageTipsUnsupportCustomMessage);
                         }
                     } else {
                         // Unsupported voice-video-call message
-                        str = TUIKitLocalizableString(TUIKitMessageTipsUnsupportCustomMessage);
+                        str = TIMCommonLocalizableString(TUIKitMessageTipsUnsupportCustomMessage);
                     }
                 } else {
                     // Others custom message
                     str = [self getCustomDisplayString:message];
                     if (str == nil) {
-                        str = TUIKitLocalizableString(TUIKitMessageTipsUnsupportCustomMessage);
+                        str = TIMCommonLocalizableString(TUIKitMessageTipsUnsupportCustomMessage);
                     }
                 }
             }
                 break;
             default:
-                str = TUIKitLocalizableString(TUIKitMessageTipsUnsupportCustomMessage);
+                str = TIMCommonLocalizableString(TUIKitMessageTipsUnsupportCustomMessage);
                 break;
         }
     }
@@ -688,7 +695,7 @@ static TUIChatCallingDataProvider *_callingDataProvider;
                 // Same week
                 if (nowComponent.day == dateCompoent.day) {
                     // Same day
-                    return TUIKitLocalizableString(TUIKitDateToday);
+                    return TIMCommonLocalizableString(TUIKitDateToday);
                 } else {
                     // Not same day
                     dateFmt.dateFormat = @"EEEE";

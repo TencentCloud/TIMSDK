@@ -6,8 +6,8 @@
 //
 
 #import "TUISearchResultHeaderFooterView_Minimalist.h"
-#import "TUIDefine.h"
-#import "TUIThemeManager.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
 
 
 @interface TUISearchResultHeaderFooterView_Minimalist ()
@@ -31,7 +31,7 @@
 - (void)setupViews
 {
     [self.contentView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)]];
-    self.contentView.backgroundColor = TUICoreDynamicColor(@"form_bg_color", @"#FFFFFF");
+    self.contentView.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
     _iconView = [[UIImageView alloc] init];
     _iconView.image = [UIImage imageNamed:TUISearchImagePath(@"search")];
     [self.contentView addSubview:_iconView];
@@ -42,7 +42,7 @@
     [self.contentView addSubview:_titleLabel];
     
     _moreBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_moreBtn setTitle:TUIKitLocalizableString(More) forState:UIControlStateNormal];
+    [_moreBtn setTitle:TIMCommonLocalizableString(More) forState:UIControlStateNormal];
     [_moreBtn setTitleColor:[UIColor systemBlueColor] forState:UIControlStateNormal];
     _moreBtn.titleLabel.font = [UIFont boldSystemFontOfSize:kScale390(12)];
     _moreBtn.userInteractionEnabled  = NO;
@@ -63,7 +63,7 @@
     
     self.iconView.hidden = !self.isFooter;
     self.iconView.hidden = !self.isFooter;
-    UIColor *footerColor = TUICoreDynamicColor(@"primary_theme_color", @"#147AFF");
+    UIColor *footerColor = TIMCommonDynamicColor(@"primary_theme_color", @"#147AFF");
     self.titleLabel.textColor = self.isFooter ? footerColor : [UIColor darkGrayColor];
 }
 
@@ -129,7 +129,7 @@
 - (void)setupViews
 {
     [self.contentView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)]];
-    self.contentView.backgroundColor = TUICoreDynamicColor(@"form_bg_color", @"#FFFFFF");
+    self.contentView.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
     _iconView = [[UIImageView alloc] init];
     _iconView.image = [UIImage imageNamed:TUISearchImagePath(@"search")];
     [self.contentView addSubview:_iconView];
@@ -144,7 +144,7 @@
     [self.contentView addSubview:_rowAccessoryView];
     
     _separtorView = [[UIView alloc] init];
-    _separtorView.backgroundColor = TUICoreDynamicColor(@"separator_color", @"#DBDBDB");
+    _separtorView.backgroundColor = TIMCommonDynamicColor(@"separator_color", @"#DBDBDB");
     [self.contentView addSubview:_separtorView];
 
     

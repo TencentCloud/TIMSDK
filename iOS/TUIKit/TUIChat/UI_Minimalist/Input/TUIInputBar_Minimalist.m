@@ -7,16 +7,16 @@
 //
 
 #import "TUIInputBar_Minimalist.h"
-#import "TUIDefine.h"
-#import "TUITool.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUITool.h>
+#import <TIMCommon/TIMDefine.h>
 #import "ReactiveObjC/ReactiveObjC.h"
-#import "UIView+TUILayout.h"
-#import "TUIDarkModel.h"
-#import "TUIGlobalization.h"
-#import "NSTimer+TUISafe.h"
-#import "NSString+TUIEmoji.h"
-#import "TUICore.h"
+#import <TUICore/UIView+TUILayout.h>
+#import <TUICore/TUIDarkModel.h>
+#import <TUICore/TUIGlobalization.h>
+#import <TIMCommon/NSTimer+TUISafe.h>
+#import <TIMCommon/NSString+TUIEmoji.h>
+#import <TUICore/TUICore.h>
 #import "TUIAudioRecorder.h"
 
 @interface TUIInputBar_Minimalist() <UITextViewDelegate, TUIAudioRecorderDelegate>
@@ -56,7 +56,7 @@
     self.backgroundColor = RGBA(255, 255, 255, 1);
 
     _lineView = [[UIView alloc] init];
-    _lineView.backgroundColor = TUICoreDynamicColor(@"separator_color", @"#FFFFFF");
+    _lineView.backgroundColor = TIMCommonDynamicColor(@"separator_color", @"#FFFFFF");
 
     _moreButton = [[UIButton alloc] init];
     [_moreButton addTarget:self action:@selector(clickMoreBtn:) forControlEvents:UIControlEventTouchUpInside];
@@ -145,7 +145,7 @@
     _recordTipsLabel = [[UILabel alloc] init];
     _recordTipsLabel.textColor = RGBA(102, 102, 102, 1);
     _recordTipsLabel.textColor = [UIColor blackColor];
-    _recordTipsLabel.text = TUIKitLocalizableString(TUIKitInputRecordTipsTitle);
+    _recordTipsLabel.text = TIMCommonLocalizableString(TUIKitInputRecordTipsTitle);
     _recordTipsLabel.textAlignment = NSTextAlignmentCenter;
     _recordTipsLabel.font = [UIFont systemFontOfSize:14];
     _recordTipsLabel.frame = CGRectMake(0, 10, Screen_Width, 22);
@@ -166,7 +166,7 @@
                 _recordAnimateCoverView.backgroundColor = _recordBackgroudView.backgroundColor;
                 _recordAnimateCoverView.frame = self.recordAnimateCoverViewFrame;
                 _recordTimeLabel.text = @"0:00";
-                _recordTipsLabel.text = TUIKitLocalizableString(TUIKitInputRecordTipsTitle);
+                _recordTipsLabel.text = TIMCommonLocalizableString(TUIKitInputRecordTipsTitle);
                 
                 if (TUIRecordStatus_Record == status) {
                     _recordView.hidden = NO;
@@ -181,7 +181,7 @@
                 _recordDeleteView.image = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath_Minimalist(@"voice_record_delete_ready")];
                 _recordBackgroudView.backgroundColor = RGBA(255, 88, 76, 1);
                 _recordAnimateCoverView.backgroundColor = _recordBackgroudView.backgroundColor;
-                _recordTipsLabel.text = TUIKitLocalizableString(TUIKitInputRecordCancelTipsTitle);
+                _recordTipsLabel.text = TIMCommonLocalizableString(TUIKitInputRecordCancelTipsTitle);
                 
                 _recordView.hidden = NO;
             }
@@ -438,8 +438,8 @@
         if(_delegate && [_delegate respondsToSelector:@selector(inputBar:didSendText:)]) {
             NSString *sp = [[textView.textStorage getPlainString] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
             if (sp.length == 0) {
-                UIAlertController *ac = [UIAlertController alertControllerWithTitle:TUIKitLocalizableString(TUIKitInputBlankMessageTitle) message:nil preferredStyle:UIAlertControllerStyleAlert];
-                [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Confirm) style:UIAlertActionStyleDefault handler:nil]];
+                UIAlertController *ac = [UIAlertController alertControllerWithTitle:TIMCommonLocalizableString(TUIKitInputBlankMessageTitle) message:nil preferredStyle:UIAlertControllerStyleAlert];
+                [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(Confirm) style:UIAlertActionStyleDefault handler:nil]];
                 [self.mm_viewController presentViewController:ac animated:YES completion:nil];
             } else {
                 [_delegate inputBar:self didSendText:[textView.textStorage getPlainString]];
@@ -611,9 +611,9 @@
 }
 
 - (void)showRequestMicAuthorizationAlert {
-    UIAlertController *ac = [UIAlertController alertControllerWithTitle:TUIKitLocalizableString(TUIKitInputNoMicTitle) message:TUIKitLocalizableString(TUIKitInputNoMicTips) preferredStyle:UIAlertControllerStyleAlert];
-    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitInputNoMicOperateLater) style:UIAlertActionStyleCancel handler:nil]];
-    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitInputNoMicOperateEnable) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:TIMCommonLocalizableString(TUIKitInputNoMicTitle) message:TIMCommonLocalizableString(TUIKitInputNoMicTips) preferredStyle:UIAlertControllerStyleAlert];
+    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(TUIKitInputNoMicOperateLater) style:UIAlertActionStyleCancel handler:nil]];
+    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(TUIKitInputNoMicOperateEnable) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         UIApplication *app = [UIApplication sharedApplication];
         NSURL *settingsURL = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
         if ([app canOpenURL:settingsURL]) {

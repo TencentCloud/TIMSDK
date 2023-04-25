@@ -6,7 +6,7 @@
 //
 
 #import "TUIFaceMessageCell.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 
 @interface TUIFaceMessageCell ()
 @end
@@ -28,19 +28,23 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    CGFloat topMargin = 0;
-    CGFloat height = self.container.mm_h;
     
     if (self.messageData.messageModifyReactsSize.height > 0) {
-        topMargin = 10;
-        height = (self.container.mm_h - self.messageData.messageModifyReactsSize.height - topMargin);
+        if (self.tagView) {
+            CGFloat topMargin = 10;
+            CGFloat tagViewTopPadding = 6;
+            CGFloat height = self.container.mm_h - topMargin - self.messageData.messageModifyReactsSize.height - tagViewTopPadding;
+            _face.mm_height(height).mm_left(0).mm_top(topMargin).mm_width(self.container.mm_w);
+            self.tagView.frame = CGRectMake(0, self.container.mm_h - self.messageData.messageModifyReactsSize.height - tagViewTopPadding , self.container.frame.size.width, self.messageData.messageModifyReactsSize.height);
+        }
         self.bubbleView.hidden = NO;
     }
     else {
+        CGFloat topMargin = 0;
+        CGFloat height = self.container.mm_h;
+        _face.mm_height(height).mm_left(0).mm_top(topMargin).mm_width(self.container.mm_w);
         self.bubbleView.hidden = YES;
     }
-    _face.mm_height(height ).mm_left(0).mm_top(topMargin).mm_width(self.container.mm_w);
-
     _face.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 }
 - (void)fillWithData:(TUIFaceMessageCellData *)data

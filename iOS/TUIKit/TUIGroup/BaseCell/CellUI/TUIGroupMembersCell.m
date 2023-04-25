@@ -8,8 +8,8 @@
 
 #import "TUIGroupMembersCell.h"
 #import "TUIGroupMemberCell.h"
-#import "TUIDefine.h"
-#import "TUIThemeManager.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
 
 @interface TUIGroupMembersCell () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @end

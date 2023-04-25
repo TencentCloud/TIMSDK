@@ -1,5 +1,5 @@
 #import "TUIImageMessageCellData_Minimalist.h"
-#import "TUIMessageCell_Minimalist.h"
+#import <TIMCommon/TUIMessageCell_Minimalist.h>
 
 @interface TUIImageMessageCell_Minimalist : TUIMessageCell_Minimalist
 

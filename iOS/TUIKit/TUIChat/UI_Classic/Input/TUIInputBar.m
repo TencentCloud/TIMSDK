@@ -8,17 +8,17 @@
 
 #import "TUIInputBar.h"
 #import "TUIRecordView.h"
-#import "TUIDefine.h"
-#import "TUITool.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUITool.h>
+#import <TIMCommon/TIMDefine.h>
 
 #import "ReactiveObjC/ReactiveObjC.h"
-#import "UIView+TUILayout.h"
-#import "TUIDarkModel.h"
-#import "TUIGlobalization.h"
-#import "NSTimer+TUISafe.h"
-#import "NSString+TUIEmoji.h"
-#import "TUICore.h"
+#import <TUICore/UIView+TUILayout.h>
+#import <TUICore/TUIDarkModel.h>
+#import <TUICore/TUIGlobalization.h>
+#import <TIMCommon/NSTimer+TUISafe.h>
+#import <TIMCommon/NSString+TUIEmoji.h>
+#import <TUICore/TUICore.h>
 #import "TUIAudioRecorder.h"
 
 @interface TUIInputBar() <UITextViewDelegate, TUIAudioRecorderDelegate>
@@ -57,7 +57,7 @@
     self.backgroundColor = TUIChatDynamicColor(@"chat_input_controller_bg_color", @"#EBF0F6");
 
     _lineView = [[UIView alloc] init];
-    _lineView.backgroundColor = TUICoreDynamicColor(@"separator_color", @"#FFFFFF");
+    _lineView.backgroundColor = TIMCommonDynamicColor(@"separator_color", @"#FFFFFF");
 
     _micButton = [[UIButton alloc] init];
     [_micButton addTarget:self action:@selector(onMicButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -96,7 +96,7 @@
     [_recordButton addTarget:self action:@selector(onRecordButtonTouchCancel:) forControlEvents:UIControlEventTouchUpOutside | UIControlEventTouchCancel];
     [_recordButton addTarget:self action:@selector(onRecordButtonTouchDragExit:) forControlEvents:UIControlEventTouchDragExit];
     [_recordButton addTarget:self action:@selector(onRecordButtonTouchDragEnter:) forControlEvents:UIControlEventTouchDragEnter];
-    [_recordButton setTitle:TUIKitLocalizableString(TUIKitInputHoldToTalk) forState:UIControlStateNormal];
+    [_recordButton setTitle:TIMCommonLocalizableString(TUIKitInputHoldToTalk) forState:UIControlStateNormal];
     [_recordButton setTitleColor:TUIChatDynamicColor(@"chat_input_text_color", @"#000000") forState:UIControlStateNormal];
     _recordButton.hidden = YES;
     [self addSubview:_recordButton];
@@ -121,14 +121,14 @@
         [_recordButton.layer setMasksToBounds:YES];
         [_recordButton.layer setCornerRadius:4.0f];
         [_recordButton.layer setBorderWidth:0.5f];
-        [_recordButton.layer setBorderColor:TUICoreDynamicColor(@"separator_color", @"#DBDBDB").CGColor];
+        [_recordButton.layer setBorderColor:TIMCommonDynamicColor(@"separator_color", @"#DBDBDB").CGColor];
     }
     
     if (_inputTextView) {
         [_inputTextView.layer setMasksToBounds:YES];
         [_inputTextView.layer setCornerRadius:4.0f];
         [_inputTextView.layer setBorderWidth:0.5f];
-        [_inputTextView.layer setBorderColor:TUICoreDynamicColor(@"separator_color", @"#DBDBDB").CGColor];
+        [_inputTextView.layer setBorderColor:TIMCommonDynamicColor(@"separator_color", @"#DBDBDB").CGColor];
     }
 }
 
@@ -227,7 +227,7 @@
 
 - (void)onRecordButtonTouchUpInside:(UIButton *)sender {
     self.recordButton.backgroundColor = [UIColor clearColor];
-    [self.recordButton setTitle:TUIKitLocalizableString(TUIKitInputHoldToTalk)
+    [self.recordButton setTitle:TIMCommonLocalizableString(TUIKitInputHoldToTalk)
                        forState:UIControlStateNormal];
     
     NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:self.recordStartTime];
@@ -269,18 +269,18 @@
 - (void)onRecordButtonTouchCancel:(UIButton *)sender {
     [self.recordView removeFromSuperview];
     self.recordButton.backgroundColor = [UIColor clearColor];
-    [self.recordButton setTitle:TUIKitLocalizableString(TUIKitInputHoldToTalk) forState:UIControlStateNormal];
+    [self.recordButton setTitle:TIMCommonLocalizableString(TUIKitInputHoldToTalk) forState:UIControlStateNormal];
     [self.recorder cancel];
 }
 
 - (void)onRecordButtonTouchDragExit:(UIButton *)sender {
     [self.recordView setStatus:Record_Status_Cancel];
-    [_recordButton setTitle:TUIKitLocalizableString(TUIKitInputReleaseToCancel) forState:UIControlStateNormal];
+    [_recordButton setTitle:TIMCommonLocalizableString(TUIKitInputReleaseToCancel) forState:UIControlStateNormal];
 }
 
 - (void)onRecordButtonTouchDragEnter:(UIButton *)sender {
     [self.recordView setStatus:Record_Status_Recording];
-    [_recordButton setTitle:TUIKitLocalizableString(TUIKitInputReleaseToSend) forState:UIControlStateNormal];
+    [_recordButton setTitle:TIMCommonLocalizableString(TUIKitInputReleaseToSend) forState:UIControlStateNormal];
 }
 
 - (void)showHapticFeedback {
@@ -385,8 +385,8 @@
         if(_delegate && [_delegate respondsToSelector:@selector(inputBar:didSendText:)]) {
             NSString *sp = [[textView.textStorage getPlainString] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
             if (sp.length == 0) {
-                UIAlertController *ac = [UIAlertController alertControllerWithTitle:TUIKitLocalizableString(TUIKitInputBlankMessageTitle) message:nil preferredStyle:UIAlertControllerStyleAlert];
-                [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Confirm) style:UIAlertActionStyleDefault handler:nil]];
+                UIAlertController *ac = [UIAlertController alertControllerWithTitle:TIMCommonLocalizableString(TUIKitInputBlankMessageTitle) message:nil preferredStyle:UIAlertControllerStyleAlert];
+                [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(Confirm) style:UIAlertActionStyleDefault handler:nil]];
                 [self.mm_viewController presentViewController:ac animated:YES completion:nil];
             } else {
                 [_delegate inputBar:self didSendText:[textView.textStorage getPlainString]];
@@ -549,9 +549,9 @@
 }
 
 - (void)showRequestMicAuthorizationAlert {
-    UIAlertController *ac = [UIAlertController alertControllerWithTitle:TUIKitLocalizableString(TUIKitInputNoMicTitle) message:TUIKitLocalizableString(TUIKitInputNoMicTips) preferredStyle:UIAlertControllerStyleAlert];
-    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitInputNoMicOperateLater) style:UIAlertActionStyleCancel handler:nil]];
-    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitInputNoMicOperateEnable) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:TIMCommonLocalizableString(TUIKitInputNoMicTitle) message:TIMCommonLocalizableString(TUIKitInputNoMicTips) preferredStyle:UIAlertControllerStyleAlert];
+    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(TUIKitInputNoMicOperateLater) style:UIAlertActionStyleCancel handler:nil]];
+    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(TUIKitInputNoMicOperateEnable) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         UIApplication *app = [UIApplication sharedApplication];
         NSURL *settingsURL = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
         if ([app canOpenURL:settingsURL]) {
@@ -568,7 +568,7 @@
     self.recordStartTime = [NSDate date];
     [self.recordView setStatus:Record_Status_Recording];
     self.recordButton.backgroundColor = [UIColor lightGrayColor];
-    [self.recordButton setTitle:TUIKitLocalizableString(TUIKitInputReleaseToSend) forState:UIControlStateNormal];
+    [self.recordButton setTitle:TIMCommonLocalizableString(TUIKitInputReleaseToSend) forState:UIControlStateNormal];
     [self showHapticFeedback];
 }
 
@@ -588,7 +588,7 @@
          * The long type is cast here to eliminate compiler warnings.
          * Here +1 is to round up and optimize the time logic.
          */
-        self.recordView.title.text = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitInputWillFinishRecordInSeconds), (long)seconds + 1];
+        self.recordView.title.text = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitInputWillFinishRecordInSeconds), (long)seconds + 1];
     } else if (time >= 60) {
         [self.recorder stop];
         NSString *path = self.recorder.recordedFilePath;

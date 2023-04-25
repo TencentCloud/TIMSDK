@@ -5,7 +5,7 @@
 //  Created by harvy on 2021/11/11.
 //
 
-#import "TUIBubbleMessageCell_Minimalist.h"
+#import <TIMCommon/TUIBubbleMessageCell_Minimalist.h>
 #import "TUIChatDefine.h"
 
 @class TUIReplyMessageCellData_Minimalist;

@@ -6,12 +6,12 @@
 #import "TUIReplyMessageCell_Minimalist.h"
 #import "TUIReplyMessageCellData_Minimalist.h"
 #import "TUIReferenceMessageCell_Minimalist.h"
-#import "TUIGlobalization.h"
-#import "TUIThemeManager.h"
+#import <TUICore/TUIGlobalization.h>
+#import <TUICore/TUIThemeManager.h>
 #import "TUIMessageSearchDataProvider_Minimalist.h"
-#import "UIView+TUILayout.h"
+#import <TUICore/UIView+TUILayout.h>
 #import "ReactiveObjC.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 #import "TUIChatModifyMessageHelper.h"
 #import "TUIChatConfig.h"
 
@@ -89,11 +89,12 @@
     [TUIChatSmallTongueManager_Minimalist hideTongue:NO];
 }
 
-- (void)onDelete:(TUIMessageCellData *)cellData
+- (void)onDelete:(TUIMessageCell *)cell
 {
+    TUIMessageCellData *cellData = cell.messageData;
     @weakify(self)
-    UIAlertController *vc = [UIAlertController alertControllerWithTitle:nil message:TUIKitLocalizableString(ConfirmDeleteMessage) preferredStyle:UIAlertControllerStyleActionSheet];
-    [vc tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Delete) style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertController *vc = [UIAlertController alertControllerWithTitle:nil message:TIMCommonLocalizableString(ConfirmDeleteMessage) preferredStyle:UIAlertControllerStyleActionSheet];
+    [vc tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(Delete) style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
         @strongify(self)
         [self.messageDataProvider deleteUIMsgs:@[cellData] SuccBlock:^{
             [self updateAtMeTongue:cellData];
@@ -102,7 +103,7 @@
             NSAssert(NO, desc);
         }];
     }]];
-    [vc tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:nil]];
+    [vc tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:nil]];
     [self presentViewController:vc animated:YES completion:nil];
 }
 
@@ -446,17 +447,17 @@
    
     [(TUIMessageSearchDataProvider_Minimalist *)self.messageDataProvider findMessages:@[originMsgID?:@""] callback:^(BOOL success, NSString * _Nonnull desc, NSArray<V2TIMMessage *> * _Nonnull msgs) {
         if (!success) {
-            [TUITool makeToast:TUIKitLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
+            [TUITool makeToast:TIMCommonLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
             return;
         }
         V2TIMMessage *message = msgs.firstObject;
         if (message == nil) {
-            [TUITool makeToast:TUIKitLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
+            [TUITool makeToast:TIMCommonLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
             return;
         }
         
         if (message.status == V2TIM_MSG_STATUS_HAS_DELETED || message.status == V2TIM_MSG_STATUS_LOCAL_REVOKED) {
-            [TUITool makeToast:TUIKitLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
+            [TUITool makeToast:TIMCommonLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
             return;
         }
         

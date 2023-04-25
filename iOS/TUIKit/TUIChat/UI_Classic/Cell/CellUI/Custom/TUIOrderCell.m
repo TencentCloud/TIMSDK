@@ -6,8 +6,8 @@
 //
 
 #import "TUIOrderCell.h"
-#import "TUIGlobalization.h"
-#import "TUIThemeManager.h"
+#import <TUICore/TUIGlobalization.h>
+#import <TUICore/TUIThemeManager.h>
 
 @implementation TUIOrderCell
 

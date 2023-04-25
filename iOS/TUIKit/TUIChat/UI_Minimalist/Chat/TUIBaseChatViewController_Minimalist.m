@@ -18,29 +18,30 @@
 #import "TUIVoiceMessageCellData_Minimalist.h"
 #import "TUITextMessageCellData_Minimalist.h"
 #import "TUIReplyMessageCellData_Minimalist.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 #import "TUIMessageMultiChooseView_Minimalist.h"
 #import "TUIMessageController_Minimalist.h"
 #import "TUIChatDataProvider_Minimalist.h"
 #import "TUIMessageDataProvider_Minimalist.h"
 #import "TUICameraViewController.h"
-#import "TUITool.h"
-#import "TUICore.h"
-#import "TUIDefine.h"
-#import "NSDictionary+TUISafe.h"
-#import "NSString+TUIEmoji.h"
-#import "TUIThemeManager.h"
+#import <TUICore/TUITool.h>
+#import <TUICore/TUICore.h>
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/NSDictionary+TUISafe.h>
+#import <TIMCommon/NSString+TUIEmoji.h>
+#import <TUICore/TUIThemeManager.h>
 #import "TUIChatMediaDataProvider.h"
 #import "TUIMessageReadViewController_Minimalist.h"
 #import "TUIJoinGroupMessageCell_Minimalist.h"
 #import "TUICloudCustomDataTypeCenter.h"
-#import "TUILogin.h"
+#import <TUICore/TUILogin.h>
 #import "TUIChatConfig.h"
 #import "TUIChatModifyMessageHelper.h"
 #import "TUIChatMembersReactController.h"
 #import "TUIAIDenoiseSignatureManager.h"
-#import "TUIBubbleMessageCell_Minimalist.h"
-#import "TUIChatFloatController.h"
+#import <TIMCommon/TUIBubbleMessageCell_Minimalist.h>
+#import "TUIFloatViewController.h"
+#import "UIAlertController+TUICustomStyle.h"
 
 static UIView *customTopView;
 
@@ -50,7 +51,7 @@ static UIView *customTopView;
                                                     UIDocumentPickerDelegate,
                                                     UINavigationControllerDelegate,
                                                     TUIMessageMultiChooseViewDelegate_Minimalist,
-                                                    TUIChatBaseDataProviderForwardDelegate,
+                                                    TUIChatBaseDataProviderDelegate,
                                                     TUINotificationProtocol,
                                                     TUIJoinGroupMessageCellDelegate_Minimalist,
                                                     V2TIMConversationListener,
@@ -61,8 +62,6 @@ static UIView *customTopView;
 @property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
 @property (nonatomic, strong) TUIMessageMultiChooseView_Minimalist *multiChooseView;
 @property (nonatomic, assign) BOOL responseKeyboard;
-// @{@"serviceID" : serviceID, @"title" : @"Video call", @"image" : image}
-@property (nonatomic, strong) NSMutableArray<NSDictionary *> *resgisterParam;
 @property (nonatomic, strong) TUIChatDataProvider_Minimalist *dataProvider;
 
 @property (nonatomic, weak) UIViewController *forwardConversationSelectVC;
@@ -81,7 +80,7 @@ static UIView *customTopView;
 
 @property (nonatomic, strong) UILabel *subTitleLabel;
 
-@property (nonatomic, copy) NSString *translatedText;
+@property (nonatomic, copy) NSString *forwardText;
 
 @property (nonatomic, strong) TUIChatMediaDataProvider *mediaProvider;
 
@@ -107,7 +106,7 @@ static UIView *customTopView;
     [super viewDidLoad];
     
     self.firstAppear = YES;
-    self.view.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#FFFFFF");
+    self.view.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#FFFFFF");
     self.edgesForExtendedLayout = UIRectEdgeNone;
 
     [self configBackgroundView];
@@ -124,7 +123,7 @@ static UIView *customTopView;
     
     // data provider
     self.dataProvider = [[TUIChatDataProvider_Minimalist alloc] init];
-    self.dataProvider.forwardDelegate = self;
+    self.dataProvider.delegate = self;
     
     [[V2TIMManager sharedInstance] addIMSDKListener:self];
 }
@@ -217,33 +216,31 @@ static UIView *customTopView;
 
     self.navigationItem.leftBarButtonItems = @[backButtonItem, infoViewItem];
     
-    BOOL hasVideoCall = NO;
-    BOOL hasAuidoCall = NO;
-    NSMutableArray *btnItems = [NSMutableArray array];
-    for (TUIInputMoreCellData_Minimalist *data in _moreMenus) {
-        if ([data.key isEqualToString:TUIInputMoreCellKey_VideoCall]) {
-            hasVideoCall = YES;
-        } else if ([data.key isEqualToString:TUIInputMoreCellKey_AudioCall]) {
-            hasAuidoCall = YES;
+    CGSize itemSize = CGSizeMake(30, 24);
+    NSMutableArray *rightBarButtonList = [NSMutableArray array];
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    if (self.conversationData.userID.length > 0) {
+        param[TUICore_TUIChatExtension_NavigationMoreItem_UserID] = self.conversationData.userID;
+    } else if (self.conversationData.groupID.length > 0) {
+        param[TUICore_TUIChatExtension_NavigationMoreItem_GroupID] = self.conversationData.groupID;
+    }
+    param[TUICore_TUIChatExtension_NavigationMoreItem_ItemSize] = NSStringFromCGSize(itemSize);
+    param[TUICore_TUIChatExtension_NavigationMoreItem_FilterVideoCall] = @(!TUIChatConfig.defaultConfig.enableVideoCall);
+    param[TUICore_TUIChatExtension_NavigationMoreItem_FilterAudioCall] = @(!TUIChatConfig.defaultConfig.enableAudioCall);
+    NSArray<TUIExtensionInfo *> *extensionList = [TUICore getExtensionList:TUICore_TUIChatExtension_NavigationMoreItem_MinimalistExtensionID param:param];
+    for (TUIExtensionInfo *info in extensionList) {
+        if (info.icon && info.onClicked) {
+            UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, itemSize.width, itemSize.height)];
+            button.tui_extValueObj = info;
+            [button addTarget:self action:@selector(rightBarButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+            [button setImage:info.icon forState:UIControlStateNormal];
+            UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithCustomView:button];
+            [rightBarButtonList addObject:rightItem];
         }
     }
-    if (hasAuidoCall) {
-        UIButton *audioCallBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 24)];
-        [audioCallBtn addTarget:self action:@selector(audioCallBtnClick) forControlEvents:UIControlEventTouchUpInside];
-        UIImage *image = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath_Minimalist(@"audio_call")];
-        [audioCallBtn setImage:image forState:UIControlStateNormal];
-        UIBarButtonItem *audioCallBtnItem = [[UIBarButtonItem alloc] initWithCustomView:audioCallBtn];
-        [btnItems addObject:audioCallBtnItem];
+    if (rightBarButtonList.count > 0) {
+        self.navigationItem.rightBarButtonItems = rightBarButtonList.reverseObjectEnumerator.allObjects;
     }
-    if (hasVideoCall) {
-        UIButton *videoCallBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 24)];
-        [videoCallBtn addTarget:self action:@selector(videoCallBtnClick) forControlEvents:UIControlEventTouchUpInside];
-        UIImage *image = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath_Minimalist(@"video_call")];
-        [videoCallBtn setImage:image forState:UIControlStateNormal];
-        UIBarButtonItem *videoCallBtnItem = [[UIBarButtonItem alloc] initWithCustomView:videoCallBtn];
-        [btnItems addObject:videoCallBtnItem];
-    }
-    self.navigationItem.rightBarButtonItems  = btnItems;
 }
 
 - (NSString *)getMainTitleLabelText {
@@ -298,22 +295,22 @@ static UIView *customTopView;
     switch (status.statusType) {
         case V2TIM_USER_STATUS_UNKNOWN:
             {
-                title = TUIKitLocalizableString(TUIKitUserStatusUnknown);
+                title = TIMCommonLocalizableString(TUIKitUserStatusUnknown);
             }
             break;
         case V2TIM_USER_STATUS_ONLINE:
             {
-                title = TUIKitLocalizableString(TUIKitUserStatusOnline);
+                title = TIMCommonLocalizableString(TUIKitUserStatusOnline);
             }
             break;
         case V2TIM_USER_STATUS_OFFLINE:
             {
-                title = TUIKitLocalizableString(TUIKitUserStatusOffline);
+                title = TIMCommonLocalizableString(TUIKitUserStatusOffline);
             }
             break;
         case V2TIM_USER_STATUS_UNLOGINED:
             {
-                title = TUIKitLocalizableString(TUIKitUserStatusUnlogined);
+                title = TIMCommonLocalizableString(TUIKitUserStatusUnlogined);
             }
             break;
         default:
@@ -327,30 +324,22 @@ static UIView *customTopView;
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-- (void)videoCallBtnClick {
-    if(self.conversationData.userID.length > 0) {
-        [self c2cCall:self.conversationData.userID isVideoCall:YES];
-    } else {
-        [self groupCall:self.conversationData.groupID isVideoCall:YES];
+- (void)rightBarButtonClick:(UIButton *)button {
+    TUIExtensionInfo *info = button.tui_extValueObj;
+    if (info == nil || ![info isKindOfClass:TUIExtensionInfo.class] || info.onClicked == nil) {
+        return;
     }
-}
-
-- (void)audioCallBtnClick {
-    if(self.conversationData.userID.length > 0) {
-        [self c2cCall:self.conversationData.userID isVideoCall:NO];
-    } else {
-        [self groupCall:self.conversationData.groupID isVideoCall:NO];
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    if (self.conversationData.userID.length > 0) {
+        param[TUICore_TUIChatExtension_NavigationMoreItem_UserID] = self.conversationData.userID;
+    } else if (self.conversationData.groupID.length > 0) {
+        param[TUICore_TUIChatExtension_NavigationMoreItem_GroupID] = self.conversationData.groupID;
     }
-}
-
-- (void)c2cCall:(NSString *)userID isVideoCall:(BOOL)isVideoCall {
-    // Subclasses need to override this method
-    return;
-}
-
-- (void)groupCall:(NSString *)groupID isVideoCall:(BOOL)isVideoCall {
-    // Subclasses need to override this method
-    return;
+    
+    if (self.navigationController) {
+        param[TUICore_TUIChatExtension_NavigationMoreItem_PushVC] = self.navigationController;
+    }
+    info.onClicked(param);
 }
 
 - (void)setupMessageController {
@@ -377,11 +366,6 @@ static UIView *customTopView;
 - (void)setupInputController {
     _inputController = [[TUIInputController_Minimalist alloc] init];
     _inputController.delegate = self;
-    @weakify(self)
-    [RACObserve(self, moreMenus) subscribeNext:^(NSArray *x) {
-        @strongify(self)
-        [self.inputController.moreView setData:x];
-    }];
     _inputController.view.frame = CGRectMake(0, self.view.frame.size.height - TTextView_Height - Bottom_SafeHeight, self.view.frame.size.width, TTextView_Height + Bottom_SafeHeight);
     _inputController.view.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
     [self addChildViewController:_inputController];
@@ -541,12 +525,6 @@ static UIView *customTopView;
 
 - (void)setConversationData:(TUIChatConversationModel *)conversationData {
     _conversationData = conversationData;
-    self.resgisterParam = [NSMutableArray array];
-    _moreMenus = ({
-        NSMutableArray<TUIInputMoreCellData_Minimalist *> *moreMenus = [TUIChatDataProvider_Minimalist moreMenuCellDataArray:conversationData.groupID userID:conversationData.userID isNeedVideoCall:[TUIChatConfig defaultConfig].enableVideoCall isNeedAudioCall:[TUIChatConfig defaultConfig].enableAudioCall isNeedGroupLive:NO isNeedLink:[TUIChatConfig defaultConfig].enableLink];
-        moreMenus;
-    });
-    
 }
 
 - (CGFloat)topMarginByCustomView {
@@ -604,11 +582,9 @@ static UIView *customTopView;
         }];
     } else {
         NSDictionary *param = @{
-            TUICore_TUIGroupService_GetGroupInfoControllerMethod_GroupIDKey: self.conversationData.groupID
+            TUICore_TUIGroupObjectFactory_GetGroupInfoControllerMethod_GroupIDKey: self.conversationData.groupID
         };
-        UIViewController *vc = [TUICore callService:TUICore_TUIGroupService_Minimalist
-                                             method:TUICore_TUIGroupService_GetGroupInfoControllerMethod
-                                              param:param];
+        UIViewController *vc = [TUICore createObject:TUICore_TUIGroupObjectFactory_Minimalist key:TUICore_TUIGroupObjectFactory_GetGroupInfoControllerMethod param:param];
         [self.navigationController pushViewController:vc animated:YES];
     }
 }
@@ -617,13 +593,11 @@ static UIView *customTopView;
                                  succBlock:(void(^)(UIViewController *vc))succ
                                  failBlock:(nullable V2TIMFail)fail {
     NSDictionary *param = @{
-        TUICore_TUIContactService_GetUserOrFriendProfileVCMethod_UserIDKey: userID ? : @"",
-        TUICore_TUIContactService_GetUserOrFriendProfileVCMethod_SuccKey: succ ? : ^(UIViewController *vc){},
-        TUICore_TUIContactService_GetUserOrFriendProfileVCMethod_FailKey: fail ? : ^(int code, NSString * desc){}
+        TUICore_TUIContactObjectFactory_GetUserOrFriendProfileVCMethod_UserIDKey: userID ? : @"",
+        TUICore_TUIContactObjectFactory_GetUserOrFriendProfileVCMethod_SuccKey: succ ? : ^(UIViewController *vc){},
+        TUICore_TUIContactObjectFactory_GetUserOrFriendProfileVCMethod_FailKey: fail ? : ^(int code, NSString * desc){}
     };
-    [TUICore callService:TUICore_TUIContactService_Minimalist
-                  method:TUICore_TUIContactService_GetUserOrFriendProfileVCMethod
-                   param:param];
+    [TUICore createObject:TUICore_TUIContactObjectFactory_Minimalist key:TUICore_TUIContactObjectFactory_GetUserOrFriendProfileVCMethod param:param];
 }
 
 #pragma mark - TUICore notify
@@ -647,9 +621,9 @@ static UIView *customTopView;
         [self forwardMessages:self.forwardSelectUIMsgs toTargets:targetList merge:self.isMergeForward];
         self.forwardSelectUIMsgs = nil;
         
-        if (self.translatedText.length > 0) {
-            [self forwardTranslationText:self.translatedText toConverations:targetList];
-            self.translatedText = nil;
+        if (self.forwardText.length > 0) {
+            [self forwardText:self.forwardText toConverations:targetList];
+            self.forwardText = nil;
         }
     }
     
@@ -737,6 +711,22 @@ static UIView *customTopView;
     [self.messageController sendMessage:msg];
 }
 
+- (void)inputControllerDidSelectMoreButton:(TUIInputController_Minimalist *)inputController {
+    NSArray *items = [self.dataProvider getInputMoreActionItemList:self.conversationData.userID
+                                                           groupID:self.conversationData.groupID
+                                                            pushVC:self.navigationController];
+    if (items.count) {
+        UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+        [alertVC configItems:items];
+        [alertVC addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:nil]];
+        [self presentViewController:alertVC animated:YES completion:nil];
+    }
+}
+
+- (void)inputControllerDidSelectCamera:(TUIInputController_Minimalist *)inputController {
+    [self.mediaProvider takePicture];
+}
+
 - (void)inputControllerDidInputAt:(TUIInputController_Minimalist *)inputController {
     /**
      * 交给 GroupChatVC 去处理
@@ -752,28 +742,11 @@ static UIView *customTopView;
 }
 
 - (void)inputControllerBeginTyping:(TUIInputController_Minimalist *)inputController {
-    
     //for C2CChatVC
 }
 
 - (void)inputControllerEndTyping:(TUIInputController_Minimalist *)inputController {
     //for C2CChatVC
-}
-
-- (void)inputController:(TUIInputController_Minimalist *)inputController didSelectMoreCellAction:(NSString *)actionName {
-    if ([actionName isEqualToString:@"Album"]) {
-        [self.mediaProvider selectPhoto];
-    } else if ([actionName isEqualToString:@"RecordVideo"]) {
-        [self.mediaProvider takeVideo];
-    } else if ([actionName isEqualToString:@"File"]) {
-        [self.mediaProvider selectFile];
-    } else if ([actionName isEqualToString:@"TakePhoto"]) {
-        [self.mediaProvider takePicture];
-    }
-}
-
-- (void)inputControllerDidSelectCamera:(TUIInputController_Minimalist *)inputController {
-    [self.mediaProvider takePicture];
 }
 
 #pragma mark - TUIBaseMessageControllerDelegate
@@ -845,16 +818,36 @@ static UIView *customTopView;
 - (void)messageController:(TUIBaseMessageController_Minimalist *)controller onSelectMessageWhenMultiCheckboxAppear:(TUIMessageCellData *)data {
     if (_multiChooseView) {
         NSArray *uiMsgs = [self.messageController multiSelectedResult:TUIMultiResultOptionAll];
-        _multiChooseView.selectedCountLabel.text = [NSString stringWithFormat:@"%lu %@",(unsigned long)uiMsgs.count,TUIKitLocalizableString(TUIKitSelected)];
+        _multiChooseView.selectedCountLabel.text = [NSString stringWithFormat:@"%lu %@",(unsigned long)uiMsgs.count,TIMCommonLocalizableString(TUIKitSelected)];
     }
 }
-#pragma mark - TUIChatBaseDataProviderForwardDelegate
+#pragma mark - TUIChatBaseDataProviderDelegate
 - (NSString *)dataProvider:(TUIChatBaseDataProvider *)dataProvider mergeForwardTitleWithMyName:(NSString *)name {
     return [self forwardTitleWithMyName:name];
 }
 
 - (NSString *)dataProvider:(TUIChatBaseDataProvider *)dataProvider mergeForwardMsgAbstactForMessage:(V2TIMMessage *)message {
     return @"";
+}
+
+- (void)dataProvider:(TUIChatBaseDataProvider *)dataProvider sendMessage:(V2TIMMessage *)message {
+    [self.messageController sendMessage:message];
+}
+
+- (void)onSelectPhotoMoreCellData {
+    [self.mediaProvider selectPhoto];
+}
+
+- (void)onTakePictureMoreCellData {
+    [self.mediaProvider takePicture];
+}
+
+- (void)onTakeVideoMoreCellData {
+    [self.mediaProvider takeVideo];
+}
+
+- (void)onSelectFileMoreCellData {
+    [self.mediaProvider selectFile];
 }
 
 #pragma mark - TUINavigationControllerDelegate
@@ -896,7 +889,7 @@ static UIView *customTopView;
         _multiChooseView.frame = UIScreen.mainScreen.bounds;
         _multiChooseView.delegate = self;
         _multiChooseView.titleLabel.text = self.conversationData.title;
-        _multiChooseView.selectedCountLabel.text = [NSString stringWithFormat:@"%d %@",1,TUIKitLocalizableString(TUIKitSelected)];
+        _multiChooseView.selectedCountLabel.text = [NSString stringWithFormat:@"%d %@",1,TIMCommonLocalizableString(TUIKitSelected)];
         if (@available(iOS 12.0, *)) {
             if (@available(iOS 13.0, *)) {
                 // > ios 12
@@ -931,7 +924,7 @@ static UIView *customTopView;
 - (void)messageMultiChooseViewOnDeleteClicked:(TUIMessageMultiChooseView_Minimalist *)multiChooseView {
     NSArray *uiMsgs = [self.messageController multiSelectedResult:TUIMultiResultOptionAll];
     if (uiMsgs.count == 0) {
-        [TUITool makeToast:TUIKitLocalizableString(TUIKitRelayNoMessageTips)];
+        [TUITool makeToast:TIMCommonLocalizableString(TUIKitRelayNoMessageTips)];
         return;
     }
     
@@ -942,7 +935,7 @@ static UIView *customTopView;
 
 - (void)prepareForwardMessages:(NSArray<TUIMessageCellData *> *)uiMsgs {
     if (uiMsgs.count == 0) {
-        [TUITool makeToast:TUIKitLocalizableString(TUIKitRelayNoMessageTips)];
+        [TUITool makeToast:TIMCommonLocalizableString(TUIKitRelayNoMessageTips)];
         return;
     }
 
@@ -955,8 +948,8 @@ static UIView *customTopView;
     }
     
     if (hasUnsupportMsg) {
-        UIAlertController *vc = [UIAlertController alertControllerWithTitle:TUIKitLocalizableString(TUIKitRelayUnsupportForward) message:nil preferredStyle:UIAlertControllerStyleAlert];
-        [vc tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Confirm) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        UIAlertController *vc = [UIAlertController alertControllerWithTitle:TIMCommonLocalizableString(TUIKitRelayUnsupportForward) message:nil preferredStyle:UIAlertControllerStyleAlert];
+        [vc tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(Confirm) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             
         }]];
         [self presentViewController:vc animated:YES completion:nil];
@@ -965,15 +958,19 @@ static UIView *customTopView;
     
     __weak typeof(self) weakSelf = self;
     void(^chooseTarget)(BOOL) = ^(BOOL mergeForward) {
-        UIViewController * vc = (UIViewController *)[TUICore callService:TUICore_TUIConversationService_Minimalist method:TUICore_TUIConversationService_GetConversationSelectControllerMethod param:nil];
-        TUIChatFloatController *floatVC = [[TUIChatFloatController alloc] init];
+        UIViewController * vc = (UIViewController *)[TUICore createObject:TUICore_TUIConversationObjectFactory_Minimalist key:TUICore_TUIConversationObjectFactory_GetConversationSelectControllerMethod param:nil];
+        TUIFloatViewController *floatVC = [[TUIFloatViewController alloc] init];
         [floatVC appendChildViewController:(id)vc topMargin:kScale390(87.5)];
-        [floatVC.topGestureView setTitleText:@"" subTitleText:@"" leftBtnText:TUIKitLocalizableString(TUIKitCreateCancel) rightBtnText:TUIKitLocalizableString(MultiSelect)];
+        [floatVC.topGestureView setTitleText:@"" subTitleText:@"" leftBtnText:TIMCommonLocalizableString(TUIKitCreateCancel) rightBtnText:TIMCommonLocalizableString(MultiSelect)];
         floatVC.topGestureView.subTitleLabel.hidden = YES;
         weakSelf.forwardConversationSelectVC = (UIViewController *)vc;
         weakSelf.forwardSelectUIMsgs = uiMsgs;
         weakSelf.isMergeForward = mergeForward;
-        [self presentViewController:floatVC animated:YES completion:nil];
+        [self presentViewController:floatVC animated:YES completion:^{
+            weakSelf.responseKeyboard = NO;
+            [weakSelf openMultiChooseBoard:NO];
+            [weakSelf.messageController enableMultiSelectedMode:NO];
+        }];
     };
     
     UIAlertController *tipsVc = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
@@ -982,14 +979,14 @@ static UIView *customTopView;
      * 逐条转发
      * Forward one-by-one
      */
-    [tipsVc tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitRelayOneByOneForward) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    [tipsVc tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(TUIKitRelayOneByOneForward) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         if (uiMsgs.count <= 30) {
             chooseTarget(NO);
             return;
         }
-        UIAlertController *vc = [UIAlertController alertControllerWithTitle:TUIKitLocalizableString(TUIKitRelayOneByOnyOverLimit) message:nil preferredStyle:UIAlertControllerStyleAlert];
-        [vc tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel) style:UIAlertActionStyleDefault handler:nil]];
-        [vc tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitRelayCombineForwad) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        UIAlertController *vc = [UIAlertController alertControllerWithTitle:TIMCommonLocalizableString(TUIKitRelayOneByOnyOverLimit) message:nil preferredStyle:UIAlertControllerStyleAlert];
+        [vc tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(Cancel) style:UIAlertActionStyleDefault handler:nil]];
+        [vc tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(TUIKitRelayCombineForwad) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             chooseTarget(YES);
         }]];
         [weakSelf presentViewController:vc animated:YES completion:nil];
@@ -999,10 +996,10 @@ static UIView *customTopView;
      * 合并转发
      * Merge-forward
      */
-    [tipsVc tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitRelayCombineForwad) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    [tipsVc tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(TUIKitRelayCombineForwad) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         chooseTarget(YES);
     }]];
-    [tipsVc tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:nil]];
+    [tipsVc tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:nil]];
     [self presentViewController:tipsVc animated:YES completion:nil];
 }
 
@@ -1187,32 +1184,30 @@ static UIView *customTopView;
 }
 
 #pragma mark - Translation forward
-- (void)messageController:(TUIBaseMessageController_Minimalist *)controller
-     onForwardTranslation:(NSString *)text {
+- (void)messageController:(TUIBaseMessageController_Minimalist *)controller onForwardText:(NSString *)text {
     if (text.length == 0) {
         return;
     }
-    self.translatedText = text;
+    self.forwardText = text;
     [self presentConverationSelectVC];
 }
 
 - (void)presentConverationSelectVC {
-    UIViewController *vc = (UIViewController *)[TUICore callService:TUICore_TUIConversationService_Minimalist method:TUICore_TUIConversationService_GetConversationSelectControllerMethod param:nil];
-    TUIChatFloatController *floatVC = [[TUIChatFloatController alloc] init];
+    UIViewController *vc = (UIViewController *)[TUICore createObject:TUICore_TUIConversationObjectFactory_Minimalist key:TUICore_TUIConversationObjectFactory_GetConversationSelectControllerMethod param:nil];
+    TUIFloatViewController *floatVC = [[TUIFloatViewController alloc] init];
     [floatVC appendChildViewController:(id)vc topMargin:kScale390(87.5)];
-    [floatVC.topGestureView setTitleText:@"" subTitleText:@"" leftBtnText:TUIKitLocalizableString(TUIKitCreateCancel) rightBtnText:TUIKitLocalizableString(MultiSelect)];
+    [floatVC.topGestureView setTitleText:@"" subTitleText:@"" leftBtnText:TIMCommonLocalizableString(TUIKitCreateCancel) rightBtnText:TIMCommonLocalizableString(MultiSelect)];
     floatVC.topGestureView.subTitleLabel.hidden = YES;
     self.forwardConversationSelectVC = (UIViewController *)vc;
     [self presentViewController:floatVC animated:YES completion:nil];
 }
 
-- (void)forwardTranslationText:(NSString *)text
-                toConverations:(NSArray <TUIChatConversationModel *> *)conversations {
+- (void)forwardText:(NSString *)text toConverations:(NSArray <TUIChatConversationModel *> *)conversations {
     for (TUIChatConversationModel *conversation in conversations) {
         V2TIMMessage *message = [[V2TIMManager sharedInstance] createTextMessage:text];
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([conversation.conversationID isEqualToString:self.conversationData.conversationID]) {
-                // Send translated text to myself
+                // Send text to myself
                 [self.messageController sendMessage:message];
             } else {
                 // Send to other conversation

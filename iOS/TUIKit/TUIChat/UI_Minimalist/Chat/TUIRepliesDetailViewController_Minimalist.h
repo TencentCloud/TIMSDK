@@ -10,7 +10,7 @@
 #import "TUIInputController_Minimalist.h"
 #import "TUIMessageDataProvider_Minimalist.h"
 #import "TUIChatConversationModel.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 #import "TUIChatFlexViewController.h"
 
 @class TUIMessageDataProvider_Minimalist;

@@ -5,8 +5,10 @@
 //  Created by wyl on 2023/1/3.
 //
 
-#import "TUICommonModel.h"
+#import <TIMCommon/TIMCommonModel.h>
 #import "TUIGroupProfileCardCellData_Minimalist.h"
+
+@class V2TIMGroupInfo;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -20,10 +22,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIImageView *headImg;
 @property (nonatomic, strong) UILabel *descriptionLabel;
 @property (nonatomic, strong) UILabel *idLabel;
-
-@property (nonatomic, strong) TUIGroupProfileHeaderItemView_Minimalist * itemMessage;
-@property (nonatomic, strong) TUIGroupProfileHeaderItemView_Minimalist * itemAudio;
-@property (nonatomic, strong) TUIGroupProfileHeaderItemView_Minimalist * itemVideo;
+@property (nonatomic, strong) UIView *functionListView;
+@property (nonatomic,strong) NSArray<TUIGroupProfileHeaderItemView_Minimalist *> *itemViewList;
+@property (nonatomic,strong) V2TIMGroupInfo *groupInfo;
 
 @end
 
@@ -31,6 +32,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) TUIGroupProfileHeaderView_Minimalist *headerView;
 @property (nonatomic, strong) TUIGroupProfileCardCellData_Minimalist *cardData;
 - (void)fillWithData:(TUIGroupProfileCardCellData_Minimalist *)data;
+
+@property (nonatomic,strong) NSArray<TUIGroupProfileHeaderItemView_Minimalist *> *itemViewList;
+
 @end
 
 NS_ASSUME_NONNULL_END

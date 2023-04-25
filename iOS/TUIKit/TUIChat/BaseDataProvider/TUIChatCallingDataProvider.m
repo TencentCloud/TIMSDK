@@ -6,8 +6,8 @@
 //
 
 #import "TUIChatCallingDataProvider.h"
-#import "TUICore.h"
-#import "TUIDefine.h"
+#import <TUICore/TUICore.h>
+#import <TIMCommon/TIMDefine.h>
 #import "TUIMessageBaseDataProvider.h"
 
 typedef NSString * TUIChatMessageID;
@@ -242,33 +242,33 @@ typedef NSDictionary * TUIChatCallingJsonData;
     BOOL isGroup = (self.participantType == TUICallParticipantTypeGroup);
     
     if (protocolType == TUICallProtocolTypeUnknown) {
-        return TUIKitLocalizableString(TUIkitSignalingUnrecognlize);
+        return TIMCommonLocalizableString(TUIkitSignalingUnrecognlize);
     }
     
-    NSString *display = TUIKitLocalizableString(TUIkitSignalingUnrecognlize);
+    NSString *display = TIMCommonLocalizableString(TUIkitSignalingUnrecognlize);
     NSString *showName = [TUIMessageBaseDataProvider getShowName:self.innerMessage];
     
     if (protocolType == TUICallProtocolTypeSend) {
         // Launch call
-        display = isGroup ? [NSString stringWithFormat:TUIKitLocalizableString(TUIKitSignalingNewGroupCallFormat), showName]
-                          : TUIKitLocalizableString(TUIKitSignalingNewCall);
+        display = isGroup ? [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitSignalingNewGroupCallFormat), showName]
+                          : TIMCommonLocalizableString(TUIKitSignalingNewCall);
     } else if (protocolType == TUICallProtocolTypeAccept) {
         // Accept call
-        display = isGroup ? [NSString stringWithFormat:TUIKitLocalizableString(TUIKitSignalingHangonCallFormat), showName]
-                          : TUIKitLocalizableString(TUIkitSignalingHangonCall);
+        display = isGroup ? [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitSignalingHangonCallFormat), showName]
+                          : TIMCommonLocalizableString(TUIkitSignalingHangonCall);
     } else if (protocolType == TUICallProtocolTypeReject) {
         // Reject call
-        display = isGroup ? [NSString stringWithFormat:TUIKitLocalizableString(TUIKitSignalingDeclineFormat), showName]
-                          : TUIKitLocalizableString(TUIkitSignalingDecline);
+        display = isGroup ? [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitSignalingDeclineFormat), showName]
+                          : TIMCommonLocalizableString(TUIkitSignalingDecline);
     } else if (protocolType == TUICallProtocolTypeCancel) {
         // Cancel pending call
-        display = isGroup ? [NSString stringWithFormat:TUIKitLocalizableString(TUIkitSignalingCancelGroupCallFormat), showName]
-                          : TUIKitLocalizableString(TUIkitSignalingCancelCall);
+        display = isGroup ? [NSString stringWithFormat:TIMCommonLocalizableString(TUIkitSignalingCancelGroupCallFormat), showName]
+                          : TIMCommonLocalizableString(TUIkitSignalingCancelCall);
     } else if (protocolType == TUICallProtocolTypeHangup) {
         // Hang up
         NSUInteger duration = [[self.jsonData objectForKey:@"call_end"] unsignedIntegerValue];
-        display = isGroup ? TUIKitLocalizableString(TUIKitSignalingFinishGroupChat)
-                          : [NSString stringWithFormat:TUIKitLocalizableString(TUIKitSignalingFinishConversationAndTimeFormat), duration / 60, duration % 60];
+        display = isGroup ? TIMCommonLocalizableString(TUIKitSignalingFinishGroupChat)
+                          : [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitSignalingFinishConversationAndTimeFormat), duration / 60, duration % 60];
                 
     } else if (protocolType == TUICallProtocolTypeTimeout) {
         // Call timeout
@@ -283,18 +283,18 @@ typedef NSDictionary * TUIChatCallingJsonData;
                 [mutableContent replaceCharactersInRange:NSMakeRange(mutableContent.length - 1, 1) withString:@" "];
             }
         }
-        [mutableContent appendString:TUIKitLocalizableString(TUIKitSignalingNoResponse)];
+        [mutableContent appendString:TIMCommonLocalizableString(TUIKitSignalingNoResponse)];
         display = [NSString stringWithString:mutableContent];
     } else if (protocolType == TUICallProtocolTypeLineBusy) {
         // Hang up with line busy
-        display = isGroup ? [NSString stringWithFormat:TUIKitLocalizableString(TUIKitSignalingBusyFormat), showName]
-                          : TUIKitLocalizableString(TUIKitSignalingCallBusy);
+        display = isGroup ? [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitSignalingBusyFormat), showName]
+                          : TIMCommonLocalizableString(TUIKitSignalingCallBusy);
     } else if (protocolType == TUICallProtocolTypeSwitchToAudio) {
         // Change video-call to voice-call
-        display = TUIKitLocalizableString(TUIKitSignalingSwitchToAudio);
+        display = TIMCommonLocalizableString(TUIKitSignalingSwitchToAudio);
     } else if (protocolType == TUICallProtocolTypeSwitchToAudioConfirm) {
         // Confirm the change of video-voice-call
-        display = TUIKitLocalizableString(TUIKitSignalingComfirmSwitchToAudio);
+        display = TIMCommonLocalizableString(TUIKitSignalingComfirmSwitchToAudio);
     }
     
     return display;

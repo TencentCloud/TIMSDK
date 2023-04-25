@@ -14,14 +14,14 @@
 #import "TUITextMessageCellData_Minimalist.h"
 #import "TUILinkCellData_Minimalist.h"
 #import "TUIMessageDataProvider_Minimalist.h"
-#import "TUICommonModel.h"
-#import "TUILogin.h"
-#import "TUICore.h"
-#import "TUIDefine.h"
-#import "NSDictionary+TUISafe.h"
-#import "NSString+TUIEmoji.h"
+#import <TIMCommon/TIMCommonModel.h>
+#import <TUICore/TUILogin.h>
+#import <TUICore/TUICore.h>
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/NSDictionary+TUISafe.h>
+#import <TIMCommon/NSString+TUIEmoji.h>
 
-@interface TUIGroupChatViewController_Minimalist () <V2TIMGroupListener, TUINotificationProtocol>
+@interface TUIGroupChatViewController_Minimalist () <V2TIMGroupListener>
 
 //@property (nonatomic, strong) UIButton *atBtn;
 @property (nonatomic, strong) UIView *tipsView;
@@ -31,11 +31,6 @@
 @property (nonatomic, strong) TUIGroupPendencyDataProvider *pendencyViewModel;
 @property (nonatomic, strong) NSMutableArray<TUIUserModel *> *atUserList;
 @property (nonatomic, assign) BOOL responseKeyboard;
-
-@property (nonatomic, weak) UIViewController *atSelectGroupMemberVC;
-
-@property (nonatomic, weak) UIViewController *callingSelectGroupMemberVC;
-@property (nonatomic, copy) NSString *callingType;
 
 @end
 
@@ -47,8 +42,6 @@
     [self setupTipsView];
 
     [[V2TIMManager sharedInstance] addGroupListener:self];
-    
-    [TUICore registerEvent:TUICore_TUIGroupNotify subKey:TUICore_TUIGroupNotify_SelectGroupMemberSubKey object:self];
 }
 
 - (void)dealloc {
@@ -67,7 +60,7 @@
 
     self.pendencyBtn = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.tipsView addSubview:self.pendencyBtn];
-    [self.pendencyBtn setTitle:TUIKitLocalizableString(TUIKitChatPendencyTitle) forState:UIControlStateNormal];
+    [self.pendencyBtn setTitle:TIMCommonLocalizableString(TUIKitChatPendencyTitle) forState:UIControlStateNormal];
     [self.pendencyBtn.titleLabel setFont:[UIFont systemFontOfSize:12]];
     [self.pendencyBtn addTarget:self action:@selector(openPendency:) forControlEvents:UIControlEventTouchUpInside];
     [self.pendencyBtn sizeToFit];
@@ -77,7 +70,7 @@
     [RACObserve(self.pendencyViewModel, unReadCnt) subscribeNext:^(NSNumber *unReadCnt) {
         @strongify(self)
         if ([unReadCnt intValue]) {
-            self.pendencyLabel.text = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitChatPendencyRequestToJoinGroupFormat), unReadCnt];
+            self.pendencyLabel.text = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitChatPendencyRequestToJoinGroupFormat), unReadCnt];
             [self.pendencyLabel sizeToFit];
             CGFloat gap = (self.tipsView.mm_w - self.pendencyLabel.mm_w - self.pendencyBtn.mm_w-8)/2;
             self.pendencyLabel.mm_left(gap).mm__centerY(self.tipsView.mm_h/2);
@@ -111,13 +104,13 @@
         [[V2TIMManager sharedInstance] getUsersInfo:@[cell.pendencyData.fromUser] succ:^(NSArray<V2TIMUserFullInfo *> *profiles) {
             // 显示用户资料 VC
             NSDictionary *param = @{
-                TUICore_TUIContactService_GetUserProfileControllerMethod_UserProfileKey : profiles.firstObject,
-                TUICore_TUIContactService_GetUserProfileControllerMethod_PendencyDataKey : cell.pendencyData,
-                TUICore_TUIContactService_GetUserProfileControllerMethod_ActionTypeKey : @(3)
+                TUICore_TUIContactObjectFactory_GetUserProfileControllerMethod_UserProfileKey : profiles.firstObject,
+                TUICore_TUIContactObjectFactory_GetUserProfileControllerMethod_PendencyDataKey : cell.pendencyData,
+                TUICore_TUIContactObjectFactory_GetUserProfileControllerMethod_ActionTypeKey : @(3)
             };
-            UIViewController *vc = [TUICore callService:TUICore_TUIContactService_Minimalist
-                                                 method:TUICore_TUIContactService_GetUserProfileControllerMethod
-                                                  param:param];
+            UIViewController *vc = [TUICore createObject:TUICore_TUIContactObjectFactory_Minimalist
+                                                     key:TUICore_TUIContactObjectFactory_GetUserProfileControllerMethod
+                                                   param:param];
             [self.navigationController pushViewController:vc animated:YES];
         } fail:nil];
     };
@@ -134,73 +127,6 @@
     }
     
     self.atUserList = [NSMutableArray array];
-}
-
-#pragma mark - Call
-- (void)groupCall:(NSString *)groupID isVideoCall:(BOOL)isVideoCall {
-    NSDictionary *param = @{
-        TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_GroupIDKey : groupID,
-        TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_NameKey : TUIKitLocalizableString(Make-a-call),
-    };
-    UIViewController *vc = [TUICore callService:TUICore_TUIGroupService_Minimalist
-                                         method:TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod
-                                          param:param];
-    [self.navigationController pushViewController:vc animated:YES];
-    
-    self.callingSelectGroupMemberVC = vc;
-    self.callingType = isVideoCall ? @"1" : @"0";
-}
-
-#pragma mark - TUICore
-- (void)onNotifyEvent:(NSString *)key subKey:(NSString *)subKey object:(nullable id)anObject param:(nullable NSDictionary *)param {
-    [super onNotifyEvent:key subKey:subKey object:anObject param:param];
-    
-    if ([key isEqualToString:TUICore_TUIGroupNotify]
-        && [subKey isEqualToString:TUICore_TUIGroupNotify_SelectGroupMemberSubKey]
-        && self.atSelectGroupMemberVC == anObject) {
-        NSArray<TUIUserModel *> *modelList = [param tui_objectForKey:TUICore_TUIGroupNotify_SelectGroupMemberSubKey_UserListKey asClass:NSArray.class];
-        NSMutableString *atText = [[NSMutableString alloc] init];
-        for (int i = 0; i < modelList.count; i++) {
-            TUIUserModel *model = modelList[i];
-            if (![model isKindOfClass:TUIUserModel.class]) {
-                NSAssert(NO, @"Error data-type in modelList");
-                continue;
-            }
-            [self.atUserList addObject:model];
-            if (i == 0) {
-                [atText appendString:[NSString stringWithFormat:@"%@ ",model.name]];
-            } else {
-                [atText appendString:[NSString stringWithFormat:@"@%@ ",model.name]];
-            }
-        }
-        
-
-        UIFont *textFont = kTUIInputNoramlFont;
-        NSAttributedString *spaceString = [[NSAttributedString alloc] initWithString:atText attributes:@{NSFontAttributeName: textFont}];
-        [self.inputController.inputBar.inputTextView.textStorage insertAttributedString:spaceString atIndex:self.inputController.inputBar.inputTextView.textStorage.length];
-        [self.inputController.inputBar updateTextViewFrame];
-    }
-    else if ([key isEqualToString:TUICore_TUIGroupNotify]
-             && [subKey isEqualToString:TUICore_TUIGroupNotify_SelectGroupMemberSubKey]
-             && self.callingSelectGroupMemberVC == anObject) {
-        
-        NSArray<TUIUserModel *> *modelList = [param tui_objectForKey:TUICore_TUIGroupNotify_SelectGroupMemberSubKey_UserListKey asClass:NSArray.class];
-        NSMutableArray *userIDs = [NSMutableArray arrayWithCapacity:modelList.count];
-        for (TUIUserModel *user in modelList) {
-            NSParameterAssert(user.userId);
-            [userIDs addObject:user.userId];
-        }
-        
-        // 显示通话VC
-        NSDictionary *param = @{
-            TUICore_TUICallingService_ShowCallingViewMethod_GroupIDKey : self.conversationData.groupID,
-            TUICore_TUICallingService_ShowCallingViewMethod_UserIDsKey : userIDs,
-            TUICore_TUICallingService_ShowCallingViewMethod_CallTypeKey : self.callingType
-        };
-        [TUICore callService:TUICore_TUICallingService
-                      method:TUICore_TUICallingService_ShowCallingViewMethod
-                       param:param];
-    }
 }
 
 #pragma mark - V2TIMGroupListener
@@ -257,19 +183,43 @@
      * Input of @ character detected
      */
     if (self.conversationData.groupID.length > 0) {
-        if ([self.navigationController.topViewController isKindOfClass:NSClassFromString(@"TUISelectGroupMemberViewController")]) {
+        if ([self.navigationController.topViewController isKindOfClass:NSClassFromString(@"TUISelectGroupMemberViewController_Minimalist")]) {
             return;
         }
-        NSDictionary *param = @{
-            TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_GroupIDKey : self.conversationData.groupID,
-            TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_NameKey : TUIKitLocalizableString(TUIKitAtSelectMemberTitle),
-            TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_OptionalStyleKey : @(1),
-        };
-        UIViewController *vc = [TUICore callService:TUICore_TUIGroupService_Minimalist
-                                             method:TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod
-                                              param:param];
-        [self.navigationController pushViewController:vc animated:YES];
-        self.atSelectGroupMemberVC = vc;
+        __weak typeof(self) weakSelf = self;
+        NSMutableDictionary *param = [NSMutableDictionary dictionary];
+        param[TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_GroupID] = self.conversationData.groupID;
+        param[TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_Name] = TIMCommonLocalizableString(TUIKitAtSelectMemberTitle);
+        param[TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_OptionalStyle] = @(1);
+        UIViewController *vc = [TUICore createObject:TUICore_TUIGroupObjectFactory_Minimalist
+                                                 key:TUICore_TUIGroupObjectFactory_SelectGroupMemberVC
+                                               param:param];
+        if (vc && [vc isKindOfClass:UIViewController.class]) {
+            vc.tui_valueCallback = ^(NSDictionary * _Nonnull param) {
+                NSArray<TUIUserModel *> *modelList = [param tui_objectForKey:TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_ResultUserList asClass:NSArray.class];
+                NSMutableString *atText = [[NSMutableString alloc] init];
+                for (int i = 0; i < modelList.count; i++) {
+                    TUIUserModel *model = modelList[i];
+                    if (![model isKindOfClass:TUIUserModel.class]) {
+                        NSAssert(NO, @"Error data-type in modelList");
+                        continue;
+                    }
+                    [self.atUserList addObject:model];
+                    if (i == 0) {
+                        [atText appendString:[NSString stringWithFormat:@"%@ ",model.name]];
+                    } else {
+                        [atText appendString:[NSString stringWithFormat:@"@%@ ",model.name]];
+                    }
+                }
+                
+
+                UIFont *textFont = kTUIInputNoramlFont;
+                NSAttributedString *spaceString = [[NSAttributedString alloc] initWithString:atText attributes:@{NSFontAttributeName: textFont}];
+                [weakSelf.inputController.inputBar.inputTextView.textStorage insertAttributedString:spaceString atIndex:weakSelf.inputController.inputBar.inputTextView.textStorage.length];
+                [weakSelf.inputController.inputBar updateTextViewFrame];
+            };
+            [self.navigationController pushViewController:vc animated:YES];
+        }
     }
 }
 
@@ -281,28 +231,6 @@
             [self.atUserList removeObject:user];
             break;
         }
-    }
-}
-
-- (void)inputController:(TUIInputController_Minimalist *)inputController didSelectMoreCellAction:(NSString *)actionName {
-    [super inputController:inputController didSelectMoreCellAction:actionName];
-    if([actionName isEqualToString:TUIInputMoreCellKey_Link]) {  //custom message
-        NSString *text = TUIKitLocalizableString(TUIKitWelcome);
-        NSString *link = TUITencentCloudHomePageEN;
-        NSString *language = [TUIGlobalization tk_localizableLanguageKey];
-        if ([language containsString:@"zh-"]) {
-            link =  TUITencentCloudHomePageCN;
-        }
-        NSError *error = nil;
-        NSDictionary *param = @{BussinessID: BussinessID_TextLink, @"text":text, @"link":link};
-        NSData *data = [NSJSONSerialization dataWithJSONObject:param options:0 error:&error];
-        if(error)
-        {
-            NSLog(@"[%@] Post Json Error", [self class]);
-            return;
-        }
-        V2TIMMessage *message = [TUIMessageDataProvider_Minimalist getCustomMessageWithJsonData:data];
-        [self sendMessage:message];
     }
 }
 
@@ -327,16 +255,20 @@
         user.name = cell.messageData.name;
         [self.atUserList addObject:user];
         
+        NSString * nameString = [NSString stringWithFormat:@"@%@ ",user.name];
         UIFont *textFont = kTUIInputNoramlFont;
-        NSAttributedString *spaceString = [[NSAttributedString alloc] initWithString:user.name attributes:@{NSFontAttributeName: textFont}];
+        NSAttributedString *spaceString = [[NSAttributedString alloc] initWithString:nameString attributes:@{NSFontAttributeName: textFont}];
         [self.inputController.inputBar.inputTextView.textStorage insertAttributedString:spaceString atIndex:self.inputController.inputBar.inputTextView.textStorage.length];        
         [self.inputController.inputBar.inputTextView becomeFirstResponder];
+        self.inputController.inputBar.inputTextView.selectedRange = NSMakeRange(spaceString
+        .length + self.inputController.inputBar.inputTextView.textStorage.length,0);
+
     }
 }
 
 #pragma mark - Override Methods
 - (NSString *)forwardTitleWithMyName:(NSString *)nameStr {
-    return TUIKitLocalizableString(TUIKitRelayGroupChatHistory);
+    return TIMCommonLocalizableString(TUIKitRelayGroupChatHistory);
 }
 
 @end

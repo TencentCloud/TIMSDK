@@ -6,12 +6,12 @@
 //
 
 #import "TUISettingAdminController.h"
-#import "TUIGlobalization.h"
+#import <TUICore/TUIGlobalization.h>
 #import "TUIMemberInfoCell.h"
 #import "TUIMemberInfoCellData.h"
 #import "TUISettingAdminDataProvider.h"
 #import "TUISelectGroupMemberViewController.h"
-#import "TUIThemeManager.h"
+#import <TUICore/TUIThemeManager.h>
 
 @interface TUISettingAdminController () <UITableViewDataSource, UITableViewDelegate>
 
@@ -45,9 +45,9 @@
 - (void)setupViews
 {
     UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.text = TUIKitLocalizableString(TUIKitGroupManageAdminSetting);
+    titleLabel.text = TIMCommonLocalizableString(TUIKitGroupManageAdminSetting);
     titleLabel.font = [UIFont boldSystemFontOfSize:17.0];
-    titleLabel.textColor = TUICoreDynamicColor(@"nav_title_text_color", @"#000000");
+    titleLabel.textColor = TIMCommonDynamicColor(@"nav_title_text_color", @"#000000");
     [titleLabel sizeToFit];
     self.navigationItem.titleView = titleLabel;
     [self.view addSubview:self.tableView];
@@ -84,7 +84,7 @@
         __weak typeof(self) weakSelf = self;
         TUISelectGroupMemberViewController *vc = [[TUISelectGroupMemberViewController alloc] init];
         vc.groupId = self.groupID;
-        vc.name = TUIKitLocalizableString(TUIKitGroupManageAdminSetting);
+        vc.name = TIMCommonLocalizableString(TUIKitGroupManageAdminSetting);
         vc.selectedFinished = ^(NSMutableArray<TUIUserModel *> * _Nonnull modelList) {
             [weakSelf.dataProvider settingAdmins:modelList callback:^(int code, NSString *errorMsg) {
                 if (code != 0) {
@@ -104,7 +104,7 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return TUIKitLocalizableString(Delete);
+    return TIMCommonLocalizableString(Delete);
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -125,9 +125,9 @@
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     NSArray *subArray = self.dataProvider.datas[section];
-    NSString *title = TUIKitLocalizableString(TUIKitGroupOwner);
+    NSString *title = TIMCommonLocalizableString(TUIKitGroupOwner);
     if (section == 1) {
-        title = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitGroupManagerFormat), subArray.count - 1, 10];
+        title = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitGroupManagerFormat), subArray.count - 1, 10];
     }
     
     UIView *view = [[UIView alloc] init];
@@ -162,7 +162,7 @@
 {
     if (_tableView == nil) {
         _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
-        _tableView.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
+        _tableView.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#F2F3F5");
         _tableView.delaysContentTouches = NO;
         _tableView.delegate = self;
         _tableView.dataSource = self;

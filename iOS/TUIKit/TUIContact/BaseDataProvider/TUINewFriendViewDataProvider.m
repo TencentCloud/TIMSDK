@@ -6,7 +6,7 @@
 //
 
 #import "TUINewFriendViewDataProvider.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 
 @interface TUINewFriendViewDataProvider()
 

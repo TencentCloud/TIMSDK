@@ -5,11 +5,11 @@
 //  Created by harvy on 2020/12/24.
 //
 
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 #import "TUISearchResultCell.h"
 #import "TUISearchResultCellModel.h"
-#import "TUICommonModel.h"
-#import "TUIThemeManager.h"
+#import <TIMCommon/TIMCommonModel.h>
+#import <TUICore/TUIThemeManager.h>
 @interface TUISearchResultCell ()
 @property (nonatomic, strong) UILabel *detail_title;
 @property (nonatomic, strong) UIView *separtorView;
@@ -29,25 +29,25 @@
 
 - (void)setupViews
 {
-    self.contentView.backgroundColor = TUICoreDynamicColor(@"form_bg_color", @"#FFFFFF");
+    self.contentView.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
 
     _avatarView = [[UIImageView alloc] init];
     [self.contentView addSubview:_avatarView];
     
     _title_label = [[UILabel alloc] init];
     _title_label.text = @"";
-    _title_label.textColor = TUICoreDynamicColor(@"form_title_color", @"#000000");
+    _title_label.textColor = TIMCommonDynamicColor(@"form_title_color", @"#000000");
     _title_label.font = [UIFont systemFontOfSize:14.0];
     [self.contentView addSubview:_title_label];
     
     _detail_title = [[UILabel alloc] init];
     _detail_title.text = @"";
-    _detail_title.textColor =  TUICoreDynamicColor(@"form_subtitle_color", @"#888888");
+    _detail_title.textColor =  TIMCommonDynamicColor(@"form_subtitle_color", @"#888888");
     _detail_title.font = [UIFont systemFontOfSize:12.0];
     [self.contentView addSubview:_detail_title];
     
     _separtorView = [[UIView alloc] init];
-    _separtorView.backgroundColor = TUICoreDynamicColor(@"separator_color", @"#DBDBDB");
+    _separtorView.backgroundColor = TIMCommonDynamicColor(@"separator_color", @"#DBDBDB");
     [self.contentView addSubview:_separtorView];
     
     self.selectionStyle = UITableViewCellSelectionStyleNone;

@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 
 @class TUISearchGroupResult;
 

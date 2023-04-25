@@ -4,9 +4,9 @@
 
 #import "TUIChatBaseDataProvider.h"
 #import "TUIMessageBaseDataProvider.h"
-#import "TUICore.h"
-#import "NSDictionary+TUISafe.h"
-#import "TUIThemeManager.h"
+#import <TUICore/TUICore.h>
+#import <TUICore/NSDictionary+TUISafe.h>
+#import <TUICore/TUIThemeManager.h>
 
 #define Input_SendBtn_Key @"Input_SendBtn_Key"
 #define Input_SendBtn_Title @"Input_SendBtn_Title"
@@ -29,7 +29,7 @@ static NSArray *customInputBtnInfo = nil;
 {
     if (customInputBtnInfo == nil) {
         customInputBtnInfo = @[@{Input_SendBtn_Key : TUIInputMoreCellKey_Link,
-                                 Input_SendBtn_Title :  TUIKitLocalizableString(TUIKitMoreLink),
+                                 Input_SendBtn_Title :  TIMCommonLocalizableString(TUIKitMoreLink),
                                  Input_SendBtn_ImageName : @"chat_more_link_img"
                                 }
         ];
@@ -97,7 +97,7 @@ static NSArray *customInputBtnInfo = nil;
                 myName = infoList.firstObject.nickName;
             }
             
-            NSString *title = [self.forwardDelegate dataProvider:self mergeForwardTitleWithMyName:myName];
+            NSString *title = [self.delegate dataProvider:self mergeForwardTitleWithMyName:myName];
             NSMutableArray *abstactList = [NSMutableArray array];
             if (uiMsgs.count > 0) {
                 [abstactList addObject:[self abstractDisplayWithMessage:msgs[0]]];
@@ -108,7 +108,7 @@ static NSArray *customInputBtnInfo = nil;
             if (uiMsgs.count > 2) {
                 [abstactList addObject:[self abstractDisplayWithMessage:msgs[2]]];
             }
-            NSString *compatibleText = TUIKitLocalizableString(TUIKitRelayCompatibleText);
+            NSString *compatibleText = TIMCommonLocalizableString(TUIKitRelayCompatibleText);
             V2TIMMessage *mergeMessage = [V2TIMManager.sharedInstance createMergerMessage:msgs title:title abstractList:abstactList compatibleText:compatibleText];
             if (mergeMessage == nil) {
                 if (fail) {

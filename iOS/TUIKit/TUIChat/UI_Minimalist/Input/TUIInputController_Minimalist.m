@@ -10,23 +10,21 @@
 #import "TUIInputController_Minimalist.h"
 #import "TUIMenuCell_Minimalist.h"
 #import "TUIMenuCellData_Minimalist.h"
-#import "TUIInputMoreCell_Minimalist.h"
-#import "TUICommonModel.h"
+#import <TIMCommon/TIMCommonModel.h>
 #import "TUIFaceMessageCell_Minimalist.h"
 #import "TUITextMessageCell_Minimalist.h"
 #import "TUIVoiceMessageCell_Minimalist.h"
-#import "TUIDefine.h"
-#import "TUIDarkModel.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIDarkModel.h>
 #import "TUIMessageDataProvider_Minimalist.h"
-#import "NSString+TUIEmoji.h"
-#import "TUIThemeManager.h"
+#import <TIMCommon/NSString+TUIEmoji.h>
+#import <TUICore/TUIThemeManager.h>
 #import "TUICloudCustomDataTypeCenter.h"
 #import "TUIChatDataProvider_Minimalist.h"
 #import "TUIChatModifyMessageHelper.h"
-#import "UIAlertController+TUICustomStyle.h"
 #import "TUIChatConfig.h"
 
-@interface TUIInputController_Minimalist () <TUIInputBarDelegate_Minimalist, TUIMenuViewDelegate_Minimalist, TUIFaceViewDelegate, TUIMoreViewDelegate_Minimalist>
+@interface TUIInputController_Minimalist () <TUIInputBarDelegate_Minimalist, TUIMenuViewDelegate_Minimalist, TUIFaceViewDelegate>
 @property (nonatomic, assign) InputStatus status;
 @property (nonatomic, assign) CGRect keyboardFrame;
 
@@ -89,11 +87,7 @@
 {
     if(_status == Input_Status_Input_Face){
         [self hideFaceAnimation];
-    }
-    else if(_status == Input_Status_Input_More){
-        [self hideMoreAnimation];
-    }
-    else{
+    } else{
         //[self hideFaceAnimation:NO];
         //[self hideMoreAnimation:NO];
     }
@@ -157,41 +151,10 @@
     } completion:nil];
 }
 
-- (void)hideMoreAnimation
-{
-    self.moreView.hidden = NO;
-    self.moreView.alpha = 1.0;
-    __weak typeof(self) ws = self;
-    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        ws.moreView.alpha = 0.0;
-    } completion:^(BOOL finished) {
-        ws.moreView.hidden = YES;
-        ws.moreView.alpha = 1.0;
-        [ws.moreView removeFromSuperview];
-    }];
-}
-
-- (void)showMoreAnimation
-{
-    [self.view addSubview:self.moreView];
-
-    self.moreView.hidden = NO;
-    CGRect frame = self.moreView.frame;
-    frame.origin.y = Screen_Height;
-    self.moreView.frame = frame;
-    __weak typeof(self) ws = self;
-    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        CGRect newFrame = ws.moreView.frame;
-        newFrame.origin.y = ws.inputBar.frame.origin.y + ws.inputBar.frame.size.height;
-        ws.moreView.frame = newFrame;
-    } completion:nil];
-}
-
 - (void)inputBarDidTouchCamera:(TUIInputBar_Minimalist *)textView
 {
     [_inputBar.inputTextView resignFirstResponder];
     [self hideFaceAnimation];
-    [self hideMoreAnimation];
     _status = Input_Status_Input_Camera;
     if (_delegate && [_delegate respondsToSelector:@selector(inputController:didChangeHeight:)]){
         CGFloat inputContainerBottom = [self getInputContainerBottom];
@@ -202,64 +165,15 @@
     }
 }
 
-- (void)inputBarDidTouchMore:(TUIInputBar_Minimalist *)textView
-{
-    
-    UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-    NSMutableArray *titles = [NSMutableArray arrayWithArray:@[
-                                                                TUIKitLocalizableString(TUIKitMorePhoto),
-                                                                TUIKitLocalizableString(TUIKitMoreCamera),
-                                                                TUIKitLocalizableString(TUIKitMoreVideo),
-                                                                TUIKitLocalizableString(TUIKitMoreFile)
-                                                            ]];
-    
-    NSMutableArray *images = [NSMutableArray arrayWithArray:@[
-                                                                [UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_more_photo")],
-                                                                [UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_more_camera")],
-                                                                [UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_more_video")],
-                                                                [UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_more_document")],
-                                                            ]];
-
-    NSMutableArray *actionHandles = [NSMutableArray arrayWithArray:@[
-                                        ^(UIAlertAction *action){ [self excuteAction:@"Album"]; },
-                                        ^(UIAlertAction *action){ [self excuteAction:@"TakePhoto"]; },
-                                        ^(UIAlertAction *action){ [self excuteAction:@"RecordVideo"]; },
-                                        ^(UIAlertAction *action){ [self excuteAction:@"File"]; }
-                                    ]];
-    
-    if (TUIChatConfig.defaultConfig.enableLink) {
-        [titles addObject:TUIKitLocalizableString(TUIKitMoreLink)];
-        [images addObject:[UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_more_custom")]];
-        [actionHandles addObject:^(UIAlertAction *action){ [self excuteAction:TUIInputMoreCellKey_Link];}];
-    }
-    
-    NSMutableArray *items = [NSMutableArray array];
-    for (int i = 0 ; i< titles.count; i++) {
-        TUICustomActionSheetItem *item = [[TUICustomActionSheetItem alloc] initWithTitle:titles[i] leftMark:images[i] withActionHandler:actionHandles[i]];
-        item.actionStyle = UIAlertActionStyleDefault;
-        [items addObject:item];
-    }
-    
-    [ac configItems:items];
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:  ^(UIAlertAction *action){
-        NSLog(@"Cancel");
-    }];
-    [ac addAction:cancelAction];
-    [self presentViewController:ac animated:YES completion:nil];
-}
-
-- (void)excuteAction:(NSString *)actionName {
-    if(_delegate && [_delegate respondsToSelector:@selector(inputController:didSelectMoreCellAction:)]){
-        [_delegate inputController:self didSelectMoreCellAction:actionName];
+- (void)inputBarDidTouchMore:(TUIInputBar_Minimalist *)textView {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(inputControllerDidSelectMoreButton:)]) {
+        [self.delegate inputControllerDidSelectMoreButton:self];
     }
 }
-- (void)inputBarDidTouchFace:(TUIInputBar_Minimalist *)textView
-{
-    if([TUIConfig defaultConfig].faceGroups.count == 0){
+
+- (void)inputBarDidTouchFace:(TUIInputBar_Minimalist *)textView {
+    if([TIMConfig defaultConfig].faceGroups.count == 0){
         return;
-    }
-    if(_status == Input_Status_Input_More){
-        [self hideMoreAnimation];
     }
     [_inputBar.inputTextView resignFirstResponder];
     _status = Input_Status_Input_Face;
@@ -269,11 +183,7 @@
     [self showFaceAnimation];
 }
 
-- (void)inputBarDidTouchKeyboard:(TUIInputBar_Minimalist *)textView
-{
-    if(_status == Input_Status_Input_More){
-        [self hideMoreAnimation];
-    }
+- (void)inputBarDidTouchKeyboard:(TUIInputBar_Minimalist *)textView {
     if (_status == Input_Status_Input_Face) {
         [self hideFaceAnimation];
     }
@@ -281,13 +191,9 @@
     [_inputBar.inputTextView becomeFirstResponder];
 }
 
-- (void)inputBar:(TUIInputBar_Minimalist *)textView didChangeInputHeight:(CGFloat)offset
-{
+- (void)inputBar:(TUIInputBar_Minimalist *)textView didChangeInputHeight:(CGFloat)offset {
     if(_status == Input_Status_Input_Face){
         [self showFaceAnimation];
-    }
-    else if(_status == Input_Status_Input_More){
-        [self showMoreAnimation];
     }
     if (_delegate && [_delegate respondsToSelector:@selector(inputController:didChangeHeight:)]){
         [_delegate inputController:self didChangeHeight:self.view.frame.size.height + offset];
@@ -298,8 +204,7 @@
     }
 }
 
-- (void)inputBar:(TUIInputBar_Minimalist *)textView didSendText:(NSString *)text
-{
+- (void)inputBar:(TUIInputBar_Minimalist *)textView didSendText:(NSString *)text {
     /**
      * 表情国际化 --> 恢复成实际的中文 key
      * Emoticon internationalization --> restore to actual Chinese key
@@ -326,8 +231,7 @@
     }
 }
 
-- (void)appendReplyDataIfNeeded:(V2TIMMessage *)message
-{
+- (void)appendReplyDataIfNeeded:(V2TIMMessage *)message {
     if (self.replyData) {
         V2TIMMessage * parentMsg = self.replyData.originMessage;
         NSMutableDictionary  * simpleReply = [NSMutableDictionary dictionary];
@@ -391,8 +295,6 @@
 }
 
 - (void)modifyRootReplyMsgByID:(NSString *)messageRootID  currentMsg:(TUIMessageCellData *)messageCellData{
-    
-    
     NSDictionary *simpleCurrentContent = @{
         @"messageID"       : messageCellData.innerMessage.msgID?:@"",
         @"messageAbstract" : [messageCellData.innerMessage.textElem.text?:@"" getInternationalStringWithfaceContent],
@@ -414,8 +316,7 @@
     }
 }
 
-- (void)appendReferenceDataIfNeeded:(V2TIMMessage *)message
-{
+- (void)appendReferenceDataIfNeeded:(V2TIMMessage *)message {
     if (self.referenceData) {
         NSDictionary *dict = @{
             @"messageReply": @{
@@ -437,8 +338,7 @@
     }
 }
 
-- (void)inputBar:(TUIInputBar_Minimalist *)textView didSendVoice:(NSString *)path
-{
+- (void)inputBar:(TUIInputBar_Minimalist *)textView didSendVoice:(NSString *)path {
     NSURL *url = [NSURL fileURLWithPath:path];
     AVURLAsset *audioAsset = [AVURLAsset URLAssetWithURL:url options:nil];
     int duration = (int)CMTimeGetSeconds(audioAsset.duration);
@@ -448,55 +348,41 @@
     }
 }
 
-- (void)inputBarDidInputAt:(TUIInputBar_Minimalist *)textView
-{
+- (void)inputBarDidInputAt:(TUIInputBar_Minimalist *)textView {
     if (_delegate && [_delegate respondsToSelector:@selector(inputControllerDidInputAt:)]) {
         [_delegate inputControllerDidInputAt:self];
     }
 }
 
-- (void)inputBar:(TUIInputBar_Minimalist *)textView didDeleteAt:(NSString *)atText
-{
+- (void)inputBar:(TUIInputBar_Minimalist *)textView didDeleteAt:(NSString *)atText {
     if (_delegate && [_delegate respondsToSelector:@selector(inputController:didDeleteAt:)]) {
         [_delegate inputController:self didDeleteAt:atText];
     }
 }
 
-- (void)inputBarDidDeleteBackward:(TUIInputBar_Minimalist *)textView
-{
+- (void)inputBarDidDeleteBackward:(TUIInputBar_Minimalist *)textView {
     if (textView.inputTextView.text.length == 0) {
         [self exitReplyAndReference:nil];
     }
 }
 
-
 - (void)inputTextViewShouldBeginTyping:(UITextView *)textView {
-    
     if (_delegate && [_delegate respondsToSelector:@selector(inputControllerBeginTyping:)]) {
         [_delegate inputControllerBeginTyping:self];
     }
 }
 
 - (void)inputTextViewShouldEndTyping:(UITextView *)textView {
-    
     if (_delegate && [_delegate respondsToSelector:@selector(inputControllerEndTyping:)]) {
         [_delegate inputControllerEndTyping:self];
     }
     
 }
 
-
-
-
-- (void)reset
-{
+- (void)reset {
     if(_status == Input_Status_Input){
         return;
-    }
-    else if(_status == Input_Status_Input_More){
-        [self hideMoreAnimation];
-    }
-    else if(_status == Input_Status_Input_Face){
+    } else if(_status == Input_Status_Input_Face){
         [self hideFaceAnimation];
     }
     _status = Input_Status_Input;
@@ -519,6 +405,12 @@
         
     self.referencePreviewBar.frame = CGRectMake(0, 0, self.view.bounds.size.width, TMenuView_Menu_Height);
     self.referencePreviewBar.mm_y = CGRectGetMaxY(self.inputBar.frame);
+    
+    //Set the default position to solve the UI confusion when the keyboard does not become the first responder
+    if(self.delegate && [self.delegate respondsToSelector:@selector(inputController:didChangeHeight:)]) {
+        [self.delegate inputController:self didChangeHeight:CGRectGetMaxY(self.inputBar.frame) + Bottom_SafeHeight + TMenuView_Menu_Height];
+    }
+    
     if (self.status == Input_Status_Input_Keyboard) {
         CGFloat keyboradHeight = self.keyboardFrame.size.height;
         if (self.delegate && [self.delegate respondsToSelector:@selector(inputController:didChangeHeight:)]){
@@ -530,8 +422,8 @@
         [self.inputBar.inputTextView becomeFirstResponder];
     }
 }
-- (void)showReplyPreview:(TUIReplyPreviewData_Minimalist *)data
-{
+
+- (void)showReplyPreview:(TUIReplyPreviewData_Minimalist *)data {
     self.replyData = data;
     [self.replyPreviewBar removeFromSuperview];
     [self.view addSubview:self.replyPreviewBar];
@@ -541,6 +433,12 @@
     
     self.replyPreviewBar.frame = CGRectMake(0, 0, self.view.bounds.size.width, TMenuView_Menu_Height);
     self.inputBar.mm_y = CGRectGetMaxY(self.replyPreviewBar.frame);
+    
+    //Set the default position to solve the UI confusion when the keyboard does not become the first responder
+    if(self.delegate && [self.delegate respondsToSelector:@selector(inputController:didChangeHeight:)]) {
+        [self.delegate inputController:self didChangeHeight:CGRectGetMaxY(self.inputBar.frame) + Bottom_SafeHeight];
+    }
+    
     if (self.status == Input_Status_Input_Keyboard) {
         CGFloat keyboradHeight = self.keyboardFrame.size.height;
         if (self.delegate && [self.delegate respondsToSelector:@selector(inputController:didChangeHeight:)]){
@@ -551,40 +449,6 @@
     } else {
         [self.inputBar.inputTextView becomeFirstResponder];
     }
-}
-
-- (void)exitReply
-{
-    if (self.replyData == nil && self.referenceData == nil) {
-        return;
-    }
-    self.replyData = nil;
-    self.referenceData = nil;
-    __weak typeof(self) weakSelf = self;
-    [UIView animateWithDuration:0.25 animations:^{
-        weakSelf.replyPreviewBar.hidden = YES;
-        weakSelf.referencePreviewBar.hidden = YES;
-        weakSelf.inputBar.mm_y = 0;
-        
-        if (weakSelf.status == Input_Status_Input_Keyboard) {
-            CGFloat keyboradHeight = weakSelf.keyboardFrame.size.height;
-            if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(inputController:didChangeHeight:)]){
-                [weakSelf.delegate inputController:weakSelf didChangeHeight:CGRectGetMaxY(weakSelf.inputBar.frame) + keyboradHeight];
-            }
-        } else {
-            if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(inputController:didChangeHeight:)]){
-                [weakSelf.delegate inputController:weakSelf didChangeHeight:CGRectGetMaxY(weakSelf.inputBar.frame) + Bottom_SafeHeight];
-            }
-        }
-        
-    } completion:^(BOOL finished) {
-        [weakSelf.replyPreviewBar removeFromSuperview];
-        [weakSelf.referencePreviewBar removeFromSuperview];
-        weakSelf.replyPreviewBar = nil;
-        weakSelf.referencePreviewBar = nil;
-        [weakSelf hideFaceAnimation];
-        weakSelf.inputBar.lineView.hidden = NO;
-    }];
 }
 
 - (void)exitReplyAndReference:(void (^ __nullable)(void))finishedCallback {
@@ -626,13 +490,11 @@
     }];
 }
 
-- (void)menuView:(TUIMenuView_Minimalist *)menuView didSelectItemAtIndex:(NSInteger)index
-{
+- (void)menuView:(TUIMenuView_Minimalist *)menuView didSelectItemAtIndex:(NSInteger)index {
     [self.faceView scrollToFaceGroupIndex:index];
 }
 
-- (void)menuViewDidSendMessage:(TUIMenuView_Minimalist *)menuView
-{
+- (void)menuViewDidSendMessage:(TUIMenuView_Minimalist *)menuView {
     NSString *text = [_inputBar getInput];
     if([text isEqualToString:@""]){
         return;
@@ -651,19 +513,16 @@
     }
 }
 
-- (void)faceView:(TUIFaceView *)faceView scrollToFaceGroupIndex:(NSInteger)index
-{
+- (void)faceView:(TUIFaceView *)faceView scrollToFaceGroupIndex:(NSInteger)index {
     [self.menuView scrollToMenuIndex:index];
 }
 
-- (void)faceViewDidBackDelete:(TUIFaceView *)faceView
-{
+- (void)faceViewDidBackDelete:(TUIFaceView *)faceView {
     [_inputBar backDelete];
 }
 
-- (void)faceView:(TUIFaceView *)faceView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    TUIFaceGroup *group = [TUIConfig defaultConfig].faceGroups[indexPath.section];
+- (void)faceView:(TUIFaceView *)faceView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    TUIFaceGroup *group = [TIMConfig defaultConfig].faceGroups[indexPath.section];
     TUIFaceCellData *face = group.faces[indexPath.row];
     if(indexPath.section == 0){
         [_inputBar addEmoji:face];
@@ -680,34 +539,23 @@
 
 
 #pragma mark - lazy load
-- (TUIFaceView *)faceView
-{
+- (TUIFaceView *)faceView {
     if(!_faceView){
         _faceView = [[TUIFaceView alloc] initWithFrame:CGRectMake(0, _menuView.mm_maxY, self.view.mm_w, TFaceView_Height)];
         _faceView.backgroundColor = [UIColor whiteColor];
         _faceView.faceCollectionView.backgroundColor = _faceView.backgroundColor;
         _faceView.delegate = self;
-        [_faceView setData:[TUIConfig defaultConfig].faceGroups];
+        [_faceView setData:[TIMConfig defaultConfig].faceGroups];
     }
     return _faceView;
 }
 
-- (TUIMoreView_Minimalist *)moreView
-{
-    if(!_moreView){
-        _moreView = [[TUIMoreView_Minimalist alloc] initWithFrame:CGRectMake(0, _inputBar.frame.origin.y + _inputBar.frame.size.height, self.view.mm_w, 0)];
-        _moreView.delegate = self;
-    }
-    return _moreView;
-}
-
-- (TUIMenuView_Minimalist *)menuView
-{
+- (TUIMenuView_Minimalist *)menuView {
     if(!_menuView){
         _menuView = [[TUIMenuView_Minimalist alloc] initWithFrame:CGRectMake(0, _inputBar.mm_maxY, self.view.mm_w, TMenuView_Menu_Height)];
         _menuView.delegate = self;
 
-        TUIConfig *config = [TUIConfig defaultConfig];
+        TIMConfig *config = [TIMConfig defaultConfig];
         NSMutableArray *menus = [NSMutableArray array];
         for (NSInteger i = 0; i < config.faceGroups.count; ++i) {
             TUIFaceGroup *group = config.faceGroups[i];
@@ -724,14 +572,13 @@
     return _menuView;
 }
 
-- (TUIReplyPreviewBar_Minimalist *)replyPreviewBar
-{
+- (TUIReplyPreviewBar_Minimalist *)replyPreviewBar {
     if (_replyPreviewBar == nil) {
         _replyPreviewBar = [[TUIReplyPreviewBar_Minimalist alloc] init];
         __weak typeof(self) weakSelf = self;
         _replyPreviewBar.onClose = ^{
             __strong typeof(weakSelf)strongSelf = weakSelf;
-            [strongSelf exitReply];
+            [strongSelf exitReplyAndReference:nil];
         };
     }
     return _replyPreviewBar;
@@ -743,7 +590,7 @@
         __weak typeof(self) weakSelf = self;
         _referencePreviewBar.onClose = ^{
             __strong typeof(weakSelf)strongSelf = weakSelf;
-            [strongSelf exitReply];
+            [strongSelf exitReplyAndReference:nil];
         };
     }
     return _referencePreviewBar;

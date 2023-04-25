@@ -6,7 +6,7 @@
 //
 
 #import "TUIContactEmptyView_Minimalist.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 
 @implementation TUIContactEmptyView_Minimalist
 - (instancetype)initWithImage:(UIImage *)img Text:(NSString *)text {

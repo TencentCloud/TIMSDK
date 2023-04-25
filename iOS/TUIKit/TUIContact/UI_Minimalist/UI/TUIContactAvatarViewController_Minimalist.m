@@ -1,9 +1,9 @@
 #import "TUIContactAvatarViewController_Minimalist.h"
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "SDWebImage/UIImageView+WebCache.h"
-#import "UIView+TUILayout.h"
-#import "TUICommonModel.h"
-#import "TUIDefine.h"
+#import <TUICore/UIView+TUILayout.h>
+#import <TIMCommon/TIMCommonModel.h>
+#import <TIMCommon/TIMDefine.h>
 
 @interface TUIContactAvatarViewController_Minimalist ()<UIScrollViewDelegate>
 @property UIImageView *avatarView;
@@ -26,11 +26,7 @@
                                                   forBarMetrics:UIBarMetricsDefault];
     self.navigationController.navigationBar.shadowImage = [UIImage new];
 
-    //Fix  translucent = NO;
     CGRect rect = self.view.bounds;
-    if (![UINavigationBar appearance].isTranslucent && [[[UIDevice currentDevice] systemVersion] doubleValue]<15.0) {
-        rect = CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height - TabBar_Height - NavBar_Height );
-    }
     self.avatarScrollView = [[TUIScrollView alloc] initWithFrame:CGRectZero];
     [self.view addSubview:self.avatarScrollView];
     self.avatarScrollView.backgroundColor = [UIColor blackColor];

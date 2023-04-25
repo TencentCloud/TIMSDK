@@ -6,27 +6,27 @@
 //
 
 #import "TUIGroupMemberTableViewCell_Minimalist.h"
-#import "TUIDefine.h"
-#import "TUIThemeManager.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
 
 @implementation TUIGroupMemberTableViewCell_Minimalist
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.contentView.backgroundColor = TUICoreDynamicColor(@"", @"#FFFFFF");
+        self.contentView.backgroundColor = TIMCommonDynamicColor(@"", @"#FFFFFF");
         self.avatarView = [[UIImageView alloc] initWithImage:DefaultAvatarImage];
         [self.contentView addSubview:self.avatarView];
 
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         [self.contentView addSubview:self.titleLabel];
         self.titleLabel.font = [UIFont systemFontOfSize:14];
-        self.titleLabel.textColor = TUICoreDynamicColor(@"", @"#000000");
+        self.titleLabel.textColor = TIMCommonDynamicColor(@"", @"#000000");
         
         self.detailLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         [self.contentView addSubview:self.detailLabel];
         self.detailLabel.font = [UIFont systemFontOfSize:14];
-        self.detailLabel.textColor = TUICoreDynamicColor(@"", @"#666666");
+        self.detailLabel.textColor = TIMCommonDynamicColor(@"", @"#666666");
 
         _separtorView = [[UIView alloc] init];
         _separtorView.backgroundColor = [UIColor whiteColor];

@@ -6,7 +6,7 @@
 //
 
 #import "TUIGroupNoticeController_Minimalist.h"
-#import "TUIThemeManager.h"
+#import <TUICore/TUIThemeManager.h>
 #import "TUIGroupNoticeDataProvider.h"
 
 @interface TUIGroupNoticeController_Minimalist ()
@@ -26,10 +26,10 @@
     [self.view addSubview:self.textView];
     
     UIButton *rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [rightBtn setTitleColor:TUICoreDynamicColor(@"nav_title_text_color", @"#000000") forState:UIControlStateNormal];
-    [rightBtn setTitleColor:TUICoreDynamicColor(@"nav_title_text_color", @"#000000") forState:UIControlStateSelected];
-    [rightBtn setTitle:TUIKitLocalizableString(Edit) forState:UIControlStateNormal];
-    [rightBtn setTitle:TUIKitLocalizableString(Done) forState:UIControlStateSelected];
+    [rightBtn setTitleColor:TIMCommonDynamicColor(@"nav_title_text_color", @"#000000") forState:UIControlStateNormal];
+    [rightBtn setTitleColor:TIMCommonDynamicColor(@"nav_title_text_color", @"#000000") forState:UIControlStateSelected];
+    [rightBtn setTitle:TIMCommonLocalizableString(Edit) forState:UIControlStateNormal];
+    [rightBtn setTitle:TIMCommonLocalizableString(Done) forState:UIControlStateSelected];
     [rightBtn sizeToFit];
     [rightBtn addTarget:self action:@selector(onClickRight:) forControlEvents:UIControlEventTouchUpInside];
     self.rightButton = rightBtn;
@@ -37,9 +37,9 @@
     self.rightButton.hidden = YES;
     
     UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.text = TUIKitLocalizableString(TUIKitGroupNotice);
+    titleLabel.text = TIMCommonLocalizableString(TUIKitGroupNotice);
     titleLabel.font = [UIFont boldSystemFontOfSize:17.0];
-    titleLabel.textColor = TUICoreDynamicColor(@"nav_title_text_color", @"#000000");
+    titleLabel.textColor = TIMCommonDynamicColor(@"nav_title_text_color", @"#000000");
     [titleLabel sizeToFit];
     self.navigationItem.titleView = titleLabel;
     
@@ -99,8 +99,8 @@
 {
     if (_textView == nil) {
         _textView = [[UITextView alloc] init];
-        _textView.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
-        _textView.textColor = TUICoreDynamicColor(@"form_title_color", @"#000000");
+        _textView.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#F2F3F5");
+        _textView.textColor = TIMCommonDynamicColor(@"form_title_color", @"#000000");
         _textView.font = [UIFont systemFontOfSize:17];
     }
     return _textView;

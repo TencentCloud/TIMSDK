@@ -5,8 +5,8 @@
 //  Created by harvy on 2021/11/11.
 //
 
-#import "TUIBubbleMessageCell.h"
-#import "TUITextView.h"
+#import <TIMCommon/TUIBubbleMessageCell.h>
+#import <TIMCommon/TUITextView.h>
 #import "TUIChatDefine.h"
 
 @class TUIReplyMessageCellData;

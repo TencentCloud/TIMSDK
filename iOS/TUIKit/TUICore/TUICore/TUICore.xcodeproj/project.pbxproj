@@ -8,10 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		74EB491B95F77E9046CD13FD /* libPods-TUICore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 60EE7CF6B787F47E37EE7E90 /* libPods-TUICore.a */; };
-		D5D83F0929B82C0C007EE351 /* TUIFitButton.h in Headers */ = {isa = PBXBuildFile; fileRef = D5D83EE729B82C0B007EE351 /* TUIFitButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D5D83F0A29B82C0C007EE351 /* TUICommonModel.h in Headers */ = {isa = PBXBuildFile; fileRef = D5D83EE829B82C0B007EE351 /* TUICommonModel.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D5D83F0B29B82C0C007EE351 /* UIView+TUIToast.h in Headers */ = {isa = PBXBuildFile; fileRef = D5D83EE929B82C0B007EE351 /* UIView+TUIToast.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D5D83F0C29B82C0C007EE351 /* TUIFitButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D5D83EEA29B82C0B007EE351 /* TUIFitButton.m */; };
 		D5D83F0D29B82C0C007EE351 /* TUICommonModel.m in Sources */ = {isa = PBXBuildFile; fileRef = D5D83EEB29B82C0B007EE351 /* TUICommonModel.m */; };
 		D5D83F0E29B82C0C007EE351 /* NSDictionary+TUISafe.m in Sources */ = {isa = PBXBuildFile; fileRef = D5D83EEC29B82C0B007EE351 /* NSDictionary+TUISafe.m */; };
 		D5D83F0F29B82C0C007EE351 /* UIView+TUILayout.m in Sources */ = {isa = PBXBuildFile; fileRef = D5D83EED29B82C0B007EE351 /* UIView+TUILayout.m */; };
@@ -36,12 +34,10 @@
 		D5D83F2229B82C0C007EE351 /* TUICore.h in Headers */ = {isa = PBXBuildFile; fileRef = D5D83F0029B82C0C007EE351 /* TUICore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D5D83F2329B82C0C007EE351 /* UIColor+TUIHexColor.h in Headers */ = {isa = PBXBuildFile; fileRef = D5D83F0129B82C0C007EE351 /* UIColor+TUIHexColor.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D5D83F2429B82C0C007EE351 /* UIView+TUIUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D5D83F0229B82C0C007EE351 /* UIView+TUIUtil.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D5D83F2529B82C0C007EE351 /* NSTimer+TUISafe.m in Sources */ = {isa = PBXBuildFile; fileRef = D5D83F0329B82C0C007EE351 /* NSTimer+TUISafe.m */; };
 		D5D83F2629B82C0C007EE351 /* TUICore.podspec in Resources */ = {isa = PBXBuildFile; fileRef = D5D83F0429B82C0C007EE351 /* TUICore.podspec */; };
 		D5D83F2729B82C0C007EE351 /* TUILogin.h in Headers */ = {isa = PBXBuildFile; fileRef = D5D83F0529B82C0C007EE351 /* TUILogin.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D5D83F2829B82C0C007EE351 /* NSDictionary+TUISafe.h in Headers */ = {isa = PBXBuildFile; fileRef = D5D83F0629B82C0C007EE351 /* NSDictionary+TUISafe.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D5D83F2929B82C0C007EE351 /* NSString+TUIUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = D5D83F0729B82C0C007EE351 /* NSString+TUIUtil.m */; };
-		D5D83F2A29B82C0C007EE351 /* NSTimer+TUISafe.h in Headers */ = {isa = PBXBuildFile; fileRef = D5D83F0829B82C0C007EE351 /* NSTimer+TUISafe.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D5D83F2F29B82C1B007EE351 /* TUIKitLocalizable.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D5D83F2B29B82C1A007EE351 /* TUIKitLocalizable.bundle */; };
 		D5D83F3029B82C1B007EE351 /* TUICore.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D5D83F2C29B82C1A007EE351 /* TUICore.bundle */; };
 		D5D83F3129B82C1B007EE351 /* TUICoreTheme.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D5D83F2D29B82C1B007EE351 /* TUICoreTheme.bundle */; };
@@ -53,10 +49,8 @@
 		C66DD3F144DEE7E1E956FD7A /* Pods-TUICore.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TUICore.debug.xcconfig"; path = "Target Support Files/Pods-TUICore/Pods-TUICore.debug.xcconfig"; sourceTree = "<group>"; };
 		D2D738DBAE3BB6797A7473EB /* Pods-TUICore.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TUICore.release.xcconfig"; path = "Target Support Files/Pods-TUICore/Pods-TUICore.release.xcconfig"; sourceTree = "<group>"; };
 		D5D83EDD29B82BD7007EE351 /* TUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		D5D83EE729B82C0B007EE351 /* TUIFitButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TUIFitButton.h; path = ../../TUIFitButton.h; sourceTree = "<group>"; };
 		D5D83EE829B82C0B007EE351 /* TUICommonModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TUICommonModel.h; path = ../../TUICommonModel.h; sourceTree = "<group>"; };
 		D5D83EE929B82C0B007EE351 /* UIView+TUIToast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+TUIToast.h"; path = "../../UIView+TUIToast.h"; sourceTree = "<group>"; };
-		D5D83EEA29B82C0B007EE351 /* TUIFitButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TUIFitButton.m; path = ../../TUIFitButton.m; sourceTree = "<group>"; };
 		D5D83EEB29B82C0B007EE351 /* TUICommonModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TUICommonModel.m; path = ../../TUICommonModel.m; sourceTree = "<group>"; };
 		D5D83EEC29B82C0B007EE351 /* NSDictionary+TUISafe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDictionary+TUISafe.m"; path = "../../NSDictionary+TUISafe.m"; sourceTree = "<group>"; };
 		D5D83EED29B82C0B007EE351 /* UIView+TUILayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+TUILayout.m"; path = "../../UIView+TUILayout.m"; sourceTree = "<group>"; };
@@ -81,12 +75,10 @@
 		D5D83F0029B82C0C007EE351 /* TUICore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TUICore.h; path = ../../TUICore.h; sourceTree = "<group>"; };
 		D5D83F0129B82C0C007EE351 /* UIColor+TUIHexColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIColor+TUIHexColor.h"; path = "../../UIColor+TUIHexColor.h"; sourceTree = "<group>"; };
 		D5D83F0229B82C0C007EE351 /* UIView+TUIUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+TUIUtil.h"; path = "../../UIView+TUIUtil.h"; sourceTree = "<group>"; };
-		D5D83F0329B82C0C007EE351 /* NSTimer+TUISafe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSTimer+TUISafe.m"; path = "../../NSTimer+TUISafe.m"; sourceTree = "<group>"; };
 		D5D83F0429B82C0C007EE351 /* TUICore.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = TUICore.podspec; path = ../../TUICore.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		D5D83F0529B82C0C007EE351 /* TUILogin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TUILogin.h; path = ../../TUILogin.h; sourceTree = "<group>"; };
 		D5D83F0629B82C0C007EE351 /* NSDictionary+TUISafe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDictionary+TUISafe.h"; path = "../../NSDictionary+TUISafe.h"; sourceTree = "<group>"; };
 		D5D83F0729B82C0C007EE351 /* NSString+TUIUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+TUIUtil.m"; path = "../../NSString+TUIUtil.m"; sourceTree = "<group>"; };
-		D5D83F0829B82C0C007EE351 /* NSTimer+TUISafe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSTimer+TUISafe.h"; path = "../../NSTimer+TUISafe.h"; sourceTree = "<group>"; };
 		D5D83F2B29B82C1A007EE351 /* TUIKitLocalizable.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = TUIKitLocalizable.bundle; path = ../../Resources/TUIKitLocalizable.bundle; sourceTree = "<group>"; };
 		D5D83F2C29B82C1A007EE351 /* TUICore.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = TUICore.bundle; path = ../../Resources/TUICore.bundle; sourceTree = "<group>"; };
 		D5D83F2D29B82C1B007EE351 /* TUICoreTheme.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = TUICoreTheme.bundle; path = ../../Resources/TUICoreTheme.bundle; sourceTree = "<group>"; };
@@ -134,8 +126,6 @@
 				D5D83EEC29B82C0B007EE351 /* NSDictionary+TUISafe.m */,
 				D5D83EF529B82C0C007EE351 /* NSString+TUIUtil.h */,
 				D5D83F0729B82C0C007EE351 /* NSString+TUIUtil.m */,
-				D5D83F0829B82C0C007EE351 /* NSTimer+TUISafe.h */,
-				D5D83F0329B82C0C007EE351 /* NSTimer+TUISafe.m */,
 				D5D83EE829B82C0B007EE351 /* TUICommonModel.h */,
 				D5D83EEB29B82C0B007EE351 /* TUICommonModel.m */,
 				D5D83EF029B82C0B007EE351 /* TUIConfig.h */,
@@ -146,8 +136,6 @@
 				D5D83EF129B82C0B007EE351 /* TUIDarkModel.h */,
 				D5D83EEE29B82C0B007EE351 /* TUIDarkModel.m */,
 				D5D83EF329B82C0C007EE351 /* TUIDefine.h */,
-				D5D83EE729B82C0B007EE351 /* TUIFitButton.h */,
-				D5D83EEA29B82C0B007EE351 /* TUIFitButton.m */,
 				D5D83EF929B82C0C007EE351 /* TUIGlobalization.h */,
 				D5D83EF629B82C0C007EE351 /* TUIGlobalization.m */,
 				D5D83F0529B82C0C007EE351 /* TUILogin.h */,
@@ -200,9 +188,7 @@
 				D5D83F1229B82C0C007EE351 /* TUIConfig.h in Headers */,
 				D5D83F1A29B82C0C007EE351 /* UIView+TUILayout.h in Headers */,
 				D5D83F1729B82C0C007EE351 /* NSString+TUIUtil.h in Headers */,
-				D5D83F0929B82C0C007EE351 /* TUIFitButton.h in Headers */,
 				D5D83F2329B82C0C007EE351 /* UIColor+TUIHexColor.h in Headers */,
-				D5D83F2A29B82C0C007EE351 /* NSTimer+TUISafe.h in Headers */,
 				D5D83F1F29B82C0C007EE351 /* TUIThemeManager.h in Headers */,
 				D5D83F2429B82C0C007EE351 /* UIView+TUIUtil.h in Headers */,
 				D5D83F1B29B82C0C007EE351 /* TUIGlobalization.h in Headers */,
@@ -335,11 +321,9 @@
 				D5D83F1E29B82C0C007EE351 /* TUIConfig.m in Sources */,
 				D5D83F2029B82C0C007EE351 /* TUITool.m in Sources */,
 				D5D83F1C29B82C0C007EE351 /* TUILogin.m in Sources */,
-				D5D83F2529B82C0C007EE351 /* NSTimer+TUISafe.m in Sources */,
 				D5D83F1929B82C0C007EE351 /* UIColor+TUIHexColor.m in Sources */,
 				D5D83F1029B82C0C007EE351 /* TUIDarkModel.m in Sources */,
 				D5D83F0F29B82C0C007EE351 /* UIView+TUILayout.m in Sources */,
-				D5D83F0C29B82C0C007EE351 /* TUIFitButton.m in Sources */,
 				D5D83F0D29B82C0C007EE351 /* TUICommonModel.m in Sources */,
 				D5D83F1429B82C0C007EE351 /* UIView+TUIToast.m in Sources */,
 				D5D83F2129B82C0C007EE351 /* UIView+TUIUtil.m in Sources */,

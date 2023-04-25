@@ -1,12 +1,12 @@
 
 #import <Foundation/Foundation.h>
 #import "TUIChatConversationModel.h"
-#import "TUIMessageCellData.h"
+#import <TIMCommon/TUIMessageCellData.h>
 
 @class TUIChatBaseDataProvider;
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol TUIChatBaseDataProviderForwardDelegate <NSObject>
+@protocol TUIChatBaseDataProviderDelegate <NSObject>
 
 @required
 - (NSString *)dataProvider:(TUIChatBaseDataProvider *)dataProvider
@@ -14,11 +14,17 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSString *)dataProvider:(TUIChatBaseDataProvider *)dataProvider
                 mergeForwardMsgAbstactForMessage:(V2TIMMessage *)message;
 
+- (void)dataProvider:(TUIChatBaseDataProvider *)dataProvider sendMessage:(V2TIMMessage *)message;
+- (void)onSelectPhotoMoreCellData;
+- (void)onTakePictureMoreCellData;
+- (void)onTakeVideoMoreCellData;
+- (void)onSelectFileMoreCellData;
+
 @end
 
 @interface TUIChatBaseDataProvider : NSObject
 
-@property (nonatomic, weak) id<TUIChatBaseDataProviderForwardDelegate> forwardDelegate;
+@property (nonatomic, weak) id<TUIChatBaseDataProviderDelegate> delegate;
 
 - (void)getForwardMessageWithCellDatas:(NSArray<TUIMessageCellData *> *)uiMsgs
                              toTargets:(NSArray<TUIChatConversationModel *> *)targets

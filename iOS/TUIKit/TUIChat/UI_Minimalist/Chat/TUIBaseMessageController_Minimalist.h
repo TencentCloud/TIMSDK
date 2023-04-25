@@ -12,7 +12,7 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "TUIMessageCell.h"
+#import <TIMCommon/TUIMessageCell.h>
 
 #import "TUIBaseMessageControllerDelegate_Minimalist.h"
 #import "TUIChatConversationModel.h"
@@ -88,7 +88,7 @@
 /**
  * 子类实现点击删除消息
  */
-- (void)onDelete:(TUIMessageCellData *)cellData;
+- (void)onDelete:(TUIMessageCell *)cell;
 
 
 // Reload the specific cell UI.

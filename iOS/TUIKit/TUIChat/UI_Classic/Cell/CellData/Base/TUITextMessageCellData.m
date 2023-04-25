@@ -6,10 +6,10 @@
 //
 
 #import "TUITextMessageCellData.h"
-#import "TUICommonModel.h"
-#import "TUIDefine.h"
-#import "NSString+TUIEmoji.h"
-#import "TUIThemeManager.h"
+#import <TIMCommon/TIMCommonModel.h>
+#import <TIMCommon/TIMDefine.h>
+#import <TIMCommon/NSString+TUIEmoji.h>
+#import <TUICore/TUIThemeManager.h>
 
 #ifndef CGFLOAT_CEIL
 #ifdef CGFLOAT_IS_DOUBLE
@@ -48,10 +48,6 @@
     return content.getLocalizableStringWithFaceContent;
 }
 
-- (BOOL)canTranslate {
-    return YES;
-}
-
 - (Class)getReplyQuoteViewDataClass
 {
     return NSClassFromString(@"TUITextReplyQuoteViewData");
@@ -87,18 +83,9 @@
 - (CGFloat)heightOfWidth:(CGFloat)width
 {
     CGFloat height = [super heightOfWidth:width];
-    
-    // load translationView's saved data to render translationView
-    if ([self.translationViewData shouldLoadSavedData]) {
-        [self.translationViewData setMessage:self.innerMessage];
-        [self.translationViewData loadSavedData];
+    if (self.bottomContainerSize.height > 0) {
+        height += self.bottomContainerSize.height + 6;
     }
-    [self.translationViewData calcSize];
-    
-    if (![self.translationViewData isHidden]) {
-        height += self.translationViewData.size.height + 6;
-    }
-
     return height;
 }
 

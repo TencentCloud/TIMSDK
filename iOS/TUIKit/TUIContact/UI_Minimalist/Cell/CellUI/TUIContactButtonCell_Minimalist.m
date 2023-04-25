@@ -6,7 +6,7 @@
 //
 
 #import "TUIContactButtonCell_Minimalist.h"
-#import "TUIThemeManager.h"
+#import <TUICore/TUIThemeManager.h>
 
 @implementation TUIContactButtonCell_Minimalist{
     UIView *_line;
@@ -40,7 +40,7 @@
     
     _line = [[UIView alloc] initWithFrame:CGRectZero];
     [self.contentView addSubview:_line];
-    _line.backgroundColor = TUICoreDynamicColor(@"separator_color", @"#DBDBDB");
+    _line.backgroundColor = TIMCommonDynamicColor(@"separator_color", @"#DBDBDB");
 }
 
 
@@ -54,19 +54,19 @@
 
     switch (data.style) {
         case ButtonGreen: {
-            [_button setTitleColor:TUICoreDynamicColor(@"form_green_button_text_color", @"#FFFFFF") forState:UIControlStateNormal];
-            _button.backgroundColor = TUICoreDynamicColor(@"", @"#f9f9f9");
-            [_button setBackgroundImage:[self imageWithColor:TUICoreDynamicColor(@"", @"#f9f9f9")] forState:UIControlStateHighlighted];
+            [_button setTitleColor:TIMCommonDynamicColor(@"form_green_button_text_color", @"#FFFFFF") forState:UIControlStateNormal];
+            _button.backgroundColor = TIMCommonDynamicColor(@"", @"#f9f9f9");
+            [_button setBackgroundImage:[self imageWithColor:TIMCommonDynamicColor(@"", @"#f9f9f9")] forState:UIControlStateHighlighted];
         }
             break;
         case ButtonWhite: {
-            [_button setTitleColor:TUICoreDynamicColor(@"form_white_button_text_color", @"#000000") forState:UIControlStateNormal];
-            _button.backgroundColor = TUICoreDynamicColor(@"", @"#f9f9f9");
+            [_button setTitleColor:TIMCommonDynamicColor(@"form_white_button_text_color", @"#000000") forState:UIControlStateNormal];
+            _button.backgroundColor = TIMCommonDynamicColor(@"", @"#f9f9f9");
         }
             break;
         case ButtonRedText: {
-            [_button setTitleColor:TUICoreDynamicColor(@"form_redtext_button_text_color", @"#FF0000") forState:UIControlStateNormal];
-            _button.backgroundColor = TUICoreDynamicColor(@"", @"#f9f9f9");
+            [_button setTitleColor:TIMCommonDynamicColor(@"form_redtext_button_text_color", @"#FF0000") forState:UIControlStateNormal];
+            _button.backgroundColor = TIMCommonDynamicColor(@"", @"#f9f9f9");
 
             break;
         }

@@ -7,8 +7,8 @@
 
 #import "TUIConversationListDataProvider_Minimalist.h"
 #import "TUIConversationCellData_Minimalist.h"
-#import "TUIDefine.h"
-#import "TUICore.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUICore.h>
 
 @implementation TUIConversationListDataProvider_Minimalist
 - (Class)getConversationCellClass {
@@ -35,7 +35,7 @@
      * If there is a draft box, the draft box information will be displayed first
      */
     if(conv.draftText.length > 0){
-        NSAttributedString *draft = [[NSAttributedString alloc] initWithString:TUIKitLocalizableString(TUIKitMessageTypeDraftFormat)
+        NSAttributedString *draft = [[NSAttributedString alloc] initWithString:TIMCommonLocalizableString(TUIKitMessageTypeDraftFormat)
                                                                     attributes:@{NSForegroundColorAttributeName:RGB(250, 81, 81)}];
         [attributeString appendAttributedString:draft];
         
@@ -84,7 +84,7 @@
      * The default state of the meeting type group is V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE, and the UI does not process it.
      */
     if ([self isConversationNotDisturb:conv] && conv.unreadCount > 0) {
-        NSAttributedString *unreadString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"[%d %@] ", conv.unreadCount,TUIKitLocalizableString(TUIKitMessageTypeLastMsgCountFormat)]];
+        NSAttributedString *unreadString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"[%d %@] ", conv.unreadCount,TIMCommonLocalizableString(TUIKitMessageTypeLastMsgCountFormat)]];
         [attributeString insertAttributedString:unreadString atIndex:0];
     }
     

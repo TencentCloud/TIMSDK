@@ -1,5 +1,5 @@
 #import "TUIJoinGroupMessageCell.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 
 @interface TUIJoinGroupMessageCell()<UITextViewDelegate>
 
@@ -67,7 +67,7 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    self.container.mm_center();
+    self.container.tui_mm_center();
     self.textView.mm_fill();
 }
 

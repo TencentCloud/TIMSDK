@@ -6,9 +6,9 @@
 //
 
 #import "TUIMergeMessageListController.h"
-#import "TUIGlobalization.h"
+#import <TUICore/TUIGlobalization.h>
 #import "TUITextMessageCell.h"
-#import "TUISystemMessageCell.h"
+#import <TIMCommon/TUISystemMessageCell.h>
 #import "TUIVoiceMessageCell.h"
 #import "TUIImageMessageCell.h"
 #import "TUIFaceMessageCell.h"
@@ -19,13 +19,13 @@
 #import "TUILinkCell.h"
 #import "TUILinkCell.h"
 #import "TUIReplyMessageCell.h"
-#import "TUIDarkModel.h"
+#import <TUICore/TUIDarkModel.h>
 #import "TUIFileViewController.h"
 #import "TUIMessageDataProvider.h"
 #import "TUIMediaView.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 #import "TUIReplyMessageCellData.h"
-#import "TUIThemeManager.h"
+#import <TUICore/TUIThemeManager.h>
 #import "TUIReferenceMessageCell.h"
 #import "TUIMessageSearchDataProvider.h"
 #import "TUIRepliesDetailViewController.h"
@@ -212,7 +212,7 @@
 
 - (void)setupViews
 {
-    self.title = TUIKitLocalizableString(TUIKitRelayChatHistory);
+    self.title = TIMCommonLocalizableString(TUIKitRelayChatHistory);
     self.tableView.scrollsToTop = NO;
     self.tableView.estimatedRowHeight = 0;
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
@@ -389,17 +389,17 @@
     
     [(TUIMessageSearchDataProvider *)self.msgDataProvider findMessages:@[originMsgID?:@""] callback:^(BOOL success, NSString * _Nonnull desc, NSArray<V2TIMMessage *> * _Nonnull msgs) {
         if (!success) {
-            [TUITool makeToast:TUIKitLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
+            [TUITool makeToast:TIMCommonLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
             return;
         }
         V2TIMMessage *message = msgs.firstObject;
         if (message == nil) {
-            [TUITool makeToast:TUIKitLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
+            [TUITool makeToast:TIMCommonLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
             return;
         }
         
         if (message.status == V2TIM_MSG_STATUS_HAS_DELETED || message.status == V2TIM_MSG_STATUS_LOCAL_REVOKED) {
-            [TUITool makeToast:TUIKitLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
+            [TUITool makeToast:TIMCommonLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
             return;
         }
         

@@ -6,7 +6,7 @@
 //
 
 #import "TUIContactAcceptRejectCellData_Minimalist.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 
 @implementation TUIContactAcceptRejectCellData_Minimalist
 

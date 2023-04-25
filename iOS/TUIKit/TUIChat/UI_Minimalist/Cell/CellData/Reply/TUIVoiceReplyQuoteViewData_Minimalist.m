@@ -7,8 +7,8 @@
 
 #import "TUIVoiceReplyQuoteViewData_Minimalist.h"
 #import "TUIVoiceMessageCellData_Minimalist.h"
-#import "TUIThemeManager.h"
-#import "NSString+TUIEmoji.h"
+#import <TUICore/TUIThemeManager.h>
+#import <TIMCommon/NSString+TUIEmoji.h>
 
 @implementation TUIVoiceReplyQuoteViewData_Minimalist
 

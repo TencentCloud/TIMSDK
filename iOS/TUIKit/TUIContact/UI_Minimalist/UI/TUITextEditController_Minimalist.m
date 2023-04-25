@@ -7,8 +7,8 @@
 //
 
 #import "TUITextEditController_Minimalist.h"
-#import "TUIDefine.h"
-#import "TUIThemeManager.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
 
 @interface TTextField_Minimalist : UITextField
 @property int margin;
@@ -53,14 +53,14 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:TUIKitLocalizableString(Save) style:UIBarButtonItemStylePlain target:self action:@selector(onSave)];
-    self.view.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:TIMCommonLocalizableString(Save) style:UIBarButtonItemStylePlain target:self action:@selector(onSave)];
+    self.view.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#F2F3F5");
 
     _inputTextField = [[TTextField_Minimalist alloc] initWithFrame:CGRectZero];
     _inputTextField.text = [self.textValue stringByTrimmingCharactersInSet:
                                            [NSCharacterSet illegalCharacterSet]];
     [(TTextField_Minimalist *)_inputTextField setMargin:10];
-    _inputTextField.backgroundColor = TUICoreDynamicColor(@"search_textfield_bg_color", @"#FEFEFE");
+    _inputTextField.backgroundColor = TIMCommonDynamicColor(@"search_textfield_bg_color", @"#FEFEFE");
     _inputTextField.frame = CGRectMake(0, 10, self.view.frame.size.width, 40);
     _inputTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     [self.view addSubview:_inputTextField];

@@ -8,7 +8,7 @@
 #import "TUISettingAdminDataProvider.h"
 #import <ImSDK_Plus/ImSDK_Plus.h>
 #import "TUIMemberInfoCellData.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 
 @interface TUISettingAdminDataProvider ()
 
@@ -101,7 +101,7 @@
     {
         TUIMemberInfoCellData *add = [[TUIMemberInfoCellData alloc] init];
         add.style = TUIMemberInfoCellStyleAdd;
-        add.name = TUIKitLocalizableString(TUIKitGroupAddAdmins);
+        add.name = TIMCommonLocalizableString(TUIKitGroupAddAdmins);
         add.avatar = TUIGroupCommonBundleImage(@"icon_add");
         [self.admins addObject:add];
     }

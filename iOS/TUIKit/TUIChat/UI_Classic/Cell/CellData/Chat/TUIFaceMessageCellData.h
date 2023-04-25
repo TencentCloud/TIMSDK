@@ -6,8 +6,8 @@
  *  This file declares the TUIFaceMessageCellData class.
  *  This class inherits from TUIMessageCellData and is used to store a series of data and information required by the emoticon message unit.
  */
-#import "TUIMessageCellData.h"
-#import "TUIBubbleMessageCellData.h"
+#import <TIMCommon/TUIMessageCellData.h>
+#import <TIMCommon/TUIBubbleMessageCellData.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -18,7 +18,7 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "TUIMessageCellData.h"
+#import <TIMCommon/TUIMessageCellData.h>
 #import "TUIChatDefine.h"
 
 NS_ASSUME_NONNULL_BEGIN

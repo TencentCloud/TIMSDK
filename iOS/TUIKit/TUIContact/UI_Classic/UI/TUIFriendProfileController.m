@@ -9,17 +9,17 @@
 #import "TUIFriendProfileController.h"
 #import "TUICommonContactTextCell.h"
 #import "TUICommonContactSwitchCell.h"
-#import "UIView+TUILayout.h"
+#import <TUICore/UIView+TUILayout.h>
 #import "SDWebImage/UIImageView+WebCache.h"
 #import "TUITextEditController.h"
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "TUIContactAvatarViewController.h"
 #import "TUIContactConversationCellData.h"
-#import "TUICommonModel.h"
-#import "TUICore.h"
-#import "TUIThemeManager.h"
-#import "TUICommonModel.h"
-#import "TUILogin.h"
+#import <TIMCommon/TIMCommonModel.h>
+#import <TUICore/TUICore.h>
+#import <TUICore/TUIThemeManager.h>
+#import <TIMCommon/TIMCommonModel.h>
+#import <TUICore/TUILogin.h>
 
 @interface TUIFriendProfileController ()
 @property NSArray<NSArray *> *dataList;
@@ -55,7 +55,7 @@
     if (@available(iOS 15.0, *)) {
         self.tableView.sectionHeaderTopPadding = 0;
     }
-    self.tableView.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
+    self.tableView.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#F2F3F5");
 
     [self.tableView registerClass:[TUICommonContactTextCell class] forCellReuseIdentifier:@"TextCell"];
     [self.tableView registerClass:[TUICommonContactSwitchCell class] forCellReuseIdentifier:@"SwitchCell"];
@@ -63,7 +63,7 @@
     [self.tableView registerClass:[TUIButtonCell class] forCellReuseIdentifier:@"ButtonCell"];
     self.tableView.delaysContentTouches = NO;
     _titleView = [[TUINaviBarIndicatorView alloc] init];
-    [_titleView setTitle:TUIKitLocalizableString(ProfileDetails)];
+    [_titleView setTitle:TIMCommonLocalizableString(ProfileDetails)];
     self.navigationItem.titleView = _titleView;
     self.navigationItem.title = @"";
     
@@ -82,7 +82,7 @@
             personal.avatarUrl = [NSURL URLWithString:self.userFullInfo.faceURL];
             personal.name = [self.userFullInfo showName];
             personal.genderString = [self.userFullInfo showGender];
-            personal.signature = self.userFullInfo.selfSignature.length ? [NSString stringWithFormat:TUIKitLocalizableString(SignatureFormat), self.userFullInfo.selfSignature] : TUIKitLocalizableString(no_personal_signature);
+            personal.signature = self.userFullInfo.selfSignature.length ? [NSString stringWithFormat:TIMCommonLocalizableString(SignatureFormat), self.userFullInfo.selfSignature] : TIMCommonLocalizableString(no_personal_signature);
             personal.reuseId = @"CardCell";
             personal.showSignature = YES;
             personal;
@@ -94,11 +94,11 @@
         NSMutableArray *inlist = @[].mutableCopy;
         [inlist addObject:({
             TUICommonContactTextCellData *data = TUICommonContactTextCellData.new;
-            data.key = TUIKitLocalizableString(ProfileAlia);
+            data.key = TIMCommonLocalizableString(ProfileAlia);
             data.value = self.friendProfile.friendRemark;
             if (data.value.length == 0)
             {
-                data.value = TUIKitLocalizableString(None);
+                data.value = TIMCommonLocalizableString(None);
             }
             data.showAccessory = YES;
             data.cselector = @selector(onChangeRemark:);
@@ -112,7 +112,7 @@
         NSMutableArray *inlist = @[].mutableCopy;
         [inlist addObject:({
             TUICommonContactSwitchCellData *data = TUICommonContactSwitchCellData.new;
-            data.title = TUIKitLocalizableString(ProfileMessageDoNotDisturb);
+            data.title = TIMCommonLocalizableString(ProfileMessageDoNotDisturb);
             data.cswitchSelector =  @selector(onMessageDoNotDisturb:);
             data.reuseId = @"SwitchCell";
             __weak typeof(self) weakSelf = self;
@@ -131,7 +131,7 @@
         
         [inlist addObject:({
             TUICommonContactSwitchCellData *data = TUICommonContactSwitchCellData.new;
-            data.title = TUIKitLocalizableString(ProfileStickyonTop);
+            data.title = TIMCommonLocalizableString(ProfileStickyonTop);
             data.on = NO;
 #ifndef SDKPlaceTop
 #define SDKPlaceTop
@@ -162,7 +162,7 @@
         NSMutableArray *inlist = @[].mutableCopy;
         [inlist addObject:({
             TUICommonContactTextCellData *data = TUICommonContactTextCellData.new;
-            data.key = TUIKitLocalizableString(TUIKitClearAllChatHistory);
+            data.key = TIMCommonLocalizableString(TUIKitClearAllChatHistory);
             data.showAccessory = YES;
             data.cselector = @selector(onClearHistoryChatMessage:);
             data.reuseId = @"TextCell";
@@ -171,7 +171,7 @@
         
         [inlist addObject:({
             TUICommonContactTextCellData *data = TUICommonContactTextCellData.new;
-            data.key = TUIKitLocalizableString(ProfileSetBackgroundImage);
+            data.key = TIMCommonLocalizableString(ProfileSetBackgroundImage);
             data.showAccessory = YES;
             data.cselector = @selector(onChangeBackgroundImage:);
             data.reuseId = @"TextCell";
@@ -186,7 +186,7 @@
         NSMutableArray *inlist = @[].mutableCopy;
         [inlist addObject:({
             TUICommonContactSwitchCellData *data = TUICommonContactSwitchCellData.new;
-            data.title = TUIKitLocalizableString(ProfileBlocked);
+            data.title = TIMCommonLocalizableString(ProfileBlocked);
             data.cswitchSelector =  @selector(onChangeBlackList:);
             data.reuseId = @"SwitchCell";
             __weak typeof(self) weakSelf = self;
@@ -205,48 +205,34 @@
         inlist;
     })];
 
-    
+    // Action menu
     [list addObject:({
         NSMutableArray *inlist = @[].mutableCopy;
+        // Extension menus
+        NSMutableDictionary *extensionParam = [NSMutableDictionary dictionary];
+        if (self.friendProfile.userID.length > 0) {
+            extensionParam[TUICore_TUIContactExtension_FriendProfileActionMenu_UserID] = self.friendProfile.userID;
+        }
+        extensionParam[TUICore_TUIContactExtension_FriendProfileActionMenu_FilterVideoCall] = @(NO);
+        extensionParam[TUICore_TUIContactExtension_FriendProfileActionMenu_FilterAudioCall] = @(NO);
+        NSArray *extensionList = [TUICore getExtensionList:TUICore_TUIContactExtension_FriendProfileActionMenu_ClassicExtensionID param:extensionParam];
+        for (TUIExtensionInfo *info in extensionList) {
+            if (info.text && info.onClicked) {
+                TUIButtonCellData *data = [[TUIButtonCellData alloc] init];
+                data.title = info.text;
+                data.style = ButtonWhite;
+                data.textColor = TIMCommonDynamicColor(@"primary_theme_color", @"147AFF");
+                data.reuseId = @"ButtonCell";
+                data.cbuttonSelector = @selector(onActionMenuExtensionClicked:);
+                data.tui_extValueObj = info;
+                [inlist addObject:data];
+            }
+        }
+        
+        // Built-in "Delete Friend" menu
         [inlist addObject:({
             TUIButtonCellData *data = TUIButtonCellData.new;
-            data.title = TUIKitLocalizableString(ProfileSendMessages);
-            data.style = ButtonWhite;
-            data.textColor = TUICoreDynamicColor(@"primary_theme_color", @"147AFF");
-            data.cbuttonSelector = @selector(onSendMessage:);
-            data.reuseId = @"ButtonCell";
-            data;
-        })];
-        NSString *groupID = nil;
-        NSString *userID = self.userFullInfo.userID;
-        NSDictionary *param = @{TUICore_TUIChatExtension_GetMoreCellInfo_GroupID : groupID ? groupID : @"",TUICore_TUIChatExtension_GetMoreCellInfo_UserID : userID ? userID : @""};
-        NSDictionary *videoExtentionInfo = [TUICore getExtensionInfo:TUICore_TUIChatExtension_GetMoreCellInfo_VideoCall param:param];
-        NSDictionary *audioExtentionInfo = [TUICore getExtensionInfo:TUICore_TUIChatExtension_GetMoreCellInfo_AudioCall param:param];
-        if (audioExtentionInfo) {
-            [inlist addObject:({
-                TUIButtonCellData *data = TUIButtonCellData.new;
-                data.title = TUIKitLocalizableString(TUIKitMoreVoiceCall);
-                data.style = ButtonWhite;
-                data.textColor = TUICoreDynamicColor(@"primary_theme_color", @"147AFF");
-                data.cbuttonSelector = @selector(onVoiceCall:);
-                data.reuseId = @"ButtonCell";
-                data;
-            })];
-        }
-        if (videoExtentionInfo) {
-            [inlist addObject:({
-                TUIButtonCellData *data = TUIButtonCellData.new;
-                data.title = TUIKitLocalizableString(TUIKitMoreVideoCall);
-                data.style = ButtonWhite;
-                data.textColor = TUICoreDynamicColor(@"primary_theme_color", @"147AFF");
-                data.cbuttonSelector = @selector(onVideoCall:);
-                data.reuseId = @"ButtonCell";
-                data;
-            })];
-        }
-        [inlist addObject:({
-            TUIButtonCellData *data = TUIButtonCellData.new;
-            data.title = TUIKitLocalizableString(ProfileDeleteFirend);
+            data.title = TIMCommonLocalizableString(ProfileDeleteFirend);
             data.style = ButtonRedText;
             data.cbuttonSelector =  @selector(onDeleteFriend:);
             data.reuseId = @"ButtonCell";
@@ -274,7 +260,7 @@
 - (void)onChangeRemark:(TUICommonContactTextCell *)cell
 {
     TUITextEditController *vc = [[TUITextEditController alloc] initWithText:self.friendProfile.friendRemark];
-    vc.title = TUIKitLocalizableString(ProfileEditAlia); // @"修改备注";
+    vc.title = TIMCommonLocalizableString(ProfileEditAlia); // @"修改备注";
     vc.textValue = self.friendProfile.friendRemark;
     [self.navigationController pushViewController:vc animated:YES];
 
@@ -297,8 +283,8 @@
     if (IS_NOT_EMPTY_NSSTRING(self.friendProfile.userID)) {
         NSString *userID = self.friendProfile.userID;
         @weakify(self)
-        UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:TUIKitLocalizableString(TUIKitClearAllChatHistoryTips) preferredStyle:UIAlertControllerStyleAlert];
-        [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Confirm) style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:TIMCommonLocalizableString(TUIKitClearAllChatHistoryTips) preferredStyle:UIAlertControllerStyleAlert];
+        [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(Confirm) style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
             @strongify(self)
             [V2TIMManager.sharedInstance clearC2CHistoryMessage:userID succ:^{
                 [TUICore notifyEvent:TUICore_TUIConversationNotify
@@ -310,7 +296,7 @@
                 [TUITool makeToastError:code msg:desc];
             }];
         }]];
-        [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:nil]];
+        [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:nil]];
         [self presentViewController:ac animated:YES completion:nil];
 
     }
@@ -385,13 +371,13 @@
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     UIView *view = [[UIView alloc] init];
-    view.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
+    view.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#F2F3F5");
     return view;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
     UIView *view = [[UIView alloc] init];
-    view.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
+    view.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#F2F3F5");
     return view;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -442,6 +428,26 @@
 
 }
 
+- (void)onActionMenuExtensionClicked:(id)sender {
+    if (![sender isKindOfClass:TUIButtonCell.class]) {
+        return;
+    }
+    
+    TUIButtonCell *cell = (TUIButtonCell *)sender;
+    TUIButtonCellData *data = cell.buttonData;
+    TUIExtensionInfo *info = data.tui_extValueObj;
+    if (info && [info isKindOfClass:TUIExtensionInfo.class] && info.onClicked) {
+        NSMutableDictionary *param = [NSMutableDictionary dictionary];
+        if (self.friendProfile.userID.length > 0) {
+            param[TUICore_TUIContactExtension_FriendProfileActionMenu_UserID] = self.friendProfile.userID;
+        }
+        if (self.navigationController) {
+            param[TUICore_TUIContactExtension_FriendProfileActionMenu_PushVC] = self.navigationController;
+        }
+        info.onClicked(param);
+    }
+}
+
 - (void)onVoiceCall:(id)sender
 {
     NSDictionary *param = @{
@@ -485,13 +491,11 @@
         title = self.friendProfile.friendRemark;
     }
     NSDictionary *param = @{
-        TUICore_TUIChatService_GetChatViewControllerMethod_TitleKey : title,
-        TUICore_TUIChatService_GetChatViewControllerMethod_UserIDKey : self.friendProfile.userID,
-        TUICore_TUIChatService_GetChatViewControllerMethod_ConversationIDKey: [NSString stringWithFormat:@"c2c_%@",self.userFullInfo.userID]
+        TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_TitleKey : title,
+        TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_UserIDKey : self.friendProfile.userID,
+        TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_ConversationIDKey: [NSString stringWithFormat:@"c2c_%@",self.userFullInfo.userID]
     };
-    UIViewController *chatVC = [TUICore callService:TUICore_TUIChatService
-                                             method:TUICore_TUIChatService_GetChatViewControllerMethod
-                                              param:param];
+    UIViewController *chatVC = [TUICore createObject:TUICore_TUIChatObjectFactory key:TUICore_TUIChatObjectFactory_GetChatViewControllerMethod param:param];
     
     [self.navigationController pushViewController:chatVC animated:YES];
 }

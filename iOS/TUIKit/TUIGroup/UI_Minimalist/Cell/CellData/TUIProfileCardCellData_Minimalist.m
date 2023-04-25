@@ -6,8 +6,8 @@
 //
 
 #import "TUIProfileCardCellData_Minimalist.h"
-#import "TUIDefine.h"
-#import "TUIThemeManager.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
 
 @implementation TUIProfileCardCellData_Minimalist
 

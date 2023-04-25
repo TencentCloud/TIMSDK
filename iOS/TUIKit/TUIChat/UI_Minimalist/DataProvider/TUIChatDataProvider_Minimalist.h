@@ -2,22 +2,19 @@
 #import <Foundation/Foundation.h>
 #import "TUIChatBaseDataProvider.h"
 #import "TUIVideoMessageCellData_Minimalist.h"
-#import "TUIInputMoreCellData_Minimalist.h"
 #import "TUIChatConversationModel.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
+
+@class TUICustomActionSheetItem;
 
 @class TUIChatDataProvider_Minimalist;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIChatDataProvider_Minimalist : TUIChatBaseDataProvider
 
-#pragma mark - CellData
-+ (NSMutableArray<TUIInputMoreCellData_Minimalist *> *)moreMenuCellDataArray:(NSString *)groupID
-                                                                      userID:(NSString *)userID
-                                                             isNeedVideoCall:(BOOL)isNeedVideoCall
-                                                             isNeedAudioCall:(BOOL)isNeedAudioCall
-                                                             isNeedGroupLive:(BOOL)isNeedGroupLive
-                                                                  isNeedLink:(BOOL)isNeedLink;
+- (NSArray<TUICustomActionSheetItem *> *)getInputMoreActionItemList:(nullable NSString *)userID
+                                                            groupID:(nullable NSString *)groupID
+                                                             pushVC:(nullable UINavigationController *)pushVC;
 
 @end
 

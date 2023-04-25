@@ -7,9 +7,9 @@
 
 #import "TUIMemberCell_Minimalist.h"
 #import "TUIMemberCellData_Minimalist.h"
-#import "TUICommonModel.h"
-#import "TUIThemeManager.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMCommonModel.h>
+#import <TUICore/TUIThemeManager.h>
+#import <TIMCommon/TIMDefine.h>
 
 @interface TUIMemberDescribeCell_Minimalist()
 @property (nonatomic, strong) UIView *containerView;
@@ -40,7 +40,7 @@
     
     self.titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     self.titleLabel.textAlignment = NSTextAlignmentLeft;
-    self.titleLabel.textColor = TUICoreDynamicColor(@"form_title_color", @"#000000");
+    self.titleLabel.textColor = TIMCommonDynamicColor(@"form_title_color", @"#000000");
     [self.containerView addSubview:self.titleLabel];
     
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
@@ -81,7 +81,7 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.contentView.backgroundColor = TUICoreDynamicColor(@"form_bg_color", @"#FFFFFF");
+        self.contentView.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
         
         self.avatarView = [[UIImageView alloc] initWithImage:DefaultAvatarImage];
         [self.contentView addSubview:self.avatarView];
@@ -96,14 +96,14 @@
 
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         [self.contentView addSubview:self.titleLabel];
-        self.titleLabel.textColor = TUICoreDynamicColor(@"form_title_color", @"#000000");
+        self.titleLabel.textColor = TIMCommonDynamicColor(@"form_title_color", @"#000000");
         self.titleLabel.font = [UIFont boldSystemFontOfSize:kScale390(14)];
         self.titleLabel.mm_left(self.avatarView.mm_maxX+kScale390(4)).mm_height(kScale390(17)).mm_width(200).mm__centerY(self.avatarView.mm_centerY);
         
         self.detailLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 20)];
         [self.contentView addSubview:self.detailLabel];
         self.detailLabel.textAlignment = NSTextAlignmentRight;
-        self.detailLabel.textColor = TUICoreDynamicColor(@"form_title_color", @"#000000");
+        self.detailLabel.textColor = TIMCommonDynamicColor(@"form_title_color", @"#000000");
         self.detailLabel.mm__centerY(self.avatarView.mm_centerY);
 
         [self setSelectionStyle:UITableViewCellSelectionStyleNone];

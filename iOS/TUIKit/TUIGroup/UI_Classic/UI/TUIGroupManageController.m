@@ -6,7 +6,7 @@
 //
 
 #import "TUIGroupManageController.h"
-#import "TUIGlobalization.h"
+#import <TUICore/TUIGlobalization.h>
 #import "TUIGroupManageDataProvider.h"
 #import "TUIAddCellData.h"
 #import "TUIAddCell.h"
@@ -14,7 +14,7 @@
 #import "TUIMemberInfoCell.h"
 #import "TUISelectGroupMemberViewController.h"
 #import "TUISettingAdminController.h"
-#import "TUIThemeManager.h"
+#import <TUICore/TUIThemeManager.h>
 
 @interface TUIGroupManageController () <UITableViewDelegate, UITableViewDataSource, TUIGroupManageDataProviderDelegate>
 
@@ -37,9 +37,9 @@
 
 - (void)setupViews {
     UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.text = TUIKitLocalizableString(TUIKitGroupProfileManage);
+    titleLabel.text = TIMCommonLocalizableString(TUIKitGroupProfileManage);
     titleLabel.font = [UIFont boldSystemFontOfSize:17.0];
-    titleLabel.textColor = TUICoreDynamicColor(@"nav_title_text_color", @"#000000");
+    titleLabel.textColor = TIMCommonDynamicColor(@"nav_title_text_color", @"#000000");
     [titleLabel sizeToFit];
     self.navigationItem.titleView = titleLabel;
     [self.view addSubview:self.tableView];
@@ -54,7 +54,7 @@
 - (void)onSettingAdmin:(TUICommonTextCellData *)textData
 {
     if (!self.dataProvider.currentGroupTypeSupportSettingAdmin) {
-        [TUITool makeToast:TUIKitLocalizableString(TUIKitGroupSetAdminsForbidden)];
+        [TUITool makeToast:TIMCommonLocalizableString(TUIKitGroupSetAdminsForbidden)];
         return;
     }
     TUISettingAdminController *vc = [[TUISettingAdminController alloc] init];
@@ -189,7 +189,7 @@
     UIView *view = [[UIView alloc] init];
     view.backgroundColor = [UIColor groupTableViewBackgroundColor];
     UILabel *label = [[UILabel alloc] init];
-    label.text = TUIKitLocalizableString(TUIKitGroupManageShutupAllTips);
+    label.text = TIMCommonLocalizableString(TUIKitGroupManageShutupAllTips);
     label.textColor = [UIColor colorWithRed:136/255.0 green:136/255.0 blue:136/255.0 alpha:1/1.0];
     label.font = [UIFont systemFontOfSize:14.0];
     [view addSubview:label];
@@ -205,14 +205,14 @@
     
     if (indexPath.section == 1 && indexPath.row == 0) {
         if (!self.dataProvider.currentGroupTypeSupportAddMemberOfBlocked) {
-            [TUITool makeToast:TUIKitLocalizableString(TUIKitGroupAddMemberOfBlockedForbidden)];
+            [TUITool makeToast:TIMCommonLocalizableString(TUIKitGroupAddMemberOfBlockedForbidden)];
             return;
         }
 
         TUISelectGroupMemberViewController *vc = [[TUISelectGroupMemberViewController alloc] init];
         vc.optionalStyle = TUISelectMemberOptionalStylePublicMan;
         vc.groupId = self.groupID;
-        vc.name = TUIKitLocalizableString(TUIKitGroupProfileMember);
+        vc.name = TIMCommonLocalizableString(TUIKitGroupProfileMember);
         __weak typeof(self) weakSelf = self;
         vc.selectedFinished = ^(NSMutableArray<TUIUserModel *> * _Nonnull modelList) {
             for (TUIUserModel *userModel in modelList) {
@@ -225,7 +225,7 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return TUIKitLocalizableString(Delete);
+    return TIMCommonLocalizableString(Delete);
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
@@ -259,7 +259,7 @@
 {
     if (_tableView == nil) {
         _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
-        _tableView.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
+        _tableView.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#F2F3F5");
         _tableView.delaysContentTouches = NO;
         _tableView.delegate = self;
         _tableView.dataSource = self;

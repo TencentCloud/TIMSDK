@@ -5,8 +5,8 @@
   * This file declares the TUITextMessageCellData_Minimalist class.
   * This class inherits from TUIBubbleMessageCellData and is used to store a series of data and information required by the text message unit.
   */
-#import "TUIMessageCellData.h"
-#import "TUIBubbleMessageCellData_Minimalist.h"
+#import <TIMCommon/TUIMessageCellData.h>
+#import <TIMCommon/TUIBubbleMessageCellData_Minimalist.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

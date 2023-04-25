@@ -9,8 +9,8 @@
  *  The data source also contains some business logic, such as getting and generating message overview (subTitle), updating conversation information (group message or user message update) and other logic.
  */
 
-#import "TUICommonModel.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMCommonModel.h>
+#import <TIMCommon/TIMDefine.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

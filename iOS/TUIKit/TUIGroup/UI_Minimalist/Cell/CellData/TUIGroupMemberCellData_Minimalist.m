@@ -6,8 +6,8 @@
 //
 
 #import "TUIGroupMemberCellData_Minimalist.h"
-#import "TUIDefine.h"
-#import "TUIThemeManager.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
 
 @implementation TUIGroupMemberCellData_Minimalist
 - (CGFloat)heightOfWidth:(CGFloat)width

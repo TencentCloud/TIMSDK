@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 FOUNDATION_EXTERN NSString * const EventSubCallStatusChanged;
 FOUNDATION_EXTERN NSString * const EventSubCallMediaTypeChanged;
+FOUNDATION_EXTERN NSString * const EventSubMicMuteChanged;
 
 /**
  Status Manager Protocol

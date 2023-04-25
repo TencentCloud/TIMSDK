@@ -21,7 +21,7 @@
 #import <UIKit/UIKit.h>
 #import "TUIInputController.h"
 #import "TUIBaseMessageController.h"
-#import "TUICommonModel.h"
+#import <TIMCommon/TIMCommonModel.h>
 #import "TUIChatConversationModel.h"
 @class TUIBaseChatViewController;
 
@@ -120,6 +120,15 @@
  *  More menu views include: Capture, Picture, Video, File. See Section\Chat\TUIMoreView.h for details
  */
 @property NSArray<TUIInputMoreCellData *> *moreMenus;
+
+/**
+ *  是否需要滑动到底部
+ *  通常用于跳转到其他界面，返回后需要滑动到底部的场景
+ *
+ *  Need to scroll to the bottom
+ *  It is usually used to push to another VC and need to scroll to the bottom after returning.
+ */
+@property (nonatomic, assign) BOOL needScrollToBottom;
 
 
 - (void)sendMessage:(V2TIMMessage *)message;

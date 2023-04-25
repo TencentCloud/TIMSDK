@@ -6,9 +6,10 @@
 //
 
 #import "TUIFriendProfileHeaderView_Minimalist.h"
-#import "TUICore.h"
-#import "TUIThemeManager.h"
-#import "TUICommonModel.h"
+#import <TUICore/TUICore.h>
+#import <TUICore/TUIThemeManager.h>
+#import <TIMCommon/TIMCommonModel.h>
+#import <TIMCommon/TIMConfig.h>
 
 @implementation TUIFriendProfileHeaderItemView
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -78,16 +79,29 @@
     self.descriptionLabel.font = [UIFont boldSystemFontOfSize:kScale390(24)];
     [self addSubview:self.descriptionLabel];
     
-    self.itemMessage = [[TUIFriendProfileHeaderItemView alloc] init];
-    [self addSubview:self.itemMessage];
-    @weakify(self)
-    
-    self.itemAudio = [[TUIFriendProfileHeaderItemView alloc] init];
-    [self addSubview:self.itemAudio];
-    
-    self.itemVideo = [[TUIFriendProfileHeaderItemView alloc] init];
-    [self addSubview:self.itemVideo];
+    self.functionListView = [[UIView alloc] init];
+    [self addSubview:self.functionListView];
+}
 
+- (void)setItemViewList:(NSArray<TUIFriendProfileHeaderItemView *> *)itemList {
+    for (UIView *subView in self.functionListView.subviews) {
+        [subView removeFromSuperview];
+    }
+    
+    if (itemList.count > 0) {
+        for (TUIFriendProfileHeaderItemView *itemView in itemList) {
+            [self.functionListView addSubview:itemView];
+        }
+        CGFloat width = kScale390(92);
+        CGFloat height = kScale390(95);
+        CGFloat space = kScale390(24);
+        CGFloat contentWidth = itemList.count * width + (itemList.count - 1) * space;
+        CGFloat x = 0.5 * (self.bounds.size.width - contentWidth);
+        for (TUIFriendProfileHeaderItemView *itemView in itemList) {
+            itemView.frame = CGRectMake(x, 0, width, height);
+            x = CGRectGetMaxX(itemView.frame) + space;
+        }
+    }
 }
 
 - (void)layoutSubviews {
@@ -105,18 +119,11 @@
     [self.descriptionLabel sizeToFit];
     self.descriptionLabel.frame = CGRectMake((self.bounds.size.width - self.descriptionLabel.frame.size.width) *0.5 ,
                                              self.headImg.frame.origin.y + self.headImg.frame.size.height + kScale390(10),
-                                       self.descriptionLabel.frame.size.width,
-                                       self.descriptionLabel.frame.size.height);
-
-    CGFloat width = self.bounds.size.width;
-    CGFloat padding = kScale390(24);
-    if(!self.itemVideo.isHidden && !self.itemAudio.isHidden) {
-        self.itemMessage.frame = CGRectMake(kScale390(33), self.descriptionLabel.frame.origin.y + self.descriptionLabel.frame.size.height + kScale390(42), kScale390(92), kScale390(95));
-        self.itemAudio.frame = CGRectMake(self.itemMessage.frame.origin.x +self.itemMessage.frame.size.width + kScale390(24), self.descriptionLabel.frame.origin.y + self.descriptionLabel.frame.size.height + kScale390(42), kScale390(92), kScale390(95));
-        self.itemVideo.frame = CGRectMake(self.itemAudio.frame.origin.x +self.itemMessage.frame.size.width + kScale390(24), self.descriptionLabel.frame.origin.y + self.descriptionLabel.frame.size.height + kScale390(42), kScale390(92), kScale390(95));
-    }
-    else {
-        self.itemMessage.frame = CGRectMake((self.bounds.size.width - kScale390(92)) *0.5, self.descriptionLabel.frame.origin.y + self.descriptionLabel.frame.size.height + kScale390(42), kScale390(92), kScale390(95));
+                                             self.descriptionLabel.frame.size.width,
+                                             self.descriptionLabel.frame.size.height);
+    
+    if (self.functionListView.subviews.count > 0) {
+        self.functionListView.frame = CGRectMake(0, CGRectGetMaxY(self.descriptionLabel.frame) + kScale390(42), self.bounds.size.width, kScale390(95));
     }
 }
 

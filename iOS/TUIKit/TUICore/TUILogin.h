@@ -36,6 +36,18 @@ typedef NS_ENUM(NSInteger, TUILogLevel) {
 };
 
 /**
+ * 场景化状态
+ * Status in different kinds of business scene
+ */
+typedef NS_ENUM(NSInteger, TUIBusinessScene) {
+    None                                 = 0,
+    InRecording                          = 1,
+    InCallingRoom                        = 2,
+    InMeetingRoom                        = 3,
+    InLivingRoom                         = 4,
+};
+
+/**
  * 登录成功的通知
  * Notification for log-in succeed
  */
@@ -132,10 +144,19 @@ FOUNDATION_EXTERN NSString * const TUILogoutFailNotification;
 
 
 + (int)getSdkAppID;
++ (BOOL)isUserLogined;
+
 + (NSString *)getUserID;
 + (NSString *)getUserSig;
 
 
 + (NSString *)getNickName;
 + (NSString *)getFaceUrl;
+
+/**
+ * No-thread-safe
+ */
++ (void)setCurrentBusinessScene:(TUIBusinessScene)scene;
++ (TUIBusinessScene)getCurrentBusinessScene;
+
 @end

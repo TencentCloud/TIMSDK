@@ -6,8 +6,8 @@
 //
 
 #import "TUICommonPendencyCell_Minimalist.h"
-#import "TUIDefine.h"
-#import "TUIThemeManager.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
 
 @implementation TUICommonPendencyCell_Minimalist
 
@@ -19,7 +19,7 @@
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         [self.contentView addSubview:self.titleLabel];
         self.titleLabel.font = [UIFont systemFontOfSize:kScale390(14)];
-        self.titleLabel.textColor = TUICoreDynamicColor(@"form_title_color", @"#000000");
+        self.titleLabel.textColor = TIMCommonDynamicColor(@"form_title_color", @"#000000");
         
         self.addSourceLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         [self.contentView addSubview:self.addSourceLabel];
@@ -33,12 +33,12 @@
                 
         self.agreeButton = [UIButton buttonWithType:UIButtonTypeSystem];
         self.agreeButton.titleLabel.font = [UIFont systemFontOfSize:kScale390(14)];
-        [self.agreeButton setTitleColor:TUICoreDynamicColor(@"form_title_color", @"#000000") forState:UIControlStateNormal];
+        [self.agreeButton setTitleColor:TIMCommonDynamicColor(@"form_title_color", @"#000000") forState:UIControlStateNormal];
         [self.agreeButton addTarget:self action:@selector(agreeClick) forControlEvents:UIControlEventTouchUpInside];
         
         self.rejectButton = [UIButton buttonWithType:UIButtonTypeSystem];
         self.rejectButton.titleLabel.font = [UIFont systemFontOfSize:kScale390(14)];
-        [self.rejectButton setTitleColor:TUICoreDynamicColor(@"form_title_color", @"#000000") forState:UIControlStateNormal];
+        [self.rejectButton setTitleColor:TIMCommonDynamicColor(@"form_title_color", @"#000000") forState:UIControlStateNormal];
         [self.rejectButton addTarget:self action:@selector(rejectClick) forControlEvents:UIControlEventTouchUpInside];
         
         UIStackView *stackView = [[UIStackView alloc] init];
@@ -94,36 +94,36 @@
          [self.avatarView sd_setImageWithURL:pendencyData.avatarUrl];
     }
     if (pendencyData.isAccepted) {
-        [self.agreeButton setTitle:TUIKitLocalizableString(Agreed) forState:UIControlStateNormal];
+        [self.agreeButton setTitle:TIMCommonLocalizableString(Agreed) forState:UIControlStateNormal];
         self.agreeButton.enabled = NO;
         self.agreeButton.layer.borderColor = [UIColor clearColor].CGColor;
         self.agreeButton.layer.cornerRadius = kScale390(10);
-        [self.agreeButton setTitleColor:TUICoreDynamicColor(@"form_title_color", @"#000000") forState:UIControlStateNormal];
-        self.agreeButton.backgroundColor = TUICoreDynamicColor(@"form_bg_color", @"#FFFFFF");
+        [self.agreeButton setTitleColor:TIMCommonDynamicColor(@"form_title_color", @"#000000") forState:UIControlStateNormal];
+        self.agreeButton.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
     } else {
-        [self.agreeButton setTitle:TUIKitLocalizableString(Agree) forState:UIControlStateNormal];
+        [self.agreeButton setTitle:TIMCommonLocalizableString(Agree) forState:UIControlStateNormal];
         self.agreeButton.enabled = YES;
         self.agreeButton.layer.borderColor = [UIColor clearColor].CGColor;
         self.agreeButton.layer.borderWidth = 1;
         self.agreeButton.layer.cornerRadius = kScale390(10);
         [self.agreeButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
-        self.agreeButton.backgroundColor = TUICoreDynamicColor(@"primary_theme_color", @"#147AFF");
+        self.agreeButton.backgroundColor = TIMCommonDynamicColor(@"primary_theme_color", @"#147AFF");
     }
     
     if (pendencyData.isRejected) {
-        [self.rejectButton setTitle:TUIKitLocalizableString(Disclined) forState:UIControlStateNormal];
+        [self.rejectButton setTitle:TIMCommonLocalizableString(Disclined) forState:UIControlStateNormal];
         self.rejectButton.enabled = NO;
         self.rejectButton.layer.borderColor = [UIColor clearColor].CGColor;
         self.rejectButton.layer.cornerRadius = kScale390(10);
-        [self.rejectButton setTitleColor:TUICoreDynamicColor(@"", @"#999999") forState:UIControlStateNormal];
+        [self.rejectButton setTitleColor:TIMCommonDynamicColor(@"", @"#999999") forState:UIControlStateNormal];
         self.rejectButton.backgroundColor = [UIColor tui_colorWithHex:@"f9f9f9"];
     } else {
-        [self.rejectButton setTitle:TUIKitLocalizableString(Discline) forState:UIControlStateNormal];
+        [self.rejectButton setTitle:TIMCommonLocalizableString(Discline) forState:UIControlStateNormal];
         self.rejectButton.enabled = YES;
-        self.rejectButton.layer.borderColor = TUICoreDynamicColor(@"", @"#DDDDDD").CGColor;
+        self.rejectButton.layer.borderColor = TIMCommonDynamicColor(@"", @"#DDDDDD").CGColor;
         self.rejectButton.layer.borderWidth = 1;
         self.rejectButton.layer.cornerRadius = kScale390(10);
-        [self.rejectButton setTitleColor:TUICoreDynamicColor(@"", @"#FF584C") forState:UIControlStateNormal];
+        [self.rejectButton setTitleColor:TIMCommonDynamicColor(@"", @"#FF584C") forState:UIControlStateNormal];
     }
     
     self.agreeButton.mm_sizeToFit().mm_width(kScale390(69));

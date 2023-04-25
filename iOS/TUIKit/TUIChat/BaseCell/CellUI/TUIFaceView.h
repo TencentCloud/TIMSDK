@@ -21,7 +21,7 @@
  *  - TUIFaceGroup: Emoticons group. Including the initialization of the emoticons group, the positioning of a single emoticon, etc.
  */
 #import <UIKit/UIKit.h>
-#import "TUICommonModel.h"
+#import <TIMCommon/TIMCommonModel.h>
 
 @class TUIFaceView;
 

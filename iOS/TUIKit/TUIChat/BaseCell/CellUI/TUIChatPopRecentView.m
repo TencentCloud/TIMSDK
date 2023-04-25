@@ -6,10 +6,10 @@
 //
 
 #import "TUIChatPopRecentView.h"
-#import "TUICommonModel.h"
-#import "TUIDefine.h"
-#import "NSString+TUIEmoji.h"
-#import "TUIFitButton.h"
+#import <TIMCommon/TIMCommonModel.h>
+#import <TIMCommon/TIMDefine.h>
+#import <TIMCommon/NSString+TUIEmoji.h>
+#import <TIMCommon/TUIFitButton.h>
 
 @interface TUIChatPopRecentView()
 
@@ -93,7 +93,7 @@
 
         UIView *line = [[UIView alloc] initWithFrame:CGRectMake(margin, self.frame.size.height - 1, self.frame.size.width - 2 *margin, 0.5)];;
         [self addSubview:line];
-        line.backgroundColor = TUICoreDynamicColor(@"separator_color", @"#DBDBDB");
+        line.backgroundColor = TIMCommonDynamicColor(@"separator_color", @"#DBDBDB");
     }
 }
 

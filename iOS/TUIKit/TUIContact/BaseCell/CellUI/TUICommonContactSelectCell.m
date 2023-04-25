@@ -1,7 +1,7 @@
 
 #import "TUICommonContactSelectCell.h"
-#import "TUIDefine.h"
-#import "TUIThemeManager.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
 
 @interface TUICommonContactSelectCell()
 @property TUICommonContactSelectCellData *selectData;
@@ -25,10 +25,10 @@
     if (self) {
         self.selectButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [self.contentView addSubview:self.selectButton];
-        [self.selectButton setImage:[UIImage imageNamed:TUICoreImagePath(@"icon_select_normal")] forState:UIControlStateNormal];
-        [self.selectButton setImage:[UIImage imageNamed:TUICoreImagePath(@"icon_select_pressed")] forState:UIControlStateHighlighted];
-        [self.selectButton setImage:[UIImage imageNamed:TUICoreImagePath(@"icon_select_selected")] forState:UIControlStateSelected];
-        [self.selectButton setImage:[UIImage imageNamed:TUICoreImagePath(@"icon_select_selected_disable")] forState:UIControlStateDisabled];
+        [self.selectButton setImage:[UIImage imageNamed:TIMCommonImagePath(@"icon_select_normal")] forState:UIControlStateNormal];
+        [self.selectButton setImage:[UIImage imageNamed:TIMCommonImagePath(@"icon_select_pressed")] forState:UIControlStateHighlighted];
+        [self.selectButton setImage:[UIImage imageNamed:TIMCommonImagePath(@"icon_select_selected")] forState:UIControlStateSelected];
+        [self.selectButton setImage:[UIImage imageNamed:TIMCommonImagePath(@"icon_select_selected_disable")] forState:UIControlStateDisabled];
         self.selectButton.mm_sizeToFit().mm__centerY(self.mm_centerY).mm_left(12);
         self.selectButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
 
@@ -39,7 +39,7 @@
 
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         [self.contentView addSubview:self.titleLabel];
-        self.titleLabel.textColor = TUICoreDynamicColor(@"form_title_color", @"#000000");
+        self.titleLabel.textColor = TIMCommonDynamicColor(@"form_title_color", @"#000000");
         self.titleLabel.mm_left(self.avatarView.mm_maxX+12).mm_height(20).mm__centerY(self.avatarView.mm_centerY).mm_flexToRight(0);
         self.titleLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
 

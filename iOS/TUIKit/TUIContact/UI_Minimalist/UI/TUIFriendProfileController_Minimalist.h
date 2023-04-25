@@ -15,8 +15,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TUIFriendProfileController_Minimalist : UITableViewController
+@interface TUIFriendProfileController_Minimalist : UIViewController
 
+@property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) V2TIMFriendInfo *friendProfile;
 
 @end

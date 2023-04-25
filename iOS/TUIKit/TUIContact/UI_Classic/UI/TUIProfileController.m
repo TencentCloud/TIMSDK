@@ -8,8 +8,8 @@
 
 #import "TUIProfileController.h"
 #import "TUITextEditController.h"
-#import "TUICommonModel.h"
-#import "TUIThemeManager.h"
+#import <TIMCommon/TIMCommonModel.h>
+#import <TUICore/TUIThemeManager.h>
 
 #define SHEET_COMMON 1
 #define SHEET_AGREE  2
@@ -41,14 +41,14 @@
 - (void)setupViews
 {
     _titleView = [[TUINaviBarIndicatorView alloc] init];
-    [_titleView setTitle:TUIKitLocalizableString(ProfileDetails)];
+    [_titleView setTitle:TIMCommonLocalizableString(ProfileDetails)];
     self.navigationItem.titleView = _titleView;
     self.navigationItem.title = @"";
 
     if (@available(iOS 15.0, *)) {
         self.tableView.sectionHeaderTopPadding = 0;
     }
-    self.tableView.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
+    self.tableView.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#F2F3F5");
 
     [self.tableView registerClass:[TUICommonTextCell class] forCellReuseIdentifier:@"textCell"];
     [self.tableView registerClass:[TUICommonAvatarCell class] forCellReuseIdentifier:@"avatarCell"];
@@ -67,38 +67,38 @@
     _data = [NSMutableArray array];
 
     TUICommonAvatarCellData *avatarData = [TUICommonAvatarCellData new];
-    avatarData.key = TUIKitLocalizableString(ProfilePhoto);
+    avatarData.key = TIMCommonLocalizableString(ProfilePhoto);
     avatarData.showAccessory = YES;
     avatarData.cselector = @selector(didSelectAvatar);
     avatarData.avatarUrl = [NSURL URLWithString:self.profile.faceURL];
     [_data addObject:@[avatarData]];
 
     TUICommonTextCellData *nicknameData = [TUICommonTextCellData new];
-    nicknameData.key = TUIKitLocalizableString(ProfileName);
+    nicknameData.key = TIMCommonLocalizableString(ProfileName);
     nicknameData.value = self.profile.showName;
     nicknameData.showAccessory = YES;
     nicknameData.cselector = @selector(didSelectChangeNick);
 
     TUICommonTextCellData *IDData = [TUICommonTextCellData new];
-    IDData.key = TUIKitLocalizableString(ProfileAccount);
+    IDData.key = TIMCommonLocalizableString(ProfileAccount);
     IDData.value = [NSString stringWithFormat:@"%@      ", self.profile.userID];
     IDData.showAccessory = NO;
     [_data addObject:@[nicknameData, IDData]];
 
     TUICommonTextCellData *signatureData = [TUICommonTextCellData new];
-    signatureData.key = TUIKitLocalizableString(ProfileSignature);
+    signatureData.key = TIMCommonLocalizableString(ProfileSignature);
     signatureData.value = self.profile.selfSignature.length ? self.profile.selfSignature : @"";
     signatureData.showAccessory = YES;
     signatureData.cselector = @selector(didSelectChangeSignature);
 
     TUICommonTextCellData *sexData = [TUICommonTextCellData new];
-    sexData.key = TUIKitLocalizableString(ProfileGender);
+    sexData.key = TIMCommonLocalizableString(ProfileGender);
     sexData.value = [self.profile showGender];
     sexData.showAccessory = YES;
     sexData.cselector = @selector(didSelectSex);
     
     TUICommonTextCellData *birthdayData = [TUICommonTextCellData new];
-    birthdayData.key = TUIKitLocalizableString(ProfileBirthday);
+    birthdayData.key = TIMCommonLocalizableString(ProfileBirthday);
     birthdayData.value = [_dateFormatter stringFromDate:NSDate.new];
     if (self.profile.birthday) {
         NSInteger year = self.profile.birthday / 10000;
@@ -176,7 +176,7 @@
 {
     if (modifyView.tag == 0) {
         if (![self validForSignatureAndNick:content]) {
-            [TUITool makeToast:TUIKitLocalizableString(ProfileEditNameDesc)];
+            [TUITool makeToast:TIMCommonLocalizableString(ProfileEditNameDesc)];
             return;
         }
         V2TIMUserFullInfo *info = [[V2TIMUserFullInfo alloc] init];
@@ -187,7 +187,7 @@
         } fail:nil];
     } else if (modifyView.tag == 1) {
         if (![self validForSignatureAndNick:content]) {
-            [TUITool makeToast:TUIKitLocalizableString(ProfileEditNameDesc)];
+            [TUITool makeToast:TIMCommonLocalizableString(ProfileEditNameDesc)];
             return;
         }
         V2TIMUserFullInfo *info = [[V2TIMUserFullInfo alloc] init];
@@ -211,8 +211,8 @@
 - (void)didSelectChangeNick
 {
     TUIModifyViewData *data = [[TUIModifyViewData alloc] init];
-    data.title = TUIKitLocalizableString(ProfileEditName);
-    data.desc = TUIKitLocalizableString(ProfileEditNameDesc);
+    data.title = TIMCommonLocalizableString(ProfileEditName);
+    data.desc = TIMCommonLocalizableString(ProfileEditNameDesc);
     data.content = self.profile.showName;
     TUIModifyView *modify = [[TUIModifyView alloc] init];
     modify.tag = 0;
@@ -224,8 +224,8 @@
 - (void)didSelectChangeSignature
 {
     TUIModifyViewData *data = [[TUIModifyViewData alloc] init];
-    data.title = TUIKitLocalizableString(ProfileEditSignture);
-    data.desc = TUIKitLocalizableString(ProfileEditNameDesc);
+    data.title = TIMCommonLocalizableString(ProfileEditSignture);
+    data.desc = TIMCommonLocalizableString(ProfileEditNameDesc);
     data.content = self.profile.selfSignature;
     TUIModifyView *modify = [[TUIModifyView alloc] init];
     modify.tag = 1;
@@ -238,10 +238,10 @@
 {
     UIActionSheet *sheet = [[UIActionSheet alloc] init];
     sheet.tag = SHEET_SEX;
-    sheet.title = TUIKitLocalizableString(ProfileEditGender);
-    [sheet addButtonWithTitle:TUIKitLocalizableString(Male)];
-    [sheet addButtonWithTitle:TUIKitLocalizableString(Female)];
-    [sheet setCancelButtonIndex:[sheet addButtonWithTitle:TUIKitLocalizableString(Canel)]];
+    sheet.title = TIMCommonLocalizableString(ProfileEditGender);
+    [sheet addButtonWithTitle:TIMCommonLocalizableString(Male)];
+    [sheet addButtonWithTitle:TIMCommonLocalizableString(Female)];
+    [sheet setCancelButtonIndex:[sheet addButtonWithTitle:TIMCommonLocalizableString(Canel)]];
     [sheet setDelegate:self];
     [sheet showInView:self.view];
 }
@@ -302,7 +302,7 @@
 
         if([data isKindOfClass:[TUICommonTextCell class]]){
             TUICommonTextCell *textCell = (TUICommonTextCell *)data;
-            if(textCell.textData.value && ![textCell.textData.value isEqualToString:TUIKitLocalizableString(no_set)]){
+            if(textCell.textData.value && ![textCell.textData.value isEqualToString:TIMCommonLocalizableString(no_set)]){
                 UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
                 pasteboard.string = textCell.textData.value;
                 NSString *toastString = [NSString stringWithFormat:@"copy %@",textCell.textData.key];
@@ -340,14 +340,14 @@
         [cover addSubview:menuView];
         
         UIButton *cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [cancelButton setTitle:TUIKitLocalizableString(Cancel) forState:UIControlStateNormal];
+        [cancelButton setTitle:TIMCommonLocalizableString(Cancel) forState:UIControlStateNormal];
         [cancelButton setTitleColor:UIColor.darkGrayColor forState:UIControlStateNormal];
         cancelButton.frame = CGRectMake(10, 0, 60, 35);
         [cancelButton addTarget:self action:@selector(hideDatePicker) forControlEvents:UIControlEventTouchUpInside];
         [menuView addSubview:cancelButton];
         
         UIButton *okButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [okButton setTitle:TUIKitLocalizableString(Confirm) forState:UIControlStateNormal];
+        [okButton setTitle:TIMCommonLocalizableString(Confirm) forState:UIControlStateNormal];
         [okButton setTitleColor:UIColor.darkGrayColor forState:UIControlStateNormal];
         okButton.frame = CGRectMake(cover.bounds.size.width - 10 - 60, 0, 60, 35);
         [okButton addTarget:self action:@selector(onOKDatePicker) forControlEvents:UIControlEventTouchUpInside];

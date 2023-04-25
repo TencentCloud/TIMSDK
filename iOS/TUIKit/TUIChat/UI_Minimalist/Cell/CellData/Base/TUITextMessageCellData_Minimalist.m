@@ -6,11 +6,11 @@
 //
 
 #import "TUITextMessageCellData_Minimalist.h"
-#import "TUIMessageCellLayout.h"
-#import "TUICommonModel.h"
-#import "TUIDefine.h"
-#import "NSString+TUIEmoji.h"
-#import "TUIThemeManager.h"
+#import <TIMCommon/TUIMessageCellLayout.h>
+#import <TIMCommon/TIMCommonModel.h>
+#import <TIMCommon/TIMDefine.h>
+#import <TIMCommon/NSString+TUIEmoji.h>
+#import <TUICore/TUIThemeManager.h>
 
 #ifndef CGFLOAT_CEIL
 #ifdef CGFLOAT_IS_DOUBLE
@@ -45,10 +45,6 @@
 + (NSString *)getDisplayString:(V2TIMMessage *)message {
     NSString *content = message.textElem.text;
     return content.getLocalizableStringWithFaceContent;
-}
-
-- (BOOL)canTranslate {
-    return YES;
 }
 
 - (Class)getReplyQuoteViewDataClass
@@ -88,17 +84,9 @@
 {
     CGFloat height = [super heightOfWidth:width];
     
-    // load translationView's saved data to render translationView
-    if ([self.translationViewData shouldLoadSavedData]) {
-        [self.translationViewData setMessage:self.innerMessage];
-        [self.translationViewData loadSavedData];
+    if (self.bottomContainerSize.height > 0) {
+        height += self.bottomContainerSize.height + 6;
     }
-    [self.translationViewData calcSize];
-    
-    if (![self.translationViewData isHidden]) {
-        height += self.translationViewData.size.height + 6;
-    }
-
     return height;
 }
 

@@ -6,10 +6,10 @@
 //
 
 #import "TUICommonPendencyCellData_Minimalist.h"
-#import "TUICommonModel.h"
+#import <TIMCommon/TIMCommonModel.h>
 #import "UIView+TUIToast.h"
-#import "TUITool.h"
-#import "TUIGlobalization.h"
+#import <TUICore/TUITool.h>
+#import <TUICore/TUIGlobalization.h>
 
 @implementation TUICommonPendencyCellData_Minimalist
 
@@ -23,7 +23,7 @@
         _title = _identifier;
     }
     if (application.addSource) {
-        _addSource = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitAddFriendSourceFormat), [application.addSource substringFromIndex:@"AddSource_Type_".length]];
+        _addSource = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitAddFriendSourceFormat), [application.addSource substringFromIndex:@"AddSource_Type_".length]];
     }
     _addWording = application.addWording;
     _avatarUrl = [NSURL URLWithString:application.faceUrl];
@@ -41,7 +41,7 @@
 - (void)agree
 {
     [[V2TIMManager sharedInstance] acceptFriendApplication:_application type:V2TIM_FRIEND_ACCEPT_AGREE_AND_ADD succ:^(V2TIMFriendOperationResult *result) {
-        [TUITool makeToast:TUIKitLocalizableString(TUIKitFriendApplicationApproved)];
+        [TUITool makeToast:TIMCommonLocalizableString(TUIKitFriendApplicationApproved)];
     } fail:^(int code, NSString *msg) {
         [TUITool makeToastError:code msg:msg];
     }];
@@ -50,7 +50,7 @@
 - (void)reject
 {
     [[V2TIMManager sharedInstance] refuseFriendApplication:_application succ:^(V2TIMFriendOperationResult *result) {
-        [TUITool makeToast:TUIKitLocalizableString(TUIKitFirendRequestRejected)];
+        [TUITool makeToast:TIMCommonLocalizableString(TUIKitFirendRequestRejected)];
     } fail:^(int code, NSString *msg) {
         [TUITool makeToastError:code msg:msg];
     }];

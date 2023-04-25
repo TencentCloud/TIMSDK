@@ -1,6 +1,6 @@
 
 #import "TUIMovieManager.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 
 @interface TUIMovieManager()
 {

@@ -7,9 +7,9 @@
 
 #import "TUIFoldConversationListBaseDataProvider.h"
 #import <ImSDK_Plus/ImSDK_Plus.h>
-#import "TUIDefine.h"
-#import "TUICore.h"
-#import "TUILogin.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUICore.h>
+#import <TUICore/TUILogin.h>
 #import "TUIConversationCellData.h"
 
 @interface TUIFoldConversationListBaseDataProvider (private)
@@ -117,20 +117,44 @@
     
     if (markHideDataList.count) {
         [self sortDataList:markHideDataList];
-        [markHideDataList enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            if ([self.conversationList containsObject:obj] ) {
-                [self handleHideConversation:obj];
+        NSMutableArray *pRemoveCellUIList = [NSMutableArray array];
+        NSMutableDictionary<NSString *, TUIConversationCellData *> *pMarkHideDataMap = [NSMutableDictionary dictionary];
+        for (TUIConversationCellData *item in markHideDataList) {
+            if (item.conversationID) {
+                [pRemoveCellUIList addObject:item];
+                [pMarkHideDataMap setObject:item
+                                    forKey:item.conversationID];
             }
-        }];
+        }
+        for (TUIConversationCellData *item in self.conversationList) {
+            if ([pMarkHideDataMap objectForKey:item.conversationID]) {
+                [pRemoveCellUIList addObject:item];
+            }
+        }
+        for (TUIConversationCellData *item in pRemoveCellUIList) {
+                [self handleHideConversation:item];
+        }
     }
     
     if (needHideByCancelMarkFoldDataList.count) {
         [self sortDataList:needHideByCancelMarkFoldDataList];
-        [needHideByCancelMarkFoldDataList enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            if ([self.conversationList containsObject:obj] ) {
-                [self handleHideConversation:obj];
+        NSMutableArray *pRemoveCellUIList = [NSMutableArray array];
+        NSMutableDictionary<NSString *, TUIConversationCellData *> *pMarkCancelFoldDataMap = [NSMutableDictionary dictionary];
+        for (TUIConversationCellData *item in needHideByCancelMarkFoldDataList) {
+            if (item.conversationID) {
+                [pRemoveCellUIList addObject:item];
+                [pMarkCancelFoldDataMap setObject:item
+                                    forKey:item.conversationID];
             }
-        }];
+        }
+        for (TUIConversationCellData *item in self.conversationList) {
+            if ([pMarkCancelFoldDataMap objectForKey:item.conversationID]) {
+                [pRemoveCellUIList addObject:item];
+            }
+        }
+        for (TUIConversationCellData *item in pRemoveCellUIList) {
+                [self handleHideConversation:item];
+        }
     }
     
 }

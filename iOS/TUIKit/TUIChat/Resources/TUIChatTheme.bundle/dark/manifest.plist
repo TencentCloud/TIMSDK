@@ -164,31 +164,5 @@
 	<string>TypeSelectorBtn_Black</string>
 	<key>chat_TypeSelectorBtnHL_Black_img</key>
 	<string>TypeSelectorBtnHL_Black</string>
-	<key>chat_nav_more_menu_img</key>
-	<string>chat_nav_more_menu.png</string>
-	<key>chat_message_read_status_text_color</key>
-	<string>#4877B7</string>
-	<key>chat_message_read_status_text_gray_color</key>
-	<string>#5E5E5E</string>
-	<key>chat_message_read_status_tab_color</key>
-	<string>#2170B1</string>
-	<key>chat_message_read_status_tab_unselect_color</key>
-	<string>#444444</string>
-	<key>chat_message_read_name_date_text_color</key>
-	<string>#888888</string>
-	<key>chat_messageReplyIcon_img</key>
-	<string>messageReplyIcon</string>
-	<key>chat_message_translation_loading_img</key>
-	<string>message_translation_loading.png</string>
-	<key>chat_message_translation_tips_img</key>
-	<string>message_translation_tips.png</string>
-	<key>chat_message_translation_bg_color</key>
-	<string>#1F1F1F</string>
-	<key>chat_message_translation_bg_color_minimalist</key>
-	<string>#1F1F1F</string>
-	<key>chat_message_translation_text_color</key>
-	<string>#D9D9D9</string>
-	<key>chat_message_translation_text_color_minimalist</key>
-	<string>#D9D9D9</string>
 </dict>
 </plist>

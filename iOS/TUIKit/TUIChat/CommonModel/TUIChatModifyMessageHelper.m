@@ -6,9 +6,9 @@
 //
 
 #import "TUIChatModifyMessageHelper.h"
-#import "TUITool.h"
+#import <TUICore/TUITool.h>
 #import "TUICloudCustomDataTypeCenter.h"
-#import "TUILogin.h"
+#import <TUICore/TUILogin.h>
 
 #define RETRY_MIN_TIME 500
 #define RETRY_MAX_TIME 3000

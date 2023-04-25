@@ -6,7 +6,7 @@
 //
 
 #import <ImSDK_Plus/ImSDK_Plus.h>
-#import "TUIBubbleMessageCellData.h"
+#import <TIMCommon/TUIBubbleMessageCellData.h>
 #import "TUIReplyQuoteViewData.h"
 #import "TUIChatDefine.h"
 

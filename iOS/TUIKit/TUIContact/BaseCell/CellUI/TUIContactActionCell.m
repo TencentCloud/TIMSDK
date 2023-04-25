@@ -6,10 +6,10 @@
 //
 
 #import "TUIContactActionCell.h"
-#import "TUICommonModel.h"
+#import <TIMCommon/TIMCommonModel.h>
 #import "TUICommonContactCellData.h"
-#import "TUIDefine.h"
-#import "TUIThemeManager.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
 
 @interface TUIContactActionCell ()
 @property TUIContactActionCellData *actionData;
@@ -33,7 +33,7 @@
 
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         [self.contentView addSubview:self.titleLabel];
-        self.titleLabel.textColor = TUICoreDynamicColor(@"form_title_color", @"#000000");
+        self.titleLabel.textColor = TIMCommonDynamicColor(@"form_title_color", @"#000000");
         self.titleLabel.mm_left(self.avatarView.mm_maxX+12).mm_height(20).mm__centerY(self.avatarView.mm_centerY).mm_flexToRight(0);
 
         self.unRead = [[TUIUnReadView alloc] init];

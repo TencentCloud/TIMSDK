@@ -7,7 +7,7 @@
 //
 
 #import "TUIRecordView.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 
 @implementation TUIRecordView
 - (id)init
@@ -48,7 +48,7 @@
 - (void)defaultLayout
 {
     CGSize backSize = Record_Background_Size;
-    _title.text = TUIKitLocalizableString(TUIKitInputRecordSlideToCancel);
+    _title.text = TIMCommonLocalizableString(TUIKitInputRecordSlideToCancel);
     CGSize titleSize = [_title sizeThatFits:CGSizeMake(Screen_Width, Screen_Height)];
     if(titleSize.width > backSize.width){
         backSize.width = titleSize.width + 2 * Record_Margin;
@@ -66,25 +66,25 @@
     switch (status) {
         case Record_Status_Recording:
         {
-            _title.text = TUIKitLocalizableString(TUIKitInputRecordSlideToCancel);
+            _title.text = TIMCommonLocalizableString(TUIKitInputRecordSlideToCancel);
             _title.backgroundColor = [UIColor clearColor];
             break;
         }
         case Record_Status_Cancel:
         {
-            _title.text = TUIKitLocalizableString(TUIKitInputRecordReleaseToCancel);
+            _title.text = TIMCommonLocalizableString(TUIKitInputRecordReleaseToCancel);
             _title.backgroundColor = Record_Title_Background_Color;
             break;
         }
         case Record_Status_TooShort:
         {
-            _title.text = TUIKitLocalizableString(TUIKitInputRecordTimeshort);
+            _title.text = TIMCommonLocalizableString(TUIKitInputRecordTimeshort);
             _title.backgroundColor = [UIColor clearColor];
             break;
         }
         case Record_Status_TooLong:
         {
-            _title.text = TUIKitLocalizableString(TUIKitInputRecordTimeLong);
+            _title.text = TIMCommonLocalizableString(TUIKitInputRecordTimeLong);
             _title.backgroundColor = [UIColor clearColor];
             break;
         }

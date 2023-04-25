@@ -41,6 +41,10 @@ NS_ASSUME_NONNULL_END
 @property (nonatomic, strong) TUIAudioRecordInfo *mAudioRecordInfo;
 @property (nonatomic, assign) AVAudioSessionCategory mCategory;
 @property (nonatomic, assign) AVAudioSessionCategoryOptions mCategoryOptions;
+/**
+ * Result callback for calling other service
+ */
+@property (nonatomic, copy) TUICallServiceResultCallback callback;
 
 @end
 
@@ -72,8 +76,13 @@ NS_ASSUME_NONNULL_END
 }
 
 #pragma mark - TUIServiceProtocol
-
 - (id)onCall:(NSString *)method param:(nullable NSDictionary *)param {
+    return nil;
+}
+
+- (id)onCall:(NSString *)method param:(nullable NSDictionary *)param resultCallback:(TUICallServiceResultCallback) resultCallback {
+    self.callback = resultCallback;
+    
     if ([method isEqualToString:TUICore_TUIAudioMessageRecordService_StartRecordAudioMessageMethod]) {
         if (![TUICallingCommon checkDictionaryValid:param]) {
             [self notifyAudioMessageRecordEvent:TUICore_RecordAudioMessageNotify_StartRecordAudioMessageSubKey
@@ -214,7 +223,8 @@ NS_ASSUME_NONNULL_END
 - (void)onCallReceived:(NSString *)callerId
           calleeIdList:(NSArray<NSString *> *)calleeIdList
                groupId:(NSString *)groupId
-         callMediaType:(TUICallMediaType)callMediaType {
+         callMediaType:(TUICallMediaType)callMediaType
+              userData:(NSString *)userData{
     // 收到通话邀请,停止录制
     [self stopRecordAudioMessage];
 }
@@ -291,8 +301,10 @@ NS_ASSUME_NONNULL_END
 }
 
 - (void)notifyAudioMessageRecordEvent:(NSString *)method errCode:(NSInteger)errCode path:(NSString *)path {
-    NSDictionary *param = @{@"errorCode": @(errCode), @"path": path ?: @""};
-    [TUICore notifyEvent:TUICore_RecordAudioMessageNotify subKey:method object:nil param:param];
+    NSDictionary *param = @{@"method": method ?: @"", @"errorCode": @(errCode), @"path": path ?: @""};
+    if (self.callback) {
+        self.callback(errCode,@"",param);
+    }
 }
 
 - (NSInteger)convertErrorCode:(NSString *)method errorCode:(NSInteger)errorCode {

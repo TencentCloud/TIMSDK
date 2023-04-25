@@ -6,9 +6,9 @@
 //
 
 #import "TUIVoiceReplyQuoteView.h"
-#import "NSString+TUIEmoji.h"
-#import "TUIDarkModel.h"
-#import "TUIDefine.h"
+#import <TIMCommon/NSString+TUIEmoji.h>
+#import <TUICore/TUIDarkModel.h>
+#import <TIMCommon/TIMDefine.h>
 #import "TUIVoiceReplyQuoteViewData.h"
 
 @implementation TUIVoiceReplyQuoteView

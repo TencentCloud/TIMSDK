@@ -7,7 +7,7 @@
 
 #import "TUIFileReplyQuoteViewData.h"
 #import "TUIFileMessageCellData.h"
-#import "TUIThemeManager.h"
+#import <TUICore/TUIThemeManager.h>
 
 @implementation TUIFileReplyQuoteViewData
 

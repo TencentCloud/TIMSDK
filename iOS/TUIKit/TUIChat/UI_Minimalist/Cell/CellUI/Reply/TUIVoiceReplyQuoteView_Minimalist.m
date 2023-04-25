@@ -7,9 +7,9 @@
 
 #import "TUIVoiceReplyQuoteView_Minimalist.h"
 #import "TUIVoiceReplyQuoteViewData_Minimalist.h"
-#import "TUIDarkModel.h"
-#import "TUIDefine.h"
-#import "NSString+TUIEmoji.h"
+#import <TUICore/TUIDarkModel.h>
+#import <TIMCommon/TIMDefine.h>
+#import <TIMCommon/NSString+TUIEmoji.h>
 
 @implementation TUIVoiceReplyQuoteView_Minimalist
 

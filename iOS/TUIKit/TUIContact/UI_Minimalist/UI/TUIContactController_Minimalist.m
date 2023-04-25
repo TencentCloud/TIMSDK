@@ -16,11 +16,11 @@
 #import "TUIGroupConversationListController_Minimalist.h"
 #import "TUICommonContactCell_Minimalist.h"
 #import "TUIContactActionCell_Minimalist.h"
-#import "TUIThemeManager.h"
-#import "TUIDefine.h"
-#import "TUICore.h"
+#import <TUICore/TUIThemeManager.h>
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUICore.h>
 #import "ReactiveObjC.h"
-#import "TUIContactFloatController.h"
+#import "TUIFloatViewController.h"
 
 #define kContactCellReuseId @"ContactCellReuseId"
 #define kContactActionCellReuseId @"ContactActionCellReuseId"
@@ -37,19 +37,19 @@
     NSMutableArray *list = @[].mutableCopy;
     [list addObject:({
         TUIContactActionCellData_Minimalist *data = [[TUIContactActionCellData_Minimalist alloc] init];
-        data.title = TUIKitLocalizableString(TUIKitContactsNewFriends);
+        data.title = TIMCommonLocalizableString(TUIKitContactsNewFriends);
         data.cselector = @selector(onAddNewFriend:);
         data;
     })];
     [list addObject:({
         TUIContactActionCellData_Minimalist *data = [[TUIContactActionCellData_Minimalist alloc] init];
-        data.title = TUIKitLocalizableString(TUIKitContactsGroupChats);
+        data.title = TIMCommonLocalizableString(TUIKitContactsGroupChats);
         data.cselector = @selector(onGroupConversation:);
         data;
     })];
     [list addObject:({
         TUIContactActionCellData_Minimalist *data = [[TUIContactActionCellData_Minimalist alloc] init];
-        data.title = TUIKitLocalizableString(TUIKitContactsBlackList);
+        data.title = TIMCommonLocalizableString(TUIKitContactsBlackList);
         data.cselector = @selector(onBlackList:);
         data.needBottomLine = NO;
         data;
@@ -73,7 +73,7 @@
 
 - (void)setupNavigator {
     UIButton *moreButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
-    [moreButton setImage:TUICoreDynamicImage(@"nav_more_img", [UIImage imageNamed:TUICoreImagePath(@"more")]) forState:UIControlStateNormal];
+    [moreButton setImage:TIMCommonDynamicImage(@"nav_more_img", [UIImage imageNamed:TIMCommonImagePath(@"more")]) forState:UIControlStateNormal];
     [moreButton addTarget:self action:@selector(onRightItem:) forControlEvents:UIControlEventTouchUpInside];
     [moreButton.widthAnchor constraintEqualToConstant:24].active = YES;
     [moreButton.heightAnchor constraintEqualToConstant:24].active = YES;
@@ -81,14 +81,11 @@
     self.navigationItem.rightBarButtonItem = moreItem;
 
     self.navigationController.interactivePopGestureRecognizer.enabled = YES;
-    self.view.backgroundColor = TUICoreDynamicColor(@"", @"#FFFFFF");
+    self.view.backgroundColor = TIMCommonDynamicColor(@"", @"#FFFFFF");
 }
 
 - (void)setupViews {
     CGRect rect = self.view.bounds;
-    if (![UINavigationBar appearance].isTranslucent && [[[UIDevice currentDevice] systemVersion] doubleValue]<15.0) {
-        rect = CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height - TabBar_Height - NavBar_Height );
-    }
     _tableView = [[UITableView alloc] initWithFrame:rect style:UITableViewStylePlain];
     _tableView.delegate = self;
     _tableView.dataSource = self;
@@ -128,14 +125,14 @@
     TUIPopCellData *friend = [[TUIPopCellData alloc] init];
     friend.image =
     TUIContactDynamicImage(@"pop_icon_add_friend_img", [UIImage imageNamed:TUIContactImagePath(@"add_friend")]);
-    friend.title = TUIKitLocalizableString(ContactsAddFriends); //@"添加好友";
+    friend.title = TIMCommonLocalizableString(ContactsAddFriends); //@"添加好友";
     [menus addObject:friend];
 
     TUIPopCellData *group = [[TUIPopCellData alloc] init];
     group.image =
     TUIContactDynamicImage(@"pop_icon_add_group_img", [UIImage imageNamed:TUIContactImagePath(@"add_group")]);
 
-    group.title = TUIKitLocalizableString(ContactsJoinGroup);//@"添加群组";
+    group.title = TIMCommonLocalizableString(ContactsJoinGroup);//@"添加群组";
     [menus addObject:group];
 
     CGFloat height = [TUIPopCell getHeight] * menus.count + TUIPopView_Arrow_Size.height;
@@ -167,9 +164,9 @@
             TUIFriendRequestViewController_Minimalist *frc = [[TUIFriendRequestViewController_Minimalist alloc] init];
             frc.profile = cellModel.userInfo;
             
-            TUIContactFloatController *bfloatVC = [[TUIContactFloatController alloc] init];
+            TUIFloatViewController *bfloatVC = [[TUIFloatViewController alloc] init];
             [bfloatVC appendChildViewController:(id)frc topMargin:kScale390(87.5)];
-            [bfloatVC.topGestureView setTitleText:TUIKitLocalizableString(Info) subTitleText:@"" leftBtnText:TUIKitLocalizableString(TUIKitCreateCancel) rightBtnText:@""];
+            [bfloatVC.topGestureView setTitleText:TIMCommonLocalizableString(Info) subTitleText:@"" leftBtnText:TIMCommonLocalizableString(TUIKitCreateCancel) rightBtnText:@""];
             bfloatVC.topGestureView.rightButton.hidden = YES;
             bfloatVC.topGestureView.subTitleLabel.hidden = YES;
             [self presentViewController:bfloatVC animated:YES completion:nil];
@@ -180,9 +177,9 @@
 
     };
         
-    TUIContactFloatController *floatVC = [[TUIContactFloatController alloc] init];
+    TUIFloatViewController *floatVC = [[TUIFloatViewController alloc] init];
     [floatVC appendChildViewController:(id)add topMargin:kScale390(87.5)];
-    [floatVC.topGestureView setTitleText:TUIKitLocalizableString(TUIKitAddFriend) subTitleText:@"" leftBtnText:TUIKitLocalizableString(TUIKitCreateCancel) rightBtnText:@""];
+    [floatVC.topGestureView setTitleText:TIMCommonLocalizableString(TUIKitAddFriend) subTitleText:@"" leftBtnText:TIMCommonLocalizableString(TUIKitCreateCancel) rightBtnText:@""];
     floatVC.topGestureView.rightButton.hidden = YES;
     floatVC.topGestureView.subTitleLabel.hidden = YES;
     floatVC.topGestureView.leftButtonClickCallback = ^{
@@ -201,15 +198,13 @@
         [self dismissViewControllerAnimated:YES completion:^{
             
             NSDictionary *param = @{
-                TUICore_TUIGroupService_GetGroupRequestViewControllerMethod_GroupInfoKey: cellModel.groupInfo
+                TUICore_TUIGroupObjectFactory_GetGroupRequestViewControllerMethod_GroupInfoKey: cellModel.groupInfo
             };
-            UIViewController *vc = [TUICore callService:TUICore_TUIGroupService_Minimalist
-                                                 method:TUICore_TUIGroupService_GetGroupRequestViewControllerMethod
-                                                  param:param];
+            UIViewController *vc = [TUICore createObject:TUICore_TUIGroupObjectFactory_Minimalist key:TUICore_TUIGroupObjectFactory_GetGroupRequestViewControllerMethod param:param];
             
-            TUIContactFloatController *bfloatVC = [[TUIContactFloatController alloc] init];
+            TUIFloatViewController *bfloatVC = [[TUIFloatViewController alloc] init];
             [bfloatVC appendChildViewController:(id)vc topMargin:kScale390(87.5)];
-            [bfloatVC.topGestureView setTitleText:TUIKitLocalizableString(Info) subTitleText:@"" leftBtnText:TUIKitLocalizableString(TUIKitCreateCancel) rightBtnText:@""];
+            [bfloatVC.topGestureView setTitleText:TIMCommonLocalizableString(Info) subTitleText:@"" leftBtnText:TIMCommonLocalizableString(TUIKitCreateCancel) rightBtnText:@""];
             bfloatVC.topGestureView.rightButton.hidden = YES;
             bfloatVC.topGestureView.subTitleLabel.hidden = YES;
             [self presentViewController:bfloatVC animated:YES completion:nil];
@@ -220,9 +215,9 @@
         }];
     };
     
-    TUIContactFloatController *floatVC = [[TUIContactFloatController alloc] init];
+    TUIFloatViewController *floatVC = [[TUIFloatViewController alloc] init];
     [floatVC appendChildViewController:(id)add topMargin:kScale390(87.5)];
-    [floatVC.topGestureView setTitleText:TUIKitLocalizableString(TUIKitAddGroup) subTitleText:@"" leftBtnText:TUIKitLocalizableString(TUIKitCreateCancel) rightBtnText:@""];
+    [floatVC.topGestureView setTitleText:TIMCommonLocalizableString(TUIKitAddGroup) subTitleText:@"" leftBtnText:TIMCommonLocalizableString(TUIKitCreateCancel) rightBtnText:@""];
     floatVC.topGestureView.rightButton.hidden = YES;
     floatVC.topGestureView.subTitleLabel.hidden = YES;
     floatVC.topGestureView.leftButtonClickCallback = ^{
@@ -382,15 +377,13 @@
         @strongify(self)
         
         NSDictionary *param = @{
-            TUICore_TUIChatService_GetChatViewControllerMethod_GroupIDKey : cellData.identifier ?: @"",
-            TUICore_TUIChatService_GetChatViewControllerMethod_TitleKey:cellData.title?:@"",
-            TUICore_TUIChatService_GetChatViewControllerMethod_AvatarImageKey:cellData.avatarImage,
-            TUICore_TUIChatService_GetChatViewControllerMethod_AvatarUrlKey:[cellData.avatarUrl absoluteString]?:@"",
+            TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_GroupIDKey : cellData.identifier ?: @"",
+            TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_TitleKey:cellData.title?:@"",
+            TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_AvatarImageKey:cellData.avatarImage,
+            TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_AvatarUrlKey:[cellData.avatarUrl absoluteString]?:@"",
         };
-        
-        UIViewController *chatVC = (UIViewController *)[TUICore callService:TUICore_TUIChatService_Minimalist
-                                                                     method:TUICore_TUIChatService_GetChatViewControllerMethod
-                                                                      param:param];
+
+        UIViewController *chatVC = (UIViewController *)[TUICore createObject:TUICore_TUIChatObjectFactory_Minimalist key:TUICore_TUIChatObjectFactory_GetChatViewControllerMethod param:param];
         [self.navigationController pushViewController:(UIViewController *)chatVC animated:YES];
     };
     [self.navigationController pushViewController:vc animated:YES];

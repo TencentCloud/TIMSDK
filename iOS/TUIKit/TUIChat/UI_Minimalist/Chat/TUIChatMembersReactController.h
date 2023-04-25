@@ -6,9 +6,9 @@
 //
 
 #import "TUIChatFlexViewController.h"
-#import "TUITagsModel.h"
+#import <TIMCommon/TUITagsModel.h>
 #import "TUIEmojiCellData.h"
-#import "TUIMessageCellData.h"
+#import <TIMCommon/TUIMessageCellData.h>
 #import "TUIChatConversationModel.h"
 
 NS_ASSUME_NONNULL_BEGIN

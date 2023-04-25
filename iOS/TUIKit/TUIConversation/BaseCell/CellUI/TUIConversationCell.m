@@ -6,10 +6,10 @@
 //
 
 #import "TUIConversationCell.h"
-#import "TUIDefine.h"
-#import "TUICommonModel.h"
-#import "TUITool.h"
-#import "TUIThemeManager.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TIMCommon/TIMCommonModel.h>
+#import <TUICore/TUITool.h>
+#import <TUICore/TUIThemeManager.h>
 
 #define kScale UIScreen.mainScreen.bounds.size.width / 375.0
 
@@ -26,13 +26,13 @@
 
         _timeLabel = [[UILabel alloc] init];
         _timeLabel.font = [UIFont systemFontOfSize:12];
-        _timeLabel.textColor = TUICoreDynamicColor(@"form_desc_color", @"#BBBBBB");
+        _timeLabel.textColor = TIMCommonDynamicColor(@"form_desc_color", @"#BBBBBB");
         _timeLabel.layer.masksToBounds = YES;
         [self.contentView addSubview:_timeLabel];
 
         _titleLabel = [[UILabel alloc] init];
         _titleLabel.font = [UIFont systemFontOfSize:16];
-        _titleLabel.textColor = TUICoreDynamicColor(@"form_title_color", @"#000000");
+        _titleLabel.textColor = TIMCommonDynamicColor(@"form_title_color", @"#000000");
         _titleLabel.layer.masksToBounds = YES;
         [self.contentView addSubview:_titleLabel];
 
@@ -42,7 +42,7 @@
         _subTitleLabel = [[UILabel alloc] init];
         _subTitleLabel.layer.masksToBounds = YES;
         _subTitleLabel.font = [UIFont systemFontOfSize:14];
-        _subTitleLabel.textColor = TUICoreDynamicColor(@"form_subtitle_color", @"#888888");
+        _subTitleLabel.textColor = TIMCommonDynamicColor(@"form_subtitle_color", @"#888888");
         [self.contentView addSubview:_subTitleLabel];
         
         _notDisturbRedDot = [[UIView alloc] init];
@@ -222,7 +222,7 @@
         }
     }];
     
-    NSString *imageName = (convData.showCheckBox && convData.selected) ? TUICoreImagePath(@"icon_select_selected") : TUICoreImagePath(@"icon_select_normal");
+    NSString *imageName = (convData.showCheckBox && convData.selected) ? TIMCommonImagePath(@"icon_select_selected") : TIMCommonImagePath(@"icon_select_normal");
     self.selectedIcon.image = [UIImage imageNamed:imageName];
 
     [self configOnlineStatusIcon:convData];
@@ -255,11 +255,11 @@
         if (convData.onlineStatus == TUIConversationOnlineStatusOnline &&
             TUIConfig.defaultConfig.displayOnlineStatusIcon) {
             self.onlineStatusIcon.hidden = NO;
-            self.onlineStatusIcon.image = TUICoreDynamicImage(@"icon_online_status", [UIImage imageNamed:TUICoreImagePath(@"icon_online_status")]);
+            self.onlineStatusIcon.image = TIMCommonDynamicImage(@"icon_online_status", [UIImage imageNamed:TIMCommonImagePath(@"icon_online_status")]);
         } else if (convData.onlineStatus == TUIConversationOnlineStatusOffline &&
                    TUIConfig.defaultConfig.displayOnlineStatusIcon) {
             self.onlineStatusIcon.hidden = NO;
-            self.onlineStatusIcon.image = TUICoreDynamicImage(@"icon_offline_status", [UIImage imageNamed:TUICoreImagePath(@"icon_offline_status")]);
+            self.onlineStatusIcon.image = TIMCommonDynamicImage(@"icon_offline_status", [UIImage imageNamed:TIMCommonImagePath(@"icon_offline_status")]);
         } else {
             self.onlineStatusIcon.hidden = YES;
             self.onlineStatusIcon.image = nil;

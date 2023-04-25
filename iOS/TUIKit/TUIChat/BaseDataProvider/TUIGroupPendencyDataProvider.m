@@ -6,7 +6,7 @@
 //
 
 #import "TUIGroupPendencyDataProvider.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 
 @interface TUIGroupPendencyDataProvider()
 

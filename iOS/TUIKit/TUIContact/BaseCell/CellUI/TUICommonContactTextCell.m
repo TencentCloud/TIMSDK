@@ -6,8 +6,8 @@
 //
 
 #import "TUICommonContactTextCell.h"
-#import "TUIDefine.h"
-#import "TUIThemeManager.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
 
 @implementation TUICommonContactTextCellData
 - (instancetype)init {
@@ -37,15 +37,15 @@
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     if (self = [super initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:reuseIdentifier]) {
-        self.backgroundColor = TUICoreDynamicColor(@"form_bg_color", @"#FFFFFF");
-        self.contentView.backgroundColor = TUICoreDynamicColor(@"form_bg_color", @"#FFFFFF");
+        self.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
+        self.contentView.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
         
         _keyLabel = self.textLabel;
-        _keyLabel.textColor = TUICoreDynamicColor(@"form_key_text_color", @"#444444");
+        _keyLabel.textColor = TIMCommonDynamicColor(@"form_key_text_color", @"#444444");
         _keyLabel.font = [UIFont systemFontOfSize:16.0];
         
         _valueLabel = self.detailTextLabel;
-        _valueLabel.textColor = TUICoreDynamicColor(@"form_value_text_color", @"#000000");
+        _valueLabel.textColor = TIMCommonDynamicColor(@"form_value_text_color", @"#000000");
         _valueLabel.font = [UIFont systemFontOfSize:16.0];
         
         self.selectionStyle = UITableViewCellSelectionStyleNone;

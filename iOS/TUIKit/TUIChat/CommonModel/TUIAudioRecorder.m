@@ -7,10 +7,10 @@
 
 #import <AVFoundation/AVFoundation.h>
 #import "TUIAIDenoiseSignatureManager.h"
-#import "TUICommonModel.h"
-#import "TUICore.h"
-#import "TUIDefine.h"
-#import "TUILogin.h"
+#import <TIMCommon/TIMCommonModel.h>
+#import <TUICore/TUICore.h>
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUILogin.h>
 
 @interface TUIAudioRecorder () <AVAudioRecorderDelegate, TUINotificationProtocol>
 
@@ -35,12 +35,6 @@
 }
 
 - (void)configNotify {
-    [TUICore registerEvent:TUICore_RecordAudioMessageNotify
-                    subKey:TUICore_RecordAudioMessageNotify_StartRecordAudioMessageSubKey
-                    object:self];
-    [TUICore registerEvent:TUICore_RecordAudioMessageNotify
-                    subKey:TUICore_RecordAudioMessageNotify_StopRecordAudioMessageSubKey
-                    object:self];
     [TUICore registerEvent:TUICore_RecordAudioMessageNotify
                     subKey:TUICore_RecordAudioMessageNotify_RecordAudioVoiceVolumeSubKey
                     object:self];
@@ -263,10 +257,20 @@
                         forKey:TUICore_TUIAudioMessageRecordService_StartRecordAudioMessageMethod_SdkappidKey];
     [audioRecordParam setValue:self.recordedFilePath
                         forKey:TUICore_TUIAudioMessageRecordService_StartRecordAudioMessageMethod_PathKey];
+    
+    @weakify(self)
+    void(^startCallBack)(NSInteger errorCode, NSString* errorMessage, NSDictionary *param) = ^(NSInteger errorCode, NSString* errorMessage, NSDictionary *param) {
+        @strongify(self)
+        NSString *method = param[@"method"];
+        if ([method isEqualToString:TUICore_RecordAudioMessageNotify_StartRecordAudioMessageSubKey]) {
+            [self onTUICallKitRecordStarted:errorCode];
+        }
+    };
 
     [TUICore callService:TUICore_TUIAudioMessageRecordService
                   method:TUICore_TUIAudioMessageRecordService_StartRecordAudioMessageMethod
-                   param:audioRecordParam];
+                   param:audioRecordParam
+          resultCallback:startCallBack];
 
     self.isUsingCallKitRecorder = YES;
     NSLog(@"start TUICallKit recording");
@@ -274,9 +278,20 @@
 }
 
 - (void)stopCallKitRecording {
+    @weakify(self)
+    void(^stopCallBack)(NSInteger errorCode, NSString* errorMessage, NSDictionary *param) = ^(NSInteger errorCode, NSString* errorMessage, NSDictionary *param) {
+        @strongify(self)
+        NSString *method = param[@"method"];
+        if ([method isEqualToString:TUICore_RecordAudioMessageNotify_StopRecordAudioMessageSubKey]) {
+            [self onTUICallKitRecordCompleted:errorCode];
+        }
+    };
+    
     [TUICore callService:TUICore_TUIAudioMessageRecordService
                   method:TUICore_TUIAudioMessageRecordService_StopRecordAudioMessageMethod
-                   param:nil];
+                   param:nil
+          resultCallback:stopCallBack];
+    
     NSLog(@"stop TUICallKit recording");
 }
 
@@ -290,13 +305,7 @@
             NSLog(@"TUICallKit notify param is invalid");
             return;
         }
-        if ([subKey isEqualToString:TUICore_RecordAudioMessageNotify_StartRecordAudioMessageSubKey]) {
-            NSInteger errorCode = [param[@"errorCode"] integerValue];
-            [self onTUICallKitRecordStarted:errorCode];
-        } else if ([subKey isEqualToString:TUICore_RecordAudioMessageNotify_StopRecordAudioMessageSubKey]) {
-            NSInteger errorCode = [param[@"errorCode"] integerValue];
-            [self onTUICallKitRecordCompleted:errorCode];
-        } else if ([subKey isEqualToString:TUICore_RecordAudioMessageNotify_RecordAudioVoiceVolumeSubKey]) {
+        if ([subKey isEqualToString:TUICore_RecordAudioMessageNotify_RecordAudioVoiceVolumeSubKey]) {
             NSUInteger volume = [param[@"volume"] unsignedIntegerValue];
             [self onTUICallKitVolumeChanged:volume];
         }
@@ -313,11 +322,11 @@
             break;
         }
         case TUICore_RecordAudioMessageNotifyError_StatusInCall: {
-            [TUITool makeToast:TUIKitLocalizableString(TUIKitInputRecordRejectedInCall)];
+            [TUITool makeToast:TIMCommonLocalizableString(TUIKitInputRecordRejectedInCall)];
             break;
         }
         case TUICore_RecordAudioMessageNotifyError_StatusIsAudioRecording: {
-            [TUITool makeToast:TUIKitLocalizableString(TUIKitInputRecordRejectedIsRecording)];
+            [TUITool makeToast:TIMCommonLocalizableString(TUIKitInputRecordRejectedIsRecording)];
             break;
         }
         case TUICore_RecordAudioMessageNotifyError_RequestAudioFocusFailed:

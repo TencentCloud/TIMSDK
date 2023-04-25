@@ -7,8 +7,8 @@
 
 #import "TUIMergeReplyQuoteView_Minimalist.h"
 #import "TUIMergeReplyQuoteViewData_Minimalist.h"
-#import "TUIDarkModel.h"
-#import "UIView+TUILayout.h"
+#import <TUICore/TUIDarkModel.h>
+#import <TUICore/UIView+TUILayout.h>
 
 @implementation TUIMergeReplyQuoteView_Minimalist
 

@@ -8,9 +8,9 @@
 #import "TUIContactSelectController.h"
 #import "TUICommonContactSelectCell.h"
 #import "TUIContactSelectViewDataProvider.h"
-#import "TUICore.h"
-#import "TUIDefine.h"
-#import "TUIThemeManager.h"
+#import <TUICore/TUICore.h>
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
 
 static NSString *kReuseIdentifier = @"ContactSelectCell";
 
@@ -57,7 +57,7 @@ static NSString *kReuseIdentifier = @"ContactSelectCell";
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.view.backgroundColor =  TUICoreDynamicColor(@"controller_bg_color", @"#F3F5F9");
+    self.view.backgroundColor =  TIMCommonDynamicColor(@"controller_bg_color", @"#F3F5F9");
     self.navigationController.interactivePopGestureRecognizer.enabled = YES;
 
     _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
@@ -81,9 +81,8 @@ static NSString *kReuseIdentifier = @"ContactSelectCell";
 
     UILabel *tipsLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     [_emptyView addSubview:tipsLabel];
-    tipsLabel.text = TUIKitLocalizableString(TUIKitTipsContactListNil);
-    tipsLabel.mm_sizeToFit().mm_center();
-
+    tipsLabel.text = TIMCommonLocalizableString(TUIKitTipsContactListNil);
+    tipsLabel.mm_sizeToFit().tui_mm_center();
 
     _pickerView = [[TUIContactListPicker alloc] initWithFrame:CGRectZero];
     [_pickerView setBackgroundColor:[UIColor groupTableViewBackgroundColor]];
@@ -197,7 +196,7 @@ static NSString *kReuseIdentifier = @"ContactSelectCell";
     TUICommonContactSelectCellData *data = cell.selectData;
     if (!data.isSelected) {
         if (maxSelectCount > 0 && self.selectArray.count + 1 > self.maxSelectCount) {
-            [TUITool makeToast:[NSString stringWithFormat:TUIKitLocalizableString(TUIKitTipsMostSelectTextFormat),(long)self.maxSelectCount]];
+            [TUITool makeToast:[NSString stringWithFormat:TIMCommonLocalizableString(TUIKitTipsMostSelectTextFormat),(long)self.maxSelectCount]];
             return;
         }
     }
@@ -211,14 +210,7 @@ static NSString *kReuseIdentifier = @"ContactSelectCell";
     self.pickerView.selectArray = [self.selectArray copy];
 }
 
-- (void)finishTask
-{
-    [TUICore notifyEvent:TUICore_TUIContactNotify
-                  subKey:TUICore_TUIContactNotify_SelectedContactsSubKey
-                  object:self
-                   param:@{
-                       TUICore_TUIContactNotify_SelectedContactsSubKey_ListKey : self.selectArray,
-                   }];
+- (void)finishTask {
     
     if (self.finishBlock) {
         self.finishBlock(self.selectArray);

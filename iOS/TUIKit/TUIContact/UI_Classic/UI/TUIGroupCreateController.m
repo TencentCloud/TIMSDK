@@ -7,11 +7,11 @@
 
 #import "TUIGroupCreateController.h"
 #import "TUIGroupTypeListController.h"
-#import "UIView+TUILayout.h"
-#import "TUICommonModel.h"
-#import "TUIDefine.h"
-#import "TUIThemeManager.h"
-#import "TUILogin.h"
+#import <TUICore/UIView+TUILayout.h>
+#import <TIMCommon/TIMCommonModel.h>
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
+#import <TUICore/TUILogin.h>
 
 @interface TUIGroupCreateController () <UITableViewDataSource, UITableViewDelegate,UITextFieldDelegate>
 @property (nonatomic, strong) UITableView *tableView;
@@ -53,7 +53,7 @@
 
     self.groupNameTextField = [[UITextField alloc] initWithFrame:CGRectZero];
     self.groupNameTextField.textAlignment = NSTextAlignmentRight;
-    self.groupNameTextField.placeholder = TUIKitLocalizableString(TUIKitCreatGroupNamed_Placeholder);
+    self.groupNameTextField.placeholder = TIMCommonLocalizableString(TUIKitCreatGroupNamed_Placeholder);
     self.groupNameTextField.delegate = self;
     if (IS_NOT_EMPTY_NSSTRING(self.createGroupInfo.groupName)) {
         self.groupNameTextField.text = self.createGroupInfo.groupName;
@@ -61,13 +61,13 @@
     self.groupIDTextField = [[UITextField alloc] initWithFrame:CGRectZero];
     self.groupIDTextField.textAlignment = NSTextAlignmentRight;
     self.groupIDTextField.keyboardType =  UIKeyboardTypeDefault;
-    self.groupIDTextField.placeholder = TUIKitLocalizableString(TUIKitCreatGroupID_Placeholder);
+    self.groupIDTextField.placeholder = TIMCommonLocalizableString(TUIKitCreatGroupID_Placeholder);
     self.groupIDTextField.delegate = self;
     
     [self updateRectAndTextForDescribeTextView:self.describeTextView];
     
     _titleView = [[TUINaviBarIndicatorView alloc] init];
-    [_titleView setTitle:TUIKitLocalizableString(ChatsNewGroupText)];
+    [_titleView setTitle:TIMCommonLocalizableString(ChatsNewGroupText)];
     self.navigationItem.titleView = _titleView;
     self.navigationItem.title = @"";
 
@@ -138,7 +138,7 @@
     [attributedString addAttribute:NSParagraphStyleAttributeName
                              value:paragraphStyle
                              range:NSMakeRange(0, [descStr length])];
-    NSString * inviteTipstring = TUIKitLocalizableString(TUIKitCreatGroupType_Desc_Highlight);
+    NSString * inviteTipstring = TIMCommonLocalizableString(TUIKitCreatGroupType_Desc_Highlight);
     [attributedString addAttribute:NSLinkAttributeName value:@"https://cloud.tencent.com/product/im" range:[descStr rangeOfString:inviteTipstring]];
     self.describeTextView.attributedText = attributedString;
     
@@ -205,16 +205,16 @@
     if (indexPath.section == 0) {
         if (indexPath.row == 0) {
             UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"groupName"];
-            cell.textLabel.text = TUIKitLocalizableString(TUIKitCreatGroupNamed);
+            cell.textLabel.text = TIMCommonLocalizableString(TUIKitCreatGroupNamed);
             [cell.contentView addSubview:self.groupNameTextField];
-            cell.backgroundColor = TUICoreDynamicColor(@"form_bg_color", @"#FFFFFF");
+            cell.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
             self.groupNameTextField.mm_width(cell.contentView.mm_w/2).mm_height(cell.contentView.mm_h).mm_right(16);
             self.groupNameTextField.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
             return cell;
         } else {
             UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"groupID"];
-            cell.backgroundColor = TUICoreDynamicColor(@"form_bg_color", @"#FFFFFF");
-            cell.textLabel.text = TUIKitLocalizableString(TUIKitCreatGroupID);
+            cell.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
+            cell.textLabel.text = TIMCommonLocalizableString(TUIKitCreatGroupID);
             [cell.contentView addSubview:self.groupIDTextField];
             self.groupIDTextField.mm_width(cell.contentView.mm_w/2).mm_height(cell.contentView.mm_h).mm_right(16);
             self.groupIDTextField.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
@@ -223,9 +223,9 @@
     }
     else if (indexPath.section == 1) {
         UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"GroupType"];
-        cell.backgroundColor = TUICoreDynamicColor(@"form_bg_color", @"#FFFFFF");
+        cell.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        cell.textLabel.text = TUIKitLocalizableString(TUIKitCreatGroupType);
+        cell.textLabel.text = TIMCommonLocalizableString(TUIKitCreatGroupType);
         [self.class getfomatDescribeType:self.createGroupInfo.groupType completion:^(NSString *groupTypeStr, NSString *groupTypeDescribeStr) {
             cell.detailTextLabel.text = groupTypeStr;
         }];
@@ -235,9 +235,9 @@
     else if (indexPath.section == 2) {
     
         UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"GroupType"];
-        cell.backgroundColor = TUICoreDynamicColor(@"form_bg_color", @"#FFFFFF");
+        cell.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        cell.textLabel.text = TUIKitLocalizableString(TUIKitCreatGroupAvatar);
+        cell.textLabel.text = TIMCommonLocalizableString(TUIKitCreatGroupAvatar);
         UIImageView *headImage = [[UIImageView alloc] initWithImage:DefaultGroupAvatarImageByGroupType(self.createGroupInfo.groupType)];
         [cell.contentView addSubview:headImage];
         if (TUIConfig.defaultConfig.enableGroupGridAvatar && self.cacheGroupGridAvatarImage) {
@@ -318,20 +318,20 @@
     }
     NSString *desc = @"";
     if ([groupType isEqualToString:@"Work"]) {
-        desc = [NSString stringWithFormat:@"%@\n%@",TUIKitLocalizableString(TUIKitCreatGroupType_Work_Desc) ,TUIKitLocalizableString(TUIKitCreatGroupType_See_Doc)];
-        completion(TUIKitLocalizableString(TUIKitCreatGroupType_Work),desc);
+        desc = [NSString stringWithFormat:@"%@\n%@",TIMCommonLocalizableString(TUIKitCreatGroupType_Work_Desc) ,TIMCommonLocalizableString(TUIKitCreatGroupType_See_Doc)];
+        completion(TIMCommonLocalizableString(TUIKitCreatGroupType_Work),desc);
     }
     else if ([groupType isEqualToString:@"Public"]) {
-        desc = [NSString stringWithFormat:@"%@\n%@",TUIKitLocalizableString(TUIKitCreatGroupType_Public_Desc) ,TUIKitLocalizableString(TUIKitCreatGroupType_See_Doc)];
-        completion(TUIKitLocalizableString(TUIKitCreatGroupType_Public),desc);
+        desc = [NSString stringWithFormat:@"%@\n%@",TIMCommonLocalizableString(TUIKitCreatGroupType_Public_Desc) ,TIMCommonLocalizableString(TUIKitCreatGroupType_See_Doc)];
+        completion(TIMCommonLocalizableString(TUIKitCreatGroupType_Public),desc);
     }
     else if ([groupType isEqualToString:@"Meeting"]) {
-        desc = [NSString stringWithFormat:@"%@\n%@",TUIKitLocalizableString(TUIKitCreatGroupType_Meeting_Desc) ,TUIKitLocalizableString(TUIKitCreatGroupType_See_Doc)];
-        completion(TUIKitLocalizableString(TUIKitCreatGroupType_Meeting),desc);
+        desc = [NSString stringWithFormat:@"%@\n%@",TIMCommonLocalizableString(TUIKitCreatGroupType_Meeting_Desc) ,TIMCommonLocalizableString(TUIKitCreatGroupType_See_Doc)];
+        completion(TIMCommonLocalizableString(TUIKitCreatGroupType_Meeting),desc);
     }
     else if ([groupType isEqualToString:@"Community"]) {
-        desc = [NSString stringWithFormat:@"%@\n%@",TUIKitLocalizableString(TUIKitCreatGroupType_Community_Desc) ,TUIKitLocalizableString(TUIKitCreatGroupType_See_Doc)];
-        completion(TUIKitLocalizableString(TUIKitCreatGroupType_Community),desc);
+        desc = [NSString stringWithFormat:@"%@\n%@",TIMCommonLocalizableString(TUIKitCreatGroupType_Community_Desc) ,TIMCommonLocalizableString(TUIKitCreatGroupType_See_Doc)];
+        completion(TIMCommonLocalizableString(TUIKitCreatGroupType_Community),desc);
     }
     else {
         completion(groupType,groupType);
@@ -386,15 +386,15 @@
         @strongify(self)
         NSString *content = nil;
         if([info.groupType isEqualToString:GroupType_Work]) {
-            content = TUIKitLocalizableString(ChatsCreatePrivateGroupTips);
+            content = TIMCommonLocalizableString(ChatsCreatePrivateGroupTips);
         } else if([info.groupType isEqualToString:GroupType_Public]){
-            content = TUIKitLocalizableString(ChatsCreateGroupTips);
+            content = TIMCommonLocalizableString(ChatsCreateGroupTips);
         } else if([info.groupType isEqualToString:GroupType_Meeting]) {
-            content = TUIKitLocalizableString(ChatsCreateChatRoomTips);
+            content = TIMCommonLocalizableString(ChatsCreateChatRoomTips);
         } else if([info.groupType isEqualToString:GroupType_Community]) {
-            content = TUIKitLocalizableString(ChatsCreateCommunityTips);
+            content = TIMCommonLocalizableString(ChatsCreateCommunityTips);
         } else {
-            content = TUIKitLocalizableString(ChatsCreateDefaultTips);
+            content = TIMCommonLocalizableString(ChatsCreateDefaultTips);
         }
         NSDictionary *dic = @{@"version": @(GroupCreate_Version),
                               BussinessID: BussinessID_GroupCreate,
@@ -414,7 +414,7 @@
     } fail:^(int code, NSString *msg) {
         @strongify(self)
         if (code == ERR_SDK_INTERFACE_NOT_SUPPORT) {
-            [TUITool postUnsupportNotificationOfService:TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceCommunity) serviceDesc:TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceCommunityDesc) debugOnly:YES];
+            [TUITool postUnsupportNotificationOfService:TIMCommonLocalizableString(TUIKitErrorUnsupportIntefaceCommunity) serviceDesc:TIMCommonLocalizableString(TUIKitErrorUnsupportIntefaceCommunityDesc) debugOnly:YES];
         }
         else {
             NSString *toastMsg = nil;

@@ -6,9 +6,9 @@
 //
 
 #import "TUIVoiceReplyQuoteViewData.h"
-#import "NSString+TUIEmoji.h"
+#import <TIMCommon/NSString+TUIEmoji.h>
 #import "TUIVoiceMessageCellData.h"
-#import "TUIThemeManager.h"
+#import <TUICore/TUIThemeManager.h>
 @implementation TUIVoiceReplyQuoteViewData
 
 + (instancetype)getReplyQuoteViewData:(TUIMessageCellData *)originCellData

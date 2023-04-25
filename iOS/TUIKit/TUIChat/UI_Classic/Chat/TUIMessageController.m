@@ -6,12 +6,12 @@
 #import "TUIReplyMessageCell.h"
 #import "TUIReplyMessageCellData.h"
 #import "TUIReferenceMessageCell.h"
-#import "TUIGlobalization.h"
-#import "TUIThemeManager.h"
+#import <TUICore/TUIGlobalization.h>
+#import <TUICore/TUIThemeManager.h>
 #import "TUIMessageSearchDataProvider.h"
-#import "UIView+TUILayout.h"
+#import <TUICore/UIView+TUILayout.h>
 #import "ReactiveObjC.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 #import "TUIChatModifyMessageHelper.h"
 #import "TUIChatConfig.h"
 
@@ -53,6 +53,7 @@
 {
     [TUIChatSmallTongueManager removeTongue];
     [NSNotificationCenter.defaultCenter removeObserver:self];
+    NSLog(@"%s dealloc", __FUNCTION__);
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -408,19 +409,21 @@
         msgAbstract = cellData.msgAbstract;
     }
    
+    @weakify(self);
     [(TUIMessageSearchDataProvider *)self.messageDataProvider findMessages:@[originMsgID?:@""] callback:^(BOOL success, NSString * _Nonnull desc, NSArray<V2TIMMessage *> * _Nonnull msgs) {
+        @strongify(self);
         if (!success) {
-            [TUITool makeToast:TUIKitLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
+            [TUITool makeToast:TIMCommonLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
             return;
         }
         V2TIMMessage *message = msgs.firstObject;
         if (message == nil) {
-            [TUITool makeToast:TUIKitLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
+            [TUITool makeToast:TIMCommonLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
             return;
         }
         
         if (message.status == V2TIM_MSG_STATUS_HAS_DELETED || message.status == V2TIM_MSG_STATUS_LOCAL_REVOKED) {
-            [TUITool makeToast:TUIKitLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
+            [TUITool makeToast:TIMCommonLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
             return;
         }
         

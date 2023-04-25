@@ -6,8 +6,8 @@
 //
 
 #import "TUICommonContactSwitchCell.h"
-#import "TUIDefine.h"
-#import "TUIThemeManager.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
 
 @implementation TUICommonContactSwitchCellData
 
@@ -45,13 +45,13 @@
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])
     {
         _titleLabel = [[UILabel alloc] init];
-        _titleLabel.textColor = TUICoreDynamicColor(@"form_key_text_color", @"#444444");
+        _titleLabel.textColor = TIMCommonDynamicColor(@"form_key_text_color", @"#444444");
         _titleLabel.font = [UIFont systemFontOfSize:16];
         _titleLabel.textAlignment = NSTextAlignmentLeft;
         [self.contentView addSubview:_titleLabel];
         
         _descLabel = [[UILabel alloc] init];
-        _descLabel.textColor = TUICoreDynamicColor(@"group_modify_desc_color", @"#888888");
+        _descLabel.textColor = TIMCommonDynamicColor(@"group_modify_desc_color", @"#888888");
         _descLabel.font = [UIFont systemFontOfSize:12];
         _descLabel.numberOfLines = 0;
         _descLabel.textAlignment = NSTextAlignmentLeft;
@@ -60,7 +60,7 @@
         
         _switcher = [[UISwitch alloc] init];
         //将开关开启时的颜色改为蓝色
-        _switcher.onTintColor = TUICoreDynamicColor(@"common_switch_on_color", @"#147AFF");
+        _switcher.onTintColor = TIMCommonDynamicColor(@"common_switch_on_color", @"#147AFF");
         self.accessoryView = _switcher;
         [self.contentView addSubview:_switcher];
         [_switcher addTarget:self action:@selector(switchClick) forControlEvents:UIControlEventValueChanged];

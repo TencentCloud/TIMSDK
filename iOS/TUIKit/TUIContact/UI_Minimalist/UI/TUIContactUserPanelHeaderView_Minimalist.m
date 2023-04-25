@@ -6,6 +6,7 @@
 //
 
 #import "TUIContactUserPanelHeaderView_Minimalist.h"
+#import "TUIDefine.h"
 
 @implementation TUIContactPanelCell_Minimalist
 {
@@ -58,7 +59,7 @@
 }
 - (void)fillWithData:(TUICommonContactSelectCellData *)model
 {
-    [_imageView sd_setImageWithURL:model.avatarUrl placeholderImage:[UIImage imageNamed:TUICoreImagePath(@"default_c2c_head")] options:SDWebImageHighPriority];
+    [_imageView sd_setImageWithURL:model.avatarUrl placeholderImage:[UIImage imageNamed:TIMCommonImagePath(@"default_c2c_head")] options:SDWebImageHighPriority];
     _nameLabel.text = model.title;
 
 }

@@ -6,8 +6,8 @@
 //
 
 #import "TUIMergeReplyQuoteView.h"
-#import "UIView+TUILayout.h"
-#import "TUIDarkModel.h"
+#import <TUICore/UIView+TUILayout.h>
+#import <TUICore/TUIDarkModel.h>
 #import "TUIMergeReplyQuoteViewData.h"
 
 @implementation TUIMergeReplyQuoteView

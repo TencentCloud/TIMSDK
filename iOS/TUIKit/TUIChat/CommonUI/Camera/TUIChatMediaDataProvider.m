@@ -14,8 +14,8 @@
 #import <SDWebImage/SDWebImage.h>
 
 #import "TUICameraViewController.h"
-#import "TUIDefine.h"
-#import "TUITool.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUITool.h>
 #import "TUIUserAuthorizationCenter.h"
 
 @interface TUIChatMediaDataProvider () <PHPickerViewControllerDelegate,

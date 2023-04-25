@@ -6,7 +6,7 @@
 //
 
 #import "TUIGroupManageDataProvider.h"
-#import "TUIGlobalization.h"
+#import <TUICore/TUIGlobalization.h>
 #import "TUISelectGroupMemberCell.h"
 #import "TUIAddCellData.h"
 #import "TUIMemberInfoCellData.h"
@@ -146,7 +146,7 @@
     
     TUIMemberInfoCellData *add = [[TUIMemberInfoCellData alloc] init];
     add.avatar = TUIGroupCommonBundleImage(@"icon_add");
-    add.name = TUIKitLocalizableString(TUIKitGroupAddShutupMember);
+    add.name = TIMCommonLocalizableString(TUIKitGroupAddShutupMember);
     add.style = TUIMemberInfoCellStyleAdd;
     [self.muteMembersDataArray addObject:add];
     
@@ -224,14 +224,14 @@
     [self.groupInfoDatasArray removeAllObjects];
 
     TUICommonTextCellData *adminSetting = [[TUICommonTextCellData alloc] init];
-    adminSetting.key = TUIKitLocalizableString(TUIKitGroupManageAdminSetting);
+    adminSetting.key = TIMCommonLocalizableString(TUIKitGroupManageAdminSetting);
     adminSetting.value = @"";
     adminSetting.showAccessory = YES;
     adminSetting.cselector = @selector(onSettingAdmin:);
     [self.groupInfoDatasArray addObject:adminSetting];
     
     TUICommonSwitchCellData *shutupAll = [[TUICommonSwitchCellData alloc] init];
-    shutupAll.title = TUIKitLocalizableString(TUIKitGroupManageShutAll);
+    shutupAll.title = TIMCommonLocalizableString(TUIKitGroupManageShutAll);
     shutupAll.on = groupInfo.allMuted;
     shutupAll.cswitchSelector = @selector(onMutedAll:);
     [self.groupInfoDatasArray addObject:shutupAll];

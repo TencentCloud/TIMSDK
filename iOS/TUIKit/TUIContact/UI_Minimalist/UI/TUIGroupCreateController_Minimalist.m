@@ -7,12 +7,12 @@
 
 #import "TUIGroupCreateController_Minimalist.h"
 #import "TUIGroupTypeListController_Minimalist.h"
-#import "UIView+TUILayout.h"
-#import "TUICommonModel.h"
-#import "TUIDefine.h"
-#import "TUIThemeManager.h"
-#import "TUILogin.h"
-#import "TUIContactFloatController.h"
+#import <TUICore/UIView+TUILayout.h>
+#import <TIMCommon/TIMCommonModel.h>
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
+#import <TUICore/TUILogin.h>
+#import "TUIFloatViewController.h"
 #import "TUIContactUserPanelHeaderView_Minimalist.h"
 
 @interface TUIGroupPortraitSelectAvatarCollectionCell_Minimalist : UICollectionViewCell
@@ -67,7 +67,7 @@
 
 - (void)updateSelectedUI {
     if (self.cardItem.isSelect){
-        self.imageView.layer.borderColor = TUICoreDynamicColor(@"", @"#006EFF").CGColor;
+        self.imageView.layer.borderColor = TIMCommonDynamicColor(@"", @"#006EFF").CGColor;
         self.selectedView.hidden = NO;
     }
     else {
@@ -87,7 +87,7 @@
     }
     else {
         [self.imageView sd_setImageWithURL:[NSURL URLWithString:self.cardItem.posterUrlStr]
-                          placeholderImage:TUICoreBundleThemeImage(@"default_c2c_head_img", @"default_c2c_head_img")];
+                          placeholderImage:TIMCommonBundleThemeImage(@"default_c2c_head_img", @"default_c2c_head_img")];
     }
 }
 - (void)updateMaskView {
@@ -95,7 +95,7 @@
         self.maskView.hidden = NO;
         self.maskView.frame = CGRectMake(0, self.imageView.frame.size.height - 28, self.imageView.frame.size.width, 28);
         [self.descLabel sizeToFit];
-        self.descLabel.mm_center();
+        self.descLabel.tui_mm_center();
     }
     else {
         self.maskView.hidden = YES;
@@ -113,12 +113,12 @@
     self.maskView.backgroundColor = [UIColor tui_colorWithHex:@"cccccc"];
     [self.imageView addSubview:self.maskView];
     self.descLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    self.descLabel.text = TUIKitLocalizableString(TUIKitDefaultBackground);
+    self.descLabel.text = TIMCommonLocalizableString(TUIKitDefaultBackground);
     self.descLabel.textColor = [UIColor whiteColor];
     self.descLabel.font = [UIFont systemFontOfSize:13];
     [self.maskView addSubview:self.descLabel];
     [self.descLabel sizeToFit];
-    self.descLabel.mm_center();
+    self.descLabel.tui_mm_center();
 }
 
 - (void)setCardItem:(TUISelectAvatarCardItem *)cardItem {
@@ -129,7 +129,7 @@
     
     if (!_selectedView) {
         _selectedView = [[UIImageView alloc]initWithFrame:CGRectZero];
-        _selectedView.image = [UIImage imageNamed:TUICoreImagePath(@"icon_avatar_selected")];
+        _selectedView.image = [UIImage imageNamed:TIMCommonImagePath(@"icon_avatar_selected")];
     }
     return _selectedView;
 }
@@ -232,7 +232,7 @@ static NSString * const reuseIdentifier = @"TUISelectAvatarCollectionCell";
 - (void)setCurrentSelectCardItem:(TUISelectAvatarCardItem *)currentSelectCardItem {
     _currentSelectCardItem = currentSelectCardItem;
     if (_currentSelectCardItem) {
-        [self.rightButton setTitleColor:TUICoreDynamicColor(@"", @"#006EFF") forState:UIControlStateNormal];
+        [self.rightButton setTitleColor:TIMCommonDynamicColor(@"", @"#006EFF") forState:UIControlStateNormal];
     }
     else {
         [self.rightButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
@@ -393,7 +393,7 @@ static NSString * const reuseIdentifier = @"TUISelectAvatarCollectionCell";
     self.groupNameTextField = [[UITextField alloc] initWithFrame:CGRectZero];
     self.groupNameTextField.textAlignment = NSTextAlignmentLeft;
     self.groupNameTextField.attributedText = [[NSAttributedString alloc] initWithString:@"" attributes:attributes];
-    self.groupNameTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:TUIKitLocalizableString(TUIKitCreatGroupNamed_Placeholder) attributes:attributesPlaceholder];
+    self.groupNameTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:TIMCommonLocalizableString(TUIKitCreatGroupNamed_Placeholder) attributes:attributesPlaceholder];
     self.groupNameTextField.delegate = self;
     
     if (IS_NOT_EMPTY_NSSTRING(self.createGroupInfo.groupName)) {
@@ -403,13 +403,13 @@ static NSString * const reuseIdentifier = @"TUISelectAvatarCollectionCell";
     self.groupIDTextField.textAlignment = NSTextAlignmentLeft;
     self.groupIDTextField.keyboardType =  UIKeyboardTypeDefault;
     self.groupIDTextField.attributedText = [[NSAttributedString alloc] initWithString:@"" attributes:attributes];
-    self.groupIDTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:TUIKitLocalizableString(TUIKitCreatGroupID_Placeholder) attributes:attributesPlaceholder];
+    self.groupIDTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:TIMCommonLocalizableString(TUIKitCreatGroupID_Placeholder) attributes:attributesPlaceholder];
     self.groupIDTextField.delegate = self;
     
     [self updateRectAndTextForDescribeTextView:self.describeTextView];
     
     _titleView = [[TUINaviBarIndicatorView alloc] init];
-    [_titleView setTitle:TUIKitLocalizableString(ChatsNewGroupText)];
+    [_titleView setTitle:TIMCommonLocalizableString(ChatsNewGroupText)];
     self.navigationItem.titleView = _titleView;
     self.navigationItem.title = @"";
 
@@ -488,7 +488,7 @@ static NSString * const reuseIdentifier = @"TUISelectAvatarCollectionCell";
     [attributedString addAttribute:NSParagraphStyleAttributeName
                              value:paragraphStyle
                              range:NSMakeRange(0, [descStr length])];
-    NSString * inviteTipstring = TUIKitLocalizableString(TUIKitCreatGroupType_Desc_Highlight);
+    NSString * inviteTipstring = TIMCommonLocalizableString(TUIKitCreatGroupType_Desc_Highlight);
     [attributedString addAttribute:NSLinkAttributeName value:@"https://cloud.tencent.com/product/im" range:[descStr rangeOfString:inviteTipstring]];
     self.describeTextView.attributedText = attributedString;
     
@@ -547,10 +547,10 @@ static NSString * const reuseIdentifier = @"TUISelectAvatarCollectionCell";
         [view addSubview: sectionTitleLabel];
         sectionTitleLabel.font = [UIFont boldSystemFontOfSize:kScale390(16)];
         if(section == 2) {
-            sectionTitleLabel.text = TUIKitLocalizableString(TUIKitCreatGroupAvatar);
+            sectionTitleLabel.text = TIMCommonLocalizableString(TUIKitCreatGroupAvatar);
         }
         else if (section == 3) {
-            sectionTitleLabel.text = TUIKitLocalizableString(TUIKitCreateMemebers);
+            sectionTitleLabel.text = TIMCommonLocalizableString(TUIKitCreateMemebers);
         }
         
         [sectionTitleLabel sizeToFit];
@@ -585,12 +585,12 @@ static NSString * const reuseIdentifier = @"TUISelectAvatarCollectionCell";
         if (indexPath.row == 0) {
             UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"groupName"];
             [cell.contentView addSubview:self.groupNameTextField];
-            cell.backgroundColor = TUICoreDynamicColor(@"form_bg_color", @"#FFFFFF");
+            cell.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
             self.groupNameTextField.mm_width(cell.contentView.mm_w).mm_height(cell.contentView.mm_h).mm_left(kScale390(16));
             return cell;
         } else {
             UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"groupID"];
-            cell.backgroundColor = TUICoreDynamicColor(@"form_bg_color", @"#FFFFFF");
+            cell.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
             [cell.contentView addSubview:self.groupIDTextField];
             self.groupIDTextField.mm_width(cell.contentView.mm_w).mm_height(cell.contentView.mm_h).mm_left(kScale390(16));
             return cell;
@@ -598,12 +598,12 @@ static NSString * const reuseIdentifier = @"TUISelectAvatarCollectionCell";
     }
     else if (indexPath.section == 1) {
         UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"GroupType"];
-        cell.backgroundColor = TUICoreDynamicColor(@"form_bg_color", @"#FFFFFF");
+        cell.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         UILabel *leftTextLabel = [[UILabel alloc] init];
         [cell.contentView addSubview:leftTextLabel];
         leftTextLabel.mm_width(cell.contentView.mm_w).mm_height(cell.contentView.mm_h).mm_left(kScale390(16));
-        leftTextLabel.text = TUIKitLocalizableString(TUIKitCreatGroupType);
+        leftTextLabel.text = TIMCommonLocalizableString(TUIKitCreatGroupType);
         leftTextLabel.textColor = [UIColor grayColor];
         leftTextLabel.font = [UIFont systemFontOfSize:kScale390(16)];
         cell.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
@@ -658,9 +658,9 @@ static NSString * const reuseIdentifier = @"TUISelectAvatarCollectionCell";
         TUIGroupTypeListController_Minimalist *vc = [[TUIGroupTypeListController_Minimalist alloc] init];
         vc.cacheGroupType = self.createGroupInfo.groupType;
         vc.title = @"";
-        TUIContactFloatController *floatVC = [[TUIContactFloatController alloc] init];
+        TUIFloatViewController *floatVC = [[TUIFloatViewController alloc] init];
         [floatVC appendChildViewController:(id)vc topMargin:kScale390(87.5)];
-        [floatVC.topGestureView setTitleText:TUIKitLocalizableString(TUIKitGroupProfileType) subTitleText:@"" leftBtnText:TUIKitLocalizableString(TUIKitCreateCancel) rightBtnText:@""];
+        [floatVC.topGestureView setTitleText:TIMCommonLocalizableString(TUIKitGroupProfileType) subTitleText:@"" leftBtnText:TIMCommonLocalizableString(TUIKitCreateCancel) rightBtnText:@""];
         floatVC.topGestureView.rightButton.hidden = YES;
         floatVC.topGestureView.subTitleLabel.hidden = YES;
         [self presentViewController:floatVC animated:YES completion:nil];
@@ -729,20 +729,20 @@ static NSString * const reuseIdentifier = @"TUISelectAvatarCollectionCell";
     }
     NSString *desc = @"";
     if ([groupType isEqualToString:@"Work"]) {
-        desc = [NSString stringWithFormat:@"%@\n%@",TUIKitLocalizableString(TUIKitCreatGroupType_Work_Desc) ,TUIKitLocalizableString(TUIKitCreatGroupType_See_Doc)];
-        completion(TUIKitLocalizableString(TUIKitCreatGroupType_Work),desc);
+        desc = [NSString stringWithFormat:@"%@\n%@",TIMCommonLocalizableString(TUIKitCreatGroupType_Work_Desc) ,TIMCommonLocalizableString(TUIKitCreatGroupType_See_Doc)];
+        completion(TIMCommonLocalizableString(TUIKitCreatGroupType_Work),desc);
     }
     else if ([groupType isEqualToString:@"Public"]) {
-        desc = [NSString stringWithFormat:@"%@\n%@",TUIKitLocalizableString(TUIKitCreatGroupType_Public_Desc) ,TUIKitLocalizableString(TUIKitCreatGroupType_See_Doc)];
-        completion(TUIKitLocalizableString(TUIKitCreatGroupType_Public),desc);
+        desc = [NSString stringWithFormat:@"%@\n%@",TIMCommonLocalizableString(TUIKitCreatGroupType_Public_Desc) ,TIMCommonLocalizableString(TUIKitCreatGroupType_See_Doc)];
+        completion(TIMCommonLocalizableString(TUIKitCreatGroupType_Public),desc);
     }
     else if ([groupType isEqualToString:@"Meeting"]) {
-        desc = [NSString stringWithFormat:@"%@\n%@",TUIKitLocalizableString(TUIKitCreatGroupType_Meeting_Desc) ,TUIKitLocalizableString(TUIKitCreatGroupType_See_Doc)];
-        completion(TUIKitLocalizableString(TUIKitCreatGroupType_Meeting),desc);
+        desc = [NSString stringWithFormat:@"%@\n%@",TIMCommonLocalizableString(TUIKitCreatGroupType_Meeting_Desc) ,TIMCommonLocalizableString(TUIKitCreatGroupType_See_Doc)];
+        completion(TIMCommonLocalizableString(TUIKitCreatGroupType_Meeting),desc);
     }
     else if ([groupType isEqualToString:@"Community"]) {
-        desc = [NSString stringWithFormat:@"%@\n%@",TUIKitLocalizableString(TUIKitCreatGroupType_Community_Desc) ,TUIKitLocalizableString(TUIKitCreatGroupType_See_Doc)];
-        completion(TUIKitLocalizableString(TUIKitCreatGroupType_Community),desc);
+        desc = [NSString stringWithFormat:@"%@\n%@",TIMCommonLocalizableString(TUIKitCreatGroupType_Community_Desc) ,TIMCommonLocalizableString(TUIKitCreatGroupType_See_Doc)];
+        completion(TIMCommonLocalizableString(TUIKitCreatGroupType_Community),desc);
     }
     else {
         completion(groupType,groupType);
@@ -798,15 +798,15 @@ static NSString * const reuseIdentifier = @"TUISelectAvatarCollectionCell";
         @strongify(self)
         NSString *content = nil;
         if([info.groupType isEqualToString:GroupType_Work]) {
-            content = TUIKitLocalizableString(ChatsCreatePrivateGroupTips);
+            content = TIMCommonLocalizableString(ChatsCreatePrivateGroupTips);
         } else if([info.groupType isEqualToString:GroupType_Public]){
-            content = TUIKitLocalizableString(ChatsCreateGroupTips);
+            content = TIMCommonLocalizableString(ChatsCreateGroupTips);
         } else if([info.groupType isEqualToString:GroupType_Meeting]) {
-            content = TUIKitLocalizableString(ChatsCreateChatRoomTips);
+            content = TIMCommonLocalizableString(ChatsCreateChatRoomTips);
         } else if([info.groupType isEqualToString:GroupType_Community]) {
-            content = TUIKitLocalizableString(ChatsCreateCommunityTips);
+            content = TIMCommonLocalizableString(ChatsCreateCommunityTips);
         } else {
-            content = TUIKitLocalizableString(ChatsCreateDefaultTips);
+            content = TIMCommonLocalizableString(ChatsCreateDefaultTips);
         }
         NSDictionary *dic = @{@"version": @(GroupCreate_Version),
                               BussinessID: BussinessID_GroupCreate,
@@ -826,7 +826,7 @@ static NSString * const reuseIdentifier = @"TUISelectAvatarCollectionCell";
     } fail:^(int code, NSString *msg) {
         @strongify(self)
         if (code == ERR_SDK_INTERFACE_NOT_SUPPORT) {
-            [TUITool postUnsupportNotificationOfService:TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceCommunity) serviceDesc:TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceCommunityDesc) debugOnly:YES];
+            [TUITool postUnsupportNotificationOfService:TIMCommonLocalizableString(TUIKitErrorUnsupportIntefaceCommunity) serviceDesc:TIMCommonLocalizableString(TUIKitErrorUnsupportIntefaceCommunityDesc) debugOnly:YES];
         }
         else {
             NSString *toastMsg = nil;

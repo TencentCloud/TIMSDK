@@ -6,7 +6,7 @@
 //
 
 #import "TUIBlackListViewDataProvider.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 
 @interface TUIBlackListViewDataProvider()
 @property NSArray<TUICommonContactCellData *> *blackListData;

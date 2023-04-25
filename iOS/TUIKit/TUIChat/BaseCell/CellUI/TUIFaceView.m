@@ -7,9 +7,9 @@
 //
 
 #import "TUIFaceView.h"
-#import "TUICommonModel.h"
-#import "TUIDefine.h"
-#import "TUIThemeManager.h"
+#import <TIMCommon/TIMCommonModel.h>
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
 
 @interface TUIFaceView () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property (nonatomic, strong) NSMutableArray *sectionIndexInGroup;
@@ -55,7 +55,7 @@
     [self addSubview:_faceCollectionView];
 
     _lineView = [[UIView alloc] init];
-    _lineView.backgroundColor = TUICoreDynamicColor(@"separator_color", @"#DBDBDB");
+    _lineView.backgroundColor = TIMCommonDynamicColor(@"separator_color", @"#DBDBDB");
 
     _pageControl = [[UIPageControl alloc] init];
     _pageControl.currentPageIndicatorTintColor = TUIChatDynamicColor(@"chat_face_page_control_current_color", @"#7D7D7D");

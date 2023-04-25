@@ -6,8 +6,8 @@
 //
 
 #import "TUIChatSmallTongueView.h"
-#import "TUIThemeManager.h"
-#import "TUIDarkModel.h"
+#import <TUICore/TUIThemeManager.h>
+#import <TUICore/TUIDarkModel.h>
 
 #define TongueHeight 35.f
 #define TongueImageWidth 12.f
@@ -92,9 +92,9 @@
     static NSMutableDictionary *titleCacheFormat;
     if (titleCacheFormat == nil) {
         titleCacheFormat = [NSMutableDictionary dictionary];
-        [titleCacheFormat setObject:TUIKitLocalizableString(TUIKitChatBackToLatestLocation) forKey:@(TUIChatSmallTongueType_ScrollToBoom)];
-        [titleCacheFormat setObject:TUIKitLocalizableString(TUIKitChatNewMessages) forKey:@(TUIChatSmallTongueType_ReceiveNewMsg)];
-        [titleCacheFormat setObject:TUIKitLocalizableString(TUIKitChatTipsAtMe) forKey:@(TUIChatSmallTongueType_SomeoneAtMe)];
+        [titleCacheFormat setObject:TIMCommonLocalizableString(TUIKitChatBackToLatestLocation) forKey:@(TUIChatSmallTongueType_ScrollToBoom)];
+        [titleCacheFormat setObject:TIMCommonLocalizableString(TUIKitChatNewMessages) forKey:@(TUIChatSmallTongueType_ReceiveNewMsg)];
+        [titleCacheFormat setObject:TIMCommonLocalizableString(TUIKitChatTipsAtMe) forKey:@(TUIChatSmallTongueType_SomeoneAtMe)];
     }
     
     if (tongue.type == TUIChatSmallTongueType_ReceiveNewMsg) {

@@ -5,7 +5,7 @@
 //  Created by xia on 2022/6/10.
 //
 
-#import "TUIBubbleMessageCell.h"
+#import <TIMCommon/TUIBubbleMessageCell.h>
 #import "TUIEvaluationCellData.h"
 
 NS_ASSUME_NONNULL_BEGIN

@@ -1,4 +1,4 @@
-#import "TUISystemMessageCell.h"
+#import <TIMCommon/TUISystemMessageCell.h>
 #import "TUIJoinGroupMessageCellData_Minimalist.h"
 NS_ASSUME_NONNULL_BEGIN
 

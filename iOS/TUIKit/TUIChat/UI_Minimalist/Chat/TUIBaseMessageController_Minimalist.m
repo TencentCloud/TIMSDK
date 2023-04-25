@@ -8,7 +8,7 @@
 
 #import "TUIBaseMessageController_Minimalist.h"
 #import "TUITextMessageCell_Minimalist.h"
-#import "TUISystemMessageCell.h"
+#import <TIMCommon/TUISystemMessageCell.h>
 #import "TUIVoiceMessageCell_Minimalist.h"
 #import "TUIImageMessageCell_Minimalist.h"
 #import "TUIFaceMessageCell_Minimalist.h"
@@ -28,13 +28,13 @@
 #import "TUIChatDataProvider_Minimalist.h"
 #import "TUIChatConversationModel.h"
 #import "TUIChatPopMenu.h"
-#import "TUIDefine.h"
-#import "TUIConfig.h"
-#import "TUITool.h"
-#import "TUICore.h"
-#import "TUILogin.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TIMCommon/TIMConfig.h>
+#import <TUICore/TUITool.h>
+#import <TUICore/TUICore.h>
+#import <TUICore/TUILogin.h>
 #import <UIKit/UIWindow.h>
-#import "TUIThemeManager.h"
+#import <TUICore/TUIThemeManager.h>
 #import "TUIMessageReadViewController_Minimalist.h"
 #import "TUIRepliesDetailViewController_Minimalist.h"
 #import "TUIOrderCell_Minimalist.h"
@@ -42,11 +42,15 @@
 #import "TUIChatPopContextController.h"
 #import "TUIMessageProgressManager.h"
 #import "TUIChatCallingDataProvider.h"
+#import <TIMCommon/TIMPopActionProtocol.h>
+
 
 @interface TUIBaseMessageController_Minimalist () <TUIMessageCellDelegate,
 TUIJoinGroupMessageCellDelegate_Minimalist,
 TUIMessageBaseDataProviderDataSource,
-TUIMessageProgressManagerDelegate>
+TUIMessageProgressManagerDelegate,
+TIMPopActionProtocol, 
+TUINotificationProtocol>
 
 @property (nonatomic, strong) TUIMessageDataProvider_Minimalist *messageDataProvider;
 @property (nonatomic, strong) TUIMessageCellData *menuUIMsg;
@@ -56,6 +60,7 @@ TUIMessageProgressManagerDelegate>
 @property (nonatomic, assign) BOOL isActive;
 @property (nonatomic, assign) BOOL showCheckBox;
 @property (nonatomic, assign) BOOL scrollingTriggeredByUser;
+@property (nonatomic, assign) BOOL isAutoScrolledToBottom;
 @property (nonatomic, strong) TUIChatPopContextController * popAlertController;
 @end
 
@@ -69,13 +74,16 @@ TUIMessageProgressManagerDelegate>
     self.isActive = YES;
     [TUITool addUnsupportNotificationInVC:self];
     [TUIMessageProgressManager.shareManager addDelegate:self];
+    
+    [TUICore registerEvent:TUICore_TUITranslationNotify subKey:TUICore_TUITranslationNotify_WillForwardTranslationSubKey object:self];
+    [TUICore registerEvent:TUICore_TUITranslationNotify subKey:TUICore_TUITranslationNotify_DidChangeTranslationSubKey object:self];
 }
 
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [TUIMessageProgressManager.shareManager removeDelegate:self];
-
+    [TUICore unRegisterEventByObject:self];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -204,21 +212,6 @@ TUIMessageProgressManagerDelegate>
     [self.tableView layoutIfNeeded];
 }
 
-- (void)reloadCellOfMessage:(NSString *)messageID {
-    NSIndexPath *indexPath = [self indexPathOfMessage:messageID];
-    
-    // Disable animation when loading to avoid cell jumping.
-    [self reloadCellOfIndexPath:indexPath];
-}
-
-- (void)reloadCellOfIndexPath:(NSIndexPath *)indexPath {
-    // Disable animation when loading to avoid cell jumping
-    [UIView performWithoutAnimation:^{
-        [self.tableView reloadRowsAtIndexPaths:@[indexPath]
-                              withRowAnimation:UITableViewRowAnimationNone];
-    }];
-}
-
 - (void)reloadAndScrollToBottomOfMessage:(NSString *)messageID {
     // Dispatch the task to RunLoop to ensure that they are executed after the UITableView refresh is complete.
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -229,17 +222,33 @@ TUIMessageProgressManagerDelegate>
     });
 }
 
+- (void)reloadCellOfMessage:(NSString *)messageID {
+    NSIndexPath *indexPath = [self indexPathOfMessage:messageID];
+    
+    // Disable animation when loading to avoid cell jumping.
+    if (indexPath == nil) {
+        return;
+    }
+    [UIView performWithoutAnimation:^{
+        [self.tableView reloadRowsAtIndexPaths:@[indexPath]
+                              withRowAnimation:UITableViewRowAnimationNone];
+    }];
+}
+
 - (void)scrollCellToBottomOfMessage:(NSString *)messageID {
     NSIndexPath *indexPath = [self indexPathOfMessage:messageID];
     
     // Scroll the tableView only if the bottom of the cell is invisible.
     CGRect cellRect = [self.tableView rectForRowAtIndexPath:indexPath];
     CGRect tableViewRect = self.tableView.bounds;
-    BOOL isBottomInvisible = cellRect.origin.y < CGRectGetMaxY(tableViewRect) && CGRectGetMaxY(cellRect) > CGRectGetMaxY(tableViewRect);
+    BOOL isBottomInvisible = (cellRect.origin.y < CGRectGetMaxY(tableViewRect) && CGRectGetMaxY(cellRect) > CGRectGetMaxY(tableViewRect)) || (cellRect.origin.y >= CGRectGetMaxY(tableViewRect));
     if (isBottomInvisible) {
         [self.tableView scrollToRowAtIndexPath:indexPath
                               atScrollPosition:UITableViewScrollPositionBottom
                                       animated:YES];
+    }
+    if (self.isAutoScrolledToBottom) {
+        [self scrollToBottom:YES];
     }
 }
 
@@ -260,6 +269,7 @@ TUIMessageProgressManagerDelegate>
         [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.messageDataProvider.uiMsgs.count - 1 inSection:0]
                               atScrollPosition:UITableViewScrollPositionBottom
                                       animated:animate];
+        self.isAutoScrolledToBottom = YES;
     }
 }
 
@@ -349,6 +359,31 @@ TUIMessageProgressManagerDelegate>
     }];
 }
 
+#pragma mark - TUINotificationProtocol
+- (void)onNotifyEvent:(NSString *)key
+               subKey:(NSString *)subKey
+               object:(id)anObject
+                param:(NSDictionary *)param {
+    if ([key isEqualToString:TUICore_TUITranslationNotify]
+        && [subKey isEqualToString:TUICore_TUITranslationNotify_DidChangeTranslationSubKey]) {
+        // Translation View is shown, hidden or changed.
+        TUIMessageCellData *data = param[TUICore_TUITranslationNotify_DidChangeTranslationSubKey_Data];
+        [self clearAndReloadCellOfData:data];
+   } if ([key isEqualToString:TUICore_TUITranslationNotify]
+         && [subKey isEqualToString:TUICore_TUITranslationNotify_WillForwardTranslationSubKey]) {
+       // Translation will be forwarded.
+       NSString *text = param[TUICore_TUITranslationNotify_WillForwardTranslationSubKey_Text];
+       if (self.delegate && [self.delegate respondsToSelector:@selector(messageController:onForwardText:)]) {
+           [self.delegate messageController:self onForwardText:text];
+       }
+   }
+}
+
+- (void)clearAndReloadCellOfData:(TUIMessageCellData *)data {
+    [data clearCachedCellHeight];
+    [self.messageDataProvider removeHeightCacheOfData:data];
+    [self reloadAndScrollToBottomOfMessage:data.innerMessage.msgID];
+}
 
 #pragma mark - TUIMessageProgressManagerDelegate
 - (void)onMessageSendingResultChanged:(TUIMessageSendingResultType)type messageID:(NSString *)msgID
@@ -468,8 +503,8 @@ ReceiveReadMsgWithUserID:(NSString *)userId
              */
             time_t msgTime = [cell.messageData.innerMessage.timestamp timeIntervalSince1970];
             if (msgTime <= timestamp
-                && ![cell.readReceiptLabel.text isEqualToString:TUIKitLocalizableString(Read)]) {
-                cell.readReceiptLabel.text = TUIKitLocalizableString(Read);
+                && ![cell.readReceiptLabel.text isEqualToString:TIMCommonLocalizableString(Read)]) {
+                cell.readReceiptLabel.text = TIMCommonLocalizableString(Read);
             }
         }
     }
@@ -680,23 +715,7 @@ didChangeTranslationData:(TUIMessageCellData *)data {
     cell = [tableView dequeueReusableCellWithIdentifier:data.reuseId forIndexPath:indexPath];
     cell.delegate = self;
     [cell fillWithData:data];
-    
-    if ([data respondsToSelector:@selector(canTranslate)] && [data canTranslate]) {
-        NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
-        @weakify(self);
-        cell.hideTranslationCallback = ^(BOOL hide) {
-            @strongify(self);
-            [self.messageDataProvider removeHeightCache:indexPath.row];
-            [self reloadCellOfIndexPath:indexPath];
-        };
-        cell.forwardTranslationCallback = ^(NSString *text) {
-            @strongify(self);
-            if (self.delegate) {
-                [self.delegate messageController:self onForwardTranslation:text];
-            }
-        };
-    }
-    
+    [cell notifyBottomContainerReadyOfData:nil];
     return cell;
 }
 
@@ -728,6 +747,7 @@ didChangeTranslationData:(TUIMessageCellData *)data {
     if (self.scrollingTriggeredByUser) {
         // only if the scrollView is dragged by user's finger to scroll, we need to send read receipts.
         [self sendVisibleReadGroupMessages];
+        self.isAutoScrolledToBottom = NO;
     }
 }
 
@@ -867,13 +887,14 @@ didChangeTranslationData:(TUIMessageCellData *)data {
     // config
     [self configItems:alertController targetCell:cell];
     __weak typeof(cell)weakCell = cell;
+    __weak typeof(self)weakSelf = self;
     alertController.viewWillShowHandler = ^(TUIMessageCell * _Nonnull alertView) {
-        alertView.delegate  = self;
+        alertView.delegate  = weakSelf;
     };
 
     alertController.dismissComplete = ^{
         if (weakCell) {
-            cell.container.hidden = NO;
+            weakCell.container.hidden = NO;
         }
     };
     [self.navigationController presentViewController:alertController animated:NO completion:nil];
@@ -887,108 +908,129 @@ didChangeTranslationData:(TUIMessageCellData *)data {
 
     TUIMessageCellData *data = cell.messageData;
     V2TIMMessage *imMsg = data.innerMessage;
+    NSMutableArray *pluginCustomMessageInfo = [TUIMessageDataProvider_Minimalist getPluginCustomMessageInfo];
+    BOOL isPluginCustomMessage = NO ;
+    for (NSDictionary *messageInfo in pluginCustomMessageInfo) {
+        NSString *bussinessID = messageInfo[BussinessID];
+        if (bussinessID) {
+            if([data.reuseId isEqualToString:bussinessID]) {
+                isPluginCustomMessage = YES;
+                break;
+            }
+        }
+    }
+    BOOL isChatNoramlMessageOrCustomMessage = !isPluginCustomMessage ;
 
     /**
-     * 排序优先级:  复制(1)、转发(2)、多选(3)、引用(4)、回复(5)、撤回(6)、 详情(7)、删除(8)
-     * Sort priorities: copy, forward, multiselect, quote, reply, Withdraw, detail,delete
+     * 排序优先级:  复制(1)、转发(2)、多选(3)、引用(4)、回复(5)、翻译(6)、撤回(7)、详情(8)、删除(9)
+     * Sort priorities: copy, forward, multiselect, reference, reply, Withdraw, delete
+     * 权重越大越靠前weight:  复制 10000  转发 9000 多选 8000 引用 7000 回复 5000 翻译 4000 撤回3000 详情 2000  删除 1000
+     * The higher the weight, the more prioritized it is:
+        Copy - 10000
+        Forward - 9000
+        Multiple Choice - 8000
+        Quote - 7000
+        Reply - 5000
+        Withdraw - 3000
+        Details - 2000
+        Delete - 1000
      */
     NSMutableArray *Items = [NSMutableArray arrayWithCapacity:6];
 
     __weak typeof(self) weakSelf = self;
     
-    TUIChatPopContextExtionItem *copyItem = [[TUIChatPopContextExtionItem alloc] initWithTitle: TUIKitLocalizableString(Copy) markIcon:[UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_extion_copy")] rank:1 withActionHandler:^(TUIChatPopContextExtionItem *action){
-        __weak typeof(weakSelf) strongSelf = weakSelf;
-        [alertController blurDismissViewControllerAnimated:NO completion:^(BOOL finished) {
-            [strongSelf onCopyMsg:cell];
-        }];
-    }];
-    if ([data isKindOfClass:[TUITextMessageCellData_Minimalist class]] || [data isKindOfClass:TUIReferenceMessageCellData_Minimalist.class]) {
-        [Items addObject:copyItem];
-    }
+    TUIChatPopContextExtionItem *copyItem = [self setupCopyAction:alertController targetCell:cell];
 
-    TUIChatPopContextExtionItem *forwardItem = [[TUIChatPopContextExtionItem alloc] initWithTitle: TUIKitLocalizableString(Forward) markIcon:[UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_extion_forward")] rank:2 withActionHandler:^(TUIChatPopContextExtionItem *action){
-        __weak typeof(weakSelf) strongSelf = weakSelf;
-        [alertController blurDismissViewControllerAnimated:NO completion:^(BOOL finished) {
-            [strongSelf onForward:nil];
-        }];
-    }];
-    if (imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC) {
-        [Items addObject:forwardItem];
-    }
+    TUIChatPopContextExtionItem *forwardItem = [self setupForwardAction:alertController targetCell:cell];
     
-    TUIChatPopContextExtionItem *multiSelectItem = [[TUIChatPopContextExtionItem alloc] initWithTitle: TUIKitLocalizableString(MultiSelect) markIcon:[UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_extion_multi")] rank:3 withActionHandler:^(TUIChatPopContextExtionItem *action){
-        __weak typeof(weakSelf) strongSelf = weakSelf;
-        [alertController blurDismissViewControllerAnimated:NO completion:^(BOOL finished) {
-            [strongSelf onMulitSelect:nil];
-        }];
-    }];
-    [Items addObject:multiSelectItem];
+    TUIChatPopContextExtionItem *multiSelectItem = [self setupMultiSelectAction:alertController targetCell:cell];
     
-    TUIChatPopContextExtionItem *referenceItem = [[TUIChatPopContextExtionItem alloc] initWithTitle: TUIKitLocalizableString(Quote) markIcon:[UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_extion_quote")] rank:4 withActionHandler:^(TUIChatPopContextExtionItem *action){
-        __weak typeof(weakSelf) strongSelf = weakSelf;
-        [alertController blurDismissViewControllerAnimated:NO completion:^(BOOL finished) {
-            [strongSelf onReference:nil];
-        }];
-    }];
-    if (imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC) {
-        [Items addObject:referenceItem];
-    }
+    TUIChatPopContextExtionItem *referenceItem = [self setupReferenceAction:alertController targetCell:cell];
 
-    TUIChatPopContextExtionItem *replyItem = [[TUIChatPopContextExtionItem alloc] initWithTitle: TUIKitLocalizableString(Reply) markIcon:[UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_extion_reply")] rank:5 withActionHandler:^(TUIChatPopContextExtionItem *action){
-        __weak typeof(weakSelf) strongSelf = weakSelf;
-        [alertController blurDismissViewControllerAnimated:NO completion:^(BOOL finished) {
-            [strongSelf onReply:nil];
-        }];
-    }];
-    if (imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC) {
-        [Items addObject:replyItem];
-    }
+    TUIChatPopContextExtionItem *replyItem = [self setupReplyAction:alertController targetCell:cell];
     
-    TUIChatPopContextExtionItem *translateItem = [[TUIChatPopContextExtionItem alloc] initWithTitle: TUIKitLocalizableString(TUIKitTranslate) markIcon:[UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_translate")] rank:6 withActionHandler:^(TUIChatPopContextExtionItem *action){
-        __weak typeof(weakSelf) strongSelf = weakSelf;
-        [alertController blurDismissViewControllerAnimated:NO completion:^(BOOL finished) {
-            [strongSelf onTranslate:cell];
-        }];
-    }];
-    if ([data respondsToSelector:@selector(canTranslate)] && [data canTranslate]
-        && [data.translationViewData isHidden]
-        && TUIChatConfig.defaultConfig.enableTextTranslation) {
-        [Items addObject:translateItem];
-    }
+    TUIChatPopContextExtionItem *revocationItem = [self setupRevocationAction:alertController targetCell:cell];
+
+    TUIChatPopContextExtionItem *infoItem = [self setupInfoAction:alertController targetCell:cell];
+
+    TUIChatPopContextExtionItem *deleteItem = [self setupDeleteAction:alertController targetCell:cell];
     
-    TUIChatPopContextExtionItem *revocationItem = [[TUIChatPopContextExtionItem alloc] initWithTitle: TUIKitLocalizableString(Recall) markIcon:[UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_extion_revocation")] rank:6 withActionHandler:^(TUIChatPopContextExtionItem *action){
-        __weak typeof(weakSelf) strongSelf = weakSelf;
-        [alertController blurDismissViewControllerAnimated:NO completion:^(BOOL finished) {
-            [strongSelf onRevoke:nil];
-        }];
-    }];
-    if(imMsg){
-        if([imMsg isSelf] && [[NSDate date] timeIntervalSinceDate:imMsg.timestamp] < 2 * 60 && (imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC)){
-            [Items addObject:revocationItem];
+    if (isChatNoramlMessageOrCustomMessage) {
+        if ([data isKindOfClass:[TUITextMessageCellData_Minimalist class]] || [data isKindOfClass:TUIReferenceMessageCellData_Minimalist.class]) {
+            [Items addObject:copyItem];
+        }
+        if (imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC) {
+            [Items addObject:forwardItem];
+        }
+        [Items addObject:multiSelectItem];
+        if (imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC) {
+            [Items addObject:referenceItem];
+        }
+        if (imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC) {
+            [Items addObject:replyItem];
+        }
+        if(imMsg){
+            if([imMsg isSelf] &&
+               [[NSDate date] timeIntervalSinceDate:imMsg.timestamp] < TUIChatConfig.defaultConfig.timeIntervalForMessageRecall &&
+               (imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC)){
+                [Items addObject:revocationItem];
+            }
+        }
+        if(imMsg){
+            if([imMsg isSelf] && (imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC)){
+                [Items addObject:infoItem];
+            }
+        }
+        [Items addObject:deleteItem];
+
+    }
+    else {
+        //common
+        //多选（multiSelectItem） 引用（referenceItem） 回复（replyItem） 删除(deleteItem) 撤回(revocationItem)
+        [Items addObject:multiSelectItem];
+        
+        if ([TUIChatConfig defaultConfig].enablePopMenuReplyAction && (imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC)){
+            [Items addObject:replyItem];
+        }
+        if ([TUIChatConfig defaultConfig].enablePopMenuReferenceAction && (imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC)) {
+            [Items addObject:referenceItem];
+        }
+        [Items addObject:deleteItem];
+
+        if(imMsg){
+            if([imMsg isSelf] &&
+               [[NSDate date] timeIntervalSinceDate:imMsg.timestamp] < TUIChatConfig.defaultConfig.timeIntervalForMessageRecall && 
+               (imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC)){
+                [Items addObject:revocationItem];
+            }
         }
     }
-
-    TUIChatPopContextExtionItem *infoItem = [[TUIChatPopContextExtionItem alloc] initWithTitle: TUIKitLocalizableString(Info) markIcon:[UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_extion_info")] rank:7 withActionHandler:^(TUIChatPopContextExtionItem *action){
-        __weak typeof(weakSelf) strongSelf = weakSelf;
-        [alertController blurDismissViewControllerAnimated:NO completion:^(BOOL finished) {
-            [strongSelf onJumpToMessageInfoPage:cell.messageData selectCell:cell];
-        }];
+    
+    //extra
+    NSArray<TUIExtensionInfo *> *infoArray = [TUICore getExtensionList:TUICore_TUIChatExtension_PopMenuActionItem_MinimalistExtensionID param:@{
+        TUICore_TUIChatExtension_PopMenuActionItem_TargetVC:self,
+        TUICore_TUIChatExtension_PopMenuActionItem_ClickCell:cell
     }];
     
-    if(imMsg){
-        if([imMsg isSelf] && (imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC)){
-            [Items addObject:infoItem];
+    for (TUIExtensionInfo *info in infoArray) {
+        if (info.text && info.icon && info.onClicked) {
+            TUIChatPopContextExtionItem *extension = [[TUIChatPopContextExtionItem alloc] initWithTitle: info.text markIcon:info.icon weight:info.weight withActionHandler:^(TUIChatPopContextExtionItem *action){
+                [alertController blurDismissViewControllerAnimated:NO completion:^(BOOL finished) {
+                    info.onClicked(@{});
+                }];
+            }];
+            [Items addObject:extension];
         }
     }
-
-    TUIChatPopContextExtionItem *deleteItem = [[TUIChatPopContextExtionItem alloc] initWithTitle: TUIKitLocalizableString(Delete) markIcon:[UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_extion_delete")] rank:8 withActionHandler:^(TUIChatPopContextExtionItem *action){
-        __weak typeof(weakSelf) strongSelf = weakSelf;
-        [alertController blurDismissViewControllerAnimated:NO completion:^(BOOL finished) {
-            [strongSelf onDelete:strongSelf.menuUIMsg];
-        }];
+    
+    //Sory by weight
+    NSArray *sortResultArray = [Items sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        TUIChatPopContextExtionItem *per1 = obj1;
+        TUIChatPopContextExtionItem *per2 = obj2;
+        return per1.weight > per2.weight ? NSOrderedAscending : NSOrderedDescending;
     }];
-    deleteItem.titleColor = [UIColor tui_colorWithHex:@"FF584C"];
-    [Items addObject:deleteItem];
+    
+    NSMutableArray *filterArray = [NSMutableArray arrayWithArray:sortResultArray];
     
     __weak typeof(alertController) weakVC = alertController;
     alertController.reactClickCallback = ^(NSString * _Nonnull faceName) {
@@ -1000,13 +1042,14 @@ didChangeTranslationData:(TUIMessageCellData *)data {
         }];
     };
 
+    //Paging
     NSInteger perPageLimitedCount = 4;
     NSMutableArray *allPageItemsArray = [NSMutableArray array];
-    NSUInteger itemsRemaining = Items.count;
+    NSUInteger itemsRemaining = filterArray.count;
     int j = 0;
     while(itemsRemaining) {
         NSRange range = NSMakeRange(j, MIN(perPageLimitedCount, itemsRemaining));
-        NSMutableArray *subLogArr =[NSMutableArray arrayWithArray:[Items subarrayWithRange:range]];
+        NSMutableArray *subLogArr =[NSMutableArray arrayWithArray:[filterArray subarrayWithRange:range]];
         TUIChatPopContextExtionItem * lastItem = [subLogArr lastObject];
         lastItem.needBottomLine = YES;
         
@@ -1026,7 +1069,7 @@ didChangeTranslationData:(TUIMessageCellData *)data {
             else {
                 nextPageIndex = 0;
             }
-            TUIChatPopContextExtionItem *moreItem = [[TUIChatPopContextExtionItem alloc] initWithTitle: TUIKitLocalizableString(More) markIcon:[UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_extion_more")] rank:9 withActionHandler:^(TUIChatPopContextExtionItem *action){
+            TUIChatPopContextExtionItem *moreItem = [[TUIChatPopContextExtionItem alloc] initWithTitle: TIMCommonLocalizableString(More) markIcon:[UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_extion_more")] weight:INT_MAX withActionHandler:^(TUIChatPopContextExtionItem *action){
                 NSMutableArray *nextPageItems = allPageItemsArray[nextPageIndex];;
                 alertController.Items  = nextPageItems;
                 [alertController updateExtionView];
@@ -1069,11 +1112,11 @@ didChangeTranslationData:(TUIMessageCellData *)data {
 {
     _reSendUIMsg = cell.messageData;
     __weak typeof(self) weakSelf = self;
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:TUIKitLocalizableString(TUIKitTipsConfirmResendMessage) message:nil preferredStyle:UIAlertControllerStyleAlert];
-    [alert tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Re-send) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:TIMCommonLocalizableString(TUIKitTipsConfirmResendMessage) message:nil preferredStyle:UIAlertControllerStyleAlert];
+    [alert tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(Re-send) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [weakSelf sendUIMessage:weakSelf.reSendUIMsg];
     }]] ;
-    [alert tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+    [alert tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
 
     }]];
     [self.navigationController presentViewController:alert animated:YES completion:nil];
@@ -1099,7 +1142,6 @@ didChangeTranslationData:(TUIMessageCellData *)data {
             repliesDetailVC.modalPresentationStyle = UIModalPresentationCustom;
 
             [self.navigationController presentViewController:repliesDetailVC animated:YES completion:nil];
-//            [self.navigationController pushViewController:repliesDetailVC animated:YES];
             repliesDetailVC.parentPageDataProvider = self.messageDataProvider;
             @weakify(self)
             repliesDetailVC.willCloseCallback = ^(){
@@ -1134,7 +1176,6 @@ didChangeTranslationData:(TUIMessageCellData *)data {
     };
     [self.navigationController pushViewController:readViewController animated:YES];
 }
-
 
 -(BOOL)canPerformAction:(SEL)action withSender:(id)sender
 {
@@ -1187,7 +1228,7 @@ didChangeTranslationData:(TUIMessageCellData *)data {
     if (content.length > 0) {
         UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
         pasteboard.string = content;
-        [TUITool makeToast:TUIKitLocalizableString(Copied)];
+        [TUITool makeToast:TIMCommonLocalizableString(Copied)];
     }
 }
 
@@ -1242,13 +1283,6 @@ didChangeTranslationData:(TUIMessageCellData *)data {
 {
     if (_delegate && [_delegate respondsToSelector:@selector(messageController:onReferenceMessage:)]) {
         [_delegate messageController:self onReferenceMessage:self.menuUIMsg];
-    }
-}
-
-- (void)onTranslate:(TUIMessageCell *)cell {
-    TUIMessageCellData *data = cell.messageData;
-    if ([data respondsToSelector:@selector(canTranslate)] && [data canTranslate]) {
-        [self.messageDataProvider translateCellData:data containerWidth:cell.container.mm_w];
     }
 }
 
@@ -1435,9 +1469,127 @@ didChangeTranslationData:(TUIMessageCellData *)data {
     // subclass override
 }
 
-- (void)onDelete:(TUIMessageCellData *)cellData
+- (void)onDelete:(TUIMessageCell *)cell
 {
     // subclass override
+}
+
+#pragma mark - config TUIChatPopContextExtionItems
+- (TUIChatPopContextExtionItem *)setupCopyAction:(TUIChatPopContextController*) alertController
+    targetCell:(TUIMessageCell *)cell {
+    @weakify(self);
+    @weakify(cell);
+    @weakify(alertController);
+    TUIChatPopContextExtionItem *copyItem = [[TUIChatPopContextExtionItem alloc] initWithTitle: TIMCommonLocalizableString(Copy) markIcon:[UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_extion_copy")] weight:10000 withActionHandler:^(TUIChatPopContextExtionItem *action){
+        @strongify(alertController);
+        [alertController blurDismissViewControllerAnimated:NO completion:^(BOOL finished) {
+            @strongify(self);
+            @strongify(cell);
+            [self onCopyMsg:cell];
+        }];
+    }];
+    return copyItem;
+}
+
+- (TUIChatPopContextExtionItem *)setupForwardAction:(TUIChatPopContextController*) alertController
+    targetCell:(TUIMessageCell *)cell {
+    @weakify(self);
+    @weakify(alertController);
+    TUIChatPopContextExtionItem *forwardItem = [[TUIChatPopContextExtionItem alloc] initWithTitle: TIMCommonLocalizableString(Forward) markIcon:[UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_extion_forward")] weight:9000 withActionHandler:^(TUIChatPopContextExtionItem *action){
+        @strongify(alertController);
+        [alertController blurDismissViewControllerAnimated:NO completion:^(BOOL finished) {
+            @strongify(self);
+            [self onForward:nil];
+        }];
+    }];
+    return forwardItem;
+}
+
+- (TUIChatPopContextExtionItem *)setupMultiSelectAction:(TUIChatPopContextController*) alertController
+                                         targetCell:(TUIMessageCell *)cell {
+    @weakify(self);
+    @weakify(alertController);
+    TUIChatPopContextExtionItem *multiSelectItem = [[TUIChatPopContextExtionItem alloc] initWithTitle: TIMCommonLocalizableString(MultiSelect) markIcon:[UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_extion_multi")] weight:8000 withActionHandler:^(TUIChatPopContextExtionItem *action){
+        @strongify(alertController);
+        [alertController blurDismissViewControllerAnimated:NO completion:^(BOOL finished) {
+            @strongify(self);
+            [self onMulitSelect:nil];
+        }];
+    }];
+    return multiSelectItem;
+}
+
+- (TUIChatPopContextExtionItem *)setupReferenceAction:(TUIChatPopContextController*) alertController
+                                         targetCell:(TUIMessageCell *)cell {
+    @weakify(self);
+    @weakify(alertController);
+    TUIChatPopContextExtionItem *referenceItem = [[TUIChatPopContextExtionItem alloc] initWithTitle: TIMCommonLocalizableString(Quote) markIcon:[UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_extion_quote")] weight:7000 withActionHandler:^(TUIChatPopContextExtionItem *action){
+        @strongify(alertController);
+        [alertController blurDismissViewControllerAnimated:NO completion:^(BOOL finished) {
+            @strongify(self);
+            [self onReference:nil];
+        }];
+    }];
+    return referenceItem;
+}
+- (TUIChatPopContextExtionItem *)setupReplyAction:(TUIChatPopContextController*) alertController
+                                         targetCell:(TUIMessageCell *)cell {
+    @weakify(self);
+    @weakify(alertController);
+    TUIChatPopContextExtionItem *replyItem = [[TUIChatPopContextExtionItem alloc] initWithTitle: TIMCommonLocalizableString(Reply) markIcon:[UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_extion_reply")] weight:5000 withActionHandler:^(TUIChatPopContextExtionItem *action){
+        @strongify(alertController);
+        [alertController blurDismissViewControllerAnimated:NO completion:^(BOOL finished) {
+            @strongify(self);
+            [self onReply:nil];
+        }];
+    }];
+    return replyItem;
+}
+
+- (TUIChatPopContextExtionItem *)setupRevocationAction:(TUIChatPopContextController*) alertController
+                                       targetCell:(TUIMessageCell *)cell {
+    @weakify(self);
+    @weakify(alertController);
+    TUIChatPopContextExtionItem *revocationItem = [[TUIChatPopContextExtionItem alloc] initWithTitle: TIMCommonLocalizableString(Recall) markIcon:[UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_extion_revocation")] weight:3000 withActionHandler:^(TUIChatPopContextExtionItem *action){
+        @strongify(alertController);
+        [alertController blurDismissViewControllerAnimated:NO completion:^(BOOL finished) {
+            @strongify(self);
+            [self onRevoke:nil];
+        }];
+    }];
+    return revocationItem;
+}
+- (TUIChatPopContextExtionItem *)setupInfoAction:(TUIChatPopContextController*) alertController
+                                       targetCell:(TUIMessageCell *)cell {
+    @weakify(self);
+    @weakify(cell);
+    @weakify(alertController);
+    TUIChatPopContextExtionItem *infoItem = [[TUIChatPopContextExtionItem alloc] initWithTitle: TIMCommonLocalizableString(Info) markIcon:[UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_extion_info")] weight:2000 withActionHandler:^(TUIChatPopContextExtionItem *action){
+        @strongify(alertController);
+        [alertController blurDismissViewControllerAnimated:NO completion:^(BOOL finished) {
+            @strongify(self);
+            @strongify(cell);
+            [self onJumpToMessageInfoPage:cell.messageData selectCell:cell];
+        }];
+    }];
+
+    return infoItem;
+}
+- (TUIChatPopContextExtionItem *)setupDeleteAction:(TUIChatPopContextController*) alertController
+                                       targetCell:(TUIMessageCell *)cell {
+    @weakify(self);
+    @weakify(cell);
+    @weakify(alertController);
+    TUIChatPopContextExtionItem *deleteItem = [[TUIChatPopContextExtionItem alloc] initWithTitle: TIMCommonLocalizableString(Delete) markIcon:[UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_extion_delete")] weight:1000 withActionHandler:^(TUIChatPopContextExtionItem *action){
+        @strongify(alertController);
+        [alertController blurDismissViewControllerAnimated:NO completion:^(BOOL finished) {
+            @strongify(self);
+            @strongify(cell);
+            [self onDelete:cell];
+        }];
+    }];
+    deleteItem.titleColor = [UIColor tui_colorWithHex:@"FF584C"];
+    return deleteItem;
 }
 
 @end

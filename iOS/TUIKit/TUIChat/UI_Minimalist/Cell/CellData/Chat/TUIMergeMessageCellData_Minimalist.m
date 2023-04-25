@@ -7,7 +7,7 @@
 
 #import "TUIMergeMessageCellData_Minimalist.h"
 #import "TUITextMessageCellData_Minimalist.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 
 #ifndef CGFLOAT_CEIL
 #ifdef CGFLOAT_IS_DOUBLE
@@ -23,7 +23,7 @@
     V2TIMMergerElem *elem = message.mergerElem;
     if (elem.layersOverLimit) {
         TUITextMessageCellData_Minimalist *limitCell = [[TUITextMessageCellData_Minimalist alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
-        limitCell.content = TUIKitLocalizableString(TUIKitRelayLayerLimitTips);
+        limitCell.content = TIMCommonLocalizableString(TUIKitRelayLayerLimitTips);
         return limitCell;
     }
     
@@ -36,7 +36,7 @@
 }
 
 + (NSString *)getDisplayString:(V2TIMMessage *)message {
-    return [NSString stringWithFormat:@"[%@]", TUIKitLocalizableString(TUIKitRelayChatHistory)];
+    return [NSString stringWithFormat:@"[%@]", TIMCommonLocalizableString(TUIKitRelayChatHistory)];
 }
 
 - (Class)getReplyQuoteViewDataClass

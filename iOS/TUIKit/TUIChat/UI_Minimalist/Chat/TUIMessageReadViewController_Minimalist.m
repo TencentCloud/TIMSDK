@@ -6,15 +6,15 @@
 //
 
 #import "TUIMessageReadViewController_Minimalist.h"
-#import "TUIThemeManager.h"
+#import <TUICore/TUIThemeManager.h>
 #import "TUIMemberCell_Minimalist.h"
 #import "UIColor+TUIHexColor.h"
-#import "TUITool.h"
+#import <TUICore/TUITool.h>
 #import "TUIMessageDataProvider_Minimalist.h"
 #import "TUIMemberCellData_Minimalist.h"
 #import "TUIImageMessageCellData_Minimalist.h"
 #import "TUIVideoMessageCellData_Minimalist.h"
-#import "TUICore.h"
+#import <TUICore/TUICore.h>
 
 @interface TUIMessageReadViewController_Minimalist () <UITableViewDelegate, UITableViewDataSource>
 
@@ -93,20 +93,14 @@
 
 #pragma mark - Private
 - (void)setupViews {
-    self.view.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
+    self.view.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#F2F3F5");
     [self setupTitleView];
     
     [self setupMessageView];
-    
-    [self setupTableView];
 }
 
 - (void)layoutViews {
     float backViewTop = self.navigationController.navigationBar.mm_maxY;
-    if (![UINavigationBar appearance].isTranslucent &&
-        [[[UIDevice currentDevice] systemVersion] doubleValue] < 15.0) {
-        backViewTop = 0;
-    }
     
     self.tableView
         .mm_top(backViewTop)
@@ -118,18 +112,20 @@
 
 - (void)setupTitleView {
     UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.text = TUIKitLocalizableString(MessageInfo);
+    titleLabel.text = TIMCommonLocalizableString(MessageInfo);
     titleLabel.font = [UIFont systemFontOfSize:18.0];
-    titleLabel.textColor = TUICoreDynamicColor(@"nav_title_text_color", @"#000000");
+    titleLabel.textColor = TIMCommonDynamicColor(@"nav_title_text_color", @"#000000");
     [titleLabel sizeToFit];
     self.navigationItem.titleView = titleLabel;
 }
 
 - (void)setupMessageView {
     UIView *messageBackView = [[UIView alloc] init];
-    messageBackView.backgroundColor = TUICoreDynamicColor(@"form_bg_color", @"#FFFFFF");
+    messageBackView.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
     messageBackView.userInteractionEnabled = YES;
     self.messageBackView = messageBackView;
+    self.tableView.tableHeaderView = self.messageBackView;
+    self.tableView.tableHeaderView.userInteractionEnabled = YES;
     
     UILabel *dateLabel = [[UILabel alloc] init];
     [messageBackView addSubview:dateLabel];
@@ -148,6 +144,7 @@
     
     _alertView.translatesAutoresizingMaskIntoConstraints = NO;
     [_alertView fillWithData:self.alertViewCellData];
+    [_alertView notifyBottomContainerReadyOfData:nil];
     [_alertView layoutIfNeeded];
     if (self.alertViewCellData.direction == MsgDirectionIncoming) {
         _alertView.frame = CGRectMake(kScale390(16) ,dateLabel.frame.origin.y + dateLabel.frame.size.height, _originFrame.size.width, _originFrame.size.height);
@@ -161,23 +158,6 @@
     messageBackView.mm_width (self.view.bounds.size.width);
     messageBackView.mm_height( _alertView.frame.origin.y + _alertView.frame.size.height + kScale390(4));
 
-}
-
-- (void)setupTableView {
-    _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-    _tableView.delegate = self;
-    _tableView.dataSource = self;
-    _tableView.contentInset = UIEdgeInsetsMake(0, 0, 8, 0);
-    [_tableView setBackgroundColor:TUICoreDynamicColor(@"form_bg_color", @"#FFFFFF")];
-    [self.view addSubview:_tableView];
-    
-    UIView *view = [[UIView alloc] initWithFrame:CGRectZero];
-    [_tableView setTableFooterView:view];
-    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    [_tableView registerClass:[TUIMemberCell_Minimalist class] forCellReuseIdentifier:kMemberCellReuseId];
-    [_tableView registerClass:[TUIMemberDescribeCell_Minimalist class] forCellReuseIdentifier:@"TUIMemberDescribeCell_Minimalist"];
-    self.tableView.tableHeaderView = self.messageBackView;
-    self.tableView.tableHeaderView.userInteractionEnabled = YES;
 }
 
 - (void)loadMembers {
@@ -231,13 +211,11 @@
                                  SuccBlock:(void(^)(UIViewController *vc))succ
                                  failBlock:(nullable V2TIMFail)fail {
     NSDictionary *param = @{
-        TUICore_TUIContactService_GetUserOrFriendProfileVCMethod_UserIDKey: userID ? : @"",
-        TUICore_TUIContactService_GetUserOrFriendProfileVCMethod_SuccKey: succ ? : ^(UIViewController *vc){},
-        TUICore_TUIContactService_GetUserOrFriendProfileVCMethod_FailKey: fail ? : ^(int code, NSString * desc){}
+        TUICore_TUIContactObjectFactory_GetUserOrFriendProfileVCMethod_UserIDKey: userID ? : @"",
+        TUICore_TUIContactObjectFactory_GetUserOrFriendProfileVCMethod_SuccKey: succ ? : ^(UIViewController *vc){},
+        TUICore_TUIContactObjectFactory_GetUserOrFriendProfileVCMethod_FailKey: fail ? : ^(int code, NSString * desc){}
     };
-    [TUICore callService:TUICore_TUIContactService_Minimalist
-                  method:TUICore_TUIContactService_GetUserOrFriendProfileVCMethod
-                   param:param];
+    [TUICore createObject:TUICore_TUIContactObjectFactory_Minimalist key:TUICore_TUIContactObjectFactory_GetUserOrFriendProfileVCMethod param:param];
 }
 
 #pragma mark - UITableViewDataSource & UITableViewDelegate
@@ -309,7 +287,7 @@
     if ([self isGroupMessageRead]) {
         if (self.readMembers.count > 0) {
             TUIMemberDescribeCellData_Minimalist * describeCellData = [[TUIMemberDescribeCellData_Minimalist alloc] init];
-            describeCellData.title = TUIKitLocalizableString(GroupReadBy);
+            describeCellData.title = TIMCommonLocalizableString(GroupReadBy);
             describeCellData.icon = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath_Minimalist(@"msg_status_all_people_read")];
             [dataArray addObject:describeCellData];
             
@@ -326,7 +304,7 @@
         
         if (self.unreadMembers.count > 0) {
             TUIMemberDescribeCellData_Minimalist * describeCellData = [[TUIMemberDescribeCellData_Minimalist alloc] init];
-            describeCellData.title = TUIKitLocalizableString(GroupDeliveredTo);
+            describeCellData.title = TIMCommonLocalizableString(GroupDeliveredTo);
             describeCellData.icon = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath_Minimalist(@"msg_status_some_people_read")];
             
             [dataArray addObject:describeCellData];
@@ -352,11 +330,11 @@
         TUIMemberDescribeCellData_Minimalist * describeCellData = [[TUIMemberDescribeCellData_Minimalist alloc] init];
         if (isPeerRead) {
             
-            describeCellData.title = TUIKitLocalizableString(C2CReadBy);
+            describeCellData.title = TIMCommonLocalizableString(C2CReadBy);
             describeCellData.icon = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath_Minimalist(@"msg_status_all_people_read")];
         }
         else {
-            describeCellData.title = TUIKitLocalizableString(C2CDeliveredTo);
+            describeCellData.title = TIMCommonLocalizableString(C2CDeliveredTo);
             describeCellData.icon = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath_Minimalist(@"msg_status_some_people_read")];
         }
         
@@ -392,6 +370,24 @@
 
 - (BOOL)isGroupMessageRead {
     return self.cellData.innerMessage.groupID.length > 0;
+}
+
+- (UITableView *)tableView {
+    if (!_tableView) {
+        _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+        _tableView.delegate = self;
+        _tableView.dataSource = self;
+        _tableView.contentInset = UIEdgeInsetsMake(0, 0, 8, 0);
+        [_tableView setBackgroundColor:TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF")];
+        [self.view addSubview:_tableView];
+        
+        UIView *view = [[UIView alloc] initWithFrame:CGRectZero];
+        [_tableView setTableFooterView:view];
+        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        [_tableView registerClass:[TUIMemberCell_Minimalist class] forCellReuseIdentifier:kMemberCellReuseId];
+        [_tableView registerClass:[TUIMemberDescribeCell_Minimalist class] forCellReuseIdentifier:@"TUIMemberDescribeCell_Minimalist"];
+    }
+    return _tableView;
 }
 
 @end

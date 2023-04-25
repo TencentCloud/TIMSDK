@@ -11,8 +11,8 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "TUIDefine.h"
-#import "TUICommonModel.h"
+#import <TIMCommon/TIMCommonModel.h>
+#import <TIMCommon/TIMDefine.h>
 #import "TUICommonPendencyCellData.h"
 #import "TUICommonPendencyCellData_Minimalist.h"
 

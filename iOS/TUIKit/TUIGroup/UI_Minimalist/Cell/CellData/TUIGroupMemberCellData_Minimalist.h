@@ -5,7 +5,7 @@
 //  Created by wyl on 2023/1/3.
 //
 
-#import "TUICommonModel.h"
+#import <TIMCommon/TIMCommonModel.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

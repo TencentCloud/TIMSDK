@@ -1,6 +1,6 @@
-#import "TUIBubbleMessageCell_Minimalist.h"
+#import <TIMCommon/TUIBubbleMessageCell_Minimalist.h>
 #import "TUITextMessageCellData_Minimalist.h"
-#import "TUITextView.h"
+#import <TIMCommon/TUITextView.h>
 #import "TUIChatDefine.h"
 
 @interface TUITextMessageCell_Minimalist : TUIBubbleMessageCell_Minimalist<UITextViewDelegate>

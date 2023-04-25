@@ -7,7 +7,7 @@
 //
 
 #import "TUIGroupCreatedCellData.h"
-#import "NSString+TUIUtil.h"
+#import <TUICore/NSString+TUIUtil.h>
 
 @implementation TUIGroupCreatedCellData
 

@@ -14,6 +14,10 @@ NS_ASSUME_NONNULL_BEGIN
 static const int TUI_CALLKIT_SIGNALING_MAX_TIME = 30;
 // 默认头像
 static NSString * const TUI_CALL_DEFAULT_AVATAR = @"https://imgcache.qq.com/qcloud/public/static//avatar1_100.20191230.png";
+// 开启麦克风通知
+FOUNDATION_EXTERN NSString * const TUICallKitEventOpenMicrophone;
+// 关闭麦克风通知
+FOUNDATION_EXTERN NSString * const TUICallKitEventCloseMicrophone;
 
 @interface TUICallKitConstants : NSObject
 

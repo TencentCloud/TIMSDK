@@ -52,7 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithGroupID:(NSString *)groupID;
 - (void)loadData;
-- (void)updateGroupInfo;
+- (void)updateGroupInfo:(void(^)(void))callback;
 - (void)setGroupAddOpt:(V2TIMGroupAddOpt)opt;
 - (void)setGroupReceiveMessageOpt:(V2TIMReceiveMessageOpt)opt Succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
 - (void)setGroupName:(NSString *)groupName succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;

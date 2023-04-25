@@ -4,7 +4,7 @@
  */
 
 #import "TUIGroupCreatedCellData_Minimalist.h"
-#import "TUISystemMessageCell.h"
+#import <TIMCommon/TUISystemMessageCell.h>
 
 @interface TUIGroupCreatedCell_Minimalist : TUISystemMessageCell
 

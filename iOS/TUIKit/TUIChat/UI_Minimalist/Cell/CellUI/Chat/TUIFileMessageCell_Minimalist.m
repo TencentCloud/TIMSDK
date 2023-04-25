@@ -7,8 +7,8 @@
 
 #import "TUIFileMessageCell_Minimalist.h"
 #import "TUIMessageProgressManager.h"
-#import "TUIThemeManager.h"
-#import "TUIDefine.h"
+#import <TUICore/TUIThemeManager.h>
+#import <TIMCommon/TIMDefine.h>
 #import "ReactiveObjC/ReactiveObjC.h"
 
 @interface TUIFileMessageCell_Minimalist () <V2TIMSDKListener, TUIMessageProgressManagerDelegate>

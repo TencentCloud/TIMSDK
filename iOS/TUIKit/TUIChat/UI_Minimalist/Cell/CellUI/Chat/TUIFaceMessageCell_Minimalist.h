@@ -1,6 +1,6 @@
 
 #import "TUIFaceMessageCellData_Minimalist.h"
-#import "TUIBubbleMessageCell_Minimalist.h"
+#import <TIMCommon/TUIBubbleMessageCell_Minimalist.h>
 
 @interface TUIFaceMessageCell_Minimalist : TUIBubbleMessageCell_Minimalist
 /**

@@ -1,7 +1,7 @@
 
 #import "TUICaptureImagePreviewController.h"
-#import "TUICommonModel.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMCommonModel.h>
+#import <TIMCommon/TIMDefine.h>
 
 @interface TUICaptureImagePreviewController ()
 {

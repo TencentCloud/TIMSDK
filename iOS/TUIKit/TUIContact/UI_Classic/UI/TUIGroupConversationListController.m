@@ -6,10 +6,10 @@
 //
 
 #import "TUIGroupConversationListController.h"
-#import "TUICore.h"
-#import "TUIDefine.h"
-#import "TUICommonModel.h"
-#import "TUIThemeManager.h"
+#import <TUICore/TUICore.h>
+#import <TIMCommon/TIMDefine.h>
+#import <TIMCommon/TIMCommonModel.h>
+#import <TUICore/TUIThemeManager.h>
 
 static NSString *kConversationCell_ReuseId = @"TConversationCell";
 
@@ -25,20 +25,16 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
     [super viewDidLoad];
     
     UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.text = TUIKitLocalizableString(TUIKitContactsGroupChats);
+    titleLabel.text = TIMCommonLocalizableString(TUIKitContactsGroupChats);
     titleLabel.font = [UIFont boldSystemFontOfSize:17.0];
-    titleLabel.textColor = TUICoreDynamicColor(@"nav_title_text_color", @"#000000");
+    titleLabel.textColor = TIMCommonDynamicColor(@"nav_title_text_color", @"#000000");
     [titleLabel sizeToFit];
 
     self.navigationItem.titleView = titleLabel;
     
 
-    self.view.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
-    //Fix  translucent = NO;
+    self.view.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#F2F3F5");
     CGRect rect = self.view.bounds;
-    if (![UINavigationBar appearance].isTranslucent && [[[UIDevice currentDevice] systemVersion] doubleValue]<15.0) {
-        rect = CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height - TabBar_Height - NavBar_Height );
-    }
     _tableView = [[UITableView alloc] initWithFrame:rect style:UITableViewStylePlain];
     [self.view addSubview:_tableView];
     _tableView.delegate = self;
@@ -110,7 +106,7 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
 
 - (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return TUIKitLocalizableString(Delete);
+    return TIMCommonLocalizableString(Delete);
 }
 
 - (BOOL)tableView:(UITableView *)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath
@@ -166,13 +162,11 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
     }
     
     NSDictionary *param = @{
-        TUICore_TUIChatService_GetChatViewControllerMethod_TitleKey : cell.contactData.title ?: @"",
-        TUICore_TUIChatService_GetChatViewControllerMethod_GroupIDKey : cell.contactData.identifier ?: @"",
+        TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_TitleKey : cell.contactData.title ?: @"",
+        TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_GroupIDKey : cell.contactData.identifier ?: @"",
     };
     
-    UIViewController *chatVC = (UIViewController *)[TUICore callService:TUICore_TUIChatService
-                                                                 method:TUICore_TUIChatService_GetChatViewControllerMethod
-                                                                  param:param];
+    UIViewController *chatVC = (UIViewController *)[TUICore createObject:TUICore_TUIChatObjectFactory key:TUICore_TUIChatObjectFactory_GetChatViewControllerMethod param:param];
     [self.navigationController pushViewController:(UIViewController *)chatVC animated:YES];
 }
 
@@ -201,7 +195,7 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
         _noDataTipsLabel.textColor = TUIContactDynamicColor(@"contact_add_contact_nodata_tips_text_color", @"#999999");
         _noDataTipsLabel.font = [UIFont systemFontOfSize:14.0];
         _noDataTipsLabel.textAlignment = NSTextAlignmentCenter;
-        _noDataTipsLabel.text = TUIKitLocalizableString(TUIKitContactNoGroupChats);
+        _noDataTipsLabel.text = TIMCommonLocalizableString(TUIKitContactNoGroupChats);
     }
     return _noDataTipsLabel;
 }

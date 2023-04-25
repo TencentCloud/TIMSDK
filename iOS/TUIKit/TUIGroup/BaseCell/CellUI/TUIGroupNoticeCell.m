@@ -6,7 +6,7 @@
 //
 
 #import "TUIGroupNoticeCell.h"
-#import "TUIThemeManager.h"
+#import <TUICore/TUIThemeManager.h>
 
 @implementation TUIGroupNoticeCell
 
@@ -20,8 +20,8 @@
 
 - (void)setupViews
 {
-    self.backgroundColor = TUICoreDynamicColor(@"form_bg_color", @"#FFFFFF");
-    self.contentView.backgroundColor = TUICoreDynamicColor(@"form_bg_color", @"#FFFFFF");
+    self.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
+    self.contentView.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     [self.contentView addSubview:self.nameLabel];
@@ -73,7 +73,7 @@
     if (_nameLabel == nil) {
         _nameLabel = [[UILabel alloc] init];
         _nameLabel.text = @"";
-        _nameLabel.textColor = TUICoreDynamicColor(@"form_key_text_color", @"#888888");
+        _nameLabel.textColor = TIMCommonDynamicColor(@"form_key_text_color", @"#888888");
         _nameLabel.font = [UIFont systemFontOfSize:16.0];
     }
     return _nameLabel;
@@ -84,7 +84,7 @@
     if (_descLabel == nil) {
         _descLabel = [[UILabel alloc] init];
         _descLabel.text = @"neirong";
-        _descLabel.textColor = TUICoreDynamicColor(@"form_subtitle_color", @"#BBBBBB");
+        _descLabel.textColor = TIMCommonDynamicColor(@"form_subtitle_color", @"#BBBBBB");
         _descLabel.font = [UIFont systemFontOfSize:12.0];
     }
     return _descLabel;

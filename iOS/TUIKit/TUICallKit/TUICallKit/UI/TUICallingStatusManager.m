@@ -10,6 +10,7 @@
 
 NSString * const EventSubCallStatusChanged = @"eventSubCallStatusChanged";
 NSString * const EventSubCallMediaTypeChanged = @"eventSubCallMediaTypeChanged";
+NSString * const EventSubMicMuteChanged = @"eventSubMicMuteChanged";
 
 @implementation TUICallingStatusManager
 
@@ -39,6 +40,7 @@ NSString * const EventSubCallMediaTypeChanged = @"eventSubCallMediaTypeChanged";
     }
     
     _isMicMute = isMicMute;
+    [[NSNotificationCenter defaultCenter] postNotificationName:EventSubMicMuteChanged object:nil];
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(updateMicMute)]) {
         [self.delegate updateMicMute];

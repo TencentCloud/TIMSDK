@@ -1,5 +1,6 @@
 #import <UIKit/UIKit.h>
-#import "TUICommonModel.h"
+#import <TIMCommon/TIMCommonModel.h>
+#import <TIMCommon/TIMDefine.h>
 
 @class TUICommonContactProfileCardCell_Minimalist;
 

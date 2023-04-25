@@ -5,7 +5,7 @@
 //  Created by xia on 2022/6/10.
 //
 
-#import "TUIBubbleMessageCellData_Minimalist.h"
+#import <TIMCommon/TUIBubbleMessageCellData_Minimalist.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

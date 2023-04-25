@@ -10,11 +10,11 @@
 #import "TUICommonContactProfileCardCell_Minimalist.h"
 #import "TUIFriendRequestViewController_Minimalist.h"
 #import "TUICommonContactTextCell.h"
-#import "TUICommonModel.h"
+#import <TIMCommon/TIMCommonModel.h>
 #import "TUICommonPendencyCellData.h"
 #import "TUIContactAvatarViewController_Minimalist.h"
 #import "TUIContactConversationCellData.h"
-#import "TUIThemeManager.h"
+#import <TUICore/TUIThemeManager.h>
 #import "TUIContactAcceptRejectCell_Minimalist.h"
 #import "TUIContactButtonCell_Minimalist.h"
 
@@ -41,7 +41,7 @@
     [super viewDidLoad];
 
     _titleView = [[TUINaviBarIndicatorView alloc] init];
-    [_titleView setTitle:TUIKitLocalizableString(ProfileDetails)];
+    [_titleView setTitle:TIMCommonLocalizableString(ProfileDetails)];
     self.navigationItem.titleView = _titleView;
     self.navigationItem.title = @"";
     self.clearsSelectionOnViewWillAppear = YES;
@@ -85,7 +85,7 @@
             NSMutableArray *inlist = @[].mutableCopy;
             [inlist addObject:({
                 TUICommonContactTextCellData *data = TUICommonContactTextCellData.new;
-                data.key = TUIKitLocalizableString(FriendAddVerificationMessage);
+                data.key = TIMCommonLocalizableString(FriendAddVerificationMessage);
                 data.keyColor = [UIColor colorWithRed:136/255.0 green:136/255.0 blue:136/255.0 alpha:1/1.0];
                 data.valueColor = [UIColor colorWithRed:68/255.0 green:68/255.0 blue:68/255.0 alpha:1/1.0];
                 if (self.pendency) {
@@ -118,7 +118,7 @@
                 NSMutableArray *inlist = @[].mutableCopy;
                 [inlist addObject:({
                     TUIContactButtonCellData_Minimalist *data = TUIContactButtonCellData_Minimalist.new;
-                    data.title = TUIKitLocalizableString(FriendAddTitle);
+                    data.title = TIMCommonLocalizableString(FriendAddTitle);
                     data.style = ButtonBule;
                     data.textColor = [UIColor tui_colorWithHex:@"147AFF"];
                     data.cbuttonSelector = @selector(onAddFriend);
@@ -165,16 +165,16 @@
             NSMutableArray *inlist = @[].mutableCopy;
             [inlist addObject:({
                 TUIContactButtonCellData_Minimalist *data = TUIContactButtonCellData_Minimalist.new;
-                data.title = TUIKitLocalizableString(Accept);
+                data.title = TIMCommonLocalizableString(Accept);
                 data.style = ButtonWhite;
-                data.textColor = TUICoreDynamicColor(@"primary_theme_color", @"#147AFF");
+                data.textColor = TIMCommonDynamicColor(@"primary_theme_color", @"#147AFF");
                 data.cbuttonSelector = @selector(onAgreeGroup);
                 data.reuseId = @"ButtonCell";
                 data;
             })];
             [inlist addObject:({
                 TUIContactButtonCellData_Minimalist *data = TUIContactButtonCellData_Minimalist.new;
-                data.title = TUIKitLocalizableString(Decline);
+                data.title = TIMCommonLocalizableString(Decline);
                 data.style = ButtonRedText;
                 data.cbuttonSelector =  @selector(onRejectGroup);
                 data.reuseId = @"ButtonCell";

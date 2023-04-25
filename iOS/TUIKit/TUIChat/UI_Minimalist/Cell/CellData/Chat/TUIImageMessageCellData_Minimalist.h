@@ -1,4 +1,4 @@
-#import "TUIBubbleMessageCellData_Minimalist.h"
+#import <TIMCommon/TUIBubbleMessageCellData_Minimalist.h>
 #import "TUIMessageItem.h"
 #import "TUIChatDefine.h"
 
@@ -36,8 +36,8 @@ NS_ASSUME_NONNULL_BEGIN
  *  The file storage path
  *
  *  @note
- *  - path 由程序默认维护，您可以通过引入 TUIDefine.h 并引用 TUIKit_Image_Path 来直接获取 Demo 存储路径
- *   @path is maintained by the program by default, you can directly obtain the demo storage path by importing TUIDefine.h and referencing TUIKit_Image_Path
+ *  - path 由程序默认维护，您可以通过引入 TIMDefine.h 并引用 TUIKit_Image_Path 来直接获取 Demo 存储路径
+ *   @path is maintained by the program by default, you can directly obtain the demo storage path by importing TIMDefine.h and referencing TUIKit_Image_Path
  *
  *  - 如果您有进一步的个性化需求，也可使用其他路径
  *   Other routes are also available if you have further individual needs

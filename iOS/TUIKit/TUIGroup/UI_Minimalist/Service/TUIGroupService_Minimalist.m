@@ -3,10 +3,10 @@
 #import "TUIGroupRequestViewController_Minimalist.h"
 #import "TUIGroupInfoController_Minimalist.h"
 #import "TUISelectGroupMemberViewController_Minimalist.h"
-#import "TUIDefine.h"
-#import "NSDictionary+TUISafe.h"
-#import "TUIThemeManager.h"
-#import "TUIGlobalization.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/NSDictionary+TUISafe.h>
+#import <TUICore/TUIThemeManager.h>
+#import <TUICore/TUIGlobalization.h>
 
 @implementation TUIGroupService_Minimalist
 
@@ -23,53 +23,6 @@
     return g_sharedInstance;
 }
 
-- (UIViewController *)createGroupRequestViewController:(V2TIMGroupInfo *)groupInfo
-{
-    TUIGroupRequestViewController_Minimalist *vc = [[TUIGroupRequestViewController_Minimalist alloc] init];
-    vc.groupInfo = groupInfo;
-    return vc;
-}
-
-- (UIViewController *)createGroupInfoController:(NSString *)groupID
-{
-    TUIGroupInfoController_Minimalist *vc = [[TUIGroupInfoController_Minimalist alloc] init];
-    vc.groupId = groupID;
-    return vc;
-}
-
-- (UIViewController *)createSelectGroupMemberViewController:(NSString *)groupID
-                                                                         name:(NSString *)name
-                                                                optionalStyle:(TUISelectMemberOptionalStyle)optionalStyle {
-    return [self createSelectGroupMemberViewController:groupID
-                                                  name:name
-                                         optionalStyle:optionalStyle
-                                    selectedUserIDList:@[]];
-}
-
-- (UIViewController *)createSelectGroupMemberViewController:(NSString *)groupID
-                                                       name:(NSString *)name
-                                              optionalStyle:(TUISelectMemberOptionalStyle)optionalStyle
-                                         selectedUserIDList:(NSArray *)userIDList {
-    return [self createSelectGroupMemberViewController:groupID
-                                                  name:name
-                                         optionalStyle:optionalStyle
-                                    selectedUserIDList:@[]
-                                              userData:@""];
-}
-
-- (UIViewController *)createSelectGroupMemberViewController:(NSString *)groupID
-                                                       name:(NSString *)name
-                                              optionalStyle:(TUISelectMemberOptionalStyle)optionalStyle
-                                         selectedUserIDList:(NSArray *)userIDList
-                                                   userData:(NSString *)userData {
-    TUISelectGroupMemberViewController_Minimalist *vc = [[TUISelectGroupMemberViewController_Minimalist alloc] init];
-    vc.groupId = groupID;
-    vc.name = name;
-    vc.optionalStyle = optionalStyle;
-    vc.selectedUserIDList = userIDList;
-    vc.userData = userData;
-    return vc;
-}
 
 - (void)createGroup:(NSString *)groupType
        createOption:(V2TIMGroupAddOpt)createOption
@@ -105,15 +58,15 @@
         [[V2TIMManager sharedInstance] createGroup:info memberList:members succ:^(NSString *groupID) {
             NSString *content = nil;
             if([info.groupType isEqualToString:GroupType_Work]) {
-                content = TUIKitLocalizableString(ChatsCreatePrivateGroupTips);
+                content = TIMCommonLocalizableString(ChatsCreatePrivateGroupTips);
             } else if([info.groupType isEqualToString:GroupType_Public]){
-                content = TUIKitLocalizableString(ChatsCreateGroupTips);
+                content = TIMCommonLocalizableString(ChatsCreateGroupTips);
             } else if([info.groupType isEqualToString:GroupType_Meeting]) {
-                content = TUIKitLocalizableString(ChatsCreateChatRoomTips);
+                content = TIMCommonLocalizableString(ChatsCreateChatRoomTips);
             } else if([info.groupType isEqualToString:GroupType_Community]) {
-                content = TUIKitLocalizableString(ChatsCreateCommunityTips);
+                content = TIMCommonLocalizableString(ChatsCreateCommunityTips);
             } else {
-                content = TUIKitLocalizableString(ChatsCreateDefaultTips);
+                content = TIMCommonLocalizableString(ChatsCreateDefaultTips);
             }
             NSDictionary *dic = @{@"version": @(GroupCreate_Version),
                                   BussinessID: BussinessID_GroupCreate,
@@ -134,7 +87,7 @@
                 completion(NO, nil, nil);
             }
             if (code == ERR_SDK_INTERFACE_NOT_SUPPORT) {
-                [TUITool postUnsupportNotificationOfService:TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceCommunity) serviceDesc:TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceCommunityDesc) debugOnly:YES];
+                [TUITool postUnsupportNotificationOfService:TIMCommonLocalizableString(TUIKitErrorUnsupportIntefaceCommunity) serviceDesc:TIMCommonLocalizableString(TUIKitErrorUnsupportIntefaceCommunityDesc) debugOnly:YES];
             }
         }];
     } fail:^(int code, NSString *msg) {
@@ -147,32 +100,7 @@
 #pragma mark - TUIServiceProtocol
 - (id)onCall:(NSString *)method param:(NSDictionary *)param{
     id returnObject = nil;
-    if ([method isEqualToString:TUICore_TUIGroupService_GetGroupRequestViewControllerMethod]) {
-        returnObject = [self createGroupRequestViewController:[param tui_objectForKey:TUICore_TUIGroupService_GetGroupRequestViewControllerMethod_GroupInfoKey
-                                                                       asClass:V2TIMGroupInfo.class]];
-        
-    } else if ([method isEqualToString:TUICore_TUIGroupService_GetGroupInfoControllerMethod]) {
-        returnObject = [self createGroupInfoController:[param tui_objectForKey:TUICore_TUIGroupService_GetGroupInfoControllerMethod_GroupIDKey
-                                                                       asClass:NSString.class]];
-        
-    } else if ([method isEqualToString:TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod]) {
-        NSString *groupID            = [param tui_objectForKey:TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_GroupIDKey
-                                                      asClass:NSString.class];
-        NSString *title              = [param tui_objectForKey:TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_NameKey
-                                                      asClass:NSString.class];
-        NSNumber *optionalStyleNum   = [param tui_objectForKey:TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_OptionalStyleKey
-                                                     asClass:NSNumber.class];
-        NSArray  *selectedUserIDList = [param tui_objectForKey:TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_SelectedUserIDListKey
-                                                      asClass:NSArray.class];
-        NSString *userData           = [param tui_objectForKey:TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_UserDataKey asClass:NSString.class];
-        
-        returnObject = [self createSelectGroupMemberViewController:groupID
-                                                              name:title
-                                                     optionalStyle:[optionalStyleNum integerValue]
-                                                selectedUserIDList:selectedUserIDList
-                                                          userData:userData];
-        
-    } else if ([method isEqualToString:TUICore_TUIGroupService_CreateGroupMethod]) {
+    if ([method isEqualToString:TUICore_TUIGroupService_CreateGroupMethod]) {
         NSString *groupType = [param tui_objectForKey:TUICore_TUIGroupService_CreateGroupMethod_GroupTypeKey asClass:NSString.class];
         NSNumber *option    = [param tui_objectForKey:TUICore_TUIGroupService_CreateGroupMethod_OptionKey asClass:NSNumber.class];
         NSArray  *contacts  = [param tui_objectForKey:TUICore_TUIGroupService_CreateGroupMethod_ContactsKey asClass:NSArray.class];

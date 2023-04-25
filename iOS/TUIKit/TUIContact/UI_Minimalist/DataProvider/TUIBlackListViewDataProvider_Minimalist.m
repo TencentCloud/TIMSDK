@@ -6,7 +6,7 @@
 //
 
 #import "TUIBlackListViewDataProvider_Minimalist.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 
 @interface TUIBlackListViewDataProvider_Minimalist()
 @property NSArray<TUICommonContactCellData_Minimalist *> *blackListData;

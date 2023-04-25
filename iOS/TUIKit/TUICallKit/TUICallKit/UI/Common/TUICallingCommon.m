@@ -40,6 +40,17 @@
     return nil;
 }
 
++ (CGFloat)getStatusBarHeight {
+    CGFloat statusBarHeight = 0.0;
+    if (@available(iOS 13.0, *)) {
+        UIWindow *window = [UIApplication sharedApplication].windows.firstObject;
+        return window.safeAreaInsets.top;
+    } else {
+        statusBarHeight = [UIApplication sharedApplication].statusBarFrame.size.height;
+    }
+    return statusBarHeight ?: 20;
+}
+
 + (BOOL)checkDictionaryValid:(id)data {
     if (!data || ![data isKindOfClass:[NSDictionary class]]) {
         return NO;

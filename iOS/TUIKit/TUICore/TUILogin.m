@@ -32,6 +32,7 @@ NSString * const TUILogoutFailNotification = @"TUILogoutFailNotification";
 @property (nonatomic, copy) NSString *nickName;
 @property (nonatomic, copy) NSString *faceUrl;
 @property (nonatomic, assign) BOOL loginWithInit;
+@property (nonatomic, assign) TUIBusinessScene currentBusinessScene;
 
 @end
 
@@ -74,6 +75,10 @@ NSString * const TUILogoutFailNotification = @"TUILogoutFailNotification";
     return [TUILogin.shareInstance getSdkAppID];
 }
 
++ (BOOL)isUserLogined {
+    return [V2TIMManager sharedInstance].getLoginStatus == V2TIM_STATUS_LOGINED;
+}
+
 + (NSString *)getUserID {
     return [TUILogin.shareInstance getUserID];
 }
@@ -90,6 +95,13 @@ NSString * const TUILogoutFailNotification = @"TUILogoutFailNotification";
     return [TUILogin.shareInstance getFaceUrl];
 }
 
++ (void)setCurrentBusinessScene:(TUIBusinessScene)scene {
+    TUILogin.shareInstance.currentBusinessScene = scene;
+}
+
++ (TUIBusinessScene)getCurrentBusinessScene {
+    return TUILogin.shareInstance.currentBusinessScene;
+}
 
 #pragma mark - Private
 
@@ -112,6 +124,7 @@ NSString * const TUILogoutFailNotification = @"TUILogoutFailNotification";
         _nickName = nil;
         _faceUrl = nil;
         _loginWithInit = NO;
+        _currentBusinessScene = None;
     }
     return self;
 }
@@ -131,6 +144,7 @@ NSString * const TUILogoutFailNotification = @"TUILogoutFailNotification";
     self.userID = userID;
     self.userSig = userSig;
     self.loginWithInit = NO;
+    self.currentBusinessScene = None;
     if ([[[V2TIMManager sharedInstance] getLoginUser] isEqualToString:userID]) {
         if (succ) {
             succ();
@@ -161,6 +175,7 @@ NSString * const TUILogoutFailNotification = @"TUILogoutFailNotification";
          succ:(TSucc)succ
          fail:(TFail)fail {
     self.loginWithInit = YES;
+    self.currentBusinessScene = None;
     if (0 != self.sdkAppID && sdkAppID != self.sdkAppID) {
         [self logout:nil fail:nil];
         [[V2TIMManager sharedInstance] unInitSDK];
@@ -224,6 +239,7 @@ NSString * const TUILogoutFailNotification = @"TUILogoutFailNotification";
 - (void)logout:(TSucc)succ fail:(TFail)fail {
     self.userID = @"";
     self.userSig = @"";
+    self.currentBusinessScene = None;
     [[V2TIMManager sharedInstance] logout:^{
         if (succ) {
             succ();
@@ -288,8 +304,7 @@ NSString * const TUILogoutFailNotification = @"TUILogoutFailNotification";
     return self.faceUrl;
 }
 
-- (void)doInMainThread:(dispatch_block_t)callback
-{
+- (void)doInMainThread:(dispatch_block_t)callback {
     if ([NSThread isMainThread]) {
         if (callback) {
             callback();
@@ -337,6 +352,7 @@ NSString * const TUILogoutFailNotification = @"TUILogoutFailNotification";
 }
 
 - (void)onKickedOffline {
+    self.currentBusinessScene = None;
     __weak typeof(self) weakSelf = self;
     [self doInMainThread:^{
         for (id<TUILoginListener> listener in weakSelf.loginListenerSet) {
@@ -348,6 +364,8 @@ NSString * const TUILogoutFailNotification = @"TUILogoutFailNotification";
 }
 
 - (void)onUserSigExpired {
+    self.currentBusinessScene = None;
+    
     __weak typeof(self) weakSelf = self;
     [self doInMainThread:^{
         for (id<TUILoginListener> listener in weakSelf.loginListenerSet) {

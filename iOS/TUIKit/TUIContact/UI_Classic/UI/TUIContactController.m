@@ -15,9 +15,9 @@
 #import "TUINewFriendViewController.h"
 #import "TUIGroupConversationListController.h"
 #import "TUIContactActionCell.h"
-#import "TUIThemeManager.h"
-#import "TUIDefine.h"
-#import "TUICore.h"
+#import <TUICore/TUIThemeManager.h>
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUICore.h>
 #import "ReactiveObjC.h"
 
 #define kContactCellReuseId @"ContactCellReuseId"
@@ -36,21 +36,21 @@
     [list addObject:({
         TUIContactActionCellData *data = [[TUIContactActionCellData alloc] init];
         data.icon = TUIContactDynamicImage(@"contact_new_friend_img", [UIImage imageNamed:TUIContactImagePath(@"new_friend")]);
-        data.title = TUIKitLocalizableString(TUIKitContactsNewFriends);
+        data.title = TIMCommonLocalizableString(TUIKitContactsNewFriends);
         data.cselector = @selector(onAddNewFriend:);
         data;
     })];
     [list addObject:({
         TUIContactActionCellData *data = [[TUIContactActionCellData alloc] init];
         data.icon = TUIContactDynamicImage(@"contact_public_group_img", [UIImage imageNamed:TUIContactImagePath(@"public_group")]);
-        data.title = TUIKitLocalizableString(TUIKitContactsGroupChats);
+        data.title = TIMCommonLocalizableString(TUIKitContactsGroupChats);
         data.cselector = @selector(onGroupConversation:);
         data;
     })];
     [list addObject:({
         TUIContactActionCellData *data = [[TUIContactActionCellData alloc] init];
         data.icon = TUIContactDynamicImage(@"contact_blacklist_img", [UIImage imageNamed:TUIContactImagePath(@"blacklist")]);
-        data.title = TUIKitLocalizableString(TUIKitContactsBlackList);
+        data.title = TIMCommonLocalizableString(TUIKitContactsBlackList);
         data.cselector = @selector(onBlackList:);
         data;
     })];
@@ -73,7 +73,7 @@
 
 - (void)setupNavigator {
     UIButton *moreButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
-    [moreButton setImage:TUICoreDynamicImage(@"nav_more_img", [UIImage imageNamed:TUICoreImagePath(@"more")]) forState:UIControlStateNormal];
+    [moreButton setImage:TIMCommonDynamicImage(@"nav_more_img", [UIImage imageNamed:TIMCommonImagePath(@"more")]) forState:UIControlStateNormal];
     [moreButton addTarget:self action:@selector(onRightItem:) forControlEvents:UIControlEventTouchUpInside];
     [moreButton.widthAnchor constraintEqualToConstant:24].active = YES;
     [moreButton.heightAnchor constraintEqualToConstant:24].active = YES;
@@ -84,11 +84,8 @@
 }
 
 - (void)setupViews {
-    self.view.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
+    self.view.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#F2F3F5");
     CGRect rect = self.view.bounds;
-    if (![UINavigationBar appearance].isTranslucent && [[[UIDevice currentDevice] systemVersion] doubleValue]<15.0) {
-        rect = CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height - TabBar_Height - NavBar_Height );
-    }
     _tableView = [[UITableView alloc] initWithFrame:rect style:UITableViewStylePlain];
     _tableView.delegate = self;
     _tableView.dataSource = self;
@@ -128,14 +125,14 @@
     TUIPopCellData *friend = [[TUIPopCellData alloc] init];
     friend.image =
     TUIDemoDynamicImage(@"pop_icon_add_friend_img", [UIImage imageNamed:TUIDemoImagePath(@"add_friend")]);
-    friend.title = TUIKitLocalizableString(ContactsAddFriends); //@"添加好友";
+    friend.title = TIMCommonLocalizableString(ContactsAddFriends); //@"添加好友";
     [menus addObject:friend];
 
     TUIPopCellData *group = [[TUIPopCellData alloc] init];
     group.image =
     TUIDemoDynamicImage(@"pop_icon_add_group_img", [UIImage imageNamed:TUIDemoImagePath(@"add_group")]);
 
-    group.title = TUIKitLocalizableString(ContactsJoinGroup);//@"添加群组";
+    group.title = TIMCommonLocalizableString(ContactsJoinGroup);//@"添加群组";
     [menus addObject:group];
 
     CGFloat height = [TUIPopCell getHeight] * menus.count + TUIPopView_Arrow_Size.height;
@@ -166,11 +163,9 @@
             [self.navigationController pushViewController:frc animated:YES];
         } else {
             NSDictionary *param = @{
-                TUICore_TUIGroupService_GetGroupRequestViewControllerMethod_GroupInfoKey: cellModel.groupInfo
+                TUICore_TUIGroupObjectFactory_GetGroupRequestViewControllerMethod_GroupInfoKey: cellModel.groupInfo
             };
-            UIViewController *vc = [TUICore callService:TUICore_TUIGroupService
-                                                 method:TUICore_TUIGroupService_GetGroupRequestViewControllerMethod
-                                                  param:param];
+            UIViewController *vc = [TUICore createObject:TUICore_TUIGroupObjectFactory key:TUICore_TUIGroupObjectFactory_GetGroupRequestViewControllerMethod param:param];
             [self.navigationController pushViewController:vc animated:YES];
         }
     };
@@ -233,7 +228,7 @@
     }
     UILabel *label = [headerView viewWithTag:TEXT_TAG];
     label.text = self.viewModel.groupList[section-1];
-    headerView.contentView.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
+    headerView.contentView.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#F2F3F5");
     return headerView;
 }
 
@@ -322,14 +317,10 @@
     @weakify(self)
     vc.onSelect = ^(TUICommonContactCellData * _Nonnull cellData) {
         @strongify(self)
-        
         NSDictionary *param = @{
-            TUICore_TUIChatService_GetChatViewControllerMethod_GroupIDKey : cellData.identifier ?: @""
+            TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_GroupIDKey : cellData.identifier ?: @""
         };
-        
-        UIViewController *chatVC = (UIViewController *)[TUICore callService:TUICore_TUIChatService
-                                                                     method:TUICore_TUIChatService_GetChatViewControllerMethod
-                                                                      param:param];
+        UIViewController *chatVC = (UIViewController *)[TUICore createObject:TUICore_TUIChatObjectFactory key:TUICore_TUIChatObjectFactory_GetChatViewControllerMethod param:param];
         [self.navigationController pushViewController:(UIViewController *)chatVC animated:YES];
     };
     [self.navigationController pushViewController:vc animated:YES];

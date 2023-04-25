@@ -1,5 +1,5 @@
 #import "TUIVideoCollectionCell_Minimalist.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 #import "ReactiveObjC/ReactiveObjC.h"
 
 @import MediaPlayer;
@@ -262,7 +262,7 @@
 - (void)onDownloadBtnClick {
     if (![self.videoData isVideoExist]) {
         self.isSaveVideo = YES;
-        [TUITool makeToast:TUIKitLocalizableString(TUIKitVideoDownloading) duration:CGFLOAT_MAX];
+        [TUITool makeToast:TIMCommonLocalizableString(TUIKitVideoDownloading) duration:CGFLOAT_MAX];
     } else {
         [self saveVideo];
     }
@@ -276,9 +276,9 @@
     } completionHandler:^(BOOL success, NSError * _Nullable error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
-                [TUITool makeToast:TUIKitLocalizableString(TUIKitVideoSavedSuccess) duration:1];
+                [TUITool makeToast:TIMCommonLocalizableString(TUIKitVideoSavedSuccess) duration:1];
             } else {
-                [TUITool makeToastError:-1 msg:TUIKitLocalizableString(TUIKitVideoSavedFailed)];
+                [TUITool makeToastError:-1 msg:TIMCommonLocalizableString(TUIKitVideoSavedFailed)];
             }
         });
     }];

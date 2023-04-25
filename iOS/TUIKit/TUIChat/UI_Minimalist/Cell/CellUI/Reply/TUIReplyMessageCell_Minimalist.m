@@ -14,10 +14,11 @@
 #import "TUITextMessageCellData_Minimalist.h"
 #import "TUIMergeMessageCellData_Minimalist.h"
 #import "TUILinkCellData_Minimalist.h"
-#import "TUIDarkModel.h"
-#import "TUIThemeManager.h"
-#import "UIView+TUILayout.h"
-#import "NSString+TUIEmoji.h"
+#import <TUICore/TUIDarkModel.h>
+#import <TUICore/TUIThemeManager.h>
+#import <TUICore/UIView+TUILayout.h>
+#import <TUICore/TUICore.h>
+#import <TIMCommon/NSString+TUIEmoji.h>
 
 #import "TUIReplyQuoteView_Minimalist.h"
 #import "TUITextReplyQuoteView_Minimalist.h"
@@ -53,23 +54,15 @@
     [self.bubbleView addSubview:self.quoteView];
     [self.bubbleView addSubview:self.contentLabel];
     
-    self.translationView = [[TUITranslationView alloc] initWithBackgroundColor: TUIChatDynamicColor(@"chat_message_translation_bg_color_minimalist", @"#F2F7FF")];
-    self.translationView.delegate = self;
-    [self.contentView addSubview:self.translationView];
+    self.bottomContainer = [[UIView alloc] init];
+    [self.contentView addSubview:self.bottomContainer];
 }
 
-- (void)setupRAC {
-    @weakify(self);
-    [[[RACObserve(self, replyData.translationViewData.status) distinctUntilChanged] skip:1] subscribeNext:^(NSNumber *status) {
-        @strongify(self);
-        if (self.replyData == nil) {
-            return;
-        }
-        
-        [self refreshTranslationView];
-    }];
+// Override
+- (void)notifyBottomContainerReadyOfData:(TUIMessageCellData *)cellData {
+    NSDictionary *param = @{TUICore_TUIChatExtension_BottomContainer_CellData: self.replyData};
+    [TUICore raiseExtension:TUICore_TUIChatExtension_BottomContainer_MinimalistExtensionID parentView:self.bottomContainer param:param];
 }
-
 
 - (void)fillWithData:(TUIReplyMessageCellData_Minimalist *)data
 {
@@ -92,7 +85,7 @@
     }
     self.contentLabel.attributedText = [data.content getFormatEmojiStringWithFont:self.contentLabel.font emojiLocations:nil];
     
-    [self refreshTranslationView];
+    self.bottomContainer.hidden = CGSizeEqualToSize(data.bottomContainerSize, CGSizeZero);
     
     @weakify(self)
     [[RACObserve(data, originMessage) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(V2TIMMessage *originMessage) {
@@ -102,19 +95,6 @@
     }];
     
     [self layoutIfNeeded];
-}
-
-- (void)refreshTranslationView {
-    if (self.replyData.translationViewData.status == TUITranslationViewStatusLoading) {
-        [self.translationView startLoading];
-    } else {
-        [self.translationView stopLoading];
-    }
-    
-    self.translationView.hidden = [self.replyData.translationViewData isHidden];
-    [self.replyData.translationViewData calcSize];
-    [self.translationView updateTransaltion:self.replyData.translationViewData.text];
-    [self layoutTranslationView];
 }
 
 - (void)updateUI:(TUIReplyMessageCellData_Minimalist *)replyData
@@ -218,41 +198,42 @@
     
     [self updateUI:self.replyData];
     
-    [self layoutTranslationView];
+    [self layoutBottomContainer];
 }
 
-- (void)layoutTranslationView {
-    if (self.translationView.hidden) {
+- (void)layoutBottomContainer {
+    if (CGSizeEqualToSize(self.replyData.bottomContainerSize, CGSizeZero)) {
         return;
     }
-    
-    CGSize size = self.replyData.translationViewData.size;
+
+    CGSize size = self.replyData.bottomContainerSize;
     UIView *view = self.replyEmojiView.hidden ? self.bubbleView : self.replyEmojiView;
     CGFloat topMargin = view.mm_maxY + self.nameLabel.mm_h + 6;
     
     if (self.replyData.direction == MsgDirectionOutgoing) {
-        self.translationView
+        self.bottomContainer
             .mm_top(topMargin)
             .mm_width(size.width)
             .mm_height(size.height)
             .mm_right(self.mm_w - self.container.mm_maxX);
     } else {
-        self.translationView
+        self.bottomContainer
             .mm_top(topMargin)
             .mm_width(size.width)
             .mm_height(size.height)
             .mm_left(self.container.mm_minX);
     }
-    
+
     if (!self.messageModifyRepliesButton.hidden) {
         CGRect oldRect = self.messageModifyRepliesButton.frame;
-        CGRect newRect = CGRectMake(oldRect.origin.x, CGRectGetMaxY(self.translationView.frame) + 5,
+        CGRect newRect = CGRectMake(oldRect.origin.x, CGRectGetMaxY(self.bottomContainer.frame),
                                     oldRect.size.width, oldRect.size.height);
         self.messageModifyRepliesButton.frame = newRect;
     }
+    
     for (UIView *view in self.replyAvatarImageViews) {
         CGRect oldRect = view.frame;
-        CGRect newRect = CGRectMake(oldRect.origin.x, CGRectGetMaxY(self.translationView.frame) + 5,
+        CGRect newRect = CGRectMake(oldRect.origin.x, CGRectGetMaxY(self.bottomContainer.frame) + 5,
                                     oldRect.size.width, oldRect.size.height);
         view.frame = newRect;
     }

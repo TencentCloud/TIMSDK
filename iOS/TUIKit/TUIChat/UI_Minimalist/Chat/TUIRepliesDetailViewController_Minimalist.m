@@ -9,12 +9,12 @@
 #import "TUIMessageDataProvider_Minimalist.h"
 #import "TUIChatDataProvider_Minimalist.h"
 #import "TUITextMessageCellData_Minimalist.h"
-#import "TUIMessageCell.h"
+#import <TIMCommon/TUIMessageCell.h>
 #import "TUITextMessageCell_Minimalist.h"
 #import "TUIMenuCellData_Minimalist.h"
 
 #import "TUITextMessageCell_Minimalist.h"
-#import "TUISystemMessageCell.h"
+#import <TIMCommon/TUISystemMessageCell.h>
 #import "TUIVoiceMessageCell_Minimalist.h"
 #import "TUIImageMessageCell_Minimalist.h"
 #import "TUIFaceMessageCell_Minimalist.h"
@@ -29,13 +29,13 @@
 #import "TUIReferenceMessageCell_Minimalist.h"
 #import "TUIMergeMessageListController_Minimalist.h"
 #import "TUIMediaView_Minimalist.h"
-#import "TUIGlobalization.h"
-#import "TUIDefine.h"
-#import "TUIDarkModel.h"
-#import "TUIThemeManager.h"
+#import <TUICore/TUIGlobalization.h>
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIDarkModel.h>
+#import <TUICore/TUIThemeManager.h>
+#import "TUICore.h"
 
-
-@interface TUIRepliesDetailViewController_Minimalist ()<TUIInputControllerDelegate_Minimalist,UITableViewDelegate,UITableViewDataSource,TUIMessageBaseDataProviderDataSource,TUIMessageCellDelegate>
+@interface TUIRepliesDetailViewController_Minimalist ()<TUIInputControllerDelegate_Minimalist,UITableViewDelegate,UITableViewDataSource,TUIMessageBaseDataProviderDataSource,TUIMessageCellDelegate, TUINotificationProtocol>
 
 @property (nonatomic, strong) TUIMessageCellData *cellData;
 @property (nonatomic, strong) TUIMessageDataProvider_Minimalist *msgDataProvider;
@@ -72,6 +72,7 @@
 - (void)dealloc {
     self.cellData.showAvatar = self.showAvatar;
     self.cellData.sameToNextMsgSender = self.sameToNextMsgSender;
+    [TUICore unRegisterEventByObject:self];
 }
 
 - (void)viewDidLoad {
@@ -86,7 +87,7 @@
     self.topImgView.hidden = YES;
     
     _cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_cancelButton setTitle:TUIKitLocalizableString(Cancel) forState:UIControlStateNormal];
+    [_cancelButton setTitle:TIMCommonLocalizableString(Cancel) forState:UIControlStateNormal];
     [_cancelButton setTitleColor:[UIColor systemBlueColor] forState:UIControlStateNormal];
     _cancelButton.titleLabel.font = [UIFont systemFontOfSize:16.0];
     [_cancelButton addTarget:self action:@selector(onCancel:) forControlEvents:UIControlEventTouchUpInside];
@@ -94,13 +95,15 @@
     [self.topGestureView addSubview:_cancelButton];
     
     _titleLabel = [[UILabel alloc] init];
-    _titleLabel.text =  [NSString stringWithFormat:@"0 %@",TUIKitLocalizableString(TUIKitThreadQuote)];
+    _titleLabel.text =  [NSString stringWithFormat:@"0 %@",TIMCommonLocalizableString(TUIKitThreadQuote)];
     _titleLabel.font = [UIFont boldSystemFontOfSize:16.0];
-    _titleLabel.textColor = TUICoreDynamicColor(@"form_title_color", @"#000000");
+    _titleLabel.textColor = TIMCommonDynamicColor(@"form_title_color", @"#000000");
     [_titleLabel sizeToFit];
     [self.topGestureView addSubview:_titleLabel];
 
     [self updateSubContainerView];
+    
+    [TUICore registerEvent:TUICore_TUITranslationNotify subKey:TUICore_TUITranslationNotify_DidChangeTranslationSubKey object:self];
 }
 
 - (void)updateSubContainerView {
@@ -173,7 +176,7 @@
     if (msgIDArray.count <= 0) {
         [self.navigationController popViewControllerAnimated:YES];
     }
-    self.titleLabel.text =  [NSString stringWithFormat:@"%lu %@",(unsigned long)msgIDArray.count,TUIKitLocalizableString(TUIKitThreadQuote)];
+    self.titleLabel.text =  [NSString stringWithFormat:@"%lu %@",(unsigned long)msgIDArray.count,TIMCommonLocalizableString(TUIKitThreadQuote)];
     [self.titleLabel sizeToFit];
     __weak typeof(self)weakSelf = self;
     [TUIChatDataProvider_Minimalist findMessages:msgIDArray callback:^(BOOL succ, NSString * _Nonnull error_message, NSArray * _Nonnull msgs) {
@@ -206,7 +209,7 @@
 
 - (void)setupViews
 {
-    self.title = TUIKitLocalizableString(TUIKitRepliesDetailTitle);
+    self.title = TIMCommonLocalizableString(TUIKitRepliesDetailTitle);
     self.view.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.5];
     self.tableView.scrollsToTop = NO;
     self.tableView.delegate = self;
@@ -244,7 +247,7 @@
     _inputController.view.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
     [self addChildViewController:_inputController];
     [self.containerView addSubview:_inputController.view];
-    TUIFaceGroup *group = TUIConfig.defaultConfig.faceGroups[0];
+    TUIFaceGroup *group = TIMConfig.defaultConfig.faceGroups[0];
     [_inputController.faceView setData:(id)@[group]];
     TUIMenuCellData_Minimalist *data = [[TUIMenuCellData_Minimalist alloc] init];
     data.path = group.menuPath;
@@ -387,7 +390,7 @@
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
     if (section == 0) {
         UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0, 0, Screen_Width, 0.5)];
-        line.backgroundColor = TUICoreDynamicColor(@"separator_color", @"#DBDBDB");
+        line.backgroundColor = TIMCommonDynamicColor(@"separator_color", @"#DBDBDB");
         return line;
     }
     return nil;
@@ -420,6 +423,7 @@
         cell = [tableView dequeueReusableCellWithIdentifier:data.reuseId forIndexPath:indexPath];
         cell.delegate = self;
         [cell fillWithData:data];
+        [cell notifyBottomContainerReadyOfData:nil];
         return cell;
     }
     TUIMessageCellData *data = _uiMsgs[indexPath.row];
@@ -428,6 +432,7 @@
 
     cell = [tableView dequeueReusableCellWithIdentifier:data.reuseId forIndexPath:indexPath];
     [cell fillWithData:_uiMsgs[indexPath.row]];
+    [cell notifyBottomContainerReadyOfData:nil];
     cell.delegate = self;
     return cell;
 }
@@ -465,16 +470,6 @@
 
 - (void)inputController:(TUIInputController_Minimalist *)inputController didSendMessage:(V2TIMMessage *)msg {
     [self sendMessage:msg];
-}
-
-- (void)inputController:(TUIInputController_Minimalist *)inputController didSelectMoreCell:(TUIInputMoreCell_Minimalist *)cell
-{
-    cell.disableDefaultSelectAction = NO;
-    
-    if (cell.disableDefaultSelectAction) {
-        return;
-    }
-
 }
 
 
@@ -723,5 +718,70 @@
     } FailBlock:^(int code, NSString *desc) {
         [TUITool makeToastError:code msg:desc];
     }];
+}
+
+#pragma mark - TUINotificationProtocol
+- (void)onNotifyEvent:(NSString *)key
+               subKey:(NSString *)subKey
+               object:(id)anObject
+                param:(NSDictionary *)param {
+    if ([key isEqualToString:TUICore_TUITranslationNotify]
+        && [subKey isEqualToString:TUICore_TUITranslationNotify_DidChangeTranslationSubKey]) {
+        TUIMessageCellData *data = param[TUICore_TUITranslationNotify_DidChangeTranslationSubKey_Data];
+        [data clearCachedCellHeight];
+        [self.parentPageDataProvider removeHeightCacheOfData:data];
+        [self reloadAndScrollToBottomOfMessage:data.innerMessage.msgID section:1];
+    }
+}
+
+- (void)reloadAndScrollToBottomOfMessage:(NSString *)messageID section:(NSInteger)section {
+    // Dispatch the task to RunLoop to ensure that they are executed after the UITableView refresh is complete.
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self reloadCellOfMessage:messageID section:section];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self scrollCellToBottomOfMessage:messageID section:section];
+        });
+    });
+}
+
+- (void)reloadCellOfMessage:(NSString *)messageID section:(NSInteger)section {
+    NSIndexPath *indexPath = [self indexPathOfMessage:messageID section:section];
+    
+    // Disable animation when loading to avoid cell jumping.
+    if (indexPath == nil) {
+        return;
+    }
+    [UIView performWithoutAnimation:^{
+        [self.tableView reloadRowsAtIndexPaths:@[indexPath]
+                              withRowAnimation:UITableViewRowAnimationNone];
+    }];
+}
+
+- (void)scrollCellToBottomOfMessage:(NSString *)messageID section:(NSInteger)section {
+    NSIndexPath *indexPath = [self indexPathOfMessage:messageID section:section];
+    
+    // Scroll the tableView only if the bottom of the cell is invisible.
+    CGRect cellRect = [self.tableView rectForRowAtIndexPath:indexPath];
+    CGRect tableViewRect = self.tableView.bounds;
+    BOOL isBottomInvisible = cellRect.origin.y < CGRectGetMaxY(tableViewRect) && CGRectGetMaxY(cellRect) > CGRectGetMaxY(tableViewRect);
+    if (isBottomInvisible) {
+        [self.tableView scrollToRowAtIndexPath:indexPath
+                              atScrollPosition:UITableViewScrollPositionBottom
+                                      animated:YES];
+    }
+}
+
+- (NSIndexPath *)indexPathOfMessage:(NSString *)messageID section:(NSInteger)section {
+    if (section == 0) {
+        return [NSIndexPath indexPathForRow:0 inSection:section];
+    } else {
+        for (int i = 0; i < self.uiMsgs.count; i++) {
+            TUIMessageCellData *data = self.uiMsgs[i];
+            if ([data.innerMessage.msgID isEqualToString:messageID]) {
+                return [NSIndexPath indexPathForRow:i inSection:section];
+            }
+        }
+    }
+    return nil;
 }
 @end

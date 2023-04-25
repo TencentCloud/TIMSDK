@@ -6,8 +6,8 @@
 //
 
 #import "TUIReplyMessageCell.h"
-#import "TUIDarkModel.h"
-#import "UIView+TUILayout.h"
+#import <TUICore/TUIDarkModel.h>
+#import <TUICore/UIView+TUILayout.h>
 #import "TUIReplyMessageCellData.h"
 #import "TUIImageMessageCellData.h"
 #import "TUIVideoMessageCellData.h"
@@ -16,8 +16,9 @@
 #import "TUITextMessageCellData.h"
 #import "TUIMergeMessageCellData.h"
 #import "TUILinkCellData.h"
-#import "NSString+TUIEmoji.h"
-#import "TUIThemeManager.h"
+#import <TIMCommon/NSString+TUIEmoji.h>
+#import <TUICore/TUIThemeManager.h>
+#import <TUICore/TUICore.h>
 
 #import "TUIReplyQuoteView.h"
 #import "TUITextReplyQuoteView.h"
@@ -53,21 +54,14 @@
     [self.bubbleView addSubview:self.quoteView];
     [self.bubbleView addSubview:self.textView];
     
-    self.translationView = [[TUITranslationView alloc] init];
-    self.translationView.delegate = self;
-    [self.contentView addSubview:self.translationView];
+    self.bottomContainer = [[UIView alloc] init];
+    [self.contentView addSubview:self.bottomContainer];
 }
 
-- (void)setupRAC {
-    @weakify(self);
-    [[[RACObserve(self, replyData.translationViewData.status) distinctUntilChanged] skip:1] subscribeNext:^(NSNumber *status) {
-        @strongify(self);
-        if (self.replyData == nil) {
-            return;
-        }
-        
-        [self refreshTranslationView];
-    }];
+// Override
+- (void)notifyBottomContainerReadyOfData:(TUIMessageCellData *)cellData {
+    NSDictionary *param = @{TUICore_TUIChatExtension_BottomContainer_CellData: self.replyData};
+    [TUICore raiseExtension:TUICore_TUIChatExtension_BottomContainer_ClassicExtensionID parentView:self.bottomContainer param:param];
 }
 
 - (void)fillWithData:(TUIReplyMessageCellData *)data
@@ -90,7 +84,7 @@
     }
     self.textView.attributedText = [data.content getFormatEmojiStringWithFont:self.textView.font emojiLocations:self.replyData.emojiLocations];
     
-    [self refreshTranslationView];
+    self.bottomContainer.hidden = CGSizeEqualToSize(data.bottomContainerSize, CGSizeZero);
     
     @weakify(self)
     [[RACObserve(data, originMessage) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(V2TIMMessage *originMessage) {
@@ -100,19 +94,6 @@
     }];
     
     [self layoutIfNeeded];
-}
-
-- (void)refreshTranslationView {
-    if (self.replyData.translationViewData.status == TUITranslationViewStatusLoading) {
-        [self.translationView startLoading];
-    } else {
-        [self.translationView stopLoading];
-    }
-    
-    self.translationView.hidden = [self.replyData.translationViewData isHidden];
-    [self.replyData.translationViewData calcSize];
-    [self.translationView updateTransaltion:self.replyData.translationViewData.text];
-    [self layoutTranslationView];
 }
 
 - (void)updateUI:(TUIReplyMessageCellData *)replyData
@@ -216,34 +197,45 @@
     
     [self updateUI:self.replyData];
     
-    [self layoutTranslationView];
+    [self updateTagView];
+    
+    [self layoutBottomContainer];
 }
 
-- (void)layoutTranslationView {
-    if (self.translationView.hidden) {
+- (void)updateTagView {
+    if (self.messageData.messageModifyReactsSize.height > 0) {
+        if (self.tagView) {
+            CGFloat tagViewTopPadding = 6;
+            self.tagView.frame = CGRectMake(0, self.container.mm_h - self.messageData.messageModifyReactsSize.height - tagViewTopPadding , self.container.frame.size.width, self.messageData.messageModifyReactsSize.height);
+        }
+    }
+
+}
+- (void)layoutBottomContainer {
+    if (CGSizeEqualToSize(self.replyData.bottomContainerSize, CGSizeZero)) {
         return;
     }
-    
-    CGSize size = self.replyData.translationViewData.size;
+
+    CGSize size = self.replyData.bottomContainerSize;
     CGFloat topMargin = self.bubbleView.mm_maxY + self.nameLabel.mm_h + 6;
     
     if (self.replyData.direction == MsgDirectionOutgoing) {
-        self.translationView
+        self.bottomContainer
             .mm_top(topMargin)
             .mm_width(size.width)
             .mm_height(size.height)
             .mm_right(self.mm_w - self.container.mm_maxX);
     } else {
-        self.translationView
+        self.bottomContainer
             .mm_top(topMargin)
             .mm_width(size.width)
             .mm_height(size.height)
             .mm_left(self.container.mm_minX);
     }
-    
+
     if (!self.messageModifyRepliesButton.hidden) {
         CGRect oldRect = self.messageModifyRepliesButton.frame;
-        CGRect newRect = CGRectMake(oldRect.origin.x, CGRectGetMaxY(self.translationView.frame),
+        CGRect newRect = CGRectMake(oldRect.origin.x, CGRectGetMaxY(self.bottomContainer.frame),
                                     oldRect.size.width, oldRect.size.height);
         self.messageModifyRepliesButton.frame = newRect;
     }

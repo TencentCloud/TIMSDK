@@ -6,7 +6,7 @@
 //
 
 #import "TUISearchEmptyView_Minimalist.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 
 @implementation TUISearchEmptyView_Minimalist
 

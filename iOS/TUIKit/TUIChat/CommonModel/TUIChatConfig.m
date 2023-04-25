@@ -6,7 +6,7 @@
 //
 
 #import "TUIChatConfig.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 
 @implementation TUIChatConfig
 
@@ -17,14 +17,14 @@
         self.msgNeedReadReceipt = NO;
         self.enableVideoCall = YES;
         self.enableAudioCall = YES;
-        self.enableLink = YES;
+        self.enableWelcomeCustomMessage = YES;
         self.enablePopMenuEmojiReactAction = YES;
         self.enablePopMenuReplyAction = YES;
         self.enablePopMenuReferenceAction = YES;
         self.enableTypingStatus = YES;
         self.enableFloatWindowForCall = YES;
         self.enableMultiDeviceForCall = NO;
-        self.enableTextTranslation = NO;
+        self.timeIntervalForMessageRecall = 120;
         
         [self updateEmojiGroups];
     }

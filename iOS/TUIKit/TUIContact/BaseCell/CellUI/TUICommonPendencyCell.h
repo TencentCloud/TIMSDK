@@ -5,7 +5,8 @@
 //  Created by annidyfeng on 2019/5/7.
 //
 
-#import "TUICommonModel.h"
+#import <TIMCommon/TIMCommonModel.h>
+#import <TIMCommon/TIMDefine.h>
 #import "TUICommonPendencyCellData.h"
 
 NS_ASSUME_NONNULL_BEGIN

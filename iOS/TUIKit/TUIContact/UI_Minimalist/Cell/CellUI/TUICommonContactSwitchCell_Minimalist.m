@@ -6,8 +6,8 @@
 //
 
 #import "TUICommonContactSwitchCell_Minimalist.h"
-#import "TUIDefine.h"
-#import "TUIThemeManager.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
 
 @implementation TUICommonContactSwitchCellData_Minimalist
 
@@ -44,17 +44,17 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])
     {
-        self.backgroundColor = TUICoreDynamicColor(@"", @"#f9f9f9");
-        self.contentView.backgroundColor = TUICoreDynamicColor(@"", @"#f9f9f9");
+        self.backgroundColor = TIMCommonDynamicColor(@"", @"#f9f9f9");
+        self.contentView.backgroundColor = TIMCommonDynamicColor(@"", @"#f9f9f9");
 
         _titleLabel = [[UILabel alloc] init];
-        _titleLabel.textColor = TUICoreDynamicColor(@"form_key_text_color", @"#444444");
+        _titleLabel.textColor = TIMCommonDynamicColor(@"form_key_text_color", @"#444444");
         _titleLabel.font = [UIFont systemFontOfSize:16];
         _titleLabel.textAlignment = NSTextAlignmentLeft;
         [self.contentView addSubview:_titleLabel];
         
         _descLabel = [[UILabel alloc] init];
-        _descLabel.textColor = TUICoreDynamicColor(@"group_modify_desc_color", @"#888888");
+        _descLabel.textColor = TIMCommonDynamicColor(@"group_modify_desc_color", @"#888888");
         _descLabel.font = [UIFont systemFontOfSize:12];
         _descLabel.numberOfLines = 0;
         _descLabel.textAlignment = NSTextAlignmentLeft;
@@ -62,7 +62,7 @@
         [self.contentView addSubview:_descLabel];
         
         _switcher = [[UISwitch alloc] init];
-        _switcher.onTintColor = TUICoreDynamicColor(@"common_switch_on_color", @"#34C759");
+        _switcher.onTintColor = TIMCommonDynamicColor(@"common_switch_on_color", @"#34C759");
         self.accessoryView = _switcher;
         [self.contentView addSubview:_switcher];
         [_switcher addTarget:self action:@selector(switchClick) forControlEvents:UIControlEventValueChanged];

@@ -27,8 +27,8 @@
 #import "TUIVoiceMessageCellData_Minimalist.h"
 #import "TUITextMessageCellData_Minimalist.h"
 #import "TUIMergeMessageCellData_Minimalist.h"
-#import "TUIMessageCellLayout.h"
-#import "NSString+TUIEmoji.h"
+#import <TIMCommon/TUIMessageCellLayout.h>
+#import <TIMCommon/NSString+TUIEmoji.h>
 
 #import "TUITextReplyQuoteViewData_Minimalist.h"
 #import "TUIImageReplyQuoteViewData_Minimalist.h"
@@ -76,15 +76,8 @@
 - (CGFloat)heightOfWidth:(CGFloat)width {
     CGFloat height = [super heightOfWidth:width];
     
-    // load translationView's saved data to render translationView
-    if ([self.translationViewData shouldLoadSavedData]) {
-        [self.translationViewData setMessage:self.innerMessage];
-        [self.translationViewData loadSavedData];
-    }
-    [self.translationViewData calcSize];
-    
-    if (![self.translationViewData isHidden]) {
-        height += self.translationViewData.size.height + 6;
+    if (self.bottomContainerSize.height > 0) {
+        height += self.bottomContainerSize.height + 6;
     }
     
     return height;
@@ -158,10 +151,6 @@
     }
     
     return CGSizeMake(quoteWidth + kReplyQuoteViewMarginWidth, height);
-}
-
-- (BOOL)canTranslate {
-    return YES;
 }
 
 - (CGSize)quotePlaceholderSizeWithType:(V2TIMElemType)type data:(TUIReplyQuoteViewData_Minimalist *)data

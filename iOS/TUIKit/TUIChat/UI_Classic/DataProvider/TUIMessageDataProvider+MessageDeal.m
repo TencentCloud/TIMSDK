@@ -8,7 +8,7 @@
 #import "TUIMessageDataProvider+MessageDeal.h"
 #import "TUIChatDataProvider.h"
 #import "TUIMessageDataProvider.h"
-#import "TUIMessageCellData.h"
+#import <TIMCommon/TUIMessageCellData.h>
 #import "TUIImageMessageCellData.h"
 @implementation TUIMessageDataProvider (MessageDeal)
 

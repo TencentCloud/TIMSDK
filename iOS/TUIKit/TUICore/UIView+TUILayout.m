@@ -184,7 +184,7 @@
 }
 
 
--(UIView *(^)(void))mm_center {
+-(UIView *(^)(void))tui_mm_center {
     @tui_mm_weakify(self);
     return ^{
         @tui_mm_strongify(self);

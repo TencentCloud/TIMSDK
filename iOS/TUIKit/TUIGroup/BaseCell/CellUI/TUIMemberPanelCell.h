@@ -6,8 +6,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TUICommonModel.h"
-#import "UIView+TUILayout.h"
+#import <TIMCommon/TIMCommonModel.h>
+#import <TUICore/UIView+TUILayout.h>
 
 @interface TUIMemberPanelCell : UICollectionViewCell
 - (void)fillWithData:(TUIUserModel *)model;

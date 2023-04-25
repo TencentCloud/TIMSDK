@@ -7,7 +7,7 @@
 
 #import "TUIGroupButtonCell_Minimalist.h"
 
-#import "TUIThemeManager.h"
+#import <TUICore/TUIThemeManager.h>
 
 @implementation TUIGroupButtonCell_Minimalist{
     UIView *_line;
@@ -54,26 +54,26 @@
     _button.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0);
     switch (data.style) {
         case ButtonGreen: {
-            [_button setTitleColor:TUICoreDynamicColor(@"form_green_button_text_color", @"#FFFFFF") forState:UIControlStateNormal];
-            _button.backgroundColor = TUICoreDynamicColor(@"", @"#f9f9f9");
-            [_button setBackgroundImage:[self imageWithColor:TUICoreDynamicColor(@"", @"#f9f9f9")] forState:UIControlStateHighlighted];
+            [_button setTitleColor:TIMCommonDynamicColor(@"form_green_button_text_color", @"#FFFFFF") forState:UIControlStateNormal];
+            _button.backgroundColor = TIMCommonDynamicColor(@"", @"#f9f9f9");
+            [_button setBackgroundImage:[self imageWithColor:TIMCommonDynamicColor(@"", @"#f9f9f9")] forState:UIControlStateHighlighted];
         }
             break;
         case ButtonWhite: {
-            [_button setTitleColor:TUICoreDynamicColor(@"form_white_button_text_color", @"#000000") forState:UIControlStateNormal];
-            _button.backgroundColor = TUICoreDynamicColor(@"", @"#f9f9f9");
+            [_button setTitleColor:TIMCommonDynamicColor(@"form_white_button_text_color", @"#000000") forState:UIControlStateNormal];
+            _button.backgroundColor = TIMCommonDynamicColor(@"", @"#f9f9f9");
         }
             break;
         case ButtonRedText: {
-            [_button setTitleColor:TUICoreDynamicColor(@"form_redtext_button_text_color", @"#FF0000") forState:UIControlStateNormal];
-            _button.backgroundColor = TUICoreDynamicColor(@"", @"#f9f9f9");
+            [_button setTitleColor:TIMCommonDynamicColor(@"form_redtext_button_text_color", @"#FF0000") forState:UIControlStateNormal];
+            _button.backgroundColor = TIMCommonDynamicColor(@"", @"#f9f9f9");
 
             break;
         }
         case ButtonBule:{
             if (data.isInfoPageLeftButton) {
-                [_button setTitleColor:TUICoreDynamicColor(@"", @"#0365F9") forState:UIControlStateNormal];
-                _button.backgroundColor = TUICoreDynamicColor(@"", @"#f9f9f9");
+                [_button setTitleColor:TIMCommonDynamicColor(@"", @"#0365F9") forState:UIControlStateNormal];
+                _button.backgroundColor = TIMCommonDynamicColor(@"", @"#f9f9f9");
             }
             else {
                 [_button.titleLabel setTextColor:[UIColor tui_colorWithHex:@"147AFF"]];

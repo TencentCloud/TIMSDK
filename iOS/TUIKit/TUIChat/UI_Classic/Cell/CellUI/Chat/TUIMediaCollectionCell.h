@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TUIMessageCellData.h"
+#import <TIMCommon/TUIMessageCellData.h>
 #import <Photos/Photos.h>
 
 @class TUIMediaCollectionCell;

@@ -6,7 +6,7 @@
 //
 
 #import "TUIImageMessageCell_Minimalist.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 
 @interface TUIImageMessageCell_Minimalist ()
 

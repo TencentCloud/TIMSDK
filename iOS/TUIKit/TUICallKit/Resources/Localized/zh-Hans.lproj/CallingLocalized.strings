@@ -69,3 +69,13 @@
 "TUICallKit.package.not.purchased" = "您当前未购买音视频通话能力套餐，请前往IM 控制台开通免费体验或加购正式版";
 "TUICallKit.package.not.support" = "您当前购买的音视频通话能力套餐不支持该功能，建议您升级套餐类型";
 "TUICallKit.have.new.invitation" = "您有一个新的通话";
+
+"TUICallKit.Recents.all" = "所有通话";
+"TUICallKit.Recents.missed" = "未接通话";
+"TUICallKit.Recents.calls" = "通话记录";
+"TUICallKit.Recents.clear" = "清除";
+"TUICallKit.Recents.done" = "完成";
+"TUICallKit.Recents.delete" = "删除";
+"TUICallKit.Recents.addUser" = "添加成员";
+"TUICallKit.Recents.clear.all" = "清除所有记录";
+"TUICallKit.Recents.clear.cancel" = "取消";

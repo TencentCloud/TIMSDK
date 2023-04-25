@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TUICustomActionSheetItem : NSObject
 
+@property (nonatomic, assign) NSInteger priority;
+
 @property (nonatomic, copy) NSString * title;
 
 @property (nonatomic, strong) UIImage * leftMark;

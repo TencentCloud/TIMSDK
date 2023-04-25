@@ -6,9 +6,10 @@
 //
 
 #import "TUIVideoMessageCell_Minimalist.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
+#import "TUIMessageProgressManager.h"
 
-@interface TUIVideoMessageCell_Minimalist ()
+@interface TUIVideoMessageCell_Minimalist ()<TUIMessageProgressManagerDelegate>
 
 @property (nonatomic, strong) UIView *animateHighlightView;
 
@@ -48,6 +49,7 @@
         _progress.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         
         self.msgTimeLabel.textColor = RGB(255, 255, 255);
+        [TUIMessageProgressManager.shareManager addDelegate:self];
     }
     return self;
 }
@@ -100,7 +102,7 @@
     
     _thumb.mm_height(height).mm_left(0).mm_top(topMargin).mm_width(self.container.mm_w);
 
-    _play.mm_width(TVideoMessageCell_Play_Size.width).mm_height(TVideoMessageCell_Play_Size.height).mm_center();
+    _play.mm_width(TVideoMessageCell_Play_Size.width).mm_height(TVideoMessageCell_Play_Size.height).tui_mm_center();
     
     self.msgStatusView.frame = CGRectOffset(self.msgStatusView.frame, kScale390(8), 0);
     self.msgTimeLabel.frame = CGRectOffset(self.msgTimeLabel.frame, kScale390(8), 0);
@@ -150,6 +152,15 @@
         _animateHighlightView.backgroundColor = [UIColor orangeColor];
     }
     return _animateHighlightView;
+}
+#pragma mark - TUIMessageProgressManagerDelegate
+- (void)onProgress:(NSString *)msgID progress:(NSInteger)progress {
+    if (![msgID isEqualToString:self.videoData.msgID]) {
+        return;
+    }
+    if (self.videoData.direction == MsgDirectionOutgoing) {
+        self.videoData.uploadProgress = progress;
+    }
 }
 
 @end

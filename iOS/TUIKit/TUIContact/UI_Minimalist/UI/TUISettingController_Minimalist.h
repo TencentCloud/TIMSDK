@@ -16,7 +16,8 @@
  *  - This class depends on Tencent Cloud TUIKit and IMSDK
  */
 #import <UIKit/UIKit.h>
-#import "TUICommonModel.h"
+#import <TIMCommon/TIMCommonModel.h>
+#import <TIMCommon/TIMDefine.h>
 
 #define SHEET_COMMON 1
 #define SHEET_AGREE  2
@@ -27,16 +28,27 @@
 @optional
 - (void)onSwitchMsgReadStatus:(BOOL)isOn;
 - (void)onSwitchOnlineStatus:(BOOL)isOn;
-- (void)onClickAbout;
+- (void)onSwitchCallsRecord:(BOOL)isOn;
+- (void)onClickAboutIM;
 - (void)onClickLogout;
+- (void)onChangeStyle;
+- (void)onChangeTheme;
 @end
 
 @interface TUISettingController_Minimalist : UITableViewController
 @property(nonatomic, weak) id<TUISettingControllerDelegate_Minimalist> delegate;
 
+@property(nonatomic, assign) BOOL showPersonalCell;
 @property(nonatomic, assign) BOOL showMessageReadStatusCell;
 @property(nonatomic, assign) BOOL showDisplayOnlineStatusCell;
+@property(nonatomic, assign) BOOL showSelectStyleCell;
+@property(nonatomic, assign) BOOL showChangeThemeCell;
+@property(nonatomic, assign) BOOL showCallsRecordCell;
+@property(nonatomic, assign) BOOL showAboutIMCell;
 @property(nonatomic, assign) BOOL showLoginOutCell;
+
 @property(nonatomic, assign) BOOL msgNeedReadReceipt;
-@property(nonatomic, strong) NSString *aboutCellText;
+@property(nonatomic, assign) BOOL displayCallsRecord;
+
+@property(nonatomic, strong) NSString *aboutIMCellText;
 @end

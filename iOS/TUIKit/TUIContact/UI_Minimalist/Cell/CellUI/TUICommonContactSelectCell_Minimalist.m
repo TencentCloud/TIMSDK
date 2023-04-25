@@ -1,8 +1,7 @@
 
 #import "TUICommonContactSelectCell_Minimalist.h"
-#import "TUIDefine.h"
-#import "TUIThemeManager.h"
-
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
 
 @implementation TUICommonContactSelectCellData_Minimalist
 
@@ -34,10 +33,10 @@
     if (self) {
         self.selectButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [self.contentView addSubview:self.selectButton];
-        [self.selectButton setImage:[UIImage imageNamed:TUICoreImagePath(@"icon_select_normal")] forState:UIControlStateNormal];
-        [self.selectButton setImage:[UIImage imageNamed:TUICoreImagePath(@"icon_select_pressed")] forState:UIControlStateHighlighted];
-        [self.selectButton setImage:[UIImage imageNamed:TUICoreImagePath(@"icon_select_selected")] forState:UIControlStateSelected];
-        [self.selectButton setImage:[UIImage imageNamed:TUICoreImagePath(@"icon_select_selected_disable")] forState:UIControlStateDisabled];
+        [self.selectButton setImage:[UIImage imageNamed:TIMCommonImagePath(@"icon_select_normal")] forState:UIControlStateNormal];
+        [self.selectButton setImage:[UIImage imageNamed:TIMCommonImagePath(@"icon_select_pressed")] forState:UIControlStateHighlighted];
+        [self.selectButton setImage:[UIImage imageNamed:TIMCommonImagePath(@"icon_select_selected")] forState:UIControlStateSelected];
+        [self.selectButton setImage:[UIImage imageNamed:TIMCommonImagePath(@"icon_select_selected_disable")] forState:UIControlStateDisabled];
         self.selectButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
 
         self.avatarView = [[UIImageView alloc] initWithImage:DefaultAvatarImage];
@@ -46,7 +45,7 @@
 
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         [self.contentView addSubview:self.titleLabel];
-        self.titleLabel.textColor = TUICoreDynamicColor(@"form_title_color", @"#000000");
+        self.titleLabel.textColor = TIMCommonDynamicColor(@"form_title_color", @"#000000");
 
         self.titleLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
 

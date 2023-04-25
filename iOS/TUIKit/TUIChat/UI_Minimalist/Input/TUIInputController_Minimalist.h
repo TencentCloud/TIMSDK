@@ -14,10 +14,9 @@
 #import <UIKit/UIKit.h>
 #import "TUIInputBar_Minimalist.h"
 #import "TUIMenuView_Minimalist.h"
-#import "TUIMoreView_Minimalist.h"
 #import "TUIReplyPreviewBar_Minimalist.h"
 #import "TUIFaceView.h"
-#import "TUIMessageCell.h"
+#import <TIMCommon/TUIMessageCell.h>
 #import "TUIChatDefine.h"
 
 @class TUIInputController_Minimalist;
@@ -46,8 +45,16 @@
  */
 - (void)inputController:(TUIInputController_Minimalist *)inputController didSendMessage:(V2TIMMessage *)msg;
 
-- (void)inputController:(TUIInputController_Minimalist *)inputController didSelectMoreCellAction:(NSString *)actionName;
+/**
+ * 点击了 InputController 底部的更多按钮
+ * Callback when the more button in the bottom of input controller was clicked
+ */
+- (void)inputControllerDidSelectMoreButton:(TUIInputController_Minimalist *)inputController;
 
+/**
+ * 点击了 InputController 底部的拍照按钮
+ * Callback when the take-photo button in the bottom of input controller was clicked
+ */
 - (void)inputControllerDidSelectCamera:(TUIInputController_Minimalist *)inputController;
 
 /**
@@ -64,7 +71,6 @@
 
 
 - (void)inputControllerBeginTyping:(TUIInputController_Minimalist *)inputController;
-
 - (void)inputControllerEndTyping:(TUIInputController_Minimalist *)inputController;
 
 @end
@@ -127,16 +133,6 @@
  *  The menu view is located below the emoticon view and is responsible for providing the emoticon grouping unit and the send button.
  */
 @property (nonatomic, strong) TUIMenuView_Minimalist *menuView;
-
-/**
- *  更多视图
- *  更多视图一般在点击“更多“按钮（”+“按钮）后浮现，负责显示各个更多单元，比如拍摄、视频、文件、相册等。
- *
- *  More view
- *  More views generally appear after clicking the "More" button ("+" button), and are responsible for displaying each more unit, such as shooting, video, file, album, etc.
- */
-@property (nonatomic, strong) TUIMoreView_Minimalist *moreView;
-
 
 @property (nonatomic, weak) id<TUIInputControllerDelegate_Minimalist> delegate;
 

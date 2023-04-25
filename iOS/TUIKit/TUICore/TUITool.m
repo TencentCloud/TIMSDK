@@ -589,6 +589,8 @@
             return TUIKitLocalizableString(TUIkitErrorSVRAccountINvalidParameters);
         case ERR_SVR_ACCOUNT_ADMIN_REQUIRED:
             return TUIKitLocalizableString(TUIKitErrorSVRAccountAdminRequired);
+        case ERR_SVR_ACCOUNT_LOW_SDK_VERSION:
+            return TUIKitLocalizableString(TUIKitErrorSVRAccountLowSDKVersion);
         case ERR_SVR_ACCOUNT_FREQ_LIMIT:
             return TUIKitLocalizableString(TUIKitErrorSVRAccountFreqLimit);
         case ERR_SVR_ACCOUNT_BLACKLIST:

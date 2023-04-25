@@ -1,5 +1,5 @@
 #import <UIKit/UIKit.h>
-#import "TUIFitButton.h"
+#import <TIMCommon/TUIFitButton.h>
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIConversationMultiChooseView_Minimalist : UIView

@@ -5,7 +5,7 @@
 //  Created by wyl on 2022/7/4.
 //
 
-#import "TUIMessageCellData.h"
+#import <TIMCommon/TUIMessageCellData.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

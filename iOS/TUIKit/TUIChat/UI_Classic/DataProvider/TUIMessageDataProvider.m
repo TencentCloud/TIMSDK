@@ -4,7 +4,7 @@
 #import "TUIMessageDataProvider.h"
 #import "TUIMessageDataProvider+MessageDeal.h"
 #import "TUITextMessageCellData.h"
-#import "TUISystemMessageCellData.h"
+#import <TIMCommon/TUISystemMessageCellData.h>
 #import "TUIVoiceMessageCellData.h"
 #import "TUIImageMessageCellData.h"
 #import "TUIFaceMessageCellData.h"
@@ -24,7 +24,9 @@
  */
 #define MaxReEditMessageDelay 2 * 60
 
-static NSArray *customMessageInfo = nil;
+static NSMutableArray *customMessageInfo = nil;
+
+static NSMutableArray *pluginCustomMessageInfo = nil;
 
 @implementation TUIMessageDataProvider
 
@@ -34,46 +36,54 @@ static NSArray *customMessageInfo = nil;
 //                      Custom Message Configuration
 // *************************************************************************
 + (void)load {
-    customMessageInfo = @[@{BussinessID : BussinessID_TextLink,
-                            TMessageCell_Name : @"TUILinkCell",
-                            TMessageCell_Data_Name : @"TUILinkCellData"
-                          },
-                          @{BussinessID : BussinessID_GroupCreate,
-                            TMessageCell_Name : @"TUIGroupCreatedCell",
-                            TMessageCell_Data_Name : @"TUIGroupCreatedCellData"
-                          },
-                          @{BussinessID : BussinessID_Evaluation,
-                            TMessageCell_Name : @"TUIEvaluationCell",
-                            TMessageCell_Data_Name : @"TUIEvaluationCellData"
-                          },
-                          @{BussinessID : BussinessID_Order,
-                            TMessageCell_Name : @"TUIOrderCell",
-                            TMessageCell_Data_Name : @"TUIOrderCellData"
-                          },
-                          @{BussinessID : BussinessID_Typing,
-                            TMessageCell_Name : @"TUIMessageCell",
-                            TMessageCell_Data_Name : @"TUITypingStatusCellData"
-                          },
-                          @{BussinessID : BussinessID_GroupPoll,
-                            TMessageCell_Name : @"TUIPollContainerCell",
-                            TMessageCell_Data_Name : @"TUIPollContainerCellData"
-                          },
-                          @{BussinessID : BussinessID_GroupNote,
-                            TMessageCell_Name : @"TUIGroupNoteContainerCell",
-                            TMessageCell_Data_Name : @"TUIGroupNoteContainerCellData"
-                          },
-                          @{BussinessID : BussinessID_GroupNoteTips,
-                            TMessageCell_Name : @"TUIGroupNoteTipsCell",
-                            TMessageCell_Data_Name : @"TUIGroupNoteTipsCellData"
-                          },
-    ];
+    customMessageInfo = [NSMutableArray arrayWithArray:@[@{BussinessID : BussinessID_TextLink,
+                                                           TMessageCell_Name : @"TUILinkCell",
+                                                           TMessageCell_Data_Name : @"TUILinkCellData"
+                                                         },
+                                                         @{BussinessID : BussinessID_GroupCreate,
+                                                           TMessageCell_Name : @"TUIGroupCreatedCell",
+                                                           TMessageCell_Data_Name : @"TUIGroupCreatedCellData"
+                                                         },
+                                                         @{BussinessID : BussinessID_Evaluation,
+                                                           TMessageCell_Name : @"TUIEvaluationCell",
+                                                           TMessageCell_Data_Name : @"TUIEvaluationCellData"
+                                                         },
+                                                         @{BussinessID : BussinessID_Order,
+                                                           TMessageCell_Name : @"TUIOrderCell",
+                                                           TMessageCell_Data_Name : @"TUIOrderCellData"
+                                                         },
+                                                         @{BussinessID : BussinessID_Typing,
+                                                           TMessageCell_Name : @"TUIMessageCell",
+                                                           TMessageCell_Data_Name : @"TUITypingStatusCellData"
+                                                         },
+                                                       ]];
+    
+    pluginCustomMessageInfo = [NSMutableArray array];
+    
 }
 
-+ (NSArray *)getCustomMessageInfo {
++ (NSMutableArray *)getCustomMessageInfo {
     return customMessageInfo;
 }
 
++ (NSMutableArray *)getPluginCustomMessageInfo {
+    return pluginCustomMessageInfo;
+}
 
++ (BOOL)judgeCurrentDataPluginMsg:(TUIMessageCellData *)data {
+    NSMutableArray *pluginCustomMessageInfo = [TUIMessageDataProvider getPluginCustomMessageInfo];
+    NSMutableArray * currentCustomMessageBussinessIDArray = [NSMutableArray array];
+    for (NSDictionary *messageInfo in pluginCustomMessageInfo) {
+        NSString *bussinessID = messageInfo[BussinessID];
+        if (bussinessID) {
+            [currentCustomMessageBussinessIDArray addObject:bussinessID];
+        }
+    }
+    if([currentCustomMessageBussinessIDArray containsObject:data.reuseId]){
+        return YES;
+    }
+    return NO;
+}
 #pragma mark - Differentiated internal Message cell appearance configuration
 // *************************************************************************
 //            差异化的内置消息 Cell 外观配置
@@ -151,7 +161,6 @@ static NSArray *customMessageInfo = nil;
                             // This message will be ignore in chat page
                             data = nil;
                         } else {
-                            // Translate to cell data
                             data = [self getCallingCellData:callingInfo];
                             if (data == nil) {
                                 data = [self getUnsupportedCellData:message];
@@ -292,7 +301,7 @@ static NSArray *customMessageInfo = nil;
 
 + (TUIMessageCellData *)getUnsupportedCellData:(V2TIMMessage *)message {
     TUITextMessageCellData *cellData = [[TUITextMessageCellData alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
-    cellData.content = TUIKitLocalizableString(TUIKitNotSupportThisMessage);
+    cellData.content = TIMCommonLocalizableString(TUIKitNotSupportThisMessage);
     cellData.reuseId = TTextMessageCell_ReuseId;
     return cellData;
 }
@@ -330,11 +339,11 @@ static NSArray *customMessageInfo = nil;
         if (message.elemType == V2TIM_ELEM_TYPE_TEXT && fabs([[NSDate date] timeIntervalSinceDate:message.timestamp]) < MaxReEditMessageDelay) {
             revoke.supportReEdit = YES;
         }
-        revoke.content = TUIKitLocalizableString(TUIKitMessageTipsYouRecallMessage);
+        revoke.content = TIMCommonLocalizableString(TUIKitMessageTipsYouRecallMessage);
         revoke.innerMessage = message;
         return revoke;
     } else if (message.userID.length > 0){
-        revoke.content = TUIKitLocalizableString(TUIkitMessageTipsOthersRecallMessage);
+        revoke.content = TIMCommonLocalizableString(TUIkitMessageTipsOthersRecallMessage);
         revoke.innerMessage = message;
         return revoke;
     } else if (message.groupID.length > 0) {
@@ -344,7 +353,7 @@ static NSArray *customMessageInfo = nil;
          */
         NSString *userName = [TUIMessageDataProvider getShowName:message];
         TUIJoinGroupMessageCellData *joinGroupData = [[TUIJoinGroupMessageCellData alloc] initWithDirection:MsgDirectionIncoming];
-        joinGroupData.content = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsRecallMessageFormat), userName];
+        joinGroupData.content = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsRecallMessageFormat), userName];
         joinGroupData.opUserID = message.sender;
         joinGroupData.opUserName = userName;
         joinGroupData.reuseId = TJoinGroupMessageCell_ReuseId;
@@ -453,23 +462,23 @@ static TUIChatCallingDataProvider *_callingDataProvider;
                             str = nil;
                         } else {
                             // Get display text
-                            str = callingInfo.content ?: TUIKitLocalizableString(TUIKitMessageTipsUnsupportCustomMessage);
+                            str = callingInfo.content ?: TIMCommonLocalizableString(TUIKitMessageTipsUnsupportCustomMessage);
                         }
                     } else {
                         // Unsupported voice-video-call message
-                        str = TUIKitLocalizableString(TUIKitMessageTipsUnsupportCustomMessage);
+                        str = TIMCommonLocalizableString(TUIKitMessageTipsUnsupportCustomMessage);
                     }
                 } else {
                     // Others custom message
                     str = [self getCustomDisplayString:message];
                     if (str == nil) {
-                        str = TUIKitLocalizableString(TUIKitMessageTipsUnsupportCustomMessage);
+                        str = TIMCommonLocalizableString(TUIKitMessageTipsUnsupportCustomMessage);
                     }
                 }
             }
                 break;
             default:
-                str = TUIKitLocalizableString(TUIKitMessageTipsUnsupportCustomMessage);
+                str = TIMCommonLocalizableString(TUIKitMessageTipsUnsupportCustomMessage);
                 break;
         }
     }

@@ -5,7 +5,8 @@
 //  Created by wyl on 2022/12/14.
 //
 
-#import "TUICommonModel.h"
+#import <TIMCommon/TIMCommonModel.h>
+#import <TIMCommon/TIMDefine.h>
 #import "TUIContactButtonCellData_Minimalist.h"
 NS_ASSUME_NONNULL_BEGIN
 

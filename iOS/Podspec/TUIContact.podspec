@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUIContact'
-  spec.version      = '7.1.3925'
+  spec.version      = '7.2.4123'
   spec.platform     = :ios 
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
@@ -16,15 +16,16 @@ Pod::Spec.new do |spec|
 
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/7.1.3925/ios/TUIContact.zip?time=2'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4123/ios/TUIContact.zip?time=2'}
 
   spec.default_subspec = 'ALL'
   
   spec.subspec 'BaseCell' do |baseCell|
     baseCell.subspec 'CellData' do |cellData|
       cellData.source_files = '**/TUIContact/BaseCell/CellData/*.{h,m,mm}'
-      cellData.dependency 'TXIMSDK_Plus_iOS','7.1.3925'
-      cellData.dependency 'TUICore','7.1.3925'
+      cellData.dependency 'TXIMSDK_Plus_iOS','7.2.4123'
+      cellData.dependency 'TUICore','7.2.4123'
+      cellData.dependency 'TIMCommon','7.2.4123'
       cellData.dependency 'ReactiveObjC'
     end
     baseCell.subspec 'CellUI' do |cellUI|
@@ -37,11 +38,16 @@ Pod::Spec.new do |spec|
     baseDataProvider.source_files = '**/TUIContact/BaseDataProvider/*.{h,m,mm}'
     baseDataProvider.dependency "TUIContact/BaseCell"
   end
+  
+  spec.subspec 'CommonUI' do |commonUI|
+     commonUI.source_files = '**/TUIContact/CommonUI/*.{h,m,mm}'
+     commonUI.dependency "TUIContact/BaseDataProvider"
+  end
 
   spec.subspec 'UI_Classic' do |uiClassic|
     uiClassic.subspec 'UI' do |ui|
       ui.source_files = '**/TUIContact/UI_Classic/UI/*.{h,m,mm}'
-      ui.dependency "TUIContact/BaseDataProvider"
+      ui.dependency "TUIContact/CommonUI"
     end
     uiClassic.subspec 'Service' do |service|
       service.source_files = '**/TUIContact/UI_Classic/Service/*.{h,m,mm}'
@@ -60,7 +66,7 @@ Pod::Spec.new do |spec|
     uiMinimalist.subspec 'Cell' do |cell|
         cell.subspec 'CellData' do |cellData|
         cellData.source_files = '**/TUIContact/UI_Minimalist/Cell/CellData/*.{h,m,mm}'
-        cellData.dependency "TUIContact/BaseDataProvider"
+        cellData.dependency "TUIContact/CommonUI"
         end
         cell.subspec 'CellUI' do |cellUI|
         cellUI.source_files = '**/TUIContact/UI_Minimalist/Cell/CellUI/*.{h,m,mm}'

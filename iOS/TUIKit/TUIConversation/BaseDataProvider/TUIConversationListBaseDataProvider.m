@@ -8,9 +8,9 @@
 #import "TUIConversationListBaseDataProvider.h"
 
 #import <ImSDK_Plus/ImSDK_Plus.h>
-#import "TUIDefine.h"
-#import "TUICore.h"
-#import "TUILogin.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUICore.h>
+#import <TUICore/TUILogin.h>
 #import "TUIConversationCellData.h"
 
 #define kPageSize 100
@@ -255,25 +255,49 @@
     
     if (markHideDataList.count) {
         [self sortDataList:markHideDataList];
-        [markHideDataList enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            if ([self.conversationList containsObject:obj] ) {
-                [self handleHideConversation:obj];
+        NSMutableArray *pRemoveCellUIList = [NSMutableArray array];
+        NSMutableDictionary<NSString *, TUIConversationCellData *> *pMarkHideDataMap = [NSMutableDictionary dictionary];
+        for (TUIConversationCellData *item in markHideDataList) {
+            if (item.conversationID) {
+                [pRemoveCellUIList addObject:item];
+                [pMarkHideDataMap setObject:item
+                                    forKey:item.conversationID];
             }
-        }];
+        }
+        for (TUIConversationCellData *item in self.conversationList) {
+            if ([pMarkHideDataMap objectForKey:item.conversationID]) {
+                [pRemoveCellUIList addObject:item];
+            }
+        }
+        for (TUIConversationCellData *item in pRemoveCellUIList) {
+                [self handleHideConversation:item];
+        }
     }
     
     [self updateMarkUnreadCount];
 
     if (markFoldDataList.count) {
         [self sortDataList:markFoldDataList];
-        [markFoldDataList enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            // 如果有被折叠的会话出现在首页会话列表，则需要隐藏，注意不能删除历史记录
-            // If a collapsed session appears in the home page List, it needs to be hidden. Note that the history cannot be deleted.
-            if ([self.conversationList containsObject:obj] ) {
-                [self handleHideConversation:obj];
+        NSMutableArray *pRemoveCellUIList = [NSMutableArray array];
+        NSMutableDictionary<NSString *, TUIConversationCellData *> *pMarkFoldDataMap = [NSMutableDictionary dictionary];
+        for (TUIConversationCellData *item in markFoldDataList) {
+            if (item.conversationID) {
+                [pRemoveCellUIList addObject:item];
+                [pMarkFoldDataMap setObject:item
+                                    forKey:item.conversationID];
             }
-        }];
-
+        }
+        for (TUIConversationCellData *item in self.conversationList) {
+            if ([pMarkFoldDataMap objectForKey:item.conversationID]) {
+                [pRemoveCellUIList addObject:item];
+            }
+        }
+        // 如果有被折叠的会话出现在首页会话列表，则需要隐藏，注意不能删除历史记录
+        // If a collapsed session appears in the home page List, it needs to be hidden. Note that the history cannot be deleted.
+        for (TUIConversationCellData *item in pRemoveCellUIList) {
+            [self handleHideConversation:item];
+        }
+        
     }
 }
 
@@ -336,14 +360,21 @@
     
     NSInteger minIndex = self.conversationList.count - 1;
     NSInteger maxIndex = 0;
+    
+    NSMutableDictionary<NSString *, TUIConversationCellData *> *conversationMap = [NSMutableDictionary dictionary];
+    for (TUIConversationCellData *item in self.conversationList) {
+        if (item.conversationID) {
+            [conversationMap setObject:item forKey:item.conversationID];
+        }
+    }
+    
     for (TUIConversationCellData *cellData in conversationList) {
-        for (TUIConversationCellData *item in self.conversationList) {
-            if ([item.conversationID isEqualToString:cellData.conversationID]) {
-                NSInteger previous = [[positionMaps objectForKey:item.conversationID] integerValue];
-                NSInteger current  = [self.conversationList indexOfObject:item];
-                minIndex = minIndex < MIN(previous, current) ? minIndex : MIN(previous, current);
-                maxIndex = maxIndex > MAX(previous, current) ? maxIndex : MAX(previous, current);
-            }
+        TUIConversationCellData *item = [conversationMap objectForKey:cellData.conversationID];
+        if (item) {
+            NSInteger previous = [[positionMaps objectForKey:item.conversationID] integerValue];
+            NSInteger current  = [self.conversationList indexOfObject:item];
+            minIndex = minIndex < MIN(previous, current) ? minIndex : MIN(previous, current);
+            maxIndex = maxIndex > MAX(previous, current) ? maxIndex : MAX(previous, current);
         }
     }
     
@@ -618,7 +649,7 @@
         [self dealFoldcellDataOfGroupID:groupID];
         return;
     }
-    [TUITool makeToast:[NSString stringWithFormat:TUIKitLocalizableString(TUIKitGroupDismssTipsFormat), data.groupID]];
+    [TUITool makeToast:[NSString stringWithFormat:TIMCommonLocalizableString(TUIKitGroupDismssTipsFormat), data.groupID]];
     [self handleRemoveConversation:data];
 }
 
@@ -628,7 +659,7 @@
         [self dealFoldcellDataOfGroupID:groupID];
         return;
     }
-    [TUITool makeToast:[NSString stringWithFormat:TUIKitLocalizableString(TUIKitGroupRecycledTipsFormat), data.groupID]];
+    [TUITool makeToast:[NSString stringWithFormat:TIMCommonLocalizableString(TUIKitGroupRecycledTipsFormat), data.groupID]];
     [self handleRemoveConversation:data];
 }
 
@@ -650,7 +681,7 @@
         return;
     }
     
-    [TUITool makeToast:[NSString stringWithFormat:TUIKitLocalizableString(TUIKitGroupKickOffTipsFormat), data.groupID]];
+    [TUITool makeToast:[NSString stringWithFormat:TIMCommonLocalizableString(TUIKitGroupKickOffTipsFormat), data.groupID]];
     [self handleRemoveConversation:data];
 }
 
@@ -660,7 +691,7 @@
         [self dealFoldcellDataOfGroupID:groupID];
         return;
     }
-    [TUITool makeToast:[NSString stringWithFormat:TUIKitLocalizableString(TUIKitGroupDropoutTipsFormat), data.groupID]];
+    [TUITool makeToast:[NSString stringWithFormat:TIMCommonLocalizableString(TUIKitGroupDropoutTipsFormat), data.groupID]];
     [self handleRemoveConversation:data];
 }
 
@@ -866,13 +897,13 @@
         }
     }
     if (atMe && !atAll) {
-        atTipsStr = TUIKitLocalizableString(TUIKitConversationTipsAtMe);
+        atTipsStr = TIMCommonLocalizableString(TUIKitConversationTipsAtMe);
     }
     if (!atMe && atAll) {
-        atTipsStr = TUIKitLocalizableString(TUIKitConversationTipsAtAll);
+        atTipsStr = TIMCommonLocalizableString(TUIKitConversationTipsAtAll);
     }
     if (atMe && atAll) {
-        atTipsStr = TUIKitLocalizableString(TUIKitConversationTipsAtMeAndAll);
+        atTipsStr = TIMCommonLocalizableString(TUIKitConversationTipsAtMeAndAll);
     }
     return atTipsStr;
 }
@@ -1018,8 +1049,8 @@
         if (cls) {
             _conversationFoldListData = (TUIConversationCellData *)[[cls alloc] init];
             _conversationFoldListData.conversationID = @"group_conversationFoldListMockID";
-            _conversationFoldListData.title          = TUIKitLocalizableString(TUIKitConversationMarkFoldGroups);
-            _conversationFoldListData.avatarImage =  TUICoreBundleThemeImage(@"", @"default_fold_group");
+            _conversationFoldListData.title          = TIMCommonLocalizableString(TUIKitConversationMarkFoldGroups);
+            _conversationFoldListData.avatarImage =  TIMCommonBundleThemeImage(@"", @"default_fold_group");
             _conversationFoldListData.isNotDisturb   = YES;
         }
     }

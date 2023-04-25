@@ -8,8 +8,8 @@
 
 #import "TUIMoreView.h"
 #import "TUIInputMoreCell.h"
-#import "TUIDefine.h"
-#import "TUIThemeManager.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
 
 @interface TUIMoreView () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property (nonatomic, strong) NSArray *data;
@@ -54,7 +54,7 @@
     [self addSubview:_moreCollectionView];
 
     _lineView = [[UIView alloc] init];
-    _lineView.backgroundColor =  TUICoreDynamicColor(@"separator_color", @"#DBDBDB");
+    _lineView.backgroundColor =  TIMCommonDynamicColor(@"separator_color", @"#DBDBDB");
     [self addSubview:_lineView];
 
     _pageControl = [[UIPageControl alloc] init];

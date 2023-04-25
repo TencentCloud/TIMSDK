@@ -1,6 +1,6 @@
 #import "TUIImageCollectionCell.h"
-#import "TUIDefine.h"
-#import "TUITool.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUITool.h>
 
 @implementation TUIImageCollectionCell
 - (id)initWithFrame:(CGRect)frame
@@ -41,9 +41,9 @@
     } completionHandler:^(BOOL success, NSError * _Nullable error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
-                [TUITool makeToast:TUIKitLocalizableString(TUIKitPictureSavedSuccess)];
+                [TUITool makeToast:TIMCommonLocalizableString(TUIKitPictureSavedSuccess)];
             } else {
-                [TUITool makeToast:TUIKitLocalizableString(TUIKitPictureSavedFailed)];
+                [TUITool makeToast:TIMCommonLocalizableString(TUIKitPictureSavedFailed)];
             }
         });
     }];

@@ -6,10 +6,10 @@
 //
 
 #import "TUICommonContactCell_Minimalist.h"
-#import "TUICommonModel.h"
+#import <TIMCommon/TIMCommonModel.h>
 #import "TUICommonContactCellData_Minimalist.h"
-#import "TUIDefine.h"
-#import "TUIThemeManager.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
 
 #define kScale UIScreen.mainScreen.bounds.size.width / 375.0
 
@@ -24,22 +24,23 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.contentView.backgroundColor = TUICoreDynamicColor(@"", @"#FFFFFF");
+        self.contentView.backgroundColor = TIMCommonDynamicColor(@"", @"#FFFFFF");
         self.avatarView = [[UIImageView alloc] initWithImage:DefaultAvatarImage];
         [self.contentView addSubview:self.avatarView];
 
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         [self.contentView addSubview:self.titleLabel];
         self.titleLabel.font = [UIFont systemFontOfSize:14];
-        self.titleLabel.textColor = TUICoreDynamicColor(@"", @"#000000");
+        self.titleLabel.textColor = TIMCommonDynamicColor(@"", @"#000000");
         
         self.onlineStatusIcon = [[UIImageView alloc] init];
         [self.contentView addSubview:self.onlineStatusIcon];
 
         _separtorView = [[UIView alloc] init];
-        _separtorView.backgroundColor = TUICoreDynamicColor(@"separator_color", @"#DBDBDB");
+        _separtorView.backgroundColor = TIMCommonDynamicColor(@"separator_color", @"#DBDBDB");
         [self.contentView addSubview:_separtorView];
-
+        _separtorView.hidden = YES;
+        
         [self setSelectionStyle:UITableViewCellSelectionStyleNone];
 
         self.changeColorWhenTouched = YES;
@@ -61,11 +62,11 @@
         if (contactData.onlineStatus == TUIContactOnlineStatusOnline_Minimalist &&
             TUIConfig.defaultConfig.displayOnlineStatusIcon) {
             self.onlineStatusIcon.hidden = NO;
-            self.onlineStatusIcon.image = TUICoreDynamicImage(@"icon_online_status", [UIImage imageNamed:TUICoreImagePath(@"icon_online_status")]);
+            self.onlineStatusIcon.image = TIMCommonDynamicImage(@"icon_online_status", [UIImage imageNamed:TIMCommonImagePath(@"icon_online_status")]);
         } else if (contactData.onlineStatus == TUIContactOnlineStatusOffline_Minimalist &&
                    TUIConfig.defaultConfig.displayOnlineStatusIcon) {
             self.onlineStatusIcon.hidden = NO;
-            self.onlineStatusIcon.image = TUICoreDynamicImage(@"icon_offline_status", [UIImage imageNamed:TUICoreImagePath(@"icon_offline_status")]);
+            self.onlineStatusIcon.image = TIMCommonDynamicImage(@"icon_offline_status", [UIImage imageNamed:TIMCommonImagePath(@"icon_offline_status")]);
         } else {
             self.onlineStatusIcon.hidden = YES;
             self.onlineStatusIcon.image = nil;

@@ -1,5 +1,6 @@
 #import <UIKit/UIKit.h>
-#import "TUIDefine.h"
+#import <TIMCommon/TIMCommonModel.h>
+#import <TIMCommon/TIMDefine.h>
 #import "TUIContactSelectViewDataProvider.h"
 
 NS_ASSUME_NONNULL_BEGIN

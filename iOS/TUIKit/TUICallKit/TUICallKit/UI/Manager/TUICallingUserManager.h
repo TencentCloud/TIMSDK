@@ -35,6 +35,8 @@ typedef void (^CallingUserModelCallback)(NSInteger code, NSString * _Nonnull mes
 
 + (void)removeUser:(NSString *)userId;
 
++ (NSString *)getSelfUserId;
+
 @end
 
 NS_ASSUME_NONNULL_END

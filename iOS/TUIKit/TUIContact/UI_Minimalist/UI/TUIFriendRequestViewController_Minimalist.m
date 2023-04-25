@@ -6,13 +6,13 @@
 //  Copyright © 2019年 kennethmiao. All rights reserved.
 //
 #import "TUIFriendRequestViewController_Minimalist.h"
-#import "UIView+TUILayout.h"
+#import <TUICore/UIView+TUILayout.h>
 #import "TUICommonContactProfileCardCell.h"
-#import "TUICommonModel.h"
+#import <TIMCommon/TIMCommonModel.h>
 #import "TUICommonContactSwitchCell.h"
 #import "TUIContactAvatarViewController_Minimalist.h"
-#import "TUIDefine.h"
-#import "TUIThemeManager.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
 #import "TUIContactButtonCell_Minimalist.h"
 #import "UIView+TUIToast.h"
 
@@ -60,7 +60,7 @@
             if (infoList && infoList.count > 0) {
                 V2TIMUserFullInfo * userInfo = [infoList firstObject];
                 if (userInfo) {
-                    NSString *text = [NSString stringWithFormat:TUIKitLocalizableString(FriendRequestFormat), userInfo.nickName?userInfo.nickName:userInfo.userID];
+                    NSString *text = [NSString stringWithFormat:TIMCommonLocalizableString(FriendRequestFormat), userInfo.nickName?userInfo.nickName:userInfo.userID];
                     self.addWordTextView.attributedText = [[NSAttributedString alloc] initWithString:text attributes:attributes];
                 }
             }
@@ -73,7 +73,7 @@
 
 
     _titleView = [[TUINaviBarIndicatorView alloc] init];
-    [_titleView setTitle:TUIKitLocalizableString(FriendRequestFillInfo)];
+    [_titleView setTitle:TIMCommonLocalizableString(FriendRequestFillInfo)];
     self.navigationItem.titleView = _titleView;
     self.navigationItem.title = @"";
 
@@ -89,7 +89,7 @@
 
 
     self.singleSwitchData = [TUICommonContactSwitchCellData new];
-    self.singleSwitchData.title = TUIKitLocalizableString(FriendOneWay);
+    self.singleSwitchData.title = TIMCommonLocalizableString(FriendOneWay);
 
 
     @weakify(self)
@@ -156,9 +156,9 @@
     label.textColor = [UIColor tui_colorWithHex:@"#000000"];
     label.font = [UIFont systemFontOfSize:14.0];
     if (section == 1) {
-        label.text = [NSString stringWithFormat:@"   %@", TUIKitLocalizableString(please_fill_in_verification_information)];
+        label.text = [NSString stringWithFormat:@"   %@", TIMCommonLocalizableString(please_fill_in_verification_information)];
     } else if (section == 2) {
-        label.text = [NSString stringWithFormat:@"   %@", TUIKitLocalizableString(please_fill_in_remarks_group_info)];
+        label.text = [NSString stringWithFormat:@"   %@", TIMCommonLocalizableString(please_fill_in_remarks_group_info)];
     }
     return label;
 }
@@ -193,7 +193,7 @@
     if (indexPath.section == 2) {
         if (indexPath.row == 0) {
             UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"NickName"];
-            cell.textLabel.text = TUIKitLocalizableString(Alia);
+            cell.textLabel.text = TIMCommonLocalizableString(Alia);
             [cell.contentView addSubview:self.nickTextField];
             
             UIView *separtor = [[UIView alloc] init];
@@ -209,8 +209,8 @@
         } else {
             UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"GroupName"];
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-            cell.textLabel.text = TUIKitLocalizableString(Group);
-            cell.detailTextLabel.text = TUIKitLocalizableString(my_friend);
+            cell.textLabel.text = TIMCommonLocalizableString(Group);
+            cell.detailTextLabel.text = TIMCommonLocalizableString(my_friend);
             self.groupNameLabel = cell.detailTextLabel;
             
             UIView *separtor = [[UIView alloc] init];
@@ -225,9 +225,9 @@
         TUIContactButtonCell_Minimalist *cell = [[TUIContactButtonCell_Minimalist alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"send"];
         TUIContactButtonCellData_Minimalist *data = [[TUIContactButtonCellData_Minimalist alloc] init];
         data.style = ButtonBule;
-        data.title = TUIKitLocalizableString(Send);
+        data.title = TIMCommonLocalizableString(Send);
         data.cselector = @selector(onSend);
-        data.textColor = TUICoreDynamicColor(@"primary_theme_color", @"147AFF"); //[UIColor colorWithRed:20/255.0 green:122/255.0 blue:255/255.0 alpha:1/1.0];
+        data.textColor = TIMCommonDynamicColor(@"primary_theme_color", @"147AFF"); //[UIColor colorWithRed:20/255.0 green:122/255.0 blue:255/255.0 alpha:1/1.0];
         [cell fillWithData:data];
         
         return cell;
@@ -263,12 +263,12 @@
         NSString *msg = nil;
         BOOL isSuccessFlag = NO;
         if (ERR_SUCC == result.resultCode) {
-            msg = TUIKitLocalizableString(FriendAddResultSuccess);
+            msg = TIMCommonLocalizableString(FriendAddResultSuccess);
             isSuccessFlag = YES;
         }
         else if (ERR_SVR_FRIENDSHIP_INVALID_PARAMETERS == result.resultCode) {
             if ([result.resultInfo isEqualToString:@"Err_SNS_FriendAdd_Friend_Exist"]) {
-                msg = TUIKitLocalizableString(FriendAddResultExists);
+                msg = TIMCommonLocalizableString(FriendAddResultExists);
             }
         }
         else {

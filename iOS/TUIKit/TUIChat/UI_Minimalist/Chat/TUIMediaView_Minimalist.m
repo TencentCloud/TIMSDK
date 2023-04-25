@@ -7,14 +7,14 @@
 //
 
 #import "TUIMediaView_Minimalist.h"
-#import "TUIMessageCell.h"
+#import <TIMCommon/TUIMessageCell.h>
 #import "TUIImageCollectionCell_Minimalist.h"
 #import "TUIVideoCollectionCell_Minimalist.h"
 #import "TUIMessageMediaDataProvider_Minimalist.h"
 #import "TUIChatConversationModel.h"
-#import "TUIDefine.h"
-#import "TUIDarkModel.h"
-#import "TUIGlobalization.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIDarkModel.h>
+#import <TUICore/TUIGlobalization.h>
 
 #define ANIMATION_TIME 0.2
 

@@ -6,7 +6,7 @@
 //
 
 #import "TUIInputMoreCell.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 
 @implementation TUIInputMoreCell
 
@@ -44,9 +44,6 @@
     _image.frame = CGRectMake(0, 0, menuSize.width, menuSize.height);
     _title.frame = CGRectMake(0, _image.frame.origin.y + _image.frame.size.height, _image.frame.size.width + 10, TMoreCell_Title_Height);
     _title.center = CGPointMake(_image.center.x, _title.center.y);
-    if (data.extentionView) {
-        [self addSubview:data.extentionView];
-    }
 }
 
 + (CGSize)getSize

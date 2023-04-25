@@ -7,11 +7,11 @@
 //
 
 #import "TUIMenuView.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 #import "TUIMenuCell.h"
-#import "TUIDarkModel.h"
-#import "TUIGlobalization.h"
-#import "TUIThemeManager.h"
+#import <TUICore/TUIDarkModel.h>
+#import <TUICore/TUIGlobalization.h>
+#import <TUICore/TUIThemeManager.h>
 
 @interface TUIMenuView () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property (nonatomic, strong) NSMutableArray<TUIMenuCellData *> *data;
@@ -43,7 +43,7 @@
 
     _sendButton = [[UIButton alloc] init];
     _sendButton.titleLabel.font = [UIFont systemFontOfSize:15.0];
-    [_sendButton setTitle:TUIKitLocalizableString(Send) forState:UIControlStateNormal];
+    [_sendButton setTitle:TIMCommonLocalizableString(Send) forState:UIControlStateNormal];
     _sendButton.backgroundColor = TMenuView_Send_Color;
     [_sendButton addTarget:self action:@selector(sendUpInside:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_sendButton];

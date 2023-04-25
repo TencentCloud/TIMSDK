@@ -84,6 +84,7 @@ static NSString * const TUI_CALLING_BELL_KEY = @"CallingBell";
 #pragma mark - Public Method
 
 - (void)call:(NSString *)userId callMediaType:(TUICallMediaType)callMediaType {
+    TUILog(@"TUICallKit - call, userId:%@, callMediaType:%ld", userId, callMediaType);
     [self call:userId callMediaType:callMediaType params:[self getCallParams] succ:nil fail:nil];
 }
 
@@ -92,6 +93,7 @@ callMediaType:(TUICallMediaType)callMediaType
       params:(TUICallParams *)params
         succ:(TUICallSucc __nullable)succ
         fail:(TUICallFail __nullable)fail {
+    TUILog(@"TUICallKit - call, userId:%@, callMediaType:%ld, params:%@", userId, callMediaType, params.description);
     if (!userId || ![userId isKindOfClass:[NSString class]] || userId.length <= 0) {
         if (fail) {
             fail(ERROR_PARAM_INVALID, @"call failed, invalid params 'userId'");
@@ -141,6 +143,7 @@ callMediaType:(TUICallMediaType)callMediaType
 }
 
 - (void)groupCall:(NSString *)groupId userIdList:(NSArray<NSString *> *)userIdList callMediaType:(TUICallMediaType)callMediaType {
+    TUILog(@"TUICallKit - groupCall, groupId:%@, userIdList:%@, callMediaType:%ld", groupId, userIdList, callMediaType);
     [self groupCall:groupId userIdList:userIdList callMediaType:callMediaType params:[self getCallParams] succ:nil fail:nil];
 }
 
@@ -150,6 +153,7 @@ callMediaType:(TUICallMediaType)callMediaType
            params:(TUICallParams *)params
              succ:(TUICallSucc __nullable)succ
              fail:(TUICallFail __nullable)fail {
+    TUILog(@"TUICallKit - groupCall, groupId:%@, userIdList:%@, callMediaType:%ld, params:%@", groupId, userIdList, callMediaType, params.description);
     if (![TUICallingCommon checkArrayValid:userIdList]) {
         if (fail) {
             fail(ERROR_PARAM_INVALID, @"groupCall failed, invalid params 'userIdList'");
@@ -219,6 +223,7 @@ callMediaType:(TUICallMediaType)callMediaType
 }
 
 - (void)joinInGroupCall:(TUIRoomId *)roomId groupId:(NSString *)groupId callMediaType:(TUICallMediaType)callMediaType {
+    TUILog(@"TUICallKit - joinInGroupCall, roomId:%u, groupId:%@, callMediaType:%ld", roomId.intRoomId, groupId, callMediaType);
     if (!(roomId)) {
         TUILog(@"TUICallKit - joinInGroupCall failed, roomId is invalid");
         return;
@@ -301,6 +306,7 @@ callMediaType:(TUICallMediaType)callMediaType
 }
 
 - (void)setCallingBell:(NSString *)filePath {
+    TUILog(@"TUICallKit - setCallingBell, filePath:%@", filePath);
     if(!(filePath && [filePath isKindOfClass:NSString.class] && filePath.length > 0)) {
         return;
     }
@@ -332,10 +338,12 @@ callMediaType:(TUICallMediaType)callMediaType
 }
 
 - (void)setSelfInfo:(NSString * _Nullable)nickname avatar:(NSString * _Nullable)avatar succ:(TUICallSucc)succ fail:(TUICallFail)fail {
+    TUILog(@"TUICallKit - setSelfInfo, nickname:%@, avatar:%@", nickname, avatar);
     [[TUICallEngine createInstance] setSelfInfo:nickname avatar:avatar succ:succ fail:fail];
 }
 
 - (void)enableMuteMode:(BOOL)enable {
+    TUILog(@"TUICallKit - enableMuteMode, enable:%d", enable);
     self.enableMuteMode = enable;
     if (enable) {
         [TUICallingAction openMicrophone];
@@ -345,14 +353,17 @@ callMediaType:(TUICallMediaType)callMediaType
 }
 
 - (void)enableFloatWindow:(BOOL)enable {
+    TUILog(@"TUICallKit - enableFloatWindow, enable:%d", enable);
     [self.callingViewManager enableFloatWindow:enable];
 }
 
 - (void)enableCustomViewRoute:(BOOL)enable {
+    TUILog(@"TUICallKit - enableCustomViewRoute, enable:%d", enable);
     self.enableCustomViewRoute = enable;
 }
 
 - (UIViewController * _Nullable)getCallViewController {
+    TUILog(@"TUICallKit - getCallViewController");
     UIViewController *callViewController = nil;
     if (self.enableCustomViewRoute) {
         callViewController = [[UIViewController alloc] init];
@@ -482,7 +493,8 @@ callMediaType:(TUICallMediaType)callMediaType
 - (void)onCallReceived:(nonnull NSString *)callerId
           calleeIdList:(nonnull NSArray<NSString *> *)calleeIdList
                groupId:(NSString *)groupId
-         callMediaType:(TUICallMediaType)callMediaType {
+         callMediaType:(TUICallMediaType)callMediaType
+              userData:(NSString *)userData {
     if (![TUICallingCommon checkArrayValid:calleeIdList]) {
         return;
     }
@@ -612,12 +624,12 @@ callMediaType:(TUICallMediaType)callMediaType
 - (void)registerNotifications {
     if (@available(iOS 13.0, *)) {
         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(appWillEnterForeground)
-                                                     name:UISceneWillEnterForegroundNotification object:nil];
+                                                 selector:@selector(appDidBecomeActive)
+                                                     name:UISceneDidActivateNotification object:nil];
     } else {
         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(appWillEnterForeground)
-                                                     name:UIApplicationWillEnterForegroundNotification object:nil];
+                                                 selector:@selector(appDidBecomeActive)
+                                                     name:UIApplicationDidBecomeActiveNotification object:nil];
     }
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(loginSuccessNotification)
@@ -630,7 +642,11 @@ callMediaType:(TUICallMediaType)callMediaType
                                                  name:EventSubCallStatusChanged object:nil];
 }
 
-- (void)appWillEnterForeground {
+- (void)appDidBecomeActive {
+    if ([TUICallingStatusManager shareInstance].callStatus != TUICallStatusNone) {
+        [self.callingViewManager showCallingView];
+    }
+    
     if (self.needContinuePlaying) {
         [self playAudioToCalled];
     }
@@ -699,7 +715,9 @@ callMediaType:(TUICallMediaType)callMediaType
 
 - (void)callStart:(NSArray *)userIDs type:(TUICallMediaType)type role:(TUICallRole)role {
     if (!self.enableCustomViewRoute) {
-        [self.callingViewManager showCallingView];
+        if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
+            [self.callingViewManager showCallingView];
+        }
     }
     
     if (self.enableMuteMode) {

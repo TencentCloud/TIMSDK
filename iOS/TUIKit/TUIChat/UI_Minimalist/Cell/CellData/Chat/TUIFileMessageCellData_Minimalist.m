@@ -7,8 +7,8 @@
 
 #import "TUIFileMessageCellData_Minimalist.h"
 #import "TUIMessageProgressManager.h"
-#import "TUIDefine.h"
-#import "NSString+TUIUtil.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/NSString+TUIUtil.h>
 
 @interface TUIFileMessageCellData_Minimalist ()
 @property (nonatomic, strong) NSMutableArray *progressBlocks;
@@ -29,7 +29,7 @@
 }
 
 + (NSString *)getDisplayString:(V2TIMMessage *)message {
-    return TUIKitLocalizableString(TUIkitMessageTypeFile); // @"[文件]";
+    return TIMCommonLocalizableString(TUIkitMessageTypeFile); // @"[文件]";
 }
 
 - (Class)getReplyQuoteViewDataClass

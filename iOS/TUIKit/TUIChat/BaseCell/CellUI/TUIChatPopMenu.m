@@ -6,8 +6,8 @@
 //
 
 #import "TUIChatPopMenu.h"
-#import "TUIDefine.h"
-#import "TUIThemeManager.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
 #import "TUIChatPopEmojiView.h"
 #import "TUIChatPopRecentView.h"
 #import "TUIChatPopActionsView.h"
@@ -26,12 +26,12 @@
 
 - (instancetype)initWithTitle:(NSString *)title
                         image:(UIImage *)image
-                         rank:(NSInteger)rank
+                       weight:(NSInteger)weight
                      callback:(TUIChatPopMenuActionCallback)callback {
     if (self = [super init]) {
         self.title = title;
         self.image = image;
-        self.rank = rank;
+        self.weight = weight;
         self.callback = callback;
     }
     return self;
@@ -205,28 +205,11 @@
     NSArray *ageSortResultArray = [self.actions sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
             TUIChatPopMenuAction *per1 = obj1;
             TUIChatPopMenuAction *per2 = obj2;
-            return per1.rank > per2.rank ? NSOrderedDescending : NSOrderedAscending;
+            return per1.weight > per2.weight ? NSOrderedAscending : NSOrderedDescending;
         }];
     NSMutableArray *filterArray = [NSMutableArray arrayWithArray:ageSortResultArray];
     
-    self.actions = [NSMutableArray arrayWithCapacity:10];
-    
-    [filterArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        TUIChatPopMenuAction *per1 = obj;
-        if (per1.rank == 4 ) {
-            if ([TUIChatConfig defaultConfig].enablePopMenuReferenceAction) {
-                [self.actions addObject:per1];
-            }
-        }
-        else if (per1.rank == 5) {
-            if ([TUIChatConfig defaultConfig].enablePopMenuReplyAction) {
-                [self.actions addObject:per1];
-            }
-        }
-        else {
-            [self.actions addObject:per1];
-        }
-    }];
+    self.actions = [NSMutableArray arrayWithArray:ageSortResultArray];
 
 }
 - (void)setupContainerPosition
@@ -362,7 +345,7 @@
         i++;
         if (i == maxColumns && i < self.actions.count ) {
             UIView *separtorView = [[UIView alloc] init];
-            separtorView.backgroundColor =  TUICoreDynamicColor(@"separator_color", @"#39393B");
+            separtorView.backgroundColor =  TIMCommonDynamicColor(@"separator_color", @"#39393B");
             separtorView.hidden = YES;
             [self.actionsView addSubview:separtorView];
             i = 0;
@@ -401,7 +384,7 @@
     self.emojiAdvanceView = [[TUIChatPopEmojiView alloc] initWithFrame:CGRectZero] ;
     [self.emojiContainerView addSubview:_emojiAdvanceView];
     
-    [_emojiAdvanceView setData:(id)[TUIConfig defaultConfig].chatPopDetailGroups];
+    [_emojiAdvanceView setData:(id)[TIMConfig defaultConfig].chatPopDetailGroups];
     _emojiAdvanceView.delegate = self;
     _emojiAdvanceView.alpha = 0;
     _emojiAdvanceView.faceCollectionView.scrollEnabled = YES;

@@ -7,7 +7,7 @@
 //
 
 #import "TUIAddCell.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 
 @implementation TUIAddCell
 

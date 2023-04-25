@@ -9,10 +9,10 @@
 #import "TUIChatMembersSegementScrollView.h"
 #import "TUIEmojiCellData.h"
 #import "TUIEmojiCell.h"
-#import "TUILogin.h"
+#import <TUICore/TUILogin.h>
 #import "TUIChatModifyMessageHelper.h"
 #import "TUIMessageDataProvider_Minimalist.h" //-->provier
-#import "TUIMessageCell.h"
+#import <TIMCommon/TUIMessageCell.h>
 
 @implementation TUIChatMembersReactSubController
 
@@ -155,7 +155,7 @@
         [tabItems addObject:item];
         summaryCount += tagsModel.followUserModels.count;
     }
-    summaryItem.title = [NSString stringWithFormat:@"ALL %d",summaryCount];
+    summaryItem.title = [NSString stringWithFormat:@"%@ %d",TIMCommonLocalizableString(All),summaryCount];
 
     //config cellData
     NSMutableArray *pageTabCellDatasArray = [NSMutableArray arrayWithCapacity:3];

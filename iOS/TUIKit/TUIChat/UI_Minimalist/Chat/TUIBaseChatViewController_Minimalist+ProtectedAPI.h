@@ -6,8 +6,8 @@
 //
 
 #import "TUIBaseChatViewController_Minimalist.h"
-#import "TUICore.h"
-#import "TUIDefine.h"
+#import <TUICore/TUICore.h>
+#import <TIMCommon/TIMDefine.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

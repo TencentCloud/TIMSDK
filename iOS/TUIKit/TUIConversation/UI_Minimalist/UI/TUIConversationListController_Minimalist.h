@@ -32,7 +32,7 @@
 #import "TUIConversationMultiChooseView_Minimalist.h"
 #import "TUIConversationListControllerListener.h"
 #import "TUIConversationCell.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -68,11 +68,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) TUIConversationListBaseDataProvider *dataProvider;
 
-/**
- *  是否展示搜索框，如果集成了 TUICalling 组件，默认会展示
- *  An identifier that identifies whether to display the search box, If the TUICalling component is integrated, it will be displayed by default
- */
-@property (nonatomic) BOOL isEnableSearch;
+@property (nonatomic) BOOL isShowBanner;
 
 @property (nonatomic,copy) void(^dataSourceChanged)(NSInteger count);
 

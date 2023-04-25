@@ -13,8 +13,8 @@
 #import "TUIMotionManager.h"
 #import "TUIMovieManager.h"
 #import "TUICaptureTimer.h"
-#import "TUICommonModel.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMCommonModel.h>
+#import <TIMCommon/TIMDefine.h>
 
 @interface TUICameraViewController ()<AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate, TUICameraViewDelegate>
 {
@@ -38,7 +38,6 @@
 
 @property (nonatomic) BOOL isFirstShow;
 @property (nonatomic) BOOL lastPageBarHidden;
-@property (nonatomic) BOOL lastPopGestureEnabled;
 @end
 
 @implementation TUICameraViewController
@@ -87,12 +86,15 @@
     
     if (self.isFirstShow) {
         self.isFirstShow = NO;
-        
-        self.lastPopGestureEnabled = self.navigationController.interactivePopGestureRecognizer.enabled;
-        self.navigationController.interactivePopGestureRecognizer.enabled = NO;
-        
         self.lastPageBarHidden = self.navigationController.navigationBarHidden;
-        self.navigationController.navigationBarHidden = YES;
+    }
+    self.navigationController.navigationBarHidden = YES;
+}
+
+- (void)willMoveToParentViewController:(UIViewController *)parent {
+    [super willMoveToParentViewController:parent];
+    if (!parent) {
+        self.navigationController.navigationBarHidden = self.lastPageBarHidden;
     }
 }
 
@@ -333,7 +335,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             @strongify(self)
             if (duration < self.videoMinimumDuration) {
-                [self showErrorStr:TUIKitLocalizableString(TUIKitMoreVideoCaptureDurationTip)];
+                [self showErrorStr:TIMCommonLocalizableString(TUIKitMoreVideoCaptureDurationTip)];
             }
             else if (error) {
                 [self showErrorStr:error.localizedDescription];
@@ -400,8 +402,6 @@
     if (index > 0 && index < self.navigationController.viewControllers.count) {
         lastVC = self.navigationController.viewControllers[index];
     }
-    
-    self.navigationController.interactivePopGestureRecognizer.enabled = self.lastPopGestureEnabled;
     
     self.navigationController.navigationBarHidden = self.lastPageBarHidden;
     

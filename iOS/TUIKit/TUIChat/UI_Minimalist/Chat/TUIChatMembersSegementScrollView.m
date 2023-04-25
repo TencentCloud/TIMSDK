@@ -6,8 +6,9 @@
 //
 
 #import "TUIChatMembersSegementScrollView.h"
-#import "TUIFitButton.h"
-#import "TUIThemeManager.h"
+#import <TIMCommon/TUIFitButton.h>
+#import <TUICore/TUIThemeManager.h>
+#import <TIMCommon/TIMDefine.h>
 
 #define SEGEMENT_BTN_WIDTH kScale390(43)
 #define SEGEMENT_BTN_HEIGHT kScale390(20)

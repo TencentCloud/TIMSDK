@@ -6,8 +6,8 @@
 //
 
 #import "TUIMergeMessageCell_Minimalist.h"
-#import "TUIThemeManager.h"
-#import "TUIDefine.h"
+#import <TUICore/TUIThemeManager.h>
+#import <TIMCommon/TIMDefine.h>
 
 @implementation TUIMergeMessageCell_Minimalist
 
@@ -37,11 +37,11 @@
     [self.container addSubview:_abstractLabel];
 
     _separtorView = [[UIView alloc] init];
-    _separtorView.backgroundColor = TUICoreDynamicColor(@"separator_color", @"#DBDBDB");
+    _separtorView.backgroundColor = TIMCommonDynamicColor(@"separator_color", @"#DBDBDB");
     [self.container addSubview:_separtorView];
     
     _bottomTipsLabel = [[UILabel alloc] init];
-    _bottomTipsLabel.text = TUIKitLocalizableString(TUIKitRelayChatHistory);
+    _bottomTipsLabel.text = TIMCommonLocalizableString(TUIKitRelayChatHistory);
     _bottomTipsLabel.textColor = RGBA(153, 153, 153, 1);
     _bottomTipsLabel.font = [UIFont systemFontOfSize:10];
     [self.container addSubview:_bottomTipsLabel];

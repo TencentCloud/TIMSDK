@@ -165,11 +165,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)messageController:(TUIBaseMessageController *)controller onReEditMessage:(TUIMessageCellData *)data;
 
-/// Translate message.
-- (void)messageController:(TUIBaseMessageController *)controller onTranslateMessage:(TUIMessageCell *)cell;
-
-/// Forward translated text.
-- (void)messageController:(TUIBaseMessageController *)controller onForwardTranslation:(NSString *)text;
+/// Forward text.
+- (void)messageController:(TUIBaseMessageController *)controller onForwardText:(NSString *)text;
 
 /**
  * 拿到自定义Tips的高度（例如Demo中的安全提示）

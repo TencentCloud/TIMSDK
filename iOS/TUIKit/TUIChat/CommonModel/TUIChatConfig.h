@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TUICommonModel.h"
+#import <TIMCommon/TIMCommonModel.h>
 
 
 NS_ASSUME_NONNULL_BEGIN
@@ -37,11 +37,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) BOOL enableAudioCall;
 
 /**
- *  是否展示自定义消息按钮，默认 YES
- *  Display custom message button, default YES
+ *  是否展示自定义的欢迎消息按钮，默认 YES
+ *  Display custom welcome message button, default YES
  */
 
-@property(nonatomic, assign) BOOL enableLink;
+@property(nonatomic, assign) BOOL enableWelcomeCustomMessage;
 
 /**
  *  聊天长按弹框是否展示emoji互动消息功能，默认 YES
@@ -97,10 +97,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) BOOL enableMultiDeviceForCall;
 
 /**
- * 是否开启文本消息翻译，默认关闭
- * Whether to enable text translation function, default is NO
+ * 消息可撤回时间，单位秒，默认 120 秒。如果想调整该配置，请同步修改 IM 控制台设置。
+ * The time interval for message recall, in seconds, default is 120 seconds. If you want to adjust this configuration, please modify the IM console settings synchronously.
+ *
+ * https://cloud.tencent.com/document/product/269/38656#.E6.B6.88.E6.81.AF.E6.92.A4.E5.9B.9E.E8.AE.BE.E7.BD.AE
  */
-@property(nonatomic, assign) BOOL enableTextTranslation;
+@property(nonatomic, assign) NSUInteger timeIntervalForMessageRecall;
 
 @end
 

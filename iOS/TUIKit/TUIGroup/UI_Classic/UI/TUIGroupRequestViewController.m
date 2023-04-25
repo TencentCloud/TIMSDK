@@ -6,8 +6,8 @@
 //  Copyright © 2019年 Tencent. All rights reserved.
 //
 #import "TUIGroupRequestViewController.h"
-#import "TUICommonModel.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMCommonModel.h>
+#import <TIMCommon/TIMDefine.h>
 
 @interface TUIGroupRequestViewController ()<UITableViewDataSource, UITableViewDelegate, TUIProfileCardDelegate>
 @property UITableView *tableView;
@@ -29,7 +29,7 @@
     self.addMsgTextView.font = [UIFont systemFontOfSize:14];
     NSString *loginUser = [[V2TIMManager sharedInstance] getLoginUser];
     [[V2TIMManager sharedInstance] getUsersInfo:@[loginUser] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
-        self.addMsgTextView.text = [NSString stringWithFormat:TUIKitLocalizableString(GroupRequestJoinGroupFormat), [[infoList firstObject] showName]];
+        self.addMsgTextView.text = [NSString stringWithFormat:TIMCommonLocalizableString(GroupRequestJoinGroupFormat), [[infoList firstObject] showName]];
     } fail:^(int code, NSString *msg) {
     }];
     TUIProfileCardCellData *data = [TUIProfileCardCellData new];
@@ -39,7 +39,7 @@
     data.avatarUrl = [NSURL URLWithString:self.groupInfo.faceURL];
     self.cardCellData = data;
 
-    self.title = TUIKitLocalizableString(GroupJoin);
+    self.title = TIMCommonLocalizableString(GroupJoin);
     
     [TUITool addUnsupportNotificationInVC:self];
 }
@@ -76,7 +76,7 @@
     view.backgroundColor = [UIColor clearColor];
     
     UILabel *label = [[UILabel alloc] init];
-    label.text = TUIKitLocalizableString(please_fill_in_verification_information);
+    label.text = TIMCommonLocalizableString(please_fill_in_verification_information);
     label.textColor = [UIColor colorWithRed:136/255.0 green:136/255.0 blue:136/255.0 alpha:1/1.0];
     label.font = [UIFont systemFontOfSize:14.0];
     
@@ -129,7 +129,7 @@
     if (indexPath.section == 2) {
         TUIButtonCell *cell = [[TUIButtonCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"send"];
         TUIButtonCellData *cellData = [[TUIButtonCellData alloc] init];
-        cellData.title = TUIKitLocalizableString(Send);
+        cellData.title = TIMCommonLocalizableString(Send);
         cellData.style = ButtonWhite;
         cellData.cselector = @selector(onSend);
         cellData.textColor = [UIColor colorWithRed:20/255.0 green:122/255.0 blue:255/255.0 alpha:1/1.0];
@@ -151,14 +151,14 @@
     [TUITool makeToastActivity];
     [[V2TIMManager sharedInstance] joinGroup:self.groupInfo.groupID msg:self.addMsgTextView.text succ:^{
         [TUITool hideToastActivity];
-        [TUITool makeToast:TUIKitLocalizableString(send_success)
+        [TUITool makeToast:TIMCommonLocalizableString(send_success)
                  duration:3.0
                  idposition:TUICSToastPositionBottom];
     } fail:^(int code, NSString *desc) {
         [TUITool hideToastActivity];
         [TUITool makeToastError:code msg:desc];
         if (code == ERR_SDK_INTERFACE_NOT_SUPPORT) {
-            [TUITool postUnsupportNotificationOfService:TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceCommunity) serviceDesc:TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceCommunityDesc) debugOnly:YES];
+            [TUITool postUnsupportNotificationOfService:TIMCommonLocalizableString(TUIKitErrorUnsupportIntefaceCommunity) serviceDesc:TIMCommonLocalizableString(TUIKitErrorUnsupportIntefaceCommunityDesc) debugOnly:YES];
         }
     }];
 }

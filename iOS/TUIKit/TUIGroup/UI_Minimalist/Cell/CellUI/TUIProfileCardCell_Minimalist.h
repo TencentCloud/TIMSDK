@@ -5,7 +5,7 @@
 //  Created by wyl on 2022/12/6.
 //
 
-#import "TUICommonModel.h"
+#import <TIMCommon/TIMCommonModel.h>
 #import "TUIProfileCardCellData_Minimalist.h"
 NS_ASSUME_NONNULL_BEGIN
 

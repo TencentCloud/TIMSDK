@@ -12,8 +12,8 @@
 
 #import <UIKit/UIKit.h>
 #import "TUIResponderTextView_Minimalist.h"
-#import "TUICommonModel.h"
-#import "TUIThemeManager.h"
+#import <TIMCommon/TIMCommonModel.h>
+#import <TUICore/TUIThemeManager.h>
 #define kTUIInputNoramlFont [UIFont systemFontOfSize:16.0]
 #define kTUIInputNormalTextColor TUIChatDynamicColor(@"chat_input_text_color", @"#000000")
 

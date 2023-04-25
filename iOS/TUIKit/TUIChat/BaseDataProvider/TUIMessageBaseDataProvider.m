@@ -2,17 +2,18 @@
 #import <AVFoundation/AVFoundation.h>
 
 #import "TUIMessageBaseDataProvider.h"
-#import "TUIMessageCell.h"
+#import <TIMCommon/TUIMessageCell.h>
 #import "TUITypingStatusCellData.h"
-#import "TUITagsModel.h"
-#import "TUIDefine.h"
-#import "TUITool.h"
-#import "TUILogin.h"
-#import "NSString+TUIUtil.h"
+#import <TIMCommon/TUITagsModel.h>
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUITool.h>
+#import <TUICore/TUILogin.h>
+#import <TUICore/TUICore.h>
+#import <TUICore/NSString+TUIUtil.h>
 #import "TUIMessageProgressManager.h"
 #import "TUICloudCustomDataTypeCenter.h"
 #import "TUIChatConfig.h"
-#import "NSString+TUIEmoji.h"
+#import <TIMCommon/NSString+TUIEmoji.h>
 
 /**
  * 消息上方的日期时间间隔, 单位秒 , default is (5 * 60)
@@ -295,7 +296,7 @@
         [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(resetTypingStatus) object:nil];
         
         self.conversationModel.otherSideTyping = YES;
-        self.conversationModel.title = [NSString stringWithFormat:@"%@...",TUIKitLocalizableString(TUIKitTyping)];
+        self.conversationModel.title = [NSString stringWithFormat:@"%@...",TIMCommonLocalizableString(TUIKitTyping)];
         
         //如果对方没有继续输入，每隔5秒结束状态
         //If the other party does not continue typing, end the status every 5 seconds
@@ -887,6 +888,7 @@
         pushInfo.AndroidOPPOChannelID = @"tuikit";
         pushInfo.AndroidSound = TUIConfig.defaultConfig.enableCustomRing ? @"private_ring" : nil;
         pushInfo.AndroidHuaWeiCategory = @"IM";
+        pushInfo.AndroidVIVOCategory = @"IM";
     }
     if ([self isGroupCommunity:conversationData.groupType groupID:conversationData.groupID] ||
         [self isGroupAVChatRoom:conversationData.groupType]) {
@@ -1032,7 +1034,7 @@
 + (NSString *)getRevokeDispayString:(V2TIMMessage *)message {
     NSString *str = nil;
     if(message.isSelf){
-        str = TUIKitLocalizableString(TUIKitMessageTipsYouRecallMessage);
+        str = TIMCommonLocalizableString(TUIKitMessageTipsYouRecallMessage);
     }
     else if(message.groupID != nil){
         NSString *userString = message.nameCard;;
@@ -1042,10 +1044,10 @@
         if (userString.length == 0) {
             userString = message.sender;
         }
-        str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsRecallMessageFormat), userString];
+        str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsRecallMessageFormat), userString];
     }
     else if(message.userID != nil){
-        str = TUIKitLocalizableString(TUIkitMessageTipsOthersRecallMessage);
+        str = TIMCommonLocalizableString(TUIkitMessageTipsOthersRecallMessage);
     }
     return str;
 }
@@ -1061,10 +1063,10 @@
                 if (opUser.length > 0) {
                     if ((userList.count == 0) ||
                         (userList.count == 1 && [opUser isEqualToString:userList.firstObject])) {
-                        str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsJoinGroupFormat), opUser];
+                        str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsJoinGroupFormat), opUser];
                     } else {
                         NSString *users = [userList componentsJoinedByString:@"、"];
-                        str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsInviteJoinGroupFormat), opUser, users];
+                        str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsInviteJoinGroupFormat), opUser, users];
                     }
                 }
             }
@@ -1073,14 +1075,14 @@
             {
                 if (userList.count > 0) {
                     NSString *users = [userList componentsJoinedByString:@"、"];
-                    str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsInviteJoinGroupFormat), opUser, users];
+                    str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsInviteJoinGroupFormat), opUser, users];
                 }
             }
                 break;
             case V2TIM_GROUP_TIPS_TYPE_QUIT:
             {
                 if (opUser.length > 0) {
-                    str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsLeaveGroupFormat), opUser];
+                    str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsLeaveGroupFormat), opUser];
                 }
             }
                 break;
@@ -1088,7 +1090,7 @@
             {
                 if (userList.count > 0) {
                     NSString *users = [userList componentsJoinedByString:@"、"];
-                    str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsKickoffGroupFormat), opUser, users];
+                    str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsKickoffGroupFormat), opUser, users];
                 }
             }
                 break;
@@ -1096,7 +1098,7 @@
             {
                 if (userList.count > 0) {
                     NSString *users = [userList componentsJoinedByString:@"、"];
-                    str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsSettAdminFormat), users];
+                    str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsSettAdminFormat), users];
                 }
             }
                 break;
@@ -1104,7 +1106,7 @@
             {
                 if (userList.count > 0) {
                     NSString *users = [userList componentsJoinedByString:@"、"];
-                    str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsCancelAdminFormat), users];
+                    str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsCancelAdminFormat), users];
                 }
             }
                 break;
@@ -1115,34 +1117,34 @@
                     switch (info.type) {
                         case V2TIM_GROUP_INFO_CHANGE_TYPE_NAME:
                         {
-                            str = [NSString stringWithFormat:TUIKitLocalizableString(TUIkitMessageTipsEditGroupNameFormat), str, info.value];
+                            str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIkitMessageTipsEditGroupNameFormat), str, info.value];
                         }
                             break;
                         case V2TIM_GROUP_INFO_CHANGE_TYPE_INTRODUCTION:
                         {
-                            str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsEditGroupIntroFormat), str, info.value];
+                            str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsEditGroupIntroFormat), str, info.value];
                         }
                             break;
                         case V2TIM_GROUP_INFO_CHANGE_TYPE_NOTIFICATION:
                         {
                             if (info.value.length) {
-                                str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsEditGroupAnnounceFormat), str, info.value];
+                                str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsEditGroupAnnounceFormat), str, info.value];
                             } else {
-                                str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsDeleteGroupAnnounceFormat), str];
+                                str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsDeleteGroupAnnounceFormat), str];
                             }
                         }
                             break;
                         case V2TIM_GROUP_INFO_CHANGE_TYPE_FACE:
                         {
-                            str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsEditGroupAvatarFormat), str];
+                            str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsEditGroupAvatarFormat), str];
                         }
                             break;
                         case V2TIM_GROUP_INFO_CHANGE_TYPE_OWNER:
                         {
                             if (userList.count) {
-                                str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsEditGroupOwnerFormat), str, userList.firstObject];
+                                str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsEditGroupOwnerFormat), str, userList.firstObject];
                             } else {
-                                str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsEditGroupOwnerFormat), str, info.value];
+                                str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsEditGroupOwnerFormat), str, info.value];
                             }
 
                         }
@@ -1150,13 +1152,27 @@
                         case V2TIM_GROUP_INFO_CHANGE_TYPE_SHUT_UP_ALL:
                         {
                             if (info.boolValue) {
-                                str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitSetShutupAllFormat), opUser];
+                                str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitSetShutupAllFormat), opUser];
                             } else {
-                                str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitCancelShutupAllFormat), opUser];
+                                str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitCancelShutupAllFormat), opUser];
                             }
                         }
                             break;
                         case V2TIM_GROUP_INFO_CHANGE_TYPE_GROUP_ADD_OPT:
+                        {
+                            uint32_t addOpt = info.intValue;
+                            NSString *addOptDesc = @"unknown";
+                            if (addOpt == V2TIM_GROUP_ADD_FORBID) {
+                                addOptDesc = TIMCommonLocalizableString(TUIKitGroupProfileJoinDisable);
+                            } else if (addOpt == V2TIM_GROUP_ADD_AUTH) {
+                                addOptDesc = TIMCommonLocalizableString(TUIKitGroupProfileAdminApprove);
+                            } else if (addOpt == V2TIM_GROUP_ADD_ANY) {
+                                addOptDesc = TIMCommonLocalizableString(TUIKitGroupProfileAutoApproval);
+                            }
+                            str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsEditGroupAddOptFormat), str, addOptDesc];
+                        }
+                            break;
+                        case V2TIM_GROUP_INFO_CHANGE_TYPE_GROUP_APPROVE_OPT:
                         {
                             uint32_t addOpt = info.intValue;
                             NSString *addOptDesc = @"unknown";
@@ -1167,7 +1183,7 @@
                             } else if (addOpt == V2TIM_GROUP_ADD_ANY) {
                                 addOptDesc = TUIKitLocalizableString(TUIKitGroupProfileAutoApproval);
                             }
-                            str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsEditGroupAddOptFormat), str, addOptDesc];
+                            str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsEditGroupInviteOptFormat), str, addOptDesc];
                         }
                             break;
                         default:
@@ -1187,7 +1203,7 @@
                     int32_t muteTime = [(V2TIMGroupMemberChangeInfo *)info muteTime];
                     NSString *myId = V2TIMManager.sharedInstance.getLoginUser;
                     NSString *showName = [self.class getUserName:tips with:userId];
-                    str = [NSString stringWithFormat:@"%@ %@", [userId isEqualToString:myId] ? TUIKitLocalizableString(You) : showName, muteTime == 0 ? TUIKitLocalizableString(TUIKitMessageTipsUnmute): TUIKitLocalizableString(TUIKitMessageTipsMute)];
+                    str = [NSString stringWithFormat:@"%@ %@", [userId isEqualToString:myId] ? TIMCommonLocalizableString(You) : showName, muteTime == 0 ? TIMCommonLocalizableString(TUIKitMessageTipsUnmute): TIMCommonLocalizableString(TUIKitMessageTipsMute)];
                     break;
                 }
             }
@@ -1272,153 +1288,6 @@
         }
   }
   return str;
-}
-
-#pragma mark -- Translate
-- (void)translateCellData:(TUIMessageCellData *)data
-           containerWidth:(float)containerWidth {
-    if (data.innerMessage.elemType != V2TIM_ELEM_TYPE_TEXT) {
-        return;
-    }
-    V2TIMTextElem *textElem = data.innerMessage.textElem;
-    if (textElem == nil) {
-        return;
-    }
-    if (![data respondsToSelector:@selector(canTranslate)] ||
-        ![data canTranslate]) {
-        return;
-    }
-    
-    /// Get at user's nickname by userID
-    NSMutableArray *atUserIDs = [data.innerMessage.groupAtUserList mutableCopy];
-    if (atUserIDs.count == 0) {
-        /// There's no any @user info.
-        [self translateData:data atUsers:nil containerWidth:containerWidth];
-        return;
-    }
-    
-    /// Find @All info.
-    NSMutableArray *atUserIDsExcludingAtAll = [NSMutableArray new];
-    NSMutableIndexSet *atAllIndex = [NSMutableIndexSet new];
-    for (int i = 0; i < atUserIDs.count; i++) {
-        NSString *userID = atUserIDs[i];
-        if (![userID isEqualToString:kImSDK_MesssageAtALL]) {
-            /// Exclude @All.
-            [atUserIDsExcludingAtAll addObject:userID];
-        } else {
-            /// Record @All's location for later restore.
-            [atAllIndex addIndex:i];
-        }
-    }
-    if (atUserIDsExcludingAtAll.count == 0) {
-        /// There's only @All info.
-        NSMutableArray *atAllNames = [NSMutableArray new];
-        for (int i = 0; i < atAllIndex.count; i++) {
-            [atAllNames addObject:TUIKitLocalizableString(All)];
-        }
-        [self translateData:data atUsers:atAllNames containerWidth:containerWidth];
-        return;
-    }
-    [[V2TIMManager sharedInstance] getUsersInfo:atUserIDsExcludingAtAll
-                                           succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
-        NSMutableArray *atUserNames = [NSMutableArray new];
-        for (NSString *userID in atUserIDsExcludingAtAll) {
-            for (V2TIMUserFullInfo *user in infoList) {
-                if ([userID isEqualToString:user.userID]) {
-                    [atUserNames addObject:user.nickName ? : user.userID];
-                    break;
-                }
-            }
-        }
-        
-        // Restore @All.
-        if (atAllIndex.count > 0) {
-            [atAllIndex enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL * _Nonnull stop) {
-                [atUserNames insertObject:TUIKitLocalizableString(All) atIndex:idx];
-            }];
-        }
-        [self translateData:data atUsers:atUserNames containerWidth:containerWidth];
-    } fail:^(int code, NSString *desc) {
-        [self translateData:data atUsers:atUserIDs containerWidth:containerWidth];
-    }];
-}
-
-- (void)translateData:(TUIMessageCellData *)data
-              atUsers:(NSArray *)atUsers
-       containerWidth:(float)containerWidth {
-    V2TIMTextElem *textElem = data.innerMessage.textElem;
-    [data.translationViewData setContainerWidth:containerWidth];
-    [self removeHeightCacheOfData:data];
-    
-    NSString *target = [self targetLanguage];
-    NSDictionary *splitResult = [textElem.text splitTextByEmojiAndAtUsers:atUsers];
-    NSArray *textArray = splitResult[kSplitStringTextKey];
-    
-    if (textArray.count == 0) {
-        /// Nothing need to be translated.
-        data.translationViewData.text = textElem.text;
-        data.translationViewData.status = TUITranslationViewStatusShown;
-        if ([self.dataSource respondsToSelector:@selector(dataProvider:didChangeTranslationData:)]) {
-            [self.dataSource dataProvider:self didChangeTranslationData:data];
-        }
-        return;
-    }
-    
-    if (data.translationViewData.text.length > 0) {
-        data.translationViewData.status = TUITranslationViewStatusShown;
-        if ([self.dataSource respondsToSelector:@selector(dataProvider:didChangeTranslationData:)]) {
-            [self.dataSource dataProvider:self didChangeTranslationData:data];
-        }
-        return;
-    } else {
-        data.translationViewData.status = TUITranslationViewStatusLoading;
-        if ([self.dataSource respondsToSelector:@selector(dataProvider:didChangeTranslationData:)]) {
-            [self.dataSource dataProvider:self didChangeTranslationData:data];
-        }
-    }
-    
-    /// Send translate request.
-    @weakify(self);
-    [[V2TIMManager sharedInstance] translateText:textArray
-                                  sourceLanguage:nil
-                                  targetLanguage:target
-                                      completion:^(int code, NSString *desc, NSDictionary<NSString *,NSString *> *result) {
-        @strongify(self);
-        [self removeHeightCacheOfData:data];
-        
-        /// Translate failed.
-        if (code != 0 || result.count == 0) {
-            if (self) {
-                [TUITool makeToastError:code msg:desc];
-            }
-            data.translationViewData.status = TUITranslationViewStatusHidden;
-            if ([self.dataSource respondsToSelector:@selector(dataProvider:didChangeTranslationData:)]) {
-                [self.dataSource dataProvider:self didChangeTranslationData:data];
-            }
-            return;
-        }
-
-        /// Translate succeeded.
-        NSString *text = [NSString replacedStringWithArray:splitResult[kSplitStringResultKey]
-                                                     index:splitResult[kSplitStringTextIndexKey]
-                                               replaceDict:result];
-        data.translationViewData.text = text;
-        data.translationViewData.status = TUITranslationViewStatusShown;
-        if ([self.dataSource respondsToSelector:@selector(dataProvider:didChangeTranslationData:)]) {
-            [self.dataSource dataProvider:self didChangeTranslationData:data];
-        }
-    }];
-}
-
-- (NSString *)targetLanguage {
-    NSString *target = nil;
-    NSString *curAppLang = [TUIGlobalization tk_localizableLanguageKey];
-    if ([curAppLang isEqualToString:@"zh-Hans"] || [curAppLang isEqualToString:@"zh-Hant"]) {
-        target = @"zh";
-    } else {
-        target = @"en";
-    }
-    return target;
 }
 
 @end

@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 #import "TUIBaseMessageControllerDelegate.h"
 #import "TUIInputController.h"
 #import "TUIChatConversationModel.h"

@@ -8,9 +8,9 @@
  *  and at the same time, can respond to user operations and provide an operation entry for video playback.
  *  When you tap the video message, you will enter the video playback interface.
  */
-#import "TUIMessageCell.h"
+#import <TIMCommon/TUIMessageCell.h>
 #import "TUIVideoMessageCellData.h"
-#import "TUIBubbleMessageCell.h"
+#import <TIMCommon/TUIBubbleMessageCell.h>
 /**
  * 【模块名称】TUIVideoMessageCell
  * 【功能说明】视频消息单元

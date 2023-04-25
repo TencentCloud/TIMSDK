@@ -6,8 +6,8 @@
 //
 
 #import "TUIImageMessageCellData_Minimalist.h"
-#import "TUIDefine.h"
-#import "NSString+TUIUtil.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/NSString+TUIUtil.h>
 
 @interface TUIImageMessageCellData_Minimalist ()
 @property (nonatomic, assign) BOOL isDownloading;
@@ -46,7 +46,7 @@
 }
 
 + (NSString *)getDisplayString:(V2TIMMessage *)message {
-    return TUIKitLocalizableString(TUIkitMessageTypeImage); // @"[图片]";
+    return TIMCommonLocalizableString(TUIkitMessageTypeImage); // @"[图片]";
 }
 
 - (Class)getReplyQuoteViewDataClass

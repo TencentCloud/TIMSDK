@@ -8,7 +8,7 @@
 #import "TUIFindContactViewDataProvider.h"
 #import <ImSDK_Plus/ImSDK_Plus.h>
 #import "TUIFindContactCellModel.h"
-#import "TUIGlobalization.h"
+#import <TUICore/TUIGlobalization.h>
 
 @interface TUIFindContactViewDataProvider ()
 @property (nonatomic, strong) NSArray<TUIFindContactCellModel *> *users;
@@ -88,7 +88,7 @@
 - (NSString *)getMyUserIDDescription
 {
     NSString *loginUser = V2TIMManager.sharedInstance.getLoginUser;
-    return [NSString stringWithFormat:TUIKitLocalizableString(TUIKitAddContactMyUserIDFormat), loginUser];
+    return [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitAddContactMyUserIDFormat), loginUser];
 }
 
 - (void)clear

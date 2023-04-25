@@ -7,12 +7,13 @@
 
 #import "TUISearchBar.h"
 #import "TUISearchViewController.h"
-#import "TUIGlobalization.h"
-#import "TUIDarkModel.h"
-#import "UIView+TUILayout.h"
-#import "TUICore.h"
-#import "TUIDefine.h"
-#import "TUIThemeManager.h"
+#import <TUICore/TUIGlobalization.h>
+#import <TUICore/TUIGlobalization.h>
+#import <TUICore/TUIDarkModel.h>
+#import <TUICore/UIView+TUILayout.h>
+#import <TUICore/TUICore.h>
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
 
 @interface TUISearchBar () <UISearchBarDelegate>
 @property (nonatomic, strong) UISearchBar *searchBar;
@@ -29,7 +30,7 @@
 
 - (UIColor *)bgColorOfSearchBar
 {
-    return TUICoreDynamicColor(@"head_bg_gradient_start_color", @"#EBF0F6");
+    return TIMCommonDynamicColor(@"head_bg_gradient_start_color", @"#EBF0F6");
 }
 
 - (void)setupViews
@@ -37,14 +38,14 @@
     
     self.backgroundColor = self.bgColorOfSearchBar;
     _searchBar = [[UISearchBar alloc] init];
-    _searchBar.placeholder = TUIKitLocalizableString(Search);
+    _searchBar.placeholder = TIMCommonLocalizableString(Search);
     _searchBar.backgroundImage = [UIImage new];
     _searchBar.barTintColor = UIColor.redColor;
     _searchBar.showsCancelButton = NO;
     _searchBar.delegate = self;
     _searchBar.showsCancelButton = !self.isEntrance;
     if (@available(iOS 13.0, *)) {
-        _searchBar.searchTextField.backgroundColor = TUICoreDynamicColor(@"search_textfield_bg_color", @"#FEFEFE");
+        _searchBar.searchTextField.backgroundColor = TIMCommonDynamicColor(@"search_textfield_bg_color", @"#FEFEFE");
     }
     [self addSubview:_searchBar];
     [self enableCancelButton];
@@ -132,7 +133,7 @@
         cancelBtn.enabled = YES;
         cancelBtn.userInteractionEnabled = YES;
 
-        [UIBarButtonItem appearanceWhenContainedInInstancesOfClasses:@[[UISearchBar class]]].title = TUIKitLocalizableString(TUIKitSearchItemCancel);;
+        [UIBarButtonItem appearanceWhenContainedInInstancesOfClasses:@[[UISearchBar class]]].title = TIMCommonLocalizableString(TUIKitSearchItemCancel);;
     });
 }
 

@@ -7,12 +7,12 @@
 
 #import "TUISearchBar_Minimalist.h"
 #import "TUISearchViewController_Minimalist.h"
-#import "TUIGlobalization.h"
-#import "TUIDarkModel.h"
-#import "UIView+TUILayout.h"
-#import "TUICore.h"
-#import "TUIDefine.h"
-#import "TUIThemeManager.h"
+#import <TUICore/TUIGlobalization.h>
+#import <TUICore/TUIDarkModel.h>
+#import <TUICore/UIView+TUILayout.h>
+#import <TUICore/TUICore.h>
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
 
 @interface TUISearchBar_Minimalist () <UISearchBarDelegate>
 @property (nonatomic, strong) UISearchBar *searchBar;
@@ -37,7 +37,7 @@
     
     self.backgroundColor = self.bgColorOfSearchBar;
     _searchBar = [[UISearchBar alloc] init];
-    _searchBar.placeholder = TUIKitLocalizableString(Search);
+    _searchBar.placeholder = TIMCommonLocalizableString(Search);
     _searchBar.backgroundImage = [UIImage new];
     _searchBar.barTintColor = UIColor.redColor;
     _searchBar.showsCancelButton = NO;
@@ -131,7 +131,7 @@
         cancelBtn.enabled = YES;
         cancelBtn.userInteractionEnabled = YES;
         
-        [UIBarButtonItem appearanceWhenContainedInInstancesOfClasses:@[[UISearchBar class]]].title = TUIKitLocalizableString(TUIKitSearchItemCancel);;
+        [UIBarButtonItem appearanceWhenContainedInInstancesOfClasses:@[[UISearchBar class]]].title = TIMCommonLocalizableString(TUIKitSearchItemCancel);;
     });
 }
 

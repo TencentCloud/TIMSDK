@@ -1,6 +1,6 @@
-#import "TUIMessageCell.h"
+#import <TIMCommon/TUIMessageCell.h>
 #import "TUIFileMessageCellData.h"
-#import "TUIBubbleMessageCell.h"
+#import <TIMCommon/TUIBubbleMessageCell.h>
 
 @interface TUIFileMessageCell : TUIMessageCell
 

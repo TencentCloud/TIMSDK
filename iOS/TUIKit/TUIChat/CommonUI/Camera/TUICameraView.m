@@ -1,8 +1,8 @@
 
 #import "TUICameraView.h"
 #import "TUICaptureTimer.h"
-#import "TUICommonModel.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMCommonModel.h>
+#import <TIMCommon/TIMDefine.h>
 
 static CGFloat photoBtnZoomInRatio = 1.125;
 static CGFloat progressLayerLineWidth = 5.0;

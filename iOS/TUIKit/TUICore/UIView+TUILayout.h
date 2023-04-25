@@ -46,7 +46,7 @@
 - (UIView * (^)(CGFloat y))mm__centerY;         ///< set center
 
 
-- (UIView * (^)(void))mm_center;
+- (UIView * (^)(void))tui_mm_center;
 - (UIView * (^)(void))mm_fill;
 
 - (UIView * (^)(CGFloat space))mm_hstack;

@@ -16,7 +16,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TUIMessageDataProvider_Minimalist : TUIMessageBaseDataProvider
 - (void)preProcessReplyMessageV2:(NSArray<TUIMessageCellData *> *)uiMsgs callback:(void(^)(void))callback;
 
-+ (NSArray *)getCustomMessageInfo;
++ (NSMutableArray *)getCustomMessageInfo;
+
++ (NSMutableArray *)getPluginCustomMessageInfo;
 
 + (TUIChatCallingDataProvider *)callingDataProvider;
 

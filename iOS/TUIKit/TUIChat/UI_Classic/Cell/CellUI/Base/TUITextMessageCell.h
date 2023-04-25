@@ -1,8 +1,7 @@
-#import "TUIBubbleMessageCell.h"
+#import <TIMCommon/TUIBubbleMessageCell.h>
 #import "TUITextMessageCellData.h"
-#import "TUITextView.h"
+#import <TIMCommon/TUITextView.h>
 #import "TUIChatDefine.h"
-#import "TUITranslationView.h"
 
 @class TUITextView;
 

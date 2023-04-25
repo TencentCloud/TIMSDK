@@ -6,8 +6,8 @@
 //
 
 #import "TUIGroupConversationListViewDataProvider_Minimalist.h"
-#import "TUIDefine.h"
-#import "NSString+TUIUtil.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/NSString+TUIUtil.h>
 
 @interface TUIGroupConversationListViewDataProvider_Minimalist ()
 @property BOOL isLoadFinished;

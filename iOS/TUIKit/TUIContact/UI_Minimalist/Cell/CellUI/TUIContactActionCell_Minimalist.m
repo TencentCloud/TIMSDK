@@ -6,10 +6,10 @@
 //
 
 #import "TUIContactActionCell_Minimalist.h"
-#import "TUICommonModel.h"
+#import <TIMCommon/TIMCommonModel.h>
 #import "TUICommonContactCellData_Minimalist.h"
-#import "TUIDefine.h"
-#import "TUIThemeManager.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
 
 @interface TUIContactActionCell_Minimalist ()
 @property TUIContactActionCellData_Minimalist *actionData;
@@ -23,7 +23,7 @@
     if (self) {
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         [self.contentView addSubview:self.titleLabel];
-        self.titleLabel.textColor = TUICoreDynamicColor(@"", @"#000000");
+        self.titleLabel.textColor = TIMCommonDynamicColor(@"", @"#000000");
         self.titleLabel.font = [UIFont systemFontOfSize:kScale390(16)];
         self.unRead = [[TUIUnReadView alloc] init];
         [self.contentView addSubview:self.unRead];

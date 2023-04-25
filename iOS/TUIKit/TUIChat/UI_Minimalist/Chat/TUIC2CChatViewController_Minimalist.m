@@ -35,51 +35,11 @@
     self.sendTypingBaseCondationInVC = NO;
 }
 
-- (void)videoCallBtnClick:(UIButton *)btn {
-    if(self.conversationData.userID.length > 0) {
-        [self c2cCall:self.conversationData.userID isVideoCall:YES];
-    }
-}
-
-#pragma mark - Call
-- (void)c2cCall:(NSString *)userID isVideoCall:(BOOL)isVideoCall {
-    NSDictionary *param = @{
-        TUICore_TUICallingService_ShowCallingViewMethod_UserIDsKey : @[userID],
-        TUICore_TUICallingService_ShowCallingViewMethod_CallTypeKey : isVideoCall ? @"1" : @"0"
-    };
-    [TUICore callService:TUICore_TUICallingService
-                  method:TUICore_TUICallingService_ShowCallingViewMethod
-                   param:param];
-}
-
-
 #pragma mark - Override Methods
-- (NSString *)forwardTitleWithMyName:(NSString *)nameStr
-{
-    return [NSString stringWithFormat:TUIKitLocalizableString(TUIKitRelayChatHistoryForSomebodyFormat), self.conversationData.title, nameStr];
+- (NSString *)forwardTitleWithMyName:(NSString *)nameStr {
+    return [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitRelayChatHistoryForSomebodyFormat), self.conversationData.title, nameStr];
 }
 
-- (void)inputController:(TUIInputController_Minimalist *)inputController didSelectMoreCellAction:(NSString *)actionName {
-    [super inputController:inputController didSelectMoreCellAction:actionName];
-    if([actionName isEqualToString:TUIInputMoreCellKey_Link]) {  // 自定义消息
-        NSString *text = TUIKitLocalizableString(TUIKitWelcome);
-        NSString *link = TUITencentCloudHomePageEN;
-        NSString *language = [TUIGlobalization tk_localizableLanguageKey];
-        if ([language containsString:@"zh-"]) {
-            link =  TUITencentCloudHomePageCN;
-        }
-        NSError *error = nil;
-        NSDictionary *param = @{BussinessID: BussinessID_TextLink, @"text":text, @"link":link};
-        NSData *data = [NSJSONSerialization dataWithJSONObject:param options:0 error:&error];
-        if(error)
-        {
-            NSLog(@"[%@] Post Json Error", [self class]);
-            return;
-        }
-        V2TIMMessage *message = [TUIMessageDataProvider_Minimalist getCustomMessageWithJsonData:data];
-        [self sendMessage:message];
-    }
-}
 - (void)inputControllerBeginTyping:(TUIInputController_Minimalist *)inputController {
 
     [super inputControllerBeginTyping:inputController];

@@ -7,8 +7,8 @@
 //
 #import "TUISearchGroupViewController_Minimalist.h"
 #import "TUIGroupRequestViewController_Minimalist.h"
-#import "TUIDefine.h"
-#import "TUIThemeManager.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
 
 @implementation UISearchController (Leak)
 
@@ -51,7 +51,7 @@
         } else {
             _idLabel.text = groupInfo.groupID;
         }
-        _idLabel.mm_sizeToFit().mm_center().mm_left(8);
+        _idLabel.mm_sizeToFit().tui_mm_center().mm_left(8);
         _line.mm_height(1).mm_width(self.mm_w).mm_bottom(0);
         _line.hidden = NO;
     } else {
@@ -82,9 +82,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = TUIKitLocalizableString(ContactsJoinGroup);
+    self.title = TIMCommonLocalizableString(ContactsJoinGroup);
 
-    self.view.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
+    self.view.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#F2F3F5");
 
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.automaticallyAdjustsScrollViewInsets = NO;

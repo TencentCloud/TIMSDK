@@ -6,8 +6,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TUIMessageCellData.h"
-#import "TUIMessageCell.h"
+#import <TIMCommon/TUIMessageCellData.h>
+#import <TIMCommon/TUIMessageCell.h>
 #import "TUIChatPopContextRecentView.h"
 
 NS_ASSUME_NONNULL_BEGIN

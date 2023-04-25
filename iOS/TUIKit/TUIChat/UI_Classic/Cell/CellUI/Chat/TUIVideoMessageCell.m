@@ -6,9 +6,10 @@
 //
 
 #import "TUIVideoMessageCell.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
+#import "TUIMessageProgressManager.h"
 
-@interface TUIVideoMessageCell ()
+@interface TUIVideoMessageCell ()<TUIMessageProgressManagerDelegate>
 
 @property (nonatomic, strong) UIView *animateHighlightView;
 
@@ -53,6 +54,7 @@
         [self.container addSubview:_progress];
         _progress.mm_fill();
         _progress.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        [TUIMessageProgressManager.shareManager addDelegate:self];
     }
     return self;
 }
@@ -104,21 +106,23 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    
-    self.bubbleView.hidden = YES;
-    
-    CGFloat topMargin = 0;
-    CGFloat height = self.container.mm_h;
-    
     if (self.messageData.messageModifyReactsSize.height > 0) {
-        topMargin = 10;
-        height = (self.container.mm_h - self.messageData.messageModifyReactsSize.height - topMargin);
+        if (self.tagView) {
+            CGFloat topMargin = 10;
+            CGFloat tagViewTopMargin = 6;
+            CGFloat thumbHeight = self.container.mm_h - topMargin - self.messageData.messageModifyReactsSize.height - tagViewTopMargin;
+            _thumb.mm_height(thumbHeight ).mm_left(0).mm_top(topMargin).mm_width(self.container.mm_w);
+            self.tagView.frame = CGRectMake(0, self.container.mm_h - self.messageData.messageModifyReactsSize.height - tagViewTopMargin , self.container.frame.size.width, self.messageData.messageModifyReactsSize.height);
+        }
         self.bubbleView.hidden = NO;
     }
-    
-    _thumb.mm_height(height ).mm_left(0).mm_top(topMargin).mm_width(self.container.mm_w);
-
-    _play.mm_width(TVideoMessageCell_Play_Size.width).mm_height(TVideoMessageCell_Play_Size.height).mm_center();
+    else {
+        CGFloat topMargin = 0;
+        CGFloat height = self.container.mm_h;
+        _thumb.mm_height(height ).mm_left(0).mm_top(topMargin).mm_width(self.container.mm_w);
+        self.bubbleView.hidden = YES;
+    }
+    _play.mm_width(TVideoMessageCell_Play_Size.width).mm_height(TVideoMessageCell_Play_Size.height).tui_mm_center();
 }
 
 - (void)highlightWhenMatchKeyword:(NSString *)keyword
@@ -165,6 +169,15 @@
         _animateHighlightView.backgroundColor = [UIColor orangeColor];
     }
     return _animateHighlightView;
+}
+#pragma mark - TUIMessageProgressManagerDelegate
+- (void)onProgress:(NSString *)msgID progress:(NSInteger)progress {
+    if (![msgID isEqualToString:self.videoData.msgID]) {
+        return;
+    }
+    if (self.videoData.direction == MsgDirectionOutgoing) {
+        self.videoData.uploadProgress = progress;
+    }
 }
 
 @end

@@ -6,8 +6,8 @@
 //
 #import "TUIEmojiCell.h"
 #import "TUIEmojiCellData.h"
-#import "TUICommonModel.h"
-#import "NSString+TUIEmoji.h"
+#import <TIMCommon/TIMCommonModel.h>
+#import <TIMCommon/NSString+TUIEmoji.h>
 
 #define Avatar_Size 40
 
@@ -58,8 +58,8 @@
     _displayName.text = data.displayName;
     _tapToRemoveLabel.text = @"";
     if (data.isCurrentUser) {
-        _displayName.text = @"You";
-        _tapToRemoveLabel.text = @"Tap to remove";
+        _displayName.text = TIMCommonLocalizableString(You);
+        _tapToRemoveLabel.text = TIMCommonLocalizableString(TUIKitChatTap2Remove);
     }
 
     [_emoji setImage:[data.emojiName getEmojiImage]];

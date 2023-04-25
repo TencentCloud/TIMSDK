@@ -15,10 +15,11 @@
 #import "TUITextMessageCellData_Minimalist.h"
 #import "TUIMergeMessageCellData_Minimalist.h"
 #import "TUILinkCellData_Minimalist.h"
-#import "TUIThemeManager.h"
-#import "TUIDarkModel.h"
-#import "NSString+TUIEmoji.h"
-#import "UIView+TUILayout.h"
+#import <TUICore/TUIThemeManager.h>
+#import <TUICore/TUIDarkModel.h>
+#import <TIMCommon/NSString+TUIEmoji.h>
+#import <TUICore/UIView+TUILayout.h>
+#import <TUICore/TUICore.h>
 
 #import "TUIReplyQuoteView_Minimalist.h"
 #import "TUITextReplyQuoteView_Minimalist.h"
@@ -53,10 +54,8 @@
     [self.contentView addSubview:self.quoteLineView];
     [self.contentView addSubview:self.quoteView];
     
-    self.translationView = [[TUITranslationView alloc] initWithBackgroundColor: TUIChatDynamicColor(@"chat_message_translation_bg_color_minimalist", @"#F2F7FF")];
-    self.translationView.delegate = self;
-    [self.contentView addSubview:self.translationView];
-        
+    self.bottomContainer = [[UIView alloc] init];
+    [self.contentView addSubview:self.bottomContainer];
 }
 - (void)setupContentTextView {
     self.textView = [[TUITextView alloc] init];
@@ -70,18 +69,6 @@
     self.textView.textColor = TUIChatDynamicColor(@"chat_reference_message_content_text_color", @"#000000");
 
     [self.bubbleView addSubview:self.textView];
-}
-
-- (void)setupRAC {
-    @weakify(self);
-    [[[RACObserve(self, referenceData.translationViewData.status) distinctUntilChanged] skip:1] subscribeNext:^(NSNumber *status) {
-        @strongify(self);
-        if (self.referenceData == nil) {
-            return;
-        }
-        
-        [self refreshTranslationView];
-    }];
 }
 
 - (void)fillWithData:(TUIReferenceMessageCellData_Minimalist *)data
@@ -101,7 +88,7 @@
     }
     self.quoteLineView.image = [lineImage resizableImageWithCapInsets:UIEdgeInsetsFromString(@"{10,0,20,0}") resizingMode:UIImageResizingModeStretch];
     
-    [self refreshTranslationView];
+    self.bottomContainer.hidden = CGSizeEqualToSize(data.bottomContainerSize, CGSizeZero);
     
     @weakify(self)
     [[RACObserve(data, originMessage) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(V2TIMMessage *originMessage) {
@@ -113,17 +100,10 @@
     [self layoutIfNeeded];
 }
 
-- (void)refreshTranslationView {
-    if (self.referenceData.translationViewData.status == TUITranslationViewStatusLoading) {
-        [self.translationView startLoading];
-    } else {
-        [self.translationView stopLoading];
-    }
-    
-    self.translationView.hidden = [self.referenceData.translationViewData isHidden];
-    [self.referenceData.translationViewData calcSize];
-    [self.translationView updateTransaltion:self.referenceData.translationViewData.text];
-    [self layoutTranslationView];
+// Override
+- (void)notifyBottomContainerReadyOfData:(TUIMessageCellData *)cellData {
+    NSDictionary *param = @{TUICore_TUIChatExtension_BottomContainer_CellData: self.referenceData};
+    [TUICore raiseExtension:TUICore_TUIChatExtension_BottomContainer_MinimalistExtensionID parentView:self.bottomContainer param:param];
 }
 
 - (void)updateUI:(TUIReferenceMessageCellData_Minimalist *)referenceData
@@ -255,15 +235,16 @@
     [super layoutSubviews];
     
     [self updateUI:self.referenceData];
-    [self layoutTranslationView];
+
+    [self layoutBottomContainer];
 }
 
-- (void)layoutTranslationView {
-    if (self.translationView.hidden) {
+- (void)layoutBottomContainer {
+    if (CGSizeEqualToSize(self.referenceData.bottomContainerSize, CGSizeZero)) {
         return;
     }
-    
-    CGSize size = self.referenceData.translationViewData.size;
+
+    CGSize size = self.referenceData.bottomContainerSize;
     /// TransitionView should not cover the replyView.
     /// Add an extra tiny offset to the left or right of TransitionView if replyView is visible.
     CGFloat offset = self.quoteLineView.hidden ? 0 : 1;
@@ -271,22 +252,21 @@
     CGFloat topMargin = view.mm_maxY + self.nameLabel.mm_h + 6;
     
     if (self.referenceData.direction == MsgDirectionOutgoing) {
-        self.translationView
+        self.bottomContainer
             .mm_top(topMargin)
             .mm_width(size.width)
             .mm_height(size.height)
-            .mm_right(self.mm_w - self.container.mm_maxX + offset);
+            .mm_right(self.mm_w - self.container.mm_maxX);
     } else {
-        self.translationView
+        self.bottomContainer
             .mm_top(topMargin)
             .mm_width(size.width)
             .mm_height(size.height)
-            .mm_left(self.container.mm_minX + offset);
+            .mm_left(self.container.mm_minX);
     }
-    
     if (!self.quoteView.hidden) {
         CGRect oldRect = self.quoteView.frame;
-        CGRect newRect = CGRectMake(oldRect.origin.x, CGRectGetMaxY(self.translationView.frame) + 5,
+        CGRect newRect = CGRectMake(oldRect.origin.x, CGRectGetMaxY(self.bottomContainer.frame) + 5,
                                     oldRect.size.width, oldRect.size.height);
         self.quoteView.frame = newRect;
     }
@@ -305,7 +285,7 @@
     if (!self.quoteLineView.hidden) {
         CGRect oldRect = self.quoteLineView.frame;
         CGRect newRect = CGRectMake(oldRect.origin.x, oldRect.origin.y,
-                                    oldRect.size.width, oldRect.size.height + self.translationView.mm_h);
+                                    oldRect.size.width, oldRect.size.height + self.bottomContainer.mm_h);
         self.quoteLineView.frame = newRect;
     }
 }

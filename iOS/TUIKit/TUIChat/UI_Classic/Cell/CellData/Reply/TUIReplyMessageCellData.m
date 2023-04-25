@@ -27,7 +27,7 @@
 #import "TUIVoiceMessageCellData.h"
 #import "TUITextMessageCellData.h"
 #import "TUIMergeMessageCellData.h"
-#import "NSString+TUIEmoji.h"
+#import <TIMCommon/NSString+TUIEmoji.h>
 
 #import "TUITextReplyQuoteViewData.h"
 #import "TUIImageReplyQuoteViewData.h"
@@ -88,15 +88,8 @@
 - (CGFloat)heightOfWidth:(CGFloat)width {
     CGFloat height = [super heightOfWidth:width];
     
-    // load translationView's saved data to render translationView
-    if ([self.translationViewData shouldLoadSavedData]) {
-        [self.translationViewData setMessage:self.innerMessage];
-        [self.translationViewData loadSavedData];
-    }
-    [self.translationViewData calcSize];
-    
-    if (![self.translationViewData isHidden]) {
-        height += self.translationViewData.size.height + 6;
+    if (self.bottomContainerSize.height > 0) {
+        height += self.bottomContainerSize.height + 6;
     }
     
     return height;
@@ -199,10 +192,6 @@
         }
     };
     return quoteData;
-}
-
-- (BOOL)canTranslate {
-    return YES;
 }
 
 @end

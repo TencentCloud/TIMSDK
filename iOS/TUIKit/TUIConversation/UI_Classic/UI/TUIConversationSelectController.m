@@ -8,15 +8,15 @@
 #import "TUIConversationSelectController.h"
 #import "TUIConversationCell.h"
 #import "TUIConversationCellData.h"
-#import "TUICommonModel.h"
+#import <TIMCommon/TIMCommonModel.h>
 #import "TUIConversationSelectDataProvider.h"
-#import "TUIDefine.h"
-#import "TUICore.h"
-#import "NSDictionary+TUISafe.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUICore.h>
+#import <TUICore/NSDictionary+TUISafe.h>
 
 typedef void(^TUIConversationSelectCompletHandler)(BOOL);
 
-@interface TUIConversationSelectController () <UITableViewDelegate, UITableViewDataSource, TUINotificationProtocol>
+@interface TUIConversationSelectController () <UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) TUIContactListPicker *pickerView;
@@ -40,12 +40,9 @@ static NSString *const Id = @"con";
     [super viewDidLoad];
     
     [self setupViews];
-    
-    [TUICore registerEvent:TUICore_TUIContactNotify subKey:TUICore_TUIContactNotify_SelectedContactsSubKey object:self];
 }
 
-- (void)viewWillLayoutSubviews
-{
+- (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
     [self updateLayout];
 }
@@ -60,88 +57,10 @@ static NSString *const Id = @"con";
 
 - (void)dealloc {
     NSLog(@"%s dealloc", __FUNCTION__);
-    [TUICore unRegisterEventByObject:self];
-}
-
-#pragma mark - TUICore
-- (void)onNotifyEvent:(NSString *)key subKey:(NSString *)subKey object:(nullable id)anObject param:(NSDictionary *)param {
-    if ([key isEqualToString:TUICore_TUIContactNotify]
-        && [subKey isEqualToString:TUICore_TUIContactNotify_SelectedContactsSubKey]
-        && anObject == self.showContactSelectVC) {
-
-        NSArray<TUICommonContactSelectCellData *> *selectArray = [param tui_objectForKey:TUICore_TUIContactNotify_SelectedContactsSubKey_ListKey asClass:NSArray.class];
-        if (![selectArray.firstObject isKindOfClass:TUICommonContactSelectCellData.class]) {
-            NSAssert(NO, @"Error value type");
-        }
-        if (self.enableMuliple) {
-            /**
-             * 多选: 从通讯录中选择 -> 为每个联系人创建会话 -> pickerView 显示每个联系人
-             * Multiple selection: Select from address book -> Create conversation for each contact -> Every contact will be displayed in pickerView
-             */
-            for (TUICommonContactSelectCellData *contact in selectArray) {
-                if ([self existInSelectedArray:contact.identifier]) {
-                    continue;
-                }
-                TUIConversationCellData *conv =  [self findItemInDataListArray:contact.identifier];
-                if (!conv) {
-                    conv = [[TUIConversationCellData alloc] init];
-                    conv.conversationID = contact.identifier;
-                    conv.userID = contact.identifier;
-                    conv.groupID = @"";
-                    conv.avatarImage = contact.avatarImage;
-                    conv.faceUrl = contact.avatarUrl.absoluteString;
-                }
-                else {
-                    conv.selected = !conv.selected;
-                }
-                
-                [self.currentSelectedList addObject:conv];
-            }
-            
-         
-            [self updatePickerView];
-            [self.tableView reloadData];
-            [self.navigationController popViewControllerAnimated:YES];
-        } else {
-            /**
-             * 单选: 创建新聊天(多人就是群聊) -> 为所选联系人创建群聊 -> 直接转发
-             * Single Choice: Create a new chat (or a group chat if there are multiple people) -> Create a group chat for the selected contact -> Forward directly
-             */
-            if (selectArray.count <= 1) {
-                TUICommonContactSelectCellData *contact = selectArray.firstObject;
-                if (contact) {
-                    TUIConversationCellData *conv = [[TUIConversationCellData alloc] init];
-                    conv.conversationID = contact.identifier;
-                    conv.userID = contact.identifier;
-                    conv.groupID = @"";
-                    conv.avatarImage = contact.avatarImage;
-                    conv.faceUrl = contact.avatarUrl.absoluteString;
-                    self.currentSelectedList = [NSMutableArray arrayWithArray:@[conv]];
-                    [self tryFinishSelected:^(BOOL finished) {
-                        if (finished) {
-                            [self notifyFinishSelecting];
-                            [self dismissViewControllerAnimated:YES completion:nil];
-                        }
-                    }];
-                }
-                return;
-            }
-            [self tryFinishSelected:^(BOOL finished) {
-                if (finished) {
-                    [self createGroupWithContacts:selectArray completion:^(BOOL success) {
-                        if (success) {
-                            [self dismissViewControllerAnimated:YES completion:nil];
-                        }
-                    }];
-                }
-            }];
-        }
-    }
 }
 
 #pragma mark - API
-+ (instancetype)showIn:(UIViewController *)presentVC
-{
++ (instancetype)showIn:(UIViewController *)presentVC {
     TUIConversationSelectController *vc = [[TUIConversationSelectController alloc] init];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
     nav.modalPresentationStyle = UIModalPresentationFullScreen;
@@ -154,13 +73,12 @@ static NSString *const Id = @"con";
 }
 
 #pragma mark - UI
-- (void)setupViews
-{
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:TUIKitLocalizableString(Cancel)
+- (void)setupViews {
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:TIMCommonLocalizableString(Cancel)
                                                                              style:UIBarButtonItemStylePlain
                                                                             target:self
                                                                             action:@selector(doCancel)];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:TUIKitLocalizableString(Multiple)
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:TIMCommonLocalizableString(Multiple)
                                                                               style:UIBarButtonItemStylePlain
                                                                              target:self
                                                                              action:@selector(doMultiple)];
@@ -168,7 +86,7 @@ static NSString *const Id = @"con";
     self.view.backgroundColor = [UIColor whiteColor];
     
     _headerView = [[TUICommonTableViewCell alloc] init];
-    _headerView.textLabel.text = TUIKitLocalizableString(TUIKitRelayTargetCreateNewChat);
+    _headerView.textLabel.text = TIMCommonLocalizableString(TUIKitRelayTargetCreateNewChat);
     _headerView.textLabel.font = [UIFont systemFontOfSize:15.0];
     _headerView.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     [_headerView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onCreateSessionOrSelectContact)]];
@@ -213,11 +131,10 @@ static NSString *const Id = @"con";
     }];
 }
 
-- (void)updateLayout
-{
+- (void)updateLayout {
     [self.pickerView setHidden:!self.enableMuliple];
     self.headerView.frame =  CGRectMake(0, 0, self.view.bounds.size.width, 55);
-    _headerView.textLabel.text = self.enableMuliple ? TUIKitLocalizableString(TUIKitRelayTargetSelectFromContacts) : TUIKitLocalizableString(TUIKitRelayTargetCreateNewChat);
+    _headerView.textLabel.text = self.enableMuliple ? TIMCommonLocalizableString(TUIKitRelayTargetSelectFromContacts) : TIMCommonLocalizableString(TUIKitRelayTargetCreateNewChat);
     
     if (!self.enableMuliple) {
         self.tableView.frame = self.view.bounds;
@@ -233,8 +150,7 @@ static NSString *const Id = @"con";
     self.tableView.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - pH - pMargin);
 }
 
-- (void)updatePickerView
-{
+- (void)updatePickerView {
     NSMutableArray *arrayM = [NSMutableArray array];
     for (TUIConversationCellData *convCellData in self.currentSelectedList) {
         TUICommonContactSelectCellData *data = [[TUICommonContactSelectCellData alloc] init];
@@ -248,8 +164,7 @@ static NSString *const Id = @"con";
 }
 
 #pragma mark - Action
-- (void)doCancel
-{
+- (void)doCancel {
     if (self.enableMuliple) {
         // 退出多选
         self.enableMuliple = NO;
@@ -268,15 +183,13 @@ static NSString *const Id = @"con";
     }
 }
 
-- (void)doMultiple
-{
+- (void)doMultiple {
     self.enableMuliple = YES;
     [self updateLayout];
     [self.tableView reloadData];
 }
 
-- (void)onCreateSessionOrSelectContact
-{
+- (void)onCreateSessionOrSelectContact {
     
     NSMutableArray *ids = NSMutableArray.new;
     for (TUIConversationCellData *cd in self.currentSelectedList) {
@@ -287,18 +200,89 @@ static NSString *const Id = @"con";
         }
     }
     
-    UIViewController *vc = [TUICore callService:TUICore_TUIContactService
-                                         method:TUICore_TUIContactService_GetContactSelectControllerMethod
-                                          param:@{
-        TUICore_TUIContactService_GetContactSelectControllerMethod_DisableIdsKey : ids,
+    @weakify(self);
+    void (^selectContactCompletion)(NSArray<TUICommonContactSelectCellData *> *) = ^(NSArray<TUICommonContactSelectCellData *> *array){
+        @strongify(self);
+        [self dealSelectBlock:array];
+    };
+
+    UIViewController *vc = [TUICore createObject:TUICore_TUIContactObjectFactory key:TUICore_TUIContactObjectFactory_GetContactSelectControllerMethod param:@{
+        TUICore_TUIContactObjectFactory_GetContactSelectControllerMethod_DisableIdsKey : ids,
+        TUICore_TUIContactObjectFactory_GetContactSelectControllerMethod_CompletionKey: selectContactCompletion,
     }];
     
     [self.navigationController pushViewController:(UIViewController *)vc animated:YES];
     self.showContactSelectVC = vc;
 }
 
-- (BOOL)existInSelectedArray:(NSString *)identifier
-{
+- (void)dealSelectBlock:(NSArray<TUICommonContactSelectCellData *> *)array {
+    NSArray<TUICommonContactSelectCellData *> *selectArray = array;
+    if (![selectArray.firstObject isKindOfClass:TUICommonContactSelectCellData.class]) {
+        NSAssert(NO, @"Error value type");
+    }
+    if (self.enableMuliple) {
+        /**
+         * 多选: 从通讯录中选择 -> 为每个联系人创建会话 -> pickerView 显示每个联系人
+         * Multiple selection: Select from address book -> Create conversation for each contact -> Every contact will be displayed in pickerView
+         */
+        for (TUICommonContactSelectCellData *contact in selectArray) {
+            if ([self existInSelectedArray:contact.identifier]) {
+                continue;
+            }
+            TUIConversationCellData *conv =  [self findItemInDataListArray:contact.identifier];
+            if (!conv) {
+                conv = [[TUIConversationCellData alloc] init];
+                conv.conversationID = contact.identifier;
+                conv.userID = contact.identifier;
+                conv.groupID = @"";
+                conv.avatarImage = contact.avatarImage;
+                conv.faceUrl = contact.avatarUrl.absoluteString;
+            }
+            else {
+                conv.selected = !conv.selected;
+            }
+            
+            [self.currentSelectedList addObject:conv];
+        }
+        [self updatePickerView];
+        [self.tableView reloadData];
+        [self.navigationController popViewControllerAnimated:YES];
+    } else {
+        /**
+         * 单选: 创建新聊天(多人就是群聊) -> 为所选联系人创建群聊 -> 直接转发
+         * Single Choice: Create a new chat (or a group chat if there are multiple people) -> Create a group chat for the selected contact -> Forward directly
+         */
+        if (selectArray.count <= 1) {
+            TUICommonContactSelectCellData *contact = selectArray.firstObject;
+            if (contact) {
+                TUIConversationCellData *conv = [[TUIConversationCellData alloc] init];
+                conv.conversationID = contact.identifier;
+                conv.userID = contact.identifier;
+                conv.groupID = @"";
+                conv.avatarImage = contact.avatarImage;
+                conv.faceUrl = contact.avatarUrl.absoluteString;
+                self.currentSelectedList = [NSMutableArray arrayWithArray:@[conv]];
+                [self tryFinishSelected:^(BOOL finished) {
+                    if (finished) {
+                        [self notifyFinishSelecting];
+                        [self dismissViewControllerAnimated:YES completion:nil];
+                    }
+                }];
+            }
+            return;
+        }
+        [self tryFinishSelected:^(BOOL finished) {
+            if (finished) {
+                [self createGroupWithContacts:selectArray completion:^(BOOL success) {
+                    if (success) {
+                        [self dismissViewControllerAnimated:YES completion:nil];
+                    }
+                }];
+            }
+        }];
+    }
+}
+- (BOOL)existInSelectedArray:(NSString *)identifier {
     for (TUIConversationCellData *cellData in self.currentSelectedList) {
         if (cellData.userID.length && [cellData.userID isEqualToString:identifier]) {
             return YES;
@@ -307,8 +291,7 @@ static NSString *const Id = @"con";
     return NO;
 }
 
-- (TUIConversationCellData *)findItemInDataListArray:(NSString *)identifier
-{
+- (TUIConversationCellData *)findItemInDataListArray:(NSString *)identifier {
     for (TUIConversationCellData *cellData in self.dataProvider.dataList) {
         if (cellData.userID.length && [cellData.userID isEqualToString:identifier]) {
             return cellData;
@@ -317,8 +300,7 @@ static NSString *const Id = @"con";
     return nil;
 }
 
-- (void)doPickerDone
-{
+- (void)doPickerDone {
     __weak typeof(self) weakSelf = self;
     [self tryFinishSelected:^(BOOL finished) {
         if (finished) {
@@ -330,17 +312,17 @@ static NSString *const Id = @"con";
 
 // confirm whether to forward or not
 - (void)tryFinishSelected:(TUIConversationSelectCompletHandler)handler {
-    UIAlertController *alertVc = [UIAlertController alertControllerWithTitle:TUIKitLocalizableString(TUIKitRelayConfirmForward)
+    UIAlertController *alertVc = [UIAlertController alertControllerWithTitle:TIMCommonLocalizableString(TUIKitRelayConfirmForward)
                                                                      message:nil
                                                               preferredStyle:UIAlertControllerStyleAlert];
-    [alertVc tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel)
+    [alertVc tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(Cancel)
                                                 style:UIAlertActionStyleDefault
                                               handler:^(UIAlertAction * _Nonnull action) {
         if (handler) {
             handler(NO);
         }
     }]];
-    [alertVc tuitheme_addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Confirm)
+    [alertVc tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(Confirm)
                                                 style:UIAlertActionStyleDefault
                                               handler:^(UIAlertAction * _Nonnull action) {
         if (handler) {
@@ -375,7 +357,7 @@ static NSString *const Id = @"con";
     void (^createGroupCompletion)(BOOL, NSString *, NSString *) = ^(BOOL success, NSString *groupID, NSString *groupName) {
         @strongify(self);
         if (!success) {
-            [TUITool makeToast:TUIKitLocalizableString(TUIKitRelayTargetCrateGroupError)];
+            [TUITool makeToast:TIMCommonLocalizableString(TUIKitRelayTargetCrateGroupError)];
             if (completion) {
                 completion(NO);
             }
@@ -402,13 +384,11 @@ static NSString *const Id = @"con";
 }
 
 #pragma mark - UITableViewDelegate, UITableViewDataSource
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.dataProvider.dataList.count;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     TUIConversationCell *cell = [tableView dequeueReusableCellWithIdentifier:Id forIndexPath:indexPath];
     if (indexPath.row < 0 || indexPath.row >= self.dataProvider.dataList.count) {
         return cell;
@@ -445,18 +425,16 @@ static NSString *const Id = @"con";
     [self.tableView reloadData];
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 56.0;
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-{
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     UIView *titleView = [[UIView alloc] init];
     titleView.backgroundColor = [UIColor groupTableViewBackgroundColor];
     titleView.bounds = CGRectMake(0, 0, self.tableView.bounds.size.width, 30);
     UILabel *label = [[UILabel alloc] init];
-    label.text = TUIKitLocalizableString(TUIKitRelayRecentMessages);
+    label.text = TIMCommonLocalizableString(TUIKitRelayRecentMessages);
     label.font = [UIFont systemFontOfSize:12.0];
     label.textColor = [UIColor darkGrayColor];
     label.textAlignment = NSTextAlignmentLeft;
@@ -467,8 +445,7 @@ static NSString *const Id = @"con";
 
 #pragma mark - Lazy
 
-- (NSMutableArray<TUIConversationCellData *> *)currentSelectedList
-{
+- (NSMutableArray<TUIConversationCellData *> *)currentSelectedList {
     if (_currentSelectedList == nil) {
         _currentSelectedList = [NSMutableArray array];
     }

@@ -6,7 +6,7 @@
 //
 
 #import "TUIFaceMessageCell_Minimalist.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 
 @interface TUIFaceMessageCell_Minimalist ()
 @end

@@ -17,11 +17,11 @@
 
 #ifndef dispatch_callkit_main_async_safe
 #define dispatch_callkit_main_async_safe(block)\
-    if (dispatch_queue_get_label(DISPATCH_CURRENT_QUEUE_LABEL) == dispatch_queue_get_label(dispatch_get_main_queue())) {\
-        block();\
-    } else {\
-        dispatch_async(dispatch_get_main_queue(), block);\
-    }
+if (dispatch_queue_get_label(DISPATCH_CURRENT_QUEUE_LABEL) == dispatch_queue_get_label(dispatch_get_main_queue())) {\
+block();\
+} else {\
+dispatch_async(dispatch_get_main_queue(), block);\
+}
 #endif
 
 NS_ASSUME_NONNULL_BEGIN
@@ -38,6 +38,8 @@ typedef NS_ENUM(NSUInteger, AuthorizationDeniedType ) {
 + (UIImage *)getBundleImageWithName:(NSString *)name;
 
 + (UIWindow *)getKeyWindow;
+
++ (CGFloat)getStatusBarHeight;
 
 + (BOOL)checkDictionaryValid:(id)data;
 

@@ -74,6 +74,7 @@
     }
     [[TUICallEngine createInstance] openMicrophone:^{
         [TUICallingStatusManager shareInstance].isMicMute = YES;
+        [[NSNotificationCenter defaultCenter] postNotificationName:TUICallKitEventOpenMicrophone object:nil];
     } fail:^(int code, NSString *errMsg) {
     }];
 }
@@ -84,6 +85,7 @@
         return;
     }
     [[TUICallEngine createInstance] closeMicrophone];
+    [[NSNotificationCenter defaultCenter] postNotificationName:TUICallKitEventCloseMicrophone object:nil];
     [TUICallingStatusManager shareInstance].isMicMute = NO;
 }
 

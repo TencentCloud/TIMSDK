@@ -7,7 +7,7 @@
 
 #import <UIKit/UIKit.h>
 #import <Photos/Photos.h>
-#import "TUIMessageCellData.h"
+#import <TIMCommon/TUIMessageCellData.h>
 
 @class TUIMediaCollectionCell_Minimalist;
 

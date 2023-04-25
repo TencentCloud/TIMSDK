@@ -6,7 +6,7 @@
 //
 
 #import "TUIConversationSelectBaseDataProvider.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 
 
 @interface TUIConversationSelectBaseDataProvider ()

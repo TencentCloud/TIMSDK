@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TUIConfig.h"
+#import <TIMCommon/TIMDefine.h>
 
 @import UIKit;
 NS_ASSUME_NONNULL_BEGIN

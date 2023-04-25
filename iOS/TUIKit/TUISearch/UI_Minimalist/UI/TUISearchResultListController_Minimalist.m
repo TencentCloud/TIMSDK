@@ -10,8 +10,8 @@
 #import "TUISearchBar_Minimalist.h"
 #import "TUISearchResultCellModel.h"
 #import "TUISearchResultCell_Minimalist.h"
-#import "TUICore.h"
-#import "TUIDefine.h"
+#import <TUICore/TUICore.h>
+#import <TIMCommon/TIMDefine.h>
 #import "TUISearchEmptyView_Minimalist.h"
 
 @interface TUISearchResultListController_Minimalist () <UITableViewDelegate, UITableViewDataSource, TUISearchBarDelegate_Minimalist, TUISearchResultDelegate>
@@ -122,7 +122,7 @@ static NSString * const HistoryHFId  = @"HistoryHFId";
 
 -  (TUISearchEmptyView_Minimalist *)noDataEmptyView {
     if (_noDataEmptyView == nil) {
-        _noDataEmptyView = [[TUISearchEmptyView_Minimalist alloc] initWithImage:TUISearchBundleThemeImage(@"", @"search_not_found_icon") Text:TUIKitLocalizableString(TUIKitSearchNoResultLists)];
+        _noDataEmptyView = [[TUISearchEmptyView_Minimalist alloc] initWithImage:TUISearchBundleThemeImage(@"", @"search_not_found_icon") Text:TIMCommonLocalizableString(TUIKitSearchNoResultLists)];
         _noDataEmptyView.hidden = YES;
     }
     return _noDataEmptyView;
@@ -153,8 +153,14 @@ static NSString * const HistoryHFId  = @"HistoryHFId";
     }
     TUISearchResultCellModel *cellModel = self.results[indexPath.row];
     TUISearchResultCell_Minimalist *cell = [tableView cellForRowAtIndexPath:indexPath];
-    cellModel.avatarImage = cell.avatarView.image;
-    cellModel.title = cell.title_label.text;
+
+    if (self.module == TUISearchResultModuleChatHistory) {
+        cellModel.avatarImage = self.headerConversationAvatar?:cell.avatarView.image;
+        cellModel.title = self.headerConversationShowName?:cell.title_label.text;
+    }else {
+        cellModel.avatarImage = cell.avatarView.image;
+        cellModel.title = cell.title_label.text;
+    }
     [self onSelectModel:cellModel module:self.module];
 }
 
@@ -233,30 +239,26 @@ static NSString * const HistoryHFId  = @"HistoryHFId";
 
     if ([cellModel.context isKindOfClass:V2TIMMessage.class]) {
         V2TIMMessage *message = cellModel.context;
-        NSDictionary *param = @{TUICore_TUIChatService_GetChatViewControllerMethod_TitleKey : self.headerConversationShowName ?: @"",
-                                TUICore_TUIChatService_GetChatViewControllerMethod_UserIDKey : message.userID ?: @"",
-                                TUICore_TUIChatService_GetChatViewControllerMethod_GroupIDKey : message.groupID ?: @"",
-                                TUICore_TUIChatService_GetChatViewControllerMethod_AvatarImageKey : self.headerConversationAvatar ?: [[UIImage alloc] init],
-                                TUICore_TUIChatService_GetChatViewControllerMethod_AvatarUrlKey: self.headerConversationURL?:@"",
+        NSDictionary *param = @{TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_TitleKey : self.headerConversationShowName ?: @"",
+                                TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_UserIDKey : message.userID ?: @"",
+                                TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_GroupIDKey : message.groupID ?: @"",
+                                TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_AvatarImageKey : self.headerConversationAvatar ?: [[UIImage alloc] init],
+                                TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_AvatarUrlKey: self.headerConversationURL?:@"",
         };
-        UIViewController *chatVC = [TUICore callService:TUICore_TUIChatService_Minimalist
-                                                 method:TUICore_TUIChatService_GetChatViewControllerMethod
-                                                  param:param];
+        UIViewController *chatVC = [TUICore createObject:TUICore_TUIChatObjectFactory_Minimalist key:TUICore_TUIChatObjectFactory_GetChatViewControllerMethod param:param];
         [chatVC setTitle:message.userID];
         [self.navigationController pushViewController:chatVC animated:YES];
     }
      else if (([cellModel.context isKindOfClass:NSDictionary.class])) {
         NSDictionary *convInfo = cellModel.context;
         V2TIMConversation *conversation = convInfo[kSearchChatHistoryConverationInfo];
-        NSDictionary *param = @{TUICore_TUIChatService_GetChatViewControllerMethod_TitleKey : self.headerConversationShowName ?: @"",
-                                    TUICore_TUIChatService_GetChatViewControllerMethod_UserIDKey : conversation.userID ?: @"",
-                                    TUICore_TUIChatService_GetChatViewControllerMethod_GroupIDKey : conversation.groupID ?: @"",
-                                TUICore_TUIChatService_GetChatViewControllerMethod_AvatarImageKey : self.headerConversationAvatar ?: [[UIImage alloc] init],
-                                TUICore_TUIChatService_GetChatViewControllerMethod_AvatarUrlKey: self.headerConversationURL?:@"",
+        NSDictionary *param = @{TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_TitleKey : self.headerConversationShowName ?: @"",
+                                    TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_UserIDKey : conversation.userID ?: @"",
+                                    TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_GroupIDKey : conversation.groupID ?: @"",
+                                TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_AvatarImageKey : self.headerConversationAvatar ?: [[UIImage alloc] init],
+                                TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_AvatarUrlKey: self.headerConversationURL?:@"",
         };
-        UIViewController *chatVC = [TUICore callService:TUICore_TUIChatService_Minimalist
-                                                 method:TUICore_TUIChatService_GetChatViewControllerMethod
-                                                  param:param];
+        UIViewController *chatVC = [TUICore createObject:TUICore_TUIChatObjectFactory_Minimalist key:TUICore_TUIChatObjectFactory_GetChatViewControllerMethod param:param];
         [chatVC setTitle:cellModel.title?:cellModel.titleAttributeString.string];
         [self.navigationController pushViewController:chatVC animated:YES];
     }
@@ -268,16 +270,14 @@ static NSString * const HistoryHFId  = @"HistoryHFId";
         if (![cellModel.context isKindOfClass:NSDictionary.class]) {
             if ([cellModel.context isKindOfClass:V2TIMMessage.class]) {
                 V2TIMMessage *message = cellModel.context;
-                NSDictionary *param = @{TUICore_TUIChatService_GetChatViewControllerMethod_TitleKey : cellModel.title ?: @"",
-                                        TUICore_TUIChatService_GetChatViewControllerMethod_UserIDKey : message.userID ?: @"",
-                                        TUICore_TUIChatService_GetChatViewControllerMethod_GroupIDKey : message.groupID ?: @"",
-                                        TUICore_TUIChatService_GetChatViewControllerMethod_AvatarImageKey : cellModel.avatarImage ?: [[UIImage alloc] init],
-                                        TUICore_TUIChatService_GetChatViewControllerMethod_HighlightKeywordKey : self.searchBar.searchBar.text ?: @"",
-                                        TUICore_TUIChatService_GetChatViewControllerMethod_LocateMessageKey : message,
+                NSDictionary *param = @{TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_TitleKey : cellModel.title ?: @"",
+                                        TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_UserIDKey : message.userID ?: @"",
+                                        TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_GroupIDKey : message.groupID ?: @"",
+                                        TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_AvatarImageKey : cellModel.avatarImage ?: [[UIImage alloc] init],
+                                        TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_HighlightKeywordKey : self.searchBar.searchBar.text ?: @"",
+                                        TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_LocateMessageKey : message,
                 };
-                UIViewController *chatVC = [TUICore callService:TUICore_TUIChatService_Minimalist
-                                                         method:TUICore_TUIChatService_GetChatViewControllerMethod
-                                                          param:param];
+                UIViewController *chatVC = [TUICore createObject:TUICore_TUIChatObjectFactory_Minimalist key:TUICore_TUIChatObjectFactory_GetChatViewControllerMethod param:param];
                 [chatVC setTitle:message.userID];
                 [self.navigationController pushViewController:chatVC animated:YES];
                 return;
@@ -305,6 +305,7 @@ static NSString * const HistoryHFId  = @"HistoryHFId";
                                                                                            keyword:self.searchBar.searchBar.text
                                                                                             module:module
                                                                                              param:@{TUISearchChatHistoryParamKeyConversationId:conversationId}];
+        
         vc.headerConversationAvatar =  cellModel.avatarImage;
         vc.headerConversationShowName = cellModel.title;
         [self.navigationController pushViewController:vc animated:YES];
@@ -314,24 +315,22 @@ static NSString * const HistoryHFId  = @"HistoryHFId";
     NSDictionary *param = nil;
     if (module == TUISearchResultModuleContact && [cellModel.context isKindOfClass:V2TIMFriendInfo.class]) {
         V2TIMFriendInfo *friend = cellModel.context;
-        param = @{TUICore_TUIChatService_GetChatViewControllerMethod_TitleKey : cellModel.title ?: @"",
-                  TUICore_TUIChatService_GetChatViewControllerMethod_UserIDKey : friend.userID ?: @"",
-                  TUICore_TUIChatService_GetChatViewControllerMethod_AvatarImageKey : cellModel.avatarImage ?: [UIImage new],
+        param = @{TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_TitleKey : cellModel.title ?: @"",
+                  TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_UserIDKey : friend.userID ?: @"",
+                  TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_AvatarImageKey : cellModel.avatarImage ?: [UIImage new],
                   
         };
     }
 
     if (module == TUISearchResultModuleGroup && [cellModel.context isKindOfClass:V2TIMGroupInfo.class]) {
         V2TIMGroupInfo *group = cellModel.context;
-        param = @{TUICore_TUIChatService_GetChatViewControllerMethod_TitleKey : cellModel.title ?: @"",
-                  TUICore_TUIChatService_GetChatViewControllerMethod_GroupIDKey : group.groupID ?: @"",
-                  TUICore_TUIChatService_GetChatViewControllerMethod_AvatarImageKey : cellModel.avatarImage ?: [UIImage new],
+        param = @{TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_TitleKey : cellModel.title ?: @"",
+                  TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_GroupIDKey : group.groupID ?: @"",
+                  TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_AvatarImageKey : cellModel.avatarImage ?: [UIImage new],
         };
     }
 
-    UIViewController *chatVc = (UIViewController *)[TUICore callService:TUICore_TUIChatService_Minimalist
-                                                                 method:TUICore_TUIChatService_GetChatViewControllerMethod
-                                                                  param:param];
+    UIViewController *chatVc = (UIViewController *)[TUICore createObject:TUICore_TUIChatObjectFactory_Minimalist key:TUICore_TUIChatObjectFactory_GetChatViewControllerMethod param:param];
     [chatVc setTitle:cellModel.title?:cellModel.titleAttributeString.string];
     [self.navigationController pushViewController:(UIViewController *)chatVc animated:YES];
 }

@@ -7,8 +7,8 @@
 //
 
 #import "TUIMenuCell.h"
-#import "TUIDefine.h"
-#import "TUIThemeManager.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
 
 @implementation TUIMenuCell
 - (id)initWithFrame:(CGRect)frame

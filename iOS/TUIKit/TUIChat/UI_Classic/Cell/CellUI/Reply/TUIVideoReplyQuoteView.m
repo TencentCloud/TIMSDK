@@ -6,8 +6,8 @@
 //
 
 #import "TUIVideoReplyQuoteView.h"
-#import "TUIDarkModel.h"
-#import "TUIDefine.h"
+#import <TUICore/TUIDarkModel.h>
+#import <TIMCommon/TIMDefine.h>
 #import "TUIVideoReplyQuoteViewData.h"
 
 @implementation TUIVideoReplyQuoteView

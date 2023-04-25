@@ -5,7 +5,7 @@
 //  Created by harvy on 2020/12/24.
 //
 
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 #import "TUISearchViewController.h"
 #import "TUISearchBar.h"
 #import "TUISearchResultHeaderFooterView.h"
@@ -13,7 +13,7 @@
 #import "TUISearchResultCellModel.h"
 #import "TUISearchResultListController.h"
 #import "TUISearchDataProvider.h"
-#import "TUICore.h"
+#import <TUICore/TUICore.h>
 
 @interface TUISearchViewController () <UITableViewDelegate, UITableViewDataSource, TUISearchBarDelegate, TUISearchResultDelegate>
 
@@ -188,15 +188,13 @@ static NSString * const HFId = @"HFId";
         V2TIMConversation *conversation = convInfo[kSearchChatHistoryConverationInfo];
         NSArray *msgs = convInfo[kSearchChatHistoryConversationMsgs];
         if (msgs.count == 1) {
-            NSDictionary *param = @{TUICore_TUIChatService_GetChatViewControllerMethod_TitleKey : cellModel.title ?: @"",
-                                    TUICore_TUIChatService_GetChatViewControllerMethod_UserIDKey : conversation.userID ?: @"",
-                                    TUICore_TUIChatService_GetChatViewControllerMethod_GroupIDKey : conversation.groupID ?: @"",
-                                    TUICore_TUIChatService_GetChatViewControllerMethod_HighlightKeywordKey : self.searchBar.searchBar.text ?: @"",
-                                    TUICore_TUIChatService_GetChatViewControllerMethod_LocateMessageKey : msgs.firstObject,
+            NSDictionary *param = @{TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_TitleKey : cellModel.title ?: @"",
+                                    TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_UserIDKey : conversation.userID ?: @"",
+                                    TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_GroupIDKey : conversation.groupID ?: @"",
+                                    TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_HighlightKeywordKey : self.searchBar.searchBar.text ?: @"",
+                                    TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_LocateMessageKey : msgs.firstObject,
             };
-            UIViewController *chatVC = [TUICore callService:TUICore_TUIChatService
-                                                     method:TUICore_TUIChatService_GetChatViewControllerMethod
-                                                      param:param];
+            UIViewController *chatVC = [TUICore createObject:TUICore_TUIChatObjectFactory key:TUICore_TUIChatObjectFactory_GetChatViewControllerMethod param:param];
             [chatVC setTitle:cellModel.title?:cellModel.titleAttributeString.string];
             [self.navigationController pushViewController:chatVC animated:YES];
             return;
@@ -226,20 +224,18 @@ static NSString * const HFId = @"HFId";
 
     if (module == TUISearchResultModuleContact && [cellModel.context isKindOfClass:V2TIMFriendInfo.class]) {
         V2TIMFriendInfo *friend = cellModel.context;
-        param = @{TUICore_TUIChatService_GetChatViewControllerMethod_TitleKey : cellModel.title ?: @"",
-                                TUICore_TUIChatService_GetChatViewControllerMethod_UserIDKey : friend.userID ?: @"",
+        param = @{TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_TitleKey : cellModel.title ?: @"",
+                                TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_UserIDKey : friend.userID ?: @"",
         };
     }
 
     if (module == TUISearchResultModuleGroup && [cellModel.context isKindOfClass:V2TIMGroupInfo.class]) {
         V2TIMGroupInfo *group = cellModel.context;
-        param = @{TUICore_TUIChatService_GetChatViewControllerMethod_TitleKey : cellModel.title ?: @"",
-                                TUICore_TUIChatService_GetChatViewControllerMethod_GroupIDKey : group.groupID ?: @"",
+        param = @{TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_TitleKey : cellModel.title ?: @"",
+                                TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_GroupIDKey : group.groupID ?: @"",
         };
     }
-    UIViewController *chatVc = [TUICore callService:TUICore_TUIChatService
-                                             method:TUICore_TUIChatService_GetChatViewControllerMethod
-                                              param:param];
+    UIViewController *chatVc = [TUICore createObject:TUICore_TUIChatObjectFactory key:TUICore_TUIChatObjectFactory_GetChatViewControllerMethod param:param];
     NSParameterAssert(chatVc);
     [(UIViewController *)chatVc setTitle:cellModel.title?:cellModel.titleAttributeString.string];
     [self.navigationController pushViewController:(UIViewController *)chatVc animated:YES];

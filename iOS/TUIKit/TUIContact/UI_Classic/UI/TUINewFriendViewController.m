@@ -8,8 +8,8 @@
 
 #import "TUINewFriendViewController.h"
 #import "TUINewFriendViewDataProvider.h"
-#import "TUIDefine.h"
-#import "TUIThemeManager.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
 
 @interface TUINewFriendViewController ()<UITableViewDelegate,UITableViewDataSource>
 @property UITableView *tableView;
@@ -24,21 +24,16 @@
     [super viewDidLoad];
 
     UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.text = TUIKitLocalizableString(TUIKitContactsNewFriends);
+    titleLabel.text = TIMCommonLocalizableString(TUIKitContactsNewFriends);
     titleLabel.font = [UIFont boldSystemFontOfSize:17.0];
-    titleLabel.textColor = TUICoreDynamicColor(@"nav_title_text_color", @"#000000");
+    titleLabel.textColor = TIMCommonDynamicColor(@"nav_title_text_color", @"#000000");
     [titleLabel sizeToFit];
     self.navigationItem.titleView = titleLabel;
     
     
-    self.view.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
+    self.view.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#F2F3F5");
     
-    //Fix  translucent = NO;
     CGRect rect = self.view.bounds;
-    if (![UINavigationBar appearance].isTranslucent && [[[UIDevice currentDevice] systemVersion] doubleValue]<15.0) {
-        rect = CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height - TabBar_Height - NavBar_Height );
-    }
-    
     _tableView = [[UITableView alloc] initWithFrame:rect style:UITableViewStylePlain];
     if (@available(iOS 15.0, *)) {
         _tableView.sectionHeaderTopPadding = 0;
@@ -155,7 +150,7 @@
         _noDataTipsLabel.textColor = TUIContactDynamicColor(@"contact_add_contact_nodata_tips_text_color", @"#999999");
         _noDataTipsLabel.font = [UIFont systemFontOfSize:14.0];
         _noDataTipsLabel.textAlignment = NSTextAlignmentCenter;
-        _noDataTipsLabel.text = TUIKitLocalizableString(TUIKitContactNoNewApplicationRequest);
+        _noDataTipsLabel.text = TIMCommonLocalizableString(TUIKitContactNoNewApplicationRequest);
     }
     return _noDataTipsLabel;
 }

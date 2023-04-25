@@ -9,9 +9,9 @@
 #import "TUICommonContactSelectCell.h"
 #import "TUICommonContactSelectCell_Minimalist.h"
 #import "TUIContactSelectViewDataProvider_Minimalist.h"
-#import "TUICore.h"
-#import "TUIDefine.h"
-#import "TUIThemeManager.h"
+#import <TUICore/TUICore.h>
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
 #import "TUIContactUserPanelHeaderView_Minimalist.h"
 
 
@@ -77,7 +77,7 @@
 
 @property UITableView *tableView;
 @property UIView *emptyView;
-@property NSMutableArray<TUICommonContactSelectCellData *> *selectArray;
+@property NSMutableArray<TUICommonContactSelectCellData_Minimalist *> *selectArray;
 @property (nonatomic,strong) TUIContactSelectControllerHeaderView_Minimalist *addNewGroupHeaderView;
 @property (nonatomic,strong) TUIContactUserPanelHeaderView_Minimalist *userPanelHeaderView;
 @property (nonatomic, copy) void(^floatDataSourceChanged)(NSArray *arr);
@@ -120,7 +120,7 @@
     
     self.view.backgroundColor =  [UIColor whiteColor];
     self.navigationController.interactivePopGestureRecognizer.enabled = YES;
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:TUIKitLocalizableString(Done)
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:TIMCommonLocalizableString(Done)
                                                                               style:UIBarButtonItemStylePlain
                                                                              target:self
                                                                              action:@selector(finishTask)];
@@ -149,11 +149,11 @@
     
     UILabel *tipsLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     [_emptyView addSubview:tipsLabel];
-    tipsLabel.text = TUIKitLocalizableString(TUIKitTipsContactListNil);
-    tipsLabel.mm_sizeToFit().mm_center();
+    tipsLabel.text = TIMCommonLocalizableString(TUIKitTipsContactListNil);
+    tipsLabel.mm_sizeToFit().tui_mm_center();
     
     _addNewGroupHeaderView = [[TUIContactSelectControllerHeaderView_Minimalist alloc] init];
-    _addNewGroupHeaderView.nameLabel.text = TUIKitLocalizableString(TUIKitRelayTargetCreateNewGroup);
+    _addNewGroupHeaderView.nameLabel.text = TIMCommonLocalizableString(TUIKitRelayTargetCreateNewGroup);
     _addNewGroupHeaderView.nameLabel.font = [UIFont systemFontOfSize:15.0];
     [_addNewGroupHeaderView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onCreateSessionOrSelectContact)]];
     _tableView.tableHeaderView = _addNewGroupHeaderView;
@@ -278,7 +278,7 @@
     TUICommonContactSelectCellData *data = cell.selectData;
     if (!data.isSelected) {
         if (self.maxSelectCount > 0 && self.selectArray.count + 1 > self.maxSelectCount) {
-            [TUITool makeToast:[NSString stringWithFormat:TUIKitLocalizableString(TUIKitTipsMostSelectTextFormat),(long)self.maxSelectCount]];
+            [TUITool makeToast:[NSString stringWithFormat:TIMCommonLocalizableString(TUIKitTipsMostSelectTextFormat),(long)self.maxSelectCount]];
             return;
         }
     }
@@ -332,8 +332,7 @@
     
 }
 
-- (void)onCreateSessionOrSelectContact
-{
+- (void)onCreateSessionOrSelectContact {
     [self dismissViewControllerAnimated:YES completion:^{
         [[NSNotificationCenter defaultCenter] postNotificationName:@"kTUIConversationCreatGroupNotification" object:nil];
     }];
@@ -341,15 +340,7 @@
 }
 
 
-- (void)finishTask
-{
-    [TUICore notifyEvent:TUICore_TUIContactNotify
-                  subKey:TUICore_TUIContactNotify_SelectedContactsSubKey
-                  object:self
-                   param:@{
-        TUICore_TUIContactNotify_SelectedContactsSubKey_ListKey : self.selectArray,
-    }];
-    
+- (void)finishTask {
     if (self.finishBlock) {
         self.finishBlock(self.selectArray);
     }

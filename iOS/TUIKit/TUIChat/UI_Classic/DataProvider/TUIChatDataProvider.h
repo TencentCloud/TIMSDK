@@ -4,7 +4,7 @@
 #import "TUIVideoMessageCellData.h"
 #import "TUIInputMoreCellData.h"
 #import "TUIChatConversationModel.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 
 @class TUIChatDataProvider;
 NS_ASSUME_NONNULL_BEGIN
@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TUIChatDataProvider : TUIChatBaseDataProvider
 
 #pragma mark - CellData
-+ (NSMutableArray<TUIInputMoreCellData *> *)moreMenuCellDataArray:(NSString *)groupID
+- (NSMutableArray<TUIInputMoreCellData *> *)moreMenuCellDataArray:(NSString *)groupID
                                                            userID:(NSString *)userID
                                                   isNeedVideoCall:(BOOL)isNeedVideoCall
                                                   isNeedAudioCall:(BOOL)isNeedAudioCall

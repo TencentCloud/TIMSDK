@@ -9,12 +9,12 @@
 #import "TUIMessageDataProvider.h"
 #import "TUIChatDataProvider.h"
 #import "TUITextMessageCellData.h"
-#import "TUIMessageCell.h"
+#import <TIMCommon/TUIMessageCell.h>
 #import "TUITextMessageCell.h"
 
-#import "TUIGlobalization.h"
+#import <TUICore/TUIGlobalization.h>
 #import "TUITextMessageCell.h"
-#import "TUISystemMessageCell.h"
+#import <TIMCommon/TUISystemMessageCell.h>
 #import "TUIVoiceMessageCell.h"
 #import "TUIImageMessageCell.h"
 #import "TUIFaceMessageCell.h"
@@ -25,18 +25,18 @@
 #import "TUILinkCell.h"
 #import "TUILinkCell.h"
 #import "TUIReplyMessageCell.h"
-#import "TUIDarkModel.h"
+#import <TUICore/TUIDarkModel.h>
 #import "TUIFileViewController.h"
 #import "TUIMessageDataProvider.h"
 #import "TUIMediaView.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 #import "TUIReplyMessageCellData.h"
 #import "TUIReferenceMessageCell.h"
-#import "TUIThemeManager.h"
+#import <TUICore/TUIThemeManager.h>
 #import "TUIMergeMessageListController.h"
+#import <TUICore/TUICore.h>
 
-
-@interface TUIRepliesDetailViewController ()<TUIInputControllerDelegate,UITableViewDelegate,UITableViewDataSource,TUIMessageBaseDataProviderDataSource,TUIMessageCellDelegate>
+@interface TUIRepliesDetailViewController ()<TUIInputControllerDelegate,UITableViewDelegate,UITableViewDataSource,TUIMessageBaseDataProviderDataSource,TUIMessageCellDelegate, TUINotificationProtocol>
 
 @property (nonatomic, strong) TUIMessageCellData *cellData;
 @property (nonatomic, strong) TUIMessageDataProvider *msgDataProvider;
@@ -69,6 +69,7 @@
     
     [self setupInputViewController];
     
+    [TUICore registerEvent:TUICore_TUITranslationNotify subKey:TUICore_TUITranslationNotify_DidChangeTranslationSubKey object:self];
 }
 - (void)viewWillAppear:(BOOL)animated {
     [self updateRootMsg];
@@ -109,6 +110,12 @@
         });
     }
 }
+
+- (void)dealloc {
+    NSLog(@"%s dealloc", __FUNCTION__);
+    [TUICore unRegisterEventByObject:self];
+}
+
 - (void)applyData {
     NSArray * messageModifyReplies = self.cellData.messageModifyReplies;
     NSMutableArray * msgIDArray =  [NSMutableArray array];
@@ -156,7 +163,7 @@
 
 - (void)setupViews
 {
-    self.title = TUIKitLocalizableString(TUIKitRepliesDetailTitle);
+    self.title = TIMCommonLocalizableString(TUIKitRepliesDetailTitle);
     self.view.backgroundColor = TUIChatDynamicColor(@"chat_controller_bg_color", @"#FFFFFF");
     self.tableView.scrollsToTop = NO;
     self.tableView.delegate = self;
@@ -193,7 +200,7 @@
     _inputController.view.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
     [self addChildViewController:_inputController];
     [self.view addSubview:_inputController.view];
-    TUIFaceGroup *group = TUIConfig.defaultConfig.faceGroups[0];
+    TUIFaceGroup *group = TIMConfig.defaultConfig.faceGroups[0];
     [_inputController.faceView setData:(id)@[group]];
     TUIMenuCellData *data = [[TUIMenuCellData alloc] init];
     data.path = group.menuPath;
@@ -302,9 +309,6 @@
 - (UITableView *)tableView {
     if (!_tableView) {
         CGRect rect = self.view.bounds;
-        if (![UINavigationBar appearance].isTranslucent && [[[UIDevice currentDevice] systemVersion] doubleValue]<15.0) {
-            rect = CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height - TabBar_Height - NavBar_Height  - TTextView_Height);
-        }
         _tableView = [[UITableView alloc] initWithFrame:rect style:UITableViewStylePlain];
         if (@available(iOS 15.0, *)) {
             _tableView.sectionHeaderTopPadding = 0;
@@ -343,7 +347,7 @@
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
     if (section == 0) {
         UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0, 0, Screen_Width, 0.5)];
-        line.backgroundColor = TUICoreDynamicColor(@"separator_color", @"#DBDBDB");
+        line.backgroundColor = TIMCommonDynamicColor(@"separator_color", @"#DBDBDB");
         return line;
     }
     return nil;
@@ -369,13 +373,13 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
     if (indexPath.section == 0) {
         TUIMessageCell *cell = nil;
         TUIMessageCellData *data = self.cellData;
         cell = [tableView dequeueReusableCellWithIdentifier:data.reuseId forIndexPath:indexPath];
         cell.delegate = self;
         [cell fillWithData:data];
+        [cell notifyBottomContainerReadyOfData:nil];
         return cell;
     }
     TUIMessageCellData *data = _uiMsgs[indexPath.row];
@@ -386,6 +390,7 @@
     cell = [tableView dequeueReusableCellWithIdentifier:data.reuseId forIndexPath:indexPath];
     [cell fillWithData:_uiMsgs[indexPath.row]];
     cell.delegate = self;
+    [cell notifyBottomContainerReadyOfData:nil];
     if ([cell isKindOfClass:TUIBubbleMessageCell.class]) {
         TUIBubbleMessageCell * bubbleCell = (TUIBubbleMessageCell *)cell;
         if (bubbleCell.bubbleView) {
@@ -666,4 +671,71 @@
         [TUITool makeToastError:code msg:desc];
     }];
 }
+
+#pragma mark - TUINotificationProtocol
+- (void)onNotifyEvent:(NSString *)key
+               subKey:(NSString *)subKey
+               object:(id)anObject
+                param:(NSDictionary *)param {
+    if ([key isEqualToString:TUICore_TUITranslationNotify]
+        && [subKey isEqualToString:TUICore_TUITranslationNotify_DidChangeTranslationSubKey]) {
+        
+        TUIMessageCellData *data = param[TUICore_TUITranslationNotify_DidChangeTranslationSubKey_Data];
+        [data clearCachedCellHeight];
+        [self.parentPageDataProvider removeHeightCacheOfData:data];
+        [self reloadAndScrollToBottomOfMessage:data.innerMessage.msgID section:1];
+    }
+}
+
+- (void)reloadAndScrollToBottomOfMessage:(NSString *)messageID section:(NSInteger)section {
+    // Dispatch the task to RunLoop to ensure that they are executed after the UITableView refresh is complete.
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self reloadCellOfMessage:messageID section:section];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self scrollCellToBottomOfMessage:messageID section:section];
+        });
+    });
+}
+
+- (void)reloadCellOfMessage:(NSString *)messageID section:(NSInteger)section {
+    NSIndexPath *indexPath = [self indexPathOfMessage:messageID section:section];
+    
+    // Disable animation when loading to avoid cell jumping.
+    if (indexPath == nil) {
+        return;
+    }
+    [UIView performWithoutAnimation:^{
+        [self.tableView reloadRowsAtIndexPaths:@[indexPath]
+                              withRowAnimation:UITableViewRowAnimationNone];
+    }];
+}
+
+- (void)scrollCellToBottomOfMessage:(NSString *)messageID section:(NSInteger)section {
+    NSIndexPath *indexPath = [self indexPathOfMessage:messageID section:section];
+    
+    // Scroll the tableView only if the bottom of the cell is invisible.
+    CGRect cellRect = [self.tableView rectForRowAtIndexPath:indexPath];
+    CGRect tableViewRect = self.tableView.bounds;
+    BOOL isBottomInvisible = cellRect.origin.y < CGRectGetMaxY(tableViewRect) && CGRectGetMaxY(cellRect) > CGRectGetMaxY(tableViewRect);
+    if (isBottomInvisible) {
+        [self.tableView scrollToRowAtIndexPath:indexPath
+                              atScrollPosition:UITableViewScrollPositionBottom
+                                      animated:YES];
+    }
+}
+
+- (NSIndexPath *)indexPathOfMessage:(NSString *)messageID section:(NSInteger)section {
+    if (section == 0) {
+        return [NSIndexPath indexPathForRow:0 inSection:section];
+    } else {
+        for (int i = 0; i < self.uiMsgs.count; i++) {
+            TUIMessageCellData *data = self.uiMsgs[i];
+            if ([data.innerMessage.msgID isEqualToString:messageID]) {
+                return [NSIndexPath indexPathForRow:i inSection:section];
+            }
+        }
+    }
+    return nil;
+}
+
 @end

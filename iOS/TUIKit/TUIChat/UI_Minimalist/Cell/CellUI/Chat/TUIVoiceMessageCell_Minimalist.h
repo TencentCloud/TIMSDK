@@ -7,7 +7,7 @@
  *  Voice messages, i.e. message units displayed after voice is sent/received. TUIKit displays it as a message with a "sound wave" icon in a bubble by default.
  *  The voice message unit is also responsible for responding to the user's operation and playing the corresponding audio information when the user clicks.
  */
-#import "TUIBubbleMessageCell_Minimalist.h"
+#import <TIMCommon/TUIBubbleMessageCell_Minimalist.h>
 #import "TUIVoiceMessageCellData_Minimalist.h"
 @import AVFoundation;
 

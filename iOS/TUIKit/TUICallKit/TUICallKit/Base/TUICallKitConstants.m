@@ -8,6 +8,9 @@
 
 #import "TUICallKitConstants.h"
 
+NSString * const TUICallKitEventOpenMicrophone = @"TUICallKitEventOpenMicrophone";
+NSString * const TUICallKitEventCloseMicrophone = @"TUICallKitEventCloseMicrophone";
+
 @implementation TUICallKitConstants
 
 @end

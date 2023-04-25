@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 
 @import ImSDK_Plus;
 

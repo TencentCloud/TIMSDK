@@ -1,6 +1,6 @@
 
-#import "TUIMessageCellData.h"
-#import "TUIBubbleMessageCellData_Minimalist.h"
+#import <TIMCommon/TUIMessageCellData.h>
+#import <TIMCommon/TUIBubbleMessageCellData_Minimalist.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

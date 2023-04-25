@@ -6,9 +6,9 @@
 //
 
 #import "TUIFileMessageCell.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 #import "ReactiveObjC/ReactiveObjC.h"
-#import "TUIThemeManager.h"
+#import <TUICore/TUIThemeManager.h>
 #import "TUIMessageProgressManager.h"
 
 @interface TUIFileMessageCell () <V2TIMSDKListener, TUIMessageProgressManagerDelegate>
@@ -159,7 +159,7 @@
         }
     } else {
         if (!self.fileData.isLocalExist && !self.fileData.isDownloading) {
-            str = [NSString stringWithFormat:@"%@ %@", str, TUIKitLocalizableString(TUIKitNotDownload)];
+            str = [NSString stringWithFormat:@"%@ %@", str, TIMCommonLocalizableString(TUIKitNotDownload)];
         }
     }
     

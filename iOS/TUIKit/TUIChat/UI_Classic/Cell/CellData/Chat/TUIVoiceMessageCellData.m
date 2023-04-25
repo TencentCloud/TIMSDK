@@ -6,9 +6,9 @@
 //
 
 #import "TUIVoiceMessageCellData.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 #import "EMVoiceConverter.h"
-#import "TUIThemeManager.h"
+#import <TUICore/TUIThemeManager.h>
 @import AVFoundation;
 
 @interface TUIVoiceMessageCellData ()<AVAudioPlayerDelegate>
@@ -30,7 +30,7 @@
 }
 
 + (NSString *)getDisplayString:(V2TIMMessage *)message {
-    return TUIKitLocalizableString(TUIKitMessageTypeVoice); // @"[语音]";
+    return TIMCommonLocalizableString(TUIKitMessageTypeVoice); // @"[语音]";
 }
 
 - (Class)getReplyQuoteViewDataClass

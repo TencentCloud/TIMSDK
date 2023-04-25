@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUIChat'
-  spec.version      = '7.1.3925'
+  spec.version      = '7.2.4123'
   spec.platform     = :ios
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
@@ -17,7 +17,7 @@ Pod::Spec.new do |spec|
 
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/7.1.3925/ios/TUIChat.zip?time=2'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4123/ios/TUIChat.zip?time=2'}
 
   spec.default_subspec = 'ALL'
 
@@ -28,8 +28,9 @@ Pod::Spec.new do |spec|
 
   spec.subspec 'CommonModel' do |commonModel|
     commonModel.source_files = '**/TUIChat/CommonModel/*.{h,m,mm}'
-    commonModel.dependency 'TXIMSDK_Plus_iOS','7.1.3925'
-    commonModel.dependency 'TUICore','7.1.3925'
+    commonModel.dependency 'TXIMSDK_Plus_iOS','7.2.4123'
+    commonModel.dependency 'TUICore','7.2.4123'
+    commonModel.dependency 'TIMCommon','7.2.4123'
     #commonModel.dependency 'TUICore', :path => 'TUICore'
     commonModel.dependency "TUIChat/VoiceConvert"
     commonModel.dependency 'ReactiveObjC'
@@ -82,10 +83,6 @@ Pod::Spec.new do |spec|
           custom.source_files = '**/TUIChat/UI_Classic/Cell/CellData/Custom/*.{h,m,mm}'
           custom.dependency "TUIChat/UI_Classic/Cell/CellData/Chat"
         end
-        cellData.subspec 'Plugin' do |plugin|
-          plugin.source_files = '**/TUIChat/UI_Classic/Cell/CellData/Plugin/*.{h,m,mm}'
-          plugin.dependency "TUIChat/UI_Classic/Cell/CellData/Chat"
-        end
         cellData.subspec 'Reply' do |reply|
           reply.source_files = '**/TUIChat/UI_Classic/Cell/CellData/Reply/*.{h,m,mm}'
           reply.dependency "TUIChat/UI_Classic/Cell/CellData/Custom"
@@ -103,10 +100,6 @@ Pod::Spec.new do |spec|
         cellUI.subspec 'Custom' do |custom|
           custom.source_files = '**/TUIChat/UI_Classic/Cell/CellUI/Custom/*.{h,m,mm}'
           custom.dependency "TUIChat/UI_Classic/Cell/CellUI/Chat"
-        end
-        cellUI.subspec 'Plugin' do |plugin|
-          plugin.source_files = '**/TUIChat/UI_Classic/Cell/CellUI/Plugin/*.{h,m,mm}'
-          plugin.dependency "TUIChat/UI_Classic/Cell/CellUI/Chat"
         end
         cellUI.subspec 'Reply' do |reply|
           reply.source_files = '**/TUIChat/UI_Classic/Cell/CellUI/Reply/*.{h,m,mm}'

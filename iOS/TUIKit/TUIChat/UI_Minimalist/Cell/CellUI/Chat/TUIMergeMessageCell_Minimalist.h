@@ -19,7 +19,7 @@
  *  | vinson：Okay.
  */
 
-#import "TUIMessageCell_Minimalist.h"
+#import <TIMCommon/TUIMessageCell_Minimalist.h>
 #import "TUIMergeMessageCellData_Minimalist.h"
 NS_ASSUME_NONNULL_BEGIN
 

@@ -6,9 +6,9 @@
 //
 
 #import "TUIMemberCell.h"
-#import "TUICommonModel.h"
-#import "TUIDefine.h"
-#import "TUIThemeManager.h"
+#import <TIMCommon/TIMCommonModel.h>
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
 #import "TUIMemberCellData.h"
 
 @interface TUIMemberCell()
@@ -26,7 +26,7 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.contentView.backgroundColor = TUICoreDynamicColor(@"form_bg_color", @"#FFFFFF");
+        self.contentView.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
         
         self.avatarView = [[UIImageView alloc] initWithImage:DefaultAvatarImage];
         [self.contentView addSubview:self.avatarView];
@@ -41,13 +41,13 @@
 
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         [self.contentView addSubview:self.titleLabel];
-        self.titleLabel.textColor = TUICoreDynamicColor(@"form_title_color", @"#000000");
+        self.titleLabel.textColor = TIMCommonDynamicColor(@"form_title_color", @"#000000");
         self.titleLabel.mm_left(self.avatarView.mm_maxX+12).mm_height(20).mm_width(200).mm__centerY(self.avatarView.mm_centerY);
         
         self.detailLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 20)];
         [self.contentView addSubview:self.detailLabel];
         self.detailLabel.textAlignment = NSTextAlignmentRight;
-        self.detailLabel.textColor = TUICoreDynamicColor(@"form_title_color", @"#000000");
+        self.detailLabel.textColor = TIMCommonDynamicColor(@"form_title_color", @"#000000");
         self.detailLabel.mm__centerY(self.avatarView.mm_centerY);
 
         [self setSelectionStyle:UITableViewCellSelectionStyleNone];

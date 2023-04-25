@@ -8,10 +8,10 @@
 
 #import "TUIMenuView_Minimalist.h"
 #import "TUIMenuCell_Minimalist.h"
-#import "TUIDarkModel.h"
-#import "TUIGlobalization.h"
-#import "TUIThemeManager.h"
-#import "TUIDefine.h"
+#import <TUICore/TUIDarkModel.h>
+#import <TUICore/TUIGlobalization.h>
+#import <TUICore/TUIThemeManager.h>
+#import <TIMCommon/TIMDefine.h>
 
 @interface TUIMenuView_Minimalist () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property (nonatomic, strong) NSMutableArray<TUIMenuCellData_Minimalist *> *data;
@@ -43,7 +43,7 @@
 
     _sendButton = [[UIButton alloc] init];
     _sendButton.titleLabel.font = [UIFont systemFontOfSize:15.0];
-    [_sendButton setTitle:TUIKitLocalizableString(Send) forState:UIControlStateNormal];
+    [_sendButton setTitle:TIMCommonLocalizableString(Send) forState:UIControlStateNormal];
     _sendButton.backgroundColor = RGBA(20, 122, 255, 1);
     [_sendButton addTarget:self action:@selector(sendUpInside:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_sendButton];

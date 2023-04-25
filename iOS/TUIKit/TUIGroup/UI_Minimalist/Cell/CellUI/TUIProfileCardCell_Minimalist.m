@@ -6,8 +6,8 @@
 //
 
 #import "TUIProfileCardCell_Minimalist.h"
-#import "TUIDefine.h"
-#import "TUIThemeManager.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
 
 @implementation TUIProfileCardCell_Minimalist
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
@@ -47,17 +47,17 @@
     
     _name = [[UILabel alloc] init];
     [_name setFont:[UIFont boldSystemFontOfSize:kScale390(24)]];
-    [_name setTextColor:TUICoreDynamicColor(@"form_title_color", @"#000000")];
+    [_name setTextColor:TIMCommonDynamicColor(@"form_title_color", @"#000000")];
     [self.contentView addSubview:_name];
     
     _identifier = [[UILabel alloc] init];
     [_identifier setFont:[UIFont systemFontOfSize:kScale390(12)]];
-    [_identifier setTextColor:TUICoreDynamicColor(@"form_subtitle_color", @"#888888")];
+    [_identifier setTextColor:TIMCommonDynamicColor(@"form_subtitle_color", @"#888888")];
     [self.contentView addSubview:_identifier];
     
     _signature = [[UILabel alloc] init];
     [_signature setFont:[UIFont systemFontOfSize:kScale390(12)]];
-    [_signature setTextColor:TUICoreDynamicColor(@"form_subtitle_color", @"#888888")];
+    [_signature setTextColor:TIMCommonDynamicColor(@"form_subtitle_color", @"#888888")];
     [self.contentView addSubview:_signature];
     
     self.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -91,9 +91,9 @@
     
     [[RACObserve(data, genderString) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(NSString *x) {
         @strongify(self)
-        if([x isEqualToString:TUIKitLocalizableString(Male)]){
+        if([x isEqualToString:TIMCommonLocalizableString(Male)]){
             self.genderIcon.image = TUIGroupCommonBundleImage(@"male");
-        }else if([x isEqualToString:TUIKitLocalizableString(Female)]){
+        }else if([x isEqualToString:TIMCommonLocalizableString(Female)]){
             self.genderIcon.image = TUIGroupCommonBundleImage(@"female");
         }else{
             self.genderIcon.image = nil;

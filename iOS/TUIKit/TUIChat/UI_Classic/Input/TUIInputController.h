@@ -16,7 +16,7 @@
 #import "TUIFaceView.h"
 #import "TUIMenuView.h"
 #import "TUIMoreView.h"
-#import "TUIMessageCell.h"
+#import <TIMCommon/TUIMessageCell.h>
 #import "TUIReplyPreviewBar.h"
 #import "TUIChatDefine.h"
 

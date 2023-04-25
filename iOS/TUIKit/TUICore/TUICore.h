@@ -13,24 +13,35 @@
 @protocol TUIObjectProtocol;
 @protocol TUINotificationProtocol;
 @protocol TUIExtensionProtocol;
+@class TUIExtensionInfo;
 
 NS_ASSUME_NONNULL_BEGIN
+
+typedef void(^TUIExtensionClickCallback)(NSDictionary *param);
+typedef void(^TUICallServiceResultCallback)(NSInteger errorCode, NSString* errorMessage, NSDictionary *param);
 
 @interface TUICore : NSObject
 
 + (void)registerService:(NSString *)serviceName object:(id<TUIServiceProtocol>)object;
-+ (id<TUIServiceProtocol>)getService:(NSString *)serviceName;
++ (nullable id<TUIServiceProtocol>)getService:(NSString *)serviceName;
 + (id)callService:(NSString *)serviceName method:(NSString *)method param:(nullable NSDictionary *)param;
-
++ (id)callService:(NSString *)serviceName method:(NSString *)method param:(nullable NSDictionary *)param resultCallback:(nullable TUICallServiceResultCallback)resultCallback;
 
 + (void)registerEvent:(NSString *)key subKey:(NSString *)subKey object:(id<TUINotificationProtocol>)object;
 + (void)unRegisterEventByObject:(id<TUINotificationProtocol>)object;
 + (void)unRegisterEvent:(nullable NSString *)key subKey:(nullable NSString *)subKey object:(nullable id<TUINotificationProtocol>)object;
 + (void)notifyEvent:(NSString *)key subKey:(NSString *)subKey object:(nullable id)anObject param:(nullable NSDictionary *)param;
 
-+ (void)registerExtension:(NSString *)key object:(id<TUIExtensionProtocol>)object;
-+ (void)unRegisterExtension:(NSString *)key object:(id<TUIExtensionProtocol>)object;
-+ (NSDictionary *)getExtensionInfo:(NSString *)key param:(nullable NSDictionary *)param;
++ (void)registerExtension:(NSString *)extensionID object:(id<TUIExtensionProtocol>)object;
++ (void)unRegisterExtension:(NSString *)extensionID object:(id<TUIExtensionProtocol>)object;
++ (NSArray<TUIExtensionInfo *> *)getExtensionList:(NSString *)extensionID param:(nullable NSDictionary *)param;
++ (void)raiseExtension:(NSString *)extensionID parentView:(UIView *)parentView param:(nullable NSDictionary *)param;
+// deprecated
++ (NSDictionary *)getExtensionInfo:(NSString *)extensionID param:(nullable NSDictionary *)param  __attribute__((deprecated("use getExtensionList:param: instead")));
+
++ (void)registerObjectFactoryName:(NSString *)factoryName objectFactory:(id<TUIObjectProtocol>)objectFactory;
++ (void)unRegisterObjectFactory:(NSString *)factoryName;
++ (id)createObject:(NSString *)factoryName key:(NSString *)method param:(NSDictionary *)param;
 
 @end
 
@@ -38,12 +49,12 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol TUIServiceProtocol<NSObject>
 @optional
 - (id)onCall:(NSString *)method param:(nullable NSDictionary *)param;
+- (id)onCall:(NSString *)method param:(nullable NSDictionary *)param resultCallback:(TUICallServiceResultCallback) resultCallback;
 @end
 
 @protocol TUIObjectProtocol<NSObject>
 @optional
-- (void)onCreate:(NSDictionary *)param;
-- (NSArray<NSDictionary *> *)onGetInfo:(NSString *)key param:(NSDictionary *)param;
+- (id)onCreateObject:(NSString *)method param:(nullable NSDictionary *)param;
 @end
 
 @protocol TUINotificationProtocol<NSObject>
@@ -53,7 +64,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol TUIExtensionProtocol<NSObject>
 @optional
-- (NSDictionary *)getExtensionInfo:(NSString *)key param:(nullable NSDictionary *)param;
+- (NSArray<TUIExtensionInfo *> *)onGetExtension:(NSString *)extensionID param:(nullable NSDictionary *)param;
+- (void)onRaiseExtension:(NSString *)extensionID parentView:(UIView *)parentView param:(nullable NSDictionary *)param;
+// deprecated
+- (NSDictionary *)getExtensionInfo:(NSString *)extensionID param:(nullable NSDictionary *)param __attribute__((deprecated("use onGetExtension:param: instead")));
 @end
 
 @interface TUIWeakProxy : NSProxy
@@ -62,6 +76,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (nonnull instancetype)initWithTarget:(nonnull id)target;
 + (nonnull instancetype)proxyWithTarget:(nonnull id)target;
+
+@end
+
+@interface TUIExtensionInfo: NSObject
+
+@property(nonatomic, assign) NSInteger weight;
+@property(nonatomic, strong) UIImage *icon;
+@property(nonatomic, copy) NSString *text;
+@property(nonatomic, strong) NSDictionary *data;
+@property(nonatomic, copy) TUIExtensionClickCallback onClicked;
 
 @end
 

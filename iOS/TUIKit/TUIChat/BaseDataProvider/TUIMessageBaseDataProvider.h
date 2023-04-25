@@ -1,8 +1,9 @@
 
 #import <Foundation/Foundation.h>
 #import "TUIChatConversationModel.h"
-#import "TUIMessageCellData.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TUIMessageCellData.h>
+#import <TIMCommon/TUIMessageCell.h>
+#import <TIMCommon/TIMDefine.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -92,9 +93,6 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
  */
 - (nullable TUIMessageCellData *)dataProvider:(TUIMessageBaseDataProvider *)dataProvider
                CustomCellDataFromNewIMMessage:(V2TIMMessage *)msg;
-
-/// The translationData of MessageCellData changed.
-- (void)dataProvider:(TUIMessageBaseDataProvider *)dataProvider didChangeTranslationData:(TUIMessageCellData *)data;
 
 @end
 
@@ -268,10 +266,6 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 + (NSString *)getOpUserName:(V2TIMGroupMemberInfo *)info;
 + (NSMutableArray *)getUserNameList:(NSArray<V2TIMGroupMemberInfo *> *)infoList;
 + (NSString *)getUserName:(V2TIMGroupTipsElem *)tips with:(NSString *)userId;
-
-/// translate
-- (void)translateCellData:(TUIMessageCellData *)data
-           containerWidth:(float)containerWidth;
 
 @end
 

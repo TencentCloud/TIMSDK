@@ -6,9 +6,9 @@
 //
 
 #import "TUIGroupTypeListController.h"
-#import "UIView+TUILayout.h"
-#import "TUICommonModel.h"
-#import "TUIDefine.h"
+#import <TUICore/UIView+TUILayout.h>
+#import <TIMCommon/TIMCommonModel.h>
+#import <TIMCommon/TIMDefine.h>
 
 @interface TUIGroupTypeData : NSObject
 @property (nonatomic, strong) UIImage *image;
@@ -74,7 +74,7 @@
 
 - (void)setupViews
 {
-    self.backgroundColor = TUICoreDynamicColor(@"form_bg_color", @"#FFFFFF");
+    self.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
 
     _image = [[UIImageView alloc] init];
     _image.contentMode = UIViewContentModeScaleAspectFit;
@@ -82,7 +82,7 @@
 
     _title = [[UILabel alloc] init];
     _title.font = [UIFont systemFontOfSize:16];
-    _title.textColor = TUICoreDynamicColor(@"form_title_color", @"#000000");
+    _title.textColor = TIMCommonDynamicColor(@"form_title_color", @"#000000");
     _title.numberOfLines = 0;
     [self addSubview:_title];
 
@@ -184,8 +184,8 @@
         TUIGroupTypeData * dataWork = [[TUIGroupTypeData alloc] init];
         dataWork.groupType = GroupType_Work;
         dataWork.image = DefaultGroupAvatarImageByGroupType(GroupType_Work);
-        dataWork.title = TUIKitLocalizableString(TUIKitCreatGroupType_Work);
-        dataWork.describeText = [NSString stringWithFormat:@"%@%@",TUIKitLocalizableString(TUIKitCreatGroupType_Work_Desc) ,TUIKitLocalizableString(TUIKitCreatGroupType_See_Doc)];
+        dataWork.title = TIMCommonLocalizableString(TUIKitCreatGroupType_Work);
+        dataWork.describeText = [NSString stringWithFormat:@"%@%@",TIMCommonLocalizableString(TUIKitCreatGroupType_Work_Desc) ,TIMCommonLocalizableString(TUIKitCreatGroupType_See_Doc)];
         [dataWork caculateCellHeight];
         [self.data addObject:dataWork];
     }
@@ -195,8 +195,8 @@
         TUIGroupTypeData * dataPublic = [[TUIGroupTypeData alloc] init];
         dataPublic.groupType = GroupType_Public;
         dataPublic.image = DefaultGroupAvatarImageByGroupType(GroupType_Public);
-        dataPublic.title = TUIKitLocalizableString(TUIKitCreatGroupType_Public);
-        dataPublic.describeText = [NSString stringWithFormat:@"%@%@",TUIKitLocalizableString(TUIKitCreatGroupType_Public_Desc) ,TUIKitLocalizableString(TUIKitCreatGroupType_See_Doc)];
+        dataPublic.title = TIMCommonLocalizableString(TUIKitCreatGroupType_Public);
+        dataPublic.describeText = [NSString stringWithFormat:@"%@%@",TIMCommonLocalizableString(TUIKitCreatGroupType_Public_Desc) ,TIMCommonLocalizableString(TUIKitCreatGroupType_See_Doc)];
         [dataPublic caculateCellHeight];
         [self.data addObject:dataPublic];
     }
@@ -207,8 +207,8 @@
         TUIGroupTypeData * dataMeeting = [[TUIGroupTypeData alloc] init];
         dataMeeting.groupType = GroupType_Meeting;
         dataMeeting.image = DefaultGroupAvatarImageByGroupType(GroupType_Meeting);
-        dataMeeting.title = TUIKitLocalizableString(TUIKitCreatGroupType_Meeting);
-        dataMeeting.describeText = [NSString stringWithFormat:@"%@%@",TUIKitLocalizableString(TUIKitCreatGroupType_Meeting_Desc) ,TUIKitLocalizableString(TUIKitCreatGroupType_See_Doc)];
+        dataMeeting.title = TIMCommonLocalizableString(TUIKitCreatGroupType_Meeting);
+        dataMeeting.describeText = [NSString stringWithFormat:@"%@%@",TIMCommonLocalizableString(TUIKitCreatGroupType_Meeting_Desc) ,TIMCommonLocalizableString(TUIKitCreatGroupType_See_Doc)];
         [dataMeeting caculateCellHeight];
         [self.data addObject:dataMeeting];
     }
@@ -218,8 +218,8 @@
         TUIGroupTypeData * dataCommunity = [[TUIGroupTypeData alloc] init];
         dataCommunity.groupType = GroupType_Community;
         dataCommunity.image = DefaultGroupAvatarImageByGroupType(GroupType_Community);
-        dataCommunity.title = TUIKitLocalizableString(TUIKitCreatGroupType_Community);
-        dataCommunity.describeText = [NSString stringWithFormat:@"%@%@",TUIKitLocalizableString(TUIKitCreatGroupType_Community_Desc) ,TUIKitLocalizableString(TUIKitCreatGroupType_See_Doc)];
+        dataCommunity.title = TIMCommonLocalizableString(TUIKitCreatGroupType_Community);
+        dataCommunity.describeText = [NSString stringWithFormat:@"%@%@",TIMCommonLocalizableString(TUIKitCreatGroupType_Community_Desc) ,TIMCommonLocalizableString(TUIKitCreatGroupType_See_Doc)];
         [dataCommunity caculateCellHeight];
         [self.data addObject:dataCommunity];
     }
@@ -241,7 +241,7 @@
     }
     
     _titleView = [[TUINaviBarIndicatorView alloc] init];
-    [_titleView setTitle:TUIKitLocalizableString(ChatsNewGroupText)];
+    [_titleView setTitle:TIMCommonLocalizableString(ChatsNewGroupText)];
     self.navigationItem.titleView = _titleView;
     self.navigationItem.title = @"";
     
@@ -251,7 +251,7 @@
     self.bottomButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [bottomView addSubview:self.bottomButton];
     self.bottomButton.titleLabel.font = [UIFont systemFontOfSize:13];
-    [self.bottomButton setTitle:TUIKitLocalizableString(TUIKitCreatGroupType_See_Doc_Simple) forState:UIControlStateNormal];
+    [self.bottomButton setTitle:TIMCommonLocalizableString(TUIKitCreatGroupType_See_Doc_Simple) forState:UIControlStateNormal];
     [self.bottomButton setTitleColor:[UIColor systemBlueColor] forState:UIControlStateNormal];
     self.bottomButton.mm_width(self.view.mm_w - 30).mm_bottom(40).mm__centerX(self.view.mm_w/2.0).mm_height(18);
     [self.bottomButton addTarget:self action:@selector(bottomButtonClick) forControlEvents:UIControlEventTouchUpInside];

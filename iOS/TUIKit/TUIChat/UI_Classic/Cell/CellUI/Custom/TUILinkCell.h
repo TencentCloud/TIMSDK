@@ -6,9 +6,9 @@
 //  Copyright © 2019年 Tencent. All rights reserved.
 //
 
-#import "TUIMessageCell.h"
+#import <TIMCommon/TUIMessageCell.h>
 #import "TUILinkCellData.h"
-#import "TUIBubbleMessageCell.h"
+#import <TIMCommon/TUIBubbleMessageCell.h>
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TUILinkCell : TUIBubbleMessageCell

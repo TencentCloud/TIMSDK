@@ -6,10 +6,10 @@
 //
 
 #import "TUIMemberPanelCell.h"
-#import "TUIDarkModel.h"
+#import <TUICore/TUIDarkModel.h>
 #import "SDWebImage/UIImageView+WebCache.h"
-#import "TUIDefine.h"
-#import "TUIThemeManager.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
 
 @implementation TUIMemberPanelCell
 {
@@ -30,7 +30,7 @@
 
 - (void)fillWithData:(TUIUserModel *)model
 {
-    [_imageView sd_setImageWithURL:[NSURL URLWithString:model.avatar] placeholderImage:[UIImage imageNamed:TUICoreImagePath(@"default_c2c_head")] options:SDWebImageHighPriority];
+    [_imageView sd_setImageWithURL:[NSURL URLWithString:model.avatar] placeholderImage:[UIImage imageNamed:TIMCommonImagePath(@"default_c2c_head")] options:SDWebImageHighPriority];
 }
 
 @end

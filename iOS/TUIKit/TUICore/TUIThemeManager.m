@@ -490,7 +490,6 @@ static id _instance;
         BOOL exist = [NSFileManager.defaultManager fileExistsAtPath:resourcePath isDirectory:&isDirectory];
         if (!exist || !isDirectory) {
             NSLog(@"[theme][applyTheme] invalid resurce, themeID:%@, module:%zd", themeID, module);
-            return nil;
         }
     }
     

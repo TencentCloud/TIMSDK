@@ -5,7 +5,7 @@
 //  Created by annidyfeng on 2019/5/7.
 //
 
-#import "TUICommonModel.h"
+#import <TIMCommon/TIMCommonModel.h>
 @class V2TIMFriendApplication;
 
 NS_ASSUME_NONNULL_BEGIN

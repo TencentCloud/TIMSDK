@@ -7,7 +7,7 @@
 
 #import "TUIFileReplyQuoteViewData_Minimalist.h"
 #import "TUIFileMessageCellData_Minimalist.h"
-#import "TUIThemeManager.h"
+#import <TUICore/TUIThemeManager.h>
 
 @implementation TUIFileReplyQuoteViewData_Minimalist
 

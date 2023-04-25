@@ -6,15 +6,15 @@
 //
 
 #import "TUIMessageReadViewController.h"
-#import "TUIThemeManager.h"
+#import <TUICore/TUIThemeManager.h>
 #import "TUIMemberCell.h"
 #import "UIColor+TUIHexColor.h"
-#import "TUITool.h"
+#import <TUICore/TUITool.h>
 #import "TUIMessageDataProvider.h"
 #import "TUIMemberCellData.h"
 #import "TUIImageMessageCellData.h"
 #import "TUIVideoMessageCellData.h"
-#import "TUICore.h"
+#import <TUICore/TUICore.h>
 
 @interface TUIMessageReadSelectView ()
 
@@ -88,7 +88,7 @@
 }
 
 - (void)updateColorBySelected:(BOOL)selected {
-    UIColor *color = selected ? TUIChatDynamicColor(@"chat_message_read_status_tab_color", @"#147AFF") : TUICoreDynamicColor(@"chat_message_read_status_tab_unselect_color", @"#444444");
+    UIColor *color = selected ? TUIChatDynamicColor(@"chat_message_read_status_tab_color", @"#147AFF") : TIMCommonDynamicColor(@"chat_message_read_status_tab_unselect_color", @"#444444");
     self.titleLabel.textColor = color;
     self.bottomLine.hidden = !selected;
     self.bottomLine.backgroundColor = color;
@@ -175,7 +175,7 @@
 
 #pragma mark - Private
 - (void)setupViews {
-    self.view.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
+    self.view.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#F2F3F5");
     [self setupTitleView];
     [self setupMessageView];
     if ([self isGroupMessageRead]) {
@@ -186,10 +186,6 @@
 
 - (void)layoutViews {
     float backViewTop = self.navigationController.navigationBar.mm_maxY;
-    if (![UINavigationBar appearance].isTranslucent &&
-        [[[UIDevice currentDevice] systemVersion] doubleValue] < 15.0) {
-        backViewTop = 0;
-    }
     self.messageBackView
         .mm_left(0)
         .mm_width(self.view.mm_w)
@@ -234,16 +230,16 @@
 
 - (void)setupTitleView {
     UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.text = TUIKitLocalizableString(TUIKitMessageReadDetail);
+    titleLabel.text = TIMCommonLocalizableString(TUIKitMessageReadDetail);
     titleLabel.font = [UIFont systemFontOfSize:18.0];
-    titleLabel.textColor = TUICoreDynamicColor(@"nav_title_text_color", @"#000000");
+    titleLabel.textColor = TIMCommonDynamicColor(@"nav_title_text_color", @"#000000");
     [titleLabel sizeToFit];
     self.navigationItem.titleView = titleLabel;
 }
 
 - (void)setupMessageView {
     UIView *messageBackView = [[UIView alloc] init];
-    messageBackView.backgroundColor = TUICoreDynamicColor(@"form_bg_color", @"#FFFFFF");
+    messageBackView.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
     [self.view addSubview:messageBackView];
     self.messageBackView = messageBackView;
     
@@ -301,7 +297,7 @@
     for (NSNumber *tag in dataDict) {
         NSDictionary *data = dataDict[tag];
         TUIMessageReadSelectView *selectView = [[TUIMessageReadSelectView alloc] initWithTitle:data[@"title"] viewTag:[data[@"tag"] integerValue] selected:[data[@"selected"] boolValue]];
-        selectView.backgroundColor = TUICoreDynamicColor(@"form_bg_color", @"#FFFFFF");
+        selectView.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
         selectView.delegate = self;
         [self.view addSubview:selectView];
         [self.selectViewsDict setObject:selectView forKey:data[@"tag"]];
@@ -321,7 +317,7 @@
     _tableView.dataSource = self;
     _tableView.contentInset = UIEdgeInsetsMake(0, 0, 8, 0);
     _tableView.rowHeight = 56;
-    [_tableView setBackgroundColor:TUICoreDynamicColor(@"form_bg_color", @"#FFFFFF")];
+    [_tableView setBackgroundColor:TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF")];
     [self.view addSubview:_tableView];
     UIView *view = [[UIView alloc] initWithFrame:CGRectZero];
     [_tableView setTableFooterView:view];
@@ -336,7 +332,7 @@
 - (void)loadMembers {
     [self getReadMembersWithCompletion:^(int code, NSString *desc, NSArray *members, BOOL isFinished) {
         if (code != 0) {
-            [TUITool makeToast:TUIKitLocalizableString(TUIKitMessageReadGetReadMembersFail)];
+            [TUITool makeToast:TIMCommonLocalizableString(TUIKitMessageReadGetReadMembersFail)];
             NSLog(@"get read members failed, code: %d, desc: %@", code, desc);
             return;
         }
@@ -344,7 +340,7 @@
     }];
     [self getUnreadMembersWithCompletion:^(int code, NSString *desc, NSArray *members, BOOL isFinished) {
         if (code != 0) {
-            [TUITool makeToast:TUIKitLocalizableString(TUIKitMessageReadGetUnreadMembersFail)];
+            [TUITool makeToast:TIMCommonLocalizableString(TUIKitMessageReadGetUnreadMembersFail)];
             NSLog(@"get unread members failed, code: %d, desc: %@", code, desc);
             return;
         }
@@ -400,13 +396,11 @@
                                  SuccBlock:(void(^)(UIViewController *vc))succ
                                  failBlock:(nullable V2TIMFail)fail {
     NSDictionary *param = @{
-        TUICore_TUIContactService_GetUserOrFriendProfileVCMethod_UserIDKey: userID ? : @"",
-        TUICore_TUIContactService_GetUserOrFriendProfileVCMethod_SuccKey: succ ? : ^(UIViewController *vc){},
-        TUICore_TUIContactService_GetUserOrFriendProfileVCMethod_FailKey: fail ? : ^(int code, NSString * desc){}
+        TUICore_TUIContactObjectFactory_GetUserOrFriendProfileVCMethod_UserIDKey: userID ? : @"",
+        TUICore_TUIContactObjectFactory_GetUserOrFriendProfileVCMethod_SuccKey: succ ? : ^(UIViewController *vc){},
+        TUICore_TUIContactObjectFactory_GetUserOrFriendProfileVCMethod_FailKey: fail ? : ^(int code, NSString * desc){}
     };
-    [TUICore callService:TUICore_TUIContactService
-                  method:TUICore_TUIContactService_GetUserOrFriendProfileVCMethod
-                   param:param];
+    [TUICore createObject:TUICore_TUIContactObjectFactory key:TUICore_TUIContactObjectFactory_GetUserOrFriendProfileVCMethod param:param];
 }
 
 #pragma mark - UITableViewDataSource & UITableViewDelegate
@@ -455,7 +449,7 @@
     } else {
         NSString *detail = nil;
         BOOL isPeerRead = self.cellData.messageReceipt.isPeerRead;
-        detail = isPeerRead ? TUIKitLocalizableString(TUIKitMessageReadC2CRead) :  TUIKitLocalizableString(TUIKitMessageReadC2CUnReadDetail);
+        detail = isPeerRead ? TIMCommonLocalizableString(TUIKitMessageReadC2CRead) :  TIMCommonLocalizableString(TUIKitMessageReadC2CUnReadDetail);
         data = [[TUIMemberCellData alloc] initWithUserID:self.cellData.innerMessage.userID
                                                 nickName:nil
                                             friendRemark:self.c2cReceiverName
@@ -485,7 +479,7 @@
                 [self refreshTableView];
                 
                 if (members != nil && members.count == 0) {
-                    [TUITool makeToast:TUIKitLocalizableString(TUIKitMessageReadNoMoreData)];
+                    [TUITool makeToast:TIMCommonLocalizableString(TUIKitMessageReadNoMoreData)];
                     [self.tableView setContentOffset:CGPointMake(0, scrollView.contentOffset.y - TMessageController_Header_Height) animated:YES];
                 }
             }];
@@ -498,7 +492,7 @@
                 [self refreshTableView];
                 
                 if (members != nil && members.count == 0) {
-                    [TUITool makeToast:TUIKitLocalizableString(TUIKitMessageReadNoMoreData)];
+                    [TUITool makeToast:TIMCommonLocalizableString(TUIKitMessageReadNoMoreData)];
                     [self.tableView setContentOffset:CGPointMake(0, scrollView.contentOffset.y - TMessageController_Header_Height) animated:YES];
                 }
             }];
@@ -574,17 +568,17 @@
 - (NSMutableDictionary *)selectViewsData {
     NSMutableDictionary *readViews = [NSMutableDictionary dictionaryWithDictionary: @{
         @(TUIMessageReadViewTagRead): @{@"tag": @(TUIMessageReadViewTagRead),
-                                        @"title":[NSString stringWithFormat:@"%ld %@", (long)self.cellData.messageReceipt.readCount, TUIKitLocalizableString(TUIKitMessageReadPartRead)],
+                                        @"title":[NSString stringWithFormat:@"%ld %@", (long)self.cellData.messageReceipt.readCount, TIMCommonLocalizableString(TUIKitMessageReadPartRead)],
                                         @"selected": @(YES)
                                       },
         @(TUIMessageReadViewTagUnread): @{@"tag": @(TUIMessageReadViewTagUnread),
-                                          @"title": [NSString stringWithFormat:@"%ld %@", (long)self.cellData.messageReceipt.unreadCount, TUIKitLocalizableString(TUIKitMessageReadPartUnread)],
+                                          @"title": [NSString stringWithFormat:@"%ld %@", (long)self.cellData.messageReceipt.unreadCount, TIMCommonLocalizableString(TUIKitMessageReadPartUnread)],
                                           @"selected": @(NO)
                                       },
     }];
     if (self.showReadStatusDisable) {
         [readViews setObject:@{@"tag": @(TUIMessageReadViewTagReadDisable),
-                               @"title": TUIKitLocalizableString(TUIKitMessageReadPartDisable),
+                               @"title": TIMCommonLocalizableString(TUIKitMessageReadPartDisable),
                                @"selected": @(NO)}
                       forKey:@(TUIMessageReadViewTagReadDisable)];
     }

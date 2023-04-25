@@ -6,10 +6,10 @@
 //
 
 #import "TUIConversationMultiChooseView_Minimalist.h"
-#import "TUIGlobalization.h"
-#import "TUIDarkModel.h"
-#import "TUIThemeManager.h"
-#import "UIView+TUILayout.h"
+#import <TUICore/TUIGlobalization.h>
+#import <TUICore/TUIDarkModel.h>
+#import <TUICore/TUIThemeManager.h>
+#import <TUICore/UIView+TUILayout.h>
 
 @interface TUIConversationMultiChooseView_Minimalist ()
 
@@ -85,7 +85,7 @@
 - (void)setupViews
 {
     _toolView = [[UIView alloc] init];
-    _toolView.backgroundColor = TUICoreDynamicColor(@"head_bg_gradient_start_color", @"#EBF0F6");
+    _toolView.backgroundColor = TIMCommonDynamicColor(@"head_bg_gradient_start_color", @"#EBF0F6");
     [self addSubview:_toolView];
     
     _menuView = [[UIView alloc] init];
@@ -94,8 +94,8 @@
     [self addSubview:_menuView];
     
     _cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_cancelButton setTitle:TUIKitLocalizableString(Cancel) forState:UIControlStateNormal];
-    [_cancelButton setTitleColor:TUICoreDynamicColor(@"form_title_color", @"#000000") forState:UIControlStateNormal];
+    [_cancelButton setTitle:TIMCommonLocalizableString(Cancel) forState:UIControlStateNormal];
+    [_cancelButton setTitleColor:TIMCommonDynamicColor(@"form_title_color", @"#000000") forState:UIControlStateNormal];
     _cancelButton.titleLabel.font = [UIFont systemFontOfSize:15.0];
 //    [_cancelButton addTarget:self action:@selector(onCancel:) forControlEvents:UIControlEventTouchUpInside];
     [_cancelButton sizeToFit];
@@ -104,31 +104,31 @@
     _titleLabel = [[UILabel alloc] init];
     _titleLabel.text = @"";
     _titleLabel.font = [UIFont boldSystemFontOfSize:17.0];
-    _titleLabel.textColor = TUICoreDynamicColor(@"form_title_color", @"#000000");
+    _titleLabel.textColor = TIMCommonDynamicColor(@"form_title_color", @"#000000");
     [_toolView addSubview:_titleLabel];
     
     _hideButton = [TUIBlockButton buttonWithType:UIButtonTypeCustom];
     [_hideButton setTitle:@"Mark as Hide" forState:UIControlStateNormal];
     _hideButton.titleLabel.font = [UIFont systemFontOfSize:14.0];
-    TUICoreDynamicColor(@"common_switch_on_color", @"#147AFF");
-    [_hideButton setTitleColor:TUICoreDynamicColor(@"primary_theme_color", @"#147AFF") forState:UIControlStateNormal];
-    [_hideButton setTitleColor:[TUICoreDynamicColor(@"primary_theme_color", @"#147AFF") colorWithAlphaComponent:0.3] forState:UIControlStateDisabled];
+    TIMCommonDynamicColor(@"common_switch_on_color", @"#147AFF");
+    [_hideButton setTitleColor:TIMCommonDynamicColor(@"primary_theme_color", @"#147AFF") forState:UIControlStateNormal];
+    [_hideButton setTitleColor:[TIMCommonDynamicColor(@"primary_theme_color", @"#147AFF") colorWithAlphaComponent:0.3] forState:UIControlStateDisabled];
 //    [_hideButton addTarget:self action:@selector(onMarkHideAction:) forControlEvents:UIControlEventTouchUpInside];
     [_menuView addSubview:_hideButton];
     
     _readButton = [TUIBlockButton buttonWithType:UIButtonTypeCustom];
     [_readButton setTitle:@"Mark as Read" forState:UIControlStateNormal];
     _readButton.titleLabel.font = [UIFont systemFontOfSize:14.0];
-    [_readButton setTitleColor:TUICoreDynamicColor(@"primary_theme_color", @"#147AFF") forState:UIControlStateNormal];
-    [_readButton setTitleColor:[TUICoreDynamicColor(@"primary_theme_color", @"#147AFF") colorWithAlphaComponent:0.3] forState:UIControlStateDisabled];
+    [_readButton setTitleColor:TIMCommonDynamicColor(@"primary_theme_color", @"#147AFF") forState:UIControlStateNormal];
+    [_readButton setTitleColor:[TIMCommonDynamicColor(@"primary_theme_color", @"#147AFF") colorWithAlphaComponent:0.3] forState:UIControlStateDisabled];
 //    [_readButton addTarget:self action:@selector(onMarkReadAction:) forControlEvents:UIControlEventTouchUpInside];
     [_menuView addSubview:_readButton];
     
     _deleteButton = [TUIBlockButton buttonWithType:UIButtonTypeCustom];
-    [_deleteButton setTitle:TUIKitLocalizableString(Delete) forState:UIControlStateNormal];
+    [_deleteButton setTitle:TIMCommonLocalizableString(Delete) forState:UIControlStateNormal];
     _deleteButton.titleLabel.font = [UIFont systemFontOfSize:14.0];
-    [_deleteButton setTitleColor:TUICoreDynamicColor(@"primary_theme_color", @"#147AFF") forState:UIControlStateNormal];
-    [_deleteButton setTitleColor:[TUICoreDynamicColor(@"primary_theme_color", @"#147AFF") colorWithAlphaComponent:0.3] forState:UIControlStateDisabled];
+    [_deleteButton setTitleColor:TIMCommonDynamicColor(@"primary_theme_color", @"#147AFF") forState:UIControlStateNormal];
+    [_deleteButton setTitleColor:[TIMCommonDynamicColor(@"primary_theme_color", @"#147AFF") colorWithAlphaComponent:0.3] forState:UIControlStateDisabled];
 //    [_deleteButton addTarget:self action:@selector(onDelete:) forControlEvents:UIControlEventTouchUpInside];
     [_menuView addSubview:_deleteButton];
 }
@@ -140,7 +140,7 @@
     if (_separtorLayer == nil) {
         _separtorLayer = [CALayer layer];
         
-        _separtorLayer.backgroundColor = TUICoreDynamicColor(@"separator_color", @"#DBDBDB").CGColor;
+        _separtorLayer.backgroundColor = TIMCommonDynamicColor(@"separator_color", @"#DBDBDB").CGColor;
     }
     return _separtorLayer;
 }

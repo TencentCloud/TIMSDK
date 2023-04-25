@@ -15,6 +15,8 @@
 @import UIKit;
 NS_ASSUME_NONNULL_BEGIN
 
+typedef void(^TUIInputMoreCallback)(NSDictionary *param);
+
 /////////////////////////////////////////////////////////////////////////////////
 //
 //                            TUIInputMoreCellData
@@ -35,19 +37,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TUIInputMoreCellData : NSObject
 
 /**
- *  UI 扩展 view
- *  UI extension view
- */
-@property (nonatomic, strong) UIView *extentionView;
-
-/**
- *  唯一标识 key
- *
- *  Unique identification key
- */
-@property (nonatomic, strong) NSString *key;
-
-/**
  *  单元图标
  *  各个单元的图标有所不同，用于形象表示该单元所对应的功能。
  *
@@ -66,30 +55,17 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *title;
 
 /**
- *  “相册”单元所对应的数据源。用于存放相册单元所需的各类信息与数据。
- *  The data source corresponding to the "Album" unit. It is used to store all kinds of information and data required by the album unit.
+ * 点击后的响应
+ * Callback for clicked
  */
-@property (class, nonatomic, assign) TUIInputMoreCellData *photoData;
+@property (nonatomic, copy) TUIInputMoreCallback onClicked;
 
 /**
- *  “拍摄”单元所对应的数据源。用于存放拍摄单元所需的各类信息与数据。
- *  The data source corresponding to the "Photo" unit. It is used to store all kinds of information and data required by the shooting unit.
+ *  展示优先级，数值越大越靠前
+ *  Prioriy for displaying in more menu list
+ *  The larger the value, the higher the front in list
  */
-@property (class, nonatomic, assign) TUIInputMoreCellData *pictureData;
-
-/**
- *  “视频”单元所对应的数据源。用于存放视频单元所需的各类信息与数据。
- *  The data source corresponding to the "Video" unit. It is used to store all kinds of information and data required by the video unit.
- */
-@property (class, nonatomic, assign) TUIInputMoreCellData *videoData;
-
-/**
- *  “文件”单元所对应的数据源。用于存放文件单元所需的各类信息与数据。
- *  The data source corresponding to the "File" unit. It is used to store all kinds of information and data required by the file unit.
- */
-@property (class, nonatomic, assign) TUIInputMoreCellData *fileData;
-
-+ (void)resetAllCelData;
+@property (nonatomic, assign) NSInteger priority;
 
 @end
 

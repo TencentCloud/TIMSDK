@@ -6,8 +6,8 @@
 //
 
 #import "TUICommonContactCellData.h"
-#import "TUICommonModel.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMCommonModel.h>
+#import <TIMCommon/TIMDefine.h>
 
 @implementation TUICommonContactCellData
 {

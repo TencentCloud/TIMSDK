@@ -6,6 +6,7 @@
 //
 
 #import "TUIContactConversationCellData_Minimalist.h"
+#import "TUIDefine.h"
 
 @implementation TUIContactConversationCellData_Minimalist
 

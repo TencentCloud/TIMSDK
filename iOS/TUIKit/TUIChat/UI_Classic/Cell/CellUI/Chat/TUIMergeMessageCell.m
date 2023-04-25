@@ -6,8 +6,8 @@
 //
 
 #import "TUIMergeMessageCell.h"
-#import "TUIDefine.h"
-#import "TUIThemeManager.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
 
 @interface TUIMergeMessageCell ()
 
@@ -45,11 +45,11 @@
 
 
     _separtorView = [[UIView alloc] init];
-    _separtorView.backgroundColor = TUICoreDynamicColor(@"separator_color", @"#DBDBDB");
+    _separtorView.backgroundColor = TIMCommonDynamicColor(@"separator_color", @"#DBDBDB");
     [self.container addSubview:_separtorView];
     
     _bottomTipsLabel = [[UILabel alloc] init];
-    _bottomTipsLabel.text = TUIKitLocalizableString(TUIKitRelayChatHistory);
+    _bottomTipsLabel.text = TIMCommonLocalizableString(TUIKitRelayChatHistory);
     _bottomTipsLabel.textColor = TUIChatDynamicColor(@"chat_merge_message_content_color", @"#d5d5d5");
     _bottomTipsLabel.font = [UIFont systemFontOfSize:9];
     [self.container addSubview:_bottomTipsLabel];
@@ -104,7 +104,7 @@
     if (_borderLayer == nil) {
         _borderLayer = [CAShapeLayer layer];
         _borderLayer.lineWidth = 1.0;
-        _borderLayer.strokeColor = TUICoreDynamicColor(@"separator_color", @"#DBDBDB").CGColor;
+        _borderLayer.strokeColor = TIMCommonDynamicColor(@"separator_color", @"#DBDBDB").CGColor;
         _borderLayer.fillColor = [UIColor clearColor].CGColor;
     }
     return _borderLayer;
@@ -113,7 +113,7 @@
 //MARK: ThemeChanged
 - (void)applyBorderTheme {
     if (_borderLayer) {
-        _borderLayer.strokeColor = TUICoreDynamicColor(@"separator_color", @"#DBDBDB").CGColor;
+        _borderLayer.strokeColor = TIMCommonDynamicColor(@"separator_color", @"#DBDBDB").CGColor;
     }
 }
 

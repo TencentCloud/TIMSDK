@@ -6,7 +6,7 @@
 //
 
 #import "TUIReplyPreviewData_Minimalist.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 
 @implementation TUIReplyPreviewData_Minimalist
 
@@ -14,18 +14,18 @@
 {
     NSString *text = abstract;
     if (type == V2TIM_ELEM_TYPE_IMAGE) {
-        text = TUIKitLocalizableString(TUIkitMessageTypeImage);
+        text = TIMCommonLocalizableString(TUIkitMessageTypeImage);
     } else if (type == V2TIM_ELEM_TYPE_VIDEO) {
-        text = TUIKitLocalizableString(TUIkitMessageTypeVideo);
+        text = TIMCommonLocalizableString(TUIkitMessageTypeVideo);
     } else if (type == V2TIM_ELEM_TYPE_SOUND) {
-        text = TUIKitLocalizableString(TUIKitMessageTypeVoice);
+        text = TIMCommonLocalizableString(TUIKitMessageTypeVoice);
     } else if (type == V2TIM_ELEM_TYPE_FACE) {
-        text = TUIKitLocalizableString(TUIKitMessageTypeAnimateEmoji);
+        text = TIMCommonLocalizableString(TUIKitMessageTypeAnimateEmoji);
     } else if (type == V2TIM_ELEM_TYPE_FILE) {
         if (withFilename) {
-            text = [NSString stringWithFormat:@"%@%@", TUIKitLocalizableString(TUIkitMessageTypeFile), abstract];;
+            text = [NSString stringWithFormat:@"%@%@", TIMCommonLocalizableString(TUIkitMessageTypeFile), abstract];;
         } else {
-            text = TUIKitLocalizableString(TUIkitMessageTypeFile);
+            text = TIMCommonLocalizableString(TUIkitMessageTypeFile);
         }
     }
     return text;

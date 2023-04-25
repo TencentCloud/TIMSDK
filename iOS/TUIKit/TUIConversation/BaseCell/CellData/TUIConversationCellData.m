@@ -23,12 +23,6 @@
     return TConversationCell_Height;
 }
 
-- (BOOL)isEqual:(TUIConversationCellData *)object
-{
-    return [self.conversationID isEqual:object.conversationID];
-}
-
-
 + (BOOL)isMarkedByHideType:(NSArray *)markList {
     for (NSNumber *num in markList) {
         if (num.unsignedLongValue == V2TIM_CONVERSATION_MARK_TYPE_HIDE) {

@@ -7,8 +7,8 @@
 
 #import "TUIBlackListController_Minimalist.h"
 #import "ReactiveObjC.h"
-#import "TUIDefine.h"
-#import "TUIThemeManager.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
 
 @interface TUIBlackListController_Minimalist ()<V2TIMFriendshipListener>
 
@@ -29,9 +29,9 @@
     self.view.backgroundColor = [UIColor whiteColor];
 
     UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.text = TUIKitLocalizableString(TUIKitContactsBlackList);
+    titleLabel.text = TIMCommonLocalizableString(TUIKitContactsBlackList);
     titleLabel.font = [UIFont boldSystemFontOfSize:17.0];
-    titleLabel.textColor = TUICoreDynamicColor(@"nav_title_text_color", @"#000000");
+    titleLabel.textColor = TIMCommonDynamicColor(@"nav_title_text_color", @"#000000");
     [titleLabel sizeToFit];
     self.navigationItem.titleView = titleLabel;
     self.tableView.delaysContentTouches = NO;
@@ -109,7 +109,7 @@
         _noDataTipsLabel.textColor = TUIContactDynamicColor(@"contact_add_contact_nodata_tips_text_color", @"#999999");
         _noDataTipsLabel.font = [UIFont systemFontOfSize:14.0];
         _noDataTipsLabel.textAlignment = NSTextAlignmentCenter;
-        _noDataTipsLabel.text = TUIKitLocalizableString(TUIKitContactNoBlockList);
+        _noDataTipsLabel.text = TIMCommonLocalizableString(TUIKitContactNoBlockList);
     }
     return _noDataTipsLabel;
 }

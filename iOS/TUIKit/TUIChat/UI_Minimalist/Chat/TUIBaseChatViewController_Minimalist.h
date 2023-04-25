@@ -21,7 +21,7 @@
 #import <UIKit/UIKit.h>
 #import "TUIInputController_Minimalist.h"
 #import "TUIBaseMessageController_Minimalist.h"
-#import "TUICommonModel.h"
+#import <TIMCommon/TIMCommonModel.h>
 #import "TUIChatConversationModel.h"
 @class TUIBaseChatViewController;
 
@@ -105,16 +105,6 @@
  *  Please refer to TUIChat\UI\Input\TUIInputController.h for details of the message input controller
  */
 @property TUIInputController_Minimalist *inputController;
-
-/**
- *  更多菜单视图数据的数据组
- *  更多菜单视图包括：拍摄、图片、视频、文件。详细信息请参考 Section\Chat\TUIMoreView.h
- *
- *  Data group for more menu view data
- *  More menu views include: Capture, Picture, Video, File. See Section\Chat\TUIMoreView.h for details
- */
-@property NSArray<TUIInputMoreCellData_Minimalist *> *moreMenus;
-
 
 - (void)sendMessage:(V2TIMMessage *)message;
 

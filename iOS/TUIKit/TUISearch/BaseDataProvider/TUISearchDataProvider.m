@@ -5,11 +5,11 @@
 //  Created by harvy on 2020/12/28.
 //
 
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 #import "TUISearchDataProvider.h"
 #import "TUISearchResultCellModel.h"
 #import "TUISearchGroupDataProvider.h"
-#import "TUIThemeManager.h"
+#import <TUICore/TUIThemeManager.h>
 
 TUISearchParamKey TUISearchChatHistoryParamKeyConversationId = @"TUISearchChatHistoryParamKeyConversationId";
 TUISearchParamKey TUISearchChatHistoryParamKeyCount = @"TUISearchChatHistoryParamKeyCount";
@@ -156,7 +156,7 @@ typedef void(^TUISearchResultCallback)(BOOL succ, NSString * __nullable errMsg, 
                 if ([why isEqualToString:title]) {
                     why = nil;
                 }else {
-                    why = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitSearchResultMatchFormat), why];
+                    why = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitSearchResultMatchFormat), why];
                 }
             }
             
@@ -210,10 +210,10 @@ typedef void(^TUISearchResultCallback)(BOOL succ, NSString * __nullable errMsg, 
             [arrayM addObject:cellModel];
             
             if (result.matchField == TUISearchGroupMatchFieldGroupID) {
-                NSString *text = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitSearchResultMatchGroupIDFormat), result.matchValue];
+                NSString *text = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitSearchResultMatchGroupIDFormat), result.matchValue];
                 cellModel.detailsAttributeString = [TUISearchDataProvider attributeStringWithText:text key:keyword];
             }else if (result.matchField == TUISearchGroupMatchFieldMember && result.matchMembers.count) {
-                NSString *text = TUIKitLocalizableString(TUIKitSearchResultMatchGroupMember);
+                NSString *text = TIMCommonLocalizableString(TUIKitSearchResultMatchGroupMember);
                 for (int i = 0; i < result.matchMembers.count; i++) {
                     TUISearchGroupMemberMatchResult *memberResult = result.matchMembers[i];
                     text = [text stringByAppendingString:memberResult.memberMatchValue];
@@ -313,7 +313,7 @@ typedef void(^TUISearchResultCallback)(BOOL succ, NSString * __nullable errMsg, 
                 NSUInteger count = [conversationCountMap[conversationId] integerValue];
                 if (displayWithConveration) {
                     TUISearchResultCellModel *cellModel = [[TUISearchResultCellModel alloc] init];
-                    NSString *desc = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitSearchResultDisplayChatHistoryCountFormat), count];
+                    NSString *desc = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitSearchResultDisplayChatHistoryCountFormat), count];
                     if (messageList.count == 1) {
                         V2TIMMessage *firstMessage = messageList.firstObject;
                         desc = [TUISearchDataProvider matchedTextForMessage:(V2TIMMessage *)firstMessage withKey:keyword];
@@ -363,7 +363,7 @@ typedef void(^TUISearchResultCallback)(BOOL succ, NSString * __nullable errMsg, 
             callback(NO, desc, nil);
         }
         if (code == ERR_SDK_INTERFACE_NOT_SUPPORT) {
-            [TUITool postUnsupportNotificationOfService:TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceSearch)];
+            [TUITool postUnsupportNotificationOfService:TIMCommonLocalizableString(TUIKitErrorUnsupportIntefaceSearch)];
         }
     }];
 }
@@ -386,7 +386,7 @@ typedef void(^TUISearchResultCallback)(BOOL succ, NSString * __nullable errMsg, 
     while (len > 0) {
         NSRange range = [text.lowercaseString rangeOfString:key.lowercaseString options:NSCaseInsensitiveSearch range:NSMakeRange(loc, len)];
         if (range.length) {
-            [attr addAttribute:NSForegroundColorAttributeName value:TUICoreDynamicColor(@"primary_theme_color", @"#147AFF") range:range];
+            [attr addAttribute:NSForegroundColorAttributeName value:TIMCommonDynamicColor(@"primary_theme_color", @"#147AFF") range:range];
             loc = range.location + 1;
             len = text.length - loc;
         }else {

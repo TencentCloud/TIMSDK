@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 @class TUISearchResultCellModel;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -49,16 +49,16 @@ static inline NSString *titleForModule(TUISearchResultModule module, BOOL isHead
     NSString *footerTitle = @"";
     switch (module) {
         case TUISearchResultModuleContact:
-            headerTitle = TUIKitLocalizableString(TUIKitSearchItemHeaderTitleContact);
-            footerTitle = TUIKitLocalizableString(TUIKitSearchItemFooterTitleContact);
+            headerTitle = TIMCommonLocalizableString(TUIKitSearchItemHeaderTitleContact);
+            footerTitle = TIMCommonLocalizableString(TUIKitSearchItemFooterTitleContact);
             break;
         case TUISearchResultModuleGroup:
-            headerTitle = TUIKitLocalizableString(TUIKitSearchItemHeaderTitleGroup);
-            footerTitle = TUIKitLocalizableString(TUIKitSearchItemFooterTitleGroup);
+            headerTitle = TIMCommonLocalizableString(TUIKitSearchItemHeaderTitleGroup);
+            footerTitle = TIMCommonLocalizableString(TUIKitSearchItemFooterTitleGroup);
             break;
         case TUISearchResultModuleChatHistory:
-            headerTitle = TUIKitLocalizableString(TUIkitSearchItemHeaderTitleChatHistory);
-            footerTitle = TUIKitLocalizableString(TUIKitSearchItemFooterTitleChatHistory);
+            headerTitle = TIMCommonLocalizableString(TUIkitSearchItemHeaderTitleChatHistory);
+            footerTitle = TIMCommonLocalizableString(TUIKitSearchItemFooterTitleChatHistory);
             break;
         default:
             break;

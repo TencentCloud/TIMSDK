@@ -12,11 +12,6 @@
 #import "TUILogin.h"
 #import "TUIThemeManager.h"
 
-typedef NS_OPTIONS(NSInteger, emojiFaceType) {
-    emojiFaceTypeKeyBoard = 1 << 0,
-    emojiFaceTypePopDetail = 1 << 1,
-};
-
 @interface TUIConfig ()
 
 @property (nonatomic, strong) UIImage *defaultGroupAvatarImage_Public;
@@ -38,17 +33,13 @@ typedef NS_OPTIONS(NSInteger, emojiFaceType) {
         _defaultGroupAvatarImage_Public = TUICoreBundleThemeImage(@"default_group_head_public_img", @"default_group_head_public");
         _defaultGroupAvatarImage_Meeting = TUICoreBundleThemeImage(@"default_group_head_meeting_img", @"default_group_head_meeting");
         _defaultGroupAvatarImage_AVChatRoom = TUICoreBundleThemeImage(@"default_group_head_avchatroom_img", @"default_group_head_avchatRoom");
-        _defaultGroupAvatarImage_Community = TUICoreBundleThemeImage(@"", @"default_group_head_Community");
+        _defaultGroupAvatarImage_Community = TUICoreBundleThemeImage(@"", @"default_group_head_community");
         
         _isExcludedFromUnreadCount = NO;
         _isExcludedFromLastMessage = NO;
         _enableToast = YES;
         _displayOnlineStatusIcon = NO;
         _enableGroupGridAvatar = YES;
-        
-        [self updateEmojiGroups];
-        
-        [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onChangeLanguage) name:TUIChangeLanguageNotification object:nil];
         [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onChangeTheme) name:TUIDidApplyingThemeChangedNotfication object:nil];
     }
     return self;
@@ -64,86 +55,6 @@ typedef NS_OPTIONS(NSInteger, emojiFaceType) {
     return config;
 }
 
-- (void)onChangeLanguage
-{
-    [self updateEmojiGroups];
-}
-
-- (void)updateEmojiGroups {
-    self.faceGroups = [self updateFaceGroups:self.faceGroups type:emojiFaceTypeKeyBoard];
-    self.chatPopDetailGroups = [self updateFaceGroups:self.chatPopDetailGroups type:emojiFaceTypePopDetail];
-}
-
-- (void)appendFaceGroup:(TUIFaceGroup *)faceGroup {
-    NSMutableArray *faceGroupMenu = [NSMutableArray arrayWithArray:self.faceGroups];
-    [faceGroupMenu addObject:faceGroup];
-    self.faceGroups = faceGroupMenu;
-}
-
-- (NSArray *)updateFaceGroups:(NSArray *)groups type:(emojiFaceType)type {
-    
-    if (groups.count) {
-        NSMutableArray *arrayM = [NSMutableArray arrayWithArray:groups];
-        [arrayM removeObjectAtIndex:0];
-        
-        TUIFaceGroup *defaultFaceGroup = [self findFaceGroupAboutType:type];
-        if (defaultFaceGroup) {
-            [arrayM insertObject:[self findFaceGroupAboutType:type] atIndex:0];
-        }
-        return  [NSArray arrayWithArray:arrayM];
-    }
-    else {
-        NSMutableArray *faceArray = [NSMutableArray array];
-        TUIFaceGroup *defaultFaceGroup = [self findFaceGroupAboutType:type];
-        if (defaultFaceGroup) {
-            [faceArray addObject:defaultFaceGroup];
-        }
-        return faceArray;
-    }
-    return @[];
-}
-- (TUIFaceGroup *)findFaceGroupAboutType:(emojiFaceType)type {
-    //emoji group
-
-    NSMutableArray *emojiFaces = [NSMutableArray array];
-    NSArray *emojis = [NSArray arrayWithContentsOfFile:TUIChatFaceImagePath(@"emoji/emoji.plist")];
-    for (NSDictionary *dic in emojis) {
-        TUIFaceCellData *data = [[TUIFaceCellData alloc] init];
-        NSString *name = [dic objectForKey:@"face_name"];
-        NSString *path = [NSString stringWithFormat:@"emoji/%@", name];
-        NSString *localizableName = [TUIGlobalization g_localizedStringForKey:name bundle:@"TUIChatFace"];
-        data.name = name;
-        data.path = TUIChatFaceImagePath(path);
-        data.localizableName = localizableName;
-        [self addFaceToCache:data.path];
-        [emojiFaces addObject:data];
-    }
-    if(emojiFaces.count != 0){
-        TUIFaceGroup *emojiGroup = [[TUIFaceGroup alloc] init];
-        emojiGroup.faces = emojiFaces;
-        emojiGroup.groupIndex = 0;
-        emojiGroup.groupPath = TUIChatFaceImagePath(@"emoji/");
-        emojiGroup.menuPath = TUIChatFaceImagePath(@"emoji/menu");
-        if(type == emojiFaceTypeKeyBoard) {
-            emojiGroup.rowCount = 3;
-            emojiGroup.itemCountPerRow = 9;
-            emojiGroup.needBackDelete = YES;
-        }
-        else  {
-            emojiGroup.rowCount = 3;
-            emojiGroup.itemCountPerRow = 8;
-            emojiGroup.needBackDelete = NO;
-        }
-
-        [self addFaceToCache:emojiGroup.menuPath];
-        [self addFaceToCache:TUIChatFaceImagePath(@"del_normal")];
-        [self addFaceToCache:TUIChatFaceImagePath(@"ic_unknown_image")];
-        return emojiGroup;
-    }
-    
-    return nil;
-}
-
 - (void)onChangeTheme
 {
     self.defaultAvatarImage = TUICoreBundleThemeImage(@"default_c2c_head_img", @"default_c2c_head");
@@ -154,51 +65,26 @@ typedef NS_OPTIONS(NSInteger, emojiFaceType) {
     self.defaultGroupAvatarImage_Community = TUICoreBundleThemeImage(@"default_group_head_community_img", @"default_group_head_community");
 }
 
-- (TUIFaceGroup *)getDefaultFaceGroup
+- (UIImage *)getGroupAvatarImageByGroupType:(NSString *)groupType
 {
-    //emoji group
-    NSMutableArray *emojiFaces = [NSMutableArray array];
-    NSArray *emojis = [NSArray arrayWithContentsOfFile:TUIChatFaceImagePath(@"emoji/emoji.plist")];
-    for (NSDictionary *dic in emojis) {
-        TUIFaceCellData *data = [[TUIFaceCellData alloc] init];
-        NSString *name = [dic objectForKey:@"face_name"];
-        NSString *path = [NSString stringWithFormat:@"emoji/%@", name];
-        NSString *localizableName = [TUIGlobalization g_localizedStringForKey:name bundle:@"TUIChatFace"];
-        data.name = name;
-        data.path = TUIChatFaceImagePath(path);
-        data.localizableName = localizableName;
-        [self addFaceToCache:data.path];
-        [emojiFaces addObject:data];
+    if ([groupType isEqualToString:GroupType_Work]) {
+        return self.defaultGroupAvatarImage;
     }
-    if(emojiFaces.count != 0){
-        TUIFaceGroup *emojiGroup = [[TUIFaceGroup alloc] init];
-        emojiGroup.groupIndex = 0;
-        emojiGroup.groupPath = TUIChatFaceImagePath(@"emoji/");
-        emojiGroup.faces = emojiFaces;
-        emojiGroup.rowCount = 3;
-        emojiGroup.itemCountPerRow = 9;
-        emojiGroup.needBackDelete = YES;
-        emojiGroup.menuPath = TUIChatFaceImagePath(@"emoji/menu");
-        [self addFaceToCache:emojiGroup.menuPath];
-        [self addFaceToCache:TUIChatFaceImagePath(@"del_normal")];
-        [self addFaceToCache:TUIChatFaceImagePath(@"ic_unknown_image")];
-        return emojiGroup;
+    else if ([groupType isEqualToString:GroupType_Public]) {
+        return self.defaultGroupAvatarImage_Public;
     }
-    
-    return nil;
-}
-
-#pragma mark - resource
-
-- (void)addResourceToCache:(NSString *)path
-{
-    [[TUIImageCache sharedInstance] addResourceToCache:path];
-}
-
-
-- (void)addFaceToCache:(NSString *)path
-{
-    [[TUIImageCache sharedInstance] addFaceToCache:path];
+    else if ([groupType isEqualToString:GroupType_Meeting]) {
+        return self.defaultGroupAvatarImage_Meeting;
+    }
+    else if ([groupType isEqualToString:GroupType_AVChatRoom]) {
+        return self.defaultGroupAvatarImage_AVChatRoom;
+    }
+    else if ([groupType isEqualToString:GroupType_Community]) {
+        return self.defaultGroupAvatarImage_Community;
+    }
+    else {
+        return self.defaultGroupAvatarImage;
+    }
 }
 
 #pragma mark - Sence
@@ -242,27 +128,4 @@ typedef NS_OPTIONS(NSInteger, emojiFaceType) {
         }
     }] resume];
 }
-
-- (UIImage *)getGroupAvatarImageByGroupType:(NSString *)groupType
-{
-    if ([groupType isEqualToString:GroupType_Work]) {
-        return self.defaultGroupAvatarImage;
-    }
-    else if ([groupType isEqualToString:GroupType_Public]) {
-        return self.defaultGroupAvatarImage_Public;
-    }
-    else if ([groupType isEqualToString:GroupType_Meeting]) {
-        return self.defaultGroupAvatarImage_Meeting;
-    }
-    else if ([groupType isEqualToString:GroupType_AVChatRoom]) {
-        return self.defaultGroupAvatarImage_AVChatRoom;
-    }
-    else if ([groupType isEqualToString:GroupType_Community]) {
-        return self.defaultGroupAvatarImage_Community;
-    }
-    else {
-        return self.defaultGroupAvatarImage;
-    }
-}
-
 @end

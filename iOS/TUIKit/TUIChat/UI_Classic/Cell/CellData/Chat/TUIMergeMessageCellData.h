@@ -5,9 +5,9 @@
 //  Created by harvy on 2020/12/9.
 //
 
-#import "TUIMessageCellData.h"
-#import "TUIDefine.h"
-#import "TUIBubbleMessageCellData.h"
+#import <TIMCommon/TUIMessageCellData.h>
+#import <TIMCommon/TIMDefine.h>
+#import <TIMCommon/TUIBubbleMessageCellData.h>
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIMergeMessageCellData : TUIMessageCellData

@@ -7,7 +7,7 @@
 
 #import "TUIGroupMemberDataProvider.h"
 #import "TUIMemberInfoCellData.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 
 @interface TUIGroupMemberDataProvider()
 @property (nonatomic, strong) NSString *groupID;

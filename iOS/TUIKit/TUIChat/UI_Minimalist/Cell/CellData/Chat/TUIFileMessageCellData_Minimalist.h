@@ -1,5 +1,5 @@
 
-#import "TUIBubbleMessageCellData_Minimalist.h"
+#import <TIMCommon/TUIBubbleMessageCellData_Minimalist.h>
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIFileMessageCellData_Minimalist : TUIBubbleMessageCellData_Minimalist<TUIMessageCellDataFileUploadProtocol, TUIMessageCellDataFileDownloadProtocol>

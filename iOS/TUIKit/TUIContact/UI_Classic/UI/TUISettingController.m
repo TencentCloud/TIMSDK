@@ -7,17 +7,24 @@
 //
 #import "TUISettingController.h"
 #import "TUIProfileController.h"
-#import "TUICommonModel.h"
-#import "TUILogin.h"
-#import "TUIDarkModel.h"
-#import "TUICommonModel.h"
-#import "TUIThemeManager.h"
-#import "TUIConfig.h"
+#import "TUIStyleSelectViewController.h"
+#import "TUIThemeSelectController.h"
+#import <TIMCommon/TIMCommonModel.h>
+#import <TIMCommon/TIMCommonModel.h>
+#import <TIMCommon/TIMConfig.h>
+#import <TUICore/TUICore.h>
 
-@interface TUISettingController () <UIActionSheetDelegate, V2TIMSDKListener, TUIProfileCardDelegate>
+static NSString * const kKeyWeight = @"weight";
+static NSString * const kKeyItems = @"items";
+static NSString * const kKeyViews = @"views"; // Used to pass custom views from extensions.
+
+@interface TUISettingController () <UIActionSheetDelegate, V2TIMSDKListener, TUIProfileCardDelegate, TUIStyleSelectControllerDelegate, TUIThemeSelectControllerDelegate>
 @property (nonatomic, strong) NSMutableArray *dataList;
 @property (nonatomic, strong) V2TIMUserFullInfo *profile;
 @property (nonatomic, strong) TUIProfileCardCellData *profileCellData;
+@property (nonatomic, strong) NSString *styleName;
+@property (nonatomic, strong) NSString *themeName;
+@property (nonatomic, copy) NSArray *sortedDataList;
 @end
 
 @implementation TUISettingController
@@ -25,14 +32,25 @@
 - (instancetype) init {
     self = [super init];
     if (self) {
+        self.showPersonalCell = YES;
         self.showMessageReadStatusCell = YES;
         self.showDisplayOnlineStatusCell = YES;
+        self.showCallsRecordCell = YES;
+        self.showSelectStyleCell = NO;
+        self.showChangeThemeCell = NO;
+        self.showAboutIMCell = YES;
         self.showLoginOutCell = YES;
     }
     return self;
 }
 
 #pragma mark - Life cycle
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.navigationController.navigationBarHidden = NO;
+    [self.tableView reloadData];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupViews];
@@ -51,24 +69,19 @@
     [TUITool addUnsupportNotificationInVC:self debugOnly:NO];
 }
 
-#pragma mark - Debug
+#pragma mark - Private
 - (void)setupViews
 {
     self.tableView.delaysContentTouches = NO;
     self.tableView.tableFooterView = [[UIView alloc] init];
-    self.tableView.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
+    self.tableView.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#F2F3F5");
     
-    //Fix  translucent = NO;
     CGRect rect = self.view.bounds;
-    if (![UINavigationBar appearance].isTranslucent && [[[UIDevice currentDevice] systemVersion] doubleValue]<15.0) {
-        rect = CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height - TabBar_Height - NavBar_Height );
-        self.tableView.frame = rect;
-    }
-    
     [self.tableView registerClass:[TUICommonTextCell class] forCellReuseIdentifier:@"textCell"];
     [self.tableView registerClass:[TUIProfileCardCell class] forCellReuseIdentifier:@"personalCell"];
     [self.tableView registerClass:[TUIButtonCell class] forCellReuseIdentifier:@"buttonCell"];
     [self.tableView registerClass:[TUICommonSwitchCell class] forCellReuseIdentifier:@"switchCell"];
+    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"containerCell"];
     
     if (@available(iOS 15.0, *)) {
         self.tableView.sectionHeaderTopPadding = 0;
@@ -83,7 +96,7 @@
 
 #pragma mark - UITableView DataSource & Delegate
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return self.dataList.count;
+    return self.sortedDataList.count;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
@@ -97,39 +110,59 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSMutableArray *array = self.dataList[section];
-    return array.count;
+    NSDictionary *dict = self.sortedDataList[section];
+    // Extension settings.
+    if (dict[kKeyViews] && [dict[kKeyViews] isKindOfClass:NSArray.class]) {
+        NSArray *views = dict[kKeyViews];
+        return views.count;
+    }
+    // Built-in settings.
+    NSArray *items = dict[kKeyItems];
+    return items.count;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSMutableArray *array = self.dataList[indexPath.section];
+    NSDictionary *dict = self.sortedDataList[indexPath.section];
+    // Extension settings.
+    if (dict[kKeyViews] && [dict[kKeyViews] isKindOfClass:NSArray.class]) {
+        UIView *view = dict[kKeyViews][indexPath.row];
+        return view.bounds.size.height;
+    }
+    // Built-in settings.
+    NSArray *array = dict[kKeyItems];
     TUICommonCellData *data = array[indexPath.row];
-
     return [data heightOfWidth:Screen_Width];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSMutableArray *array = self.dataList[indexPath.section];
-    NSObject *data = array[indexPath.row];
-    if([data isKindOfClass:[TUIProfileCardCellData class]]){
+    NSDictionary *dict = self.sortedDataList[indexPath.section];
+    // Extension settings.
+    if (dict[kKeyViews] && [dict[kKeyViews] isKindOfClass:NSArray.class]) {
+        UIView *view = dict[kKeyViews][indexPath.row];
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"containerCell" forIndexPath:indexPath];
+        [cell addSubview:view];
+        return cell;
+    }
+    // Built-in settings.
+    NSArray *array = dict[kKeyItems];
+    NSDictionary *data = array[indexPath.row];
+    if ([data isKindOfClass:[TUIProfileCardCellData class]]) {
         TUIProfileCardCell *cell = [tableView dequeueReusableCellWithIdentifier:@"personalCell" forIndexPath:indexPath];
         cell.delegate = self;
         [cell fillWithData:(TUIProfileCardCellData *)data];
         return cell;
-    }
-    else if([data isKindOfClass:[TUIButtonCellData class]]){
+    } else if ([data isKindOfClass:[TUIButtonCellData class]]) {
         TUIButtonCell *cell = [tableView dequeueReusableCellWithIdentifier:TButtonCell_ReuseId];
-        if(!cell){
+        if (!cell) {
             cell = [[TUIButtonCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TButtonCell_ReuseId];
         }
         [cell fillWithData:(TUIButtonCellData *)data];
         return cell;
-    }  else if([data isKindOfClass:[TUICommonTextCellData class]]) {
+    } else if ([data isKindOfClass:[TUICommonTextCellData class]]) {
         TUICommonTextCell *cell = [tableView dequeueReusableCellWithIdentifier:@"textCell" forIndexPath:indexPath];
         [cell fillWithData:(TUICommonTextCellData *)data];
         return cell;
-    }
-    else if([data isKindOfClass:[TUICommonSwitchCellData class]]) {
+    } else if ([data isKindOfClass:[TUICommonSwitchCellData class]]) {
         TUICommonSwitchCell *cell = [tableView dequeueReusableCellWithIdentifier:@"switchCell" forIndexPath:indexPath];
         [cell fillWithData:(TUICommonSwitchCellData *)data];
         return cell;
@@ -140,71 +173,135 @@
 #pragma mark - Private
 - (void)setupData {
     self.dataList = [NSMutableArray array];
-
-    TUIProfileCardCellData *personal = [[TUIProfileCardCellData alloc] init];
-    personal.identifier = self.profile.userID;
-    personal.avatarImage = DefaultAvatarImage;
-    personal.avatarUrl = [NSURL URLWithString:self.profile.faceURL];
-    personal.name = [self.profile showName];
-    personal.genderString = [self.profile showGender];
-    personal.signature = self.profile.selfSignature.length ? [NSString stringWithFormat:TUIKitLocalizableString(SignatureFormat), self.profile.selfSignature] : TUIKitLocalizableString(no_personal_signature);
-    personal.cselector = @selector(didSelectCommon);
-    personal.showAccessory = YES;
-    personal.showSignature = YES;
-    self.profileCellData = personal;
-    [self.dataList addObject:@[personal]];
-
+    
+    if (self.showPersonalCell) {
+        TUIProfileCardCellData *personal = [[TUIProfileCardCellData alloc] init];
+        personal.identifier = self.profile.userID;
+        personal.avatarImage = DefaultAvatarImage;
+        personal.avatarUrl = [NSURL URLWithString:self.profile.faceURL];
+        personal.name = [self.profile showName];
+        personal.genderString = [self.profile showGender];
+        personal.signature = self.profile.selfSignature.length ? [NSString stringWithFormat:TIMCommonLocalizableString(SignatureFormat), self.profile.selfSignature] : TIMCommonLocalizableString(no_personal_signature);
+        personal.cselector = @selector(didSelectCommon);
+        personal.showAccessory = YES;
+        personal.showSignature = YES;
+        self.profileCellData = personal;
+        [self.dataList addObject:@{kKeyWeight: @1000, kKeyItems: @[personal]}];
+    }
+    
     TUICommonTextCellData *friendApply = [TUICommonTextCellData new];
-    friendApply.key = TUIKitLocalizableString(MeFriendRequest);
+    friendApply.key = TIMCommonLocalizableString(MeFriendRequest);
     friendApply.showAccessory = YES;
     friendApply.cselector = @selector(onEditFriendApply);
     if (self.profile.allowType == V2TIM_FRIEND_ALLOW_ANY) {
-        friendApply.value = TUIKitLocalizableString(MeFriendRequestMethodAgreeAll);
+        friendApply.value = TIMCommonLocalizableString(MeFriendRequestMethodAgreeAll);
     }
     if (self.profile.allowType == V2TIM_FRIEND_NEED_CONFIRM) {
-        friendApply.value = TUIKitLocalizableString(MeFriendRequestMethodNeedConfirm);
+        friendApply.value = TIMCommonLocalizableString(MeFriendRequestMethodNeedConfirm);
     }
     if (self.profile.allowType == V2TIM_FRIEND_DENY_ANY) {
-        friendApply.value = TUIKitLocalizableString(MeFriendRequestMethodDenyAll);
+        friendApply.value = TIMCommonLocalizableString(MeFriendRequestMethodDenyAll);
     }
-    [self.dataList addObject:@[friendApply]];
-    
+    [self.dataList addObject:@{kKeyWeight: @900, kKeyItems: @[friendApply]}];
+
     if (self.showMessageReadStatusCell) {
         TUICommonSwitchCellData *msgReadStatus = [TUICommonSwitchCellData new];
-        msgReadStatus.title =  TUIKitLocalizableString(MeMessageReadStatus);
-        msgReadStatus.desc = self.msgNeedReadReceipt ? TUIKitLocalizableString(MeMessageReadStatusOpenDesc) : TUIKitLocalizableString(MeMessageReadStatusCloseDesc);
+        msgReadStatus.title =  TIMCommonLocalizableString(MeMessageReadStatus);
+        msgReadStatus.desc = self.msgNeedReadReceipt ? TIMCommonLocalizableString(MeMessageReadStatusOpenDesc) : TIMCommonLocalizableString(MeMessageReadStatusCloseDesc);
         msgReadStatus.cswitchSelector = @selector(onSwitchMsgReadStatus:);
         msgReadStatus.on = self.msgNeedReadReceipt;
-        [self.dataList addObject:@[msgReadStatus]];
+        [self.dataList addObject:@{kKeyWeight: @800, kKeyItems: @[msgReadStatus]}];
     }
     
     if (self.showDisplayOnlineStatusCell) {
         TUICommonSwitchCellData *onlineStatus = [TUICommonSwitchCellData new];
-        onlineStatus.title =  TUIKitLocalizableString(ShowOnlineStatus);
-        onlineStatus.desc = [TUIConfig defaultConfig].displayOnlineStatusIcon ? TUIKitLocalizableString(ShowOnlineStatusOpenDesc) : TUIKitLocalizableString(ShowOnlineStatusCloseDesc);
+        onlineStatus.title =  TIMCommonLocalizableString(ShowOnlineStatus);
+        onlineStatus.desc = [TUIConfig defaultConfig].displayOnlineStatusIcon ? TIMCommonLocalizableString(ShowOnlineStatusOpenDesc) : TIMCommonLocalizableString(ShowOnlineStatusCloseDesc);
         onlineStatus.cswitchSelector = @selector(onSwitchOnlineStatus:);
         onlineStatus.on = [TUIConfig defaultConfig].displayOnlineStatusIcon;
-        [self.dataList addObject:@[onlineStatus]];
+        [self.dataList addObject:@{kKeyWeight: @700, kKeyItems: @[onlineStatus]}];
     }
     
-    if (self.aboutCellText.length > 0) {
+    if (self.showSelectStyleCell) {
+        TUICommonTextCellData *styleApply = [TUICommonTextCellData new];
+        styleApply.key = TIMCommonLocalizableString(TIMAppSelectStyle);
+        styleApply.showAccessory = YES;
+        styleApply.cselector = @selector(onClickChangeStyle);
+        [[RACObserve(self, styleName) distinctUntilChanged] subscribeNext:^(NSString *styleName) {
+            styleApply.value = self.styleName;
+        }];
+        self.styleName = [TUIStyleSelectViewController isClassicEntrance] ? TIMCommonLocalizableString(TUIKitClassic) : TIMCommonLocalizableString(TUIKitMinimalist);
+        [self.dataList addObject:@{kKeyWeight: @600, kKeyItems: @[styleApply]}];
+    }
+    
+    if (self.showChangeThemeCell && [self.styleName isEqualToString:TIMCommonLocalizableString(TUIKitClassic)]) {
+        TUICommonTextCellData *themeApply = [TUICommonTextCellData new];
+        themeApply.key = TIMCommonLocalizableString(TIMAppChangeTheme);
+        themeApply.showAccessory = YES;
+        themeApply.cselector = @selector(onClickChangeTheme);
+        [[RACObserve(self, themeName) distinctUntilChanged] subscribeNext:^(NSString *themeName) {
+            themeApply.value = self.themeName;
+        }];
+        self.themeName = [TUIThemeSelectController getLastThemeName];
+        [self.dataList addObject:@{kKeyWeight: @500, kKeyItems: @[themeApply]}];
+    }
+    
+    if (self.showCallsRecordCell) {
+        TUICommonSwitchCellData *record = [TUICommonSwitchCellData new];
+        record.title = TIMCommonLocalizableString(ShowCallsRecord);
+        record.desc = @"";
+        record.cswitchSelector = @selector(onSwitchCallsRecord:);
+        record.on = self.displayCallsRecord;
+        [self.dataList addObject:@{kKeyWeight: @400, kKeyItems: @[record]}];
+    }
+    
+    if (self.showAboutIMCell) {
         TUICommonTextCellData *about = [TUICommonTextCellData new];
-        about.key = self.aboutCellText;
+        about.key = self.aboutIMCellText;
         about.showAccessory = YES;
-        about.cselector = @selector(onClickAbout:);
-        [self.dataList addObject:@[about]];
+        about.cselector = @selector(onClickAboutIM:);
+        [self.dataList addObject:@{kKeyWeight: @300, kKeyItems: @[about]}];
     }
 
     if (self.showLoginOutCell) {
         TUIButtonCellData *button =  [[TUIButtonCellData alloc] init];
-        button.title = TUIKitLocalizableString(logout);
+        button.title = TIMCommonLocalizableString(logout);
         button.style = ButtonRedText;
         button.cbuttonSelector = @selector(onClickLogout:);
         button.hideSeparatorLine = YES;
-        [self.dataList addObject:@[button]];
+        [self.dataList addObject:@{kKeyWeight: @200, kKeyItems: @[button]}];
     }
     
+    [self setupExtensionsData];
+    [self sortDataList];
+    
     [self.tableView reloadData];
+}
+
+- (void)setupExtensionsData {
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    param[TUICore_TUIContactExtension_MeSettingMenu_Nav] = self.navigationController;
+    NSArray *extensionList = [TUICore getExtensionList:TUICore_TUIContactExtension_MeSettingMenu_ClassicExtensionID
+                                                 param:param];
+    for (TUIExtensionInfo *info in extensionList) {
+        NSAssert(info.data, @"extension for setting is invalid, check data");
+        UIView *view = info.data[TUICore_TUIContactExtension_MeSettingMenu_View];
+        NSInteger weight = [info.data[TUICore_TUIContactExtension_MeSettingMenu_Weight] integerValue];
+        if (view) {
+            [self.dataList addObject:@{kKeyWeight: @(weight), kKeyViews: @[view]}];
+        }
+    }
+}
+
+- (void)sortDataList {
+    NSArray *sortedArray = [self.dataList sortedArrayUsingComparator:^NSComparisonResult(NSDictionary *obj1, NSDictionary *obj2) {
+        if ([obj1[kKeyWeight] integerValue] <= [obj2[kKeyWeight] integerValue]) {
+            return NSOrderedDescending;
+        } else {
+            return NSOrderedAscending;
+        }
+    }];
+    self.sortedDataList = sortedArray;
 }
 
 #pragma mark -- Event
@@ -217,15 +314,16 @@
 - (void)onEditFriendApply {
     UIActionSheet *sheet = [[UIActionSheet alloc] init];
     sheet.tag = SHEET_AGREE;
-    [sheet addButtonWithTitle:TUIKitLocalizableString(MeFriendRequestMethodAgreeAll)];
-    [sheet addButtonWithTitle:TUIKitLocalizableString(MeFriendRequestMethodNeedConfirm)];
-    [sheet addButtonWithTitle:TUIKitLocalizableString(MeFriendRequestMethodDenyAll)];
-    [sheet setCancelButtonIndex:[sheet addButtonWithTitle:TUIKitLocalizableString(Cancel)]];
+    [sheet addButtonWithTitle:TIMCommonLocalizableString(MeFriendRequestMethodAgreeAll)];
+    [sheet addButtonWithTitle:TIMCommonLocalizableString(MeFriendRequestMethodNeedConfirm)];
+    [sheet addButtonWithTitle:TIMCommonLocalizableString(MeFriendRequestMethodDenyAll)];
+    [sheet setCancelButtonIndex:[sheet addButtonWithTitle:TIMCommonLocalizableString(Cancel)]];
     [sheet setDelegate:self];
     [sheet showInView:self.view];
     [self setupData];
 }
 
+#pragma mark UIActionSheetDelegate
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (actionSheet.tag == SHEET_AGREE) {
         if (buttonIndex >= 3)
@@ -254,11 +352,11 @@
     TUICommonSwitchCellData *switchData = cell.switchData;
     switchData.on = on;
     if (on) {
-        switchData.desc = TUIKitLocalizableString(MeMessageReadStatusOpenDesc);
+        switchData.desc = TIMCommonLocalizableString(MeMessageReadStatusOpenDesc);
         [TUITool hideToast];
-        [TUITool makeToast:TUIKitLocalizableString(ShowPackageToast)];
+        [TUITool makeToast:TIMCommonLocalizableString(ShowPackageToast)];
     } else {
-        switchData.desc = TUIKitLocalizableString(MeMessageReadStatusCloseDesc);
+        switchData.desc = TIMCommonLocalizableString(MeMessageReadStatusCloseDesc);
     }
     [cell fillWithData:switchData];
 }
@@ -273,22 +371,67 @@
     TUICommonSwitchCellData *switchData = cell.switchData;
     switchData.on = on;
     if (on) {
-        switchData.desc = TUIKitLocalizableString(ShowOnlineStatusOpenDesc);
+        switchData.desc = TIMCommonLocalizableString(ShowOnlineStatusOpenDesc);
     } else {
-        switchData.desc = TUIKitLocalizableString(ShowOnlineStatusCloseDesc);
+        switchData.desc = TIMCommonLocalizableString(ShowOnlineStatusCloseDesc);
     }
     
     if (on) {
         [TUITool hideToast];
-        [TUITool makeToast:TUIKitLocalizableString(ShowPackageToast)];
+        [TUITool makeToast:TIMCommonLocalizableString(ShowPackageToast)];
     }
     
     [cell fillWithData:switchData];
 }
 
-- (void)onClickAbout:(TUICommonTextCell *)cell {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(onClickAbout)]){
-        [self.delegate onClickAbout];
+- (void)onSwitchCallsRecord:(TUICommonSwitchCell *)cell {
+    BOOL on = cell.switcher.isOn;
+    if (self.delegate && [self.delegate respondsToSelector:@selector(onSwitchCallsRecord:)]) {
+        [self.delegate onSwitchCallsRecord:on];
+    }
+    
+    TUICommonSwitchCellData *data = cell.switchData;
+    data.on = on;
+    [cell fillWithData:data];
+}
+
+
+- (void)onClickAboutIM:(TUICommonTextCell *)cell {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(onClickAboutIM)]){
+        [self.delegate onClickAboutIM];
+    }
+}
+
+- (void)onClickChangeStyle {
+    TUIStyleSelectViewController *styleVC = [[TUIStyleSelectViewController alloc] init];
+    styleVC.delegate = self;
+    [self.navigationController pushViewController:styleVC animated:YES];
+}
+
+- (void)onClickChangeTheme {
+    TUIThemeSelectController *vc = [[TUIThemeSelectController alloc] init];
+    vc.delegate = self;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+#pragma mark TUIStyleSelectControllerDelegate
+
+- (void)onSelectStyle:(TUIStyleSelectCellModel *)cellModel {
+    if (![cellModel.styleName isEqualToString:self.styleName]) {
+        self.styleName = cellModel.styleName;
+        if (self.delegate && [self.delegate respondsToSelector:@selector(onChangeStyle)]) {
+            [self.delegate onChangeStyle];
+        }
+    }
+}
+
+#pragma mark TUIThemeSelectControllerDelegate
+- (void)onSelectTheme:(TUIThemeSelectCollectionViewCellModel *)cellModel {
+    if (![cellModel.themeName isEqualToString:self.themeName]) {
+        self.themeName = cellModel.themeName;
+        if (self.delegate && [self.delegate respondsToSelector:@selector(onChangeTheme)]) {
+            [self.delegate onChangeTheme];
+        }
     }
 }
 

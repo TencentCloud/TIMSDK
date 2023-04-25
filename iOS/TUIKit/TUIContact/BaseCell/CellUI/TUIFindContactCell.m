@@ -6,9 +6,9 @@
 //
 
 #import "TUIFindContactCell.h"
-#import "UIView+TUILayout.h"
-#import "TUIDefine.h"
-#import "TUIThemeManager.h"
+#import <TUICore/UIView+TUILayout.h>
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
 #define kScale UIScreen.mainScreen.bounds.size.width / 375.0
 
 @implementation TUIFindContactCell
@@ -80,7 +80,7 @@
     if (_mainTitleLabel == nil) {
         _mainTitleLabel = [[UILabel alloc] init];
         _mainTitleLabel.text = @"mainTitle";
-        _mainTitleLabel.textColor = TUICoreDynamicColor(@"form_title_color", @"#000000");
+        _mainTitleLabel.textColor = TIMCommonDynamicColor(@"form_title_color", @"#000000");
         _mainTitleLabel.font = [UIFont systemFontOfSize:18.0 * kScale];
     }
     return _mainTitleLabel;
@@ -90,7 +90,7 @@
     if (_subTitleLabel == nil) {
         _subTitleLabel = [[UILabel alloc] init];
         _subTitleLabel.text = @"subTitle";
-        _subTitleLabel.textColor =  TUICoreDynamicColor(@"form_subtitle_color", @"#888888");
+        _subTitleLabel.textColor =  TIMCommonDynamicColor(@"form_subtitle_color", @"#888888");
         _subTitleLabel.font = [UIFont systemFontOfSize:13.0 * kScale];
     }
     return _subTitleLabel;
@@ -100,7 +100,7 @@
     if (_descLabel == nil) {
         _descLabel = [[UILabel alloc] init];
         _descLabel.text = @"descLabel";
-        _descLabel.textColor = TUICoreDynamicColor(@"form_desc_color", @"#888888");
+        _descLabel.textColor = TIMCommonDynamicColor(@"form_desc_color", @"#888888");
         _descLabel.font = [UIFont systemFontOfSize:13.0 * kScale];
     }
     return _descLabel;

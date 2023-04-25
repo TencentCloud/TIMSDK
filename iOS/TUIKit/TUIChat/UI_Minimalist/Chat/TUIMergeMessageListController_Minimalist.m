@@ -6,9 +6,9 @@
 //
 
 #import "TUIMergeMessageListController_Minimalist.h"
-#import "TUIGlobalization.h"
+#import <TUICore/TUIGlobalization.h>
 #import "TUITextMessageCell_Minimalist.h"
-#import "TUISystemMessageCell.h"
+#import <TIMCommon/TUISystemMessageCell.h>
 #import "TUIVoiceMessageCell_Minimalist.h"
 #import "TUIImageMessageCell_Minimalist.h"
 #import "TUIFaceMessageCell_Minimalist.h"
@@ -18,14 +18,14 @@
 #import "TUIMergeMessageCell_Minimalist.h"
 #import "TUILinkCell_Minimalist.h"
 #import "TUIReplyMessageCell_Minimalist.h"
-#import "TUIDarkModel.h"
+#import <TUICore/TUIDarkModel.h>
 #import "TUIFileViewController_Minimalist.h"
 #import "TUIMessageDataProvider_Minimalist.h"
 #import "TUIMediaView_Minimalist.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 #import "TUIReplyMessageCellData_Minimalist.h"
-#import "TUIMessageCellLayout.h"
-#import "TUIThemeManager.h"
+#import <TIMCommon/TUIMessageCellLayout.h>
+#import <TUICore/TUIThemeManager.h>
 #import "TUIReferenceMessageCell_Minimalist.h"
 #import "TUIMessageSearchDataProvider_Minimalist.h"
 #import "TUIRepliesDetailViewController_Minimalist.h"
@@ -161,13 +161,13 @@
 
 - (void)setupViews
 {
-    self.title = TUIKitLocalizableString(TUIKitRelayChatHistory);
+    self.title = TIMCommonLocalizableString(TUIKitRelayChatHistory);
     self.tableView.scrollsToTop = NO;
     self.tableView.estimatedRowHeight = 0;
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     self.tableView.backgroundColor = TUIChatDynamicColor(@"chat_controller_bg_color", @"#FFFFFF");;
     
-    UIImage *image = TUICoreDynamicImage(@"nav_back_img", [UIImage imageNamed:@"ic_back_white"]);
+    UIImage *image = TIMCommonDynamicImage(@"nav_back_img", [UIImage imageNamed:@"ic_back_white"]);
     image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton setImage:image forState:UIControlStateNormal];
@@ -350,17 +350,17 @@
     
     [(TUIMessageSearchDataProvider_Minimalist *)self.msgDataProvider findMessages:@[originMsgID?:@""] callback:^(BOOL success, NSString * _Nonnull desc, NSArray<V2TIMMessage *> * _Nonnull msgs) {
         if (!success) {
-            [TUITool makeToast:TUIKitLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
+            [TUITool makeToast:TIMCommonLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
             return;
         }
         V2TIMMessage *message = msgs.firstObject;
         if (message == nil) {
-            [TUITool makeToast:TUIKitLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
+            [TUITool makeToast:TIMCommonLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
             return;
         }
         
         if (message.status == V2TIM_MSG_STATUS_HAS_DELETED || message.status == V2TIM_MSG_STATUS_LOCAL_REVOKED) {
-            [TUITool makeToast:TUIKitLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
+            [TUITool makeToast:TIMCommonLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
             return;
         }
         

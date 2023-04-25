@@ -122,31 +122,5 @@
 	<string>#FFFFFF</string>
 	<key>chat_small_tongue_line_color</key>
 	<string>#E5E5E5</string>
-	<key>chat_nav_more_menu_img</key>
-	<string>chat_nav_more_menu.png</string>
-	<key>chat_message_read_status_text_color</key>
-	<string>#ECA08E</string>
-	<key>chat_message_read_status_text_gray_color</key>
-	<string>#BBBBBB</string>
-	<key>chat_message_read_status_tab_color</key>
-	<string>#FF584C</string>
-	<key>chat_message_read_status_tab_unselect_color</key>
-	<string>#444444</string>
-	<key>chat_message_read_name_date_text_color</key>
-	<string>#999999</string>
-	<key>chat_messageReplyIcon_img</key>
-	<string>messageReplyIcon</string>
-	<key>chat_message_translation_loading_img</key>
-	<string>message_translation_loading.png</string>
-	<key>chat_message_translation_tips_img</key>
-	<string>message_translation_tips.png</string>
-	<key>chat_message_translation_bg_color</key>
-	<string>#F2F7FF</string>
-	<key>chat_message_translation_bg_color_minimalist</key>
-	<string>#F3F5F9</string>
-	<key>chat_message_translation_text_color</key>
-	<string>#000000</string>
-	<key>chat_message_translation_text_color_minimalist</key>
-	<string>#000000</string>
 </dict>
 </plist>

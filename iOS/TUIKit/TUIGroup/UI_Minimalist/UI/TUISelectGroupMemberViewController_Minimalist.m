@@ -6,14 +6,14 @@
 //
 
 #import "TUISelectGroupMemberViewController_Minimalist.h"
-#import "TUIDarkModel.h"
+#import <TUICore/TUIDarkModel.h>
 #import "TUISelectGroupMemberCell.h"
 #import "TUIMemberPanelCell.h"
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "TUIMemberPanelCell.h"
-#import "TUIGlobalization.h"
-#import "TUICore.h"
-#import "TUIThemeManager.h"
+#import <TUICore/TUIGlobalization.h>
+#import <TUICore/TUICore.h>
+#import <TUICore/TUIThemeManager.h>
 
 #define kUserBorder 44.0
 #define kUserSpacing 2
@@ -49,13 +49,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.text = self.name?:TUIKitLocalizableString(Make-a-call);
+    titleLabel.text = self.name?:TIMCommonLocalizableString(Make-a-call);
     titleLabel.font = [UIFont boldSystemFontOfSize:17.0];
-    titleLabel.textColor = TUICoreDynamicColor(@"nav_title_text_color", @"#000000");
+    titleLabel.textColor = TIMCommonDynamicColor(@"nav_title_text_color", @"#000000");
     [titleLabel sizeToFit];
     self.navigationItem.titleView = titleLabel;
     
-    self.view.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
+    self.view.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#F2F3F5");
     
     UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView:self.cancelBtn];
     self.navigationItem.leftBarButtonItem = item;
@@ -73,13 +73,7 @@
     topPadding = MAX(26, topPadding);
     CGFloat navBarHeight = self.navigationController.navigationBar.bounds.size.height;
     self.topStartPosition = topPadding + (navBarHeight > 0 ? navBarHeight : 44);
-    //Fix  translucent = NO;
     CGRect rect = self.view.bounds;
-    if (![UINavigationBar appearance].isTranslucent && [[[UIDevice currentDevice] systemVersion] doubleValue]<15.0) {
-        self.topStartPosition = 0;
-        rect = CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height - TabBar_Height - NavBar_Height );
-        self.selectTable.frame = rect;
-    }
     self.memberList = [NSMutableArray array];
     self.selectedUsers = [NSMutableArray array];
     self.indicatorView.frame = CGRectMake(0, 0, self.view.bounds.size.width, TMessageController_Header_Height);
@@ -92,8 +86,8 @@
 - (UIButton *)cancelBtn {
     if (!_cancelBtn.superview) {
          _cancelBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
-        [_cancelBtn setTitle:TUIKitLocalizableString(Cancel) forState:UIControlStateNormal];
-        [_cancelBtn setTitleColor:TUICoreDynamicColor(@"nav_title_text_color", @"#000000") forState:UIControlStateNormal];
+        [_cancelBtn setTitle:TIMCommonLocalizableString(Cancel) forState:UIControlStateNormal];
+        [_cancelBtn setTitleColor:TIMCommonDynamicColor(@"nav_title_text_color", @"#000000") forState:UIControlStateNormal];
         [_cancelBtn addTarget:self action:@selector(cancel) forControlEvents:UIControlEventTouchUpInside];
     }
     return _cancelBtn;
@@ -102,9 +96,9 @@
 - (UIButton *)doneBtn {
     if (!_doneBtn.superview) {
         _doneBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
-        [_doneBtn setTitle:TUIKitLocalizableString(Done) forState:UIControlStateNormal];
+        [_doneBtn setTitle:TIMCommonLocalizableString(Done) forState:UIControlStateNormal];
         [_doneBtn setAlpha:0.5];
-        [_doneBtn setTitleColor:TUICoreDynamicColor(@"nav_title_text_color", @"#000000") forState:UIControlStateNormal];
+        [_doneBtn setTitleColor:TIMCommonDynamicColor(@"nav_title_text_color", @"#000000") forState:UIControlStateNormal];
         [_doneBtn addTarget:self action:@selector(onNext) forControlEvents:UIControlEventTouchUpInside];
     }
     return _doneBtn;
@@ -192,10 +186,11 @@
     [self cancel];
     
     NSDictionary *result = @{
-        TUICore_TUIGroupNotify_SelectGroupMemberSubKey_UserListKey : users,
-        TUICore_TUIGroupNotify_SelectGroupMemberSubKey_UserDataKey: self.userData?:@""
+        TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_ResultUserList : users
     };
-    [TUICore notifyEvent:TUICore_TUIGroupNotify subKey:TUICore_TUIGroupNotify_SelectGroupMemberSubKey object:self param:result];
+    if (self.tui_valueCallback) {
+        self.tui_valueCallback(result);
+    }
 }
 
 - (void)cancel {
@@ -240,7 +235,7 @@
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    return TUIKitLocalizableString(TUIKitGroupProfileMember);
+    return TIMCommonLocalizableString(TUIKitGroupProfileMember);
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
@@ -462,7 +457,7 @@
     if (self.optionalStyle & TUISelectMemberOptionalStyleAtAll) {
         TUIUserModel *model = [[TUIUserModel alloc] init];
         model.userId = kImSDK_MesssageAtALL;
-        model.name = TUIKitLocalizableString(All);
+        model.name = TIMCommonLocalizableString(All);
         [self.memberList addObject:model];
     }
 }

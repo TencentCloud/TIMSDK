@@ -6,8 +6,8 @@
 //
 
 #import "TUIFileMessageCellData.h"
-#import "TUIDefine.h"
-#import "NSString+TUIUtil.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/NSString+TUIUtil.h>
 #import "TUIMessageProgressManager.h"
 
 @interface TUIFileMessageCellData ()
@@ -29,7 +29,7 @@
 }
 
 + (NSString *)getDisplayString:(V2TIMMessage *)message {
-    return TUIKitLocalizableString(TUIkitMessageTypeFile); // @"[文件]";
+    return TIMCommonLocalizableString(TUIkitMessageTypeFile); // @"[文件]";
 }
 
 - (Class)getReplyQuoteViewDataClass

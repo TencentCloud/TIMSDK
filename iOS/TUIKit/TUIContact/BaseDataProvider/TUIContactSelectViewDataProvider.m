@@ -6,10 +6,10 @@
 //
 
 #import "TUIContactSelectViewDataProvider.h"
-#import "TUICommonModel.h"
-#import "TUIDefine.h"
-#import "TUICommonModel.h"
-#import "NSString+TUIUtil.h"
+#import <TIMCommon/TIMCommonModel.h>
+#import <TIMCommon/TIMDefine.h>
+#import <TIMCommon/TIMCommonModel.h>
+#import <TUICore/NSString+TUIUtil.h>
 
 @interface TUIContactSelectViewDataProvider()
 @property NSDictionary<NSString *, NSArray<TUICommonContactSelectCellData *> *> *dataDict;

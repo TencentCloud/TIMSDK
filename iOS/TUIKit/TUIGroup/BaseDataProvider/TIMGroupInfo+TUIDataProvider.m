@@ -1,6 +1,6 @@
 
 #import "TIMGroupInfo+TUIDataProvider.h"
-#import "TUIGlobalization.h"
+#import <TUICore/TUIGlobalization.h>
 
 @implementation V2TIMGroupInfo(TUIDataProvider)
 

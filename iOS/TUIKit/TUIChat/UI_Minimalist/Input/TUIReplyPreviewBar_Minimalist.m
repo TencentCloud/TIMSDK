@@ -6,10 +6,10 @@
 //
 
 #import "TUIReplyPreviewBar_Minimalist.h"
-#import "TUIDarkModel.h"
-#import "TUIDefine.h"
-#import "NSString+TUIEmoji.h"
-#import "TUIThemeManager.h"
+#import <TUICore/TUIDarkModel.h>
+#import <TIMCommon/TIMDefine.h>
+#import <TIMCommon/NSString+TUIEmoji.h>
+#import <TUICore/TUIThemeManager.h>
 
 @implementation TUIReplyPreviewBar_Minimalist
 

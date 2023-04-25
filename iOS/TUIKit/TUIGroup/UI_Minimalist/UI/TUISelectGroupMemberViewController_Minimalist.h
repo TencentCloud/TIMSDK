@@ -7,7 +7,7 @@
 
 #import <UIKit/UIKit.h>
 #import "TUISelectGroupMemberCell.h"
-#import "TUIDefine.h"
+#import <TIMCommon/TIMDefine.h>
 #import "TUIGroupDefine.h"
 
 NS_ASSUME_NONNULL_BEGIN

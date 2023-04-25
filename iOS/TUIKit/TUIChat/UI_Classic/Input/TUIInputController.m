@@ -10,17 +10,17 @@
 #import "TUIMenuCell.h"
 #import "TUIMenuCellData.h"
 #import "TUIInputMoreCell.h"
-#import "TUICommonModel.h"
+#import <TIMCommon/TIMCommonModel.h>
 #import "TUIFaceMessageCell.h"
 #import "TUITextMessageCell.h"
 #import "TUIVoiceMessageCell.h"
-#import "TUIDefine.h"
-#import "TUIDefine.h"
-#import "TUIDarkModel.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIDarkModel.h>
 #import "TUIMessageDataProvider.h"
-#import "NSString+TUIEmoji.h"
+#import <TIMCommon/NSString+TUIEmoji.h>
 #import <AVFoundation/AVFoundation.h>
-#import "TUIThemeManager.h"
+#import <TUICore/TUIThemeManager.h>
 #import "TUICloudCustomDataTypeCenter.h"
 #import "TUIChatDataProvider.h"
 #import "TUIChatModifyMessageHelper.h"
@@ -219,7 +219,7 @@
 
 - (void)inputBarDidTouchFace:(TUIInputBar *)textView
 {
-    if([TUIConfig defaultConfig].faceGroups.count == 0){
+    if([TIMConfig defaultConfig].faceGroups.count == 0){
         return;
     }
     if(_status == Input_Status_Input_More){
@@ -483,6 +483,12 @@
         
     self.referencePreviewBar.frame = CGRectMake(0, 0, self.view.bounds.size.width, TMenuView_Menu_Height);
     self.referencePreviewBar.mm_y = CGRectGetMaxY(self.inputBar.frame);
+    
+    //Set the default position to solve the UI confusion when the keyboard does not become the first responder
+    if(self.delegate && [self.delegate respondsToSelector:@selector(inputController:didChangeHeight:)]) {
+        [self.delegate inputController:self didChangeHeight:CGRectGetMaxY(self.inputBar.frame) + Bottom_SafeHeight + TMenuView_Menu_Height];
+    }
+
     if (self.status == Input_Status_Input_Keyboard) {
         CGFloat keyboradHeight = self.keyboardFrame.size.height;
         if (self.delegate && [self.delegate respondsToSelector:@selector(inputController:didChangeHeight:)]){
@@ -506,6 +512,12 @@
     
     self.replyPreviewBar.frame = CGRectMake(0, 0, self.view.bounds.size.width, TMenuView_Menu_Height);
     self.inputBar.mm_y = CGRectGetMaxY(self.replyPreviewBar.frame);
+    
+    //Set the default position to solve the UI confusion when the keyboard does not become the first responder
+    if(self.delegate && [self.delegate respondsToSelector:@selector(inputController:didChangeHeight:)]) {
+        [self.delegate inputController:self didChangeHeight:CGRectGetMaxY(self.inputBar.frame) + Bottom_SafeHeight];
+    }
+    
     if (self.status == Input_Status_Input_Keyboard) {
         CGFloat keyboradHeight = self.keyboardFrame.size.height;
         if (self.delegate && [self.delegate respondsToSelector:@selector(inputController:didChangeHeight:)]){
@@ -517,40 +529,6 @@
     } else {
         [self.inputBar.inputTextView becomeFirstResponder];
     }
-}
-
-- (void)exitReply
-{
-    if (self.replyData == nil && self.referenceData == nil) {
-        return;
-    }
-    self.replyData = nil;
-    self.referenceData = nil;
-    __weak typeof(self) weakSelf = self;
-    [UIView animateWithDuration:0.25 animations:^{
-        weakSelf.replyPreviewBar.hidden = YES;
-        weakSelf.referencePreviewBar.hidden = YES;
-        weakSelf.inputBar.mm_y = 0;
-        
-        if (weakSelf.status == Input_Status_Input_Keyboard) {
-            CGFloat keyboradHeight = weakSelf.keyboardFrame.size.height;
-            if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(inputController:didChangeHeight:)]){
-                [weakSelf.delegate inputController:weakSelf didChangeHeight:CGRectGetMaxY(weakSelf.inputBar.frame) + keyboradHeight];
-            }
-        } else {
-            if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(inputController:didChangeHeight:)]){
-                [weakSelf.delegate inputController:weakSelf didChangeHeight:CGRectGetMaxY(weakSelf.inputBar.frame) + Bottom_SafeHeight];
-            }
-        }
-        
-    } completion:^(BOOL finished) {
-        [weakSelf.replyPreviewBar removeFromSuperview];
-        [weakSelf.referencePreviewBar removeFromSuperview];
-        weakSelf.replyPreviewBar = nil;
-        weakSelf.referencePreviewBar = nil;
-        [weakSelf hideFaceAnimation];
-        weakSelf.inputBar.lineView.hidden = NO;
-    }];
 }
 
 - (void)exitReplyAndReference:(void (^ __nullable)(void))finishedCallback {
@@ -629,7 +607,7 @@
 
 - (void)faceView:(TUIFaceView *)faceView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    TUIFaceGroup *group = [TUIConfig defaultConfig].faceGroups[indexPath.section];
+    TUIFaceGroup *group = [TIMConfig defaultConfig].faceGroups[indexPath.section];
     TUIFaceCellData *face = group.faces[indexPath.row];
     if(indexPath.section == 0){
         [_inputBar addEmoji:face];
@@ -658,7 +636,7 @@
     if(!_faceView){
         _faceView = [[TUIFaceView alloc] initWithFrame:CGRectMake(0, _inputBar.frame.origin.y + _inputBar.frame.size.height, self.view.frame.size.width, TFaceView_Height)];
         _faceView.delegate = self;
-        [_faceView setData:[TUIConfig defaultConfig].faceGroups];
+        [_faceView setData:[TIMConfig defaultConfig].faceGroups];
     }
     return _faceView;
 }
@@ -678,7 +656,7 @@
         _menuView = [[TUIMenuView alloc] initWithFrame:CGRectMake(0, self.faceView.frame.origin.y + self.faceView.frame.size.height, self.view.frame.size.width, TMenuView_Menu_Height)];
         _menuView.delegate = self;
 
-        TUIConfig *config = [TUIConfig defaultConfig];
+        TIMConfig *config = [TIMConfig defaultConfig];
         NSMutableArray *menus = [NSMutableArray array];
         for (NSInteger i = 0; i < config.faceGroups.count; ++i) {
             TUIFaceGroup *group = config.faceGroups[i];
@@ -702,7 +680,7 @@
         __weak typeof(self) weakSelf = self;
         _replyPreviewBar.onClose = ^{
             __strong typeof(weakSelf)strongSelf = weakSelf;
-            [strongSelf exitReply];
+            [strongSelf exitReplyAndReference:nil];
         };
     }
     return _replyPreviewBar;
@@ -714,7 +692,7 @@
         __weak typeof(self) weakSelf = self;
         _referencePreviewBar.onClose = ^{
             __strong typeof(weakSelf)strongSelf = weakSelf;
-            [strongSelf exitReply];
+            [strongSelf exitReplyAndReference:nil];
         };
     }
     return _referencePreviewBar;

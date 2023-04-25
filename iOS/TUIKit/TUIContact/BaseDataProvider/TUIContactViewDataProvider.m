@@ -6,8 +6,8 @@
 //
 
 #import "TUIContactViewDataProvider.h"
-#import "TUIDefine.h"
-#import "NSString+TUIUtil.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/NSString+TUIUtil.h>
 
 #define kGetUserStatusPageCount 500
 

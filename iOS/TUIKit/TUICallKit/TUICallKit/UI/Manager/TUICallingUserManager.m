@@ -10,6 +10,7 @@
 #import "ImSDK_Plus/ImSDK_Plus.h"
 #import "TUICallEngineHeader.h"
 #import "TUICallingUserModel.h"
+#import <TUICore/TUILogin.h>
 
 @interface TUICallingUserManager ()
 
@@ -107,6 +108,10 @@ static dispatch_once_t gOnceToken;
     if (userId) {
         [[TUICallingUserManager shareInstance] deleteUser:userId];
     }
+}
+
++ (NSString *)getSelfUserId {
+    return [TUILogin getUserID];
 }
 
 #pragma mark private function

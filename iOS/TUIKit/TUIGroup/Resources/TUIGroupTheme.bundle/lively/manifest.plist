@@ -24,5 +24,7 @@
 	<string>#FF8E82</string>
 	<key>group_nav_back_img</key>
 	<string>nav_back.png</string>
+	<key>chat_nav_more_menu_img</key>
+	<string>chat_nav_more_menu.png</string>
 </dict>
 </plist>

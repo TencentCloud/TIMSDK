@@ -7,7 +7,8 @@
 //
 #import "TUISearchFriendViewController.h"
 #import "TUIFriendRequestViewController.h"
-#import "TUIThemeManager.h"
+#import <TUICore/TUIThemeManager.h>
+#import "TUIDefine.h"
 
 @interface AddFriendUserView : UIView
 @property (nonatomic) V2TIMUserFullInfo *profile;
@@ -39,7 +40,7 @@
     _profile = profile;
     if (_profile) {
         _idLabel.text = profile.userID;
-        _idLabel.mm_sizeToFit().mm_center().mm_left(8);
+        _idLabel.mm_sizeToFit().tui_mm_center().mm_left(8);
         _line.mm_height(1).mm_width(self.mm_w).mm_bottom(0);
         _line.hidden = NO;
     } else {
@@ -67,9 +68,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = TUIKitLocalizableString(ContactsAddFriends);
+    self.title = TIMCommonLocalizableString(ContactsAddFriends);
 
-    self.view.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
+    self.view.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#F2F3F5");
 
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.automaticallyAdjustsScrollViewInsets = NO;
@@ -79,7 +80,7 @@
     self.searchController.delegate = self;
     self.searchController.searchResultsUpdater = self;
     self.searchController.dimsBackgroundDuringPresentation = NO;
-    _searchController.searchBar.placeholder = TUIKitLocalizableString(SearchGroupPlaceholder);
+    _searchController.searchBar.placeholder = TIMCommonLocalizableString(SearchGroupPlaceholder);
     [self.view addSubview:_searchController.searchBar];
     self.searchController.searchBar.mm_sizeToFit();
     [self setSearchIconCenter:YES];

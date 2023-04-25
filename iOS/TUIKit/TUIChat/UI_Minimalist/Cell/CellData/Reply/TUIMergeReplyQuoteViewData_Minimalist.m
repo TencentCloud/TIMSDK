@@ -7,7 +7,7 @@
 
 #import "TUIMergeReplyQuoteViewData_Minimalist.h"
 #import "TUIMergeMessageCellData_Minimalist.h"
-#import "NSString+TUIEmoji.h"
+#import <TIMCommon/NSString+TUIEmoji.h>
 
 @implementation TUIMergeReplyQuoteViewData_Minimalist
 

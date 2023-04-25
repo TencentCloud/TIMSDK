@@ -6,10 +6,10 @@
 //
 
 #import "TUIMessageMultiChooseView.h"
-#import "UIView+TUILayout.h"
-#import "TUIGlobalization.h"
-#import "TUIDarkModel.h"
-#import "TUIThemeManager.h"
+#import <TUICore/UIView+TUILayout.h>
+#import <TUICore/TUIGlobalization.h>
+#import <TUICore/TUIDarkModel.h>
+#import <TUICore/TUIThemeManager.h>
 
 
 @interface TUIMessageMultiChooseView ()
@@ -86,7 +86,7 @@
 - (void)setupViews
 {
     _toolView = [[UIView alloc] init];
-    _toolView.backgroundColor = TUICoreDynamicColor(@"head_bg_gradient_start_color", @"#EBF0F6");
+    _toolView.backgroundColor = TIMCommonDynamicColor(@"head_bg_gradient_start_color", @"#EBF0F6");
     [self addSubview:_toolView];
     
     _menuView = [[UIView alloc] init];
@@ -95,8 +95,8 @@
     [self addSubview:_menuView];
     
     _cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_cancelButton setTitle:TUIKitLocalizableString(Cancel) forState:UIControlStateNormal];
-    [_cancelButton setTitleColor:TUICoreDynamicColor(@"form_title_color", @"#000000") forState:UIControlStateNormal];
+    [_cancelButton setTitle:TIMCommonLocalizableString(Cancel) forState:UIControlStateNormal];
+    [_cancelButton setTitleColor:TIMCommonDynamicColor(@"form_title_color", @"#000000") forState:UIControlStateNormal];
     _cancelButton.titleLabel.font = [UIFont systemFontOfSize:15.0];
     [_cancelButton addTarget:self action:@selector(onCancel:) forControlEvents:UIControlEventTouchUpInside];
     [_cancelButton sizeToFit];
@@ -105,20 +105,20 @@
     _titleLabel = [[UILabel alloc] init];
     _titleLabel.text = @"";
     _titleLabel.font = [UIFont boldSystemFontOfSize:17.0];
-    _titleLabel.textColor = TUICoreDynamicColor(@"form_title_color", @"#000000");
+    _titleLabel.textColor = TIMCommonDynamicColor(@"form_title_color", @"#000000");
     [_toolView addSubview:_titleLabel];
     
     _relayButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_relayButton setTitle:TUIKitLocalizableString(Forward) forState:UIControlStateNormal];
+    [_relayButton setTitle:TIMCommonLocalizableString(Forward) forState:UIControlStateNormal];
     _relayButton.titleLabel.font = [UIFont systemFontOfSize:14.0];
-    [_relayButton setTitleColor:TUICoreDynamicColor(@"form_title_color", @"#000000") forState:UIControlStateNormal];
+    [_relayButton setTitleColor:TIMCommonDynamicColor(@"form_title_color", @"#000000") forState:UIControlStateNormal];
     [_relayButton addTarget:self action:@selector(onRelay:) forControlEvents:UIControlEventTouchUpInside];
     [_menuView addSubview:_relayButton];
     
     _deleteButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_deleteButton setTitle:TUIKitLocalizableString(Delete) forState:UIControlStateNormal];
+    [_deleteButton setTitle:TIMCommonLocalizableString(Delete) forState:UIControlStateNormal];
     _deleteButton.titleLabel.font = [UIFont systemFontOfSize:14.0];
-    [_deleteButton setTitleColor:TUICoreDynamicColor(@"form_title_color", @"#000000") forState:UIControlStateNormal];
+    [_deleteButton setTitleColor:TIMCommonDynamicColor(@"form_title_color", @"#000000") forState:UIControlStateNormal];
     [_deleteButton addTarget:self action:@selector(onDelete:) forControlEvents:UIControlEventTouchUpInside];
     [_menuView addSubview:_deleteButton];
 }
@@ -150,7 +150,7 @@
     if (_separtorLayer == nil) {
         _separtorLayer = [CALayer layer];
         
-        _separtorLayer.backgroundColor = TUICoreDynamicColor(@"separator_color", @"#DBDBDB").CGColor;
+        _separtorLayer.backgroundColor = TIMCommonDynamicColor(@"separator_color", @"#DBDBDB").CGColor;
     }
     return _separtorLayer;
 }

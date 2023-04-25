@@ -32,10 +32,10 @@
 #import "TUICallingUserModel.h"
 #import "TUICallEngineHeader.h"
 #import "TUICore.h"
+#import "TUICallingNavigationController.h"
+#import "TUICallKitSelectGroupMeberViewController.h"
 
-static NSString * const TUICallKit_TUIGroupService_UserDataValue = @"TUICallKit";
-
-@interface TUICallingViewManager () <TUICallingFloatingWindowManagerDelegate, TUINotificationProtocol>
+@interface TUICallingViewManager () <TUICallingFloatingWindowManagerDelegate, SelectGroupMeberViewControllerDelegate>
 
 @property (nonatomic, strong) UIWindow *callingWindow;
 @property (nonatomic, strong) UIView *containerView;
@@ -53,6 +53,7 @@ static NSString * const TUICallKit_TUIGroupService_UserDataValue = @"TUICallKit"
 @property (nonatomic, strong) CallingUserModel *remoteUser;
 /// Is Enable FloatWindow
 @property (nonatomic, assign) BOOL enableFloatWindow;
+@property (nonatomic, assign) BOOL alreadyShownCallKitView;
 
 @end
 
@@ -66,7 +67,6 @@ static NSString * const TUICallKit_TUIGroupService_UserDataValue = @"TUICallKit"
         [[TUICallingFloatingWindowManager shareInstance] setFloatingWindowManagerDelegate:self];
         self.containerView.backgroundColor = [UIColor t_colorWithHexString:@"#F2F2F2"];
         self.enableFloatWindow = NO;
-        [TUICore registerEvent:TUICore_TUIGroupNotify subKey:TUICore_TUIGroupNotify_SelectGroupMemberSubKey object:self];
     }
     return self;
 }
@@ -303,9 +303,6 @@ static NSString * const TUICallKit_TUIGroupService_UserDataValue = @"TUICallKit"
 }
 
 - (void)initAddOtherUserBtn {
-    if (![TUICore getService:TUICore_TUIGroupService]) {
-        return;
-    }
     [self.addOtherUserBtn removeFromSuperview];
     [self.containerView addSubview:self.addOtherUserBtn];
     [self.addOtherUserBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -477,9 +474,16 @@ static NSString * const TUICallKit_TUIGroupService_UserDataValue = @"TUICallKit"
 }
 
 - (void)showCallingView {
+    if (self.alreadyShownCallKitView) {
+        return;
+    }
+    self.alreadyShownCallKitView = YES;
+    
     UIViewController *viewController = [[UIViewController alloc] init];
     [viewController.view addSubview:self.containerView];
-    self.callingWindow.rootViewController = viewController;
+    TUICallingNavigationController *nvc = [[TUICallingNavigationController alloc] initWithRootViewController: viewController];
+    [nvc setNavigationBarHidden:true];
+    self.callingWindow.rootViewController = nvc;
     self.callingWindow.hidden = NO;
     dispatch_async(dispatch_get_main_queue(), ^{
         if (self->_callingWindow != nil) {
@@ -493,6 +497,7 @@ static NSString * const TUICallKit_TUIGroupService_UserDataValue = @"TUICallKit"
     [self.containerView removeFromSuperview];
     self.callingWindow.hidden = YES;
     self.callingWindow = nil;
+    self.alreadyShownCallKitView = NO;
     [[TUICallingFloatingWindowManager shareInstance] closeMicroFloatingWindow:nil];
 }
 
@@ -558,23 +563,30 @@ static NSString * const TUICallKit_TUIGroupService_UserDataValue = @"TUICallKit"
 }
 
 - (void)addOtherUserTouchEvent:(UIButton *)sender {
-    NSDictionary *param = @{
-        TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_GroupIDKey : [TUICallingStatusManager shareInstance].groupId ?: @"",
-        TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_SelectedUserIDListKey : [TUICallingUserManager allUserIdList] ?: @[],
-        TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_UserDataKey : TUICallKit_TUIGroupService_UserDataValue,
-        TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_NameKey : TUIKitLocalizableString(Make-a-call),
-    };
-    UIViewController *viewController = [TUICore callService:TUICore_TUIGroupService
-                                                     method:TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod
-                                                      param:param];
-    if (!viewController) {
-        viewController = [TUICore callService:TUICore_TUIGroupService_Minimalist
-                                       method:TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod
-                                        param:param];
-    }
-    TUINavigationController *navigationController = [[TUINavigationController alloc] initWithRootViewController:viewController];
+    TUICallKitSelectGroupMeberViewController *vc = [[TUICallKitSelectGroupMeberViewController alloc] init];
+    vc.delegate = self;
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:vc];
     navigationController.modalPresentationStyle = UIModalPresentationFullScreen;
     [self.callingWindow.rootViewController presentViewController:navigationController animated:NO completion:nil];
+}
+
+#pragma mark -SelectGroupMeberViewControllerDelegate
+- (void)addNewGroupUser:(NSArray<TUIUserModel *> *)inviteUsersn {
+    __weak typeof(self) weakSelf = self;
+    [TUICallingAction inviteUser:inviteUsersn succ:^(NSArray * _Nonnull userIDs) {
+        [[V2TIMManager sharedInstance] getUsersInfo:userIDs succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
+            __strong typeof(self) strongSelf = weakSelf;
+            for (V2TIMUserFullInfo *userInfo in infoList) {
+                CallingUserModel *userModel = [TUICallingCommon covertUser:userInfo];
+                [TUICallingUserManager cacheUser:userModel];
+                if (strongSelf.backgroundView && [strongSelf.backgroundView respondsToSelector:@selector(userAdd:)]) {
+                    [strongSelf.backgroundView userAdd:userModel];
+                }
+            }
+        } fail:nil];
+    } fail:^(int code, NSString * _Nonnull desc) {
+        [[TUICallingCommon getKeyWindow] makeToast:desc];
+    }];
 }
 
 #pragma mark - TUICallingStatusManagerProtocol
@@ -666,36 +678,6 @@ static NSString * const TUICallKit_TUIGroupService_UserDataValue = @"TUICallKit"
 
 - (void)closeFloatingWindow {
     [TUICallingAction hangup];
-}
-
-#pragma mark - TUINotificationProtocol
-
-- (void)onNotifyEvent:(NSString *)key subKey:(NSString *)subKey object:(id)anObject param:(NSDictionary *)param {
-    if ([key isEqualToString:TUICore_TUIGroupNotify] && [subKey isEqualToString:TUICore_TUIGroupNotify_SelectGroupMemberSubKey]) {
-        NSString *userData = param[TUICore_TUIGroupNotify_SelectGroupMemberSubKey_UserDataKey];
-        if (!(userData && [userData isKindOfClass:NSString.class] && [userData isEqualToString:TUICallKit_TUIGroupService_UserDataValue])) {
-            return;
-        }
-        NSArray<TUIUserModel *> *selectUserList = param[TUICore_TUIGroupNotify_SelectGroupMemberSubKey_UserListKey];
-        if (!(selectUserList && [selectUserList isKindOfClass:NSArray.class] && selectUserList.count > 0)) {
-            return;
-        }
-        [TUICallingAction inviteUser:selectUserList succ:^(NSArray * _Nonnull userIDs) {
-            __weak typeof(self) weakSelf = self;
-            [[V2TIMManager sharedInstance] getUsersInfo:userIDs succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
-                __strong typeof(self) strongSelf = weakSelf;
-                for (V2TIMUserFullInfo *userInfo in infoList) {
-                    CallingUserModel *userModel = [TUICallingCommon covertUser:userInfo];
-                    [TUICallingUserManager cacheUser:userModel];
-                    if (strongSelf.backgroundView && [strongSelf.backgroundView respondsToSelector:@selector(userAdd:)]) {
-                        [strongSelf.backgroundView userAdd:userModel];
-                    }
-                }
-            } fail:nil];
-        } fail:^(int code, NSString * _Nonnull desc) {
-            [[TUICallingCommon getKeyWindow] makeToast:desc];
-        }];
-    }
 }
 
 #pragma mark - Private Method
