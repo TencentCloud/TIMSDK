@@ -24,7 +24,7 @@
 
 [最新 TUICore 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4123/android/TUICore.zip)
 
-[最新 TUICommon 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4123/android/TUICommon.zip)
+[最新 TIMCommon 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4123/android/TIMCommon.zip)
 
 ## 交流&反馈
 

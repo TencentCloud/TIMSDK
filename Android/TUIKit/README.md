@@ -24,7 +24,7 @@ English | [简体中文](./README_ZH.md)
 
 [Latest TUICore download](https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4123/android/TUICore.zip)
 
-[Latest TUICommon download](https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4123/android/TUICommon.zip)
+[Latest TIMCommon download](https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4123/android/TIMCommon.zip)
 
 
 If you encounter a TUIKit bug, please submit a pull request. After successful merging, we will update the TUIKit library in time.
