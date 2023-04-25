@@ -18,8 +18,15 @@ public class OfflinePushInfoConfig {
         pushInfo.setAndroidOPPOChannelID("tuikit");
         pushInfo.setIgnoreIOSBadge(false);
         pushInfo.setIOSSound("phone_ringing.mp3");
+        pushInfo.setAndroidSound("phone_ringing");
         //VIVO message type: 0-push message, 1-System message(have a higher delivery rate)
         pushInfo.setAndroidVIVOClassification(1);
+        //FCM channel ID, you need change PrivateConstants.java and set "fcmPushChannelId"
+        pushInfo.setAndroidFCMChannelID("fcm_push_channel");
+        //HuaWei message type: https://developer.huawei.com/consumer/cn/doc/development/HMSCore-Guides/message-classification-0000001149358835
+        pushInfo.setAndroidHuaWeiCategory("IM");
+        //IOS push type: if you want user VoIP, please modify type to TUICallDefine.IOSOfflinePushType.VoIP
+        pushInfo.setIOSPushType(TUICallDefine.IOSOfflinePushType.APNs);
         return pushInfo;
     }
 }

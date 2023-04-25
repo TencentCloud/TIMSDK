@@ -33,7 +33,7 @@
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp">
 
-                <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+                <com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView
                     android:id="@+id/self_icon"
                     android:layout_width="66dp"
                     android:layout_height="66dp"
@@ -101,56 +101,26 @@
             </RelativeLayout>
 
             <LinearLayout
+                android:id="@+id/ll_settings_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="34dp"
                 android:orientation="vertical">
 
-                <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
-                    android:id="@+id/modify_allow_type"
-                    android:layout_width="match_parent"
-                    android:layout_height="46dp"
-                    app:name="@string/add_rule" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:background="#1A000000"/>
-
-                <include layout="@layout/minimalist_profile_custom_layout"></include>
-
-                <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
-                    android:id="@+id/about_im"
-                    android:layout_width="match_parent"
-                    android:layout_height="46dp"
-                    android:layout_marginTop="10dp"
-                    app:name="@string/about_im" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:background="#1A000000"/>
-
-                <TextView
-                    android:id="@+id/logout_btn"
-                    android:layout_width="match_parent"
-                    android:layout_height="42dp"
-                    android:gravity="center"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginTop="37dp"
-                    android:background="@drawable/demo_profile_button_border"
-                    android:lineHeight="24.96sp"
-                    android:text="@string/exit"
-                    android:textColor="?attr/core_error_tip_color"
-                    android:textSize="16sp" />
-
             </LinearLayout>
-
+            <TextView
+                android:id="@+id/logout_btn"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:gravity="center"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="37dp"
+                android:background="@drawable/demo_profile_button_border"
+                android:lineHeight="24.96sp"
+                android:text="@string/exit"
+                android:textColor="?attr/core_error_tip_color"
+                android:textSize="16sp" />
         </LinearLayout>
 
     </ScrollView>

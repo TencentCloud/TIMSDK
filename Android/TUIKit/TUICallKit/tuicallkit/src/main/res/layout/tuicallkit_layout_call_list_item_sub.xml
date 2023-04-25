@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cl_info_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <com.tencent.qcloud.tuikit.tuicallkit.extensions.recents.RecordsIconView
+        android:id="@+id/call_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:scaleType="fitCenter"
+        app:corner_radius="45dp"
+        app:default_image="@drawable/tuicalling_ic_avatar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_info"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/call_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toEndOf="@+id/call_icon"
+        app:layout_constraintTop_toTopOf="@+id/call_icon">
+
+        <TextView
+            android:id="@+id/tv_call_user_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxWidth="180dp"
+            android:singleLine="true"
+            android:text="userId"
+            android:textColor="@color/tuicalling_color_black"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/call_media_type"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_gravity="center_vertical"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_call_status"
+            app:layout_constraintStart_toStartOf="@+id/tv_call_user_id"
+            app:layout_constraintTop_toTopOf="@+id/tv_call_status" />
+
+        <TextView
+            android:id="@+id/tv_call_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="Missed"
+            android:textColor="#7A7A7A"
+            android:textSize="12sp"
+            app:layout_constraintStart_toEndOf="@+id/call_media_type"
+            app:layout_constraintTop_toBottomOf="@+id/tv_call_user_id" />
+
+        <TextView
+            android:id="@+id/tv_call_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:lineHeight="15.84sp"
+            android:text="2:14 PM"
+            android:textColor="#b0b0b0"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/img_call_details"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/img_call_details"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:padding="5dp"
+            android:src="@drawable/tuicallkit_ic_more_info"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

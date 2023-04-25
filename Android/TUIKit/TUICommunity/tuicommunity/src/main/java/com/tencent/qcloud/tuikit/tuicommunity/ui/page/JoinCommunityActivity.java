@@ -10,10 +10,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tencent.qcloud.tuicore.TUIThemeManager;
-import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
-import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
+import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuicommunity.R;
 import com.tencent.qcloud.tuikit.tuicommunity.bean.CommunityBean;
 import com.tencent.qcloud.tuikit.tuicommunity.component.SelectTextButton;
@@ -88,7 +88,7 @@ public class JoinCommunityActivity extends BaseLightActivity {
     private void setCommunityArea(CommunityBean data) {
         communityBean = data;
         GlideEngine.loadImageSetDefault(avatar, data.getGroupFaceUrl(),
-                TUIThemeManager.getAttrResId(this, com.tencent.qcloud.tuicore.R.attr.core_default_group_icon_community));
+                TUIThemeManager.getAttrResId(this, com.tencent.qcloud.tuikit.timcommon.R.attr.core_default_group_icon_community));
         name.setText(data.getCommunityName());
         owner.setText(getString(R.string.community_owner) + ": " + data.getOwner());
         setJoinButton(data.getRole() != CommunityBean.ROLE_UNDEFINED);

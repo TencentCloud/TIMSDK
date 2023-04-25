@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.tencent.qcloud.tuicore.component.MinimalistTitleBar
+    <com.tencent.qcloud.tuikit.timcommon.component.MinimalistTitleBar
         android:id="@+id/group_list_titlebar"
         android:layout_width="match_parent"
         android:layout_height="56dp" />

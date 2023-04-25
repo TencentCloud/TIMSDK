@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.tencent.qcloud.tuicore.util.ScreenUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuicommunity.R;
 
 import java.util.ArrayList;

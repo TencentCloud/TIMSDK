@@ -13,8 +13,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
-import com.tencent.qcloud.tuicore.R;
-import com.tencent.qcloud.tuicore.component.CustomLinearLayoutManager;
+import com.tencent.qcloud.tuikit.timcommon.R;
+import com.tencent.qcloud.tuikit.timcommon.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tuikit.tuicontact.component.indexlib.IndexBar.bean.BaseIndexPinyinBean;
 import com.tencent.qcloud.tuikit.tuicontact.component.indexlib.IndexBar.helper.IIndexBarDataHelper;
 import com.tencent.qcloud.tuikit.tuicontact.component.indexlib.IndexBar.helper.IndexBarDataHelperImpl;

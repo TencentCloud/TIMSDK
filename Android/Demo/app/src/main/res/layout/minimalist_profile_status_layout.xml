@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/message_read_setting_area"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingLeft="15.36dp"
+        android:paddingTop="11.52dp"
+        android:paddingBottom="11.52dp">
+
+        <LinearLayout
+            android:id="@+id/message_read_setting_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:ellipsize="end"
+                android:gravity="right"
+                android:singleLine="true"
+                android:text="@string/demo_message_read_switch_title"
+                android:textColor="@color/black"
+                android:textSize="15.36sp" />
+
+            <TextView
+                android:id="@+id/message_read_status_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:text="@string/demo_message_read_switch_open_text"
+                android:textColor="#888888"
+                android:textSize="11.52sp" />
+        </LinearLayout>
+
+        <com.tencent.qcloud.tuikit.timcommon.component.SwitchCustomWidth
+            android:id="@+id/message_read_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="15.36dp"
+            app:custom_width="51dp"
+            android:textOff=""
+            android:textOn=""
+            android:thumb="@drawable/minimalist_switch_thumb"
+            app:track="@drawable/minimalist_switch_track" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/bottom_line_1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/message_read_setting_area"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="#1A000000"/>
+
+
+    <LinearLayout
+        android:id="@+id/user_status_layout"
+        android:layout_below="@+id/bottom_line_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingLeft="15.36dp"
+        android:paddingTop="11.52dp"
+        android:paddingBottom="11.52dp">
+
+        <LinearLayout
+            android:id="@+id/user_status_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:ellipsize="end"
+                android:gravity="right"
+                android:singleLine="true"
+                android:text="@string/demo_user_status_switch_title"
+                android:textColor="@color/black"
+                android:textSize="15.36sp" />
+
+            <TextView
+                android:id="@+id/user_status_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:text="@string/demo_user_status_switch_off_text"
+                android:textColor="#888888"
+                android:textSize="11.52sp" />
+        </LinearLayout>
+
+
+        <com.tencent.qcloud.tuikit.timcommon.component.SwitchCustomWidth
+            android:id="@+id/user_status_switch"
+            android:layout_width="51dp"
+            android:layout_height="31dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="15.36dp"
+            app:custom_width="51dp"
+            android:textOff=""
+            android:textOn=""
+            android:thumb="@drawable/minimalist_switch_thumb"
+            app:track="@drawable/minimalist_switch_track" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_below="@id/user_status_layout"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="#1A000000"/>
+
+</RelativeLayout>

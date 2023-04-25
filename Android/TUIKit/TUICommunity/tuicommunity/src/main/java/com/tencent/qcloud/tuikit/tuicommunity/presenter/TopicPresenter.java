@@ -4,8 +4,8 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.SPUtils;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuicommunity.TUICommunityService;
 import com.tencent.qcloud.tuikit.tuicommunity.bean.CommunityBean;
 import com.tencent.qcloud.tuikit.tuicommunity.bean.TopicBean;

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,7 +7,7 @@
     android:orientation="vertical"
     tools:context=".classicui.page.SetGroupManagerActivity">
 
-    <com.tencent.qcloud.tuicore.component.TitleBarLayout
+    <com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout
         android:id="@+id/set_group_manager_title_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/page_title_height" />
@@ -34,7 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp">
 
-        <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+        <com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView
             android:id="@+id/set_group_manager_owner_face"
             android:scaleType="centerCrop"
             android:layout_marginRight="11.52dp"

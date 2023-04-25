@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- 参与换肤的属性 -->
-    <attr name="chat_bubble_self_bg" format="reference"/>
-    <attr name="chat_bubble_other_bg" format="reference"/>
-    <attr name="chat_bubble_self_bg_color" format="reference|color"/>
-    <attr name="chat_bubble_other_bg_color" format="reference|color"/>
+
 
     <attr name="chat_input_area_bg" format="reference|color"/>
 
@@ -32,10 +29,6 @@
     <attr name="chat_self_reply_text_color" format="reference|color"/>
     <attr name="chat_other_reply_text_color" format="reference|color"/>
 
-    <attr name="chat_read_receipt_text_color" format="reference|color"/>
-    <attr name="chat_react_text_color" format="reference|color"/>
-    <attr name="chat_react_other_text_color" format="reference|color"/>
-    <attr name="chat_reply_detail_icon" format="reference"/>
     <attr name="chat_jump_recent_down_icon" format="reference"/>
     <attr name="chat_jump_recent_up_icon" format="reference"/>
 

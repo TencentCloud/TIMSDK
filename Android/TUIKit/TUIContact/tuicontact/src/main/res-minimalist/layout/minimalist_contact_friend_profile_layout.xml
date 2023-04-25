@@ -7,7 +7,7 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <com.tencent.qcloud.tuicore.component.MinimalistTitleBar
+    <com.tencent.qcloud.tuikit.timcommon.component.MinimalistTitleBar
         android:id="@+id/friend_title_bar"
         android:layout_width="match_parent"
         android:layout_height="44dp" />
@@ -29,7 +29,7 @@
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
-            <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+            <com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView
                 android:id="@+id/friend_icon"
                 android:layout_width="94dp"
                 android:layout_height="94dp"
@@ -78,115 +78,16 @@
                     tools:text="991618" />
             </LinearLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/profile_item_container"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="42dp"
                 android:layout_marginBottom="40dp">
 
-                <LinearLayout
-                    android:id="@+id/message_btn"
-                    android:layout_width="92dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:background="@drawable/contact_profile_btn_shape"
-                    android:paddingTop="16dp"
-                    android:paddingBottom="16dp"
-                    app:layout_constraintEnd_toStartOf="@id/audio_call_btn"
-                    app:layout_constraintHorizontal_chainStyle="spread"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+            </androidx.recyclerview.widget.RecyclerView>
 
-                    <ImageView
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:background="@drawable/contact_minimalist_message_icon"
-                        android:scaleType="centerCrop" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:singleLine="true"
-                        android:ellipsize="end"
-                        android:textColor="@color/black"
-                        android:text="@string/contact_profile_message"
-                        android:textSize="16sp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/audio_call_btn"
-                    android:layout_width="92dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:background="@drawable/contact_profile_btn_shape"
-                    android:orientation="vertical"
-                    android:paddingStart="8dp"
-                    android:paddingTop="16dp"
-                    android:paddingEnd="8dp"
-                    android:paddingBottom="16dp"
-                    app:layout_constraintEnd_toStartOf="@id/video_call_btn"
-                    app:layout_constraintStart_toEndOf="@id/message_btn"
-                    app:layout_constraintTop_toBottomOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <ImageView
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:background="@drawable/contact_minimalist_audio_icon"
-                        android:scaleType="centerCrop" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:textColor="@color/black"
-                        android:singleLine="true"
-                        android:ellipsize="end"
-                        android:text="@string/contact_profile_audio_call"
-                        android:textSize="16sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/video_call_btn"
-                    android:layout_width="92dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/contact_profile_btn_shape"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:paddingStart="8dp"
-                    android:paddingTop="16dp"
-                    android:paddingEnd="8dp"
-                    android:paddingBottom="16dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/audio_call_btn"
-                    app:layout_constraintTop_toBottomOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <ImageView
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:background="@drawable/contact_minimalist_video_icon"
-                        android:scaleType="centerCrop" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:textColor="@color/black"
-                        android:singleLine="true"
-                        android:ellipsize="end"
-                        android:text="@string/contact_profile_video_call"
-                        android:textSize="16sp" />
-
-                </LinearLayout>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+            <com.tencent.qcloud.tuikit.timcommon.component.MinimalistLineControllerView
                 android:id="@+id/remark"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
@@ -196,7 +97,7 @@
                 app:name="@string/profile_remark"
                 tools:visibility="visible" />
 
-            <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+            <com.tencent.qcloud.tuikit.timcommon.component.MinimalistLineControllerView
                 android:id="@+id/msg_rev_opt"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
@@ -206,7 +107,7 @@
                 app:isSwitch="true"
                 app:name="@string/profile_msgrev_opt" />
 
-            <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+            <com.tencent.qcloud.tuikit.timcommon.component.MinimalistLineControllerView
                 android:id="@+id/chat_to_top"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
@@ -216,7 +117,7 @@
                 app:isSwitch="true"
                 app:name="@string/chat_to_top" />
 
-            <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+            <com.tencent.qcloud.tuikit.timcommon.component.MinimalistLineControllerView
                 android:id="@+id/chat_background"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
@@ -226,7 +127,7 @@
                 app:name="@string/profile_chat_background"
                 tools:visibility="visible" />
 
-            <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+            <com.tencent.qcloud.tuikit.timcommon.component.MinimalistLineControllerView
                 android:id="@+id/blackList"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
@@ -236,7 +137,7 @@
                 app:isSwitch="true"
                 app:name="@string/profile_black" />
 
-            <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+            <com.tencent.qcloud.tuikit.timcommon.component.MinimalistLineControllerView
                 android:id="@+id/clear_chat_history"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
@@ -245,7 +146,7 @@
                 app:isSwitch="false"
                 app:name="@string/profile_clear_message"/>
 
-            <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+            <com.tencent.qcloud.tuikit.timcommon.component.MinimalistLineControllerView
                 android:id="@+id/btn_delete"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"

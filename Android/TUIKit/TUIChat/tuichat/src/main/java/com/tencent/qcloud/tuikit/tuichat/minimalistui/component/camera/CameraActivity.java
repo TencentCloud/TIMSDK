@@ -10,15 +10,15 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
-import com.tencent.qcloud.tuicore.util.FileUtil;
 import com.tencent.qcloud.tuicore.util.TUIBuild;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
+import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.camera.listener.CameraListener;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.camera.listener.ClickListener;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.camera.listener.ErrorListener;
-import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.camera.listener.CameraListener;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.camera.view.CameraView;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 

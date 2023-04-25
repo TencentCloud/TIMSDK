@@ -12,6 +12,8 @@ import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
 import com.tencent.qcloud.tuicore.interfaces.ITUIService;
+import com.tencent.qcloud.tuicore.interfaces.TUIServiceCallback;
+import com.tencent.qcloud.tuicore.permission.PermissionCallback;
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine;
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallEngine;
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallObserver;
@@ -25,7 +27,6 @@ import com.tencent.trtc.TRTCCloudListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +38,8 @@ public class TUIAudioMessageRecordService implements ITUIService, ITUINotificati
 
     private AudioFocusRequest                       mFocusRequest;
     private AudioManager                            mAudioManager;
-    private AudioManager.OnAudioFocusChangeListener onFocusChangeListener;
+    private AudioManager.OnAudioFocusChangeListener mOnFocusChangeListener;
+    private TUIServiceCallback mAudioRecordValueCallback;
 
     public TUIAudioMessageRecordService(Context context) {
         mContext = context.getApplicationContext();
@@ -46,7 +48,8 @@ public class TUIAudioMessageRecordService implements ITUIService, ITUINotificati
     }
 
     @Override
-    public Object onCall(String method, Map<String, Object> param) {
+    public Object onCall(String method, Map<String, Object> param, TUIServiceCallback callback) {
+        this.mAudioRecordValueCallback = callback;
         if (TextUtils.equals(TUIConstants.TUICalling.METHOD_NAME_START_RECORD_AUDIO_MESSAGE, method)) {
             if (param == null) {
                 TUILog.e(TAG, "startRecordAudioMessage failed, param is empty");
@@ -72,12 +75,9 @@ public class TUIAudioMessageRecordService implements ITUIService, ITUINotificati
             }
 
             //获取麦克风权限
-            int microphone = PermissionRequest.PERMISSION_MICROPHONE;
-            PermissionRequest.requestPermission(mContext, microphone, new PermissionRequest.PermissionCallback() {
+            PermissionRequest.requestPermissions(mContext, TUICallDefine.MediaType.Audio, new PermissionCallback() {
                 @Override
                 public void onGranted() {
-                    super.onGranted();
-
                     //获取音频焦点
                     initAudioFocusManager();
                     if (requestAudioFocus() != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
@@ -105,8 +105,8 @@ public class TUIAudioMessageRecordService implements ITUIService, ITUINotificati
                 }
 
                 @Override
-                public void onDialogRefused() {
-                    super.onDialogRefused();
+                public void onDenied() {
+                    super.onDenied();
                     notifyAudioMessageRecordEvent(TUIConstants.TUICalling.EVENT_SUB_KEY_RECORD_START,
                             TUIConstants.TUICalling.ERROR_MIC_PERMISSION_REFUSED, null);
                 }
@@ -152,9 +152,9 @@ public class TUIAudioMessageRecordService implements ITUIService, ITUINotificati
 
     private TUICallObserver mCallObserver = new TUICallObserver() {
         @Override
-        public void onCallReceived(String callerId, List<String> calleeIdList,
-                                   String groupId, TUICallDefine.MediaType callMediaType) {
-            super.onCallReceived(callerId, calleeIdList, groupId, callMediaType);
+        public void onCallReceived(String callerId, List<String> calleeIdList, String groupId,
+                                   TUICallDefine.MediaType callMediaType, String userData) {
+            super.onCallReceived(callerId, calleeIdList, groupId, callMediaType, userData);
             //收到通话邀请,停止录制
             stopRecordAudioMessage();
         }
@@ -205,11 +205,13 @@ public class TUIAudioMessageRecordService implements ITUIService, ITUINotificati
     }
 
     private void notifyAudioMessageRecordEvent(String method, int errCode, String path) {
-        TUILog.i(TAG, "notifyAudioMessageRecordEvent, method: " + method + ",errCode: " + errCode + ",path: " + path);
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("errorCode", errCode);
-        map.put(TUIConstants.TUICalling.PARAM_NAME_AUDIO_PATH, path);
-        TUICore.notifyEvent(TUIConstants.TUICalling.EVENT_KEY_RECORD_AUDIO_MESSAGE, method, map);
+        TUILog.i(TAG, "notifyAudioMessageRecordEvent, method: " + method + ", errCode: " + errCode + ",path: " + path);
+        if (mAudioRecordValueCallback != null) {
+            Bundle bundleInfo = new Bundle();
+            bundleInfo.putString(TUIConstants.TUICalling.EVENT_KEY_RECORD_AUDIO_MESSAGE, method);
+            bundleInfo.putString(TUIConstants.TUICalling.PARAM_NAME_AUDIO_PATH, path);
+            mAudioRecordValueCallback.onServiceCallback(errCode, "", bundleInfo);
+        }
     }
 
     @Override
@@ -224,8 +226,8 @@ public class TUIAudioMessageRecordService implements ITUIService, ITUINotificati
         if (mAudioManager == null) {
             mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         }
-        if (onFocusChangeListener == null) {
-            onFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
+        if (mOnFocusChangeListener == null) {
+            mOnFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
                 @Override
                 public void onAudioFocusChange(int focusChange) {
                     switch (focusChange) {
@@ -258,7 +260,7 @@ public class TUIAudioMessageRecordService implements ITUIService, ITUINotificati
             mFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)
                     .setWillPauseWhenDucked(true)
                     .setAudioAttributes(attributes)
-                    .setOnAudioFocusChangeListener(onFocusChangeListener)
+                    .setOnAudioFocusChangeListener(mOnFocusChangeListener)
                     .build();
         }
     }
@@ -271,7 +273,7 @@ public class TUIAudioMessageRecordService implements ITUIService, ITUINotificati
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             result = mAudioManager.requestAudioFocus(mFocusRequest);
         } else {
-            result = mAudioManager.requestAudioFocus(onFocusChangeListener, AudioManager.STREAM_MUSIC,
+            result = mAudioManager.requestAudioFocus(mOnFocusChangeListener, AudioManager.STREAM_MUSIC,
                     AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
         }
         return result;
@@ -285,7 +287,7 @@ public class TUIAudioMessageRecordService implements ITUIService, ITUINotificati
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             result = mAudioManager.abandonAudioFocusRequest(mFocusRequest);
         } else {
-            result = mAudioManager.abandonAudioFocus(onFocusChangeListener);
+            result = mAudioManager.abandonAudioFocus(mOnFocusChangeListener);
         }
         return result;
     }

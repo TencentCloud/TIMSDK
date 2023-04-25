@@ -10,10 +10,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView;
-import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
-import com.tencent.qcloud.tuicore.util.BackgroundTasks;
-import com.tencent.qcloud.tuicore.util.ScreenUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView;
+import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
+import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuigroup.R;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupMemberInfo;
@@ -187,7 +187,7 @@ public class GroupMemberAdapter extends RecyclerView.Adapter<GroupMemberAdapter.
                     mGroupMembers.add(groupMemberInfo);
                 }
             }
-            BackgroundTasks.getInstance().runOnUiThread(new Runnable() {
+            ThreadUtils.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     notifyDataSetChanged();

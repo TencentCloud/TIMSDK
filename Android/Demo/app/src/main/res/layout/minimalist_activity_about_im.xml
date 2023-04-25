@@ -8,12 +8,12 @@
     android:background="@color/white"
     tools:context=".profile.AboutIMActivity">
 
-    <com.tencent.qcloud.tuicore.component.MinimalistTitleBar
+    <com.tencent.qcloud.tuikit.timcommon.component.MinimalistTitleBar
         android:id="@+id/about_im_title_bar"
         android:layout_width="match_parent"
         android:layout_height="52dp" />
 
-    <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+    <com.tencent.qcloud.tuikit.timcommon.component.MinimalistLineControllerView
         android:id="@+id/about_sdk_version_lv"
         android:layout_width="match_parent"
         android:layout_height="52dp"
@@ -27,7 +27,7 @@
         android:background="#1A000000"/>
 
 
-    <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+    <com.tencent.qcloud.tuikit.timcommon.component.MinimalistLineControllerView
         android:id="@+id/about_im_privacy_lv"
         android:layout_width="match_parent"
         android:layout_height="52dp"
@@ -41,7 +41,7 @@
         android:layout_marginEnd="16dp"
         android:background="#1A000000"/>
 
-    <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+    <com.tencent.qcloud.tuikit.timcommon.component.MinimalistLineControllerView
         android:id="@+id/about_user_agreement_lv"
         android:layout_width="match_parent"
         android:layout_height="52dp"
@@ -55,7 +55,7 @@
         android:layout_marginEnd="16dp"
         android:background="#1A000000"/>
 
-    <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+    <com.tencent.qcloud.tuikit.timcommon.component.MinimalistLineControllerView
         android:id="@+id/about_statement_lv"
         android:layout_width="match_parent"
         android:layout_height="52dp"
@@ -69,7 +69,7 @@
         android:layout_marginEnd="16dp"
         android:background="#1A000000"/>
 
-    <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+    <com.tencent.qcloud.tuikit.timcommon.component.MinimalistLineControllerView
         android:id="@+id/self_infomation_collection_lv"
         android:layout_width="match_parent"
         android:layout_height="52dp"
@@ -83,7 +83,7 @@
         android:layout_marginEnd="16dp"
         android:background="#1A000000"/>
 
-    <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+    <com.tencent.qcloud.tuikit.timcommon.component.MinimalistLineControllerView
         android:id="@+id/third_part_shared_lv"
         android:layout_width="match_parent"
         android:layout_height="52dp"
@@ -97,7 +97,7 @@
         android:layout_marginEnd="16dp"
         android:background="#1A000000"/>
 
-    <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+    <com.tencent.qcloud.tuikit.timcommon.component.MinimalistLineControllerView
         android:id="@+id/cancel_account_lv"
         android:layout_width="match_parent"
         android:layout_height="52dp"
@@ -111,7 +111,7 @@
         android:layout_marginEnd="16dp"
         android:background="#1A000000"/>
 
-    <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+    <com.tencent.qcloud.tuikit.timcommon.component.MinimalistLineControllerView
         android:id="@+id/about_im_lv"
         android:layout_width="match_parent"
         android:layout_height="52dp"

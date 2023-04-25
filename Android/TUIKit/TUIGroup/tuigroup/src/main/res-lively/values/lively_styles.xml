@@ -3,6 +3,8 @@
 
     <style name="TUIGroupLivelyTheme" parent="TUIBaseLivelyTheme">
         <item name="group_add_icon">@drawable/group_add_icon_lively</item>
+        <item name="group_chat_extension_title_bar_more_menu">@drawable/group_chat_extension_title_bar_more_menu_lively</item>
+
     </style>
 
 </resources>

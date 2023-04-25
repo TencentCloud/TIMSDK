@@ -11,11 +11,11 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import com.tencent.qcloud.tuicore.component.TitleBarLayout;
-import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
-import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
+import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuigroup.R;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupConstants;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;

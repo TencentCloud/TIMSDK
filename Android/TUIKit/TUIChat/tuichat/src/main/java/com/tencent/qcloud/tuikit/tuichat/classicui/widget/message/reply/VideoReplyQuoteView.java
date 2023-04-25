@@ -6,9 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.tencent.qcloud.tuicore.TUIConfig;
-import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIReplyQuoteBean;
+import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TUIReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
 public class VideoReplyQuoteView extends ImageReplyQuoteView {

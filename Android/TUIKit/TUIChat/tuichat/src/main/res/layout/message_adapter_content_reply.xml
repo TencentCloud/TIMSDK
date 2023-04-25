@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MaxWidthLinearLayout
+<com.tencent.qcloud.tuikit.timcommon.component.MaxWidthLinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/reply_container"
@@ -66,4 +66,4 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-</com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MaxWidthLinearLayout>
+</com.tencent.qcloud.tuikit.timcommon.component.MaxWidthLinearLayout>

@@ -21,7 +21,6 @@ android {
         versionName rootProject.ext.versionName
         archivesBaseName = "TUIKitDemo"
         multiDexEnabled = true
-
         ndk {
             abiFilters = []
             abiFilters.addAll(rootProject.ext.abiFilters)
@@ -48,7 +47,6 @@ android {
             minifyEnabled false
         }
     }
-
     repositories {
         flatDir {
             dirs 'libs'
@@ -80,10 +78,10 @@ dependencies {
     implementation fileTree(include: ['*.jar','*.aar'], dir: '../libs')
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'androidx.appcompat:appcompat:1.3.0'
-    implementation 'com.squareup.okhttp3:okhttp:3.2.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.google.code.gson:gson:2.9.1'
     implementation 'com.android.support:design:28.0.0'
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
     implementation 'com.google.android.material:material:1.4.0'
@@ -95,6 +93,8 @@ dependencies {
 
     implementation 'com.github.bumptech.glide:glide:4.12.0'
 
+    api "com.tencent.imsdk.tuiplugin:tuigroupnote:7.2.4124"
+    api "com.tencent.imsdk.tuiplugin:tuipoll:7.2.4124"
     api project(':tuicommunity')
     api project(':tuiconversation')
     api project(':tuicontact')
@@ -103,17 +103,6 @@ dependencies {
     api project(':tuigroup')
     api project(':tuicallkit')
     api project(':tuiofflinepush')
+    api project(':tuitranslation')
 
-    def projects = this.rootProject.getAllprojects().stream().map { project -> project.name }.collect()
-    if (projects.contains("tuigroupnote")) {
-        api project(':tuigroupnote')
-    } else {
-        api "com.tencent.imsdk.tuiplugin:tuigroupnote:7.1.3925"
-    }
-
-    if (projects.contains("tuipoll")) {
-        api project(':tuipoll')
-    } else {
-        api "com.tencent.imsdk.tuiplugin:tuipoll:7.1.3925"
-    }
 }

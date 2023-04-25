@@ -7,7 +7,7 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <com.tencent.qcloud.tuicore.component.MinimalistTitleBar
+    <com.tencent.qcloud.tuikit.timcommon.component.MinimalistTitleBar
         android:id="@+id/group_member_title_bar"
         android:layout_width="match_parent"
         android:layout_height="56dp" />

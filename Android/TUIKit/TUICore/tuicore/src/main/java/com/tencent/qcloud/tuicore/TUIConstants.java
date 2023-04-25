@@ -32,15 +32,15 @@ public final class TUIConstants {
         public static final String TUI_BEAUTY = "TUIBeauty";
         public static final String TUI_OFFLINEPUSH = "TUIOfflinePushService";
         public static final String TUI_COMMUNITY = "TUICommunityService";
+        public static final String TUI_DEMO = "TIMAppService";
         public static final String TUI_POLL = "TUIPollService";
         public static final String TUI_GROUP_NOTE = "TUIGroupNoteService";
-        public static final String TUI_DEMO = "TIMAppService";
+        public static final String TUI_TRANSLATION = "TUITranslation";
     }
 
     public static final class TUICore {
         public static final String LANGUAGE_EVENT = "TUIThemeManager";
         public static final String LANGUAGE_EVENT_SUB_KEY = "onInitLanguage";
-
     }
 
     public static final class TUILogin {
@@ -77,7 +77,7 @@ public final class TUIConstants {
     }
 
     public static final class TUIChat {
-        public static final String SERVICE_NAME = Service.TUI_CHAT;
+        public static final String SERVICE_NAME = TUIConstants.Service.TUI_CHAT;
 
         // Send message
         public static final String METHOD_SEND_MESSAGE = "sendMessage";
@@ -87,8 +87,6 @@ public final class TUIConstants {
         public static final String METHOD_GET_DISPLAY_STRING = "getDisplayString";
         // add message to chat list
         public static final String METHOD_ADD_MESSAGE_TO_CHAT = "addMessageToChat";
-        // 处理完群申请 // Process the group application
-        public static final String METHOD_GROUP_APPLICAITON_PROCESSED = "groupApplicationProcessed";
         // Set chat extension
         public static final String METHOD_SET_CHAT_EXTENSION = "setChatExtension";
 
@@ -98,6 +96,7 @@ public final class TUIConstants {
         public static final String EXTENSION_INPUT_MORE_GROUP_NOTE = "inputMoreGroupNote";
         public static final String EXTENSION_INPUT_MORE_POLL = "inputMoreGroupPoll";
 
+        // Message actions
         public static final String EVENT_KEY_RECEIVE_MESSAGE = "eventReceiveMessage";
         public static final String EVENT_SUB_KEY_CONVERSATION_ID = "eventConversationID";
 
@@ -152,8 +151,8 @@ public final class TUIConstants {
         public static final String INPUT_MORE_VIEW = "inputMoreView";
 
         // Background
-        public static final String CHAT_CONVERSATION_BACKGROUND_URL = "https://sdk-im-1252463788.file.myqcloud.com/download/tuikit-resource/conversation-backgroundImage/backgroundImage_%s_full.png";
-        public static final String CHAT_CONVERSATION_BACKGROUND_THUMBNAIL_URL = "https://sdk-im-1252463788.file.myqcloud.com/download/tuikit-resource/conversation-backgroundImage/backgroundImage_%s.png";
+        public static final String CHAT_CONVERSATION_BACKGROUND_URL = "https://im.sdk.qcloud.com/download/tuikit-resource/conversation-backgroundImage/backgroundImage_%s_full.png";
+        public static final String CHAT_CONVERSATION_BACKGROUND_THUMBNAIL_URL = "https://im.sdk.qcloud.com/download/tuikit-resource/conversation-backgroundImage/backgroundImage_%s.png";
         public static final int CHAT_CONVERSATION_BACKGROUND_COUNT = 7;
         public static final String CHAT_CONVERSATION_BACKGROUND_DEFAULT_URL = "chat/conversation/background/default/url";
         public static final int CHAT_REQUEST_BACKGROUND_CODE = 1001;
@@ -164,6 +163,74 @@ public final class TUIConstants {
         public static final String ENABLE_VIDEO_CALL = "enableVideoCall";
         public static final String ENABLE_AUDIO_CALL = "enableAudioCall";
         public static final String ENABLE_LINK = "enableLink";
+
+        // Translation
+        public static final String CHAT_RECYCLER_VIEW = "chatRecyclerView";
+        public static final String THEME_STYLE_CLASSIC = "classicTheme";
+        public static final String THEME_STYLE_MINIMALIST = "minimalistTheme";
+        public static final String FRAGMENT = "fragment";
+        public static final String ACTIVITY = "activity";
+
+        public static class Extension {
+            // UI extension for the input area at the bottom of the chat page
+            public static class InputMore {
+                public static final String CLASSIC_EXTENSION_ID = "ChatInputMoreExtensionClassicID";
+                public static final String MINIMALIST_EXTENSION_ID = "ChatInputMoreExtensionMinimalistID";
+                public static final String FILTER_VOICE_CALL = "ChatInputMoreExtensionFilterAudioCall";
+                public static final String FILTER_VIDEO_CALL= "ChatInputMoreExtensionFilterVideoCall";
+                public static final String CONTEXT = "ChatContext";
+                public static final String USER_ID = "ChatInputMoreUserID";
+                public static final String GROUP_ID = "ChatInputMoreGroupID";
+
+            }
+
+            // Message long press pop-up window extension
+            public static class MessagePopMenu {
+                public static final String CLASSIC_EXTENSION_ID = "ChatMessagePopMenuExtensionClassicID";
+                public static final String MINIMALIST_EXTENSION_ID = "ChatMessagePopMenuExtensionMinimalistID";
+                public static final String MESSAGE_BEAN = "ChatMessageBean";
+                public static final String ON_POP_CLICK_LISTENER = "ChatOnPopClickListener";
+            }
+
+            // UI extension on the right side of navigation bar in chat page
+            public static class ChatNavigationMoreItem {
+                public static final String CLASSIC_EXTENSION_ID = "ChatNavigationMoreItemExtensionClassicID";
+                public static final String MINIMALIST_EXTENSION_ID = "ChatNavigationMoreItemExtensionMinimalistID";
+
+                public static final String FILTER_VOICE_CALL= "ChatNavigationMoreItemFilterAudioCall";
+                public static final String FILTER_VIDEO_CALL= "ChatNavigationMoreItemFilterVideoCall";
+
+                public static final String CHAT_BACKGROUND_URI = "ChatBackgroundUri";
+                public static final String USER_ID = "ChatUserID";
+                public static final String GROUP_ID = "ChatGroupID";
+                public static final String TOPIC_ID = "ChatTopicID";
+                public static final String CONTEXT = "ChatContext";
+            }
+
+        }
+
+        public static class Method {
+            // Register a message type with Chat
+            public static class RegisterCustomMessage {
+                public static final String CLASSIC_SERVICE_NAME = TUIChat.Service.CLASSIC_SERVICE_NAME;
+                public static final String MINIMALIST_SERVICE_NAME = TUIChat.Service.MINIMALIST_SERVICE_NAME;
+                public static final String METHOD_NAME = "ChatRegisterCustomMessageName";
+                public static final String MESSAGE_BUSINESS_ID = "ChatMessageBusinessID";
+                public static final String MESSAGE_BEAN_CLASS = "ChatMessageBeanClass";
+                public static final String MESSAGE_VIEW_HOLDER_CLASS = "ChatMessageViewHolderClass";
+                public static final String MESSAGE_REPLY_BEAN_CLASS = "ChatMessageReplyBeanClass";
+                public static final String MESSAGE_REPLY_VIEW_CLASS = "ChatMessageReplyViewClass";
+                public static final String IS_NEED_EMPTY_VIEW_GROUP = "ChatMessageIsNeedEmptyViewGroup";
+            }
+        }
+
+        public static class Service {
+            public static final String CHAT_SERVICE_NAME = TUIConstants.Service.TUI_CHAT;
+            public static final String CLASSIC_SERVICE_NAME = "ChatClassicService";
+            public static final String MINIMALIST_SERVICE_NAME = "ChatMinimalistService";
+        }
+
+
     }
 
     public static final class TUIConversation {
@@ -197,6 +264,16 @@ public final class TUIConstants {
 
         public static final String EVENT_KEY_MESSAGE_SEND_FOR_CONVERSATION = "eventKeyMessageSendForConversation";
         public static final String EVENT_SUB_KEY_MESSAGE_SEND_FOR_CONVERSATION = "eventSubKeyMessageSendForConversation";
+
+        public static class Extension {
+            // Conversation List Header Extension
+            public static class ConversationListHeader {
+                public static final String CLASSIC_EXTENSION_ID = "TUIConversationListHeaderClassicID";
+                public static final String MINIMALIST_EXTENSION_ID = "TUIConversationListHeaderMinimalistID";
+                public static final String HEADER_CONTAINER = "TUIConversationListHeaderContainer";
+            }
+        }
+
     }
 
     public static final class TUIContact {
@@ -221,8 +298,35 @@ public final class TUIConstants {
         public static final int GROUP_TYPE_CHAT_ROOM = 2;
         public static final int GROUP_TYPE_COMMUNITY = 3;
 
-        public static final String GROUP_FACE_URL = "https://im.sdk.cloud.tencent.cn/download/tuikit-resource/group-avatar/group_avatar_%s.png";
+        public static final String GROUP_FACE_URL = "https://im.sdk.qcloud.com/download/tuikit-resource/group-avatar/group_avatar_%s.png";
         public static final int GROUP_FACE_COUNT = 24;
+
+        public static class Extension {
+            public static class FriendProfileItem {
+
+                public static final String CLASSIC_EXTENSION_ID = "ContactFriendProfileItemClassicID";
+                public static final String MINIMALIST_EXTENSION_ID = "ContactFriendProfileItemMinimalistID";
+                public static final String USER_ID = "ContactFriendProfileUserID";
+            }
+        }
+
+        public static class StartActivity {
+            // Group members selector
+            public static class GroupMemberSelect {
+
+                public static final String CLASSIC_ACTIVITY_NAME = "StartGroupMemberSelectActivity";
+                public static final String MINIMALIST_ACTIVITY_NAME = "StartGroupMemberSelectMinimalistActivity";
+                public static final String GROUP_ID = "ContactGroupMemberSelectGroupID";
+                public static final String MEMBER_LIMIT = "ContactGroupMemberSelectMemberLimit";
+                public static final String SELECT_FOR_CALL = "ContactGroupMemberSelectForCall";
+                public static final String SELECTED_LIST = "ContactGroupMemberSelectedList";
+                public static final String SELECT_FRIENDS = "ContactGroupMemberSelectFriends";
+                public static final String DATA_LIST = "ContactGroupMemberSelectDataList";
+                public static final String PAGE_TITLE = "ContactGroupMemberSelectTitle";
+                public static final String USER_NAME_CARD_SELECT = "ContactGroupMemberSelectNameCardSelected";
+                public static final String USER_ID_SELECT = "ContactGroupMemberSelectUserIDSelected";
+            }
+        }
     }
 
     public static final class TUICalling {
@@ -291,6 +395,17 @@ public final class TUIConstants {
         public static final int ERR_MIC_NOT_AUTHORIZED           = -1317; // microphone authorize failed
         public static final int ERR_MIC_SET_PARAM_FAIL           = -1318; // microphone param is invalid
         public static final int ERR_MIC_OCCUPY                   = -1319; // microphone is occupied
+
+        public static class ObjectFactory {
+            public static final String FACTORY_NAME = "TUICallingObjectFactory";
+            public static class RecentCalls {
+                public static final String OBJECT_NAME = "TUICallingRecentCallsFragment";
+                public static final String UI_STYLE = "TUICallingRecentCallsFragmentUIStyle";
+                public static final String UI_STYLE_CLASSIC = "ClassicStyle";
+                public static final String UI_STYLE_MINIMALIST = "MinimalistStyle";
+
+            }
+        }
     }
 
     public static final class TUILive {
@@ -359,6 +474,23 @@ public final class TUIConstants {
         public static final String LIMIT = "limit";
         public static final String FILTER = "filter";
         public static final String JOIN_TYPE_INDEX = "joinTypeIndex";
+
+        public static class Extension {
+            public static class GroupProfileItem {
+
+                public static final String CLASSIC_EXTENSION_ID = "GroupProfileItemClassicID";
+                public static final String MINIMALIST_EXTENSION_ID = "GroupProfileItemMinimalistID";
+                public static final String GROUP_ID = "GroupProfileGroupID";
+                public static final String CONTEXT = "GroupProfileContext";
+            }
+        }
+
+        public static class Event {
+            public static class GroupApplication {
+                public static final String KEY_GROUP_APPLICATION = "groupApplication";
+                public static final String SUB_KEY_GROUP_APPLICATION_NUM_CHANGED = "groupApplicationNumChanged";
+            }
+        }
 
     }
 
@@ -446,6 +578,7 @@ public final class TUIConstants {
         public static final String GROUP_NOTE_CREATOR_ACTIVITY_NAME = "TUIGroupNoteCreatorActivity";
 
         public static final String PLUGIN_GROUP_NOTE_CREATOR = "creator";
+        public static final String PLUGIN_GROUP_NOTE_SHOW_LINE_NUM = "show_line_num";
         public static final String PLUGIN_GROUP_NOTE_FORMAT = "format";
         public static final String PLUGIN_GROUP_NOTE_ENABLE_MULTIPLE_SUBMISSION = "multi_submit";
         public static final String PLUGIN_GROUP_NOTE_DEADLINE = "deadline";
@@ -460,7 +593,6 @@ public final class TUIConstants {
 
         public static final String EVENT_KEY_GROUP_NOTE_EVENT = "eventKeyGroupNoteEvent";
         public static final String EVENT_SUB_KEY_GROUP_NOTE_CHANGED = "eventSubKeyGroupNoteChanged";
-        public static final String EVENT_SUB_KEY_MESSAGE_MODIFIED_DUE_TO_EXTENSION_CHANGES = "eventSubKeyMessageModifiedDueToExtensionChanges";
     }
 
     public static final class TIMAppKit {
@@ -473,15 +605,41 @@ public final class TUIConstants {
         public static final String IM_DEMO_ITEM_TYPE_CHAT = "imDemoItemTypeChat";
         public static final String IM_DEMO_ITEM_TYPE_COMMUNITY = "imDemoItemTypeCommunity";
         public static final String IM_DEMO_ITEM_TYPE_CONTACT = "imDemoItemTypeContact";
+        public static final String IM_DEMO_ITEM_TYPE_RECENT_CALLS = "imDemoItemTypeRecentCalls";
         public static final String IM_DEMO_ITEM_TYPE_PROFILE = "imDemoItemTypeProfile";
         public static final String BACK_TO_RTCUBE_DEMO_TYPE_KEY = "backToRTCubeDemoTypeKey";
         public static final String BACK_TO_RTCUBE_DEMO_TYPE_IM = "backToRTCubeDemoTypeIM";
         public static final String NOTIFY_RTCUBE_EVENT_KEY = "notifyRTCubeEventKey";
         public static final String NOTIFY_RTCUBE_LOGIN_SUB_KEY = "notifyRTCubeLoginSubKey";
         public static final String NOFITY_IMLOGIN_SUCCESS_SUB_KEY = "nofityIMLoginSuccessSubKey";
+        public static final String OFFLINE_PUSH_INTENT_DATA = "offlinePushIntentData";
 
         public static final int BACK_RTCUBE_HOME_ICON_WIDTH = 40;
         public static final int BACK_RTCUBE_HOME_ICON_HEIGHT = 32;
+
+        public static class Extension {
+            public static class ProfileSettings {
+                public static final String CLASSIC_EXTENSION_ID = "ProfileSettingsViewClassicID";
+                public static final String MINIMALIST_EXTENSION_ID = "ProfileSettingsMinimalistID";
+                public static final String KEY_VIEW = "view";
+            }
+        }
+    }
+
+    public static final class TUITranslation {
+        public static class Extension {
+            // TranslationView Extension
+            public static class TranslationView {
+                public static final String CLASSIC_EXTENSION_ID = "TUITranslationViewClassicID";
+                public static final String MINIMALIST_EXTENSION_ID = "TUITranslationViewMinimalistID";
+            }
+        }
+        // show translation view
+        public static final String EVENT_KEY_TRANSLATION_EVENT = "eventKeyTranslationEvent";
+        public static final String EVENT_SUB_KEY_TRANSLATION_CHANGED = "eventSubKeyTranslationChanged";
+        // select target language
+        public static final String METHOD_SELECT_TRANSLATION_LANGUAGE = "selectTranslationLanguage";
+        public static final String LANGUAGE_NAME = "languageName";
     }
 
     public static final class Message {

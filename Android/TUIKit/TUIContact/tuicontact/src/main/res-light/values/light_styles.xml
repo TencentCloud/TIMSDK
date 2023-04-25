@@ -5,5 +5,7 @@
         <item name="contact_new_friend_icon">@drawable/contact_new_friend_icon_light</item>
         <item name="contact_group_list_icon">@drawable/contact_group_list_icon_light</item>
         <item name="contact_black_list_icon">@drawable/contact_black_list_icon_light</item>
+
+        <item name="contact_chat_extension_title_bar_more_menu">@drawable/contact_chat_extension_title_bar_more_menu_light</item>
     </style>
 </resources>

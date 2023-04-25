@@ -4,16 +4,17 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.CustomEvaluationMessageReplyQuoteBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TUIReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
 import java.io.Serializable;
 
-public class CustomEvaluationMessageBean extends TUIMessageBean{
+public class CustomEvaluationMessageBean extends TUIMessageBean {
 
     public class CustomEvaluationMessage implements Serializable {
         //public static final int CUSTOM_EVALUATION_ACTION_ID = 4;

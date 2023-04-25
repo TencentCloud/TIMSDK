@@ -1,28 +1,31 @@
 package com.tencent.qcloud.tuikit.tuigroup.classicui.widget;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.app.Activity;
 import android.content.Context;
-
-import androidx.annotation.Nullable;
-
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.tencent.qcloud.tuicore.TUIConstants;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultCaller;
+import androidx.annotation.Nullable;
+
 import com.tencent.qcloud.tuicore.TUICore;
-import com.tencent.qcloud.tuicore.component.TitleBarLayout;
-import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
+import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuikit.tuigroup.R;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupConstants;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupApplyInfo;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
+import com.tencent.qcloud.tuikit.tuigroup.classicui.page.GroupApplyDetailActivity;
 import com.tencent.qcloud.tuikit.tuigroup.interfaces.IGroupApplyLayout;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupApplyPresenter;
 
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -56,11 +59,20 @@ public class GroupApplyManagerLayout extends LinearLayout implements IGroupApply
             @Override
             public void onItemClick(GroupApplyInfo info) {
                 Bundle bundle = new Bundle();
-                bundle.putString("fromUser", info.getFromUser());
-                bundle.putString("fromUserNickName", info.getFromUserNickName());
-                bundle.putString("requestMsg", info.getRequestMsg());
-                bundle.putSerializable("groupApplication", info.getGroupApplication());
-                TUICore.startActivity(getContext(),"FriendProfileActivity", bundle, TUIGroupConstants.ActivityRequest.CODE_1);
+                bundle.putSerializable(TUIGroupConstants.Group.MEMBER_APPLY, info);
+                TUICore.startActivityForResult((ActivityResultCaller) getContext(), GroupApplyDetailActivity.class, bundle, new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() != RESULT_OK || result.getData() == null) {
+                            return;
+                        }
+                        GroupApplyInfo info = (GroupApplyInfo) result.getData().getSerializableExtra(TUIGroupConstants.Group.MEMBER_APPLY);
+                        if (info == null) {
+                            return;
+                        }
+                        updateItemData(info);
+                    }
+                });
             }
         });
         mApplyMemberList.setAdapter(mAdapter);
@@ -87,11 +99,6 @@ public class GroupApplyManagerLayout extends LinearLayout implements IGroupApply
 
     public void onDataSetChanged() {
         mAdapter.notifyDataSetChanged();
-
-        HashMap<String, Object> param = new HashMap<>();
-        param.put(TUIConstants.TUIChat.IS_GROUP_CHAT, true);
-        param.put(TUIConstants.TUIChat.GROUP_APPLY_NUM, mAdapter.getCount()-1);
-        TUICore.callService(TUIConstants.TUIChat.SERVICE_NAME, TUIConstants.TUIChat.METHOD_GROUP_APPLICAITON_PROCESSED, param);
     }
 
     public void setPresenter(GroupApplyPresenter groupApplyPresenter) {

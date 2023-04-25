@@ -2,11 +2,6 @@
 <resources>
 
     <style name="TUIChatLightTheme" parent="TUIBaseLightTheme">
-        <item name="chat_bubble_self_bg_color">@color/chat_bubble_self_color_light</item>
-        <item name="chat_bubble_other_bg_color">@color/chat_bubble_other_color_light</item>
-        <item name="chat_bubble_self_bg">@drawable/chat_bubble_self_bg_light</item>
-        <item name="chat_bubble_other_bg">@drawable/chat_bubble_other_bg_light</item>
-
         <item name="chat_input_area_bg">@color/chat_input_layout_bg_light</item>
 
         <item name="chat_unread_dot_bg_color">@color/chat_unread_dot_bg_color_light</item>
@@ -32,10 +27,6 @@
         <item name="chat_self_reply_text_color">@color/chat_self_reply_text_color_light</item>
         <item name="chat_other_reply_text_color">@color/chat_other_reply_text_color_light</item>
 
-        <item name="chat_read_receipt_text_color">@color/chat_read_receipt_text_color_light</item>
-        <item name="chat_react_text_color">@color/chat_react_text_color_light</item>
-        <item name="chat_react_other_text_color">@color/chat_react_other_text_color_light</item>
-        <item name="chat_reply_detail_icon">@drawable/chat_reply_icon_light</item>
         <item name="chat_jump_recent_down_icon">@drawable/chat_ic_arrow_down_light</item>
         <item name="chat_jump_recent_up_icon">@drawable/chat_ic_arrow_up_light</item>
 

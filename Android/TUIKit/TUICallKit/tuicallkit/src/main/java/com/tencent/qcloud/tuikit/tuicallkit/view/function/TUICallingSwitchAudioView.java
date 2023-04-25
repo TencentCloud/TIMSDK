@@ -4,12 +4,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine;
 import com.tencent.qcloud.tuikit.tuicallkit.R;
 import com.tencent.qcloud.tuikit.tuicallkit.base.TUICallingAction;
 
-public class TUICallingSwitchAudioView extends BaseFunctionView {
+public class TUICallingSwitchAudioView extends RelativeLayout {
     private final Context mContext;
 
     public TUICallingSwitchAudioView(Context context) {

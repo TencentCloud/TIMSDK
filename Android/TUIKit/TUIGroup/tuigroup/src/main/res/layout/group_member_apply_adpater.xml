@@ -4,10 +4,11 @@
     android:layout_height="60dp"
     android:gravity="center_vertical"
     android:orientation="horizontal"
+    android:background="@color/white"
     android:paddingLeft="@dimen/page_margin"
     android:paddingRight="@dimen/page_margin">
 
-    <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+    <com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView
         android:id="@+id/group_apply_member_icon"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -38,22 +39,24 @@
 
     </LinearLayout>
 
-    <Button
+    <TextView
         android:id="@+id/group_apply_accept"
         android:layout_width="60dp"
         android:layout_height="40dp"
         android:layout_marginRight="10dp"
-        android:background="@color/bg_positive_btn"
+        android:gravity="center"
+        android:background="@drawable/group_bg_positive_btn"
         android:onClick="startConversation"
         android:text="@string/accept"
         android:textColor="#fff" />
 
-    <Button
+    <TextView
         android:id="@+id/group_apply_refuse"
         android:layout_width="60dp"
         android:layout_height="40dp"
         android:layout_marginRight="10dp"
-        android:background="@color/bg_negative_btn"
+        android:gravity="center"
+        android:background="@drawable/group_bg_negative_btn"
         android:onClick="startConversation"
         android:text="@string/refuse"
         android:textColor="#fb6155" />

@@ -1,16 +1,13 @@
 package com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder;
 
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tencent.qcloud.tuikit.tuichat.R;
-import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 
 public class CallingMessageHolder extends TextMessageHolder{
 

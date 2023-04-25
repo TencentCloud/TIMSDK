@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Tencent IM</string>
+    <string name="demo_app_name">Tencent IM</string>
 
     <string name="test_custom_message">View Details>></string>
 
@@ -40,11 +40,14 @@
     <string name="modify_signature">Status</string>
     <string name="modify_account">Account</string>
     <string name="add_rule">Friend Request</string>
+    <string name="translation_target_language">Translate message to</string>
     <string name="allow_type_allow_any">Allow any user to add you as friend</string>
     <string name="allow_type_deny_any">Decline friend request from any user</string>
     <string name="allow_type_need_confirm">Anyone upon Request</string>
     <string name="exit">Log Out</string>
     <string name="about_im">About Tencent Cloud·IM</string>
+    <string name="appkit_show_recent_calls">Show Recent Calls</string>
+    <string name="appkit_recent_calls_tab_name">Calls</string>
     <string name="modify_birthday">Birthday</string>
     <string name="modify_gender">Gender</string>
     <string name="cancel_account">Cancel Account</string>
@@ -207,4 +210,24 @@
 
     <string name="chat_security_warning">[Security Reminder] This App is only used to experience the features of Tencent Cloud IM products, and cannot be used for business negotiation and expansion. Please do not trust remittance, winning the lottery and other information related to money, do not easily make strange phone calls, beware of being deceived.</string>
     <string name="chat_security_warning_report">Report</string>
+
+
+    <string name="change_theme">Change Theme</string>
+    <string name="change_style">Select Style</string>
+    <string name="app_title">Instant Messaging</string>
+    <string name="app_title_content">Welcome to use this APP to experience Tencent Cloud IM products and services</string>
+    <string name="button_enter">Enter IM</string>
+    <string name="demo_style_sub_title">Chat styles</string>
+    <string name="demo_ui_title">Theme</string>
+    <string name="demo_ui_sub_title">Chat themes</string>
+    <string name="im_about_detail">Welcome to Chat demo! You can try out various features such as sending text/emoji/rich media messages, checking message read status and friend relationship. You can also start one-to-one chats or group chats and manage groups with three no-replying bot friends equipped for you.</string>
+    <string name="im_about_title_time">1 minute</string>
+    <string name="im_about_subtitle_time">Run a demo in 1 minute with a few lines of code changes</string>
+    <string name="im_about_title_custom">10,000+</string>
+    <string name="im_about_subtitle_custom">Over 10,000 customers per month</string>
+    <string name="im_about_title_success">99.99%</string>
+    <string name="im_about_subtitle_success">Over 99.99% messaging success rate and service reliability</string>
+    <string name="im_about_title_mau">1 billion+</string>
+    <string name="im_about_subtitle_mau">Over 1 billion active users per month</string>
+    <string name="im_about_known">OK</string>
 </resources>

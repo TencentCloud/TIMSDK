@@ -7,9 +7,9 @@
         android:name=".DemoApplication"
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
+        android:label="@string/demo_app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/DemoAppTheme">
         <activity
             android:name=".SplashActivity"
             android:screenOrientation="portrait"
@@ -18,7 +18,9 @@
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
+                <action android:name="com.tencent.qloud.splash" />
 
+                <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -28,14 +30,29 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
 
+        <provider
+            android:name=".TIMAppService"
+            android:authorities="${applicationId}.TIMApp.Init"
+            android:enabled="true"
+            android:exported="false" />
+
+
+        <activity android:name=".login.ThemeSelectActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".login.StyleSelectActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".login.LanguageSelectActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".main.MainActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:exported="true"
+            android:theme="@style/DemoAppTheme"
             android:windowSoftInputMode="adjustResize|stateHidden">
 
-            <!-- 离线推送打开应用内页面 -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -47,37 +64,20 @@
             </intent-filter>
         </activity>
 
-        <receiver
-            android:name=".LanguageReceiver"
-            android:enabled="true"
-            android:exported="false">
-            <intent-filter android:priority="1000">
-                <action android:name="android.intent.action.LOCALE_CHANGED" />
-            </intent-filter>
-        </receiver>
-
         <activity
             android:name=".profile.SelfDetailActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".profile.AboutIMActivity"
             android:screenOrientation="portrait" />
 
-
-        <activity android:name=".login.ThemeSelectActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".login.LanguageSelectActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".login.StyleSelectActivity"
-            android:screenOrientation="portrait"/>
-
         <activity
             android:name=".main.MainMinimalistActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:exported="true"
+            android:theme="@style/DemoAppTheme"
             android:windowSoftInputMode="adjustResize|stateHidden">
 
-            <!-- 离线推送打开应用内页面 -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -91,9 +91,9 @@
         <activity
             android:name=".profile.SelfDetailMinamalistActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".profile.AboutIMMinimalistActivity"
+        <activity android:name=".profile.AboutIMMinamalistActivity"
             android:screenOrientation="portrait" />
 
-    </application>
 
+    </application>
 </manifest>

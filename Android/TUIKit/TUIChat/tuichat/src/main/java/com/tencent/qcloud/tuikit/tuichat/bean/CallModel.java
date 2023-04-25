@@ -9,7 +9,7 @@ import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMSignalingInfo;
 import com.tencent.qcloud.tuicore.TUIConstants;
-import com.tencent.qcloud.tuicore.util.DateTimeUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.DateTimeUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;

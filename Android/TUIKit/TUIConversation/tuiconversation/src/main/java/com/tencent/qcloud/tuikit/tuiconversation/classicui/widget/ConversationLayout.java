@@ -2,25 +2,23 @@ package com.tencent.qcloud.tuikit.tuiconversation.classicui.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
-import com.tencent.qcloud.tuicore.component.TitleBarLayout;
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.classicui.interfaces.IConversationLayout;
 import com.tencent.qcloud.tuikit.tuiconversation.interfaces.IConversationListAdapter;
 import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationPresenter;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class ConversationLayout extends RelativeLayout implements IConversationLayout {
 
     private ConversationListLayout mConversationList;
+    private ViewGroup headerContainer;
     private ConversationPresenter presenter;
     public ConversationLayout(Context context) {
         super(context);
@@ -50,31 +48,24 @@ public class ConversationLayout extends RelativeLayout implements IConversationL
     private void init() {
         inflate(getContext(), R.layout.conversation_layout, this);
         mConversationList = findViewById(R.id.conversation_list);
+        headerContainer = findViewById(R.id.header_container);
     }
 
     public void initDefault() {
         final ConversationListAdapter adapter = new ConversationListAdapter();
         if (presenter != null) {
-            initSearchView(adapter);
+            initHeaderView();
             adapter.setShowFoldedStyle(true);
         }
         mConversationList.setAdapter((IConversationListAdapter) adapter);
         if (presenter != null) {
             presenter.setAdapter(adapter);
         }
-        mConversationList.loadConversation(0);
+        mConversationList.loadConversation();
     }
 
-    public void initSearchView(ConversationListAdapter adapter) {
-        Map<String, Object> param = new HashMap<>();
-        param.put(TUIConstants.TUIConversation.CONTEXT, getContext());
-        Map<String, Object> searchExtension = TUICore.getExtensionInfo(TUIConstants.TUIConversation.EXTENSION_CLASSIC_SEARCH, param);
-        if (searchExtension != null) {
-            View searchView = (View) searchExtension.get(TUIConstants.TUIConversation.SEARCH_VIEW);
-            if (searchView != null) {
-                adapter.setSearchView(searchView);
-            }
-        }
+    public void initHeaderView() {
+        TUICore.raiseExtension(TUIConstants.TUIConversation.Extension.ConversationListHeader.CLASSIC_EXTENSION_ID, headerContainer, null);
     }
 
     @Override

@@ -26,17 +26,17 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
-import com.tencent.qcloud.tuicore.component.action.PopActionClickListener;
-import com.tencent.qcloud.tuicore.component.action.PopDialogAdapter;
-import com.tencent.qcloud.tuicore.component.action.PopMenuAction;
-import com.tencent.qcloud.tuicore.component.fragments.BaseFragment;
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
-import com.tencent.qcloud.tuicore.util.ScreenUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.action.PopActionClickListener;
+import com.tencent.qcloud.tuikit.timcommon.component.action.PopDialogAdapter;
+import com.tencent.qcloud.tuikit.timcommon.component.action.PopMenuAction;
+import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationConstants;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
-import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.interfaces.OnConversationAdapterListener;
 import com.tencent.qcloud.tuikit.tuiconversation.commonutil.ConversationUtils;
+import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.interfaces.OnConversationAdapterListener;
 import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.util.TUIConversationUtils;
 import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.widget.ConversationLayout;
 import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.widget.ConversationListAdapter;
@@ -67,6 +67,12 @@ public class TUIConversationMinimalistFragment extends BaseFragment {
         mBaseView = inflater.inflate(R.layout.minimalistui_conversation_fragment, container, false);
         initView();
         return mBaseView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mConversationLayout.initUI();
     }
 
     private void initView() {
@@ -182,6 +188,11 @@ public class TUIConversationMinimalistFragment extends BaseFragment {
                 } else {
                     menu.show();
                 }
+            }
+
+            @Override
+            public void finishActivity() {
+                getActivity().finish();
             }
         });
 
@@ -348,6 +359,7 @@ public class TUIConversationMinimalistFragment extends BaseFragment {
         void onEditConversationStartClick();
         void onEditConversationEndClick();
         void onStartChatClick();
+        void finishActivity();
     }
 
     private void showEditConversationDialog(){
@@ -613,7 +625,7 @@ public class TUIConversationMinimalistFragment extends BaseFragment {
         WindowManager.LayoutParams lp = win.getAttributes();
         lp.width = lp.width - ScreenUtil.getPxByDp(16f);
         lp.y = ScreenUtil.getPxByDp(34f);
-        moreDialog.getWindow().setBackgroundDrawableResource(com.tencent.qcloud.tuicore.R.color.status_bar_color);
+        moreDialog.getWindow().setBackgroundDrawableResource(com.tencent.qcloud.tuikit.timcommon.R.color.status_bar_color);
         win.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
         win.setAttributes(lp);
         moreDialog.show();

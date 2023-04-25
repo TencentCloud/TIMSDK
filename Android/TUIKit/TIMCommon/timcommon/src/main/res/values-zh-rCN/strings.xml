@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="open_file_tips">选择要打开此文件的应用</string>
+
+    <string name="date_year_short">年</string>
+    <string name="date_month_short">月</string>
+    <string name="date_day_short">天</string>
+    <string name="date_hour_short">时</string>
+    <string name="date_minute_short">分</string>
+    <string name="date_second_short">秒</string>
+    <string name="date_yesterday">昨天</string>
+    <string name="chat_time_today">今天</string>
+
+    <string name="setting">设置中</string>
+    <string name="setting_fail">设置失败！</string>
+    <string name="setting_success">设置成功！</string>
+    <string name="default_text">默认背景</string>
+    <string name="core_next_step">下一步</string>
+
+    <string name="revoke_tips_you">您撤回了一条消息</string>
+    <string name="revoke_tips">撤回了一条消息</string>
+    <string name="revoke_tips_other">对方撤回了一条消息</string>
+    <string name="chat_reply_num">%d条回复</string>
+    <string name="has_read">已读</string>
+    <string name="unread">未读</string>
+    <string name="has_all_read">全部已读</string>
+    <string name="someone_has_read">%d人已读</string>
+
+    <string name="translation_support">由腾讯云 IM 提供翻译支持</string>
+    <string name="timcommon_no_support_msg">不支持的自定义消息</string>
+
+</resources>

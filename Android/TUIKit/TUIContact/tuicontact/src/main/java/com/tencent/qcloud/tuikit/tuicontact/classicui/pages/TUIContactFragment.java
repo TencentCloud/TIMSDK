@@ -2,21 +2,20 @@ package com.tencent.qcloud.tuikit.tuicontact.classicui.pages;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.tencent.qcloud.tuicore.component.fragments.BaseFragment;
-import com.tencent.qcloud.tuikit.tuicontact.TUIContactService;
-import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
-import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
-import com.tencent.qcloud.tuikit.tuicontact.classicui.widget.ContactLayout;
-import com.tencent.qcloud.tuikit.tuicontact.classicui.widget.ContactListView;
+import androidx.annotation.Nullable;
+
+import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
+import com.tencent.qcloud.tuikit.tuicontact.TUIContactService;
+import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
+import com.tencent.qcloud.tuikit.tuicontact.classicui.widget.ContactLayout;
+import com.tencent.qcloud.tuikit.tuicontact.classicui.widget.ContactListView;
+import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
 import com.tencent.qcloud.tuikit.tuicontact.util.TUIContactLog;
 
 public class TUIContactFragment extends BaseFragment {

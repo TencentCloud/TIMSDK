@@ -7,13 +7,9 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.tencent.qcloud.tuicore.component.TitleBarLayout;
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
-import com.tencent.qcloud.tuicore.util.ScreenUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
-import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.interfaces.IConversationListAdapter;
-import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.interfaces.IConversationLayout;
 import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationPresenter;
 
 public class ForwardSelectLayout extends RelativeLayout {
@@ -67,7 +63,7 @@ public class ForwardSelectLayout extends RelativeLayout {
         conversationList.setAdapter((IConversationListAdapter) adapter);
         conversationList.setItemAvatarRadius(ScreenUtil.dip2px(28));
         presenter.setAdapter(adapter);
-        presenter.loadConversation(0);
+        presenter.loadMoreConversation();
     }
 
     public ConversationListLayout getConversationList() {

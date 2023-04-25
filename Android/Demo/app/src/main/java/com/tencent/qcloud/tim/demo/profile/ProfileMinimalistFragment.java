@@ -12,10 +12,10 @@ import com.tencent.qcloud.tim.demo.bean.UserInfo;
 import com.tencent.qcloud.tim.demo.utils.TUIKitConstants;
 import com.tencent.qcloud.tim.demo.utils.TUIUtils;
 import com.tencent.qcloud.tuicore.TUILogin;
-import com.tencent.qcloud.tuicore.component.dialog.TUIKitDialog;
-import com.tencent.qcloud.tuicore.component.fragments.BaseFragment;
 import com.tencent.qcloud.tuicore.interfaces.TUICallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.dialog.TUIKitDialog;
+import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
 
 
 public class ProfileMinimalistFragment extends BaseFragment {
@@ -34,6 +34,12 @@ public class ProfileMinimalistFragment extends BaseFragment {
 
     private void initView() {
         mProfileLayout = mBaseView.findViewById(R.id.profile_view);
+        mProfileLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void finishActivity() {
+                getActivity().finish();
+            }
+        });
         mBaseView.findViewById(R.id.logout_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,5 +82,15 @@ public class ProfileMinimalistFragment extends BaseFragment {
             }
         });
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mProfileLayout.initUI();
+    }
+
+    public interface OnClickListener {
+        void finishActivity();
     }
 }

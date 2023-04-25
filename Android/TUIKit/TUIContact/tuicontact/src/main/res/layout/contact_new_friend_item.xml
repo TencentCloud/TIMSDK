@@ -10,7 +10,7 @@
     android:focusable="true"
     android:paddingBottom="11.52dp">
 
-    <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+    <com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView
         android:id="@+id/avatar"
         android:layout_width="46dp"
         android:layout_height="46dp"

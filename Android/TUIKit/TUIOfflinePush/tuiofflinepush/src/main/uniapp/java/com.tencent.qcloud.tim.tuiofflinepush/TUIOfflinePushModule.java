@@ -70,8 +70,8 @@ public class TUIOfflinePushModule extends UniModule {
      *
      *   // oppo
      *   "oppoPushBussinessId": "", // 在腾讯云控制台上传第三方推送证书后分配的证书ID
-     *   "oppoPushAppKey": "",// oppo开放平台分配的应用APPID
-     *   "oppoPushAppSecret": "",// oppo开放平台分配的应用APPKEY
+     *   "oppoPushAppKey": "",// oppo开放平台分配的应用 AppKey
+     *   "oppoPushAppSecret": "",// oppo开放平台分配的应用 AppSecret
      *
      *   // honor
      *   "honorPushBussinessId": "",  // 在腾讯云控制台上传第三方推送证书后分配的证书ID

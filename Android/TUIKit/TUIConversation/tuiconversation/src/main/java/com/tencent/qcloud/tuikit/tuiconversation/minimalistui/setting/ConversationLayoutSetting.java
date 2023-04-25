@@ -1,6 +1,6 @@
 package com.tencent.qcloud.tuikit.tuiconversation.minimalistui.setting;
 
-import com.tencent.qcloud.tuicore.util.ScreenUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.widget.ConversationLayout;
 import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.widget.ConversationListLayout;
 

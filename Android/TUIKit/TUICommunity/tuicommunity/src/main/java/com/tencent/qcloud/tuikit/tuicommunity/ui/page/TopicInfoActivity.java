@@ -9,12 +9,12 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.tencent.qcloud.tuicore.TUIConstants;
-import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
-import com.tencent.qcloud.tuicore.component.dialog.TUIKitDialog;
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
-import com.tencent.qcloud.tuicore.component.popupcard.PopupInputCard;
-import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.PopupInputCard;
+import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
+import com.tencent.qcloud.tuikit.timcommon.component.dialog.TUIKitDialog;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuicommunity.R;
 import com.tencent.qcloud.tuikit.tuicommunity.bean.CommunityBean;
 import com.tencent.qcloud.tuikit.tuicommunity.bean.TopicBean;

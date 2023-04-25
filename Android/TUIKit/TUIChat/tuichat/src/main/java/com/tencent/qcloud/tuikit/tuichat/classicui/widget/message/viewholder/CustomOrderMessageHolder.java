@@ -12,15 +12,16 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
-import com.tencent.qcloud.tuicore.util.ScreenUtil;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.MessageContentHolder;
+import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
+import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomOrderMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
-public class CustomOrderMessageHolder extends MessageContentHolder{
+public class CustomOrderMessageHolder extends MessageContentHolder {
     private ImageView imageView;
     private TextView titleView;
     private TextView contentView;

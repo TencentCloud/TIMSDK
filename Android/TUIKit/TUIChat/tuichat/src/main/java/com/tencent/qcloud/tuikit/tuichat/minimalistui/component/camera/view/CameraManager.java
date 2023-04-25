@@ -25,8 +25,8 @@ import android.view.SurfaceHolder;
 import android.widget.ImageView;
 
 import com.tencent.qcloud.tuicore.TUIConfig;
-import com.tencent.qcloud.tuicore.util.FileUtil;
-import com.tencent.qcloud.tuicore.util.ScreenUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.camera.listener.ErrorListener;
 import com.tencent.qcloud.tuikit.tuichat.util.AngleUtil;
 import com.tencent.qcloud.tuikit.tuichat.util.CameraParamUtil;

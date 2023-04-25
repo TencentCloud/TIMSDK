@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,7 +22,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -35,17 +33,17 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.tencent.qcloud.tuicore.component.RoundCornerImageView;
-import com.tencent.qcloud.tuicore.util.ScreenUtil;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.component.RoundCornerImageView;
+import com.tencent.qcloud.tuikit.timcommon.component.face.Emoji;
+import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
+import com.tencent.qcloud.tuikit.timcommon.component.face.RecentEmojiManager;
+import com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message.MessageContentHolder;
+import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.component.face.Emoji;
-import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
-import com.tencent.qcloud.tuikit.tuichat.component.face.RecentEmojiManager;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.MinimalistUIService;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder.ImageMessageHolder;
-import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder.MessageContentHolder;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder.MessageViewHolderFactory;
 import com.tencent.qcloud.tuikit.tuichat.util.BlurUtils;
 
@@ -506,6 +504,8 @@ public class ChatPopActivity extends AppCompatActivity {
         private int textColor = Integer.MAX_VALUE;
 
         private int actionIcon;
+
+        private int priority;
         private ChatPopMenuAction.OnClickListener actionClickListener;
 
         public void setActionName(String actionName) {
@@ -526,6 +526,14 @@ public class ChatPopActivity extends AppCompatActivity {
 
         public void setTextColor(int color) {
             this.textColor = color;
+        }
+
+        public int getPriority() {
+            return priority;
+        }
+
+        public void setPriority(int priority) {
+            this.priority = priority;
         }
 
         public void setActionClickListener(ChatPopMenuAction.OnClickListener actionClickListener) {

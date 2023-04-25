@@ -35,17 +35,17 @@ import com.tencent.imsdk.v2.V2TIMImageElem;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMVideoElem;
 import com.tencent.qcloud.tuicore.TUIConfig;
-import com.tencent.qcloud.tuicore.util.BackgroundTasks;
-import com.tencent.qcloud.tuicore.util.DateTimeUtil;
-import com.tencent.qcloud.tuicore.util.FileUtil;
-import com.tencent.qcloud.tuicore.util.ImageUtil;
-import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.DateTimeUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.ImageUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.classicui.component.photoview.listener.OnMatrixChangedListener;
 import com.tencent.qcloud.tuikit.tuichat.classicui.component.photoview.listener.OnPhotoTapListener;
@@ -183,7 +183,7 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
                         public void onSuccess() {
                             holder.loadingView.setVisibility(View.GONE);
                             imageMessageBean.setDataPath(path);
-                            BackgroundTasks.getInstance().runOnUiThread(new Runnable() {
+                            ThreadUtils.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     notifyDataSetChanged();
@@ -257,7 +257,7 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
 
                         @Override
                         public void onSuccess() {
-                            BackgroundTasks.getInstance().runOnUiThread(new Runnable() {
+                            ThreadUtils.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     loadImageIntoView(holder.photoView, path);

@@ -22,9 +22,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.tencent.qcloud.tuicore.component.CustomLinearLayoutManager;
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
-import com.tencent.qcloud.tuicore.util.ScreenUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.CustomLinearLayoutManager;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.bean.InputMoreActionUnit;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.input.InputView;
@@ -133,9 +133,7 @@ public class InputMoreDialogFragment extends DialogFragment {
         @Override
         public void onBindViewHolder(@NonNull SelectAdapter.SelectViewHolder holder, int position) {
             InputMoreActionUnit actionUnit = mInputMoreList.get(position);
-            if (actionUnit.getTitleId() > 0) {
-                holder.itemText.setText(getContext().getString(actionUnit.getTitleId()));
-            }
+            holder.itemText.setText(actionUnit.getName());
             if (actionUnit.getIconResId() > 0) {
                 holder.itemImage.setImageResource(actionUnit.getIconResId());
             }

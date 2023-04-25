@@ -6,12 +6,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.TUICommonDefine;
 import com.tencent.qcloud.tuikit.tuicallkit.R;
 import com.tencent.qcloud.tuikit.tuicallkit.base.TUICallingStatusManager;
-import com.tencent.qcloud.tuikit.tuicallkit.utils.ImageLoader;
 
 public class TUICallingVideoFunctionView extends BaseFunctionView {
     private LinearLayout mLayoutOpenCamera;
@@ -84,17 +82,11 @@ public class TUICallingVideoFunctionView extends BaseFunctionView {
             public void onClick(View v) {
                 if (TUICallingStatusManager.sharedInstance(mContext).isCameraOpen()) {
                     mCallingAction.closeCamera();
-                    if (null != mLocalUserLayout) {
-                        mLocalUserLayout.setVideoAvailable(false);
-                        ImageLoader.loadImage(mContext, mLocalUserLayout.getAvatarImage(), TUILogin.getFaceUrl(),
-                                R.drawable.tuicalling_ic_avatar);
-                    }
                     ToastUtil.toastShortMessage(mContext.getString(R.string.tuicalling_toast_disable_camera));
                 } else {
                     if (null != mLocalUserLayout) {
                         mCallingAction.openCamera(TUICallingStatusManager.sharedInstance(mContext).getFrontCamera(),
                                 mLocalUserLayout.getVideoView(), null);
-                        mLocalUserLayout.setVideoAvailable(true);
                         ToastUtil.toastShortMessage(mContext.getString(R.string.tuicalling_toast_enable_camera));
                     }
                 }
@@ -123,9 +115,6 @@ public class TUICallingVideoFunctionView extends BaseFunctionView {
     public void updateCameraOpenStatus(boolean isOpen) {
         super.updateCameraOpenStatus(isOpen);
         mImageOpenCamera.setActivated(isOpen);
-        if (null != mLocalUserLayout) {
-            mLocalUserLayout.setVideoAvailable(isOpen);
-        }
     }
 
     @Override

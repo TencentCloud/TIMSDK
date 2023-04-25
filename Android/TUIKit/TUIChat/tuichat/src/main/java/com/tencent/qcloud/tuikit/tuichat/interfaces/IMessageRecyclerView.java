@@ -18,6 +18,9 @@ public interface IMessageRecyclerView {
     // 先刷新消息再滚动到消息位置
     // Refresh the message before scrolling to the message position
     int DATA_CHANGE_SCROLL_TO_POSITION = 10;
+    // 先刷新消息再滚动到消息位置, 不高亮
+    // Refresh the message before scrolling to the message position, without high light
+    int DATA_CHANGE_SCROLL_TO_POSITION_WITHOUT_HIGH_LIGHT = 11;
 
     boolean isDisplayJumpMessageLayout();
     void displayBackToNewMessage(boolean display, String messageId, int count);

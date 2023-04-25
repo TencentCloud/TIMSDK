@@ -9,8 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tencent.qcloud.tuicore.TUIConstants;
-import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
-import com.tencent.qcloud.tuicore.util.BackgroundTasks;
+import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
+import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuigroup.R;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupMemberInfo;
@@ -180,7 +180,7 @@ public class GroupInfoAdapter extends BaseAdapter {
                 del.setMemberType(DEL_TYPE);
                 mGroupMembers.add(del);
             }
-            BackgroundTasks.getInstance().runOnUiThread(new Runnable() {
+            ThreadUtils.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     notifyDataSetChanged();

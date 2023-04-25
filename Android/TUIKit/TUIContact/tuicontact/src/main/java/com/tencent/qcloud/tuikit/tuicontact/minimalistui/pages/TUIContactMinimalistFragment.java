@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 
-import com.tencent.qcloud.tuicore.component.fragments.BaseFragment;
+import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactService;
@@ -41,6 +41,13 @@ public class TUIContactMinimalistFragment extends BaseFragment {
         mContactLayout.setPresenter(presenter);
         mContactLayout.initDefault();
 
+        mContactLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void finishActivity() {
+                getActivity().finish();
+            }
+        });
+
         mContactLayout.getContactListView().setOnItemClickListener(new ContactListView.OnItemClickListener() {
             @Override
             public void onItemClick(int position, ContactItemBean contact) {
@@ -70,5 +77,10 @@ public class TUIContactMinimalistFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         TUIContactLog.i(TAG, "onResume");
+        mContactLayout.initUI();
+    }
+
+    public interface OnClickListener {
+        void finishActivity();
     }
 }

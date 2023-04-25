@@ -21,10 +21,10 @@ import android.widget.PopupWindow;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.tencent.qcloud.tuicore.R;
-import com.tencent.qcloud.tuicore.component.action.PopMenuAction;
-import com.tencent.qcloud.tuicore.component.action.PopMenuAdapter;
-import com.tencent.qcloud.tuicore.util.ScreenUtil;
+import com.tencent.qcloud.tuikit.timcommon.R;
+import com.tencent.qcloud.tuikit.timcommon.component.action.PopMenuAction;
+import com.tencent.qcloud.tuikit.timcommon.component.action.PopMenuAdapter;
+import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 
 import java.util.ArrayList;
 import java.util.List;

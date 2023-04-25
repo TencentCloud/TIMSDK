@@ -23,14 +23,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
-import com.tencent.qcloud.tuicore.component.CustomLinearLayoutManager;
-import com.tencent.qcloud.tuicore.component.TitleBarLayout;
-import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
-import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
-import com.tencent.qcloud.tuicore.util.BackgroundTasks;
-import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.CustomLinearLayoutManager;
+import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
+import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuicommunity.R;
 import com.tencent.qcloud.tuikit.tuicommunity.bean.CommunityBean;
 import com.tencent.qcloud.tuikit.tuicommunity.bean.CommunityMemberBean;
@@ -313,7 +313,7 @@ public class CommunityMemberList extends LinearLayout implements ICommunityMembe
 
         public void setCommunityBean(CommunityBean communityBean) {
             if (communityBean != null) {
-                BackgroundTasks.getInstance().runOnUiThread(new Runnable() {
+                ThreadUtils.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         notifyDataSetChanged();

@@ -1,21 +1,19 @@
 package com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder;
 
-import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.MessageContentHolder;
+import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.tuichat.R;
-import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
 
 import java.util.List;
 
-public class MergeMessageHolder extends MessageContentHolder{
+public class MergeMessageHolder extends MessageContentHolder {
     private LinearLayout mForwardMsgLayout;
     private TextView msgForwardTitle;
     private TextView msgForwardContent;
@@ -38,7 +36,7 @@ public class MergeMessageHolder extends MessageContentHolder{
         if (msg == null){
             return;
         }
-        reactView.setThemeColorId(TUIThemeManager.getAttrResId(reactView.getContext(), R.attr.chat_react_other_text_color));
+        reactView.setThemeColorId(TUIThemeManager.getAttrResId(reactView.getContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.chat_react_other_text_color));
         if (isForwardMode || isReplyDetailMode) {
             msgArea.setBackgroundResource(R.drawable.chat_bubble_other_cavity_bg);
             statusImage.setVisibility(View.GONE);
@@ -96,10 +94,9 @@ public class MergeMessageHolder extends MessageContentHolder{
         mForwardMsgLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(TUIChatConstants.FORWARD_MERGE_MESSAGE_KEY, msg);
-                bundle.putSerializable(TUIChatConstants.CHAT_INFO, presenter.getChatInfo());
-                TUICore.startActivity("TUIForwardChatActivity", bundle);
+                if (onItemClickListener != null) {
+                    onItemClickListener.onMessageClick(view, position, msg);
+                }
             }
         });
         

@@ -4,17 +4,21 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView;
-import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
-import com.tencent.qcloud.tuicore.util.ScreenUtil;
+import com.tencent.qcloud.tuicore.TUIConfig;
+import com.tencent.qcloud.tuicore.TUIConstants;
+import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView;
+import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuicommunity.R;
 import com.tencent.qcloud.tuikit.tuicommunity.bean.CommunityBean;
 import com.tencent.qcloud.tuikit.tuicommunity.presenter.CommunityPresenter;
@@ -39,6 +43,7 @@ public class TUICommunityFragment extends Fragment implements ICommunityFragment
 
     private View connectFailed;
     private View connecting;
+    private ImageView homeView;
     private CommunityGroupList groupIconList;
     private CommunityPresenter presenter;
 
@@ -98,6 +103,28 @@ public class TUICommunityFragment extends Fragment implements ICommunityFragment
 
         connectFailed = baseView.findViewById(R.id.network_connect_failed);
         connecting = baseView.findViewById(R.id.network_connecting);
+        homeView = baseView.findViewById(R.id.home_view);
+        if (TUIConfig.getTUIHostType() != TUIConfig.TUI_HOST_TYPE_RTCUBE) {
+            homeView.setVisibility(View.GONE);
+        } else {
+            homeView.setVisibility(View.VISIBLE);
+            homeView.setBackgroundResource(R.drawable.title_bar_left_icon);
+            int iconwidth = ScreenUtil.dip2px(TUIConstants.TIMAppKit.BACK_RTCUBE_HOME_ICON_WIDTH);
+            int iconHeight = ScreenUtil.dip2px(TUIConstants.TIMAppKit.BACK_RTCUBE_HOME_ICON_HEIGHT);
+            ViewGroup.LayoutParams iconParams = homeView.getLayoutParams();
+            iconParams.width = iconwidth;
+            iconParams.height = iconHeight;
+            homeView.setLayoutParams(iconParams);
+            homeView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString(TUIConstants.TIMAppKit.BACK_TO_RTCUBE_DEMO_TYPE_KEY, TUIConstants.TIMAppKit.BACK_TO_RTCUBE_DEMO_TYPE_IM);
+                    TUICore.startActivity("TRTCMainActivity", bundle);
+                    getActivity().finish();
+                }
+            });
+        }
     }
 
     @Override

@@ -177,7 +177,7 @@ public class FileUtil {
     }
 
     public static String getMimeType(String filePath) {
-        String fileExtension = com.tencent.qcloud.tuicore.util.FileUtil.getFileExtensionFromUrl(filePath);
+        String fileExtension = com.tencent.qcloud.tuikit.timcommon.util.FileUtil.getFileExtensionFromUrl(filePath);
         return MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension);
     }
 

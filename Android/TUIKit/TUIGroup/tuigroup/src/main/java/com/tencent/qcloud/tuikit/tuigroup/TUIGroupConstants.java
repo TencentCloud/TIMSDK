@@ -33,7 +33,7 @@ public class TUIGroupConstants {
 
     }
 
-    public static final String GROUP_FACE_URL = "https://im.sdk.cloud.tencent.cn/download/tuikit-resource/group-avatar/group_avatar_%s.png";
+    public static final String GROUP_FACE_URL = "https://im.sdk.qcloud.com/download/tuikit-resource/group-avatar/group_avatar_%s.png";
     public static final int GROUP_FACE_COUNT = 24;
 
 }

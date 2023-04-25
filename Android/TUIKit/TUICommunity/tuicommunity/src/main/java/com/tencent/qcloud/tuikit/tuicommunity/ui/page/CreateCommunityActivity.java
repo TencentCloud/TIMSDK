@@ -11,11 +11,11 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
-import com.tencent.qcloud.tuicore.component.TitleBarLayout;
-import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
-import com.tencent.qcloud.tuicore.component.activities.ImageSelectActivity;
-import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
-import com.tencent.qcloud.tuicore.util.ScreenUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
+import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
+import com.tencent.qcloud.tuikit.timcommon.component.activities.ImageSelectActivity;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
+import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuicommunity.R;
 import com.tencent.qcloud.tuikit.tuicommunity.component.SelectTextButton;
 import com.tencent.qcloud.tuikit.tuicommunity.presenter.CommunityPresenter;

@@ -1,8 +1,7 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion "28.0.3"
+    compileSdkVersion 31
 
     defaultConfig {
         versionName "1.0"
@@ -26,7 +25,9 @@ android {
 
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
-    api 'androidx.appcompat:appcompat:1.0.0'
+    api 'androidx.appcompat:appcompat:1.3.1'
+    api 'com.google.android.material:material:1.4.0'
+    api 'androidx.recyclerview:recyclerview:1.2.1'
     api 'androidx.constraintlayout:constraintlayout:1.1.3'
     api "com.github.bumptech.glide:glide:4.12.0"
 
@@ -35,15 +36,15 @@ dependencies {
     if (projects.contains("tuicore")) {
         api project(':tuicore')
     } else {
-        api "com.tencent.imsdk:imsdk-plus:7.1.3925"
-        api "com.tencent.liteav.tuikit:tuicore:1.1.22"
+        api "com.tencent.imsdk:imsdk-plus:7.2.4123"
+        api "com.tencent.liteav.tuikit:tuicore:1.1.23"
     }
 
     if (projects.contains("tuicallengine")) {
         api project(':tuicallengine')
     } else {
         api "com.google.code.gson:gson:2.9.1"
-        api "com.tencent.liteav:LiteAVSDK_TRTC:10.9.0.13092"
-        api 'com.tencent.liteav.tuikit:tuicallengine:1.5.0.305'
+        api "com.tencent.liteav:LiteAVSDK_TRTC:11.1.0.13111"
+        api 'com.tencent.liteav.tuikit:tuicallengine:1.6.0.360'
     }
 }

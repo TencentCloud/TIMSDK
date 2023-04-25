@@ -24,10 +24,10 @@ import com.tencent.imsdk.v2.V2TIMUserStatus;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tuicore.BuildConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
-import com.tencent.qcloud.tuicore.util.ThreadHelper;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactService;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactGroupApplyInfo;
@@ -49,7 +49,7 @@ public class ContactProvider {
 
     public void loadFriendListDataAsync(IUIKitCallback<List<ContactItemBean>> callback) {
         TUIContactLog.i(TAG, "loadFriendListDataAsync");
-        ThreadHelper.INST.execute(new Runnable() {
+        ThreadUtils.execute(new Runnable() {
             @Override
             public void run() {
                 // 压测时数据量比较大，query耗时比较久，所以这里使用新线程来处理

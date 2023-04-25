@@ -15,7 +15,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
-import com.tencent.qcloud.tuicore.component.RoundCornerImageView;
+import com.tencent.qcloud.tuikit.timcommon.component.RoundCornerImageView;
 import com.tencent.qcloud.tuikit.tuicommunity.R;
 
 public class SettingsLinearView extends LinearLayout {
@@ -85,7 +85,7 @@ public class SettingsLinearView extends LinearLayout {
             isShowContentText = ta.getBoolean(R.styleable.SettingsLinearView_setting_is_show_content_text, true);
             isShowContentImage = ta.getBoolean(R.styleable.SettingsLinearView_setting_is_show_content_image, false);
             name = ta.getString(R.styleable.SettingsLinearView_setting_name);
-            isShowBottomLine = ta.getBoolean(com.tencent.qcloud.tuicore.R.styleable.LineControllerView_isBottom, false);
+            isShowBottomLine = ta.getBoolean(com.tencent.qcloud.tuikit.timcommon.R.styleable.LineControllerView_isBottom, false);
             isShowCopy = ta.getBoolean(R.styleable.SettingsLinearView_setting_is_show_copy, false);
             isShowArrow = ta.getBoolean(R.styleable.SettingsLinearView_setting_is_show_arrow, true);
             isShowTopLine = ta.getBoolean(R.styleable.SettingsLinearView_setting_is_show_top_line, false);

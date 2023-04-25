@@ -25,6 +25,34 @@ public class GroupApplyInfo implements Serializable {
         this.status = status;
     }
 
+    public String getFromUserFaceUrl() {
+        if (timGroupApplication != null) {
+            return timGroupApplication.getFromUserFaceUrl();
+        }
+        return null;
+    }
+
+    public String getFromUserID() {
+        if (timGroupApplication != null) {
+            return timGroupApplication.getFromUser();
+        }
+        return null;
+    }
+
+    public String getAddWording() {
+        if (timGroupApplication != null) {
+            return timGroupApplication.getRequestMsg();
+        }
+        return null;
+    }
+
+    public String getGroupID() {
+        if (timGroupApplication != null) {
+            return timGroupApplication.getGroupID();
+        }
+        return null;
+    }
+
     public V2TIMGroupApplication getGroupApplication() {
         return timGroupApplication;
     }

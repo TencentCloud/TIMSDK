@@ -14,8 +14,8 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.tencent.qcloud.tuicore.component.UnreadCountTextView;
-import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
+import com.tencent.qcloud.tuikit.timcommon.component.UnreadCountTextView;
+import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
 import com.tencent.qcloud.tuikit.tuicommunity.R;
 import com.tencent.qcloud.tuikit.tuicommunity.bean.TopicBean;
 import com.tencent.qcloud.tuikit.tuicommunity.bean.TopicFoldBean;

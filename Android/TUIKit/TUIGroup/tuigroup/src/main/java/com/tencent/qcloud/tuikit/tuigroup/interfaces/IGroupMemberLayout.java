@@ -1,6 +1,6 @@
 package com.tencent.qcloud.tuikit.tuigroup.interfaces;
 
-import com.tencent.qcloud.tuicore.component.interfaces.ILayout;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ILayout;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 
 

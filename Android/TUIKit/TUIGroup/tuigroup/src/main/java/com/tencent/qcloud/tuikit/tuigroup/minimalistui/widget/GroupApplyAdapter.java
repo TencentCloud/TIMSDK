@@ -5,12 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.tencent.imsdk.v2.V2TIMGroupApplication;
+import com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView;
+import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
+import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuigroup.R;
-import com.tencent.qcloud.tuikit.tuigroup.TUIGroupService;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupApplyInfo;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupApplyPresenter;
@@ -60,10 +61,10 @@ public class GroupApplyAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int i, View view, ViewGroup viewGroup) {
-        MyViewHolder holder;
+        ApplyViewHolder holder;
         final GroupApplyInfo info = getItem(i);
         if (view == null) {
-            view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.group_member_apply_adpater, viewGroup, false);
+            view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.group_minimalist_new_group_application_item, viewGroup, false);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -72,22 +73,36 @@ public class GroupApplyAdapter extends BaseAdapter {
                     }
                 }
             });
-            holder = new MyViewHolder();
-            holder.memberIcon = view.findViewById(R.id.group_apply_member_icon);
-            holder.memberName = view.findViewById(R.id.group_apply_member_name);
-            holder.reason = view.findViewById(R.id.group_apply_reason);
-            holder.accept = view.findViewById(R.id.group_apply_accept);
-            holder.refuse = view.findViewById(R.id.group_apply_refuse);
+            holder = new ApplyViewHolder();
+            holder.memberIcon = view.findViewById(R.id.avatar);
+            holder.memberName = view.findViewById(R.id.name);
+            holder.reason = view.findViewById(R.id.description);
+            holder.accept = view.findViewById(R.id.agree);
+            holder.refuse = view.findViewById(R.id.reject);
+            holder.resultTv = view.findViewById(R.id.result_tv);
             view.setTag(holder);
         } else {
-            holder = (MyViewHolder) view.getTag();
+            holder = (ApplyViewHolder) view.getTag();
         }
-        holder.memberName.setText(info.getGroupApplication().getFromUser());
-        holder.reason.setText(info.getGroupApplication().getRequestMsg());
+
+        if (info.getGroupApplication().getApplicationType() == V2TIMGroupApplication.V2TIM_GROUP_INVITE_APPLICATION_NEED_APPROVED_BY_ADMIN) {
+            holder.memberName.setText(info.getGroupApplication().getFromUser());
+            holder.reason.setText(view.getResources().getString(R.string.invite) + " " + info.getGroupApplication().getToUser());
+        } else {
+            if (TextUtils.isEmpty(info.getFromUserNickName())) {
+                holder.memberName.setText(info.getFromUserID());
+            } else {
+                holder.memberName.setText(info.getFromUserNickName());
+            }
+            holder.reason.setText(info.getAddWording());
+        }
+        int radius = ScreenUtil.dip2px(25);
+        holder.memberIcon.setRadius(radius);
+        GlideEngine.loadUserIcon(holder.memberIcon, info.getFromUserFaceUrl(), radius);
+
         if (info.getStatus() == GroupApplyInfo.UNHANDLED) {
             holder.accept.setVisibility(View.VISIBLE);
             holder.accept.setText(R.string.accept);
-            holder.accept.setBackground(TUIGroupService.getAppContext().getResources().getDrawable(R.color.bg_positive_btn));
             holder.accept.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -96,7 +111,6 @@ public class GroupApplyAdapter extends BaseAdapter {
             });
             holder.refuse.setVisibility(View.VISIBLE);
             holder.refuse.setText(R.string.refuse);
-            holder.refuse.setBackground(TUIGroupService.getAppContext().getResources().getDrawable(R.color.bg_negative_btn));
             holder.refuse.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -104,17 +118,17 @@ public class GroupApplyAdapter extends BaseAdapter {
                 }
             });
         } else if (info.getStatus() == GroupApplyInfo.APPLIED) {
-            holder.accept.setVisibility(View.VISIBLE);
             holder.accept.setClickable(false);
-            holder.accept.setText(R.string.accepted);
-            holder.accept.setBackground(TUIGroupService.getAppContext().getResources().getDrawable(R.drawable.gray_btn_bg));
+            holder.resultTv.setText(R.string.accepted);
+            holder.resultTv.setVisibility(View.VISIBLE);
+            holder.accept.setVisibility(View.GONE);
             holder.refuse.setVisibility(View.GONE);
         } else if (info.getStatus() == GroupApplyInfo.REFUSED) {
-            holder.refuse.setVisibility(View.VISIBLE);
             holder.refuse.setClickable(false);
-            holder.refuse.setText(R.string.refused);
-            holder.refuse.setBackground(TUIGroupService.getAppContext().getResources().getDrawable(R.drawable.gray_btn_bg));
+            holder.resultTv.setVisibility(View.VISIBLE);
+            holder.resultTv.setText(R.string.refused);
             holder.accept.setVisibility(View.GONE);
+            holder.refuse.setVisibility(View.GONE);
         }
 
         return view;
@@ -125,9 +139,10 @@ public class GroupApplyAdapter extends BaseAdapter {
     }
 
     public void updateItemData(GroupApplyInfo info) {
-        for (GroupApplyInfo i : mGroupMembers) {
-            if (TextUtils.equals(i.getGroupApplication().getFromUser(), info.getGroupApplication().getFromUser())) {
-                i.setStatus(info.getStatus());
+        for (GroupApplyInfo item : mGroupMembers) {
+            if (TextUtils.equals(item.getGroupApplication().getFromUser(), info.getGroupApplication().getFromUser())
+                    && TextUtils.equals(item.getGroupID(), info.getGroupID())) {
+                item.setStatus(info.getStatus());
                 notifyDataSetChanged();
                 break;
             }
@@ -147,24 +162,24 @@ public class GroupApplyAdapter extends BaseAdapter {
         if (presenter == null) {
             return;
         }
-        presenter.acceptApply(item);
+        presenter.acceptApply(item, null);
     }
 
     public void refuseApply(final int position, final GroupApplyInfo item) {
         if (presenter == null) {
             return;
         }
-        presenter.refuseApply(item);
+        presenter.refuseApply(item, null);
     }
 
     public interface OnItemClickListener {
         void onItemClick(GroupApplyInfo info);
     }
 
-    private class MyViewHolder {
-        private ImageView memberIcon;
+    private static class ApplyViewHolder {
+        private ShadeImageView memberIcon;
         private TextView memberName, reason;
-        private Button accept, refuse;
+        private TextView accept, refuse, resultTv;
     }
 
 }

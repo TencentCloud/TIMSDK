@@ -54,7 +54,7 @@
             android:textColor="@color/list_bottom_text_bg" />
 
 
-        <com.tencent.qcloud.tuicore.component.UnreadCountTextView
+        <com.tencent.qcloud.tuikit.timcommon.component.UnreadCountTextView
             android:id="@+id/conversation_unread"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -17,7 +17,7 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <com.tencent.qcloud.tuicore.component.RoundCornerImageView
+        <com.tencent.qcloud.tuikit.timcommon.component.RoundCornerImageView
             android:id="@+id/ivAvatar"
             android:layout_width="40dp"
             android:layout_height="40dp"

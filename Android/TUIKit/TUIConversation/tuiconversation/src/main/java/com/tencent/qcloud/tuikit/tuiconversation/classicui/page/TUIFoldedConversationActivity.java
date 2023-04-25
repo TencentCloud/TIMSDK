@@ -1,8 +1,10 @@
 package com.tencent.qcloud.tuikit.tuiconversation.classicui.page;
 
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
-import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
+
+import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 
 public class TUIFoldedConversationActivity extends BaseLightActivity {

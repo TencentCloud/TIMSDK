@@ -63,7 +63,7 @@
     <string name="contact_group_type_tag">Group Type : </string>
     <string name="contact_my_friend">My Friend</string>
 
-    <string name="contact_profile_message">Message</string>
+    <string name="contact_profile_message">`Message`</string>
     <string name="contact_profile_audio_call">Audio</string>
     <string name="contact_profile_video_call">Video</string>
 

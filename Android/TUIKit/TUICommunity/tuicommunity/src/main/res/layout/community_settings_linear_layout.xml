@@ -55,7 +55,7 @@
                     android:textSize="16sp"
                     tools:text="content" />
 
-                <com.tencent.qcloud.tuicore.component.RoundCornerImageView
+                <com.tencent.qcloud.tuikit.timcommon.component.RoundCornerImageView
                     android:id="@+id/content_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

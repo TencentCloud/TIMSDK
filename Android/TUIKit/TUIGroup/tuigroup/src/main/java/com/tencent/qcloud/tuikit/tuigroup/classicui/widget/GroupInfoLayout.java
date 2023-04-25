@@ -15,28 +15,30 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultCaller;
 import androidx.annotation.Nullable;
 
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
-import com.tencent.qcloud.tuicore.component.LineControllerView;
-import com.tencent.qcloud.tuicore.component.TitleBarLayout;
-import com.tencent.qcloud.tuicore.component.activities.SelectionActivity;
-import com.tencent.qcloud.tuicore.component.dialog.TUIKitDialog;
-import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
-import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
-import com.tencent.qcloud.tuicore.component.popupcard.PopupInputCard;
-import com.tencent.qcloud.tuicore.util.ScreenUtil;
-import com.tencent.qcloud.tuicore.util.TUIUtil;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.LineControllerView;
+import com.tencent.qcloud.tuikit.timcommon.component.PopupInputCard;
+import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
+import com.tencent.qcloud.tuikit.timcommon.component.activities.SelectionActivity;
+import com.tencent.qcloud.tuikit.timcommon.component.dialog.TUIKitDialog;
+import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.TUIUtil;
 import com.tencent.qcloud.tuikit.tuigroup.R;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupConstants;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupService;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.classicui.interfaces.IGroupMemberListener;
-import com.tencent.qcloud.tuikit.tuigroup.classicui.page.GroupInfoActivity;
 import com.tencent.qcloud.tuikit.tuigroup.classicui.page.GroupInfoFragment;
 import com.tencent.qcloud.tuikit.tuigroup.classicui.page.GroupMemberActivity;
 import com.tencent.qcloud.tuikit.tuigroup.classicui.page.GroupNoticeActivity;
@@ -414,20 +416,38 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
             intent.putExtra(TUIGroupConstants.Group.GROUP_INFO, mGroupInfo);
             getContext().startActivity(intent);
         } else if (v == mChangeOwnerBtn) {
-            ArrayList<String> excludeList = new ArrayList<>();
-            excludeList.add(TUILogin.getLoginUser());
-            Intent intent = new Intent(getContext(), GroupMemberActivity.class);
-            intent.putExtra(TUIConstants.TUIGroup.IS_SELECT_MODE, true);
-            intent.putExtra(TUIConstants.TUIGroup.GROUP_ID, mGroupInfo.getId());
-            intent.putExtra(TUIConstants.TUIGroup.LIMIT, 1);
-            intent.putExtra(TUIConstants.TUIGroup.EXCLUDE_LIST, excludeList);
-            intent.putExtra(TUIConstants.TUIGroup.TITLE, getResources().getString(R.string.group_transfer_group_owner));
-            ((Activity) getContext()).startActivityForResult(intent, GroupInfoActivity.REQUEST_FOR_CHANGE_OWNER);
+            changeGroupOwner();
         } else if (v.getId() == R.id.chat_background) {
             if (mListener != null) {
                 mListener.onSetChatBackground();
             }
         }
+    }
+
+    private void changeGroupOwner() {
+        ArrayList<String> excludeList = new ArrayList<>();
+        excludeList.add(TUILogin.getLoginUser());
+        Bundle param = new Bundle();
+        param.putBoolean(TUIConstants.TUIGroup.IS_SELECT_MODE, true);
+        param.putString(TUIConstants.TUIGroup.GROUP_ID, mGroupInfo.getId());
+        param.putInt(TUIConstants.TUIGroup.LIMIT, 1);
+        param.putStringArrayList(TUIConstants.TUIGroup.EXCLUDE_LIST, excludeList);
+        param.putString(TUIConstants.TUIGroup.TITLE, getResources().getString(R.string.group_transfer_group_owner));
+
+        TUICore.startActivityForResult((ActivityResultCaller) getContext(), GroupMemberActivity.class, param, new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result.getData() != null) {
+                    List<String> selectedList = result.getData().getStringArrayListExtra(TUIGroupConstants.Selection.LIST);
+                    if (selectedList != null && !selectedList.isEmpty()) {
+                        String newOwnerId = selectedList.get(0);
+                        if (mListener != null) {
+                            mListener.onChangeGroupOwner(newOwnerId);
+                        }
+                    }
+                }
+            }
+        });
     }
 
     public void loadGroupInfo(String groupId) {
@@ -673,6 +693,7 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
 
     public interface OnButtonClickListener {
         default void onSetChatBackground() {};
+        default void onChangeGroupOwner(String newOwnerID) {};
     }
 
 }

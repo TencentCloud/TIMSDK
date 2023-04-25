@@ -2,6 +2,10 @@
 <resources>
     <string name="open_file_tips">选择要打开此文件的应用</string>
 
+    <string name="sure">确定</string>
+    <string name="cancel">取消</string>
+    <string name="core_permission_dialog_title">权限申请</string>
+    <string name="core_permission_dialog_positive_setting_text">去设置</string>
     <string name="date_year_short">年</string>
     <string name="date_month_short">月</string>
     <string name="date_day_short">天</string>
@@ -9,15 +13,5 @@
     <string name="date_minute_short">分</string>
     <string name="date_second_short">秒</string>
     <string name="date_yesterday">昨天</string>
-
-    <string name="sure">确定</string>
-    <string name="cancel">取消</string>
-    <string name="core_permission_dialog_title">权限申请</string>
-    <string name="core_permission_dialog_positive_setting_text">去设置</string>
-    <string name="setting">设置中</string>
-    <string name="setting_fail">设置失败！</string>
-    <string name="setting_success">设置成功！</string>
-    <string name="default_text">默认背景</string>
-    <string name="core_next_step">下一步</string>
 
 </resources>

@@ -22,14 +22,14 @@ import com.tencent.imsdk.v2.V2TIMSignalingInfo;
 import com.tencent.imsdk.v2.V2TIMSoundElem;
 import com.tencent.imsdk.v2.V2TIMTextElem;
 import com.tencent.imsdk.v2.V2TIMVideoElem;
+import com.tencent.qcloud.tuicore.ServiceInitializer;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
-import com.tencent.qcloud.tuicore.util.DateTimeUtil;
-import com.tencent.qcloud.tuicore.util.FileUtil;
-import com.tencent.qcloud.tuicore.util.ImageUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.DateTimeUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.ImageUtil;
 import com.tencent.qcloud.tuikit.tuisearch.R;
 import com.tencent.qcloud.tuikit.tuisearch.TUISearchConstants;
-import com.tencent.qcloud.tuikit.tuisearch.TUISearchService;
 import com.tencent.qcloud.tuikit.tuisearch.bean.CallModel;
 import com.tencent.qcloud.tuikit.tuisearch.bean.MessageInfo;
 import com.tencent.qcloud.tuikit.tuisearch.message.MessageCustom;
@@ -90,7 +90,7 @@ public class MessageInfoUtil {
             return null;
         }
 
-        Context context = TUISearchService.getAppContext();
+        Context context = ServiceInitializer.getAppContext();
         if (context == null){
             TUISearchLog.e(TAG, "context == null");
             return new MessageInfo();
@@ -238,7 +238,7 @@ public class MessageInfoUtil {
         boolean isGroup = messageInfo.isGroup();
         String senderShowName = getDisplayName(timMessage);
         String content = "";
-        Context context = TUISearchService.getAppContext();
+        Context context = ServiceInitializer.getAppContext();
         switch (callModel.action) {
             case CallModel.VIDEO_CALL_ACTION_DIALING:
                 content = isGroup ? ("\"" + senderShowName + "\"" +
@@ -304,7 +304,7 @@ public class MessageInfoUtil {
                 anchorName = roomName;
             }
         }
-        content = "[" + anchorName + TUISearchService.getAppContext().getString(R.string.live) + "]";
+        content = "[" + anchorName + ServiceInitializer.getAppContext().getString(R.string.live) + "]";
         messageInfo.setExtra(content);
     }
 

@@ -12,10 +12,10 @@ import com.tencent.qcloud.tim.demo.bean.UserInfo;
 import com.tencent.qcloud.tim.demo.utils.TUIKitConstants;
 import com.tencent.qcloud.tim.demo.utils.TUIUtils;
 import com.tencent.qcloud.tuicore.TUILogin;
-import com.tencent.qcloud.tuicore.component.dialog.TUIKitDialog;
-import com.tencent.qcloud.tuicore.component.fragments.BaseFragment;
 import com.tencent.qcloud.tuicore.interfaces.TUICallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.dialog.TUIKitDialog;
+import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
 
 
 public class ProfileFragment extends BaseFragment {
@@ -30,6 +30,14 @@ public class ProfileFragment extends BaseFragment {
         mBaseView = inflater.inflate(R.layout.profile_fragment, container, false);
         initView();
         return mBaseView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mProfileLayout != null) {
+            mProfileLayout.initUI();
+        }
     }
 
     private void initView() {

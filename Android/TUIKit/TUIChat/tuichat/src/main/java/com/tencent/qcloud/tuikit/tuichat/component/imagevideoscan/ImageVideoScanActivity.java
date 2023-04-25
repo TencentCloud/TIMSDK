@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.util.PermissionHelper;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 

@@ -6,10 +6,10 @@ import android.view.ViewGroup;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.tencent.qcloud.tuikit.timcommon.interfaces.ICommonMessageAdapter;
+import com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message.MessageBaseHolder;
 import com.tencent.qcloud.tuikit.tuichat.R;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.MinimalistUIService;
-import com.tencent.qcloud.tuikit.tuichat.minimalistui.interfaces.ICommonMessageAdapter;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -28,11 +28,11 @@ public class MessageViewHolderFactory {
             return holder;
         }
 
-        if (viewType == MinimalistUIService.getInstance().getViewType(TipsMessageBean.class)) {
+        if (MinimalistUIService.getInstance().isNeedEmptyViewGroup(viewType)) {
             view = inflater.inflate(R.layout.message_adapter_item_empty, parent, false);
-            holder = new TipsMessageHolder(view);
+            holder = getViewHolder(view, viewType);
         } else {
-            view = inflater.inflate(R.layout.minimalist_message_adapter_item_content, parent, false);
+            view = inflater.inflate(com.tencent.qcloud.tuikit.timcommon.R.layout.minimalist_message_adapter_item_content, parent, false);
             holder = getViewHolder(view, viewType);
         }
 

@@ -13,9 +13,20 @@
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
+    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
+    <!-- Support Android S(31) Bluetooth-->
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+
     <application>
         <activity
             android:name="com.tencent.qcloud.tuikit.tuicallkit.base.BaseCallActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <activity
+            android:name=".extensions.inviteuser.SelectGroupMemberActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />

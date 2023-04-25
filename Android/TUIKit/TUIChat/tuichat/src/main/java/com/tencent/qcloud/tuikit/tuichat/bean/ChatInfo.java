@@ -2,7 +2,7 @@ package com.tencent.qcloud.tuikit.tuichat.bean;
 
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMGroupAtInfo;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 
 import java.io.Serializable;
 import java.util.ArrayList;

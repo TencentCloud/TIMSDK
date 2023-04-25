@@ -10,14 +10,16 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.qcloud.tuicore.TUICore;
-import com.tencent.qcloud.tuicore.component.CustomLinearLayoutManager;
-import com.tencent.qcloud.tuicore.component.TitleBarLayout;
-import com.tencent.qcloud.tuicore.component.fragments.BaseFragment;
-import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
+import com.tencent.qcloud.tuikit.timcommon.component.CustomLinearLayoutManager;
+import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
+import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationConstants;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
@@ -76,15 +78,9 @@ public class TUIForwardSelectFragment extends BaseFragment {
                     return;
                 } else if (viewType == ConversationInfo.TYPE_FORWAR_SELECT){
                     if(mTitleBarLayout.getLeftTitle().getText().equals(getString(R.string.titlebar_cancle))){
-                        Bundle param = new Bundle();
-                        param.putInt(TUIConversationConstants.GroupType.TYPE, TUIConversationConstants.GroupType.PUBLIC);
-                        param.putBoolean(TUIConversationConstants.FORWARD_CREATE_NEW_CHAT, false);
-                        TUICore.startActivity(TUIForwardSelectFragment.this, "ForwardSelectGroupActivity", param, TUIConversationConstants.FORWARD_SELECT_MEMBERS_CODE);
+                        selectContactsToForward();
                     }else if(mTitleBarLayout.getLeftTitle().getText().equals(getString(R.string.titlebar_close))){
-                        Bundle param = new Bundle();
-                        param.putInt(TUIConversationConstants.GroupType.TYPE, TUIConversationConstants.GroupType.PUBLIC);
-                        param.putBoolean(TUIConversationConstants.FORWARD_CREATE_NEW_CHAT, true);
-                        TUICore.startActivity(TUIForwardSelectFragment.this, "ForwardSelectGroupActivity", param, TUIConversationConstants.FORWARD_CREATE_GROUP_CODE);
+                        createNewConversationToForward();
                     }else{
                         TUIConversationLog.d(TAG,"Titlebar exception");
                     }
@@ -175,6 +171,56 @@ public class TUIForwardSelectFragment extends BaseFragment {
 
         refreshSelectConversations();
         initTitleAction();
+    }
+
+    private void createNewConversationToForward() {
+        Bundle param = new Bundle();
+        param.putInt(TUIConversationConstants.GroupType.TYPE, TUIConversationConstants.GroupType.PUBLIC);
+        param.putBoolean(TUIConversationConstants.FORWARD_CREATE_NEW_CHAT, true);
+        TUICore.startActivityForResult(TUIForwardSelectFragment.this, "ForwardSelectGroupActivity", param, new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (getActivity() != null) {
+                    getActivity().setResult(TUIConversationConstants.FORWARD_SELECT_ACTIVTY_CODE, result.getData());
+                    getActivity().finish();
+                }
+            }
+        });
+    }
+
+    private void selectContactsToForward() {
+        Bundle param = new Bundle();
+        param.putInt(TUIConversationConstants.GroupType.TYPE, TUIConversationConstants.GroupType.PUBLIC);
+        param.putBoolean(TUIConversationConstants.FORWARD_CREATE_NEW_CHAT, false);
+        TUICore.startActivityForResult(TUIForwardSelectFragment.this, "ForwardSelectGroupActivity", param, new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result.getData() == null) {
+                    return;
+                }
+                HashMap<String, String> conversationMap = (HashMap<String, String>) result.getData()
+                        .getSerializableExtra(TUIConversationConstants.FORWARD_SELECT_CONVERSATION_KEY);
+                if (conversationMap == null || conversationMap.isEmpty()){
+                    mContactDataSource.clear();
+                    refreshSelectConversations();
+                    return;
+                }
+
+                mContactDataSource.clear();
+                for (Map.Entry<String, String> entry: conversationMap.entrySet()){
+                    ConversationInfo conversationInfo = new ConversationInfo();
+                    List<Object> iconList = new ArrayList<>();
+                    iconList.add(entry.getValue());
+                    conversationInfo.setIconUrlList(iconList);
+                    conversationInfo.setId(entry.getKey());
+                    conversationInfo.setGroup(false);
+                    mContactDataSource.add(conversationInfo);
+                }
+                checkRepeat();
+
+                refreshSelectConversations();
+            }
+        });
     }
 
     private void refreshSelectConversations(){
@@ -280,38 +326,6 @@ public class TUIForwardSelectFragment extends BaseFragment {
                 listLayout.getAdapter().notifyDataSetChanged();
             }
         });
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == TUIConversationConstants.FORWARD_CREATE_GROUP_CODE && resultCode == TUIConversationConstants.FORWARD_CREATE_GROUP_CODE) {
-            if (getActivity() != null) {
-                getActivity().setResult(TUIConversationConstants.FORWARD_SELECT_ACTIVTY_CODE, data);
-                getActivity().finish();
-            }
-        } else if (requestCode == TUIConversationConstants.FORWARD_SELECT_MEMBERS_CODE && resultCode == TUIConversationConstants.FORWARD_SELECT_MEMBERS_CODE){
-            HashMap<String, String> conversationMap = (HashMap<String, String>) data.getSerializableExtra(TUIConversationConstants.FORWARD_SELECT_CONVERSATION_KEY);
-            if (conversationMap == null || conversationMap.isEmpty()){
-                mContactDataSource.clear();
-                refreshSelectConversations();
-                return;
-            }
-
-            mContactDataSource.clear();
-            for (Map.Entry<String, String> entry: conversationMap.entrySet()){
-                ConversationInfo conversationInfo = new ConversationInfo();
-                List<Object> iconList = new ArrayList<>();
-                iconList.add(entry.getValue());
-                conversationInfo.setIconUrlList(iconList);
-                conversationInfo.setId(entry.getKey());
-                conversationInfo.setGroup(false);
-                mContactDataSource.add(conversationInfo);
-            }
-            checkRepeat();
-
-            refreshSelectConversations();
-        }
     }
 
     private void checkRepeat() {

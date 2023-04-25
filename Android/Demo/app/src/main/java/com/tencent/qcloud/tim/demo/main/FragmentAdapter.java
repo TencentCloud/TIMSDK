@@ -7,7 +7,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-
 import java.util.List;
 
 public class FragmentAdapter extends FragmentStateAdapter {
@@ -43,5 +42,10 @@ public class FragmentAdapter extends FragmentStateAdapter {
     @Override
     public int getItemCount() {
         return fragmentList == null ? 0 : fragmentList.size();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return fragmentList.get(position).hashCode();
     }
 }

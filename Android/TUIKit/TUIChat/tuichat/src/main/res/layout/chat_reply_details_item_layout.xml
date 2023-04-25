@@ -9,7 +9,7 @@
     android:paddingLeft="12.6dp"
     android:paddingTop="11.52dp">
 
-    <com.tencent.qcloud.tuicore.component.gatherimage.UserIconView
+    <com.tencent.qcloud.tuikit.timcommon.component.gatherimage.UserIconView
         android:id="@+id/user_icon"
         android:layout_width="41dp"
         android:layout_height="41dp"
@@ -52,7 +52,7 @@
         tools:text="吃饭" />
 
     <!-- translation content area -->
-    <com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MaxWidthFrameLayout
+    <com.tencent.qcloud.tuikit.timcommon.component.MaxWidthFrameLayout
         android:id="@+id/translate_content_fl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

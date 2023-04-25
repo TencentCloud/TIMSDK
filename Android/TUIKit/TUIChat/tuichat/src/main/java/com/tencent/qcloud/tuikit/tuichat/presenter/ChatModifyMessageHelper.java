@@ -2,9 +2,9 @@ package com.tencent.qcloud.tuikit.tuichat.presenter;
 
 import android.os.Handler;
 
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.C2CChatEventListener;
 import com.tencent.qcloud.tuikit.tuichat.model.ChatProvider;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;

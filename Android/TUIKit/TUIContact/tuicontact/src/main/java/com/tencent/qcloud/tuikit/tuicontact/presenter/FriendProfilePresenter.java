@@ -7,10 +7,9 @@ import android.util.Pair;
 
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
-import com.tencent.qcloud.tuicore.util.BackgroundTasks;
-import com.tencent.qcloud.tuicore.util.ThreadHelper;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactService;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactGroupApplyInfo;
@@ -85,7 +84,7 @@ public class FriendProfilePresenter {
                 bean.setSignature(user.getSignature());
 
                 CountDownLatch latch = new CountDownLatch(2);
-                ThreadHelper.INST.execute(new Runnable() {
+                ThreadUtils.execute(new Runnable() {
                     @Override
                     public void run() {
                         isInBlackList(id, new IUIKitCallback<Boolean>() {
@@ -103,7 +102,7 @@ public class FriendProfilePresenter {
                     }
                 });
 
-                ThreadHelper.INST.execute(new Runnable() {
+                ThreadUtils.execute(new Runnable() {
                     @Override
                     public void run() {
                         isFriend(id, bean, new IUIKitCallback<Boolean>() {
@@ -121,7 +120,7 @@ public class FriendProfilePresenter {
                     }
                 });
 
-                ThreadHelper.INST.execute(new Runnable() {
+                ThreadUtils.execute(new Runnable() {
                     @Override
                     public void run() {
                         try {
@@ -129,7 +128,7 @@ public class FriendProfilePresenter {
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                        BackgroundTasks.getInstance().runOnUiThread(new Runnable() {
+                        ThreadUtils.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 if (friendProfileLayout != null) {

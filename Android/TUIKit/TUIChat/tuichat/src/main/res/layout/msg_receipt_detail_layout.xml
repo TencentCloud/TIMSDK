@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.tencent.qcloud.tuicore.component.TitleBarLayout
+    <com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout
         android:id="@+id/receipt_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
@@ -84,7 +84,7 @@
         android:paddingRight="15.36dp"
         android:orientation="vertical">
 
-        <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+        <com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView
             android:id="@+id/user_face"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"

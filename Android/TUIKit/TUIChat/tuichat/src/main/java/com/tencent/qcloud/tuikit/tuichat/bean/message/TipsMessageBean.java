@@ -8,7 +8,8 @@ import com.tencent.imsdk.v2.V2TIMGroupMemberChangeInfo;
 import com.tencent.imsdk.v2.V2TIMGroupMemberInfo;
 import com.tencent.imsdk.v2.V2TIMGroupTipsElem;
 import com.tencent.imsdk.v2.V2TIMMessage;
-import com.tencent.qcloud.tuicore.util.DateTimeUtil;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.util.DateTimeUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
@@ -172,7 +173,18 @@ public class TipsMessageBean extends TUIMessageBean {
                     } else {
                         tipsMessage = tipsMessage + TUIChatService.getAppContext().getString(R.string.group_add_opt_auto_approval);
                     }
+                } else if (modifyType == V2TIMGroupChangeInfo.V2TIM_GROUP_INFO_CHANGE_TYPE_GROUP_APPROVE_OPT) {
+                    tipsMessage = TUIChatService.getAppContext().getString(R.string.modify_group_invite_opt);
+                    int addOpt = modifyInfo.getIntValue();
+                    if (addOpt == V2TIMGroupInfo.V2TIM_GROUP_ADD_FORBID) {
+                        tipsMessage = tipsMessage + TUIChatService.getAppContext().getString(R.string.group_add_opt_join_disable);
+                    } else if (addOpt == V2TIMGroupInfo.V2TIM_GROUP_ADD_AUTH) {
+                        tipsMessage = tipsMessage + TUIChatService.getAppContext().getString(R.string.group_add_opt_admin_approve);
+                    } else {
+                        tipsMessage = tipsMessage + TUIChatService.getAppContext().getString(R.string.group_add_opt_auto_approval);
+                    }
                 }
+
                 if (i < modifyList.size() - 1) {
                     tipsMessage = tipsMessage + "、";
                 }

@@ -32,13 +32,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.tencent.qcloud.tuicore.util.ScreenUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.face.Emoji;
+import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
+import com.tencent.qcloud.tuikit.timcommon.component.face.RecentEmojiManager;
+import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.classicui.component.EmojiIndicatorView;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MessageRecyclerView;
-import com.tencent.qcloud.tuikit.tuichat.component.face.Emoji;
-import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
-import com.tencent.qcloud.tuikit.tuichat.component.face.RecentEmojiManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -675,6 +675,8 @@ public class ChatPopMenu {
     public static class ChatPopMenuAction {
         private String actionName;
         private int actionIcon;
+
+        private int priority;
         private OnClickListener actionClickListener;
 
         public void setActionName(String actionName) {
@@ -693,6 +695,13 @@ public class ChatPopMenu {
             return actionIcon;
         }
 
+        public int getPriority() {
+            return priority;
+        }
+
+        public void setPriority(int priority) {
+            this.priority = priority;
+        }
         public void setActionClickListener(OnClickListener actionClickListener) {
             this.actionClickListener = actionClickListener;
         }

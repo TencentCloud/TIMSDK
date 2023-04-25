@@ -8,9 +8,9 @@ import androidx.annotation.Nullable;
 
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
-import com.tencent.qcloud.tuicore.component.activities.BaseMinimalistLightActivity;
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseMinimalistLightActivity;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuigroup.R;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupConstants;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupService;
@@ -134,13 +134,13 @@ public class GroupMemberMinimalistActivity extends BaseMinimalistLightActivity {
                     presenter.setGroupManager(groupID, groupMemberInfo.getAccount(), new IUIKitCallback<Void>() {
                         @Override
                         public void onSuccess(Void data) {
-                            ToastUtil.toastLongMessage(getString(com.tencent.qcloud.tuicore.R.string.setting_success));
+                            ToastUtil.toastLongMessage(getString(com.tencent.qcloud.tuikit.timcommon.R.string.setting_success));
                             GroupMemberMinimalistActivity.this.onAdminRoleChanged(groupMemberInfo);
                         }
 
                         @Override
                         public void onError(String module, int errCode, String errMsg) {
-                            ToastUtil.toastLongMessage(getString(com.tencent.qcloud.tuicore.R.string.setting_fail)
+                            ToastUtil.toastLongMessage(getString(com.tencent.qcloud.tuikit.timcommon.R.string.setting_fail)
                                     + ", errCode = " + errCode + ", errMsg = " + errMsg);
                         }
                     });
@@ -148,13 +148,13 @@ public class GroupMemberMinimalistActivity extends BaseMinimalistLightActivity {
                     presenter.setGroupMemberRole(groupID, groupMemberInfo.getAccount(), new IUIKitCallback<Void>() {
                         @Override
                         public void onSuccess(Void data) {
-                            ToastUtil.toastLongMessage(getString(com.tencent.qcloud.tuicore.R.string.setting_success));
+                            ToastUtil.toastLongMessage(getString(com.tencent.qcloud.tuikit.timcommon.R.string.setting_success));
                             GroupMemberMinimalistActivity.this.onAdminRoleChanged(groupMemberInfo);
                         }
 
                         @Override
                         public void onError(String module, int errCode, String errMsg) {
-                            ToastUtil.toastLongMessage(getString(com.tencent.qcloud.tuicore.R.string.setting_fail)
+                            ToastUtil.toastLongMessage(getString(com.tencent.qcloud.tuikit.timcommon.R.string.setting_fail)
                                     + ", errCode = " + errCode + ", errMsg = " + errMsg);
                         }
                     });

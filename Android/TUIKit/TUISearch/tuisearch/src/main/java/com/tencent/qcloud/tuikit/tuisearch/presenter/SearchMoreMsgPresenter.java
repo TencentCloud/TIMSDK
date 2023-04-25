@@ -3,7 +3,7 @@ package com.tencent.qcloud.tuikit.tuisearch.presenter;
 import android.text.TextUtils;
 import android.util.Pair;
 
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuisearch.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuisearch.bean.MessageInfo;
 import com.tencent.qcloud.tuikit.tuisearch.bean.SearchDataBean;

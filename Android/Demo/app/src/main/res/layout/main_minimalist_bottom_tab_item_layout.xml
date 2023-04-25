@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:id="@+id/conversation_btn_group"
+    android:layout_width="@dimen/demo_tab_bottom_item_width"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageView
+        android:id="@+id/tab_icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/demo_overseas_main_tab_conversation_selected" />
+
+    <TextView
+        android:id="@+id/tab_text"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tab_icon"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="@string/demo_tab_overseas_conversation_tab_text"
+        android:textColor="@color/demo_main_tab_text_selected_color_light"
+        android:textSize="12sp" />
+
+    <com.tencent.qcloud.tuikit.timcommon.component.UnreadCountTextView
+        android:id="@+id/unread_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="-17dp"
+        android:layout_marginTop="1dp"
+        android:layout_toEndOf="@id/tab_text"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:textColor="@color/white"
+        android:minWidth="18.4dp"
+        android:minHeight="18.4dp"
+        android:textSize="13.6sp"
+        android:visibility="gone" />
+
+</RelativeLayout>
+

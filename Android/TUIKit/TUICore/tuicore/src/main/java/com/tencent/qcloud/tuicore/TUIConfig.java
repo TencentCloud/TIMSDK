@@ -46,10 +46,10 @@ public class TUIConfig {
     private static int defaultAvatarImage;
     private static int defaultGroupAvatarImage;
 
-    public final static int TUIKIT_DEMO_IM = 0;
-    public final static int TUIKIT_DEMO_RTCUBE = 1;
-    // 0,im demo; 1,rtcube demo
-    private static int tuikitDemoType = TUIKIT_DEMO_IM;
+    public final static int TUI_HOST_TYPE_IMAPP = 0;
+    public final static int TUI_HOST_TYPE_RTCUBE = 1;
+    // 0,im app; 1,rtcube app
+    private static int tuiHostType = TUI_HOST_TYPE_IMAPP;
 
     public static void init(Context context) {
         if (initialized) {
@@ -161,12 +161,12 @@ public class TUIConfig {
         return gender;
     }
 
-    public static void setTUIKitDemoType(int type) {
-        TUIConfig.tuikitDemoType = type;
+    public static void setTUIHostType(int type) {
+        TUIConfig.tuiHostType = type;
     }
 
-    public static int getTUIKitDemoType() {
-        return tuikitDemoType;
+    public static int getTUIHostType() {
+        return tuiHostType;
     }
 
     /**

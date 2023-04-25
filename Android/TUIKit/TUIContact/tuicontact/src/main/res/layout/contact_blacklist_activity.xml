@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.tencent.qcloud.tuicore.component.TitleBarLayout
+    <com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout
         android:id="@+id/black_list_titlebar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/page_title_height" />

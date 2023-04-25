@@ -29,22 +29,40 @@
     <string name="tuicalling_switch_camera_hint">请先打开摄像头</string>
     <string name="tuicalling_switch_audio_call">切到语音通话</string>
     <string name="tuicalling_btn_cancel">取消</string>
-    <string name="tuicalling_tips_start_audio">请先打开麦克风权限</string>
     <string name="tuicalling_video_call">视频通话</string>
     <string name="tuicalling_audio_call">语音通话</string>
     <string name="tuicalling_user_kicked_offline">您已被踢下线，请重新登录</string>
     <string name="tuicalling_user_sig_expired">您的用户签名信息已过期</string>
     <string name="tuicalling_user_exceed_limit">暂支持最多9人通话。如需多人会议，请使用TUIRoom</string>
     <string name="tuicalling_wait_resonse">等待接听</string>
-    <string name="tuicalling_is_calling">正在通话中,无法再次发起</string>
-    <string name="tuicalling_tips_start_camera">请先打开相机权限</string>
-    <string name="tuicalling_permission_camera_reason_title">%s申请获取相机权限</string>
+
+    <string name="tuicalling_permission_camera">相机</string>
+    <string name="tuicalling_permission_microphone">麦克风</string>
+    <string name="tuicalling_permission_bluetooth">蓝牙</string>
+    <string name="tuicalling_permission_separator">、</string>
+    <string name="tuicalling_permission_tips">请先打开%s权限</string>
+    <string name="tuicalling_permission_title">%s申请获取%s权限</string>
     <string name="tuicalling_permission_camera_reason">需要访问您的相机权限，开启后用于视频通话、多人视频通话等功能，在您使用美颜功能时，我们会对您实时拍摄的面部的像素信息进行实时智能识别，在识别过程中会实时收集您面部的像素信息，以为您提供更好的美颜效果。</string>
-    <string name="tuicalling_permission_mic_reason_title">%s申请获取麦克风权限</string>
-    <string name="tuicalling_permission_mic_reason">需要访问您的麦克风权限，开启后用于语音通话、多人语音通话、视频通话、多人视频通话等功能，并且开启后录制的视频才会有声音</string>
+    <string name="tuicalling_permission_mic_reason">需要访问您的麦克风权限，开启后用于语音通话、多人语音通话、视频通话、多人视频通话等功能，并且开启后录制的视频才会有声音。</string>
+    <string name="tuicalling_permission_bluetooth_reason">需要访问您的蓝牙权限，开启后用于使用蓝牙耳机。</string>
+
     <string name="tuicalling_package_not_purchased">您当前未购买音视频通话能力套餐，请前往 IM 控制台开通免费体验或加购正式版</string>
     <string name="tuicalling_package_not_support">您当前购买的音视频通话能力套餐不支持该功能，建议您升级套餐类型</string>
     <string name="tuicalling_status_is_not_accept">接听后才能使用该功能</string>
     <string name="tuicalling_groupid_is_empty">群ID为空</string>
     <string name="tuicalling_have_a_new_call">您有一个新的通话</string>
+
+    <string name="tuicallkit_record_call_title">最近通话</string>
+    <string name="tuicallkit_record_call_delete">删除</string>
+    <string name="tuicallkit_record_dialog_message">清除所有记录</string>
+    <string name="tuicallkit_record_dialog_cancel">取消</string>
+    <string name="tuicallkit_record_tab_title_all">所有通话</string>
+    <string name="tuicallkit_record_tab_title_miss">未接来电</string>
+    <string name="tuicallkit_record_done">完成</string>
+    <string name="tuicallkit_record_clear">清除</string>
+    <string name="tuicallkit_group_recall_unsupport">多人通话记录不支持重呼</string>
+
+    <string name="tuicallkit_group_title_add_user">添加成员</string>
+    <string name="tuicallkit_group_hint_you">(你)</string>
+    <string name="tuicallkit_group_btn_ok">确定</string>
 </resources>

@@ -15,10 +15,10 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import com.tencent.qcloud.tuicore.TUIThemeManager;
-import com.tencent.qcloud.tuicore.component.dialog.TUIKitDialog;
-import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.dialog.TUIKitDialog;
+import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuicommunity.R;
 import com.tencent.qcloud.tuikit.tuicommunity.bean.CommunityBean;
 import com.tencent.qcloud.tuikit.tuicommunity.component.bottompopupcard.IPopupCard;
@@ -82,7 +82,7 @@ public class CommunityMorePopupView extends FrameLayout implements IPopupView {
     public void setCommunityBean(CommunityBean communityBean) {
         this.communityBean = communityBean;
         GlideEngine.loadImageSetDefault(groupFace, communityBean.getGroupFaceUrl(),
-                TUIThemeManager.getAttrResId(getContext(), com.tencent.qcloud.tuicore.R.attr.core_default_group_icon_community));
+                TUIThemeManager.getAttrResId(getContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.core_default_group_icon_community));
         communityName.setText(communityBean.getCommunityName());
         communityID.setText(communityBean.getGroupId());
 

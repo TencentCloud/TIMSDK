@@ -21,18 +21,18 @@ import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.bean.UserInfo;
 import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
-import com.tencent.qcloud.tuicore.component.MinimalistLineControllerView;
-import com.tencent.qcloud.tuicore.component.TitleBarLayout;
-import com.tencent.qcloud.tuicore.component.activities.BaseMinimalistLightActivity;
-import com.tencent.qcloud.tuicore.component.activities.ImageSelectMinimalistActivity;
-import com.tencent.qcloud.tuicore.component.activities.SelectionMinimalistActivity;
-import com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView;
-import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
-import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
-import com.tencent.qcloud.tuicore.component.popupcard.PopupInputCard;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
-import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.MinimalistLineControllerView;
+import com.tencent.qcloud.tuikit.timcommon.component.PopupInputCard;
+import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
+import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseMinimalistLightActivity;
+import com.tencent.qcloud.tuikit.timcommon.component.activities.ImageSelectMinimalistActivity;
+import com.tencent.qcloud.tuikit.timcommon.component.activities.SelectionMinimalistActivity;
+import com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView;
+import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
+import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -57,6 +57,7 @@ public class SelfDetailMinamalistActivity extends BaseMinimalistLightActivity im
     private int gender;
     private long birthday;
     private String signature;
+    private V2TIMSDKListener v2TIMSDKListener = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +79,7 @@ public class SelfDetailMinamalistActivity extends BaseMinimalistLightActivity im
     private void setupViews() {
         titleBarLayout.getRightIcon().setVisibility(View.GONE);
         titleBarLayout.setTitle(getString(R.string.demo_profile_detail), ITitleBarLayout.Position.MIDDLE);
+        titleBarLayout.setOnLeftClickListener(this);
 
         int radius = ScreenUtil.dip2px(48);
         selfIcon.setRadius(radius);
@@ -137,12 +139,19 @@ public class SelfDetailMinamalistActivity extends BaseMinimalistLightActivity im
     }
 
     private void setUserInfoListener() {
-        V2TIMManager.getInstance().addIMSDKListener(new V2TIMSDKListener() {
+        v2TIMSDKListener = new V2TIMSDKListener() {
             @Override
             public void onSelfInfoUpdated(V2TIMUserFullInfo info) {
                 setUserInfo(info);
             }
-        });
+        };
+        V2TIMManager.getInstance().addIMSDKListener(v2TIMSDKListener);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        V2TIMManager.getInstance().removeIMSDKListener(v2TIMSDKListener);
     }
 
     @Override
@@ -204,6 +213,8 @@ public class SelfDetailMinamalistActivity extends BaseMinimalistLightActivity im
             }));
             View rootView = findViewById(android.R.id.content);
             popupInputCard.show(rootView, Gravity.BOTTOM);
+        } else if (v == titleBarLayout.getLeftGroup()) {
+            finish();
         }
     }
 

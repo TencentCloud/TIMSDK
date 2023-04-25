@@ -10,19 +10,11 @@
     </style>
 
     <style name="ChatPopActivityStyle" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:windowBackground">#BF000000</item>
+        <item name="android:windowBackground">@color/window_background_color</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowEnterAnimation">@anim/translate_dialog_in</item>
         <item name="android:windowExitAnimation">@anim/translate_dialog_out</item>
-    </style>
-
-    <style name="ChatMinimalistMessageTextStyle">
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">#FF000000</item>
-        <item name="android:textFontWeight">500</item>
-        <item name="android:lineHeight">16.7sp</item>
     </style>
 
     <style name="ChatBottomSelectSheet" parent="@android:style/Theme.Dialog">

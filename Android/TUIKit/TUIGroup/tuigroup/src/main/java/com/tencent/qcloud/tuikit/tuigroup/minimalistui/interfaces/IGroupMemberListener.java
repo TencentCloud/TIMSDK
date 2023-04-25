@@ -10,7 +10,7 @@ public interface IGroupMemberListener {
 
     void forwardAddMember(GroupInfo info);
 
-    void forwardDeleteMember(GroupInfo info);
+    default void forwardDeleteMember(GroupInfo info) {}
 
     default void setSelectedMember(ArrayList<String> members) {}
 }

@@ -3,6 +3,9 @@ include ':app'
 include ':tuicore'
 project(':tuicore').projectDir = new File(settingsDir, '../TUIKit/TUICore/tuicore')
 
+include ':timcommon'
+project(':timcommon').projectDir = new File(settingsDir, '../TUIKit/TIMCommon/timcommon')
+
 include ':tuichat'
 project(':tuichat').projectDir = new File(settingsDir, '../TUIKit/TUIChat/tuichat')
 
@@ -26,3 +29,6 @@ project(':tuiofflinepush').projectDir = new File(settingsDir, '../TUIKit/TUIOffl
 
 include ':tuicommunity'
 project(':tuicommunity').projectDir = new File(settingsDir, '../TUIKit/TUICommunity/tuicommunity')
+
+include ':tuitranslation'
+project(':tuitranslation').projectDir = new File(settingsDir, '../TUIKit/TUITranslation/tuitranslation')

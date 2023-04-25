@@ -54,14 +54,18 @@ dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.3.0'
     implementation 'com.google.android.material:material:1.3.0'
-    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.google.code.gson:gson:2.9.1'
 
     // Google FCM
-    implementation "com.tencent.tpns:fcm:1.3.3.3-release"
-    // google cloud
-    implementation('com.google.firebase:firebase-messaging:19.0.1')
+    // Import the Firebase BoM (see: https://firebase.google.com/docs/android/learn-more#bom)
+    implementation platform('com.google.firebase:firebase-bom:31.2.3')
+    // Firebase Cloud Messaging (Java)
+    implementation 'com.google.firebase:firebase-messaging'
+    // For an optimal experience using FCM, add the Firebase SDK
+    // for Google Analytics. This is recommended, but not required.
+    //implementation 'com.google.firebase:firebase-analytics'
     // xiaomi
-    implementation "com.tencent.tpns:xiaomi:1.3.3.3-release"
+    implementation "com.tencent.tpns:xiaomi:1.3.7.2-release"
     // meizu
     implementation "com.tencent.tpns:meizu:1.3.3.3-release"
     // OPPO
@@ -70,8 +74,8 @@ dependencies {
     // vivo
     implementation "com.tencent.tpns:vivo:1.3.3.3-release"
     // huawei
-    implementation 'com.tencent.tpns:huawei:1.3.3.3-release'
-    implementation 'com.huawei.hms:push:5.0.2.300'
+    implementation 'com.tencent.tpns:huawei:1.3.7.2-release'
+    implementation 'com.huawei.hms:push:6.7.0.300'
     // honor
     implementation 'com.tencent.tpns:honor:1.3.3.3-release'
 
@@ -81,8 +85,8 @@ dependencies {
         if (projects.contains("tuicore")) {
             api project(':tuicore')
         } else {
-            api "com.tencent.imsdk:imsdk-plus:7.1.3925"
-            api 'com.tencent.liteav.tuikit:tuicore:1.1.22'
+            api "com.tencent.imsdk:imsdk-plus:7.2.4123"
+            api 'com.tencent.liteav.tuikit:tuicore:1.1.23'
         }
     } else {
         implementation 'com.alibaba:fastjson:1.1.46.android'

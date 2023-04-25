@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:context=".ui.page.JoinCommunityActivity">
 
-    <com.tencent.qcloud.tuicore.component.TitleBarLayout
+    <com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout
         android:id="@+id/join_community_title"
         app:title_bar_can_return="true"
         app:title_bar_middle_title="@string/community_search_community"
@@ -84,7 +84,7 @@
         android:visibility="gone"
         tools:visibility="visible">
 
-        <com.tencent.qcloud.tuicore.component.RoundCornerImageView
+        <com.tencent.qcloud.tuikit.timcommon.component.RoundCornerImageView
             android:id="@+id/community_avatar"
             android:layout_width="42dp"
             android:layout_height="42dp"

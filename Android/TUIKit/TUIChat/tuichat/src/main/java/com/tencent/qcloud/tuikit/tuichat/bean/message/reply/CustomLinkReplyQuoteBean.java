@@ -1,7 +1,7 @@
 package com.tencent.qcloud.tuikit.tuichat.bean.message.reply;
 
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomLinkMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 
 public class CustomLinkReplyQuoteBean extends TextReplyQuoteBean {
     @Override

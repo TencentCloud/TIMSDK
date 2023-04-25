@@ -18,8 +18,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.qcloud.tuicore.TUIThemeManager;
-import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
-import com.tencent.qcloud.tuicore.util.TUIUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
+import com.tencent.qcloud.tuikit.timcommon.util.TUIUtil;
 import com.tencent.qcloud.tuikit.tuisearch.R;
 import com.tencent.qcloud.tuikit.tuisearch.bean.SearchDataBean;
 import com.tencent.qcloud.tuikit.tuisearch.interfaces.ISearchMoreMsgAdapter;
@@ -121,7 +121,7 @@ public class SearchMoreMsgAdapter extends RecyclerView.Adapter<RecyclerView.View
                 if (searchDataBean.isGroup()) {
                     avatarIconResID = TUIUtil.getDefaultGroupIconResIDByGroupType(context, searchDataBean.getGroupType());
                 } else {
-                    avatarIconResID = TUIThemeManager.getAttrResId(contactViewHolder.mUserIconView.getContext(), com.tencent.qcloud.tuicore.R.attr.core_default_user_icon);
+                    avatarIconResID = TUIThemeManager.getAttrResId(contactViewHolder.mUserIconView.getContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.core_default_user_icon);
                 }
                 contactViewHolder.mUserIconView.setImageResource(avatarIconResID);
             }
@@ -184,7 +184,7 @@ public class SearchMoreMsgAdapter extends RecyclerView.Adapter<RecyclerView.View
         if (searchDataBean.isGroup()) {
             avatarDefaultIconResID = TUIUtil.getDefaultGroupIconResIDByGroupType(context, searchDataBean.getGroupType());
         } else {
-            avatarDefaultIconResID = TUIThemeManager.getAttrResId(holder.itemView.getContext(), com.tencent.qcloud.tuicore.R.attr.core_default_user_icon);
+            avatarDefaultIconResID = TUIThemeManager.getAttrResId(holder.itemView.getContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.core_default_user_icon);
         }
         if (!TextUtils.isEmpty(searchDataBean.getIconPath())) {
             GlideEngine.loadImageSetDefault(holder.conversationIcon, searchDataBean.getIconPath(), avatarDefaultIconResID);

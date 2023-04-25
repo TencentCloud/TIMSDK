@@ -1,12 +1,12 @@
 package com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.reply;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,16 +14,18 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.tencent.qcloud.tuicore.component.gatherimage.UserIconView;
-import com.tencent.qcloud.tuicore.util.DateTimeUtil;
+import com.tencent.qcloud.tuicore.TUIConstants;
+import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuikit.timcommon.bean.MessageRepliesBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
+import com.tencent.qcloud.tuikit.timcommon.component.gatherimage.UserIconView;
+import com.tencent.qcloud.tuikit.timcommon.util.DateTimeUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageRepliesBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
-import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.MessageProperties;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +33,7 @@ public class ReplyDetailsView extends RecyclerView {
     private ReplyDetailsAdapter adapter;
     private LinearLayoutManager layoutManager;
     private FrameLayout translationContentFrameLayout;
-    private LinearLayout translationResultLayout;
+    private Activity activity;
 
     public ReplyDetailsView(@NonNull Context context) {
         super(context);
@@ -60,6 +62,10 @@ public class ReplyDetailsView extends RecyclerView {
         adapter.notifyDataSetChanged();
     }
 
+    public void setActivity(Activity activity) {
+        this.activity = activity;
+    }
+
     public class ReplyDetailsAdapter extends Adapter<ReplyDetailsViewHolder>{
         Map<MessageRepliesBean.ReplyBean, TUIMessageBean> data;
 
@@ -72,8 +78,6 @@ public class ReplyDetailsView extends RecyclerView {
         public ReplyDetailsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_reply_details_item_layout, parent, false);
             translationContentFrameLayout = view.findViewById(R.id.translate_content_fl);
-            LayoutInflater.from(view.getContext()).inflate(R.layout.translation_contant_layout, translationContentFrameLayout);
-            translationResultLayout = translationContentFrameLayout.findViewById(R.id.translate_result_ll);
             return new ReplyDetailsViewHolder(view);
         }
 
@@ -84,13 +88,11 @@ public class ReplyDetailsView extends RecyclerView {
             String userName;
             String messageText;
             List<Object> iconList = new ArrayList<>();
-            int translationStatus = TUIMessageBean.MSG_TRANSLATE_STATUS_UNKNOWN;
             if (messageBean == null) {
                 userName = replyBean.getSenderShowName();
                 messageText = replyBean.getMessageAbstract();
                 iconList.add(replyBean.getSenderFaceUrl());
             } else {
-                translationStatus = messageBean.getTranslationStatus();
                 messageText = messageBean.getExtra();
                 userName = messageBean.getUserDisplayName();
                 iconList.add(messageBean.getFaceUrl());
@@ -100,21 +102,7 @@ public class ReplyDetailsView extends RecyclerView {
             holder.userNameTv.setText(userName);
             FaceManager.handlerEmojiText(holder.messageText, messageText, false);
 
-            if (translationStatus == TUIMessageBean.MSG_TRANSLATE_STATUS_SHOWN) {
-                translationContentFrameLayout.setVisibility(View.VISIBLE);
-                translationResultLayout.setVisibility(View.VISIBLE);
-                TextView translationText = translationContentFrameLayout.findViewById(R.id.translate_tv);
-                if (MessageProperties.getInstance().getChatContextFontSize() != 0) {
-                    translationText.setTextSize(MessageProperties.getInstance().getChatContextFontSize());
-                }
-                FaceManager.handlerEmojiText(translationText, messageBean.getTranslation(), false);
-            } else if (translationStatus == TUIMessageBean.MSG_TRANSLATE_STATUS_LOADING) {
-                translationContentFrameLayout.setVisibility(View.VISIBLE);
-                translationResultLayout.setVisibility(View.GONE);
-            } else {
-                translationContentFrameLayout.setVisibility(View.GONE);
-            }
-
+            setTranslationContent(messageBean);
         }
 
         @Override
@@ -124,6 +112,14 @@ public class ReplyDetailsView extends RecyclerView {
             }
             return data.size();
         }
+    }
+
+    private void setTranslationContent(TUIMessageBean msg) {
+        HashMap<String, Object> param = new HashMap<>();
+        param.put(TUIConstants.TUIChat.MESSAGE_BEAN, msg);
+        param.put(TUIConstants.TUIChat.CHAT_RECYCLER_VIEW, ReplyDetailsView.this);
+
+        TUICore.raiseExtension(TUIConstants.TUITranslation.Extension.TranslationView.CLASSIC_EXTENSION_ID, translationContentFrameLayout, param);
     }
 
     static class ReplyDetailsViewHolder extends ViewHolder {

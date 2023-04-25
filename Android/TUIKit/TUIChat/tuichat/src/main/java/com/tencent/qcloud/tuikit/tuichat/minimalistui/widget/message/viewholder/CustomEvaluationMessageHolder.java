@@ -4,10 +4,11 @@ import android.view.View;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message.MessageContentHolder;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomEvaluationMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
 public class CustomEvaluationMessageHolder extends MessageContentHolder {

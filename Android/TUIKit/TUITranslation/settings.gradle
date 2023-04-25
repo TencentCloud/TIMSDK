@@ -1,0 +1,5 @@
+rootProject.name = "TUITranslation"
+include ':tuitranslation'
+
+include ':tuicore'
+project(':tuicore').projectDir = new File(settingsDir, '../TUICore/tuicore')

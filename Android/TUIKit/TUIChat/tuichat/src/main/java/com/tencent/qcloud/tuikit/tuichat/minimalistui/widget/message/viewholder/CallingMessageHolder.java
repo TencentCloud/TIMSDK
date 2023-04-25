@@ -3,14 +3,13 @@ package com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder
 import android.graphics.Color;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
 import android.view.View;
 
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 
 public class CallingMessageHolder extends TextMessageHolder {
 

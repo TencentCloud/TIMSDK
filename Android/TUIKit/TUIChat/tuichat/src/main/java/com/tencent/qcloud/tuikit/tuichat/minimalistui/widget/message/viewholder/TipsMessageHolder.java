@@ -7,10 +7,10 @@ import android.widget.TextView;
 
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message.MessageBaseHolder;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
-import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
 
 public class TipsMessageHolder extends MessageBaseHolder {
@@ -78,4 +78,8 @@ public class TipsMessageHolder extends MessageBaseHolder {
         }
     }
 
+    @Override
+    protected boolean isShowAvatar(TUIMessageBean messageBean) {
+        return messageBean instanceof TipsMessageBean;
+    }
 }

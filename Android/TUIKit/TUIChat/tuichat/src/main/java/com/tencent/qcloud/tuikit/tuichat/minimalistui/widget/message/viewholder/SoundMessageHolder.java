@@ -6,13 +6,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tencent.qcloud.tuicore.TUIConfig;
-import com.tencent.qcloud.tuicore.util.BackgroundTasks;
-import com.tencent.qcloud.tuicore.util.DateTimeUtil;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message.MessageContentHolder;
+import com.tencent.qcloud.tuikit.timcommon.util.DateTimeUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.SoundMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
@@ -78,7 +79,7 @@ public class SoundMessageHolder extends MessageContentHolder {
                     mTimer.schedule(new TimerTask() {
                         @Override
                         public void run() {
-                            BackgroundTasks.getInstance().runOnUiThread(new Runnable() {
+                            ThreadUtils.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     if (times < finalDuration) {

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#99000000"
@@ -104,7 +103,7 @@
                     android:layout_height="1dp"
                     android:background="#EFEFF3" />
 
-                <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+                <com.tencent.qcloud.tuikit.timcommon.component.MinimalistLineControllerView
                     android:id="@+id/group_type_layout"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/contact_profile_item_height"

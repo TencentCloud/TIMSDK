@@ -15,14 +15,14 @@ import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMUserStatus;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
-import com.tencent.qcloud.tuicore.component.UnreadCountTextView;
-import com.tencent.qcloud.tuicore.util.DateTimeUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.UnreadCountTextView;
+import com.tencent.qcloud.tuikit.timcommon.component.swipe.SwipeLayout;
+import com.tencent.qcloud.tuikit.timcommon.util.DateTimeUtil;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.DraftInfo;
-import com.tencent.qcloud.tuikit.tuiconversation.config.TUIConversationConfig;
 import com.tencent.qcloud.tuikit.tuiconversation.commonutil.TUIConversationLog;
-import com.tencent.qcloud.tuicore.component.swipe.SwipeLayout;
+import com.tencent.qcloud.tuikit.tuiconversation.config.TUIConversationConfig;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -35,7 +35,7 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
     protected TextView messageText;
     protected TextView timelineText;
     protected UnreadCountTextView unreadText;
-    protected TextView atInfoText;
+    protected UnreadCountTextView conversationNotDisturbUnread;
     protected ImageView disturbView;
     protected CheckBox multiSelectCheckBox;
     protected RelativeLayout messageStatusLayout;
@@ -43,6 +43,10 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
     public ImageView messageFailed;
     private boolean isForwardMode = false;
     protected View userStatusView;
+
+    protected TextView atAllTv;
+    protected TextView atMeTv;
+    protected TextView draftTv;
     private boolean showFoldedStyle = true;
     protected SwipeLayout swipeLayout;
     protected RelativeLayout markReadView, moreView;
@@ -57,7 +61,10 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
         messageText = rootView.findViewById(R.id.conversation_last_msg);
         timelineText = rootView.findViewById(R.id.conversation_time);
         unreadText = rootView.findViewById(R.id.conversation_unread);
-        atInfoText = rootView.findViewById(R.id.conversation_at_msg);
+        conversationNotDisturbUnread = rootView.findViewById(R.id.conversation_not_disturb_unread);
+        atMeTv = rootView.findViewById(R.id.conversation_at_me);
+        atAllTv = rootView.findViewById(R.id.conversation_at_all);
+        draftTv = rootView.findViewById(R.id.conversation_draft);
         disturbView = rootView.findViewById(R.id.not_disturb);
         multiSelectCheckBox = rootView.findViewById(R.id.select_checkbox);
         messageStatusLayout = rootView.findViewById(R.id.message_status_layout);
@@ -95,6 +102,9 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
         }
         messageText.setText("");
         timelineText.setText("");
+        atAllTv.setVisibility(View.GONE);
+        atMeTv.setVisibility(View.GONE);
+        draftTv.setVisibility(View.GONE);
         DraftInfo draftInfo = conversation.getDraft();
         String draftText = "";
         if (draftInfo != null) {
@@ -129,24 +139,22 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
         }
 
         if (conversation.isShowDisturbIcon()) {
+            unreadText.setVisibility(View.GONE);
             if ((showFoldedStyle && conversation.isMarkFold())) {
                 if (conversation.isMarkLocalUnread()) {
-                    unreadText.setVisibility(View.VISIBLE);
-                    unreadText.setText("");
+                    conversationNotDisturbUnread.setVisibility(View.VISIBLE);
                 } else {
-                    unreadText.setVisibility(View.GONE);
+                    conversationNotDisturbUnread.setVisibility(View.GONE);
                 }
             } else {
                 if (conversation.getUnRead() == 0) {
                     if (conversation.isMarkUnread()) {
-                        unreadText.setVisibility(View.VISIBLE);
-                        unreadText.setText("");
+                        conversationNotDisturbUnread.setVisibility(View.VISIBLE);
                     } else {
-                        unreadText.setVisibility(View.GONE);
+                        conversationNotDisturbUnread.setVisibility(View.GONE);
                     }
                 } else {
-                    unreadText.setVisibility(View.VISIBLE);
-                    unreadText.setText("");
+                    conversationNotDisturbUnread.setVisibility(View.VISIBLE);
 
                     if (messageText.getText() != null) {
                         String text = messageText.getText().toString();
@@ -155,6 +163,7 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
                 }
             }
         } else if (conversation.getUnRead() > 0) {
+            conversationNotDisturbUnread.setVisibility(View.GONE);
             unreadText.setVisibility(View.VISIBLE);
             if (conversation.getUnRead() > 99) {
                 unreadText.setText("99+");
@@ -162,6 +171,7 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
                 unreadText.setText("" + conversation.getUnRead());
             }
         } else {
+            conversationNotDisturbUnread.setVisibility(View.GONE);
             if (conversation.isMarkUnread()) {
                 unreadText.setVisibility(View.VISIBLE);
                 unreadText.setText("1");
@@ -169,24 +179,20 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
                 unreadText.setVisibility(View.GONE);
             }
         }
-
+        if (conversation.getAtType() == ConversationInfo.AT_TYPE_AT_ME) {
+            atMeTv.setVisibility(View.VISIBLE);
+        } else if (conversation.getAtType() == ConversationInfo.AT_TYPE_AT_ALL) {
+            atAllTv.setVisibility(View.VISIBLE);
+        } else if (conversation.getAtType() == ConversationInfo.AT_TYPE_AT_ALL_AND_ME) {
+            atAllTv.setVisibility(View.VISIBLE);
+            atMeTv.setVisibility(View.VISIBLE);
+        }
         if (draftInfo != null) {
-            atInfoText.setVisibility(View.VISIBLE);
-            atInfoText.setText(R.string.drafts);
-            atInfoText.setTextColor(Color.RED);
-
+            draftTv.setVisibility(View.VISIBLE);
             messageStatusLayout.setVisibility(View.GONE);
             messageFailed.setVisibility(View.GONE);
             messageSending.setVisibility(View.GONE);
         } else {
-            if (conversation.getAtInfoText().isEmpty()) {
-                atInfoText.setVisibility(View.GONE);
-            } else {
-                atInfoText.setVisibility(View.VISIBLE);
-                atInfoText.setText(conversation.getAtInfoText());
-                atInfoText.setTextColor(Color.RED);
-            }
-
             V2TIMMessage lastMessage = conversation.getLastMessage();
             if (lastMessage != null) {
                 int status = lastMessage.getStatus();
@@ -221,6 +227,7 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
             titleText.setTextSize(mAdapter.getItemTopTextSize());
         }
         if (!mAdapter.hasItemUnreadDot()) {
+            conversationNotDisturbUnread.setVisibility(View.GONE);
             unreadText.setVisibility(View.GONE);
         }
 
@@ -241,7 +248,6 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
             messageText.setVisibility(View.GONE);
             timelineText.setVisibility(View.GONE);
             unreadText.setVisibility(View.GONE);
-            atInfoText.setVisibility(View.GONE);
             messageStatusLayout.setVisibility(View.GONE);
             messageFailed.setVisibility(View.GONE);
             messageSending.setVisibility(View.GONE);

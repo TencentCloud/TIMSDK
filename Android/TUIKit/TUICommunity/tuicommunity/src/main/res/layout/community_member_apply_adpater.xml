@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/page_margin"
     android:paddingRight="@dimen/page_margin">
 
-    <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+    <com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView
         android:id="@+id/group_apply_member_icon"
         android:layout_width="50dp"
         android:layout_height="50dp"

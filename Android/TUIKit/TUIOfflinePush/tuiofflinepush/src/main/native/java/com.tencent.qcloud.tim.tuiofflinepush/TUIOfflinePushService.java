@@ -9,8 +9,6 @@ import android.text.TextUtils;
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMConversationListener;
 import com.tencent.imsdk.v2.V2TIMManager;
-import com.tencent.imsdk.v2.V2TIMValueCallback;
-import com.tencent.qcloud.tim.tuiofflinepush.utils.BrandUtil;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushLog;
 import com.tencent.qcloud.tuicore.ServiceInitializer;
 import com.tencent.qcloud.tuicore.TUIConstants;
@@ -27,6 +25,8 @@ public class TUIOfflinePushService extends ServiceInitializer implements ITUINot
 
     public static Context appContext;
     public String userId;
+
+    private long totalUnread;
 
     @Override
     public void init(Context context) {
@@ -63,23 +63,35 @@ public class TUIOfflinePushService extends ServiceInitializer implements ITUINot
 
     private void initActivityLifecycle() {
         if (appContext instanceof Application) {
+
+            final V2TIMConversationListener unreadListener = new V2TIMConversationListener() {
+                @Override
+                public void onTotalUnreadMessageCountChanged(long totalUnreadCount) {
+                    TUIOfflinePushService.this.totalUnread = totalUnreadCount;
+                    TUIOfflinePushManager.getInstance().updateBadge(appContext, (int) TUIOfflinePushService.this.totalUnread);
+                }
+            };
+            final ITUINotification unreadNotification = new ITUINotification() {
+                @Override
+                public void onNotifyEvent(String key, String subKey, Map<String, Object> param) {
+                    if (param != null) {
+                        Object unreadCount = param.get(TUIConstants.TUIConversation.TOTAL_UNREAD_COUNT);
+                        if (unreadCount instanceof Long) {
+                            TUIOfflinePushService.this.totalUnread = (long) unreadCount;
+                            TUIOfflinePushManager.getInstance().updateBadge(appContext, (int) TUIOfflinePushService.this.totalUnread);
+                        }
+                    }
+                }
+            };
+
             ((Application) appContext).registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
                 private int foregroundActivities = 0;
                 private boolean isChangingConfiguration;
 
-                private final V2TIMConversationListener unreadListener = new V2TIMConversationListener() {
-                    @Override
-                    public void onTotalUnreadMessageCountChanged(long totalUnreadCount) {
-                        TUIOfflinePushManager.getInstance().updateBadge(appContext, (int) totalUnreadCount);
-                    }
-                };
 
                 @Override
                 public void onActivityCreated(Activity activity, Bundle bundle) {
                     TUIOfflinePushLog.i(TAG, "onActivityCreated bundle: " + bundle);
-                    if (bundle != null) {
-
-                    }
                 }
 
                 @Override
@@ -99,7 +111,8 @@ public class TUIOfflinePushService extends ServiceInitializer implements ITUINot
                             }
                         });
 
-                        V2TIMManager.getConversationManager().removeConversationListener(unreadListener);
+                        V2TIMManager.getConversationManager().addConversationListener(unreadListener);
+                        TUICore.registerEvent(TUIConstants.TUIConversation.EVENT_UNREAD, TUIConstants.TUIConversation.EVENT_SUB_KEY_UNREAD_CHANGED, unreadNotification);
                     }
                     isChangingConfiguration = false;
                 }
@@ -119,30 +132,20 @@ public class TUIOfflinePushService extends ServiceInitializer implements ITUINot
                     foregroundActivities--;
                     if (foregroundActivities == 0) {
                         TUIOfflinePushLog.i(TAG, "application enter background");
-                        V2TIMManager.getConversationManager().getTotalUnreadMessageCount(new V2TIMValueCallback<Long>() {
+                        V2TIMManager.getOfflinePushManager().doBackground((int) totalUnread, new V2TIMCallback() {
                             @Override
-                            public void onSuccess(Long aLong) {
-                                int totalCount = aLong.intValue();
-                                V2TIMManager.getOfflinePushManager().doBackground(totalCount, new V2TIMCallback() {
-                                    @Override
-                                    public void onError(int code, String desc) {
-                                        TUIOfflinePushLog.e(TAG, "doBackground err = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
-                                    }
-
-                                    @Override
-                                    public void onSuccess() {
-                                        TUIOfflinePushLog.i(TAG, "doBackground success");
-                                    }
-                                });
+                            public void onError(int code, String desc) {
+                                TUIOfflinePushLog.e(TAG, "doBackground err = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
                             }
 
                             @Override
-                            public void onError(int code, String desc) {
-
+                            public void onSuccess() {
+                                TUIOfflinePushLog.i(TAG, "doBackground success");
                             }
                         });
 
-                        V2TIMManager.getConversationManager().addConversationListener(unreadListener);
+                        V2TIMManager.getConversationManager().removeConversationListener(unreadListener);
+                        TUICore.unRegisterEvent(TUIConstants.TUIConversation.EVENT_UNREAD, TUIConstants.TUIConversation.EVENT_SUB_KEY_UNREAD_CHANGED, unreadNotification);
                     }
                     isChangingConfiguration = activity.isChangingConfigurations();
                 }
@@ -181,6 +184,8 @@ public class TUIOfflinePushService extends ServiceInitializer implements ITUINot
             String appPackageName = appContext.getPackageName();
             if (TextUtils.equals("com.tencent.qcloud.tim.tuikit", appPackageName)) {
                 appPackageName = "com.tencent.qcloud.tim.demo";
+            } else {
+                return "local";
             }
             Class<?> clazz = Class.forName(appPackageName + ".BuildConfig");
             Field field = clazz.getField(fieldName);

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="open_file_tips">Select an app to open the file</string>
+    <string name="chat_time_today">Today</string>
+    <string name="date_yesterday">Yesterday</string>
+    <string name="date_year_short">YYYY</string>
+    <string name="date_month_short">MM</string>
+    <string name="date_day_short">DD</string>
+    <string name="date_hour_short">HH</string>
+    <string name="date_minute_short">MM</string>
+    <string name="date_second_short">SS</string>
+
+    <string name="setting">setting</string>
+    <string name="setting_fail">Setup failed！</string>
+    <string name="setting_success">Setup Success！</string>
+    <string name="default_text">Default</string>
+    <string name="core_next_step">Next step</string>
+
+    <string name="revoke_tips_you">You recalled a message.</string>
+    <string name="revoke_tips">recalled a message.</string>
+    <string name="revoke_tips_other">A message is recalled.</string>
+    <string name="chat_reply_num">%d replied</string>
+    <string name="has_read">Read</string>
+    <string name="unread">Unread</string>
+    <string name="has_all_read">All read</string>
+    <string name="someone_has_read">%d read</string>
+
+    <string name="timcommon_no_support_msg">Unsupported custom messages</string>
+    <string name="translation_support">Translated by IM</string>
+
+</resources>

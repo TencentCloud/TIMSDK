@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest package="com.tencent.qcloud.tuikit.timcommon"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application >
+
+        <activity
+            android:name="com.tencent.qcloud.tuikit.timcommon.component.activities.SelectionActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.tencent.qcloud.tuikit.timcommon.component.activities.ImageSelectActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.tencent.qcloud.tuikit.timcommon.component.activities.SelectionMinimalistActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.tencent.qcloud.tuikit.timcommon.component.activities.ImageSelectMinimalistActivity"
+            android:screenOrientation="portrait" />
+
+        <provider
+            android:name=".util.FileProvider"
+            android:authorities="${applicationId}.timcommon.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths_public"/>
+        </provider>
+
+        <provider
+            android:name=".TIMCommonService"
+            android:authorities="${applicationId}.TIMCommon.Init"
+            android:enabled="true"
+            android:exported="false"/>
+
+    </application>
+</manifest>

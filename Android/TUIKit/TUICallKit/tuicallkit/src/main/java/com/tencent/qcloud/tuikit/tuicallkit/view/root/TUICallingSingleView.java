@@ -18,7 +18,9 @@ import com.tencent.qcloud.tuikit.tuicallkit.base.TUICallingStatusManager;
 import com.tencent.qcloud.tuikit.tuicallkit.base.UserLayout;
 import com.tencent.qcloud.tuikit.tuicallkit.base.UserLayoutEntity;
 import com.tencent.qcloud.tuikit.tuicallkit.utils.DisplayUtils;
+import com.tencent.qcloud.tuikit.tuicallkit.utils.ImageLoader;
 import com.tencent.qcloud.tuikit.tuicallkit.view.UserLayoutFactory;
+import com.tencent.qcloud.tuikit.tuicallkit.view.common.RoundCornerImageView;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -84,23 +86,7 @@ public class TUICallingSingleView extends BaseCallView {
         }
 
         layout.setVideoAvailable(userModel.isVideoAvailable);
-        mCallingAction.startRemoteView(userModel.userId, layout.getVideoView(),
-                new TUICommonDefine.PlayCallback() {
-                    @Override
-                    public void onPlaying(String userId) {
-
-                    }
-
-                    @Override
-                    public void onLoading(String userId) {
-
-                    }
-
-                    @Override
-                    public void onError(String userId, int errCode, String errMsg) {
-
-                    }
-                });
+        mCallingAction.startRemoteView(userModel.userId, layout.getVideoView(), null);
     }
 
     public void updateUserInfo(CallingUserModel userModel) {
@@ -108,6 +94,8 @@ public class TUICallingSingleView extends BaseCallView {
         UserLayout layout = findUserLayout(userModel.userId);
         if (layout != null) {
             layout.setVideoAvailable(userModel.isVideoAvailable);
+            ImageLoader.loadImage(mContext, layout.getAvatarImage(), userModel.userAvatar,
+                    R.drawable.tuicalling_ic_avatar);
         }
     }
 
@@ -179,6 +167,10 @@ public class TUICallingSingleView extends BaseCallView {
         initGestureListener(userLayout);
         userLayout.setVisibility(VISIBLE);
         userLayout.disableAudioImage(true);
+        RelativeLayout.LayoutParams lp = new LayoutParams(180, 180);
+        lp.addRule(CENTER_IN_PARENT);
+        ((RoundCornerImageView) userLayout.getAvatarImage()).setRadius(15);
+        userLayout.getAvatarImage().setLayoutParams(lp);
         mLayoutUserContainer.addView(userLayout);
         mCount++;
         this.post(new Runnable() {

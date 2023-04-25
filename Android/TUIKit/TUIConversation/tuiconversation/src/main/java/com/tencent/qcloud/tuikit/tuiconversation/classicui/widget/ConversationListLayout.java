@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
-import com.tencent.qcloud.tuicore.component.CustomLinearLayoutManager;
+import com.tencent.qcloud.tuikit.timcommon.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tuikit.tuiconversation.classicui.interfaces.IConversationListLayout;
 import com.tencent.qcloud.tuikit.tuiconversation.classicui.interfaces.OnConversationAdapterListener;
 import com.tencent.qcloud.tuikit.tuiconversation.interfaces.IConversationListAdapter;
@@ -127,9 +127,9 @@ public class ConversationListLayout extends RecyclerView implements IConversatio
         }
     }
 
-    public void loadConversation(long nextSeq) {
+    public void loadConversation() {
         if (presenter != null) {
-            presenter.loadConversation(nextSeq);
+            presenter.loadMoreConversation();
         }
     }
 

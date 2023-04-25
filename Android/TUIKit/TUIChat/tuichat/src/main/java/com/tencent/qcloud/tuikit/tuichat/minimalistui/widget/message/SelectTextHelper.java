@@ -35,8 +35,8 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.StringRes;
 
-import com.tencent.qcloud.tuikit.tuichat.classicui.component.BeginnerGuidePage;
-import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
+import com.tencent.qcloud.tuikit.timcommon.classicui.component.BeginnerGuidePage;
+import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
 import java.util.LinkedList;
@@ -538,7 +538,7 @@ public class SelectTextHelper {
 
                 Drawable drawable = new BitmapDrawable(bitmap);
                 ShapeDrawable background = new ShapeDrawable();
-                background.getPaint().setColor(mTextView.getContext().getResources().getColor(com.tencent.qcloud.tuicore.R.color.text_select_color));
+                background.getPaint().setColor(mTextView.getContext().getResources().getColor(com.tencent.qcloud.tuikit.timcommon.R.color.text_select_color));
                 LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{background, drawable});
                 layerDrawable.setBounds(0, 0, 64, 64);
                 ImageSpan image = new ImageSpan(layerDrawable, ImageSpan.ALIGN_BASELINE);

@@ -1,8 +1,9 @@
 package com.tencent.qcloud.tuikit.tuichat.bean.message;
 
 import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.LocationReplyQuoteBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TUIReplyQuoteBean;
 
 public class LocationMessageBean extends TUIMessageBean {
 

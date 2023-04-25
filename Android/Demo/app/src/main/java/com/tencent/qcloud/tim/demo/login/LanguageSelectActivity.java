@@ -17,12 +17,13 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.qcloud.tim.demo.R;
+import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
-import com.tencent.qcloud.tuicore.component.CustomLinearLayoutManager;
-import com.tencent.qcloud.tuicore.component.TitleBarLayout;
-import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
-import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuicore.util.TUIBuild;
+import com.tencent.qcloud.tuikit.timcommon.component.CustomLinearLayoutManager;
+import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
+import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,10 +31,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+
 public class LanguageSelectActivity extends BaseLightActivity {
 
     public static final String LANGUAGE = "language";
-    public static final String DEMO_LANGUAGE_CHANGED_ACTION = "demoLanguageChangedAction";
 
     private OnItemClickListener onItemClickListener;
     private TitleBarLayout titleBarLayout;
@@ -74,7 +75,7 @@ public class LanguageSelectActivity extends BaseLightActivity {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new CustomLinearLayoutManager(this));
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
-        dividerItemDecoration.setDrawable(getResources().getDrawable(com.tencent.qcloud.tuicore.R.drawable.core_list_divider));
+        dividerItemDecoration.setDrawable(getResources().getDrawable(com.tencent.qcloud.tuikit.timcommon.R.drawable.core_list_divider));
         recyclerView.addItemDecoration(dividerItemDecoration);
 
         onItemClickListener = new OnItemClickListener() {
@@ -97,7 +98,7 @@ public class LanguageSelectActivity extends BaseLightActivity {
 
     private void notifyLanguageChanged() {
         Intent intent = new Intent();
-        intent.setAction(DEMO_LANGUAGE_CHANGED_ACTION);
+        intent.setAction(Constants.DEMO_LANGUAGE_CHANGED_ACTION);
         intent.putExtra(LANGUAGE, currentLanguage);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
@@ -136,7 +137,7 @@ public class LanguageSelectActivity extends BaseLightActivity {
         @NonNull
         @Override
         public SelectAdapter.SelectViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(LanguageSelectActivity.this).inflate(com.tencent.qcloud.tuicore.R.layout.core_select_item_layout,parent, false);
+            View view = LayoutInflater.from(LanguageSelectActivity.this).inflate(com.tencent.qcloud.tuikit.timcommon.R.layout.core_select_item_layout,parent, false);
             return new SelectAdapter.SelectViewHolder(view);
         }
 
@@ -167,8 +168,8 @@ public class LanguageSelectActivity extends BaseLightActivity {
             ImageView selectedIcon;
             public SelectViewHolder(@NonNull View itemView) {
                 super(itemView);
-                name = itemView.findViewById(com.tencent.qcloud.tuicore.R.id.name);
-                selectedIcon = itemView.findViewById(com.tencent.qcloud.tuicore.R.id.selected_icon);
+                name = itemView.findViewById(com.tencent.qcloud.tuikit.timcommon.R.id.name);
+                selectedIcon = itemView.findViewById(com.tencent.qcloud.tuikit.timcommon.R.id.selected_icon);
             }
         }
     }

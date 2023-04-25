@@ -117,7 +117,7 @@
         android:visibility="gone"
         tools:visibility="visible">
 
-        <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+        <com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView
             android:id="@+id/friend_icon"
             android:layout_width="45dp"
             android:layout_height="45dp"

@@ -82,23 +82,7 @@ public class TUICallingGroupView extends BaseCallView {
                 if (null != entity.userModel) {
                     if (TUICallDefine.MediaType.Video.equals(mediaType) && entity.userModel.isVideoAvailable) {
                         layout.setVideoAvailable(true);
-                        mCallingAction.startRemoteView(entity.userId, layout.getVideoView(),
-                                new TUICommonDefine.PlayCallback() {
-                                    @Override
-                                    public void onPlaying(String userId) {
-
-                                    }
-
-                                    @Override
-                                    public void onLoading(String userId) {
-
-                                    }
-
-                                    @Override
-                                    public void onError(String userId, int errCode, String errMsg) {
-
-                                    }
-                                });
+                        mCallingAction.startRemoteView(entity.userId, layout.getVideoView(), null);
                     }
                     ImageLoader.loadImage(mContext, entity.layout.getAvatarImage(), entity.userModel.userAvatar,
                             R.drawable.tuicalling_ic_avatar);
@@ -125,22 +109,12 @@ public class TUICallingGroupView extends BaseCallView {
         }
         layout.stopLoading();
         TUICallDefine.MediaType mediaType = TUICallingStatusManager.sharedInstance(mContext).getMediaType();
+        layout.setVideoAvailable(TUICallDefine.MediaType.Video.equals(mediaType));
         if (TUICallDefine.MediaType.Video.equals(mediaType)) {
-            layout.setVideoAvailable(true);
-            mCallingAction.startRemoteView(userModel.userId, layout.getVideoView(),
-                    new TUICommonDefine.PlayCallback() {
-                        @Override
-                        public void onPlaying(String userId) {
-                        }
-
-                        @Override
-                        public void onLoading(String userId) {
-                        }
-
-                        @Override
-                        public void onError(String userId, int errCode, String errMsg) {
-                        }
-                    });
+            mCallingAction.startRemoteView(userModel.userId, layout.getVideoView(), null);
+        } else {
+            ImageLoader.loadImage(mContext, layout.getAvatarImage(), userModel.userAvatar,
+                    R.drawable.tuicalling_ic_avatar);
         }
     }
 
@@ -156,21 +130,12 @@ public class TUICallingGroupView extends BaseCallView {
         }
         layout.startLoading();
         TUICallDefine.MediaType mediaType = TUICallingStatusManager.sharedInstance(mContext).getMediaType();
+        layout.setVideoAvailable(TUICallDefine.MediaType.Video.equals(mediaType));
         if (TUICallDefine.MediaType.Video.equals(mediaType)) {
-            mCallingAction.startRemoteView(userModel.userId, layout.getVideoView(),
-                    new TUICommonDefine.PlayCallback() {
-                        @Override
-                        public void onPlaying(String userId) {
-                        }
-
-                        @Override
-                        public void onLoading(String userId) {
-                        }
-
-                        @Override
-                        public void onError(String userId, int errCode, String errMsg) {
-                        }
-                    });
+            mCallingAction.startRemoteView(userModel.userId, layout.getVideoView(), null);
+        } else {
+            ImageLoader.loadImage(mContext, layout.getAvatarImage(), userModel.userAvatar,
+                    R.drawable.tuicalling_ic_avatar);
         }
     }
 
@@ -189,6 +154,8 @@ public class TUICallingGroupView extends BaseCallView {
         UserLayout userLayout = mUserLayoutFactory.findUserLayout(userModel.userId);
         if (null != userLayout) {
             userLayout.setVideoAvailable(userModel.isVideoAvailable);
+            ImageLoader.loadImage(mContext, userLayout.getAvatarImage(), userModel.userAvatar,
+                    R.drawable.tuicalling_ic_avatar);
         }
     }
 

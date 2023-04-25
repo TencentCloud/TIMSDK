@@ -18,12 +18,11 @@
     <color name="core_border_color_serious">#FFDDDDDD</color>
     <color name="core_header_start_color_serious">#FF6395FF</color>
     <color name="core_header_end_color_serious">#FF0052FF</color>
+    <color name="core_header_text_color_serious">#FFFFFFFF</color>
 
     <color name="core_btn_normal_color_serious">#FF0052FF</color>
     <color name="core_btn_pressed_color_serious">#FF0049E4</color>
     <color name="core_btn_disable_color_serious">#4D0052FF</color>
     <!-- 颜色规范 end -->
-
-    <color name="core_title_bar_text_bg_serious">#FFFFFFFF</color>
 
 </resources>

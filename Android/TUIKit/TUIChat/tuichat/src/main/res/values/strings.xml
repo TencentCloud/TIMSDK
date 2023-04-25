@@ -20,8 +20,6 @@
 
     <string name="chat_message_detail">Message details</string>
 
-    <string name="translation_support">Translated by IM</string>
-    <string name="translation_fail">Translation failed</string>
     <!-- 消息转发 -->
 
     <string name="titlebar_back">Back</string>
@@ -78,8 +76,6 @@
     <string name="audio_extra">[Voice]</string>
     <string name="file_extra">[File]</string>
     <string name="location_extra">[Location]</string>
-    <string name="group_note_extra">[Group Note]</string>
-    <string name="group_poll_extra">[Poll]</string>
 
     <string name="locate_origin_msg_failed_tip">Unable to locate the original message.</string>
 
@@ -106,6 +102,7 @@
     <string name="banned">is blocked from posting</string>
     <string name="cancle_banned">is unblocked and can post now</string>
     <string name="modify_group_add_opt">changed group add option to </string>
+    <string name="modify_group_invite_opt">changed group inviting option to </string>
     <string name="group_add_opt_auto_approval">Auto Approval</string>
     <string name="group_add_opt_admin_approve">Admin Approval</string>
     <string name="group_add_opt_join_disable">Prohibited from Joining</string>
@@ -121,11 +118,8 @@
     <string name="play_error_tip">The voice file is damaged or does not exist</string>
     <string name="input_tip">No nickname. Enter again.</string>
 
-    <string name="has_read">Read</string>
-    <string name="unread">Unread</string>
+
     <string name="delivered">Delivered to</string>
-    <string name="has_all_read">All read</string>
-    <string name="someone_has_read">%d read</string>
     <string name="someone_unread">%d unread</string>
     <string name="someone_have_read">%d have read</string>
 
@@ -172,7 +166,6 @@
     <string name="live_group_live_end">Live Over</string>
     <string name="live_group_user_live">%s Live</string>
     <string name="live_group_live">Live Group</string>
-    <string name="chat_time_today">Today</string>
 
     <string name="start_group_call">Start Group Call</string>
     <string name="start_call">Start Call</string>
@@ -226,7 +219,6 @@
     <string name="chat_buying_guidelines">price description</string>
     <string name="chat_im_flagship_edition_update_tip">%s feature is only available to the Ultimate edition, which can be used after purchasing the Ultimate Edition. See the price guidelines for details.</string>
 
-    <string name="chat_reply_num">%d replied</string>
     <string name="chat_reply_detail">Reply detail</string>
 
     <string name="chat_not_read">Unread</string>

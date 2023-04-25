@@ -6,9 +6,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tencent.qcloud.tuicore.TUIThemeManager;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIReplyQuoteBean;
+import com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message.TUIReplyQuoteView;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.SoundReplyQuoteBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TUIReplyQuoteBean;
 
 public class SoundReplyQuoteView extends TUIReplyQuoteView {
     private View soundMsgLayout;

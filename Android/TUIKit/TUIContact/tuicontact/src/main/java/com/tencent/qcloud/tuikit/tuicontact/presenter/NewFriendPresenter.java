@@ -2,8 +2,8 @@ package com.tencent.qcloud.tuikit.tuicontact.presenter;
 
 import android.text.TextUtils;
 
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactService;
 import com.tencent.qcloud.tuikit.tuicontact.bean.FriendApplicationBean;
 import com.tencent.qcloud.tuikit.tuicontact.interfaces.ContactEventListener;

@@ -1,5 +1,7 @@
 package com.tencent.qcloud.tuicore;
 
+import static com.tencent.imsdk.v2.V2TIMManager.V2TIM_STATUS_LOGINED;
+
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
@@ -25,8 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import static com.tencent.imsdk.v2.V2TIMManager.V2TIM_STATUS_LOGINED;
-
 
 /**
  * Login logic for IM and TRTC
@@ -47,6 +47,7 @@ public class TUILogin {
     private String userId;
     private String userSig;
     private boolean hasLoginSuccess = false;
+    private int currentBusinessScene = TUIBusinessScene.NONE;
 
     private final List<TUILoginListener> listenerList = new CopyOnWriteArrayList<>();
 
@@ -154,6 +155,7 @@ public class TUILogin {
         }
         this.appContext = context.getApplicationContext();
         this.sdkAppId = sdkAppId;
+        currentBusinessScene = TUIBusinessScene.NONE;
         V2TIMManager.getInstance().addIMSDKListener(imSdkListener);
         // Notify init event
         TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_IMSDK_INIT_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_START_INIT, null);
@@ -207,6 +209,7 @@ public class TUILogin {
 
     private void internalLogout(TUICallback callback) {
         // Notify unit event
+        currentBusinessScene = TUIBusinessScene.NONE;
         TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_IMSDK_INIT_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_START_UNINIT, null);
         V2TIMManager.getInstance().logout(new V2TIMCallback() {
             @Override
@@ -290,6 +293,7 @@ public class TUILogin {
                 if (listener != null) {
                     listener.onKickedOffline();
                 }
+                setCurrentBusinessScene(TUIBusinessScene.NONE);
                 TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED,
                         TUIConstants.TUILogin.EVENT_SUB_KEY_USER_KICKED_OFFLINE, null);
             }
@@ -299,6 +303,7 @@ public class TUILogin {
                 if (listener != null) {
                     listener.onUserSigExpired();
                 }
+                setCurrentBusinessScene(TUIBusinessScene.NONE);
                 TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED,
                         TUIConstants.TUILogin.EVENT_SUB_KEY_USER_SIG_EXPIRED, null);
             }
@@ -461,5 +466,25 @@ public class TUILogin {
 
     public static String getLoginUser() {
         return V2TIMManager.getInstance().getLoginUser();
+    }
+
+    public static class TUIBusinessScene {
+        public static final int NONE = 0;
+        public static final int IN_RECORDING = 1;
+        public static final int IN_CALLING_ROOM = 2;
+        public static final int IN_MEETING_ROOM = 3;
+        public static final int IN_LIVING_ROOM = 4;
+    }
+
+    /**
+     * No-thread-safe
+     * @param scene
+     */
+    public static void setCurrentBusinessScene(int scene) {
+        getInstance().currentBusinessScene = scene;
+    }
+
+    public static int getCurrentBusinessScene() {
+        return getInstance().currentBusinessScene;
     }
 }

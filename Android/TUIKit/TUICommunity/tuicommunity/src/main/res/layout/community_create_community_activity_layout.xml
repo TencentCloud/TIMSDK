@@ -8,7 +8,7 @@
     android:background="#FFFFFF"
     android:orientation="vertical">
 
-    <com.tencent.qcloud.tuicore.component.TitleBarLayout
+    <com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout
         android:id="@+id/create_community_title"
         app:title_bar_middle_title="@string/community_create_community"
         app:title_bar_can_return="true"

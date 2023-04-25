@@ -22,17 +22,20 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
+import com.tencent.qcloud.tim.demo.TIMAppService;
 import com.tencent.qcloud.tim.demo.bean.UserInfo;
+import com.tencent.qcloud.tim.demo.config.AppConfig;
 import com.tencent.qcloud.tim.demo.main.MainActivity;
 import com.tencent.qcloud.tim.demo.main.MainMinimalistActivity;
 import com.tencent.qcloud.tim.demo.signature.GenerateTestUserSig;
+import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.demo.utils.TUIUtils;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
-import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuicore.interfaces.TUICallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
 
 /**
  * Demo的登录Activity
@@ -77,8 +80,8 @@ public class LoginForDevActivity extends BaseLightActivity {
 
         IntentFilter languageFilter = new IntentFilter();
         IntentFilter themeFilter = new IntentFilter();
-        languageFilter.addAction(LanguageSelectActivity.DEMO_LANGUAGE_CHANGED_ACTION);
-        themeFilter.addAction(ThemeSelectActivity.DEMO_THEME_CHANGED_ACTION);
+        languageFilter.addAction(Constants.DEMO_LANGUAGE_CHANGED_ACTION);
+        themeFilter.addAction(Constants.DEMO_THEME_CHANGED_ACTION);
         LocalBroadcastManager.getInstance(this).registerReceiver(languageChangedReceiver, languageFilter);
         LocalBroadcastManager.getInstance(this).registerReceiver(themeChangedReceiver, themeFilter);
 
@@ -111,12 +114,12 @@ public class LoginForDevActivity extends BaseLightActivity {
         mLoginView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DemoApplication.instance().init(0);
+                TIMAppService.getInstance().initBeforeLogin(0);
 
                 UserInfo.getInstance().setUserId(mUserAccount.getText().toString());
                 String userSig = GenerateTestUserSig.genTestUserSig(mUserAccount.getText().toString());
                 UserInfo.getInstance().setUserSig(userSig);
-                TUILogin.login(DemoApplication.instance(), DemoApplication.instance().getSdkAppId(), mUserAccount.getText().toString(), userSig, TUIUtils.getLoginConfig(), new TUICallback() {
+                TUILogin.login(DemoApplication.instance(), AppConfig.DEMO_SDK_APPID, mUserAccount.getText().toString(), userSig, TUIUtils.getLoginConfig(), new TUICallback() {
                     @Override
                     public void onError(final int code, final String desc) {
                         runOnUiThread(new Runnable() {
@@ -132,14 +135,14 @@ public class LoginForDevActivity extends BaseLightActivity {
                         UserInfo.getInstance().setAutoLogin(true);
                         UserInfo.getInstance().setDebugLogin(true);
                         Intent intent;
-                        if (DemoApplication.tuikit_demo_style == 0) {
+                        if (AppConfig.DEMO_UI_STYLE == 0) {
                             intent = new Intent(LoginForDevActivity.this, MainActivity.class);
                         } else {
                             intent = new Intent(LoginForDevActivity.this, MainMinimalistActivity.class);
                         }
                         startActivity(intent);
 
-                        DemoApplication.instance().registerPushManually();
+                        TIMAppService.getInstance().registerPushManually();
 
                         finish();
                     }
@@ -194,7 +197,7 @@ public class LoginForDevActivity extends BaseLightActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (DemoApplication.tuikit_demo_style == 0) {
+        if (AppConfig.DEMO_UI_STYLE == 0) {
             modifyTheme.setVisibility(View.VISIBLE);
             styleTv.setText(getString(R.string.style_classic));
         } else {

@@ -16,13 +16,13 @@ import com.tencent.imsdk.v2.V2TIMUserStatus;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
-import com.tencent.qcloud.tuicore.component.UnreadCountTextView;
-import com.tencent.qcloud.tuicore.util.DateTimeUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.UnreadCountTextView;
+import com.tencent.qcloud.tuikit.timcommon.util.DateTimeUtil;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.DraftInfo;
-import com.tencent.qcloud.tuikit.tuiconversation.config.TUIConversationConfig;
 import com.tencent.qcloud.tuikit.tuiconversation.commonutil.TUIConversationLog;
+import com.tencent.qcloud.tuikit.tuiconversation.config.TUIConversationConfig;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -35,7 +35,9 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
     protected TextView messageText;
     protected TextView timelineText;
     protected UnreadCountTextView unreadText;
-    protected TextView atInfoText;
+    protected TextView atAllTv;
+    protected TextView atMeTv;
+    protected TextView draftTv;
     protected ImageView disturbView;
     protected CheckBox multiSelectCheckBox;
     protected RelativeLayout messageStatusLayout;
@@ -53,7 +55,9 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
         messageText = rootView.findViewById(R.id.conversation_last_msg);
         timelineText = rootView.findViewById(R.id.conversation_time);
         unreadText = rootView.findViewById(R.id.conversation_unread);
-        atInfoText = rootView.findViewById(R.id.conversation_at_msg);
+        atAllTv = rootView.findViewById(R.id.conversation_at_all);
+        atMeTv = rootView.findViewById(R.id.conversation_at_me);
+        draftTv = rootView.findViewById(R.id.conversation_draft);
         disturbView = rootView.findViewById(R.id.not_disturb);
         multiSelectCheckBox = rootView.findViewById(R.id.select_checkbox);
         messageStatusLayout = rootView.findViewById(R.id.message_status_layout);
@@ -100,6 +104,11 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
                 TUIConversationLog.e("ConversationCommonHolder", " getDraftJsonMap error ");
             }
         }
+
+        atAllTv.setVisibility(View.GONE);
+        atMeTv.setVisibility(View.GONE);
+        draftTv.setVisibility(View.GONE);
+
         if (draftInfo != null) {
             messageText.setText(draftText);
             timelineText.setText(DateTimeUtil.getTimeFormatText(new Date(draftInfo.getDraftTime() * 1000)));
@@ -160,23 +169,21 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
             }
         }
 
-        if (draftInfo != null) {
-            atInfoText.setVisibility(View.VISIBLE);
-            atInfoText.setText(R.string.drafts);
-            atInfoText.setTextColor(Color.RED);
+        if (conversation.getAtType() == ConversationInfo.AT_TYPE_AT_ME) {
+            atMeTv.setVisibility(View.VISIBLE);
+        } else if (conversation.getAtType() == ConversationInfo.AT_TYPE_AT_ALL) {
+            atAllTv.setVisibility(View.VISIBLE);
+        } else if (conversation.getAtType() == ConversationInfo.AT_TYPE_AT_ALL_AND_ME) {
+            atAllTv.setVisibility(View.VISIBLE);
+            atMeTv.setVisibility(View.VISIBLE);
+        }
 
+        if (draftInfo != null) {
+            draftTv.setVisibility(View.VISIBLE);
             messageStatusLayout.setVisibility(View.GONE);
             messageFailed.setVisibility(View.GONE);
             messageSending.setVisibility(View.GONE);
         } else {
-            if (conversation.getAtInfoText().isEmpty()) {
-                atInfoText.setVisibility(View.GONE);
-            } else {
-                atInfoText.setVisibility(View.VISIBLE);
-                atInfoText.setText(conversation.getAtInfoText());
-                atInfoText.setTextColor(Color.RED);
-            }
-
             V2TIMMessage lastMessage = conversation.getLastMessage();
             if (lastMessage != null) {
                 int status = lastMessage.getStatus();
@@ -231,7 +238,6 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
             messageText.setVisibility(View.GONE);
             timelineText.setVisibility(View.GONE);
             unreadText.setVisibility(View.GONE);
-            atInfoText.setVisibility(View.GONE);
             messageStatusLayout.setVisibility(View.GONE);
             messageFailed.setVisibility(View.GONE);
             messageSending.setVisibility(View.GONE);
@@ -240,9 +246,9 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
         if (!conversation.isGroup() && TUIConversationConfig.getInstance().isShowUserStatus()) {
             userStatusView.setVisibility(View.VISIBLE);
             if (conversation.getStatusType() == V2TIMUserStatus.V2TIM_USER_STATUS_ONLINE) {
-                userStatusView.setBackgroundResource(TUIThemeManager.getAttrResId(rootView.getContext(), com.tencent.qcloud.tuicore.R.attr.user_status_online));
+                userStatusView.setBackgroundResource(TUIThemeManager.getAttrResId(rootView.getContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.user_status_online));
             } else {
-                userStatusView.setBackgroundResource(TUIThemeManager.getAttrResId(rootView.getContext(), com.tencent.qcloud.tuicore.R.attr.user_status_offline));
+                userStatusView.setBackgroundResource(TUIThemeManager.getAttrResId(rootView.getContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.user_status_offline));
             }
         } else {
             userStatusView.setVisibility(View.GONE);

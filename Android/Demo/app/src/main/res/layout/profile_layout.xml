@@ -15,7 +15,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
             <RelativeLayout
                 android:id="@+id/self_detail_area"
                 android:layout_width="match_parent"
@@ -25,7 +24,7 @@
                 android:orientation="horizontal"
                 android:padding="@dimen/page_margin">
 
-                <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+                <com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView
                     android:id="@+id/self_icon"
                     android:layout_width="@dimen/demo_profile_face_size"
                     android:layout_height="@dimen/demo_profile_face_size"
@@ -104,42 +103,26 @@
             </RelativeLayout>
 
             <LinearLayout
+                android:id="@+id/ll_settings_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <com.tencent.qcloud.tuicore.component.LineControllerView
-                    android:id="@+id/modify_allow_type"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/demo_profile_item_height"
-                    android:layout_marginTop="10dp"
-                    app:name="@string/add_rule" />
-
-                <include layout= "@layout/profile_custom_layout"></include>
-
-                <com.tencent.qcloud.tuicore.component.LineControllerView
-                    android:id="@+id/about_im"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/demo_profile_item_height"
-                    android:layout_marginTop="10dp"
-                    app:name="@string/about_im" />
-
-                <Button
-                    android:id="@+id/logout_btn"
-                    style="?android:attr/borderlessButtonStyle"
-                    android:layout_width="match_parent"
-                    android:layout_marginTop="10dp"
-                    android:layout_height="@dimen/demo_logout_btn_height"
-                    android:layout_alignParentBottom="true"
-                    android:background="@color/bg_negative_btn"
-                    android:textSize="16.32sp"
-                    android:lineHeight="24.96sp"
-                    android:text="@string/exit"
-                    android:textAllCaps="false"
-                    android:textColor="?attr/core_error_tip_color" />
-
             </LinearLayout>
 
+            <Button
+                android:id="@+id/logout_btn"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_height="@dimen/demo_logout_btn_height"
+                android:layout_alignParentBottom="true"
+                android:background="@color/bg_negative_btn"
+                android:textSize="16.32sp"
+                android:lineHeight="24.96sp"
+                android:text="@string/exit"
+                android:textAllCaps="false"
+                android:textColor="?attr/core_error_tip_color" />
         </LinearLayout>
 
     </ScrollView>

@@ -17,15 +17,15 @@ import android.widget.LinearLayout;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.tencent.qcloud.tuikit.timcommon.component.face.ChatFace;
+import com.tencent.qcloud.tuikit.timcommon.component.face.CustomFace;
+import com.tencent.qcloud.tuikit.timcommon.component.face.Emoji;
+import com.tencent.qcloud.tuikit.timcommon.component.face.FaceGroup;
+import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
+import com.tencent.qcloud.tuikit.timcommon.component.face.RecentEmojiManager;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.classicui.component.EmojiIndicatorView;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.input.BaseInputFragment;
-import com.tencent.qcloud.tuikit.tuichat.component.face.ChatFace;
-import com.tencent.qcloud.tuikit.tuichat.component.face.CustomFace;
-import com.tencent.qcloud.tuikit.tuichat.component.face.Emoji;
-import com.tencent.qcloud.tuikit.tuichat.component.face.FaceGroup;
-import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
-import com.tencent.qcloud.tuikit.tuichat.component.face.RecentEmojiManager;
 
 import java.io.IOException;
 import java.util.ArrayList;

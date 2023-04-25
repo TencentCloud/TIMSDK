@@ -15,18 +15,18 @@ import android.widget.PopupWindow;
 
 import androidx.annotation.Nullable;
 
-import com.tencent.qcloud.tuicore.util.ScreenUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.action.PopActionClickListener;
+import com.tencent.qcloud.tuikit.timcommon.component.action.PopDialogAdapter;
+import com.tencent.qcloud.tuikit.timcommon.component.action.PopMenuAction;
+import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
+import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
-import com.tencent.qcloud.tuicore.component.fragments.BaseFragment;
-import com.tencent.qcloud.tuicore.component.action.PopActionClickListener;
-import com.tencent.qcloud.tuicore.component.action.PopDialogAdapter;
-import com.tencent.qcloud.tuicore.component.action.PopMenuAction;
 import com.tencent.qcloud.tuikit.tuiconversation.classicui.interfaces.OnConversationAdapterListener;
 import com.tencent.qcloud.tuikit.tuiconversation.classicui.util.TUIConversationUtils;
 import com.tencent.qcloud.tuikit.tuiconversation.classicui.widget.ConversationLayout;
-import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationPresenter;
 import com.tencent.qcloud.tuikit.tuiconversation.commonutil.ConversationUtils;
+import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationPresenter;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <declare-styleable name="RoundCornerImageView">
+        <attr name="corner_radius" format="dimension" />
+        <attr name="left_top_radius" format="dimension" />
+        <attr name="right_top_radius" format="dimension" />
+        <attr name="right_bottom_radius" format="dimension" />
+        <attr name="left_bottom_radius" format="dimension" />
+    </declare-styleable>
 
+    <declare-styleable name="SynthesizedImageView">
+        <attr name="image_background" format="color" />
+        <attr name="default_image" format="reference" />
+        <attr name="image_size" format="dimension" />
+        <attr name="image_gap" format="dimension" />
+    </declare-styleable>
 </resources>

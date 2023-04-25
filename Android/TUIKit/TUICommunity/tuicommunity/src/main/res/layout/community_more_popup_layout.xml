@@ -14,7 +14,7 @@
         android:paddingTop="20dp"
         android:paddingBottom="20dp">
 
-        <com.tencent.qcloud.tuicore.component.RoundCornerImageView
+        <com.tencent.qcloud.tuikit.timcommon.component.RoundCornerImageView
             android:id="@+id/community_group_face"
             android:layout_width="70dp"
             android:layout_height="70dp"
@@ -118,7 +118,7 @@
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
-            <com.tencent.qcloud.tuicore.component.RoundCornerImageView
+            <com.tencent.qcloud.tuikit.timcommon.component.RoundCornerImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="@drawable/community_popup_users_icon"
@@ -142,7 +142,7 @@
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
-            <com.tencent.qcloud.tuicore.component.RoundCornerImageView
+            <com.tencent.qcloud.tuikit.timcommon.component.RoundCornerImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="@drawable/community_popup_share_icon"
@@ -166,7 +166,7 @@
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
-            <com.tencent.qcloud.tuicore.component.RoundCornerImageView
+            <com.tencent.qcloud.tuikit.timcommon.component.RoundCornerImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="@drawable/community_popup_settings_icon"

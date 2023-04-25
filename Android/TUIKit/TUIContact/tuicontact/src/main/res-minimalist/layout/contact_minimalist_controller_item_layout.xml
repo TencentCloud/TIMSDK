@@ -19,7 +19,7 @@
         android:textSize="16sp"
         android:textColor="@color/black"/>
 
-    <com.tencent.qcloud.tuicore.component.UnreadCountTextView
+    <com.tencent.qcloud.tuikit.timcommon.component.UnreadCountTextView
         android:id="@+id/unread_count"
         app:paint_color="@color/read_dot_bg"
         android:textColor="@color/white"

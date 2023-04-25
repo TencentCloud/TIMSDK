@@ -8,7 +8,7 @@
     android:background="#FFFFFFFF"
     android:orientation="horizontal">
 
-    <com.tencent.qcloud.tuicore.component.RoundCornerImageView
+    <com.tencent.qcloud.tuikit.timcommon.component.RoundCornerImageView
         android:id="@+id/user_icon"
         android:layout_width="32dp"
         android:layout_height="32dp"
@@ -28,7 +28,7 @@
         android:paddingEnd="16dp"
         android:paddingBottom="8dp">
 
-        <com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.TimeInLineTextLayout
+        <com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message.TimeInLineTextLayout
             android:id="@+id/time_in_line_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -36,7 +36,7 @@
     </FrameLayout>
 
     <!-- translation content area -->
-    <com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MaxWidthFrameLayout
+    <com.tencent.qcloud.tuikit.timcommon.component.MaxWidthFrameLayout
         android:id="@+id/translate_content_fl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

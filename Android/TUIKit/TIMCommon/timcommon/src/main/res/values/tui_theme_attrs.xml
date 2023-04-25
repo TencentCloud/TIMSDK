@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="core_line_controller_view_switch_btn_selected_bg" format="reference|color"/>
+    <attr name="core_selected_icon" format="reference"/>
+    <attr name="core_title_bar_bg" format="reference"/>
+    <attr name="core_title_bar_text_bg" format="reference|color"/>
+    <attr name="core_title_bar_back_icon" format="reference"/>
+    <attr name="core_default_group_icon_public" format="reference"/>
+    <attr name="core_default_group_icon_work" format="reference"/>
+    <attr name="core_default_group_icon_meeting" format="reference"/>
+    <attr name="core_default_group_icon_community" format="reference"/>
+    <attr name="core_default_user_icon" format="reference"/>
+    <attr name="user_status_online" format="reference"/>
+    <attr name="user_status_offline" format="reference"/>
+
+    <attr name="chat_bubble_self_bg" format="reference"/>
+    <attr name="chat_bubble_other_bg" format="reference"/>
+    <attr name="chat_bubble_self_bg_color" format="reference|color"/>
+    <attr name="chat_bubble_other_bg_color" format="reference|color"/>
+    <attr name="chat_react_text_color" format="reference|color"/>
+    <attr name="chat_read_receipt_text_color" format="reference|color"/>
+    <attr name="chat_react_other_text_color" format="reference|color"/>
+    <attr name="chat_reply_detail_icon" format="reference"/>
+
+</resources>

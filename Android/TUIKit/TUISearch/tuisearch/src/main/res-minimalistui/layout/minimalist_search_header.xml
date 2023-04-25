@@ -9,7 +9,7 @@
     android:orientation="horizontal"
     android:background="@color/transparent">
 
-    <com.tencent.qcloud.tuicore.component.RoundCornerImageView
+    <com.tencent.qcloud.tuikit.timcommon.component.RoundCornerImageView
         android:id="@+id/icon_conversation"
         android:layout_width="40dp"
         android:layout_height="40dp"

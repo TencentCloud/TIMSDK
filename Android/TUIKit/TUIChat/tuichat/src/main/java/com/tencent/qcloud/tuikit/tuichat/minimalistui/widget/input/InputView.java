@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.net.Uri;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -38,10 +37,16 @@ import com.google.gson.JsonSyntaxException;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
-import com.tencent.qcloud.tuicore.util.BackgroundTasks;
-import com.tencent.qcloud.tuicore.util.FileUtil;
+import com.tencent.qcloud.tuicore.interfaces.TUIExtensionEventListener;
+import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.component.face.CustomFace;
+import com.tencent.qcloud.tuikit.timcommon.component.face.Emoji;
+import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
@@ -50,12 +55,8 @@ import com.tencent.qcloud.tuikit.tuichat.bean.DraftInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.InputMoreActionUnit;
 import com.tencent.qcloud.tuikit.tuichat.bean.ReplyPreviewBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FileMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioRecorder;
-import com.tencent.qcloud.tuikit.tuichat.component.face.CustomFace;
-import com.tencent.qcloud.tuikit.tuichat.component.face.Emoji;
-import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
+import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.camera.CameraActivity;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.camera.view.CameraView;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.interfaces.IChatLayout;
@@ -339,7 +340,10 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         mTextInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEND) {
+                // 兼容华为P10，TUIKit 简约版使用"百度输入法华为版"时，点击回车发送。
+                if (actionId == EditorInfo.IME_ACTION_SEND
+                        || (actionId == EditorInfo.IME_ACTION_UNSPECIFIED && event != null
+                        && event.getKeyCode() == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN)) {
                     send();
                 }
                 return true;
@@ -472,7 +476,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             }
             // @ 之后要显示软键盘。Activity 没有 onResume 导致无法显示软键盘
             // Afterwards @, the soft keyboard is to be displayed. Activity does not have onResume, so the soft keyboard cannot be displayed
-            BackgroundTasks.getInstance().postDelayed(new Runnable() {
+            ThreadUtils.postOnUiThreadDelayed(new Runnable() {
                 @Override
                 public void run() {
                     showSoftInput();
@@ -1234,7 +1238,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         mTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                BackgroundTasks.getInstance().runOnUiThread(new Runnable() {
+                ThreadUtils.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         times++;
@@ -1450,8 +1454,9 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                 }
             };
             actionUnit.setIconResId(R.drawable.chat_minimalist_more_action_picture_icon);
-            actionUnit.setTitleId(R.string.pic);
+            actionUnit.setName(getResources().getString(R.string.pic));
             actionUnit.setActionType(1);
+            actionUnit.setPriority(1000);
             mInputMoreActionList.add(actionUnit);
         }
 
@@ -1464,7 +1469,8 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             };
             actionUnit.setIconResId(R.drawable.chat_minimalist_more_action_camera_icon);
             actionUnit.setActionType(1);
-            actionUnit.setTitleId(R.string.photo);
+            actionUnit.setPriority(900);
+            actionUnit.setName(getResources().getString(R.string.photo));
             mInputMoreActionList.add(actionUnit);
         }
 
@@ -1477,7 +1483,8 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             };
             actionUnit.setIconResId(R.drawable.chat_minimalist_more_action_record_icon);
             actionUnit.setActionType(1);
-            actionUnit.setTitleId(R.string.video);
+            actionUnit.setPriority(800);
+            actionUnit.setName(getResources().getString(R.string.video));
             mInputMoreActionList.add(actionUnit);
         }
 
@@ -1490,44 +1497,57 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             };
             actionUnit.setIconResId(R.drawable.chat_minimalist_more_action_file_icon);
             actionUnit.setActionType(1);
-            actionUnit.setTitleId(R.string.file);
+            actionUnit.setPriority(700);
+            actionUnit.setName(getResources().getString(R.string.file));
             mInputMoreActionList.add(actionUnit);
         }
 
         mInputMoreActionList.addAll(mInputMoreCustomActionList);
+        mInputMoreActionList.addAll(getExtensionInputMoreList());
         Collections.sort(mInputMoreActionList, new Comparator<InputMoreActionUnit>() {
             @Override
             public int compare(InputMoreActionUnit o1, InputMoreActionUnit o2) {
-                return o1.getPriority() - o2.getPriority();
+                return o2.getPriority() - o1.getPriority();
             }
         });
     }
 
-    private void onCustomActionClick(int id) {
-        if (id == TUIConstants.TUICalling.ACTION_ID_AUDIO_CALL || id == TUIConstants.TUICalling.ACTION_ID_VIDEO_CALL) {
-            String type = id == TUIConstants.TUICalling.ACTION_ID_AUDIO_CALL ? TUIConstants.TUICalling.TYPE_AUDIO
-                    : TUIConstants.TUICalling.TYPE_VIDEO;
-            if (TUIChatUtils.isGroupChat(getChatInfo().getType())) {
-                Bundle bundle = new Bundle();
-                bundle.putString(TUIConstants.TUICalling.GROUP_ID, getChatInfo().getId());
-                bundle.putString(TUIConstants.TUICalling.PARAM_NAME_TYPE, type);
-                bundle.putString(TUIChatConstants.GROUP_ID, getChatInfo().getId());
-                bundle.putBoolean(TUIChatConstants.SELECT_FOR_CALL, true);
-                bundle.putInt(TUIChatConstants.Selection.LIMIT, CALL_MEMBER_LIMIT);
-                TUICore.startActivity(getContext(), "StartGroupMemberSelectActivity", bundle, 11);
-            }
-            return;
+    private List<InputMoreActionUnit> getExtensionInputMoreList() {
+        List<InputMoreActionUnit> list = new ArrayList<>();
+
+        Map<String, Object> param = new HashMap<>();
+        param.put(TUIConstants.TUIChat.Extension.InputMore.CONTEXT, getContext());
+        if (ChatInfo.TYPE_C2C == mChatInfo.getType()) {
+            param.put(TUIConstants.TUIChat.Extension.InputMore.USER_ID, mChatInfo.getId());
+        } else {
+            param.put(TUIConstants.TUIChat.Extension.InputMore.GROUP_ID, mChatInfo.getId());
         }
-        HashMap<String, Object> param = new HashMap<>();
-        param.put(TUIConstants.TUIChat.INPUT_MORE_ACTION_ID, id);
-        param.put(TUIConstants.TUIChat.CHAT_ID, mChatInfo.getId());
-        param.put(TUIConstants.TUIChat.CHAT_NAME, mChatInfo.getChatName());
-        param.put(TUIConstants.TUIChat.CHAT_TYPE, mChatInfo.getType());
-        TUICore.notifyEvent(TUIConstants.TUIChat.EVENT_KEY_INPUT_MORE, TUIConstants.TUIChat.EVENT_SUB_KEY_ON_CLICK, param);
-    }
+        param.put(TUIConstants.TUIChat.Extension.InputMore.CONTEXT, getContext());
+        param.put(TUIConstants.TUIChat.Extension.InputMore.FILTER_VIDEO_CALL, !TUIChatConfigs.getConfigs().getGeneralConfig().isEnableVideoCall());
+        param.put(TUIConstants.TUIChat.Extension.InputMore.FILTER_VOICE_CALL, !TUIChatConfigs.getConfigs().getGeneralConfig().isEnableVoiceCall());
+        List<TUIExtensionInfo> extensionList = TUICore.getExtensionList(TUIConstants.TUIChat.Extension.InputMore.MINIMALIST_EXTENSION_ID, param);
+        for (TUIExtensionInfo extensionInfo : extensionList) {
+            if (extensionInfo != null) {
+                String name = extensionInfo.getText();
+                int icon = (int) extensionInfo.getIcon();
+                int priority = extensionInfo.getWeight();
+                InputMoreActionUnit unit = new InputMoreActionUnit() {
 
-    public void disableAudioInput(boolean disable) {
-
+                    @Override
+                    public void onAction(String chatInfoId, int chatType) {
+                        TUIExtensionEventListener extensionListener = extensionInfo.getExtensionListener();
+                        if (extensionListener != null) {
+                            extensionListener.onClicked(null);
+                        }
+                    }
+                };
+                unit.setName(name);
+                unit.setIconResId(icon);
+                unit.setPriority(priority);
+                list.add(unit);
+            }
+        }
+        return list;
     }
 
     public void disableEmojiInput(boolean disable) {

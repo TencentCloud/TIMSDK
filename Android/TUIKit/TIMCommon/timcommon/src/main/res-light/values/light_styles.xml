@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="TIMCommonLightTheme" parent="@style/TUIBaseLightTheme">
+        <item name="chat_bubble_self_bg_color">@color/chat_bubble_self_color_light</item>
+        <item name="chat_bubble_other_bg_color">@color/chat_bubble_other_color_light</item>
+        <item name="chat_bubble_self_bg">@drawable/chat_bubble_self_bg_light</item>
+        <item name="chat_bubble_other_bg">@drawable/chat_bubble_other_bg_light</item>
+        <item name="chat_react_text_color">@color/chat_react_text_color_light</item>
+        <item name="chat_read_receipt_text_color">@color/chat_read_receipt_text_color_light</item>
+        <item name="chat_react_other_text_color">@color/chat_react_other_text_color_light</item>
+        <item name="chat_reply_detail_icon">@drawable/chat_reply_icon_light</item>
+
+        <item name="core_line_controller_view_switch_btn_selected_bg">@color/core_primary_color_light</item>
+        <item name="core_selected_icon">@drawable/core_selected_icon_light</item>
+        <item name="core_title_bar_bg">@drawable/core_title_bar_bg_light</item>
+        <item name="core_title_bar_text_bg">@color/core_title_bar_text_bg_light</item>
+        <item name="core_title_bar_back_icon">@drawable/core_title_bar_back_light</item>
+        <item name="core_default_group_icon_public">@drawable/core_default_group_icon_public_light</item>
+        <item name="core_default_group_icon_work">@drawable/core_default_group_icon_work_light</item>
+        <item name="core_default_group_icon_meeting">@drawable/core_default_group_icon_meeting_light</item>
+        <item name="core_default_group_icon_community">@drawable/core_default_group_icon_community_light</item>
+        <item name="core_default_user_icon">@drawable/core_default_user_icon_light</item>
+        <item name="user_status_online">@drawable/core_online_status_light</item>
+        <item name="user_status_offline">@drawable/core_icon_offline_status</item>
+    </style>
+
+</resources>

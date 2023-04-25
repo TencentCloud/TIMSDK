@@ -1,13 +1,13 @@
 package com.tencent.qcloud.tuikit.tuichat.presenter;
 
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.timcommon.bean.MessageReceiptInfo;
+import com.tencent.qcloud.tuikit.timcommon.bean.MessageRepliesBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.ReactUserBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupInfo;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageReceiptInfo;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageRepliesBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.ReactUserBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.GroupMessageReadMembersInfo;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.model.ChatProvider;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
