@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |spec|
   spec.name         = 'TXIMSDK_Plus_Pro_iOS'
-  spec.version      = '7.1.3925'
+  spec.version      = '7.2.4123'
   spec.platform     = :ios 
   spec.ios.deployment_target = '8.0'
   spec.license      = { :type => 'Proprietary',
@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.qcloud.com/download/plus/7.1.3925/ImSDK_Plus_Pro_7.1.3925.framework.zip'}
+  spec.source = { :http => 'https://im.sdk.qcloud.com/download/plus/7.2.4123/ImSDK_Plus_Pro_7.2.4123.framework.zip'}
   spec.preserve_paths = '**/ImSDK_Plus_Pro.framework'
   spec.source_files = '**/ImSDK_Plus_Pro.framework/Headers/*.h', '**/ImSDK_Plus_Pro.framework/cpluscplus/include/*.h'
   spec.public_header_files = '**/ImSDK_Plus_Pro.framework/Headers/*.h', '**/ImSDK_Plus_Pro.framework/cpluscplus/include/*.h'
