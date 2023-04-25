@@ -29,8 +29,6 @@
 
 "None" = "None";
 
-"confirm_log_out" = "Leave now?";
-
 "choose_avatar_for_you" = "The App randomly assigns you a system avatar.";
 
 "AppLoginSucc" = "Successfully logged in";
@@ -189,4 +187,5 @@
 "TabBarItemMessageText_mini" = "Chats";
 "TabBarItemContactText_mini" = "Contact";
 "TabBarItemSettingText_mini"      = "Settings";
+"TabBarItemCallsRecordText_mini"  = "Calls";
 //----------------Mini end------------

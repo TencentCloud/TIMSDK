@@ -1,0 +1,151 @@
+//
+//  ConversationViewController.m
+//  TUIKitDemo
+//
+//  Created by kennethmiao on 2018/10/10.
+//  Copyright © 2018年 Tencent. All rights reserved.
+//
+#import "ConversationController.h"
+#import "TUIConversationListController.h"
+#import "TUIC2CChatViewController.h"
+#import "TUIGroupChatViewController.h"
+#import <TUICore/TUIThemeManager.h>
+#import <TIMCommon/TIMDefine.h>
+
+@interface ConversationController () <V2TIMSDKListener, TUIPopViewDelegate, V2TIMSDKListener>
+@property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
+@property (nonatomic, strong) TUIConversationListController *conv;
+@end
+
+@implementation ConversationController
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    if (self.viewWillAppear) {
+        self.viewWillAppear(YES);
+    }
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    if (self.viewWillAppear) {
+        self.viewWillAppear(NO);
+    }
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self setupNavigation];
+    
+    self.conv = [[TUIConversationListController alloc] init];
+    [self addChildViewController:self.conv];
+    [self.view addSubview:self.conv.view];
+    
+    [[V2TIMManager sharedInstance] addIMSDKListener:self];
+}
+
+- (void)setupNavigation
+{
+    UIButton *moreButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [moreButton setImage:TUICoreDynamicImage(@"nav_more_img", [UIImage imageNamed:TUICoreImagePath(@"more")]) forState:UIControlStateNormal];
+    [moreButton addTarget:self action:@selector(rightBarButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    moreButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
+    [moreButton.widthAnchor constraintEqualToConstant:24].active = YES;
+    [moreButton.heightAnchor constraintEqualToConstant:24].active = YES;
+    UIBarButtonItem *moreItem = [[UIBarButtonItem alloc] initWithCustomView:moreButton];
+    self.navigationItem.rightBarButtonItem = moreItem;
+    
+    _titleView = [[TUINaviBarIndicatorView alloc] init];
+    [_titleView setTitle:TIMCommonLocalizableString(TIMAppMainTitle)];
+    self.navigationItem.titleView = _titleView;
+    self.navigationItem.title = @"";
+}
+
+- (void)rightBarButtonClick:(UIButton *)rightBarButton
+{
+    NSMutableArray *menus = [NSMutableArray array];
+    TUIPopCellData *friend = [[TUIPopCellData alloc] init];
+    
+    friend.image = TUIConversationDynamicImage(@"pop_icon_new_chat_img", [UIImage imageNamed:TUIConversationImagePath(@"new_chat")]);
+    friend.title = TIMCommonLocalizableString(ChatsNewChatText);
+    [menus addObject:friend];
+    
+    TUIPopCellData *group = [[TUIPopCellData alloc] init];
+    group.image = TUIConversationDynamicImage(@"pop_icon_new_group_img", [UIImage imageNamed:TUIConversationImagePath(@"new_groupchat")]);
+    group.title = TIMCommonLocalizableString(ChatsNewGroupText);
+    [menus addObject:group];
+
+    CGFloat height = [TUIPopCell getHeight] * menus.count + TUIPopView_Arrow_Size.height;
+    CGFloat orginY = StatusBar_Height + NavBar_Height;
+    TUIPopView *popView = [[TUIPopView alloc] initWithFrame:CGRectMake(Screen_Width - 155, orginY, 145, height)];
+    CGRect frameInNaviView = [self.navigationController.view convertRect:rightBarButton.frame fromView:rightBarButton.superview];
+    popView.arrowPoint = CGPointMake(frameInNaviView.origin.x + frameInNaviView.size.width * 0.5, orginY);
+    popView.delegate = self;
+    [popView setData:menus];
+    [popView showInWindow:self.view.window];
+}
+
+#pragma TUIPopViewDelegate
+- (void)popView:(TUIPopView *)popView didSelectRowAtIndex:(NSInteger)index
+{
+    if (0 == index) {
+        [self.conv startConversation:V2TIM_C2C];
+    } else {
+        [self.conv startConversation:V2TIM_GROUP];
+    }
+}
+
+- (void)pushToChatViewController:(NSString *)groupID userID:(NSString *)userID {
+
+    UIViewController *topVc = self.navigationController.topViewController;
+    BOOL isSameTarget = NO;
+    BOOL isInChat = NO;
+    if ([topVc isKindOfClass:TUIC2CChatViewController.class] || [topVc isKindOfClass:TUIGroupChatViewController.class]) {
+        TUIChatConversationModel *cellData = [(TUIBaseChatViewController *)topVc conversationData];
+        isSameTarget = [cellData.groupID isEqualToString:groupID] || [cellData.userID isEqualToString:userID];
+        isInChat = YES;
+    }
+    if (isInChat && isSameTarget) {
+        return;
+    }
+    
+    if (isInChat && !isSameTarget) {
+        [self.navigationController popViewControllerAnimated:NO];
+    }
+    
+    TUIChatConversationModel *conversationData = [[TUIChatConversationModel alloc] init];
+    conversationData.userID = userID;
+    conversationData.groupID = groupID;
+    TUIBaseChatViewController *chatVC = [self getChatViewController:conversationData];
+    [self.navigationController pushViewController:chatVC animated:YES];
+}
+
+- (TUIBaseChatViewController *)getChatViewController:(TUIChatConversationModel *)model {
+    TUIBaseChatViewController *chat = nil;
+    if (model.userID.length > 0) {
+        chat = [[TUIC2CChatViewController alloc] init];
+    } else if (model.groupID.length > 0) {
+        chat = [[TUIGroupChatViewController alloc] init];
+    }
+    chat.conversationData = model;
+    return chat;
+}
+
+#pragma mark - V2TIMSDKListener
+- (void)onConnecting {
+    [self.titleView setTitle:TIMCommonLocalizableString(TIMAppMainConnectingTitle)];
+    [self.titleView startAnimating];
+}
+
+- (void)onConnectSuccess {
+    [self.titleView setTitle:TIMCommonLocalizableString(TIMAppMainTitle)];
+    [self.titleView stopAnimating];
+}
+
+- (void)onConnectFailed:(int)code err:(NSString*)err {
+    [self.titleView setTitle:TIMCommonLocalizableString(TIMAppMainDisconnectTitle)];
+    [self.titleView stopAnimating];
+}
+
+@end

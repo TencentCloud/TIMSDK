@@ -29,8 +29,6 @@
 
 "None" = "无";
 
-"confirm_log_out" = "确定退出吗";
-
 "choose_avatar_for_you" = "App随机为您分配一个系统头像";
 
 "AppLoginSucc" = "已成功登录";
@@ -190,4 +188,5 @@
 "TabBarItemMessageText_mini" = "聊天";
 "TabBarItemContactText_mini" = "联系人";
 "TabBarItemSettingText_mini" = "设置";
+"TabBarItemCallsRecordText_mini"  = "通话记录";
 //----------------Mini end------------

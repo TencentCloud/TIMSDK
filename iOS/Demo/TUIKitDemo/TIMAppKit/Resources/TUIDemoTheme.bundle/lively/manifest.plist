@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>id</key>
+	<string>lively</string>
+	<key>name</key>
+	<string>活泼</string>
+	<key>name_en</key>
+	<string>Lively</string>
+	<key>logo_bg</key>
+	<string>logo_bg.png</string>
+	<key>login_logo</key>
+	<string>login_logo</string>
+	<key>tab_msg_normal_img</key>
+	<string>tab_msg_normal.png</string>
+	<key>tab_msg_selected_img</key>
+	<string>tab_msg_selected.png</string>
+	<key>tab_calls_normal_img</key>
+	<string>tab_calls_normal.png</string>
+	<key>tab_calls_selected_img</key>
+	<string>tab_calls_selected.png</string>
+	<key>tab_contact_normal_img</key>
+	<string>tab_contact_normal.png</string>
+	<key>tab_contact_selected_img</key>
+	<string>tab_contact_selected.png</string>
+	<key>tab_me_normal_img</key>
+	<string>tab_me_normal.png</string>
+	<key>tab_me_selected_img</key>
+	<string>tab_me_selected.png</string>
+	<key>nav_title_text_color</key>
+	<string>#FFFFFF</string>
+	<key>tab_title_text_select_color</key>
+	<string>#FFA88B</string>
+	<key>tab_title_text_color</key>
+	<string>#939393</string>
+	<key>tab_bg_color</key>
+	<string>#F4F6F9</string>
+	<key>pop_bg_color</key>
+	<string>#FFFFFF</string>
+	<key>pop_text_color</key>
+	<string>#444444</string>
+	<key>login_content_bg_color</key>
+	<string>#FFFFFF</string>
+	<key>login_form_title_color</key>
+	<string>#444444</string>
+	<key>login_placeholder_color</key>
+	<string>#BBBBBB</string>
+	<key>login_btn_bg_color</key>
+	<string>#FF8E82</string>
+	<key>login_theme_img</key>
+	<string>login_theme.png</string>
+	<key>login_language_img</key>
+	<string>login_language.png</string>
+	<key>login_drop_img</key>
+	<string>login_drop.png</string>
+	<key>login_theme_language_text_color</key>
+	<string>#FFFFFF99</string>
+	<key>public_login_logo_img</key>
+	<string>public_login_logo.png</string>
+	<key>separator_color</key>
+	<string>#DBDBDB</string>
+</dict>
+</plist>

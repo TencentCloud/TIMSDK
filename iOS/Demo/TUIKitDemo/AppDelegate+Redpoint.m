@@ -9,6 +9,7 @@
 #import "AppDelegate+Redpoint.h"
 #import "Aspects.h"
 #import <objc/runtime.h>
+#import "TUIDefine.h"
 
 NSInteger _markUnreadCount = 0 ;
 NSInteger _markHideUnreadCount = 0;
@@ -60,6 +61,9 @@ NSInteger _markHideUnreadCount = 0;
                          withOptions:AspectPositionAfter
                           usingBlock:onTotalUnreadMessageChangedBlock
                                error:nil];
+    
+    // 监听未读数清空通知
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(redpoint_clearUnreadMessage) name:@"redpoint_clearUnreadMessage" object:nil];
     
 }
 

@@ -9,17 +9,16 @@
 #import <UIKit/UIKit.h>
 #import "TUITabBarController.h"
 #import "LoginController.h"
-#import "TUIKit.h"
 #import "GenerateTestUserSig.h"
 #import "TUILogin.h"
 #import "TUIContactViewDataProvider.h"
 #import "TCConstants.h"
-#import "StyleSelectViewController.h"
+#import "TUIStyleSelectViewController.h"
 
 @class AppDelegate;
 static AppDelegate *app = nil;
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate,StyleSelectControllerDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate,TUIStyleSelectControllerDelegate>
 
 @property (nonatomic, strong) UIWindow *window;
 

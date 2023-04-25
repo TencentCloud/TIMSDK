@@ -8,7 +8,7 @@
 
 #import "TCLoginModel.h"
 #import "TCConstants.h"
-#import "TCUtil.h"
+#import "TUIUtil.h"
 #import "TUIGlobalization.h"
 
 static NSString * const kKeySavedLoginInfoAppID = @"Key_Login_Info_AppID";

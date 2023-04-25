@@ -13,7 +13,7 @@
 #import "TUIDefine.h"
 #import "TUIKit.h"
 #import "Aspects.h"
-#import "TCUtil.h"
+#import "TUIUtil.h"
 #import "TCLoginModel.h"
 
 #if ENABLELIVE
@@ -24,12 +24,13 @@
 #import "TUIBaseChatViewController.h"
 #import "TUIBadgeView.h"
 #import "AppDelegate+Redpoint.h"
-#import "ThemeSelectController.h"
+#import "TUIThemeSelectController.h"
 #import "TUIThemeManager.h"
-#import "LanguageSelectController.h"
+#import "TUILanguageSelectController.h"
 #import "TUILogin.h"
 #import "TUIChatConfig.h"
 #import "TUIWarningView.h"
+#import "TUICallingHistoryViewController.h"
 
 //Minimalist
 #import "ConversationController_Minimalist.h"
@@ -37,11 +38,11 @@
 #import "SettingController_Minimalist.h"
 //Minimalist
 
-
-@interface AppDelegate () <V2TIMConversationListener, TUILoginListener, ThemeSelectControllerDelegate, LanguageSelectControllerDelegate,V2TIMAPNSListener>
+@interface AppDelegate () <V2TIMConversationListener, TUILoginListener, TUIThemeSelectControllerDelegate, TUILanguageSelectControllerDelegate,V2TIMAPNSListener>
 
 @property (nonatomic, strong) TUIContactViewDataProvider *contactDataProvider;
-@property (nonatomic,strong) TUILoginConfig *loginConfig;
+@property (nonatomic, strong) TUILoginConfig *loginConfig;
+@property (nonatomic, weak) TUITabBarItem *callsRecordItem;
 
 @end
 
@@ -55,8 +56,8 @@
     // Override point for customization after application launch.
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
     
-    TUIRegisterThemeResourcePath([NSBundle.mainBundle pathForResource:@"TUIDemoTheme.bundle" ofType:nil], TUIThemeModuleDemo);
-    [ThemeSelectController applyLastTheme];
+    TUIRegisterThemeResourcePath(TUIDemoThemePath, TUIThemeModuleDemo);
+    [TUIThemeSelectController applyLastTheme];
         
     [self setupListener];
     [self setupGlobalUI];
@@ -105,8 +106,9 @@
     [[V2TIMManager sharedInstance] setAPNSListener:self];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateMarkUnreadCount:) name:TUIKitNotification_onConversationMarkUnreadCountChanged object:nil];
-    
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onLogoutSucc) name:TUILogoutSuccessNotification object:nil];
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onDisplayCallsRecordForMinimalist:) name:kEnableCallsRecord_mini object:nil];
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onDisplayCallsRecordForClassic:) name:kEnableCallsRecord object:nil];
 }
 
 void uncaughtExceptionHandler(NSException*exception) {
@@ -295,8 +297,8 @@ void uncaughtExceptionHandler(NSException*exception) {
 }
 
 
-#pragma mark - LanguageSelectControllerDelegate
-- (void)onSelectLanguage:(LanguageSelectCellModel *)cellModel {
+#pragma mark - TUILanguageSelectControllerDelegate
+- (void)onSelectLanguage:(TUILanguageSelectCellModel *)cellModel {
     /**
      * 动态刷新语言的方法: 销毁当前界面，并重新创建后跳转来实现动态刷新语言
      * The method of dynamically refreshing the language: Destroy the current interface, and recreate it and then jump to realize dynamic refreshing of the language
@@ -323,7 +325,7 @@ void uncaughtExceptionHandler(NSException*exception) {
      * 2. 创建语言选择页面，并 push
      * 2. Create a language selection page and push
      */
-    LanguageSelectController *languageVc = [[LanguageSelectController alloc] init];
+    TUILanguageSelectController *languageVc = [[TUILanguageSelectController alloc] init];
     languageVc.delegate = self;
     [navVc pushViewController:languageVc animated:NO];
     
@@ -343,7 +345,7 @@ void uncaughtExceptionHandler(NSException*exception) {
 }
 
 #pragma mark - ThemeSelectControllerDelegate
-- (void)onSelectTheme:(ThemeSelectCollectionViewCellModel *)cellModel {
+- (void)onSelectTheme:(TUIThemeSelectCollectionViewCellModel *)cellModel {
     /**
      * 动态刷新主题的方法: 销毁当前界面，并重新创建后跳转来实现动态刷新主题
      * The method of dynamically refreshing the theme: Destroy the current interface, and recreate it and then jump to realize the dynamic refresh theme
@@ -370,7 +372,7 @@ void uncaughtExceptionHandler(NSException*exception) {
      * 2. 创建主题选择控制器并 push
      * 2. Create a theme selection controller and push
      */
-    ThemeSelectController *themeVc = [[ThemeSelectController alloc] init];
+    TUIThemeSelectController *themeVc = [[TUIThemeSelectController alloc] init];
     themeVc.disable = YES;
     themeVc.delegate = self;
     [themeVc.view makeToastActivity:TUICSToastPositionCenter];
@@ -404,8 +406,47 @@ void uncaughtExceptionHandler(NSException*exception) {
 
 
 #pragma mark - NSNotification
+- (void)updateMarkUnreadCount:(NSNotification *)notice {
+    
+}
 
-- (void)updateMarkUnreadCount:(NSNotification *)note {}
+- (void)onDisplayCallsRecordForClassic:(NSNotification *)notice {
+    [self onDisplayCallsRecord:notice isMinimalist:NO];
+}
+
+- (void)onDisplayCallsRecordForMinimalist:(NSNotification *)notice {
+    [self onDisplayCallsRecord:notice isMinimalist:YES];
+}
+
+- (void)onDisplayCallsRecord:(NSNotification *)notice isMinimalist:(BOOL)isMinimalist {
+    TUITabBarController *tabVC = (TUITabBarController *)self.window.rootViewController;
+    NSNumber *value = notice.object;
+    if (![value isKindOfClass:NSNumber.class] ||
+        ![tabVC isKindOfClass:TUITabBarController.class]) {
+        return;
+    }
+    NSMutableArray *items = tabVC.tabBarItems;
+    BOOL isOn = value.boolValue;
+    if (isOn) {
+        if (self.callsRecordItem) {
+            [items removeObject:self.callsRecordItem];
+        }
+        TUITabBarItem *item = [self getCallsRecordTabBarItem:isMinimalist];
+        if (item) {
+            [items insertObject:item atIndex:1];
+            self.callsRecordItem = item;
+        }
+        tabVC.tabBarItems = items;
+    } else {
+        if (self.callsRecordItem) {
+            [items removeObject:self.callsRecordItem];
+        }
+        tabVC.tabBarItems = items;
+    }
+    
+    [tabVC layoutBadgeViewIfNeeded];
+}
+
 
 #pragma mark - Other
 typedef void (^cancelHandler)(UIAlertAction *action, NSString *content);
@@ -436,7 +477,7 @@ typedef void (^confirmHandler)(UIAlertAction *action, NSString *content);
 #pragma mark - Classic  & Minimalist
 - (void)setupConfig {
    
-    if ([StyleSelectViewController isClassicEntrance]) {
+    if ([TUIStyleSelectViewController isClassicEntrance]) {
         [self setupConfig_Classic];
     }
     else {
@@ -445,7 +486,7 @@ typedef void (^confirmHandler)(UIAlertAction *action, NSString *content);
 }
 
 - (UITabBarController *)getMainController {
-    if ([StyleSelectViewController isClassicEntrance]) {
+    if ([TUIStyleSelectViewController isClassicEntrance]) {
         return [self getMainController_Classic];
     }
     else {
@@ -470,7 +511,13 @@ typedef void (^confirmHandler)(UIAlertAction *action, NSString *content);
         [self redpoint_clearUnreadMessage];
     };
     [items addObject:msgItem];
-
+    
+    TUITabBarItem *callsItem = [self getCallsRecordTabBarItem:NO];
+    if (callsItem) {
+        [items addObject:callsItem];
+        self.callsRecordItem = callsItem;
+    }
+    
     TUITabBarItem *contactItem = [[TUITabBarItem alloc] init];
     contactItem.title = NSLocalizedString(@"TabBarItemContactText", nil);
     contactItem.selectedImage = TUIDemoDynamicImage(@"tab_contact_selected_img", [UIImage imageNamed:@"contact_selected"]);
@@ -484,7 +531,18 @@ typedef void (^confirmHandler)(UIAlertAction *action, NSString *content);
     setItem.title = NSLocalizedString(@"TabBarItemMeText", nil);
     setItem.selectedImage = TUIDemoDynamicImage(@"tab_me_selected_img", [UIImage imageNamed:@"myself_selected"]);
     setItem.normalImage = TUIDemoDynamicImage(@"tab_me_normal_img", [UIImage imageNamed:@"myself_normal"]);
-    setItem.controller = [[TUINavigationController alloc] initWithRootViewController:[[SettingController alloc] init]];
+    SettingController *setVC = [[SettingController alloc] init];
+    setVC.confirmLogout = ^{
+        [TUILogin logout:^{
+            [[TCLoginModel sharedInstance] clearLoginedInfo];
+            UIViewController *loginVc = [self getLoginController];
+            self.window.rootViewController = loginVc;
+            [[NSNotificationCenter defaultCenter] postNotificationName: @"TUILoginShowPrivacyPopViewNotfication" object:nil];
+        } fail:^(int code, NSString *msg) {
+            NSLog(@"logout fail");
+        }];
+    };
+    setItem.controller = [[TUINavigationController alloc] initWithRootViewController:setVC];
     setItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
     [items addObject:setItem];
     tbc.tabBarItems = items;
@@ -502,7 +560,11 @@ typedef void (^confirmHandler)(UIAlertAction *action, NSString *content);
     }
     TUIConfig.defaultConfig.displayOnlineStatusIcon = [[NSUserDefaults standardUserDefaults] boolForKey:kEnableOnlineStatus];
     TUIChatConfig.defaultConfig.enableMultiDeviceForCall = NO;
-    TUIChatConfig.defaultConfig.enableTextTranslation = YES;
+    
+    if ([NSUserDefaults.standardUserDefaults objectForKey:kEnableCallsRecord] == nil) {
+        [NSUserDefaults.standardUserDefaults setObject:@(NO) forKey:kEnableCallsRecord];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
 }
 
 - (void)setupConfig_Minimalist {
@@ -516,10 +578,14 @@ typedef void (^confirmHandler)(UIAlertAction *action, NSString *content);
     TUIConfig.defaultConfig.displayOnlineStatusIcon = [[NSUserDefaults standardUserDefaults] boolForKey:kEnableOnlineStatus_mini];
     TUIChatConfig.defaultConfig.enableMultiDeviceForCall = NO;
     TUIConfig.defaultConfig.avatarType = TAvatarTypeRounded;
-    TUIChatConfig.defaultConfig.enableTextTranslation = YES;
+    
+    if ([NSUserDefaults.standardUserDefaults objectForKey:kEnableCallsRecord_mini] == nil) {
+        [NSUserDefaults.standardUserDefaults setObject:@(YES) forKey:kEnableCallsRecord_mini];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
 }
 
-- (void)onSelectStyle:(StyleSelectCellModel *)cellModel {
+- (void)onSelectStyle:(TUIStyleSelectCellModel *)cellModel {
     [NSUserDefaults.standardUserDefaults setBool:YES forKey:@"need_recover_login_page_info"];
     [NSUserDefaults.standardUserDefaults synchronize];
     [self reloadCombineData];
@@ -539,7 +605,7 @@ typedef void (^confirmHandler)(UIAlertAction *action, NSString *content);
         return;
     }
     
-    StyleSelectViewController *styleSelectVC = [[StyleSelectViewController alloc] init];
+    TUIStyleSelectViewController *styleSelectVC = [[TUIStyleSelectViewController alloc] init];
     styleSelectVC.delegate = self;
     [navVc pushViewController:styleSelectVC animated:NO];
 
@@ -549,8 +615,8 @@ typedef void (^confirmHandler)(UIAlertAction *action, NSString *content);
      */
     dispatch_async(dispatch_get_main_queue(), ^{
         UIApplication.sharedApplication.keyWindow.rootViewController = navVc;
-        if (![StyleSelectViewController isClassicEntrance]) {
-            [ThemeSelectController applyTheme:@"light"];
+        if (![TUIStyleSelectViewController isClassicEntrance]) {
+            [TUIThemeSelectController applyTheme:@"light"];
             [NSUserDefaults.standardUserDefaults setObject:@"light" forKey:@"current_theme_id"];
             [NSUserDefaults.standardUserDefaults synchronize];
         }
@@ -577,15 +643,31 @@ typedef void (^confirmHandler)(UIAlertAction *action, NSString *content);
     TUINavigationController *msgNav = [[TUINavigationController alloc] initWithRootViewController:[[ConversationController_Minimalist alloc] init]];
     msgItem.controller = msgNav;
     msgNav.navigationItemBackArrowImage = [UIImage imageNamed:@"icon_back_blue"];
+    ConversationController_Minimalist *convVC = [[ConversationController_Minimalist alloc] init];
+    @weakify(self)
+    convVC.getUnReadCount = ^NSUInteger{
+        @strongify(self)
+        return self.unReadCount;
+    };
+    convVC.clearUnreadMessage = ^{
+        @strongify(self)
+        [self redpoint_clearUnreadMessage];
+    };
+    msgItem.controller = [[TUINavigationController alloc] initWithRootViewController:convVC];
     msgItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:[UIColor whiteColor] dark:TController_Background_Color_Dark];
     msgItem.badgeView = [[TUIBadgeView alloc] init];
-    @weakify(self)
     msgItem.badgeView.clearCallback = ^{
         @strongify(self)
         [self redpoint_clearUnreadMessage];
     };
     [items addObject:msgItem];
 
+    TUITabBarItem *callsItem = [self getCallsRecordTabBarItem:YES];
+    if (callsItem) {
+        [items addObject:callsItem];
+        self.callsRecordItem = callsItem;
+    }
+    
     TUITabBarItem *contactItem = [[TUITabBarItem alloc] init];
     contactItem.title = NSLocalizedString(@"TabBarItemContactText_mini", nil);
     contactItem.selectedImage = TUIDynamicImage(@"", TUIThemeModuleDemo_Minimalist, [UIImage imageNamed:TUIDemoImagePath_Minimalist(@"contact_selected")]);
@@ -605,6 +687,18 @@ typedef void (^confirmHandler)(UIAlertAction *action, NSString *content);
     TUINavigationController *setNav = [[TUINavigationController alloc] initWithRootViewController:[[SettingController_Minimalist alloc] init]];
     setNav.navigationItemBackArrowImage = [UIImage imageNamed:@"icon_back_blue"];
     setItem.controller = setNav;
+    SettingController_Minimalist *setVC = [[SettingController_Minimalist alloc] init];
+    setVC.confirmLogout = ^{
+        [TUILogin logout:^{
+            [[TCLoginModel sharedInstance] clearLoginedInfo];
+            UIViewController *loginVc = [self getLoginController];
+            self.window.rootViewController = loginVc;
+            [[NSNotificationCenter defaultCenter] postNotificationName: @"TUILoginShowPrivacyPopViewNotfication" object:nil];
+        } fail:^(int code, NSString *msg) {
+            NSLog(@"logout fail");
+        }];
+    };
+    setItem.controller = [[TUINavigationController alloc] initWithRootViewController:setVC];
     setItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:[UIColor whiteColor] dark:TController_Background_Color_Dark];
     [items addObject:setItem];
     tbc.tabBarItems = items;
@@ -612,6 +706,25 @@ typedef void (^confirmHandler)(UIAlertAction *action, NSString *content);
     tbc.tabBar.backgroundColor = [UIColor whiteColor];
     tbc.tabBar.barTintColor = [UIColor whiteColor];
     return tbc;
+}
+
+- (TUITabBarItem *)getCallsRecordTabBarItem:(BOOL)isMinimalist {
+    BOOL showCallsRecord = isMinimalist ? [NSUserDefaults.standardUserDefaults boolForKey:kEnableCallsRecord_mini] : [NSUserDefaults.standardUserDefaults boolForKey:kEnableCallsRecord];
+    TUICallingHistoryViewController *callsVc = [TUICallingHistoryViewController createCallingHistoryViewController:isMinimalist];
+    if (showCallsRecord && callsVc) {
+        NSString *title = isMinimalist ? NSLocalizedString(@"TabBarItemCallsRecordText_mini", nil) : NSLocalizedString(@"TabBarItemCallsRecordText_mini", nil);
+        UIImage *selected = isMinimalist ? TUIDynamicImage(@"", TUIThemeModuleDemo_Minimalist, [UIImage imageNamed:TUIDemoImagePath_Minimalist(@"tab_calls_selected")])
+                                         : TUIDemoDynamicImage(@"tab_calls_selected_img", [UIImage imageNamed:TUIDemoImagePath(@"tab_calls_selected")]);
+        UIImage *normal = isMinimalist ? TUIDynamicImage(@"", TUIThemeModuleDemo_Minimalist, [UIImage imageNamed:TUIDemoImagePath_Minimalist(@"tab_calls_normal")])
+                                       : TUIDemoDynamicImage(@"tab_calls_normal_img", [UIImage imageNamed:TUIDemoImagePath(@"tab_calls_normal")]);
+        TUITabBarItem *callsItem = [[TUITabBarItem alloc] init];
+        callsItem.title = title;
+        callsItem.selectedImage = selected;
+        callsItem.normalImage = normal;
+        callsItem.controller = [[TUINavigationController alloc] initWithRootViewController:callsVc];
+        return callsItem;
+    }
+    return nil;
 }
 
 @end

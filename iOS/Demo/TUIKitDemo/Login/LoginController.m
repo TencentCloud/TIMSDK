@@ -7,12 +7,11 @@
 //
 
 #import "LoginController.h"
-#import "TUIKit.h"
 #import "AppDelegate.h"
 #import "GenerateTestUserSig.h"
 #import "TUIThemeManager.h"
-#import "ThemeSelectController.h"
-#import "LanguageSelectController.h"
+#import "TUIThemeSelectController.h"
+#import "TUILanguageSelectController.h"
 #import "TCLoginModel.h"
 
 @interface LoginController ()
@@ -33,9 +32,9 @@
     [super viewDidLoad];
     self.navigationController.navigationBarHidden = YES;
     
-    self.view.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F3F4F5");
+    self.view.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#F3F4F5");
     self.logView.image = TUIDemoDynamicImage(@"public_login_logo_img", [UIImage imageNamed:@"public_login_logo"]);
-    self.loginButton.backgroundColor = TUICoreDynamicColor(@"primary_theme_color", @"#147AFF");
+    self.loginButton.backgroundColor = TIMCommonDynamicColor(@"primary_theme_color", @"#147AFF");
     [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap)]];
     [self.loginButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
     [self.loginButton setTitle:NSLocalizedString(@"login", nil) forState:UIControlStateNormal];
@@ -72,7 +71,7 @@
             weakSelf.changeLanguageView.mm_y = 10;
         }
         
-        if ([StyleSelectViewController isClassicEntrance]) {
+        if ([TUIStyleSelectViewController isClassicEntrance]) {
             self.changeSkinView.hidden = NO;
             self.changeSkinView.mm_right(20 + self.changeLanguageView.mm_w + 20);
             self.changeSkinView.mm_y = self.changeLanguageView.mm_y;
@@ -94,18 +93,18 @@
 }
 
 - (void)onChangeLanguage {
-    LanguageSelectController *vc = [[LanguageSelectController alloc] init];
+    TUILanguageSelectController *vc = [[TUILanguageSelectController alloc] init];
     vc.delegate = AppDelegate.sharedInstance;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)onChangeStyle {
-    StyleSelectViewController *vc = [[StyleSelectViewController alloc] init];
+    TUIStyleSelectViewController *vc = [[TUIStyleSelectViewController alloc] init];
     vc.delegate = AppDelegate.sharedInstance;
     [self.navigationController pushViewController:vc animated:YES];
 }
 - (void)onChangeSkin {
-    ThemeSelectController *vc = [[ThemeSelectController alloc] init];
+    TUIThemeSelectController *vc = [[TUIThemeSelectController alloc] init];
     vc.delegate = AppDelegate.sharedInstance;
     [self.navigationController pushViewController:vc animated:YES];
 }
