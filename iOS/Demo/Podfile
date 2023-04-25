@@ -18,7 +18,7 @@ target 'TUIKitDemo' do
   pod 'TUIOfflinePush', '7.2.4123'
 #  pod 'TUIPoll', '7.2.4123'
 #  pod 'TUIGroupNote', '7.2.4123'
-#  pod 'TUICallKit'
+  pod 'TUICallKit'
   pod 'MJRefresh'
   pod 'Masonry'
 
