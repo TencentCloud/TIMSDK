@@ -12,6 +12,7 @@
         <provider
             android:name=".TUIChatService"
             android:authorities="${applicationId}.TUIChat.Init"
+            android:initOrder="9999"
             android:enabled="true"
             android:exported="false" />
 
@@ -54,6 +55,7 @@
         <provider
             android:name=".classicui.ClassicUIService"
             android:authorities="${applicationId}.TUIChat.ClassicUI.Init"
+            android:initOrder="9998"
             android:enabled="true"
             android:exported="false"/>
         <!-- **************** Classic UI End **************** -->
@@ -97,6 +99,7 @@
             android:name=".minimalistui.MinimalistUIService"
             android:authorities="${applicationId}.TUIChat.MinimalistUI.Init"
             android:enabled="true"
+            android:initOrder="9998"
             android:exported="false"/>
         <!-- **************** Minimalist UI End **************** -->
 

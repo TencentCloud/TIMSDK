@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp">
+
+    <com.tencent.qcloud.tuikit.timcommon.component.MinimalistTitleBar
+        android:id="@+id/new_apply_detail_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingTop="11.52dp"
+        android:paddingBottom="11.52dp">
+
+        <com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView
+            android:id="@+id/avatar"
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="13dp"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:text="name" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/user_id_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ID: "
+                    android:layout_marginTop="3dp"
+                    android:textColor="#CC000000"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/user_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="#CC000000"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/group_validation_message"
+        android:textColor="#99000000"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/validation_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="40dp"
+        tools:text="hello"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/agree"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="42dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="8dp"
+            android:layout_marginRight="9.6dp"
+            android:background="@drawable/group_minimalist_agree_btn_bg"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:text="@string/accept" />
+
+        <TextView
+            android:id="@+id/reject"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="42dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="20dp"
+            android:background="@drawable/group_minimalist_result_bg"
+            android:gravity="center"
+            android:textColor="#FF584C"
+            android:textSize="14sp"
+            android:text="@string/refuse"/>
+
+        <TextView
+            android:id="@+id/result_tv"
+            android:layout_width="160dp"
+            android:layout_height="42dp"
+            android:layout_marginRight="15.36dp"
+            android:background="@drawable/group_minimalist_result_bg"
+            android:gravity="center"
+            android:text="@string/accepted"
+            android:textColor="#999999"
+            android:textSize="14sp"
+            android:visibility="gone"
+            tools:visibility="visible" />
+    </LinearLayout>
+
+</LinearLayout>

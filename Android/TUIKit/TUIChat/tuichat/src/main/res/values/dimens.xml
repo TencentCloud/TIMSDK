@@ -16,8 +16,6 @@
 
     <dimen name="forward_text_max_length">180dp</dimen>
 
-    <dimen name="chat_message_content_max_width">235dp</dimen>
-
     <dimen name="chat_message_bg_stoke_width">1dp</dimen>
     <dimen name="chat_item_padding_bottom">7dp</dimen>
     <dimen name="chat_message_text_size">15.55sp</dimen>
@@ -58,7 +56,5 @@
     <dimen name="chat_pop_menu_item_space_width">5.28dp</dimen>
     <dimen name="chat_pop_menu_item_space_height">3.84dp</dimen>
 
-    <dimen name="chat_message_area_padding_left_right">11.52dp</dimen>
-    <dimen name="chat_message_area_padding_top_bottom">9.6dp</dimen>
 
 </resources>

@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:context=".ui.page.CreateTopicActivity">
 
-    <com.tencent.qcloud.tuicore.component.TitleBarLayout
+    <com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout
         android:id="@+id/create_topic_title"
         app:title_bar_middle_title="@string/community_create_topic"
         app:title_bar_can_return="true"

@@ -19,13 +19,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.tencent.qcloud.tuicore.TUIThemeManager;
-import com.tencent.qcloud.tuicore.util.FileUtil;
-import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.MessageContentHolder;
+import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FileMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.progress.ProgressPresenter;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.NetworkConnectionListener;
 
@@ -58,7 +59,7 @@ public class FileMessageHolder extends MessageContentHolder {
     public void layoutVariableViews(final TUIMessageBean msg, final int position) {
         msgArea.setPadding(0, 0, 0, 0);
         msgId = msg.getId();
-        reactView.setThemeColorId(TUIThemeManager.getAttrResId(reactView.getContext(), R.attr.chat_react_other_text_color));
+        reactView.setThemeColorId(TUIThemeManager.getAttrResId(reactView.getContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.chat_react_other_text_color));
         if (isForwardMode || isReplyDetailMode) {
             msgArea.setBackgroundResource(R.drawable.chat_bubble_other_cavity_bg);
             statusImage.setVisibility(View.GONE);

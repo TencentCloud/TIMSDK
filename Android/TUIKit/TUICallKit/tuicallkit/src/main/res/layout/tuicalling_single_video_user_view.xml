@@ -5,7 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <com.tencent.qcloud.tuicore.component.RoundCornerImageView
+    <com.tencent.qcloud.tuikit.tuicallkit.view.common.RoundCornerImageView
         android:id="@+id/iv_user_avatar"
         android:layout_width="80dp"
         android:layout_height="80dp"

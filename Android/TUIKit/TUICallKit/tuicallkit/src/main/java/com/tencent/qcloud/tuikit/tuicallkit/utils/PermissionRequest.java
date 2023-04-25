@@ -1,166 +1,56 @@
 package com.tencent.qcloud.tuikit.tuicallkit.utils;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.Settings;
 import android.text.TextUtils;
 
-import androidx.annotation.IntDef;
-
-import com.tencent.qcloud.tuicore.util.PermissionRequester;
+import com.tencent.qcloud.tuicore.permission.PermissionCallback;
+import com.tencent.qcloud.tuicore.permission.PermissionRequester;
+import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine;
 import com.tencent.qcloud.tuikit.tuicallengine.utils.BrandUtils;
 import com.tencent.qcloud.tuikit.tuicallengine.utils.PermissionUtils;
 import com.tencent.qcloud.tuikit.tuicallkit.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PermissionRequest {
-    public static final int PERMISSION_MICROPHONE = 1;
-    public static final int PERMISSION_CAMERA     = 2;
 
-    @IntDef({PERMISSION_MICROPHONE, PERMISSION_CAMERA})
-    public @interface PermissionType {
-    }
+    public static void requestPermissions(Context context, TUICallDefine.MediaType type, PermissionCallback callback) {
+        StringBuilder title = new StringBuilder().append(context.getString(R.string.tuicalling_permission_microphone));
+        StringBuilder reason = new StringBuilder().append(context.getString(R.string.tuicalling_permission_mic_reason));
+        List<String> permissionList = new ArrayList<>();
+        permissionList.add(Manifest.permission.RECORD_AUDIO);
 
-    public static void requestPermission(Context context, @PermissionType int type1, @PermissionType int type2,
-                                         PermissionCallback callback) {
-        requestPermission(context, type2, new PermissionCallback() {
-            @Override
-            public void onGranted() {
-                requestPermission(context, type1, new PermissionCallback() {
-                    @Override
-                    public void onGranted() {
-                        if (null != callback) {
-                            callback.onGranted();
-                        }
-                    }
+        if (TUICallDefine.MediaType.Video.equals(type)) {
+            title.append(context.getString(R.string.tuicalling_permission_separator));
+            title.append(context.getString(R.string.tuicalling_permission_camera));
+            reason.append(context.getString(R.string.tuicalling_permission_camera_reason));
+            permissionList.add(Manifest.permission.CAMERA);
+        }
+        //Android S(31) need apply for this permission,refer to:https://developer.android.com/about/versions/12/features/bluetooth-permissions?hl=zh-cn
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            title.append(context.getString(R.string.tuicalling_permission_separator));
+            title.append(context.getString(R.string.tuicalling_permission_bluetooth));
+            reason.append(context.getString(R.string.tuicalling_permission_bluetooth_reason));
+            permissionList.add(Manifest.permission.BLUETOOTH_CONNECT);
+        }
 
-                    @Override
-                    public void onDenied() {
-                        if (null != callback) {
-                            callback.onDenied();
-                        }
-                    }
-
-                    @Override
-                    public void onDialogApproved() {
-                        if (null != callback) {
-                            callback.onDialogApproved();
-                        }
-                    }
-
-                    @Override
-                    public void onDialogRefused() {
-                        if (null != callback) {
-                            callback.onDialogRefused();
-                        }
-                    }
-                });
-
-            }
-
-            @Override
-            public void onDenied() {
-                if (null != callback) {
-                    callback.onDenied();
-                }
-            }
-
-            @Override
-            public void onDialogApproved() {
-                if (null != callback) {
-                    callback.onDialogApproved();
-                }
-            }
-
-            @Override
-            public void onDialogRefused() {
-                if (null != callback) {
-                    callback.onDialogRefused();
-                }
-            }
-        });
-    }
-
-    public static void requestPermission(Context context, @PermissionType int type, PermissionCallback callback) {
-        String permission = null;
-        String reason = null;
-        String reasonTitle = null;
-        String deniedAlert = null;
         ApplicationInfo applicationInfo = context.getApplicationInfo();
         String appName = context.getPackageManager().getApplicationLabel(applicationInfo).toString();
-        switch (type) {
-            case PERMISSION_MICROPHONE: {
-                permission = PermissionRequester.PermissionConstants.MICROPHONE;
-                reasonTitle = context.getString(R.string.tuicalling_permission_mic_reason_title, appName);
-                reason = context.getString(R.string.tuicalling_permission_mic_reason);
-                deniedAlert = context.getString(R.string.tuicalling_tips_start_audio);
-                break;
-            }
-            case PERMISSION_CAMERA: {
-                permission = PermissionRequester.PermissionConstants.CAMERA;
-                reasonTitle = context.getString(R.string.tuicalling_permission_camera_reason_title, appName);
-                reason = context.getString(R.string.tuicalling_permission_camera_reason);
-                deniedAlert = context.getString(R.string.tuicalling_tips_start_camera);
-                break;
-            }
-            default:
-                break;
-        }
 
-        PermissionRequester.SimpleCallback simpleCallback = new PermissionRequester.SimpleCallback() {
-            @Override
-            public void onGranted() {
-                if (callback != null) {
-                    callback.onGranted();
-                }
-            }
-
-            @Override
-            public void onDenied() {
-                if (callback != null) {
-                    callback.onDenied();
-                }
-            }
-        };
-        if (!TextUtils.isEmpty(permission)) {
-            PermissionRequester.permission(permission)
-                    .reason(reason)
-                    .reasonTitle(reasonTitle)
-                    .deniedAlert(deniedAlert)
-                    .callback(simpleCallback)
-                    .permissionDialogCallback(new PermissionRequester.PermissionDialogCallback() {
-                        @Override
-                        public void onApproved() {
-                            if (callback != null) {
-                                callback.onDialogApproved();
-                            }
-                        }
-
-                        @Override
-                        public void onRefused() {
-                            if (callback != null) {
-                                callback.onDialogRefused();
-                            }
-                        }
-                    })
-                    .request();
-        }
-    }
-
-    public abstract static class PermissionCallback {
-
-        public void onGranted() {
-        }
-
-        public void onDenied() {
-        }
-
-        public void onDialogApproved() {
-        }
-
-        public void onDialogRefused() {
-        }
+        String[] permissions = permissionList.toArray(new String[0]);
+        PermissionRequester.newInstance(permissions)
+                .title(context.getString(R.string.tuicalling_permission_title, appName, title))
+                .description(reason.toString())
+                .settingsTip(context.getString(R.string.tuicalling_permission_tips, title))
+                .callback(callback)
+                .request();
     }
 
     public static void requestFloatPermission(Context context) {

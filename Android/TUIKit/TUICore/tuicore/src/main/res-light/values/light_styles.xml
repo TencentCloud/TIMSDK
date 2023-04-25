@@ -19,22 +19,11 @@
         <item name="core_border_color">@color/core_border_color_light</item>
         <item name="core_header_start_color">@color/core_header_start_color_light</item>
         <item name="core_header_end_color">@color/core_header_end_color_light</item>
+        <item name="core_header_text_color">@color/core_header_text_color_light</item>
         <item name="core_btn_normal_color">@color/core_btn_normal_color_light</item>
         <item name="core_btn_pressed_color">@color/core_btn_pressed_color_light</item>
         <item name="core_btn_disable_color">@color/core_btn_disable_color_light</item>
         <!-- 颜色规范 end -->
-
-        <item name="core_line_controller_view_switch_btn_selected_bg">@color/core_primary_color_light</item>
-        <item name="core_selected_icon">@drawable/core_selected_icon_light</item>
-        <item name="core_title_bar_bg">@drawable/core_title_bar_bg_light</item>
-        <item name="core_title_bar_text_bg">@color/core_title_bar_text_bg_light</item>
-        <item name="core_title_bar_back_icon">@drawable/core_title_bar_back_light</item>
-        <item name="core_default_group_icon_public">@drawable/core_default_group_icon_public_light</item>
-        <item name="core_default_group_icon_work">@drawable/core_default_group_icon_work_light</item>
-        <item name="core_default_group_icon_meeting">@drawable/core_default_group_icon_meeting_light</item>
-        <item name="core_default_group_icon_community">@drawable/core_default_group_icon_community_light</item>
-        <item name="core_default_user_icon">@drawable/core_default_user_icon_light</item>
-        <item name="user_status_online">@drawable/core_online_status_light</item>
 
     </style>
 

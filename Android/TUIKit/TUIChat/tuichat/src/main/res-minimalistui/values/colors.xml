@@ -2,6 +2,5 @@
 <resources>
     <color name="minimalist_voice_pressed">#FF584C</color>
     <color name="minimalist_voice_normal">#147AFF</color>
-    <color name="chat_minimalist_left_message_bubble_color">#FFECEBEB</color>
-    <color name="chat_minimalist_right_message_bubble_color">#FFF2F7FF</color>
+
 </resources>

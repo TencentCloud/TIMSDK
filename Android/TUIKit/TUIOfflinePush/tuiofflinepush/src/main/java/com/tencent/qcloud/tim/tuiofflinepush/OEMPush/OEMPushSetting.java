@@ -10,9 +10,7 @@ import android.text.TextUtils;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.heytap.msp.push.HeytapPushManager;
 import com.hihonor.push.sdk.HonorInstanceId;
 import com.hihonor.push.sdk.HonorMessaging;
@@ -21,6 +19,7 @@ import com.huawei.agconnect.config.AGConnectServicesConfig;
 import com.huawei.hms.aaid.HmsInstanceId;
 import com.huawei.hms.common.ApiException;
 import com.huawei.hms.push.HmsMessaging;
+import androidx.annotation.NonNull;
 import com.meizu.cloud.pushsdk.PushManager;
 import com.tencent.qcloud.tim.tuiofflinepush.PrivateConstants;
 import com.tencent.qcloud.tim.tuiofflinepush.TUIOfflinePushConfig;
@@ -178,10 +177,10 @@ public class OEMPushSetting implements PushSettingInterface{
                 break;
             default:
                 if (isGoogleServiceSupport()) {
-                    FirebaseInstanceId.getInstance().getInstanceId()
-                            .addOnCompleteListener(new com.google.android.gms.tasks.OnCompleteListener<InstanceIdResult>() {
+                    FirebaseMessaging.getInstance().getToken()
+                            .addOnCompleteListener(new com.google.android.gms.tasks.OnCompleteListener<String>() {
                                 @Override
-                                public void onComplete(Task<InstanceIdResult> task) {
+                                public void onComplete(@NonNull com.google.android.gms.tasks.Task<String> task) {
                                     if (!task.isSuccessful()) {
                                         TUIOfflinePushLog.e(TAG, "getInstanceId failed exception = " + task.getException());
                                         if (mPushCallback != null) {
@@ -196,7 +195,7 @@ public class OEMPushSetting implements PushSettingInterface{
                                     }
 
                                     // Get new Instance ID token
-                                    String token = task.getResult().getToken();
+                                    String token = task.getResult();
                                     TUIOfflinePushLog.i(TAG, "google fcm getToken = " + token);
                                     createPrivateNotification(context);
                                     if (mPushCallback != null) {

@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
 
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 
 public class CommunityUtil {
 

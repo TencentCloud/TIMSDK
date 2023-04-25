@@ -12,7 +12,7 @@
         android:layout_height="@dimen/contact_group_profile_height"
         android:background="#FFFFFF">
 
-        <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+        <com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView
             android:id="@+id/group_type_icon"
             android:layout_width="@dimen/contact_group_profile_face_size"
             android:layout_height="@dimen/contact_group_profile_face_size"

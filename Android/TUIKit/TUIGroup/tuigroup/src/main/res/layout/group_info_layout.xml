@@ -8,7 +8,7 @@
     android:background="?attr/core_bg_color"
     android:orientation="vertical">
 
-    <com.tencent.qcloud.tuicore.component.TitleBarLayout
+    <com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout
         android:id="@+id/group_info_title_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/page_title_height" />
@@ -29,7 +29,7 @@
                 android:layout_height="@dimen/group_profile_height"
                 android:background="#FFFFFF">
 
-                <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+                <com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView
                     android:id="@+id/group_icon"
                     android:layout_width="@dimen/group_profile_face_size"
                     android:layout_height="@dimen/group_profile_face_size"
@@ -86,7 +86,7 @@
             </RelativeLayout>
 
 
-            <com.tencent.qcloud.tuicore.component.LineControllerView
+            <com.tencent.qcloud.tuikit.timcommon.component.LineControllerView
                 android:id="@+id/group_member_bar"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/group_profile_item_height"
@@ -179,7 +179,7 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <com.tencent.qcloud.tuicore.component.LineControllerView
+            <com.tencent.qcloud.tuikit.timcommon.component.LineControllerView
                 android:id="@+id/group_notice"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/group_profile_item_height"
@@ -188,7 +188,7 @@
                 app:name="@string/group_notice" />
 
 
-            <com.tencent.qcloud.tuicore.component.LineControllerView
+            <com.tencent.qcloud.tuikit.timcommon.component.LineControllerView
                 android:id="@+id/group_manage"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/group_profile_item_height"
@@ -198,28 +198,28 @@
                 app:name="@string/group_manager"
                 tools:visibility="visible" />
 
-            <com.tencent.qcloud.tuicore.component.LineControllerView
+            <com.tencent.qcloud.tuikit.timcommon.component.LineControllerView
                 android:id="@+id/group_type_bar"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/group_profile_item_height"
                 app:isTop="true"
                 app:name="@string/group_type" />
 
-            <com.tencent.qcloud.tuicore.component.LineControllerView
+            <com.tencent.qcloud.tuikit.timcommon.component.LineControllerView
                 android:id="@+id/join_type_bar"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/group_profile_item_height"
                 app:isTop="true"
                 app:name="@string/join_group_type" />
 
-            <com.tencent.qcloud.tuicore.component.LineControllerView
+            <com.tencent.qcloud.tuikit.timcommon.component.LineControllerView
                 android:id="@+id/self_nickname_bar"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/group_profile_item_height"
                 android:layout_marginTop="10dp"
                 app:name="@string/in_group_nick_name" />
 
-            <com.tencent.qcloud.tuicore.component.LineControllerView
+            <com.tencent.qcloud.tuikit.timcommon.component.LineControllerView
                 android:id="@+id/msg_rev_option"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/group_profile_item_height"
@@ -237,7 +237,7 @@
                     android:layout_height="1px"
                     android:background="@color/line"/>
 
-                <com.tencent.qcloud.tuicore.component.LineControllerView
+                <com.tencent.qcloud.tuikit.timcommon.component.LineControllerView
                     android:id="@+id/fold_group_chat"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/group_profile_item_height"
@@ -260,14 +260,14 @@
                     android:background="@color/line"/>
             </RelativeLayout>
 
-            <com.tencent.qcloud.tuicore.component.LineControllerView
+            <com.tencent.qcloud.tuikit.timcommon.component.LineControllerView
                 android:id="@+id/chat_to_top_switch"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/group_profile_item_height"
                 app:isSwitch="true"
                 app:name="@string/chat_to_top" />
 
-            <com.tencent.qcloud.tuicore.component.LineControllerView
+            <com.tencent.qcloud.tuikit.timcommon.component.LineControllerView
                 android:id="@+id/chat_background"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/group_profile_item_height"

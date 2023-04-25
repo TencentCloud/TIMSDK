@@ -18,12 +18,11 @@
     <color name="core_border_color_light">#FFDDDDDD</color>
     <color name="core_header_start_color_light">#FFEBF0F6</color>
     <color name="core_header_end_color_light">#FFEBF0F6</color>
+    <color name="core_header_text_color_light">#FF000000</color>
 
     <color name="core_btn_normal_color_light">#FF147AFF</color>
     <color name="core_btn_pressed_color_light">#FF0064E7</color>
     <color name="core_btn_disable_color_light">#4D147AFF</color>
     <!-- 颜色规范 end -->
-
-    <color name="core_title_bar_text_bg_light">#FF000000</color>
 
 </resources>

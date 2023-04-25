@@ -2,24 +2,23 @@ package com.tencent.qcloud.tuikit.tuigroup.classicui.page;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 
-import android.view.View;
-
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
-import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuigroup.R;
-import com.tencent.qcloud.tuikit.tuigroup.TUIGroupService;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupConstants;
+import com.tencent.qcloud.tuikit.tuigroup.TUIGroupService;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupMemberInfo;
-import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupInfoPresenter;
-import com.tencent.qcloud.tuikit.tuigroup.classicui.widget.GroupMemberLayout;
 import com.tencent.qcloud.tuikit.tuigroup.classicui.interfaces.IGroupMemberListener;
+import com.tencent.qcloud.tuikit.tuigroup.classicui.widget.GroupMemberLayout;
+import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupInfoPresenter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -100,21 +99,21 @@ public class GroupMemberActivity extends BaseLightActivity {
             @Override
             public void forwardAddMember(GroupInfo info) {
                 Bundle param = new Bundle();
-                param.putString(TUIGroupConstants.Group.GROUP_ID, info.getId());
-                param.putBoolean(TUIGroupConstants.Selection.SELECT_FRIENDS, true);
+                param.putString(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.GROUP_ID, info.getId());
+                param.putBoolean(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.SELECT_FRIENDS, true);
                 ArrayList<String> selectedList = new ArrayList<>();
                 for (GroupMemberInfo memberInfo : info.getMemberDetails()) {
                     selectedList.add(memberInfo.getAccount());
                 }
-                param.putStringArrayList(TUIGroupConstants.Selection.SELECTED_LIST, selectedList);
+                param.putStringArrayList(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.SELECTED_LIST, selectedList);
                 TUICore.startActivity(GroupMemberActivity.this, "StartGroupMemberSelectActivity", param, 1);
             }
 
             @Override
             public void forwardDeleteMember(GroupInfo info) {
                 Bundle param = new Bundle();
-                param.putString(TUIGroupConstants.Group.GROUP_ID, info.getId());
-                param.putBoolean(TUIGroupConstants.Selection.SELECT_FOR_CALL, true);
+                param.putString(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.GROUP_ID, info.getId());
+                param.putBoolean(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.SELECT_FOR_CALL, true);
                 TUICore.startActivity(GroupMemberActivity.this, "StartGroupMemberSelectActivity", param, 2);
             }
         });

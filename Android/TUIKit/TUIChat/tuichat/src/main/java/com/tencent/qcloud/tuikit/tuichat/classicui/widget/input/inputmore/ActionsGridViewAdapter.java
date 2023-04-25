@@ -2,6 +2,7 @@ package com.tencent.qcloud.tuikit.tuichat.classicui.widget.input.inputmore;
 
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,8 +59,8 @@ public class ActionsGridViewAdapter extends BaseAdapter {
         if (action.getIconResId() > 0) {
             ((ImageView) itemLayout.findViewById(R.id.imageView)).setImageResource(action.getIconResId());
         }
-        if (action.getTitleId() > 0) {
-            ((TextView) itemLayout.findViewById(R.id.textView)).setText(context.getString(action.getTitleId()));
+        if (!TextUtils.isEmpty(action.getName())) {
+            ((TextView) itemLayout.findViewById(R.id.textView)).setText(action.getName());
         }
         return itemLayout;
     }

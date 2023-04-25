@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.OverScroller;
 
-import com.tencent.qcloud.tuicore.util.BackgroundTasks;
+import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.photoview.listener.OnGestureListener;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.photoview.listener.OnMatrixChangedListener;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.photoview.listener.OnOutsidePhotoTapListener;
@@ -120,7 +120,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             mCurrentFlingRunnable = new FlingRunnable(mImageView.getContext());
             mCurrentFlingRunnable.fling(getImageViewWidth(mImageView),
                     getImageViewHeight(mImageView), (int) velocityX, (int) velocityY);
-            BackgroundTasks.getInstance().runOnUiThread(mCurrentFlingRunnable);
+            ThreadUtils.runOnUiThread(mCurrentFlingRunnable);
         }
 
         @Override
@@ -444,7 +444,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             throw new IllegalArgumentException("Scale must be within the range of minScale and maxScale");
         }
         if (animate) {
-            BackgroundTasks.getInstance().runOnUiThread(new AnimatedZoomRunnable(getScale(), scale,
+            ThreadUtils.runOnUiThread(new AnimatedZoomRunnable(getScale(), scale,
                     focalX, focalY));
         } else {
             mSuppMatrix.setScale(scale, scale, focalX, focalY);

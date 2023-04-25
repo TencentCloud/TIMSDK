@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="core_title_bar_text_bg_lively">#FFFFFFFF</color>
+    <color name="chat_bubble_other_color_lively">#F8F8F9</color>
+    <color name="chat_bubble_self_color_lively">@color/core_bubble_bg_color_lively</color>
+    <color name="chat_react_text_color_lively">#FFFFFF</color>
+
+    <color name="chat_read_receipt_text_color_lively">#ECA08E</color>
+    <color name="chat_react_other_text_color_lively">#888888</color>
+</resources>

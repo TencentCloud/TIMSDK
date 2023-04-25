@@ -10,17 +10,20 @@ import android.view.View;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.tencent.qcloud.tuicore.component.TitleBarLayout;
-import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
-import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.bean.MessageRepliesBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
+import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.timcommon.interfaces.OnItemClickListener;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageRepliesBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.ReplyPreviewBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.input.InputView;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MessageAdapter;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MessageRecyclerView;
@@ -96,6 +99,16 @@ public class MessageReplyDetailActivity extends BaseLightActivity implements Inp
             messageAdapter.setReplyDetailMode(true);
             messageAdapter.setPresenter(presenter.getChatPresenter());
             messageRecyclerView.setAdapter(messageAdapter);
+            messageRecyclerView.setOnItemClickListener(new OnItemClickListener() {
+                @Override
+                public void onMessageClick(View view, int position, TUIMessageBean messageBean) {
+                    if (messageBean instanceof MergeMessageBean) {
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable(TUIChatConstants.FORWARD_MERGE_MESSAGE_KEY, messageBean);
+                        TUICore.startActivity("TUIForwardChatActivity", bundle);
+                    }
+                }
+            });
             presenter.getReactUserBean(message, new IUIKitCallback<Void>() {
                 @Override
                 public void onSuccess(Void data) {

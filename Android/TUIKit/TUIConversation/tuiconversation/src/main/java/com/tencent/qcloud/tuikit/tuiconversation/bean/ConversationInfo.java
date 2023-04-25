@@ -18,12 +18,19 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
 
     public static final int TYPE_FORWAR_SELECT = 3;
     public static final int TYPE_RECENT_LABEL = 4;
+
+    public static final int AT_TYPE_AT_ME = V2TIMGroupAtInfo.TIM_AT_ME;
+    public static final int AT_TYPE_AT_ALL = V2TIMGroupAtInfo.TIM_AT_ALL;
+    public static final int AT_TYPE_AT_ALL_AND_ME = V2TIMGroupAtInfo.TIM_AT_ALL_AT_ME;
+    public static final int AT_TYPE_UNKNOWN = V2TIMGroupAtInfo.TIM_AT_UNKNOWN;
     /**
      * 会话类型，自定义会话or普通会话
      * 
      * conversation type
      */
     private int type;
+
+    private int atType = AT_TYPE_UNKNOWN;
 
     /**
      * 消息未读数
@@ -232,6 +239,14 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public void setAtType(int atType) {
+        this.atType = atType;
+    }
+
+    public int getAtType() {
+        return atType;
     }
 
     public V2TIMMessage getLastMessage() {

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/item_button"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/contact_profile_btn_height"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/btn_bg_color"
+        android:text="@string/profile_chat"
+        android:textColor="?attr/core_primary_color"
+        android:textSize="@dimen/contact_profile_btn_text_size"
+        android:textAllCaps="false" />
+</FrameLayout>

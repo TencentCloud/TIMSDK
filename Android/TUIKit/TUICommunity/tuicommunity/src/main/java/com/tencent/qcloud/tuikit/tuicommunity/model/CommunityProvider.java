@@ -14,10 +14,8 @@ import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMGroupInfo;
 import com.tencent.imsdk.v2.V2TIMGroupInfoResult;
 import com.tencent.imsdk.v2.V2TIMGroupMemberFullInfo;
-import com.tencent.imsdk.v2.V2TIMGroupMemberInfo;
 import com.tencent.imsdk.v2.V2TIMGroupMemberInfoResult;
 import com.tencent.imsdk.v2.V2TIMGroupMemberOperationResult;
-import com.tencent.imsdk.v2.V2TIMGroupSearchParam;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMTopicInfo;
 import com.tencent.imsdk.v2.V2TIMTopicInfoResult;
@@ -27,8 +25,8 @@ import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuicommunity.bean.CommunityBean;
 import com.tencent.qcloud.tuikit.tuicommunity.bean.CommunityMemberBean;
 import com.tencent.qcloud.tuikit.tuicommunity.bean.TopicBean;
@@ -38,7 +36,6 @@ import com.tencent.qcloud.tuikit.tuicommunity.utils.TUICommunityLog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 

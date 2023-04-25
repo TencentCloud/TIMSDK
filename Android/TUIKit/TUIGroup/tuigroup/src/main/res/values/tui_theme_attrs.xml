@@ -2,4 +2,6 @@
 <resources>
     <!-- 参与换肤的属性 -->
     <attr name="group_add_icon" format="reference"/>
+    <attr name="group_chat_extension_title_bar_more_menu" format="reference"/>
+
 </resources>

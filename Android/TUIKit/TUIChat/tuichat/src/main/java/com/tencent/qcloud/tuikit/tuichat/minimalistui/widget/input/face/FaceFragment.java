@@ -22,13 +22,13 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.tencent.qcloud.tuikit.timcommon.component.face.ChatFace;
+import com.tencent.qcloud.tuikit.timcommon.component.face.CustomFace;
+import com.tencent.qcloud.tuikit.timcommon.component.face.Emoji;
+import com.tencent.qcloud.tuikit.timcommon.component.face.FaceGroup;
+import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
+import com.tencent.qcloud.tuikit.timcommon.component.face.RecentEmojiManager;
 import com.tencent.qcloud.tuikit.tuichat.R;
-import com.tencent.qcloud.tuikit.tuichat.component.face.ChatFace;
-import com.tencent.qcloud.tuikit.tuichat.component.face.CustomFace;
-import com.tencent.qcloud.tuikit.tuichat.component.face.Emoji;
-import com.tencent.qcloud.tuikit.tuichat.component.face.FaceGroup;
-import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
-import com.tencent.qcloud.tuikit.tuichat.component.face.RecentEmojiManager;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.EmojiIndicatorView;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.input.BaseInputFragment;
 

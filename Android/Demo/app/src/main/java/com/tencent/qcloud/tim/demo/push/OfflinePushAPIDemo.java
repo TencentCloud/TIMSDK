@@ -13,6 +13,7 @@ import com.tencent.qcloud.tim.demo.utils.TUIUtils;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
+import com.tencent.qcloud.tuikit.tuichat.util.OfflinePushInfoUtils;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -48,8 +49,8 @@ public class OfflinePushAPIDemo {
      *
      *   // oppo
      *   "oppoPushBussinessId": "", // 在腾讯云控制台上传第三方推送证书后分配的证书ID // The certificate ID assigned in the Tencent Cloud console
-     *   "oppoPushAppKey": "",// oppo开放平台分配的应用APPID // APPID, Allocated by OPPO Open Platform
-     *   "oppoPushAppSecret": "",// oppo开放平台分配的应用APPKEY // APPKEY, Allocated by OPPO Open Platform
+     *   "oppoPushAppKey": "",// oppo开放平台分配的应用 AppKey // AppKey, Allocated by OPPO Open Platform
+     *   "oppoPushAppSecret": "",// oppo开放平台分配的应用 AppSecret // AppSecret, Allocated by OPPO Open Platform
      *
      *   // honor
      *   "honorPushBussinessId": "",    // 在腾讯云控制台上传第三方推送证书后分配的证书ID  // The certificate ID assigned in the Tencent Cloud console

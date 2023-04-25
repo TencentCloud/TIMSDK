@@ -9,12 +9,7 @@
     <!--********OPPO 推送 end******** -->
 
     <!--********华为推送权限设置******** -->
-    <permission
-        android:name="${applicationId}.permission.PROCESS_PUSH_MSG"
-        android:protectionLevel="signatureOrSystem" />
-
     <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE" />
-    <uses-permission android:name="${applicationId}.permission.PROCESS_PUSH_MSG" />
 
     <!--********小米推送权限设置******** -->
     <permission
@@ -67,6 +62,7 @@
         <provider
             android:name="com.tencent.qcloud.tim.tuiofflinepush.TUIOfflinePushService"
             android:authorities="${applicationId}.TUIOfflinePush.Init"
+            android:initOrder="8000"
             android:enabled="true"
             android:exported="false" />
 

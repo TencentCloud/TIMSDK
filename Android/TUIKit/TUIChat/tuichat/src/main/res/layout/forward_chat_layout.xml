@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/chat_background_color">
 
-    <com.tencent.qcloud.tuicore.component.TitleBarLayout
+    <com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout
         android:id="@+id/chat_title_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/page_title_height" />

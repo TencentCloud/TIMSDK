@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.qcloud.tuicore.TUIThemeManager;
-import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
-import com.tencent.qcloud.tuicore.util.ScreenUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
+import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuicommunity.R;
 import com.tencent.qcloud.tuikit.tuicommunity.bean.CommunityBean;
 import com.tencent.qcloud.tuikit.tuicommunity.presenter.CommunityPresenter;
@@ -143,7 +143,7 @@ public class CommunityGroupList extends RecyclerView implements ICommunityGroupI
         public void onBindViewHolder(@NonNull CommunityGroupIconViewHolder holder, int position) {
             CommunityBean communityBean = data.get(position);
             GlideEngine.loadImageSetDefault(holder.imageView, communityBean.getGroupFaceUrl(),
-                    TUIThemeManager.getAttrResId(holder.itemView.getContext(), com.tencent.qcloud.tuicore.R.attr.core_default_group_icon_community));
+                    TUIThemeManager.getAttrResId(holder.itemView.getContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.core_default_group_icon_community));
             if (position == selectedPosition) {
                 holder.selectedBorder.setVisibility(VISIBLE);
             } else {

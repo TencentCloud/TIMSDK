@@ -1,6 +1,7 @@
 package com.tencent.qcloud.tuikit.tuicommunity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 
 import com.tencent.imsdk.v2.V2TIMGroupChangeInfo;
@@ -12,11 +13,15 @@ import com.tencent.qcloud.tuicore.ServiceInitializer;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
+import com.tencent.qcloud.tuicore.interfaces.ITUIExtension;
 import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
+import com.tencent.qcloud.tuicore.interfaces.TUIExtensionEventListener;
+import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
 import com.tencent.qcloud.tuicore.interfaces.TUILoginListener;
 import com.tencent.qcloud.tuikit.tuicommunity.bean.CommunityChangeBean;
 import com.tencent.qcloud.tuikit.tuicommunity.bean.TopicBean;
 import com.tencent.qcloud.tuikit.tuicommunity.interfaces.CommunityEventListener;
+import com.tencent.qcloud.tuikit.tuicommunity.ui.page.TopicInfoActivity;
 import com.tencent.qcloud.tuikit.tuicommunity.utils.CommunityConstants;
 import com.tencent.qcloud.tuikit.tuicommunity.utils.CommunityParser;
 import com.tencent.qcloud.tuikit.tuicommunity.utils.CommunityUtil;
@@ -24,12 +29,13 @@ import com.tencent.qcloud.tuikit.tuicommunity.utils.TUICommunityLog;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class TUICommunityService extends ServiceInitializer implements ITUINotification {
+public class TUICommunityService extends ServiceInitializer implements ITUINotification, ITUIExtension {
     private static final String TAG = TUICommunityService.class.getSimpleName();
     private static TUICommunityService instance;
 
@@ -43,6 +49,7 @@ public class TUICommunityService extends ServiceInitializer implements ITUINotif
     public void init(Context context) {
         instance = this;
         initEvent();
+        initExtension();
         initSdkListener();
     }
 
@@ -55,6 +62,10 @@ public class TUICommunityService extends ServiceInitializer implements ITUINotif
         TUICore.registerEvent(TUIConstants.TUICommunity.EVENT_KEY_COMMUNITY_EXPERIENCE, TUIConstants.TUICommunity.EVENT_SUB_KEY_CREATE_TOPIC, this);
         TUICore.registerEvent(TUIConstants.TUICommunity.EVENT_KEY_COMMUNITY_EXPERIENCE, TUIConstants.TUICommunity.EVENT_SUB_KEY_DELETE_TOPIC, this);
         TUICore.registerEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_INFO_UPDATED, this);
+    }
+
+    private void initExtension() {
+        TUICore.registerExtension(TUIConstants.TUIChat.Extension.ChatNavigationMoreItem.CLASSIC_EXTENSION_ID, this);
     }
 
     private void initSdkListener() {
@@ -303,4 +314,26 @@ public class TUICommunityService extends ServiceInitializer implements ITUINotif
         }
 
     }
+    @Override
+    public List<TUIExtensionInfo> onGetExtension(String extensionID, Map<String, Object> param) {
+        if (TextUtils.equals(extensionID, TUIConstants.TUIChat.Extension.ChatNavigationMoreItem.CLASSIC_EXTENSION_ID)) {
+            Object topicID = param.get(TUIConstants.TUIChat.Extension.ChatNavigationMoreItem.TOPIC_ID);
+            if (topicID instanceof String) {
+                TUIExtensionInfo extensionInfo = new TUIExtensionInfo();
+                extensionInfo.setIcon(R.drawable.community_chat_extension_title_bar_more_menu_light);
+                extensionInfo.setExtensionListener(new TUIExtensionEventListener() {
+                    @Override
+                    public void onClicked(Map<String, Object> param) {
+                        Intent intent = new Intent(getAppContext(), TopicInfoActivity.class);
+                        intent.putExtra(TUIConstants.TUICommunity.TOPIC_ID, (String) topicID);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        getAppContext().startActivity(intent);
+                    }
+                });
+                return Collections.singletonList(extensionInfo);
+            }
+        }
+        return null;
+    }
+
 }

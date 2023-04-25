@@ -1,15 +1,12 @@
 package com.tencent.qcloud.tuikit.tuigroup.minimalistui.page;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 
-import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
-import com.tencent.qcloud.tuicore.component.activities.BaseMinimalistLightActivity;
+import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseMinimalistLightActivity;
 import com.tencent.qcloud.tuikit.tuigroup.R;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupConstants;
-import com.tencent.qcloud.tuikit.tuigroup.bean.GroupApplyInfo;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.minimalistui.widget.GroupApplyManagerLayout;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupApplyPresenter;
@@ -35,26 +32,6 @@ public class GroupApplyManagerMinimalistActivity extends BaseMinimalistLightActi
         GroupInfo groupInfo = new GroupInfo();
         groupInfo.setId(groupId);
         mManagerLayout.setDataSource(groupInfo);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode != TUIGroupConstants.ActivityRequest.CODE_1) {
-            return;
-        }
-        if (resultCode != RESULT_OK) {
-            return;
-        }
-        GroupApplyInfo info = (GroupApplyInfo) data.getSerializableExtra(TUIGroupConstants.Group.MEMBER_APPLY);
-        if (info == null) {
-            return;
-        }
-        mManagerLayout.updateItemData(info);
     }
 
 }

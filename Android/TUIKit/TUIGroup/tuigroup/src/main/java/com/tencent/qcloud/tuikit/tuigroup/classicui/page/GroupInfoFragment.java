@@ -7,23 +7,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
 import androidx.annotation.Nullable;
 
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
-import com.tencent.qcloud.tuicore.component.activities.ImageSelectActivity;
-import com.tencent.qcloud.tuicore.component.fragments.BaseFragment;
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
-import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.activities.ImageSelectActivity;
+import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuigroup.R;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupConstants;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupService;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupMemberInfo;
-import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupInfoPresenter;
 import com.tencent.qcloud.tuikit.tuigroup.classicui.interfaces.IGroupMemberListener;
 import com.tencent.qcloud.tuikit.tuigroup.classicui.widget.GroupInfoLayout;
+import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupInfoPresenter;
 import com.tencent.qcloud.tuikit.tuigroup.util.TUIGroupLog;
 
 import java.util.ArrayList;
@@ -66,22 +68,7 @@ public class GroupInfoFragment extends BaseFragment {
         groupInfoLayout.setOnModifyGroupAvatarListener(new OnModifyGroupAvatarListener() {
             @Override
             public void onModifyGroupAvatar(String originAvatarUrl) {
-                ArrayList<ImageSelectActivity.ImageBean> faceList = new ArrayList<>();
-                for (int i = 0; i < TUIGroupConstants.GROUP_FACE_COUNT; i++) {
-                    ImageSelectActivity.ImageBean imageBean = new ImageSelectActivity.ImageBean();
-                    imageBean.setThumbnailUri(String.format(TUIGroupConstants.GROUP_FACE_URL, (i + 1) + ""));
-                    imageBean.setImageUri(String.format(TUIGroupConstants.GROUP_FACE_URL, (i + 1) + ""));
-                    faceList.add(imageBean);
-                }
-
-                Intent intent = new Intent(getContext(), ImageSelectActivity.class);
-                intent.putExtra(ImageSelectActivity.TITLE, getResources().getString(R.string.group_choose_avatar));
-                intent.putExtra(ImageSelectActivity.SPAN_COUNT, 4);
-                intent.putExtra(ImageSelectActivity.ITEM_WIDTH, ScreenUtil.dip2px(77));
-                intent.putExtra(ImageSelectActivity.ITEM_HEIGHT, ScreenUtil.dip2px(77));
-                intent.putExtra(ImageSelectActivity.DATA, faceList);
-                intent.putExtra(ImageSelectActivity.SELECTED, new ImageSelectActivity.ImageBean(originAvatarUrl, originAvatarUrl, false));
-                startActivityForResult(intent, CHOOSE_AVATAR_REQUEST_CODE);
+                startModifyGroupAvatar(originAvatarUrl);
             }
         });
         groupInfoLayout.loadGroupInfo(groupId);
@@ -96,98 +83,148 @@ public class GroupInfoFragment extends BaseFragment {
 
             @Override
             public void forwardAddMember(GroupInfo info) {
-                Bundle param = new Bundle();
-                param.putString(TUIGroupConstants.Group.GROUP_ID, info.getId());
-                param.putBoolean(TUIGroupConstants.Selection.SELECT_FRIENDS, true);
-                ArrayList<String> selectedList = new ArrayList<>();
-                for (GroupMemberInfo memberInfo : info.getMemberDetails()) {
-                    selectedList.add(memberInfo.getAccount());
-                }
-                param.putStringArrayList(TUIGroupConstants.Selection.SELECTED_LIST, selectedList);
-                TUICore.startActivity(GroupInfoFragment.this, "StartGroupMemberSelectActivity", param, 1);
+                startAddMember(info);
             }
 
             @Override
             public void forwardDeleteMember(GroupInfo info) {
-                Bundle param = new Bundle();
-                param.putString(TUIGroupConstants.Group.GROUP_ID, info.getId());
-                param.putBoolean(TUIGroupConstants.Selection.SELECT_FOR_CALL, true);
-                TUICore.startActivity(GroupInfoFragment.this, "StartGroupMemberSelectActivity", param, 2);
+                startDeleteMember(info);
             }
         });
 
         groupInfoLayout.setOnButtonClickListener(new GroupInfoLayout.OnButtonClickListener() {
             @Override
             public void onSetChatBackground() {
-                ArrayList<ImageSelectActivity.ImageBean> faceList = new ArrayList<>();
-                ImageSelectActivity.ImageBean defaultFace = new ImageSelectActivity.ImageBean();
-                defaultFace.setDefault(true);
-                faceList.add(defaultFace);
-                for (int i = 0; i < TUIConstants.TUIChat.CHAT_CONVERSATION_BACKGROUND_COUNT; i++) {
-                    ImageSelectActivity.ImageBean imageBean = new ImageSelectActivity.ImageBean();
-                    imageBean.setImageUri(String.format(TUIConstants.TUIChat.CHAT_CONVERSATION_BACKGROUND_URL, (i + 1) + ""));
-                    imageBean.setThumbnailUri(String.format(TUIConstants.TUIChat.CHAT_CONVERSATION_BACKGROUND_THUMBNAIL_URL, (i + 1) + ""));
-                    faceList.add(imageBean);
-                }
+                startSetChatBackground();
+            }
 
-                Intent intent = new Intent(getContext(), ImageSelectActivity.class);
-                intent.putExtra(ImageSelectActivity.TITLE, getResources().getString(R.string.chat_background_title));
-                intent.putExtra(ImageSelectActivity.SPAN_COUNT, 2);
-                intent.putExtra(ImageSelectActivity.ITEM_WIDTH, ScreenUtil.dip2px(186));
-                intent.putExtra(ImageSelectActivity.ITEM_HEIGHT, ScreenUtil.dip2px(124));
-                intent.putExtra(ImageSelectActivity.DATA, faceList);
-                if (TextUtils.isEmpty(mChatBackgroundThumbnailUrl) || TextUtils.equals(TUIConstants.TUIChat.CHAT_CONVERSATION_BACKGROUND_DEFAULT_URL, mChatBackgroundThumbnailUrl)) {
-                    intent.putExtra(ImageSelectActivity.SELECTED, defaultFace);
-                } else {
-                    intent.putExtra(ImageSelectActivity.SELECTED, new ImageSelectActivity.ImageBean(mChatBackgroundThumbnailUrl, "", false));
-                }
-                intent.putExtra(ImageSelectActivity.NEED_DOWLOAD_LOCAL, true);
-                startActivityForResult(intent, TUIConstants.TUIChat.CHAT_REQUEST_BACKGROUND_CODE);
+            @Override
+            public void onChangeGroupOwner(String newOwnerID) {
+                changeGroupOwner(newOwnerID);
             }
         });
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == 3) {
-            List<String> friends = (List<String>) data.getSerializableExtra(TUIGroupConstants.Selection.LIST);
-            if (requestCode == 1) {
-                inviteGroupMembers(friends);
-            } else if (requestCode == 2) {
-                deleteGroupMembers(friends);
-            }
-        } else if (requestCode == CHOOSE_AVATAR_REQUEST_CODE && resultCode == ImageSelectActivity.RESULT_CODE_SUCCESS) {
-            if (data != null) {
-                ImageSelectActivity.ImageBean imageBean = (ImageSelectActivity.ImageBean) data.getSerializableExtra(ImageSelectActivity.DATA);
+    private void startSetChatBackground() {
+        ArrayList<ImageSelectActivity.ImageBean> faceList = new ArrayList<>();
+        ImageSelectActivity.ImageBean defaultFace = new ImageSelectActivity.ImageBean();
+        defaultFace.setDefault(true);
+        faceList.add(defaultFace);
+        for (int i = 0; i < TUIConstants.TUIChat.CHAT_CONVERSATION_BACKGROUND_COUNT; i++) {
+            ImageSelectActivity.ImageBean imageBean = new ImageSelectActivity.ImageBean();
+            imageBean.setImageUri(String.format(TUIConstants.TUIChat.CHAT_CONVERSATION_BACKGROUND_URL, (i + 1) + ""));
+            imageBean.setThumbnailUri(String.format(TUIConstants.TUIChat.CHAT_CONVERSATION_BACKGROUND_THUMBNAIL_URL, (i + 1) + ""));
+            faceList.add(imageBean);
+        }
+
+        Intent intent = new Intent();
+        intent.putExtra(ImageSelectActivity.TITLE, getResources().getString(R.string.chat_background_title));
+        intent.putExtra(ImageSelectActivity.SPAN_COUNT, 2);
+        intent.putExtra(ImageSelectActivity.ITEM_WIDTH, ScreenUtil.dip2px(186));
+        intent.putExtra(ImageSelectActivity.ITEM_HEIGHT, ScreenUtil.dip2px(124));
+        intent.putExtra(ImageSelectActivity.DATA, faceList);
+        if (TextUtils.isEmpty(mChatBackgroundThumbnailUrl) || TextUtils.equals(TUIConstants.TUIChat.CHAT_CONVERSATION_BACKGROUND_DEFAULT_URL, mChatBackgroundThumbnailUrl)) {
+            intent.putExtra(ImageSelectActivity.SELECTED, defaultFace);
+        } else {
+            intent.putExtra(ImageSelectActivity.SELECTED, new ImageSelectActivity.ImageBean(mChatBackgroundThumbnailUrl, "", false));
+        }
+        intent.putExtra(ImageSelectActivity.NEED_DOWLOAD_LOCAL, true);
+
+        TUICore.startActivityForResult(this, ImageSelectActivity.class, intent.getExtras(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result.getData() == null) {
+                    return;
+                }
+                ImageSelectActivity.ImageBean imageBean = (ImageSelectActivity.ImageBean) result.getData().getSerializableExtra(ImageSelectActivity.DATA);
                 if (imageBean == null) {
+                    TUIGroupLog.e("GroupInfoFragment", "onActivityResult imageBean is null");
                     return;
                 }
 
-                String avatarUrl = imageBean.getImageUri();
-                modifyGroupAvatar(avatarUrl);
+                String backgroundUri = imageBean.getLocalPath();
+                String thumbnailUri = imageBean.getThumbnailUri();
+                String dataUri = thumbnailUri + "," + backgroundUri;
+                TUIGroupLog.d("GroupInfoFragment", "onActivityResult backgroundUri = " + backgroundUri);
+                mChatBackgroundThumbnailUrl = thumbnailUri;
+                HashMap<String, Object> param = new HashMap<>();
+                param.put(TUIConstants.TUIChat.CHAT_ID, groupId);
+                param.put(TUIConstants.TUIChat.CHAT_BACKGROUND_URI, dataUri);
+                TUICore.callService(TUIConstants.TUIChat.SERVICE_NAME, TUIConstants.TUIChat.METHOD_UPDATE_DATA_STORE_CHAT_URI, param);
             }
-        } else if (requestCode == TUIConstants.TUIChat.CHAT_REQUEST_BACKGROUND_CODE) {
-            if (data == null) {
-                return;
-            }
-            ImageSelectActivity.ImageBean imageBean = (ImageSelectActivity.ImageBean) data.getSerializableExtra(ImageSelectActivity.DATA);
-            if (imageBean == null) {
-                TUIGroupLog.e("GroupInfoFragment", "onActivityResult imageBean is null");
-                return;
-            }
+        });
 
-            String backgroundUri = imageBean.getLocalPath();
-            String thumbnailUri = imageBean.getThumbnailUri();
-            String dataUri = thumbnailUri + "," + backgroundUri;
-            TUIGroupLog.d("GroupInfoFragment", "onActivityResult backgroundUri = " + backgroundUri);
-            mChatBackgroundThumbnailUrl = thumbnailUri;
-            HashMap<String, Object> param = new HashMap<>();
-            param.put(TUIConstants.TUIChat.CHAT_ID, groupId);
-            param.put(TUIConstants.TUIChat.CHAT_BACKGROUND_URI, dataUri);
-            TUICore.callService(TUIConstants.TUIChat.SERVICE_NAME, TUIConstants.TUIChat.METHOD_UPDATE_DATA_STORE_CHAT_URI, param);
-        }
     }
+
+    private void startDeleteMember(GroupInfo info) {
+        Bundle param = new Bundle();
+        param.putString(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.GROUP_ID, info.getId());
+        param.putBoolean(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.SELECT_FOR_CALL, true);
+
+        TUICore.startActivityForResult(this, "StartGroupMemberSelectActivity", param, new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result.getData() != null) {
+                    List<String> friends = (List<String>) result.getData().getSerializableExtra(TUIGroupConstants.Selection.LIST);
+                    deleteGroupMembers(friends);
+                }
+            }
+        });
+    }
+
+    private void startAddMember(GroupInfo info) {
+        Bundle param = new Bundle();
+        param.putString(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.GROUP_ID, info.getId());
+        param.putBoolean(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.SELECT_FRIENDS, true);
+        ArrayList<String> selectedList = new ArrayList<>();
+        for (GroupMemberInfo memberInfo : info.getMemberDetails()) {
+            selectedList.add(memberInfo.getAccount());
+        }
+        param.putStringArrayList(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.SELECTED_LIST, selectedList);
+
+        TUICore.startActivityForResult(this, "StartGroupMemberSelectActivity", param, new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result.getData() != null) {
+                    List<String> friends = (List<String>) result.getData().getSerializableExtra(TUIGroupConstants.Selection.LIST);
+                    inviteGroupMembers(friends);
+                }
+            }
+        });
+    }
+
+    private void startModifyGroupAvatar(String originAvatarUrl) {
+        ArrayList<ImageSelectActivity.ImageBean> faceList = new ArrayList<>();
+        for (int i = 0; i < TUIGroupConstants.GROUP_FACE_COUNT; i++) {
+            ImageSelectActivity.ImageBean imageBean = new ImageSelectActivity.ImageBean();
+            imageBean.setThumbnailUri(String.format(TUIGroupConstants.GROUP_FACE_URL, (i + 1) + ""));
+            imageBean.setImageUri(String.format(TUIGroupConstants.GROUP_FACE_URL, (i + 1) + ""));
+            faceList.add(imageBean);
+        }
+
+        Intent intent = new Intent();
+        intent.putExtra(ImageSelectActivity.TITLE, getResources().getString(R.string.group_choose_avatar));
+        intent.putExtra(ImageSelectActivity.SPAN_COUNT, 4);
+        intent.putExtra(ImageSelectActivity.ITEM_WIDTH, ScreenUtil.dip2px(77));
+        intent.putExtra(ImageSelectActivity.ITEM_HEIGHT, ScreenUtil.dip2px(77));
+        intent.putExtra(ImageSelectActivity.DATA, faceList);
+        intent.putExtra(ImageSelectActivity.SELECTED, new ImageSelectActivity.ImageBean(originAvatarUrl, originAvatarUrl, false));
+        TUICore.startActivityForResult(this, ImageSelectActivity.class, intent.getExtras(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result.getData() != null) {
+                    ImageSelectActivity.ImageBean imageBean = (ImageSelectActivity.ImageBean) result.getData().getSerializableExtra(ImageSelectActivity.DATA);
+                    if (imageBean == null) {
+                        return;
+                    }
+
+                    String avatarUrl = imageBean.getImageUri();
+                    modifyGroupAvatar(avatarUrl);
+                }
+            }
+        });
+    }
+
 
     private void modifyGroupAvatar(String avatarUrl) {
         groupInfoLayout.modifyGroupAvatar(avatarUrl);

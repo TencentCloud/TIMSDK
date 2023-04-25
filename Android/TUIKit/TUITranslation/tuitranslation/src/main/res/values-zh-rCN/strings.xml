@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="translation_target_language">将消息翻译为</string>
+    <string name="translate_action">翻译</string>
+    <string name="translation_support">由腾讯云 IM 提供翻译支持</string>
+    <string name="translation_fail">翻译失败</string>
+    <string name="translation_language_not_support">当前翻译语言不支持，请切换至其他语言</string>
+    <string name="at_all">所有人</string>
+    <string name="copy_action">复制</string>
+    <string name="forward_action">转发</string>
+    <string name="hide_action">隐藏</string>
+    <string name="copy_success_tip">复制成功</string>
+</resources>

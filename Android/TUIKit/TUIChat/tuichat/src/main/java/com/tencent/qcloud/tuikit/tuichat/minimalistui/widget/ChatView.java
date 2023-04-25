@@ -16,6 +16,7 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -34,11 +35,15 @@ import com.tencent.imsdk.v2.V2TIMGroupAtInfo;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
-import com.tencent.qcloud.tuicore.component.dialog.TUIKitDialog;
-import com.tencent.qcloud.tuicore.component.gatherimage.SynthesizedImageView;
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
-import com.tencent.qcloud.tuicore.util.BackgroundTasks;
+import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.component.dialog.TUIKitDialog;
+import com.tencent.qcloud.tuikit.timcommon.component.face.Emoji;
+import com.tencent.qcloud.tuikit.timcommon.component.gatherimage.SynthesizedImageView;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.timcommon.interfaces.OnChatPopActionClickListener;
+import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
@@ -50,16 +55,15 @@ import com.tencent.qcloud.tuikit.tuichat.bean.ReplyPreviewBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.UserStatusBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ReplyMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioRecorder;
-import com.tencent.qcloud.tuikit.tuichat.component.face.Emoji;
 import com.tencent.qcloud.tuikit.tuichat.component.progress.ProgressPresenter;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.dialog.ChatBottomSelectSheet;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.noticelayout.NoticeLayout;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.interfaces.IChatLayout;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.page.MessageDetailMinimalistActivity;
+import com.tencent.qcloud.tuikit.tuichat.minimalistui.page.TUIBaseChatMinimalistFragment;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.setting.ChatLayoutSetting;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.input.InputView;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.MessageAdapter;
@@ -73,6 +77,7 @@ import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -113,8 +118,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
     private long lastTypingTime = 0;
     private boolean isSupportTyping = false;
 
-    private View voiceCallBtn;
-    private View videoCallBtn;
+    private LinearLayout extensionArea;
     private View chatHeaderBackBtn;
     private TextView chatName;
     private TextView chatDescription;
@@ -164,8 +168,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
         mJumpNewMessageShow = false;
         hideJumpMessageLayouts();
 
-        voiceCallBtn = findViewById(R.id.voice_call);
-        videoCallBtn = findViewById(R.id.video_call);
+        extensionArea = findViewById(R.id.extension_area);
         chatName = findViewById(R.id.chat_name);
         chatDescription = findViewById(R.id.chat_description);
         chatAvatar = findViewById(R.id.avatar_img);
@@ -346,9 +349,9 @@ public class ChatView extends LinearLayout implements IChatLayout {
     }
 
     private void initHeader() {
-        initCall();
+        initExtension();
         loadAvatar();
-        chatName.setText(mChatInfo.getChatName());
+        loadChatName();
         if (TUIChatUtils.isGroupChat(mChatInfo.getType())) {
             ((GroupChatPresenter) presenter).loadGroupMembers(mChatInfo.getId(), new IUIKitCallback<List<GroupMemberInfo>>() {
                 @Override
@@ -410,19 +413,65 @@ public class ChatView extends LinearLayout implements IChatLayout {
         });
     }
 
-    private void loadAvatar() {
-        if (TUIChatUtils.isGroupChat(mChatInfo.getType())) {
-            String chatId = mChatInfo.getId();
-            chatAvatar.setImageId(chatId);
-            chatAvatar.displayImage(mChatInfo.getIconUrlList()).load(chatId);
+    private void loadChatName() {
+        if (!TextUtils.isEmpty(mChatInfo.getChatName())) {
+            chatName.setText(mChatInfo.getChatName());
         } else {
-            Glide.with(this)
-                    .load(mChatInfo.getFaceUrl())
-                    .apply(new RequestOptions()
-                            .error(com.tencent.qcloud.tuicore.R.drawable.core_default_user_icon_light)
-                            .placeholder(com.tencent.qcloud.tuicore.R.drawable.core_default_user_icon_light))
-                    .into(chatAvatar);
+            presenter.getChatName(mChatInfo.getId(), new IUIKitCallback<String>() {
+                @Override
+                public void onSuccess(String data) {
+                    chatName.setText(data);
+                }
+
+                @Override
+                public void onError(String module, int errCode, String errMsg) {
+                    chatName.setText(mChatInfo.getId());
+                }
+            });
         }
+    }
+
+    private void loadAvatar() {
+            String chatId = mChatInfo.getId();
+        if (TUIChatUtils.isGroupChat(mChatInfo.getType())) {
+            if (mChatInfo.getIconUrlList() == null || mChatInfo.getIconUrlList().isEmpty()) {
+                loadFaceAsync(chatId);
+            } else {
+                chatAvatar.setImageId(chatId);
+                chatAvatar.displayImage(mChatInfo.getIconUrlList()).load(chatId);
+            }
+        } else {
+            String faceUrl = mChatInfo.getFaceUrl();
+            if (!TextUtils.isEmpty(faceUrl)) {
+                loadFace(faceUrl);
+            } else {
+                loadFaceAsync(chatId);
+            }
+        }
+    }
+
+    private void loadFaceAsync(String chatId) {
+        presenter.getChatFaceUrl(chatId, new IUIKitCallback<List<Object>>() {
+            @Override
+            public void onSuccess(List<Object> data) {
+                chatAvatar.setImageId(chatId);
+                chatAvatar.displayImage(data).load(chatId);
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                loadFace(null);
+            }
+        });
+    }
+
+    private void loadFace(String faceUrl) {
+        Glide.with(this)
+                .load(faceUrl)
+                .apply(new RequestOptions()
+                        .error(com.tencent.qcloud.tuikit.timcommon.R.drawable.core_default_user_icon_light)
+                        .placeholder(com.tencent.qcloud.tuikit.timcommon.R.drawable.core_default_user_icon_light))
+                .into(chatAvatar);
     }
 
     private void onHeaderUserClick(View v) {
@@ -431,41 +480,39 @@ public class ChatView extends LinearLayout implements IChatLayout {
         }
     }
 
-    private void initCall() {
+    private void initExtension() {
         // topic not support call yet.
-        if (TUIChatUtils.isTopicGroup(mChatInfo.getId())) {
-            return;
+        Map<String, Object> param = new HashMap<>();
+        param.put(TUIConstants.TUIChat.Extension.ChatNavigationMoreItem.CONTEXT, getContext());
+        if (ChatInfo.TYPE_C2C == mChatInfo.getType()) {
+            param.put(TUIConstants.TUIChat.Extension.ChatNavigationMoreItem.USER_ID, mChatInfo.getId());
+        } else {
+            param.put(TUIConstants.TUIChat.Extension.ChatNavigationMoreItem.GROUP_ID, mChatInfo.getId());
         }
+        param.put(TUIConstants.TUIChat.Extension.ChatNavigationMoreItem.FILTER_VIDEO_CALL, !TUIChatConfigs.getConfigs().getGeneralConfig().isEnableVideoCall());
+        param.put(TUIConstants.TUIChat.Extension.ChatNavigationMoreItem.FILTER_VOICE_CALL, !TUIChatConfigs.getConfigs().getGeneralConfig().isEnableVoiceCall());
 
-        HashMap<String, Object> param = new HashMap<>();
-        param.put(TUIConstants.TUIChat.CHAT_ID, mChatInfo.getId());
-        param.put(TUIConstants.TUIChat.CHAT_NAME, mChatInfo.getChatName());
-        param.put(TUIConstants.TUIChat.CHAT_TYPE, mChatInfo.getType());
-        param.put(TUIConstants.TUIChat.CONTEXT, getContext());
-
-        Map<String, Object> voiceCallExtension = TUICore.getExtensionInfo(TUIConstants.TUIChat.EXTENSION_INPUT_MORE_AUDIO_CALL, param);
-        if (voiceCallExtension != null && TUIChatConfigs.getConfigs().getGeneralConfig().isEnableVoiceCall()) {
-            voiceCallBtn.setVisibility(VISIBLE);
-        }
-
-        Map<String, Object> videoCallExtension = TUICore.getExtensionInfo(TUIConstants.TUIChat.EXTENSION_INPUT_MORE_VIDEO_CALL, param);
-        if (videoCallExtension != null && TUIChatConfigs.getConfigs().getGeneralConfig().isEnableVideoCall()) {
-            videoCallBtn.setVisibility(VISIBLE);
-        }
-
-        voiceCallBtn.setOnClickListener(new OnClickListener() {
+        List<TUIExtensionInfo> extensionInfos = TUICore.getExtensionList(TUIConstants.TUIChat.Extension.ChatNavigationMoreItem.MINIMALIST_EXTENSION_ID, param);
+        Collections.sort(extensionInfos, new Comparator<TUIExtensionInfo>() {
             @Override
-            public void onClick(View view) {
-                startCall(TUIConstants.TUICalling.ACTION_ID_AUDIO_CALL);
+            public int compare(TUIExtensionInfo o1, TUIExtensionInfo o2) {
+                return o2.getWeight() - o1.getWeight();
             }
         });
-
-        videoCallBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startCall(TUIConstants.TUICalling.ACTION_ID_VIDEO_CALL);
-            }
-        });
+        for (TUIExtensionInfo extensionInfo : extensionInfos) {
+            View view = LayoutInflater.from(getContext()).inflate(R.layout.chat_minimalist_title_extension_item_layout, null);
+            ImageView extension = view.findViewById(R.id.extension_item);
+            extension.setBackgroundResource((Integer) extensionInfo.getIcon());
+            view.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (extensionInfo.getExtensionListener() != null) {
+                        extensionInfo.getExtensionListener().onClicked(null);
+                    }
+                }
+            });
+            extensionArea.addView(view);
+        }
     }
 
     private void startCall(int callActionType) {
@@ -545,8 +592,8 @@ public class ChatView extends LinearLayout implements IChatLayout {
                     Glide.with(getContext())
                             .load(faceUrl)
                             .apply(new RequestOptions()
-                                    .error(com.tencent.qcloud.tuicore.R.drawable.core_default_user_icon_light)
-                                    .placeholder(com.tencent.qcloud.tuicore.R.drawable.core_default_user_icon_light))
+                                    .error(com.tencent.qcloud.tuikit.timcommon.R.drawable.core_default_user_icon_light)
+                                    .placeholder(com.tencent.qcloud.tuikit.timcommon.R.drawable.core_default_user_icon_light))
                             .into(chatAvatar);
                 }
 
@@ -583,8 +630,8 @@ public class ChatView extends LinearLayout implements IChatLayout {
                     Glide.with(getContext())
                             .load(faceUrl)
                             .apply(new RequestOptions()
-                                    .error(com.tencent.qcloud.tuicore.R.drawable.core_default_user_icon_light)
-                                    .placeholder(com.tencent.qcloud.tuicore.R.drawable.core_default_user_icon_light))
+                                    .error(com.tencent.qcloud.tuikit.timcommon.R.drawable.core_default_user_icon_light)
+                                    .placeholder(com.tencent.qcloud.tuikit.timcommon.R.drawable.core_default_user_icon_light))
                             .into(chatAvatar);
                 }
             });
@@ -633,7 +680,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
     }
 
     public void onApplied(int size) {
-        if (size == 0) {
+        if (size <= 0) {
             mGroupApplyLayout.setVisibility(View.GONE);
         } else {
             mGroupApplyLayout.getContent().setText(getContext().getString(R.string.group_apply_tips, size));
@@ -672,7 +719,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
     }
 
     private void initListener() {
-        getMessageLayout().setPopActionClickListener(new MessageRecyclerView.OnPopActionClickListener() {
+        getMessageLayout().setPopActionClickListener(new OnChatPopActionClickListener() {
             @Override
             public void onCopyClick(TUIMessageBean msg) {
                 ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
@@ -729,7 +776,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
 
             @Override
             public void onForwardMessageClick(TUIMessageBean msg) {
-                forwardMessage(msg, false);
+                forwardMessage(msg);
             }
 
             @Override
@@ -747,35 +794,8 @@ public class ChatView extends LinearLayout implements IChatLayout {
                 showMessageInfo(msg);
             }
 
-            @Override
-            public void onTranslateMessageClick(TUIMessageBean msg) {
-                translateMessage(msg);
-            }
         });
-        getMessageLayout().setTranslationPopActionClickListener(new MessageRecyclerView.OnTranslationPopActionClickListener() {
-            @Override
-            public void onCopyTranslationClick(String translationContent) {
-                ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                if (clipboard == null || TextUtils.isEmpty(translationContent)) {
-                    return;
-                }
-                ClipData clip = ClipData.newPlainText("message", translationContent);
-                clipboard.setPrimaryClip(clip);
-                String copySuccess = getResources().getString(R.string.copy_success_tip);
-                ToastUtil.toastShortMessage(copySuccess);
-            }
 
-            @Override
-            public void onForwardTranslationClick(TUIMessageBean msg) {
-                forwardMessage(msg, true);
-            }
-
-            @Override
-            public void onHideTranslationClick(TUIMessageBean msg) {
-                msg.setTranslationStatus(TUIMessageBean.MSG_TRANSLATE_STATUS_HIDDEN);
-                presenter.updateTranslationMessage(msg);
-            }
-        });
         getMessageLayout().setLoadMoreMessageHandler(new MessageRecyclerView.OnLoadMoreHandler() {
             @Override
             public void loadMore(int type) {
@@ -846,6 +866,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
                 }
             }
         });
+
         getMessageLayout().setEmptySpaceClickListener(new MessageRecyclerView.OnEmptySpaceClickListener() {
             @Override
             public void onClick() {
@@ -980,7 +1001,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
     }
 
     @Override
-    public void initDefault() {
+    public void initDefault(TUIBaseChatMinimalistFragment fragment) {
         getInputLayout().setMessageHandler(new InputView.MessageHandler() {
             @Override
             public void sendMessage(TUIMessageBean msg) {
@@ -999,6 +1020,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
         getInputLayout().clearCustomActionList();
         if (getMessageLayout().getAdapter() == null) {
             mAdapter = new MessageAdapter();
+            mAdapter.setFragment(fragment);
             mMessageRecyclerView.setAdapter(mAdapter);
         }
         ChatLayoutSetting chatLayoutSetting = new ChatLayoutSetting(getContext());
@@ -1057,12 +1079,12 @@ public class ChatView extends LinearLayout implements IChatLayout {
         }
     }
 
-    protected void forwardMessage(TUIMessageBean msg, boolean onlyForTranslation) {
+    public void forwardMessage(TUIMessageBean msg) {
         if (mAdapter != null) {
             mInputView.hideSoftInput();
             mAdapter.setItemChecked(msg.getId(), true);
             mAdapter.notifyDataSetChanged();
-            showForwardDialog(false, true, onlyForTranslation);
+            showForwardDialog(false, true);
         }
     }
 
@@ -1082,11 +1104,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
     protected void reactMessage(Emoji emoji, TUIMessageBean messageBean) {
         presenter.reactMessage(emoji.getFaceKey(), messageBean);
     }
-
-    protected void translateMessage(TUIMessageBean messageBean) {
-        presenter.translateMessage(messageBean);
-    }
-
+    
     protected void showMessageInfo(TUIMessageBean messageBean) {
         Intent intent = new Intent(getContext(), MessageDetailMinimalistActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -1123,9 +1141,9 @@ public class ChatView extends LinearLayout implements IChatLayout {
                     @Override
                     public void onSheetClick(int index) {
                         if (index == 0) {
-                            showForwardDialog(true, true, false);
+                            showForwardDialog(true, true);
                         } else if (index == 1) {
-                            showForwardDialog(true, false, false);
+                            showForwardDialog(true, false);
                         }
                     }
                 });
@@ -1166,7 +1184,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
         });
     }
 
-    private void showForwardDialog(boolean isMultiSelect, boolean isOneByOne, boolean onlyForTranslation) {
+    private void showForwardDialog(boolean isMultiSelect, boolean isOneByOne) {
         if (mAdapter == null) {
             return;
         }
@@ -1178,7 +1196,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
             return;
         }
 
-        if (!onlyForTranslation && checkFailedMessageInfos(messageInfoList)) {
+        if (checkFailedMessageInfos(messageInfoList)) {
             ToastUtil.toastShortMessage(getContext().getString(R.string.forward_failed_tip));
             return;
         }
@@ -1191,11 +1209,11 @@ public class ChatView extends LinearLayout implements IChatLayout {
             if (messageInfoList.size() > FORWARD_MSG_NUM_LIMIT) {
                 showForwardLimitDialog(messageInfoList);
             } else {
-                startSelectForwardActivity(TUIChatConstants.FORWARD_MODE_ONE_BY_ONE, messageInfoList, onlyForTranslation);
+                startSelectForwardActivity(TUIChatConstants.FORWARD_MODE_ONE_BY_ONE, messageInfoList);
                 resetForwardState();
             }
         } else {
-            startSelectForwardActivity(TUIChatConstants.FORWARD_MODE_MERGE, messageInfoList, onlyForTranslation);
+            startSelectForwardActivity(TUIChatConstants.FORWARD_MODE_MERGE, messageInfoList);
             resetForwardState();
         }
     }
@@ -1210,7 +1228,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
                 .setPositiveButton(getContext().getString(R.string.forward_mode_merge), new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startSelectForwardActivity(TUIChatConstants.FORWARD_MODE_MERGE, messageInfoList, false);
+                        startSelectForwardActivity(TUIChatConstants.FORWARD_MODE_MERGE, messageInfoList);
                         resetForwardState();
                     }
                 })
@@ -1223,9 +1241,9 @@ public class ChatView extends LinearLayout implements IChatLayout {
         tipsDialog.show();
     }
 
-    private void startSelectForwardActivity(int mode, List<TUIMessageBean> msgIds, boolean onlyForTranslation) {
+    private void startSelectForwardActivity(int mode, List<TUIMessageBean> msgIds) {
         if (mForwardSelectActivityListener != null) {
-            mForwardSelectActivityListener.onStartForwardSelectActivity(mode, msgIds, onlyForTranslation);
+            mForwardSelectActivityListener.onStartForwardSelectActivity(mode, msgIds);
         }
     }
 
@@ -1238,7 +1256,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
         presenter.sendMessage(msg, retry, new IUIKitCallback<TUIMessageBean>() {
             @Override
             public void onSuccess(TUIMessageBean data) {
-                BackgroundTasks.getInstance().runOnUiThread(new Runnable() {
+                ThreadUtils.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         scrollToEnd();
@@ -1270,7 +1288,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
         presenter.sendMessage(msg, retry, new IUIKitCallback<TUIMessageBean>() {
             @Override
             public void onSuccess(TUIMessageBean data) {
-                BackgroundTasks.getInstance().runOnUiThread(new Runnable() {
+                ThreadUtils.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         scrollToEnd();
@@ -1340,7 +1358,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
     }
 
     public interface ForwardSelectActivityListener {
-        public void onStartForwardSelectActivity(int mode, List<TUIMessageBean> msgIds, boolean onlyForTranslation);
+        public void onStartForwardSelectActivity(int mode, List<TUIMessageBean> msgIds);
     }
 
     @Override

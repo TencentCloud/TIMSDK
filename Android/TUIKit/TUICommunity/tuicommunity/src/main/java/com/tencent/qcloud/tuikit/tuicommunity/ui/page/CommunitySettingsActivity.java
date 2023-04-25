@@ -10,15 +10,15 @@ import androidx.annotation.Nullable;
 
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
-import com.tencent.qcloud.tuicore.component.RoundCornerImageView;
-import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
-import com.tencent.qcloud.tuicore.component.activities.ImageSelectActivity;
-import com.tencent.qcloud.tuicore.component.dialog.TUIKitDialog;
-import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
-import com.tencent.qcloud.tuicore.component.popupcard.PopupInputCard;
-import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.PopupInputCard;
+import com.tencent.qcloud.tuikit.timcommon.component.RoundCornerImageView;
+import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
+import com.tencent.qcloud.tuikit.timcommon.component.activities.ImageSelectActivity;
+import com.tencent.qcloud.tuikit.timcommon.component.dialog.TUIKitDialog;
+import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuicommunity.R;
 import com.tencent.qcloud.tuikit.tuicommunity.bean.CommunityBean;
 import com.tencent.qcloud.tuikit.tuicommunity.component.SettingsLinearView;
@@ -149,7 +149,7 @@ public class CommunitySettingsActivity extends BaseLightActivity implements ICom
     private void setAvatarView() {
         RoundCornerImageView cornerImageView = communityAvatarLv.getContentImage();
         GlideEngine.loadImageSetDefault(cornerImageView, communityBean.getGroupFaceUrl(),
-                TUIThemeManager.getAttrResId(this, com.tencent.qcloud.tuicore.R.attr.core_default_group_icon_community));
+                TUIThemeManager.getAttrResId(this, com.tencent.qcloud.tuikit.timcommon.R.attr.core_default_group_icon_community));
         if (communityBean.isOwner()) {
             communityAvatarLv.setShowArrow(true);
             communityAvatarLv.setOnContentClickListener(new View.OnClickListener() {
@@ -166,7 +166,7 @@ public class CommunitySettingsActivity extends BaseLightActivity implements ICom
                     Intent intent = new Intent(CommunitySettingsActivity.this, ImageSelectActivity.class);
                     intent.putExtra(ImageSelectActivity.TITLE, getResources().getString(R.string.community_choose_avatar));
                     intent.putExtra(ImageSelectActivity.SPAN_COUNT, 4);
-                    intent.putExtra(ImageSelectActivity.PLACEHOLDER, com.tencent.qcloud.tuicore.R.drawable.core_default_user_icon_light);
+                    intent.putExtra(ImageSelectActivity.PLACEHOLDER, com.tencent.qcloud.tuikit.timcommon.R.drawable.core_default_user_icon_light);
                     intent.putExtra(ImageSelectActivity.ITEM_WIDTH, ScreenUtil.dip2px(77));
                     intent.putExtra(ImageSelectActivity.ITEM_HEIGHT, ScreenUtil.dip2px(77));
                     intent.putExtra(ImageSelectActivity.DATA, faceList);

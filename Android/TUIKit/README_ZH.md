@@ -4,23 +4,27 @@
 
 ## 下载地址
 
-[最新 TUIChat 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.1.3925/android/TUIChat.zip)
+[最新 TUIChat 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4123/android/TUIChat.zip)
 
-[最新 TUIConversation 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.1.3925/android/TUIConversation.zip)
+[最新 TUIConversation 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4123/android/TUIConversation.zip)
 
-[最新 TUIContact 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.1.3925/android/TUIContact.zip)
+[最新 TUIContact 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4123/android/TUIContact.zip)
 
-[最新 TUIGroup 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.1.3925/android/TUIGroup.zip)
+[最新 TUIGroup 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4123/android/TUIGroup.zip)
 
-[最新 TUISearch 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.1.3925/android/TUISearch.zip)
+[最新 TUISearch 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4123/android/TUISearch.zip)
 
-[最新 TUICallKit 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.1.3925/android/TUICallKit.zip)
+[最新 TUICallKit 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4123/android/TUICallKit.zip)
 
-[最新 TUIOfflinePush 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.1.3925/android/TUIOfflinePush.zip)
+[最新 TUIOfflinePush 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4123/android/TUIOfflinePush.zip)
 
-[最新 TUICommunity 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.1.3925/android/TUICommunity.zip)
+[最新 TUICommunity 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4123/android/TUICommunity.zip)
 
-[最新 TUICore 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.1.3925/android/TUICore.zip)
+[最新 TUITranslation 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4123/android/TUITranslation.zip)
+
+[最新 TUICore 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4123/android/TUICore.zip)
+
+[最新 TUICommon 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4123/android/TUICommon.zip)
 
 ## 交流&反馈
 

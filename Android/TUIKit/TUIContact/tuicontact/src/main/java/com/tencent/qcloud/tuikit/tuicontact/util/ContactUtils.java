@@ -2,8 +2,8 @@ package com.tencent.qcloud.tuikit.tuicontact.util;
 
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMManager;
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 
 public class ContactUtils {
 

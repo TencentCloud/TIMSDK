@@ -1,10 +1,10 @@
 package com.tencent.qcloud.tuikit.tuicommunity.utils;
 
 public class CommunityConstants {
-    public static final String COVER_URL = "https://im.sdk.cloud.tencent.cn/download/tuikit-resource/community-cover/community_cover_%s.png";
-    public static final String DEFAULT_COVER_URL = "https://im.sdk.cloud.tencent.cn/download/tuikit-resource/community-cover/community_cover_default.png";
-    public static final String GROUP_FACE_URL = "https://im.sdk.cloud.tencent.cn/download/tuikit-resource/group-avatar/group_avatar_%s.png";
-    public static final String DEFAULT_GROUP_FACE_URL = "https://im.sdk.cloud.tencent.cn/download/tuikit-resource/group-avatar/group_avatar_default.png";
+    public static final String COVER_URL = "https://im.sdk.qcloud.com/download/tuikit-resource/community-cover/community_cover_%s.png";
+    public static final String DEFAULT_COVER_URL = "https://im.sdk.qcloud.com/download/tuikit-resource/community-cover/community_cover_default.png";
+    public static final String GROUP_FACE_URL = "https://im.sdk.qcloud.com/download/tuikit-resource/group-avatar/group_avatar_%s.png";
+    public static final String DEFAULT_GROUP_FACE_URL = "https://im.sdk.qcloud.com/download/tuikit-resource/group-avatar/group_avatar_default.png";
 
     public static final String COMMUNITY_INTRODUCTION = "https://cloud.tencent.com/document/product/269/75979";
     public static final String IM_NEW_BUYING = "https://cloud.tencent.com/act/pro/imnew?from=17971";

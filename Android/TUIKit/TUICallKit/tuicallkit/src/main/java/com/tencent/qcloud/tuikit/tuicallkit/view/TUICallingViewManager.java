@@ -11,12 +11,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
-import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
-import com.tencent.qcloud.tuicore.interfaces.ITUIService;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.TUICommonDefine;
 import com.tencent.qcloud.tuikit.TUIVideoView;
@@ -35,9 +34,11 @@ import com.tencent.qcloud.tuikit.tuicallkit.base.TUICallingAction;
 import com.tencent.qcloud.tuikit.tuicallkit.base.TUICallingStatusManager;
 import com.tencent.qcloud.tuikit.tuicallkit.base.UserLayout;
 import com.tencent.qcloud.tuikit.tuicallkit.base.UserLayoutEntity;
+import com.tencent.qcloud.tuikit.tuicallkit.extensions.inviteuser.SelectGroupMemberActivity;
 import com.tencent.qcloud.tuikit.tuicallkit.utils.ImageLoader;
 import com.tencent.qcloud.tuikit.tuicallkit.utils.PermissionRequest;
 import com.tencent.qcloud.tuikit.tuicallkit.utils.UserInfoUtils;
+import com.tencent.qcloud.tuikit.tuicallkit.view.common.RoundCornerImageView;
 import com.tencent.qcloud.tuikit.tuicallkit.view.component.BaseUserView;
 import com.tencent.qcloud.tuikit.tuicallkit.view.component.TUICallingSingleVideoUserView;
 import com.tencent.qcloud.tuikit.tuicallkit.view.component.TUICallingUserView;
@@ -95,8 +96,7 @@ public class TUICallingViewManager implements ITUINotification {
 
         TUICore.registerEvent(Constants.EVENT_TUICALLING_CHANGED, Constants.EVENT_SUB_CALL_STATUS_CHANGED, this);
         TUICore.registerEvent(Constants.EVENT_TUICALLING_CHANGED, Constants.EVENT_SUB_CALL_TYPE_CHANGED, this);
-        TUICore.registerEvent(TUIConstants.TUIGroup.EVENT_GROUP,
-                TUIConstants.TUIGroup.EVENT_SUB_KEY_GROUP_MEMBER_SELECTED, this);
+        TUICore.registerEvent(Constants.EVENT_TUICALLING_CHANGED, Constants.EVENT_SUB_GROUP_MEMBER_SELECTED, this);
     }
 
     public void createCallingView(List<CallingUserModel> inviteeList, CallingUserModel inviter) {
@@ -154,6 +154,7 @@ public class TUICallingViewManager implements ITUINotification {
         }
         mBaseCallView = null;
         BaseCallActivity.finishActivity();
+        SelectGroupMemberActivity.finishActivity();
 
         mSelfUserModel = null;
         mInviteeList.clear();
@@ -729,53 +730,50 @@ public class TUICallingViewManager implements ITUINotification {
     }
 
     private void initInviteUserFunction() {
-        ITUIService service = TUICore.getService(TUIConstants.TUIGroup.SERVICE_NAME);
-        boolean enableInviteUser = (service != null);
-
-        if (enableInviteUser && mBaseCallView != null) {
-            Button inviteUserBtn = new Button(mContext);
-            TUICallDefine.MediaType mediaType = TUICallingStatusManager.sharedInstance(mContext).getMediaType();
-            int resId = TUICallDefine.MediaType.Video.equals(mediaType)
-                    ? R.drawable.tuicalling_ic_add_user_white : R.drawable.tuicalling_ic_add_user_black;
-            inviteUserBtn.setBackgroundResource(resId);
-            inviteUserBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String groupId = TUICallingStatusManager.sharedInstance(mContext).getGroupId();
-                    if (TextUtils.isEmpty(groupId)) {
-                        ToastUtil.toastShortMessage(mContext.getString(R.string.tuicalling_groupid_is_empty));
-                        return;
-                    }
-
-                    TUICallDefine.Status status = TUICallingStatusManager.sharedInstance(mContext).getCallStatus();
-                    TUICallDefine.Role role = TUICallingStatusManager.sharedInstance(mContext).getCallRole();
-                    if (TUICallDefine.Role.Called.equals(role) && !TUICallDefine.Status.Accept.equals(status)) {
-                        ToastUtil.toastShortMessage(mContext.getString(R.string.tuicalling_status_is_not_accept));
-                        return;
-                    }
-
-                    ArrayList<String> list = new ArrayList<>();
-                    list.add(mInviter.userId);
-                    for (CallingUserModel model : mInviteeList) {
-                        if (model != null && !TextUtils.isEmpty(model.userId) && !list.contains(model.userId)) {
-                            list.add(model.userId);
-                        }
-                    }
-                    if (!list.contains(TUILogin.getLoginUser())) {
-                        list.add(TUILogin.getLoginUser());
-                    }
-
-                    TUILog.i(TAG, "initInviteUserFunction, groupId: " + groupId + " ,list: " + list);
-
-                    Bundle bundle = new Bundle();
-                    bundle.putString(TUIConstants.TUIGroup.GROUP_ID, groupId);
-                    bundle.putString(TUIConstants.TUIGroup.USER_DATA, Constants.TUICALLKIT);
-                    bundle.putStringArrayList(TUIConstants.TUIGroup.SELECTED_LIST, list);
-                    TUICore.startActivity("GroupMemberActivity", bundle);
-                }
-            });
-            mBaseCallView.enableAddUserView(inviteUserBtn);
+        if (mBaseCallView == null) {
+            return;
         }
+        Button inviteUserBtn = new Button(mContext);
+        TUICallDefine.MediaType mediaType = TUICallingStatusManager.sharedInstance(mContext).getMediaType();
+        int resId = TUICallDefine.MediaType.Video.equals(mediaType)
+                ? R.drawable.tuicalling_ic_add_user_white : R.drawable.tuicalling_ic_add_user_black;
+        inviteUserBtn.setBackgroundResource(resId);
+        inviteUserBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String groupId = TUICallingStatusManager.sharedInstance(mContext).getGroupId();
+                if (TextUtils.isEmpty(groupId)) {
+                    ToastUtil.toastShortMessage(mContext.getString(R.string.tuicalling_groupid_is_empty));
+                    return;
+                }
+
+                TUICallDefine.Status status = TUICallingStatusManager.sharedInstance(mContext).getCallStatus();
+                TUICallDefine.Role role = TUICallingStatusManager.sharedInstance(mContext).getCallRole();
+                if (TUICallDefine.Role.Called.equals(role) && !TUICallDefine.Status.Accept.equals(status)) {
+                    ToastUtil.toastShortMessage(mContext.getString(R.string.tuicalling_status_is_not_accept));
+                    return;
+                }
+
+                ArrayList<String> list = new ArrayList<>();
+                list.add(mInviter.userId);
+                for (CallingUserModel model : mInviteeList) {
+                    if (model != null && !TextUtils.isEmpty(model.userId) && !list.contains(model.userId)) {
+                        list.add(model.userId);
+                    }
+                }
+                if (!list.contains(TUILogin.getLoginUser())) {
+                    list.add(TUILogin.getLoginUser());
+                }
+
+                TUILog.i(TAG, "initInviteUserFunction, groupId: " + groupId + " ,list: " + list);
+
+                Bundle bundle = new Bundle();
+                bundle.putString(Constants.GROUP_ID, groupId);
+                bundle.putStringArrayList(Constants.SELECT_MEMBER_LIST, list);
+                TUICore.startActivity("SelectGroupMemberActivity", bundle);
+            }
+        });
+        mBaseCallView.enableAddUserView(inviteUserBtn);
     }
 
     private void inviteUsersToGroupCall(List<String> userIdList) {
@@ -835,6 +833,7 @@ public class TUICallingViewManager implements ITUINotification {
                     }
                 }
                 userLayout.setUserName(model.userName);
+                userLayout.setVideoAvailable(model.isVideoAvailable);
                 ImageLoader.loadImage(mContext, userLayout.getAvatarImage(), model.userAvatar,
                         R.drawable.tuicalling_ic_avatar);
             }
@@ -853,9 +852,24 @@ public class TUICallingViewManager implements ITUINotification {
         if (Constants.EVENT_TUICALLING_CHANGED.equals(key)) {
             switch (subKey) {
                 case Constants.EVENT_SUB_CAMERA_OPEN:
-                    if (mSelfUserModel != null) {
-                        mSelfUserModel.isVideoAvailable = (boolean) param.get(Constants.OPEN_CAMERA);
+                    if (mSelfUserModel == null) {
+                        break;
                     }
+                    mSelfUserModel.isVideoAvailable = (boolean) param.get(Constants.OPEN_CAMERA);
+
+                    UserLayout selfLayout = mUserLayoutFactory.findUserLayout(mSelfUserModel.userId);
+                    if (selfLayout == null) {
+                        break;
+                    }
+                    selfLayout.setVideoAvailable(mSelfUserModel.isVideoAvailable);
+
+                    if (Scene.SINGLE_CALL.equals(TUICallingStatusManager.sharedInstance(mContext).getCallScene())) {
+                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(180, 180);
+                        lp.addRule(RelativeLayout.CENTER_IN_PARENT);
+                        ((RoundCornerImageView) selfLayout.getAvatarImage()).setRadius(15);
+                        selfLayout.getAvatarImage().setLayoutParams(lp);
+                    }
+                    ImageLoader.loadImage(mContext, selfLayout.getAvatarImage(), mSelfUserModel.userAvatar);
                     break;
                 case Constants.EVENT_SUB_MIC_STATUS_CHANGED:
                     if (mSelfUserModel != null) {
@@ -872,17 +886,12 @@ public class TUICallingViewManager implements ITUINotification {
                 case Constants.EVENT_SUB_CALL_TYPE_CHANGED:
                     updateCallType((TUICallDefine.MediaType) param.get(Constants.CALL_MEDIA_TYPE));
                     break;
+                case Constants.EVENT_SUB_GROUP_MEMBER_SELECTED:
+                    List<String> list = (List<String>) param.get(Constants.SELECT_MEMBER_LIST);
+                    inviteUsersToGroupCall(list);
+                    break;
                 default:
                     break;
-            }
-        } else if (TUIConstants.TUIGroup.EVENT_GROUP.equals(key)) {
-            if (TUIConstants.TUIGroup.EVENT_SUB_KEY_GROUP_MEMBER_SELECTED.equals(subKey)) {
-                String userData = (String) param.get(TUIConstants.TUIGroup.USER_DATA);
-                if (!Constants.TUICALLKIT.equals(userData)) {
-                    return;
-                }
-                List<String> list = (List<String>) param.get(TUIConstants.TUIGroup.LIST);
-                inviteUsersToGroupCall(list);
             }
         }
     }

@@ -35,4 +35,7 @@
     <dimen name="demo_self_profile_text_size">15.36sp</dimen>
     <dimen name="demo_self_detail_face_area_height">69.6dp</dimen>
 
+    <dimen name="demo_tab_bottom_item_width">80dp</dimen>
+
+
 </resources>

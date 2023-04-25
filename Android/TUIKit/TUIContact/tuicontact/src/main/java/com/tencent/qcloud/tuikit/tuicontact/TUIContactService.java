@@ -225,4 +225,5 @@ public class TUIContactService extends ServiceInitializer implements ITUIContact
     public int getSeriousThemeResId() {
         return R.style.TUIContactSeriousTheme;
     }
+
 }

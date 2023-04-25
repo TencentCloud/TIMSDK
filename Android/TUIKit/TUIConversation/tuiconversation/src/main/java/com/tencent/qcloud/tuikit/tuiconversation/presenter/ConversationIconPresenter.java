@@ -1,6 +1,6 @@
 package com.tencent.qcloud.tuikit.tuiconversation.presenter;
 
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuiconversation.model.ConversationProvider;
 
 import java.util.List;

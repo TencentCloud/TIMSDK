@@ -3,10 +3,10 @@ package com.tencent.qcloud.tuikit.tuisearch.presenter;
 import android.text.TextUtils;
 import android.util.Pair;
 
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuicore.ServiceInitializer;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuisearch.R;
 import com.tencent.qcloud.tuikit.tuisearch.TUISearchConstants;
-import com.tencent.qcloud.tuikit.tuisearch.TUISearchService;
 import com.tencent.qcloud.tuikit.tuisearch.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuisearch.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuisearch.bean.SearchDataBean;
@@ -87,7 +87,7 @@ public class SearchMainPresenter {
                     SearchDataBean dataBean = new SearchDataBean();
                     dataBean.setIconPath(searchDataBean.getIconPath());
                     dataBean.setTitle(searchDataBean.getUserID());
-                    dataBean.setSubTitleLabel(TUISearchService.getAppContext().getString(R.string.nick_name));
+                    dataBean.setSubTitleLabel(ServiceInitializer.getAppContext().getString(R.string.nick_name));
                     if (!TextUtils.isEmpty(searchDataBean.getRemark())) {
                         dataBean.setSubTitle(searchDataBean.getRemark());
                     } else if (!TextUtils.isEmpty(searchDataBean.getNickName())) {
@@ -168,7 +168,7 @@ public class SearchMainPresenter {
                     dataBean.setIconPath(groupInfo.getFaceUrl());
                     if (searchGroupResult.getMatchField() == TUISearchGroupParam.TUISearchGroupMatchField.SEARCH_FIELD_GROUP_ID) {
                         dataBean.setTitle(groupInfo.getGroupName());
-                        dataBean.setSubTitleLabel(TUISearchService.getAppContext().getString(R.string.include_group_id));
+                        dataBean.setSubTitleLabel(ServiceInitializer.getAppContext().getString(R.string.include_group_id));
                         dataBean.setSubTitle(groupId);
                     } else if (searchGroupResult.getMatchField() == TUISearchGroupParam.TUISearchGroupMatchField.SEARCH_FIELD_GROUP_NAME) {
                         dataBean.setTitle(groupInfo.getGroupName());
@@ -177,7 +177,7 @@ public class SearchMainPresenter {
                         if (searchGroupResult.getMatchMembers() != null && !searchGroupResult.getMatchMembers().isEmpty()) {
                             TUISearchGroupResult.TUISearchGroupMemberMatchResult searchGroupMemberMatchResult = searchGroupResult.getMatchMembers().get(0);
                             if (searchGroupMemberMatchResult.getMemberMatchField() != TUISearchGroupParam.TUISearchGroupMemberMatchField.SEARCH_FIELD_MEMBER_NONE) {
-                                dataBean.setSubTitleLabel(TUISearchService.getAppContext().getString(R.string.include_group_member));
+                                dataBean.setSubTitleLabel(ServiceInitializer.getAppContext().getString(R.string.include_group_member));
                                 dataBean.setSubTitle(searchGroupMemberMatchResult.getMemberMatchValue());
                             } else {
                                 dataBean.setSubTitle("");
@@ -269,7 +269,7 @@ public class SearchMainPresenter {
                                         conversationSearchDataBeans.get(i).setSubTitle(conversationProvider.getMessageText(searchMessageBean.getMessageInfoList().get(0)));
                                         conversationSearchDataBeans.get(i).setSubTextMatch(1);
                                     } else if (count > 1) {
-                                        conversationSearchDataBeans.get(i).setSubTitle(count + TUISearchService.getAppContext().getString(R.string.chat_records));
+                                        conversationSearchDataBeans.get(i).setSubTitle(count + ServiceInitializer.getAppContext().getString(R.string.chat_records));
                                         conversationSearchDataBeans.get(i).setSubTextMatch(0);
                                     }
                                 }

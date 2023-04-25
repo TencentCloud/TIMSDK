@@ -4,8 +4,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 
-import com.tencent.qcloud.tuicore.component.TitleBarLayout;
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.classicui.interfaces.IConversationLayout;
@@ -54,7 +54,7 @@ public class ForwardSelectLayout extends RelativeLayout implements IConversation
         adapter.setForwardFragment(true);
         conversationList.setAdapter((IConversationListAdapter) adapter);
         presenter.setAdapter(adapter);
-        presenter.loadConversation(0);
+        presenter.loadMoreConversation();
     }
 
     public TitleBarLayout getTitleBar() {

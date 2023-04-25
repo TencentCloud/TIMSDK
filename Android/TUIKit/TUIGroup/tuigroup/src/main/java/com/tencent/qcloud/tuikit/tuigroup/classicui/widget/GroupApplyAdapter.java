@@ -5,10 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.tencent.imsdk.v2.V2TIMGroupApplication;
+import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
+import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuigroup.R;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupService;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupApplyInfo;
@@ -82,12 +84,24 @@ public class GroupApplyAdapter extends BaseAdapter {
         } else {
             holder = (MyViewHolder) view.getTag();
         }
-        holder.memberName.setText(info.getGroupApplication().getFromUser());
-        holder.reason.setText(info.getGroupApplication().getRequestMsg());
+
+        if (info.getGroupApplication().getApplicationType() == V2TIMGroupApplication.V2TIM_GROUP_INVITE_APPLICATION_NEED_APPROVED_BY_ADMIN) {
+            holder.memberName.setText(info.getGroupApplication().getFromUser());
+            holder.reason.setText(view.getResources().getString(R.string.invite) + " " + info.getGroupApplication().getToUser());
+        } else {
+            if (TextUtils.isEmpty(info.getFromUserNickName())) {
+                holder.memberName.setText(info.getFromUserID());
+            } else {
+                holder.memberName.setText(info.getFromUserNickName());
+            }
+            holder.reason.setText(info.getAddWording());
+        }
+        GlideEngine.loadUserIcon(holder.memberIcon, info.getFromUserFaceUrl(), ScreenUtil.dip2px(4));
+
         if (info.getStatus() == GroupApplyInfo.UNHANDLED) {
             holder.accept.setVisibility(View.VISIBLE);
             holder.accept.setText(R.string.accept);
-            holder.accept.setBackground(TUIGroupService.getAppContext().getResources().getDrawable(R.color.bg_positive_btn));
+            holder.accept.setBackground(TUIGroupService.getAppContext().getResources().getDrawable(R.drawable.group_bg_positive_btn));
             holder.accept.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -96,7 +110,7 @@ public class GroupApplyAdapter extends BaseAdapter {
             });
             holder.refuse.setVisibility(View.VISIBLE);
             holder.refuse.setText(R.string.refuse);
-            holder.refuse.setBackground(TUIGroupService.getAppContext().getResources().getDrawable(R.color.bg_negative_btn));
+            holder.refuse.setBackground(TUIGroupService.getAppContext().getResources().getDrawable(R.drawable.group_bg_negative_btn));
             holder.refuse.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -147,14 +161,14 @@ public class GroupApplyAdapter extends BaseAdapter {
         if (presenter == null) {
             return;
         }
-        presenter.acceptApply(item);
+        presenter.acceptApply(item, null);
     }
 
     public void refuseApply(final int position, final GroupApplyInfo item) {
         if (presenter == null) {
             return;
         }
-        presenter.refuseApply(item);
+        presenter.refuseApply(item, null);
     }
 
     public interface OnItemClickListener {
@@ -164,7 +178,7 @@ public class GroupApplyAdapter extends BaseAdapter {
     private class MyViewHolder {
         private ImageView memberIcon;
         private TextView memberName, reason;
-        private Button accept, refuse;
+        private TextView accept, refuse;
     }
 
 }

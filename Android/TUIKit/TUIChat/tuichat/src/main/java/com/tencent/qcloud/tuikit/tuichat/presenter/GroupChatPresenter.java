@@ -3,21 +3,23 @@ package com.tencent.qcloud.tuikit.tuichat.presenter;
 import android.text.TextUtils;
 import android.util.Pair;
 
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuicore.TUIConfig;
+import com.tencent.qcloud.tuikit.timcommon.bean.MessageReceiptInfo;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupApplyInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupMemberInfo;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageReceiptInfo;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.GroupChatEventListener;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class GroupChatPresenter extends ChatPresenter {
@@ -55,8 +57,8 @@ public class GroupChatPresenter extends ChatPresenter {
             }
 
             @Override
-            public void onApplied(int unHandledSize) {
-                GroupChatPresenter.this.onApplied(unHandledSize);
+            public void onApplied() {
+                GroupChatPresenter.this.onApplied();
             }
 
             @Override
@@ -109,8 +111,8 @@ public class GroupChatPresenter extends ChatPresenter {
             }
 
             @Override
-            public void onMessageChanged(TUIMessageBean messageBean) {
-                updateMessageInfo(messageBean);
+            public void onMessageChanged(TUIMessageBean messageBean, int dataChangeType) {
+                updateMessageInfo(messageBean, dataChangeType);
             }
         };
         TUIChatService.getInstance().addGroupChatEventListener(groupChatEventListener);
@@ -273,10 +275,20 @@ public class GroupChatPresenter extends ChatPresenter {
         }
     }
 
-    public void onApplied(int unHandledSize) {
-        if (chatNotifyHandler != null) {
-            chatNotifyHandler.onApplied(unHandledSize);
-        }
+    public void onApplied() {
+        loadApplyList(new IUIKitCallback<List<GroupApplyInfo>>() {
+            @Override
+            public void onSuccess(List<GroupApplyInfo> data) {
+                if (chatNotifyHandler != null) {
+                    chatNotifyHandler.onApplied(data.size());
+                }
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                super.onError(module, errCode, errMsg);
+            }
+        });
     }
 
     public void onGroupNameChanged(String newName) {
@@ -299,4 +311,53 @@ public class GroupChatPresenter extends ChatPresenter {
     public void setGroupInfo(GroupInfo groupInfo) {
         this.groupInfo = groupInfo;
     }
+
+    @Override
+    public void getChatName(String chatID, IUIKitCallback<String> callback) {
+        if (!TextUtils.isEmpty(chatID)) {
+            provider.getChatName(chatID, true, new IUIKitCallback<String>() {
+                @Override
+                public void onSuccess(String data) {
+                    TUIChatUtils.callbackOnSuccess(callback, data);
+                }
+
+                @Override
+                public void onError(String module, int errCode, String errMsg) {
+                    TUIChatUtils.callbackOnSuccess(callback, chatID);
+                }
+            });
+        }
+    }
+
+    @Override
+    public void getChatFaceUrl(String chatID, IUIKitCallback<List<Object>> callback) {
+        if (!TextUtils.isEmpty(chatID)) {
+            provider.getChatFaceUrl(chatID, true, new IUIKitCallback<String>() {
+                @Override
+                public void onSuccess(String data) {
+                    if (TextUtils.isEmpty(data) && TUIConfig.isEnableGroupGridAvatar()) {
+                        provider.getChatGridFaceUrls(chatID, new IUIKitCallback<List<Object>>() {
+                            @Override
+                            public void onSuccess(List<Object> faceUrls) {
+                                TUIChatUtils.callbackOnSuccess(callback, faceUrls);
+                            }
+
+                            @Override
+                            public void onError(String module, int errCode, String errMsg) {
+                                TUIChatUtils.callbackOnError(callback, errCode, errMsg);
+                            }
+                        });
+                    } else {
+                        TUIChatUtils.callbackOnSuccess(callback, Collections.singletonList(data));
+                    }
+                }
+
+                @Override
+                public void onError(String module, int errCode, String errMsg) {
+                    TUIChatUtils.callbackOnError(callback, errCode, errMsg);
+                }
+            });
+        }
+    }
+
 }

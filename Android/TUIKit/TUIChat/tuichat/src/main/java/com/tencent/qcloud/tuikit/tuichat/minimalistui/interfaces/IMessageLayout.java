@@ -1,5 +1,7 @@
 package com.tencent.qcloud.tuikit.tuichat.minimalistui.interfaces;
 
+import com.tencent.qcloud.tuikit.timcommon.interfaces.IMessageProperties;
+import com.tencent.qcloud.tuikit.timcommon.interfaces.OnItemClickListener;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.MessageAdapter;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.messagepopmenu.ChatPopActivity;
 
@@ -30,7 +32,7 @@ public interface IMessageLayout extends IMessageProperties {
     OnItemClickListener getOnItemClickListener();
 
     /**
-     * 设置消息列表的事件监听器 {@link com.tencent.qcloud.tuikit.tuichat.minimalistui.interfaces.OnItemClickListener}
+     * 设置消息列表的事件监听器 {@link com.tencent.qcloud.tuikit.timcommon.interfaces.OnItemClickListener}
      *
      * @param listener
      */

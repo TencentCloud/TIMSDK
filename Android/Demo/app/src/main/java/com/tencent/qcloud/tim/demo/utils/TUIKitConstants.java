@@ -37,4 +37,8 @@ public class TUIKitConstants {
 
     }
 
+    public static final String RECENT_CALLS_ENABLE_ACTION = "recent_calls_enable_action";
+    public static final String RECENT_CALLS_ENABLE = "recent_calls_enable";
+    public static final String MINIMALIST_RECENT_CALLS_ENABLE = "minimalist_recent_calls_enable";
+
 }

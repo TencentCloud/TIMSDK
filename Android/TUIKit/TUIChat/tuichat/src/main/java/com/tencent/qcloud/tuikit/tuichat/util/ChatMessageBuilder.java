@@ -4,13 +4,13 @@ import android.net.Uri;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
-import com.tencent.qcloud.tuicore.util.FileUtil;
-import com.tencent.qcloud.tuicore.util.ImageUtil;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.ImageUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonConstants;
 import com.tencent.qcloud.tuikit.tuichat.R;
-import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.ReplyPreviewBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FaceMessageBean;
@@ -20,7 +20,6 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.QuoteMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ReplyMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.SoundMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TextAtMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
@@ -283,7 +282,7 @@ public class ChatMessageBuilder {
     private static TUIMessageBean buildReplyMessage(V2TIMMessage v2TIMMessage, ReplyPreviewBean previewBean) {
         Map<String, ReplyPreviewBean> cloudData = new HashMap<>();
         Gson gson = new Gson();
-        cloudData.put(TUIChatConstants.MESSAGE_REPLY_KEY, previewBean);
+        cloudData.put(TIMCommonConstants.MESSAGE_REPLY_KEY, previewBean);
         v2TIMMessage.setCloudCustomData(gson.toJson(cloudData));
 
         QuoteMessageBean replyMessageBean;
@@ -320,26 +319,6 @@ public class ChatMessageBuilder {
         previewBean.setMessageType(messageBean.getMsgType());
 
         return previewBean;
-    }
-
-    public static void mergeCloudCustomData(TUIMessageBean messageBean, String key, Object data) {
-        String cloudCustomData = messageBean.getV2TIMMessage().getCloudCustomData();
-        Gson gson = new Gson();
-        HashMap hashMap = null;
-        if (TextUtils.isEmpty(cloudCustomData)) {
-            hashMap = new HashMap();
-        } else {
-            try {
-                hashMap = gson.fromJson(cloudCustomData, HashMap.class);
-            } catch (JsonSyntaxException e) {
-                TUIChatLog.e(TAG, " mergeCloudCustomData error " + e.getMessage());
-            }
-        }
-        if (hashMap != null) {
-            hashMap.put(key, data);
-            cloudCustomData = gson.toJson(hashMap);
-        }
-        messageBean.getV2TIMMessage().setCloudCustomData(cloudCustomData);
     }
 
 }

@@ -1,7 +1,7 @@
 package com.tencent.qcloud.tuikit.tuiconversation.interfaces;
 
 import com.tencent.imsdk.v2.V2TIMUserStatus;
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 
 import java.util.List;

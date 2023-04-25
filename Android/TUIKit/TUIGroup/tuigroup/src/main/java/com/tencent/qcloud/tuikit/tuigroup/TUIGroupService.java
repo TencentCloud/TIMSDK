@@ -167,12 +167,14 @@ public class TUIGroupService extends ServiceInitializer implements ITUIGroupServ
 
             @Override
             public void onReceiveJoinApplication(String groupID, V2TIMGroupMemberInfo member, String opReason) {
-                super.onReceiveJoinApplication(groupID, member, opReason);
+                TUICore.notifyEvent(TUIConstants.TUIGroup.Event.GroupApplication.KEY_GROUP_APPLICATION,
+                        TUIConstants.TUIGroup.Event.GroupApplication.SUB_KEY_GROUP_APPLICATION_NUM_CHANGED, null);
             }
 
             @Override
             public void onApplicationProcessed(String groupID, V2TIMGroupMemberInfo opUser, boolean isAgreeJoin, String opReason) {
-                super.onApplicationProcessed(groupID, opUser, isAgreeJoin, opReason);
+                TUICore.notifyEvent(TUIConstants.TUIGroup.Event.GroupApplication.KEY_GROUP_APPLICATION,
+                        TUIConstants.TUIGroup.Event.GroupApplication.SUB_KEY_GROUP_APPLICATION_NUM_CHANGED, null);
             }
 
             @Override
@@ -245,4 +247,5 @@ public class TUIGroupService extends ServiceInitializer implements ITUIGroupServ
     public int getSeriousThemeResId() {
         return R.style.TUIGroupSeriousTheme;
     }
+
 }

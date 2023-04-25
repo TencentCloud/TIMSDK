@@ -5,8 +5,8 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 
+import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
-import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuikit.tuiconversation.commonutil.TUIConversationLog;
 
 public class TUIForwardSelectActivity extends BaseLightActivity {

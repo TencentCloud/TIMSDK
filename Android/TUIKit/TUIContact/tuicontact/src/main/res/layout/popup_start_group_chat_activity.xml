@@ -6,12 +6,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
-    <com.tencent.qcloud.tuicore.component.TitleBarLayout
+    <com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout
         android:id="@+id/group_create_title_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/page_title_height" />
 
-    <com.tencent.qcloud.tuicore.component.LineControllerView
+    <com.tencent.qcloud.tuikit.timcommon.component.LineControllerView
         android:id="@+id/group_type_join"
         android:layout_width="match_parent"
         android:layout_height="46.08dp"

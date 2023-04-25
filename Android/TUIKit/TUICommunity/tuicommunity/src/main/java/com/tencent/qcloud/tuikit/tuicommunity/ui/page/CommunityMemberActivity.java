@@ -1,16 +1,15 @@
 package com.tencent.qcloud.tuikit.tuicommunity.ui.page;
 
-import com.tencent.qcloud.tuicore.TUIConstants;
-import com.tencent.qcloud.tuicore.TUICore;
-import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.Nullable;
 
+import com.tencent.qcloud.tuicore.TUIConstants;
+import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuikit.tuicommunity.R;
 import com.tencent.qcloud.tuikit.tuicommunity.bean.CommunityBean;
 import com.tencent.qcloud.tuikit.tuicommunity.bean.CommunityMemberBean;
@@ -100,14 +99,14 @@ public class CommunityMemberActivity extends BaseLightActivity implements ICommu
     @Override
     public void onAddCommunityMember() {
         Bundle param = new Bundle();
-        param.putString(TUIConstants.TUIGroup.GROUP_ID, communityBean.getGroupId());
-        param.putBoolean(TUIConstants.TUIGroup.SELECT_FRIENDS, true);
+        param.putString(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.GROUP_ID, communityBean.getGroupId());
+        param.putBoolean(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.SELECT_FRIENDS, true);
         if (memberListLayout.getCommunityMemberBeans() != null) {
             ArrayList<String> selectedList = new ArrayList<>();
             for (CommunityMemberBean memberBean : memberListLayout.getCommunityMemberBeans()) {
                 selectedList.add(memberBean.getAccount());
             }
-            param.putStringArrayList(TUIConstants.TUIGroup.SELECTED_LIST, selectedList);
+            param.putStringArrayList(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.SELECTED_LIST, selectedList);
         }
         TUICore.startActivity(this, "StartGroupMemberSelectActivity", param, REQUEST_CODE_INVITE_MEMBER);
     }

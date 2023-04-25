@@ -22,7 +22,7 @@ public class GeneralConfig {
     private boolean quoteEnable = true;
 
 
-    private boolean enableLink = true;
+    private boolean enableWelcomeCustomMessage = true;
 
     private boolean enableVoiceCall = true;
     private boolean enableVideoCall = true;
@@ -30,15 +30,7 @@ public class GeneralConfig {
     private boolean enableFloatWindowForCall = true;
     private boolean enableMultiDeviceForCall = false;
 
-    private boolean enableTextTranslation = false;
-
-    public boolean isEnableTextTranslation() {
-        return enableTextTranslation;
-    }
-
-    public void setEnableTextTranslation(boolean enableTextTranslation) {
-        this.enableTextTranslation = enableTextTranslation;
-    }
+    private int timeIntervalForMessageRecall = 120;
 
     /**
      * 是否开启音视频通话悬浮窗
@@ -240,14 +232,28 @@ public class GeneralConfig {
     }
 
     /**
-     *  是否展示自定义消息按钮，默认 YES
-     *  Display custom message button, default YES
+     *  是否展示自定义欢迎消息按钮，默认 YES
+     *  Display custom welcome message button, default YES
      */
-    public boolean isEnableLink() {
-        return enableLink;
+    public boolean isEnableWelcomeCustomMessage() {
+        return enableWelcomeCustomMessage;
     }
     
-    public void setEnableLink(boolean enableLink) {
-        this.enableLink = enableLink;
+    public void setEnableWelcomeCustomMessage(boolean enableWelcomeCustomMessage) {
+        this.enableWelcomeCustomMessage = enableWelcomeCustomMessage;
+    }
+
+    /**
+     * 消息可撤回时间，单位秒，默认 120 秒。如果想调整该配置，请同步修改 IM 控制台设置。
+     * The time interval for message recall, in seconds, default is 120 seconds. If you want to adjust this configuration, please modify the IM console settings synchronously.
+     *
+     * https://cloud.tencent.com/document/product/269/38656#.E6.B6.88.E6.81.AF.E6.92.A4.E5.9B.9E.E8.AE.BE.E7.BD.AE
+     */
+    public void setTimeIntervalForMessageRecall(int timeIntervalForMessageRecall) {
+        this.timeIntervalForMessageRecall = timeIntervalForMessageRecall;
+    }
+
+    public int getTimeIntervalForMessageRecall() {
+        return timeIntervalForMessageRecall;
     }
 }

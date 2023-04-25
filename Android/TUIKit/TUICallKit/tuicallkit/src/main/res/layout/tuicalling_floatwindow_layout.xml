@@ -19,7 +19,7 @@
             android:orientation="vertical"
             android:visibility="gone" />
 
-        <com.tencent.qcloud.tuicore.component.RoundCornerImageView
+        <com.tencent.qcloud.tuikit.tuicallkit.view.common.RoundCornerImageView
             android:id="@+id/img_float_avatar"
             android:layout_width="100dp"
             android:layout_height="100dp"

@@ -9,4 +9,7 @@
     <color name="tuicalling_color_green">#FF29CC85</color>
     <color name="tuicalling_color_bg_float_view">#FFBBBBBB</color>
     <color name="tuicalling_color_gray">#696969</color>
+
+    <color name="tuicallkit_record_text_red">#FF584C</color>
+    <color name="tuicallkit_record_edit">#0365F9</color>
 </resources>

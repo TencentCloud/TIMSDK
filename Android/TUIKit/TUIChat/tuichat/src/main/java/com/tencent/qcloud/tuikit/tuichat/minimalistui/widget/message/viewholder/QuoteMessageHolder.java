@@ -15,23 +15,23 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.tencent.qcloud.tuicore.TUIConfig;
-import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
-import com.tencent.qcloud.tuicore.util.ImageUtil;
-import com.tencent.qcloud.tuicore.util.ScreenUtil;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIReplyQuoteBean;
+import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
+import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
+import com.tencent.qcloud.tuikit.timcommon.util.ImageUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.QuoteMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.FaceReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.FileReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.ImageReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.MergeReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.SoundReplyQuoteBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TUIReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TextReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.VideoReplyQuoteBean;
-import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
@@ -64,7 +64,7 @@ public class QuoteMessageHolder extends TextMessageHolder {
 
     public QuoteMessageHolder(View itemView) {
         super(itemView);
-        quoteContentFrameLayout = itemView.findViewById(R.id.quote_content_fl);
+        quoteContentFrameLayout = itemView.findViewById(com.tencent.qcloud.tuikit.timcommon.R.id.quote_content_fl);
         quoteContentFrameLayout.setVisibility(View.VISIBLE);
         LayoutInflater.from(itemView.getContext()).inflate(R.layout.minimalist_quote_message_content_layout, quoteContentFrameLayout);
         senderNameTv = quoteContentFrameLayout.findViewById(R.id.sender_name_tv);

@@ -4,10 +4,11 @@ import android.content.Context;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIReplyQuoteBean;
+import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.TUIReplyQuoteView;
+import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.FaceReplyQuoteBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TUIReplyQuoteBean;
-import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
 
 public class FaceReplyQuoteView extends TUIReplyQuoteView {
     private final ImageView contentImage;

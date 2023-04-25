@@ -1,48 +1,45 @@
 package com.tencent.qcloud.tim.demo.login;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.qcloud.tim.demo.R;
+import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
-import com.tencent.qcloud.tuicore.component.TitleBarLayout;
-import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
-import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
-import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuicore.util.TUIBuild;
+import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
+import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
+import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ThemeSelectActivity extends BaseLightActivity {
     public static final String THEME = "language";
-    public static final String DEMO_THEME_CHANGED_ACTION = "demoThemeChangedAction";
 
-    private OnItemClickListener onItemClickListener;
     private TitleBarLayout titleBarLayout;
     private RecyclerView recyclerView;
-    private final List<ThemeBean> themeBeanList = new ArrayList<>();
-    private SelectAdapter adapter;
+    private ThemeSelectAdapter adapter;
     private int currentThemeId;
+
+    private static OnResultReturnListener onResultReturnListener;
+    private static WeakReference<ThemeSelectActivity> instance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        instance = new WeakReference<>(this);
         setContentView(R.layout.activity_theme_language_select);
         titleBarLayout = findViewById(R.id.demo_select_title_bar);
         recyclerView = findViewById(R.id.theme_recycler_view);
@@ -54,21 +51,24 @@ public class ThemeSelectActivity extends BaseLightActivity {
             }
         });
 
-        initData();
-
         currentThemeId = TUIThemeManager.getInstance().getCurrentTheme();
-        adapter = new SelectAdapter();
+        adapter = new ThemeSelectAdapter();
         adapter.setSelectedId(currentThemeId);
 
+        initData();
         int padding = ScreenUtil.dip2px(15.36f);
         recyclerView.setPadding(padding, padding, padding, padding);
         recyclerView.addItemDecoration(new GridDecoration(2, ScreenUtil.dip2px(11.52f), ScreenUtil.dip2px(9.6f)));
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setAdapter(adapter);
-        onItemClickListener = new OnItemClickListener() {
+
+        adapter.setOnItemClickListener(new ThemeSelectAdapter.OnItemClickListener() {
             @Override
             public void onClick(int themeId) {
                 if (currentThemeId == themeId) {
+                    if (onResultReturnListener != null) {
+                        onResultReturnListener.onReturn(currentThemeId);
+                    }
                     return;
                 } else {
                     currentThemeId = themeId;
@@ -78,28 +78,32 @@ public class ThemeSelectActivity extends BaseLightActivity {
                 TUIThemeManager.getInstance().changeTheme(ThemeSelectActivity.this, currentThemeId);
                 changeTitleBackground();
                 notifyThemeChanged();
+
+                if (onResultReturnListener != null) {
+                    onResultReturnListener.onReturn(currentThemeId);
+                }
             }
-        };
+        });
     }
 
     private void notifyThemeChanged() {
         Intent intent = new Intent();
-        intent.setAction(DEMO_THEME_CHANGED_ACTION);
+        intent.setAction(Constants.DEMO_THEME_CHANGED_ACTION);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
     private void changeTitleBackground() {
         int color = getResources().getColor(com.tencent.qcloud.tuicore.R.color.core_header_start_color_light);
-        int titleColor = getResources().getColor(com.tencent.qcloud.tuicore.R.color.core_title_bar_text_bg_light);
-        int backIconId = com.tencent.qcloud.tuicore.R.drawable.core_title_bar_back_light;
+        int titleColor = getResources().getColor(com.tencent.qcloud.tuikit.timcommon.R.color.core_title_bar_text_bg_light);
+        int backIconId = com.tencent.qcloud.tuikit.timcommon.R.drawable.core_title_bar_back_light;
         if (currentThemeId == TUIThemeManager.THEME_LIVELY) {
             color = getResources().getColor(com.tencent.qcloud.tuicore.R.color.core_header_start_color_lively);
-            titleColor = getResources().getColor(com.tencent.qcloud.tuicore.R.color.core_title_bar_text_bg_lively);
-            backIconId = com.tencent.qcloud.tuicore.R.drawable.core_title_bar_back_lively;
+            titleColor = getResources().getColor(com.tencent.qcloud.tuikit.timcommon.R.color.core_title_bar_text_bg_lively);
+            backIconId = com.tencent.qcloud.tuikit.timcommon.R.drawable.core_title_bar_back_lively;
         } else if (currentThemeId == TUIThemeManager.THEME_SERIOUS) {
             color = getResources().getColor(com.tencent.qcloud.tuicore.R.color.core_header_start_color_serious);
-            titleColor = getResources().getColor(com.tencent.qcloud.tuicore.R.color.core_title_bar_text_bg_serious);
-            backIconId = com.tencent.qcloud.tuicore.R.drawable.core_title_bar_back_serious;
+            titleColor = getResources().getColor(com.tencent.qcloud.tuikit.timcommon.R.color.core_title_bar_text_bg_serious);
+            backIconId = com.tencent.qcloud.tuikit.timcommon.R.drawable.core_title_bar_back_serious;
         }
         if (TUIBuild.getVersionInt() >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(color);
@@ -111,21 +115,23 @@ public class ThemeSelectActivity extends BaseLightActivity {
     }
 
     private void initData() {
-        ThemeBean lightBean = new ThemeBean();
+        ThemeSelectAdapter.ThemeBean lightBean = new ThemeSelectAdapter.ThemeBean();
         lightBean.id = TUIThemeManager.THEME_LIGHT;
         lightBean.name = getString(R.string.light_theme);
         lightBean.resId = R.drawable.demo_theme_select_bg_light;
-        ThemeBean livelyBean = new ThemeBean();
+        ThemeSelectAdapter.ThemeBean livelyBean = new ThemeSelectAdapter.ThemeBean();
         livelyBean.id = TUIThemeManager.THEME_LIVELY;
         livelyBean.name = getString(R.string.lively_theme);
         livelyBean.resId = R.drawable.demo_theme_select_bg_lively;
-        ThemeBean seriousBean = new ThemeBean();
+        ThemeSelectAdapter.ThemeBean seriousBean = new ThemeSelectAdapter.ThemeBean();
         seriousBean.id = TUIThemeManager.THEME_SERIOUS;
         seriousBean.name = getString(R.string.serious_theme);
         seriousBean.resId = R.drawable.demo_theme_select_bg_serious;
+        List<ThemeSelectAdapter.ThemeBean> themeBeanList = new ArrayList<>();
         themeBeanList.add(lightBean);
         themeBeanList.add(seriousBean);
         themeBeanList.add(livelyBean);
+        adapter.setData(themeBeanList);
     }
 
     public static void startSelectTheme(Activity activity) {
@@ -133,10 +139,23 @@ public class ThemeSelectActivity extends BaseLightActivity {
         activity.startActivity(intent);
     }
 
-    public static class ThemeBean {
-        int id;
-        String name;
-        int resId;
+    public static void startSelectTheme(Context context, OnResultReturnListener listener) {
+        Intent intent = new Intent(context, ThemeSelectActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+        onResultReturnListener = listener;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        onResultReturnListener = null;
+    }
+
+    public static void finishActivity() {
+        if (instance != null && instance.get() != null) {
+            instance.get().finish();
+        }
     }
 
     /**
@@ -169,65 +188,7 @@ public class ThemeSelectActivity extends BaseLightActivity {
         }
     }
 
-
-    class SelectAdapter extends RecyclerView.Adapter<SelectAdapter.SelectViewHolder> {
-        int selectedId = -1;
-
-        public void setSelectedId(int selectedId) {
-            this.selectedId = selectedId;
-        }
-
-        @NonNull
-        @Override
-        public SelectAdapter.SelectViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(ThemeSelectActivity.this).inflate(R.layout.layout_theme_select_item, parent, false);
-            return new SelectAdapter.SelectViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull SelectAdapter.SelectViewHolder holder, int position) {
-            ThemeBean themeBean = themeBeanList.get(position);
-            holder.content.setBackgroundResource(themeBean.resId);
-            holder.name.setText(themeBean.name);
-            if (selectedId == themeBean.id) {
-                holder.frame.setForeground(getResources().getDrawable(R.drawable.item_selected_border));
-                holder.selectedIcon.setBackgroundResource(R.drawable.check_box_selected);
-            } else {
-                holder.frame.setForeground(null);
-                holder.selectedIcon.setBackgroundResource(R.drawable.demo_checkbox_unselect_bg);
-            }
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onItemClickListener.onClick(themeBean.id);
-                }
-            });
-        }
-
-        @Override
-        public int getItemCount() {
-            return themeBeanList.size();
-        }
-
-        class SelectViewHolder extends RecyclerView.ViewHolder{
-            TextView name;
-            ImageView selectedIcon;
-            FrameLayout frame;
-            RelativeLayout content;
-            public SelectViewHolder(@NonNull View itemView) {
-                super(itemView);
-                name = itemView.findViewById(R.id.name);
-                selectedIcon = itemView.findViewById(R.id.selected_icon);
-                frame = itemView.findViewById(R.id.item_frame);
-                content = itemView.findViewById(R.id.item_content);
-                itemView.setClipToOutline(true);
-                frame.setClipToOutline(true);
-                content.setClipToOutline(true);
-            }
-        }
-    }
-
-    public interface OnItemClickListener {
-        void onClick(int themeId);
+    public interface OnResultReturnListener {
+        void onReturn(Object res);
     }
 }

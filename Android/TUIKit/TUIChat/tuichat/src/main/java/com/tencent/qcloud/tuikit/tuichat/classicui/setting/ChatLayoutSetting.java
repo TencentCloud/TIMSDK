@@ -7,15 +7,15 @@ import android.view.ViewParent;
 import android.widget.FrameLayout;
 
 import com.google.gson.Gson;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.CustomHelloMessage;
 import com.tencent.qcloud.tuikit.tuichat.bean.InputMoreActionUnit;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.ChatView;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.input.InputView;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MessageRecyclerView;
+import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 
 public class ChatLayoutSetting {
@@ -198,10 +198,10 @@ public class ChatLayoutSetting {
 
         // 增加一个欢迎提示富文本
         // Add a welcome prompt with rich text
-        if (TUIChatConfigs.getConfigs().getGeneralConfig().isEnableLink()) {
+        if (TUIChatConfigs.getConfigs().getGeneralConfig().isEnableWelcomeCustomMessage()) {
             InputMoreActionUnit unit = new InputMoreActionUnit() {};
             unit.setIconResId(R.drawable.custom);
-            unit.setTitleId(R.string.test_custom_action);
+            unit.setName(mContext.getString(R.string.test_custom_action));
             unit.setActionId(CustomHelloMessage.CUSTOM_HELLO_ACTION_ID);
             unit.setPriority(10);
             unit.setOnClickListener(unit.new OnActionClickListener() {

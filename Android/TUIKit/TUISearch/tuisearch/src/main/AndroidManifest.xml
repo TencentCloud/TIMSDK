@@ -3,12 +3,6 @@
     package="com.tencent.qcloud.tuikit.tuisearch">
 
     <application>
-        <provider
-            android:name=".TUISearchService"
-            android:authorities="${applicationId}.TUISearch.Init"
-            android:enabled="true"
-            android:exported="false" />
-
 
         <!-- **************** Classic UI Activity Start **************** -->
         <activity
@@ -22,6 +16,11 @@
         <activity
             android:name=".classicui.page.SearchMoreMsgListActivity"
             android:screenOrientation="portrait" />
+        <provider
+            android:name=".classicui.ClassicUIExtensionObserver"
+            android:authorities="${applicationId}.TUISearch.ClassicUI.Init"
+            android:enabled="true"
+            android:exported="false" />
         <!-- **************** Classic UI Activity End **************** -->
 
 
@@ -39,6 +38,11 @@
         <activity
             android:name=".minimalistui.page.SearchMoreMsgListMinimalistActivity"
             android:screenOrientation="portrait" />
+        <provider
+            android:name=".minimalistui.MinimalistUIExtensionObserver"
+            android:authorities="${applicationId}.TUISearch.Minimalist.Init"
+            android:enabled="true"
+            android:exported="false" />
         <!-- **************** Minimalist UI Activity End **************** -->
 
     </application>

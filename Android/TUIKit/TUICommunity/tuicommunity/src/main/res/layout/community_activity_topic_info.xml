@@ -8,7 +8,7 @@
     android:background="#F6F6F6"
     tools:context=".ui.page.TopicInfoActivity">
 
-    <com.tencent.qcloud.tuicore.component.TitleBarLayout
+    <com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout
         android:id="@+id/topic_info_title"
         app:title_bar_can_return="true"
         app:title_bar_middle_title="@string/community_topic_settings"

@@ -12,7 +12,7 @@ import android.view.TextureView;
 
 import androidx.annotation.Nullable;
 
-import com.tencent.qcloud.tuicore.util.ScreenUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.classicui.component.video.proxy.IPlayer;
 import com.tencent.qcloud.tuikit.tuichat.classicui.component.video.proxy.MediaPlayerProxy;
 

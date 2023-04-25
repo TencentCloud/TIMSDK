@@ -13,14 +13,15 @@ import com.tencent.qcloud.tuikit.tuicallkit.R;
 import com.tencent.qcloud.tuikit.tuicallkit.utils.ImageLoader;
 
 public class UserLayout extends RelativeLayout {
-    private TUIVideoView mTUIVideoView;
-    private ImageView    mImgUserAvatar;
-    private TextView     mTextUserName;
-    private ImageView    mImgAudioInput;
-    private ImageView    mImgLoading;
-    private boolean      mMoveAble;
-    private boolean      mMuteAudio         = false;
-    private boolean      mDisableAudioImage = false;
+    private RelativeLayout mLayoutImageHead;
+    private TUIVideoView   mTUIVideoView;
+    private ImageView      mImgUserAvatar;
+    private TextView       mTextUserName;
+    private ImageView      mImgAudioInput;
+    private ImageView      mImgLoading;
+    private boolean        mMoveAble;
+    private boolean        mMuteAudio         = false;
+    private boolean        mDisableAudioImage = false;
 
     public UserLayout(Context context) {
         this(context, null);
@@ -34,12 +35,12 @@ public class UserLayout extends RelativeLayout {
 
     private void initView() {
         LayoutInflater.from(getContext()).inflate(R.layout.tuicalling_group_user_layout, this, true);
+        mLayoutImageHead = findViewById(R.id.rl_image_head);
         mTUIVideoView = findViewById(R.id.tx_cloud_view);
         mImgUserAvatar = findViewById(R.id.img_head);
         mTextUserName = findViewById(R.id.tv_name);
         mImgAudioInput = findViewById(R.id.iv_audio_input);
-        mImgLoading = (ImageView) findViewById(R.id.img_loading);
-        ImageLoader.loadGifImage(getContext(), mImgLoading, R.drawable.tuicalling_loading);
+        mImgLoading = findViewById(R.id.img_loading);
     }
 
     public TUIVideoView getVideoView() {
@@ -62,18 +63,13 @@ public class UserLayout extends RelativeLayout {
     public void setVideoAvailable(boolean available) {
         if (available) {
             mTUIVideoView.setVisibility(VISIBLE);
-            mImgUserAvatar.setVisibility(GONE);
+            mLayoutImageHead.setVisibility(GONE);
             mTextUserName.setVisibility(VISIBLE);
         } else {
             mTUIVideoView.setVisibility(GONE);
-            mImgUserAvatar.setVisibility(VISIBLE);
+            mLayoutImageHead.setVisibility(VISIBLE);
             mTextUserName.setVisibility(VISIBLE);
         }
-    }
-
-    public void setRemoteIconAvailable(boolean available) {
-        mImgUserAvatar.setVisibility(available ? VISIBLE : GONE);
-        mTextUserName.setVisibility(available ? VISIBLE : GONE);
     }
 
     public void setUserName(String userName) {
@@ -101,6 +97,7 @@ public class UserLayout extends RelativeLayout {
 
     public void startLoading() {
         mImgLoading.setVisibility(VISIBLE);
+        ImageLoader.loadGifImage(getContext(), mImgLoading, R.drawable.tuicalling_loading);
     }
 
     public void stopLoading() {

@@ -12,8 +12,8 @@ import com.tencent.imsdk.v2.V2TIMUserStatus;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.SPUtils;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationConstants;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationService;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
@@ -104,7 +104,7 @@ public class ConversationPresenter {
             @Override
             public void onSyncServerFinish() {
                 TUIConversationLog.i(TAG, "onSyncServerFinish");
-                loadConversation(0);
+                loadMoreConversation();
                 ConversationPresenter.this.loadMarkedConversation();
             }
 
@@ -163,28 +163,6 @@ public class ConversationPresenter {
 
     public void setShowType(int showType) {
         this.showType = showType;
-    }
-
-    /**
-     * 加载会话信息
-     *
-     * @param nextSeq 分页拉取的游标，第一次默认取传 0，后续分页拉传上一次分页拉取成功回调里的 nextSeq
-     */
-    public void loadConversation(long nextSeq) {
-        TUIConversationLog.i(TAG, "loadConversation");
-        provider.loadConversation(nextSeq, GET_CONVERSATION_COUNT, new IUIKitCallback<List<ConversationInfo>>() {
-            @Override
-            public void onSuccess(List<ConversationInfo> conversationInfoList) {
-                onLoadConversationCompleted(conversationInfoList);
-            }
-
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
-                if (adapter != null) {
-                    adapter.onLoadingStateChanged(false);
-                }
-            }
-        });
     }
 
     public void loadMoreConversation() {
@@ -1056,6 +1034,19 @@ public class ConversationPresenter {
                 break;
             }
         }
+
+        if (conversationInfo == null) {
+            String conversationID;
+            if (isGroup) {
+                conversationID = TUIConstants.TUIConversation.CONVERSATION_GROUP_PREFIX + id;
+            } else {
+                conversationID = TUIConstants.TUIConversation.CONVERSATION_C2C_PREFIX + id;
+            }
+
+            conversationInfo = new ConversationInfo();
+            conversationInfo.setConversationId(conversationID);
+        }
+
         deleteConversation(conversationInfo);
     }
 

@@ -21,19 +21,19 @@ import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
-import com.tencent.qcloud.tuicore.component.LineControllerView;
-import com.tencent.qcloud.tuicore.component.TitleBarLayout;
-import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
-import com.tencent.qcloud.tuicore.component.activities.ImageSelectActivity;
-import com.tencent.qcloud.tuicore.component.dialog.TUIKitDialog;
-import com.tencent.qcloud.tuicore.component.gatherimage.SynthesizedImageView;
-import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
-import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
-import com.tencent.qcloud.tuicore.component.popupcard.PopupInputCard;
-import com.tencent.qcloud.tuicore.util.ImageUtil;
-import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.LineControllerView;
+import com.tencent.qcloud.tuikit.timcommon.component.PopupInputCard;
+import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
+import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
+import com.tencent.qcloud.tuikit.timcommon.component.activities.ImageSelectActivity;
+import com.tencent.qcloud.tuikit.timcommon.component.dialog.TUIKitDialog;
+import com.tencent.qcloud.tuikit.timcommon.component.gatherimage.SynthesizedImageView;
+import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.timcommon.util.ImageUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ChatInfo;
@@ -45,7 +45,6 @@ import com.tencent.qcloud.tuikit.tuicontact.util.TUIContactLog;
 
 import java.util.ArrayList;
 import java.util.List;
-
 public class CreateGroupActivity extends BaseLightActivity implements View.OnClickListener {
     private static final String TAG = CreateGroupActivity.class.getSimpleName();
 
@@ -234,7 +233,7 @@ public class CreateGroupActivity extends BaseLightActivity implements View.OnCli
             Intent intent = new Intent(CreateGroupActivity.this, ImageSelectActivity.class);
             intent.putExtra(ImageSelectActivity.TITLE, getString(R.string.group_choose_avatar));
             intent.putExtra(ImageSelectActivity.SPAN_COUNT, 4);
-            intent.putExtra(ImageSelectActivity.PLACEHOLDER, com.tencent.qcloud.tuicore.R.drawable.core_default_user_icon_light);
+            intent.putExtra(ImageSelectActivity.PLACEHOLDER, com.tencent.qcloud.tuikit.timcommon.R.drawable.core_default_user_icon_light);
             intent.putExtra(ImageSelectActivity.ITEM_WIDTH, ScreenUtil.dip2px(77));
             intent.putExtra(ImageSelectActivity.ITEM_HEIGHT, ScreenUtil.dip2px(77));
             intent.putExtra(ImageSelectActivity.DATA, faceList);

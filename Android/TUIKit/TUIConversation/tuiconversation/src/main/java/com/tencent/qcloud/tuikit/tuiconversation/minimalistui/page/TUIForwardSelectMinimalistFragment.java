@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
-import com.tencent.qcloud.tuicore.component.fragments.BaseFragment;
+import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationConstants;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;

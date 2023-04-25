@@ -60,6 +60,7 @@
     <string name="remove_fail_tip">移除成员失败</string>
     <string name="manager">管理</string>
     <string name="group_manager">群管理</string>
+    <string name="invite">邀请</string>
 
     <string name="forbid_join">禁止加群</string>
     <string name="manager_judge">管理员审批</string>
@@ -67,6 +68,9 @@
 
     <string name="modify_group_name">修改群名称</string>
     <string name="group_join_type">加群方式</string>
+
+    <string name="group_validation_message">验证消息</string>
+    <string name="group_group_application_detail_title">详情</string>
 
     <string name="accept">同意</string>
     <string name="refuse">拒绝</string>

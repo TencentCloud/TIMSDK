@@ -7,8 +7,8 @@ import com.tencent.qcloud.tuikit.tuigroup.bean.GroupApplyInfo;
 import java.util.List;
 
 public interface IGroupApplyLayout {
-    void onGroupApplyInfoListChanged(List<GroupApplyInfo> dataSource);
-    void onDataSetChanged();
-    Context getContext();
+    default void onGroupApplyInfoListChanged(List<GroupApplyInfo> dataSource) {}
+    default void onDataSetChanged() {}
+    default Context getContext() {return null;}
 
 }

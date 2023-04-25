@@ -6,7 +6,7 @@
     android:paddingTop="8dp"
     android:paddingBottom="8dp">
 
-    <com.tencent.qcloud.tuicore.component.RoundCornerImageView
+    <com.tencent.qcloud.tuikit.timcommon.component.RoundCornerImageView
         android:id="@+id/user_face"
         android:layout_width="40dp"
         android:layout_height="40dp"

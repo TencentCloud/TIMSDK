@@ -5,7 +5,7 @@
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
-    <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+    <com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView
         android:id="@+id/group_member_icon"
         android:layout_width="@dimen/community_profile_member_item_width"
         android:layout_height="@dimen/community_profile_member_item_width"

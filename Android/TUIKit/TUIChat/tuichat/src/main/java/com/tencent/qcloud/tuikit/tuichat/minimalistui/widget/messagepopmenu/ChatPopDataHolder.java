@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 
-import com.tencent.qcloud.tuicore.component.RoundCornerImageView;
+import com.tencent.qcloud.tuikit.timcommon.component.RoundCornerImageView;
 
 import java.lang.ref.WeakReference;
 import java.util.List;

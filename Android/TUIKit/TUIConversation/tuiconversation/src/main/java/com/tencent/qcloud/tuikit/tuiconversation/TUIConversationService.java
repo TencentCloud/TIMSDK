@@ -13,7 +13,7 @@ import com.tencent.qcloud.tuicore.ServiceInitializer;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.commonutil.ConversationUtils;
 import com.tencent.qcloud.tuikit.tuiconversation.commonutil.TUIConversationLog;
@@ -300,10 +300,6 @@ public class TUIConversationService extends ServiceInitializer implements ITUICo
                 for(ConversationEventListener conversationEventObserver : conversationEventObserverList) {
                     conversationEventObserver.updateTotalUnreadMessageCount(totalUnreadCount);
                 }
-
-                HashMap<String, Object> param = new HashMap<>();
-                param.put(TUIConstants.TUIConversation.TOTAL_UNREAD_COUNT, totalUnreadCount);
-                TUICore.notifyEvent(TUIConstants.TUIConversation.EVENT_UNREAD, TUIConstants.TUIConversation.EVENT_SUB_KEY_UNREAD_CHANGED, param);
             }
         });
 
@@ -364,7 +360,4 @@ public class TUIConversationService extends ServiceInitializer implements ITUICo
         return null;
     }
 
-    public void addMessageListener() {
-
-    }
 }

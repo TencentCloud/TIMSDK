@@ -1,5 +1,7 @@
 package com.tencent.qcloud.tuikit.tuichat.classicui.component.camera.view;
 
+import static android.graphics.Bitmap.createBitmap;
+
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
@@ -22,8 +24,8 @@ import android.view.SurfaceHolder;
 import android.widget.ImageView;
 
 import com.tencent.qcloud.tuicore.TUIConfig;
-import com.tencent.qcloud.tuicore.util.FileUtil;
-import com.tencent.qcloud.tuicore.util.ScreenUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.classicui.component.camera.listener.ErrorListener;
 import com.tencent.qcloud.tuikit.tuichat.util.AngleUtil;
 import com.tencent.qcloud.tuikit.tuichat.util.CameraParamUtil;
@@ -38,8 +40,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
-import static android.graphics.Bitmap.createBitmap;
 
 public class CameraInterface implements Camera.PreviewCallback {
 

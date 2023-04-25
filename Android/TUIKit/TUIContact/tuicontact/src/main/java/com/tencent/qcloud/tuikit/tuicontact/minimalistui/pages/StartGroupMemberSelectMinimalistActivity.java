@@ -6,24 +6,21 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import com.tencent.qcloud.tuicore.TUIConstants;
-import com.tencent.qcloud.tuicore.component.RoundCornerImageView;
-import com.tencent.qcloud.tuicore.component.TitleBarLayout;
-import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
-import com.tencent.qcloud.tuicore.component.activities.BaseMinimalistLightActivity;
-import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
-import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
-import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.RoundCornerImageView;
+import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
+import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseMinimalistLightActivity;
+import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
+import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
@@ -84,15 +81,18 @@ public class StartGroupMemberSelectMinimalistActivity extends BaseMinimalistLigh
     private void init() {
         mMembers.clear();
 
-        String groupId = getIntent().getStringExtra(TUIContactConstants.Group.GROUP_ID);
+        String groupId = getIntent().getStringExtra(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.GROUP_ID);
         if (TextUtils.isEmpty(groupId)) {
             groupId = getIntent().getStringExtra(TUIConstants.TUIGroup.GROUP_ID);
         }
-        boolean isSelectFriends = getIntent().getBooleanExtra(TUIContactConstants.Selection.SELECT_FRIENDS, false);
-        boolean isSelectForCall = getIntent().getBooleanExtra(TUIContactConstants.Selection.SELECT_FOR_CALL, false);
+        boolean isSelectFriends = getIntent().getBooleanExtra(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.SELECT_FRIENDS, false);
+        boolean isSelectForCall = getIntent().getBooleanExtra(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.SELECT_FOR_CALL, false);
         String title = getIntent().getStringExtra(TUIContactConstants.Selection.TITLE);
-        limit = getIntent().getIntExtra(TUIContactConstants.Selection.LIMIT, Integer.MAX_VALUE);
-        alreadySelectedList = getIntent().getStringArrayListExtra(TUIContactConstants.Selection.SELECTED_LIST);
+        if (TextUtils.isEmpty(title)) {
+            title =getIntent().getStringExtra(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.PAGE_TITLE);
+        }
+        limit = getIntent().getIntExtra(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.MEMBER_LIMIT, Integer.MAX_VALUE);
+        alreadySelectedList = getIntent().getStringArrayListExtra(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.SELECTED_LIST);
         mTitleBar = findViewById(R.id.group_create_title_bar);
         mTitleBar.setTitle(getResources().getString(com.tencent.qcloud.tuicore.R.string.sure), ITitleBarLayout.Position.RIGHT);
         if (!TextUtils.isEmpty(title)) {
@@ -141,7 +141,9 @@ public class StartGroupMemberSelectMinimalistActivity extends BaseMinimalistLigh
 
                         Intent i = new Intent();
                         i.putStringArrayListExtra(TUIContactConstants.Selection.USER_NAMECARD_SELECT, new ArrayList<String>(Arrays.asList(getString(R.string.at_all))));
+                        i.putStringArrayListExtra(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.USER_NAME_CARD_SELECT, new ArrayList<String>(Arrays.asList(getString(R.string.at_all))));
                         i.putStringArrayListExtra(TUIContactConstants.Selection.USER_ID_SELECT, new ArrayList<String>(Arrays.asList(TUIContactConstants.Selection.SELECT_ALL)));
+                        i.putStringArrayListExtra(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.USER_ID_SELECT, new ArrayList<String>(Arrays.asList(TUIContactConstants.Selection.SELECT_ALL)));
                         setResult(3, i);
 
                         finish();
@@ -190,8 +192,11 @@ public class StartGroupMemberSelectMinimalistActivity extends BaseMinimalistLigh
             friendIdList.add(memberInfo.getAccount());
         }
         i.putExtra(TUIContactConstants.Selection.LIST, (Serializable) friendIdList);
+        i.putExtra(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.DATA_LIST, (Serializable) friendIdList);
         i.putStringArrayListExtra(TUIContactConstants.Selection.USER_NAMECARD_SELECT, getMembersNameCard());
+        i.putStringArrayListExtra(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.USER_NAME_CARD_SELECT, getMembersNameCard());
         i.putStringArrayListExtra(TUIContactConstants.Selection.USER_ID_SELECT, getMembersUserId());
+        i.putStringArrayListExtra(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.USER_ID_SELECT, getMembersUserId());
         i.putExtras(getIntent());
         setResult(3, i);
 

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">腾讯云IM</string>
+    <string name="demo_app_name">腾讯云IM</string>
 
     <string name="test_custom_message">查看详情>></string>
 
@@ -37,11 +37,14 @@
     <string name="modify_user_icon">头像</string>
     <string name="modify_nick_name">昵称</string>
     <string name="add_rule">加我为好友时</string>
+    <string name="translation_target_language">将消息翻译为</string>
     <string name="allow_type_allow_any">允许任何人</string>
     <string name="allow_type_deny_any">拒绝任何人</string>
     <string name="allow_type_need_confirm">需要验证</string>
     <string name="exit">退出登录</string>
     <string name="about_im">关于腾讯云·IM</string>
+    <string name="appkit_show_recent_calls">显示通话记录</string>
+    <string name="appkit_recent_calls_tab_name">通话记录</string>
     <string name="modify_birthday">生日</string>
     <string name="modify_gender">性别</string>
     <string name="modify_signature">个性签名</string>
@@ -207,4 +210,24 @@
 
     <string name="chat_security_warning">【安全提示】本 APP 仅用于体验腾讯云即时通信 IM 产品功能，不可用于业务洽谈与拓展。请勿轻信汇款、中奖等涉及钱款的信息，勿轻易拨打陌生电话，谨防上当受骗。</string>
     <string name="chat_security_warning_report">点此举报</string>
+
+
+    <string name="change_theme">更换皮肤</string>
+    <string name="change_style">选择风格</string>
+    <string name="app_title">即时通信</string>
+    <string name="app_title_content">欢迎使用本 APP 体验即时通信 IM 产品服务</string>
+    <string name="button_enter">进入 IM</string>
+    <string name="demo_style_sub_title">IM专属风格切换</string>
+    <string name="demo_ui_title">选择皮肤</string>
+    <string name="demo_ui_sub_title">IM专属皮肤切换</string>
+    <string name="im_about_detail">欢迎使用本 APP 体验即时通信 IM 产品服务，如发送文字/表情/富媒体消息、消息回复、表情回应、消息阅读状态、好友关系链等功能。同时，我们为您默认提供了3个不会回复的机器人好友，您可直接发起单聊、群聊会话，体验群管理等功能。</string>
+    <string name="im_about_title_time">1分钟</string>
+    <string name="im_about_subtitle_time">改2行代码，1分钟跑通 Demo</string>
+    <string name="im_about_title_custom">10000+</string>
+    <string name="im_about_subtitle_custom">每月服务客户数超过10000家</string>
+    <string name="im_about_title_success">99.99%</string>
+    <string name="im_about_subtitle_success">消息收发成功率、服务可靠性高于99.99%</string>
+    <string name="im_about_title_mau">10亿+</string>
+    <string name="im_about_subtitle_mau">每月活跃用户数超过10亿</string>
+    <string name="im_about_known">已了解</string>
 </resources>

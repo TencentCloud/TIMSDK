@@ -20,8 +20,6 @@
 
     <string name="chat_message_detail">消息详情</string>
 
-    <string name="translation_support">由腾讯云 IM 提供翻译支持</string>
-    <string name="translation_fail">翻译失败</string>
     <!-- 消息转发 -->
 
     <string name="titlebar_back">返回</string>
@@ -76,15 +74,10 @@
     <string name="audio_extra">[语音]</string>
     <string name="file_extra">[文件]</string>
     <string name="location_extra">[地理位置]</string>
-    <string name="group_note_extra">[群接龙]</string>
-    <string name="group_poll_extra">[投票]</string>
 
     <string name="locate_origin_msg_failed_tip">无法定位到原消息</string>
 
     <string name="forward_extra">[聊天记录]</string>
-    <string name="revoke_tips_you">您撤回了一条消息</string>
-    <string name="revoke_tips">撤回了一条消息</string>
-    <string name="revoke_tips_other">对方撤回了一条消息</string>
 
     <string name="create_group">创建群组</string>
     <string name="etc">等</string>
@@ -104,6 +97,7 @@
     <string name="banned">被禁言</string>
     <string name="cancle_banned">被取消禁言</string>
     <string name="modify_group_add_opt">修改加群方式为</string>
+    <string name="modify_group_invite_opt">修改邀请进群方式为</string>
     <string name="group_add_opt_auto_approval">自动审批</string>
     <string name="group_add_opt_admin_approve">管理员审批</string>
     <string name="group_add_opt_join_disable">禁止加群</string>
@@ -120,11 +114,8 @@
     <string name="play_error_tip">语音文件已损坏或不存在</string>
     <string name="input_tip">没有输入昵称，请重新填写</string>
 
-    <string name="has_read">已读</string>
+
     <string name="delivered">已送达</string>
-    <string name="unread">未读</string>
-    <string name="has_all_read">全部已读</string>
-    <string name="someone_has_read">%d人已读</string>
     <string name="someone_unread">%d人未读</string>
     <string name="someone_have_read">%d人已读</string>
 
@@ -172,8 +163,7 @@
     <string name="live_group_user_live">%s的直播</string>
     <string name="live_group_live">群直播</string>
 
-    <string name="chat_time_today">今天</string>
-    
+
     <string name="start_group_call">发起群通话</string>
     <string name="start_call">发起通话</string>
     <string name="cancle_group_call">取消群通话</string>
@@ -228,7 +218,6 @@
     <string name="chat_buying_guidelines">价格说明</string>
     <string name="chat_im_flagship_edition_update_tip">%s功能为IM旗舰版功能，购买旗舰版套餐包后可使用，详见价格说明。</string>
 
-    <string name="chat_reply_num">%d条回复</string>
     <string name="chat_reply_detail">回复详情</string>
 
     <string name="chat_not_read">尚未阅读</string>

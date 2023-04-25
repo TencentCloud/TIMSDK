@@ -8,8 +8,7 @@ public class InputMoreActionUnit {
     private ChatInfo chatInfo;
 
     private int iconResId;
-
-    private int titleId;
+    private String name;
 
     private int actionId;
     
@@ -60,12 +59,12 @@ public class InputMoreActionUnit {
         this.iconResId = iconResId;
     }
 
-    public int getTitleId() {
-        return titleId;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setTitleId(int titleId) {
-        this.titleId = titleId;
+    public String getName() {
+        return name;
     }
 
     public int getActionId() {

@@ -42,7 +42,7 @@ public class ServiceInitializer extends ContentProvider {
     }
 
 /////////////////////////////////////////////////////////////////////////////////
-//             The following methods do not need to be overridden                      //
+//             The following methods do not need to be overridden              //
 /////////////////////////////////////////////////////////////////////////////////
 
     private static Context appContext;

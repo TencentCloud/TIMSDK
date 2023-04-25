@@ -10,15 +10,15 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.tencent.qcloud.tuicore.util.ScreenUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.swipe.RecyclerSwipeAdapter;
+import com.tencent.qcloud.tuikit.timcommon.component.swipe.SimpleSwipeListener;
+import com.tencent.qcloud.tuikit.timcommon.component.swipe.SwipeLayout;
+import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationService;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
-import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.interfaces.OnConversationAdapterListener;
 import com.tencent.qcloud.tuikit.tuiconversation.interfaces.IConversationListAdapter;
-import com.tencent.qcloud.tuicore.component.swipe.RecyclerSwipeAdapter;
-import com.tencent.qcloud.tuicore.component.swipe.SimpleSwipeListener;
-import com.tencent.qcloud.tuicore.component.swipe.SwipeLayout;
+import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.interfaces.OnConversationAdapterListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -234,7 +234,6 @@ public class ConversationListAdapter extends RecyclerSwipeAdapter<RecyclerView.V
                             @Override
                             public void onClick(View view) {
                                 if (mOnConversationAdapterListener != null) {
-                                    mItemManger.removeShownLayouts(viewHolder.swipeLayout);
                                     mOnConversationAdapterListener.onMarkConversationHidden(view, conversationInfo);
                                 }
                                 mItemManger.closeAllSwipeItems();

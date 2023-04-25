@@ -1,7 +1,6 @@
 package com.tencent.qcloud.tuikit.tuiconversation.model;
 
 import android.text.TextUtils;
-import android.view.View;
 
 import com.tencent.imsdk.BaseConstants;
 import com.tencent.imsdk.v2.V2TIMCallback;
@@ -16,15 +15,14 @@ import com.tencent.imsdk.v2.V2TIMUserStatus;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tuicore.BuildConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
-import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationService;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
-import com.tencent.qcloud.tuikit.tuiconversation.config.TUIConversationConfig;
 import com.tencent.qcloud.tuikit.tuiconversation.commonutil.ConversationUtils;
 import com.tencent.qcloud.tuikit.tuiconversation.commonutil.TUIConversationLog;
 import com.tencent.qcloud.tuikit.tuiconversation.commonutil.TUIConversationUtils;
+import com.tencent.qcloud.tuikit.tuiconversation.config.TUIConversationConfig;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,12 +40,12 @@ public class ConversationProvider {
     private HashMap<String, V2TIMConversation> markUnreadMap = new HashMap<>();
 
     public void loadConversation(long startSeq, int loadCount, final IUIKitCallback<List<ConversationInfo>> callBack) {
-        isFinished = false;
-        nextLoadSeq = 0;
+        TUIConversationLog.i(TAG, "loadConversation startSeq " + startSeq + " loadCount " + loadCount);
+
         V2TIMManager.getConversationManager().getConversationList(startSeq, loadCount, new V2TIMValueCallback<V2TIMConversationResult>() {
             @Override
             public void onError(int code, String desc) {
-                TUIConversationLog.v(TAG, "loadConversation getConversationList error, code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
+                TUIConversationLog.e(TAG, "loadConversation getConversationList error, code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
                 TUIConversationUtils.callbackOnError(callBack, TAG, code, desc);
             }
 
@@ -55,6 +53,10 @@ public class ConversationProvider {
             public void onSuccess(V2TIMConversationResult v2TIMConversationResult) {
                 List<V2TIMConversation> v2TIMConversationList = v2TIMConversationResult.getConversationList();
                 List<ConversationInfo> conversationInfoList = ConversationUtils.convertV2TIMConversationList(v2TIMConversationList);
+                TUIConversationLog.i(TAG, "loadConversation getConversationList success size " + conversationInfoList.size() + " nextSeq " + v2TIMConversationResult.getNextSeq() + " isFinished " + v2TIMConversationResult.isFinished());
+                if (!conversationInfoList.isEmpty()) {
+                    TUIConversationLog.i(TAG, "loadConversation getConversationList success first " + conversationInfoList.get(0) + " last " + conversationInfoList.get(conversationInfoList.size() - 1));
+                }
                 isFinished = v2TIMConversationResult.isFinished();
                 nextLoadSeq = v2TIMConversationResult.getNextSeq();
                 TUIConversationUtils.callbackOnSuccess(callBack, conversationInfoList);

@@ -43,6 +43,10 @@ public class PrivateConstants {
     public static long fcmPushBussinessId = 0;
     // 海外证书 ID，需要在海外控制台配置，不使用不用填写  // The overseas certificate ID, which needs to be configured on the overseas console, does not need to be filled in if it is not used.
     public static long fcmPushBussinessIdAbroad = 0;
+    // FCM 通道预创建通知栏的 channel ID    // The channel ID of the FCM channel pre-created notification bar
+    public static String fcmPushChannelId = "";
+    // FCM 通道预创建通知栏的推送铃音名称，raw 目录下不需要后缀名。 //The name of the push ringtone for the pre-created notification bar of the FCM channel. The suffix is not required in the raw directory
+    public static String fcmPushChannelSoundName = "";
     /****** google end ******/
 
     /****** oppo begin ******/
@@ -50,7 +54,7 @@ public class PrivateConstants {
     public static long oppoPushBussinessId = 0;
     // 海外证书 ID，需要在海外控制台配置，不使用不用填写  // The overseas certificate ID, which needs to be configured on the overseas console, does not need to be filled in if it is not used.
     public static long oppoPushBussinessIdAbroad = 0;
-    // oppo开放平台分配的应用APPID及APPKEY  // APPID APPKEY, Allocated by OPPO Open Platform
+    // oppo开放平台分配的应用 AppKey 和 AppSecret // Allocated by OPPO Open Platform
     public static String oppoPushAppKey = "";
     public static String oppoPushAppSecret = "";
     /****** oppo end ******/

@@ -29,22 +29,40 @@
     <string name="tuicalling_switch_camera_hint">Turn on your camera first</string>
     <string name="tuicalling_switch_audio_call">Switch to Voice Call</string>
     <string name="tuicalling_btn_cancel">Cancel</string>
-    <string name="tuicalling_tips_start_audio">Please turn on the microphone permissions first</string>
     <string name="tuicalling_video_call">Video Call</string>
     <string name="tuicalling_audio_call">Voice Call</string>
     <string name="tuicalling_user_kicked_offline">You have been kicked off the line. Please log in again!</string>
     <string name="tuicalling_user_sig_expired">Your user signature information has expired</string>
     <string name="tuicalling_user_exceed_limit">TUICalling currently supports call with up to 9 people.For larger conference calls,try using TUIRoom</string>
     <string name="tuicalling_wait_resonse">Waiting</string>
-    <string name="tuicalling_is_calling">Unable to restart the call</string>
-    <string name="tuicalling_tips_start_camera">Please turn on the camera permission first</string>
-    <string name="tuicalling_permission_mic_reason_title">%s applies for access to the microphone</string>
+
+    <string name="tuicalling_permission_camera">Camera</string>
+    <string name="tuicalling_permission_microphone">Microphone</string>
+    <string name="tuicalling_permission_bluetooth">Bluetooth</string>
+    <string name="tuicalling_permission_separator">,</string>
+    <string name="tuicalling_permission_tips">Please turn on the %s permission first</string>
+    <string name="tuicalling_permission_title">%s applies for access to the %s</string>
     <string name="tuicalling_permission_mic_reason">Needs access to your microphone, and it can be used for functions such as Audio/Video Call, Group Audio/Video Call etc.</string>
-    <string name="tuicalling_permission_camera_reason_title">%s applies for camera permission</string>
     <string name="tuicalling_permission_camera_reason">Needs access to your camera, and it can be used for functions such as Video Call, Group Video Call etc. For beauty filters to work, we will collect the facial information captured by your camera in real time to detect your facial features.</string>
+    <string name="tuicalling_permission_bluetooth_reason">Needs access to your bluetooth，and it can be user for bluetooth headset.</string>
+
     <string name="tuicalling_package_not_purchased">You do not have TUICallKit package, please open the free experience in the console or purchase the official package</string>
     <string name="tuicalling_package_not_support">The package you purchased does not support this ability</string>
     <string name="tuicalling_status_is_not_accept">You can only use this function after you accept the call</string>
     <string name="tuicalling_groupid_is_empty">groupId is empty</string>
     <string name="tuicalling_have_a_new_call">You have a new call</string>
+
+    <string name="tuicallkit_record_call_title">Recent Calls</string>
+    <string name="tuicallkit_record_call_delete">delete</string>
+    <string name="tuicallkit_record_dialog_message">Clear All Call History</string>
+    <string name="tuicallkit_record_dialog_cancel">Cancel</string>
+    <string name="tuicallkit_record_tab_title_all">All</string>
+    <string name="tuicallkit_record_tab_title_miss">Missed</string>
+    <string name="tuicallkit_record_done">Done</string>
+    <string name="tuicallkit_record_clear">Clear</string>
+    <string name="tuicallkit_group_recall_unsupport">Multiple call records do not support recalls</string>
+
+    <string name="tuicallkit_group_title_add_user">Add User</string>
+    <string name="tuicallkit_group_hint_you">(you)</string>
+    <string name="tuicallkit_group_btn_ok">Confirm</string>
 </resources>

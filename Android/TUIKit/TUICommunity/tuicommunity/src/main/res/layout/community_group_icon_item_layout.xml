@@ -5,7 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <com.tencent.qcloud.tuicore.component.RoundCornerImageView
+    <com.tencent.qcloud.tuikit.timcommon.component.RoundCornerImageView
         android:id="@+id/face_url"
         android:layout_width="48dp"
         android:layout_height="48dp"
@@ -19,7 +19,7 @@
         android:layout_height="48dp"
         android:background="@drawable/selected_border"/>
 
-    <com.tencent.qcloud.tuicore.component.UnreadCountTextView
+    <com.tencent.qcloud.tuikit.timcommon.component.UnreadCountTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/face_url"

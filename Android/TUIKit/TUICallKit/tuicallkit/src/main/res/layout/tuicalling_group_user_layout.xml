@@ -11,13 +11,20 @@
         android:layout_height="match_parent"
         android:visibility="gone" />
 
-    <com.tencent.qcloud.tuicore.component.RoundCornerImageView
-        android:id="@+id/img_head"
+    <RelativeLayout
+        android:id="@+id/rl_image_head"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal"
-        android:scaleType="fitXY"
-        android:src="@drawable/tuicalling_ic_avatar" />
+        android:background="@color/tuicalling_color_video_background"
+        android:gravity="center">
+
+        <com.tencent.qcloud.tuikit.tuicallkit.view.common.RoundCornerImageView
+            android:id="@+id/img_head"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:scaleType="fitXY" />
+    </RelativeLayout>
 
     <ImageView
         android:id="@+id/img_loading"

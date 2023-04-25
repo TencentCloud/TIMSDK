@@ -7,18 +7,20 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.qcloud.tim.demo.bean.UserInfo;
+import com.tencent.qcloud.tim.demo.config.AppConfig;
+import com.tencent.qcloud.tim.demo.config.InitSetting;
 import com.tencent.qcloud.tim.demo.login.LoginForDevActivity;
 import com.tencent.qcloud.tim.demo.main.MainActivity;
 import com.tencent.qcloud.tim.demo.main.MainMinimalistActivity;
+import com.tencent.qcloud.tim.demo.signature.GenerateTestUserSig;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.demo.utils.TUIUtils;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUILogin;
-import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuicore.interfaces.TUICallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
 
 public class SplashActivity extends BaseLightActivity {
 
@@ -45,7 +47,7 @@ public class SplashActivity extends BaseLightActivity {
     private void handleData() {
         UserInfo userInfo = UserInfo.getInstance();
         if (userInfo != null && userInfo.isAutoLogin()) {
-            DemoApplication.instance().init(0);
+            AppConfig.DEMO_SDK_APPID = GenerateTestUserSig.SDKAPPID;
             login();
         } else {
             startLogin();
@@ -54,7 +56,7 @@ public class SplashActivity extends BaseLightActivity {
 
     private void login() {
         UserInfo userInfo = UserInfo.getInstance();
-        TUILogin.login(DemoApplication.instance(), DemoApplication.instance().getSdkAppId(), userInfo.getUserId(), userInfo.getUserSig(), new TUICallback() {
+        TUILogin.login(DemoApplication.instance(), AppConfig.DEMO_SDK_APPID, userInfo.getUserId(), userInfo.getUserSig(), TUIUtils.getLoginConfig(), new TUICallback() {
             @Override
             public void onError(final int code, final String desc) {
                 runOnUiThread(new Runnable() {
@@ -69,7 +71,7 @@ public class SplashActivity extends BaseLightActivity {
             @Override
             public void onSuccess() {
                 startMain();
-                DemoApplication.instance().registerPushManually();
+                TIMAppService.getInstance().registerPushManually();
             }
         });
     }
@@ -85,7 +87,7 @@ public class SplashActivity extends BaseLightActivity {
         DemoLog.i(TAG, "MainActivity" );
 
         Intent intent;
-        if (DemoApplication.tuikit_demo_style == 0) {
+        if (AppConfig.DEMO_UI_STYLE == 0) {
             intent = new Intent(SplashActivity.this, MainActivity.class);
         } else {
             intent = new Intent(SplashActivity.this, MainMinimalistActivity.class);

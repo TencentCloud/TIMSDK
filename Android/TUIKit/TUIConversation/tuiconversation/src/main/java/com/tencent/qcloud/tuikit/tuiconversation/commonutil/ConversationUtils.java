@@ -9,8 +9,8 @@ import com.tencent.imsdk.v2.V2TIMGroupAtInfo;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.TUIConfig;
-import com.tencent.qcloud.tuicore.component.action.PopDialogAdapter;
-import com.tencent.qcloud.tuicore.util.DateTimeUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.action.PopDialogAdapter;
+import com.tencent.qcloud.tuikit.timcommon.util.DateTimeUtil;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationService;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
@@ -68,17 +68,19 @@ public class ConversationUtils {
         switch (atInfoType){
             case V2TIMGroupAtInfo.TIM_AT_ME:
                 info.setAtInfoText(TUIConversationService.getAppContext().getString(R.string.ui_at_me));
+                info.setAtType(ConversationInfo.AT_TYPE_AT_ME);
                 break;
             case V2TIMGroupAtInfo.TIM_AT_ALL:
                 info.setAtInfoText(TUIConversationService.getAppContext().getString(R.string.ui_at_all));
+                info.setAtType(ConversationInfo.AT_TYPE_AT_ALL);
                 break;
             case V2TIMGroupAtInfo.TIM_AT_ALL_AT_ME:
                 info.setAtInfoText(TUIConversationService.getAppContext().getString(R.string.ui_at_all_me));
+                info.setAtType(ConversationInfo.AT_TYPE_AT_ALL_AND_ME);
                 break;
             default:
                 info.setAtInfoText("");
                 break;
-
         }
 
         info.setTitle(conversation.getShowName());

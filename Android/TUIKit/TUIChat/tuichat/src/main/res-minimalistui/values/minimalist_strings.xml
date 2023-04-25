@@ -6,4 +6,6 @@
     <string name="chat_tap_to_remove">Tap to remove</string>
     <string name="chat_forward_checked_num">%d Selected</string>
     <string name="chat_minimalist_pop_more">More</string>
+    <string name="chat_contact_profile_message">Message</string>
+
 </resources>

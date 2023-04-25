@@ -19,7 +19,7 @@ public class Constants {
     public static final String DEMO_SP_KEY_MESSAGE_READ_STATUS = "MessageReadStatus";
     public static final String DEMO_SP_KEY_USER_STATUS = "user_status";
 
-    public static final String AVATAR_FACE_URL = "https://im.sdk.cloud.tencent.cn/download/tuikit-resource/avatar/avatar_%s.png";
+    public static final String AVATAR_FACE_URL = "https://im.sdk.qcloud.com/download/tuikit-resource/avatar/avatar_%s.png";
     public static final int AVATAR_FACE_COUNT = 26;
 
     public static final String IM_PRIVACY_PROTECTION = "https://privacy.qq.com/document/preview/1cfe904fb7004b8ab1193a55857f7272";
@@ -32,30 +32,8 @@ public class Constants {
     public static final String FLAVOR_INTERNATIONAL = "international";
     public static final String FLAVOR_LOCAL = "local";
 
-    // Public
-    public static final int TEST_ENVIRONMENT_PUBLIC = 0;
-    // Public test
-    public static final int TEST_ENVIRONMENT_PUBLIC_TEST = 1;
-    // Private
-    public static final int TEST_ENVIRONMENT_PRIVATE = 2;
-    // Private test
-    public static final int TEST_ENVIRONMENT_PRIVATE_TEST = 3;
-    // Singapore
-    public static final int TEST_ENVIRONMENT_SINGAPORE = 4;
-    // Singapore test
-    public static final int TEST_ENVIRONMENT_SINGAPORE_TEST = 5;
-    // Korea
-    public static final int TEST_ENVIRONMENT_KOREA = 6;
-    // Korea test
-    public static final int TEST_ENVIRONMENT_KOREA_TEST = 7;
-    // Germany
-    public static final int TEST_ENVIRONMENT_GERMANY = 8;
-    // Germany test
-    public static final int TEST_ENVIRONMENT_GERMANY_TEST = 9;
-    // India
-    public static final int TEST_ENVIRONMENT_INDIA = 10;
-    // India test
-    public static final int TEST_ENVIRONMENT_INDIA_TEST = 11;
-    // Private Custom
-    public static final int TEST_ENVIRONMENT_CUSTOME = 12;
+    public static final String DEMO_THEME_CHANGED_ACTION = "demoThemeChangedAction";
+    public static final String DEMO_LANGUAGE_CHANGED_ACTION = "demoLanguageChangedAction";
+
+    public static final String IM_MAIN_ITEM_SELECTED = "imMainItemSelected";
 }

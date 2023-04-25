@@ -3,7 +3,7 @@ package com.tencent.qcloud.tim.demo.bean;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
-import com.tencent.qcloud.tim.demo.DemoApplication;
+import com.tencent.qcloud.tim.demo.TIMAppService;
 import com.tencent.qcloud.tim.demo.utils.TUIKitConstants;
 
 import java.io.Serializable;
@@ -27,7 +27,7 @@ public class UserInfo implements Serializable {
 
     public synchronized static UserInfo getInstance() {
         if (sUserInfo == null) {
-            SharedPreferences shareInfo = DemoApplication.instance().getSharedPreferences(TUIKitConstants.USERINFO, 0);
+            SharedPreferences shareInfo = TIMAppService.getAppContext().getSharedPreferences(TUIKitConstants.USERINFO, 0);
             String json = shareInfo.getString(PER_USER_MODEL, "");
             sUserInfo = new Gson().fromJson(json, UserInfo.class);
             if (sUserInfo == null) {
@@ -42,7 +42,7 @@ public class UserInfo implements Serializable {
     }
 
     public void setUserInfo(UserInfo info) {
-        SharedPreferences shareInfo = DemoApplication.instance().getSharedPreferences(TUIKitConstants.USERINFO, 0);
+        SharedPreferences shareInfo = TIMAppService.getAppContext().getSharedPreferences(TUIKitConstants.USERINFO, 0);
         SharedPreferences.Editor editor = shareInfo.edit();
         editor.putString(PER_USER_MODEL, new Gson().toJson(info));
         editor.commit();

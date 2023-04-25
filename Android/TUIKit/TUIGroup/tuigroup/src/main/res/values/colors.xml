@@ -9,6 +9,9 @@
     <color name="btn_negative">#ffffff</color>
     <color name="btn_negative_hover">#cc3428</color>
 
+    <color name="group_btn_negative">#ffffff</color>
+
+
     <color name="text_color_gray">#696969</color>
     <color name="item_split_color">#cccccc</color>
 

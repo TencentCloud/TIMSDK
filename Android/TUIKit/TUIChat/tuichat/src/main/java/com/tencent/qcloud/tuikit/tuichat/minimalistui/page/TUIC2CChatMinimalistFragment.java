@@ -43,19 +43,24 @@ public class TUIC2CChatMinimalistFragment extends TUIBaseChatMinimalistFragment 
     protected void initView() {
         super.initView();
 
-        chatView.setOnAvatarClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putString(TUIConstants.TUIChat.CHAT_ID, chatInfo.getId());
-                bundle.putString(TUIConstants.TUIChat.CHAT_BACKGROUND_URI, mChatBackgroundThumbnailUrl);
-                TUICore.startActivity("FriendProfileMinimalistActivity", bundle);
-            }
-        });
 
+        setTitleBarClickAction();
         chatView.setPresenter(presenter);
         presenter.setChatInfo(chatInfo);
         chatView.setChatInfo(chatInfo);
+    }
+
+    private void setTitleBarClickAction() {
+
+        chatView.setOnAvatarClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle param = new Bundle();
+                param.putString(TUIConstants.TUIChat.CHAT_ID, chatInfo.getId());
+                param.putString(TUIConstants.TUIChat.CHAT_BACKGROUND_URI, mChatBackgroundThumbnailUrl);
+                TUICore.startActivity("FriendProfileMinimalistActivity", param);
+            }
+        });
     }
 
     public void setPresenter(C2CChatPresenter presenter) {

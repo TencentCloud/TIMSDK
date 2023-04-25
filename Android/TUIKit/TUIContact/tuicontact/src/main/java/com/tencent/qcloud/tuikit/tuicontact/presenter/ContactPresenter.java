@@ -5,9 +5,8 @@ import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.tencent.imsdk.v2.V2TIMUserStatus;
 import com.tencent.qcloud.tuicore.TUILogin;
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
-import com.tencent.qcloud.tuicore.util.BackgroundTasks;
-import com.tencent.qcloud.tuicore.util.ThreadHelper;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactService;
@@ -311,7 +310,7 @@ public class ContactPresenter {
                 messageCustom.content = TUIContactService.getAppContext().getString(R.string.create_group);
                 String data = gson.toJson(messageCustom);
 
-                ThreadHelper.INST.execute(new Runnable() {
+                ThreadUtils.execute(new Runnable() {
                     @Override
                     public void run() {
                         try {
@@ -322,7 +321,7 @@ public class ContactPresenter {
                         sendGroupTipsMessage(groupId, data, new IUIKitCallback<String>() {
                             @Override
                             public void onSuccess(String result) {
-                                BackgroundTasks.getInstance().runOnUiThread(new Runnable() {
+                                ThreadUtils.runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
                                         ContactUtils.callbackOnSuccess(callback, result);
@@ -332,7 +331,7 @@ public class ContactPresenter {
 
                             @Override
                             public void onError(String module, int errCode, String errMsg) {
-                                BackgroundTasks.getInstance().runOnUiThread(new Runnable() {
+                                ThreadUtils.runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
                                         ContactUtils.callbackOnError(callback, module, errCode, errMsg);

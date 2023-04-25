@@ -9,20 +9,18 @@ import androidx.annotation.Nullable;
 import com.tencent.imsdk.v2.V2TIMGroupAtInfo;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.TUIConstants;
-import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
-import com.tencent.qcloud.tuicore.component.activities.BaseMinimalistLightActivity;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseMinimalistLightActivity;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.DraftInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupMemberInfo;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
-import java.util.HashMap;
 import java.util.List;
 
 public abstract class TUIBaseChatMinimalistActivity extends BaseMinimalistLightActivity {
@@ -73,27 +71,6 @@ public abstract class TUIBaseChatMinimalistActivity extends BaseMinimalistLightA
     }
 
     public abstract void initChat(ChatInfo chatInfo);
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == 3 && data != null) {
-            if (requestCode == 11) {
-                List<String> stringList = data.getStringArrayListExtra("list");
-                if (stringList != null && !stringList.isEmpty()) {
-                    String[] stringArray = stringList.toArray(new String[]{});
-                    data.putExtra(TUIConstants.TUICalling.PARAM_NAME_USERIDS, stringArray);
-                    HashMap<String, Object> hashMap = new HashMap<>();
-                    for (String key : data.getExtras().keySet()) {
-                        hashMap.put(key, data.getExtras().get(key));
-                    }
-                    TUICore.callService(TUIConstants.TUICalling.SERVICE_NAME,
-                            TUIConstants.TUICalling.METHOD_NAME_CALL, hashMap);
-                }
-            }
-        }
-
-    }
 
     private ChatInfo getChatInfo(Intent intent) {
         int chatType = intent.getIntExtra(TUIConstants.TUIChat.CHAT_TYPE, ChatInfo.TYPE_INVALID);

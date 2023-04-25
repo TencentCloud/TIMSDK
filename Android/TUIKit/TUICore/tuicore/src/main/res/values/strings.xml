@@ -2,6 +2,10 @@
 <resources>
     <string name="open_file_tips">Select an app to open the file</string>
 
+    <string name="cancel">Cancel</string>
+    <string name="sure">Confirm</string>
+    <string name="core_permission_dialog_title">Authorization Request</string>
+    <string name="core_permission_dialog_positive_setting_text">Settings</string>
     <string name="date_yesterday">Yesterday</string>
     <string name="date_year_short">YYYY</string>
     <string name="date_month_short">MM</string>
@@ -9,15 +13,4 @@
     <string name="date_hour_short">HH</string>
     <string name="date_minute_short">MM</string>
     <string name="date_second_short">SS</string>
-
-    <string name="cancel">Cancel</string>
-    <string name="sure">Confirm</string>
-    <string name="core_permission_dialog_title">Authorization Request</string>
-    <string name="core_permission_dialog_positive_setting_text">Settings</string>
-    <string name="setting">setting</string>
-    <string name="setting_fail">Setup failed！</string>
-    <string name="setting_success">Setup Success！</string>
-    <string name="default_text">Default</string>
-    <string name="core_next_step">Next step</string>
-
 </resources>

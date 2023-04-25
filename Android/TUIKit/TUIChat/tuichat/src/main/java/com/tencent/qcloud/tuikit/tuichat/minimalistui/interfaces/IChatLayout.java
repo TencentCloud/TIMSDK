@@ -1,11 +1,11 @@
 package com.tencent.qcloud.tuikit.tuichat.minimalistui.interfaces;
 
-import com.tencent.qcloud.tuicore.component.interfaces.ILayout;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.noticelayout.NoticeLayout;
+import com.tencent.qcloud.tuikit.tuichat.minimalistui.page.TUIBaseChatMinimalistFragment;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.input.InputView;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.MessageRecyclerView;
-import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.noticelayout.NoticeLayout;
 
 /**
  * 聊天窗口 {@link com.tencent.qcloud.tuikit.tuichat.classicui.widget.ChatView} 提供了消息的展示与发送等功能，界面布局从上到下分为四个部分: <br>
@@ -67,7 +67,7 @@ public interface IChatLayout  {
     /**
      * 初始化参数
      */
-    void initDefault();
+    void initDefault(TUIBaseChatMinimalistFragment fragment);
 
     /**
      * 加载聊天消息

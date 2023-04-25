@@ -3,17 +3,16 @@ package com.tencent.qcloud.tuikit.tuichat.classicui.widget.input.inputmore;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import androidx.annotation.Nullable;
+
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuichat.R;
-import com.tencent.qcloud.tuikit.tuichat.classicui.widget.input.BaseInputFragment;
 import com.tencent.qcloud.tuikit.tuichat.bean.InputMoreActionUnit;
+import com.tencent.qcloud.tuikit.tuichat.classicui.widget.input.BaseInputFragment;
 
 import java.util.ArrayList;
 import java.util.List;

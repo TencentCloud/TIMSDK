@@ -6,7 +6,7 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <com.tencent.qcloud.tuicore.component.RoundFrameLayout
+    <com.tencent.qcloud.tuikit.timcommon.component.RoundFrameLayout
         android:id="@+id/banner_frame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,7 +20,7 @@
             android:layout_height="150dp"
             android:background="#FFFFFF" />
 
-    </com.tencent.qcloud.tuicore.component.RoundFrameLayout>
+    </com.tencent.qcloud.tuikit.timcommon.component.RoundFrameLayout>
 
 
     <LinearLayout
@@ -37,7 +37,7 @@
         android:paddingTop="12dp"
         android:paddingBottom="10dp">
 
-        <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+        <com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView
             android:id="@+id/create_community_icon"
             android:layout_width="28dp"
             android:layout_height="28dp"
@@ -68,7 +68,7 @@
         android:paddingTop="12dp"
         android:paddingBottom="10dp">
 
-        <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+        <com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView
             android:id="@+id/join_community_icon"
             android:layout_width="28dp"
             android:layout_height="28dp"

@@ -78,4 +78,6 @@
 
     <color name="demo_community_page_navigate_bar_color">#FFFFFFFF</color>
     <color name="demo_community_page_status_bar_color">#EBECF0</color>
+
+    <color name="demo_im_about_item_bg">#E7F2FF</color>
 </resources>

@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
 
-    <com.tencent.qcloud.tuicore.component.TitleBarLayout
+    <com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout
         android:id="@+id/add_friend_titlebar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/page_title_height" />
@@ -83,7 +83,7 @@
         android:visibility="gone"
         tools:visibility="visible">
 
-        <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+        <com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView
             android:id="@+id/friend_icon"
             android:layout_width="@dimen/contact_profile_face_size"
             android:layout_height="@dimen/contact_profile_face_size"

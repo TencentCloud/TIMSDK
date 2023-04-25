@@ -51,6 +51,13 @@
         <activity
             android:name=".classicui.pages.GroupTypeSelectActivity"
             android:screenOrientation="portrait" />
+
+        <provider
+            android:name=".classicui.ClassicUIExtensionObserver"
+            android:authorities="${applicationId}.TUIContact.ClassicUI.Init"
+            android:enabled="true"
+            android:exported="false"/>
+
         <!-- **************** Classic UI Activity End **************** -->
 
 
@@ -98,6 +105,7 @@
             android:name=".minimalistui.pages.GroupTypeSelectMinimalistActivity"
             android:theme="@style/ContactTransparentPopActivityStyle"
             android:screenOrientation="portrait" />
+
         <!-- **************** Minimalist UI Activity End **************** -->
 
     </application>

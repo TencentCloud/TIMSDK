@@ -141,6 +141,7 @@
     <string name="TUIKitErrorSVRAccountInvalidCount">请求中批量数量不合法。</string>
     <string name="TUIkitErrorSVRAccountINvalidParameters">参数非法，请检查必填字段是否填充，或者字段的填充是否满足协议要求。</string>
     <string name="TUIKitErrorSVRAccountAdminRequired">请求需要 App 管理员权限。</string>
+    <string name="TUIKitErrorSVRAccountLowSDKVersion">您的SDK版本过低，请升级到最新版本。</string>
     <string name="TUIKitErrorSVRAccountFreqLimit">因失败且重试次数过多导致被限制，请检查 UserSig 是否正确，一分钟之后再试。</string>
     <string name="TUIKitErrorSVRAccountBlackList">帐号被拉入黑名单。</string>
     <string name="TUIKitErrorSVRAccountCountLimit">创建帐号数量超过免费体验版数量限制，请升级为专业版。</string>

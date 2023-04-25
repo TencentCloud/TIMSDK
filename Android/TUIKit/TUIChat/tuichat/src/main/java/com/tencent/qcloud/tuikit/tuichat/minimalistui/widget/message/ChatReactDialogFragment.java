@@ -21,14 +21,14 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.tencent.qcloud.tuicore.TUILogin;
-import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
-import com.tencent.qcloud.tuicore.util.ScreenUtil;
+import com.tencent.qcloud.tuikit.timcommon.bean.MessageReactBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.ReactUserBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
+import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
+import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageReactBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.ReactUserBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ReactPresenter;
 
 import java.util.ArrayList;
@@ -264,7 +264,7 @@ public class ChatReactDialogFragment extends DialogFragment {
         @Override
         public void onBindViewHolder(@NonNull ReactCategoryHolder holder, int position) {
             if (selectedIndex == position) {
-                holder.itemView.setBackgroundResource(R.drawable.chat_gray_round_rect_bg);
+                holder.itemView.setBackgroundResource(com.tencent.qcloud.tuikit.timcommon.R.drawable.chat_gray_round_rect_bg);
             } else {
                 holder.itemView.setBackground(null);
             }

@@ -17,8 +17,8 @@ import androidx.annotation.Nullable;
 
 import com.tencent.qcloud.tuicore.util.SPUtils;
 import com.tencent.qcloud.tuicore.util.TUIBuild;
-import com.tencent.qcloud.tuicore.util.TUIUtil;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -93,6 +93,32 @@ public class TUIThemeManager {
         applyTheme(appContext);
     }
 
+    private static String currentProcessName = "";
+
+    public static String getProcessName() {
+        if (!TextUtils.isEmpty(currentProcessName)) {
+            return currentProcessName;
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            currentProcessName = Application.getProcessName();
+            return currentProcessName;
+        }
+
+        try {
+            final Method declaredMethod = Class.forName("android.app.ActivityThread", false, Application.class.getClassLoader())
+                    .getDeclaredMethod("currentProcessName", (Class<?>[]) new Class[0]);
+            declaredMethod.setAccessible(true);
+            final Object invoke = declaredMethod.invoke(null, new Object[0]);
+            if (invoke instanceof String) {
+                currentProcessName = (String) invoke;
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+
+        return currentProcessName;
+    }
     private void notifySetLanguageEvent() {
         TUICore.notifyEvent(TUIConstants.TUICore.LANGUAGE_EVENT, TUIConstants.TUICore.LANGUAGE_EVENT_SUB_KEY, null);
     }
@@ -105,7 +131,7 @@ public class TUIThemeManager {
         try {
             Log.i(TAG, "setWebViewLanguage");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                WebView.setDataDirectorySuffix(TUIUtil.getProcessName());
+                WebView.setDataDirectorySuffix(getProcessName());
             }
             new WebView(appContext).destroy();
         } catch (Throwable throwable) {

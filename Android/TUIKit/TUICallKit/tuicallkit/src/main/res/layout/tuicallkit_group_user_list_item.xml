@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="58dp"
+    android:background="@color/tuicalling_color_white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="5dp">
+
+        <CheckBox
+            android:id="@+id/group_user_check_box"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/tuicallkit_group_checkbox_selector"
+            android:button="@null"
+            android:clickable="false"
+            android:focusable="false"
+            android:gravity="center" />
+
+        <com.tencent.qcloud.tuikit.tuicallkit.view.common.RoundCornerImageView
+            android:id="@+id/group_user_avatar"
+            android:layout_width="38.4dp"
+            android:layout_height="38.4dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/tuicalling_ic_avatar"
+            app:corner_radius="12dp" />
+
+        <TextView
+            android:id="@+id/group_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:lines="1"
+            android:textColor="#ff111111"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/group_user_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="4dp"
+            android:gravity="center_vertical"
+            android:text="@string/tuicallkit_group_hint_you"
+            android:textColor="@color/tuicalling_color_gray"
+            android:textSize="14sp"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/view_line"
+        android:layout_width="match_parent"
+        android:layout_height="0.55dp"
+        android:background="#D9D9D9" />
+</LinearLayout>

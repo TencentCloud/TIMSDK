@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="core_title_bar_text_bg_serious">#FFFFFFFF</color>
+    <color name="chat_bubble_other_color_serious">#F8F8F9</color>
+    <color name="chat_bubble_self_color_serious">@color/core_bubble_bg_color_serious</color>
+    <color name="chat_react_text_color_serious">#FFFFFF</color>
+    <color name="chat_read_receipt_text_color_serious">#5695E7</color>
+    <color name="chat_react_other_text_color_serious">#888888</color>
+</resources>

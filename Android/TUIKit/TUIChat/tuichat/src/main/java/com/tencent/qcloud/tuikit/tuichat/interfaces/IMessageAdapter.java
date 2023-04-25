@@ -1,6 +1,6 @@
 package com.tencent.qcloud.tuikit.tuichat.interfaces;
 
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 
 import java.util.List;
 

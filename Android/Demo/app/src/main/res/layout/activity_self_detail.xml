@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/demo_profile_bg"
     android:orientation="vertical">
 
-    <com.tencent.qcloud.tuicore.component.TitleBarLayout
+    <com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout
         android:id="@+id/self_detail_title_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
@@ -45,7 +44,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+                    <com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView
                         android:id="@+id/self_icon"
                         android:layout_width="@dimen/demo_profile_face_size"
                         android:layout_height="@dimen/demo_profile_face_size"
@@ -66,7 +65,7 @@
 
             </LinearLayout>
 
-            <com.tencent.qcloud.tuicore.component.LineControllerView
+            <com.tencent.qcloud.tuikit.timcommon.component.LineControllerView
                 android:id="@+id/modify_nick_name_lv"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/demo_profile_item_height"
@@ -74,14 +73,14 @@
                 app:canNav="true"
                 app:name="@string/modify_nick_name" />
 
-            <com.tencent.qcloud.tuicore.component.LineControllerView
+            <com.tencent.qcloud.tuikit.timcommon.component.LineControllerView
                 android:id="@+id/modify_account_lv"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/demo_profile_item_height"
                 app:isTop="true"
                 app:name="@string/modify_account" />
 
-            <com.tencent.qcloud.tuicore.component.LineControllerView
+            <com.tencent.qcloud.tuikit.timcommon.component.LineControllerView
                 android:id="@+id/modify_signature_lv"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/demo_profile_item_height"
@@ -89,7 +88,7 @@
                 app:canNav="true"
                 app:name="@string/modify_signature" />
 
-            <com.tencent.qcloud.tuicore.component.LineControllerView
+            <com.tencent.qcloud.tuikit.timcommon.component.LineControllerView
                 android:id="@+id/modify_gender_lv"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/demo_profile_item_height"
@@ -97,7 +96,7 @@
                 app:isTop="true"
                 app:name="@string/modify_gender" />
 
-            <com.tencent.qcloud.tuicore.component.LineControllerView
+            <com.tencent.qcloud.tuikit.timcommon.component.LineControllerView
                 android:id="@+id/modify_birthday_lv"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/demo_profile_item_height"

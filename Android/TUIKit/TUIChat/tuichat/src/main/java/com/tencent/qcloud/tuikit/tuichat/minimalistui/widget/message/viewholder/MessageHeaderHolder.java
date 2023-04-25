@@ -5,7 +5,8 @@ import android.widget.LinearLayout;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message.MessageBaseHolder;
 
 public class MessageHeaderHolder extends MessageBaseHolder {
 

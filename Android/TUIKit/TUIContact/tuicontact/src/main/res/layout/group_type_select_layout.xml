@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="?attr/core_bg_color">
 
-    <com.tencent.qcloud.tuicore.component.TitleBarLayout
+    <com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout
         android:id="@+id/create_group_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

@@ -8,28 +8,31 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 
-import androidx.annotation.RequiresApi;
-
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMManager;
-import com.tencent.qcloud.tim.demo.BuildConfig;
-import com.tencent.qcloud.tim.demo.DemoApplication;
-import com.tencent.qcloud.tim.demo.SplashActivity;
-import com.tencent.qcloud.tim.demo.main.MainActivity;
-import com.tencent.qcloud.tim.demo.main.MainMinimalistActivity;
+import com.tencent.qcloud.tim.demo.TIMAppService;
+import com.tencent.qcloud.tim.demo.config.AppConfig;
 import com.tencent.qcloud.tim.demo.push.HandleOfflinePushCallBack;
 import com.tencent.qcloud.tim.demo.push.OfflineMessageBean;
 import com.tencent.qcloud.tim.demo.push.OfflineMessageDispatcher;
+import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushLog;
+import com.tencent.qcloud.tuicore.BuildConfig;
+import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.interfaces.TUILoginConfig;
 import com.tencent.qcloud.tuicore.util.TUIBuild;
+import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 
 public class TUIUtils {
-    public static final String TAG = TUIUtils.class.getSimpleName();
+    private static final String TAG = TUIUtils.class.getSimpleName();
+
+    public static String offlineData = null;
 
     public static void startActivity(String activityName, Bundle param) {
         TUICore.startActivity(activityName, param);
@@ -40,7 +43,7 @@ public class TUIUtils {
         bundle.putString(TUIConstants.TUIChat.CHAT_ID, chatId);
         bundle.putString(TUIConstants.TUIChat.CHAT_NAME, chatName);
         bundle.putInt(TUIConstants.TUIChat.CHAT_TYPE, chatType);
-        if (DemoApplication.tuikit_demo_style == 0) {
+        if (AppConfig.DEMO_UI_STYLE == 0) {
             if (chatType == V2TIMConversation.V2TIM_C2C) {
                 TUICore.startActivity(TUIConstants.TUIChat.C2C_CHAT_ACTIVITY_NAME, bundle);
             } else if (chatType == V2TIMConversation.V2TIM_GROUP) {
@@ -79,9 +82,19 @@ public class TUIUtils {
     }
 
     public static void handleOfflinePush(Intent intent, HandleOfflinePushCallBack callBack) {
-        Context context = DemoApplication.instance().getApplicationContext();
+        Context context = TIMAppService.getAppContext();
         if (V2TIMManager.getInstance().getLoginStatus() == V2TIMManager.V2TIM_STATUS_LOGOUT) {
-            Intent intentAction = new Intent(context, SplashActivity.class);
+            if (TUIConfig.getTUIHostType() == TUIConfig.TUI_HOST_TYPE_RTCUBE) {
+                TUIOfflinePushLog.e(TAG, "rtcube not logined");
+                Map<String, Object> param = new HashMap<>();
+                param.put(TUIConstants.TIMAppKit.OFFLINE_PUSH_INTENT_DATA, intent);
+                TUICore.notifyEvent(TUIConstants.TIMAppKit.NOTIFY_RTCUBE_EVENT_KEY, TUIConstants.TIMAppKit.NOTIFY_RTCUBE_LOGIN_SUB_KEY, param);
+                return;
+            }
+            Intent intentAction = new Intent();
+            intentAction.setAction("com.tencent.qloud.splash");
+            intentAction.addCategory("android.intent.category.LAUNCHER");
+            intentAction.addCategory("android.intent.category.DEFAULT");
             if (intent != null) {
                 intentAction.putExtras(intent);
             }
@@ -113,9 +126,17 @@ public class TUIUtils {
     }
 
     public static void handleOfflinePush(String ext, HandleOfflinePushCallBack callBack) {
-        Context context = DemoApplication.instance().getApplicationContext();
+        Context context = TIMAppService.getAppContext();
         if (V2TIMManager.getInstance().getLoginStatus() == V2TIMManager.V2TIM_STATUS_LOGOUT) {
-            Intent intentAction = new Intent(context, SplashActivity.class);
+            if (TUIConfig.getTUIHostType() == TUIConfig.TUI_HOST_TYPE_RTCUBE) {
+                offlineData = ext;
+                TUICore.notifyEvent(TUIConstants.TIMAppKit.NOTIFY_RTCUBE_EVENT_KEY, TUIConstants.TIMAppKit.NOTIFY_RTCUBE_LOGIN_SUB_KEY, null);
+                return;
+            }
+            Intent intentAction = new Intent();
+            intentAction.setAction("com.tencent.qloud.splash");
+            intentAction.addCategory("android.intent.category.LAUNCHER");
+            intentAction.addCategory("android.intent.category.DEFAULT");
             if (!TextUtils.isEmpty(ext)) {
                 intentAction.putExtra(TUIConstants.TUIOfflinePush.NOTIFICATION_EXT_KEY, ext);
             }

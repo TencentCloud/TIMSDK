@@ -13,7 +13,6 @@
 
     <color name="voice_pressed">#DEDEDE</color>
     <color name="voice_normal">#ffffff</color>
-    <color name="test_blue">#338BFF</color>
 
     <color name="line">#DDDDDD</color>
     <color name="navigation_bar_color">#F7F7F7</color>
@@ -23,7 +22,6 @@
     <color name="white">#FFFFFF</color>
     <color name="text_color_gray">#696969</color>
     <color name="black_font_color">#181818</color>
-    <color name="text_tips_color">#A5A5A5</color>
 
     <color name="list_bottom_text_bg">#999999</color>
     <color name="font_blue">#066fff</color>
@@ -45,11 +43,10 @@
     <color name="reply_abstract_line_bg">#1A444444</color>
     <color name="reply_msg_text">#FF888888</color>
 
-    <color name="chat_message_bubble_high_light_light_color">#33FF9800</color>
-    <color name="chat_message_bubble_high_light_dark_color">#80FF9800</color>
 
     <color name="chat_unread_count_tip_color">#AABCD1</color>
     <color name="jum_message_text_color">#147AFF</color>
 
     <color name="order_message_color">#FF7201</color>
+    <color name="window_background_color">#BF000000</color>
 </resources>

@@ -343,6 +343,8 @@ public class ErrorMessageConverter {
                 return getLocalizedString(R.string.TUIkitErrorSVRAccountINvalidParameters);
             case BaseConstants.ERR_SVR_ACCOUNT_ADMIN_REQUIRED:
                 return getLocalizedString(R.string.TUIKitErrorSVRAccountAdminRequired);
+            case BaseConstants.ERR_SVR_ACCOUNT_LOW_SDK_VERSION:
+                return getLocalizedString(R.string.TUIKitErrorSVRAccountLowSDKVersion);
             case BaseConstants.ERR_SVR_ACCOUNT_FREQ_LIMIT:
                 return getLocalizedString(R.string.TUIKitErrorSVRAccountFreqLimit);
             case BaseConstants.ERR_SVR_ACCOUNT_BLACKLIST:

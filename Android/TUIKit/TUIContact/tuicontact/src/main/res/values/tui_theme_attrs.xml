@@ -4,4 +4,7 @@
     <attr name="contact_new_friend_icon" format="reference"/>
     <attr name="contact_group_list_icon" format="reference"/>
     <attr name="contact_black_list_icon" format="reference"/>
+
+    <attr name="contact_chat_extension_title_bar_more_menu" format="reference"/>
+
 </resources>

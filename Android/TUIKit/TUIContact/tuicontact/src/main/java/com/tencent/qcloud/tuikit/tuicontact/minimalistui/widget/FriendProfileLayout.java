@@ -2,31 +2,40 @@ package com.tencent.qcloud.tuikit.tuicontact.minimalistui.widget;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
-import com.tencent.qcloud.tuicore.component.MinimalistLineControllerView;
-import com.tencent.qcloud.tuicore.component.MinimalistTitleBar;
-import com.tencent.qcloud.tuicore.component.dialog.TUIKitDialog;
-import com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView;
-import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
-import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
-import com.tencent.qcloud.tuicore.component.popupcard.PopupInputCard;
+import com.tencent.qcloud.tuicore.interfaces.TUIExtensionEventListener;
+import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
+import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.MinimalistLineControllerView;
+import com.tencent.qcloud.tuikit.timcommon.component.MinimalistTitleBar;
+import com.tencent.qcloud.tuikit.timcommon.component.PopupInputCard;
+import com.tencent.qcloud.tuikit.timcommon.component.dialog.TUIKitDialog;
+import com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView;
+import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuicontact.R;
-import com.tencent.qcloud.tuikit.tuicontact.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.bean.FriendApplicationBean;
 import com.tencent.qcloud.tuikit.tuicontact.interfaces.IFriendProfileLayout;
@@ -34,10 +43,10 @@ import com.tencent.qcloud.tuikit.tuicontact.presenter.FriendProfilePresenter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 public class FriendProfileLayout extends LinearLayout implements View.OnClickListener, IFriendProfileLayout {
 
     private static final String TAG = FriendProfileLayout.class.getSimpleName();
@@ -53,10 +62,9 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
     private MinimalistLineControllerView deleteFriendBtn;
     private MinimalistLineControllerView clearMessageBtn;
     private TextView friendIDTv;
-    private View messageBtn;
-    private View audioCallBtn;
-    private View videoCallBtn;
 
+    private RecyclerView profileItemListView;
+    private ProfileItemAdapter profileItemAdapter;
     private ContactItemBean mContactInfo;
     private FriendApplicationBean friendApplicationBean;
     private OnButtonClickListener mListener;
@@ -104,15 +112,10 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
         clearMessageBtn = findViewById(R.id.clear_chat_history);
         clearMessageBtn.setOnClickListener(this);
         clearMessageBtn.setNameColor(0xFFFF584C);
-        messageBtn = findViewById(R.id.message_btn);
-        messageBtn.setOnClickListener(this);
         mChatBackground = findViewById(R.id.chat_background);
         mChatBackground.setOnClickListener(this);
 
-        audioCallBtn = findViewById(R.id.audio_call_btn);
-        audioCallBtn.setOnClickListener(this);
-        videoCallBtn = findViewById(R.id.video_call_btn);
-        videoCallBtn.setOnClickListener(this);
+        profileItemListView = findViewById(R.id.profile_item_container);
 
         mTitleBar = findViewById(R.id.friend_title_bar);
         mTitleBar.setTitle(getResources().getString(R.string.profile_detail), ITitleBarLayout.Position.MIDDLE);
@@ -124,23 +127,29 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
         mChatBackground.setBackground(new ColorDrawable(getResources().getColor(R.color.contact_line_controller_color)));
         deleteFriendBtn.setBackground(new ColorDrawable(getResources().getColor(R.color.contact_line_controller_color)));
         clearMessageBtn.setBackground(new ColorDrawable(getResources().getColor(R.color.contact_line_controller_color)));
+
+        profileItemAdapter = new ProfileItemAdapter();
+        profileItemListView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        int leftRightSpace = ScreenUtil.dip2px(24);
+        profileItemListView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                int position = parent.getChildAdapterPosition(view);
+                int column = position % 3;
+                outRect.left = column * leftRightSpace / 3;
+                outRect.right = leftRightSpace * (2 - column) / 3;
+            }
+        });
+        profileItemListView.setAdapter(profileItemAdapter);
     }
 
-    private void setupCall() {
+    private void setupExtension() {
         HashMap<String, Object> param = new HashMap<>();
-        param.put(TUIConstants.TUIChat.CHAT_ID, mId);
-        param.put(TUIConstants.TUIChat.CHAT_NAME, mNickname);
-        param.put(TUIConstants.TUIChat.CHAT_TYPE, ChatInfo.TYPE_C2C);
-        param.put(TUIConstants.TUIChat.CONTEXT, getContext());
-        Map<String, Object> videoCallExtension = TUICore.getExtensionInfo(TUIConstants.TUIChat.EXTENSION_INPUT_MORE_VIDEO_CALL, param);
-        if (videoCallExtension == null) {
-            videoCallBtn.setVisibility(GONE);
-        }
-
-        Map<String, Object> audioCallExtension = TUICore.getExtensionInfo(TUIConstants.TUIChat.EXTENSION_INPUT_MORE_AUDIO_CALL, param);
-        if (audioCallExtension == null) {
-            audioCallBtn.setVisibility(GONE);
-        }
+        param.put(TUIConstants.TUIContact.Extension.FriendProfileItem.USER_ID, mId);
+        List<TUIExtensionInfo> extensionInfoList = TUICore.getExtensionList(TUIConstants.TUIContact.Extension.FriendProfileItem.MINIMALIST_EXTENSION_ID, param);
+        Collections.sort(extensionInfoList);
+        profileItemAdapter.setExtensionInfoList(extensionInfoList);
+        profileItemAdapter.notifyDataSetChanged();
     }
 
     private void initEvent() {
@@ -182,7 +191,7 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
             mNickNameView.setText(mId);
         }
 
-        setupCall();
+        setupExtension();
     }
 
     private void setViewContentFromItemBean(ContactItemBean data) {
@@ -201,9 +210,7 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
         if (TextUtils.equals(mContactInfo.getId(), TUILogin.getLoginUser())) {
             if (isFriend) {
                 mRemarkView.setVisibility(VISIBLE);
-                messageBtn.setVisibility(VISIBLE);
-                audioCallBtn.setVisibility(VISIBLE);
-                videoCallBtn.setVisibility(VISIBLE);
+                profileItemListView.setVisibility(VISIBLE);
                 mAddBlackView.setVisibility(VISIBLE);
                 mChatTopView.setVisibility(View.VISIBLE);
                 mChatBackground.setVisibility(VISIBLE);
@@ -211,9 +218,7 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
             }
         } else {
             if (mContactInfo.isBlackList()) {
-                messageBtn.setVisibility(VISIBLE);
-                audioCallBtn.setVisibility(VISIBLE);
-                videoCallBtn.setVisibility(VISIBLE);
+                profileItemListView.setVisibility(VISIBLE);
                 mRemarkView.setVisibility(VISIBLE);
                 mAddBlackView.setVisibility(VISIBLE);
                 mMessageOptionView.setVisibility(VISIBLE);
@@ -221,9 +226,7 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
                 mChatBackground.setVisibility(VISIBLE);
             } else {
                 mRemarkView.setVisibility(VISIBLE);
-                messageBtn.setVisibility(VISIBLE);
-                audioCallBtn.setVisibility(VISIBLE);
-                videoCallBtn.setVisibility(VISIBLE);
+                profileItemListView.setVisibility(VISIBLE);
                 mAddBlackView.setVisibility(VISIBLE);
                 mChatTopView.setVisibility(View.VISIBLE);
                 mChatBackground.setVisibility(VISIBLE);
@@ -262,7 +265,7 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
     @Override
     public void onDataSourceChanged(ContactItemBean bean) {
         setViewContentFromItemBean(bean);
-        setupCall();
+        setupExtension();
         if (bean.isFriend()) {
             updateMessageOptionView();
             clearMessageBtn.setVisibility(VISIBLE);
@@ -304,18 +307,9 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
         });
     }
 
-    private void chat() {
-        if (mListener != null || mContactInfo != null) {
-            mListener.onStartConversationClick(mContactInfo);
-        }
-        ((Activity) getContext()).finish();
-    }
-
     @Override
     public void onClick(View v) {
-        if (v == messageBtn) {
-            chat();
-        } else if (v == deleteFriendBtn) {
+        if (v == deleteFriendBtn) {
             new TUIKitDialog(getContext())
                     .builder()
                     .setCancelable(true)
@@ -358,16 +352,6 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
                         }
                     })
                     .show();
-        } else if (v == videoCallBtn) {
-            Map<String, Object> map = new HashMap<>();
-            map.put(TUIConstants.TUICalling.PARAM_NAME_USERIDS, new String[]{mId});
-            map.put(TUIConstants.TUICalling.PARAM_NAME_TYPE, TUIConstants.TUICalling.TYPE_VIDEO);
-            TUICore.callService(TUIConstants.TUICalling.SERVICE_NAME, TUIConstants.TUICalling.METHOD_NAME_CALL, map);
-        } else if (v == audioCallBtn) {
-            Map<String, Object> map = new HashMap<>();
-            map.put(TUIConstants.TUICalling.PARAM_NAME_USERIDS, new String[]{mId});
-            map.put(TUIConstants.TUICalling.PARAM_NAME_TYPE, TUIConstants.TUICalling.TYPE_AUDIO);
-            TUICore.callService(TUIConstants.TUICalling.SERVICE_NAME, TUIConstants.TUICalling.METHOD_NAME_CALL, map);
         } else if (v == mRemarkView) {
             PopupInputCard popupInputCard = new PopupInputCard((Activity) getContext());
             popupInputCard.setContent(mRemarkView.getContent());
@@ -419,6 +403,55 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
         String[] idStringList = mId.split(",");
         List<String> idList = new ArrayList<>(Arrays.asList(idStringList));
         presenter.deleteFromBlackList(idList);
+    }
+
+    class ProfileItemAdapter extends RecyclerView.Adapter<ProfileItemAdapter.ItemViewHolder> {
+        List<TUIExtensionInfo> extensionInfoList;
+
+        public void setExtensionInfoList(List<TUIExtensionInfo> extensionInfoList) {
+            this.extensionInfoList = extensionInfoList;
+        }
+
+        @NonNull
+        @Override
+        public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View itemView = LayoutInflater.from(getContext()).inflate(R.layout.contact_minimalist_friend_profile_item_layout, null);
+            return new ItemViewHolder(itemView);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
+            TUIExtensionInfo extensionInfo = extensionInfoList.get(position);
+            holder.imageView.setBackgroundResource((Integer) extensionInfo.getIcon());
+            holder.textView.setText(extensionInfo.getText());
+            TUIExtensionEventListener eventListener = extensionInfo.getExtensionListener();
+            holder.itemView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (eventListener != null) {
+                        eventListener.onClicked(null);
+                    }
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            if (extensionInfoList == null) {
+                return 0;
+            }
+            return extensionInfoList.size();
+        }
+
+        class ItemViewHolder extends RecyclerView.ViewHolder {
+            public ImageView imageView;
+            public TextView textView;
+            public ItemViewHolder(@NonNull View itemView) {
+                super(itemView);
+                imageView = itemView.findViewById(R.id.item_image);
+                textView = itemView.findViewById(R.id.item_text);
+            }
+        }
     }
 
     public void setOnButtonClickListener(OnButtonClickListener l) {

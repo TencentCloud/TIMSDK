@@ -6,4 +6,6 @@
     <string name="chat_tap_to_remove">点击删除</string>
     <string name="chat_forward_checked_num">已选择 %d 个</string>
     <string name="chat_minimalist_pop_more">更多</string>
+    <string name="chat_contact_profile_message">发送消息</string>
+
 </resources>

@@ -11,16 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.qcloud.tuicore.TUIThemeManager;
-import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
-import com.tencent.qcloud.tuicore.util.DateTimeUtil;
-import com.tencent.qcloud.tuicore.util.TUIUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
+import com.tencent.qcloud.tuikit.timcommon.util.DateTimeUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.TUIUtil;
 import com.tencent.qcloud.tuikit.tuisearch.R;
 import com.tencent.qcloud.tuikit.tuisearch.bean.SearchDataBean;
 import com.tencent.qcloud.tuikit.tuisearch.interfaces.ISearchMoreMsgAdapter;
@@ -123,7 +122,7 @@ public class SearchMoreMsgAdapter extends RecyclerView.Adapter<RecyclerView.View
                 if (searchDataBean.isGroup()) {
                     avatarIconResID = TUIUtil.getDefaultGroupIconResIDByGroupType(context, searchDataBean.getGroupType());
                 } else {
-                    avatarIconResID = TUIThemeManager.getAttrResId(contactViewHolder.mUserIconView.getContext(), com.tencent.qcloud.tuicore.R.attr.core_default_user_icon);
+                    avatarIconResID = TUIThemeManager.getAttrResId(contactViewHolder.mUserIconView.getContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.core_default_user_icon);
                 }
                 GlideEngine.loadImage(contactViewHolder.mUserIconView, avatarIconResID);
             }
@@ -188,7 +187,7 @@ public class SearchMoreMsgAdapter extends RecyclerView.Adapter<RecyclerView.View
         if (searchDataBean.isGroup()) {
             avatarDefaultIconResID = TUIUtil.getDefaultGroupIconResIDByGroupType(context, searchDataBean.getGroupType());
         } else {
-            avatarDefaultIconResID = TUIThemeManager.getAttrResId(holder.itemView.getContext(), com.tencent.qcloud.tuicore.R.attr.core_default_user_icon);
+            avatarDefaultIconResID = TUIThemeManager.getAttrResId(holder.itemView.getContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.core_default_user_icon);
         }
         GlideEngine.loadImageSetDefault(holder.conversationIcon, searchDataBean.getIconPath(), avatarDefaultIconResID);
         holder.conversationTitle.setText(searchDataBean.getTitle());

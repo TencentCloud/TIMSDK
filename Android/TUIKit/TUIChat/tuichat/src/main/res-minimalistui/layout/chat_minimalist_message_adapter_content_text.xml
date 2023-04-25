@@ -4,7 +4,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.TimeInLineTextLayout
+    <com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message.TimeInLineTextLayout
         android:id="@+id/text_message_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

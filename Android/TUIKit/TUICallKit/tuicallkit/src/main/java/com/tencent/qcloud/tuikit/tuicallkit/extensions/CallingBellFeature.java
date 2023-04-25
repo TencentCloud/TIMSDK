@@ -34,6 +34,9 @@ public class CallingBellFeature {
     }
 
     public void startRing() {
+        if (SPUtils.getInstance(PROFILE_TUICALLKIT).getBoolean(PROFILE_MUTE_MODE, false)) {
+            return;
+        }
         String path = SPUtils.getInstance(PROFILE_TUICALLKIT).getString(PROFILE_CALL_BELL, "");
         if (TextUtils.isEmpty(path)) {
             start("", R.raw.phone_ringing);

@@ -18,12 +18,11 @@
     <color name="core_border_color_lively">#FFDDDDDD</color>
     <color name="core_header_start_color_lively">#FFFF7B7B</color>
     <color name="core_header_end_color_lively">#FFFFA88B</color>
+    <color name="core_header_text_color_lively">#FFFFFFFF</color>
 
     <color name="core_btn_normal_color_lively">#FFFF8E82</color>
     <color name="core_btn_pressed_color_lively">#FFF86657</color>
     <color name="core_btn_disable_color_lively">#4DFF8E82</color>
     <!-- 颜色规范 end -->
-
-    <color name="core_title_bar_text_bg_lively">#FFFFFFFF</color>
 
 </resources>

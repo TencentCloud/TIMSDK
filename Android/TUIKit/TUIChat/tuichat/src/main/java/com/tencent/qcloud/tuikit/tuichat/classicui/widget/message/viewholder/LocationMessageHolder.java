@@ -2,7 +2,8 @@ package com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder;
 
 import android.view.View;
 
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.MessageContentHolder;
 
 public class LocationMessageHolder extends MessageContentHolder {
 

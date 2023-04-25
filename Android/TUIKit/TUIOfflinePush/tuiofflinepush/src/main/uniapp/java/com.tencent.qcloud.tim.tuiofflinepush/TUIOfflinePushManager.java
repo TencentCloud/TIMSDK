@@ -90,11 +90,6 @@ public class TUIOfflinePushManager {
             }
 
             @Override
-            public void onBadgeCallback(Context context, int number) {
-                updateBadge(context, number);
-            }
-
-            @Override
             public void onTokenErrorCallBack(TUIOfflinePushErrorBean errorBean) {
                 TUIOfflinePushLog.e(TAG, "onTokenErrorCallBack-- ");
                 uniJSCallback.invokeAndKeepAlive(errorBean);
@@ -233,9 +228,5 @@ public class TUIOfflinePushManager {
             TUIOfflinePushLog.i(TAG, "setPushTokenToTIM third token is empty");
             return;
         }
-    }
-
-    void updateBadge(final Context context, final int number) {
-
     }
 }

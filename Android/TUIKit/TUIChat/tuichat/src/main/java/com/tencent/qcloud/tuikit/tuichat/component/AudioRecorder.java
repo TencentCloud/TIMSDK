@@ -2,6 +2,7 @@ package com.tencent.qcloud.tuikit.tuichat.component;
 
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 
@@ -9,11 +10,11 @@ import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
+import com.tencent.qcloud.tuicore.interfaces.TUIServiceCallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
-import com.tencent.qcloud.tuikit.tuichat.interfaces.AudioRecordEventListener;
 import com.tencent.qcloud.tuikit.tuichat.model.AIDenoiseSignatureManager;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
@@ -34,8 +35,7 @@ public class AudioRecorder {
     private Handler mHandler;
 
     private boolean mIsCallkitRecorder;
-    private AudioRecordEventListener mCallkitAudioRecordEventListener;
-
+    private TUIServiceCallback mCallkitAudioRecordValueCallback;
     private AudioRecorder() {
         mHandler = new Handler();
         initCallkitAudioRecordListener();
@@ -46,99 +46,107 @@ public class AudioRecorder {
     }
 
     private void initCallkitAudioRecordListener() {
-        mCallkitAudioRecordEventListener = new AudioRecordEventListener() {
+        mCallkitAudioRecordValueCallback = new TUIServiceCallback() {
             @Override
-            public void onRecordBegin(int errorCode, String path) {
-                TUIChatLog.i(TAG, "callkit recorder begin, errorCode:" + errorCode);
-                switch (errorCode) {
-                    case TUIConstants.TUICalling.ERROR_NONE:
-                        mHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                stopCallkitRecord();
-                                onRecordCompleted(true);
-                                ToastUtil.toastShortMessage(TUIChatService.getAppContext().getString(R.string.record_limit_tips));
-                            }
-                        }, TUIChatConfigs.getConfigs().getGeneralConfig().getAudioRecordMaxTime() * 1000);
-                        return;
-
-                    case TUIConstants.TUICalling.ERROR_STATUS_IN_CALL:
-                        mHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                onRecordCompleted(false);
-                                ToastUtil.toastShortMessage(TUIChatService.getAppContext().getString(R.string.record_rejected_for_in_call));
-                            }
-                        });
-                        return;
-                    case TUIConstants.TUICalling.ERROR_STATUS_IS_AUDIO_RECORDING:
-                        mHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                onRecordCompleted(false);
-                                ToastUtil.toastShortMessage(TUIChatService.getAppContext().getString(R.string.record_rejected_for_in_recording));
-                            }
-                        });
-                        return;
-                    case TUIConstants.TUICalling.ERROR_MIC_PERMISSION_REFUSED:
-                        mHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                stopCallkitRecord();
-                                onRecordCompleted(false);
-                                ToastUtil.toastShortMessage(TUIChatService.getAppContext().getString(R.string.audio_permission_error));
-                            }
-                        });
-                        return;
-                    case TUIConstants.TUICalling.ERROR_REQUEST_AUDIO_FOCUS_FAILED:
-                    case TUIConstants.TUICalling.ERROR_RECORD_INIT_FAILED:
-                    case TUIConstants.TUICalling.ERR_MIC_START_FAIL:
-                    case TUIConstants.TUICalling.ERR_MIC_NOT_AUTHORIZED:
-                    case TUIConstants.TUICalling.ERR_MIC_SET_PARAM_FAIL:
-                    case TUIConstants.TUICalling.ERR_MIC_OCCUPY:
-                        mHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                stopCallkitRecord();
-                                onRecordCompleted(false);
-                            }
-                        });
-                        return;
-                    case TUIConstants.TUICalling.ERROR_PATH_FORMAT_NOT_SUPPORT:
-                    case TUIConstants.TUICalling.ERROR_INVALID_PARAM:
-                    case TUIConstants.TUICalling.ERROR_SIGNATURE_ERROR:
-                    case TUIConstants.TUICalling.ERROR_SIGNATURE_EXPIRED:
-                    default:
-                        mHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                stopCallkitRecord();
-                                startSystemRecorder();
-                            }
-                        });
-                        return;
-                }
-
-            }
-
-            @Override
-            public void onRecordComplete(int errorCode, String path) {
-                TUIChatLog.i(TAG, "callkit recorder complete, errorCode:" + errorCode);
-                switch (errorCode) {
-                    case TUIConstants.TUICalling.ERROR_NONE:
-                        onRecordCompleted(true);
-                        return;
-                    case TUIConstants.TUICalling.ERROR_NO_MESSAGE_TO_RECORD:
-                    case TUIConstants.TUICalling.ERROR_RECORD_FAILED:
-                        onRecordCompleted(false);
-                        break;
-                    default:
-                        break;
+            public void onServiceCallback(int errorCode, String errorMessage, Bundle bundle) {
+                String recordMethod = bundle.getString(TUIConstants.TUICalling.EVENT_KEY_RECORD_AUDIO_MESSAGE);
+                String path = bundle.getString(TUIConstants.TUICalling.PARAM_NAME_AUDIO_PATH);
+                if (TextUtils.equals(recordMethod, TUIConstants.TUICalling.EVENT_SUB_KEY_RECORD_START)) {
+                    processCallkitRecordStart(errorCode, path);
+                } else if (TextUtils.equals(recordMethod, TUIConstants.TUICalling.EVENT_SUB_KEY_RECORD_STOP)) {
+                    processCallkitRecordStop(errorCode, path);
+                } else {
+                    TUIChatLog.e(TAG, "unknown callkit recorder method:" + recordMethod + ", errorCode:" + errorCode);
                 }
             }
         };
+    }
 
-        TUIChatService.getInstance().addAudioRecordEventListener(mCallkitAudioRecordEventListener);
+    private void processCallkitRecordStart(int errorCode, String path) {
+        TUIChatLog.i(TAG, "callkit recorder begin, errorCode:" + errorCode);
+        switch (errorCode) {
+            case TUIConstants.TUICalling.ERROR_NONE:
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        stopCallkitRecord();
+                        onRecordCompleted(true);
+                        ToastUtil.toastShortMessage(TUIChatService.getAppContext().getString(R.string.record_limit_tips));
+                    }
+                }, TUIChatConfigs.getConfigs().getGeneralConfig().getAudioRecordMaxTime() * 1000);
+                return;
+
+            case TUIConstants.TUICalling.ERROR_STATUS_IN_CALL:
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        onRecordCompleted(false);
+                        ToastUtil.toastShortMessage(TUIChatService.getAppContext().getString(R.string.record_rejected_for_in_call));
+                    }
+                });
+                return;
+            case TUIConstants.TUICalling.ERROR_STATUS_IS_AUDIO_RECORDING:
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        onRecordCompleted(false);
+                        ToastUtil.toastShortMessage(TUIChatService.getAppContext().getString(R.string.record_rejected_for_in_recording));
+                    }
+                });
+                return;
+            case TUIConstants.TUICalling.ERROR_MIC_PERMISSION_REFUSED:
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        stopCallkitRecord();
+                        onRecordCompleted(false);
+                        ToastUtil.toastShortMessage(TUIChatService.getAppContext().getString(R.string.audio_permission_error));
+                    }
+                });
+                return;
+            case TUIConstants.TUICalling.ERROR_REQUEST_AUDIO_FOCUS_FAILED:
+            case TUIConstants.TUICalling.ERROR_RECORD_INIT_FAILED:
+            case TUIConstants.TUICalling.ERR_MIC_START_FAIL:
+            case TUIConstants.TUICalling.ERR_MIC_NOT_AUTHORIZED:
+            case TUIConstants.TUICalling.ERR_MIC_SET_PARAM_FAIL:
+            case TUIConstants.TUICalling.ERR_MIC_OCCUPY:
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        stopCallkitRecord();
+                        onRecordCompleted(false);
+                    }
+                });
+                return;
+            case TUIConstants.TUICalling.ERROR_PATH_FORMAT_NOT_SUPPORT:
+            case TUIConstants.TUICalling.ERROR_INVALID_PARAM:
+            case TUIConstants.TUICalling.ERROR_SIGNATURE_ERROR:
+            case TUIConstants.TUICalling.ERROR_SIGNATURE_EXPIRED:
+            default:
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        stopCallkitRecord();
+                        startSystemRecorder();
+                    }
+                });
+                return;
+        }
+    }
+
+    private void processCallkitRecordStop(int errorCode, String path) {
+        TUIChatLog.i(TAG, "callkit recorder complete, errorCode:" + errorCode);
+        switch (errorCode) {
+            case TUIConstants.TUICalling.ERROR_NONE:
+                onRecordCompleted(true);
+                return;
+            case TUIConstants.TUICalling.ERROR_NO_MESSAGE_TO_RECORD:
+            case TUIConstants.TUICalling.ERROR_RECORD_FAILED:
+                onRecordCompleted(false);
+                break;
+            default:
+                break;
+        }
     }
 
     public void startRecord(Callback callback) {
@@ -165,7 +173,7 @@ public class AudioRecorder {
         audioRecordParam.put(TUIConstants.TUICalling.PARAM_NAME_AUDIO_SIGNATURE, signature);
         audioRecordParam.put(TUIConstants.TUICalling.PARAM_NAME_SDK_APP_ID, TUILogin.getSdkAppId());
         audioRecordParam.put(TUIConstants.TUICalling.PARAM_NAME_AUDIO_PATH, mAudioRecordPath);
-        TUICore.callService(TUIConstants.TUICalling.SERVICE_NAME_AUDIO_RECORD, TUIConstants.TUICalling.METHOD_NAME_START_RECORD_AUDIO_MESSAGE, audioRecordParam);
+        TUICore.callService(TUIConstants.TUICalling.SERVICE_NAME_AUDIO_RECORD, TUIConstants.TUICalling.METHOD_NAME_START_RECORD_AUDIO_MESSAGE, audioRecordParam, mCallkitAudioRecordValueCallback);
 
         mIsCallkitRecorder = true;
         TUIChatLog.i(TAG, "use callkit recorder");
@@ -210,7 +218,7 @@ public class AudioRecorder {
 
     private void stopCallkitRecord() {
         mHandler.removeCallbacksAndMessages(null);
-        TUICore.callService(TUIConstants.TUICalling.SERVICE_NAME_AUDIO_RECORD, TUIConstants.TUICalling.METHOD_NAME_STOP_RECORD_AUDIO_MESSAGE, null);
+        TUICore.callService(TUIConstants.TUICalling.SERVICE_NAME_AUDIO_RECORD, TUIConstants.TUICalling.METHOD_NAME_STOP_RECORD_AUDIO_MESSAGE, null, mCallkitAudioRecordValueCallback);
     }
 
     private void stopMediaRecord() {

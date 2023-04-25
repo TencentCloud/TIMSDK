@@ -16,8 +16,8 @@ import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
-import com.tencent.qcloud.tuicore.util.BackgroundTasks;
+import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
+import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuicommunity.R;
 
 import java.util.List;
@@ -40,30 +40,30 @@ public class BannerView extends FrameLayout {
     private Timer switchTimer;
     public BannerView(Context context) {
         super(context);
-        init(context, null);
+        init(null);
     }
 
     public BannerView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context, attrs);
+        init(attrs);
     }
 
     public BannerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context, attrs);
+        init(attrs);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public BannerView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        init(context, attrs);
+        init(attrs);
     }
 
-    private void init(Context context, AttributeSet attrs) {
-        View view = LayoutInflater.from(context).inflate(R.layout.community_banner_view_layout, this);
+    private void init(AttributeSet attrs) {
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.community_banner_view_layout, this);
         bannerList = view.findViewById(R.id.banner_list);
         bannerIndicatorView = view.findViewById(R.id.banner_indicator);
-        bannerLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false) {
+        bannerLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false) {
             @Override
             public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state,
                                                int position) {
@@ -109,7 +109,7 @@ public class BannerView extends FrameLayout {
         switchTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                BackgroundTasks.getInstance().runOnUiThread(new Runnable() {
+                ThreadUtils.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         int nextIndex = oldFacePageIndex + 1;
@@ -118,6 +118,15 @@ public class BannerView extends FrameLayout {
                 });
             }
         }, interval, interval);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        if (switchTimer != null) {
+            switchTimer.cancel();
+        }
+        switchTimer = null;
     }
 
     public static class BannerItem {

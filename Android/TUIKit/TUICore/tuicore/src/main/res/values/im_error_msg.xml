@@ -140,6 +140,7 @@
     <string name="TUIKitErrorSVRAccountInvalidCount">Invalid batch quantity in the request.</string>
     <string name="TUIkitErrorSVRAccountINvalidParameters">Invalid parameter. Check whether the fields are entered as required in the protocol.</string>
     <string name="TUIKitErrorSVRAccountAdminRequired">The request requires app admin permissions.</string>
+    <string name="TUIKitErrorSVRAccountLowSDKVersion">Your sdk version is too low, Please upgrade to the latest version.</string>
     <string name="TUIKitErrorSVRAccountFreqLimit">Restricted due to too many failures and retries. Check if the UserSig is correct and try again after one minute.</string>
     <string name="TUIKitErrorSVRAccountBlackList">The account is added to the blocked list.</string>
     <string name="TUIKitErrorSVRAccountCountLimit">The number of accounts created exceeds that allowed in the free trial version. Upgrade to the professional version.</string>

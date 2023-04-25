@@ -1,20 +1,20 @@
 package com.tencent.qcloud.tim.demo.profile;
 
-import androidx.appcompat.app.AlertDialog;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.appcompat.app.AlertDialog;
+
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.utils.Constants;
-import com.tencent.qcloud.tuicore.component.LineControllerView;
-import com.tencent.qcloud.tuicore.component.TitleBarLayout;
-import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
-import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
+import com.tencent.qcloud.tuikit.timcommon.component.LineControllerView;
+import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
+import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
 
 public class AboutIMActivity extends BaseLightActivity implements View.OnClickListener {
     private TitleBarLayout titleBarLayout;

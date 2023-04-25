@@ -19,16 +19,25 @@
         android:paddingLeft="7dp"
         android:paddingRight="7dp">
 
+        <ImageView
+            android:id="@+id/home_view"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:clickable="false"
+            android:visibility="gone"
+            android:layout_marginBottom="42dp"
+            android:background="?attr/core_title_bar_back_icon" />
+
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-            <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+            <com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView
                 android:id="@+id/self_face"
                 android:layout_width="48dp"
                 android:layout_height="48dp" />
 
-            <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+            <com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView
                 android:id="@+id/self_face_select_border"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
@@ -60,13 +69,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp">
 
-                <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+                <com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView
                     android:id="@+id/add_community"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:background="@drawable/community_add_group" />
 
-                <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+                <com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView
                     android:id="@+id/add_community_select_border"
                     android:layout_width="48dp"
                     android:layout_height="48dp"

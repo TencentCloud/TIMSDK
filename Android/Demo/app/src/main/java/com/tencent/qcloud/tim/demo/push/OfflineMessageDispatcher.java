@@ -8,8 +8,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
-import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
+import com.tencent.qcloud.tim.demo.TIMAppService;
 import com.tencent.qcloud.tim.demo.utils.BrandUtil;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
@@ -116,28 +116,12 @@ public class OfflineMessageDispatcher {
         } else if (bean.version != 1
                 || (bean.action != OfflineMessageBean.REDIRECT_ACTION_CHAT
                     && bean.action != OfflineMessageBean.REDIRECT_ACTION_CALL) ) {
-            PackageManager packageManager = DemoApplication.instance().getPackageManager();
-            String label = String.valueOf(packageManager.getApplicationLabel(DemoApplication.instance().getApplicationInfo()));
-            ToastUtil.toastLongMessage(DemoApplication.instance().getString(R.string.you_app) + label + DemoApplication.instance().getString(R.string.low_version));
+            PackageManager packageManager = TIMAppService.getAppContext().getPackageManager();
+            String label = String.valueOf(packageManager.getApplicationLabel(TIMAppService.getAppContext().getApplicationInfo()));
+            ToastUtil.toastLongMessage(TIMAppService.getAppContext().getString(R.string.you_app) + label + TIMAppService.getAppContext().getString(R.string.low_version));
             DemoLog.e(TAG, "unknown version: " + bean.version + " or action: " + bean.action);
             return null;
         }
         return bean;
-    }
-
-    public static void updateBadge(final Context context, final int number) {
-        if (!BrandUtil.isBrandHuawei()) {
-            return;
-        }
-        DemoLog.i(TAG, "huawei badge = " + number);
-        try {
-            Bundle extra = new Bundle();
-            extra.putString("package", "com.tencent.qcloud.tim.tuikit");
-            extra.putString("class", "com.tencent.qcloud.tim.demo.SplashActivity");
-            extra.putInt("badgenumber", number);
-            context.getContentResolver().call(Uri.parse("content://com.huawei.android.launcher.settings/badge/"), "change_badge", null, extra);
-        } catch (Exception e) {
-            DemoLog.w(TAG, "huawei badge exception: " + e.getLocalizedMessage());
-        }
     }
 }

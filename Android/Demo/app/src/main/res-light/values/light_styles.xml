@@ -17,6 +17,8 @@
         <item name="demo_main_tab_profile_selected_bg">@drawable/demo_main_tab_profile_selected_light</item>
         <item name="demo_main_tab_community_selected_bg">@drawable/demo_main_tab_community_selected_light</item>
         <item name="demo_main_tab_community_normal_bg">@drawable/demo_community_not_selected</item>
+        <item name="demo_main_tab_recent_calls_normal_bg">@drawable/demo_recent_calls_not_selected_light</item>
+        <item name="demo_main_tab_recent_calls_selected_bg">@drawable/demo_recent_calls_selected_light</item>
 
         <item name="demo_navigate_bar_bg">@color/demo_navigate_bar_bg_light</item>
         <item name="demo_title_bar_more">@drawable/demo_title_bar_more_light</item>
@@ -27,6 +29,10 @@
         <item name="demo_login_theme_language_text_color">@color/demo_login_theme_language_text_color_light</item>
         <item name="demo_login_ic_logo">@drawable/demo_ic_logo_light</item>
         <item name="demo_phone_login_logo">@drawable/demo_phone_login_logo_light</item>
+
+        <item name="demo_theme_style_setting_bg">@drawable/theme_style_setting_bg_light</item>
+        <item name="demo_theme_style_setting_im">@drawable/theme_style_setting_im_light</item>
+        <item name="demo_theme_style_setting_about">@drawable/theme_style_setting_about_light</item>
 
     </style>
 </resources>

@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- 参与换肤的属性 -->
-
-    <attr name="demo_login_bg" format="reference"/>
-    <attr name="demo_login_btn_normal_color" format="reference|color"/>
-    <attr name="demo_login_btn_pressed_color" format="reference|color"/>
-    <attr name="demo_login_btn_disable_color" format="reference|color"/>
-
     <attr name="demo_main_tab_selected_text_color" format="reference|color"/>
     <attr name="demo_main_tab_normal_text_color" format="reference|color"/>
 
@@ -18,9 +11,20 @@
     <attr name="demo_main_tab_profile_selected_bg" format="reference"/>
     <attr name="demo_main_tab_community_selected_bg" format="reference"/>
     <attr name="demo_main_tab_community_normal_bg" format="reference"/>
+    <attr name="demo_main_tab_recent_calls_normal_bg" format="reference"/>
+    <attr name="demo_main_tab_recent_calls_selected_bg" format="reference"/>
     <attr name="demo_navigate_bar_bg" format="reference|color"/>
     <attr name="demo_title_bar_more" format="reference"/>
 
+    <attr name="demo_login_btn_normal_color" format="reference|color"/>
+    <attr name="demo_login_btn_pressed_color" format="reference|color"/>
+    <attr name="demo_login_btn_disable_color" format="reference|color"/>
+
+    <attr name="demo_theme_style_setting_bg" format="reference"/>
+    <attr name="demo_theme_style_setting_im" format="reference"/>
+    <attr name="demo_theme_style_setting_about" format="reference"/>
+
+    <attr name="demo_login_bg" format="reference"/>
     <attr name="demo_login_language_arrow" format="reference"/>
     <attr name="demo_login_language_icon" format="reference"/>
     <attr name="demo_login_theme_icon" format="reference"/>

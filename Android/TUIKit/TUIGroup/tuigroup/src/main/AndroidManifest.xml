@@ -25,6 +25,14 @@
         <activity android:name=".classicui.page.GroupApplyManagerActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+        <activity android:name=".classicui.page.GroupApplyDetailActivity"
+        android:screenOrientation="portrait"
+        android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+        <provider
+            android:name=".classicui.ClassicUIExtensionObserver"
+            android:authorities="${applicationId}.TUIGroup.ClassicUI.Init"
+            android:enabled="true"
+            android:exported="false" />
         <!-- **************** Classic UI Activity End **************** -->
 
 
@@ -42,6 +50,9 @@
         <activity android:name=".minimalistui.page.GroupApplyManagerMinimalistActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+        <activity android:name=".minimalistui.page.GroupApplyDetailMinimalistActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"/>
         <!-- **************** Minimalist UI Activity End **************** -->
 
     </application>

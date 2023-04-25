@@ -8,7 +8,7 @@
     android:paddingStart="16dp"
     android:paddingEnd="16dp">
 
-    <com.tencent.qcloud.tuicore.component.MinimalistTitleBar
+    <com.tencent.qcloud.tuikit.timcommon.component.MinimalistTitleBar
         android:id="@+id/new_friend_detail_title_bar"
         android:layout_width="match_parent"
         android:layout_height="56dp" />
@@ -23,7 +23,7 @@
         android:paddingTop="11.52dp"
         android:paddingBottom="11.52dp">
 
-        <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+        <com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView
             android:id="@+id/avatar"
             android:layout_width="40dp"
             android:layout_height="40dp" />

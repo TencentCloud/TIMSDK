@@ -1,5 +1,7 @@
 package com.tencent.qcloud.tuicore.util;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
@@ -9,6 +11,7 @@ import com.tencent.qcloud.tuicore.ServiceInitializer;
 
 public class ToastUtil {
 
+    private final static Handler handler = new Handler(Looper.getMainLooper());
     private static Toast toast;
 
     public static void toastLongMessage(final String message) {
@@ -20,7 +23,7 @@ public class ToastUtil {
     }
 
     private static void toastMessage(final String message, boolean isLong) {
-        BackgroundTasks.getInstance().runOnUiThread(new Runnable() {
+        handler.post(new Runnable() {
             @Override
             public void run() {
                 if (toast != null) {
@@ -40,5 +43,4 @@ public class ToastUtil {
             }
         });
     }
-
 }

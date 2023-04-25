@@ -3,8 +3,8 @@ package com.tencent.qcloud.tuikit.tuicontact.presenter;
 import android.text.TextUtils;
 import android.util.Pair;
 
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.bean.FriendApplicationBean;
@@ -107,11 +107,17 @@ public class AddMorePresenter {
     }
 
     public void getGroupInfo(String groupId, IUIKitCallback<GroupInfo> callback) {
+        if (TextUtils.isEmpty(groupId)) {
+            return;
+        }
         List<String> groupIds = new ArrayList<>();
         groupIds.add(groupId);
         provider.getGroupInfo(groupIds, new IUIKitCallback<List<GroupInfo>>() {
             @Override
             public void onSuccess(List<GroupInfo> data) {
+                if (data == null || data.isEmpty()) {
+                    return;
+                }
                 ContactUtils.callbackOnSuccess(callback, data.get(0));
             }
 

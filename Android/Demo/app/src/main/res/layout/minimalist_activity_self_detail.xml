@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical">
 
-    <com.tencent.qcloud.tuicore.component.MinimalistTitleBar
+    <com.tencent.qcloud.tuikit.timcommon.component.MinimalistTitleBar
         android:id="@+id/self_detail_title_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
@@ -22,7 +21,7 @@
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
-            <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+            <com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView
                 android:id="@+id/self_icon"
                 android:layout_width="94dp"
                 android:layout_height="94dp"
@@ -49,7 +48,7 @@
                 android:textSize="16sp"
                 android:textColor="@color/black" />
 
-            <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+            <com.tencent.qcloud.tuikit.timcommon.component.MinimalistLineControllerView
                 android:id="@+id/modify_account_lv"
                 android:layout_width="match_parent"
                 android:layout_height="46dp"
@@ -64,7 +63,7 @@
                 android:background="#1A000000"/>
 
 
-            <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+            <com.tencent.qcloud.tuikit.timcommon.component.MinimalistLineControllerView
                 android:id="@+id/modify_signature_lv"
                 android:layout_width="match_parent"
                 android:layout_height="46dp"
@@ -80,7 +79,7 @@
                 android:background="#1A000000"/>
 
 
-            <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+            <com.tencent.qcloud.tuikit.timcommon.component.MinimalistLineControllerView
                 android:id="@+id/modify_gender_lv"
                 android:layout_width="match_parent"
                 android:layout_height="46dp"
@@ -94,7 +93,7 @@
                 android:layout_marginEnd="16dp"
                 android:background="#1A000000"/>
 
-            <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+            <com.tencent.qcloud.tuikit.timcommon.component.MinimalistLineControllerView
                 android:id="@+id/modify_birthday_lv"
                 android:layout_width="match_parent"
                 android:layout_height="46dp"

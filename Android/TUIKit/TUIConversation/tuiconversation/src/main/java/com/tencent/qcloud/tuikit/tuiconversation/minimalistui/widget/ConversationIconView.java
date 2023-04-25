@@ -9,11 +9,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.tencent.qcloud.tuicore.TUIConfig;
-import com.tencent.qcloud.tuicore.component.gatherimage.SynthesizedImageView;
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
-import com.tencent.qcloud.tuicore.util.BackgroundTasks;
-import com.tencent.qcloud.tuicore.util.ImageUtil;
-import com.tencent.qcloud.tuicore.util.ThreadHelper;
+import com.tencent.qcloud.tuikit.timcommon.component.gatherimage.SynthesizedImageView;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.timcommon.util.ImageUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationIconPresenter;
@@ -47,8 +46,8 @@ public class ConversationIconView extends RelativeLayout {
     }
 
     private void init() {
-        inflate(getContext(), com.tencent.qcloud.tuicore.R.layout.profile_icon_view, this);
-        mIconView = findViewById(com.tencent.qcloud.tuicore.R.id.profile_icon);
+        inflate(getContext(), com.tencent.qcloud.tuikit.timcommon.R.layout.profile_icon_view, this);
+        mIconView = findViewById(com.tencent.qcloud.tuikit.timcommon.R.id.profile_icon);
         ((SynthesizedImageView) mIconView).defaultImage(TUIConfig.getDefaultAvatarImage());
         presenter = new ConversationIconPresenter();
     }
@@ -64,7 +63,7 @@ public class ConversationIconView extends RelativeLayout {
      */
     public void setIconUrls(final List<Object> iconUrls, final String conversationId) {
         // 需要在主线程中执行，以免写缓存出现问题
-        BackgroundTasks.getInstance().runOnUiThread(new Runnable() {
+        ThreadUtils.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if (mIconView instanceof SynthesizedImageView) {
@@ -97,7 +96,7 @@ public class ConversationIconView extends RelativeLayout {
                 return;
             }
             // 读取文件，在线程池中进行，避免主线程卡顿
-            ThreadHelper.INST.execute(new Runnable() {
+            ThreadUtils.execute(new Runnable() {
                 @Override
                 public void run() {
                     final String savedIcon = ImageUtil.getGroupConversationAvatar(info.getConversationId());
@@ -123,7 +122,7 @@ public class ConversationIconView extends RelativeLayout {
     }
 
     private void fillFaceUrlList(final String groupID, final ConversationInfo info) {
-        BackgroundTasks.getInstance().runOnUiThread(new Runnable() {
+        ThreadUtils.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 clearImage();

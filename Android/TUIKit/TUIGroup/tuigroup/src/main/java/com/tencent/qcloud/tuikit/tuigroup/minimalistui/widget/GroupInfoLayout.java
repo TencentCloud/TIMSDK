@@ -3,16 +3,23 @@ package com.tencent.qcloud.tuikit.tuigroup.minimalistui.widget;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultCaller;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,28 +27,28 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
-import com.tencent.qcloud.tuicore.component.MinimalistLineControllerView;
-import com.tencent.qcloud.tuicore.component.TitleBarLayout;
-import com.tencent.qcloud.tuicore.component.activities.SelectionMinimalistActivity;
-import com.tencent.qcloud.tuicore.component.dialog.TUIKitDialog;
-import com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView;
-import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
-import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
-import com.tencent.qcloud.tuicore.component.popupcard.PopupInputCard;
-import com.tencent.qcloud.tuicore.util.ImageUtil;
-import com.tencent.qcloud.tuicore.util.ScreenUtil;
-import com.tencent.qcloud.tuicore.util.TUIUtil;
+import com.tencent.qcloud.tuicore.interfaces.TUIExtensionEventListener;
+import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.MinimalistLineControllerView;
+import com.tencent.qcloud.tuikit.timcommon.component.PopupInputCard;
+import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
+import com.tencent.qcloud.tuikit.timcommon.component.activities.SelectionMinimalistActivity;
+import com.tencent.qcloud.tuikit.timcommon.component.dialog.TUIKitDialog;
+import com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView;
+import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.timcommon.util.ImageUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.TUIUtil;
 import com.tencent.qcloud.tuikit.tuigroup.R;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupConstants;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupService;
-import com.tencent.qcloud.tuikit.tuigroup.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupMemberInfo;
 import com.tencent.qcloud.tuikit.tuigroup.interfaces.IGroupMemberLayout;
 import com.tencent.qcloud.tuikit.tuigroup.minimalistui.interfaces.IGroupMemberListener;
-import com.tencent.qcloud.tuikit.tuigroup.minimalistui.page.GroupInfoMinimalistActivity;
 import com.tencent.qcloud.tuikit.tuigroup.minimalistui.page.GroupInfoMinimalistFragment;
 import com.tencent.qcloud.tuikit.tuigroup.minimalistui.page.GroupMemberMinimalistActivity;
 import com.tencent.qcloud.tuikit.tuigroup.minimalistui.page.GroupNoticeMinimalistActivity;
@@ -51,7 +58,9 @@ import com.tencent.qcloud.tuikit.tuigroup.util.TUIGroupLog;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -83,16 +92,15 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
     private MinimalistLineControllerView mChangeOwnerBtn;
     private RecyclerView memberList;
 
-    private View messageBtn;
-    private View audioCallBtn;
-    private View videoCallBtn;
-
     private OnButtonClickListener mListener;
 
     private GroupInfo mGroupInfo;
     private GroupInfoPresenter mPresenter;
     private ArrayList<String> mJoinTypes = new ArrayList<>();
     private GroupInfoMinimalistFragment.OnModifyGroupAvatarListener onModifyGroupAvatarListener;
+
+    private RecyclerView profileItemListView;
+    private ProfileItemAdapter profileItemAdapter;
     public GroupInfoLayout(Context context) {
         super(context);
         init();
@@ -207,9 +215,6 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
         mChatBackground.setOnClickListener(this);
         mChatBackground.setCanNav(true);
 
-        messageBtn = findViewById(R.id.message_btn);
-        messageBtn.setOnClickListener(this);
-
         int linearViewBgColor = 0xF0F9F9F9;
         mMsgRevOptionSwitchView.setBackgroundColor(linearViewBgColor);
         mLayoutFold.setBackgroundColor(linearViewBgColor);
@@ -227,6 +232,21 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
         mDissolveBtn.setBackgroundColor(linearViewBgColor);
         mAddMembersView.setBackgroundColor(linearViewBgColor);
         mAddMembersView.setNameColor(0xFF0365F9);
+
+        profileItemListView = findViewById(R.id.profile_item_container);
+        profileItemAdapter = new ProfileItemAdapter();
+        profileItemListView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        int leftRightSpace = com.tencent.qcloud.tuicore.util.ScreenUtil.dip2px(24);
+        profileItemListView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                int position = parent.getChildAdapterPosition(view);
+                int column = position % 3;
+                outRect.left = column * leftRightSpace / 3;
+                outRect.right = leftRightSpace * (2 - column) / 3;
+            }
+        });
+        profileItemListView.setAdapter(profileItemAdapter);
     }
 
     private void initView() {
@@ -252,31 +272,18 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
         } else {
             mAddMembersView.setVisibility(GONE);
         }
-        setupCall();
+        setupExtension();
     }
 
-    private void setupCall() {
-        audioCallBtn = findViewById(R.id.audio_call_btn);
-        audioCallBtn.setOnClickListener(this);
-        videoCallBtn = findViewById(R.id.video_call_btn);
-        videoCallBtn.setOnClickListener(this);
-
+    private void setupExtension() {
         HashMap<String, Object> param = new HashMap<>();
-        param.put(TUIConstants.TUIChat.CHAT_ID, mGroupInfo.getId());
-        param.put(TUIConstants.TUIChat.CHAT_NAME, mGroupInfo.getGroupName());
-        param.put(TUIConstants.TUIChat.CHAT_TYPE, ChatInfo.TYPE_GROUP);
-        param.put(TUIConstants.TUIChat.CONTEXT, getContext());
-        Map<String, Object> videoCallExtension = TUICore.getExtensionInfo(TUIConstants.TUIChat.EXTENSION_INPUT_MORE_VIDEO_CALL, param);
-        if (videoCallExtension == null) {
-            videoCallBtn.setVisibility(GONE);
-        }
-
-        Map<String, Object> audioCallExtension = TUICore.getExtensionInfo(TUIConstants.TUIChat.EXTENSION_INPUT_MORE_AUDIO_CALL, param);
-        if (audioCallExtension == null) {
-            audioCallBtn.setVisibility(GONE);
-        }
+        param.put(TUIConstants.TUIGroup.Extension.GroupProfileItem.GROUP_ID, mGroupInfo.getId());
+        param.put(TUIConstants.TUIGroup.Extension.GroupProfileItem.CONTEXT, getContext());
+        List<TUIExtensionInfo> extensionInfoList = TUICore.getExtensionList(TUIConstants.TUIGroup.Extension.GroupProfileItem.MINIMALIST_EXTENSION_ID, param);
+        Collections.sort(extensionInfoList);
+        profileItemAdapter.setExtensionInfoList(extensionInfoList);
+        profileItemAdapter.notifyDataSetChanged();
     }
-
     public void setGroupInfoPresenter(GroupInfoPresenter presenter) {
         this.mPresenter = presenter;
         if (mMemberAdapter != null) {
@@ -454,24 +461,31 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
         } else if (v == mChangeOwnerBtn) {
             ArrayList<String> excludeList = new ArrayList<>();
             excludeList.add(TUILogin.getLoginUser());
-            Intent intent = new Intent(getContext(), GroupMemberMinimalistActivity.class);
-            intent.putExtra(TUIConstants.TUIGroup.IS_SELECT_MODE, true);
-            intent.putExtra(TUIConstants.TUIGroup.GROUP_ID, mGroupInfo.getId());
-            intent.putExtra(TUIConstants.TUIGroup.LIMIT, 1);
-            intent.putExtra(TUIConstants.TUIGroup.EXCLUDE_LIST, excludeList);
-            intent.putExtra(TUIConstants.TUIGroup.TITLE, getResources().getString(R.string.group_transfer_group_owner));
-            ((Activity) getContext()).startActivityForResult(intent, GroupInfoMinimalistActivity.REQUEST_FOR_CHANGE_OWNER);
+            Bundle param = new Bundle();
+            param.putBoolean(TUIConstants.TUIGroup.IS_SELECT_MODE, true);
+            param.putString(TUIConstants.TUIGroup.GROUP_ID, mGroupInfo.getId());
+            param.putInt(TUIConstants.TUIGroup.LIMIT, 1);
+            param.putStringArrayList(TUIConstants.TUIGroup.EXCLUDE_LIST, excludeList);
+            param.putString(TUIConstants.TUIGroup.TITLE, getResources().getString(R.string.group_transfer_group_owner));
+
+            TUICore.startActivityForResult((ActivityResultCaller) getContext(), GroupMemberMinimalistActivity.class, param, new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getData() != null) {
+                        List<String> selectedList = result.getData().getStringArrayListExtra(TUIGroupConstants.Selection.LIST);
+                        if (selectedList != null && !selectedList.isEmpty()) {
+                            String newOwnerId = selectedList.get(0);
+                            if (mListener != null) {
+                                mListener.onChangeGroupOwner(newOwnerId);
+                            }
+                        }
+                    }
+                }
+            });
+
         } else if (v.getId() == R.id.chat_background) {
             if (mListener != null) {
                 mListener.onSetChatBackground();
-            }
-        } else if (v == messageBtn) {
-            if (mListener != null) {
-                mListener.onChatBtnClicked(mGroupInfo);
-            }
-        } else if (v == audioCallBtn || v == videoCallBtn) {
-            if (mListener != null) {
-                mListener.onCallBtnClicked(mGroupInfo.getId(), v == audioCallBtn);
             }
         } else if (v == mAddMembersView) {
             if (mMemberPreviewListener != null) {
@@ -705,6 +719,56 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
 
     }
 
+
+    class ProfileItemAdapter extends RecyclerView.Adapter<ProfileItemAdapter.ItemViewHolder> {
+        List<TUIExtensionInfo> extensionInfoList;
+
+        public void setExtensionInfoList(List<TUIExtensionInfo> extensionInfoList) {
+            this.extensionInfoList = extensionInfoList;
+        }
+
+        @NonNull
+        @Override
+        public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View itemView = LayoutInflater.from(getContext()).inflate(R.layout.group_minimalist_group_profile_item_layout, null);
+            return new ItemViewHolder(itemView);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
+            TUIExtensionInfo extensionInfo = extensionInfoList.get(position);
+            holder.imageView.setBackgroundResource((Integer) extensionInfo.getIcon());
+            holder.textView.setText(extensionInfo.getText());
+            TUIExtensionEventListener eventListener = extensionInfo.getExtensionListener();
+            holder.itemView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (eventListener != null) {
+                        eventListener.onClicked(null);
+                    }
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            if (extensionInfoList == null) {
+                return 0;
+            }
+            return extensionInfoList.size();
+        }
+
+        class ItemViewHolder extends RecyclerView.ViewHolder {
+            public ImageView imageView;
+            public TextView textView;
+            public ItemViewHolder(@NonNull View itemView) {
+                super(itemView);
+                imageView = itemView.findViewById(R.id.item_image);
+                textView = itemView.findViewById(R.id.item_text);
+            }
+        }
+    }
+
     public void setOnButtonClickListener(OnButtonClickListener l) {
         mListener = l;
     }
@@ -712,12 +776,9 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
     public abstract static class OnButtonClickListener {
         public void onSetChatBackground() {
         }
-
-        public void onCallBtnClicked(String groupID, boolean isAudioCall) {
+        public void onChangeGroupOwner(String newOwnerId) {
         }
 
-        public void onChatBtnClicked(GroupInfo groupInfo) {
-        }
     }
 
 }

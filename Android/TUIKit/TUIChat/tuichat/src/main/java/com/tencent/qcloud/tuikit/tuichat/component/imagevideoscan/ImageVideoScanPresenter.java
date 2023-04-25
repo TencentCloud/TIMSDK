@@ -8,14 +8,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUICore;
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
-import com.tencent.qcloud.tuicore.util.ThreadHelper;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.util.FileUtil;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
@@ -236,7 +236,7 @@ public class ImageVideoScanPresenter {
     }
 
     private void saveImage(Context context, String imagePath) {
-        ThreadHelper.INST.execute(new Runnable() {
+        ThreadUtils.execute(new Runnable() {
             @Override
             public void run() {
                 boolean success = FileUtil.saveImageToGallery(context, imagePath);
@@ -250,7 +250,7 @@ public class ImageVideoScanPresenter {
     }
 
     private void saveVideo(Context context, String videoPath) {
-        ThreadHelper.INST.execute(new Runnable() {
+        ThreadUtils.execute(new Runnable() {
             @Override
             public void run() {
                 boolean success = FileUtil.saveVideoToGallery(context, videoPath);

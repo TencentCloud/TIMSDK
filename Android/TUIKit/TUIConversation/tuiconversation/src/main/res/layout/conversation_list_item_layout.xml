@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/item_left"
     android:layout_width="match_parent"
     android:layout_height="@dimen/conversation_list_item_height"
@@ -29,7 +30,7 @@
             android:layout_width="@dimen/conversation_list_avatar_width"
             android:layout_height="@dimen/conversation_list_avatar_height" />
 
-        <com.tencent.qcloud.tuicore.component.UnreadCountTextView
+        <com.tencent.qcloud.tuikit.timcommon.component.UnreadCountTextView
             android:id="@+id/conversation_unread"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -87,9 +88,8 @@
             android:textSize="11.52sp"
             android:lineHeight="15.84sp"/>
 
-
         <TextView
-            android:id="@+id/conversation_at_msg"
+            android:id="@+id/conversation_at_all"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/view_line"
@@ -98,9 +98,45 @@
             android:layout_marginBottom="@dimen/conversation_list_text_margin_bottom"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textColor="@color/list_bottom_text_bg"
+            android:textColor="@color/read_dot_bg"
             android:textSize="13.44sp"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:text="@string/ui_at_all"
+            tools:visibility="visible"/>
+
+        <TextView
+            android:id="@+id/conversation_at_me"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/view_line"
+            android:layout_toEndOf="@id/conversation_at_all"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/conversation_list_text_margin_bottom"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="@color/read_dot_bg"
+            android:textSize="13.44sp"
+            android:visibility="gone"
+            android:text="@string/ui_at_me"
+            tools:visibility="visible"/>
+
+
+        <TextView
+            android:id="@+id/conversation_draft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/view_line"
+            android:layout_toEndOf="@id/conversation_at_me"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/conversation_list_text_margin_bottom"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="@color/read_dot_bg"
+            android:textSize="13.44sp"
+            android:visibility="gone"
+            android:text="@string/drafts"
+            tools:visibility="visible" />
+
 
         <RelativeLayout
             android:id="@+id/message_status_layout"
@@ -116,7 +152,7 @@
             android:visibility="gone"
             android:layout_marginBottom="@dimen/conversation_list_text_margin_bottom"
             android:layout_marginRight="2dp"
-            android:layout_toRightOf="@+id/conversation_at_msg">
+            android:layout_toEndOf="@+id/conversation_draft">
 
             <ImageView
                 android:id="@+id/message_status_sending"
@@ -148,7 +184,8 @@
             android:ellipsize="end"
             android:singleLine="true"
             android:textColor="@color/list_bottom_text_bg"
-            android:textSize="13.44sp" />
+            android:textSize="13.44sp"
+            tools:text="MessageContent"/>
 
 
         <ImageView

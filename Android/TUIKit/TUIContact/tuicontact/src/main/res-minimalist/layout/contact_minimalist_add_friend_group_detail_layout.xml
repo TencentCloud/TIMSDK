@@ -57,7 +57,7 @@
         android:visibility="gone"
         tools:visibility="visible">
 
-        <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+        <com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView
             android:id="@+id/friend_icon"
             android:layout_width="60dp"
             android:layout_height="60dp"
@@ -175,7 +175,7 @@
             android:textSize="14sp"
             android:textColor="@color/black"/>
 
-        <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+        <com.tencent.qcloud.tuikit.timcommon.component.MinimalistLineControllerView
             android:id="@+id/remarks_controller"
             app:name="@string/contact_add_friend_remark"
             app:canNav="true"
@@ -187,7 +187,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"/>
 
-        <com.tencent.qcloud.tuicore.component.MinimalistLineControllerView
+        <com.tencent.qcloud.tuikit.timcommon.component.MinimalistLineControllerView
             android:id="@+id/group_controller"
             app:name="@string/contact_friend_group"
             app:subject="@string/contact_my_friend"

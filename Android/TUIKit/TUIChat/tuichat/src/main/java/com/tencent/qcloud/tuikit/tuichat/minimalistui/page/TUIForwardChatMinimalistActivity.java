@@ -6,14 +6,14 @@ import android.view.View;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.tencent.qcloud.tuicore.component.CustomLinearLayoutManager;
-import com.tencent.qcloud.tuicore.component.activities.BaseMinimalistLightActivity;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.component.CustomLinearLayoutManager;
+import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseMinimalistLightActivity;
+import com.tencent.qcloud.tuikit.timcommon.interfaces.OnItemClickListener;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.minimalistui.interfaces.OnItemClickListener;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.MessageAdapter;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.MessageRecyclerView;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ForwardPresenter;
@@ -68,6 +68,15 @@ public class TUIForwardChatMinimalistActivity extends BaseMinimalistLightActivit
                 bundle.putSerializable(TUIChatConstants.FORWARD_MERGE_MESSAGE_KEY, messageInfo);
                 intent.putExtras(bundle);
                 startActivity(intent);
+            }
+
+            @Override
+            public void onMessageClick(View view, int position, TUIMessageBean messageBean) {
+                if (messageBean instanceof MergeMessageBean) {
+                    Intent intent = new Intent(view.getContext(), TUIForwardChatMinimalistActivity.class);
+                    intent.putExtra(TUIChatConstants.FORWARD_MERGE_MESSAGE_KEY, messageBean);
+                    startActivity(intent);
+                }
             }
         });
 

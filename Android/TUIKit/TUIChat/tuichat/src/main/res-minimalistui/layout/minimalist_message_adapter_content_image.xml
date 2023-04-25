@@ -3,7 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <com.tencent.qcloud.tuicore.component.RoundCornerImageView
+    <com.tencent.qcloud.tuikit.timcommon.component.RoundCornerImageView
         android:id="@+id/content_image_iv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -19,7 +19,7 @@
         android:clickable="false"
         android:src="@drawable/chat_minimalist_play_icon" />
 
-    <com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.TimeInLineTextLayout
+    <com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message.TimeInLineTextLayout
         android:id="@+id/image_msg_time_in_line_text"
         android:layout_alignEnd="@id/content_image_iv"
         android:layout_alignBottom="@id/content_image_iv"
