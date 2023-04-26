@@ -589,6 +589,9 @@ public class ChatView extends LinearLayout implements IChatLayout {
 
                 @Override
                 public void onGroupFaceUrlChanged(String faceUrl) {
+                    if (isActivityDestroyed()){
+                        return;
+                    }
                     Glide.with(getContext())
                             .load(faceUrl)
                             .apply(new RequestOptions()

@@ -47,6 +47,12 @@ public class InitSetting {
         setPermissionRequestContent();
         TUIChatConfigs.getConfigs().getGeneralConfig().setEnableMultiDeviceForCall(true);
         initOfflinePushConfigs();
+        initDemoStyle();
+    }
+
+    private void initDemoStyle() {
+        final SharedPreferences sharedPreferences = mContext.getSharedPreferences("TUIKIT_DEMO_SETTINGS", mContext.MODE_PRIVATE);
+        AppConfig.DEMO_UI_STYLE = sharedPreferences.getInt("tuikit_demo_style", 0);
     }
 
     private void setPermissionRequestContent() {

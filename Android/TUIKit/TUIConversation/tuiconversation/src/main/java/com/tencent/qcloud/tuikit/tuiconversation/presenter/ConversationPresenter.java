@@ -104,7 +104,7 @@ public class ConversationPresenter {
             @Override
             public void onSyncServerFinish() {
                 TUIConversationLog.i(TAG, "onSyncServerFinish");
-                loadMoreConversation();
+                reloadConversation();
                 ConversationPresenter.this.loadMarkedConversation();
             }
 
@@ -167,6 +167,23 @@ public class ConversationPresenter {
 
     public void loadMoreConversation() {
         provider.loadMoreConversation(GET_CONVERSATION_COUNT, new IUIKitCallback<List<ConversationInfo>>() {
+            @Override
+            public void onSuccess(List<ConversationInfo> data) {
+                onLoadConversationCompleted(data);
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                if (adapter != null) {
+                    adapter.onLoadingStateChanged(false);
+                }
+
+            }
+        });
+    }
+
+    public void reloadConversation() {
+        provider.reloadConversation(GET_CONVERSATION_COUNT, new IUIKitCallback<List<ConversationInfo>>() {
             @Override
             public void onSuccess(List<ConversationInfo> data) {
                 onLoadConversationCompleted(data);

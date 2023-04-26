@@ -71,6 +71,10 @@ public class ConversationProvider {
         loadConversation(nextLoadSeq, loadCount, callBack);
     }
 
+    public void reloadConversation(int loadCount, IUIKitCallback<List<ConversationInfo>> callBack) {
+        loadConversation(0, loadCount, callBack);
+    }
+
     public boolean isLoadFinished() {
         return isFinished;
     }
