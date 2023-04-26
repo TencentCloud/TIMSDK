@@ -11,7 +11,7 @@
 #import <QuickLook/QuickLook.h>
 #import "ReactiveObjC/ReactiveObjC.h"
 #import <TUICore/UIView+TUILayout.h>
-#import "UIView+TUIToast.h"
+#import <TUICore/UIView+TUIToast.h>
 #import <TUICore/TUIGlobalization.h>
 #import <TUICore/TUIThemeManager.h>
 

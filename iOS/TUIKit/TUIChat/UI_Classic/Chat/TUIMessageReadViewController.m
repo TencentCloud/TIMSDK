@@ -8,7 +8,7 @@
 #import "TUIMessageReadViewController.h"
 #import <TUICore/TUIThemeManager.h>
 #import "TUIMemberCell.h"
-#import "UIColor+TUIHexColor.h"
+#import <TUICore/UIColor+TUIHexColor.h>
 #import <TUICore/TUITool.h>
 #import "TUIMessageDataProvider.h"
 #import "TUIMemberCellData.h"

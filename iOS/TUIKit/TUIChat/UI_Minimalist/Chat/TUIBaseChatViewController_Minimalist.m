@@ -40,7 +40,7 @@
 #import "TUIChatMembersReactController.h"
 #import "TUIAIDenoiseSignatureManager.h"
 #import <TIMCommon/TUIBubbleMessageCell_Minimalist.h>
-#import "TUIFloatViewController.h"
+#import <TIMCommon/TUIFloatViewController.h>
 #import "UIAlertController+TUICustomStyle.h"
 
 static UIView *customTopView;

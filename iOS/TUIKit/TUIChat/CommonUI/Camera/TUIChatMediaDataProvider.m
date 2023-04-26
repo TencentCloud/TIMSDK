@@ -16,7 +16,7 @@
 #import "TUICameraViewController.h"
 #import <TIMCommon/TIMDefine.h>
 #import <TUICore/TUITool.h>
-#import "TUIUserAuthorizationCenter.h"
+#import <TIMCommon/TUIUserAuthorizationCenter.h>
 
 @interface TUIChatMediaDataProvider () <PHPickerViewControllerDelegate,
                                         UINavigationControllerDelegate,

@@ -19,7 +19,7 @@
 #import "TUILinkCellData.h"
 #import <TIMCommon/NSString+TUIEmoji.h>
 #import <TUICore/TUIThemeManager.h>
-#import "TUICore.h"
+#import <TUICore/TUICore.h>
 
 #import "TUIReplyQuoteView.h"
 #import "TUITextReplyQuoteView.h"

@@ -33,7 +33,7 @@
 #import <TIMCommon/TIMDefine.h>
 #import <TUICore/TUIDarkModel.h>
 #import <TUICore/TUIThemeManager.h>
-#import "TUICore.h"
+#import <TUICore/TUICore.h>
 
 @interface TUIRepliesDetailViewController_Minimalist ()<TUIInputControllerDelegate_Minimalist,UITableViewDelegate,UITableViewDataSource,TUIMessageBaseDataProviderDataSource,TUIMessageCellDelegate, TUINotificationProtocol>
 

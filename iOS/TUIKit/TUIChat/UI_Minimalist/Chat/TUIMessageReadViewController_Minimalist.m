@@ -8,7 +8,7 @@
 #import "TUIMessageReadViewController_Minimalist.h"
 #import <TUICore/TUIThemeManager.h>
 #import "TUIMemberCell_Minimalist.h"
-#import "UIColor+TUIHexColor.h"
+#import <TUICore/UIColor+TUIHexColor.h>
 #import <TUICore/TUITool.h>
 #import "TUIMessageDataProvider_Minimalist.h"
 #import "TUIMemberCellData_Minimalist.h"
