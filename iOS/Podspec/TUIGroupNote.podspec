@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |spec|
     spec.name         = 'TUIGroupNote'
-    spec.version      = '7.1.3925'
+    spec.version      = '7.2.4123'
     spec.platform     = :ios 
     spec.ios.deployment_target = '9.0'
     spec.license      = { :type => 'Proprietary',
@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
     
     spec.requires_arc = true
   
-    spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuiplugin/7.1.3925/ios/TUIGroupNote.framework.zip'}
+    spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuiplugin/7.2.4123/ios/TUIGroupNote.framework.zip'}
     spec.preserve_paths = 'TUIGroupNote.framework'
     spec.vendored_frameworks = 'TUIGroupNote.framework'
     spec.pod_target_xcconfig = {
