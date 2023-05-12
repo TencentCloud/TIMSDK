@@ -5,13 +5,13 @@ English | [简体中文](./README_ZH.md)
 ## Download Links
 
 ### Enhanced Edition
-[Latest C++ API download](https://im.sdk.qcloud.com/download/plus/7.2.4123/cross_platform/ImSDK_Windows_CPP_7.2.4123.zip)
+[Latest C++ API download](https://im.sdk.qcloud.com/download/plus/7.2.4146/cross_platform/ImSDK_Windows_CPP_7.2.4146.zip)
 
 ### Enhanced Edition Pro (Providing axp-quic multiplex transmission protocol to enhance network performance)
-[Latest C++ API Pro download](https://im.sdk.qcloud.com/download/plus/7.2.4123/cross_platform/ImSDK_Windows_CPP_Pro_7.2.4123.zip)
+[Latest C++ API Pro download](https://im.sdk.qcloud.com/download/plus/7.2.4146/cross_platform/ImSDK_Windows_CPP_Pro_7.2.4146.zip)
 
 ### Enhanced Edition
-[Latest C API download](https://im.sdk.qcloud.com/download/plus/7.2.4123/cross_platform/ImSDK_Windows_C_7.2.4123.zip)
+[Latest C API download](https://im.sdk.qcloud.com/download/plus/7.2.4146/cross_platform/ImSDK_Windows_C_7.2.4146.zip)
 
 ## TIMSDK for Windows
 
