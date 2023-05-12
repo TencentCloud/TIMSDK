@@ -2,6 +2,35 @@ English | [简体中文](./版本历史.md)
 
 # TIMSDK
 
+## 7.2.4123 @2023.04.25 - Enhanced Edition
+### SDK
+
+- Supported clearing messages for topics.
+- Added the notification for conversation deletion.
+- Improved the synchronization speed of conversation lists after login.
+- Supported blocking members kicked out of the group from joining again for non-audio-video groups and community groups.
+- Supported checking western European languages by words in local content moderation.
+- Supported configuring approval options for joining a community group via application or invitation.
+- Android offline push supported second-level message category for vivo phones
+- Supported configuring the number of long polling tasks on console for audio-video groups.
+- Prohibited reverting timestamp for one-to-one message read reporting.
+- The sequence of the read reported group message cannot exceed the sequence of the last group message.
+- Android offline push is now adapted to Android 12 for Huawei, Mi and FCM channels.
+- Fixed the issue that the group name card fields are missing for group messages sent by yourself.
+- Fixed the occasional error that message modification callback is not triggered after a message is modified successfully.
+- Fixed the issue that repeated callback for onMemberKicked after a member is kicked out of a group.
+- Fixed the parsing error for multi-element message in Swift SDK.
+- Fixed the issue that there is no callback for pulling group messages under certain conditions.
+- Fixed the occasional issue that message unread count is not updated in time after a message is recalled.
+- Fixed the occasional OpenSSL crash issue for Android and C/C++.
+
+### TUIKit and demo
+
+- Added call records page.
+- Supported specifying target language for message translation.
+- Supported customizing time limit for message recall in TUIChat
+- Fixed the no response issue when users press Enter to send messages with some third-party input methods
+
 ## 7.1.3925 @2023.03.07 - Enhanced Edition
 
 ### SDK
