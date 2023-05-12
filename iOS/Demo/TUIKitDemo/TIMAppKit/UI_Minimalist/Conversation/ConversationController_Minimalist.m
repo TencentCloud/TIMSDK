@@ -95,8 +95,8 @@
     self.navigationItem.leftBarButtonItems = self.showLeftBarButtonItems;
     
     UIButton *editButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [editButton setImage:[UIImage imageNamed:TUIConversationImagePath_Minimalist(@"nav_edit")]
-                forState:UIControlStateNormal];
+    [editButton setTitle:TIMCommonLocalizableString(Edit) forState:UIControlStateNormal];
+    [editButton setTitleColor:[UIColor systemBlueColor] forState:UIControlStateNormal];
     [editButton addTarget:self action:@selector(editBarButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     editButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
     [editButton setFrame:CGRectMake(0, 0, 26, 26)];
