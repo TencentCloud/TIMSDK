@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -174,11 +177,12 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         ChatPopDataHolder.setMessageViewGlobalRect(rect);
         view.setVisibility(INVISIBLE);
         View decorView = ((Activity)getContext()).getWindow().getDecorView();
-        decorView.setDrawingCacheEnabled(true);
-        decorView.buildDrawingCache();
-        dialogBgBitmap = Bitmap.createBitmap(decorView.getDrawingCache());
+        Bitmap dialogBgBitmap = Bitmap.createBitmap(decorView.getWidth(), decorView.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas();
+        canvas.setBitmap(dialogBgBitmap);
+        decorView.draw(canvas);
+        canvas.drawColor(Color.WHITE, PorterDuff.Mode.DST_OVER);
         ChatPopDataHolder.setChatPopBgBitmap(dialogBgBitmap);
-        decorView.setDrawingCacheEnabled(false);
 
         emojiOnClickListener = new ChatPopActivity.EmojiOnClickListener() {
 

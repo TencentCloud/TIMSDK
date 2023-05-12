@@ -913,15 +913,10 @@ public class ConversationPresenter {
                     adapter.onItemRemoved(index);
                 }
 
-                if (mUIFoldConversation == null || !conversation.isGroup()) {
+                if (mUIFoldConversation == null) {
                     return;
                 }
 
-                if (!TextUtils.equals(conversation.getConversationId(), mUIFoldConversation.getConversationId())) {
-                    return;
-                }
-
-                mUIFoldConversation = null;
                 Iterator<ConversationInfo> iterator = foldConversationInfoList.iterator();
                 while (iterator.hasNext()) {
                     ConversationInfo cacheConversationInfo = iterator.next();
@@ -931,6 +926,11 @@ public class ConversationPresenter {
                     }
                 }
 
+                if (!TextUtils.equals(conversation.getConversationId(), mUIFoldConversation.getConversationId())) {
+                    return;
+                }
+
+                mUIFoldConversation = null;
                 for (ConversationInfo conversationInfo : foldConversationInfoList) {
                     if (!conversationInfo.isMarkHidden()) {
                         mUIFoldConversation = conversationInfo;

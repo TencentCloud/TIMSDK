@@ -33,7 +33,7 @@ public class TranslationPresenter {
                 // notify Chat that message has been changed
                 Map<String, Object> param = new HashMap<>();
                 param.put(TUIChatConstants.MESSAGE_BEAN, messageBean);
-                param.put(TUIChatConstants.DATA_CHANGE_TYPE, IMessageRecyclerView.DATA_CHANGE_LOCATE_TO_POSITION);
+                param.put(TUIChatConstants.DATA_CHANGE_TYPE, IMessageRecyclerView.DATA_CHANGE_SCROLL_TO_POSITION_WITHOUT_HIGH_LIGHT);
                 TUICore.notifyEvent(TUIConstants.TUITranslation.EVENT_KEY_TRANSLATION_EVENT, TUIConstants.TUITranslation.EVENT_SUB_KEY_TRANSLATION_CHANGED, param);
             }
 

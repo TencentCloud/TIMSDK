@@ -4,27 +4,27 @@ English | [简体中文](./README_ZH.md)
 
 ## Download Links
 
-[Latest TUIChat download](https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4123/android/TUIChat.zip)
+[Latest TUIChat download](https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4146/android/TUIChat.zip)
 
-[Latest TUIConversation download](https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4123/android/TUIConversation.zip)
+[Latest TUIConversation download](https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4146/android/TUIConversation.zip)
 
-[Latest TUIContact download](https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4123/android/TUIContact.zip)
+[Latest TUIContact download](https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4146/android/TUIContact.zip)
 
-[Latest TUIGroup download](https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4123/android/TUIGroup.zip)
+[Latest TUIGroup download](https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4146/android/TUIGroup.zip)
 
-[Latest TUISearch download](https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4123/android/TUISearch.zip)
+[Latest TUISearch download](https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4146/android/TUISearch.zip)
 
 [Latest TUICallKit download](https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4123/android/TUICallKit.zip)
 
-[Latest TUIOfflinePush download](https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4123/android/TUIOfflinePush.zip)
+[Latest TUIOfflinePush download](https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4146/android/TUIOfflinePush.zip)
 
-[Latest TUICommunity download](https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4123/android/TUICommunity.zip)
+[Latest TUICommunity download](https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4146/android/TUICommunity.zip)
 
-[Latest TUITranslation download](https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4123/android/TUITranslation.zip)
+[Latest TUITranslation download](https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4146/android/TUITranslation.zip)
 
-[Latest TUICore download](https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4123/android/TUICore.zip)
+[Latest TUICore download](https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4146/android/TUICore.zip)
 
-[Latest TIMCommon download](https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4123/android/TIMCommon.zip)
+[Latest TIMCommon download](https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4146/android/TIMCommon.zip)
 
 
 If you encounter a TUIKit bug, please submit a pull request. After successful merging, we will update the TUIKit library in time.

@@ -74,10 +74,15 @@ public class DemoApplication extends Application {
     }
 
     private void initBugly() {
-        CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(getApplicationContext());
-        strategy.setAppVersion(AppConfig.DEMO_VERSION_NAME);
-        strategy.setDeviceModel(BrandUtil.getBuildModel());
-        CrashReport.initCrashReport(getApplicationContext(), PrivateConstants.BUGLY_APPID, true, strategy);
+        TUICore.registerEvent(TUIConstants.TUILogin.EVENT_IMSDK_INIT_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_START_INIT, new ITUINotification() {
+            @Override
+            public void onNotifyEvent(String key, String subKey, Map<String, Object> param) {
+                CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(getApplicationContext());
+                strategy.setAppVersion(AppConfig.DEMO_VERSION_NAME);
+                strategy.setDeviceModel(BrandUtil.getBuildModel());
+                CrashReport.initCrashReport(getApplicationContext(), PrivateConstants.BUGLY_APPID, true, strategy);
+            }
+        });
     }
 
     private void initIMDemoAppInfo() {

@@ -1,16 +1,16 @@
 package com.tencent.qcloud.tuikit.tuiconversation.minimalistui.setting;
 
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
-import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.widget.ConversationLayout;
-import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.widget.ConversationListLayout;
+import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.interfaces.IConversationLayout;
+import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.interfaces.IConversationListLayout;
 
 public class ConversationLayoutSetting {
 
-    public static void customizeConversation(final ConversationLayout layout) {
+    public static void customizeConversation(final IConversationLayout layout) {
 
-        ConversationListLayout listLayout = (ConversationListLayout) layout.getConversationList();
+        IConversationListLayout listLayout = (IConversationListLayout) layout.getConversationList();
 
-        listLayout.setItemAvatarRadius((int) ScreenUtil.dp2px(49f, listLayout.getResources().getDisplayMetrics()));
+        listLayout.setItemAvatarRadius(ScreenUtil.dip2px(49f));
 
         // 动态插入，删除Item，包括自定义会话
 //        final ConversationInfo customInfo = new ConversationInfo();

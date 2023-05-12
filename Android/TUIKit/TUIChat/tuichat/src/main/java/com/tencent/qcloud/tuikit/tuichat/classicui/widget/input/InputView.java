@@ -1252,8 +1252,15 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         } else {
             param.put(TUIConstants.TUIChat.Extension.InputMore.GROUP_ID, mChatInfo.getId());
         }
-        param.put(TUIConstants.TUIChat.Extension.InputMore.FILTER_VIDEO_CALL, !TUIChatConfigs.getConfigs().getGeneralConfig().isEnableVideoCall());
-        param.put(TUIConstants.TUIChat.Extension.InputMore.FILTER_VOICE_CALL, !TUIChatConfigs.getConfigs().getGeneralConfig().isEnableVoiceCall());
+
+        if (mChatInfo.getType() == ChatInfo.TYPE_GROUP && TUIChatUtils.isTopicGroup(mChatInfo.getId())) {
+            param.put(TUIConstants.TUIChat.Extension.InputMore.FILTER_VIDEO_CALL, true);
+            param.put(TUIConstants.TUIChat.Extension.InputMore.FILTER_VOICE_CALL, true);
+        } else {
+            param.put(TUIConstants.TUIChat.Extension.InputMore.FILTER_VIDEO_CALL, !TUIChatConfigs.getConfigs().getGeneralConfig().isEnableVideoCall());
+            param.put(TUIConstants.TUIChat.Extension.InputMore.FILTER_VOICE_CALL, !TUIChatConfigs.getConfigs().getGeneralConfig().isEnableVoiceCall());
+        }
+
         List<TUIExtensionInfo> extensionList = TUICore.getExtensionList(TUIConstants.TUIChat.Extension.InputMore.CLASSIC_EXTENSION_ID, param);
         for (TUIExtensionInfo extensionInfo : extensionList) {
             if (extensionInfo != null) {

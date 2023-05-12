@@ -4,10 +4,10 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 
-import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
+import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseMinimalistLightActivity;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 
-public class TUIFoldedConversationMinimalistActivity extends BaseLightActivity {
+public class TUIFoldedConversationMinimalistActivity extends BaseMinimalistLightActivity {
     private TUIFoldedConversationMinimalistFragment mTUIFoldedConversationMinimalistFragment;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
