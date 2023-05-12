@@ -5,19 +5,19 @@ English | [简体中文](./README_ZH.md)
 ## Download Links
 
 ### Enhanced Edition(Recommend)
-[Latest ImSDKForMac_Plus.framework download](https://sdk-im-1252463788.cos.ap-hongkong.myqcloud.com/download/plus/7.2.4123/ImSDKForMac_Plus_7.2.4123.framework.zip)
+[Latest ImSDKForMac_Plus.framework download](https://sdk-im-1252463788.cos.ap-hongkong.myqcloud.com/download/plus/7.2.4146/ImSDKForMac_Plus_7.2.4146.framework.zip)
 
 ### Enhanced Edition Pro (Providing axp-quic multiplex transmission protocol to enhance network performance)
-[Latest ImSDKForMac_Plus_Pro.framework download](https://im.sdk.qcloud.com/download/plus/7.2.4123/ImSDKForMac_Plus_Pro_7.2.4123.framework.zip)
+[Latest ImSDKForMac_Plus_Pro.framework download](https://im.sdk.qcloud.com/download/plus/7.2.4146/ImSDKForMac_Plus_Pro_7.2.4146.framework.zip)
 
 ### Basic Edition
 [Latest ImSDKForMac.framework download](https://im.sdk.qcloud.com/download/standard/5.1.62/TIM_SDK_Mac_latest_framework.zip)
 
 ### C++ API edition
-[Latest C++ API download](https://im.sdk.qcloud.com/download/plus/7.2.4123/cross_platform/ImSDK_Mac_CPP_7.2.4123.framework.zip)
+[Latest C++ API download](https://im.sdk.qcloud.com/download/plus/7.2.4146/cross_platform/ImSDK_Mac_CPP_7.2.4146.framework.zip)
 
 ### C API edition
-[Latest C API download](https://im.sdk.qcloud.com/download/plus/7.2.4123/cross_platform/ImSDK_Mac_C_7.2.4123.framework.zip)
+[Latest C API download](https://im.sdk.qcloud.com/download/plus/7.2.4146/cross_platform/ImSDK_Mac_C_7.2.4146.framework.zip)
 
 ## CocoaPods Integration
 If you are using the SDK basic edition, edit the Podfile as follows:
