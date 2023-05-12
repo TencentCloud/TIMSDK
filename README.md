@@ -208,35 +208,34 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 [API Upgrade Guidelines](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
-
-## Latest Enhanced Edition 7.1.3925 @2023.03.07
-
+## Latest Enhanced Edition 7.2.4123 @2023.04.25
 ### SDK
 
-- Supported pulling historical group messages by sequence list
-- Supported setting whether to clear historical messages when you delete a conversation
-- Added an API for deleting conversations in batches
-- Supported modifying the approval method of group member invitations
-- Supported group counters for community groups
-- Added a parameter for setting a message object to bypass the content moderation
-- Supported reporting one-to-one message read by timestamp
-- Supported reporting group message read by sequence
-- Supported getting timestamp of the read message in one-to-one chats
-- Supported getting sequence of the read message in group chats
-- Fixed the issue that intercepted messages due to local moderation were not saved in the local message database.
-- Fixed the issue that unread message count displayed when offline group members logged in again even though the messages had been excluded from the unread count.
-- Fixed the occasional issue of inaccurate `isRead` status of messages when users sent and received messages again after a one-to-one chat is deleted.
-- Fixed the occasional inconsistency of unread one-to-one message count in multi-device login scenarios.
-- Fixed the occasional crashes when file uploading failed.
-- Changed enumerated values of `V2TIMGroupApplicationGetType` to those of `V2TIMGroupApplicationType`
-- Changed the attribute name `getType` of `V2TIMGroupApplication` to `applicationType`
-
+- Supported clearing messages for topics.
+- Added the notification for conversation deletion.
+- Improved the synchronization speed of conversation lists after login.
+- Supported blocking members kicked out of the group from joining again for non-audio-video groups and community groups.
+- Supported checking western European languages by words in local content moderation.
+- Supported configuring approval options for joining a community group via application or invitation.
+- Android offline push supported second-level message category for vivo phones
+- Supported configuring the number of long polling tasks on console for audio-video groups.
+- Prohibited reverting timestamp for one-to-one message read reporting.
+- The sequence of the read reported group message cannot exceed the sequence of the last group message.
+- Android offline push is now adapted to Android 12 for Huawei, Mi and FCM channels.
+- Fixed the issue that the group name card fields are missing for group messages sent by yourself.
+- Fixed the occasional error that message modification callback is not triggered after a message is modified successfully.
+- Fixed the issue that repeated callback for onMemberKicked after a member is kicked out of a group.
+- Fixed the parsing error for multi-element message in Swift SDK.
+- Fixed the issue that there is no callback for pulling group messages under certain conditions.
+- Fixed the occasional issue that message unread count is not updated in time after a message is recalled.
+- Fixed the occasional OpenSSL crash issue for Android and C/C++.
 
 ### TUIKit and demo
 
-- Supported group polling and one-by-one notes
-- Improved the minimalist theme
-- Optimized the signaling display logic
+- Added call records page.
+- Supported specifying target language for message translation.
+- Supported customizing time limit for message recall in TUIChat
+- Fixed the no response issue when users press Enter to send messages with some third-party input methods
 
 
 ## Latest Basic Version 5.1.66 @2021.09.22
