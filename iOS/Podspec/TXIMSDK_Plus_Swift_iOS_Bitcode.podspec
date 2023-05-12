@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |spec|
   spec.name         = 'TXIMSDK_Plus_Swift_iOS_Bitcode'
-  spec.version      = '7.2.4123'
+  spec.version      = '7.2.4146'
   spec.platform     = :ios 
   spec.ios.deployment_target = '8.0'
   spec.license      = { :type => 'Proprietary',
@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/plus/7.2.4123/ImSDK_Plus_Swift_7.2.4123_Bitcode.framework.zip'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/plus/7.2.4146/ImSDK_Plus_Swift_7.2.4146_Bitcode.framework.zip'}
   spec.preserve_paths = '**/ImSDK_Plus_Swift.framework'
   spec.source_files = '**/ImSDK_Plus_Swift.framework/Headers/*.h'
   spec.public_header_files = '**/ImSDK_Plus_Swift.framework/Headers/*.h'
