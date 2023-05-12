@@ -42,6 +42,7 @@
 #import <TIMCommon/TUIBubbleMessageCell_Minimalist.h>
 #import <TIMCommon/TUIFloatViewController.h>
 #import "UIAlertController+TUICustomStyle.h"
+#import <TIMCommon/TUIGroupAvatar+Helper.h>
 
 static UIView *customTopView;
 
@@ -153,7 +154,7 @@ static UIView *customTopView;
         self.firstAppear = NO;
     }
     self.mainTitleLabel.text = [self getMainTitleLabelText];
-    [self.avatarView sd_setImageWithURL:[NSURL URLWithString:self.conversationData.faceUrl] placeholderImage:self.conversationData.avatarImage];
+    [self configHeadImageView:self.conversationData];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -213,7 +214,7 @@ static UIView *customTopView;
     [self updateSubTitleLabelText];
     [infoView addSubview:self.subTitleLabel];
     UIBarButtonItem *infoViewItem = [[UIBarButtonItem alloc] initWithCustomView:infoView];
-
+    
     self.navigationItem.leftBarButtonItems = @[backButtonItem, infoViewItem];
     
     CGSize itemSize = CGSizeMake(30, 24);
@@ -371,6 +372,43 @@ static UIView *customTopView;
     [self addChildViewController:_inputController];
     [self.view addSubview:_inputController.view];
 }
+- (void)configHeadImageView:(TUIChatConversationModel *)convData {
+    
+    /**
+     * 修改默认头像
+     * Setup default avatar
+     */
+    if (convData.groupID.length > 0) {
+        /**
+         * 群组, 则将群组默认头像修改成上次使用的头像
+         * If it is a group, change the group default avatar to the last used avatar
+         */
+        convData.avatarImage = [TUIGroupAvatar getNormalGroupCacheAvatar:convData.groupID groupType:convData.groupType];
+    }
+    
+    @weakify(self);
+
+    [[RACObserve(convData,faceUrl) distinctUntilChanged] subscribeNext:^(NSString *faceUrl) {
+        @strongify(self)
+        NSString * groupID = convData.groupID?:@"";
+        NSString * pFaceUrl = convData.faceUrl?:@"";
+        NSString * groupType = convData.groupType?:@"";
+        UIImage * originAvatarImage = nil;
+        if (convData.groupID.length > 0) {
+            originAvatarImage = convData.avatarImage?:DefaultGroupAvatarImageByGroupType(groupType);
+        }
+        else {
+            originAvatarImage = convData.avatarImage?:DefaultAvatarImage;
+        }
+        NSDictionary *param =  @{
+            @"groupID":groupID,
+            @"faceUrl":pFaceUrl,
+            @"groupType":groupType,
+            @"originAvatarImage":originAvatarImage,
+        };
+        [TUIGroupAvatar configAvatarByParam:param targetView:self.avatarView];
+    }];
+}
 
 - (void)configBackgroundView {
     self.backgroudView = [[UIImageView alloc] init];
@@ -525,6 +563,9 @@ static UIView *customTopView;
 
 - (void)setConversationData:(TUIChatConversationModel *)conversationData {
     _conversationData = conversationData;
+    if(!IS_NOT_EMPTY_NSSTRING(_conversationData.title) || !IS_NOT_EMPTY_NSSTRING(conversationData.faceUrl)) {
+        [self checkTitle:YES];
+    }
 }
 
 - (CGFloat)topMarginByCustomView {
@@ -546,11 +587,13 @@ static UIView *customTopView;
                 if (friendInfoResult.relation & V2TIM_FRIEND_RELATION_TYPE_IN_MY_FRIEND_LIST
                     && friendInfoResult.friendInfo.friendRemark.length > 0) {
                     self.conversationData.title = friendInfoResult.friendInfo.friendRemark;
+                    self.conversationData.faceUrl = friendInfoResult.friendInfo.userFullInfo.faceURL;
                 } else {
                     [TUIChatDataProvider_Minimalist getUserInfoWithUserId:friendInfoResult.friendInfo.userID
                                                    SuccBlock:^(V2TIMUserFullInfo * _Nonnull userInfo) {
                         if (userInfo.nickName.length > 0) {
                             self.conversationData.title = userInfo.nickName;
+                            self.conversationData.faceUrl = userInfo.faceURL;
                         }
                     } failBlock:nil];
                 }
@@ -561,6 +604,8 @@ static UIView *customTopView;
                                              SuccBlock:^(V2TIMGroupInfoResult * _Nonnull groupResult) {
                 if (groupResult.info.groupName.length > 0) {
                     self.conversationData.title = groupResult.info.groupName;
+                    self.conversationData.faceUrl = groupResult.info.faceURL;
+                    self.conversationData.groupType = groupResult.info.groupType;
                 }
             } failBlock:nil];
         }

@@ -166,6 +166,9 @@
     return NO;
 }
 
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [self.addMsgTextView endEditing:YES];
+}
 - (void)onSend
 {
     // display toast with an activity spinner

@@ -26,7 +26,8 @@
     _identifier = args.userID;
     _avatarUrl = [NSURL URLWithString:args.userFullInfo.faceURL];
     _friendProfile = args;
-
+    _userID = args.userID;
+    _faceUrl = args.userFullInfo.faceURL;
     return self;
 }
 
@@ -38,7 +39,9 @@
     _avatarImage = DefaultGroupAvatarImageByGroupType(args.groupType);
     _avatarUrl = [NSURL URLWithString:args.faceURL];
     _identifier = args.groupID;
-
+    _groupID = args.groupID;
+    _groupType = args.groupType;
+    _faceUrl = args.faceURL;
     return self;
 }
 

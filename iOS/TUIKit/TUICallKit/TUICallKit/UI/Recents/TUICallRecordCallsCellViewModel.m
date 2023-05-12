@@ -12,7 +12,6 @@
 #import "TUITool.h"
 #import "TUICallDefine.h"
 #import "TUIConfig.h"
-#import "TUIInternalLogin.h"
 
 @interface TUICallRecordCallsCellViewModel ()
 

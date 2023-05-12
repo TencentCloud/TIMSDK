@@ -1,5 +1,5 @@
 platform :ios, '8.0'
-source 'https://github.com/CocoaPods/Specs.git'
+#source 'https://github.com/CocoaPods/Specs.git'
 
 target 'TUICore' do
    # Comment the next line if you don't want to use dynamic frameworks

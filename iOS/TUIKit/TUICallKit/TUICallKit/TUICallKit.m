@@ -239,10 +239,7 @@ callMediaType:(TUICallMediaType)callMediaType
     self.currentCallingRole = TUICallRoleCalled;
     self.currentCallingType = callMediaType;
     [self.callingViewManager createGroupCallingAcceptView:callMediaType callRole:TUICallRoleCalled callScene:TUICallSceneGroup];
-    
-    if (!self.enableCustomViewRoute) {
-        [self.callingViewManager showCallingView];
-    }
+    [self showCallKitView];
     
     __weak typeof(self) weakSelf = self;
     [[TUICallEngine createInstance] joinInGroupCall:roomId groupId:groupId callMediaType:callMediaType succ:^{
@@ -644,7 +641,7 @@ callMediaType:(TUICallMediaType)callMediaType
 
 - (void)appDidBecomeActive {
     if ([TUICallingStatusManager shareInstance].callStatus != TUICallStatusNone) {
-        [self.callingViewManager showCallingView];
+        [self showCallKitView];
     }
     
     if (self.needContinuePlaying) {
@@ -669,6 +666,12 @@ callMediaType:(TUICallMediaType)callMediaType
 }
 
 #pragma mark - Private method
+
+- (void)showCallKitView {
+    if (!self.enableCustomViewRoute) {
+        [self.callingViewManager showCallingView];
+    }
+}
 
 - (void)handleAbilityFailErrorMessage:(int)errorCode errorMessage:(NSString *)errorMessage {
     NSString *errMsg = errorMessage;
@@ -714,10 +717,8 @@ callMediaType:(TUICallMediaType)callMediaType
 }
 
 - (void)callStart:(NSArray *)userIDs type:(TUICallMediaType)type role:(TUICallRole)role {
-    if (!self.enableCustomViewRoute) {
-        if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
-            [self.callingViewManager showCallingView];
-        }
+    if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
+        [self showCallKitView];
     }
     
     if (self.enableMuteMode) {

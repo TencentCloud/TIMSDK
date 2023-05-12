@@ -10,6 +10,7 @@
 #import "TUICommonContactCellData_Minimalist.h"
 #import <TIMCommon/TIMDefine.h>
 #import <TUICore/TUIThemeManager.h>
+#import <TIMCommon/TUIGroupAvatar+Helper.h>
 
 #define kScale UIScreen.mainScreen.bounds.size.width / 375.0
 
@@ -54,8 +55,7 @@
     self.contactData = contactData;
 
     self.titleLabel.text = contactData.title;
-    [self.avatarView sd_setImageWithURL:contactData.avatarUrl placeholderImage:contactData.avatarImage?:DefaultAvatarImage];
-    
+    [self configHeadImageView:contactData];
     @weakify(self)
     [[RACObserve(TUIConfig.defaultConfig, displayOnlineStatusIcon) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(id  _Nullable x) {
         @strongify(self)
@@ -94,5 +94,43 @@
 
     self.separtorView.frame = CGRectMake(self.avatarView.mm_maxX, self.contentView.mm_h - 1, self.contentView.mm_w, 1);
 }
+- (void)configHeadImageView:(TUICommonContactCellData_Minimalist *)convData {
+    
+    /**
+     * 修改默认头像
+     * Setup default avatar
+     */
+    if (convData.groupID.length > 0) {
+        /**
+         * 群组, 则将群组默认头像修改成上次使用的头像
+         * If it is a group, change the group default avatar to the last used avatar
+         */
+        convData.avatarImage = [TUIGroupAvatar getNormalGroupCacheAvatar:convData.groupID groupType:convData.groupType];
+    }
+    
+    @weakify(self);
+
+    [[RACObserve(convData,faceUrl) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(NSString *faceUrl) {
+        @strongify(self)
+        NSString * groupID = convData.groupID?:@"";
+        NSString * pFaceUrl = convData.faceUrl?:@"";
+        NSString * groupType = convData.groupType?:@"";
+        UIImage * originAvatarImage = nil;
+        if (convData.groupID.length > 0) {
+            originAvatarImage = convData.avatarImage?:DefaultGroupAvatarImageByGroupType(groupType);
+        }
+        else {
+            originAvatarImage = convData.avatarImage?:DefaultAvatarImage;
+        }        
+        NSDictionary *param =  @{
+            @"groupID":groupID,
+            @"faceUrl":pFaceUrl,
+            @"groupType":groupType,
+            @"originAvatarImage":originAvatarImage,
+        };
+        [TUIGroupAvatar configAvatarByParam:param targetView:self.avatarView];
+    }];
+}
+
 @end
 

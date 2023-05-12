@@ -6,7 +6,7 @@
 //
 
 #import "TUIConversationForwardSelectCell_Minimalist.h"
-
+#import <TIMCommon/TUIGroupAvatar+Helper.h>
 @interface TUIConversationForwardSelectCell_Minimalist()
 
 @end
@@ -54,13 +54,6 @@
 - (void)fillWithData:(TUIConversationCellData *)selectData {
     self.selectData = selectData;
     self.titleLabel.text = selectData.title;
-    if (selectData.faceUrl) {
-        [self.avatarView sd_setImageWithURL:[NSURL URLWithString:selectData.faceUrl] placeholderImage:DefaultAvatarImage];
-    } else if (selectData.avatarImage) {
-        [self.avatarView setImage:selectData.avatarImage];
-    } else {
-        [self.avatarView setImage:DefaultAvatarImage];
-    }
     if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {
         self.avatarView.layer.masksToBounds = YES;
         self.avatarView.layer.cornerRadius = self.avatarView.frame.size.height / 2;
@@ -68,6 +61,7 @@
         self.avatarView.layer.masksToBounds = YES;
         self.avatarView.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
     }
+    [self configHeadImageView:selectData];
     [self.selectButton setSelected:selectData.selected];
     if (selectData.showCheckBox) {
         self.selectButton.hidden = NO;
@@ -78,4 +72,42 @@
 //    self.selectButton.enabled = selectData.enabled;
 }
 
+
+- (void)configHeadImageView:(TUIConversationCellData *)convData {
+    
+    /**
+     * 修改默认头像
+     * Setup default avatar
+     */
+    if (convData.groupID.length > 0) {
+        /**
+         * 群组, 则将群组默认头像修改成上次使用的头像
+         * If it is a group, change the group default avatar to the last used avatar
+         */
+        convData.avatarImage = [TUIGroupAvatar getNormalGroupCacheAvatar:convData.groupID groupType:convData.groupType];
+    }
+    
+    @weakify(self);
+
+    [[RACObserve(convData,faceUrl) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(NSString *faceUrl) {
+        @strongify(self)
+        NSString * groupID = convData.groupID?:@"";
+        NSString * pFaceUrl = convData.faceUrl?:@"";
+        NSString * groupType = convData.groupType?:@"";
+        UIImage * originAvatarImage = nil;
+        if (convData.groupID.length > 0) {
+            originAvatarImage = convData.avatarImage?:DefaultGroupAvatarImageByGroupType(groupType);
+        }
+        else {
+            originAvatarImage = convData.avatarImage?:DefaultAvatarImage;
+        }
+        NSDictionary *param =  @{
+            @"groupID":groupID,
+            @"faceUrl":pFaceUrl,
+            @"groupType":groupType,
+            @"originAvatarImage":originAvatarImage,
+        };
+        [TUIGroupAvatar configAvatarByParam:param targetView:self.avatarView];
+    }];
+}
 @end

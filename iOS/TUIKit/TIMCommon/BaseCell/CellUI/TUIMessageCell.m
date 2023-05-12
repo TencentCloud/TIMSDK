@@ -370,9 +370,11 @@
         }
         
         [V2TIMManager.sharedInstance getUsersInfo:@[userId] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
+            @strongify(self)
             V2TIMUserFullInfo *info = infoList.firstObject;
             if (info && [data isEqual:self.messageData]) {
                 data.avatarUrl = [NSURL URLWithString:info.faceURL];
+                [self.avatarView sd_setImageWithURL:data.avatarUrl placeholderImage:DefaultAvatarImage];
             }
         } fail:^(int code, NSString *desc) {
             

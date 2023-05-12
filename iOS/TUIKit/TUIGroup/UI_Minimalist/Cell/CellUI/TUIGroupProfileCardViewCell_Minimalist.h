@@ -20,7 +20,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIGroupProfileHeaderView_Minimalist : UIView
 @property (nonatomic, strong) UIImageView *headImg;
+@property (nonatomic, copy) void(^headImgClickBlock)(void);
 @property (nonatomic, strong) UILabel *descriptionLabel;
+@property (nonatomic, strong) UIButton *editButton;
+@property (nonatomic, copy) void(^editBtnClickBlock)(void);
 @property (nonatomic, strong) UILabel *idLabel;
 @property (nonatomic, strong) UIView *functionListView;
 @property (nonatomic,strong) NSArray<TUIGroupProfileHeaderItemView_Minimalist *> *itemViewList;

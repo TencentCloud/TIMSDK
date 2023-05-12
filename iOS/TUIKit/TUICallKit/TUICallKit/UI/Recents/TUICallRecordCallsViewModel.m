@@ -13,7 +13,6 @@
 #import "TUICallDefine.h"
 #import "TUICallRecordCallsCellViewModel.h"
 #import "TUICallKit.h"
-#import "TUIInternalLogin.h"
 #import "TUICallKitOfflinePushInfoConfig.h"
 #import "TUICallKitConstants.h"
 

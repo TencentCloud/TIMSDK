@@ -70,6 +70,16 @@
     self.tableView.tableHeaderView = headerView;
     [self updateGroupInfo];
     
+    @weakify(self)
+    headerView.headImgClickBlock = ^{
+        @strongify(self)
+        [self didSelectAvatar];
+    };
+    headerView.editBtnClickBlock = ^{
+        @strongify(self)
+        [self didSelectEditGroupName];
+    };
+    
     // Extension
     NSMutableArray<TUIGroupProfileHeaderItemView_Minimalist *> *itemViewList = [NSMutableArray array];
     NSMutableDictionary *param = [NSMutableDictionary dictionary];
@@ -139,10 +149,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSMutableArray *array = self.dataProvider.dataList[indexPath.section];
     NSObject *data = array[indexPath.row];
-    if([data isKindOfClass:[TUIGroupProfileCardCellData_Minimalist class]]){
-        return [(TUIGroupProfileCardCellData_Minimalist *)data heightOfWidth:Screen_Width];
-    }
-    else if([data isKindOfClass:[TUIGroupMemberCellData_Minimalist class]]){
+    if([data isKindOfClass:[TUIGroupMemberCellData_Minimalist class]]){
         return [(TUIGroupMemberCellData_Minimalist *)data heightOfWidth:Screen_Width];
     }
     else if([data isKindOfClass:[TUIGroupButtonCellData_Minimalist class]]){
@@ -282,32 +289,18 @@
 - (void)didSelectCommon {
     UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
 
-    __weak typeof(self) weakSelf = self;
     if ([self.dataProvider.groupInfo isPrivate] || [TUIGroupInfoDataProvider_Minimalist isMeOwner:self.dataProvider.groupInfo]) {
+        @weakify(self)
         [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(TUIKitGroupProfileEditGroupName) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-
-            TUIModifyViewData *data = [[TUIModifyViewData alloc] init];
-            data.title = TIMCommonLocalizableString(TUIKitGroupProfileEditGroupName);
-            data.content = weakSelf.dataProvider.profileCellData.name;
-            data.desc = TIMCommonLocalizableString(TUIKitGroupProfileEditGroupName);
-            TUIModifyView *modify = [[TUIModifyView alloc] init];
-            modify.tag = 0;
-            modify.delegate = weakSelf;
-            [modify setData:data];
-            [modify showInWindow:weakSelf.view.window];
-
+            @strongify(self)
+            [self didSelectEditGroupName];
         }]];
     }
     if ([TUIGroupInfoDataProvider_Minimalist isMeOwner:self.dataProvider.groupInfo]) {
+        @weakify(self)
         [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(TUIKitGroupProfileEditAnnouncement) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-
-            TUIModifyViewData *data = [[TUIModifyViewData alloc] init];
-            data.title = TIMCommonLocalizableString(TUIKitGroupProfileEditAnnouncement);
-            TUIModifyView *modify = [[TUIModifyView alloc] init];
-            modify.tag = 1;
-            modify.delegate = weakSelf;
-            [modify setData:data];
-            [modify showInWindow:weakSelf.view.window];
+            @strongify(self)
+            [self didSelectEditAnnouncement];
         }]];
     }
 
@@ -315,22 +308,7 @@
         @weakify(self)
         [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(TUIKitGroupProfileEditAvatar) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             @strongify(self)
-            TUISelectAvatarController * vc = [[TUISelectAvatarController alloc] init];
-            vc.selectAvatarType = TUISelectAvatarTypeGroupAvatar;
-            vc.profilFaceURL = self.dataProvider.groupInfo.faceURL;
-            [self.navigationController pushViewController:vc animated:YES];
-            vc.selectCallBack = ^(NSString * _Nonnull urlStr) {
-                if (urlStr.length > 0) {
-                    V2TIMGroupInfo *info = [[V2TIMGroupInfo alloc] init];
-                    info.groupID = self.groupId;
-                    info.faceURL = urlStr;
-                    [[V2TIMManager sharedInstance] setGroupInfo:info succ:^{
-                        [self updateGroupInfo];
-                    } fail:^(int code, NSString *msg) {
-                        [TUITool makeToastError:code msg:msg];
-                    }];
-                }
-            };
+            [self didSelectAvatar];
         }]];
     }
     
@@ -339,6 +317,49 @@
     [self presentViewController:ac animated:YES completion:nil];
 }
 
+- (void)didSelectEditGroupName {
+    TUIModifyViewData *data = [[TUIModifyViewData alloc] init];
+    data.title = TIMCommonLocalizableString(TUIKitGroupProfileEditGroupName);
+    data.content = self.dataProvider.groupInfo.groupName;
+    data.desc = TIMCommonLocalizableString(TUIKitGroupProfileEditGroupName);
+    TUIModifyView *modify = [[TUIModifyView alloc] init];
+    modify.tag = 0;
+    modify.delegate = self;
+    [modify setData:data];
+    [modify showInWindow:self.view.window];
+
+}
+- (void)didSelectEditAnnouncement {
+    TUIModifyViewData *data = [[TUIModifyViewData alloc] init];
+    data.title = TIMCommonLocalizableString(TUIKitGroupProfileEditAnnouncement);
+    TUIModifyView *modify = [[TUIModifyView alloc] init];
+    modify.tag = 1;
+    modify.delegate = self;
+    [modify setData:data];
+    [modify showInWindow:self.view.window];
+}
+- (void)didSelectAvatar {
+    TUISelectAvatarController * vc = [[TUISelectAvatarController alloc] init];
+    vc.selectAvatarType = TUISelectAvatarTypeGroupAvatar;
+    vc.profilFaceURL = self.dataProvider.groupInfo.faceURL;
+    [self.navigationController pushViewController:vc animated:YES];
+    @weakify(self)
+    vc.selectCallBack = ^(NSString * _Nonnull urlStr) {
+        @strongify(self)
+        if (urlStr.length > 0) {
+            V2TIMGroupInfo *info = [[V2TIMGroupInfo alloc] init];
+            info.groupID = self.groupId;
+            info.faceURL = urlStr;
+            @weakify(self)
+            [[V2TIMManager sharedInstance] setGroupInfo:info succ:^{
+                @strongify(self)
+                [self updateGroupInfo];
+            } fail:^(int code, NSString *msg) {
+                [TUITool makeToastError:code msg:msg];
+            }];
+        }
+    };
+}
 - (void)didSelectOnNotDisturb:(TUICommonSwitchCell *)cell {
     V2TIMReceiveMessageOpt opt;
     if (cell.switcher.on) {
@@ -705,7 +726,7 @@
     if(modifyView.tag == 0){
         [self.dataProvider setGroupName:content succ:^{
             @strongify(self)
-            [self.tableView reloadData];
+            [self updateGroupInfo];
         } fail:^(int code, NSString *desc) {
         }];
     }

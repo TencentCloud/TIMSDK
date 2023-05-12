@@ -31,6 +31,11 @@ typedef NS_ENUM(NSInteger, TUIContactOnlineStatus_Minimalist) {
 @property NSString *title;
 @property UIImage *avatarImage;
 
+@property (nonatomic, copy) NSString *userID;
+@property (nonatomic, copy) NSString *groupID;
+@property (nonatomic, copy) NSString *groupType;
+@property (nonatomic, copy) NSString *faceUrl;
+
 // The flag of indicating the user's online status
 @property (nonatomic, assign) TUIContactOnlineStatus_Minimalist onlineStatus;
 

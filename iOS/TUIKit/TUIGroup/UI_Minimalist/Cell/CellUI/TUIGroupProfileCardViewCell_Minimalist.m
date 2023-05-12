@@ -10,6 +10,7 @@
 #import <TUICore/TUIThemeManager.h>
 #import <TIMCommon/TIMDefine.h>
 #import <TIMCommon/TIMCommonModel.h>
+#import <TIMCommon/TUIGroupAvatar+Helper.h>
 
 @implementation TUIGroupProfileHeaderItemView_Minimalist
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -75,12 +76,20 @@
     [self addSubview:self.headImg];
     self.headImg.userInteractionEnabled = YES;
     self.headImg.contentMode = UIViewContentModeScaleAspectFit;
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(headImageClick)];
+    [self.headImg addGestureRecognizer:tap];
     
     self.descriptionLabel = [[UILabel alloc] init];
     self.descriptionLabel.font = [UIFont boldSystemFontOfSize:kScale390(24)];
     self.descriptionLabel.textAlignment = NSTextAlignmentCenter;
     self.descriptionLabel.userInteractionEnabled = YES;
     [self addSubview:self.descriptionLabel];
+    
+    self.editButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [self addSubview: self.editButton];
+    [self.editButton setImage:[UIImage imageNamed:TUIGroupImagePath(@"icon_group_edit")] forState:UIControlStateNormal];
+    [self.editButton addTarget:self action:@selector(editButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    self.editButton.hidden = YES;
     
     self.idLabel = [[UILabel alloc] init];
     self.idLabel.font = [UIFont systemFontOfSize:kScale390(12)];
@@ -97,8 +106,43 @@
 - (void)setGroupInfo:(V2TIMGroupInfo *)groupInfo {
     _groupInfo = groupInfo;
     [self.headImg sd_setImageWithURL:[NSURL URLWithString:self.groupInfo.faceURL] placeholderImage:DefaultGroupAvatarImageByGroupType(self.groupInfo.groupType)];
+    [self configHeadImageView:groupInfo];
+    
     self.descriptionLabel.text = groupInfo.groupName;
+    [self.descriptionLabel sizeToFit];
     self.idLabel.text = self.groupInfo.groupID;
+    if([self.class isMeSuper:groupInfo]) {
+        self.editButton.hidden = NO;
+    }
+    [self setNeedsLayout];
+}
+- (void)configHeadImageView:(V2TIMGroupInfo *)groupInfo {
+    
+    /**
+     * 修改默认头像
+     * Setup default avatar
+     */
+    if (groupInfo.groupID.length > 0) {
+        /**
+         * 群组, 则将群组默认头像修改成上次使用的头像
+         * If it is a group, change the group default avatar to the last used avatar
+         */
+        [self.headImg sd_setImageWithURL:[NSURL URLWithString:self.groupInfo.faceURL] placeholderImage:DefaultGroupAvatarImageByGroupType(self.groupInfo.groupType)];
+    }
+    
+    @weakify(self);
+    NSString * groupID = groupInfo.groupID?:@"";
+    NSString * pFaceUrl = groupInfo.faceURL?:@"";
+    NSString * groupType = groupInfo.groupType?:@"";
+    UIImage * originAvatarImage = DefaultGroupAvatarImageByGroupType(self.groupInfo.groupType)?:[UIImage new];
+
+    NSDictionary *param =  @{
+        @"groupID":groupID,
+        @"faceUrl":pFaceUrl,
+        @"groupType":groupType,
+        @"originAvatarImage":originAvatarImage,
+    };
+    [TUIGroupAvatar configAvatarByParam:param targetView:self.headImg];
 }
 
 - (void)setItemViewList:(NSArray<TUIGroupProfileHeaderItemView_Minimalist *> *)itemList {
@@ -133,7 +177,10 @@
         self.headImg.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
     }
     
-    self.descriptionLabel.frame = CGRectMake(0, self.headImg.frame.origin.y + self.headImg.frame.size.height + kScale390(10), self.bounds.size.width, 30);
+    [self.descriptionLabel sizeToFit];
+    CGFloat descriptionLabelWidth = MIN(self.descriptionLabel.frame.size.width, self.bounds.size.width *0.5);
+    self.descriptionLabel.frame = CGRectMake((self.bounds.size.width - descriptionLabelWidth) *0.5, self.headImg.frame.origin.y + self.headImg.frame.size.height + kScale390(10), descriptionLabelWidth, 30);
+    self.editButton.frame = CGRectMake(self.descriptionLabel.frame.origin.x + self.descriptionLabel.frame.size.width + kScale390(3), self.descriptionLabel.frame.origin.y, kScale390(30), kScale390(30));
     self.idLabel.frame = CGRectMake(0, self.descriptionLabel.frame.origin.y + self.descriptionLabel.frame.size.height + kScale390(8), self.bounds.size.width, 30);
     
     if (self.functionListView.subviews.count > 0) {
@@ -141,6 +188,21 @@
     }
 }
 
+- (void)headImageClick {
+    if(self.headImgClickBlock && [self.class isMeSuper:self.groupInfo]) {
+       self.headImgClickBlock();
+    }
+}
+
+- (void)editButtonClick {
+    if (self.editBtnClickBlock && [self.class isMeSuper:self.groupInfo]) {
+        self.editBtnClickBlock();
+    }
+}
+
++ (BOOL)isMeSuper:(V2TIMGroupInfo *)groupInfo {
+    return [groupInfo.owner isEqualToString:[[V2TIMManager sharedInstance] getLoginUser]] && (groupInfo.role == V2TIM_GROUP_MEMBER_ROLE_SUPER);
+}
 @end
 
 @implementation TUIGroupProfileCardViewCell_Minimalist
@@ -167,7 +229,6 @@
     [self.headerView.headImg sd_setImageWithURL:data.avatarUrl placeholderImage:data.avatarImage];
     self.headerView.descriptionLabel.text = data.name;
     self.headerView.idLabel.text = [NSString stringWithFormat:@"ID: %@",data.identifier];
-    [self setupExtesionList];
 }
 - (void)layoutSubviews {
     [super layoutSubviews];
@@ -179,7 +240,5 @@
     [self.headerView.descriptionLabel sizeToFit];
     self.headerView.itemViewList = self.itemViewList;
 }
-- (void)setupExtesionList {
 
-}
 @end
