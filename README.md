@@ -208,34 +208,19 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 [API Upgrade Guidelines](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
-## Latest Enhanced Edition 7.2.4123 @2023.04.25
+## Latest Enhanced Edition 7.2.4146 @2023.05.12
 ### SDK
+- Fixed the issue that the conversation list failed to be returned before the login is successful.
+- Fixed the issue that the unread count of group conversations could not be cleared occasionally.
+- Fixed the issue that the last message of the group conversation was not updated occasionally when synchronizing the conversation list.
+- Fixed the issue that one end could not synchronize to the other end when it included unread group messages.
+- Fixed the issue that sending unread group messages to conference groups will fail.
+- Fixed the issue of occasional failure to obtain the total number of unread conversations based on filter conditions.
+- Fixed the issue that the local field of the message is occasionally lost when pulling historical messages.
+- Fixed the issue that the package MAC rename SDK prompts that the signature fails.
 
-- Supported clearing messages for topics.
-- Added the notification for conversation deletion.
-- Improved the synchronization speed of conversation lists after login.
-- Supported blocking members kicked out of the group from joining again for non-audio-video groups and community groups.
-- Supported checking western European languages by words in local content moderation.
-- Supported configuring approval options for joining a community group via application or invitation.
-- Android offline push supported second-level message category for vivo phones
-- Supported configuring the number of long polling tasks on console for audio-video groups.
-- Prohibited reverting timestamp for one-to-one message read reporting.
-- The sequence of the read reported group message cannot exceed the sequence of the last group message.
-- Android offline push is now adapted to Android 12 for Huawei, Mi and FCM channels.
-- Fixed the issue that the group name card fields are missing for group messages sent by yourself.
-- Fixed the occasional error that message modification callback is not triggered after a message is modified successfully.
-- Fixed the issue that repeated callback for onMemberKicked after a member is kicked out of a group.
-- Fixed the parsing error for multi-element message in Swift SDK.
-- Fixed the issue that there is no callback for pulling group messages under certain conditions.
-- Fixed the occasional issue that message unread count is not updated in time after a message is recalled.
-- Fixed the occasional OpenSSL crash issue for Android and C/C++.
-
-### TUIKit and demo
-
-- Added call records page.
-- Supported specifying target language for message translation.
-- Supported customizing time limit for message recall in TUIChat
-- Fixed the no response issue when users press Enter to send messages with some third-party input methods
+### TUIKit & Demo
+- Fixed overseas version TUIKit related experience problems
 
 
 ## Latest Basic Version 5.1.66 @2021.09.22
