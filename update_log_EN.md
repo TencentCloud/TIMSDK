@@ -2,6 +2,20 @@ English | [简体中文](./版本历史.md)
 
 # TIMSDK
 
+## 7.2.4146 @2023.05.12 - Enhanced Edition
+### SDK
+- Fixed the issue that the conversation list failed to be returned before the login is successful.
+- Fixed the issue that the unread count of group conversations could not be cleared occasionally.
+- Fixed the issue that the last message of the group conversation was not updated occasionally when synchronizing the conversation list.
+- Fixed the issue that one end could not synchronize to the other end when it included unread group messages.
+- Fixed the issue that sending unread group messages to conference groups will fail.
+- Fixed the issue of occasional failure to obtain the total number of unread conversations based on filter conditions.
+- Fixed the issue that the local field of the message is occasionally lost when pulling historical messages.
+- Fixed the issue that the package MAC rename SDK prompts that the signature fails.
+
+### TUIKit & Demo
+- Fixed overseas version TUIKit related experience problems
+
 ## 7.2.4123 @2023.04.25 - Enhanced Edition
 ### SDK
 
