@@ -171,7 +171,7 @@ static UIView *customTopView;
     }
     _titleView = [[TUINaviBarIndicatorView alloc] init];
     self.navigationItem.titleView = _titleView;
-    self.navigationItem.title = @"";
+    self.navigationItem.title = @"    ";
     __weak typeof (self)weakSelf = self;
     [[RACObserve(_conversationData, title) distinctUntilChanged] subscribeNext:^(NSString *title) {
         [weakSelf.titleView setTitle:title];
