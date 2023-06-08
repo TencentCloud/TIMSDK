@@ -61,9 +61,9 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 <table >
   <tr>
-    <th width="180px" style="text-align:center">Functional module</th>
+    <th width="180px" style="text-align:center">Functional Module</th>
     <th width="180px" style="text-align:center">Platform</th>
-    <th width="500px" style="text-align:center">Document link</th>
+    <th width="500px" style="text-align:center">Document Link</th>
   </tr>
 
   <tr >
