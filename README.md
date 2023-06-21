@@ -213,25 +213,24 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 - Support server message search
 - Support filtering conversation list and conversation total unread count by whether it contains unread messages
 - Support filtering conversation list and conversation total unread count by whether it contains @ messages
-- The interface for obtaining group member list adds the online identification of group members
-- All types of groups support obtaining online numbers
+- Adding online identification to group members obtained througn getMemberList API
+- Total number of online group members can be obtained for all type of groups
 - Optimize the reconnection speed when switching from the background to the foreground
 - Optimize the slow problem of pulling local messages in weak network
 - Fix the problem of missing the application list after marking the group application as read
 - Fix the problem that the conversation cannot be retrieved after sending the first message to a non-friend account
 - Fix the problem that the conversation personal information is the previous account information when switching accounts to log in
 - Fix the problem that the local field disappears occasionally when pulling historical messages
-- Fix the problem that iOS occasionally does not throw out signaling notifications
-- Fix the problem that the conversation unread count callback does not take effect after one-click clearing the unread count
-- Fix the problem that the conversation object in the conversation update callback after deleting or renaming the conversation group does not have showName, faceUrl, and lastMessage information
-- Fix the problem that the conversation mark and conversation group information change notification for conversations that do not exist locally will be discarded
-- Fix the problem that deleting a conversation occasionally clears the message database
+- Fix the problem that signaling notifications are not throw out occasionally on iOS platform
+- Fix the problem that the conversation unread count callback does not take effect after clearing all unread messages
+- Fix the problem that detail information are not filled in conversation object when receiving conversation update notification after deleting or renaming the conversation group
+- Fix the problem that conversation mark and conversation group change notification are discarded for conversations which do not exist locally
 - Fix the problem of symbol conflict between SDK and user code
 
 ### TUIKit & Demo
 - Support multiple conversation groups and conversation marks
 - Add quick meeting function
-- Language messages support automatic playback of the next voice message
+- Adding the feature of playing the next voice message automatically
 - Picture and video viewing supports zooming in and out and adaptive horizontal and vertical screens
 - Picture and video upload and download support displaying progress
 - Picture and video messages support multi-select sending
