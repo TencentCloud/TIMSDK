@@ -2,6 +2,36 @@ English | [简体中文](./版本历史.md)
 
 # TIMSDK
 
+## 7.3.4358 @2023.06.21 - Enhanced Edition
+### SDK
+- Support server message search
+- Support filtering conversation list and conversation total unread count by whether it contains unread messages
+- Support filtering conversation list and conversation total unread count by whether it contains @ messages
+- The interface for obtaining group member list adds the online identification of group members
+- All types of groups support obtaining online numbers
+- Optimize the reconnection speed when switching from the background to the foreground
+- Optimize the slow problem of pulling local messages in weak network
+- Fix the problem of missing the application list after marking the group application as read
+- Fix the problem that the conversation cannot be retrieved after sending the first message to a non-friend account
+- Fix the problem that the conversation personal information is the previous account information when switching accounts to log in
+- Fix the problem that the local field disappears occasionally when pulling historical messages
+- Fix the problem that iOS occasionally does not throw out signaling notifications
+- Fix the problem that the conversation unread count callback does not take effect after one-click clearing the unread count
+- Fix the problem that the conversation object in the conversation update callback after deleting or renaming the conversation group does not have showName, faceUrl, and lastMessage information
+- Fix the problem that the conversation mark and conversation group information change notification for conversations that do not exist locally will be discarded
+- Fix the problem that deleting a conversation occasionally clears the message database
+- Fix the problem of symbol conflict between SDK and user code
+
+### TUIKit & Demo
+- Support multiple conversation groups and conversation marks
+- Add quick meeting function
+- Language messages support automatic playback of the next voice message
+- Picture and video viewing supports zooming in and out and adaptive horizontal and vertical screens
+- Picture and video upload and download support displaying progress
+- Picture and video messages support multi-select sending
+- The group information page supports modifying the invitation option
+- iOS supports adding suffix names when sending pictures
+
 ## 7.2.4146 @2023.05.12 - Enhanced Edition
 ### SDK
 - Fixed the issue that the conversation list failed to be returned before the login is successful.
