@@ -19,13 +19,13 @@ class RoomMessageManager: NSObject {
     var engineManager: EngineManager {
         EngineManager.shared
     }
-    var roomEngine: TUIRoomEngine {
+    private var roomEngine: TUIRoomEngine {
         engineManager.roomEngine
     }
-    var roomInfo: RoomInfo {
+    private var roomInfo: RoomInfo {
         engineManager.store.roomInfo
     }
-    lazy var userId: String = {
+    private lazy var userId: String = {
         return TUILogin.getUserID() ?? engineManager.store.currentLoginUser.userId
     }()
     weak var listener: RoomMessageManagerListener?

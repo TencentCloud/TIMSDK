@@ -62,17 +62,19 @@ import TUIRoomEngine
         self.listener = listener
     }
     
-    public func removeListener() {
+    func removeListener() {
         self.listener = nil
     }
     
-    public func banAutoRaiseUiOnce(isBan: Bool) {
+    func banAutoRaiseUiOnce(isBan: Bool) {
         EngineManager.shared.store.isBanAutoRaise = isBan
     }
-    public func raiseUi() {
+    
+    func raiseUi() {
         RoomRouter.shared.pushMainViewController(roomId: EngineManager.shared.store.roomInfo.roomId)
     }
-    public func setChatAccessRoom(isChatAccessRoom: Bool) {
+    
+    func setChatAccessRoom(isChatAccessRoom: Bool) {
         EngineManager.shared.store.isChatAccessRoom = isChatAccessRoom
     }
     
